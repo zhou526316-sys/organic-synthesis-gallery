@@ -2,11 +2,6 @@ name: Deploy Cloudflare staging
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - migration/cloudflare
-    paths:
-      - 'DEPLOY_TOC_FIX'
 
 permissions:
   contents: read
