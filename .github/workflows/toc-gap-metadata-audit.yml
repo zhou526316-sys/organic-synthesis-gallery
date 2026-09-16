@@ -1,0 +1,36 @@
+name: Audit TOC-gap DOI metadata
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/toc-gap-metadata-audit.yml'
+      - 'cloudflare/scripts/audit-toc-gap-metadata.mjs'
+      - 'audit/toc-gap-dois-2026-09-16.json'
+      - 'public/papers.gz.b64'
+      - 'public/total-synthesis.json'
+      - 'public/manual-supplement.json'
+      - 'public/final-audit-supplement.json'
+      - 'public/curated-supplement.json'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify DOI, title and journal consistency
+        run: node cloudflare/scripts/audit-toc-gap-metadata.mjs
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: toc-gap-metadata-report
+          path: audit/toc-gap-metadata-report.json
+          retention-days: 7
