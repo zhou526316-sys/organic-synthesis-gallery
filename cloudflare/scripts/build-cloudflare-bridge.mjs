@@ -18,7 +18,7 @@ if (!source.includes("const VERSION = '0.4.5';") || !source.includes('Organic Sy
 }
 
 source = source
-  .replace('// @version      0.4.5', '// @version      1.0.2')
+  .replace('// @version      0.4.5', '// @version      1.0.3')
   .replace(
     '// @match        https://organic-synthesis-literature-gallery-ase43k.v2.appdeploy.ai/*',
     `// @match        ${TARGET_SITE_ORIGIN}/*`
@@ -35,7 +35,7 @@ source = source
     '// @grant        GM_xmlhttpRequest',
     '// @grant        GM_xmlhttpRequest\n// @grant        GM_getValue\n// @grant        GM_setValue\n// @grant        GM_registerMenuCommand'
   )
-  .replace("const VERSION = '0.4.5';", "const VERSION = '1.0.2';")
+  .replace("const VERSION = '0.4.5';", "const VERSION = '1.0.3';")
   .replace(
     "const API_BASE = 'https://api-v2.appdeploy.ai/app/organic-synthesis-literature-gallery-ase43k';",
     `const API_BASE = '${TARGET_API_BASE}';\n  const WRITE_TOKEN_KEY = 'organicGalleryCloudflareBridgeWriteToken';`
@@ -44,6 +44,18 @@ source = source
     "  function supportedDoi(doi) {\n    return validDoi(doi) && /^10\\.(?:1021|1002|1038|1126)\\//i.test(doi.trim());\n  }",
     "  function supportedDoi(doi) {\n    return validDoi(doi);\n  }"
   );
+
+const robustnessRewrites = [
+  ['const REQUEST_TIMEOUT = 22000;', 'const REQUEST_TIMEOUT = 35000;'],
+  ['const BRIDGE_RETRY_COOLDOWN_MS = 2 * 60 * 1000;', 'const BRIDGE_RETRY_COOLDOWN_MS = 6 * 60 * 60 * 1000;'],
+  ['const scale = Math.min(1, 1900 / width, 1350 / height);', 'const scale = Math.min(1, 2800 / width, 2000 / height);'],
+  ["if (dataUrl.length > 2500000) dataUrl = canvas.toDataURL('image/jpeg', 0.74);", "if (dataUrl.length > 4800000) dataUrl = canvas.toDataURL('image/jpeg', 0.84);"],
+  ['if (!requiresRasterization && image.buffer.byteLength <= 1650000) return bufferToDataUrl(image.buffer, image.mime);', 'if (!requiresRasterization && image.buffer.byteLength <= 3800000) return bufferToDataUrl(image.buffer, image.mime);'],
+];
+for (const [before, after] of robustnessRewrites) {
+  if (!source.includes(before)) throw new Error(`Source Bridge robustness anchor changed: ${before}`);
+  source = source.replace(before, after);
+}
 
 if (!source.includes(`// @connect      ${targetApiHost}`)) {
   const grantAnchor = '// @grant        GM_registerMenuCommand';
