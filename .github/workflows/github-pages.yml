@@ -12,6 +12,7 @@ on:
       - 'cloudflare/scripts/build-pages-mirror-v2.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
       - 'cloudflare/scripts/snapshot-production-static.mjs'
+      - 'cloudflare/scripts/sync-curated-cloudflare.mjs'
       - 'public/curated-supplement.json'
       - 'public/papers.gz.b64'
       - 'public/total-synthesis.json'
@@ -54,6 +55,12 @@ jobs:
       - name: Snapshot current literature files
         run: node cloudflare/scripts/snapshot-production-static.mjs
 
+      - name: Sync curated literature into Cloudflare repair queue
+        env:
+          GALLERY_BACKEND: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: node cloudflare/scripts/sync-curated-cloudflare.mjs
+
       - name: Generate GitHub Pages VPN Bridge
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery.zhou526316.workers.dev
@@ -87,6 +94,7 @@ jobs:
           grep -F "// @version      1.0.1" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @connect      organic-synthesis-gallery.zhou526316.workers.dev" dist/gallery-vpn-bridge.user.js
+          grep -R -F 'gallery-hires-viewer' dist/assets >/dev/null
           node - <<'NODE'
           const fs = require('fs');
           const manifest = JSON.parse(fs.readFileSync('dist/media-index.json', 'utf8'));
