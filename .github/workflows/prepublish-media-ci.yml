@@ -8,8 +8,10 @@ on:
       - '.github/workflows/prepublish-media-ci.yml'
       - '.github/workflows/github-pages.yml'
       - 'cloudflare/scripts/build-pages-mirror-v2.mjs'
+      - 'cloudflare/scripts/annotate-media-inventory.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
       - 'cloudflare/scripts/snapshot-production-static.mjs'
+      - 'cloudflare/scripts/sync-curated-cloudflare.mjs'
       - 'public/curated-supplement.json'
       - 'src/**'
       - 'index.html'
@@ -28,6 +30,11 @@ jobs:
           node-version: '22'
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Syntax-check sync and media scripts
+        run: |
+          node --check cloudflare/scripts/sync-curated-cloudflare.mjs
+          node --check cloudflare/scripts/annotate-media-inventory.mjs
+          node --check cloudflare/scripts/build-pages-mirror-v2.mjs
       - name: Snapshot current static literature
         run: node cloudflare/scripts/snapshot-production-static.mjs
       - name: Mirror live media from D1/R2
@@ -35,6 +42,10 @@ jobs:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
           PAGES_MEDIA_CONCURRENCY: '8'
         run: node cloudflare/scripts/build-pages-mirror-v2.mjs
+      - name: Annotate strict TOC versus figure fallback state
+        env:
+          GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+        run: node cloudflare/scripts/annotate-media-inventory.mjs
       - name: Merge curated literature and titles
         run: node cloudflare/scripts/merge-curated-pages.mjs
       - name: Build Gallery
@@ -51,11 +62,13 @@ jobs:
           const fs=require('fs');
           const manifest=JSON.parse(fs.readFileSync('dist/media-index.json','utf8'));
           const items=Object.values(manifest.items||{});
-          const toc=items.filter(x=>x?.toc?.available&&x.toc.imageUrl).length;
+          const realToc=items.filter(x=>x?.inventory?.tocStored===true).length;
+          const fallback=items.filter(x=>x?.inventory?.tocMissing===true&&Number(x?.inventory?.figureCount||0)>0).length;
           const figures=items.reduce((n,x)=>n+(x?.figures?.figures?.length||0),0);
           const supplement=JSON.parse(fs.readFileSync('dist/literature-supplement.json','utf8'));
           const remote=(JSON.stringify(manifest).match(/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//g)||[]).length;
           if (remote) throw new Error(`remote media URLs remain: ${remote}`);
           if (!items.length || !supplement.papers?.length) throw new Error('merged build is empty');
-          console.log('PREPUBLISH_SUMMARY', JSON.stringify({mediaItems:items.length,toc,figures,supplementPapers:supplement.papers.length}));
+          if (!items.every(x=>x.inventory&&typeof x.inventory.status==='string')) throw new Error('strict inventory annotation missing');
+          console.log('PREPUBLISH_SUMMARY', JSON.stringify({mediaItems:items.length,realToc,fallback,figures,supplementPapers:supplement.papers.length}));
           NODE
