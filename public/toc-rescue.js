@@ -1,5 +1,6 @@
 (() => {
   const DOI_RE = /^10\.\d{4,9}\/\S+$/i;
+  const VIEWPORT_MARGIN = 1200;
   const attempts = new Map();
   let manifestPromise = null;
   let scanTimer = null;
@@ -16,6 +17,11 @@
       .replace(/^doi:\s*/i, '')
       .replace(/[?#].*$/, '');
     return DOI_RE.test(cleaned) ? cleaned : null;
+  }
+
+  function isNearViewport(slot) {
+    const rect = slot.getBoundingClientRect();
+    return rect.bottom >= -VIEWPORT_MARGIN && rect.top <= window.innerHeight + VIEWPORT_MARGIN;
   }
 
   async function loadManifest() {
@@ -116,6 +122,7 @@
     const manifest = await loadManifest();
     const items = manifest?.items || {};
     for (const slot of document.querySelectorAll('.toc-slot[data-doi]')) {
+      if (!isNearViewport(slot)) continue;
       const doi = normalizeDoi(slot.dataset.doi);
       if (!doi) continue;
       const imageInfo = pickLargeImage(items[doi]);
@@ -133,10 +140,11 @@
     }, delay);
   }
 
-  const observer = new MutationObserver(() => scheduleScan(20));
+  const observer = new MutationObserver(() => scheduleScan(30));
   observer.observe(document.documentElement, { childList: true, subtree: true });
   window.addEventListener('pageshow', () => scheduleScan(0));
   window.addEventListener('scroll', () => scheduleScan(50), { passive: true });
+  window.addEventListener('resize', () => scheduleScan(80), { passive: true });
   window.addEventListener('gallery-assets-updated', () => {
     manifestPromise = null;
     scheduleScan(0);
