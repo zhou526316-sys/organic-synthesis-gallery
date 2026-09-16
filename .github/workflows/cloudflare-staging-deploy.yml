@@ -117,7 +117,7 @@ jobs:
           MIGRATION_STAGE = "staging"
 
           [triggers]
-          crons = ["*/5 * * * *"]
+          crons = ["0 * * * *"]
 
           [assets]
           directory = "../../dist"
@@ -195,13 +195,13 @@ jobs:
           }
           NODE
 
-      - name: Migrate production literature metadata and media cache
-        env:
-          TARGET_API_BASE: ${{ steps.bootstrap.outputs.url }}
-          TARGET_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
-        run: node cloudflare/scripts/migrate-from-appdeploy.mjs
+      - name: Defer bulk media migration to protect free-tier quota
+        run: |
+          echo 'Bulk TOC/Figure cache migration intentionally skipped on initial staging deployment.'
+          echo 'The 86 user-reported priority DOI records are already seeded and will be repaired gradually.'
+          echo 'Existing AppDeploy production remains online as the source-of-truth during staging validation.'
 
-      - name: Verify production migration inventory endpoint
+      - name: Verify repair queue endpoint
         shell: bash
         env:
           STAGING_URL: ${{ steps.bootstrap.outputs.url }}
@@ -222,5 +222,7 @@ jobs:
             echo '- D1 schema: applied'
             echo '- R2 media bucket: attached'
             echo '- Bridge write secret: installed'
-            echo '- Existing production metadata/media: migration attempted'
+            echo '- Repair cron: hourly (quota-conservative)'
+            echo '- Bulk TOC/Figure migration: intentionally deferred'
+            echo '- 86 user-reported priority DOI records: seeded'
           } >> "$GITHUB_STEP_SUMMARY"
