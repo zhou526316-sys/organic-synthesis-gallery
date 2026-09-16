@@ -10,7 +10,13 @@ on:
       - '.github/workflows/github-pages.yml'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
+      - 'cloudflare/scripts/merge-curated-pages.mjs'
       - 'cloudflare/scripts/snapshot-production-static.mjs'
+      - 'public/curated-supplement.json'
+      - 'public/papers.gz.b64'
+      - 'public/total-synthesis.json'
+      - 'public/manual-supplement.json'
+      - 'public/final-audit-supplement.json'
       - 'src/**'
       - 'index.html'
       - 'vite.config.ts'
@@ -61,6 +67,9 @@ jobs:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
           PAGES_MEDIA_CONCURRENCY: '8'
 
+      - name: Merge assistant-audited literature and bilingual titles
+        run: node cloudflare/scripts/merge-curated-pages.mjs
+
       - name: Build static Gallery
         run: npm run build
 
@@ -86,7 +95,12 @@ jobs:
           const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
           if (!items.length) throw new Error('media-index is empty');
           if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
-          console.log(JSON.stringify({ manifestItems: items.length, figures }));
+          const supplement = JSON.parse(fs.readFileSync('dist/literature-supplement.json', 'utf8'));
+          const dois = new Set((supplement.papers || []).map(p => String(p.doi || '').toLowerCase()));
+          if (!dois.has('10.1038/s41467-026-77774-9')) throw new Error('curated literature supplement was not merged');
+          const translations = JSON.parse(fs.readFileSync('dist/title-translations-zh.json', 'utf8'));
+          if (!(translations.translations || []).some(x => x.title === 'Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage' && x.zh)) throw new Error('curated Chinese title was not merged');
+          console.log(JSON.stringify({ manifestItems: items.length, figures, curatedSupplement: true }));
           NODE
 
       - name: Upload Pages artifact
