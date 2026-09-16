@@ -18,6 +18,7 @@ async function preloadChineseTitleCache(): Promise<void> {
   }
 }
 
-void preloadChineseTitleCache().finally(() => {
-  void import('./main');
+void preloadChineseTitleCache().finally(async () => {
+  await import('./main');
+  await import('./media-enhancements');
 });
