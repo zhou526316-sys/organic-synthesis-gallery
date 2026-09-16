@@ -1,0 +1,93 @@
+name: Deploy GitHub Pages frontend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - migration/cloudflare
+    paths:
+      - '.github/workflows/github-pages.yml'
+      - 'cloudflare/scripts/build-pages-mirror.mjs'
+      - 'cloudflare/scripts/snapshot-production-static.mjs'
+      - 'src/**'
+      - 'index.html'
+      - 'vite.config.ts'
+      - 'package.json'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Snapshot current literature files
+        run: node cloudflare/scripts/snapshot-production-static.mjs
+
+      - name: Mirror media and metadata for static Pages
+        run: node cloudflare/scripts/build-pages-mirror.mjs
+        env:
+          GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+          PAGES_MEDIA_CONCURRENCY: '8'
+
+      - name: Build static Gallery
+        run: npm run build
+
+      - name: Verify self-contained artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test -f dist/media-index.json
+          test -f dist/literature-supplement.json
+          test -f dist/title-translations-zh.json
+          test -f dist/paper-title-resolutions.json
+          test -d dist/media-mirror
+          node - <<'NODE'
+          const fs = require('fs');
+          const manifest = JSON.parse(fs.readFileSync('dist/media-index.json', 'utf8'));
+          const items = Object.values(manifest.items || {});
+          const remote = JSON.stringify(manifest).match(/https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//g) || [];
+          const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
+          if (!items.length) throw new Error('media-index is empty');
+          if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
+          console.log(JSON.stringify({ manifestItems: items.length, figures }));
+          NODE
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
