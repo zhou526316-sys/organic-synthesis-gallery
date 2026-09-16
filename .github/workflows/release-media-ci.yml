@@ -1,0 +1,88 @@
+name: Validate media quality release
+
+on:
+  push:
+    branches:
+      - release/media-quality-20260916
+    paths:
+      - '.github/workflows/release-media-ci.yml'
+      - '.github/workflows/github-pages.yml'
+      - '.github/workflows/media-quality-repair.yml'
+      - 'cloudflare/scripts/build-pages-mirror-v2.mjs'
+      - 'cloudflare/scripts/annotate-media-inventory.mjs'
+      - 'cloudflare/scripts/sync-curated-cloudflare.mjs'
+      - 'cloudflare/scripts/media-quality-repair.mjs'
+      - 'src/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      BACKEND: https://organic-synthesis-gallery.zhou526316.workers.dev
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Verify repository baseline and scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s public/papers.gz.b64
+          test -s public/total-synthesis.json
+          test -s public/manual-supplement.json
+          test -s public/final-audit-supplement.json
+          test -n "$BRIDGE_WRITE_TOKEN"
+          node --check cloudflare/scripts/sync-curated-cloudflare.mjs
+          node --check cloudflare/scripts/media-quality-repair.mjs
+          node --check cloudflare/scripts/build-pages-mirror-v2.mjs
+          node --check cloudflare/scripts/annotate-media-inventory.mjs
+      - name: Seed curated DOI into live repair queue
+        env:
+          GALLERY_BACKEND: ${{ env.BACKEND }}
+        run: node cloudflare/scripts/sync-curated-cloudflare.mjs | tee /tmp/curated-sync.log
+      - name: Generate Pages Bridge
+        env:
+          TARGET_API_BASE: ${{ env.BACKEND }}
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
+        run: node cloudflare/scripts/build-cloudflare-bridge.mjs
+      - name: Mirror live media
+        env:
+          GALLERY_BACKEND_SOURCE: ${{ env.BACKEND }}
+          PAGES_MEDIA_CONCURRENCY: '8'
+        run: node cloudflare/scripts/build-pages-mirror-v2.mjs
+      - name: Annotate strict media inventory
+        env:
+          GALLERY_BACKEND_SOURCE: ${{ env.BACKEND }}
+        run: node cloudflare/scripts/annotate-media-inventory.mjs | tee /tmp/inventory.log
+      - name: Merge curated literature
+        run: node cloudflare/scripts/merge-curated-pages.mjs
+      - name: Build frontend
+        run: npm run build
+      - name: Verify release artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -F 'gallery-hires-viewer' dist/assets >/dev/null
+          node - <<'NODE'
+          const fs=require('fs');
+          const manifest=JSON.parse(fs.readFileSync('dist/media-index.json','utf8'));
+          const items=Object.values(manifest.items||{});
+          const realToc=items.filter(x=>x?.inventory?.tocStored===true).length;
+          const fallback=items.filter(x=>x?.inventory?.tocMissing===true&&Number(x?.inventory?.figureCount||0)>0).length;
+          const figures=items.reduce((n,x)=>n+(x?.figures?.figures?.length||0),0);
+          if(!items.length) throw new Error('media manifest empty');
+          if(!items.every(x=>x.inventory&&typeof x.inventory.status==='string')) throw new Error('strict inventory missing');
+          if((JSON.stringify(manifest).match(/workers\.dev\/media\//g)||[]).length) throw new Error('remote media remains in Pages artifact');
+          console.log('RELEASE_MEDIA_SUMMARY',JSON.stringify({items:items.length,realToc,fallback,figures}));
+          NODE
+          grep '^CURATED_SYNC_SUMMARY ' /tmp/curated-sync.log
+          grep '^MEDIA_INVENTORY_ANNOTATION ' /tmp/inventory.log
