@@ -9,6 +9,7 @@ on:
       - 'cloudflare/schema.sql'
       - 'cloudflare/worker/src/index.js'
       - 'cloudflare/worker/src/user-ui.js'
+      - 'cloudflare/worker/src/integrations.js'
   workflow_dispatch:
 
 permissions:
@@ -27,6 +28,23 @@ jobs:
       D1_NAME: organic-synthesis-gallery
       R2_BUCKET: organic-synthesis-gallery-media
       WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      WECHAT_OPEN_APP_ID: ${{ secrets.WECHAT_OPEN_APP_ID }}
+      WECHAT_OPEN_APP_SECRET: ${{ secrets.WECHAT_OPEN_APP_SECRET }}
+      QQ_CONNECT_APP_ID: ${{ secrets.QQ_CONNECT_APP_ID }}
+      QQ_CONNECT_APP_KEY: ${{ secrets.QQ_CONNECT_APP_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+      WECHAT_PAY_MCH_ID: ${{ secrets.WECHAT_PAY_MCH_ID }}
+      WECHAT_PAY_APP_ID: ${{ secrets.WECHAT_PAY_APP_ID }}
+      WECHAT_PAY_SERIAL_NO: ${{ secrets.WECHAT_PAY_SERIAL_NO }}
+      WECHAT_PAY_PRIVATE_KEY: ${{ secrets.WECHAT_PAY_PRIVATE_KEY }}
+      WECHAT_PAY_API_V3_KEY: ${{ secrets.WECHAT_PAY_API_V3_KEY }}
+      WECHAT_PAY_PLATFORM_PUBLIC_KEY: ${{ secrets.WECHAT_PAY_PLATFORM_PUBLIC_KEY }}
+      ALIPAY_APP_ID: ${{ secrets.ALIPAY_APP_ID }}
+      ALIPAY_PRIVATE_KEY: ${{ secrets.ALIPAY_PRIVATE_KEY }}
+      ALIPAY_PUBLIC_KEY: ${{ secrets.ALIPAY_PUBLIC_KEY }}
 
     steps:
       - name: Checkout main
@@ -114,6 +132,28 @@ jobs:
         working-directory: cloudflare/worker
         run: npx wrangler d1 execute "$D1_NAME" --remote --file ../schema.sql --config wrangler.user-ui.toml
 
+      - name: Sync configured login and payment secrets
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs = require('fs');
+          const names = [
+            'GOOGLE_CLIENT_ID','GOOGLE_CLIENT_SECRET','WECHAT_OPEN_APP_ID','WECHAT_OPEN_APP_SECRET',
+            'QQ_CONNECT_APP_ID','QQ_CONNECT_APP_KEY','RESEND_API_KEY','EMAIL_FROM',
+            'WECHAT_PAY_MCH_ID','WECHAT_PAY_APP_ID','WECHAT_PAY_SERIAL_NO','WECHAT_PAY_PRIVATE_KEY',
+            'WECHAT_PAY_API_V3_KEY','WECHAT_PAY_PLATFORM_PUBLIC_KEY','ALIPAY_APP_ID','ALIPAY_PRIVATE_KEY','ALIPAY_PUBLIC_KEY'
+          ];
+          const values = Object.fromEntries(names.flatMap(name => process.env[name] ? [[name, process.env[name]]] : []));
+          fs.writeFileSync('/tmp/user-integrations-secrets.json', JSON.stringify(values));
+          console.log(`Prepared ${Object.keys(values).length} configured integration secrets.`);
+          NODE
+          if [ "$(node -p "Object.keys(require('/tmp/user-integrations-secrets.json')).length")" -gt 0 ]; then
+            npx wrangler secret bulk /tmp/user-integrations-secrets.json --config wrangler.user-ui.toml >/dev/null
+          fi
+          rm -f /tmp/user-integrations-secrets.json
+
       - name: Dry-run Worker bundle
         working-directory: cloudflare/worker
         run: npx wrangler deploy --dry-run --config wrangler.user-ui.toml --outdir .wrangler-user-ui-dry-run
@@ -132,11 +172,16 @@ jobs:
             -H 'origin: https://zhou526316-sys.github.io' \
             --data '{"dois":[]}' \
             "$WORKER_URL/api/user-ui/reader-counts" > /tmp/counts.json
+          curl --fail --silent --show-error --retry 5 --retry-delay 2 \
+            -H 'origin: https://zhou526316-sys.github.io' \
+            "$WORKER_URL/api/user-ui/integrations" > /tmp/integrations.json
           node - <<'NODE'
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json', 'utf8'));
           const counts = JSON.parse(fs.readFileSync('/tmp/counts.json', 'utf8'));
+          const integrations = JSON.parse(fs.readFileSync('/tmp/integrations.json', 'utf8'));
           if (!health.ok || !health.d1 || !health.r2 || !health.writeAuth) throw new Error(`Healthcheck failed: ${JSON.stringify(health)}`);
           if (!counts || typeof counts.counts !== 'object') throw new Error(`Reader count route failed: ${JSON.stringify(counts)}`);
-          console.log(JSON.stringify({ health: true, userUiRoutes: true, mediaMigration: false }));
+          if (!integrations?.auth || !integrations?.payments) throw new Error(`Integration route failed: ${JSON.stringify(integrations)}`);
+          console.log(JSON.stringify({ health: true, userUiRoutes: true, integrations, mediaMigration: false }));
           NODE
