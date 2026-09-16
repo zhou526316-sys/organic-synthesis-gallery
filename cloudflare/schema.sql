@@ -136,3 +136,80 @@ CREATE TABLE IF NOT EXISTS paper_feedback (
 );
 CREATE INDEX IF NOT EXISTS idx_paper_feedback_status_created
   ON paper_feedback(status, created_at DESC);
+
+-- Formal user accounts. OAuth identities remain separate until the user explicitly links them.
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  display_name TEXT,
+  email TEXT,
+  avatar_url TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS auth_identities (
+  provider TEXT NOT NULL,
+  provider_user_id TEXT NOT NULL,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  email TEXT,
+  display_name TEXT,
+  avatar_url TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (provider, provider_user_id)
+);
+CREATE INDEX IF NOT EXISTS idx_auth_identities_user ON auth_identities(user_id);
+
+CREATE TABLE IF NOT EXISTS auth_states (
+  state TEXT PRIMARY KEY,
+  provider TEXT NOT NULL,
+  return_to TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_auth_states_expiry ON auth_states(expires_at);
+
+-- OAuth/email callbacks exchange this short-lived one-time code for an opaque bearer session.
+CREATE TABLE IF NOT EXISTS login_exchange_codes (
+  code_hash TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_login_exchange_expiry ON login_exchange_codes(expires_at);
+
+CREATE TABLE IF NOT EXISTS user_sessions (
+  token_hash TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_user ON user_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_expiry ON user_sessions(expires_at);
+
+CREATE TABLE IF NOT EXISTS email_login_tokens (
+  token_hash TEXT PRIMARY KEY,
+  email TEXT NOT NULL,
+  return_to TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_email_login_expiry ON email_login_tokens(expires_at);
+
+-- Support-site orders. Provider callbacks are the only path that can mark an order paid.
+CREATE TABLE IF NOT EXISTS support_orders (
+  id TEXT PRIMARY KEY,
+  provider TEXT NOT NULL CHECK (provider IN ('wechat', 'alipay')),
+  amount_cents INTEGER NOT NULL CHECK (amount_cents >= 100),
+  status TEXT NOT NULL CHECK (status IN ('created', 'pending', 'paid', 'failed', 'closed')),
+  profile_id TEXT,
+  user_id TEXT REFERENCES users(id) ON DELETE SET NULL,
+  provider_order_id TEXT,
+  detail_json TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_support_orders_status_created
+  ON support_orders(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_support_orders_user_created
+  ON support_orders(user_id, created_at DESC);
