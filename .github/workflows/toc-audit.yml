@@ -1,0 +1,81 @@
+name: Audit and repair TOC gaps
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - migration/cloudflare
+    paths:
+      - 'TOC_AUDIT_NOW'
+      - '.github/workflows/toc-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit-repair:
+    runs-on: ubuntu-latest
+    env:
+      BACKEND: https://organic-synthesis-gallery.zhou526316.workers.dev
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+    steps:
+      - name: Validate secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$BRIDGE_WRITE_TOKEN"
+
+      - name: Capture pre-repair audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error "$BACKEND/api/media-audit" > /tmp/audit-before.json
+          curl --fail --silent --show-error "$BACKEND/api/media/repair-status" > /tmp/repair-before.json
+          curl --fail --silent --show-error "$BACKEND/api/media/bridge-queue" > /tmp/bridge-before.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const audit=JSON.parse(fs.readFileSync('/tmp/audit-before.json','utf8'));
+          const repair=JSON.parse(fs.readFileSync('/tmp/repair-before.json','utf8'));
+          const bridge=JSON.parse(fs.readFileSync('/tmp/bridge-before.json','utf8'));
+          console.log('AUDIT_BEFORE', JSON.stringify(audit.summary || audit));
+          console.log('REPAIR_BEFORE', JSON.stringify(repair.summary || repair));
+          console.log('BRIDGE_BEFORE', JSON.stringify({count:Array.isArray(bridge.items)?bridge.items.length:null}));
+          NODE
+
+      - name: Run conservative priority repair rounds
+        shell: bash
+        run: |
+          set -euo pipefail
+          for round in 1 2 3 4; do
+            echo "REPAIR_ROUND $round"
+            curl --fail --silent --show-error \
+              -H "Authorization: Bearer $BRIDGE_WRITE_TOKEN" \
+              -H 'Content-Type: application/json' \
+              -d '{"limit":4}' \
+              "$BACKEND/api/media/repair-batch" | tee "/tmp/repair-$round.json"
+            echo
+          done
+
+      - name: Capture post-repair audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error "$BACKEND/api/media-audit" > /tmp/audit-after.json
+          curl --fail --silent --show-error "$BACKEND/api/media/repair-status" > /tmp/repair-after.json
+          curl --fail --silent --show-error "$BACKEND/api/media/bridge-queue" > /tmp/bridge-after.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const before=JSON.parse(fs.readFileSync('/tmp/audit-before.json','utf8'));
+          const after=JSON.parse(fs.readFileSync('/tmp/audit-after.json','utf8'));
+          const repair=JSON.parse(fs.readFileSync('/tmp/repair-after.json','utf8'));
+          const bridge=JSON.parse(fs.readFileSync('/tmp/bridge-after.json','utf8'));
+          const rounds=[1,2,3,4].map(i=>JSON.parse(fs.readFileSync(`/tmp/repair-${i}.json`,'utf8')));
+          const results=rounds.flatMap(r=>r.results||[]);
+          const causes={};
+          for (const r of results) causes[r.rootCause]=(causes[r.rootCause]||0)+1;
+          console.log('AUDIT_AFTER', JSON.stringify(after.summary || after));
+          console.log('REPAIR_AFTER', JSON.stringify(repair.summary || repair));
+          console.log('BRIDGE_AFTER', JSON.stringify({count:Array.isArray(bridge.items)?bridge.items.length:null}));
+          console.log('REPAIR_RESULTS', JSON.stringify({processed:results.length, complete:results.filter(r=>r.complete).length, progress:results.filter(r=>r.progress).length, causes}));
+          console.log('AUDIT_ISSUES', JSON.stringify((after.issues||[]).slice(0,120)));
+          NODE
