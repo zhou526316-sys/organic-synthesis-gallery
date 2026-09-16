@@ -47,11 +47,20 @@ jobs:
           GALLERY_SITE: https://zhou526316-sys.github.io/organic-synthesis-gallery
         run: node cloudflare/scripts/audit-literature.mjs
 
+      - name: Upload audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: literature-audit
+          path: audit/latest.json
+          retention-days: 14
+
       - name: Commit latest audit report
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git rebase origin/main
           git add audit/latest.json
           if git diff --cached --quiet; then
             echo 'Audit report unchanged.'
@@ -59,10 +68,3 @@ jobs:
             git commit -m 'audit: refresh literature completeness report'
             git push origin HEAD:main
           fi
-
-      - name: Upload audit artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: literature-audit
-          path: audit/latest.json
-          retention-days: 14
