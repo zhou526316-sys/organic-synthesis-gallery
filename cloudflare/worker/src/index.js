@@ -26,6 +26,7 @@ import {
   importLiteratureSupplement,
   importTitleTranslations,
 } from './metadata.js';
+import { runRepairBatch } from './repair.js';
 import { resolvePaperTitles } from './title-resolution.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
@@ -130,6 +131,7 @@ async function handleApi(request, env) {
       '/api/article-figures/reset',
       '/api/media/attempt',
       '/api/media/diagnose',
+      '/api/media/repair-batch',
       '/api/title-translations/zh/import',
       '/api/literature/supplement/import',
     ].includes(url.pathname);
@@ -155,6 +157,10 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/diagnose') {
     return resultResponse(await diagnoseMedia(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/repair-batch') {
+    const payload = await readJson(request);
+    return json(await runRepairBatch(env, payload?.limit));
   }
   if (request.method === 'POST' && url.pathname === '/api/title-translations/zh/import') {
     return resultResponse(await importTitleTranslations(env, await readJson(request)));
@@ -186,8 +192,12 @@ export default {
   },
 
   async scheduled(controller, env, ctx) {
-    // This will replace the AppDeploy media-repair cron jobs after the
-    // publisher-retrieval functions are migrated and validated.
-    ctx.waitUntil(Promise.resolve());
+    ctx.waitUntil(
+      runRepairBatch(env, 2).then(result => {
+        console.log('MEDIA_REPAIR_CRON', JSON.stringify({ processed: result.processed, results: result.results }));
+      }).catch(error => {
+        console.error('MEDIA_REPAIR_CRON_FAILED', error instanceof Error ? error.message : String(error));
+      })
+    );
   },
 };
