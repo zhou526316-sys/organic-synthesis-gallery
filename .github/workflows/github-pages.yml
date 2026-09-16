@@ -106,7 +106,7 @@ jobs:
           test -f dist/gallery-vpn-bridge.user.js
           test -f dist/toc-rescue.js
           test -d dist/media-mirror
-          grep -F "// @version      1.0.1" dist/gallery-vpn-bridge.user.js
+          grep -F "// @version      1.0.2" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @connect      organic-synthesis-gallery.zhou526316.workers.dev" dist/gallery-vpn-bridge.user.js
           node - <<'NODE'
