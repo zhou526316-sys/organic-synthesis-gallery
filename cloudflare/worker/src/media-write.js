@@ -233,9 +233,10 @@ export async function importFigure(request, env, payload) {
          sort_order = excluded.sort_order,
          updated_at = excluded.updated_at
        WHERE
-         COALESCE(excluded.width, 0) * COALESCE(excluded.height, 0) >=
-         COALESCE(figure_assets.width, 0) * COALESCE(figure_assets.height, 0)
-         OR figure_assets.updated_at <= excluded.updated_at`
+         COALESCE(figure_assets.width, 0) = 0
+         OR COALESCE(figure_assets.height, 0) = 0
+         OR COALESCE(excluded.width, 0) * COALESCE(excluded.height, 0) >=
+            COALESCE(figure_assets.width, 0) * COALESCE(figure_assets.height, 0)`
     ).bind(doi, key, sourceId, label, caption, articleUrl, r2Key, contentHash, width, height, sortOrder, now).run();
   }
 
