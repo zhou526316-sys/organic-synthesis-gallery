@@ -1,0 +1,135 @@
+name: Repair TOC and media quality
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '37 */12 * * *'
+  push:
+    branches:
+      - main
+      - migration/cloudflare
+    paths:
+      - 'MEDIA_QUALITY_NOW'
+      - '.github/workflows/media-quality-repair.yml'
+      - 'cloudflare/scripts/media-quality-repair.mjs'
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: media-quality-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    env:
+      BACKEND: https://organic-synthesis-gallery.zhou526316.workers.dev
+      PAGES_SITE: https://zhou526316-sys.github.io/organic-synthesis-gallery
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate write secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$BRIDGE_WRITE_TOKEN"
+
+      - name: Syntax-check quality repairer
+        run: node --check cloudflare/scripts/media-quality-repair.mjs
+
+      - name: Capture pre-repair state
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 4 "$BACKEND/api/media/bridge-queue" > /tmp/queue-before.json
+          curl --fail --silent --show-error --retry 4 "$BACKEND/api/literature/supplement" > /tmp/supplement-live.json
+          curl --fail --silent --show-error --retry 3 "$PAGES_SITE/literature-supplement.json" > /tmp/supplement-pages.json || echo '{"papers":[]}' > /tmp/supplement-pages.json
+          node - <<'NODE'
+          const fs=require('fs'), crypto=require('crypto');
+          const queue=JSON.parse(fs.readFileSync('/tmp/queue-before.json','utf8'));
+          const live=fs.readFileSync('/tmp/supplement-live.json');
+          const pages=fs.readFileSync('/tmp/supplement-pages.json');
+          const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+          console.log('QUALITY_BEFORE', JSON.stringify({queue:queue.count ?? queue.items?.length ?? null, supplementChanged:sha(live)!==sha(pages)}));
+          NODE
+
+      - name: Run conservative publisher-quality repair
+        id: quality
+        shell: bash
+        env:
+          GALLERY_BACKEND: ${{ env.BACKEND }}
+          MEDIA_QUALITY_LIMIT: ${{ github.event_name == 'schedule' && '18' || '42' }}
+          MEDIA_QUALITY_CONCURRENCY: '3'
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/media-quality-repair.mjs 2>&1 | tee /tmp/media-quality.log
+          SUMMARY=$(grep '^MEDIA_QUALITY_SUMMARY ' /tmp/media-quality.log | tail -1 | sed 's/^MEDIA_QUALITY_SUMMARY //')
+          test -n "$SUMMARY"
+          echo "summary=$SUMMARY" >> "$GITHUB_OUTPUT"
+          UPDATED=$(node -e 'const x=JSON.parse(process.argv[1]); process.stdout.write(String((x.updated||0)>0))' "$SUMMARY")
+          echo "updated=$UPDATED" >> "$GITHUB_OUTPUT"
+
+      - name: Run small cloud repair batch for remaining queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 3 \
+            -H "Authorization: Bearer $BRIDGE_WRITE_TOKEN" \
+            -H 'Content-Type: application/json' \
+            -d '{"limit":4}' \
+            "$BACKEND/api/media/repair-batch" > /tmp/cloud-repair.json
+          cat /tmp/cloud-repair.json
+
+      - name: Decide whether static Pages needs refresh
+        id: refresh
+        shell: bash
+        env:
+          QUALITY_UPDATED: ${{ steps.quality.outputs.updated }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 4 "$BACKEND/api/media/bridge-queue" > /tmp/queue-after.json
+          node - <<'NODE' > /tmp/refresh.txt
+          const fs=require('fs'), crypto=require('crypto');
+          const live=fs.readFileSync('/tmp/supplement-live.json');
+          const pages=fs.readFileSync('/tmp/supplement-pages.json');
+          const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const supplementChanged=sha(live)!==sha(pages);
+          const mediaUpdated=process.env.QUALITY_UPDATED==='true';
+          process.stdout.write(String(supplementChanged||mediaUpdated));
+          NODE
+          echo "refresh=$(cat /tmp/refresh.txt)" >> "$GITHUB_OUTPUT"
+          node - <<'NODE'
+          const fs=require('fs');
+          const before=JSON.parse(fs.readFileSync('/tmp/queue-before.json','utf8'));
+          const after=JSON.parse(fs.readFileSync('/tmp/queue-after.json','utf8'));
+          console.log('QUALITY_AFTER', JSON.stringify({before:before.count ?? before.items?.length ?? null, after:after.count ?? after.items?.length ?? null}));
+          NODE
+
+      - name: Refresh GitHub Pages when live data changed
+        if: steps.refresh.outputs.refresh == 'true' && github.ref_name == 'main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run github-pages.yml --ref main
+
+      - name: Publish repair summary
+        env:
+          SUMMARY: ${{ steps.quality.outputs.summary }}
+          REFRESH: ${{ steps.refresh.outputs.refresh }}
+        run: |
+          {
+            echo '## Media quality repair'
+            echo
+            echo "Quality: $SUMMARY"
+            echo "Pages refresh needed: $REFRESH"
+            echo
+            echo 'Only missing semantic TOC or demonstrably higher-resolution same-semantic assets are written.'
+          } >> "$GITHUB_STEP_SUMMARY"
