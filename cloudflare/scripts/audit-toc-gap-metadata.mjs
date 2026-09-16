@@ -4,7 +4,9 @@ import { readFile, writeFile } from 'node:fs/promises';
 const GAP_FILE = process.env.GAP_FILE || 'audit/toc-gap-dois-2026-09-16.json';
 const REPORT_FILE = process.env.REPORT_FILE || 'audit/toc-gap-metadata-report.json';
 const CROSSREF_BASE = 'https://api.crossref.org';
-const CONCURRENCY = Math.max(1, Math.min(8, Number(process.env.AUDIT_CONCURRENCY || 5)));
+const REQUEST_DELAY_MS = Math.max(300, Number(process.env.CROSSREF_DELAY_MS || 550));
+
+function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
 function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
@@ -38,6 +40,7 @@ function normalizeText(value) {
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
+    .replace(/<[^>]+>/g, ' ')
     .replace(/&[a-z]+;/g, ' ')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
@@ -50,7 +53,7 @@ function tokens(value) {
 function titleSimilarity(a, b) {
   const A = tokens(a);
   const B = tokens(b);
-  if (!A.size || !B.size) return 0;
+  if (!A.size || !B.size) return null;
   let intersection = 0;
   for (const token of A) if (B.has(token)) intersection += 1;
   return (2 * intersection) / (A.size + B.size);
@@ -67,8 +70,8 @@ function canonicalJournal(value) {
   if (s.includes('nature chemistry')) return 'nature chemistry';
   if (s.includes('nature catalysis')) return 'nature catalysis';
   if (s.includes('nature synthesis')) return 'nature synthesis';
-  if (s === 'nature' || s.startsWith('nature ')) return s.includes('communications') ? 'nature communications' : s.includes('chemistry') ? 'nature chemistry' : s.includes('catalysis') ? 'nature catalysis' : s.includes('synthesis') ? 'nature synthesis' : 'nature';
-  if (s === 'science' || s.startsWith('science ')) return 'science';
+  if (s === 'nature') return 'nature';
+  if (s === 'science') return 'science';
   return s;
 }
 
@@ -93,24 +96,33 @@ async function loadRecords() {
     const doi = doiFromRecord(record);
     if (!doi) continue;
     const existing = byDoi.get(doi);
-    if (!existing || (!existing?.titleZh && record?.titleZh) || (!existing?.date && record?.date)) byDoi.set(doi, record);
+    if (!existing || (!existing?.title && record?.title) || (!existing?.titleZh && record?.titleZh) || (!existing?.date && record?.date)) byDoi.set(doi, record);
   }
   return byDoi;
 }
 
-async function fetchJson(url) {
-  const response = await fetch(url, {
-    headers: {
-      'Accept': 'application/json',
-      'User-Agent': 'organic-synthesis-gallery-metadata-audit/1.0 (https://github.com/zhou526316-sys/organic-synthesis-gallery)',
-    },
-    signal: AbortSignal.timeout(20000),
-  });
-  if (response.status === 404) return { status: 404, data: null };
-  const text = await response.text();
-  let data = null;
-  try { data = text ? JSON.parse(text) : null; } catch { data = null; }
-  return { status: response.status, data };
+async function fetchCrossref(url) {
+  const waits = [0, 1800, 4500, 9000];
+  let lastStatus = null;
+  for (let attempt = 0; attempt < waits.length; attempt += 1) {
+    if (waits[attempt]) await sleep(waits[attempt]);
+    await sleep(REQUEST_DELAY_MS);
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'organic-synthesis-gallery-metadata-audit/1.1 (https://github.com/zhou526316-sys/organic-synthesis-gallery)',
+      },
+      signal: AbortSignal.timeout(25000),
+    });
+    lastStatus = response.status;
+    if (response.status === 429 || response.status >= 500) continue;
+    if (response.status === 404) return { status: 404, data: null };
+    const text = await response.text();
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+    return { status: response.status, data };
+  }
+  return { status: lastStatus, data: null };
 }
 
 function crossrefTitle(message) {
@@ -122,7 +134,7 @@ function crossrefJournal(message) {
 }
 
 function scoreCandidate(record, message) {
-  const titleScore = titleSimilarity(record?.title, crossrefTitle(message));
+  const titleScore = titleSimilarity(record?.title, crossrefTitle(message)) ?? 0;
   const expectedJournal = canonicalJournal(record?.journal);
   const candidateJournal = canonicalJournal(crossrefJournal(message));
   const journalScore = expectedJournal && candidateJournal && expectedJournal === candidateJournal ? 1 : 0;
@@ -134,7 +146,7 @@ async function searchByTitle(record) {
   if (title.length < 8) return [];
   const url = `${CROSSREF_BASE}/works?query.title=${encodeURIComponent(title)}&rows=5&select=DOI,title,container-title,published-online,published-print,type`;
   try {
-    const { status, data } = await fetchJson(url);
+    const { status, data } = await fetchCrossref(url);
     if (status !== 200) return [];
     const items = Array.isArray(data?.message?.items) ? data.message.items : [];
     return items.map(item => {
@@ -171,7 +183,7 @@ async function auditOne(doi, record) {
   }
 
   try {
-    const { status, data } = await fetchJson(`${CROSSREF_BASE}/works/${encodeURIComponent(doi)}`);
+    const { status, data } = await fetchCrossref(`${CROSSREF_BASE}/works/${encodeURIComponent(doi)}`);
     result.directStatus = status;
     if (status === 200 && data?.message) {
       result.registered = true;
@@ -189,7 +201,8 @@ async function auditOne(doi, record) {
       const actualJournal = canonicalJournal(crJournal);
       result.journalMatches = Boolean(expectedJournal && actualJournal && expectedJournal === actualJournal);
 
-      if (result.titleSimilarity < 0.62) result.issue = 'title_mismatch';
+      if (!String(record?.title || '').trim()) result.issue = 'local_title_missing';
+      else if (result.titleSimilarity !== null && result.titleSimilarity < 0.62) result.issue = 'title_mismatch';
       else if (!result.journalMatches) result.issue = 'journal_mismatch';
       else if (result.crossref.doi && result.crossref.doi !== doi) result.issue = 'doi_mismatch';
       else result.issue = null;
@@ -200,7 +213,7 @@ async function auditOne(doi, record) {
     result.issue = `crossref_error:${error instanceof Error ? error.message : String(error)}`;
   }
 
-  if (result.issue) {
+  if (['doi_not_registered_in_crossref', 'title_mismatch', 'journal_mismatch', 'doi_mismatch'].includes(result.issue)) {
     const candidates = await searchByTitle(record);
     const best = candidates[0];
     if (best && best.score >= 0.78) result.candidate = best;
@@ -208,32 +221,26 @@ async function auditOne(doi, record) {
   return result;
 }
 
-async function mapLimit(items, limit, mapper) {
-  const results = new Array(items.length);
-  let cursor = 0;
-  async function worker() {
-    while (true) {
-      const index = cursor++;
-      if (index >= items.length) return;
-      results[index] = await mapper(items[index], index);
-    }
-  }
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, () => worker()));
-  return results;
-}
-
 const gapPayload = JSON.parse(await readFile(GAP_FILE, 'utf8'));
 const gapDois = [...new Set((gapPayload?.dois || []).map(normalizeDoi).filter(Boolean))];
 const records = await loadRecords();
-const results = await mapLimit(gapDois, CONCURRENCY, async doi => auditOne(doi, records.get(doi)));
+const results = [];
+for (let index = 0; index < gapDois.length; index += 1) {
+  const doi = gapDois[index];
+  const item = await auditOne(doi, records.get(doi));
+  results.push(item);
+  if ((index + 1) % 20 === 0 || index + 1 === gapDois.length) console.log(`METADATA_AUDIT_PROGRESS ${index + 1}/${gapDois.length}`);
+}
 const issues = results.filter(item => item.issue);
-const correctionCandidates = issues.filter(item => item.candidate && item.candidate.doi !== item.doi);
-const confirmed = results.filter(item => !item.issue);
+const actionableIssues = issues.filter(item => item.issue !== 'local_title_missing' && !String(item.issue).startsWith('crossref_http_'));
+const correctionCandidates = actionableIssues.filter(item => item.candidate && item.candidate.doi !== item.doi);
+const confirmed = results.filter(item => !item.issue || item.issue === 'local_title_missing');
 const summary = {
   audited: results.length,
-  confirmedMetadata: confirmed.length,
-  issues: issues.length,
-  missingLocalRecord: issues.filter(item => item.issue === 'missing_local_record').length,
+  confirmedDoiJournal: confirmed.length,
+  fullyConfirmedMetadata: results.filter(item => !item.issue).length,
+  localTitleMissing: issues.filter(item => item.issue === 'local_title_missing').length,
+  unresolvedServiceErrors: issues.filter(item => String(item.issue).startsWith('crossref_http_') || String(item.issue).startsWith('crossref_error:')).length,
   doiNotRegistered: issues.filter(item => item.issue === 'doi_not_registered_in_crossref').length,
   titleMismatch: issues.filter(item => item.issue === 'title_mismatch').length,
   journalMismatch: issues.filter(item => item.issue === 'journal_mismatch').length,
@@ -244,10 +251,11 @@ const report = {
   sourceGapFile: GAP_FILE,
   summary,
   issues,
+  actionableIssues,
   correctionCandidates,
   results,
 };
 await writeFile(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
 console.log(`METADATA_AUDIT_SUMMARY ${JSON.stringify(summary)}`);
-for (const item of issues) console.log(`METADATA_ISSUE ${JSON.stringify(item)}`);
+for (const item of actionableIssues) console.log(`METADATA_ACTIONABLE ${JSON.stringify(item)}`);
 for (const item of correctionCandidates) console.log(`CORRECTION_CANDIDATE ${JSON.stringify({ doi: item.doi, local: item.local, candidate: item.candidate })}`);
