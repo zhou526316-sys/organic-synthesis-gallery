@@ -13,6 +13,13 @@ import {
   quarantineToc,
   resetFigures,
 } from './media-write.js';
+import {
+  diagnoseMedia,
+  mediaAudit,
+  mediaDiagnostics,
+  persistMediaAttempt,
+  persistRenderReport,
+} from './diagnostics.js';
 import { resolvePaperTitles } from './title-resolution.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
@@ -65,6 +72,7 @@ async function handleApi(request, env) {
       migration: true,
       d1: Boolean(env.DB),
       r2: Boolean(env.MEDIA),
+      kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
     });
   }
@@ -91,6 +99,15 @@ async function handleApi(request, env) {
   if (request.method === 'GET' && url.pathname === '/api/media/repair-status') {
     return resultResponse(await repairStatus(request, env));
   }
+  if (request.method === 'GET' && url.pathname === '/api/media-audit') {
+    return resultResponse(await mediaAudit(env));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/media-diagnostics') {
+    return resultResponse(await mediaDiagnostics(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/render-report') {
+    return resultResponse(await persistRenderReport(env, await readJson(request)));
+  }
 
   const isWriteRoute =
     request.method === 'POST' &&
@@ -99,6 +116,8 @@ async function handleApi(request, env) {
       '/api/toc/quarantine',
       '/api/article-figures/import',
       '/api/article-figures/reset',
+      '/api/media/attempt',
+      '/api/media/diagnose',
     ].includes(url.pathname);
   if (isWriteRoute) {
     const denied = requireWriteAuthorization(request, env);
@@ -116,6 +135,12 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/reset') {
     return resultResponse(await resetFigures(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/attempt') {
+    return resultResponse(await persistMediaAttempt(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/diagnose') {
+    return resultResponse(await diagnoseMedia(env, await readJson(request)));
   }
 
   return json({
