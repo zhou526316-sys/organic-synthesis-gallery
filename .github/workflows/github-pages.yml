@@ -70,6 +70,7 @@ jobs:
         run: node cloudflare/scripts/build-pages-mirror.mjs
         env:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+          PAGES_MEDIA_FALLBACK: https://zhou526316-sys.github.io/organic-synthesis-gallery
           PAGES_MEDIA_CONCURRENCY: '8'
 
       - name: Merge assistant-audited literature and bilingual titles
@@ -104,12 +105,30 @@ jobs:
           const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
           if (!items.length) throw new Error('media-index is empty');
           if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
+
+          const requiredDois = [
+            '10.1038/s41467-026-77774-9',
+            '10.1021/jacs.6c15393',
+            '10.1021/acs.orglett.6c03266',
+            '10.1021/acscatal.6c05029',
+            '10.1002/anie.5041475',
+            '10.1038/s41467-026-77715-6',
+          ];
           const supplement = JSON.parse(fs.readFileSync('dist/literature-supplement.json', 'utf8'));
-          const dois = new Set((supplement.papers || []).map(p => String(p.doi || '').toLowerCase()));
-          if (!dois.has('10.1038/s41467-026-77774-9')) throw new Error('curated literature supplement was not merged');
+          const supplementDois = new Set((supplement.papers || []).map(p => String(p.doi || '').toLowerCase()));
+          const mandatory = JSON.parse(fs.readFileSync('dist/final-audit-supplement.json', 'utf8'));
+          const mandatoryDois = new Set((mandatory.papers || []).map(p => String(p.doi || '').toLowerCase()));
+          for (const doi of requiredDois) {
+            if (!supplementDois.has(doi)) throw new Error(`curated DOI missing from literature supplement: ${doi}`);
+            if (!mandatoryDois.has(doi)) throw new Error(`curated DOI missing from mandatory card dataset: ${doi}`);
+          }
+
           const translations = JSON.parse(fs.readFileSync('dist/title-translations-zh.json', 'utf8'));
-          if (!(translations.translations || []).some(x => x.title === 'Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage' && x.zh)) throw new Error('curated Chinese title was not merged');
-          console.log(JSON.stringify({ manifestItems: items.length, figures, curatedSupplement: true, repositoryBaseline: true }));
+          const zh = new Map((translations.translations || []).map(x => [x.title, x.zh]));
+          if (!zh.get('Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage')) throw new Error('curated Chinese title was not merged');
+          if (!zh.get('Scalable Total Syntheses of Nonthmicin and Ecteinamycin Reveal a Dual Antibacterial and Antitoxin Profile against Clostridioides difficile')) throw new Error('second-batch Chinese title was not merged');
+
+          console.log(JSON.stringify({ manifestItems: items.length, figures, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true }));
           NODE
 
       - name: Upload Pages artifact
