@@ -1,4 +1,4 @@
-name: Deploy user UI Worker additions
+name: Deploy Worker additions
 
 on:
   push:
@@ -10,6 +10,9 @@ on:
       - 'cloudflare/worker/src/index.js'
       - 'cloudflare/worker/src/user-ui.js'
       - 'cloudflare/worker/src/integrations.js'
+      - 'cloudflare/worker/src/media.js'
+      - 'cloudflare/worker/src/media-write.js'
+      - 'cloudflare/worker/src/repair.js'
   workflow_dispatch:
 
 permissions:
