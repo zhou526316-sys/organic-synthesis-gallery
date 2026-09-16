@@ -18,5 +18,6 @@ async function preloadChineseTitleCache(): Promise<void> {
   }
 }
 
-await preloadChineseTitleCache();
-await import('./main');
+void preloadChineseTitleCache().finally(() => {
+  void import('./main');
+});
