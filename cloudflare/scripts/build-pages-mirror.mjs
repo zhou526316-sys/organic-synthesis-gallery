@@ -8,7 +8,7 @@ const FALLBACK_SITE = (process.env.PAGES_MEDIA_FALLBACK || 'https://zhou526316-s
 const PUBLIC_DIR = path.resolve('public');
 const MEDIA_DIR = path.join(PUBLIC_DIR, 'media-mirror');
 const CONCURRENCY = Math.max(2, Math.min(12, Number(process.env.PAGES_MEDIA_CONCURRENCY || 8)));
-const MAX_IMAGE_BYTES = 2_500_000;
+const MAX_IMAGE_BYTES = 4_000_000;
 
 async function fetchRetry(url, init = {}, attempts = 4) {
   let lastError;
@@ -82,7 +82,7 @@ function extensionFor(contentType, url) {
 async function loadRecords() {
   const encoded = (await readFile(path.join(PUBLIC_DIR, 'papers.gz.b64'), 'utf8')).trim();
   const base = JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8'));
-  const files = ['total-synthesis.json', 'manual-supplement.json', 'final-audit-supplement.json'];
+  const files = ['total-synthesis.json', 'manual-supplement.json', 'final-audit-supplement.json', 'curated-supplement.json'];
   const local = [];
   for (const file of files) {
     try {
