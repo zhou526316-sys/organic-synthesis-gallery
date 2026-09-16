@@ -21,4 +21,5 @@ async function preloadChineseTitleCache(): Promise<void> {
 void preloadChineseTitleCache().finally(async () => {
   await import('./main');
   await import('./media-enhancements');
+  await import('./runtime-recovery');
 });
