@@ -11,7 +11,6 @@ on:
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
-      - 'cloudflare/scripts/snapshot-production-static.mjs'
       - 'public/curated-supplement.json'
       - 'public/papers.gz.b64'
       - 'public/total-synthesis.json'
@@ -51,8 +50,14 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Snapshot current literature files
-        run: node cloudflare/scripts/snapshot-production-static.mjs
+      - name: Verify repository-owned literature baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s public/papers.gz.b64
+          test -s public/total-synthesis.json
+          test -s public/manual-supplement.json
+          test -s public/final-audit-supplement.json
 
       - name: Generate GitHub Pages VPN Bridge
         env:
@@ -78,6 +83,10 @@ jobs:
         run: |
           set -euo pipefail
           test -f dist/index.html
+          test -f dist/papers.gz.b64
+          test -f dist/total-synthesis.json
+          test -f dist/manual-supplement.json
+          test -f dist/final-audit-supplement.json
           test -f dist/media-index.json
           test -f dist/literature-supplement.json
           test -f dist/title-translations-zh.json
@@ -100,7 +109,7 @@ jobs:
           if (!dois.has('10.1038/s41467-026-77774-9')) throw new Error('curated literature supplement was not merged');
           const translations = JSON.parse(fs.readFileSync('dist/title-translations-zh.json', 'utf8'));
           if (!(translations.translations || []).some(x => x.title === 'Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage' && x.zh)) throw new Error('curated Chinese title was not merged');
-          console.log(JSON.stringify({ manifestItems: items.length, figures, curatedSupplement: true }));
+          console.log(JSON.stringify({ manifestItems: items.length, figures, curatedSupplement: true, repositoryBaseline: true }));
           NODE
 
       - name: Upload Pages artifact
