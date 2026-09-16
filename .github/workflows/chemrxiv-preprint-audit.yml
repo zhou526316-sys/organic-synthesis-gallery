@@ -7,7 +7,7 @@ on:
     paths:
       - '.github/workflows/chemrxiv-preprint-audit.yml'
       - 'cloudflare/scripts/audit-chemrxiv-preprints.mjs'
-      - 'audit/toc-gap-dois-2026-09-16.json'
+      - 'audit/visual-gap-dois-2026-09-16.json'
 
 permissions:
   contents: read
@@ -23,12 +23,13 @@ jobs:
           node-version: 22
       - name: Search ChemRxiv by verified article title
         env:
+          TOC_GAP_FILE: audit/visual-gap-dois-2026-09-16.json
           CHEMRXIV_CONCURRENCY: '2'
           CHEMRXIV_DELAY_MS: '250'
         run: node cloudflare/scripts/audit-chemrxiv-preprints.mjs
       - name: Upload preprint audit
         uses: actions/upload-artifact@v4
         with:
-          name: chemrxiv-toc-gap-report
+          name: chemrxiv-visual-gap-report
           path: audit/chemrxiv-toc-gap-report.json
           retention-days: 7
