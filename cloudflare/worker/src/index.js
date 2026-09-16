@@ -13,6 +13,7 @@ import {
   quarantineToc,
   resetFigures,
 } from './media-write.js';
+import { resolvePaperTitles } from './title-resolution.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
   ...init,
@@ -66,6 +67,10 @@ async function handleApi(request, env) {
       r2: Boolean(env.MEDIA),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
     });
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/paper-titles/resolve') {
+    return resultResponse(await resolvePaperTitles(env, await readJson(request)));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/toc') {
