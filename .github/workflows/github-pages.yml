@@ -10,12 +10,15 @@ on:
       - '.github/workflows/github-pages.yml'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
+      - 'cloudflare/scripts/merge-worker-media.mjs'
+      - 'cloudflare/scripts/prune-media-mirror.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
       - 'public/curated-supplement.json'
       - 'public/papers.gz.b64'
       - 'public/total-synthesis.json'
       - 'public/manual-supplement.json'
       - 'public/final-audit-supplement.json'
+      - 'public/toc-rescue.js'
       - 'src/**'
       - 'index.html'
       - 'vite.config.ts'
@@ -73,6 +76,14 @@ jobs:
           PAGES_MEDIA_FALLBACK: https://zhou526316-sys.github.io/organic-synthesis-gallery
           PAGES_MEDIA_CONCURRENCY: '8'
 
+      - name: Merge current Worker media into static snapshot
+        run: |
+          node cloudflare/scripts/merge-worker-media.mjs
+          node cloudflare/scripts/prune-media-mirror.mjs
+        env:
+          GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+          WORKER_MEDIA_CONCURRENCY: '6'
+
       - name: Merge assistant-audited literature and bilingual titles
         run: node cloudflare/scripts/merge-curated-pages.mjs
 
@@ -93,6 +104,7 @@ jobs:
           test -f dist/title-translations-zh.json
           test -f dist/paper-title-resolutions.json
           test -f dist/gallery-vpn-bridge.user.js
+          test -f dist/toc-rescue.js
           test -d dist/media-mirror
           grep -F "// @version      1.0.1" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
@@ -103,7 +115,8 @@ jobs:
           const items = Object.values(manifest.items || {});
           const remote = JSON.stringify(manifest).match(/https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//g) || [];
           const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
-          if (!items.length) throw new Error('media-index is empty');
+          if (items.length < 382) throw new Error(`media-index regressed below preserved baseline: ${items.length}`);
+          if (figures < 652) throw new Error(`figure metadata regressed below preserved baseline: ${figures}`);
           if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
 
           const requiredDois = [
@@ -128,7 +141,7 @@ jobs:
           if (!zh.get('Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage')) throw new Error('curated Chinese title was not merged');
           if (!zh.get('Scalable Total Syntheses of Nonthmicin and Ecteinamycin Reveal a Dual Antibacterial and Antitoxin Profile against Clostridioides difficile')) throw new Error('second-batch Chinese title was not merged');
 
-          console.log(JSON.stringify({ manifestItems: items.length, figures, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true }));
+          console.log(JSON.stringify({ manifestItems: items.length, figures, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true, workerMediaMerged: true }));
           NODE
 
       - name: Upload Pages artifact
