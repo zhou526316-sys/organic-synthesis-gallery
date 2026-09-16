@@ -1,0 +1,68 @@
+name: Audit literature completeness
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: Audit start date (YYYY-MM-DD)
+        required: false
+        default: '2026-07-01'
+      end_date:
+        description: Audit end date (YYYY-MM-DD)
+        required: false
+        default: '2026-09-16'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/literature-audit.yml'
+      - 'cloudflare/scripts/audit-literature.mjs'
+      - 'public/curated-supplement.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: literature-completeness-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Build DOI-union audit report
+        env:
+          AUDIT_START: ${{ inputs.start_date || '2026-07-01' }}
+          AUDIT_END: ${{ inputs.end_date || '2026-09-16' }}
+          GALLERY_SITE: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: node cloudflare/scripts/audit-literature.mjs
+
+      - name: Commit latest audit report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit/latest.json
+          if git diff --cached --quiet; then
+            echo 'Audit report unchanged.'
+          else
+            git commit -m 'audit: refresh literature completeness report'
+            git push origin HEAD:main
+          fi
+
+      - name: Upload audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: literature-audit
+          path: audit/latest.json
+          retention-days: 14
