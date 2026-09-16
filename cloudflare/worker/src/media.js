@@ -1,0 +1,313 @@
+const DOI_PATTERN = /^10\.\d{4,9}\/\S+$/i;
+const DOI_LIMIT = 1200;
+const QUERY_CHUNK = 80;
+
+export function normalizeDoi(value) {
+  if (typeof value !== 'string') return null;
+  let cleaned = value.trim();
+  try {
+    cleaned = decodeURIComponent(cleaned);
+  } catch {
+    return null;
+  }
+  cleaned = cleaned
+    .replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '')
+    .replace(/^doi:\s*/i, '')
+    .replace(/[?#].*$/, '');
+  return DOI_PATTERN.test(cleaned) ? cleaned.toLowerCase() : null;
+}
+
+function mediaUrl(request, key) {
+  if (!key) return undefined;
+  const url = new URL(request.url);
+  const encoded = key.split('/').map(part => encodeURIComponent(part)).join('/');
+  return `${url.origin}/media/${encoded}`;
+}
+
+function semanticPriority(key) {
+  const normalized = String(key || '').toLowerCase();
+  const numbered = /^(figure|scheme|chart)-(\d+)/.exec(normalized);
+  if (numbered) {
+    const number = Number(numbered[2]);
+    return number === 1 ? 0 : 10 + number;
+  }
+  if (normalized === 'scope') return 50;
+  if (normalized === 'mechanism') return 51;
+  if (normalized === 'optimization') return 52;
+  return 80;
+}
+
+function bestFigure(rows) {
+  return [...rows].sort((a, b) => {
+    const priority = semanticPriority(a.semantic_key) - semanticPriority(b.semantic_key);
+    if (priority) return priority;
+    const pixelsA = Number(a.width || 0) * Number(a.height || 0);
+    const pixelsB = Number(b.width || 0) * Number(b.height || 0);
+    if (pixelsA !== pixelsB) return pixelsB - pixelsA;
+    return Number(a.sort_order || 0) - Number(b.sort_order || 0);
+  })[0] || null;
+}
+
+function figureOne(rows) {
+  return rows.find(row => String(row.semantic_key || '').toLowerCase() === 'figure-1') || null;
+}
+
+function tocResponse(request, doi, toc, figures) {
+  if (toc && Number(toc.available) === 1 && toc.r2_key) {
+    return {
+      available: true,
+      doi,
+      articleUrl: toc.article_url || undefined,
+      imageUrl: mediaUrl(request, toc.r2_key),
+      contentHash: toc.content_hash || undefined,
+      reason: toc.reason || 'cached',
+      cacheHit: true,
+      cacheState: 'hit',
+    };
+  }
+
+  const fallback = bestFigure(figures);
+  if (fallback?.r2_key) {
+    return {
+      available: true,
+      doi,
+      articleUrl: fallback.article_url || undefined,
+      imageUrl: mediaUrl(request, fallback.r2_key),
+      contentHash: fallback.content_hash || undefined,
+      reason: String(fallback.semantic_key || '').toLowerCase() === 'figure-1'
+        ? 'figure1_fallback'
+        : `figure_fallback:${fallback.label}`,
+      cacheHit: true,
+      cacheState: 'hit',
+    };
+  }
+
+  return {
+    available: false,
+    doi,
+    reason: toc?.reason || 'cache_miss',
+    cacheHit: true,
+    cacheState: 'miss',
+  };
+}
+
+function figureResponse(request, doi, rows) {
+  const selected = [...rows]
+    .sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0) || Number(b.updated_at || 0) - Number(a.updated_at || 0))
+    .slice(0, 10)
+    .map(row => ({
+      id: row.source_id,
+      label: row.label,
+      caption: row.caption || undefined,
+      imageUrl: mediaUrl(request, row.r2_key),
+      order: Number(row.sort_order || 0),
+    }));
+
+  return {
+    available: selected.length > 0,
+    doi,
+    articleUrl: rows.find(row => row.article_url)?.article_url || undefined,
+    figures: selected,
+  };
+}
+
+async function allRows(statement) {
+  const result = await statement.all();
+  return Array.isArray(result?.results) ? result.results : [];
+}
+
+async function queryByDois(env, sqlPrefix, dois) {
+  const rows = [];
+  for (let offset = 0; offset < dois.length; offset += QUERY_CHUNK) {
+    const chunk = dois.slice(offset, offset + QUERY_CHUNK);
+    if (!chunk.length) continue;
+    const placeholders = chunk.map(() => '?').join(',');
+    const statement = env.DB.prepare(`${sqlPrefix} (${placeholders})`).bind(...chunk);
+    rows.push(...await allRows(statement));
+  }
+  return rows;
+}
+
+async function loadMediaRows(env, rawDois) {
+  if (!env?.DB) throw new Error('D1 binding DB is not configured');
+  const dois = [...new Set(rawDois.map(normalizeDoi).filter(Boolean))].slice(0, DOI_LIMIT);
+  if (!dois.length) return { dois, tocByDoi: new Map(), figuresByDoi: new Map(), duplicateHashes: new Set() };
+
+  const [tocRows, figureRows, duplicateRows] = await Promise.all([
+    queryByDois(
+      env,
+      'SELECT doi, article_url, r2_key, content_hash, reason, available, checked_at, updated_at FROM toc_assets WHERE doi IN',
+      dois
+    ),
+    queryByDois(
+      env,
+      'SELECT doi, semantic_key, source_id, label, caption, article_url, r2_key, content_hash, width, height, sort_order, updated_at FROM figure_assets WHERE doi IN',
+      dois
+    ),
+    allRows(env.DB.prepare("SELECT content_hash, COUNT(*) AS owners FROM toc_assets WHERE available = 1 AND content_hash IS NOT NULL AND content_hash <> '' GROUP BY content_hash HAVING COUNT(*) > 1")),
+  ]);
+
+  const tocByDoi = new Map();
+  for (const row of tocRows) tocByDoi.set(String(row.doi).toLowerCase(), row);
+  const figuresByDoi = new Map();
+  for (const row of figureRows) {
+    const doi = String(row.doi).toLowerCase();
+    const group = figuresByDoi.get(doi) || [];
+    group.push(row);
+    figuresByDoi.set(doi, group);
+  }
+  const duplicateHashes = new Set(duplicateRows.map(row => row.content_hash).filter(Boolean));
+  return { dois, tocByDoi, figuresByDoi, duplicateHashes };
+}
+
+function inventoryItem(doi, toc, figures, duplicateHashes) {
+  const tocStored = Boolean(toc && Number(toc.available) === 1 && toc.r2_key);
+  const one = figureOne(figures);
+  const fallback = bestFigure(figures);
+  const nonFigureOneMatch = Boolean(
+    tocStored &&
+    toc.content_hash &&
+    figures.some(item => item.content_hash === toc.content_hash && String(item.semantic_key || '').toLowerCase() !== 'figure-1')
+  );
+  const suspiciousToc = Boolean(nonFigureOneMatch || (toc?.content_hash && duplicateHashes.has(toc.content_hash)));
+  const largeSource = tocStored && !suspiciousToc
+    ? 'toc'
+    : fallback
+      ? one
+        ? 'figure1'
+        : 'figure'
+      : 'none';
+  const figureCount = figures.length;
+  const status = largeSource !== 'none' && figureCount > 0
+    ? 'complete'
+    : largeSource !== 'none'
+      ? 'large_only'
+      : figureCount > 0
+        ? 'figures_only'
+        : 'missing';
+
+  return {
+    doi,
+    status,
+    largeSource,
+    tocStored,
+    tocReason: toc?.reason || (tocStored ? 'cached' : 'cache_miss'),
+    figureCount,
+    figureOneStored: Boolean(one),
+    fallbackLabel: fallback?.label,
+    suspiciousToc,
+  };
+}
+
+async function ensureRepairRows(env, dois) {
+  if (!dois.length) return;
+  const now = Date.now();
+  const statements = dois.map(doi => env.DB.prepare(
+    `INSERT INTO media_repair_state
+      (doi, repair_version, attempts, last_attempt_at, next_retry_at, reported_priority, updated_at)
+     VALUES (?, 1, 0, 0, 0, 0, ?)
+     ON CONFLICT(doi) DO NOTHING`
+  ).bind(doi, now));
+  for (let offset = 0; offset < statements.length; offset += 80) {
+    await env.DB.batch(statements.slice(offset, offset + 80));
+  }
+}
+
+export async function serveMediaObject(request, env) {
+  if (!env?.MEDIA) return new Response('R2 binding MEDIA is not configured', { status: 503 });
+  const prefix = '/media/';
+  const path = new URL(request.url).pathname;
+  if (!path.startsWith(prefix)) return new Response('Not found', { status: 404 });
+  const key = path.slice(prefix.length).split('/').map(part => decodeURIComponent(part)).join('/');
+  if (!key || key.includes('..')) return new Response('Invalid media key', { status: 400 });
+  const object = await env.MEDIA.get(key);
+  if (!object) return new Response('Not found', { status: 404 });
+  const headers = new Headers();
+  object.writeHttpMetadata(headers);
+  headers.set('etag', object.httpEtag);
+  headers.set('cache-control', 'public, max-age=86400, stale-while-revalidate=604800');
+  return new Response(object.body, { headers });
+}
+
+export async function getToc(request, env) {
+  const doi = normalizeDoi(new URL(request.url).searchParams.get('doi'));
+  if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  const media = await loadMediaRows(env, [doi]);
+  return { status: 200, body: tocResponse(request, doi, media.tocByDoi.get(doi), media.figuresByDoi.get(doi) || []) };
+}
+
+export async function getArticleFigures(request, env) {
+  const doi = normalizeDoi(new URL(request.url).searchParams.get('doi'));
+  if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  const media = await loadMediaRows(env, [doi]);
+  return { status: 200, body: figureResponse(request, doi, media.figuresByDoi.get(doi) || []) };
+}
+
+export async function mediaBatch(request, env, payload) {
+  const input = Array.isArray(payload?.dois) ? payload.dois : [];
+  const startedAt = Date.now();
+  const media = await loadMediaRows(env, input);
+  const items = media.dois.map(doi => ({
+    doi,
+    toc: tocResponse(request, doi, media.tocByDoi.get(doi), media.figuresByDoi.get(doi) || []),
+    figures: figureResponse(request, doi, media.figuresByDoi.get(doi) || []),
+  }));
+  return { status: 200, body: { items, elapsedMs: Date.now() - startedAt } };
+}
+
+export async function mediaInventory(request, env, payload) {
+  const input = Array.isArray(payload?.dois) ? payload.dois : [];
+  const media = await loadMediaRows(env, input);
+  await ensureRepairRows(env, media.dois);
+  const items = media.dois.map(doi => inventoryItem(
+    doi,
+    media.tocByDoi.get(doi),
+    media.figuresByDoi.get(doi) || [],
+    media.duplicateHashes
+  ));
+  const summary = {
+    total: items.length,
+    complete: items.filter(item => item.status === 'complete').length,
+    largeOnly: items.filter(item => item.status === 'large_only').length,
+    figuresOnly: items.filter(item => item.status === 'figures_only').length,
+    missing: items.filter(item => item.status === 'missing').length,
+    suspiciousToc: items.filter(item => item.suspiciousToc).length,
+    withToc: items.filter(item => item.tocStored).length,
+    withFigure1: items.filter(item => item.figureOneStored).length,
+  };
+  return { status: 200, body: { generatedAt: Date.now(), summary, items } };
+}
+
+export async function bridgeQueue(request, env) {
+  const rows = await allRows(env.DB.prepare(
+    'SELECT doi, attempts, last_attempt_at, next_retry_at, last_root_cause, reported_priority FROM media_repair_state ORDER BY reported_priority DESC, next_retry_at ASC, attempts ASC LIMIT 1200'
+  ));
+  const dois = rows.map(row => row.doi).filter(Boolean);
+  const media = await loadMediaRows(env, dois);
+  const stateByDoi = new Map(rows.map(row => [String(row.doi).toLowerCase(), row]));
+  const items = media.dois
+    .map(doi => ({
+      ...inventoryItem(doi, media.tocByDoi.get(doi), media.figuresByDoi.get(doi) || [], media.duplicateHashes),
+      attempts: Number(stateByDoi.get(doi)?.attempts || 0),
+      lastRootCause: stateByDoi.get(doi)?.last_root_cause || '',
+      reportedPriority: Number(stateByDoi.get(doi)?.reported_priority || 0) === 1,
+    }))
+    .filter(item => item.status !== 'complete' || item.suspiciousToc || item.figureCount < 2)
+    .sort((a, b) => Number(b.reportedPriority) - Number(a.reportedPriority) || Number(b.suspiciousToc) - Number(a.suspiciousToc) || Number(a.figureCount > 0) - Number(b.figureCount > 0) || a.attempts - b.attempts);
+  return { status: 200, body: { updatedAt: Date.now(), count: items.length, items } };
+}
+
+export async function repairStatus(request, env) {
+  const rows = await allRows(env.DB.prepare(
+    'SELECT doi, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at FROM media_repair_state ORDER BY updated_at DESC LIMIT 1200'
+  ));
+  return {
+    status: 200,
+    body: {
+      updatedAt: Date.now(),
+      runs: 0,
+      bridgeQueueCount: rows.filter(row => Number(row.next_retry_at || 0) <= Date.now()).length,
+      items: rows,
+    },
+  };
+}
