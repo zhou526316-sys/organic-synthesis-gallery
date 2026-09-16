@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - migration/cloudflare
+      - main
     paths:
       - '.github/workflows/github-pages.yml'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
@@ -27,7 +27,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout migration branch
+      - name: Checkout main
         uses: actions/checkout@v4
 
       - name: Set up Node
