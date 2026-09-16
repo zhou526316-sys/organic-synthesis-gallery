@@ -36,7 +36,7 @@ jobs:
           npx tsc --noEmit --target ES2022 --module ESNext --moduleResolution bundler
           --lib ES2022,DOM,DOM.Iterable --strict --noUnusedLocals --noUnusedParameters
           src/user-shell.ts src/user-ui/shared.ts src/user-ui/paper-actions.ts
-          src/user-ui/library-shell.ts src/user-ui/search-controller.ts
+          src/user-ui/library-shell.ts src/user-ui/search-controller.ts src/user-ui/account-sync.ts
 
   worker-dry-run:
     runs-on: ubuntu-latest
@@ -83,7 +83,7 @@ jobs:
         run: |
           set -euo pipefail
           test -s /tmp/gallery-vpn-bridge.user.js
-          grep -F "// @version      1.0.1" /tmp/gallery-vpn-bridge.user.js
+          grep -F "// @version      1.0.2" /tmp/gallery-vpn-bridge.user.js
           grep -F "// @match        https://gallery.example.pages.dev/*" /tmp/gallery-vpn-bridge.user.js
           grep -F "// @connect      api.example.workers.dev" /tmp/gallery-vpn-bridge.user.js
           grep -F "const API_BASE = 'https://api.example.workers.dev';" /tmp/gallery-vpn-bridge.user.js
