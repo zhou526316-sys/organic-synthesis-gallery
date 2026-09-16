@@ -1,0 +1,47 @@
+name: Probe publisher reachability
+
+on:
+  push:
+    branches:
+      - migration/cloudflare
+    paths:
+      - '.github/workflows/publisher-probe.yml'
+      - 'PUBLISHER_PROBE_NOW'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe publisher HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const targets = [
+            ['nature','https://www.nature.com/articles/s41467-026-77774-9'],
+            ['acs','https://pubs.acs.org/doi/10.1021/jacs.6c15393'],
+            ['wiley','https://onlinelibrary.wiley.com/doi/10.1002/anie.5041475'],
+          ];
+          for (const [name,url] of targets) {
+            try {
+              const response = await fetch(url, {
+                redirect: 'follow',
+                headers: {
+                  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36',
+                  'accept': 'text/html,application/xhtml+xml',
+                  'accept-language': 'en-US,en;q=0.9',
+                },
+                signal: AbortSignal.timeout(20000),
+              });
+              const text = await response.text();
+              const title = (text.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || '').replace(/\s+/g, ' ').trim().slice(0,160);
+              console.log('PUBLISHER_PROBE', JSON.stringify({ name, status: response.status, finalUrl: response.url, bytes: text.length, title, hasMediaHints: /figure|scheme|graphical abstract|toc/i.test(text) }));
+            } catch (error) {
+              console.log('PUBLISHER_PROBE', JSON.stringify({ name, error: error instanceof Error ? error.message : String(error) }));
+            }
+          }
+          NODE
