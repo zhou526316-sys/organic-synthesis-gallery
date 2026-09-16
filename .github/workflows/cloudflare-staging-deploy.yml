@@ -117,7 +117,7 @@ jobs:
           MIGRATION_STAGE = "staging"
 
           [triggers]
-          crons = ["0 * * * *"]
+          crons = ["0 */6 * * *"]
 
           [assets]
           directory = "../../dist"
@@ -197,9 +197,9 @@ jobs:
 
       - name: Defer bulk media migration to protect free-tier quota
         run: |
-          echo 'Bulk TOC/Figure cache migration intentionally skipped on initial staging deployment.'
-          echo 'The 86 user-reported priority DOI records are already seeded and will be repaired gradually.'
-          echo 'Existing AppDeploy production remains online as the source-of-truth during staging validation.'
+          echo 'Bulk TOC/Figure cache migration intentionally skipped on staging.'
+          echo 'The 86 user-reported priority DOI records are seeded and repaired gradually.'
+          echo 'Existing AppDeploy production remains online during staging validation.'
 
       - name: Verify repair queue endpoint
         shell: bash
@@ -222,7 +222,8 @@ jobs:
             echo '- D1 schema: applied'
             echo '- R2 media bucket: attached'
             echo '- Bridge write secret: installed'
-            echo '- Repair cron: hourly (quota-conservative)'
+            echo '- Repair cron: every 6 hours (quota-conservative)'
+            echo '- Repair batch: at most 2 DOI per run'
             echo '- Bulk TOC/Figure migration: intentionally deferred'
             echo '- 86 user-reported priority DOI records: seeded'
           } >> "$GITHUB_STEP_SUMMARY"
