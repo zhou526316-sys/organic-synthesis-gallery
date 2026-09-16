@@ -122,14 +122,6 @@ async function request(mode: 'account-merge' | 'account-save' | 'account-pull', 
   return { ok: response.ok, status: response.status, body };
 }
 
-function applyRemote(account: NonNullable<SyncResponse['account']>, localWins = false): void {
-  applyingRemote = true;
-  store.state = mergeStates(account.state, store.state, localWins);
-  rememberAccount(account.userId, account.revision);
-  store.save();
-  applyingRemote = false;
-}
-
 async function initialMerge(): Promise<void> {
   const result = await request('account-merge', store.state);
   if (!result.ok || !result.body.account) {
