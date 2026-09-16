@@ -1,19 +1,6 @@
 name: Deploy Cloudflare staging
 
 on:
-  push:
-    branches:
-      - migration/cloudflare
-    paths:
-      - 'src/**'
-      - 'public/**'
-      - 'index.html'
-      - 'package.json'
-      - 'vite.config.ts'
-      - 'postcss.config.js'
-      - 'tailwind.config.js'
-      - 'cloudflare/**'
-      - '.github/workflows/cloudflare-staging-deploy.yml'
   workflow_dispatch:
 
 permissions:
