@@ -1,0 +1,45 @@
+name: Materialize literature baseline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/materialize-literature-baseline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Snapshot historical literature baseline into GitHub
+        shell: bash
+        run: |
+          set -euo pipefail
+          source='https://organic-synthesis-literature-gallery-ase43k.v2.appdeploy.ai'
+          mkdir -p public
+          for file in papers.gz.b64 total-synthesis.json manual-supplement.json final-audit-supplement.json; do
+            curl --fail --location --retry 4 --retry-delay 2 "$source/$file" -o "public/$file"
+          done
+
+      - name: Commit baseline files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json
+          if git diff --cached --quiet; then
+            echo 'Baseline already materialized.'
+          else
+            git commit -m 'data: materialize literature baseline from AppDeploy'
+            git push origin HEAD:main
+          fi
