@@ -53,6 +53,18 @@ const json = (value, init = {}) => new Response(JSON.stringify(value), {
   },
 });
 
+const BROWSER_READ_PATHS = new Set([
+  '/api/paper-titles/resolve',
+  '/api/title-translations/zh',
+  '/api/literature/supplement',
+  '/api/toc',
+  '/api/article-figures',
+  '/api/media/batch',
+  '/api/media/inventory',
+  '/api/media/bridge-queue',
+  '/api/media/repair-status',
+]);
+
 async function readJson(request) {
   try {
     return await request.json();
@@ -65,7 +77,7 @@ function resultResponse(result, headers = {}) {
   return json(result.body, { status: result.status || 200, headers });
 }
 
-function userUiCorsHeaders(request) {
+function browserCorsHeaders(request) {
   const origin = request.headers.get('origin') || '';
   const allowed = new Set([
     'https://zhou526316-sys.github.io',
@@ -81,6 +93,10 @@ function userUiCorsHeaders(request) {
     'access-control-max-age': '86400',
     'vary': 'Origin',
   };
+}
+
+function isBrowserReadablePath(pathname) {
+  return pathname.startsWith('/api/user-ui/') || BROWSER_READ_PATHS.has(pathname);
 }
 
 function writeAuthorized(request, env) {
@@ -105,9 +121,10 @@ function requireWriteAuthorization(request, env) {
 async function handleApi(request, env) {
   const url = new URL(request.url);
   const userUiRoute = url.pathname.startsWith('/api/user-ui/');
-  const cors = userUiRoute ? userUiCorsHeaders(request) : {};
+  const corsRoute = isBrowserReadablePath(url.pathname);
+  const cors = corsRoute ? browserCorsHeaders(request) : {};
 
-  if (userUiRoute && request.method === 'OPTIONS') {
+  if (corsRoute && request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: cors });
   }
 
@@ -174,32 +191,32 @@ async function handleApi(request, env) {
   }
 
   if (request.method === 'POST' && url.pathname === '/api/paper-titles/resolve') {
-    return resultResponse(await resolvePaperTitles(env, await readJson(request)));
+    return resultResponse(await resolvePaperTitles(env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/title-translations/zh') {
-    return resultResponse(await getTitleTranslations(env, await readJson(request)));
+    return resultResponse(await getTitleTranslations(env, await readJson(request)), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/literature/supplement') {
-    return resultResponse(await getLiteratureSupplement(env));
+    return resultResponse(await getLiteratureSupplement(env), cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/toc') {
-    return resultResponse(await getToc(request, env));
+    return resultResponse(await getToc(request, env), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/article-figures') {
-    return resultResponse(await getArticleFigures(request, env));
+    return resultResponse(await getArticleFigures(request, env), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/media/batch') {
-    return resultResponse(await mediaBatch(request, env, await readJson(request)));
+    return resultResponse(await mediaBatch(request, env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/media/inventory') {
-    return resultResponse(await mediaInventory(request, env, await readJson(request)));
+    return resultResponse(await mediaInventory(request, env, await readJson(request)), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/media/bridge-queue') {
-    return resultResponse(await bridgeQueue(request, env));
+    return resultResponse(await bridgeQueue(request, env), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/media/repair-status') {
-    return resultResponse(await repairStatus(request, env));
+    return resultResponse(await repairStatus(request, env), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/media-audit') {
     return resultResponse(await mediaAudit(env));
@@ -276,7 +293,7 @@ export default {
         path: url.pathname,
         message: error instanceof Error ? error.message : String(error),
       });
-      const headers = url.pathname.startsWith('/api/user-ui/') ? userUiCorsHeaders(request) : {};
+      const headers = isBrowserReadablePath(url.pathname) ? browserCorsHeaders(request) : {};
       return json({ error: 'internal_error' }, { status: 500, headers });
     }
   },
