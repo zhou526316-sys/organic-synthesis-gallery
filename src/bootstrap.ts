@@ -18,6 +18,8 @@ async function preloadChineseTitleCache(): Promise<void> {
   }
 }
 
+void import('./zoom-enhancer');
+
 void preloadChineseTitleCache().finally(() => {
   void import('./main');
 });
