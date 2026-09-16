@@ -54,13 +54,30 @@ interface StaticResolutions {
   byUrl?: Record<string, { title?: string; doi?: string }>;
 }
 
+interface InventoryItem {
+  doi: string;
+  status: 'complete' | 'large_only' | 'figures_only' | 'missing';
+  largeSource: 'toc' | 'figure1' | 'figure' | 'none';
+  fallbackLabel?: string;
+  suspiciousToc?: boolean;
+  figureCount?: number;
+}
+
+const WORKER_ORIGIN = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+
 let mediaManifestPromise: Promise<StaticMediaManifest> | null = null;
 let translationsPromise: Promise<StaticTranslations> | null = null;
 let resolutionsPromise: Promise<StaticResolutions> | null = null;
 
 function assetUrl(path: string): string {
+  if (/^(?:https?:|data:|blob:)/i.test(path)) return path;
   if (typeof document !== 'undefined') return new URL(path.replace(/^\//, ''), document.baseURI).toString();
   return path;
+}
+
+function workerAssetUrl(path: string): string {
+  if (/^(?:https?:|data:|blob:)/i.test(path)) return path;
+  return new URL(path, `${WORKER_ORIGIN}/`).toString();
 }
 
 function staticFrontendOnly(): boolean {
@@ -81,9 +98,9 @@ function normalizeTitle(value: unknown): string {
   return typeof value === 'string' ? value.trim().toLowerCase().replace(/\s+/g, ' ') : '';
 }
 
-async function fetchStaticJson<T>(path: string, fallback: T): Promise<T> {
+async function fetchStaticJson<T>(path: string, fallback: T, cache: RequestCache = 'force-cache'): Promise<T> {
   try {
-    const response = await fetch(assetUrl(path), { credentials: 'same-origin', cache: 'force-cache' });
+    const response = await fetch(assetUrl(path), { credentials: 'same-origin', cache });
     if (!response.ok) return fallback;
     return await response.json() as T;
   } catch {
@@ -91,9 +108,52 @@ async function fetchStaticJson<T>(path: string, fallback: T): Promise<T> {
   }
 }
 
+function normalizeMediaItem(item: StaticMediaItem, source: 'static' | 'worker'): StaticMediaItem {
+  const resolve = source === 'static' ? assetUrl : workerAssetUrl;
+  return {
+    ...item,
+    toc: {
+      ...item.toc,
+      ...(item.toc?.imageUrl ? { imageUrl: resolve(item.toc.imageUrl) } : {}),
+    },
+    figures: {
+      ...item.figures,
+      figures: (item.figures?.figures || []).map(figure => ({
+        ...figure,
+        imageUrl: resolve(figure.imageUrl),
+      })),
+    },
+  };
+}
+
+function mediaItemHasToc(item: StaticMediaItem | undefined): boolean {
+  return Boolean(item?.toc?.available && item.toc.imageUrl);
+}
+
+function mediaItemHasFigures(item: StaticMediaItem | undefined): boolean {
+  return Boolean(item?.figures?.available && item.figures.figures?.length);
+}
+
+function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMediaItem | undefined): StaticMediaItem | undefined {
+  if (!local) return dynamic;
+  if (!dynamic) return local;
+  const toc = mediaItemHasToc(local) ? local.toc : dynamic.toc;
+  const figures = mediaItemHasFigures(local) ? local.figures : dynamic.figures;
+  return {
+    ...dynamic,
+    ...local,
+    toc,
+    figures,
+    inventory: {
+      ...(dynamic.inventory || {}),
+      ...(local.inventory || {}),
+    },
+  };
+}
+
 function loadMediaManifest(): Promise<StaticMediaManifest> {
   if (!mediaManifestPromise) {
-    mediaManifestPromise = fetchStaticJson<StaticMediaManifest>('media-index.json', { version: 1, generatedAt: 0, items: {} })
+    mediaManifestPromise = fetchStaticJson<StaticMediaManifest>('media-index.json', { version: 1, generatedAt: 0, items: {} }, 'no-cache')
       .then(payload => payload && typeof payload === 'object'
         ? { version: payload.version || 1, generatedAt: payload.generatedAt || 0, items: payload.items || {} }
         : { version: 1, generatedAt: 0, items: {} });
@@ -111,7 +171,7 @@ function loadResolutions(): Promise<StaticResolutions> {
   return resolutionsPromise;
 }
 
-function localInventory(item: StaticMediaItem | undefined, doi: string) {
+function localInventory(item: StaticMediaItem | undefined, doi: string): InventoryItem {
   if (!item) {
     return {
       doi,
@@ -135,10 +195,17 @@ function localInventory(item: StaticMediaItem | undefined, doi: string) {
   };
 }
 
+function inventoryRank(status: InventoryItem['status']): number {
+  if (status === 'complete') return 3;
+  if (status === 'large_only' || status === 'figures_only') return 2;
+  return 0;
+}
+
 async function rawRequest<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
+  const absolute = /^https?:\/\//i.test(path);
   const response = await fetch(path, {
     method,
-    credentials: 'same-origin',
+    credentials: absolute ? 'omit' : 'same-origin',
     headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
@@ -167,6 +234,10 @@ async function rawRequest<T>(method: string, path: string, body?: unknown): Prom
   };
 }
 
+function workerRequest<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
+  return rawRequest<T>(method, `${WORKER_ORIGIN}${path}`, body);
+}
+
 async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
   const requested = body && typeof body === 'object' && Array.isArray((body as { dois?: unknown }).dois)
     ? (body as { dois: unknown[] }).dois.map(normalizeDoi).filter((doi): doi is string => Boolean(doi))
@@ -174,9 +245,30 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
 
   if (path === '/api/media/inventory' && requested.length) {
     const manifest = await loadMediaManifest();
-    const items = requested.map(doi => localInventory(manifest.items?.[doi], doi));
+    const localByDoi = new Map(requested.map(doi => [doi, localInventory(manifest.items?.[doi], doi)]));
+    const incomplete = requested.filter(doi => localByDoi.get(doi)?.status !== 'complete');
+
+    if (staticFrontendOnly() && incomplete.length) {
+      try {
+        const dynamic = await workerRequest<{ generatedAt?: number; items?: InventoryItem[] }>('POST', path, { dois: incomplete });
+        for (const item of dynamic.data?.items || []) {
+          const doi = normalizeDoi(item?.doi);
+          if (!doi) continue;
+          const local = localByDoi.get(doi);
+          if (!local || inventoryRank(item.status) > inventoryRank(local.status)) localByDoi.set(doi, item);
+        }
+        return {
+          data: { generatedAt: dynamic.data?.generatedAt || manifest.generatedAt || Date.now(), items: requested.map(doi => localByDoi.get(doi)!) } as T,
+          status: 200,
+          headers: new Headers({ 'x-gallery-media-source': 'static+worker-inventory' }),
+        };
+      } catch {
+        // Keep the complete static snapshot usable if the Worker is unavailable.
+      }
+    }
+
     return {
-      data: { generatedAt: manifest.generatedAt || Date.now(), items } as T,
+      data: { generatedAt: manifest.generatedAt || Date.now(), items: requested.map(doi => localByDoi.get(doi)!) } as T,
       status: 200,
       headers: new Headers({ 'x-gallery-media-source': 'static-manifest' }),
     };
@@ -184,37 +276,47 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
 
   if (path === '/api/media/batch' && requested.length) {
     const manifest = await loadMediaManifest();
-    const localItems = requested.flatMap(doi => {
+    const localByDoi = new Map<string, StaticMediaItem>();
+    for (const doi of requested) {
       const item = manifest.items?.[doi];
-      return item ? [item] : [];
+      if (item) localByDoi.set(doi, normalizeMediaItem(item, 'static'));
+    }
+
+    const incomplete = requested.filter(doi => {
+      const item = localByDoi.get(doi);
+      return !mediaItemHasToc(item) || !mediaItemHasFigures(item);
     });
-    const missing = requested.filter(doi => !manifest.items?.[doi]);
 
-    if (!missing.length || staticFrontendOnly()) {
-      return {
-        data: { generatedAt: manifest.generatedAt || Date.now(), items: localItems } as T,
-        status: 200,
-        headers: new Headers({ 'x-gallery-media-source': missing.length ? 'static-only' : 'static-manifest' }),
-      };
+    if (incomplete.length) {
+      try {
+        const dynamic = staticFrontendOnly()
+          ? await workerRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>('POST', path, { dois: incomplete })
+          : await rawRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>('POST', path, { dois: incomplete });
+        const dynamicByDoi = new Map<string, StaticMediaItem>();
+        for (const item of dynamic.data?.items || []) {
+          const doi = normalizeDoi(item?.doi);
+          if (!doi) continue;
+          dynamicByDoi.set(doi, normalizeMediaItem(item, staticFrontendOnly() ? 'worker' : 'static'));
+        }
+        const items = requested.flatMap(doi => {
+          const merged = mergeMediaItem(localByDoi.get(doi), dynamicByDoi.get(doi));
+          return merged ? [merged] : [];
+        });
+        return {
+          data: { generatedAt: dynamic.data?.generatedAt || manifest.generatedAt || Date.now(), items } as T,
+          status: 200,
+          headers: new Headers({ 'x-gallery-media-source': localByDoi.size ? 'static+dynamic' : 'dynamic' }),
+        };
+      } catch {
+        // Preserve all static media if the Worker cannot fill the gaps.
+      }
     }
 
-    try {
-      const dynamic = await rawRequest<{ items?: StaticMediaItem[] }>('POST', path, { dois: missing });
-      return {
-        data: {
-          generatedAt: Date.now(),
-          items: [...localItems, ...(dynamic.data?.items || [])],
-        } as T,
-        status: 200,
-        headers: new Headers({ 'x-gallery-media-source': localItems.length ? 'static+dynamic' : 'dynamic' }),
-      };
-    } catch {
-      return {
-        data: { generatedAt: manifest.generatedAt || Date.now(), items: localItems } as T,
-        status: 200,
-        headers: new Headers({ 'x-gallery-media-source': 'static-fallback' }),
-      };
-    }
+    return {
+      data: { generatedAt: manifest.generatedAt || Date.now(), items: requested.flatMap(doi => localByDoi.get(doi) ? [localByDoi.get(doi)!] : []) } as T,
+      status: 200,
+      headers: new Headers({ 'x-gallery-media-source': incomplete.length ? 'static-fallback' : 'static-manifest' }),
+    };
   }
 
   if (staticFrontendOnly() && path === '/api/title-translations/zh') {
@@ -263,7 +365,7 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
 
 async function request<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
   if (method === 'GET' && staticFrontendOnly() && path === '/api/literature/supplement') {
-    const data = await fetchStaticJson<unknown>('literature-supplement.json', { papers: [] });
+    const data = await fetchStaticJson<unknown>('literature-supplement.json', { papers: [] }, 'no-cache');
     return {
       data: data as T,
       status: 200,
