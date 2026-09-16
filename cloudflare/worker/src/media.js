@@ -170,7 +170,8 @@ function inventoryItem(doi, toc, figures, duplicateHashes) {
     figures.some(item => item.content_hash === toc.content_hash && String(item.semantic_key || '').toLowerCase() !== 'figure-1')
   );
   const suspiciousToc = Boolean(nonFigureOneMatch || (toc?.content_hash && duplicateHashes.has(toc.content_hash)));
-  const largeSource = tocStored && !suspiciousToc
+  const trueToc = tocStored && !suspiciousToc;
+  const largeSource = trueToc
     ? 'toc'
     : fallback
       ? one
@@ -178,9 +179,9 @@ function inventoryItem(doi, toc, figures, duplicateHashes) {
         : 'figure'
       : 'none';
   const figureCount = figures.length;
-  const status = largeSource !== 'none' && figureCount > 0
+  const status = trueToc && figureCount > 0
     ? 'complete'
-    : largeSource !== 'none'
+    : trueToc
       ? 'large_only'
       : figureCount > 0
         ? 'figures_only'
@@ -190,7 +191,9 @@ function inventoryItem(doi, toc, figures, duplicateHashes) {
     doi,
     status,
     largeSource,
-    tocStored,
+    tocStored: trueToc,
+    tocRawStored: tocStored,
+    tocMissing: !trueToc,
     tocReason: toc?.reason || (tocStored ? 'cached' : 'cache_miss'),
     figureCount,
     figureOneStored: Boolean(one),
@@ -271,6 +274,7 @@ export async function mediaInventory(request, env, payload) {
     largeOnly: items.filter(item => item.status === 'large_only').length,
     figuresOnly: items.filter(item => item.status === 'figures_only').length,
     missing: items.filter(item => item.status === 'missing').length,
+    tocMissing: items.filter(item => item.tocMissing).length,
     suspiciousToc: items.filter(item => item.suspiciousToc).length,
     withToc: items.filter(item => item.tocStored).length,
     withFigure1: items.filter(item => item.figureOneStored).length,
@@ -292,8 +296,8 @@ export async function bridgeQueue(request, env) {
       lastRootCause: stateByDoi.get(doi)?.last_root_cause || '',
       reportedPriority: Number(stateByDoi.get(doi)?.reported_priority || 0) === 1,
     }))
-    .filter(item => item.status !== 'complete' || item.suspiciousToc || item.figureCount < 2)
-    .sort((a, b) => Number(b.reportedPriority) - Number(a.reportedPriority) || Number(b.suspiciousToc) - Number(a.suspiciousToc) || Number(a.figureCount > 0) - Number(b.figureCount > 0) || a.attempts - b.attempts);
+    .filter(item => item.tocMissing || item.suspiciousToc || item.figureCount < 2)
+    .sort((a, b) => Number(b.reportedPriority) - Number(a.reportedPriority) || Number(b.tocMissing) - Number(a.tocMissing) || Number(b.suspiciousToc) - Number(a.suspiciousToc) || Number(a.figureCount > 0) - Number(b.figureCount > 0) || a.attempts - b.attempts);
   return { status: 200, body: { updatedAt: Date.now(), count: items.length, items } };
 }
 
