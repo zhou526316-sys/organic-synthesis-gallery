@@ -37,15 +37,22 @@
     return manifestPromise;
   }
 
+  function tocLabel(toc) {
+    const sourceType = String(toc?.sourceType || '');
+    const reason = String(toc?.reason || '');
+    if (sourceType === 'open_graphical_abstract' || reason.startsWith('open_graphical_abstract:')) return 'Open graphical abstract';
+    if (sourceType === 'preprint_graphic' || reason.startsWith('preprint_graphic:')) return 'Preprint graphic';
+    if (sourceType === 'preprint_figure1' || reason.startsWith('preprint_figure1:')) return 'Preprint Figure 1';
+    if (reason === 'figure1_fallback' || sourceType === 'article_figure1') return 'Figure 1';
+    if (reason.startsWith('figure_fallback:')) return reason.slice('figure_fallback:'.length);
+    return 'Article graphic / TOC';
+  }
+
   function pickLargeImage(item) {
     if (item?.toc?.available && item.toc.imageUrl) {
       return {
         url: item.toc.imageUrl,
-        label: item.toc.reason === 'figure1_fallback'
-          ? 'Figure 1'
-          : item.toc.reason?.startsWith('figure_fallback:')
-            ? item.toc.reason.slice('figure_fallback:'.length)
-            : 'Article graphic / TOC',
+        label: tocLabel(item.toc),
       };
     }
     const first = item?.figures?.figures?.[0];
