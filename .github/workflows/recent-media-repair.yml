@@ -84,7 +84,7 @@ jobs:
           NODE
           )
           test -n "$D1_ID" || { echo 'D1 database is missing'; exit 1; }
-          cat > /tmp/wrangler.recent-media.toml <<EOF
+          cat > wrangler.recent-media.toml <<EOF
           name = "organic-synthesis-gallery"
           main = "src/index.js"
           compatibility_date = "2026-09-16"
@@ -95,7 +95,7 @@ jobs:
           database_name = "$D1_NAME"
           database_id = "$D1_ID"
           EOF
-          npx wrangler d1 execute "$D1_NAME" --remote --file /tmp/recent-media-priority.sql --config /tmp/wrangler.recent-media.toml
+          npx wrangler d1 execute "$D1_NAME" --remote --file /tmp/recent-media-priority.sql --config wrangler.recent-media.toml
 
       - name: Repair prioritized recent media
         shell: bash
