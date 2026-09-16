@@ -9,7 +9,7 @@ on:
       - 'PAGES_REFRESH'
       - '.github/workflows/github-pages.yml'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
-      - 'cloudflare/scripts/build-pages-mirror.mjs'
+      - 'cloudflare/scripts/build-pages-mirror-v2.mjs'
       - 'cloudflare/scripts/snapshot-production-static.mjs'
       - 'src/**'
       - 'index.html'
@@ -55,8 +55,8 @@ jobs:
           BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
         run: node cloudflare/scripts/build-cloudflare-bridge.mjs
 
-      - name: Mirror media and metadata for static Pages
-        run: node cloudflare/scripts/build-pages-mirror.mjs
+      - name: Mirror live D1 media and metadata for static Pages
+        run: node cloudflare/scripts/build-pages-mirror-v2.mjs
         env:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
           PAGES_MEDIA_CONCURRENCY: '8'
@@ -84,9 +84,10 @@ jobs:
           const items = Object.values(manifest.items || {});
           const remote = JSON.stringify(manifest).match(/https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//g) || [];
           const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
+          const toc = items.filter(item => item?.toc?.available && item?.toc?.imageUrl).length;
           if (!items.length) throw new Error('media-index is empty');
           if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
-          console.log(JSON.stringify({ manifestItems: items.length, figures }));
+          console.log(JSON.stringify({ manifestItems: items.length, toc, figures }));
           NODE
 
       - name: Upload Pages artifact
