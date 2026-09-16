@@ -13,7 +13,7 @@ const IMAGE_HOSTS = [
   'www.science.org',
   'pubs.rsc.org',
 ];
-const MAX_IMAGE_BYTES = 2_000_000;
+const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_PAGES = 3;
 const MAX_FIGURES = 8;
 const REPAIR_VERSION = 1;
