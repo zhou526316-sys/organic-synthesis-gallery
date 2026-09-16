@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - migration/cloudflare
+      - integration/media-quality-20260916
     paths:
       - 'src/**'
       - 'index.html'
