@@ -113,8 +113,7 @@ CREATE TABLE IF NOT EXISTS media_attempts (
   updated_at INTEGER NOT NULL
 );
 
--- Unique-reader events. A browser profile is provisional until account auth is connected;
--- the primary key prevents the same profile from incrementing one paper more than once.
+-- Unique-reader events. Browser profiles are provisional until a live account session links them.
 CREATE TABLE IF NOT EXISTS paper_readers (
   doi TEXT NOT NULL,
   profile_id TEXT NOT NULL,
@@ -186,6 +185,24 @@ CREATE TABLE IF NOT EXISTS user_sessions (
 );
 CREATE INDEX IF NOT EXISTS idx_user_sessions_user ON user_sessions(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_sessions_expiry ON user_sessions(expires_at);
+
+-- One synchronized user-library document per account. revision provides optimistic concurrency control.
+CREATE TABLE IF NOT EXISTS user_library_state (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  state_json TEXT NOT NULL,
+  revision INTEGER NOT NULL DEFAULT 1 CHECK (revision >= 1),
+  updated_at INTEGER NOT NULL
+);
+
+-- Associates a browser profile with a live session so reader counts can use the stable account identity.
+-- The join to user_sessions makes the link automatically invalid after logout or session expiry.
+CREATE TABLE IF NOT EXISTS user_profile_sessions (
+  profile_id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  session_token_hash TEXT NOT NULL REFERENCES user_sessions(token_hash) ON DELETE CASCADE,
+  linked_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_user_profile_sessions_user ON user_profile_sessions(user_id);
 
 CREATE TABLE IF NOT EXISTS email_login_tokens (
   token_hash TEXT PRIMARY KEY,
