@@ -25,6 +25,23 @@ function normalizeDoi(value) {
   return /^10\.\d{4,9}\/\S+$/i.test(cleaned) ? cleaned.toLowerCase() : null;
 }
 
+function doiFromRecord(record) {
+  const direct = normalizeDoi(record?.doi);
+  if (direct) return direct;
+  if (typeof record?.url !== 'string') return null;
+  try {
+    const url = new URL(record.url);
+    if (/^(?:dx\.)?doi\.org$/i.test(url.hostname)) return normalizeDoi(url.pathname.slice(1));
+    const doiPath = url.pathname.match(/\/doi\/(?:abs\/|full\/|pdf\/|epdf\/)?(10\..+)$/i);
+    if (doiPath) return normalizeDoi(doiPath[1]);
+    const nature = url.pathname.match(/^\/articles\/(s\d+-\d+-\d+[a-z0-9-]*)$/i);
+    if (/nature\.com$/i.test(url.hostname) && nature) return normalizeDoi(`10.1038/${nature[1]}`);
+  } catch {
+    return null;
+  }
+  return null;
+}
+
 async function fetchWithRetry(url, init = {}, attempts = 3) {
   let lastError;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -54,7 +71,39 @@ async function optionalJson(url) {
   }
 }
 
-async function loadGalleryDois() {
+async function sourceJson(path) {
+  const response = await fetchWithRetry(`${SOURCE_API}${path}`, {}, 2);
+  if (!response.ok) throw new Error(`Source API HTTP ${response.status}: ${path}`);
+  return response.json();
+}
+
+async function sourcePost(path, body) {
+  const response = await fetchWithRetry(`${SOURCE_API}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  }, 2);
+  if (!response.ok) throw new Error(`Source API HTTP ${response.status}: ${path}`);
+  return response.json();
+}
+
+async function targetPost(path, body) {
+  const response = await fetchWithRetry(`${TARGET_API_BASE}${path}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${TARGET_WRITE_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  }, 3);
+  const text = await response.text();
+  let parsed = null;
+  try { parsed = text ? JSON.parse(text) : null; } catch { parsed = text; }
+  if (!response.ok) throw new Error(`Target HTTP ${response.status}: ${typeof parsed === 'string' ? parsed : JSON.stringify(parsed)}`);
+  return parsed;
+}
+
+async function loadGallerySnapshot() {
   const encodedResponse = await fetchWithRetry(`${SOURCE_SITE}/papers.gz.b64`);
   if (!encodedResponse.ok) throw new Error(`Unable to load base literature data: ${encodedResponse.status}`);
   const encoded = (await encodedResponse.text()).trim();
@@ -66,17 +115,79 @@ async function loadGalleryDois() {
     'final-audit-supplement.json',
   ];
   const supplemental = await Promise.all(supplementalFiles.map(file => optionalJson(`${SOURCE_SITE}/${file}`)));
+  const dynamicSupplement = await sourceJson('/api/literature/supplement').catch(() => ({ papers: [] }));
+
   const records = [
     ...(Array.isArray(base) ? base : []),
     ...supplemental.flatMap(value => Array.isArray(value?.papers) ? value.papers : []),
+    ...(Array.isArray(dynamicSupplement?.papers) ? dynamicSupplement.papers : []),
   ];
 
-  const dois = new Set();
-  for (const record of records) {
-    const doi = normalizeDoi(record?.doi) || normalizeDoi(record?.url);
-    if (doi) dois.add(doi);
+  return { records, dynamicSupplement };
+}
+
+async function resolveMissingDois(records) {
+  const unresolved = records.flatMap((record, index) => {
+    if (doiFromRecord(record)) return [];
+    const title = typeof record?.title === 'string' ? record.title.trim() : '';
+    if (!title || title.length < 8) return [];
+    return [{
+      key: String(index),
+      title,
+      journal: typeof record?.journal === 'string' ? record.journal : '',
+      date: typeof record?.date === 'string' ? record.date : '',
+      url: typeof record?.url === 'string' ? record.url : undefined,
+    }];
+  });
+  const resolved = new Map();
+  for (let offset = 0; offset < unresolved.length; offset += 40) {
+    const batch = unresolved.slice(offset, offset + 40);
+    try {
+      const payload = await sourcePost('/api/paper-titles/resolve', { papers: batch });
+      for (const item of payload?.papers || []) {
+        const doi = normalizeDoi(item?.doi);
+        if (doi && typeof item?.key === 'string') resolved.set(Number(item.key), doi);
+      }
+    } catch (error) {
+      console.warn(`Unable to resolve DOI batch ${offset}-${offset + batch.length}:`, error instanceof Error ? error.message : String(error));
+    }
   }
-  return [...dois].sort();
+  return resolved;
+}
+
+async function migrateMetadata(snapshot, resolvedDois) {
+  const supplement = snapshot.dynamicSupplement;
+  if (supplement && Array.isArray(supplement.papers)) {
+    try {
+      const imported = await targetPost('/api/literature/supplement/import', supplement);
+      console.log(`Migrated ${imported?.imported || 0} persisted supplement papers.`);
+    } catch (error) {
+      console.warn('Literature supplement migration failed:', error instanceof Error ? error.message : String(error));
+    }
+  }
+
+  const titles = [...new Set(snapshot.records
+    .map(record => typeof record?.title === 'string' ? record.title.trim() : '')
+    .filter(Boolean))];
+  let translated = 0;
+  for (let offset = 0; offset < titles.length; offset += 100) {
+    const batch = titles.slice(offset, offset + 100);
+    try {
+      const payload = await sourcePost('/api/title-translations/zh', { titles: batch });
+      const translations = Array.isArray(payload?.translations) ? payload.translations : [];
+      if (translations.length) {
+        const imported = await targetPost('/api/title-translations/zh/import', { translations });
+        translated += Number(imported?.imported || 0);
+      }
+    } catch (error) {
+      console.warn(`Chinese title migration batch ${offset} failed:`, error instanceof Error ? error.message : String(error));
+    }
+  }
+  console.log(`Migrated ${translated} Chinese title translations.`);
+
+  for (const [index, doi] of resolvedDois.entries()) {
+    if (snapshot.records[index] && !snapshot.records[index].doi) snapshot.records[index].doi = doi;
+  }
 }
 
 function sniffContentType(bytes, declared) {
@@ -108,28 +219,6 @@ async function imageDataUrl(url) {
   const contentType = sniffContentType(bytes, response.headers.get('content-type'));
   if (!contentType) throw new Error('Unsupported image format');
   return `data:${contentType};base64,${Buffer.from(bytes).toString('base64')}`;
-}
-
-async function sourceJson(path) {
-  const response = await fetchWithRetry(`${SOURCE_API}${path}`, {}, 2);
-  if (!response.ok) throw new Error(`Source API HTTP ${response.status}: ${path}`);
-  return response.json();
-}
-
-async function targetPost(path, body) {
-  const response = await fetchWithRetry(`${TARGET_API_BASE}${path}`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${TARGET_WRITE_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  }, 3);
-  const text = await response.text();
-  let parsed = null;
-  try { parsed = text ? JSON.parse(text) : null; } catch { parsed = text; }
-  if (!response.ok) throw new Error(`Target HTTP ${response.status}: ${typeof parsed === 'string' ? parsed : JSON.stringify(parsed)}`);
-  return parsed;
 }
 
 async function migrateDoi(doi) {
@@ -203,8 +292,12 @@ if (!targetHealth?.d1 || !targetHealth?.r2 || !targetHealth?.writeAuth) {
   throw new Error(`Target bindings are incomplete: ${JSON.stringify(targetHealth)}`);
 }
 
-const dois = await loadGalleryDois();
-console.log(`Discovered ${dois.length} unique DOI records from the current production Gallery.`);
+const snapshot = await loadGallerySnapshot();
+const resolvedDois = await resolveMissingDois(snapshot.records);
+await migrateMetadata(snapshot, resolvedDois);
+
+const dois = [...new Set(snapshot.records.map(doiFromRecord).filter(Boolean))].sort();
+console.log(`Discovered ${dois.length} unique DOI records from the current production Gallery after title-based DOI recovery.`);
 
 let completed = 0;
 const results = await mapConcurrent(dois, CONCURRENCY, async doi => {
@@ -218,6 +311,7 @@ const results = await mapConcurrent(dois, CONCURRENCY, async doi => {
 
 const summary = {
   dois: results.length,
+  recoveredMissingDois: resolvedDois.size,
   tocImported: results.reduce((sum, item) => sum + item.toc, 0),
   figuresImported: results.reduce((sum, item) => sum + item.figures, 0),
   empty: results.filter(item => item.skipped > 0).length,
