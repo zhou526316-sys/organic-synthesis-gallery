@@ -1,0 +1,142 @@
+name: Deploy user UI Worker additions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/cloudflare-user-ui-release.yml'
+      - 'cloudflare/schema.sql'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/src/user-ui.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-user-ui-release
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      D1_NAME: organic-synthesis-gallery
+      R2_BUCKET: organic-synthesis-gallery-media
+      WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate Cloudflare credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Install frontend dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build current frontend assets
+        run: npm run build
+
+      - name: Install Worker dependencies
+        working-directory: cloudflare/worker
+        run: npm install --no-audit --no-fund
+
+      - name: Resolve existing D1 database
+        id: d1
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 list --json > /tmp/d1-list.json
+          D1_ID=$(node - <<'NODE'
+          const fs = require('fs');
+          const rows = JSON.parse(fs.readFileSync('/tmp/d1-list.json', 'utf8'));
+          const row = rows.find(item => item.name === process.env.D1_NAME);
+          if (row?.uuid) process.stdout.write(row.uuid);
+          NODE
+          )
+          test -n "$D1_ID" || { echo 'D1 database is missing'; exit 1; }
+          echo "database_id=$D1_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Verify R2 bucket exists
+        working-directory: cloudflare/worker
+        run: npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null
+
+      - name: Generate non-destructive Worker configuration
+        working-directory: cloudflare/worker
+        shell: bash
+        env:
+          D1_ID: ${{ steps.d1.outputs.database_id }}
+        run: |
+          set -euo pipefail
+          cat > wrangler.user-ui.toml <<EOF
+          name = "organic-synthesis-gallery"
+          main = "src/index.js"
+          compatibility_date = "2026-09-16"
+          workers_dev = true
+
+          [vars]
+          MIGRATION_STAGE = "staging"
+
+          [triggers]
+          crons = ["0 */6 * * *"]
+
+          [assets]
+          directory = "../../dist"
+          binding = "ASSETS"
+          not_found_handling = "single-page-application"
+          run_worker_first = ["/api/*", "/media/*"]
+
+          [[r2_buckets]]
+          binding = "MEDIA"
+          bucket_name = "$R2_BUCKET"
+
+          [[d1_databases]]
+          binding = "DB"
+          database_name = "$D1_NAME"
+          database_id = "$D1_ID"
+          EOF
+
+      - name: Apply idempotent user schema
+        working-directory: cloudflare/worker
+        run: npx wrangler d1 execute "$D1_NAME" --remote --file ../schema.sql --config wrangler.user-ui.toml
+
+      - name: Dry-run Worker bundle
+        working-directory: cloudflare/worker
+        run: npx wrangler deploy --dry-run --config wrangler.user-ui.toml --outdir .wrangler-user-ui-dry-run
+
+      - name: Deploy Worker without media migration
+        working-directory: cloudflare/worker
+        run: npx wrangler deploy --config wrangler.user-ui.toml
+
+      - name: Verify health and user UI routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 5 --retry-delay 2 "$WORKER_URL/api/_healthcheck" > /tmp/health.json
+          curl --fail --silent --show-error --retry 5 --retry-delay 2 \
+            -H 'content-type: application/json' \
+            -H 'origin: https://zhou526316-sys.github.io' \
+            --data '{"dois":[]}' \
+            "$WORKER_URL/api/user-ui/reader-counts" > /tmp/counts.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const health = JSON.parse(fs.readFileSync('/tmp/health.json', 'utf8'));
+          const counts = JSON.parse(fs.readFileSync('/tmp/counts.json', 'utf8'));
+          if (!health.ok || !health.d1 || !health.r2 || !health.writeAuth) throw new Error(`Healthcheck failed: ${JSON.stringify(health)}`);
+          if (!counts || typeof counts.counts !== 'object') throw new Error(`Reader count route failed: ${JSON.stringify(counts)}`);
+          console.log(JSON.stringify({ health: true, userUiRoutes: true, mediaMigration: false }));
+          NODE
