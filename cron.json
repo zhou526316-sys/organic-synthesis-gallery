@@ -1,0 +1,7 @@
+[
+  {"name":"media-repair-0","cron":"*/5 * * * *","handler":"mediaRepairCron","timezone":"UTC"},
+  {"name":"media-repair-1","cron":"1-59/5 * * * *","handler":"mediaRepairCron","timezone":"UTC"},
+  {"name":"media-repair-2","cron":"2-59/5 * * * *","handler":"mediaRepairCron","timezone":"UTC"},
+  {"name":"media-repair-3","cron":"3-59/5 * * * *","handler":"mediaRepairCron","timezone":"UTC"},
+  {"name":"media-repair-4","cron":"4-59/5 * * * *","handler":"mediaRepairCron","timezone":"UTC"}
+]
