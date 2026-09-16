@@ -44,7 +44,29 @@ interface StaticMediaManifest {
   items?: Record<string, StaticMediaItem>;
 }
 
+interface StaticTranslations {
+  translations?: Array<{ title?: string; zh?: string }>;
+}
+
+interface StaticResolutions {
+  byDoi?: Record<string, { title?: string; doi?: string }>;
+  byTitle?: Record<string, { title?: string; doi?: string }>;
+  byUrl?: Record<string, { title?: string; doi?: string }>;
+}
+
 let mediaManifestPromise: Promise<StaticMediaManifest> | null = null;
+let translationsPromise: Promise<StaticTranslations> | null = null;
+let resolutionsPromise: Promise<StaticResolutions> | null = null;
+
+function assetUrl(path: string): string {
+  if (typeof document !== 'undefined') return new URL(path.replace(/^\//, ''), document.baseURI).toString();
+  return path;
+}
+
+function staticFrontendOnly(): boolean {
+  if (typeof location === 'undefined') return false;
+  return location.hostname.endsWith('.github.io') || location.protocol === 'file:';
+}
 
 function normalizeDoi(value: unknown): string | null {
   if (typeof value !== 'string') return null;
@@ -55,19 +77,38 @@ function normalizeDoi(value: unknown): string | null {
   return /^10\.\d{4,9}\/\S+$/i.test(cleaned) ? cleaned : null;
 }
 
+function normalizeTitle(value: unknown): string {
+  return typeof value === 'string' ? value.trim().toLowerCase().replace(/\s+/g, ' ') : '';
+}
+
+async function fetchStaticJson<T>(path: string, fallback: T): Promise<T> {
+  try {
+    const response = await fetch(assetUrl(path), { credentials: 'same-origin', cache: 'force-cache' });
+    if (!response.ok) return fallback;
+    return await response.json() as T;
+  } catch {
+    return fallback;
+  }
+}
+
 function loadMediaManifest(): Promise<StaticMediaManifest> {
   if (!mediaManifestPromise) {
-    mediaManifestPromise = fetch('/media-index.json', { credentials: 'same-origin', cache: 'force-cache' })
-      .then(async response => {
-        if (!response.ok) return { version: 1, generatedAt: 0, items: {} };
-        const payload = await response.json() as StaticMediaManifest;
-        return payload && typeof payload === 'object'
-          ? { version: payload.version || 1, generatedAt: payload.generatedAt || 0, items: payload.items || {} }
-          : { version: 1, generatedAt: 0, items: {} };
-      })
-      .catch(() => ({ version: 1, generatedAt: 0, items: {} }));
+    mediaManifestPromise = fetchStaticJson<StaticMediaManifest>('media-index.json', { version: 1, generatedAt: 0, items: {} })
+      .then(payload => payload && typeof payload === 'object'
+        ? { version: payload.version || 1, generatedAt: payload.generatedAt || 0, items: payload.items || {} }
+        : { version: 1, generatedAt: 0, items: {} });
   }
   return mediaManifestPromise;
+}
+
+function loadTranslations(): Promise<StaticTranslations> {
+  if (!translationsPromise) translationsPromise = fetchStaticJson<StaticTranslations>('title-translations-zh.json', { translations: [] });
+  return translationsPromise;
+}
+
+function loadResolutions(): Promise<StaticResolutions> {
+  if (!resolutionsPromise) resolutionsPromise = fetchStaticJson<StaticResolutions>('paper-title-resolutions.json', { byDoi: {}, byTitle: {}, byUrl: {} });
+  return resolutionsPromise;
 }
 
 function localInventory(item: StaticMediaItem | undefined, doi: string) {
@@ -149,11 +190,11 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
     });
     const missing = requested.filter(doi => !manifest.items?.[doi]);
 
-    if (!missing.length) {
+    if (!missing.length || staticFrontendOnly()) {
       return {
         data: { generatedAt: manifest.generatedAt || Date.now(), items: localItems } as T,
         status: 200,
-        headers: new Headers({ 'x-gallery-media-source': 'static-manifest' }),
+        headers: new Headers({ 'x-gallery-media-source': missing.length ? 'static-only' : 'static-manifest' }),
       };
     }
 
@@ -176,10 +217,59 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
     }
   }
 
+  if (staticFrontendOnly() && path === '/api/title-translations/zh') {
+    const titles = body && typeof body === 'object' && Array.isArray((body as { titles?: unknown }).titles)
+      ? (body as { titles: unknown[] }).titles.filter((value): value is string => typeof value === 'string')
+      : [];
+    const payload = await loadTranslations();
+    const map = new Map((payload.translations || [])
+      .filter(item => typeof item.title === 'string' && typeof item.zh === 'string')
+      .map(item => [normalizeTitle(item.title), item]));
+    const translations = titles.flatMap(title => {
+      const hit = map.get(normalizeTitle(title));
+      return hit ? [{ title, zh: hit.zh }] : [];
+    });
+    return {
+      data: { translations } as T,
+      status: 200,
+      headers: new Headers({ 'x-gallery-metadata-source': 'static-translations' }),
+    };
+  }
+
+  if (staticFrontendOnly() && path === '/api/paper-titles/resolve') {
+    const papers = body && typeof body === 'object' && Array.isArray((body as { papers?: unknown }).papers)
+      ? (body as { papers: Array<Record<string, unknown>> }).papers
+      : [];
+    const payload = await loadResolutions();
+    const results = papers.flatMap(item => {
+      const doi = normalizeDoi(item.doi);
+      const titleKey = normalizeTitle(item.title);
+      const urlKey = typeof item.url === 'string' ? item.url.trim() : '';
+      const hit = (doi ? payload.byDoi?.[doi] : undefined)
+        || (titleKey ? payload.byTitle?.[titleKey] : undefined)
+        || (urlKey ? payload.byUrl?.[urlKey] : undefined);
+      if (!hit?.title) return [];
+      return [{ key: item.key, title: hit.title, doi: hit.doi }];
+    });
+    return {
+      data: { papers: results } as T,
+      status: 200,
+      headers: new Headers({ 'x-gallery-metadata-source': 'static-resolutions' }),
+    };
+  }
+
   return rawRequest<T>('POST', path, body);
 }
 
 async function request<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
+  if (method === 'GET' && staticFrontendOnly() && path === '/api/literature/supplement') {
+    const data = await fetchStaticJson<unknown>('literature-supplement.json', { papers: [] });
+    return {
+      data: data as T,
+      status: 200,
+      headers: new Headers({ 'x-gallery-metadata-source': 'static-supplement' }),
+    };
+  }
   if (method === 'POST') return staticAwarePost<T>(path, body);
   return rawRequest<T>(method, path, body);
 }
