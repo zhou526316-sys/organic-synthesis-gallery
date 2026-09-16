@@ -1,0 +1,33 @@
+name: Audit OpenAlex open versions
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/openalex-open-version-audit.yml'
+      - 'cloudflare/scripts/audit-openalex-open-versions.mjs'
+      - 'audit/visual-gap-dois-2026-09-16.json'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Resolve non-publisher open versions
+        env:
+          OPENALEX_DELAY_MS: '160'
+        run: node cloudflare/scripts/audit-openalex-open-versions.mjs
+      - name: Upload open-version report
+        uses: actions/upload-artifact@v4
+        with:
+          name: openalex-open-version-report
+          path: audit/openalex-open-version-report.json
+          retention-days: 7
