@@ -15,33 +15,39 @@ function titleKey(value) {
   return typeof value === 'string' ? value.trim().toLowerCase().replace(/\s+/g, ' ') : '';
 }
 
-const curated = JSON.parse(await readFile(path.join(PUBLIC_DIR, 'curated-supplement.json'), 'utf8'));
-const supplementPath = path.join(PUBLIC_DIR, 'literature-supplement.json');
-const translationsPath = path.join(PUBLIC_DIR, 'title-translations-zh.json');
-const supplement = JSON.parse(await readFile(supplementPath, 'utf8'));
-const translationPayload = JSON.parse(await readFile(translationsPath, 'utf8'));
-
-const merged = new Map();
-for (const paper of [...(supplement?.papers || []), ...(curated?.papers || [])]) {
-  if (!paper || typeof paper !== 'object') continue;
-  const doi = normalizeDoi(paper.doi);
-  const title = titleKey(paper.title);
-  const key = doi || `title:${title}`;
-  if (!key || key === 'title:') continue;
-  const existing = merged.get(key) || {};
-  merged.set(key, {
-    ...existing,
-    ...paper,
-    new: Boolean(existing.new || paper.new),
-    ...(existing.synthesisType && !paper.synthesisType ? { synthesisType: existing.synthesisType } : {}),
-  });
+function mergePapers(...sets) {
+  const merged = new Map();
+  for (const paper of sets.flat()) {
+    if (!paper || typeof paper !== 'object') continue;
+    const doi = normalizeDoi(paper.doi);
+    const title = titleKey(paper.title);
+    const key = doi || `title:${title}`;
+    if (!key || key === 'title:') continue;
+    const existing = merged.get(key) || {};
+    merged.set(key, {
+      ...existing,
+      ...paper,
+      new: Boolean(existing.new || paper.new),
+      ...(existing.synthesisType && !paper.synthesisType ? { synthesisType: existing.synthesisType } : {}),
+    });
+  }
+  return [...merged.values()].sort((a, b) =>
+    String(b.date || '').localeCompare(String(a.date || '')) ||
+    String(a.journal || '').localeCompare(String(b.journal || '')) ||
+    String(a.title || '').localeCompare(String(b.title || ''))
+  );
 }
 
-const papers = [...merged.values()].sort((a, b) =>
-  String(b.date || '').localeCompare(String(a.date || '')) ||
-  String(a.journal || '').localeCompare(String(b.journal || '')) ||
-  String(a.title || '').localeCompare(String(b.title || ''))
-);
+const curated = JSON.parse(await readFile(path.join(PUBLIC_DIR, 'curated-supplement.json'), 'utf8'));
+const supplementPath = path.join(PUBLIC_DIR, 'literature-supplement.json');
+const finalAuditPath = path.join(PUBLIC_DIR, 'final-audit-supplement.json');
+const translationsPath = path.join(PUBLIC_DIR, 'title-translations-zh.json');
+const supplement = JSON.parse(await readFile(supplementPath, 'utf8'));
+const finalAudit = JSON.parse(await readFile(finalAuditPath, 'utf8'));
+const translationPayload = JSON.parse(await readFile(translationsPath, 'utf8'));
+
+const papers = mergePapers(supplement?.papers || [], curated?.papers || []);
+const mandatoryStaticPapers = mergePapers(finalAudit?.papers || [], curated?.papers || []);
 
 const translations = new Map();
 for (const item of translationPayload?.translations || []) {
@@ -61,6 +67,19 @@ await writeFile(supplementPath, JSON.stringify({
   curatedVerifiedThrough: curated?.verifiedThrough || null,
   papers,
 }));
+
+await writeFile(finalAuditPath, JSON.stringify({
+  ...finalAudit,
+  verifiedThrough: curated?.verifiedThrough || finalAudit?.verifiedThrough || null,
+  curatedMerged: true,
+  papers: mandatoryStaticPapers,
+}));
+
 await writeFile(translationsPath, JSON.stringify({ translations: [...translations.values()] }));
 
-console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({ curated: curated?.papers?.length || 0, supplement: papers.length, translations: translations.size })}`);
+console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({
+  curated: curated?.papers?.length || 0,
+  supplement: papers.length,
+  mandatoryStatic: mandatoryStaticPapers.length,
+  translations: translations.size,
+})}`);
