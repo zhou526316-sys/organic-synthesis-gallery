@@ -9,7 +9,9 @@ on:
       - 'PAGES_REFRESH'
       - '.github/workflows/github-pages.yml'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
-      - 'cloudflare/scripts/build-pages-mirror.mjs'
+      - 'cloudflare/scripts/build-pages-mirror-v2.mjs'
+      - 'cloudflare/scripts/annotate-media-inventory.mjs'
+      - 'cloudflare/scripts/sync-curated-cloudflare.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
       - 'public/curated-supplement.json'
       - 'public/papers.gz.b64'
@@ -59,6 +61,12 @@ jobs:
           test -s public/manual-supplement.json
           test -s public/final-audit-supplement.json
 
+      - name: Sync curated literature into Cloudflare TOC repair queue
+        env:
+          GALLERY_BACKEND: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: node cloudflare/scripts/sync-curated-cloudflare.mjs
+
       - name: Generate GitHub Pages VPN Bridge
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery.zhou526316.workers.dev
@@ -66,11 +74,16 @@ jobs:
           BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
         run: node cloudflare/scripts/build-cloudflare-bridge.mjs
 
-      - name: Mirror media and metadata for static Pages
-        run: node cloudflare/scripts/build-pages-mirror.mjs
+      - name: Mirror live D1 media and metadata for static Pages
+        run: node cloudflare/scripts/build-pages-mirror-v2.mjs
         env:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
           PAGES_MEDIA_CONCURRENCY: '8'
+
+      - name: Annotate strict TOC versus figure fallback state
+        env:
+          GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+        run: node cloudflare/scripts/annotate-media-inventory.mjs
 
       - name: Merge assistant-audited literature and bilingual titles
         run: node cloudflare/scripts/merge-curated-pages.mjs
@@ -96,20 +109,24 @@ jobs:
           grep -F "// @version      1.0.1" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @connect      organic-synthesis-gallery.zhou526316.workers.dev" dist/gallery-vpn-bridge.user.js
+          grep -R -F 'gallery-hires-viewer' dist/assets >/dev/null
           node - <<'NODE'
           const fs = require('fs');
           const manifest = JSON.parse(fs.readFileSync('dist/media-index.json', 'utf8'));
           const items = Object.values(manifest.items || {});
           const remote = JSON.stringify(manifest).match(/https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//g) || [];
           const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
+          const realToc = items.filter(item => item?.inventory?.tocStored === true).length;
+          const fallback = items.filter(item => item?.inventory?.tocMissing === true && Number(item?.inventory?.figureCount || 0) > 0).length;
           if (!items.length) throw new Error('media-index is empty');
           if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
+          if (!items.every(item => item.inventory && typeof item.inventory.status === 'string')) throw new Error('strict media inventory annotation missing');
           const supplement = JSON.parse(fs.readFileSync('dist/literature-supplement.json', 'utf8'));
           const dois = new Set((supplement.papers || []).map(p => String(p.doi || '').toLowerCase()));
           if (!dois.has('10.1038/s41467-026-77774-9')) throw new Error('curated literature supplement was not merged');
           const translations = JSON.parse(fs.readFileSync('dist/title-translations-zh.json', 'utf8'));
           if (!(translations.translations || []).some(x => x.title === 'Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage' && x.zh)) throw new Error('curated Chinese title was not merged');
-          console.log(JSON.stringify({ manifestItems: items.length, figures, curatedSupplement: true, repositoryBaseline: true }));
+          console.log(JSON.stringify({ manifestItems: items.length, realToc, fallback, figures, curatedSupplement: true, repositoryBaseline: true }));
           NODE
 
       - name: Upload Pages artifact
