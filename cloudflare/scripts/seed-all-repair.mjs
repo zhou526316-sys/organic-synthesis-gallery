@@ -43,7 +43,12 @@ async function jsonFetch(url, init = {}) {
 async function loadLocalRecords() {
   const encoded = (await readFile('public/papers.gz.b64', 'utf8')).trim();
   const base = JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8'));
-  const supplementFiles = ['public/total-synthesis.json', 'public/manual-supplement.json', 'public/final-audit-supplement.json'];
+  const supplementFiles = [
+    'public/total-synthesis.json',
+    'public/manual-supplement.json',
+    'public/final-audit-supplement.json',
+    'public/curated-supplement.json',
+  ];
   const supplements = [];
   for (const file of supplementFiles) {
     try {
