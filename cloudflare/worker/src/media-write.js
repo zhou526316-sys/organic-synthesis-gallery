@@ -1,6 +1,6 @@
 import { getArticleFigures, getToc, normalizeDoi } from './media.js';
 
-const MAX_IMAGE_BYTES = 2_000_000;
+const MAX_IMAGE_BYTES = 4_000_000;
 const ARTICLE_HOSTS = [
   'pubs.acs.org',
   'onlinelibrary.wiley.com',
@@ -78,6 +78,55 @@ function parseImageData(value) {
   const bytes = bytesFromBase64(base64);
   if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) return null;
   return { contentType, bytes };
+}
+
+function imageDimensions(bytes, contentType) {
+  if (!(bytes instanceof Uint8Array) || bytes.byteLength < 10) return null;
+
+  if (contentType === 'image/png' && bytes.byteLength >= 24) {
+    const signature = [137, 80, 78, 71, 13, 10, 26, 10];
+    if (signature.every((value, index) => bytes[index] === value)) {
+      const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+      const width = view.getUint32(16, false);
+      const height = view.getUint32(20, false);
+      if (width > 0 && height > 0) return { width, height };
+    }
+  }
+
+  if (contentType === 'image/gif' && bytes.byteLength >= 10) {
+    const header = String.fromCharCode(...bytes.subarray(0, 6));
+    if (header === 'GIF87a' || header === 'GIF89a') {
+      const width = bytes[6] | (bytes[7] << 8);
+      const height = bytes[8] | (bytes[9] << 8);
+      if (width > 0 && height > 0) return { width, height };
+    }
+  }
+
+  if (contentType === 'image/jpeg' && bytes[0] === 0xff && bytes[1] === 0xd8) {
+    let offset = 2;
+    const sofMarkers = new Set([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf]);
+    while (offset + 9 < bytes.byteLength) {
+      if (bytes[offset] !== 0xff) {
+        offset += 1;
+        continue;
+      }
+      const marker = bytes[offset + 1];
+      if (marker === 0xd8 || marker === 0xd9 || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) {
+        offset += 2;
+        continue;
+      }
+      const length = (bytes[offset + 2] << 8) | bytes[offset + 3];
+      if (length < 2 || offset + 2 + length > bytes.byteLength) break;
+      if (sofMarkers.has(marker) && length >= 7) {
+        const height = (bytes[offset + 5] << 8) | bytes[offset + 6];
+        const width = (bytes[offset + 7] << 8) | bytes[offset + 8];
+        if (width > 0 && height > 0) return { width, height };
+      }
+      offset += 2 + length;
+    }
+  }
+
+  return null;
 }
 
 function extensionForContentType(contentType) {
@@ -204,8 +253,13 @@ export async function importFigure(request, env, payload) {
   const key = semanticKey(label, sourceId);
   const caption = typeof payload?.caption === 'string' && payload.caption.trim() ? payload.caption.trim().slice(0, 600) : null;
   const articleUrl = normalizeArticleUrl(payload?.articleUrl, doi);
-  const width = Number.isFinite(payload?.width) ? Math.max(0, Math.round(payload.width)) : null;
-  const height = Number.isFinite(payload?.height) ? Math.max(0, Math.round(payload.height)) : null;
+  const detected = imageDimensions(image.bytes, image.contentType);
+  const width = Number.isFinite(payload?.width) && Number(payload.width) > 0
+    ? Math.max(1, Math.round(payload.width))
+    : detected?.width || null;
+  const height = Number.isFinite(payload?.height) && Number(payload.height) > 0
+    ? Math.max(1, Math.round(payload.height))
+    : detected?.height || null;
   const sortOrder = Number.isFinite(payload?.order) ? Math.max(0, Math.min(99, Math.round(payload.order))) : 0;
   const [token, fullHash] = await Promise.all([doiToken(doi), sha256Hex(image.bytes)]);
   const contentHash = fullHash.slice(0, 32);
