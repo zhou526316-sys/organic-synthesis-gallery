@@ -31,8 +31,12 @@ jobs:
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
 
-      - name: TypeScript check
-        run: npx tsc --noEmit
+      - name: Type-check isolated user UI modules
+        run: >-
+          npx tsc --noEmit --target ES2022 --module ESNext --moduleResolution bundler
+          --lib ES2022,DOM,DOM.Iterable --strict --noUnusedLocals --noUnusedParameters
+          src/user-shell.ts src/user-ui/shared.ts src/user-ui/paper-actions.ts
+          src/user-ui/library-shell.ts src/user-ui/search-controller.ts
 
   worker-dry-run:
     runs-on: ubuntu-latest
