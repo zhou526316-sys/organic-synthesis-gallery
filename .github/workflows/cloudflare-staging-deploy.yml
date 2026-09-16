@@ -2,6 +2,11 @@ name: Deploy Cloudflare staging
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - migration/cloudflare
+    paths:
+      - 'DEPLOY_TOC_FIX'
 
 permissions:
   contents: read
@@ -145,6 +150,11 @@ jobs:
         working-directory: cloudflare/worker
         run: npx wrangler deploy --config wrangler.staging.toml
 
+      - name: Seed repair state for all current DOI records
+        env:
+          TARGET_API_BASE: ${{ env.STAGING_URL }}
+        run: node cloudflare/scripts/seed-all-repair.mjs | tee /tmp/repair-seed.log
+
       - name: Verify Cloudflare health and static manifest
         shell: bash
         run: |
@@ -164,7 +174,16 @@ jobs:
           NODE
 
       - name: Verify priority repair queue remains available
-        run: curl --fail --silent --show-error "$STAGING_URL/api/media/repair-status" > /tmp/repair-status.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error "$STAGING_URL/api/media/repair-status" > /tmp/repair-status.json
+          curl --fail --silent --show-error "$STAGING_URL/api/media/bridge-queue" > /tmp/bridge-queue.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const queue=JSON.parse(fs.readFileSync('/tmp/bridge-queue.json','utf8'));
+          console.log(JSON.stringify({bridgeQueueCount:queue.count, tocMissing:(queue.items||[]).filter(x=>x.tocMissing).length}));
+          NODE
 
       - name: Publish deployment summary
         env:
@@ -176,9 +195,10 @@ jobs:
             echo "$STAGING_URL"
             echo
             echo "Migration: $MIGRATION_SUMMARY"
+            grep '^REPAIR_SEED_SUMMARY ' /tmp/repair-seed.log || true
             echo '- Frontend media reads: static media-index first'
             echo '- D1 fallback: only for visible media not present in static manifest'
-            echo '- R2 migration: source inventory filtered; existing target media skipped'
+            echo '- Real TOC is now required for media completeness'
+            echo '- Repair state seeded for all current DOI records'
             echo '- Repair cron: every 6 hours, max 2 DOI per run'
-            echo '- 86 user-reported priority DOI records preserved'
           } >> "$GITHUB_STEP_SUMMARY"
