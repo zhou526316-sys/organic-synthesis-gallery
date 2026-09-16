@@ -2,11 +2,6 @@ name: Deploy static Cloudflare Pages fallback
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - migration/cloudflare
-    paths:
-      - '.github/workflows/cloudflare-pages-static.yml'
 
 permissions:
   contents: read
