@@ -1,0 +1,44 @@
+name: Diagnose Nature media markup
+
+on:
+  push:
+    branches:
+      - integration/media-quality-20260916
+    paths:
+      - '.github/workflows/nature-media-diagnostic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inspect publisher HTML media markup
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const ids=['s41467-026-77092-0','s41467-026-74378-1','s41586-026-11043-z'];
+          function attr(tag,name){return new RegExp(`\\b${name}\\s*=\\s*["']([^"']+)["']`,'i').exec(tag)?.[1]||''}
+          for(const id of ids){
+            const url=`https://www.nature.com/articles/${id}`;
+            try{
+              const r=await fetch(url,{redirect:'follow',headers:{'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Safari/537.36','accept':'text/html,application/xhtml+xml'}});
+              const html=await r.text();
+              const figures=html.match(/<figure\b/gi)||[];
+              const imgs=html.match(/<img\b[^>]*>/gi)||[];
+              const sources=html.match(/<source\b[^>]*>/gi)||[];
+              const media=imgs.slice(0,60).map(tag=>({src:attr(tag,'src'),dataSrc:attr(tag,'data-src'),srcset:attr(tag,'srcset').slice(0,300),alt:attr(tag,'alt'),cls:attr(tag,'class')})).filter(x=>x.src||x.dataSrc||x.srcset);
+              const figContexts=[];
+              for(const needle of ['Fig. 1','Figure 1','c-article-section__figure','data-test="figure"','article__figure','c-article-figure']){
+                const i=html.indexOf(needle); if(i>=0) figContexts.push({needle,context:html.slice(Math.max(0,i-500),i+1800).replace(/\s+/g,' ').slice(0,2300)});
+              }
+              const pdf=[...html.matchAll(/href=["']([^"']+\.pdf[^"']*)["']/gi)].slice(0,12).map(m=>m[1]);
+              console.log('NATURE_DIAG',JSON.stringify({id,status:r.status,finalUrl:r.url,bytes:html.length,figures:figures.length,imgs:imgs.length,sources:sources.length,hasFig1:/\b(?:Fig\.|Figure)\s*1\b/i.test(html),media:media.slice(0,25),figContexts,pdf}));
+            }catch(e){ console.log('NATURE_DIAG_ERROR',id,String(e)); }
+          }
+          NODE
