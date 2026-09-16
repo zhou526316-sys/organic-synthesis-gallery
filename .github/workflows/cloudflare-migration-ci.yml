@@ -83,7 +83,7 @@ jobs:
         run: |
           set -euo pipefail
           test -s /tmp/gallery-vpn-bridge.user.js
-          grep -F "// @version      1.0.3" /tmp/gallery-vpn-bridge.user.js
+          grep -F "// @version      1.0.4" /tmp/gallery-vpn-bridge.user.js
           grep -F "// @match        https://gallery.example.pages.dev/*" /tmp/gallery-vpn-bridge.user.js
           grep -F "// @connect      api.example.workers.dev" /tmp/gallery-vpn-bridge.user.js
           grep -F "const API_BASE = 'https://api.example.workers.dev';" /tmp/gallery-vpn-bridge.user.js
@@ -92,6 +92,8 @@ jobs:
           grep -F "GM_registerMenuCommand" /tmp/gallery-vpn-bridge.user.js
           grep -F "Authorization: \`Bearer \${token}\`" /tmp/gallery-vpn-bridge.user.js
           grep -F "return validDoi(doi);" /tmp/gallery-vpn-bridge.user.js
+          grep -F "publisher_access_blocked" /tmp/gallery-vpn-bridge.user.js
+          grep -F "semantic_toc_not_found" /tmp/gallery-vpn-bridge.user.js
           if grep -F "api-v2.appdeploy.ai/app/organic-synthesis-literature-gallery-ase43k" /tmp/gallery-vpn-bridge.user.js; then
             echo 'Generated Bridge still contains the old AppDeploy API base.'
             exit 1
