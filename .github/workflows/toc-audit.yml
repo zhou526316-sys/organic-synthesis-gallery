@@ -1,81 +1,73 @@
-name: Audit and repair TOC gaps
+name: Seed all TOC gaps for VPN Bridge
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - migration/cloudflare
+      - main
     paths:
       - 'TOC_AUDIT_NOW'
       - '.github/workflows/toc-audit.yml'
+      - 'cloudflare/scripts/seed-all-repair.mjs'
+      - 'public/papers.gz.b64'
+      - 'public/total-synthesis.json'
+      - 'public/manual-supplement.json'
+      - 'public/final-audit-supplement.json'
+      - 'public/curated-supplement.json'
 
 permissions:
   contents: read
 
 jobs:
-  audit-repair:
+  seed-and-audit:
     runs-on: ubuntu-latest
     env:
       BACKEND: https://organic-synthesis-gallery.zhou526316.workers.dev
-      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+      TARGET_API_BASE: https://organic-synthesis-gallery.zhou526316.workers.dev
     steps:
-      - name: Validate secret
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -n "$BRIDGE_WRITE_TOKEN"
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Capture pre-repair audit
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Seed every tracked DOI into the VPN Bridge repair queue
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error "$BACKEND/api/media-audit" > /tmp/audit-before.json
-          curl --fail --silent --show-error "$BACKEND/api/media/repair-status" > /tmp/repair-before.json
-          curl --fail --silent --show-error "$BACKEND/api/media/bridge-queue" > /tmp/bridge-before.json
+          node cloudflare/scripts/seed-all-repair.mjs | tee /tmp/seed-all.log
+
+      - name: Verify full bridge queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error "$BACKEND/api/media/bridge-queue" > /tmp/bridge.json
+          curl --fail --silent --show-error "$BACKEND/api/media-audit" > /tmp/audit.json
           node - <<'NODE'
-          const fs=require('fs');
-          const audit=JSON.parse(fs.readFileSync('/tmp/audit-before.json','utf8'));
-          const repair=JSON.parse(fs.readFileSync('/tmp/repair-before.json','utf8'));
-          const bridge=JSON.parse(fs.readFileSync('/tmp/bridge-before.json','utf8'));
-          console.log('AUDIT_BEFORE', JSON.stringify(audit.summary || audit));
-          console.log('REPAIR_BEFORE', JSON.stringify(repair.summary || repair));
-          console.log('BRIDGE_BEFORE', JSON.stringify({count:Array.isArray(bridge.items)?bridge.items.length:null}));
-          NODE
-
-      - name: Run conservative priority repair rounds
-        shell: bash
-        run: |
-          set -euo pipefail
-          for round in 1 2 3 4; do
-            echo "REPAIR_ROUND $round"
-            curl --fail --silent --show-error \
-              -H "Authorization: Bearer $BRIDGE_WRITE_TOKEN" \
-              -H 'Content-Type: application/json' \
-              -d '{"limit":4}' \
-              "$BACKEND/api/media/repair-batch" | tee "/tmp/repair-$round.json"
-            echo
-          done
-
-      - name: Capture post-repair audit
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl --fail --silent --show-error "$BACKEND/api/media-audit" > /tmp/audit-after.json
-          curl --fail --silent --show-error "$BACKEND/api/media/repair-status" > /tmp/repair-after.json
-          curl --fail --silent --show-error "$BACKEND/api/media/bridge-queue" > /tmp/bridge-after.json
-          node - <<'NODE'
-          const fs=require('fs');
-          const before=JSON.parse(fs.readFileSync('/tmp/audit-before.json','utf8'));
-          const after=JSON.parse(fs.readFileSync('/tmp/audit-after.json','utf8'));
-          const repair=JSON.parse(fs.readFileSync('/tmp/repair-after.json','utf8'));
-          const bridge=JSON.parse(fs.readFileSync('/tmp/bridge-after.json','utf8'));
-          const rounds=[1,2,3,4].map(i=>JSON.parse(fs.readFileSync(`/tmp/repair-${i}.json`,'utf8')));
-          const results=rounds.flatMap(r=>r.results||[]);
-          const causes={};
-          for (const r of results) causes[r.rootCause]=(causes[r.rootCause]||0)+1;
-          console.log('AUDIT_AFTER', JSON.stringify(after.summary || after));
-          console.log('REPAIR_AFTER', JSON.stringify(repair.summary || repair));
-          console.log('BRIDGE_AFTER', JSON.stringify({count:Array.isArray(bridge.items)?bridge.items.length:null}));
-          console.log('REPAIR_RESULTS', JSON.stringify({processed:results.length, complete:results.filter(r=>r.complete).length, progress:results.filter(r=>r.progress).length, causes}));
-          console.log('AUDIT_ISSUES', JSON.stringify((after.issues||[]).slice(0,120)));
+          const fs = require('fs');
+          const bridge = JSON.parse(fs.readFileSync('/tmp/bridge.json', 'utf8'));
+          const audit = JSON.parse(fs.readFileSync('/tmp/audit.json', 'utf8'));
+          const seed = fs.readFileSync('/tmp/seed-all.log', 'utf8');
+          const seedLine = seed.split(/\r?\n/).find(line => line.startsWith('REPAIR_SEED_SUMMARY '));
+          let seedSummary = null;
+          if (seedLine) {
+            try { seedSummary = JSON.parse(seedLine.slice('REPAIR_SEED_SUMMARY '.length)); } catch {}
+          }
+          const items = Array.isArray(bridge.items) ? bridge.items : [];
+          const summary = {
+            trackedDois: seedSummary?.trackedDois ?? null,
+            tocMissing: seedSummary?.tocMissing ?? null,
+            withToc: seedSummary?.withToc ?? null,
+            bridgeQueueCount: items.length,
+            queueTocMissing: items.filter(item => item?.tocMissing).length,
+            queueSuspiciousToc: items.filter(item => item?.suspiciousToc).length,
+            queueFiguresUnder2: items.filter(item => Number(item?.figureCount || 0) < 2).length,
+          };
+          console.log('FULL_TOC_QUEUE_SUMMARY', JSON.stringify(summary));
+          console.log('MEDIA_AUDIT_SUMMARY', JSON.stringify(audit.summary || audit));
+          if (summary.trackedDois !== null && summary.trackedDois > 1200) {
+            throw new Error(`Tracked DOI count ${summary.trackedDois} exceeds current Bridge queue limit 1200.`);
+          }
           NODE
