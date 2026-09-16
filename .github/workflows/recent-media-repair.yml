@@ -63,7 +63,8 @@ jobs:
           test -n "$BRIDGE_WRITE_TOKEN"
 
       - name: Prepare recent media gaps
-        run: node cloudflare/scripts/prepare-recent-media-repair.mjs
+        shell: bash
+        run: node cloudflare/scripts/prepare-recent-media-repair.mjs | tee /tmp/recent-media-prepare.log
 
       - name: Install Wrangler
         working-directory: cloudflare/worker
@@ -119,8 +120,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node - <<'NODE'
-          const fs = require('fs');
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
           const prepared = JSON.parse(fs.readFileSync('/tmp/recent-media-repair.json', 'utf8'));
           const dois = (prepared.recent || []).map(item => item.doi).filter(Boolean);
           const response = await fetch(`${process.env.WORKER_URL}/api/media/inventory`, {
@@ -154,7 +155,7 @@ jobs:
           {
             echo '## Recent media repair'
             echo
-            grep '^RECENT_MEDIA_PREPARE_SUMMARY ' <(node cloudflare/scripts/prepare-recent-media-repair.mjs) || true
+            grep '^RECENT_MEDIA_PREPARE_SUMMARY ' /tmp/recent-media-prepare.log || true
             if [ -f /tmp/recent-media-verify.json ]; then
               echo "- Verification: $(cat /tmp/recent-media-verify.json)"
             fi
