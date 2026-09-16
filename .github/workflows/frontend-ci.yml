@@ -1,0 +1,38 @@
+name: Gallery frontend CI
+
+on:
+  push:
+    branches:
+      - migration/cloudflare
+    paths:
+      - 'src/**'
+      - 'index.html'
+      - 'vite.config.ts'
+      - 'package.json'
+      - 'cloudflare/scripts/build-pages-mirror-v2.mjs'
+      - '.github/workflows/frontend-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Syntax-check Pages mirror
+        run: node --check cloudflare/scripts/build-pages-mirror-v2.mjs
+      - name: Build frontend
+        run: npm run build
+      - name: Verify zoom viewer is bundled
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -R -F 'gallery-hires-viewer' dist/assets >/dev/null
+          test -f dist/index.html
