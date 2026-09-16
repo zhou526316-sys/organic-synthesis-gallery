@@ -29,6 +29,20 @@ import {
 import { runRepairBatch } from './repair.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { markReader, readerCounts, submitPaperFeedback } from './user-ui.js';
+import {
+  alipayNotify,
+  authCallback,
+  authStart,
+  createPayment,
+  emailConsume,
+  emailStart,
+  exchangeAuth,
+  integrationStatus,
+  logout,
+  paymentStatus,
+  sessionInfo,
+  wechatNotify,
+} from './integrations.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
   ...init,
@@ -62,8 +76,8 @@ function userUiCorsHeaders(request) {
   ]);
   return {
     'access-control-allow-origin': allowed.has(origin) ? origin : 'https://zhou526316-sys.github.io',
-    'access-control-allow-methods': 'POST, OPTIONS',
-    'access-control-allow-headers': 'content-type',
+    'access-control-allow-methods': 'GET, POST, OPTIONS',
+    'access-control-allow-headers': 'content-type, authorization',
     'access-control-max-age': '86400',
     'vary': 'Origin',
   };
@@ -91,9 +105,10 @@ function requireWriteAuthorization(request, env) {
 async function handleApi(request, env) {
   const url = new URL(request.url);
   const userUiRoute = url.pathname.startsWith('/api/user-ui/');
+  const cors = userUiRoute ? userUiCorsHeaders(request) : {};
 
   if (userUiRoute && request.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: userUiCorsHeaders(request) });
+    return new Response(null, { status: 204, headers: cors });
   }
 
   if (request.method === 'GET' && url.pathname === '/api/_healthcheck') {
@@ -105,17 +120,57 @@ async function handleApi(request, env) {
       r2: Boolean(env.MEDIA),
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
+      integrations: integrationStatus(env).body,
     });
   }
 
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts') {
-    return resultResponse(await readerCounts(env, await readJson(request)), userUiCorsHeaders(request));
+    return resultResponse(await readerCounts(env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark') {
-    return resultResponse(await markReader(env, await readJson(request)), userUiCorsHeaders(request));
+    return resultResponse(await markReader(env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/feedback') {
-    return resultResponse(await submitPaperFeedback(env, await readJson(request)), userUiCorsHeaders(request));
+    return resultResponse(await submitPaperFeedback(env, await readJson(request)), cors);
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/integrations') {
+    return resultResponse(integrationStatus(env), cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/auth/start') {
+    return authStart(request, env);
+  }
+  if (request.method === 'GET' && url.pathname.startsWith('/api/user-ui/auth/callback/')) {
+    const provider = url.pathname.split('/').pop() || '';
+    return authCallback(request, env, provider);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/exchange') {
+    return resultResponse(await exchangeAuth(env, await readJson(request)), cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/auth/session') {
+    return resultResponse(await sessionInfo(request, env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/logout') {
+    return resultResponse(await logout(request, env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/start') {
+    return resultResponse(await emailStart(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/auth/email/consume') {
+    return emailConsume(request, env);
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/payments/create') {
+    return resultResponse(await createPayment(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/payments/status') {
+    return resultResponse(await paymentStatus(request, env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/payments/wechat/notify') {
+    return wechatNotify(request, env);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/payments/alipay/notify') {
+    return alipayNotify(request, env);
   }
 
   if (request.method === 'POST' && url.pathname === '/api/paper-titles/resolve') {
@@ -206,7 +261,7 @@ async function handleApi(request, env) {
   return json({
     error: 'route_not_migrated',
     path: url.pathname,
-  }, { status: 501 });
+  }, { status: 501, headers: cors });
 }
 
 export default {
