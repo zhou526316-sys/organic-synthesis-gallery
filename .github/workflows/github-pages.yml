@@ -6,6 +6,7 @@ on:
     branches:
       - main
     paths:
+      - 'PAGES_REFRESH'
       - '.github/workflows/github-pages.yml'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
       - 'cloudflare/scripts/snapshot-production-static.mjs'
