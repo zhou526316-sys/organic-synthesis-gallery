@@ -1,6 +1,7 @@
 import './user-ui/paper-actions';
 import { USER_SHELL_ELEMENT } from './user-ui/library-shell';
 import { UserSearchController } from './user-ui/search-controller';
+import { WORKER_API_BASE } from './user-ui/shared';
 
 export type UserShellLanguage = 'zh' | 'en';
 
@@ -12,12 +13,15 @@ type IntegrationProbeShell = HTMLElement & {
   render?: () => void;
 };
 
+const SESSION_KEY = 'organic-gallery-session-v1';
+const AUTH_WINDOW_NAME = 'organic-gallery-auth';
 const productionIntegrationFallback = {
   auth: { google: true, wechat: false, qq: false, email: true },
   payments: { wechat: false, alipay: false },
 };
 
 let activeController: UserSearchController | null = null;
+let authStorageWatchInstalled = false;
 
 function guardSlowIntegrationProbe(shell: HTMLElement): void {
   const target = shell as unknown as IntegrationProbeShell;
@@ -31,6 +35,66 @@ function guardSlowIntegrationProbe(shell: HTMLElement): void {
     if (ticks >= 30 || !shell.isConnected) window.clearInterval(timer);
   }, 3000);
 }
+
+function currentReturnUrl(): string {
+  const url = new URL(window.location.href);
+  url.hash = '';
+  return url.toString();
+}
+
+function installSafeOAuthPopup(shell: HTMLElement, language: UserShellLanguage): void {
+  const shadow = shell.shadowRoot;
+  if (!shadow) return;
+  shadow.addEventListener('click', event => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest<HTMLButtonElement>('[data-action^="provider:"]');
+    if (!button || button.disabled) return;
+    const provider = (button.dataset.action || '').slice('provider:'.length);
+    if (!['google', 'wechat', 'qq'].includes(provider)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    const authUrl = `${WORKER_API_BASE}/api/user-ui/auth/start?provider=${encodeURIComponent(provider)}&returnTo=${encodeURIComponent(currentReturnUrl())}`;
+    const popup = window.open('about:blank', AUTH_WINDOW_NAME, 'popup,width=560,height=720,resizable=yes,scrollbars=yes');
+    if (!popup) {
+      window.alert(language === 'zh' ? '浏览器阻止了登录窗口，请允许本站弹出窗口后重试。' : 'The browser blocked the sign-in window. Allow pop-ups for this site and try again.');
+      return;
+    }
+    try { popup.opener = null; } catch { /* optional hardening */ }
+    popup.location.href = authUrl;
+  }, { capture: true });
+}
+
+function installAuthStorageWatch(): void {
+  if (authStorageWatchInstalled) return;
+  authStorageWatchInstalled = true;
+  window.addEventListener('storage', event => {
+    if (event.key === SESSION_KEY && event.oldValue !== event.newValue) window.location.reload();
+  });
+}
+
+function closeAuthPopupAfterExchange(): void {
+  if (window.name !== AUTH_WINDOW_NAME) return;
+  let checks = 0;
+  const timer = window.setInterval(() => {
+    checks += 1;
+    let token = '';
+    try { token = window.localStorage.getItem(SESSION_KEY) || ''; } catch { /* optional */ }
+    const exchangeStillPending = /(?:^#|[&#])auth_(?:code|error)=/.test(window.location.hash);
+    if (token && !exchangeStillPending) {
+      window.clearInterval(timer);
+      window.setTimeout(() => window.close(), 250);
+      return;
+    }
+    if (checks >= 120) window.clearInterval(timer);
+  }, 250);
+}
+
+installAuthStorageWatch();
+closeAuthPopupAfterExchange();
 
 export function mountUserShell(root: HTMLElement, language: UserShellLanguage): void {
   const preservedQuery = activeController?.currentSearch() || '';
@@ -56,6 +120,7 @@ export function mountUserShell(root: HTMLElement, language: UserShellLanguage): 
   shell.setAttribute('data-language', language);
   cluster.appendChild(shell);
   guardSlowIntegrationProbe(shell);
+  installSafeOAuthPopup(shell, language);
 
   activeController = new UserSearchController(root, language);
   activeController.start(preservedQuery);
