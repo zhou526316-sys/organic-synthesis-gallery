@@ -1,0 +1,34 @@
+name: Audit preprint relations
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/preprint-relation-audit.yml'
+      - 'cloudflare/scripts/audit-preprint-relations.mjs'
+      - 'audit/toc-gap-dois-2026-09-16.json'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Resolve Crossref preprint relationships
+        env:
+          CROSSREF_RELATION_DELAY_MS: '650'
+          CROSSREF_RELATION_TIMEOUT_MS: '12000'
+        run: node cloudflare/scripts/audit-preprint-relations.mjs
+      - name: Upload relation audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: preprint-relation-report
+          path: audit/preprint-relation-report.json
+          retention-days: 7
