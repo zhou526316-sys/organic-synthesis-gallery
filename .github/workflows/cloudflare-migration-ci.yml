@@ -59,7 +59,9 @@ jobs:
         run: |
           set -euo pipefail
           test -s /tmp/gallery-vpn-bridge.user.js
-          grep -F "// @version      1.0.0" /tmp/gallery-vpn-bridge.user.js
+          grep -F "// @version      1.0.1" /tmp/gallery-vpn-bridge.user.js
+          grep -F "// @match        https://gallery.example.pages.dev/*" /tmp/gallery-vpn-bridge.user.js
+          grep -F "// @connect      api.example.workers.dev" /tmp/gallery-vpn-bridge.user.js
           grep -F "const API_BASE = 'https://api.example.workers.dev';" /tmp/gallery-vpn-bridge.user.js
           grep -F "GM_getValue" /tmp/gallery-vpn-bridge.user.js
           grep -F "GM_setValue" /tmp/gallery-vpn-bridge.user.js
