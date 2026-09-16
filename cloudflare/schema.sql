@@ -112,3 +112,27 @@ CREATE TABLE IF NOT EXISTS media_attempts (
   detail_json TEXT,
   updated_at INTEGER NOT NULL
 );
+
+-- Unique-reader events. A browser profile is provisional until account auth is connected;
+-- the primary key prevents the same profile from incrementing one paper more than once.
+CREATE TABLE IF NOT EXISTS paper_readers (
+  doi TEXT NOT NULL,
+  profile_id TEXT NOT NULL,
+  first_read_at INTEGER NOT NULL,
+  first_status_id TEXT,
+  PRIMARY KEY (doi, profile_id)
+);
+CREATE INDEX IF NOT EXISTS idx_paper_readers_doi ON paper_readers(doi);
+
+-- User-submitted metadata/media corrections enter a review queue; they never edit literature directly.
+CREATE TABLE IF NOT EXISTS paper_feedback (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  doi TEXT NOT NULL,
+  profile_id TEXT,
+  kind TEXT NOT NULL,
+  note TEXT,
+  status TEXT NOT NULL DEFAULT 'open',
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_paper_feedback_status_created
+  ON paper_feedback(status, created_at DESC);
