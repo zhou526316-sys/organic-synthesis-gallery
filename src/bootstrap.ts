@@ -18,6 +18,10 @@ async function preloadChineseTitleCache(): Promise<void> {
   }
 }
 
+// Install the capture-phase media viewer immediately so every real TOC/Figure uses
+// one reliable zoom path, including cards rendered during initial startup.
+void import('./zoom-enhancer');
+
 void preloadChineseTitleCache().finally(() => {
   void import('./main');
 });
