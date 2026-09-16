@@ -20,6 +20,12 @@ import {
   persistMediaAttempt,
   persistRenderReport,
 } from './diagnostics.js';
+import {
+  getLiteratureSupplement,
+  getTitleTranslations,
+  importLiteratureSupplement,
+  importTitleTranslations,
+} from './metadata.js';
 import { resolvePaperTitles } from './title-resolution.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
@@ -80,6 +86,12 @@ async function handleApi(request, env) {
   if (request.method === 'POST' && url.pathname === '/api/paper-titles/resolve') {
     return resultResponse(await resolvePaperTitles(env, await readJson(request)));
   }
+  if (request.method === 'POST' && url.pathname === '/api/title-translations/zh') {
+    return resultResponse(await getTitleTranslations(env, await readJson(request)));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/literature/supplement') {
+    return resultResponse(await getLiteratureSupplement(env));
+  }
 
   if (request.method === 'GET' && url.pathname === '/api/toc') {
     return resultResponse(await getToc(request, env));
@@ -118,6 +130,8 @@ async function handleApi(request, env) {
       '/api/article-figures/reset',
       '/api/media/attempt',
       '/api/media/diagnose',
+      '/api/title-translations/zh/import',
+      '/api/literature/supplement/import',
     ].includes(url.pathname);
   if (isWriteRoute) {
     const denied = requireWriteAuthorization(request, env);
@@ -141,6 +155,12 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/diagnose') {
     return resultResponse(await diagnoseMedia(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/title-translations/zh/import') {
+    return resultResponse(await importTitleTranslations(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/literature/supplement/import') {
+    return resultResponse(await importLiteratureSupplement(env, await readJson(request)));
   }
 
   return json({
