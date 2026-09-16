@@ -1,0 +1,124 @@
+name: Deploy Cloudflare staging
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+      D1_NAME: organic-synthesis-gallery
+      R2_BUCKET: organic-synthesis-gallery-media
+    defaults:
+      run:
+        working-directory: cloudflare/worker
+
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: cloudflare/worker/package.json
+
+      - name: Install Wrangler
+        run: npm install --no-audit --no-fund
+
+      - name: Validate required repository secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'Missing CLOUDFLARE_API_TOKEN'; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Missing CLOUDFLARE_ACCOUNT_ID'; exit 1; }
+          test -n "$BRIDGE_WRITE_TOKEN" || { echo 'Missing BRIDGE_WRITE_TOKEN'; exit 1; }
+
+      - name: Create or reuse D1 database
+        id: d1
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 list --json > /tmp/d1-list.json
+          D1_ID=$(node - <<'NODE'
+          const fs = require('fs');
+          const rows = JSON.parse(fs.readFileSync('/tmp/d1-list.json', 'utf8'));
+          const row = rows.find(item => item.name === process.env.D1_NAME);
+          if (row?.uuid) process.stdout.write(row.uuid);
+          NODE
+          )
+          if [ -z "$D1_ID" ]; then
+            npx wrangler d1 create "$D1_NAME"
+            npx wrangler d1 list --json > /tmp/d1-list.json
+            D1_ID=$(node - <<'NODE'
+          const fs = require('fs');
+          const rows = JSON.parse(fs.readFileSync('/tmp/d1-list.json', 'utf8'));
+          const row = rows.find(item => item.name === process.env.D1_NAME);
+          if (row?.uuid) process.stdout.write(row.uuid);
+          NODE
+            )
+          fi
+          test -n "$D1_ID" || { echo 'Unable to resolve D1 database id'; exit 1; }
+          echo "database_id=$D1_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Create or reuse R2 bucket
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null 2>&1; then
+            npx wrangler r2 bucket create "$R2_BUCKET"
+          fi
+
+      - name: Generate staging Wrangler configuration
+        shell: bash
+        env:
+          D1_ID: ${{ steps.d1.outputs.database_id }}
+        run: |
+          set -euo pipefail
+          cat > /tmp/wrangler.staging.toml <<EOF
+          name = "organic-synthesis-gallery-api"
+          main = "src/index.js"
+          compatibility_date = "2026-09-16"
+          workers_dev = true
+
+          [vars]
+          MIGRATION_STAGE = "staging"
+
+          [triggers]
+          crons = ["*/5 * * * *"]
+
+          [[r2_buckets]]
+          binding = "MEDIA"
+          bucket_name = "$R2_BUCKET"
+
+          [[d1_databases]]
+          binding = "DB"
+          database_name = "$D1_NAME"
+          database_id = "$D1_ID"
+          EOF
+
+      - name: Apply D1 schema
+        run: npx wrangler d1 execute "$D1_NAME" --remote --file ../schema.sql --config /tmp/wrangler.staging.toml
+
+      - name: Seed user-reported media priorities
+        run: npx wrangler d1 execute "$D1_NAME" --remote --file ../seeds/user-reported-media-priority.sql --config /tmp/wrangler.staging.toml
+
+      - name: Dry-run Worker bundle
+        run: npx wrangler deploy --dry-run --config /tmp/wrangler.staging.toml --outdir .wrangler-staging-dry-run
+
+      - name: Deploy staging Worker
+        run: npx wrangler deploy --config /tmp/wrangler.staging.toml
+
+      - name: Install Bridge write secret
+        shell: bash
+        run: printf '%s' "$BRIDGE_WRITE_TOKEN" | npx wrangler secret put BRIDGE_WRITE_TOKEN --config /tmp/wrangler.staging.toml
+
+      - name: Confirm deployment list
+        run: npx wrangler deployments list --config /tmp/wrangler.staging.toml
