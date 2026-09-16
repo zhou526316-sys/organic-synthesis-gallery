@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/recent-media-repair.yml'
       - 'cloudflare/scripts/prepare-recent-media-repair.mjs'
+      - 'cloudflare/scripts/import-recent-media-direct.mjs'
       - 'public/papers.gz.b64'
       - 'public/curated-supplement.json'
       - 'public/total-synthesis.json'
@@ -41,7 +42,8 @@ jobs:
       WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
       GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
       RECENT_MEDIA_LIMIT: '30'
-      REPAIR_ROUNDS: '10'
+      DIRECT_MEDIA_LIMIT: '24'
+      REPAIR_ROUNDS: '6'
 
     steps:
       - name: Checkout main
@@ -66,11 +68,19 @@ jobs:
         shell: bash
         run: node cloudflare/scripts/prepare-recent-media-repair.mjs | tee /tmp/recent-media-prepare.log
 
+      - name: Import media directly from publisher pages
+        shell: bash
+        run: node cloudflare/scripts/import-recent-media-direct.mjs | tee /tmp/direct-media-import.log
+
       - name: Install Wrangler
         working-directory: cloudflare/worker
         run: npm install --no-audit --no-fund
 
-      - name: Resolve D1 and prioritize newest gaps
+      - name: Refresh gaps after direct import
+        shell: bash
+        run: node cloudflare/scripts/prepare-recent-media-repair.mjs | tee /tmp/recent-media-after-direct.log
+
+      - name: Resolve D1 and prioritize remaining newest gaps
         working-directory: cloudflare/worker
         shell: bash
         run: |
@@ -97,7 +107,7 @@ jobs:
           EOF
           npx wrangler d1 execute "$D1_NAME" --remote --file /tmp/recent-media-priority.sql --config wrangler.recent-media.toml
 
-      - name: Repair prioritized recent media
+      - name: Run Worker repair fallback
         shell: bash
         run: |
           set -euo pipefail
@@ -156,6 +166,8 @@ jobs:
             echo '## Recent media repair'
             echo
             grep '^RECENT_MEDIA_PREPARE_SUMMARY ' /tmp/recent-media-prepare.log || true
+            grep '^DIRECT_MEDIA_SUMMARY ' /tmp/direct-media-import.log || true
+            grep '^RECENT_MEDIA_PREPARE_SUMMARY ' /tmp/recent-media-after-direct.log | tail -1 || true
             if [ -f /tmp/recent-media-verify.json ]; then
               echo "- Verification: $(cat /tmp/recent-media-verify.json)"
             fi
