@@ -35,3 +35,38 @@ jobs:
 
       - name: Wrangler dry-run build
         run: npm run check
+
+  bridge-generator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Generate Cloudflare Bridge from production 0.4.5
+        env:
+          TARGET_API_BASE: https://api.example.workers.dev
+          TARGET_SITE_ORIGIN: https://gallery.example.pages.dev
+          BRIDGE_OUTPUT: /tmp/gallery-vpn-bridge.user.js
+        run: node cloudflare/scripts/build-cloudflare-bridge.mjs
+
+      - name: Validate generated Bridge contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s /tmp/gallery-vpn-bridge.user.js
+          grep -F "// @version      1.0.0" /tmp/gallery-vpn-bridge.user.js
+          grep -F "const API_BASE = 'https://api.example.workers.dev';" /tmp/gallery-vpn-bridge.user.js
+          grep -F "GM_getValue" /tmp/gallery-vpn-bridge.user.js
+          grep -F "GM_setValue" /tmp/gallery-vpn-bridge.user.js
+          grep -F "GM_registerMenuCommand" /tmp/gallery-vpn-bridge.user.js
+          grep -F "Authorization: \`Bearer \${token}\`" /tmp/gallery-vpn-bridge.user.js
+          grep -F "return validDoi(doi);" /tmp/gallery-vpn-bridge.user.js
+          if grep -F "api-v2.appdeploy.ai/app/organic-synthesis-literature-gallery-ase43k" /tmp/gallery-vpn-bridge.user.js; then
+            echo 'Generated Bridge still contains the old AppDeploy API base.'
+            exit 1
+          fi
