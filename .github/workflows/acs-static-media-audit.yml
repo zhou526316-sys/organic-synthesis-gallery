@@ -1,0 +1,35 @@
+name: Audit ACS static media
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/acs-static-media-audit.yml'
+      - 'cloudflare/scripts/audit-acs-static-media.mjs'
+      - 'audit/visual-gap-dois-2026-09-16.json'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Probe three representative ACS blank cards
+        env:
+          ACS_PROBE_LIMIT: '3'
+          ACS_IMAGE_INDEX_MAX: '14'
+          ACS_PROBE_DELAY_MS: '100'
+        run: node cloudflare/scripts/audit-acs-static-media.mjs
+      - name: Upload ACS static-media report
+        uses: actions/upload-artifact@v4
+        with:
+          name: acs-static-media-report
+          path: audit/acs-static-media-report.json
+          retention-days: 3
