@@ -7,6 +7,12 @@ import {
   repairStatus,
   serveMediaObject,
 } from './media.js';
+import {
+  importFigure,
+  importToc,
+  quarantineToc,
+  resetFigures,
+} from './media-write.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
   ...init,
@@ -61,6 +67,19 @@ async function handleApi(request, env) {
     return resultResponse(await repairStatus(request, env));
   }
 
+  if (request.method === 'POST' && url.pathname === '/api/toc/import') {
+    return resultResponse(await importToc(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/toc/quarantine') {
+    return resultResponse(await quarantineToc(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/article-figures/import') {
+    return resultResponse(await importFigure(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/article-figures/reset') {
+    return resultResponse(await resetFigures(request, env, await readJson(request)));
+  }
+
   return json({
     error: 'route_not_migrated',
     path: url.pathname,
@@ -85,7 +104,7 @@ export default {
 
   async scheduled(controller, env, ctx) {
     // This will replace the AppDeploy media-repair cron jobs after the
-    // media write paths and publisher-retrieval functions are migrated.
+    // publisher-retrieval functions are migrated and validated.
     ctx.waitUntil(Promise.resolve());
   },
 };
