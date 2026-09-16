@@ -1,0 +1,26 @@
+name = "organic-synthesis-gallery-api"
+main = "src/index.js"
+compatibility_date = "2026-09-16"
+workers_dev = true
+
+[vars]
+MIGRATION_STAGE = "staging"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+# Resource bindings are intentionally not committed until the corresponding
+# Cloudflare resources exist. Add them after creation, for example:
+#
+# [[r2_buckets]]
+# binding = "MEDIA"
+# bucket_name = "organic-synthesis-gallery-media"
+#
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "organic-synthesis-gallery"
+# database_id = "<set in Cloudflare after creation>"
+#
+# [[kv_namespaces]]
+# binding = "STATE"
+# id = "<set in Cloudflare after creation>"
