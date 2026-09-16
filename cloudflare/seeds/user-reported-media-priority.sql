@@ -112,6 +112,7 @@ SELECT
   1,
   CAST(strftime('%s','now') AS INTEGER) * 1000
 FROM priority
+WHERE 1 = 1
 ON CONFLICT(doi) DO UPDATE SET
   reported_priority = 1,
   next_retry_at = 0,
