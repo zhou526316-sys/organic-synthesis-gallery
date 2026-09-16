@@ -18,7 +18,7 @@ if (!source.includes("const VERSION = '0.4.5';") || !source.includes('Organic Sy
 }
 
 source = source
-  .replace('// @version      0.4.5', '// @version      1.0.1')
+  .replace('// @version      0.4.5', '// @version      1.0.2')
   .replace(
     '// @match        https://organic-synthesis-literature-gallery-ase43k.v2.appdeploy.ai/*',
     `// @match        ${TARGET_SITE_ORIGIN}/*`
@@ -35,7 +35,7 @@ source = source
     '// @grant        GM_xmlhttpRequest',
     '// @grant        GM_xmlhttpRequest\n// @grant        GM_getValue\n// @grant        GM_setValue\n// @grant        GM_registerMenuCommand'
   )
-  .replace("const VERSION = '0.4.5';", "const VERSION = '1.0.1';")
+  .replace("const VERSION = '0.4.5';", "const VERSION = '1.0.2';")
   .replace(
     "const API_BASE = 'https://api-v2.appdeploy.ai/app/organic-synthesis-literature-gallery-ase43k';",
     `const API_BASE = '${TARGET_API_BASE}';\n  const WRITE_TOKEN_KEY = 'organicGalleryCloudflareBridgeWriteToken';`
@@ -58,8 +58,13 @@ const apiReplacement = `  function bridgeWriteToken() {\n    const value = typeo
 if (!source.includes(apiAnchor)) throw new Error('Source Bridge API helper anchor changed; refusing automatic rewrite.');
 source = source.replace(apiAnchor, apiReplacement);
 
+const statusClickAnchor = `    node.addEventListener('click', () => {\n      for (const [key, state] of articleStates) if (state.state === 'failed') articleStates.delete(key);\n      stats.failed = 0;\n      scheduleScan(0);\n    });`;
+const statusClickReplacement = `    node.addEventListener('click', () => {\n      if (!bridgeWriteToken()) {\n        configureBridgeWriteToken();\n        return;\n      }\n      for (const [key, state] of articleStates) if (state.state === 'failed') articleStates.delete(key);\n      stats.failed = 0;\n      scheduleBridgeQueueRefresh(0);\n      scheduleScan(0);\n    });`;
+if (!source.includes(statusClickAnchor)) throw new Error('Source Bridge status click anchor changed; refusing automatic rewrite.');
+source = source.replace(statusClickAnchor, statusClickReplacement);
+
 const statusAnchor = "    const nextText = `VPN Literature ${VERSION} · TOC ${stats.tocNew} new / ${stats.tocReplaced} replaced · Figures ${stats.figures} · Done ${stats.papersDone} · Failed ${stats.failed}` + (pending ? ` · ${pending} pending` : '');";
-const statusReplacement = "    const authText = bridgeWriteToken() ? '' : ' · 写入密钥未设置';\n    const nextText = `VPN Literature ${VERSION} · TOC ${stats.tocNew} new / ${stats.tocReplaced} replaced · Figures ${stats.figures} · Done ${stats.papersDone} · Failed ${stats.failed}` + (pending ? ` · ${pending} pending` : '') + authText;";
+const statusReplacement = "    const authText = bridgeWriteToken() ? '' : ' · 写入密钥未设置';\n    node.title = bridgeWriteToken() ? 'VPN Literature Bridge；点击重试失败项目并刷新待修队列' : 'VPN Literature Bridge；点击设置 Cloudflare 写入密钥';\n    const nextText = `VPN Literature ${VERSION} · TOC ${stats.tocNew} new / ${stats.tocReplaced} replaced · Figures ${stats.figures} · Done ${stats.papersDone} · Failed ${stats.failed}` + (pending ? ` · ${pending} pending` : '') + authText;";
 if (!source.includes(statusAnchor)) throw new Error('Source Bridge status anchor changed; refusing automatic rewrite.');
 source = source.replace(statusAnchor, statusReplacement);
 
