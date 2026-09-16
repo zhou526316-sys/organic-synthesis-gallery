@@ -4,6 +4,7 @@ import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
 
 const SOURCE = (process.env.GALLERY_BACKEND_SOURCE || 'https://organic-synthesis-gallery.zhou526316.workers.dev').replace(/\/$/, '');
+const FALLBACK_SITE = (process.env.PAGES_MEDIA_FALLBACK || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/$/, '');
 const PUBLIC_DIR = path.resolve('public');
 const MEDIA_DIR = path.join(PUBLIC_DIR, 'media-mirror');
 const CONCURRENCY = Math.max(2, Math.min(12, Number(process.env.PAGES_MEDIA_CONCURRENCY || 8)));
@@ -70,7 +71,7 @@ function extensionFor(contentType, url) {
   if (type === 'image/avif') return 'avif';
   if (type === 'image/jpeg' || type === 'image/jpg') return 'jpg';
   try {
-    const ext = new URL(url).pathname.match(/\.([a-z0-9]{2,5})$/i)?.[1]?.toLowerCase();
+    const ext = new URL(url, `${FALLBACK_SITE}/`).pathname.match(/\.([a-z0-9]{2,5})$/i)?.[1]?.toLowerCase();
     if (['png', 'webp', 'gif', 'avif', 'jpg', 'jpeg'].includes(ext || '')) return ext === 'jpeg' ? 'jpg' : ext;
   } catch {
     // fall through
@@ -171,8 +172,18 @@ async function mapConcurrent(items, concurrency, worker) {
 }
 
 async function mirrorMedia() {
-  const manifest = await jsonGet(`${SOURCE}/media-index.json`);
-  if (!manifest?.items || typeof manifest.items !== 'object') throw new Error('Cloudflare media-index.json is unavailable or invalid.');
+  let manifest = await jsonGet(`${SOURCE}/media-index.json`);
+  let mediaBase = SOURCE;
+  let mediaSource = 'worker';
+  if (!manifest?.items || typeof manifest.items !== 'object' || Object.keys(manifest.items).length === 0) {
+    console.warn('Worker media index is empty; preserving the last published GitHub Pages media snapshot.');
+    manifest = await jsonGet(`${FALLBACK_SITE}/media-index.json`);
+    mediaBase = FALLBACK_SITE;
+    mediaSource = 'published-pages-fallback';
+  }
+  if (!manifest?.items || typeof manifest.items !== 'object' || Object.keys(manifest.items).length === 0) {
+    throw new Error('Neither Worker nor published Pages provides a non-empty media-index.json.');
+  }
 
   await rm(MEDIA_DIR, { recursive: true, force: true });
   await mkdir(MEDIA_DIR, { recursive: true });
@@ -191,12 +202,13 @@ async function mirrorMedia() {
   const list = [...urls];
   await mapConcurrent(list, CONCURRENCY, async (url, index) => {
     try {
-      const response = await fetchRetry(url);
+      const fetchUrl = /^https?:\/\//i.test(url) ? url : new URL(url, `${mediaBase}/`).toString();
+      const response = await fetchRetry(fetchUrl);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const bytes = Buffer.from(await response.arrayBuffer());
       if (bytes.length < 100 || bytes.length > MAX_IMAGE_BYTES) throw new Error(`invalid image size ${bytes.length}`);
-      const ext = extensionFor(response.headers.get('content-type'), url);
-      const name = `${createHash('sha256').update(url).digest('hex').slice(0, 28)}.${ext}`;
+      const ext = extensionFor(response.headers.get('content-type'), fetchUrl);
+      const name = `${createHash('sha256').update(String(url)).digest('hex').slice(0, 28)}.${ext}`;
       await writeFile(path.join(MEDIA_DIR, name), bytes);
       replacements.set(url, `media-mirror/${name}`);
       bytesTotal += bytes.length;
@@ -218,7 +230,7 @@ async function mirrorMedia() {
     console.warn(JSON.stringify(failures.slice(0, 20), null, 2));
   }
   await writeFile(path.join(PUBLIC_DIR, 'media-index.json'), JSON.stringify(manifest));
-  return { manifestItems: Object.keys(manifest.items).length, mediaObjects: replacements.size, failures: failures.length, bytesTotal };
+  return { mediaSource, manifestItems: Object.keys(manifest.items).length, mediaObjects: replacements.size, failures: failures.length, bytesTotal };
 }
 
 await mkdir(PUBLIC_DIR, { recursive: true });
