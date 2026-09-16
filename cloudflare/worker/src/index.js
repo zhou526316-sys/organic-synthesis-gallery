@@ -35,6 +35,25 @@ function resultResponse(result) {
   return json(result.body, { status: result.status || 200 });
 }
 
+function writeAuthorized(request, env) {
+  const expected = typeof env.BRIDGE_WRITE_TOKEN === 'string' ? env.BRIDGE_WRITE_TOKEN.trim() : '';
+  if (!expected) return false;
+  const authorization = request.headers.get('authorization') || '';
+  const bearer = authorization.replace(/^Bearer\s+/i, '').trim();
+  const bridgeHeader = (request.headers.get('x-bridge-token') || '').trim();
+  return bearer === expected || bridgeHeader === expected;
+}
+
+function requireWriteAuthorization(request, env) {
+  if (!env.BRIDGE_WRITE_TOKEN) {
+    return json({ error: 'write_token_not_configured' }, { status: 503 });
+  }
+  if (!writeAuthorized(request, env)) {
+    return json({ error: 'unauthorized' }, { status: 401 });
+  }
+  return null;
+}
+
 async function handleApi(request, env) {
   const url = new URL(request.url);
 
@@ -45,6 +64,7 @@ async function handleApi(request, env) {
       migration: true,
       d1: Boolean(env.DB),
       r2: Boolean(env.MEDIA),
+      writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
     });
   }
 
@@ -65,6 +85,19 @@ async function handleApi(request, env) {
   }
   if (request.method === 'GET' && url.pathname === '/api/media/repair-status') {
     return resultResponse(await repairStatus(request, env));
+  }
+
+  const isWriteRoute =
+    request.method === 'POST' &&
+    [
+      '/api/toc/import',
+      '/api/toc/quarantine',
+      '/api/article-figures/import',
+      '/api/article-figures/reset',
+    ].includes(url.pathname);
+  if (isWriteRoute) {
+    const denied = requireWriteAuthorization(request, env);
+    if (denied) return denied;
   }
 
   if (request.method === 'POST' && url.pathname === '/api/toc/import') {
