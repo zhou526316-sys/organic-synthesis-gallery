@@ -8,6 +8,7 @@ const OUTPUT = resolve(process.env.BRIDGE_OUTPUT || 'public/gallery-vpn-bridge.u
 
 if (!TARGET_API_BASE) throw new Error('TARGET_API_BASE is required.');
 if (!TARGET_SITE_ORIGIN) throw new Error('TARGET_SITE_ORIGIN is required.');
+const targetApiHost = new URL(TARGET_API_BASE).hostname;
 
 const response = await fetch(SOURCE_BRIDGE, { signal: AbortSignal.timeout(20_000) });
 if (!response.ok) throw new Error(`Unable to fetch source Bridge: HTTP ${response.status}`);
@@ -17,7 +18,7 @@ if (!source.includes("const VERSION = '0.4.5';") || !source.includes('Organic Sy
 }
 
 source = source
-  .replace('// @version      0.4.5', '// @version      1.0.0')
+  .replace('// @version      0.4.5', '// @version      1.0.1')
   .replace(
     '// @match        https://organic-synthesis-literature-gallery-ase43k.v2.appdeploy.ai/*',
     `// @match        ${TARGET_SITE_ORIGIN}/*`
@@ -34,7 +35,7 @@ source = source
     '// @grant        GM_xmlhttpRequest',
     '// @grant        GM_xmlhttpRequest\n// @grant        GM_getValue\n// @grant        GM_setValue\n// @grant        GM_registerMenuCommand'
   )
-  .replace("const VERSION = '0.4.5';", "const VERSION = '1.0.0';")
+  .replace("const VERSION = '0.4.5';", "const VERSION = '1.0.1';")
   .replace(
     "const API_BASE = 'https://api-v2.appdeploy.ai/app/organic-synthesis-literature-gallery-ase43k';",
     `const API_BASE = '${TARGET_API_BASE}';\n  const WRITE_TOKEN_KEY = 'organicGalleryCloudflareBridgeWriteToken';`
@@ -43,6 +44,12 @@ source = source
     "  function supportedDoi(doi) {\n    return validDoi(doi) && /^10\\.(?:1021|1002|1038|1126)\\//i.test(doi.trim());\n  }",
     "  function supportedDoi(doi) {\n    return validDoi(doi);\n  }"
   );
+
+if (!source.includes(`// @connect      ${targetApiHost}`)) {
+  const grantAnchor = '// @grant        GM_registerMenuCommand';
+  if (!source.includes(grantAnchor)) throw new Error('Unable to add Cloudflare API @connect permission.');
+  source = source.replace(grantAnchor, `${grantAnchor}\n// @connect      ${targetApiHost}`);
+}
 
 const apiAnchor = `  async function apiGet(path) {\n    const response = await gmRequest({ method: 'GET', url: \`\${API_BASE}\${path}\` });\n    return safeJson(response.responseText) || {};\n  }\n\n  async function apiPost(path, body) {\n    const response = await gmRequest({ method: 'POST', url: \`\${API_BASE}\${path}\`, headers: { 'Content-Type': 'application/json' }, data: JSON.stringify(body) });\n    return safeJson(response.responseText) || {};\n  }`;
 
