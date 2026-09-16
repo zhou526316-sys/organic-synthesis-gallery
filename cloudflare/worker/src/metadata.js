@@ -176,6 +176,19 @@ export async function importLiteratureSupplement(env, payload) {
     await env.DB.batch(statements.slice(offset, offset + 80));
   }
 
+  // Hard invariant: every newly imported DOI enters the media-repair system in the
+  // same import operation. Existing completed/priority state is preserved.
+  const repairDois = [...new Set(rows.map(row => row.doi).filter(Boolean))];
+  const repairStatements = repairDois.map(doi => env.DB.prepare(
+    `INSERT INTO media_repair_state
+      (doi, repair_version, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at)
+     VALUES (?, 1, 0, 0, 0, 'new_literature_import', 'pending', 0, ?)
+     ON CONFLICT(doi) DO NOTHING`
+  ).bind(doi, now));
+  for (let offset = 0; offset < repairStatements.length; offset += 80) {
+    await env.DB.batch(repairStatements.slice(offset, offset + 80));
+  }
+
   const generatedAt = Number.isFinite(payload?.generatedAt) ? Number(payload.generatedAt) : now;
   const verifiedThrough = typeof payload?.verifiedThrough === 'string' ? payload.verifiedThrough.slice(0, 40) : null;
   const reviewSummary = payload?.reviewSummary && typeof payload.reviewSummary === 'object'
@@ -191,5 +204,13 @@ export async function importLiteratureSupplement(env, payload) {
        updated_at = excluded.updated_at`
   ).bind(generatedAt, verifiedThrough, reviewSummary, now).run();
 
-  return { status: 200, body: { imported: rows.length, generatedAt, verifiedThrough } };
+  return {
+    status: 200,
+    body: {
+      imported: rows.length,
+      mediaRepairSeeded: repairDois.length,
+      generatedAt,
+      verifiedThrough,
+    },
+  };
 }
