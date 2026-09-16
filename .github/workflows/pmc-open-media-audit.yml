@@ -1,0 +1,37 @@
+name: Audit PMC open-media fallback
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/pmc-open-media-audit.yml'
+      - 'cloudflare/scripts/merge-pmc-open-media.mjs'
+      - 'audit/toc-gap-dois-2026-09-16.json'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Resolve redistributable PMC graphics
+        env:
+          PMC_MEDIA_CONCURRENCY: '2'
+          PMC_REQUEST_DELAY_MS: '180'
+        run: node cloudflare/scripts/merge-pmc-open-media.mjs
+      - name: Upload generated open-media snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmc-open-media-snapshot
+          path: |
+            public/media-index.json
+            public/open-media-mirror
+          if-no-files-found: warn
+          retention-days: 3
