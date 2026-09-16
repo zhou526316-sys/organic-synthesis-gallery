@@ -1,0 +1,37 @@
+name: Cloudflare migration CI
+
+on:
+  push:
+    branches:
+      - migration/cloudflare
+  pull_request:
+    paths:
+      - 'cloudflare/**'
+      - '.github/workflows/cloudflare-migration-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  worker-dry-run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cloudflare/worker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: cloudflare/worker/package.json
+
+      - name: Install Worker dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Wrangler dry-run build
+        run: npm run check
