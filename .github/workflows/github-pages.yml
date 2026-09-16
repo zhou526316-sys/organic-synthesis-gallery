@@ -11,8 +11,10 @@ on:
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
       - 'cloudflare/scripts/merge-worker-media.mjs'
+      - 'cloudflare/scripts/merge-pmc-open-media.mjs'
       - 'cloudflare/scripts/prune-media-mirror.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
+      - 'audit/toc-gap-dois-2026-09-16.json'
       - 'public/curated-supplement.json'
       - 'public/papers.gz.b64'
       - 'public/total-synthesis.json'
@@ -84,6 +86,12 @@ jobs:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
           WORKER_MEDIA_CONCURRENCY: '6'
 
+      - name: Merge redistributable PMC open-media fallbacks
+        run: node cloudflare/scripts/merge-pmc-open-media.mjs
+        env:
+          PMC_MEDIA_CONCURRENCY: '2'
+          PMC_REQUEST_DELAY_MS: '180'
+
       - name: Merge assistant-audited literature and bilingual titles
         run: node cloudflare/scripts/merge-curated-pages.mjs
 
@@ -115,9 +123,13 @@ jobs:
           const items = Object.values(manifest.items || {});
           const remote = JSON.stringify(manifest).match(/https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//g) || [];
           const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
+          const pmcFallbacks = items.filter(item => item?.toc?.sourceRepository === 'PMC');
           if (items.length < 382) throw new Error(`media-index regressed below preserved baseline: ${items.length}`);
           if (figures < 652) throw new Error(`figure metadata regressed below preserved baseline: ${figures}`);
           if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
+          for (const item of pmcFallbacks) {
+            if (!String(item?.toc?.imageUrl || '').startsWith('open-media-mirror/')) throw new Error(`PMC fallback was not mirrored locally: ${item?.doi || 'unknown DOI'}`);
+          }
 
           const requiredDois = [
             '10.1038/s41467-026-77774-9',
@@ -141,7 +153,7 @@ jobs:
           if (!zh.get('Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage')) throw new Error('curated Chinese title was not merged');
           if (!zh.get('Scalable Total Syntheses of Nonthmicin and Ecteinamycin Reveal a Dual Antibacterial and Antitoxin Profile against Clostridioides difficile')) throw new Error('second-batch Chinese title was not merged');
 
-          console.log(JSON.stringify({ manifestItems: items.length, figures, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true, workerMediaMerged: true }));
+          console.log(JSON.stringify({ manifestItems: items.length, figures, pmcFallbacks: pmcFallbacks.length, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true, workerMediaMerged: true }));
           NODE
 
       - name: Upload Pages artifact
