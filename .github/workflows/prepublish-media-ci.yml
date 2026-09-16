@@ -1,0 +1,61 @@
+name: Full Pages prepublish CI
+
+on:
+  push:
+    branches:
+      - integration/media-quality-20260916
+    paths:
+      - '.github/workflows/prepublish-media-ci.yml'
+      - '.github/workflows/github-pages.yml'
+      - 'cloudflare/scripts/build-pages-mirror-v2.mjs'
+      - 'cloudflare/scripts/merge-curated-pages.mjs'
+      - 'cloudflare/scripts/snapshot-production-static.mjs'
+      - 'public/curated-supplement.json'
+      - 'src/**'
+      - 'index.html'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Snapshot current static literature
+        run: node cloudflare/scripts/snapshot-production-static.mjs
+      - name: Mirror live media from D1/R2
+        env:
+          GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+          PAGES_MEDIA_CONCURRENCY: '8'
+        run: node cloudflare/scripts/build-pages-mirror-v2.mjs
+      - name: Merge curated literature and titles
+        run: node cloudflare/scripts/merge-curated-pages.mjs
+      - name: Build Gallery
+        run: npm run build
+      - name: Verify merged media artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/media-index.json
+          test -f dist/literature-supplement.json
+          test -d dist/media-mirror
+          grep -R -F 'gallery-hires-viewer' dist/assets >/dev/null
+          node - <<'NODE'
+          const fs=require('fs');
+          const manifest=JSON.parse(fs.readFileSync('dist/media-index.json','utf8'));
+          const items=Object.values(manifest.items||{});
+          const toc=items.filter(x=>x?.toc?.available&&x.toc.imageUrl).length;
+          const figures=items.reduce((n,x)=>n+(x?.figures?.figures?.length||0),0);
+          const supplement=JSON.parse(fs.readFileSync('dist/literature-supplement.json','utf8'));
+          const remote=(JSON.stringify(manifest).match(/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//g)||[]).length;
+          if (remote) throw new Error(`remote media URLs remain: ${remote}`);
+          if (!items.length || !supplement.papers?.length) throw new Error('merged build is empty');
+          console.log('PREPUBLISH_SUMMARY', JSON.stringify({mediaItems:items.length,toc,figures,supplementPapers:supplement.papers.length}));
+          NODE
