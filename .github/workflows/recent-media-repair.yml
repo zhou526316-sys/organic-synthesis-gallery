@@ -1,0 +1,164 @@
+name: Repair recent literature media
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/recent-media-repair.yml'
+      - 'cloudflare/scripts/prepare-recent-media-repair.mjs'
+      - 'public/papers.gz.b64'
+      - 'public/curated-supplement.json'
+      - 'public/total-synthesis.json'
+      - 'public/manual-supplement.json'
+      - 'public/final-audit-supplement.json'
+  workflow_run:
+    workflows:
+      - 'Deploy Worker additions'
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: recent-literature-media-repair
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+      D1_NAME: organic-synthesis-gallery
+      WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+      GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+      RECENT_MEDIA_LIMIT: '30'
+      REPAIR_ROUNDS: '10'
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate repair credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$BRIDGE_WRITE_TOKEN"
+
+      - name: Prepare recent media gaps
+        shell: bash
+        run: node cloudflare/scripts/prepare-recent-media-repair.mjs | tee /tmp/recent-media-prepare.log
+
+      - name: Install Wrangler
+        working-directory: cloudflare/worker
+        run: npm install --no-audit --no-fund
+
+      - name: Resolve D1 and prioritize newest gaps
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 list --json > /tmp/d1-list.json
+          D1_ID=$(node - <<'NODE'
+          const fs = require('fs');
+          const rows = JSON.parse(fs.readFileSync('/tmp/d1-list.json', 'utf8'));
+          const row = rows.find(item => item.name === process.env.D1_NAME);
+          if (row?.uuid) process.stdout.write(row.uuid);
+          NODE
+          )
+          test -n "$D1_ID" || { echo 'D1 database is missing'; exit 1; }
+          cat > wrangler.recent-media.toml <<EOF
+          name = "organic-synthesis-gallery"
+          main = "src/index.js"
+          compatibility_date = "2026-09-16"
+          workers_dev = true
+
+          [[d1_databases]]
+          binding = "DB"
+          database_name = "$D1_NAME"
+          database_id = "$D1_ID"
+          EOF
+          npx wrangler d1 execute "$D1_NAME" --remote --file /tmp/recent-media-priority.sql --config wrangler.recent-media.toml
+
+      - name: Repair prioritized recent media
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > /tmp/recent-media-repair-runs.jsonl
+          for round in $(seq 1 "$REPAIR_ROUNDS"); do
+            response=$(curl --fail --silent --show-error --max-time 120 \
+              -H 'content-type: application/json' \
+              -H "Authorization: Bearer $BRIDGE_WRITE_TOKEN" \
+              --data '{"limit":2}' \
+              "$WORKER_URL/api/media/repair-batch")
+            echo "$response" >> /tmp/recent-media-repair-runs.jsonl
+            processed=$(printf '%s' "$response" | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{process.stdout.write(String(JSON.parse(s).processed||0))}catch{process.stdout.write('0')}})")
+            echo "round=$round processed=$processed"
+            if [ "$processed" = "0" ]; then
+              break
+            fi
+          done
+
+      - name: Verify recent media inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const prepared = JSON.parse(fs.readFileSync('/tmp/recent-media-repair.json', 'utf8'));
+          const dois = (prepared.recent || []).map(item => item.doi).filter(Boolean);
+          const response = await fetch(`${process.env.WORKER_URL}/api/media/inventory`, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ dois }),
+          });
+          if (!response.ok) throw new Error(`inventory HTTP ${response.status}`);
+          const payload = await response.json();
+          const items = payload.items || [];
+          const summary = {
+            checked: items.length,
+            complete: items.filter(item => item.status === 'complete').length,
+            withLarge: items.filter(item => item.largeSource && item.largeSource !== 'none').length,
+            withFigures: items.filter(item => Number(item.figureCount || 0) > 0).length,
+            missing: items.filter(item => item.status === 'missing').length,
+          };
+          console.log(`RECENT_MEDIA_VERIFY_SUMMARY ${JSON.stringify(summary)}`);
+          fs.writeFileSync('/tmp/recent-media-verify.json', JSON.stringify(summary));
+          NODE
+
+      - name: Refresh GitHub Pages after repair
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: gh workflow run github-pages.yml --ref main
+
+      - name: Publish summary
+        shell: bash
+        run: |
+          {
+            echo '## Recent media repair'
+            echo
+            grep '^RECENT_MEDIA_PREPARE_SUMMARY ' /tmp/recent-media-prepare.log || true
+            if [ -f /tmp/recent-media-verify.json ]; then
+              echo "- Verification: $(cat /tmp/recent-media-verify.json)"
+            fi
+            echo '- Full media migration: not run'
+            echo '- D1/R2 recreated: no'
+          } >> "$GITHUB_STEP_SUMMARY"
