@@ -28,6 +28,7 @@ import {
 } from './metadata.js';
 import { runRepairBatch } from './repair.js';
 import { resolvePaperTitles } from './title-resolution.js';
+import { markReader, readerCounts, submitPaperFeedback } from './user-ui.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
   ...init,
@@ -46,8 +47,26 @@ async function readJson(request) {
   }
 }
 
-function resultResponse(result) {
-  return json(result.body, { status: result.status || 200 });
+function resultResponse(result, headers = {}) {
+  return json(result.body, { status: result.status || 200, headers });
+}
+
+function userUiCorsHeaders(request) {
+  const origin = request.headers.get('origin') || '';
+  const allowed = new Set([
+    'https://zhou526316-sys.github.io',
+    'https://organic-synthesis-gallery.zhou526316.workers.dev',
+    'https://organic-synthesis-gallery-public.pages.dev',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+  ]);
+  return {
+    'access-control-allow-origin': allowed.has(origin) ? origin : 'https://zhou526316-sys.github.io',
+    'access-control-allow-methods': 'POST, OPTIONS',
+    'access-control-allow-headers': 'content-type',
+    'access-control-max-age': '86400',
+    'vary': 'Origin',
+  };
 }
 
 function writeAuthorized(request, env) {
@@ -71,6 +90,11 @@ function requireWriteAuthorization(request, env) {
 
 async function handleApi(request, env) {
   const url = new URL(request.url);
+  const userUiRoute = url.pathname.startsWith('/api/user-ui/');
+
+  if (userUiRoute && request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: userUiCorsHeaders(request) });
+  }
 
   if (request.method === 'GET' && url.pathname === '/api/_healthcheck') {
     return json({
@@ -82,6 +106,16 @@ async function handleApi(request, env) {
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
     });
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts') {
+    return resultResponse(await readerCounts(env, await readJson(request)), userUiCorsHeaders(request));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark') {
+    return resultResponse(await markReader(env, await readJson(request)), userUiCorsHeaders(request));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/feedback') {
+    return resultResponse(await submitPaperFeedback(env, await readJson(request)), userUiCorsHeaders(request));
   }
 
   if (request.method === 'POST' && url.pathname === '/api/paper-titles/resolve') {
@@ -187,7 +221,8 @@ export default {
         path: url.pathname,
         message: error instanceof Error ? error.message : String(error),
       });
-      return json({ error: 'internal_error' }, { status: 500 });
+      const headers = url.pathname.startsWith('/api/user-ui/') ? userUiCorsHeaders(request) : {};
+      return json({ error: 'internal_error' }, { status: 500, headers });
     }
   },
 
