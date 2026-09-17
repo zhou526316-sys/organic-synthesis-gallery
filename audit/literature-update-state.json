@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Single-source coordination state for literature fetching, TOC collection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
+  "timezone": "Asia/Shanghai",
+  "phase": "idle",
+  "activeRun": null,
+  "lastCompletedFetch": null,
+  "lastWebsiteSync": null,
+  "verifiedThrough": "2026-09-15",
+  "rules": {
+    "freshFetchLockMinutes": 120,
+    "reuseCompletedFetchHours": 24,
+    "syncOnlyMustNotRefetch": true,
+    "allowedPhases": [
+      "idle",
+      "fetching",
+      "toc_processing",
+      "ready_to_sync",
+      "syncing",
+      "synced",
+      "sync_failed",
+      "needs_approval",
+      "blocked_by_concurrent_change"
+    ]
+  }
+}
