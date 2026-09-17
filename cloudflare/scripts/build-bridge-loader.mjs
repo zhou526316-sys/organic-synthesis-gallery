@@ -14,6 +14,7 @@ function replaceRequired(before, after, label) {
 
 replaceRequired('// @version      1.0.4', '// @version      1.1.0', 'runtime metadata version');
 replaceRequired("const VERSION = '1.0.4';", "const VERSION = '1.1.0';", 'runtime status version');
+replaceRequired("const COOLDOWN_KEY = 'organicGalleryBridgeCooldownsV1';", "const COOLDOWN_KEY = 'organicGalleryBridgeCooldownsV2';", 'runtime cooldown generation');
 
 replaceRequired(
   "const semanticPattern = /visual\\s*abstract|graphical\\s*abstract|toc\\s*(?:graphic|image)|table\\s*of\\s*contents/i;",
