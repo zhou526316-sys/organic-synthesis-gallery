@@ -30,7 +30,8 @@
       "output": "dist"
     },
     "extraFiles": [
-      { "from": "scripts/Start-CollectorDiagnostics.ps1", "to": "Start-CollectorDiagnostics.ps1" }
+      { "from": "scripts/Start-CollectorDiagnostics.ps1", "to": "Start-CollectorDiagnostics.ps1" },
+      { "from": "scripts/START-TOC-COLLECTOR.cmd", "to": "START-TOC-COLLECTOR.cmd" }
     ],
     "win": {
       "target": [
