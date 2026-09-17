@@ -1,0 +1,94 @@
+name: Apply TOC Collector safe-start patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-toc-collector-safe-start.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch safe startup
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('toc-collector/src/main.mjs')
+          s = p.read_text(encoding='utf-8')
+
+          s = s.replace(
+          "const gotLock = app.requestSingleInstanceLock();\nif (!gotLock) app.quit();\napp.on('second-instance', () => showDashboard());\n",
+          "// Safe-start mode: do not let a stale older Collector process block this version.\n// Version-aware locking can be restored after startup behavior is stable.\n"
+          )
+
+          s = s.replace(
+          "    minHeight: 480,\n    show: false,\n    autoHideMenuBar: true,\n    title: 'TOC Collector',",
+          "    minHeight: 480,\n    show: true,\n    autoHideMenuBar: true,\n    title: 'TOC Collector',"
+          )
+
+          s = s.replace(
+          "  refreshDashboard();\n  dashboard.once('ready-to-show', () => { dashboard?.show(); dashboard?.focus(); });\n}",
+          "  refreshDashboard();\n  dashboard.show();\n  dashboard.focus();\n}"
+          )
+
+          old = """app.whenReady().then(async () => {
+  await ensureConfig();
+  tray = new Tray(trayIcon());
+  tray.setToolTip('Organic Synthesis Gallery TOC Collector');
+  tray.on('click', () => showDashboard());
+  tray.on('double-click', () => showDashboard());
+  rebuildTrayMenu();
+  if (!process.argv.includes('--background')) showDashboard();
+  await log('collector started', { version: app.getVersion(), configPath: configPath() });
+  setTimeout(() => void runCycle(false), 2500);
+  pollTimer = setInterval(() => void runCycle(false), Math.max(3, Number(config.pollMinutes)||10) * 60 * 1000);
+});
+
+app.on('window-all-closed', event => event.preventDefault?.());
+"""
+          new = """app.whenReady().then(async () => {
+  await ensureConfig();
+
+  // A normal manual launch must always show something before tray/network work starts.
+  if (!process.argv.includes('--background')) showDashboard();
+
+  try {
+    tray = new Tray(trayIcon());
+    tray.setToolTip('Organic Synthesis Gallery TOC Collector');
+    tray.on('click', () => showDashboard());
+    tray.on('double-click', () => showDashboard());
+    rebuildTrayMenu();
+  } catch (error) {
+    await log('tray init failed', String(error?.stack || error));
+  }
+
+  await log('collector started', { version: app.getVersion(), configPath: configPath(), background: process.argv.includes('--background') });
+  setTimeout(() => void runCycle(false), 2500);
+  pollTimer = setInterval(() => void runCycle(false), Math.max(3, Number(config.pollMinutes)||10) * 60 * 1000);
+}).catch(error => {
+  console.error(error);
+  try { dialog.showErrorBox('TOC Collector 启动失败', String(error?.stack || error)); } catch {}
+});
+
+app.on('window-all-closed', () => {});
+"""
+          if old not in s:
+              raise SystemExit('startup anchor not found')
+          s = s.replace(old, new)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+          node --check toc-collector/src/main.mjs
+      - name: Commit safe-start patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add toc-collector/src/main.mjs
+          git commit -m "fix: make TOC Collector startup visible and lock-free"
+          git push
