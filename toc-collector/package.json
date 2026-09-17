@@ -1,22 +1,24 @@
 {
   "name": "organic-synthesis-gallery-toc-collector",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "type": "module",
   "main": "src/main.mjs",
   "scripts": {
-    "start": "electron .",
-    "check": "node --check src/main.mjs",
-    "dist:win": "electron-builder --win nsis portable --x64"
+    "start": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/Start-CollectorDiagnostics.ps1 -Development",
+    "check": "node --check src/main.mjs && node --check src/minimal.mjs && node --check src/background.mjs && node --check scripts/build-windows.mjs",
+    "dist:win": "node scripts/build-windows.mjs nsis portable",
+    "dist:nsis": "node scripts/build-windows.mjs nsis",
+    "dist:portable": "node scripts/build-windows.mjs portable",
+    "dist:debug": "node scripts/build-windows.mjs debug"
   },
   "devDependencies": {
-    "electron": "^37.2.0",
-    "electron-builder": "^26.0.12"
+    "electron": "37.10.3",
+    "electron-builder": "26.15.3"
   },
   "build": {
     "appId": "com.organicsynthesisgallery.toccollector",
     "productName": "Organic Synthesis Gallery TOC Collector",
-    "artifactName": "${productName}-${version}-${arch}.${ext}",
     "asar": true,
     "files": [
       "src/**/*",
@@ -27,6 +29,9 @@
     "directories": {
       "output": "dist"
     },
+    "extraFiles": [
+      { "from": "scripts/Start-CollectorDiagnostics.ps1", "to": "Start-CollectorDiagnostics.ps1" }
+    ],
     "win": {
       "target": [
         {
@@ -44,10 +49,14 @@
       ]
     },
     "nsis": {
+      "artifactName": "Organic-Synthesis-Gallery-TOC-Collector-Setup-${version}-${arch}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": false,
       "createStartMenuShortcut": true
+    },
+    "portable": {
+      "artifactName": "Organic-Synthesis-Gallery-TOC-Collector-Portable-${version}-${arch}.${ext}"
     }
   }
 }
