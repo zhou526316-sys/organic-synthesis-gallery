@@ -72,7 +72,7 @@ jobs:
           BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
         run: node cloudflare/scripts/build-cloudflare-bridge.mjs
 
-      - name: Package self-updating VPN Bridge runtime
+      - name: Package self-contained VPN Bridge runtime
         env:
           TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
           BRIDGE_UPDATE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
@@ -124,12 +124,15 @@ jobs:
           test -f dist/gallery-vpn-bridge-runtime.js
           test -f dist/toc-rescue.js
           test -d dist/media-mirror
-          grep -F "// @version      2.0.2" dist/gallery-vpn-bridge.user.js
+          grep -F "// @version      2.1.0" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
           grep -F "// @connect      *" dist/gallery-vpn-bridge.user.js
-          grep -F "gallery-vpn-bridge-runtime.js" dist/gallery-vpn-bridge.user.js
+          grep -F "VPN Bridge 2.1.0 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
+          grep -F "const VERSION = '1.1.1';" dist/gallery-vpn-bridge.user.js
+          grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge.user.js
+          if grep -Eq "\beval\s*\(" dist/gallery-vpn-bridge.user.js; then echo "Bridge userscript must not use eval"; exit 1; fi
           grep -F "const VERSION = '1.1.1';" dist/gallery-vpn-bridge-runtime.js
           grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge-runtime.js
           grep -F "abstract\\s*image" dist/gallery-vpn-bridge-runtime.js
