@@ -28,6 +28,7 @@ void preloadChineseTitleCache().finally(async () => {
     restoreLegacyMediaListeners();
   }
   await import('./user-ui/user-center-management');
+  await import('./user-ui/interaction-stability');
   await import('./user-ui/account-sync');
   await import('./media-enhancements');
   await import('./runtime-recovery');
