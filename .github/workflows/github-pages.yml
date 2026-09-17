@@ -9,6 +9,7 @@ on:
       - 'PAGES_REFRESH'
       - '.github/workflows/github-pages.yml'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
+      - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
       - 'cloudflare/scripts/merge-worker-media.mjs'
       - 'cloudflare/scripts/merge-pmc-open-media.mjs'
@@ -71,6 +72,13 @@ jobs:
           BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
         run: node cloudflare/scripts/build-cloudflare-bridge.mjs
 
+      - name: Package self-updating VPN Bridge runtime
+        env:
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
+          BRIDGE_RUNTIME_OUTPUT: public/gallery-vpn-bridge-runtime.js
+        run: node cloudflare/scripts/build-bridge-loader.mjs
+
       - name: Mirror media and metadata for static Pages
         run: node cloudflare/scripts/build-pages-mirror.mjs
         env:
@@ -112,11 +120,15 @@ jobs:
           test -f dist/title-translations-zh.json
           test -f dist/paper-title-resolutions.json
           test -f dist/gallery-vpn-bridge.user.js
+          test -f dist/gallery-vpn-bridge-runtime.js
           test -f dist/toc-rescue.js
           test -d dist/media-mirror
-          grep -F "// @version      1.0.4" dist/gallery-vpn-bridge.user.js
+          grep -F "// @version      2.0.0" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
-          grep -F "// @connect      organic-synthesis-gallery.zhou526316.workers.dev" dist/gallery-vpn-bridge.user.js
+          grep -F "// @connect      *" dist/gallery-vpn-bridge.user.js
+          grep -F "gallery-vpn-bridge-runtime.js" dist/gallery-vpn-bridge.user.js
+          grep -F "const VERSION = '1.1.0';" dist/gallery-vpn-bridge-runtime.js
+          grep -F "abstract\\s*image" dist/gallery-vpn-bridge-runtime.js
           node - <<'NODE'
           const fs = require('fs');
           const manifest = JSON.parse(fs.readFileSync('dist/media-index.json', 'utf8'));
@@ -153,7 +165,7 @@ jobs:
           if (!zh.get('Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage')) throw new Error('curated Chinese title was not merged');
           if (!zh.get('Scalable Total Syntheses of Nonthmicin and Ecteinamycin Reveal a Dual Antibacterial and Antitoxin Profile against Clostridioides difficile')) throw new Error('second-batch Chinese title was not merged');
 
-          console.log(JSON.stringify({ manifestItems: items.length, figures, pmcFallbacks: pmcFallbacks.length, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true, workerMediaMerged: true }));
+          console.log(JSON.stringify({ manifestItems: items.length, figures, pmcFallbacks: pmcFallbacks.length, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true, workerMediaMerged: true, bridgeLoader: true, bridgeRuntime: true }));
           NODE
 
       - name: Upload Pages artifact
