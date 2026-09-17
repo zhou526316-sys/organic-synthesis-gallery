@@ -68,21 +68,61 @@ function union(remote: string[] = [], local: string[] = []): string[] {
   return [...new Set([...remote, ...local].filter(Boolean))];
 }
 
+function stringList(value: unknown): string[] {
+  return Array.isArray(value) ? [...new Set(value.filter((item): item is string => typeof item === 'string' && Boolean(item)))] : [];
+}
+
 function mergePaper(remote: any = {}, local: any = {}, localWins = true): any {
-  const remoteNoteAt = Number(remote.noteUpdatedAt || 0);
-  const localNoteAt = Number(local.noteUpdatedAt || 0);
-  const noteSource = localNoteAt > remoteNoteAt ? local : remote;
-  const base = localWins ? { ...remote, ...local } : { ...local, ...remote };
-  return {
-    ...base,
-    favorite: Boolean(remote.favorite || local.favorite),
-    collections: union(remote.collections, local.collections),
-    quickTerms: union(remote.quickTerms, local.quickTerms),
-    tags: union(remote.tags, local.tags),
-    note: noteSource.note || '',
+  const remoteUpdatedAt = Number(remote?.updatedAt || 0);
+  const localUpdatedAt = Number(local?.updatedAt || 0);
+  const remoteNoteAt = Number(remote?.noteUpdatedAt || 0);
+  const localNoteAt = Number(local?.noteUpdatedAt || 0);
+  const lastOpenedAt = Math.max(Number(remote?.lastOpenedAt || 0), Number(local?.lastOpenedAt || 0)) || undefined;
+
+  // Records created before updatedAt existed keep the old additive behavior so
+  // upgrading does not silently discard saved state. As soon as either side has
+  // a real edit timestamp, the newer paper snapshot wins, which makes removals
+  // (unsave, clear status/folders/tags) durable across devices.
+  if (!remoteUpdatedAt && !localUpdatedAt) {
+    const noteSource = localNoteAt > remoteNoteAt ? local : remote;
+    const base = localWins ? { ...remote, ...local } : { ...local, ...remote };
+    return {
+      ...base,
+      favorite: Boolean(remote.favorite || local.favorite),
+      collections: union(remote.collections, local.collections),
+      quickTerms: union(remote.quickTerms, local.quickTerms),
+      tags: union(remote.tags, local.tags),
+      note: typeof noteSource?.note === 'string' ? noteSource.note : '',
+      noteUpdatedAt: Math.max(remoteNoteAt, localNoteAt) || undefined,
+      lastOpenedAt,
+    };
+  }
+
+  const generalSource = remoteUpdatedAt === localUpdatedAt
+    ? (localWins ? local : remote)
+    : (localUpdatedAt > remoteUpdatedAt ? local : remote);
+  const otherSource = generalSource === local ? remote : local;
+  const noteSource = remoteNoteAt === localNoteAt
+    ? generalSource
+    : (localNoteAt > remoteNoteAt ? local : remote);
+  const merged = {
+    ...otherSource,
+    ...generalSource,
+    favorite: Boolean(generalSource?.favorite),
+    collections: stringList(generalSource?.collections),
+    quickTerms: stringList(generalSource?.quickTerms),
+    tags: stringList(generalSource?.tags),
+    note: typeof noteSource?.note === 'string' ? noteSource.note : '',
     noteUpdatedAt: Math.max(remoteNoteAt, localNoteAt) || undefined,
-    lastOpenedAt: Math.max(Number(remote.lastOpenedAt || 0), Number(local.lastOpenedAt || 0)) || undefined,
-  };
+    updatedAt: Math.max(remoteUpdatedAt, localUpdatedAt) || undefined,
+    lastOpenedAt,
+  } as any;
+
+  // Object spreading cannot express deletion of an optional field, so explicitly
+  // remove a stale status when the newest snapshot says the status is unset.
+  if (typeof generalSource?.statusId === 'string' && generalSource.statusId) merged.statusId = generalSource.statusId;
+  else delete merged.statusId;
+  return merged;
 }
 
 function mergeStates(remote: UserUiState, local: UserUiState, localWins = true): UserUiState {
@@ -123,16 +163,36 @@ async function request(mode: 'account-merge' | 'account-save' | 'account-pull', 
 }
 
 async function initialMerge(): Promise<void> {
-  const result = await request('account-merge', store.state);
-  if (!result.ok || !result.body.account) {
-    if (result.status === 401) clearRememberedAccount();
+  // Pull first and merge locally. The original server-side account-merge used
+  // OR/union semantics, which could resurrect a favorite or tag that a newer
+  // device had deliberately removed.
+  const pulled = await request('account-pull');
+  if (!pulled.ok || !pulled.body.account) {
+    if (pulled.status === 401) clearRememberedAccount();
     return;
   }
+
+  const localState = store.state;
+  const merged = mergeStates(pulled.body.account.state, localState, true);
   applyingRemote = true;
-  store.state = result.body.account.state;
-  rememberAccount(result.body.account.userId, result.body.account.revision);
+  store.state = merged;
+  rememberAccount(pulled.body.account.userId, pulled.body.account.revision);
   store.save();
   applyingRemote = false;
+
+  const saved = await request('account-save', merged);
+  if (saved.status === 409 && saved.body.account) {
+    const retryMerged = mergeStates(saved.body.account.state, merged, true);
+    applyingRemote = true;
+    store.state = retryMerged;
+    rememberAccount(saved.body.account.userId, saved.body.account.revision);
+    store.save();
+    applyingRemote = false;
+    const retried = await request('account-save', retryMerged);
+    if (retried.ok && retried.body.account) rememberAccount(retried.body.account.userId, retried.body.account.revision);
+    return;
+  }
+  if (saved.ok && saved.body.account) rememberAccount(saved.body.account.userId, saved.body.account.revision);
 }
 
 async function pullRemote(): Promise<void> {
