@@ -79,6 +79,16 @@ function extensionFor(contentType, url) {
   return 'jpg';
 }
 
+function isCriticalMirrorFailure(url) {
+  if (!/^https?:\/\//i.test(url)) return true;
+  try {
+    const host = new URL(url).host;
+    return host === new URL(SOURCE).host || host === new URL(FALLBACK_SITE).host;
+  } catch {
+    return true;
+  }
+}
+
 async function loadRecords() {
   const encoded = (await readFile(path.join(PUBLIC_DIR, 'papers.gz.b64'), 'utf8')).trim();
   const base = JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8'));
@@ -198,6 +208,7 @@ async function mirrorMedia() {
 
   const replacements = new Map();
   const failures = [];
+  let criticalFailures = 0;
   let bytesTotal = 0;
   const list = [...urls];
   await mapConcurrent(list, CONCURRENCY, async (url, index) => {
@@ -214,7 +225,9 @@ async function mirrorMedia() {
       bytesTotal += bytes.length;
       if ((index + 1) % 100 === 0) console.log(`Mirrored ${index + 1}/${list.length} media objects`);
     } catch (error) {
-      failures.push({ url, error: error instanceof Error ? error.message : String(error) });
+      const critical = isCriticalMirrorFailure(url);
+      if (critical) criticalFailures += 1;
+      failures.push({ url, critical, error: error instanceof Error ? error.message : String(error) });
     }
   });
 
@@ -226,11 +239,20 @@ async function mirrorMedia() {
   }
 
   if (failures.length) {
-    console.warn(`Media mirror failures: ${failures.length}`);
+    const externalFallbacks = failures.length - criticalFailures;
+    console.warn(`Media mirror failures: ${failures.length} (${criticalFailures} critical, ${externalFallbacks} external fallbacks retained)`);
     console.warn(JSON.stringify(failures.slice(0, 20), null, 2));
   }
   await writeFile(path.join(PUBLIC_DIR, 'media-index.json'), JSON.stringify(manifest));
-  return { mediaSource, manifestItems: Object.keys(manifest.items).length, mediaObjects: replacements.size, failures: failures.length, bytesTotal };
+  return {
+    mediaSource,
+    manifestItems: Object.keys(manifest.items).length,
+    mediaObjects: replacements.size,
+    failures: failures.length,
+    criticalFailures,
+    externalFallbacks: failures.length - criticalFailures,
+    bytesTotal,
+  };
 }
 
 await mkdir(PUBLIC_DIR, { recursive: true });
@@ -248,4 +270,4 @@ const summary = {
   ...media,
 };
 console.log(`PAGES_MIRROR_SUMMARY ${JSON.stringify(summary)}`);
-if (media.failures > 0) process.exitCode = 2;
+if (media.criticalFailures > 0) process.exitCode = 2;
