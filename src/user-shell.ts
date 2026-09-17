@@ -15,7 +15,7 @@ type IntegrationProbeShell = HTMLElement & {
 
 const SESSION_KEY = 'organic-gallery-session-v1';
 const AUTH_WINDOW_NAME = 'organic-gallery-auth';
-const BROWSER_API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';
+const BROWSER_API_BASE = 'https://api.gczhouwld.com';
 const WORKER_ORIGIN = new URL(WORKER_API_BASE).origin;
 const productionIntegrationFallback = {
   auth: { google: true, wechat: false, qq: false, email: true },
