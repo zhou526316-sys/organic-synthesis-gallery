@@ -40,6 +40,8 @@ let cycleRunning = false;
 let vpnWatchTimer = null;
 let pollTimer = null;
 let lastQueue = [];
+const publisherPartition = 'toc-publisher-scan';
+const publisherSession = session.fromPartition(publisherPartition, { cache: false });
 
 
 function dataDir() { return path.join(app.getPath('userData')); }
@@ -76,6 +78,11 @@ async function ensureConfig() {
   config = await loadJson(configPath(), DEFAULT_CONFIG);
   state = await loadJson(statePath(), state);
   state.cooldowns = state.cooldowns && typeof state.cooldowns === 'object' ? state.cooldowns : {};
+  // 0.1.5 retries papers that 0.1.4 marked as generic client-side failures.
+  if (state.collectorRecoveryVersion !== '0.1.5') {
+    state.cooldowns = Object.fromEntries(Object.entries(state.cooldowns).filter(([, value]) => value?.reason !== 'collector_failed'));
+    state.collectorRecoveryVersion = '0.1.5';
+  }
   await saveState();
   // Login settings change only after the user explicitly toggles the tray option.
 }
@@ -118,7 +125,7 @@ async function fetchQueue() {
 
 async function probeUrl(url) {
   try {
-    const res = await session.defaultSession.fetch(url, { method: 'GET', redirect: 'follow', signal: AbortSignal.timeout(10000) });
+    const res = await publisherSession.fetch(url, { method: 'GET', redirect: 'follow', signal: AbortSignal.timeout(10000) });
     return res.status >= 200 && res.status < 400;
   } catch (error) {
     mark('background.network.probe.error', { url, message: String(error?.message || error) });
@@ -154,15 +161,141 @@ function semanticScore(text) {
   return 0;
 }
 
+function decodeHtml(value) {
+  return String(value || '')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>');
+}
+
+function tagAttributes(tag) {
+  const attrs = {};
+  for (const match of String(tag || '').matchAll(/([:\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/g)) {
+    attrs[String(match[1] || '').toLowerCase()] = decodeHtml(match[2] ?? match[3] ?? match[4] ?? '');
+  }
+  return attrs;
+}
+
+function stripHtml(value) {
+  return decodeHtml(String(value || '')
+    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim());
+}
+
+function absoluteMediaUrl(value, pageUrl) {
+  if (!value) return '';
+  try { return new URL(String(value).trim(), pageUrl).href; } catch { return ''; }
+}
+
+function sourceFromAttrs(attrs) {
+  for (const key of ['src', 'data-src', 'data-original', 'data-lazy-src', 'data-image-src']) {
+    if (attrs[key]) return attrs[key];
+  }
+  if (attrs.srcset) {
+    const options = attrs.srcset.split(',').map(part => part.trim().split(/\s+/)[0]).filter(Boolean);
+    return options.at(-1) || '';
+  }
+  return '';
+}
+
+function htmlCandidate(html, pageUrl) {
+  const rows = [];
+  const add = (src, text, kind, width = 0, height = 0) => {
+    const absolute = absoluteMediaUrl(src, pageUrl);
+    if (!absolute) return;
+    if (/logo|icon|avatar|cover|advert|banner/i.test(String(text || ''))) return;
+    rows.push({ src: absolute, text: String(text || ''), kind, width: Number(width) || 0, height: Number(height) || 0 });
+  };
+
+  for (const match of String(html || '').matchAll(/<meta\b[^>]*>/gi)) {
+    const attrs = tagAttributes(match[0]);
+    const key = String(attrs.name || attrs.property || attrs.itemprop || '').toLowerCase();
+    if (['citation_graphical_abstract', 'citation_toc_graphic', 'citation_abstract_image'].includes(key)) {
+      add(attrs.content, key, 'official');
+    }
+  }
+
+  let figures = 0;
+  for (const match of String(html || '').matchAll(/<figure\b[\s\S]*?<\/figure>/gi)) {
+    if (++figures > 80) break;
+    const block = match[0];
+    const img = block.match(/<img\b[^>]*>/i)?.[0];
+    if (!img) continue;
+    const attrs = tagAttributes(img);
+    const text = [attrs.alt, attrs.title, attrs.id, attrs.class, stripHtml(block).slice(0, 1400)].filter(Boolean).join(' ');
+    const official = /visual\s*abstract|graphical\s*abstract|abstract\s*image|toc\s*(graphic|image)|table\s*of\s*contents/i.test(text);
+    const fig1 = /(^|\b)(fig(?:ure)?\.?\s*1)(\b|[:.])/i.test(text);
+    if (official || fig1) add(sourceFromAttrs(attrs), text, official ? 'official' : 'figure1', attrs.width, attrs.height);
+  }
+
+  let images = 0;
+  for (const match of String(html || '').matchAll(/<img\b[^>]*>/gi)) {
+    if (++images > 500) break;
+    const attrs = tagAttributes(match[0]);
+    const text = [attrs.alt, attrs.title, attrs.id, attrs.class].filter(Boolean).join(' ');
+    const official = /visual\s*abstract|graphical\s*abstract|abstract\s*image|toc\s*(graphic|image)|table\s*of\s*contents/i.test(text);
+    const fig1 = /(^|\b)(fig(?:ure)?\.?\s*1)(\b|[:.])/i.test(text);
+    if (official || fig1) add(sourceFromAttrs(attrs), text, official ? 'official' : 'figure1', attrs.width, attrs.height);
+  }
+
+  rows.sort((a,b) => {
+    const sa = semanticScore(a.text) + (a.kind === 'official' ? 20 : 0) + Math.min(20, ((a.width||0)*(a.height||0))/100000);
+    const sb = semanticScore(b.text) + (b.kind === 'official' ? 20 : 0) + Math.min(20, ((b.width||0)*(b.height||0))/100000);
+    return sb - sa;
+  });
+  return rows[0] || null;
+}
+
+async function inspectArticleHtml(doi, url, browserError = '') {
+  const res = await publisherSession.fetch(url, {
+    method: 'GET',
+    redirect: 'follow',
+    headers: {
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+      'Accept-Language': 'en-US,en;q=0.9',
+    },
+    signal: AbortSignal.timeout(Math.max(15000, Number(config.publisherTimeoutSeconds || 35) * 1000)),
+  });
+  if (!res.ok) throw new Error(`publisher_http_${res.status}${browserError ? ` after ${browserError}` : ''}`);
+  const html = await res.text();
+  if (/captcha|verify you are human|access denied|challenge-platform/i.test(html.slice(0, 250000))) {
+    throw new Error(`publisher_access_challenge${browserError ? ` after ${browserError}` : ''}`);
+  }
+  const finalUrl = res.url || url;
+  const candidate = htmlCandidate(html, finalUrl);
+  await log('publisher html fallback', { doi, browserError, candidate: candidate?.kind || 'none', url: finalUrl });
+  return { url: finalUrl, candidate };
+}
+
 async function inspectArticle(doi) {
   const url = articleUrl(doi);
-  const win = new BrowserWindow({ show: false, webPreferences: { sandbox: true, contextIsolation: true, images: true } });
+  const win = new BrowserWindow({
+    show: false,
+    webPreferences: {
+      partition: publisherPartition,
+      sandbox: true,
+      contextIsolation: true,
+      images: true,
+    },
+  });
   let publisherTimer;
   try {
-    await Promise.race([
-      win.loadURL(url, { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36' }),
-      new Promise((_, reject) => { publisherTimer = setTimeout(() => reject(new Error('publisher_timeout')), Math.max(1, Number(config.publisherTimeoutSeconds) || 35) * 1000); }),
-    ]);
+    try {
+      await Promise.race([
+        win.loadURL(url, { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36' }),
+        new Promise((_, reject) => { publisherTimer = setTimeout(() => reject(new Error('publisher_timeout')), Math.max(1, Number(config.publisherTimeoutSeconds) || 35) * 1000); }),
+      ]);
+    } catch (error) {
+      const browserError = String(error?.message || error);
+      await log('browser scan failed; trying html fallback', { doi, browserError });
+      return await inspectArticleHtml(doi, url, browserError);
+    }
     await new Promise(r => setTimeout(r, Number(config.headlessWaitMs) || 5000));
     const result = await win.webContents.executeJavaScript(`(() => {
       const abs = u => { try { return new URL(u, location.href).href } catch { return '' } };
@@ -200,7 +333,7 @@ async function inspectArticle(doi) {
 }
 
 async function imageData(url, referer) {
-  const res = await session.defaultSession.fetch(url, { headers: { Accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8', Referer: referer }, signal: AbortSignal.timeout(30000) });
+  const res = await publisherSession.fetch(url, { headers: { Accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8', Referer: referer }, signal: AbortSignal.timeout(30000) });
   if (!res.ok) throw new Error(`image_http_${res.status}`);
   let buffer = Buffer.from(await res.arrayBuffer());
   const type = (res.headers.get('content-type') || 'image/jpeg').split(';')[0].toLowerCase();
@@ -251,6 +384,7 @@ async function processItem(item) {
     if (/403|access|captcha|challenge/i.test(msg)) { reason = 'publisher_access_blocked'; ms = 24*60*60*1000; }
     else if (/429|rate/i.test(msg)) { reason = 'publisher_rate_limited'; ms = 24*60*60*1000; }
     else if (/timeout/i.test(msg)) { reason = 'publisher_timeout'; ms = 8*60*60*1000; }
+    else if (/ERR_BLOCKED_BY_CLIENT/i.test(msg)) { reason = 'publisher_client_blocked'; ms = 30*60*1000; }
     else if (/write_token_missing|401/.test(msg)) { reason = 'collector_auth'; ms = 30*60*1000; }
     await setCooldown(doi, reason, ms);
     await report(doi, 'process', 'failed', reason, articleUrl(doi));
@@ -391,7 +525,7 @@ function dashboardHtml() {
     .ok{color:#188038}.bad{color:#b3261e}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.buttons a{background:#fff;border:1px solid #bbb;border-radius:8px;padding:9px 13px;text-decoration:none;color:#202124}
     table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden}td,th{padding:8px 10px;border-bottom:1px solid #eee;text-align:left;font-size:13px}
     .note{font-size:12px;color:#666;margin-top:12px;line-height:1.5}.errors{background:#fff1f0;border:1px solid #d77;border-radius:8px;padding:12px;margin:12px 0;overflow-wrap:anywhere}.status{padding:10px 0;color:#174d32}
-  </style></head><body><div class="wrap"><h1>Organic Synthesis Gallery · TOC Collector</h1><div class="sub">程序已启动 · TOC Collector 0.1.4 started successfully<br>${closeHint}</div>
+  </style></head><body><div class="wrap"><h1>Organic Synthesis Gallery · TOC Collector</h1><div class="sub">程序已启动 · TOC Collector ${escapeHtml(app.getVersion())} started successfully<br>${closeHint}</div>
   <div class="status">${escapeHtml(stageStatus)}</div>${errors ? `<div class="errors" role="alert">后台错误（主窗口继续运行）${errors}</div>` : ''}
   <div class="grid">
     <div class="card"><div class="k">当前队列</div><div class="v">${lastQueue.length}</div></div>
