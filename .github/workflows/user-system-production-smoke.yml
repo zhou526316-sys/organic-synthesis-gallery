@@ -1,0 +1,116 @@
+name: User system production smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/user-system-production-smoke.yml'
+      - 'src/user-shell.ts'
+      - 'src/user-ui/**'
+      - 'cloudflare/worker/src/integrations.js'
+      - 'cloudflare/worker/src/user-ui.js'
+      - 'cloudflare/worker/src/index.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: user-system-production-smoke
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check custom-domain auth, session, sync, email validation, and reader routes
+        env:
+          API_BASE: https://api.gczhouwld.com
+          SITE_ORIGIN: https://zhou526316-sys.github.io
+          RETURN_TO: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+        run: |
+          node - <<'NODE'
+          const assert = (value, message) => { if (!value) throw new Error(message); };
+          const base = process.env.API_BASE;
+          const origin = process.env.SITE_ORIGIN;
+          const returnTo = process.env.RETURN_TO;
+
+          async function json(path, init = {}, expected = 200) {
+            const headers = new Headers(init.headers || {});
+            headers.set('origin', origin);
+            const response = await fetch(`${base}${path}`, { ...init, headers, redirect: 'manual' });
+            const text = await response.text();
+            let body = {};
+            try { body = text ? JSON.parse(text) : {}; } catch { throw new Error(`${path} returned non-JSON: ${text.slice(0, 300)}`); }
+            assert(response.status === expected, `${path}: expected HTTP ${expected}, got ${response.status}: ${text}`);
+            const allowOrigin = response.headers.get('access-control-allow-origin');
+            assert(allowOrigin === origin, `${path}: CORS origin mismatch: ${allowOrigin}`);
+            return body;
+          }
+
+          const health = await json('/api/_healthcheck');
+          assert(health.ok && health.d1 && health.r2 && health.writeAuth, `healthcheck incomplete: ${JSON.stringify(health)}`);
+
+          const integrations = await json('/api/user-ui/integrations');
+          assert(integrations?.auth?.google === true, `Google auth is not configured: ${JSON.stringify(integrations)}`);
+          assert(integrations?.auth?.email === true, `Email auth is not configured: ${JSON.stringify(integrations)}`);
+
+          const anonymousSession = await json('/api/user-ui/auth/session');
+          assert(anonymousSession.authenticated === false && anonymousSession.user === null, `anonymous session response invalid: ${JSON.stringify(anonymousSession)}`);
+
+          const counts = await json('/api/user-ui/reader-counts', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ dois: [] }),
+          });
+          assert(counts && typeof counts.counts === 'object', `reader count response invalid: ${JSON.stringify(counts)}`);
+
+          const pull = await json('/api/user-ui/reader-counts', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ mode: 'account-pull', sessionToken: 'invalid-smoke-session', profileId: 'smoke-profile-0001' }),
+          }, 401);
+          assert(pull.error === 'not_authenticated', `account pull auth guard invalid: ${JSON.stringify(pull)}`);
+
+          const invalidExchange = await json('/api/user-ui/auth/exchange', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ code: 'invalid-smoke-exchange-code' }),
+          }, 400);
+          assert(invalidExchange.error === 'invalid_or_expired_code', `auth exchange guard invalid: ${JSON.stringify(invalidExchange)}`);
+
+          const invalidEmail = await json('/api/user-ui/auth/email/start', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ email: 'not-an-email', returnTo }),
+          }, 400);
+          assert(invalidEmail.error === 'invalid_email', `email validation invalid: ${JSON.stringify(invalidEmail)}`);
+
+          const google = await fetch(`${base}/api/user-ui/auth/start?provider=google&returnTo=${encodeURIComponent(returnTo)}`, {
+            headers: { origin },
+            redirect: 'manual',
+          });
+          assert(google.status === 302, `Google auth start expected 302, got ${google.status}`);
+          const location = google.headers.get('location') || '';
+          assert(location, 'Google auth start missing Location header');
+          const target = new URL(location);
+          assert(target.hostname === 'accounts.google.com', `Google auth redirected to unexpected host: ${target.hostname}`);
+          const callback = target.searchParams.get('redirect_uri');
+          assert(callback === `${base}/api/user-ui/auth/callback/google`, `Google redirect_uri mismatch: ${callback}`);
+          assert(Boolean(target.searchParams.get('state')), 'Google OAuth state is missing');
+          assert(target.searchParams.get('scope')?.includes('openid'), `Google OAuth scope missing openid: ${target.searchParams.get('scope')}`);
+
+          console.log(JSON.stringify({
+            health: true,
+            cors: true,
+            googleConfigured: true,
+            emailConfigured: true,
+            googleRedirectHost: target.hostname,
+            googleRedirectUri: callback,
+            anonymousSession: true,
+            authExchangeGuard: true,
+            emailValidation: true,
+            readerCounts: true,
+            accountSyncAuthGuard: true,
+          }));
+          NODE
