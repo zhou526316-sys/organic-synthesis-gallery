@@ -1,0 +1,100 @@
+name: Apply TOC Collector 0.1.5 publisher fallback
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-toc-collector-015-publisher-fallback.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: toc-collector-015-publisher-fallback
+  cancel-in-progress: false
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply 0.1.5 publisher fallback patch
+        run: python .github/scripts/toc_collector_015_publisher_fallback.py
+
+      - name: Verify source
+        shell: bash
+        run: |
+          node --check toc-collector/src/main.mjs
+          node --check toc-collector/src/background.mjs
+          grep -q "publisher html fallback" toc-collector/src/background.mjs
+          grep -q "toc-publisher-scan" toc-collector/src/background.mjs
+          grep -q "collectorRecoveryVersion !== '0.1.5'" toc-collector/src/background.mjs
+          grep -q '"version": "0.1.5"' toc-collector/package.json
+          git diff --check
+
+      - name: Commit patched source
+        shell: bash
+        run: |
+          if git diff --quiet -- toc-collector/src/main.mjs toc-collector/src/background.mjs toc-collector/package.json; then
+            echo "0.1.5 source is already patched."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add toc-collector/src/main.mjs toc-collector/src/background.mjs toc-collector/package.json
+          git commit -m "fix: TOC Collector 0.1.5 publisher fallback"
+          git push origin HEAD:main
+
+  build-windows:
+    needs: patch
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: toc-collector
+    steps:
+      - name: Checkout patched main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Refresh patched main
+        shell: pwsh
+        run: |
+          git fetch origin main
+          git checkout --detach origin/main
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Verify 0.1.5 source
+        shell: pwsh
+        run: |
+          npm run check
+          $source = Get-Content src/background.mjs -Raw
+          $pkg = Get-Content package.json -Raw
+          if (-not $source.Contains('publisher html fallback')) { throw 'HTML fallback marker missing' }
+          if (-not $source.Contains('toc-publisher-scan')) { throw 'isolated publisher session missing' }
+          if (-not $pkg.Contains('0.1.5')) { throw '0.1.5 version missing' }
+
+      - name: Build Windows installer and portable EXE
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npm run dist:win
+
+      - name: Upload Windows 0.1.5 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: toc-collector-windows-0.1.5
+          path: |
+            toc-collector/dist/*.exe
+            toc-collector/dist/*.yml
+          if-no-files-found: error
+          retention-days: 14
