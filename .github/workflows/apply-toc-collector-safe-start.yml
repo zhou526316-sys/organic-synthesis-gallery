@@ -1,6 +1,7 @@
 name: Apply TOC Collector safe-start patch
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
@@ -9,35 +10,45 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: toc-collector-safe-start
+  cancel-in-progress: false
+
 jobs:
   patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch safe startup
+
+      - name: Patch safe startup and bump version
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
+          import json
+
           p = Path('toc-collector/src/main.mjs')
           s = p.read_text(encoding='utf-8')
 
+          old_lock = "const gotLock = app.requestSingleInstanceLock();\nif (!gotLock) app.quit();\napp.on('second-instance', () => showDashboard());\n"
+          if old_lock in s:
+              s = s.replace(
+                  old_lock,
+                  "// Safe-start 0.1.3: never silently quit before the UI can report a startup problem.\n"
+                  "// Background duplicate protection will be reintroduced only after startup is proven stable.\n"
+              )
+
           s = s.replace(
-          "const gotLock = app.requestSingleInstanceLock();\nif (!gotLock) app.quit();\napp.on('second-instance', () => showDashboard());\n",
-          "// Safe-start mode: do not let a stale older Collector process block this version.\n// Version-aware locking can be restored after startup behavior is stable.\n"
+              "    minHeight: 480,\n    show: false,\n    autoHideMenuBar: true,\n    title: 'TOC Collector',",
+              "    minHeight: 480,\n    show: true,\n    autoHideMenuBar: true,\n    title: 'TOC Collector',"
           )
 
           s = s.replace(
-          "    minHeight: 480,\n    show: false,\n    autoHideMenuBar: true,\n    title: 'TOC Collector',",
-          "    minHeight: 480,\n    show: true,\n    autoHideMenuBar: true,\n    title: 'TOC Collector',"
+              "  refreshDashboard();\n  dashboard.once('ready-to-show', () => { dashboard?.show(); dashboard?.focus(); });\n}",
+              "  refreshDashboard();\n  dashboard.show();\n  dashboard.focus();\n}"
           )
 
-          s = s.replace(
-          "  refreshDashboard();\n  dashboard.once('ready-to-show', () => { dashboard?.show(); dashboard?.focus(); });\n}",
-          "  refreshDashboard();\n  dashboard.show();\n  dashboard.focus();\n}"
-          )
-
-          old = """app.whenReady().then(async () => {
+          old_start = """app.whenReady().then(async () => {
   await ensureConfig();
   tray = new Tray(trayIcon());
   tray.setToolTip('Organic Synthesis Gallery TOC Collector');
@@ -52,10 +63,10 @@ jobs:
 
 app.on('window-all-closed', event => event.preventDefault?.());
 """
-          new = """app.whenReady().then(async () => {
+          new_start = """app.whenReady().then(async () => {
   await ensureConfig();
 
-  // A normal manual launch must always show something before tray/network work starts.
+  // Manual launch: make the dashboard visible before tray/network initialization.
   if (!process.argv.includes('--background')) showDashboard();
 
   try {
@@ -68,27 +79,120 @@ app.on('window-all-closed', event => event.preventDefault?.());
     await log('tray init failed', String(error?.stack || error));
   }
 
-  await log('collector started', { version: app.getVersion(), configPath: configPath(), background: process.argv.includes('--background') });
+  await log('collector started', {
+    version: app.getVersion(),
+    configPath: configPath(),
+    background: process.argv.includes('--background'),
+  });
   setTimeout(() => void runCycle(false), 2500);
   pollTimer = setInterval(() => void runCycle(false), Math.max(3, Number(config.pollMinutes)||10) * 60 * 1000);
-}).catch(error => {
+}).catch(async error => {
+  const detail = String(error?.stack || error);
   console.error(error);
-  try { dialog.showErrorBox('TOC Collector 启动失败', String(error?.stack || error)); } catch {}
+  try { await log('startup failed', detail); } catch {}
+  try { dialog.showErrorBox('TOC Collector 启动失败', detail); } catch {}
 });
 
 app.on('window-all-closed', () => {});
 """
-          if old not in s:
-              raise SystemExit('startup anchor not found')
-          s = s.replace(old, new)
+          if old_start in s:
+              s = s.replace(old_start, new_start)
+          elif "tray init failed" not in s:
+              raise SystemExit('startup anchor not found and safe-start patch is absent')
+
+          fatal_marker = "// Fatal-error visibility 0.1.3"
+          if fatal_marker not in s:
+              anchor = "app.whenReady().then(async () => {"
+              if anchor not in s:
+                  raise SystemExit('whenReady anchor not found')
+              handlers = """// Fatal-error visibility 0.1.3
+process.on('uncaughtException', error => {
+  const detail = String(error?.stack || error);
+  console.error(error);
+  void log('uncaught exception', detail);
+  try { dialog.showErrorBox('TOC Collector 运行错误', detail); } catch {}
+});
+process.on('unhandledRejection', error => {
+  const detail = String(error?.stack || error);
+  console.error(error);
+  void log('unhandled rejection', detail);
+  try { dialog.showErrorBox('TOC Collector 运行错误', detail); } catch {}
+});
+
+"""
+              s = s.replace(anchor, handlers + anchor, 1)
 
           p.write_text(s, encoding='utf-8')
+
+          package_path = Path('toc-collector/package.json')
+          package = json.loads(package_path.read_text(encoding='utf-8'))
+          package['version'] = '0.1.3'
+          package_path.write_text(json.dumps(package, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
+
           node --check toc-collector/src/main.mjs
-      - name: Commit safe-start patch
+          grep -q "Safe-start 0.1.3" toc-collector/src/main.mjs
+          grep -q '"version": "0.1.3"' toc-collector/package.json
+
+      - name: Commit patched source
+        shell: bash
         run: |
+          if git diff --quiet -- toc-collector/src/main.mjs toc-collector/package.json; then
+            echo "Safe-start source is already patched."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add toc-collector/src/main.mjs
-          git commit -m "fix: make TOC Collector startup visible and lock-free"
-          git push
+          git add toc-collector/src/main.mjs toc-collector/package.json
+          git commit -m "fix: TOC Collector 0.1.3 visible safe startup"
+          git push origin HEAD:main
+
+  build-windows:
+    needs: patch
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: toc-collector
+    steps:
+      - name: Checkout patched main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Refresh patched main
+        shell: pwsh
+        run: |
+          git fetch origin main
+          git checkout --detach origin/main
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Verify safe-start source
+        shell: pwsh
+        run: |
+          npm run check
+          $source = Get-Content src/main.mjs -Raw
+          $pkg = Get-Content package.json -Raw
+          if (-not $source.Contains('Safe-start 0.1.3')) { throw 'safe-start marker missing' }
+          if (-not $pkg.Contains('"version": "0.1.3"')) { throw '0.1.3 version missing' }
+
+      - name: Build Windows installer and portable EXE
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npm run dist:win
+
+      - name: Upload Windows 0.1.3 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: toc-collector-windows-0.1.3
+          path: |
+            toc-collector/dist/*.exe
+            toc-collector/dist/*.yml
+          if-no-files-found: error
+          retention-days: 14
