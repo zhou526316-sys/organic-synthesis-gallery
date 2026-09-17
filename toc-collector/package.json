@@ -31,7 +31,8 @@
     },
     "extraFiles": [
       { "from": "scripts/Start-CollectorDiagnostics.ps1", "to": "Start-CollectorDiagnostics.ps1" },
-      { "from": "scripts/START-TOC-COLLECTOR.cmd", "to": "START-TOC-COLLECTOR.cmd" }
+      { "from": "scripts/START-TOC-COLLECTOR.cmd", "to": "START-TOC-COLLECTOR.cmd" },
+      { "from": "scripts/Start-TOC-Collector-Unblock.ps1", "to": "Start-TOC-Collector-Unblock.ps1" }
     ],
     "win": {
       "target": [
