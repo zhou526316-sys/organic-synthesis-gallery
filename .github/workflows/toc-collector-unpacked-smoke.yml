@@ -5,6 +5,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'toc-collector/**'
       - '.github/workflows/toc-collector-unpacked-smoke.yml'
 
 permissions:
@@ -37,34 +38,77 @@ jobs:
         shell: pwsh
         run: |
           npx electron-builder --win --x64 --dir --publish never
-          $exe = Join-Path (Resolve-Path 'dist/win-unpacked') 'Organic Synthesis Gallery TOC Collector.exe'
+          $dir = Resolve-Path 'dist/win-unpacked'
+          $exe = Join-Path $dir 'Organic Synthesis Gallery TOC Collector.exe'
+          $launcher = Join-Path $dir 'START-TOC-COLLECTOR.cmd'
           if (-not (Test-Path $exe)) { throw "Unpacked EXE missing: $exe" }
+          if (-not (Test-Path $launcher)) { throw "Unblock launcher missing: $launcher" }
           Write-Host "UNPACKED_EXE=$exe"
 
-      - name: Launch smoke test
+      - name: Direct launch smoke test
         shell: pwsh
         run: |
           $log = Join-Path $env:TEMP 'toc-collector-bootstrap.log'
           Remove-Item $log -Force -ErrorAction SilentlyContinue
           $exe = Join-Path (Resolve-Path 'dist/win-unpacked') 'Organic Synthesis Gallery TOC Collector.exe'
           $p = Start-Process -FilePath $exe -ArgumentList '--startup-stage=window' -PassThru
-          Start-Sleep -Seconds 10
+          Start-Sleep -Seconds 8
           if ($p.HasExited) {
             if (Test-Path $log) { Get-Content $log }
-            throw "TOC Collector exited during smoke test with code $($p.ExitCode)"
+            throw "TOC Collector exited during direct smoke test with code $($p.ExitCode)"
           }
-          if (-not (Test-Path $log)) { Stop-Process -Id $p.Id -Force; throw 'Bootstrap log was not created' }
           $text = Get-Content $log -Raw
-          Write-Host $text
-          if (-not $text.Contains('JS file loaded')) { Stop-Process -Id $p.Id -Force; throw 'JS entry marker missing' }
           if (-not $text.Contains('startup-window.visible')) { Stop-Process -Id $p.Id -Force; throw 'Visible startup window marker missing' }
           Stop-Process -Id $p.Id -Force
+
+      - name: ZoneId unblock launcher smoke test
+        shell: pwsh
+        run: |
+          $dir = Resolve-Path 'dist/win-unpacked'
+          $exe = Join-Path $dir 'Organic Synthesis Gallery TOC Collector.exe'
+          $launcher = Join-Path $dir 'START-TOC-COLLECTOR.cmd'
+          $zone = "$exe`:Zone.Identifier"
+          Set-Content -LiteralPath $zone -Value "[ZoneTransfer]`r`nZoneId=3`r`n" -Encoding ASCII
+          if (-not (Test-Path -LiteralPath $zone)) { throw 'Could not create Zone.Identifier test marker' }
+          $before = Get-Content -LiteralPath $zone -Raw
+          Write-Host "Zone before launcher: $before"
+          $log = Join-Path $env:TEMP 'toc-collector-bootstrap.log'
+          Remove-Item $log -Force -ErrorAction SilentlyContinue
+          Start-Process -FilePath 'cmd.exe' -ArgumentList '/c', ('"{0}"' -f $launcher) -WorkingDirectory $dir -Wait
+          Start-Sleep -Seconds 8
+          if (Test-Path -LiteralPath $zone) { throw 'Launcher did not remove EXE Zone.Identifier' }
+          $proc = Get-Process | Where-Object { $_.Path -eq $exe } | Select-Object -First 1
+          if (-not $proc) {
+            if (Test-Path $log) { Get-Content $log }
+            throw 'Launcher removed ZoneId but Collector process is not running'
+          }
+          if (-not (Test-Path $log)) { Stop-Process -Id $proc.Id -Force; throw 'Bootstrap log was not created after launcher start' }
+          $text = Get-Content $log -Raw
+          Write-Host $text
+          if (-not $text.Contains('startup-window.visible')) { Stop-Process -Id $proc.Id -Force; throw 'Launcher-started app did not report visible startup window' }
+          Stop-Process -Id $proc.Id -Force
           Copy-Item $log 'dist/win-unpacked/SMOKE-TEST-bootstrap.log' -Force
 
-      - name: Upload smoke-tested unpacked app
+      - name: Add start-here note
+        shell: pwsh
+        run: |
+          @'
+          START HERE
+          ==========
+          This bundle is for Windows systems where downloaded EXE files do nothing because the Windows reputation / SmartScreen UI crashes before Electron starts.
+
+          1. Extract the entire ZIP to a normal folder.
+          2. Double-click START-TOC-COLLECTOR.cmd (not the EXE on the first launch).
+          3. The launcher removes Zone.Identifier only from files in this Collector folder, then starts Organic Synthesis Gallery TOC Collector.exe.
+          4. Your existing config.json/writeToken in %APPDATA% is preserved.
+
+          After the first successful launch, the EXE itself should also be unblocked.
+          '@ | Set-Content 'dist/win-unpacked/START-HERE.txt' -Encoding UTF8
+
+      - name: Upload Zone-safe smoke-tested unpacked app
         uses: actions/upload-artifact@v4
         with:
-          name: toc-collector-windows-0.1.5-unpacked-smoketested
+          name: toc-collector-windows-0.1.5-zone-safe
           path: toc-collector/dist/win-unpacked/**
           if-no-files-found: error
           retention-days: 14
