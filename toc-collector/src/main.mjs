@@ -159,8 +159,8 @@ async function inspectArticle(doi) {
     })()`);
     const rows = Array.isArray(result?.rows) ? result.rows : [];
     rows.sort((a,b) => {
-      const sa = ${semanticScore.toString()}(a.text) + (a.kind === 'official' ? 20 : 0) + Math.min(20, ((a.width||0)*(a.height||0))/100000);
-      const sb = ${semanticScore.toString()}(b.text) + (b.kind === 'official' ? 20 : 0) + Math.min(20, ((b.width||0)*(b.height||0))/100000);
+      const sa = semanticScore(a.text) + (a.kind === 'official' ? 20 : 0) + Math.min(20, ((a.width||0)*(a.height||0))/100000);
+      const sb = semanticScore(b.text) + (b.kind === 'official' ? 20 : 0) + Math.min(20, ((b.width||0)*(b.height||0))/100000);
       return sb - sa;
     });
     return { url: result?.href || url, candidate: rows[0] || null };
