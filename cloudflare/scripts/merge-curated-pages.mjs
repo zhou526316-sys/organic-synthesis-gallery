@@ -83,3 +83,7 @@ console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({
   mandatoryStatic: mandatoryStaticPapers.length,
   translations: translations.size,
 })}`);
+
+// Keep Nature/Springer Nature Figure 1 fallbacks persistent in the Pages media snapshot.
+// The imported module validates each CDN URL before writing and never overwrites an existing large image.
+await import('./merge-nature-figure-fallbacks.mjs');
