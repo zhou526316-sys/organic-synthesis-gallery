@@ -13,9 +13,11 @@ on:
       - 'cloudflare/scripts/build-pages-mirror.mjs'
       - 'cloudflare/scripts/merge-worker-media.mjs'
       - 'cloudflare/scripts/merge-pmc-open-media.mjs'
+      - 'cloudflare/scripts/merge-nature-figure-fallbacks.mjs'
       - 'cloudflare/scripts/prune-media-mirror.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
       - 'audit/toc-gap-dois-2026-09-16.json'
+      - 'audit/visual-gap-dois-2026-09-16.json'
       - 'public/curated-supplement.json'
       - 'public/papers.gz.b64'
       - 'public/total-synthesis.json'
@@ -101,6 +103,12 @@ jobs:
           PMC_MEDIA_CONCURRENCY: '2'
           PMC_REQUEST_DELAY_MS: '180'
 
+      - name: Merge Springer Nature Figure 1 fallbacks
+        run: node cloudflare/scripts/merge-nature-figure-fallbacks.mjs
+        env:
+          NATURE_FIGURE_CONCURRENCY: '3'
+          NATURE_FIGURE_REQUEST_DELAY_MS: '180'
+
       - name: Merge assistant-audited literature and bilingual titles
         run: node cloudflare/scripts/merge-curated-pages.mjs
 
@@ -143,11 +151,16 @@ jobs:
           const remote = JSON.stringify(manifest).match(/https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//g) || [];
           const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
           const pmcFallbacks = items.filter(item => item?.toc?.sourceRepository === 'PMC');
+          const natureFallbacks = items.filter(item => item?.toc?.sourceRepository === 'Springer Nature' && item?.toc?.reason === 'figure1_fallback');
           if (items.length < 382) throw new Error(`media-index regressed below preserved baseline: ${items.length}`);
           if (figures < 652) throw new Error(`figure metadata regressed below preserved baseline: ${figures}`);
           if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
+          if (natureFallbacks.length < 12) throw new Error(`Springer Nature fallback merge regressed: ${natureFallbacks.length}`);
           for (const item of pmcFallbacks) {
             if (!String(item?.toc?.imageUrl || '').startsWith('open-media-mirror/')) throw new Error(`PMC fallback was not mirrored locally: ${item?.doi || 'unknown DOI'}`);
+          }
+          for (const item of natureFallbacks) {
+            if (!/^https:\/\/media\.springernature\.com\//.test(String(item?.toc?.imageUrl || ''))) throw new Error(`Nature fallback is not a Springer Nature CDN URL: ${item?.doi || 'unknown DOI'}`);
           }
 
           const requiredDois = [
@@ -172,7 +185,7 @@ jobs:
           if (!zh.get('Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage')) throw new Error('curated Chinese title was not merged');
           if (!zh.get('Scalable Total Syntheses of Nonthmicin and Ecteinamycin Reveal a Dual Antibacterial and Antitoxin Profile against Clostridioides difficile')) throw new Error('second-batch Chinese title was not merged');
 
-          console.log(JSON.stringify({ manifestItems: items.length, figures, pmcFallbacks: pmcFallbacks.length, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true, workerMediaMerged: true, bridgeLoader: true, bridgeRuntime: true }));
+          console.log(JSON.stringify({ manifestItems: items.length, figures, pmcFallbacks: pmcFallbacks.length, natureFallbacks: natureFallbacks.length, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true, workerMediaMerged: true, bridgeLoader: true, bridgeRuntime: true }));
           NODE
 
       - name: Upload Pages artifact
