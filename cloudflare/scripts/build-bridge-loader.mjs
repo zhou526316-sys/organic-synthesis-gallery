@@ -47,14 +47,20 @@ runtime = runtime.replaceAll(
 
 await writeFile(RUNTIME_OUTPUT, runtime, 'utf8');
 
+const runtimeBody = runtime.replace(/^\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==\s*/, '').trim();
+if (!runtimeBody.includes("const VERSION = '1.1.1';") || !runtimeBody.includes("const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';")) {
+  throw new Error('Packaged Runtime validation failed.');
+}
+if (/\beval\s*\(/.test(runtimeBody)) throw new Error('Runtime unexpectedly contains eval().');
+
 const matchLines = PUBLIC_SITE_ORIGINS.map(origin => `// @match        ${origin}/*`).join('\n');
-const runtimeOriginsJson = JSON.stringify(PUBLIC_SITE_ORIGINS);
+const loaderVersion = '2.1.0';
 
 const loader = `// ==UserScript==
 // @name         Organic Synthesis Gallery VPN Literature Bridge
 // @namespace    organic-synthesis-gallery
-// @version      2.0.2
-// @description  Stable VPN Bridge loader. Installs once, then loads the latest Gallery Bridge runtime automatically on every visit.
+// @version      ${loaderVersion}
+// @description  Self-contained VPN Bridge. The complete runtime is bundled locally so Tampermonkey does not need remote eval.
 ${matchLines}
 // @updateURL    ${UPDATE_ORIGIN}/gallery-vpn-bridge.user.js
 // @downloadURL  ${UPDATE_ORIGIN}/gallery-vpn-bridge.user.js
@@ -69,99 +75,41 @@ ${matchLines}
 (() => {
   'use strict';
 
-  const SITE_ORIGINS = ${runtimeOriginsJson};
-  const CACHE_KEY = 'organicGalleryBridgeRuntimeCacheV2';
-  const CACHE_AT_KEY = 'organicGalleryBridgeRuntimeCacheAtV2';
-
-  function loadText(url) {
-    return new Promise((resolve, reject) => {
-      GM_xmlhttpRequest({
-        method: 'GET',
-        url,
-        timeout: 30000,
-        headers: { Accept: 'text/javascript,*/*;q=0.8', 'Cache-Control': 'no-cache' },
-        onload(response) {
-          if (response.status >= 200 && response.status < 300 && typeof response.responseText === 'string' && response.responseText.length > 1000) {
-            resolve(response.responseText);
-          } else {
-            reject(new Error('Runtime HTTP ' + response.status));
-          }
-        },
-        onerror() { reject(new Error('Runtime network error')); },
-        ontimeout() { reject(new Error('Runtime request timeout')); },
-      });
+  const DIAGNOSTIC_ID = 'vpn-lit-bridge-loader-status';
+  let node = document.getElementById(DIAGNOSTIC_ID);
+  if (!node) {
+    node = document.createElement('button');
+    node.id = DIAGNOSTIC_ID;
+    node.type = 'button';
+    Object.assign(node.style, {
+      position: 'fixed', right: '14px', bottom: '14px', zIndex: '2147483647',
+      border: '1px solid #84adff', borderRadius: '999px', padding: '8px 12px',
+      background: 'rgba(255,255,255,.98)', color: '#175cd3', font: '12px/1.25 system-ui,sans-serif',
+      boxShadow: '0 4px 18px rgba(16,24,40,.14)', cursor: 'default'
     });
+    (document.documentElement || document.body).appendChild(node);
   }
+  node.textContent = 'VPN Bridge ${loaderVersion} · 正在启动 Runtime…';
+  node.title = 'Tampermonkey 脚本已执行；正在启动内置 Runtime。';
 
-  function executeRuntime(source, sourceLabel) {
-    if (!source.includes('Organic Synthesis Gallery VPN Literature Bridge') || !source.includes('VPN LIT BRIDGE')) {
-      throw new Error('Runtime validation failed');
+  setTimeout(() => {
+    const runtimeNode = document.getElementById('vpn-lit-bridge-status');
+    const diagnosticNode = document.getElementById(DIAGNOSTIC_ID);
+    if (!diagnosticNode) return;
+    if (runtimeNode) {
+      diagnosticNode.remove();
+      return;
     }
-    eval(source + '\n//# sourceURL=' + sourceLabel);
-  }
-
-  function showLoaderError(message) {
-    let node = document.getElementById('vpn-lit-bridge-loader-error');
-    if (!node) {
-      node = document.createElement('button');
-      node.id = 'vpn-lit-bridge-loader-error';
-      node.type = 'button';
-      Object.assign(node.style, {
-        position: 'fixed', right: '14px', bottom: '14px', zIndex: '2147483647',
-        border: '1px solid #f04438', borderRadius: '999px', padding: '8px 12px',
-        background: 'rgba(255,255,255,.98)', color: '#b42318', font: '12px/1.25 system-ui,sans-serif',
-        boxShadow: '0 4px 18px rgba(16,24,40,.14)', cursor: 'pointer'
-      });
-      node.addEventListener('click', () => location.reload());
-      document.documentElement.appendChild(node);
-    }
-    node.textContent = 'VPN Bridge runtime 加载失败 · 点击重试';
-    node.title = message;
-  }
-
-  function runtimeUrls() {
-    const here = location.href;
-    const ordered = [...SITE_ORIGINS].sort((a, b) => Number(here.startsWith(b + '/')) - Number(here.startsWith(a + '/')));
-    return ordered.map(origin => origin + '/gallery-vpn-bridge-runtime.js');
-  }
-
-  async function boot() {
-    const errors = [];
-    for (const runtimeUrl of runtimeUrls()) {
-      try {
-        const fresh = await loadText(runtimeUrl + '?t=' + Date.now());
-        executeRuntime(fresh, runtimeUrl);
-        try {
-          GM_setValue(CACHE_KEY, fresh);
-          GM_setValue(CACHE_AT_KEY, Date.now());
-        } catch {}
-        console.log('[VPN LIT BRIDGE LOADER] latest runtime loaded from', runtimeUrl);
-        return;
-      } catch (error) {
-        errors.push(runtimeUrl + ': ' + (error?.message || String(error)));
-        console.warn('[VPN LIT BRIDGE LOADER] runtime unavailable', runtimeUrl, error);
-      }
-    }
-
-    try {
-      const cached = GM_getValue(CACHE_KEY, '');
-      if (typeof cached === 'string' && cached.length > 1000) {
-        executeRuntime(cached, 'gallery-vpn-bridge-runtime.js#cached');
-        console.warn('[VPN LIT BRIDGE LOADER] using cached runtime from', GM_getValue(CACHE_AT_KEY, 0));
-        return;
-      }
-    } catch (error) {
-      errors.push('cached runtime: ' + (error?.message || String(error)));
-      console.warn('[VPN LIT BRIDGE LOADER] cached runtime failed', error);
-    }
-
-    showLoaderError(errors.join('\n') || 'No valid latest or cached Bridge runtime is available.');
-  }
-
-  void boot();
+    diagnosticNode.textContent = 'VPN Bridge ${loaderVersion} · Runtime 未启动';
+    diagnosticNode.title = 'Tampermonkey 已执行 Loader，但 Runtime 没有创建状态控件。';
+    diagnosticNode.style.borderColor = '#f04438';
+    diagnosticNode.style.color = '#b42318';
+  }, 1500);
 })();
+
+${runtimeBody}
 `;
 
 await writeFile(BRIDGE_OUTPUT, loader, 'utf8');
-console.log(`Packaged self-updating Bridge loader at ${BRIDGE_OUTPUT}`);
-console.log(`Packaged latest Bridge runtime at ${RUNTIME_OUTPUT}`);
+console.log(`Packaged self-contained Bridge userscript at ${BRIDGE_OUTPUT}`);
+console.log(`Packaged standalone Bridge runtime for diagnostics at ${RUNTIME_OUTPUT}`);
