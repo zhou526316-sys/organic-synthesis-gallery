@@ -66,21 +66,57 @@ function union(remote = [], local = []) {
   return [...new Set([...(Array.isArray(remote) ? remote : []), ...(Array.isArray(local) ? local : [])].filter(value => typeof value === 'string' && value))];
 }
 
+function stringList(value) {
+  return [...new Set((Array.isArray(value) ? value : []).filter(item => typeof item === 'string' && item))];
+}
+
 function mergePaper(remote = {}, local = {}, localWins = false) {
+  const remoteUpdatedAt = Number(remote?.updatedAt || 0);
+  const localUpdatedAt = Number(local?.updatedAt || 0);
   const remoteNoteAt = Number(remote?.noteUpdatedAt || 0);
   const localNoteAt = Number(local?.noteUpdatedAt || 0);
-  const noteSource = localNoteAt > remoteNoteAt ? local : remote;
-  const base = localWins ? { ...remote, ...local } : { ...local, ...remote };
-  return {
-    ...base,
-    favorite: Boolean(remote?.favorite || local?.favorite),
-    collections: union(remote?.collections, local?.collections),
-    quickTerms: union(remote?.quickTerms, local?.quickTerms),
-    tags: union(remote?.tags, local?.tags),
+  const lastOpenedAt = Math.max(Number(remote?.lastOpenedAt || 0), Number(local?.lastOpenedAt || 0)) || undefined;
+
+  // Backward compatibility for records written before per-paper updatedAt existed.
+  // Once either side has a timestamp, use last-write-wins for removable fields so
+  // an explicit unsave/clear action cannot be resurrected by an older device.
+  if (!remoteUpdatedAt && !localUpdatedAt) {
+    const noteSource = localNoteAt > remoteNoteAt ? local : remote;
+    const base = localWins ? { ...remote, ...local } : { ...local, ...remote };
+    return {
+      ...base,
+      favorite: Boolean(remote?.favorite || local?.favorite),
+      collections: union(remote?.collections, local?.collections),
+      quickTerms: union(remote?.quickTerms, local?.quickTerms),
+      tags: union(remote?.tags, local?.tags),
+      note: typeof noteSource?.note === 'string' ? noteSource.note : '',
+      noteUpdatedAt: Math.max(remoteNoteAt, localNoteAt) || undefined,
+      lastOpenedAt,
+    };
+  }
+
+  const generalSource = remoteUpdatedAt === localUpdatedAt
+    ? (localWins ? local : remote)
+    : (localUpdatedAt > remoteUpdatedAt ? local : remote);
+  const otherSource = generalSource === local ? remote : local;
+  const noteSource = remoteNoteAt === localNoteAt
+    ? generalSource
+    : (localNoteAt > remoteNoteAt ? local : remote);
+  const merged = {
+    ...otherSource,
+    ...generalSource,
+    favorite: Boolean(generalSource?.favorite),
+    collections: stringList(generalSource?.collections),
+    quickTerms: stringList(generalSource?.quickTerms),
+    tags: stringList(generalSource?.tags),
     note: typeof noteSource?.note === 'string' ? noteSource.note : '',
     noteUpdatedAt: Math.max(remoteNoteAt, localNoteAt) || undefined,
-    lastOpenedAt: Math.max(Number(remote?.lastOpenedAt || 0), Number(local?.lastOpenedAt || 0)) || undefined,
+    updatedAt: Math.max(remoteUpdatedAt, localUpdatedAt) || undefined,
+    lastOpenedAt,
   };
+  if (typeof generalSource?.statusId === 'string' && generalSource.statusId) merged.statusId = generalSource.statusId;
+  else delete merged.statusId;
+  return merged;
 }
 
 function mergeStates(remote = {}, local = {}, localWins = false) {
