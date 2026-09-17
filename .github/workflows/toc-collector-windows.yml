@@ -16,6 +16,9 @@ concurrency:
   group: toc-collector-windows
   cancel-in-progress: true
 
+env:
+  COLLECTOR_BUILD_REV: '1'
+
 jobs:
   build:
     runs-on: windows-latest
