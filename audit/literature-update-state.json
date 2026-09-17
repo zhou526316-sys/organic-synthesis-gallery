@@ -1,16 +1,21 @@
 {
-  "schemaVersion": 1,
-  "purpose": "Single-source coordination state for literature fetching, TOC collection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
+  "schemaVersion": 2,
+  "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
   "phase": "idle",
   "activeRun": null,
   "lastCompletedFetch": null,
   "lastWebsiteSync": null,
   "verifiedThrough": "2026-09-15",
+  "capabilityRegistry": "audit/literature-capability.json",
+  "lastCapabilitySnapshot": null,
   "rules": {
     "freshFetchLockMinutes": 120,
     "reuseCompletedFetchHours": 24,
     "syncOnlyMustNotRefetch": true,
+    "preferLatestCompatibleStableCapability": true,
+    "pinCapabilityDuringRun": true,
+    "forceRefetchOnCapabilityFingerprintChange": true,
     "allowedPhases": [
       "idle",
       "fetching",
