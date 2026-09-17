@@ -2,8 +2,29 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
 
-const START = process.env.AUDIT_START || '2026-07-01';
-const END = process.env.AUDIT_END || '2026-09-16';
+const TIME_ZONE = 'Asia/Shanghai';
+
+function dateInTimeZone(date = new Date(), timeZone = TIME_ZONE) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function shiftDate(dateString, days) {
+  const date = new Date(`${dateString}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+const DEFAULT_END = dateInTimeZone();
+const END = process.env.AUDIT_END || DEFAULT_END;
+const START = process.env.AUDIT_START || shiftDate(END, -2);
+const CLOSURE_DATE = shiftDate(END, -1);
 const SITE = (process.env.GALLERY_SITE || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/$/, '');
 const OUT = path.resolve(process.env.AUDIT_OUTPUT || 'audit/latest.json');
 
@@ -50,7 +71,7 @@ function openAlexAbstract(index) {
 
 async function jsonFetch(url, timeout = 20000) {
   const response = await fetch(url, {
-    headers: { accept: 'application/json', 'user-agent': 'OrganicSynthesisGalleryAudit/2.0' },
+    headers: { accept: 'application/json', 'user-agent': 'OrganicSynthesisGalleryAudit/2.1' },
     signal: AbortSignal.timeout(timeout),
   });
   if (!response.ok) throw new Error(`${response.status} ${url}`);
@@ -220,6 +241,14 @@ function retainForReview(c) {
   return false;
 }
 
+function compactCandidate(c) {
+  return {
+    ...c,
+    reviewPriority: retainForReview(c) ? 'high' : 'normal',
+    abstract: (c.abstract || '').slice(0, 1800),
+  };
+}
+
 const galleryDois = await loadGalleryDois();
 const merged = new Map();
 const stats = [];
@@ -233,36 +262,63 @@ for (const journal of JOURNALS) {
 
 const universe = [...merged.values()].filter(c => !c.date || (c.date >= START && c.date <= END));
 const missing = universe.filter(c => !galleryDois.has(c.doi));
-const potentialGaps = missing.filter(retainForReview)
+const missingCandidates = missing
   .sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.journal.localeCompare(b.journal) || String(a.title).localeCompare(String(b.title)))
-  .map(c => ({ ...c, abstract: (c.abstract || '').slice(0, 1800) }));
+  .map(compactCandidate);
+const potentialGaps = missingCandidates.filter(c => c.reviewPriority === 'high');
 
 const criticalFailures = stats.filter(s => !s.ok);
 const byJournal = Object.fromEntries(JOURNALS.map(j => {
   const candidates = universe.filter(x => x.journal === j.name);
-  const gaps = potentialGaps.filter(x => x.journal === j.name);
-  return [j.name, { sourceRecords: candidates.length, coveredByGallery: candidates.filter(x => galleryDois.has(x.doi)).length, potentialGaps: gaps.length }];
+  const missingForJournal = missingCandidates.filter(x => x.journal === j.name);
+  const gaps = missingForJournal.filter(x => x.reviewPriority === 'high');
+  return [j.name, {
+    sourceRecords: candidates.length,
+    coveredByGallery: candidates.filter(x => galleryDois.has(x.doi)).length,
+    missingFromGallery: missingForJournal.length,
+    potentialGaps: gaps.length,
+  }];
 }));
 
+const closureUniverse = universe.filter(c => c.date === CLOSURE_DATE);
+const closureMissing = missingCandidates.filter(c => c.date === CLOSURE_DATE);
+const closurePotentialGaps = closureMissing.filter(c => c.reviewPriority === 'high');
+const closureStatus = criticalFailures.length > 0 ? 'blocked-source-failure' : 'requires-assistant-review';
+
 const report = {
-  auditVersion: 2,
+  auditVersion: 3,
   generatedAt: new Date().toISOString(),
+  timeZone: TIME_ZONE,
+  windowMode: process.env.AUDIT_START || process.env.AUDIT_END ? 'explicit' : 'rolling-72h-calendar',
   startDate: START,
   endDate: END,
-  policy: 'Multi-ISSN Crossref union plus OpenAlex union. No fixed candidate review cap. Deterministic screening only prioritizes records for assistant review; potential gaps are never silently counted as excluded.',
+  closureDate: CLOSURE_DATE,
+  policy: 'Multi-ISSN Crossref online/published union plus OpenAlex union. Default window is the current Beijing date plus the two preceding calendar dates. All DOI differences are exposed for assistant review; deterministic screening only assigns review priority and never silently excludes a missing record.',
   summary: {
     galleryDois: galleryDois.size,
     sourceRecords: universe.length,
     missingFromGallery: missing.length,
     potentialGaps: potentialGaps.length,
     criticalSourceFailures: criticalFailures.length,
-    unresolved: potentialGaps.length,
+    unresolved: missing.length,
+  },
+  closure: {
+    date: CLOSURE_DATE,
+    status: closureStatus,
+    sourceRecords: closureUniverse.length,
+    missingFromGallery: closureMissing.length,
+    potentialGaps: closurePotentialGaps.length,
+    criticalSourceFailures: criticalFailures.length,
+    verifiedThroughEligible: false,
+    note: 'Machine audit never advances verifiedThrough by itself. Every missing record for the closure date must receive an explicit assistant decision, publisher sources must be cross-checked where available, unresolved must reach zero, and critical source failures must be zero.',
   },
   byJournal,
   sourceStats: stats,
+  missingCandidates,
   potentialGaps,
 };
 
 await mkdir(path.dirname(OUT), { recursive: true });
 await writeFile(OUT, JSON.stringify(report, null, 2));
+console.log(`AUDIT_WINDOW ${START}..${END} closure=${CLOSURE_DATE} timezone=${TIME_ZONE}`);
 console.log(`AUDIT_RESULT ${JSON.stringify(report.summary)}`);
