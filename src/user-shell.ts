@@ -15,6 +15,8 @@ type IntegrationProbeShell = HTMLElement & {
 
 const SESSION_KEY = 'organic-gallery-session-v1';
 const AUTH_WINDOW_NAME = 'organic-gallery-auth';
+const BROWSER_API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';
+const WORKER_ORIGIN = new URL(WORKER_API_BASE).origin;
 const productionIntegrationFallback = {
   auth: { google: true, wechat: false, qq: false, email: true },
   payments: { wechat: false, alipay: false },
@@ -22,6 +24,39 @@ const productionIntegrationFallback = {
 
 let activeController: UserSearchController | null = null;
 let authStorageWatchInstalled = false;
+let browserApiFallbackInstalled = false;
+
+function installBrowserApiFallback(): void {
+  if (browserApiFallbackInstalled) return;
+  browserApiFallbackInstalled = true;
+  const nativeFetch = window.fetch.bind(window);
+  window.fetch = (async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    let requestUrl = '';
+    if (typeof input === 'string') requestUrl = input;
+    else if (input instanceof URL) requestUrl = input.toString();
+    else if (input instanceof Request) requestUrl = input.url;
+
+    let rewritten: RequestInfo | URL = input;
+    try {
+      const parsed = new URL(requestUrl, window.location.href);
+      if (parsed.origin === WORKER_ORIGIN) {
+        const target = new URL(`${parsed.pathname}${parsed.search}${parsed.hash}`, BROWSER_API_BASE);
+        if (input instanceof Request) rewritten = new Request(target.toString(), input);
+        else rewritten = target.toString();
+      }
+    } catch { /* preserve the original fetch target */ }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 10000);
+    const fetchInit: RequestInit = { ...(init || {}) };
+    if (!fetchInit.signal) fetchInit.signal = controller.signal;
+    try {
+      return await nativeFetch(rewritten, fetchInit);
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }) as typeof window.fetch;
+}
 
 function guardSlowIntegrationProbe(shell: HTMLElement): void {
   const target = shell as unknown as IntegrationProbeShell;
@@ -57,7 +92,7 @@ function installSafeOAuthPopup(shell: HTMLElement, language: UserShellLanguage):
     event.stopPropagation();
     event.stopImmediatePropagation();
 
-    const authUrl = `${WORKER_API_BASE}/api/user-ui/auth/start?provider=${encodeURIComponent(provider)}&returnTo=${encodeURIComponent(currentReturnUrl())}`;
+    const authUrl = `${BROWSER_API_BASE}/api/user-ui/auth/start?provider=${encodeURIComponent(provider)}&returnTo=${encodeURIComponent(currentReturnUrl())}`;
     const popup = window.open('about:blank', AUTH_WINDOW_NAME, 'popup,width=560,height=720,resizable=yes,scrollbars=yes');
     if (!popup) {
       window.alert(language === 'zh' ? '浏览器阻止了登录窗口，请允许本站弹出窗口后重试。' : 'The browser blocked the sign-in window. Allow pop-ups for this site and try again.');
@@ -93,6 +128,7 @@ function closeAuthPopupAfterExchange(): void {
   }, 250);
 }
 
+installBrowserApiFallback();
 installAuthStorageWatch();
 closeAuthPopupAfterExchange();
 
