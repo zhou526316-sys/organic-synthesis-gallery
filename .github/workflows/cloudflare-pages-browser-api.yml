@@ -1,0 +1,176 @@
+name: Deploy browser API on Cloudflare Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/cloudflare-pages-browser-api.yml'
+      - 'cloudflare/worker/src/**'
+      - 'cloudflare/worker/package.json'
+      - 'cloudflare/schema.sql'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-pages-browser-api
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PROJECT_NAME: organic-synthesis-gallery-public
+      D1_NAME: organic-synthesis-gallery
+      R2_BUCKET: organic-synthesis-gallery-media
+      PAGES_URL: https://organic-synthesis-gallery-public.pages.dev
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      WECHAT_OPEN_APP_ID: ${{ secrets.WECHAT_OPEN_APP_ID }}
+      WECHAT_OPEN_APP_SECRET: ${{ secrets.WECHAT_OPEN_APP_SECRET }}
+      QQ_CONNECT_APP_ID: ${{ secrets.QQ_CONNECT_APP_ID }}
+      QQ_CONNECT_APP_KEY: ${{ secrets.QQ_CONNECT_APP_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+      WECHAT_PAY_MCH_ID: ${{ secrets.WECHAT_PAY_MCH_ID }}
+      WECHAT_PAY_APP_ID: ${{ secrets.WECHAT_PAY_APP_ID }}
+      WECHAT_PAY_SERIAL_NO: ${{ secrets.WECHAT_PAY_SERIAL_NO }}
+      WECHAT_PAY_PRIVATE_KEY: ${{ secrets.WECHAT_PAY_PRIVATE_KEY }}
+      WECHAT_PAY_API_V3_KEY: ${{ secrets.WECHAT_PAY_API_V3_KEY }}
+      WECHAT_PAY_PLATFORM_PUBLIC_KEY: ${{ secrets.WECHAT_PAY_PLATFORM_PUBLIC_KEY }}
+      ALIPAY_APP_ID: ${{ secrets.ALIPAY_APP_ID }}
+      ALIPAY_PRIVATE_KEY: ${{ secrets.ALIPAY_PRIVATE_KEY }}
+      ALIPAY_PUBLIC_KEY: ${{ secrets.ALIPAY_PUBLIC_KEY }}
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate Cloudflare credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Install frontend dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build static Gallery assets
+        run: npm run build
+
+      - name: Install Worker dependencies
+        working-directory: cloudflare/worker
+        run: npm install --no-audit --no-fund
+
+      - name: Resolve existing D1 database
+        id: d1
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 list --json > /tmp/d1-list.json
+          D1_ID=$(node - <<'NODE'
+          const fs = require('fs');
+          const rows = JSON.parse(fs.readFileSync('/tmp/d1-list.json', 'utf8'));
+          const row = rows.find(item => item.name === process.env.D1_NAME);
+          if (row?.uuid) process.stdout.write(row.uuid);
+          NODE
+          )
+          test -n "$D1_ID" || { echo 'D1 database is missing'; exit 1; }
+          echo "database_id=$D1_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Verify R2 bucket exists
+        working-directory: cloudflare/worker
+        run: npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null
+
+      - name: Build Pages advanced-mode Worker
+        working-directory: cloudflare/worker
+        run: npx wrangler deploy src/pages.js --dry-run --outfile ../../dist/_worker.js --compatibility-date 2026-09-17
+
+      - name: Generate Pages production configuration
+        shell: bash
+        env:
+          D1_ID: ${{ steps.d1.outputs.database_id }}
+        run: |
+          set -euo pipefail
+          cat > wrangler.jsonc <<EOF
+          {
+            "name": "$PROJECT_NAME",
+            "pages_build_output_dir": "./dist",
+            "compatibility_date": "2026-09-17",
+            "vars": {
+              "MIGRATION_STAGE": "pages-browser-api"
+            },
+            "d1_databases": [
+              {
+                "binding": "DB",
+                "database_name": "$D1_NAME",
+                "database_id": "$D1_ID"
+              }
+            ],
+            "r2_buckets": [
+              {
+                "binding": "MEDIA",
+                "bucket_name": "$R2_BUCKET"
+              }
+            ]
+          }
+          EOF
+
+      - name: Sync configured integration secrets to Pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs = require('fs');
+          const names = [
+            'GOOGLE_CLIENT_ID','GOOGLE_CLIENT_SECRET','WECHAT_OPEN_APP_ID','WECHAT_OPEN_APP_SECRET',
+            'QQ_CONNECT_APP_ID','QQ_CONNECT_APP_KEY','RESEND_API_KEY','EMAIL_FROM',
+            'WECHAT_PAY_MCH_ID','WECHAT_PAY_APP_ID','WECHAT_PAY_SERIAL_NO','WECHAT_PAY_PRIVATE_KEY',
+            'WECHAT_PAY_API_V3_KEY','WECHAT_PAY_PLATFORM_PUBLIC_KEY','ALIPAY_APP_ID','ALIPAY_PRIVATE_KEY','ALIPAY_PUBLIC_KEY'
+          ];
+          const values = Object.fromEntries(names.flatMap(name => process.env[name] ? [[name, process.env[name]]] : []));
+          fs.writeFileSync('/tmp/pages-integration-secrets.json', JSON.stringify(values));
+          console.log(`Prepared ${Object.keys(values).length} configured Pages integration secrets.`);
+          NODE
+          if [ "$(node -p "Object.keys(require('/tmp/pages-integration-secrets.json')).length")" -gt 0 ]; then
+            ./cloudflare/worker/node_modules/.bin/wrangler pages secret bulk /tmp/pages-integration-secrets.json --project-name "$PROJECT_NAME" >/dev/null
+          fi
+          rm -f /tmp/pages-integration-secrets.json
+
+      - name: Deploy Pages browser API mirror
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./cloudflare/worker/node_modules/.bin/wrangler pages deploy dist \
+            --project-name "$PROJECT_NAME" \
+            --branch main \
+            --commit-hash "$GITHUB_SHA" \
+            --commit-message "Browser API mirror $GITHUB_SHA"
+
+      - name: Verify Pages API and configured login methods
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 8 --retry-delay 2 "$PAGES_URL/api/_healthcheck" > /tmp/pages-health.json
+          curl --fail --silent --show-error --retry 8 --retry-delay 2 \
+            -H 'origin: https://zhou526316-sys.github.io' \
+            "$PAGES_URL/api/user-ui/integrations" > /tmp/pages-integrations.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const health = JSON.parse(fs.readFileSync('/tmp/pages-health.json', 'utf8'));
+          const integrations = JSON.parse(fs.readFileSync('/tmp/pages-integrations.json', 'utf8'));
+          if (!health.ok || !health.d1 || !health.r2) throw new Error(`Pages API healthcheck failed: ${JSON.stringify(health)}`);
+          if (!integrations?.auth?.google || !integrations?.auth?.email) throw new Error(`Google/email secrets are not active on Pages: ${JSON.stringify(integrations)}`);
+          console.log(JSON.stringify({ pagesApi: true, google: true, email: true }));
+          NODE
