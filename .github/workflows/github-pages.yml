@@ -160,7 +160,10 @@ jobs:
             if (!String(item?.toc?.imageUrl || '').startsWith('open-media-mirror/')) throw new Error(`PMC fallback was not mirrored locally: ${item?.doi || 'unknown DOI'}`);
           }
           for (const item of natureFallbacks) {
-            if (!/^https:\/\/media\.springernature\.com\//.test(String(item?.toc?.imageUrl || ''))) throw new Error(`Nature fallback is not a Springer Nature CDN URL: ${item?.doi || 'unknown DOI'}`);
+            const imageUrl = String(item?.toc?.imageUrl || '');
+            const localMirror = imageUrl.startsWith('media-mirror/');
+            const springerCdn = /^https:\/\/media\.springernature\.com\//.test(imageUrl);
+            if (!localMirror && !springerCdn) throw new Error(`Nature fallback has neither a local mirror nor a Springer Nature CDN URL: ${item?.doi || 'unknown DOI'}`);
           }
 
           const requiredDois = [
