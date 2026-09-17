@@ -10,7 +10,7 @@ export interface QuickTerm { id: string; label: string; style: StyleDef; }
 export interface CollectionDef { id: string; name: string; }
 export interface AliasGroup { id: string; name: string; terms: string[]; }
 export interface PaperMeta { id: string; doi?: string; title: string; journal: string; href?: string; authors: string[]; topics: string[]; }
-export interface PaperUserState { favorite: boolean; collections: string[]; statusId?: string; note: string; noteUpdatedAt?: number; quickTerms: string[]; tags: string[]; lastOpenedAt?: number; }
+export interface PaperUserState { favorite: boolean; collections: string[]; statusId?: string; note: string; noteUpdatedAt?: number; quickTerms: string[]; tags: string[]; lastOpenedAt?: number; updatedAt?: number; }
 export interface UserUiState {
   statuses: StatusDef[];
   quickTerms: QuickTerm[];
@@ -26,7 +26,7 @@ export interface UserUiState {
 
 const STORAGE_KEY = 'organic-gallery-user-ui-v1';
 const PROFILE_KEY = 'organic-gallery-profile-v1';
-export const WORKER_API_BASE = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+export const WORKER_API_BASE = 'https://api.gczhouwld.com';
 export const SHAPES: Shape[] = ['pill', 'rounded', 'rectangle', 'circle', 'square', 'diamond', 'bookmark', 'star'];
 
 function style(rgb: RGB, shape: Shape = 'rounded'): StyleDef { return { rgb, shape }; }
@@ -172,21 +172,31 @@ class Store extends EventTarget {
     if (broadcast) this.dispatchEvent(new Event('change'));
   }
   paper(id: string): PaperUserState { return this.state.papers[id] || { favorite: false, collections: [], note: '', quickTerms: [], tags: [] }; }
-  updatePaper(id: string, updater: (value: PaperUserState) => void, broadcast = true): void {
-    const value = structuredClone(this.paper(id)); updater(value); this.state.papers[id] = value; this.save(broadcast);
+  updatePaper(id: string, updater: (value: PaperUserState) => void, broadcast = true, markUpdated = true): void {
+    const value = structuredClone(this.paper(id));
+    updater(value);
+    if (markUpdated) value.updatedAt = Date.now();
+    this.state.papers[id] = value;
+    this.save(broadcast);
   }
   registerMeta(meta: PaperMeta): void { this.state.metadata[meta.id] = { id: meta.id, doi: meta.doi, title: meta.title, journal: meta.journal, href: meta.href }; this.save(false); }
   metadata(id: string): Omit<PaperMeta, 'authors' | 'topics'> | undefined { return this.state.metadata[id]; }
   status(id: string): StatusDef | undefined { return this.state.statuses.find(item => item.id === id); }
   isRead(id: string): boolean { const status = this.status(this.paper(id).statusId || ''); return status?.countsAsRead === true; }
-  toggleFavorite(id: string): void { this.updatePaper(id, paper => { paper.favorite = !paper.favorite; if (paper.favorite && !paper.collections.length) paper.collections = ['default']; }); }
+  toggleFavorite(id: string): void {
+    this.updatePaper(id, paper => {
+      paper.favorite = !paper.favorite;
+      if (paper.favorite && !paper.collections.length) paper.collections = ['default'];
+      if (!paper.favorite) paper.collections = [];
+    });
+  }
   setStatus(id: string, statusId: string): void {
-    this.updatePaper(id, paper => { paper.statusId = statusId; });
+    this.updatePaper(id, paper => { if (statusId) paper.statusId = statusId; else delete paper.statusId; });
     const meta = this.metadata(id); const status = this.status(statusId);
     if (meta?.doi && status?.countsAsRead) void this.markRead(meta.doi, statusId);
   }
   setNote(id: string, note: string, broadcast = false): void { this.updatePaper(id, paper => { paper.note = note; paper.noteUpdatedAt = Date.now(); }, broadcast); }
-  touchOpened(id: string): void { this.updatePaper(id, paper => { paper.lastOpenedAt = Date.now(); }, false); }
+  touchOpened(id: string): void { this.updatePaper(id, paper => { paper.lastOpenedAt = Date.now(); }, false, false); }
   addHistory(query: string): void { const value = query.trim(); if (!value) return; this.state.searchHistory = [value, ...this.state.searchHistory.filter(item => item.toLowerCase() !== value.toLowerCase())].slice(0, 20); this.save(false); }
   follow(query: string): void { const value = query.trim(); if (value && !this.state.followedSearches.some(item => item.toLowerCase() === value.toLowerCase())) { this.state.followedSearches.unshift(value); this.save(); } }
   async loadCounts(dois: string[]): Promise<void> {
