@@ -4,13 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       start_date:
-        description: Audit start date (YYYY-MM-DD)
+        description: Optional audit start date (YYYY-MM-DD); blank = Beijing rolling 72h window
         required: false
-        default: '2026-07-01'
       end_date:
-        description: Audit end date (YYYY-MM-DD)
+        description: Optional audit end date (YYYY-MM-DD); blank = current Beijing date
         required: false
-        default: '2026-09-16'
   push:
     branches:
       - main
@@ -42,8 +40,8 @@ jobs:
 
       - name: Build DOI-union audit report
         env:
-          AUDIT_START: ${{ inputs.start_date || '2026-07-01' }}
-          AUDIT_END: ${{ inputs.end_date || '2026-09-16' }}
+          AUDIT_START: ${{ inputs.start_date || '' }}
+          AUDIT_END: ${{ inputs.end_date || '' }}
           GALLERY_SITE: https://zhou526316-sys.github.io/organic-synthesis-gallery
         run: node cloudflare/scripts/audit-literature.mjs
 
