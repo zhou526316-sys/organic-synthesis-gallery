@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  COLLECTOR_BUILD_REV: '1'
+  COLLECTOR_BUILD_REV: '2'
 
 jobs:
   build:
