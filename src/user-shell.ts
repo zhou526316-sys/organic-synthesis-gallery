@@ -31,20 +31,15 @@ function installBrowserApiFallback(): void {
   browserApiFallbackInstalled = true;
   const nativeFetch = window.fetch.bind(window);
   window.fetch = (async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-    let requestUrl = '';
-    if (typeof input === 'string') requestUrl = input;
-    else if (input instanceof URL) requestUrl = input.toString();
-    else if (input instanceof Request) requestUrl = input.url;
-
     let rewritten: RequestInfo | URL = input;
-    try {
-      const parsed = new URL(requestUrl, window.location.href);
-      if (parsed.origin === WORKER_ORIGIN) {
-        const target = new URL(`${parsed.pathname}${parsed.search}${parsed.hash}`, BROWSER_API_BASE);
-        if (input instanceof Request) rewritten = new Request(target.toString(), input);
-        else rewritten = target.toString();
-      }
-    } catch { /* preserve the original fetch target */ }
+    if (!(input instanceof Request)) {
+      try {
+        const parsed = new URL(typeof input === 'string' ? input : input.toString(), window.location.href);
+        if (parsed.origin === WORKER_ORIGIN) {
+          rewritten = new URL(`${parsed.pathname}${parsed.search}${parsed.hash}`, BROWSER_API_BASE).toString();
+        }
+      } catch { /* preserve the original fetch target */ }
+    }
 
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 10000);
