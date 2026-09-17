@@ -83,7 +83,18 @@ jobs:
         run: node cloudflare/scripts/build-bridge-loader.mjs
 
       - name: Mirror media and metadata for static Pages
-        run: node cloudflare/scripts/build-pages-mirror.mjs
+        shell: bash
+        run: |
+          set +e
+          node cloudflare/scripts/build-pages-mirror.mjs
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+            exit "$status"
+          fi
+          if [ "$status" -eq 2 ]; then
+            echo "Media mirror reported isolated misses; continuing to strict artifact verification."
+          fi
         env:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
           PAGES_MEDIA_FALLBACK: https://zhou526316-sys.github.io/organic-synthesis-gallery
