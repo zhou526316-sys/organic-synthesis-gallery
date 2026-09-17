@@ -1,0 +1,70 @@
+name: Build and smoke-test unpacked TOC Collector
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/toc-collector-unpacked-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  unpacked-smoke:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: toc-collector
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Verify source
+        run: npm run check
+
+      - name: Build unpacked Windows app
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        shell: pwsh
+        run: |
+          npx electron-builder --win --x64 --dir --publish never
+          $exe = Join-Path (Resolve-Path 'dist/win-unpacked') 'Organic Synthesis Gallery TOC Collector.exe'
+          if (-not (Test-Path $exe)) { throw "Unpacked EXE missing: $exe" }
+          Write-Host "UNPACKED_EXE=$exe"
+
+      - name: Launch smoke test
+        shell: pwsh
+        run: |
+          $log = Join-Path $env:TEMP 'toc-collector-bootstrap.log'
+          Remove-Item $log -Force -ErrorAction SilentlyContinue
+          $exe = Join-Path (Resolve-Path 'dist/win-unpacked') 'Organic Synthesis Gallery TOC Collector.exe'
+          $p = Start-Process -FilePath $exe -ArgumentList '--startup-stage=window' -PassThru
+          Start-Sleep -Seconds 10
+          if ($p.HasExited) {
+            if (Test-Path $log) { Get-Content $log }
+            throw "TOC Collector exited during smoke test with code $($p.ExitCode)"
+          }
+          if (-not (Test-Path $log)) { Stop-Process -Id $p.Id -Force; throw 'Bootstrap log was not created' }
+          $text = Get-Content $log -Raw
+          Write-Host $text
+          if (-not $text.Contains('JS file loaded')) { Stop-Process -Id $p.Id -Force; throw 'JS entry marker missing' }
+          if (-not $text.Contains('startup-window.visible')) { Stop-Process -Id $p.Id -Force; throw 'Visible startup window marker missing' }
+          Stop-Process -Id $p.Id -Force
+          Copy-Item $log 'dist/win-unpacked/SMOKE-TEST-bootstrap.log' -Force
+
+      - name: Upload smoke-tested unpacked app
+        uses: actions/upload-artifact@v4
+        with:
+          name: toc-collector-windows-0.1.5-unpacked-smoketested
+          path: toc-collector/dist/win-unpacked/**
+          if-no-files-found: error
+          retention-days: 14
