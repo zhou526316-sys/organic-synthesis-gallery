@@ -27,9 +27,8 @@ let vpnWatchTimer = null;
 let pollTimer = null;
 let lastQueue = [];
 
-const gotLock = app.requestSingleInstanceLock();
-if (!gotLock) app.quit();
-app.on('second-instance', () => showDashboard());
+// Safe-start 0.1.3: never silently quit before the UI can report a startup problem.
+// Background duplicate protection will be reintroduced only after startup is proven stable.
 
 function dataDir() { return path.join(app.getPath('userData')); }
 function configPath() { return path.join(dataDir(), 'config.json'); }
@@ -376,7 +375,7 @@ function showDashboard() {
     height: 680,
     minWidth: 560,
     minHeight: 480,
-    show: false,
+    show: true,
     autoHideMenuBar: true,
     title: 'TOC Collector',
     webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false },
@@ -398,7 +397,8 @@ function showDashboard() {
     if (action === 'hide') dashboard?.hide();
   });
   refreshDashboard();
-  dashboard.once('ready-to-show', () => { dashboard?.show(); dashboard?.focus(); });
+  dashboard.show();
+  dashboard.focus();
 }
 
 function trayIcon() {
@@ -426,18 +426,49 @@ function rebuildTrayMenu() {
   ]));
 }
 
-app.whenReady().then(async () => {
-  await ensureConfig();
-  tray = new Tray(trayIcon());
-  tray.setToolTip('Organic Synthesis Gallery TOC Collector');
-  tray.on('click', () => showDashboard());
-  tray.on('double-click', () => showDashboard());
-  rebuildTrayMenu();
-  if (!process.argv.includes('--background')) showDashboard();
-  await log('collector started', { version: app.getVersion(), configPath: configPath() });
-  setTimeout(() => void runCycle(false), 2500);
-  pollTimer = setInterval(() => void runCycle(false), Math.max(3, Number(config.pollMinutes)||10) * 60 * 1000);
+// Fatal-error visibility 0.1.3
+process.on('uncaughtException', error => {
+  const detail = String(error?.stack || error);
+  console.error(error);
+  void log('uncaught exception', detail);
+  try { dialog.showErrorBox('TOC Collector 运行错误', detail); } catch {}
+});
+process.on('unhandledRejection', error => {
+  const detail = String(error?.stack || error);
+  console.error(error);
+  void log('unhandled rejection', detail);
+  try { dialog.showErrorBox('TOC Collector 运行错误', detail); } catch {}
 });
 
-app.on('window-all-closed', event => event.preventDefault?.());
+app.whenReady().then(async () => {
+  await ensureConfig();
+
+  // Manual launch: make the dashboard visible before tray/network initialization.
+  if (!process.argv.includes('--background')) showDashboard();
+
+  try {
+    tray = new Tray(trayIcon());
+    tray.setToolTip('Organic Synthesis Gallery TOC Collector');
+    tray.on('click', () => showDashboard());
+    tray.on('double-click', () => showDashboard());
+    rebuildTrayMenu();
+  } catch (error) {
+    await log('tray init failed', String(error?.stack || error));
+  }
+
+  await log('collector started', {
+    version: app.getVersion(),
+    configPath: configPath(),
+    background: process.argv.includes('--background'),
+  });
+  setTimeout(() => void runCycle(false), 2500);
+  pollTimer = setInterval(() => void runCycle(false), Math.max(3, Number(config.pollMinutes)||10) * 60 * 1000);
+}).catch(async error => {
+  const detail = String(error?.stack || error);
+  console.error(error);
+  try { await log('startup failed', detail); } catch {}
+  try { dialog.showErrorBox('TOC Collector 启动失败', detail); } catch {}
+});
+
+app.on('window-all-closed', () => {});
 app.on('before-quit', () => { quitting = true; if (pollTimer) clearInterval(pollTimer); if (vpnWatchTimer) clearInterval(vpnWatchTimer); });
