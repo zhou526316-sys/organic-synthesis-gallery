@@ -1,4 +1,7 @@
+import { installGalleryPerformanceRuntime } from './performance-runtime';
+
 const ZH_CACHE_KEY = 'organic-gallery-zh-title-cache-v2';
+const restoreLegacyMediaListeners = installGalleryPerformanceRuntime();
 
 async function preloadChineseTitleCache(): Promise<void> {
   try {
@@ -19,7 +22,11 @@ async function preloadChineseTitleCache(): Promise<void> {
 }
 
 void preloadChineseTitleCache().finally(async () => {
-  await import('./main');
+  try {
+    await import('./main');
+  } finally {
+    restoreLegacyMediaListeners();
+  }
   await import('./user-ui/user-center-management');
   await import('./user-ui/account-sync');
   await import('./media-enhancements');
