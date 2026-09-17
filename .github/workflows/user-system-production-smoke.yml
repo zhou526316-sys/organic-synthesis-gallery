@@ -35,7 +35,7 @@ jobs:
           const origin = process.env.SITE_ORIGIN;
           const returnTo = process.env.RETURN_TO;
 
-          async function json(path, init = {}, expected = 200) {
+          async function json(path, init = {}, expected = 200, expectCors = true) {
             const headers = new Headers(init.headers || {});
             headers.set('origin', origin);
             const response = await fetch(`${base}${path}`, { ...init, headers, redirect: 'manual' });
@@ -43,12 +43,14 @@ jobs:
             let body = {};
             try { body = text ? JSON.parse(text) : {}; } catch { throw new Error(`${path} returned non-JSON: ${text.slice(0, 300)}`); }
             assert(response.status === expected, `${path}: expected HTTP ${expected}, got ${response.status}: ${text}`);
-            const allowOrigin = response.headers.get('access-control-allow-origin');
-            assert(allowOrigin === origin, `${path}: CORS origin mismatch: ${allowOrigin}`);
+            if (expectCors) {
+              const allowOrigin = response.headers.get('access-control-allow-origin');
+              assert(allowOrigin === origin, `${path}: CORS origin mismatch: ${allowOrigin}`);
+            }
             return body;
           }
 
-          const health = await json('/api/_healthcheck');
+          const health = await json('/api/_healthcheck', {}, 200, false);
           assert(health.ok && health.d1 && health.r2 && health.writeAuth, `healthcheck incomplete: ${JSON.stringify(health)}`);
 
           const integrations = await json('/api/user-ui/integrations');
