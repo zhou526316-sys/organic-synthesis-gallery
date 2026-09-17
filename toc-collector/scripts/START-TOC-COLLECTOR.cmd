@@ -1,7 +1,8 @@
 @echo off
 setlocal
 chcp 65001 >nul
-set "TOC_ROOT=%~dp0..\"
+set "TOC_ROOT=%~dp0"
+if not exist "%TOC_ROOT%Organic Synthesis Gallery TOC Collector.exe" set "TOC_ROOT=%~dp0..\"
 cd /d "%TOC_ROOT%"
 
 echo [TOC Collector] Removing download Zone.Identifier markers from this app folder...
