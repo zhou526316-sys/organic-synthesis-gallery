@@ -7,6 +7,8 @@ on:
       - main
     paths:
       - '.github/workflows/cloudflare-pages-browser-api.yml'
+      - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
+      - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
       - 'cloudflare/schema.sql'
@@ -64,6 +66,21 @@ jobs:
 
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
+
+      - name: Generate Cloudflare Pages VPN Bridge
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://organic-synthesis-gallery-public.pages.dev
+          BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
+        run: node cloudflare/scripts/build-cloudflare-bridge.mjs
+
+      - name: Package self-updating VPN Bridge runtime
+        env:
+          TARGET_SITE_ORIGIN: https://organic-synthesis-gallery-public.pages.dev
+          BRIDGE_UPDATE_ORIGIN: https://organic-synthesis-gallery-public.pages.dev
+          BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
+          BRIDGE_RUNTIME_OUTPUT: public/gallery-vpn-bridge-runtime.js
+        run: node cloudflare/scripts/build-bridge-loader.mjs
 
       - name: Build static Gallery assets
         run: npm run build
@@ -158,7 +175,7 @@ jobs:
             --commit-hash "$GITHUB_SHA" \
             --commit-message "Browser API mirror $GITHUB_SHA"
 
-      - name: Verify Pages API and configured login methods
+      - name: Verify Pages API, Bridge, and configured login methods
         shell: bash
         run: |
           set -euo pipefail
@@ -166,11 +183,19 @@ jobs:
           curl --fail --silent --show-error --retry 8 --retry-delay 2 \
             -H 'origin: https://zhou526316-sys.github.io' \
             "$PAGES_URL/api/user-ui/integrations" > /tmp/pages-integrations.json
+          curl --fail --silent --show-error --retry 8 --retry-delay 2 "$PAGES_URL/gallery-vpn-bridge.user.js?t=$GITHUB_SHA" > /tmp/bridge.user.js
+          curl --fail --silent --show-error --retry 8 --retry-delay 2 "$PAGES_URL/gallery-vpn-bridge-runtime.js?t=$GITHUB_SHA" > /tmp/bridge.runtime.js
+          grep -F "// @version      2.0.1" /tmp/bridge.user.js
+          grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" /tmp/bridge.user.js
+          grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" /tmp/bridge.user.js
+          grep -F "const VERSION = '1.1.1';" /tmp/bridge.runtime.js
+          grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" /tmp/bridge.runtime.js
+          grep -F "abstract\\s*image" /tmp/bridge.runtime.js
           node - <<'NODE'
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/pages-health.json', 'utf8'));
           const integrations = JSON.parse(fs.readFileSync('/tmp/pages-integrations.json', 'utf8'));
           if (!health.ok || !health.d1 || !health.r2) throw new Error(`Pages API healthcheck failed: ${JSON.stringify(health)}`);
           if (!integrations?.auth?.google || !integrations?.auth?.email) throw new Error(`Google/email secrets are not active on Pages: ${JSON.stringify(integrations)}`);
-          console.log(JSON.stringify({ pagesApi: true, google: true, email: true }));
+          console.log(JSON.stringify({ pagesApi: true, bridgeLoader: true, bridgeRuntime: true, google: true, email: true }));
           NODE
