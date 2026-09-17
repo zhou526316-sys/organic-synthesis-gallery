@@ -2,6 +2,10 @@ import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const SITE_ORIGIN = (process.env.TARGET_SITE_ORIGIN || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/$/, '');
+const GITHUB_SITE_ORIGIN = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
+const CLOUDFLARE_SITE_ORIGIN = 'https://organic-synthesis-gallery-public.pages.dev';
+const UPDATE_ORIGIN = (process.env.BRIDGE_UPDATE_ORIGIN || CLOUDFLARE_SITE_ORIGIN).replace(/\/$/, '');
+const PUBLIC_SITE_ORIGINS = [...new Set([SITE_ORIGIN, CLOUDFLARE_SITE_ORIGIN, GITHUB_SITE_ORIGIN])];
 const BRIDGE_OUTPUT = path.resolve(process.env.BRIDGE_OUTPUT || 'public/gallery-vpn-bridge.user.js');
 const RUNTIME_OUTPUT = path.resolve(process.env.BRIDGE_RUNTIME_OUTPUT || 'public/gallery-vpn-bridge-runtime.js');
 
@@ -12,9 +16,9 @@ function replaceRequired(before, after, label) {
   runtime = runtime.replace(before, after);
 }
 
-replaceRequired('// @version      1.0.4', '// @version      1.1.0', 'runtime metadata version');
-replaceRequired("const VERSION = '1.0.4';", "const VERSION = '1.1.0';", 'runtime status version');
-replaceRequired("const COOLDOWN_KEY = 'organicGalleryBridgeCooldownsV1';", "const COOLDOWN_KEY = 'organicGalleryBridgeCooldownsV2';", 'runtime cooldown generation');
+replaceRequired('// @version      1.0.4', '// @version      1.1.1', 'runtime metadata version');
+replaceRequired("const VERSION = '1.0.4';", "const VERSION = '1.1.1';", 'runtime status version');
+replaceRequired("const COOLDOWN_KEY = 'organicGalleryBridgeCooldownsV1';", "const COOLDOWN_KEY = 'organicGalleryBridgeCooldownsV3';", 'runtime cooldown generation');
 
 replaceRequired(
   "const semanticPattern = /visual\\s*abstract|graphical\\s*abstract|toc\\s*(?:graphic|image)|table\\s*of\\s*contents/i;",
@@ -43,14 +47,17 @@ runtime = runtime.replaceAll(
 
 await writeFile(RUNTIME_OUTPUT, runtime, 'utf8');
 
+const matchLines = PUBLIC_SITE_ORIGINS.map(origin => `// @match        ${origin}/*`).join('\n');
+const runtimeOriginsJson = JSON.stringify(PUBLIC_SITE_ORIGINS);
+
 const loader = `// ==UserScript==
 // @name         Organic Synthesis Gallery VPN Literature Bridge
 // @namespace    organic-synthesis-gallery
-// @version      2.0.0
+// @version      2.0.1
 // @description  Stable VPN Bridge loader. Installs once, then loads the latest Gallery Bridge runtime automatically on every visit.
-// @match        ${SITE_ORIGIN}/*
-// @updateURL    ${SITE_ORIGIN}/gallery-vpn-bridge.user.js
-// @downloadURL  ${SITE_ORIGIN}/gallery-vpn-bridge.user.js
+${matchLines}
+// @updateURL    ${UPDATE_ORIGIN}/gallery-vpn-bridge.user.js
+// @downloadURL  ${UPDATE_ORIGIN}/gallery-vpn-bridge.user.js
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -62,9 +69,9 @@ const loader = `// ==UserScript==
 (() => {
   'use strict';
 
-  const RUNTIME_URL = '${SITE_ORIGIN}/gallery-vpn-bridge-runtime.js';
-  const CACHE_KEY = 'organicGalleryBridgeRuntimeCacheV1';
-  const CACHE_AT_KEY = 'organicGalleryBridgeRuntimeCacheAtV1';
+  const SITE_ORIGINS = ${runtimeOriginsJson};
+  const CACHE_KEY = 'organicGalleryBridgeRuntimeCacheV2';
+  const CACHE_AT_KEY = 'organicGalleryBridgeRuntimeCacheAtV2';
 
   function loadText(url) {
     return new Promise((resolve, reject) => {
@@ -112,32 +119,43 @@ const loader = `// ==UserScript==
     node.title = message;
   }
 
+  function runtimeUrls() {
+    const here = location.href;
+    const ordered = [...SITE_ORIGINS].sort((a, b) => Number(here.startsWith(b + '/')) - Number(here.startsWith(a + '/')));
+    return ordered.map(origin => origin + '/gallery-vpn-bridge-runtime.js');
+  }
+
   async function boot() {
-    try {
-      const fresh = await loadText(RUNTIME_URL + '?t=' + Date.now());
-      executeRuntime(fresh, RUNTIME_URL);
+    const errors = [];
+    for (const runtimeUrl of runtimeUrls()) {
       try {
-        GM_setValue(CACHE_KEY, fresh);
-        GM_setValue(CACHE_AT_KEY, Date.now());
-      } catch {}
-      console.log('[VPN LIT BRIDGE LOADER] latest runtime loaded');
-      return;
-    } catch (error) {
-      console.warn('[VPN LIT BRIDGE LOADER] latest runtime unavailable', error);
+        const fresh = await loadText(runtimeUrl + '?t=' + Date.now());
+        executeRuntime(fresh, runtimeUrl);
+        try {
+          GM_setValue(CACHE_KEY, fresh);
+          GM_setValue(CACHE_AT_KEY, Date.now());
+        } catch {}
+        console.log('[VPN LIT BRIDGE LOADER] latest runtime loaded from', runtimeUrl);
+        return;
+      } catch (error) {
+        errors.push(runtimeUrl + ': ' + (error?.message || String(error)));
+        console.warn('[VPN LIT BRIDGE LOADER] runtime unavailable', runtimeUrl, error);
+      }
     }
 
     try {
       const cached = GM_getValue(CACHE_KEY, '');
       if (typeof cached === 'string' && cached.length > 1000) {
-        executeRuntime(cached, RUNTIME_URL + '#cached');
+        executeRuntime(cached, 'gallery-vpn-bridge-runtime.js#cached');
         console.warn('[VPN LIT BRIDGE LOADER] using cached runtime from', GM_getValue(CACHE_AT_KEY, 0));
         return;
       }
     } catch (error) {
+      errors.push('cached runtime: ' + (error?.message || String(error)));
       console.warn('[VPN LIT BRIDGE LOADER] cached runtime failed', error);
     }
 
-    showLoaderError('No valid latest or cached Bridge runtime is available.');
+    showLoaderError(errors.join('\n') || 'No valid latest or cached Bridge runtime is available.');
   }
 
   void boot();
