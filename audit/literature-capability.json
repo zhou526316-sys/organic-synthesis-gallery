@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "selectionPolicy": "latest-compatible-stable",
+  "purpose": "Capability registry for literature discovery, completeness auditing, TOC retrieval, and website synchronization. The primary literature task must select the newest stable compatible capability on main before each fetch run.",
+  "currentKnownStable": {
+    "literatureAudit": {
+      "path": "cloudflare/scripts/audit-literature.mjs",
+      "blobSha": "517a33dc05d6d662a678f5d85acaa21ba3947e85"
+    },
+    "literatureWorkflow": {
+      "path": ".github/workflows/literature-audit.yml",
+      "blobSha": "f304c4a6667b3042e1b7eeb764b8e7cd62e08d77"
+    },
+    "tocCollector": {
+      "primaryPath": "toc-collector/src/background.mjs",
+      "primaryBlobSha": "78a60e833c102497d03770c58cd6fae4adb5675d",
+      "publisherFallbackPath": ".github/scripts/toc_collector_015_publisher_fallback.py",
+      "publisherFallbackBlobSha": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
+    }
+  },
+  "discoveryHints": {
+    "literature": [
+      "cloudflare/scripts/*literature*.mjs",
+      ".github/workflows/*literature*.yml",
+      "docs/*literature*.md"
+    ],
+    "toc": [
+      "toc-collector/src/*",
+      ".github/scripts/*toc*",
+      ".github/workflows/*toc*",
+      "cloudflare/scripts/*media*"
+    ]
+  },
+  "upgradePolicy": {
+    "inspectMainBeforeEachPrimaryRun": true,
+    "preferNewestStableCompatibleImplementation": true,
+    "requireMergedToMain": true,
+    "preferPassingRelevantAuditOrSmokeChecks": true,
+    "pinCapabilitySnapshotForWholeRun": true,
+    "neverHotSwapDuringActiveRun": true,
+    "force72HourRefetchWhenCapabilityFingerprintChanges": true,
+    "doNotReuseOld24HourFetchAcrossCapabilityChange": true,
+    "syncOnlyFallbackMustNeverRefetch": true,
+    "recordCapabilityFingerprintInLastCompletedFetch": true
+  }
+}
