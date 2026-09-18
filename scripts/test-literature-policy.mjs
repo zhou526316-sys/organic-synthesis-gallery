@@ -22,11 +22,13 @@ const SOURCES = [
 ];
 
 const findings = [];
+let formalAddedDateCount = 0;
 for (const file of SOURCES) {
   try {
     const payload = JSON.parse(await readFile(path.join(PUBLIC_DIR, file), 'utf8'));
     for (const paper of payload?.papers || []) {
       if (isExcludedDoi(paper?.doi)) findings.push({ file, doi: paper.doi });
+      if (paper?.addedDate === '2026-09-18') formalAddedDateCount += 1;
     }
   } catch (error) {
     if (error?.code !== 'ENOENT') throw error;
@@ -37,10 +39,12 @@ const baseEncoded = (await readFile(path.join(PUBLIC_DIR, 'papers.gz.b64'), 'utf
 const base = JSON.parse(gunzipSync(Buffer.from(baseEncoded, 'base64')).toString('utf8'));
 for (const paper of base) {
   if (isExcludedDoi(paper?.doi)) findings.push({ file: 'papers.gz.b64', doi: paper.doi });
+  if (paper?.addedDate === '2026-09-18') formalAddedDateCount += 1;
 }
 
 assert.deepEqual(findings, [], `Excluded DOI present in formal source: ${JSON.stringify(findings)}`);
 assert.equal(EXCLUDED_DOIS.size >= 2, true);
+assert.equal(formalAddedDateCount, 19, 'Exactly the reviewed 19 papers may carry addedDate=2026-09-18 across formal sources');
 
 const beforeMidnight = new Date('2026-09-18T15:59:59.500Z'); // 23:59:59.5 Asia/Shanghai
 const afterMidnight = new Date('2026-09-18T16:00:00.500Z'); // 00:00:00.5 Asia/Shanghai
@@ -51,6 +55,10 @@ assert.equal(isNewToday(undefined, afterMidnight), false);
 assert.equal(earliestAddedDate('2026-09-18', '2026-09-19'), '2026-09-18');
 assert.equal(earliestAddedDate('', '2026-09-19'), '2026-09-19');
 assert.ok(msUntilNextBeijingDay(beforeMidnight) > 0 && msUntilNextBeijingDay(beforeMidnight) < 2000);
+
+const mainSource = await readFile(path.resolve('src/main.ts'), 'utf8');
+assert.ok(mainSource.includes("${isNewToday(paper) ? `<span class='tag new'>"), 'Card badge must be driven by isNewToday(paper)');
+assert.ok(mainSource.includes(".filter(paper => !onlyNew || isNewToday(paper))"), 'Only-new filter must be driven by isNewToday(paper)');
 
 const automation = JSON.parse(await readFile(path.join(PUBLIC_DIR, 'automation-supplement.json'), 'utf8'));
 assert.equal((automation.papers || []).length, 19, 'Reviewed automation set must stay at 19');
@@ -63,4 +71,5 @@ console.log(JSON.stringify({
   excludedFindings: findings.length,
   midnight: 'passed',
   reviewedSet: automation.papers.length,
+  formalAddedDateCount,
 }));
