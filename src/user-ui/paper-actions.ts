@@ -27,11 +27,10 @@ export class GalleryPaperActions extends HTMLElement {
     this.render();
   };
   private readonly countsChanged = (event: Event): void => {
-    const detail = event instanceof CustomEvent ? event.detail as { doi?: string } : undefined;
-    if (detail?.doi) {
-      const doi = store.metadata(this.paperId)?.doi?.toLowerCase();
-      if (doi !== detail.doi.toLowerCase()) return;
-    }
+    const detail = event instanceof CustomEvent ? event.detail as { doi?: string; dois?: string[] } : undefined;
+    const doi = store.metadata(this.paperId)?.doi?.toLowerCase();
+    if (doi && detail?.doi && doi !== detail.doi.toLowerCase()) return;
+    if (doi && Array.isArray(detail?.dois) && !detail.dois.some(value => String(value).toLowerCase() === doi)) return;
     this.render();
   };
 
