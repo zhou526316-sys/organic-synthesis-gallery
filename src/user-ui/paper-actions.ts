@@ -24,12 +24,47 @@ export class GalleryPaperActions extends HTMLElement {
   private readonly rerender = (): void => this.render();
 
   static get observedAttributes(): string[] { return ['data-paper-id', 'data-language']; }
-  connectedCallback(): void { store.addEventListener('change', this.rerender); store.addEventListener('counts', this.rerender); this.render(); }
-  disconnectedCallback(): void { store.removeEventListener('change', this.rerender); store.removeEventListener('counts', this.rerender); }
+  connectedCallback(): void {
+    store.addEventListener('change', this.rerender);
+    store.addEventListener('counts', this.rerender);
+    this.render();
+  }
+  disconnectedCallback(): void {
+    store.removeEventListener('change', this.rerender);
+    store.removeEventListener('counts', this.rerender);
+    this.closePanel(false);
+  }
   attributeChangedCallback(): void { if (this.isConnected) this.render(); }
   private get paperId(): string { return this.dataset.paperId || ''; }
   private get language(): Language { return this.dataset.language === 'en' ? 'en' : 'zh'; }
   private tr(zh: string, en: string): string { return this.language === 'zh' ? zh : en; }
+
+  private syncScrollLock(): void {
+    const open = [...document.querySelectorAll<HTMLElement>(NAME)].some(host => host.isConnected && host.dataset.drawerOpen === 'true');
+    document.documentElement.classList.toggle('gallery-user-drawer-open', open);
+    if (!open) {
+      for (const element of [document.documentElement, document.body]) {
+        if (element.style.overflow === 'hidden') element.style.removeProperty('overflow');
+        if (element.style.overscrollBehavior === 'none') element.style.removeProperty('overscroll-behavior');
+        element.classList.remove('scroll-lock', 'scroll-locked', 'no-scroll');
+      }
+    }
+  }
+
+  private openPanel(panel: 'status' | 'note' | 'more'): void {
+    this.panel = panel;
+    this.dataset.drawerOpen = 'true';
+    this.render();
+    this.syncScrollLock();
+  }
+
+  private closePanel(render = true): void {
+    this.panel = 'none';
+    delete this.dataset.drawerOpen;
+    if (render && this.isConnected) this.render();
+    this.closest<HTMLElement>('.card')?.classList.remove('user-action-open');
+    this.syncScrollLock();
+  }
 
   private render(): void {
     const paper = store.paper(this.paperId); const meta = store.metadata(this.paperId); const status = store.status(paper.statusId || '');
