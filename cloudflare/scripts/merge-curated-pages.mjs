@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { earliestAddedDate, isExcludedDoi } from '../../shared/literature-policy.js';
 
 const PUBLIC_DIR = path.resolve('public');
 
@@ -19,6 +20,7 @@ function mergePapers(...sets) {
   const merged = new Map();
   for (const paper of sets.flat()) {
     if (!paper || typeof paper !== 'object') continue;
+    if (isExcludedDoi(paper.doi)) continue;
     const doi = normalizeDoi(paper.doi);
     const title = titleKey(paper.title);
     const key = doi || `title:${title}`;
@@ -31,6 +33,7 @@ function mergePapers(...sets) {
       ...paper,
       authors: incomingAuthors.length ? incomingAuthors : existingAuthors,
       new: Boolean(existing.new || paper.new),
+      ...(earliestAddedDate(existing.addedDate, paper.addedDate) ? { addedDate: earliestAddedDate(existing.addedDate, paper.addedDate) } : {}),
       ...(existing.synthesisType && !paper.synthesisType ? { synthesisType: existing.synthesisType } : {}),
     });
   }
