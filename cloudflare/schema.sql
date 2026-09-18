@@ -61,6 +61,24 @@ CREATE TABLE IF NOT EXISTS primary_visual_assets (
 CREATE INDEX IF NOT EXISTS idx_primary_visual_kind
   ON primary_visual_assets(kind, confidence DESC, updated_at DESC);
 
+
+-- Optional display variants for a canonical Primary Visual. The master row
+-- remains in primary_visual_assets; this table lets card thumbnails be small
+-- while the lightbox opens the original/high-resolution asset.
+CREATE TABLE IF NOT EXISTS primary_visual_variants (
+  doi TEXT NOT NULL,
+  role TEXT NOT NULL CHECK (role IN ('master', 'thumbnail', 'preview')),
+  r2_key TEXT NOT NULL,
+  content_hash TEXT,
+  width INTEGER,
+  height INTEGER,
+  byte_length INTEGER,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (doi, role)
+);
+CREATE INDEX IF NOT EXISTS idx_primary_visual_variants_doi
+  ON primary_visual_variants(doi, role);
+
 -- Lease-based media job queue. This is the only task truth for new resolver code.
 CREATE TABLE IF NOT EXISTS media_jobs (
   doi TEXT PRIMARY KEY,
