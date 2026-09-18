@@ -471,6 +471,17 @@ select {
   font-style: italic;
   font-weight: 600;
 }
+.authors {
+  margin: -7px 0 13px;
+  color: #667085;
+  font-size: 12px;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
 .title.translating {
   margin-bottom: 6px;
   color: #667085;

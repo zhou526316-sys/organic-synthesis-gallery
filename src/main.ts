@@ -9,6 +9,7 @@ interface Paper {
   date: string;
   url: string | null;
   new: boolean;
+  authors: string[];
   synthesisType?: 'total' | 'formal';
 }
 
@@ -255,6 +256,9 @@ function normalizePaper(paper: Paper): Paper {
     journal: canonicalJournal(paper.journal),
     title: pendingTitle(paper.title) ? null : paper.title?.trim() || null,
     doi: normalizeDoi(paper.doi),
+    authors: Array.isArray(paper.authors)
+      ? paper.authors.filter((author): author is string => typeof author === 'string').map(author => author.trim()).filter(Boolean)
+      : [],
   };
 }
 
@@ -290,6 +294,7 @@ function mergePapers(base: Paper[], additions: Paper[]): Paper[] {
       if (!existing.doi && paper.doi) existing.doi = paper.doi;
       if (!existing.url && paper.url) existing.url = paper.url;
       if (paper.synthesisType) existing.synthesisType = paper.synthesisType;
+      if (paper.authors.length > existing.authors.length) existing.authors = [...paper.authors];
       existing.new = existing.new || paper.new;
       continue;
     }
@@ -326,6 +331,7 @@ function filteredPapers(): Paper[] {
         paper.title ? zhTitleCache.get(paper.title) || '' : '',
         paperDoi(paper) || '',
         paper.journal,
+        paper.authors.join(' '),
         paper.date,
       ].some(value => value.toLowerCase().includes(needle));
     })
@@ -362,7 +368,7 @@ function renderCards(): void {
   gallery.innerHTML = list.length ? list.map(paper => {
     const doi = paperDoi(paper);
     const href = paper.url || (doi ? `https://doi.org/${doi}` : '');
-    return `<article class='card'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${paper.new ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
+    return `<article class='card'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${paper.new ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);

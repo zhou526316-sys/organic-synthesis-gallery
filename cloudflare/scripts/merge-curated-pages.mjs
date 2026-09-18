@@ -24,9 +24,12 @@ function mergePapers(...sets) {
     const key = doi || `title:${title}`;
     if (!key || key === 'title:') continue;
     const existing = merged.get(key) || {};
+    const existingAuthors = Array.isArray(existing.authors) ? existing.authors.filter(Boolean) : [];
+    const incomingAuthors = Array.isArray(paper.authors) ? paper.authors.filter(Boolean) : [];
     merged.set(key, {
       ...existing,
       ...paper,
+      authors: incomingAuthors.length ? incomingAuthors : existingAuthors,
       new: Boolean(existing.new || paper.new),
       ...(existing.synthesisType && !paper.synthesisType ? { synthesisType: existing.synthesisType } : {}),
     });
@@ -44,14 +47,21 @@ try {
   automation = JSON.parse(await readFile(path.join(PUBLIC_DIR, 'automation-supplement.json'), 'utf8'));
 } catch {}
 const auditedPapers = mergePapers(curated?.papers || [], automation?.papers || []);
+// literature-supplement.json is a generated compatibility artifact, not an
+// authoritative merge input. The current source contract is curated +
+ // automation, while final-audit remains the browser's mandatory static set.
 const supplementPath = path.join(PUBLIC_DIR, 'literature-supplement.json');
 const finalAuditPath = path.join(PUBLIC_DIR, 'final-audit-supplement.json');
 const translationsPath = path.join(PUBLIC_DIR, 'title-translations-zh.json');
-const supplement = JSON.parse(await readFile(supplementPath, 'utf8'));
 const finalAudit = JSON.parse(await readFile(finalAuditPath, 'utf8'));
-const translationPayload = JSON.parse(await readFile(translationsPath, 'utf8'));
+let translationPayload = { translations: [] };
+try {
+  translationPayload = JSON.parse(await readFile(translationsPath, 'utf8'));
+} catch (error) {
+  if (error?.code !== 'ENOENT') throw error;
+}
 
-const papers = mergePapers(supplement?.papers || [], auditedPapers);
+const papers = auditedPapers;
 const mandatoryStaticPapers = mergePapers(finalAudit?.papers || [], auditedPapers);
 
 const translations = new Map();
@@ -67,8 +77,8 @@ for (const paper of auditedPapers) {
 }
 
 await writeFile(supplementPath, JSON.stringify({
-  ...supplement,
   generatedAt: Date.now(),
+  generatedFrom: ['curated-supplement.json', 'automation-supplement.json'],
   curatedVerifiedThrough: curated?.verifiedThrough || null,
   papers,
 }));

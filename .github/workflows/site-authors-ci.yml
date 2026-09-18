@@ -1,0 +1,93 @@
+name: Validate Gallery authors and site data
+
+on:
+  push:
+    branches:
+      - release/site-authors-sep17-main-sync
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'audit/author-coverage.json'
+      - 'audit/missing-authors.json'
+      - 'cloudflare/scripts/merge-curated-pages.mjs'
+      - 'cloudflare/scripts/merge-worker-media.mjs'
+      - 'cloudflare/schema.sql'
+      - 'cloudflare/worker/src/metadata.js'
+      - '.github/workflows/site-authors-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Verify author audit and reviewed September set
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const zlib = require('zlib');
+          const audit = JSON.parse(fs.readFileSync('audit/author-coverage.json','utf8'));
+          const missing = JSON.parse(fs.readFileSync('audit/missing-authors.json','utf8'));
+          if (audit.missingAuthors !== 0 || audit.withAuthors !== audit.total) {
+            throw new Error(`author audit is not complete: ${JSON.stringify(audit)}`);
+          }
+          if ((missing.papers || []).length !== 0) throw new Error('missing-authors.json is not empty');
+
+          const sources = [];
+          const base = JSON.parse(zlib.gunzipSync(Buffer.from(fs.readFileSync('public/papers.gz.b64','utf8').trim(),'base64')).toString('utf8'));
+          sources.push(...base);
+          for (const file of ['public/total-synthesis.json','public/manual-supplement.json','public/final-audit-supplement.json','public/curated-supplement.json','public/automation-supplement.json']) {
+            const payload = JSON.parse(fs.readFileSync(file,'utf8'));
+            sources.push(...(payload.papers || []));
+          }
+          const normalizeDoi = v => String(v || '').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//i,'').replace(/^doi:\s*/i,'').replace(/[?#].*$/,'');
+          const titleKey = v => String(v || '').trim().toLowerCase().replace(/\s+/g,' ');
+          const byKey = new Map();
+          for (const p of sources) {
+            const doi = normalizeDoi(p.doi);
+            const key = doi || 'title:' + titleKey(p.title);
+            if (!key || key === 'title:') continue;
+            const old = byKey.get(key);
+            if (!old || (p.authors || []).length > (old.authors || []).length) byKey.set(key,p);
+          }
+          const papers = [...byKey.values()];
+          const noAuthors = papers.filter(p => !Array.isArray(p.authors) || p.authors.length === 0);
+          if (noAuthors.length) throw new Error(`browser-source papers without authors: ${noAuthors.map(p=>p.doi||p.title).join(', ')}`);
+
+          const excluded = new Set(['10.1038/s41467-026-77616-8','10.1021/jacs.6c13738']);
+          for (const doi of excluded) if (byKey.has(doi)) throw new Error(`excluded DOI still present: ${doi}`);
+
+          const update = JSON.parse(fs.readFileSync('public/automation-supplement.json','utf8')).papers || [];
+          if (update.length !== 19) throw new Error(`expected 19 reviewed update papers, found ${update.length}`);
+          for (const p of update) {
+            const doi = normalizeDoi(p.doi);
+            if (!byKey.has(doi)) throw new Error(`reviewed update DOI missing: ${doi}`);
+            if (!Array.isArray(p.authors) || p.authors.length === 0) throw new Error(`reviewed update DOI missing authors: ${doi}`);
+          }
+          console.log(JSON.stringify({galleryTotal: papers.length, authorsCovered: papers.length, updatePapers: update.length}));
+          NODE
+
+      - name: Install frontend dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Merge reviewed literature snapshot
+        run: node cloudflare/scripts/merge-curated-pages.mjs
+
+      - name: Build Gallery
+        run: npm run build
+
+      - name: Verify built artifact
+        run: |
+          test -s dist/index.html
+          test -s dist/papers.gz.b64
+          test -s dist/final-audit-supplement.json
+          test -s dist/title-translations-zh.json

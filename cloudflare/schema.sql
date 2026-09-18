@@ -86,6 +86,17 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_literature_supplement_doi
 CREATE INDEX IF NOT EXISTS idx_literature_supplement_date
   ON literature_supplement_papers(first_online_date DESC);
 
+-- Ordered full author lists for literature supplements. Kept in a child table so
+-- existing D1 databases can adopt authors without ALTER TABLE migrations.
+CREATE TABLE IF NOT EXISTS literature_supplement_authors (
+  identity TEXT NOT NULL,
+  sort_order INTEGER NOT NULL,
+  author_name TEXT NOT NULL,
+  PRIMARY KEY (identity, sort_order)
+);
+CREATE INDEX IF NOT EXISTS idx_literature_supplement_authors_identity
+  ON literature_supplement_authors(identity, sort_order);
+
 CREATE TABLE IF NOT EXISTS literature_supplement_meta (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   generated_at INTEGER NOT NULL,
