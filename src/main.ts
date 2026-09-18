@@ -9,6 +9,7 @@ interface Paper {
   date: string;
   url: string | null;
   new: boolean;
+  addedDate?: string;
   authors: string[];
   synthesisType?: 'total' | 'formal';
 }
@@ -256,12 +257,39 @@ function normalizePaper(paper: Paper): Paper {
     journal: canonicalJournal(paper.journal),
     title: pendingTitle(paper.title) ? null : paper.title?.trim() || null,
     doi: normalizeDoi(paper.doi),
+    addedDate: typeof paper.addedDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(paper.addedDate) ? paper.addedDate : undefined,
     authors: Array.isArray(paper.authors)
       ? paper.authors.filter((author): author is string => typeof author === 'string').map(author => author.trim()).filter(Boolean)
       : [],
   };
 }
 
+function beijingDate(now = Date.now()): string {
+  return new Date(now + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+function isNewToday(paper: Paper, now = Date.now()): boolean {
+  return Boolean(paper.addedDate && paper.addedDate === beijingDate(now));
+}
+
+function earliestAddedDate(a?: string, b?: string): string | undefined {
+  if (!a) return b;
+  if (!b) return a;
+  return a <= b ? a : b;
+}
+
+let newnessTimer: number | null = null;
+function scheduleNewnessBoundary(): void {
+  if (newnessTimer !== null) window.clearTimeout(newnessTimer);
+  const now = Date.now();
+  const shifted = now + 8 * 60 * 60 * 1000;
+  const nextShiftedMidnight = (Math.floor(shifted / 86400000) + 1) * 86400000;
+  const delay = Math.max(250, nextShiftedMidnight - shifted + 100);
+  newnessTimer = window.setTimeout(() => {
+    renderCards();
+    scheduleNewnessBoundary();
+  }, delay);
+}
 function titleCacheKey(paper: Paper): string {
   return (paperDoi(paper) || paper.url || `${paper.journal}|${paper.date}|${paper.title || ''}`).toLowerCase();
 }
@@ -295,6 +323,7 @@ function mergePapers(base: Paper[], additions: Paper[]): Paper[] {
       if (!existing.url && paper.url) existing.url = paper.url;
       if (paper.synthesisType) existing.synthesisType = paper.synthesisType;
       if (paper.authors.length > existing.authors.length) existing.authors = [...paper.authors];
+      existing.addedDate = earliestAddedDate(existing.addedDate, paper.addedDate);
       existing.new = existing.new || paper.new;
       continue;
     }
@@ -323,7 +352,7 @@ function filteredPapers(): Paper[] {
   const needle = query.trim().toLowerCase();
   return papers
     .filter(paper => selectedJournals.size === 0 || selectedJournals.has(paper.journal))
-    .filter(paper => !onlyNew || paper.new)
+    .filter(paper => !onlyNew || isNewToday(paper))
     .filter(paper => {
       if (!needle) return true;
       return [
@@ -368,7 +397,7 @@ function renderCards(): void {
   gallery.innerHTML = list.length ? list.map(paper => {
     const doi = paperDoi(paper);
     const href = paper.url || (doi ? `https://doi.org/${doi}` : '');
-    return `<article class='card'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${paper.new ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
+    return `<article class='card'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);
@@ -419,6 +448,7 @@ function mount(): void {
   }));
 
   renderCards();
+  scheduleNewnessBoundary();
   scheduleInventory();
 }
 
