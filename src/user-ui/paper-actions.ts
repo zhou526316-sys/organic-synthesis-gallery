@@ -21,17 +21,29 @@ export class GalleryPaperActions extends HTMLElement {
   private readonly shadow = this.attachShadow({ mode: 'open' });
   private panel: 'none' | 'status' | 'note' | 'more' = 'none';
   private feedbackMessage = '';
-  private readonly rerender = (): void => this.render();
+  private readonly storeChanged = (event: Event): void => {
+    const detail = event instanceof CustomEvent ? event.detail as { scope?: string; paperId?: string } : undefined;
+    if (detail?.scope === 'paper' && detail.paperId && detail.paperId !== this.paperId) return;
+    this.render();
+  };
+  private readonly countsChanged = (event: Event): void => {
+    const detail = event instanceof CustomEvent ? event.detail as { doi?: string } : undefined;
+    if (detail?.doi) {
+      const doi = store.metadata(this.paperId)?.doi?.toLowerCase();
+      if (doi !== detail.doi.toLowerCase()) return;
+    }
+    this.render();
+  };
 
   static get observedAttributes(): string[] { return ['data-paper-id', 'data-language']; }
   connectedCallback(): void {
-    store.addEventListener('change', this.rerender);
-    store.addEventListener('counts', this.rerender);
+    store.addEventListener('change', this.storeChanged);
+    store.addEventListener('counts', this.countsChanged);
     this.render();
   }
   disconnectedCallback(): void {
-    store.removeEventListener('change', this.rerender);
-    store.removeEventListener('counts', this.rerender);
+    store.removeEventListener('change', this.storeChanged);
+    store.removeEventListener('counts', this.countsChanged);
     this.closePanel(false);
   }
   attributeChangedCallback(): void { if (this.isConnected) this.render(); }
@@ -44,9 +56,11 @@ export class GalleryPaperActions extends HTMLElement {
     document.documentElement.classList.toggle('gallery-user-drawer-open', open);
     if (!open) {
       for (const element of [document.documentElement, document.body]) {
+        element.classList.remove('gallery-user-drawer-open', 'scroll-lock', 'scroll-locked', 'no-scroll');
         if (element.style.overflow === 'hidden') element.style.removeProperty('overflow');
+        if (element.style.overflowY === 'hidden') element.style.removeProperty('overflow-y');
         if (element.style.overscrollBehavior === 'none') element.style.removeProperty('overscroll-behavior');
-        element.classList.remove('scroll-lock', 'scroll-locked', 'no-scroll');
+        if (element.style.touchAction === 'none') element.style.removeProperty('touch-action');
       }
     }
   }
@@ -64,6 +78,7 @@ export class GalleryPaperActions extends HTMLElement {
     if (render && this.isConnected) this.render();
     this.closest<HTMLElement>('.card')?.classList.remove('user-action-open');
     this.syncScrollLock();
+    queueMicrotask(() => this.syncScrollLock());
   }
 
   private render(): void {
@@ -121,7 +136,9 @@ export class GalleryPaperActions extends HTMLElement {
     this.shadow.querySelectorAll<HTMLElement>('[data-action]').forEach(element => element.addEventListener('click', () => { void this.action(element.dataset.action || ''); }));
     this.shadow.querySelectorAll<HTMLElement>('[data-close-panel]').forEach(element => element.addEventListener('click', () => this.closePanel()));
     this.shadow.querySelector<HTMLTextAreaElement>('[data-note]')?.addEventListener('input', event => store.setNote(this.paperId, (event.target as HTMLTextAreaElement).value, false));
-    this.shadow.querySelector<HTMLTextAreaElement>('[data-note]')?.addEventListener('blur', event => { store.setNote(this.paperId, (event.target as HTMLTextAreaElement).value, true); this.render(); });
+    this.shadow.querySelector<HTMLTextAreaElement>('[data-note]')?.addEventListener('blur', event => {
+      store.setNote(this.paperId, (event.target as HTMLTextAreaElement).value, false);
+    });
     this.shadow.querySelectorAll<HTMLInputElement>('[data-collection]').forEach(input => input.addEventListener('change', () => store.updatePaper(this.paperId, paper => {
       const id = input.dataset.collection || ''; paper.collections = input.checked ? [...new Set([...paper.collections, id])] : paper.collections.filter(value => value !== id); paper.favorite = paper.collections.length > 0 || paper.favorite;
     })));
