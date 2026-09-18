@@ -55,8 +55,8 @@ function figureOne(rows) {
   return rows.find(row => String(row.semantic_key || '').toLowerCase() === 'figure-1') || null;
 }
 
-function tocResponse(request, doi, toc, figures, primary) {
-  const primaryResponse = primaryVisualResponse(request, doi, primary);
+function tocResponse(request, doi, toc, figures, primary, variants = []) {
+  const primaryResponse = primaryVisualResponse(request, doi, primary, variants);
   if (primaryResponse.available && primaryResponse.kind === 'official_visual') {
     return {
       available: true,
@@ -169,9 +169,9 @@ async function queryByDois(env, sqlPrefix, dois) {
 async function loadMediaRows(env, rawDois) {
   if (!env?.DB) throw new Error('D1 binding DB is not configured');
   const dois = [...new Set(rawDois.map(normalizeDoi).filter(Boolean))].slice(0, DOI_LIMIT);
-  if (!dois.length) return { dois, tocByDoi: new Map(), figuresByDoi: new Map(), primaryByDoi: new Map(), duplicateHashes: new Set() };
+  if (!dois.length) return { dois, tocByDoi: new Map(), figuresByDoi: new Map(), primaryByDoi: new Map(), primaryVariantsByDoi: new Map(), duplicateHashes: new Set() };
 
-  const [tocRows, figureRows, primaryRows, duplicateRows] = await Promise.all([
+  const [tocRows, figureRows, primaryRows, primaryVariantRows, duplicateRows] = await Promise.all([
     queryByDois(
       env,
       'SELECT doi, article_url, r2_key, content_hash, reason, available, checked_at, updated_at FROM toc_assets WHERE doi IN',
@@ -185,6 +185,11 @@ async function loadMediaRows(env, rawDois) {
     queryByDois(
       env,
       'SELECT doi, kind, source, source_url, article_url, r2_key, content_hash, caption, confidence, page_number, bbox_json, retrieved_at, updated_at FROM primary_visual_assets WHERE doi IN',
+      dois
+    ),
+    queryByDois(
+      env,
+      'SELECT doi, role, r2_key, content_hash, width, height, byte_length, updated_at FROM primary_visual_variants WHERE doi IN',
       dois
     ),
     allRows(env.DB.prepare("SELECT content_hash, COUNT(*) AS owners FROM toc_assets WHERE available = 1 AND content_hash IS NOT NULL AND content_hash <> '' GROUP BY content_hash HAVING COUNT(*) > 1")),
@@ -201,8 +206,15 @@ async function loadMediaRows(env, rawDois) {
   }
   const primaryByDoi = new Map();
   for (const row of primaryRows) primaryByDoi.set(String(row.doi).toLowerCase(), row);
+  const primaryVariantsByDoi = new Map();
+  for (const row of primaryVariantRows) {
+    const doi = String(row.doi).toLowerCase();
+    const group = primaryVariantsByDoi.get(doi) || [];
+    group.push(row);
+    primaryVariantsByDoi.set(doi, group);
+  }
   const duplicateHashes = new Set(duplicateRows.map(row => row.content_hash).filter(Boolean));
-  return { dois, tocByDoi, figuresByDoi, primaryByDoi, duplicateHashes };
+  return { dois, tocByDoi, figuresByDoi, primaryByDoi, primaryVariantsByDoi, duplicateHashes };
 }
 
 function inventoryItem(doi, toc, figures, primary, duplicateHashes) {
@@ -300,7 +312,7 @@ export async function getToc(request, env) {
   const doi = normalizeDoi(new URL(request.url).searchParams.get('doi'));
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
   const media = await loadMediaRows(env, [doi]);
-  return { status: 200, body: tocResponse(request, doi, media.tocByDoi.get(doi), media.figuresByDoi.get(doi) || [], media.primaryByDoi.get(doi)) };
+  return { status: 200, body: tocResponse(request, doi, media.tocByDoi.get(doi), media.figuresByDoi.get(doi) || [], media.primaryByDoi.get(doi), media.primaryVariantsByDoi.get(doi) || []) };
 }
 
 export async function getArticleFigures(request, env) {
@@ -316,8 +328,8 @@ export async function mediaBatch(request, env, payload) {
   const media = await loadMediaRows(env, input);
   const items = media.dois.map(doi => ({
     doi,
-    toc: tocResponse(request, doi, media.tocByDoi.get(doi), media.figuresByDoi.get(doi) || [], media.primaryByDoi.get(doi)),
-    primary: primaryVisualResponse(request, doi, media.primaryByDoi.get(doi)),
+    toc: tocResponse(request, doi, media.tocByDoi.get(doi), media.figuresByDoi.get(doi) || [], media.primaryByDoi.get(doi), media.primaryVariantsByDoi.get(doi) || []),
+    primary: primaryVisualResponse(request, doi, media.primaryByDoi.get(doi), media.primaryVariantsByDoi.get(doi) || []),
     figures: figureResponse(request, doi, media.figuresByDoi.get(doi) || []),
   }));
   return { status: 200, body: { items, elapsedMs: Date.now() - startedAt } };
