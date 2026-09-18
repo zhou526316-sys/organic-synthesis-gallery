@@ -1,7 +1,7 @@
 import { api } from './platform-api';
 import './styles.css';
 import { mountUserShell } from './user-shell';
-import { beijingDate, earliestAddedDate, isExcludedDoi, validAddedDate } from '../shared/literature-policy.js';
+import { earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 
 interface Paper {
   journal: string;
@@ -326,18 +326,12 @@ function visibleTitle(paper: Paper): string {
 }
 
 function isNewToday(paper: Paper): boolean {
-  return Boolean(paper.addedDate && paper.addedDate === beijingDate());
+  return isNewTodayDate(paper.addedDate);
 }
 
 function scheduleNewnessBoundary(): void {
   if (newnessTimer !== null) window.clearTimeout(newnessTimer);
-  const now = new Date();
-  const current = beijingDate(now);
-  let probe = new Date(now.getTime() + 60_000);
-  while (beijingDate(probe) === current && probe.getTime() - now.getTime() < 26 * 60 * 60 * 1000) {
-    probe = new Date(probe.getTime() + 15 * 60 * 1000);
-  }
-  const delay = Math.max(30_000, probe.getTime() - now.getTime() + 1_000);
+  const delay = msUntilNextBeijingDay();
   newnessTimer = window.setTimeout(() => {
     newnessTimer = null;
     renderCards();
