@@ -1,6 +1,7 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
+import { isExcludedDoi } from '../../shared/literature-policy.js';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -109,7 +110,7 @@ async function loadGalleryDois() {
 
 function mergeCandidate(map, incoming) {
   const doi = normalizeDoi(incoming.doi);
-  if (!doi) return;
+  if (!doi || isExcludedDoi(doi)) return;
   const current = map.get(doi);
   if (!current) {
     map.set(doi, { ...incoming, doi, sources: [...new Set(incoming.sources || [])] });
@@ -261,7 +262,8 @@ for (const journal of JOURNALS) {
 }
 
 const universe = [...merged.values()].filter(c => !c.date || (c.date >= START && c.date <= END));
-const missing = universe.filter(c => !galleryDois.has(c.doi));
+const excludedUniverse = universe.filter(c => isExcludedDoi(c.doi));
+const missing = universe.filter(c => !isExcludedDoi(c.doi) && !galleryDois.has(c.doi));
 const missingCandidates = missing
   .sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.journal.localeCompare(b.journal) || String(a.title).localeCompare(String(b.title)))
   .map(compactCandidate);
@@ -301,6 +303,7 @@ const report = {
     potentialGaps: potentialGaps.length,
     criticalSourceFailures: criticalFailures.length,
     unresolved: missing.length,
+    excludedByPolicy: excludedUniverse.length,
   },
   closure: {
     date: CLOSURE_DATE,
