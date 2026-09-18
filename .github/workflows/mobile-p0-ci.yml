@@ -1,0 +1,42 @@
+name: Mobile P0 regression
+
+on:
+  push:
+    branches:
+      - feat/mobile-newness-exclusions-resolver-lease
+    paths:
+      - 'src/user-ui/**'
+      - 'src/main.ts'
+      - 'src/styles.css'
+      - 'scripts/test-mobile-drawer.mjs'
+      - '.github/workflows/mobile-p0-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-p0-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install frontend dependencies
+        run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Build
+        run: npm run build
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Run 30-cycle mobile drawer regression
+        run: node scripts/test-mobile-drawer.mjs
