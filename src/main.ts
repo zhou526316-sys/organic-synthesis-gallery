@@ -15,12 +15,29 @@ interface Paper {
   synthesisType?: 'total' | 'formal';
 }
 
+interface PrimaryVisualResponse {
+  available: boolean;
+  kind?: 'official_visual' | 'figure1' | 'pdf_primary' | 'article_figure' | 'open_fallback';
+  label?: string;
+  imageUrl?: string;
+  masterImageUrl?: string;
+  thumbnailImageUrl?: string;
+  previewImageUrl?: string;
+  width?: number;
+  height?: number;
+  thumbnailWidth?: number;
+  thumbnailHeight?: number;
+  source?: string;
+  confidence?: number;
+}
+
 interface TocResponse {
   available: boolean;
   imageUrl?: string;
   articleUrl?: string;
   contentHash?: string;
   reason?: string;
+  primary?: PrimaryVisualResponse;
 }
 
 interface FigureAsset {
@@ -526,21 +543,25 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'toc-link';
+  const masterImageUrl = result.primary?.masterImageUrl || result.primary?.imageUrl || result.imageUrl;
+  const cardImageUrl = result.primary?.thumbnailImageUrl || result.primary?.previewImageUrl || result.imageUrl;
   const image = new Image();
-  image.src = result.imageUrl;
-  image.alt = t('toc');
+  image.src = cardImageUrl;
+  image.alt = result.primary?.label || t('toc');
   image.className = 'toc-image';
-  image.loading = 'eager';
+  image.loading = 'lazy';
   image.decoding = 'async';
   const label = document.createElement('span');
   label.className = 'toc-label';
-  label.textContent = result.reason === 'figure1_fallback'
+  label.textContent = result.primary?.label || (result.reason === 'figure1_fallback'
     ? 'Figure 1'
-    : result.reason?.startsWith('figure_fallback:')
-      ? result.reason.slice('figure_fallback:'.length)
-      : t('toc');
+    : result.reason === 'pdf_primary_fallback'
+      ? 'PDF Primary Visual'
+      : result.reason?.startsWith('figure_fallback:')
+        ? result.reason.slice('figure_fallback:'.length)
+        : t('toc'));
   button.append(image, label);
-  button.addEventListener('click', () => openLightbox(result.imageUrl!, label.textContent || t('toc')));
+  button.addEventListener('click', () => openLightbox(masterImageUrl, label.textContent || t('toc')));
   image.addEventListener('load', () => {
     slot.replaceChildren(button);
     slot.classList.remove('generated');
