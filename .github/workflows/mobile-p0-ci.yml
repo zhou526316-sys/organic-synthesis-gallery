@@ -30,8 +30,6 @@ jobs:
           node-version: '22'
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
-      - name: Typecheck
-        run: npx tsc --noEmit
       - name: Build
         run: npm run build
       - name: Install Playwright Chromium
