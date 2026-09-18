@@ -1,6 +1,6 @@
 {
   "name": "organic-synthesis-gallery-toc-collector",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": true,
   "type": "module",
   "main": "src/main.mjs",
@@ -31,11 +31,26 @@
       "output": "dist"
     },
     "extraFiles": [
-      { "from": "scripts/Start-CollectorDiagnostics.ps1", "to": "Start-CollectorDiagnostics.ps1" },
-      { "from": "scripts/START-TOC-COLLECTOR.cmd", "to": "START-TOC-COLLECTOR.cmd" },
-      { "from": "scripts/Start-TOC-Collector-Unblock.ps1", "to": "Start-TOC-Collector-Unblock.ps1" },
-      { "from": "scripts/Start-TOC-Collector-Diagnostic.cmd", "to": "Start-TOC-Collector-Diagnostic.cmd" },
-      { "from": "scripts/Start-TOC-Collector-Diagnostic.ps1", "to": "Start-TOC-Collector-Diagnostic.ps1" }
+      {
+        "from": "scripts/Start-CollectorDiagnostics.ps1",
+        "to": "Start-CollectorDiagnostics.ps1"
+      },
+      {
+        "from": "scripts/START-TOC-COLLECTOR.cmd",
+        "to": "START-TOC-COLLECTOR.cmd"
+      },
+      {
+        "from": "scripts/Start-TOC-Collector-Unblock.ps1",
+        "to": "Start-TOC-Collector-Unblock.ps1"
+      },
+      {
+        "from": "scripts/Start-TOC-Collector-Diagnostic.cmd",
+        "to": "Start-TOC-Collector-Diagnostic.cmd"
+      },
+      {
+        "from": "scripts/Start-TOC-Collector-Diagnostic.ps1",
+        "to": "Start-TOC-Collector-Diagnostic.ps1"
+      }
     ],
     "win": {
       "target": [
@@ -63,5 +78,8 @@
     "portable": {
       "artifactName": "Organic-Synthesis-Gallery-TOC-Collector-Portable-${version}-${arch}.${ext}"
     }
+  },
+  "dependencies": {
+    "playwright-core": "1.63.0"
   }
 }

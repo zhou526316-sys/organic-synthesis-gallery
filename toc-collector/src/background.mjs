@@ -26,6 +26,8 @@ let renderPromise = null;
   apiBase: PRIMARY_API_BASE,
   apiFallbackBase: FALLBACK_API_BASE,
   writeToken: '',
+  browserbaseApiKey: '',
+  browserbaseProjectId: '',
   vpnExecutable: '',
   autoStart: false,
   pollMinutes: 10,
@@ -37,7 +39,7 @@ let renderPromise = null;
 };
 
 let config = { ...DEFAULT_CONFIG };
-let state = { cooldowns: {}, nextReminderAt: 0, muteDate: '', pauseUntil: 0, lastSummary: null };
+let state = { cooldowns: {}, nextReminderAt: 0, muteDate: '', pauseUntil: 0, lastSummary: null, browserbase: { contexts: {}, lastRequestByPublisher: {}, status: {}, lastSuccessDoi: {} } };
 let tray = null;
 let dashboard = window;
 let quitting = false;
@@ -76,8 +78,10 @@ function getPublisherSession() {
 
 function safeError(error, limit = 1200) {
   let value = String(error?.message || error || 'unknown_error');
-  const token = String(config?.writeToken || '').trim();
-  if (token) value = value.split(token).join('[REDACTED]');
+  for (const secret of [config?.writeToken, config?.browserbaseApiKey, process.env.BROWSERBASE_API_KEY]) {
+    const token = String(secret || '').trim();
+    if (token) value = value.split(token).join('[REDACTED]');
+  }
   value = value
     .replace(/Bearer\s+[^\s"']+/gi, 'Bearer [REDACTED]')
     .replace(/([?&](?:token|key|auth|authorization)=)[^&#\s]+/gi, '$1[REDACTED]');
@@ -112,6 +116,25 @@ function configDiagnostic() {
   };
 }
 
+function browserbaseCredentials() {
+  return {
+    apiKey: String(process.env.BROWSERBASE_API_KEY || config.browserbaseApiKey || '').trim(),
+    projectId: String(process.env.BROWSERBASE_PROJECT_ID || config.browserbaseProjectId || '').trim(),
+  };
+}
+
+function browserbaseDiagnostic() {
+  const credentials = browserbaseCredentials();
+  const info = state.browserbase || {};
+  return {
+    configured: Boolean(credentials.apiKey),
+    projectConfigured: Boolean(credentials.projectId),
+    acs: info.status?.acs || '尚未尝试',
+    wiley: info.status?.wiley || '尚未尝试',
+    lastSuccessDoi: info.lastSuccessDoi?.acs || info.lastSuccessDoi?.wiley || '',
+  };
+}
+
 async function log(message, extra = '') {
   const line = `[${new Date().toISOString()}] ${message}${extra ? ` ${typeof extra === 'string' ? extra : JSON.stringify(extra)}` : ''}\n`;
   await fsp.mkdir(dataDir(), { recursive: true });
@@ -141,6 +164,11 @@ async function ensureConfig() {
   await reloadConfig({ source: 'startup' });
   state = await loadJson(statePath(), state);
   state.cooldowns = state.cooldowns && typeof state.cooldowns === 'object' ? state.cooldowns : {};
+  state.browserbase = state.browserbase && typeof state.browserbase === 'object' ? state.browserbase : {};
+  state.browserbase.contexts = state.browserbase.contexts && typeof state.browserbase.contexts === 'object' ? state.browserbase.contexts : {};
+  state.browserbase.lastRequestByPublisher = state.browserbase.lastRequestByPublisher && typeof state.browserbase.lastRequestByPublisher === 'object' ? state.browserbase.lastRequestByPublisher : {};
+  state.browserbase.status = state.browserbase.status && typeof state.browserbase.status === 'object' ? state.browserbase.status : {};
+  state.browserbase.lastSuccessDoi = state.browserbase.lastSuccessDoi && typeof state.browserbase.lastSuccessDoi === 'object' ? state.browserbase.lastSuccessDoi : {};
   // Retry only generic failures from older collectors; keep all specific cooldowns.
   if (state.collectorRecoveryVersion !== '0.1.6') {
     state.cooldowns = Object.fromEntries(Object.entries(state.cooldowns).filter(([, value]) => value?.reason !== 'collector_failed'));
@@ -438,6 +466,127 @@ function htmlCandidate(html, pageUrl) {
   return rows[0] || null;
 }
 
+function browserbasePublisher(doi) {
+  const publisher = classify(doi);
+  return ['acs', 'wiley'].includes(publisher) ? publisher : '';
+}
+
+function browserbaseManualRequired(html, pageUrl = '') {
+  const signal = `${pageUrl}\n${String(html || '').slice(0, 250000)}`;
+  return /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|enable javascript|unusual traffic/i.test(signal);
+}
+
+function browserbaseOwnsDoi(doi, pageUrl, html) {
+  const normalized = String(doi || '').trim().toLowerCase();
+  if (!normalized) return false;
+  const publisher = browserbasePublisher(normalized);
+  let domainMatches = false;
+  try {
+    const hostname = new URL(pageUrl).hostname.toLowerCase();
+    domainMatches = publisher === 'acs' ? hostname.endsWith('pubs.acs.org') : hostname.endsWith('onlinelibrary.wiley.com');
+  } catch {}
+  const encoded = normalized.replace('/', '%2f');
+  const bodyHasDoi = String(html || '').toLowerCase().includes(normalized) || String(html || '').toLowerCase().includes(encoded);
+  return domainMatches && bodyHasDoi;
+}
+
+function browserbaseHeaders(apiKey) {
+  return { 'X-BB-API-Key': apiKey, 'Content-Type': 'application/json', Accept: 'application/json' };
+}
+
+async function browserbaseApi(pathname, options = {}) {
+  const { apiKey } = browserbaseCredentials();
+  if (!apiKey) throw new Error('browserbase_missing_credentials');
+  const response = await globalThis.fetch(`https://api.browserbase.com/v1${pathname}`, {
+    ...options,
+    headers: { ...browserbaseHeaders(apiKey), ...(options.headers || {}) },
+    signal: AbortSignal.timeout(30000),
+  });
+  const text = await response.text();
+  let body = {};
+  try { body = text ? JSON.parse(text) : {}; } catch { body = { text }; }
+  if (!response.ok) throw new Error(`browserbase_http_${response.status}:${safeError(body.message || body.error || text, 240)}`);
+  return body;
+}
+
+async function waitForBrowserbaseSlot(publisher) {
+  const last = Number(state.browserbase?.lastRequestByPublisher?.[publisher] || 0);
+  const delay = Math.max(0, 1800 - (Date.now() - last));
+  if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+  state.browserbase.lastRequestByPublisher[publisher] = Date.now();
+  await saveState();
+}
+
+async function browserbaseContext(publisher) {
+  const existing = String(state.browserbase.contexts?.[publisher] || '').trim();
+  if (existing) return existing;
+  const { projectId } = browserbaseCredentials();
+  const payload = { name: `organic-synthesis-gallery-${publisher}` };
+  if (projectId) payload.projectId = projectId;
+  const created = await browserbaseApi('/contexts', { method: 'POST', body: JSON.stringify(payload) });
+  if (!created?.id) throw new Error('browserbase_context_missing_id');
+  state.browserbase.contexts[publisher] = String(created.id);
+  await saveState();
+  await log('browserbase_context_created', { publisher, contextId: String(created.id) });
+  return String(created.id);
+}
+
+async function inspectArticleBrowserbase(doi, url, localReason = '') {
+  const publisher = browserbasePublisher(doi);
+  if (!publisher) return null;
+  const credentials = browserbaseCredentials();
+  if (!credentials.apiKey) {
+    state.browserbase.status[publisher] = 'missing';
+    await saveState();
+    await log('browserbase_missing', { publisher, doi, localReason });
+    return null;
+  }
+  let browser;
+  try {
+    await waitForBrowserbaseSlot(publisher);
+    const contextId = await browserbaseContext(publisher);
+    const payload = {
+      keepAlive: false,
+      browserSettings: { context: { id: contextId, persist: true } },
+    };
+    if (credentials.projectId) payload.projectId = credentials.projectId;
+    const sessionInfo = await browserbaseApi('/sessions', { method: 'POST', body: JSON.stringify(payload) });
+    if (!sessionInfo?.connectUrl) throw new Error('browserbase_session_missing_connect_url');
+    const { chromium } = await import('playwright-core');
+    browser = await chromium.connectOverCDP(sessionInfo.connectUrl);
+    const context = browser.contexts()[0];
+    const page = context.pages()[0] || await context.newPage();
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: Math.max(15000, Number(config.publisherTimeoutSeconds || 35) * 1000) });
+    await page.waitForTimeout(Math.min(5000, Math.max(500, Number(config.headlessWaitMs || 1500))));
+    const pageUrl = page.url();
+    const html = await page.content();
+    if (browserbaseManualRequired(html, pageUrl)) {
+      state.browserbase.status[publisher] = 'manual_required';
+      await saveState();
+      await log('browserbase_manual_required', { publisher, doi, url: pageUrl, sessionId: String(sessionInfo.id || '') });
+      throw new Error('manual_required');
+    }
+    if (!browserbaseOwnsDoi(doi, pageUrl, html)) throw new Error('browserbase_doi_mismatch');
+    const candidate = htmlCandidate(html, pageUrl);
+    if (!candidate) throw new Error('browserbase_no_candidate');
+    state.browserbase.status[publisher] = 'connected';
+    state.browserbase.lastSuccessDoi[publisher] = doi;
+    await saveState();
+    await log('browserbase_success', { publisher, doi, kind: candidate.kind, url: pageUrl, sessionId: String(sessionInfo.id || '') });
+    return { url: pageUrl, candidate, method: 'browserbase' };
+  } catch (error) {
+    const reason = safeError(error, 300);
+    if (reason !== 'manual_required') state.browserbase.status[publisher] = `failed: ${reason}`;
+    await saveState();
+    await log('browserbase_failed', { publisher, doi, reason, localReason });
+    if (reason === 'manual_required') throw error;
+    return null;
+  } finally {
+    if (browser) await browser.close().catch(() => {});
+    refreshDashboard();
+  }
+}
+
 async function publisherFetch(url, options, fallbackEvent) {
   try {
     return await getPublisherSession().fetch(url, options);
@@ -548,7 +697,18 @@ async function inspectArticle(doi) {
     if (win && !win.isDestroyed()) win.destroy();
     win = null;
     await log('browser_blocked_fallback', { doi, browserError, blockedByClient: /ERR_BLOCKED_BY_CLIENT/i.test(browserError) });
-    return await inspectArticleHtml(doi, url, browserError);
+    let htmlResult = null;
+    try { htmlResult = await inspectArticleHtml(doi, url, browserError); }
+    catch (htmlError) {
+      await log('publisher_html_fallback_failed', { doi, reason: safeError(htmlError, 300) });
+    }
+    if (htmlResult?.candidate) return htmlResult;
+    const browserbaseResult = await inspectArticleBrowserbase(doi, url, browserError);
+    if (browserbaseResult?.candidate) return browserbaseResult;
+    // PDF is deliberately a later, independent resolver. Reaching this marker
+    // means local browser, direct HTML, and Browserbase produced no visual.
+    await log('pdf_fallback_next', { doi, localCandidate: Boolean(htmlResult?.candidate), browserbaseConfigured: browserbaseDiagnostic().configured });
+    return htmlResult || { url, candidate: null, method: 'no_candidate' };
   } finally {
     if (publisherTimer) clearTimeout(publisherTimer);
     if (win && !win.isDestroyed()) win.destroy();
@@ -626,6 +786,7 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     if (/write_token_missing|^API (401|403)/.test(msg)) { reason = 'collector_auth'; ms = 30*60*1000; }
     else if (/^API /.test(msg)) { reason = 'upload_failed'; ms = 60*60*1000; }
     else if (/^image_/.test(msg)) { reason = 'image_download_failed'; ms = 8*60*60*1000; }
+    else if (/manual_required/.test(msg)) { reason = 'manual_required'; ms = 24*60*60*1000; }
     else if (/403|access|captcha|challenge/i.test(msg)) { reason = 'publisher_access_blocked'; ms = 24*60*60*1000; }
     else if (/429|rate/i.test(msg)) { reason = 'publisher_rate_limited'; ms = 24*60*60*1000; }
     else if (/timeout/i.test(msg)) { reason = 'publisher_timeout'; ms = 8*60*60*1000; }
@@ -796,6 +957,7 @@ function dashboardHtml() {
   const restricted = lastQueue.filter(x => ['acs','wiley'].includes(classify(x.doi))).length;
   const rows = lastQueue.slice(0, 12).map(x => `<tr><td>${escapeHtml(x.doi)}</td><td>${escapeHtml(classify(x.doi).toUpperCase())}</td></tr>`).join('');
   const configInfo = configDiagnostic();
+  const browserbaseInfo = browserbaseDiagnostic();
   const tokenState = configInfo.configured
     ? `已配置 · 长度 ${configInfo.length} · SHA-256 ${configInfo.sha256Prefix}`
     : '缺失 · 长度 0';
@@ -817,6 +979,7 @@ function dashboardHtml() {
     <div class="card"><div class="k">ACS 网络</div><div class="v ${net.acs ? 'ok':'bad'}">${net.acs === true ? '可访问' : net.acs === false ? '不可访问' : '待检测'}</div></div>
     <div class="card"><div class="k">Wiley 网络</div><div class="v ${net.wiley ? 'ok':'bad'}">${net.wiley === true ? '可访问' : net.wiley === false ? '不可访问' : '待检测'}</div></div>
     <div class="card"><div class="k">写入密钥</div><div class="v" style="font-size:14px">${escapeHtml(tokenState)}</div></div>
+    <div class="card"><div class="k">Browserbase</div><div class="v" style="font-size:14px">${browserbaseInfo.configured ? '已配置' : '缺失'} · ACS ${escapeHtml(browserbaseInfo.acs)} · Wiley ${escapeHtml(browserbaseInfo.wiley)}${browserbaseInfo.lastSuccessDoi ? `<br>最近成功：${escapeHtml(browserbaseInfo.lastSuccessDoi)}` : ''}</div></div>
     <div class="card"><div class="k">上次处理</div><div class="v" style="font-size:14px">${summary.at ? `成功 ${Number(summary.success||0)} · 失败 ${Number(summary.failed||0)}` : '尚未采集'}</div></div>
   </div>
   <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开当前设置</a><a href="collector:reload-config">重新加载设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>

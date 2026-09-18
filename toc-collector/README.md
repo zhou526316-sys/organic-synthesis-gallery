@@ -33,6 +33,8 @@ Windows 10/11 托盘常驻程序，用用户本机网络/VPN 补齐出版社 TOC
 {
   "apiBase": "https://api.gczhouwld.com",
   "apiFallbackBase": "https://organic-synthesis-gallery.zhou526316.workers.dev",
+  "browserbaseApiKey": "",
+  "browserbaseProjectId": "",
   "writeToken": "YOUR_BRIDGE_WRITE_TOKEN",
   "vpnExecutable": "C:\\Program Files\\YourVPN\\vpn.exe",
   "autoStart": false,
@@ -44,6 +46,8 @@ Windows 10/11 托盘常驻程序，用用户本机网络/VPN 补齐出版社 TOC
   "headlessWaitMs": 5000
 }
 ```
+
+`BROWSERBASE_API_KEY` 与可选的 `BROWSERBASE_PROJECT_ID` 也可作为进程环境变量提供，且优先于配置文件。它们只保存在本机；Collector 为 ACS 与 Wiley 各自创建并复用 Browserbase Context，直连/HTML 失败时才使用 CDP 会话。GUI 与日志只显示配置状态、连接状态和 DOI，不记录密钥。
 
 ## 托盘菜单
 
