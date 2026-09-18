@@ -35,6 +35,67 @@ CREATE INDEX IF NOT EXISTS idx_figure_assets_doi_order
 CREATE INDEX IF NOT EXISTS idx_figure_assets_hash
   ON figure_assets(doi, content_hash);
 
+-- Canonical Primary Visual. The rank order is enforced by application code:
+-- official visual > publisher Figure 1 > PDF primary > article figure/scheme > open fallback.
+CREATE TABLE IF NOT EXISTS primary_visual_assets (
+  doi TEXT PRIMARY KEY,
+  kind TEXT NOT NULL CHECK (kind IN (
+    'official_visual',
+    'figure1',
+    'pdf_primary',
+    'article_figure',
+    'open_fallback'
+  )),
+  source TEXT NOT NULL,
+  source_url TEXT,
+  article_url TEXT,
+  r2_key TEXT NOT NULL,
+  content_hash TEXT,
+  caption TEXT,
+  confidence INTEGER NOT NULL DEFAULT 0,
+  page_number INTEGER,
+  bbox_json TEXT,
+  retrieved_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_primary_visual_kind
+  ON primary_visual_assets(kind, confidence DESC, updated_at DESC);
+
+-- Lease-based media job queue. This is the only task truth for new resolver code.
+CREATE TABLE IF NOT EXISTS media_jobs (
+  doi TEXT PRIMARY KEY,
+  publisher TEXT NOT NULL,
+  mode TEXT NOT NULL DEFAULT 'coverage' CHECK (mode IN ('coverage', 'upgrade')),
+  state TEXT NOT NULL DEFAULT 'pending' CHECK (state IN (
+    'pending',
+    'leased',
+    'processing',
+    'retry_wait',
+    'manual_required',
+    'resolved',
+    'upgrade_wait',
+    'audited_unresolved'
+  )),
+  priority INTEGER NOT NULL DEFAULT 0,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  last_attempt_at INTEGER NOT NULL DEFAULT 0,
+  next_retry_at INTEGER NOT NULL DEFAULT 0,
+  lease_owner TEXT,
+  lease_expires_at INTEGER NOT NULL DEFAULT 0,
+  last_failure_reason TEXT,
+  visual_kind TEXT,
+  visual_source TEXT,
+  confidence INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_media_jobs_claim
+  ON media_jobs(mode, state, next_retry_at, priority DESC, attempts ASC);
+CREATE INDEX IF NOT EXISTS idx_media_jobs_lease
+  ON media_jobs(lease_expires_at, lease_owner);
+CREATE INDEX IF NOT EXISTS idx_media_jobs_publisher_state
+  ON media_jobs(publisher, state, updated_at DESC);
+
 -- Cloud repair state. This replaces media-repair/state.json.
 CREATE TABLE IF NOT EXISTS media_repair_state (
   doi TEXT PRIMARY KEY,
