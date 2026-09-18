@@ -1,4 +1,5 @@
 import { normalizeDoi } from './media.js';
+import { earliestAddedDate, isExcludedDoi, validAddedDate } from '../../../shared/literature-policy.js';
 
 async function sha256Hex(value) {
   const bytes = new TextEncoder().encode(value);
@@ -82,7 +83,7 @@ export async function importTitleTranslations(env, payload) {
 
 export async function getLiteratureSupplement(env) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
-  const [papersResult, authorsResult, meta] = await Promise.all([
+  const [papersResult, authorsResult, addedDatesResult, meta] = await Promise.all([
     env.DB.prepare(
       `SELECT identity, doi, title, journal, first_online_date, article_url, synthesis_type, source
        FROM literature_supplement_papers
@@ -94,6 +95,10 @@ export async function getLiteratureSupplement(env) {
        ORDER BY identity, sort_order`
     ).all(),
     env.DB.prepare(
+      `SELECT identity, added_date
+       FROM literature_supplement_added_dates`
+    ).all(),
+    env.DB.prepare(
       'SELECT generated_at, verified_through, review_summary_json FROM literature_supplement_meta WHERE id = 1'
     ).first(),
   ]);
@@ -102,13 +107,17 @@ export async function getLiteratureSupplement(env) {
     if (!authorsByIdentity.has(row.identity)) authorsByIdentity.set(row.identity, []);
     authorsByIdentity.get(row.identity).push(row.author_name);
   }
-  const papers = (papersResult?.results || []).map(row => ({
+  const addedDateByIdentity = new Map((addedDatesResult?.results || []).map(row => [row.identity, row.added_date]));
+  const papers = (papersResult?.results || [])
+    .filter(row => !isExcludedDoi(row.doi))
+    .map(row => ({
     journal: row.journal,
     title: row.title || null,
     doi: row.doi || null,
     date: row.first_online_date,
     url: row.article_url || (row.doi ? `https://doi.org/${row.doi}` : null),
     new: true,
+    ...(validAddedDate(addedDateByIdentity.get(row.identity)) ? { addedDate: addedDateByIdentity.get(row.identity) } : {}),
     authors: authorsByIdentity.get(row.identity) || [],
     ...(row.synthesis_type === 'total' || row.synthesis_type === 'formal'
       ? { synthesisType: row.synthesis_type }
@@ -141,6 +150,7 @@ export async function importLiteratureSupplement(env, payload) {
     const date = typeof paper.date === 'string' ? paper.date.trim() : '';
     const title = typeof paper.title === 'string' && paper.title.trim() ? paper.title.trim() : null;
     const doi = normalizeDoi(paper.doi);
+    if (isExcludedDoi(doi)) continue;
     if (!journal || !/^\d{4}-\d{2}-\d{2}$/.test(date) || (!title && !doi)) continue;
     rows.push({
       identity: await paperIdentity(paper),
@@ -154,6 +164,7 @@ export async function importLiteratureSupplement(env, payload) {
           ? `https://doi.org/${doi}`
           : null,
       synthesisType: normalizeSynthesisType(paper.synthesisType),
+      addedDate: validAddedDate(paper.addedDate) || '',
       authors: Array.isArray(paper.authors)
         ? paper.authors.filter(value => typeof value === 'string').map(value => value.trim()).filter(Boolean).slice(0, 200)
         : [],
@@ -204,6 +215,21 @@ export async function importLiteratureSupplement(env, payload) {
   }
   for (let offset = 0; offset < authorStatements.length; offset += 80) {
     await env.DB.batch(authorStatements.slice(offset, offset + 80));
+  }
+
+  const addedDateStatements = rows.flatMap(row => row.addedDate ? [env.DB.prepare(
+    `INSERT INTO literature_supplement_added_dates (identity, added_date, updated_at)
+     VALUES (?, ?, ?)
+     ON CONFLICT(identity) DO UPDATE SET
+       added_date = CASE
+         WHEN literature_supplement_added_dates.added_date <= excluded.added_date
+           THEN literature_supplement_added_dates.added_date
+         ELSE excluded.added_date
+       END,
+       updated_at = excluded.updated_at`
+  ).bind(row.identity, row.addedDate, now)] : []);
+  for (let offset = 0; offset < addedDateStatements.length; offset += 80) {
+    await env.DB.batch(addedDateStatements.slice(offset, offset + 80));
   }
 
   // Hard invariant: every newly imported DOI enters the media-repair system in the
