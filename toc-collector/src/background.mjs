@@ -1354,6 +1354,19 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     const inspected = await inspectArticle(doi);
     const c = inspected.candidate;
     if (!c) {
+      if (inspected.pdfPath) {
+        if (!inspectOnly) {
+          await setCooldown(doi, 'pdf_downloaded_visual_extraction_pending', 6 * 60 * 60 * 1000);
+          await report(doi, 'extract', 'partial', 'pdf_downloaded_visual_extraction_pending', inspected.pdfUrl || inspected.url);
+        }
+        await log('pdf_visual_extraction_pending', {
+          doi,
+          publisher: classify(doi),
+          path: inspected.pdfPath,
+          bytes: Number(inspected.pdfBytes || 0),
+        });
+        return { doi, status: 'pdf_downloaded', source: inspected.method || '', pdfPath: inspected.pdfPath, pdfBytes: Number(inspected.pdfBytes || 0) };
+      }
       if (!inspectOnly) {
         const reason = inspected.verifiedLocalSession ? 'verified_local_no_visual' : 'semantic_media_not_found';
         const waitMs = inspected.verifiedLocalSession ? 6 * 60 * 60 * 1000 : 72 * 60 * 60 * 1000;
@@ -1590,7 +1603,7 @@ async function runCycle(manual = false) {
     const runnableRestricted = restricted.filter(x => (classify(x.doi)==='acs' ? net.acs : net.wiley));
     const runnable = [...open, ...runnableRestricted];
     const results = await processBatch(runnable);
-    const success = results.filter(x => ['official','figure1'].includes(x?.status)).length;
+    const success = results.filter(x => ['official','figure1','pdf_downloaded'].includes(x?.status)).length;
     const failed = results.filter(x => x?.status === 'failed').length;
     state.lastSummary = { at: Date.now(), queue: queue.length, processed: results.length, success, failed, net };
     await saveState();
