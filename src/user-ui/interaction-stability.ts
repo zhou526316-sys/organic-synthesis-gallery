@@ -27,21 +27,31 @@ function releaseOrphanedScrollLock(): void {
   document.documentElement.classList.toggle('gallery-user-drawer-open', drawerOpen);
   if (drawerOpen) return;
   for (const element of [document.documentElement, document.body]) {
+    element.classList.remove('gallery-user-drawer-open', 'scroll-lock', 'scroll-locked', 'no-scroll');
     if (element.style.overflow === 'hidden') element.style.removeProperty('overflow');
+    if (element.style.overflowY === 'hidden') element.style.removeProperty('overflow-y');
     if (element.style.overscrollBehavior === 'none') element.style.removeProperty('overscroll-behavior');
-    element.classList.remove('scroll-lock', 'scroll-locked', 'no-scroll');
+    if (element.style.touchAction === 'none') element.style.removeProperty('touch-action');
   }
 }
 
 ensureGlobalStyle();
 releaseOrphanedScrollLock();
 
-const observer = new MutationObserver(() => releaseOrphanedScrollLock());
-observer.observe(document.documentElement, {
+let cleanupQueued = false;
+const observer = new MutationObserver(() => {
+  if (cleanupQueued) return;
+  cleanupQueued = true;
+  queueMicrotask(() => {
+    cleanupQueued = false;
+    releaseOrphanedScrollLock();
+  });
+});
+observer.observe(document.body, {
   subtree: true,
   childList: true,
   attributes: true,
-  attributeFilter: ['data-drawer-open', 'class', 'style'],
+  attributeFilter: ['data-drawer-open'],
 });
 
 window.addEventListener('pageshow', releaseOrphanedScrollLock);
