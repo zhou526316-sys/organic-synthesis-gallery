@@ -97,6 +97,16 @@ CREATE TABLE IF NOT EXISTS literature_supplement_authors (
 CREATE INDEX IF NOT EXISTS idx_literature_supplement_authors_identity
   ON literature_supplement_authors(identity, sort_order);
 
+-- Explicit Beijing-date of first formal Gallery inclusion. This is separate
+-- from publication date and is never synthesized for historical rows.
+CREATE TABLE IF NOT EXISTS literature_supplement_added_dates (
+  identity TEXT PRIMARY KEY,
+  added_date TEXT NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_literature_supplement_added_date
+  ON literature_supplement_added_dates(added_date DESC);
+
 CREATE TABLE IF NOT EXISTS literature_supplement_meta (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   generated_at INTEGER NOT NULL,
