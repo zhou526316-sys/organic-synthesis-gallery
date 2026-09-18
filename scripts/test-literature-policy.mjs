@@ -22,13 +22,13 @@ const SOURCES = [
 ];
 
 const findings = [];
-let formalAddedDateCount = 0;
+const formalAddedToday = new Set();
 for (const file of SOURCES) {
   try {
     const payload = JSON.parse(await readFile(path.join(PUBLIC_DIR, file), 'utf8'));
     for (const paper of payload?.papers || []) {
       if (isExcludedDoi(paper?.doi)) findings.push({ file, doi: paper.doi });
-      if (paper?.addedDate === '2026-09-18') formalAddedDateCount += 1;
+      if (paper?.addedDate === '2026-09-18') formalAddedToday.add(String(paper.doi || paper.title || '').toLowerCase());
     }
   } catch (error) {
     if (error?.code !== 'ENOENT') throw error;
@@ -39,12 +39,12 @@ const baseEncoded = (await readFile(path.join(PUBLIC_DIR, 'papers.gz.b64'), 'utf
 const base = JSON.parse(gunzipSync(Buffer.from(baseEncoded, 'base64')).toString('utf8'));
 for (const paper of base) {
   if (isExcludedDoi(paper?.doi)) findings.push({ file: 'papers.gz.b64', doi: paper.doi });
-  if (paper?.addedDate === '2026-09-18') formalAddedDateCount += 1;
+  if (paper?.addedDate === '2026-09-18') formalAddedToday.add(String(paper.doi || paper.title || '').toLowerCase());
 }
 
 assert.deepEqual(findings, [], `Excluded DOI present in formal source: ${JSON.stringify(findings)}`);
 assert.equal(EXCLUDED_DOIS.size >= 2, true);
-assert.equal(formalAddedDateCount, 19, 'Exactly the reviewed 19 papers may carry addedDate=2026-09-18 across formal sources');
+assert.equal(formalAddedToday.size, 19, 'Exactly the reviewed 19 unique papers may carry addedDate=2026-09-18 across formal sources');
 
 const beforeMidnight = new Date('2026-09-18T15:59:59.500Z'); // 23:59:59.5 Asia/Shanghai
 const afterMidnight = new Date('2026-09-18T16:00:00.500Z'); // 00:00:00.5 Asia/Shanghai
@@ -71,5 +71,5 @@ console.log(JSON.stringify({
   excludedFindings: findings.length,
   midnight: 'passed',
   reviewedSet: automation.papers.length,
-  formalAddedDateCount,
+  formalAddedDateCount: formalAddedToday.size,
 }));
