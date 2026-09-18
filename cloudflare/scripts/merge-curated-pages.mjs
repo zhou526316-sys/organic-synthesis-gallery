@@ -54,7 +54,12 @@ const supplementPath = path.join(PUBLIC_DIR, 'literature-supplement.json');
 const finalAuditPath = path.join(PUBLIC_DIR, 'final-audit-supplement.json');
 const translationsPath = path.join(PUBLIC_DIR, 'title-translations-zh.json');
 const finalAudit = JSON.parse(await readFile(finalAuditPath, 'utf8'));
-const translationPayload = JSON.parse(await readFile(translationsPath, 'utf8'));
+let translationPayload = { translations: [] };
+try {
+  translationPayload = JSON.parse(await readFile(translationsPath, 'utf8'));
+} catch (error) {
+  if (error?.code !== 'ENOENT') throw error;
+}
 
 const papers = auditedPapers;
 const mandatoryStaticPapers = mergePapers(finalAudit?.papers || [], auditedPapers);
