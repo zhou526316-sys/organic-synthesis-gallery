@@ -2,22 +2,26 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "fetching",
+  "phase": "toc_processing",
   "activeRun": {
-    "id": "chat-20260917-1942",
-    "startedAt": "2026-09-17T19:42:00+08:00",
-    "targetThrough": "2026-09-17",
-    "auditWindow": {
-      "start": "2026-09-15",
-      "end": "2026-09-17"
-    },
-    "baseMainSha": "0ef5b5c5108ff699b2965b0e41b4f02cd2ada01e",
+    "id": "automation-20260918-0800",
+    "runType": "scheduled_fetch",
+    "startedAt": "2026-09-18T08:00:24+08:00",
+    "targetThrough": "2026-09-18",
+    "auditWindow": {"start":"2026-09-16","end":"2026-09-18"},
+    "baseMainSha": "48485d8cc257473ffd2da121e5054fe7c97d2d20",
+    "auditWorkflowRunId": 35289380914,
+    "mediaRepairRunId": 35289666157,
+    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
     "capabilitySnapshot": {
       "literatureAudit": "517a33dc05d6d662a678f5d85acaa21ba3947e85",
-      "literatureWorkflow": "f304c4a6667b3042e1b7eeb764b8e7cd62e08d77",
+      "literatureWorkflow": "9c51d57345a5c26002ed003a8ed3d063f7a11b09",
       "tocCollector": "78a60e833c102497d03770c58cd6fae4adb5675d",
       "publisherFallback": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
-    }
+    },
+    "auditSummary": {"sourceRecords":261,"missingFromGallery":261,"potentialGaps":87,"criticalSourceFailures":0,"machineUnresolved":261},
+    "auditedAdditions": 19,
+    "dataCommitSha": "c25af78110a45bed35d135443bb36473f8001dd5"
   },
   "lastCompletedFetch": null,
   "lastWebsiteSync": null,
@@ -31,16 +35,6 @@
     "preferLatestCompatibleStableCapability": true,
     "pinCapabilityDuringRun": true,
     "forceRefetchOnCapabilityFingerprintChange": true,
-    "allowedPhases": [
-      "idle",
-      "fetching",
-      "toc_processing",
-      "ready_to_sync",
-      "syncing",
-      "synced",
-      "sync_failed",
-      "needs_approval",
-      "blocked_by_concurrent_change"
-    ]
+    "allowedPhases": ["idle","fetching","toc_processing","ready_to_sync","syncing","synced","sync_failed","needs_approval","blocked_by_concurrent_change"]
   }
 }
