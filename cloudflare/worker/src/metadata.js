@@ -1,5 +1,6 @@
 import { normalizeDoi } from './media.js';
 import { earliestAddedDate, isExcludedDoi, validAddedDate } from '../../../shared/literature-policy.js';
+import { seedMediaJobs } from './media-jobs.js';
 
 async function sha256Hex(value) {
   const bytes = new TextEncoder().encode(value);
@@ -235,6 +236,7 @@ export async function importLiteratureSupplement(env, payload) {
   // Hard invariant: every newly imported DOI enters the media-repair system in the
   // same import operation. Existing completed/priority state is preserved.
   const repairDois = [...new Set(rows.map(row => row.doi).filter(Boolean))];
+  const mediaJobSeed = await seedMediaJobs(env, repairDois);
   const repairStatements = repairDois.map(doi => env.DB.prepare(
     `INSERT INTO media_repair_state
       (doi, repair_version, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at)
@@ -265,6 +267,7 @@ export async function importLiteratureSupplement(env, payload) {
     body: {
       imported: rows.length,
       mediaRepairSeeded: repairDois.length,
+      mediaJobsSeeded: mediaJobSeed.seeded,
       generatedAt,
       verifiedThrough,
     },
