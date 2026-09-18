@@ -36,3 +36,15 @@ export function beijingDate(date = new Date()) {
   const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
   return `${values.year}-${values.month}-${values.day}`;
 }
+
+export function isNewToday(addedDate, date = new Date()) {
+  const normalized = validAddedDate(addedDate);
+  return Boolean(normalized && normalized === beijingDate(date));
+}
+
+export function msUntilNextBeijingDay(date = new Date()) {
+  const now = date.getTime();
+  const shifted = now + 8 * 60 * 60 * 1000;
+  const next = (Math.floor(shifted / 86400000) + 1) * 86400000;
+  return Math.max(250, next - shifted + 50);
+}
