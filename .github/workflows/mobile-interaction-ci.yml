@@ -27,10 +27,10 @@ jobs:
       - name: Install site dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Install Playwright Chromium
+      - name: Install Playwright WebKit for iPhone emulation
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.0
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps webkit
 
       - name: Build Gallery
         run: npm run build
