@@ -167,9 +167,9 @@ class Store extends EventTarget {
   readonly profileId = browserProfile();
   readerCounts: Record<string, number> = {};
 
-  save(broadcast = true): void {
+  save(broadcast = true, detail?: { paperId?: string; scope?: 'paper' | 'global' }): void {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); } catch { /* optional */ }
-    if (broadcast) this.dispatchEvent(new Event('change'));
+    if (broadcast) this.dispatchEvent(new CustomEvent('change', { detail: detail || { scope: 'global' } }));
   }
   paper(id: string): PaperUserState { return this.state.papers[id] || { favorite: false, collections: [], note: '', quickTerms: [], tags: [] }; }
   updatePaper(id: string, updater: (value: PaperUserState) => void, broadcast = true, markUpdated = true): void {
@@ -209,7 +209,7 @@ class Store extends EventTarget {
         const data = await workerPost<{ counts?: Record<string, number> }>('/api/user-ui/reader-counts', { dois: unique.slice(i, i + 150) });
         Object.assign(this.readerCounts, data.counts || {});
       }
-      this.dispatchEvent(new Event('counts'));
+      this.dispatchEvent(new CustomEvent('counts', { detail: { dois: unique } }));
     } catch { /* aggregate counts are optional */ }
   }
   private async markRead(doi: string, statusId: string): Promise<void> {
