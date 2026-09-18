@@ -47,6 +47,7 @@ async function loadGalleryDois() {
     'manual-supplement.json',
     'final-audit-supplement.json',
     'curated-supplement.json',
+    'automation-supplement.json',
     'literature-supplement.json',
   ]) {
     try {
@@ -175,6 +176,8 @@ async function main() {
     }
   });
 
+  const failedUrls = new Set(failures.map(item => item.url));
+
   let addedRecords = 0;
   let updatedRecords = 0;
   let workerToc = 0;
@@ -183,11 +186,24 @@ async function main() {
     const doi = normalizeDoi(incomingRaw?.doi);
     if (!doi) continue;
     const incoming = structuredClone(incomingRaw);
-    if (incoming?.toc?.imageUrl && replacements.has(incoming.toc.imageUrl)) incoming.toc.imageUrl = replacements.get(incoming.toc.imageUrl);
-    incoming.figures ||= { available: false, doi, figures: [] };
-    for (const figure of incoming.figures.figures || []) {
-      if (figure?.imageUrl && replacements.has(figure.imageUrl)) figure.imageUrl = replacements.get(figure.imageUrl);
+    if (incoming?.toc?.imageUrl) {
+      const originalTocUrl = incoming.toc.imageUrl;
+      if (replacements.has(originalTocUrl)) {
+        incoming.toc.imageUrl = replacements.get(originalTocUrl);
+      } else if (failedUrls.has(originalTocUrl)) {
+        incoming.toc.available = false;
+        delete incoming.toc.imageUrl;
+      }
     }
+    incoming.figures ||= { available: false, doi, figures: [] };
+    incoming.figures.figures = (incoming.figures.figures || []).flatMap(figure => {
+      if (!figure?.imageUrl) return [];
+      const originalFigureUrl = figure.imageUrl;
+      if (replacements.has(originalFigureUrl)) return [{ ...figure, imageUrl: replacements.get(originalFigureUrl) }];
+      if (failedUrls.has(originalFigureUrl)) return [];
+      return [figure];
+    });
+    incoming.figures.available = incoming.figures.figures.length > 0;
     if (incoming?.toc?.available && incoming?.toc?.imageUrl) workerToc += 1;
     workerFigures += incoming?.figures?.figures?.length || 0;
 
@@ -235,8 +251,8 @@ async function main() {
   };
   console.log(`WORKER_MEDIA_MERGE_SUMMARY ${JSON.stringify(summary)}`);
   if (failures.length) {
+    console.warn('WORKER_MEDIA_SOFT_FAILURES');
     console.warn(JSON.stringify(failures.slice(0, 12), null, 2));
-    process.exitCode = 2;
   }
 }
 
