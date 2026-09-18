@@ -11,6 +11,7 @@ on:
       - 'cloudflare/scripts/import-recent-media-direct.mjs'
       - 'public/papers.gz.b64'
       - 'public/curated-supplement.json'
+      - 'public/automation-supplement.json'
       - 'public/total-synthesis.json'
       - 'public/manual-supplement.json'
       - 'public/final-audit-supplement.json'
