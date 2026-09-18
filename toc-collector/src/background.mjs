@@ -1240,7 +1240,11 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
         const fig1 = /(^|\\b)(fig(?:ure)?\\.?\\s*1)(\\b|[:.])/i.test(text);
         if (official || fig1) rows.push({ src, text, width: img.naturalWidth || 0, height: img.naturalHeight || 0, kind: official ? 'official' : 'figure1' });
       }
-      return { title: document.title, href: location.href, rows };
+      const pdfLinks = [...document.querySelectorAll('a[href]')]
+        .map(a => ({ href: abs(a.getAttribute('href') || ''), text: String(a.textContent || '').trim() }))
+        .filter(item => item.href && (/\\bpdf\\b|download|epdf/i.test(item.text + ' ' + item.href)))
+        .slice(0, 30);
+      return { title: document.title, href: location.href, rows, pdfLinks };
     })()`);
     const rows = Array.isArray(result?.rows) ? result.rows : [];
     rows.sort((a,b) => {
@@ -1248,7 +1252,40 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       const sb = semanticScore(b.text) + (b.kind === 'official' ? 20 : 0) + Math.min(20, ((b.width||0)*(b.height||0))/100000);
       return sb - sa;
     });
-    if (!rows[0]) throw new Error('browser_no_candidate');
+    if (!rows[0]) {
+      const publisher = classify(doi);
+      const pageUrl = result?.href || url;
+      const pdfLinks = Array.isArray(result?.pdfLinks) ? result.pdfLinks : [];
+      const currentIsPdfViewer =
+        (publisher === 'wiley' && /\/doi\/(?:e?pdf)\//i.test(pageUrl)) ||
+        (publisher === 'acs' && /\/doi\/(?:e?pdf|pdf)\//i.test(pageUrl)) ||
+        /\.pdf(?:[?#]|$)/i.test(pageUrl);
+      const pdfUrl = currentIsPdfViewer ? pageUrl : String(pdfLinks[0]?.href || '');
+      if (localPublisherReady(publisher)) {
+        let pdf = null;
+        if (pdfUrl) {
+          pdf = await downloadPdfFromPublisherBrowser({ doi, publisher, webContents: win.webContents, pdfUrl });
+        }
+        await log('verified_local_browser_no_visual', {
+          doi,
+          publisher,
+          url: pageUrl,
+          pdfUrl: pdfUrl || '',
+          pdfDownloaded: Boolean(pdf),
+          pdfBytes: Number(pdf?.bytes || 0),
+        });
+        return {
+          url: pageUrl,
+          candidate: null,
+          method: pdf ? 'browser_pdf_downloaded' : 'verified_local_browser',
+          pdfUrl: pdfUrl || '',
+          pdfPath: pdf?.path || '',
+          pdfBytes: Number(pdf?.bytes || 0),
+          verifiedLocalSession: true,
+        };
+      }
+      throw new Error('browser_no_candidate');
+    }
     await log('browser_success', { doi, kind: rows[0].kind, url: result?.href || url });
     return { url: result?.href || url, candidate: rows[0], method: 'browser' };
   } catch (error) {
