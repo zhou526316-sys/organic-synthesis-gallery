@@ -241,3 +241,16 @@ CREATE INDEX IF NOT EXISTS idx_support_orders_status_created
   ON support_orders(status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_support_orders_user_created
   ON support_orders(user_id, created_at DESC);
+
+-- Native site accounts using email + password. Passwords are PBKDF2-SHA256 hashes with per-user salts.
+CREATE TABLE IF NOT EXISTS password_credentials (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  salt TEXT NOT NULL,
+  iterations INTEGER NOT NULL CHECK (iterations >= 100000),
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_password_credentials_email
+  ON password_credentials(email);
