@@ -9,7 +9,8 @@
     },
     "literatureWorkflow": {
       "path": ".github/workflows/literature-audit.yml",
-      "blobSha": "f304c4a6667b3042e1b7eeb764b8e7cd62e08d77"
+      "blobSha": "9c51d57345a5c26002ed003a8ed3d063f7a11b09",
+      "validation": "GitHub Actions run 35289380914: DOI-union build, artifact upload, and audit/latest.json persistence succeeded"
     },
     "tocCollector": {
       "primaryPath": "toc-collector/src/background.mjs",
@@ -18,6 +19,13 @@
       "publisherFallbackBlobSha": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
     }
   },
+  "pendingValidation": [
+    {
+      "path": ".github/workflows/recent-media-repair.yml",
+      "blobSha": "acdf2d25771f1fc6edc657148d1821e925f53e00",
+      "purpose": "Trigger publisher/direct TOC repair automatically for public/automation-supplement.json updates"
+    }
+  ],
   "discoveryHints": {
     "literature": [
       "cloudflare/scripts/*literature*.mjs",
