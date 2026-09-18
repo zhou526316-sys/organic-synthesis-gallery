@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-09-18T03:21:12.761Z",
+  "generatedAt": "2026-09-18T03:27:55.138Z",
   "total": 462,
-  "withAuthors": 459,
-  "missingAuthors": 3,
-  "crossrefLookups": 459,
+  "withAuthors": 462,
+  "missingAuthors": 0,
+  "crossrefLookups": 0,
   "sourceFiles": [
     "public/papers.gz.b64",
     "public/total-synthesis.json",
@@ -12,36 +12,5 @@
     "public/curated-supplement.json",
     "public/automation-supplement.json"
   ],
-  "papers": [
-    {
-      "doi": "10.1021/jacs.6c08483",
-      "title": "Unlocking Azulene Functionalization via Strain-Induced Azulyne Intermediates",
-      "journal": "JACS",
-      "date": "2026-07-03",
-      "authors": [],
-      "sources": [
-        "public/papers.gz.b64"
-      ]
-    },
-    {
-      "doi": "10.1002/anie.6219487",
-      "title": "Intramolecular Nickel-Catalyzed Reductive Coupling: Enantioselective Synthesis of Tetrahydroisoquinolines and Related Heterocycles",
-      "journal": "Angew",
-      "date": "2026-09-02",
-      "authors": [],
-      "sources": [
-        "public/manual-supplement.json"
-      ]
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02588",
-      "title": "E-Selective Iodobis(trifluoromethyl)carbinolation of Arylalkynes Enabled by Red or Green Light Irradiation",
-      "journal": "Organic Letters",
-      "date": "2026-07-08",
-      "authors": [],
-      "sources": [
-        "public/final-audit-supplement.json"
-      ]
-    }
-  ]
+  "papers": []
 }
