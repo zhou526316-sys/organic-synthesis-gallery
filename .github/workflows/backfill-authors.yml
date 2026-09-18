@@ -1,0 +1,52 @@
+name: Backfill literature authors
+
+on:
+  push:
+    branches:
+      - feat/site-authors-sep17
+    paths:
+      - 'scripts/backfill-authors.mjs'
+      - '.github/workflows/backfill-authors.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Backfill all authors from Crossref
+        run: node scripts/backfill-authors.mjs
+        env:
+          AUTHOR_BACKFILL_CONCURRENCY: '5'
+
+      - name: Commit generated author metadata
+        run: |
+          if git diff --quiet; then
+            echo "No author changes"
+            exit 0
+          fi
+          git config user.name "organic-gallery-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A public audit
+          git commit -m "data: backfill authors across literature corpus"
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Verify zero missing authors
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const audit = JSON.parse(fs.readFileSync('audit/author-coverage.json', 'utf8'));
+          if (audit.missingAuthors !== 0) throw new Error(`missing authors: ${audit.missingAuthors}`);
+          console.log(JSON.stringify(audit));
+          NODE
