@@ -15,6 +15,7 @@ const EMAIL_TTL = 1000 * 60 * 15;
 const PASSWORD_PBKDF2_ITERATIONS = 210_000;
 const PASSWORD_MIN_LENGTH = 8;
 const PASSWORD_MAX_LENGTH = 128;
+const REGISTER_TTL = 1000 * 60 * 20;
 
 function json(value, init = {}) {
   return new Response(JSON.stringify(value), {
@@ -438,8 +439,9 @@ async function createUserSession(env, userId) {
   return { token, user: await userSummary(env, userId), expiresAt: now + SESSION_TTL };
 }
 
-export async function registerPasswordUser(env, payload) {
+export async function registerPasswordUser(request, env, payload) {
   if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  if (!providerConfigured(env, 'email')) return { status: 503, body: { error: 'email_provider_not_configured' } };
   const email = normalizeEmail(payload?.email);
   const password = normalizePassword(payload?.password);
   const displayName = normalizeDisplayName(payload?.displayName, email);
@@ -448,31 +450,89 @@ export async function registerPasswordUser(env, payload) {
   if (!displayName) return { status: 400, body: { error: 'invalid_display_name' } };
 
   const existing = await env.DB.prepare(
-    'SELECT id FROM users WHERE lower(email) = ? LIMIT 1'
+    'SELECT user_id FROM password_credentials WHERE email = ? LIMIT 1'
   ).bind(email).first();
-  if (existing?.id) return { status: 409, body: { error: 'email_already_registered' } };
+  if (existing?.user_id) return { status: 409, body: { error: 'email_already_registered' } };
 
-  const userId = `usr_${crypto.randomUUID().replace(/-/g, '')}`;
+  const returnTo = safeReturnTo(payload?.returnTo);
   const credential = await createPasswordCredential(password);
+  const token = randomToken(32);
+  const tokenHash = await sha256Hex(token);
   const now = Date.now();
-  try {
+  await env.DB.prepare('DELETE FROM password_registration_tokens WHERE email = ? OR expires_at < ?').bind(email, now).run();
+  await env.DB.prepare(
+    `INSERT INTO password_registration_tokens
+      (token_hash, email, display_name, password_hash, salt, iterations, return_to, created_at, expires_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(tokenHash, email, displayName, credential.hash, credential.salt, credential.iterations, returnTo, now, now + REGISTER_TTL).run();
+
+  const link = `${new URL(request.url).origin}/api/user-ui/auth/register/consume?token=${encodeURIComponent(token)}`;
+  const send = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      from: env.EMAIL_FROM,
+      to: [email],
+      subject: 'Organic Synthesis Literature Gallery 注册确认',
+      html: `<p>请点击下面的链接完成本站账号注册。链接 20 分钟内有效。</p><p><a href="${link}">确认注册并登录</a></p>`,
+    }),
+  });
+  if (!send.ok) {
+    await env.DB.prepare('DELETE FROM password_registration_tokens WHERE token_hash = ?').bind(tokenHash).run();
+    return { status: 502, body: { error: 'email_delivery_failed' } };
+  }
+  return { status: 200, body: { accepted: true, verificationRequired: true } };
+}
+
+export async function consumePasswordRegistration(request, env) {
+  if (!env?.DB) return json({ error: 'database_not_configured' }, { status: 503 });
+  const token = new URL(request.url).searchParams.get('token') || '';
+  if (!token) return redirectWithHash(DEFAULT_RETURN, { auth_error: 'missing_registration_token' });
+  const tokenHash = await sha256Hex(token);
+  const row = await env.DB.prepare(
+    `SELECT email, display_name, password_hash, salt, iterations, return_to, expires_at
+     FROM password_registration_tokens WHERE token_hash = ?`
+  ).bind(tokenHash).first();
+  await env.DB.prepare('DELETE FROM password_registration_tokens WHERE token_hash = ?').bind(tokenHash).run();
+  if (!row || Number(row.expires_at || 0) < Date.now()) {
+    return redirectWithHash(DEFAULT_RETURN, { auth_error: 'registration_link_expired' });
+  }
+
+  const already = await env.DB.prepare(
+    'SELECT user_id FROM password_credentials WHERE email = ? LIMIT 1'
+  ).bind(row.email).first();
+  if (already?.user_id) return redirectWithHash(row.return_to, { auth_error: 'email_already_registered' });
+
+  const now = Date.now();
+  let user = await env.DB.prepare('SELECT id, display_name FROM users WHERE lower(email) = ? LIMIT 1').bind(row.email).first();
+  let userId = user?.id || '';
+  if (!userId) {
+    userId = `usr_${crypto.randomUUID().replace(/-/g, '')}`;
     await env.DB.prepare(
       'INSERT INTO users (id, display_name, email, avatar_url, created_at, updated_at) VALUES (?, ?, ?, NULL, ?, ?)'
-    ).bind(userId, displayName, email, now, now).run();
+    ).bind(userId, row.display_name, row.email, now, now).run();
+  } else {
     await env.DB.prepare(
-      'INSERT INTO auth_identities (provider, provider_user_id, user_id, email, display_name, avatar_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NULL, ?, ?)'
-    ).bind('local', email, userId, email, displayName, now, now).run();
-    await env.DB.prepare(
-      'INSERT INTO password_credentials (user_id, email, password_hash, salt, iterations, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
-    ).bind(userId, email, credential.hash, credential.salt, credential.iterations, now, now).run();
-    return { status: 201, body: await createUserSession(env, userId) };
-  } catch (error) {
-    await env.DB.prepare('DELETE FROM users WHERE id = ?').bind(userId).run().catch(() => {});
-    const message = error instanceof Error ? error.message : String(error);
-    if (/unique|constraint/i.test(message)) return { status: 409, body: { error: 'email_already_registered' } };
-    console.error('PASSWORD_REGISTER_FAILED', message);
-    return { status: 500, body: { error: 'registration_failed' } };
+      'UPDATE users SET display_name = COALESCE(display_name, ?), email = COALESCE(email, ?), updated_at = ? WHERE id = ?'
+    ).bind(row.display_name, row.email, now, userId).run();
   }
+
+  await env.DB.prepare(
+    `INSERT INTO auth_identities (provider, provider_user_id, user_id, email, display_name, avatar_url, created_at, updated_at)
+     VALUES ('local', ?, ?, ?, ?, NULL, ?, ?)
+     ON CONFLICT(provider, provider_user_id) DO UPDATE SET
+       user_id = excluded.user_id,
+       email = excluded.email,
+       display_name = excluded.display_name,
+       updated_at = excluded.updated_at`
+  ).bind(row.email, userId, row.email, row.display_name, now, now).run();
+
+  await env.DB.prepare(
+    'INSERT INTO password_credentials (user_id, email, password_hash, salt, iterations, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+  ).bind(userId, row.email, row.password_hash, row.salt, Number(row.iterations), now, now).run();
+
+  const exchange = await createExchangeCode(env, userId);
+  return redirectWithHash(row.return_to, { auth_code: exchange, auth_provider: 'local' });
 }
 
 export async function passwordLogin(env, payload) {
