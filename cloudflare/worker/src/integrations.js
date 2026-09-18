@@ -479,6 +479,46 @@ export async function registerPasswordUser(request, env, payload) {
   }
 }
 
+export async function consumePasswordRegistration(request, env) {
+  if (!env?.DB) return json({ error: 'database_not_configured' }, { status: 503 });
+  const token = new URL(request.url).searchParams.get('token') || '';
+  if (!token) return redirectWithHash(DEFAULT_RETURN, { auth_error: 'missing_registration_token' });
+  const tokenHash = await sha256Hex(token);
+  const row = await env.DB.prepare(
+    `SELECT email, display_name, password_hash, salt, iterations, return_to, expires_at
+     FROM password_registration_tokens WHERE token_hash = ?`
+  ).bind(tokenHash).first();
+  await env.DB.prepare('DELETE FROM password_registration_tokens WHERE token_hash = ?').bind(tokenHash).run();
+  if (!row || Number(row.expires_at || 0) < Date.now()) {
+    return redirectWithHash(DEFAULT_RETURN, { auth_error: 'registration_link_expired' });
+  }
+
+  const existing = await env.DB.prepare('SELECT id FROM users WHERE lower(email) = ? LIMIT 1').bind(row.email).first();
+  if (existing?.id) return redirectWithHash(row.return_to, { auth_error: 'email_already_registered' });
+
+  const userId = `usr_${crypto.randomUUID().replace(/-/g, '')}`;
+  const now = Date.now();
+  try {
+    await env.DB.prepare(
+      'INSERT INTO users (id, display_name, email, avatar_url, created_at, updated_at) VALUES (?, ?, ?, NULL, ?, ?)'
+    ).bind(userId, row.display_name, row.email, now, now).run();
+    await env.DB.prepare(
+      `INSERT INTO auth_identities
+        (provider, provider_user_id, user_id, email, display_name, avatar_url, created_at, updated_at)
+       VALUES ('local', ?, ?, ?, ?, NULL, ?, ?)`
+    ).bind(row.email, userId, row.email, row.display_name, now, now).run();
+    await env.DB.prepare(
+      'INSERT INTO password_credentials (user_id, email, password_hash, salt, iterations, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).bind(userId, row.email, row.password_hash, row.salt, Number(row.iterations), now, now).run();
+    const exchange = await createExchangeCode(env, userId);
+    return redirectWithHash(row.return_to, { auth_code: exchange, auth_provider: 'local' });
+  } catch (error) {
+    await env.DB.prepare('DELETE FROM users WHERE id = ?').bind(userId).run().catch(() => {});
+    console.error('LEGACY_REGISTRATION_CONSUME_FAILED', error instanceof Error ? error.message : String(error));
+    return redirectWithHash(row.return_to, { auth_error: 'registration_failed' });
+  }
+}
+
 export async function passwordLogin(env, payload) {
   if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
   const email = normalizeEmail(payload?.email);
