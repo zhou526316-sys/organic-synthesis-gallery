@@ -28,6 +28,9 @@ const TITLE_METADATA_OVERRIDES = new Map([
 ]);
 const DOI_AUTHOR_OVERRIDES = new Map([
   ['10.1002/anie.6268409', ['Jinbo Duan', 'Xiaoqian He', 'Xingyue Qi', 'Huachen Hou', 'Xingang Xie', 'Huilin Li', 'Gaoyuan Zhao', 'Xuegong She']],
+  ['10.1021/jacs.6c08483', ['Xiaoling Yuan', 'Liyun Zhang', 'Qingshuang Zhang', 'Hanxue Fu', 'Mei Zuo', 'Junxiang Liu', 'Yuetian Wang', 'Lianggui Li', 'Dachuan Qiu', 'Yang Li']],
+  ['10.1002/anie.6219487', ['Thilo Bender', 'Markus Leutzsch', 'Yannik Sell', 'Alois Fürstner']],
+  ['10.1021/acs.orglett.6c02588', ['Wenting Lai', 'Bojing Deng', 'Fangzhuo Qin', 'Shiqin Qiu', 'Peng Xu']],
 ]);
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
