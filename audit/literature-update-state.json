@@ -6,7 +6,7 @@
   "activeRun": null,
   "lastCompletedFetch": {
     "id": "automation-20260918-1800",
-    "finishedAt": "2026-09-18T18:16:00+08:00",
+    "finishedAt": "2026-09-18T18:18:00+08:00",
     "windowStart": "2026-09-16",
     "windowEnd": "2026-09-18",
     "sourceSummary": {
@@ -15,6 +15,8 @@
       "machineMissingBeforeAssistantReview": 265,
       "machinePotentialGaps": 78,
       "journalSourceRecords": {"Nature":53,"Science":38,"Nature Catalysis":0,"Nature Synthesis":3,"Nature Chemistry":4,"Nature Communications":94,"JACS":43,"Angew":25,"ACS Catalysis":11,"Organic Letters":13},
+      "reviewedDifferenceRecords": 264,
+      "fullWindowAssistantUnresolved": 1,
       "closureDate": "2026-09-17",
       "closureSourceRecords": 126,
       "closureReviewedMissing": 116,
@@ -22,7 +24,7 @@
       "currentDayUnresolved": 1
     },
     "addedThisRun": ["10.1038/s41467-026-77616-8"],
-    "currentDayPending": [{"doi":"10.1021/acs.orglett.6c03339","reason":"Organic-synthesis methodology candidate; ACS page/TOC is Cloudflare-blocked and authoritative author metadata was not available during this run. Keep pending rather than publish incomplete metadata."}],
+    "currentDayPending": [{"doi":"10.1021/acs.orglett.6c03339","title":"Rh(III)-Catalyzed C–H Activation/Cyclization of Heterocyclic Ketene Aminals with 2,3-Diaryl-2H-azirines: Access to Pyrrolo[1,2-a]imidazoles","reason":"Organic-synthesis methodology candidate; ACS page and TOC are Cloudflare-blocked and authoritative author metadata was not available during this run. Kept pending rather than publishing incomplete metadata."}],
     "dataCommitSha": "4d49c6ecd89c5777c870470ac06482258755951b",
     "mergeCommitSha": "8730bb7a48812fc963127eaa11cf0489dd577099",
     "tocStatus": {
@@ -41,7 +43,7 @@
       "tocCollector": "78a60e833c102497d03770c58cd6fae4adb5675d",
       "publisherFallback": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
     },
-    "auditArtifact": {"workflowRunId":35289380914,"artifactId":10542131742,"note":"Fresh 72-hour audit completed with all critical sources healthy. Workflow's audit/latest.json commit step conflicted with concurrent main updates, so the fresh report is preserved as the workflow artifact; assistant closure is persisted separately."}
+    "auditArtifact": {"workflowRunId":35289380914,"artifactId":10542131742,"note":"Fresh 72-hour audit completed with all critical sources healthy. Workflow's audit/latest.json commit step conflicted with concurrent main updates, so the fresh report is preserved as the workflow artifact; explicit Sep 16 and Sep 17 assistant decisions are persisted separately."}
   },
   "lastWebsiteSync": {
     "finishedAt": "2026-09-18T18:16:00+08:00",
