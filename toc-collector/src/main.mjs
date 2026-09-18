@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 // No Electron import or app.getPath is needed to record entry/module failures.
 const bootstrapPath = path.join(os.tmpdir(), 'toc-collector-bootstrap.log');
@@ -66,7 +67,14 @@ app.whenReady().then(async () => {
   window = new BrowserWindow({
     width: 800, height: 740, minWidth: 560, minHeight: 480,
     show: true, autoHideMenuBar: true, title: `TOC Collector ${app.getVersion()}`,
-    webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false },
+    webPreferences: {
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+      // The preload exposes only three credential actions. It never exposes
+      // Node.js, the filesystem, or Electron objects to the dashboard.
+      preload: path.join(path.dirname(fileURLToPath(import.meta.url)), 'preload.mjs'),
+    },
   });
   mark('BrowserWindow.after', { id: window.id });
   mark('WINDOW_CREATED', { id: window.id });

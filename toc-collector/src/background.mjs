@@ -7,7 +7,7 @@ import { createHash } from 'node:crypto';
 // This module is imported only after the startup window has rendered.
 // All Electron objects, filesystem operations and background work are deferred.
 export async function initializeBackground({ window, stage = 'collector', mark = () => {}, reportError = () => {} }) {
-const { app, BrowserWindow, Tray, Menu, dialog, Notification, shell, nativeImage, session } = await import('electron');
+const { app, BrowserWindow, Tray, Menu, dialog, Notification, shell, nativeImage, session, ipcMain } = await import('electron');
 const stageNames = ['logging', 'config', 'tray', 'network', 'api', 'collector'];
 const stageResults = {};
 const backgroundErrors = [];
@@ -39,7 +39,7 @@ let renderPromise = null;
 };
 
 let config = { ...DEFAULT_CONFIG };
-let state = { cooldowns: {}, nextReminderAt: 0, muteDate: '', pauseUntil: 0, lastSummary: null, browserbase: { contexts: {}, lastRequestByPublisher: {}, status: {}, lastSuccessDoi: {} } };
+let state = { cooldowns: {}, nextReminderAt: 0, muteDate: '', pauseUntil: 0, lastSummary: null, browserbase: { contexts: {}, lastRequestByPublisher: {}, status: {}, lastSuccessDoi: {}, acceptance: {}, batch: null } };
 let tray = null;
 let dashboard = window;
 let quitting = false;
@@ -172,6 +172,7 @@ async function ensureConfig() {
   state.browserbase.lastRequestByPublisher = state.browserbase.lastRequestByPublisher && typeof state.browserbase.lastRequestByPublisher === 'object' ? state.browserbase.lastRequestByPublisher : {};
   state.browserbase.status = state.browserbase.status && typeof state.browserbase.status === 'object' ? state.browserbase.status : {};
   state.browserbase.lastSuccessDoi = state.browserbase.lastSuccessDoi && typeof state.browserbase.lastSuccessDoi === 'object' ? state.browserbase.lastSuccessDoi : {};
+  state.browserbase.acceptance = state.browserbase.acceptance && typeof state.browserbase.acceptance === 'object' ? state.browserbase.acceptance : {};
   // Retry only generic failures from older collectors; keep all specific cooldowns.
   if (state.collectorRecoveryVersion !== '0.1.6') {
     state.cooldowns = Object.fromEntries(Object.entries(state.cooldowns).filter(([, value]) => value?.reason !== 'collector_failed'));
@@ -228,6 +229,34 @@ async function saveConfig(source = 'collector') {
   await fsp.writeFile(configPath(), JSON.stringify(config, null, 2));
   await reloadConfig({ source });
   refreshDashboard();
+}
+
+function credentialText(value, limit) {
+  if (typeof value !== 'string') throw new Error('credential_value_invalid');
+  const text = value.trim();
+  if (text.length > limit) throw new Error('credential_value_too_long');
+  return text;
+}
+
+async function saveBrowserbaseCredentials({ apiKey, projectId } = {}) {
+  // This is the only persistence path used by the GUI. Never log either value.
+  config.browserbaseApiKey = credentialText(apiKey, 2048);
+  config.browserbaseProjectId = credentialText(projectId, 512);
+  await saveConfig('browserbase-gui-save');
+  stageStatus = browserbaseDiagnostic().configured ? 'Browserbase 凭据已保存并生效，无需重启。' : 'Browserbase API Key 为空，设置未配置。';
+  rebuildTrayMenu();
+  await refreshDashboard();
+  return { configured: browserbaseDiagnostic().configured, projectConfigured: browserbaseDiagnostic().projectConfigured };
+}
+
+async function clearBrowserbaseCredentials() {
+  config.browserbaseApiKey = '';
+  config.browserbaseProjectId = '';
+  await saveConfig('browserbase-gui-clear');
+  stageStatus = 'Browserbase 凭据已从当前设置清除。';
+  rebuildTrayMenu();
+  await refreshDashboard();
+  return { configured: false, projectConfigured: false };
 }
 
 function startConfigWatch() {
@@ -546,7 +575,17 @@ async function browserbaseContext(publisher) {
   return String(created.id);
 }
 
-async function inspectArticleBrowserbase(doi, url, localReason = '') {
+async function verifyBrowserbaseImage(page, candidate, { publisher, doi, sessionId }) {
+  const response = await page.request.get(candidate.src, { timeout: 20000 });
+  const contentType = String(response.headers()['content-type'] || '').toLowerCase();
+  const bytes = (await response.body()).length;
+  if (!response.ok()) throw new Error(`browserbase_image_http_${response.status()}`);
+  if (!contentType.startsWith('image/') || bytes < 128) throw new Error('browserbase_image_unreadable');
+  await log('browserbase_image_readable', { publisher, doi, kind: candidate.kind, bytes, sessionId });
+  return { contentType: contentType.split(';')[0], bytes };
+}
+
+async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyImage = false } = {}) {
   const publisher = browserbasePublisher(doi);
   if (!publisher) return null;
   const credentials = browserbaseCredentials();
@@ -567,8 +606,10 @@ async function inspectArticleBrowserbase(doi, url, localReason = '') {
     if (credentials.projectId) payload.projectId = credentials.projectId;
     const sessionInfo = await browserbaseApi('/sessions', { method: 'POST', body: JSON.stringify(payload) });
     if (!sessionInfo?.connectUrl) throw new Error('browserbase_session_missing_connect_url');
+    await log('browserbase_session_created', { publisher, doi, sessionId: String(sessionInfo.id || '') });
     const { chromium } = await import('playwright-core');
     browser = await chromium.connectOverCDP(sessionInfo.connectUrl);
+    await log('browserbase_cdp_connected', { publisher, doi, sessionId: String(sessionInfo.id || '') });
     const context = browser.contexts()[0];
     const page = context.pages()[0] || await context.newPage();
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: Math.max(15000, Number(config.publisherTimeoutSeconds || 35) * 1000) });
@@ -582,13 +623,15 @@ async function inspectArticleBrowserbase(doi, url, localReason = '') {
       throw new Error('manual_required');
     }
     if (!browserbaseOwnsDoi(doi, pageUrl, html)) throw new Error('browserbase_doi_mismatch');
+    await log('browserbase_doi_verified', { publisher, doi, url: pageUrl, sessionId: String(sessionInfo.id || '') });
     const candidate = htmlCandidate(html, pageUrl);
     if (!candidate) throw new Error('browserbase_no_candidate');
+    const image = verifyImage ? await verifyBrowserbaseImage(page, candidate, { publisher, doi, sessionId: String(sessionInfo.id || '') }) : null;
     state.browserbase.status[publisher] = 'connected';
     state.browserbase.lastSuccessDoi[publisher] = doi;
     await saveState();
     await log('browserbase_success', { publisher, doi, kind: candidate.kind, url: pageUrl, sessionId: String(sessionInfo.id || '') });
-    return { url: pageUrl, candidate, method: 'browserbase' };
+    return { url: pageUrl, candidate, method: 'browserbase', sessionId: String(sessionInfo.id || ''), image };
   } catch (error) {
     const reason = safeError(error, 300);
     if (reason !== 'manual_required') state.browserbase.status[publisher] = `failed: ${reason}`;
@@ -650,7 +693,7 @@ async function inspectArticleHtml(doi, url, browserError = '') {
   }
 }
 
-async function inspectArticle(doi) {
+async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnostic, verifyBrowserbaseImage = false } = {}) {
   const url = articleUrl(doi);
   let win = null;
   let publisherTimer;
@@ -664,8 +707,8 @@ async function inspectArticle(doi) {
         images: true,
       },
     });
-    if (forceBrowserFallback || forceBrowserbaseDiagnostic) {
-      throw new Error(forceBrowserbaseDiagnostic ? 'browserbase_diagnostic_forced' : 'net::ERR_BLOCKED_BY_CLIENT (diagnostic injection)');
+    if (forceBrowserFallback || forceBrowserbase) {
+      throw new Error(forceBrowserbase ? 'browserbase_diagnostic_forced' : 'net::ERR_BLOCKED_BY_CLIENT (diagnostic injection)');
     }
     await Promise.race([
       win.loadURL(url, { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36' }),
@@ -715,7 +758,7 @@ async function inspectArticle(doi) {
     win = null;
     await log('browser_blocked_fallback', { doi, browserError, blockedByClient: /ERR_BLOCKED_BY_CLIENT/i.test(browserError) });
     let htmlResult = null;
-    if (!forceBrowserbaseDiagnostic) {
+    if (!forceBrowserbase) {
       try { htmlResult = await inspectArticleHtml(doi, url, browserError); }
       catch (htmlError) {
         await log('publisher_html_fallback_failed', { doi, reason: safeError(htmlError, 300) });
@@ -724,7 +767,7 @@ async function inspectArticle(doi) {
       await log('browserbase_diagnostic_forced', { doi });
     }
     if (htmlResult?.candidate) return htmlResult;
-    const browserbaseResult = await inspectArticleBrowserbase(doi, url, browserError);
+    const browserbaseResult = await inspectArticleBrowserbase(doi, url, browserError, { verifyImage: verifyBrowserbaseImage });
     if (browserbaseResult?.candidate) return browserbaseResult;
     // PDF is deliberately a later, independent resolver. Reaching this marker
     // means local browser, direct HTML, and Browserbase produced no visual.
@@ -826,6 +869,69 @@ async function processBatch(items) {
   const results = [];
   for (const item of selected) results.push(await processItem(item));
   return results;
+}
+
+async function runBrowserbaseAcceptanceTarget(doi) {
+  const publisher = classify(doi);
+  try {
+    const inspected = await inspectArticle(doi, { forceBrowserbase: true, verifyBrowserbaseImage: true });
+    if (inspected.method !== 'browserbase' || !inspected.candidate || !inspected.image) throw new Error('browserbase_acceptance_no_verified_visual');
+    const result = {
+      doi,
+      publisher,
+      status: 'verified',
+      kind: inspected.candidate.kind,
+      sessionId: inspected.sessionId || '',
+      imageBytes: inspected.image.bytes,
+    };
+    state.browserbase.acceptance[publisher] = result;
+    await saveState();
+    return result;
+  } catch (error) {
+    const message = safeError(error, 300);
+    const result = { doi, publisher, status: /manual_required/.test(message) ? 'manual_required' : 'failed', reason: message };
+    state.browserbase.acceptance[publisher] = result;
+    await saveState();
+    return result;
+  }
+}
+
+async function runBrowserbaseBatchTest(limit = 12) {
+  const acceptance = state.browserbase.acceptance || {};
+  if (acceptance.acs?.status !== 'verified' || acceptance.wiley?.status !== 'verified') {
+    throw new Error('browserbase_acceptance_required_before_batch');
+  }
+  const items = lastQueue.filter(item => ['acs', 'wiley'].includes(classify(item.doi))).slice(0, limit);
+  let resolved = 0;
+  const results = [];
+  for (const item of items) {
+    const result = await runBrowserbaseAcceptanceTarget(String(item.doi || '').toLowerCase());
+    results.push({ doi: result.doi, status: result.status, kind: result.kind || '' });
+    if (result.status === 'verified') resolved += 1;
+  }
+  state.browserbase.batch = { requested: items.length, resolved, at: Date.now(), results };
+  await saveState();
+  await log('browserbase_batch_completed', { requested: items.length, resolved });
+  return state.browserbase.batch;
+}
+
+async function runBrowserbaseAcceptance() {
+  if (!browserbaseDiagnostic().configured) {
+    stageStatus = 'Browserbase API Key 缺失；未发起远端测试。';
+    await refreshDashboard();
+    return { configured: false };
+  }
+  stageStatus = '正在进行 Browserbase 只读验收：ACS 与 Wiley…';
+  await refreshDashboard();
+  const acs = await runBrowserbaseAcceptanceTarget('10.1021/acs.orglett.6c03622');
+  const wiley = await runBrowserbaseAcceptanceTarget('10.1002/anie.1537547');
+  let batch = null;
+  if (acs.status === 'verified' && wiley.status === 'verified') batch = await runBrowserbaseBatchTest(12);
+  stageStatus = batch
+    ? `Browserbase 验收完成；12 条只读测试解析 ${batch.resolved}/${batch.requested}。`
+    : `Browserbase 验收完成：ACS ${acs.status}；Wiley ${wiley.status}。`;
+  await refreshDashboard();
+  return { configured: true, acs, wiley, batch };
 }
 
 async function runPublisherDiagnostics() {
@@ -979,6 +1085,7 @@ function dashboardHtml() {
   const rows = lastQueue.slice(0, 12).map(x => `<tr><td>${escapeHtml(x.doi)}</td><td>${escapeHtml(classify(x.doi).toUpperCase())}</td></tr>`).join('');
   const configInfo = configDiagnostic();
   const browserbaseInfo = browserbaseDiagnostic();
+  const browserbaseBatch = state.browserbase?.batch;
   const tokenState = configInfo.configured
     ? `已配置 · 长度 ${configInfo.length} · SHA-256 ${configInfo.sha256Prefix}`
     : '缺失 · 长度 0';
@@ -991,7 +1098,7 @@ function dashboardHtml() {
     .card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px}.k{font-size:12px;color:#777}.v{font-size:19px;margin-top:4px}
     .ok{color:#188038}.bad{color:#b3261e}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.buttons a{background:#fff;border:1px solid #bbb;border-radius:8px;padding:9px 13px;text-decoration:none;color:#202124}
     table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden}td,th{padding:8px 10px;border-bottom:1px solid #eee;text-align:left;font-size:13px}
-    .note{font-size:12px;color:#666;margin-top:12px;line-height:1.5}.errors{background:#fff1f0;border:1px solid #d77;border-radius:8px;padding:12px;margin:12px 0;overflow-wrap:anywhere}.status{padding:10px 0;color:#174d32}
+    .note{font-size:12px;color:#666;margin-top:12px;line-height:1.5}.errors{background:#fff1f0;border:1px solid #d77;border-radius:8px;padding:12px;margin:12px 0;overflow-wrap:anywhere}.status{padding:10px 0;color:#174d32}.credentials{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px;margin:14px 0}.credentials label{display:block;font-size:13px;margin:10px 0 4px}.credentials input{box-sizing:border-box;width:100%;padding:9px;border:1px solid #bbb;border-radius:6px}.credentials button{margin:10px 8px 0 0;padding:8px 12px;border:1px solid #777;border-radius:7px;background:#fff}.credentials .primary{background:#174d32;color:#fff;border-color:#174d32}
   </style></head><body><div class="wrap"><h1>Organic Synthesis Gallery · TOC Collector</h1><div class="sub">程序已启动 · TOC Collector ${escapeHtml(app.getVersion())} started successfully<br>${closeHint}</div>
   <div class="status">${escapeHtml(stageStatus)}</div>${errors ? `<div class="errors" role="alert">后台错误（主窗口继续运行）${errors}</div>` : ''}
   <div class="grid">
@@ -1000,13 +1107,14 @@ function dashboardHtml() {
     <div class="card"><div class="k">ACS 网络</div><div class="v ${net.acs ? 'ok':'bad'}">${net.acs === true ? '可访问' : net.acs === false ? '不可访问' : '待检测'}</div></div>
     <div class="card"><div class="k">Wiley 网络</div><div class="v ${net.wiley ? 'ok':'bad'}">${net.wiley === true ? '可访问' : net.wiley === false ? '不可访问' : '待检测'}</div></div>
     <div class="card"><div class="k">写入密钥</div><div class="v" style="font-size:14px">${escapeHtml(tokenState)}</div></div>
-    <div class="card"><div class="k">Browserbase</div><div class="v" style="font-size:14px">${browserbaseInfo.configured ? '已配置' : '缺失'} · ACS ${escapeHtml(browserbaseInfo.acs)} · Wiley ${escapeHtml(browserbaseInfo.wiley)}${browserbaseInfo.lastSuccessDoi ? `<br>最近成功：${escapeHtml(browserbaseInfo.lastSuccessDoi)}` : ''}</div></div>
+    <div class="card"><div class="k">Browserbase</div><div class="v" style="font-size:14px">${browserbaseInfo.configured ? '已配置' : '缺失'} · ACS ${escapeHtml(browserbaseInfo.acs)} · Wiley ${escapeHtml(browserbaseInfo.wiley)}${browserbaseInfo.lastSuccessDoi ? `<br>最近成功：${escapeHtml(browserbaseInfo.lastSuccessDoi)}` : ''}${browserbaseBatch ? `<br>12 条测试：${Number(browserbaseBatch.resolved || 0)}/${Number(browserbaseBatch.requested || 0)}` : ''}</div></div>
     <div class="card"><div class="k">上次处理</div><div class="v" style="font-size:14px">${summary.at ? `成功 ${Number(summary.success||0)} · 失败 ${Number(summary.failed||0)}` : '尚未采集'}</div></div>
   </div>
   <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开当前设置</a><a href="collector:reload-config">重新加载设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
+  <section class="credentials"><strong>Browserbase 本机凭据</strong><div class="note">密钥只保存到当前进程的 config.json；界面、日志和控制台都不会显示密钥。</div><form id="browserbase-form"><label for="browserbase-api-key">Browserbase API Key</label><input id="browserbase-api-key" type="password" autocomplete="off" maxlength="2048" placeholder="粘贴 API Key"><label for="browserbase-project-id">Browserbase Project ID（可选）</label><input id="browserbase-project-id" type="text" autocomplete="off" maxlength="512" placeholder="可留空"><button class="primary" type="submit">保存</button><button id="browserbase-clear" type="button">清除凭据</button>${browserbaseInfo.configured ? '<button id="browserbase-test" type="button">Browserbase 验收</button>' : ''}<span class="note" id="browserbase-action-status"></span></form></section>
   <table><thead><tr><th>最近待处理 DOI</th><th>来源</th></tr></thead><tbody>${rows || '<tr><td colspan="2">当前无待处理项目</td></tr>'}</tbody></table>
   <div class="note">实际 userData：<code>${escapeHtml(configInfo.userData)}</code><br>实际 config.json：<code>${escapeHtml(configInfo.configPath)}</code><br>设置状态：${escapeHtml(configInfo.message)}${configInfo.reloadedAt ? `（${escapeHtml(new Date(configInfo.reloadedAt).toLocaleString())}）` : ''}<br>VPN 程序：${vpnState}<br>自动检查间隔：${Number(config.pollMinutes||10)} 分钟；提醒间隔：${Number(config.reminderHours||6)} 小时。</div>
-  </div></body></html>`;
+  </div><script>(() => { const bridge = window.tocCollector; const form = document.getElementById('browserbase-form'); const status = document.getElementById('browserbase-action-status'); if (!bridge || !form) return; const show = text => { status.textContent = text; }; form.addEventListener('submit', async event => { event.preventDefault(); show('正在保存…'); const apiKey = document.getElementById('browserbase-api-key').value; const projectId = document.getElementById('browserbase-project-id').value; const result = await bridge.saveBrowserbase({ apiKey, projectId }); document.getElementById('browserbase-api-key').value = ''; document.getElementById('browserbase-project-id').value = ''; show(result.configured ? '已保存并生效。' : 'API Key 为空。'); setTimeout(() => location.reload(), 350); }); const clear = document.getElementById('browserbase-clear'); if (clear) clear.addEventListener('click', async () => { show('正在清除…'); await bridge.clearBrowserbase(); show('已清除。'); setTimeout(() => location.reload(), 250); }); const test = document.getElementById('browserbase-test'); if (test) test.addEventListener('click', async () => { test.disabled = true; show('正在进行只读验收…'); const result = await bridge.testBrowserbase(); show(result.configured ? '验收已完成。' : 'API Key 缺失。'); setTimeout(() => location.reload(), 600); }); })();</script></body></html>`;
 }
 
 function refreshDashboard() {
@@ -1135,12 +1243,32 @@ function dispose() {
   if (vpnWatchTimer) clearInterval(vpnWatchTimer);
   if (configReloadTimer) clearTimeout(configReloadTimer);
   if (configWatcher) configWatcher.close();
+  ipcMain.removeHandler('toc-collector:browserbase-save');
+  ipcMain.removeHandler('toc-collector:browserbase-clear');
+  ipcMain.removeHandler('toc-collector:browserbase-acceptance');
   if (validTray()) tray.destroy();
 }
 
 if (!dashboard || dashboard.isDestroyed()) throw new Error('Startup window is unavailable');
 dashboard.on('close', onClose);
 dashboard.webContents.on('will-navigate', onNavigate);
+// Credentials cross the process boundary only through these three narrow IPC
+// methods. The page receives status flags, never the saved key or project id.
+ipcMain.removeHandler('toc-collector:browserbase-save');
+ipcMain.removeHandler('toc-collector:browserbase-clear');
+ipcMain.removeHandler('toc-collector:browserbase-acceptance');
+ipcMain.handle('toc-collector:browserbase-save', async (_event, payload) => {
+  try { return await saveBrowserbaseCredentials(payload); }
+  catch (error) { return { configured: browserbaseDiagnostic().configured, error: safeError(error, 120) }; }
+});
+ipcMain.handle('toc-collector:browserbase-clear', async () => {
+  try { return await clearBrowserbaseCredentials(); }
+  catch (error) { return { configured: browserbaseDiagnostic().configured, error: safeError(error, 120) }; }
+});
+ipcMain.handle('toc-collector:browserbase-acceptance', async () => {
+  try { return await runBrowserbaseAcceptance(); }
+  catch (error) { return { configured: browserbaseDiagnostic().configured, error: safeError(error, 120) }; }
+});
 app.once('before-quit', dispose);
 const steps = {
   logging: async () => {
