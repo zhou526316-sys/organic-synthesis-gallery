@@ -177,7 +177,10 @@ class Store extends EventTarget {
     updater(value);
     if (markUpdated) value.updatedAt = Date.now();
     this.state.papers[id] = value;
-    this.save(broadcast);
+    this.save(false);
+    if (broadcast) {
+      this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'paper', paperId: id } }));
+    }
   }
   registerMeta(meta: PaperMeta): void { this.state.metadata[meta.id] = { id: meta.id, doi: meta.doi, title: meta.title, journal: meta.journal, href: meta.href }; this.save(false); }
   metadata(id: string): Omit<PaperMeta, 'authors' | 'topics'> | undefined { return this.state.metadata[id]; }
@@ -212,7 +215,10 @@ class Store extends EventTarget {
   private async markRead(doi: string, statusId: string): Promise<void> {
     try {
       const data = await workerPost<{ count?: number }>('/api/user-ui/reader-counts/mark', { doi, profileId: this.profileId, statusId });
-      if (typeof data.count === 'number') { this.readerCounts[doi] = data.count; this.dispatchEvent(new Event('counts')); }
+      if (typeof data.count === 'number') {
+        this.readerCounts[doi] = data.count;
+        this.dispatchEvent(new CustomEvent('counts', { detail: { doi } }));
+      }
     } catch { /* local reading state still succeeds */ }
   }
   async feedback(doi: string, kind: string, note: string): Promise<boolean> {
