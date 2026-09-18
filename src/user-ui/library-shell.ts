@@ -25,6 +25,7 @@ export class GalleryUserShell extends HTMLElement {
   private integrationMessage = '';
   private integrations: IntegrationStatus | null = null;
   private authUser: AuthUser | null = null;
+  private authMode: 'login' | 'register' = 'login';
   private paymentCodeUrl = '';
   private paymentOrderId = '';
   private readonly rerender = (): void => this.render();
@@ -45,7 +46,7 @@ export class GalleryUserShell extends HTMLElement {
 
   private render(): void {
     this.shadow.innerHTML = `<style>
-      :host{position:relative;display:inline-flex;flex:0 0 auto;font:12px/1.45 Inter,system-ui,sans-serif;color:#172033}*{box-sizing:border-box}button,input,select{font:inherit}button{cursor:pointer}.trigger{min-height:34px;padding:6px 11px;border:1px solid #d7deea;border-radius:10px;background:#fff;color:#334155;font-weight:700}.trigger:hover{border-color:#9fb7f7;color:#3159bd}.panel{position:absolute;right:0;top:calc(100% + 9px);z-index:10010;width:min(650px,calc(100vw - 28px));max-height:min(76vh,720px);min-height:0;display:grid;grid-template-columns:150px minmax(0,1fr);overflow:hidden;border:1px solid #dfe5ef;border-radius:16px;background:#fff;box-shadow:0 20px 60px rgba(15,23,42,.2)}.nav{min-height:0;padding:12px;border-right:1px solid #edf0f4;background:#fafbfc}.nav button{width:100%;padding:9px;border:0;border-radius:9px;background:transparent;text-align:left;color:#475467}.nav button.active{background:#eef3ff;color:#3159bd;font-weight:750}.content{min-height:0;padding:16px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.head{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px}.head h3{margin:0;font-size:17px}.close{border:0;border-radius:8px;width:28px;height:28px;background:#f2f4f7}.item{display:grid;gap:3px;padding:10px 0;border-top:1px solid #edf0f4}.item a{color:#243044;text-decoration:none;font-weight:700}.item small,.help{color:#8a93a3;font-size:10px}.empty{padding:18px 0;color:#8a93a3}.row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.secondary,.link{padding:7px 9px;border:1px solid #dfe5ef;border-radius:9px;background:#fff;color:#475467}.link{border:0;padding:4px;background:transparent;color:#3159bd}.danger{color:#b42318}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.manage{display:grid;gap:8px}.manage-row{padding:9px;border:1px solid #e5e9f0;border-radius:11px}.manage-row>.top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.manage-row input[type=text]{min-width:140px;flex:1}.manage-row input[type=text],.manage-row select,.amount,.email{border:1px solid #d7deea;border-radius:8px;padding:6px}.style-row{display:grid;grid-template-columns:minmax(130px,1fr) auto auto auto;align-items:center;gap:7px;padding:8px 0;border-top:1px dashed #e5e9f0}.style-row label{display:flex;align-items:center;gap:4px;font-size:10px}.style-row input[type=color]{width:30px;height:26px;border:0;background:transparent;padding:0}.upload input{width:105px;font-size:9px}.provider{display:grid;gap:7px}.provider button{padding:9px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;text-align:left}.provider button:disabled{cursor:not-allowed;opacity:.52}.provider .ok{color:#27845b}.provider .off{color:#8a93a3}.amounts{display:flex;gap:6px;flex-wrap:wrap}.amounts button{padding:7px 10px;border:1px solid #d7deea;border-radius:9px;background:#fff}.notice{margin-top:10px;padding:9px;border-radius:9px;background:#f8fafc;color:#667085;font-size:10px}.user-card{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #e5e9f0;border-radius:11px}.avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#eef1f5}.pay-result{margin-top:10px;padding:10px;border:1px solid #e5e9f0;border-radius:10px;overflow-wrap:anywhere}.pay-result a{color:#3159bd}.email{min-width:220px;flex:1}
+      :host{position:relative;display:inline-flex;flex:0 0 auto;font:12px/1.45 Inter,system-ui,sans-serif;color:#172033}*{box-sizing:border-box}button,input,select{font:inherit}button{cursor:pointer}.trigger{min-height:34px;padding:6px 11px;border:1px solid #d7deea;border-radius:10px;background:#fff;color:#334155;font-weight:700}.trigger:hover{border-color:#9fb7f7;color:#3159bd}.panel{position:absolute;right:0;top:calc(100% + 9px);z-index:10010;width:min(650px,calc(100vw - 28px));max-height:min(76vh,720px);min-height:0;display:grid;grid-template-columns:150px minmax(0,1fr);overflow:hidden;border:1px solid #dfe5ef;border-radius:16px;background:#fff;box-shadow:0 20px 60px rgba(15,23,42,.2)}.nav{min-height:0;padding:12px;border-right:1px solid #edf0f4;background:#fafbfc}.nav button{width:100%;padding:9px;border:0;border-radius:9px;background:transparent;text-align:left;color:#475467}.nav button.active{background:#eef3ff;color:#3159bd;font-weight:750}.content{min-height:0;padding:16px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.head{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px}.head h3{margin:0;font-size:17px}.close{border:0;border-radius:8px;width:28px;height:28px;background:#f2f4f7}.item{display:grid;gap:3px;padding:10px 0;border-top:1px solid #edf0f4}.item a{color:#243044;text-decoration:none;font-weight:700}.item small,.help{color:#8a93a3;font-size:10px}.empty{padding:18px 0;color:#8a93a3}.row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.secondary,.link{padding:7px 9px;border:1px solid #dfe5ef;border-radius:9px;background:#fff;color:#475467}.link{border:0;padding:4px;background:transparent;color:#3159bd}.danger{color:#b42318}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.manage{display:grid;gap:8px}.manage-row{padding:9px;border:1px solid #e5e9f0;border-radius:11px}.manage-row>.top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.manage-row input[type=text]{min-width:140px;flex:1}.manage-row input[type=text],.manage-row select,.amount,.email{border:1px solid #d7deea;border-radius:8px;padding:6px}.style-row{display:grid;grid-template-columns:minmax(130px,1fr) auto auto auto;align-items:center;gap:7px;padding:8px 0;border-top:1px dashed #e5e9f0}.style-row label{display:flex;align-items:center;gap:4px;font-size:10px}.style-row input[type=color]{width:30px;height:26px;border:0;background:transparent;padding:0}.upload input{width:105px;font-size:9px}.provider{display:grid;gap:7px}.provider button{padding:9px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;text-align:left}.provider button:disabled{cursor:not-allowed;opacity:.52}.provider .ok{color:#27845b}.provider .off{color:#8a93a3}.amounts{display:flex;gap:6px;flex-wrap:wrap}.amounts button{padding:7px 10px;border:1px solid #d7deea;border-radius:9px;background:#fff}.notice{margin-top:10px;padding:9px;border-radius:9px;background:#f8fafc;color:#667085;font-size:10px}.user-card{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #e5e9f0;border-radius:11px}.avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#eef1f5}.pay-result{margin-top:10px;padding:10px;border:1px solid #e5e9f0;border-radius:10px;overflow-wrap:anywhere}.pay-result a{color:#3159bd}.email{min-width:220px;flex:1}.auth-tabs{display:flex;gap:6px;margin-bottom:10px}.auth-tabs button{flex:1;padding:8px;border:1px solid #dfe5ef;border-radius:9px;background:#fff;color:#475467}.auth-tabs button.active{border-color:#9fb7f7;background:#eef3ff;color:#3159bd;font-weight:750}.auth-form{display:grid;gap:8px}.auth-form input{width:100%;border:1px solid #d7deea;border-radius:9px;padding:9px}.primary{padding:9px 11px;border:1px solid #3159bd;border-radius:9px;background:#3159bd;color:#fff;font-weight:750}.qr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}.qr-card{display:grid;gap:7px;padding:10px;border:1px solid #e5e9f0;border-radius:12px;background:#fff;text-align:center}.qr-card strong{font-size:12px}.qr-card a{display:block;border-radius:10px;overflow:hidden;background:#fff}.qr-card img{display:block;width:100%;aspect-ratio:1;object-fit:contain}.support-note{margin:0;color:#667085;font-size:11px;line-height:1.6}
       @media(max-width:680px){.panel{position:fixed;inset:60px 8px 8px;width:auto;height:auto;max-height:calc(100dvh - 68px);min-height:0;grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);overflow:hidden}.nav{display:flex;overflow-x:auto;overflow-y:hidden;border-right:0;border-bottom:1px solid #edf0f4;padding:7px}.nav button{width:auto;white-space:nowrap}.content{min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:12px 12px 28px}.style-row{grid-template-columns:1fr 1fr}.trigger{min-height:32px;padding:5px 9px}}
     </style><button class='trigger' type='button' aria-expanded='${this.open}'>${this.tr('用户中心', 'User Center')}</button>${this.open ? this.panelMarkup() : ''}`;
     this.bind();
@@ -100,13 +101,34 @@ export class GalleryUserShell extends HTMLElement {
       return `<div class='user-card'>${this.authUser.avatarUrl ? `<img class='avatar' src='${escapeHtml(this.authUser.avatarUrl)}' alt=''>` : `<div class='avatar'></div>`}<div><strong>${escapeHtml(this.authUser.displayName || this.authUser.email || this.authUser.id)}</strong>${this.authUser.email ? `<div class='help'>${escapeHtml(this.authUser.email)}</div>` : ''}</div></div><div class='row' style='margin-top:10px'><button class='secondary' type='button' data-action='logout'>${this.tr('退出登录', 'Sign out')}</button></div>${this.integrationMessage ? `<div class='notice'>${escapeHtml(this.integrationMessage)}</div>` : ''}`;
     }
     const enabled = (provider: Provider): string => this.integrations?.auth[provider] ? '' : 'disabled';
-    return `<div class='provider'><button type='button' data-action='provider:google' ${enabled('google')}>Google <small class='${this.integrations?.auth.google ? 'ok' : 'off'}'>· ${this.providerState('google')}</small></button><button type='button' data-action='provider:wechat' ${enabled('wechat')}>微信 <small class='${this.integrations?.auth.wechat ? 'ok' : 'off'}'>· ${this.providerState('wechat')}</small></button><button type='button' data-action='provider:qq' ${enabled('qq')}>QQ <small class='${this.integrations?.auth.qq ? 'ok' : 'off'}'>· ${this.providerState('qq')}</small></button></div><div class='section'><h4>${this.tr('邮箱登录', 'Email sign-in')}</h4><div class='row'><input class='email' type='email' data-email placeholder='name@example.com'><button class='secondary' type='button' data-action='email-login' ${enabled('email')}>${this.tr('发送登录链接', 'Send sign-in link')}</button></div><div class='help'>${this.providerState('email')}</div></div>${this.integrationMessage ? `<div class='notice'>${escapeHtml(this.integrationMessage)}</div>` : `<div class='notice'>${this.tr('OAuth 回调、一次性交换码和正式会话接口已接入。只有已配置密钥的登录方式会启用。', 'OAuth callbacks, one-time exchange codes and formal sessions are wired. Only providers with configured secrets are enabled.')}</div>`}`;
+    const register = this.authMode === 'register';
+    const nativeAccount = `<section class='section' style='border-top:0;padding-top:0'>
+      <h4>${this.tr('本站账号', 'Site account')}</h4>
+      <div class='auth-tabs'>
+        <button type='button' data-action='auth-mode:login' class='${register ? '' : 'active'}'>${this.tr('登录', 'Sign in')}</button>
+        <button type='button' data-action='auth-mode:register' class='${register ? 'active' : ''}'>${this.tr('注册', 'Register')}</button>
+      </div>
+      <div class='auth-form'>
+        ${register ? `<input type='text' maxlength='60' autocomplete='name' data-local-name placeholder='${this.tr('昵称', 'Display name')}'>` : ''}
+        <input type='email' autocomplete='email' data-local-email placeholder='name@example.com'>
+        <input type='password' minlength='8' maxlength='128' autocomplete='${register ? 'new-password' : 'current-password'}' data-local-password placeholder='${this.tr('密码（至少 8 位）', 'Password (8+ characters)')}'>
+        <button class='primary' type='button' data-action='${register ? 'local-register' : 'local-login'}'>${register ? this.tr('创建本站账号', 'Create site account') : this.tr('登录本站账号', 'Sign in with site account')}</button>
+      </div>
+      <div class='help' style='margin-top:7px'>${register ? this.tr('注册后会向邮箱发送确认链接；确认后账号才会建立，并自动登录。', 'A verification link will be emailed to you. Your account is created only after verification.') : this.tr('本站账号会同步收藏、阅读状态、私人备注和个性化设置。', 'Site accounts sync saved papers, reading status, private notes, and preferences.')}</div>
+    </section>`;
+
+    return `${nativeAccount}
+      <section class='section'><h4>${this.tr('其他登录方式', 'Other sign-in methods')}</h4><div class='provider'><button type='button' data-action='provider:google' ${enabled('google')}>Google <small class='${this.integrations?.auth.google ? 'ok' : 'off'}'>· ${this.providerState('google')}</small></button><button type='button' data-action='provider:wechat' ${enabled('wechat')}>微信 <small class='${this.integrations?.auth.wechat ? 'ok' : 'off'}'>· ${this.providerState('wechat')}</small></button><button type='button' data-action='provider:qq' ${enabled('qq')}>QQ <small class='${this.integrations?.auth.qq ? 'ok' : 'off'}'>· ${this.providerState('qq')}</small></button></div></section>
+      <section class='section'><h4>${this.tr('邮箱免密码登录', 'Passwordless email sign-in')}</h4><div class='row'><input class='email' type='email' data-email placeholder='name@example.com'><button class='secondary' type='button' data-action='email-login' ${enabled('email')}>${this.tr('发送登录链接', 'Send sign-in link')}</button></div><div class='help'>${this.providerState('email')}</div></section>
+      ${this.integrationMessage ? `<div class='notice'>${escapeHtml(this.integrationMessage)}</div>` : ''}`;
   }
 
   private support(): string {
-    const wechatReady = this.integrations?.payments.wechat === true;
-    const alipayReady = this.integrations?.payments.alipay === true;
-    return `<p>${this.tr('最低金额 ¥1。支付订单由服务器创建，并只在支付平台签名回调验证成功后标记为已支付。', 'Minimum ¥1. Orders are created server-side and marked paid only after a verified provider callback.')}</p><div class='amounts'>${[1,5,10,20,50].map(value => `<button type='button' data-amount='${value}'>¥${value}</button>`).join('')}</div><div class='row' style='margin-top:10px'><input class='amount' type='number' min='1' max='50000' step='1' value='1' data-support-amount><button class='secondary' type='button' data-action='pay:wechat' ${wechatReady ? '' : 'disabled'}>${this.tr('微信支付', 'WeChat Pay')}</button><button class='secondary' type='button' data-action='pay:alipay' ${alipayReady ? '' : 'disabled'}>${this.tr('支付宝', 'Alipay')}</button></div><div class='help'>${this.tr('微信', 'WeChat')}: ${wechatReady ? this.tr('可用', 'ready') : this.tr('待商户密钥', 'merchant credentials required')} · ${this.tr('支付宝', 'Alipay')}: ${alipayReady ? this.tr('可用', 'ready') : this.tr('待商户密钥', 'merchant credentials required')}</div>${this.paymentCodeUrl ? `<div class='pay-result'><strong>${this.tr('微信支付订单已创建', 'WeChat Pay order created')}</strong><div class='help'>${escapeHtml(this.paymentOrderId)}</div><a href='${escapeHtml(this.paymentCodeUrl)}'>${this.tr('打开微信支付', 'Open WeChat Pay')}</a><div class='help'>${escapeHtml(this.paymentCodeUrl)}</div></div>` : ''}${this.supportError ? `<div class='notice danger'>${escapeHtml(this.supportError)}</div>` : ''}`;
+    return `<p class='support-note'>${this.tr('目前暂不接入需要商户资质的自动支付接口。下面为项目维护者的收款码，用于自愿支持本站维护与服务器成本；扫码转账不会自动开通会员或其他付费权益。', 'Merchant payment APIs are not enabled for now. The QR codes below are for voluntary support of maintenance and server costs; QR-code transfers do not automatically unlock membership or paid benefits.')}</p>
+      <div class='qr-grid'>
+        <div class='qr-card'><strong>${this.tr('微信支持', 'WeChat')}</strong><a href='./support/wechat-qr.svg' target='_blank' rel='noopener noreferrer' title='${this.tr('点击放大', 'Open full size')}'><img src='./support/wechat-qr.svg' alt='${this.tr('微信收款码', 'WeChat payment QR code')}' loading='lazy'></a><span class='help'>${this.tr('点击二维码可放大', 'Click the QR code to enlarge')}</span></div>
+        <div class='qr-card'><strong>${this.tr('支付宝支持', 'Alipay')}</strong><a href='./support/alipay-qr.svg' target='_blank' rel='noopener noreferrer' title='${this.tr('点击放大', 'Open full size')}'><img src='./support/alipay-qr.svg' alt='${this.tr('支付宝收款码', 'Alipay payment QR code')}' loading='lazy'></a><span class='help'>${this.tr('点击二维码可放大', 'Click the QR code to enlarge')}</span></div>
+      </div>`;
   }
 
   private bind(): void {
@@ -174,6 +196,44 @@ export class GalleryUserShell extends HTMLElement {
     this.render();
   }
 
+  private async submitNativeAccount(register: boolean): Promise<void> {
+    const email = this.shadow.querySelector<HTMLInputElement>('[data-local-email]')?.value.trim() || '';
+    const password = this.shadow.querySelector<HTMLInputElement>('[data-local-password]')?.value || '';
+    const displayName = this.shadow.querySelector<HTMLInputElement>('[data-local-name]')?.value.trim() || '';
+    if (!email) { this.integrationMessage = this.tr('请输入邮箱。', 'Enter an email address.'); this.render(); return; }
+    if (password.length < 8) { this.integrationMessage = this.tr('密码至少需要 8 位。', 'Password must contain at least 8 characters.'); this.render(); return; }
+    if (register && !displayName) { this.integrationMessage = this.tr('请输入昵称。', 'Enter a display name.'); this.render(); return; }
+
+    try {
+      if (register) {
+        await this.api<{ accepted: boolean; verificationRequired?: boolean }>('/api/user-ui/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({ email, password, displayName, returnTo: returnUrl() }),
+        });
+        this.integrationMessage = this.tr('注册确认邮件已发送。请在 20 分钟内点击邮件中的确认链接，完成后会自动登录。', 'Registration email sent. Open the verification link within 20 minutes; you will be signed in automatically after confirmation.');
+      } else {
+        const result = await this.api<{ token: string; user: AuthUser }>('/api/user-ui/auth/password/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+        });
+        saveSessionToken(result.token);
+        this.authUser = result.user;
+        this.integrationMessage = this.tr('登录成功。', 'Signed in.');
+      }
+    } catch (error) {
+      const code = error instanceof Error ? error.message : String(error);
+      const known: Record<string, string> = {
+        invalid_credentials: this.tr('邮箱或密码错误。', 'Incorrect email or password.'),
+        email_already_registered: this.tr('该邮箱已经注册，可直接登录。', 'This email is already registered. Sign in instead.'),
+        invalid_email: this.tr('邮箱格式不正确。', 'Invalid email address.'),
+        invalid_password: this.tr('密码需要 8–128 位。', 'Password must be 8–128 characters.'),
+        email_delivery_failed: this.tr('确认邮件发送失败，请稍后重试。', 'Could not send the verification email. Try again later.'),
+      };
+      this.integrationMessage = known[code] || code;
+    }
+    this.render();
+  }
+
   private async startProvider(provider: Exclude<Provider, 'email'>): Promise<void> {
     if (!this.integrations?.auth[provider]) return;
     location.href = `${WORKER_API_BASE}/api/user-ui/auth/start?provider=${encodeURIComponent(provider)}&returnTo=${encodeURIComponent(returnUrl())}`;
@@ -223,6 +283,10 @@ export class GalleryUserShell extends HTMLElement {
     if (action === 'add-alias') { const name = prompt(this.tr('概念组名称', 'Concept group name')); if (!name?.trim()) return; const raw = prompt(this.tr('同义词/别名，用逗号分隔', 'Synonyms/aliases separated by commas')); const terms = (raw || '').split(/[,，;]/).map(value => value.trim()).filter(Boolean); if (terms.length) { store.state.aliases.push({ id: makeId('alias'), name: name.trim(), terms }); store.save(); } return; }
     if (action.startsWith('delete-alias:')) { store.state.aliases = store.state.aliases.filter(item => item.id !== action.slice(13)); store.save(); return; }
     if (action.startsWith('clear-image:')) { const target = this.styleTarget(action.slice(12)); if (target) { delete target.imageData; store.save(); } return; }
+    if (action === 'auth-mode:login') { this.authMode = 'login'; this.integrationMessage = ''; this.render(); return; }
+    if (action === 'auth-mode:register') { this.authMode = 'register'; this.integrationMessage = ''; this.render(); return; }
+    if (action === 'local-login') { await this.submitNativeAccount(false); return; }
+    if (action === 'local-register') { await this.submitNativeAccount(true); return; }
     if (action.startsWith('provider:')) { await this.startProvider(action.slice(9) as Exclude<Provider, 'email'>); return; }
     if (action === 'email-login') { await this.startEmail(); return; }
     if (action === 'logout') {
