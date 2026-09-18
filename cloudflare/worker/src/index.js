@@ -26,7 +26,7 @@ import {
   importLiteratureSupplement,
   importTitleTranslations,
 } from './metadata.js';
-import { runRepairBatch } from './repair.js';
+import { runLeaseRepairBatch, runRepairBatch } from './repair.js';
 import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
@@ -334,11 +334,14 @@ export default {
   },
 
   async scheduled(controller, env, ctx) {
+    const minute = new Date(controller.scheduledTime || Date.now()).getUTCMinutes();
+    const mode = minute === 0 ? 'upgrade' : 'coverage';
+    const limit = mode === 'upgrade' ? 1 : 2;
     ctx.waitUntil(
-      runRepairBatch(env, 2).then(result => {
-        console.log('MEDIA_REPAIR_CRON', JSON.stringify({ processed: result.processed, results: result.results }));
+      runLeaseRepairBatch(env, limit, mode, `cloudflare-cron:${controller.scheduledTime || Date.now()}`).then(result => {
+        console.log('MEDIA_JOB_CRON', JSON.stringify({ mode, claimed: result.claimed, processed: result.processed, results: result.results }));
       }).catch(error => {
-        console.error('MEDIA_REPAIR_CRON_FAILED', error instanceof Error ? error.message : String(error));
+        console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
       })
     );
   },
