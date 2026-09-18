@@ -2,17 +2,16 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "toc_processing",
+  "phase": "fetching",
   "activeRun": {
-    "id": "automation-20260918-0800",
+    "id": "automation-20260918-1800",
     "runType": "scheduled_fetch",
-    "startedAt": "2026-09-18T08:00:24+08:00",
+    "startedAt": "2026-09-18T17:58:56+08:00",
     "targetThrough": "2026-09-18",
     "auditWindow": {"start":"2026-09-16","end":"2026-09-18"},
-    "baseMainSha": "48485d8cc257473ffd2da121e5054fe7c97d2d20",
+    "baseMainSha": "0de9e8203eb5a48eb9ba4e3a98bcb8b9ba0dbc8f",
     "auditWorkflowRunId": 35289380914,
-    "mediaRepairRunId": 35289746427,
-    "pagesRunId": 35289714117,
+    "auditWorkflowAttempt": 2,
     "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
     "capabilitySnapshot": {
       "literatureAudit": "517a33dc05d6d662a678f5d85acaa21ba3947e85",
@@ -20,10 +19,7 @@
       "tocCollector": "78a60e833c102497d03770c58cd6fae4adb5675d",
       "publisherFallback": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
     },
-    "auditSummary": {"sourceRecords":261,"missingFromGallery":261,"potentialGaps":87,"criticalSourceFailures":0,"machineUnresolved":261},
-    "auditedAdditions": 19,
-    "dataCommitSha": "c25af78110a45bed35d135443bb36473f8001dd5",
-    "tocStatus": "automation supplement was added to the recent-media queue; upgraded repair run is processing Sep 16-17 papers"
+    "capabilityNote": "Pinned to registry latest-compatible-stable for this run. Main contains newer TOC collector changes (c6ad546d...) and a successful recent-media repair workflow, but the registry has not yet promoted those changes as the stable production capability; they remain pending validation for capability selection in this run."
   },
   "lastCompletedFetch": null,
   "lastWebsiteSync": null,
