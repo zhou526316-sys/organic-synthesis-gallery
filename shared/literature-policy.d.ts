@@ -4,3 +4,5 @@ export function isExcludedDoi(value: unknown): boolean;
 export function validAddedDate(value: unknown): string;
 export function earliestAddedDate(...values: unknown[]): string;
 export function beijingDate(date?: Date): string;
+export function isNewToday(addedDate: unknown, date?: Date): boolean;
+export function msUntilNextBeijingDay(date?: Date): number;
