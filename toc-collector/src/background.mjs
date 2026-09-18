@@ -66,6 +66,9 @@ const diagnosticPublishers = requestedDiagnosticPublishers.filter(value => valid
 const requestedDiagnosticDois = diagnosticDoiArgs.map(arg => arg.slice('--diagnose-doi='.length).trim().toLowerCase()).filter(Boolean);
 const invalidDiagnosticDois = requestedDiagnosticDois.filter(doi => !/^10\.\d{4,9}\/\S+$/.test(doi));
 const forceBrowserFallback = process.argv.includes('--force-browser-fallback');
+// This only exists for the explicit, read-only Browserbase acceptance test. It
+// never changes the normal resolver order used by the Collector.
+const forceBrowserbaseDiagnostic = process.argv.includes('--force-browserbase');
 
 function getPublisherSession() {
   if (!app.isReady()) throw new Error('publisher_session_before_app_ready');
@@ -181,6 +184,12 @@ async function ensureConfig() {
 
 async function reloadConfig({ source = 'manual' } = {}) {
   const previous = tokenIdentity();
+  // Keep the raw object long enough to distinguish an old 0.1.6 config from a
+  // config that already has deliberately blank Browserbase fields. loadJson()
+  // merges defaults, so it cannot provide that distinction by itself.
+  let onDiskConfig = {};
+  try { onDiskConfig = JSON.parse(await fsp.readFile(configPath(), 'utf8')); }
+  catch { /* ensureConfig creates a valid file before the first reload */ }
   config = await loadJson(configPath(), DEFAULT_CONFIG);
   let configChanged = false;
   if (!String(config.apiBase || '').trim() || String(config.apiBase).replace(/\/$/, '') === LEGACY_PAGES_API_BASE) {
@@ -190,6 +199,12 @@ async function reloadConfig({ source = 'manual' } = {}) {
   if (!String(config.apiFallbackBase || '').trim()) {
     config.apiFallbackBase = FALLBACK_API_BASE;
     configChanged = true;
+  }
+  for (const key of ['browserbaseApiKey', 'browserbaseProjectId']) {
+    if (!Object.prototype.hasOwnProperty.call(onDiskConfig, key)) {
+      config[key] = '';
+      configChanged = true;
+    }
   }
   if (configChanged) await fsp.writeFile(configPath(), JSON.stringify(config, null, 2));
   const current = tokenIdentity();
@@ -649,7 +664,9 @@ async function inspectArticle(doi) {
         images: true,
       },
     });
-    if (forceBrowserFallback) throw new Error('net::ERR_BLOCKED_BY_CLIENT (diagnostic injection)');
+    if (forceBrowserFallback || forceBrowserbaseDiagnostic) {
+      throw new Error(forceBrowserbaseDiagnostic ? 'browserbase_diagnostic_forced' : 'net::ERR_BLOCKED_BY_CLIENT (diagnostic injection)');
+    }
     await Promise.race([
       win.loadURL(url, { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36' }),
       new Promise((_, reject) => { publisherTimer = setTimeout(() => reject(new Error('publisher_timeout')), Math.max(1, Number(config.publisherTimeoutSeconds) || 35) * 1000); }),
@@ -698,9 +715,13 @@ async function inspectArticle(doi) {
     win = null;
     await log('browser_blocked_fallback', { doi, browserError, blockedByClient: /ERR_BLOCKED_BY_CLIENT/i.test(browserError) });
     let htmlResult = null;
-    try { htmlResult = await inspectArticleHtml(doi, url, browserError); }
-    catch (htmlError) {
-      await log('publisher_html_fallback_failed', { doi, reason: safeError(htmlError, 300) });
+    if (!forceBrowserbaseDiagnostic) {
+      try { htmlResult = await inspectArticleHtml(doi, url, browserError); }
+      catch (htmlError) {
+        await log('publisher_html_fallback_failed', { doi, reason: safeError(htmlError, 300) });
+      }
+    } else {
+      await log('browserbase_diagnostic_forced', { doi });
     }
     if (htmlResult?.candidate) return htmlResult;
     const browserbaseResult = await inspectArticleBrowserbase(doi, url, browserError);
