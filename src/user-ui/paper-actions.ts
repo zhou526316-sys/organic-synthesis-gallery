@@ -106,7 +106,6 @@ export class GalleryPaperActions extends HTMLElement {
       delete this.dataset.drawerOpen;
       this.closest<HTMLElement>('.card')?.classList.remove('user-action-open');
     }
-    this.syncScrollLock();
   }
 
   private chips(paper: PaperUserState, status: ReturnType<typeof store.status>): string {
