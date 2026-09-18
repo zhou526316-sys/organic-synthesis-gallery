@@ -44,6 +44,7 @@ async function loadRecords() {
     'manual-supplement.json',
     'final-audit-supplement.json',
     'curated-supplement.json',
+    'automation-supplement.json',
     'literature-supplement.json',
   ]) {
     try {
