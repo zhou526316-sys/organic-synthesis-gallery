@@ -254,3 +254,19 @@ CREATE TABLE IF NOT EXISTS password_credentials (
 );
 CREATE INDEX IF NOT EXISTS idx_password_credentials_email
   ON password_credentials(email);
+
+
+-- Short-lived, email-verified registration requests for native password accounts.
+CREATE TABLE IF NOT EXISTS password_registration_tokens (
+  token_hash TEXT PRIMARY KEY,
+  email TEXT NOT NULL,
+  display_name TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  salt TEXT NOT NULL,
+  iterations INTEGER NOT NULL CHECK (iterations >= 100000),
+  return_to TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_password_registration_tokens_expiry
+  ON password_registration_tokens(expires_at);
