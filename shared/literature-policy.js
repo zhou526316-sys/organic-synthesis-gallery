@@ -1,3 +1,4 @@
+// Single source of truth for literature exclusions and added-date merge semantics.
 export const EXCLUDED_DOIS = new Set([
   '10.1038/s41467-026-77616-8',
   '10.1021/jacs.6c13738',
