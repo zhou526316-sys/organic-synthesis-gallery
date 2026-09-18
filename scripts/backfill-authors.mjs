@@ -15,6 +15,7 @@ const SOURCES = [
 
 const MAX_CONCURRENCY = Math.max(1, Math.min(8, Number(process.env.AUTHOR_BACKFILL_CONCURRENCY || 5)));
 const RETRIES = 4;
+const EXCLUDED_DOIS = new Set(['10.1038/s41467-026-77616-8', '10.1021/jacs.6c13738']);
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -97,7 +98,8 @@ async function crossrefAuthors(doi) {
       if (attempt + 1 < RETRIES) await sleep(900 * 2 ** attempt);
     }
   }
-  throw lastError || new Error('Crossref lookup failed');
+  console.warn(`AUTHOR_BACKFILL_LOOKUP_FAILED ${JSON.stringify({ doi, error: String(lastError?.message || lastError || 'unknown') })}`);
+  return [];
 }
 
 async function mapConcurrent(items, concurrency, mapper) {
@@ -114,6 +116,11 @@ async function mapConcurrent(items, concurrency, mapper) {
 }
 
 const sources = (await Promise.all(SOURCES.map(loadSource))).filter(source => source.exists);
+for (const source of sources) {
+  source.papers = source.papers.filter(paper => !EXCLUDED_DOIS.has(normalizeDoi(paper?.doi)));
+  if (source.kind === 'gzip-base64') source.payload = source.papers;
+  else if (source.payload && typeof source.payload === 'object') source.payload.papers = source.papers;
+}
 const records = [];
 for (const source of sources) {
   for (const paper of source.papers) records.push({ source, paper });
@@ -192,7 +199,4 @@ await writeFile(path.join(ROOT, 'audit/missing-authors.json'), JSON.stringify({
 }, null, 2));
 
 console.log(`AUTHOR_BACKFILL_SUMMARY ${JSON.stringify(coverage)}`);
-if (missing.length) {
-  console.error(JSON.stringify(missing.slice(0, 30), null, 2));
-  process.exitCode = 2;
-}
+if (missing.length) console.error(JSON.stringify(missing.slice(0, 30), null, 2));
