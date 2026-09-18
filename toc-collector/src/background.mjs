@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
 
 // This module is imported only after the startup window has rendered.
 // All Electron objects, filesystem operations and background work are deferred.
@@ -44,6 +45,10 @@ let cycleRunning = false;
 let vpnWatchTimer = null;
 let pollTimer = null;
 let lastQueue = [];
+let configWatcher = null;
+let configReloadTimer = null;
+let configReloadedAt = 0;
+let configReloadMessage = '尚未读取';
 const publisherPartition = 'toc-publisher-scan';
 let publisherSession = null;
 const diagnosticArg = process.argv.find(arg => arg.startsWith('--diagnose-publishers='));
@@ -85,6 +90,28 @@ function configPath() { return path.join(dataDir(), 'config.json'); }
 function statePath() { return path.join(dataDir(), 'state.json'); }
 function logPath() { return path.join(dataDir(), 'collector.log'); }
 
+// This is deliberately an identity check, never a secret display. It makes it
+// possible to distinguish two configured profiles without putting a credential
+// in the dashboard, bootstrap log, or collector.log.
+function tokenIdentity() {
+  const token = String(config?.writeToken || '').trim();
+  return {
+    configured: Boolean(token),
+    length: token.length,
+    sha256Prefix: token ? createHash('sha256').update(token).digest('hex').slice(0, 8) : '',
+  };
+}
+
+function configDiagnostic() {
+  return {
+    userData: dataDir(),
+    configPath: configPath(),
+    ...tokenIdentity(),
+    reloadedAt: configReloadedAt,
+    message: configReloadMessage,
+  };
+}
+
 async function log(message, extra = '') {
   const line = `[${new Date().toISOString()}] ${message}${extra ? ` ${typeof extra === 'string' ? extra : JSON.stringify(extra)}` : ''}\n`;
   await fsp.mkdir(dataDir(), { recursive: true });
@@ -111,6 +138,21 @@ async function saveState() {
 async function ensureConfig() {
   await fsp.mkdir(dataDir(), { recursive: true });
   if (!fs.existsSync(configPath())) await fsp.writeFile(configPath(), JSON.stringify(DEFAULT_CONFIG, null, 2));
+  await reloadConfig({ source: 'startup' });
+  state = await loadJson(statePath(), state);
+  state.cooldowns = state.cooldowns && typeof state.cooldowns === 'object' ? state.cooldowns : {};
+  // Retry only generic failures from older collectors; keep all specific cooldowns.
+  if (state.collectorRecoveryVersion !== '0.1.6') {
+    state.cooldowns = Object.fromEntries(Object.entries(state.cooldowns).filter(([, value]) => value?.reason !== 'collector_failed'));
+    state.collectorRecoveryVersion = '0.1.6';
+  }
+  await saveState();
+  startConfigWatch();
+  // Login settings change only after the user explicitly toggles the tray option.
+}
+
+async function reloadConfig({ source = 'manual' } = {}) {
+  const previous = tokenIdentity();
   config = await loadJson(configPath(), DEFAULT_CONFIG);
   let configChanged = false;
   if (!String(config.apiBase || '').trim() || String(config.apiBase).replace(/\/$/, '') === LEGACY_PAGES_API_BASE) {
@@ -122,15 +164,48 @@ async function ensureConfig() {
     configChanged = true;
   }
   if (configChanged) await fsp.writeFile(configPath(), JSON.stringify(config, null, 2));
-  state = await loadJson(statePath(), state);
-  state.cooldowns = state.cooldowns && typeof state.cooldowns === 'object' ? state.cooldowns : {};
-  // Retry only generic failures from older collectors; keep all specific cooldowns.
-  if (state.collectorRecoveryVersion !== '0.1.6') {
-    state.cooldowns = Object.fromEntries(Object.entries(state.cooldowns).filter(([, value]) => value?.reason !== 'collector_failed'));
-    state.collectorRecoveryVersion = '0.1.6';
+  const current = tokenIdentity();
+  configReloadedAt = Date.now();
+  configReloadMessage = `已从 ${source === 'watch' ? '磁盘保存事件' : source} 重新加载`;
+  await log('config_reloaded', {
+    source,
+    userData: dataDir(),
+    configPath: configPath(),
+    configured: current.configured,
+    tokenLength: current.length,
+    tokenSha256Prefix: current.sha256Prefix,
+    changed: previous.sha256Prefix !== current.sha256Prefix || previous.length !== current.length,
+  });
+  mark('background.config.reloaded', configDiagnostic());
+  return current;
+}
+
+async function saveConfig(source = 'collector') {
+  await fsp.mkdir(dataDir(), { recursive: true });
+  await fsp.writeFile(configPath(), JSON.stringify(config, null, 2));
+  await reloadConfig({ source });
+  refreshDashboard();
+}
+
+function startConfigWatch() {
+  if (configWatcher) return;
+  try {
+    configWatcher = fs.watch(dataDir(), { persistent: false }, (_event, filename) => {
+      if (String(filename || '').toLowerCase() !== 'config.json') return;
+      if (configReloadTimer) clearTimeout(configReloadTimer);
+      configReloadTimer = setTimeout(() => {
+        configReloadTimer = null;
+        void guard('config-reload', async () => {
+          await reloadConfig({ source: 'watch' });
+          stageStatus = '设置已保存并生效，无需重启。';
+          rebuildTrayMenu();
+          await refreshDashboard();
+        });
+      }, 150);
+    });
+  } catch (error) {
+    mark('background.config.watch.error', safeError(error));
   }
-  await saveState();
-  // Login settings change only after the user explicitly toggles the tray option.
 }
 
 function todayKey() { return new Date().toISOString().slice(0, 10); }
@@ -720,7 +795,10 @@ function dashboardHtml() {
   const net = Object.keys(network).length ? network : (summary.net || {});
   const restricted = lastQueue.filter(x => ['acs','wiley'].includes(classify(x.doi))).length;
   const rows = lastQueue.slice(0, 12).map(x => `<tr><td>${escapeHtml(x.doi)}</td><td>${escapeHtml(classify(x.doi).toUpperCase())}</td></tr>`).join('');
-  const tokenState = config.writeToken ? '已配置' : '未配置（只能检查，不能上传）';
+  const configInfo = configDiagnostic();
+  const tokenState = configInfo.configured
+    ? `已配置 · 长度 ${configInfo.length} · SHA-256 ${configInfo.sha256Prefix}`
+    : '缺失 · 长度 0';
   const vpnState = config.vpnExecutable ? escapeHtml(config.vpnExecutable) : '未设置';
   const errors = backgroundErrors.map(item => `<div><strong>${escapeHtml(item.stage)}</strong>: ${escapeHtml(item.message)}</div>`).join('');
   const closeHint = validTray() ? '关闭窗口可隐藏到托盘。' : '关闭窗口将退出程序。';
@@ -741,9 +819,9 @@ function dashboardHtml() {
     <div class="card"><div class="k">写入密钥</div><div class="v" style="font-size:14px">${escapeHtml(tokenState)}</div></div>
     <div class="card"><div class="k">上次处理</div><div class="v" style="font-size:14px">${summary.at ? `成功 ${Number(summary.success||0)} · 失败 ${Number(summary.failed||0)}` : '尚未采集'}</div></div>
   </div>
-  <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
+  <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开当前设置</a><a href="collector:reload-config">重新加载设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
   <table><thead><tr><th>最近待处理 DOI</th><th>来源</th></tr></thead><tbody>${rows || '<tr><td colspan="2">当前无待处理项目</td></tr>'}</tbody></table>
-  <div class="note">VPN 程序：${vpnState}<br>自动检查间隔：${Number(config.pollMinutes||10)} 分钟；提醒间隔：${Number(config.reminderHours||6)} 小时。</div>
+  <div class="note">实际 userData：<code>${escapeHtml(configInfo.userData)}</code><br>实际 config.json：<code>${escapeHtml(configInfo.configPath)}</code><br>设置状态：${escapeHtml(configInfo.message)}${configInfo.reloadedAt ? `（${escapeHtml(new Date(configInfo.reloadedAt).toLocaleString())}）` : ''}<br>VPN 程序：${vpnState}<br>自动检查间隔：${Number(config.pollMinutes||10)} 分钟；提醒间隔：${Number(config.reminderHours||6)} 小时。</div>
   </div></body></html>`;
 }
 
@@ -800,11 +878,12 @@ function rebuildTrayMenu() {
     { type: 'separator' },
     { label: diagnosticRequested ? '发布商诊断模式' : cycleRunning ? '正在检查…' : '现在检查一次', enabled: !diagnosticRequested && !cycleRunning && stageResults.collector === 'ok', click: guard('manual-cycle', () => runCycle(true)) },
     { label: `查看当前队列 (${lastQueue.length})`, click: guard('queue-dialog', () => dialog.showMessageBox(dashboard, { title: '当前 TOC 队列', message: lastQueue.slice(0,60).map(x => `${x.doi}  [${classify(x.doi)}]`).join('\n') || '当前无待处理项目' })) },
-    { label: '打开设置文件', click: guard('open-config', () => shell.openPath(configPath())) },
+    { label: '打开当前进程设置文件', click: guard('open-config', () => shell.openPath(configPath())) },
+    { label: '重新加载设置（无需重启）', click: guard('reload-config', async () => { await reloadConfig({ source: 'tray' }); stageStatus = '设置已重新加载并生效，无需重启。'; rebuildTrayMenu(); await refreshDashboard(); }) },
     { label: '查看日志', click: guard('open-log', () => shell.openPath(logPath())) },
     { type: 'separator' },
     { label: '今天不再提醒', type: 'checkbox', checked: state.muteDate === todayKey(), click: guard('mute-reminders', async item => { state.muteDate = item.checked ? todayKey() : ''; await saveState(); }) },
-    { label: '开机自动运行', type: 'checkbox', checked: Boolean(config.autoStart), click: guard('login-setting', async item => { app.setLoginItemSettings({ openAtLogin: item.checked, path: process.env.PORTABLE_EXECUTABLE_FILE || process.execPath, args: ['--background'] }); config.autoStart = item.checked; await fsp.writeFile(configPath(), JSON.stringify(config, null, 2)); }) },
+    { label: '开机自动运行', type: 'checkbox', checked: Boolean(config.autoStart), click: guard('login-setting', async item => { app.setLoginItemSettings({ openAtLogin: item.checked, path: process.env.PORTABLE_EXECUTABLE_FILE || process.execPath, args: ['--background'] }); config.autoStart = item.checked; await saveConfig('tray-login-setting'); rebuildTrayMenu(); }) },
     { type: 'separator' },
     { label: '退出', click: () => app.quit() },
   ]));
@@ -857,6 +936,7 @@ function onNavigate(event, url) {
   void guard(`dashboard-${action}`, async () => {
     if (action === 'check') await runCycle(true);
     if (action === 'config') await shell.openPath(configPath());
+    if (action === 'reload-config') { await reloadConfig({ source: 'dashboard' }); stageStatus = '设置已重新加载并生效，无需重启。'; rebuildTrayMenu(); await refreshDashboard(); }
     if (action === 'log') await shell.openPath(logPath());
     if (action === 'hide' && validTray()) dashboard.hide();
     if (action === 'quit') app.quit();
@@ -869,6 +949,8 @@ function dispose() {
   if (firstCycleTimer) clearTimeout(firstCycleTimer);
   if (pollTimer) clearInterval(pollTimer);
   if (vpnWatchTimer) clearInterval(vpnWatchTimer);
+  if (configReloadTimer) clearTimeout(configReloadTimer);
+  if (configWatcher) configWatcher.close();
   if (validTray()) tray.destroy();
 }
 

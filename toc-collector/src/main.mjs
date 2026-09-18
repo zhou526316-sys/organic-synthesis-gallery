@@ -78,7 +78,10 @@ app.whenReady().then(async () => {
   window.on('closed', () => { mark('BrowserWindow.closed'); window = null; });
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', (event, url) => { if (!url.startsWith('collector:')) event.preventDefault(); });
-  await window.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(`<!doctype html><meta charset="utf-8"><title>TOC Collector ${app.getVersion()}</title><style>body{font:17px Segoe UI,Arial;margin:40px;background:#f6f7f9;color:#202124}h1{font-size:27px}p{line-height:1.6}code{overflow-wrap:anywhere}</style><h1>程序已启动</h1><p>TOC Collector ${escapeHtml(app.getVersion())} started successfully</p><p>正在加载后台功能，发生错误时此窗口会继续显示。</p><p>启动日志：<code>${escapeHtml(bootstrapPath)}</code></p>`));
+  const runtimeUserData = app.getPath('userData');
+  const runtimeConfigPath = path.join(runtimeUserData, 'config.json');
+  mark('runtime.paths', { userData: runtimeUserData, configPath: runtimeConfigPath });
+  await window.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(`<!doctype html><meta charset="utf-8"><title>TOC Collector ${app.getVersion()}</title><style>body{font:17px Segoe UI,Arial;margin:40px;background:#f6f7f9;color:#202124}h1{font-size:27px}p{line-height:1.6}code{overflow-wrap:anywhere}</style><h1>程序已启动</h1><p>TOC Collector ${escapeHtml(app.getVersion())} started successfully</p><p>正在加载后台功能，发生错误时此窗口会继续显示。</p><p>实际 userData：<code>${escapeHtml(runtimeUserData)}</code><br>实际 config.json：<code>${escapeHtml(runtimeConfigPath)}</code></p><p>启动日志：<code>${escapeHtml(bootstrapPath)}</code></p>`));
   window.show();
   window.focus();
   mark('startup-window.visible', { visible: window.isVisible(), title: window.getTitle() });
