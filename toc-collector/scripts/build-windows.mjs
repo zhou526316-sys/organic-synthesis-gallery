@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const projectDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const packageInfo = JSON.parse(await fs.readFile(path.join(projectDir, 'package.json'), 'utf8'));
 const builderDir = path.dirname(require.resolve('app-builder-lib/package.json'));
 const templatePath = path.join(builderDir, 'templates', 'nsis', 'portable.nsi');
 const expectedBuilderVersion = '26.15.3';
@@ -31,13 +32,19 @@ function instrumentPortable(original, diagnostics, launch) {
 }
 
 const requested = process.argv.slice(2);
-if (!requested.length || requested.some(target => !['nsis', 'portable', 'debug', '--check-template'].includes(target))) {
-  throw new Error('Usage: node scripts/build-windows.mjs nsis|portable|debug [nsis|portable]');
+if (!requested.length || requested.some(target => !['unpacked', 'nsis', 'portable', 'debug', '--check-template'].includes(target))) {
+  throw new Error('Usage: node scripts/build-windows.mjs unpacked|nsis|portable|debug [unpacked|nsis|portable]');
 }
-const original = await fs.readFile(templatePath, 'utf8');
-const diagnostics = await fs.readFile(path.join(projectDir, 'build', 'portable-bootstrap.nsh'), 'utf8');
-const launch = await fs.readFile(path.join(projectDir, 'build', 'portable-launch.nsh'), 'utf8');
-const instrumented = instrumentPortable(original, diagnostics + '\n', launch);
+// Unpacked and Setup builds do not depend on the portable launcher template.
+const needsPortable = requested.some(target => ['portable', 'debug', '--check-template'].includes(target));
+let original;
+let instrumented;
+if (needsPortable) {
+  original = await fs.readFile(templatePath, 'utf8');
+  const diagnostics = await fs.readFile(path.join(projectDir, 'build', 'portable-bootstrap.nsh'), 'utf8');
+  const launch = await fs.readFile(path.join(projectDir, 'build', 'portable-launch.nsh'), 'utf8');
+  instrumented = instrumentPortable(original, diagnostics + '\n', launch);
+}
 if (requested.includes('--check-template')) {
   console.log(`Native portable diagnostics verified against electron-builder ${version}.`);
 } else {
@@ -48,17 +55,40 @@ if (requested.includes('--check-template')) {
   try {
     for (const target of requested) {
       const debug = target === 'debug';
-      const actualTarget = debug ? 'portable' : target;
-      await fs.writeFile(templatePath, actualTarget === 'portable' ? instrumented : original);
+      const actualTarget = debug ? 'portable' : target === 'unpacked' ? 'dir' : target;
+      if (needsPortable) await fs.writeFile(templatePath, actualTarget === 'portable' ? instrumented : original);
       const config = debug ? {
-        extraMetadata: { version: '0.1.4-debug', main: 'src/minimal.mjs' },
+        extraMetadata: { version: `${packageInfo.version}-debug`, main: 'src/minimal.mjs' },
         directories: { output: 'dist/debug' },
         portable: { artifactName: 'Organic-Synthesis-Gallery-TOC-Collector-Portable-${version}-${arch}.${ext}' },
       } : {};
-      await build({ projectDir, targets: Platform.WINDOWS.createTarget(actualTarget, Arch.x64), config });
+      await build({ projectDir, targets: Platform.WINDOWS.createTarget(actualTarget, Arch.x64), config, publish: 'never' });
+      if (target === 'unpacked') {
+        const outputDir = path.join(projectDir, 'dist');
+        const unpackedDir = path.join(outputDir, 'win-unpacked');
+        await Promise.all([
+          fs.access(path.join(unpackedDir, `${packageInfo.build.productName}.exe`)),
+          fs.access(path.join(unpackedDir, 'Start-CollectorDiagnostics.ps1')),
+          fs.access(path.join(unpackedDir, 'START-TOC-COLLECTOR.cmd')),
+          fs.access(path.join(unpackedDir, 'Start-TOC-Collector-Unblock.ps1')),
+          fs.access(path.join(unpackedDir, 'Start-TOC-Collector-Diagnostic.cmd')),
+          fs.access(path.join(unpackedDir, 'Start-TOC-Collector-Diagnostic.ps1')),
+        ]);
+        const zipPath = path.join(outputDir, `Organic-Synthesis-Gallery-TOC-Collector-${packageInfo.version}-x64-win-unpacked.zip`);
+        const temporaryZip = `${zipPath}.${process.pid}.tmp.zip`;
+        // Reuse this pinned builder's archiver and retain the win-unpacked/ folder.
+        const { archive } = require(path.join(builderDir, 'out', 'targets', 'archive.js'));
+        try {
+          await archive('zip', temporaryZip, unpackedDir, { withoutDir: false });
+          await fs.rename(temporaryZip, zipPath);
+        } finally {
+          await fs.rm(temporaryZip, { force: true });
+        }
+        console.log(`Unpacked ZIP: ${zipPath}`);
+      }
     }
   } finally {
-    await fs.writeFile(templatePath, original);
+    if (needsPortable) await fs.writeFile(templatePath, original);
     await lock.close();
     await fs.unlink(lockPath);
   }

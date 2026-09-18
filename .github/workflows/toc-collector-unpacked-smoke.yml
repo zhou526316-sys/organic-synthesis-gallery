@@ -37,29 +37,44 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
         shell: pwsh
         run: |
-          npx electron-builder --win --x64 --dir --publish never
+          npm run dist:unpacked
           $dir = Resolve-Path 'dist/win-unpacked'
           $exe = Join-Path $dir 'Organic Synthesis Gallery TOC Collector.exe'
           $launcher = Join-Path $dir 'START-TOC-COLLECTOR.cmd'
+          $diagnostic = Join-Path $dir 'Start-TOC-Collector-Diagnostic.cmd'
           if (-not (Test-Path $exe)) { throw "Unpacked EXE missing: $exe" }
           if (-not (Test-Path $launcher)) { throw "Unblock launcher missing: $launcher" }
+          if (-not (Test-Path $diagnostic)) { throw "Diagnostic launcher missing: $diagnostic" }
           Write-Host "UNPACKED_EXE=$exe"
 
       - name: Direct launch smoke test
         shell: pwsh
         run: |
           $log = Join-Path $env:TEMP 'toc-collector-bootstrap.log'
-          Remove-Item $log -Force -ErrorAction SilentlyContinue
+          $env:ELECTRON_ENABLE_LOGGING = '1'
+          $env:ELECTRON_ENABLE_STACK_DUMPING = '1'
+          Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue
           $exe = Join-Path (Resolve-Path 'dist/win-unpacked') 'Organic Synthesis Gallery TOC Collector.exe'
-          $p = Start-Process -FilePath $exe -ArgumentList '--startup-stage=window' -PassThru
-          Start-Sleep -Seconds 8
-          if ($p.HasExited) {
-            if (Test-Path $log) { Get-Content $log }
-            throw "TOC Collector exited during direct smoke test with code $($p.ExitCode)"
+          $p = Start-Process -FilePath $exe -ArgumentList '--startup-stage=tray', '--enable-logging=stderr' -PassThru -RedirectStandardOutput 'dist/smoke-stdout.log' -RedirectStandardError 'dist/smoke-stderr.log'
+          try {
+            Start-Sleep -Seconds 10
+            $p.Refresh()
+            if ($p.HasExited) { throw "TOC Collector exited during smoke test with code $($p.ExitCode)" }
+            $text = Get-Content -LiteralPath $log -Raw
+            foreach ($marker in @('JS_ENTRY', 'ELECTRON_IMPORTED', 'APP_READY', 'WINDOW_CREATED', 'WINDOW_VISIBLE', 'BACKGROUND_IMPORT_BEGIN', 'BACKGROUND_IMPORT_OK', 'BACKGROUND_INIT_BEGIN', 'BACKGROUND_INIT_OK')) {
+              if ($text -notmatch "\[$($p.Id)\] $marker(?:\s|$)") { throw "Missing $marker for process $($p.Id)" }
+            }
+            foreach ($stage in @('logging', 'config', 'tray')) {
+              if ($text -notmatch "\[$($p.Id)\] background\.$stage\.ok(?:\s|$)") { throw "Background stage failed or never completed: $stage" }
+              if ($text -match "\[$($p.Id)\] background\.$stage\.error(?:\s|$)") { throw "Background stage logged an error: $stage" }
+            }
+            if ($p.MainWindowHandle -eq [IntPtr]::Zero) { throw 'No native main window handle was observed' }
+            Write-Host "TOC Collector is running; native window handle=$($p.MainWindowHandle)"
+          } finally {
+            if (Test-Path -LiteralPath $log) { Copy-Item -LiteralPath $log -Destination 'dist/smoke-bootstrap.log' -Force }
+            if (-not $p.HasExited) { $p.Kill($true); $p.WaitForExit() }
+            $p.Dispose()
           }
-          $text = Get-Content $log -Raw
-          if (-not $text.Contains('startup-window.visible')) { Stop-Process -Id $p.Id -Force; throw 'Visible startup window marker missing' }
-          Stop-Process -Id $p.Id -Force
 
       - name: ZoneId unblock launcher smoke test
         shell: pwsh
@@ -108,7 +123,10 @@ jobs:
       - name: Upload Zone-safe smoke-tested unpacked app
         uses: actions/upload-artifact@v4
         with:
-          name: toc-collector-windows-0.1.5-zone-safe
-          path: toc-collector/dist/win-unpacked/**
+          name: toc-collector-windows-0.1.6-unpacked-smoketested
+          path: |
+            toc-collector/dist/win-unpacked/**
+            toc-collector/dist/*-win-unpacked.zip
+            toc-collector/dist/smoke-*.log
           if-no-files-found: error
           retention-days: 14

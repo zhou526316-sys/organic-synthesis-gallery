@@ -16,9 +16,6 @@ concurrency:
   group: toc-collector-windows
   cancel-in-progress: true
 
-env:
-  COLLECTOR_BUILD_REV: '2'
-
 jobs:
   build:
     runs-on: windows-latest
@@ -40,15 +37,64 @@ jobs:
       - name: Syntax check
         run: npm run check
 
-      - name: Build Windows installer
+      - name: Build unpacked Windows ZIP first
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-        run: npm run dist:win
+        run: npm run dist:unpacked
 
-      - name: Build minimal startup diagnostic
+      - name: Smoke-test unpacked runtime
+        shell: pwsh
+        run: |
+          $env:ELECTRON_ENABLE_LOGGING = '1'
+          $env:ELECTRON_ENABLE_STACK_DUMPING = '1'
+          Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue
+          $exe = Join-Path (Resolve-Path 'dist/win-unpacked') 'Organic Synthesis Gallery TOC Collector.exe'
+          $log = Join-Path $env:TEMP 'toc-collector-bootstrap.log'
+          foreach ($stage in @('window', 'tray')) {
+            $p = Start-Process -FilePath $exe -ArgumentList "--startup-stage=$stage", '--enable-logging=stderr' -PassThru -RedirectStandardOutput "dist/smoke-$stage-stdout.log" -RedirectStandardError "dist/smoke-$stage-stderr.log"
+            try {
+              Start-Sleep -Seconds 10
+              $p.Refresh()
+              if ($p.HasExited) { throw "Runtime exited during $stage startup with code $($p.ExitCode)" }
+              $text = Get-Content -LiteralPath $log -Raw
+              foreach ($marker in @('JS_ENTRY', 'ELECTRON_IMPORTED', 'APP_READY', 'WINDOW_CREATED', 'WINDOW_VISIBLE')) {
+                if ($text -notmatch "\[$($p.Id)\] $marker(?:\s|$)") { throw "Missing $marker for process $($p.Id)" }
+              }
+              if ($stage -eq 'tray') {
+                if ($text -notmatch "\[$($p.Id)\] BACKGROUND_INIT_OK(?:\s|$)") { throw 'Background startup did not finish' }
+                foreach ($backgroundStage in @('logging', 'config', 'tray')) {
+                  if ($text -notmatch "\[$($p.Id)\] background\.$backgroundStage\.ok(?:\s|$)") { throw "Background stage failed or never completed: $backgroundStage" }
+                  if ($text -match "\[$($p.Id)\] background\.$backgroundStage\.error(?:\s|$)") { throw "Background stage logged an error: $backgroundStage" }
+                }
+              }
+              if ($p.MainWindowHandle -eq [IntPtr]::Zero) { throw 'No native main window handle was observed' }
+              Write-Host "$stage startup: process alive, window handle=$($p.MainWindowHandle)"
+            } finally {
+              if (Test-Path -LiteralPath $log) { Copy-Item -LiteralPath $log -Destination 'dist/smoke-bootstrap.log' -Force }
+              if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+              $p.Dispose()
+            }
+          }
+
+      - name: Upload primary unpacked ZIP and smoke logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: toc-collector-windows-unpacked
+          path: |
+            toc-collector/dist/*-win-unpacked.zip
+            toc-collector/dist/smoke-*.log
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Build Setup after unpacked smoke test
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-        run: npm run dist:debug
+        run: npm run dist:nsis
+
+      - name: Build Portable last
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npm run dist:portable
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
@@ -57,6 +103,5 @@ jobs:
           path: |
             toc-collector/dist/*.exe
             toc-collector/dist/*.yml
-            toc-collector/dist/debug/*.exe
           if-no-files-found: error
           retention-days: 14

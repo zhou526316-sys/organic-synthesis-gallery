@@ -1,13 +1,14 @@
 {
   "name": "organic-synthesis-gallery-toc-collector",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": true,
   "type": "module",
   "main": "src/main.mjs",
   "scripts": {
     "start": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/Start-CollectorDiagnostics.ps1 -Development",
     "check": "node --check src/main.mjs && node --check src/minimal.mjs && node --check src/background.mjs && node --check scripts/build-windows.mjs",
-    "dist:win": "node scripts/build-windows.mjs nsis portable",
+    "dist:win": "node scripts/build-windows.mjs unpacked nsis portable",
+    "dist:unpacked": "node scripts/build-windows.mjs unpacked",
     "dist:nsis": "node scripts/build-windows.mjs nsis",
     "dist:portable": "node scripts/build-windows.mjs portable",
     "dist:debug": "node scripts/build-windows.mjs debug"
@@ -32,7 +33,9 @@
     "extraFiles": [
       { "from": "scripts/Start-CollectorDiagnostics.ps1", "to": "Start-CollectorDiagnostics.ps1" },
       { "from": "scripts/START-TOC-COLLECTOR.cmd", "to": "START-TOC-COLLECTOR.cmd" },
-      { "from": "scripts/Start-TOC-Collector-Unblock.ps1", "to": "Start-TOC-Collector-Unblock.ps1" }
+      { "from": "scripts/Start-TOC-Collector-Unblock.ps1", "to": "Start-TOC-Collector-Unblock.ps1" },
+      { "from": "scripts/Start-TOC-Collector-Diagnostic.cmd", "to": "Start-TOC-Collector-Diagnostic.cmd" },
+      { "from": "scripts/Start-TOC-Collector-Diagnostic.ps1", "to": "Start-TOC-Collector-Diagnostic.ps1" }
     ],
     "win": {
       "target": [

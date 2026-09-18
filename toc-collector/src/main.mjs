@@ -9,6 +9,7 @@ function mark(stage, detail = '') {
     fs.appendFileSync(bootstrapPath, `${new Date().toISOString()} [${process.pid}] ${stage} ${typeof detail === 'string' ? detail : JSON.stringify(detail)}\n`);
   } catch (error) { console.error('Bootstrap log unavailable:', error.message); }
 }
+mark('JS_ENTRY', { entry: import.meta.url, electron: process.versions.electron });
 mark('JS file loaded', { entry: import.meta.url, electron: process.versions.electron });
 // A diagnostic console may close while this GUI app keeps running.
 // Broken stdout/stderr must never become an uncaught application error.
@@ -45,6 +46,7 @@ try {
   mark('electron.import.before');
   electron = await import('electron');
   mark('electron.import.after');
+  mark('ELECTRON_IMPORTED', { electron: process.versions.electron });
 } catch (error) {
   mark('electron.import.error', errorText(error));
   throw error; // The native launcher records the non-zero exit before Electron dialogs exist.
@@ -59,6 +61,7 @@ app.on('child-process-gone', (_event, details) => reportError('child-process-gon
 mark('app.whenReady.register');
 app.whenReady().then(async () => {
   mark('app.whenReady', { version: app.getVersion(), userData: app.getPath('userData') });
+  mark('APP_READY', { version: app.getVersion() });
   mark('BrowserWindow.before');
   window = new BrowserWindow({
     width: 800, height: 740, minWidth: 560, minHeight: 480,
@@ -66,6 +69,7 @@ app.whenReady().then(async () => {
     webPreferences: { sandbox: true, contextIsolation: true, nodeIntegration: false },
   });
   mark('BrowserWindow.after', { id: window.id });
+  mark('WINDOW_CREATED', { id: window.id });
   window.webContents.on('render-process-gone', (_event, details) => {
     mark('renderer.gone', details);
     electron.dialog.showErrorBox('TOC Collector 页面进程错误', `${details.reason}\n日志：${bootstrapPath}`);
@@ -78,6 +82,7 @@ app.whenReady().then(async () => {
   window.show();
   window.focus();
   mark('startup-window.visible', { visible: window.isVisible(), title: window.getTitle() });
+  mark('WINDOW_VISIBLE', { visible: window.isVisible(), title: window.getTitle() });
   const stageArg = process.argv.find(arg => arg.startsWith('--startup-stage='));
   const stage = stageArg?.split('=')[1] || 'collector';
   if (stage === 'window') { mark('startup.complete', { stage }); return; }
@@ -85,9 +90,13 @@ app.whenReady().then(async () => {
   setImmediate(async () => {
     try {
       mark('background.import.before');
+      mark('BACKGROUND_IMPORT_BEGIN');
       const { initializeBackground } = await import('./background.mjs');
       mark('background.import.after');
+      mark('BACKGROUND_IMPORT_OK');
+      mark('BACKGROUND_INIT_BEGIN');
       background = await initializeBackground({ window, stage, mark, reportError });
+      mark('BACKGROUND_INIT_OK', { stage });
       mark('startup.complete', { stage, visible: Boolean(window && !window.isDestroyed() && window.isVisible()) });
     } catch (error) { reportError('background', error); }
   });

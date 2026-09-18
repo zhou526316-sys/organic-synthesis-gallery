@@ -6,7 +6,7 @@ Windows 10/11 托盘常驻程序，用用户本机网络/VPN 补齐出版社 TOC
 
 - 手动运行立即显示“程序已启动”，然后逐项加载后台功能；后台失败显示在面板上，窗口继续保留。
 - 开机自动启动默认关闭，可在托盘菜单中主动开启；初始化配置不修改 Windows 登录启动设置。
-- 默认每 10 分钟检查一次 `/api/media/bridge-queue`。
+- 默认每 10 分钟从 `https://api.gczhouwld.com/api/media/bridge-queue` 读取队列；主域名发生 DNS、TLS、超时或 5xx 错误时自动尝试 Worker 原始地址。
 - Nature / Science / 其他当前可直接访问来源先静默处理。
 - ACS (`10.1021/*`) 与 Wiley/Angew (`10.1002/*`) 先检测网络；已可访问时自动工作。
 - 只有存在受限 backlog 且当前网络不可访问时才提醒。
@@ -31,7 +31,8 @@ Windows 10/11 托盘常驻程序，用用户本机网络/VPN 补齐出版社 TOC
 
 ```json
 {
-  "apiBase": "https://organic-synthesis-gallery-public.pages.dev",
+  "apiBase": "https://api.gczhouwld.com",
+  "apiFallbackBase": "https://organic-synthesis-gallery.zhou526316.workers.dev",
   "writeToken": "YOUR_BRIDGE_WRITE_TOKEN",
   "vpnExecutable": "C:\\Program Files\\YourVPN\\vpn.exe",
   "autoStart": false,
@@ -75,12 +76,13 @@ npm run check
 npm run dist:win
 ```
 
-0.1.4 固定 Electron 37.10.3 / electron-builder 26.15.3，避免同一源码因依赖升级生成不同运行时。两个 target 顺序构建，并使用不同文件名，禁止再共享同名 EXE：
+0.1.6 固定 Electron 37.10.3 / electron-builder 26.15.3，避免同一源码因依赖升级生成不同运行时。优先构建 `win-unpacked` ZIP，再顺序构建两个安装 target；所有产物使用不同文件名：
 
-- `dist/Organic-Synthesis-Gallery-TOC-Collector-Setup-0.1.4-x64.exe`：NSIS 安装程序。
-- `dist/Organic-Synthesis-Gallery-TOC-Collector-Portable-0.1.4-x64.exe`：免安装程序。
+- `dist/Organic-Synthesis-Gallery-TOC-Collector-0.1.6-x64-win-unpacked.zip`：优先发布的完整解压目录。
+- `dist/Organic-Synthesis-Gallery-TOC-Collector-Setup-0.1.6-x64.exe`：NSIS 安装程序。
+- `dist/Organic-Synthesis-Gallery-TOC-Collector-Portable-0.1.6-x64.exe`：免安装程序。
 
-也可以用 `npm run dist:nsis` 和 `npm run dist:portable` 单独构建。`npm run dist:debug` 生成 `dist/debug/Organic-Synthesis-Gallery-TOC-Collector-Portable-0.1.4-debug-x64.exe`，入口为 `src/minimal.mjs`，仅用于确认窗口能够启动。
+也可以用 `npm run dist:unpacked`、`npm run dist:nsis` 和 `npm run dist:portable` 单独构建。`npm run dist:debug` 生成 `dist/debug/Organic-Synthesis-Gallery-TOC-Collector-Portable-0.1.6-debug-x64.exe`，入口为 `src/minimal.mjs`，仅用于确认窗口能够启动。
 
 免安装启动器在 Electron 启动前，将入口、解压、启动及子进程退出码写入 `%TEMP%\toc-collector-bootstrap.log`。解压后缺少 EXE、Windows 创建进程失败或子进程异常退出时显示原生错误框。每次启动使用独立的临时解压目录；子程序路径显式加引号。electron-builder 26 没有 portable 自定义脚本选项，因此 `scripts/build-windows.mjs` 只在构建期间为固定版本的原生模板增加 `build/portable-*.nsh`，并在结束或失败后恢复模板；请使用上述 npm 构建命令。
 
@@ -96,7 +98,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Start-CollectorDiagnos
 
 ## 当前边界
 
-0.1.4 优先保证启动可见、启动诊断完整。无 writeToken 时不采集或上传。API 或出版社不可达时面板显示错误，主窗口继续运行。特殊 CAPTCHA、必须登录的页面仍需人工处理。PMC 继续沿用仓库已有的 GitHub Pages 开放媒体管道，不重复抓取。
+0.1.6 优先保证启动可见、启动诊断完整。无 writeToken 时仍可读取队列和执行显式的只读发布商诊断，但不会上传。API 或出版社不可达时面板显示错误，主窗口继续运行。特殊 CAPTCHA、必须登录的页面仍需人工处理。PMC 继续沿用仓库已有的 GitHub Pages 开放媒体管道，不重复抓取。
 
 ## 分阶段启动排障
 

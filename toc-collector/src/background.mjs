@@ -17,9 +17,13 @@ let firstCycleTimer = null;
 let disposed = false;
 let renderPending = false;
 let renderPromise = null;
-const failStage = process.argv.find(arg => arg.startsWith('--fail-stage='))?.split('=')[1];
-const DEFAULT_CONFIG = {
-  apiBase: 'https://organic-synthesis-gallery-public.pages.dev',
+  const failStage = process.argv.find(arg => arg.startsWith('--fail-stage='))?.split('=')[1];
+  const PRIMARY_API_BASE = 'https://api.gczhouwld.com';
+  const FALLBACK_API_BASE = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+  const LEGACY_PAGES_API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';
+  const DEFAULT_CONFIG = {
+  apiBase: PRIMARY_API_BASE,
+  apiFallbackBase: FALLBACK_API_BASE,
   writeToken: '',
   vpnExecutable: '',
   autoStart: false,
@@ -41,7 +45,39 @@ let vpnWatchTimer = null;
 let pollTimer = null;
 let lastQueue = [];
 const publisherPartition = 'toc-publisher-scan';
-const publisherSession = session.fromPartition(publisherPartition, { cache: false });
+let publisherSession = null;
+const diagnosticArg = process.argv.find(arg => arg.startsWith('--diagnose-publishers='));
+const diagnosticDoiArgs = process.argv.filter(arg => arg.startsWith('--diagnose-doi='));
+const diagnosticRequested = Boolean(diagnosticArg) || diagnosticDoiArgs.length > 0;
+const requestedDiagnosticPublishers = (diagnosticArg?.split('=')[1] || '')
+  .split(',')
+  .map(value => value.trim().toLowerCase())
+  .filter(Boolean);
+const validPublisherNames = ['nature', 'wiley', 'acs', 'science', 'other'];
+const invalidDiagnosticPublishers = requestedDiagnosticPublishers.filter(value => !validPublisherNames.includes(value));
+const diagnosticPublishers = requestedDiagnosticPublishers.filter(value => validPublisherNames.includes(value));
+const requestedDiagnosticDois = diagnosticDoiArgs.map(arg => arg.slice('--diagnose-doi='.length).trim().toLowerCase()).filter(Boolean);
+const invalidDiagnosticDois = requestedDiagnosticDois.filter(doi => !/^10\.\d{4,9}\/\S+$/.test(doi));
+const forceBrowserFallback = process.argv.includes('--force-browser-fallback');
+
+function getPublisherSession() {
+  if (!app.isReady()) throw new Error('publisher_session_before_app_ready');
+  if (!publisherSession) {
+    publisherSession = session.fromPartition(publisherPartition, { cache: false });
+    mark('background.publisher-session.created', { partition: publisherPartition });
+  }
+  return publisherSession;
+}
+
+function safeError(error, limit = 1200) {
+  let value = String(error?.message || error || 'unknown_error');
+  const token = String(config?.writeToken || '').trim();
+  if (token) value = value.split(token).join('[REDACTED]');
+  value = value
+    .replace(/Bearer\s+[^\s"']+/gi, 'Bearer [REDACTED]')
+    .replace(/([?&](?:token|key|auth|authorization)=)[^&#\s]+/gi, '$1[REDACTED]');
+  return value.slice(0, limit);
+}
 
 
 function dataDir() { return path.join(app.getPath('userData')); }
@@ -76,12 +112,22 @@ async function ensureConfig() {
   await fsp.mkdir(dataDir(), { recursive: true });
   if (!fs.existsSync(configPath())) await fsp.writeFile(configPath(), JSON.stringify(DEFAULT_CONFIG, null, 2));
   config = await loadJson(configPath(), DEFAULT_CONFIG);
+  let configChanged = false;
+  if (!String(config.apiBase || '').trim() || String(config.apiBase).replace(/\/$/, '') === LEGACY_PAGES_API_BASE) {
+    config.apiBase = PRIMARY_API_BASE;
+    configChanged = true;
+  }
+  if (!String(config.apiFallbackBase || '').trim()) {
+    config.apiFallbackBase = FALLBACK_API_BASE;
+    configChanged = true;
+  }
+  if (configChanged) await fsp.writeFile(configPath(), JSON.stringify(config, null, 2));
   state = await loadJson(statePath(), state);
   state.cooldowns = state.cooldowns && typeof state.cooldowns === 'object' ? state.cooldowns : {};
-  // 0.1.5 retries papers that 0.1.4 marked as generic client-side failures.
-  if (state.collectorRecoveryVersion !== '0.1.5') {
+  // Retry only generic failures from older collectors; keep all specific cooldowns.
+  if (state.collectorRecoveryVersion !== '0.1.6') {
     state.cooldowns = Object.fromEntries(Object.entries(state.cooldowns).filter(([, value]) => value?.reason !== 'collector_failed'));
-    state.collectorRecoveryVersion = '0.1.5';
+    state.collectorRecoveryVersion = '0.1.6';
   }
   await saveState();
   // Login settings change only after the user explicitly toggles the tray option.
@@ -105,27 +151,82 @@ function articleUrl(doi) {
   return `https://doi.org/${doi}`;
 }
 
+function transportDetails(error) {
+  const messages = [];
+  const codes = [];
+  let current = error;
+  for (let depth = 0; current && depth < 4; depth += 1) {
+    if (current.message) messages.push(String(current.message));
+    if (current.code) codes.push(String(current.code));
+    current = current.cause;
+  }
+  const combined = `${codes.join(' ')} ${messages.join(' ')}`;
+  const kind = /abort|timeout|timed out/i.test(combined) ? 'timeout'
+    : /ENOTFOUND|EAI_AGAIN|ERR_NAME_NOT_RESOLVED|dns/i.test(combined) ? 'dns'
+      : /CERT|TLS|SSL|handshake/i.test(combined) ? 'tls'
+        : 'network';
+  return { kind, code: codes[0] || '', message: safeError(messages.join(' <- ') || error, 500) };
+}
+
+async function logApiEvent(event, detail) {
+  mark(`background.${event}`, detail);
+  try { await log(event, detail); } catch {}
+}
+
 async function api(pathname, options = {}) {
+  const method = String(options.method || 'GET').toUpperCase();
+  const readOnly = method === 'GET' || method === 'HEAD';
   const headers = { Accept: 'application/json', ...(options.headers || {}) };
   if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
-  if (config.writeToken) headers.Authorization = `Bearer ${String(config.writeToken).trim()}`;
-  const res = await session.defaultSession.fetch(`${String(config.apiBase).replace(/\/$/, '')}${pathname}`, { ...options, headers, signal: AbortSignal.timeout(30000) });
-  const text = await res.text();
-  let body = {}; try { body = text ? JSON.parse(text) : {}; } catch { body = { text }; }
-  if (!res.ok) throw new Error(`API ${res.status}: ${body.error || text.slice(0, 160)}`);
-  return body;
+  if (!readOnly && config.writeToken) headers.Authorization = `Bearer ${String(config.writeToken).trim()}`;
+  const bases = [...new Set([
+    String(config.apiBase || PRIMARY_API_BASE).replace(/\/$/, ''),
+    String(config.apiFallbackBase || FALLBACK_API_BASE).replace(/\/$/, ''),
+  ].filter(Boolean))];
+  let lastError = null;
+  for (let index = 0; index < bases.length; index += 1) {
+    const requestedUrl = `${bases[index]}${pathname}`;
+    const startedAt = Date.now();
+    try {
+      // Node's fetch honors the user's HTTP(S)_PROXY environment on Windows. Chromium's
+      // session fetch can close workers.dev connections on the same machine even when
+      // the endpoint is healthy, so API traffic uses the Node transport explicitly.
+      const res = await globalThis.fetch(requestedUrl, { ...options, method, headers, signal: AbortSignal.timeout(30000) });
+      const finalUrl = res.url || requestedUrl;
+      const text = await res.text();
+      let body = {};
+      try { body = text ? JSON.parse(text) : {}; } catch { body = { text }; }
+      const detail = { method, transport: 'node-fetch', attempt: index + 1, fallback: index > 0, status: res.status, elapsedMs: Date.now() - startedAt, requestedUrl, finalUrl };
+      if (res.ok) {
+        await logApiEvent('api_request_success', detail);
+        return body;
+      }
+      const message = safeError(body.error || text.slice(0, 160), 300);
+      lastError = new Error(`API ${res.status}: ${message}; finalUrl=${finalUrl}`);
+      await logApiEvent('api_request_http_error', { ...detail, message });
+      if (res.status < 500 || index === bases.length - 1) throw lastError;
+    } catch (error) {
+      if (error === lastError) throw error;
+      const transport = transportDetails(error);
+      lastError = new Error(`API ${transport.kind}: ${transport.message}; requestedUrl=${requestedUrl}`);
+      await logApiEvent('api_request_transport_error', { method, transport: 'node-fetch', attempt: index + 1, fallback: index > 0, elapsedMs: Date.now() - startedAt, requestedUrl, finalUrl: requestedUrl, ...transport });
+      if (index === bases.length - 1) throw lastError;
+    }
+  }
+  throw lastError || new Error(`API request failed: ${method} ${pathname}`);
 }
 
 async function fetchQueue() {
   const payload = await api('/api/media/bridge-queue');
   if (!Array.isArray(payload.items)) throw new Error('Queue API returned no items array');
   lastQueue = payload.items.filter(item => item && typeof item === 'object' && typeof item.doi === 'string');
+  await log('api_get_queue_success', { count: lastQueue.length });
   return lastQueue;
 }
 
 async function probeUrl(url) {
   try {
-    const res = await publisherSession.fetch(url, { method: 'GET', redirect: 'follow', signal: AbortSignal.timeout(10000) });
+    const res = await getPublisherSession().fetch(url, { method: 'GET', redirect: 'follow', signal: AbortSignal.timeout(10000) });
     return res.status >= 200 && res.status < 400;
   } catch (error) {
     mark('background.network.probe.error', { url, message: String(error?.message || error) });
@@ -189,18 +290,29 @@ function stripHtml(value) {
 
 function absoluteMediaUrl(value, pageUrl) {
   if (!value) return '';
-  try { return new URL(String(value).trim(), pageUrl).href; } catch { return ''; }
+  try {
+    const url = new URL(String(value).trim(), pageUrl);
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+  } catch { return ''; }
 }
 
-function sourceFromAttrs(attrs) {
-  for (const key of ['src', 'data-src', 'data-original', 'data-lazy-src', 'data-image-src']) {
-    if (attrs[key]) return attrs[key];
+function sourceFromAttrs(attrs, pageUrl) {
+  for (const key of ['data-src', 'data-original', 'data-lazy-src', 'data-image-src']) {
+    const candidate = absoluteMediaUrl(attrs[key], pageUrl);
+    if (candidate) return candidate;
   }
   if (attrs.srcset) {
-    const options = attrs.srcset.split(',').map(part => part.trim().split(/\s+/)[0]).filter(Boolean);
-    return options.at(-1) || '';
+    const options = attrs.srcset.split(',').map((part, index) => {
+      const [url, descriptor = ''] = part.trim().split(/\s+/, 2);
+      const score = descriptor.endsWith('w') ? Number.parseFloat(descriptor) : descriptor.endsWith('x') ? Number.parseFloat(descriptor) * 10000 : index;
+      return { url, score: Number.isFinite(score) ? score : index };
+    }).filter(option => option.url).sort((a, b) => b.score - a.score);
+    for (const option of options) {
+      const candidate = absoluteMediaUrl(option.url, pageUrl);
+      if (candidate) return candidate;
+    }
   }
-  return '';
+  return absoluteMediaUrl(attrs.src, pageUrl);
 }
 
 function htmlCandidate(html, pageUrl) {
@@ -230,7 +342,7 @@ function htmlCandidate(html, pageUrl) {
     const text = [attrs.alt, attrs.title, attrs.id, attrs.class, stripHtml(block).slice(0, 1400)].filter(Boolean).join(' ');
     const official = /visual\s*abstract|graphical\s*abstract|abstract\s*image|toc\s*(graphic|image)|table\s*of\s*contents/i.test(text);
     const fig1 = /(^|\b)(fig(?:ure)?\.?\s*1)(\b|[:.])/i.test(text);
-    if (official || fig1) add(sourceFromAttrs(attrs), text, official ? 'official' : 'figure1', attrs.width, attrs.height);
+    if (official || fig1) add(sourceFromAttrs(attrs, pageUrl), text, official ? 'official' : 'figure1', attrs.width, attrs.height);
   }
 
   let images = 0;
@@ -240,7 +352,7 @@ function htmlCandidate(html, pageUrl) {
     const text = [attrs.alt, attrs.title, attrs.id, attrs.class].filter(Boolean).join(' ');
     const official = /visual\s*abstract|graphical\s*abstract|abstract\s*image|toc\s*(graphic|image)|table\s*of\s*contents/i.test(text);
     const fig1 = /(^|\b)(fig(?:ure)?\.?\s*1)(\b|[:.])/i.test(text);
-    if (official || fig1) add(sourceFromAttrs(attrs), text, official ? 'official' : 'figure1', attrs.width, attrs.height);
+    if (official || fig1) add(sourceFromAttrs(attrs, pageUrl), text, official ? 'official' : 'figure1', attrs.width, attrs.height);
   }
 
   rows.sort((a,b) => {
@@ -251,63 +363,89 @@ function htmlCandidate(html, pageUrl) {
   return rows[0] || null;
 }
 
-async function inspectArticleHtml(doi, url, browserError = '') {
-  const res = await publisherSession.fetch(url, {
-    method: 'GET',
-    redirect: 'follow',
-    headers: {
-      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
-      'Accept-Language': 'en-US,en;q=0.9',
-    },
-    signal: AbortSignal.timeout(Math.max(15000, Number(config.publisherTimeoutSeconds || 35) * 1000)),
-  });
-  if (!res.ok) throw new Error(`publisher_http_${res.status}${browserError ? ` after ${browserError}` : ''}`);
-  const html = await res.text();
-  if (/captcha|verify you are human|access denied|challenge-platform/i.test(html.slice(0, 250000))) {
-    throw new Error(`publisher_access_challenge${browserError ? ` after ${browserError}` : ''}`);
+async function publisherFetch(url, options, fallbackEvent) {
+  try {
+    return await getPublisherSession().fetch(url, options);
+  } catch (error) {
+    const reason = safeError(error, 300);
+    if (!/ERR_BLOCKED_BY_CLIENT|ERR_CONNECTION_CLOSED/i.test(reason)) throw error;
+    await log(fallbackEvent, { url, reason, transport: 'node-fetch' });
+    return globalThis.fetch(url, options);
   }
-  const finalUrl = res.url || url;
-  const candidate = htmlCandidate(html, finalUrl);
-  await log('publisher html fallback', { doi, browserError, candidate: candidate?.kind || 'none', url: finalUrl });
-  return { url: finalUrl, candidate };
+}
+
+async function inspectArticleHtml(doi, url, browserError = '') {
+  try {
+    const res = await publisherFetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
+      signal: AbortSignal.timeout(Math.max(15000, Number(config.publisherTimeoutSeconds || 35) * 1000)),
+    }, 'publisher_html_node_fallback');
+    if (!res.ok) throw new Error(`publisher_http_${res.status}`);
+    const html = await res.text();
+    const finalUrl = res.url || url;
+    const candidate = htmlCandidate(html, finalUrl);
+    if (candidate) {
+      await log('html_fallback_success', { doi, kind: candidate.kind, url: finalUrl, browserError });
+      return { url: finalUrl, candidate, method: 'html' };
+    }
+    let challengeUrl = false;
+    try {
+      const parsed = new URL(finalUrl);
+      challengeUrl = parsed.hostname === 'idp.nature.com' && parsed.pathname.startsWith('/transit');
+    } catch {}
+    const challenge = challengeUrl || /captcha|verify you are human|access denied|challenge-platform|client challenge|just a moment|enable javascript/i.test(html.slice(0, 250000));
+    await log('html_fallback_no_candidate', { doi, url: finalUrl, challenge, browserError });
+    if (challenge) throw new Error('publisher_access_challenge');
+    return { url: finalUrl, candidate: null, method: 'html' };
+  } catch (error) {
+    if (!/publisher_access_challenge/.test(String(error?.message || error))) {
+      await log('html_fallback_no_candidate', { doi, reason: safeError(error, 300).replace(/https?:\/\/\S+/g, '<url>'), browserError });
+    }
+    throw error;
+  }
 }
 
 async function inspectArticle(doi) {
   const url = articleUrl(doi);
-  const win = new BrowserWindow({
-    show: false,
-    webPreferences: {
-      partition: publisherPartition,
-      sandbox: true,
-      contextIsolation: true,
-      images: true,
-    },
-  });
+  let win = null;
   let publisherTimer;
   try {
-    try {
-      await Promise.race([
-        win.loadURL(url, { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36' }),
-        new Promise((_, reject) => { publisherTimer = setTimeout(() => reject(new Error('publisher_timeout')), Math.max(1, Number(config.publisherTimeoutSeconds) || 35) * 1000); }),
-      ]);
-    } catch (error) {
-      const browserError = String(error?.message || error);
-      await log('browser scan failed; trying html fallback', { doi, browserError });
-      return await inspectArticleHtml(doi, url, browserError);
-    }
+    win = new BrowserWindow({
+      show: false,
+      webPreferences: {
+        session: getPublisherSession(),
+        sandbox: true,
+        contextIsolation: true,
+        images: true,
+      },
+    });
+    if (forceBrowserFallback) throw new Error('net::ERR_BLOCKED_BY_CLIENT (diagnostic injection)');
+    await Promise.race([
+      win.loadURL(url, { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36' }),
+      new Promise((_, reject) => { publisherTimer = setTimeout(() => reject(new Error('publisher_timeout')), Math.max(1, Number(config.publisherTimeoutSeconds) || 35) * 1000); }),
+    ]);
+    clearTimeout(publisherTimer);
+    publisherTimer = null;
     await new Promise(r => setTimeout(r, Number(config.headlessWaitMs) || 5000));
     const result = await win.webContents.executeJavaScript(`(() => {
-      const abs = u => { try { return new URL(u, location.href).href } catch { return '' } };
+      const abs = u => { try { const value = new URL(u, location.href); return ['http:','https:'].includes(value.protocol) ? value.href : '' } catch { return '' } };
       const rows = [];
       for (const m of document.querySelectorAll('meta')) {
-        const key = (m.getAttribute('name') || m.getAttribute('property') || '').toLowerCase();
+        const key = (m.getAttribute('name') || m.getAttribute('property') || m.getAttribute('itemprop') || '').toLowerCase();
         if (['citation_graphical_abstract','citation_toc_graphic','citation_abstract_image'].includes(key)) {
           const src = abs(m.content || ''); if (src) rows.push({ src, text: key, width: 0, height: 0, kind: 'official' });
         }
       }
       for (const img of document.images) {
-        const src = abs(img.currentSrc || img.src || img.getAttribute('data-src') || img.getAttribute('data-original') || '');
+        const srcset = (img.getAttribute('srcset') || '').split(',').map(x => x.trim().split(/\\s+/)[0]).filter(Boolean).reverse();
+        const sources = [img.getAttribute('data-src'), img.getAttribute('data-original'), img.getAttribute('data-lazy-src'), img.getAttribute('data-image-src'), img.currentSrc, ...srcset, img.src];
+        const src = sources.map(abs).find(Boolean) || '';
         if (!src) continue;
         const root = img.closest('figure,section,div,aside') || img.parentElement;
         const text = [img.alt, img.title, img.id, img.className, root?.getAttribute?.('aria-label'), root?.innerText?.slice(0,500)].filter(Boolean).join(' ');
@@ -325,18 +463,29 @@ async function inspectArticle(doi) {
       const sb = semanticScore(b.text) + (b.kind === 'official' ? 20 : 0) + Math.min(20, ((b.width||0)*(b.height||0))/100000);
       return sb - sa;
     });
-    return { url: result?.href || url, candidate: rows[0] || null };
+    if (!rows[0]) throw new Error('browser_no_candidate');
+    await log('browser_success', { doi, kind: rows[0].kind, url: result?.href || url });
+    return { url: result?.href || url, candidate: rows[0], method: 'browser' };
+  } catch (error) {
+    const browserError = safeError(error, 300).replace(/https?:\/\/\S+/g, '<url>');
+    if (publisherTimer) clearTimeout(publisherTimer);
+    publisherTimer = null;
+    if (win && !win.isDestroyed()) win.destroy();
+    win = null;
+    await log('browser_blocked_fallback', { doi, browserError, blockedByClient: /ERR_BLOCKED_BY_CLIENT/i.test(browserError) });
+    return await inspectArticleHtml(doi, url, browserError);
   } finally {
     if (publisherTimer) clearTimeout(publisherTimer);
-    if (!win.isDestroyed()) win.destroy();
+    if (win && !win.isDestroyed()) win.destroy();
   }
 }
 
 async function imageData(url, referer) {
-  const res = await publisherSession.fetch(url, { headers: { Accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8', Referer: referer }, signal: AbortSignal.timeout(30000) });
+  const res = await publisherFetch(url, { headers: { Accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8', Referer: referer }, signal: AbortSignal.timeout(30000) }, 'publisher_image_node_fallback');
   if (!res.ok) throw new Error(`image_http_${res.status}`);
   let buffer = Buffer.from(await res.arrayBuffer());
   const type = (res.headers.get('content-type') || 'image/jpeg').split(';')[0].toLowerCase();
+  if (!type.startsWith('image/')) throw new Error(`image_content_type_${type || 'missing'}`);
   if (buffer.length > 3_800_000 || /webp|avif/.test(type)) {
     const img = nativeImage.createFromBuffer(buffer);
     if (img.isEmpty()) throw new Error('image_decode_failed');
@@ -356,38 +505,60 @@ async function report(doi, stage, outcome, rootCause, url = '') {
   catch (error) { await handleFailure('attempt-report', error); }
 }
 
-async function processItem(item) {
+async function processItem(item, { ignoreCooldown = false, inspectOnly = false } = {}) {
   const doi = String(item.doi || '').toLowerCase();
-  if (!doi || cooldownActive(doi)) return { skipped: true };
+  if (!doi || (!ignoreCooldown && cooldownActive(doi))) return { doi, status: 'skipped' };
   try {
     const inspected = await inspectArticle(doi);
     const c = inspected.candidate;
     if (!c) {
-      await setCooldown(doi, 'semantic_media_not_found', 72 * 60 * 60 * 1000);
-      await report(doi, 'extract', 'partial', 'semantic_media_not_found', inspected.url);
+      if (!inspectOnly) {
+        await setCooldown(doi, 'semantic_media_not_found', 72 * 60 * 60 * 1000);
+        await report(doi, 'extract', 'partial', 'semantic_media_not_found', inspected.url);
+      }
       return { doi, status: 'no_candidate' };
     }
-    const data = await imageData(c.src, inspected.url);
+    let data;
+    try {
+      data = await imageData(c.src, inspected.url);
+    } catch (error) {
+      await log('image_download_failed', { doi, kind: c.kind, reason: safeError(error, 300) });
+      throw error;
+    }
+    if (inspectOnly) {
+      await log('upload_failed', { doi, kind: c.kind, reason: 'write_token_missing_inspection_only' });
+      return { doi, status: 'inspection_only', reason: 'write_token_missing', kind: c.kind, source: inspected.method };
+    }
     if (!config.writeToken) throw new Error('write_token_missing');
-    if (c.kind === 'official') {
-      await api('/api/toc/import', { method: 'POST', body: JSON.stringify({ doi, articleUrl: inspected.url, imageData: data, replace: Boolean(item.suspiciousToc) }) });
-      await report(doi, 'upload', 'complete', 'collector_official_toc', inspected.url);
-    } else {
-      await api('/api/article-figures/import', { method: 'POST', body: JSON.stringify({ doi, articleUrl: inspected.url, id: 'figure-1', label: 'Figure 1', caption: c.text?.slice(0,500) || 'Figure 1', imageData: data, order: 0 }) });
-      await report(doi, 'upload', 'partial', 'collector_figure1_fallback', inspected.url);
+    try {
+      if (c.kind === 'official') {
+        await api('/api/toc/import', { method: 'POST', body: JSON.stringify({ doi, articleUrl: inspected.url, imageData: data, replace: Boolean(item.suspiciousToc) }) });
+        await report(doi, 'upload', 'complete', 'collector_official_toc', inspected.url);
+      } else {
+        await api('/api/article-figures/import', { method: 'POST', body: JSON.stringify({ doi, articleUrl: inspected.url, id: 'figure-1', label: 'Figure 1', caption: c.text?.slice(0,500) || 'Figure 1', imageData: data, order: 0 }) });
+        await report(doi, 'upload', 'partial', 'collector_figure1_fallback', inspected.url);
+      }
+      await log('upload_success', { doi, kind: c.kind, source: inspected.method });
+    } catch (error) {
+      await log('upload_failed', { doi, kind: c.kind, reason: safeError(error, 300) });
+      throw error;
     }
     await clearCooldown(doi);
     return { doi, status: c.kind };
   } catch (error) {
-    const msg = String(error?.message || error);
+    const msg = safeError(error, 1000);
     let reason = 'collector_failed', ms = 6 * 60 * 60 * 1000;
-    if (/403|access|captcha|challenge/i.test(msg)) { reason = 'publisher_access_blocked'; ms = 24*60*60*1000; }
+    if (/write_token_missing|^API (401|403)/.test(msg)) { reason = 'collector_auth'; ms = 30*60*1000; }
+    else if (/^API /.test(msg)) { reason = 'upload_failed'; ms = 60*60*1000; }
+    else if (/^image_/.test(msg)) { reason = 'image_download_failed'; ms = 8*60*60*1000; }
+    else if (/403|access|captcha|challenge/i.test(msg)) { reason = 'publisher_access_blocked'; ms = 24*60*60*1000; }
     else if (/429|rate/i.test(msg)) { reason = 'publisher_rate_limited'; ms = 24*60*60*1000; }
     else if (/timeout/i.test(msg)) { reason = 'publisher_timeout'; ms = 8*60*60*1000; }
     else if (/ERR_BLOCKED_BY_CLIENT/i.test(msg)) { reason = 'publisher_client_blocked'; ms = 30*60*1000; }
-    else if (/write_token_missing|401/.test(msg)) { reason = 'collector_auth'; ms = 30*60*1000; }
-    await setCooldown(doi, reason, ms);
-    await report(doi, 'process', 'failed', reason, articleUrl(doi));
+    if (!inspectOnly) {
+      await setCooldown(doi, reason, ms);
+      await report(doi, 'process', 'failed', reason, articleUrl(doi));
+    }
     await log('paper failed', { doi, reason, msg });
     return { doi, status: 'failed', reason };
   }
@@ -398,6 +569,37 @@ async function processBatch(items) {
   const results = [];
   for (const item of selected) results.push(await processItem(item));
   return results;
+}
+
+async function runPublisherDiagnostics() {
+  const publishers = [...new Set(diagnosticPublishers)];
+  const requestedDois = [...new Set(requestedDiagnosticDois)];
+  if (!publishers.length && !requestedDois.length) return null;
+  const inspectOnly = !String(config.writeToken || '').trim();
+  await log('publisher_diagnostic_write_mode', { writeEnabled: !inspectOnly });
+  const results = [];
+  const missing = [];
+  const targets = requestedDois.length
+    ? requestedDois.map(doi => ({ selector: doi, publisher: classify(doi), item: lastQueue.find(entry => String(entry.doi || '').toLowerCase() === doi) }))
+    : publishers.map(publisher => ({ selector: publisher, publisher, item: lastQueue.find(entry => classify(entry.doi) === publisher) }));
+  for (const target of targets) {
+    const { publisher, item, selector } = target;
+    if (!item) {
+      missing.push(selector);
+      await log('publisher_diagnostic_no_queue_item', { publisher, selector });
+      continue;
+    }
+    const doi = String(item.doi || '').toLowerCase();
+    await log('publisher_diagnostic_selected', { publisher, doi });
+    const result = await processItem(item, { ignoreCooldown: true, inspectOnly });
+    results.push({ publisher, doi, status: result?.status || 'unknown', reason: result?.reason || '' });
+    await log('publisher_diagnostic_result', results.at(-1));
+  }
+  const summary = { mode: requestedDois.length ? 'doi' : 'publisher', requested: requestedDois.length ? requestedDois : publishers, completed: results.length, missing, writeEnabled: !inspectOnly, results };
+  state.lastPublisherDiagnostic = { at: Date.now(), ...summary };
+  await saveState();
+  await log('publisher_diagnostic_complete', summary);
+  return summary;
 }
 
 async function maybeNotifyRestricted(restrictedCount) {
@@ -456,6 +658,10 @@ function startVpnWatch() {
 }
 
 async function runCycle(manual = false) {
+  if (diagnosticRequested) {
+    await log('publisher_diagnostic_normal_cycle_blocked', { manual });
+    return;
+  }
   if (cycleRunning || disposed || stageResults.collector !== 'ok') return;
   cycleRunning = true;
   try {
@@ -535,7 +741,7 @@ function dashboardHtml() {
     <div class="card"><div class="k">写入密钥</div><div class="v" style="font-size:14px">${escapeHtml(tokenState)}</div></div>
     <div class="card"><div class="k">上次处理</div><div class="v" style="font-size:14px">${summary.at ? `成功 ${Number(summary.success||0)} · 失败 ${Number(summary.failed||0)}` : '尚未采集'}</div></div>
   </div>
-  <div class="buttons">${stageResults.collector === 'ok' ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
+  <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
   <table><thead><tr><th>最近待处理 DOI</th><th>来源</th></tr></thead><tbody>${rows || '<tr><td colspan="2">当前无待处理项目</td></tr>'}</tbody></table>
   <div class="note">VPN 程序：${vpnState}<br>自动检查间隔：${Number(config.pollMinutes||10)} 分钟；提醒间隔：${Number(config.reminderHours||6)} 小时。</div>
   </div></body></html>`;
@@ -592,7 +798,7 @@ function rebuildTrayMenu() {
     { label: `TOC Collector · ${status}`, enabled: false },
     { label: '打开状态面板', click: () => showDashboard() },
     { type: 'separator' },
-    { label: cycleRunning ? '正在检查…' : '现在检查一次', enabled: !cycleRunning && stageResults.collector === 'ok', click: guard('manual-cycle', () => runCycle(true)) },
+    { label: diagnosticRequested ? '发布商诊断模式' : cycleRunning ? '正在检查…' : '现在检查一次', enabled: !diagnosticRequested && !cycleRunning && stageResults.collector === 'ok', click: guard('manual-cycle', () => runCycle(true)) },
     { label: `查看当前队列 (${lastQueue.length})`, click: guard('queue-dialog', () => dialog.showMessageBox(dashboard, { title: '当前 TOC 队列', message: lastQueue.slice(0,60).map(x => `${x.doi}  [${classify(x.doi)}]`).join('\n') || '当前无待处理项目' })) },
     { label: '打开设置文件', click: guard('open-config', () => shell.openPath(configPath())) },
     { label: '查看日志', click: guard('open-log', () => shell.openPath(logPath())) },
@@ -605,11 +811,11 @@ function rebuildTrayMenu() {
 }
 
 async function handleFailure(failedStage, error) {
-  const message = String(error?.message || error);
+  const message = safeError(error);
   backgroundErrors.push({ stage: failedStage, message });
-  mark(`background.${failedStage}.error`, { message, stack: String(error?.stack || error) });
-  try { await log(`${failedStage} failed`, String(error?.stack || error)); } catch {}
-  reportError(failedStage, error);
+  mark(`background.${failedStage}.error`, { message });
+  try { await log(`${failedStage} failed`, message); } catch {}
+  reportError(failedStage, new Error(message));
   refreshDashboard();
 }
 
@@ -695,13 +901,20 @@ const steps = {
   },
   collector: async () => {
     if (stageResults.config !== 'ok') throw new Error('Collector requires a valid config.json');
-    if (!String(config.writeToken || '').trim()) {
+    if (diagnosticRequested && ((!diagnosticPublishers.length && !requestedDiagnosticDois.length) || invalidDiagnosticPublishers.length || invalidDiagnosticDois.length)) {
+      throw new Error(`invalid_publisher_diagnostic_args:${[...invalidDiagnosticPublishers, ...invalidDiagnosticDois].join(',') || 'empty'}`);
+    }
+    if (diagnosticRequested) {
+      await log('publisher diagnostic mode enabled', { publishers: [...new Set(diagnosticPublishers)], dois: [...new Set(requestedDiagnosticDois)] });
+    } else if (!String(config.writeToken || '').trim()) {
       await log('collector waiting for writeToken; no collection performed');
       mark('background.collector.waiting-for-token');
     } else {
       firstCycleTimer = setTimeout(guard('first-cycle', () => runCycle(false)), 2500);
     }
-    pollTimer = setInterval(guard('scheduled-cycle', () => runCycle(false)), Math.max(3, Number(config.pollMinutes) || 10) * 60 * 1000);
+    if (!diagnosticRequested) {
+      pollTimer = setInterval(guard('scheduled-cycle', () => runCycle(false)), Math.max(3, Number(config.pollMinutes) || 10) * 60 * 1000);
+    }
   },
 };
 const lastStage = stageNames.indexOf(stage);
@@ -710,8 +923,14 @@ for (const name of stageNames.slice(0, lastStage + 1)) {
   if (disposed) break;
   await runStage(name, steps[name]);
 }
+let publisherDiagnostic = null;
+if (stage === 'collector' && stageResults.collector === 'ok' && diagnosticRequested) {
+  publisherDiagnostic = await runPublisherDiagnostics();
+}
 stageStatus = stage === 'collector'
-  ? (!String(config.writeToken || '').trim() ? '等待配置 writeToken；尚未开始采集或上传' : '后台初始化完成，等待首次采集')
+  ? diagnosticRequested
+    ? `发布商诊断完成 ${Number(publisherDiagnostic?.completed || 0)} 项；${Number(publisherDiagnostic?.missing?.length || 0)} 类队列缺项`
+    : (!String(config.writeToken || '').trim() ? '等待配置 writeToken；尚未开始采集或上传' : '后台初始化完成，等待首次采集')
   : `启动诊断已完成至 ${currentStage}；后续功能未启动`;
 if (backgroundErrors.length) stageStatus += `；${backgroundErrors.length} 个后台错误，详见下方`;
 try { rebuildTrayMenu(); } catch (error) { await handleFailure('tray-menu', error); }
