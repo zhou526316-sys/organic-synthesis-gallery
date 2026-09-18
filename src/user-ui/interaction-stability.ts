@@ -1,4 +1,4 @@
-const LOCK_CLASS = 'gallery-user-drawer-open';
+const PAPER_ACTIONS = 'gallery-paper-actions';
 
 function ensureGlobalStyle(): void {
   if (document.getElementById('user-ui-interaction-stability')) return;
@@ -13,8 +13,8 @@ function ensureGlobalStyle(): void {
       position: relative;
       z-index: 10019;
     }
-    html.${LOCK_CLASS},
-    html.${LOCK_CLASS} body {
+    html.gallery-user-drawer-open,
+    html.gallery-user-drawer-open body {
       overflow: hidden !important;
       overscroll-behavior: none;
     }
@@ -22,28 +22,31 @@ function ensureGlobalStyle(): void {
   document.head.appendChild(style);
 }
 
-function drawerActuallyOpen(): boolean {
-  return [...document.querySelectorAll<HTMLElement>('gallery-paper-actions')]
-    .some(host => host.isConnected && host.dataset.drawerOpen === 'true');
-}
-
-function cleanupStaleScrollLock(): void {
-  if (drawerActuallyOpen()) return;
-  document.documentElement.classList.remove(LOCK_CLASS);
+function releaseOrphanedScrollLock(): void {
+  const drawerOpen = Boolean(document.querySelector(`${PAPER_ACTIONS}[data-drawer-open="true"]`));
+  document.documentElement.classList.toggle('gallery-user-drawer-open', drawerOpen);
+  if (drawerOpen) return;
   for (const element of [document.documentElement, document.body]) {
     if (element.style.overflow === 'hidden') element.style.removeProperty('overflow');
     if (element.style.overscrollBehavior === 'none') element.style.removeProperty('overscroll-behavior');
     element.classList.remove('scroll-lock', 'scroll-locked', 'no-scroll');
   }
-  document.querySelectorAll<HTMLElement>('.card.user-action-open').forEach(card => card.classList.remove('user-action-open'));
 }
 
 ensureGlobalStyle();
-cleanupStaleScrollLock();
+releaseOrphanedScrollLock();
 
-const observer = new MutationObserver(() => cleanupStaleScrollLock());
-observer.observe(document.documentElement, { childList: true, subtree: true });
-window.addEventListener('pageshow', cleanupStaleScrollLock);
-window.addEventListener('focus', cleanupStaleScrollLock);
+const observer = new MutationObserver(() => releaseOrphanedScrollLock());
+observer.observe(document.documentElement, {
+  subtree: true,
+  childList: true,
+  attributes: true,
+  attributeFilter: ['data-drawer-open', 'class', 'style'],
+});
+
+window.addEventListener('pageshow', releaseOrphanedScrollLock);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) releaseOrphanedScrollLock();
+});
 
 export {};
