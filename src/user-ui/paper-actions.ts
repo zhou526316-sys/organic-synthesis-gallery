@@ -117,7 +117,7 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private bind(): void {
-    this.shadow.querySelector('.overlay')?.addEventListener('click', event => { if (event.target === event.currentTarget) { this.panel = 'none'; this.render(); } });
+    this.shadow.querySelector('.overlay')?.addEventListener('click', event => { if (event.target === event.currentTarget) this.closePanel(); });
     this.shadow.querySelectorAll<HTMLElement>('[data-action]').forEach(element => element.addEventListener('click', () => { void this.action(element.dataset.action || ''); }));
     this.shadow.querySelector<HTMLTextAreaElement>('[data-note]')?.addEventListener('input', event => store.setNote(this.paperId, (event.target as HTMLTextAreaElement).value, false));
     this.shadow.querySelector<HTMLTextAreaElement>('[data-note]')?.addEventListener('blur', event => { store.setNote(this.paperId, (event.target as HTMLTextAreaElement).value, true); this.render(); });
@@ -131,12 +131,22 @@ export class GalleryPaperActions extends HTMLElement {
 
   private async action(action: string): Promise<void> {
     if (action === 'favorite') { store.toggleFavorite(this.paperId); return; }
-    if (action === 'status' || action === 'note' || action === 'more') { this.panel = action; this.render(); return; }
-    if (action === 'close') { this.panel = 'none'; this.render(); return; }
-    if (action.startsWith('set-status:')) { store.setStatus(this.paperId, action.slice(11)); this.panel = 'none'; return; }
+    if (action === 'status' || action === 'note' || action === 'more') { this.openPanel(action); return; }
+    if (action === 'close') { this.closePanel(); return; }
+    if (action.startsWith('set-status:')) {
+      const statusId = action.slice(11);
+      this.closePanel();
+      store.setStatus(this.paperId, statusId);
+      return;
+    }
     if (action === 'add-tag') { const input = this.shadow.querySelector<HTMLInputElement>('[data-tag]'); const tag = input?.value.trim(); if (tag) store.updatePaper(this.paperId, paper => { if (!paper.tags.includes(tag)) paper.tags.push(tag); }); return; }
     if (action.startsWith('remove-tag:')) { const tag = action.slice(11); store.updatePaper(this.paperId, paper => { paper.tags = paper.tags.filter(value => value !== tag); }); return; }
-    if (action === 'similar') { this.dispatchEvent(new CustomEvent('gallery-similar', { bubbles: true, composed: true, detail: { paperId: this.paperId } })); this.panel = 'none'; return; }
+    if (action === 'similar') {
+      const paperId = this.paperId;
+      this.closePanel();
+      this.dispatchEvent(new CustomEvent('gallery-similar', { bubbles: true, composed: true, detail: { paperId } }));
+      return;
+    }
     if (action === 'feedback') {
       const meta = store.metadata(this.paperId); if (!meta?.doi) { this.feedbackMessage = this.tr('该文献 DOI 尚未核验，暂不能提交。', 'DOI is not verified yet.'); this.render(); return; }
       const kinds = this.tr('TOC错误/图片错误/标题错误/日期错误/重复文献/分类错误/其他', 'toc/image/title/date/duplicate/classification/other');
