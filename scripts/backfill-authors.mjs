@@ -16,6 +16,19 @@ const SOURCES = [
 const MAX_CONCURRENCY = Math.max(1, Math.min(8, Number(process.env.AUTHOR_BACKFILL_CONCURRENCY || 5)));
 const RETRIES = 4;
 const EXCLUDED_DOIS = new Set(['10.1038/s41467-026-77616-8', '10.1021/jacs.6c13738']);
+const TITLE_METADATA_OVERRIDES = new Map([
+  ['grignard reagents unlock three-dimensional nitrogen heterocycles via single-carbon-atom insertion', {
+    doi: '10.1021/jacs.6c08636',
+    authors: ['Aleksandr Koronatov', 'Pavel Sakharov', 'Alexander Kaushansky', 'Natalia Fridman', 'Peter R. Schreiner', 'Mark Gandelman'],
+  }],
+  ['diverse bicyclic heterocyclic scaffolds via palladium-catalyzed c(sp3)–h activation of amides and amines', {
+    doi: '10.1021/acscatal.6c02896',
+    authors: ['Rahul K. Shukla', 'Alpa Sharma', 'Bedadyuti Vedvyas Pati', 'Md Emdadul Hoque', 'Martin Tomanik', 'Jin-Quan Yu'],
+  }],
+]);
+const DOI_AUTHOR_OVERRIDES = new Map([
+  ['10.1002/anie.6268409', ['Jinbo Duan', 'Xiaoqian He', 'Xingyue Qi', 'Huachen Hou', 'Xingang Xie', 'Huilin Li', 'Gaoyuan Zhao', 'Xuegong She']],
+]);
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -44,6 +57,10 @@ function authorName(author) {
     typeof author.suffix === 'string' ? author.suffix.trim() : '',
   ].filter(Boolean);
   return pieces.join(' ').replace(/\s+/g, ' ').trim();
+}
+
+function normalizedTitle(value) {
+  return String(value || '').trim().toLowerCase().replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
 }
 
 function identity(paper) {
@@ -123,7 +140,18 @@ for (const source of sources) {
 }
 const records = [];
 for (const source of sources) {
-  for (const paper of source.papers) records.push({ source, paper });
+  for (const paper of source.papers) {
+    const override = TITLE_METADATA_OVERRIDES.get(normalizedTitle(paper?.title));
+    if (override) {
+      if (!normalizeDoi(paper?.doi) && override.doi) paper.doi = override.doi;
+      if (!normalizeAuthors(paper?.authors).length && override.authors?.length) paper.authors = [...override.authors];
+    }
+    const doi = normalizeDoi(paper?.doi);
+    if (doi && DOI_AUTHOR_OVERRIDES.has(doi) && !normalizeAuthors(paper?.authors).length) {
+      paper.authors = [...DOI_AUTHOR_OVERRIDES.get(doi)];
+    }
+    records.push({ source, paper });
+  }
 }
 
 const authorsByDoi = new Map();
@@ -149,9 +177,26 @@ const lookupResults = await mapConcurrent(doiTargets, MAX_CONCURRENCY, async (do
   return { doi, count: authors.length };
 });
 
+const bestByTitle = new Map();
 for (const { paper } of records) {
   const doi = normalizeDoi(paper?.doi);
-  const authors = doi ? authorsByDoi.get(doi) || [] : normalizeAuthors(paper?.authors);
+  const authors = doi ? authorsByDoi.get(doi) || normalizeAuthors(paper?.authors) : normalizeAuthors(paper?.authors);
+  const key = normalizedTitle(paper?.title);
+  if (key && doi && authors.length) bestByTitle.set(key, { doi, authors });
+}
+for (const { paper } of records) {
+  let doi = normalizeDoi(paper?.doi);
+  let authors = doi ? authorsByDoi.get(doi) || normalizeAuthors(paper?.authors) : normalizeAuthors(paper?.authors);
+  if ((!doi || !authors.length) && paper?.title) {
+    const match = bestByTitle.get(normalizedTitle(paper.title));
+    if (match) {
+      if (!doi) {
+        paper.doi = match.doi;
+        doi = match.doi;
+      }
+      if (!authors.length) authors = match.authors;
+    }
+  }
   paper.authors = authors;
 }
 
