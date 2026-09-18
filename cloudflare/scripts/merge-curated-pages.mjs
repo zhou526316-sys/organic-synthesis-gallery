@@ -39,6 +39,11 @@ function mergePapers(...sets) {
 }
 
 const curated = JSON.parse(await readFile(path.join(PUBLIC_DIR, 'curated-supplement.json'), 'utf8'));
+let automation = { papers: [] };
+try {
+  automation = JSON.parse(await readFile(path.join(PUBLIC_DIR, 'automation-supplement.json'), 'utf8'));
+} catch {}
+const auditedPapers = mergePapers(curated?.papers || [], automation?.papers || []);
 const supplementPath = path.join(PUBLIC_DIR, 'literature-supplement.json');
 const finalAuditPath = path.join(PUBLIC_DIR, 'final-audit-supplement.json');
 const translationsPath = path.join(PUBLIC_DIR, 'title-translations-zh.json');
@@ -46,8 +51,8 @@ const supplement = JSON.parse(await readFile(supplementPath, 'utf8'));
 const finalAudit = JSON.parse(await readFile(finalAuditPath, 'utf8'));
 const translationPayload = JSON.parse(await readFile(translationsPath, 'utf8'));
 
-const papers = mergePapers(supplement?.papers || [], curated?.papers || []);
-const mandatoryStaticPapers = mergePapers(finalAudit?.papers || [], curated?.papers || []);
+const papers = mergePapers(supplement?.papers || [], auditedPapers);
+const mandatoryStaticPapers = mergePapers(finalAudit?.papers || [], auditedPapers);
 
 const translations = new Map();
 for (const item of translationPayload?.translations || []) {
@@ -55,7 +60,7 @@ for (const item of translationPayload?.translations || []) {
     translations.set(titleKey(item.title), { title: item.title.trim(), zh: item.zh.trim() });
   }
 }
-for (const paper of curated?.papers || []) {
+for (const paper of auditedPapers) {
   if (typeof paper?.title === 'string' && typeof paper?.titleZh === 'string' && paper.titleZh.trim()) {
     translations.set(titleKey(paper.title), { title: paper.title.trim(), zh: paper.titleZh.trim() });
   }
@@ -72,6 +77,7 @@ await writeFile(finalAuditPath, JSON.stringify({
   ...finalAudit,
   verifiedThrough: curated?.verifiedThrough || finalAudit?.verifiedThrough || null,
   curatedMerged: true,
+  automationMerged: true,
   papers: mandatoryStaticPapers,
 }));
 
@@ -79,6 +85,7 @@ await writeFile(translationsPath, JSON.stringify({ translations: [...translation
 
 console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({
   curated: curated?.papers?.length || 0,
+  automation: automation?.papers?.length || 0,
   supplement: papers.length,
   mandatoryStatic: mandatoryStaticPapers.length,
   translations: translations.size,
