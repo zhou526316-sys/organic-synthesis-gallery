@@ -628,7 +628,9 @@ async function browserbaseContext(publisher) {
 }
 
 function localPublisherReady(publisher) {
-  return ['verified_article_access', 'verified_pdf_access'].includes(String(state.localPublisher?.[publisher]?.status || ''));
+  const local = state.localPublisher?.[publisher] || {};
+  return ['verified_article_access', 'verified_pdf_access'].includes(String(local.status || ''))
+    || ['verified_article_access', 'verified_pdf_access'].includes(String(local.lastVerifiedStatus || ''));
 }
 
 async function closeLocalPublisherBrowser(publisher) {
@@ -707,13 +709,18 @@ async function startLocalPublisherVerification(publisher) {
     void log('local_publisher_load_failed', { publisher, doi: target.doi || '', code, description, url: validatedUrl });
   });
 
-  state.localPublisher[publisher] = {
-    ...(state.localPublisher[publisher] || {}),
-    status: 'opening',
-    doi: target.doi || '',
-    partition: `persist:toc-publisher-${publisher}`,
-    openedAt: Date.now(),
-  };
+  {
+    const previous = state.localPublisher[publisher] || {};
+    const preserveVerified = localPublisherReady(publisher);
+    state.localPublisher[publisher] = {
+      ...previous,
+      status: preserveVerified ? previous.status : 'opening',
+      windowStatus: 'opening',
+      doi: target.doi || '',
+      partition: `persist:toc-publisher-${publisher}`,
+      openedAt: Date.now(),
+    };
+  }
   await saveState();
   await log('local_publisher_window_opened', { publisher, doi: target.doi || '', url: target.url, partition: `persist:toc-publisher-${publisher}` });
 
@@ -723,12 +730,17 @@ async function startLocalPublisherVerification(publisher) {
     await log('local_publisher_load_error', { publisher, doi: target.doi || '', reason: safeError(error, 240) });
   });
 
-  state.localPublisher[publisher] = {
-    ...(state.localPublisher[publisher] || {}),
-    status: 'open',
-    currentUrl: win.webContents.getURL(),
-    openedAt: Date.now(),
-  };
+  {
+    const previous = state.localPublisher[publisher] || {};
+    const preserveVerified = localPublisherReady(publisher);
+    state.localPublisher[publisher] = {
+      ...previous,
+      status: preserveVerified ? previous.status : 'open',
+      windowStatus: 'open',
+      currentUrl: win.webContents.getURL(),
+      openedAt: Date.now(),
+    };
+  }
   await saveState();
   stageStatus = `${manualPublisherLabel(publisher)} 已在本机持久浏览器会话打开。该会话直接使用 Windows 网络；若学校 VPN 是系统级隧道，它会沿用学校 VPN。完成验证并进入论文页后点击“检查本机权限”。`;
   refreshDashboard();
@@ -817,6 +829,13 @@ async function finishLocalPublisherVerification(publisher) {
     pdfContentType,
     pdfUrl: pdfAccess ? pdfUrl : '',
     pdfEvidence,
+    windowStatus: 'checked',
+    lastVerifiedStatus: ['verified_article_access', 'verified_pdf_access'].includes(status)
+      ? status
+      : state.localPublisher?.[publisher]?.lastVerifiedStatus || '',
+    lastVerifiedAt: ['verified_article_access', 'verified_pdf_access'].includes(status)
+      ? Date.now()
+      : state.localPublisher?.[publisher]?.lastVerifiedAt || 0,
     checkedAt: Date.now(),
   };
 
