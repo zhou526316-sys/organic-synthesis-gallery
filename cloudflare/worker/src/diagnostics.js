@@ -41,6 +41,20 @@ async function mediaState(env, doi) {
   };
 }
 
+function collectorRetryDelay(stage, outcome, rootCause) {
+  const cause = String(rootCause || '').toLowerCase();
+  if (stage === 'upload' && outcome === 'complete') return 0;
+  if (stage === 'upload' && outcome === 'partial' && cause === 'collector_figure1_fallback') return 24 * 60 * 60 * 1000;
+  if (cause.includes('manual_required')) return 24 * 60 * 60 * 1000;
+  if (cause.includes('semantic_media_not_found')) return 72 * 60 * 60 * 1000;
+  if (cause.includes('image_download_failed')) return 8 * 60 * 60 * 1000;
+  if (cause.includes('publisher_rate_limited')) return 24 * 60 * 60 * 1000;
+  if (cause.includes('publisher_timeout')) return 8 * 60 * 60 * 1000;
+  if (cause.includes('collector_auth')) return 30 * 60 * 1000;
+  if (cause.includes('upload_failed')) return 60 * 60 * 1000;
+  return 6 * 60 * 60 * 1000;
+}
+
 export async function persistMediaAttempt(env, payload) {
   const doi = normalizeDoi(payload?.doi);
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
@@ -61,6 +75,24 @@ export async function persistMediaAttempt(env, payload) {
        detail_json = excluded.detail_json,
        updated_at = excluded.updated_at`
   ).bind(doi, source, stage, outcome, rootCause, detail, now).run();
+
+  if (source === 'windows-toc-collector') {
+    const delay = collectorRetryDelay(stage, outcome, rootCause);
+    const nextRetryAt = delay > 0 ? now + delay : now;
+    await env.DB.prepare(
+      `INSERT INTO media_repair_state
+        (doi, repair_version, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at)
+       VALUES (?, 1, 1, ?, ?, ?, ?, 0, ?)
+       ON CONFLICT(doi) DO UPDATE SET
+         attempts = media_repair_state.attempts + 1,
+         last_attempt_at = excluded.last_attempt_at,
+         next_retry_at = excluded.next_retry_at,
+         last_root_cause = excluded.last_root_cause,
+         last_outcome = excluded.last_outcome,
+         updated_at = excluded.updated_at`
+    ).bind(doi, now, nextRetryAt, rootCause, outcome, now).run();
+  }
+
   return { status: 200, body: { stored: true, doi, updatedAt: now } };
 }
 

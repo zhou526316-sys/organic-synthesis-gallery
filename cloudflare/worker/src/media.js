@@ -283,22 +283,40 @@ export async function mediaInventory(request, env, payload) {
 }
 
 export async function bridgeQueue(request, env) {
+  const url = new URL(request.url);
+  const mode = url.searchParams.get('mode') === 'upgrade' ? 'upgrade' : 'coverage';
+  const now = Date.now();
   const rows = await allRows(env.DB.prepare(
-    'SELECT doi, attempts, last_attempt_at, next_retry_at, last_root_cause, reported_priority FROM media_repair_state ORDER BY reported_priority DESC, next_retry_at ASC, attempts ASC LIMIT 1200'
-  ));
+    'SELECT doi, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority FROM media_repair_state WHERE next_retry_at <= ? ORDER BY reported_priority DESC, next_retry_at ASC, attempts ASC LIMIT 1200'
+  ).bind(now));
   const dois = rows.map(row => row.doi).filter(Boolean);
   const media = await loadMediaRows(env, dois);
   const stateByDoi = new Map(rows.map(row => [String(row.doi).toLowerCase(), row]));
   const items = media.dois
-    .map(doi => ({
-      ...inventoryItem(doi, media.tocByDoi.get(doi), media.figuresByDoi.get(doi) || [], media.duplicateHashes),
-      attempts: Number(stateByDoi.get(doi)?.attempts || 0),
-      lastRootCause: stateByDoi.get(doi)?.last_root_cause || '',
-      reportedPriority: Number(stateByDoi.get(doi)?.reported_priority || 0) === 1,
-    }))
-    .filter(item => item.tocMissing || item.suspiciousToc || item.figureCount < 2)
-    .sort((a, b) => Number(b.reportedPriority) - Number(a.reportedPriority) || Number(b.tocMissing) - Number(a.tocMissing) || Number(b.suspiciousToc) - Number(a.suspiciousToc) || Number(a.figureCount > 0) - Number(b.figureCount > 0) || a.attempts - b.attempts);
-  return { status: 200, body: { updatedAt: Date.now(), count: items.length, items } };
+    .map(doi => {
+      const inventory = inventoryItem(doi, media.tocByDoi.get(doi), media.figuresByDoi.get(doi) || [], media.duplicateHashes);
+      const repair = stateByDoi.get(doi) || {};
+      return {
+        ...inventory,
+        attempts: Number(repair.attempts || 0),
+        lastRootCause: repair.last_root_cause || '',
+        lastOutcome: repair.last_outcome || '',
+        nextRetryAt: Number(repair.next_retry_at || 0),
+        reportedPriority: Number(repair.reported_priority || 0) === 1,
+      };
+    })
+    .filter(item => {
+      if (item.suspiciousToc) return true;
+      if (mode === 'upgrade') return item.tocMissing && item.largeSource !== 'none';
+      return item.largeSource === 'none';
+    })
+    .sort((a, b) =>
+      Number(b.reportedPriority) - Number(a.reportedPriority) ||
+      Number(a.largeSource !== 'none') - Number(b.largeSource !== 'none') ||
+      Number(b.suspiciousToc) - Number(a.suspiciousToc) ||
+      a.attempts - b.attempts
+    );
+  return { status: 200, body: { updatedAt: now, mode, count: items.length, items } };
 }
 
 export async function repairStatus(request, env) {
