@@ -53,6 +53,8 @@ let configReloadedAt = 0;
 let configReloadMessage = '尚未读取';
 const publisherPartition = 'toc-publisher-scan';
 let publisherSession = null;
+const localPublisherSessions = new Map();
+const localPublisherWindows = new Map();
 const manualBrowserbaseSessions = new Map();
 const diagnosticArg = process.argv.find(arg => arg.startsWith('--diagnose-publishers='));
 const diagnosticDoiArgs = process.argv.filter(arg => arg.startsWith('--diagnose-doi='));
@@ -71,13 +73,45 @@ const forceBrowserFallback = process.argv.includes('--force-browser-fallback');
 // never changes the normal resolver order used by the Collector.
 const forceBrowserbaseDiagnostic = process.argv.includes('--force-browserbase');
 
-function getPublisherSession() {
+function getPublisherSession(publisher = '') {
   if (!app.isReady()) throw new Error('publisher_session_before_app_ready');
+  const key = String(publisher || '').trim().toLowerCase();
+  if (['acs', 'wiley', 'nature', 'science'].includes(key)) {
+    if (!localPublisherSessions.has(key)) {
+      const partition = `persist:toc-publisher-${key}`;
+      const value = session.fromPartition(partition, { cache: true });
+      localPublisherSessions.set(key, value);
+      mark('background.publisher-session.created', { publisher: key, partition, persistent: true });
+    }
+    return localPublisherSessions.get(key);
+  }
   if (!publisherSession) {
     publisherSession = session.fromPartition(publisherPartition, { cache: false });
-    mark('background.publisher-session.created', { partition: publisherPartition });
+    mark('background.publisher-session.created', { partition: publisherPartition, persistent: false });
   }
   return publisherSession;
+}
+
+function publisherFromUrl(url) {
+  try {
+    const hostname = new URL(String(url || '')).hostname.toLowerCase();
+    if (hostname.endsWith('pubs.acs.org')) return 'acs';
+    if (hostname.endsWith('onlinelibrary.wiley.com')) return 'wiley';
+    if (hostname.endsWith('nature.com')) return 'nature';
+    if (hostname.endsWith('science.org')) return 'science';
+  } catch {}
+  return '';
+}
+
+function publisherHostMatches(publisher, url) {
+  try {
+    const hostname = new URL(String(url || '')).hostname.toLowerCase();
+    if (publisher === 'acs') return hostname.endsWith('pubs.acs.org');
+    if (publisher === 'wiley') return hostname.endsWith('onlinelibrary.wiley.com');
+    if (publisher === 'nature') return hostname.endsWith('nature.com');
+    if (publisher === 'science') return hostname.endsWith('science.org');
+  } catch {}
+  return false;
 }
 
 function safeError(error, limit = 1200) {
@@ -175,6 +209,7 @@ async function ensureConfig() {
   state.browserbase.lastSuccessDoi = state.browserbase.lastSuccessDoi && typeof state.browserbase.lastSuccessDoi === 'object' ? state.browserbase.lastSuccessDoi : {};
   state.browserbase.acceptance = state.browserbase.acceptance && typeof state.browserbase.acceptance === 'object' ? state.browserbase.acceptance : {};
   state.browserbase.manual = state.browserbase.manual && typeof state.browserbase.manual === 'object' ? state.browserbase.manual : {};
+  state.localPublisher = state.localPublisher && typeof state.localPublisher === 'object' ? state.localPublisher : {};
   // Retry only generic failures from older collectors; keep all specific cooldowns.
   if (state.collectorRecoveryVersion !== '0.1.6') {
     state.cooldowns = Object.fromEntries(Object.entries(state.cooldowns).filter(([, value]) => value?.reason !== 'collector_failed'));
@@ -585,6 +620,164 @@ async function browserbaseContext(publisher) {
   return String(created.id);
 }
 
+async function startLocalPublisherVerification(publisher) {
+  publisher = String(publisher || '').trim().toLowerCase();
+  if (!['acs', 'wiley', 'nature', 'science'].includes(publisher)) throw new Error('local_publisher_unsupported');
+
+  const existing = localPublisherWindows.get(publisher);
+  if (existing?.win && !existing.win.isDestroyed()) {
+    existing.win.show();
+    existing.win.focus();
+    return { publisher, status: 'open', doi: existing.doi || '', url: existing.win.webContents.getURL() };
+  }
+
+  const target = manualPublisherTarget(publisher);
+  const publisherSession = getPublisherSession(publisher);
+  const win = new BrowserWindow({
+    width: 1380,
+    height: 960,
+    show: true,
+    title: `Collector · ${manualPublisherLabel(publisher)} · 本机/VPN 验证`,
+    webPreferences: {
+      session: publisherSession,
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+      images: true,
+    },
+  });
+  localPublisherWindows.set(publisher, { win, doi: target.doi || '', targetUrl: target.url, startedAt: Date.now() });
+  win.on('closed', () => {
+    const current = localPublisherWindows.get(publisher);
+    if (current?.win === win) localPublisherWindows.delete(publisher);
+  });
+  win.webContents.on('did-fail-load', (_event, code, description, validatedUrl) => {
+    void log('local_publisher_load_failed', { publisher, doi: target.doi || '', code, description, url: validatedUrl });
+  });
+
+  state.localPublisher[publisher] = {
+    status: 'opening',
+    doi: target.doi || '',
+    partition: `persist:toc-publisher-${publisher}`,
+    openedAt: Date.now(),
+  };
+  await saveState();
+  await log('local_publisher_window_opened', { publisher, doi: target.doi || '', url: target.url, partition: `persist:toc-publisher-${publisher}` });
+
+  await win.loadURL(target.url, {
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+  }).catch(async error => {
+    await log('local_publisher_load_error', { publisher, doi: target.doi || '', reason: safeError(error, 240) });
+  });
+
+  state.localPublisher[publisher] = {
+    ...(state.localPublisher[publisher] || {}),
+    status: 'open',
+    currentUrl: win.webContents.getURL(),
+    openedAt: Date.now(),
+  };
+  await saveState();
+  stageStatus = `${manualPublisherLabel(publisher)} 已在本机持久浏览器会话打开。若你的学校 VPN 是 Windows/系统级隧道，此窗口会跟随该 VPN；完成登录/验证并确认论文页可见后点击“检查本机权限”。`;
+  refreshDashboard();
+  return { publisher, status: 'open', doi: target.doi || '', url: win.webContents.getURL() };
+}
+
+async function finishLocalPublisherVerification(publisher) {
+  publisher = String(publisher || '').trim().toLowerCase();
+  const active = localPublisherWindows.get(publisher);
+  if (!active?.win || active.win.isDestroyed()) throw new Error('local_publisher_window_not_open');
+
+  const details = await active.win.webContents.executeJavaScript(`(() => {
+    const abs = value => { try { return new URL(value, location.href).href } catch { return '' } };
+    const text = String(document.body?.innerText || '').slice(0, 220000);
+    const pdfLinks = [...document.querySelectorAll('a[href]')]
+      .map(a => ({ href: abs(a.getAttribute('href') || ''), text: String(a.textContent || '').trim() }))
+      .filter(item => item.href && (/\\bpdf\\b|download/i.test(item.text + ' ' + item.href)))
+      .slice(0, 20);
+    return { href: location.href, title: document.title, text, pdfLinks };
+  })()`);
+
+  const pageUrl = String(details?.href || active.win.webContents.getURL() || '');
+  const body = String(details?.text || '');
+  const challenged = browserbaseManualRequired(body, pageUrl);
+  const hostOk = publisherHostMatches(publisher, pageUrl);
+  const normalizedDoi = String(active.doi || '').toLowerCase();
+  const doiOk = !normalizedDoi || body.toLowerCase().includes(normalizedDoi) || pageUrl.toLowerCase().includes(normalizedDoi.split('/').at(-1) || normalizedDoi);
+  let pdfAccess = false;
+  let pdfStatus = 0;
+  let pdfContentType = '';
+  let pdfUrl = '';
+
+  if (!challenged && hostOk) {
+    const publisherSession = getPublisherSession(publisher);
+    for (const item of Array.isArray(details?.pdfLinks) ? details.pdfLinks : []) {
+      try {
+        const response = await publisherSession.fetch(item.href, {
+          method: 'GET',
+          redirect: 'follow',
+          headers: { Referer: pageUrl, Accept: 'application/pdf,*/*;q=0.8' },
+          signal: AbortSignal.timeout(20000),
+        });
+        pdfStatus = Number(response.status || 0);
+        pdfContentType = String(response.headers.get('content-type') || '').toLowerCase();
+        pdfUrl = String(response.url || item.href);
+        if (response.ok && (pdfContentType.includes('application/pdf') || /\\.pdf(?:[?#]|$)/i.test(pdfUrl))) {
+          pdfAccess = true;
+          try { await response.body?.cancel(); } catch {}
+          break;
+        }
+        try { await response.body?.cancel(); } catch {}
+      } catch (error) {
+        await log('local_publisher_pdf_probe_failed', { publisher, doi: normalizedDoi, reason: safeError(error, 180) });
+      }
+    }
+  }
+
+  const status = challenged
+    ? 'still_challenged'
+    : !hostOk
+      ? 'wrong_domain'
+      : !doiOk
+        ? 'doi_not_verified'
+        : pdfAccess
+          ? 'verified_pdf_access'
+          : 'verified_article_access';
+
+  state.localPublisher[publisher] = {
+    ...(state.localPublisher[publisher] || {}),
+    status,
+    doi: normalizedDoi,
+    currentUrl: pageUrl,
+    pdfAccess,
+    pdfStatus,
+    pdfContentType,
+    checkedAt: Date.now(),
+  };
+  await saveState();
+  await log('local_publisher_verification_checked', {
+    publisher,
+    doi: normalizedDoi,
+    status,
+    pdfAccess,
+    pdfStatus,
+    pdfContentType,
+    url: pageUrl,
+  });
+
+  if (status === 'verified_pdf_access' || status === 'verified_article_access') {
+    active.win.close();
+    stageStatus = pdfAccess
+      ? `${manualPublisherLabel(publisher)} 本机/VPN 权限已确认：文章页与 PDF 均可访问；后续本机抓取将复用该持久会话。`
+      : `${manualPublisherLabel(publisher)} 文章页已确认，但当前没有验证到可直接读取的 PDF 链接；登录态已保存在本机持久会话，可继续后续 resolver 测试。`;
+  } else if (status === 'still_challenged') {
+    stageStatus = `${manualPublisherLabel(publisher)} 仍处在验证/挑战页面，请在本机窗口完成后再次点击“检查本机权限”。`;
+  } else {
+    stageStatus = `${manualPublisherLabel(publisher)} 尚未完成权限确认（${status}），请保持本机窗口打开并进入目标论文页。`;
+  }
+  refreshDashboard();
+  return { publisher, status, doi: normalizedDoi, url: pageUrl, pdfAccess, pdfStatus, pdfContentType };
+}
+
 function manualPublisherLabel(publisher) {
   return publisher === 'acs' ? 'ACS'
     : publisher === 'wiley' ? 'Wiley'
@@ -787,7 +980,8 @@ async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyIma
 
 async function publisherFetch(url, options, fallbackEvent) {
   try {
-    return await getPublisherSession().fetch(url, options);
+    const publisher = publisherFromUrl(url);
+    return await getPublisherSession(publisher).fetch(url, options);
   } catch (error) {
     const reason = safeError(error, 300);
     if (!/ERR_BLOCKED_BY_CLIENT|ERR_CONNECTION_CLOSED/i.test(reason)) throw error;
@@ -841,7 +1035,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
     win = new BrowserWindow({
       show: false,
       webPreferences: {
-        session: getPublisherSession(),
+        session: getPublisherSession(classify(doi)),
         sandbox: true,
         contextIsolation: true,
         images: true,
@@ -1251,6 +1445,7 @@ function dashboardHtml() {
     <div class="card"><div class="k">上次处理</div><div class="v" style="font-size:14px">${summary.at ? `成功 ${Number(summary.success||0)} · 失败 ${Number(summary.failed||0)}` : '尚未采集'}</div></div>
   </div>
   <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开当前设置</a><a href="collector:reload-config">重新加载设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
+  <section class="credentials"><strong>本机 / 学校 VPN 出版社权限</strong><div class="note">这里打开的是你电脑上的 Electron 持久浏览器会话，不是 Browserbase。若学校 VPN 是 Windows/系统级 VPN，这些窗口会沿用该 VPN 的网络出口。验证状态、cookies 和站点存储保存在 <code>persist:toc-publisher-*</code> 会话中。</div><div class="buttons" id="local-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const local = state.localPublisher?.[publisher] || {}; return `<span><button type="button" data-local-start="${publisher}">本机打开 ${escapeHtml(label)}</button><button type="button" data-local-finish="${publisher}">检查本机权限</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(local.status || '未验证')}${local.pdfAccess ? ' · PDF 可访问' : ''}</small></span>`; }).join('')}</div></section>
   <section class="credentials"><strong>Browserbase 本机凭据</strong><div class="note">密钥只保存到当前进程的 config.json；界面、日志和控制台都不会显示密钥。</div><form id="browserbase-form"><label for="browserbase-api-key">Browserbase API Key</label><input id="browserbase-api-key" type="password" autocomplete="off" maxlength="2048" placeholder="粘贴 API Key"><label for="browserbase-project-id">Browserbase Project ID（可选）</label><input id="browserbase-project-id" type="text" autocomplete="off" maxlength="512" placeholder="可留空"><button class="primary" type="submit">保存</button><button id="browserbase-clear" type="button">清除凭据</button>${browserbaseInfo.configured ? '<button id="browserbase-test" type="button">Browserbase 验收</button>' : ''}<span class="note" id="browserbase-action-status"></span></form>${browserbaseInfo.configured ? `<div class="note" style="margin-top:14px"><strong>人工验证 / 权限初始化</strong><br>点击后会打开 Browserbase Live View。完成出版社验证后回到此窗口点击对应“完成验证”。验证状态会保存在该出版社的 persistent Context 中。</div><div class="buttons" id="manual-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const manual = state.browserbase?.manual?.[publisher] || {}; return `<span><button type="button" data-manual-start="${publisher}">打开 ${escapeHtml(label)}</button><button type="button" data-manual-finish="${publisher}">完成验证</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(manual.status || '未初始化')}${manual.sessionId ? ` · Session ${escapeHtml(manual.sessionId)}` : ''}</small></span>`; }).join('')}</div>` : ''}</section>
   <table><thead><tr><th>最近待处理 DOI</th><th>来源</th></tr></thead><tbody>${rows || '<tr><td colspan="2">当前无待处理项目</td></tr>'}</tbody></table>
   <div class="note">实际 userData：<code>${escapeHtml(configInfo.userData)}</code><br>实际 config.json：<code>${escapeHtml(configInfo.configPath)}</code><br>设置状态：${escapeHtml(configInfo.message)}${configInfo.reloadedAt ? `（${escapeHtml(new Date(configInfo.reloadedAt).toLocaleString())}）` : ''}<br>VPN 程序：${vpnState}<br>自动检查间隔：${Number(config.pollMinutes||10)} 分钟；提醒间隔：${Number(config.reminderHours||6)} 小时。</div>
@@ -1298,6 +1493,14 @@ function dashboardHtml() {
     document.getElementById('browserbase-test')?.addEventListener('click', () => {
       void run('正在进行只读验收…', () => bridge.testBrowserbase());
     });
+    document.querySelectorAll('[data-local-start]').forEach(button => button.addEventListener('click', () => {
+      const publisher = button.getAttribute('data-local-start');
+      void run('正在打开本机/VPN 出版社窗口…', () => bridge.startLocalPublisher(publisher));
+    }));
+    document.querySelectorAll('[data-local-finish]').forEach(button => button.addEventListener('click', () => {
+      const publisher = button.getAttribute('data-local-finish');
+      void run('正在检查文章页与 PDF 权限…', () => bridge.finishLocalPublisher(publisher));
+    }));
     document.querySelectorAll('[data-manual-start]').forEach(button => button.addEventListener('click', () => {
       const publisher = button.getAttribute('data-manual-start');
       void run('正在创建人工验证会话…', () => bridge.startManualBrowserbase(publisher));
@@ -1435,6 +1638,10 @@ function dispose() {
   if (vpnWatchTimer) clearInterval(vpnWatchTimer);
   if (configReloadTimer) clearTimeout(configReloadTimer);
   if (configWatcher) configWatcher.close();
+  for (const active of localPublisherWindows.values()) {
+    try { if (active.win && !active.win.isDestroyed()) active.win.destroy(); } catch {}
+  }
+  localPublisherWindows.clear();
   for (const active of manualBrowserbaseSessions.values()) {
     active.browser?.close?.().catch?.(() => {});
   }
@@ -1444,6 +1651,8 @@ function dispose() {
   ipcMain.removeHandler('toc-collector:browserbase-acceptance');
   ipcMain.removeHandler('toc-collector:browserbase-manual-start');
   ipcMain.removeHandler('toc-collector:browserbase-manual-finish');
+  ipcMain.removeHandler('toc-collector:local-publisher-start');
+  ipcMain.removeHandler('toc-collector:local-publisher-finish');
   if (validTray()) tray.destroy();
 }
 
@@ -1457,6 +1666,8 @@ ipcMain.removeHandler('toc-collector:browserbase-clear');
 ipcMain.removeHandler('toc-collector:browserbase-acceptance');
 ipcMain.removeHandler('toc-collector:browserbase-manual-start');
 ipcMain.removeHandler('toc-collector:browserbase-manual-finish');
+ipcMain.removeHandler('toc-collector:local-publisher-start');
+ipcMain.removeHandler('toc-collector:local-publisher-finish');
 ipcMain.handle('toc-collector:browserbase-save', async (_event, payload) => {
   try { return await saveBrowserbaseCredentials(payload); }
   catch (error) { return { configured: browserbaseDiagnostic().configured, error: safeError(error, 120) }; }
@@ -1468,6 +1679,14 @@ ipcMain.handle('toc-collector:browserbase-clear', async () => {
 ipcMain.handle('toc-collector:browserbase-acceptance', async () => {
   try { return await runBrowserbaseAcceptance(); }
   catch (error) { return { configured: browserbaseDiagnostic().configured, error: safeError(error, 120) }; }
+});
+ipcMain.handle('toc-collector:local-publisher-start', async (_event, publisher) => {
+  try { return await startLocalPublisherVerification(publisher); }
+  catch (error) { return { error: safeError(error, 160) }; }
+});
+ipcMain.handle('toc-collector:local-publisher-finish', async (_event, publisher) => {
+  try { return await finishLocalPublisherVerification(publisher); }
+  catch (error) { return { error: safeError(error, 160) }; }
 });
 ipcMain.handle('toc-collector:browserbase-manual-start', async (_event, publisher) => {
   try { return await startManualBrowserbase(publisher); }
