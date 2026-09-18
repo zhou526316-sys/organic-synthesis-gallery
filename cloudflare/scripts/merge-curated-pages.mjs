@@ -24,9 +24,12 @@ function mergePapers(...sets) {
     const key = doi || `title:${title}`;
     if (!key || key === 'title:') continue;
     const existing = merged.get(key) || {};
+    const existingAuthors = Array.isArray(existing.authors) ? existing.authors.filter(Boolean) : [];
+    const incomingAuthors = Array.isArray(paper.authors) ? paper.authors.filter(Boolean) : [];
     merged.set(key, {
       ...existing,
       ...paper,
+      authors: incomingAuthors.length ? incomingAuthors : existingAuthors,
       new: Boolean(existing.new || paper.new),
       ...(existing.synthesisType && !paper.synthesisType ? { synthesisType: existing.synthesisType } : {}),
     });
