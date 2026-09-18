@@ -23,7 +23,7 @@ export class UserSearchController {
   private fullQuery = '';
   private candidates: Candidate[] = [];
   private refreshQueued = false;
-  private readonly storeChanged = (): void => this.replay();
+  private readonly storeChanged = (): void => this.refresh();
   private readonly resize = (): void => this.positionPopover();
   private readonly onInput = (): void => {
     if (!this.searchInput) return;
@@ -90,7 +90,6 @@ export class UserSearchController {
     this.searchInput.dispatchEvent(new Event('input', { bubbles: true }));
     this.searchInput.focus();
   }
-  private replay(): void { if (!this.searchInput) return; this.searchInput.value = this.fullQuery; this.searchInput.dispatchEvent(new Event('input', { bubbles: true })); }
   private updateShellQuery(): void { this.root.querySelector<HTMLElement>(USER_SHELL_ELEMENT)?.setAttribute('data-current-query', this.fullQuery); }
   private queueRefresh(): void { if (this.refreshQueued) return; this.refreshQueued = true; queueMicrotask(() => { this.refreshQueued = false; this.refresh(); }); }
 
@@ -133,15 +132,20 @@ export class UserSearchController {
     const tokens = queryTokens(this.fullQuery); let visible = 0;
     for (const card of cards) {
       const id = card.dataset.userPaperId || ''; const meta = store.metadata(id); const searchable = `${card.textContent || ''} ${card.dataset.authors || ''} ${card.dataset.topics || ''}`.toLowerCase();
-      if (!tokens.every(token => this.expanded(token).some(term => searchable.includes(term))) || (store.state.hideRead && store.isRead(id))) { card.remove(); continue; }
-      visible += 1; card.querySelector('.user-hit-reason')?.remove();
+      const hidden = !tokens.every(token => this.expanded(token).some(term => searchable.includes(term))) || (store.state.hideRead && store.isRead(id));
+      card.hidden = hidden;
+      card.querySelector('.user-hit-reason')?.remove();
+      if (hidden) continue;
+      visible += 1;
       if (tokens.length) {
         const reasons = tokens.map(token => { const terms = this.expanded(token); if (card.dataset.authors && terms.some(term => card.dataset.authors!.toLowerCase().includes(term))) return `${this.language === 'zh' ? '作者' : 'Author'}:${token}`; if (meta?.journal && terms.some(term => meta.journal.toLowerCase().includes(term))) return `${this.language === 'zh' ? '期刊' : 'Journal'}:${token}`; if (meta?.doi && terms.some(term => meta.doi!.includes(term))) return `DOI:${token}`; return `${this.language === 'zh' ? '标题/关键词' : 'Title/keyword'}:${token}`; });
         const hit = document.createElement('div'); hit.className = 'user-hit-reason'; hit.textContent = `${this.language === 'zh' ? '命中' : 'Matched'}：${reasons.join(' · ')}`; card.querySelector(PAPER_ACTION_ELEMENT)?.before(hit);
       }
     }
     const count = this.root.querySelector<HTMLElement>('#resultCount'); if (count) count.textContent = String(visible);
-    if (!visible && this.gallery && !this.gallery.querySelector('.user-search-empty')) { const empty = document.createElement('div'); empty.className = 'user-search-empty'; empty.textContent = this.language === 'zh' ? '没有匹配当前词条组合的文献。可以减少词条、选择智能推荐或检查拼写。' : 'No papers match this term combination. Try fewer terms, a suggestion, or check spelling.'; this.gallery.appendChild(empty); }
+    const empty = this.gallery?.querySelector<HTMLElement>('.user-search-empty') || null;
+    if (!visible && this.gallery && !empty) { const next = document.createElement('div'); next.className = 'user-search-empty'; next.textContent = this.language === 'zh' ? '没有匹配当前词条组合的文献。可以减少词条、选择智能推荐或检查拼写。' : 'No papers match this term combination. Try fewer terms, a suggestion, or check spelling.'; this.gallery.appendChild(next); }
+    if (visible) empty?.remove();
   }
 
   private suggestions(): Suggestion[] {
