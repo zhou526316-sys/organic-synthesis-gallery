@@ -9,6 +9,8 @@ on:
       end_date:
         description: Optional audit end date (YYYY-MM-DD); blank = current Beijing date
         required: false
+  schedule:
+    - cron: '0 0,10 * * *'
   push:
     branches:
       - main
@@ -57,12 +59,11 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git fetch origin main
-          git rebase origin/main
           git add audit/latest.json
           if git diff --cached --quiet; then
             echo 'Audit report unchanged.'
           else
             git commit -m 'audit: refresh literature completeness report'
+            git pull --rebase origin main
             git push origin HEAD:main
           fi
