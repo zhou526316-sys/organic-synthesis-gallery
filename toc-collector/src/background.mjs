@@ -1134,6 +1134,66 @@ async function inspectArticleHtml(doi, url, browserError = '') {
   }
 }
 
+async function downloadPdfFromPublisherBrowser({ doi, publisher, webContents, pdfUrl }) {
+  if (!pdfUrl || !webContents || webContents.isDestroyed()) return null;
+  const cacheDir = path.join(dataDir(), 'pdf-cache');
+  await fsp.mkdir(cacheDir, { recursive: true });
+  const key = createHash('sha256').update(String(doi).toLowerCase()).digest('hex').slice(0, 24);
+  const target = path.join(cacheDir, `${key}.pdf`);
+  try {
+    const stat = await fsp.stat(target);
+    if (stat.size > 10000) {
+      await log('local_pdf_cache_hit', { doi, publisher, bytes: stat.size, path: target });
+      return { path: target, bytes: stat.size, source: 'cache' };
+    }
+  } catch {}
+
+  const publisherSession = getPublisherSession(publisher);
+  return await new Promise(resolve => {
+    let settled = false;
+    let timer = null;
+    const finish = result => {
+      if (settled) return;
+      settled = true;
+      if (timer) clearTimeout(timer);
+      publisherSession.removeListener('will-download', onDownload);
+      resolve(result);
+    };
+    const onDownload = (_event, item, sourceWebContents) => {
+      if (sourceWebContents && sourceWebContents.id !== webContents.id) return;
+      item.setSavePath(target);
+      item.once('done', async (_doneEvent, stateName) => {
+        if (stateName !== 'completed') {
+          await log('local_pdf_download_failed', { doi, publisher, state: stateName, url: pdfUrl });
+          finish(null);
+          return;
+        }
+        try {
+          const stat = await fsp.stat(target);
+          if (stat.size < 10000) {
+            await fsp.rm(target, { force: true }).catch(() => {});
+            await log('local_pdf_download_failed', { doi, publisher, state: 'too_small', bytes: stat.size, url: pdfUrl });
+            finish(null);
+            return;
+          }
+          await log('local_pdf_downloaded', { doi, publisher, bytes: stat.size, path: target, url: pdfUrl });
+          finish({ path: target, bytes: stat.size, source: 'browser_download' });
+        } catch (error) {
+          await log('local_pdf_download_failed', { doi, publisher, state: 'stat_failed', reason: safeError(error, 180), url: pdfUrl });
+          finish(null);
+        }
+      });
+    };
+    publisherSession.on('will-download', onDownload);
+    timer = setTimeout(() => finish(null), 45000);
+    try {
+      webContents.downloadURL(pdfUrl);
+    } catch (error) {
+      void log('local_pdf_download_failed', { doi, publisher, state: 'download_url_failed', reason: safeError(error, 180), url: pdfUrl });
+      finish(null);
+    }
+  });
+}
 async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnostic, verifyBrowserbaseImage = false } = {}) {
   const url = articleUrl(doi);
   let win = null;
