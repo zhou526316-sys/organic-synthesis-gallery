@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "timeZone": "Asia/Shanghai",
+  "excludedDois": [
+    "10.1038/s41467-026-77616-8",
+    "10.1021/jacs.6c13738"
+  ],
+  "targetJournals": {
+    "ACS": [
+      "JACS",
+      "ACS Catalysis",
+      "Organic Letters"
+    ],
+    "Wiley": [
+      "Angew"
+    ],
+    "Springer Nature": [
+      "Nature",
+      "Nature Catalysis",
+      "Nature Synthesis",
+      "Nature Chemistry",
+      "Nature Communications"
+    ],
+    "AAAS": [
+      "Science"
+    ]
+  },
+  "primaryVisualPriority": [
+    "official_graphical_abstract_or_toc",
+    "publisher_figure1",
+    "pdf_primary_visual",
+    "article_figure_or_scheme",
+    "open_version_fallback"
+  ]
+}
