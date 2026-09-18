@@ -6,7 +6,7 @@
   "main": "src/main.mjs",
   "scripts": {
     "start": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/Start-CollectorDiagnostics.ps1 -Development",
-    "check": "node --check src/main.mjs && node --check src/preload.mjs && node --check src/minimal.mjs && node --check src/background.mjs && node --check scripts/build-windows.mjs",
+    "check": "node --check src/main.mjs && node --check src/preload.cjs && node --check src/minimal.mjs && node --check src/background.mjs && node --check scripts/build-windows.mjs",
     "dist:win": "node scripts/build-windows.mjs unpacked nsis portable",
     "dist:unpacked": "node scripts/build-windows.mjs unpacked",
     "dist:nsis": "node scripts/build-windows.mjs nsis",

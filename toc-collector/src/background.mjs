@@ -1114,7 +1114,51 @@ function dashboardHtml() {
   <section class="credentials"><strong>Browserbase 本机凭据</strong><div class="note">密钥只保存到当前进程的 config.json；界面、日志和控制台都不会显示密钥。</div><form id="browserbase-form"><label for="browserbase-api-key">Browserbase API Key</label><input id="browserbase-api-key" type="password" autocomplete="off" maxlength="2048" placeholder="粘贴 API Key"><label for="browserbase-project-id">Browserbase Project ID（可选）</label><input id="browserbase-project-id" type="text" autocomplete="off" maxlength="512" placeholder="可留空"><button class="primary" type="submit">保存</button><button id="browserbase-clear" type="button">清除凭据</button>${browserbaseInfo.configured ? '<button id="browserbase-test" type="button">Browserbase 验收</button>' : ''}<span class="note" id="browserbase-action-status"></span></form></section>
   <table><thead><tr><th>最近待处理 DOI</th><th>来源</th></tr></thead><tbody>${rows || '<tr><td colspan="2">当前无待处理项目</td></tr>'}</tbody></table>
   <div class="note">实际 userData：<code>${escapeHtml(configInfo.userData)}</code><br>实际 config.json：<code>${escapeHtml(configInfo.configPath)}</code><br>设置状态：${escapeHtml(configInfo.message)}${configInfo.reloadedAt ? `（${escapeHtml(new Date(configInfo.reloadedAt).toLocaleString())}）` : ''}<br>VPN 程序：${vpnState}<br>自动检查间隔：${Number(config.pollMinutes||10)} 分钟；提醒间隔：${Number(config.reminderHours||6)} 小时。</div>
-  </div><script>(() => { const bridge = window.tocCollector; const form = document.getElementById('browserbase-form'); const status = document.getElementById('browserbase-action-status'); if (!bridge || !form) return; const show = text => { status.textContent = text; }; form.addEventListener('submit', async event => { event.preventDefault(); show('正在保存…'); const apiKey = document.getElementById('browserbase-api-key').value; const projectId = document.getElementById('browserbase-project-id').value; const result = await bridge.saveBrowserbase({ apiKey, projectId }); document.getElementById('browserbase-api-key').value = ''; document.getElementById('browserbase-project-id').value = ''; show(result.configured ? '已保存并生效。' : 'API Key 为空。'); setTimeout(() => location.reload(), 350); }); const clear = document.getElementById('browserbase-clear'); if (clear) clear.addEventListener('click', async () => { show('正在清除…'); await bridge.clearBrowserbase(); show('已清除。'); setTimeout(() => location.reload(), 250); }); const test = document.getElementById('browserbase-test'); if (test) test.addEventListener('click', async () => { test.disabled = true; show('正在进行只读验收…'); const result = await bridge.testBrowserbase(); show(result.configured ? '验收已完成。' : 'API Key 缺失。'); setTimeout(() => location.reload(), 600); }); })();</script></body></html>`;
+  </div><script>(() => {
+    const bridge = window.tocCollector;
+    const form = document.getElementById('browserbase-form');
+    const status = document.getElementById('browserbase-action-status');
+    if (!form) return;
+    const show = text => { status.textContent = text; };
+    form.addEventListener('submit', event => event.preventDefault());
+    if (!bridge) {
+      show('设置接口加载失败，请使用修复后的程序。');
+      for (const button of form.querySelectorAll('button')) button.disabled = true;
+      return;
+    }
+    let busy = false;
+    const run = async (message, action) => {
+      if (busy) return;
+      busy = true;
+      show(message);
+      for (const button of form.querySelectorAll('button')) button.disabled = true;
+      try {
+        const result = await action();
+        if (result.error) { show('操作失败：' + result.error); return; }
+        show(result.configured ? '已生效。' : '当前未配置。');
+      } catch {
+        // IPC errors may contain arguments: never display or log the raw error.
+        show('操作未完成，请重新加载设置后重试。');
+      } finally {
+        busy = false;
+        for (const button of form.querySelectorAll('button')) button.disabled = false;
+      }
+    };
+    form.addEventListener('submit', () => {
+      void run('正在保存…', async () => {
+        const apiKey = document.getElementById('browserbase-api-key').value;
+        const projectId = document.getElementById('browserbase-project-id').value;
+        document.getElementById('browserbase-api-key').value = '';
+        return bridge.saveBrowserbase({ apiKey, projectId });
+      });
+    });
+    document.getElementById('browserbase-clear').addEventListener('click', () => {
+      void run('正在清除…', () => bridge.clearBrowserbase());
+    });
+    document.getElementById('browserbase-test')?.addEventListener('click', () => {
+      void run('正在进行只读验收…', () => bridge.testBrowserbase());
+    });
+  })();</script></body></html>`;
 }
 
 function refreshDashboard() {

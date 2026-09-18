@@ -73,7 +73,7 @@ app.whenReady().then(async () => {
       nodeIntegration: false,
       // The preload exposes only three credential actions. It never exposes
       // Node.js, the filesystem, or Electron objects to the dashboard.
-      preload: path.join(path.dirname(fileURLToPath(import.meta.url)), 'preload.mjs'),
+      preload: path.join(path.dirname(fileURLToPath(import.meta.url)), 'preload.cjs'),
     },
   });
   mark('BrowserWindow.after', { id: window.id });

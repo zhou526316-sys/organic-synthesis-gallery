@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+const { contextBridge, ipcRenderer } = require('electron');
 
 // Keep Browserbase credentials off URLs and out of the dashboard document.
 // The main process validates and persists the two submitted strings.
