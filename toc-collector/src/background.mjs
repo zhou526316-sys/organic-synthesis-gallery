@@ -1719,7 +1719,7 @@ function onNavigate(event, url) {
   })();
 }
 
-function dispose() {
+async function dispose() {
   disposed = true;
   quitting = true;
   if (firstCycleTimer) clearTimeout(firstCycleTimer);
