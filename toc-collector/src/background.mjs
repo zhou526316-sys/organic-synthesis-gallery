@@ -419,11 +419,18 @@ async function probeUrl(url) {
 }
 
 async function networkState() {
-  const [acs, wiley] = await Promise.all([
+  const [acsProbe, wileyProbe] = await Promise.all([
     probeUrl('https://pubs.acs.org/'),
     probeUrl('https://onlinelibrary.wiley.com/'),
   ]);
-  return { acs, wiley };
+  const acsVerified = localPublisherReady('acs');
+  const wileyVerified = localPublisherReady('wiley');
+  return {
+    acs: acsVerified || acsProbe,
+    wiley: wileyVerified || wileyProbe,
+    acsSource: acsVerified ? 'verified_local_session' : (acsProbe ? 'direct_probe' : 'unavailable'),
+    wileySource: wileyVerified ? 'verified_local_session' : (wileyProbe ? 'direct_probe' : 'unavailable'),
+  };
 }
 
 function cooldownActive(doi) {
@@ -620,46 +627,49 @@ async function browserbaseContext(publisher) {
   return String(created.id);
 }
 
-function systemBrowserCandidates() {
-  const values = [
-    process.env.PROGRAMFILES && path.join(process.env.PROGRAMFILES, 'Microsoft', 'Edge', 'Application', 'msedge.exe'),
-    process.env['PROGRAMFILES(X86)'] && path.join(process.env['PROGRAMFILES(X86)'], 'Microsoft', 'Edge', 'Application', 'msedge.exe'),
-    process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA, 'Microsoft', 'Edge', 'Application', 'msedge.exe'),
-    process.env.PROGRAMFILES && path.join(process.env.PROGRAMFILES, 'Google', 'Chrome', 'Application', 'chrome.exe'),
-    process.env['PROGRAMFILES(X86)'] && path.join(process.env['PROGRAMFILES(X86)'], 'Google', 'Chrome', 'Application', 'chrome.exe'),
-    process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA, 'Google', 'Chrome', 'Application', 'chrome.exe'),
-  ].filter(Boolean);
-  return [...new Set(values)];
-}
-
-function findSystemBrowserExecutable() {
-  return systemBrowserCandidates().find(candidate => fs.existsSync(candidate)) || '';
-}
-
-async function waitForDevToolsPort(profileDir, child, timeoutMs = 20000) {
-  const activePortPath = path.join(profileDir, 'DevToolsActivePort');
-  const deadline = Date.now() + timeoutMs;
-  while (Date.now() < deadline) {
-    if (child.exitCode != null) throw new Error(`local_browser_exited_${child.exitCode}`);
-    try {
-      const text = await fsp.readFile(activePortPath, 'utf8');
-      const [portLine] = text.split(/\r?\n/);
-      const port = Number(portLine);
-      if (Number.isInteger(port) && port > 0) return port;
-    } catch {}
-    await new Promise(resolve => setTimeout(resolve, 200));
-  }
-  throw new Error('local_browser_devtools_timeout');
+function localPublisherReady(publisher) {
+  return ['verified_article_access', 'verified_pdf_access'].includes(String(state.localPublisher?.[publisher]?.status || ''));
 }
 
 async function closeLocalPublisherBrowser(publisher) {
   const active = localPublisherWindows.get(publisher);
   if (!active) return;
   localPublisherWindows.delete(publisher);
-  try { await active.browser?.close?.(); } catch {}
   try {
-    if (active.process && active.process.exitCode == null) active.process.kill();
+    if (active.win && !active.win.isDestroyed()) active.win.destroy();
   } catch {}
+}
+
+async function clearPublisherCooldowns(publisher) {
+  let cleared = 0;
+  for (const doi of Object.keys(state.cooldowns || {})) {
+    if (classify(doi) !== publisher) continue;
+    delete state.cooldowns[doi];
+    cleared += 1;
+  }
+  if (cleared) {
+    await saveState();
+    await log('publisher_cooldowns_cleared', { publisher, cleared });
+  }
+  return cleared;
+}
+
+async function releaseVerifiedPublisherCooldowns() {
+  let changed = false;
+  for (const publisher of ['acs', 'wiley']) {
+    if (!localPublisherReady(publisher)) continue;
+    let cleared = 0;
+    for (const doi of Object.keys(state.cooldowns || {})) {
+      if (classify(doi) !== publisher) continue;
+      delete state.cooldowns[doi];
+      cleared += 1;
+    }
+    if (cleared) {
+      changed = true;
+      await log('publisher_cooldowns_cleared', { publisher, cleared, reason: 'verified_local_session' });
+    }
+  }
+  if (changed) await saveState();
 }
 
 async function startLocalPublisherVerification(publisher) {
@@ -667,103 +677,80 @@ async function startLocalPublisherVerification(publisher) {
   if (!['acs', 'wiley', 'nature', 'science'].includes(publisher)) throw new Error('local_publisher_unsupported');
 
   const existing = localPublisherWindows.get(publisher);
-  if (existing?.page && !existing.page.isClosed()) {
-    await existing.page.bringToFront().catch(() => {});
-    return { publisher, status: 'open', doi: existing.doi || '', url: existing.page.url() };
+  if (existing?.win && !existing.win.isDestroyed()) {
+    existing.win.show();
+    existing.win.focus();
+    return { publisher, status: 'open', doi: existing.doi || '', url: existing.win.webContents.getURL() };
   }
-
-  await closeLocalPublisherBrowser(publisher);
-
-  const executablePath = findSystemBrowserExecutable();
-  if (!executablePath) throw new Error('system_edge_or_chrome_not_found');
 
   const target = manualPublisherTarget(publisher);
-  const profileDir = path.join(dataDir(), 'publisher-browser-profiles', publisher);
-  await fsp.mkdir(profileDir, { recursive: true });
-  await fsp.rm(path.join(profileDir, 'DevToolsActivePort'), { force: true }).catch(() => {});
-
-  const child = spawn(executablePath, [
-    `--user-data-dir=${profileDir}`,
-    '--remote-debugging-port=0',
-    '--no-first-run',
-    '--no-default-browser-check',
-    '--new-window',
-    target.url,
-  ], {
-    detached: false,
-    stdio: 'ignore',
-    windowsHide: false,
+  const publisherSession = getPublisherSession(publisher);
+  const win = new BrowserWindow({
+    width: 1380,
+    height: 960,
+    show: true,
+    title: `Collector · ${manualPublisherLabel(publisher)} · 本机/VPN 验证`,
+    webPreferences: {
+      session: publisherSession,
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+      images: true,
+    },
   });
-  child.once('error', error => {
-    void log('local_system_browser_process_error', { publisher, reason: safeError(error, 200) });
+  localPublisherWindows.set(publisher, { win, doi: target.doi || '', targetUrl: target.url, startedAt: Date.now() });
+  win.on('closed', () => {
+    const current = localPublisherWindows.get(publisher);
+    if (current?.win === win) localPublisherWindows.delete(publisher);
   });
-
-  const port = await waitForDevToolsPort(profileDir, child);
-  const { chromium } = await import('playwright-core');
-  const browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`, { timeout: 15000 });
-  const context = browser.contexts()[0];
-  if (!context) {
-    try { await browser.close(); } catch {}
-    throw new Error('local_browser_context_missing');
-  }
-
-  let page = context.pages().find(candidate => publisherHostMatches(publisher, candidate.url()));
-  if (!page) page = context.pages()[0] || await context.newPage();
-  if (!publisherHostMatches(publisher, page.url())) {
-    await page.goto(target.url, { waitUntil: 'domcontentloaded', timeout: Math.max(30000, Number(config.publisherTimeoutSeconds || 35) * 1000) }).catch(() => {});
-  }
-  await page.bringToFront().catch(() => {});
-
-  localPublisherWindows.set(publisher, {
-    browser,
-    context,
-    page,
-    process: child,
-    doi: target.doi || '',
-    targetUrl: target.url,
-    executablePath,
-    profileDir,
-    startedAt: Date.now(),
+  win.webContents.on('did-fail-load', (_event, code, description, validatedUrl) => {
+    void log('local_publisher_load_failed', { publisher, doi: target.doi || '', code, description, url: validatedUrl });
   });
 
   state.localPublisher[publisher] = {
-    status: 'open',
+    ...(state.localPublisher[publisher] || {}),
+    status: 'opening',
     doi: target.doi || '',
-    browser: path.basename(executablePath),
-    profileDir,
-    currentUrl: page.url(),
+    partition: `persist:toc-publisher-${publisher}`,
     openedAt: Date.now(),
   };
   await saveState();
-  await log('local_system_browser_opened', {
-    publisher,
-    doi: target.doi || '',
-    browser: path.basename(executablePath),
-    profileDir,
-    url: page.url(),
+  await log('local_publisher_window_opened', { publisher, doi: target.doi || '', url: target.url, partition: `persist:toc-publisher-${publisher}` });
+
+  await win.loadURL(target.url, {
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+  }).catch(async error => {
+    await log('local_publisher_load_error', { publisher, doi: target.doi || '', reason: safeError(error, 240) });
   });
 
-  stageStatus = `${manualPublisherLabel(publisher)} 已在本机真实 ${path.basename(executablePath)} 中打开。该浏览器直接使用 Windows 网络，因此会随系统级学校 VPN；请在这个正常浏览器窗口完成验证并进入论文页，然后点“检查本机权限”。`;
+  state.localPublisher[publisher] = {
+    ...(state.localPublisher[publisher] || {}),
+    status: 'open',
+    currentUrl: win.webContents.getURL(),
+    openedAt: Date.now(),
+  };
+  await saveState();
+  stageStatus = `${manualPublisherLabel(publisher)} 已在本机持久浏览器会话打开。该会话直接使用 Windows 网络；若学校 VPN 是系统级隧道，它会沿用学校 VPN。完成验证并进入论文页后点击“检查本机权限”。`;
   refreshDashboard();
-  return { publisher, status: 'open', doi: target.doi || '', url: page.url(), browser: path.basename(executablePath) };
+  return { publisher, status: 'open', doi: target.doi || '', url: win.webContents.getURL() };
 }
 
 async function finishLocalPublisherVerification(publisher) {
   publisher = String(publisher || '').trim().toLowerCase();
   const active = localPublisherWindows.get(publisher);
-  if (!active?.page || active.page.isClosed()) throw new Error('local_publisher_browser_not_open');
+  if (!active?.win || active.win.isDestroyed()) throw new Error('local_publisher_window_not_open');
 
-  const details = await active.page.evaluate(() => {
+  const details = await active.win.webContents.executeJavaScript(`(() => {
     const abs = value => { try { return new URL(value, location.href).href } catch { return '' } };
     const text = String(document.body?.innerText || '').slice(0, 220000);
     const pdfLinks = [...document.querySelectorAll('a[href]')]
       .map(a => ({ href: abs(a.getAttribute('href') || ''), text: String(a.textContent || '').trim() }))
-      .filter(item => item.href && (/\bpdf\b|download/i.test(item.text + ' ' + item.href)))
+      .filter(item => item.href && (/\\bpdf\\b|download/i.test(item.text + ' ' + item.href)))
       .slice(0, 30);
     return { href: location.href, title: document.title, text, pdfLinks };
-  });
+  })()`);
 
-  const pageUrl = String(details?.href || active.page.url() || '');
+  const pageUrl = String(details?.href || active.win.webContents.getURL() || '');
   const body = String(details?.text || '');
   const challenged = browserbaseManualRequired(body, pageUrl);
   const hostOk = publisherHostMatches(publisher, pageUrl);
@@ -771,30 +758,41 @@ async function finishLocalPublisherVerification(publisher) {
   const doiSuffix = normalizedDoi.split('/').at(-1) || normalizedDoi;
   const doiOk = !normalizedDoi || body.toLowerCase().includes(normalizedDoi) || pageUrl.toLowerCase().includes(doiSuffix.toLowerCase());
 
-  let pdfAccess = false;
-  let pdfStatus = 0;
-  let pdfContentType = '';
-  let pdfUrl = '';
+  // Browser-level PDF/ePDF viewers are valid entitlement evidence even when a
+  // separate fetch() is rejected by publisher anti-bot middleware.
+  const browserPdfViewer =
+    (publisher === 'wiley' && /\/doi\/(?:e?pdf)\//i.test(pageUrl)) ||
+    (publisher === 'acs' && /\/doi\/(?:e?pdf|pdf)\//i.test(pageUrl)) ||
+    /\.pdf(?:[?#]|$)/i.test(pageUrl);
 
-  if (!challenged && hostOk) {
+  let pdfAccess = browserPdfViewer;
+  let pdfStatus = browserPdfViewer ? 200 : 0;
+  let pdfContentType = browserPdfViewer ? 'browser/pdf-viewer' : '';
+  let pdfUrl = browserPdfViewer ? pageUrl : '';
+  let pdfEvidence = browserPdfViewer ? 'browser_viewer' : '';
+
+  if (!challenged && hostOk && !pdfAccess) {
+    const publisherSession = getPublisherSession(publisher);
     for (const item of Array.isArray(details?.pdfLinks) ? details.pdfLinks : []) {
       try {
-        const response = await active.context.request.get(item.href, {
-          timeout: 20000,
+        const response = await publisherSession.fetch(item.href, {
+          method: 'GET',
+          redirect: 'follow',
           headers: { Referer: pageUrl, Accept: 'application/pdf,*/*;q=0.8' },
-          failOnStatusCode: false,
+          signal: AbortSignal.timeout(20000),
         });
-        pdfStatus = response.status();
-        pdfContentType = String(response.headers()['content-type'] || '').toLowerCase();
-        pdfUrl = response.url();
-        if (response.ok() && (pdfContentType.includes('application/pdf') || /\.pdf(?:[?#]|$)/i.test(pdfUrl))) {
+        pdfStatus = Number(response.status || 0);
+        pdfContentType = String(response.headers.get('content-type') || '').toLowerCase();
+        pdfUrl = String(response.url || item.href);
+        if (response.ok && (pdfContentType.includes('application/pdf') || /\.pdf(?:[?#]|$)/i.test(pdfUrl))) {
           pdfAccess = true;
-          await response.dispose().catch(() => {});
+          pdfEvidence = 'direct_fetch';
+          try { await response.body?.cancel(); } catch {}
           break;
         }
-        await response.dispose().catch(() => {});
+        try { await response.body?.cancel(); } catch {}
       } catch (error) {
-        await log('local_system_browser_pdf_probe_failed', { publisher, doi: normalizedDoi, reason: safeError(error, 180) });
+        await log('local_publisher_pdf_probe_failed', { publisher, doi: normalizedDoi, reason: safeError(error, 180) });
       }
     }
   }
@@ -818,30 +816,54 @@ async function finishLocalPublisherVerification(publisher) {
     pdfStatus,
     pdfContentType,
     pdfUrl: pdfAccess ? pdfUrl : '',
+    pdfEvidence,
     checkedAt: Date.now(),
   };
-  await saveState();
-  await log('local_system_browser_verification_checked', {
-    publisher,
-    doi: normalizedDoi,
-    status,
-    pdfAccess,
-    pdfStatus,
-    pdfContentType,
-    url: pageUrl,
-  });
 
   if (status === 'verified_pdf_access' || status === 'verified_article_access') {
+    let cleared = 0;
+    for (const doi of Object.keys(state.cooldowns || {})) {
+      if (classify(doi) !== publisher) continue;
+      delete state.cooldowns[doi];
+      cleared += 1;
+    }
+    await log('local_publisher_verification_checked', {
+      publisher,
+      doi: normalizedDoi,
+      status,
+      pdfAccess,
+      pdfStatus,
+      pdfContentType,
+      pdfEvidence,
+      clearedCooldowns: cleared,
+      url: pageUrl,
+    });
+    await saveState();
+    active.win.close();
     stageStatus = pdfAccess
-      ? `${manualPublisherLabel(publisher)} 本机/VPN 权限已确认：真实浏览器中的文章页和 PDF 都可访问。该出版社的独立浏览器 Profile 已持久保存。`
-      : `${manualPublisherLabel(publisher)} 文章页已确认，浏览器 Profile 已保存；当前没有从页面链接探测到可直接读取的 PDF，将在 resolver 阶段继续识别 PDF 入口。`;
-  } else if (status === 'still_challenged') {
-    stageStatus = `${manualPublisherLabel(publisher)} 仍处于验证页面。请只在打开的真实 Edge/Chrome 中完成验证；不要回到 Electron 内嵌页面。`;
+      ? `${manualPublisherLabel(publisher)} 本机/VPN 权限已确认：浏览器级 PDF/ePDF 权限成立；已清除该出版社旧 cooldown，可立即重新处理。`
+      : `${manualPublisherLabel(publisher)} 文章权限已确认；已清除该出版社旧 cooldown。PDF 将继续通过浏览器会话而不是独立 HTTP 探针解析。`;
   } else {
-    stageStatus = `${manualPublisherLabel(publisher)} 尚未完成权限确认（${status}）。请保持真实浏览器窗口在目标论文页，再次检查。`;
+    await saveState();
+    await log('local_publisher_verification_checked', {
+      publisher,
+      doi: normalizedDoi,
+      status,
+      pdfAccess,
+      pdfStatus,
+      pdfContentType,
+      pdfEvidence,
+      url: pageUrl,
+    });
+    if (status === 'still_challenged') {
+      stageStatus = `${manualPublisherLabel(publisher)} 仍处在验证/挑战页面，请在本机窗口完成后再次点击“检查本机权限”。`;
+    } else {
+      stageStatus = `${manualPublisherLabel(publisher)} 尚未完成权限确认（${status}），请保持本机窗口打开并进入目标论文页。`;
+    }
   }
+
   refreshDashboard();
-  return { publisher, status, doi: normalizedDoi, url: pageUrl, pdfAccess, pdfStatus, pdfContentType };
+  return { publisher, status, doi: normalizedDoi, url: pageUrl, pdfAccess, pdfStatus, pdfContentType, pdfEvidence };
 }
 
 function manualPublisherLabel(publisher) {
@@ -1429,6 +1451,7 @@ async function runCycle(manual = false) {
   cycleRunning = true;
   try {
     config = await loadJson(configPath(), DEFAULT_CONFIG);
+    await releaseVerifiedPublisherCooldowns();
     if (!String(config.writeToken || '').trim()) {
       stageStatus = '等待配置 writeToken；尚未开始采集或上传';
       await log('collector waiting for writeToken; no collection performed');
@@ -1504,14 +1527,14 @@ function dashboardHtml() {
   <div class="grid">
     <div class="card"><div class="k">当前队列</div><div class="v">${lastQueue.length}</div></div>
     <div class="card"><div class="k">ACS / Wiley 待处理</div><div class="v">${restricted}</div></div>
-    <div class="card"><div class="k">ACS 网络</div><div class="v ${net.acs ? 'ok':'bad'}">${net.acs === true ? '可访问' : net.acs === false ? '不可访问' : '待检测'}</div></div>
-    <div class="card"><div class="k">Wiley 网络</div><div class="v ${net.wiley ? 'ok':'bad'}">${net.wiley === true ? '可访问' : net.wiley === false ? '不可访问' : '待检测'}</div></div>
+    <div class="card"><div class="k">ACS 网络 / 权限</div><div class="v ${net.acs ? 'ok':'bad'}">${net.acs === true ? '可使用' : net.acs === false ? '不可用' : '待检测'}${net.acsSource ? `<br><small>${escapeHtml(net.acsSource)}</small>` : ''}</div></div>
+    <div class="card"><div class="k">Wiley 网络 / 权限</div><div class="v ${net.wiley ? 'ok':'bad'}">${net.wiley === true ? '可使用' : net.wiley === false ? '不可用' : '待检测'}${net.wileySource ? `<br><small>${escapeHtml(net.wileySource)}</small>` : ''}</div></div>
     <div class="card"><div class="k">写入密钥</div><div class="v" style="font-size:14px">${escapeHtml(tokenState)}</div></div>
     <div class="card"><div class="k">Browserbase</div><div class="v" style="font-size:14px">${browserbaseInfo.configured ? '已配置' : '缺失'} · ACS ${escapeHtml(state.browserbase?.status?.acs || browserbaseInfo.acs)}<br>Wiley ${escapeHtml(state.browserbase?.status?.wiley || browserbaseInfo.wiley)} · Nature ${escapeHtml(state.browserbase?.status?.nature || 'standby')} · Science ${escapeHtml(state.browserbase?.status?.science || 'standby')}${browserbaseBatch ? `<br>12 条测试：${Number(browserbaseBatch.resolved || 0)}/${Number(browserbaseBatch.requested || 0)}` : ''}</div></div>
     <div class="card"><div class="k">上次处理</div><div class="v" style="font-size:14px">${summary.at ? `成功 ${Number(summary.success||0)} · 失败 ${Number(summary.failed||0)}` : '尚未采集'}</div></div>
   </div>
   <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开当前设置</a><a href="collector:reload-config">重新加载设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
-  <section class="credentials"><strong>本机 / 学校 VPN 出版社权限</strong><div class="note">这里会启动你电脑上真实的 Microsoft Edge 或 Google Chrome 独立 Profile，不使用 Electron 验证页，也不使用 Browserbase。浏览器直接走 Windows 网络，因此系统级学校 VPN 会生效；cookies、登录态与验证状态保存在 Collector 的独立 publisher browser profile 中。</div><div class="buttons" id="local-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const local = state.localPublisher?.[publisher] || {}; return `<span><button type="button" data-local-start="${publisher}">本机打开 ${escapeHtml(label)}</button><button type="button" data-local-finish="${publisher}">检查本机权限</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(local.status || '未验证')}${local.pdfAccess ? ' · PDF 可访问' : ''}</small></span>`; }).join('')}</div></section>
+  <section class="credentials"><strong>本机 / 学校 VPN 出版社权限</strong><div class="note">这里使用 Collector 本机持久浏览器会话，不使用 Browserbase。会话直接走 Windows 网络，因此系统级学校 VPN 会生效；ACS/Wiley 已验证状态会直接参与后台调度。</div><div class="buttons" id="local-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const local = state.localPublisher?.[publisher] || {}; return `<span><button type="button" data-local-start="${publisher}">本机打开 ${escapeHtml(label)}</button><button type="button" data-local-finish="${publisher}">检查本机权限</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(local.status || '未验证')}${local.pdfAccess ? ' · PDF 可访问' : ''}</small></span>`; }).join('')}</div></section>
   <section class="credentials"><strong>Browserbase 本机凭据</strong><div class="note">密钥只保存到当前进程的 config.json；界面、日志和控制台都不会显示密钥。</div><form id="browserbase-form"><label for="browserbase-api-key">Browserbase API Key</label><input id="browserbase-api-key" type="password" autocomplete="off" maxlength="2048" placeholder="粘贴 API Key"><label for="browserbase-project-id">Browserbase Project ID（可选）</label><input id="browserbase-project-id" type="text" autocomplete="off" maxlength="512" placeholder="可留空"><button class="primary" type="submit">保存</button><button id="browserbase-clear" type="button">清除凭据</button>${browserbaseInfo.configured ? '<button id="browserbase-test" type="button">Browserbase 验收</button>' : ''}<span class="note" id="browserbase-action-status"></span></form>${browserbaseInfo.configured ? `<div class="note" style="margin-top:14px"><strong>人工验证 / 权限初始化</strong><br>点击后会打开 Browserbase Live View。完成出版社验证后回到此窗口点击对应“完成验证”。验证状态会保存在该出版社的 persistent Context 中。</div><div class="buttons" id="manual-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const manual = state.browserbase?.manual?.[publisher] || {}; return `<span><button type="button" data-manual-start="${publisher}">打开 ${escapeHtml(label)}</button><button type="button" data-manual-finish="${publisher}">完成验证</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(manual.status || '未初始化')}${manual.sessionId ? ` · Session ${escapeHtml(manual.sessionId)}` : ''}</small></span>`; }).join('')}</div>` : ''}</section>
   <table><thead><tr><th>最近待处理 DOI</th><th>来源</th></tr></thead><tbody>${rows || '<tr><td colspan="2">当前无待处理项目</td></tr>'}</tbody></table>
   <div class="note">实际 userData：<code>${escapeHtml(configInfo.userData)}</code><br>实际 config.json：<code>${escapeHtml(configInfo.configPath)}</code><br>设置状态：${escapeHtml(configInfo.message)}${configInfo.reloadedAt ? `（${escapeHtml(new Date(configInfo.reloadedAt).toLocaleString())}）` : ''}<br>VPN 程序：${vpnState}<br>自动检查间隔：${Number(config.pollMinutes||10)} 分钟；提醒间隔：${Number(config.reminderHours||6)} 小时。</div>
