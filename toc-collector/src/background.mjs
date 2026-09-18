@@ -1208,6 +1208,11 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       await log('browserbase_diagnostic_forced', { doi });
     }
     if (htmlResult?.candidate) return htmlResult;
+    const publisher = classify(doi);
+    if (!forceBrowserbase && localPublisherReady(publisher)) {
+      await log('browserbase_skipped_verified_local_session', { doi, publisher, browserError });
+      return htmlResult || { url, candidate: null, method: 'verified_local_no_candidate', verifiedLocalSession: true };
+    }
     const browserbaseResult = await inspectArticleBrowserbase(doi, url, browserError, { verifyImage: verifyBrowserbaseImage });
     if (browserbaseResult?.candidate) return browserbaseResult;
     // PDF is deliberately a later, independent resolver. Reaching this marker
@@ -1253,10 +1258,12 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     const c = inspected.candidate;
     if (!c) {
       if (!inspectOnly) {
-        await setCooldown(doi, 'semantic_media_not_found', 72 * 60 * 60 * 1000);
-        await report(doi, 'extract', 'partial', 'semantic_media_not_found', inspected.url);
+        const reason = inspected.verifiedLocalSession ? 'verified_local_no_visual' : 'semantic_media_not_found';
+        const waitMs = inspected.verifiedLocalSession ? 6 * 60 * 60 * 1000 : 72 * 60 * 60 * 1000;
+        await setCooldown(doi, reason, waitMs);
+        await report(doi, 'extract', 'partial', reason, inspected.url);
       }
-      return { doi, status: 'no_candidate' };
+      return { doi, status: 'no_candidate', source: inspected.method || '' };
     }
     let data;
     try {
