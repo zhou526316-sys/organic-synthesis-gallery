@@ -114,13 +114,13 @@ export class GalleryUserShell extends HTMLElement {
         <input type='password' minlength='8' maxlength='128' autocomplete='${register ? 'new-password' : 'current-password'}' data-local-password placeholder='${this.tr('密码（至少 8 位）', 'Password (8+ characters)')}'>
         <button class='primary' type='button' data-action='${register ? 'local-register' : 'local-login'}'>${register ? this.tr('创建本站账号', 'Create site account') : this.tr('登录本站账号', 'Sign in with site account')}</button>
       </div>
-      <div class='help' style='margin-top:7px'>${register ? this.tr('注册后会向邮箱发送确认链接；确认后账号才会建立，并自动登录。', 'A verification link will be emailed to you. Your account is created only after verification.') : this.tr('本站账号会同步收藏、阅读状态、私人备注和个性化设置。', 'Site accounts sync saved papers, reading status, private notes, and preferences.')}</div>
+      <div class='help' style='margin-top:7px'>${register ? this.tr('填写昵称、邮箱和密码即可直接注册并登录。密码仅保存为安全哈希，不保存明文。', 'Enter a display name, email, and password to register and sign in immediately. Passwords are stored only as secure hashes.') : this.tr('本站账号会同步收藏、阅读状态、私人备注和个性化设置。', 'Site accounts sync saved papers, reading status, private notes, and preferences.')}</div>
     </section>`;
 
     return `${nativeAccount}
       <section class='section'><h4>${this.tr('其他登录方式', 'Other sign-in methods')}</h4><div class='provider'><button type='button' data-action='provider:google' ${enabled('google')}>Google <small class='${this.integrations?.auth.google ? 'ok' : 'off'}'>· ${this.providerState('google')}</small></button><button type='button' data-action='provider:wechat' ${enabled('wechat')}>微信 <small class='${this.integrations?.auth.wechat ? 'ok' : 'off'}'>· ${this.providerState('wechat')}</small></button><button type='button' data-action='provider:qq' ${enabled('qq')}>QQ <small class='${this.integrations?.auth.qq ? 'ok' : 'off'}'>· ${this.providerState('qq')}</small></button></div></section>
       <section class='section'><h4>${this.tr('邮箱免密码登录', 'Passwordless email sign-in')}</h4><div class='row'><input class='email' type='email' data-email placeholder='name@example.com'><button class='secondary' type='button' data-action='email-login' ${enabled('email')}>${this.tr('发送登录链接', 'Send sign-in link')}</button></div><div class='help'>${this.providerState('email')}</div></section>
-      ${this.integrationMessage ? `<div class='notice'>${escapeHtml(this.integrationMessage)}</div>` : ''}`;
+      <div class='notice' data-auth-message ${this.integrationMessage ? '' : 'hidden'}>${escapeHtml(this.integrationMessage)}</div>`;
   }
 
   private support(): string {
@@ -146,6 +146,14 @@ export class GalleryUserShell extends HTMLElement {
   }
 
   private styleTarget(value: string): StyleDef | undefined { const [kind, id] = value.split(':'); return kind === 'status' ? store.status(id)?.style : kind === 'action' ? store.state.actionStyles[id as ActionKey] : undefined; }
+
+  private setAuthMessage(message: string): void {
+    this.integrationMessage = message;
+    const notice = this.shadow.querySelector<HTMLElement>('[data-auth-message]');
+    if (!notice) return;
+    notice.textContent = message;
+    notice.hidden = !message;
+  }
 
   private async api<T>(path: string, init: RequestInit = {}): Promise<T> {
     const token = sessionToken();
@@ -197,41 +205,56 @@ export class GalleryUserShell extends HTMLElement {
   }
 
   private async submitNativeAccount(register: boolean): Promise<void> {
-    const email = this.shadow.querySelector<HTMLInputElement>('[data-local-email]')?.value.trim() || '';
-    const password = this.shadow.querySelector<HTMLInputElement>('[data-local-password]')?.value || '';
-    const displayName = this.shadow.querySelector<HTMLInputElement>('[data-local-name]')?.value.trim() || '';
-    if (!email) { this.integrationMessage = this.tr('请输入邮箱。', 'Enter an email address.'); this.render(); return; }
-    if (password.length < 8) { this.integrationMessage = this.tr('密码至少需要 8 位。', 'Password must contain at least 8 characters.'); this.render(); return; }
-    if (register && !displayName) { this.integrationMessage = this.tr('请输入昵称。', 'Enter a display name.'); this.render(); return; }
+    const emailInput = this.shadow.querySelector<HTMLInputElement>('[data-local-email]');
+    const passwordInput = this.shadow.querySelector<HTMLInputElement>('[data-local-password]');
+    const nameInput = this.shadow.querySelector<HTMLInputElement>('[data-local-name]');
+    const submit = this.shadow.querySelector<HTMLButtonElement>(`[data-action='${register ? 'local-register' : 'local-login'}']`);
+    const email = emailInput?.value.trim().toLowerCase() || '';
+    const password = passwordInput?.value || '';
+    const displayName = nameInput?.value.trim() || '';
+
+    if (!email) { this.setAuthMessage(this.tr('请输入邮箱。', 'Enter an email address.')); emailInput?.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { this.setAuthMessage(this.tr('邮箱格式不正确。', 'Invalid email address.')); emailInput?.focus(); return; }
+    if (password.length < 8 || password.length > 128) { this.setAuthMessage(this.tr('密码需要 8–128 位。', 'Password must be 8–128 characters.')); passwordInput?.focus(); return; }
+    if (register && !displayName) { this.setAuthMessage(this.tr('请输入昵称。', 'Enter a display name.')); nameInput?.focus(); return; }
+
+    const originalLabel = submit?.textContent || '';
+    if (submit) {
+      submit.disabled = true;
+      submit.textContent = this.tr(register ? '正在注册…' : '正在登录…', register ? 'Creating account…' : 'Signing in…');
+    }
+    this.setAuthMessage('');
 
     try {
-      if (register) {
-        await this.api<{ accepted: boolean; verificationRequired?: boolean }>('/api/user-ui/auth/register', {
+      const result = await this.api<{ token: string; user: AuthUser }>(
+        register ? '/api/user-ui/auth/register' : '/api/user-ui/auth/password/login',
+        {
           method: 'POST',
-          body: JSON.stringify({ email, password, displayName, returnTo: returnUrl() }),
-        });
-        this.integrationMessage = this.tr('注册确认邮件已发送。请在 20 分钟内点击邮件中的确认链接，完成后会自动登录。', 'Registration email sent. Open the verification link within 20 minutes; you will be signed in automatically after confirmation.');
-      } else {
-        const result = await this.api<{ token: string; user: AuthUser }>('/api/user-ui/auth/password/login', {
-          method: 'POST',
-          body: JSON.stringify({ email, password }),
-        });
-        saveSessionToken(result.token);
-        this.authUser = result.user;
-        this.integrationMessage = this.tr('登录成功。', 'Signed in.');
-      }
+          body: JSON.stringify(register ? { email, password, displayName } : { email, password }),
+        },
+      );
+      saveSessionToken(result.token);
+      this.authUser = result.user;
+      this.integrationMessage = register
+        ? this.tr('注册成功，已自动登录。', 'Account created. You are signed in.')
+        : this.tr('登录成功。', 'Signed in.');
+      this.render();
     } catch (error) {
       const code = error instanceof Error ? error.message : String(error);
       const known: Record<string, string> = {
         invalid_credentials: this.tr('邮箱或密码错误。', 'Incorrect email or password.'),
-        email_already_registered: this.tr('该邮箱已经注册，可直接登录。', 'This email is already registered. Sign in instead.'),
+        email_already_registered: this.tr('该邮箱已经存在账号，请直接登录或使用原登录方式。', 'An account already uses this email. Sign in or use the original sign-in method.'),
         invalid_email: this.tr('邮箱格式不正确。', 'Invalid email address.'),
         invalid_password: this.tr('密码需要 8–128 位。', 'Password must be 8–128 characters.'),
-        email_delivery_failed: this.tr('确认邮件发送失败，请稍后重试。', 'Could not send the verification email. Try again later.'),
+        invalid_display_name: this.tr('昵称无效。', 'Invalid display name.'),
+        registration_failed: this.tr('注册失败，请稍后重试。', 'Registration failed. Try again later.'),
       };
-      this.integrationMessage = known[code] || code;
+      this.setAuthMessage(known[code] || this.tr(`操作失败：${code}`, `Request failed: ${code}`));
+      if (submit) {
+        submit.disabled = false;
+        submit.textContent = originalLabel;
+      }
     }
-    this.render();
   }
 
   private async startProvider(provider: Exclude<Provider, 'email'>): Promise<void> {
