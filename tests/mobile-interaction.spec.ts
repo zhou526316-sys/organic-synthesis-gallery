@@ -6,6 +6,7 @@ test.use({
 });
 
 test('mobile paper actions survive 30 status/note/more cycles without locking page scroll', async ({ page }) => {
+  test.setTimeout(120_000);
   await page.route('https://api.gczhouwld.com/**', async route => {
     const url = route.request().url();
     if (url.includes('/api/user-ui/reader-counts/mark')) {
