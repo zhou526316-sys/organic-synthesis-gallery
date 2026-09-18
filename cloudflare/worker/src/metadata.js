@@ -82,16 +82,26 @@ export async function importTitleTranslations(env, payload) {
 
 export async function getLiteratureSupplement(env) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
-  const [papersResult, meta] = await Promise.all([
+  const [papersResult, authorsResult, meta] = await Promise.all([
     env.DB.prepare(
-      `SELECT doi, title, journal, first_online_date, article_url, synthesis_type, source
+      `SELECT identity, doi, title, journal, first_online_date, article_url, synthesis_type, source
        FROM literature_supplement_papers
        ORDER BY first_online_date DESC, journal, title`
+    ).all(),
+    env.DB.prepare(
+      `SELECT identity, sort_order, author_name
+       FROM literature_supplement_authors
+       ORDER BY identity, sort_order`
     ).all(),
     env.DB.prepare(
       'SELECT generated_at, verified_through, review_summary_json FROM literature_supplement_meta WHERE id = 1'
     ).first(),
   ]);
+  const authorsByIdentity = new Map();
+  for (const row of authorsResult?.results || []) {
+    if (!authorsByIdentity.has(row.identity)) authorsByIdentity.set(row.identity, []);
+    authorsByIdentity.get(row.identity).push(row.author_name);
+  }
   const papers = (papersResult?.results || []).map(row => ({
     journal: row.journal,
     title: row.title || null,
@@ -99,6 +109,7 @@ export async function getLiteratureSupplement(env) {
     date: row.first_online_date,
     url: row.article_url || (row.doi ? `https://doi.org/${row.doi}` : null),
     new: true,
+    authors: authorsByIdentity.get(row.identity) || [],
     ...(row.synthesis_type === 'total' || row.synthesis_type === 'formal'
       ? { synthesisType: row.synthesis_type }
       : {}),
@@ -143,6 +154,9 @@ export async function importLiteratureSupplement(env, payload) {
           ? `https://doi.org/${doi}`
           : null,
       synthesisType: normalizeSynthesisType(paper.synthesisType),
+      authors: Array.isArray(paper.authors)
+        ? paper.authors.filter(value => typeof value === 'string').map(value => value.trim()).filter(Boolean).slice(0, 200)
+        : [],
       source: typeof paper.source === 'string' ? paper.source.slice(0, 120) : 'appdeploy-v93-migration',
     });
   }
@@ -174,6 +188,22 @@ export async function importLiteratureSupplement(env, payload) {
   ));
   for (let offset = 0; offset < statements.length; offset += 80) {
     await env.DB.batch(statements.slice(offset, offset + 80));
+  }
+
+  const authorStatements = [];
+  for (const row of rows) {
+    authorStatements.push(env.DB.prepare(
+      'DELETE FROM literature_supplement_authors WHERE identity = ?'
+    ).bind(row.identity));
+    row.authors.forEach((author, sortOrder) => {
+      authorStatements.push(env.DB.prepare(
+        `INSERT INTO literature_supplement_authors (identity, sort_order, author_name)
+         VALUES (?, ?, ?)`
+      ).bind(row.identity, sortOrder, author));
+    });
+  }
+  for (let offset = 0; offset < authorStatements.length; offset += 80) {
+    await env.DB.batch(authorStatements.slice(offset, offset + 80));
   }
 
   // Hard invariant: every newly imported DOI enters the media-repair system in the
