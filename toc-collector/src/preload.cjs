@@ -8,4 +8,6 @@ contextBridge.exposeInMainWorld('tocCollector', {
   testBrowserbase: () => ipcRenderer.invoke('toc-collector:browserbase-acceptance'),
   startManualBrowserbase: publisher => ipcRenderer.invoke('toc-collector:browserbase-manual-start', publisher),
   finishManualBrowserbase: publisher => ipcRenderer.invoke('toc-collector:browserbase-manual-finish', publisher),
+  startLocalPublisher: publisher => ipcRenderer.invoke('toc-collector:local-publisher-start', publisher),
+  finishLocalPublisher: publisher => ipcRenderer.invoke('toc-collector:local-publisher-finish', publisher),
 });
