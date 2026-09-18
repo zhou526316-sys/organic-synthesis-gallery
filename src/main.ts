@@ -1,6 +1,7 @@
 import { api } from './platform-api';
 import './styles.css';
 import { mountUserShell } from './user-shell';
+import { beijingDate, earliestAddedDate, isExcludedDoi, validAddedDate } from '../shared/literature-policy.js';
 
 interface Paper {
   journal: string;
@@ -9,6 +10,7 @@ interface Paper {
   date: string;
   url: string | null;
   new: boolean;
+  addedDate?: string;
   authors: string[];
   synthesisType?: 'total' | 'formal';
 }
@@ -145,6 +147,7 @@ let batchAgain = false;
 let inventoryFingerprint = '';
 let bridgeStageTimer: number | null = null;
 let bridgeStageCursor = 0;
+let newnessTimer: number | null = null;
 
 hydrateBrowserCaches();
 document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
@@ -256,6 +259,7 @@ function normalizePaper(paper: Paper): Paper {
     journal: canonicalJournal(paper.journal),
     title: pendingTitle(paper.title) ? null : paper.title?.trim() || null,
     doi: normalizeDoi(paper.doi),
+    addedDate: validAddedDate(paper.addedDate) || undefined,
     authors: Array.isArray(paper.authors)
       ? paper.authors.filter((author): author is string => typeof author === 'string').map(author => author.trim()).filter(Boolean)
       : [],
@@ -295,6 +299,8 @@ function mergePapers(base: Paper[], additions: Paper[]): Paper[] {
       if (!existing.url && paper.url) existing.url = paper.url;
       if (paper.synthesisType) existing.synthesisType = paper.synthesisType;
       if (paper.authors.length > existing.authors.length) existing.authors = [...paper.authors];
+      const addedDate = earliestAddedDate(existing.addedDate, paper.addedDate);
+      existing.addedDate = addedDate || undefined;
       existing.new = existing.new || paper.new;
       continue;
     }
@@ -319,11 +325,31 @@ function visibleTitle(paper: Paper): string {
   return paper.title;
 }
 
+function isNewToday(paper: Paper): boolean {
+  return Boolean(paper.addedDate && paper.addedDate === beijingDate());
+}
+
+function scheduleNewnessBoundary(): void {
+  if (newnessTimer !== null) window.clearTimeout(newnessTimer);
+  const now = new Date();
+  const current = beijingDate(now);
+  let probe = new Date(now.getTime() + 60_000);
+  while (beijingDate(probe) === current && probe.getTime() - now.getTime() < 26 * 60 * 60 * 1000) {
+    probe = new Date(probe.getTime() + 15 * 60 * 1000);
+  }
+  const delay = Math.max(30_000, probe.getTime() - now.getTime() + 1_000);
+  newnessTimer = window.setTimeout(() => {
+    newnessTimer = null;
+    renderCards();
+    scheduleNewnessBoundary();
+  }, delay);
+}
+
 function filteredPapers(): Paper[] {
   const needle = query.trim().toLowerCase();
   return papers
     .filter(paper => selectedJournals.size === 0 || selectedJournals.has(paper.journal))
-    .filter(paper => !onlyNew || paper.new)
+    .filter(paper => !onlyNew || isNewToday(paper))
     .filter(paper => {
       if (!needle) return true;
       return [
@@ -368,7 +394,7 @@ function renderCards(): void {
   gallery.innerHTML = list.length ? list.map(paper => {
     const doi = paperDoi(paper);
     const href = paper.url || (doi ? `https://doi.org/${doi}` : '');
-    return `<article class='card'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${paper.new ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
+    return `<article class='card' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);
@@ -420,6 +446,7 @@ function mount(): void {
 
   renderCards();
   scheduleInventory();
+  scheduleNewnessBoundary();
 }
 
 function visibleMediaTargets(): Array<{ doi: string; toc: HTMLElement; figures: HTMLElement | null }> {
@@ -742,12 +769,12 @@ async function loadStaticPapers(): Promise<Paper[]> {
 async function load(): Promise<void> {
   try {
     const staticPapers = await loadStaticPapers();
-    papers = mergePapers([], staticPapers);
+    papers = mergePapers([], staticPapers).filter(paper => !isExcludedDoi(paperDoi(paper)));
     applyResolvedTitles();
     try {
       const response = await api.get('/api/literature/supplement');
       const supplement = response.data as { papers?: Paper[] };
-      papers = mergePapers(papers, (supplement.papers || []).map(normalizePaper));
+      papers = mergePapers(papers, (supplement.papers || []).map(normalizePaper)).filter(paper => !isExcludedDoi(paperDoi(paper)));
     } catch {
       // Static snapshot remains usable if the API is temporarily unavailable.
     }
