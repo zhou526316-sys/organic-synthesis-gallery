@@ -2,16 +2,38 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "fetching",
-  "activeRun": {
+  "phase": "synced",
+  "activeRun": null,
+  "lastCompletedFetch": {
     "id": "automation-20260918-1800",
-    "runType": "scheduled_fetch",
-    "startedAt": "2026-09-18T17:58:56+08:00",
-    "targetThrough": "2026-09-18",
-    "auditWindow": {"start":"2026-09-16","end":"2026-09-18"},
-    "baseMainSha": "0de9e8203eb5a48eb9ba4e3a98bcb8b9ba0dbc8f",
-    "auditWorkflowRunId": 35289380914,
-    "auditWorkflowAttempt": 2,
+    "finishedAt": "2026-09-18T18:16:00+08:00",
+    "windowStart": "2026-09-16",
+    "windowEnd": "2026-09-18",
+    "sourceSummary": {
+      "sourceRecords": 284,
+      "criticalSourceFailures": 0,
+      "machineMissingBeforeAssistantReview": 265,
+      "machinePotentialGaps": 78,
+      "journalSourceRecords": {"Nature":53,"Science":38,"Nature Catalysis":0,"Nature Synthesis":3,"Nature Chemistry":4,"Nature Communications":94,"JACS":43,"Angew":25,"ACS Catalysis":11,"Organic Letters":13},
+      "closureDate": "2026-09-17",
+      "closureSourceRecords": 126,
+      "closureReviewedMissing": 116,
+      "closureUnresolved": 0,
+      "currentDayUnresolved": 1
+    },
+    "addedThisRun": ["10.1038/s41467-026-77616-8"],
+    "currentDayPending": [{"doi":"10.1021/acs.orglett.6c03339","reason":"Organic-synthesis methodology candidate; ACS page/TOC is Cloudflare-blocked and authoritative author metadata was not available during this run. Keep pending rather than publish incomplete metadata."}],
+    "dataCommitSha": "4d49c6ecd89c5777c870470ac06482258755951b",
+    "mergeCommitSha": "8730bb7a48812fc963127eaa11cf0489dd577099",
+    "tocStatus": {
+      "status": "partial",
+      "recentRepairRunId": 35289746427,
+      "recentChecked": 30,
+      "recentComplete": 0,
+      "recentMissing": 30,
+      "directPublisherTocImported": 0,
+      "note": "The repair workflow completed operationally but publisher anti-bot restrictions left all 30 newest media gaps unresolved. The newly added Nature Communications card is published without claiming a TOC image; TOC remains pending."
+    },
     "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
     "capabilitySnapshot": {
       "literatureAudit": "517a33dc05d6d662a678f5d85acaa21ba3947e85",
@@ -19,13 +41,24 @@
       "tocCollector": "78a60e833c102497d03770c58cd6fae4adb5675d",
       "publisherFallback": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
     },
-    "capabilityNote": "Pinned to registry latest-compatible-stable for this run. Main contains newer TOC collector changes (c6ad546d...) and a successful recent-media repair workflow, but the registry has not yet promoted those changes as the stable production capability; they remain pending validation for capability selection in this run."
+    "auditArtifact": {"workflowRunId":35289380914,"artifactId":10542131742,"note":"Fresh 72-hour audit completed with all critical sources healthy. Workflow's audit/latest.json commit step conflicted with concurrent main updates, so the fresh report is preserved as the workflow artifact; assistant closure is persisted separately."}
   },
-  "lastCompletedFetch": null,
-  "lastWebsiteSync": null,
-  "verifiedThrough": "2026-09-15",
+  "lastWebsiteSync": {
+    "finishedAt": "2026-09-18T18:16:00+08:00",
+    "dataCommitSha": "4d49c6ecd89c5777c870470ac06482258755951b",
+    "deploymentCommitSha": "7c9479a1b1ff365927045c8a36a88aeff32dc8e1",
+    "pagesRunId": 35333626244,
+    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
+    "deployment": "success",
+    "verification": {"build":"success","deploy":"success","rollingMerged":1,"supplementPapers":59,"mandatoryStaticPapers":169,"manifestItems":406,"figures":714,"pmcFallbacks":26,"natureFallbacks":16,"oldDataRegressionCheck":"passed"},
+    "tocVerification": "partial-newest-media-gaps-remain"
+  },
+  "verifiedThrough": "2026-09-17",
   "capabilityRegistry": "audit/literature-capability.json",
-  "lastCapabilitySnapshot": null,
+  "lastCapabilitySnapshot": {
+    "fingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
+    "note": "Pinned latest-compatible-stable capability. Newer TOC collector changes on main remain unpromoted in the capability registry and were not hot-switched into this run."
+  },
   "rules": {
     "freshFetchLockMinutes": 120,
     "reuseCompletedFetchHours": 24,
