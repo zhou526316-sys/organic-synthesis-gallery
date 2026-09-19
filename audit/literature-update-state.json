@@ -2,48 +2,42 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "synced",
+  "phase": "blocked_by_concurrent_change",
   "activeRun": null,
+  "blockedRun": {
+    "id": "automation-20260919-0800",
+    "finishedAt": "2026-09-19T08:03:21+08:00",
+    "windowStart": "2026-09-17",
+    "windowEnd": "2026-09-19",
+    "sourceSummary": {
+      "sourceRecords": 210,
+      "criticalSourceFailures": 0,
+      "missingFromGallery": 199,
+      "potentialGaps": 65,
+      "unresolved": 199,
+      "journalSourceRecords": {"Nature":16,"Science":38,"Nature Catalysis":0,"Nature Synthesis":2,"Nature Chemistry":4,"Nature Communications":71,"JACS":33,"Angew":17,"ACS Catalysis":13,"Organic Letters":16},
+      "closureDate": "2026-09-18",
+      "closureSourceRecords": 84,
+      "closureMissingFromGallery": 84,
+      "closurePotentialGaps": 38,
+      "closureUnresolved": 84
+    },
+    "auditArtifact": {"workflowRunId":35289380914,"artifactId":10573342386,"digest":"sha256:f9558b5941d37f8d7d77f6823d71d245db8ebb94d37fb6f3e987638059d2ff21"},
+    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
+    "capabilitySnapshot": {"mainCommit":"8aa225af00cb88b6bf497e74429cc427aae41538","literatureAudit":"517a33dc05d6d662a678f5d85acaa21ba3947e85","literatureWorkflow":"9c51d57345a5c26002ed003a8ed3d063f7a11b09","tocCollector":"78a60e833c102497d03770c58cd6fae4adb5675d","publisherFallback":"a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"},
+    "reason": "Fresh DOI-union audit completed and artifact upload succeeded, but the workflow could not atomically commit audit/latest.json because main changed concurrently. No literature data, TOC mapping, or website deployment was overwritten."
+  },
   "lastCompletedFetch": {
     "id": "automation-20260918-1800",
     "finishedAt": "2026-09-18T18:18:00+08:00",
     "windowStart": "2026-09-16",
     "windowEnd": "2026-09-18",
-    "sourceSummary": {
-      "sourceRecords": 284,
-      "criticalSourceFailures": 0,
-      "machineMissingBeforeAssistantReview": 265,
-      "machinePotentialGaps": 78,
-      "journalSourceRecords": {"Nature":53,"Science":38,"Nature Catalysis":0,"Nature Synthesis":3,"Nature Chemistry":4,"Nature Communications":94,"JACS":43,"Angew":25,"ACS Catalysis":11,"Organic Letters":13},
-      "reviewedDifferenceRecords": 264,
-      "fullWindowAssistantUnresolved": 1,
-      "closureDate": "2026-09-17",
-      "closureSourceRecords": 126,
-      "closureReviewedMissing": 116,
-      "closureUnresolved": 0,
-      "currentDayUnresolved": 1
-    },
+    "sourceSummary": {"sourceRecords":284,"criticalSourceFailures":0,"reviewedDifferenceRecords":264,"fullWindowAssistantUnresolved":1,"closureDate":"2026-09-17","closureUnresolved":0},
     "addedThisRun": ["10.1038/s41467-026-77616-8"],
-    "currentDayPending": [{"doi":"10.1021/acs.orglett.6c03339","title":"Rh(III)-Catalyzed C–H Activation/Cyclization of Heterocyclic Ketene Aminals with 2,3-Diaryl-2H-azirines: Access to Pyrrolo[1,2-a]imidazoles","reason":"Organic-synthesis methodology candidate; ACS page and TOC are Cloudflare-blocked and authoritative author metadata was not available during this run. Kept pending rather than publishing incomplete metadata."}],
     "dataCommitSha": "4d49c6ecd89c5777c870470ac06482258755951b",
     "mergeCommitSha": "8730bb7a48812fc963127eaa11cf0489dd577099",
-    "tocStatus": {
-      "status": "partial",
-      "recentRepairRunId": 35289746427,
-      "recentChecked": 30,
-      "recentComplete": 0,
-      "recentMissing": 30,
-      "directPublisherTocImported": 0,
-      "note": "The repair workflow completed operationally but publisher anti-bot restrictions left all 30 newest media gaps unresolved. The newly added Nature Communications card is published without claiming a TOC image; TOC remains pending."
-    },
-    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
-    "capabilitySnapshot": {
-      "literatureAudit": "517a33dc05d6d662a678f5d85acaa21ba3947e85",
-      "literatureWorkflow": "9c51d57345a5c26002ed003a8ed3d063f7a11b09",
-      "tocCollector": "78a60e833c102497d03770c58cd6fae4adb5675d",
-      "publisherFallback": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
-    },
-    "auditArtifact": {"workflowRunId":35289380914,"artifactId":10542131742,"note":"Fresh 72-hour audit completed with all critical sources healthy. Workflow's audit/latest.json commit step conflicted with concurrent main updates, so the fresh report is preserved as the workflow artifact; explicit Sep 16 and Sep 17 assistant decisions are persisted separately."}
+    "tocStatus": {"status":"partial","recentChecked":30,"recentComplete":0,"recentMissing":30,"directPublisherTocImported":0},
+    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699"
   },
   "lastWebsiteSync": {
     "finishedAt": "2026-09-18T18:16:00+08:00",
@@ -52,22 +46,11 @@
     "pagesRunId": 35333626244,
     "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
     "deployment": "success",
-    "verification": {"build":"success","deploy":"success","rollingMerged":1,"supplementPapers":59,"mandatoryStaticPapers":169,"manifestItems":406,"figures":714,"pmcFallbacks":26,"natureFallbacks":16,"oldDataRegressionCheck":"passed"},
+    "verification": {"build":"success","deploy":"success","totalGalleryCards":463,"oldDataRegressionCheck":"passed"},
     "tocVerification": "partial-newest-media-gaps-remain"
   },
   "verifiedThrough": "2026-09-17",
   "capabilityRegistry": "audit/literature-capability.json",
-  "lastCapabilitySnapshot": {
-    "fingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
-    "note": "Pinned latest-compatible-stable capability. Newer TOC collector changes on main remain unpromoted in the capability registry and were not hot-switched into this run."
-  },
-  "rules": {
-    "freshFetchLockMinutes": 120,
-    "reuseCompletedFetchHours": 24,
-    "syncOnlyMustNotRefetch": true,
-    "preferLatestCompatibleStableCapability": true,
-    "pinCapabilityDuringRun": true,
-    "forceRefetchOnCapabilityFingerprintChange": true,
-    "allowedPhases": ["idle","fetching","toc_processing","ready_to_sync","syncing","synced","sync_failed","needs_approval","blocked_by_concurrent_change"]
-  }
+  "lastCapabilitySnapshot": {"fingerprint":"00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699","note":"Stable capability registry unchanged; pending recent-media-repair workflow remains unpromoted."},
+  "rules": {"freshFetchLockMinutes":120,"reuseCompletedFetchHours":24,"syncOnlyMustNotRefetch":true,"preferLatestCompatibleStableCapability":true,"pinCapabilityDuringRun":true,"forceRefetchOnCapabilityFingerprintChange":true,"allowedPhases":["idle","fetching","toc_processing","ready_to_sync","syncing","synced","sync_failed","needs_approval","blocked_by_concurrent_change"]}
 }
