@@ -90,6 +90,15 @@ jobs:
           async function inspect(site) {
             const html = await get(`${site}?frontend-sync=${Date.now()}`);
             if (!html.includes('id="app"')) throw new Error(`${site}: app root missing`);
+            const stylesheets = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["']/g)]
+              .map(match => new URL(match[1], site).href);
+            const css = (await Promise.all(stylesheets.map(href => get(
+              `${href}${href.includes('?') ? '&' : '?'}frontend-sync=${Date.now()}`,
+            )))).join('\n');
+            if (!/\.card\[hidden\]\{display:none!important\}/.test(css)) {
+              throw new Error(`${site}: search filtering CSS is missing; hidden cards may still be visible`);
+            }
+
             const scripts = [...html.matchAll(/<script[^>]+src=["']([^"']+\.js[^"']*)["']/g)]
               .map(match => new URL(match[1], site).href);
             if (!scripts.length) throw new Error(`${site}: no JS entry found`);
@@ -116,7 +125,7 @@ jobs:
             if (missing.length) {
               throw new Error(`${site}: stale frontend, missing ${missing.map(item => item[1]).join(', ')}`);
             }
-            return { site, chunks: seen.size };
+            return { site, chunks: seen.size, stylesheets: stylesheets.length, searchFilteringCss: true };
           }
 
           const results = [];
