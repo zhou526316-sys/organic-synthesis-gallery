@@ -101,3 +101,38 @@ jobs:
       - name: Deploy frontend assets
         working-directory: cloudflare/worker
         run: npx wrangler deploy --config wrangler.frontend.toml
+
+      - name: Verify deployed search filtering CSS
+        env:
+          SITE_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/
+        run: |
+          node - <<'NODE'
+          const site = process.env.SITE_URL;
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          const marker = /\.card\[hidden\]\{display:none!important\}/;
+
+          for (let attempt = 0; attempt < 10; attempt += 1) {
+            try {
+              const htmlResponse = await fetch(`${site}?search-css-smoke=${Date.now()}`, {
+                headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+              });
+              const html = await htmlResponse.text();
+              const hrefs = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["']/g)]
+                .map(match => new URL(match[1], site).href);
+              const css = (await Promise.all(hrefs.map(async href => {
+                const response = await fetch(`${href}${href.includes('?') ? '&' : '?'}smoke=${Date.now()}`, {
+                  headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+                });
+                return response.ok ? response.text() : '';
+              }))).join('\n');
+              if (marker.test(css)) {
+                console.log(JSON.stringify({ searchFilteringCss: true, stylesheets: hrefs.length, site }));
+                process.exit(0);
+              }
+            } catch (error) {
+              console.warn(String(error));
+            }
+            await sleep(3000);
+          }
+          throw new Error(`${site}: deployed CSS is missing .card[hidden]{display:none!important}`);
+          NODE
