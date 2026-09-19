@@ -2,8 +2,17 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "synced",
-  "activeRun": null,
+  "phase": "toc_processing",
+  "activeRun": {
+    "id": "manual-review-20260919-1140",
+    "runType": "reuse_existing_audit_review_and_sync",
+    "startedAt": "2026-09-19T11:40:00+08:00",
+    "windowStart": "2026-09-17",
+    "windowEnd": "2026-09-19",
+    "sourceAuditGeneratedAt": "2026-09-19T03:27:14.743Z",
+    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
+    "note": "Reusing the existing DOI-union audit; no Crossref/OpenAlex refetch. All 203 missing candidates are being given explicit assistant decisions before sync."
+  },
   "lastCompletedFetch": {
     "id": "automation-20260918-1800",
     "finishedAt": "2026-09-18T18:18:00+08:00",
