@@ -1668,6 +1668,113 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
   throw new Error('publisher_window_closed_before_capture');
 }
 
+async function captureRenderedVisual(win, candidate, doi, publisher) {
+  if (!win || win.isDestroyed() || !candidate?.src) return null;
+  try {
+    const target = await win.webContents.executeJavaScript(`(() => {
+      const wanted = ${JSON.stringify(String(candidate?.src || ''))};
+      const clean = value => {
+        try {
+          const u = new URL(String(value || ''), location.href);
+          u.hash = '';
+          return u.href;
+        } catch { return String(value || ''); }
+      };
+      const wantedClean = clean(wanted);
+      const wantedPath = (() => {
+        try { return new URL(wantedClean).pathname; } catch { return ''; }
+      })();
+      let best = null;
+      for (const img of document.images) {
+        const urls = [
+          img.currentSrc,
+          img.src,
+          img.getAttribute('data-src'),
+          img.getAttribute('data-original'),
+          img.getAttribute('data-lazy-src'),
+          img.getAttribute('data-image-src'),
+          img.getAttribute('data-lg-src'),
+          img.getAttribute('data-hi-res-src'),
+          img.getAttribute('data-full-src'),
+        ].filter(Boolean).map(clean);
+        const matched = urls.some(value => value === wantedClean)
+          || (wantedPath && urls.some(value => {
+            try { return new URL(value).pathname === wantedPath; } catch { return false; }
+          }));
+        if (!matched) continue;
+        const rect = img.getBoundingClientRect();
+        if (rect.width < 80 || rect.height < 50) continue;
+        best = {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+          naturalWidth: img.naturalWidth || 0,
+          naturalHeight: img.naturalHeight || 0,
+        };
+        img.scrollIntoView({ block: 'center', inline: 'center' });
+        break;
+      }
+      return best;
+    })()`);
+    if (!target) return null;
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const refreshed = await win.webContents.executeJavaScript(`(() => {
+      const wanted = ${JSON.stringify(String(candidate?.src || ''))};
+      const wantedPath = (() => { try { return new URL(wanted, location.href).pathname; } catch { return ''; } })();
+      for (const img of document.images) {
+        const urls = [img.currentSrc,img.src,img.getAttribute('data-src'),img.getAttribute('data-original'),img.getAttribute('data-lg-src'),img.getAttribute('data-hi-res-src')].filter(Boolean);
+        const matched = urls.some(value => value === wanted) || (wantedPath && urls.some(value => { try { return new URL(value, location.href).pathname === wantedPath; } catch { return false; } }));
+        if (!matched) continue;
+        const rect = img.getBoundingClientRect();
+        if (rect.width < 80 || rect.height < 50) continue;
+        return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+      }
+      return null;
+    })()`);
+    if (!refreshed) return null;
+
+    const bounds = {
+      x: Math.max(0, Math.floor(refreshed.left)),
+      y: Math.max(0, Math.floor(refreshed.top)),
+      width: Math.max(80, Math.ceil(refreshed.width)),
+      height: Math.max(50, Math.ceil(refreshed.height)),
+    };
+    const bitmap = await win.webContents.capturePage(bounds);
+    if (!bitmap || bitmap.isEmpty()) return null;
+
+    let finalImage = bitmap;
+    const size = bitmap.getSize();
+    if (size.width < 700 && target.naturalWidth > size.width) {
+      const scale = Math.min(2.5, Math.max(1, target.naturalWidth / Math.max(1, size.width)));
+      finalImage = bitmap.resize({
+        width: Math.min(2200, Math.round(size.width * scale)),
+        height: Math.min(1600, Math.round(size.height * scale)),
+      });
+    }
+    const buffer = finalImage.toPNG();
+    if (buffer.length < 500) return null;
+
+    await log('browser_rendered_visual_capture', {
+      doi,
+      publisher,
+      kind: candidate.kind || '',
+      bytes: buffer.length,
+      width: finalImage.getSize().width,
+      height: finalImage.getSize().height,
+    });
+    return {
+      imageData: `data:image/png;base64,${buffer.toString('base64')}`,
+      bytes: buffer.length,
+      source: 'rendered_article_element',
+    };
+  } catch (error) {
+    await log('browser_rendered_visual_capture_failed', { doi, publisher, reason: safeError(error, 250) });
+    return null;
+  }
+}
+
 async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnostic, verifyBrowserbaseImage = false } = {}) {
   const url = articleUrl(doi);
   if (!forceBrowserbase && classify(doi) === 'nature') {
@@ -1900,7 +2007,8 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       throw new Error('browser_no_candidate');
     }
     await log('browser_success', { doi, kind: rows[0].kind, url: result?.href || url });
-    return { url: result?.href || url, candidate: rows[0], method: 'browser', diagnostic };
+    const renderedImage = await captureRenderedVisual(win, rows[0], doi, publisher);
+    return { url: result?.href || url, candidate: rows[0], method: 'browser', diagnostic, image: renderedImage };
   } catch (error) {
     const browserError = safeError(error, 300).replace(/https?:\/\/\S+/g, '<url>');
     if (publisherTimer) clearTimeout(publisherTimer);
@@ -1965,11 +2073,41 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
 }
 
 async function imageData(url, referer) {
-  const res = await publisherFetch(url, { headers: { Accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8', Referer: referer }, signal: AbortSignal.timeout(30000) }, 'publisher_image_node_fallback');
+  const assetPublisher = publisherFromUrl(url);
+  const refererPublisher = publisherFromUrl(referer);
+  const publisher = assetPublisher || refererPublisher || '';
+  const headers = {
+    Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+    Referer: referer,
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+    'Accept-Language': 'en-US,en;q=0.9',
+  };
+  let res;
+  try {
+    res = publisher
+      ? await getPublisherSession(publisher).fetch(url, { headers, signal: AbortSignal.timeout(30000) })
+      : await publisherFetch(url, { headers, signal: AbortSignal.timeout(30000) }, 'publisher_image_node_fallback');
+  } catch (error) {
+    await log('publisher_image_session_fetch_failed', { publisher, url: sanitizedPageUrl(url), reason: safeError(error, 220) });
+    throw error;
+  }
   if (!res.ok) throw new Error(`image_http_${res.status}`);
   let buffer = Buffer.from(await res.arrayBuffer());
   const type = (res.headers.get('content-type') || 'image/jpeg').split(';')[0].toLowerCase();
   if (!type.startsWith('image/')) throw new Error(`image_content_type_${type || 'missing'}`);
+
+  if (type === 'image/svg+xml') {
+    const svgImage = nativeImage.createFromBuffer(buffer);
+    if (!svgImage.isEmpty()) {
+      const size = svgImage.getSize();
+      const width = Math.max(800, Math.min(2800, Number(size.width || 1600)));
+      const height = Math.max(400, Math.min(2000, Number(size.height || 900)));
+      buffer = svgImage.resize({ width, height }).toPNG();
+      return `data:image/png;base64,${buffer.toString('base64')}`;
+    }
+    return `data:image/svg+xml;base64,${buffer.toString('base64')}`;
+  }
+
   if (buffer.length > 3_800_000 || /webp|avif/.test(type)) {
     const img = nativeImage.createFromBuffer(buffer);
     if (img.isEmpty()) throw new Error('image_decode_failed');
@@ -2025,8 +2163,29 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     try {
       data = inspected?.image?.imageData || c.imageData || await imageData(c.src, inspected.url);
     } catch (error) {
-      await log('image_download_failed', { doi, kind: c.kind, reason: safeError(error, 300) });
-      throw error;
+      const imageError = safeError(error, 300);
+      await log('image_download_failed', { doi, kind: c.kind, reason: imageError, candidate: sanitizedPageUrl(c.src || '') });
+      return {
+        doi,
+        status: 'failed',
+        reason: 'image_download_failed',
+        source: inspected.method || '',
+        diagnostic: {
+          ...(inspected.diagnostic || {}),
+          publisher: classify(doi),
+          requestedUrl: articleUrl(doi),
+          finalUrl: inspected.url || '',
+          error: imageError,
+          candidateCount: Math.max(1, Number(inspected.diagnostic?.candidateCount || 0)),
+          topCandidates: inspected.diagnostic?.topCandidates || [{
+            kind: c.kind || '',
+            source: c.source || '',
+            assetType: c.assetType || '',
+            score: Number(c.score || 0),
+            src: sanitizedPageUrl(c.src || ''),
+          }],
+        },
+      };
     }
     const localCapture = ['official','figure1'].includes(c.kind) ? await saveLocalTocCapture(doi, c, data, inspected.url) : null;
     if (localOnlyMode) {
