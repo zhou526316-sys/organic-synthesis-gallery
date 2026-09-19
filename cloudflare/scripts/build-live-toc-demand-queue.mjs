@@ -1,0 +1,115 @@
+import { gunzipSync } from 'node:zlib';
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
+const ROOT = process.cwd();
+const PUBLIC = path.join(ROOT, 'public');
+const OUT = path.join(ROOT, 'toc-collector', 'queues');
+const MEDIA_URL = process.env.MEDIA_INDEX_URL || 'https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json';
+
+function normalizeDoi(value) {
+  if (typeof value !== 'string') return null;
+  let s = value.trim().toLowerCase();
+  try { s = decodeURIComponent(s); } catch {}
+  s = s.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '').replace(/[?#].*$/, '');
+  return /^10\.\d{4,9}\/\S+$/i.test(s) ? s : null;
+}
+
+function canonicalJournal(value='') {
+  const s = String(value).trim();
+  if (/^(?:angew\b|angewandte chemie)/i.test(s)) return 'Angew';
+  return s;
+}
+
+function publisherFor(doi) {
+  if (doi.startsWith('10.1021/')) return 'acs';
+  if (doi.startsWith('10.1002/')) return 'wiley';
+  if (doi.startsWith('10.1038/')) return 'nature';
+  if (doi.startsWith('10.1126/')) return 'science';
+  return 'other';
+}
+
+function isOfficialToc(toc) {
+  if (!toc?.available || !toc?.imageUrl) return false;
+  const reason = String(toc.reason || '').toLowerCase();
+  if (!reason) return true;
+  if (reason === 'figure1_fallback' || reason === 'pdf_primary_fallback') return false;
+  if (reason.startsWith('figure_fallback:')) return false;
+  if (reason.includes('fallback') && !reason.includes('official')) return false;
+  return true;
+}
+
+function hasAnyVisual(record) {
+  if (record?.toc?.available && record?.toc?.imageUrl) return true;
+  const figures = record?.figures?.figures;
+  return Array.isArray(figures) && figures.some(x => x?.imageUrl);
+}
+
+async function readJson(name) {
+  try { return JSON.parse(await readFile(path.join(PUBLIC, name), 'utf8')); } catch { return {}; }
+}
+
+async function loadPapers() {
+  const encoded = (await readFile(path.join(PUBLIC, 'papers.gz.b64'), 'utf8')).trim();
+  const base = JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8'));
+  const [total, manual, audit] = await Promise.all([
+    readJson('total-synthesis.json'),
+    readJson('manual-supplement.json'),
+    readJson('final-audit-supplement.json'),
+  ]);
+  const merged = new Map();
+  const all = [].concat(Array.isArray(base) ? base : [], total?.papers || [], manual?.papers || [], audit?.papers || []);
+  for (const raw of all) {
+    const doi = normalizeDoi(raw?.doi || raw?.url || '');
+    if (!doi) continue;
+    const paper = { doi, journal: canonicalJournal(raw?.journal || ''), title: typeof raw?.title === 'string' ? raw.title : '', date: typeof raw?.date === 'string' ? raw.date : '' };
+    const prev = merged.get(doi);
+    if (!prev) merged.set(doi, paper);
+    else merged.set(doi, { doi, journal: prev.journal || paper.journal, title: prev.title || paper.title, date: prev.date || paper.date });
+  }
+  return merged;
+}
+
+async function fetchMediaIndex() {
+  const response = await fetch(MEDIA_URL, { headers: { 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(45000) });
+  if (!response.ok) throw new Error('media-index HTTP ' + response.status);
+  const json = await response.json();
+  return json?.items && typeof json.items === 'object' ? json.items : {};
+}
+
+function csvEscape(value='') {
+  const s = String(value);
+  return /[\",\n]/.test(s) ? '"' + s.replaceAll('"','""') + '"' : s;
+}
+
+async function main() {
+  const papers = await loadPapers();
+  const media = await fetchMediaIndex();
+  const rows = [];
+  for (const [doi, paper] of papers) {
+    const record = media[doi] || null;
+    if (isOfficialToc(record?.toc)) continue;
+    const anyVisual = hasAnyVisual(record);
+    rows.push({ doi, journal: paper.journal, title: paper.title, date: paper.date, publisher: publisherFor(doi), state: anyVisual ? 'fallback_only' : 'no_visual', existingReason: String(record?.toc?.reason || '') });
+  }
+  rows.sort((a,b) => a.publisher.localeCompare(b.publisher) || a.journal.localeCompare(b.journal) || b.date.localeCompare(a.date) || a.doi.localeCompare(b.doi));
+  const officialUpgrade = rows.filter(x => x.state === 'fallback_only');
+  const noVisual = rows.filter(x => x.state === 'no_visual');
+  const publishers = ['acs','wiley','nature','science','other'];
+  await mkdir(OUT, { recursive: true });
+  async function writeList(name, list) { await writeFile(path.join(OUT, name), list.map(x => x.doi).join('\n') + (list.length ? '\n' : '')); }
+  await writeList('toc-demand-all.txt', rows);
+  await writeList('toc-demand-no-visual.txt', noVisual);
+  await writeList('toc-demand-official-upgrade.txt', officialUpgrade);
+  for (const publisher of publishers) await writeList('toc-demand-' + publisher + '.txt', rows.filter(x => x.publisher === publisher));
+  const csv = ['doi,publisher,journal,date,state,existingReason,title'].concat(rows.map(r => [r.doi,r.publisher,r.journal,r.date,r.state,r.existingReason,r.title].map(csvEscape).join(','))).join('\n') + '\n';
+  await writeFile(path.join(OUT, 'toc-demand-all.csv'), csv);
+  const byPublisher = Object.fromEntries(publishers.map(p => [p, rows.filter(x => x.publisher === p).length]));
+  const byJournal = {};
+  for (const r of rows) byJournal[r.journal || 'Unknown'] = (byJournal[r.journal || 'Unknown'] || 0) + 1;
+  const summary = { generatedAt: new Date().toISOString(), mediaIndexUrl: MEDIA_URL, webpageDoiCount: papers.size, mediaRecordCount: Object.keys(media).length, demandTotal: rows.length, noVisual: noVisual.length, fallbackOnlyNeedsOfficialUpgrade: officialUpgrade.length, byPublisher, byJournal, sample: rows.slice(0,25) };
+  await writeFile(path.join(OUT, 'toc-demand-summary.json'), JSON.stringify(summary, null, 2) + '\n');
+  console.log('TOC_DEMAND_SUMMARY ' + JSON.stringify(summary));
+}
+
+await main();
