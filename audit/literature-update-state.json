@@ -2,34 +2,41 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "synced",
+  "phase": "ready_to_sync",
   "activeRun": null,
   "lastCompletedFetch": {
-    "id": "automation-20260918-1800",
-    "finishedAt": "2026-09-18T18:18:00+08:00",
-    "windowStart": "2026-09-16",
-    "windowEnd": "2026-09-18",
+    "id": "capability-upgrade-fetch-20260919",
+    "finishedAt": "2026-09-19T14:55:25+08:00",
+    "windowStart": "2026-09-13",
+    "windowEnd": "2026-09-19",
     "sourceSummary": {
-      "sourceRecords": 284,
+      "sourceRecords": 591,
       "criticalSourceFailures": 0,
-      "reviewedDifferenceRecords": 264,
-      "fullWindowAssistantUnresolved": 1,
-      "closureDate": "2026-09-17",
-      "closureUnresolved": 0
+      "sourceFamilyGaps": 0,
+      "reviewedDifferenceRecords": 335,
+      "fullWindowAssistantUnresolved": 0,
+      "closureDate": "2026-09-18",
+      "closureUnresolved": 0,
+      "lateIndexed": 3
     },
     "addedThisRun": [
-      "10.1038/s41467-026-77616-8"
+      "10.1021/jacs.6c14433",
+      "10.1021/jacs.6c13760",
+      "10.1021/acs.orglett.6c03505"
     ],
-    "dataCommitSha": "4d49c6ecd89c5777c870470ac06482258755951b",
-    "mergeCommitSha": "8730bb7a48812fc963127eaa11cf0489dd577099",
+    "dataCommitSha": "c2a144d9db4bcf52d8711de8fd1e07a72beb522a",
+    "mergeCommitSha": "c2a144d9db4bcf52d8711de8fd1e07a72beb522a",
+    "auditCommitSha": "64318cc7de76a9b755a9110d96d1eb1cb10fa36c",
+    "reviewCommitSha": "c2a144d9db4bcf52d8711de8fd1e07a72beb522a",
     "tocStatus": {
       "status": "partial",
-      "recentChecked": 30,
+      "recentChecked": 3,
       "recentComplete": 0,
-      "recentMissing": 30,
-      "directPublisherTocImported": 0
+      "recentMissing": 3,
+      "directPublisherTocImported": 0,
+      "note": "Three newly accepted papers are present in the authoritative dataset; publisher TOC/Graphical Abstract media remains pending and must not block website synchronization."
     },
-    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699"
+    "capabilityFingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075"
   },
   "lastWebsiteSync": {
     "finishedAt": "2026-09-19T11:49:20+08:00",
@@ -64,7 +71,12 @@
   "capabilityRegistry": "audit/literature-capability.json",
   "lastCapabilitySnapshot": {
     "fingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
-    "note": "The Sep 19 assistant review was pinned to the upgraded stable completeness capability (15 prospective journals, seven-day safety rescan, Crossref created-date late-deposit rescue plus OpenAlex union). Review closure is validated, but pendingCapabilityUpgrade remains because the next primary literature fetch must still run fresh under this fingerprint rather than reuse the prior 24-hour fetch."
+    "literatureAudit": "bafbb8d02495dd8d5d24a106a49f6efd6a897e7a",
+    "literatureWorkflow": "d8219dfe731a2d93370fe720c13160508f3cf8c6",
+    "journalRegistry": "05ccdd8a66522027f35e327082cd45e88e75e897",
+    "completenessGuard": "d2292f048bf06f77dda70d3e41ab089085914aa4",
+    "comparisonArtifact": "audit/literature-capability-comparison-2026-09-19.json",
+    "note": "Upgraded completeness capability validated and used for the 2026-09-13..2026-09-19 safety rescan and completed semantic review. Website sync still needs to consume dataCommitSha c2a144d9db4bcf52d8711de8fd1e07a72beb522a."
   },
   "rules": {
     "freshFetchLockMinutes": 120,
@@ -176,15 +188,5 @@
     }
   },
   "currentStableCapabilityFingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
-  "pendingCapabilityUpgrade": {
-    "detectedAt": "2026-09-19T14:55:25+08:00",
-    "fingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
-    "priorFetchFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
-    "requiresFreshFetch": true,
-    "requiredSafetyRescanDays": 7,
-    "validatedAuditGeneratedAt": "2026-09-19T06:55:25.883Z",
-    "validatedAuditCommit": "7a212252a399abff49ac95978120df0dbc18cb3d",
-    "reason": "Validated completeness capability is strictly stronger than the prior stable fetch capability: 15 prospective journals, seven-day overlap, Crossref online/published/created plus OpenAlex union, per-journal source-family health, and late-deposit rescue. The validated rescue surfaced three records that the same seven-day audit without rescue omitted. Do not reuse the old 24-hour fetch across this fingerprint change.",
-    "comparisonArtifact": "audit/literature-capability-comparison-2026-09-19.json"
-  }
+  "pendingCapabilityUpgrade": null
 }
