@@ -153,7 +153,8 @@ foreach ($row in $rows) {
 
   $tmpJson = Join-Path $env:TEMP ("toc-sync-" + [Guid]::NewGuid().ToString("N") + ".json")
   $tmpResp = Join-Path $env:TEMP ("toc-sync-" + [Guid]::NewGuid().ToString("N") + ".response")
-  $payload | ConvertTo-Json -Depth 6 -Compress | Set-Content -LiteralPath $tmpJson -Encoding UTF8
+  $jsonText = $payload | ConvertTo-Json -Depth 6 -Compress
+  [IO.File]::WriteAllText($tmpJson, $jsonText, (New-Object Text.UTF8Encoding($false)))
 
   $ok = $false
   $last = ""
