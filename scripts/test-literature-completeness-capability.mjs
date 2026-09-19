@@ -24,7 +24,10 @@ for (const name of ['Chem', 'Chemical Science', 'CCS Chemistry', 'Science Advanc
 const jacs = TARGET_JOURNALS.find(item => item.name === 'JACS');
 assert.equal(effectiveJournalStart(jacs, '2026-09-13'), '2026-09-13', 'Existing journals must retain the full safety lookback');
 
-assert.match(auditSource, /DEFAULT_LOOKBACK_DAYS\s*=\s*7/, 'Default completeness safety rescan must remain seven days');
+assert.match(auditSource, /DEFAULT_LOOKBACK_DAYS\s*=\s*3/, 'Default publication rescan must remain three days');
+assert.match(auditSource, /DEFAULT_LATE_DEPOSIT_RESCUE_DAYS\s*=\s*7/, 'Late-deposit rescue must remain at least seven days');
+assert.ok(auditSource.includes('catchupStart'), 'Audit must automatically catch up from verifiedThrough when closure falls behind');
+assert.ok(auditSource.includes("mode === 'created' ? journalRescueStart : journalStart"), 'Crossref created-date rescue must use the wider rescue window independently of the 3-day publication rescan');
 assert.ok(auditSource.includes("['online', 'published', 'created']"), 'Crossref discovery must union online, published and created dates');
 assert.ok(auditSource.includes('createdDiscovered'), 'Late-deposit rescue must remain enabled');
 assert.ok(auditSource.includes('lateIndexed'), 'Late-indexed records must remain observable in the audit report');
