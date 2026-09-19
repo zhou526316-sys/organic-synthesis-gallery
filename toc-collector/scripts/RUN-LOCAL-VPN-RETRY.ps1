@@ -55,6 +55,15 @@ $collectorArgs = @(
 & npm @collectorArgs
 $collectorExit = $LASTEXITCODE
 
+$captureSync = Join-Path $ScriptDir "SYNC-LOCAL-CAPTURES.ps1"
+if (Test-Path -LiteralPath $captureSync) {
+  try {
+    & $captureSync
+  } catch {
+    Write-Warning ("Capture upload failed: " + $_.Exception.Message)
+  }
+}
+
 $diagSync = Join-Path $ScriptDir "SYNC-LOCAL-DIAGNOSTICS.ps1"
 if (Test-Path -LiteralPath $diagSync) {
   try {
