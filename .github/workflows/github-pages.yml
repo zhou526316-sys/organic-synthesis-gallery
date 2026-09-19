@@ -17,6 +17,7 @@ on:
       - 'cloudflare/scripts/merge-nature-figure-fallbacks.mjs'
       - 'cloudflare/scripts/prune-media-mirror.mjs'
       - 'cloudflare/scripts/verify-static-media-integrity.mjs'
+      - 'cloudflare/scripts/sanitize-static-media.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
       - 'audit/toc-gap-dois-2026-09-16.json'
       - 'audit/visual-gap-dois-2026-09-16.json'
@@ -151,6 +152,9 @@ jobs:
 
       - name: Merge assistant-audited literature and bilingual titles
         run: node cloudflare/scripts/merge-curated-pages.mjs
+
+      - name: Sanitize invalid static media
+        run: node cloudflare/scripts/sanitize-static-media.mjs
 
       - name: Verify media-index asset integrity
         run: node cloudflare/scripts/verify-static-media-integrity.mjs
