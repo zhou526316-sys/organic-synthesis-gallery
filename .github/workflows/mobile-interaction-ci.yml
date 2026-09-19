@@ -46,4 +46,4 @@ jobs:
           exit 1
 
       - name: Run 30-cycle mobile interaction smoke
-        run: npx playwright test tests/mobile-interaction.spec.ts --reporter=line --workers=1
+        run: npx playwright test tests/mobile-interaction.spec.ts --browser=webkit --reporter=line --workers=1

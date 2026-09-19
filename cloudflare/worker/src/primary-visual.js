@@ -1,3 +1,4 @@
+import { isExcludedDoi } from '../../../shared/literature-policy.js';
 import { normalizeDoi } from './media.js';
 
 const MAX_IMAGE_BYTES = 4_000_000;
@@ -33,8 +34,16 @@ function parseImageData(value) {
   const match = /^data:(image\/(?:png|jpe?g|gif|webp));base64,([A-Za-z0-9+/=\r\n]+)$/i.exec(value);
   if (!match) return null;
   const contentType = match[1].toLowerCase().replace('image/jpg', 'image/jpeg');
-  const bytes = bytesFromBase64(match[2].replace(/\s+/g, ''));
+  let bytes;
+  try { bytes = bytesFromBase64(match[2].replace(/\s+/g, '')); } catch { return null; }
   if (bytes.byteLength < 128 || bytes.byteLength > MAX_IMAGE_BYTES) return null;
+  const signatures = {
+    'image/png': () => [137,80,78,71,13,10,26,10].every((n, i) => bytes[i] === n),
+    'image/jpeg': () => bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255,
+    'image/gif': () => new TextDecoder().decode(bytes.slice(0, 6)).match(/^GIF8[79]a$/),
+    'image/webp': () => new TextDecoder().decode(bytes.slice(0, 4)) === 'RIFF' && new TextDecoder().decode(bytes.slice(8, 12)) === 'WEBP',
+  };
+  if (!signatures[contentType]?.()) return null;
   return { contentType, bytes };
 }
 
@@ -55,7 +64,7 @@ async function doiToken(doi) {
 }
 
 export function primaryVisualShouldReplace(existing, incoming) {
-  if (!incoming?.kind) return false;
+  if (!PRIMARY_VISUAL_RANK[incoming?.kind]) return false;
   if (!existing) return true;
   const oldRank = PRIMARY_VISUAL_RANK[existing.kind] || 0;
   const newRank = PRIMARY_VISUAL_RANK[incoming.kind] || 0;
@@ -67,6 +76,7 @@ export async function importPrimaryVisual(request, env, payload) {
   if (!env?.DB || !env?.MEDIA) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
   const doi = normalizeDoi(payload?.doi);
   const kind = normalizeKind(payload?.kind);
+  if (isExcludedDoi(doi)) return { status: 422, body: { error: 'excluded_doi' } };
   if (!doi || !kind) return { status: 400, body: { error: 'A valid DOI and primary visual kind are required.' } };
 
   const image = parseImageData(payload?.imageData);
@@ -86,16 +96,21 @@ export async function importPrimaryVisual(request, env, payload) {
   const thumbnailWidth = Number.isFinite(Number(payload?.thumbnailWidth)) && Number(payload.thumbnailWidth) > 0 ? Math.round(Number(payload.thumbnailWidth)) : null;
   const thumbnailHeight = Number.isFinite(Number(payload?.thumbnailHeight)) && Number(payload.thumbnailHeight) > 0 ? Math.round(Number(payload.thumbnailHeight)) : null;
 
+  if (!width || !height || width < 200 || height < 120 || width * height < 60000 || confidence < 70) {
+    return { status: 422, body: { error: 'primary_visual_below_quality_threshold' } };
+  }
   const [existing, oldVariantsResult] = await Promise.all([
     env.DB.prepare(
       'SELECT kind, confidence, r2_key, content_hash, source, source_url, retrieved_at FROM primary_visual_assets WHERE doi = ?'
     ).bind(doi).first(),
     env.DB.prepare(
-      'SELECT role, r2_key FROM primary_visual_variants WHERE doi = ?'
+      'SELECT role, r2_key, width, height FROM primary_visual_variants WHERE doi = ?'
     ).bind(doi).all(),
   ]);
   const oldVariants = oldVariantsResult?.results || [];
-  if (!primaryVisualShouldReplace(existing, { kind, confidence })) {
+  const oldMaster = oldVariants.find(row => row.role === 'master' && row.r2_key === existing?.r2_key);
+  const resolutionDowngrade = existing?.kind === kind && oldMaster?.width * oldMaster?.height > width * height;
+  if (resolutionDowngrade || !primaryVisualShouldReplace(existing, { kind, confidence })) {
     return {
       status: 200,
       body: {
@@ -109,15 +124,15 @@ export async function importPrimaryVisual(request, env, payload) {
 
   const [token, fullHash] = await Promise.all([doiToken(doi), sha256Hex(image.bytes)]);
   const contentHash = fullHash.slice(0, 32);
-  const r2Key = `primary-visual/images/${token}/${kind}.${extension(image.contentType)}`;
-  const thumbKey = thumbnail ? `primary-visual/images/${token}/${kind}-thumb.${extension(thumbnail.contentType)}` : null;
+  const r2Key = `primary-visual/images/${token}/${kind}-${contentHash}.${extension(image.contentType)}`;
+  const thumbKey = thumbnail ? `primary-visual/images/${token}/${kind}-${contentHash}-thumb.${extension(thumbnail.contentType)}` : null;
   const now = Date.now();
   await env.MEDIA.put(r2Key, image.bytes, { httpMetadata: { contentType: image.contentType } });
   if (thumbnail && thumbKey) {
     await env.MEDIA.put(thumbKey, thumbnail.bytes, { httpMetadata: { contentType: thumbnail.contentType } });
   }
 
-  await env.DB.prepare(
+  const writeResult = await env.DB.prepare(
     `INSERT INTO primary_visual_assets
       (doi, kind, source, source_url, article_url, r2_key, content_hash, caption, confidence, page_number, bbox_json, retrieved_at, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -133,14 +148,19 @@ export async function importPrimaryVisual(request, env, payload) {
        page_number = excluded.page_number,
        bbox_json = excluded.bbox_json,
        retrieved_at = excluded.retrieved_at,
-       updated_at = excluded.updated_at`
+       updated_at = excluded.updated_at
+     WHERE (CASE excluded.kind WHEN 'official_visual' THEN 500 WHEN 'figure1' THEN 400 WHEN 'pdf_primary' THEN 300 WHEN 'article_figure' THEN 200 ELSE 100 END) >
+       (CASE primary_visual_assets.kind WHEN 'official_visual' THEN 500 WHEN 'figure1' THEN 400 WHEN 'pdf_primary' THEN 300 WHEN 'article_figure' THEN 200 ELSE 100 END)
+       OR (excluded.kind = primary_visual_assets.kind AND excluded.confidence > primary_visual_assets.confidence)`
   ).bind(doi, kind, source, sourceUrl, articleUrl, r2Key, contentHash, caption, confidence, pageNumber, bbox, retrievedAt, now).run();
+
+  if (!writeResult.meta?.changes) return { status: 200, body: { doi, imported: false, importState: 'known_good_preserved' } };
 
   const variantStatements = [
     env.DB.prepare(
       `INSERT INTO primary_visual_variants
         (doi, role, r2_key, content_hash, width, height, byte_length, updated_at)
-       VALUES (?, 'master', ?, ?, ?, ?, ?, ?)
+       SELECT ?, 'master', ?, ?, ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM primary_visual_assets WHERE doi = ? AND r2_key = ?)
        ON CONFLICT(doi, role) DO UPDATE SET
          r2_key = excluded.r2_key,
          content_hash = excluded.content_hash,
@@ -148,13 +168,13 @@ export async function importPrimaryVisual(request, env, payload) {
          height = excluded.height,
          byte_length = excluded.byte_length,
          updated_at = excluded.updated_at`
-    ).bind(doi, r2Key, contentHash, width, height, image.bytes.byteLength, now),
+    ).bind(doi, r2Key, contentHash, width, height, image.bytes.byteLength, now, doi, r2Key),
   ];
   if (thumbnail && thumbKey) {
     variantStatements.push(env.DB.prepare(
       `INSERT INTO primary_visual_variants
         (doi, role, r2_key, content_hash, width, height, byte_length, updated_at)
-       VALUES (?, 'thumbnail', ?, ?, ?, ?, ?, ?)
+       SELECT ?, 'thumbnail', ?, ?, ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM primary_visual_assets WHERE doi = ? AND r2_key = ?)
        ON CONFLICT(doi, role) DO UPDATE SET
          r2_key = excluded.r2_key,
          content_hash = excluded.content_hash,
@@ -162,19 +182,15 @@ export async function importPrimaryVisual(request, env, payload) {
          height = excluded.height,
          byte_length = excluded.byte_length,
          updated_at = excluded.updated_at`
-    ).bind(doi, thumbKey, await sha256Hex(thumbnail.bytes).then(value => value.slice(0, 32)), thumbnailWidth, thumbnailHeight, thumbnail.bytes.byteLength, now));
+    ).bind(doi, thumbKey, await sha256Hex(thumbnail.bytes).then(value => value.slice(0, 32)), thumbnailWidth, thumbnailHeight, thumbnail.bytes.byteLength, now, doi, r2Key));
   } else {
     variantStatements.push(env.DB.prepare(
-      "DELETE FROM primary_visual_variants WHERE doi = ? AND role = 'thumbnail'"
-    ).bind(doi));
+      "DELETE FROM primary_visual_variants WHERE doi = ? AND role = 'thumbnail' AND EXISTS (SELECT 1 FROM primary_visual_assets WHERE doi = ? AND r2_key = ?)"
+    ).bind(doi, doi, r2Key));
   }
   await env.DB.batch(variantStatements);
 
-  const staleKeys = new Set([
-    ...(existing?.r2_key && existing.r2_key !== r2Key ? [existing.r2_key] : []),
-    ...oldVariants.map(row => row?.r2_key).filter(key => key && key !== r2Key && key !== thumbKey),
-  ]);
-  for (const key of staleKeys) await env.MEDIA.delete(key).catch(() => {});
+  // Retain immutable prior objects: concurrent readers and known-good media must survive upgrades.
 
   return {
     status: 200,
@@ -199,7 +215,9 @@ export function primaryVisualResponse(request, doi, row, variants = []) {
   if (!row?.r2_key) return { available: false, doi };
   const url = new URL(request.url);
   const mediaUrl = key => `${url.origin}/media/${String(key).split('/').map(part => encodeURIComponent(part)).join('/')}`;
-  const variantMap = new Map((variants || []).map(item => [String(item.role || ''), item]));
+  const variantMap = new Map((variants || []).filter(item => item.role === 'master'
+    ? item.r2_key === row.r2_key
+    : String(item.r2_key).includes(`${row.kind}-${row.content_hash}-`)).map(item => [String(item.role || ''), item]));
   const master = variantMap.get('master');
   const thumbnail = variantMap.get('thumbnail');
   const preview = variantMap.get('preview');
@@ -213,8 +231,8 @@ export function primaryVisualResponse(request, doi, row, variants = []) {
     source: row.source,
     sourceUrl: row.source_url || undefined,
     articleUrl: row.article_url || undefined,
-    imageUrl: mediaUrl(master?.r2_key || row.r2_key),
-    masterImageUrl: mediaUrl(master?.r2_key || row.r2_key),
+    imageUrl: mediaUrl(row.r2_key),
+    masterImageUrl: mediaUrl(row.r2_key),
     thumbnailImageUrl: thumbnail?.r2_key ? mediaUrl(thumbnail.r2_key) : undefined,
     previewImageUrl: preview?.r2_key ? mediaUrl(preview.r2_key) : undefined,
     width: master?.width ? Number(master.width) : undefined,

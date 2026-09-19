@@ -69,7 +69,7 @@ jobs:
           for (const doi of excluded) if (byKey.has(doi)) throw new Error(`excluded DOI still present: ${doi}`);
 
           const update = JSON.parse(fs.readFileSync('public/automation-supplement.json','utf8')).papers || [];
-          if (update.length !== 19) throw new Error(`expected 19 reviewed update papers, found ${update.length}`);
+          if (update.length !== 32) throw new Error(`expected 32 reviewed update papers, found ${update.length}`);
           for (const p of update) {
             const doi = normalizeDoi(p.doi);
             if (!byKey.has(doi)) throw new Error(`reviewed update DOI missing: ${doi}`);

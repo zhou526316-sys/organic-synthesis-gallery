@@ -142,10 +142,15 @@ async function main() {
   const manifest = JSON.parse(await readFile(MEDIA_INDEX, 'utf8'));
   manifest.items ||= {};
   const workerItems = [];
+  const failures = [];
   for (let offset = 0; offset < dois.length; offset += BATCH_SIZE) {
     const batch = dois.slice(offset, offset + BATCH_SIZE);
-    const payload = await postJson('/api/media/batch', { dois: batch });
-    if (Array.isArray(payload?.items)) workerItems.push(...payload.items);
+    try {
+      const payload = await postJson('/api/media/batch', { dois: batch });
+      if (Array.isArray(payload?.items)) workerItems.push(...payload.items);
+    } catch (error) {
+      failures.push({ url: `${SOURCE}/api/media/batch`, error: String(error.message), affected: batch.length });
+    }
   }
 
   await mkdir(MEDIA_DIR, { recursive: true });
@@ -158,7 +163,6 @@ async function main() {
   }
 
   const replacements = new Map();
-  const failures = [];
   let bytesTotal = 0;
   const list = [...urls];
   await mapConcurrent(list, CONCURRENCY, async url => {

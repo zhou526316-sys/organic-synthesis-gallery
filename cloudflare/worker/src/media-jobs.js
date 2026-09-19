@@ -1,3 +1,4 @@
+import { isExcludedDoi, EXCLUDED_DOIS } from '../../../shared/literature-policy.js';
 import { normalizeDoi } from './media.js';
 import { publisherForDoi } from '../../../shared/publishers.js';
 
@@ -16,7 +17,7 @@ function queueStateForMode(mode) {
 export async function seedMediaJobs(env, rawDois, { priority = 0 } = {}) {
   if (!env?.DB) return { seeded: 0 };
   const now = Date.now();
-  const rows = [...new Set((rawDois || []).map(normalizeDoi).filter(Boolean))];
+  const rows = [...new Set((rawDois || []).map(normalizeDoi).filter(doi => doi && !isExcludedDoi(doi)))];
   const statements = rows.map(doi => env.DB.prepare(
     `INSERT INTO media_jobs
       (doi, publisher, mode, state, priority, attempts, last_attempt_at, next_retry_at, lease_owner, lease_expires_at, last_failure_reason, visual_kind, visual_source, confidence, created_at, updated_at)
@@ -56,28 +57,19 @@ export async function claimMediaJobs(env, payload = {}) {
 
   const allowed = [...queueStateForMode(mode)];
   const placeholders = allowed.map(() => '?').join(',');
-  const due = await env.DB.prepare(
-    `SELECT doi FROM media_jobs
-     WHERE mode = ? AND state IN (${placeholders}) AND next_retry_at <= ?
-     ORDER BY priority DESC, next_retry_at ASC, attempts ASC, created_at ASC
-     LIMIT ?`
-  ).bind(mode, ...allowed, now, limit).all();
-
+  const excluded = [...EXCLUDED_DOIS];
+  const exclusionSql = excluded.map(() => '?').join(',');
   const expires = now + leaseMs;
-  const statements = (due?.results || []).map(row => env.DB.prepare(
-    `UPDATE media_jobs SET state = 'leased', lease_owner = ?, lease_expires_at = ?, updated_at = ?
-     WHERE doi = ? AND mode = ? AND state IN (${placeholders}) AND next_retry_at <= ?`
-  ).bind(owner, expires, now, row.doi, mode, ...allowed, now));
-  if (statements.length) await env.DB.batch(statements);
-
+  // A single SQLite write both selects and leases. RETURNING reports only rows
+  // claimed by this call, even when the same owner makes overlapping requests.
   const claimed = await env.DB.prepare(
-    `SELECT doi, publisher, mode, state, priority, attempts, last_attempt_at, next_retry_at,
-            lease_owner, lease_expires_at, last_failure_reason, visual_kind, visual_source, confidence
-     FROM media_jobs
-     WHERE lease_owner = ? AND lease_expires_at = ? AND state = 'leased'
-     ORDER BY priority DESC, attempts ASC, doi
-     LIMIT ?`
-  ).bind(owner, expires, limit).all();
+    `UPDATE media_jobs SET state = 'leased', lease_owner = ?, lease_expires_at = ?, updated_at = ?
+     WHERE doi IN (
+       SELECT doi FROM media_jobs WHERE mode = ? AND state IN (${placeholders})
+       AND next_retry_at <= ? AND doi NOT IN (${exclusionSql})
+       ORDER BY priority DESC, next_retry_at ASC, attempts ASC, created_at ASC LIMIT ?
+     ) RETURNING *`
+  ).bind(owner, expires, now, mode, ...allowed, now, ...excluded, limit).all();
   return { status: 200, body: { owner, mode, leaseExpiresAt: expires, items: claimed?.results || [] } };
 }
 
@@ -102,6 +94,7 @@ export async function completeMediaJob(env, payload = {}) {
   const visualKind = String(payload.visualKind || '').slice(0, 80);
   const visualSource = String(payload.visualSource || '').slice(0, 160);
   const confidence = Math.max(0, Math.min(100, Math.round(Number(payload.confidence) || 0)));
+  if (!['official_visual','figure1','pdf_primary','article_figure','open_fallback'].includes(visualKind)) return { status: 400, body: { error: 'invalid_visual_kind' } };
   if (!doi || !owner || !visualKind) return { status: 400, body: { error: 'doi, owner and visualKind are required' } };
   const now = Date.now();
   const official = visualKind === 'official_visual';
@@ -125,7 +118,7 @@ export async function failMediaJob(env, payload = {}) {
   if (!doi || !owner) return { status: 400, body: { error: 'doi and owner are required' } };
   const reason = String(payload.reason || 'resolver_failed').slice(0, 500);
   const now = Date.now();
-  const manual = payload.manualRequired === true || reason === 'manual_required';
+  const manual = payload.manualRequired === true || /manual_required|captcha|challenge|publisher.*403/i.test(reason);
   const audited = payload.auditedUnresolved === true;
   const current = await env.DB.prepare('SELECT mode, attempts FROM media_jobs WHERE doi = ?').bind(doi).first();
   const mode = current?.mode === 'upgrade' ? 'upgrade' : 'coverage';
@@ -134,12 +127,12 @@ export async function failMediaJob(env, payload = {}) {
   const defaultDelay = mode === 'upgrade'
     ? 7 * 24 * 60 * 60 * 1000
     : Math.min(24 * 60 * 60 * 1000, Math.max(10 * 60 * 1000, 5 * 60 * 1000 * 2 ** Math.min(6, attempts)));
-  const retryMs = manual ? 0 : Math.max(60_000, Number(payload.retryMs) || defaultDelay);
+  const retryMs = manual ? 0 : Math.max(/429/.test(reason) ? 86400000 : 60000, Number(payload.retryMs) || defaultDelay);
   const result = await env.DB.prepare(
     `UPDATE media_jobs SET state = ?, next_retry_at = ?, lease_owner = NULL, lease_expires_at = 0,
        last_failure_reason = ?, updated_at = ?
-     WHERE doi = ? AND state IN ('leased','processing') AND lease_owner = ?`
-  ).bind(state, manual ? 0 : now + retryMs, reason, now, doi, owner).run();
+     WHERE doi = ? AND state IN ('leased','processing') AND lease_owner = ? AND lease_expires_at > ?`
+  ).bind(state, manual ? 0 : now + retryMs, reason, now, doi, owner, now).run();
   return Number(result?.meta?.changes || 0)
     ? { status: 200, body: { doi, state, nextRetryAt: manual ? 0 : now + retryMs } }
     : { status: 409, body: { error: 'lease_not_owned', doi } };

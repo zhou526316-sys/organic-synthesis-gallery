@@ -1,0 +1,55 @@
+name: Collector Primary Visual regression
+on:
+  push:
+    branches: [feat/mobile-newness-exclusions-resolver-lease]
+  pull_request:
+    branches: [main]
+    paths: ['toc-collector/**', 'cloudflare/**', 'shared/**', 'scripts/test-*.mjs', '.github/workflows/collector-primary-visual-ci.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  worker-and-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with: {node-version: '24'}
+      - run: |
+          node scripts/test-primary-visual.mjs
+          node scripts/test-primary-import.mjs
+          node scripts/test-media-jobs.mjs
+          node scripts/test-literature-policy.mjs
+          node scripts/test-pages-fail-soft.mjs
+          node toc-collector/scripts/test-publisher-resolvers.mjs
+          node toc-collector/scripts/test-manual-session.mjs
+      - run: npm install --no-audit --no-fund && npm run build
+      - run: npm install --no-audit --no-fund && npm run check
+        working-directory: cloudflare/worker
+  windows-collector:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with: {node-version: '24'}
+      - run: npm ci
+        working-directory: toc-collector
+      - run: npm run check
+        working-directory: toc-collector
+      - name: Render vector and compound PDF fixtures
+        shell: pwsh
+        run: |
+          $env:ELECTRON_RUN_AS_NODE = $null
+          $p = Start-Process -FilePath ./toc-collector/node_modules/electron/dist/electron.exe -ArgumentList 'toc-collector/scripts/test-pdf-primary.cjs' -Wait -PassThru -WindowStyle Hidden
+          if ($p.ExitCode -ne 0) { throw 'PDF fixture failed' }
+          $result = Get-Content .artifacts/pdf-tests.json -Raw | ConvertFrom-Json
+          if (-not $result.passed) { throw $result.error }
+      - run: npm run dist:unpacked
+        working-directory: toc-collector
+      - uses: actions/upload-artifact@v4
+        with:
+          name: collector-unpacked-review-only
+          path: |
+            toc-collector/dist/*win-unpacked.zip
+            .artifacts/pdf-tests.json
+            .artifacts/pdf-vector-*.png

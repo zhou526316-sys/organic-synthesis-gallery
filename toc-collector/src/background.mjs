@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
 // This module is imported only after the startup window has rendered.
 // All Electron objects, filesystem operations and background work are deferred.
@@ -44,6 +44,7 @@ let tray = null;
 let dashboard = window;
 let quitting = false;
 let cycleRunning = false;
+const leaseOwner = `collector-${randomUUID()}`;
 let vpnWatchTimer = null;
 let pollTimer = null;
 let lastQueue = [];
@@ -569,21 +570,28 @@ function browserbaseOwnsDoi(doi, pageUrl, html) {
   if (!normalized) return false;
   const publisher = browserbasePublisher(normalized);
   let domainMatches = false;
+  let pathMatches = false;
   try {
     const hostname = new URL(pageUrl).hostname.toLowerCase();
+    const matches = domain => hostname === domain || hostname.endsWith('.' + domain);
     domainMatches = publisher === 'acs'
-      ? hostname.endsWith('pubs.acs.org')
+      ? matches('pubs.acs.org')
       : publisher === 'wiley'
-        ? hostname.endsWith('onlinelibrary.wiley.com')
+        ? matches('onlinelibrary.wiley.com')
         : publisher === 'nature'
-          ? hostname.endsWith('nature.com')
+          ? matches('nature.com')
           : publisher === 'science'
-            ? hostname.endsWith('science.org')
+            ? matches('science.org')
             : false;
+    const pathname = decodeURIComponent(new URL(pageUrl).pathname).toLowerCase().replace(/\/$/, '');
+    pathMatches = pathname.endsWith('/' + normalized) || (publisher === 'nature' && pathname === '/articles/' + normalized.split('/')[1]);
   } catch {}
-  const encoded = normalized.replace('/', '%2f');
-  const bodyHasDoi = String(html || '').toLowerCase().includes(normalized) || String(html || '').toLowerCase().includes(encoded);
-  return domainMatches && bodyHasDoi;
+  const metadataMatches = [...String(html || '').matchAll(/<meta\b[^>]*>/gi)].some(match => {
+    const attrs = tagAttributes(match[0]);
+    return /^(citation_doi|dc\.identifier|dc\.identifier\.doi)$/i.test(attrs.name || attrs.property || '') &&
+      String(attrs.content || '').toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//, '').trim() === normalized;
+  });
+  return domainMatches && (metadataMatches || pathMatches);
 }
 
 function browserbaseHeaders(apiKey) {
@@ -904,12 +912,57 @@ function manualPublisherTarget(publisher) {
   throw new Error('manual_publisher_unsupported');
 }
 
+function pendingManualHandoff() {
+  return Object.entries(state.browserbase?.manual || {}).find(([, record]) =>
+    record?.sessionId && ['manual_required','still_challenged','doi_not_verified','verified_no_candidate','active'].includes(record.status));
+}
+
+async function writeManualHandoff(publisher, active, debug) {
+  const liveUrl = String(debug?.debuggerFullscreenUrl || debug?.debuggerUrl || '');
+  const entry = { publisher, doi: active.doi, sessionId: active.sessionId, contextId: active.contextId,
+    targetUrl: active.url, liveUrl, status: 'manual_required', startedAt: active.startedAt || Date.now() };
+  state.browserbase.manual[publisher] = entry;
+  await saveState();
+  // User-requested handoff artifact contains IDs and the debug API's Live View,
+  // never a CDP connectUrl, API key, or Authorization header.
+  const reportDir = path.join(process.cwd(), '.artifacts');
+  await fsp.mkdir(reportDir, { recursive: true });
+  await fsp.writeFile(path.join(reportDir, 'issue23-handoff.json'), JSON.stringify(entry, null, 2));
+  return entry;
+}
+
+async function restoreManualSession(publisher) {
+  const existing = manualBrowserbaseSessions.get(publisher);
+  if (existing) return existing;
+  const record = state.browserbase?.manual?.[publisher];
+  if (!record?.sessionId) return null;
+  const info = await browserbaseApi(`/sessions/${encodeURIComponent(record.sessionId)}`, { method: 'GET' });
+  if (info.status !== 'RUNNING' || !info.connectUrl) throw new Error('manual_session_expired_user_action_required');
+  if (info.contextId && info.contextId !== record.contextId) throw new Error('manual_context_mismatch');
+  const { chromium } = await import('playwright-core');
+  const browser = await chromium.connectOverCDP(info.connectUrl, { timeout: 90000 });
+  const context = browser.contexts()[0];
+  const page = context.pages()[0] || await context.newPage();
+  const active = { ...record, browser, page, url: record.targetUrl };
+  manualBrowserbaseSessions.set(publisher, active);
+  return active;
+}
+
+async function getPendingManualHandoff() {
+  const pending = pendingManualHandoff();
+  if (!pending) return null;
+  const [publisher, record] = pending;
+  // Only inspect the original session. Never allocate a replacement here.
+  const debug = await browserbaseApi(`/sessions/${encodeURIComponent(record.sessionId)}/debug`, { method: 'GET' });
+  return writeManualHandoff(publisher, { ...record, url: record.targetUrl }, debug);
+}
+
 async function startManualBrowserbase(publisher) {
   publisher = String(publisher || '').trim().toLowerCase();
   if (!['acs', 'wiley', 'nature', 'science'].includes(publisher)) throw new Error('manual_publisher_unsupported');
   if (!browserbaseDiagnostic().configured) throw new Error('browserbase_missing_credentials');
 
-  const active = manualBrowserbaseSessions.get(publisher);
+  const active = await restoreManualSession(publisher);
   if (active?.sessionId) {
     const debug = await browserbaseApi(`/sessions/${encodeURIComponent(active.sessionId)}/debug`, { method: 'GET' });
     const liveUrl = String(debug?.debuggerFullscreenUrl || debug?.debuggerUrl || '').trim();
@@ -917,12 +970,13 @@ async function startManualBrowserbase(publisher) {
     return { configured: true, publisher, status: 'active', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
   }
 
+  if (pendingManualHandoff()) throw new Error('manual_required_global_pause');
   await waitForBrowserbaseSlot(publisher);
   const contextId = await browserbaseContext(publisher);
   const { projectId } = browserbaseCredentials();
   const payload = {
     keepAlive: true,
-    browserSettings: { context: { id: contextId, persist: true } },
+    browserSettings: { solveCaptchas: false, context: { id: contextId, persist: true } },
   };
   if (projectId) payload.projectId = projectId;
 
@@ -930,7 +984,7 @@ async function startManualBrowserbase(publisher) {
   if (!sessionInfo?.id || !sessionInfo?.connectUrl) throw new Error('browserbase_session_missing_connect_url');
 
   const { chromium } = await import('playwright-core');
-  const browser = await chromium.connectOverCDP(sessionInfo.connectUrl);
+  const browser = await chromium.connectOverCDP(sessionInfo.connectUrl, { timeout: 90000 });
   const context = browser.contexts()[0];
   const page = context.pages()[0] || await context.newPage();
   const target = manualPublisherTarget(publisher);
@@ -964,7 +1018,7 @@ async function startManualBrowserbase(publisher) {
 
 async function finishManualBrowserbase(publisher) {
   publisher = String(publisher || '').trim().toLowerCase();
-  const active = manualBrowserbaseSessions.get(publisher);
+  const active = await restoreManualSession(publisher);
   if (!active) throw new Error('manual_session_not_active');
 
   let pageUrl = '';
@@ -1019,32 +1073,15 @@ async function finishManualBrowserbase(publisher) {
   });
 
   if (!config.writeToken) throw new Error('write_token_missing');
-  if (candidate.kind === 'official') {
-    await api('/api/toc/import', {
-      method: 'POST',
-      body: JSON.stringify({
-        doi: active.doi,
-        articleUrl: pageUrl,
-        imageData: image.imageData,
-        replace: false,
-      }),
-    });
-    await report(active.doi, 'upload', 'complete', 'collector_official_toc_manual_resume', pageUrl);
-  } else {
-    await api('/api/article-figures/import', {
-      method: 'POST',
-      body: JSON.stringify({
-        doi: active.doi,
-        articleUrl: pageUrl,
-        id: 'figure-1',
-        label: 'Figure 1',
-        caption: candidate.text?.slice(0, 500) || 'Figure 1',
-        imageData: image.imageData,
-        order: 0,
-      }),
-    });
-    await report(active.doi, 'upload', 'partial', 'collector_figure1_manual_resume', pageUrl);
-  }
+  await api('/api/media/primary/import', { method: 'POST', body: JSON.stringify({
+    doi: active.doi, kind: candidate.kind === 'official' ? 'official_visual' : 'figure1',
+    articleUrl: pageUrl, sourceUrl: candidate.src, source: 'browserbase_manual_resume',
+    caption: candidate.text, imageData: image.imageData, confidence: 90,
+    ...nativeImage.createFromDataURL(image.imageData).getSize(), retrievedAt: Date.now(),
+  }) });
+  // A manual job was released from its old lease. Requeue it for a fresh claim;
+  // the next claimant sees the canonical cached visual and completes normally.
+  await api('/api/media/jobs/resume-manual', { method: 'POST', body: JSON.stringify({ doi: active.doi }) });
 
   await clearCooldown(active.doi);
   await log('browserbase_manual_resume_upload_success', {
@@ -1056,6 +1093,9 @@ async function finishManualBrowserbase(publisher) {
   });
 
   await active.browser.close().catch(() => {});
+  await browserbaseApi(`/sessions/${encodeURIComponent(active.sessionId)}`, { method: 'POST', body: JSON.stringify({
+    status: 'REQUEST_RELEASE', ...(browserbaseCredentials().projectId ? { projectId: browserbaseCredentials().projectId } : {}),
+  }) });
   manualBrowserbaseSessions.delete(publisher);
   state.browserbase.manual[publisher] = {
     status: 'verified',
@@ -1151,6 +1191,8 @@ async function verifySpringerNatureCandidate(doi, candidate) {
     await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, status: response.status, reason: 'http' });
     return null;
   }
+  const finalImageUrl = decodeURIComponent(response.url || candidate.src);
+  if (!finalImageUrl.includes(`10.1038/${articleId}/MediaObjects/`)) throw new Error('springer_nature_redirect_ownership_mismatch');
   const contentType = String(response.headers.get('content-type') || '').toLowerCase().split(';')[0];
   if (!contentType.startsWith('image/')) {
     await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'content_type', contentType });
@@ -1199,6 +1241,7 @@ async function inspectSpringerNatureStructured(doi) {
   const normalized = String(doi || '').trim().toLowerCase();
   if (classify(normalized) !== 'nature') return null;
   const target = articleUrl(normalized);
+  let metadataFallback = null;
 
   try {
     const response = await publisherFetch(target, {
@@ -1231,7 +1274,7 @@ async function inspectSpringerNatureStructured(doi) {
               const size = image.getSize();
               if (size.width >= 240 && size.height >= 120) {
                 await log('springer_nature_metadata_candidate_verified', { doi: normalized, kind: metadataCandidate.kind, width: size.width, height: size.height, url: finalUrl });
-                return {
+                metadataFallback = {
                   url: finalUrl,
                   method: 'springer_nature_metadata',
                   candidate: {
@@ -1243,6 +1286,7 @@ async function inspectSpringerNatureStructured(doi) {
                     confidence: metadataCandidate.kind === 'official' ? 100 : 97,
                   },
                 };
+                if (metadataCandidate.kind === 'official') return metadataFallback;
               }
             }
           }
@@ -1268,12 +1312,13 @@ async function inspectSpringerNatureStructured(doi) {
       await log('springer_nature_candidate_failed', { doi: normalized, kind: candidate.kind, reason: safeError(error, 240) });
     }
   }
-  return null;
+  return metadataFallback;
 }
 
 async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyImage = false } = {}) {
   const publisher = browserbasePublisher(doi);
   if (!publisher) return null;
+  if (pendingManualHandoff()) throw new Error('manual_required_global_pause');
   const activeManual = manualBrowserbaseSessions.get(publisher);
   if (activeManual?.sessionId) {
     state.browserbase.status[publisher] = 'manual_required';
@@ -1289,22 +1334,36 @@ async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyIma
     return null;
   }
   let browser;
+  let remoteSessionId = '';
+  let connectionPhase = 'session_create';
   try {
     await waitForBrowserbaseSlot(publisher);
     const contextId = await browserbaseContext(publisher);
     const payload = {
-      keepAlive: false,
-      browserSettings: { context: { id: contextId, persist: true } },
+      keepAlive: true,
+      browserSettings: { solveCaptchas: false, context: { id: contextId, persist: true } },
     };
     if (credentials.projectId) payload.projectId = credentials.projectId;
     const sessionInfo = await browserbaseApi('/sessions', { method: 'POST', body: JSON.stringify(payload) });
+    remoteSessionId = String(sessionInfo?.id || '');
+    state.browserbase.sessions ||= {};
+    state.browserbase.sessions[publisher] = { sessionId: remoteSessionId, contextId, doi, phase: connectionPhase, createdAt: Date.now() };
+    await saveState();
     if (!sessionInfo?.connectUrl) throw new Error('browserbase_session_missing_connect_url');
     await log('browserbase_session_created', { publisher, doi, sessionId: String(sessionInfo.id || '') });
     const { chromium } = await import('playwright-core');
-    browser = await chromium.connectOverCDP(sessionInfo.connectUrl);
+    connectionPhase = 'cdp_connect';
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try { browser = await chromium.connectOverCDP(sessionInfo.connectUrl, { timeout: 90000 }); break; }
+      catch (error) { if (attempt || !/timeout/i.test(String(error.message))) throw new Error('browserbase_cdp_connect_failed'); }
+    }
     await log('browserbase_cdp_connected', { publisher, doi, sessionId: String(sessionInfo.id || '') });
     const context = browser.contexts()[0];
     const page = context.pages()[0] || await context.newPage();
+    connectionPhase = 'public_page_connectivity';
+    await page.goto('https://example.com/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await log('browserbase_public_connectivity_ok', { publisher, sessionId: remoteSessionId });
+    connectionPhase = 'publisher_page';
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: Math.max(15000, Number(config.publisherTimeoutSeconds || 35) * 1000) });
     await page.waitForTimeout(Math.min(5000, Math.max(500, Number(config.headlessWaitMs || 1500))));
     const pageUrl = page.url();
@@ -1334,6 +1393,7 @@ async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyIma
         liveAvailable: Boolean(debug?.debuggerFullscreenUrl || debug?.debuggerUrl),
       };
       state.browserbase.status[publisher] = 'manual_required';
+      await writeManualHandoff(publisher, manualBrowserbaseSessions.get(publisher), debug);
       await saveState();
       await log('browserbase_manual_required', { publisher, doi, url: pageUrl, sessionId, contextId });
       stageStatus = `${manualPublisherLabel(publisher)} 需要人工验证；当前 Session 已保活，没有创建新 Session。请点击“打开 Live Session”，验证后点击“继续当前任务”。`;
@@ -1352,13 +1412,20 @@ async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyIma
     return { url: pageUrl, candidate, method: 'browserbase', sessionId: String(sessionInfo.id || ''), image };
   } catch (error) {
     const reason = safeError(error, 300);
+    if (state.browserbase.sessions?.[publisher]) state.browserbase.sessions[publisher].phase = connectionPhase;
     if (reason !== 'manual_required') state.browserbase.status[publisher] = `failed: ${reason}`;
     await saveState();
-    await log('browserbase_failed', { publisher, doi, reason, localReason });
+    await log('browserbase_failed', { publisher, doi, phase: connectionPhase, sessionId: remoteSessionId, reason, localReason });
     if (reason === 'manual_required') throw error;
     return null;
   } finally {
     if (browser) await browser.close().catch(() => {});
+    // keepAlive sessions need an explicit release to flush persistent cookies.
+    // Never release a session handed to the user for challenge verification.
+    if (remoteSessionId && state.browserbase.manual?.[publisher]?.sessionId !== remoteSessionId) {
+      await browserbaseApi(`/sessions/${encodeURIComponent(remoteSessionId)}`, { method: 'POST',
+        body: JSON.stringify({ status: 'REQUEST_RELEASE', ...(credentials.projectId ? { projectId: credentials.projectId } : {}) }) }).catch(() => {});
+    }
     refreshDashboard();
   }
 }
@@ -1390,6 +1457,8 @@ async function inspectArticleHtml(doi, url, browserError = '') {
     if (!res.ok) throw new Error(`publisher_http_${res.status}`);
     const html = await res.text();
     const finalUrl = res.url || url;
+    if (browserbaseManualRequired(html, finalUrl)) throw new Error('publisher_access_challenge');
+    if (browserbasePublisher(doi) && !browserbaseOwnsDoi(doi, finalUrl, html)) throw new Error('publisher_doi_mismatch');
     const candidate = htmlCandidate(html, finalUrl);
     if (candidate) {
       await log('html_fallback_success', { doi, kind: candidate.kind, url: finalUrl, browserError });
@@ -1474,6 +1543,12 @@ async function downloadPdfFromPublisherBrowser({ doi, publisher, webContents, pd
 }
 async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnostic, verifyBrowserbaseImage = false } = {}) {
   const url = articleUrl(doi);
+  if (!forceBrowserbase && classify(doi) === 'science') {
+    try {
+      const metadata = await inspectArticleHtml(doi, url, 'science_metadata_first');
+      if (metadata?.candidate) return metadata;
+    } catch (error) { await log('science_metadata_fallback', { doi, reason: safeError(error, 180) }); }
+  }
   if (!forceBrowserbase && classify(doi) === 'nature') {
     const structured = await inspectSpringerNatureStructured(doi);
     if (structured?.candidate) return structured;
@@ -1544,6 +1619,8 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
         /\.pdf(?:[?#]|$)/i.test(pageUrl);
       const pdfUrl = currentIsPdfViewer ? pageUrl : String(pdfLinks[0]?.href || '');
       if (localPublisherReady(publisher)) {
+        const remote = await inspectArticleBrowserbase(doi, url, 'local_browser_no_visual', { verifyImage: true });
+        if (remote?.candidate) return remote;
         let pdf = null;
         if (pdfUrl) {
           pdf = await downloadPdfFromPublisherBrowser({ doi, publisher, webContents: win.webContents, pdfUrl });
@@ -1578,7 +1655,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
     win = null;
     await log('browser_blocked_fallback', { doi, browserError, blockedByClient: /ERR_BLOCKED_BY_CLIENT/i.test(browserError) });
     let htmlResult = null;
-    if (!forceBrowserbase) {
+    if (!forceBrowserbase && !['acs','wiley'].includes(classify(doi))) {
       try { htmlResult = await inspectArticleHtml(doi, url, browserError); }
       catch (htmlError) {
         await log('publisher_html_fallback_failed', { doi, reason: safeError(htmlError, 300) });
@@ -1588,10 +1665,6 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
     }
     if (htmlResult?.candidate) return htmlResult;
     const publisher = classify(doi);
-    if (!forceBrowserbase && localPublisherReady(publisher)) {
-      await log('browserbase_skipped_verified_local_session', { doi, publisher, browserError });
-      return htmlResult || { url, candidate: null, method: 'verified_local_no_candidate', verifiedLocalSession: true };
-    }
     const browserbaseResult = await inspectArticleBrowserbase(doi, url, browserError, { verifyImage: verifyBrowserbaseImage });
     if (browserbaseResult?.candidate) return browserbaseResult;
     // PDF is deliberately a later, independent resolver. Reaching this marker
@@ -1629,26 +1702,34 @@ async function report(doi, stage, outcome, rootCause, url = '') {
   catch (error) { await handleFailure('attempt-report', error); }
 }
 
-async function processItem(item, { ignoreCooldown = false, inspectOnly = false } = {}) {
+async function processItem(item, { ignoreCooldown = false, inspectOnly = false, owner = null } = {}) {
   const doi = String(item.doi || '').toLowerCase();
   if (!doi || (!ignoreCooldown && cooldownActive(doi))) return { doi, status: 'skipped' };
   try {
-    const inspected = await inspectArticle(doi);
-    const c = inspected.candidate;
-    if (!c) {
-      if (inspected.pdfPath) {
-        if (!inspectOnly) {
-          await setCooldown(doi, 'pdf_downloaded_visual_extraction_pending', 6 * 60 * 60 * 1000);
-          await report(doi, 'extract', 'partial', 'pdf_downloaded_visual_extraction_pending', inspected.pdfUrl || inspected.url);
-        }
-        await log('pdf_visual_extraction_pending', {
-          doi,
-          publisher: classify(doi),
-          path: inspected.pdfPath,
-          bytes: Number(inspected.pdfBytes || 0),
-        });
-        return { doi, status: 'pdf_downloaded', source: inspected.method || '', pdfPath: inspected.pdfPath, pdfBytes: Number(inspected.pdfBytes || 0) };
+    if (owner) {
+      const cached = await api(`/api/toc?doi=${encodeURIComponent(doi)}`);
+      const visual = cached.primary;
+      if (visual?.available && (item.mode !== 'upgrade' || visual.kind === 'official_visual')) {
+        await api('/api/media/jobs/complete', { method: 'POST', body: JSON.stringify({ doi, owner,
+          visualKind: visual.kind, visualSource: visual.source, confidence: visual.confidence }) });
+        return { doi, status: visual.kind === 'official_visual' ? 'official' : visual.kind, source: 'canonical_cache' };
       }
+    }
+    const inspected = await inspectArticle(doi);
+    let c = inspected.candidate;
+    if (!c && inspected.pdfPath) {
+      const { extractPdfPrimary } = await import('./pdf-primary.mjs');
+      const rendered = await extractPdfPrimary({ BrowserWindow, doi, pdfPath: inspected.pdfPath });
+      if (rendered.imageData) {
+        c = { ...rendered, src: inspected.pdfUrl };
+        inspected.method = 'pdf_caption_region_render';
+        await log('pdf_primary_verified', { doi, page: c.page, bbox: c.bbox, width: c.width, height: c.height });
+      } else {
+        await log('pdf_primary_unresolved', { doi, reason: rendered.reason });
+        return { doi, status: 'audited_unresolved', reason: rendered.reason };
+      }
+    }
+    if (!c) {
       if (!inspectOnly) {
         const reason = inspected.verifiedLocalSession ? 'verified_local_no_visual' : 'semantic_media_not_found';
         const waitMs = inspected.verifiedLocalSession ? 6 * 60 * 60 * 1000 : 72 * 60 * 60 * 1000;
@@ -1670,14 +1751,24 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     }
     if (!config.writeToken) throw new Error('write_token_missing');
     try {
-      if (c.kind === 'official') {
-        await api('/api/toc/import', { method: 'POST', body: JSON.stringify({ doi, articleUrl: inspected.url, imageData: data, replace: Boolean(item.suspiciousToc) }) });
-        await report(doi, 'upload', 'complete', 'collector_official_toc', inspected.url);
-      } else {
-        await api('/api/article-figures/import', { method: 'POST', body: JSON.stringify({ doi, articleUrl: inspected.url, id: 'figure-1', label: 'Figure 1', caption: c.text?.slice(0,500) || 'Figure 1', imageData: data, order: 0 }) });
-        await report(doi, 'upload', 'partial', 'collector_figure1_fallback', inspected.url);
-      }
+      const kind = c.kind === 'official' ? 'official_visual' : c.kind === 'figure1' ? 'figure1' : c.kind === 'pdf_primary' ? 'pdf_primary' : 'article_figure';
+      const image = nativeImage.createFromDataURL(data);
+      if (image.isEmpty()) throw new Error('image_decode_failed');
+      const size = image.getSize();
+      const uploaded = await api('/api/media/primary/import', { method: 'POST', body: JSON.stringify({
+        doi, kind, owner, source: c.source || inspected.method, sourceUrl: c.src,
+        articleUrl: inspected.url, imageData: data, caption: c.text || '',
+        confidence: c.confidence || 90, width: size.width, height: size.height,
+        page: c.page, bbox: c.bbox, retrievedAt: Date.now(),
+      }) });
+      if (owner) await api('/api/media/jobs/complete', { method: 'POST', body: JSON.stringify({
+        doi, owner, visualKind: uploaded.existing?.kind || kind,
+        visualSource: uploaded.existing?.source || c.source || inspected.method,
+        confidence: uploaded.existing?.confidence || c.confidence || 90,
+      }) });
       await log('upload_success', { doi, kind: c.kind, source: inspected.method });
+      state.lastSuccessByPublisher ||= {};
+      state.lastSuccessByPublisher[classify(doi)] = doi;
     } catch (error) {
       await log('upload_failed', { doi, kind: c.kind, reason: safeError(error, 300) });
       throw error;
@@ -1695,6 +1786,9 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     else if (/429|rate/i.test(msg)) { reason = 'publisher_rate_limited'; ms = 24*60*60*1000; }
     else if (/timeout/i.test(msg)) { reason = 'publisher_timeout'; ms = 8*60*60*1000; }
     else if (/ERR_BLOCKED_BY_CLIENT/i.test(msg)) { reason = 'publisher_client_blocked'; ms = 30*60*1000; }
+    if (owner) {
+      await api('/api/media/jobs/fail', { method: 'POST', body: JSON.stringify({ doi, owner, reason, manualRequired: /manual_required|publisher_access_blocked/.test(reason), retryMs: ms }) }).catch(() => {});
+    }
     if (!inspectOnly) {
       await setCooldown(doi, reason, ms);
       await report(doi, 'process', 'failed', reason, articleUrl(doi));
@@ -1707,7 +1801,10 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
 async function processBatch(items) {
   const selected = items.filter(x => !cooldownActive(String(x.doi||''))).slice(0, Math.max(1, Number(config.maxPerCycle)||12));
   const results = [];
-  for (const item of selected) results.push(await processItem(item));
+  for (const item of selected) {
+    if (pendingManualHandoff()) break;
+    results.push(await processItem(item));
+  }
   return results;
 }
 
@@ -1764,6 +1861,7 @@ async function runBrowserbaseAcceptance() {
   stageStatus = '正在进行 Browserbase 只读验收：ACS 与 Wiley…';
   await refreshDashboard();
   const acs = await runBrowserbaseAcceptanceTarget('10.1021/acs.orglett.6c03622');
+  if (pendingManualHandoff()) return { configured: true, acs, paused: 'manual_required' };
   const wiley = await runBrowserbaseAcceptanceTarget('10.1002/anie.1537547');
   let batch = null;
   if (acs.status === 'verified' && wiley.status === 'verified') batch = await runBrowserbaseBatchTest(12);
@@ -1865,7 +1963,7 @@ async function runCycle(manual = false) {
     await log('publisher_diagnostic_normal_cycle_blocked', { manual });
     return;
   }
-  if (cycleRunning || disposed || stageResults.collector !== 'ok') return;
+  if (pendingManualHandoff() || cycleRunning || disposed || stageResults.collector !== 'ok') return;
   cycleRunning = true;
   try {
     config = await loadJson(configPath(), DEFAULT_CONFIG);
@@ -1877,26 +1975,31 @@ async function runCycle(manual = false) {
       refreshDashboard();
       return;
     }
-    const queue = await fetchQueue();
-    const net = await networkState();
-    network = net;
-    const open = queue.filter(x => ['nature','science','other'].includes(classify(x.doi)));
-    const restricted = queue.filter(x => ['acs','wiley'].includes(classify(x.doi)));
-    const runnableRestricted = restricted.filter(x => (classify(x.doi)==='acs' ? net.acs : net.wiley));
-    const runnable = [...open, ...runnableRestricted];
-    const results = await processBatch(runnable);
-    const success = results.filter(x => ['official','figure1','pdf_downloaded'].includes(x?.status)).length;
-    const failed = results.filter(x => x?.status === 'failed').length;
-    state.lastSummary = { at: Date.now(), queue: queue.length, processed: results.length, success, failed, net };
-    await saveState();
-    await log('cycle complete', state.lastSummary);
-    if (!net.acs || !net.wiley) {
-      const waiting = restricted.filter(x => (classify(x.doi)==='acs' ? !net.acs : !net.wiley)).length;
-      if (waiting > 0) {
-        startVpnWatch();
-        if (!manual) await maybeNotifyRestricted(waiting);
+    const results = [];
+    // Claim one at a time so human verification never strands a large batch.
+    for (let i = 0; i < Math.min(4, Number(config.maxPerCycle) || 4); i++) {
+      if (pendingManualHandoff()) break;
+      let claim = await api('/api/media/jobs/claim', { method: 'POST', body: JSON.stringify({ owner: leaseOwner, limit: 1, mode: 'coverage' }) });
+      if (!claim.items?.length && Date.now() - Number(state.lastUpgradeClaimAt || 0) > 86400000) {
+        state.lastUpgradeClaimAt = Date.now();
+        claim = await api('/api/media/jobs/claim', { method: 'POST', body: JSON.stringify({ owner: leaseOwner, limit: 1, mode: 'upgrade' }) });
       }
+      const job = claim.items?.[0];
+      if (!job) break;
+      await api('/api/media/jobs/start', { method: 'POST', body: JSON.stringify({ doi: job.doi, owner: leaseOwner, leaseMs: 1800000 }) });
+      const result = await processItem(job, { owner: leaseOwner, ignoreCooldown: true });
+      if (!['official','figure1','pdf_primary','article_figure'].includes(result.status) && result.status !== 'failed') {
+        await api('/api/media/jobs/fail', { method: 'POST', body: JSON.stringify({ doi: job.doi, owner: leaseOwner,
+          reason: result.reason || result.status, auditedUnresolved: true, retryMs: 86400000 }) });
+      }
+      results.push(result);
     }
+    const success = results.filter(x => ['official','figure1','pdf_primary','article_figure'].includes(x.status)).length;
+    const failed = results.length - success;
+    state.lastSummary = { at: Date.now(), processed: results.length, success, failed, leaseOwner };
+    try { state.jobStatus = await api('/api/media/jobs/status'); } catch {}
+    await saveState();
+    await log('lease_cycle_complete', state.lastSummary);
     if (manual || success > 0 || failed > 0) {
       if (Notification.isSupported()) {
         try { new Notification({ title: 'TOC Collector', body: `本次补充 ${success} 篇，${failed} 篇等待下次重试。`, silent: true }).show(); }
@@ -1932,6 +2035,19 @@ function dashboardHtml() {
     : '缺失 · 长度 0';
   const vpnState = config.vpnExecutable ? escapeHtml(config.vpnExecutable) : '未设置';
   const errors = backgroundErrors.map(item => `<div><strong>${escapeHtml(item.stage)}</strong>: ${escapeHtml(item.message)}</div>`).join('');
+  const publisherRows = ['acs','wiley','nature','science'].map(publisher => {
+    const queuePublisher = { nature: 'springer_nature', science: 'aaas' }[publisher] || publisher;
+    const counts = state.jobStatus?.publishers?.filter(row => row.publisher === queuePublisher) || [];
+    const count = status => state.jobStatus ? Number(counts.find(row => row.state === status)?.count || 0) : '—';
+    const recent = state.jobStatus?.recent?.filter(row => row.publisher === queuePublisher) || [];
+    const active = state.browserbase?.manual?.[publisher] || state.browserbase?.sessions?.[publisher] || {};
+    const name = { acs: 'ACS', wiley: 'Wiley', nature: 'Springer Nature', science: 'AAAS' }[publisher];
+    return `<section class="card"><strong>${name}</strong><div class="note">local: ${escapeHtml(state.localPublisher?.[publisher]?.status || 'unchecked')} · Browserbase: ${escapeHtml(state.browserbase?.status?.[publisher] || 'standby')}<br>
+      pending ${count('pending')} · leased ${count('leased')} · processing ${count('processing')} · retry_wait ${count('retry_wait')} · manual_required ${count('manual_required')} · resolved ${count('resolved')}<br>
+      last success: ${escapeHtml(state.lastSuccessByPublisher?.[publisher] || state.browserbase?.lastSuccessDoi?.[publisher] || recent.find(row => row.visual_kind)?.doi || '—')}<br>
+      last failure: ${escapeHtml(recent.find(row => row.last_failure_reason)?.last_failure_reason || '—')}<br>
+      sessionId: ${escapeHtml(active.sessionId || '—')} · contextId: ${escapeHtml(active.contextId || '—')}</div></section>`;
+  }).join('');
   const closeHint = validTray() ? '关闭窗口可隐藏到托盘。' : '关闭窗口将退出程序。';
   return `<!doctype html><html><head><meta charset="utf-8"><title>TOC Collector</title><style>
     body{font-family:Segoe UI,Arial,sans-serif;margin:0;background:#f6f7f9;color:#202124}.wrap{max-width:720px;margin:auto;padding:24px}
@@ -1951,6 +2067,7 @@ function dashboardHtml() {
     <div class="card"><div class="k">Browserbase</div><div class="v" style="font-size:14px">${browserbaseInfo.configured ? '已配置' : '缺失'} · ACS ${escapeHtml(state.browserbase?.status?.acs || browserbaseInfo.acs)}<br>Wiley ${escapeHtml(state.browserbase?.status?.wiley || browserbaseInfo.wiley)} · Nature ${escapeHtml(state.browserbase?.status?.nature || 'standby')} · Science ${escapeHtml(state.browserbase?.status?.science || 'standby')}${browserbaseBatch ? `<br>12 条测试：${Number(browserbaseBatch.resolved || 0)}/${Number(browserbaseBatch.requested || 0)}` : ''}</div></div>
     <div class="card"><div class="k">上次处理</div><div class="v" style="font-size:14px">${summary.at ? `成功 ${Number(summary.success||0)} · 失败 ${Number(summary.failed||0)}` : '尚未采集'}</div></div>
   </div>
+  <div class="grid">${publisherRows}</div>
   <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开当前设置</a><a href="collector:reload-config">重新加载设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
   <section class="credentials"><strong>本机 / 学校 VPN 出版社权限</strong><div class="note">这里使用 Collector 本机持久浏览器会话，不使用 Browserbase。会话直接走 Windows 网络，因此系统级学校 VPN 会生效；ACS/Wiley 已验证状态会直接参与后台调度。</div><div class="buttons" id="local-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const local = state.localPublisher?.[publisher] || {}; return `<span><button type="button" data-local-start="${publisher}">本机打开 ${escapeHtml(label)}</button><button type="button" data-local-finish="${publisher}">检查本机权限</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(local.status || '未验证')}${local.pdfAccess ? ' · PDF 可访问' : ''}</small></span>`; }).join('')}</div></section>
   <section class="credentials"><strong>Browserbase 本机凭据</strong><div class="note">密钥只保存到当前进程的 config.json；界面、日志和控制台都不会显示密钥。</div><form id="browserbase-form"><label for="browserbase-api-key">Browserbase API Key</label><input id="browserbase-api-key" type="password" autocomplete="off" maxlength="2048" placeholder="粘贴 API Key"><label for="browserbase-project-id">Browserbase Project ID（可选）</label><input id="browserbase-project-id" type="text" autocomplete="off" maxlength="512" placeholder="可留空"><button class="primary" type="submit">保存</button><button id="browserbase-clear" type="button">清除凭据</button>${browserbaseInfo.configured ? '<button id="browserbase-test" type="button">Browserbase 验收</button>' : ''}<span class="note" id="browserbase-action-status"></span></form>${browserbaseInfo.configured ? `<div class="note" style="margin-top:14px"><strong>人工验证 / 权限初始化</strong><br>点击后会打开 Browserbase Live View。完成出版社验证后回到此窗口点击对应“完成验证”。验证状态会保存在该出版社的 persistent Context 中。</div><div class="buttons" id="manual-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const manual = state.browserbase?.manual?.[publisher] || {}; return `<span><button type="button" data-manual-start="${publisher}">${manual.sessionId ? '打开 Live Session' : `人工处理 ${escapeHtml(label)}`}</button><button type="button" data-manual-finish="${publisher}">继续当前任务</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(manual.status || '未初始化')}${manual.sessionId ? ` · Session ${escapeHtml(manual.sessionId)}` : ''}${manual.contextId ? ` · Context ${escapeHtml(manual.contextId)}` : ''}</small></span>`; }).join('')}</div>` : ''}</section>
@@ -2263,5 +2380,5 @@ stageStatus = stage === 'collector'
 if (backgroundErrors.length) stageStatus += `；${backgroundErrors.length} 个后台错误，详见下方`;
 try { rebuildTrayMenu(); } catch (error) { await handleFailure('tray-menu', error); }
 await refreshDashboard();
-return { stageResults, dispose, showDashboard };
+return { stageResults, dispose, showDashboard, inspectArticle, inspectArticleBrowserbase, processItem, pendingManualHandoff, getPendingManualHandoff };
 }

@@ -28,6 +28,7 @@ function Get-SafeJson([string]$Path) {
 
 $config = Get-SafeJson $configPath
 $state  = Get-SafeJson $statePath
+$jobs = $null
 
 $proc = Get-Process | Where-Object {
   try { $_.Path -like "*Organic Synthesis Gallery TOC Collector.exe" } catch { $false }
@@ -59,6 +60,7 @@ try {
   $queueInfo.acs = $acs
   $queueInfo.wiley = $wiley
   $queueInfo.other = $items.Count - $acs - $wiley
+  try { $jobs = Invoke-RestMethod -Uri ($apiBase.TrimEnd('/') + '/api/media/jobs/status') -TimeoutSec 30 } catch {}
 } catch {
   $queueInfo.error = $_.Exception.Message
 }
@@ -80,6 +82,10 @@ if (Test-Path -LiteralPath $logPath) {
         $line = $_
         $line = $line -replace '(?i)(Bearer\s+)[A-Za-z0-9._\-]+', '$1[REDACTED]'
         $line = $line -replace '(?i)("?(?:writeToken|browserbaseApiKey|apiKey)"?\s*[:=]\s*"?)[^",\s]+', '$1[REDACTED]'
+        foreach ($secret in @($config.writeToken, $config.browserbaseApiKey, $env:BROWSERBASE_API_KEY, $env:BRIDGE_WRITE_TOKEN)) {
+          if (-not [string]::IsNullOrWhiteSpace([string]$secret)) { $line = $line.Replace([string]$secret, '[REDACTED]') }
+        }
+        $line = $line -replace 'wss://[^\s"<>]+', '[CDP URL REDACTED]'
         $line
       }
   )
@@ -128,9 +134,20 @@ $report = [ordered]@{
     browserbaseProjectIdConfigured = -not [string]::IsNullOrWhiteSpace([string]$config.browserbaseProjectId)
   }
   queue = $queueInfo
+  leaseQueue = [ordered]@{
+    available = [bool]$jobs
+    summary = $jobs.summary
+    publishers = $jobs.publishers
+    activeLeases = $jobs.activeLeases
+    manualRequired = @($jobs.recent | Where-Object { $_.state -eq 'manual_required' } | Select-Object doi,publisher,last_failure_reason)
+    recentFailures = @($jobs.recent | Where-Object { $_.last_failure_reason } | Select-Object -First 15 doi,publisher,last_failure_reason)
+    recentUploads = @($jobs.recent | Where-Object { $_.visual_kind } | Select-Object -First 15 doi,publisher,visual_kind,visual_source)
+  }
   browserbase = [ordered]@{
     status = $state.browserbase.status
     lastSuccessDoi = $state.browserbase.lastSuccessDoi
+    sessions = $state.browserbase.sessions
+    manualSessions = @($state.browserbase.manual.PSObject.Properties | ForEach-Object { $_.Value | Select-Object publisher,doi,sessionId,contextId,status })
     acceptance = $state.browserbase.acceptance
     batch = $state.browserbase.batch
   }

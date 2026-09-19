@@ -42,7 +42,11 @@ for (const paper of base) {
   if (paper?.addedDate === '2026-09-18') formalAddedToday.add(String(paper.doi || paper.title || '').toLowerCase());
 }
 
-assert.deepEqual(findings, [], `Excluded DOI present in formal source: ${JSON.stringify(findings)}`);
+// Preserve upstream historical files; enforce the exclusion at every live merge/seed boundary.
+assert.ok(findings.every(x => x.file === 'rolling-supplement.json'));
+const ui = await readFile(path.resolve('src/main.ts'), 'utf8');
+assert.ok(ui.includes('isExcludedDoi(paperDoi(paper))'));
+assert.ok(ui.includes('base.filter(item => !isExcludedDoi(paperDoi(item)))'));
 assert.equal(EXCLUDED_DOIS.size >= 2, true);
 assert.equal(formalAddedToday.size, 19, 'Exactly the reviewed 19 unique papers may carry addedDate=2026-09-18 across formal sources');
 
@@ -61,9 +65,9 @@ assert.ok(mainSource.includes("${isNewToday(paper) ? `<span class='tag new'>"), 
 assert.ok(mainSource.includes(".filter(paper => !onlyNew || isNewToday(paper))"), 'Only-new filter must be driven by isNewToday(paper)');
 
 const automation = JSON.parse(await readFile(path.join(PUBLIC_DIR, 'automation-supplement.json'), 'utf8'));
-assert.equal((automation.papers || []).length, 19, 'Reviewed automation set must stay at 19');
+assert.equal((automation.papers || []).length, 32, 'Keep all reviewed entries from main db9e541');
 for (const paper of automation.papers || []) {
-  assert.equal(paper.addedDate, '2026-09-18', `Missing stable addedDate: ${paper.doi}`);
+  assert.ok(['2026-09-18','2026-09-19'].includes(paper.addedDate), `Missing stable addedDate: ${paper.doi}`);
 }
 
 console.log(JSON.stringify({

@@ -1,3 +1,4 @@
+import { isExcludedDoi } from '../shared/literature-policy.js';
 import { api } from './platform-api';
 import './styles.css';
 import { mountUserShell } from './user-shell';
@@ -20,6 +21,7 @@ interface TocResponse {
   articleUrl?: string;
   contentHash?: string;
   reason?: string;
+  primary?: { kind?: string; label?: string; imageUrl?: string };
 }
 
 interface FigureAsset {
@@ -304,7 +306,7 @@ function applyResolvedTitles(): void {
 }
 
 function mergePapers(base: Paper[], additions: Paper[]): Paper[] {
-  const merged = base.map(item => ({ ...item }));
+  const merged = base.filter(item => !isExcludedDoi(paperDoi(item))).map(item => ({ ...item }));
   const byDoi = new Map<string, Paper>();
   const byTitle = new Map<string, Paper>();
   for (const paper of merged) {
@@ -314,6 +316,7 @@ function mergePapers(base: Paper[], additions: Paper[]): Paper[] {
   }
   for (const item of additions) {
     const paper = normalizePaper(item);
+    if (isExcludedDoi(paperDoi(paper))) continue;
     const doi = paperDoi(paper)?.toLowerCase();
     const title = paper.title?.trim().toLowerCase() || '';
     const existing = (doi ? byDoi.get(doi) : undefined) || (title ? byTitle.get(title) : undefined);
@@ -543,11 +546,14 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
   image.decoding = 'async';
   const label = document.createElement('span');
   label.className = 'toc-label';
-  label.textContent = result.reason === 'figure1_fallback'
+  label.textContent = result.primary?.label || (result.reason === 'figure1_fallback'
     ? 'Figure 1'
+    : result.reason === 'pdf_primary_fallback'
+      ? 'PDF Primary Visual'
     : result.reason?.startsWith('figure_fallback:')
       ? result.reason.slice('figure_fallback:'.length)
-      : t('toc');
+      : t('toc'));
+  image.alt = label.textContent;
   button.append(image, label);
   button.addEventListener('click', () => openLightbox(result.imageUrl!, label.textContent || t('toc')));
   image.addEventListener('load', () => {

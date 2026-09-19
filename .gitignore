@@ -7,3 +7,8 @@ dist/
 !.env.example
 .DS_Store
 *.log
+
+.artifacts/
+.wrangler-dry-run/
+test-results/
+playwright-report/
