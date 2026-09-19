@@ -627,11 +627,36 @@ async function browserbaseContext(publisher) {
   const { projectId } = browserbaseCredentials();
   const payload = { name: `organic-synthesis-gallery-${publisher}` };
   if (projectId) payload.projectId = projectId;
-  const created = await browserbaseApi('/contexts', { method: 'POST', body: JSON.stringify(payload) });
+  let created;
+  let recovered = false;
+  try {
+    created = await browserbaseApi('/contexts', { method: 'POST', body: JSON.stringify(payload) });
+  } catch (error) {
+    if (!/browserbase_http_409:/.test(String(error.message))) throw error;
+    // The public API has no Context list endpoint. Recover the original ID
+    // from session history, then verify its name/project before reusing cookies.
+    const sessions = await browserbaseApi('/sessions', { method: 'GET' });
+    const ids = [...new Set((Array.isArray(sessions) ? sessions : [])
+      .filter(item => !projectId || item.projectId === projectId)
+      .map(item => item.contextId).filter(Boolean))];
+    for (const id of ids) {
+      let context;
+      try { context = await browserbaseApi(`/contexts/${encodeURIComponent(id)}`, { method: 'GET' }); }
+      catch (lookupError) {
+        if (/browserbase_http_404:/.test(String(lookupError.message))) continue;
+        throw lookupError;
+      }
+      if (String(context?.name || '').trim().toLowerCase() === payload.name &&
+          (!projectId || context.projectId === projectId)) {
+        created = context; recovered = true; break;
+      }
+    }
+    if (!created?.id) throw new Error('browserbase_context_conflict_original_id_not_found');
+  }
   if (!created?.id) throw new Error('browserbase_context_missing_id');
   state.browserbase.contexts[publisher] = String(created.id);
   await saveState();
-  await log('browserbase_context_created', { publisher, contextId: String(created.id) });
+  await log(recovered ? 'browserbase_context_recovered' : 'browserbase_context_created', { publisher, contextId: String(created.id) });
   return String(created.id);
 }
 
@@ -2456,5 +2481,5 @@ stageStatus = stage === 'collector'
 if (backgroundErrors.length) stageStatus += `；${backgroundErrors.length} 个后台错误，详见下方`;
 try { rebuildTrayMenu(); } catch (error) { await handleFailure('tray-menu', error); }
 await refreshDashboard();
-return { stageResults, dispose, showDashboard, inspectArticle, inspectArticleBrowserbase, processItem, pendingManualHandoff, getPendingManualHandoff };
+return { stageResults, dispose, showDashboard, inspectArticle, inspectArticleBrowserbase, processItem, pendingManualHandoff, getPendingManualHandoff, finishManualBrowserbase };
 }

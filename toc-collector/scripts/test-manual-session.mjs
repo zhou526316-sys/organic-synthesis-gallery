@@ -7,6 +7,35 @@ const source = readFileSync(new URL('../src/background.mjs', import.meta.url), '
 const orchestration = source.slice(source.indexOf('async function inspectArticleBrowserbase('), source.indexOf('\nasync function publisherFetch('))
   .replace("const { chromium } = await import('playwright-core');", 'const { chromium } = playwright;');
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+const contextSource = source.slice(source.indexOf('async function browserbaseContext('), source.indexOf('\nfunction localPublisherReady('));
+const recoverContext = new AsyncFunction('dependencies', `with (dependencies) { ${contextSource}; return browserbaseContext('acs'); }`);
+const recoveryCalls = [];
+const recovery = {
+  state: { browserbase: { contexts: {} } },
+  browserbaseCredentials: () => ({ projectId: 'project-a' }),
+  saveState: async () => {}, log: async () => {},
+  browserbaseApi: async (url, options) => {
+    recoveryCalls.push([url, options.method]);
+    if (url === '/contexts') throw new Error('browserbase_http_409:already exists');
+    if (url === '/sessions') return [
+      { contextId: 'wrong-project', projectId: 'project-b' },
+      { contextId: 'original-acs', projectId: 'project-a' },
+    ];
+    assert.equal(url, '/contexts/original-acs');
+    return { id: 'original-acs', name: 'organic-synthesis-gallery-acs', projectId: 'project-a' };
+  },
+};
+assert.equal(await recoverContext(recovery), 'original-acs');
+assert.equal(await recoverContext(recovery), 'original-acs');
+assert.equal(recoveryCalls.length, 3, 'restored Context is reused without further API calls');
+assert.deepEqual(recoveryCalls.map(c => c[1]), ['POST', 'GET', 'GET']);
+recovery.state.browserbase.contexts = {};
+recovery.browserbaseApi = async url => {
+  if (url === '/contexts') throw new Error('browserbase_http_409:already exists');
+  return [];
+};
+await assert.rejects(recoverContext(recovery), /original_id_not_found/);
+console.log('PASS: Context 409 recovers original cookies by verified name/project, never creates replacement');
 const state = { browserbase: { contexts: { acs: 'acs-context', wiley: 'wiley-context' }, manual: {}, status: {}, lastSuccessDoi: {} } };
 let created = 0, closed = 0, handoff;
 const calls = [];

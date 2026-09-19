@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const stage = process.argv.find(arg => arg.startsWith('--phase='))?.split('=')[1] || 'nature';
-if (!['nature', 'restricted'].includes(stage)) throw new Error('Unsupported phase');
+if (!['nature', 'restricted', 'wiley', 'resume-acs', 'resume-wiley'].includes(stage)) throw new Error('Unsupported phase');
 app.setPath('userData', path.join(app.getPath('appData'), 'organic-synthesis-gallery-toc-collector'));
 const output = path.resolve('.artifacts');
 fs.mkdirSync(output, { recursive: true });
@@ -21,10 +21,16 @@ app.whenReady().then(async () => {
   checkpoint = 'background_initialize';
   bg = await initializeBackground({ window, stage: 'config' });
   checkpoint = 'publisher_acceptance';
+  if (stage.startsWith('resume-')) {
+    const result = await bg.finishManualBrowserbase(stage.slice(7));
+    fs.writeFileSync(path.join(output, `issue23-${stage}.json`), JSON.stringify(result, null, 2));
+    if (!bg.pendingManualHandoff()) { bg.dispose(); window.destroy(); app.exit(0); }
+    return;
+  }
   const results = [];
   const dois = stage === 'nature'
     ? ['10.1038/s41467-026-76235-7', '10.1038/s44160-026-01158-6']
-    : ['10.1021/acs.orglett.6c03622', '10.1002/anie.1537547'];
+    : stage === 'wiley' ? ['10.1002/anie.1537547'] : ['10.1021/acs.orglett.6c03622', '10.1002/anie.1537547'];
   for (const doi of dois) {
     if (bg.pendingManualHandoff()) {
       await bg.getPendingManualHandoff();
