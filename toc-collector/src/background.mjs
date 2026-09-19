@@ -274,10 +274,14 @@ async function saveLocalTocCapture(doi, candidate, dataUrl, articleUrl) {
   if (!candidate || !['official','figure1'].includes(candidate.kind) || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) return null;
   const match = /^data:(image\/[a-z0-9.+-]+);base64,(.+)$/i.exec(dataUrl);
   if (!match) return null;
-  const mime = match[1].toLowerCase();
-  const ext = mime.includes('png') ? 'png' : mime.includes('gif') ? 'gif' : mime.includes('webp') ? 'webp' : 'jpg';
+  let mime = match[1].toLowerCase();
   const bytes = Buffer.from(match[2], 'base64');
   if (bytes.length < 200) return null;
+  const headText = bytes.subarray(0, Math.min(bytes.length, 1024)).toString('utf8').replace(/^\uFEFF/, '').trimStart().toLowerCase();
+  if (headText.startsWith('<?xml') || headText.startsWith('<svg') || headText.includes('<svg ')) mime = 'image/svg+xml';
+  else if (bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) mime = 'image/png';
+  else if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) mime = 'image/jpeg';
+  const ext = mime.includes('svg') ? 'svg' : mime.includes('png') ? 'png' : mime.includes('gif') ? 'gif' : mime.includes('webp') ? 'webp' : 'jpg';
   await fsp.mkdir(localCaptureDir(), { recursive: true });
   const key = String(doi).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
   const file = path.join(localCaptureDir(), `${key}__${candidate.kind}.${ext}`);
