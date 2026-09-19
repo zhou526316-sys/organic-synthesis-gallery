@@ -64,7 +64,7 @@ const requestedDiagnosticPublishers = (diagnosticArg?.split('=')[1] || '')
   .split(',')
   .map(value => value.trim().toLowerCase())
   .filter(Boolean);
-const validPublisherNames = ['nature', 'wiley', 'acs', 'science', 'other'];
+const validPublisherNames = ['nature', 'wiley', 'acs', 'rsc', 'elsevier', 'science', 'other'];
 const invalidDiagnosticPublishers = requestedDiagnosticPublishers.filter(value => !validPublisherNames.includes(value));
 const diagnosticPublishers = requestedDiagnosticPublishers.filter(value => validPublisherNames.includes(value));
 const requestedDiagnosticDois = diagnosticDoiArgs.map(arg => arg.slice('--diagnose-doi='.length).trim().toLowerCase()).filter(Boolean);
@@ -77,7 +77,7 @@ const forceBrowserbaseDiagnostic = process.argv.includes('--force-browserbase');
 function getPublisherSession(publisher = '') {
   if (!app.isReady()) throw new Error('publisher_session_before_app_ready');
   const key = String(publisher || '').trim().toLowerCase();
-  if (['acs', 'wiley', 'nature', 'science'].includes(key)) {
+  if (['acs', 'wiley', 'rsc', 'elsevier', 'nature', 'science'].includes(key)) {
     if (!localPublisherSessions.has(key)) {
       const partition = `persist:toc-publisher-${key}`;
       const value = session.fromPartition(partition, { cache: true });
@@ -488,7 +488,7 @@ function htmlCandidate(html, pageUrl, doi = '') {
 }
 function browserbasePublisher(doi) {
   const publisher = classify(doi);
-  return ['acs', 'wiley', 'nature', 'science'].includes(publisher) ? publisher : '';
+  return ['acs', 'wiley', 'rsc', 'elsevier', 'nature', 'science'].includes(publisher) ? publisher : '';
 }
 
 function browserbaseManualRequired(html, pageUrl = '') {
@@ -503,15 +503,7 @@ function browserbaseOwnsDoi(doi, pageUrl, html) {
   let domainMatches = false;
   try {
     const hostname = new URL(pageUrl).hostname.toLowerCase();
-    domainMatches = publisher === 'acs'
-      ? hostname.endsWith('pubs.acs.org')
-      : publisher === 'wiley'
-        ? hostname.endsWith('onlinelibrary.wiley.com')
-        : publisher === 'nature'
-          ? hostname.endsWith('nature.com')
-          : publisher === 'science'
-            ? hostname.endsWith('science.org')
-            : false;
+    domainMatches = publisherHostMatches(publisher, pageUrl);
   } catch {}
   const encoded = normalized.replace('/', '%2f');
   const bodyHasDoi = String(html || '').toLowerCase().includes(normalized) || String(html || '').toLowerCase().includes(encoded);
@@ -590,7 +582,7 @@ async function clearPublisherCooldowns(publisher) {
 
 async function releaseVerifiedPublisherCooldowns() {
   let changed = false;
-  for (const publisher of ['acs', 'wiley', 'nature', 'science']) {
+  for (const publisher of ['acs', 'wiley', 'rsc', 'elsevier', 'nature', 'science']) {
     if (!localPublisherReady(publisher)) continue;
     let cleared = 0;
     for (const doi of Object.keys(state.cooldowns || {})) {
@@ -608,7 +600,7 @@ async function releaseVerifiedPublisherCooldowns() {
 
 async function startLocalPublisherVerification(publisher) {
   publisher = String(publisher || '').trim().toLowerCase();
-  if (!['acs', 'wiley', 'nature', 'science'].includes(publisher)) throw new Error('local_publisher_unsupported');
+  if (!['acs', 'wiley', 'rsc', 'elsevier', 'nature', 'science'].includes(publisher)) throw new Error('local_publisher_unsupported');
 
   const existing = localPublisherWindows.get(publisher);
   if (existing?.win && !existing.win.isDestroyed()) {
@@ -821,9 +813,11 @@ async function finishLocalPublisherVerification(publisher) {
 function manualPublisherLabel(publisher) {
   return publisher === 'acs' ? 'ACS'
     : publisher === 'wiley' ? 'Wiley'
-      : publisher === 'nature' ? 'Springer Nature'
-        : publisher === 'science' ? 'AAAS / Science'
-          : publisher;
+      : publisher === 'rsc' ? 'RSC'
+        : publisher === 'elsevier' ? 'Elsevier / ScienceDirect'
+          : publisher === 'nature' ? 'Springer Nature'
+            : publisher === 'science' ? 'AAAS / Science'
+              : publisher;
 }
 
 function manualPublisherTarget(publisher) {
@@ -831,6 +825,8 @@ function manualPublisherTarget(publisher) {
   if (queued?.doi) return { doi: String(queued.doi).toLowerCase(), url: articleUrl(String(queued.doi).toLowerCase()) };
   if (publisher === 'acs') return { doi: '10.1021/acs.orglett.6c03622', url: articleUrl('10.1021/acs.orglett.6c03622') };
   if (publisher === 'wiley') return { doi: '10.1002/anie.1537547', url: articleUrl('10.1002/anie.1537547') };
+  if (publisher === 'rsc') return { doi: '', url: 'https://pubs.rsc.org/' };
+  if (publisher === 'elsevier') return { doi: '', url: 'https://www.sciencedirect.com/' };
   if (publisher === 'nature') return { doi: '10.1038/s44160-026-01158-6', url: articleUrl('10.1038/s44160-026-01158-6') };
   if (publisher === 'science') return { doi: '', url: 'https://www.science.org/' };
   throw new Error('manual_publisher_unsupported');
@@ -838,7 +834,7 @@ function manualPublisherTarget(publisher) {
 
 async function startManualBrowserbase(publisher) {
   publisher = String(publisher || '').trim().toLowerCase();
-  if (!['acs', 'wiley', 'nature', 'science'].includes(publisher)) throw new Error('manual_publisher_unsupported');
+  if (!['acs', 'wiley', 'rsc', 'elsevier', 'nature', 'science'].includes(publisher)) throw new Error('manual_publisher_unsupported');
   if (!browserbaseDiagnostic().configured) throw new Error('browserbase_missing_credentials');
 
   const active = manualBrowserbaseSessions.get(publisher);
