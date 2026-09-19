@@ -1,4 +1,4 @@
-import { getLocalCaptureIndex, importLocalCapture } from './local-captures.js';
+import { getLocalCaptureIndex, getLocalDiagnostics, importLocalCapture, importLocalDiagnostics } from './local-captures.js';
 import {
   bridgeQueue,
   getArticleFigures,
@@ -84,6 +84,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/repair-status',
   '/api/media/jobs/status',
   '/api/media/local-capture-index',
+  '/api/media/local-diagnostics',
 ]);
 
 async function readJson(request) {
@@ -296,6 +297,9 @@ async function handleApi(request, env) {
   if (request.method === 'GET' && url.pathname === '/api/media/local-capture-index') {
     return resultResponse(await getLocalCaptureIndex(request, env), cors);
   }
+  if (request.method === 'GET' && url.pathname === '/api/media/local-diagnostics') {
+    return resultResponse(await getLocalDiagnostics(env), cors);
+  }
   if (request.method === 'GET' && url.pathname === '/api/media-audit') {
     return resultResponse(await mediaAudit(env));
   }
@@ -318,6 +322,7 @@ async function handleApi(request, env) {
       '/api/media/repair-batch',
       '/api/media/primary/import',
       '/api/media/local-capture/import',
+      '/api/media/local-diagnostics/import',
       '/api/media/jobs/claim',
       '/api/media/jobs/start',
       '/api/media/jobs/complete',
@@ -359,6 +364,9 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-capture/import') {
     return resultResponse(await importLocalCapture(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/local-diagnostics/import') {
+    return resultResponse(await importLocalDiagnostics(request, env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/media/jobs/claim') {
     return resultResponse(await claimMediaJobs(env, await readJson(request)));
