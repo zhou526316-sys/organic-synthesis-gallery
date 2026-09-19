@@ -135,3 +135,68 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   expect(scrollability.scrollHeight).toBeGreaterThan(scrollability.clientHeight);
   expect(scrollability.after).toBeGreaterThan(scrollability.before);
 });
+
+
+test('search keeps input stable without rebuilding cards and feedback widget submits', async ({ page }) => {
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/site-feedback')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ accepted: true, id: 1 }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  await page.locator('.card').first().waitFor({ state: 'visible', timeout: 30000 });
+
+  const initialCards = await page.locator('.card').count();
+  expect(initialCards).toBeGreaterThan(400);
+  await page.evaluate(() => {
+    const gallery = document.querySelector('#gallery');
+    (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards = 0;
+    if (!gallery) return;
+    const observer = new MutationObserver(records => {
+      for (const record of records) {
+        for (const node of record.removedNodes) {
+          if (!(node instanceof Element)) continue;
+          if (node.matches('.card')) (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards! += 1;
+          (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards! += node.querySelectorAll?.('.card').length || 0;
+        }
+      }
+    });
+    observer.observe(gallery, { childList: true });
+  });
+
+  const search = page.locator('#search');
+  await search.fill('photoredox');
+  await expect(search).toHaveValue('photoredox');
+  await expect.poll(async () => page.locator('.card:not([hidden])').count()).toBeGreaterThan(0);
+  expect(await page.locator('.card:not([hidden])').count()).toBeLessThan(initialCards);
+  expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
+
+  await search.fill('光催化');
+  await expect(search).toHaveValue('光催化');
+  await expect.poll(async () => page.locator('.card:not([hidden])').count()).toBeGreaterThan(0);
+  expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
+
+  const feedback = page.locator('site-feedback-widget');
+  await expect(feedback.locator('.site-feedback-tab')).toBeVisible();
+  await feedback.locator('.site-feedback-tab').click();
+  await feedback.locator('[data-feedback-category]').selectOption('search');
+  await feedback.locator('[data-feedback-message]').fill('搜索框输入时不应该闪烁或清空。');
+  await feedback.locator('[data-feedback-submit]').click();
+  await expect(feedback.locator('.site-feedback-status')).toContainText('已收到');
+});
