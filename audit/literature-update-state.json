@@ -83,7 +83,8 @@
       "sync_failed",
       "needs_approval",
       "blocked_by_concurrent_change"
-    ]
+    ],
+    "minimumSafetyRescanDaysOnCapabilityChange": 7
   },
   "lastBlockedRun": {
     "id": "automation-20260919-0800",
@@ -181,5 +182,16 @@
       "closureStatus": "assistant-decisions-complete",
       "verifiedThroughEligible": true
     }
+  },
+  "currentStableCapabilityFingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
+  "pendingCapabilityUpgrade": {
+    "detectedAt": "2026-09-19T14:55:25+08:00",
+    "fingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
+    "priorFetchFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
+    "requiresFreshFetch": true,
+    "requiredSafetyRescanDays": 7,
+    "validatedAuditGeneratedAt": "2026-09-19T06:55:25.883Z",
+    "validatedAuditCommit": "7a212252a399abff49ac95978120df0dbc18cb3d",
+    "reason": "Validated completeness capability is strictly stronger than the prior stable fetch capability: 15 prospective journals, seven-day overlap, Crossref online/published/created plus OpenAlex union, per-journal source-family health, and late-deposit rescue. The validated rescue surfaced three records that the same seven-day audit without rescue omitted. Do not reuse the old 24-hour fetch across this fingerprint change."
   }
 }
