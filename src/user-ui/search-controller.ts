@@ -127,7 +127,7 @@ export class UserSearchController {
   private decorate(card: HTMLElement): PaperMeta | null {
     const titleElement = card.querySelector<HTMLElement>('.title'); const doiElement = card.querySelector<HTMLElement>('.doi'); const open = card.querySelector<HTMLAnchorElement>('a.open');
     if (!titleElement) return null;
-    const title = titleElement.textContent?.trim() || ''; const journal = card.querySelector<HTMLElement>('.meta .tag')?.textContent?.trim() || ''; const doi = normalizeDoi(doiElement?.textContent || ''); const href = open?.href || (doi ? `https://doi.org/${doi}` : undefined);
+    const title = titleElement.textContent?.trim() || ''; const journal = card.querySelector<HTMLElement>('.meta .tag')?.textContent?.trim() || ''; const doi = normalizeDoi(doiElement?.textContent || ''); const href = doi ? `https://doi.org/${doi}` : open?.href;
     const id = doi || `title:${normalizeSearch(title).slice(0, 120)}`; if (!id) return null;
     const authors = (card.dataset.authors || '').split('|').map(value => value.trim()).filter(Boolean); const topics = (card.dataset.topics || '').split('|').map(value => value.trim()).filter(Boolean);
     const meta: PaperMeta = { id, doi, title, journal, href, authors, topics }; store.registerMeta(meta); card.dataset.userPaperId = id;
