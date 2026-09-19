@@ -2,13 +2,8 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "syncing",
-  "activeRun": {
-    "id": "manual-recovery-20260919-1125",
-    "runType": "concurrency_recovery_and_deploy",
-    "startedAt": "2026-09-19T11:25:00+08:00",
-    "note": "User approved deployment. Literature audit persistence was repaired and validated by GitHub Actions run 35418557042. Reusing existing reviewed literature/TOC data; no unreviewed audit candidates are being published."
-  },
+  "phase": "synced",
+  "activeRun": null,
   "lastCompletedFetch": {
     "id": "automation-20260918-1800",
     "finishedAt": "2026-09-18T18:18:00+08:00",
@@ -37,19 +32,25 @@
     "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699"
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-09-18T18:16:00+08:00",
+    "finishedAt": "2026-09-19T11:33:23+08:00",
     "dataCommitSha": "4d49c6ecd89c5777c870470ac06482258755951b",
-    "deploymentCommitSha": "7c9479a1b1ff365927045c8a36a88aeff32dc8e1",
-    "pagesRunId": 35333626244,
+    "deploymentCommitSha": "c9bf4090648e954d591818d94bb64ca47a3f626a",
+    "pagesRunId": 35418810801,
     "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
     "deployment": "success",
     "verification": {
       "build": "success",
       "deploy": "success",
       "totalGalleryCards": 463,
+      "galleryDois": 463,
+      "workerMediaDois": 463,
+      "manifestItems": 407,
+      "figureMetadata": 716,
+      "pmcFallbacks": 26,
+      "natureFallbacks": 16,
       "oldDataRegressionCheck": "passed"
     },
-    "tocVerification": "partial-newest-media-gaps-remain"
+    "tocVerification": "partial: newest rolling card now has a stable mirrored Figure 1 fallback; not claimed as a true publisher graphical abstract"
   },
   "verifiedThrough": "2026-09-17",
   "capabilityRegistry": "audit/literature-capability.json",
@@ -119,5 +120,13 @@
       "publisherFallback": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
     },
     "reason": "Fresh DOI-union audit completed and artifact upload succeeded, but the workflow could not atomically commit audit/latest.json because main changed concurrently. No literature data, TOC mapping, or website deployment was overwritten."
+  },
+  "lastConcurrencyRecovery": {
+    "resolvedAt": "2026-09-19T11:33:23+08:00",
+    "blockedRunId": "automation-20260919-0800",
+    "auditWorkflowRunId": 35418557042,
+    "auditPersistenceFixCommit": "7d3da88ea8a6f857c65395e10c52ed7f28ed17c9",
+    "validation": "success",
+    "note": "audit/latest.json persistence conflict is now recoverable and no longer blocks the whole literature pipeline; authoritative literature/TOC data conflicts remain hard stops."
   }
 }
