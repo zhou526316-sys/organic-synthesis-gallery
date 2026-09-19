@@ -406,7 +406,7 @@ function renderCards(): void {
   count.textContent = String(list.length);
   gallery.innerHTML = list.length ? list.map(paper => {
     const doi = paperDoi(paper);
-    const href = paper.url || (doi ? `https://doi.org/${doi}` : '');
+    const href = doi ? `https://doi.org/${doi}` : (paper.url || '');
     return `<article class='card' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();

@@ -206,6 +206,15 @@ test('search highlights results, picker closes outside, feedback drags and submi
   expect(await page.locator('.card[hidden]:visible').count()).toBe(0);
   expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
 
+  await search.fill('10.1021/jacs.6c08636');
+  await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
+  const doiCard = page.locator('.card:visible').filter({ hasText: '10.1021/jacs.6c08636' }).first();
+  await expect(doiCard).toBeVisible();
+  const canonicalDoiHref = 'https://doi.org/10.1021/jacs.6c08636';
+  await expect(doiCard.locator('a.open')).toHaveAttribute('href', canonicalDoiHref);
+  await expect(doiCard.locator('.user-title-link')).toHaveAttribute('href', canonicalDoiHref);
+  await expect(doiCard.locator('.user-doi-link')).toHaveAttribute('href', canonicalDoiHref);
+
   const feedback = page.locator('site-feedback-widget');
   await expect(feedback.locator('.site-feedback-tab')).toBeVisible();
   await feedback.locator('.site-feedback-tab').click();
