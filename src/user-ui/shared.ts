@@ -224,6 +224,24 @@ class Store extends EventTarget {
   async feedback(doi: string, kind: string, note: string): Promise<boolean> {
     try { await workerPost('/api/user-ui/feedback', { doi, profileId: this.profileId, kind, note: note.slice(0, 1000) }); return true; } catch { return false; }
   }
+  async siteFeedback(category: string, message: string, context: { pagePath?: string; language?: string; searchQuery?: string; viewportWidth?: number; viewportHeight?: number } = {}): Promise<'accepted' | 'rate_limited' | 'failed'> {
+    try {
+      const response = await fetch(`${WORKER_API_BASE}/api/user-ui/site-feedback`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          profileId: this.profileId,
+          category,
+          message: message.slice(0, 2000),
+          ...context,
+        }),
+      });
+      if (response.status === 429) return 'rate_limited';
+      return response.ok ? 'accepted' : 'failed';
+    } catch {
+      return 'failed';
+    }
+  }
   async setImage(target: StyleDef, file: File): Promise<void> {
     if (!file.type.startsWith('image/') || file.size > 4_000_000) return;
     const source = await new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); });
