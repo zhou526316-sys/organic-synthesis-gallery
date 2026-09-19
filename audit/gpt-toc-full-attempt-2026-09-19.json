@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-19T11:30:00Z",
+  "timeZone": "Asia/Shanghai",
+  "mode": "manual_gpt_full_toc_attempt",
+  "galleryBaseline": {
+    "galleryDois": 478,
+    "verifiedPublisherToc": 310,
+    "fallbackOnly": 96,
+    "noLargeVisual": 72,
+    "attemptedGaps": 168
+  },
+  "attemptedByPublisher": {
+    "acs": {
+      "attempted": 87,
+      "directBrowserReachable": 0,
+      "botBlocked": 87,
+      "verifiedNewOfficialToc": 0
+    },
+    "wiley": {
+      "attempted": 13,
+      "directBrowserReachable": 0,
+      "botBlocked": 13,
+      "verifiedNewOfficialToc": 0,
+      "nativeWebIndexCanConfirmGraphicalAbstract": true
+    },
+    "nature": {
+      "attempted": 66,
+      "directBrowserReachable": 66,
+      "botBlocked": 0,
+      "verifiedNewOfficialToc": 0,
+      "note": "Article pages were reachable but no independent Graphical Abstract/Visual Abstract/TOC semantic marker was found; existing Figure fallbacks remain correctly classified."
+    },
+    "science": {
+      "attempted": 2,
+      "directBrowserReachable": 0,
+      "botBlocked": 2,
+      "verifiedNewOfficialToc": 0
+    }
+  },
+  "recovered": {
+    "newOfficialToc": 0,
+    "replacedFallbacks": 0,
+    "newFallbacks": 0
+  },
+  "evidence": [
+    {
+      "doi": "10.1002/anie.6992524",
+      "publisher": "wiley",
+      "result": "publisher article is crawlable through the native web index and explicitly contains a Graphical Abstract section, but the extraction surface did not expose the Graphical Abstract image src; therefore no unsafe image substitution was written."
+    },
+    {
+      "doi": "10.1021/jacs.6c14433",
+      "publisher": "acs",
+      "result": "an early isolated browser fetch reached the ACS Silverchair abstract page and exposed an article CDN image, but the later full 87-DOI pass was bot-blocked for all ACS targets. The isolated image was not promoted because strong TOC semantics could not be bound to it."
+    }
+  ],
+  "infrastructureIssue": {
+    "workerMediaInventory": "Cloudflare Worker 1101 / HTTP 500 during the full queue seed",
+    "primaryApiRepairStatus": "HTTP 500",
+    "effect": "The GPT pass was forced to reconstruct the 168-gap universe from the deployed GitHub Pages artifact/media-index rather than the live media inventory. This did not change the attempted DOI set, but prevented normal write-back/queue verification."
+  },
+  "conclusion": "Full direct GPT publisher-page crawling was attempted for all 168 current non-official-TOC gaps. No new image met the project's strong official-TOC evidence threshold. This is a negative but useful production test: GPT web access is good for semantic verification and Wiley index discovery, but bulk image acquisition for ACS/Wiley/Science still requires an authenticated/local-browser/VPN-capable media collector or a source that exposes the raw image URL."
+}
