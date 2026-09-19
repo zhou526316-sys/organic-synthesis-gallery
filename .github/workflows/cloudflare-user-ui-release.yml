@@ -165,21 +165,52 @@ jobs:
         working-directory: cloudflare/worker
         run: npx wrangler deploy --config wrangler.user-ui.toml
 
+      - name: Seed native registration verification challenge
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const email = `native-smoke-${process.env.GITHUB_RUN_ID}@example.invalid`;
+          const password = 'Smoke-Password-123!';
+          const code = '246810';
+          const challengeId = `ch_native_smoke_${process.env.GITHUB_RUN_ID}`;
+          const codeSalt = 'native-smoke-salt';
+          const codeHash = crypto.createHash('sha256').update(`${codeSalt}:${code}`).digest('hex');
+          const salt = crypto.randomBytes(16);
+          const passwordHash = crypto.pbkdf2Sync(password, salt, 100000, 32, 'sha256').toString('base64url');
+          const passwordSalt = salt.toString('base64url');
+          const now = Date.now();
+          const q = value => `'${String(value).replace(/'/g, "''")}'`;
+          const sql = [
+            `DELETE FROM email_code_challenges WHERE challenge_id = ${q(challengeId)};`,
+            `DELETE FROM users WHERE email = ${q(email)};`,
+            `INSERT INTO email_code_challenges (challenge_id, purpose, user_id, email, display_name, password_hash, salt, iterations, code_hash, code_salt, attempts, last_sent_at, created_at, expires_at) VALUES (${q(challengeId)}, 'register', NULL, ${q(email)}, 'Native Smoke', ${q(passwordHash)}, ${q(passwordSalt)}, 100000, ${q(codeHash)}, ${q(codeSalt)}, 0, ${now}, ${now}, ${now + 600000});`,
+          ].join('\n');
+          fs.writeFileSync('/tmp/native-registration-smoke.sql', sql);
+          fs.writeFileSync('/tmp/native-registration-smoke.json', JSON.stringify({ email, password, code, challengeId }));
+          NODE
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.user-ui.toml --file /tmp/native-registration-smoke.sql >/dev/null
+
       - name: Native registration end-to-end smoke
         shell: bash
         run: |
           set -euo pipefail
           node - <<'NODE'
+          const fs = require('fs');
           const assert = (value, message) => { if (!value) throw new Error(message); };
           const base = process.env.WORKER_URL;
-          const email = `native-smoke-${process.env.GITHUB_RUN_ID}@example.invalid`;
-          const password = 'Smoke-Password-123!';
           const origin = 'https://zhou526316-sys.github.io';
+          const seeded = JSON.parse(fs.readFileSync('/tmp/native-registration-smoke.json', 'utf8'));
 
-          async function call(path, body, expected) {
+          async function call(path, body, expected, authorization = '') {
+            const headers = { 'content-type': 'application/json', origin };
+            if (authorization) headers.authorization = `Bearer ${authorization}`;
             const response = await fetch(`${base}${path}`, {
               method: 'POST',
-              headers: { 'content-type': 'application/json', origin },
+              headers,
               body: JSON.stringify(body),
             });
             const text = await response.text();
@@ -190,16 +221,32 @@ jobs:
             return data;
           }
 
-          const registered = await call('/api/user-ui/auth/register', {
-            email,
-            password,
-            displayName: 'Native Smoke',
+          const registered = await call('/api/user-ui/auth/register/verify', {
+            challengeId: seeded.challengeId,
+            code: seeded.code,
           }, 201);
-          assert(registered.token && registered.user?.email === email, `registration response invalid: ${JSON.stringify(registered)}`);
+          assert(registered.token && registered.user?.email === seeded.email, `verification response invalid: ${JSON.stringify(registered)}`);
+          assert(registered.user?.emailVerified === true, `verified account missing emailVerified: ${JSON.stringify(registered)}`);
 
-          const loggedIn = await call('/api/user-ui/auth/password/login', { email, password }, 200);
-          assert(loggedIn.token && loggedIn.user?.email === email, `password login response invalid: ${JSON.stringify(loggedIn)}`);
-          console.log(JSON.stringify({ nativeRegistration: true, passwordLogin: true, email }));
+          const loggedIn = await call('/api/user-ui/auth/password/login', {
+            email: seeded.email,
+            password: seeded.password,
+          }, 200);
+          assert(loggedIn.token && loggedIn.user?.email === seeded.email, `password login response invalid: ${JSON.stringify(loggedIn)}`);
+
+          const changed = await call('/api/user-ui/auth/password/change', {
+            currentPassword: seeded.password,
+            newPassword: 'Smoke-New-Password-456!',
+          }, 200, loggedIn.token);
+          assert(changed.token && changed.user?.email === seeded.email, `password change response invalid: ${JSON.stringify(changed)}`);
+
+          console.log(JSON.stringify({
+            nativeRegistrationVerification: true,
+            emailVerified: true,
+            passwordLogin: true,
+            passwordChange: true,
+            email: seeded.email,
+          }));
           NODE
 
       - name: Clean native registration smoke account
@@ -209,8 +256,9 @@ jobs:
         run: |
           set -euo pipefail
           EMAIL="native-smoke-${GITHUB_RUN_ID}@example.invalid"
+          CHALLENGE="ch_native_smoke_${GITHUB_RUN_ID}"
           npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.user-ui.toml \
-            --command "DELETE FROM users WHERE email = '$EMAIL';" >/dev/null
+            --command "DELETE FROM email_code_challenges WHERE challenge_id = '$CHALLENGE'; DELETE FROM users WHERE email = '$EMAIL';" >/dev/null
 
       - name: Verify health and user UI routes
         shell: bash
