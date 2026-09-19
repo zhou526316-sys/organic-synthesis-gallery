@@ -1,6 +1,6 @@
 {
   "auditVersion": 3,
-  "generatedAt": "2026-09-19T03:40:30.374Z",
+  "generatedAt": "2026-09-19T03:47:26.137Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-72h-calendar",
   "startDate": "2026-09-17",
@@ -8,19 +8,19 @@
   "closureDate": "2026-09-18",
   "policy": "Multi-ISSN Crossref online/published union plus OpenAlex union. Default window is the current Beijing date plus the two preceding calendar dates. All DOI differences are exposed for assistant review; deterministic screening only assigns review priority and never silently excludes a missing record.",
   "summary": {
-    "galleryDois": 463,
+    "galleryDois": 476,
     "sourceRecords": 214,
-    "missingFromGallery": 203,
-    "potentialGaps": 73,
+    "missingFromGallery": 190,
+    "potentialGaps": 60,
     "criticalSourceFailures": 0,
-    "unresolved": 203
+    "unresolved": 190
   },
   "closure": {
     "date": "2026-09-18",
     "status": "requires-assistant-review",
     "sourceRecords": 85,
-    "missingFromGallery": 85,
-    "potentialGaps": 45,
+    "missingFromGallery": 73,
+    "potentialGaps": 33,
     "criticalSourceFailures": 0,
     "verifiedThroughEligible": false,
     "note": "Machine audit never advances verifiedThrough by itself. Every missing record for the closure date must receive an explicit assistant decision, publisher sources must be cross-checked where available, unresolved must reach zero, and critical source failures must be zero."
@@ -64,27 +64,27 @@
     },
     "JACS": {
       "sourceRecords": 34,
-      "coveredByGallery": 4,
-      "missingFromGallery": 30,
-      "potentialGaps": 18
+      "coveredByGallery": 7,
+      "missingFromGallery": 27,
+      "potentialGaps": 15
     },
     "Angew": {
       "sourceRecords": 17,
-      "coveredByGallery": 0,
-      "missingFromGallery": 17,
-      "potentialGaps": 15
+      "coveredByGallery": 3,
+      "missingFromGallery": 14,
+      "potentialGaps": 12
     },
     "ACS Catalysis": {
       "sourceRecords": 14,
-      "coveredByGallery": 0,
-      "missingFromGallery": 14,
-      "potentialGaps": 11
+      "coveredByGallery": 2,
+      "missingFromGallery": 12,
+      "potentialGaps": 9
     },
     "Organic Letters": {
       "sourceRecords": 16,
-      "coveredByGallery": 5,
-      "missingFromGallery": 11,
-      "potentialGaps": 10
+      "coveredByGallery": 10,
+      "missingFromGallery": 6,
+      "potentialGaps": 5
     }
   },
   "sourceStats": [
@@ -459,22 +459,6 @@
   ],
   "missingCandidates": [
     {
-      "doi": "10.1021/jacs.6c12832",
-      "journal": "JACS",
-      "title": "Synthesis, Evaluation, and Context for Applications of SF5-Containing [1.1.1]Bicyclopentane and [ 2 ]Staffane “Hybrid Bioisosteres”",
-      "abstract": "Abstract Bioisosteric replacements are conventionally applied as single-variable changes to a parent molecule during drug discovery campaigns. Herein, we evaluate hybrid bioisosteric replacements as strategic combinations of multiple substitutions that counterbalance the physicochemical consequences of incorporating single bioisosteres individually. In this context, we validate SF5-substituted [1.1.1]bicyclopentanes (SF5-BCPs) and SF5-[2]staffanes (SF5-BCP-BCPs) as hybrid bioisostere motifs that have not been field-tested due to lack of access to versatile building blocks. We address a key synthetic limitation by developing scalable routes to carboxylic acid-containing intermediates that facilitate incorporation of these motifs into drug-like molecules via carbonyl group manipulations. These advances enable (1) crystallographic studies that contextualize structural features of these motifs, (2) syntheses of structurally diverse pharmaceutical and agrochemical derivatives, and (3) systematic evaluation of single (SF5-Ph → SF5-BCP) and multicomponent “hybrid” bioisosteric replacements (CF3-Ph → SF5-BCP and CF3-Ph-Ph → SF5-BCP-BCP) through in vitro ADME profiling. Finally, we investigate the chemical stability profile of these novel SF5-[2]staffanes, establish an extensive suite of building blocks, and demonstrate their compatibility with reactions frequently used in medicinal chemistry. Together, the results of this extensive study position SF5-BCPs and SF5-[2]staffanes as practical hybrid bioisosteres for tuning molecular properties in drug discovery.",
-      "date": "2026-09-19",
-      "type": "journal-article",
-      "topics": [],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published"
-      ],
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1038/s41467-026-77550-9",
       "journal": "Nature Communications",
       "title": "Single-fiber hyperspectral imaging via nanophotonic disordered dispersion",
@@ -547,28 +531,6 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1021/acscatal.6c04593",
-      "journal": "ACS Catalysis",
-      "title": "Glycopeptide Assembly via Selective Manganese(I)-Catalyzed C–H Alkenylations in Organic Media and in Water",
-      "abstract": "Abstract Glycopeptides are key structural motifs of powerful pharmaceuticals and of relevance for the molecular understanding in the life sciences. Despite major advances, the synthesis of glycopeptides largely relies on prefunctionalized substrates and lengthy synthesis sequences. In sharp contrast, the assembly of diverse glycopeptides has now been accomplished under exceedingly mild reaction conditions by manganese-catalyzed C–H alkenylations with ample scope. The C–H activation strategy was characterized by distinctive elements of regio-, site-, and chemo-selectivities with structurally complex substrates at room temperature by a benign manganese catalyst. The distinct power of our approach was mirrored by the assembly of hybrid glycopeptides featuring various fluorogenic labels with large Stokes shifts. The robust nature of our manganese(I) catalyst was reflected by its full tolerance for water as a reaction medium in micellar catalysis.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Carbohydrate Chemistry and Synthesis",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Click Chemistry and Applications",
-        "Fluorine in Organic Chemistry"
-      ],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "openalex:S37391459"
-      ],
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1021/csv016i018_1967738",
       "journal": "ACS Catalysis",
       "title": "Issue Editorial Masthead",
@@ -612,28 +574,6 @@
         "Physical Sciences",
         "Catalysis and Oxidation Reactions",
         "Catalysts for Methane Reforming"
-      ],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "openalex:S37391459"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acscatal.6c05065",
-      "journal": "ACS Catalysis",
-      "title": "Synergistic Effects of Brønsted Acid Site and Lewis Acid Site of Nb2O5 on the Direct Amination of Alcohols",
-      "abstract": "Abstract Direct amination of alcohols is an attractive synthetic method of secondary amines as water is generated as the sole byproduct. Solid acid catalysts have been developed with the advantages of their high stability and easily tunable acid nature. Herein, we report the synergistic effects of the Brønsted and Lewis acid sites of Nb2O5 on the amination of alcohols. Calcination of Nb2O5 altered the ratio of Brønsted acid sites to Lewis acid sites along with the removal of water, promoting the direct amination of alcohols. Nb2O5 calcined at 573 K (Nb2O5-573) acted as a reusable heterogeneous catalyst for the direct amination of alcohols to give the corresponding secondary amines in high yields. The formation rate per acid site of Nb2O5-573 was 21.7 h–1, which is higher than those of the previously reported solid acid catalysts (0.4–8.5 h–1). A variety of alcohols and aromatic amines were applicable with this catalytic system to afford the corresponding secondary amines in moderate to high yields. Catalyst characterizations and control experiments using chiral alcohols demonstrated that the direct amination of alcohols over Nb2O5 mainly proceeded through an SN2-type nucleophilic substitution mechanism, whereas an SN1-type nucleophilic substitution mechanism has been proposed for the previously reported solid acid catalysts. Both Brønsted and Lewis acid sites interact with the hydroxy group of alcohols to enhance the leaving ability of the hydroxy group, resulting in the improvement of nucleophilic substitution by amines.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Asymmetric Hydrogenation and Catalysis",
-        "Inorganic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Chemical Synthesis and Reactions",
-        "Asymmetric Synthesis and Catalysis"
       ],
       "sources": [
         "crossref:2155-5435:online",
@@ -697,30 +637,6 @@
         "crossref:2155-5435:online",
         "crossref:2155-5435:published",
         "openalex:S37391459"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.8911828",
-      "journal": "Angew",
-      "title": "Access to Axially Chiral Diaryl Ethers via Catalytic Atroposelective [2+2+2] Cycloaddition of Alkynyloxybenzenes",
-      "abstract": "ABSTRACT Despite the growing importance of axially chiral diaryl ethers, efficient catalytic asymmetric methods for their synthesis remain rare, and existing approaches are largely limited to desymmetrization. Here, we report a direct and atroposelective annulation strategy to address this challenge. Using a rhodium catalyst, this method constructs diaryl ethers bearing C─O chiral axes in a single step from readily accessible phenoxyalkynes and 1,6‐diynes. The approach provides a modular and efficient pathway that avoids preassembled chiral precursors, affording atropisomers in high yields with excellent enantiocontrol and chemoselectivity. The synthetic utility of this methodology is further demonstrated by converting the products into valuable chiral building blocks and chiral ligands.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Axial and Atropisomeric Chirality Synthesis",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Catalytic C–H Functionalization Methods",
-        "Catalytic Alkyne Reactions"
-      ],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "openalex:S67393510"
       ],
       "reviewPriority": "high"
     },
@@ -860,54 +776,6 @@
         "openalex:S67393510"
       ],
       "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1002/anie.5852828",
-      "journal": "Angew",
-      "title": "De Novo Design and Structural Optimization of Mn(salen)‐Based Artificial Metalloenzymes for Asymmetric Sulfoxidation",
-      "abstract": "ABSTRACT Artificial metalloenzymes (ArMs) exhibit exceptional selectivity, yet extending their reactivity beyond native cofactors remains a major challenge. While previous designs using native protein scaffolds to incorporate nonnative cofactors have been reported, de novo protein design enables tailored scaffolds that incorporate nonnative cofactors, unlocking transformations inaccessible to natural enzymes. Here, we report the computational design of de novo proteins that bind Mn(salen)‐based complexes for asymmetric sulfoxidation. The resulting ArMs outperform the free cofactor, achieving up to 45% yield and an enantiomeric ratio (e.r.) of 26:74 under optimized conditions. A 1.5 Å resolution crystal structure confirms the designed architecture and reveals key secondary‐sphere interactions that govern reactivity. Guided by these insights, rational mutagenesis enhanced performance up to 79% yield and an e.r. up to 16:84. This work establishes a general strategy for integrating complex nonnative cofactors into de novo scaffolds, enabling selective catalysts for reactions beyond the reach of natural enzymes.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Cyclopropane Reaction Mechanisms",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Metal-Catalyzed Oxygenation Mechanisms",
-        "Metalloenzymes and iron-sulfur proteins"
-      ],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "openalex:S67393510"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.6992524",
-      "journal": "Angew",
-      "title": "Deaminative Allylation of Primary Amines",
-      "abstract": "ABSTRACT Nitrogen atoms play pivotal roles in governing molecular properties and biological activity. Accordingly, nitrogen‐atom manipulation has emerged as a powerful strategy for skeletal remodeling. However, its integration into classical reactions to redirect their inherent pathways and outcomes remains largely unexplored. Here, we report a deaminative allylation enabled by embedding a photoinduced N‐atom deletion process within a classical N‐allylation reaction. This reaction‐reprogramming strategy transforms ubiquitous alkylamines into α‐substituted acrylates and acrylamides—privileged motifs in covalent drugs, chemical biology probes, and functional materials. Mechanistic studies reveal multiple parallel pathways, including deaminative allylation of alkylamines, formal nitrogen‐atom deletion of allyl alkylamine intermediates, and denitrogenation of allyl alkyldiazene species, which collectively converge on the same products. The method exhibits broad substrate scope and excellent functional‐group tolerance, enabling late‐stage modification of natural products and pharmaceuticals. Beyond providing streamlined access to valuable acrylic compounds, this work establishes a pathway‐convergent reaction paradigm that harnesses, rather than suppresses, competing reaction pathways, offering new opportunities for bioactive‐molecule discovery.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Click Chemistry and Applications",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Radical Photochemical Reactions",
-        "Chemical Synthesis and Analysis"
-      ],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "openalex:S67393510"
-      ],
-      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.5409854",
@@ -1102,30 +970,6 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1021/jacs.6c15781",
-      "journal": "JACS",
-      "title": "A Convenient Conversion of Amides to Ketones",
-      "abstract": "Abstract Amides are classic motifs for further functional group transformations because of their abundance and well-established syntheses. Herein we describe a general route to ketones from secondary amides through direct nitrogen deletion, preserving the remainder of the structural scaffold. The transformation proceeds through rapid oxidation of hydrazides, which are accessed via N-amination of the parent amides. Our protocol employs simple, commercial reagents in a wet organic solvent, open to air. This method can be performed in one pot and translates smoothly to gram scale, demonstrating a unique retrosynthetic logic toward ketone targets.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Advanced Synthetic Organic Chemistry",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Chemical Synthesis and Analysis",
-        "Catalytic C–H Functionalization Methods"
-      ],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "openalex:S111155417"
-      ],
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1021/jacs.6c09329",
       "journal": "JACS",
       "title": "Beyond Symmetric Motifs: Asymmetric Small-Molecule Recognition Directs a New Poly(adenine) Assembly",
@@ -1139,30 +983,6 @@
         "Life Sciences",
         "Advanced biosensing and bioanalysis techniques",
         "Supramolecular Chemistry and Complexes"
-      ],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "openalex:S111155417"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/jacs.6c07021",
-      "journal": "JACS",
-      "title": "Chiral Counteranion-Directed Asymmetric Intramolecular Rhodium-Catalyzed [(3+2+2)] Carbocyclization Reactions with Alkylidenecyclopropanes",
-      "abstract": "Abstract Transition metal-catalyzed higher-order [m+n+o] carbocyclizations of alkylidenecyclopropanes (ACPs) provide atom-economical routes to complex polycyclic frameworks; however, achieving high enantioselectivity in these transformations remains extremely challenging. Herein, we report the first asymmetric intramolecular rhodium-catalyzed [(3+2+2)] carbocyclization of ACPs, enabled by asymmetric counteranion-directed catalysis (ACDC), to afford bridged tricyclic products with high diastereo- and enantioselectivity. Conventional ligand-controlled approaches failed to provide satisfactory reactivity or enantioinduction, whereas generating a chiral phosphate counteranion in situ from a silver phosphate (e.g., Ag-(S)-TRIP) via salt metathesis with a rhodium complex markedly enhanced enantioselectivity. Enantiomeric excesses of up to 93% were achieved using a matched combination of chiral phosphate and phosphoramidite ligands. The ACDC strategy also enables kinetic resolution of 1,5-diene-tethered ACPs in a new rhodium-catalyzed [(3+2+2)] carbocyclization, providing access to previously inaccessible tricyclic scaffolds with excellent stereocontrol. These results constitute rare examples of highly stereoselective rhodium-catalyzed higher-order carbocyclizations of ACPs and demonstrate that chiral counteranion-directed catalysis can enable asymmetric transition metal-catalyzed [m+n+o] cyclizations that remain inaccessible to conventional chiral-ligand control.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Cyclopropane Reaction Mechanisms",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Catalytic Alkyne Reactions",
-        "Catalytic C–H Functionalization Methods"
       ],
       "sources": [
         "crossref:0002-7863:online",
@@ -2233,38 +2053,6 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03255",
-      "journal": "Organic Letters",
-      "title": "Biomimetic Base-Exchange Reaction for Late-Stage Synthesis of Stereodivergent NAADP+ and NAD(P)+ Derivatives",
-      "abstract": "Abstract Nicotinic acid adenine dinucleotide phosphate (NAADP+) and related NAD(P)+ analogues are important tools for calcium signaling, redox biology, and chemical biology. Their preparation, however, remains constrained by lengthy dinucleotide synthesis and enzyme-dependent base exchange. Here we describe a biomimetic chemical base-exchange reaction that converts native NAD+ or NADP+ directly into NAAD+, NAADP+, and modified pyridine nucleotide analogues. Fe(III) promotes substitution of the nicotinamide unit through synergistic activation of the cationic C–N glycosidic bond.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03247",
-      "journal": "Organic Letters",
-      "title": "Direct C6-Alkynylation of Indoles by Palladium/Norbornene Cooperative Catalysis",
-      "abstract": "Abstract C6–H alkynylation of indoles is a highly attractive yet challenging transformation Herein we report a palladium/norbornene cooperative catalysis strategy that enables direct and regioselective C6–H alkynylation of indoles. The method exhibits broad substrate generality, accommodating a wide range of functional groups, fused heterocycles, and complex bioactive molecules. Mechanistic studies reveal that neither C–H cleavage step is turnover-limiting and that both the palladium catalyst and ethynyl benziodoxolone participate in the turnover-limiting step.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published"
-      ],
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1021/acs.orglett.6c03495",
       "journal": "Organic Letters",
       "title": "Functionalization of Polyamide Cages through Peripheral Postmodification",
@@ -2313,70 +2101,6 @@
       "date": "2026-09-18",
       "type": "journal-article",
       "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "openalex:S201989124"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03151",
-      "journal": "Organic Letters",
-      "title": "Nondirected Palladium-Catalyzed C(sp3)–H Oxygenation with H2O2",
-      "abstract": "Abstract Palladium(II) complexes of the TPA family (TPA = tris(2-pyridylmethyl)amine) catalyze selective C(sp3)–H oxyfunctionalizations but have so far been unable to activate “green” oxidant H2O2, instead requiring peroxycarboxylic acids (2–4 equiv, best results coming with m-CPBA). Herein, we show that hydrogen peroxide itself, conveniently delivered as its solid surrogates (UHP and SPC), can serve as the terminal oxidant in Pd(TPA)-catalyzed nondirected C(sp3)–H oxygenation, with carboxylic acid anhydrides as cocatalytic H2O2 activators. Depending on the conditions, alcohols or ketones form, with the catalyst sustaining up to 1.6 × 104 turnovers. The protocol is applied to the selective oxidation of complex natural products (steroids and terpenoids).",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03147",
-      "journal": "Organic Letters",
-      "title": "Photoredox-Catalyzed Radical Heterocyclization of Heteroatom-Tethered Alkenes with α-Iodonium Diazo Compounds",
-      "abstract": "Abstract A photoredox-catalyzed radical heterocyclization of alkenoic acids and sulfonamides with α-iodonium diazo compounds is reported. The reaction delivers diazomethyl-containing lactones and pyrrolidines in good yields with full retention of the diazo group. The synthetic utility is demonstrated by a gram-scale synthesis and downstream derivatizations under mild, redox-neutral conditions. A plausible radical–polar crossover mechanism is proposed for this transformation.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Radical Photochemical Reactions",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Cyclopropane Reaction Mechanisms",
-        "Catalytic C–H Functionalization Methods"
-      ],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "openalex:S201989124"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03339",
-      "journal": "Organic Letters",
-      "title": "Rh(III)-Catalyzed C–H Activation/[3 + 2] Cycloaddition for the Synthesis of Functionalized Pyrrolo[1,2- a ]imidazole Derivatives",
-      "abstract": "Abstract We report a Rh(III)-catalyzed C–H activation/[3 + 2] cycloaddition of heterocyclic ketene aminals (HKAs) 1 with 2,3-diaryl-2H-azirines 2, affording functionalized pyrrolo[1,2-a]imidazoles 3 in moderate to excellent yields. The native nitrogen atom of HKAs serves as an intrinsic directing group, enabling selective α-C–H activation without prior substrate functionalization. The azirines act as unusual C2 synthons, enabling a distinct and highly regioselective [3 + 2] annulation mode complementary to those of alkynes and alkenes. The reaction proceeds under [Cp*RhCl2]2/AgBF4/HOAc catalysis in refluxing acetonitrile under air and exhibits broad substrate scope and excellent functional-group tolerance. Mechanistic studies support exclusive α-C–H activation and a plausible Rh(III)-catalyzed pathway. This method provides a practical, atom- and step-economical route to structurally diverse pyrrolo[1,2-a]imidazoles.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Catalytic C–H Functionalization Methods",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Synthesis and Catalytic Reactions",
-        "Synthesis and Characterization of Pyrroles"
-      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
@@ -4926,22 +4650,6 @@
   ],
   "potentialGaps": [
     {
-      "doi": "10.1021/jacs.6c12832",
-      "journal": "JACS",
-      "title": "Synthesis, Evaluation, and Context for Applications of SF5-Containing [1.1.1]Bicyclopentane and [ 2 ]Staffane “Hybrid Bioisosteres”",
-      "abstract": "Abstract Bioisosteric replacements are conventionally applied as single-variable changes to a parent molecule during drug discovery campaigns. Herein, we evaluate hybrid bioisosteric replacements as strategic combinations of multiple substitutions that counterbalance the physicochemical consequences of incorporating single bioisosteres individually. In this context, we validate SF5-substituted [1.1.1]bicyclopentanes (SF5-BCPs) and SF5-[2]staffanes (SF5-BCP-BCPs) as hybrid bioisostere motifs that have not been field-tested due to lack of access to versatile building blocks. We address a key synthetic limitation by developing scalable routes to carboxylic acid-containing intermediates that facilitate incorporation of these motifs into drug-like molecules via carbonyl group manipulations. These advances enable (1) crystallographic studies that contextualize structural features of these motifs, (2) syntheses of structurally diverse pharmaceutical and agrochemical derivatives, and (3) systematic evaluation of single (SF5-Ph → SF5-BCP) and multicomponent “hybrid” bioisosteric replacements (CF3-Ph → SF5-BCP and CF3-Ph-Ph → SF5-BCP-BCP) through in vitro ADME profiling. Finally, we investigate the chemical stability profile of these novel SF5-[2]staffanes, establish an extensive suite of building blocks, and demonstrate their compatibility with reactions frequently used in medicinal chemistry. Together, the results of this extensive study position SF5-BCPs and SF5-[2]staffanes as practical hybrid bioisosteres for tuning molecular properties in drug discovery.",
-      "date": "2026-09-19",
-      "type": "journal-article",
-      "topics": [],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published"
-      ],
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1021/acscatal.6c05165",
       "journal": "ACS Catalysis",
       "title": "Amplifying Electron Sink Effect and Piezoelectric Polarization in Size-Minimized Nitrogen-Rich Carbon Nitride Nanosheets for Boosting H2O2 Piezo-Photosynthesis under Pure Water",
@@ -4986,28 +4694,6 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1021/acscatal.6c04593",
-      "journal": "ACS Catalysis",
-      "title": "Glycopeptide Assembly via Selective Manganese(I)-Catalyzed C–H Alkenylations in Organic Media and in Water",
-      "abstract": "Abstract Glycopeptides are key structural motifs of powerful pharmaceuticals and of relevance for the molecular understanding in the life sciences. Despite major advances, the synthesis of glycopeptides largely relies on prefunctionalized substrates and lengthy synthesis sequences. In sharp contrast, the assembly of diverse glycopeptides has now been accomplished under exceedingly mild reaction conditions by manganese-catalyzed C–H alkenylations with ample scope. The C–H activation strategy was characterized by distinctive elements of regio-, site-, and chemo-selectivities with structurally complex substrates at room temperature by a benign manganese catalyst. The distinct power of our approach was mirrored by the assembly of hybrid glycopeptides featuring various fluorogenic labels with large Stokes shifts. The robust nature of our manganese(I) catalyst was reflected by its full tolerance for water as a reaction medium in micellar catalysis.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Carbohydrate Chemistry and Synthesis",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Click Chemistry and Applications",
-        "Fluorine in Organic Chemistry"
-      ],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "openalex:S37391459"
-      ],
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1021/acscatal.6c02273",
       "journal": "ACS Catalysis",
       "title": "Probing Ethanol Dehydration with Silicon-Doped Aluminophosphates under Realistic Working Conditions Using Inelastic Neutron Scattering and Infrared Measurements",
@@ -5021,28 +4707,6 @@
         "Physical Sciences",
         "Catalysis and Oxidation Reactions",
         "Catalysts for Methane Reforming"
-      ],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "openalex:S37391459"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acscatal.6c05065",
-      "journal": "ACS Catalysis",
-      "title": "Synergistic Effects of Brønsted Acid Site and Lewis Acid Site of Nb2O5 on the Direct Amination of Alcohols",
-      "abstract": "Abstract Direct amination of alcohols is an attractive synthetic method of secondary amines as water is generated as the sole byproduct. Solid acid catalysts have been developed with the advantages of their high stability and easily tunable acid nature. Herein, we report the synergistic effects of the Brønsted and Lewis acid sites of Nb2O5 on the amination of alcohols. Calcination of Nb2O5 altered the ratio of Brønsted acid sites to Lewis acid sites along with the removal of water, promoting the direct amination of alcohols. Nb2O5 calcined at 573 K (Nb2O5-573) acted as a reusable heterogeneous catalyst for the direct amination of alcohols to give the corresponding secondary amines in high yields. The formation rate per acid site of Nb2O5-573 was 21.7 h–1, which is higher than those of the previously reported solid acid catalysts (0.4–8.5 h–1). A variety of alcohols and aromatic amines were applicable with this catalytic system to afford the corresponding secondary amines in moderate to high yields. Catalyst characterizations and control experiments using chiral alcohols demonstrated that the direct amination of alcohols over Nb2O5 mainly proceeded through an SN2-type nucleophilic substitution mechanism, whereas an SN1-type nucleophilic substitution mechanism has been proposed for the previously reported solid acid catalysts. Both Brønsted and Lewis acid sites interact with the hydroxy group of alcohols to enhance the leaving ability of the hydroxy group, resulting in the improvement of nucleophilic substitution by amines.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Asymmetric Hydrogenation and Catalysis",
-        "Inorganic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Chemical Synthesis and Reactions",
-        "Asymmetric Synthesis and Catalysis"
       ],
       "sources": [
         "crossref:2155-5435:online",
@@ -5084,30 +4748,6 @@
         "crossref:2155-5435:online",
         "crossref:2155-5435:published",
         "openalex:S37391459"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.8911828",
-      "journal": "Angew",
-      "title": "Access to Axially Chiral Diaryl Ethers via Catalytic Atroposelective [2+2+2] Cycloaddition of Alkynyloxybenzenes",
-      "abstract": "ABSTRACT Despite the growing importance of axially chiral diaryl ethers, efficient catalytic asymmetric methods for their synthesis remain rare, and existing approaches are largely limited to desymmetrization. Here, we report a direct and atroposelective annulation strategy to address this challenge. Using a rhodium catalyst, this method constructs diaryl ethers bearing C─O chiral axes in a single step from readily accessible phenoxyalkynes and 1,6‐diynes. The approach provides a modular and efficient pathway that avoids preassembled chiral precursors, affording atropisomers in high yields with excellent enantiocontrol and chemoselectivity. The synthetic utility of this methodology is further demonstrated by converting the products into valuable chiral building blocks and chiral ligands.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Axial and Atropisomeric Chirality Synthesis",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Catalytic C–H Functionalization Methods",
-        "Catalytic Alkyne Reactions"
-      ],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "openalex:S67393510"
       ],
       "reviewPriority": "high"
     },
@@ -5221,54 +4861,6 @@
         "Physical Sciences",
         "Catalytic C–H Functionalization Methods",
         "Catalytic Cross-Coupling Reactions"
-      ],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "openalex:S67393510"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.5852828",
-      "journal": "Angew",
-      "title": "De Novo Design and Structural Optimization of Mn(salen)‐Based Artificial Metalloenzymes for Asymmetric Sulfoxidation",
-      "abstract": "ABSTRACT Artificial metalloenzymes (ArMs) exhibit exceptional selectivity, yet extending their reactivity beyond native cofactors remains a major challenge. While previous designs using native protein scaffolds to incorporate nonnative cofactors have been reported, de novo protein design enables tailored scaffolds that incorporate nonnative cofactors, unlocking transformations inaccessible to natural enzymes. Here, we report the computational design of de novo proteins that bind Mn(salen)‐based complexes for asymmetric sulfoxidation. The resulting ArMs outperform the free cofactor, achieving up to 45% yield and an enantiomeric ratio (e.r.) of 26:74 under optimized conditions. A 1.5 Å resolution crystal structure confirms the designed architecture and reveals key secondary‐sphere interactions that govern reactivity. Guided by these insights, rational mutagenesis enhanced performance up to 79% yield and an e.r. up to 16:84. This work establishes a general strategy for integrating complex nonnative cofactors into de novo scaffolds, enabling selective catalysts for reactions beyond the reach of natural enzymes.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Cyclopropane Reaction Mechanisms",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Metal-Catalyzed Oxygenation Mechanisms",
-        "Metalloenzymes and iron-sulfur proteins"
-      ],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "openalex:S67393510"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.6992524",
-      "journal": "Angew",
-      "title": "Deaminative Allylation of Primary Amines",
-      "abstract": "ABSTRACT Nitrogen atoms play pivotal roles in governing molecular properties and biological activity. Accordingly, nitrogen‐atom manipulation has emerged as a powerful strategy for skeletal remodeling. However, its integration into classical reactions to redirect their inherent pathways and outcomes remains largely unexplored. Here, we report a deaminative allylation enabled by embedding a photoinduced N‐atom deletion process within a classical N‐allylation reaction. This reaction‐reprogramming strategy transforms ubiquitous alkylamines into α‐substituted acrylates and acrylamides—privileged motifs in covalent drugs, chemical biology probes, and functional materials. Mechanistic studies reveal multiple parallel pathways, including deaminative allylation of alkylamines, formal nitrogen‐atom deletion of allyl alkylamine intermediates, and denitrogenation of allyl alkyldiazene species, which collectively converge on the same products. The method exhibits broad substrate scope and excellent functional‐group tolerance, enabling late‐stage modification of natural products and pharmaceuticals. Beyond providing streamlined access to valuable acrylic compounds, this work establishes a pathway‐convergent reaction paradigm that harnesses, rather than suppresses, competing reaction pathways, offering new opportunities for bioactive‐molecule discovery.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Click Chemistry and Applications",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Radical Photochemical Reactions",
-        "Chemical Synthesis and Analysis"
       ],
       "sources": [
         "crossref:1433-7851:online",
@@ -5448,30 +5040,6 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1021/jacs.6c15781",
-      "journal": "JACS",
-      "title": "A Convenient Conversion of Amides to Ketones",
-      "abstract": "Abstract Amides are classic motifs for further functional group transformations because of their abundance and well-established syntheses. Herein we describe a general route to ketones from secondary amides through direct nitrogen deletion, preserving the remainder of the structural scaffold. The transformation proceeds through rapid oxidation of hydrazides, which are accessed via N-amination of the parent amides. Our protocol employs simple, commercial reagents in a wet organic solvent, open to air. This method can be performed in one pot and translates smoothly to gram scale, demonstrating a unique retrosynthetic logic toward ketone targets.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Advanced Synthetic Organic Chemistry",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Chemical Synthesis and Analysis",
-        "Catalytic C–H Functionalization Methods"
-      ],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "openalex:S111155417"
-      ],
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1021/jacs.6c09329",
       "journal": "JACS",
       "title": "Beyond Symmetric Motifs: Asymmetric Small-Molecule Recognition Directs a New Poly(adenine) Assembly",
@@ -5485,30 +5053,6 @@
         "Life Sciences",
         "Advanced biosensing and bioanalysis techniques",
         "Supramolecular Chemistry and Complexes"
-      ],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "openalex:S111155417"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/jacs.6c07021",
-      "journal": "JACS",
-      "title": "Chiral Counteranion-Directed Asymmetric Intramolecular Rhodium-Catalyzed [(3+2+2)] Carbocyclization Reactions with Alkylidenecyclopropanes",
-      "abstract": "Abstract Transition metal-catalyzed higher-order [m+n+o] carbocyclizations of alkylidenecyclopropanes (ACPs) provide atom-economical routes to complex polycyclic frameworks; however, achieving high enantioselectivity in these transformations remains extremely challenging. Herein, we report the first asymmetric intramolecular rhodium-catalyzed [(3+2+2)] carbocyclization of ACPs, enabled by asymmetric counteranion-directed catalysis (ACDC), to afford bridged tricyclic products with high diastereo- and enantioselectivity. Conventional ligand-controlled approaches failed to provide satisfactory reactivity or enantioinduction, whereas generating a chiral phosphate counteranion in situ from a silver phosphate (e.g., Ag-(S)-TRIP) via salt metathesis with a rhodium complex markedly enhanced enantioselectivity. Enantiomeric excesses of up to 93% were achieved using a matched combination of chiral phosphate and phosphoramidite ligands. The ACDC strategy also enables kinetic resolution of 1,5-diene-tethered ACPs in a new rhodium-catalyzed [(3+2+2)] carbocyclization, providing access to previously inaccessible tricyclic scaffolds with excellent stereocontrol. These results constitute rare examples of highly stereoselective rhodium-catalyzed higher-order carbocyclizations of ACPs and demonstrate that chiral counteranion-directed catalysis can enable asymmetric transition metal-catalyzed [m+n+o] cyclizations that remain inaccessible to conventional chiral-ligand control.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Cyclopropane Reaction Mechanisms",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Catalytic Alkyne Reactions",
-        "Catalytic C–H Functionalization Methods"
       ],
       "sources": [
         "crossref:0002-7863:online",
@@ -5820,38 +5364,6 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03255",
-      "journal": "Organic Letters",
-      "title": "Biomimetic Base-Exchange Reaction for Late-Stage Synthesis of Stereodivergent NAADP+ and NAD(P)+ Derivatives",
-      "abstract": "Abstract Nicotinic acid adenine dinucleotide phosphate (NAADP+) and related NAD(P)+ analogues are important tools for calcium signaling, redox biology, and chemical biology. Their preparation, however, remains constrained by lengthy dinucleotide synthesis and enzyme-dependent base exchange. Here we describe a biomimetic chemical base-exchange reaction that converts native NAD+ or NADP+ directly into NAAD+, NAADP+, and modified pyridine nucleotide analogues. Fe(III) promotes substitution of the nicotinamide unit through synergistic activation of the cationic C–N glycosidic bond.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03247",
-      "journal": "Organic Letters",
-      "title": "Direct C6-Alkynylation of Indoles by Palladium/Norbornene Cooperative Catalysis",
-      "abstract": "Abstract C6–H alkynylation of indoles is a highly attractive yet challenging transformation Herein we report a palladium/norbornene cooperative catalysis strategy that enables direct and regioselective C6–H alkynylation of indoles. The method exhibits broad substrate generality, accommodating a wide range of functional groups, fused heterocycles, and complex bioactive molecules. Mechanistic studies reveal that neither C–H cleavage step is turnover-limiting and that both the palladium catalyst and ethynyl benziodoxolone participate in the turnover-limiting step.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published"
-      ],
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1021/acs.orglett.6c03495",
       "journal": "Organic Letters",
       "title": "Functionalization of Polyamide Cages through Peripheral Postmodification",
@@ -5883,70 +5395,6 @@
       "date": "2026-09-18",
       "type": "journal-article",
       "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "openalex:S201989124"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03151",
-      "journal": "Organic Letters",
-      "title": "Nondirected Palladium-Catalyzed C(sp3)–H Oxygenation with H2O2",
-      "abstract": "Abstract Palladium(II) complexes of the TPA family (TPA = tris(2-pyridylmethyl)amine) catalyze selective C(sp3)–H oxyfunctionalizations but have so far been unable to activate “green” oxidant H2O2, instead requiring peroxycarboxylic acids (2–4 equiv, best results coming with m-CPBA). Herein, we show that hydrogen peroxide itself, conveniently delivered as its solid surrogates (UHP and SPC), can serve as the terminal oxidant in Pd(TPA)-catalyzed nondirected C(sp3)–H oxygenation, with carboxylic acid anhydrides as cocatalytic H2O2 activators. Depending on the conditions, alcohols or ketones form, with the catalyst sustaining up to 1.6 × 104 turnovers. The protocol is applied to the selective oxidation of complex natural products (steroids and terpenoids).",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03147",
-      "journal": "Organic Letters",
-      "title": "Photoredox-Catalyzed Radical Heterocyclization of Heteroatom-Tethered Alkenes with α-Iodonium Diazo Compounds",
-      "abstract": "Abstract A photoredox-catalyzed radical heterocyclization of alkenoic acids and sulfonamides with α-iodonium diazo compounds is reported. The reaction delivers diazomethyl-containing lactones and pyrrolidines in good yields with full retention of the diazo group. The synthetic utility is demonstrated by a gram-scale synthesis and downstream derivatizations under mild, redox-neutral conditions. A plausible radical–polar crossover mechanism is proposed for this transformation.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Radical Photochemical Reactions",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Cyclopropane Reaction Mechanisms",
-        "Catalytic C–H Functionalization Methods"
-      ],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "openalex:S201989124"
-      ],
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03339",
-      "journal": "Organic Letters",
-      "title": "Rh(III)-Catalyzed C–H Activation/[3 + 2] Cycloaddition for the Synthesis of Functionalized Pyrrolo[1,2- a ]imidazole Derivatives",
-      "abstract": "Abstract We report a Rh(III)-catalyzed C–H activation/[3 + 2] cycloaddition of heterocyclic ketene aminals (HKAs) 1 with 2,3-diaryl-2H-azirines 2, affording functionalized pyrrolo[1,2-a]imidazoles 3 in moderate to excellent yields. The native nitrogen atom of HKAs serves as an intrinsic directing group, enabling selective α-C–H activation without prior substrate functionalization. The azirines act as unusual C2 synthons, enabling a distinct and highly regioselective [3 + 2] annulation mode complementary to those of alkynes and alkenes. The reaction proceeds under [Cp*RhCl2]2/AgBF4/HOAc catalysis in refluxing acetonitrile under air and exhibits broad substrate scope and excellent functional-group tolerance. Mechanistic studies support exclusive α-C–H activation and a plausible Rh(III)-catalyzed pathway. This method provides a practical, atom- and step-economical route to structurally diverse pyrrolo[1,2-a]imidazoles.",
-      "date": "2026-09-18",
-      "type": "journal-article",
-      "topics": [
-        "Catalytic C–H Functionalization Methods",
-        "Organic Chemistry",
-        "Chemistry",
-        "Physical Sciences",
-        "Synthesis and Catalytic Reactions",
-        "Synthesis and Characterization of Pyrroles"
-      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
