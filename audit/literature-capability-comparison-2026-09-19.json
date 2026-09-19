@@ -1,0 +1,121 @@
+{
+  "generatedAt": "2026-09-19T15:08:00+08:00",
+  "purpose": "Evidence-based comparison of the prior and upgraded literature discovery/completeness capability. The promotion criterion is higher recall/completeness under the project's requirement to avoid missed organic-synthesis papers; this does not claim higher semantic precision.",
+  "prior": {
+    "referenceCommit": "8f768807372e55cc46cd97d1a381e3edfa37ee38",
+    "auditBlobSha": "2bf18d6df41def88763196c4b0f31c2bcc6f14a7",
+    "report": {
+      "generatedAt": "2026-09-19T05:56:56.629Z",
+      "auditVersion": 3,
+      "windowMode": "rolling-72h-calendar",
+      "targetJournals": 10,
+      "sourceRecords": 217,
+      "criticalSourceFailures": 0
+    },
+    "structure": {
+      "journalConfiguration": "hard-coded inside audit-literature.mjs",
+      "windowDays": 3,
+      "crossrefModes": [
+        "online",
+        "published"
+      ],
+      "openAlex": true,
+      "lateDepositRescue": false,
+      "sourceFamilyHealth": false,
+      "sourceAgreementCounts": false,
+      "prospectivePerJournalActivation": false,
+      "regressionGuard": false
+    }
+  },
+  "upgraded": {
+    "referenceCommit": "7a212252a399abff49ac95978120df0dbc18cb3d",
+    "auditBlobSha": "bafbb8d02495dd8d5d24a106a49f6efd6a897e7a",
+    "journalRegistryBlobSha": "05ccdd8a66522027f35e327082cd45e88e75e897",
+    "workflowBlobSha": "d8219dfe731a2d93370fe720c13160508f3cf8c6",
+    "completenessGuardBlobSha": "d2292f048bf06f77dda70d3e41ab089085914aa4",
+    "stableFingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
+    "report": {
+      "generatedAt": "2026-09-19T06:55:25.883Z",
+      "auditVersion": 4,
+      "windowMode": "rolling-7d-calendar",
+      "targetJournals": 15,
+      "sourceRecords": 591,
+      "criticalSourceFailures": 0,
+      "sourceFamilyGaps": 0,
+      "lateIndexed": 3
+    },
+    "structure": {
+      "journalConfiguration": "canonical shared/literature-journals.js registry",
+      "windowDays": 7,
+      "crossrefModes": [
+        "online",
+        "published",
+        "created"
+      ],
+      "openAlex": true,
+      "lateDepositRescue": true,
+      "sourceFamilyHealth": true,
+      "sourceAgreementCounts": true,
+      "prospectivePerJournalActivation": true,
+      "regressionGuard": true
+    }
+  },
+  "controlledEvidence": {
+    "description": "Same upgraded 15-journal, seven-day configuration before and after enabling late-deposit rescue.",
+    "withoutLateDepositRescue": {
+      "reportCommit": "c28ca0732ec1adaac75f6e90e82c52dd299946ba",
+      "generatedAt": "2026-09-19T06:32:39.774Z",
+      "sourceRecords": 588,
+      "missingFromGallery": 332,
+      "potentialGaps": 132
+    },
+    "withLateDepositRescue": {
+      "reportCommit": "5365635fcfc80f0a42bd0bec1b71cff3ace86011",
+      "generatedAt": "2026-09-19T06:42:58.095Z",
+      "sourceRecords": 591,
+      "missingFromGallery": 335,
+      "potentialGaps": 133
+    },
+    "additionalRecords": [
+      {
+        "doi": "10.1038/d41586-026-02901-x",
+        "journal": "Nature",
+        "publicationDate": "2026-09-11",
+        "reviewPriority": "normal"
+      },
+      {
+        "doi": "10.1021/acscatal.6c03322",
+        "journal": "ACS Catalysis",
+        "publicationDate": "2026-09-08",
+        "reviewPriority": "normal"
+      },
+      {
+        "doi": "10.1021/acscatal.6c02362",
+        "journal": "ACS Catalysis",
+        "publicationDate": "2026-08-31",
+        "reviewPriority": "high"
+      }
+    ],
+    "interpretation": "The old window-filter behavior would never present these late-deposited records for semantic review. The rescue increases recall by routing them to review. Their eventual inclusion/exclusion remains a separate semantic decision."
+  },
+  "safeguards": {
+    "newJournalsActiveFrom": "2026-09-19",
+    "newJournals": [
+      "Chem",
+      "Chemical Science",
+      "CCS Chemistry",
+      "Science Advances",
+      "Chinese Journal of Chemistry"
+    ],
+    "noPreActivationBackfill": true,
+    "keywordRulesOnlyPrioritize": true,
+    "allDoiDifferencesRemainReviewable": true,
+    "sourceFailureNeverMeansZeroPapers": true,
+    "ciRegressionGuard": true
+  },
+  "tradeoffs": {
+    "reviewWorkload": "Higher because more candidates are intentionally exposed to review.",
+    "precision": "Not asserted to improve. Some rescued records can be irrelevant and should be excluded during semantic review.",
+    "conclusion": "For the user's completeness-first requirement, the upgraded capability is demonstrably stronger because it expands independent discovery coverage and catches records the prior structure could not surface, while activation cutoffs and review semantics prevent automatic historical backfill or automatic inclusion."
+  }
+}
