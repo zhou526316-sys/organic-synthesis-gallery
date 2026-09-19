@@ -46,6 +46,20 @@ let tray = null;
 let dashboard = window;
 let quitting = false;
 let cycleRunning = false;
+let liveScan = {
+  running: false,
+  total: 0,
+  current: 0,
+  currentDoi: '',
+  saved: 0,
+  noOfficial: 0,
+  failed: 0,
+  pdfDownloaded: 0,
+  other: 0,
+  startedAt: 0,
+  finishedAt: 0,
+  recent: [],
+};
 let vpnWatchTimer = null;
 let pollTimer = null;
 let lastQueue = [];
@@ -1727,13 +1741,62 @@ async function processBatch(items) {
   const selected = scanAllMode ? eligible : eligible.slice(0, Math.max(1, Number(config.maxPerCycle)||12));
   const results = [];
   const delayMs = localOnlyMode ? Math.max(1500, Number(config.localScanDelayMs || 5000)) : 0;
+
+  liveScan = {
+    running: true,
+    total: selected.length,
+    current: 0,
+    currentDoi: '',
+    saved: 0,
+    noOfficial: 0,
+    failed: 0,
+    pdfDownloaded: 0,
+    other: 0,
+    startedAt: Date.now(),
+    finishedAt: 0,
+    recent: [],
+  };
+  stageStatus = localOnlyMode ? '本机/VPN TOC 扫描正在进行…' : 'TOC 扫描正在进行…';
+  await refreshDashboard();
+
   for (let index = 0; index < selected.length; index += 1) {
     const item = selected[index];
+    const doi = String(item.doi || '');
+    liveScan.current = index + 1;
+    liveScan.currentDoi = doi;
+    stageStatus = `正在处理 ${index + 1}/${selected.length}：${doi}`;
+    await refreshDashboard();
+
     const result = await processItem(item, { ignoreCooldown: localOnlyMode });
     results.push(result);
-    await log('local_scan_progress', { current: index + 1, total: selected.length, doi: String(item.doi || ''), status: result?.status || 'unknown' });
+
+    const status = result?.status || 'unknown';
+    if (['official','saved_local'].includes(status)) liveScan.saved += 1;
+    else if (['no_candidate','no_official_toc'].includes(status)) liveScan.noOfficial += 1;
+    else if (status === 'failed') liveScan.failed += 1;
+    else if (status === 'pdf_downloaded') liveScan.pdfDownloaded += 1;
+    else liveScan.other += 1;
+
+    liveScan.recent.unshift({
+      doi,
+      publisher: classify(doi),
+      status,
+      reason: result?.reason || '',
+      localPath: result?.localPath || '',
+      at: Date.now(),
+    });
+    liveScan.recent = liveScan.recent.slice(0, 12);
+
+    await log('local_scan_progress', { current: index + 1, total: selected.length, doi, status });
+    await refreshDashboard();
     if (delayMs && index + 1 < selected.length) await new Promise(resolve => setTimeout(resolve, delayMs));
   }
+
+  liveScan.running = false;
+  liveScan.currentDoi = '';
+  liveScan.finishedAt = Date.now();
+  stageStatus = `扫描完成：已保存 ${liveScan.saved}，未发现官方 TOC ${liveScan.noOfficial}，失败 ${liveScan.failed}`;
+  await refreshDashboard();
   return results;
 }
 
@@ -1953,6 +2016,21 @@ function escapeHtml(value) {
 
 function dashboardHtml() {
   const summary = state.lastSummary || {};
+  const scan = liveScan || {};
+  const scanPercent = Number(scan.total || 0) > 0 ? Math.round((Number(scan.current || 0) / Number(scan.total || 1)) * 100) : 0;
+  const scanRows = (scan.recent || []).map(item => {
+    const label = item.status === 'saved_local' || item.status === 'official'
+      ? '已抓到官方 TOC'
+      : item.status === 'no_candidate' || item.status === 'no_official_toc'
+        ? '未发现官方 TOC'
+        : item.status === 'failed'
+          ? '失败'
+          : item.status === 'pdf_downloaded'
+            ? '已下载 PDF'
+            : item.status;
+    const cls = item.status === 'saved_local' || item.status === 'official' ? 'ok' : item.status === 'failed' ? 'bad' : '';
+    return `<tr><td>${escapeHtml(item.doi)}</td><td>${escapeHtml(String(item.publisher || '').toUpperCase())}</td><td class="${cls}">${escapeHtml(label)}</td><td>${escapeHtml(item.reason || '')}</td></tr>`;
+  }).join('');
   const net = Object.keys(network).length ? network : (summary.net || {});
   const restricted = lastQueue.filter(x => ['acs','wiley'].includes(classify(x.doi))).length;
   const rows = lastQueue.slice(0, 12).map(x => `<tr><td>${escapeHtml(x.doi)}</td><td>${escapeHtml(classify(x.doi).toUpperCase())}</td></tr>`).join('');
@@ -1970,10 +2048,25 @@ function dashboardHtml() {
     h1{font-size:23px;margin:0 0 6px}.sub{color:#666;margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
     .card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px}.k{font-size:12px;color:#777}.v{font-size:19px;margin-top:4px}
     .ok{color:#188038}.bad{color:#b3261e}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.buttons a{background:#fff;border:1px solid #bbb;border-radius:8px;padding:9px 13px;text-decoration:none;color:#202124}
+    .scanbox{background:#fff;border:1px solid #d8dadd;border-radius:12px;padding:16px;margin:14px 0}.scanhead{display:flex;justify-content:space-between;gap:12px;align-items:center}.progress{height:12px;background:#e6e8eb;border-radius:999px;overflow:hidden;margin:12px 0}.bar{height:100%;background:#188038;width:${scanPercent}%}.current-doi{font-family:Consolas,monospace;font-size:13px;overflow-wrap:anywhere;background:#f6f7f9;border-radius:7px;padding:8px;margin-top:8px}.scan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.scan-metric{background:#f8f9fa;border-radius:8px;padding:10px}.scan-metric .n{font-size:22px;font-weight:600}.scan-metric .l{font-size:11px;color:#666}
     table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden}td,th{padding:8px 10px;border-bottom:1px solid #eee;text-align:left;font-size:13px}
     .note{font-size:12px;color:#666;margin-top:12px;line-height:1.5}.errors{background:#fff1f0;border:1px solid #d77;border-radius:8px;padding:12px;margin:12px 0;overflow-wrap:anywhere}.status{padding:10px 0;color:#174d32}.credentials{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px;margin:14px 0}.credentials label{display:block;font-size:13px;margin:10px 0 4px}.credentials input{box-sizing:border-box;width:100%;padding:9px;border:1px solid #bbb;border-radius:6px}.credentials button{margin:10px 8px 0 0;padding:8px 12px;border:1px solid #777;border-radius:7px;background:#fff}.credentials .primary{background:#174d32;color:#fff;border-color:#174d32}
   </style></head><body><div class="wrap"><h1>Organic Synthesis Gallery · TOC Collector</h1><div class="sub">程序已启动 · TOC Collector ${escapeHtml(app.getVersion())} started successfully<br>${closeHint}</div>
   <div class="status">${escapeHtml(stageStatus)}</div>${errors ? `<div class="errors" role="alert">后台错误（主窗口继续运行）${errors}</div>` : ''}
+  <section class="scanbox">
+    <div class="scanhead"><strong>本机 TOC 抓取进度</strong><span>${scan.running ? `运行中 · ${scanPercent}%` : scan.finishedAt ? '已完成' : '待开始'}</span></div>
+    <div class="progress"><div class="bar"></div></div>
+    <div class="scan-grid">
+      <div class="scan-metric"><div class="n">${Number(scan.current || 0)}/${Number(scan.total || 0)}</div><div class="l">已处理 / 总数</div></div>
+      <div class="scan-metric"><div class="n ok">${Number(scan.saved || 0)}</div><div class="l">已抓到官方 TOC</div></div>
+      <div class="scan-metric"><div class="n">${Number(scan.noOfficial || 0)}</div><div class="l">未发现官方 TOC</div></div>
+      <div class="scan-metric"><div class="n bad">${Number(scan.failed || 0)}</div><div class="l">失败</div></div>
+    </div>
+    <div class="current-doi">${scan.currentDoi ? `当前：${escapeHtml(scan.currentDoi)}` : scan.finishedAt ? '当前扫描已结束' : '尚未开始处理 DOI'}</div>
+    <div class="note">官方 TOC 本地目录：<code>${escapeHtml(localCaptureDir())}</code></div>
+    <div class="buttons"><a href="collector:captures">打开 TOC 保存目录</a><a href="collector:log">查看详细日志</a></div>
+    <table><thead><tr><th>最近 DOI</th><th>来源</th><th>结果</th><th>原因</th></tr></thead><tbody>${scanRows || '<tr><td colspan="4">暂无处理结果</td></tr>'}</tbody></table>
+  </section>
   <div class="grid">
     <div class="card"><div class="k">当前队列</div><div class="v">${lastQueue.length}</div></div>
     <div class="card"><div class="k">ACS / Wiley 待处理</div><div class="v">${restricted}</div></div>
@@ -2164,6 +2257,7 @@ function onNavigate(event, url) {
     if (action === 'config') await shell.openPath(configPath());
     if (action === 'reload-config') { await reloadConfig({ source: 'dashboard' }); stageStatus = '设置已重新加载并生效，无需重启。'; rebuildTrayMenu(); await refreshDashboard(); }
     if (action === 'log') await shell.openPath(logPath());
+    if (action === 'captures') { await fsp.mkdir(localCaptureDir(), { recursive: true }); await shell.openPath(localCaptureDir()); }
     if (action === 'hide' && validTray()) dashboard.hide();
     if (action === 'quit') app.quit();
   })();
