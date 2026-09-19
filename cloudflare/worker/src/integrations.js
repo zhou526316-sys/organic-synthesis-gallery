@@ -15,7 +15,9 @@ const EMAIL_TTL = 1000 * 60 * 15;
 const PASSWORD_PBKDF2_ITERATIONS = 100_000;
 const PASSWORD_MIN_LENGTH = 8;
 const PASSWORD_MAX_LENGTH = 128;
-const REGISTER_TTL = 1000 * 60 * 20;
+const REGISTER_TTL = 1000 * 60 * 10;
+const EMAIL_CODE_COOLDOWN = 1000 * 60;
+const EMAIL_CODE_MAX_ATTEMPTS = 6;
 
 function json(value, init = {}) {
   return new Response(JSON.stringify(value), {
@@ -28,6 +30,111 @@ function randomToken(size = 32) {
   const bytes = new Uint8Array(size);
   crypto.getRandomValues(bytes);
   return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function randomEmailCode() {
+  const value = new Uint32Array(1);
+  crypto.getRandomValues(value);
+  return String(value[0] % 1_000_000).padStart(6, '0');
+}
+
+function randomShortSalt() {
+  const bytes = new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+  return bytesToBase64Url(bytes);
+}
+
+async function emailCodeHash(code, salt) {
+  return sha256Hex(`${salt}:${code}`);
+}
+
+async function sendEmailCode(env, email, purpose, code) {
+  if (!providerConfigured(env, 'email')) return { ok: false, error: 'provider_not_configured' };
+  const subjects = {
+    register: 'Organic Synthesis Literature Gallery 注册验证码',
+    reset: 'Organic Synthesis Literature Gallery 密码重置验证码',
+    verify: 'Organic Synthesis Literature Gallery 邮箱验证码',
+  };
+  const actions = {
+    register: '完成本站账号注册',
+    reset: '重置本站账号密码',
+    verify: '验证本站账号邮箱',
+  };
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      from: env.EMAIL_FROM,
+      to: [email],
+      subject: subjects[purpose] || subjects.verify,
+      html: `<p>你的验证码是：</p><p style="font-size:28px;font-weight:700;letter-spacing:6px">${code}</p><p>用于${actions[purpose] || actions.verify}。验证码 10 分钟内有效，请勿转发给他人。</p>`,
+    }),
+  });
+  return response.ok ? { ok: true } : { ok: false, error: 'email_delivery_failed' };
+}
+
+function normalizeEmailCode(value) {
+  const code = typeof value === 'string' ? value.trim() : '';
+  return /^\d{6}$/.test(code) ? code : '';
+}
+
+async function challengeRow(env, challengeId, purpose) {
+  const id = typeof challengeId === 'string' ? challengeId.trim() : '';
+  if (!id) return null;
+  const row = await env.DB.prepare(
+    `SELECT challenge_id, purpose, user_id, email, display_name, password_hash, salt, iterations,
+            code_hash, code_salt, attempts, last_sent_at, created_at, expires_at
+       FROM email_code_challenges
+      WHERE challenge_id = ? AND purpose = ?`
+  ).bind(id, purpose).first();
+  return row || null;
+}
+
+async function verifyChallengeCode(env, row, rawCode) {
+  if (!row) return { ok: false, status: 400, error: 'invalid_code' };
+  if (Number(row.expires_at || 0) <= Date.now()) {
+    await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(row.challenge_id).run();
+    return { ok: false, status: 410, error: 'code_expired' };
+  }
+  if (Number(row.attempts || 0) >= EMAIL_CODE_MAX_ATTEMPTS) {
+    await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(row.challenge_id).run();
+    return { ok: false, status: 429, error: 'too_many_code_attempts' };
+  }
+  const code = normalizeEmailCode(rawCode);
+  const valid = code && constantTimeEqual(await emailCodeHash(code, row.code_salt), String(row.code_hash || ''));
+  if (!valid) {
+    const nextAttempts = Number(row.attempts || 0) + 1;
+    if (nextAttempts >= EMAIL_CODE_MAX_ATTEMPTS) {
+      await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(row.challenge_id).run();
+      return { ok: false, status: 429, error: 'too_many_code_attempts', attemptsRemaining: 0 };
+    }
+    await env.DB.prepare('UPDATE email_code_challenges SET attempts = ? WHERE challenge_id = ?')
+      .bind(nextAttempts, row.challenge_id).run();
+    return { ok: false, status: 400, error: 'invalid_code', attemptsRemaining: EMAIL_CODE_MAX_ATTEMPTS - nextAttempts };
+  }
+  return { ok: true, code };
+}
+
+async function resendChallengeCode(env, row) {
+  if (!row) return { status: 400, body: { error: 'invalid_challenge' } };
+  const now = Date.now();
+  if (Number(row.expires_at || 0) <= now) {
+    await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(row.challenge_id).run();
+    return { status: 410, body: { error: 'code_expired' } };
+  }
+  const elapsed = now - Number(row.last_sent_at || 0);
+  if (elapsed < EMAIL_CODE_COOLDOWN) {
+    return { status: 429, body: { error: 'code_cooldown', retryAfter: Math.ceil((EMAIL_CODE_COOLDOWN - elapsed) / 1000) } };
+  }
+  const code = randomEmailCode();
+  const codeSalt = randomShortSalt();
+  const codeHash = await emailCodeHash(code, codeSalt);
+  const sent = await sendEmailCode(env, row.email, row.purpose, code);
+  if (!sent.ok) return { status: sent.error === 'provider_not_configured' ? 503 : 502, body: { error: sent.error } };
+  await env.DB.prepare(
+    'UPDATE email_code_challenges SET code_hash = ?, code_salt = ?, attempts = 0, last_sent_at = ?, expires_at = ? WHERE challenge_id = ?'
+  ).bind(codeHash, codeSalt, now, now + REGISTER_TTL, row.challenge_id).run();
+  return { status: 200, body: { accepted: true, challengeId: row.challenge_id, expiresIn: REGISTER_TTL / 1000, resendAfter: EMAIL_CODE_COOLDOWN / 1000 } };
 }
 
 async function sha256Hex(value) {
@@ -305,8 +412,21 @@ export async function authCallback(request, env, provider) {
 }
 
 async function userSummary(env, userId) {
-  const row = await env.DB.prepare('SELECT id, display_name, email, avatar_url FROM users WHERE id = ?').bind(userId).first();
-  return row ? { id: row.id, displayName: row.display_name || null, email: row.email || null, avatarUrl: row.avatar_url || null } : null;
+  const row = await env.DB.prepare(
+    `SELECT u.id, u.display_name, u.email, u.avatar_url,
+            EXISTS(SELECT 1 FROM auth_identities ai WHERE ai.user_id = u.id AND ai.provider = 'local') AS local_account,
+            EXISTS(SELECT 1 FROM user_email_verifications v WHERE v.user_id = u.id) AS email_verified
+       FROM users u
+      WHERE u.id = ?`
+  ).bind(userId).first();
+  return row ? {
+    id: row.id,
+    displayName: row.display_name || null,
+    email: row.email || null,
+    avatarUrl: row.avatar_url || null,
+    localAccount: Boolean(row.local_account),
+    emailVerified: Boolean(row.email_verified),
+  } : null;
 }
 
 export async function exchangeAuth(env, payload) {
@@ -442,6 +562,8 @@ async function createUserSession(env, userId) {
 export async function registerPasswordUser(request, env, payload) {
   void request;
   if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  if (!providerConfigured(env, 'email')) return { status: 503, body: { error: 'provider_not_configured', provider: 'email' } };
+
   const email = normalizeEmail(payload?.email);
   const password = normalizePassword(payload?.password);
   const displayName = normalizeDisplayName(payload?.displayName, email);
@@ -449,34 +571,295 @@ export async function registerPasswordUser(request, env, payload) {
   if (!password) return { status: 400, body: { error: 'invalid_password', minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH } };
   if (!displayName) return { status: 400, body: { error: 'invalid_display_name' } };
 
-  const existing = await env.DB.prepare(
-    'SELECT id FROM users WHERE lower(email) = ? LIMIT 1'
-  ).bind(email).first();
+  const existing = await env.DB.prepare('SELECT id FROM users WHERE lower(email) = ? LIMIT 1').bind(email).first();
   if (existing?.id) return { status: 409, body: { error: 'email_already_registered' } };
 
-  const userId = `usr_${crypto.randomUUID().replace(/-/g, '')}`;
+  const previous = await env.DB.prepare(
+    "SELECT challenge_id, last_sent_at FROM email_code_challenges WHERE purpose = 'register' AND email = ?"
+  ).bind(email).first();
+  if (previous?.challenge_id) {
+    const elapsed = Date.now() - Number(previous.last_sent_at || 0);
+    if (elapsed < EMAIL_CODE_COOLDOWN) {
+      return {
+        status: 429,
+        body: {
+          error: 'code_cooldown',
+          challengeId: previous.challenge_id,
+          retryAfter: Math.ceil((EMAIL_CODE_COOLDOWN - elapsed) / 1000),
+        },
+      };
+    }
+  }
+
   const credential = await createPasswordCredential(password);
+  const challengeId = `ch_${randomToken(18)}`;
+  const code = randomEmailCode();
+  const codeSalt = randomShortSalt();
+  const codeHash = await emailCodeHash(code, codeSalt);
+  const now = Date.now();
+
+  await env.DB.prepare("DELETE FROM email_code_challenges WHERE purpose = 'register' AND email = ?").bind(email).run();
+  await env.DB.prepare(
+    `INSERT INTO email_code_challenges
+      (challenge_id, purpose, user_id, email, display_name, password_hash, salt, iterations,
+       code_hash, code_salt, attempts, last_sent_at, created_at, expires_at)
+     VALUES (?, 'register', NULL, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?)`
+  ).bind(
+    challengeId, email, displayName, credential.hash, credential.salt, credential.iterations,
+    codeHash, codeSalt, now, now, now + REGISTER_TTL
+  ).run();
+
+  const sent = await sendEmailCode(env, email, 'register', code);
+  if (!sent.ok) {
+    await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(challengeId).run();
+    return { status: sent.error === 'provider_not_configured' ? 503 : 502, body: { error: sent.error } };
+  }
+  return {
+    status: 202,
+    body: {
+      accepted: true,
+      verificationRequired: true,
+      challengeId,
+      expiresIn: REGISTER_TTL / 1000,
+      resendAfter: EMAIL_CODE_COOLDOWN / 1000,
+    },
+  };
+}
+
+export async function verifyPasswordRegistration(env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const row = await challengeRow(env, payload?.challengeId, 'register');
+  const verified = await verifyChallengeCode(env, row, payload?.code);
+  if (!verified.ok) return { status: verified.status, body: { error: verified.error, attemptsRemaining: verified.attemptsRemaining } };
+
+  const existing = await env.DB.prepare('SELECT id FROM users WHERE lower(email) = ? LIMIT 1').bind(row.email).first();
+  if (existing?.id) {
+    await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(row.challenge_id).run();
+    return { status: 409, body: { error: 'email_already_registered' } };
+  }
+
+  const userId = `usr_${crypto.randomUUID().replace(/-/g, '')}`;
   const now = Date.now();
   try {
     await env.DB.prepare(
       'INSERT INTO users (id, display_name, email, avatar_url, created_at, updated_at) VALUES (?, ?, ?, NULL, ?, ?)'
-    ).bind(userId, displayName, email, now, now).run();
+    ).bind(userId, row.display_name, row.email, now, now).run();
     await env.DB.prepare(
       `INSERT INTO auth_identities
         (provider, provider_user_id, user_id, email, display_name, avatar_url, created_at, updated_at)
        VALUES ('local', ?, ?, ?, ?, NULL, ?, ?)`
-    ).bind(email, userId, email, displayName, now, now).run();
+    ).bind(row.email, userId, row.email, row.display_name, now, now).run();
     await env.DB.prepare(
       'INSERT INTO password_credentials (user_id, email, password_hash, salt, iterations, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
-    ).bind(userId, email, credential.hash, credential.salt, credential.iterations, now, now).run();
+    ).bind(userId, row.email, row.password_hash, row.salt, Number(row.iterations), now, now).run();
+    await env.DB.prepare(
+      'INSERT INTO user_email_verifications (user_id, email, verified_at) VALUES (?, ?, ?)'
+    ).bind(userId, row.email, now).run();
+    await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(row.challenge_id).run();
     return { status: 201, body: await createUserSession(env, userId) };
   } catch (error) {
     await env.DB.prepare('DELETE FROM users WHERE id = ?').bind(userId).run().catch(() => {});
     const message = error instanceof Error ? error.message : String(error);
     if (/unique|constraint/i.test(message)) return { status: 409, body: { error: 'email_already_registered' } };
-    console.error('PASSWORD_REGISTER_FAILED', message);
+    console.error('PASSWORD_REGISTER_VERIFY_FAILED', message);
     return { status: 500, body: { error: 'registration_failed' } };
   }
+}
+
+export async function resendPasswordRegistrationCode(env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  return resendChallengeCode(env, await challengeRow(env, payload?.challengeId, 'register'));
+}
+
+export async function startPasswordReset(env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  if (!providerConfigured(env, 'email')) return { status: 503, body: { error: 'provider_not_configured', provider: 'email' } };
+  const email = normalizeEmail(payload?.email);
+  if (!email) return { status: 400, body: { error: 'invalid_email' } };
+
+  const fakeChallengeId = `ch_${randomToken(18)}`;
+  const credential = await env.DB.prepare(
+    'SELECT user_id, email FROM password_credentials WHERE email = ?'
+  ).bind(email).first();
+  if (!credential?.user_id) {
+    return {
+      status: 202,
+      body: { accepted: true, challengeId: fakeChallengeId, expiresIn: REGISTER_TTL / 1000, resendAfter: EMAIL_CODE_COOLDOWN / 1000 },
+    };
+  }
+
+  const previous = await env.DB.prepare(
+    "SELECT challenge_id, last_sent_at FROM email_code_challenges WHERE purpose = 'reset' AND email = ?"
+  ).bind(email).first();
+  if (previous?.challenge_id) {
+    const elapsed = Date.now() - Number(previous.last_sent_at || 0);
+    if (elapsed < EMAIL_CODE_COOLDOWN) {
+      return {
+        status: 202,
+        body: {
+          accepted: true,
+          challengeId: previous.challenge_id,
+          expiresIn: REGISTER_TTL / 1000,
+          resendAfter: Math.ceil((EMAIL_CODE_COOLDOWN - elapsed) / 1000),
+        },
+      };
+    }
+  }
+
+  const challengeId = `ch_${randomToken(18)}`;
+  const code = randomEmailCode();
+  const codeSalt = randomShortSalt();
+  const codeHash = await emailCodeHash(code, codeSalt);
+  const now = Date.now();
+  await env.DB.prepare("DELETE FROM email_code_challenges WHERE purpose = 'reset' AND email = ?").bind(email).run();
+  await env.DB.prepare(
+    `INSERT INTO email_code_challenges
+      (challenge_id, purpose, user_id, email, code_hash, code_salt, attempts, last_sent_at, created_at, expires_at)
+     VALUES (?, 'reset', ?, ?, ?, ?, 0, ?, ?, ?)`
+  ).bind(challengeId, credential.user_id, email, codeHash, codeSalt, now, now, now + REGISTER_TTL).run();
+
+  const sent = await sendEmailCode(env, email, 'reset', code);
+  if (!sent.ok) {
+    await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(challengeId).run();
+    return { status: sent.error === 'provider_not_configured' ? 503 : 502, body: { error: sent.error } };
+  }
+  return {
+    status: 202,
+    body: { accepted: true, challengeId, expiresIn: REGISTER_TTL / 1000, resendAfter: EMAIL_CODE_COOLDOWN / 1000 },
+  };
+}
+
+export async function resendPasswordResetCode(env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const row = await challengeRow(env, payload?.challengeId, 'reset');
+  if (!row) return { status: 202, body: { accepted: true, challengeId: payload?.challengeId || '', expiresIn: REGISTER_TTL / 1000, resendAfter: EMAIL_CODE_COOLDOWN / 1000 } };
+  return resendChallengeCode(env, row);
+}
+
+export async function confirmPasswordReset(env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const password = normalizePassword(payload?.newPassword);
+  if (!password) return { status: 400, body: { error: 'invalid_password', minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH } };
+  const row = await challengeRow(env, payload?.challengeId, 'reset');
+  const verified = await verifyChallengeCode(env, row, payload?.code);
+  if (!verified.ok) return { status: verified.status, body: { error: verified.error, attemptsRemaining: verified.attemptsRemaining } };
+  if (!row?.user_id) return { status: 400, body: { error: 'invalid_code' } };
+
+  const credential = await createPasswordCredential(password);
+  const now = Date.now();
+  await env.DB.prepare(
+    'UPDATE password_credentials SET password_hash = ?, salt = ?, iterations = ?, updated_at = ? WHERE user_id = ?'
+  ).bind(credential.hash, credential.salt, credential.iterations, now, row.user_id).run();
+  await env.DB.prepare('DELETE FROM user_sessions WHERE user_id = ?').bind(row.user_id).run();
+  await env.DB.prepare(
+    `INSERT INTO user_email_verifications (user_id, email, verified_at)
+     VALUES (?, ?, ?)
+     ON CONFLICT(user_id) DO UPDATE SET email = excluded.email, verified_at = excluded.verified_at`
+  ).bind(row.user_id, row.email, now).run();
+  await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(row.challenge_id).run();
+  return { status: 200, body: { ok: true, reauthRequired: true } };
+}
+
+export async function startExistingEmailVerification(request, env) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  if (!providerConfigured(env, 'email')) return { status: 503, body: { error: 'provider_not_configured', provider: 'email' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+  const user = await userSummary(env, session.user_id);
+  if (!user?.localAccount || !user.email) return { status: 400, body: { error: 'email_verification_not_applicable' } };
+  if (user.emailVerified) return { status: 200, body: { verified: true, user } };
+
+  const previous = await env.DB.prepare(
+    "SELECT challenge_id, last_sent_at FROM email_code_challenges WHERE purpose = 'verify' AND email = ?"
+  ).bind(user.email).first();
+  if (previous?.challenge_id) {
+    const elapsed = Date.now() - Number(previous.last_sent_at || 0);
+    if (elapsed < EMAIL_CODE_COOLDOWN) {
+      return {
+        status: 429,
+        body: { error: 'code_cooldown', challengeId: previous.challenge_id, retryAfter: Math.ceil((EMAIL_CODE_COOLDOWN - elapsed) / 1000) },
+      };
+    }
+  }
+
+  const challengeId = `ch_${randomToken(18)}`;
+  const code = randomEmailCode();
+  const codeSalt = randomShortSalt();
+  const codeHash = await emailCodeHash(code, codeSalt);
+  const now = Date.now();
+  await env.DB.prepare("DELETE FROM email_code_challenges WHERE purpose = 'verify' AND email = ?").bind(user.email).run();
+  await env.DB.prepare(
+    `INSERT INTO email_code_challenges
+      (challenge_id, purpose, user_id, email, code_hash, code_salt, attempts, last_sent_at, created_at, expires_at)
+     VALUES (?, 'verify', ?, ?, ?, ?, 0, ?, ?, ?)`
+  ).bind(challengeId, session.user_id, user.email, codeHash, codeSalt, now, now, now + REGISTER_TTL).run();
+
+  const sent = await sendEmailCode(env, user.email, 'verify', code);
+  if (!sent.ok) {
+    await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(challengeId).run();
+    return { status: sent.error === 'provider_not_configured' ? 503 : 502, body: { error: sent.error } };
+  }
+  return { status: 200, body: { accepted: true, challengeId, expiresIn: REGISTER_TTL / 1000, resendAfter: EMAIL_CODE_COOLDOWN / 1000 } };
+}
+
+export async function resendExistingEmailVerification(request, env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+  const row = await challengeRow(env, payload?.challengeId, 'verify');
+  if (!row || row.user_id !== session.user_id) return { status: 400, body: { error: 'invalid_challenge' } };
+  return resendChallengeCode(env, row);
+}
+
+export async function confirmExistingEmailVerification(request, env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+  const row = await challengeRow(env, payload?.challengeId, 'verify');
+  if (!row || row.user_id !== session.user_id) return { status: 400, body: { error: 'invalid_challenge' } };
+  const verified = await verifyChallengeCode(env, row, payload?.code);
+  if (!verified.ok) return { status: verified.status, body: { error: verified.error, attemptsRemaining: verified.attemptsRemaining } };
+  const now = Date.now();
+  await env.DB.prepare(
+    `INSERT INTO user_email_verifications (user_id, email, verified_at)
+     VALUES (?, ?, ?)
+     ON CONFLICT(user_id) DO UPDATE SET email = excluded.email, verified_at = excluded.verified_at`
+  ).bind(session.user_id, row.email, now).run();
+  await env.DB.prepare('DELETE FROM email_code_challenges WHERE challenge_id = ?').bind(row.challenge_id).run();
+  return { status: 200, body: { verified: true, user: await userSummary(env, session.user_id) } };
+}
+
+export async function changePassword(request, env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+  const currentPassword = normalizePassword(payload?.currentPassword);
+  const newPassword = normalizePassword(payload?.newPassword);
+  if (!currentPassword || !newPassword) return { status: 400, body: { error: 'invalid_password' } };
+
+  const row = await env.DB.prepare(
+    'SELECT user_id, password_hash, salt, iterations FROM password_credentials WHERE user_id = ?'
+  ).bind(session.user_id).first();
+  if (!row) return { status: 400, body: { error: 'password_not_configured' } };
+  if (!(await verifyPassword(currentPassword, row))) return { status: 401, body: { error: 'invalid_current_password' } };
+
+  const credential = await createPasswordCredential(newPassword);
+  const now = Date.now();
+  await env.DB.prepare(
+    'UPDATE password_credentials SET password_hash = ?, salt = ?, iterations = ?, updated_at = ? WHERE user_id = ?'
+  ).bind(credential.hash, credential.salt, credential.iterations, now, session.user_id).run();
+  await env.DB.prepare('DELETE FROM user_sessions WHERE user_id = ?').bind(session.user_id).run();
+  return { status: 200, body: await createUserSession(env, session.user_id) };
+}
+
+export async function revokeOtherSessions(request, env) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+  const result = await env.DB.prepare(
+    'DELETE FROM user_sessions WHERE user_id = ? AND token_hash <> ?'
+  ).bind(session.user_id, session.token_hash).run();
+  return { status: 200, body: { ok: true, revoked: Number(result?.meta?.changes || 0) } };
 }
 
 export async function consumePasswordRegistration(request, env) {
