@@ -187,7 +187,7 @@ function windows(source, regex) {
   const rows = [];
   let count = 0;
   for (const match of source.matchAll(regex)) {
-    rows.push(source.slice(Math.max(0, match.index - 1600), Math.min(source.length, match.index + 9000)));
+    rows.push(source.slice(match.index, Math.min(source.length, match.index + 7000)));
     if (++count >= 30) break;
   }
   return rows;
@@ -219,9 +219,13 @@ export function extractPublisherMediaCandidates(html, pageUrl, options = {}) {
     const context = stripHtml(fragment).slice(0, 2500);
     const type = assetType(context, publisher);
     if (!type) continue;
-    for (const item of fragmentImages(fragment, pageUrl)) {
-      const marker = [item.attrs.alt,item.attrs.title,item.attrs.id,item.attrs.class,context].filter(Boolean).join(' ');
-      addCandidate(map, item.src, pageUrl, { publisher, source: publisher + '_semantic_block', assetType: type, text: marker, width: item.attrs.width, height: item.attrs.height, bonus: 170 });
+    const images = fragmentImages(fragment, pageUrl);
+    for (const [index, item] of images.entries()) {
+      const ownMarker = [item.attrs.alt,item.attrs.title,item.attrs.id,item.attrs.class,item.attrs['aria-label']].filter(Boolean).join(' ');
+      const ownType = assetType(ownMarker, publisher);
+      if (!ownType && index > 0) continue;
+      const marker = [ownMarker, context].filter(Boolean).join(' ');
+      addCandidate(map, item.src, pageUrl, { publisher, source: publisher + '_semantic_block', assetType: ownType || type, text: marker, width: item.attrs.width, height: item.attrs.height, bonus: 170 });
     }
   }
 
