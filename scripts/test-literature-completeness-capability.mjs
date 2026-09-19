@@ -27,7 +27,9 @@ assert.equal(effectiveJournalStart(jacs, '2026-09-13'), '2026-09-13', 'Existing 
 assert.match(auditSource, /DEFAULT_LOOKBACK_DAYS\s*=\s*3/, 'Default publication rescan must remain three days');
 assert.match(auditSource, /DEFAULT_LATE_DEPOSIT_RESCUE_DAYS\s*=\s*7/, 'Late-deposit rescue must remain at least seven days');
 assert.ok(auditSource.includes('catchupStart'), 'Audit must automatically catch up from verifiedThrough when closure falls behind');
-assert.ok(auditSource.includes("mode === 'created' ? journalRescueStart : journalStart"), 'Crossref created-date rescue must use the wider rescue window independently of the 3-day publication rescan');
+assert.ok(auditSource.includes('const modeStart = journalRescueStart'), 'All Crossref source modes must retain the seven-day machine safety tail behind the 3-day review window');
+assert.ok(auditSource.includes('from_publication_date:${rescueStartForJournal(journal)}'), 'OpenAlex must retain the seven-day machine safety tail behind the 3-day review window');
+assert.ok(auditSource.includes('safetyTail'), 'Safety-tail records must remain observable without becoming routine re-review work');
 assert.ok(auditSource.includes("['online', 'published', 'created']"), 'Crossref discovery must union online, published and created dates');
 assert.ok(auditSource.includes('createdDiscovered'), 'Late-deposit rescue must remain enabled');
 assert.ok(auditSource.includes('lateIndexed'), 'Late-indexed records must remain observable in the audit report');
@@ -42,6 +44,7 @@ console.log(JSON.stringify({
   lookbackDays: 3,
   lateDepositRescueDays: 7,
   verifiedThroughCatchup: true,
+  multiSourceSafetyTail: true,
   crossrefModes: ['online', 'published', 'created'],
   openAlex: true,
   lateDepositRescue: true,

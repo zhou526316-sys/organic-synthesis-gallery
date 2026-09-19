@@ -2,16 +2,15 @@
   "schemaVersion": 2,
   "selectionPolicy": "latest-compatible-stable",
   "purpose": "Capability registry for literature discovery, completeness auditing, TOC retrieval, and website synchronization. The primary literature task must select the newest stable compatible capability on main before each fetch run.",
-  "currentKnownStableFingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
+  "currentKnownStableFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
   "fingerprintMethod": "sha256 of newline-joined stable component labels and blob SHAs: literatureAudit, literatureWorkflow, journalRegistry, completenessGuard, tocCollector, publisherFallback",
   "currentKnownStable": {
     "literatureAudit": {
       "path": "cloudflare/scripts/audit-literature.mjs",
-      "blobSha": "bafbb8d02495dd8d5d24a106a49f6efd6a897e7a",
-      "validation": "Workflow-generated audit persisted in commit 7a212252a399abff49ac95978120df0dbc18cb3d at 2026-09-19T06:55:25.883Z with auditVersion=4, 15 target journals, rolling seven-day safety window, sourceRecords=591, criticalSourceFailures=0, sourceFamilyGaps=0, and lateIndexed=3 across Nature/ACS Catalysis.",
-      "comparisonToPriorStable": "Prior stable audit blob 2bf18d6df41def88763196c4b0f31c2bcc6f14a7 covered 10 journals, used a rolling three-calendar-day window, queried Crossref online/published only, had no per-journal source-family health, and discarded records whose publication date fell before the rolling window even when they were newly deposited. On the same upgraded seven-day configuration, enabling late-deposit rescue increased the discovered universe from 588 to 591 and surfaced three otherwise missed late-indexed records.",
-      "semanticImpact": "Strict recall upgrade. Adds five journals prospectively from 2026-09-19; expands overlap to seven Beijing calendar days; unions Crossref online/published/created with OpenAlex; retains recent Crossref-created deposits back to each journal activeFrom even when publication date predates the rolling window; exposes source agreement and source-family health. Keyword screening remains priority-only and cannot silently remove DOI differences.",
-      "comparisonArtifact": "audit/literature-capability-comparison-2026-09-19.json"
+      "blobSha": "18db944416004e46a58d1843820cf185310bbcf5",
+      "validation": "GitHub Actions run 35438640474 succeeded with the completeness guard and DOI-union audit: 15 target journals, primary lookbackDays=3, lateDepositRescueDays=7, multi-source machine safety tail enabled, sourceRecords=591, criticalSourceFailures=0, sourceFamilyGaps=0. The prior 7-day stable audit also reported 591 source records; the two Angew OpenAlex-only edge records that disappeared in the first naïve 3-day attempt were restored by the safety tail.",
+      "comparisonToPriorStable": "The prior stable implementation used a seven-day window as the routine audit window. The new stable implementation makes three days the primary semantic-review window but retains seven days of machine-only source coverage across Crossref online/published/created and OpenAlex. Already resolved days 4-7 do not become routine GPT re-review work; only genuinely unseen DOI differences surface. verifiedThrough catch-up automatically widens the primary publication range after interrupted/source-failure closure.",
+      "semanticImpact": "Complexity reduction without a source-recall downgrade: routine GPT review is three days, while seven-day multi-source safety-tail discovery, Crossref created/deposit rescue, 15-journal coverage, source-family health checks, all-difference review, prospective activation cutoffs, and persistent review decisions remain mandatory."
     },
     "literatureWorkflow": {
       "path": ".github/workflows/literature-audit.yml",
@@ -27,9 +26,9 @@
     },
     "completenessGuard": {
       "path": "scripts/test-literature-completeness-capability.mjs",
-      "blobSha": "d2292f048bf06f77dda70d3e41ab089085914aa4",
-      "validation": "Executed by the literature audit workflow before the report persisted in commit 7a212252a399abff49ac95978120df0dbc18cb3d.",
-      "semanticImpact": "CI fails if journal count/list, prospective activation, seven-day overlap, Crossref created-date discovery, late-deposit observability, source-family health, or the no-silent-keyword-exclusion invariant regresses."
+      "blobSha": "9cfe49263e14ec4cb5707b2b83af37b81e7050e7",
+      "validation": "Passed in GitHub Actions run 35438640474 before the production audit. It enforces 15 journals, three-day primary review, seven-day multi-source safety tail, verifiedThrough catch-up, Crossref online/published/created union, OpenAlex coverage, late-deposit observability, source-family health, and no silent keyword exclusion.",
+      "semanticImpact": "CI now rejects either direction of regression: expanding routine GPT work back to seven days or shrinking the machine safety coverage below seven days."
     },
     "tocCollector": {
       "primaryPath": "toc-collector/src/background.mjs",
@@ -75,11 +74,13 @@
     "pinCapabilitySnapshotForWholeRun": true,
     "neverHotSwapDuringActiveRun": true,
     "force72HourRefetchWhenCapabilityFingerprintChanges": true,
-    "minimumSafetyRescanDaysOnCapabilityChange": 7,
+    "minimumSafetyRescanDaysOnCapabilityChange": 3,
     "doNotReuseOld24HourFetchAcrossCapabilityChange": true,
     "syncOnlyFallbackMustNeverRefetch": true,
     "recordCapabilityFingerprintInLastCompletedFetch": true,
     "forceSafetyRescanWhenCapabilityFingerprintChanges": true,
-    "legacyForce72HourFieldRetainedForCompatibility": true
+    "legacyForce72HourFieldRetainedForCompatibility": true,
+    "machineSafetyTailDays": 7,
+    "lateDepositRescueDays": 7
   }
 }

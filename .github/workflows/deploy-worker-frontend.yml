@@ -1,0 +1,103 @@
+name: Deploy Worker frontend assets
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: worker-frontend-assets
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      D1_NAME: organic-synthesis-gallery
+      R2_BUCKET: organic-synthesis-gallery-media
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Install frontend dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build current frontend assets
+        run: npm run build
+
+      - name: Install Worker dependencies
+        working-directory: cloudflare/worker
+        run: npm install --no-audit --no-fund
+
+      - name: Resolve existing Cloudflare bindings
+        id: bindings
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npx wrangler d1 list --json > /tmp/d1-list.json
+          D1_ID=$(node - <<'NODE'
+          const fs = require('fs');
+          const rows = JSON.parse(fs.readFileSync('/tmp/d1-list.json', 'utf8'));
+          const row = rows.find(item => item.name === process.env.D1_NAME);
+          if (row?.uuid) process.stdout.write(row.uuid);
+          NODE
+          )
+          test -n "$D1_ID" || { echo 'D1 database binding is missing'; exit 1; }
+          npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null
+          echo "d1_id=$D1_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Generate frontend deployment configuration
+        working-directory: cloudflare/worker
+        shell: bash
+        env:
+          D1_ID: ${{ steps.bindings.outputs.d1_id }}
+        run: |
+          set -euo pipefail
+          cat > wrangler.frontend.toml <<EOF
+          name = "organic-synthesis-gallery"
+          main = "src/index.js"
+          compatibility_date = "2026-09-16"
+          workers_dev = true
+
+          [vars]
+          MIGRATION_STAGE = "staging"
+
+          [triggers]
+          crons = ["0 */6 * * *"]
+
+          [assets]
+          directory = "../../dist"
+          binding = "ASSETS"
+          not_found_handling = "single-page-application"
+          run_worker_first = ["/api/*", "/media/*"]
+
+          [[r2_buckets]]
+          binding = "MEDIA"
+          bucket_name = "$R2_BUCKET"
+
+          [[d1_databases]]
+          binding = "DB"
+          database_name = "$D1_NAME"
+          database_id = "$D1_ID"
+          EOF
+
+      - name: Dry-run frontend Worker bundle
+        working-directory: cloudflare/worker
+        run: npx wrangler deploy --dry-run --config wrangler.frontend.toml --outdir .wrangler-frontend-dry-run
+
+      - name: Deploy frontend assets
+        working-directory: cloudflare/worker
+        run: npx wrangler deploy --config wrangler.frontend.toml

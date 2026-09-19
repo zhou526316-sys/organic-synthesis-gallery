@@ -198,7 +198,11 @@ async function fetchCrossref(journal) {
   for (const issn of journal.issns) {
     for (const mode of ['online', 'published', 'created']) {
       const filterField = mode === 'online' ? 'online-pub-date' : mode === 'published' ? 'pub-date' : 'created-date';
-      const modeStart = mode === 'created' ? journalRescueStart : journalStart;
+      // All source families keep a seven-day machine-only safety tail. The
+      // three-day START remains the primary semantic-review window; older tail
+      // records only matter when they surface a DOI that has not already been
+      // accepted, excluded, or marked pending.
+      const modeStart = journalRescueStart;
       const dateFilter = `from-${filterField}:${modeStart},until-${filterField}:${END}`;
       let cursor = '*';
       let count = 0;
@@ -259,7 +263,7 @@ async function fetchOpenAlex(journal) {
     let note = '';
     try {
       for (let page = 0; page < 40; page += 1) {
-        const filter = `primary_location.source.id:${sourceId},from_publication_date:${auditStartForJournal(journal)},to_publication_date:${END}`;
+        const filter = `primary_location.source.id:${sourceId},from_publication_date:${rescueStartForJournal(journal)},to_publication_date:${END}`;
         const q = new URLSearchParams({ filter, 'per-page': '200', cursor });
         const data = await jsonFetch(`https://api.openalex.org/works?${q}`);
         const items = data?.results || [];
@@ -319,6 +323,7 @@ function compactCandidate(c) {
     activeFrom: journal?.activeFrom || '',
     dateUnverified: !c.date,
     lateIndexed: Boolean(c.date && c.date < effectiveStart && createdDiscovered),
+    safetyTail: Boolean(c.date && c.date < effectiveStart && c.date >= (journal ? rescueStartForJournal(journal) : RESCUE_START)),
     reviewPriority: retainForReview(c) ? 'high' : 'normal',
     abstract: (c.abstract || '').slice(0, 1800),
   };
@@ -339,10 +344,12 @@ const universe = [...merged.values()].filter(c => {
   const journal = JOURNAL_BY_NAME.get(c.journal);
   const effectiveStart = journal ? auditStartForJournal(journal) : START;
   const activeFrom = journal?.activeFrom || START;
+  const rescueStart = journal ? rescueStartForJournal(journal) : RESCUE_START;
   const createdDiscovered = (c.sources || []).some(source => source.endsWith(':created'));
+  const sourceDiscovered = (c.sources || []).length > 0;
   if (!c.date) return createdDiscovered;
   if (c.date > END || c.date < activeFrom) return false;
-  return c.date >= effectiveStart || createdDiscovered;
+  return c.date >= effectiveStart || (sourceDiscovered && c.date >= rescueStart);
 });
 const excludedUniverse = universe.filter(c => isExcludedDoi(c.doi));
 const rawMissing = universe.filter(c => !galleryDois.has(c.doi));
@@ -391,6 +398,7 @@ const byJournal = Object.fromEntries(JOURNALS.map(j => {
     openAlexOnly,
     multiSource,
     lateIndexed: candidates.filter(x => Boolean(x.date && x.date < auditStartForJournal(j) && (x.sources || []).some(s => s.endsWith(':created')))).length,
+    safetyTail: candidates.filter(x => Boolean(x.date && x.date < auditStartForJournal(j) && x.date >= rescueStartForJournal(j))).length,
     coveredByGallery: candidates.filter(x => galleryDois.has(x.doi)).length,
     rawMissingFromGallery: rawMissingForJournal.length,
     previouslyReviewedExcluded: reviewedExcludedForJournal.length,
@@ -423,7 +431,7 @@ const report = {
   startDate: START,
   endDate: END,
   closureDate: CLOSURE_DATE,
-  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing publication rescan, seven-calendar-day Crossref-created late-deposit rescue, and automatic catch-up from the first unverified date when verifiedThrough falls behind. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
+  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail (including Crossref created/deposit rescue and OpenAlex), and automatic catch-up from the first unverified date when verifiedThrough falls behind. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
   targetJournals: JOURNALS.map(journal => ({ name: journal.name, issns: journal.issns, activeFrom: journal.activeFrom || '', effectiveStart: auditStartForJournal(journal), lateDepositRescueStart: rescueStartForJournal(journal) })),
   summary: {
     galleryDois: galleryDois.size,
