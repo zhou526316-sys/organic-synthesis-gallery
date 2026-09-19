@@ -24,10 +24,15 @@ Write-Host ""
 if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
   throw "npm was not found. Install Node.js first."
 }
-if (-not (Test-Path (Join-Path $CollectorDir "node_modules\electron"))) {
-  Write-Host "Installing Collector dependencies..." -ForegroundColor Yellow
-  npm install --no-audit --no-fund
-  if ($LASTEXITCODE -ne 0) { throw "npm install failed: $LASTEXITCODE" }
+$electronExe = Join-Path $CollectorDir "node_modules\electron\dist\electron.exe"
+if (-not (Test-Path $electronExe)) {
+  Write-Host "Electron runtime is missing or incomplete. Reinstalling dependencies..." -ForegroundColor Yellow
+  if (Test-Path (Join-Path $CollectorDir "node_modules")) {
+    Remove-Item (Join-Path $CollectorDir "node_modules") -Recurse -Force -ErrorAction SilentlyContinue
+  }
+  npm ci --no-audit --no-fund
+  if ($LASTEXITCODE -ne 0) { throw "npm ci failed: $LASTEXITCODE" }
+  if (-not (Test-Path $electronExe)) { throw "Electron install completed but electron.exe is still missing: $electronExe" }
 }
 
 npm run check
