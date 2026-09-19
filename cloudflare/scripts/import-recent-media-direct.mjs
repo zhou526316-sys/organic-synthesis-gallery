@@ -1,3 +1,4 @@
+import { articleUrlsForDoi as publisherArticleUrlsForDoi, extractPublisherMediaCandidates } from '../../toc-collector/src/publisher-adapters.mjs';
 import { readFile } from 'node:fs/promises';
 
 const API_BASE = (process.env.WORKER_URL || 'https://organic-synthesis-gallery.zhou526316.workers.dev').replace(/\/$/, '');
@@ -21,24 +22,8 @@ function normalizeDoi(value) {
 }
 
 function articleUrlsForDoi(doi) {
-  const urls = [];
-  const add = value => { if (value && !urls.includes(value)) urls.push(value); };
-  if (doi.startsWith('10.1021/')) {
-    add(`https://pubs.acs.org/doi/${doi}`);
-    add(`https://pubs.acs.org/doi/full/${doi}`);
-  } else if (doi.startsWith('10.1002/')) {
-    add(`https://onlinelibrary.wiley.com/doi/${doi}`);
-    add(`https://onlinelibrary.wiley.com/doi/full/${doi}`);
-  } else if (doi.startsWith('10.1038/')) {
-    add(`https://www.nature.com/articles/${doi.split('/')[1]}`);
-  } else if (doi.startsWith('10.1126/')) {
-    add(`https://www.science.org/doi/${doi}`);
-    add(`https://www.science.org/doi/full/${doi}`);
-  }
-  add(`https://doi.org/${doi}`);
-  return urls;
+  return publisherArticleUrlsForDoi(doi).map(item => item.url);
 }
-
 function decodeHtml(value) {
   return String(value || '')
     .replace(/&amp;/gi, '&')
@@ -123,30 +108,19 @@ function addCandidate(map, rawUrl, base, score, context, extra = {}) {
   if (!old || score > old.score) map.set(url, item);
 }
 
-function extractTocCandidates(html, pageUrl) {
-  const source = decodeHtml(html);
-  const candidates = new Map();
-  for (const tag of source.match(/<meta\b[^>]*>/gi) || []) {
-    const key = `${attr(tag, 'name')} ${attr(tag, 'property')}`.toLowerCase();
-    const content = attr(tag, 'content');
-    if (/citation_graphical_abstract|citation_toc_graphic/.test(key)) addCandidate(candidates, content, pageUrl, 5000, key);
-    else if (/og:image|twitter:image/.test(key)) addCandidate(candidates, content, pageUrl, 650, key);
-  }
-  const semantic = /visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)|table\s*of\s*contents/gi;
-  let match;
-  while ((match = semantic.exec(source))) {
-    const start = Math.max(0, match.index - 1200);
-    const fragment = source.slice(start, Math.min(source.length, match.index + 8500));
-    for (const url of imageUrlsFromFragment(fragment, pageUrl)) addCandidate(candidates, url, pageUrl, 3200, fragment.slice(0, 1000));
-  }
-  for (const tag of source.match(/<img\b[^>]*>/gi) || []) {
-    const marker = `${attr(tag, 'alt')} ${attr(tag, 'title')} ${attr(tag, 'class')} ${attr(tag, 'id')}`;
-    if (!/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)|table\s*of\s*contents/i.test(marker)) continue;
-    for (const url of imageUrlsFromTag(tag, pageUrl)) addCandidate(candidates, url, pageUrl, 3000, marker);
-  }
-  return [...candidates.values()].sort((a, b) => b.score - a.score).slice(0, 12);
+function extractTocCandidates(html, pageUrl, doi) {
+  return extractPublisherMediaCandidates(html, pageUrl, { doi })
+    .filter(item => item.kind === 'official')
+    .map(item => ({
+      url: item.src,
+      score: item.score,
+      context: item.text,
+      assetType: item.assetType,
+      source: item.source,
+      publisher: item.publisher,
+    }))
+    .slice(0, 16);
 }
-
 function figureLabel(block, index) {
   const text = stripTags(block).slice(0, 2200);
   const numbered = text.match(/\b(Figure|Fig\.?|Scheme|Chart)\s*([A-Za-z]?\d+[A-Za-z]?)\b/i);
@@ -288,7 +262,7 @@ async function importOne(doi) {
     const page = await fetchPage(url);
     pageResults.push({ requested: url, final: page.finalUrl, status: page.status, bytes: page.html.length, ok: page.ok, error: page.error });
     if (!page.ok) continue;
-    for (const candidate of extractTocCandidates(page.html, page.finalUrl)) {
+    for (const candidate of extractTocCandidates(page.html, page.finalUrl, doi)) {
       if (seenToc.has(candidate.url)) continue;
       seenToc.add(candidate.url);
       toc.push({ ...candidate, articleUrl: page.finalUrl });
