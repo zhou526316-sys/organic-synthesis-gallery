@@ -154,14 +154,29 @@ async function allRows(statement) {
   return Array.isArray(result?.results) ? result.results : [];
 }
 
-async function queryByDois(env, sqlPrefix, dois) {
+function isLegacySchemaError(error) {
+  const message = String(error?.message || error || '');
+  return /no such table|no such column|has no column named|SQLITE_ERROR/i.test(message);
+}
+
+async function allRowsOptional(statement, label = 'optional_query') {
+  try {
+    return await allRows(statement);
+  } catch (error) {
+    if (!isLegacySchemaError(error)) throw error;
+    console.warn('MEDIA_LEGACY_SCHEMA_FALLBACK', JSON.stringify({ label, message: String(error?.message || error) }));
+    return [];
+  }
+}
+
+async function queryByDois(env, sqlPrefix, dois, { optional = false, label = 'query' } = {}) {
   const rows = [];
   for (let offset = 0; offset < dois.length; offset += QUERY_CHUNK) {
     const chunk = dois.slice(offset, offset + QUERY_CHUNK);
     if (!chunk.length) continue;
     const placeholders = chunk.map(() => '?').join(',');
     const statement = env.DB.prepare(`${sqlPrefix} (${placeholders})`).bind(...chunk);
-    rows.push(...await allRows(statement));
+    rows.push(...(optional ? await allRowsOptional(statement, label) : await allRows(statement)));
   }
   return rows;
 }
@@ -185,14 +200,16 @@ async function loadMediaRows(env, rawDois) {
     queryByDois(
       env,
       'SELECT doi, kind, source, source_url, article_url, r2_key, content_hash, caption, confidence, page_number, bbox_json, retrieved_at, updated_at FROM primary_visual_assets WHERE doi IN',
-      dois
+      dois,
+      { optional: true, label: 'primary_visual_assets' }
     ),
     queryByDois(
       env,
       'SELECT doi, role, r2_key, content_hash, width, height, byte_length, updated_at FROM primary_visual_variants WHERE doi IN',
-      dois
+      dois,
+      { optional: true, label: 'primary_visual_variants' }
     ),
-    allRows(env.DB.prepare("SELECT content_hash, COUNT(*) AS owners FROM toc_assets WHERE available = 1 AND content_hash IS NOT NULL AND content_hash <> '' GROUP BY content_hash HAVING COUNT(*) > 1")),
+    allRowsOptional(env.DB.prepare("SELECT content_hash, COUNT(*) AS owners FROM toc_assets WHERE available = 1 AND content_hash IS NOT NULL AND content_hash <> '' GROUP BY content_hash HAVING COUNT(*) > 1"), 'duplicate_toc_hashes'),
   ]);
 
   const tocByDoi = new Map();
@@ -364,9 +381,19 @@ export async function bridgeQueue(request, env) {
   const url = new URL(request.url);
   const mode = url.searchParams.get('mode') === 'upgrade' ? 'upgrade' : 'coverage';
   const now = Date.now();
-  const rows = await allRows(env.DB.prepare(
-    'SELECT doi, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority FROM media_repair_state WHERE next_retry_at <= ? ORDER BY reported_priority DESC, next_retry_at ASC, attempts ASC LIMIT 1200'
-  ).bind(now));
+  let rows;
+  try {
+    rows = await allRows(env.DB.prepare(
+      'SELECT doi, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority FROM media_repair_state WHERE next_retry_at <= ? ORDER BY reported_priority DESC, next_retry_at ASC, attempts ASC LIMIT 1200'
+    ).bind(now));
+  } catch (error) {
+    if (!isLegacySchemaError(error)) throw error;
+    console.warn('MEDIA_LEGACY_SCHEMA_FALLBACK', JSON.stringify({ label: 'bridge_queue', message: String(error?.message || error) }));
+    const legacy = await allRowsOptional(env.DB.prepare(
+      'SELECT doi, attempts, last_attempt_at, next_retry_at FROM media_repair_state WHERE next_retry_at <= ? ORDER BY next_retry_at ASC, attempts ASC LIMIT 1200'
+    ).bind(now), 'bridge_queue_legacy');
+    rows = legacy.map(row => ({ ...row, last_root_cause: '', last_outcome: '', reported_priority: 0 }));
+  }
   const dois = rows.map(row => row.doi).filter(Boolean);
   const media = await loadMediaRows(env, dois);
   const stateByDoi = new Map(rows.map(row => [String(row.doi).toLowerCase(), row]));
@@ -398,9 +425,19 @@ export async function bridgeQueue(request, env) {
 }
 
 export async function repairStatus(request, env) {
-  const rows = await allRows(env.DB.prepare(
-    'SELECT doi, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at FROM media_repair_state ORDER BY updated_at DESC LIMIT 1200'
-  ));
+  let rows;
+  try {
+    rows = await allRows(env.DB.prepare(
+      'SELECT doi, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at FROM media_repair_state ORDER BY updated_at DESC LIMIT 1200'
+    ));
+  } catch (error) {
+    if (!isLegacySchemaError(error)) throw error;
+    console.warn('MEDIA_LEGACY_SCHEMA_FALLBACK', JSON.stringify({ label: 'repair_status', message: String(error?.message || error) }));
+    const legacy = await allRowsOptional(env.DB.prepare(
+      'SELECT doi, attempts, last_attempt_at, next_retry_at, updated_at FROM media_repair_state ORDER BY updated_at DESC LIMIT 1200'
+    ), 'repair_status_legacy');
+    rows = legacy.map(row => ({ ...row, last_root_cause: '', last_outcome: '', reported_priority: 0 }));
+  }
   return {
     status: 200,
     body: {
