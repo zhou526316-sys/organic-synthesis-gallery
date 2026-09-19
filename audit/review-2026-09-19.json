@@ -1,0 +1,1830 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-19T03:40:00Z",
+  "timeZone": "Asia/Shanghai",
+  "sourceAudit": {
+    "generatedAt": "2026-09-19T03:40:30.374Z",
+    "startDate": "2026-09-17",
+    "endDate": "2026-09-19",
+    "closureDate": "2026-09-18",
+    "sourceRecords": 214,
+    "missingFromGallery": 203,
+    "criticalSourceFailures": 0
+  },
+  "policy": "Every DOI difference in the saved audit received an explicit assistant decision. Keywords only set priority; normal-priority records were also reviewed. No new Crossref/OpenAlex crawl was performed for this manual update.",
+  "summary": {
+    "reviewed": 203,
+    "accepted": 13,
+    "rejected": 190,
+    "pending": 0,
+    "closureDate": "2026-09-18",
+    "closureUnresolved": 0,
+    "currentDayUnresolved": 0
+  },
+  "accepted": [
+    {
+      "doi": "10.1021/jacs.6c12832",
+      "journal": "JACS",
+      "date": "2026-09-19",
+      "title": "Synthesis, Evaluation, and Context for Applications of SF5-Containing [1.1.1]Bicyclopentane and [2]Staffane “Hybrid Bioisosteres”",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1021/jacs.6c15781",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "A Convenient Conversion of Amides to Ketones",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1021/jacs.6c07021",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Chiral Counteranion-Directed Asymmetric Intramolecular Rhodium-Catalyzed [(3+2+2)] Carbocyclization Reactions with Alkylidenecyclopropanes",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04593",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Glycopeptide Assembly via Selective Manganese(I)-Catalyzed C–H Alkenylations in Organic Media and in Water",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05065",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Synergistic Effects of Brønsted Acid Site and Lewis Acid Site of Nb2O5 on the Direct Amination of Alcohols",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1002/anie.8911828",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Access to Axially Chiral Diaryl Ethers via Catalytic Atroposelective [2+2+2] Cycloaddition of Alkynyloxybenzenes",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1002/anie.5852828",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "De Novo Design and Structural Optimization of Mn(salen)-Based Artificial Metalloenzymes for Asymmetric Sulfoxidation",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1002/anie.6992524",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Deaminative Allylation of Primary Amines",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03255",
+      "journal": "Organic Letters",
+      "date": "2026-09-18",
+      "title": "Biomimetic Base-Exchange Reaction for Late-Stage Synthesis of Stereodivergent NAADP+ and NAD(P)+ Derivatives",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03247",
+      "journal": "Organic Letters",
+      "date": "2026-09-18",
+      "title": "Direct C6-Alkynylation of Indoles by Palladium/Norbornene Cooperative Catalysis",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03151",
+      "journal": "Organic Letters",
+      "date": "2026-09-18",
+      "title": "Nondirected Palladium-Catalyzed C(sp3)–H Oxygenation with H2O2",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03147",
+      "journal": "Organic Letters",
+      "date": "2026-09-18",
+      "title": "Photoredox-Catalyzed Radical Heterocyclization of Heteroatom-Tethered Alkenes with α-Iodonium Diazo Compounds",
+      "classification": "methodology_core"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03339",
+      "journal": "Organic Letters",
+      "date": "2026-09-18",
+      "title": "Rh(III)-Catalyzed C–H Activation/[3 + 2] Cycloaddition for the Synthesis of Functionalized Pyrrolo[1,2-a]imidazole Derivatives",
+      "classification": "methodology_core"
+    }
+  ],
+  "rejected": [
+    {
+      "doi": "10.1038/s41467-026-77550-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Single-fiber hyperspectral imaging via nanophotonic disordered dispersion",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77898-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Spatial partitioning of NSD2 defines H3K36me2 as an active mark for repetitive sequence activation",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05165",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Amplifying Electron Sink Effect and Piezoelectric Polarization in Size-Minimized Nitrogen-Rich Carbon Nitride Nanosheets for Boosting H2O2 Piezo-Photosynthesis under Pure Water",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "energy-oriented H2O2 piezo-photosynthesis"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04320",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Application of Single-Atom Synergistic Catalysts in Multifield Coupling Reactions",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "review article"
+    },
+    {
+      "doi": "10.1021/csv016i018_1967738",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Issue Editorial Masthead",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "paratext/review/correction, not a research synthesis paper"
+    },
+    {
+      "doi": "10.1021/csv016i018_1967739",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Issue Publication Information",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "paratext/review/correction, not a research synthesis paper"
+    },
+    {
+      "doi": "10.1021/acscatal.6c02273",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Probing Ethanol Dehydration with Silicon-Doped Aluminophosphates under Realistic Working Conditions Using Inelastic Neutron Scattering and Infrared Measurements",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "heterogeneous catalyst mechanistic spectroscopy"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04560",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Taming Complexity: Structural and Electronic Evolution of Copper Indium Oxide Under CO2 Hydrogenation Via Multi-Method X-ray Characterization",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "CO2 hydrogenation catalyst structure/mechanism"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04799",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Tuning the Local Coordination and Electronic Metal–Support Interaction of Pd Single-Atom Catalysts for Methane Combustion",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "chemistry record reviewed; outside organic synthetic methodology/total-synthesis scope or lacks sufficient general synthetic scope"
+    },
+    {
+      "doi": "10.1021/acscatal.6c06843",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-18",
+      "title": "Unlocking Vacancy-Inherited Reconstruction of Metal-Organic Frameworks toward Water Oxidation",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "water-oxidation electrocatalyst materials"
+    },
+    {
+      "doi": "10.1002/anie.2998568",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Access to Unsupported Iminobismuthane and Tetraazabismole Species Enabled by a Rigid and Bulky Organobismuthinidene",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "main-group inorganic species synthesis; catalytic azide reduction is secondary and not a general organic method"
+    },
+    {
+      "doi": "10.1002/anie.6472829",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Alkali Metal Cation‐Regulated Interfacial Electric Fields Enable Selective C─H Oxidation via Reactive Oxygen Species",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "surface/electrocatalytic model C–H oxidation without general synthetic substrate scope"
+    },
+    {
+      "doi": "10.1002/anie.1584222",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Carbohydrate‐Directed Labeling Probes for UV‐Independent Chemoproteomic Profiling of Carbohydrate–Protein Interactions",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "chemoproteomic labeling application"
+    },
+    {
+      "doi": "10.1002/anie.1859339",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Chirality‐Matched Piezoelectric Responsiveness and Energy Transfer in Supramolecular Co‐Assembly of Dipeptides",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "supramolecular materials study"
+    },
+    {
+      "doi": "10.1002/anie.3165931",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Cobalt‐Catalyzed C─N Bond Formation via Metal‐Hydride Hydrogen Atom Transfer (MHAT)",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "review article"
+    },
+    {
+      "doi": "10.1002/anie.2501599",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Correction to “Achieving over 20% Efficiency in Laminated HTM‐Free Carbon Electrode Perovskite Solar Cells through In Situ Interface Reconstruction”",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "paratext/review/correction, not a research synthesis paper"
+    },
+    {
+      "doi": "10.1002/anie.5409854",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Deciphering Dynamic Self‐Healing for Crystallinity Control in β‐Ketoenamine‐Linked Covalent Organic Frameworks",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "COF crystallinity/materials study"
+    },
+    {
+      "doi": "10.1002/anie.4780761",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Effect of Structural Similarity Between Dopants and Matrices in Organic Room‐Temperature Phosphorescence Materials: “Like Dissolves Like”",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1002/anie.4761895",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Environment‐Regulated Crystal‐Structure Reconfiguration of Hybrid Halide Scintillators Enables Tunable STE Emission Toward Intelligent X‐Ray Imaging",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "scintillator materials"
+    },
+    {
+      "doi": "10.1002/anie.8409117",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Geometric Accommodation of Atom Repulsions Enables Sub‐10 nm Ultra‐Narrowband Multi‐Resonance Blue Emitters",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "OLED emitter materials"
+    },
+    {
+      "doi": "10.1002/anie.2505284",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Intermolecular Carbon–Carbon Naphthalene Coupling Involves a Radical Mechanism Driven by Cytochrome P450 in Alternaria alternata",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "biosynthetic enzyme mechanism, not a preparative methodology"
+    },
+    {
+      "doi": "10.1002/anie.7346886",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Intermolecular Interaction‐Facilitated Unimolecular Dehydration of Cyclohexanol on Rutile TiO 2 (110) Surface",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "surface reaction mechanism"
+    },
+    {
+      "doi": "10.1002/anie.8252739",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "NHC‐Copper(I)‐Mediated Functionalization of White Phosphorus",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "white-phosphorus/main-group inorganic functionalization outside project scope"
+    },
+    {
+      "doi": "10.1002/anie.5734835",
+      "journal": "Angew",
+      "date": "2026-09-18",
+      "title": "Transformation of Active Sites on Cobalt Sulfide Nanoclusters With Similar Nuclearities",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "nanocluster active-site/materials catalysis"
+    },
+    {
+      "doi": "10.1021/jacs.6c09329",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Beyond Symmetric Motifs: Asymmetric Small-Molecule Recognition Directs a New Poly(adenine) Assembly",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "supramolecular/nucleic-acid assembly, not synthetic methodology"
+    },
+    {
+      "doi": "10.1021/jacs.6c07091",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Constructing a Dynamic Interface via Thermoresponsive Polymers to Promote CO2 Electroreduction in a Strongly Acidic Electrolyte",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "CO2 electroreduction interface/materials catalysis"
+    },
+    {
+      "doi": "10.1021/jacs.6c11154",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Engineered Metal-Organic Frameworks Preserve Mitochondrial Bioenergetics at Micromolar Concentrations",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "biointerface/MOF materials study"
+    },
+    {
+      "doi": "10.1021/jacs.6c13048",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "High-Efficiency Host-to-Guest Energy Transfer within Complex Multicomponent Luminescent Metal–Organic Frameworks",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c05378",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Interplay of Lattice Distortion and Cation Disorder Governs Li-Ion Transport in Cation-Disordered Rocksalt Cathodes",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c11486",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Machine-Learning Prediction of Carrier Mobility and Polarity Type of Polymer Semiconductors: from High-Fidelity Data to Experimental Realization",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c12759",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Post-Fabrication Deprotection of Semiconducting Polymers for High-Performance Organic Electrochemical Transistors",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "polymer/device materials processing"
+    },
+    {
+      "doi": "10.1021/jacs.6c14628",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Rate Coefficients by Integration of Total Reaction NMR Spectra",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "analytical/kinetics method, not synthesis"
+    },
+    {
+      "doi": "10.1021/jacs.6c15419",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Room-Temperature Adsorption on Magnetite Induces Spontaneous Fragmentation of Early Transition-Metal Size-Selected Nanoclusters",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c00345",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Screening Lithium-Ion Conductors Based on Local and Global Topology",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c06971",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Structure of Li3YCl6 and Its Effect on Lithium Ionic Conductivity",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "solid-state electrolyte structure"
+    },
+    {
+      "doi": "10.1021/jacs.6c11850",
+      "journal": "JACS",
+      "date": "2026-09-18",
+      "title": "Unlocking Water as Docking Sites in Covalent Organic Frameworks for Enhanced Physisorptive Carbon Capture under Wet Conditions",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02922-6",
+      "journal": "Nature",
+      "date": "2026-09-18",
+      "title": "AI cracked the Navier–Stokes challenge. What does that mean for physics?",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02984-6",
+      "journal": "Nature",
+      "date": "2026-09-18",
+      "title": "Briefing Chat: Evidence mounts for hidden chambers beyond Tutankhamun's tomb",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02946-y",
+      "journal": "Nature",
+      "date": "2026-09-18",
+      "title": "Chinese companies doubled down on science after US tech restrictions",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02897-4",
+      "journal": "Nature",
+      "date": "2026-09-18",
+      "title": "Cognitive resilience helps to predict Alzheimer’s dementia",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02919-1",
+      "journal": "Nature",
+      "date": "2026-09-18",
+      "title": "Europe pushes for space independence amid geopolitical rifts",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02945-z",
+      "journal": "Nature",
+      "date": "2026-09-18",
+      "title": "First for RNA therapy: man with rare motor-neuron disease improves after treatment",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02184-2",
+      "journal": "Nature",
+      "date": "2026-09-18",
+      "title": "How research funding took me out of the lab and into leadership",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02943-1",
+      "journal": "Nature",
+      "date": "2026-09-18",
+      "title": "How to make a brain: new experiments challenge existing picture",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41557-026-02240-4",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-18",
+      "title": "Autonomous migration of a phosphate group along glycerol and inositol scaffolds driven by a phosphodiester reaction cycle",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "fundamental phosphate migration/reaction-cycle study, not preparative synthetic methodology"
+    },
+    {
+      "doi": "10.1038/s41557-026-02252-0",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-18",
+      "title": "Weaving two-dimensional peptide crystals",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "peptide crystal/materials assembly"
+    },
+    {
+      "doi": "10.1038/s41467-026-77870-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "A temporal single cell atlas of dynamic chromatin accessibility during murine lung maturation",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77882-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "A ubiquitin carboxyl-terminal hydrolase facilitates H2A.Z removal in response to phosphate starvation",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77320-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Autophagy inhibition sensitizes radiotherapy responses in high-grade mutant IDH1 glioma",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77838-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "BEAR-GRN: Systematic assessment of single-cell multi-omics-based gene regulatory network inference methods",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77876-4",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Cell-type-specific surfaceome profiling of 100-500 isolated cells using a droplet-based Magnetic Affinity Purification System",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77605-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Characterization of recombinase-based genetic parts and circuits using nanopore sequencing",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77360-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "ConvexGating infers gating strategies from clusters in single cell cytometry data",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77849-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Coordination-mediated cold quenching for the synthesis of strongly quantum-confined FAPbI3 quantum dots",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "chemistry record reviewed; outside organic synthetic methodology/total-synthesis scope or lacks sufficient general synthetic scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77641-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Distinct migratory dendritic cell subsets cooperate to prime tissue-resident memory-like CD8⁺ T cells in mouse tumors",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77920-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Genome-wide cross-trait analysis to compare genetic architecture between Parkinson’s disease and kidney-related traits",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77728-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Imaging nanoscopic co-assemblies of α-synuclein and Tau in human samples",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77914-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Large strain and high reversible dielectric tunability in Sm-modified PMN-PT ceramics",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77645-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Learning chemical-induced gene expression perturbations with WAVE",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77747-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Massive release of predominantly magmatic carbon drove an Early Jurassic hyperthermal",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77787-4",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Microglia and border-associated macrophages play opposite roles in cerebrovascular and leukocyte responses under systemic inflammation in male mice",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77553-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Modular assembly of arterial organoids enables rapid blood perfusion to ameliorate ischemic diseases",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77705-8",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Ociperlimab and tislelizumab in advanced esophageal squamous cell carcinoma (AdvanTIG-203): a phase II study",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77930-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "ReScale4DL: balancing pixel and contextual information for enhanced bioimage segmentation",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-76586-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Resonating-valence-bond superconductor from small Fermi surface in twisted bilayer graphene",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77854-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Small extracellular vesicle-mediated epithelial–macrophage crosstalk contributes to macrophage dysfunction during PEDV infection",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77745-0",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Spatiotemporal metabolic networks in a preclinical model of pancreatic cancer and associated cachexia",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77872-8",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "The DNMT1 CXXC domain senses CpG islands for DNA methylation inhibition",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77802-8",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Uncoupling of the allosteric signalling network in the β1-adrenergic receptor by a negative allosteric modulator",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77862-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Wafer-scale conformal metasurface optics",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77366-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-18",
+      "title": "Whisker-based tactile flight for tiny drones",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s44160-026-01159-5",
+      "journal": "Nature Synthesis",
+      "date": "2026-09-18",
+      "title": "Through-space conductive pathways for polyoxometalate electronics",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "polyoxometalate electronics/materials"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03495",
+      "journal": "Organic Letters",
+      "date": "2026-09-18",
+      "title": "Functionalization of Polyamide Cages through Peripheral Postmodification",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "single-scaffold supramolecular cage postmodification; insufficient general substrate scope"
+    },
+    {
+      "doi": "10.1021/olv028i037_2131167",
+      "journal": "Organic Letters",
+      "date": "2026-09-18",
+      "title": "Issue Editorial Masthead",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "paratext/review/correction, not a research synthesis paper"
+    },
+    {
+      "doi": "10.1021/olv028i037_2131166",
+      "journal": "Organic Letters",
+      "date": "2026-09-18",
+      "title": "Issue Publication Information",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "issue publication information"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04749",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-17",
+      "title": "Delocalized Electronic Buffering at Pd/High-Entropy Oxide Interfaces Enables Water-Tolerant Methane Oxidation",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "methane-oxidation heterogeneous catalysis"
+    },
+    {
+      "doi": "10.1021/acscatal.6c03185",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-17",
+      "title": "Electronic Communication Between Ferroelectric Surface Dipoles and Catalytic Active Sites Under Diverse Reaction Conditions",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "ferroelectric surface/catalyst interface study"
+    },
+    {
+      "doi": "10.1021/acscatal.6c03855",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-17",
+      "title": "Emerging N-Heterocyclic Carbene–Nickel Catalysis: Bond Activations, Cross-Coupling Reactions, and Beyond",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "review article"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05166",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-17",
+      "title": "Mg-Doping Engineered Interfacial Electronic Structures in Ordered Porous Nanoreactors for Enhanced Solar Photothermal CO2 Methanation",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "CO2 methanation materials catalysis"
+    },
+    {
+      "doi": "10.1021/jacs.6c10187",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "A Twisted σ-Bond Mediated by a Lone-Pair in Elemental Sulfur",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "fundamental bonding study"
+    },
+    {
+      "doi": "10.1021/jacs.6c13098",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Atmospheric Fate of Acyloxyl Radicals: Decomposition versus Isomerization",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "atmospheric radical chemistry"
+    },
+    {
+      "doi": "10.1021/jacs.6c14417",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Electronic Effects Modulated Hemilabile Carboxylate Coordination of Ruthenium Complexes for Electrocatalytic Ammonia Oxidation",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "electrocatalytic ammonia oxidation"
+    },
+    {
+      "doi": "10.1021/jacs.6c10078",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Femtosecond X-ray Tracking of Oxygen Vacancy-Driven Shallow-to-Deep Trap Transition and Its Impact on Charge Carrier Dynamics in Blue TiO2",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "photocatalytic materials charge dynamics"
+    },
+    {
+      "doi": "10.1021/jacs.6c06384",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Interconnected Pore Channels with Sieving Windows Deliver Ultrafast Propylene Purification",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "porous-material separation"
+    },
+    {
+      "doi": "10.1021/jacs.6c11739",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Lanthanide-Enabled Lattice Engineering of Copper(I) Cluster Scintillators",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "scintillator materials"
+    },
+    {
+      "doi": "10.1021/jacs.6c13561",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Overcoming Challenges and Limitations of Electrochemical Gas-Starved Systems: Nanobubble-Engineered Enhancement of the CO2 Reduction Reaction",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "CO2 electroreduction engineering"
+    },
+    {
+      "doi": "10.1021/jacs.6c13687",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Oxidation-Enabled Assembly Forms a Diatomic Catalyst for Propane Dehydrogenation",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "heterogeneous propane dehydrogenation catalyst"
+    },
+    {
+      "doi": "10.1021/jacs.6c11538",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Receptor-Guided Targeted Protein Degradation Collapses Extracellular Vesicle-Driven Tumor-Stroma Crosstalk",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c14521",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Reconstruction of a 30,000-Year-Old Biosynthetic Gene Cluster Reveals Lasso Peptides Formed by a Highly Tolerant Cyclase",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "chemistry record reviewed; outside organic synthetic methodology/total-synthesis scope or lacks sufficient general synthetic scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c10488",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Revealing Non-Steady-State Structure–Performance Relationship in Plateau-Capacity-Dominated Hard Carbon Anodes for High-Rate Reversible Sodium Storage",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c12109",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Second-Sphere Protonation Imparts a Biologically Relevant Potential Shift in a Chlorophyll Model Compound",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "bioinorganic/chlorophyll model study"
+    },
+    {
+      "doi": "10.1021/jacs.6c13549",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Skeletal Distortion Manipulation in 2D–3D-Fused Boron Clusters Enables Solid-State Luminescence and Photothermal Conversion",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c12077",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Structural Mass Spectrometry Resolves the Conformational Dynamics of Semaglutide Oligomerization",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c12466",
+      "journal": "JACS",
+      "date": "2026-09-17",
+      "title": "Unraveling the Biosynthesis and Anti-Inflammatory Bioactivity of Tripdiolide from Tripterygium wilfordii",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "chemistry record reviewed; outside organic synthetic methodology/total-synthesis scope or lacks sufficient general synthetic scope"
+    },
+    {
+      "doi": "10.1038/s41586-026-11134-x",
+      "journal": "Nature",
+      "date": "2026-09-17",
+      "title": "Author Correction: Genomic deletion of malic enzyme 2 confers collateral lethality in pancreatic cancer",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "paratext/review/correction, not a research synthesis paper"
+    },
+    {
+      "doi": "10.1038/d41586-026-02621-2",
+      "journal": "Nature",
+      "date": "2026-09-17",
+      "title": "Exclusive: New evidence for hidden chambers beyond Tutankhamun’s tomb",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02954-y",
+      "journal": "Nature",
+      "date": "2026-09-17",
+      "title": "How a team of AIs discovered a promising lung-cancer drug",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02913-7",
+      "journal": "Nature",
+      "date": "2026-09-17",
+      "title": "How fast are you ageing? Ask AI",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02898-3",
+      "journal": "Nature",
+      "date": "2026-09-17",
+      "title": "Mercury is shrinking with age — faster than thought",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02896-5",
+      "journal": "Nature",
+      "date": "2026-09-17",
+      "title": "Schoolhouse meals serve up an income bump",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02911-9",
+      "journal": "Nature",
+      "date": "2026-09-17",
+      "title": "Take a risk or play it safe? Neuronal tug-of-war helps the brain decide",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/d41586-026-02910-w",
+      "journal": "Nature",
+      "date": "2026-09-17",
+      "title": "Who gets credit in the AI era? OpenAI maths bombshell sparks debate",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41557-026-02256-w",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-17",
+      "title": "F-centre charge state and dynamism govern oxide electrocatalytic selectivity",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "oxide electrocatalysis"
+    },
+    {
+      "doi": "10.1038/s41557-026-02253-z",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-17",
+      "title": "Forging ammonia with iron and light from water and nitrogen",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "ammonia synthesis/energy catalysis"
+    },
+    {
+      "doi": "10.1038/s41467-026-77697-5",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "A lipoprotein-biomimetic nanoplatform for oncogenic KRAS mutation-specific lysosome-targeting protein degradation",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77725-4",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Absence of a prolonged macrophage and B cell response inhibits heart regeneration in the Mexican cavefish",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77887-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Ambient, real-time digitization and datafication of glass slide microscopy towards AI-at-the-microscope",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77451-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Ashwin and FAM98 paralogs define nuclear and cytoplasmic RNA ligase complexes for tRNA biogenesis",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77809-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Asymmetric basin-wide responses of coastal phytoplankton biomass to the Indian Ocean dipole",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77735-2",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Author Correction: Straightforward construction of functionalized γ-lactams via conjugated-engineered covalent organic framework photocatalysed cascade reactions",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "paratext/review/correction, not a research synthesis paper"
+    },
+    {
+      "doi": "10.1038/s41467-026-76599-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Behaviorally-relevant features of observed actions dominate cortical representational geometry in natural vision",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-76974-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Cardiopulmonary hospitalization risks from wildfire-specific and non-wildfire PM2.5 in 20 US states",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77460-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Cell type–selective targeting by heterobifunctional protein binders via in-cell enrichment",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77512-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Characterization of hypothetical proteins reveals function modules and virulence factors in Pseudomonas aeruginosa",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77772-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Climate urgency enables political alignment for Latin American power integration",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-75406-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Color patterns as a model for connecting developmental mechanisms to phenotypic evolution",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77080-4",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Data-driven massive reaction networks reveal mechanistic pathways underlying catalytic CO2 hydrogenation",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "chemistry record reviewed; outside organic synthetic methodology/total-synthesis scope or lacks sufficient general synthetic scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77724-5",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Development-inspired approach for the derivation of functional and transplantable salivary gland organoids from human pluripotent stem cells",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77785-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Divergent genome fractionation and adaptation following polyploidy in the Araliaceae",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77650-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Electron delocalization-driven high dielectric electrolyte for solid-state lithium metal batteries",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77805-5",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Enzyme-mimicking peripheral substituents beyond the second coordination sphere tune single-atom catalysts for periodate activation",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "chemistry record reviewed; outside organic synthetic methodology/total-synthesis scope or lacks sufficient general synthetic scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77194-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "European ash pangenome reveals widespread structural variation and genetic basis of low ash dieback susceptibility",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77780-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Functional characterization of viral transcriptional regulators reveals extensive rewiring of host pathways",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77561-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Interface-driven boost in the performance and stability of protonic ceramic electrochemical cells",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77425-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Machine learning forecasts suggest a concentration paradox in international student mobility to the United Kingdom",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77759-8",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Mammalian DNA maintenance methylation depends on histone but not PAF15 ubiquitination",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77659-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Mechanistic Basis for 5-HT2AR Over 5-HT2BR Activation",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77824-2",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Methodological Variations in Environmental Justice Screening Tools and Their Impact on Disadvantaged Community Designations",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77784-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Multiplexed embryo profiling links cellular state to zygotic genome activation in single cells",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77825-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Nano-NucleOTAC-mediated Z-DNA transformation disrupts mycobacterium tuberculosis biofilms and activates antibacterial immunity",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77593-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Nano-wrinkle waveguides for programmable polariton channeling",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77875-5",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Nanohelical Permeable Electronics with Strain-Insensitive Performance",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77531-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Net carbon losses in Central African forests revealed by high-resolution biomass change maps",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77760-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Omaveloxolone functions as a molecular crowbar-like degrader of STING to alleviate aging-related inflammation",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-76416-4",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Predicting unknown mammalian viral hosts with Dynamic Positive–Unlabeled learning",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77860-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Proximity biotinylation at the host-Shigella interface reveals UFMylation as an antibacterial pathway",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77819-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Rapid and repeated evolution of increased competitive ability in a global invader",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77580-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Silicon-photonics optoacoustic sensor for fully wearable blood pressure monitoring",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77667-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Solvent polarizability governs Li⁺ transport kinetics for high energy lithium metal batteries",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77450-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Structural framework for the assembly of the human tRNA ligase complex",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77484-2",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Structure based discovery of antipsychotic-like TAAR1 agonists",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77658-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Structure-based design of subtype-selective psychedelic analogs",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77508-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Structures of the volume-regulated anion channel LRRC8A/D in activating and inhibiting conditions",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77674-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Suspended thin-film lithium niobate modulator for broadband mid-infrared light modulation and frequency comb generation",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-76839-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "The brain of the female Anopheles gambiae mosquito at spatial and single-cell resolution",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77507-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "The intracellular subdomain of the volume-regulated anion channel subunit LRRC8A is a hotspot of channel activation",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77792-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "The PAXT connection is a modifier of rare codon-enriched protein expression",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77822-4",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Towards a quantitative description of nanostructured order in amorphous diamond-like carbon",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77826-0",
+      "journal": "Nature Communications",
+      "date": "2026-09-17",
+      "title": "Transient activation of ciliary CCR2 signaling promotes the initiation of adipogenesis",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03362",
+      "journal": "Organic Letters",
+      "date": "2026-09-17",
+      "title": "1,2- seco -Bicyclic Polyprenylated Acylphloroglucinols as Isoform Selective Inhibitors of T-Type Calcium Channels",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "natural-product isolation/bioactivity, not synthesis"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02870",
+      "journal": "Organic Letters",
+      "date": "2026-09-17",
+      "title": "A Modular Rapid-Injection NMR for Structure Elucidation and Kinetic Analysis",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "NMR instrumentation/kinetics method"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03613",
+      "journal": "Organic Letters",
+      "date": "2026-09-17",
+      "title": "Discovery of Three Macrocyclic Diterpenoid Skeletons from Croton laevigatus and Their NF-κB Inhibitory Activity",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "natural-product isolation/bioactivity, not total synthesis"
+    },
+    {
+      "doi": "10.1126/science.aei0498",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "A noncontiguous code for RNA-guided DNA recognition at the origin of CRISPR-Cas",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aem4012",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "A seismic shift",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.ael0758",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "A viral origin for RNA-guided immunity",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aem4440",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Alarming report on AI and bioweapons divides scientists",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.ael2468",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Alberta’s ill-advised black bear hunting",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aec6129",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "An expert-level generalist AI for abdominal CT diagnosis",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.adv1295",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Ancient DNA unveils distinctive ancestries in the Bronze and Iron Ages of East Tianshan",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aec4071",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Atmospheric methane lifetime during the Last Glacial Maximum was reduced owing to dust-mediated chlorine chemistry",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.ael8642",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Ban bets on unfinished clinical trials",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "editorial/commentary"
+    },
+    {
+      "doi": "10.1126/science.aem2760",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Biodiversity science’s missing species",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aek5942",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Climate unrest comes to a fictionalized France The Hunger of Those Who Built It Wendy Waring Stelliform Press, 2026. 370 pp.",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aeg3946",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Disorder-promoted stability",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.ael6948",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Escaping a downward spiral for science and public accountability",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.adz0521",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Extreme loss suppression in an ultracold molecular gas with widely tunable dipolar interactions",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.adz9952",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Fast, continuous, and coherent atom reloading in a neutral-atom qubit array",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aek6854",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Free inquiry depends on freedom of movement",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aem4444",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Future forests",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aed7991",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Geopolitical tensions with the US accelerate Chinese firms’ leveraging of science",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aec0473",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Germline EGFR T790M mutation and lung cancer risk",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aem4011",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "In Other Journals",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aem4010",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "In Science Journals",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aek3832",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "In search of past genetics",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aem4442",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "In water fight, California to spend billions on ‘visionary’ plan to boost fish habitat",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.ady6372",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Multi-organelle signatures map cell-state diversity and metabolic adaptation in tissues",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aem4441",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "New platform could broaden conference poster audience",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aek9090",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Noise and diversity can boost stability",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.adx5917",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Nuclear tests at Mt. Mantap have reactivated intraplate faults",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "geophysics"
+    },
+    {
+      "doi": "10.1126/science.aem4439",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "OpenAI leap triggers ‘existential crisis’ in math",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.ael3062",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Parsing heterogeneity in autism spectrum disorder",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aek9555",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Prevent a drone e-waste crisis",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.adx9928",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Protecting tropical forests is more cost-effective for biodiversity and climate than restoration",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aeh7535",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Quantum jumps of sound",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aem4443",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Social science studies often breach participants’ privacy",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aec7230",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Splenic regulation of systemic platelet activation state",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aej4194",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "The indomitable Stephen Hawking Hawking Graham Farmelo Bantam, 2026. 608 pp.",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aeg6779",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "The Virtual Biotech: A multi-agent AI framework for therapeutic discovery and development",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.adz6688",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "Transcriptome-based classification in mice with ASD-risk mutations",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1126/science.aei3472",
+      "journal": "Science",
+      "date": "2026-09-17",
+      "title": "VIPR RNA-guided DNA recognition by noncontiguous geometric triplex formation",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "outside organic synthesis methodology/total-synthesis scope"
+    }
+  ],
+  "pending": []
+}
