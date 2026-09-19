@@ -157,7 +157,7 @@ function rejectContext(value) {
 function assetType(text, publisher) {
   const t = String(text || '');
   if (/toc\s*(?:and\s*abstract\s*)?(?:graphic|image)|table\s*of\s*contents\s*(?:graphic|image)/i.test(t)) return 'toc_graphic';
-  if (/graphical\s*abstract|visual\s*abstract/i.test(t)) return 'graphical_abstract';
+  if (/graphical\s*abstract|visual\s*abstract|graphical\s*(?:summary|synopsis)|visual\s*summary/i.test(t)) return 'graphical_abstract';
   if (/abstract\s*(?:graphic|image)/i.test(t)) return 'abstract_image';
   if (publisher === 'wiley' && /first\s+page\s+image/i.test(t)) return 'graphical_abstract';
   return '';
@@ -224,7 +224,7 @@ export function extractPublisherMediaCandidates(html, pageUrl, options = {}) {
     if (type) addCandidate(map, a.content, pageUrl, { publisher, source: 'publisher_metadata', assetType: type, text: key, bonus: 250 });
   }
 
-  const strong = /toc\s*(?:and\s*abstract\s*)?(?:graphic|image)|graphical\s*abstract|visual\s*abstract|abstract\s*(?:graphic|image)|table\s*of\s*contents\s*(?:graphic|image)/gi;
+  const strong = /toc\s*(?:and\s*abstract\s*)?(?:graphic|image)|graphical\s*abstract|visual\s*abstract|graphical\s*(?:summary|synopsis)|visual\s*summary|abstract\s*(?:graphic|image)|table\s*of\s*contents\s*(?:graphic|image)|first\s+page\s+image/gi;
   for (const fragment of windows(source, strong)) {
     const context = stripHtml(fragment).slice(0, 2500);
     const type = assetType(context, publisher);
