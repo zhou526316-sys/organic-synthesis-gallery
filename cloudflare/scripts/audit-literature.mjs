@@ -1,4 +1,4 @@
-import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
 
@@ -90,8 +90,41 @@ async function loadGalleryDois() {
     const doi = normalizeDoi(paper?.doi || paper?.url || '');
     if (doi.startsWith('10.')) dois.add(doi);
   };
-  const encoded = Buffer.from(await siteBytes('papers.gz.b64')).toString('utf8').trim();
-  JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8')).forEach(add);
+
+  // Repository data is the write-side source of truth. Read it first so an
+  // audit that races a Pages deployment does not rediscover papers that were
+  // already accepted and committed but are not visible on the CDN yet.
+  try {
+    const encoded = (await readFile(path.resolve('public/papers.gz.b64'), 'utf8')).trim();
+    JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8')).forEach(add);
+  } catch (error) {
+    console.warn(`Repository baseline unavailable: ${error.message}`);
+  }
+  for (const file of [
+    'total-synthesis.json',
+    'manual-supplement.json',
+    'final-audit-supplement.json',
+    'curated-supplement.json',
+    'automation-supplement.json',
+    'rolling-supplement.json',
+    'literature-supplement.json',
+  ]) {
+    try {
+      const payload = JSON.parse(await readFile(path.resolve('public', file), 'utf8'));
+      (payload?.papers || []).forEach(add);
+    } catch {
+      // Optional/local generated source.
+    }
+  }
+
+  // Union the currently deployed snapshot as a compatibility fallback for any
+  // data that may still be served dynamically but is not yet repository-owned.
+  try {
+    const encoded = Buffer.from(await siteBytes('papers.gz.b64')).toString('utf8').trim();
+    JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8')).forEach(add);
+  } catch (error) {
+    console.warn(`Deployed baseline unavailable: ${error.message}`);
+  }
   for (const file of ['total-synthesis.json', 'manual-supplement.json', 'final-audit-supplement.json', 'literature-supplement.json']) {
     try {
       const payload = JSON.parse(Buffer.from(await siteBytes(file)).toString('utf8'));
@@ -100,11 +133,29 @@ async function loadGalleryDois() {
       console.warn(`Gallery asset unavailable: ${file}: ${error.message}`);
     }
   }
-  try {
-    const curated = JSON.parse(await readFile(path.resolve('public/curated-supplement.json'), 'utf8'));
-    (curated?.papers || []).forEach(add);
-  } catch {}
   return dois;
+}
+
+async function loadReviewExclusions() {
+  const excluded = new Set();
+  const files = await readdir(path.resolve('audit')).catch(() => []);
+  for (const file of files.filter(name => /^review-.*\\.json$/i.test(name)).sort()) {
+    try {
+      const payload = JSON.parse(await readFile(path.resolve('audit', file), 'utf8'));
+      for (const item of payload?.rejected || []) {
+        const doi = normalizeDoi(item?.doi);
+        if (doi) excluded.add(doi);
+      }
+      for (const item of payload?.decisions || []) {
+        if (String(item?.decision || '').toLowerCase() !== 'exclude') continue;
+        const doi = normalizeDoi(item?.doi);
+        if (doi) excluded.add(doi);
+      }
+    } catch (error) {
+      console.warn(`Review decision file unavailable: ${file}: ${error.message}`);
+    }
+  }
+  return excluded;
 }
 
 function mergeCandidate(map, incoming) {
@@ -249,7 +300,7 @@ function compactCandidate(c) {
   };
 }
 
-const galleryDois = await loadGalleryDois();
+const [galleryDois, reviewedExclusions] = await Promise.all([loadGalleryDois(), loadReviewExclusions()]);
 const merged = new Map();
 const stats = [];
 
@@ -261,7 +312,9 @@ for (const journal of JOURNALS) {
 }
 
 const universe = [...merged.values()].filter(c => !c.date || (c.date >= START && c.date <= END));
-const missing = universe.filter(c => !galleryDois.has(c.doi));
+const rawMissing = universe.filter(c => !galleryDois.has(c.doi));
+const reviewedExcluded = rawMissing.filter(c => reviewedExclusions.has(c.doi));
+const missing = rawMissing.filter(c => !reviewedExclusions.has(c.doi));
 const missingCandidates = missing
   .sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.journal.localeCompare(b.journal) || String(a.title).localeCompare(String(b.title)))
   .map(compactCandidate);
@@ -270,20 +323,30 @@ const potentialGaps = missingCandidates.filter(c => c.reviewPriority === 'high')
 const criticalFailures = stats.filter(s => !s.ok);
 const byJournal = Object.fromEntries(JOURNALS.map(j => {
   const candidates = universe.filter(x => x.journal === j.name);
+  const rawMissingForJournal = rawMissing.filter(x => x.journal === j.name);
+  const reviewedExcludedForJournal = rawMissingForJournal.filter(x => reviewedExclusions.has(x.doi));
   const missingForJournal = missingCandidates.filter(x => x.journal === j.name);
   const gaps = missingForJournal.filter(x => x.reviewPriority === 'high');
   return [j.name, {
     sourceRecords: candidates.length,
     coveredByGallery: candidates.filter(x => galleryDois.has(x.doi)).length,
+    rawMissingFromGallery: rawMissingForJournal.length,
+    previouslyReviewedExcluded: reviewedExcludedForJournal.length,
     missingFromGallery: missingForJournal.length,
     potentialGaps: gaps.length,
   }];
 }));
 
 const closureUniverse = universe.filter(c => c.date === CLOSURE_DATE);
+const closureRawMissing = rawMissing.filter(c => c.date === CLOSURE_DATE);
+const closureReviewedExcluded = closureRawMissing.filter(c => reviewedExclusions.has(c.doi));
 const closureMissing = missingCandidates.filter(c => c.date === CLOSURE_DATE);
 const closurePotentialGaps = closureMissing.filter(c => c.reviewPriority === 'high');
-const closureStatus = criticalFailures.length > 0 ? 'blocked-source-failure' : 'requires-assistant-review';
+const closureStatus = criticalFailures.length > 0
+  ? 'blocked-source-failure'
+  : closureMissing.length > 0
+    ? 'requires-assistant-review'
+    : 'assistant-decisions-complete';
 
 const report = {
   auditVersion: 3,
@@ -293,10 +356,12 @@ const report = {
   startDate: START,
   endDate: END,
   closureDate: CLOSURE_DATE,
-  policy: 'Multi-ISSN Crossref online/published union plus OpenAlex union. Default window is the current Beijing date plus the two preceding calendar dates. All DOI differences are exposed for assistant review; deterministic screening only assigns review priority and never silently excludes a missing record.',
+  policy: 'Multi-ISSN Crossref online/published union plus OpenAlex union. Default window is the current Beijing date plus the two preceding calendar dates. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Persisted assistant exclude decisions resolve previously reviewed DOI differences; new/unresolved differences remain exposed for assistant review. Deterministic screening only assigns review priority and never silently excludes a new missing record.',
   summary: {
     galleryDois: galleryDois.size,
     sourceRecords: universe.length,
+    rawMissingFromGallery: rawMissing.length,
+    previouslyReviewedExcluded: reviewedExcluded.length,
     missingFromGallery: missing.length,
     potentialGaps: potentialGaps.length,
     criticalSourceFailures: criticalFailures.length,
@@ -306,11 +371,13 @@ const report = {
     date: CLOSURE_DATE,
     status: closureStatus,
     sourceRecords: closureUniverse.length,
+    rawMissingFromGallery: closureRawMissing.length,
+    previouslyReviewedExcluded: closureReviewedExcluded.length,
     missingFromGallery: closureMissing.length,
     potentialGaps: closurePotentialGaps.length,
     criticalSourceFailures: criticalFailures.length,
-    verifiedThroughEligible: false,
-    note: 'Machine audit never advances verifiedThrough by itself. Every missing record for the closure date must receive an explicit assistant decision, publisher sources must be cross-checked where available, unresolved must reach zero, and critical source failures must be zero.',
+    verifiedThroughEligible: criticalFailures.length === 0 && closureMissing.length === 0,
+    note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, and critical source failures must be zero.',
   },
   byJournal,
   sourceStats: stats,
