@@ -34,7 +34,7 @@ jobs:
           set -euo pipefail
           gh workflow run cloudflare-user-ui-release.yml --repo "$REPO" --ref main
           for i in {1..30}; do
-            RUN_ID="$(gh run list --repo "$REPO" --workflow cloudflare-user-ui-release.yml --branch main --event workflow_dispatch --limit 10 --json databaseId,headSha,status --jq '.[] | select(.headSha == env.GITHUB_SHA) | .databaseId' | head -n1)"
+            RUN_ID="$(gh run list --repo "$REPO" --workflow cloudflare-user-ui-release.yml --branch main --event workflow_dispatch --limit 10 --json databaseId,headSha,status --jq ".[] | select(.headSha == \"$GITHUB_SHA\") | .databaseId" | head -n1)"
             if [ -n "$RUN_ID" ]; then
               echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
               exit 0
