@@ -18,6 +18,12 @@
       "primaryBlobSha": "78a60e833c102497d03770c58cd6fae4adb5675d",
       "publisherFallbackPath": ".github/scripts/toc_collector_015_publisher_fallback.py",
       "publisherFallbackBlobSha": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
+    },
+    "websiteMediaSync": {
+      "path": "cloudflare/scripts/merge-worker-media.mjs",
+      "blobSha": "8a518d03f2c894755ad1c57f07c699017db9b136",
+      "validation": "GitHub Pages run 35418810801 succeeded with galleryDois=463, workerItems=463, finalRecords=407, failures=0 and figure metadata=716",
+      "semanticImpact": "Downstream media synchronization coverage only. Adds rolling-supplement.json to media sync; does not alter literature discovery, inclusion decisions, or upstream TOC retrieval, so it does not require a literature refetch."
     }
   },
   "pendingValidation": [
