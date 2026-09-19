@@ -26,8 +26,20 @@ function trueToc(toc) {
   );
 }
 
+function sniffImageType(bytes, declaredType = '') {
+  const head = bytes.subarray(0, Math.min(bytes.length, 1024));
+  const text = head.toString('utf8').replace(/^\uFEFF/, '').trimStart().toLowerCase();
+  if (text.startsWith('<?xml') || text.startsWith('<svg') || text.includes('<svg ')) return 'image/svg+xml';
+  if (head.length >= 8 && head[0] === 0x89 && head[1] === 0x50 && head[2] === 0x4e && head[3] === 0x47) return 'image/png';
+  if (head.length >= 3 && head[0] === 0xff && head[1] === 0xd8 && head[2] === 0xff) return 'image/jpeg';
+  if (head.length >= 12 && head.toString('ascii', 0, 4) === 'RIFF' && head.toString('ascii', 8, 12) === 'WEBP') return 'image/webp';
+  if (head.length >= 6 && /^GIF8[79]a$/.test(head.toString('ascii', 0, 6))) return 'image/gif';
+  return String(declaredType || '').split(';')[0].trim().toLowerCase();
+}
+
 function extensionFor(contentType, url) {
   const type = String(contentType || '').split(';')[0].trim().toLowerCase();
+  if (type === 'image/svg+xml') return 'svg';
   if (type === 'image/png') return 'png';
   if (type === 'image/webp') return 'webp';
   if (type === 'image/gif') return 'gif';
@@ -35,7 +47,7 @@ function extensionFor(contentType, url) {
   if (type === 'image/jpeg' || type === 'image/jpg') return 'jpg';
   try {
     const ext = new URL(url).pathname.match(/\.([a-z0-9]{2,5})$/i)?.[1]?.toLowerCase();
-    if (['png','webp','gif','avif','jpg','jpeg'].includes(ext || '')) return ext === 'jpeg' ? 'jpg' : ext;
+    if (['svg','png','webp','gif','avif','jpg','jpeg'].includes(ext || '')) return ext === 'jpeg' ? 'jpg' : ext;
   } catch {}
   return 'jpg';
 }
@@ -75,10 +87,11 @@ async function downloadCapture(item) {
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const bytes = Buffer.from(await response.arrayBuffer());
   if (bytes.length < 100 || bytes.length > MAX_IMAGE_BYTES) throw new Error(`invalid image size ${bytes.length}`);
-  const ext = extensionFor(response.headers.get('content-type') || item.contentType, item.imageUrl);
+  const detectedType = sniffImageType(bytes, response.headers.get('content-type') || item.contentType);
+  const ext = extensionFor(detectedType, item.imageUrl);
   const name = `local-${createHash('sha256').update(`${item.doi}|${item.kind}|${item.contentHash || item.imageUrl}`).digest('hex').slice(0,28)}.${ext}`;
   await writeFile(path.join(MEDIA_DIR, name), bytes);
-  return { localUrl: `media-mirror/${name}`, bytes: bytes.length };
+  return { localUrl: `media-mirror/${name}`, bytes: bytes.length, contentType: detectedType };
 }
 
 async function main() {
@@ -122,7 +135,9 @@ async function main() {
 
       if (kind === 'official') {
         official += 1;
-        if (!trueToc(record.toc)) {
+        const refreshLocalCapture = record?.toc?.sourceRepository === 'Local VPN Collector'
+          || String(record?.toc?.imageUrl || '').startsWith('media-mirror/local-');
+        if (!trueToc(record.toc) || refreshLocalCapture) {
           record.toc = {
             available: true,
             doi,
