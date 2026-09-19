@@ -2,9 +2,8 @@ import { escapeHtml, makeId, SHAPES, statusLabel, store, WORKER_API_BASE, type A
 
 const NAME = 'gallery-user-shell';
 const SESSION_KEY = 'organic-gallery-session-v1';
-type Tab = 'saved' | 'notes' | 'followed' | 'settings' | 'login' | 'support';
+type Tab = 'saved' | 'notes' | 'followed' | 'settings' | 'login';
 type Provider = 'google' | 'wechat' | 'qq' | 'email';
-type PayProvider = 'wechat' | 'alipay';
 interface IntegrationStatus { auth: Record<Provider, boolean>; payments: Record<PayProvider, boolean>; }
 interface AuthUser { id: string; displayName?: string | null; email?: string | null; avatarUrl?: string | null; }
 
@@ -21,13 +20,10 @@ export class GalleryUserShell extends HTMLElement {
   private readonly shadow = this.attachShadow({ mode: 'open' });
   private open = false;
   private tab: Tab = 'saved';
-  private supportError = '';
   private integrationMessage = '';
   private integrations: IntegrationStatus | null = null;
   private authUser: AuthUser | null = null;
   private authMode: 'login' | 'register' = 'login';
-  private paymentCodeUrl = '';
-  private paymentOrderId = '';
   private readonly rerender = (): void => this.render();
   private readonly outside = (event: PointerEvent): void => { if (this.open && !event.composedPath().includes(this)) { this.open = false; this.render(); } };
 
@@ -53,7 +49,7 @@ export class GalleryUserShell extends HTMLElement {
   }
 
   private panelMarkup(): string {
-    const tabs: Array<[Tab, string]> = [['saved', this.tr('我的收藏', 'Saved')], ['notes', this.tr('私人备注', 'Notes')], ['followed', this.tr('关注检索', 'Followed')], ['settings', this.tr('个性化设置', 'Settings')], ['login', this.tr('登录', 'Sign in')], ['support', this.tr('支持本站', 'Support')]];
+    const tabs: Array<[Tab, string]> = [['saved', this.tr('我的收藏', 'Saved')], ['notes', this.tr('私人备注', 'Notes')], ['followed', this.tr('关注检索', 'Followed')], ['settings', this.tr('个性化设置', 'Settings')], ['login', this.tr('登录', 'Sign in')]];
     return `<section class='panel'><nav class='nav'>${tabs.map(([tab, label]) => `<button type='button' data-tab='${tab}' class='${this.tab === tab ? 'active' : ''}'>${label}</button>`).join('')}</nav><div class='content'><div class='head'><h3>${tabs.find(([tab]) => tab === this.tab)?.[1] || ''}</h3><button class='close' type='button' data-action='close'>×</button></div>${this.tabBody()}</div></section>`;
   }
 
@@ -62,8 +58,7 @@ export class GalleryUserShell extends HTMLElement {
     if (this.tab === 'notes') return this.paperList('notes');
     if (this.tab === 'followed') return this.followed();
     if (this.tab === 'settings') return this.settings();
-    if (this.tab === 'login') return this.login();
-    return this.support();
+    return this.login();
   }
 
   private paperList(mode: 'saved' | 'notes'): string {
@@ -81,7 +76,7 @@ export class GalleryUserShell extends HTMLElement {
   }
 
   private settings(): string {
-    const actions: Array<[ActionKey, string]> = [['favorite', this.tr('收藏', 'Save')], ['status', this.tr('阅读状态', 'Status')], ['note', this.tr('备注', 'Note')], ['more', this.tr('更多', 'More')], ['login', this.tr('登录', 'Sign in')], ['support', this.tr('支持本站', 'Support')]];
+    const actions: Array<[ActionKey, string]> = [['favorite', this.tr('收藏', 'Save')], ['status', this.tr('阅读状态', 'Status')], ['note', this.tr('备注', 'Note')], ['more', this.tr('更多', 'More')], ['login', this.tr('登录', 'Sign in')]];
     return `<section class='section'><label class='row'><input type='checkbox' data-hide-read ${store.state.hideRead ? 'checked' : ''}>${this.tr('隐藏已读', 'Hide read')}</label></section>
     <section class='section'><h4>${this.tr('阅读状态', 'Reading status')}</h4><div class='manage'>${store.state.statuses.map(status => `<div class='manage-row'><div class='top'><input type='text' data-status-name='${escapeHtml(status.id)}' value='${escapeHtml(status.name)}'><label><input type='checkbox' data-status-read='${escapeHtml(status.id)}' ${status.countsAsRead ? 'checked' : ''}> ${this.tr('计入阅读人数', 'Counts as read')}</label><button class='link danger' type='button' data-action='delete-status:${escapeHtml(status.id)}'>${this.tr('删除', 'Delete')}</button></div>${styleRow(status.style, `status:${status.id}`, '')}</div>`).join('')}</div><button class='secondary' type='button' data-action='add-status'>＋ ${this.tr('添加状态', 'Add status')}</button><div class='help'>${this.tr('默认状态和自定义状态都可以删除；至少保留一个状态。删除后，使用该状态的文献会恢复为未设置状态。', 'Default and custom statuses can both be deleted; at least one status is retained. Papers using a deleted status become unset.')}</div></section>
     <section class='section'><h4>${this.tr('收藏夹', 'Folders')}</h4><div class='row'>${store.state.collections.map(item => `<span>${escapeHtml(item.name)}</span>`).join(' · ')}</div><button class='secondary' type='button' data-action='add-collection'>＋ ${this.tr('新建收藏夹', 'New folder')}</button></section>
@@ -121,14 +116,6 @@ export class GalleryUserShell extends HTMLElement {
       <section class='section'><h4>${this.tr('其他登录方式', 'Other sign-in methods')}</h4><div class='provider'><button type='button' data-action='provider:google' ${enabled('google')}>Google <small class='${this.integrations?.auth.google ? 'ok' : 'off'}'>· ${this.providerState('google')}</small></button><button type='button' data-action='provider:wechat' ${enabled('wechat')}>微信 <small class='${this.integrations?.auth.wechat ? 'ok' : 'off'}'>· ${this.providerState('wechat')}</small></button><button type='button' data-action='provider:qq' ${enabled('qq')}>QQ <small class='${this.integrations?.auth.qq ? 'ok' : 'off'}'>· ${this.providerState('qq')}</small></button></div></section>
       <section class='section'><h4>${this.tr('邮箱免密码登录', 'Passwordless email sign-in')}</h4><div class='row'><input class='email' type='email' data-email placeholder='name@example.com'><button class='secondary' type='button' data-action='email-login' ${enabled('email')}>${this.tr('发送登录链接', 'Send sign-in link')}</button></div><div class='help'>${this.providerState('email')}</div></section>
       <div class='notice' data-auth-message ${this.integrationMessage ? '' : 'hidden'}>${escapeHtml(this.integrationMessage)}</div>`;
-  }
-
-  private support(): string {
-    return `<p class='support-note'>${this.tr('目前暂不接入需要商户资质的自动支付接口。下面为项目维护者的收款码，用于自愿支持本站维护与服务器成本；扫码转账不会自动开通会员或其他付费权益。', 'Merchant payment APIs are not enabled for now. The QR codes below are for voluntary support of maintenance and server costs; QR-code transfers do not automatically unlock membership or paid benefits.')}</p>
-      <div class='qr-grid'>
-        <div class='qr-card'><strong>${this.tr('微信支持', 'WeChat')}</strong><a href='./support/wechat-qr.svg' target='_blank' rel='noopener noreferrer' title='${this.tr('点击放大', 'Open full size')}'><img src='./support/wechat-qr.svg' alt='${this.tr('微信收款码', 'WeChat payment QR code')}' loading='lazy'></a><span class='help'>${this.tr('点击二维码可放大', 'Click the QR code to enlarge')}</span></div>
-        <div class='qr-card'><strong>${this.tr('支付宝支持', 'Alipay')}</strong><a href='./support/alipay-qr.svg' target='_blank' rel='noopener noreferrer' title='${this.tr('点击放大', 'Open full size')}'><img src='./support/alipay-qr.svg' alt='${this.tr('支付宝收款码', 'Alipay payment QR code')}' loading='lazy'></a><span class='help'>${this.tr('点击二维码可放大', 'Click the QR code to enlarge')}</span></div>
-      </div>`;
   }
 
   private bind(): void {
@@ -272,21 +259,6 @@ export class GalleryUserShell extends HTMLElement {
     this.render();
   }
 
-  private async createPayment(provider: PayProvider): Promise<void> {
-    const amount = Number(this.shadow.querySelector<HTMLInputElement>('[data-support-amount]')?.value || 0);
-    if (!Number.isFinite(amount) || amount < 1) { this.supportError = this.tr('最低金额为 ¥1。', 'Minimum amount is ¥1.'); this.render(); return; }
-    this.supportError = '';
-    try {
-      const result = await this.api<{ orderId: string; checkoutUrl?: string; codeUrl?: string }>('/api/user-ui/payments/create', {
-        method: 'POST',
-        body: JSON.stringify({ provider, amount, profileId: store.profileId, returnTo: returnUrl() }),
-      });
-      if (result.checkoutUrl) { location.href = result.checkoutUrl; return; }
-      if (result.codeUrl) { this.paymentCodeUrl = result.codeUrl; this.paymentOrderId = result.orderId; }
-    } catch (error) { this.supportError = error instanceof Error ? error.message : String(error); }
-    this.render();
-  }
-
   private async action(action: string): Promise<void> {
     if (action === 'close') { this.open = false; this.render(); return; }
     if (action === 'follow-current') { store.follow(this.dataset.currentQuery || ''); return; }
@@ -316,7 +288,6 @@ export class GalleryUserShell extends HTMLElement {
       try { await this.api('/api/user-ui/auth/logout', { method: 'POST' }); } catch { /* local logout still applies */ }
       saveSessionToken(''); this.authUser = null; this.integrationMessage = this.tr('已退出登录。', 'Signed out.'); this.render(); return;
     }
-    if (action.startsWith('pay:')) { await this.createPayment(action.slice(4) as PayProvider); }
   }
 }
 
