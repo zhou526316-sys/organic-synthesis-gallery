@@ -60,6 +60,9 @@ jobs:
       - name: Install Worker dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Test site feedback D1-to-R2 fallback
+        run: npm run test:feedback-fallback
+
       - name: Compile Worker with Wrangler
         run: npm run check
 
