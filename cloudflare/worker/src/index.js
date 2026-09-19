@@ -35,6 +35,7 @@ import {
   authStart,
   createPayment,
   changePassword,
+  confirmEmailChange,
   confirmExistingEmailVerification,
   confirmPasswordReset,
   consumePasswordRegistration,
@@ -46,11 +47,13 @@ import {
   paymentStatus,
   passwordLogin,
   registerPasswordUser,
+  resendEmailChange,
   resendExistingEmailVerification,
   resendPasswordRegistrationCode,
   resendPasswordResetCode,
   revokeOtherSessions,
   sessionInfo,
+  startEmailChange,
   startExistingEmailVerification,
   startPasswordReset,
   verifyPasswordRegistration,
@@ -209,6 +212,15 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/password/change') {
     return resultResponse(await changePassword(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/change/start') {
+    return resultResponse(await startEmailChange(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/change/resend') {
+    return resultResponse(await resendEmailChange(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/change/confirm') {
+    return resultResponse(await confirmEmailChange(request, env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/sessions/revoke-others') {
     return resultResponse(await revokeOtherSessions(request, env), cors);
