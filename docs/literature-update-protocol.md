@@ -22,6 +22,22 @@ If the capability fingerprint differs from the one recorded for the most recent 
 
 Do not automatically adopt an experimental or failing implementation merely because it is newer. If a newer candidate cannot be verified as stable/compatible, keep the latest known-stable capability for production and report the candidate for review.
 
+## Target journals and prospective activation
+
+The canonical target list is `shared/literature-journals.js`. Do not maintain a second independent hard-coded list in fetch logic.
+
+The original ten journals remain in scope from 2026-07-01. The following five journals are prospective additions and are in scope only from 2026-09-19 (Asia/Shanghai), inclusive: Chem, Chemical Science, CCS Chemistry, Science Advances, and Chinese Journal of Chemistry (CJC). A wider safety lookback must never backfill these five before their `activeFrom` date.
+
+## Completeness standard
+
+The default primary audit is a seven-calendar-day Beijing safety rescan, not a narrow one-day delta. This overlap is intentional so records deposited or indexed late are recovered automatically.
+
+For every active journal, candidate discovery must use the union of all configured ISSNs across Crossref online-publication date, Crossref published date, Crossref created/deposit date, and OpenAlex publication date. DOI normalization/deduplication happens only after the union is formed. A record found by only one source is not discarded; it remains in the review universe and the audit report must expose cross-source disagreement.
+
+The audit must report source-family health per journal. A source failure is never interpreted as proof that there were no papers. When an official publisher TOC/Early View/ASAP/latest-articles source is accessible, the primary assistant review must cross-check it before advancing `verifiedThrough`. If a publisher page is blocked, record that limitation explicitly and rely on the independent metadata-source union plus the overlapping safety rescan rather than silently treating the publisher check as passed.
+
+All DOI differences must end as `include`, `exclude`, or narrowly justified `pending`. Keyword rules may prioritize review but may not silently exclude candidates. A day is eligible for closure only after the active journals for that date have no unresolved DOI differences, critical discovery-source failures are zero, and accepted records have been written to the authoritative dataset.
+
 ## Fetch workflow
 
 The primary scheduled literature task owns capability selection, candidate discovery, LLM review, metadata verification, TOC retrieval, data commits, and first-attempt website synchronization. It must update the state file through `fetching -> toc_processing -> ready_to_sync -> syncing -> synced` (or an explicit failure state).
@@ -40,4 +56,4 @@ A conflict on authoritative literature data, TOC mappings, or the coordination s
 
 ## Scheduled fallback
 
-The primary task runs at 08:00 and 18:00 Asia/Shanghai. A sync-only fallback runs at 08:30 and 18:30 Asia/Shanghai and is explicitly forbidden from re-fetching literature or TOCs.
+The primary task runs at 08:00 and 18:00 Asia/Shanghai. Each fresh primary run uses the seven-day safety rescan subject to each journal's prospective `activeFrom` cutoff. A sync-only fallback runs at 08:30 and 18:30 Asia/Shanghai and is explicitly forbidden from re-fetching literature or TOCs.

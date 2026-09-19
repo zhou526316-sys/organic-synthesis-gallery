@@ -5,13 +5,15 @@
   "currentKnownStable": {
     "literatureAudit": {
       "path": "cloudflare/scripts/audit-literature.mjs",
-      "blobSha": "517a33dc05d6d662a678f5d85acaa21ba3947e85"
+      "blobSha": "d935d2748893738b673a25ee93dc51e9509c75e4",
+      "validation": "GitHub Actions literature audit runs 35426690488 and 35426823046 passed with auditVersion=4, 15 registered journals, rolling seven-day safety window, criticalSourceFailures=0 and sourceFamilyGaps=0.",
+      "semanticImpact": "Discovery/completeness semantics changed: five journals were added prospectively from 2026-09-19; default overlap increased to seven Beijing calendar days; Crossref created-date discovery and per-journal source-family health/source-agreement reporting were added. This must invalidate the prior fetch capability fingerprint and force a fresh safety rescan."
     },
     "literatureWorkflow": {
       "path": ".github/workflows/literature-audit.yml",
-      "blobSha": "1b54b4c671f4058439b93cd1b35eb34dcbdd3265",
-      "validation": "GitHub Actions run 35418557042 succeeded end-to-end after concurrency hardening: DOI-union audit, artifact upload, and non-force audit/latest.json persistence all passed",
-      "semanticImpact": "Persistence/concurrency hardening only; literature discovery and TOC retrieval semantics are unchanged, so the fetch capability fingerprint is not invalidated by this operational fix."
+      "blobSha": "69249646ae4aa35c0f09c083d2411aab30e62bdd",
+      "validation": "GitHub Actions run 35426823046 succeeded after adding shared/literature-journals.js to the workflow trigger set; the audit artifact and non-force persistence path completed successfully.",
+      "semanticImpact": "Workflow trigger coverage now includes the canonical journal registry. Discovery semantics come from the stable literatureAudit capability and shared registry."
     },
     "tocCollector": {
       "primaryPath": "toc-collector/src/background.mjs",

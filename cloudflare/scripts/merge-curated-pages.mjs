@@ -32,8 +32,8 @@ function mergePapers(...sets) {
       ...existing,
       ...paper,
       authors: incomingAuthors.length ? incomingAuthors : existingAuthors,
-      ...(earliestAddedDate(existing.addedDate, paper.addedDate) ? { addedDate: earliestAddedDate(existing.addedDate, paper.addedDate) } : {}),
       new: Boolean(existing.new || paper.new),
+      ...(earliestAddedDate(existing.addedDate, paper.addedDate) ? { addedDate: earliestAddedDate(existing.addedDate, paper.addedDate) } : {}),
       ...(existing.synthesisType && !paper.synthesisType ? { synthesisType: existing.synthesisType } : {}),
     });
   }

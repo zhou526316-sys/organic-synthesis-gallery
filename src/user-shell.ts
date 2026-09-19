@@ -16,7 +16,9 @@ type IntegrationProbeShell = HTMLElement & {
 const SESSION_KEY = 'organic-gallery-session-v1';
 const AUTH_WINDOW_NAME = 'organic-gallery-auth';
 const BROWSER_API_BASE = 'https://api.gczhouwld.com';
+const BROWSER_API_FALLBACK = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
 const WORKER_ORIGIN = new URL(WORKER_API_BASE).origin;
+const BROWSER_API_ORIGINS = new Set([WORKER_ORIGIN, new URL(BROWSER_API_BASE).origin, new URL(BROWSER_API_FALLBACK).origin]);
 const productionIntegrationFallback = {
   auth: { google: true, wechat: false, qq: false, email: true },
   payments: { wechat: false, alipay: false },
@@ -31,25 +33,38 @@ function installBrowserApiFallback(): void {
   browserApiFallbackInstalled = true;
   const nativeFetch = window.fetch.bind(window);
   window.fetch = (async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-    let rewritten: RequestInfo | URL = input;
-    if (!(input instanceof Request)) {
-      try {
-        const parsed = new URL(typeof input === 'string' ? input : input.toString(), window.location.href);
-        if (parsed.origin === WORKER_ORIGIN) {
-          rewritten = new URL(`${parsed.pathname}${parsed.search}${parsed.hash}`, BROWSER_API_BASE).toString();
-        }
-      } catch { /* preserve the original fetch target */ }
-    }
+    if (input instanceof Request) return nativeFetch(input, init);
 
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 10000);
-    const fetchInit: RequestInit = { ...(init || {}) };
-    if (!fetchInit.signal) fetchInit.signal = controller.signal;
+    let targets: Array<RequestInfo | URL> = [input];
     try {
-      return await nativeFetch(rewritten, fetchInit);
-    } finally {
-      window.clearTimeout(timeout);
+      const parsed = new URL(typeof input === 'string' ? input : input.toString(), window.location.href);
+      if (BROWSER_API_ORIGINS.has(parsed.origin)) {
+        const suffix = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+        targets = [
+          new URL(suffix, BROWSER_API_BASE).toString(),
+          new URL(suffix, BROWSER_API_FALLBACK).toString(),
+        ];
+      }
+    } catch { /* preserve the original fetch target */ }
+
+    let lastError: unknown = new TypeError('Failed to fetch');
+    for (const target of targets) {
+      const fetchInit: RequestInit = { ...(init || {}) };
+      let timeout = 0;
+      if (!fetchInit.signal) {
+        const controller = new AbortController();
+        fetchInit.signal = controller.signal;
+        timeout = window.setTimeout(() => controller.abort(), 12000);
+      }
+      try {
+        return await nativeFetch(target, fetchInit);
+      } catch (error) {
+        lastError = error;
+      } finally {
+        if (timeout) window.clearTimeout(timeout);
+      }
     }
+    throw lastError;
   }) as typeof window.fetch;
 }
 

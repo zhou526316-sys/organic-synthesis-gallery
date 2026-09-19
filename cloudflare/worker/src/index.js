@@ -36,6 +36,10 @@ import {
   authCallback,
   authStart,
   createPayment,
+  changePassword,
+  confirmEmailChange,
+  confirmExistingEmailVerification,
+  confirmPasswordReset,
   consumePasswordRegistration,
   emailConsume,
   emailStart,
@@ -45,7 +49,16 @@ import {
   paymentStatus,
   passwordLogin,
   registerPasswordUser,
+  resendEmailChange,
+  resendExistingEmailVerification,
+  resendPasswordRegistrationCode,
+  resendPasswordResetCode,
+  revokeOtherSessions,
   sessionInfo,
+  startEmailChange,
+  startExistingEmailVerification,
+  startPasswordReset,
+  verifyPasswordRegistration,
   wechatNotify,
 } from './integrations.js';
 
@@ -182,8 +195,47 @@ async function handleApi(request, env) {
   if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/register') {
     return resultResponse(await registerPasswordUser(request, env, await readJson(request)), cors);
   }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/register/verify') {
+    return resultResponse(await verifyPasswordRegistration(env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/register/resend') {
+    return resultResponse(await resendPasswordRegistrationCode(env, await readJson(request)), cors);
+  }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/password/login') {
     return resultResponse(await passwordLogin(env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/password/reset/start') {
+    return resultResponse(await startPasswordReset(env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/password/reset/resend') {
+    return resultResponse(await resendPasswordResetCode(env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/password/reset/confirm') {
+    return resultResponse(await confirmPasswordReset(env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/password/change') {
+    return resultResponse(await changePassword(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/change/start') {
+    return resultResponse(await startEmailChange(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/change/resend') {
+    return resultResponse(await resendEmailChange(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/change/confirm') {
+    return resultResponse(await confirmEmailChange(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/sessions/revoke-others') {
+    return resultResponse(await revokeOtherSessions(request, env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/verify/start') {
+    return resultResponse(await startExistingEmailVerification(request, env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/verify/resend') {
+    return resultResponse(await resendExistingEmailVerification(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/verify/confirm') {
+    return resultResponse(await confirmExistingEmailVerification(request, env, await readJson(request)), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/auth/register/consume') {
     return consumePasswordRegistration(request, env);
