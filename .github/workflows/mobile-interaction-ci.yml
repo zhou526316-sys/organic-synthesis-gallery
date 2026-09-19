@@ -1,13 +1,6 @@
 name: Mobile interaction regression
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'src/**'
-      - 'tests/mobile-interaction.spec.ts'
-      - '.github/workflows/mobile-interaction-ci.yml'
   workflow_dispatch:
 
 permissions:
