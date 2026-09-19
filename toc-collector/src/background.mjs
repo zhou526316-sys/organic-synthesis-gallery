@@ -74,6 +74,7 @@ const forceBrowserFallback = process.argv.includes('--force-browser-fallback');
 const localOnlyMode = process.argv.includes('--local-only');
 const scanAllMode = process.argv.includes('--scan-all');
 const officialOnlyMode = process.argv.includes('--official-only');
+const showBrowserMode = process.argv.includes('--show-browser');
 const doiFileArg = process.argv.find(arg => arg.startsWith('--doi-file='));
 const doiFilePath = doiFileArg ? path.resolve(doiFileArg.slice('--doi-file='.length)) : '';
 // This only exists for the explicit, read-only Browserbase acceptance test. It
@@ -1465,7 +1466,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
   let publisherTimer;
   try {
     win = new BrowserWindow({
-      show: false,
+      show: showBrowserMode,
       webPreferences: {
         session: getPublisherSession(classify(doi)),
         sandbox: true,
@@ -1892,7 +1893,7 @@ async function runCycle(manual = false) {
     const results = await processBatch(runnable);
     const success = results.filter(x => ['official','figure1','pdf_downloaded','saved_local'].includes(x?.status)).length;
     const failed = results.filter(x => x?.status === 'failed').length;
-    state.lastSummary = { at: Date.now(), queue: queue.length, processed: results.length, success, failed, net, localOnlyMode, scanAllMode, officialOnlyMode, doiFilePath, localCaptureDir: localCaptureDir() };
+    state.lastSummary = { at: Date.now(), queue: queue.length, processed: results.length, success, failed, net, localOnlyMode, scanAllMode, officialOnlyMode, showBrowserMode, doiFilePath, localCaptureDir: localCaptureDir() };
     await saveState();
     await log('cycle complete', state.lastSummary);
     if (!net.acs || !net.wiley) {
