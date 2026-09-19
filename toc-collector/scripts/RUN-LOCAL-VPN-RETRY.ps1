@@ -1,3 +1,5 @@
+# RUN-LOCAL-VPN-RETRY.ps1
+# Corrected balanced-brace version. Updated 2026-09-19.
 param(
   [ValidateSet("all","acs","wiley","nature","science")]
   [string]$Publisher = "all"
