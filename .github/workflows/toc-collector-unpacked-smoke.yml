@@ -89,7 +89,11 @@ jobs:
           Write-Host "Zone before launcher: $before"
           $log = Join-Path $env:TEMP 'toc-collector-bootstrap.log'
           Remove-Item $log -Force -ErrorAction SilentlyContinue
-          Start-Process -FilePath 'cmd.exe' -ArgumentList '/c', ('"{0}"' -f $launcher) -WorkingDirectory $dir -Wait
+          # Start-Process -Wait includes descendants and therefore waits forever
+          # for the GUI we are about to verify. Wait only for the launcher process.
+          $launcherProcess = Start-Process -FilePath 'cmd.exe' -ArgumentList '/c', ('"{0}"' -f $launcher) -WorkingDirectory $dir -PassThru -WindowStyle Hidden
+          if (-not $launcherProcess.WaitForExit(30000)) { throw 'Launcher did not exit within 30 seconds' }
+          if ($launcherProcess.ExitCode -ne 0) { throw "Launcher failed: $($launcherProcess.ExitCode)" }
           Start-Sleep -Seconds 8
           if (Test-Path -LiteralPath $zone) { throw 'Launcher did not remove EXE Zone.Identifier' }
           $proc = Get-Process | Where-Object { $_.Path -eq $exe } | Select-Object -First 1
