@@ -1,0 +1,117 @@
+import { normalizeDoi } from './media.js';
+
+const INDEX_KEY = 'local-captures/index.json';
+const IMAGE_PREFIX = 'local-captures/images/';
+const MAX_IMAGE_BYTES = 4_000_000;
+
+function parseImageData(value) {
+  if (typeof value !== 'string') return null;
+  const match = /^data:(image\/(?:png|jpeg|jpg|gif|webp));base64,([A-Za-z0-9+/=\r\n]+)$/i.exec(value.trim());
+  if (!match) return null;
+  const bytes = Uint8Array.from(atob(match[2].replace(/\s+/g, '')), c => c.charCodeAt(0));
+  if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) return null;
+  const contentType = match[1].toLowerCase().replace('image/jpg', 'image/jpeg');
+  return { bytes, contentType };
+}
+
+function extensionFor(type) {
+  if (type === 'image/png') return 'png';
+  if (type === 'image/gif') return 'gif';
+  if (type === 'image/webp') return 'webp';
+  return 'jpg';
+}
+
+async function sha256Hex(bytes) {
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('');
+}
+
+async function readIndex(env) {
+  if (!env?.MEDIA) throw new Error('R2 binding MEDIA is not configured');
+  const object = await env.MEDIA.get(INDEX_KEY);
+  if (!object) return { version: 1, updatedAt: 0, items: {} };
+  try {
+    const value = JSON.parse(await object.text());
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('invalid index');
+    value.items = value.items && typeof value.items === 'object' && !Array.isArray(value.items) ? value.items : {};
+    return value;
+  } catch {
+    return { version: 1, updatedAt: 0, items: {} };
+  }
+}
+
+function publicMediaUrl(request, key) {
+  const origin = new URL(request.url).origin;
+  const encoded = key.split('/').map(part => encodeURIComponent(part)).join('/');
+  return `${origin}/media/${encoded}`;
+}
+
+export async function importLocalCapture(request, env, payload) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
+  const doi = normalizeDoi(payload?.doi);
+  if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  const kind = String(payload?.kind || '').toLowerCase();
+  if (!['official', 'figure1'].includes(kind)) return { status: 400, body: { error: 'kind must be official or figure1.' } };
+  const image = parseImageData(payload?.imageData);
+  if (!image) return { status: 400, body: { error: 'A valid imageData payload is required.' } };
+
+  const hash = await sha256Hex(image.bytes);
+  const doiHash = await sha256Hex(new TextEncoder().encode(doi));
+  const key = `${IMAGE_PREFIX}${doiHash.slice(0, 24)}-${kind}-${hash.slice(0, 16)}.${extensionFor(image.contentType)}`;
+  await env.MEDIA.put(key, image.bytes, {
+    httpMetadata: { contentType: image.contentType, cacheControl: 'public, max-age=31536000, immutable' },
+    customMetadata: { doi, kind, contentHash: hash.slice(0, 32), source: 'windows-toc-collector' },
+  });
+
+  const index = await readIndex(env);
+  const now = Date.now();
+  const identity = `${doi}|${kind}`;
+  index.items[identity] = {
+    doi,
+    kind,
+    r2Key: key,
+    contentHash: hash.slice(0, 32),
+    contentType: image.contentType,
+    byteLength: image.bytes.byteLength,
+    articleUrl: typeof payload?.articleUrl === 'string' ? payload.articleUrl.slice(0, 2000) : '',
+    caption: typeof payload?.caption === 'string' ? payload.caption.slice(0, 600) : '',
+    sourceUrl: typeof payload?.sourceUrl === 'string' ? payload.sourceUrl.slice(0, 2000) : '',
+    source: 'windows-toc-collector',
+    capturedAt: typeof payload?.capturedAt === 'string' ? payload.capturedAt.slice(0, 80) : '',
+    updatedAt: now,
+  };
+  index.version = 1;
+  index.updatedAt = now;
+  await env.MEDIA.put(INDEX_KEY, JSON.stringify(index), {
+    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
+  });
+
+  return {
+    status: 200,
+    body: {
+      stored: true,
+      doi,
+      kind,
+      contentHash: hash.slice(0, 32),
+      imageUrl: publicMediaUrl(request, key),
+      updatedAt: now,
+    },
+  };
+}
+
+export async function getLocalCaptureIndex(request, env) {
+  const index = await readIndex(env);
+  const items = Object.values(index.items || {}).map(item => ({
+    ...item,
+    imageUrl: item?.r2Key ? publicMediaUrl(request, item.r2Key) : undefined,
+  }));
+  return {
+    status: 200,
+    body: {
+      version: Number(index.version || 1),
+      updatedAt: Number(index.updatedAt || 0),
+      count: items.length,
+      items,
+    },
+  };
+}
