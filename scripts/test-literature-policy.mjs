@@ -22,13 +22,21 @@ const SOURCES = [
 ];
 
 const findings = [];
-const formalAddedToday = new Set();
+const formalAddedByDate = new Map();
+const recordAddedDate = paper => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(paper?.addedDate || ''))) return;
+  const key = String(paper.doi || paper.title || '').toLowerCase();
+  if (!key) return;
+  const set = formalAddedByDate.get(paper.addedDate) || new Set();
+  set.add(key);
+  formalAddedByDate.set(paper.addedDate, set);
+};
 for (const file of SOURCES) {
   try {
     const payload = JSON.parse(await readFile(path.join(PUBLIC_DIR, file), 'utf8'));
     for (const paper of payload?.papers || []) {
       if (isExcludedDoi(paper?.doi)) findings.push({ file, doi: paper.doi });
-      if (paper?.addedDate === '2026-09-18') formalAddedToday.add(String(paper.doi || paper.title || '').toLowerCase());
+      recordAddedDate(paper);
     }
   } catch (error) {
     if (error?.code !== 'ENOENT') throw error;
@@ -39,12 +47,11 @@ const baseEncoded = (await readFile(path.join(PUBLIC_DIR, 'papers.gz.b64'), 'utf
 const base = JSON.parse(gunzipSync(Buffer.from(baseEncoded, 'base64')).toString('utf8'));
 for (const paper of base) {
   if (isExcludedDoi(paper?.doi)) findings.push({ file: 'papers.gz.b64', doi: paper.doi });
-  if (paper?.addedDate === '2026-09-18') formalAddedToday.add(String(paper.doi || paper.title || '').toLowerCase());
+  recordAddedDate(paper);
 }
 
 assert.deepEqual(findings, [], `Excluded DOI present in formal source: ${JSON.stringify(findings)}`);
 assert.equal(EXCLUDED_DOIS.size >= 2, true);
-assert.equal(formalAddedToday.size, 19, 'Exactly the reviewed 19 unique papers may carry addedDate=2026-09-18 across formal sources');
 
 const beforeMidnight = new Date('2026-09-18T15:59:59.500Z'); // 23:59:59.5 Asia/Shanghai
 const afterMidnight = new Date('2026-09-18T16:00:00.500Z'); // 00:00:00.5 Asia/Shanghai
@@ -61,15 +68,30 @@ assert.ok(mainSource.includes("${isNewToday(paper) ? `<span class='tag new'>"), 
 assert.ok(mainSource.includes(".filter(paper => !onlyNew || isNewToday(paper))"), 'Only-new filter must be driven by isNewToday(paper)');
 
 const automation = JSON.parse(await readFile(path.join(PUBLIC_DIR, 'automation-supplement.json'), 'utf8'));
-assert.equal((automation.papers || []).length, 19, 'Reviewed automation set must stay at 19');
-for (const paper of automation.papers || []) {
-  assert.equal(paper.addedDate, '2026-09-18', `Missing stable addedDate: ${paper.doi}`);
+const automationPapers = automation.papers || [];
+assert.ok(automationPapers.length > 0, 'Reviewed automation set must not be empty');
+const automationByDoi = new Map(automationPapers.map(paper => [String(paper.doi || '').toLowerCase(), paper]));
+for (const paper of automationPapers) {
+  assert.match(String(paper.addedDate || ''), /^\d{4}-\d{2}-\d{2}$/, `Missing stable addedDate: ${paper.doi}`);
+  const key = String(paper.doi || paper.title || '').toLowerCase();
+  assert.equal(formalAddedByDate.get(paper.addedDate)?.has(key), true, `Formal sources lost addedDate mapping: ${paper.doi}`);
+}
+
+const updateState = JSON.parse(await readFile(path.resolve('audit/literature-update-state.json'), 'utf8'));
+const latestReview = updateState?.lastCompletedReview;
+assert.ok(latestReview && Array.isArray(latestReview.addedDois), 'Latest completed review metadata is required');
+const latestReviewDate = String(latestReview.finishedAt || '').slice(0, 10);
+for (const doi of latestReview.addedDois) {
+  const paper = automationByDoi.get(String(doi).toLowerCase());
+  assert.ok(paper, `Latest reviewed DOI missing from automation supplement: ${doi}`);
+  assert.equal(paper.addedDate, latestReviewDate, `Latest reviewed DOI has wrong addedDate: ${doi}`);
 }
 
 console.log(JSON.stringify({
   excludedDois: [...EXCLUDED_DOIS],
   excludedFindings: findings.length,
   midnight: 'passed',
-  reviewedSet: automation.papers.length,
-  formalAddedDateCount: formalAddedToday.size,
+  reviewedSet: automationPapers.length,
+  latestReviewedSet: latestReview.addedDois.length,
+  addedDates: Object.fromEntries([...formalAddedByDate].map(([date, set]) => [date, set.size])),
 }));
