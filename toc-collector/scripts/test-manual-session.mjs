@@ -49,3 +49,23 @@ await assert.rejects(run(dependencies, '10.1002/anie.1537547'), /manual_required
 assert.equal(created, 1, 'manual handoff stops even other publishers from creating a session');
 assert.equal(dependencies.manualBrowserbaseSessions.get('acs').sessionId, 'original-session');
 console.log('PASS: keepAlive, persistent context, no CAPTCHA solver, original session retained, global pause');
+const resume = source.slice(source.indexOf('async function finishManualBrowserbase('), source.indexOf('async function verifyBrowserbaseImage('));
+const active = dependencies.manualBrowserbaseSessions.get('acs');
+Object.assign(dependencies, {
+  restoreManualSession: async () => active,
+  browserbaseManualRequired: () => false, browserbaseOwnsDoi: () => true,
+  htmlCandidate: () => ({ kind: 'figure1', src: 'https://fixture.invalid/fig1.png' }),
+  verifyBrowserbaseImage: async () => ({ imageData: 'fixture-image' }),
+  browserbaseApi: async (url, options) => {
+    assert.equal(url, '/sessions/original-session');
+    assert.equal(JSON.parse(options.body).status, 'REQUEST_RELEASE');
+  },
+  api: async () => { throw new Error('Read-only acceptance must not upload or claim a lease'); },
+});
+const continued = await new AsyncFunction('dependencies', `with(dependencies) { ${resume}; return finishManualBrowserbase('acs'); }`)(dependencies);
+assert.equal(continued.status, 'verified_readonly');
+assert.equal(continued.sessionId, 'original-session');
+assert.equal(continued.contextId, 'acs-context');
+assert.equal(continued.imageReadable, true);
+assert.equal(created, 1);
+console.log('PASS: original-session read-only continuation works without a write token');

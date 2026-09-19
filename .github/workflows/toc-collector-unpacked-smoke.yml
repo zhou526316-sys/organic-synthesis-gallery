@@ -91,8 +91,10 @@ jobs:
           Remove-Item $log -Force -ErrorAction SilentlyContinue
           # Start-Process -Wait includes descendants and therefore waits forever
           # for the GUI we are about to verify. Wait only for the launcher process.
-          $launcherProcess = Start-Process -FilePath 'cmd.exe' -ArgumentList '/c', ('"{0}"' -f $launcher) -WorkingDirectory $dir -PassThru -WindowStyle Hidden
-          if (-not $launcherProcess.WaitForExit(30000)) { throw 'Launcher did not exit within 30 seconds' }
+          $launcherProcess = Start-Process -FilePath 'cmd.exe' -ArgumentList '/d', '/s', '/c', ('""{0}" <nul"' -f $launcher) -WorkingDirectory $dir -PassThru -WindowStyle Hidden -RedirectStandardOutput 'dist/zone-launch-stdout.log' -RedirectStandardError 'dist/zone-launch-stderr.log'
+          $launcherExited = $launcherProcess.WaitForExit(30000)
+          Get-Content 'dist/zone-launch-stdout.log', 'dist/zone-launch-stderr.log' -ErrorAction SilentlyContinue
+          if (-not $launcherExited) { throw 'Launcher did not exit within 30 seconds' }
           if ($launcherProcess.ExitCode -ne 0) { throw "Launcher failed: $($launcherProcess.ExitCode)" }
           Start-Sleep -Seconds 8
           if (Test-Path -LiteralPath $zone) { throw 'Launcher did not remove EXE Zone.Identifier' }

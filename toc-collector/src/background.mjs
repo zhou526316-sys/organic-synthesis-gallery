@@ -914,7 +914,7 @@ function manualPublisherTarget(publisher) {
 
 function pendingManualHandoff() {
   return Object.entries(state.browserbase?.manual || {}).find(([, record]) =>
-    record?.sessionId && ['manual_required','still_challenged','doi_not_verified','verified_no_candidate','active'].includes(record.status));
+    record?.sessionId && ['connecting','manual_required','still_challenged','doi_not_verified','verified_no_candidate','active'].includes(record.status));
 }
 
 async function writeManualHandoff(publisher, active, debug) {
@@ -935,7 +935,7 @@ async function restoreManualSession(publisher) {
   const existing = manualBrowserbaseSessions.get(publisher);
   if (existing) return existing;
   const record = state.browserbase?.manual?.[publisher];
-  if (!record?.sessionId) return null;
+  if (!record?.sessionId || !['connecting','manual_required','still_challenged','doi_not_verified','verified_no_candidate','active'].includes(record.status)) return null;
   const info = await browserbaseApi(`/sessions/${encodeURIComponent(record.sessionId)}`, { method: 'GET' });
   if (info.status !== 'RUNNING' || !info.connectUrl) throw new Error('manual_session_expired_user_action_required');
   if (info.contextId && info.contextId !== record.contextId) throw new Error('manual_context_mismatch');
@@ -983,11 +983,15 @@ async function startManualBrowserbase(publisher) {
   const sessionInfo = await browserbaseApi('/sessions', { method: 'POST', body: JSON.stringify(payload) });
   if (!sessionInfo?.id || !sessionInfo?.connectUrl) throw new Error('browserbase_session_missing_connect_url');
 
+  const target = manualPublisherTarget(publisher);
+  state.browserbase.manual[publisher] = { publisher, status: 'connecting', sessionId: String(sessionInfo.id),
+    contextId, doi: target.doi, targetUrl: target.url, startedAt: Date.now() };
+  await saveState();
+
   const { chromium } = await import('playwright-core');
   const browser = await chromium.connectOverCDP(sessionInfo.connectUrl, { timeout: 90000 });
   const context = browser.contexts()[0];
   const page = context.pages()[0] || await context.newPage();
-  const target = manualPublisherTarget(publisher);
   await page.goto(target.url, { waitUntil: 'domcontentloaded', timeout: Math.max(30000, Number(config.publisherTimeoutSeconds || 35) * 1000) }).catch(() => {});
   await page.waitForTimeout(1200).catch(() => {});
 
@@ -1001,10 +1005,13 @@ async function startManualBrowserbase(publisher) {
   const sessionId = String(sessionInfo.id);
   manualBrowserbaseSessions.set(publisher, { browser, page, sessionId, contextId, doi: target.doi, url: target.url, startedAt: Date.now() });
   state.browserbase.manual[publisher] = {
+    publisher,
     status: 'active',
     sessionId,
     contextId,
     doi: target.doi,
+    targetUrl: target.url,
+    liveUrl,
     startedAt: Date.now(),
   };
   state.browserbase.status[publisher] = 'manual_active';
@@ -1072,7 +1079,20 @@ async function finishManualBrowserbase(publisher) {
     sessionId: active.sessionId,
   });
 
-  if (!config.writeToken) throw new Error('write_token_missing');
+  if (!config.writeToken) {
+    state.browserbase.manual[publisher] = { ...state.browserbase.manual[publisher], status: 'verified_readonly',
+      resolvedKind: candidate.kind, verifiedAt: Date.now(), upload: 'write_token_missing' };
+    state.browserbase.lastSuccessDoi[publisher] = active.doi;
+    await saveState();
+    await active.browser.close().catch(() => {});
+    await browserbaseApi(`/sessions/${encodeURIComponent(active.sessionId)}`, { method: 'POST', body: JSON.stringify({
+      status: 'REQUEST_RELEASE', ...(browserbaseCredentials().projectId ? { projectId: browserbaseCredentials().projectId } : {}),
+    }) });
+    manualBrowserbaseSessions.delete(publisher);
+    stageStatus = `${manualPublisherLabel(publisher)} 已在原 session 完成 DOI 与图片只读验证；上传等待 writeToken。`;
+    refreshDashboard();
+    return { publisher, doi: active.doi, status: 'verified_readonly', sessionId: active.sessionId, contextId: active.contextId, kind: candidate.kind, imageReadable: true, upload: 'write_token_missing' };
+  }
   await api('/api/media/primary/import', { method: 'POST', body: JSON.stringify({
     doi: active.doi, kind: candidate.kind === 'official' ? 'official_visual' : 'figure1',
     articleUrl: pageUrl, sourceUrl: candidate.src, source: 'browserbase_manual_resume',
@@ -1124,12 +1144,35 @@ async function finishManualBrowserbase(publisher) {
 }
 
 async function verifyBrowserbaseImage(page, candidate, { publisher, doi, sessionId }) {
-  const response = await page.request.get(candidate.src, { timeout: 20000 });
-  const contentType = String(response.headers()['content-type'] || '').toLowerCase();
-  const body = await response.body();
+  // Fetch in the remote page first: Playwright's APIRequestContext otherwise
+  // sends this request from the local PC, where ACS/Wiley may be unreachable.
+  const remote = await page.evaluate(async url => {
+    try {
+      const response = await fetch(url, { credentials: 'include', signal: AbortSignal.timeout(20000) });
+      const type = response.headers.get('content-type') || '';
+      if (!response.ok || !type.startsWith('image/')) return null;
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      if (bytes.length > 8000000) return null;
+      let binary = '';
+      for (let i = 0; i < bytes.length; i += 16384) binary += String.fromCharCode(...bytes.subarray(i, i + 16384));
+      return { type, base64: btoa(binary) };
+    } catch { return null; }
+  }, candidate.src);
+  let body, contentType;
+  if (remote) { body = Buffer.from(remote.base64, 'base64'); contentType = remote.type; }
+  else {
+    // A single secondary request supports public CDNs without browser CORS.
+    const response = await page.request.get(candidate.src, { timeout: 20000 });
+    if (!response.ok()) throw new Error(`browserbase_image_http_${response.status()}`);
+    contentType = String(response.headers()['content-type'] || '').toLowerCase();
+    body = await response.body();
+  }
   const bytes = body.length;
-  if (!response.ok()) throw new Error(`browserbase_image_http_${response.status()}`);
-  if (!contentType.startsWith('image/') || bytes < 1024) throw new Error('browserbase_image_unreadable');
+  if (!contentType.startsWith('image/') || bytes < 1024 || bytes > 8000000) throw new Error('browserbase_image_unreadable');
+  const decoded = nativeImage.createFromBuffer(body);
+  if (decoded.isEmpty()) throw new Error('browserbase_image_decode_failed');
+  const { width, height } = decoded.getSize();
+  if (width < 200 || height < 120 || width / height > 8 || height / width > 8) throw new Error('browserbase_image_low_quality');
   const mime = contentType.split(';')[0];
   await log('browserbase_image_readable', { publisher, doi, kind: candidate.kind, bytes, sessionId });
   return { contentType: mime, bytes, imageData: `data:${mime};base64,${body.toString('base64')}` };
