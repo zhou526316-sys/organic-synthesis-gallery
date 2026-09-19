@@ -1,0 +1,147 @@
+name: User registration browser smoke
+
+on:
+  workflow_run:
+    workflows:
+      - Deploy GitHub Pages frontend
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: user-registration-browser-smoke
+  cancel-in-progress: true
+
+jobs:
+  browser-smoke:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Verify native registration UI and request wiring
+        env:
+          SITE_URL: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          SITE_ORIGIN: https://zhou526316-sys.github.io
+          API_URL: https://api.gczhouwld.com/api/user-ui/auth/register
+        run: |
+          mkdir -p test-results
+          node - <<'NODE'
+          const { chromium } = require('playwright');
+          const assert = (value, message) => { if (!value) throw new Error(message); };
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+            const pageErrors = [];
+            const consoleErrors = [];
+            const requestFailures = [];
+            page.on('pageerror', error => pageErrors.push(error.message));
+            page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+            page.on('requestfailed', request => requestFailures.push(`${request.method()} ${request.url()} :: ${request.failure()?.errorText || 'failed'}`));
+
+            try {
+              await page.goto(process.env.SITE_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
+              const shell = page.locator('gallery-user-shell').first();
+              await shell.waitFor({ state: 'attached', timeout: 30000 });
+
+              await shell.locator('.trigger').click();
+              await shell.locator("[data-tab='login']").click();
+              await shell.locator("[data-action='auth-mode:register']").click();
+
+              const name = shell.locator('[data-local-name]');
+              const email = shell.locator('[data-local-email]');
+              const password = shell.locator('[data-local-password]');
+              const submit = shell.locator('[data-native-auth-submit]');
+              const notice = shell.locator('[data-auth-message]');
+
+              await name.fill('Browser Smoke');
+              await email.fill('bad@');
+              await password.fill('12345678');
+              await submit.click();
+
+              await notice.waitFor({ state: 'visible', timeout: 5000 });
+              assert((await notice.textContent())?.trim() === '邮箱格式不正确。', `unexpected client validation: ${await notice.textContent()}`);
+              assert(await submit.isEnabled(), 'register button stayed disabled after client validation');
+
+              let capturedRegistration = null;
+              await page.route(process.env.API_URL, async route => {
+                const request = route.request();
+                const cors = {
+                  'access-control-allow-origin': process.env.SITE_ORIGIN,
+                  'access-control-allow-methods': 'POST, OPTIONS',
+                  'access-control-allow-headers': 'content-type, authorization',
+                };
+                if (request.method() === 'OPTIONS') {
+                  await route.fulfill({ status: 204, headers: cors });
+                  return;
+                }
+                capturedRegistration = JSON.parse(request.postData() || '{}');
+                await route.fulfill({
+                  status: 409,
+                  headers: { ...cors, 'content-type': 'application/json' },
+                  body: JSON.stringify({ error: 'email_already_registered' }),
+                });
+              });
+
+              await email.fill('browser-smoke@example.invalid');
+              await submit.click();
+              await page.waitForFunction(() => {
+                const shell = document.querySelector('gallery-user-shell');
+                const notice = shell?.shadowRoot?.querySelector('[data-auth-message]');
+                return notice && !notice.hasAttribute('hidden') && /已经存在账号/.test(notice.textContent || '');
+              }, null, { timeout: 10000 });
+
+              assert(capturedRegistration, 'registration POST was never emitted');
+              assert(capturedRegistration.email === 'browser-smoke@example.invalid', `wrong registration email: ${JSON.stringify(capturedRegistration)}`);
+              assert(capturedRegistration.password === '12345678', 'registration password payload missing');
+              assert(capturedRegistration.displayName === 'Browser Smoke', `wrong display name: ${JSON.stringify(capturedRegistration)}`);
+              assert(await submit.isEnabled(), 'register button stayed disabled after API error');
+              assert(pageErrors.length === 0, `uncaught browser errors: ${pageErrors.join(' | ')}`);
+
+              console.log(JSON.stringify({
+                nativeRegistrationForm: true,
+                clientValidationVisible: true,
+                registrationPostEmitted: true,
+                apiErrorVisibleInline: true,
+                submitRecoversAfterError: true,
+                pageErrors,
+                consoleErrors: consoleErrors.slice(0, 20),
+                requestFailures: requestFailures.slice(0, 20),
+              }));
+            } catch (error) {
+              await page.screenshot({ path: 'test-results/registration-failure.png', fullPage: true }).catch(() => {});
+              console.error('PAGE_ERRORS', JSON.stringify(pageErrors));
+              console.error('CONSOLE_ERRORS', JSON.stringify(consoleErrors.slice(0, 50)));
+              console.error('REQUEST_FAILURES', JSON.stringify(requestFailures.slice(0, 50)));
+              throw error;
+            } finally {
+              await browser.close();
+            }
+          })().catch(error => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload failure screenshot
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-registration-browser-smoke
+          path: test-results/
+          if-no-files-found: ignore
