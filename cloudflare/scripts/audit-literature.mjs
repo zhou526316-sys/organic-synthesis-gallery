@@ -2,6 +2,7 @@ import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
 import { isExcludedDoi } from '../../shared/literature-policy.js';
+import { TARGET_JOURNALS, effectiveJournalStart } from '../../shared/literature-journals.js';
 
 const TIME_ZONE = 'Asia/Shanghai';
 
@@ -24,23 +25,17 @@ function shiftDate(dateString, days) {
 
 const DEFAULT_END = dateInTimeZone();
 const END = process.env.AUDIT_END || DEFAULT_END;
-const START = process.env.AUDIT_START || shiftDate(END, -2);
+const DEFAULT_LOOKBACK_DAYS = 7;
+const parsedLookbackDays = Number.parseInt(process.env.AUDIT_LOOKBACK_DAYS || String(DEFAULT_LOOKBACK_DAYS), 10);
+const LOOKBACK_DAYS = Number.isFinite(parsedLookbackDays) ? Math.max(3, Math.min(31, parsedLookbackDays)) : DEFAULT_LOOKBACK_DAYS;
+const START = process.env.AUDIT_START || shiftDate(END, -(LOOKBACK_DAYS - 1));
 const CLOSURE_DATE = shiftDate(END, -1);
 const SITE = (process.env.GALLERY_SITE || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/$/, '');
 const OUT = path.resolve(process.env.AUDIT_OUTPUT || 'audit/latest.json');
 
-const JOURNALS = [
-  { name: 'Nature', issns: ['0028-0836', '1476-4687'] },
-  { name: 'Science', issns: ['0036-8075', '1095-9203'] },
-  { name: 'Nature Catalysis', issns: ['2520-1158'] },
-  { name: 'Nature Synthesis', issns: ['2731-0582'] },
-  { name: 'Nature Chemistry', issns: ['1755-4330', '1755-4349'] },
-  { name: 'Nature Communications', issns: ['2041-1723'] },
-  { name: 'JACS', issns: ['0002-7863', '1520-5126'] },
-  { name: 'Angew', issns: ['1433-7851', '1521-3773'] },
-  { name: 'ACS Catalysis', issns: ['2155-5435'] },
-  { name: 'Organic Letters', issns: ['1523-7052', '1523-7060'] },
-];
+const JOURNALS = TARGET_JOURNALS;
+const JOURNAL_BY_NAME = new Map(JOURNALS.map(journal => [journal.name, journal]));
+const auditStartForJournal = journal => effectiveJournalStart(journal, START);
 
 const normalizeDoi = value => {
   if (typeof value !== 'string') return '';
@@ -178,11 +173,11 @@ function mergeCandidate(map, incoming) {
 async function fetchCrossref(journal) {
   const map = new Map();
   const stats = [];
+  const journalStart = auditStartForJournal(journal);
   for (const issn of journal.issns) {
-    for (const mode of ['online', 'published']) {
-      const dateFilter = mode === 'online'
-        ? `from-online-pub-date:${START},until-online-pub-date:${END}`
-        : `from-pub-date:${START},until-pub-date:${END}`;
+    for (const mode of ['online', 'published', 'created']) {
+      const filterField = mode === 'online' ? 'online-pub-date' : mode === 'published' ? 'pub-date' : 'created-date';
+      const dateFilter = `from-${filterField}:${journalStart},until-${filterField}:${END}`;
       let cursor = '*';
       let count = 0;
       let ok = true;
@@ -242,7 +237,7 @@ async function fetchOpenAlex(journal) {
     let note = '';
     try {
       for (let page = 0; page < 40; page += 1) {
-        const filter = `primary_location.source.id:${sourceId},from_publication_date:${START},to_publication_date:${END}`;
+        const filter = `primary_location.source.id:${sourceId},from_publication_date:${auditStartForJournal(journal)},to_publication_date:${END}`;
         const q = new URLSearchParams({ filter, 'per-page': '200', cursor });
         const data = await jsonFetch(`https://api.openalex.org/works?${q}`);
         const items = data?.results || [];
@@ -294,8 +289,11 @@ function retainForReview(c) {
 }
 
 function compactCandidate(c) {
+  const journal = JOURNAL_BY_NAME.get(c.journal);
   return {
     ...c,
+    activeFrom: journal?.activeFrom || '',
+    dateUnverified: !c.date,
     reviewPriority: retainForReview(c) ? 'high' : 'normal',
     abstract: (c.abstract || '').slice(0, 1800),
   };
@@ -312,7 +310,11 @@ for (const journal of JOURNALS) {
   console.log(`AUDIT_SOURCE ${journal.name} crossref=${crossref.candidates.length} openalex=${openalex.candidates.length}`);
 }
 
-const universe = [...merged.values()].filter(c => !c.date || (c.date >= START && c.date <= END));
+const universe = [...merged.values()].filter(c => {
+  const journal = JOURNAL_BY_NAME.get(c.journal);
+  const effectiveStart = journal ? auditStartForJournal(journal) : START;
+  return !c.date || (c.date >= effectiveStart && c.date <= END);
+});
 const excludedUniverse = universe.filter(c => isExcludedDoi(c.doi));
 const rawMissing = universe.filter(c => !galleryDois.has(c.doi));
 const reviewableMissing = rawMissing.filter(c => !isExcludedDoi(c.doi));
@@ -324,14 +326,41 @@ const missingCandidates = missing
 const potentialGaps = missingCandidates.filter(c => c.reviewPriority === 'high');
 
 const criticalFailures = stats.filter(s => !s.ok);
+const sourceFamilyHealth = Object.fromEntries(JOURNALS.map(j => {
+  const rows = stats.filter(s => s.journal === j.name);
+  const crossrefRows = rows.filter(s => s.source === 'crossref');
+  const openAlexRows = rows.filter(s => s.source === 'openalex' || s.source === 'openalex-source');
+  return [j.name, {
+    activeFrom: j.activeFrom || '',
+    effectiveStart: auditStartForJournal(j),
+    crossrefRequests: crossrefRows.length,
+    crossrefFailures: crossrefRows.filter(s => !s.ok).length,
+    openAlexRequests: openAlexRows.length,
+    openAlexFailures: openAlexRows.filter(s => !s.ok).length,
+    crossrefHealthy: crossrefRows.some(s => s.ok),
+    openAlexHealthy: openAlexRows.some(s => s.ok),
+  }];
+}));
+const sourceFamilyGaps = Object.entries(sourceFamilyHealth)
+  .filter(([, health]) => !health.crossrefHealthy || !health.openAlexHealthy)
+  .map(([journal, health]) => ({ journal, ...health }));
+
 const byJournal = Object.fromEntries(JOURNALS.map(j => {
   const candidates = universe.filter(x => x.journal === j.name);
   const rawMissingForJournal = rawMissing.filter(x => x.journal === j.name);
   const reviewedExcludedForJournal = rawMissingForJournal.filter(x => reviewedExclusions.has(x.doi));
   const missingForJournal = missingCandidates.filter(x => x.journal === j.name);
   const gaps = missingForJournal.filter(x => x.reviewPriority === 'high');
+  const crossrefOnly = candidates.filter(x => (x.sources || []).some(s => s.startsWith('crossref:')) && !(x.sources || []).some(s => s.startsWith('openalex:'))).length;
+  const openAlexOnly = candidates.filter(x => (x.sources || []).some(s => s.startsWith('openalex:')) && !(x.sources || []).some(s => s.startsWith('crossref:'))).length;
+  const multiSource = candidates.filter(x => (x.sources || []).some(s => s.startsWith('crossref:')) && (x.sources || []).some(s => s.startsWith('openalex:'))).length;
   return [j.name, {
+    activeFrom: j.activeFrom || '',
+    effectiveStart: auditStartForJournal(j),
     sourceRecords: candidates.length,
+    crossrefOnly,
+    openAlexOnly,
+    multiSource,
     coveredByGallery: candidates.filter(x => galleryDois.has(x.doi)).length,
     rawMissingFromGallery: rawMissingForJournal.length,
     previouslyReviewedExcluded: reviewedExcludedForJournal.length,
@@ -352,14 +381,16 @@ const closureStatus = criticalFailures.length > 0
     : 'assistant-decisions-complete';
 
 const report = {
-  auditVersion: 3,
+  auditVersion: 4,
   generatedAt: new Date().toISOString(),
   timeZone: TIME_ZONE,
-  windowMode: process.env.AUDIT_START || process.env.AUDIT_END ? 'explicit' : 'rolling-72h-calendar',
+  windowMode: process.env.AUDIT_START || process.env.AUDIT_END ? 'explicit' : 'rolling-7d-calendar',
+  lookbackDays: LOOKBACK_DAYS,
   startDate: START,
   endDate: END,
   closureDate: CLOSURE_DATE,
-  policy: 'Multi-ISSN Crossref online/published union plus OpenAlex union. Default window is the current Beijing date plus the two preceding calendar dates. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Persisted assistant exclude decisions resolve previously reviewed DOI differences; new/unresolved differences remain exposed for assistant review. Deterministic screening only assigns review priority and never silently excludes a new missing record.',
+  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default seven-calendar-day Beijing safety rescan to recover delayed indexing. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
+  targetJournals: JOURNALS.map(journal => ({ name: journal.name, issns: journal.issns, activeFrom: journal.activeFrom || '', effectiveStart: auditStartForJournal(journal) })),
   summary: {
     galleryDois: galleryDois.size,
     sourceRecords: universe.length,
@@ -368,6 +399,7 @@ const report = {
     missingFromGallery: missing.length,
     potentialGaps: potentialGaps.length,
     criticalSourceFailures: criticalFailures.length,
+    sourceFamilyGaps: sourceFamilyGaps.length,
     unresolved: missing.length,
     excludedByPolicy: excludedUniverse.length,
   },
@@ -384,6 +416,8 @@ const report = {
     note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, and critical source failures must be zero.',
   },
   byJournal,
+  sourceFamilyHealth,
+  sourceFamilyGaps,
   sourceStats: stats,
   missingCandidates,
   potentialGaps,
