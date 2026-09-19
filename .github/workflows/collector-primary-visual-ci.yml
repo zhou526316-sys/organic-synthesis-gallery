@@ -23,7 +23,7 @@ jobs:
           node scripts/test-pages-fail-soft.mjs
           node toc-collector/scripts/test-publisher-resolvers.mjs
           node toc-collector/scripts/test-manual-session.mjs
-      - run: npm install --no-audit --no-fund && npm run build
+      - run: npm install --no-audit --no-fund && npx tsc --noEmit && npm run build
       - run: npm install --no-audit --no-fund && npm run check
         working-directory: cloudflare/worker
   windows-collector:

@@ -1,6 +1,8 @@
 name: Mobile interaction regression
 
 on:
+  push:
+    branches: [feat/mobile-newness-exclusions-resolver-lease]
   pull_request:
     branches:
       - main

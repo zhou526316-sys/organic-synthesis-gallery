@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release/site-authors-sep17-main-sync
+      - feat/mobile-newness-exclusions-resolver-lease
   pull_request:
     branches:
       - main

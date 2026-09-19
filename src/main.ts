@@ -144,7 +144,7 @@ const TITLE_CACHE_KEY = 'organic-gallery-resolved-title-cache-v2';
 const ZH_CACHE_KEY = 'organic-gallery-zh-title-cache-v2';
 const MEDIA_TTL = 5 * 60 * 1000;
 
-const app = document.querySelector<HTMLDivElement>('#app');
+const app = document.querySelector<HTMLDivElement>('#app')!;
 if (!app) throw new Error('App root not found');
 
 let language: Language = initialLanguage();
