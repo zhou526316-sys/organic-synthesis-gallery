@@ -1510,9 +1510,27 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
         .map(a => ({ href: abs(a.getAttribute('href') || ''), text: String(a.textContent || '').trim() }))
         .filter(item => item.href && (/\\bpdf\\b|download|epdf/i.test(item.text + ' ' + item.href)))
         .slice(0, 30);
-      return { title: document.title, href: location.href, rows, pdfLinks };
+      return {
+        title: document.title,
+        href: location.href,
+        rows,
+        pdfLinks,
+        html: String(document.documentElement?.outerHTML || '').slice(0, 2500000),
+      };
     })()`);
-    const rows = Array.isArray(result?.rows) ? result.rows : [];
+    const rows = Array.isArray(result?.rows) ? [...result.rows] : [];
+    const adapterCandidate = result?.html ? htmlCandidate(result.html, result?.href || url, doi) : null;
+    if (adapterCandidate && !rows.some(item => item?.src === adapterCandidate.src)) {
+      rows.push(adapterCandidate);
+      await log('browser_adapter_candidate', {
+        doi,
+        kind: adapterCandidate.kind,
+        assetType: adapterCandidate.assetType || '',
+        source: adapterCandidate.source || '',
+        score: Number(adapterCandidate.score || 0),
+        url: result?.href || url,
+      });
+    }
     rows.sort((a,b) => {
       const sa = semanticScore(a.text) + (a.kind === 'official' ? 20 : 0) + Math.min(20, ((a.width||0)*(a.height||0))/100000);
       const sb = semanticScore(b.text) + (b.kind === 'official' ? 20 : 0) + Math.min(20, ((b.width||0)*(b.height||0))/100000);
@@ -1612,7 +1630,7 @@ async function imageData(url, referer) {
 }
 
 async function report(doi, stage, outcome, rootCause, url = '') {
-  if (!config.writeToken) return;
+  if (localOnlyMode || !config.writeToken) return;
   try { await api('/api/media/attempt', { method: 'POST', body: JSON.stringify({ doi, source: 'windows-toc-collector', stage, outcome, rootCause, url }) }); }
   catch (error) { await handleFailure('attempt-report', error); }
 }
@@ -1637,7 +1655,7 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
         });
         return { doi, status: 'pdf_downloaded', source: inspected.method || '', pdfPath: inspected.pdfPath, pdfBytes: Number(inspected.pdfBytes || 0) };
       }
-      if (!inspectOnly) {
+      if (!inspectOnly && !localOnlyMode) {
         const reason = inspected.verifiedLocalSession ? 'verified_local_no_visual' : 'semantic_media_not_found';
         const waitMs = inspected.verifiedLocalSession ? 6 * 60 * 60 * 1000 : 72 * 60 * 60 * 1000;
         await setCooldown(doi, reason, waitMs);
@@ -1657,6 +1675,10 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
       throw error;
     }
     const localCapture = c.kind === 'official' ? await saveLocalTocCapture(doi, c, data, inspected.url) : null;
+    if (localOnlyMode) {
+      if (localCapture) return { doi, status: 'saved_local', kind: c.kind, source: inspected.method, localPath: localCapture.path };
+      return { doi, status: 'local_only_candidate_not_saved', kind: c.kind, source: inspected.method };
+    }
     if (inspectOnly) {
       await log('upload_failed', { doi, kind: c.kind, reason: 'write_token_missing_inspection_only' });
       return { doi, status: localCapture ? 'saved_local' : 'inspection_only', reason: 'write_token_missing', kind: c.kind, source: inspected.method, localPath: localCapture?.path || '' };
@@ -1691,7 +1713,7 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     else if (/429|rate/i.test(msg)) { reason = 'publisher_rate_limited'; ms = 24*60*60*1000; }
     else if (/timeout/i.test(msg)) { reason = 'publisher_timeout'; ms = 8*60*60*1000; }
     else if (/ERR_BLOCKED_BY_CLIENT/i.test(msg)) { reason = 'publisher_client_blocked'; ms = 30*60*1000; }
-    if (!inspectOnly) {
+    if (!inspectOnly && !localOnlyMode) {
       await setCooldown(doi, reason, ms);
       await report(doi, 'process', 'failed', reason, articleUrl(doi));
     }
