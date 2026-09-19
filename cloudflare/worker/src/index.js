@@ -26,7 +26,9 @@ import {
   importLiteratureSupplement,
   importTitleTranslations,
 } from './metadata.js';
-import { runRepairBatch } from './repair.js';
+import { runLeaseRepairBatch, runRepairBatch } from './repair.js';
+import { importPrimaryVisual } from './primary-visual.js';
+import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { markReader, readerCounts, submitPaperFeedback } from './user-ui.js';
 import {
@@ -79,6 +81,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/inventory',
   '/api/media/bridge-queue',
   '/api/media/repair-status',
+  '/api/media/jobs/status',
 ]);
 
 async function readJson(request) {
@@ -282,6 +285,9 @@ async function handleApi(request, env) {
   if (request.method === 'GET' && url.pathname === '/api/media/repair-status') {
     return resultResponse(await repairStatus(request, env), cors);
   }
+  if (request.method === 'GET' && url.pathname === '/api/media/jobs/status') {
+    return resultResponse(await mediaJobStatus(env), cors);
+  }
   if (request.method === 'GET' && url.pathname === '/api/media-audit') {
     return resultResponse(await mediaAudit(env));
   }
@@ -302,6 +308,13 @@ async function handleApi(request, env) {
       '/api/media/attempt',
       '/api/media/diagnose',
       '/api/media/repair-batch',
+      '/api/media/primary/import',
+      '/api/media/jobs/claim',
+      '/api/media/jobs/start',
+      '/api/media/jobs/complete',
+      '/api/media/jobs/fail',
+      '/api/media/jobs/resume-manual',
+      '/api/media/jobs/seed',
       '/api/title-translations/zh/import',
       '/api/literature/supplement/import',
     ].includes(url.pathname);
@@ -331,6 +344,28 @@ async function handleApi(request, env) {
   if (request.method === 'POST' && url.pathname === '/api/media/repair-batch') {
     const payload = await readJson(request);
     return json(await runRepairBatch(env, payload?.limit));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/primary/import') {
+    return resultResponse(await importPrimaryVisual(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/jobs/claim') {
+    return resultResponse(await claimMediaJobs(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/jobs/start') {
+    return resultResponse(await startMediaJob(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/jobs/complete') {
+    return resultResponse(await completeMediaJob(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/jobs/fail') {
+    return resultResponse(await failMediaJob(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/jobs/resume-manual') {
+    return resultResponse(await resumeManualJob(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/jobs/seed') {
+    const payload = await readJson(request);
+    return resultResponse({ status: 200, body: await seedMediaJobs(env, Array.isArray(payload?.dois) ? payload.dois : [], { priority: payload?.priority }) });
   }
   if (request.method === 'POST' && url.pathname === '/api/title-translations/zh/import') {
     return resultResponse(await importTitleTranslations(env, await readJson(request)));
@@ -363,11 +398,14 @@ export default {
   },
 
   async scheduled(controller, env, ctx) {
+    const minute = new Date(controller.scheduledTime || Date.now()).getUTCMinutes();
+    const mode = minute === 0 ? 'upgrade' : 'coverage';
+    const limit = mode === 'upgrade' ? 1 : 2;
     ctx.waitUntil(
-      runRepairBatch(env, 2).then(result => {
-        console.log('MEDIA_REPAIR_CRON', JSON.stringify({ processed: result.processed, results: result.results }));
+      runLeaseRepairBatch(env, limit, mode, `cloudflare-cron:${controller.scheduledTime || Date.now()}`).then(result => {
+        console.log('MEDIA_JOB_CRON', JSON.stringify({ mode, claimed: result.claimed, processed: result.processed, results: result.results }));
       }).catch(error => {
-        console.error('MEDIA_REPAIR_CRON_FAILED', error instanceof Error ? error.message : String(error));
+        console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
       })
     );
   },

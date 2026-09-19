@@ -16,6 +16,8 @@ on:
       - 'cloudflare/scripts/merge-worker-media.mjs'
       - 'cloudflare/schema.sql'
       - 'cloudflare/worker/src/metadata.js'
+      - 'shared/literature-policy.js'
+      - 'scripts/test-literature-policy.mjs'
       - '.github/workflows/site-authors-ci.yml'
 
 permissions:
@@ -67,14 +69,24 @@ jobs:
           for (const doi of excluded) if (byKey.has(doi)) throw new Error(`excluded DOI still present: ${doi}`);
 
           const update = JSON.parse(fs.readFileSync('public/automation-supplement.json','utf8')).papers || [];
-          if (update.length !== 19) throw new Error(`expected 19 reviewed update papers, found ${update.length}`);
+          if (!update.length) throw new Error('automation-supplement.json contains no reviewed papers');
+          const updateDois = new Set(update.map(p => normalizeDoi(p.doi)).filter(Boolean));
+          const state = JSON.parse(fs.readFileSync('audit/literature-update-state.json','utf8'));
+          const latestAccepted = state?.lastCompletedReview?.addedDois || [];
+          for (const doiValue of latestAccepted) {
+            const doi = normalizeDoi(doiValue);
+            if (doi && !updateDois.has(doi)) throw new Error(`latest reviewed DOI missing from automation supplement: ${doi}`);
+          }
           for (const p of update) {
             const doi = normalizeDoi(p.doi);
             if (!byKey.has(doi)) throw new Error(`reviewed update DOI missing: ${doi}`);
             if (!Array.isArray(p.authors) || p.authors.length === 0) throw new Error(`reviewed update DOI missing authors: ${doi}`);
           }
-          console.log(JSON.stringify({galleryTotal: papers.length, authorsCovered: papers.length, updatePapers: update.length}));
+          console.log(JSON.stringify({galleryTotal: papers.length, authorsCovered: papers.length, updatePapers: update.length, latestAccepted: latestAccepted.length}));
           NODE
+
+      - name: Verify exclusion and Beijing-day newness policy
+        run: node scripts/test-literature-policy.mjs
 
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund
