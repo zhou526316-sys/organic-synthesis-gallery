@@ -28,24 +28,15 @@ if ($liveReady) {
     Join-Path $queueDir ("toc-demand-" + $Publisher + ".txt")
   }
 } else {
-  $buildQueue = Join-Path $ScriptDir "BUILD-RETRY-QUEUE.ps1"
-  try {
-    & $buildQueue
-  } catch {
-    throw ("Retry queue generation failed: " + $_.Exception.Message)
-  }
-
-  $expectedQueue = Join-Path $CollectorDir "retry-dois.txt"
-  if (-not (Test-Path -LiteralPath $expectedQueue)) {
-    throw "Retry queue generation failed: retry-dois.txt was not created."
-  }
-
-  $queue = if ($Publisher -eq "all") {
-    Join-Path $CollectorDir "retry-dois.txt"
-  } else {
-    Join-Path $CollectorDir ("retry-" + $Publisher + ".txt")
-  }
+  $queueMap = @{
+  "all" = "toc-needs-all-2026-09-19.txt"
+  "acs" = "toc-needs-acs-2026-09-19.txt"
+  "wiley" = "toc-needs-wiley-2026-09-19.txt"
+  "nature" = "toc-needs-nature-2026-09-19.txt"
+  "science" = "toc-needs-science-2026-09-19.txt"
 }
+
+$queue = Join-Path $CollectorDir $queueMap[$Publisher]
 
 if (-not (Test-Path -LiteralPath $queue)) { throw "Retry queue not found: $queue" }
 $dois = @(Get-Content -LiteralPath $queue -Encoding UTF8 | Where-Object { $_ -match "^10\." })
