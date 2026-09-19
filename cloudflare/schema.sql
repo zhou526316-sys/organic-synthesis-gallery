@@ -270,3 +270,35 @@ CREATE TABLE IF NOT EXISTS password_registration_tokens (
 );
 CREATE INDEX IF NOT EXISTS idx_password_registration_tokens_expiry
   ON password_registration_tokens(expires_at);
+
+
+-- Email-verification state for password accounts. Existing accounts remain valid but can be prompted to verify.
+CREATE TABLE IF NOT EXISTS user_email_verifications (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  verified_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_user_email_verifications_email
+  ON user_email_verifications(email);
+
+-- One-time six-digit email challenges for registration, password reset, and existing-account verification.
+CREATE TABLE IF NOT EXISTS email_code_challenges (
+  challenge_id TEXT PRIMARY KEY,
+  purpose TEXT NOT NULL CHECK (purpose IN ('register', 'reset', 'verify')),
+  user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  display_name TEXT,
+  password_hash TEXT,
+  salt TEXT,
+  iterations INTEGER CHECK (iterations IS NULL OR iterations >= 100000),
+  code_hash TEXT NOT NULL,
+  code_salt TEXT NOT NULL,
+  attempts INTEGER NOT NULL DEFAULT 0 CHECK (attempts >= 0),
+  last_sent_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_email_code_challenges_purpose_email
+  ON email_code_challenges(purpose, email);
+CREATE INDEX IF NOT EXISTS idx_email_code_challenges_expiry
+  ON email_code_challenges(expires_at);
