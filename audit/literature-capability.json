@@ -10,7 +10,8 @@
       "blobSha": "bafbb8d02495dd8d5d24a106a49f6efd6a897e7a",
       "validation": "Workflow-generated audit persisted in commit 7a212252a399abff49ac95978120df0dbc18cb3d at 2026-09-19T06:55:25.883Z with auditVersion=4, 15 target journals, rolling seven-day safety window, sourceRecords=591, criticalSourceFailures=0, sourceFamilyGaps=0, and lateIndexed=3 across Nature/ACS Catalysis.",
       "comparisonToPriorStable": "Prior stable audit blob 2bf18d6df41def88763196c4b0f31c2bcc6f14a7 covered 10 journals, used a rolling three-calendar-day window, queried Crossref online/published only, had no per-journal source-family health, and discarded records whose publication date fell before the rolling window even when they were newly deposited. On the same upgraded seven-day configuration, enabling late-deposit rescue increased the discovered universe from 588 to 591 and surfaced three otherwise missed late-indexed records.",
-      "semanticImpact": "Strict recall upgrade. Adds five journals prospectively from 2026-09-19; expands overlap to seven Beijing calendar days; unions Crossref online/published/created with OpenAlex; retains recent Crossref-created deposits back to each journal activeFrom even when publication date predates the rolling window; exposes source agreement and source-family health. Keyword screening remains priority-only and cannot silently remove DOI differences."
+      "semanticImpact": "Strict recall upgrade. Adds five journals prospectively from 2026-09-19; expands overlap to seven Beijing calendar days; unions Crossref online/published/created with OpenAlex; retains recent Crossref-created deposits back to each journal activeFrom even when publication date predates the rolling window; exposes source agreement and source-family health. Keyword screening remains priority-only and cannot silently remove DOI differences.",
+      "comparisonArtifact": "audit/literature-capability-comparison-2026-09-19.json"
     },
     "literatureWorkflow": {
       "path": ".github/workflows/literature-audit.yml",
@@ -77,6 +78,8 @@
     "minimumSafetyRescanDaysOnCapabilityChange": 7,
     "doNotReuseOld24HourFetchAcrossCapabilityChange": true,
     "syncOnlyFallbackMustNeverRefetch": true,
-    "recordCapabilityFingerprintInLastCompletedFetch": true
+    "recordCapabilityFingerprintInLastCompletedFetch": true,
+    "forceSafetyRescanWhenCapabilityFingerprintChanges": true,
+    "legacyForce72HourFieldRetainedForCompatibility": true
   }
 }
