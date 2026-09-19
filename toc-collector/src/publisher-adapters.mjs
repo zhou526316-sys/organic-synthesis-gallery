@@ -27,6 +27,7 @@ export function classifyPublisher(value = '') {
   if (doi.startsWith('10.1016/')) return 'elsevier';
   if (doi.startsWith('10.1038/')) return 'nature';
   if (doi.startsWith('10.1126/')) return 'science';
+  if (doi.startsWith('10.31635/')) return 'ccs';
   return 'other';
 }
 
@@ -39,6 +40,7 @@ export function publisherFromUrl(value = '') {
     if (hostname.endsWith('sciencedirect.com') || hostname.endsWith('elsevier.com')) return 'elsevier';
     if (hostname.endsWith('nature.com') || hostname.endsWith('springernature.com')) return 'nature';
     if (hostname.endsWith('science.org')) return 'science';
+    if (hostname.endsWith('chemsoc.org.cn') || hostname.endsWith('chinesechemsoc.org')) return 'ccs';
   } catch {}
   return '';
 }
@@ -83,6 +85,8 @@ export function articleUrlsForDoi(value = '') {
   } else if (publisher === 'science') {
     add('https://www.science.org/doi/' + doi, 'article');
     add('https://www.science.org/doi/full/' + doi, 'full_page');
+    add('https://doi.org/' + doi, 'doi_redirect');
+  } else if (publisher === 'ccs') {
     add('https://doi.org/' + doi, 'doi_redirect');
   } else {
     add('https://doi.org/' + doi, 'doi_redirect');

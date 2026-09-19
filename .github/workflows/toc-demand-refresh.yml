@@ -36,6 +36,9 @@ jobs:
           echo "wiley=$(wc -l < toc-collector/queues/toc-demand-wiley.txt)"
           echo "nature=$(wc -l < toc-collector/queues/toc-demand-nature.txt)"
           echo "science=$(wc -l < toc-collector/queues/toc-demand-science.txt)"
+          echo "rsc=$(wc -l < toc-collector/queues/toc-demand-rsc.txt)"
+          echo "elsevier=$(wc -l < toc-collector/queues/toc-demand-elsevier.txt)"
+          echo "ccs=$(wc -l < toc-collector/queues/toc-demand-ccs.txt)"
           echo "no_visual=$(wc -l < toc-collector/queues/toc-demand-no-visual.txt)"
           echo "upgrade=$(wc -l < toc-collector/queues/toc-demand-official-upgrade.txt)"
       - name: Commit refreshed queues

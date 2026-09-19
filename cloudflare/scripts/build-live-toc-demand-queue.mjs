@@ -27,6 +27,9 @@ function publisherFor(doi) {
   if (doi.startsWith('10.1002/')) return 'wiley';
   if (doi.startsWith('10.1038/')) return 'nature';
   if (doi.startsWith('10.1126/')) return 'science';
+  if (doi.startsWith('10.1039/')) return 'rsc';
+  if (doi.startsWith('10.1016/')) return 'elsevier';
+  if (doi.startsWith('10.31635/')) return 'ccs';
   return 'other';
 }
 
@@ -115,7 +118,7 @@ async function main() {
   displayGaps.sort(sorter);
   officialUpgrade.sort(sorter);
   const rows = displayGaps;
-  const publishers = ['acs','wiley','nature','science','other'];
+  const publishers = ['acs','wiley','nature','science','rsc','elsevier','ccs','other'];
   await mkdir(OUT, { recursive: true });
   async function writeList(name, list) { await writeFile(path.join(OUT, name), list.map(x => x.doi).join('\n') + (list.length ? '\n' : '')); }
 

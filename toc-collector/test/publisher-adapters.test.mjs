@@ -12,9 +12,12 @@ assert.equal(classifyPublisher('10.1039/D6SC03136A'), 'rsc');
 assert.equal(classifyPublisher('10.1016/j.chempr.2026.01.001'), 'elsevier');
 assert.equal(classifyPublisher('10.1038/s44160-026-01158-6'), 'nature');
 assert.equal(classifyPublisher('10.1126/science.abc1234'), 'science');
+assert.equal(classifyPublisher('10.1126/sciadv.abc1234'), 'science');
+assert.equal(classifyPublisher('10.31635/ccschem.026.202600001'), 'ccs');
 
 assert.ok(articleUrlsForDoi('10.1039/D6SC03136A').some(x => x.url.includes('/2026/sc/d6sc03136a')));
 assert.equal(articleUrlsForDoi('10.1016/j.chempr.2026.01.001')[0].source, 'doi_redirect');
+assert.equal(articleUrlsForDoi('10.31635/ccschem.026.202600001')[0].source, 'doi_redirect');
 
 const acsHtml = '<section><h2>TOC and Abstract graphic</h2><figure><img alt="TOC and Abstract graphic" src="/toc.png" width="900" height="450"></figure></section><figure><figcaption>Figure 1. Mechanism.</figcaption><img src="/fig1.png"></figure>';
 const acs = pickBestPublisherMediaCandidate(acsHtml, 'https://pubs.acs.org/doi/10.1021/jacs.6c14433', { doi: '10.1021/jacs.6c14433' });

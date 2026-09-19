@@ -233,13 +233,12 @@ class Store extends EventTarget {
   readonly profileId = browserProfile();
   readerCounts: Record<string, number> = {};
   private feedbackFlushRunning = false;
-  private feedbackFlushTimer: number | null = null;
 
   constructor() {
     super();
     if (typeof window !== 'undefined') {
       window.addEventListener('online', () => void this.flushSiteFeedbackQueue());
-      this.feedbackFlushTimer = window.setInterval(() => void this.flushSiteFeedbackQueue(), 5 * 60 * 1000);
+      window.setInterval(() => void this.flushSiteFeedbackQueue(), 5 * 60 * 1000);
       window.setTimeout(() => void this.flushSiteFeedbackQueue(), 1500);
     }
   }
