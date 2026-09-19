@@ -16,14 +16,6 @@ function titleKey(value) {
   return typeof value === 'string' ? value.trim().toLowerCase().replace(/\s+/g, ' ') : '';
 }
 
-function earliestAddedDate(a, b) {
-  const left = /^\d{4}-\d{2}-\d{2}$/.test(String(a || '')) ? String(a) : '';
-  const right = /^\d{4}-\d{2}-\d{2}$/.test(String(b || '')) ? String(b) : '';
-  if (!left) return right || undefined;
-  if (!right) return left;
-  return left <= right ? left : right;
-}
-
 function mergePapers(...sets) {
   const merged = new Map();
   for (const paper of sets.flat()) {
@@ -40,7 +32,6 @@ function mergePapers(...sets) {
       ...existing,
       ...paper,
       authors: incomingAuthors.length ? incomingAuthors : existingAuthors,
-      ...(earliestAddedDate(existing.addedDate, paper.addedDate) ? { addedDate: earliestAddedDate(existing.addedDate, paper.addedDate) } : {}),
       new: Boolean(existing.new || paper.new),
       ...(earliestAddedDate(existing.addedDate, paper.addedDate) ? { addedDate: earliestAddedDate(existing.addedDate, paper.addedDate) } : {}),
       ...(existing.synthesisType && !paper.synthesisType ? { synthesisType: existing.synthesisType } : {}),
