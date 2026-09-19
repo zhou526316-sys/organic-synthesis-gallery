@@ -12,6 +12,7 @@ on:
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
       - 'cloudflare/scripts/merge-worker-media.mjs'
+      - 'cloudflare/scripts/merge-local-captures.mjs'
       - 'cloudflare/scripts/merge-pmc-open-media.mjs'
       - 'cloudflare/scripts/merge-nature-figure-fallbacks.mjs'
       - 'cloudflare/scripts/prune-media-mirror.mjs'
@@ -118,6 +119,22 @@ jobs:
         env:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
           WORKER_MEDIA_CONCURRENCY: '6'
+
+      - name: Merge D1-free local VPN captures
+        shell: bash
+        run: |
+          set +e
+          node cloudflare/scripts/merge-local-captures.mjs
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+            exit "$status"
+          fi
+          if [ "$status" -eq 2 ]; then
+            echo "Local capture merge had isolated failures; preserving successful captures."
+          fi
+        env:
+          GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
 
       - name: Merge redistributable PMC open-media fallbacks
         run: node cloudflare/scripts/merge-pmc-open-media.mjs
