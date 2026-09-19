@@ -41,10 +41,13 @@ function assetUrl(path: string): string {
   return new URL(path.replace(/^\//, ''), document.baseURI).toString();
 }
 
-function loadManifest(): Promise<StaticMediaManifest> {
+function loadManifest(forceRefresh = false): Promise<StaticMediaManifest> {
+  if (forceRefresh) manifestPromise = null;
   if (!manifestPromise) {
-    manifestPromise = fetch(new URL('./media-index.json', document.baseURI), {
-      cache: 'force-cache',
+    const url = new URL('./media-index.json', document.baseURI);
+    if (forceRefresh) url.searchParams.set('refresh', String(Date.now()));
+    manifestPromise = fetch(url, {
+      cache: 'no-store',
       credentials: 'same-origin',
     })
       .then(response => response.ok ? response.json() as Promise<StaticMediaManifest> : { items: {} })
@@ -296,10 +299,23 @@ function suppressLegacyScrollMediaHandlers(): () => void {
 
 export function installGalleryPerformanceRuntime(): () => void {
   installPerformanceCss();
-  void loadManifest();
+  void loadManifest(true);
   const restoreAddEventListener = suppressLegacyScrollMediaHandlers();
   const observer = new MutationObserver(scheduleScan);
   observer.observe(document.documentElement, { childList: true, subtree: true });
+
+  const refreshMedia = (): void => {
+    manifestPromise = null;
+    void loadManifest(true).then(() => scheduleScan());
+  };
+  window.addEventListener('pageshow', refreshMedia);
+  window.addEventListener('gallery-assets-updated', refreshMedia as EventListener);
+
   scheduleScan();
-  return restoreAddEventListener;
+  return () => {
+    window.removeEventListener('pageshow', refreshMedia);
+    window.removeEventListener('gallery-assets-updated', refreshMedia as EventListener);
+    observer.disconnect();
+    restoreAddEventListener();
+  };
 }
