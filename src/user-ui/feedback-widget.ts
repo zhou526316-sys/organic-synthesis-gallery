@@ -80,7 +80,7 @@ function installStyles(): void {
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = `
-    ${ELEMENT}{position:fixed;left:0;top:44%;z-index:10040;font:inherit}
+    ${ELEMENT}{position:fixed;left:0;top:44%;z-index:10060;font:inherit}
     .site-feedback-tab{border:1px solid #cfd7e6;border-left:0;border-radius:0 12px 12px 0;background:#fff;color:#344054;padding:12px 9px;box-shadow:0 8px 28px rgba(15,23,42,.14);cursor:pointer;font-weight:700;letter-spacing:.04em}
     .site-feedback-tab:hover{background:#f6f8fc}
     .site-feedback-panel{position:fixed;left:12px;top:50%;transform:translateY(-50%);width:min(360px,calc(100vw - 24px));max-height:calc(100vh - 32px);overflow:auto;border:1px solid #d7deea;border-radius:16px;background:#fff;color:#273142;box-shadow:0 24px 70px rgba(15,23,42,.22);padding:16px}
