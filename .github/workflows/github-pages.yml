@@ -105,8 +105,15 @@ jobs:
           PAGES_MEDIA_CONCURRENCY: '8'
 
       - name: Merge current Worker media into static snapshot
+        shell: bash
         run: |
+          set +e
           node cloudflare/scripts/merge-worker-media.mjs
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            echo "Worker media merge unavailable; preserving the mirrored/published media snapshot and continuing to strict artifact verification."
+          fi
           node cloudflare/scripts/prune-media-mirror.mjs
         env:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
@@ -221,3 +228,39 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify deployed search filtering CSS
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const site = process.env.SITE_URL;
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          const marker = /\.card\[hidden\]\{display:none!important\}/;
+
+          for (let attempt = 0; attempt < 10; attempt += 1) {
+            try {
+              const htmlResponse = await fetch(`${site}?search-css-smoke=${Date.now()}`, {
+                headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+              });
+              const html = await htmlResponse.text();
+              const hrefs = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["']/g)]
+                .map(match => new URL(match[1], site).href);
+              const css = (await Promise.all(hrefs.map(async href => {
+                const response = await fetch(`${href}${href.includes('?') ? '&' : '?'}smoke=${Date.now()}`, {
+                  headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+                });
+                return response.ok ? response.text() : '';
+              }))).join('\n');
+              if (marker.test(css)) {
+                console.log(JSON.stringify({ searchFilteringCss: true, stylesheets: hrefs.length, site }));
+                process.exit(0);
+              }
+            } catch (error) {
+              console.warn(String(error));
+            }
+            await sleep(3000);
+          }
+          throw new Error(`${site}: deployed CSS is missing .card[hidden]{display:none!important}`);
+          NODE
