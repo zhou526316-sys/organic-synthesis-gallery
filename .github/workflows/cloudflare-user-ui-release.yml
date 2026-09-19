@@ -165,6 +165,53 @@ jobs:
         working-directory: cloudflare/worker
         run: npx wrangler deploy --config wrangler.user-ui.toml
 
+      - name: Native registration end-to-end smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const assert = (value, message) => { if (!value) throw new Error(message); };
+          const base = process.env.WORKER_URL;
+          const email = `native-smoke-${process.env.GITHUB_RUN_ID}@example.invalid`;
+          const password = 'Smoke-Password-123!';
+          const origin = 'https://zhou526316-sys.github.io';
+
+          async function call(path, body, expected) {
+            const response = await fetch(`${base}${path}`, {
+              method: 'POST',
+              headers: { 'content-type': 'application/json', origin },
+              body: JSON.stringify(body),
+            });
+            const text = await response.text();
+            let data = {};
+            try { data = text ? JSON.parse(text) : {}; } catch {}
+            assert(response.status === expected, `${path}: expected ${expected}, got ${response.status}: ${text.slice(0, 500)}`);
+            assert(response.headers.get('access-control-allow-origin') === origin, `${path}: CORS header missing`);
+            return data;
+          }
+
+          const registered = await call('/api/user-ui/auth/register', {
+            email,
+            password,
+            displayName: 'Native Smoke',
+          }, 201);
+          assert(registered.token && registered.user?.email === email, `registration response invalid: ${JSON.stringify(registered)}`);
+
+          const loggedIn = await call('/api/user-ui/auth/password/login', { email, password }, 200);
+          assert(loggedIn.token && loggedIn.user?.email === email, `password login response invalid: ${JSON.stringify(loggedIn)}`);
+          console.log(JSON.stringify({ nativeRegistration: true, passwordLogin: true, email }));
+          NODE
+
+      - name: Clean native registration smoke account
+        if: always()
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          EMAIL="native-smoke-${GITHUB_RUN_ID}@example.invalid"
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.user-ui.toml \
+            --command "DELETE FROM users WHERE email = '$EMAIL';" >/dev/null
+
       - name: Verify health and user UI routes
         shell: bash
         run: |
