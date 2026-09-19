@@ -54,11 +54,13 @@ async function sendEmailCode(env, email, purpose, code) {
     register: 'Organic Synthesis Literature Gallery 注册验证码',
     reset: 'Organic Synthesis Literature Gallery 密码重置验证码',
     verify: 'Organic Synthesis Literature Gallery 邮箱验证码',
+    change: 'Organic Synthesis Literature Gallery 新邮箱验证码',
   };
   const actions = {
     register: '完成本站账号注册',
     reset: '重置本站账号密码',
     verify: '验证本站账号邮箱',
+    change: '确认新的本站账号邮箱',
   };
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -849,6 +851,167 @@ export async function changePassword(request, env, payload) {
     'UPDATE password_credentials SET password_hash = ?, salt = ?, iterations = ?, updated_at = ? WHERE user_id = ?'
   ).bind(credential.hash, credential.salt, credential.iterations, now, session.user_id).run();
   await env.DB.prepare('DELETE FROM user_sessions WHERE user_id = ?').bind(session.user_id).run();
+  return { status: 200, body: await createUserSession(env, session.user_id) };
+}
+
+export async function startEmailChange(request, env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  if (!providerConfigured(env, 'email')) return { status: 503, body: { error: 'provider_not_configured', provider: 'email' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+
+  const newEmail = normalizeEmail(payload?.newEmail);
+  const currentPassword = normalizePassword(payload?.currentPassword);
+  if (!newEmail) return { status: 400, body: { error: 'invalid_email' } };
+  if (!currentPassword) return { status: 400, body: { error: 'invalid_password' } };
+
+  const user = await userSummary(env, session.user_id);
+  if (!user?.localAccount || !user.email) return { status: 400, body: { error: 'email_change_not_applicable' } };
+  if (newEmail === String(user.email).toLowerCase()) return { status: 400, body: { error: 'email_unchanged' } };
+
+  const credential = await env.DB.prepare(
+    'SELECT user_id, password_hash, salt, iterations FROM password_credentials WHERE user_id = ?'
+  ).bind(session.user_id).first();
+  if (!credential || !(await verifyPassword(currentPassword, credential))) {
+    return { status: 401, body: { error: 'invalid_current_password' } };
+  }
+
+  const conflict = await env.DB.prepare(
+    'SELECT user_id FROM password_credentials WHERE email = ? AND user_id <> ? LIMIT 1'
+  ).bind(newEmail, session.user_id).first();
+  if (conflict?.user_id) return { status: 409, body: { error: 'email_already_registered' } };
+
+  const previous = await env.DB.prepare(
+    'SELECT challenge_id, last_sent_at FROM email_change_challenges WHERE user_id = ?'
+  ).bind(session.user_id).first();
+  if (previous?.challenge_id) {
+    const elapsed = Date.now() - Number(previous.last_sent_at || 0);
+    if (elapsed < EMAIL_CODE_COOLDOWN) {
+      return {
+        status: 429,
+        body: {
+          error: 'code_cooldown',
+          challengeId: previous.challenge_id,
+          retryAfter: Math.ceil((EMAIL_CODE_COOLDOWN - elapsed) / 1000),
+        },
+      };
+    }
+  }
+
+  const challengeId = `ch_${randomToken(18)}`;
+  const code = randomEmailCode();
+  const codeSalt = randomShortSalt();
+  const codeHash = await emailCodeHash(code, codeSalt);
+  const now = Date.now();
+  await env.DB.prepare('DELETE FROM email_change_challenges WHERE user_id = ?').bind(session.user_id).run();
+  await env.DB.prepare(
+    `INSERT INTO email_change_challenges
+      (challenge_id, user_id, new_email, code_hash, code_salt, attempts, last_sent_at, created_at, expires_at)
+     VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?)`
+  ).bind(challengeId, session.user_id, newEmail, codeHash, codeSalt, now, now, now + REGISTER_TTL).run();
+
+  const sent = await sendEmailCode(env, newEmail, 'change', code);
+  if (!sent.ok) {
+    await env.DB.prepare('DELETE FROM email_change_challenges WHERE challenge_id = ?').bind(challengeId).run();
+    return { status: sent.error === 'provider_not_configured' ? 503 : 502, body: { error: sent.error } };
+  }
+  return {
+    status: 200,
+    body: {
+      accepted: true,
+      challengeId,
+      newEmail,
+      expiresIn: REGISTER_TTL / 1000,
+      resendAfter: EMAIL_CODE_COOLDOWN / 1000,
+    },
+  };
+}
+
+export async function resendEmailChange(request, env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+  const challengeId = typeof payload?.challengeId === 'string' ? payload.challengeId.trim() : '';
+  const row = await env.DB.prepare(
+    'SELECT challenge_id, user_id, new_email, code_hash, code_salt, attempts, last_sent_at, created_at, expires_at FROM email_change_challenges WHERE challenge_id = ?'
+  ).bind(challengeId).first();
+  if (!row || row.user_id !== session.user_id) return { status: 400, body: { error: 'invalid_challenge' } };
+  const now = Date.now();
+  if (Number(row.expires_at || 0) <= now) {
+    await env.DB.prepare('DELETE FROM email_change_challenges WHERE challenge_id = ?').bind(challengeId).run();
+    return { status: 410, body: { error: 'code_expired' } };
+  }
+  const elapsed = now - Number(row.last_sent_at || 0);
+  if (elapsed < EMAIL_CODE_COOLDOWN) {
+    return { status: 429, body: { error: 'code_cooldown', retryAfter: Math.ceil((EMAIL_CODE_COOLDOWN - elapsed) / 1000) } };
+  }
+  const code = randomEmailCode();
+  const codeSalt = randomShortSalt();
+  const codeHash = await emailCodeHash(code, codeSalt);
+  const sent = await sendEmailCode(env, row.new_email, 'change', code);
+  if (!sent.ok) return { status: sent.error === 'provider_not_configured' ? 503 : 502, body: { error: sent.error } };
+  await env.DB.prepare(
+    'UPDATE email_change_challenges SET code_hash = ?, code_salt = ?, attempts = 0, last_sent_at = ?, expires_at = ? WHERE challenge_id = ?'
+  ).bind(codeHash, codeSalt, now, now + REGISTER_TTL, challengeId).run();
+  return { status: 200, body: { accepted: true, challengeId, newEmail: row.new_email, expiresIn: REGISTER_TTL / 1000, resendAfter: EMAIL_CODE_COOLDOWN / 1000 } };
+}
+
+export async function confirmEmailChange(request, env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const session = await sessionRow(request, env);
+  if (!session) return { status: 401, body: { error: 'not_authenticated' } };
+  const challengeId = typeof payload?.challengeId === 'string' ? payload.challengeId.trim() : '';
+  const row = await env.DB.prepare(
+    'SELECT challenge_id, user_id, new_email, code_hash, code_salt, attempts, expires_at FROM email_change_challenges WHERE challenge_id = ?'
+  ).bind(challengeId).first();
+  if (!row || row.user_id !== session.user_id) return { status: 400, body: { error: 'invalid_challenge' } };
+  if (Number(row.expires_at || 0) <= Date.now()) {
+    await env.DB.prepare('DELETE FROM email_change_challenges WHERE challenge_id = ?').bind(challengeId).run();
+    return { status: 410, body: { error: 'code_expired' } };
+  }
+  if (Number(row.attempts || 0) >= EMAIL_CODE_MAX_ATTEMPTS) {
+    await env.DB.prepare('DELETE FROM email_change_challenges WHERE challenge_id = ?').bind(challengeId).run();
+    return { status: 429, body: { error: 'too_many_code_attempts' } };
+  }
+  const code = normalizeEmailCode(payload?.code);
+  const valid = code && constantTimeEqual(await emailCodeHash(code, row.code_salt), String(row.code_hash || ''));
+  if (!valid) {
+    const nextAttempts = Number(row.attempts || 0) + 1;
+    if (nextAttempts >= EMAIL_CODE_MAX_ATTEMPTS) {
+      await env.DB.prepare('DELETE FROM email_change_challenges WHERE challenge_id = ?').bind(challengeId).run();
+      return { status: 429, body: { error: 'too_many_code_attempts', attemptsRemaining: 0 } };
+    }
+    await env.DB.prepare('UPDATE email_change_challenges SET attempts = ? WHERE challenge_id = ?')
+      .bind(nextAttempts, challengeId).run();
+    return { status: 400, body: { error: 'invalid_code', attemptsRemaining: EMAIL_CODE_MAX_ATTEMPTS - nextAttempts } };
+  }
+
+  const conflict = await env.DB.prepare(
+    'SELECT user_id FROM password_credentials WHERE email = ? AND user_id <> ? LIMIT 1'
+  ).bind(row.new_email, session.user_id).first();
+  if (conflict?.user_id) return { status: 409, body: { error: 'email_already_registered' } };
+
+  const now = Date.now();
+  try {
+    await env.DB.batch([
+      env.DB.prepare('UPDATE users SET email = ?, updated_at = ? WHERE id = ?').bind(row.new_email, now, session.user_id),
+      env.DB.prepare('UPDATE password_credentials SET email = ?, updated_at = ? WHERE user_id = ?').bind(row.new_email, now, session.user_id),
+      env.DB.prepare("UPDATE auth_identities SET provider_user_id = ?, email = ?, updated_at = ? WHERE provider = 'local' AND user_id = ?")
+        .bind(row.new_email, row.new_email, now, session.user_id),
+      env.DB.prepare(
+        `INSERT INTO user_email_verifications (user_id, email, verified_at)
+         VALUES (?, ?, ?)
+         ON CONFLICT(user_id) DO UPDATE SET email = excluded.email, verified_at = excluded.verified_at`
+      ).bind(session.user_id, row.new_email, now),
+      env.DB.prepare('DELETE FROM email_change_challenges WHERE challenge_id = ?').bind(challengeId),
+      env.DB.prepare('DELETE FROM user_sessions WHERE user_id = ?').bind(session.user_id),
+    ]);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (/unique|constraint/i.test(message)) return { status: 409, body: { error: 'email_already_registered' } };
+    console.error('EMAIL_CHANGE_FAILED', message);
+    return { status: 500, body: { error: 'email_change_failed' } };
+  }
   return { status: 200, body: await createUserSession(env, session.user_id) };
 }
 
