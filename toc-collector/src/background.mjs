@@ -3,7 +3,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { classifyPublisher, pickBestPublisherMediaCandidate, primaryArticleUrlForDoi, publisherFromUrl as publisherFromAdapter, publisherHostMatches as publisherHostMatchesAdapter } from './publisher-adapters.mjs';
+import { classifyPublisher, extractPublisherMediaCandidates, pickBestPublisherMediaCandidate, primaryArticleUrlForDoi, publisherFromUrl as publisherFromAdapter, publisherHostMatches as publisherHostMatchesAdapter } from './publisher-adapters.mjs';
 
 // This module is imported only after the startup window has rendered.
 // All Electron objects, filesystem operations and background work are deferred.
@@ -37,6 +37,7 @@ let renderPromise = null;
   maxPerCycle: 12,
   localScanDelayMs: 5000,
   localInteractiveSettleMs: 12000,
+  localAuthWaitMinutes: 8,
   publisherTimeoutSeconds: 35,
   headlessWaitMs: 5000,
 };
@@ -90,6 +91,7 @@ const localOnlyMode = process.argv.includes('--local-only');
 const scanAllMode = process.argv.includes('--scan-all');
 const officialOnlyMode = process.argv.includes('--official-only');
 const showBrowserMode = process.argv.includes('--show-browser');
+const diagnoseMissesMode = process.argv.includes('--diagnose-misses');
 const doiFileArg = process.argv.find(arg => arg.startsWith('--doi-file='));
 const doiFilePath = doiFileArg ? path.resolve(doiFileArg.slice('--doi-file='.length)) : '';
 // This only exists for the explicit, read-only Browserbase acceptance test. It
@@ -141,6 +143,110 @@ function configPath() { return path.join(dataDir(), 'config.json'); }
 function statePath() { return path.join(dataDir(), 'state.json'); }
 function logPath() { return path.join(dataDir(), 'collector.log'); }
 function localCaptureDir() { return path.join(dataDir(), 'local-toc-capture'); }
+function diagnosticDir() { return path.join(dataDir(), 'toc-diagnostics'); }
+function diagnosticJsonlPath() { return path.join(diagnosticDir(), 'diagnostics.jsonl'); }
+function retryQueuePath() { return path.join(diagnosticDir(), 'retry-dois.txt'); }
+function upgradeQueuePath() { return path.join(diagnosticDir(), 'official-upgrade-dois.txt'); }
+
+function sanitizedPageUrl(value) {
+  try {
+    const url = new URL(String(value || ''));
+    return `${url.origin}${url.pathname}`;
+  } catch {
+    return String(value || '').replace(/[?#].*$/, '').slice(0, 1200);
+  }
+}
+
+function diagnosisReason(result = {}) {
+  const d = result?.diagnostic || {};
+  const status = String(result?.status || '');
+  const error = String(result?.reason || d.error || '');
+
+  if (status === 'saved_local') return 'official_toc_saved';
+  if (status === 'saved_local_figure1') return 'figure1_fallback_saved';
+  if (/window_closed_during_auth/i.test(error)) return 'window_closed_during_auth';
+  if (/publisher_window_closed/i.test(error)) return 'window_closed_before_capture';
+  if (/captcha_or_challenge|captcha|challenge/i.test(error) || d.challenge) return 'captcha_or_challenge';
+  if (/auth_not_completed/i.test(error) || d.authPage) return 'auth_not_completed';
+  if (/publisher_timeout|timeout/i.test(error)) return 'publisher_timeout';
+  if (/image_download_failed|image_/i.test(error)) return 'image_download_failed';
+  if (d.hostOk === false) return 'wrong_domain_or_idp';
+  if (Number(d.semanticMarkerCount || 0) > 0 && Number(d.candidateCount || 0) === 0) return 'media_marker_found_but_image_url_missing';
+  if (Number(d.figure1MarkerCount || 0) > 0 && Number(d.candidateCount || 0) === 0) return 'figure1_marker_found_but_image_url_missing';
+  if (d.articleSignal && Number(d.candidateCount || 0) === 0) return 'article_loaded_no_recognized_visual';
+  if (status === 'no_candidate' || status === 'no_official_toc') return 'semantic_media_not_found';
+  return error || status || 'unknown';
+}
+
+async function appendDiagnostic(result = {}, index = 0, total = 0) {
+  if (!diagnoseMissesMode) return;
+  const doi = String(result?.doi || '').toLowerCase();
+  if (!doi) return;
+  await fsp.mkdir(diagnosticDir(), { recursive: true });
+  const d = result?.diagnostic || {};
+  const row = {
+    at: new Date().toISOString(),
+    index,
+    total,
+    doi,
+    publisher: classify(doi),
+    status: String(result?.status || 'unknown'),
+    reason: diagnosisReason(result),
+    method: String(result?.source || d.method || ''),
+    proxy: String(d.proxy || ''),
+    requestedUrl: sanitizedPageUrl(d.requestedUrl || articleUrl(doi)),
+    finalUrl: sanitizedPageUrl(d.finalUrl || ''),
+    title: String(d.title || '').slice(0, 240),
+    challenge: Boolean(d.challenge),
+    authPage: Boolean(d.authPage),
+    hostOk: d.hostOk === undefined ? null : Boolean(d.hostOk),
+    doiOk: d.doiOk === undefined ? null : Boolean(d.doiOk),
+    articleSignal: Boolean(d.articleSignal),
+    institutionalAccessSignal: Boolean(d.institutionalAccessSignal),
+    imageCount: Number(d.imageCount || 0),
+    figureCount: Number(d.figureCount || 0),
+    semanticMarkerCount: Number(d.semanticMarkerCount || 0),
+    figure1MarkerCount: Number(d.figure1MarkerCount || 0),
+    candidateCount: Number(d.candidateCount || 0),
+    adapterCandidateCount: Number(d.adapterCandidateCount || 0),
+    topCandidates: Array.isArray(d.topCandidates) ? d.topCandidates.slice(0, 5) : [],
+    waitState: String(d.waitState || ''),
+    error: String(result?.reason || d.error || '').slice(0, 500),
+    localPath: String(result?.localPath || ''),
+  };
+  await fsp.appendFile(diagnosticJsonlPath(), JSON.stringify(row) + '\n');
+}
+
+async function finalizeDiagnosticRun(selected = [], results = []) {
+  if (!diagnoseMissesMode) return;
+  await fsp.mkdir(diagnosticDir(), { recursive: true });
+  const unresolved = [];
+  const upgrades = [];
+  const rows = [];
+  for (let i = 0; i < selected.length; i += 1) {
+    const doi = String(selected[i]?.doi || '').toLowerCase();
+    const result = results[i] || { doi, status: 'missing_result', reason: 'missing_result' };
+    const status = String(result.status || '');
+    const reason = diagnosisReason(result);
+    rows.push({ doi, publisher: classify(doi), status, reason });
+    if (status === 'saved_local_figure1') upgrades.push(doi);
+    else if (!['saved_local','official','figure1'].includes(status)) unresolved.push(doi);
+  }
+  await fsp.writeFile(retryQueuePath(), [...new Set(unresolved)].join('\n') + (unresolved.length ? '\n' : ''));
+  await fsp.writeFile(upgradeQueuePath(), [...new Set(upgrades)].join('\n') + (upgrades.length ? '\n' : ''));
+  const summary = {
+    generatedAt: new Date().toISOString(),
+    total: selected.length,
+    officialSaved: rows.filter(x => x.status === 'saved_local' || x.status === 'official').length,
+    figure1Saved: rows.filter(x => x.status === 'saved_local_figure1' || x.status === 'figure1').length,
+    retry: unresolved.length,
+    officialUpgrade: upgrades.length,
+    byReason: Object.fromEntries([...new Set(rows.map(x => x.reason))].sort().map(reason => [reason, rows.filter(x => x.reason === reason).length])),
+    rows,
+  };
+  await fsp.writeFile(path.join(diagnosticDir(), 'latest-summary.json'), JSON.stringify(summary, null, 2));
+  await log('diagnostic_run_complete', summary);
+}
 
 function parseDoiList(text) {
   const found = String(text || '').match(/10\.\d{4,9}\/[^\s,;"'<>]+/gi) || [];
@@ -1474,30 +1580,37 @@ async function downloadPdfFromPublisherBrowser({ doi, publisher, webContents, pd
 async function waitForLocalInteractiveArticle(win, doi, publisher) {
   if (!localOnlyMode || !showBrowserMode || !win || win.isDestroyed()) {
     await new Promise(resolve => setTimeout(resolve, Number(config.headlessWaitMs) || 5000));
-    return;
+    return { waitState: 'headless_settle' };
   }
 
   const settleMs = Math.max(5000, Number(config.localInteractiveSettleMs || 12000));
+  const authWaitMs = Math.max(60_000, Number(config.localAuthWaitMinutes || 8) * 60_000);
   const startedAt = Date.now();
   let lastStatus = '';
+  let lastDetails = null;
 
   while (!win.isDestroyed()) {
     let details = null;
     try {
       details = await win.webContents.executeJavaScript(`(() => {
-        const text = String(document.body?.innerText || '').slice(0, 120000);
+        const text = String(document.body?.innerText || '').slice(0, 160000);
         const href = location.href;
         const title = document.title;
         const citationDoi = String(document.querySelector('meta[name="citation_doi"]')?.content || document.querySelector('meta[name="dc.identifier"]')?.content || '').toLowerCase();
         const canonical = String(document.querySelector('link[rel="canonical"]')?.href || '').toLowerCase();
-        const challenge = /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic/i.test(title + '\\n' + text);
-        const authPage = /(?:login|signin|sign-in|shibboleth|saml|institution|federated|wayf|idp)/i.test(href)
-          || /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login/i.test(title + '\\n' + text);
+        const challenge = /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic|checking your browser/i.test(title + '\\n' + text);
+        const authPage = /(?:login|signin|sign-in|shibboleth|saml|institution|federated|wayf|idp|openathens)/i.test(href)
+          || /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login|institutional access|access provided by/i.test(title + '\\n' + text);
         const articleSignal = /\\babstract\\b|\\breferences\\b|\\bsupporting information\\b|\\barticle\\b/i.test(text) && text.length > 2500;
-        return { href, title, textLength: text.length, citationDoi, canonical, challenge, authPage, articleSignal };
+        const institutionalAccessSignal = /access provided by|institutional access|access through your institution|signed in through|authenticated by/i.test(text);
+        return { href, title, textLength: text.length, citationDoi, canonical, challenge, authPage, articleSignal, institutionalAccessSignal };
       })()`);
+      lastDetails = details;
     } catch (error) {
-      if (win.isDestroyed()) throw new Error('publisher_window_closed_by_user');
+      if (win.isDestroyed()) {
+        if (lastDetails?.challenge || lastDetails?.authPage) throw new Error('window_closed_during_auth');
+        throw new Error('publisher_window_closed_before_capture');
+      }
       await log('local_interactive_probe_failed', { doi, publisher, reason: safeError(error, 180) });
     }
 
@@ -1509,11 +1622,12 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
       const doiOk = String(details.citationDoi || '').includes(normalized)
         || String(details.canonical || '').includes(normalized)
         || href.toLowerCase().includes(suffix.toLowerCase());
-      const articleReady = hostOk && (doiOk || details.articleSignal) && !details.challenge;
+      const articleReady = hostOk && (doiOk || details.articleSignal) && !details.challenge && !details.authPage;
+      const elapsed = Date.now() - startedAt;
 
-      if (articleReady && Date.now() - startedAt >= settleMs) {
+      if (articleReady && elapsed >= settleMs) {
         if (lastStatus !== 'ready') await log('local_interactive_article_ready', { doi, publisher, url: href });
-        return;
+        return { ...details, hostOk, doiOk, waitState: 'article_ready', elapsedMs: elapsed };
       }
 
       const waitingForUser = details.challenge || details.authPage || !hostOk;
@@ -1521,7 +1635,7 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
       if (nextStatus !== lastStatus) {
         lastStatus = nextStatus;
         if (waitingForUser) {
-          stageStatus = `等待你完成 ${manualPublisherLabel(publisher)} 登录/学校验证：${doi}。窗口不会自动关闭；完成后程序会自行继续。`;
+          stageStatus = `等待你完成 ${manualPublisherLabel(publisher)} 登录/学校验证：${doi}。窗口会保持，最长等待 ${Math.round(authWaitMs/60000)} 分钟。`;
           await log('local_interactive_waiting_for_user', { doi, publisher, url: href, challenge: Boolean(details.challenge), authPage: Boolean(details.authPage), hostOk });
         } else {
           stageStatus = `等待页面完整加载：${doi}`;
@@ -1529,13 +1643,21 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
         await refreshDashboard();
       }
 
-      if (!waitingForUser && Date.now() - startedAt >= settleMs * 2) return;
+      if (waitingForUser && elapsed >= authWaitMs) {
+        if (details.challenge) throw new Error('captcha_or_challenge_not_completed');
+        if (details.authPage || !hostOk) throw new Error('auth_not_completed');
+      }
+
+      if (!waitingForUser && elapsed >= settleMs * 3) {
+        return { ...details, hostOk, doiOk, waitState: 'page_settled_unverified', elapsedMs: elapsed };
+      }
     }
 
     await new Promise(resolve => setTimeout(resolve, 1500));
   }
 
-  throw new Error('publisher_window_closed_by_user');
+  if (lastDetails?.challenge || lastDetails?.authPage) throw new Error('window_closed_during_auth');
+  throw new Error('publisher_window_closed_before_capture');
 }
 
 async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnostic, verifyBrowserbaseImage = false } = {}) {
@@ -1550,6 +1672,14 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
   try {
     const publisher = classify(doi);
     const publisherSession = getPublisherSession(publisher);
+    let resolvedProxy = '';
+    try {
+      resolvedProxy = await publisherSession.resolveProxy(url);
+      await log('publisher_proxy_resolution', { doi, publisher, proxy: resolvedProxy || 'UNKNOWN', url: sanitizedPageUrl(url) });
+    } catch (error) {
+      resolvedProxy = 'RESOLVE_PROXY_FAILED';
+      await log('publisher_proxy_resolution_failed', { doi, publisher, reason: safeError(error, 180) });
+    }
     win = new BrowserWindow({
       show: showBrowserMode,
       webPreferences: {
@@ -1586,7 +1716,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
     ]);
     clearTimeout(publisherTimer);
     publisherTimer = null;
-    await waitForLocalInteractiveArticle(win, doi, publisher);
+    const waitDetails = await waitForLocalInteractiveArticle(win, doi, publisher);
     const result = await win.webContents.executeJavaScript(`(() => {
       const abs = u => { try { const value = new URL(u, location.href); return ['http:','https:'].includes(value.protocol) ? value.href : '' } catch { return '' } };
       const rows = [];
@@ -1637,24 +1767,41 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
         .map(a => ({ href: abs(a.getAttribute('href') || ''), text: String(a.textContent || '').trim() }))
         .filter(item => item.href && (/\\bpdf\\b|download|epdf/i.test(item.text + ' ' + item.href)))
         .slice(0, 30);
+      const bodyText = String(document.body?.innerText || '').slice(0, 180000);
+      const semanticNodes = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6,strong,b,dt,[role="heading"],[class*="graphical"],[class*="visual"],[class*="toc"],[id*="graphical"],[id*="visual"],[id*="toc"]')];
+      const semanticLabels = semanticNodes.map(el => String(el.textContent || el.getAttribute?.('aria-label') || '').trim()).filter(text => semanticRe.test(text)).slice(0, 20);
+      const figure1MarkerCount = (bodyText.match(/(?:figure|fig\\.)\\s*1\\b/gi) || []).length;
       return {
         title: document.title,
         href: location.href,
         rows,
         pdfLinks,
         html: String(document.documentElement?.outerHTML || '').slice(0, 2500000),
+        pageDiagnostics: {
+          imageCount: document.images.length,
+          figureCount: document.querySelectorAll('figure').length,
+          semanticMarkerCount: semanticLabels.length,
+          semanticLabels,
+          figure1MarkerCount,
+          institutionalAccessSignal: /access provided by|institutional access|access through your institution|signed in through|authenticated by/i.test(bodyText),
+        },
       };
     })()`);
     const rows = Array.isArray(result?.rows) ? [...result.rows] : [];
-    const adapterCandidate = result?.html ? htmlCandidate(result.html, result?.href || url, doi) : null;
-    if (adapterCandidate && !rows.some(item => item?.src === adapterCandidate.src)) {
-      rows.push(adapterCandidate);
+    const adapterRows = result?.html
+      ? extractPublisherMediaCandidates(result.html, result?.href || url, { doi, publisher })
+      : [];
+    for (const adapterCandidate of adapterRows.slice(0, 20)) {
+      if (!rows.some(item => item?.src === adapterCandidate.src)) rows.push(adapterCandidate);
+    }
+    if (adapterRows[0]) {
       await log('browser_adapter_candidate', {
         doi,
-        kind: adapterCandidate.kind,
-        assetType: adapterCandidate.assetType || '',
-        source: adapterCandidate.source || '',
-        score: Number(adapterCandidate.score || 0),
+        kind: adapterRows[0].kind,
+        assetType: adapterRows[0].assetType || '',
+        source: adapterRows[0].source || '',
+        score: Number(adapterRows[0].score || 0),
+        candidates: adapterRows.length,
         url: result?.href || url,
       });
     }
@@ -1663,8 +1810,45 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       const sb = semanticScore(b.text) + (b.kind === 'official' ? 20 : 0) + Math.min(20, ((b.width||0)*(b.height||0))/100000);
       return sb - sa;
     });
+    const pageUrl = result?.href || url;
+    const normalized = String(doi || '').toLowerCase();
+    const suffix = normalized.split('/').at(-1) || normalized;
+    const hostOk = publisherHostMatches(publisher, pageUrl);
+    const doiOk = String(waitDetails?.citationDoi || '').includes(normalized)
+      || String(waitDetails?.canonical || '').includes(normalized)
+      || String(pageUrl).toLowerCase().includes(suffix.toLowerCase());
+    const diagnostic = {
+      method: 'browser',
+      publisher,
+      proxy: resolvedProxy,
+      requestedUrl: url,
+      finalUrl: pageUrl,
+      title: result?.title || '',
+      challenge: Boolean(waitDetails?.challenge),
+      authPage: Boolean(waitDetails?.authPage),
+      hostOk,
+      doiOk,
+      articleSignal: Boolean(waitDetails?.articleSignal),
+      institutionalAccessSignal: Boolean(waitDetails?.institutionalAccessSignal || result?.pageDiagnostics?.institutionalAccessSignal),
+      waitState: waitDetails?.waitState || '',
+      imageCount: Number(result?.pageDiagnostics?.imageCount || 0),
+      figureCount: Number(result?.pageDiagnostics?.figureCount || 0),
+      semanticMarkerCount: Number(result?.pageDiagnostics?.semanticMarkerCount || 0),
+      semanticLabels: Array.isArray(result?.pageDiagnostics?.semanticLabels) ? result.pageDiagnostics.semanticLabels.slice(0, 20) : [],
+      figure1MarkerCount: Number(result?.pageDiagnostics?.figure1MarkerCount || 0),
+      candidateCount: rows.length,
+      adapterCandidateCount: adapterRows.length,
+      topCandidates: rows.slice(0, 5).map(item => ({
+        kind: item.kind || '',
+        source: item.source || '',
+        assetType: item.assetType || '',
+        score: Number(item.score || semanticScore(item.text) || 0),
+        width: Number(item.width || 0),
+        height: Number(item.height || 0),
+        src: sanitizedPageUrl(item.src || ''),
+      })),
+    };
     if (!rows[0]) {
-      const publisher = classify(doi);
       const pageUrl = result?.href || url;
       const pdfLinks = Array.isArray(result?.pdfLinks) ? result.pdfLinks : [];
       const currentIsPdfViewer =
@@ -1672,6 +1856,16 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
         (publisher === 'acs' && /\/doi\/(?:e?pdf|pdf)\//i.test(pageUrl)) ||
         /\.pdf(?:[?#]|$)/i.test(pageUrl);
       const pdfUrl = currentIsPdfViewer ? pageUrl : String(pdfLinks[0]?.href || '');
+      if (localOnlyMode) {
+        await log('local_browser_no_visual', { doi, publisher, diagnostic });
+        return {
+          url: pageUrl,
+          candidate: null,
+          method: 'local_browser_no_candidate',
+          verifiedLocalSession: localPublisherReady(publisher),
+          diagnostic,
+        };
+      }
       if (localPublisherReady(publisher)) {
         let pdf = null;
         if (pdfUrl) {
@@ -1698,7 +1892,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       throw new Error('browser_no_candidate');
     }
     await log('browser_success', { doi, kind: rows[0].kind, url: result?.href || url });
-    return { url: result?.href || url, candidate: rows[0], method: 'browser' };
+    return { url: result?.href || url, candidate: rows[0], method: 'browser', diagnostic };
   } catch (error) {
     const browserError = safeError(error, 300).replace(/https?:\/\/\S+/g, '<url>');
     if (publisherTimer) clearTimeout(publisherTimer);
@@ -1723,7 +1917,29 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
     }
     if (localOnlyMode) {
       await log('browserbase_skipped_local_only', { doi, publisher, browserError });
-      return htmlResult || { url, candidate: null, method: 'local_only_no_candidate', verifiedLocalSession: localPublisherReady(publisher) };
+      if (htmlResult) {
+        htmlResult.diagnostic = { ...(htmlResult.diagnostic || {}), publisher, requestedUrl: url, error: browserError, method: htmlResult.method || 'html_fallback' };
+        return htmlResult;
+      }
+      return {
+        url,
+        candidate: null,
+        method: 'local_only_no_candidate',
+        verifiedLocalSession: localPublisherReady(publisher),
+        diagnostic: {
+          publisher,
+          requestedUrl: url,
+          finalUrl: '',
+          error: browserError,
+          waitState: /auth_not_completed/.test(browserError) ? 'auth_timeout' : /window_closed_during_auth/.test(browserError) ? 'window_closed_during_auth' : '',
+          challenge: /captcha|challenge/i.test(browserError),
+          authPage: /auth_not_completed|window_closed_during_auth/i.test(browserError),
+          hostOk: null,
+          doiOk: null,
+          candidateCount: 0,
+          adapterCandidateCount: 0,
+        },
+      };
     }
     const browserbaseResult = await inspectArticleBrowserbase(doi, url, browserError, { verifyImage: verifyBrowserbaseImage });
     if (browserbaseResult?.candidate) return browserbaseResult;
@@ -1783,7 +1999,7 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
           path: inspected.pdfPath,
           bytes: Number(inspected.pdfBytes || 0),
         });
-        return { doi, status: 'pdf_downloaded', source: inspected.method || '', pdfPath: inspected.pdfPath, pdfBytes: Number(inspected.pdfBytes || 0) };
+        return { doi, status: 'pdf_downloaded', source: inspected.method || '', pdfPath: inspected.pdfPath, pdfBytes: Number(inspected.pdfBytes || 0), diagnostic: inspected.diagnostic || {} };
       }
       if (!inspectOnly && !localOnlyMode) {
         const reason = inspected.verifiedLocalSession ? 'verified_local_no_visual' : 'semantic_media_not_found';
@@ -1791,11 +2007,11 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
         await setCooldown(doi, reason, waitMs);
         await report(doi, 'extract', 'partial', reason, inspected.url);
       }
-      return { doi, status: 'no_candidate', source: inspected.method || '' };
+      return { doi, status: 'no_candidate', source: inspected.method || '', reason: diagnosisReason({ status: 'no_candidate', diagnostic: inspected.diagnostic || {} }), diagnostic: inspected.diagnostic || {} };
     }
     if (officialOnlyMode && c.kind !== 'official' && !localOnlyMode) {
       await log('local_official_only_skip_fallback', { doi, kind: c.kind, source: inspected.method || '' });
-      return { doi, status: 'no_official_toc', source: inspected.method || '' };
+      return { doi, status: 'no_official_toc', source: inspected.method || '', diagnostic: inspected.diagnostic || {} };
     }
     let data;
     try {
@@ -1806,8 +2022,8 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     }
     const localCapture = ['official','figure1'].includes(c.kind) ? await saveLocalTocCapture(doi, c, data, inspected.url) : null;
     if (localOnlyMode) {
-      if (localCapture) return { doi, status: c.kind === 'official' ? 'saved_local' : 'saved_local_figure1', kind: c.kind, source: inspected.method, localPath: localCapture.path };
-      return { doi, status: 'local_only_candidate_not_saved', kind: c.kind, source: inspected.method };
+      if (localCapture) return { doi, status: c.kind === 'official' ? 'saved_local' : 'saved_local_figure1', kind: c.kind, source: inspected.method, localPath: localCapture.path, diagnostic: inspected.diagnostic || {} };
+      return { doi, status: 'local_only_candidate_not_saved', kind: c.kind, source: inspected.method, diagnostic: inspected.diagnostic || {} };
     }
     if (inspectOnly) {
       await log('upload_failed', { doi, kind: c.kind, reason: 'write_token_missing_inspection_only' });
@@ -1841,6 +2057,10 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     else if (/manual_required/.test(msg)) { reason = 'manual_required'; ms = 24*60*60*1000; }
     else if (/403|access|captcha|challenge/i.test(msg)) { reason = 'publisher_access_blocked'; ms = 24*60*60*1000; }
     else if (/429|rate/i.test(msg)) { reason = 'publisher_rate_limited'; ms = 24*60*60*1000; }
+    else if (/window_closed_during_auth/i.test(msg)) { reason = 'window_closed_during_auth'; ms = 10*60*1000; }
+    else if (/publisher_window_closed_before_capture/i.test(msg)) { reason = 'window_closed_before_capture'; ms = 10*60*1000; }
+    else if (/auth_not_completed/i.test(msg)) { reason = 'auth_not_completed'; ms = 10*60*1000; }
+    else if (/captcha_or_challenge/i.test(msg)) { reason = 'captcha_or_challenge'; ms = 10*60*1000; }
     else if (/timeout/i.test(msg)) { reason = 'publisher_timeout'; ms = 8*60*60*1000; }
     else if (/ERR_BLOCKED_BY_CLIENT/i.test(msg)) { reason = 'publisher_client_blocked'; ms = 30*60*1000; }
     if (!inspectOnly && !localOnlyMode) {
@@ -1848,7 +2068,7 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
       await report(doi, 'process', 'failed', reason, articleUrl(doi));
     }
     await log('paper failed', { doi, reason, msg });
-    return { doi, status: 'failed', reason };
+    return { doi, status: 'failed', reason, diagnostic: { publisher: classify(doi), requestedUrl: articleUrl(doi), error: msg, candidateCount: 0, adapterCandidateCount: 0 } };
   }
 }
 
@@ -1904,7 +2124,8 @@ async function processBatch(items) {
     });
     liveScan.recent = liveScan.recent.slice(0, 12);
 
-    await log('local_scan_progress', { current: index + 1, total: selected.length, doi, status });
+    await log('local_scan_progress', { current: index + 1, total: selected.length, doi, status, reason: diagnosisReason(result) });
+    await appendDiagnostic({ ...result, doi }, index + 1, selected.length);
     await refreshDashboard();
     if (delayMs && index + 1 < selected.length) await new Promise(resolve => setTimeout(resolve, delayMs));
   }
@@ -1913,6 +2134,7 @@ async function processBatch(items) {
   liveScan.currentDoi = '';
   liveScan.finishedAt = Date.now();
   stageStatus = `扫描完成：已保存 ${liveScan.saved}，未发现官方 TOC ${liveScan.noOfficial}，失败 ${liveScan.failed}`;
+  await finalizeDiagnosticRun(selected, results);
   await refreshDashboard();
   return results;
 }
