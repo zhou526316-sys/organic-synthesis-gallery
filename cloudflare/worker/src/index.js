@@ -30,7 +30,7 @@ import { runLeaseRepairBatch, runRepairBatch } from './repair.js';
 import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
-import { markReader, readerCounts, submitPaperFeedback } from './user-ui.js';
+import { markReader, readerCounts, submitPaperFeedback, submitSiteFeedback } from './user-ui.js';
 import {
   alipayNotify,
   authCallback,
@@ -168,6 +168,9 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/feedback') {
     return resultResponse(await submitPaperFeedback(env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/site-feedback') {
+    return resultResponse(await submitSiteFeedback(env, await readJson(request)), cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/integrations') {

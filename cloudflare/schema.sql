@@ -236,6 +236,25 @@ CREATE TABLE IF NOT EXISTS paper_feedback (
 CREATE INDEX IF NOT EXISTS idx_paper_feedback_status_created
   ON paper_feedback(status, created_at DESC);
 
+-- General site feedback ("吐槽") is deliberately separate from per-paper
+-- correction feedback. It is collected for later GPT-assisted triage and never
+-- mutates literature records or site code by itself.
+CREATE TABLE IF NOT EXISTS site_feedback (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  profile_id TEXT NOT NULL,
+  category TEXT NOT NULL DEFAULT 'general' CHECK (category IN ('general', 'search', 'ui', 'account', 'literature', 'other')),
+  message TEXT NOT NULL,
+  page_path TEXT,
+  language TEXT,
+  context_json TEXT,
+  status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'reviewed', 'dismissed')),
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_site_feedback_status_created
+  ON site_feedback(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_site_feedback_profile_created
+  ON site_feedback(profile_id, created_at DESC);
+
 -- Formal user accounts. OAuth identities remain separate until the user explicitly links them.
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
