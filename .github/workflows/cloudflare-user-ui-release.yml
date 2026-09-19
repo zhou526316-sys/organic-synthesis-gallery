@@ -199,7 +199,7 @@ jobs:
         run: |
           set -euo pipefail
           node - <<'NODE'
-          const fs = require('fs');
+          import fs from 'node:fs';
           const assert = (value, message) => { if (!value) throw new Error(message); };
           const base = process.env.WORKER_URL;
           const origin = 'https://zhou526316-sys.github.io';
