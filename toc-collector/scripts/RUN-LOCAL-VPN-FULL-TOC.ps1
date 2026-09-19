@@ -41,7 +41,6 @@ if ($LASTEXITCODE -ne 0) { throw "Collector check failed: $LASTEXITCODE" }
 $argsList = @(
   "--local-only",
   "--scan-all",
-  "--official-only",
   "--doi-file=$DoiFile"
 )
 if (-not $NoBrowser) { $argsList += "--show-browser" }
