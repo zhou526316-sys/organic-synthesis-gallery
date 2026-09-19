@@ -1,6 +1,6 @@
 {
   "auditVersion": 4,
-  "generatedAt": "2026-09-19T10:55:48.763Z",
+  "generatedAt": "2026-09-19T13:46:18.424Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -159,14 +159,14 @@
   ],
   "summary": {
     "galleryDois": 478,
-    "sourceRecords": 591,
-    "rawMissingFromGallery": 522,
+    "sourceRecords": 596,
+    "rawMissingFromGallery": 527,
     "previouslyReviewedExcluded": 519,
-    "missingFromGallery": 3,
-    "potentialGaps": 0,
+    "missingFromGallery": 8,
+    "potentialGaps": 1,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
-    "unresolved": 3,
+    "unresolved": 8,
     "excludedByPolicy": 0
   },
   "closure": {
@@ -260,17 +260,17 @@
     "Nature Communications": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-17",
-      "sourceRecords": 195,
-      "crossrefOnly": 6,
+      "sourceRecords": 200,
+      "crossrefOnly": 11,
       "openAlexOnly": 3,
       "multiSource": 186,
       "lateIndexed": 116,
       "safetyTail": 118,
       "coveredByGallery": 4,
-      "rawMissingFromGallery": 191,
+      "rawMissingFromGallery": 196,
       "previouslyReviewedExcluded": 188,
-      "missingFromGallery": 3,
-      "potentialGaps": 0
+      "missingFromGallery": 8,
+      "potentialGaps": 1
     },
     "JACS": {
       "activeFrom": "2026-07-01",
@@ -824,7 +824,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 193,
+      "count": 198,
       "note": ""
     },
     {
@@ -833,7 +833,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 193,
+      "count": 198,
       "note": ""
     },
     {
@@ -842,7 +842,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 193,
+      "count": 198,
       "note": ""
     },
     {
@@ -1306,6 +1306,44 @@
   ],
   "missingCandidates": [
     {
+      "doi": "10.1038/s41467-026-77027-9",
+      "journal": "Nature Communications",
+      "title": "Anti-thymocyte globulin triggers TNF-dependent cell death in T-cell acute lymphoblastic leukemia",
+      "abstract": "",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77768-7",
+      "journal": "Nature Communications",
+      "title": "Bayesian bilevel operator learning with low-rank adaptation for efficient uncertainty quantification of PDE inverse problems",
+      "abstract": "Abstract Uncertainty quantification in PDE inverse problems is essential in many applications. Scientific machine learning and AI enable data-driven learning of model components while preserving physical structure, and provide the scalability and adaptability needed for emerging imaging technologies and clinical insights. We develop a Bilevel Local Operator Learning framework for Bayesian inference in PDEs (B-BiLO). At the upper level, we sample parameters from the posterior via Hamiltonian Monte Carlo, while at the lower level we fine-tune a neural network via low-rank adaptation (LoRA) to approximate the solution operator locally. B-BiLO enables efficient gradient-based sampling without synthetic data or adjoint equations and avoids sampling in high-dimensional weight space, as in Bayesian neural networks, by optimizing weights deterministically. We analyze errors from approximate lower-level optimization and establish their impact on posterior accuracy. Numerical experiments across PDE models, including tumor growth, demonstrate that B-BiLO achieves accurate and efficient uncertainty quantification.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1038/s41467-026-77823-3",
       "journal": "Nature Communications",
       "title": "Cryo-EM structure of ex vivo Sup35 yeast prion and the factors defining prion phenotype",
@@ -1325,9 +1363,66 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/s41467-026-77675-x",
+      "journal": "Nature Communications",
+      "title": "Extending single-cell proteomics from HeLa to small primary human immune cells",
+      "abstract": "Abstract Single-cell proteomics (SCP) holds the promise of decoding cellular heterogeneity at the functional level, yet achieving deep and reproducible proteome coverage from individual cells has remained a formidable challenge. Here, we establish a high-sensitivity, label-free SCP platform that extends current depth and reproducibility. By integrating optimized low-input sample processing, refined liquid chromatography, and the Orbitrap Astral Zoom mass spectrometer, our approach routinely quantifies up to 7000 proteins per individual HeLa cell at over 100 samples-per-day (SPD), capturing thousands of low-abundance proteins that eluded prior SCP studies. Applied to very small human peripheral blood mononuclear cells (PBMCs), we identify up to 4000 proteins per cell, including key markers that distinguish monocytes, T cells, and activated lymphocytes within heterogeneous populations, underscoring that single-cell proteomics can now directly elucidate clinically relevant primary samples with both depth and precision.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/s41467-026-77880-8",
       "journal": "Nature Communications",
       "title": "Kirigami-actuated reconfigurable topological photonic crystals",
+      "abstract": "",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77700-z",
+      "journal": "Nature Communications",
+      "title": "Scalable molecular representations enabled by multimodal fusion and sequence distillation",
+      "abstract": "",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77847-9",
+      "journal": "Nature Communications",
+      "title": "The EF1α promoter of cilta-cel drives a highly effective GZMK+ transcriptional program",
       "abstract": "",
       "date": "2026-09-19",
       "type": "journal-article",
@@ -1363,5 +1458,25 @@
       "reviewPriority": "normal"
     }
   ],
-  "potentialGaps": []
+  "potentialGaps": [
+    {
+      "doi": "10.1038/s41467-026-77768-7",
+      "journal": "Nature Communications",
+      "title": "Bayesian bilevel operator learning with low-rank adaptation for efficient uncertainty quantification of PDE inverse problems",
+      "abstract": "Abstract Uncertainty quantification in PDE inverse problems is essential in many applications. Scientific machine learning and AI enable data-driven learning of model components while preserving physical structure, and provide the scalability and adaptability needed for emerging imaging technologies and clinical insights. We develop a Bilevel Local Operator Learning framework for Bayesian inference in PDEs (B-BiLO). At the upper level, we sample parameters from the posterior via Hamiltonian Monte Carlo, while at the lower level we fine-tune a neural network via low-rank adaptation (LoRA) to approximate the solution operator locally. B-BiLO enables efficient gradient-based sampling without synthetic data or adjoint equations and avoids sampling in high-dimensional weight space, as in Bayesian neural networks, by optimizing weights deterministically. We analyze errors from approximate lower-level optimization and establish their impact on posterior accuracy. Numerical experiments across PDE models, including tumor growth, demonstrate that B-BiLO achieves accurate and efficient uncertainty quantification.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    }
+  ]
 }
