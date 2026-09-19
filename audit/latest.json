@@ -1,6 +1,6 @@
 {
   "auditVersion": 3,
-  "generatedAt": "2026-09-19T03:49:53.498Z",
+  "generatedAt": "2026-09-19T05:56:56.629Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-72h-calendar",
   "startDate": "2026-09-17",
@@ -9,13 +9,14 @@
   "policy": "Multi-ISSN Crossref online/published union plus OpenAlex union. Default window is the current Beijing date plus the two preceding calendar dates. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Persisted assistant exclude decisions resolve previously reviewed DOI differences; new/unresolved differences remain exposed for assistant review. Deterministic screening only assigns review priority and never silently excludes a new missing record.",
   "summary": {
     "galleryDois": 476,
-    "sourceRecords": 214,
-    "rawMissingFromGallery": 190,
+    "sourceRecords": 217,
+    "rawMissingFromGallery": 194,
     "previouslyReviewedExcluded": 190,
-    "missingFromGallery": 0,
-    "potentialGaps": 0,
+    "missingFromGallery": 4,
+    "potentialGaps": 2,
     "criticalSourceFailures": 0,
-    "unresolved": 0
+    "unresolved": 4,
+    "excludedByPolicy": 0
   },
   "closure": {
     "date": "2026-09-18",
@@ -71,20 +72,20 @@
       "potentialGaps": 0
     },
     "Nature Communications": {
-      "sourceRecords": 73,
-      "coveredByGallery": 1,
-      "rawMissingFromGallery": 72,
+      "sourceRecords": 74,
+      "coveredByGallery": 0,
+      "rawMissingFromGallery": 74,
       "previouslyReviewedExcluded": 72,
-      "missingFromGallery": 0,
+      "missingFromGallery": 2,
       "potentialGaps": 0
     },
     "JACS": {
-      "sourceRecords": 34,
+      "sourceRecords": 35,
       "coveredByGallery": 7,
-      "rawMissingFromGallery": 27,
+      "rawMissingFromGallery": 28,
       "previouslyReviewedExcluded": 27,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 1,
+      "potentialGaps": 1
     },
     "Angew": {
       "sourceRecords": 17,
@@ -103,12 +104,12 @@
       "potentialGaps": 0
     },
     "Organic Letters": {
-      "sourceRecords": 16,
+      "sourceRecords": 17,
       "coveredByGallery": 10,
-      "rawMissingFromGallery": 6,
+      "rawMissingFromGallery": 7,
       "previouslyReviewedExcluded": 6,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 1,
+      "potentialGaps": 1
     }
   },
   "sourceStats": [
@@ -302,7 +303,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 72,
+      "count": 74,
       "note": ""
     },
     {
@@ -311,7 +312,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 72,
+      "count": 74,
       "note": ""
     },
     {
@@ -328,7 +329,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -337,7 +338,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -346,7 +347,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -355,7 +356,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -442,7 +443,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 16,
+      "count": 17,
       "note": ""
     },
     {
@@ -451,7 +452,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 16,
+      "count": 17,
       "note": ""
     },
     {
@@ -460,7 +461,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 16,
+      "count": 17,
       "note": ""
     },
     {
@@ -469,7 +470,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 16,
+      "count": 17,
       "note": ""
     },
     {
@@ -481,6 +482,100 @@
       "note": ""
     }
   ],
-  "missingCandidates": [],
-  "potentialGaps": []
+  "missingCandidates": [
+    {
+      "doi": "10.1021/jacs.6c14433",
+      "journal": "JACS",
+      "title": "Synthesis of a Borylborenium Ion via Direct Dehydrocoupling of Two B–H Bonds",
+      "abstract": "Abstract Dehydrocoupling of hydroboranes provides a highly efficient method for the synthesis of diboron species. While this process generally proceeds in the presence of transition metals or Lewis bases, direct dehydrocoupling of two hydroboranes to form a B–B bond is still unknown. Herein, we report that an in situ-generated dihydroborenium ion can readily undergo dehydrocoupling with an intramolecular o-carboranyl moiety to afford a borylborenium ion. Theoretical studies demonstrate that this seemingly symmetry-forbidden process is enabled by Lewis acid-mediated umpolung of the B–H bond of o-carboranyl moiety. The resulting borylborenium ion is a powerful electrophilic borylation reagent and readily borylates a number of unactivated arenes, such as dihaloarenes, at room temperature.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published"
+      ],
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/s41467-026-77985-0",
+      "journal": "Nature Communications",
+      "title": "Checkerboard-type Zhang-Rice states in overdoped cuprate superconductors",
+      "abstract": "Abstract Cuprate superconductors remain central to condensed matter physics due to their technological relevance and unconventional, incompletely understood electronic behavior. While the canonical phase diagram and low-energy models have been shaped largely by studies of underdoped and moderately doped cuprates, the overdoped regime has received comparatively limited attention. Here, we track the evolution of the electronic structure from optimal to heavy overdoping in La 2−x Sr x CuO 4 (LSCO) using broadband optical spectroscopy across x = 0.15–0.60. The measured spectral changes—including the redistribution of Zhang–Rice–related spectral weight—are in qualitative agreement with determinant quantum Monte Carlo (DQMC) simulations of the three-orbital Emery model, which together indicate a pronounced reconstruction of the electronic structure beyond hole concentrations x 0.2. Guided by these observations, we propose a spontaneous checkerboard-type Zhang–Rice electronic configuration that accounts for the coexistence of itinerant and localized carriers characteristic of the heavily overdoped state. Our results refine the doping-dependent Zhang–Rice–based framework for cuprates, illuminate how correlations persist deep into the overdoped regime, and provide new constraints on microscopic mechanisms of high-temperature superconductivity, with broader implications for correlated transition-metal oxides.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published"
+      ],
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77864-8",
+      "journal": "Nature Communications",
+      "title": "Resonance-enhanced integrated acousto-optic beam steering",
+      "abstract": "",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published"
+      ],
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03505",
+      "journal": "Organic Letters",
+      "title": "Arylcarboxylation/Cyclization/Hydrogenation Cascade of Arylalkynes with Formate: Synthesis of Ester-Substituted Dioxodihydrodibenzothiazepine Derivatives",
+      "abstract": "Abstract A novel method has been developed for the arylcarboxylation/cyclization/hydrogenation cascade reaction of arylalkynes with cheap and readily available sodium formate (HCO2Na). This approach facilitates the efficient synthesis of ester-substituted dioxodihydrodibenzothiazepine derivatives in the absence of photocatalysts and transition metals. The methodology features a broad substrate scope, operational simplicity, excellent functional group tolerance, mild reaction conditions, and scalability. Mechanistic experiments proved that the reaction involves a pathway that includes the formation of the carbon dioxide radical anion (CO2•–) from formate. Meanwhile, the hydrogen in the product comes from trace amounts of water in the solvent or HCO2Na.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published"
+      ],
+      "reviewPriority": "high"
+    }
+  ],
+  "potentialGaps": [
+    {
+      "doi": "10.1021/jacs.6c14433",
+      "journal": "JACS",
+      "title": "Synthesis of a Borylborenium Ion via Direct Dehydrocoupling of Two B–H Bonds",
+      "abstract": "Abstract Dehydrocoupling of hydroboranes provides a highly efficient method for the synthesis of diboron species. While this process generally proceeds in the presence of transition metals or Lewis bases, direct dehydrocoupling of two hydroboranes to form a B–B bond is still unknown. Herein, we report that an in situ-generated dihydroborenium ion can readily undergo dehydrocoupling with an intramolecular o-carboranyl moiety to afford a borylborenium ion. Theoretical studies demonstrate that this seemingly symmetry-forbidden process is enabled by Lewis acid-mediated umpolung of the B–H bond of o-carboranyl moiety. The resulting borylborenium ion is a powerful electrophilic borylation reagent and readily borylates a number of unactivated arenes, such as dihaloarenes, at room temperature.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published"
+      ],
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03505",
+      "journal": "Organic Letters",
+      "title": "Arylcarboxylation/Cyclization/Hydrogenation Cascade of Arylalkynes with Formate: Synthesis of Ester-Substituted Dioxodihydrodibenzothiazepine Derivatives",
+      "abstract": "Abstract A novel method has been developed for the arylcarboxylation/cyclization/hydrogenation cascade reaction of arylalkynes with cheap and readily available sodium formate (HCO2Na). This approach facilitates the efficient synthesis of ester-substituted dioxodihydrodibenzothiazepine derivatives in the absence of photocatalysts and transition metals. The methodology features a broad substrate scope, operational simplicity, excellent functional group tolerance, mild reaction conditions, and scalability. Mechanistic experiments proved that the reaction involves a pathway that includes the formation of the carbon dioxide radical anion (CO2•–) from formate. Meanwhile, the hydrogen in the product comes from trace amounts of water in the solvent or HCO2Na.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published"
+      ],
+      "reviewPriority": "high"
+    }
+  ]
 }
