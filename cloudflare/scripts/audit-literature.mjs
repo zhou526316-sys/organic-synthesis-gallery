@@ -25,10 +25,29 @@ function shiftDate(dateString, days) {
 
 const DEFAULT_END = dateInTimeZone();
 const END = process.env.AUDIT_END || DEFAULT_END;
-const DEFAULT_LOOKBACK_DAYS = 7;
+const DEFAULT_LOOKBACK_DAYS = 3;
+const DEFAULT_LATE_DEPOSIT_RESCUE_DAYS = 7;
 const parsedLookbackDays = Number.parseInt(process.env.AUDIT_LOOKBACK_DAYS || String(DEFAULT_LOOKBACK_DAYS), 10);
 const LOOKBACK_DAYS = Number.isFinite(parsedLookbackDays) ? Math.max(3, Math.min(31, parsedLookbackDays)) : DEFAULT_LOOKBACK_DAYS;
-const START = process.env.AUDIT_START || shiftDate(END, -(LOOKBACK_DAYS - 1));
+const parsedRescueDays = Number.parseInt(process.env.AUDIT_LATE_DEPOSIT_RESCUE_DAYS || String(DEFAULT_LATE_DEPOSIT_RESCUE_DAYS), 10);
+const LATE_DEPOSIT_RESCUE_DAYS = Number.isFinite(parsedRescueDays) ? Math.max(LOOKBACK_DAYS, Math.min(31, parsedRescueDays)) : DEFAULT_LATE_DEPOSIT_RESCUE_DAYS;
+const BASE_START = process.env.AUDIT_START || shiftDate(END, -(LOOKBACK_DAYS - 1));
+const RESCUE_START = process.env.AUDIT_START || shiftDate(END, -(LATE_DEPOSIT_RESCUE_DAYS - 1));
+
+let catchupStart = '';
+if (!process.env.AUDIT_START) {
+  try {
+    const state = JSON.parse(await readFile(path.resolve('audit/literature-update-state.json'), 'utf8'));
+    const verifiedThrough = String(state?.verifiedThrough || '');
+    if (/^\d{4}-\d{2}-\d{2}$/.test(verifiedThrough)) {
+      const nextUnverified = shiftDate(verifiedThrough, 1);
+      if (nextUnverified < BASE_START) catchupStart = nextUnverified;
+    }
+  } catch {
+    // Missing/stale coordination state must not make the audit narrower.
+  }
+}
+const START = catchupStart || BASE_START;
 const CLOSURE_DATE = shiftDate(END, -1);
 const SITE = (process.env.GALLERY_SITE || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/$/, '');
 const OUT = path.resolve(process.env.AUDIT_OUTPUT || 'audit/latest.json');
@@ -36,6 +55,7 @@ const OUT = path.resolve(process.env.AUDIT_OUTPUT || 'audit/latest.json');
 const JOURNALS = TARGET_JOURNALS;
 const JOURNAL_BY_NAME = new Map(JOURNALS.map(journal => [journal.name, journal]));
 const auditStartForJournal = journal => effectiveJournalStart(journal, START);
+const rescueStartForJournal = journal => effectiveJournalStart(journal, RESCUE_START);
 
 const normalizeDoi = value => {
   if (typeof value !== 'string') return '';
@@ -174,10 +194,12 @@ async function fetchCrossref(journal) {
   const map = new Map();
   const stats = [];
   const journalStart = auditStartForJournal(journal);
+  const journalRescueStart = rescueStartForJournal(journal);
   for (const issn of journal.issns) {
     for (const mode of ['online', 'published', 'created']) {
       const filterField = mode === 'online' ? 'online-pub-date' : mode === 'published' ? 'pub-date' : 'created-date';
-      const dateFilter = `from-${filterField}:${journalStart},until-${filterField}:${END}`;
+      const modeStart = mode === 'created' ? journalRescueStart : journalStart;
+      const dateFilter = `from-${filterField}:${modeStart},until-${filterField}:${END}`;
       let cursor = '*';
       let count = 0;
       let ok = true;
@@ -392,13 +414,17 @@ const report = {
   auditVersion: 4,
   generatedAt: new Date().toISOString(),
   timeZone: TIME_ZONE,
-  windowMode: process.env.AUDIT_START || process.env.AUDIT_END ? 'explicit' : 'rolling-7d-calendar',
+  windowMode: process.env.AUDIT_START || process.env.AUDIT_END ? 'explicit' : catchupStart ? 'rolling-3d-with-catchup' : 'rolling-3d-calendar',
   lookbackDays: LOOKBACK_DAYS,
+  lateDepositRescueDays: LATE_DEPOSIT_RESCUE_DAYS,
+  baseStartDate: BASE_START,
+  lateDepositRescueStartDate: RESCUE_START,
+  catchupStartDate: catchupStart || null,
   startDate: START,
   endDate: END,
   closureDate: CLOSURE_DATE,
-  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default seven-calendar-day Beijing safety rescan plus Crossref-created late-deposit rescue back to each journal activeFrom to recover delayed indexing. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
-  targetJournals: JOURNALS.map(journal => ({ name: journal.name, issns: journal.issns, activeFrom: journal.activeFrom || '', effectiveStart: auditStartForJournal(journal) })),
+  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing publication rescan, seven-calendar-day Crossref-created late-deposit rescue, and automatic catch-up from the first unverified date when verifiedThrough falls behind. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
+  targetJournals: JOURNALS.map(journal => ({ name: journal.name, issns: journal.issns, activeFrom: journal.activeFrom || '', effectiveStart: auditStartForJournal(journal), lateDepositRescueStart: rescueStartForJournal(journal) })),
   summary: {
     galleryDois: galleryDois.size,
     sourceRecords: universe.length,
@@ -433,5 +459,5 @@ const report = {
 
 await mkdir(path.dirname(OUT), { recursive: true });
 await writeFile(OUT, JSON.stringify(report, null, 2));
-console.log(`AUDIT_WINDOW ${START}..${END} closure=${CLOSURE_DATE} timezone=${TIME_ZONE}`);
+console.log(`AUDIT_WINDOW ${START}..${END} closure=${CLOSURE_DATE} timezone=${TIME_ZONE} lookbackDays=${LOOKBACK_DAYS} rescueDays=${LATE_DEPOSIT_RESCUE_DAYS} rescueStart=${RESCUE_START} catchupStart=${catchupStart || '-'}`);
 console.log(`AUDIT_RESULT ${JSON.stringify(report.summary)}`);
