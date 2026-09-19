@@ -18,6 +18,9 @@ on:
       - '.github/workflows/literature-audit.yml'
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'public/curated-supplement.json'
+      - 'public/automation-supplement.json'
+      - 'public/rolling-supplement.json'
+      - 'audit/review-*.json'
 
 permissions:
   contents: write
