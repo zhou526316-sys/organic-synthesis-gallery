@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - name: Dispatch current frontend to Worker
+      - name: Dispatch current frontend assets to Worker
         id: dispatch
         env:
           GH_TOKEN: ${{ github.token }}
@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gh workflow run cloudflare-user-ui-release.yml --repo "$REPO" --ref main
+          gh workflow run deploy-worker-frontend.yml --repo "$REPO" --ref main
           for i in {1..30}; do
             RUN_ID="$(gh run list --repo "$REPO" --workflow cloudflare-user-ui-release.yml --branch main --event workflow_dispatch --limit 10 --json databaseId,headSha,status --jq ".[] | select(.headSha == \"$GITHUB_SHA\") | .databaseId" | head -n1)"
             if [ -n "$RUN_ID" ]; then
@@ -41,7 +41,7 @@ jobs:
             fi
             sleep 2
           done
-          echo "Could not resolve dispatched Worker release run." >&2
+          echo "Could not resolve dispatched Worker frontend deploy run." >&2
           exit 1
 
       - name: Wait for Worker release
