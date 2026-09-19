@@ -1,6 +1,7 @@
 import { normalizeDoi } from './media.js';
 
 const FEEDBACK_KINDS = new Set(['toc', 'image', 'title', 'date', 'duplicate', 'classification', 'other']);
+const SITE_FEEDBACK_CATEGORIES = new Set(['general', 'search', 'ui', 'account', 'literature', 'other']);
 const ACCOUNT_MODES = new Set(['account-merge', 'account-save', 'account-pull']);
 const MAX_LIBRARY_STATE_BYTES = 1_500_000;
 
@@ -304,4 +305,56 @@ export async function submitPaperFeedback(env, payload) {
      VALUES (?, ?, ?, ?, 'open', ?)`
   ).bind(doi, profileId, kind, note || null, Date.now()).run();
   return { status: 200, body: { accepted: true, id: result?.meta?.last_row_id || null } };
+}
+
+function cleanFeedbackText(value, maxLength) {
+  return typeof value === 'string' ? value.trim().slice(0, maxLength) : '';
+}
+
+function boundedDimension(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number >= 0 && number <= 10000 ? Math.round(number) : 0;
+}
+
+export async function submitSiteFeedback(env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
+
+  const profileId = normalizeProfileId(payload?.profileId);
+  const rawCategory = cleanFeedbackText(payload?.category, 32).toLowerCase();
+  const category = SITE_FEEDBACK_CATEGORIES.has(rawCategory) ? rawCategory : 'general';
+  const message = cleanFeedbackText(payload?.message, 2000);
+  const pagePath = cleanFeedbackText(payload?.pagePath, 400);
+  const language = cleanFeedbackText(payload?.language, 16);
+  const searchQuery = cleanFeedbackText(payload?.searchQuery, 300);
+
+  if (!profileId) return { status: 400, body: { error: 'invalid_profile_id' } };
+  if (message.length < 3) return { status: 400, body: { error: 'feedback_too_short' } };
+
+  const now = Date.now();
+  const windowStart = now - 60 * 60 * 1000;
+  const recent = await env.DB.prepare(
+    'SELECT COUNT(*) AS count FROM site_feedback WHERE profile_id = ? AND created_at >= ?'
+  ).bind(profileId, windowStart).first();
+  if (Number(recent?.count || 0) >= 5) {
+    return { status: 429, body: { error: 'feedback_rate_limited', retryAfterSeconds: 3600 } };
+  }
+
+  const contextJson = JSON.stringify({
+    searchQuery,
+    viewportWidth: boundedDimension(payload?.viewportWidth),
+    viewportHeight: boundedDimension(payload?.viewportHeight),
+  });
+
+  const result = await env.DB.prepare(
+    `INSERT INTO site_feedback (profile_id, category, message, page_path, language, context_json, status, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, 'open', ?)`
+  ).bind(profileId, category, message, pagePath || null, language || null, contextJson, now).run();
+
+  return {
+    status: 200,
+    body: {
+      accepted: true,
+      id: result?.meta?.last_row_id || null,
+    },
+  };
 }

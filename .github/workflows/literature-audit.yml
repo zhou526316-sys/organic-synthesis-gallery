@@ -18,6 +18,7 @@ on:
       - '.github/workflows/literature-audit.yml'
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'shared/literature-journals.js'
+      - 'scripts/test-literature-completeness-capability.mjs'
       - 'public/curated-supplement.json'
       - 'public/automation-supplement.json'
       - 'public/rolling-supplement.json'
@@ -43,6 +44,9 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: '22'
+
+      - name: Verify completeness capability guard
+        run: node scripts/test-literature-completeness-capability.mjs
 
       - name: Build DOI-union audit report
         env:

@@ -1,19 +1,35 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "selectionPolicy": "latest-compatible-stable",
   "purpose": "Capability registry for literature discovery, completeness auditing, TOC retrieval, and website synchronization. The primary literature task must select the newest stable compatible capability on main before each fetch run.",
+  "currentKnownStableFingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
+  "fingerprintMethod": "sha256 of newline-joined stable component labels and blob SHAs: literatureAudit, literatureWorkflow, journalRegistry, completenessGuard, tocCollector, publisherFallback",
   "currentKnownStable": {
     "literatureAudit": {
       "path": "cloudflare/scripts/audit-literature.mjs",
-      "blobSha": "d935d2748893738b673a25ee93dc51e9509c75e4",
-      "validation": "GitHub Actions literature audit runs 35426690488 and 35426823046 passed with auditVersion=4, 15 registered journals, rolling seven-day safety window, criticalSourceFailures=0 and sourceFamilyGaps=0.",
-      "semanticImpact": "Discovery/completeness semantics changed: five journals were added prospectively from 2026-09-19; default overlap increased to seven Beijing calendar days; Crossref created-date discovery and per-journal source-family health/source-agreement reporting were added. This must invalidate the prior fetch capability fingerprint and force a fresh safety rescan."
+      "blobSha": "bafbb8d02495dd8d5d24a106a49f6efd6a897e7a",
+      "validation": "Workflow-generated audit persisted in commit 7a212252a399abff49ac95978120df0dbc18cb3d at 2026-09-19T06:55:25.883Z with auditVersion=4, 15 target journals, rolling seven-day safety window, sourceRecords=591, criticalSourceFailures=0, sourceFamilyGaps=0, and lateIndexed=3 across Nature/ACS Catalysis.",
+      "comparisonToPriorStable": "Prior stable audit blob 2bf18d6df41def88763196c4b0f31c2bcc6f14a7 covered 10 journals, used a rolling three-calendar-day window, queried Crossref online/published only, had no per-journal source-family health, and discarded records whose publication date fell before the rolling window even when they were newly deposited. On the same upgraded seven-day configuration, enabling late-deposit rescue increased the discovered universe from 588 to 591 and surfaced three otherwise missed late-indexed records.",
+      "semanticImpact": "Strict recall upgrade. Adds five journals prospectively from 2026-09-19; expands overlap to seven Beijing calendar days; unions Crossref online/published/created with OpenAlex; retains recent Crossref-created deposits back to each journal activeFrom even when publication date predates the rolling window; exposes source agreement and source-family health. Keyword screening remains priority-only and cannot silently remove DOI differences.",
+      "comparisonArtifact": "audit/literature-capability-comparison-2026-09-19.json"
     },
     "literatureWorkflow": {
       "path": ".github/workflows/literature-audit.yml",
-      "blobSha": "69249646ae4aa35c0f09c083d2411aab30e62bdd",
-      "validation": "GitHub Actions run 35426823046 succeeded after adding shared/literature-journals.js to the workflow trigger set; the audit artifact and non-force persistence path completed successfully.",
-      "semanticImpact": "Workflow trigger coverage now includes the canonical journal registry. Discovery semantics come from the stable literatureAudit capability and shared registry."
+      "blobSha": "d8219dfe731a2d93370fe720c13160508f3cf8c6",
+      "validation": "The workflow now runs the completeness capability guard before building the DOI-union audit and persisted the post-guard audit report in commit 7a212252a399abff49ac95978120df0dbc18cb3d.",
+      "semanticImpact": "Prevents silent regression of the 15-journal registry, prospective activation dates, seven-day rescan, Crossref created-date rescue, source-family health reporting, and all-difference review flow."
+    },
+    "journalRegistry": {
+      "path": "shared/literature-journals.js",
+      "blobSha": "05ccdd8a66522027f35e327082cd45e88e75e897",
+      "validation": "15 canonical target journals are centralized. Chem, Chemical Science, CCS Chemistry, Science Advances, and Chinese Journal of Chemistry have activeFrom=2026-09-19; existing ten journals retain activeFrom=2026-07-01.",
+      "semanticImpact": "Prevents duplicated journal lists and prevents the new five journals from being backfilled before 2026-09-19 even when the safety window or late-deposit rescue reaches earlier dates."
+    },
+    "completenessGuard": {
+      "path": "scripts/test-literature-completeness-capability.mjs",
+      "blobSha": "d2292f048bf06f77dda70d3e41ab089085914aa4",
+      "validation": "Executed by the literature audit workflow before the report persisted in commit 7a212252a399abff49ac95978120df0dbc18cb3d.",
+      "semanticImpact": "CI fails if journal count/list, prospective activation, seven-day overlap, Crossref created-date discovery, late-deposit observability, source-family health, or the no-silent-keyword-exclusion invariant regresses."
     },
     "tocCollector": {
       "primaryPath": "toc-collector/src/background.mjs",
@@ -25,14 +41,14 @@
       "path": "cloudflare/scripts/merge-worker-media.mjs",
       "blobSha": "8a518d03f2c894755ad1c57f07c699017db9b136",
       "validation": "GitHub Pages run 35418810801 succeeded with galleryDois=463, workerItems=463, finalRecords=407, failures=0 and figure metadata=716",
-      "semanticImpact": "Downstream media synchronization coverage only. Adds rolling-supplement.json to media sync; does not alter literature discovery, inclusion decisions, or upstream TOC retrieval, so it does not require a literature refetch."
+      "semanticImpact": "Downstream media synchronization coverage only. Adds rolling-supplement.json to media sync; does not alter literature discovery, inclusion decisions, or upstream TOC retrieval."
     },
     "recentMediaRepair": {
       "path": ".github/workflows/recent-media-repair.yml",
       "blobSha": "acdf2d25771f1fc6edc657148d1821e925f53e00",
       "validation": "GitHub Actions run 35419525431 completed successfully on the Sep 18-19 reviewed literature update; it prepared 30 recent gaps, attempted direct publisher retrieval, ran the Worker fallback, verified inventory, and triggered Pages refresh.",
       "effectiveness": "Publisher direct retrieval remained blocked by ACS/Wiley 403 and Nature IDP for most targets; the workflow is operationally stable but currently low-yield without an authenticated browser/VPN source.",
-      "semanticImpact": "TOC/media repair only. Does not change literature discovery or inclusion decisions; next primary run should automatically use it for confirmed papers, but it does not by itself require a literature refetch."
+      "semanticImpact": "TOC/media repair only. Does not change literature discovery or inclusion decisions."
     }
   },
   "pendingValidation": [],
@@ -40,6 +56,8 @@
     "literature": [
       "cloudflare/scripts/*literature*.mjs",
       ".github/workflows/*literature*.yml",
+      "shared/literature-journals.js",
+      "scripts/test-literature-completeness-capability.mjs",
       "docs/*literature*.md"
     ],
     "toc": [
@@ -57,8 +75,11 @@
     "pinCapabilitySnapshotForWholeRun": true,
     "neverHotSwapDuringActiveRun": true,
     "force72HourRefetchWhenCapabilityFingerprintChanges": true,
+    "minimumSafetyRescanDaysOnCapabilityChange": 7,
     "doNotReuseOld24HourFetchAcrossCapabilityChange": true,
     "syncOnlyFallbackMustNeverRefetch": true,
-    "recordCapabilityFingerprintInLastCompletedFetch": true
+    "recordCapabilityFingerprintInLastCompletedFetch": true,
+    "forceSafetyRescanWhenCapabilityFingerprintChanges": true,
+    "legacyForce72HourFieldRetainedForCompatibility": true
   }
 }

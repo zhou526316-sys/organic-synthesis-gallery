@@ -151,7 +151,7 @@ export function suggestionMatch(query: string, candidate: string): { score: numb
   };
   const maxTail = Math.min(words.length, Math.max(3, candidateWords.length + 1));
   for (let count = 1; count <= maxTail; count += 1) compare(words.slice(-count).join(' '), count, candidate);
-  const last = words.at(-1) || '';
+  const last = words[words.length - 1] || '';
   candidateWords.forEach(word => compare(last, 1, word));
   return best;
 }
@@ -223,6 +223,24 @@ class Store extends EventTarget {
   }
   async feedback(doi: string, kind: string, note: string): Promise<boolean> {
     try { await workerPost('/api/user-ui/feedback', { doi, profileId: this.profileId, kind, note: note.slice(0, 1000) }); return true; } catch { return false; }
+  }
+  async siteFeedback(category: string, message: string, context: { pagePath?: string; language?: string; searchQuery?: string; viewportWidth?: number; viewportHeight?: number } = {}): Promise<'accepted' | 'rate_limited' | 'failed'> {
+    try {
+      const response = await fetch(`${WORKER_API_BASE}/api/user-ui/site-feedback`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          profileId: this.profileId,
+          category,
+          message: message.slice(0, 2000),
+          ...context,
+        }),
+      });
+      if (response.status === 429) return 'rate_limited';
+      return response.ok ? 'accepted' : 'failed';
+    } catch {
+      return 'failed';
+    }
   }
   async setImage(target: StyleDef, file: File): Promise<void> {
     if (!file.type.startsWith('image/') || file.size > 4_000_000) return;

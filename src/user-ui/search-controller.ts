@@ -23,19 +23,29 @@ export class UserSearchController {
   private fullQuery = '';
   private candidates: Candidate[] = [];
   private refreshQueued = false;
+  private composing = false;
   private readonly storeChanged = (): void => this.refresh();
   private readonly resize = (): void => this.positionPopover();
-  private readonly onInput = (): void => {
+  private readonly onInput = (event: Event): void => {
+    // The legacy Gallery still has an input listener that rebuilds every card.
+    // This controller owns search now, so stop that older listener instead of
+    // blanking/restoring the input value (which breaks IME and caret position).
+    event.stopImmediatePropagation();
     if (!this.searchInput) return;
     this.fullQuery = this.searchInput.value;
     this.updateShellQuery();
-    this.searchInput.value = '';
-    queueMicrotask(() => {
-      if (!this.searchInput) return;
-      this.searchInput.value = this.fullQuery;
-      this.refresh();
-      this.renderSuggestions();
-    });
+    if (this.composing || (event instanceof InputEvent && event.isComposing)) return;
+    this.refresh();
+    this.renderSuggestions();
+  };
+  private readonly onCompositionStart = (): void => { this.composing = true; };
+  private readonly onCompositionEnd = (): void => {
+    this.composing = false;
+    if (!this.searchInput) return;
+    this.fullQuery = this.searchInput.value;
+    this.updateShellQuery();
+    this.refresh();
+    this.renderSuggestions();
   };
 
   constructor(private readonly root: HTMLElement, private readonly language: Language) {}
@@ -48,8 +58,16 @@ export class UserSearchController {
     this.fullQuery = preservedQuery || this.searchInput.value || '';
     this.searchInput.value = this.fullQuery;
     this.searchInput.placeholder = this.language === 'zh' ? '搜索标题、作者、DOI、关键词；多词条 AND，支持拼写纠正…' : 'Search title, author, DOI or keyword; multi-term AND + typo correction…';
-    this.searchInput.addEventListener('input', this.onInput);
-    this.searchInput.addEventListener('keydown', event => { if (event.key === 'Enter') store.addHistory(this.fullQuery); });
+    this.searchInput.addEventListener('input', this.onInput, { capture: true });
+    this.searchInput.addEventListener('compositionstart', this.onCompositionStart);
+    this.searchInput.addEventListener('compositionend', this.onCompositionEnd);
+    this.searchInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') store.addHistory(this.fullQuery);
+      if (event.key === 'Escape' && this.fullQuery) {
+        event.preventDefault();
+        this.setSearch('');
+      }
+    });
     this.searchInput.addEventListener('change', () => store.addHistory(this.fullQuery));
     this.searchInput.addEventListener('focus', () => this.renderSuggestions());
     this.searchInput.addEventListener('blur', () => window.setTimeout(() => { this.popover?.remove(); this.popover = null; }, 150));
@@ -66,7 +84,9 @@ export class UserSearchController {
 
   destroy(): void {
     this.observer?.disconnect(); this.observer = null;
-    this.searchInput?.removeEventListener('input', this.onInput);
+    this.searchInput?.removeEventListener('input', this.onInput, true);
+    this.searchInput?.removeEventListener('compositionstart', this.onCompositionStart);
+    this.searchInput?.removeEventListener('compositionend', this.onCompositionEnd);
     this.root.removeEventListener('gallery-search', this.handleSearch as EventListener);
     this.root.removeEventListener('gallery-similar', this.handleSimilar as EventListener);
     store.removeEventListener('change', this.storeChanged);
@@ -131,8 +151,11 @@ export class UserSearchController {
   private applyFilters(cards: HTMLElement[]): void {
     const tokens = queryTokens(this.fullQuery); let visible = 0;
     for (const card of cards) {
-      const id = card.dataset.userPaperId || ''; const meta = store.metadata(id); const searchable = `${card.textContent || ''} ${card.dataset.authors || ''} ${card.dataset.topics || ''}`.toLowerCase();
-      const hidden = !tokens.every(token => this.expanded(token).some(term => searchable.includes(term))) || (store.state.hideRead && store.isRead(id));
+      const id = card.dataset.userPaperId || ''; const meta = store.metadata(id); const searchable = `${card.textContent || ''} ${card.dataset.authors || ''} ${card.dataset.topics || ''}`.toLowerCase(); const normalized = normalizeSearch(searchable);
+      const hidden = !tokens.every(token => this.expanded(token).some(term => {
+        const lower = term.toLowerCase();
+        return searchable.includes(lower) || normalized.includes(normalizeSearch(lower));
+      })) || (store.state.hideRead && store.isRead(id));
       card.hidden = hidden;
       card.querySelector('.user-hit-reason')?.remove();
       if (hidden) continue;
