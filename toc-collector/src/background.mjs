@@ -1874,12 +1874,16 @@ async function runCycle(manual = false) {
   try {
     config = await loadJson(configPath(), DEFAULT_CONFIG);
     await releaseVerifiedPublisherCooldowns();
-    if (!String(config.writeToken || '').trim()) {
+    if (!String(config.writeToken || '').trim() && !localOnlyMode) {
       stageStatus = '等待配置 writeToken；尚未开始采集或上传';
       await log('collector waiting for writeToken; no collection performed');
       mark('background.collector.waiting-for-token');
       refreshDashboard();
       return;
+    }
+    if (!String(config.writeToken || '').trim() && localOnlyMode) {
+      stageStatus = '本机/VPN 扫描模式：未配置 writeToken，抓到的官方 TOC 仅保存本机，不上传。';
+      await log('local_only_without_write_token', { captureDir: localCaptureDir() });
     }
     const queue = await fetchQueue();
     const net = await networkState();
@@ -2240,7 +2244,7 @@ const steps = {
     }
     if (diagnosticRequested) {
       await log('publisher diagnostic mode enabled', { publishers: [...new Set(diagnosticPublishers)], dois: [...new Set(requestedDiagnosticDois)] });
-    } else if (!String(config.writeToken || '').trim()) {
+    } else if (!String(config.writeToken || '').trim() && !localOnlyMode) {
       await log('collector waiting for writeToken; no collection performed');
       mark('background.collector.waiting-for-token');
     } else {
