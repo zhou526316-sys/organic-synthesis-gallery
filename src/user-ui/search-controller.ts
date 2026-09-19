@@ -215,8 +215,8 @@ export class UserSearchController {
       const id = card.dataset.userPaperId || '';
       const meta = store.metadata(id);
       const title = card.querySelector<HTMLElement>('.title')?.textContent || meta?.title || '';
-      const authors = card.dataset.authors || meta?.authors?.join(' ') || '';
-      const topics = card.dataset.topics || meta?.topics?.join(' ') || '';
+      const authors = card.dataset.authors || '';
+      const topics = card.dataset.topics || '';
       const searchable = [title, authors, topics, meta?.journal || '', meta?.doi || ''].join(' ').toLowerCase();
       const normalized = normalizeSearch(searchable);
       const hidden = !tokens.every(token => this.expanded(token).some(term => {
