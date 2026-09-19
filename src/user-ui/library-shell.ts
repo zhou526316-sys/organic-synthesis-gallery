@@ -108,7 +108,7 @@ export class GalleryUserShell extends HTMLElement {
         <input type='email' autocomplete='email' data-local-email placeholder='name@example.com'>
         <input type='password' minlength='8' maxlength='128' autocomplete='${register ? 'new-password' : 'current-password'}' data-local-password placeholder='${this.tr('密码（至少 8 位）', 'Password (8+ characters)')}'>
         <button class='primary' type='submit' data-native-auth-submit>${register ? this.tr('创建本站账号', 'Create site account') : this.tr('登录本站账号', 'Sign in with site account')}</button>
-        <div class='notice auth-notice' data-auth-message aria-live='polite' ${this.integrationMessage ? '' : 'hidden'}>${escapeHtml(this.integrationMessage)}</div>
+        <div class='notice auth-notice' data-auth-message role='status' aria-live='polite' ${this.integrationMessage ? '' : 'hidden'}>${escapeHtml(this.integrationMessage)}</div>
       </form>
       <div class='help' style='margin-top:7px'>${register ? this.tr('填写昵称、邮箱和密码即可直接注册并登录。密码仅保存为安全哈希，不保存明文。', 'Enter a display name, email, and password to register and sign in immediately. Passwords are stored only as secure hashes.') : this.tr('本站账号会同步收藏、阅读状态、私人备注和个性化设置。', 'Site accounts sync saved papers, reading status, private notes, and preferences.')}</div>
     </section>`;
