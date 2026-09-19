@@ -139,7 +139,7 @@ async function loadGalleryDois() {
 async function loadReviewExclusions() {
   const excluded = new Set();
   const files = await readdir(path.resolve('audit')).catch(() => []);
-  for (const file of files.filter(name => /^review-.*\\.json$/i.test(name)).sort()) {
+  for (const file of files.filter(name => /^review-.*\.json$/i.test(name)).sort()) {
     try {
       const payload = JSON.parse(await readFile(path.resolve('audit', file), 'utf8'));
       for (const item of payload?.rejected || []) {
