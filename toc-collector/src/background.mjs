@@ -1095,6 +1095,182 @@ async function verifyBrowserbaseImage(page, candidate, { publisher, doi, session
   return { contentType: mime, bytes, imageData: `data:${mime};base64,${body.toString('base64')}` };
 }
 
+
+function springerNatureMediaCandidates(doi) {
+  const normalized = String(doi || '').trim().toLowerCase();
+  if (!normalized.startsWith('10.1038/')) return [];
+  const articleId = normalized.split('/')[1] || '';
+  const match = /^s(\d+)-(\d{3})-(\d+)-[a-z0-9]+$/i.exec(articleId);
+  if (!match) return [];
+  const journalCode = match[1];
+  const year = 2000 + Number(match[2]);
+  const articleNumber = String(Number(match[3]));
+  if (!Number.isFinite(year) || !articleNumber || articleNumber === 'NaN') return [];
+  const stem = `${journalCode}_${year}_${articleNumber}`;
+  const encodedArticle = encodeURIComponent(articleId);
+  const base = `https://media.springernature.com/full/springer-static/image/art%3A10.1038%2F${encodedArticle}/MediaObjects/`;
+  return [
+    {
+      src: `${base}${stem}_Figa_HTML.png`,
+      kind: 'official',
+      text: 'Graphical Abstract / Visual Abstract',
+      ownershipToken: `${articleId}/MediaObjects/${stem}_Figa_HTML.png`,
+      source: 'springer_nature_mediaobjects',
+      confidence: 99,
+    },
+    {
+      src: `${base}${stem}_Fig1_HTML.png`,
+      kind: 'figure1',
+      text: 'Figure 1',
+      ownershipToken: `${articleId}/MediaObjects/${stem}_Fig1_HTML.png`,
+      source: 'springer_nature_mediaobjects',
+      confidence: 96,
+    },
+  ];
+}
+
+async function verifySpringerNatureCandidate(doi, candidate) {
+  const normalized = String(doi || '').trim().toLowerCase();
+  const articleId = normalized.split('/')[1] || '';
+  let decoded = '';
+  try { decoded = decodeURIComponent(candidate.src); } catch { decoded = candidate.src; }
+  if (!articleId || !decoded.includes(`10.1038/${articleId}/MediaObjects/`)) {
+    throw new Error('springer_nature_doi_ownership_mismatch');
+  }
+  const response = await globalThis.fetch(candidate.src, {
+    method: 'GET',
+    redirect: 'follow',
+    headers: {
+      Accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+      Referer: articleUrl(normalized),
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+    },
+    signal: AbortSignal.timeout(20000),
+  });
+  if (!response.ok) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, status: response.status, reason: 'http' });
+    return null;
+  }
+  const contentType = String(response.headers.get('content-type') || '').toLowerCase().split(';')[0];
+  if (!contentType.startsWith('image/')) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'content_type', contentType });
+    return null;
+  }
+  const buffer = Buffer.from(await response.arrayBuffer());
+  if (buffer.length < 4096 || buffer.length > 8_000_000) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'size', bytes: buffer.length });
+    return null;
+  }
+  const image = nativeImage.createFromBuffer(buffer);
+  if (image.isEmpty()) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'decode' });
+    return null;
+  }
+  const size = image.getSize();
+  if (size.width < 240 || size.height < 120) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'dimensions', width: size.width, height: size.height });
+    return null;
+  }
+  const ratio = size.width / Math.max(1, size.height);
+  if (ratio > 8 || ratio < 0.12) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'logo_like_aspect', width: size.width, height: size.height });
+    return null;
+  }
+  const mime = ['image/png','image/jpeg','image/gif','image/webp'].includes(contentType) ? contentType : 'image/png';
+  const verified = {
+    ...candidate,
+    width: size.width,
+    height: size.height,
+    imageData: `data:${mime};base64,${buffer.toString('base64')}`,
+  };
+  await log('springer_nature_candidate_verified', {
+    doi: normalized,
+    kind: candidate.kind,
+    source: candidate.source,
+    confidence: candidate.confidence,
+    width: size.width,
+    height: size.height,
+    bytes: buffer.length,
+  });
+  return verified;
+}
+
+async function inspectSpringerNatureStructured(doi) {
+  const normalized = String(doi || '').trim().toLowerCase();
+  if (classify(normalized) !== 'nature') return null;
+  const target = articleUrl(normalized);
+
+  try {
+    const response = await publisherFetch(target, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
+      signal: AbortSignal.timeout(15000),
+    }, 'springer_nature_metadata_fetch_fallback');
+    if (response.ok) {
+      const html = await response.text();
+      const finalUrl = response.url || target;
+      const challenged = browserbaseManualRequired(html, finalUrl);
+      const ownsDoi = html.toLowerCase().includes(normalized) || finalUrl.toLowerCase().includes(normalized.split('/')[1]);
+      if (!challenged && ownsDoi) {
+        const metadataCandidate = htmlCandidate(html, finalUrl);
+        if (metadataCandidate && ['official','figure1'].includes(metadataCandidate.kind)) {
+          const responseImage = await globalThis.fetch(metadataCandidate.src, {
+            headers: { Accept: 'image/*,*/*;q=0.8', Referer: finalUrl },
+            signal: AbortSignal.timeout(20000),
+          });
+          if (responseImage.ok) {
+            const contentType = String(responseImage.headers.get('content-type') || '').split(';')[0].toLowerCase();
+            const buffer = Buffer.from(await responseImage.arrayBuffer());
+            const image = nativeImage.createFromBuffer(buffer);
+            if (contentType.startsWith('image/') && buffer.length >= 4096 && !image.isEmpty()) {
+              const size = image.getSize();
+              if (size.width >= 240 && size.height >= 120) {
+                await log('springer_nature_metadata_candidate_verified', { doi: normalized, kind: metadataCandidate.kind, width: size.width, height: size.height, url: finalUrl });
+                return {
+                  url: finalUrl,
+                  method: 'springer_nature_metadata',
+                  candidate: {
+                    ...metadataCandidate,
+                    width: size.width,
+                    height: size.height,
+                    imageData: `data:${contentType};base64,${buffer.toString('base64')}`,
+                    source: 'springer_nature_metadata',
+                    confidence: metadataCandidate.kind === 'official' ? 100 : 97,
+                  },
+                };
+              }
+            }
+          }
+        }
+      }
+      await log('springer_nature_metadata_no_candidate', { doi: normalized, challenged, ownsDoi, url: finalUrl });
+    }
+  } catch (error) {
+    await log('springer_nature_metadata_failed', { doi: normalized, reason: safeError(error, 240) });
+  }
+
+  for (const candidate of springerNatureMediaCandidates(normalized)) {
+    try {
+      const verified = await verifySpringerNatureCandidate(normalized, candidate);
+      if (verified) {
+        return {
+          url: target,
+          method: candidate.kind === 'official' ? 'springer_nature_official_visual' : 'springer_nature_figure1',
+          candidate: verified,
+        };
+      }
+    } catch (error) {
+      await log('springer_nature_candidate_failed', { doi: normalized, kind: candidate.kind, reason: safeError(error, 240) });
+    }
+  }
+  return null;
+}
+
 async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyImage = false } = {}) {
   const publisher = browserbasePublisher(doi);
   if (!publisher) return null;
@@ -1298,6 +1474,10 @@ async function downloadPdfFromPublisherBrowser({ doi, publisher, webContents, pd
 }
 async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnostic, verifyBrowserbaseImage = false } = {}) {
   const url = articleUrl(doi);
+  if (!forceBrowserbase && classify(doi) === 'nature') {
+    const structured = await inspectSpringerNatureStructured(doi);
+    if (structured?.candidate) return structured;
+  }
   let win = null;
   let publisherTimer;
   try {
