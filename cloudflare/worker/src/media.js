@@ -316,6 +316,7 @@ export async function serveMediaObject(request, env) {
   if (!path.startsWith(prefix)) return new Response('Not found', { status: 404 });
   const key = path.slice(prefix.length).split('/').map(part => decodeURIComponent(part)).join('/');
   if (!key || key.includes('..')) return new Response('Invalid media key', { status: 400 });
+  if (key.startsWith('private/')) return new Response('Not found', { status: 404 });
   const object = await env.MEDIA.get(key);
   if (!object) return new Response('Not found', { status: 404 });
   const headers = new Headers();
