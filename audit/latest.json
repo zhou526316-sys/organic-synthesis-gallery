@@ -1,15 +1,17 @@
 {
   "auditVersion": 3,
-  "generatedAt": "2026-09-19T03:47:26.137Z",
+  "generatedAt": "2026-09-19T03:48:28.253Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-72h-calendar",
   "startDate": "2026-09-17",
   "endDate": "2026-09-19",
   "closureDate": "2026-09-18",
-  "policy": "Multi-ISSN Crossref online/published union plus OpenAlex union. Default window is the current Beijing date plus the two preceding calendar dates. All DOI differences are exposed for assistant review; deterministic screening only assigns review priority and never silently excludes a missing record.",
+  "policy": "Multi-ISSN Crossref online/published union plus OpenAlex union. Default window is the current Beijing date plus the two preceding calendar dates. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Persisted assistant exclude decisions resolve previously reviewed DOI differences; new/unresolved differences remain exposed for assistant review. Deterministic screening only assigns review priority and never silently excludes a new missing record.",
   "summary": {
     "galleryDois": 476,
     "sourceRecords": 214,
+    "rawMissingFromGallery": 190,
+    "previouslyReviewedExcluded": 0,
     "missingFromGallery": 190,
     "potentialGaps": 60,
     "criticalSourceFailures": 0,
@@ -19,70 +21,92 @@
     "date": "2026-09-18",
     "status": "requires-assistant-review",
     "sourceRecords": 85,
+    "rawMissingFromGallery": 73,
+    "previouslyReviewedExcluded": 0,
     "missingFromGallery": 73,
     "potentialGaps": 33,
     "criticalSourceFailures": 0,
     "verifiedThroughEligible": false,
-    "note": "Machine audit never advances verifiedThrough by itself. Every missing record for the closure date must receive an explicit assistant decision, publisher sources must be cross-checked where available, unresolved must reach zero, and critical source failures must be zero."
+    "note": "Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, and critical source failures must be zero."
   },
   "byJournal": {
     "Nature": {
       "sourceRecords": 16,
       "coveredByGallery": 0,
+      "rawMissingFromGallery": 16,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 16,
       "potentialGaps": 0
     },
     "Science": {
       "sourceRecords": 38,
       "coveredByGallery": 0,
+      "rawMissingFromGallery": 38,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 38,
       "potentialGaps": 2
     },
     "Nature Catalysis": {
       "sourceRecords": 0,
       "coveredByGallery": 0,
+      "rawMissingFromGallery": 0,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "Nature Synthesis": {
       "sourceRecords": 2,
       "coveredByGallery": 1,
+      "rawMissingFromGallery": 1,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 1,
       "potentialGaps": 1
     },
     "Nature Chemistry": {
       "sourceRecords": 4,
       "coveredByGallery": 0,
+      "rawMissingFromGallery": 4,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 4,
       "potentialGaps": 4
     },
     "Nature Communications": {
       "sourceRecords": 73,
       "coveredByGallery": 1,
+      "rawMissingFromGallery": 72,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 72,
       "potentialGaps": 12
     },
     "JACS": {
       "sourceRecords": 34,
       "coveredByGallery": 7,
+      "rawMissingFromGallery": 27,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 27,
       "potentialGaps": 15
     },
     "Angew": {
       "sourceRecords": 17,
       "coveredByGallery": 3,
+      "rawMissingFromGallery": 14,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 14,
       "potentialGaps": 12
     },
     "ACS Catalysis": {
       "sourceRecords": 14,
       "coveredByGallery": 2,
+      "rawMissingFromGallery": 12,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 12,
       "potentialGaps": 9
     },
     "Organic Letters": {
       "sourceRecords": 16,
       "coveredByGallery": 10,
+      "rawMissingFromGallery": 6,
+      "previouslyReviewedExcluded": 0,
       "missingFromGallery": 6,
       "potentialGaps": 5
     }
