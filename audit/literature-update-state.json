@@ -2,17 +2,8 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "toc_processing",
-  "activeRun": {
-    "id": "manual-review-20260919-1140",
-    "runType": "reuse_existing_audit_review_and_sync",
-    "startedAt": "2026-09-19T11:40:00+08:00",
-    "windowStart": "2026-09-17",
-    "windowEnd": "2026-09-19",
-    "sourceAuditGeneratedAt": "2026-09-19T03:27:14.743Z",
-    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
-    "note": "Reusing the existing DOI-union audit; no Crossref/OpenAlex refetch. All 203 missing candidates are being given explicit assistant decisions before sync."
-  },
+  "phase": "synced",
+  "activeRun": null,
   "lastCompletedFetch": {
     "id": "automation-20260918-1800",
     "finishedAt": "2026-09-18T18:18:00+08:00",
@@ -41,31 +32,39 @@
     "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699"
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-09-19T11:33:23+08:00",
-    "dataCommitSha": "4d49c6ecd89c5777c870470ac06482258755951b",
-    "deploymentCommitSha": "c9bf4090648e954d591818d94bb64ca47a3f626a",
-    "pagesRunId": 35418810801,
+    "finishedAt": "2026-09-19T11:49:20+08:00",
+    "dataCommitSha": "d023a0bdef3c15d192891131a60c68efac647542",
+    "deploymentCommitSha": "8dd9dee072f8b2e9231cd028ee098f47ab81e83c",
+    "pagesRunId": 35419578605,
     "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
     "deployment": "success",
     "verification": {
       "build": "success",
       "deploy": "success",
-      "totalGalleryCards": 463,
-      "galleryDois": 463,
-      "workerMediaDois": 463,
+      "totalGalleryCards": 476,
+      "galleryDois": 476,
+      "workerMediaDois": 476,
       "manifestItems": 407,
-      "figureMetadata": 716,
+      "figureMetadata": 720,
       "pmcFallbacks": 26,
       "natureFallbacks": 16,
       "oldDataRegressionCheck": "passed"
     },
-    "tocVerification": "partial: newest rolling card now has a stable mirrored Figure 1 fallback; not claimed as a true publisher graphical abstract"
+    "tocVerification": {
+      "recentChecked": 30,
+      "complete": 0,
+      "withLarge": 1,
+      "withFigures": 1,
+      "missing": 29,
+      "directPublisherTocImported": 0,
+      "note": "ACS/Wiley direct retrieval returned 403 and Nature publisher pages were IDP-gated for most targets. Missing TOCs remain pending; no fallback is mislabeled as a publisher graphical abstract."
+    }
   },
-  "verifiedThrough": "2026-09-17",
+  "verifiedThrough": "2026-09-18",
   "capabilityRegistry": "audit/literature-capability.json",
   "lastCapabilitySnapshot": {
     "fingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
-    "note": "Fetch/TOC semantics unchanged. Audit persistence workflow hardened and validated in run 35418557042; operational persistence fix does not invalidate the fetch capability fingerprint."
+    "note": "This manual run remained pinned to the pre-existing fetch/TOC capability. During completion, recent-media-repair was validated and promoted as a stable downstream TOC/media repair capability for subsequent runs; no mid-run hot swap occurred."
   },
   "rules": {
     "freshFetchLockMinutes": 120,
@@ -137,5 +136,50 @@
     "auditPersistenceFixCommit": "7d3da88ea8a6f857c65395e10c52ed7f28ed17c9",
     "validation": "success",
     "note": "audit/latest.json persistence conflict is now recoverable and no longer blocks the whole literature pipeline; authoritative literature/TOC data conflicts remain hard stops."
+  },
+  "lastCompletedReview": {
+    "id": "manual-review-20260919-1140",
+    "finishedAt": "2026-09-19T11:50:00+08:00",
+    "reusedExistingAudit": true,
+    "sourceAuditGeneratedAt": "2026-09-19T03:40:30.374Z",
+    "windowStart": "2026-09-17",
+    "windowEnd": "2026-09-19",
+    "reviewed": 203,
+    "accepted": 13,
+    "rejected": 190,
+    "pending": 0,
+    "unresolved": 0,
+    "closureDate": "2026-09-18",
+    "closureUnresolved": 0,
+    "reviewFile": "audit/review-2026-09-19.json",
+    "addedDois": [
+      "10.1021/jacs.6c12832",
+      "10.1021/jacs.6c15781",
+      "10.1021/jacs.6c07021",
+      "10.1021/acscatal.6c04593",
+      "10.1021/acscatal.6c05065",
+      "10.1002/anie.8911828",
+      "10.1002/anie.5852828",
+      "10.1002/anie.6992524",
+      "10.1021/acs.orglett.6c03255",
+      "10.1021/acs.orglett.6c03247",
+      "10.1021/acs.orglett.6c03151",
+      "10.1021/acs.orglett.6c03147",
+      "10.1021/acs.orglett.6c03339"
+    ],
+    "dataCommitSha": "d023a0bdef3c15d192891131a60c68efac647542",
+    "reviewCommitSha": "e91f21f61083f379b2c080131334d216d688eab0",
+    "closureCommitSha": "a11eefe6d6788383b08148d8b7b8edca3cf97ecf",
+    "auditValidation": {
+      "generatedAt": "2026-09-19T03:49:53.498Z",
+      "sourceRecords": 214,
+      "rawMissingFromGallery": 190,
+      "previouslyReviewedExcluded": 190,
+      "missingFromGallery": 0,
+      "criticalSourceFailures": 0,
+      "unresolved": 0,
+      "closureStatus": "assistant-decisions-complete",
+      "verifiedThroughEligible": true
+    }
   }
 }
