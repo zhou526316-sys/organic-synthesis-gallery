@@ -6,17 +6,31 @@ const DIAGNOSTIC_KEY = 'local-captures/diagnostics/latest.json';
 const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_DIAGNOSTIC_BYTES = 1_500_000;
 
+function sniffImageType(bytes, declaredType = '') {
+  const head = bytes.slice(0, Math.min(bytes.byteLength, 1024));
+  const text = new TextDecoder().decode(head).replace(/^\uFEFF/, '').trimStart().toLowerCase();
+  if (text.startsWith('<?xml') || text.startsWith('<svg') || text.includes('<svg ')) return 'image/svg+xml';
+  if (head.byteLength >= 8 && head[0] === 0x89 && head[1] === 0x50 && head[2] === 0x4e && head[3] === 0x47) return 'image/png';
+  if (head.byteLength >= 3 && head[0] === 0xff && head[1] === 0xd8 && head[2] === 0xff) return 'image/jpeg';
+  if (head.byteLength >= 12 && String.fromCharCode(...head.slice(0, 4)) === 'RIFF' && String.fromCharCode(...head.slice(8, 12)) === 'WEBP') return 'image/webp';
+  const gif = head.byteLength >= 6 ? String.fromCharCode(...head.slice(0, 6)) : '';
+  if (gif === 'GIF87a' || gif === 'GIF89a') return 'image/gif';
+  return String(declaredType || '').toLowerCase().replace('image/jpg', 'image/jpeg');
+}
+
 function parseImageData(value) {
   if (typeof value !== 'string') return null;
-  const match = /^data:(image\/(?:png|jpeg|jpg|gif|webp));base64,([A-Za-z0-9+/=\r\n]+)$/i.exec(value.trim());
+  const match = /^data:(image\/(?:png|jpeg|jpg|gif|webp|svg\+xml));base64,([A-Za-z0-9+/=\r\n]+)$/i.exec(value.trim());
   if (!match) return null;
   const bytes = Uint8Array.from(atob(match[2].replace(/\s+/g, '')), c => c.charCodeAt(0));
   if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) return null;
-  const contentType = match[1].toLowerCase().replace('image/jpg', 'image/jpeg');
+  const declaredType = match[1].toLowerCase().replace('image/jpg', 'image/jpeg');
+  const contentType = sniffImageType(bytes, declaredType);
   return { bytes, contentType };
 }
 
 function extensionFor(type) {
+  if (type === 'image/svg+xml') return 'svg';
   if (type === 'image/png') return 'png';
   if (type === 'image/gif') return 'gif';
   if (type === 'image/webp') return 'webp';
