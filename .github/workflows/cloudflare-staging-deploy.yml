@@ -9,7 +9,6 @@ on:
       - 'CLOUDFLARE_SCHEMA_REFRESH'
       - '.github/workflows/cloudflare-staging-deploy.yml'
       - 'cloudflare/schema.sql'
-      - 'cloudflare/worker/**'
 
 permissions:
   contents: read
