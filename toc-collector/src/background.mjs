@@ -3,6 +3,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { classifyPublisher, pickBestPublisherMediaCandidate, primaryArticleUrlForDoi, publisherFromUrl as publisherFromAdapter, publisherHostMatches as publisherHostMatchesAdapter } from './publisher-adapters.mjs';
 
 // This module is imported only after the startup window has rendered.
 // All Electron objects, filesystem operations and background work are deferred.
@@ -93,25 +94,11 @@ function getPublisherSession(publisher = '') {
 }
 
 function publisherFromUrl(url) {
-  try {
-    const hostname = new URL(String(url || '')).hostname.toLowerCase();
-    if (hostname.endsWith('pubs.acs.org')) return 'acs';
-    if (hostname.endsWith('onlinelibrary.wiley.com')) return 'wiley';
-    if (hostname.endsWith('nature.com')) return 'nature';
-    if (hostname.endsWith('science.org')) return 'science';
-  } catch {}
-  return '';
+  return publisherFromAdapter(url);
 }
 
 function publisherHostMatches(publisher, url) {
-  try {
-    const hostname = new URL(String(url || '')).hostname.toLowerCase();
-    if (publisher === 'acs') return hostname.endsWith('pubs.acs.org');
-    if (publisher === 'wiley') return hostname.endsWith('onlinelibrary.wiley.com');
-    if (publisher === 'nature') return hostname.endsWith('nature.com');
-    if (publisher === 'science') return hostname.endsWith('science.org');
-  } catch {}
-  return false;
+  return publisherHostMatchesAdapter(publisher, url);
 }
 
 function safeError(error, limit = 1200) {
@@ -319,20 +306,10 @@ function startConfigWatch() {
 
 function todayKey() { return new Date().toISOString().slice(0, 10); }
 function classify(doi = '') {
-  const d = String(doi).toLowerCase();
-  if (d.startsWith('10.1021/')) return 'acs';
-  if (d.startsWith('10.1002/')) return 'wiley';
-  if (d.startsWith('10.1038/')) return 'nature';
-  if (d.startsWith('10.1126/')) return 'science';
-  return 'other';
+  return classifyPublisher(doi);
 }
 function articleUrl(doi) {
-  const p = classify(doi);
-  if (p === 'acs') return `https://pubs.acs.org/doi/${doi}`;
-  if (p === 'wiley') return `https://onlinelibrary.wiley.com/doi/${doi}`;
-  if (p === 'nature') return `https://www.nature.com/articles/${doi.split('/')[1]}`;
-  if (p === 'science') return `https://www.science.org/doi/${doi}`;
-  return `https://doi.org/${doi}`;
+  return primaryArticleUrlForDoi(doi);
 }
 
 function transportDetails(error) {
@@ -506,54 +483,9 @@ function sourceFromAttrs(attrs, pageUrl) {
   return absoluteMediaUrl(attrs.src, pageUrl);
 }
 
-function htmlCandidate(html, pageUrl) {
-  const rows = [];
-  const add = (src, text, kind, width = 0, height = 0) => {
-    const absolute = absoluteMediaUrl(src, pageUrl);
-    if (!absolute) return;
-    if (/logo|icon|avatar|cover|advert|banner/i.test(String(text || ''))) return;
-    rows.push({ src: absolute, text: String(text || ''), kind, width: Number(width) || 0, height: Number(height) || 0 });
-  };
-
-  for (const match of String(html || '').matchAll(/<meta\b[^>]*>/gi)) {
-    const attrs = tagAttributes(match[0]);
-    const key = String(attrs.name || attrs.property || attrs.itemprop || '').toLowerCase();
-    if (['citation_graphical_abstract', 'citation_toc_graphic', 'citation_abstract_image'].includes(key)) {
-      add(attrs.content, key, 'official');
-    }
-  }
-
-  let figures = 0;
-  for (const match of String(html || '').matchAll(/<figure\b[\s\S]*?<\/figure>/gi)) {
-    if (++figures > 80) break;
-    const block = match[0];
-    const img = block.match(/<img\b[^>]*>/i)?.[0];
-    if (!img) continue;
-    const attrs = tagAttributes(img);
-    const text = [attrs.alt, attrs.title, attrs.id, attrs.class, stripHtml(block).slice(0, 1400)].filter(Boolean).join(' ');
-    const official = /visual\s*abstract|graphical\s*abstract|abstract\s*image|toc\s*(graphic|image)|table\s*of\s*contents/i.test(text);
-    const fig1 = /(^|\b)(fig(?:ure)?\.?\s*1)(\b|[:.])/i.test(text);
-    if (official || fig1) add(sourceFromAttrs(attrs, pageUrl), text, official ? 'official' : 'figure1', attrs.width, attrs.height);
-  }
-
-  let images = 0;
-  for (const match of String(html || '').matchAll(/<img\b[^>]*>/gi)) {
-    if (++images > 500) break;
-    const attrs = tagAttributes(match[0]);
-    const text = [attrs.alt, attrs.title, attrs.id, attrs.class].filter(Boolean).join(' ');
-    const official = /visual\s*abstract|graphical\s*abstract|abstract\s*image|toc\s*(graphic|image)|table\s*of\s*contents/i.test(text);
-    const fig1 = /(^|\b)(fig(?:ure)?\.?\s*1)(\b|[:.])/i.test(text);
-    if (official || fig1) add(sourceFromAttrs(attrs, pageUrl), text, official ? 'official' : 'figure1', attrs.width, attrs.height);
-  }
-
-  rows.sort((a,b) => {
-    const sa = semanticScore(a.text) + (a.kind === 'official' ? 20 : 0) + Math.min(20, ((a.width||0)*(a.height||0))/100000);
-    const sb = semanticScore(b.text) + (b.kind === 'official' ? 20 : 0) + Math.min(20, ((b.width||0)*(b.height||0))/100000);
-    return sb - sa;
-  });
-  return rows[0] || null;
+function htmlCandidate(html, pageUrl, doi = '') {
+  return pickBestPublisherMediaCandidate(html, pageUrl, { doi, publisher: classify(doi) !== 'other' ? classify(doi) : publisherFromUrl(pageUrl) });
 }
-
 function browserbasePublisher(doi) {
   const publisher = classify(doi);
   return ['acs', 'wiley', 'nature', 'science'].includes(publisher) ? publisher : '';
@@ -998,7 +930,7 @@ async function finishManualBrowserbase(publisher) {
     return { configured: true, publisher, status: 'doi_not_verified', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
   }
 
-  const candidate = htmlCandidate(html, pageUrl);
+  const candidate = htmlCandidate(html, pageUrl, active.doi);
   if (!candidate) {
     state.browserbase.manual[publisher] = {
       ...(state.browserbase.manual[publisher] || {}),
@@ -1217,7 +1149,7 @@ async function inspectSpringerNatureStructured(doi) {
       const challenged = browserbaseManualRequired(html, finalUrl);
       const ownsDoi = html.toLowerCase().includes(normalized) || finalUrl.toLowerCase().includes(normalized.split('/')[1]);
       if (!challenged && ownsDoi) {
-        const metadataCandidate = htmlCandidate(html, finalUrl);
+        const metadataCandidate = htmlCandidate(html, finalUrl, normalized);
         if (metadataCandidate && ['official','figure1'].includes(metadataCandidate.kind)) {
           const responseImage = await globalThis.fetch(metadataCandidate.src, {
             headers: { Accept: 'image/*,*/*;q=0.8', Referer: finalUrl },
@@ -1342,7 +1274,7 @@ async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyIma
     }
     if (!browserbaseOwnsDoi(doi, pageUrl, html)) throw new Error('browserbase_doi_mismatch');
     await log('browserbase_doi_verified', { publisher, doi, url: pageUrl, sessionId: String(sessionInfo.id || '') });
-    const candidate = htmlCandidate(html, pageUrl);
+    const candidate = htmlCandidate(html, pageUrl, doi);
     if (!candidate) throw new Error('browserbase_no_candidate');
     const image = verifyImage ? await verifyBrowserbaseImage(page, candidate, { publisher, doi, sessionId: String(sessionInfo.id || '') }) : null;
     state.browserbase.status[publisher] = 'connected';
@@ -1390,7 +1322,7 @@ async function inspectArticleHtml(doi, url, browserError = '') {
     if (!res.ok) throw new Error(`publisher_http_${res.status}`);
     const html = await res.text();
     const finalUrl = res.url || url;
-    const candidate = htmlCandidate(html, finalUrl);
+    const candidate = htmlCandidate(html, finalUrl, doi);
     if (candidate) {
       await log('html_fallback_success', { doi, kind: candidate.kind, url: finalUrl, browserError });
       return { url: finalUrl, candidate, method: 'html' };
