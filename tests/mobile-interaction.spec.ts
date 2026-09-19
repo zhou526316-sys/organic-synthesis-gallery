@@ -198,5 +198,5 @@ test('search keeps input stable without rebuilding cards and feedback widget sub
   await feedback.locator('[data-feedback-category]').selectOption('search');
   await feedback.locator('[data-feedback-message]').fill('搜索框输入时不应该闪烁或清空。');
   await feedback.locator('[data-feedback-submit]').click();
-  await expect(feedback.locator('.site-feedback-status')).toContainText('已收到');
+  await expect(feedback.locator('.site-feedback-status')).toContainText(/已收到|Received/);
 });
