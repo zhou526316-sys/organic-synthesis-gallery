@@ -53,4 +53,15 @@ $collectorArgs = @(
 )
 
 & npm @collectorArgs
-exit $LASTEXITCODE
+$collectorExit = $LASTEXITCODE
+
+$diagSync = Join-Path $ScriptDir "SYNC-LOCAL-DIAGNOSTICS.ps1"
+if (Test-Path -LiteralPath $diagSync) {
+  try {
+    & $diagSync
+  } catch {
+    Write-Warning ("Diagnostic upload failed: " + $_.Exception.Message)
+  }
+}
+
+exit $collectorExit
