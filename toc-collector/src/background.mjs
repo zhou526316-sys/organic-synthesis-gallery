@@ -705,8 +705,9 @@ async function startLocalPublisherVerification(publisher) {
     const current = localPublisherWindows.get(publisher);
     if (current?.win === win) localPublisherWindows.delete(publisher);
   });
-  win.webContents.on('did-fail-load', (_event, code, description, validatedUrl) => {
-    void log('local_publisher_load_failed', { publisher, doi: target.doi || '', code, description, url: validatedUrl });
+  win.webContents.on('did-fail-load', (_event, code, description, validatedUrl, isMainFrame) => {
+    if (!isMainFrame && Number(code) === -3 && String(validatedUrl || '') === 'about:srcdoc') return;
+    void log('local_publisher_load_failed', { publisher, doi: target.doi || '', code, description, url: validatedUrl, isMainFrame: Boolean(isMainFrame) });
   });
 
   {
