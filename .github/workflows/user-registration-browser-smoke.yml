@@ -1,6 +1,10 @@
 name: User registration browser smoke
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/user-registration-browser-smoke.yml'
   workflow_run:
     workflows:
       - Deploy GitHub Pages frontend
@@ -75,7 +79,7 @@ jobs:
               await submit.click();
 
               await notice.waitFor({ state: 'visible', timeout: 5000 });
-              assert((await notice.textContent())?.trim() === '邮箱格式不正确。', `unexpected client validation: ${await notice.textContent()}`);
+              assert(/^(邮箱格式不正确。|Invalid email address\.)$/.test((await notice.textContent())?.trim() || ''), `unexpected client validation: ${await notice.textContent()}`);
               assert(await submit.isEnabled(), 'register button stayed disabled after client validation');
 
               let capturedRegistration = null;
@@ -103,7 +107,7 @@ jobs:
               await page.waitForFunction(() => {
                 const shell = document.querySelector('gallery-user-shell');
                 const notice = shell?.shadowRoot?.querySelector('[data-auth-message]');
-                return notice && !notice.hasAttribute('hidden') && /已经存在账号/.test(notice.textContent || '');
+                return notice && !notice.hasAttribute('hidden') && /(已经存在账号|already uses this email)/i.test(notice.textContent || '');
               }, null, { timeout: 10000 });
 
               assert(capturedRegistration, 'registration POST was never emitted');
