@@ -561,7 +561,7 @@ function browserbasePublisher(doi) {
 }
 
 function browserbaseManualRequired(html, pageUrl = '') {
-  const signal = `${pageUrl}\n${String(html || '').slice(0, 250000)}`;
+  const signal = `${pageUrl}\n${stripHtml(String(html || '').slice(0, 250000))}`;
   return /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|enable javascript|unusual traffic/i.test(signal);
 }
 
@@ -1402,9 +1402,38 @@ async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyIma
     }
     if (!browserbaseOwnsDoi(doi, pageUrl, html)) throw new Error('browserbase_doi_mismatch');
     await log('browserbase_doi_verified', { publisher, doi, url: pageUrl, sessionId: String(sessionInfo.id || '') });
-    const candidate = htmlCandidate(html, pageUrl);
+    let candidate = htmlCandidate(html, pageUrl);
+    let image = null;
+    if (!candidate) {
+      const pdf = await page.evaluate(async () => {
+        const links = [...document.querySelectorAll('a[href]')].map(a => ({ url: a.href, text: a.textContent || '' }))
+          .filter(a => /\bpdf\b|\/e?pdf\//i.test(a.text + ' ' + a.url) && new URL(a.url).origin === location.origin).slice(0, 2);
+        for (const link of links) {
+          try {
+            const res = await fetch(link.url, { credentials: 'include', signal: AbortSignal.timeout(30000) });
+            if (!res.ok || !/application\/pdf/i.test(res.headers.get('content-type') || '')) continue;
+            if (Number(res.headers.get('content-length')) > 30000000) continue;
+            const bytes = new Uint8Array(await res.arrayBuffer());
+            if (bytes.length > 30000000) continue;
+            let binary = '';
+            for (let i = 0; i < bytes.length; i += 16384) binary += String.fromCharCode(...bytes.subarray(i, i + 16384));
+            return { url: res.url, base64: btoa(binary) };
+          } catch {}
+        }
+        return null;
+      });
+      if (pdf) {
+        const { extractPdfPrimary } = await import('./pdf-primary.mjs');
+        const rendered = await extractPdfPrimary({ BrowserWindow, doi, bytes: Buffer.from(pdf.base64, 'base64') });
+        if (rendered.imageData) {
+          candidate = { ...rendered, src: pdf.url };
+          image = { imageData: rendered.imageData };
+          await log('browserbase_pdf_primary_verified', { publisher, doi, page: rendered.page, bbox: rendered.bbox, sessionId: remoteSessionId });
+        }
+      }
+    }
     if (!candidate) throw new Error('browserbase_no_candidate');
-    const image = verifyImage ? await verifyBrowserbaseImage(page, candidate, { publisher, doi, sessionId: String(sessionInfo.id || '') }) : null;
+    if (!image && verifyImage) image = await verifyBrowserbaseImage(page, candidate, { publisher, doi, sessionId: String(sessionInfo.id || '') });
     state.browserbase.status[publisher] = 'connected';
     state.browserbase.lastSuccessDoi[publisher] = doi;
     await saveState();
@@ -1601,8 +1630,12 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
         .map(a => ({ href: abs(a.getAttribute('href') || ''), text: String(a.textContent || '').trim() }))
         .filter(item => item.href && (/\\bpdf\\b|download|epdf/i.test(item.text + ' ' + item.href)))
         .slice(0, 30);
-      return { title: document.title, href: location.href, rows, pdfLinks };
+      return { title: document.title, href: location.href, rows, pdfLinks,
+        identity: [...document.querySelectorAll('meta[name="citation_doi"],meta[name="dc.identifier"]')].map(m => m.outerHTML).join(''),
+        visibleText: document.body.innerText.slice(0, 5000) };
     })()`);
+    if (browserbaseManualRequired(result.visibleText, result.href)) throw new Error('publisher_access_challenge');
+    if (browserbasePublisher(doi) && !browserbaseOwnsDoi(doi, result.href, result.identity)) throw new Error('publisher_doi_mismatch');
     const rows = Array.isArray(result?.rows) ? result.rows : [];
     rows.sort((a,b) => {
       const sa = semanticScore(a.text) + (a.kind === 'official' ? 20 : 0) + Math.min(20, ((a.width||0)*(a.height||0))/100000);

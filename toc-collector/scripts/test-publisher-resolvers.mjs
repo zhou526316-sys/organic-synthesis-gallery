@@ -11,8 +11,8 @@ const scope = {
   nativeImage: { createFromBuffer: () => ({ isEmpty: () => false, getSize: () => ({ width: 1000, height: 600 }) }) },
   log: async () => {},
 };
-const { htmlCandidate, browserbaseOwnsDoi, springerNatureMediaCandidates, verifySpringerNatureCandidate } =
-  new Function('scope', `with(scope) { ${helpers}\n${nature}; return {htmlCandidate,browserbaseOwnsDoi,springerNatureMediaCandidates,verifySpringerNatureCandidate}; }`)(scope);
+const { htmlCandidate, browserbaseOwnsDoi, browserbaseManualRequired, springerNatureMediaCandidates, verifySpringerNatureCandidate } =
+  new Function('scope', `with(scope) { ${helpers}\n${nature}; return {htmlCandidate,browserbaseOwnsDoi,browserbaseManualRequired,springerNatureMediaCandidates,verifySpringerNatureCandidate}; }`)(scope);
 for (const doi of ['10.1038/s41467-026-76235-7', '10.1038/s44160-026-01158-6']) {
   const candidates = springerNatureMediaCandidates(doi);
   assert.deepEqual(candidates.map(c => c.kind), ['official', 'figure1']);
@@ -35,4 +35,6 @@ assert.equal(htmlCandidate('<meta name="citation_graphical_abstract" content="/g
 assert.equal(browserbaseOwnsDoi(doi, 'https://evilscience.org/doi/' + doi, fixture), false);
 assert.equal(browserbaseOwnsDoi(doi, 'https://www.science.org/doi/10.1126/other', '<p>References: ' + doi + '</p>'), false);
 assert.equal(htmlCandidate('<img src="/logo.png" alt="Figure 1 logo">', url), null);
+assert.equal(browserbaseManualRequired('<script>const captchaLibrary = true;</script><h1>Article</h1>', url), false);
+assert.equal(browserbaseManualRequired('<h1>Verify you are human</h1>', url), true);
 console.log('PASS: Nature DOI-specific candidates, redirect/MIME/404 rejection, Science figure/official fixtures and DOI identity');
