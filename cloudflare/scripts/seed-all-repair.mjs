@@ -1,8 +1,8 @@
 import { gunzipSync } from 'node:zlib';
 import { readFile } from 'node:fs/promises';
 
-const SOURCE_API = process.env.SOURCE_API || 'https://api-v2.appdeploy.ai/app/organic-synthesis-literature-gallery-ase43k';
 const TARGET_API_BASE = (process.env.TARGET_API_BASE || 'https://organic-synthesis-gallery.zhou526316.workers.dev').replace(/\/$/, '');
+const SOURCE_API = (process.env.SOURCE_API || TARGET_API_BASE).replace(/\/$/, '');
 
 function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
@@ -48,6 +48,9 @@ async function loadLocalRecords() {
     'public/manual-supplement.json',
     'public/final-audit-supplement.json',
     'public/curated-supplement.json',
+    'public/automation-supplement.json',
+    'public/rolling-supplement.json',
+    'public/literature-supplement.json',
   ];
   const supplements = [];
   for (const file of supplementFiles) {
