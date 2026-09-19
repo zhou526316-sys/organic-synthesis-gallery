@@ -118,13 +118,17 @@ try {
     }
   }
 
-  $rows = New-Object System.Collections.Generic.List[object]
+  $allMissingOfficial = New-Object System.Collections.Generic.List[object]
+  $displayGaps = New-Object System.Collections.Generic.List[object]
+  $officialUpgrade = New-Object System.Collections.Generic.List[object]
+
   foreach ($doi in $papers.Keys) {
     $record = if ($mediaMap.ContainsKey($doi)) { $mediaMap[$doi] } else { $null }
     if (Is-Official-Toc $record.toc) { continue }
+
     $paper = $papers[$doi]
     $anyVisual = Has-Any-Visual $record
-    $rows.Add([pscustomobject]@{
+    $row = [pscustomobject]@{
       doi = $doi
       publisher = Publisher $doi
       journal = $paper.journal
@@ -132,10 +136,16 @@ try {
       state = if ($anyVisual) { "fallback_only" } else { "no_visual" }
       existingReason = if ($null -ne $record -and $null -ne $record.toc) { [string]$record.toc.reason } else { "" }
       title = $paper.title
-    })
+    }
+
+    $allMissingOfficial.Add($row)
+    if ($anyVisual) { $officialUpgrade.Add($row) } else { $displayGaps.Add($row) }
   }
 
-  $rows = @($rows | Sort-Object publisher,journal,@{Expression="date";Descending=$true},doi)
+  $allMissingOfficial = @($allMissingOfficial | Sort-Object publisher,journal,@{Expression="date";Descending=$true},doi)
+  $displayGaps = @($displayGaps | Sort-Object publisher,journal,@{Expression="date";Descending=$true},doi)
+  $officialUpgrade = @($officialUpgrade | Sort-Object publisher,journal,@{Expression="date";Descending=$true},doi)
+  $rows = $displayGaps
   $utf8NoBom = New-Object Text.UTF8Encoding($false)
 
   function Write-DoiList([string]$Name, $List) {
@@ -145,28 +155,44 @@ try {
     [IO.File]::WriteAllText($path,$text,$utf8NoBom)
   }
 
-  Write-DoiList "toc-demand-all.txt" $rows
-  Write-DoiList "toc-demand-no-visual.txt" @($rows | Where-Object state -eq "no_visual")
-  Write-DoiList "toc-demand-official-upgrade.txt" @($rows | Where-Object state -eq "fallback_only")
+  # Primary queue = what the user actually sees as missing on the website.
+  Write-DoiList "toc-demand-all.txt" $displayGaps
+  Write-DoiList "toc-demand-no-visual.txt" $displayGaps
   foreach ($publisher in @("acs","wiley","nature","science","other")) {
-    Write-DoiList "toc-demand-$publisher.txt" @($rows | Where-Object publisher -eq $publisher)
+    Write-DoiList "toc-demand-$publisher.txt" @($displayGaps | Where-Object publisher -eq $publisher)
   }
 
-  $rows | Export-Csv -LiteralPath (Join-Path $QueueDir "toc-demand-all.csv") -NoTypeInformation -Encoding UTF8
+  # Secondary queue = fallback exists, but official TOC can still be upgraded later.
+  Write-DoiList "toc-demand-official-upgrade.txt" $officialUpgrade
+  Write-DoiList "toc-demand-missing-official-all.txt" $allMissingOfficial
+  foreach ($publisher in @("acs","wiley","nature","science","other")) {
+    Write-DoiList "toc-demand-official-upgrade-$publisher.txt" @($officialUpgrade | Where-Object publisher -eq $publisher)
+  }
+
+  $allMissingOfficial | Export-Csv -LiteralPath (Join-Path $QueueDir "toc-demand-all.csv") -NoTypeInformation -Encoding UTF8
 
   $summary = [pscustomobject]@{
     generatedAt = (Get-Date).ToString("o")
     webpageDoiCount = $papers.Count
     mediaRecordCount = $mediaMap.Count
-    demandTotal = @($rows).Count
-    noVisual = @($rows | Where-Object state -eq "no_visual").Count
-    fallbackOnlyNeedsOfficialUpgrade = @($rows | Where-Object state -eq "fallback_only").Count
+    visibleGapTotal = @($displayGaps).Count
+    demandTotal = @($displayGaps).Count
+    noVisual = @($displayGaps).Count
+    fallbackOnlyNeedsOfficialUpgrade = @($officialUpgrade).Count
+    missingOfficialTotal = @($allMissingOfficial).Count
     byPublisher = [pscustomobject]@{
-      acs = @($rows | Where-Object publisher -eq "acs").Count
-      wiley = @($rows | Where-Object publisher -eq "wiley").Count
-      nature = @($rows | Where-Object publisher -eq "nature").Count
-      science = @($rows | Where-Object publisher -eq "science").Count
-      other = @($rows | Where-Object publisher -eq "other").Count
+      acs = @($displayGaps | Where-Object publisher -eq "acs").Count
+      wiley = @($displayGaps | Where-Object publisher -eq "wiley").Count
+      nature = @($displayGaps | Where-Object publisher -eq "nature").Count
+      science = @($displayGaps | Where-Object publisher -eq "science").Count
+      other = @($displayGaps | Where-Object publisher -eq "other").Count
+    }
+    upgradeByPublisher = [pscustomobject]@{
+      acs = @($officialUpgrade | Where-Object publisher -eq "acs").Count
+      wiley = @($officialUpgrade | Where-Object publisher -eq "wiley").Count
+      nature = @($officialUpgrade | Where-Object publisher -eq "nature").Count
+      science = @($officialUpgrade | Where-Object publisher -eq "science").Count
+      other = @($officialUpgrade | Where-Object publisher -eq "other").Count
     }
   }
 
@@ -176,14 +202,23 @@ try {
   Write-Host "LIVE TOC DEMAND READY" -ForegroundColor Green
   Write-Host "Website DOI total : $($summary.webpageDoiCount)"
   Write-Host "Media records     : $($summary.mediaRecordCount)"
-  Write-Host "Need official TOC : $($summary.demandTotal)"
+  Write-Host "VISIBLE gaps      : $($summary.visibleGapTotal)"
   Write-Host "  No visual       : $($summary.noVisual)"
-  Write-Host "  Fallback only   : $($summary.fallbackOnlyNeedsOfficialUpgrade)"
+  Write-Host "Official upgrades : $($summary.fallbackOnlyNeedsOfficialUpgrade)"
+  Write-Host "Missing official  : $($summary.missingOfficialTotal)"
+  Write-Host ""
+  Write-Host "VISIBLE gaps by publisher"
   Write-Host "ACS               : $($summary.byPublisher.acs)"
   Write-Host "Wiley             : $($summary.byPublisher.wiley)"
   Write-Host "Nature            : $($summary.byPublisher.nature)"
   Write-Host "Science           : $($summary.byPublisher.science)"
   Write-Host "Other             : $($summary.byPublisher.other)"
+  Write-Host ""
+  Write-Host "Official-upgrade queue by publisher"
+  Write-Host "ACS upgrade       : $($summary.upgradeByPublisher.acs)"
+  Write-Host "Wiley upgrade     : $($summary.upgradeByPublisher.wiley)"
+  Write-Host "Nature upgrade    : $($summary.upgradeByPublisher.nature)"
+  Write-Host "Science upgrade   : $($summary.upgradeByPublisher.science)"
   Write-Host "All DOI queue     : $(Join-Path $QueueDir 'toc-demand-all.txt')"
 } finally {
   Remove-Item -LiteralPath $TempDir -Recurse -Force -ErrorAction SilentlyContinue
