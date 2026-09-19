@@ -87,6 +87,7 @@ try {
   $totalFile = Download-File "total-synthesis.json"
   $manualFile = Download-File "manual-supplement.json"
   $auditFile = Download-File "final-audit-supplement.json"
+  $literatureSupplementFile = Download-File "literature-supplement.json"
   $mediaFile = Download-File "media-index.json"
 
   $encoded = (Get-Content -LiteralPath $papersFile -Raw).Trim()
@@ -103,6 +104,7 @@ try {
   $total = Get-Content -LiteralPath $totalFile -Raw -Encoding UTF8 | ConvertFrom-Json
   $manual = Get-Content -LiteralPath $manualFile -Raw -Encoding UTF8 | ConvertFrom-Json
   $audit = Get-Content -LiteralPath $auditFile -Raw -Encoding UTF8 | ConvertFrom-Json
+  $literatureSupplement = Get-Content -LiteralPath $literatureSupplementFile -Raw -Encoding UTF8 | ConvertFrom-Json
   $media = Get-Content -LiteralPath $mediaFile -Raw -Encoding UTF8 | ConvertFrom-Json
 
   $papers = @{}
@@ -110,6 +112,7 @@ try {
   Add-Papers $total.papers $papers
   Add-Papers $manual.papers $papers
   Add-Papers $audit.papers $papers
+  Add-Papers $literatureSupplement.papers $papers
 
   $mediaMap = @{}
   if ($null -ne $media.items) {
