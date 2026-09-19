@@ -290,10 +290,13 @@ function retainForReview(c) {
 
 function compactCandidate(c) {
   const journal = JOURNAL_BY_NAME.get(c.journal);
+  const effectiveStart = journal ? auditStartForJournal(journal) : START;
+  const createdDiscovered = (c.sources || []).some(source => source.endsWith(':created'));
   return {
     ...c,
     activeFrom: journal?.activeFrom || '',
     dateUnverified: !c.date,
+    lateIndexed: Boolean(c.date && c.date < effectiveStart && createdDiscovered),
     reviewPriority: retainForReview(c) ? 'high' : 'normal',
     abstract: (c.abstract || '').slice(0, 1800),
   };
@@ -313,7 +316,11 @@ for (const journal of JOURNALS) {
 const universe = [...merged.values()].filter(c => {
   const journal = JOURNAL_BY_NAME.get(c.journal);
   const effectiveStart = journal ? auditStartForJournal(journal) : START;
-  return !c.date || (c.date >= effectiveStart && c.date <= END);
+  const activeFrom = journal?.activeFrom || START;
+  const createdDiscovered = (c.sources || []).some(source => source.endsWith(':created'));
+  if (!c.date) return createdDiscovered;
+  if (c.date > END || c.date < activeFrom) return false;
+  return c.date >= effectiveStart || createdDiscovered;
 });
 const excludedUniverse = universe.filter(c => isExcludedDoi(c.doi));
 const rawMissing = universe.filter(c => !galleryDois.has(c.doi));
@@ -361,6 +368,7 @@ const byJournal = Object.fromEntries(JOURNALS.map(j => {
     crossrefOnly,
     openAlexOnly,
     multiSource,
+    lateIndexed: candidates.filter(x => Boolean(x.date && x.date < auditStartForJournal(j) && (x.sources || []).some(s => s.endsWith(':created')))).length,
     coveredByGallery: candidates.filter(x => galleryDois.has(x.doi)).length,
     rawMissingFromGallery: rawMissingForJournal.length,
     previouslyReviewedExcluded: reviewedExcludedForJournal.length,
@@ -389,7 +397,7 @@ const report = {
   startDate: START,
   endDate: END,
   closureDate: CLOSURE_DATE,
-  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default seven-calendar-day Beijing safety rescan to recover delayed indexing. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
+  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default seven-calendar-day Beijing safety rescan plus Crossref-created late-deposit rescue back to each journal activeFrom to recover delayed indexing. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
   targetJournals: JOURNALS.map(journal => ({ name: journal.name, issns: journal.issns, activeFrom: journal.activeFrom || '', effectiveStart: auditStartForJournal(journal) })),
   summary: {
     galleryDois: galleryDois.size,
