@@ -56,6 +56,7 @@ jobs:
           const integrations = await json('/api/user-ui/integrations');
           assert(integrations?.auth?.google === true, `Google auth is not configured: ${JSON.stringify(integrations)}`);
           assert(integrations?.auth?.email === true, `Email auth is not configured: ${JSON.stringify(integrations)}`);
+          assert(integrations?.auth?.local === true, `Native local auth is not enabled: ${JSON.stringify(integrations)}`);
 
           const anonymousSession = await json('/api/user-ui/auth/session');
           assert(anonymousSession.authenticated === false && anonymousSession.user === null, `anonymous session response invalid: ${JSON.stringify(anonymousSession)}`);
@@ -88,6 +89,27 @@ jobs:
           }, 400);
           assert(invalidEmail.error === 'invalid_email', `email validation invalid: ${JSON.stringify(invalidEmail)}`);
 
+          const invalidNativeRegistration = await json('/api/user-ui/auth/register', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ email: 'not-an-email', password: '12345678', displayName: 'Smoke' }),
+          }, 400);
+          assert(invalidNativeRegistration.error === 'invalid_email', `native registration email validation invalid: ${JSON.stringify(invalidNativeRegistration)}`);
+
+          const invalidNativePassword = await json('/api/user-ui/auth/register', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ email: 'smoke-password@example.invalid', password: 'short', displayName: 'Smoke' }),
+          }, 400);
+          assert(invalidNativePassword.error === 'invalid_password', `native registration password validation invalid: ${JSON.stringify(invalidNativePassword)}`);
+
+          const invalidNativeLogin = await json('/api/user-ui/auth/password/login', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ email: 'nonexistent-smoke@example.invalid', password: '12345678' }),
+          }, 401);
+          assert(invalidNativeLogin.error === 'invalid_credentials', `native password login guard invalid: ${JSON.stringify(invalidNativeLogin)}`);
+
           const google = await fetch(`${base}/api/user-ui/auth/start?provider=google&returnTo=${encodeURIComponent(returnTo)}`, {
             headers: { origin },
             redirect: 'manual',
@@ -107,6 +129,9 @@ jobs:
             cors: true,
             googleConfigured: true,
             emailConfigured: true,
+            localAuthEnabled: true,
+            nativeRegistrationValidation: true,
+            nativePasswordLoginGuard: true,
             googleRedirectHost: target.hostname,
             googleRedirectUri: callback,
             anonymousSession: true,
