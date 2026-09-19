@@ -190,16 +190,20 @@ test('search highlights results, picker closes outside, feedback drags and submi
   const search = page.locator('#search');
   await search.fill('photoredox');
   await expect(search).toHaveValue('photoredox');
-  await expect.poll(async () => page.locator('.card:not([hidden])').count()).toBeGreaterThan(0);
-  expect(await page.locator('.card:not([hidden])').count()).toBeLessThan(initialCards);
+  await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
+  const visibleAfterSearch = await page.locator('.card:visible').count();
+  expect(visibleAfterSearch).toBeLessThan(initialCards);
+  expect(await page.locator('.card[hidden]:visible').count()).toBe(0);
   await expect(page.locator('.user-search-summary')).toContainText(/photoredox/i);
-  await expect(page.locator('.card.user-search-match:not([hidden])').first()).toBeVisible();
-  await expect(page.locator('.card:not([hidden]) mark.user-search-highlight').first()).toBeVisible();
+  await expect(page.locator('.card.user-search-match:visible').first()).toBeVisible();
+  await expect(page.locator('.card:visible mark.user-search-highlight').first()).toBeVisible();
   expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
 
   await search.fill('光催化');
   await expect(search).toHaveValue('光催化');
-  await expect.poll(async () => page.locator('.card:not([hidden])').count()).toBeGreaterThan(0);
+  await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
+  expect(await page.locator('.card:visible').count()).toBeLessThan(initialCards);
+  expect(await page.locator('.card[hidden]:visible').count()).toBe(0);
   expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
 
   const feedback = page.locator('site-feedback-widget');
