@@ -140,25 +140,15 @@ foreach ($row in $rows) {
   $dataUrl = "data:$mime;base64,$([Convert]::ToBase64String($bytes))"
   $articleUrl = [string]$row.articleUrl
 
-  if ($kind -eq "official") {
-    $endpoint = "/api/toc/import"
-    $payload = @{
-      doi = $doi
-      articleUrl = $articleUrl
-      imageData = $dataUrl
-      replace = $false
-    }
-  } else {
-    $endpoint = "/api/article-figures/import"
-    $payload = @{
-      doi = $doi
-      articleUrl = $articleUrl
-      id = "figure-1"
-      label = "Figure 1"
-      caption = if ($row.text) { ([string]$row.text).Substring(0, [Math]::Min(500, ([string]$row.text).Length)) } else { "Figure 1" }
-      imageData = $dataUrl
-      order = 0
-    }
+  $endpoint = "/api/media/local-capture/import"
+  $payload = @{
+    doi = $doi
+    kind = $kind
+    articleUrl = $articleUrl
+    caption = if ($row.text) { ([string]$row.text).Substring(0, [Math]::Min(500, ([string]$row.text).Length)) } else { "" }
+    sourceUrl = [string]$row.sourceUrl
+    capturedAt = [string]$row.capturedAt
+    imageData = $dataUrl
   }
 
   $tmpJson = Join-Path $env:TEMP ("toc-sync-" + [Guid]::NewGuid().ToString("N") + ".json")
