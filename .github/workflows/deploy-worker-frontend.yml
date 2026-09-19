@@ -2,6 +2,12 @@ name: Deploy Worker frontend assets
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'WORKER_FRONTEND_REFRESH'
+      - '.github/workflows/deploy-worker-frontend.yml'
 
 permissions:
   contents: read
