@@ -84,7 +84,8 @@
       "needs_approval",
       "blocked_by_concurrent_change"
     ],
-    "minimumSafetyRescanDaysOnCapabilityChange": 7
+    "minimumSafetyRescanDaysOnCapabilityChange": 7,
+    "forceSafetyRescanWhenCapabilityFingerprintChanges": true
   },
   "lastBlockedRun": {
     "id": "automation-20260919-0800",
@@ -192,6 +193,7 @@
     "requiredSafetyRescanDays": 7,
     "validatedAuditGeneratedAt": "2026-09-19T06:55:25.883Z",
     "validatedAuditCommit": "7a212252a399abff49ac95978120df0dbc18cb3d",
-    "reason": "Validated completeness capability is strictly stronger than the prior stable fetch capability: 15 prospective journals, seven-day overlap, Crossref online/published/created plus OpenAlex union, per-journal source-family health, and late-deposit rescue. The validated rescue surfaced three records that the same seven-day audit without rescue omitted. Do not reuse the old 24-hour fetch across this fingerprint change."
+    "reason": "Validated completeness capability is strictly stronger than the prior stable fetch capability: 15 prospective journals, seven-day overlap, Crossref online/published/created plus OpenAlex union, per-journal source-family health, and late-deposit rescue. The validated rescue surfaced three records that the same seven-day audit without rescue omitted. Do not reuse the old 24-hour fetch across this fingerprint change.",
+    "comparisonArtifact": "audit/literature-capability-comparison-2026-09-19.json"
   }
 }
