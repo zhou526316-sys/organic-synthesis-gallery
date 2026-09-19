@@ -1,0 +1,29 @@
+name: Sync frontend to Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/frontend-worker-sync.yml'
+      - 'src/**'
+      - 'index.html'
+      - 'vite.config.ts'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: frontend-worker-sync
+  cancel-in-progress: true
+
+jobs:
+  dispatch-worker-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch existing Worker release workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run cloudflare-user-ui-release.yml --repo "${{ github.repository }}" --ref main
