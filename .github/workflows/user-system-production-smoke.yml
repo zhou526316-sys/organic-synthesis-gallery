@@ -1,15 +1,12 @@
 name: User system production smoke
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - Deploy Worker additions
+      - Deploy GitHub Pages frontend
+    types: [completed]
     branches: [main]
-    paths:
-      - '.github/workflows/user-system-production-smoke.yml'
-      - 'src/user-shell.ts'
-      - 'src/user-ui/**'
-      - 'cloudflare/worker/src/integrations.js'
-      - 'cloudflare/worker/src/user-ui.js'
-      - 'cloudflare/worker/src/index.js'
   workflow_dispatch:
 
 permissions:
@@ -21,9 +18,82 @@ concurrency:
 
 jobs:
   smoke:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: Check custom-domain auth, session, sync, email validation, and reader routes
+      - name: Verify deployed GitHub Pages frontend and loaded chunks
+        env:
+          SITE_URL: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+        run: |
+          node - <<'NODE'
+          const assert = (value, message) => { if (!value) throw new Error(message); };
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          const site = process.env.SITE_URL;
+
+          async function get(url, attempts = 6) {
+            let last = '';
+            for (let i = 0; i < attempts; i += 1) {
+              try {
+                const response = await fetch(url, {
+                  headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+                  redirect: 'follow',
+                });
+                last = `${response.status} ${response.statusText}`;
+                if (response.ok) return { response, text: await response.text() };
+              } catch (error) {
+                last = String(error);
+              }
+              await sleep(3000);
+            }
+            throw new Error(`GET ${url} failed after retries: ${last}`);
+          }
+
+          const pageUrl = `${site}?production-smoke=${Date.now()}`;
+          const { text: html } = await get(pageUrl);
+          assert(html.includes('Organic Synthesis Literature Gallery'), 'deployed HTML title marker missing');
+          assert(html.includes('id="app"'), 'deployed app root missing');
+
+          const queue = [];
+          for (const match of html.matchAll(/<script[^>]+src=["']([^"']+\.js[^"']*)["']/g)) {
+            queue.push(new URL(match[1], site).href);
+          }
+          assert(queue.length > 0, 'deployed HTML has no JavaScript bundle');
+
+          const visited = new Set();
+          const sources = [];
+          while (queue.length && visited.size < 80) {
+            const url = queue.shift();
+            if (!url || visited.has(url)) continue;
+            visited.add(url);
+            const { text } = await get(url);
+            sources.push(text);
+
+            const candidates = [
+              ...text.matchAll(/["'](\.\/?[^"'\s]+\.js)["']/g),
+              ...text.matchAll(/["'](\/[^"'\s]+\.js)["']/g),
+            ];
+            for (const match of candidates) {
+              try {
+                const next = new URL(match[1], url).href;
+                if (next.startsWith(new URL(site).origin) && !visited.has(next)) queue.push(next);
+              } catch {}
+            }
+          }
+
+          const bundle = sources.join('\n');
+          assert(bundle.includes('site-feedback-widget'), 'deployed bundle is missing site feedback widget');
+          assert(bundle.includes('/api/user-ui/site-feedback'), 'deployed bundle is missing site feedback API route');
+          assert(bundle.includes('api.gczhouwld.com'), 'deployed bundle is missing production API base');
+
+          console.log(JSON.stringify({
+            frontend: true,
+            chunksChecked: visited.size,
+            feedbackWidget: true,
+            feedbackApiRoute: true,
+          }));
+          NODE
+
+      - name: Check custom-domain auth, session, sync, email validation, reader, and feedback routes
         env:
           API_BASE: https://api.gczhouwld.com
           SITE_ORIGIN: https://zhou526316-sys.github.io
@@ -67,6 +137,13 @@ jobs:
             body: JSON.stringify({ dois: [] }),
           });
           assert(counts && typeof counts.counts === 'object', `reader count response invalid: ${JSON.stringify(counts)}`);
+
+          const invalidFeedback = await json('/api/user-ui/site-feedback', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ profileId: '', message: '' }),
+          }, 400);
+          assert(Boolean(invalidFeedback.error), `site feedback validation route invalid: ${JSON.stringify(invalidFeedback)}`);
 
           const pull = await json('/api/user-ui/reader-counts', {
             method: 'POST',
@@ -170,6 +247,7 @@ jobs:
             authExchangeGuard: true,
             emailValidation: true,
             readerCounts: true,
+            siteFeedbackRoute: true,
             accountSyncAuthGuard: true,
           }));
           NODE

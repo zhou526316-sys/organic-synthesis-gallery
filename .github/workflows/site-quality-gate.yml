@@ -1,0 +1,178 @@
+name: Site quality gate
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-quality-gate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend build and typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Install frontend dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Type-check frontend
+        run: npx tsc --noEmit
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Verify production artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s dist/index.html
+          test -d dist/assets
+          find dist/assets -type f -name '*.js' -size +0c | grep -q .
+          grep -R -F "site-feedback-widget" dist/assets >/dev/null
+          grep -R -F "api.gczhouwld.com" dist/assets >/dev/null
+
+  worker:
+    name: Worker dry-run
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: cloudflare/worker
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Install Worker dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Compile Worker with Wrangler
+        run: npm run check
+
+  playwright:
+    name: Playwright interaction regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Install site dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install Playwright WebKit
+        run: |
+          npm install --no-save --no-package-lock @playwright/test@1.55.0
+          npx playwright install --with-deps webkit
+
+      - name: Build Gallery
+        run: npm run build
+
+      - name: Start preview server
+        shell: bash
+        run: |
+          set -euo pipefail
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gallery-preview.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/gallery-preview.log
+          exit 1
+
+      - name: Run interaction regression
+        run: npx playwright test tests/mobile-interaction.spec.ts --reporter=line --workers=1
+
+  api-smoke:
+    name: Production API smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify current production API before merge
+        env:
+          API_BASE: https://api.gczhouwld.com
+          SITE_ORIGIN: https://zhou526316-sys.github.io
+        run: |
+          node - <<'NODE'
+          const assert = (value, message) => { if (!value) throw new Error(message); };
+          const base = process.env.API_BASE;
+          const origin = process.env.SITE_ORIGIN;
+
+          async function call(path, init = {}, expected = 200, cors = true) {
+            const headers = new Headers(init.headers || {});
+            headers.set('origin', origin);
+            const response = await fetch(`${base}${path}`, { ...init, headers, redirect: 'manual' });
+            const text = await response.text();
+            let body = {};
+            try { body = text ? JSON.parse(text) : {}; } catch {
+              throw new Error(`${path} returned non-JSON: ${text.slice(0, 300)}`);
+            }
+            assert(response.status === expected, `${path}: expected ${expected}, got ${response.status}: ${text.slice(0, 500)}`);
+            if (cors) {
+              assert(response.headers.get('access-control-allow-origin') === origin, `${path}: CORS mismatch`);
+            }
+            return body;
+          }
+
+          const health = await call('/api/_healthcheck', {}, 200, false);
+          assert(health.ok && health.d1 && health.r2 && health.writeAuth, `healthcheck incomplete: ${JSON.stringify(health)}`);
+
+          const integrations = await call('/api/user-ui/integrations');
+          assert(integrations?.auth && integrations?.payments, `integrations invalid: ${JSON.stringify(integrations)}`);
+
+          const counts = await call('/api/user-ui/reader-counts', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ dois: [] }),
+          });
+          assert(counts && typeof counts.counts === 'object', `reader-counts invalid: ${JSON.stringify(counts)}`);
+
+          const invalidFeedback = await call('/api/user-ui/site-feedback', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ profileId: '', message: '' }),
+          }, 400);
+          assert(Boolean(invalidFeedback.error), `site-feedback validation route missing: ${JSON.stringify(invalidFeedback)}`);
+
+          console.log(JSON.stringify({ health: true, integrations: true, readerCounts: true, siteFeedbackRoute: true }));
+          NODE
+
+  required:
+    name: Required quality gate
+    if: always()
+    needs: [frontend, worker, playwright, api-smoke]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce all quality checks
+        env:
+          FRONTEND: ${{ needs.frontend.result }}
+          WORKER: ${{ needs.worker.result }}
+          PLAYWRIGHT: ${{ needs.playwright.result }}
+          API_SMOKE: ${{ needs.api-smoke.result }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf 'frontend=%s\nworker=%s\nplaywright=%s\napi-smoke=%s\n' "$FRONTEND" "$WORKER" "$PLAYWRIGHT" "$API_SMOKE"
+          test "$FRONTEND" = success
+          test "$WORKER" = success
+          test "$PLAYWRIGHT" = success
+          test "$API_SMOKE" = success

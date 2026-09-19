@@ -151,7 +151,7 @@ export function suggestionMatch(query: string, candidate: string): { score: numb
   };
   const maxTail = Math.min(words.length, Math.max(3, candidateWords.length + 1));
   for (let count = 1; count <= maxTail; count += 1) compare(words.slice(-count).join(' '), count, candidate);
-  const last = words.at(-1) || '';
+  const last = words[words.length - 1] || '';
   candidateWords.forEach(word => compare(last, 1, word));
   return best;
 }
