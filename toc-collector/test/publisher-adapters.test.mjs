@@ -48,6 +48,7 @@ assert.equal(fig.assetType, 'figure1_fallback');
 assert.equal(pickBestPublisherMediaCandidate('<img alt="Journal cover image" src="https://example.org/cover.jpg"><meta property="og:image" content="https://example.org/cover2.jpg">', 'https://example.org/article', { doi: '10.1021/jacs.6c14433' }), null);
 
 const all = extractPublisherMediaCandidates(acsHtml, 'https://pubs.acs.org/doi/10.1021/jacs.6c14433', { doi: '10.1021/jacs.6c14433' });
+console.log('ACS_CANDIDATES', JSON.stringify(all));
 assert.ok(all.some(x => x.kind === 'official'));
 assert.ok(all.some(x => x.kind === 'figure1'));
 assert.ok(all.find(x => x.kind === 'official').score > all.find(x => x.kind === 'figure1').score);
