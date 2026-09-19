@@ -391,3 +391,21 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_email_code_challenges_purpose_email
   ON email_code_challenges(purpose, email);
 CREATE INDEX IF NOT EXISTS idx_email_code_challenges_expiry
   ON email_code_challenges(expires_at);
+
+
+-- Verified new-address challenges for authenticated local accounts changing their email.
+CREATE TABLE IF NOT EXISTS email_change_challenges (
+  challenge_id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  new_email TEXT NOT NULL,
+  code_hash TEXT NOT NULL,
+  code_salt TEXT NOT NULL,
+  attempts INTEGER NOT NULL DEFAULT 0 CHECK (attempts >= 0),
+  last_sent_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_email_change_challenges_user
+  ON email_change_challenges(user_id);
+CREATE INDEX IF NOT EXISTS idx_email_change_challenges_expiry
+  ON email_change_challenges(expires_at);

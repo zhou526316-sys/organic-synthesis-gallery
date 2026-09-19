@@ -110,6 +110,34 @@ jobs:
           }, 401);
           assert(invalidNativeLogin.error === 'invalid_credentials', `native password login guard invalid: ${JSON.stringify(invalidNativeLogin)}`);
 
+          const invalidResetEmail = await json('/api/user-ui/auth/password/reset/start', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ email: 'not-an-email' }),
+          }, 400);
+          assert(invalidResetEmail.error === 'invalid_email', `password reset invalid-email validation failed: ${JSON.stringify(invalidResetEmail)}`);
+
+          const invalidRegistrationCode = await json('/api/user-ui/auth/register/verify', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ challengeId: 'missing-smoke-challenge', code: '000000' }),
+          }, 400);
+          assert(invalidRegistrationCode.error === 'invalid_code', `registration verification guard invalid: ${JSON.stringify(invalidRegistrationCode)}`);
+
+          const unauthenticatedPasswordChange = await json('/api/user-ui/auth/password/change', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ currentPassword: '12345678', newPassword: '87654321' }),
+          }, 401);
+          assert(unauthenticatedPasswordChange.error === 'not_authenticated', `password change auth guard invalid: ${JSON.stringify(unauthenticatedPasswordChange)}`);
+
+          const unauthenticatedVerifyStart = await json('/api/user-ui/auth/email/verify/start', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: '{}',
+          }, 401);
+          assert(unauthenticatedVerifyStart.error === 'not_authenticated', `email verify auth guard invalid: ${JSON.stringify(unauthenticatedVerifyStart)}`);
+
           const google = await fetch(`${base}/api/user-ui/auth/start?provider=google&returnTo=${encodeURIComponent(returnTo)}`, {
             headers: { origin },
             redirect: 'manual',
@@ -132,6 +160,10 @@ jobs:
             localAuthEnabled: true,
             nativeRegistrationValidation: true,
             nativePasswordLoginGuard: true,
+            passwordResetValidation: true,
+            registrationCodeGuard: true,
+            passwordChangeAuthGuard: true,
+            existingEmailVerificationAuthGuard: true,
             googleRedirectHost: target.hostname,
             googleRedirectUri: callback,
             anonymousSession: true,
