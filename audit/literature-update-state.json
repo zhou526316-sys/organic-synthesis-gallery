@@ -2,191 +2,39 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "ready_to_sync",
+  "phase": "synced",
   "activeRun": null,
   "lastCompletedFetch": {
     "id": "capability-upgrade-fetch-20260919",
     "finishedAt": "2026-09-19T14:55:25+08:00",
     "windowStart": "2026-09-13",
     "windowEnd": "2026-09-19",
-    "sourceSummary": {
-      "sourceRecords": 591,
-      "criticalSourceFailures": 0,
-      "sourceFamilyGaps": 0,
-      "reviewedDifferenceRecords": 335,
-      "fullWindowAssistantUnresolved": 0,
-      "closureDate": "2026-09-18",
-      "closureUnresolved": 0,
-      "lateIndexed": 3
-    },
-    "addedThisRun": [
-      "10.1021/jacs.6c14433",
-      "10.1021/jacs.6c13760",
-      "10.1021/acs.orglett.6c03505"
-    ],
+    "sourceSummary": {"sourceRecords":591,"criticalSourceFailures":0,"sourceFamilyGaps":0,"reviewedDifferenceRecords":335,"fullWindowAssistantUnresolved":0,"closureDate":"2026-09-18","closureUnresolved":0,"lateIndexed":3},
+    "addedThisRun": ["10.1021/jacs.6c14433","10.1021/jacs.6c13760","10.1021/acs.orglett.6c03505"],
     "dataCommitSha": "c2a144d9db4bcf52d8711de8fd1e07a72beb522a",
     "mergeCommitSha": "c2a144d9db4bcf52d8711de8fd1e07a72beb522a",
     "auditCommitSha": "64318cc7de76a9b755a9110d96d1eb1cb10fa36c",
     "reviewCommitSha": "c2a144d9db4bcf52d8711de8fd1e07a72beb522a",
-    "tocStatus": {
-      "status": "partial",
-      "recentChecked": 3,
-      "recentComplete": 0,
-      "recentMissing": 3,
-      "directPublisherTocImported": 0,
-      "note": "Three newly accepted papers are present in the authoritative dataset; publisher TOC/Graphical Abstract media remains pending and must not block website synchronization."
-    },
+    "tocStatus": {"status":"partial","recentChecked":3,"recentComplete":0,"recentMissing":3,"directPublisherTocImported":0,"note":"Three newly accepted papers are present in the authoritative dataset; publisher TOC/Graphical Abstract media remains pending and must not block website synchronization."},
     "capabilityFingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075"
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-09-19T11:49:20+08:00",
-    "dataCommitSha": "d023a0bdef3c15d192891131a60c68efac647542",
-    "deploymentCommitSha": "8dd9dee072f8b2e9231cd028ee098f47ab81e83c",
-    "pagesRunId": 35419578605,
-    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
+    "finishedAt": "2026-09-19T17:51:51+08:00",
+    "dataCommitSha": "c2a144d9db4bcf52d8711de8fd1e07a72beb522a",
+    "deploymentCommitSha": "5fdf73b87e834e244c77bfb417cf076ab05e792f",
+    "pagesRunId": 35435799196,
+    "capabilityFingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
     "deployment": "success",
-    "verification": {
-      "build": "success",
-      "deploy": "success",
-      "totalGalleryCards": 476,
-      "galleryDois": 476,
-      "workerMediaDois": 476,
-      "manifestItems": 407,
-      "figureMetadata": 720,
-      "pmcFallbacks": 26,
-      "natureFallbacks": 16,
-      "oldDataRegressionCheck": "passed"
-    },
-    "tocVerification": {
-      "recentChecked": 30,
-      "complete": 0,
-      "withLarge": 1,
-      "withFigures": 1,
-      "missing": 29,
-      "directPublisherTocImported": 0,
-      "note": "ACS/Wiley direct retrieval returned 403 and Nature publisher pages were IDP-gated for most targets. Missing TOCs remain pending; no fallback is mislabeled as a publisher graphical abstract."
-    }
+    "verification": {"build":"success","deploy":"success","totalGalleryCards":478,"galleryDois":478,"workerMediaDois":478,"manifestItems":407,"figureMetadata":720,"pmcFallbacks":26,"natureFallbacks":16,"oldDataRegressionCheck":"passed"},
+    "tocVerification": {"recentChecked":3,"complete":0,"missing":3,"directPublisherTocImported":0,"note":"The three newly accepted papers remain publisher-TOC pending. The later publisher-adapter merge is a downstream media extraction improvement and did not alter this run's candidate-discovery/review capability; it will be used by subsequent TOC repair without relabeling figure fallbacks as publisher TOCs."}
   },
   "verifiedThrough": "2026-09-18",
   "capabilityRegistry": "audit/literature-capability.json",
-  "lastCapabilitySnapshot": {
-    "fingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
-    "literatureAudit": "bafbb8d02495dd8d5d24a106a49f6efd6a897e7a",
-    "literatureWorkflow": "d8219dfe731a2d93370fe720c13160508f3cf8c6",
-    "journalRegistry": "05ccdd8a66522027f35e327082cd45e88e75e897",
-    "completenessGuard": "d2292f048bf06f77dda70d3e41ab089085914aa4",
-    "comparisonArtifact": "audit/literature-capability-comparison-2026-09-19.json",
-    "note": "Upgraded completeness capability validated and used for the 2026-09-13..2026-09-19 safety rescan and completed semantic review. Website sync still needs to consume dataCommitSha c2a144d9db4bcf52d8711de8fd1e07a72beb522a."
-  },
-  "rules": {
-    "freshFetchLockMinutes": 120,
-    "reuseCompletedFetchHours": 24,
-    "syncOnlyMustNotRefetch": true,
-    "preferLatestCompatibleStableCapability": true,
-    "pinCapabilityDuringRun": true,
-    "forceRefetchOnCapabilityFingerprintChange": true,
-    "allowedPhases": [
-      "idle",
-      "fetching",
-      "toc_processing",
-      "ready_to_sync",
-      "syncing",
-      "synced",
-      "sync_failed",
-      "needs_approval",
-      "blocked_by_concurrent_change"
-    ],
-    "minimumSafetyRescanDaysOnCapabilityChange": 7,
-    "forceSafetyRescanWhenCapabilityFingerprintChanges": true
-  },
-  "lastBlockedRun": {
-    "id": "automation-20260919-0800",
-    "finishedAt": "2026-09-19T08:03:21+08:00",
-    "windowStart": "2026-09-17",
-    "windowEnd": "2026-09-19",
-    "sourceSummary": {
-      "sourceRecords": 210,
-      "criticalSourceFailures": 0,
-      "missingFromGallery": 199,
-      "potentialGaps": 65,
-      "unresolved": 199,
-      "journalSourceRecords": {
-        "Nature": 16,
-        "Science": 38,
-        "Nature Catalysis": 0,
-        "Nature Synthesis": 2,
-        "Nature Chemistry": 4,
-        "Nature Communications": 71,
-        "JACS": 33,
-        "Angew": 17,
-        "ACS Catalysis": 13,
-        "Organic Letters": 16
-      },
-      "closureDate": "2026-09-18",
-      "closureSourceRecords": 84,
-      "closureMissingFromGallery": 84,
-      "closurePotentialGaps": 38,
-      "closureUnresolved": 84
-    },
-    "auditArtifact": {
-      "workflowRunId": 35289380914,
-      "artifactId": 10573342386,
-      "digest": "sha256:f9558b5941d37f8d7d77f6823d71d245db8ebb94d37fb6f3e987638059d2ff21"
-    },
-    "capabilityFingerprint": "00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699",
-    "capabilitySnapshot": {
-      "mainCommit": "8aa225af00cb88b6bf497e74429cc427aae41538",
-      "literatureAudit": "517a33dc05d6d662a678f5d85acaa21ba3947e85",
-      "literatureWorkflow": "9c51d57345a5c26002ed003a8ed3d063f7a11b09",
-      "tocCollector": "78a60e833c102497d03770c58cd6fae4adb5675d",
-      "publisherFallback": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
-    },
-    "reason": "Fresh DOI-union audit completed and artifact upload succeeded, but the workflow could not atomically commit audit/latest.json because main changed concurrently. No literature data, TOC mapping, or website deployment was overwritten."
-  },
-  "lastConcurrencyRecovery": {
-    "resolvedAt": "2026-09-19T11:33:23+08:00",
-    "blockedRunId": "automation-20260919-0800",
-    "auditWorkflowRunId": 35418557042,
-    "auditPersistenceFixCommit": "7d3da88ea8a6f857c65395e10c52ed7f28ed17c9",
-    "validation": "success",
-    "note": "audit/latest.json persistence conflict is now recoverable and no longer blocks the whole literature pipeline; authoritative literature/TOC data conflicts remain hard stops."
-  },
-  "lastCompletedReview": {
-    "id": "manual-review-20260919-1520-upgraded",
-    "finishedAt": "2026-09-19T15:20:52+08:00",
-    "reusedExistingAudit": true,
-    "sourceAuditGeneratedAt": "2026-09-19T06:55:25.883Z",
-    "windowStart": "2026-09-13",
-    "windowEnd": "2026-09-19",
-    "reviewed": 335,
-    "accepted": 3,
-    "rejected": 332,
-    "pending": 0,
-    "unresolved": 0,
-    "closureDate": "2026-09-18",
-    "closureUnresolved": 0,
-    "reviewFile": "audit/review-2026-09-19.json",
-    "addedDois": [
-      "10.1021/jacs.6c14433",
-      "10.1021/jacs.6c13760",
-      "10.1021/acs.orglett.6c03505"
-    ],
-    "dataCommitSha": "c2a144d9db4bcf52d8711de8fd1e07a72beb522a",
-    "reviewCommitSha": "c2a144d9db4bcf52d8711de8fd1e07a72beb522a",
-    "closureCommitSha": "64318cc7de76a9b755a9110d96d1eb1cb10fa36c",
-    "auditValidation": {
-      "generatedAt": "2026-09-19T07:20:50.849Z",
-      "sourceRecords": 591,
-      "rawMissingFromGallery": 522,
-      "previouslyReviewedExcluded": 522,
-      "missingFromGallery": 0,
-      "criticalSourceFailures": 0,
-      "sourceFamilyGaps": 0,
-      "unresolved": 0,
-      "closureStatus": "assistant-decisions-complete",
-      "verifiedThroughEligible": true
-    }
-  },
+  "lastCapabilitySnapshot": {"fingerprint":"02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075","literatureAudit":"bafbb8d02495dd8d5d24a106a49f6efd6a897e7a","literatureWorkflow":"d8219dfe731a2d93370fe720c13160508f3cf8c6","journalRegistry":"05ccdd8a66522027f35e327082cd45e88e75e897","completenessGuard":"d2292f048bf06f77dda70d3e41ab089085914aa4","comparisonArtifact":"audit/literature-capability-comparison-2026-09-19.json","note":"Upgraded 15-journal completeness capability was used for the 2026-09-13..2026-09-19 safety rescan. Website sync consumed dataCommitSha c2a144d9db4bcf52d8711de8fd1e07a72beb522a and deployed successfully in Pages run 35435799196."},
+  "rules": {"freshFetchLockMinutes":120,"reuseCompletedFetchHours":24,"syncOnlyMustNotRefetch":true,"preferLatestCompatibleStableCapability":true,"pinCapabilityDuringRun":true,"forceRefetchOnCapabilityFingerprintChange":true,"allowedPhases":["idle","fetching","toc_processing","ready_to_sync","syncing","synced","sync_failed","needs_approval","blocked_by_concurrent_change"],"minimumSafetyRescanDaysOnCapabilityChange":7,"forceSafetyRescanWhenCapabilityFingerprintChanges":true},
+  "lastBlockedRun": {"id":"automation-20260919-0800","finishedAt":"2026-09-19T08:03:21+08:00","windowStart":"2026-09-17","windowEnd":"2026-09-19","sourceSummary":{"sourceRecords":210,"criticalSourceFailures":0,"missingFromGallery":199,"potentialGaps":65,"unresolved":199,"journalSourceRecords":{"Nature":16,"Science":38,"Nature Catalysis":0,"Nature Synthesis":2,"Nature Chemistry":4,"Nature Communications":71,"JACS":33,"Angew":17,"ACS Catalysis":13,"Organic Letters":16},"closureDate":"2026-09-18","closureSourceRecords":84,"closureMissingFromGallery":84,"closurePotentialGaps":38,"closureUnresolved":84},"auditArtifact":{"workflowRunId":35289380914,"artifactId":10573342386,"digest":"sha256:f9558b5941d37f8d7d77f6823d71d245db8ebb94d37fb6f3e987638059d2ff21"},"capabilityFingerprint":"00b8d72048baf699c62987d98e51830b78561d3a06762ba5557f6ba807aa7699","capabilitySnapshot":{"mainCommit":"8aa225af00cb88b6bf497e74429cc427aae41538","literatureAudit":"517a33dc05d6d662a678f5d85acaa21ba3947e85","literatureWorkflow":"9c51d57345a5c26002ed003a8ed3d063f7a11b09","tocCollector":"78a60e833c102497d03770c58cd6fae4adb5675d","publisherFallback":"a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"},"reason":"Fresh DOI-union audit completed and artifact upload succeeded, but the workflow could not atomically commit audit/latest.json because main changed concurrently. No literature data, TOC mapping, or website deployment was overwritten."},
+  "lastConcurrencyRecovery": {"resolvedAt":"2026-09-19T11:33:23+08:00","blockedRunId":"automation-20260919-0800","auditWorkflowRunId":35418557042,"auditPersistenceFixCommit":"7d3da88ea8a6f857c65395e10c52ed7f28ed17c9","validation":"success","note":"audit/latest.json persistence conflict is now recoverable and no longer blocks the whole literature pipeline; authoritative literature/TOC data conflicts remain hard stops."},
+  "lastCompletedReview": {"id":"manual-review-20260919-1520-upgraded","finishedAt":"2026-09-19T15:20:52+08:00","reusedExistingAudit":true,"sourceAuditGeneratedAt":"2026-09-19T06:55:25.883Z","windowStart":"2026-09-13","windowEnd":"2026-09-19","reviewed":335,"accepted":3,"rejected":332,"pending":0,"unresolved":0,"closureDate":"2026-09-18","closureUnresolved":0,"reviewFile":"audit/review-2026-09-19.json","addedDois":["10.1021/jacs.6c14433","10.1021/jacs.6c13760","10.1021/acs.orglett.6c03505"],"dataCommitSha":"c2a144d9db4bcf52d8711de8fd1e07a72beb522a","reviewCommitSha":"c2a144d9db4bcf52d8711de8fd1e07a72beb522a","closureCommitSha":"64318cc7de76a9b755a9110d96d1eb1cb10fa36c","auditValidation":{"generatedAt":"2026-09-19T07:20:50.849Z","sourceRecords":591,"rawMissingFromGallery":522,"previouslyReviewedExcluded":522,"missingFromGallery":0,"criticalSourceFailures":0,"sourceFamilyGaps":0,"unresolved":0,"closureStatus":"assistant-decisions-complete","verifiedThroughEligible":true}},
   "currentStableCapabilityFingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
-  "pendingCapabilityUpgrade": null
+  "pendingCapabilityUpgrade": {"mergedCommit":"5fdf73b87e834e244c77bfb417cf076ab05e792f","scope":"publisher TOC/Graphical Abstract extraction adapters","candidateDiscoveryImpact":false,"reviewEvidenceImpact":false,"upstreamTocDiscoveryImpact":false,"downstreamMediaExtractionImpact":true,"note":"Merged after the completed fetch. It improves publisher-specific media extraction but does not change candidate discovery or semantic review. It should be validated/promoted by the capability registry before changing the primary fetch fingerprint."}
 }
