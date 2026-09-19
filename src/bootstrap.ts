@@ -30,6 +30,7 @@ void preloadChineseTitleCache().finally(async () => {
   await import('./user-ui/user-center-management');
   await import('./user-ui/interaction-stability');
   await import('./user-ui/account-sync');
+  await import('./user-ui/feedback-widget');
   await import('./media-enhancements');
   await import('./runtime-recovery');
   await import('./nature-figure-fallbacks');
