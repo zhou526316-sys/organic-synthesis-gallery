@@ -144,8 +144,9 @@ const TITLE_CACHE_KEY = 'organic-gallery-resolved-title-cache-v2';
 const ZH_CACHE_KEY = 'organic-gallery-zh-title-cache-v2';
 const MEDIA_TTL = 5 * 60 * 1000;
 
-const app = document.querySelector<HTMLDivElement>('#app');
-if (!app) throw new Error('App root not found');
+const appElement = document.querySelector<HTMLDivElement>('#app');
+if (!appElement) throw new Error('App root not found');
+const app = appElement;
 
 let language: Language = initialLanguage();
 let papers: Paper[] = [];
@@ -418,7 +419,7 @@ function filterSummary(): string {
 function mount(): void {
   const journals = [...new Set(papers.map(paper => paper.journal))].sort();
   const dates = papers.map(paper => paper.date).filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
-  const latest = dates.at(-1) || '';
+  const latest = dates[dates.length - 1] || '';
   document.title = t('title');
   app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='stats'><div class='stat'><strong>${papers.length}</strong><span>${escapeHtml(t('total'))}</span></div><div class='stat'><strong>${journals.length}</strong><span>${escapeHtml(t('journals'))}</span></div><div class='stat'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => `<label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}><span>${escapeHtml(journal)}</span></label>`).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><div class='resultline'><div><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div><section id='gallery' class='gallery' aria-live='polite'></section><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
   mountUserShell(app, language);
