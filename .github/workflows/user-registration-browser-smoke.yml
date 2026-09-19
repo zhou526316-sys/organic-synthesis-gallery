@@ -42,6 +42,7 @@ jobs:
           SITE_URL: https://zhou526316-sys.github.io/organic-synthesis-gallery/
           SITE_ORIGIN: https://zhou526316-sys.github.io
           API_URL: https://api.gczhouwld.com/api/user-ui/auth/register
+          API_FALLBACK_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/api/user-ui/auth/register
         run: |
           mkdir -p test-results
           node - <<'NODE'
@@ -82,8 +83,25 @@ jobs:
               assert(/^(邮箱格式不正确。|Invalid email address\.)$/.test((await notice.textContent())?.trim() || ''), `unexpected client validation: ${await notice.textContent()}`);
               assert(await submit.isEnabled(), 'register button stayed disabled after client validation');
 
+              const corsProbe = await page.evaluate(async apiUrl => {
+                try {
+                  const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/json' },
+                    body: JSON.stringify({ email: 'not-an-email', password: '12345678', displayName: 'Probe' }),
+                  });
+                  return { status: response.status, body: await response.json() };
+                } catch (error) {
+                  return { status: 0, error: error instanceof Error ? error.message : String(error) };
+                }
+              }, process.env.API_URL);
+              assert(corsProbe.status === 400 && corsProbe.body?.error === 'invalid_email', `real browser CORS/API probe failed: ${JSON.stringify(corsProbe)}`);
+
               let capturedRegistration = null;
-              await page.route(process.env.API_URL, async route => {
+              await page.route('https://api.gczhouwld.com/**', async route => {
+                await route.abort('failed');
+              });
+              await page.route(process.env.API_FALLBACK_URL, async route => {
                 const request = route.request();
                 const cors = {
                   'access-control-allow-origin': process.env.SITE_ORIGIN,
@@ -120,6 +138,8 @@ jobs:
               console.log(JSON.stringify({
                 nativeRegistrationForm: true,
                 clientValidationVisible: true,
+                productionCorsProbe: true,
+                apiFallbackAfterNetworkFailure: true,
                 registrationPostEmitted: true,
                 apiErrorVisibleInline: true,
                 submitRecoversAfterError: true,
