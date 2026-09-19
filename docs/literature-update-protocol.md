@@ -34,7 +34,9 @@ A request such as “同步一下网页 / 同步文献到网站” is a sync-onl
 
 ## Concurrency
 
-Every state transition must fetch the current blob SHA and use that SHA for the write. If the SHA changed, stop instead of overwriting. Literature data and TOC updates should use minimal diffs and must not modify unrelated UI/user/account/search/API code.
+Every state transition must fetch the current blob SHA and use that SHA for the write. Literature data and TOC updates should use minimal diffs and must not modify unrelated UI/user/account/search/API code.
+
+A conflict on authoritative literature data, TOC mappings, or the coordination state remains a hard stop: do not overwrite it. A conflict that occurs only while persisting the derived audit report `audit/latest.json` is recoverable and must not block the whole literature run. The audit workflow uploads the fresh report as an artifact first, then refetches the newest `main`, compares `generatedAt`, and retries a non-force commit of only `audit/latest.json`. If persistence still loses repeated races, keep the artifact as the recovery source and report a warning rather than setting the project phase to `blocked_by_concurrent_change`.
 
 ## Scheduled fallback
 
