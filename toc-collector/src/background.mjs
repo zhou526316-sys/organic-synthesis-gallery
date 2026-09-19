@@ -228,7 +228,15 @@ async function finalizeDiagnosticRun(selected = [], results = []) {
     const result = results[i] || { doi, status: 'missing_result', reason: 'missing_result' };
     const status = String(result.status || '');
     const reason = diagnosisReason(result);
-    rows.push({ doi, publisher: classify(doi), status, reason });
+    rows.push({
+      doi,
+      publisher: classify(doi),
+      status,
+      reason,
+      source: String(result?.source || ''),
+      localPath: String(result?.localPath || ''),
+      diagnostic: result?.diagnostic || {},
+    });
     if (status === 'saved_local_figure1') upgrades.push(doi);
     else if (!['saved_local','official','figure1'].includes(status)) unresolved.push(doi);
   }
