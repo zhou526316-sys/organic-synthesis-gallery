@@ -406,6 +406,9 @@ select {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
+.card[hidden] {
+  display: none !important;
+}
 .card {
   display: flex;
   flex-direction: column;
