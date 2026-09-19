@@ -921,7 +921,7 @@ async function startManualBrowserbase(publisher) {
   const contextId = await browserbaseContext(publisher);
   const { projectId } = browserbaseCredentials();
   const payload = {
-    keepAlive: false,
+    keepAlive: true,
     browserSettings: { context: { id: contextId, persist: true } },
   };
   if (projectId) payload.projectId = projectId;
@@ -981,7 +981,7 @@ async function finishManualBrowserbase(publisher) {
     };
     state.browserbase.status[publisher] = 'manual_required';
     await saveState();
-    stageStatus = `${manualPublisherLabel(publisher)} 仍处在验证/挑战页面，请在 Live View 完成后再次点击“完成验证”。`;
+    stageStatus = `${manualPublisherLabel(publisher)} 仍处在验证/挑战页面；继续在 Live Session 完成验证，然后再次点击“继续当前任务”。`;
     refreshDashboard();
     return { configured: true, publisher, status: 'still_challenged', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
   }
@@ -993,10 +993,67 @@ async function finishManualBrowserbase(publisher) {
       checkedAt: Date.now(),
     };
     await saveState();
-    stageStatus = `${manualPublisherLabel(publisher)} 页面已离开挑战，但尚未确认目标 DOI；请打开目标文章后再次点击“完成验证”。`;
+    stageStatus = `${manualPublisherLabel(publisher)} 已离开挑战页，但当前页面尚未确认目标 DOI；请在同一 Live Session 打开目标论文，再点击“继续当前任务”。`;
     refreshDashboard();
     return { configured: true, publisher, status: 'doi_not_verified', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
   }
+
+  const candidate = htmlCandidate(html, pageUrl);
+  if (!candidate) {
+    state.browserbase.manual[publisher] = {
+      ...(state.browserbase.manual[publisher] || {}),
+      status: 'verified_no_candidate',
+      checkedAt: Date.now(),
+    };
+    state.browserbase.status[publisher] = 'manual_verified_no_candidate';
+    await saveState();
+    stageStatus = `${manualPublisherLabel(publisher)} 权限已通过，但当前页面未找到可信 Primary Visual；session 保持打开，可继续检查文章/PDF。`;
+    refreshDashboard();
+    return { configured: true, publisher, status: 'verified_no_candidate', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
+  }
+
+  const image = await verifyBrowserbaseImage(active.page, candidate, {
+    publisher,
+    doi: active.doi,
+    sessionId: active.sessionId,
+  });
+
+  if (!config.writeToken) throw new Error('write_token_missing');
+  if (candidate.kind === 'official') {
+    await api('/api/toc/import', {
+      method: 'POST',
+      body: JSON.stringify({
+        doi: active.doi,
+        articleUrl: pageUrl,
+        imageData: image.imageData,
+        replace: false,
+      }),
+    });
+    await report(active.doi, 'upload', 'complete', 'collector_official_toc_manual_resume', pageUrl);
+  } else {
+    await api('/api/article-figures/import', {
+      method: 'POST',
+      body: JSON.stringify({
+        doi: active.doi,
+        articleUrl: pageUrl,
+        id: 'figure-1',
+        label: 'Figure 1',
+        caption: candidate.text?.slice(0, 500) || 'Figure 1',
+        imageData: image.imageData,
+        order: 0,
+      }),
+    });
+    await report(active.doi, 'upload', 'partial', 'collector_figure1_manual_resume', pageUrl);
+  }
+
+  await clearCooldown(active.doi);
+  await log('browserbase_manual_resume_upload_success', {
+    publisher,
+    doi: active.doi,
+    kind: candidate.kind,
+    sessionId: active.sessionId,
+    contextId: active.contextId,
+  });
 
   await active.browser.close().catch(() => {});
   manualBrowserbaseSessions.delete(publisher);
@@ -1006,29 +1063,48 @@ async function finishManualBrowserbase(publisher) {
     contextId: active.contextId,
     doi: active.doi || '',
     verifiedAt: Date.now(),
+    resumedSameSession: true,
+    resolvedKind: candidate.kind,
   };
   state.browserbase.status[publisher] = 'manual_verified';
   if (active.doi) state.browserbase.lastSuccessDoi[publisher] = active.doi;
   await saveState();
-  await log('browserbase_manual_verified', { publisher, doi: active.doi || '', sessionId: active.sessionId, contextId: active.contextId });
-  stageStatus = `${manualPublisherLabel(publisher)} 人工验证完成；Browserbase Context 已保存，可供后续自动任务复用。`;
+  stageStatus = `${manualPublisherLabel(publisher)} 人工验证完成；已在同一 Browserbase Session 继续并上传当前 DOI，persistent Context 已保存供后续论文复用。`;
   refreshDashboard();
-  return { configured: true, publisher, status: 'verified', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
+  return {
+    configured: true,
+    publisher,
+    status: 'verified',
+    sessionId: active.sessionId,
+    contextId: active.contextId,
+    doi: active.doi || '',
+    resumedSameSession: true,
+    resolvedKind: candidate.kind,
+  };
 }
 
 async function verifyBrowserbaseImage(page, candidate, { publisher, doi, sessionId }) {
   const response = await page.request.get(candidate.src, { timeout: 20000 });
   const contentType = String(response.headers()['content-type'] || '').toLowerCase();
-  const bytes = (await response.body()).length;
+  const body = await response.body();
+  const bytes = body.length;
   if (!response.ok()) throw new Error(`browserbase_image_http_${response.status()}`);
-  if (!contentType.startsWith('image/') || bytes < 128) throw new Error('browserbase_image_unreadable');
+  if (!contentType.startsWith('image/') || bytes < 1024) throw new Error('browserbase_image_unreadable');
+  const mime = contentType.split(';')[0];
   await log('browserbase_image_readable', { publisher, doi, kind: candidate.kind, bytes, sessionId });
-  return { contentType: contentType.split(';')[0], bytes };
+  return { contentType: mime, bytes, imageData: `data:${mime};base64,${body.toString('base64')}` };
 }
 
 async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyImage = false } = {}) {
   const publisher = browserbasePublisher(doi);
   if (!publisher) return null;
+  const activeManual = manualBrowserbaseSessions.get(publisher);
+  if (activeManual?.sessionId) {
+    state.browserbase.status[publisher] = 'manual_required';
+    await saveState();
+    await log('browserbase_manual_session_reused_waiting', { publisher, doi, sessionId: activeManual.sessionId, activeDoi: activeManual.doi || '' });
+    throw new Error('manual_required');
+  }
   const credentials = browserbaseCredentials();
   if (!credentials.apiKey) {
     state.browserbase.status[publisher] = 'missing';
@@ -1058,9 +1134,34 @@ async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyIma
     const pageUrl = page.url();
     const html = await page.content();
     if (browserbaseManualRequired(html, pageUrl)) {
+      const sessionId = String(sessionInfo.id || '');
+      const debug = sessionId
+        ? await browserbaseApi(`/sessions/${encodeURIComponent(sessionId)}/debug`, { method: 'GET' }).catch(() => null)
+        : null;
+      const contextId = String(state.browserbase.contexts?.[publisher] || '');
+      manualBrowserbaseSessions.set(publisher, {
+        browser,
+        page,
+        sessionId,
+        contextId,
+        doi,
+        url,
+        startedAt: Date.now(),
+      });
+      browser = null;
+      state.browserbase.manual[publisher] = {
+        status: 'manual_required',
+        sessionId,
+        contextId,
+        doi,
+        startedAt: Date.now(),
+        liveAvailable: Boolean(debug?.debuggerFullscreenUrl || debug?.debuggerUrl),
+      };
       state.browserbase.status[publisher] = 'manual_required';
       await saveState();
-      await log('browserbase_manual_required', { publisher, doi, url: pageUrl, sessionId: String(sessionInfo.id || '') });
+      await log('browserbase_manual_required', { publisher, doi, url: pageUrl, sessionId, contextId });
+      stageStatus = `${manualPublisherLabel(publisher)} 需要人工验证；当前 Session 已保活，没有创建新 Session。请点击“打开 Live Session”，验证后点击“继续当前任务”。`;
+      refreshDashboard();
       throw new Error('manual_required');
     }
     if (!browserbaseOwnsDoi(doi, pageUrl, html)) throw new Error('browserbase_doi_mismatch');
@@ -1378,7 +1479,7 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     }
     let data;
     try {
-      data = await imageData(c.src, inspected.url);
+      data = inspected?.image?.imageData || c.imageData || await imageData(c.src, inspected.url);
     } catch (error) {
       await log('image_download_failed', { doi, kind: c.kind, reason: safeError(error, 300) });
       throw error;
@@ -1672,7 +1773,7 @@ function dashboardHtml() {
   </div>
   <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开当前设置</a><a href="collector:reload-config">重新加载设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
   <section class="credentials"><strong>本机 / 学校 VPN 出版社权限</strong><div class="note">这里使用 Collector 本机持久浏览器会话，不使用 Browserbase。会话直接走 Windows 网络，因此系统级学校 VPN 会生效；ACS/Wiley 已验证状态会直接参与后台调度。</div><div class="buttons" id="local-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const local = state.localPublisher?.[publisher] || {}; return `<span><button type="button" data-local-start="${publisher}">本机打开 ${escapeHtml(label)}</button><button type="button" data-local-finish="${publisher}">检查本机权限</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(local.status || '未验证')}${local.pdfAccess ? ' · PDF 可访问' : ''}</small></span>`; }).join('')}</div></section>
-  <section class="credentials"><strong>Browserbase 本机凭据</strong><div class="note">密钥只保存到当前进程的 config.json；界面、日志和控制台都不会显示密钥。</div><form id="browserbase-form"><label for="browserbase-api-key">Browserbase API Key</label><input id="browserbase-api-key" type="password" autocomplete="off" maxlength="2048" placeholder="粘贴 API Key"><label for="browserbase-project-id">Browserbase Project ID（可选）</label><input id="browserbase-project-id" type="text" autocomplete="off" maxlength="512" placeholder="可留空"><button class="primary" type="submit">保存</button><button id="browserbase-clear" type="button">清除凭据</button>${browserbaseInfo.configured ? '<button id="browserbase-test" type="button">Browserbase 验收</button>' : ''}<span class="note" id="browserbase-action-status"></span></form>${browserbaseInfo.configured ? `<div class="note" style="margin-top:14px"><strong>人工验证 / 权限初始化</strong><br>点击后会打开 Browserbase Live View。完成出版社验证后回到此窗口点击对应“完成验证”。验证状态会保存在该出版社的 persistent Context 中。</div><div class="buttons" id="manual-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const manual = state.browserbase?.manual?.[publisher] || {}; return `<span><button type="button" data-manual-start="${publisher}">打开 ${escapeHtml(label)}</button><button type="button" data-manual-finish="${publisher}">完成验证</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(manual.status || '未初始化')}${manual.sessionId ? ` · Session ${escapeHtml(manual.sessionId)}` : ''}</small></span>`; }).join('')}</div>` : ''}</section>
+  <section class="credentials"><strong>Browserbase 本机凭据</strong><div class="note">密钥只保存到当前进程的 config.json；界面、日志和控制台都不会显示密钥。</div><form id="browserbase-form"><label for="browserbase-api-key">Browserbase API Key</label><input id="browserbase-api-key" type="password" autocomplete="off" maxlength="2048" placeholder="粘贴 API Key"><label for="browserbase-project-id">Browserbase Project ID（可选）</label><input id="browserbase-project-id" type="text" autocomplete="off" maxlength="512" placeholder="可留空"><button class="primary" type="submit">保存</button><button id="browserbase-clear" type="button">清除凭据</button>${browserbaseInfo.configured ? '<button id="browserbase-test" type="button">Browserbase 验收</button>' : ''}<span class="note" id="browserbase-action-status"></span></form>${browserbaseInfo.configured ? `<div class="note" style="margin-top:14px"><strong>人工验证 / 权限初始化</strong><br>点击后会打开 Browserbase Live View。完成出版社验证后回到此窗口点击对应“完成验证”。验证状态会保存在该出版社的 persistent Context 中。</div><div class="buttons" id="manual-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const manual = state.browserbase?.manual?.[publisher] || {}; return `<span><button type="button" data-manual-start="${publisher}">${manual.sessionId ? '打开 Live Session' : `人工处理 ${escapeHtml(label)}`}</button><button type="button" data-manual-finish="${publisher}">继续当前任务</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(manual.status || '未初始化')}${manual.sessionId ? ` · Session ${escapeHtml(manual.sessionId)}` : ''}${manual.contextId ? ` · Context ${escapeHtml(manual.contextId)}` : ''}</small></span>`; }).join('')}</div>` : ''}</section>
   <table><thead><tr><th>最近待处理 DOI</th><th>来源</th></tr></thead><tbody>${rows || '<tr><td colspan="2">当前无待处理项目</td></tr>'}</tbody></table>
   <div class="note">实际 userData：<code>${escapeHtml(configInfo.userData)}</code><br>实际 config.json：<code>${escapeHtml(configInfo.configPath)}</code><br>设置状态：${escapeHtml(configInfo.message)}${configInfo.reloadedAt ? `（${escapeHtml(new Date(configInfo.reloadedAt).toLocaleString())}）` : ''}<br>VPN 程序：${vpnState}<br>自动检查间隔：${Number(config.pollMinutes||10)} 分钟；提醒间隔：${Number(config.reminderHours||6)} 小时。</div>
   </div><script>(() => {
