@@ -6,6 +6,7 @@ const ROOT = process.cwd();
 const PUBLIC = path.join(ROOT, 'public');
 const OUT = path.join(ROOT, 'toc-collector', 'queues');
 const MEDIA_URL = process.env.MEDIA_INDEX_URL || 'https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json';
+const SUPPLEMENT_URL = process.env.LITERATURE_SUPPLEMENT_URL || 'https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json';
 
 function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
@@ -52,13 +53,16 @@ async function readJson(name) {
 async function loadPapers() {
   const encoded = (await readFile(path.join(PUBLIC, 'papers.gz.b64'), 'utf8')).trim();
   const base = JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8'));
-  const [total, manual, audit] = await Promise.all([
+  const [total, manual, audit, supplement] = await Promise.all([
     readJson('total-synthesis.json'),
     readJson('manual-supplement.json'),
     readJson('final-audit-supplement.json'),
+    fetch(SUPPLEMENT_URL, { headers: { 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(45000) })
+      .then(response => response.ok ? response.json() : { papers: [] })
+      .catch(() => ({ papers: [] })),
   ]);
   const merged = new Map();
-  const all = [].concat(Array.isArray(base) ? base : [], total?.papers || [], manual?.papers || [], audit?.papers || []);
+  const all = [].concat(Array.isArray(base) ? base : [], total?.papers || [], manual?.papers || [], audit?.papers || [], supplement?.papers || []);
   for (const raw of all) {
     const doi = normalizeDoi(raw?.doi || raw?.url || '');
     if (!doi) continue;
@@ -135,6 +139,7 @@ async function main() {
   const summary = {
     generatedAt: new Date().toISOString(),
     mediaIndexUrl: MEDIA_URL,
+    literatureSupplementUrl: SUPPLEMENT_URL,
     webpageDoiCount: papers.size,
     mediaRecordCount: Object.keys(media).length,
     visibleGapTotal: displayGaps.length,
