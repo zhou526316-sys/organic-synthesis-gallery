@@ -36,6 +36,7 @@ let renderPromise = null;
   minRestrictedBacklog: 1,
   maxPerCycle: 12,
   localScanDelayMs: 5000,
+  localInteractiveSettleMs: 12000,
   publisherTimeoutSeconds: 35,
   headlessWaitMs: 5000,
 };
@@ -156,7 +157,7 @@ async function loadLocalDoiQueue() {
 }
 
 async function saveLocalTocCapture(doi, candidate, dataUrl, articleUrl) {
-  if (!candidate || candidate.kind !== 'official' || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) return null;
+  if (!candidate || !['official','figure1'].includes(candidate.kind) || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) return null;
   const match = /^data:(image\/[a-z0-9.+-]+);base64,(.+)$/i.exec(dataUrl);
   if (!match) return null;
   const mime = match[1].toLowerCase();
@@ -165,7 +166,7 @@ async function saveLocalTocCapture(doi, candidate, dataUrl, articleUrl) {
   if (bytes.length < 200) return null;
   await fsp.mkdir(localCaptureDir(), { recursive: true });
   const key = String(doi).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-  const file = path.join(localCaptureDir(), `${key}.${ext}`);
+  const file = path.join(localCaptureDir(), `${key}__${candidate.kind}.${ext}`);
   await fsp.writeFile(file, bytes);
   const manifestFile = path.join(localCaptureDir(), 'manifest.jsonl');
   const row = {
@@ -1470,6 +1471,73 @@ async function downloadPdfFromPublisherBrowser({ doi, publisher, webContents, pd
     }
   });
 }
+async function waitForLocalInteractiveArticle(win, doi, publisher) {
+  if (!localOnlyMode || !showBrowserMode || !win || win.isDestroyed()) {
+    await new Promise(resolve => setTimeout(resolve, Number(config.headlessWaitMs) || 5000));
+    return;
+  }
+
+  const settleMs = Math.max(5000, Number(config.localInteractiveSettleMs || 12000));
+  const startedAt = Date.now();
+  let lastStatus = '';
+
+  while (!win.isDestroyed()) {
+    let details = null;
+    try {
+      details = await win.webContents.executeJavaScript(`(() => {
+        const text = String(document.body?.innerText || '').slice(0, 120000);
+        const href = location.href;
+        const title = document.title;
+        const citationDoi = String(document.querySelector('meta[name="citation_doi"]')?.content || document.querySelector('meta[name="dc.identifier"]')?.content || '').toLowerCase();
+        const canonical = String(document.querySelector('link[rel="canonical"]')?.href || '').toLowerCase();
+        const challenge = /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic/i.test(title + '\\n' + text);
+        const authPage = /(?:login|signin|sign-in|shibboleth|saml|institution|federated|wayf|idp)/i.test(href)
+          || /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login/i.test(title + '\\n' + text);
+        const articleSignal = /\\babstract\\b|\\breferences\\b|\\bsupporting information\\b|\\barticle\\b/i.test(text) && text.length > 2500;
+        return { href, title, textLength: text.length, citationDoi, canonical, challenge, authPage, articleSignal };
+      })()`);
+    } catch (error) {
+      if (win.isDestroyed()) throw new Error('publisher_window_closed_by_user');
+      await log('local_interactive_probe_failed', { doi, publisher, reason: safeError(error, 180) });
+    }
+
+    if (details) {
+      const normalized = String(doi || '').toLowerCase();
+      const suffix = normalized.split('/').at(-1) || normalized;
+      const href = String(details.href || '');
+      const hostOk = publisherHostMatches(publisher, href);
+      const doiOk = String(details.citationDoi || '').includes(normalized)
+        || String(details.canonical || '').includes(normalized)
+        || href.toLowerCase().includes(suffix.toLowerCase());
+      const articleReady = hostOk && (doiOk || details.articleSignal) && !details.challenge;
+
+      if (articleReady && Date.now() - startedAt >= settleMs) {
+        if (lastStatus !== 'ready') await log('local_interactive_article_ready', { doi, publisher, url: href });
+        return;
+      }
+
+      const waitingForUser = details.challenge || details.authPage || !hostOk;
+      const nextStatus = waitingForUser ? 'waiting_for_user' : 'settling';
+      if (nextStatus !== lastStatus) {
+        lastStatus = nextStatus;
+        if (waitingForUser) {
+          stageStatus = `等待你完成 ${manualPublisherLabel(publisher)} 登录/学校验证：${doi}。窗口不会自动关闭；完成后程序会自行继续。`;
+          await log('local_interactive_waiting_for_user', { doi, publisher, url: href, challenge: Boolean(details.challenge), authPage: Boolean(details.authPage), hostOk });
+        } else {
+          stageStatus = `等待页面完整加载：${doi}`;
+        }
+        await refreshDashboard();
+      }
+
+      if (!waitingForUser && Date.now() - startedAt >= settleMs * 2) return;
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 1500));
+  }
+
+  throw new Error('publisher_window_closed_by_user');
+}
+
 async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnostic, verifyBrowserbaseImage = false } = {}) {
   const url = articleUrl(doi);
   if (!forceBrowserbase && classify(doi) === 'nature') {
@@ -1478,15 +1546,36 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
   }
   let win = null;
   let publisherTimer;
+  const childWindows = [];
   try {
+    const publisher = classify(doi);
+    const publisherSession = getPublisherSession(publisher);
     win = new BrowserWindow({
       show: showBrowserMode,
       webPreferences: {
-        session: getPublisherSession(classify(doi)),
+        session: publisherSession,
         sandbox: true,
         contextIsolation: true,
         images: true,
       },
+    });
+    win.webContents.setWindowOpenHandler(() => ({
+      action: 'allow',
+      overrideBrowserWindowOptions: {
+        show: true,
+        parent: win,
+        webPreferences: {
+          session: publisherSession,
+          sandbox: true,
+          contextIsolation: true,
+          nodeIntegration: false,
+          images: true,
+        },
+      },
+    }));
+    win.webContents.on('did-create-window', child => {
+      childWindows.push(child);
+      void log('local_auth_popup_opened', { doi, publisher, url: child.webContents.getURL() || '' });
     });
     if (forceBrowserFallback || forceBrowserbase) {
       throw new Error(forceBrowserbase ? 'browserbase_diagnostic_forced' : 'net::ERR_BLOCKED_BY_CLIENT (diagnostic injection)');
@@ -1497,7 +1586,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
     ]);
     clearTimeout(publisherTimer);
     publisherTimer = null;
-    await new Promise(r => setTimeout(r, Number(config.headlessWaitMs) || 5000));
+    await waitForLocalInteractiveArticle(win, doi, publisher);
     const result = await win.webContents.executeJavaScript(`(() => {
       const abs = u => { try { const value = new URL(u, location.href); return ['http:','https:'].includes(value.protocol) ? value.href : '' } catch { return '' } };
       const rows = [];
@@ -1507,18 +1596,42 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
           const src = abs(m.content || ''); if (src) rows.push({ src, text: key, width: 0, height: 0, kind: 'official' });
         }
       }
+      const semanticRe = /visual\\s*abstract|graphical\\s*abstract|abstract\\s*(?:image|graphic)|toc\\s*(?:graphic|image|entry)|table\\s*of\\s*contents(?:\\s*(?:graphic|image|entry))?|first\\s+page\\s+image|graphical\\s+synopsis/i;
       for (const img of document.images) {
         const srcset = (img.getAttribute('srcset') || '').split(',').map(x => x.trim().split(/\\s+/)[0]).filter(Boolean).reverse();
-        const sources = [img.getAttribute('data-src'), img.getAttribute('data-original'), img.getAttribute('data-lazy-src'), img.getAttribute('data-image-src'), img.currentSrc, ...srcset, img.src];
+        const sources = [img.getAttribute('data-lg-src'), img.getAttribute('data-hi-res-src'), img.getAttribute('data-src-large'), img.getAttribute('data-full-src'), img.getAttribute('data-src'), img.getAttribute('data-original'), img.getAttribute('data-lazy-src'), img.getAttribute('data-image-src'), img.currentSrc, ...srcset, img.src];
         const src = sources.map(abs).find(Boolean) || '';
         if (!src) continue;
-        const root = img.closest('figure,section,div,aside') || img.parentElement;
-        const text = [img.alt, img.title, img.id, img.className, root?.getAttribute?.('aria-label'), root?.innerText?.slice(0,500)].filter(Boolean).join(' ');
+        let root = img.closest('figure,section,article,div,aside') || img.parentElement;
+        let context = '';
+        for (let depth = 0; root && depth < 4; depth += 1, root = root.parentElement) context += ' ' + String(root?.innerText || '').slice(0,1200);
+        const text = [img.alt, img.title, img.id, img.className, img.getAttribute('aria-label'), context].filter(Boolean).join(' ');
         const low = text.toLowerCase();
-        if (/logo|icon|avatar|cover|advert|banner/.test(low)) continue;
-        const official = /visual\\s*abstract|graphical\\s*abstract|abstract\\s*image|toc\\s*(graphic|image)|table\\s*of\\s*contents/.test(low);
-        const fig1 = /(^|\\b)(fig(?:ure)?\\.?\\s*1)(\\b|[:.])/i.test(text);
+        if (/logo|icon|avatar|journal\\s*cover|issue\\s*cover|advert|banner|cookie/.test(low)) continue;
+        const official = semanticRe.test(text);
+        const fig1 = /(^|\\b)(fig(?:ure)?\\.?\\s*1)(\\b|[:.)])/i.test(text);
         if (official || fig1) rows.push({ src, text, width: img.naturalWidth || 0, height: img.naturalHeight || 0, kind: official ? 'official' : 'figure1' });
+      }
+      for (const heading of document.querySelectorAll('h1,h2,h3,h4,h5,h6,strong,b,dt,[role="heading"]')) {
+        const label = String(heading.textContent || '').trim();
+        if (!semanticRe.test(label)) continue;
+        let scope = heading.closest('section,figure,article,div') || heading.parentElement;
+        for (let depth = 0; scope && depth < 4; depth += 1, scope = scope.parentElement) {
+          const media = scope.querySelector('picture img,img,source[srcset]');
+          if (!media) continue;
+          const raw = media.currentSrc || media.src || media.getAttribute('data-src') || media.getAttribute('data-original') || media.getAttribute('srcset')?.split(',').at(-1)?.trim().split(/\\s+/)[0] || '';
+          const src = abs(raw);
+          if (src) rows.push({ src, text: label, width: media.naturalWidth || 0, height: media.naturalHeight || 0, kind: 'official' });
+          break;
+        }
+      }
+      for (const el of document.querySelectorAll('[style*="background-image"],[class*="graphical"],[class*="toc"],[id*="graphical"],[id*="toc"]')) {
+        const marker = [el.id, el.className, el.getAttribute?.('aria-label'), String(el.innerText || '').slice(0,700)].filter(Boolean).join(' ');
+        if (!semanticRe.test(marker)) continue;
+        const bg = String(getComputedStyle(el).backgroundImage || '');
+        const match = /url\\(["']?([^"')]+)["']?\\)/i.exec(bg);
+        const src = abs(match?.[1] || '');
+        if (src) rows.push({ src, text: marker, width: el.clientWidth || 0, height: el.clientHeight || 0, kind: 'official' });
       }
       const pdfLinks = [...document.querySelectorAll('a[href]')]
         .map(a => ({ href: abs(a.getAttribute('href') || ''), text: String(a.textContent || '').trim() }))
@@ -1620,6 +1733,9 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
     return htmlResult || { url, candidate: null, method: 'no_candidate' };
   } finally {
     if (publisherTimer) clearTimeout(publisherTimer);
+    for (const child of childWindows) {
+      try { if (child && !child.isDestroyed()) child.destroy(); } catch {}
+    }
     if (win && !win.isDestroyed()) win.destroy();
   }
 }
@@ -1677,7 +1793,7 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
       }
       return { doi, status: 'no_candidate', source: inspected.method || '' };
     }
-    if (officialOnlyMode && c.kind !== 'official') {
+    if (officialOnlyMode && c.kind !== 'official' && !localOnlyMode) {
       await log('local_official_only_skip_fallback', { doi, kind: c.kind, source: inspected.method || '' });
       return { doi, status: 'no_official_toc', source: inspected.method || '' };
     }
@@ -1688,9 +1804,9 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
       await log('image_download_failed', { doi, kind: c.kind, reason: safeError(error, 300) });
       throw error;
     }
-    const localCapture = c.kind === 'official' ? await saveLocalTocCapture(doi, c, data, inspected.url) : null;
+    const localCapture = ['official','figure1'].includes(c.kind) ? await saveLocalTocCapture(doi, c, data, inspected.url) : null;
     if (localOnlyMode) {
-      if (localCapture) return { doi, status: 'saved_local', kind: c.kind, source: inspected.method, localPath: localCapture.path };
+      if (localCapture) return { doi, status: c.kind === 'official' ? 'saved_local' : 'saved_local_figure1', kind: c.kind, source: inspected.method, localPath: localCapture.path };
       return { doi, status: 'local_only_candidate_not_saved', kind: c.kind, source: inspected.method };
     }
     if (inspectOnly) {
@@ -1772,6 +1888,7 @@ async function processBatch(items) {
 
     const status = result?.status || 'unknown';
     if (['official','saved_local'].includes(status)) liveScan.saved += 1;
+    else if (status === 'saved_local_figure1') { liveScan.noOfficial += 1; liveScan.other += 1; }
     else if (['no_candidate','no_official_toc'].includes(status)) liveScan.noOfficial += 1;
     else if (status === 'failed') liveScan.failed += 1;
     else if (status === 'pdf_downloaded') liveScan.pdfDownloaded += 1;
@@ -1980,7 +2097,7 @@ async function runCycle(manual = false) {
       : restricted.filter(x => (classify(x.doi)==='acs' ? net.acs : net.wiley));
     const runnable = localOnlyMode && doiFilePath ? queue : [...open, ...runnableRestricted];
     const results = await processBatch(runnable);
-    const success = results.filter(x => ['official','figure1','pdf_downloaded','saved_local'].includes(x?.status)).length;
+    const success = results.filter(x => ['official','figure1','pdf_downloaded','saved_local','saved_local_figure1'].includes(x?.status)).length;
     const failed = results.filter(x => x?.status === 'failed').length;
     state.lastSummary = { at: Date.now(), queue: queue.length, processed: results.length, success, failed, net, localOnlyMode, scanAllMode, officialOnlyMode, showBrowserMode, doiFilePath, localCaptureDir: localCaptureDir() };
     await saveState();
@@ -2021,7 +2138,9 @@ function dashboardHtml() {
   const scanRows = (scan.recent || []).map(item => {
     const label = item.status === 'saved_local' || item.status === 'official'
       ? '已抓到官方 TOC'
-      : item.status === 'no_candidate' || item.status === 'no_official_toc'
+      : item.status === 'saved_local_figure1'
+        ? '已保存 Figure 1 fallback'
+        : item.status === 'no_candidate' || item.status === 'no_official_toc'
         ? '未发现官方 TOC'
         : item.status === 'failed'
           ? '失败'
