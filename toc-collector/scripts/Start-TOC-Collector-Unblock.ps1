@@ -20,11 +20,12 @@ if (-not (Test-Path -LiteralPath $exe)) {
 
 $removed = 0
 Get-ChildItem -LiteralPath $root -Recurse -Force -File -ErrorAction SilentlyContinue | ForEach-Object {
-    $zonePath = '{0}:Zone.Identifier' -f $_.FullName
-    $hadZone = Test-Path -LiteralPath $zonePath
     try {
+        # Windows PowerShell 5.1 cannot Test-Path an alternate data stream.
+        $hadZone = $null -ne (Get-Item -LiteralPath $_.FullName -Stream Zone.Identifier -ErrorAction SilentlyContinue)
         Unblock-File -LiteralPath $_.FullName -ErrorAction Stop
-        if ($hadZone -and -not (Test-Path -LiteralPath $zonePath)) { $removed += 1 }
+        $hasZone = $null -ne (Get-Item -LiteralPath $_.FullName -Stream Zone.Identifier -ErrorAction SilentlyContinue)
+        if ($hadZone -and -not $hasZone) { $removed += 1 }
     } catch {
         Write-LaunchLog ('unblock-warning file={0} error={1}' -f $_.FullName, $_.Exception.Message)
     }
