@@ -4,6 +4,7 @@ import {
   getToc,
   mediaBatch,
   mediaInventory,
+  tocGaps,
   repairStatus,
   serveMediaObject,
 } from './media.js';
@@ -79,6 +80,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/article-figures',
   '/api/media/batch',
   '/api/media/inventory',
+  '/api/media/toc-gaps',
   '/api/media/bridge-queue',
   '/api/media/repair-status',
   '/api/media/jobs/status',
@@ -281,6 +283,9 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/inventory') {
     return resultResponse(await mediaInventory(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/media/toc-gaps') {
+    return resultResponse(await tocGaps(request, env), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/media/bridge-queue') {
     return resultResponse(await bridgeQueue(request, env), cors);
