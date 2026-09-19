@@ -85,29 +85,68 @@ function csvEscape(value='') {
 async function main() {
   const papers = await loadPapers();
   const media = await fetchMediaIndex();
-  const rows = [];
+  const allMissingOfficial = [];
+  const displayGaps = [];
+  const officialUpgrade = [];
   for (const [doi, paper] of papers) {
     const record = media[doi] || null;
-    if (isOfficialToc(record?.toc)) continue;
+    const official = isOfficialToc(record?.toc);
     const anyVisual = hasAnyVisual(record);
-    rows.push({ doi, journal: paper.journal, title: paper.title, date: paper.date, publisher: publisherFor(doi), state: anyVisual ? 'fallback_only' : 'no_visual', existingReason: String(record?.toc?.reason || '') });
+    if (official) continue;
+    const row = {
+      doi,
+      journal: paper.journal,
+      title: paper.title,
+      date: paper.date,
+      publisher: publisherFor(doi),
+      state: anyVisual ? 'fallback_only' : 'no_visual',
+      existingReason: String(record?.toc?.reason || ''),
+    };
+    allMissingOfficial.push(row);
+    if (anyVisual) officialUpgrade.push(row);
+    else displayGaps.push(row);
   }
-  rows.sort((a,b) => a.publisher.localeCompare(b.publisher) || a.journal.localeCompare(b.journal) || b.date.localeCompare(a.date) || a.doi.localeCompare(b.doi));
-  const officialUpgrade = rows.filter(x => x.state === 'fallback_only');
-  const noVisual = rows.filter(x => x.state === 'no_visual');
+  const sorter = (a,b) => a.publisher.localeCompare(b.publisher) || a.journal.localeCompare(b.journal) || b.date.localeCompare(a.date) || a.doi.localeCompare(b.doi);
+  allMissingOfficial.sort(sorter);
+  displayGaps.sort(sorter);
+  officialUpgrade.sort(sorter);
+  const rows = displayGaps;
   const publishers = ['acs','wiley','nature','science','other'];
   await mkdir(OUT, { recursive: true });
   async function writeList(name, list) { await writeFile(path.join(OUT, name), list.map(x => x.doi).join('\n') + (list.length ? '\n' : '')); }
-  await writeList('toc-demand-all.txt', rows);
-  await writeList('toc-demand-no-visual.txt', noVisual);
+
+  // "toc-demand-*" now means visible website gaps: no usable TOC/Figure fallback at all.
+  await writeList('toc-demand-all.txt', displayGaps);
+  await writeList('toc-demand-no-visual.txt', displayGaps);
+  for (const publisher of publishers) await writeList('toc-demand-' + publisher + '.txt', displayGaps.filter(x => x.publisher === publisher));
+
+  // Separate lower-priority queue: visible fallback exists, but official TOC is still missing.
   await writeList('toc-demand-official-upgrade.txt', officialUpgrade);
-  for (const publisher of publishers) await writeList('toc-demand-' + publisher + '.txt', rows.filter(x => x.publisher === publisher));
-  const csv = ['doi,publisher,journal,date,state,existingReason,title'].concat(rows.map(r => [r.doi,r.publisher,r.journal,r.date,r.state,r.existingReason,r.title].map(csvEscape).join(','))).join('\n') + '\n';
+  await writeList('toc-demand-missing-official-all.txt', allMissingOfficial);
+  for (const publisher of publishers) {
+    await writeList('toc-demand-official-upgrade-' + publisher + '.txt', officialUpgrade.filter(x => x.publisher === publisher));
+  }
+  const csv = ['doi,publisher,journal,date,state,existingReason,title'].concat(allMissingOfficial.map(r => [r.doi,r.publisher,r.journal,r.date,r.state,r.existingReason,r.title].map(csvEscape).join(','))).join('\n') + '\n';
   await writeFile(path.join(OUT, 'toc-demand-all.csv'), csv);
-  const byPublisher = Object.fromEntries(publishers.map(p => [p, rows.filter(x => x.publisher === p).length]));
+  const byPublisher = Object.fromEntries(publishers.map(p => [p, displayGaps.filter(x => x.publisher === p).length]));
+  const upgradeByPublisher = Object.fromEntries(publishers.map(p => [p, officialUpgrade.filter(x => x.publisher === p).length]));
   const byJournal = {};
-  for (const r of rows) byJournal[r.journal || 'Unknown'] = (byJournal[r.journal || 'Unknown'] || 0) + 1;
-  const summary = { generatedAt: new Date().toISOString(), mediaIndexUrl: MEDIA_URL, webpageDoiCount: papers.size, mediaRecordCount: Object.keys(media).length, demandTotal: rows.length, noVisual: noVisual.length, fallbackOnlyNeedsOfficialUpgrade: officialUpgrade.length, byPublisher, byJournal, sample: rows.slice(0,25) };
+  for (const r of displayGaps) byJournal[r.journal || 'Unknown'] = (byJournal[r.journal || 'Unknown'] || 0) + 1;
+  const summary = {
+    generatedAt: new Date().toISOString(),
+    mediaIndexUrl: MEDIA_URL,
+    webpageDoiCount: papers.size,
+    mediaRecordCount: Object.keys(media).length,
+    visibleGapTotal: displayGaps.length,
+    demandTotal: displayGaps.length,
+    noVisual: displayGaps.length,
+    fallbackOnlyNeedsOfficialUpgrade: officialUpgrade.length,
+    missingOfficialTotal: allMissingOfficial.length,
+    byPublisher,
+    upgradeByPublisher,
+    byJournal,
+    sample: displayGaps.slice(0,25),
+  };
   await writeFile(path.join(OUT, 'toc-demand-summary.json'), JSON.stringify(summary, null, 2) + '\n');
   console.log('TOC_DEMAND_SUMMARY ' + JSON.stringify(summary));
 }
