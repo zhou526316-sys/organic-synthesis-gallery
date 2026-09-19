@@ -26,6 +26,7 @@ const copy = {
     sending: '提交中…',
     close: '关闭',
     accepted: '已收到。之后会由 GPT 汇总、去重并筛选值得处理的意见。',
+    queued: 'Cloudflare 当前不可用或额度不足，已安全暂存在本浏览器；恢复后会自动重试，不影响继续浏览。',
     rateLimited: '这一小时提交得有点多，请稍后再试。',
     failed: '提交失败，请稍后重试。',
     tooShort: '请至少写 3 个字。',
@@ -50,6 +51,7 @@ const copy = {
     sending: 'Sending…',
     close: 'Close',
     accepted: 'Received. GPT will later consolidate, deduplicate, and triage useful feedback.',
+    queued: 'Cloudflare is unavailable or over quota. This feedback is safely queued in this browser and will retry automatically; browsing remains available.',
     rateLimited: 'Too many submissions this hour. Please try again later.',
     failed: 'Submission failed. Please try again later.',
     tooShort: 'Please enter at least 3 characters.',
@@ -270,14 +272,14 @@ class SiteFeedbackWidget extends HTMLElement {
     });
     this.busy = false;
 
-    if (result === 'accepted') {
-      this.status = t.accepted;
+    if (result === 'accepted' || result === 'queued') {
+      this.status = result === 'accepted' ? t.accepted : t.queued;
       this.render();
       const nextCategory = this.querySelector<HTMLSelectElement>('[data-feedback-category]');
       if (nextCategory) nextCategory.value = select?.value || 'general';
       return;
     }
-    this.status = result === 'rate_limited' ? t.rateLimited : t.failed;
+    this.status = t.rateLimited;
     this.rerenderPreservingDraft();
   }
 }
