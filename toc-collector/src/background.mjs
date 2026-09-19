@@ -81,7 +81,7 @@ const requestedDiagnosticPublishers = (diagnosticArg?.split('=')[1] || '')
   .split(',')
   .map(value => value.trim().toLowerCase())
   .filter(Boolean);
-const validPublisherNames = ['nature', 'wiley', 'acs', 'rsc', 'elsevier', 'science', 'other'];
+const validPublisherNames = ['nature', 'wiley', 'acs', 'rsc', 'elsevier', 'science', 'ccs', 'other'];
 const invalidDiagnosticPublishers = requestedDiagnosticPublishers.filter(value => !validPublisherNames.includes(value));
 const diagnosticPublishers = requestedDiagnosticPublishers.filter(value => validPublisherNames.includes(value));
 const requestedDiagnosticDois = diagnosticDoiArgs.map(arg => arg.slice('--diagnose-doi='.length).trim().toLowerCase()).filter(Boolean);
@@ -101,7 +101,7 @@ const forceBrowserbaseDiagnostic = process.argv.includes('--force-browserbase');
 function getPublisherSession(publisher = '') {
   if (!app.isReady()) throw new Error('publisher_session_before_app_ready');
   const key = String(publisher || '').trim().toLowerCase();
-  if (['acs', 'wiley', 'rsc', 'elsevier', 'nature', 'science'].includes(key)) {
+  if (['acs', 'wiley', 'rsc', 'elsevier', 'nature', 'science', 'ccs'].includes(key)) {
     if (!localPublisherSessions.has(key)) {
       const partition = `persist:toc-publisher-${key}`;
       const value = session.fromPartition(partition, { cache: true });
