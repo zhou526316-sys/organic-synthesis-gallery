@@ -8,8 +8,17 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $CollectorDir = Split-Path -Parent $ScriptDir
 Set-Location $CollectorDir
 
-& (Join-Path $ScriptDir "BUILD-RETRY-QUEUE.ps1")
-if ($LASTEXITCODE -ne 0) { throw "Retry queue generation failed." }
+$buildQueue = Join-Path $ScriptDir "BUILD-RETRY-QUEUE.ps1"
+try {
+  & $buildQueue
+} catch {
+  throw ("Retry queue generation failed: " + $_.Exception.Message)
+}
+
+$expectedQueue = Join-Path $CollectorDir "retry-dois.txt"
+if (-not (Test-Path -LiteralPath $expectedQueue)) {
+  throw "Retry queue generation failed: retry-dois.txt was not created."
+}
 
 $queue = if ($Publisher -eq "all") {
   Join-Path $CollectorDir "retry-dois.txt"
