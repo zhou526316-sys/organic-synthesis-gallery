@@ -26,6 +26,9 @@ export interface UserUiState {
 
 const STORAGE_KEY = 'organic-gallery-user-ui-v1';
 const PROFILE_KEY = 'organic-gallery-profile-v1';
+const SITE_FEEDBACK_QUEUE_KEY = 'organic-gallery-site-feedback-queue-v1';
+const OPTIONAL_CLOUD_TIMEOUT_MS = 6500;
+const SITE_FEEDBACK_QUEUE_LIMIT = 50;
 export const WORKER_API_BASE = 'https://api.gczhouwld.com';
 export const SHAPES: Shape[] = ['pill', 'rounded', 'rectangle', 'circle', 'square', 'diamond', 'bookmark', 'star'];
 
@@ -156,8 +159,71 @@ export function suggestionMatch(query: string, candidate: string): { score: numb
   return best;
 }
 
+type SiteFeedbackPayload = {
+  profileId: string;
+  category: string;
+  message: string;
+  pagePath?: string;
+  language?: string;
+  searchQuery?: string;
+  viewportWidth?: number;
+  viewportHeight?: number;
+};
+
+type QueuedSiteFeedback = {
+  id: string;
+  createdAt: number;
+  attempts: number;
+  payload: SiteFeedbackPayload;
+};
+
+function readSiteFeedbackQueue(): QueuedSiteFeedback[] {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SITE_FEEDBACK_QUEUE_KEY) || '[]');
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter(item => item && typeof item === 'object' && typeof item.id === 'string' && item.payload && typeof item.payload.message === 'string')
+      .slice(-SITE_FEEDBACK_QUEUE_LIMIT);
+  } catch {
+    return [];
+  }
+}
+
+function writeSiteFeedbackQueue(items: QueuedSiteFeedback[]): void {
+  try {
+    localStorage.setItem(SITE_FEEDBACK_QUEUE_KEY, JSON.stringify(items.slice(-SITE_FEEDBACK_QUEUE_LIMIT)));
+  } catch { /* local fallback is best effort */ }
+}
+
+function enqueueSiteFeedback(payload: SiteFeedbackPayload): void {
+  const queue = readSiteFeedbackQueue();
+  queue.push({ id: newId('feedback'), createdAt: Date.now(), attempts: 0, payload });
+  writeSiteFeedbackQueue(queue);
+}
+
+async function postSiteFeedback(payload: SiteFeedbackPayload): Promise<'accepted' | 'rate_limited' | 'retryable'> {
+  try {
+    const response = await fetch(`${WORKER_API_BASE}/api/user-ui/site-feedback`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(OPTIONAL_CLOUD_TIMEOUT_MS),
+    });
+    if (response.status === 429) return 'rate_limited';
+    if (response.ok) return 'accepted';
+    return response.status >= 500 || response.status === 408 ? 'retryable' : 'retryable';
+  } catch {
+    return 'retryable';
+  }
+}
+
 async function workerPost<T>(path: string, body: unknown): Promise<T> {
-  const response = await fetch(`${WORKER_API_BASE}${path}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const response = await fetch(`${WORKER_API_BASE}${path}`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(OPTIONAL_CLOUD_TIMEOUT_MS),
+  });
   if (!response.ok) throw new Error(`Worker ${response.status}`);
   return response.json() as Promise<T>;
 }
@@ -166,6 +232,39 @@ class Store extends EventTarget {
   state = load();
   readonly profileId = browserProfile();
   readerCounts: Record<string, number> = {};
+  private feedbackFlushRunning = false;
+  private feedbackFlushTimer: number | null = null;
+
+  constructor() {
+    super();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', () => void this.flushSiteFeedbackQueue());
+      this.feedbackFlushTimer = window.setInterval(() => void this.flushSiteFeedbackQueue(), 5 * 60 * 1000);
+      window.setTimeout(() => void this.flushSiteFeedbackQueue(), 1500);
+    }
+  }
+
+  private async flushSiteFeedbackQueue(): Promise<void> {
+    if (this.feedbackFlushRunning) return;
+    const queue = readSiteFeedbackQueue();
+    if (!queue.length) return;
+    this.feedbackFlushRunning = true;
+    const remaining: QueuedSiteFeedback[] = [];
+    try {
+      for (const item of queue) {
+        const result = await postSiteFeedback(item.payload);
+        if (result === 'accepted') continue;
+        remaining.push({ ...item, attempts: item.attempts + 1 });
+        if (result === 'rate_limited' || result === 'retryable') {
+          remaining.push(...queue.slice(queue.indexOf(item) + 1));
+          break;
+        }
+      }
+      writeSiteFeedbackQueue(remaining);
+    } finally {
+      this.feedbackFlushRunning = false;
+    }
+  }
 
   save(broadcast = true, detail?: { paperId?: string; scope?: 'paper' | 'global' }): void {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); } catch { /* optional */ }
@@ -224,23 +323,21 @@ class Store extends EventTarget {
   async feedback(doi: string, kind: string, note: string): Promise<boolean> {
     try { await workerPost('/api/user-ui/feedback', { doi, profileId: this.profileId, kind, note: note.slice(0, 1000) }); return true; } catch { return false; }
   }
-  async siteFeedback(category: string, message: string, context: { pagePath?: string; language?: string; searchQuery?: string; viewportWidth?: number; viewportHeight?: number } = {}): Promise<'accepted' | 'rate_limited' | 'failed'> {
-    try {
-      const response = await fetch(`${WORKER_API_BASE}/api/user-ui/site-feedback`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          profileId: this.profileId,
-          category,
-          message: message.slice(0, 2000),
-          ...context,
-        }),
-      });
-      if (response.status === 429) return 'rate_limited';
-      return response.ok ? 'accepted' : 'failed';
-    } catch {
-      return 'failed';
+  async siteFeedback(category: string, message: string, context: { pagePath?: string; language?: string; searchQuery?: string; viewportWidth?: number; viewportHeight?: number } = {}): Promise<'accepted' | 'queued' | 'rate_limited'> {
+    const payload: SiteFeedbackPayload = {
+      profileId: this.profileId,
+      category,
+      message: message.slice(0, 2000),
+      ...context,
+    };
+    const result = await postSiteFeedback(payload);
+    if (result === 'accepted') {
+      void this.flushSiteFeedbackQueue();
+      return 'accepted';
     }
+    if (result === 'rate_limited') return 'rate_limited';
+    enqueueSiteFeedback(payload);
+    return 'queued';
   }
   async setImage(target: StyleDef, file: File): Promise<void> {
     if (!file.type.startsWith('image/') || file.size > 4_000_000) return;
