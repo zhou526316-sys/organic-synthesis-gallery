@@ -166,6 +166,7 @@ let inventoryFingerprint = '';
 let bridgeStageTimer: number | null = null;
 let bridgeStageCursor = 0;
 let newnessTimer: number | null = null;
+let journalPickerAbort: AbortController | null = null;
 
 hydrateBrowserCaches();
 document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
@@ -432,6 +433,23 @@ function mount(): void {
     try { localStorage.setItem(LANGUAGE_KEY, language); } catch { /* optional */ }
     mount();
   }));
+  journalPickerAbort?.abort();
+  journalPickerAbort = new AbortController();
+  const journalPicker = document.querySelector<HTMLDetailsElement>('.journal-picker');
+  if (journalPicker) {
+    document.addEventListener('pointerdown', event => {
+      if (!journalPicker.open) return;
+      const target = event.target;
+      if (target instanceof Node && !journalPicker.contains(target)) journalPicker.open = false;
+    }, { capture: true, signal: journalPickerAbort.signal });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && journalPicker.open) {
+        journalPicker.open = false;
+        journalPicker.querySelector<HTMLElement>('summary')?.focus();
+      }
+    }, { signal: journalPickerAbort.signal });
+  }
+
   document.querySelector<HTMLInputElement>('#search')?.addEventListener('input', event => {
     query = (event.target as HTMLInputElement).value;
     renderCards();

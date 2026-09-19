@@ -38,6 +38,12 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   const initialCards = await page.locator('.card').count();
   expect(initialCards).toBeGreaterThan(400);
 
+  const journalPicker = page.locator('.journal-picker');
+  await journalPicker.locator('summary').click();
+  await expect(journalPicker).toHaveAttribute('open', '');
+  await page.locator('.hero h1').click();
+  await expect(journalPicker).not.toHaveAttribute('open', '');
+
   await page.evaluate(() => {
     const gallery = document.querySelector('#gallery');
     (window as Window & { __removedGalleryCards?: number }).__removedGalleryCards = 0;
@@ -137,7 +143,8 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
 });
 
 
-test('search keeps input stable without rebuilding cards and feedback widget submits', async ({ page }) => {
+test('search highlights results, picker closes outside, feedback drags and submits', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.route('https://api.gczhouwld.com/**', async route => {
     const url = route.request().url();
     if (url.includes('/api/user-ui/site-feedback')) {
@@ -185,6 +192,9 @@ test('search keeps input stable without rebuilding cards and feedback widget sub
   await expect(search).toHaveValue('photoredox');
   await expect.poll(async () => page.locator('.card:not([hidden])').count()).toBeGreaterThan(0);
   expect(await page.locator('.card:not([hidden])').count()).toBeLessThan(initialCards);
+  await expect(page.locator('.user-search-summary')).toContainText(/photoredox/i);
+  await expect(page.locator('.card.user-search-match:not([hidden])').first()).toBeVisible();
+  await expect(page.locator('.card:not([hidden]) mark.user-search-highlight').first()).toBeVisible();
   expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
 
   await search.fill('光催化');
@@ -195,6 +205,25 @@ test('search keeps input stable without rebuilding cards and feedback widget sub
   const feedback = page.locator('site-feedback-widget');
   await expect(feedback.locator('.site-feedback-tab')).toBeVisible();
   await feedback.locator('.site-feedback-tab').click();
+
+  const panel = feedback.locator('.site-feedback-panel');
+  const head = feedback.locator('.site-feedback-head');
+  const before = await panel.boundingBox();
+  const handle = await head.boundingBox();
+  expect(before).not.toBeNull();
+  expect(handle).not.toBeNull();
+  if (before && handle) {
+    await page.mouse.move(handle.x + 80, handle.y + 14);
+    await page.mouse.down();
+    await page.mouse.move(handle.x + 240, handle.y + 94, { steps: 6 });
+    await page.mouse.up();
+    const after = await panel.boundingBox();
+    expect(after).not.toBeNull();
+    if (after) {
+      expect(Math.abs(after.x - before.x) + Math.abs(after.y - before.y)).toBeGreaterThan(60);
+    }
+  }
+
   await feedback.locator('[data-feedback-category]').selectOption('search');
   await feedback.locator('[data-feedback-message]').fill('搜索框输入时不应该闪烁或清空。');
   await feedback.locator('[data-feedback-submit]').click();
