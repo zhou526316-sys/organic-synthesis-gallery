@@ -1,0 +1,53 @@
+name: Publisher TOC adapter CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'toc-collector/src/publisher-adapters.mjs'
+      - 'toc-collector/src/background.mjs'
+      - 'toc-collector/test/**'
+      - 'toc-collector/package.json'
+      - 'cloudflare/scripts/import-recent-media-direct.mjs'
+      - '.github/workflows/toc-publisher-adapters-ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'toc-collector/src/publisher-adapters.mjs'
+      - 'toc-collector/src/background.mjs'
+      - 'toc-collector/test/**'
+      - 'toc-collector/package.json'
+      - 'cloudflare/scripts/import-recent-media-direct.mjs'
+      - '.github/workflows/toc-publisher-adapters-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  adapters:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Syntax check
+        run: |
+          node --check toc-collector/src/publisher-adapters.mjs
+          node --check toc-collector/src/background.mjs
+          node --check cloudflare/scripts/import-recent-media-direct.mjs
+
+      - name: Run publisher adapter fixtures
+        run: node toc-collector/test/publisher-adapters.test.mjs
+
+      - name: Verify direct importer uses shared adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F "publisher-adapters.mjs" cloudflare/scripts/import-recent-media-direct.mjs
+          grep -F "extractPublisherMediaCandidates" cloudflare/scripts/import-recent-media-direct.mjs
+          grep -F "pickBestPublisherMediaCandidate" toc-collector/src/background.mjs
