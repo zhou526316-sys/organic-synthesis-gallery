@@ -16,6 +16,8 @@ on:
       - 'cloudflare/scripts/merge-worker-media.mjs'
       - 'cloudflare/schema.sql'
       - 'cloudflare/worker/src/metadata.js'
+      - 'shared/literature-policy.js'
+      - 'scripts/test-literature-policy.mjs'
       - '.github/workflows/site-authors-ci.yml'
 
 permissions:
@@ -75,6 +77,9 @@ jobs:
           }
           console.log(JSON.stringify({galleryTotal: papers.length, authorsCovered: papers.length, updatePapers: update.length}));
           NODE
+
+      - name: Verify exclusion and Beijing-day newness policy
+        run: node scripts/test-literature-policy.mjs
 
       - name: Install frontend dependencies
         run: npm install --no-audit --no-fund

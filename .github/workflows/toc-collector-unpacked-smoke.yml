@@ -3,7 +3,7 @@ name: Build and smoke-test unpacked TOC Collector
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, feat/mobile-newness-exclusions-resolver-lease]
     paths:
       - 'toc-collector/**'
       - '.github/workflows/toc-collector-unpacked-smoke.yml'

@@ -39,7 +39,7 @@ let renderPromise = null;
 };
 
 let config = { ...DEFAULT_CONFIG };
-let state = { cooldowns: {}, nextReminderAt: 0, muteDate: '', pauseUntil: 0, lastSummary: null, browserbase: { contexts: {}, lastRequestByPublisher: {}, status: {}, lastSuccessDoi: {}, acceptance: {}, batch: null } };
+let state = { cooldowns: {}, nextReminderAt: 0, muteDate: '', pauseUntil: 0, lastSummary: null, browserbase: { contexts: {}, lastRequestByPublisher: {}, status: {}, lastSuccessDoi: {}, acceptance: {}, manual: {}, batch: null } };
 let tray = null;
 let dashboard = window;
 let quitting = false;
@@ -53,6 +53,9 @@ let configReloadedAt = 0;
 let configReloadMessage = '尚未读取';
 const publisherPartition = 'toc-publisher-scan';
 let publisherSession = null;
+const localPublisherSessions = new Map();
+const localPublisherWindows = new Map();
+const manualBrowserbaseSessions = new Map();
 const diagnosticArg = process.argv.find(arg => arg.startsWith('--diagnose-publishers='));
 const diagnosticDoiArgs = process.argv.filter(arg => arg.startsWith('--diagnose-doi='));
 const diagnosticRequested = Boolean(diagnosticArg) || diagnosticDoiArgs.length > 0;
@@ -70,13 +73,45 @@ const forceBrowserFallback = process.argv.includes('--force-browser-fallback');
 // never changes the normal resolver order used by the Collector.
 const forceBrowserbaseDiagnostic = process.argv.includes('--force-browserbase');
 
-function getPublisherSession() {
+function getPublisherSession(publisher = '') {
   if (!app.isReady()) throw new Error('publisher_session_before_app_ready');
+  const key = String(publisher || '').trim().toLowerCase();
+  if (['acs', 'wiley', 'nature', 'science'].includes(key)) {
+    if (!localPublisherSessions.has(key)) {
+      const partition = `persist:toc-publisher-${key}`;
+      const value = session.fromPartition(partition, { cache: true });
+      localPublisherSessions.set(key, value);
+      mark('background.publisher-session.created', { publisher: key, partition, persistent: true });
+    }
+    return localPublisherSessions.get(key);
+  }
   if (!publisherSession) {
     publisherSession = session.fromPartition(publisherPartition, { cache: false });
-    mark('background.publisher-session.created', { partition: publisherPartition });
+    mark('background.publisher-session.created', { partition: publisherPartition, persistent: false });
   }
   return publisherSession;
+}
+
+function publisherFromUrl(url) {
+  try {
+    const hostname = new URL(String(url || '')).hostname.toLowerCase();
+    if (hostname.endsWith('pubs.acs.org')) return 'acs';
+    if (hostname.endsWith('onlinelibrary.wiley.com')) return 'wiley';
+    if (hostname.endsWith('nature.com')) return 'nature';
+    if (hostname.endsWith('science.org')) return 'science';
+  } catch {}
+  return '';
+}
+
+function publisherHostMatches(publisher, url) {
+  try {
+    const hostname = new URL(String(url || '')).hostname.toLowerCase();
+    if (publisher === 'acs') return hostname.endsWith('pubs.acs.org');
+    if (publisher === 'wiley') return hostname.endsWith('onlinelibrary.wiley.com');
+    if (publisher === 'nature') return hostname.endsWith('nature.com');
+    if (publisher === 'science') return hostname.endsWith('science.org');
+  } catch {}
+  return false;
 }
 
 function safeError(error, limit = 1200) {
@@ -173,6 +208,8 @@ async function ensureConfig() {
   state.browserbase.status = state.browserbase.status && typeof state.browserbase.status === 'object' ? state.browserbase.status : {};
   state.browserbase.lastSuccessDoi = state.browserbase.lastSuccessDoi && typeof state.browserbase.lastSuccessDoi === 'object' ? state.browserbase.lastSuccessDoi : {};
   state.browserbase.acceptance = state.browserbase.acceptance && typeof state.browserbase.acceptance === 'object' ? state.browserbase.acceptance : {};
+  state.browserbase.manual = state.browserbase.manual && typeof state.browserbase.manual === 'object' ? state.browserbase.manual : {};
+  state.localPublisher = state.localPublisher && typeof state.localPublisher === 'object' ? state.localPublisher : {};
   // Retry only generic failures from older collectors; keep all specific cooldowns.
   if (state.collectorRecoveryVersion !== '0.1.6') {
     state.cooldowns = Object.fromEntries(Object.entries(state.cooldowns).filter(([, value]) => value?.reason !== 'collector_failed'));
@@ -382,11 +419,18 @@ async function probeUrl(url) {
 }
 
 async function networkState() {
-  const [acs, wiley] = await Promise.all([
+  const [acsProbe, wileyProbe] = await Promise.all([
     probeUrl('https://pubs.acs.org/'),
     probeUrl('https://onlinelibrary.wiley.com/'),
   ]);
-  return { acs, wiley };
+  const acsVerified = localPublisherReady('acs');
+  const wileyVerified = localPublisherReady('wiley');
+  return {
+    acs: acsVerified || acsProbe,
+    wiley: wileyVerified || wileyProbe,
+    acsSource: acsVerified ? 'verified_local_session' : (acsProbe ? 'direct_probe' : 'unavailable'),
+    wileySource: wileyVerified ? 'verified_local_session' : (wileyProbe ? 'direct_probe' : 'unavailable'),
+  };
 }
 
 function cooldownActive(doi) {
@@ -512,7 +556,7 @@ function htmlCandidate(html, pageUrl) {
 
 function browserbasePublisher(doi) {
   const publisher = classify(doi);
-  return ['acs', 'wiley'].includes(publisher) ? publisher : '';
+  return ['acs', 'wiley', 'nature', 'science'].includes(publisher) ? publisher : '';
 }
 
 function browserbaseManualRequired(html, pageUrl = '') {
@@ -527,7 +571,15 @@ function browserbaseOwnsDoi(doi, pageUrl, html) {
   let domainMatches = false;
   try {
     const hostname = new URL(pageUrl).hostname.toLowerCase();
-    domainMatches = publisher === 'acs' ? hostname.endsWith('pubs.acs.org') : hostname.endsWith('onlinelibrary.wiley.com');
+    domainMatches = publisher === 'acs'
+      ? hostname.endsWith('pubs.acs.org')
+      : publisher === 'wiley'
+        ? hostname.endsWith('onlinelibrary.wiley.com')
+        : publisher === 'nature'
+          ? hostname.endsWith('nature.com')
+          : publisher === 'science'
+            ? hostname.endsWith('science.org')
+            : false;
   } catch {}
   const encoded = normalized.replace('/', '%2f');
   const bodyHasDoi = String(html || '').toLowerCase().includes(normalized) || String(html || '').toLowerCase().includes(encoded);
@@ -575,19 +627,660 @@ async function browserbaseContext(publisher) {
   return String(created.id);
 }
 
+function localPublisherReady(publisher) {
+  const local = state.localPublisher?.[publisher] || {};
+  return ['verified_article_access', 'verified_pdf_access'].includes(String(local.status || ''))
+    || ['verified_article_access', 'verified_pdf_access'].includes(String(local.lastVerifiedStatus || ''));
+}
+
+async function closeLocalPublisherBrowser(publisher) {
+  const active = localPublisherWindows.get(publisher);
+  if (!active) return;
+  localPublisherWindows.delete(publisher);
+  try {
+    if (active.win && !active.win.isDestroyed()) active.win.destroy();
+  } catch {}
+}
+
+async function clearPublisherCooldowns(publisher) {
+  let cleared = 0;
+  for (const doi of Object.keys(state.cooldowns || {})) {
+    if (classify(doi) !== publisher) continue;
+    delete state.cooldowns[doi];
+    cleared += 1;
+  }
+  if (cleared) {
+    await saveState();
+    await log('publisher_cooldowns_cleared', { publisher, cleared });
+  }
+  return cleared;
+}
+
+async function releaseVerifiedPublisherCooldowns() {
+  let changed = false;
+  for (const publisher of ['acs', 'wiley', 'nature', 'science']) {
+    if (!localPublisherReady(publisher)) continue;
+    let cleared = 0;
+    for (const doi of Object.keys(state.cooldowns || {})) {
+      if (classify(doi) !== publisher) continue;
+      delete state.cooldowns[doi];
+      cleared += 1;
+    }
+    if (cleared) {
+      changed = true;
+      await log('publisher_cooldowns_cleared', { publisher, cleared, reason: 'verified_local_session' });
+    }
+  }
+  if (changed) await saveState();
+}
+
+async function startLocalPublisherVerification(publisher) {
+  publisher = String(publisher || '').trim().toLowerCase();
+  if (!['acs', 'wiley', 'nature', 'science'].includes(publisher)) throw new Error('local_publisher_unsupported');
+
+  const existing = localPublisherWindows.get(publisher);
+  if (existing?.win && !existing.win.isDestroyed()) {
+    existing.win.show();
+    existing.win.focus();
+    return { publisher, status: 'open', doi: existing.doi || '', url: existing.win.webContents.getURL() };
+  }
+
+  const target = manualPublisherTarget(publisher);
+  const publisherSession = getPublisherSession(publisher);
+  const win = new BrowserWindow({
+    width: 1380,
+    height: 960,
+    show: true,
+    title: `Collector · ${manualPublisherLabel(publisher)} · 本机/VPN 验证`,
+    webPreferences: {
+      session: publisherSession,
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+      images: true,
+    },
+  });
+  localPublisherWindows.set(publisher, { win, doi: target.doi || '', targetUrl: target.url, startedAt: Date.now() });
+  win.on('closed', () => {
+    const current = localPublisherWindows.get(publisher);
+    if (current?.win === win) localPublisherWindows.delete(publisher);
+  });
+  win.webContents.on('did-fail-load', (_event, code, description, validatedUrl, isMainFrame) => {
+    if (!isMainFrame && Number(code) === -3 && String(validatedUrl || '') === 'about:srcdoc') return;
+    void log('local_publisher_load_failed', { publisher, doi: target.doi || '', code, description, url: validatedUrl, isMainFrame: Boolean(isMainFrame) });
+  });
+
+  {
+    const previous = state.localPublisher[publisher] || {};
+    const preserveVerified = localPublisherReady(publisher);
+    state.localPublisher[publisher] = {
+      ...previous,
+      status: preserveVerified ? previous.status : 'opening',
+      windowStatus: 'opening',
+      doi: target.doi || '',
+      partition: `persist:toc-publisher-${publisher}`,
+      openedAt: Date.now(),
+    };
+  }
+  await saveState();
+  await log('local_publisher_window_opened', { publisher, doi: target.doi || '', url: target.url, partition: `persist:toc-publisher-${publisher}` });
+
+  await win.loadURL(target.url, {
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+  }).catch(async error => {
+    await log('local_publisher_load_error', { publisher, doi: target.doi || '', reason: safeError(error, 240) });
+  });
+
+  {
+    const previous = state.localPublisher[publisher] || {};
+    const preserveVerified = localPublisherReady(publisher);
+    state.localPublisher[publisher] = {
+      ...previous,
+      status: preserveVerified ? previous.status : 'open',
+      windowStatus: 'open',
+      currentUrl: win.webContents.getURL(),
+      openedAt: Date.now(),
+    };
+  }
+  await saveState();
+  stageStatus = `${manualPublisherLabel(publisher)} 已在本机持久浏览器会话打开。该会话直接使用 Windows 网络；若学校 VPN 是系统级隧道，它会沿用学校 VPN。完成验证并进入论文页后点击“检查本机权限”。`;
+  refreshDashboard();
+  return { publisher, status: 'open', doi: target.doi || '', url: win.webContents.getURL() };
+}
+
+async function finishLocalPublisherVerification(publisher) {
+  publisher = String(publisher || '').trim().toLowerCase();
+  const active = localPublisherWindows.get(publisher);
+  if (!active?.win || active.win.isDestroyed()) throw new Error('local_publisher_window_not_open');
+
+  const details = await active.win.webContents.executeJavaScript(`(() => {
+    const abs = value => { try { return new URL(value, location.href).href } catch { return '' } };
+    const text = String(document.body?.innerText || '').slice(0, 220000);
+    const pdfLinks = [...document.querySelectorAll('a[href]')]
+      .map(a => ({ href: abs(a.getAttribute('href') || ''), text: String(a.textContent || '').trim() }))
+      .filter(item => item.href && (/\\bpdf\\b|download/i.test(item.text + ' ' + item.href)))
+      .slice(0, 30);
+    return { href: location.href, title: document.title, text, pdfLinks };
+  })()`);
+
+  const pageUrl = String(details?.href || active.win.webContents.getURL() || '');
+  const body = String(details?.text || '');
+  const challenged = browserbaseManualRequired(body, pageUrl);
+  const hostOk = publisherHostMatches(publisher, pageUrl);
+  const normalizedDoi = String(active.doi || '').toLowerCase();
+  const doiSuffix = normalizedDoi.split('/').at(-1) || normalizedDoi;
+  const doiOk = !normalizedDoi || body.toLowerCase().includes(normalizedDoi) || pageUrl.toLowerCase().includes(doiSuffix.toLowerCase());
+
+  // Browser-level PDF/ePDF viewers are valid entitlement evidence even when a
+  // separate fetch() is rejected by publisher anti-bot middleware.
+  const browserPdfViewer =
+    (publisher === 'wiley' && /\/doi\/(?:e?pdf)\//i.test(pageUrl)) ||
+    (publisher === 'acs' && /\/doi\/(?:e?pdf|pdf)\//i.test(pageUrl)) ||
+    /\.pdf(?:[?#]|$)/i.test(pageUrl);
+
+  let pdfAccess = browserPdfViewer;
+  let pdfStatus = browserPdfViewer ? 200 : 0;
+  let pdfContentType = browserPdfViewer ? 'browser/pdf-viewer' : '';
+  let pdfUrl = browserPdfViewer ? pageUrl : '';
+  let pdfEvidence = browserPdfViewer ? 'browser_viewer' : '';
+
+  if (!challenged && hostOk && !pdfAccess) {
+    const publisherSession = getPublisherSession(publisher);
+    for (const item of Array.isArray(details?.pdfLinks) ? details.pdfLinks : []) {
+      try {
+        const response = await publisherSession.fetch(item.href, {
+          method: 'GET',
+          redirect: 'follow',
+          headers: { Referer: pageUrl, Accept: 'application/pdf,*/*;q=0.8' },
+          signal: AbortSignal.timeout(20000),
+        });
+        pdfStatus = Number(response.status || 0);
+        pdfContentType = String(response.headers.get('content-type') || '').toLowerCase();
+        pdfUrl = String(response.url || item.href);
+        if (response.ok && (pdfContentType.includes('application/pdf') || /\.pdf(?:[?#]|$)/i.test(pdfUrl))) {
+          pdfAccess = true;
+          pdfEvidence = 'direct_fetch';
+          try { await response.body?.cancel(); } catch {}
+          break;
+        }
+        try { await response.body?.cancel(); } catch {}
+      } catch (error) {
+        await log('local_publisher_pdf_probe_failed', { publisher, doi: normalizedDoi, reason: safeError(error, 180) });
+      }
+    }
+  }
+
+  const status = challenged
+    ? 'still_challenged'
+    : !hostOk
+      ? 'wrong_domain'
+      : !doiOk
+        ? 'doi_not_verified'
+        : pdfAccess
+          ? 'verified_pdf_access'
+          : 'verified_article_access';
+
+  state.localPublisher[publisher] = {
+    ...(state.localPublisher[publisher] || {}),
+    status,
+    doi: normalizedDoi,
+    currentUrl: pageUrl,
+    pdfAccess,
+    pdfStatus,
+    pdfContentType,
+    pdfUrl: pdfAccess ? pdfUrl : '',
+    pdfEvidence,
+    windowStatus: 'checked',
+    lastVerifiedStatus: ['verified_article_access', 'verified_pdf_access'].includes(status)
+      ? status
+      : state.localPublisher?.[publisher]?.lastVerifiedStatus || '',
+    lastVerifiedAt: ['verified_article_access', 'verified_pdf_access'].includes(status)
+      ? Date.now()
+      : state.localPublisher?.[publisher]?.lastVerifiedAt || 0,
+    checkedAt: Date.now(),
+  };
+
+  if (status === 'verified_pdf_access' || status === 'verified_article_access') {
+    let cleared = 0;
+    for (const doi of Object.keys(state.cooldowns || {})) {
+      if (classify(doi) !== publisher) continue;
+      delete state.cooldowns[doi];
+      cleared += 1;
+    }
+    await log('local_publisher_verification_checked', {
+      publisher,
+      doi: normalizedDoi,
+      status,
+      pdfAccess,
+      pdfStatus,
+      pdfContentType,
+      pdfEvidence,
+      clearedCooldowns: cleared,
+      url: pageUrl,
+    });
+    await saveState();
+    active.win.close();
+    stageStatus = pdfAccess
+      ? `${manualPublisherLabel(publisher)} 本机/VPN 权限已确认：浏览器级 PDF/ePDF 权限成立；已清除该出版社旧 cooldown，可立即重新处理。`
+      : `${manualPublisherLabel(publisher)} 文章权限已确认；已清除该出版社旧 cooldown。PDF 将继续通过浏览器会话而不是独立 HTTP 探针解析。`;
+  } else {
+    await saveState();
+    await log('local_publisher_verification_checked', {
+      publisher,
+      doi: normalizedDoi,
+      status,
+      pdfAccess,
+      pdfStatus,
+      pdfContentType,
+      pdfEvidence,
+      url: pageUrl,
+    });
+    if (status === 'still_challenged') {
+      stageStatus = `${manualPublisherLabel(publisher)} 仍处在验证/挑战页面，请在本机窗口完成后再次点击“检查本机权限”。`;
+    } else {
+      stageStatus = `${manualPublisherLabel(publisher)} 尚未完成权限确认（${status}），请保持本机窗口打开并进入目标论文页。`;
+    }
+  }
+
+  refreshDashboard();
+  return { publisher, status, doi: normalizedDoi, url: pageUrl, pdfAccess, pdfStatus, pdfContentType, pdfEvidence };
+}
+
+function manualPublisherLabel(publisher) {
+  return publisher === 'acs' ? 'ACS'
+    : publisher === 'wiley' ? 'Wiley'
+      : publisher === 'nature' ? 'Springer Nature'
+        : publisher === 'science' ? 'AAAS / Science'
+          : publisher;
+}
+
+function manualPublisherTarget(publisher) {
+  const queued = lastQueue.find(item => classify(item?.doi) === publisher && item?.doi);
+  if (queued?.doi) return { doi: String(queued.doi).toLowerCase(), url: articleUrl(String(queued.doi).toLowerCase()) };
+  if (publisher === 'acs') return { doi: '10.1021/acs.orglett.6c03622', url: articleUrl('10.1021/acs.orglett.6c03622') };
+  if (publisher === 'wiley') return { doi: '10.1002/anie.1537547', url: articleUrl('10.1002/anie.1537547') };
+  if (publisher === 'nature') return { doi: '10.1038/s44160-026-01158-6', url: articleUrl('10.1038/s44160-026-01158-6') };
+  if (publisher === 'science') return { doi: '', url: 'https://www.science.org/' };
+  throw new Error('manual_publisher_unsupported');
+}
+
+async function startManualBrowserbase(publisher) {
+  publisher = String(publisher || '').trim().toLowerCase();
+  if (!['acs', 'wiley', 'nature', 'science'].includes(publisher)) throw new Error('manual_publisher_unsupported');
+  if (!browserbaseDiagnostic().configured) throw new Error('browserbase_missing_credentials');
+
+  const active = manualBrowserbaseSessions.get(publisher);
+  if (active?.sessionId) {
+    const debug = await browserbaseApi(`/sessions/${encodeURIComponent(active.sessionId)}/debug`, { method: 'GET' });
+    const liveUrl = String(debug?.debuggerFullscreenUrl || debug?.debuggerUrl || '').trim();
+    if (liveUrl) await shell.openExternal(liveUrl);
+    return { configured: true, publisher, status: 'active', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
+  }
+
+  await waitForBrowserbaseSlot(publisher);
+  const contextId = await browserbaseContext(publisher);
+  const { projectId } = browserbaseCredentials();
+  const payload = {
+    keepAlive: true,
+    browserSettings: { context: { id: contextId, persist: true } },
+  };
+  if (projectId) payload.projectId = projectId;
+
+  const sessionInfo = await browserbaseApi('/sessions', { method: 'POST', body: JSON.stringify(payload) });
+  if (!sessionInfo?.id || !sessionInfo?.connectUrl) throw new Error('browserbase_session_missing_connect_url');
+
+  const { chromium } = await import('playwright-core');
+  const browser = await chromium.connectOverCDP(sessionInfo.connectUrl);
+  const context = browser.contexts()[0];
+  const page = context.pages()[0] || await context.newPage();
+  const target = manualPublisherTarget(publisher);
+  await page.goto(target.url, { waitUntil: 'domcontentloaded', timeout: Math.max(30000, Number(config.publisherTimeoutSeconds || 35) * 1000) }).catch(() => {});
+  await page.waitForTimeout(1200).catch(() => {});
+
+  const debug = await browserbaseApi(`/sessions/${encodeURIComponent(String(sessionInfo.id))}/debug`, { method: 'GET' });
+  const liveUrl = String(debug?.debuggerFullscreenUrl || debug?.debuggerUrl || '').trim();
+  if (!liveUrl) {
+    await browser.close().catch(() => {});
+    throw new Error('browserbase_live_url_missing');
+  }
+
+  const sessionId = String(sessionInfo.id);
+  manualBrowserbaseSessions.set(publisher, { browser, page, sessionId, contextId, doi: target.doi, url: target.url, startedAt: Date.now() });
+  state.browserbase.manual[publisher] = {
+    status: 'active',
+    sessionId,
+    contextId,
+    doi: target.doi,
+    startedAt: Date.now(),
+  };
+  state.browserbase.status[publisher] = 'manual_active';
+  await saveState();
+  await log('browserbase_manual_session_started', { publisher, doi: target.doi, sessionId, contextId });
+  await shell.openExternal(liveUrl);
+  stageStatus = `${manualPublisherLabel(publisher)} 人工验证窗口已打开；完成后回到 Collector 点击“完成验证”。`;
+  refreshDashboard();
+  return { configured: true, publisher, status: 'active', sessionId, contextId, doi: target.doi };
+}
+
+async function finishManualBrowserbase(publisher) {
+  publisher = String(publisher || '').trim().toLowerCase();
+  const active = manualBrowserbaseSessions.get(publisher);
+  if (!active) throw new Error('manual_session_not_active');
+
+  let pageUrl = '';
+  let html = '';
+  try {
+    pageUrl = active.page.url();
+    html = await active.page.content();
+  } catch {}
+  if (browserbaseManualRequired(html, pageUrl)) {
+    state.browserbase.manual[publisher] = {
+      ...(state.browserbase.manual[publisher] || {}),
+      status: 'still_challenged',
+      checkedAt: Date.now(),
+    };
+    state.browserbase.status[publisher] = 'manual_required';
+    await saveState();
+    stageStatus = `${manualPublisherLabel(publisher)} 仍处在验证/挑战页面；继续在 Live Session 完成验证，然后再次点击“继续当前任务”。`;
+    refreshDashboard();
+    return { configured: true, publisher, status: 'still_challenged', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
+  }
+
+  if (active.doi && !browserbaseOwnsDoi(active.doi, pageUrl, html)) {
+    state.browserbase.manual[publisher] = {
+      ...(state.browserbase.manual[publisher] || {}),
+      status: 'doi_not_verified',
+      checkedAt: Date.now(),
+    };
+    await saveState();
+    stageStatus = `${manualPublisherLabel(publisher)} 已离开挑战页，但当前页面尚未确认目标 DOI；请在同一 Live Session 打开目标论文，再点击“继续当前任务”。`;
+    refreshDashboard();
+    return { configured: true, publisher, status: 'doi_not_verified', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
+  }
+
+  const candidate = htmlCandidate(html, pageUrl);
+  if (!candidate) {
+    state.browserbase.manual[publisher] = {
+      ...(state.browserbase.manual[publisher] || {}),
+      status: 'verified_no_candidate',
+      checkedAt: Date.now(),
+    };
+    state.browserbase.status[publisher] = 'manual_verified_no_candidate';
+    await saveState();
+    stageStatus = `${manualPublisherLabel(publisher)} 权限已通过，但当前页面未找到可信 Primary Visual；session 保持打开，可继续检查文章/PDF。`;
+    refreshDashboard();
+    return { configured: true, publisher, status: 'verified_no_candidate', sessionId: active.sessionId, contextId: active.contextId, doi: active.doi || '' };
+  }
+
+  const image = await verifyBrowserbaseImage(active.page, candidate, {
+    publisher,
+    doi: active.doi,
+    sessionId: active.sessionId,
+  });
+
+  if (!config.writeToken) throw new Error('write_token_missing');
+  if (candidate.kind === 'official') {
+    await api('/api/toc/import', {
+      method: 'POST',
+      body: JSON.stringify({
+        doi: active.doi,
+        articleUrl: pageUrl,
+        imageData: image.imageData,
+        replace: false,
+      }),
+    });
+    await report(active.doi, 'upload', 'complete', 'collector_official_toc_manual_resume', pageUrl);
+  } else {
+    await api('/api/article-figures/import', {
+      method: 'POST',
+      body: JSON.stringify({
+        doi: active.doi,
+        articleUrl: pageUrl,
+        id: 'figure-1',
+        label: 'Figure 1',
+        caption: candidate.text?.slice(0, 500) || 'Figure 1',
+        imageData: image.imageData,
+        order: 0,
+      }),
+    });
+    await report(active.doi, 'upload', 'partial', 'collector_figure1_manual_resume', pageUrl);
+  }
+
+  await clearCooldown(active.doi);
+  await log('browserbase_manual_resume_upload_success', {
+    publisher,
+    doi: active.doi,
+    kind: candidate.kind,
+    sessionId: active.sessionId,
+    contextId: active.contextId,
+  });
+
+  await active.browser.close().catch(() => {});
+  manualBrowserbaseSessions.delete(publisher);
+  state.browserbase.manual[publisher] = {
+    status: 'verified',
+    sessionId: active.sessionId,
+    contextId: active.contextId,
+    doi: active.doi || '',
+    verifiedAt: Date.now(),
+    resumedSameSession: true,
+    resolvedKind: candidate.kind,
+  };
+  state.browserbase.status[publisher] = 'manual_verified';
+  if (active.doi) state.browserbase.lastSuccessDoi[publisher] = active.doi;
+  await saveState();
+  stageStatus = `${manualPublisherLabel(publisher)} 人工验证完成；已在同一 Browserbase Session 继续并上传当前 DOI，persistent Context 已保存供后续论文复用。`;
+  refreshDashboard();
+  return {
+    configured: true,
+    publisher,
+    status: 'verified',
+    sessionId: active.sessionId,
+    contextId: active.contextId,
+    doi: active.doi || '',
+    resumedSameSession: true,
+    resolvedKind: candidate.kind,
+  };
+}
+
 async function verifyBrowserbaseImage(page, candidate, { publisher, doi, sessionId }) {
   const response = await page.request.get(candidate.src, { timeout: 20000 });
   const contentType = String(response.headers()['content-type'] || '').toLowerCase();
-  const bytes = (await response.body()).length;
+  const body = await response.body();
+  const bytes = body.length;
   if (!response.ok()) throw new Error(`browserbase_image_http_${response.status()}`);
-  if (!contentType.startsWith('image/') || bytes < 128) throw new Error('browserbase_image_unreadable');
+  if (!contentType.startsWith('image/') || bytes < 1024) throw new Error('browserbase_image_unreadable');
+  const mime = contentType.split(';')[0];
   await log('browserbase_image_readable', { publisher, doi, kind: candidate.kind, bytes, sessionId });
-  return { contentType: contentType.split(';')[0], bytes };
+  return { contentType: mime, bytes, imageData: `data:${mime};base64,${body.toString('base64')}` };
+}
+
+
+function springerNatureMediaCandidates(doi) {
+  const normalized = String(doi || '').trim().toLowerCase();
+  if (!normalized.startsWith('10.1038/')) return [];
+  const articleId = normalized.split('/')[1] || '';
+  const match = /^s(\d+)-(\d{3})-(\d+)-[a-z0-9]+$/i.exec(articleId);
+  if (!match) return [];
+  const journalCode = match[1];
+  const year = 2000 + Number(match[2]);
+  const articleNumber = String(Number(match[3]));
+  if (!Number.isFinite(year) || !articleNumber || articleNumber === 'NaN') return [];
+  const stem = `${journalCode}_${year}_${articleNumber}`;
+  const encodedArticle = encodeURIComponent(articleId);
+  const base = `https://media.springernature.com/full/springer-static/image/art%3A10.1038%2F${encodedArticle}/MediaObjects/`;
+  return [
+    {
+      src: `${base}${stem}_Figa_HTML.png`,
+      kind: 'official',
+      text: 'Graphical Abstract / Visual Abstract',
+      ownershipToken: `${articleId}/MediaObjects/${stem}_Figa_HTML.png`,
+      source: 'springer_nature_mediaobjects',
+      confidence: 99,
+    },
+    {
+      src: `${base}${stem}_Fig1_HTML.png`,
+      kind: 'figure1',
+      text: 'Figure 1',
+      ownershipToken: `${articleId}/MediaObjects/${stem}_Fig1_HTML.png`,
+      source: 'springer_nature_mediaobjects',
+      confidence: 96,
+    },
+  ];
+}
+
+async function verifySpringerNatureCandidate(doi, candidate) {
+  const normalized = String(doi || '').trim().toLowerCase();
+  const articleId = normalized.split('/')[1] || '';
+  let decoded = '';
+  try { decoded = decodeURIComponent(candidate.src); } catch { decoded = candidate.src; }
+  if (!articleId || !decoded.includes(`10.1038/${articleId}/MediaObjects/`)) {
+    throw new Error('springer_nature_doi_ownership_mismatch');
+  }
+  const response = await globalThis.fetch(candidate.src, {
+    method: 'GET',
+    redirect: 'follow',
+    headers: {
+      Accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+      Referer: articleUrl(normalized),
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+    },
+    signal: AbortSignal.timeout(20000),
+  });
+  if (!response.ok) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, status: response.status, reason: 'http' });
+    return null;
+  }
+  const contentType = String(response.headers.get('content-type') || '').toLowerCase().split(';')[0];
+  if (!contentType.startsWith('image/')) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'content_type', contentType });
+    return null;
+  }
+  const buffer = Buffer.from(await response.arrayBuffer());
+  if (buffer.length < 4096 || buffer.length > 8_000_000) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'size', bytes: buffer.length });
+    return null;
+  }
+  const image = nativeImage.createFromBuffer(buffer);
+  if (image.isEmpty()) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'decode' });
+    return null;
+  }
+  const size = image.getSize();
+  if (size.width < 240 || size.height < 120) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'dimensions', width: size.width, height: size.height });
+    return null;
+  }
+  const ratio = size.width / Math.max(1, size.height);
+  if (ratio > 8 || ratio < 0.12) {
+    await log('springer_nature_candidate_rejected', { doi: normalized, kind: candidate.kind, reason: 'logo_like_aspect', width: size.width, height: size.height });
+    return null;
+  }
+  const mime = ['image/png','image/jpeg','image/gif','image/webp'].includes(contentType) ? contentType : 'image/png';
+  const verified = {
+    ...candidate,
+    width: size.width,
+    height: size.height,
+    imageData: `data:${mime};base64,${buffer.toString('base64')}`,
+  };
+  await log('springer_nature_candidate_verified', {
+    doi: normalized,
+    kind: candidate.kind,
+    source: candidate.source,
+    confidence: candidate.confidence,
+    width: size.width,
+    height: size.height,
+    bytes: buffer.length,
+  });
+  return verified;
+}
+
+async function inspectSpringerNatureStructured(doi) {
+  const normalized = String(doi || '').trim().toLowerCase();
+  if (classify(normalized) !== 'nature') return null;
+  const target = articleUrl(normalized);
+
+  try {
+    const response = await publisherFetch(target, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
+      signal: AbortSignal.timeout(15000),
+    }, 'springer_nature_metadata_fetch_fallback');
+    if (response.ok) {
+      const html = await response.text();
+      const finalUrl = response.url || target;
+      const challenged = browserbaseManualRequired(html, finalUrl);
+      const ownsDoi = html.toLowerCase().includes(normalized) || finalUrl.toLowerCase().includes(normalized.split('/')[1]);
+      if (!challenged && ownsDoi) {
+        const metadataCandidate = htmlCandidate(html, finalUrl);
+        if (metadataCandidate && ['official','figure1'].includes(metadataCandidate.kind)) {
+          const responseImage = await globalThis.fetch(metadataCandidate.src, {
+            headers: { Accept: 'image/*,*/*;q=0.8', Referer: finalUrl },
+            signal: AbortSignal.timeout(20000),
+          });
+          if (responseImage.ok) {
+            const contentType = String(responseImage.headers.get('content-type') || '').split(';')[0].toLowerCase();
+            const buffer = Buffer.from(await responseImage.arrayBuffer());
+            const image = nativeImage.createFromBuffer(buffer);
+            if (contentType.startsWith('image/') && buffer.length >= 4096 && !image.isEmpty()) {
+              const size = image.getSize();
+              if (size.width >= 240 && size.height >= 120) {
+                await log('springer_nature_metadata_candidate_verified', { doi: normalized, kind: metadataCandidate.kind, width: size.width, height: size.height, url: finalUrl });
+                return {
+                  url: finalUrl,
+                  method: 'springer_nature_metadata',
+                  candidate: {
+                    ...metadataCandidate,
+                    width: size.width,
+                    height: size.height,
+                    imageData: `data:${contentType};base64,${buffer.toString('base64')}`,
+                    source: 'springer_nature_metadata',
+                    confidence: metadataCandidate.kind === 'official' ? 100 : 97,
+                  },
+                };
+              }
+            }
+          }
+        }
+      }
+      await log('springer_nature_metadata_no_candidate', { doi: normalized, challenged, ownsDoi, url: finalUrl });
+    }
+  } catch (error) {
+    await log('springer_nature_metadata_failed', { doi: normalized, reason: safeError(error, 240) });
+  }
+
+  for (const candidate of springerNatureMediaCandidates(normalized)) {
+    try {
+      const verified = await verifySpringerNatureCandidate(normalized, candidate);
+      if (verified) {
+        return {
+          url: target,
+          method: candidate.kind === 'official' ? 'springer_nature_official_visual' : 'springer_nature_figure1',
+          candidate: verified,
+        };
+      }
+    } catch (error) {
+      await log('springer_nature_candidate_failed', { doi: normalized, kind: candidate.kind, reason: safeError(error, 240) });
+    }
+  }
+  return null;
 }
 
 async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyImage = false } = {}) {
   const publisher = browserbasePublisher(doi);
   if (!publisher) return null;
+  const activeManual = manualBrowserbaseSessions.get(publisher);
+  if (activeManual?.sessionId) {
+    state.browserbase.status[publisher] = 'manual_required';
+    await saveState();
+    await log('browserbase_manual_session_reused_waiting', { publisher, doi, sessionId: activeManual.sessionId, activeDoi: activeManual.doi || '' });
+    throw new Error('manual_required');
+  }
   const credentials = browserbaseCredentials();
   if (!credentials.apiKey) {
     state.browserbase.status[publisher] = 'missing';
@@ -617,9 +1310,34 @@ async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyIma
     const pageUrl = page.url();
     const html = await page.content();
     if (browserbaseManualRequired(html, pageUrl)) {
+      const sessionId = String(sessionInfo.id || '');
+      const debug = sessionId
+        ? await browserbaseApi(`/sessions/${encodeURIComponent(sessionId)}/debug`, { method: 'GET' }).catch(() => null)
+        : null;
+      const contextId = String(state.browserbase.contexts?.[publisher] || '');
+      manualBrowserbaseSessions.set(publisher, {
+        browser,
+        page,
+        sessionId,
+        contextId,
+        doi,
+        url,
+        startedAt: Date.now(),
+      });
+      browser = null;
+      state.browserbase.manual[publisher] = {
+        status: 'manual_required',
+        sessionId,
+        contextId,
+        doi,
+        startedAt: Date.now(),
+        liveAvailable: Boolean(debug?.debuggerFullscreenUrl || debug?.debuggerUrl),
+      };
       state.browserbase.status[publisher] = 'manual_required';
       await saveState();
-      await log('browserbase_manual_required', { publisher, doi, url: pageUrl, sessionId: String(sessionInfo.id || '') });
+      await log('browserbase_manual_required', { publisher, doi, url: pageUrl, sessionId, contextId });
+      stageStatus = `${manualPublisherLabel(publisher)} 需要人工验证；当前 Session 已保活，没有创建新 Session。请点击“打开 Live Session”，验证后点击“继续当前任务”。`;
+      refreshDashboard();
       throw new Error('manual_required');
     }
     if (!browserbaseOwnsDoi(doi, pageUrl, html)) throw new Error('browserbase_doi_mismatch');
@@ -647,7 +1365,8 @@ async function inspectArticleBrowserbase(doi, url, localReason = '', { verifyIma
 
 async function publisherFetch(url, options, fallbackEvent) {
   try {
-    return await getPublisherSession().fetch(url, options);
+    const publisher = publisherFromUrl(url);
+    return await getPublisherSession(publisher).fetch(url, options);
   } catch (error) {
     const reason = safeError(error, 300);
     if (!/ERR_BLOCKED_BY_CLIENT|ERR_CONNECTION_CLOSED/i.test(reason)) throw error;
@@ -693,15 +1412,79 @@ async function inspectArticleHtml(doi, url, browserError = '') {
   }
 }
 
+async function downloadPdfFromPublisherBrowser({ doi, publisher, webContents, pdfUrl }) {
+  if (!pdfUrl || !webContents || webContents.isDestroyed()) return null;
+  const cacheDir = path.join(dataDir(), 'pdf-cache');
+  await fsp.mkdir(cacheDir, { recursive: true });
+  const key = createHash('sha256').update(String(doi).toLowerCase()).digest('hex').slice(0, 24);
+  const target = path.join(cacheDir, `${key}.pdf`);
+  try {
+    const stat = await fsp.stat(target);
+    if (stat.size > 10000) {
+      await log('local_pdf_cache_hit', { doi, publisher, bytes: stat.size, path: target });
+      return { path: target, bytes: stat.size, source: 'cache' };
+    }
+  } catch {}
+
+  const publisherSession = getPublisherSession(publisher);
+  return await new Promise(resolve => {
+    let settled = false;
+    let timer = null;
+    const finish = result => {
+      if (settled) return;
+      settled = true;
+      if (timer) clearTimeout(timer);
+      publisherSession.removeListener('will-download', onDownload);
+      resolve(result);
+    };
+    const onDownload = (_event, item, sourceWebContents) => {
+      if (sourceWebContents && sourceWebContents.id !== webContents.id) return;
+      item.setSavePath(target);
+      item.once('done', async (_doneEvent, stateName) => {
+        if (stateName !== 'completed') {
+          await log('local_pdf_download_failed', { doi, publisher, state: stateName, url: pdfUrl });
+          finish(null);
+          return;
+        }
+        try {
+          const stat = await fsp.stat(target);
+          if (stat.size < 10000) {
+            await fsp.rm(target, { force: true }).catch(() => {});
+            await log('local_pdf_download_failed', { doi, publisher, state: 'too_small', bytes: stat.size, url: pdfUrl });
+            finish(null);
+            return;
+          }
+          await log('local_pdf_downloaded', { doi, publisher, bytes: stat.size, path: target, url: pdfUrl });
+          finish({ path: target, bytes: stat.size, source: 'browser_download' });
+        } catch (error) {
+          await log('local_pdf_download_failed', { doi, publisher, state: 'stat_failed', reason: safeError(error, 180), url: pdfUrl });
+          finish(null);
+        }
+      });
+    };
+    publisherSession.on('will-download', onDownload);
+    timer = setTimeout(() => finish(null), 45000);
+    try {
+      webContents.downloadURL(pdfUrl);
+    } catch (error) {
+      void log('local_pdf_download_failed', { doi, publisher, state: 'download_url_failed', reason: safeError(error, 180), url: pdfUrl });
+      finish(null);
+    }
+  });
+}
 async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnostic, verifyBrowserbaseImage = false } = {}) {
   const url = articleUrl(doi);
+  if (!forceBrowserbase && classify(doi) === 'nature') {
+    const structured = await inspectSpringerNatureStructured(doi);
+    if (structured?.candidate) return structured;
+  }
   let win = null;
   let publisherTimer;
   try {
     win = new BrowserWindow({
       show: false,
       webPreferences: {
-        session: getPublisherSession(),
+        session: getPublisherSession(classify(doi)),
         sandbox: true,
         contextIsolation: true,
         images: true,
@@ -739,7 +1522,11 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
         const fig1 = /(^|\\b)(fig(?:ure)?\\.?\\s*1)(\\b|[:.])/i.test(text);
         if (official || fig1) rows.push({ src, text, width: img.naturalWidth || 0, height: img.naturalHeight || 0, kind: official ? 'official' : 'figure1' });
       }
-      return { title: document.title, href: location.href, rows };
+      const pdfLinks = [...document.querySelectorAll('a[href]')]
+        .map(a => ({ href: abs(a.getAttribute('href') || ''), text: String(a.textContent || '').trim() }))
+        .filter(item => item.href && (/\\bpdf\\b|download|epdf/i.test(item.text + ' ' + item.href)))
+        .slice(0, 30);
+      return { title: document.title, href: location.href, rows, pdfLinks };
     })()`);
     const rows = Array.isArray(result?.rows) ? result.rows : [];
     rows.sort((a,b) => {
@@ -747,7 +1534,40 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       const sb = semanticScore(b.text) + (b.kind === 'official' ? 20 : 0) + Math.min(20, ((b.width||0)*(b.height||0))/100000);
       return sb - sa;
     });
-    if (!rows[0]) throw new Error('browser_no_candidate');
+    if (!rows[0]) {
+      const publisher = classify(doi);
+      const pageUrl = result?.href || url;
+      const pdfLinks = Array.isArray(result?.pdfLinks) ? result.pdfLinks : [];
+      const currentIsPdfViewer =
+        (publisher === 'wiley' && /\/doi\/(?:e?pdf)\//i.test(pageUrl)) ||
+        (publisher === 'acs' && /\/doi\/(?:e?pdf|pdf)\//i.test(pageUrl)) ||
+        /\.pdf(?:[?#]|$)/i.test(pageUrl);
+      const pdfUrl = currentIsPdfViewer ? pageUrl : String(pdfLinks[0]?.href || '');
+      if (localPublisherReady(publisher)) {
+        let pdf = null;
+        if (pdfUrl) {
+          pdf = await downloadPdfFromPublisherBrowser({ doi, publisher, webContents: win.webContents, pdfUrl });
+        }
+        await log('verified_local_browser_no_visual', {
+          doi,
+          publisher,
+          url: pageUrl,
+          pdfUrl: pdfUrl || '',
+          pdfDownloaded: Boolean(pdf),
+          pdfBytes: Number(pdf?.bytes || 0),
+        });
+        return {
+          url: pageUrl,
+          candidate: null,
+          method: pdf ? 'browser_pdf_downloaded' : 'verified_local_browser',
+          pdfUrl: pdfUrl || '',
+          pdfPath: pdf?.path || '',
+          pdfBytes: Number(pdf?.bytes || 0),
+          verifiedLocalSession: true,
+        };
+      }
+      throw new Error('browser_no_candidate');
+    }
     await log('browser_success', { doi, kind: rows[0].kind, url: result?.href || url });
     return { url: result?.href || url, candidate: rows[0], method: 'browser' };
   } catch (error) {
@@ -767,6 +1587,11 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       await log('browserbase_diagnostic_forced', { doi });
     }
     if (htmlResult?.candidate) return htmlResult;
+    const publisher = classify(doi);
+    if (!forceBrowserbase && localPublisherReady(publisher)) {
+      await log('browserbase_skipped_verified_local_session', { doi, publisher, browserError });
+      return htmlResult || { url, candidate: null, method: 'verified_local_no_candidate', verifiedLocalSession: true };
+    }
     const browserbaseResult = await inspectArticleBrowserbase(doi, url, browserError, { verifyImage: verifyBrowserbaseImage });
     if (browserbaseResult?.candidate) return browserbaseResult;
     // PDF is deliberately a later, independent resolver. Reaching this marker
@@ -811,15 +1636,30 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
     const inspected = await inspectArticle(doi);
     const c = inspected.candidate;
     if (!c) {
-      if (!inspectOnly) {
-        await setCooldown(doi, 'semantic_media_not_found', 72 * 60 * 60 * 1000);
-        await report(doi, 'extract', 'partial', 'semantic_media_not_found', inspected.url);
+      if (inspected.pdfPath) {
+        if (!inspectOnly) {
+          await setCooldown(doi, 'pdf_downloaded_visual_extraction_pending', 6 * 60 * 60 * 1000);
+          await report(doi, 'extract', 'partial', 'pdf_downloaded_visual_extraction_pending', inspected.pdfUrl || inspected.url);
+        }
+        await log('pdf_visual_extraction_pending', {
+          doi,
+          publisher: classify(doi),
+          path: inspected.pdfPath,
+          bytes: Number(inspected.pdfBytes || 0),
+        });
+        return { doi, status: 'pdf_downloaded', source: inspected.method || '', pdfPath: inspected.pdfPath, pdfBytes: Number(inspected.pdfBytes || 0) };
       }
-      return { doi, status: 'no_candidate' };
+      if (!inspectOnly) {
+        const reason = inspected.verifiedLocalSession ? 'verified_local_no_visual' : 'semantic_media_not_found';
+        const waitMs = inspected.verifiedLocalSession ? 6 * 60 * 60 * 1000 : 72 * 60 * 60 * 1000;
+        await setCooldown(doi, reason, waitMs);
+        await report(doi, 'extract', 'partial', reason, inspected.url);
+      }
+      return { doi, status: 'no_candidate', source: inspected.method || '' };
     }
     let data;
     try {
-      data = await imageData(c.src, inspected.url);
+      data = inspected?.image?.imageData || c.imageData || await imageData(c.src, inspected.url);
     } catch (error) {
       await log('image_download_failed', { doi, kind: c.kind, reason: safeError(error, 300) });
       throw error;
@@ -1029,6 +1869,7 @@ async function runCycle(manual = false) {
   cycleRunning = true;
   try {
     config = await loadJson(configPath(), DEFAULT_CONFIG);
+    await releaseVerifiedPublisherCooldowns();
     if (!String(config.writeToken || '').trim()) {
       stageStatus = '等待配置 writeToken；尚未开始采集或上传';
       await log('collector waiting for writeToken; no collection performed');
@@ -1044,7 +1885,7 @@ async function runCycle(manual = false) {
     const runnableRestricted = restricted.filter(x => (classify(x.doi)==='acs' ? net.acs : net.wiley));
     const runnable = [...open, ...runnableRestricted];
     const results = await processBatch(runnable);
-    const success = results.filter(x => ['official','figure1'].includes(x?.status)).length;
+    const success = results.filter(x => ['official','figure1','pdf_downloaded'].includes(x?.status)).length;
     const failed = results.filter(x => x?.status === 'failed').length;
     state.lastSummary = { at: Date.now(), queue: queue.length, processed: results.length, success, failed, net };
     await saveState();
@@ -1104,14 +1945,15 @@ function dashboardHtml() {
   <div class="grid">
     <div class="card"><div class="k">当前队列</div><div class="v">${lastQueue.length}</div></div>
     <div class="card"><div class="k">ACS / Wiley 待处理</div><div class="v">${restricted}</div></div>
-    <div class="card"><div class="k">ACS 网络</div><div class="v ${net.acs ? 'ok':'bad'}">${net.acs === true ? '可访问' : net.acs === false ? '不可访问' : '待检测'}</div></div>
-    <div class="card"><div class="k">Wiley 网络</div><div class="v ${net.wiley ? 'ok':'bad'}">${net.wiley === true ? '可访问' : net.wiley === false ? '不可访问' : '待检测'}</div></div>
+    <div class="card"><div class="k">ACS 网络 / 权限</div><div class="v ${net.acs ? 'ok':'bad'}">${net.acs === true ? '可使用' : net.acs === false ? '不可用' : '待检测'}${net.acsSource ? `<br><small>${escapeHtml(net.acsSource)}</small>` : ''}</div></div>
+    <div class="card"><div class="k">Wiley 网络 / 权限</div><div class="v ${net.wiley ? 'ok':'bad'}">${net.wiley === true ? '可使用' : net.wiley === false ? '不可用' : '待检测'}${net.wileySource ? `<br><small>${escapeHtml(net.wileySource)}</small>` : ''}</div></div>
     <div class="card"><div class="k">写入密钥</div><div class="v" style="font-size:14px">${escapeHtml(tokenState)}</div></div>
-    <div class="card"><div class="k">Browserbase</div><div class="v" style="font-size:14px">${browserbaseInfo.configured ? '已配置' : '缺失'} · ACS ${escapeHtml(browserbaseInfo.acs)} · Wiley ${escapeHtml(browserbaseInfo.wiley)}${browserbaseInfo.lastSuccessDoi ? `<br>最近成功：${escapeHtml(browserbaseInfo.lastSuccessDoi)}` : ''}${browserbaseBatch ? `<br>12 条测试：${Number(browserbaseBatch.resolved || 0)}/${Number(browserbaseBatch.requested || 0)}` : ''}</div></div>
+    <div class="card"><div class="k">Browserbase</div><div class="v" style="font-size:14px">${browserbaseInfo.configured ? '已配置' : '缺失'} · ACS ${escapeHtml(state.browserbase?.status?.acs || browserbaseInfo.acs)}<br>Wiley ${escapeHtml(state.browserbase?.status?.wiley || browserbaseInfo.wiley)} · Nature ${escapeHtml(state.browserbase?.status?.nature || 'standby')} · Science ${escapeHtml(state.browserbase?.status?.science || 'standby')}${browserbaseBatch ? `<br>12 条测试：${Number(browserbaseBatch.resolved || 0)}/${Number(browserbaseBatch.requested || 0)}` : ''}</div></div>
     <div class="card"><div class="k">上次处理</div><div class="v" style="font-size:14px">${summary.at ? `成功 ${Number(summary.success||0)} · 失败 ${Number(summary.failed||0)}` : '尚未采集'}</div></div>
   </div>
   <div class="buttons">${stageResults.collector === 'ok' && !diagnosticRequested ? '<a href="collector:check">现在检查一次</a>' : ''}<a href="collector:config">打开当前设置</a><a href="collector:reload-config">重新加载设置</a><a href="collector:log">查看日志</a>${validTray() ? '<a href="collector:hide">隐藏到托盘</a>' : ''}<a href="collector:quit">退出程序</a></div>
-  <section class="credentials"><strong>Browserbase 本机凭据</strong><div class="note">密钥只保存到当前进程的 config.json；界面、日志和控制台都不会显示密钥。</div><form id="browserbase-form"><label for="browserbase-api-key">Browserbase API Key</label><input id="browserbase-api-key" type="password" autocomplete="off" maxlength="2048" placeholder="粘贴 API Key"><label for="browserbase-project-id">Browserbase Project ID（可选）</label><input id="browserbase-project-id" type="text" autocomplete="off" maxlength="512" placeholder="可留空"><button class="primary" type="submit">保存</button><button id="browserbase-clear" type="button">清除凭据</button>${browserbaseInfo.configured ? '<button id="browserbase-test" type="button">Browserbase 验收</button>' : ''}<span class="note" id="browserbase-action-status"></span></form></section>
+  <section class="credentials"><strong>本机 / 学校 VPN 出版社权限</strong><div class="note">这里使用 Collector 本机持久浏览器会话，不使用 Browserbase。会话直接走 Windows 网络，因此系统级学校 VPN 会生效；ACS/Wiley 已验证状态会直接参与后台调度。</div><div class="buttons" id="local-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const local = state.localPublisher?.[publisher] || {}; return `<span><button type="button" data-local-start="${publisher}">本机打开 ${escapeHtml(label)}</button><button type="button" data-local-finish="${publisher}">检查本机权限</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(local.status || '未验证')}${local.pdfAccess ? ' · PDF 可访问' : ''}</small></span>`; }).join('')}</div></section>
+  <section class="credentials"><strong>Browserbase 本机凭据</strong><div class="note">密钥只保存到当前进程的 config.json；界面、日志和控制台都不会显示密钥。</div><form id="browserbase-form"><label for="browserbase-api-key">Browserbase API Key</label><input id="browserbase-api-key" type="password" autocomplete="off" maxlength="2048" placeholder="粘贴 API Key"><label for="browserbase-project-id">Browserbase Project ID（可选）</label><input id="browserbase-project-id" type="text" autocomplete="off" maxlength="512" placeholder="可留空"><button class="primary" type="submit">保存</button><button id="browserbase-clear" type="button">清除凭据</button>${browserbaseInfo.configured ? '<button id="browserbase-test" type="button">Browserbase 验收</button>' : ''}<span class="note" id="browserbase-action-status"></span></form>${browserbaseInfo.configured ? `<div class="note" style="margin-top:14px"><strong>人工验证 / 权限初始化</strong><br>点击后会打开 Browserbase Live View。完成出版社验证后回到此窗口点击对应“完成验证”。验证状态会保存在该出版社的 persistent Context 中。</div><div class="buttons" id="manual-publisher-actions">${['acs','wiley','nature','science'].map(publisher => { const label = manualPublisherLabel(publisher); const manual = state.browserbase?.manual?.[publisher] || {}; return `<span><button type="button" data-manual-start="${publisher}">${manual.sessionId ? '打开 Live Session' : `人工处理 ${escapeHtml(label)}`}</button><button type="button" data-manual-finish="${publisher}">继续当前任务</button><small style="display:block;color:#666;margin-top:3px">${escapeHtml(manual.status || '未初始化')}${manual.sessionId ? ` · Session ${escapeHtml(manual.sessionId)}` : ''}${manual.contextId ? ` · Context ${escapeHtml(manual.contextId)}` : ''}</small></span>`; }).join('')}</div>` : ''}</section>
   <table><thead><tr><th>最近待处理 DOI</th><th>来源</th></tr></thead><tbody>${rows || '<tr><td colspan="2">当前无待处理项目</td></tr>'}</tbody></table>
   <div class="note">实际 userData：<code>${escapeHtml(configInfo.userData)}</code><br>实际 config.json：<code>${escapeHtml(configInfo.configPath)}</code><br>设置状态：${escapeHtml(configInfo.message)}${configInfo.reloadedAt ? `（${escapeHtml(new Date(configInfo.reloadedAt).toLocaleString())}）` : ''}<br>VPN 程序：${vpnState}<br>自动检查间隔：${Number(config.pollMinutes||10)} 分钟；提醒间隔：${Number(config.reminderHours||6)} 小时。</div>
   </div><script>(() => {
@@ -1158,6 +2000,22 @@ function dashboardHtml() {
     document.getElementById('browserbase-test')?.addEventListener('click', () => {
       void run('正在进行只读验收…', () => bridge.testBrowserbase());
     });
+    document.querySelectorAll('[data-local-start]').forEach(button => button.addEventListener('click', () => {
+      const publisher = button.getAttribute('data-local-start');
+      void run('正在打开本机/VPN 出版社窗口…', () => bridge.startLocalPublisher(publisher));
+    }));
+    document.querySelectorAll('[data-local-finish]').forEach(button => button.addEventListener('click', () => {
+      const publisher = button.getAttribute('data-local-finish');
+      void run('正在检查文章页与 PDF 权限…', () => bridge.finishLocalPublisher(publisher));
+    }));
+    document.querySelectorAll('[data-manual-start]').forEach(button => button.addEventListener('click', () => {
+      const publisher = button.getAttribute('data-manual-start');
+      void run('正在创建人工验证会话…', () => bridge.startManualBrowserbase(publisher));
+    }));
+    document.querySelectorAll('[data-manual-finish]').forEach(button => button.addEventListener('click', () => {
+      const publisher = button.getAttribute('data-manual-finish');
+      void run('正在确认验证状态并保存 Context…', () => bridge.finishManualBrowserbase(publisher));
+    }));
   })();</script></body></html>`;
 }
 
@@ -1279,7 +2137,7 @@ function onNavigate(event, url) {
   })();
 }
 
-function dispose() {
+async function dispose() {
   disposed = true;
   quitting = true;
   if (firstCycleTimer) clearTimeout(firstCycleTimer);
@@ -1287,9 +2145,21 @@ function dispose() {
   if (vpnWatchTimer) clearInterval(vpnWatchTimer);
   if (configReloadTimer) clearTimeout(configReloadTimer);
   if (configWatcher) configWatcher.close();
+  for (const [publisher] of localPublisherWindows) {
+    await closeLocalPublisherBrowser(publisher).catch(() => {});
+  }
+  localPublisherWindows.clear();
+  for (const active of manualBrowserbaseSessions.values()) {
+    active.browser?.close?.().catch?.(() => {});
+  }
+  manualBrowserbaseSessions.clear();
   ipcMain.removeHandler('toc-collector:browserbase-save');
   ipcMain.removeHandler('toc-collector:browserbase-clear');
   ipcMain.removeHandler('toc-collector:browserbase-acceptance');
+  ipcMain.removeHandler('toc-collector:browserbase-manual-start');
+  ipcMain.removeHandler('toc-collector:browserbase-manual-finish');
+  ipcMain.removeHandler('toc-collector:local-publisher-start');
+  ipcMain.removeHandler('toc-collector:local-publisher-finish');
   if (validTray()) tray.destroy();
 }
 
@@ -1301,6 +2171,10 @@ dashboard.webContents.on('will-navigate', onNavigate);
 ipcMain.removeHandler('toc-collector:browserbase-save');
 ipcMain.removeHandler('toc-collector:browserbase-clear');
 ipcMain.removeHandler('toc-collector:browserbase-acceptance');
+ipcMain.removeHandler('toc-collector:browserbase-manual-start');
+ipcMain.removeHandler('toc-collector:browserbase-manual-finish');
+ipcMain.removeHandler('toc-collector:local-publisher-start');
+ipcMain.removeHandler('toc-collector:local-publisher-finish');
 ipcMain.handle('toc-collector:browserbase-save', async (_event, payload) => {
   try { return await saveBrowserbaseCredentials(payload); }
   catch (error) { return { configured: browserbaseDiagnostic().configured, error: safeError(error, 120) }; }
@@ -1312,6 +2186,22 @@ ipcMain.handle('toc-collector:browserbase-clear', async () => {
 ipcMain.handle('toc-collector:browserbase-acceptance', async () => {
   try { return await runBrowserbaseAcceptance(); }
   catch (error) { return { configured: browserbaseDiagnostic().configured, error: safeError(error, 120) }; }
+});
+ipcMain.handle('toc-collector:local-publisher-start', async (_event, publisher) => {
+  try { return await startLocalPublisherVerification(publisher); }
+  catch (error) { return { error: safeError(error, 160) }; }
+});
+ipcMain.handle('toc-collector:local-publisher-finish', async (_event, publisher) => {
+  try { return await finishLocalPublisherVerification(publisher); }
+  catch (error) { return { error: safeError(error, 160) }; }
+});
+ipcMain.handle('toc-collector:browserbase-manual-start', async (_event, publisher) => {
+  try { return await startManualBrowserbase(publisher); }
+  catch (error) { return { configured: browserbaseDiagnostic().configured, error: safeError(error, 160) }; }
+});
+ipcMain.handle('toc-collector:browserbase-manual-finish', async (_event, publisher) => {
+  try { return await finishManualBrowserbase(publisher); }
+  catch (error) { return { configured: browserbaseDiagnostic().configured, error: safeError(error, 160) }; }
 });
 app.once('before-quit', dispose);
 const steps = {

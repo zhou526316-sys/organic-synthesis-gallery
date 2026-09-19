@@ -1,4 +1,6 @@
 import { importFigure, importToc, quarantineToc } from './media-write.js';
+import { importPrimaryVisual } from './primary-visual.js';
+import { claimMediaJobs, completeMediaJob, failMediaJob, startMediaJob } from './media-jobs.js';
 
 const IMAGE_HOSTS = [
   'pubs.acs.org',
@@ -170,6 +172,78 @@ function figureKey(label) {
   return label.toLowerCase().replace(/^fig\.?\s*/, 'figure ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
+function natureMediaObjectCandidates(doi, articleUrl) {
+  const match = /^10\.1038\/(s(\d+)-(\d{3})-(\d+)-[a-z0-9]+)$/i.exec(String(doi || ''));
+  if (!match) return { toc: [], figures: [] };
+  const slug = match[1];
+  const journalId = match[2];
+  const year = 2000 + Number(match[3]);
+  const articleNumber = String(Number(match[4]));
+  if (!Number.isFinite(year) || !articleNumber || articleNumber === 'NaN') return { toc: [], figures: [] };
+  const encodedArticle = encodeURIComponent(`10.1038/${slug}`);
+  const prefix = `https://media.springernature.com/full/springer-static/image/art%3A${encodedArticle}/MediaObjects/${journalId}_${year}_${articleNumber}_`;
+  const variants = suffix => [`${prefix}${suffix}_HTML.png`, `${prefix}${suffix}_HTML.jpg`];
+  return {
+    toc: variants('Figa').map(url => ({
+      url,
+      score: 560,
+      articleUrl,
+      source: 'springer_nature_mediaobject',
+      primaryKind: 'official_visual',
+      confidence: 96,
+      label: 'Graphical Abstract / TOC',
+    })),
+    figures: variants('Fig1').map(url => ({
+      key: 'figure-1',
+      label: 'Figure 1',
+      caption: 'Figure 1',
+      url,
+      articleUrl,
+      priority: 10,
+      order: -1,
+      source: 'springer_nature_mediaobject',
+      primaryKind: 'figure1',
+      confidence: 92,
+    })),
+  };
+}
+
+function imageDimensions(contentType, bytes) {
+  try {
+    if (contentType === 'image/png' && bytes.length >= 24 &&
+        bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
+      const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+      return { width: view.getUint32(16), height: view.getUint32(20) };
+    }
+    if (contentType === 'image/jpeg' && bytes.length > 4) {
+      let offset = 2;
+      while (offset + 9 < bytes.length) {
+        if (bytes[offset] !== 0xff) { offset += 1; continue; }
+        const marker = bytes[offset + 1];
+        if (marker === 0xd8 || marker === 0xd9) { offset += 2; continue; }
+        if (offset + 4 >= bytes.length) break;
+        const length = (bytes[offset + 2] << 8) + bytes[offset + 3];
+        if (length < 2 || offset + 2 + length > bytes.length) break;
+        if ([0xc0,0xc1,0xc2,0xc3,0xc5,0xc6,0xc7,0xc9,0xca,0xcb,0xcd,0xce,0xcf].includes(marker)) {
+          return {
+            height: (bytes[offset + 5] << 8) + bytes[offset + 6],
+            width: (bytes[offset + 7] << 8) + bytes[offset + 8],
+          };
+        }
+        offset += 2 + length;
+      }
+    }
+  } catch {}
+  return { width: 0, height: 0 };
+}
+
+function primaryConfidence(candidate, image) {
+  const base = Number(candidate?.confidence || (candidate?.primaryKind === 'official_visual' ? 94 : candidate?.primaryKind === 'figure1' ? 88 : 75));
+  const longEdge = Math.max(Number(image?.width || 0), Number(image?.height || 0));
+  const resolutionBonus = longEdge >= 1800 ? 3 : longEdge >= 1200 ? 2 : longEdge >= 800 ? 1 : 0;
+  return Math.min(100, base + resolutionBonus);
+}
+
 function extractFigureCandidates(html, pageUrl) {
   const source = decodeHtml(html);
   const grouped = new Map();
@@ -257,7 +331,9 @@ async function downloadImage(candidate) {
     if (!['image/png', 'image/jpeg', 'image/gif', 'image/webp'].includes(contentType)) return null;
     const bytes = new Uint8Array(await response.arrayBuffer());
     if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) return null;
-    return { contentType, bytes };
+    const dimensions = imageDimensions(contentType, bytes);
+    if (dimensions.width && dimensions.height && (dimensions.width < 220 || dimensions.height < 120)) return null;
+    return { contentType, bytes, ...dimensions };
   } catch {
     return null;
   }
@@ -273,14 +349,18 @@ function bytesToDataUrl(contentType, bytes) {
 }
 
 async function currentState(env, doi) {
-  const [toc, figureCountRow] = await Promise.all([
+  const [toc, figureCountRow, figureOneRow, primary] = await Promise.all([
     env.DB.prepare('SELECT available, content_hash, reason, r2_key FROM toc_assets WHERE doi = ?').bind(doi).first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM figure_assets WHERE doi = ?').bind(doi).first(),
+    env.DB.prepare("SELECT COUNT(*) AS count FROM figure_assets WHERE doi = ? AND semantic_key = 'figure-1'").bind(doi).first(),
+    env.DB.prepare('SELECT kind, source, confidence, r2_key FROM primary_visual_assets WHERE doi = ?').bind(doi).first(),
   ]);
   return {
     trueToc: Boolean(toc && Number(toc.available) === 1 && toc.r2_key),
     toc,
     figureCount: Number(figureCountRow?.count || 0),
+    figureOne: Number(figureOneRow?.count || 0) > 0,
+    primary,
   };
 }
 
@@ -331,7 +411,7 @@ async function updateRepairState(env, doi, result) {
   ).run();
 }
 
-export async function repairOne(env, doi) {
+export async function repairOne(env, doi, { updateLegacyState = true } = {}) {
   const before = await currentState(env, doi);
   const suspicious = before.trueToc ? await tocSuspicious(env, doi, before.toc) : false;
   if (suspicious) {
@@ -345,13 +425,30 @@ export async function repairOne(env, doi) {
 
   const tocCandidates = [];
   const figureGroups = new Map();
+  if (String(doi).startsWith('10.1038/')) {
+    const articleUrl = `https://www.nature.com/articles/${String(doi).split('/')[1]}`;
+    const nature = natureMediaObjectCandidates(doi, articleUrl);
+    tocCandidates.push(...nature.toc);
+    if (nature.figures.length) figureGroups.set('figure-1', [...nature.figures]);
+  }
   for (const page of pages) {
     for (const candidate of extractTocCandidates(page.html, page.finalUrl)) {
-      if (!tocCandidates.some(item => item.url === candidate.url)) tocCandidates.push(candidate);
+      if (!tocCandidates.some(item => item.url === candidate.url)) tocCandidates.push({
+        ...candidate,
+        source: candidate.source || (String(doi).startsWith('10.1126/') ? 'aaas_publisher_html' : 'publisher_html'),
+        primaryKind: 'official_visual',
+        confidence: 94,
+        label: 'Graphical Abstract / TOC',
+      });
     }
     for (const candidate of extractFigureCandidates(page.html, page.finalUrl)) {
       const alternatives = figureGroups.get(candidate.key) || [];
-      if (!alternatives.some(item => item.url === candidate.url)) alternatives.push(candidate);
+      if (!alternatives.some(item => item.url === candidate.url)) alternatives.push({
+        ...candidate,
+        source: candidate.source || (String(doi).startsWith('10.1038/') ? 'springer_nature_html' : String(doi).startsWith('10.1126/') ? 'aaas_publisher_html' : 'publisher_html'),
+        primaryKind: candidate.key === 'figure-1' ? 'figure1' : 'article_figure',
+        confidence: candidate.key === 'figure-1' ? 88 : 76,
+      });
       figureGroups.set(candidate.key, alternatives);
     }
   }
@@ -360,14 +457,27 @@ export async function repairOne(env, doi) {
     for (const candidate of tocCandidates) {
       const image = await downloadImage(candidate);
       if (!image) continue;
+      const imageData = bytesToDataUrl(image.contentType, image.bytes);
       const result = await importToc(new Request('https://repair.internal/'), env, {
         doi,
         articleUrl: candidate.articleUrl,
-        imageData: bytesToDataUrl(image.contentType, image.bytes),
+        imageData,
         replace: true,
       });
       if (result.status === 200) {
         tocImported = true;
+        await importPrimaryVisual(new Request('https://repair.internal/'), env, {
+          doi,
+          kind: 'official_visual',
+          source: candidate.source || 'publisher_html',
+          sourceUrl: candidate.url,
+          articleUrl: candidate.articleUrl,
+          caption: candidate.label || 'Graphical Abstract / TOC',
+          confidence: primaryConfidence(candidate, image),
+          width: image.width,
+          height: image.height,
+          imageData,
+        });
         break;
       }
     }
@@ -381,6 +491,7 @@ export async function repairOne(env, doi) {
     for (const candidate of alternatives) {
       const image = await downloadImage(candidate);
       if (!image) continue;
+      const imageData = bytesToDataUrl(image.contentType, image.bytes);
       const result = await importFigure(new Request('https://repair.internal/'), env, {
         doi,
         articleUrl: candidate.articleUrl,
@@ -388,10 +499,24 @@ export async function repairOne(env, doi) {
         label: candidate.label,
         caption: candidate.caption,
         order,
-        imageData: bytesToDataUrl(image.contentType, image.bytes),
+        imageData,
       });
       if (result.status === 200) {
         figuresImported += 1;
+        if (candidate.primaryKind === 'figure1' || (candidate.primaryKind === 'article_figure' && order === 0)) {
+          await importPrimaryVisual(new Request('https://repair.internal/'), env, {
+            doi,
+            kind: candidate.primaryKind,
+            source: candidate.source || 'publisher_html',
+            sourceUrl: candidate.url,
+            articleUrl: candidate.articleUrl,
+            caption: candidate.caption || candidate.label,
+            confidence: primaryConfidence(candidate, image),
+            width: image.width,
+            height: image.height,
+            imageData,
+          });
+        }
         order += 1;
         break;
       }
@@ -420,9 +545,52 @@ export async function repairOne(env, doi) {
     figuresImported,
     trueToc: after.trueToc,
     figureCount: after.figureCount,
+    figureOne: after.figureOne,
+    primaryKind: after.primary?.kind || (after.trueToc ? 'official_visual' : after.figureOne ? 'figure1' : ''),
+    primarySource: after.primary?.source || (after.trueToc ? 'legacy_toc' : after.figureOne ? 'publisher_figure1' : ''),
+    confidence: Number(after.primary?.confidence || (after.trueToc ? 85 : after.figureOne ? 80 : 0)),
   };
-  await updateRepairState(env, doi, result);
+  if (updateLegacyState) await updateRepairState(env, doi, result);
   return result;
+}
+
+export async function runLeaseRepairBatch(env, requestedLimit = 2, mode = 'coverage', owner = 'cloudflare-cron') {
+  const limit = Math.max(1, Math.min(8, Number(requestedLimit) || 2));
+  const claim = await claimMediaJobs(env, { owner, mode: mode === 'upgrade' ? 'upgrade' : 'coverage', limit, leaseMs: 8 * 60 * 1000 });
+  const items = claim?.body?.items || [];
+  const results = [];
+  for (const item of items) {
+    const doi = String(item.doi || '').toLowerCase();
+    const started = await startMediaJob(env, { doi, owner, leaseMs: 8 * 60 * 1000 });
+    if (started.status !== 200) continue;
+    try {
+      const result = await repairOne(env, doi, { updateLegacyState: false });
+      if (result.primaryKind) {
+        const completed = await completeMediaJob(env, {
+          doi,
+          owner,
+          visualKind: result.primaryKind,
+          visualSource: result.primarySource || 'cloudflare-resolver',
+          confidence: result.confidence || 0,
+        });
+        results.push({ ...result, jobState: completed.body?.state || 'unknown' });
+      } else {
+        const failed = await failMediaJob(env, {
+          doi,
+          owner,
+          reason: result.rootCause || 'semantic_media_not_found',
+          retryMs: mode === 'upgrade' ? 7 * 24 * 60 * 60 * 1000 : undefined,
+          auditedUnresolved: false,
+        });
+        results.push({ ...result, jobState: failed.body?.state || 'unknown' });
+      }
+    } catch (error) {
+      const reason = `repair_exception:${error instanceof Error ? error.message.slice(0, 160) : String(error).slice(0, 160)}`;
+      await failMediaJob(env, { doi, owner, reason });
+      results.push({ doi, complete: false, progress: false, rootCause: reason, jobState: 'retry_wait' });
+    }
+  }
+  return { generatedAt: Date.now(), requested: limit, claimed: items.length, processed: results.length, mode, results };
 }
 
 export async function runRepairBatch(env, requestedLimit = 2) {

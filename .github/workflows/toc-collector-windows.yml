@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - feat/mobile-newness-exclusions-resolver-lease
     paths:
       - 'toc-collector/**'
       - '.github/workflows/toc-collector-windows.yml'
