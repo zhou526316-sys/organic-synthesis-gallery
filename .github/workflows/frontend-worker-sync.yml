@@ -20,10 +20,106 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  dispatch-worker-release:
+  sync-and-verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
-      - name: Dispatch existing Worker release workflow
+      - name: Dispatch current frontend to Worker
+        id: dispatch
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run cloudflare-user-ui-release.yml --repo "${{ github.repository }}" --ref main
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run cloudflare-user-ui-release.yml --repo "$REPO" --ref main
+          for i in {1..30}; do
+            RUN_ID="$(gh run list --repo "$REPO" --workflow cloudflare-user-ui-release.yml --branch main --event workflow_dispatch --limit 10 --json databaseId,headSha,status --jq ".[] | select(.headSha == \"$GITHUB_SHA\") | .databaseId" | head -n1)"
+            if [ -n "$RUN_ID" ]; then
+              echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Could not resolve dispatched Worker release run." >&2
+          exit 1
+
+      - name: Wait for Worker release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ steps.dispatch.outputs.run_id }}
+        run: gh run watch "$RUN_ID" --repo "$REPO" --exit-status
+
+      - name: Verify GitHub Pages and Worker serve reviewed UI
+        env:
+          GITHUB_PAGES_URL: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          WORKER_SITE_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/
+        run: |
+          node - <<'NODE'
+          const sites = [process.env.GITHUB_PAGES_URL, process.env.WORKER_SITE_URL];
+          const required = [
+            ['site-feedback-widget', 'feedback widget'],
+            ['user-search-summary', 'search results summary'],
+            ['site-feedback-widget-position-v1', 'draggable feedback position'],
+          ];
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+          async function get(url, attempts = 8) {
+            let last = '';
+            for (let attempt = 0; attempt < attempts; attempt += 1) {
+              try {
+                const response = await fetch(url, {
+                  redirect: 'follow',
+                  headers: {
+                    'cache-control': 'no-cache',
+                    pragma: 'no-cache',
+                    'user-agent': 'organic-gallery-frontend-sync-smoke',
+                  },
+                });
+                last = `${response.status} ${response.statusText}`;
+                if (response.ok) return await response.text();
+              } catch (error) {
+                last = String(error);
+              }
+              await sleep(2500);
+            }
+            throw new Error(`${url}: request failed: ${last}`);
+          }
+
+          async function inspect(site) {
+            const html = await get(`${site}?frontend-sync=${Date.now()}`);
+            if (!html.includes('id="app"')) throw new Error(`${site}: app root missing`);
+            const scripts = [...html.matchAll(/<script[^>]+src=["']([^"']+\.js[^"']*)["']/g)]
+              .map(match => new URL(match[1], site).href);
+            if (!scripts.length) throw new Error(`${site}: no JS entry found`);
+
+            const seen = new Set();
+            const queue = [...scripts];
+            const bodies = [];
+            while (queue.length && seen.size < 80) {
+              const url = queue.shift();
+              if (!url || seen.has(url)) continue;
+              seen.add(url);
+              const body = await get(url);
+              bodies.push(body);
+              for (const match of body.matchAll(/["']([^"'\s]+\.js)["']/g)) {
+                try {
+                  const next = new URL(match[1], url).href;
+                  if (next.startsWith(new URL(site).origin) && !seen.has(next)) queue.push(next);
+                } catch {}
+              }
+            }
+
+            const bundle = bodies.join('\n');
+            const missing = required.filter(([needle]) => !bundle.includes(needle));
+            if (missing.length) {
+              throw new Error(`${site}: stale frontend, missing ${missing.map(item => item[1]).join(', ')}`);
+            }
+            return { site, chunks: seen.size };
+          }
+
+          const results = [];
+          for (const site of sites) results.push(await inspect(site));
+          console.log(JSON.stringify({ ok: true, results }));
+          NODE
