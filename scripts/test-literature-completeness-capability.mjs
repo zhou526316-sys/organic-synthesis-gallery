@@ -36,7 +36,7 @@ assert.ok(!auditSource.includes('.filter(retainForReview)'), 'Keyword screening 
 console.log(JSON.stringify({
   targetJournals: TARGET_JOURNALS.length,
   prospectiveFrom: '2026-09-19',
-  lookbackDays: 7,
+  lookbackDays: 3,\n  lateDepositRescueDays: 7,\n  verifiedThroughCatchup: true,
   crossrefModes: ['online', 'published', 'created'],
   openAlex: true,
   lateDepositRescue: true,
