@@ -9,8 +9,9 @@
     },
     "literatureWorkflow": {
       "path": ".github/workflows/literature-audit.yml",
-      "blobSha": "9c51d57345a5c26002ed003a8ed3d063f7a11b09",
-      "validation": "GitHub Actions run 35289380914: DOI-union build, artifact upload, and audit/latest.json persistence succeeded"
+      "blobSha": "1b54b4c671f4058439b93cd1b35eb34dcbdd3265",
+      "validation": "GitHub Actions run 35418557042 succeeded end-to-end after concurrency hardening: DOI-union audit, artifact upload, and non-force audit/latest.json persistence all passed",
+      "semanticImpact": "Persistence/concurrency hardening only; literature discovery and TOC retrieval semantics are unchanged, so the fetch capability fingerprint is not invalidated by this operational fix."
     },
     "tocCollector": {
       "primaryPath": "toc-collector/src/background.mjs",
