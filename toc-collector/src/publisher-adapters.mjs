@@ -206,6 +206,16 @@ export function extractPublisherMediaCandidates(html, pageUrl, options = {}) {
   const publisher = options.publisher || classifyPublisher(options.doi) || publisherFromUrl(pageUrl) || 'other';
   const source = decodeHtml(html);
   const map = new Map();
+  const figureOneSources = new Set();
+
+  // A nearby graphical-abstract heading must never upgrade an explicitly
+  // numbered Figure 1. Semantic windows can span multiple sibling blocks on
+  // publisher pages, so mark Figure 1 URLs before scoring TOC candidates.
+  for (const block of source.match(/<figure\b[\s\S]{0,70000}?<\/figure>/gi) || []) {
+    const context = stripHtml(block).slice(0, 2200);
+    if (!isFigureOne(context) || assetType(context, publisher)) continue;
+    for (const item of fragmentImages(block, pageUrl)) figureOneSources.add(item.src);
+  }
 
   for (const tag of source.match(/<meta\b[^>]*>/gi) || []) {
     const a = attrs(tag);
@@ -223,7 +233,7 @@ export function extractPublisherMediaCandidates(html, pageUrl, options = {}) {
     for (const [index, item] of images.entries()) {
       const ownMarker = [item.attrs.alt,item.attrs.title,item.attrs.id,item.attrs.class,item.attrs['aria-label']].filter(Boolean).join(' ');
       const ownType = assetType(ownMarker, publisher);
-      if (!ownType && index > 0) continue;
+      if (!ownType && (index > 0 || figureOneSources.has(item.src))) continue;
       const marker = [ownMarker, context].filter(Boolean).join(' ');
       addCandidate(map, item.src, pageUrl, { publisher, source: publisher + '_semantic_block', assetType: ownType || type, text: marker, width: item.attrs.width, height: item.attrs.height, bonus: 170 });
     }
