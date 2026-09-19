@@ -40,6 +40,9 @@ function Publisher([string]$Doi) {
   if ($Doi.StartsWith("10.1002/")) { return "wiley" }
   if ($Doi.StartsWith("10.1038/")) { return "nature" }
   if ($Doi.StartsWith("10.1126/")) { return "science" }
+  if ($Doi.StartsWith("10.1039/")) { return "rsc" }
+  if ($Doi.StartsWith("10.1016/")) { return "elsevier" }
+  if ($Doi.StartsWith("10.31635/")) { return "ccs" }
   return "other"
 }
 
@@ -90,6 +93,16 @@ try {
   $literatureSupplementFile = Download-File "literature-supplement.json"
   $mediaFile = Download-File "media-index.json"
 
+  $optionalSupplementFiles = @{}
+  foreach ($optionalName in @("curated-supplement.json","automation-supplement.json","rolling-supplement.json")) {
+    try {
+      $optionalSupplementFiles[$optionalName] = Download-File $optionalName
+    }
+    catch {
+      Write-Warning ("Optional gallery supplement unavailable: " + $optionalName)
+    }
+  }
+
   $encoded = (Get-Content -LiteralPath $papersFile -Raw).Trim()
   $compressed = [Convert]::FromBase64String($encoded)
   $input = New-Object IO.MemoryStream(,$compressed)
@@ -113,6 +126,16 @@ try {
   Add-Papers $manual.papers $papers
   Add-Papers $audit.papers $papers
   Add-Papers $literatureSupplement.papers $papers
+
+  foreach ($optionalName in $optionalSupplementFiles.Keys) {
+    try {
+      $optionalPayload = Get-Content -LiteralPath $optionalSupplementFiles[$optionalName] -Raw -Encoding UTF8 | ConvertFrom-Json
+      Add-Papers $optionalPayload.papers $papers
+    }
+    catch {
+      Write-Warning ("Could not parse optional gallery supplement: " + $optionalName)
+    }
+  }
 
   $mediaMap = @{}
   if ($null -ne $media.items) {
@@ -161,14 +184,14 @@ try {
   # Primary queue = what the user actually sees as missing on the website.
   Write-DoiList "toc-demand-all.txt" $displayGaps
   Write-DoiList "toc-demand-no-visual.txt" $displayGaps
-  foreach ($publisher in @("acs","wiley","nature","science","other")) {
+  foreach ($publisher in @("acs","wiley","nature","science","rsc","elsevier","ccs","other")) {
     Write-DoiList "toc-demand-$publisher.txt" @($displayGaps | Where-Object publisher -eq $publisher)
   }
 
   # Secondary queue = fallback exists, but official TOC can still be upgraded later.
   Write-DoiList "toc-demand-official-upgrade.txt" $officialUpgrade
   Write-DoiList "toc-demand-missing-official-all.txt" $allMissingOfficial
-  foreach ($publisher in @("acs","wiley","nature","science","other")) {
+  foreach ($publisher in @("acs","wiley","nature","science","rsc","elsevier","ccs","other")) {
     Write-DoiList "toc-demand-official-upgrade-$publisher.txt" @($officialUpgrade | Where-Object publisher -eq $publisher)
   }
 
@@ -188,6 +211,9 @@ try {
       wiley = @($displayGaps | Where-Object publisher -eq "wiley").Count
       nature = @($displayGaps | Where-Object publisher -eq "nature").Count
       science = @($displayGaps | Where-Object publisher -eq "science").Count
+      rsc = @($displayGaps | Where-Object publisher -eq "rsc").Count
+      elsevier = @($displayGaps | Where-Object publisher -eq "elsevier").Count
+      ccs = @($displayGaps | Where-Object publisher -eq "ccs").Count
       other = @($displayGaps | Where-Object publisher -eq "other").Count
     }
     upgradeByPublisher = [pscustomobject]@{
@@ -195,6 +221,9 @@ try {
       wiley = @($officialUpgrade | Where-Object publisher -eq "wiley").Count
       nature = @($officialUpgrade | Where-Object publisher -eq "nature").Count
       science = @($officialUpgrade | Where-Object publisher -eq "science").Count
+      rsc = @($officialUpgrade | Where-Object publisher -eq "rsc").Count
+      elsevier = @($officialUpgrade | Where-Object publisher -eq "elsevier").Count
+      ccs = @($officialUpgrade | Where-Object publisher -eq "ccs").Count
       other = @($officialUpgrade | Where-Object publisher -eq "other").Count
     }
   }
@@ -215,6 +244,9 @@ try {
   Write-Host "Wiley             : $($summary.byPublisher.wiley)"
   Write-Host "Nature            : $($summary.byPublisher.nature)"
   Write-Host "Science           : $($summary.byPublisher.science)"
+  Write-Host "RSC               : $($summary.byPublisher.rsc)"
+  Write-Host "Elsevier          : $($summary.byPublisher.elsevier)"
+  Write-Host "CCS               : $($summary.byPublisher.ccs)"
   Write-Host "Other             : $($summary.byPublisher.other)"
   Write-Host ""
   Write-Host "Official-upgrade queue by publisher"
@@ -222,6 +254,9 @@ try {
   Write-Host "Wiley upgrade     : $($summary.upgradeByPublisher.wiley)"
   Write-Host "Nature upgrade    : $($summary.upgradeByPublisher.nature)"
   Write-Host "Science upgrade   : $($summary.upgradeByPublisher.science)"
+  Write-Host "RSC upgrade       : $($summary.upgradeByPublisher.rsc)"
+  Write-Host "Elsevier upgrade  : $($summary.upgradeByPublisher.elsevier)"
+  Write-Host "CCS upgrade       : $($summary.upgradeByPublisher.ccs)"
   Write-Host "All DOI queue     : $(Join-Path $QueueDir 'toc-demand-all.txt')"
 } finally {
   Remove-Item -LiteralPath $TempDir -Recurse -Force -ErrorAction SilentlyContinue
