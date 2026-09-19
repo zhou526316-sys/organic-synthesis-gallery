@@ -158,6 +158,29 @@ async function buildResolutions(records) {
   return resolvedCount;
 }
 
+
+const PRIMARY_URL_FIELDS = ['imageUrl', 'masterImageUrl', 'thumbnailImageUrl', 'previewImageUrl'];
+
+function collectPrimaryUrls(primary, urls) {
+  if (!primary || typeof primary !== 'object') return;
+  for (const field of PRIMARY_URL_FIELDS) {
+    if (typeof primary[field] === 'string' && primary[field]) urls.add(primary[field]);
+  }
+}
+
+function rewritePrimaryUrls(primary, replacements, failedUrls = new Set()) {
+  if (!primary || typeof primary !== 'object') return;
+  for (const field of PRIMARY_URL_FIELDS) {
+    const original = primary[field];
+    if (typeof original !== 'string' || !original) continue;
+    if (replacements.has(original)) {
+      primary[field] = replacements.get(original);
+    } else if (failedUrls.has(original) && /^https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//i.test(original)) {
+      delete primary[field];
+    }
+  }
+}
+
 async function mapConcurrent(items, concurrency, worker) {
   let cursor = 0;
   const results = new Array(items.length);
@@ -191,6 +214,8 @@ async function mirrorMedia() {
   const urls = new Set();
   for (const item of Object.values(manifest.items)) {
     if (item?.toc?.available && typeof item.toc.imageUrl === 'string') urls.add(item.toc.imageUrl);
+    collectPrimaryUrls(item?.primary, urls);
+    collectPrimaryUrls(item?.toc?.primary, urls);
     for (const figure of item?.figures?.figures || []) {
       if (typeof figure?.imageUrl === 'string') urls.add(figure.imageUrl);
     }
@@ -218,8 +243,11 @@ async function mirrorMedia() {
     }
   });
 
+  const failedUrls = new Set(failures.map(item => item.url));
   for (const item of Object.values(manifest.items)) {
     if (item?.toc?.imageUrl && replacements.has(item.toc.imageUrl)) item.toc.imageUrl = replacements.get(item.toc.imageUrl);
+    rewritePrimaryUrls(item?.primary, replacements, failedUrls);
+    rewritePrimaryUrls(item?.toc?.primary, replacements, failedUrls);
     for (const figure of item?.figures?.figures || []) {
       if (figure?.imageUrl && replacements.has(figure.imageUrl)) figure.imageUrl = replacements.get(figure.imageUrl);
     }
