@@ -43,6 +43,7 @@ jobs:
           SITE_ORIGIN: https://zhou526316-sys.github.io
           API_URL: https://api.gczhouwld.com/api/user-ui/auth/register
           API_FALLBACK_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/api/user-ui/auth/register
+          API_FALLBACK_ORIGIN: https://organic-synthesis-gallery.zhou526316.workers.dev
         run: |
           mkdir -p test-results
           node - <<'NODE'
@@ -98,41 +99,124 @@ jobs:
               assert(corsProbe.status === 400 && corsProbe.body?.error === 'invalid_email', `real browser CORS/API probe failed: ${JSON.stringify(corsProbe)}`);
 
               let capturedRegistration = null;
+              let capturedVerification = null;
               await page.route('https://api.gczhouwld.com/**', async route => {
                 await route.abort('failed');
               });
-              await page.route(process.env.API_FALLBACK_URL, async route => {
+              await page.route(`${process.env.API_FALLBACK_ORIGIN}/api/user-ui/auth/**`, async route => {
                 const request = route.request();
+                const url = new URL(request.url());
                 const cors = {
                   'access-control-allow-origin': process.env.SITE_ORIGIN,
-                  'access-control-allow-methods': 'POST, OPTIONS',
+                  'access-control-allow-methods': 'GET, POST, OPTIONS',
                   'access-control-allow-headers': 'content-type, authorization',
                 };
                 if (request.method() === 'OPTIONS') {
                   await route.fulfill({ status: 204, headers: cors });
                   return;
                 }
-                capturedRegistration = JSON.parse(request.postData() || '{}');
-                await route.fulfill({
-                  status: 409,
-                  headers: { ...cors, 'content-type': 'application/json' },
-                  body: JSON.stringify({ error: 'email_already_registered' }),
-                });
+                if (url.pathname === '/api/user-ui/auth/register') {
+                  capturedRegistration = JSON.parse(request.postData() || '{}');
+                  await route.fulfill({
+                    status: 202,
+                    headers: { ...cors, 'content-type': 'application/json' },
+                    body: JSON.stringify({
+                      accepted: true,
+                      verificationRequired: true,
+                      challengeId: 'ch_browser_smoke',
+                      expiresIn: 600,
+                      resendAfter: 60,
+                    }),
+                  });
+                  return;
+                }
+                if (url.pathname === '/api/user-ui/auth/register/verify') {
+                  capturedVerification = JSON.parse(request.postData() || '{}');
+                  await route.fulfill({
+                    status: 201,
+                    headers: { ...cors, 'content-type': 'application/json' },
+                    body: JSON.stringify({
+                      token: 'browser-smoke-token',
+                      user: {
+                        id: 'usr_browser_smoke',
+                        displayName: 'Browser Smoke',
+                        email: 'browser-smoke@example.invalid',
+                        localAccount: true,
+                        emailVerified: true,
+                      },
+                      expiresAt: Date.now() + 3600000,
+                    }),
+                  });
+                  return;
+                }
+                if (url.pathname === '/api/user-ui/auth/password/reset/start') {
+                  await route.fulfill({
+                    status: 202,
+                    headers: { ...cors, 'content-type': 'application/json' },
+                    body: JSON.stringify({
+                      accepted: true,
+                      challengeId: 'ch_reset_smoke',
+                      expiresIn: 600,
+                      resendAfter: 60,
+                    }),
+                  });
+                  return;
+                }
+                if (url.pathname === '/api/user-ui/auth/password/reset/confirm') {
+                  await route.fulfill({
+                    status: 200,
+                    headers: { ...cors, 'content-type': 'application/json' },
+                    body: JSON.stringify({ ok: true, reauthRequired: true }),
+                  });
+                  return;
+                }
+                if (url.pathname === '/api/user-ui/auth/session') {
+                  await route.fulfill({
+                    status: 200,
+                    headers: { ...cors, 'content-type': 'application/json' },
+                    body: JSON.stringify({ authenticated: false, user: null }),
+                  });
+                  return;
+                }
+                await route.continue();
               });
 
               await email.fill('browser-smoke@example.invalid');
               await submit.click();
-              await page.waitForFunction(() => {
-                const shell = document.querySelector('gallery-user-shell');
-                const notice = shell?.shadowRoot?.querySelector('[data-auth-message]');
-                return notice && !notice.hasAttribute('hidden') && /(已经存在账号|already uses this email)/i.test(notice.textContent || '');
-              }, null, { timeout: 10000 });
+              const codeInput = shell.locator('[data-register-code]');
+              await codeInput.waitFor({ state: 'visible', timeout: 10000 });
 
               assert(capturedRegistration, 'registration POST was never emitted');
               assert(capturedRegistration.email === 'browser-smoke@example.invalid', `wrong registration email: ${JSON.stringify(capturedRegistration)}`);
               assert(capturedRegistration.password === '12345678', 'registration password payload missing');
               assert(capturedRegistration.displayName === 'Browser Smoke', `wrong display name: ${JSON.stringify(capturedRegistration)}`);
-              assert(await submit.isEnabled(), 'register button stayed disabled after API error');
+
+              await codeInput.fill('246810');
+              await shell.locator('[data-register-code-form] button[type="submit"]').click();
+              await shell.locator('.user-card').waitFor({ state: 'visible', timeout: 10000 });
+              assert(capturedVerification?.challengeId === 'ch_browser_smoke', `wrong registration challenge: ${JSON.stringify(capturedVerification)}`);
+              assert(capturedVerification?.code === '246810', `wrong verification code payload: ${JSON.stringify(capturedVerification)}`);
+              assert((await shell.locator('.user-card').textContent())?.includes('Browser Smoke'), 'verified user card did not render');
+
+              await page.evaluate(() => localStorage.removeItem('organic-gallery-session-v1'));
+              await page.reload({ waitUntil: 'domcontentloaded' });
+              const shell2 = page.locator('gallery-user-shell').first();
+              await shell2.waitFor({ state: 'attached', timeout: 30000 });
+              await shell2.locator('.trigger').click();
+              await shell2.locator("[data-tab='login']").click();
+              await shell2.locator("[data-action='forgot-password']").click();
+              const resetEmail = shell2.locator('[data-reset-email]');
+              await resetEmail.fill('browser-smoke@example.invalid');
+              await shell2.locator('[data-reset-start-form] button[type="submit"]').click();
+              const resetCode = shell2.locator('[data-reset-code]');
+              await resetCode.waitFor({ state: 'visible', timeout: 10000 });
+              await resetCode.fill('135790');
+              await shell2.locator('[data-reset-new-password]').fill('New-Smoke-Password-123!');
+              await shell2.locator('[data-reset-confirm-form] button[type="submit"]').click();
+              await shell2.locator('[data-local-email]').waitFor({ state: 'visible', timeout: 10000 });
+              const resetNotice = shell2.locator('[data-auth-message]');
+              assert(/密码已重置|Password reset/i.test((await resetNotice.textContent()) || ''), `reset completion message missing: ${await resetNotice.textContent()}`);
+
               assert(pageErrors.length === 0, `uncaught browser errors: ${pageErrors.join(' | ')}`);
 
               console.log(JSON.stringify({
@@ -141,8 +225,10 @@ jobs:
                 productionCorsProbe: true,
                 apiFallbackAfterNetworkFailure: true,
                 registrationPostEmitted: true,
-                apiErrorVisibleInline: true,
-                submitRecoversAfterError: true,
+                registrationCodeStepVisible: true,
+                registrationVerificationSubmitted: true,
+                verifiedAccountRendered: true,
+                passwordResetUiCompleted: true,
                 pageErrors,
                 consoleErrors: consoleErrors.slice(0, 20),
                 requestFailures: requestFailures.slice(0, 20),
