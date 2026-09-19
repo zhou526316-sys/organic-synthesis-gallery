@@ -1,0 +1,52 @@
+name: Refresh live TOC demand queue
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'TOC_DEMAND_REFRESH'
+      - 'cloudflare/scripts/build-live-toc-demand-queue.mjs'
+      - '.github/workflows/toc-demand-refresh.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: toc-demand-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Build current TOC demand queues
+        run: node cloudflare/scripts/build-live-toc-demand-queue.mjs
+      - name: Show demand counts
+        shell: bash
+        run: |
+          cat toc-collector/queues/toc-demand-summary.json
+          echo "all=$(wc -l < toc-collector/queues/toc-demand-all.txt)"
+          echo "acs=$(wc -l < toc-collector/queues/toc-demand-acs.txt)"
+          echo "wiley=$(wc -l < toc-collector/queues/toc-demand-wiley.txt)"
+          echo "nature=$(wc -l < toc-collector/queues/toc-demand-nature.txt)"
+          echo "science=$(wc -l < toc-collector/queues/toc-demand-science.txt)"
+          echo "no_visual=$(wc -l < toc-collector/queues/toc-demand-no-visual.txt)"
+          echo "upgrade=$(wc -l < toc-collector/queues/toc-demand-official-upgrade.txt)"
+      - name: Commit refreshed queues
+        shell: bash
+        run: |
+          if git diff --quiet -- toc-collector/queues; then
+            echo "No queue changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add toc-collector/queues
+          git commit -m "Refresh live TOC demand queues"
+          git push
