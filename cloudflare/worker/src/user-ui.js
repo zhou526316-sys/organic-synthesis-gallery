@@ -316,9 +316,81 @@ function boundedDimension(value) {
   return Number.isFinite(number) && number >= 0 && number <= 10000 ? Math.round(number) : 0;
 }
 
-export async function submitSiteFeedback(env, payload) {
-  if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
+const SITE_FEEDBACK_R2_PREFIX = 'private/site-feedback/open/';
 
+function feedbackHourBucket(timestamp) {
+  const date = new Date(timestamp);
+  const pad = value => String(value).padStart(2, '0');
+  return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}${pad(date.getUTCHours())}`;
+}
+
+async function feedbackProfileToken(profileId) {
+  return (await sha256Hex(profileId)).slice(0, 24);
+}
+
+async function fallbackFeedbackObjectsForWindow(env, profileId, now) {
+  if (!env?.MEDIA) return [];
+  const token = await feedbackProfileToken(profileId);
+  const buckets = [...new Set([feedbackHourBucket(now), feedbackHourBucket(now - 60 * 60 * 1000)])];
+  const objects = [];
+  for (const bucket of buckets) {
+    const listed = await env.MEDIA.list({
+      prefix: `${SITE_FEEDBACK_R2_PREFIX}${token}/${bucket}/`,
+      limit: 12,
+    });
+    objects.push(...(listed?.objects || []));
+  }
+  return objects;
+}
+
+async function storeSiteFeedbackFallback(env, record) {
+  if (!env?.MEDIA) {
+    return { status: 503, body: { error: 'feedback_storage_unavailable' } };
+  }
+
+  const windowStart = record.createdAt - 60 * 60 * 1000;
+  const recentObjects = await fallbackFeedbackObjectsForWindow(env, record.profileId, record.createdAt);
+  let recentCount = 0;
+  for (const item of recentObjects) {
+    const object = await env.MEDIA.get(item.key);
+    if (!object) continue;
+    try {
+      const parsed = JSON.parse(await object.text());
+      if (Number(parsed?.createdAt || 0) >= windowStart) recentCount += 1;
+    } catch {}
+  }
+  if (recentCount >= 5) {
+    return { status: 429, body: { error: 'feedback_rate_limited', retryAfterSeconds: 3600 } };
+  }
+
+  const token = await feedbackProfileToken(record.profileId);
+  const fallbackId = crypto.randomUUID();
+  const key = `${SITE_FEEDBACK_R2_PREFIX}${token}/${feedbackHourBucket(record.createdAt)}/${record.createdAt}-${fallbackId}.json`;
+  const stored = {
+    fallbackId,
+    category: record.category,
+    message: record.message,
+    pagePath: record.pagePath,
+    language: record.language,
+    context: record.context,
+    status: 'open',
+    createdAt: record.createdAt,
+  };
+  await env.MEDIA.put(key, JSON.stringify(stored), {
+    httpMetadata: { contentType: 'application/json; charset=utf-8' },
+    customMetadata: { kind: 'site-feedback', status: 'open' },
+  });
+  return {
+    status: 200,
+    body: {
+      accepted: true,
+      id: `r2:${fallbackId}`,
+      storage: 'r2-fallback',
+    },
+  };
+}
+
+export async function submitSiteFeedback(env, payload) {
   const profileId = normalizeProfileId(payload?.profileId);
   const rawCategory = cleanFeedbackText(payload?.category, 32).toLowerCase();
   const category = SITE_FEEDBACK_CATEGORIES.has(rawCategory) ? rawCategory : 'general';
@@ -331,30 +403,143 @@ export async function submitSiteFeedback(env, payload) {
   if (message.length < 3) return { status: 400, body: { error: 'feedback_too_short' } };
 
   const now = Date.now();
-  const windowStart = now - 60 * 60 * 1000;
-  const recent = await env.DB.prepare(
-    'SELECT COUNT(*) AS count FROM site_feedback WHERE profile_id = ? AND created_at >= ?'
-  ).bind(profileId, windowStart).first();
-  if (Number(recent?.count || 0) >= 5) {
-    return { status: 429, body: { error: 'feedback_rate_limited', retryAfterSeconds: 3600 } };
-  }
-
-  const contextJson = JSON.stringify({
+  const context = {
     searchQuery,
     viewportWidth: boundedDimension(payload?.viewportWidth),
     viewportHeight: boundedDimension(payload?.viewportHeight),
-  });
+  };
+  const record = { profileId, category, message, pagePath, language, context, createdAt: now };
 
-  const result = await env.DB.prepare(
-    `INSERT INTO site_feedback (profile_id, category, message, page_path, language, context_json, status, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, 'open', ?)`
-  ).bind(profileId, category, message, pagePath || null, language || null, contextJson, now).run();
+  if (env?.DB) {
+    try {
+      const windowStart = now - 60 * 60 * 1000;
+      const recent = await env.DB.prepare(
+        'SELECT COUNT(*) AS count FROM site_feedback WHERE profile_id = ? AND created_at >= ?'
+      ).bind(profileId, windowStart).first();
+      if (Number(recent?.count || 0) >= 5) {
+        return { status: 429, body: { error: 'feedback_rate_limited', retryAfterSeconds: 3600 } };
+      }
+
+      const result = await env.DB.prepare(
+        `INSERT INTO site_feedback (profile_id, category, message, page_path, language, context_json, status, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, 'open', ?)`
+      ).bind(profileId, category, message, pagePath || null, language || null, JSON.stringify(context), now).run();
+
+      return {
+        status: 200,
+        body: {
+          accepted: true,
+          id: result?.meta?.last_row_id || null,
+          storage: 'd1',
+        },
+      };
+    } catch (error) {
+      console.warn('SITE_FEEDBACK_D1_FALLBACK', JSON.stringify({
+        message: String(error?.message || error).slice(0, 300),
+      }));
+    }
+  }
+
+  try {
+    return await storeSiteFeedbackFallback(env, record);
+  } catch (error) {
+    console.error('SITE_FEEDBACK_R2_FALLBACK_FAILED', JSON.stringify({
+      message: String(error?.message || error).slice(0, 300),
+    }));
+    return { status: 503, body: { error: 'feedback_storage_unavailable' } };
+  }
+}
+
+async function r2OpenSiteFeedback(env, limit) {
+  if (!env?.MEDIA) return [];
+  const rows = [];
+  let cursor;
+  do {
+    const listed = await env.MEDIA.list({
+      prefix: SITE_FEEDBACK_R2_PREFIX,
+      limit: Math.min(1000, Math.max(100, limit * 2)),
+      ...(cursor ? { cursor } : {}),
+    });
+    const objects = listed?.objects || [];
+    for (let offset = 0; offset < objects.length && rows.length < limit; offset += 25) {
+      const batch = objects.slice(offset, offset + 25);
+      const loaded = await Promise.all(batch.map(async item => {
+        const object = await env.MEDIA.get(item.key);
+        if (!object) return null;
+        try {
+          const parsed = JSON.parse(await object.text());
+          if (parsed?.status !== 'open') return null;
+          return {
+            id: `r2:${parsed.fallbackId || item.key}`,
+            source: 'r2-fallback',
+            category: parsed.category || 'general',
+            message: parsed.message || '',
+            pagePath: parsed.pagePath || '',
+            language: parsed.language || '',
+            context: parsed.context && typeof parsed.context === 'object' ? parsed.context : {},
+            createdAt: Number(parsed.createdAt || 0),
+          };
+        } catch {
+          return null;
+        }
+      }));
+      rows.push(...loaded.filter(Boolean));
+    }
+    cursor = listed?.truncated ? listed.cursor : undefined;
+  } while (cursor && rows.length < limit);
+  return rows;
+}
+
+export async function exportOpenSiteFeedback(env, limit = 300) {
+  const safeLimit = Math.max(1, Math.min(500, Number(limit) || 300));
+  const rows = [];
+  let d1Available = false;
+  let d1Error = '';
+
+  if (env?.DB) {
+    try {
+      const result = await env.DB.prepare(
+        `SELECT id, category, message, page_path, language, context_json, created_at
+         FROM site_feedback WHERE status = 'open' ORDER BY created_at DESC LIMIT ?`
+      ).bind(safeLimit).all();
+      d1Available = true;
+      for (const row of result?.results || []) {
+        let context = {};
+        try { context = row.context_json ? JSON.parse(row.context_json) : {}; } catch {}
+        rows.push({
+          id: Number(row.id),
+          source: 'd1',
+          category: row.category,
+          message: row.message,
+          pagePath: row.page_path || '',
+          language: row.language || '',
+          context,
+          createdAt: Number(row.created_at || 0),
+        });
+      }
+    } catch (error) {
+      d1Error = String(error?.message || error).slice(0, 300);
+      console.warn('SITE_FEEDBACK_EXPORT_D1_UNAVAILABLE', JSON.stringify({ message: d1Error }));
+    }
+  }
+
+  const fallback = await r2OpenSiteFeedback(env, safeLimit);
+  const feedback = [...rows, ...fallback]
+    .sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0))
+    .slice(0, safeLimit);
 
   return {
     status: 200,
     body: {
-      accepted: true,
-      id: result?.meta?.last_row_id || null,
+      generatedAt: new Date().toISOString(),
+      scope: 'open-site-feedback',
+      count: feedback.length,
+      sources: {
+        d1: { available: d1Available, count: rows.length, error: d1Error || undefined },
+        r2Fallback: { available: Boolean(env?.MEDIA), count: fallback.length },
+      },
+      feedback,
     },
   };
 }
+
