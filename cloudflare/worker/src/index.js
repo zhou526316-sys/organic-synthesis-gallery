@@ -36,12 +36,15 @@ import {
   authCallback,
   authStart,
   createPayment,
+  consumePasswordRegistration,
   emailConsume,
   emailStart,
   exchangeAuth,
   integrationStatus,
   logout,
   paymentStatus,
+  passwordLogin,
+  registerPasswordUser,
   sessionInfo,
   wechatNotify,
 } from './integrations.js';
@@ -175,6 +178,15 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/email/start') {
     return resultResponse(await emailStart(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/register') {
+    return resultResponse(await registerPasswordUser(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/auth/password/login') {
+    return resultResponse(await passwordLogin(env, await readJson(request)), cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/auth/register/consume') {
+    return consumePasswordRegistration(request, env);
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/auth/email/consume') {
     return emailConsume(request, env);

@@ -18,6 +18,9 @@ on:
       - '.github/workflows/literature-audit.yml'
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'public/curated-supplement.json'
+      - 'public/automation-supplement.json'
+      - 'public/rolling-supplement.json'
+      - 'audit/review-*.json'
 
 permissions:
   contents: write
@@ -54,16 +57,58 @@ jobs:
           path: audit/latest.json
           retention-days: 14
 
-      - name: Commit latest audit report
+      - name: Persist latest audit report without blocking the audit
+        shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add audit/latest.json
-          if git diff --cached --quiet; then
-            echo 'Audit report unchanged.'
-          else
+
+          candidate="$RUNNER_TEMP/literature-audit-latest.json"
+          cp audit/latest.json "$candidate"
+
+          for attempt in 1 2 3; do
+            echo "Persist attempt $attempt"
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p audit
+
+            if [ -s audit/latest.json ]; then
+              node - "$candidate" audit/latest.json <<'NODE'
+          const fs = require('fs');
+          const [candidatePath, existingPath] = process.argv.slice(2);
+          const candidate = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
+          const existing = JSON.parse(fs.readFileSync(existingPath, 'utf8'));
+          const candidateTime = Date.parse(candidate.generatedAt || 0) || 0;
+          const existingTime = Date.parse(existing.generatedAt || 0) || 0;
+          if (existingTime >= candidateTime) {
+            console.log('A same-age or newer audit report is already on main; nothing to persist.');
+            process.exit(42);
+          }
+          NODE
+              status=$?
+              if [ "$status" -eq 42 ]; then
+                exit 0
+              elif [ "$status" -ne 0 ]; then
+                exit "$status"
+              fi
+            fi
+
+            cp "$candidate" audit/latest.json
+            git add audit/latest.json
+            if git diff --cached --quiet; then
+              echo 'Audit report unchanged.'
+              exit 0
+            fi
+
             git commit -m 'audit: refresh literature completeness report'
-            git pull --rebase origin main
-            git push origin HEAD:main
-          fi
+            if git push origin HEAD:main; then
+              echo 'Audit report persisted.'
+              exit 0
+            fi
+
+            echo "::warning::main changed during audit persistence attempt $attempt; retrying against the new tip."
+            sleep $((attempt * 2))
+          done
+
+          echo "::warning::Fresh audit artifact was uploaded successfully, but audit/latest.json could not be persisted after 3 non-force attempts. The audit run remains successful and the artifact is the recovery source."

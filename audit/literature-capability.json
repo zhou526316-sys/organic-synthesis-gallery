@@ -9,23 +9,31 @@
     },
     "literatureWorkflow": {
       "path": ".github/workflows/literature-audit.yml",
-      "blobSha": "9c51d57345a5c26002ed003a8ed3d063f7a11b09",
-      "validation": "GitHub Actions run 35289380914: DOI-union build, artifact upload, and audit/latest.json persistence succeeded"
+      "blobSha": "1b54b4c671f4058439b93cd1b35eb34dcbdd3265",
+      "validation": "GitHub Actions run 35418557042 succeeded end-to-end after concurrency hardening: DOI-union audit, artifact upload, and non-force audit/latest.json persistence all passed",
+      "semanticImpact": "Persistence/concurrency hardening only; literature discovery and TOC retrieval semantics are unchanged, so the fetch capability fingerprint is not invalidated by this operational fix."
     },
     "tocCollector": {
       "primaryPath": "toc-collector/src/background.mjs",
       "primaryBlobSha": "78a60e833c102497d03770c58cd6fae4adb5675d",
       "publisherFallbackPath": ".github/scripts/toc_collector_015_publisher_fallback.py",
       "publisherFallbackBlobSha": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
-    }
-  },
-  "pendingValidation": [
-    {
+    },
+    "websiteMediaSync": {
+      "path": "cloudflare/scripts/merge-worker-media.mjs",
+      "blobSha": "8a518d03f2c894755ad1c57f07c699017db9b136",
+      "validation": "GitHub Pages run 35418810801 succeeded with galleryDois=463, workerItems=463, finalRecords=407, failures=0 and figure metadata=716",
+      "semanticImpact": "Downstream media synchronization coverage only. Adds rolling-supplement.json to media sync; does not alter literature discovery, inclusion decisions, or upstream TOC retrieval, so it does not require a literature refetch."
+    },
+    "recentMediaRepair": {
       "path": ".github/workflows/recent-media-repair.yml",
       "blobSha": "acdf2d25771f1fc6edc657148d1821e925f53e00",
-      "purpose": "Trigger publisher/direct TOC repair automatically for public/automation-supplement.json updates"
+      "validation": "GitHub Actions run 35419525431 completed successfully on the Sep 18-19 reviewed literature update; it prepared 30 recent gaps, attempted direct publisher retrieval, ran the Worker fallback, verified inventory, and triggered Pages refresh.",
+      "effectiveness": "Publisher direct retrieval remained blocked by ACS/Wiley 403 and Nature IDP for most targets; the workflow is operationally stable but currently low-yield without an authenticated browser/VPN source.",
+      "semanticImpact": "TOC/media repair only. Does not change literature discovery or inclusion decisions; next primary run should automatically use it for confirmed papers, but it does not by itself require a literature refetch."
     }
-  ],
+  },
+  "pendingValidation": [],
   "discoveryHints": {
     "literature": [
       "cloudflare/scripts/*literature*.mjs",

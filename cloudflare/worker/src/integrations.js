@@ -12,6 +12,10 @@ const SESSION_TTL = 1000 * 60 * 60 * 24 * 30;
 const STATE_TTL = 1000 * 60 * 10;
 const EXCHANGE_TTL = 1000 * 60 * 5;
 const EMAIL_TTL = 1000 * 60 * 15;
+const PASSWORD_PBKDF2_ITERATIONS = 210_000;
+const PASSWORD_MIN_LENGTH = 8;
+const PASSWORD_MAX_LENGTH = 128;
+const REGISTER_TTL = 1000 * 60 * 20;
 
 function json(value, init = {}) {
   return new Response(JSON.stringify(value), {
@@ -66,6 +70,7 @@ export function integrationStatus(env) {
     status: 200,
     body: {
       auth: {
+        local: true,
         google: providerConfigured(env, 'google'),
         wechat: providerConfigured(env, 'wechat'),
         qq: providerConfigured(env, 'qq'),
@@ -358,6 +363,199 @@ function normalizeEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254 ? email : '';
 }
 
+
+function normalizeDisplayName(value, email = '') {
+  const name = typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '';
+  if (name && name.length <= 60) return name;
+  return email ? email.split('@')[0].slice(0, 60) : '';
+}
+
+function normalizePassword(value) {
+  if (typeof value !== 'string') return '';
+  if (value.length < PASSWORD_MIN_LENGTH || value.length > PASSWORD_MAX_LENGTH) return '';
+  return value;
+}
+
+function bytesToBase64Url(bytes) {
+  return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function base64UrlToBytes(value) {
+  const normalized = String(value || '').replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized + '='.repeat((4 - normalized.length % 4) % 4);
+  return Uint8Array.from(atob(padded), char => char.charCodeAt(0));
+}
+
+async function passwordDigest(password, saltBytes, iterations) {
+  const material = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+  const bits = await crypto.subtle.deriveBits({
+    name: 'PBKDF2',
+    hash: 'SHA-256',
+    salt: saltBytes,
+    iterations,
+  }, material, 256);
+  return bytesToBase64Url(new Uint8Array(bits));
+}
+
+function constantTimeEqual(left, right) {
+  if (typeof left !== 'string' || typeof right !== 'string' || left.length !== right.length) return false;
+  let diff = 0;
+  for (let index = 0; index < left.length; index += 1) diff |= left.charCodeAt(index) ^ right.charCodeAt(index);
+  return diff === 0;
+}
+
+async function createPasswordCredential(password) {
+  const salt = new Uint8Array(16);
+  crypto.getRandomValues(salt);
+  return {
+    salt: bytesToBase64Url(salt),
+    hash: await passwordDigest(password, salt, PASSWORD_PBKDF2_ITERATIONS),
+    iterations: PASSWORD_PBKDF2_ITERATIONS,
+  };
+}
+
+async function verifyPassword(password, row) {
+  try {
+    const actual = await passwordDigest(password, base64UrlToBytes(row.salt), Number(row.iterations || 0));
+    return constantTimeEqual(actual, String(row.password_hash || ''));
+  } catch {
+    return false;
+  }
+}
+
+async function createUserSession(env, userId) {
+  const token = randomToken(36);
+  const tokenHash = await sha256Hex(token);
+  const now = Date.now();
+  await env.DB.prepare(
+    'INSERT INTO user_sessions (token_hash, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)'
+  ).bind(tokenHash, userId, now, now + SESSION_TTL).run();
+  return { token, user: await userSummary(env, userId), expiresAt: now + SESSION_TTL };
+}
+
+export async function registerPasswordUser(request, env, payload) {
+  void request;
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const email = normalizeEmail(payload?.email);
+  const password = normalizePassword(payload?.password);
+  const displayName = normalizeDisplayName(payload?.displayName, email);
+  if (!email) return { status: 400, body: { error: 'invalid_email' } };
+  if (!password) return { status: 400, body: { error: 'invalid_password', minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH } };
+  if (!displayName) return { status: 400, body: { error: 'invalid_display_name' } };
+
+  const existing = await env.DB.prepare(
+    'SELECT id FROM users WHERE lower(email) = ? LIMIT 1'
+  ).bind(email).first();
+  if (existing?.id) return { status: 409, body: { error: 'email_already_registered' } };
+
+  const userId = `usr_${crypto.randomUUID().replace(/-/g, '')}`;
+  const credential = await createPasswordCredential(password);
+  const now = Date.now();
+  try {
+    await env.DB.prepare(
+      'INSERT INTO users (id, display_name, email, avatar_url, created_at, updated_at) VALUES (?, ?, ?, NULL, ?, ?)'
+    ).bind(userId, displayName, email, now, now).run();
+    await env.DB.prepare(
+      `INSERT INTO auth_identities
+        (provider, provider_user_id, user_id, email, display_name, avatar_url, created_at, updated_at)
+       VALUES ('local', ?, ?, ?, ?, NULL, ?, ?)`
+    ).bind(email, userId, email, displayName, now, now).run();
+    await env.DB.prepare(
+      'INSERT INTO password_credentials (user_id, email, password_hash, salt, iterations, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).bind(userId, email, credential.hash, credential.salt, credential.iterations, now, now).run();
+    return { status: 201, body: await createUserSession(env, userId) };
+  } catch (error) {
+    await env.DB.prepare('DELETE FROM users WHERE id = ?').bind(userId).run().catch(() => {});
+    const message = error instanceof Error ? error.message : String(error);
+    if (/unique|constraint/i.test(message)) return { status: 409, body: { error: 'email_already_registered' } };
+    console.error('PASSWORD_REGISTER_FAILED', message);
+    return { status: 500, body: { error: 'registration_failed' } };
+  }
+}
+
+export async function consumePasswordRegistration(request, env) {
+  if (!env?.DB) return json({ error: 'database_not_configured' }, { status: 503 });
+  const token = new URL(request.url).searchParams.get('token') || '';
+  if (!token) return redirectWithHash(DEFAULT_RETURN, { auth_error: 'missing_registration_token' });
+  const tokenHash = await sha256Hex(token);
+  const row = await env.DB.prepare(
+    `SELECT email, display_name, password_hash, salt, iterations, return_to, expires_at
+     FROM password_registration_tokens WHERE token_hash = ?`
+  ).bind(tokenHash).first();
+  await env.DB.prepare('DELETE FROM password_registration_tokens WHERE token_hash = ?').bind(tokenHash).run();
+  if (!row || Number(row.expires_at || 0) < Date.now()) {
+    return redirectWithHash(DEFAULT_RETURN, { auth_error: 'registration_link_expired' });
+  }
+
+  const existing = await env.DB.prepare('SELECT id FROM users WHERE lower(email) = ? LIMIT 1').bind(row.email).first();
+  if (existing?.id) return redirectWithHash(row.return_to, { auth_error: 'email_already_registered' });
+
+  const userId = `usr_${crypto.randomUUID().replace(/-/g, '')}`;
+  const now = Date.now();
+  try {
+    await env.DB.prepare(
+      'INSERT INTO users (id, display_name, email, avatar_url, created_at, updated_at) VALUES (?, ?, ?, NULL, ?, ?)'
+    ).bind(userId, row.display_name, row.email, now, now).run();
+    await env.DB.prepare(
+      `INSERT INTO auth_identities
+        (provider, provider_user_id, user_id, email, display_name, avatar_url, created_at, updated_at)
+       VALUES ('local', ?, ?, ?, ?, NULL, ?, ?)`
+    ).bind(row.email, userId, row.email, row.display_name, now, now).run();
+    await env.DB.prepare(
+      'INSERT INTO password_credentials (user_id, email, password_hash, salt, iterations, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).bind(userId, row.email, row.password_hash, row.salt, Number(row.iterations), now, now).run();
+    const exchange = await createExchangeCode(env, userId);
+    return redirectWithHash(row.return_to, { auth_code: exchange, auth_provider: 'local' });
+  } catch (error) {
+    await env.DB.prepare('DELETE FROM users WHERE id = ?').bind(userId).run().catch(() => {});
+    console.error('LEGACY_REGISTRATION_CONSUME_FAILED', error instanceof Error ? error.message : String(error));
+    return redirectWithHash(row.return_to, { auth_error: 'registration_failed' });
+  }
+}
+
+export async function passwordLogin(env, payload) {
+  if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
+  const email = normalizeEmail(payload?.email);
+  const password = normalizePassword(payload?.password);
+  if (!email || !password) return { status: 401, body: { error: 'invalid_credentials' } };
+  const row = await env.DB.prepare(
+    'SELECT user_id, password_hash, salt, iterations FROM password_credentials WHERE email = ?'
+  ).bind(email).first();
+  if (!row || !(await verifyPassword(password, row))) return { status: 401, body: { error: 'invalid_credentials' } };
+  return { status: 200, body: await createUserSession(env, row.user_id) };
+}
+
+async function upsertEmailIdentity(env, email) {
+  const existing = await env.DB.prepare(
+    'SELECT user_id FROM auth_identities WHERE provider = ? AND provider_user_id = ?'
+  ).bind('email', email).first();
+  if (existing?.user_id) return existing.user_id;
+
+  const matchingUser = await env.DB.prepare(
+    'SELECT id, display_name FROM users WHERE lower(email) = ? LIMIT 1'
+  ).bind(email).first();
+  if (!matchingUser?.id) {
+    return upsertIdentity(env, 'email', {
+      providerUserId: email,
+      email,
+      displayName: email.split('@')[0],
+      avatarUrl: null,
+    });
+  }
+
+  const now = Date.now();
+  await env.DB.prepare(
+    'INSERT INTO auth_identities (provider, provider_user_id, user_id, email, display_name, avatar_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NULL, ?, ?)'
+  ).bind('email', email, matchingUser.id, email, matchingUser.display_name || email.split('@')[0], now, now).run();
+  return matchingUser.id;
+}
+
 export async function emailStart(request, env, payload) {
   if (!env?.DB) return { status: 503, body: { error: 'database_not_configured' } };
   if (!providerConfigured(env, 'email')) return { status: 503, body: { error: 'provider_not_configured', provider: 'email' } };
@@ -396,7 +594,7 @@ export async function emailConsume(request, env) {
   const row = await env.DB.prepare('SELECT email, return_to, expires_at FROM email_login_tokens WHERE token_hash = ?').bind(hash).first();
   await env.DB.prepare('DELETE FROM email_login_tokens WHERE token_hash = ?').bind(hash).run();
   if (!row || Number(row.expires_at || 0) < Date.now()) return redirectWithHash(DEFAULT_RETURN, { auth_error: 'email_link_expired' });
-  const userId = await upsertIdentity(env, 'email', { providerUserId: row.email, email: row.email, displayName: row.email.split('@')[0], avatarUrl: null });
+  const userId = await upsertEmailIdentity(env, row.email);
   const exchange = await createExchangeCode(env, userId);
   return redirectWithHash(row.return_to, { auth_code: exchange, auth_provider: 'email' });
 }

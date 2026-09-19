@@ -167,9 +167,9 @@ class Store extends EventTarget {
   readonly profileId = browserProfile();
   readerCounts: Record<string, number> = {};
 
-  save(broadcast = true, detail?: { paperId?: string; scope?: 'paper' | 'global' }): void {
+  save(broadcast = true): void {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); } catch { /* optional */ }
-    if (broadcast) this.dispatchEvent(new CustomEvent('change', { detail: detail || { scope: 'global' } }));
+    if (broadcast) this.dispatchEvent(new Event('change'));
   }
   paper(id: string): PaperUserState { return this.state.papers[id] || { favorite: false, collections: [], note: '', quickTerms: [], tags: [] }; }
   updatePaper(id: string, updater: (value: PaperUserState) => void, broadcast = true, markUpdated = true): void {
@@ -178,9 +178,7 @@ class Store extends EventTarget {
     if (markUpdated) value.updatedAt = Date.now();
     this.state.papers[id] = value;
     this.save(false);
-    if (broadcast) {
-      this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'paper', paperId: id } }));
-    }
+    if (broadcast) this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'paper', paperId: id } }));
   }
   registerMeta(meta: PaperMeta): void { this.state.metadata[meta.id] = { id: meta.id, doi: meta.doi, title: meta.title, journal: meta.journal, href: meta.href }; this.save(false); }
   metadata(id: string): Omit<PaperMeta, 'authors' | 'topics'> | undefined { return this.state.metadata[id]; }
@@ -209,7 +207,7 @@ class Store extends EventTarget {
         const data = await workerPost<{ counts?: Record<string, number> }>('/api/user-ui/reader-counts', { dois: unique.slice(i, i + 150) });
         Object.assign(this.readerCounts, data.counts || {});
       }
-      this.dispatchEvent(new CustomEvent('counts', { detail: { dois: unique } }));
+      this.dispatchEvent(new Event('counts'));
     } catch { /* aggregate counts are optional */ }
   }
   private async markRead(doi: string, statusId: string): Promise<void> {

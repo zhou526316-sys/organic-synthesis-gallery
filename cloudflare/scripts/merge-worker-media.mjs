@@ -48,6 +48,7 @@ async function loadGalleryDois() {
     'final-audit-supplement.json',
     'curated-supplement.json',
     'automation-supplement.json',
+    'rolling-supplement.json',
     'literature-supplement.json',
   ]) {
     try {
