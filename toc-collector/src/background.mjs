@@ -658,7 +658,7 @@ async function clearPublisherCooldowns(publisher) {
 
 async function releaseVerifiedPublisherCooldowns() {
   let changed = false;
-  for (const publisher of ['acs', 'wiley']) {
+  for (const publisher of ['acs', 'wiley', 'nature', 'science']) {
     if (!localPublisherReady(publisher)) continue;
     let cleared = 0;
     for (const doi of Object.keys(state.cooldowns || {})) {
