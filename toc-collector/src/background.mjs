@@ -35,6 +35,7 @@ let renderPromise = null;
   reminderHours: 6,
   minRestrictedBacklog: 1,
   maxPerCycle: 12,
+  localScanDelayMs: 5000,
   publisherTimeoutSeconds: 35,
   headlessWaitMs: 5000,
 };
@@ -70,6 +71,11 @@ const diagnosticPublishers = requestedDiagnosticPublishers.filter(value => valid
 const requestedDiagnosticDois = diagnosticDoiArgs.map(arg => arg.slice('--diagnose-doi='.length).trim().toLowerCase()).filter(Boolean);
 const invalidDiagnosticDois = requestedDiagnosticDois.filter(doi => !/^10\.\d{4,9}\/\S+$/.test(doi));
 const forceBrowserFallback = process.argv.includes('--force-browser-fallback');
+const localOnlyMode = process.argv.includes('--local-only');
+const scanAllMode = process.argv.includes('--scan-all');
+const officialOnlyMode = process.argv.includes('--official-only');
+const doiFileArg = process.argv.find(arg => arg.startsWith('--doi-file='));
+const doiFilePath = doiFileArg ? path.resolve(doiFileArg.slice('--doi-file='.length)) : '';
 // This only exists for the explicit, read-only Browserbase acceptance test. It
 // never changes the normal resolver order used by the Collector.
 const forceBrowserbaseDiagnostic = process.argv.includes('--force-browserbase');
@@ -118,6 +124,50 @@ function dataDir() { return path.join(app.getPath('userData')); }
 function configPath() { return path.join(dataDir(), 'config.json'); }
 function statePath() { return path.join(dataDir(), 'state.json'); }
 function logPath() { return path.join(dataDir(), 'collector.log'); }
+function localCaptureDir() { return path.join(dataDir(), 'local-toc-capture'); }
+
+function parseDoiList(text) {
+  const found = String(text || '').match(/10\.\d{4,9}\/[^\s,;"'<>]+/gi) || [];
+  return [...new Set(found.map(x => x.trim().toLowerCase().replace(/[).,;]+$/, '')).filter(x => /^10\.\d{4,9}\/\S+$/.test(x)))];
+}
+
+async function loadLocalDoiQueue() {
+  if (!doiFilePath) return null;
+  const text = await fsp.readFile(doiFilePath, 'utf8');
+  const dois = parseDoiList(text);
+  if (!dois.length) throw new Error(`No DOI found in local input file: ${doiFilePath}`);
+  await log('local_doi_queue_loaded', { path: doiFilePath, count: dois.length, localOnlyMode, scanAllMode, officialOnlyMode });
+  return dois.map(doi => ({ doi, tocMissing: true, suspiciousToc: false, localInput: true }));
+}
+
+async function saveLocalTocCapture(doi, candidate, dataUrl, articleUrl) {
+  if (!candidate || candidate.kind !== 'official' || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) return null;
+  const match = /^data:(image\/[a-z0-9.+-]+);base64,(.+)$/i.exec(dataUrl);
+  if (!match) return null;
+  const mime = match[1].toLowerCase();
+  const ext = mime.includes('png') ? 'png' : mime.includes('gif') ? 'gif' : mime.includes('webp') ? 'webp' : 'jpg';
+  const bytes = Buffer.from(match[2], 'base64');
+  if (bytes.length < 200) return null;
+  await fsp.mkdir(localCaptureDir(), { recursive: true });
+  const key = String(doi).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  const file = path.join(localCaptureDir(), `${key}.${ext}`);
+  await fsp.writeFile(file, bytes);
+  const manifestFile = path.join(localCaptureDir(), 'manifest.jsonl');
+  const row = {
+    capturedAt: new Date().toISOString(),
+    doi: String(doi).toLowerCase(),
+    kind: candidate.kind,
+    text: String(candidate.text || '').slice(0, 500),
+    articleUrl: String(articleUrl || ''),
+    sourceUrl: String(candidate.src || ''),
+    mime,
+    bytes: bytes.length,
+    path: file,
+  };
+  await fsp.appendFile(manifestFile, JSON.stringify(row) + '\n');
+  await log('local_toc_saved', { doi: row.doi, bytes: row.bytes, path: file, sourceUrl: row.sourceUrl });
+  return row;
+}
 
 // This is deliberately an identity check, never a secret display. It makes it
 // possible to distinguish two configured profiles without putting a credential
@@ -378,6 +428,11 @@ async function api(pathname, options = {}) {
 }
 
 async function fetchQueue() {
+  const localQueue = await loadLocalDoiQueue();
+  if (localQueue) {
+    lastQueue = localQueue;
+    return lastQueue;
+  }
   const payload = await api('/api/media/bridge-queue');
   if (!Array.isArray(payload.items)) throw new Error('Queue API returned no items array');
   lastQueue = payload.items.filter(item => item && typeof item === 'object' && typeof item.doi === 'string');
@@ -1520,6 +1575,10 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       await log('browserbase_skipped_verified_local_session', { doi, publisher, browserError });
       return htmlResult || { url, candidate: null, method: 'verified_local_no_candidate', verifiedLocalSession: true };
     }
+    if (localOnlyMode) {
+      await log('browserbase_skipped_local_only', { doi, publisher, browserError });
+      return htmlResult || { url, candidate: null, method: 'local_only_no_candidate', verifiedLocalSession: localPublisherReady(publisher) };
+    }
     const browserbaseResult = await inspectArticleBrowserbase(doi, url, browserError, { verifyImage: verifyBrowserbaseImage });
     if (browserbaseResult?.candidate) return browserbaseResult;
     // PDF is deliberately a later, independent resolver. Reaching this marker
@@ -1585,6 +1644,10 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
       }
       return { doi, status: 'no_candidate', source: inspected.method || '' };
     }
+    if (officialOnlyMode && c.kind !== 'official') {
+      await log('local_official_only_skip_fallback', { doi, kind: c.kind, source: inspected.method || '' });
+      return { doi, status: 'no_official_toc', source: inspected.method || '' };
+    }
     let data;
     try {
       data = inspected?.image?.imageData || c.imageData || await imageData(c.src, inspected.url);
@@ -1592,11 +1655,15 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
       await log('image_download_failed', { doi, kind: c.kind, reason: safeError(error, 300) });
       throw error;
     }
+    const localCapture = c.kind === 'official' ? await saveLocalTocCapture(doi, c, data, inspected.url) : null;
     if (inspectOnly) {
       await log('upload_failed', { doi, kind: c.kind, reason: 'write_token_missing_inspection_only' });
-      return { doi, status: 'inspection_only', reason: 'write_token_missing', kind: c.kind, source: inspected.method };
+      return { doi, status: localCapture ? 'saved_local' : 'inspection_only', reason: 'write_token_missing', kind: c.kind, source: inspected.method, localPath: localCapture?.path || '' };
     }
-    if (!config.writeToken) throw new Error('write_token_missing');
+    if (!config.writeToken) {
+      if (localCapture) return { doi, status: 'saved_local', kind: c.kind, source: inspected.method, localPath: localCapture.path };
+      throw new Error('write_token_missing');
+    }
     try {
       if (c.kind === 'official') {
         await api('/api/toc/import', { method: 'POST', body: JSON.stringify({ doi, articleUrl: inspected.url, imageData: data, replace: Boolean(item.suspiciousToc) }) });
@@ -1633,9 +1700,17 @@ async function processItem(item, { ignoreCooldown = false, inspectOnly = false }
 }
 
 async function processBatch(items) {
-  const selected = items.filter(x => !cooldownActive(String(x.doi||''))).slice(0, Math.max(1, Number(config.maxPerCycle)||12));
+  const eligible = items.filter(x => localOnlyMode || !cooldownActive(String(x.doi||'')));
+  const selected = scanAllMode ? eligible : eligible.slice(0, Math.max(1, Number(config.maxPerCycle)||12));
   const results = [];
-  for (const item of selected) results.push(await processItem(item));
+  const delayMs = localOnlyMode ? Math.max(1500, Number(config.localScanDelayMs || 5000)) : 0;
+  for (let index = 0; index < selected.length; index += 1) {
+    const item = selected[index];
+    const result = await processItem(item, { ignoreCooldown: localOnlyMode });
+    results.push(result);
+    await log('local_scan_progress', { current: index + 1, total: selected.length, doi: String(item.doi || ''), status: result?.status || 'unknown' });
+    if (delayMs && index + 1 < selected.length) await new Promise(resolve => setTimeout(resolve, delayMs));
+  }
   return results;
 }
 
@@ -1808,14 +1883,16 @@ async function runCycle(manual = false) {
     const queue = await fetchQueue();
     const net = await networkState();
     network = net;
-    const open = queue.filter(x => ['nature','science','other'].includes(classify(x.doi)));
+    const open = queue.filter(x => ['nature','science','other','rsc','elsevier'].includes(classify(x.doi)));
     const restricted = queue.filter(x => ['acs','wiley'].includes(classify(x.doi)));
-    const runnableRestricted = restricted.filter(x => (classify(x.doi)==='acs' ? net.acs : net.wiley));
-    const runnable = [...open, ...runnableRestricted];
+    const runnableRestricted = localOnlyMode
+      ? restricted
+      : restricted.filter(x => (classify(x.doi)==='acs' ? net.acs : net.wiley));
+    const runnable = localOnlyMode && doiFilePath ? queue : [...open, ...runnableRestricted];
     const results = await processBatch(runnable);
-    const success = results.filter(x => ['official','figure1','pdf_downloaded'].includes(x?.status)).length;
+    const success = results.filter(x => ['official','figure1','pdf_downloaded','saved_local'].includes(x?.status)).length;
     const failed = results.filter(x => x?.status === 'failed').length;
-    state.lastSummary = { at: Date.now(), queue: queue.length, processed: results.length, success, failed, net };
+    state.lastSummary = { at: Date.now(), queue: queue.length, processed: results.length, success, failed, net, localOnlyMode, scanAllMode, officialOnlyMode, doiFilePath, localCaptureDir: localCaptureDir() };
     await saveState();
     await log('cycle complete', state.lastSummary);
     if (!net.acs || !net.wiley) {
