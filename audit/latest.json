@@ -1,13 +1,17 @@
 {
   "auditVersion": 4,
-  "generatedAt": "2026-09-19T07:20:50.849Z",
+  "generatedAt": "2026-09-19T10:51:46.508Z",
   "timeZone": "Asia/Shanghai",
-  "windowMode": "rolling-7d-calendar",
-  "lookbackDays": 7,
-  "startDate": "2026-09-13",
+  "windowMode": "rolling-3d-calendar",
+  "lookbackDays": 3,
+  "lateDepositRescueDays": 7,
+  "baseStartDate": "2026-09-17",
+  "lateDepositRescueStartDate": "2026-09-13",
+  "catchupStartDate": null,
+  "startDate": "2026-09-17",
   "endDate": "2026-09-19",
   "closureDate": "2026-09-18",
-  "policy": "Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default seven-calendar-day Beijing safety rescan plus Crossref-created late-deposit rescue back to each journal activeFrom to recover delayed indexing. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.",
+  "policy": "Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing publication rescan, seven-calendar-day Crossref-created late-deposit rescue, and automatic catch-up from the first unverified date when verifiedThrough falls behind. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.",
   "targetJournals": [
     {
       "name": "Nature",
@@ -16,7 +20,8 @@
         "1476-4687"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "Science",
@@ -25,7 +30,8 @@
         "1095-9203"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "Nature Catalysis",
@@ -33,7 +39,8 @@
         "2520-1158"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "Nature Synthesis",
@@ -41,7 +48,8 @@
         "2731-0582"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "Nature Chemistry",
@@ -50,7 +58,8 @@
         "1755-4349"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "Nature Communications",
@@ -58,7 +67,8 @@
         "2041-1723"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "JACS",
@@ -67,7 +77,8 @@
         "1520-5126"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "Angew",
@@ -76,7 +87,8 @@
         "1521-3773"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "ACS Catalysis",
@@ -84,7 +96,8 @@
         "2155-5435"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "Organic Letters",
@@ -93,7 +106,8 @@
         "1523-7060"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13"
+      "effectiveStart": "2026-09-17",
+      "lateDepositRescueStart": "2026-09-13"
     },
     {
       "name": "Chem",
@@ -101,7 +115,8 @@
         "2451-9294"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19"
+      "effectiveStart": "2026-09-19",
+      "lateDepositRescueStart": "2026-09-19"
     },
     {
       "name": "Chemical Science",
@@ -110,7 +125,8 @@
         "2041-6539"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19"
+      "effectiveStart": "2026-09-19",
+      "lateDepositRescueStart": "2026-09-19"
     },
     {
       "name": "CCS Chemistry",
@@ -118,7 +134,8 @@
         "2096-5745"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19"
+      "effectiveStart": "2026-09-19",
+      "lateDepositRescueStart": "2026-09-19"
     },
     {
       "name": "Science Advances",
@@ -126,7 +143,8 @@
         "2375-2548"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19"
+      "effectiveStart": "2026-09-19",
+      "lateDepositRescueStart": "2026-09-19"
     },
     {
       "name": "Chinese Journal of Chemistry",
@@ -135,19 +153,20 @@
         "1614-7065"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19"
+      "effectiveStart": "2026-09-19",
+      "lateDepositRescueStart": "2026-09-19"
     }
   ],
   "summary": {
     "galleryDois": 478,
-    "sourceRecords": 591,
-    "rawMissingFromGallery": 522,
-    "previouslyReviewedExcluded": 522,
-    "missingFromGallery": 0,
+    "sourceRecords": 590,
+    "rawMissingFromGallery": 521,
+    "previouslyReviewedExcluded": 518,
+    "missingFromGallery": 3,
     "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
-    "unresolved": 0,
+    "unresolved": 3,
     "excludedByPolicy": 0
   },
   "closure": {
@@ -165,12 +184,12 @@
   "byJournal": {
     "Nature": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "sourceRecords": 87,
-      "crossrefOnly": 1,
+      "crossrefOnly": 71,
       "openAlexOnly": 0,
-      "multiSource": 86,
-      "lateIndexed": 1,
+      "multiSource": 16,
+      "lateIndexed": 71,
       "coveredByGallery": 0,
       "rawMissingFromGallery": 87,
       "previouslyReviewedExcluded": 87,
@@ -179,7 +198,7 @@
     },
     "Science": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "sourceRecords": 38,
       "crossrefOnly": 1,
       "openAlexOnly": 0,
@@ -193,12 +212,12 @@
     },
     "Nature Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "sourceRecords": 1,
-      "crossrefOnly": 0,
+      "crossrefOnly": 1,
       "openAlexOnly": 0,
-      "multiSource": 1,
-      "lateIndexed": 0,
+      "multiSource": 0,
+      "lateIndexed": 1,
       "coveredByGallery": 1,
       "rawMissingFromGallery": 0,
       "previouslyReviewedExcluded": 0,
@@ -207,12 +226,12 @@
     },
     "Nature Synthesis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "sourceRecords": 3,
-      "crossrefOnly": 0,
+      "crossrefOnly": 1,
       "openAlexOnly": 0,
-      "multiSource": 3,
-      "lateIndexed": 0,
+      "multiSource": 2,
+      "lateIndexed": 1,
       "coveredByGallery": 1,
       "rawMissingFromGallery": 2,
       "previouslyReviewedExcluded": 2,
@@ -221,7 +240,7 @@
     },
     "Nature Chemistry": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "sourceRecords": 4,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
@@ -235,26 +254,26 @@
     },
     "Nature Communications": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
-      "sourceRecords": 192,
-      "crossrefOnly": 5,
-      "openAlexOnly": 3,
-      "multiSource": 184,
-      "lateIndexed": 0,
+      "effectiveStart": "2026-09-17",
+      "sourceRecords": 193,
+      "crossrefOnly": 123,
+      "openAlexOnly": 1,
+      "multiSource": 69,
+      "lateIndexed": 116,
       "coveredByGallery": 4,
-      "rawMissingFromGallery": 188,
-      "previouslyReviewedExcluded": 188,
-      "missingFromGallery": 0,
+      "rawMissingFromGallery": 189,
+      "previouslyReviewedExcluded": 186,
+      "missingFromGallery": 3,
       "potentialGaps": 0
     },
     "JACS": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "sourceRecords": 83,
-      "crossrefOnly": 4,
+      "crossrefOnly": 49,
       "openAlexOnly": 0,
-      "multiSource": 79,
-      "lateIndexed": 0,
+      "multiSource": 34,
+      "lateIndexed": 47,
       "coveredByGallery": 16,
       "rawMissingFromGallery": 67,
       "previouslyReviewedExcluded": 67,
@@ -263,26 +282,26 @@
     },
     "Angew": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
-      "sourceRecords": 109,
-      "crossrefOnly": 1,
-      "openAlexOnly": 2,
-      "multiSource": 106,
-      "lateIndexed": 0,
+      "effectiveStart": "2026-09-17",
+      "sourceRecords": 107,
+      "crossrefOnly": 90,
+      "openAlexOnly": 0,
+      "multiSource": 17,
+      "lateIndexed": 90,
       "coveredByGallery": 10,
-      "rawMissingFromGallery": 99,
-      "previouslyReviewedExcluded": 99,
+      "rawMissingFromGallery": 97,
+      "previouslyReviewedExcluded": 97,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "sourceRecords": 35,
-      "crossrefOnly": 3,
+      "crossrefOnly": 21,
       "openAlexOnly": 0,
-      "multiSource": 32,
-      "lateIndexed": 2,
+      "multiSource": 14,
+      "lateIndexed": 21,
       "coveredByGallery": 6,
       "rawMissingFromGallery": 29,
       "previouslyReviewedExcluded": 29,
@@ -291,12 +310,12 @@
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "sourceRecords": 39,
-      "crossrefOnly": 4,
+      "crossrefOnly": 23,
       "openAlexOnly": 0,
-      "multiSource": 35,
-      "lateIndexed": 0,
+      "multiSource": 16,
+      "lateIndexed": 22,
       "coveredByGallery": 31,
       "rawMissingFromGallery": 8,
       "previouslyReviewedExcluded": 8,
@@ -377,7 +396,7 @@
   "sourceFamilyHealth": {
     "Nature": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -387,7 +406,7 @@
     },
     "Science": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -397,7 +416,7 @@
     },
     "Nature Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -407,7 +426,7 @@
     },
     "Nature Synthesis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -417,7 +436,7 @@
     },
     "Nature Chemistry": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -427,7 +446,7 @@
     },
     "Nature Communications": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -437,7 +456,7 @@
     },
     "JACS": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -447,7 +466,7 @@
     },
     "Angew": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -457,7 +476,7 @@
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -467,7 +486,7 @@
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-13",
+      "effectiveStart": "2026-09-17",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -534,7 +553,7 @@
       "issn": "0028-0836",
       "mode": "online",
       "ok": true,
-      "count": 86,
+      "count": 16,
       "note": ""
     },
     {
@@ -543,7 +562,7 @@
       "issn": "0028-0836",
       "mode": "published",
       "ok": true,
-      "count": 86,
+      "count": 16,
       "note": ""
     },
     {
@@ -561,7 +580,7 @@
       "issn": "1476-4687",
       "mode": "online",
       "ok": true,
-      "count": 86,
+      "count": 16,
       "note": ""
     },
     {
@@ -570,7 +589,7 @@
       "issn": "1476-4687",
       "mode": "published",
       "ok": true,
-      "count": 86,
+      "count": 16,
       "note": ""
     },
     {
@@ -587,7 +606,7 @@
       "journal": "Nature",
       "sourceId": "S137773608",
       "ok": true,
-      "count": 86,
+      "count": 16,
       "note": ""
     },
     {
@@ -658,7 +677,7 @@
       "issn": "2520-1158",
       "mode": "online",
       "ok": true,
-      "count": 1,
+      "count": 0,
       "note": ""
     },
     {
@@ -667,7 +686,7 @@
       "issn": "2520-1158",
       "mode": "published",
       "ok": true,
-      "count": 1,
+      "count": 0,
       "note": ""
     },
     {
@@ -684,7 +703,7 @@
       "journal": "Nature Catalysis",
       "sourceId": "S4210229375",
       "ok": true,
-      "count": 1,
+      "count": 0,
       "note": ""
     },
     {
@@ -693,7 +712,7 @@
       "issn": "2731-0582",
       "mode": "online",
       "ok": true,
-      "count": 3,
+      "count": 2,
       "note": ""
     },
     {
@@ -702,7 +721,7 @@
       "issn": "2731-0582",
       "mode": "published",
       "ok": true,
-      "count": 3,
+      "count": 2,
       "note": ""
     },
     {
@@ -719,7 +738,7 @@
       "journal": "Nature Synthesis",
       "sourceId": "S4210215815",
       "ok": true,
-      "count": 3,
+      "count": 2,
       "note": ""
     },
     {
@@ -790,7 +809,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 190,
+      "count": 77,
       "note": ""
     },
     {
@@ -799,7 +818,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 190,
+      "count": 77,
       "note": ""
     },
     {
@@ -808,7 +827,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 190,
+      "count": 193,
       "note": ""
     },
     {
@@ -816,7 +835,7 @@
       "journal": "Nature Communications",
       "sourceId": "S64187185",
       "ok": true,
-      "count": 188,
+      "count": 71,
       "note": ""
     },
     {
@@ -825,7 +844,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 84,
+      "count": 36,
       "note": ""
     },
     {
@@ -834,7 +853,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 84,
+      "count": 36,
       "note": ""
     },
     {
@@ -852,7 +871,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 84,
+      "count": 36,
       "note": ""
     },
     {
@@ -861,7 +880,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 84,
+      "count": 36,
       "note": ""
     },
     {
@@ -878,7 +897,7 @@
       "journal": "JACS",
       "sourceId": "S111155417",
       "ok": true,
-      "count": 80,
+      "count": 34,
       "note": ""
     },
     {
@@ -887,7 +906,7 @@
       "issn": "1433-7851",
       "mode": "online",
       "ok": true,
-      "count": 106,
+      "count": 17,
       "note": ""
     },
     {
@@ -896,7 +915,7 @@
       "issn": "1433-7851",
       "mode": "published",
       "ok": true,
-      "count": 107,
+      "count": 17,
       "note": ""
     },
     {
@@ -914,7 +933,7 @@
       "issn": "1521-3773",
       "mode": "online",
       "ok": true,
-      "count": 106,
+      "count": 17,
       "note": ""
     },
     {
@@ -923,7 +942,7 @@
       "issn": "1521-3773",
       "mode": "published",
       "ok": true,
-      "count": 107,
+      "count": 17,
       "note": ""
     },
     {
@@ -940,7 +959,7 @@
       "journal": "Angew",
       "sourceId": "S67393510",
       "ok": true,
-      "count": 108,
+      "count": 17,
       "note": ""
     },
     {
@@ -949,7 +968,7 @@
       "issn": "2155-5435",
       "mode": "online",
       "ok": true,
-      "count": 33,
+      "count": 14,
       "note": ""
     },
     {
@@ -958,7 +977,7 @@
       "issn": "2155-5435",
       "mode": "published",
       "ok": true,
-      "count": 33,
+      "count": 14,
       "note": ""
     },
     {
@@ -975,7 +994,7 @@
       "journal": "ACS Catalysis",
       "sourceId": "S37391459",
       "ok": true,
-      "count": 32,
+      "count": 14,
       "note": ""
     },
     {
@@ -984,7 +1003,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 39,
+      "count": 17,
       "note": ""
     },
     {
@@ -993,7 +1012,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 39,
+      "count": 17,
       "note": ""
     },
     {
@@ -1011,7 +1030,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 39,
+      "count": 17,
       "note": ""
     },
     {
@@ -1020,7 +1039,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 39,
+      "count": 17,
       "note": ""
     },
     {
@@ -1037,7 +1056,7 @@
       "journal": "Organic Letters",
       "sourceId": "S201989124",
       "ok": true,
-      "count": 35,
+      "count": 16,
       "note": ""
     },
     {
@@ -1270,6 +1289,61 @@
       "note": ""
     }
   ],
-  "missingCandidates": [],
+  "missingCandidates": [
+    {
+      "doi": "10.1038/s41467-026-77823-3",
+      "journal": "Nature Communications",
+      "title": "Cryo-EM structure of ex vivo Sup35 yeast prion and the factors defining prion phenotype",
+      "abstract": "Abstract Human prions and amyloids exhibit structural diversity that correlates with different pathological manifestations. Yeast prions represent a convenient model for studying fundamental properties of prions and their strain diversity. The Sup35 yeast prion has multiple structural variants, divided into “strong” and “weak” groups differing in frequency of fibril fragmentation and resulting nonsense-suppression. The molecular origin of these distinctions remains unclear. Here, we show that the different frequency of prion fragmentation is determined by their stability, rather than the efficiency of chaperone binding. The fully protease-resistant part (residues 2-32) of the Sup35 prion core is a key for the prion phenotype and maintenance, whereas partially resistant part (33-72) is less important. We established the cryo-EM structure of a strong Sup35 prion variant purified from yeast, comprising residues 2–64, with 2.7 Å resolution. Comparison of this structure with that of Sup35 amyloid formed in vitro at 4˚C revealed their significant difference.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77880-8",
+      "journal": "Nature Communications",
+      "title": "Kirigami-actuated reconfigurable topological photonic crystals",
+      "abstract": "",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77463-7",
+      "journal": "Nature Communications",
+      "title": "Virtual sensing to enable real-time monitoring of inaccessible locations unmeasurable parameters",
+      "abstract": "Abstract Real-time monitoring of safety-critical interior states remains an open problem across energy, environmental, and industrial systems where direct instrumentation is infeasible. Existing approaches based on governing equations, discrete state vectors, or fixed sensor locations fail to provide mesh-independent, field-level reconstructions at arbitrary interior coordinates under real-time constraints. Here we introduce neural operator-based virtual sensing as a general framework for recovering inaccessible interior fields from sparse, heterogeneous measurements and operating conditions, instantiated with MIMONet, a multi-input, multi-output neural operator that fuses heterogeneous inputs and decodes coupled physical fields through a shared latent representation. Across three engineering-grade evaluations of escalating complexity, from confined recirculating flows to pressurized water reactor subchannels and compact power-system heat exchangers, MIMONet achieves ≤5% relative reconstruction error, while generating full-field predictions with sub-millisecond inference on an NVIDIA H200, at least five orders of magnitude faster than traditional high-fidelity CFD simulations, with calibrated uncertainty and noise resilience demonstrated on the heat-exchanger case. We validate the framework on three independent real-world datasets spanning electrochemical energy, atmospheric science, and physical oceanography: current-density mapping in a hydrogen fuel cell, wind-speed profiling on instrumented meteorological towers, and North Atlantic ocean-state from a global ocean reanalysis. MIMONet improves over classical virtual-sensing baselines by 72–84%: 84% on fuel-cell internal-field recovery from 10% sensor coverage and 83% on hub-height wind-speed recovery from lower-level ",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "reviewPriority": "normal"
+    }
+  ],
   "potentialGaps": []
 }
