@@ -8,22 +8,43 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $CollectorDir = Split-Path -Parent $ScriptDir
 Set-Location $CollectorDir
 
-$buildQueue = Join-Path $ScriptDir "BUILD-RETRY-QUEUE.ps1"
-try {
-  & $buildQueue
-} catch {
-  throw ("Retry queue generation failed: " + $_.Exception.Message)
+$liveBuilder = Join-Path $ScriptDir "BUILD-LIVE-TOC-DEMAND.ps1"
+$queueDir = Join-Path $CollectorDir "queues"
+$liveReady = $false
+
+if (Test-Path -LiteralPath $liveBuilder) {
+  try {
+    & $liveBuilder
+    $liveReady = $true
+  } catch {
+    Write-Warning ("Live TOC demand generation failed; falling back to local historical queue: " + $_.Exception.Message)
+  }
 }
 
-$expectedQueue = Join-Path $CollectorDir "retry-dois.txt"
-if (-not (Test-Path -LiteralPath $expectedQueue)) {
-  throw "Retry queue generation failed: retry-dois.txt was not created."
-}
-
-$queue = if ($Publisher -eq "all") {
-  Join-Path $CollectorDir "retry-dois.txt"
+if ($liveReady) {
+  $queue = if ($Publisher -eq "all") {
+    Join-Path $queueDir "toc-demand-all.txt"
+  } else {
+    Join-Path $queueDir ("toc-demand-" + $Publisher + ".txt")
+  }
 } else {
-  Join-Path $CollectorDir "retry-$Publisher.txt"
+  $buildQueue = Join-Path $ScriptDir "BUILD-RETRY-QUEUE.ps1"
+  try {
+    & $buildQueue
+  } catch {
+    throw ("Retry queue generation failed: " + $_.Exception.Message)
+  }
+
+  $expectedQueue = Join-Path $CollectorDir "retry-dois.txt"
+  if (-not (Test-Path -LiteralPath $expectedQueue)) {
+    throw "Retry queue generation failed: retry-dois.txt was not created."
+  }
+
+  $queue = if ($Publisher -eq "all") {
+    Join-Path $CollectorDir "retry-dois.txt"
+  } else {
+    Join-Path $CollectorDir ("retry-" + $Publisher + ".txt")
+  }
 }
 
 if (-not (Test-Path -LiteralPath $queue)) { throw "Retry queue not found: $queue" }
@@ -46,6 +67,7 @@ Write-Host "Browserbase: DISABLED"
 Write-Host "Figure 1 fallback: ENABLED"
 Write-Host "Per-DOI diagnostics: ENABLED"
 Write-Host "Queue: $queue"
+Write-Host "Queue mode: $(if ($liveReady) { 'LIVE CURRENT GALLERY' } else { 'HISTORICAL FALLBACK' })"
 Write-Host ""
 Write-Host "Institution login/captcha windows stay open for up to 8 minutes." -ForegroundColor Yellow
 Write-Host "Complete validation and wait for Collector to continue. Do not close the publisher window during validation." -ForegroundColor Yellow
