@@ -89,6 +89,12 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/tampermonkey-reports',
 ]);
 
+const TAMPERMONKEY_CORS_WRITE_PATHS = new Set([
+  '/api/media/local-capture/import',
+  '/api/media/local-diagnostics/import',
+  '/api/media/tampermonkey-report/import',
+]);
+
 async function readJson(request) {
   try {
     return await request.json();
@@ -101,17 +107,43 @@ function resultResponse(result, headers = {}) {
   return json(result.body, { status: result.status || 200, headers });
 }
 
-function browserCorsHeaders(request) {
-  const origin = request.headers.get('origin') || '';
-  const allowed = new Set([
+function browserCorsOriginAllowed(origin) {
+  if (!origin) return false;
+  const exact = new Set([
     'https://zhou526316-sys.github.io',
     'https://organic-synthesis-gallery.zhou526316.workers.dev',
     'https://organic-synthesis-gallery-public.pages.dev',
+    'https://pubs.acs.org',
+    'https://onlinelibrary.wiley.com',
+    'https://pubs.rsc.org',
+    'https://www.nature.com',
+    'https://www.science.org',
+    'https://www.sciencedirect.com',
+    'https://www.cell.com',
+    'https://www.ccspublishing.org.cn',
+    'https://doi.org',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
   ]);
+  if (exact.has(origin)) return true;
+  try {
+    const url = new URL(origin);
+    const host = url.hostname.toLowerCase();
+    return url.protocol === 'https:' && (
+      host.endsWith('.onlinelibrary.wiley.com') ||
+      host.endsWith('.sciencedirect.com') ||
+      host.endsWith('.cell.com') ||
+      host.endsWith('.ccspublishing.org.cn')
+    );
+  } catch {
+    return false;
+  }
+}
+
+function browserCorsHeaders(request) {
+  const origin = request.headers.get('origin') || '';
   return {
-    'access-control-allow-origin': allowed.has(origin) ? origin : 'https://zhou526316-sys.github.io',
+    'access-control-allow-origin': browserCorsOriginAllowed(origin) ? origin : 'https://zhou526316-sys.github.io',
     'access-control-allow-methods': 'GET, POST, OPTIONS',
     'access-control-allow-headers': 'content-type, authorization',
     'access-control-max-age': '86400',
@@ -120,7 +152,9 @@ function browserCorsHeaders(request) {
 }
 
 function isBrowserReadablePath(pathname) {
-  return pathname.startsWith('/api/user-ui/') || BROWSER_READ_PATHS.has(pathname);
+  return pathname.startsWith('/api/user-ui/') ||
+    BROWSER_READ_PATHS.has(pathname) ||
+    TAMPERMONKEY_CORS_WRITE_PATHS.has(pathname);
 }
 
 function writeAuthorized(request, env) {
