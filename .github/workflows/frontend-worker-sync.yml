@@ -9,6 +9,13 @@ on:
       - 'index.html'
       - 'vite.config.ts'
       - 'package.json'
+      - 'public/papers.gz.b64'
+      - 'public/total-synthesis.json'
+      - 'public/automation-supplement.json'
+      - 'public/manual-supplement.json'
+      - 'public/final-audit-supplement.json'
+      - 'public/curated-supplement.json'
+      - 'public/rolling-supplement.json'
   workflow_dispatch:
 
 permissions:
