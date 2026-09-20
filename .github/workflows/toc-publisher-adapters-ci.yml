@@ -69,7 +69,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.2.1" public/toc-mainline.user.js
+          grep -F "// @version      6.2.2" public/toc-mainline.user.js
           grep -F "toc-demand-live.json" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
@@ -85,9 +85,13 @@ jobs:
           grep -F "中止当前 TOC 批次" public/toc-mainline.user.js
           grep -F "继续 TOC 主线" public/toc-mainline.user.js
           grep -F "上传本地 TOC 日志" public/toc-mainline.user.js
+          grep -F "publisher_userscript_not_running" public/toc-mainline.user.js
+          grep -F "publisher_userscript_running_job_not_seen" public/toc-mainline.user.js
+          grep -F "查看出版社脚本心跳" public/toc-mainline.user.js
+          grep -F "publisher_script_started" public/toc-mainline.user.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "loaderVersion = '2.2.1'" cloudflare/scripts/build-bridge-loader.mjs
+          grep -F "loaderVersion = '2.2.2'" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" cloudflare/scripts/build-bridge-loader.mjs
           if grep -Fq "chinesechemsoc.org" public/toc-mainline.user.js; then echo "Obsolete CJC domains must not remain in TOC mainline"; exit 1; fi
           if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
