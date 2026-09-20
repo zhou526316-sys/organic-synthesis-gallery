@@ -186,8 +186,30 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   await expect(actions.locator('.drawer')).toBeVisible();
   const toRead = actions.locator('button[data-action="set-status:to-read"]');
   await expect(toRead.locator('.status-image')).toBeVisible();
+
+  await actions.locator('button[data-action="edit-status-style:to-read"]').click();
+  const inlineEditor = actions.locator('[data-status-editor="to-read"]');
+  await expect(inlineEditor).toBeVisible();
+  await expectAnchored(actions.locator('button[data-action="status"]'), actions.locator('.drawer'));
+
+  const colorInput = inlineEditor.locator('input[data-status-color="to-read"]');
+  await colorInput.evaluate((element: HTMLInputElement) => {
+    element.value = '#123456';
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await expect.poll(async () =>
+    toRead.locator('.status-choice-label').evaluate(element => getComputedStyle(element).backgroundColor)
+  ).toBe('rgb(18, 52, 86)');
+
+  const shapeSelect = actions.locator('select[data-status-shape="to-read"]');
+  await shapeSelect.selectOption('square');
+  await expect(toRead.locator('.status-choice-label')).toHaveClass(/shape-square/);
+
   await toRead.click();
-  await expect(actions.locator('.chip.status .status-image')).toBeVisible();
+  const cardStatus = actions.locator('.chip.status');
+  await expect(cardStatus.locator('.status-image')).toBeVisible();
+  await expect(cardStatus).toHaveClass(/shape-square/);
+  await expect.poll(async () => cardStatus.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(18, 52, 86)');
 });
 
 
