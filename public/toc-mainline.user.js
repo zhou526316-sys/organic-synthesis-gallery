@@ -46,6 +46,7 @@
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
   var P = 'osg-toc-v6:';
   var TOKEN_KEY = P + 'write-token';
+  var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';
   var ENABLED_KEY = P + 'enabled';
   var ACTIVE_JOB_KEY = P + 'active-job';
   var LEASE_KEY = P + 'controller-lease';
@@ -100,6 +101,16 @@
   function traceKey(doi) { return P + 'trace:' + normalizeDoi(doi); }
   function attemptKey(doi, generatedAt) { return P + 'attempt:' + normalizeDoi(doi) + ':' + String(generatedAt || ''); }
   function failureKey(doi) { return P + 'failure:' + normalizeDoi(doi); }
+  function writeToken() {
+    var current = String(GM_getValue(TOKEN_KEY, '') || '').trim();
+    if (current) return current;
+    var legacy = String(GM_getValue(LEGACY_TOKEN_KEY, '') || '').trim();
+    if (legacy) {
+      GM_setValue(TOKEN_KEY, legacy);
+      return legacy;
+    }
+    return '';
+  }
   function batchSize() {
     var value = Number(GM_getValue(BATCH_SIZE_KEY, DEFAULT_BATCH_SIZE));
     if (!Number.isFinite(value)) value = DEFAULT_BATCH_SIZE;
@@ -717,7 +728,7 @@
 
   async function runPublisherJob(job) {
     var trace = [];
-    var token = String(GM_getValue(TOKEN_KEY, '') || '').trim();
+    var token = writeToken();
     job.publisher = String(job.publisher || publisherForDoi(job.doi));
     job.startedAt = job.startedAt || nowIso();
     pushTrace(trace, { stage: 'job', event: 'start', status: 'running', url: location.href, message: 'v' + VERSION + ';state=' + String(job.state || '') });
@@ -840,7 +851,7 @@
       badge('TOC 主线已暂停', '#6b7280');
       return;
     }
-    var token = String(GM_getValue(TOKEN_KEY, '') || '').trim();
+    var token = writeToken();
     if (!token) {
       badge('TOC 主线：请先从 Tampermonkey 菜单设置 R2 写入令牌', '#991b1b');
       return;
@@ -954,9 +965,11 @@
       value = String(value || '').trim();
       if (!value) {
         GM_deleteValue(TOKEN_KEY);
+        GM_deleteValue(LEGACY_TOKEN_KEY);
         window.alert('本机写入令牌已清除。');
       } else {
         GM_setValue(TOKEN_KEY, value);
+        GM_setValue(LEGACY_TOKEN_KEY, value);
         window.alert('写入令牌已保存在本机 Tampermonkey。');
       }
     });
