@@ -53,6 +53,9 @@ jobs:
       - name: Run publisher adapter fixtures
         run: node toc-collector/test/publisher-adapters.test.mjs
 
+      - name: Test Tampermonkey diagnostic history
+        run: node cloudflare/worker/scripts/test-tampermonkey-report-history.mjs
+
       - name: Verify direct importer uses shared adapter
         shell: bash
         run: |
