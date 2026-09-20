@@ -33,6 +33,21 @@ function publisherFor(doi) {
   return 'other';
 }
 
+function articleUrlFor(doi, publisher = publisherFor(doi)) {
+  const suffix = doi.split('/')[1] || '';
+  if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + doi;
+  if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + doi;
+  if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
+  if (publisher === 'science') return 'https://www.science.org/doi/' + doi;
+  if (publisher === 'rsc') {
+    const match = /^([a-z])(\d)([a-z]{2})/i.exec(suffix);
+    if (match) return 'https://pubs.rsc.org/en/content/articlelanding/' + (2020 + Number(match[2])) + '/' + match[3].toLowerCase() + '/' + suffix.toLowerCase();
+  }
+  if (publisher === 'elsevier') return 'https://doi.org/' + doi;
+  if (publisher === 'ccs') return 'https://www.chinesechemsoc.org/doi/' + doi;
+  return 'https://doi.org/' + doi;
+}
+
 function isOfficialToc(toc) {
   if (!toc?.available || !toc?.imageUrl) return false;
   const reason = String(toc.reason || '').toLowerCase();
@@ -108,6 +123,7 @@ async function main() {
       publisher: publisherFor(doi),
       state: anyVisual ? 'fallback_only' : 'no_visual',
       existingReason: String(record?.toc?.reason || ''),
+      articleUrl: articleUrlFor(doi),
     };
     allMissingOfficial.push(row);
     if (anyVisual) officialUpgrade.push(row);
@@ -156,6 +172,18 @@ async function main() {
     sample: displayGaps.slice(0,25),
   };
   await writeFile(path.join(OUT, 'toc-demand-summary.json'), JSON.stringify(summary, null, 2) + '\n');
+
+  const publicDemand = {
+    version: 1,
+    generatedAt: summary.generatedAt,
+    webpageDoiCount: papers.size,
+    visibleGapTotal: displayGaps.length,
+    missingOfficialTotal: allMissingOfficial.length,
+    officialUpgradeTotal: officialUpgrade.length,
+    visibleGaps: displayGaps,
+    officialUpgrades: officialUpgrade,
+  };
+  await writeFile(path.join(PUBLIC, 'toc-demand.json'), JSON.stringify(publicDemand, null, 2) + '\n');
   console.log('TOC_DEMAND_SUMMARY ' + JSON.stringify(summary));
 }
 
