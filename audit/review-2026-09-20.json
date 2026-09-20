@@ -1,37 +1,632 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-20T00:00:00Z",
+  "generatedAt": "2026-09-20T05:54:10.311Z",
   "timeZone": "Asia/Shanghai",
   "sourceAudit": {
-    "generatedAt": "2026-09-19T13:46:18.424Z",
-    "startDate": "2026-09-17",
-    "endDate": "2026-09-19",
-    "closureDate": "2026-09-18",
-    "sourceRecords": 596,
-    "missingFromGallery": 8,
-    "criticalSourceFailures": 0
+    "generatedAt": "2026-09-20T05:09:03.885Z",
+    "startDate": "2026-09-18",
+    "endDate": "2026-09-20",
+    "closureDate": "2026-09-19",
+    "sourceRecords": 619,
+    "threeDayPrimaryRecords": 127,
+    "safetyTailAdditionalRecords": 492,
+    "missingFromGallery": 26,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0
   },
-  "policy": "Every previously undecided DOI difference from the pinned stable-capability audit received an explicit assistant decision. Keywords were priority-only and no normal-priority candidate was silently excluded. The 7-day machine safety tail remains machine-only for already decided records.",
+  "policy": "All unresolved DOI differences in the corrected 2026-09-18..2026-09-20 Beijing primary window received explicit semantic decisions. The earlier eight 2026-09-19 Nature Communications exclusions are retained so they remain resolved. Keywords are priority-only; TOC availability does not affect inclusion.",
   "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
-  "summary": {
-    "reviewed": 8,
-    "accepted": 0,
-    "rejected": 8,
+  "correctionBatch": {
+    "reason": "The earlier 2026-09-20 run reused an audit ending 2026-09-19 and incorrectly reported zero additions. A fresh rolling audit ending 2026-09-20 exposed 26 unresolved candidates.",
+    "reviewed": 26,
+    "accepted": 5,
+    "rejected": 21,
     "pending": 0,
-    "closureDate": "2026-09-18",
+    "acceptedDois": [
+      "10.1002/anie.4084841",
+      "10.1002/anie.3092581",
+      "10.1021/acs.orglett.6c03072",
+      "10.1021/acs.orglett.6c03822",
+      "10.1021/acs.orglett.6c03588"
+    ]
+  },
+  "summary": {
+    "reviewed": 34,
+    "accepted": 5,
+    "rejected": 29,
+    "pending": 0,
+    "closureDate": "2026-09-19",
     "closureUnresolved": 0,
     "currentDayUnresolved": 0
   },
-  "accepted": [],
+  "accepted": [
+    {
+      "doi": "10.1002/anie.4084841",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Divergent Single‐Oxygen Transmutation of Furans",
+      "authors": [
+        "Yi He",
+        "Yuta Kato",
+        "Hong Lu",
+        "Takashi Kurogi",
+        "Yihang Zhang",
+        "Yuxuan Yang",
+        "Hideki Yorimitsu",
+        "Hao Wei"
+      ],
+      "reviewPriority": "high",
+      "decision": "include",
+      "reason": "general synthetic methodology: lithium-mediated divergent endocyclic oxygen transmutation of furans to multiple heterocycle classes"
+    },
+    {
+      "doi": "10.1002/anie.3092581",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Taming the Flexible Eight‐Membered Ring: Enantioselective Synthesis of Inherently Chiral Dibenzo[ a , e ]cyclooctatetraenes Enabled by Pd‐Catalyzed Suzuki–Miyaura Cross‐Coupling",
+      "authors": [
+        "Yu‐Kun Jiang",
+        "Liu‐Yi Dong",
+        "Yong‐Le Tian",
+        "Chuan‐Jun Lu",
+        "Long‐Long Xi",
+        "Ren‐Rong Liu"
+      ],
+      "reviewPriority": "high",
+      "decision": "include",
+      "reason": "general asymmetric synthetic methodology: Pd-catalyzed atroposelective Suzuki–Miyaura construction of inherently chiral dbCOT scaffolds"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03072",
+      "journal": "Organic Letters",
+      "date": "2026-09-19",
+      "title": "Biocatalytic Synthesis of Substituted Cinnamaldehydes",
+      "authors": [
+        "Ahmad Reza Salehi",
+        "Farah M. Mustafa",
+        "Terry Girier Rioual",
+        "Jonathan Nakhleh",
+        "David R. J. Palmer"
+      ],
+      "reviewPriority": "high",
+      "decision": "include",
+      "reason": "general biocatalytic synthesis method with substrate scope and preparative-scale validation"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03822",
+      "journal": "Organic Letters",
+      "date": "2026-09-19",
+      "title": "Photocatalytic 1,4-Alkylation/Carboxylation of 1,3-Enynes with 4-Alkyl-Hantzsch Esters and CO2 for the Synthesis of 2,3-Allenoic Acids",
+      "authors": [
+        "Yubing Liu",
+        "Aolong Zhang",
+        "Jiaqi Lin",
+        "Jiahao Pan",
+        "Song Sun"
+      ],
+      "reviewPriority": "high",
+      "decision": "include",
+      "reason": "general photocatalytic 1,4-alkylation/carboxylation of 1,3-enynes with CO2, with scope and derivatization"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03588",
+      "journal": "Organic Letters",
+      "date": "2026-09-19",
+      "title": "Reductive Catalyst Regeneration Enables the General Cu-Catalyzed Atom Transfer Radical Addition with Primary Alkyl Halides",
+      "authors": [
+        "Gyeongmin K. Lee",
+        "Tam D. Ho",
+        "Jacob A. Utley",
+        "Byung Joo Lee",
+        "Ngoc Q. Ngo",
+        "Kami L. Hull"
+      ],
+      "reviewPriority": "high",
+      "decision": "include",
+      "reason": "general Cu-catalyzed ATRA methodology for primary alkyl halides across diverse alkenes with broad synthetic scope"
+    }
+  ],
   "rejected": [
-    {"doi":"10.1038/s41467-026-77027-9","journal":"Nature Communications","date":"2026-09-19","title":"Anti-thymocyte globulin triggers TNF-dependent cell death in T-cell acute lymphoblastic leukemia","reviewPriority":"normal","decision":"exclude","reason":"biomedical leukemia study; outside organic synthesis methodology/total-synthesis scope"},
-    {"doi":"10.1038/s41467-026-77768-7","journal":"Nature Communications","date":"2026-09-19","title":"Bayesian bilevel operator learning with low-rank adaptation for efficient uncertainty quantification of PDE inverse problems","reviewPriority":"high","decision":"exclude","reason":"scientific machine learning/PDE inverse-problem methodology; outside organic synthesis scope"},
-    {"doi":"10.1038/s41467-026-77823-3","journal":"Nature Communications","date":"2026-09-19","title":"Cryo-EM structure of ex vivo Sup35 yeast prion and the factors defining prion phenotype","reviewPriority":"normal","decision":"exclude","reason":"structural biology/prion study; outside organic synthesis scope"},
-    {"doi":"10.1038/s41467-026-77675-x","journal":"Nature Communications","date":"2026-09-19","title":"Extending single-cell proteomics from HeLa to small primary human immune cells","reviewPriority":"normal","decision":"exclude","reason":"single-cell proteomics methodology; outside organic synthesis scope"},
-    {"doi":"10.1038/s41467-026-77880-8","journal":"Nature Communications","date":"2026-09-19","title":"Kirigami-actuated reconfigurable topological photonic crystals","reviewPriority":"normal","decision":"exclude","reason":"photonic materials/device study; outside organic synthesis scope"},
-    {"doi":"10.1038/s41467-026-77700-z","journal":"Nature Communications","date":"2026-09-19","title":"Scalable molecular representations enabled by multimodal fusion and sequence distillation","reviewPriority":"normal","decision":"exclude","reason":"machine-learning molecular representation study without a general synthetic method"},
-    {"doi":"10.1038/s41467-026-77847-9","journal":"Nature Communications","date":"2026-09-19","title":"The EF1α promoter of cilta-cel drives a highly effective GZMK+ transcriptional program","reviewPriority":"normal","decision":"exclude","reason":"cell/gene-therapy biology study; outside organic synthesis scope"},
-    {"doi":"10.1038/s41467-026-77463-7","journal":"Nature Communications","date":"2026-09-19","title":"Virtual sensing to enable real-time monitoring of inaccessible locations unmeasurable parameters","reviewPriority":"normal","decision":"exclude","reason":"engineering neural-operator virtual sensing study; outside organic synthesis scope"}
+    {
+      "doi": "10.1038/s41467-026-77027-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Anti-thymocyte globulin triggers TNF-dependent cell death in T-cell acute lymphoblastic leukemia",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "biomedical leukemia study; outside organic synthesis methodology/total-synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77768-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Bayesian bilevel operator learning with low-rank adaptation for efficient uncertainty quantification of PDE inverse problems",
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "scientific machine learning/PDE inverse-problem methodology; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77823-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Cryo-EM structure of ex vivo Sup35 yeast prion and the factors defining prion phenotype",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "structural biology/prion study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77675-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Extending single-cell proteomics from HeLa to small primary human immune cells",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "single-cell proteomics methodology; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77880-8",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Kirigami-actuated reconfigurable topological photonic crystals",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "photonic materials/device study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77700-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Scalable molecular representations enabled by multimodal fusion and sequence distillation",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "machine-learning molecular representation study without a general synthetic method"
+    },
+    {
+      "doi": "10.1038/s41467-026-77847-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "The EF1α promoter of cilta-cel drives a highly effective GZMK+ transcriptional program",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "cell/gene-therapy biology study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77463-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Virtual sensing to enable real-time monitoring of inaccessible locations unmeasurable parameters",
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "engineering neural-operator virtual sensing study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04708",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-19",
+      "title": "Cobalt-Modified Mordenite with Enhanced Stability for Dimethyl Ether Carbonylation",
+      "authors": [
+        "Nan Chen",
+        "Wenhao Cui",
+        "Dan Zhao",
+        "Songyue Han",
+        "Shiping Liu",
+        "Linying Wang",
+        "Dong Fan",
+        "Peng Tian",
+        "Zhongmin Liu"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "heterogeneous zeolite catalyst/process study for DME carbonylation; not an organic synthesis methodology or total synthesis paper"
+    },
+    {
+      "doi": "10.1002/anie.4940262",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "A Descriptor for Non‐Arrhenius Ion Transport Enables Design of Sulfide Superionic Conductors",
+      "authors": [
+        "Han Zhou",
+        "Xiaoxuan Chen",
+        "Hermann Tempel",
+        "Yong Yang",
+        "Boryann Liaw",
+        "Shicheng Yu",
+        "Rüdiger‐A. Eichel"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "solid-electrolyte ion-transport/materials study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1002/anie.2735155",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Bio‐Inspired Bidirectional Proton Regulatory Mechanisms by Anhydride‐Based Hydrogel Electrolytes for High‐Performance Aqueous Zinc‐Ion Batteries",
+      "authors": [
+        "Jingcheng Li",
+        "Yuanwei Chu",
+        "Xinpeng Li",
+        "Tingting Luo",
+        "Ruixiang Ying",
+        "Mingshan Wang",
+        "Dongling Wu",
+        "Guozhong Cao",
+        "Xing Li"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "hydrogel electrolyte/zinc-battery materials study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1002/anie.4300417",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Borosulfates Hosting Se 4 2+ Ions—Crystal Structures, Chemical Bonding, Optical Spectroscopy, and Magnetism",
+      "authors": [
+        "Erich Turgunbajew",
+        "Marios Symeonidis",
+        "Jörn Bruns",
+        "Sara N. Özbay",
+        "Jan Langwald",
+        "Mathias S. Wickleder",
+        "Robert E. Dinnebier",
+        "Linda S. Reitz",
+        "Richard Dronskowski",
+        "Lars Schumacher",
+        "Rainer Pöttgen",
+        "Henning A. Höppe"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "inorganic borosulfate crystal-structure/bonding study; not a general organic synthesis method"
+    },
+    {
+      "doi": "10.1002/anie.2911991",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Breaking Charge Symmetry in Co–Zn Dual‑Atom Catalyst With Axial Sulfur Coordination for Efficient Oxygen Reduction Reaction",
+      "authors": [
+        "Jixiang Zou",
+        "Lixiao Shen",
+        "Zhishuai Yuan",
+        "Mei Yan",
+        "Lei Zhao",
+        "Chongshen Guo",
+        "Zhenbo Wang"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "dual-atom ORR electrocatalysis/materials study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1002/anie.9361104",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Catalytic Anionic Substituents Effects as Selectivity Mediators in Photocatalytic Hydrogen Atom Transfers",
+      "authors": [
+        "Gaétan Archer",
+        "Maurice Médebielle",
+        "Jérémy Merad"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "minireview on photocatalytic HAT selectivity concepts; reviews are excluded"
+    },
+    {
+      "doi": "10.1002/anie.5950356",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Chemical Switching Between B 2 N and B 2 C Homoaromaticity",
+      "authors": [
+        "Tim Wiesmeier",
+        "Philipp Grewelinger",
+        "Carsten Präsang",
+        "Bernd Morgenstern",
+        "Diego M. Andrada",
+        "David Scheschkewitz"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "single molecular/inorganic homoaromatic switching study aimed at responsive materials; no general organic synthesis methodology"
+    },
+    {
+      "doi": "10.1002/anie.5865467",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Coordinating Mesopore Geometry and Interfacial Water Dynamics for Iron‐Site Evolution in Nitrate Electroreduction",
+      "authors": [
+        "Xiangyang Liu",
+        "Yingji Zhao",
+        "Norman C.‐R. Chen",
+        "Kevin C.‐W. Wu",
+        "Ho Ngoc Nam",
+        "Quan Manh Phung",
+        "Asep Sugih Nugraha",
+        "Yusuke Asakura",
+        "Yusuke Yamauchi"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "nitrate electroreduction electrocatalysis/MOF active-site study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1002/anie.9043892",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Electrochemically Self‐Driven Interfacial Selenium Transfer Reshapes Sulfur Redox Pathway in Lithium–Sulfur Batteries",
+      "authors": [
+        "Yutong Feng",
+        "Cunyi Peng",
+        "Shufen Tan",
+        "Jian Ma",
+        "Xiaoning Li",
+        "Tongtong Zhang",
+        "Lu Chen",
+        "Wei Xu",
+        "Ruijin Meng",
+        "Chi Zhang",
+        "Jinhu Yang"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "lithium-sulfur battery interfacial redox study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1002/anie.3793292",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Low‐Crystalline Ag 1.2 V 3 O 8 : A Zinc‐Ion Storage Cathode With an Ultrahigh Capacity of 525 mAh g −1 Enabled by Oxygen‐Vacancy‐Rich Coordination Environments",
+      "authors": [
+        "Hongxuan Tang",
+        "Lixun Feng",
+        "Xiaoyue Li",
+        "Cuiqin Chao",
+        "Longlong Tian",
+        "Xiaojun Gu",
+        "Jiahuan Zhao",
+        "Xiaoying Liu",
+        "Lifang Zheng",
+        "Yuan Chen",
+        "Yan Zhao",
+        "Jiangwei Zhang",
+        "Linfeng Hu",
+        "Limin Wu"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "zinc-ion battery cathode/materials study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1002/anie.3185665",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Methane Activation by B 5 + Toward a CB 5 H 2 + Isomer Containing a Planar Tetracoordinate Carbon Atom",
+      "authors": [
+        "Qin‐Wei Zhang",
+        "Qiang Chen",
+        "Fernando Murillo",
+        "Filiberto Ortíz‐Chi",
+        "Rui‐Nan Yuan",
+        "Fernando Martínez‐Villarino",
+        "Aura Gómez‐Heredia",
+        "Hong Niu",
+        "Rui Wei",
+        "Jiao‐Jiao Chen",
+        "Yan‐Bo Wu",
+        "Gabriel Merino"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "gas-phase cluster methane activation/mechanistic physical chemistry study; no preparative organic synthesis method"
+    },
+    {
+      "doi": "10.1002/anie.9229523",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Noncovalent Biomolecular Glass Platform for Ultralong Room‐Temperature Phosphorescence",
+      "authors": [
+        "Yumo Dong",
+        "Zhenyi He",
+        "Jiayu Wang",
+        "Haiwei Liu",
+        "Aixing Shao",
+        "Tao Li",
+        "Liangwei Ma",
+        "He Tian",
+        "Xiang Ma"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "phosphorescent biomolecular glass/materials study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1002/anie.2000678",
+      "journal": "Angew",
+      "date": "2026-09-19",
+      "title": "Superoxide‐Anion‐Dominated Labeling of Graphene Defects in an Interfacial Nanoreactor of Electron‐Donated Substrate",
+      "authors": [
+        "Qian Yang",
+        "Maoyun Yin",
+        "Yan Jin",
+        "Rong Wang",
+        "Yuehong Lv",
+        "Xiangnan Gong",
+        "Tao Han",
+        "Baoshan Hu"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "graphene defect labeling/materials characterization study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c14441",
+      "journal": "JACS",
+      "date": "2026-09-19",
+      "title": "Activating Aqueous Multivalent Metal–Sulfur Electrochemistry via Kinetic Promoter",
+      "authors": [
+        "Xinran Li",
+        "Tengsheng Zhang",
+        "Qitong Ye",
+        "Jin-Lin Yang",
+        "Yanyan Zhang",
+        "Xiaoyu Yu",
+        "Hongrun Jin",
+        "Junwei Zhang",
+        "Zhuo Yang",
+        "Zefang Yang",
+        "Yifeng Wang",
+        "Wanhai Zhou",
+        "Hong Jin Fan",
+        "Dongyuan Zhao",
+        "Dongliang Chao"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "aqueous metal-sulfur battery electrochemistry study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c10813",
+      "journal": "JACS",
+      "date": "2026-09-19",
+      "title": "Redox-Regulated Nonvolatility Switching in Single-Nanopipette Memory Diodes",
+      "authors": [
+        "Dipak Baram",
+        "Ruoyu Yang",
+        "Gangli Wang"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "nanofluidic memory-device study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1021/jacs.6c17074",
+      "journal": "JACS",
+      "date": "2026-09-19",
+      "title": "Structural Basis of Cyclized C17 Precursor Recognition and Product Formation in Chlororaphen and Grimophan Biosynthesis",
+      "authors": [
+        "Kexin Yang",
+        "Michael Groll",
+        "Jeroen S. Dickschat"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "structural/mechanistic terpene-biosynthesis study without a general preparative synthetic method"
+    },
+    {
+      "doi": "10.1021/jacs.6c10270",
+      "journal": "JACS",
+      "date": "2026-09-19",
+      "title": "Two-Dimensional Orthorhombic Molybdenum Boride Enabled by Selective Mo–Al Bond Cleavage in MoAlB",
+      "authors": [
+        "Zexiang He",
+        "Shuo Wang",
+        "Yan Sun",
+        "Mingao Chen",
+        "Wentao Fan",
+        "Yuxuan Zhang",
+        "Chunfeng Hu",
+        "Shitao Wu",
+        "Houyu Ma",
+        "Yiyong Mai",
+        "Hao Sun",
+        "Sheng Yang"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "two-dimensional molybdenum-boride materials synthesis; outside organic synthesis methodology scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77798-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Disruption of SWI/SNF ATPases in the mouse liver impairs diurnal gene expression associated with specific promoter features",
+      "authors": [
+        "Nicolaj I. Toft",
+        "Victor E. Goitea",
+        "Stine M. Præstholm",
+        "Catarina M. Correia",
+        "Isabel Heyde",
+        "Majken S. Siersbæk",
+        "Henrik Oster",
+        "Lars Grøntved"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "gene-expression/biology study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77992-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Dosing and delivery of bacteriophage therapy in a murine wound infection model",
+      "authors": [
+        "Yung-Hao Lin",
+        "Tejas Dharmaraj",
+        "Qingquan Chen",
+        "Arne Echterhof",
+        "Robert Manasherob",
+        "Lucy J. Zhang",
+        "Zhiwei Li",
+        "Cas de Leeuw",
+        "Nana A. Peterson",
+        "Tony H. W. Chang",
+        "Whitney Stannard",
+        "Maryam Hajfathalian",
+        "Aviv Hargil",
+        "Hunter A. Martinez",
+        "Julie Pourtois",
+        "Maya Abhyankar",
+        "Francis G. Blankenberg",
+        "Derek Amanatullah",
+        "Ovijit Chaudhuri",
+        "Paul L. Bollyky"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "bacteriophage therapy/biomedical study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77922-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Dynamics-informed machine learning for recovering extensive missing systems dynamics",
+      "authors": [
+        "Tao Wu",
+        "Xiangyun Gao",
+        "Ying Tang",
+        "Feng An",
+        "Xiaotian Sun",
+        "Kazuyuki Aihara",
+        "Haizhong An",
+        "Jürgen Kurths"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "machine-learning systems-dynamics study; outside organic synthesis scope"
+    },
+    {
+      "doi": "10.1038/s41467-026-77851-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-19",
+      "title": "Record-high efficiency in 1.54 µm electroluminescent diodes based on lead-free Cs3CrBr6: Er3+ semiconductor nanocrystals",
+      "authors": [
+        "Hanqi Xu",
+        "Tianyuan Wang",
+        "Wen Xie",
+        "Hao Liang",
+        "Hong Shen",
+        "Luying Wang",
+        "Siqi Cheng",
+        "Xinyu Wang",
+        "Yufeng Xin",
+        "Donglei Zhou",
+        "Fei Xu",
+        "Hongwei Song"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "electroluminescent semiconductor nanocrystal/materials study; outside organic synthesis scope"
+    }
   ],
   "pending": []
 }
