@@ -13,10 +13,10 @@ export const PUBLISHER_LABELS = {
 
 export const TARGET_JOURNALS_BY_PUBLISHER = {
   acs: ['JACS', 'ACS Catalysis', 'Organic Letters'],
-  wiley: ['Angew', 'Chinese Journal of Chemistry'],
+  wiley: ['Angew'],
   springer_nature: ['Nature', 'Nature Communications', 'Nature Chemistry', 'Nature Catalysis', 'Nature Synthesis'],
   aaas: ['Science', 'Science Advances'],
-  rsc: ['Chemical Science'],
+  rsc: ['Chemical Science', 'Green Chemistry'],
   elsevier: ['Chem'],
   ccs: ['CCS Chemistry'],
 };

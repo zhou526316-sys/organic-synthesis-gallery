@@ -26,7 +26,7 @@ Do not automatically adopt an experimental or failing implementation merely beca
 
 The canonical target list is `shared/literature-journals.js`. Do not maintain a second independent hard-coded list in fetch logic.
 
-The original ten journals remain in scope from 2026-07-01. The following five journals are prospective additions and are in scope only from 2026-09-19 (Asia/Shanghai), inclusive: Chem, Chemical Science, CCS Chemistry, Science Advances, and Chinese Journal of Chemistry (CJC). A wider safety lookback must never backfill these five before their `activeFrom` date.
+The original ten journals remain in scope from 2026-07-01. The following five journals are prospective additions and are in scope only from 2026-09-19 (Asia/Shanghai), inclusive: Chem, Chemical Science, CCS Chemistry, Science Advances, and Green Chemistry. A wider safety lookback must never backfill these five before their `activeFrom` date.
 
 ## Completeness standard
 
@@ -48,7 +48,9 @@ The primary task must always use the currently selected latest stable capability
 
 When a primary 08:00/18:00 run finishes semantic review and has one or more accepted papers, those accepted papers must be committed to the authoritative literature dataset and deployed to the production website in the same run. Do not wait for the 08:30/18:30 TOC-repair task, the next scheduled literature run, or a separate sync fallback.
 
-TOC/Graphical Abstract availability is downstream and non-blocking. Newly accepted cards may go live with TOC explicitly pending; the TOC task can fill or upgrade media afterwards. The primary run must trigger the existing production deployment path immediately after the authoritative literature-data commit, then verify that every newly accepted DOI is visible/searchable in production and report the resulting total card count. If deployment fails, record `sync_failed` with the concrete reason and retry deployment when safe; never report an accepted DOI as live until production verification succeeds.
+TOC/Graphical Abstract availability is downstream and non-blocking. Newly accepted cards may go live with TOC explicitly pending; the TOC task can fill or upgrade media afterwards.
+
+Every accepted-literature data commit must also feed the browser-side TOC acquisition path. Changes to authoritative literature supplements trigger `Refresh live TOC demand queue`, which rebuilds `public/toc-demand-live.json`. Tampermonkey is the preferred authenticated/browser-context acquisition path for publisher TOC/Graphical Abstract and Figure 1 fallback: it consumes the live queue, prioritizes `visibleGaps`, then `officialUpgrades`, and writes captured media through the existing authenticated Worker media-import path. The 08:20/18:20 Asia/Shanghai queue refresh is a fallback; the accepted-paper commit should trigger the queue refresh immediately. Tampermonkey/TOC failure must never delay literature-card publication. The primary run must trigger the existing production deployment path immediately after the authoritative literature-data commit, then verify that every newly accepted DOI is visible/searchable in production and report the resulting total card count. If deployment fails, record `sync_failed` with the concrete reason and retry deployment when safe; never report an accepted DOI as live until production verification succeeds.
 
 The primary run must also report two distinct discovery counts: (1) unique records whose publication date falls inside the three-calendar-day primary review window, and (2) additional records included only by the seven-day machine safety tail / late-deposit rescue. Do not present their union as if every record were newly published inside the three-day window.
 

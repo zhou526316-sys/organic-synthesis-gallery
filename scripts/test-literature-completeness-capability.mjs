@@ -10,12 +10,12 @@ assert.equal(TARGET_JOURNALS.length, 15, 'Completeness audit must cover exactly 
 for (const name of [
   'Nature', 'Science', 'Nature Catalysis', 'Nature Synthesis', 'Nature Chemistry',
   'Nature Communications', 'JACS', 'Angew', 'ACS Catalysis', 'Organic Letters',
-  'Chem', 'Chemical Science', 'CCS Chemistry', 'Science Advances', 'Chinese Journal of Chemistry',
+  'Chem', 'Chemical Science', 'CCS Chemistry', 'Science Advances', 'Green Chemistry',
 ]) {
   assert.ok(names.includes(name), `Missing target journal: ${name}`);
 }
 
-for (const name of ['Chem', 'Chemical Science', 'CCS Chemistry', 'Science Advances', 'Chinese Journal of Chemistry']) {
+for (const name of ['Chem', 'Chemical Science', 'CCS Chemistry', 'Science Advances', 'Green Chemistry']) {
   const journal = TARGET_JOURNALS.find(item => item.name === name);
   assert.equal(journal?.activeFrom, '2026-09-19', `${name} must remain prospective from 2026-09-19`);
   assert.equal(effectiveJournalStart(journal, '2026-09-13'), '2026-09-19', `${name} must not be backfilled before activation`);
