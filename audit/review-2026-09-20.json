@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-20T00:00:00Z",
+  "timeZone": "Asia/Shanghai",
+  "sourceAudit": {
+    "generatedAt": "2026-09-19T13:46:18.424Z",
+    "startDate": "2026-09-17",
+    "endDate": "2026-09-19",
+    "closureDate": "2026-09-18",
+    "sourceRecords": 596,
+    "missingFromGallery": 8,
+    "criticalSourceFailures": 0
+  },
+  "policy": "Every previously undecided DOI difference from the pinned stable-capability audit received an explicit assistant decision. Keywords were priority-only and no normal-priority candidate was silently excluded. The 7-day machine safety tail remains machine-only for already decided records.",
+  "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
+  "summary": {
+    "reviewed": 8,
+    "accepted": 0,
+    "rejected": 8,
+    "pending": 0,
+    "closureDate": "2026-09-18",
+    "closureUnresolved": 0,
+    "currentDayUnresolved": 0
+  },
+  "accepted": [],
+  "rejected": [
+    {"doi":"10.1038/s41467-026-77027-9","journal":"Nature Communications","date":"2026-09-19","title":"Anti-thymocyte globulin triggers TNF-dependent cell death in T-cell acute lymphoblastic leukemia","reviewPriority":"normal","decision":"exclude","reason":"biomedical leukemia study; outside organic synthesis methodology/total-synthesis scope"},
+    {"doi":"10.1038/s41467-026-77768-7","journal":"Nature Communications","date":"2026-09-19","title":"Bayesian bilevel operator learning with low-rank adaptation for efficient uncertainty quantification of PDE inverse problems","reviewPriority":"high","decision":"exclude","reason":"scientific machine learning/PDE inverse-problem methodology; outside organic synthesis scope"},
+    {"doi":"10.1038/s41467-026-77823-3","journal":"Nature Communications","date":"2026-09-19","title":"Cryo-EM structure of ex vivo Sup35 yeast prion and the factors defining prion phenotype","reviewPriority":"normal","decision":"exclude","reason":"structural biology/prion study; outside organic synthesis scope"},
+    {"doi":"10.1038/s41467-026-77675-x","journal":"Nature Communications","date":"2026-09-19","title":"Extending single-cell proteomics from HeLa to small primary human immune cells","reviewPriority":"normal","decision":"exclude","reason":"single-cell proteomics methodology; outside organic synthesis scope"},
+    {"doi":"10.1038/s41467-026-77880-8","journal":"Nature Communications","date":"2026-09-19","title":"Kirigami-actuated reconfigurable topological photonic crystals","reviewPriority":"normal","decision":"exclude","reason":"photonic materials/device study; outside organic synthesis scope"},
+    {"doi":"10.1038/s41467-026-77700-z","journal":"Nature Communications","date":"2026-09-19","title":"Scalable molecular representations enabled by multimodal fusion and sequence distillation","reviewPriority":"normal","decision":"exclude","reason":"machine-learning molecular representation study without a general synthetic method"},
+    {"doi":"10.1038/s41467-026-77847-9","journal":"Nature Communications","date":"2026-09-19","title":"The EF1α promoter of cilta-cel drives a highly effective GZMK+ transcriptional program","reviewPriority":"normal","decision":"exclude","reason":"cell/gene-therapy biology study; outside organic synthesis scope"},
+    {"doi":"10.1038/s41467-026-77463-7","journal":"Nature Communications","date":"2026-09-19","title":"Virtual sensing to enable real-time monitoring of inaccessible locations unmeasurable parameters","reviewPriority":"normal","decision":"exclude","reason":"engineering neural-operator virtual sensing study; outside organic synthesis scope"}
+  ],
+  "pending": []
+}
