@@ -100,7 +100,7 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
 
   for (let index = 0; index < 30; index += 1) {
     await actions.locator('button[data-action="status"]').click();
-    await expect(actions.locator('.overlay')).toBeVisible();
+    await expect(actions.locator('.drawer')).toBeVisible();
     if (index === 0) await expectAnchored(actions.locator('button[data-action="status"]'), actions.locator('.drawer'));
 
     const choices = actions.locator('button[data-action^="set-status:"]');
@@ -124,14 +124,14 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
     }
 
     await actions.locator('button[data-action="note"]').click();
-    await expect(actions.locator('.overlay')).toBeVisible();
+    await expect(actions.locator('.drawer')).toBeVisible();
     if (index === 0) await expectAnchored(actions.locator('button[data-action="note"]'), actions.locator('.drawer'));
     await actions.locator('button[data-action="close"]').click();
     await expect(actions.locator('.overlay')).toHaveCount(0);
     await expectUnlocked();
 
     await actions.locator('button[data-action="more"]').click();
-    await expect(actions.locator('.overlay')).toBeVisible();
+    await expect(actions.locator('.drawer')).toBeVisible();
     if (index === 0) await expectAnchored(actions.locator('button[data-action="more"]'), actions.locator('.drawer'));
     await actions.locator('button[data-action="close"]').click();
     await expect(actions.locator('.overlay')).toHaveCount(0);
