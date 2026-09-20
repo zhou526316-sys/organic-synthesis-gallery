@@ -16,8 +16,6 @@
 // @match        https://*.sciencedirect.com/*
 // @match        https://www.cell.com/*
 // @match        https://*.cell.com/*
-// @match        https://www.chinesechemsoc.org/*
-// @match        https://*.chinesechemsoc.org/*
 // @match        https://www.ccspublishing.org.cn/*
 // @match        https://*.ccspublishing.org.cn/*
 // @match        https://doi.org/*
@@ -115,6 +113,40 @@
     var value = Number(GM_getValue(BATCH_SIZE_KEY, DEFAULT_BATCH_SIZE));
     if (!Number.isFinite(value)) value = DEFAULT_BATCH_SIZE;
     return Math.max(1, Math.min(20, Math.floor(value)));
+  }
+  function selectBatchJobs(allJobs, limit) {
+    var buckets = new Map();
+    allJobs.forEach(function (raw) {
+      var job = Object.assign({}, raw);
+      job.doi = normalizeDoi(job.doi);
+      if (!job.doi) return;
+      job.publisher = String(job.publisher || publisherForDoi(job.doi));
+      if (!buckets.has(job.publisher)) buckets.set(job.publisher, []);
+      buckets.get(job.publisher).push(job);
+    });
+    buckets.forEach(function (rows) {
+      rows.sort(function (a, b) {
+        return String(b.date || '').localeCompare(String(a.date || '')) || String(a.doi).localeCompare(String(b.doi));
+      });
+    });
+    var publishers = Array.from(buckets.keys()).sort();
+    var out = [];
+    var index = 0;
+    while (out.length < limit && publishers.length) {
+      if (index >= publishers.length) index = 0;
+      var publisher = publishers[index];
+      var rows = buckets.get(publisher) || [];
+      while (rows.length) {
+        var candidate = rows.shift();
+        var failed = GM_getValue(failureKey(candidate.doi), null);
+        if (failed && Number(failed.at || 0) > 0 && Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS) continue;
+        out.push(candidate);
+        break;
+      }
+      if (!rows.length) publishers.splice(index, 1);
+      else index += 1;
+    }
+    return out;
   }
 
   function pushTrace(trace, data) {
@@ -874,19 +906,14 @@
     var upgrades = Array.isArray(queue.officialUpgrades) ? queue.officialUpgrades : [];
     var allJobs = visible.concat(upgrades);
     var limit = batchSize();
-    var jobs = [];
-    var cooldownSkipped = 0;
-    for (var q = 0; q < allJobs.length && jobs.length < limit; q += 1) {
-      var queued = Object.assign({}, allJobs[q]);
-      queued.doi = normalizeDoi(queued.doi);
-      if (!queued.doi) continue;
-      var failed = GM_getValue(failureKey(queued.doi), null);
-      if (failed && Number(failed.at || 0) > 0 && Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS) {
-        cooldownSkipped += 1;
-        continue;
-      }
-      jobs.push(queued);
-    }
+    var jobs = selectBatchJobs(allJobs, limit);
+    var cooling = allJobs.filter(function (queued) {
+      var doi = normalizeDoi(queued && queued.doi);
+      if (!doi) return false;
+      var failed = GM_getValue(failureKey(doi), null);
+      return failed && Number(failed.at || 0) > 0 && Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS;
+    });
+    var cooldownSkipped = cooling.length;
     var summary = {
       version: VERSION,
       queueGeneratedAt: queue.generatedAt || '',

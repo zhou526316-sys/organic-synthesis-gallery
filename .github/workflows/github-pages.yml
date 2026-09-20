@@ -185,16 +185,23 @@ jobs:
           grep -F "toc-demand-live.json" dist/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" dist/toc-mainline.user.js
           test -d dist/media-mirror
-          grep -F "// @version      2.1.0" dist/gallery-vpn-bridge.user.js
+          grep -F "// @version      2.2.0" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
           grep -F "// @connect      *" dist/gallery-vpn-bridge.user.js
-          grep -F "VPN Bridge 2.1.0 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
-          grep -F "const VERSION = '1.1.1';" dist/gallery-vpn-bridge.user.js
+          grep -F "// @match        https://pubs.acs.org/*" dist/gallery-vpn-bridge.user.js
+          grep -F "// @match        https://onlinelibrary.wiley.com/*" dist/gallery-vpn-bridge.user.js
+          grep -F "// @match        https://pubs.rsc.org/*" dist/gallery-vpn-bridge.user.js
+          grep -F "// @grant        GM_openInTab" dist/gallery-vpn-bridge.user.js
+          grep -F "organicGalleryCloudflareBridgeWriteToken" dist/gallery-vpn-bridge.user.js
+          grep -F "__OSG_TOC_BROWSER_MAINLINE__" dist/gallery-vpn-bridge.user.js
+          grep -F "toc-demand-live.json" dist/gallery-vpn-bridge.user.js
+          grep -F "VPN Bridge 2.2.0 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
+          grep -F "const VERSION = '1.2.0';" dist/gallery-vpn-bridge.user.js
           grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge.user.js
           if grep -Eq "\beval\s*\(" dist/gallery-vpn-bridge.user.js; then echo "Bridge userscript must not use eval"; exit 1; fi
-          grep -F "const VERSION = '1.1.1';" dist/gallery-vpn-bridge-runtime.js
+          grep -F "const VERSION = '1.2.0';" dist/gallery-vpn-bridge-runtime.js
           grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge-runtime.js
           grep -F "abstract\\s*image" dist/gallery-vpn-bridge-runtime.js
           node - <<'NODE'
