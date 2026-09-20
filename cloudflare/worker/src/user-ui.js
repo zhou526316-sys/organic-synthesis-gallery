@@ -317,6 +317,11 @@ function boundedDimension(value) {
 }
 
 const SITE_FEEDBACK_R2_PREFIX = 'private/site-feedback/open/';
+const SITE_FEEDBACK_STATUSES = new Set(['open', 'reviewed', 'dismissed']);
+
+function siteFeedbackR2Prefix(status) {
+  return `private/site-feedback/${status}/`;
+}
 
 function feedbackHourBucket(timestamp) {
   const date = new Date(timestamp);
@@ -539,6 +544,121 @@ export async function exportOpenSiteFeedback(env, limit = 300) {
         r2Fallback: { available: Boolean(env?.MEDIA), count: fallback.length },
       },
       feedback,
+    },
+  };
+}
+
+
+async function findR2SiteFeedback(env, fallbackId) {
+  if (!env?.MEDIA || !fallbackId) return null;
+  let cursor;
+  do {
+    const listed = await env.MEDIA.list({
+      prefix: SITE_FEEDBACK_R2_PREFIX,
+      limit: 1000,
+      ...(cursor ? { cursor } : {}),
+    });
+    for (const item of listed?.objects || []) {
+      const object = await env.MEDIA.get(item.key);
+      if (!object) continue;
+      try {
+        const parsed = JSON.parse(await object.text());
+        if (String(parsed?.fallbackId || '') === fallbackId) {
+          return { key: item.key, parsed };
+        }
+      } catch {}
+    }
+    cursor = listed?.truncated ? listed.cursor : undefined;
+  } while (cursor);
+  return null;
+}
+
+async function updateR2SiteFeedbackStatus(env, fallbackId, status) {
+  const found = await findR2SiteFeedback(env, fallbackId);
+  if (!found) return false;
+  if (status === 'open') return true;
+
+  const targetKey = found.key.replace(SITE_FEEDBACK_R2_PREFIX, siteFeedbackR2Prefix(status));
+  const stored = {
+    ...found.parsed,
+    status,
+    updatedAt: Date.now(),
+  };
+  await env.MEDIA.put(targetKey, JSON.stringify(stored), {
+    httpMetadata: { contentType: 'application/json; charset=utf-8' },
+    customMetadata: { kind: 'site-feedback', status },
+  });
+  await env.MEDIA.delete(found.key);
+  return true;
+}
+
+export async function updateSiteFeedbackStatuses(env, payload) {
+  const updates = Array.isArray(payload?.updates) ? payload.updates.slice(0, 100) : [];
+  if (!updates.length) return { status: 400, body: { error: 'feedback_updates_required' } };
+
+  const results = [];
+  for (const entry of updates) {
+    const status = typeof entry?.status === 'string' ? entry.status.trim().toLowerCase() : '';
+    if (!SITE_FEEDBACK_STATUSES.has(status)) {
+      results.push({ id: entry?.id ?? null, ok: false, error: 'invalid_status' });
+      continue;
+    }
+
+    const id = entry?.id;
+    if (typeof id === 'string' && id.startsWith('r2:')) {
+      try {
+        const fallbackId = id.slice(3).trim();
+        const ok = await updateR2SiteFeedbackStatus(env, fallbackId, status);
+        results.push({ id, ok, status, error: ok ? undefined : 'feedback_not_found' });
+      } catch (error) {
+        results.push({
+          id,
+          ok: false,
+          status,
+          error: String(error?.message || error).slice(0, 240),
+        });
+      }
+      continue;
+    }
+
+    const numericId = Number(id);
+    if (!Number.isInteger(numericId) || numericId <= 0) {
+      results.push({ id: id ?? null, ok: false, error: 'invalid_feedback_id' });
+      continue;
+    }
+    if (!env?.DB) {
+      results.push({ id: numericId, ok: false, status, error: 'd1_unavailable' });
+      continue;
+    }
+
+    try {
+      const result = await env.DB.prepare(
+        'UPDATE site_feedback SET status = ? WHERE id = ?'
+      ).bind(status, numericId).run();
+      const changed = Number(result?.meta?.changes || 0);
+      results.push({
+        id: numericId,
+        ok: changed > 0,
+        status,
+        error: changed > 0 ? undefined : 'feedback_not_found',
+      });
+    } catch (error) {
+      results.push({
+        id: numericId,
+        ok: false,
+        status,
+        error: String(error?.message || error).slice(0, 240),
+      });
+    }
+  }
+
+  const updated = results.filter(item => item.ok).length;
+  return {
+    status: 200,
+    body: {
+      updated,
+      failed: results.length - updated,
+      results,
     },
   };
 }
