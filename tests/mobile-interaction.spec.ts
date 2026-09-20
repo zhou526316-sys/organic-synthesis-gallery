@@ -311,3 +311,58 @@ test('search highlights results, picker closes outside, feedback drags and submi
   await feedback.locator('[data-feedback-submit]').click();
   await expect(feedback.locator('.site-feedback-status')).toContainText(/已收到|Received/);
 });
+
+
+test('journal and date filters persist across reload and clear cleanly', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  await page.locator('.card').first().waitFor({ state: 'visible', timeout: 30000 });
+  const initialCards = await page.locator('.card').count();
+  expect(initialCards).toBeGreaterThan(400);
+
+  const picker = page.locator('.journal-picker');
+  await picker.locator('summary').click();
+  const jacs = picker.locator('input[data-journal-option][value="JACS"]');
+  await jacs.check();
+  await expect(jacs).toBeChecked();
+
+  await page.locator('#dateFrom').evaluate((element: HTMLInputElement) => {
+    element.value = '2026-09-01';
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await page.locator('#dateTo').evaluate((element: HTMLInputElement) => {
+    element.value = '2026-09-20';
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+
+  await expect(page.locator('#dateFrom')).toHaveValue('2026-09-01');
+  await expect(page.locator('#dateTo')).toHaveValue('2026-09-20');
+  await expect.poll(async () => page.locator('.card').count()).toBeGreaterThan(0);
+  const filteredCount = await page.locator('.card').count();
+  expect(filteredCount).toBeLessThan(initialCards);
+
+  const filtered = await page.locator('.card').evaluateAll(cards => cards.map(card => ({
+    journal: (card as HTMLElement).dataset.journal || '',
+    date: (card as HTMLElement).dataset.date || '',
+  })));
+  expect(filtered.length).toBe(filteredCount);
+  expect(filtered.every(item => item.journal === 'JACS')).toBe(true);
+  expect(filtered.every(item => item.date >= '2026-09-01' && item.date <= '2026-09-20')).toBe(true);
+
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.locator('.card').first().waitFor({ state: 'visible', timeout: 30000 });
+  await expect(page.locator('#dateFrom')).toHaveValue('2026-09-01');
+  await expect(page.locator('#dateTo')).toHaveValue('2026-09-20');
+  await expect(page.locator('input[data-journal-option][value="JACS"]')).toBeChecked();
+  await expect.poll(async () => page.locator('.card').count()).toBe(filteredCount);
+
+  await page.locator('#clearCustomFilters').click();
+  await expect(page.locator('#dateFrom')).toHaveValue('');
+  await expect(page.locator('#dateTo')).toHaveValue('');
+  await expect(page.locator('input[data-journal-option][value="JACS"]')).not.toBeChecked();
+  await expect.poll(async () => page.locator('.card').count()).toBe(initialCards);
+});
