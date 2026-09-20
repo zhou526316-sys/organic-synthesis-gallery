@@ -32,7 +32,7 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   });
 
   await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
-  await page.locator('.card').first().waitFor({ state: 'visible', timeout: 30000 });
+  await galleryCards.first().waitFor({ state: 'visible', timeout: 30000 });
   await page.locator('gallery-paper-actions').first().waitFor({ state: 'visible', timeout: 30000 });
 
   const initialCards = await page.locator('.card').count();
@@ -320,8 +320,9 @@ test('journal and date filters persist across reload and clear cleanly', async (
   });
 
   await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
-  await page.locator('.card').first().waitFor({ state: 'visible', timeout: 30000 });
-  const initialCards = await page.locator('.card').count();
+  const galleryCards = page.locator('#gallery > .card');
+  await galleryCards.first().waitFor({ state: 'visible', timeout: 30000 });
+  const initialCards = await galleryCards.count();
   expect(initialCards).toBeGreaterThan(400);
 
   const picker = page.locator('.journal-picker');
@@ -341,11 +342,11 @@ test('journal and date filters persist across reload and clear cleanly', async (
 
   await expect(page.locator('#dateFrom')).toHaveValue('2026-09-01');
   await expect(page.locator('#dateTo')).toHaveValue('2026-09-20');
-  await expect.poll(async () => page.locator('.card').count()).toBeGreaterThan(0);
-  const filteredCount = await page.locator('.card').count();
+  await expect.poll(async () => galleryCards.count()).toBeGreaterThan(0);
+  const filteredCount = await galleryCards.count();
   expect(filteredCount).toBeLessThan(initialCards);
 
-  const filtered = await page.locator('.card').evaluateAll(cards => cards.map(card => ({
+  const filtered = await galleryCards.evaluateAll(cards => cards.map(card => ({
     journal: (card as HTMLElement).dataset.journal || '',
     date: (card as HTMLElement).dataset.date || '',
   })));
@@ -358,11 +359,11 @@ test('journal and date filters persist across reload and clear cleanly', async (
   await expect(page.locator('#dateFrom')).toHaveValue('2026-09-01');
   await expect(page.locator('#dateTo')).toHaveValue('2026-09-20');
   await expect(page.locator('input[data-journal-option][value="JACS"]')).toBeChecked();
-  await expect.poll(async () => page.locator('.card').count()).toBe(filteredCount);
+  await expect.poll(async () => galleryCards.count()).toBe(filteredCount);
 
   await page.locator('#clearCustomFilters').click();
   await expect(page.locator('#dateFrom')).toHaveValue('');
   await expect(page.locator('#dateTo')).toHaveValue('');
   await expect(page.locator('input[data-journal-option][value="JACS"]')).not.toBeChecked();
-  await expect.poll(async () => page.locator('.card').count()).toBe(initialCards);
+  await expect.poll(async () => galleryCards.count()).toBe(initialCards);
 });
