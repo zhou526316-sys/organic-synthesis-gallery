@@ -42,6 +42,7 @@ jobs:
         shell: bash
         run: |
           cat toc-collector/queues/toc-demand-summary.json
+          node -e "const q=require('./public/toc-demand-live.json'); console.log(JSON.stringify({visible:q.visibleGapTotal,missingOfficial:q.missingOfficialTotal,upgrades:q.officialUpgradeTotal}))"
           echo "all=$(wc -l < toc-collector/queues/toc-demand-all.txt)"
           echo "acs=$(wc -l < toc-collector/queues/toc-demand-acs.txt)"
           echo "wiley=$(wc -l < toc-collector/queues/toc-demand-wiley.txt)"
@@ -55,12 +56,12 @@ jobs:
       - name: Commit refreshed queues
         shell: bash
         run: |
-          if git diff --quiet -- toc-collector/queues; then
+          if git diff --quiet -- toc-collector/queues public/toc-demand-live.json; then
             echo "No queue changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add toc-collector/queues
+          git add toc-collector/queues public/toc-demand-live.json
           git commit -m "Refresh live TOC demand queues"
           git push
