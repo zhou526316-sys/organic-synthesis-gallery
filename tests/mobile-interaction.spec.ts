@@ -172,6 +172,22 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   });
   expect(scrollability.scrollHeight).toBeGreaterThan(scrollability.clientHeight);
   expect(scrollability.after).toBeGreaterThan(scrollability.before);
+
+  const statusImageInput = userShell.locator('input[data-image="status:to-read"]');
+  await statusImageInput.setInputFiles({
+    name: 'status.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64'),
+  });
+  await expect(userShell.locator('[data-style-preview="status:to-read"] img')).toBeVisible();
+
+  await userShell.locator('button[data-action="close"]').click();
+  await actions.locator('button[data-action="status"]').click();
+  await expect(actions.locator('.drawer')).toBeVisible();
+  const toRead = actions.locator('button[data-action="set-status:to-read"]');
+  await expect(toRead.locator('.status-image')).toBeVisible();
+  await toRead.click();
+  await expect(actions.locator('.chip.status .status-image')).toBeVisible();
 });
 
 

@@ -81,20 +81,28 @@ export class GalleryPaperActions extends HTMLElement {
 
     drawer.style.left = '0px';
     drawer.style.top = '0px';
+    drawer.style.removeProperty('max-height');
     const anchorRect = anchor.getBoundingClientRect();
     const hostRect = this.getBoundingClientRect();
-    const drawerRect = drawer.getBoundingClientRect();
+    const initialRect = drawer.getBoundingClientRect();
     const margin = 8;
     const gap = 6;
 
     let left = anchorRect.left;
-    left = Math.min(left, window.innerWidth - drawerRect.width - margin);
+    left = Math.min(left, window.innerWidth - initialRect.width - margin);
     left = Math.max(margin, left);
 
-    let top = anchorRect.bottom + gap;
-    const above = anchorRect.top - drawerRect.height - gap;
-    if (top + drawerRect.height > window.innerHeight - margin && above >= margin) top = above;
-    top = Math.max(margin, Math.min(top, window.innerHeight - drawerRect.height - margin));
+    const below = Math.max(0, window.innerHeight - anchorRect.bottom - gap - margin);
+    const above = Math.max(0, anchorRect.top - gap - margin);
+    const openBelow = below >= Math.min(initialRect.height, 220) || below >= above;
+    const available = openBelow ? below : above;
+    const cap = window.innerWidth <= 680 ? 520 : 560;
+    drawer.style.maxHeight = `${Math.max(96, Math.min(cap, available))}px`;
+
+    const fittedRect = drawer.getBoundingClientRect();
+    const top = openBelow
+      ? anchorRect.bottom + gap
+      : anchorRect.top - fittedRect.height - gap;
 
     drawer.style.left = `${Math.round(left - hostRect.left)}px`;
     drawer.style.top = `${Math.round(top - hostRect.top)}px`;
@@ -123,9 +131,9 @@ export class GalleryPaperActions extends HTMLElement {
     const s = store.state.actionStyles;
     this.shadow.innerHTML = `<style>
       :host{display:block;position:relative;margin-top:4px;font:12px/1.4 Inter,system-ui,sans-serif;color:#344054}
-      *{box-sizing:border-box}button,input,textarea,select{font:inherit}button{cursor:pointer}.bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 10px}.action{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:30px;padding:5px 8px;border:0;background:var(--u-color);color:var(--u-text);font-size:11px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}.action.active{box-shadow:0 0 0 2px rgba(49,89,189,.18)}.action .icon{width:15px;height:15px;object-fit:contain}.shape-pill{border-radius:999px}.shape-rounded{border-radius:9px}.shape-rectangle{border-radius:2px}.shape-circle{width:32px;height:32px;padding:0;border-radius:50%}.shape-circle span:last-child,.shape-square span:last-child,.shape-diamond span:last-child,.shape-star span:last-child,.shape-bookmark span:last-child{display:none}.shape-square{width:32px;height:32px;padding:0;border-radius:5px}.shape-diamond{width:29px;height:29px;padding:0;border-radius:5px;transform:rotate(45deg)}.shape-diamond>*{transform:rotate(-45deg)}.shape-bookmark{border-radius:6px 6px 2px 2px;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}.shape-star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%);width:34px;height:34px;padding:0}.metric{margin-left:auto;color:#7a8494;font-size:10px;white-space:nowrap}.chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}.chip{padding:3px 6px;border-radius:999px;background:#f2f5fb;color:#526071;font-size:9px}.status{background:${status ? rgbCss(status.style.rgb) : '#f2f5fb'};color:${status ? '#fff' : '#526071'}}
+      *{box-sizing:border-box}button,input,textarea,select{font:inherit}button{cursor:pointer}.bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 10px}.action{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:30px;padding:5px 8px;border:0;background:var(--u-color);color:var(--u-text);font-size:11px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}.action.active{box-shadow:0 0 0 2px rgba(49,89,189,.18)}.action .icon{width:15px;height:15px;object-fit:contain}.shape-pill{border-radius:999px}.shape-rounded{border-radius:9px}.shape-rectangle{border-radius:2px}.shape-circle{width:32px;height:32px;padding:0;border-radius:50%}.shape-circle span:last-child,.shape-square span:last-child,.shape-diamond span:last-child,.shape-star span:last-child,.shape-bookmark span:last-child{display:none}.shape-square{width:32px;height:32px;padding:0;border-radius:5px}.shape-diamond{width:29px;height:29px;padding:0;border-radius:5px;transform:rotate(45deg)}.shape-diamond>*{transform:rotate(-45deg)}.shape-bookmark{border-radius:6px 6px 2px 2px;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}.shape-star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%);width:34px;height:34px;padding:0}.metric{margin-left:auto;color:#7a8494;font-size:10px;white-space:nowrap}.chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}.chip{padding:3px 6px;border-radius:999px;background:#f2f5fb;color:#526071;font-size:9px}.chip.status,.status-choice-label{display:inline-flex;align-items:center;gap:5px;color:#fff}.status-image{width:16px;height:16px;object-fit:contain;border-radius:4px;background:rgba(255,255,255,.16)}.status-choice{display:flex;align-items:center;gap:7px}.status-choice-label{padding:4px 7px;min-width:0}.status-choice small{color:#7a8494;font-size:9px}.status{background:${status ? rgbCss(status.style.rgb) : '#f2f5fb'};color:${status ? '#fff' : '#526071'}}
       .overlay{position:absolute;left:0;top:0;width:100%;height:0;z-index:10020;background:transparent;pointer-events:none}.drawer{position:absolute;pointer-events:auto;width:min(350px,calc(100vw - 24px));height:auto;max-height:min(68dvh,560px);overflow:auto;padding:15px;background:#fff;border:1px solid #dfe5ef;border-radius:16px;box-shadow:0 14px 38px rgba(15,23,42,.18)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:18px 0 10px;z-index:2}.head h3{margin:0;font-size:17px}.close{border:0;background:#f2f4f7;border-radius:9px;width:30px;height:30px}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.stack{display:grid;gap:6px}.choice,.secondary{width:100%;text-align:left;padding:8px 10px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;color:#344054}.choice.selected{border-color:#8aa5ef;background:#f5f7ff}.check{display:flex;align-items:center;gap:8px;padding:5px 0}.input,textarea{width:100%;border:1px solid #d7deea;border-radius:10px;padding:9px;outline:none}textarea{min-height:150px;resize:vertical}.help{margin-top:6px;color:#8a93a3;font-size:10px}.preview{margin-top:8px;padding:9px;border-radius:10px;background:#f8fafc;overflow-wrap:anywhere}.preview a{color:#3159bd}.check-preview{display:flex;gap:6px}.tag-row{display:flex;gap:6px}.tag-row .input{flex:1}.tag-row .secondary{width:auto}.danger{color:#b42318}.feedback{margin-top:7px;color:#667085;font-size:10px}
-      @media(max-width:680px){:host{margin-top:2px}.bar{gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:none}}
+      @media(max-width:680px){:host{margin-top:2px}.bar{gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:flex}.chips>.chip:not(.status){display:none}.drawer .chips>.chip{display:inline-flex}}
     </style>${this.chips(paper, status)}<div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
       ${button(s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status))}
@@ -146,9 +154,16 @@ export class GalleryPaperActions extends HTMLElement {
     if (drawerOpen) queueMicrotask(() => this.positionPanel());
   }
 
+  private statusVisual(status: NonNullable<ReturnType<typeof store.status>>, className: string): string {
+    const image = status.style.imageData
+      ? `<img class='status-image' src='${escapeHtml(status.style.imageData)}' alt=''>`
+      : '';
+    return `<span class='${className} shape-${status.style.shape}' style='background:${rgbCss(status.style.rgb)}'>${image}<span>${escapeHtml(statusLabel(status, this.language))}</span></span>`;
+  }
+
   private chips(paper: PaperUserState, status: ReturnType<typeof store.status>): string {
     const quick = store.state.quickTerms.filter(item => paper.quickTerms.includes(item.id));
-    const values = [status ? `<span class='chip status'>${escapeHtml(statusLabel(status, this.language))}</span>` : '', ...quick.map(item => `<span class='chip'>${escapeHtml(item.label)}</span>`), ...paper.tags.map(tag => `<span class='chip'>${escapeHtml(tag)}</span>`)];
+    const values = [status ? this.statusVisual(status, 'chip status') : '', ...quick.map(item => `<span class='chip'>${escapeHtml(item.label)}</span>`), ...paper.tags.map(tag => `<span class='chip'>${escapeHtml(tag)}</span>`)];
     return values.some(Boolean) ? `<div class='chips'>${values.join('')}</div>` : '';
   }
 
@@ -156,7 +171,7 @@ export class GalleryPaperActions extends HTMLElement {
     const meta = store.metadata(this.paperId); const title = this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
     let body = '';
     if (this.panel === 'status') {
-      body = `<section class='section'><div class='stack'>${store.state.statuses.map(status => `<button type='button' class='choice${paper.statusId === status.id ? ' selected' : ''}' data-action='set-status:${escapeHtml(status.id)}'>${escapeHtml(statusLabel(status, this.language))}${status.countsAsRead ? ` · ${this.tr('计入阅读人数', 'counts as read')}` : ''}</button>`).join('')}</div></section>`;
+      body = `<section class='section'><div class='stack'>${store.state.statuses.map(status => `<button type='button' class='choice status-choice${paper.statusId === status.id ? ' selected' : ''}' data-action='set-status:${escapeHtml(status.id)}'>${this.statusVisual(status, 'status-choice-label')}${status.countsAsRead ? `<small>· ${this.tr('计入阅读人数', 'counts as read')}</small>` : ''}</button>`).join('')}</div></section>`;
     } else if (this.panel === 'note') {
       body = `<section class='section'><textarea data-note placeholder='${this.tr('支持 Markdown 文本、DOI/URL、- [ ] checklist', 'Markdown text, DOI/URL and - [ ] checklist are supported')}'>${escapeHtml(paper.note)}</textarea><div class='help'>${paper.noteUpdatedAt ? `${this.tr('修改于', 'Modified')} ${formatTime(paper.noteUpdatedAt)}` : this.tr('自动保存到当前浏览器', 'Autosaved in this browser')}</div>${paper.note ? `<div class='preview'>${notePreview(paper.note)}</div>` : ''}</section>`;
     } else {
