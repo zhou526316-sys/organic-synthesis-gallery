@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { exportOpenSiteFeedback, submitSiteFeedback } from '../src/user-ui.js';
+import { exportOpenSiteFeedback, submitSiteFeedback, updateSiteFeedbackStatuses } from '../src/user-ui.js';
 import { serveMediaObject } from '../src/media.js';
 
 class MemoryR2 {
@@ -17,6 +17,9 @@ class MemoryR2 {
       async text() { return value.body; },
       body: value.body,
     };
+  }
+  async delete(key) {
+    this.map.delete(key);
   }
   async list({ prefix = '', limit = 1000 } = {}) {
     const objects = [...this.map.keys()]
@@ -78,7 +81,21 @@ assert.equal(exported.body.sources.d1.available, false);
 assert.equal(exported.body.sources.r2Fallback.count, 5);
 assert.ok(exported.body.feedback.every(item => item.source === 'r2-fallback'));
 
-const privateKey = [...media.map.keys()][0];
+const reviewedId = exported.body.feedback[0].id;
+const statusUpdate = await updateSiteFeedbackStatuses(env, {
+  updates: [{ id: reviewedId, status: 'reviewed' }],
+});
+assert.equal(statusUpdate.status, 200);
+assert.equal(statusUpdate.body.updated, 1);
+assert.equal(statusUpdate.body.failed, 0);
+
+const afterReview = await exportOpenSiteFeedback(env, 300);
+assert.equal(afterReview.body.count, 4);
+assert.ok(!afterReview.body.feedback.some(item => item.id === reviewedId));
+assert.ok([...media.map.keys()].some(key => key.startsWith('private/site-feedback/reviewed/')));
+assert.ok(![...media.map.keys()].some(key => key.includes(String(reviewedId).replace(/^r2:/, '')) && key.startsWith('private/site-feedback/open/')));
+
+const privateKey = [...media.map.keys()].find(key => key.startsWith('private/site-feedback/open/'));
 assert.ok(privateKey.startsWith('private/site-feedback/open/'));
 const privateRead = await serveMediaObject(
   new Request(`https://example.test/media/${privateKey}`),
@@ -90,5 +107,6 @@ console.log(JSON.stringify({
   fallbackWrites: 5,
   fallbackRateLimit: true,
   mergedExport: true,
+  statusUpdate: true,
   privateMediaBlocked: true,
 }));
