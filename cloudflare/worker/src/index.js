@@ -31,7 +31,7 @@ import { runLeaseRepairBatch, runRepairBatch } from './repair.js';
 import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
-import { exportOpenSiteFeedback, markReader, readerCounts, submitPaperFeedback, submitSiteFeedback } from './user-ui.js';
+import { exportOpenSiteFeedback, markReader, readerCounts, submitPaperFeedback, submitSiteFeedback, updateSiteFeedbackStatuses } from './user-ui.js';
 import {
   alipayNotify,
   authCallback,
@@ -182,6 +182,11 @@ async function handleApi(request, env) {
     if (authError) return authError;
     const limit = Math.max(1, Math.min(500, Number(url.searchParams.get('limit') || 300)));
     return resultResponse(await exportOpenSiteFeedback(env, limit));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/site-feedback/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await updateSiteFeedbackStatuses(env, await readJson(request)));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/integrations') {
