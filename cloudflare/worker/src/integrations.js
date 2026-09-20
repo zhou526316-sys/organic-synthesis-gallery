@@ -18,6 +18,7 @@ const PASSWORD_MAX_LENGTH = 128;
 const REGISTER_TTL = 1000 * 60 * 10;
 const EMAIL_CODE_COOLDOWN = 1000 * 60;
 const EMAIL_CODE_MAX_ATTEMPTS = 6;
+const VERIFIED_EMAIL_FROM = 'Organic Synthesis Gallery <login@mail.gczhouwld.com>';
 
 function json(value, init = {}) {
   return new Response(JSON.stringify(value), {
@@ -66,7 +67,7 @@ async function sendEmailCode(env, email, purpose, code) {
     method: 'POST',
     headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, 'content-type': 'application/json' },
     body: JSON.stringify({
-      from: env.EMAIL_FROM,
+      from: VERIFIED_EMAIL_FROM,
       to: [email],
       subject: subjects[purpose] || subjects.verify,
       html: `<p>你的验证码是：</p><p style="font-size:28px;font-weight:700;letter-spacing:6px">${code}</p><p>用于${actions[purpose] || actions.verify}。验证码 10 分钟内有效，请勿转发给他人。</p>`,
@@ -162,7 +163,7 @@ function providerConfigured(env, provider) {
   if (provider === 'google') return Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET);
   if (provider === 'wechat') return Boolean(env.WECHAT_OPEN_APP_ID && env.WECHAT_OPEN_APP_SECRET);
   if (provider === 'qq') return Boolean(env.QQ_CONNECT_APP_ID && env.QQ_CONNECT_APP_KEY);
-  if (provider === 'email') return Boolean(env.RESEND_API_KEY && env.EMAIL_FROM);
+  if (provider === 'email') return Boolean(env.RESEND_API_KEY);
   return false;
 }
 
@@ -206,7 +207,7 @@ export async function probeEmailDelivery(env) {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        from: env.EMAIL_FROM,
+        from: VERIFIED_EMAIL_FROM,
         to: ['delivered@resend.dev'],
         subject: 'Organic Synthesis Gallery email delivery probe',
         html: '<p>Automated delivery probe.</p>',
@@ -1170,7 +1171,7 @@ export async function emailStart(request, env, payload) {
     method: 'POST',
     headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, 'content-type': 'application/json' },
     body: JSON.stringify({
-      from: env.EMAIL_FROM,
+      from: VERIFIED_EMAIL_FROM,
       to: [email],
       subject: 'Organic Synthesis Literature Gallery 登录链接',
       html: `<p>点击下面的链接登录 Organic Synthesis Literature Gallery。链接 15 分钟内有效。</p><p><a href="${link}">登录</a></p>`,
