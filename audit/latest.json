@@ -1,6 +1,6 @@
 {
   "auditVersion": 4,
-  "generatedAt": "2026-09-20T07:16:17.085Z",
+  "generatedAt": "2026-09-20T14:00:55.893Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -159,14 +159,14 @@
   ],
   "summary": {
     "galleryDois": 483,
-    "sourceRecords": 619,
-    "rawMissingFromGallery": 546,
+    "sourceRecords": 620,
+    "rawMissingFromGallery": 547,
     "previouslyReviewedExcluded": 546,
-    "missingFromGallery": 0,
+    "missingFromGallery": 1,
     "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
-    "unresolved": 0,
+    "unresolved": 1,
     "excludedByPolicy": 0
   },
   "closure": {
@@ -260,25 +260,25 @@
     "Nature Communications": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-18",
-      "sourceRecords": 204,
-      "crossrefOnly": 15,
+      "sourceRecords": 205,
+      "crossrefOnly": 2,
       "openAlexOnly": 3,
-      "multiSource": 186,
+      "multiSource": 200,
       "lateIndexed": 160,
       "safetyTail": 163,
       "coveredByGallery": 4,
-      "rawMissingFromGallery": 200,
+      "rawMissingFromGallery": 201,
       "previouslyReviewedExcluded": 200,
-      "missingFromGallery": 0,
+      "missingFromGallery": 1,
       "potentialGaps": 0
     },
     "JACS": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-18",
       "sourceRecords": 87,
-      "crossrefOnly": 6,
+      "crossrefOnly": 0,
       "openAlexOnly": 0,
-      "multiSource": 81,
+      "multiSource": 87,
       "lateIndexed": 66,
       "safetyTail": 66,
       "coveredByGallery": 16,
@@ -291,9 +291,9 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-18",
       "sourceRecords": 123,
-      "crossrefOnly": 15,
+      "crossrefOnly": 1,
       "openAlexOnly": 2,
-      "multiSource": 106,
+      "multiSource": 120,
       "lateIndexed": 90,
       "safetyTail": 92,
       "coveredByGallery": 12,
@@ -306,9 +306,9 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-18",
       "sourceRecords": 32,
-      "crossrefOnly": 1,
+      "crossrefOnly": 0,
       "openAlexOnly": 0,
-      "multiSource": 31,
+      "multiSource": 32,
       "lateIndexed": 21,
       "safetyTail": 21,
       "coveredByGallery": 5,
@@ -321,9 +321,9 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-18",
       "sourceRecords": 42,
-      "crossrefOnly": 4,
+      "crossrefOnly": 0,
       "openAlexOnly": 0,
-      "multiSource": 38,
+      "multiSource": 42,
       "lateIndexed": 30,
       "safetyTail": 30,
       "coveredByGallery": 34,
@@ -824,7 +824,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 202,
+      "count": 203,
       "note": ""
     },
     {
@@ -833,7 +833,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 202,
+      "count": 203,
       "note": ""
     },
     {
@@ -842,7 +842,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 202,
+      "count": 203,
       "note": ""
     },
     {
@@ -850,7 +850,7 @@
       "journal": "Nature Communications",
       "sourceId": "S64187185",
       "ok": true,
-      "count": 190,
+      "count": 204,
       "note": ""
     },
     {
@@ -912,7 +912,7 @@
       "journal": "JACS",
       "sourceId": "S111155417",
       "ok": true,
-      "count": 82,
+      "count": 88,
       "note": ""
     },
     {
@@ -974,7 +974,7 @@
       "journal": "Angew",
       "sourceId": "S67393510",
       "ok": true,
-      "count": 108,
+      "count": 122,
       "note": ""
     },
     {
@@ -1009,7 +1009,7 @@
       "journal": "ACS Catalysis",
       "sourceId": "S37391459",
       "ok": true,
-      "count": 31,
+      "count": 32,
       "note": ""
     },
     {
@@ -1071,7 +1071,7 @@
       "journal": "Organic Letters",
       "sourceId": "S201989124",
       "ok": true,
-      "count": 38,
+      "count": 42,
       "note": ""
     },
     {
@@ -1304,6 +1304,37 @@
       "note": ""
     }
   ],
-  "missingCandidates": [],
+  "missingCandidates": [
+    {
+      "doi": "10.1038/s41467-026-76272-2",
+      "journal": "Nature Communications",
+      "title": "Memristive singular value decomposition",
+      "abstract": "",
+      "date": "2026-09-20",
+      "type": "journal-article",
+      "authors": [
+        "Chenchen Ding",
+        "Zhengwu Liu",
+        "Yibei Zhang",
+        "Can Li",
+        "Jianshi Tang",
+        "Bin Gao",
+        "Hao Yu",
+        "Huaqiang Wu",
+        "Ngai Wong"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    }
+  ],
   "potentialGaps": []
 }
