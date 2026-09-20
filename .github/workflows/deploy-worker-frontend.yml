@@ -110,6 +110,23 @@ jobs:
         working-directory: cloudflare/worker
         run: npx wrangler deploy --config wrangler.frontend.toml
 
+      - name: Probe configured email delivery
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node - <<'NODE'
+          const response = await fetch(process.env.WORKER_URL + '/api/admin/email/probe', {
+            method: 'POST',
+            headers: { authorization: `Bearer ${process.env.BRIDGE_WRITE_TOKEN}` },
+          });
+          const text = await response.text();
+          let body = {};
+          try { body = text ? JSON.parse(text) : {}; } catch {}
+          console.log(JSON.stringify({ status: response.status, body }));
+          if (!response.ok || body?.ok !== true) process.exit(1);
+          NODE
+
       - name: Verify feedback runtime routes without D1 reads
         env:
           WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
