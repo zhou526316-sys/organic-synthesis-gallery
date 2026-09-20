@@ -8,16 +8,18 @@ const UPDATE_ORIGIN = (process.env.BRIDGE_UPDATE_ORIGIN || GITHUB_SITE_ORIGIN).r
 const PUBLIC_SITE_ORIGINS = [...new Set([SITE_ORIGIN, CLOUDFLARE_SITE_ORIGIN, GITHUB_SITE_ORIGIN])];
 const BRIDGE_OUTPUT = path.resolve(process.env.BRIDGE_OUTPUT || 'public/gallery-vpn-bridge.user.js');
 const RUNTIME_OUTPUT = path.resolve(process.env.BRIDGE_RUNTIME_OUTPUT || 'public/gallery-vpn-bridge-runtime.js');
+const TOC_MAINLINE_INPUT = path.resolve(process.env.TOC_MAINLINE_INPUT || 'public/toc-mainline.user.js');
 
 let runtime = await readFile(BRIDGE_OUTPUT, 'utf8');
+let tocMainline = await readFile(TOC_MAINLINE_INPUT, 'utf8');
 
 function replaceRequired(before, after, label) {
   if (!runtime.includes(before)) throw new Error(`Bridge packaging anchor changed: ${label}`);
   runtime = runtime.replace(before, after);
 }
 
-replaceRequired('// @version      1.0.4', '// @version      1.1.1', 'runtime metadata version');
-replaceRequired("const VERSION = '1.0.4';", "const VERSION = '1.1.1';", 'runtime status version');
+replaceRequired('// @version      1.0.4', '// @version      1.2.0', 'runtime metadata version');
+replaceRequired("const VERSION = '1.0.4';", "const VERSION = '1.2.0';", 'runtime status version');
 replaceRequired("const COOLDOWN_KEY = 'organicGalleryBridgeCooldownsV1';", "const COOLDOWN_KEY = 'organicGalleryBridgeCooldownsV3';", 'runtime cooldown generation');
 
 replaceRequired(
@@ -44,17 +46,39 @@ runtime = runtime.replaceAll(
   'No verified Visual/Graphical Abstract or TOC Graphic across publisher/full-text pages; Figure 1 will be used when available',
   'No verified Visual/Graphical Abstract, Abstract Image, or TOC Graphic across publisher/full-text pages; Figure 1 will be used when available'
 );
+replaceRequired(
+  '  async function refreshServerBridgeQueue() {',
+  '  async function refreshServerBridgeQueue() {\n    if (globalThis.__OSG_TOC_BROWSER_MAINLINE__) return;',
+  'disable duplicate legacy server backlog when browser mainline is integrated'
+);
 
 await writeFile(RUNTIME_OUTPUT, runtime, 'utf8');
 
 const runtimeBody = runtime.replace(/^\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==\s*/, '').trim();
-if (!runtimeBody.includes("const VERSION = '1.1.1';") || !runtimeBody.includes("const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';")) {
+if (!runtimeBody.includes("const VERSION = '1.2.0';") || !runtimeBody.includes("const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';")) {
   throw new Error('Packaged Runtime validation failed.');
 }
 if (/\beval\s*\(/.test(runtimeBody)) throw new Error('Runtime unexpectedly contains eval().');
 
-const matchLines = PUBLIC_SITE_ORIGINS.map(origin => `// @match        ${origin}/*`).join('\n');
-const loaderVersion = '2.1.0';
+const tocMatchLines = tocMainline.match(/^\/\/ @match\s+.+$/gm) || [];
+let tocBody = tocMainline.replace(/^\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==\s*/, '').trim();
+if (!tocBody.includes("var VERSION = '6.1.0';")) throw new Error('TOC mainline version/content changed unexpectedly.');
+tocBody = tocBody
+  .replace("var TOKEN_KEY = P + 'write-token';", "var TOKEN_KEY = 'organicGalleryCloudflareBridgeWriteToken';")
+  .replace("var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';", "var LEGACY_TOKEN_KEY = TOKEN_KEY;")
+  .replace("right:14px;bottom:14px", "right:14px;bottom:58px");
+if (!tocBody.includes("var TOKEN_KEY = 'organicGalleryCloudflareBridgeWriteToken';")) {
+  throw new Error('Integrated TOC mainline did not adopt the Bridge token storage key.');
+}
+if (/\beval\s*\(/.test(tocBody)) throw new Error('TOC mainline unexpectedly contains eval().');
+
+const matchLines = [...new Set([
+  ...PUBLIC_SITE_ORIGINS.map(origin => `// @match        ${origin}/*`),
+  ...tocMatchLines,
+])].join('\n');
+const galleryHosts = [...new Set(PUBLIC_SITE_ORIGINS.map(origin => new URL(origin).hostname))];
+const galleryHostExpression = galleryHosts.map(host => `location.hostname === '${host}'`).join(' || ');
+const loaderVersion = '2.2.0';
 
 const loader = `// ==UserScript==
 // @name         Organic Synthesis Gallery VPN Literature Bridge
@@ -67,13 +91,19 @@ ${matchLines}
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_deleteValue
 // @grant        GM_registerMenuCommand
+// @grant        GM_openInTab
 // @connect      *
 // @run-at       document-idle
+// @noframes
 // ==/UserScript==
+
+globalThis.__OSG_TOC_BROWSER_MAINLINE__ = true;
 
 (() => {
   'use strict';
+  if (!(${galleryHostExpression})) return;
 
   const DIAGNOSTIC_ID = 'vpn-lit-bridge-loader-status';
   let node = document.getElementById(DIAGNOSTIC_ID);
@@ -107,7 +137,11 @@ ${matchLines}
   }, 1500);
 })();
 
+if (${galleryHostExpression}) {
 ${runtimeBody}
+}
+
+${tocBody}
 `;
 
 await writeFile(BRIDGE_OUTPUT, loader, 'utf8');
