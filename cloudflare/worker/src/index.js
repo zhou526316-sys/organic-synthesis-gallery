@@ -46,6 +46,7 @@ import {
   emailStart,
   exchangeAuth,
   integrationStatus,
+  probeEmailDelivery,
   logout,
   paymentStatus,
   passwordLogin,
@@ -184,6 +185,11 @@ async function handleApi(request, env) {
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/integrations') {
     return resultResponse(integrationStatus(env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/email/probe') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await probeEmailDelivery(env));
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/auth/start') {
     return authStart(request, env);
