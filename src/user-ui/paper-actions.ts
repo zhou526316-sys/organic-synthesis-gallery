@@ -158,7 +158,10 @@ export class GalleryPaperActions extends HTMLElement {
       this.closest<HTMLElement>('.card')?.classList.remove('user-action-open');
     }
     this.syncScrollLock();
-    if (drawerOpen) queueMicrotask(() => this.positionPanel());
+    if (drawerOpen) {
+      queueMicrotask(() => this.positionPanel());
+      requestAnimationFrame(() => this.positionPanel());
+    }
   }
 
   private statusVisual(status: NonNullable<ReturnType<typeof store.status>>, className: string): string {
