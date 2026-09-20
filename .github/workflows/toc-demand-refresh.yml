@@ -57,7 +57,7 @@ jobs:
       - name: Commit refreshed queues
         shell: bash
         run: |
-          if git diff --quiet -- toc-collector/queues public/toc-demand-live.json; then
+          if [ -z "$(git status --porcelain -- toc-collector/queues public/toc-demand-live.json)" ]; then
             echo "No queue changes."
             exit 0
           fi

@@ -10,6 +10,9 @@ on:
       - 'toc-collector/test/**'
       - 'toc-collector/package.json'
       - 'cloudflare/scripts/import-recent-media-direct.mjs'
+      - 'cloudflare/worker/src/local-captures.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'public/toc-mainline.user.js'
       - '.github/workflows/toc-publisher-adapters-ci.yml'
   push:
     branches: [main]
@@ -40,6 +43,9 @@ jobs:
           node --check toc-collector/src/publisher-adapters.mjs
           node --check toc-collector/src/background.mjs
           node --check cloudflare/scripts/import-recent-media-direct.mjs
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/index.js
+          node --check cloudflare/worker/src/local-captures.js
 
       - name: Run publisher adapter fixtures
         run: node toc-collector/test/publisher-adapters.test.mjs
@@ -52,6 +58,22 @@ jobs:
           grep -F "extractPublisherMediaCandidates" cloudflare/scripts/import-recent-media-direct.mjs
           grep -F "pickBestPublisherMediaCandidate" toc-collector/src/background.mjs
 
+
+      - name: Verify Tampermonkey mainline contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F "// @version      6.1.0" public/toc-mainline.user.js
+          grep -F "toc-demand-live.json" public/toc-mainline.user.js
+          grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
+          grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
+          grep -F "FAILURE_COOLDOWN_MS" public/toc-mainline.user.js
+          grep -F "DEFAULT_BATCH_SIZE = 8" public/toc-mainline.user.js
+          grep -F "articlelanding/" public/toc-mainline.user.js
+          if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
+            echo "Userscript must not embed a write token"
+            exit 1
+          fi
 
   windows-collector-smoke:
     runs-on: windows-latest
