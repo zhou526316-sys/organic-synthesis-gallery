@@ -94,6 +94,7 @@ const showBrowserMode = process.argv.includes('--show-browser');
 const diagnoseMissesMode = process.argv.includes('--diagnose-misses');
 const doiFileArg = process.argv.find(arg => arg.startsWith('--doi-file='));
 const doiFilePath = doiFileArg ? path.resolve(doiFileArg.slice('--doi-file='.length)) : '';
+const oneShotLocalQueueMode = localOnlyMode && scanAllMode && Boolean(doiFilePath);
 // This only exists for the explicit, read-only Browserbase acceptance test. It
 // never changes the normal resolver order used by the Collector.
 const forceBrowserbaseDiagnostic = process.argv.includes('--force-browserbase');
@@ -1589,10 +1590,51 @@ async function downloadPdfFromPublisherBrowser({ doi, publisher, webContents, pd
     }
   });
 }
-async function waitForLocalInteractiveArticle(win, doi, publisher) {
-  if (!localOnlyMode || !showBrowserMode || !win || win.isDestroyed()) {
+async function probeLocalPublisherWindow(candidateWin, doi, publisher) {
+  if (!candidateWin || candidateWin.isDestroyed() || candidateWin.webContents.isDestroyed()) return null;
+  try {
+    const details = await candidateWin.webContents.executeJavaScript(\`(() => {
+      const text = String(document.body?.innerText || '').slice(0, 160000);
+      const href = location.href;
+      const title = document.title;
+      const citationDoi = String(document.querySelector('meta[name="citation_doi"]')?.content || document.querySelector('meta[name="dc.identifier"]')?.content || '').toLowerCase();
+      const canonical = String(document.querySelector('link[rel="canonical"]')?.href || '').toLowerCase();
+      const challenge = /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic|checking your browser/i.test(title + '\\n' + text);
+      const authPage = /(?:login|signin|sign-in|shibboleth|saml|institution|federated|wayf|idp|openathens)/i.test(href)
+        || /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login|institutional access|access provided by/i.test(title + '\\n' + text);
+      const articleSignal = /\\babstract\\b|\\breferences\\b|\\bsupporting information\\b|\\barticle\\b/i.test(text) && text.length > 2500;
+      const institutionalAccessSignal = /access provided by|institutional access|access through your institution|signed in through|authenticated by/i.test(text);
+      return { href, title, textLength: text.length, citationDoi, canonical, challenge, authPage, articleSignal, institutionalAccessSignal };
+    })()\`);
+    const normalized = String(doi || '').toLowerCase();
+    const suffix = normalized.split('/').at(-1) || normalized;
+    const href = String(details?.href || '');
+    const hostOk = publisherHostMatches(publisher, href);
+    const doiOk = String(details?.citationDoi || '').includes(normalized)
+      || String(details?.canonical || '').includes(normalized)
+      || href.toLowerCase().includes(suffix.toLowerCase());
+    return {
+      ...details,
+      hostOk,
+      doiOk,
+      webContentsId: candidateWin.webContents.id,
+      windowId: candidateWin.id,
+    };
+  } catch (error) {
+    await log('local_interactive_probe_failed', {
+      doi,
+      publisher,
+      windowId: Number(candidateWin?.id || 0),
+      reason: safeError(error, 180),
+    });
+    return null;
+  }
+}
+
+async function waitForLocalInteractiveArticle(win, doi, publisher, childWindows = []) {
+  if (!localOnlyMode || !showBrowserMode) {
     await new Promise(resolve => setTimeout(resolve, Number(config.headlessWaitMs) || 5000));
-    return { waitState: 'headless_settle' };
+    return { waitState: 'headless_settle', webContentsId: win?.webContents?.id || 0 };
   }
 
   const settleMs = Math.max(5000, Number(config.localInteractiveSettleMs || 12000));
@@ -1601,67 +1643,76 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
   let lastStatus = '';
   let lastDetails = null;
 
-  while (!win.isDestroyed()) {
-    let details = null;
-    try {
-      details = await win.webContents.executeJavaScript(`(() => {
-        const text = String(document.body?.innerText || '').slice(0, 160000);
-        const href = location.href;
-        const title = document.title;
-        const citationDoi = String(document.querySelector('meta[name="citation_doi"]')?.content || document.querySelector('meta[name="dc.identifier"]')?.content || '').toLowerCase();
-        const canonical = String(document.querySelector('link[rel="canonical"]')?.href || '').toLowerCase();
-        const challenge = /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic|checking your browser/i.test(title + '\\n' + text);
-        const authPage = /(?:login|signin|sign-in|shibboleth|saml|institution|federated|wayf|idp|openathens)/i.test(href)
-          || /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login|institutional access|access provided by/i.test(title + '\\n' + text);
-        const articleSignal = /\\babstract\\b|\\breferences\\b|\\bsupporting information\\b|\\barticle\\b/i.test(text) && text.length > 2500;
-        const institutionalAccessSignal = /access provided by|institutional access|access through your institution|signed in through|authenticated by/i.test(text);
-        return { href, title, textLength: text.length, citationDoi, canonical, challenge, authPage, articleSignal, institutionalAccessSignal };
-      })()`);
-      lastDetails = details;
-    } catch (error) {
-      if (win.isDestroyed()) {
-        if (lastDetails?.challenge || lastDetails?.authPage) throw new Error('window_closed_during_auth');
-        throw new Error('publisher_window_closed_before_capture');
-      }
-      await log('local_interactive_probe_failed', { doi, publisher, reason: safeError(error, 180) });
+  while (true) {
+    const liveWindows = [win, ...childWindows]
+      .filter(Boolean)
+      .filter(candidateWin => !candidateWin.isDestroyed() && !candidateWin.webContents.isDestroyed());
+
+    if (!liveWindows.length) break;
+
+    const probes = [];
+    for (const candidateWin of [...liveWindows].reverse()) {
+      const details = await probeLocalPublisherWindow(candidateWin, doi, publisher);
+      if (details) probes.push(details);
     }
 
-    if (details) {
-      const normalized = String(doi || '').toLowerCase();
-      const suffix = normalized.split('/').at(-1) || normalized;
-      const href = String(details.href || '');
-      const hostOk = publisherHostMatches(publisher, href);
-      const doiOk = String(details.citationDoi || '').includes(normalized)
-        || String(details.canonical || '').includes(normalized)
-        || href.toLowerCase().includes(suffix.toLowerCase());
-      const articleReady = hostOk && (doiOk || details.articleSignal) && !details.challenge && !details.authPage;
-      const elapsed = Date.now() - startedAt;
+    const elapsed = Date.now() - startedAt;
+    const ready = probes.find(details =>
+      details.hostOk &&
+      (details.doiOk || details.articleSignal) &&
+      !details.challenge &&
+      !details.authPage
+    );
 
-      if (articleReady && elapsed >= settleMs) {
-        if (lastStatus !== 'ready') await log('local_interactive_article_ready', { doi, publisher, url: href });
-        return { ...details, hostOk, doiOk, waitState: 'article_ready', elapsedMs: elapsed };
+    if (ready && elapsed >= settleMs) {
+      if (lastStatus !== 'ready') {
+        await log('local_interactive_article_ready', {
+          doi,
+          publisher,
+          url: ready.href,
+          windowId: ready.windowId,
+          childWindow: ready.windowId !== win?.id,
+        });
       }
+      return { ...ready, waitState: 'article_ready', elapsedMs: elapsed };
+    }
 
-      const waitingForUser = details.challenge || details.authPage || !hostOk;
+    const preferred = probes.find(details => details.hostOk && details.doiOk)
+      || probes.find(details => details.hostOk && !details.authPage)
+      || probes.find(details => details.hostOk)
+      || probes[0]
+      || lastDetails;
+    if (preferred) lastDetails = preferred;
+
+    if (preferred) {
+      const waitingForUser = preferred.challenge || preferred.authPage || !preferred.hostOk;
       const nextStatus = waitingForUser ? 'waiting_for_user' : 'settling';
       if (nextStatus !== lastStatus) {
         lastStatus = nextStatus;
         if (waitingForUser) {
-          stageStatus = `等待你完成 ${manualPublisherLabel(publisher)} 登录/学校验证：${doi}。窗口会保持，最长等待 ${Math.round(authWaitMs/60000)} 分钟。`;
-          await log('local_interactive_waiting_for_user', { doi, publisher, url: href, challenge: Boolean(details.challenge), authPage: Boolean(details.authPage), hostOk });
+          stageStatus = \`等待你完成 \${manualPublisherLabel(publisher)} 登录/学校验证：\${doi}。窗口会保持，最长等待 \${Math.round(authWaitMs/60000)} 分钟。\`;
+          await log('local_interactive_waiting_for_user', {
+            doi,
+            publisher,
+            url: preferred.href,
+            challenge: Boolean(preferred.challenge),
+            authPage: Boolean(preferred.authPage),
+            hostOk: Boolean(preferred.hostOk),
+            windowId: preferred.windowId,
+          });
         } else {
-          stageStatus = `等待页面完整加载：${doi}`;
+          stageStatus = \`等待页面完整加载：\${doi}\`;
         }
         await refreshDashboard();
       }
 
       if (waitingForUser && elapsed >= authWaitMs) {
-        if (details.challenge) throw new Error('captcha_or_challenge_not_completed');
-        if (details.authPage || !hostOk) throw new Error('auth_not_completed');
+        if (preferred.challenge) throw new Error('captcha_or_challenge_not_completed');
+        if (preferred.authPage || !preferred.hostOk) throw new Error('auth_not_completed');
       }
 
       if (!waitingForUser && elapsed >= settleMs * 3) {
-        return { ...details, hostOk, doiOk, waitState: 'page_settled_unverified', elapsedMs: elapsed };
+        return { ...preferred, waitState: 'page_settled_unverified', elapsedMs: elapsed };
       }
     }
 
@@ -1675,8 +1726,9 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
 async function captureRenderedVisual(win, candidate, doi, publisher) {
   if (!win || win.isDestroyed() || !candidate?.src) return null;
   try {
-    const target = await win.webContents.executeJavaScript(`(() => {
-      const wanted = ${JSON.stringify(String(candidate?.src || ''))};
+    const target = await win.webContents.executeJavaScript(\`(() => {
+      const wanted = \${JSON.stringify(String(candidate?.src || ''))};
+      const wantedKind = \${JSON.stringify(String(candidate?.kind || 'official'))};
       const clean = value => {
         try {
           const u = new URL(String(value || ''), location.href);
@@ -1685,10 +1737,12 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
         } catch { return String(value || ''); }
       };
       const wantedClean = clean(wanted);
-      const wantedPath = (() => {
-        try { return new URL(wantedClean).pathname; } catch { return ''; }
-      })();
-      let best = null;
+      const wantedPath = (() => { try { return new URL(wantedClean).pathname; } catch { return ''; } })();
+      const semanticRe = /visual\\s*abstract|graphical\\s*abstract|abstract\\s*(?:image|graphic)|toc\\s*(?:graphic|image|entry)|table\\s*of\\s*contents(?:\\s*(?:graphic|image|entry))?|first\\s+page\\s+image|graphical\\s+(?:synopsis|summary)/i;
+      const fig1Re = /(^|\\b)(fig(?:ure)?\\.?\\s*1)(\\b|[:.)])/i;
+      const rejectRe = /logo|icon|avatar|journal\\s*cover|issue\\s*cover|advert|banner|cookie|spinner|loading/i;
+      const options = [];
+
       for (const img of document.images) {
         const urls = [
           img.currentSrc,
@@ -1701,42 +1755,103 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
           img.getAttribute('data-hi-res-src'),
           img.getAttribute('data-full-src'),
         ].filter(Boolean).map(clean);
-        const matched = urls.some(value => value === wantedClean)
+        const rect = img.getBoundingClientRect();
+        if (rect.width < 80 || rect.height < 50) continue;
+
+        let root = img.closest('figure,section,article,div,aside') || img.parentElement;
+        let context = '';
+        for (let depth = 0; root && depth < 4; depth += 1, root = root.parentElement) {
+          context += ' ' + String(root?.innerText || '').slice(0, 1200);
+        }
+        const marker = [
+          img.alt,
+          img.title,
+          img.id,
+          img.className,
+          img.getAttribute('aria-label'),
+          context,
+        ].filter(Boolean).join(' ');
+        if (rejectRe.test(marker)) continue;
+
+        const exact = urls.some(value => value === wantedClean)
           || (wantedPath && urls.some(value => {
             try { return new URL(value).pathname === wantedPath; } catch { return false; }
           }));
-        if (!matched) continue;
-        const rect = img.getBoundingClientRect();
-        if (rect.width < 80 || rect.height < 50) continue;
-        best = {
+        const semanticOfficial = semanticRe.test(marker);
+        const semanticFigure1 = fig1Re.test(marker);
+        if (!exact) {
+          if (wantedKind === 'official' && !semanticOfficial) continue;
+          if (wantedKind === 'figure1' && !semanticFigure1) continue;
+        }
+
+        const score = (exact ? 10000 : 0)
+          + (semanticOfficial ? 1200 : 0)
+          + (semanticFigure1 ? 300 : 0)
+          + Math.min(100, (rect.width * rect.height) / 10000);
+        options.push({
           left: rect.left,
           top: rect.top,
           width: rect.width,
           height: rect.height,
           naturalWidth: img.naturalWidth || 0,
           naturalHeight: img.naturalHeight || 0,
-        };
-        img.scrollIntoView({ block: 'center', inline: 'center' });
-        break;
+          matchedSrc: clean(img.currentSrc || img.src || urls[0] || ''),
+          matchMode: exact ? 'url' : 'semantic',
+          score,
+          element: img,
+        });
       }
-      return best;
-    })()`);
-    if (!target) return null;
+
+      options.sort((a, b) => b.score - a.score);
+      const best = options[0];
+      if (!best) return null;
+      best.element.scrollIntoView({ block: 'center', inline: 'center' });
+      return {
+        left: best.left,
+        top: best.top,
+        width: best.width,
+        height: best.height,
+        naturalWidth: best.naturalWidth,
+        naturalHeight: best.naturalHeight,
+        matchedSrc: best.matchedSrc,
+        matchMode: best.matchMode,
+        score: best.score,
+      };
+    })()\`);
+    if (!target) {
+      await log('browser_rendered_visual_not_found', { doi, publisher, kind: candidate.kind || '', candidate: sanitizedPageUrl(candidate.src || '') });
+      return null;
+    }
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    const refreshed = await win.webContents.executeJavaScript(`(() => {
-      const wanted = ${JSON.stringify(String(candidate?.src || ''))};
-      const wantedPath = (() => { try { return new URL(wanted, location.href).pathname; } catch { return ''; } })();
+    const refreshed = await win.webContents.executeJavaScript(\`(() => {
+      const wanted = \${JSON.stringify(String(target.matchedSrc || candidate?.src || ''))};
+      const wantedKind = \${JSON.stringify(String(candidate?.kind || 'official'))};
+      const clean = value => {
+        try { const u = new URL(String(value || ''), location.href); u.hash = ''; return u.href; }
+        catch { return String(value || ''); }
+      };
+      const wantedClean = clean(wanted);
+      const wantedPath = (() => { try { return new URL(wantedClean).pathname; } catch { return ''; } })();
+      const semanticRe = /visual\\s*abstract|graphical\\s*abstract|abstract\\s*(?:image|graphic)|toc\\s*(?:graphic|image|entry)|table\\s*of\\s*contents(?:\\s*(?:graphic|image|entry))?|first\\s+page\\s+image|graphical\\s+(?:synopsis|summary)/i;
+      const fig1Re = /(^|\\b)(fig(?:ure)?\\.?\\s*1)(\\b|[:.)])/i;
+      let best = null;
       for (const img of document.images) {
-        const urls = [img.currentSrc,img.src,img.getAttribute('data-src'),img.getAttribute('data-original'),img.getAttribute('data-lg-src'),img.getAttribute('data-hi-res-src')].filter(Boolean);
-        const matched = urls.some(value => value === wanted) || (wantedPath && urls.some(value => { try { return new URL(value, location.href).pathname === wantedPath; } catch { return false; } }));
-        if (!matched) continue;
+        const urls = [img.currentSrc,img.src,img.getAttribute('data-src'),img.getAttribute('data-original'),img.getAttribute('data-lg-src'),img.getAttribute('data-hi-res-src')].filter(Boolean).map(clean);
         const rect = img.getBoundingClientRect();
         if (rect.width < 80 || rect.height < 50) continue;
-        return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+        let root = img.closest('figure,section,article,div,aside') || img.parentElement;
+        let context = '';
+        for (let depth = 0; root && depth < 4; depth += 1, root = root.parentElement) context += ' ' + String(root?.innerText || '').slice(0, 1200);
+        const marker = [img.alt,img.title,img.id,img.className,img.getAttribute('aria-label'),context].filter(Boolean).join(' ');
+        const exact = urls.some(value => value === wantedClean) || (wantedPath && urls.some(value => { try { return new URL(value).pathname === wantedPath; } catch { return false; } }));
+        const semantic = wantedKind === 'figure1' ? fig1Re.test(marker) : semanticRe.test(marker);
+        if (!exact && !semantic) continue;
+        const score = (exact ? 10000 : 0) + (semantic ? 1000 : 0) + Math.min(100, (rect.width * rect.height) / 10000);
+        if (!best || score > best.score) best = { left: rect.left, top: rect.top, width: rect.width, height: rect.height, score };
       }
-      return null;
-    })()`);
+      return best;
+    })()\`);
     if (!refreshed) return null;
 
     const bounds = {
@@ -1764,14 +1879,15 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
       doi,
       publisher,
       kind: candidate.kind || '',
+      matchMode: target.matchMode || '',
       bytes: buffer.length,
       width: finalImage.getSize().width,
       height: finalImage.getSize().height,
     });
     return {
-      imageData: `data:image/png;base64,${buffer.toString('base64')}`,
+      imageData: \`data:image/png;base64,\${buffer.toString('base64')}\`,
       bytes: buffer.length,
-      source: 'rendered_article_element',
+      source: target.matchMode === 'semantic' ? 'rendered_semantic_element' : 'rendered_article_element',
     };
   } catch (error) {
     await log('browser_rendered_visual_capture_failed', { doi, publisher, reason: safeError(error, 250) });
@@ -1835,8 +1951,17 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
     ]);
     clearTimeout(publisherTimer);
     publisherTimer = null;
-    const waitDetails = await waitForLocalInteractiveArticle(win, doi, publisher);
-    const result = await win.webContents.executeJavaScript(`(() => {
+    const waitDetails = await waitForLocalInteractiveArticle(win, doi, publisher, childWindows);
+    const articleWin = [win, ...childWindows].find(candidateWin =>
+      candidateWin &&
+      !candidateWin.isDestroyed() &&
+      !candidateWin.webContents.isDestroyed() &&
+      candidateWin.webContents.id === waitDetails.webContentsId
+    ) || win;
+    if (!articleWin || articleWin.isDestroyed() || articleWin.webContents.isDestroyed()) {
+      throw new Error('publisher_article_window_unavailable');
+    }
+    const result = await articleWin.webContents.executeJavaScript(`(() => {
       const abs = u => { try { const value = new URL(u, location.href); return ['http:','https:'].includes(value.protocol) ? value.href : '' } catch { return '' } };
       const rows = [];
       for (const m of document.querySelectorAll('meta')) {
@@ -1988,7 +2113,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       if (localPublisherReady(publisher)) {
         let pdf = null;
         if (pdfUrl) {
-          pdf = await downloadPdfFromPublisherBrowser({ doi, publisher, webContents: win.webContents, pdfUrl });
+          pdf = await downloadPdfFromPublisherBrowser({ doi, publisher, webContents: articleWin.webContents, pdfUrl });
         }
         await log('verified_local_browser_no_visual', {
           doi,
@@ -2011,7 +2136,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       throw new Error('browser_no_candidate');
     }
     await log('browser_success', { doi, kind: rows[0].kind, url: result?.href || url });
-    const renderedImage = await captureRenderedVisual(win, rows[0], doi, publisher);
+    const renderedImage = await captureRenderedVisual(articleWin, rows[0], doi, publisher);
     return { url: result?.href || url, candidate: rows[0], method: 'browser', diagnostic, image: renderedImage };
   } catch (error) {
     const browserError = safeError(error, 300).replace(/https?:\/\/\S+/g, '<url>');
@@ -2509,7 +2634,21 @@ async function runCycle(manual = false) {
       }
     }
     rebuildTrayMenu();
-    refreshDashboard();
+    await refreshDashboard();
+    if (oneShotLocalQueueMode) {
+      stageStatus = '一次性本机/VPN 扫描完成；正在退出 Collector 并同步 R2…';
+      await log('one_shot_local_queue_complete', {
+        queue: queue.length,
+        processed: results.length,
+        success,
+        failed,
+        doiFilePath,
+      });
+      await refreshDashboard();
+      setTimeout(() => {
+        if (!disposed) app.quit();
+      }, 1200);
+    }
   } catch (error) {
     await handleFailure('collector-cycle', error);
   } finally { cycleRunning = false; }
