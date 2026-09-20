@@ -21,6 +21,12 @@ export class GalleryPaperActions extends HTMLElement {
   private readonly shadow = this.attachShadow({ mode: 'open' });
   private panel: 'none' | 'status' | 'note' | 'more' = 'none';
   private feedbackMessage = '';
+  private readonly outside = (event: PointerEvent): void => {
+    if (this.panel === 'none') return;
+    if (event.composedPath().includes(this)) return;
+    this.closePanel();
+  };
+  private readonly reposition = (): void => { if (this.panel !== 'none') this.positionPanel(); };
   private readonly storeChanged = (event: Event): void => {
     const detail = event instanceof CustomEvent ? event.detail as { scope?: string; paperId?: string } : undefined;
     if (detail?.scope === 'paper' && detail.paperId && detail.paperId !== this.paperId) return;
@@ -38,11 +44,17 @@ export class GalleryPaperActions extends HTMLElement {
   connectedCallback(): void {
     store.addEventListener('change', this.storeChanged);
     store.addEventListener('counts', this.countsChanged);
+    document.addEventListener('pointerdown', this.outside);
+    window.addEventListener('resize', this.reposition);
+    window.addEventListener('scroll', this.reposition, true);
     this.render();
   }
   disconnectedCallback(): void {
     store.removeEventListener('change', this.storeChanged);
     store.removeEventListener('counts', this.countsChanged);
+    document.removeEventListener('pointerdown', this.outside);
+    window.removeEventListener('resize', this.reposition);
+    window.removeEventListener('scroll', this.reposition, true);
     this.closePanel(false);
   }
   attributeChangedCallback(): void { if (this.isConnected) this.render(); }
@@ -51,17 +63,42 @@ export class GalleryPaperActions extends HTMLElement {
   private tr(zh: string, en: string): string { return this.language === 'zh' ? zh : en; }
 
   private syncScrollLock(): void {
-    const open = [...document.querySelectorAll<HTMLElement>(NAME)].some(host => host.isConnected && host.dataset.drawerOpen === 'true');
-    document.documentElement.classList.toggle('gallery-user-drawer-open', open);
-    if (!open) {
-      for (const element of [document.documentElement, document.body]) {
-        element.classList.remove('gallery-user-drawer-open', 'scroll-lock', 'scroll-locked', 'no-scroll');
-        if (element.style.overflow === 'hidden') element.style.removeProperty('overflow');
-        if (element.style.overflowY === 'hidden') element.style.removeProperty('overflow-y');
-        if (element.style.overscrollBehavior === 'none') element.style.removeProperty('overscroll-behavior');
-        if (element.style.touchAction === 'none') element.style.removeProperty('touch-action');
-      }
+    document.documentElement.classList.remove('gallery-user-drawer-open');
+    for (const element of [document.documentElement, document.body]) {
+      element.classList.remove('gallery-user-drawer-open', 'scroll-lock', 'scroll-locked', 'no-scroll');
+      if (element.style.overflow === 'hidden') element.style.removeProperty('overflow');
+      if (element.style.overflowY === 'hidden') element.style.removeProperty('overflow-y');
+      if (element.style.overscrollBehavior === 'none') element.style.removeProperty('overscroll-behavior');
+      if (element.style.touchAction === 'none') element.style.removeProperty('touch-action');
     }
+  }
+
+  private positionPanel(): void {
+    if (this.panel === 'none') return;
+    const anchor = this.shadow.querySelector<HTMLElement>(`button[data-action="${this.panel}"]`);
+    const drawer = this.shadow.querySelector<HTMLElement>('.drawer');
+    if (!anchor || !drawer) return;
+
+    drawer.style.left = '0px';
+    drawer.style.top = '0px';
+    const anchorRect = anchor.getBoundingClientRect();
+    const hostRect = this.getBoundingClientRect();
+    const drawerRect = drawer.getBoundingClientRect();
+    const margin = 8;
+    const gap = 6;
+
+    let left = anchorRect.left;
+    left = Math.min(left, window.innerWidth - drawerRect.width - margin);
+    left = Math.max(margin, left);
+
+    let top = anchorRect.bottom + gap;
+    const above = anchorRect.top - drawerRect.height - gap;
+    if (top + drawerRect.height > window.innerHeight - margin && above >= margin) top = above;
+    top = Math.max(margin, Math.min(top, window.innerHeight - drawerRect.height - margin));
+
+    drawer.style.left = `${Math.round(left - hostRect.left)}px`;
+    drawer.style.top = `${Math.round(top - hostRect.top)}px`;
+    drawer.dataset.anchor = this.panel;
   }
 
   private openPanel(panel: 'status' | 'note' | 'more'): void {
@@ -87,8 +124,8 @@ export class GalleryPaperActions extends HTMLElement {
     this.shadow.innerHTML = `<style>
       :host{display:block;position:relative;margin-top:4px;font:12px/1.4 Inter,system-ui,sans-serif;color:#344054}
       *{box-sizing:border-box}button,input,textarea,select{font:inherit}button{cursor:pointer}.bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 10px}.action{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:30px;padding:5px 8px;border:0;background:var(--u-color);color:var(--u-text);font-size:11px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}.action.active{box-shadow:0 0 0 2px rgba(49,89,189,.18)}.action .icon{width:15px;height:15px;object-fit:contain}.shape-pill{border-radius:999px}.shape-rounded{border-radius:9px}.shape-rectangle{border-radius:2px}.shape-circle{width:32px;height:32px;padding:0;border-radius:50%}.shape-circle span:last-child,.shape-square span:last-child,.shape-diamond span:last-child,.shape-star span:last-child,.shape-bookmark span:last-child{display:none}.shape-square{width:32px;height:32px;padding:0;border-radius:5px}.shape-diamond{width:29px;height:29px;padding:0;border-radius:5px;transform:rotate(45deg)}.shape-diamond>*{transform:rotate(-45deg)}.shape-bookmark{border-radius:6px 6px 2px 2px;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}.shape-star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%);width:34px;height:34px;padding:0}.metric{margin-left:auto;color:#7a8494;font-size:10px;white-space:nowrap}.chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}.chip{padding:3px 6px;border-radius:999px;background:#f2f5fb;color:#526071;font-size:9px}.status{background:${status ? rgbCss(status.style.rgb) : '#f2f5fb'};color:${status ? '#fff' : '#526071'}}
-      .overlay{position:fixed;inset:0;z-index:10020;background:rgba(15,23,42,.28);display:flex;justify-content:flex-end;align-items:flex-start}.drawer{width:min(350px,calc(100vw - 32px));height:auto;max-height:calc(100dvh - 32px);margin:16px;overflow:auto;padding:15px;background:#fff;border-radius:16px;box-shadow:-12px 12px 44px rgba(15,23,42,.18)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:18px 0 10px;z-index:2}.head h3{margin:0;font-size:17px}.close{border:0;background:#f2f4f7;border-radius:9px;width:30px;height:30px}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.stack{display:grid;gap:6px}.choice,.secondary{width:100%;text-align:left;padding:8px 10px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;color:#344054}.choice.selected{border-color:#8aa5ef;background:#f5f7ff}.check{display:flex;align-items:center;gap:8px;padding:5px 0}.input,textarea{width:100%;border:1px solid #d7deea;border-radius:10px;padding:9px;outline:none}textarea{min-height:150px;resize:vertical}.help{margin-top:6px;color:#8a93a3;font-size:10px}.preview{margin-top:8px;padding:9px;border-radius:10px;background:#f8fafc;overflow-wrap:anywhere}.preview a{color:#3159bd}.check-preview{display:flex;gap:6px}.tag-row{display:flex;gap:6px}.tag-row .input{flex:1}.tag-row .secondary{width:auto}.danger{color:#b42318}.feedback{margin-top:7px;color:#667085;font-size:10px}
-      @media(max-width:680px){:host{margin-top:2px}.bar{gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.overlay{align-items:flex-end}.drawer{width:calc(100vw - 16px);height:auto;max-height:78dvh;margin:8px;padding:14px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:16px}.chips{display:none}}
+      .overlay{position:absolute;left:0;top:0;width:100%;height:0;z-index:10020;background:transparent;pointer-events:none}.drawer{position:absolute;pointer-events:auto;width:min(350px,calc(100vw - 24px));height:auto;max-height:min(68dvh,560px);overflow:auto;padding:15px;background:#fff;border:1px solid #dfe5ef;border-radius:16px;box-shadow:0 14px 38px rgba(15,23,42,.18)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:18px 0 10px;z-index:2}.head h3{margin:0;font-size:17px}.close{border:0;background:#f2f4f7;border-radius:9px;width:30px;height:30px}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.stack{display:grid;gap:6px}.choice,.secondary{width:100%;text-align:left;padding:8px 10px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;color:#344054}.choice.selected{border-color:#8aa5ef;background:#f5f7ff}.check{display:flex;align-items:center;gap:8px;padding:5px 0}.input,textarea{width:100%;border:1px solid #d7deea;border-radius:10px;padding:9px;outline:none}textarea{min-height:150px;resize:vertical}.help{margin-top:6px;color:#8a93a3;font-size:10px}.preview{margin-top:8px;padding:9px;border-radius:10px;background:#f8fafc;overflow-wrap:anywhere}.preview a{color:#3159bd}.check-preview{display:flex;gap:6px}.tag-row{display:flex;gap:6px}.tag-row .input{flex:1}.tag-row .secondary{width:auto}.danger{color:#b42318}.feedback{margin-top:7px;color:#667085;font-size:10px}
+      @media(max-width:680px){:host{margin-top:2px}.bar{gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:none}}
     </style>${this.chips(paper, status)}<div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
       ${button(s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status))}
@@ -106,6 +143,7 @@ export class GalleryPaperActions extends HTMLElement {
       this.closest<HTMLElement>('.card')?.classList.remove('user-action-open');
     }
     this.syncScrollLock();
+    if (drawerOpen) queueMicrotask(() => this.positionPanel());
   }
 
   private chips(paper: PaperUserState, status: ReturnType<typeof store.status>): string {
@@ -131,7 +169,6 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private bind(): void {
-    this.shadow.querySelector('.overlay')?.addEventListener('click', event => { if (event.target === event.currentTarget) this.closePanel(); });
     this.shadow.querySelectorAll<HTMLElement>('[data-action]').forEach(element => element.addEventListener('click', () => { void this.action(element.dataset.action || ''); }));
     this.shadow.querySelectorAll<HTMLElement>('[data-close-panel]').forEach(element => element.addEventListener('click', () => this.closePanel()));
     this.shadow.querySelector<HTMLTextAreaElement>('[data-note]')?.addEventListener('input', event => store.setNote(this.paperId, (event.target as HTMLTextAreaElement).value, false));
