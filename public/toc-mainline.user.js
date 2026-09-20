@@ -399,6 +399,49 @@
     return values;
   }
 
+  function rawTagAttrs(tag) {
+    var out = {};
+    String(tag || '').replace(/([:\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+))/g, function (_, key, dq, sq, bare) {
+      var value = dq !== undefined ? dq : sq !== undefined ? sq : bare !== undefined ? bare : '';
+      out[String(key || '').toLowerCase()] = String(value || '').replace(/&amp;/g, '&').replace(/&#38;/g, '&');
+      return _;
+    });
+    return out;
+  }
+
+  function rawTagImageUrls(tag, baseUrl) {
+    var attrs = rawTagAttrs(tag);
+    var urls = [];
+    function add(value) {
+      if (!value) return;
+      String(value).split(',').forEach(function (part) {
+        var raw = part.trim().split(/\s+/)[0];
+        var url = normalizeUrl(raw, baseUrl);
+        if (url && urls.indexOf(url) < 0) urls.push(url);
+      });
+    }
+    [
+      'data-lg-src','data-hi-res-src','data-src-large','data-full-src','data-full',
+      'data-original','data-src','data-lazy-src','data-image-src','data-image','data-url'
+    ].forEach(function (key) { add(attrs[key]); });
+    ['data-srcset','srcset'].forEach(function (key) {
+      var parts = String(attrs[key] || '').split(',').map(function (part) { return part.trim(); }).filter(Boolean).reverse();
+      parts.forEach(function (part) { add(part.split(/\s+/)[0]); });
+    });
+    add(attrs.src);
+    return { attrs: attrs, urls: urls };
+  }
+
+  function htmlText(fragment) {
+    try {
+      var node = document.createElement('div');
+      node.innerHTML = String(fragment || '');
+      return String(node.textContent || '').replace(/\s+/g, ' ').trim();
+    } catch (_) {
+      return String(fragment || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+  }
+
   function contextFor(node) {
     var out = [];
     var image = node instanceof HTMLSourceElement ? (node.parentElement && node.parentElement.querySelector('img')) : node;
@@ -546,6 +589,47 @@
       }
     });
 
+    // ACS/Silverchair and some publisher pages use generic image filenames
+    // (for example m_ol..._0007.svg) while the surrounding HTML says
+    // "Visual Abstract". Recover those images from semantic windows instead
+    // of requiring the filename itself to contain toc/graphical/visual.
+    var strongSemantic = /toc\s*(?:and\s*abstract\s*)?(?:graphic|image)|graphical\s*abstract|visual\s*abstract|graphical\s*(?:summary|synopsis)|visual\s*summary|abstract\s*(?:graphic|image)|table\s*of\s*contents\s*(?:graphic|image)|first\s+page\s+image/gi;
+    var semanticMatch;
+    var semanticWindows = 0;
+    while ((semanticMatch = strongSemantic.exec(html)) !== null && semanticWindows < 30) {
+      semanticWindows += 1;
+      var fragment = html.slice(semanticMatch.index, Math.min(html.length, semanticMatch.index + 7000));
+      var semanticContext = htmlText(fragment).slice(0, 2600);
+      var semanticType = officialType(semanticContext, '', publisher);
+      if (!semanticType) continue;
+      var tags = String(fragment).match(/<(?:img|source)\b[^>]*>/gi) || [];
+      for (var ti = 0; ti < Math.min(tags.length, 12); ti += 1) {
+        var parsed = rawTagImageUrls(tags[ti], pageUrl);
+        var ownMarker = [
+          parsed.attrs.alt, parsed.attrs.title, parsed.attrs.id, parsed.attrs.class, parsed.attrs['aria-label']
+        ].filter(Boolean).join(' ');
+        var ownType = officialType(ownMarker, '', publisher);
+        if (!ownType && ti > 0) continue;
+        if (!ownType && isFigureOne(ownMarker)) continue;
+        parsed.urls.forEach(function (url) {
+          if (!url || reject(ownMarker + ' ' + semanticContext, url)) return;
+          var old = map.get(url);
+          var row = {
+            url: url,
+            kind: 'official',
+            assetType: ownType || semanticType,
+            score: ownType ? 610 : 540,
+            source: source + '_semantic_window',
+            text: (ownMarker + ' ' + semanticContext).replace(/\s+/g, ' ').trim().slice(0, 1000),
+            width: Number(parsed.attrs.width || 0),
+            height: Number(parsed.attrs.height || 0),
+            element: null
+          };
+          if (!old || row.score > old.score) map.set(url, row);
+        });
+      }
+    }
+
     var rows = Array.from(map.values()).sort(function (a, b) {
       if (a.kind !== b.kind) return a.kind === 'official' ? -1 : 1;
       return b.score - a.score;
@@ -616,7 +700,11 @@
     function add(value) {
       if (value && urls.indexOf(value) < 0) urls.push(value);
     }
-    if (publisher === 'wiley' && location.hostname.endsWith('onlinelibrary.wiley.com')) {
+    if (publisher === 'acs' && location.hostname.endsWith('pubs.acs.org')) {
+      add(location.origin + '/doi/' + doi);
+      add(location.origin + '/doi/abs/' + doi);
+      add(location.origin + '/doi/full/' + doi);
+    } else if (publisher === 'wiley' && location.hostname.endsWith('onlinelibrary.wiley.com')) {
       add(location.origin + '/doi/' + doi);
       add(location.origin + '/doi/full/' + doi);
       add(location.origin + '/doi/abs/' + doi);
@@ -762,6 +850,7 @@
     var started = Date.now();
     var lastWait = 0;
     var iframeAttempted = false;
+    var mainScrollStep = 0;
     while (Date.now() - started < maxMs) {
       if (isAbortRequested()) throw new Error('user_aborted');
       var state = pageState(job, trace);
@@ -791,7 +880,25 @@
       if (candidates.length) return candidates;
 
       var elapsed = Date.now() - started;
-      if (!iframeAttempted && elapsed > 7000 && (job.publisher === 'wiley' || job.publisher === 'science')) {
+      if (job.publisher === 'acs' && mainScrollStep < 3 && elapsed > [2500, 6000, 10500][mainScrollStep]) {
+        var targets = [1200, 3000, 6000];
+        var target = Math.min(Number(document.body && document.body.scrollHeight || targets[mainScrollStep]), targets[mainScrollStep]);
+        mainScrollStep += 1;
+        try { window.scrollTo({ top: target, behavior: 'auto' }); }
+        catch (_) { try { window.scrollTo(0, target); } catch (_) {} }
+        pushTrace(trace, {
+          stage: 'lazy_load_trigger',
+          event: 'scroll',
+          status: 'ok',
+          url: location.href,
+          message: 'acs_main_scroll_top=' + String(target) + ';step=' + String(mainScrollStep)
+        });
+        await waitForDomMutation(900);
+        candidates = collectCandidates(job, trace, document, location.href, 'live_dom_after_scroll', false);
+        if (candidates.length) return candidates;
+      }
+
+      if (!iframeAttempted && elapsed > 7000 && (job.publisher === 'acs' || job.publisher === 'wiley' || job.publisher === 'science')) {
         iframeAttempted = true;
         if (isAbortRequested()) throw new Error('user_aborted');
         var iframeRows = await iframeCandidates(job, trace);
