@@ -187,7 +187,6 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   const toRead = actions.locator('button[data-action="set-status:to-read"]');
   await expect(toRead.locator('.status-image')).toBeVisible();
 
-  await actions.locator('button[data-action="edit-status-style:to-read"]').click();
   const inlineEditor = actions.locator('[data-status-editor="to-read"]');
   await expect(inlineEditor).toBeVisible();
   await expectAnchored(actions.locator('button[data-action="status"]'), actions.locator('.drawer'));
