@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-20T00:29:00Z",
+  "timeZone": "Asia/Shanghai",
+  "mode": "gpt_toc_backlog_discovery",
+  "scopePolicy": "Only already accepted/deployed gallery DOI; no literature candidate discovery or relevance review.",
+  "startBacklog": {
+    "visibleGaps": 20,
+    "byPublisher": {"acs":7,"wiley":11,"nature":2,"science":0},
+    "officialUpgradeFallbackOnly": 68,
+    "source": "authoritative TOC Collector handoff/live-demand state; Worker R2 endpoints were inaccessible from this automation web surface"
+  },
+  "processed": [
+    {
+      "doi": "10.1021/jacs.6c13760",
+      "publisher": "acs",
+      "sourcePage": "https://pubs.acs.org/doi/10.1021/jacs.6c13760",
+      "assetType": "visual_abstract",
+      "status": "official_semantics_confirmed_raw_image_url_not_exposed",
+      "evidence": "ACS indexed article explicitly exposes a Visual Abstract section and identifies its content as Graphic.",
+      "writeBack": "discovery audit only; local authenticated Collector required to obtain/import image bytes or raw official CDN URL"
+    },
+    {
+      "doi": "10.1021/jacs.6c10408",
+      "publisher": "acs",
+      "sourcePage": "https://pubs.acs.org/doi/10.1021/jacs.6c10408",
+      "assetType": "visual_abstract",
+      "status": "official_semantics_confirmed_raw_image_url_not_exposed",
+      "evidence": "ACS indexed article explicitly exposes a Visual Abstract section and identifies its content as Graphic; direct article open returned HTTP 403.",
+      "writeBack": "discovery audit only; local authenticated Collector required"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05293",
+      "publisher": "acs",
+      "sourcePage": "https://pubs.acs.org/doi/10.1021/acscatal.6c05293",
+      "assetType": "visual_abstract",
+      "status": "official_semantics_confirmed_raw_image_url_not_exposed",
+      "evidence": "ACS indexed article explicitly exposes Visual Abstract; direct article open returned HTTP 403.",
+      "writeBack": "discovery audit only; local authenticated Collector required"
+    },
+    {
+      "doi": "10.1002/anie.5070160",
+      "publisher": "wiley",
+      "sourcePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.5070160",
+      "assetType": "graphical_abstract",
+      "status": "official_semantics_confirmed_raw_image_url_not_exposed",
+      "evidence": "Wiley indexed Early View article explicitly contains Graphical Abstract section.",
+      "writeBack": "discovery audit only; authenticated/browser media extraction required"
+    },
+    {
+      "doi": "10.1002/anie.5617321",
+      "publisher": "wiley",
+      "sourcePage": "https://onlinelibrary.wiley.com/doi/10.1002/anie.5617321",
+      "assetType": "graphical_abstract",
+      "status": "official_semantics_confirmed_raw_image_url_not_exposed",
+      "evidence": "Wiley indexed Early View article explicitly contains Graphical Abstract section.",
+      "writeBack": "discovery audit only; authenticated/browser media extraction required"
+    }
+  ],
+  "summary": {
+    "processedDois": 5,
+    "officialTocSemanticConfirmed": 5,
+    "officialImageImported": 0,
+    "figure1FallbackAdded": 0,
+    "remainingVisibleBacklog": 20,
+    "historicalBacklogReduction": 0,
+    "failureClasses": {
+      "raw_image_url_not_exposed": 5,
+      "acs_direct_open_http_403": 2,
+      "worker_r2_endpoint_inaccessible_from_automation_web": 1
+    }
+  },
+  "remainingBacklog": {
+    "acs": ["10.1021/acscatal.6c04593","10.1021/acscatal.6c05293","10.1021/jacs.6c09678","10.1021/jacs.6c13760","10.1021/jacs.6c10408","10.1021/acs.orglett.6c03247","10.1021/acs.orglett.6c03255"],
+    "wiley": ["10.1002/anie.5852828","10.1002/anie.6992524","10.1002/anie.8911828","10.1002/anie.1537547","10.1002/anie.5796773","10.1002/anie.8651160","10.1002/anie.2218878","10.1002/anie.5041475","10.1002/anie.8789956","10.1002/anie.5070160","10.1002/anie.5617321"],
+    "nature": ["10.1038/s41586-026-11043-z","10.1038/s41467-026-76235-7"],
+    "science": []
+  },
+  "nextAction": "Run current local authenticated Collector against the complete live visible-gap queue, then sync captures and diagnostics to R2, merge to Pages, require STATIC_MEDIA_INTEGRITY failures=0, and regenerate full live demand. Confirmed ACS/Wiley semantic hits should be prioritized because their official visual exists but the automation search surface does not expose a safe raw image URL."
+}
