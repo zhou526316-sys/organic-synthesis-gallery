@@ -1,4 +1,4 @@
-import { escapeHtml, makeId, SHAPES, statusLabel, store, WORKER_API_BASE, type ActionKey, type Language, type Shape, type StyleDef } from './shared';
+import { escapeHtml, makeId, SHAPES, statusLabel, store, styleVars, WORKER_API_BASE, type ActionKey, type Language, type Shape, type StyleDef } from './shared';
 
 const NAME = 'gallery-user-shell';
 const SESSION_KEY = 'organic-gallery-session-v1';
