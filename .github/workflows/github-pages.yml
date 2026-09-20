@@ -24,6 +24,7 @@ on:
       - 'public/curated-supplement.json'
       - 'public/automation-supplement.json'
       - 'public/toc-demand-live.json'
+      - 'public/toc-mainline.user.js'
       - 'audit/author-coverage.json'
       - 'audit/missing-authors.json'
       - 'public/papers.gz.b64'
@@ -179,6 +180,11 @@ jobs:
           test -f dist/gallery-vpn-bridge.user.js
           test -f dist/gallery-vpn-bridge-runtime.js
           test -f dist/toc-rescue.js
+          test -f dist/toc-demand-live.json
+          test -f dist/toc-mainline.user.js
+          grep -F "// @version      5.0.0" dist/toc-mainline.user.js
+          grep -F "toc-demand-live.json" dist/toc-mainline.user.js
+          node -e "const q=require('./dist/toc-demand-live.json'); if(!Array.isArray(q.visibleGaps)||!Array.isArray(q.officialUpgrades)) throw new Error('invalid live TOC queue')"
           test -d dist/media-mirror
           grep -F "// @version      2.1.0" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
