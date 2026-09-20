@@ -17,7 +17,7 @@ export const TARGET_JOURNALS = Object.freeze([
   { name: 'Chemical Science', issns: ['2041-6520', '2041-6539'], activeFrom: '2026-09-19' },
   { name: 'CCS Chemistry', issns: ['2096-5745'], activeFrom: '2026-09-19' },
   { name: 'Science Advances', issns: ['2375-2548'], activeFrom: '2026-09-19' },
-  { name: 'Chinese Journal of Chemistry', issns: ['1001-604X', '1614-7065'], activeFrom: '2026-09-19' },
+  { name: 'Green Chemistry', issns: ['1463-9262', '1463-9270'], activeFrom: '2026-09-19' },
 ]);
 
 export function effectiveJournalStart(journal, requestedStart) {

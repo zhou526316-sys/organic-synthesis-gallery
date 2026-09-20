@@ -16,6 +16,7 @@ assert.equal(classifyPublisher('10.1126/sciadv.abc1234'), 'science');
 assert.equal(classifyPublisher('10.31635/ccschem.026.202600001'), 'ccs');
 
 assert.ok(articleUrlsForDoi('10.1039/D6SC03136A').some(x => x.url.includes('/2026/sc/d6sc03136a')));
+assert.ok(articleUrlsForDoi('10.1039/D6GC03578G').some(x => x.url.includes('/2026/gc/d6gc03578g')));
 assert.equal(articleUrlsForDoi('10.1016/j.chempr.2026.01.001')[0].source, 'doi_redirect');
 assert.equal(articleUrlsForDoi('10.31635/ccschem.026.202600001')[0].source, 'doi_redirect');
 
