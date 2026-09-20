@@ -1,16 +1,16 @@
 {
   "auditVersion": 4,
-  "generatedAt": "2026-09-19T13:46:18.424Z",
+  "generatedAt": "2026-09-20T00:02:09.123Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
   "lateDepositRescueDays": 7,
-  "baseStartDate": "2026-09-17",
-  "lateDepositRescueStartDate": "2026-09-13",
+  "baseStartDate": "2026-09-18",
+  "lateDepositRescueStartDate": "2026-09-14",
   "catchupStartDate": null,
-  "startDate": "2026-09-17",
-  "endDate": "2026-09-19",
-  "closureDate": "2026-09-18",
+  "startDate": "2026-09-18",
+  "endDate": "2026-09-20",
+  "closureDate": "2026-09-19",
   "policy": "Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail (including Crossref created/deposit rescue and OpenAlex), and automatic catch-up from the first unverified date when verifiedThrough falls behind. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.",
   "targetJournals": [
     {
@@ -20,8 +20,8 @@
         "1476-4687"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "Science",
@@ -30,8 +30,8 @@
         "1095-9203"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "Nature Catalysis",
@@ -39,8 +39,8 @@
         "2520-1158"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "Nature Synthesis",
@@ -48,8 +48,8 @@
         "2731-0582"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "Nature Chemistry",
@@ -58,8 +58,8 @@
         "1755-4349"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "Nature Communications",
@@ -67,8 +67,8 @@
         "2041-1723"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "JACS",
@@ -77,8 +77,8 @@
         "1520-5126"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "Angew",
@@ -87,8 +87,8 @@
         "1521-3773"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "ACS Catalysis",
@@ -96,8 +96,8 @@
         "2155-5435"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "Organic Letters",
@@ -106,8 +106,8 @@
         "1523-7060"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "lateDepositRescueStart": "2026-09-13"
+      "effectiveStart": "2026-09-18",
+      "lateDepositRescueStart": "2026-09-14"
     },
     {
       "name": "Chem",
@@ -159,53 +159,53 @@
   ],
   "summary": {
     "galleryDois": 478,
-    "sourceRecords": 596,
-    "rawMissingFromGallery": 527,
-    "previouslyReviewedExcluded": 519,
-    "missingFromGallery": 8,
-    "potentialGaps": 1,
+    "sourceRecords": 618,
+    "rawMissingFromGallery": 550,
+    "previouslyReviewedExcluded": 525,
+    "missingFromGallery": 25,
+    "potentialGaps": 15,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
-    "unresolved": 8,
+    "unresolved": 25,
     "excludedByPolicy": 0
   },
   "closure": {
-    "date": "2026-09-18",
-    "status": "assistant-decisions-complete",
-    "sourceRecords": 85,
-    "rawMissingFromGallery": 73,
-    "previouslyReviewedExcluded": 73,
-    "missingFromGallery": 0,
-    "potentialGaps": 0,
+    "date": "2026-09-19",
+    "status": "requires-assistant-review",
+    "sourceRecords": 41,
+    "rawMissingFromGallery": 38,
+    "previouslyReviewedExcluded": 13,
+    "missingFromGallery": 25,
+    "potentialGaps": 15,
     "criticalSourceFailures": 0,
-    "verifiedThroughEligible": true,
+    "verifiedThroughEligible": false,
     "note": "Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, and critical source failures must be zero."
   },
   "byJournal": {
     "Nature": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "sourceRecords": 86,
+      "effectiveStart": "2026-09-18",
+      "sourceRecords": 85,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
-      "multiSource": 86,
-      "lateIndexed": 70,
-      "safetyTail": 70,
+      "multiSource": 85,
+      "lateIndexed": 77,
+      "safetyTail": 77,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 86,
-      "previouslyReviewedExcluded": 86,
+      "rawMissingFromGallery": 85,
+      "previouslyReviewedExcluded": 85,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "Science": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "sourceRecords": 38,
       "crossrefOnly": 1,
       "openAlexOnly": 0,
       "multiSource": 37,
-      "lateIndexed": 0,
-      "safetyTail": 0,
+      "lateIndexed": 37,
+      "safetyTail": 38,
       "coveredByGallery": 0,
       "rawMissingFromGallery": 38,
       "previouslyReviewedExcluded": 38,
@@ -214,7 +214,7 @@
     },
     "Nature Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "sourceRecords": 1,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
@@ -229,13 +229,13 @@
     },
     "Nature Synthesis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "sourceRecords": 3,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
       "multiSource": 3,
-      "lateIndexed": 1,
-      "safetyTail": 1,
+      "lateIndexed": 2,
+      "safetyTail": 2,
       "coveredByGallery": 1,
       "rawMissingFromGallery": 2,
       "previouslyReviewedExcluded": 2,
@@ -244,13 +244,13 @@
     },
     "Nature Chemistry": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "sourceRecords": 4,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
       "multiSource": 4,
-      "lateIndexed": 0,
-      "safetyTail": 0,
+      "lateIndexed": 2,
+      "safetyTail": 2,
       "coveredByGallery": 0,
       "rawMissingFromGallery": 4,
       "previouslyReviewedExcluded": 4,
@@ -259,78 +259,78 @@
     },
     "Nature Communications": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "sourceRecords": 200,
-      "crossrefOnly": 11,
+      "effectiveStart": "2026-09-18",
+      "sourceRecords": 204,
+      "crossrefOnly": 15,
       "openAlexOnly": 3,
       "multiSource": 186,
-      "lateIndexed": 116,
-      "safetyTail": 118,
+      "lateIndexed": 160,
+      "safetyTail": 163,
       "coveredByGallery": 4,
-      "rawMissingFromGallery": 196,
-      "previouslyReviewedExcluded": 188,
-      "missingFromGallery": 8,
-      "potentialGaps": 1
+      "rawMissingFromGallery": 200,
+      "previouslyReviewedExcluded": 196,
+      "missingFromGallery": 4,
+      "potentialGaps": 0
     },
     "JACS": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "sourceRecords": 83,
-      "crossrefOnly": 2,
+      "effectiveStart": "2026-09-18",
+      "sourceRecords": 87,
+      "crossrefOnly": 6,
       "openAlexOnly": 0,
       "multiSource": 81,
-      "lateIndexed": 47,
-      "safetyTail": 47,
+      "lateIndexed": 66,
+      "safetyTail": 66,
       "coveredByGallery": 16,
-      "rawMissingFromGallery": 67,
+      "rawMissingFromGallery": 71,
       "previouslyReviewedExcluded": 67,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 4,
+      "potentialGaps": 2
     },
     "Angew": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "sourceRecords": 109,
-      "crossrefOnly": 1,
+      "effectiveStart": "2026-09-18",
+      "sourceRecords": 123,
+      "crossrefOnly": 15,
       "openAlexOnly": 2,
       "multiSource": 106,
       "lateIndexed": 90,
       "safetyTail": 92,
       "coveredByGallery": 10,
-      "rawMissingFromGallery": 99,
+      "rawMissingFromGallery": 113,
       "previouslyReviewedExcluded": 99,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 14,
+      "potentialGaps": 10
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "sourceRecords": 33,
+      "effectiveStart": "2026-09-18",
+      "sourceRecords": 31,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
-      "multiSource": 33,
-      "lateIndexed": 19,
-      "safetyTail": 19,
-      "coveredByGallery": 6,
-      "rawMissingFromGallery": 27,
-      "previouslyReviewedExcluded": 27,
+      "multiSource": 31,
+      "lateIndexed": 21,
+      "safetyTail": 21,
+      "coveredByGallery": 5,
+      "rawMissingFromGallery": 26,
+      "previouslyReviewedExcluded": 26,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
-      "sourceRecords": 39,
-      "crossrefOnly": 1,
+      "effectiveStart": "2026-09-18",
+      "sourceRecords": 42,
+      "crossrefOnly": 4,
       "openAlexOnly": 0,
       "multiSource": 38,
-      "lateIndexed": 22,
-      "safetyTail": 22,
+      "lateIndexed": 30,
+      "safetyTail": 30,
       "coveredByGallery": 31,
-      "rawMissingFromGallery": 8,
+      "rawMissingFromGallery": 11,
       "previouslyReviewedExcluded": 8,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 3,
+      "potentialGaps": 3
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -411,7 +411,7 @@
   "sourceFamilyHealth": {
     "Nature": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -421,7 +421,7 @@
     },
     "Science": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -431,7 +431,7 @@
     },
     "Nature Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -441,7 +441,7 @@
     },
     "Nature Synthesis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -451,7 +451,7 @@
     },
     "Nature Chemistry": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -461,7 +461,7 @@
     },
     "Nature Communications": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -471,7 +471,7 @@
     },
     "JACS": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -481,7 +481,7 @@
     },
     "Angew": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -491,7 +491,7 @@
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -501,7 +501,7 @@
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-17",
+      "effectiveStart": "2026-09-18",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -568,7 +568,7 @@
       "issn": "0028-0836",
       "mode": "online",
       "ok": true,
-      "count": 86,
+      "count": 85,
       "note": ""
     },
     {
@@ -577,7 +577,7 @@
       "issn": "0028-0836",
       "mode": "published",
       "ok": true,
-      "count": 86,
+      "count": 85,
       "note": ""
     },
     {
@@ -595,7 +595,7 @@
       "issn": "1476-4687",
       "mode": "online",
       "ok": true,
-      "count": 86,
+      "count": 85,
       "note": ""
     },
     {
@@ -604,7 +604,7 @@
       "issn": "1476-4687",
       "mode": "published",
       "ok": true,
-      "count": 86,
+      "count": 85,
       "note": ""
     },
     {
@@ -621,7 +621,7 @@
       "journal": "Nature",
       "sourceId": "S137773608",
       "ok": true,
-      "count": 86,
+      "count": 85,
       "note": ""
     },
     {
@@ -824,7 +824,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 198,
+      "count": 202,
       "note": ""
     },
     {
@@ -833,7 +833,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 198,
+      "count": 202,
       "note": ""
     },
     {
@@ -842,7 +842,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 198,
+      "count": 202,
       "note": ""
     },
     {
@@ -859,7 +859,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 84,
+      "count": 88,
       "note": ""
     },
     {
@@ -868,7 +868,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 84,
+      "count": 88,
       "note": ""
     },
     {
@@ -877,7 +877,7 @@
       "issn": "0002-7863",
       "mode": "created",
       "ok": true,
-      "count": 84,
+      "count": 88,
       "note": ""
     },
     {
@@ -886,7 +886,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 84,
+      "count": 88,
       "note": ""
     },
     {
@@ -895,7 +895,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 84,
+      "count": 88,
       "note": ""
     },
     {
@@ -904,7 +904,7 @@
       "issn": "1520-5126",
       "mode": "created",
       "ok": true,
-      "count": 84,
+      "count": 88,
       "note": ""
     },
     {
@@ -921,7 +921,7 @@
       "issn": "1433-7851",
       "mode": "online",
       "ok": true,
-      "count": 106,
+      "count": 120,
       "note": ""
     },
     {
@@ -930,7 +930,7 @@
       "issn": "1433-7851",
       "mode": "published",
       "ok": true,
-      "count": 107,
+      "count": 121,
       "note": ""
     },
     {
@@ -939,7 +939,7 @@
       "issn": "1433-7851",
       "mode": "created",
       "ok": true,
-      "count": 107,
+      "count": 121,
       "note": ""
     },
     {
@@ -948,7 +948,7 @@
       "issn": "1521-3773",
       "mode": "online",
       "ok": true,
-      "count": 106,
+      "count": 120,
       "note": ""
     },
     {
@@ -957,7 +957,7 @@
       "issn": "1521-3773",
       "mode": "published",
       "ok": true,
-      "count": 107,
+      "count": 121,
       "note": ""
     },
     {
@@ -966,7 +966,7 @@
       "issn": "1521-3773",
       "mode": "created",
       "ok": true,
-      "count": 107,
+      "count": 121,
       "note": ""
     },
     {
@@ -983,7 +983,7 @@
       "issn": "2155-5435",
       "mode": "online",
       "ok": true,
-      "count": 33,
+      "count": 31,
       "note": ""
     },
     {
@@ -992,7 +992,7 @@
       "issn": "2155-5435",
       "mode": "published",
       "ok": true,
-      "count": 33,
+      "count": 31,
       "note": ""
     },
     {
@@ -1009,7 +1009,7 @@
       "journal": "ACS Catalysis",
       "sourceId": "S37391459",
       "ok": true,
-      "count": 33,
+      "count": 31,
       "note": ""
     },
     {
@@ -1018,7 +1018,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 39,
+      "count": 42,
       "note": ""
     },
     {
@@ -1027,7 +1027,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 39,
+      "count": 42,
       "note": ""
     },
     {
@@ -1036,7 +1036,7 @@
       "issn": "1523-7052",
       "mode": "created",
       "ok": true,
-      "count": 39,
+      "count": 42,
       "note": ""
     },
     {
@@ -1045,7 +1045,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 39,
+      "count": 42,
       "note": ""
     },
     {
@@ -1054,7 +1054,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 39,
+      "count": 42,
       "note": ""
     },
     {
@@ -1063,7 +1063,7 @@
       "issn": "1523-7060",
       "mode": "created",
       "ok": true,
-      "count": 39,
+      "count": 42,
       "note": ""
     },
     {
@@ -1306,17 +1306,20 @@
   ],
   "missingCandidates": [
     {
-      "doi": "10.1038/s41467-026-77027-9",
-      "journal": "Nature Communications",
-      "title": "Anti-thymocyte globulin triggers TNF-dependent cell death in T-cell acute lymphoblastic leukemia",
-      "abstract": "",
+      "doi": "10.1002/anie.4940262",
+      "journal": "Angew",
+      "title": "A Descriptor for Non‐Arrhenius Ion Transport Enables Design of Sulfide Superionic Conductors",
+      "abstract": "ABSTRACT Non‐Arrhenius ion transport is increasingly observed in solid electrolytes but remains difficult to compare across materials or use in screening. A curated database of 867 conductivity‐temperature entries from thio‐LISICON and LGPS‐type sulfides is used to introduce Meyer–Neldel deviation (MND), a physics‐informed, material‐level descriptor of temperature‐dependent changes in apparent activation energy. More than 40% of the analyzed sulfide electrolytes show notable deviations from linear Arrhenius behavior. MND separates low‐conductivity/high‐barrier and superionic/low‐barrier regimes associated with ionic‐radius mismatch, electronegativity difference, configurational entropy, and mixing thermodynamics, while providing a more informative learning target than single‐value activation energies. Sensitivity analyses indicate that material‐level trends remain reasonably robust to variations in conductivity, reference temperature, and sampling density. Application to a reprocessed dataset of 160 compositions and 2,410 conductivity‐temperature entries across seven electrolyte families supports broader applicability. MND‐guided screening of 171 Li 10 Ge x Si y Sn z P 2 S 12 compositions prioritizes Li 10 Ge 0.3 Si 0.15 Sn 0.55 P 2 S 12 , which exhibits a room‐temperature conductivity of 7.21 mS cm − 1 , an apparent activation energy of 0.288 eV, and weak non‐Arrhenius behavior consistent with prediction. Evaluation of a second composition further supports the multistage screening strategy. These results position MND as a chemically interpretable representation for quantifying, learning, and screening temperature‐dependent ion transport.",
       "date": "2026-09-19",
       "type": "journal-article",
       "topics": [],
       "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1325,17 +1328,20 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1038/s41467-026-77768-7",
-      "journal": "Nature Communications",
-      "title": "Bayesian bilevel operator learning with low-rank adaptation for efficient uncertainty quantification of PDE inverse problems",
-      "abstract": "Abstract Uncertainty quantification in PDE inverse problems is essential in many applications. Scientific machine learning and AI enable data-driven learning of model components while preserving physical structure, and provide the scalability and adaptability needed for emerging imaging technologies and clinical insights. We develop a Bilevel Local Operator Learning framework for Bayesian inference in PDEs (B-BiLO). At the upper level, we sample parameters from the posterior via Hamiltonian Monte Carlo, while at the lower level we fine-tune a neural network via low-rank adaptation (LoRA) to approximate the solution operator locally. B-BiLO enables efficient gradient-based sampling without synthetic data or adjoint equations and avoids sampling in high-dimensional weight space, as in Bayesian neural networks, by optimizing weights deterministically. We analyze errors from approximate lower-level optimization and establish their impact on posterior accuracy. Numerical experiments across PDE models, including tumor growth, demonstrate that B-BiLO achieves accurate and efficient uncertainty quantification.",
+      "doi": "10.1002/anie.2735155",
+      "journal": "Angew",
+      "title": "Bio‐Inspired Bidirectional Proton Regulatory Mechanisms by Anhydride‐Based Hydrogel Electrolytes for High‐Performance Aqueous Zinc‐Ion Batteries",
+      "abstract": "ABSTRACT Aqueous zinc‐ion batteries (AZIBs) employing hydrogel electrolytes offer significant advantages in mitigating short‐circuit and electrolyte leakage risks. Nevertheless, the sluggish transport kinetics of Zn 2 + and severe interfacial instability of zinc anodes still severely restrict their further development. Herein, a bio‐inspired hydrogel electrolyte based on poly(acrylamide‐co‐maleic anhydride) (P(AM‐co‐MA)) copolymer is fabricated to construct a dual‐functional polymer network. The dynamic acid–base equilibrium between carboxyl and amide groups enables reversible bidirectional proton buffering, which effectively suppresses the hydrogen evolution reaction and anode corrosion. Meanwhile, the synergistic Zn 2 + hopping sites constituted of carboxylate and amide groups optimize the ion‐transport microenvironment and accelerate Zn 2 + migration kinetics synchronously, realizing the coordinated regulation of proton activity and Zn 2 + transport. Thus, the optimized P(AM‐co‐MA) hydrogel electrolyte delivers a high Zn 2 + transference number of 0.66 and an ionic conductivity of 16 mS cm −1 . The assembled Zn||Zn symmetric cells achieve ultra‐long and stable cycling for over 2700 h at 1 mA cm −1 . Furthermore, the pouch‐type Zn||NaV 3 O 8 full cells based on this hydrogel electrolyte exhibit a high specific capacity of 254 mAh g −1 at 1 A g −1 , with a capacity retention of 80% after 120 cycles, verifying the great application potential of this rational design for flexible energy storage devices.",
       "date": "2026-09-19",
       "type": "journal-article",
       "topics": [],
       "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1344,17 +1350,152 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1038/s41467-026-77823-3",
-      "journal": "Nature Communications",
-      "title": "Cryo-EM structure of ex vivo Sup35 yeast prion and the factors defining prion phenotype",
-      "abstract": "Abstract Human prions and amyloids exhibit structural diversity that correlates with different pathological manifestations. Yeast prions represent a convenient model for studying fundamental properties of prions and their strain diversity. The Sup35 yeast prion has multiple structural variants, divided into “strong” and “weak” groups differing in frequency of fibril fragmentation and resulting nonsense-suppression. The molecular origin of these distinctions remains unclear. Here, we show that the different frequency of prion fragmentation is determined by their stability, rather than the efficiency of chaperone binding. The fully protease-resistant part (residues 2-32) of the Sup35 prion core is a key for the prion phenotype and maintenance, whereas partially resistant part (33-72) is less important. We established the cryo-EM structure of a strong Sup35 prion variant purified from yeast, comprising residues 2–64, with 2.7 Å resolution. Comparison of this structure with that of Sup35 amyloid formed in vitro at 4˚C revealed their significant difference.",
+      "doi": "10.1002/anie.4300417",
+      "journal": "Angew",
+      "title": "Borosulfates Hosting Se 4 2+ Ions—Crystal Structures, Chemical Bonding, Optical Spectroscopy, and Magnetism",
+      "abstract": "ABSTRACT Despite consistent growth in the number of compounds known to host homo‐ and hetero polycations of group 16 elements, only two, Se 4 [HS 2 O 7 ] 2 and Se 4 [S 4 O 13 ], provided an exclusively oxidic coordination environment, the former being the first structural characterization of the Se 4 2+ cation in 1968. With the first selenium borosulfates Se 4 [B(S 2 O 7 ) 2 ] 2 (SO 3 ), Se 4 [B(S 2 O 7 ) 2 ] 2 , Se 4 [B 2 (SO 4 ) 2 (S 2 O 7 ) 2 ]‐I, Se 4 [B 2 (SO 4 ) 2 (S 2 O 7 ) 2 ]‐II, and Se 4 [B 2 (SO 4 ) 4 ] we extended this list by five compounds. Aside from Se 4 [HS 2 O 7 ] 2 , Se 4 [S 4 O 13 ] was synthesized but never structurally characterized. In this contribution we also evaluate the crystal structure of the tetrasulfate Se 4 [S 4 O 13 ]. All compounds are synthesized under solvothermal conditions. Powder reflectance spectra of the selenium borosulfates are in accordance with the yellow body color of the compounds. Magnetic measurements confirm the diamagnetic character of the Se 4 2+ ions, in agreement with the calculations. Temperature‐programmed powder X‐ray diffraction reveals that the borosulfates of the study form sequentially with increasing decomposition temperature, enabling their selective synthesis. Furthermore, we performed infrared spectroscopy, Rietveld refinements and thermal analyses.",
       "date": "2026-09-19",
       "type": "journal-article",
       "topics": [],
       "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2911991",
+      "journal": "Angew",
+      "title": "Breaking Charge Symmetry in Co–Zn Dual‑Atom Catalyst With Axial Sulfur Coordination for Efficient Oxygen Reduction Reaction",
+      "abstract": "ABSTRACT Dual‐atom catalysts (DACs) represent an emerging and promising paradigm in electrocatalysis. Nevertheless, their symmetric electron density distribution hampers the polarization and subsequent scission of the O─O bond. In this work, a Co–Zn DAC with axial sulfur coordination (Co─Zn@SNC) was constructed via a molecular‐cage encapsulation method. The as‐synthesized catalyst demonstrated outstanding oxygen reduction reaction (ORR) activity across a wide pH range, with half‐wave potentials of 0.902 V in 0.1 M KOH, 0.817 V in 0.1 M PBS, and 0.809 V in 0.1 M HClO 4 . Theoretical calculations revealed that the axially coordinated S not only modulated the orbital and electronic structure of the Co active center but also collaborated with the nearby Zn site to induce an asymmetric charge distribution within the Co‐N 4 , thereby shifting the catalytic activity closer to the peak of the Sabatier volcano plot. The zinc–air battery (ZAB) and microbial fuel cell (MFC) assembled with the Co─Zn@SNC cathode exhibited peak power densities of 166.36 mW cm −2 and 1.505 W m −2 , respectively, as well as good stability. The present work provided fundamental insights into the precise regulation and underlying mechanism of DACs, offering a viable strategy for the rational design of advanced electrocatalysts for energy storage and conversion applications.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.9361104",
+      "journal": "Angew",
+      "title": "Catalytic Anionic Substituents Effects as Selectivity Mediators in Photocatalytic Hydrogen Atom Transfers",
+      "abstract": "ABSTRACT Photo‐induced hydrogen atom transfer (HAT) catalysis has become a powerful platform for the direct and selective functionalization of ubiquitous C─H bonds. Traditionally, the outcome of these transformations is dictated by the interplay between C─H bond dissociation energies and polar effects, enabling predictable yet inherently substrate‐controlled selectivity. Recently, a fundamentally new strategy has emerged that relies on the catalytic and reversible modulation of substrate electronics to transiently enhance the reactivity of targeted C─H bonds. Notably, catalytic full or partial deprotonation of oxygen‐ and nitrogen‐containing functional groups has proven remarkably effective in selectively activating adjacent C─H bonds toward HAT, a phenomenon known as the anionic substituent effect. Rather than relying solely on the intrinsic properties of a substrate, this concept allows chemists to reprogram C─H bond reactivity in situ, unlocking previously inaccessible levels of selectivity in the direct functionalization of abundant functional groups under mild photocatalytic conditions. In this minireview, we discuss the mechanistic principles underpinning catalytic anionic substituent effects (CASE), the diverse strategies developed to generate them, and their impact on photocatalytic HAT‐mediated C–H functionalization. By highlighting recent advances and emerging opportunities, we illustrate how transient electronic activation is reshaping the design of selective C–H functionalization reactions.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.5950356",
+      "journal": "Angew",
+      "title": "Chemical Switching Between B 2 N and B 2 C Homoaromaticity",
+      "abstract": "ABSTRACT In homoaromatic species, the formal replacement of one or more bonds of the σ‐framework by saturated fragments (the homo bridge) can lead to geometry distortions that preserve a certain degree of cyclic π‐conjugation. While cationic and anionic homoaromatics are well‐established, charge‐neutral derivatives occur less frequently but move increasingly into focus as potential photoswitches for responsive materials. We herein report the synthesis of homoaromatic 1‐aza‐2,4‐diazadiboretane with a bicyclic four‐membered NB 2 C motif and demonstrate experimentally and theoretically that the homoaromatic delocalization can also be chemically shifted from the B 2 N to the B 2 C moiety by deprotonation of the ring carbon atom. Reaction of the anion with carbon‐, silicon‐, and tin‐centered electrophiles, as well as with water as proton source, effectively reinstates the previous electronic situation. Aromaticity analysis confirms the displacement of the 2π homodelocalization and thus the deliberate chemical alteration of the conjugation path, offering substantial potential for the design and synthesis of chemically responsive electronic materials.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.5865467",
+      "journal": "Angew",
+      "title": "Coordinating Mesopore Geometry and Interfacial Water Dynamics for Iron‐Site Evolution in Nitrate Electroreduction",
+      "abstract": "ABSTRACT Developing electrocatalysts with active sites that undergo structural evolution under operating conditions remains a challenge in electrochemical nitrate reduction. Here, we use single‐crystalline mesoporous metal–organic frameworks (MOFs) with distinct pore geometries to investigate the potential‐dependent evolution of iron active sites during electrochemical nitrate‐to‐ammonia conversion. Fe single atoms are anchored within hexagonal and cubic mesoporous frameworks, providing two structurally distinct environments for examining their catalytic and working‐state responses. Operando FTIR, H/D isotope‐exchange, and DRT analyses reveal that the 1D hexagonal mesoporous environment is associated with a distinct interfacial‐water response and proton‐involved reaction behavior. This response coincides with changes in the average Fe coordination environment. Operando XAS further reveals potential‐dependent changes in both catalysts, with FeSAs@ m UiO‐P exhibiting a more pronounced Fe‐associated higher‐shell contribution and greater post‐potential recovery. Under the investigated conditions, FeSAs@ m UiO‐P achieves a Faradaic efficiency of 99.1% at −1.05 V versus RHE and exhibits higher NH 3 selectivity than its cubic counterpart. Collectively, these findings reveal a potential‐dependent correspondence among mesopore architecture, interfacial water organization, and Fe‐site evolution. Although the causal relationship between water organization and Fe‐site evolution remains to be established, this correspondence provides a working framework for investigating reaction‐state‐dependent catalytic interfaces.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.4084841",
+      "journal": "Angew",
+      "title": "Divergent Single‐Oxygen Transmutation of Furans",
+      "abstract": "ABSTRACT Despite the prevalence of furans in organic chemistry, their direct conversion into diverse heterocycles via oxygen transmutation remains a formidable challenge. This limitation is primarily attributed to the robust endocyclic C—O bonds, its aromaticity, and the lack of strategies to activate inert oxygen atoms. In this study, we report a lithium‐mediated strategy that enables the divergent transmutation of furan oxygen atoms. By employing a mechanochemical ball‐milling protocol, we achieve this transformation under mild and operationally simple conditions, significantly enhancing the efficiency compared to conventional solution‐phase methods. This approach enables the precise replacement of oxygen with diverse elements—including silicon, carbon, selenium, phosphorus, germanium, and titanium—via deoxygenatively dilithiated intermediates that react in situ with various electrophiles, thereby providing direct access to a library of valuable heterocycles. This work highlights a versatile platform for molecular diversification with endocyclic transmutation, demonstrating that mechanochemistry can serve as an operationally efficient and time‐saving strategy for complex heterocycle synthesis.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.9043892",
+      "journal": "Angew",
+      "title": "Electrochemically Self‐Driven Interfacial Selenium Transfer Reshapes Sulfur Redox Pathway in Lithium–Sulfur Batteries",
+      "abstract": "ABSTRACT Sulfur redox in lithium–sulfur (Li–S) batteries is governed by a multistep liquid–solid conversion network involving soluble polysulfide intermediates and continuously evolving solid–liquid interfaces. Here we identify an electrochemically self‐driven interfacial anion‐transfer process at a CoPSe‐based catalytic interface that reshapes sulfur redox pathway. During discharge, selenium released from the catalyst surface becomes incorporated into sulfur intermediates, redirecting sulfur reduction toward Se‐containing species that facilitate bond cleavage, favor shorter‐chain intermediates, and accelerate Li 2 S formation. Meanwhile, partial selenium extraction generates Se‐deficient catalytic sites with enhanced polysulfide affinity, promoting intermediate anchoring and liquid‐to‐solid conversion. Through this coupled evolution of sulfur species and catalytic sites, the interface operates in an operando adaptive mode rather than merely accelerating conventional polysulfide conversion. The resulting Li–S cells deliver 703 mAh g– 1 at 5 C with a capacity decay of 0.016% per cycle over 1,000 cycles at 2 C. This work establishes interfacial anion transfer as a route to pathway‐level sulfur‐redox regulation and adaptive catalyst evolution as a design principle for multistep electrochemical reactions.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1363,17 +1504,20 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1038/s41467-026-77675-x",
-      "journal": "Nature Communications",
-      "title": "Extending single-cell proteomics from HeLa to small primary human immune cells",
-      "abstract": "Abstract Single-cell proteomics (SCP) holds the promise of decoding cellular heterogeneity at the functional level, yet achieving deep and reproducible proteome coverage from individual cells has remained a formidable challenge. Here, we establish a high-sensitivity, label-free SCP platform that extends current depth and reproducibility. By integrating optimized low-input sample processing, refined liquid chromatography, and the Orbitrap Astral Zoom mass spectrometer, our approach routinely quantifies up to 7000 proteins per individual HeLa cell at over 100 samples-per-day (SPD), capturing thousands of low-abundance proteins that eluded prior SCP studies. Applied to very small human peripheral blood mononuclear cells (PBMCs), we identify up to 4000 proteins per cell, including key markers that distinguish monocytes, T cells, and activated lymphocytes within heterogeneous populations, underscoring that single-cell proteomics can now directly elucidate clinically relevant primary samples with both depth and precision.",
+      "doi": "10.1002/anie.3793292",
+      "journal": "Angew",
+      "title": "Low‐Crystalline Ag 1.2 V 3 O 8 : A Zinc‐Ion Storage Cathode With an Ultrahigh Capacity of 525 mAh g −1 Enabled by Oxygen‐Vacancy‐Rich Coordination Environments",
+      "abstract": "ABSTRACT Conventional vanadium‐based cathodes are limited by sluggish Zn 2+ transport, poor electronic conductivity, and incomplete utilization of redox‐active sites. Here, redox‐active Ag serves as a regulator of local coordination chemistry in a short‐range‐ordered low‐crystalline vanadate. Ag incorporation reconstructs the local Ag‐V‐O environment, lowers the oxygen‐vacancy formation energy, promotes V 5+ /V 4+ conversion, and activates electrochemically accessible Ag/V dual‐redox centers, thereby simultaneously enhancing electronic accessibility and Zn 2+ transport kinetics. Meanwhile, the short‐range‐ordered low‐crystalline framework stabilizes these defect‐rich coordination environments, provides pseudocapacitive‐favored charge‐storage pathways, and accommodates local structural strain during repeated Zn 2+ insertion/extraction. Density functional theory (DFT) calculations reveal that Ag incorporation markedly reduces the Zn 2+ migration barrier and increases electronic states near the Fermi level. Consequently, the low‐crystalline silver vanadate cathode delivers an ultrahigh reversible capacity of 525.51 mAh g −1 at 0.1 A g −1 , a high energy density of 499.23 Wh kg −1 , excellent rate capability, and outstanding cycling stability with 96.2% capacity retention after 5,000 cycles at 8 A g −1 . This work demonstrates that local coordination reprogramming unlocks Ag/V redox chemistry and pseudocapacitive Zn 2+ storage, highlighting a promising strategy for enhancing redox accessibility and Zn‐ion storage in low‐crystalline vanadate cathodes.",
       "date": "2026-09-19",
       "type": "journal-article",
       "topics": [],
       "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1382,9 +1526,185 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1038/s41467-026-77880-8",
+      "doi": "10.1002/anie.3185665",
+      "journal": "Angew",
+      "title": "Methane Activation by B 5 + Toward a CB 5 H 2 + Isomer Containing a Planar Tetracoordinate Carbon Atom",
+      "abstract": "ABSTRACT Planar tetracoordinate carbon (ptC) motifs have been identified predominantly in the global‐minimum structures of gas‐phase clusters generated through laser ablation, limiting access to alternative kinetically persistent structures. Here, gas‐phase reactions of mass‐selected B 5 + clusters with methane at room temperature yield CB 5 H 2 + through H 2 elimination, as established by time‐of‐flight mass spectrometry, isotope labeling, and kinetic measurements. Electronic‐structure calculations identify a low‐lying ptC‐containing isomer accessible from the nascent dehydrogenation product through a multistep rearrangement pathway. Microcanonical analysis indicates that a fraction of the nascent dehydrogenation product population can overcome the highest barrier before collisional deactivation. Once collisionally stabilized, this species is predicted to be kinetically persistent under the experimental conditions. Its bonding pattern combines localized C–B interactions with multicenter σ and π delocalization across the CB 5 framework. These results establish CB 5 H 2 + formation and provide computational support for access to a low‐lying ptC‐containing system.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.9229523",
+      "journal": "Angew",
+      "title": "Noncovalent Biomolecular Glass Platform for Ultralong Room‐Temperature Phosphorescence",
+      "abstract": "ABSTRACT Developing sustainable luminescent materials that integrate biodegradability, high optical transparency and long‐lived room‐temperature phosphorescence (RTP) remains an important challenge. Here we report a series of amino‐acid‐derived noncovalent biomolecular glasses (NBGs) as versatile hosts for organic luminophores. The dense noncovalent interaction network within the NBGs matrix confines the embedded luminophores and suppresses nonradiative relaxation, thereby enabling ultralong RTP. The resulting doped glasses exhibit color‐tunable afterglow from 430 to 610 nm, high transmittance of up to 93%, phosphorescence lifetimes of up to 4.11 s and photoluminescence quantum yields of up to 74.9%. The doped systems also display phosphor‐dependent photophysical behaviors, including excitation‐wavelength‐dependent emission. In addition, the pronounced viscosity changes during NBGs formation endow the materials with strong, substrate‐adaptive adhesion to diverse surfaces. Combining afterglow performance, optical transparency, reprocess ability, recyclability and biodegradability, these NBGs offer a sustainable supramolecular‐glass platform for multifunctional organic phosphorescent materials.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.2000678",
+      "journal": "Angew",
+      "title": "Superoxide‐Anion‐Dominated Labeling of Graphene Defects in an Interfacial Nanoreactor of Electron‐Donated Substrate",
+      "abstract": "ABSTRACT Harnessing the chemical reactivity of defects delivers a fundamental tool for precise nanoscale characterization of graphene defects. Herein, we develop a confined photochemical strategy based on the photosensitization of dye molecules targeted at the chemically active defects of graphene to label the defects. The graphene/copper interface enriches the electrons of graphene defects to construct a nanoreactor within defect‐positioning interfaces, which modulates the preferential adsorption and the photosensitization reaction pathway of photoexcited methylene blue (MB). The nanoscale reactor preferentially channels the reaction through the Type I electron‐transfer pathway, significantly triggering the •O 2 − generation while concomitantly attenuating the competing Type II energy‐transfer pathway. Subsequently, the •O 2 − species deduce the selective etching reaction of Cu at defect sites, with the reaction kinetics following the Higuchi model. Moreover, the etching process exhibits pronounced crystallographic specificity, as evidenced by distinct pit morphologies and etching rates on the copper (111), (110), and (100) crystalline planes. DFT calculations confirm preferential adsorption and favorable electron transfer from defects to •O 2 − species, unravelling the spatially confined nature of the etching reaction at graphene defects. Collectively, our results demonstrate how localized electronic states can dictate the interfacial reaction landscapes, advancing defect chemistry‐guided identification/modification methodology of two‐dimensional materials.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.3092581",
+      "journal": "Angew",
+      "title": "Taming the Flexible Eight‐Membered Ring: Enantioselective Synthesis of Inherently Chiral Dibenzo[ a , e ]cyclooctatetraenes Enabled by Pd‐Catalyzed Suzuki–Miyaura Cross‐Coupling",
+      "abstract": "ABSTRACT Inherently chiral molecules generated by the curvature of planar frameworks represent an emerging class of three‐dimensional chiral architectures, yet their catalytic asymmetric synthesis remains highly challenging. Herein, we report a Pd‐catalyzed asymmetric Suzuki–Miyaura coupling for the efficient construction of inherently chiral dibenzo[ a , e ]cyclooctatetraene (dbCOT) diene ligands. This strategy enables rapid access to a diverse range of cyclic diene scaffolds with excellent enantioselectivities (up to 98% ee). Mechanistic investigations reveal that the stereochemical outcome is governed by a sequential dynamic kinetic asymmetric transformation (DyKAT) and enantioenrichment process involving two consecutive coupling events. The resulting inherently chiral dbCOT ligands readily coordinate with transition metals and exhibit excellent catalytic performance in Rh‐catalyzed asymmetric additions and Pd‐catalyzed atroposelective transformations. This work establishes a catalytic platform for the synthesis of inherently chiral cyclic diene ligands and expands the toolbox of asymmetric catalysis.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c14441",
+      "journal": "JACS",
+      "title": "Activating Aqueous Multivalent Metal–Sulfur Electrochemistry via Kinetic Promoter",
+      "abstract": "Abstract Sulfur-based aqueous batteries for sustainable energy storage have the advantages of material abundance, low cost, and high theoretical capacity. While aqueous multivalent metal–sulfur electrochemistry is effective in suppressing sulfide dissolution due to its low solubility product constant, it is intrinsically limited by sluggish conversion kinetics. Here, we decouple sulfur-conversion kinetics from sulfur-species stabilization by introducing a kinetic promoter. Operando spectroscopy, electrochemical quartz crystal microbalance analysis, and density functional theory simulations reveal that the Li+ promoter preferentially targets long-chain sulfur species and lowers the redox barrier, while Mn2+ anchors sulfur species and immobilizes short-chain intermediates, steering the reaction from a dissolution route to a rapid, solid-state-dominated pathway. This cooperative mechanism induces the formation of a highly reversible ternary solid phase with an apparent average composition close to Li4Mn6S8, suppressing the accumulation of soluble polysulfide intermediates and enabling deep discharge at ultrahigh rates. Consequently, the SABs with kinetic promoter exhibit highly reversible sulfur redox chemistry with a capacity of 1012 mAh g–1 at 15 A g–1. We also demonstrate the strategy in Zn2+-S and Ni2+-S systems, illustrating its effectiveness in various multivalent aqueous sulfur batteries.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c10813",
+      "journal": "JACS",
+      "title": "Redox-Regulated Nonvolatility Switching in Single-Nanopipette Memory Diodes",
+      "abstract": "Abstract Nanofluidic memory devices featuring brain-mimicking functions could mitigate von Neumann architecture limitations, but long-term memory and controllable volatility–nonvolatility state switching remain challenging to establish, which are foundational for higher-order complexity functions. By integrating the redox polymer PEDOT:PSS into single-nanopipette diodes with memristor properties, hysteretic ion transport is regulated by coupled electron transfers, which switch nanotip conductivity hundredfold. Oxidation and reduction of PEDOT lock in different nanotip conductivity states, accompanied by stochastic current spikes and switching behavior. Reversible volatile and nonvolatile rectified memory effects are controlled by low electric potentials: redox-regulated conductivity state changes drive long-term memory and potential sweeping or pulse trains stimulate short-term ionic memory effects. Integrating gate controls in three-terminal transistors into two-terminal memristor diodes constitutes a generalizable design principle for advancing iontronics and neuromorphic computing capabilities.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c17074",
+      "journal": "JACS",
+      "title": "Structural Basis of Cyclized C17 Precursor Recognition and Product Formation in Chlororaphen and Grimophan Biosynthesis",
+      "abstract": "Abstract Terpene cyclases (TCs) typically transform acyclic oligoprenyl pyrophosphates through carbocationic cyclization cascades. However, recently discovered bacterial pathways generate compact, cyclized and stereochemically defined noncanonical intermediates through methyltransferases prior to TC catalysis, raising the question of how these unusual substrates are recognized and converted. Here, we report high-resolution crystal structures of two bacterial C17 class I TCs, Pc-ChloS and Vb-GriS, including a complex with a substrate surrogate that defines recognition of the cyclized precursor α-prechlororaphen pyrophosphate (α-PCPP). Combined with mutagenesis and isotope-labeling experiments, these structures provide a molecular framework for chlororaphen and grimophan biosynthesis. Despite highly similar active-site architectures, reciprocal mutagenesis identifies a single Thr/Leu exchange at position 89 as a major determinant of product partitioning. Together with comparisons to other class I TCs, these findings reveal how a conserved scaffold accommodates cyclized terpene precursors, while subtle active-site changes redirect complex carbocation cascades and product formation.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c10270",
+      "journal": "JACS",
+      "title": "Two-Dimensional Orthorhombic Molybdenum Boride Enabled by Selective Mo–Al Bond Cleavage in MoAlB",
+      "abstract": "Abstract Two-dimensional (2D) metal borides (MBenes) exhibit fascinating magnetic, electronic and catalytic properties, originating from the rich chemical bonding schemes of boron. However, the growth or exfoliation of 2D MBene remains extremely challenging due to the close minimal formation energy differences ( lt;0.1 eV) among competing boride phase variations. Herein, we present a liquid-metal-mediated selective bond-breaking strategy that enables orthorhombic 2D MoB nanosheets from non-van der Waals MoAlB precursor. The interplay between gallium, MoAlB and molten salt introduces chemical-potential-driven cleavage of Mo–Al bonds and interlayer steric hindrance, suppressing the undesirable structural evolution to unreactive MoAl0.5B. The subsequent formation of soluble AlF63– species removes aluminum bilayer from MoAlB completely, generating layered MoB that can be readily exfoliated into crystalline 2D sheets with micrometer-scale dimensions and atomic thickness. The abundant exposed Mo–B sites facilitate Lewis acid–base interactions with electrolyte anions, enabling efficient tailoring of electrode–electrolyte interface chemistry. This optimized dense and uniform lithium deposition promotes anode-free Li metal batteries with 200-cycle stability and 2 C rate performance, opening new avenues for interphase-dominated energy storage.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77798-1",
       "journal": "Nature Communications",
-      "title": "Kirigami-actuated reconfigurable topological photonic crystals",
+      "title": "Disruption of SWI/SNF ATPases in the mouse liver impairs diurnal gene expression associated with specific promoter features",
       "abstract": "",
       "date": "2026-09-19",
       "type": "journal-article",
@@ -1401,9 +1721,9 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1038/s41467-026-77700-z",
+      "doi": "10.1038/s41467-026-77992-1",
       "journal": "Nature Communications",
-      "title": "Scalable molecular representations enabled by multimodal fusion and sequence distillation",
+      "title": "Dosing and delivery of bacteriophage therapy in a murine wound infection model",
       "abstract": "",
       "date": "2026-09-19",
       "type": "journal-article",
@@ -1420,9 +1740,28 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1038/s41467-026-77847-9",
+      "doi": "10.1038/s41467-026-77922-1",
       "journal": "Nature Communications",
-      "title": "The EF1α promoter of cilta-cel drives a highly effective GZMK+ transcriptional program",
+      "title": "Dynamics-informed machine learning for recovering extensive missing systems dynamics",
+      "abstract": "Abstract Inevitable missing values in observational time series often hinder reliable data-driven modeling of complex systems across diverse domains. Recovery is essential yet challenging, particularly in high-dimensional systems where most variables can exhibit extensive intra-series missingness and widespread inter-variable missingness simultaneously. In this study, we introduce a dynamics-informed imputation framework, termed Full-Partial Reconstruction Mapping (FPRM). In contrast to traditional approaches that directly fit time series interdependences, the FPRM embeds intrinsic dynamical priors via state-space reconstruction and recovers multiple incomplete series by learning diffeomorphic topology between attractors from complete and incomplete data. We validate the FPRM on paradigmatic model systems (e.g., an ecology system, the ordinary Lorenz system, a coupled 120-dimensional (120D) Lorenz system, and a coupled 120D Rössler system and real-world datasets (e.g., road occupancy rate from transportation system, electroencephalogram (EEG) signals from neuroscience, exchange rates from finance, and wind speed from climate systems). Even in high-dimensional systems where only one variable is fully observed and all others suffer from extreme missingness (e.g., 90%), the FPRM enables reliable imputation of multiple incomplete variables—a task that challenges most existing approaches. This dynamics-guided framework outperforms traditional approaches, alleviating substantial data gaps and enabling robust data-driven paradigms for complex dynamical systems.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77851-z",
+      "journal": "Nature Communications",
+      "title": "Record-high efficiency in 1.54 µm electroluminescent diodes based on lead-free Cs3CrBr6: Er3+ semiconductor nanocrystals",
       "abstract": "",
       "date": "2026-09-19",
       "type": "journal-article",
@@ -1439,38 +1778,396 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1038/s41467-026-77463-7",
-      "journal": "Nature Communications",
-      "title": "Virtual sensing to enable real-time monitoring of inaccessible locations unmeasurable parameters",
-      "abstract": "Abstract Real-time monitoring of safety-critical interior states remains an open problem across energy, environmental, and industrial systems where direct instrumentation is infeasible. Existing approaches based on governing equations, discrete state vectors, or fixed sensor locations fail to provide mesh-independent, field-level reconstructions at arbitrary interior coordinates under real-time constraints. Here we introduce neural operator-based virtual sensing as a general framework for recovering inaccessible interior fields from sparse, heterogeneous measurements and operating conditions, instantiated with MIMONet, a multi-input, multi-output neural operator that fuses heterogeneous inputs and decodes coupled physical fields through a shared latent representation. Across three engineering-grade evaluations of escalating complexity, from confined recirculating flows to pressurized water reactor subchannels and compact power-system heat exchangers, MIMONet achieves ≤5% relative reconstruction error, while generating full-field predictions with sub-millisecond inference on an NVIDIA H200, at least five orders of magnitude faster than traditional high-fidelity CFD simulations, with calibrated uncertainty and noise resilience demonstrated on the heat-exchanger case. We validate the framework on three independent real-world datasets spanning electrochemical energy, atmospheric science, and physical oceanography: current-density mapping in a hydrogen fuel cell, wind-speed profiling on instrumented meteorological towers, and North Atlantic ocean-state from a global ocean reanalysis. MIMONet improves over classical virtual-sensing baselines by 72–84%: 84% on fuel-cell internal-field recovery from 10% sensor coverage and 83% on hub-height wind-speed recovery from lower-level ",
+      "doi": "10.1021/acs.orglett.6c03072",
+      "journal": "Organic Letters",
+      "title": "Biocatalytic Synthesis of Substituted Cinnamaldehydes",
+      "abstract": "Abstract Substituted cinnamaldehydes are valuable compounds, but current syntheses rely on expensive and toxic reagents. We report a biocatalytic synthesis of substituted cinnamaldehydes from the corresponding benzaldehydes via an aldolase, NahE, and benzoylformate decarboxylase. This is the first use of α,β-unsaturated 2-oxo acids as substrates for thiamine diphosphate-dependent 2-oxo acid decarboxylases. We found electron-donating substituents were better tolerated than electron-withdrawing substituents, but all showed good to excellent conversions. A preparative-scale reaction gave 4-methoxycinnamaldehyde in 77% isolated yield.",
       "date": "2026-09-19",
       "type": "journal-article",
       "topics": [],
       "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03822",
+      "journal": "Organic Letters",
+      "title": "Photocatalytic 1,4-Alkylation/Carboxylation of 1,3-Enynes with 4-Alkyl-Hantzsch Esters and CO2 for the Synthesis of 2,3-Allenoic Acids",
+      "abstract": "Abstract Herein, a visible-light-promoted protocol for the regioselective 1,4-alkylation/carboxylation of 1,3-enynes with 4-alkyl-Hantzsch esters and CO2 is described. This approach enabled direct access to a diverse range of tetrasubstituted 2,3-allenoic acids in satisfactory yields. This transformation relies on readily available 4-alkyl-1,4-dihydropyridines as competent alkyl radical precursors, exhibits good functional group tolerance, and is amenable to 1 mmol scale synthesis. The utility of this method is further highlighted by the derivatization of the obtained allenoic acid products.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03588",
+      "journal": "Organic Letters",
+      "title": "Reductive Catalyst Regeneration Enables the General Cu-Catalyzed Atom Transfer Radical Addition with Primary Alkyl Halides",
+      "abstract": "Abstract Primary alkyl halides are poor coupling partners in most atom transfer radical addition (ATRA) reactions due to their propensity to undergo off-cycle radical termination pathways, which lead to catalyst deactivation. Herein, we overcome this challenge in the Cu-catalyzed ATRA reaction though the addition of 1,1′-azobis(cyclohexanecarbonitrile), an in situ reducing agent. Under optimized conditions, the catalyst turnover is restored and challenging halides become competent coupling partners across a variety of substituted alkenes. This strategy enables the synthesis of a diverse array of biologically relevant synthetic intermediates, including α-haloboronic esters, sulfones, esters, amides, and arenes. The versatility and synthetic utility of these ATRA conditions are demonstrated in 48 examples and 13 subsequent functionalizations.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
     }
   ],
   "potentialGaps": [
     {
-      "doi": "10.1038/s41467-026-77768-7",
-      "journal": "Nature Communications",
-      "title": "Bayesian bilevel operator learning with low-rank adaptation for efficient uncertainty quantification of PDE inverse problems",
-      "abstract": "Abstract Uncertainty quantification in PDE inverse problems is essential in many applications. Scientific machine learning and AI enable data-driven learning of model components while preserving physical structure, and provide the scalability and adaptability needed for emerging imaging technologies and clinical insights. We develop a Bilevel Local Operator Learning framework for Bayesian inference in PDEs (B-BiLO). At the upper level, we sample parameters from the posterior via Hamiltonian Monte Carlo, while at the lower level we fine-tune a neural network via low-rank adaptation (LoRA) to approximate the solution operator locally. B-BiLO enables efficient gradient-based sampling without synthetic data or adjoint equations and avoids sampling in high-dimensional weight space, as in Bayesian neural networks, by optimizing weights deterministically. We analyze errors from approximate lower-level optimization and establish their impact on posterior accuracy. Numerical experiments across PDE models, including tumor growth, demonstrate that B-BiLO achieves accurate and efficient uncertainty quantification.",
+      "doi": "10.1002/anie.2735155",
+      "journal": "Angew",
+      "title": "Bio‐Inspired Bidirectional Proton Regulatory Mechanisms by Anhydride‐Based Hydrogel Electrolytes for High‐Performance Aqueous Zinc‐Ion Batteries",
+      "abstract": "ABSTRACT Aqueous zinc‐ion batteries (AZIBs) employing hydrogel electrolytes offer significant advantages in mitigating short‐circuit and electrolyte leakage risks. Nevertheless, the sluggish transport kinetics of Zn 2 + and severe interfacial instability of zinc anodes still severely restrict their further development. Herein, a bio‐inspired hydrogel electrolyte based on poly(acrylamide‐co‐maleic anhydride) (P(AM‐co‐MA)) copolymer is fabricated to construct a dual‐functional polymer network. The dynamic acid–base equilibrium between carboxyl and amide groups enables reversible bidirectional proton buffering, which effectively suppresses the hydrogen evolution reaction and anode corrosion. Meanwhile, the synergistic Zn 2 + hopping sites constituted of carboxylate and amide groups optimize the ion‐transport microenvironment and accelerate Zn 2 + migration kinetics synchronously, realizing the coordinated regulation of proton activity and Zn 2 + transport. Thus, the optimized P(AM‐co‐MA) hydrogel electrolyte delivers a high Zn 2 + transference number of 0.66 and an ionic conductivity of 16 mS cm −1 . The assembled Zn||Zn symmetric cells achieve ultra‐long and stable cycling for over 2700 h at 1 mA cm −1 . Furthermore, the pouch‐type Zn||NaV 3 O 8 full cells based on this hydrogel electrolyte exhibit a high specific capacity of 254 mAh g −1 at 1 A g −1 , with a capacity retention of 80% after 120 cycles, verifying the great application potential of this rational design for flexible energy storage devices.",
       "date": "2026-09-19",
       "type": "journal-article",
       "topics": [],
       "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.4300417",
+      "journal": "Angew",
+      "title": "Borosulfates Hosting Se 4 2+ Ions—Crystal Structures, Chemical Bonding, Optical Spectroscopy, and Magnetism",
+      "abstract": "ABSTRACT Despite consistent growth in the number of compounds known to host homo‐ and hetero polycations of group 16 elements, only two, Se 4 [HS 2 O 7 ] 2 and Se 4 [S 4 O 13 ], provided an exclusively oxidic coordination environment, the former being the first structural characterization of the Se 4 2+ cation in 1968. With the first selenium borosulfates Se 4 [B(S 2 O 7 ) 2 ] 2 (SO 3 ), Se 4 [B(S 2 O 7 ) 2 ] 2 , Se 4 [B 2 (SO 4 ) 2 (S 2 O 7 ) 2 ]‐I, Se 4 [B 2 (SO 4 ) 2 (S 2 O 7 ) 2 ]‐II, and Se 4 [B 2 (SO 4 ) 4 ] we extended this list by five compounds. Aside from Se 4 [HS 2 O 7 ] 2 , Se 4 [S 4 O 13 ] was synthesized but never structurally characterized. In this contribution we also evaluate the crystal structure of the tetrasulfate Se 4 [S 4 O 13 ]. All compounds are synthesized under solvothermal conditions. Powder reflectance spectra of the selenium borosulfates are in accordance with the yellow body color of the compounds. Magnetic measurements confirm the diamagnetic character of the Se 4 2+ ions, in agreement with the calculations. Temperature‐programmed powder X‐ray diffraction reveals that the borosulfates of the study form sequentially with increasing decomposition temperature, enabling their selective synthesis. Furthermore, we performed infrared spectroscopy, Rietveld refinements and thermal analyses.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2911991",
+      "journal": "Angew",
+      "title": "Breaking Charge Symmetry in Co–Zn Dual‑Atom Catalyst With Axial Sulfur Coordination for Efficient Oxygen Reduction Reaction",
+      "abstract": "ABSTRACT Dual‐atom catalysts (DACs) represent an emerging and promising paradigm in electrocatalysis. Nevertheless, their symmetric electron density distribution hampers the polarization and subsequent scission of the O─O bond. In this work, a Co–Zn DAC with axial sulfur coordination (Co─Zn@SNC) was constructed via a molecular‐cage encapsulation method. The as‐synthesized catalyst demonstrated outstanding oxygen reduction reaction (ORR) activity across a wide pH range, with half‐wave potentials of 0.902 V in 0.1 M KOH, 0.817 V in 0.1 M PBS, and 0.809 V in 0.1 M HClO 4 . Theoretical calculations revealed that the axially coordinated S not only modulated the orbital and electronic structure of the Co active center but also collaborated with the nearby Zn site to induce an asymmetric charge distribution within the Co‐N 4 , thereby shifting the catalytic activity closer to the peak of the Sabatier volcano plot. The zinc–air battery (ZAB) and microbial fuel cell (MFC) assembled with the Co─Zn@SNC cathode exhibited peak power densities of 166.36 mW cm −2 and 1.505 W m −2 , respectively, as well as good stability. The present work provided fundamental insights into the precise regulation and underlying mechanism of DACs, offering a viable strategy for the rational design of advanced electrocatalysts for energy storage and conversion applications.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.9361104",
+      "journal": "Angew",
+      "title": "Catalytic Anionic Substituents Effects as Selectivity Mediators in Photocatalytic Hydrogen Atom Transfers",
+      "abstract": "ABSTRACT Photo‐induced hydrogen atom transfer (HAT) catalysis has become a powerful platform for the direct and selective functionalization of ubiquitous C─H bonds. Traditionally, the outcome of these transformations is dictated by the interplay between C─H bond dissociation energies and polar effects, enabling predictable yet inherently substrate‐controlled selectivity. Recently, a fundamentally new strategy has emerged that relies on the catalytic and reversible modulation of substrate electronics to transiently enhance the reactivity of targeted C─H bonds. Notably, catalytic full or partial deprotonation of oxygen‐ and nitrogen‐containing functional groups has proven remarkably effective in selectively activating adjacent C─H bonds toward HAT, a phenomenon known as the anionic substituent effect. Rather than relying solely on the intrinsic properties of a substrate, this concept allows chemists to reprogram C─H bond reactivity in situ, unlocking previously inaccessible levels of selectivity in the direct functionalization of abundant functional groups under mild photocatalytic conditions. In this minireview, we discuss the mechanistic principles underpinning catalytic anionic substituent effects (CASE), the diverse strategies developed to generate them, and their impact on photocatalytic HAT‐mediated C–H functionalization. By highlighting recent advances and emerging opportunities, we illustrate how transient electronic activation is reshaping the design of selective C–H functionalization reactions.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.5950356",
+      "journal": "Angew",
+      "title": "Chemical Switching Between B 2 N and B 2 C Homoaromaticity",
+      "abstract": "ABSTRACT In homoaromatic species, the formal replacement of one or more bonds of the σ‐framework by saturated fragments (the homo bridge) can lead to geometry distortions that preserve a certain degree of cyclic π‐conjugation. While cationic and anionic homoaromatics are well‐established, charge‐neutral derivatives occur less frequently but move increasingly into focus as potential photoswitches for responsive materials. We herein report the synthesis of homoaromatic 1‐aza‐2,4‐diazadiboretane with a bicyclic four‐membered NB 2 C motif and demonstrate experimentally and theoretically that the homoaromatic delocalization can also be chemically shifted from the B 2 N to the B 2 C moiety by deprotonation of the ring carbon atom. Reaction of the anion with carbon‐, silicon‐, and tin‐centered electrophiles, as well as with water as proton source, effectively reinstates the previous electronic situation. Aromaticity analysis confirms the displacement of the 2π homodelocalization and thus the deliberate chemical alteration of the conjugation path, offering substantial potential for the design and synthesis of chemically responsive electronic materials.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.5865467",
+      "journal": "Angew",
+      "title": "Coordinating Mesopore Geometry and Interfacial Water Dynamics for Iron‐Site Evolution in Nitrate Electroreduction",
+      "abstract": "ABSTRACT Developing electrocatalysts with active sites that undergo structural evolution under operating conditions remains a challenge in electrochemical nitrate reduction. Here, we use single‐crystalline mesoporous metal–organic frameworks (MOFs) with distinct pore geometries to investigate the potential‐dependent evolution of iron active sites during electrochemical nitrate‐to‐ammonia conversion. Fe single atoms are anchored within hexagonal and cubic mesoporous frameworks, providing two structurally distinct environments for examining their catalytic and working‐state responses. Operando FTIR, H/D isotope‐exchange, and DRT analyses reveal that the 1D hexagonal mesoporous environment is associated with a distinct interfacial‐water response and proton‐involved reaction behavior. This response coincides with changes in the average Fe coordination environment. Operando XAS further reveals potential‐dependent changes in both catalysts, with FeSAs@ m UiO‐P exhibiting a more pronounced Fe‐associated higher‐shell contribution and greater post‐potential recovery. Under the investigated conditions, FeSAs@ m UiO‐P achieves a Faradaic efficiency of 99.1% at −1.05 V versus RHE and exhibits higher NH 3 selectivity than its cubic counterpart. Collectively, these findings reveal a potential‐dependent correspondence among mesopore architecture, interfacial water organization, and Fe‐site evolution. Although the causal relationship between water organization and Fe‐site evolution remains to be established, this correspondence provides a working framework for investigating reaction‐state‐dependent catalytic interfaces.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.4084841",
+      "journal": "Angew",
+      "title": "Divergent Single‐Oxygen Transmutation of Furans",
+      "abstract": "ABSTRACT Despite the prevalence of furans in organic chemistry, their direct conversion into diverse heterocycles via oxygen transmutation remains a formidable challenge. This limitation is primarily attributed to the robust endocyclic C—O bonds, its aromaticity, and the lack of strategies to activate inert oxygen atoms. In this study, we report a lithium‐mediated strategy that enables the divergent transmutation of furan oxygen atoms. By employing a mechanochemical ball‐milling protocol, we achieve this transformation under mild and operationally simple conditions, significantly enhancing the efficiency compared to conventional solution‐phase methods. This approach enables the precise replacement of oxygen with diverse elements—including silicon, carbon, selenium, phosphorus, germanium, and titanium—via deoxygenatively dilithiated intermediates that react in situ with various electrophiles, thereby providing direct access to a library of valuable heterocycles. This work highlights a versatile platform for molecular diversification with endocyclic transmutation, demonstrating that mechanochemistry can serve as an operationally efficient and time‐saving strategy for complex heterocycle synthesis.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.3185665",
+      "journal": "Angew",
+      "title": "Methane Activation by B 5 + Toward a CB 5 H 2 + Isomer Containing a Planar Tetracoordinate Carbon Atom",
+      "abstract": "ABSTRACT Planar tetracoordinate carbon (ptC) motifs have been identified predominantly in the global‐minimum structures of gas‐phase clusters generated through laser ablation, limiting access to alternative kinetically persistent structures. Here, gas‐phase reactions of mass‐selected B 5 + clusters with methane at room temperature yield CB 5 H 2 + through H 2 elimination, as established by time‐of‐flight mass spectrometry, isotope labeling, and kinetic measurements. Electronic‐structure calculations identify a low‐lying ptC‐containing isomer accessible from the nascent dehydrogenation product through a multistep rearrangement pathway. Microcanonical analysis indicates that a fraction of the nascent dehydrogenation product population can overcome the highest barrier before collisional deactivation. Once collisionally stabilized, this species is predicted to be kinetically persistent under the experimental conditions. Its bonding pattern combines localized C–B interactions with multicenter σ and π delocalization across the CB 5 framework. These results establish CB 5 H 2 + formation and provide computational support for access to a low‐lying ptC‐containing system.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2000678",
+      "journal": "Angew",
+      "title": "Superoxide‐Anion‐Dominated Labeling of Graphene Defects in an Interfacial Nanoreactor of Electron‐Donated Substrate",
+      "abstract": "ABSTRACT Harnessing the chemical reactivity of defects delivers a fundamental tool for precise nanoscale characterization of graphene defects. Herein, we develop a confined photochemical strategy based on the photosensitization of dye molecules targeted at the chemically active defects of graphene to label the defects. The graphene/copper interface enriches the electrons of graphene defects to construct a nanoreactor within defect‐positioning interfaces, which modulates the preferential adsorption and the photosensitization reaction pathway of photoexcited methylene blue (MB). The nanoscale reactor preferentially channels the reaction through the Type I electron‐transfer pathway, significantly triggering the •O 2 − generation while concomitantly attenuating the competing Type II energy‐transfer pathway. Subsequently, the •O 2 − species deduce the selective etching reaction of Cu at defect sites, with the reaction kinetics following the Higuchi model. Moreover, the etching process exhibits pronounced crystallographic specificity, as evidenced by distinct pit morphologies and etching rates on the copper (111), (110), and (100) crystalline planes. DFT calculations confirm preferential adsorption and favorable electron transfer from defects to •O 2 − species, unravelling the spatially confined nature of the etching reaction at graphene defects. Collectively, our results demonstrate how localized electronic states can dictate the interfacial reaction landscapes, advancing defect chemistry‐guided identification/modification methodology of two‐dimensional materials.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.3092581",
+      "journal": "Angew",
+      "title": "Taming the Flexible Eight‐Membered Ring: Enantioselective Synthesis of Inherently Chiral Dibenzo[ a , e ]cyclooctatetraenes Enabled by Pd‐Catalyzed Suzuki–Miyaura Cross‐Coupling",
+      "abstract": "ABSTRACT Inherently chiral molecules generated by the curvature of planar frameworks represent an emerging class of three‐dimensional chiral architectures, yet their catalytic asymmetric synthesis remains highly challenging. Herein, we report a Pd‐catalyzed asymmetric Suzuki–Miyaura coupling for the efficient construction of inherently chiral dibenzo[ a , e ]cyclooctatetraene (dbCOT) diene ligands. This strategy enables rapid access to a diverse range of cyclic diene scaffolds with excellent enantioselectivities (up to 98% ee). Mechanistic investigations reveal that the stereochemical outcome is governed by a sequential dynamic kinetic asymmetric transformation (DyKAT) and enantioenrichment process involving two consecutive coupling events. The resulting inherently chiral dbCOT ligands readily coordinate with transition metals and exhibit excellent catalytic performance in Rh‐catalyzed asymmetric additions and Pd‐catalyzed atroposelective transformations. This work establishes a catalytic platform for the synthesis of inherently chiral cyclic diene ligands and expands the toolbox of asymmetric catalysis.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c14441",
+      "journal": "JACS",
+      "title": "Activating Aqueous Multivalent Metal–Sulfur Electrochemistry via Kinetic Promoter",
+      "abstract": "Abstract Sulfur-based aqueous batteries for sustainable energy storage have the advantages of material abundance, low cost, and high theoretical capacity. While aqueous multivalent metal–sulfur electrochemistry is effective in suppressing sulfide dissolution due to its low solubility product constant, it is intrinsically limited by sluggish conversion kinetics. Here, we decouple sulfur-conversion kinetics from sulfur-species stabilization by introducing a kinetic promoter. Operando spectroscopy, electrochemical quartz crystal microbalance analysis, and density functional theory simulations reveal that the Li+ promoter preferentially targets long-chain sulfur species and lowers the redox barrier, while Mn2+ anchors sulfur species and immobilizes short-chain intermediates, steering the reaction from a dissolution route to a rapid, solid-state-dominated pathway. This cooperative mechanism induces the formation of a highly reversible ternary solid phase with an apparent average composition close to Li4Mn6S8, suppressing the accumulation of soluble polysulfide intermediates and enabling deep discharge at ultrahigh rates. Consequently, the SABs with kinetic promoter exhibit highly reversible sulfur redox chemistry with a capacity of 1012 mAh g–1 at 15 A g–1. We also demonstrate the strategy in Zn2+-S and Ni2+-S systems, illustrating its effectiveness in various multivalent aqueous sulfur batteries.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c17074",
+      "journal": "JACS",
+      "title": "Structural Basis of Cyclized C17 Precursor Recognition and Product Formation in Chlororaphen and Grimophan Biosynthesis",
+      "abstract": "Abstract Terpene cyclases (TCs) typically transform acyclic oligoprenyl pyrophosphates through carbocationic cyclization cascades. However, recently discovered bacterial pathways generate compact, cyclized and stereochemically defined noncanonical intermediates through methyltransferases prior to TC catalysis, raising the question of how these unusual substrates are recognized and converted. Here, we report high-resolution crystal structures of two bacterial C17 class I TCs, Pc-ChloS and Vb-GriS, including a complex with a substrate surrogate that defines recognition of the cyclized precursor α-prechlororaphen pyrophosphate (α-PCPP). Combined with mutagenesis and isotope-labeling experiments, these structures provide a molecular framework for chlororaphen and grimophan biosynthesis. Despite highly similar active-site architectures, reciprocal mutagenesis identifies a single Thr/Leu exchange at position 89 as a major determinant of product partitioning. Together with comparisons to other class I TCs, these findings reveal how a conserved scaffold accommodates cyclized terpene precursors, while subtle active-site changes redirect complex carbocation cascades and product formation.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03072",
+      "journal": "Organic Letters",
+      "title": "Biocatalytic Synthesis of Substituted Cinnamaldehydes",
+      "abstract": "Abstract Substituted cinnamaldehydes are valuable compounds, but current syntheses rely on expensive and toxic reagents. We report a biocatalytic synthesis of substituted cinnamaldehydes from the corresponding benzaldehydes via an aldolase, NahE, and benzoylformate decarboxylase. This is the first use of α,β-unsaturated 2-oxo acids as substrates for thiamine diphosphate-dependent 2-oxo acid decarboxylases. We found electron-donating substituents were better tolerated than electron-withdrawing substituents, but all showed good to excellent conversions. A preparative-scale reaction gave 4-methoxycinnamaldehyde in 77% isolated yield.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03822",
+      "journal": "Organic Letters",
+      "title": "Photocatalytic 1,4-Alkylation/Carboxylation of 1,3-Enynes with 4-Alkyl-Hantzsch Esters and CO2 for the Synthesis of 2,3-Allenoic Acids",
+      "abstract": "Abstract Herein, a visible-light-promoted protocol for the regioselective 1,4-alkylation/carboxylation of 1,3-enynes with 4-alkyl-Hantzsch esters and CO2 is described. This approach enabled direct access to a diverse range of tetrasubstituted 2,3-allenoic acids in satisfactory yields. This transformation relies on readily available 4-alkyl-1,4-dihydropyridines as competent alkyl radical precursors, exhibits good functional group tolerance, and is amenable to 1 mmol scale synthesis. The utility of this method is further highlighted by the derivatization of the obtained allenoic acid products.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03588",
+      "journal": "Organic Letters",
+      "title": "Reductive Catalyst Regeneration Enables the General Cu-Catalyzed Atom Transfer Radical Addition with Primary Alkyl Halides",
+      "abstract": "Abstract Primary alkyl halides are poor coupling partners in most atom transfer radical addition (ATRA) reactions due to their propensity to undergo off-cycle radical termination pathways, which lead to catalyst deactivation. Herein, we overcome this challenge in the Cu-catalyzed ATRA reaction though the addition of 1,1′-azobis(cyclohexanecarbonitrile), an in situ reducing agent. Under optimized conditions, the catalyst turnover is restored and challenging halides become competent coupling partners across a variety of substituted alkenes. This strategy enables the synthesis of a diverse array of biologically relevant synthetic intermediates, including α-haloboronic esters, sulfones, esters, amides, and arenes. The versatility and synthetic utility of these ATRA conditions are demonstrated in 48 examples and 13 subsequent functionalizations.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
