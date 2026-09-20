@@ -5,6 +5,7 @@ import path from 'node:path';
 const ROOT = process.cwd();
 const PUBLIC = path.join(ROOT, 'public');
 const OUT = path.join(ROOT, 'toc-collector', 'queues');
+const PUBLIC_QUEUE = path.join(PUBLIC, 'toc-demand-live.json');
 const MEDIA_URL = process.env.MEDIA_INDEX_URL || 'https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json';
 const SUPPLEMENT_URL = process.env.LITERATURE_SUPPLEMENT_URL || 'https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json';
 
@@ -156,7 +157,20 @@ async function main() {
     sample: displayGaps.slice(0,25),
   };
   await writeFile(path.join(OUT, 'toc-demand-summary.json'), JSON.stringify(summary, null, 2) + '\n');
+  const liveQueue = {
+    version: 1,
+    generatedAt: summary.generatedAt,
+    webpageDoiCount: summary.webpageDoiCount,
+    visibleGapTotal: displayGaps.length,
+    missingOfficialTotal: allMissingOfficial.length,
+    officialUpgradeTotal: officialUpgrade.length,
+    visibleGaps: displayGaps,
+    officialUpgrades: officialUpgrade,
+    allMissingOfficial,
+  };
+  await writeFile(PUBLIC_QUEUE, JSON.stringify(liveQueue, null, 2) + '\n');
   console.log('TOC_DEMAND_SUMMARY ' + JSON.stringify(summary));
+  console.log('TOC_LIVE_QUEUE ' + JSON.stringify({ path: PUBLIC_QUEUE, visible: displayGaps.length, upgrades: officialUpgrade.length }));
 }
 
 await main();

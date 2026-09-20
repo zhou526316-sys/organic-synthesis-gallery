@@ -2,6 +2,7 @@ import { api } from './platform-api';
 import './styles.css';
 import { mountUserShell } from './user-shell';
 import { earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
+import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 
 interface Paper {
   journal: string;
@@ -418,7 +419,10 @@ function filterSummary(): string {
 }
 
 function mount(): void {
-  const journals = [...new Set(papers.map(paper => paper.journal))].sort();
+  const targetJournals = TARGET_JOURNALS.map(journal => journal.name);
+  const targetSet = new Set(targetJournals);
+  const extraJournals = [...new Set(papers.map(paper => paper.journal).filter(journal => !targetSet.has(journal)))].sort();
+  const journals = [...targetJournals, ...extraJournals];
   const dates = papers.map(paper => paper.date).filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
   const latest = dates[dates.length - 1] || '';
   document.title = t('title');
