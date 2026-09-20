@@ -28,7 +28,7 @@ jobs:
       D1_NAME: organic-synthesis-gallery
       R2_BUCKET: organic-synthesis-gallery-media
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+      EMAIL_FROM: 'Organic Synthesis Gallery <login@mail.gczhouwld.com>'
 
     steps:
       - name: Checkout main
