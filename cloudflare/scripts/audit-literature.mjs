@@ -174,18 +174,25 @@ async function loadReviewExclusions() {
   return excluded;
 }
 
+function candidateAuthors(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map(name => clean(name)).filter(Boolean);
+}
+
 function mergeCandidate(map, incoming) {
   const doi = normalizeDoi(incoming.doi);
   if (!doi || isExcludedDoi(doi)) return;
   const current = map.get(doi);
   if (!current) {
-    map.set(doi, { ...incoming, doi, sources: [...new Set(incoming.sources || [])] });
+    map.set(doi, { ...incoming, doi, authors: candidateAuthors(incoming.authors), sources: [...new Set(incoming.sources || [])] });
     return;
   }
   if (!current.title && incoming.title) current.title = incoming.title;
   if ((!current.abstract || current.abstract.length < 120) && incoming.abstract) current.abstract = incoming.abstract;
   if (!current.date && incoming.date) current.date = incoming.date;
   if (!current.type && incoming.type) current.type = incoming.type;
+  const incomingAuthors = candidateAuthors(incoming.authors);
+  if (incomingAuthors.length > (current.authors || []).length) current.authors = incomingAuthors;
   current.topics = [...new Set([...(current.topics || []), ...(incoming.topics || [])])];
   current.sources = [...new Set([...(current.sources || []), ...(incoming.sources || [])])];
 }
@@ -225,6 +232,7 @@ async function fetchCrossref(journal) {
               abstract: clean(item.abstract),
               date,
               type: item.type || '',
+              authors: (item.author || []).map(author => [author?.given, author?.family].filter(Boolean).join(' ')).filter(Boolean),
               topics: [],
               sources: [`crossref:${issn}:${mode}`],
             });
@@ -283,6 +291,7 @@ async function fetchOpenAlex(journal) {
             abstract: openAlexAbstract(item.abstract_inverted_index),
             date: /^\d{4}-\d{2}-\d{2}$/.test(item.publication_date || '') ? item.publication_date : '',
             type: item.type || '',
+            authors: (item.authorships || []).map(row => row?.author?.display_name).filter(Boolean),
             topics,
             sources: [`openalex:${sourceId}`],
           });
