@@ -869,6 +869,10 @@
       var queued = Object.assign({}, allJobs[q]);
       queued.doi = normalizeDoi(queued.doi);
       if (!queued.doi) continue;
+      var priorDone = GM_getValue(attemptKey(queued.doi, queue.generatedAt || ''), null);
+      if (priorDone && priorDone.status === 'success') {
+        continue;
+      }
       var failed = GM_getValue(failureKey(queued.doi), null);
       if (failed && Number(failed.at || 0) > 0 && Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS) {
         cooldownSkipped += 1;
