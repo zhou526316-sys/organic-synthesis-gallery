@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.0
+// @version      6.2.1
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -36,13 +36,14 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.0';
+  var VERSION = '6.2.1';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
   var WORKER = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
+  var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
   var P = 'osg-toc-v6:';
   var TOKEN_KEY = P + 'write-token';
   var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';
@@ -51,6 +52,7 @@
   var LEASE_KEY = P + 'controller-lease';
   var SUMMARY_KEY = P + 'last-run-summary';
   var BATCH_SIZE_KEY = P + 'batch-size';
+  var ABORT_KEY = P + 'abort-request';
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
   var DEFAULT_BATCH_SIZE = 8;
@@ -121,6 +123,98 @@
     if (!failed || Number(failed.at || 0) <= 0) return false;
     if (String(failed.engineRevision || '') !== FAILURE_ENGINE_REVISION) return false;
     return Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS;
+  }
+
+  function abortRequest() {
+    var value = GM_getValue(ABORT_KEY, null);
+    return value && Number(value.at || 0) > 0 ? value : null;
+  }
+
+  function isAbortRequested() {
+    return Boolean(abortRequest());
+  }
+
+  function sanitizeDiagnosticUrl(value) {
+    var raw = String(value || '');
+    if (!raw) return '';
+    try {
+      var url = new URL(raw, location.href);
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+      url.search = '';
+      url.hash = '';
+      return url.href;
+    } catch (_) {
+      return raw.replace(/[?#].*$/, '').slice(0, 1200);
+    }
+  }
+
+  function sanitizeLocalTrace(trace) {
+    if (!Array.isArray(trace)) return [];
+    return trace.slice(-160).map(function (entry) {
+      return Object.assign({}, entry || {}, {
+        url: sanitizeDiagnosticUrl(entry && entry.url || ''),
+        message: String(entry && entry.message || '').slice(0, 1200)
+      });
+    });
+  }
+
+  async function uploadLocalDiagnostics() {
+    var token = writeToken();
+    if (!token) {
+      window.alert('尚未设置写入密钥，无法上传本地日志。');
+      return;
+    }
+    var keys = [];
+    try {
+      if (typeof GM_listValues === 'function') keys = GM_listValues();
+    } catch (_) {}
+    var traces = keys.filter(function (key) {
+      return String(key).indexOf(P + 'trace:') === 0;
+    }).map(function (key) {
+      var item = GM_getValue(key, null);
+      if (!item || !normalizeDoi(item.doi)) return null;
+      return {
+        doi: normalizeDoi(item.doi),
+        status: String(item.status || ''),
+        reason: String(item.reason || '').slice(0, 240),
+        finishedAt: String(item.finishedAt || ''),
+        trace: sanitizeLocalTrace(item.trace)
+      };
+    }).filter(Boolean).sort(function (a, b) {
+      return String(b.finishedAt || '').localeCompare(String(a.finishedAt || ''));
+    }).slice(0, 24);
+
+    var activeJob = GM_getValue(ACTIVE_JOB_KEY, null);
+    var activeDoi = normalizeDoi(activeJob && activeJob.doi);
+    var progress = activeDoi ? GM_getValue(progressKey(activeDoi), null) : null;
+    var payload = {
+      source: 'tampermonkey-toc-mainline',
+      kind: 'manual-local-log-upload',
+      version: VERSION,
+      uploadedReason: 'user_menu',
+      total: traces.length,
+      summary: GM_getValue(SUMMARY_KEY, {}),
+      activeJob: activeDoi ? {
+        doi: activeDoi,
+        publisher: String(activeJob.publisher || publisherForDoi(activeDoi)),
+        queueGeneratedAt: String(activeJob.queueGeneratedAt || ''),
+        startedAt: String(activeJob.startedAt || '')
+      } : null,
+      progress: progress ? {
+        status: String(progress.status || ''),
+        at: String(progress.at || ''),
+        url: sanitizeDiagnosticUrl(progress.url || '')
+      } : null,
+      traces: traces
+    };
+    try {
+      var result = await postJson(DIAGNOSTICS_ENDPOINT, payload, token);
+      window.alert('本地日志已上传。trace DOI 数：' + String(traces.length) + '。');
+      return result;
+    } catch (error) {
+      window.alert('本地日志上传失败：' + String(error && error.message || error));
+      throw error;
+    }
   }
 
   function selectBatchJobs(allJobs, limit) {
@@ -305,6 +399,49 @@
     return values;
   }
 
+  function rawTagAttrs(tag) {
+    var out = {};
+    String(tag || '').replace(/([:\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+))/g, function (_, key, dq, sq, bare) {
+      var value = dq !== undefined ? dq : sq !== undefined ? sq : bare !== undefined ? bare : '';
+      out[String(key || '').toLowerCase()] = String(value || '').replace(/&amp;/g, '&').replace(/&#38;/g, '&');
+      return _;
+    });
+    return out;
+  }
+
+  function rawTagImageUrls(tag, baseUrl) {
+    var attrs = rawTagAttrs(tag);
+    var urls = [];
+    function add(value) {
+      if (!value) return;
+      String(value).split(',').forEach(function (part) {
+        var raw = part.trim().split(/\s+/)[0];
+        var url = normalizeUrl(raw, baseUrl);
+        if (url && urls.indexOf(url) < 0) urls.push(url);
+      });
+    }
+    [
+      'data-lg-src','data-hi-res-src','data-src-large','data-full-src','data-full',
+      'data-original','data-src','data-lazy-src','data-image-src','data-image','data-url'
+    ].forEach(function (key) { add(attrs[key]); });
+    ['data-srcset','srcset'].forEach(function (key) {
+      var parts = String(attrs[key] || '').split(',').map(function (part) { return part.trim(); }).filter(Boolean).reverse();
+      parts.forEach(function (part) { add(part.split(/\s+/)[0]); });
+    });
+    add(attrs.src);
+    return { attrs: attrs, urls: urls };
+  }
+
+  function htmlText(fragment) {
+    try {
+      var node = document.createElement('div');
+      node.innerHTML = String(fragment || '');
+      return String(node.textContent || '').replace(/\s+/g, ' ').trim();
+    } catch (_) {
+      return String(fragment || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+  }
+
   function contextFor(node) {
     var out = [];
     var image = node instanceof HTMLSourceElement ? (node.parentElement && node.parentElement.querySelector('img')) : node;
@@ -452,6 +589,47 @@
       }
     });
 
+    // ACS/Silverchair and some publisher pages use generic image filenames
+    // (for example m_ol..._0007.svg) while the surrounding HTML says
+    // "Visual Abstract". Recover those images from semantic windows instead
+    // of requiring the filename itself to contain toc/graphical/visual.
+    var strongSemantic = /toc\s*(?:and\s*abstract\s*)?(?:graphic|image)|graphical\s*abstract|visual\s*abstract|graphical\s*(?:summary|synopsis)|visual\s*summary|abstract\s*(?:graphic|image)|table\s*of\s*contents\s*(?:graphic|image)|first\s+page\s+image/gi;
+    var semanticMatch;
+    var semanticWindows = 0;
+    while ((semanticMatch = strongSemantic.exec(html)) !== null && semanticWindows < 30) {
+      semanticWindows += 1;
+      var fragment = html.slice(semanticMatch.index, Math.min(html.length, semanticMatch.index + 7000));
+      var semanticContext = htmlText(fragment).slice(0, 2600);
+      var semanticType = officialType(semanticContext, '', publisher);
+      if (!semanticType) continue;
+      var tags = String(fragment).match(/<(?:img|source)\b[^>]*>/gi) || [];
+      for (var ti = 0; ti < Math.min(tags.length, 12); ti += 1) {
+        var parsed = rawTagImageUrls(tags[ti], pageUrl);
+        var ownMarker = [
+          parsed.attrs.alt, parsed.attrs.title, parsed.attrs.id, parsed.attrs.class, parsed.attrs['aria-label']
+        ].filter(Boolean).join(' ');
+        var ownType = officialType(ownMarker, '', publisher);
+        if (!ownType && ti > 0) continue;
+        if (!ownType && isFigureOne(ownMarker)) continue;
+        parsed.urls.forEach(function (url) {
+          if (!url || reject(ownMarker + ' ' + semanticContext, url)) return;
+          var old = map.get(url);
+          var row = {
+            url: url,
+            kind: 'official',
+            assetType: ownType || semanticType,
+            score: ownType ? 610 : 540,
+            source: source + '_semantic_window',
+            text: (ownMarker + ' ' + semanticContext).replace(/\s+/g, ' ').trim().slice(0, 1000),
+            width: Number(parsed.attrs.width || 0),
+            height: Number(parsed.attrs.height || 0),
+            element: null
+          };
+          if (!old || row.score > old.score) map.set(url, row);
+        });
+      }
+    }
+
     var rows = Array.from(map.values()).sort(function (a, b) {
       if (a.kind !== b.kind) return a.kind === 'official' ? -1 : 1;
       return b.score - a.score;
@@ -522,7 +700,11 @@
     function add(value) {
       if (value && urls.indexOf(value) < 0) urls.push(value);
     }
-    if (publisher === 'wiley' && location.hostname.endsWith('onlinelibrary.wiley.com')) {
+    if (publisher === 'acs' && location.hostname.endsWith('pubs.acs.org')) {
+      add(location.origin + '/doi/' + doi);
+      add(location.origin + '/doi/abs/' + doi);
+      add(location.origin + '/doi/full/' + doi);
+    } else if (publisher === 'wiley' && location.hostname.endsWith('onlinelibrary.wiley.com')) {
       add(location.origin + '/doi/' + doi);
       add(location.origin + '/doi/full/' + doi);
       add(location.origin + '/doi/abs/' + doi);
@@ -668,7 +850,9 @@
     var started = Date.now();
     var lastWait = 0;
     var iframeAttempted = false;
+    var mainScrollStep = 0;
     while (Date.now() - started < maxMs) {
+      if (isAbortRequested()) throw new Error('user_aborted');
       var state = pageState(job, trace);
       if (state.challenge || state.auth) {
         if (Date.now() - lastWait > 10000) {
@@ -696,8 +880,27 @@
       if (candidates.length) return candidates;
 
       var elapsed = Date.now() - started;
-      if (!iframeAttempted && elapsed > 7000 && (job.publisher === 'wiley' || job.publisher === 'science')) {
+      if (job.publisher === 'acs' && mainScrollStep < 3 && elapsed > [2500, 6000, 10500][mainScrollStep]) {
+        var targets = [1200, 3000, 6000];
+        var target = Math.min(Number(document.body && document.body.scrollHeight || targets[mainScrollStep]), targets[mainScrollStep]);
+        mainScrollStep += 1;
+        try { window.scrollTo({ top: target, behavior: 'auto' }); }
+        catch (_) { try { window.scrollTo(0, target); } catch (_) {} }
+        pushTrace(trace, {
+          stage: 'lazy_load_trigger',
+          event: 'scroll',
+          status: 'ok',
+          url: location.href,
+          message: 'acs_main_scroll_top=' + String(target) + ';step=' + String(mainScrollStep)
+        });
+        await waitForDomMutation(900);
+        candidates = collectCandidates(job, trace, document, location.href, 'live_dom_after_scroll', false);
+        if (candidates.length) return candidates;
+      }
+
+      if (!iframeAttempted && elapsed > 7000 && (job.publisher === 'acs' || job.publisher === 'wiley' || job.publisher === 'science')) {
         iframeAttempted = true;
+        if (isAbortRequested()) throw new Error('user_aborted');
         var iframeRows = await iframeCandidates(job, trace);
         if (iframeRows.length) {
           iframeRows.slice(0, 10).forEach(function (row) {
@@ -1017,6 +1220,7 @@
       if (!candidates.length) throw new Error('no_toc_candidate_in_live_dom');
       var lastError = null;
       for (var i = 0; i < Math.min(10, candidates.length); i += 1) {
+        if (isAbortRequested()) throw new Error('user_aborted');
         var candidate = candidates[i];
         try {
           var image = await acquireImage(candidate, trace);
@@ -1054,6 +1258,14 @@
       }
       throw lastError || new Error('all_candidates_failed');
     } catch (error) {
+      if (String(error && error.message || error) === 'user_aborted') {
+        pushTrace(trace, { stage: 'job', event: 'aborted', status: 'aborted', message: 'user_aborted' });
+        await uploadReport(job, trace, 'aborted', 'user_aborted', null, token);
+        GM_setValue(resultKey(job.doi), { doi: job.doi, status: 'aborted', reason: 'user_aborted', finishedAt: nowIso() });
+        GM_setValue(traceKey(job.doi), { doi: job.doi, status: 'aborted', reason: 'user_aborted', trace: trace, finishedAt: nowIso() });
+        GM_deleteValue(progressKey(job.doi));
+        return;
+      }
       var reason = failureReason(trace, error);
       pushTrace(trace, { stage: 'job', event: 'failed', status: 'failed', message: reason });
       await uploadReport(job, trace, 'failed', reason, null, token);
@@ -1095,16 +1307,17 @@
     return true;
   }
 
-  async function uploadControllerFailure(job, reason, progress) {
+  async function uploadControllerReport(job, reason, progress, reportStatus) {
     var token = writeToken();
     if (!token || !job || !normalizeDoi(job.doi)) return false;
+    var status = String(reportStatus || 'failed');
     var trace = [
       {
         seq: 1,
         at: nowIso(),
         stage: 'controller',
-        event: 'job_timeout_or_launch_failure',
-        status: 'failed',
+        event: status === 'aborted' ? 'job_aborted' : 'job_timeout_or_launch_failure',
+        status: status,
         httpStatus: 0,
         contentType: '',
         url: String(progress && progress.url || articleUrl(job) || ''),
@@ -1140,7 +1353,7 @@
       await postJson(REPORT_ENDPOINT, {
         doi: job.doi,
         publisher: job.publisher || publisherForDoi(job.doi),
-        status: 'failed',
+        status: status,
         reason: String(reason || 'controller_failure').slice(0, 220),
         assetType: '',
         candidateKind: '',
@@ -1165,6 +1378,12 @@
     var started = Date.now();
     while (Date.now() - started < timeout) {
       renewLease();
+      if (isAbortRequested()) {
+        var abortProgress = GM_getValue(progressKey(job.doi), null);
+        await uploadControllerReport(job, 'user_aborted', abortProgress, 'aborted');
+        try { if (tab && tab.close) tab.close(); } catch (_) {}
+        return { doi: job.doi, status: 'aborted', reason: 'user_aborted', diagnosticUploaded: true, finishedAt: nowIso() };
+      }
       var result = GM_getValue(resultKey(job.doi), null);
       if (result && result.finishedAt) {
         try { if (tab && tab.close) tab.close(); } catch (_) {}
@@ -1179,7 +1398,7 @@
       await sleep(1200);
     }
     var lastProgress = GM_getValue(progressKey(job.doi), null);
-    await uploadControllerFailure(job, 'controller_timeout', lastProgress);
+    await uploadControllerReport(job, 'controller_timeout', lastProgress, 'failed');
     try { if (tab && tab.close) tab.close(); } catch (_) {}
     return {
       doi: job.doi,
@@ -1195,6 +1414,10 @@
     if (!isGalleryPage()) return;
     if (GM_getValue(ENABLED_KEY, true) === false) {
       badge('TOC 主线已暂停', '#6b7280');
+      return;
+    }
+    if (isAbortRequested()) {
+      badge('TOC 本批已中止；可从 Tampermonkey 菜单继续', '#6b7280');
       return;
     }
     var token = writeToken();
@@ -1239,11 +1462,12 @@
       success: 0,
       failed: 0,
       skipped: 0,
+      aborted: 0,
       results: []
     };
 
     for (var i = 0; i < jobs.length; i += 1) {
-      if (GM_getValue(ENABLED_KEY, true) === false) break;
+      if (GM_getValue(ENABLED_KEY, true) === false || isAbortRequested()) break;
       var job = Object.assign({}, jobs[i]);
       job.doi = normalizeDoi(job.doi);
       if (!job.doi) continue;
@@ -1273,7 +1497,7 @@
         result = await waitForResult(job, tab);
       } catch (openError) {
         var openReason = 'controller_tab_launch_failed:' + String(openError && openError.message || openError).slice(0, 160);
-        await uploadControllerFailure(job, openReason, null);
+        await uploadControllerReport(job, openReason, null, 'failed');
         result = { doi: job.doi, status: 'failed', reason: openReason, diagnosticUploaded: true, finishedAt: nowIso() };
       }
       summary.results.push(result);
@@ -1281,6 +1505,8 @@
       if (result.status === 'success') {
         summary.success += 1;
         GM_deleteValue(failureKey(job.doi));
+      } else if (result.status === 'aborted') {
+        summary.aborted += 1;
       } else {
         summary.failed += 1;
         GM_setValue(failureKey(job.doi), {
@@ -1290,13 +1516,18 @@
         });
       }
       GM_deleteValue(ACTIVE_JOB_KEY);
+      if (result.status === 'aborted' || isAbortRequested()) break;
       await sleep(3500);
     }
 
     summary.finishedAt = nowIso();
     GM_setValue(SUMMARY_KEY, summary);
     GM_deleteValue(ACTIVE_JOB_KEY);
-    badge('TOC 本批完成：' + summary.total + '/' + summary.queueTotal + '；成功 ' + summary.success + '，失败 ' + summary.failed + '，冷却跳过 ' + summary.cooldownSkipped, summary.failed ? '#92400e' : '#065f46');
+    if (summary.aborted || isAbortRequested()) {
+      badge('TOC 本批已中止：成功 ' + summary.success + '，失败 ' + summary.failed + '，中止 ' + summary.aborted, '#6b7280');
+    } else {
+      badge('TOC 本批完成：' + summary.total + '/' + summary.queueTotal + '；成功 ' + summary.success + '，失败 ' + summary.failed + '，冷却跳过 ' + summary.cooldownSkipped, summary.failed ? '#92400e' : '#065f46');
+    }
   }
 
   async function publisherBoot() {
@@ -1333,12 +1564,30 @@
       window.alert('每批抓取数量已设为 ' + parsed + '。');
     });
     GM_registerMenuCommand('立即运行实时 TOC 队列', function () {
+      GM_deleteValue(ABORT_KEY);
       GM_setValue(ENABLED_KEY, true);
       GM_deleteValue(LEASE_KEY);
       if (isGalleryPage()) controllerRun();
       else window.open('https://' + GALLERY_HOST + GALLERY_PATH, '_blank');
     });
-    GM_registerMenuCommand('暂停/继续 TOC 主线', function () {
+    GM_registerMenuCommand('中止当前 TOC 批次', function () {
+      GM_setValue(ABORT_KEY, { at: Date.now(), reason: 'user_aborted' });
+      window.alert('已请求中止当前批次。正在运行的出版社标签页会由控制器关闭；人工中止不会计入失败或失败冷却。');
+    });
+    GM_registerMenuCommand('继续 TOC 主线', function () {
+      GM_deleteValue(ABORT_KEY);
+      GM_setValue(ENABLED_KEY, true);
+      GM_deleteValue(LEASE_KEY);
+      if (isGalleryPage()) {
+        setTimeout(controllerRun, 100);
+      } else {
+        window.open('https://' + GALLERY_HOST + GALLERY_PATH, '_blank');
+      }
+    });
+    GM_registerMenuCommand('上传本地 TOC 日志', function () {
+      uploadLocalDiagnostics().catch(function () {});
+    });
+    GM_registerMenuCommand('暂停/继续 TOC 自动运行', function () {
       var enabled = GM_getValue(ENABLED_KEY, true) !== false;
       GM_setValue(ENABLED_KEY, !enabled);
       window.alert(enabled ? 'TOC 主线已暂停。' : 'TOC 主线已继续。');
