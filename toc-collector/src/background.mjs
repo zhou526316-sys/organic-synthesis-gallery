@@ -1619,7 +1619,7 @@ async function waitForLocalInteractiveArticle(win, childWindows, doi, publisher)
         const canonical = String(document.querySelector('link[rel="canonical"]')?.href || '').toLowerCase();
         const challenge = /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic|checking your browser/i.test(title + '\\n' + text);
         const authPage = /(?:login|signin|sign-in|shibboleth|saml|institution|federated|wayf|idp|openathens)/i.test(href)
-          || /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login|institutional access|access provided by/i.test(title + '\\n' + text);
+          || /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login/i.test(title + '\\n' + text);
         const articleSignal = /\\babstract\\b|\\breferences\\b|\\bsupporting information\\b|\\barticle\\b/i.test(text) && text.length > 2500;
         const institutionalAccessSignal = /access provided by|institutional access|access through your institution|signed in through|authenticated by/i.test(text);
         return { href, title, textLength: text.length, citationDoi, canonical, challenge, authPage, articleSignal, institutionalAccessSignal };
