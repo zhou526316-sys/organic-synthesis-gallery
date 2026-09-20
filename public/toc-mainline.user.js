@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.1.0
+// @version      6.2.0
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -35,7 +35,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.1.0';
+  var VERSION = '6.2.0';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -256,9 +256,9 @@
     return btoa(binary);
   }
 
-  function normalizeUrl(raw) {
+  function normalizeUrl(raw, baseUrl) {
     try {
-      var url = new URL(String(raw || '').trim(), location.href);
+      var url = new URL(String(raw || '').trim(), baseUrl || location.href);
       if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
       url.hash = '';
       return url.href;
@@ -267,21 +267,21 @@
     }
   }
 
-  function imageUrls(node) {
+  function imageUrls(node, baseUrl) {
     var values = [];
     function add(value) {
       if (!value) return;
       String(value).split(',').forEach(function (part) {
         var raw = part.trim().split(/\s+/)[0];
-        var url = normalizeUrl(raw);
+        var url = normalizeUrl(raw, baseUrl);
         if (url && values.indexOf(url) < 0) values.push(url);
       });
     }
     if (node instanceof HTMLImageElement) add(node.currentSrc);
     [
-      'data-lg-src','data-hi-res-src','data-src-large','data-full-src','data-full',
-      'data-original','data-src','data-lazy-src','data-image-src','data-image','data-url',
-      'data-srcset','srcset','src'
+      'data-srcset','srcset','data-src','data-lazy-src','data-original','data-image',
+      'data-url','data-hi-res-src','data-lg-src','data-src-large','data-full-src',
+      'data-full','data-image-src','data-large','data','href','xlink:href','src'
     ].forEach(function (name) { add(node.getAttribute && node.getAttribute(name)); });
     return values;
   }
@@ -308,22 +308,25 @@
   function officialType(text, url, publisher) {
     var hay = String(text || '') + ' ' + String(url || '');
     if (/toc\s*(?:and\s*abstract\s*)?(?:graphic|image)|table\s*of\s*contents\s*(?:graphic|image)/i.test(hay)) return 'toc_graphic';
-    if (/graphical\s*abstract|visual\s*abstract|graphical\s*(?:summary|synopsis)|visual\s*summary/i.test(hay)) return 'graphical_abstract';
+    if (/graphical\s*abstract|visual\s*abstract|graphical\s*(?:summary|synopsis)|visual\s*summary|central\s*illustration|summary\s*graphic/i.test(hay)) return 'graphical_abstract';
     if (/abstract[-_\s]*(?:graphic|image)/i.test(hay)) return 'abstract_image';
+    if (/-gra-0*1(?:[-_.]|$)|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(hay)) return 'graphical_abstract';
     if (publisher === 'wiley' && (/first\s+page\s+image/i.test(hay) || /-gra-\d+/i.test(hay))) return 'graphical_abstract';
     if (publisher === 'acs' && /(?:\/|[_-])toc(?:\/|[_-]|\d|\.)/i.test(hay)) return 'toc_graphic';
     return '';
   }
 
   function isFigureOne(text) {
-    return /(?:^|\b)fig(?:ure)?\.?\s*1(?:\b|[:.)])/i.test(String(text || ''));
+    var value = String(text || '');
+    return /(?:^|\b)fig(?:ure)?\.?\s*0*1(?:\b|[:.)-])/i.test(value)
+      || /(?:^|[\/_-])fig(?:ure)?0*1(?:[-_.]|$)|-fig-?0*1(?:[-_.]|$)|_fig0*1_html\.|(?:^|[\/_-])(?:f|gr)0*1(?:[-_.]|$)/i.test(value);
   }
 
   function reject(text, url) {
     return /journal[\s_-]*cover|issue[\s_-]*cover|masthead|site[-_ ]?logo|favicon|avatar|author[-_ ]photo|advert|banner|spinner|loading|tracking|pixel|cookie|placeholder|qr-code/i.test(String(text || '') + ' ' + String(url || ''));
   }
 
-  function scoreCandidate(node, url, publisher, allowFigureOne) {
+  function scoreCandidate(node, url, publisher, allowFigureOne, sourceName) {
     var context = contextFor(node);
     if (reject(context, url)) return null;
     var type = officialType(context, url, publisher);
@@ -347,7 +350,7 @@
       kind: kind,
       assetType: type,
       score: score,
-      source: 'live_dom',
+      source: sourceName || 'live_dom',
       text: context.slice(0, 1000),
       width: width,
       height: height,
@@ -355,51 +358,78 @@
     };
   }
 
-  function collectCandidates(job, trace) {
+  function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
+    var scope = root || document;
+    var pageUrl = baseUrl || location.href;
     var publisher = String(job.publisher || publisherForDoi(job.doi));
     var allowFigureOne = String(job.state || '') === 'no_visual';
+    var source = sourceName || 'live_dom';
     var map = new Map();
-    document.querySelectorAll('img,source').forEach(function (node) {
-      imageUrls(node).forEach(function (url) {
-        var row = scoreCandidate(node, url, publisher, allowFigureOne);
+
+    scope.querySelectorAll('img,source,object[type^="image"],svg image').forEach(function (node) {
+      imageUrls(node, pageUrl).forEach(function (url) {
+        var row = scoreCandidate(node, url, publisher, allowFigureOne, source);
         if (!row) return;
         var old = map.get(url);
         if (!old || row.score > old.score) map.set(url, row);
       });
     });
 
-    document.querySelectorAll('meta[name="citation_graphical_abstract"],meta[name="citation_visual_abstract"],meta[name="graphical_abstract"],meta[property="citation_graphical_abstract"],meta[property="citation_visual_abstract"]').forEach(function (meta) {
-      var url = normalizeUrl(meta.getAttribute('content') || '');
+    scope.querySelectorAll('meta[name="citation_graphical_abstract"],meta[name="citation_visual_abstract"],meta[name="citation_toc_graphic"],meta[name="citation_abstract_image"],meta[name="graphical_abstract"],meta[property="citation_graphical_abstract"],meta[property="citation_visual_abstract"],meta[property="citation_toc_graphic"]').forEach(function (meta) {
+      var url = normalizeUrl(meta.getAttribute('content') || '', pageUrl);
       if (!url || map.has(url) || reject('', url)) return;
+      var key = String(meta.getAttribute('name') || meta.getAttribute('property') || '').toLowerCase();
+      var type = key.indexOf('toc') >= 0 ? 'toc_graphic'
+        : key.indexOf('abstract_image') >= 0 ? 'abstract_image'
+        : 'graphical_abstract';
       map.set(url, {
         url: url,
         kind: 'official',
-        assetType: 'graphical_abstract',
-        score: 620,
-        source: 'publisher_metadata',
-        text: meta.getAttribute('name') || meta.getAttribute('property') || 'graphical abstract metadata',
+        assetType: type,
+        score: 640,
+        source: source + '_metadata',
+        text: key || 'graphical abstract metadata',
         width: 0,
         height: 0,
         element: null
       });
     });
 
-    var html = document.documentElement ? document.documentElement.innerHTML : '';
+    var html = '';
+    try {
+      html = scope.documentElement ? scope.documentElement.innerHTML : (scope.outerHTML || '');
+    } catch (_) {}
     var patterns = [
-      /["']([^"']*-gra-\d+[^"']*\.(?:png|jpe?g|webp|gif|svg)(?:\?[^"']*)?)["']/gi,
-      /["']([^"']*(?:graphical[-_]?abstract|visual[-_]?abstract|toc[-_]?graphic|abstract[-_]?graphic)[^"']*\.(?:png|jpe?g|webp|gif|svg)(?:\?[^"']*)?)["']/gi
+      /["']([^"']*(?:graphical[-_]?abstract|visual[-_]?abstract|toc[-_]?(?:graphic|image)|central[-_]?illustration)[^"']*\.(?:avif|webp|png|jpe?g|gif|svg)(?:\?[^"']*)?)["']/gi,
+      /["']([^"']*(?:-gra-0*1|[\/_-](?:ga|fx)0*1)[^"']*\.(?:avif|webp|png|jpe?g|gif|svg)(?:\?[^"']*)?)["']/gi,
+      /["']([^"']*(?:-fig-?0*1|[\/_-]fig(?:ure)?0*1|_fig0*1_html|[\/_-](?:f|gr)0*1)[^"']*\.(?:avif|webp|png|jpe?g|gif|svg)(?:\?[^"']*)?)["']/gi
     ];
     patterns.forEach(function (pattern) {
       var match;
       var count = 0;
-      while ((match = pattern.exec(html)) !== null && count < 30) {
+      while ((match = pattern.exec(html)) !== null && count < 100) {
         count += 1;
         var raw = String(match[1] || '').replace(/\\u002f/gi, '/').replace(/\\\//g, '/').replace(/&amp;/g, '&');
-        var url = normalizeUrl(raw);
+        var url = normalizeUrl(raw, pageUrl);
         if (!url || map.has(url) || reject('', url)) continue;
         var type = officialType('', url, publisher);
-        if (!type) continue;
-        map.set(url, { url: url, kind: 'official', assetType: type, score: 360, source: 'raw_html', text: '', width: 0, height: 0, element: null });
+        var kind = type ? 'official' : '';
+        if (!kind && allowFigureOne && isFigureOne(url)) {
+          kind = 'figure1';
+          type = 'figure1_fallback';
+        }
+        if (!kind) continue;
+        map.set(url, {
+          url: url,
+          kind: kind,
+          assetType: type,
+          score: kind === 'official' ? 380 : 220,
+          source: source + '_raw_html',
+          text: '',
+          width: 0,
+          height: 0,
+          element: null
+        });
       }
     });
 
@@ -407,27 +437,189 @@
       if (a.kind !== b.kind) return a.kind === 'official' ? -1 : 1;
       return b.score - a.score;
     });
-    pushTrace(trace, {
-      stage: 'candidate_discovery',
-      event: 'scan_complete',
-      status: rows.length ? 'found' : 'none',
-      message: 'official=' + rows.filter(function (x) { return x.kind === 'official'; }).length + ';figure1=' + rows.filter(function (x) { return x.kind === 'figure1'; }).length
-    });
-    rows.slice(0, 10).forEach(function (row) {
+    if (!quiet) {
       pushTrace(trace, {
         stage: 'candidate_discovery',
-        event: 'candidate',
-        status: row.kind,
-        url: row.url,
-        message: row.assetType,
-        candidateKind: row.kind,
-        candidateSource: row.source,
-        candidateScore: row.score,
-        imageWidth: row.width,
-        imageHeight: row.height
+        event: 'scan_complete',
+        status: rows.length ? 'found' : 'none',
+        message: source + ';official=' + rows.filter(function (x) { return x.kind === 'official'; }).length + ';figure1=' + rows.filter(function (x) { return x.kind === 'figure1'; }).length
       });
-    });
+      rows.slice(0, 10).forEach(function (row) {
+        pushTrace(trace, {
+          stage: 'candidate_discovery',
+          event: 'candidate',
+          status: row.kind,
+          url: row.url,
+          message: row.assetType,
+          candidateKind: row.kind,
+          candidateSource: row.source,
+          candidateScore: row.score,
+          imageWidth: row.width,
+          imageHeight: row.height
+        });
+      });
+    }
     return rows;
+  }
+
+  function waitForDomMutation(timeoutMs) {
+    return new Promise(function (resolve) {
+      if (!document.body || typeof MutationObserver === 'undefined') {
+        setTimeout(resolve, timeoutMs);
+        return;
+      }
+      var done = false;
+      var observer = new MutationObserver(function (mutations) {
+        if (done) return;
+        var useful = mutations.some(function (mutation) {
+          return mutation.addedNodes.length > 0
+            || (mutation.type === 'attributes' && /^(?:src|srcset|data-src|data-lazy-src|data-hi-res-src|data-srcset)$/i.test(String(mutation.attributeName || '')));
+        });
+        if (!useful) return;
+        done = true;
+        observer.disconnect();
+        clearTimeout(timer);
+        resolve();
+      });
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['src','srcset','data-src','data-lazy-src','data-hi-res-src','data-srcset']
+      });
+      var timer = setTimeout(function () {
+        if (done) return;
+        done = true;
+        observer.disconnect();
+        resolve();
+      }, timeoutMs);
+    });
+  }
+
+  function iframeSourceUrls(job) {
+    var doi = normalizeDoi(job && job.doi);
+    var publisher = String(job && job.publisher || publisherForDoi(doi));
+    var urls = [];
+    function add(value) {
+      if (value && urls.indexOf(value) < 0) urls.push(value);
+    }
+    if (publisher === 'wiley' && location.hostname.endsWith('onlinelibrary.wiley.com')) {
+      add(location.origin + '/doi/' + doi);
+      add(location.origin + '/doi/full/' + doi);
+      add(location.origin + '/doi/abs/' + doi);
+    } else if (publisher === 'science' && location.hostname.endsWith('science.org')) {
+      add(location.origin + '/doi/full/' + doi);
+      add(location.origin + '/doi/' + doi);
+    }
+    return urls;
+  }
+
+  async function iframeCandidates(job, trace) {
+    var urls = iframeSourceUrls(job);
+    if (!urls.length) return [];
+    var best = [];
+    for (var u = 0; u < urls.length; u += 1) {
+      var url = urls[u];
+      pushTrace(trace, { stage: 'iframe_dom_scan', event: 'load_start', status: 'start', url: url });
+      try {
+        var rows = await new Promise(function (resolve) {
+          var frame = document.createElement('iframe');
+          var started = Date.now();
+          var finished = false;
+          var scrolled = false;
+          var bestRows = [];
+          frame.setAttribute('aria-hidden', 'true');
+          frame.setAttribute('tabindex', '-1');
+          frame.style.cssText = 'position:fixed!important;left:-12000px!important;top:0!important;width:1280px!important;height:900px!important;opacity:.001!important;pointer-events:none!important;border:0!important;z-index:-2147483647!important';
+
+          function cleanup() {
+            clearInterval(poll);
+            clearTimeout(timeout);
+            try { frame.remove(); } catch (_) {}
+          }
+          function finish(value) {
+            if (finished) return;
+            finished = true;
+            cleanup();
+            resolve(value || bestRows);
+          }
+          function inspect() {
+            if (finished) return;
+            try {
+              var doc = frame.contentDocument;
+              var win = frame.contentWindow;
+              if (!doc || !doc.body) return;
+              var current = String(frame.src || url);
+              var discovered = collectCandidates(job, trace, doc, current, 'iframe_dom', true);
+              if (discovered.length) {
+                var merged = new Map();
+                bestRows.concat(discovered).forEach(function (row) {
+                  var old = merged.get(row.url);
+                  if (!old || row.score > old.score) merged.set(row.url, row);
+                });
+                bestRows = Array.from(merged.values()).sort(function (a, b) {
+                  if (a.kind !== b.kind) return a.kind === 'official' ? -1 : 1;
+                  return b.score - a.score;
+                });
+              }
+              if (bestRows.some(function (row) { return row.kind === 'official'; })) return finish(bestRows);
+              var elapsed = Date.now() - started;
+              if (!scrolled && elapsed > 3000 && win) {
+                scrolled = true;
+                try { win.scrollTo({ top: Math.min(doc.body.scrollHeight, 2400), behavior: 'auto' }); }
+                catch (_) { try { win.scrollTo(0, 2400); } catch (_) {} }
+              }
+              if (bestRows.length && elapsed > 6000) return finish(bestRows);
+            } catch (error) {
+              pushTrace(trace, {
+                stage: 'iframe_dom_scan',
+                event: 'inspect_failed',
+                status: 'failed',
+                url: url,
+                message: String(error && error.name || '') + ':' + String(error && error.message || error)
+              });
+              if (String(error && error.name || '').toLowerCase().indexOf('security') >= 0) finish(bestRows);
+            }
+          }
+
+          frame.addEventListener('load', function () {
+            setTimeout(inspect, 250);
+            setTimeout(inspect, 1000);
+            setTimeout(inspect, 2600);
+          });
+          frame.addEventListener('error', function () {
+            pushTrace(trace, { stage: 'iframe_dom_scan', event: 'load_error', status: 'failed', url: url });
+            finish(bestRows);
+          });
+          var poll = setInterval(inspect, 650);
+          var timeout = setTimeout(function () { finish(bestRows); }, 15000);
+          document.body.appendChild(frame);
+          frame.src = url;
+        });
+        if (rows.length) {
+          best = rows;
+          pushTrace(trace, {
+            stage: 'iframe_dom_scan',
+            event: 'complete',
+            status: 'found',
+            url: url,
+            message: 'candidates=' + String(rows.length)
+          });
+          if (rows.some(function (row) { return row.kind === 'official'; })) return rows;
+        } else {
+          pushTrace(trace, { stage: 'iframe_dom_scan', event: 'complete', status: 'none', url: url });
+        }
+      } catch (error) {
+        pushTrace(trace, {
+          stage: 'iframe_dom_scan',
+          event: 'failed',
+          status: 'failed',
+          url: url,
+          message: String(error && error.message || error)
+        });
+      }
+    }
+    return best;
   }
 
   function pageState(job, trace) {
@@ -456,6 +648,7 @@
     var maxMs = job.publisher === 'wiley' ? 8 * 60 * 1000 : 90 * 1000;
     var started = Date.now();
     var lastWait = 0;
+    var iframeAttempted = false;
     while (Date.now() - started < maxMs) {
       var state = pageState(job, trace);
       if (state.challenge || state.auth) {
@@ -467,7 +660,7 @@
             url: location.href
           });
         }
-        await sleep(2500);
+        await waitForDomMutation(2500);
         continue;
       }
       if (!state.doiMatch && Date.now() - started > 8000 && state.textLength > 1000) {
@@ -480,10 +673,34 @@
         });
         throw new Error('doi_page_mismatch');
       }
-      var candidates = collectCandidates(job, trace);
+      var candidates = collectCandidates(job, trace, document, location.href, 'live_dom', false);
       if (candidates.length) return candidates;
-      if (Date.now() - started > 18000 && state.textLength > 2000) return [];
-      await sleep(1500);
+
+      var elapsed = Date.now() - started;
+      if (!iframeAttempted && elapsed > 7000 && (job.publisher === 'wiley' || job.publisher === 'science')) {
+        iframeAttempted = true;
+        var iframeRows = await iframeCandidates(job, trace);
+        if (iframeRows.length) {
+          iframeRows.slice(0, 10).forEach(function (row) {
+            pushTrace(trace, {
+              stage: 'candidate_discovery',
+              event: 'candidate',
+              status: row.kind,
+              url: row.url,
+              message: row.assetType,
+              candidateKind: row.kind,
+              candidateSource: row.source,
+              candidateScore: row.score,
+              imageWidth: row.width,
+              imageHeight: row.height
+            });
+          });
+          return iframeRows;
+        }
+      }
+
+      if (elapsed > 22000 && state.textLength > 2000) return [];
+      await waitForDomMutation(1500);
     }
     throw new Error('page_wait_timeout');
   }
@@ -754,6 +971,10 @@
     if ((page403 || gm403) && canvasFail) return 'image_403_and_rendered_canvas_unreadable';
     if (page403 || gm403) return 'image_http_403';
     if (canvasFail) return 'rendered_canvas_unreadable';
+    var iframeSecurity = rev.find(function (x) { return x.stage === 'iframe_dom_scan' && x.event === 'inspect_failed' && /security/i.test(String(x.message || '')); });
+    var iframeNone = rev.find(function (x) { return x.stage === 'iframe_dom_scan' && x.event === 'complete' && x.status === 'none'; });
+    if (iframeSecurity) return 'iframe_cross_origin_or_auth_redirect';
+    if (none && iframeNone) return 'no_toc_candidate_after_live_and_iframe_scan';
     if (none) return 'no_toc_candidate_in_live_dom';
     return String(error && error.message || error || 'unknown_failure').slice(0, 220);
   }

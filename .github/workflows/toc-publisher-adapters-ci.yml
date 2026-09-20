@@ -66,13 +66,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.1.0" public/toc-mainline.user.js
+          grep -F "// @version      6.2.0" public/toc-mainline.user.js
           grep -F "toc-demand-live.json" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
           grep -F "FAILURE_COOLDOWN_MS" public/toc-mainline.user.js
           grep -F "DEFAULT_BATCH_SIZE = 8" public/toc-mainline.user.js
           grep -F "articlelanding/" public/toc-mainline.user.js
+          grep -F "async function iframeCandidates(job, trace)" public/toc-mainline.user.js
+          grep -F "function waitForDomMutation(timeoutMs)" public/toc-mainline.user.js
+          grep -F "object[type^=\"image\"],svg image" public/toc-mainline.user.js
+          grep -F "iframe_cross_origin_or_auth_redirect" public/toc-mainline.user.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "loaderVersion = '2.2.0'" cloudflare/scripts/build-bridge-loader.mjs
