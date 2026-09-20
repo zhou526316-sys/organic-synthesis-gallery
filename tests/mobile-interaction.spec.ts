@@ -1,4 +1,4 @@
-import { test, expect, devices } from '@playwright/test';
+import { test, expect, devices, type Locator } from '@playwright/test';
 
 test.use({
   ...devices['iPhone 13'],
@@ -66,7 +66,7 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
 
   const actions = page.locator('gallery-paper-actions').first();
 
-  const expectAnchored = async (anchorLocator: ReturnType<typeof actions.locator>, popoverLocator: ReturnType<typeof actions.locator>): Promise<void> => {
+  const expectAnchored = async (anchorLocator: Locator, popoverLocator: Locator): Promise<void> => {
     const anchorBox = await anchorLocator.boundingBox();
     const popoverBox = await popoverLocator.boundingBox();
     expect(anchorBox).not.toBeNull();
