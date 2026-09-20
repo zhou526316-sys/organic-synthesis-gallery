@@ -438,7 +438,7 @@ export async function importLocalDiagnostics(request, env, payload) {
   const text = JSON.stringify({
     ...payload,
     uploadedAt: Date.now(),
-    source: 'windows-toc-collector',
+    source: safeText(payload?.source || 'windows-toc-collector', 120),
   });
   const bytes = new TextEncoder().encode(text);
   if (bytes.byteLength > MAX_DIAGNOSTIC_BYTES) return { status: 413, body: { error: 'Diagnostic payload is too large.' } };
