@@ -2,12 +2,23 @@ name: Refresh live TOC demand queue
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '20 0,10 * * *'
   push:
     branches: [main]
     paths:
       - 'TOC_DEMAND_REFRESH'
       - 'cloudflare/scripts/build-live-toc-demand-queue.mjs'
       - '.github/workflows/toc-demand-refresh.yml'
+      - 'public/papers.gz.b64'
+      - 'public/total-synthesis.json'
+      - 'public/manual-supplement.json'
+      - 'public/final-audit-supplement.json'
+      - 'public/curated-supplement.json'
+      - 'public/automation-supplement.json'
+      - 'public/rolling-supplement.json'
+      - 'public/literature-supplement.json'
+      - 'public/media-index.json'
 
 permissions:
   contents: write
