@@ -1589,10 +1589,12 @@ async function downloadPdfFromPublisherBrowser({ doi, publisher, webContents, pd
     }
   });
 }
-async function waitForLocalInteractiveArticle(win, doi, publisher) {
-  if (!localOnlyMode || !showBrowserMode || !win || win.isDestroyed()) {
+async function waitForLocalInteractiveArticle(win, childWindows, doi, publisher) {
+  const liveWindows = () => [win, ...(Array.isArray(childWindows) ? childWindows : [])]
+    .filter((item, index, all) => item && !item.isDestroyed() && all.indexOf(item) === index);
+  if (!localOnlyMode || !showBrowserMode || liveWindows().length === 0) {
     await new Promise(resolve => setTimeout(resolve, Number(config.headlessWaitMs) || 5000));
-    return { waitState: 'headless_settle' };
+    return { waitState: 'headless_settle', windowId: win && !win.isDestroyed() ? win.id : 0 };
   }
 
   const settleMs = Math.max(5000, Number(config.localInteractiveSettleMs || 12000));
@@ -1601,10 +1603,15 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
   let lastStatus = '';
   let lastDetails = null;
 
-  while (!win.isDestroyed()) {
+  while (true) {
+    const windows = liveWindows();
+    if (!windows.length) break;
+    const activeWin = windows.find(item => publisherHostMatches(publisher, item.webContents.getURL()))
+      || windows.find(item => item.isVisible())
+      || windows[0];
     let details = null;
     try {
-      details = await win.webContents.executeJavaScript(`(() => {
+      details = await activeWin.webContents.executeJavaScript(`(() => {
         const text = String(document.body?.innerText || '').slice(0, 160000);
         const href = location.href;
         const title = document.title;
@@ -1619,9 +1626,14 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
       })()`);
       lastDetails = details;
     } catch (error) {
-      if (win.isDestroyed()) {
-        if (lastDetails?.challenge || lastDetails?.authPage) throw new Error('window_closed_during_auth');
-        throw new Error('publisher_window_closed_before_capture');
+      if (activeWin.isDestroyed()) {
+        await log('local_interactive_window_handoff', { doi, publisher, remainingWindows: liveWindows().length });
+        if (liveWindows().length === 0) {
+          if (lastDetails?.challenge || lastDetails?.authPage) throw new Error('window_closed_during_auth');
+          throw new Error('publisher_window_closed_before_capture');
+        }
+        await new Promise(resolve => setTimeout(resolve, 500));
+        continue;
       }
       await log('local_interactive_probe_failed', { doi, publisher, reason: safeError(error, 180) });
     }
@@ -1639,7 +1651,7 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
 
       if (articleReady && elapsed >= settleMs) {
         if (lastStatus !== 'ready') await log('local_interactive_article_ready', { doi, publisher, url: href });
-        return { ...details, hostOk, doiOk, waitState: 'article_ready', elapsedMs: elapsed };
+        return { ...details, hostOk, doiOk, waitState: 'article_ready', elapsedMs: elapsed, windowId: activeWin.id };
       }
 
       const waitingForUser = details.challenge || details.authPage || !hostOk;
@@ -1661,7 +1673,7 @@ async function waitForLocalInteractiveArticle(win, doi, publisher) {
       }
 
       if (!waitingForUser && elapsed >= settleMs * 3) {
-        return { ...details, hostOk, doiOk, waitState: 'page_settled_unverified', elapsedMs: elapsed };
+        return { ...details, hostOk, doiOk, waitState: 'page_settled_unverified', elapsedMs: elapsed, windowId: activeWin.id };
       }
     }
 
@@ -1677,6 +1689,10 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
   try {
     const target = await win.webContents.executeJavaScript(`(() => {
       const wanted = ${JSON.stringify(String(candidate?.src || ''))};
+      const wantedKind = ${JSON.stringify(String(candidate?.kind || ''))};
+      const semanticRe = /visual\s*abstract|graphical\s*abstract|abstract\s*(?:image|graphic)|toc\s*(?:graphic|image|entry)|table\s*of\s*contents(?:\s*(?:graphic|image|entry))?|graphical\s+synopsis/i;
+      const figureOneRe = /(?:^|\b)(?:fig(?:ure)?\.?\s*1)(?:\b|[:.)])/i;
+      const rejectRe = /logo|icon|avatar|journal\s*cover|issue\s*cover|advert|banner|cookie/i;
       const clean = value => {
         try {
           const u = new URL(String(value || ''), location.href);
@@ -1705,7 +1721,18 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
           || (wantedPath && urls.some(value => {
             try { return new URL(value).pathname === wantedPath; } catch { return false; }
           }));
-        if (!matched) continue;
+        const semanticRoot = img.closest('figure,[class*="visual"],[class*="graphical"],[class*="toc"],[id*="visual"],[id*="graphical"],[id*="toc"]') || img.parentElement;
+        const marker = [
+          img.alt,
+          img.title,
+          img.id,
+          img.className,
+          img.getAttribute('aria-label'),
+          String(semanticRoot?.innerText || '').slice(0, 1800),
+        ].filter(Boolean).join(' ');
+        const semanticMatched = wantedKind === 'official' && semanticRe.test(marker) && !rejectRe.test(marker);
+        const figureMatched = wantedKind === 'figure1' && figureOneRe.test(marker) && !rejectRe.test(marker);
+        if (!matched && !semanticMatched && !figureMatched) continue;
         const rect = img.getBoundingClientRect();
         if (rect.width < 80 || rect.height < 50) continue;
         best = {
@@ -1715,6 +1742,7 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
           height: rect.height,
           naturalWidth: img.naturalWidth || 0,
           naturalHeight: img.naturalHeight || 0,
+          matchMode: matched ? 'url' : semanticMatched ? 'semantic_official' : 'semantic_figure1',
         };
         img.scrollIntoView({ block: 'center', inline: 'center' });
         break;
@@ -1726,11 +1754,19 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
 
     const refreshed = await win.webContents.executeJavaScript(`(() => {
       const wanted = ${JSON.stringify(String(candidate?.src || ''))};
+      const wantedKind = ${JSON.stringify(String(candidate?.kind || ''))};
+      const semanticRe = /visual\s*abstract|graphical\s*abstract|abstract\s*(?:image|graphic)|toc\s*(?:graphic|image|entry)|table\s*of\s*contents(?:\s*(?:graphic|image|entry))?|graphical\s+synopsis/i;
+      const figureOneRe = /(?:^|\b)(?:fig(?:ure)?\.?\s*1)(?:\b|[:.)])/i;
+      const rejectRe = /logo|icon|avatar|journal\s*cover|issue\s*cover|advert|banner|cookie/i;
       const wantedPath = (() => { try { return new URL(wanted, location.href).pathname; } catch { return ''; } })();
       for (const img of document.images) {
         const urls = [img.currentSrc,img.src,img.getAttribute('data-src'),img.getAttribute('data-original'),img.getAttribute('data-lg-src'),img.getAttribute('data-hi-res-src')].filter(Boolean);
         const matched = urls.some(value => value === wanted) || (wantedPath && urls.some(value => { try { return new URL(value, location.href).pathname === wantedPath; } catch { return false; } }));
-        if (!matched) continue;
+        const semanticRoot = img.closest('figure,[class*="visual"],[class*="graphical"],[class*="toc"],[id*="visual"],[id*="graphical"],[id*="toc"]') || img.parentElement;
+        const marker = [img.alt,img.title,img.id,img.className,img.getAttribute('aria-label'),String(semanticRoot?.innerText || '').slice(0,1800)].filter(Boolean).join(' ');
+        const semanticMatched = wantedKind === 'official' && semanticRe.test(marker) && !rejectRe.test(marker);
+        const figureMatched = wantedKind === 'figure1' && figureOneRe.test(marker) && !rejectRe.test(marker);
+        if (!matched && !semanticMatched && !figureMatched) continue;
         const rect = img.getBoundingClientRect();
         if (rect.width < 80 || rect.height < 50) continue;
         return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
@@ -1767,6 +1803,7 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
       bytes: buffer.length,
       width: finalImage.getSize().width,
       height: finalImage.getSize().height,
+      matchMode: target.matchMode || '',
     });
     return {
       imageData: `data:image/png;base64,${buffer.toString('base64')}`,
@@ -1822,10 +1859,29 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
         },
       },
     }));
-    win.webContents.on('did-create-window', child => {
+    const registerChildWindow = child => {
+      if (!child || childWindows.includes(child)) return;
       childWindows.push(child);
-      void log('local_auth_popup_opened', { doi, publisher, url: child.webContents.getURL() || '' });
-    });
+      try {
+        child.webContents.setWindowOpenHandler(() => ({
+          action: 'allow',
+          overrideBrowserWindowOptions: {
+            show: true,
+            parent: child,
+            webPreferences: {
+              session: publisherSession,
+              sandbox: true,
+              contextIsolation: true,
+              nodeIntegration: false,
+              images: true,
+            },
+          },
+        }));
+        child.webContents.on('did-create-window', registerChildWindow);
+      } catch {}
+      void log('local_auth_popup_opened', { doi, publisher, windowId: child.id, url: child.webContents.getURL() || '' });
+    };
+    win.webContents.on('did-create-window', registerChildWindow);
     if (forceBrowserFallback || forceBrowserbase) {
       throw new Error(forceBrowserbase ? 'browserbase_diagnostic_forced' : 'net::ERR_BLOCKED_BY_CLIENT (diagnostic injection)');
     }
@@ -1835,8 +1891,15 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
     ]);
     clearTimeout(publisherTimer);
     publisherTimer = null;
-    const waitDetails = await waitForLocalInteractiveArticle(win, doi, publisher);
-    const result = await win.webContents.executeJavaScript(`(() => {
+    const waitDetails = await waitForLocalInteractiveArticle(win, childWindows, doi, publisher);
+    const articleWin = [win, ...childWindows].find(item => item && !item.isDestroyed() && item.id === Number(waitDetails?.windowId || 0))
+      || [win, ...childWindows].find(item => item && !item.isDestroyed() && publisherHostMatches(publisher, item.webContents.getURL()))
+      || win;
+    if (!articleWin || articleWin.isDestroyed()) throw new Error('publisher_window_closed_before_capture');
+    if (articleWin !== win) {
+      await log('local_interactive_article_window_handoff', { doi, publisher, fromWindowId: win?.id || 0, toWindowId: articleWin.id, url: articleWin.webContents.getURL() || '' });
+    }
+    const result = await articleWin.webContents.executeJavaScript(`(() => {
       const abs = u => { try { const value = new URL(u, location.href); return ['http:','https:'].includes(value.protocol) ? value.href : '' } catch { return '' } };
       const rows = [];
       for (const m of document.querySelectorAll('meta')) {
@@ -1988,7 +2051,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       if (localPublisherReady(publisher)) {
         let pdf = null;
         if (pdfUrl) {
-          pdf = await downloadPdfFromPublisherBrowser({ doi, publisher, webContents: win.webContents, pdfUrl });
+          pdf = await downloadPdfFromPublisherBrowser({ doi, publisher, webContents: articleWin.webContents, pdfUrl });
         }
         await log('verified_local_browser_no_visual', {
           doi,
@@ -2011,7 +2074,7 @@ async function inspectArticle(doi, { forceBrowserbase = forceBrowserbaseDiagnost
       throw new Error('browser_no_candidate');
     }
     await log('browser_success', { doi, kind: rows[0].kind, url: result?.href || url });
-    const renderedImage = await captureRenderedVisual(win, rows[0], doi, publisher);
+    const renderedImage = await captureRenderedVisual(articleWin, rows[0], doi, publisher);
     return { url: result?.href || url, candidate: rows[0], method: 'browser', diagnostic, image: renderedImage };
   } catch (error) {
     const browserError = safeError(error, 300).replace(/https?:\/\/\S+/g, '<url>');
@@ -2509,7 +2572,16 @@ async function runCycle(manual = false) {
       }
     }
     rebuildTrayMenu();
-    refreshDashboard();
+    await refreshDashboard();
+    if (localOnlyMode && scanAllMode && doiFilePath) {
+      stageStatus = '本机队列扫描完成，正在退出并同步 captures / diagnostics 到 R2…';
+      await log('local_one_shot_complete_auto_exit', { queue: queue.length, processed: results.length, success, failed, doiFilePath });
+      await refreshDashboard();
+      const timer = setTimeout(() => {
+        try { app.quit(); } catch {}
+      }, 1200);
+      timer.unref?.();
+    }
   } catch (error) {
     await handleFailure('collector-cycle', error);
   } finally { cycleRunning = false; }
