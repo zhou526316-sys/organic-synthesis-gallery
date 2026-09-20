@@ -26,7 +26,6 @@ export class GalleryPaperActions extends HTMLElement {
   private readonly shadow = this.attachShadow({ mode: 'open' });
   private panel: 'none' | 'status' | 'note' | 'more' = 'none';
   private feedbackMessage = '';
-  private editingStatusId = '';
   private readonly outside = (event: PointerEvent): void => {
     if (this.panel === 'none') return;
     if (event.composedPath().includes(this)) return;
@@ -124,7 +123,6 @@ export class GalleryPaperActions extends HTMLElement {
 
   private closePanel(render = true): void {
     this.panel = 'none';
-    this.editingStatusId = '';
     delete this.dataset.drawerOpen;
     if (render && this.isConnected) this.render();
     this.closest<HTMLElement>('.card')?.classList.remove('user-action-open');
@@ -138,7 +136,7 @@ export class GalleryPaperActions extends HTMLElement {
     const s = store.state.actionStyles;
     this.shadow.innerHTML = `<style>
       :host{display:block;position:relative;margin-top:4px;font:12px/1.4 Inter,system-ui,sans-serif;color:#344054}
-      *{box-sizing:border-box}button,input,textarea,select{font:inherit}button{cursor:pointer}.bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 10px}.action{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:30px;padding:5px 8px;border:0;background:var(--u-color);color:var(--u-text);font-size:11px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}.action.active{box-shadow:0 0 0 2px rgba(49,89,189,.18)}.action .icon{width:15px;height:15px;object-fit:contain}.shape-pill{border-radius:999px}.shape-rounded{border-radius:9px}.shape-rectangle{border-radius:2px}.shape-circle{width:32px;height:32px;padding:0;border-radius:50%}.shape-circle span:last-child,.shape-square span:last-child,.shape-diamond span:last-child,.shape-star span:last-child,.shape-bookmark span:last-child{display:none}.shape-square{width:32px;height:32px;padding:0;border-radius:5px}.shape-diamond{width:29px;height:29px;padding:0;border-radius:5px;transform:rotate(45deg)}.shape-diamond>*{transform:rotate(-45deg)}.shape-bookmark{border-radius:6px 6px 2px 2px;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}.shape-star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%);width:34px;height:34px;padding:0}.metric{margin-left:auto;color:#7a8494;font-size:10px;white-space:nowrap}.chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}.chip{padding:3px 6px;border-radius:999px;background:#f2f5fb;color:#526071;font-size:9px}.chip.status,.status-choice-label{display:inline-flex;align-items:center;gap:5px;color:#fff}.status-image{width:16px;height:16px;object-fit:contain;border-radius:4px;background:rgba(255,255,255,.16)}.status-row{display:grid;gap:6px}.status-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:stretch}.status-choice{display:flex;align-items:center;gap:7px}.status-choice-label{padding:4px 7px;min-width:0}.status-choice small{color:#7a8494;font-size:9px}.style-toggle{border:1px solid #dfe5ef;border-radius:9px;background:#fff;color:#526071;padding:6px 8px;white-space:nowrap}.style-toggle.active{border-color:#8aa5ef;background:#eef3ff;color:#3159bd}.status-style-editor{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:9px;border:1px solid #e3e8f1;border-radius:10px;background:#fafbfc}.status-style-editor label{display:grid;gap:4px;color:#667085;font-size:9px}.status-style-editor input[type=color]{width:100%;height:30px;border:0;padding:0;background:transparent}.status-style-editor select,.status-style-editor input[type=file]{width:100%;min-width:0;font-size:9px}.status-style-editor .remove-image{grid-column:1/-1;width:auto;justify-self:start;border:0;background:transparent;color:#b42318;padding:2px 0}.status{background:${status ? rgbCss(status.style.rgb) : '#f2f5fb'};color:${status ? '#fff' : '#526071'}}
+      *{box-sizing:border-box}button,input,textarea,select{font:inherit}button{cursor:pointer}.bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 10px}.action{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:30px;padding:5px 8px;border:0;background:var(--u-color);color:var(--u-text);font-size:11px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}.action.active{box-shadow:0 0 0 2px rgba(49,89,189,.18)}.action .icon{width:15px;height:15px;object-fit:contain}.shape-pill{border-radius:999px}.shape-rounded{border-radius:9px}.shape-rectangle{border-radius:2px}.shape-circle{width:32px;height:32px;padding:0;border-radius:50%}.shape-circle span:last-child,.shape-square span:last-child,.shape-diamond span:last-child,.shape-star span:last-child,.shape-bookmark span:last-child{display:none}.shape-square{width:32px;height:32px;padding:0;border-radius:5px}.shape-diamond{width:29px;height:29px;padding:0;border-radius:5px;transform:rotate(45deg)}.shape-diamond>*{transform:rotate(-45deg)}.shape-bookmark{border-radius:6px 6px 2px 2px;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}.shape-star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%);width:34px;height:34px;padding:0}.metric{margin-left:auto;color:#7a8494;font-size:10px;white-space:nowrap}.chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}.chip{padding:3px 6px;border-radius:999px;background:#f2f5fb;color:#526071;font-size:9px}.chip.status,.status-choice-label{display:inline-flex;align-items:center;gap:5px;color:#fff}.status-image{width:16px;height:16px;object-fit:contain;border-radius:4px;background:rgba(255,255,255,.16)}.status-row{display:grid;gap:6px}.status-main{display:block}.status-choice{display:flex;align-items:center;gap:7px}.status-choice-label{padding:4px 7px;min-width:0}.status-choice small{color:#7a8494;font-size:9px}.status-style-editor{display:grid;grid-template-columns:72px minmax(78px,1fr) minmax(92px,1.2fr);gap:7px;padding:7px 9px;border:1px solid #e3e8f1;border-radius:10px;background:#fafbfc}.status-style-editor label{display:grid;gap:4px;color:#667085;font-size:9px}.status-style-editor input[type=color]{width:100%;height:30px;border:0;padding:0;background:transparent}.status-style-editor select,.status-style-editor input[type=file]{width:100%;min-width:0;font-size:9px}.status-style-editor .remove-image{grid-column:1/-1;width:auto;justify-self:start;border:0;background:transparent;color:#b42318;padding:2px 0}.status{background:${status ? rgbCss(status.style.rgb) : '#f2f5fb'};color:${status ? '#fff' : '#526071'}}
       .overlay{position:absolute;left:0;top:0;width:100%;height:0;z-index:10020;background:transparent;pointer-events:none}.drawer{position:absolute;pointer-events:auto;width:min(350px,calc(100vw - 24px));height:auto;max-height:min(68dvh,560px);overflow:auto;padding:15px;background:#fff;border:1px solid #dfe5ef;border-radius:16px;box-shadow:0 14px 38px rgba(15,23,42,.18)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:18px 0 10px;z-index:2}.head h3{margin:0;font-size:17px}.close{border:0;background:#f2f4f7;border-radius:9px;width:30px;height:30px}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.stack{display:grid;gap:6px}.choice,.secondary{width:100%;text-align:left;padding:8px 10px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;color:#344054}.choice.selected{border-color:#8aa5ef;background:#f5f7ff}.check{display:flex;align-items:center;gap:8px;padding:5px 0}.input,textarea{width:100%;border:1px solid #d7deea;border-radius:10px;padding:9px;outline:none}textarea{min-height:150px;resize:vertical}.help{margin-top:6px;color:#8a93a3;font-size:10px}.preview{margin-top:8px;padding:9px;border-radius:10px;background:#f8fafc;overflow-wrap:anywhere}.preview a{color:#3159bd}.check-preview{display:flex;gap:6px}.tag-row{display:flex;gap:6px}.tag-row .input{flex:1}.tag-row .secondary{width:auto}.danger{color:#b42318}.feedback{margin-top:7px;color:#667085;font-size:10px}
       @media(max-width:680px){:host{margin-top:2px}.bar{gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:flex}.chips>.chip:not(.status){display:none}.drawer .chips>.chip{display:inline-flex}}
     </style>${this.chips(paper, status)}<div class='bar'>
@@ -158,10 +156,7 @@ export class GalleryPaperActions extends HTMLElement {
       this.closest<HTMLElement>('.card')?.classList.remove('user-action-open');
     }
     this.syncScrollLock();
-    if (drawerOpen) {
-      queueMicrotask(() => this.positionPanel());
-      requestAnimationFrame(() => this.positionPanel());
-    }
+    if (drawerOpen) queueMicrotask(() => this.positionPanel());
   }
 
   private statusVisual(status: NonNullable<ReturnType<typeof store.status>>, className: string): string {
@@ -182,16 +177,14 @@ export class GalleryPaperActions extends HTMLElement {
     let body = '';
     if (this.panel === 'status') {
       body = `<section class='section'><div class='stack'>${store.state.statuses.map(status => {
-        const editing = this.editingStatusId === status.id;
-        const editor = editing ? `<div class='status-style-editor' data-status-editor='${escapeHtml(status.id)}'>
+        const editor = `<div class='status-style-editor' data-status-editor='${escapeHtml(status.id)}'>
           <label>${this.tr('颜色', 'Color')}<input type='color' data-status-color='${escapeHtml(status.id)}' value='${rgbToHex(status.style.rgb)}'></label>
           <label>${this.tr('形状', 'Shape')}<select data-status-shape='${escapeHtml(status.id)}'>${SHAPES.map(shape => `<option value='${shape}' ${status.style.shape === shape ? 'selected' : ''}>${shape}</option>`).join('')}</select></label>
           <label>${this.tr('图片', 'Image')}<input type='file' accept='image/png,image/jpeg,image/webp' data-status-image='${escapeHtml(status.id)}'></label>
           ${status.style.imageData ? `<button class='remove-image' type='button' data-action='clear-status-image:${escapeHtml(status.id)}'>${this.tr('移除图片', 'Remove image')}</button>` : ''}
-        </div>` : '';
+        </div>`;
         return `<div class='status-row'><div class='status-main'>
           <button type='button' class='choice status-choice${paper.statusId === status.id ? ' selected' : ''}' data-action='set-status:${escapeHtml(status.id)}'>${this.statusVisual(status, 'status-choice-label')}${status.countsAsRead ? `<small>· ${this.tr('计入阅读人数', 'counts as read')}</small>` : ''}</button>
-          <button type='button' class='style-toggle${editing ? ' active' : ''}' data-action='edit-status-style:${escapeHtml(status.id)}' aria-expanded='${editing}'>${this.tr('编辑样式', 'Edit style')}</button>
         </div>${editor}</div>`;
       }).join('')}</div></section>`;
     } else if (this.panel === 'note') {
@@ -241,13 +234,6 @@ export class GalleryPaperActions extends HTMLElement {
     if (action === 'favorite') { store.toggleFavorite(this.paperId); return; }
     if (action === 'status' || action === 'note' || action === 'more') { this.openPanel(action); return; }
     if (action === 'close') { this.closePanel(); return; }
-    if (action.startsWith('edit-status-style:')) {
-      const statusId = action.slice('edit-status-style:'.length);
-      this.editingStatusId = this.editingStatusId === statusId ? '' : statusId;
-      this.render();
-      this.positionPanel();
-      return;
-    }
     if (action.startsWith('clear-status-image:')) {
       const statusId = action.slice('clear-status-image:'.length);
       const status = store.status(statusId);
