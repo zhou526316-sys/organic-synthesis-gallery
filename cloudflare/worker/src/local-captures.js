@@ -5,6 +5,7 @@ const IMAGE_PREFIX = 'local-captures/images/';
 const DIAGNOSTIC_KEY = 'local-captures/diagnostics/latest.json';
 const TAMPERMONKEY_REPORT_INDEX_KEY = 'local-captures/tampermonkey/report-index.json';
 const TAMPERMONKEY_REPORT_PREFIX = 'local-captures/tampermonkey/reports/';
+const TAMPERMONKEY_REPORT_HISTORY_LIMIT = 12;
 const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_DIAGNOSTIC_BYTES = 1_500_000;
 
@@ -105,13 +106,66 @@ function sanitizeTrace(trace) {
 async function readTampermonkeyReportIndex(env) {
   if (!env?.MEDIA) throw new Error('R2 binding MEDIA is not configured');
   const object = await env.MEDIA.get(TAMPERMONKEY_REPORT_INDEX_KEY);
-  if (!object) return { version: 1, updatedAt: 0, items: {} };
+  if (!object) return { version: 2, updatedAt: 0, items: {} };
   try {
     const value = JSON.parse(await object.text());
     value.items = value?.items && typeof value.items === 'object' && !Array.isArray(value.items) ? value.items : {};
+    value.version = Math.max(2, Number(value.version || 1));
     return value;
   } catch {
-    return { version: 1, updatedAt: 0, items: {} };
+    return { version: 2, updatedAt: 0, items: {} };
+  }
+}
+
+function reportAttemptSummary(report, reportKey, attemptId) {
+  return {
+    attemptId,
+    doi: report.doi,
+    publisher: report.publisher,
+    status: report.status,
+    reason: report.reason,
+    assetType: report.assetType,
+    candidateKind: report.candidateKind,
+    candidateSource: report.candidateSource,
+    articleUrl: report.articleUrl,
+    sourceUrl: report.sourceUrl,
+    reportKey,
+    traceEvents: report.trace.length,
+    startedAt: report.startedAt,
+    finishedAt: report.finishedAt,
+    updatedAt: report.updatedAt,
+  };
+}
+
+function legacyAttemptSummary(item) {
+  if (!item?.reportKey) return null;
+  return {
+    attemptId: safeText(item.attemptId || ('legacy-' + String(item.updatedAt || 0)), 120),
+    doi: safeText(item.doi || '', 300),
+    publisher: safeText(item.publisher || '', 80),
+    status: safeText(item.status || 'unknown', 80),
+    reason: safeText(item.reason || '', 240),
+    assetType: safeText(item.assetType || '', 100),
+    candidateKind: safeText(item.candidateKind || '', 80),
+    candidateSource: safeText(item.candidateSource || '', 120),
+    articleUrl: safeUrl(item.articleUrl || ''),
+    sourceUrl: safeUrl(item.sourceUrl || ''),
+    reportKey: safeText(item.reportKey || '', 500),
+    traceEvents: Number(item.traceEvents || 0),
+    startedAt: safeText(item.startedAt || '', 80),
+    finishedAt: safeText(item.finishedAt || '', 80),
+    updatedAt: Number(item.updatedAt || 0),
+  };
+}
+
+async function readReportObject(env, summary) {
+  if (!summary?.reportKey) return null;
+  const object = await env.MEDIA.get(summary.reportKey);
+  if (!object) return { error: 'tampermonkey_report_object_missing', attempt: summary };
+  try {
+    return { available: true, attemptId: summary.attemptId || '', ...(JSON.parse(await object.text())) };
+  } catch {
+    return { error: 'tampermonkey_report_invalid_json', attempt: summary };
   }
 }
 
@@ -121,9 +175,11 @@ export async function importTampermonkeyReport(request, env, payload) {
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
   const trace = sanitizeTrace(payload?.trace);
   const now = Date.now();
+  const attemptId = String(now) + '-' + crypto.randomUUID().slice(0, 8);
   const report = {
-    version: 1,
+    version: 2,
     source: 'tampermonkey-toc-mainline',
+    attemptId,
     doi,
     publisher: safeText(payload?.publisher || '', 80),
     status: safeText(payload?.status || 'unknown', 80),
@@ -140,19 +196,58 @@ export async function importTampermonkeyReport(request, env, payload) {
     trace,
     updatedAt: now,
   };
+
   const doiHash = await sha256Hex(new TextEncoder().encode(doi));
-  const key = TAMPERMONKEY_REPORT_PREFIX + doiHash.slice(0, 32) + '.json';
+  const key = TAMPERMONKEY_REPORT_PREFIX + doiHash.slice(0, 32) + '/' + attemptId + '.json';
   await env.MEDIA.put(key, JSON.stringify(report), {
     httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
-    customMetadata: { doi, status: report.status, source: report.source },
+    customMetadata: { doi, status: report.status, source: report.source, attemptId },
   });
+
   const index = await readTampermonkeyReportIndex(env);
+  const previous = index.items?.[doi] && typeof index.items[doi] === 'object' ? index.items[doi] : {};
+  const attempts = Array.isArray(previous.attempts) ? previous.attempts.slice() : [];
+  if (!attempts.length) {
+    const legacy = legacyAttemptSummary(previous);
+    if (legacy) attempts.push(legacy);
+  }
+  attempts.push(reportAttemptSummary(report, key, attemptId));
+  attempts.sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
+  const recentAttempts = attempts.slice(0, TAMPERMONKEY_REPORT_HISTORY_LIMIT);
+  const failureAttempts = recentAttempts.filter(item => item.status === 'failed');
+  const successAttempts = recentAttempts.filter(item => item.status === 'success');
+
   index.items[doi] = {
-    doi, publisher: report.publisher, status: report.status, reason: report.reason,
-    assetType: report.assetType, candidateKind: report.candidateKind, candidateSource: report.candidateSource,
-    articleUrl: report.articleUrl, sourceUrl: report.sourceUrl, reportKey: key, traceEvents: trace.length, updatedAt: now,
+    doi,
+    publisher: report.publisher,
+    status: report.status,
+    reason: report.reason,
+    assetType: report.assetType,
+    candidateKind: report.candidateKind,
+    candidateSource: report.candidateSource,
+    articleUrl: report.articleUrl,
+    sourceUrl: report.sourceUrl,
+    reportKey: key,
+    attemptId,
+    traceEvents: trace.length,
+    attemptCount: Number(previous.attemptCount || attempts.length),
+    retainedAttempts: recentAttempts.length,
+    failureCount: Number(previous.failureCount || 0) + (report.status === 'failed' ? 1 : 0),
+    successCount: Number(previous.successCount || 0) + (report.status === 'success' ? 1 : 0),
+    lastFailureReason: report.status === 'failed'
+      ? report.reason
+      : safeText(previous.lastFailureReason || failureAttempts[0]?.reason || '', 240),
+    lastFailureAt: report.status === 'failed'
+      ? now
+      : Number(previous.lastFailureAt || failureAttempts[0]?.updatedAt || 0),
+    attempts: recentAttempts,
+    updatedAt: now,
   };
-  index.version = 1;
+  index.items[doi].attemptCount = Math.max(
+    Number(previous.attemptCount || 0) + 1,
+    recentAttempts.length,
+  );
+  index.version = 2;
   index.updatedAt = now;
   const entries = Object.entries(index.items)
     .sort((a, b) => Number(b[1]?.updatedAt || 0) - Number(a[1]?.updatedAt || 0))
@@ -161,28 +256,111 @@ export async function importTampermonkeyReport(request, env, payload) {
   await env.MEDIA.put(TAMPERMONKEY_REPORT_INDEX_KEY, JSON.stringify(index), {
     httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
   });
-  return { status: 200, body: { stored: true, doi, status: report.status, reason: report.reason, traceEvents: trace.length, updatedAt: now } };
+
+  return {
+    status: 200,
+    body: {
+      stored: true,
+      doi,
+      attemptId,
+      status: report.status,
+      reason: report.reason,
+      traceEvents: trace.length,
+      retainedAttempts: recentAttempts.length,
+      failureCount: index.items[doi].failureCount,
+      successCount: index.items[doi].successCount,
+      updatedAt: now,
+    },
+  };
 }
 
 export async function getTampermonkeyReports(request, env) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const url = new URL(request.url);
   const doi = normalizeDoi(url.searchParams.get('doi') || '');
+  const statusFilter = safeText(url.searchParams.get('status') || '', 80).toLowerCase();
+  const includeHistory = ['1','true','yes'].includes(String(url.searchParams.get('history') || '').toLowerCase());
+  const limit = Math.max(1, Math.min(200, Number(url.searchParams.get('limit') || 100)));
   const index = await readTampermonkeyReportIndex(env);
+
   if (doi) {
     const item = index.items?.[doi];
     if (!item?.reportKey) return { status: 404, body: { error: 'tampermonkey_report_not_found', doi } };
-    const object = await env.MEDIA.get(item.reportKey);
-    if (!object) return { status: 404, body: { error: 'tampermonkey_report_object_missing', doi } };
-    try {
-      return { status: 200, body: { available: true, ...(JSON.parse(await object.text())) } };
-    } catch {
-      return { status: 500, body: { error: 'tampermonkey_report_invalid_json', doi } };
+    const latest = await readReportObject(env, {
+      attemptId: item.attemptId || '',
+      reportKey: item.reportKey,
+      updatedAt: item.updatedAt,
+    });
+    if (!includeHistory) {
+      if (latest?.error) return { status: 404, body: { ...latest, doi } };
+      return { status: 200, body: latest };
     }
+
+    const summaries = (Array.isArray(item.attempts) ? item.attempts : [])
+      .filter(attempt => !statusFilter || String(attempt?.status || '').toLowerCase() === statusFilter)
+      .slice(0, limit);
+    const attempts = await Promise.all(summaries.map(summary => readReportObject(env, summary)));
+    return {
+      status: 200,
+      body: {
+        available: true,
+        doi,
+        latest,
+        attemptCount: Number(item.attemptCount || summaries.length),
+        retainedAttempts: Number(item.retainedAttempts || summaries.length),
+        failureCount: Number(item.failureCount || 0),
+        successCount: Number(item.successCount || 0),
+        lastFailureReason: safeText(item.lastFailureReason || '', 240),
+        lastFailureAt: Number(item.lastFailureAt || 0),
+        attempts,
+      },
+    };
   }
-  const items = Object.values(index.items || {}).sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
-  return { status: 200, body: { version: Number(index.version || 1), updatedAt: Number(index.updatedAt || 0), count: items.length, items } };
+
+  const latestItems = Object.values(index.items || {})
+    .sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
+
+  if (statusFilter) {
+    const attempts = [];
+    for (const item of latestItems) {
+      const history = Array.isArray(item?.attempts) && item.attempts.length
+        ? item.attempts
+        : [legacyAttemptSummary(item)].filter(Boolean);
+      for (const attempt of history) {
+        if (String(attempt?.status || '').toLowerCase() !== statusFilter) continue;
+        attempts.push(attempt);
+      }
+    }
+    attempts.sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
+    const selected = attempts.slice(0, limit);
+    return {
+      status: 200,
+      body: {
+        version: Number(index.version || 2),
+        updatedAt: Number(index.updatedAt || 0),
+        mode: 'attempts',
+        statusFilter,
+        count: selected.length,
+        totalMatched: attempts.length,
+        items: selected,
+      },
+    };
+  }
+
+  const selected = latestItems.slice(0, limit);
+  return {
+    status: 200,
+    body: {
+      version: Number(index.version || 2),
+      updatedAt: Number(index.updatedAt || 0),
+      mode: 'latest',
+      count: selected.length,
+      total: latestItems.length,
+      items: selected,
+    },
+  };
 }
+
 export async function importLocalCapture(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
