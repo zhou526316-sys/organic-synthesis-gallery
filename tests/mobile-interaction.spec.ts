@@ -32,7 +32,7 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   });
 
   await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
-  await galleryCards.first().waitFor({ state: 'visible', timeout: 30000 });
+  await page.locator('.card').first().waitFor({ state: 'visible', timeout: 30000 });
   await page.locator('gallery-paper-actions').first().waitFor({ state: 'visible', timeout: 30000 });
 
   const initialCards = await page.locator('.card').count();
