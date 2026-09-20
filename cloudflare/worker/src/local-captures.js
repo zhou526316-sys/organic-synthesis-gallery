@@ -3,6 +3,7 @@ import { normalizeDoi } from './media.js';
 const INDEX_KEY = 'local-captures/index.json';
 const IMAGE_PREFIX = 'local-captures/images/';
 const DIAGNOSTIC_KEY = 'local-captures/diagnostics/latest.json';
+const TAMPERMONKEY_DIAGNOSTIC_KEY = 'local-captures/diagnostics/tampermonkey-latest.json';
 const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_DIAGNOSTIC_BYTES = 1_500_000;
 
@@ -174,5 +175,45 @@ export async function getLocalDiagnostics(env) {
     return { status: 200, body: { available: true, ...(JSON.parse(await object.text())) } };
   } catch {
     return { status: 500, body: { error: 'Stored diagnostic JSON is invalid.' } };
+  }
+}
+
+
+export async function importTampermonkeyDiagnostics(request, env, payload) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return { status: 400, body: { error: 'A diagnostic object is required.' } };
+  const text = JSON.stringify({
+    ...payload,
+    uploadedAt: Date.now(),
+    source: 'tampermonkey-toc-mainline',
+  });
+  const bytes = new TextEncoder().encode(text);
+  if (bytes.byteLength > MAX_DIAGNOSTIC_BYTES) return { status: 413, body: { error: 'Diagnostic payload is too large.' } };
+  await env.MEDIA.put(TAMPERMONKEY_DIAGNOSTIC_KEY, bytes, {
+    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
+  });
+  return {
+    status: 200,
+    body: {
+      stored: true,
+      byteLength: bytes.byteLength,
+      total: Number(payload?.total || 0),
+      retry: Number(payload?.retry || 0),
+      officialSaved: Number(payload?.officialSaved || 0),
+      figure1Saved: Number(payload?.figure1Saved || 0),
+      uploadedAt: Date.now(),
+      source: 'tampermonkey-toc-mainline',
+    },
+  };
+}
+
+export async function getTampermonkeyDiagnostics(env) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
+  const object = await env.MEDIA.get(TAMPERMONKEY_DIAGNOSTIC_KEY);
+  if (!object) return { status: 200, body: { available: false, source: 'tampermonkey-toc-mainline' } };
+  try {
+    return { status: 200, body: { available: true, ...(JSON.parse(await object.text())) } };
+  } catch {
+    return { status: 500, body: { error: 'Stored Tampermonkey diagnostic JSON is invalid.' } };
   }
 }
