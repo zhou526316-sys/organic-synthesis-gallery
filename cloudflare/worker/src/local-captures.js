@@ -71,12 +71,15 @@ export async function importLocalCapture(request, env, payload) {
   const image = parseImageData(payload?.imageData);
   if (!image) return { status: 400, body: { error: 'A valid imageData payload is required.' } };
 
+  const source = typeof payload?.source === 'string' && /^[a-z0-9._:-]{1,80}$/i.test(payload.source)
+    ? payload.source
+    : 'windows-toc-collector';
   const hash = await sha256Hex(image.bytes);
   const doiHash = await sha256Hex(new TextEncoder().encode(doi));
   const key = `${IMAGE_PREFIX}${doiHash.slice(0, 24)}-${kind}-${hash.slice(0, 16)}.${extensionFor(image.contentType)}`;
   await env.MEDIA.put(key, image.bytes, {
     httpMetadata: { contentType: image.contentType, cacheControl: 'public, max-age=31536000, immutable' },
-    customMetadata: { doi, kind, contentHash: hash.slice(0, 32), source: 'windows-toc-collector' },
+    customMetadata: { doi, kind, contentHash: hash.slice(0, 32), source },
   });
 
   const index = await readIndex(env);
@@ -92,7 +95,7 @@ export async function importLocalCapture(request, env, payload) {
     articleUrl: typeof payload?.articleUrl === 'string' ? payload.articleUrl.slice(0, 2000) : '',
     caption: typeof payload?.caption === 'string' ? payload.caption.slice(0, 600) : '',
     sourceUrl: typeof payload?.sourceUrl === 'string' ? payload.sourceUrl.slice(0, 2000) : '',
-    source: 'windows-toc-collector',
+    source,
     capturedAt: typeof payload?.capturedAt === 'string' ? payload.capturedAt.slice(0, 80) : '',
     updatedAt: now,
   };
@@ -136,10 +139,13 @@ export async function getLocalCaptureIndex(request, env) {
 export async function importLocalDiagnostics(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return { status: 400, body: { error: 'A diagnostic object is required.' } };
+  const source = typeof payload?.source === 'string' && /^[a-z0-9._:-]{1,80}$/i.test(payload.source)
+    ? payload.source
+    : 'windows-toc-collector';
   const text = JSON.stringify({
     ...payload,
     uploadedAt: Date.now(),
-    source: 'windows-toc-collector',
+    source,
   });
   const bytes = new TextEncoder().encode(text);
   if (bytes.byteLength > MAX_DIAGNOSTIC_BYTES) return { status: 413, body: { error: 'Diagnostic payload is too large.' } };
