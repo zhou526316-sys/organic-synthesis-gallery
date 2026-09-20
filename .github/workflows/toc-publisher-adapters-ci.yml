@@ -78,6 +78,7 @@ jobs:
           grep -F "object[type^=\"image\"],svg image" public/toc-mainline.user.js
           grep -F "iframe_cross_origin_or_auth_redirect" public/toc-mainline.user.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
+          grep -F "var VERSION = '6.2.0';" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "loaderVersion = '2.2.0'" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" cloudflare/scripts/build-bridge-loader.mjs
