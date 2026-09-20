@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.1
+// @version      6.2.2
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -36,7 +36,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.1';
+  var VERSION = '6.2.2';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -53,6 +53,7 @@
   var SUMMARY_KEY = P + 'last-run-summary';
   var BATCH_SIZE_KEY = P + 'batch-size';
   var ABORT_KEY = P + 'abort-request';
+  var HEARTBEAT_KEY = P + 'publisher-heartbeat';
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
   var DEFAULT_BATCH_SIZE = 8;
@@ -203,8 +204,24 @@
       progress: progress ? {
         status: String(progress.status || ''),
         at: String(progress.at || ''),
-        url: sanitizeDiagnosticUrl(progress.url || '')
+        url: sanitizeDiagnosticUrl(progress.url || ''),
+        version: String(progress.version || ''),
+        host: String(progress.host || '')
       } : null,
+      publisherHeartbeat: (function () {
+        var hb = GM_getValue(HEARTBEAT_KEY, null);
+        if (!hb) return null;
+        return {
+          doi: normalizeDoi(hb.doi || ''),
+          publisher: String(hb.publisher || ''),
+          host: String(hb.host || ''),
+          href: sanitizeDiagnosticUrl(hb.href || ''),
+          version: String(hb.version || ''),
+          state: String(hb.state || ''),
+          at: Number(hb.at || 0),
+          atIso: String(hb.atIso || '')
+        };
+      })(),
       traces: traces
     };
     try {
@@ -215,6 +232,28 @@
       window.alert('本地日志上传失败：' + String(error && error.message || error));
       throw error;
     }
+  }
+
+  function writePublisherHeartbeat(job, state) {
+    var doi = normalizeDoi(job && job.doi);
+    var publisher = doi ? String(job.publisher || publisherForDoi(doi)) : publisherForDoi(normalizeDoi(location.href));
+    var row = {
+      doi: doi,
+      publisher: publisher || '',
+      host: String(location.hostname || ''),
+      href: sanitizeDiagnosticUrl(location.href),
+      version: VERSION,
+      state: String(state || 'script_loaded'),
+      at: Date.now(),
+      atIso: nowIso()
+    };
+    GM_setValue(HEARTBEAT_KEY, row);
+    return row;
+  }
+
+  function currentPublisherHeartbeat() {
+    var hb = GM_getValue(HEARTBEAT_KEY, null);
+    return hb && Number(hb.at || 0) > 0 ? hb : null;
   }
 
   function selectBatchJobs(allJobs, limit) {
@@ -1376,8 +1415,57 @@
   async function waitForResult(job, tab) {
     var timeout = job.publisher === 'wiley' ? 9 * 60 * 1000 : 180000;
     var started = Date.now();
+    var heartbeatDeadlineMs = 12000;
+    var heartbeatValidated = false;
     while (Date.now() - started < timeout) {
       renewLease();
+
+      if (!heartbeatValidated) {
+        var hb = currentPublisherHeartbeat();
+        var elapsedForHeartbeat = Date.now() - started;
+        if (hb && Number(hb.at || 0) >= started - 2000) {
+          var hbDoi = normalizeDoi(hb.doi || '');
+          if (hbDoi === normalizeDoi(job.doi) && String(hb.version || '')) {
+            heartbeatValidated = true;
+            GM_setValue(progressKey(job.doi), {
+              status: 'publisher_heartbeat_ok',
+              at: nowIso(),
+              url: String(hb.href || ''),
+              version: String(hb.version || ''),
+              host: String(hb.host || '')
+            });
+          } else if (elapsedForHeartbeat >= heartbeatDeadlineMs) {
+            var mismatchReason = 'publisher_userscript_running_job_not_seen';
+            await uploadControllerReport(job, mismatchReason, {
+              status: String(hb.state || 'script_loaded'),
+              at: String(hb.atIso || nowIso()),
+              url: String(hb.href || ''),
+              version: String(hb.version || ''),
+              host: String(hb.host || '')
+            }, 'failed');
+            try { if (tab && tab.close) tab.close(); } catch (_) {}
+            return {
+              doi: job.doi,
+              status: 'failed',
+              reason: mismatchReason,
+              diagnosticUploaded: true,
+              publisherHeartbeat: hb,
+              finishedAt: nowIso()
+            };
+          }
+        } else if (elapsedForHeartbeat >= heartbeatDeadlineMs) {
+          var noHeartbeatReason = 'publisher_userscript_not_running';
+          await uploadControllerReport(job, noHeartbeatReason, null, 'failed');
+          try { if (tab && tab.close) tab.close(); } catch (_) {}
+          return {
+            doi: job.doi,
+            status: 'failed',
+            reason: noHeartbeatReason,
+            diagnosticUploaded: true,
+            finishedAt: nowIso()
+          };
+        }
+      }
       if (isAbortRequested()) {
         var abortProgress = GM_getValue(progressKey(job.doi), null);
         await uploadControllerReport(job, 'user_aborted', abortProgress, 'aborted');
@@ -1483,6 +1571,7 @@
 
       GM_deleteValue(resultKey(job.doi));
       GM_deleteValue(progressKey(job.doi));
+      GM_deleteValue(HEARTBEAT_KEY);
       GM_setValue(ACTIVE_JOB_KEY, job);
       badge('TOC ' + String(i + 1) + '/' + String(jobs.length) + '：' + job.doi, '#1f2937');
 
@@ -1532,10 +1621,26 @@
 
   async function publisherBoot() {
     if (location.hostname === 'doi.org') return;
+    writePublisherHeartbeat(null, 'script_loaded');
     var job = GM_getValue(ACTIVE_JOB_KEY, null);
-    if (!job || !normalizeDoi(job.doi)) return;
+    if (!job || !normalizeDoi(job.doi)) {
+      writePublisherHeartbeat(null, 'active_job_missing');
+      return;
+    }
+    writePublisherHeartbeat(job, 'active_job_seen');
     var started = Date.parse(job.startedAt || '');
-    if (!Number.isFinite(started) || Date.now() - started > 12 * 60 * 1000) return;
+    if (!Number.isFinite(started) || Date.now() - started > 12 * 60 * 1000) {
+      writePublisherHeartbeat(job, 'active_job_stale');
+      return;
+    }
+    GM_setValue(progressKey(job.doi), {
+      status: 'publisher_script_started',
+      at: nowIso(),
+      url: location.href,
+      version: VERSION,
+      host: location.hostname
+    });
+    writePublisherHeartbeat(job, 'publisher_script_started');
     await sleep(900);
     await runPublisherJob(job);
   }
@@ -1586,6 +1691,17 @@
     });
     GM_registerMenuCommand('上传本地 TOC 日志', function () {
       uploadLocalDiagnostics().catch(function () {});
+    });
+    GM_registerMenuCommand('查看出版社脚本心跳', function () {
+      var hb = currentPublisherHeartbeat();
+      window.alert(hb ? JSON.stringify({
+        doi: normalizeDoi(hb.doi || ''),
+        publisher: String(hb.publisher || ''),
+        host: String(hb.host || ''),
+        version: String(hb.version || ''),
+        state: String(hb.state || ''),
+        atIso: String(hb.atIso || '')
+      }, null, 2) : '尚未收到任何出版社页面脚本心跳。');
     });
     GM_registerMenuCommand('暂停/继续 TOC 自动运行', function () {
       var enabled = GM_getValue(ENABLED_KEY, true) !== false;
