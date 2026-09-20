@@ -24,6 +24,7 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_deleteValue
+// @grant        GM_listValues
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
@@ -51,6 +52,7 @@
   var SUMMARY_KEY = P + 'last-run-summary';
   var BATCH_SIZE_KEY = P + 'batch-size';
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+  var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
   var DEFAULT_BATCH_SIZE = 8;
   var CONTROLLER_ID = String(Date.now()) + '-' + Math.random().toString(36).slice(2);
   var MAX_TRACE = 150;
@@ -114,6 +116,13 @@
     if (!Number.isFinite(value)) value = DEFAULT_BATCH_SIZE;
     return Math.max(1, Math.min(20, Math.floor(value)));
   }
+  function isFailureCooling(doi) {
+    var failed = GM_getValue(failureKey(doi), null);
+    if (!failed || Number(failed.at || 0) <= 0) return false;
+    if (String(failed.engineRevision || '') !== FAILURE_ENGINE_REVISION) return false;
+    return Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS;
+  }
+
   function selectBatchJobs(allJobs, limit) {
     var buckets = new Map();
     allJobs.forEach(function (raw) {
@@ -138,8 +147,7 @@
       var rows = buckets.get(publisher) || [];
       while (rows.length) {
         var candidate = rows.shift();
-        var failed = GM_getValue(failureKey(candidate.doi), null);
-        if (failed && Number(failed.at || 0) > 0 && Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS) continue;
+        if (isFailureCooling(candidate.doi)) continue;
         out.push(candidate);
         break;
       }
@@ -147,6 +155,17 @@
       else index += 1;
     }
     return out;
+  }
+
+  function selectPriorityBatch(visible, upgrades, limit) {
+    var primary = selectBatchJobs(visible, limit);
+    if (primary.length >= limit) return primary;
+    var selected = new Set(primary.map(function (job) { return normalizeDoi(job.doi); }));
+    var remainingUpgrades = upgrades.filter(function (job) {
+      var doi = normalizeDoi(job && job.doi);
+      return doi && !selected.has(doi);
+    });
+    return primary.concat(selectBatchJobs(remainingUpgrades, limit - primary.length));
   }
 
   function pushTrace(trace, data) {
@@ -1076,6 +1095,71 @@
     return true;
   }
 
+  async function uploadControllerFailure(job, reason, progress) {
+    var token = writeToken();
+    if (!token || !job || !normalizeDoi(job.doi)) return false;
+    var trace = [
+      {
+        seq: 1,
+        at: nowIso(),
+        stage: 'controller',
+        event: 'job_timeout_or_launch_failure',
+        status: 'failed',
+        httpStatus: 0,
+        contentType: '',
+        url: String(progress && progress.url || articleUrl(job) || ''),
+        message: String(reason || 'controller_failure'),
+        candidateKind: '',
+        candidateSource: '',
+        candidateScore: 0,
+        imageWidth: 0,
+        imageHeight: 0,
+        byteLength: 0
+      }
+    ];
+    if (progress && progress.status) {
+      trace.push({
+        seq: 2,
+        at: String(progress.at || nowIso()),
+        stage: 'controller',
+        event: 'last_progress',
+        status: String(progress.status || ''),
+        httpStatus: 0,
+        contentType: '',
+        url: String(progress.url || ''),
+        message: 'last publisher-page progress visible to Gallery controller',
+        candidateKind: '',
+        candidateSource: '',
+        candidateScore: 0,
+        imageWidth: 0,
+        imageHeight: 0,
+        byteLength: 0
+      });
+    }
+    try {
+      await postJson(REPORT_ENDPOINT, {
+        doi: job.doi,
+        publisher: job.publisher || publisherForDoi(job.doi),
+        status: 'failed',
+        reason: String(reason || 'controller_failure').slice(0, 220),
+        assetType: '',
+        candidateKind: '',
+        candidateSource: 'gallery_controller',
+        articleUrl: String(progress && progress.url || articleUrl(job) || ''),
+        sourceUrl: '',
+        pageTitle: 'Gallery TOC controller',
+        queueGeneratedAt: job.queueGeneratedAt || '',
+        startedAt: job.startedAt || '',
+        finishedAt: nowIso(),
+        trace: trace
+      }, token);
+      return true;
+    } catch (error) {
+      try { console.warn('[OSG TOC] controller diagnostic upload failed', error); } catch (_) {}
+      return false;
+    }
+  }
+
   async function waitForResult(job, tab) {
     var timeout = job.publisher === 'wiley' ? 9 * 60 * 1000 : 180000;
     var started = Date.now();
@@ -1094,8 +1178,17 @@
       }
       await sleep(1200);
     }
+    var lastProgress = GM_getValue(progressKey(job.doi), null);
+    await uploadControllerFailure(job, 'controller_timeout', lastProgress);
     try { if (tab && tab.close) tab.close(); } catch (_) {}
-    return { doi: job.doi, status: 'failed', reason: 'controller_timeout', finishedAt: nowIso() };
+    return {
+      doi: job.doi,
+      status: 'failed',
+      reason: 'controller_timeout',
+      diagnosticUploaded: true,
+      lastProgress: lastProgress && lastProgress.status || '',
+      finishedAt: nowIso()
+    };
   }
 
   async function controllerRun() {
@@ -1127,12 +1220,10 @@
     var upgrades = Array.isArray(queue.officialUpgrades) ? queue.officialUpgrades : [];
     var allJobs = visible.concat(upgrades);
     var limit = batchSize();
-    var jobs = selectBatchJobs(allJobs, limit);
+    var jobs = selectPriorityBatch(visible, upgrades, limit);
     var cooling = allJobs.filter(function (queued) {
       var doi = normalizeDoi(queued && queued.doi);
-      if (!doi) return false;
-      var failed = GM_getValue(failureKey(doi), null);
-      return failed && Number(failed.at || 0) > 0 && Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS;
+      return doi ? isFailureCooling(doi) : false;
     });
     var cooldownSkipped = cooling.length;
     var summary = {
@@ -1171,12 +1262,20 @@
       GM_setValue(ACTIVE_JOB_KEY, job);
       badge('TOC ' + String(i + 1) + '/' + String(jobs.length) + '：' + job.doi, '#1f2937');
 
-      var tab = GM_openInTab(articleUrl(job), {
-        active: job.publisher === 'wiley',
-        insert: true,
-        setParent: true
-      });
-      var result = await waitForResult(job, tab);
+      var tab = null;
+      var result = null;
+      try {
+        tab = GM_openInTab(articleUrl(job), {
+          active: job.publisher === 'wiley',
+          insert: true,
+          setParent: true
+        });
+        result = await waitForResult(job, tab);
+      } catch (openError) {
+        var openReason = 'controller_tab_launch_failed:' + String(openError && openError.message || openError).slice(0, 160);
+        await uploadControllerFailure(job, openReason, null);
+        result = { doi: job.doi, status: 'failed', reason: openReason, diagnosticUploaded: true, finishedAt: nowIso() };
+      }
       summary.results.push(result);
       GM_setValue(attemptKey(job.doi, job.queueGeneratedAt), result);
       if (result.status === 'success') {
@@ -1184,7 +1283,11 @@
         GM_deleteValue(failureKey(job.doi));
       } else {
         summary.failed += 1;
-        GM_setValue(failureKey(job.doi), { at: Date.now(), reason: String(result.reason || 'failed').slice(0, 220) });
+        GM_setValue(failureKey(job.doi), {
+          at: Date.now(),
+          reason: String(result.reason || 'failed').slice(0, 220),
+          engineRevision: FAILURE_ENGINE_REVISION
+        });
       }
       GM_deleteValue(ACTIVE_JOB_KEY);
       await sleep(3500);
@@ -1242,6 +1345,16 @@
     });
     GM_registerMenuCommand('查看最近运行摘要', function () {
       window.alert(JSON.stringify(GM_getValue(SUMMARY_KEY, {}), null, 2));
+    });
+    GM_registerMenuCommand('清除 TOC 失败冷却并立即重试', function () {
+      var queueKeys = [];
+      try {
+        if (typeof GM_listValues === 'function') queueKeys = GM_listValues();
+      } catch (_) {}
+      queueKeys.filter(function (key) { return String(key).indexOf(P + 'failure:') === 0; })
+        .forEach(function (key) { try { GM_deleteValue(key); } catch (_) {} });
+      GM_deleteValue(LEASE_KEY);
+      window.alert('已清除当前脚本版本的失败冷却。返回 Gallery 后可立即重新运行实时 TOC 队列。');
     });
     GM_registerMenuCommand('清除卡住任务/租约', function () {
       var job = GM_getValue(ACTIVE_JOB_KEY, null);
