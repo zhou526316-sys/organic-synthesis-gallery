@@ -10,6 +10,12 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
+      - 'public/automation-supplement.json'
+      - 'public/curated-supplement.json'
+      - 'public/final-audit-supplement.json'
+      - 'public/manual-supplement.json'
+      - 'public/total-synthesis.json'
+      - 'public/papers.gz.b64'
 
 permissions:
   contents: read

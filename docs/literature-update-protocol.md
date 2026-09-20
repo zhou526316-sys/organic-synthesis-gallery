@@ -44,6 +44,12 @@ The primary scheduled literature task owns capability selection, candidate disco
 
 The primary task must always use the currently selected latest stable capability rather than a permanently hard-coded historical scraping implementation.
 
+### Immediate publication requirement
+
+If a primary run accepts one or more papers, publication is part of that same primary run. After persisting review decisions, the run must write accepted papers to the authoritative repository dataset and immediately trigger both GitHub Pages and Worker frontend deployment. It must not wait for the later 08:30/18:30 TOC repair task or a separate sync-only task. Missing publisher TOC/Graphical Abstract media is non-blocking: publish the literature card first with TOC explicitly pending, then let the TOC task enrich it later.
+
+The run is not complete merely because review JSON or data files were committed. It must verify that the accepted DOI is present in the deployed production data/card search and report the resulting total card count. If deployment fails, record an explicit sync failure and retry deployment without re-running candidate discovery or semantic review.
+
 ## Sync-only workflow
 
 A request such as “同步一下网页 / 同步文献到网站” is a sync-only request when a recent completed fetch exists. It must consume the recorded dataset/TOC commits and must not repeat candidate discovery or TOC crawling. Capability upgrades are applied by the next primary fetch task, not by the sync-only fallback.
