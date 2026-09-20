@@ -62,7 +62,7 @@ if (/\beval\s*\(/.test(runtimeBody)) throw new Error('Runtime unexpectedly conta
 
 const tocMatchLines = tocMainline.match(/^\/\/ @match\s+.+$/gm) || [];
 let tocBody = tocMainline.replace(/^\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==\s*/, '').trim();
-if (!tocBody.includes("var VERSION = '6.1.0';")) throw new Error('TOC mainline version/content changed unexpectedly.');
+if (!tocBody.includes("var VERSION = '6.2.0';")) throw new Error('TOC mainline version/content changed unexpectedly.');
 tocBody = tocBody
   .replace("var TOKEN_KEY = P + 'write-token';", "var TOKEN_KEY = 'organicGalleryCloudflareBridgeWriteToken';")
   .replace("var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';", "var LEGACY_TOKEN_KEY = TOKEN_KEY;")
