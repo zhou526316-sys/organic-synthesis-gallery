@@ -1,4 +1,4 @@
-import { getLocalCaptureIndex, getLocalDiagnostics, importLocalCapture, importLocalDiagnostics } from './local-captures.js';
+import { getLocalCaptureIndex, getLocalDiagnostics, getTampermonkeyDiagnostics, importLocalCapture, importLocalDiagnostics, importTampermonkeyDiagnostics } from './local-captures.js';
 import {
   bridgeQueue,
   getArticleFigures,
@@ -85,6 +85,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/jobs/status',
   '/api/media/local-capture-index',
   '/api/media/local-diagnostics',
+  '/api/media/tampermonkey-diagnostics',
 ]);
 
 async function readJson(request) {
@@ -306,6 +307,9 @@ async function handleApi(request, env) {
   if (request.method === 'GET' && url.pathname === '/api/media/local-diagnostics') {
     return resultResponse(await getLocalDiagnostics(env), cors);
   }
+  if (request.method === 'GET' && url.pathname === '/api/media/tampermonkey-diagnostics') {
+    return resultResponse(await getTampermonkeyDiagnostics(env), cors);
+  }
   if (request.method === 'GET' && url.pathname === '/api/media-audit') {
     return resultResponse(await mediaAudit(env));
   }
@@ -329,6 +333,7 @@ async function handleApi(request, env) {
       '/api/media/primary/import',
       '/api/media/local-capture/import',
       '/api/media/local-diagnostics/import',
+      '/api/media/tampermonkey-diagnostics/import',
       '/api/media/jobs/claim',
       '/api/media/jobs/start',
       '/api/media/jobs/complete',
@@ -373,6 +378,9 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-diagnostics/import') {
     return resultResponse(await importLocalDiagnostics(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/tampermonkey-diagnostics/import') {
+    return resultResponse(await importTampermonkeyDiagnostics(request, env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/media/jobs/claim') {
     return resultResponse(await claimMediaJobs(env, await readJson(request)));
