@@ -27,6 +27,8 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       D1_NAME: organic-synthesis-gallery
       R2_BUCKET: organic-synthesis-gallery-media
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
 
     steps:
       - name: Checkout main
@@ -101,6 +103,23 @@ jobs:
           database_name = "$D1_NAME"
           database_id = "$D1_ID"
           EOF
+
+      - name: Sync configured email secrets
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs = require('fs');
+          const values = {};
+          if (process.env.RESEND_API_KEY) values.RESEND_API_KEY = process.env.RESEND_API_KEY;
+          if (process.env.EMAIL_FROM) values.EMAIL_FROM = process.env.EMAIL_FROM;
+          if (!Object.keys(values).length) throw new Error('Email secrets are missing');
+          fs.writeFileSync('/tmp/email-secrets.json', JSON.stringify(values));
+          console.log(`Prepared ${Object.keys(values).length} email secrets.`);
+          NODE
+          npx wrangler secret bulk /tmp/email-secrets.json --config wrangler.frontend.toml >/dev/null
+          rm -f /tmp/email-secrets.json
 
       - name: Dry-run frontend Worker bundle
         working-directory: cloudflare/worker
