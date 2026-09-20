@@ -33,17 +33,23 @@ export class GalleryUserShell extends HTMLElement {
   private resetEmail = '';
   private verifyChallengeId = '';
   private readonly rerender = (): void => this.render();
+  private readonly reposition = (): void => { if (this.open) this.positionPanel(); };
   private readonly outside = (event: PointerEvent): void => { if (this.open && !event.composedPath().includes(this)) { this.open = false; this.render(); } };
 
   static get observedAttributes(): string[] { return ['data-language', 'data-current-query']; }
   connectedCallback(): void {
     document.addEventListener('pointerdown', this.outside);
+    window.addEventListener('resize', this.reposition);
     store.addEventListener('change', this.rerender);
     this.render();
     void this.refreshIntegrations();
     void this.consumeAuthHash();
   }
-  disconnectedCallback(): void { document.removeEventListener('pointerdown', this.outside); store.removeEventListener('change', this.rerender); }
+  disconnectedCallback(): void {
+    document.removeEventListener('pointerdown', this.outside);
+    window.removeEventListener('resize', this.reposition);
+    store.removeEventListener('change', this.rerender);
+  }
   attributeChangedCallback(): void { if (this.isConnected) this.render(); }
   private get language(): Language { return this.dataset.language === 'en' ? 'en' : 'zh'; }
   private tr(zh: string, en: string): string { return this.language === 'zh' ? zh : en; }
@@ -54,6 +60,24 @@ export class GalleryUserShell extends HTMLElement {
       @media(max-width:680px){.panel{position:absolute;right:0;top:calc(100% + 7px);inset:auto 0 auto auto;width:min(520px,calc(100vw - 24px));height:auto;max-height:min(72dvh,620px);min-height:0;grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);overflow:hidden;border-radius:16px}.nav{display:flex;overflow-x:auto;overflow-y:hidden;border-right:0;border-bottom:1px solid #edf0f4;padding:7px}.nav button{width:auto;white-space:nowrap}.content{min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:12px 12px 28px}.style-row{grid-template-columns:1fr 1fr}.trigger{min-height:32px;padding:5px 9px}}
     </style><button class='trigger' type='button' aria-expanded='${this.open}'>${this.tr('用户中心', 'User Center')}</button>${this.open ? this.panelMarkup() : ''}`;
     this.bind();
+    if (this.open) queueMicrotask(() => this.positionPanel());
+  }
+
+  private positionPanel(): void {
+    const trigger = this.shadow.querySelector<HTMLElement>('.trigger');
+    const panel = this.shadow.querySelector<HTMLElement>('.panel');
+    if (!trigger || !panel) return;
+    panel.style.top = '0px';
+    const triggerRect = trigger.getBoundingClientRect();
+    const hostRect = this.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    const gap = 7;
+    const margin = 8;
+    let top = triggerRect.bottom + gap;
+    const above = triggerRect.top - panelRect.height - gap;
+    if (top + panelRect.height > window.innerHeight - margin && above >= margin) top = above;
+    panel.style.top = `${Math.round(top - hostRect.top)}px`;
+    panel.dataset.anchor = 'user-center';
   }
 
   private panelMarkup(): string {
