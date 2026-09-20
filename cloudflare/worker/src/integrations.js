@@ -193,6 +193,57 @@ export function integrationStatus(env) {
   };
 }
 
+export async function probeEmailDelivery(env) {
+  if (!providerConfigured(env, 'email')) {
+    return { status: 503, body: { ok: false, error: 'provider_not_configured' } };
+  }
+  let response;
+  try {
+    response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${env.RESEND_API_KEY}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: env.EMAIL_FROM,
+        to: ['delivered@resend.dev'],
+        subject: 'Organic Synthesis Gallery email delivery probe',
+        html: '<p>Automated delivery probe.</p>',
+      }),
+    });
+  } catch (error) {
+    return {
+      status: 502,
+      body: { ok: false, error: 'email_provider_unreachable', detail: String(error?.message || error).slice(0, 240) },
+    };
+  }
+
+  const raw = await response.text();
+  let data = {};
+  try { data = raw ? JSON.parse(raw) : {}; } catch {}
+  if (!response.ok) {
+    return {
+      status: 502,
+      body: {
+        ok: false,
+        error: 'email_delivery_failed',
+        providerStatus: response.status,
+        providerName: typeof data?.name === 'string' ? data.name.slice(0, 120) : undefined,
+        providerMessage: typeof data?.message === 'string' ? data.message.slice(0, 300) : raw.slice(0, 300),
+      },
+    };
+  }
+  return {
+    status: 200,
+    body: {
+      ok: true,
+      providerStatus: response.status,
+      messageId: typeof data?.id === 'string' ? data.id : undefined,
+    },
+  };
+}
+
 async function storeState(env, state, provider, returnTo) {
   const now = Date.now();
   await env.DB.prepare(
