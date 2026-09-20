@@ -92,6 +92,9 @@ const copy = {
     newest: '最新优先',
     oldest: '最早优先',
     onlyNew: '仅新增',
+    dateFrom: '起始日期',
+    dateTo: '结束日期',
+    clearFilters: '清除期刊/日期筛选',
     shown: '篇文献',
     titlePending: '正在核验标题…',
     doiPending: 'DOI 待核验',
@@ -121,6 +124,9 @@ const copy = {
     newest: 'Newest first',
     oldest: 'Oldest first',
     onlyNew: 'Only new',
+    dateFrom: 'From date',
+    dateTo: 'To date',
+    clearFilters: 'Clear journal/date filters',
     shown: 'papers shown',
     titlePending: 'Verifying title…',
     doiPending: 'DOI pending',
@@ -143,6 +149,7 @@ type CopyKey = keyof typeof copy.zh;
 const LANGUAGE_KEY = 'organic-gallery-language';
 const TITLE_CACHE_KEY = 'organic-gallery-resolved-title-cache-v2';
 const ZH_CACHE_KEY = 'organic-gallery-zh-title-cache-v2';
+const FILTER_PREFS_KEY = 'organic-gallery-filter-preferences-v1';
 const MEDIA_TTL = 5 * 60 * 1000;
 
 const appElement = document.querySelector<HTMLDivElement>('#app');
@@ -155,6 +162,8 @@ let query = '';
 let sort: 'newest' | 'oldest' = 'newest';
 let onlyNew = false;
 const selectedJournals = new Set<string>();
+let dateFrom = '';
+let dateTo = '';
 const zhTitleCache = new Map<string, string>();
 const resolvedTitleCache = new Map<string, { title: string; doi?: string }>();
 const tocCache = new Map<string, { result: TocResponse; fetchedAt: number }>();
@@ -169,6 +178,7 @@ let bridgeStageCursor = 0;
 let newnessTimer: number | null = null;
 let journalPickerAbort: AbortController | null = null;
 
+hydrateFilterPreferences();
 hydrateBrowserCaches();
 document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
 
@@ -180,6 +190,43 @@ function initialLanguage(): Language {
     // Browser storage is optional.
   }
   return navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+}
+
+function validFilterDate(value: unknown): value is string {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function hydrateFilterPreferences(): void {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FILTER_PREFS_KEY) || 'null') as {
+      journals?: unknown;
+      dateFrom?: unknown;
+      dateTo?: unknown;
+    } | null;
+    if (!saved) return;
+    if (Array.isArray(saved.journals)) {
+      for (const journal of saved.journals) {
+        if (typeof journal === 'string' && journal.trim()) selectedJournals.add(journal.trim());
+      }
+    }
+    if (validFilterDate(saved.dateFrom)) dateFrom = saved.dateFrom;
+    if (validFilterDate(saved.dateTo)) dateTo = saved.dateTo;
+    if (dateFrom && dateTo && dateFrom > dateTo) dateTo = dateFrom;
+  } catch {
+    // Ignore malformed optional preferences.
+  }
+}
+
+function persistFilterPreferences(): void {
+  try {
+    localStorage.setItem(FILTER_PREFS_KEY, JSON.stringify({
+      journals: [...selectedJournals].sort(),
+      dateFrom,
+      dateTo,
+    }));
+  } catch {
+    // Filtering remains usable even if browser storage is unavailable.
+  }
 }
 
 function t(key: CopyKey): string {
@@ -363,6 +410,8 @@ function filteredPapers(): Paper[] {
   const needle = query.trim().toLowerCase();
   return papers
     .filter(paper => selectedJournals.size === 0 || selectedJournals.has(paper.journal))
+    .filter(paper => !dateFrom || paper.date >= dateFrom)
+    .filter(paper => !dateTo || paper.date <= dateTo)
     .filter(paper => !onlyNew || isNewToday(paper))
     .filter(paper => {
       if (!needle) return true;
@@ -408,7 +457,7 @@ function renderCards(): void {
   gallery.innerHTML = list.length ? list.map(paper => {
     const doi = paperDoi(paper);
     const href = doi ? `https://doi.org/${doi}` : (paper.url || '');
-    return `<article class='card' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
+    return `<article class='card' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);
@@ -424,9 +473,10 @@ function mount(): void {
   const extraJournals = [...new Set(papers.map(paper => paper.journal).filter(journal => !targetSet.has(journal)))].sort();
   const journals = [...targetJournals, ...extraJournals];
   const dates = papers.map(paper => paper.date).filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
+  const earliest = dates[0] || '';
   const latest = dates[dates.length - 1] || '';
   document.title = t('title');
-  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='stats'><div class='stat'><strong>${papers.length}</strong><span>${escapeHtml(t('total'))}</span></div><div class='stat'><strong>${journals.length}</strong><span>${escapeHtml(t('journals'))}</span></div><div class='stat'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => `<label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}><span>${escapeHtml(journal)}</span></label>`).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><div class='resultline'><div><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div><section id='gallery' class='gallery' aria-live='polite'></section><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
+  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='stats'><div class='stat'><strong>${papers.length}</strong><span>${escapeHtml(t('total'))}</span></div><div class='stat'><strong>${journals.length}</strong><span>${escapeHtml(t('journals'))}</span></div><div class='stat'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => `<label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}><span>${escapeHtml(journal)}</span></label>`).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'${earliest ? ` min='${escapeHtml(earliest)}'` : ''}${(dateTo || latest) ? ` max='${escapeHtml(dateTo || latest)}'` : ''}></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'${(dateFrom || earliest) ? ` min='${escapeHtml(dateFrom || earliest)}'` : ''}${latest ? ` max='${escapeHtml(latest)}'` : ''}></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div><section id='gallery' class='gallery' aria-live='polite'></section><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
   mountUserShell(app, language);
 
   document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.addEventListener('click', () => {
@@ -468,15 +518,36 @@ function mount(): void {
   });
   document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.addEventListener('click', () => {
     selectedJournals.clear();
+    persistFilterPreferences();
     mount();
   });
   document.querySelectorAll<HTMLInputElement>('[data-journal-option]').forEach(input => input.addEventListener('change', () => {
     if (input.checked) selectedJournals.add(input.value);
     else selectedJournals.delete(input.value);
+    persistFilterPreferences();
     const summary = document.querySelector<HTMLElement>('#journalSummary');
     if (summary) summary.textContent = filterSummary();
     renderCards();
   }));
+  document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
+    dateFrom = (event.target as HTMLInputElement).value;
+    if (dateFrom && dateTo && dateFrom > dateTo) dateTo = dateFrom;
+    persistFilterPreferences();
+    mount();
+  });
+  document.querySelector<HTMLInputElement>('#dateTo')?.addEventListener('change', event => {
+    dateTo = (event.target as HTMLInputElement).value;
+    if (dateFrom && dateTo && dateTo < dateFrom) dateFrom = dateTo;
+    persistFilterPreferences();
+    mount();
+  });
+  document.querySelector<HTMLButtonElement>('#clearCustomFilters')?.addEventListener('click', () => {
+    selectedJournals.clear();
+    dateFrom = '';
+    dateTo = '';
+    persistFilterPreferences();
+    mount();
+  });
 
   renderCards();
   scheduleInventory();
