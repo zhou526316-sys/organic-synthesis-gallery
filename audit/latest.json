@@ -1,6 +1,6 @@
 {
   "auditVersion": 4,
-  "generatedAt": "2026-09-20T00:02:09.123Z",
+  "generatedAt": "2026-09-20T03:57:43.406Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -159,24 +159,24 @@
   ],
   "summary": {
     "galleryDois": 478,
-    "sourceRecords": 618,
-    "rawMissingFromGallery": 550,
+    "sourceRecords": 619,
+    "rawMissingFromGallery": 551,
     "previouslyReviewedExcluded": 525,
-    "missingFromGallery": 25,
-    "potentialGaps": 15,
+    "missingFromGallery": 26,
+    "potentialGaps": 16,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
-    "unresolved": 25,
+    "unresolved": 26,
     "excludedByPolicy": 0
   },
   "closure": {
     "date": "2026-09-19",
     "status": "requires-assistant-review",
-    "sourceRecords": 41,
-    "rawMissingFromGallery": 38,
+    "sourceRecords": 42,
+    "rawMissingFromGallery": 39,
     "previouslyReviewedExcluded": 13,
-    "missingFromGallery": 25,
-    "potentialGaps": 15,
+    "missingFromGallery": 26,
+    "potentialGaps": 16,
     "criticalSourceFailures": 0,
     "verifiedThroughEligible": false,
     "note": "Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, and critical source failures must be zero."
@@ -305,17 +305,17 @@
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-18",
-      "sourceRecords": 31,
-      "crossrefOnly": 0,
+      "sourceRecords": 32,
+      "crossrefOnly": 1,
       "openAlexOnly": 0,
       "multiSource": 31,
       "lateIndexed": 21,
       "safetyTail": 21,
       "coveredByGallery": 5,
-      "rawMissingFromGallery": 26,
+      "rawMissingFromGallery": 27,
       "previouslyReviewedExcluded": 26,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 1,
+      "potentialGaps": 1
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
@@ -983,7 +983,7 @@
       "issn": "2155-5435",
       "mode": "online",
       "ok": true,
-      "count": 31,
+      "count": 32,
       "note": ""
     },
     {
@@ -992,7 +992,7 @@
       "issn": "2155-5435",
       "mode": "published",
       "ok": true,
-      "count": 31,
+      "count": 32,
       "note": ""
     },
     {
@@ -1001,7 +1001,7 @@
       "issn": "2155-5435",
       "mode": "created",
       "ok": true,
-      "count": 37,
+      "count": 38,
       "note": ""
     },
     {
@@ -1305,6 +1305,25 @@
     }
   ],
   "missingCandidates": [
+    {
+      "doi": "10.1021/acscatal.6c04708",
+      "journal": "ACS Catalysis",
+      "title": "Cobalt-Modified Mordenite with Enhanced Stability for Dimethyl Ether Carbonylation",
+      "abstract": "Abstract Mordenite (MOR) zeolite exhibits high selectivity toward methyl acetate (MeOAc) in dimethyl ether (DME) carbonylation. Nevertheless, unmodified MOR suffers from rapid coking-induced deactivation due to the methanol-to-hydrocarbon (MTH) side reaction. Herein, a highly stable cobalt (Co)-modified HMOR catalyst was developed, in which Co exists as isolated, tetrahedrally coordinated Co2+ species located in both 12-membered ring (12-MR) channels and 8-MR side pockets. The CoHMOR catalyst maintains a DME conversion of ∼30% and MeOAc selectivity of ∼98% over 100 h on stream, whereas pristine HMOR deactivates rapidly within 15 h. Notably, Co species possess high structural stability and remain atomically dispersed throughout the reaction, showing advantages over other metal modifiers (e.g., Cu and Ni). Combined acidity and coke analyses reveal that the catalytic stability of CoHMOR originates from the reduced Brønsted acid site density in the 12-MR channels and the structural robustness of Co species against leaching or sintering. These factors hinder the accumulation and condensation of bulky polyaromatic species after the initial rapid coking stage, thereby preserving mass transfer efficiency within the 12-MR channels.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
     {
       "doi": "10.1002/anie.4940262",
       "journal": "Angew",
@@ -1845,6 +1864,25 @@
     }
   ],
   "potentialGaps": [
+    {
+      "doi": "10.1021/acscatal.6c04708",
+      "journal": "ACS Catalysis",
+      "title": "Cobalt-Modified Mordenite with Enhanced Stability for Dimethyl Ether Carbonylation",
+      "abstract": "Abstract Mordenite (MOR) zeolite exhibits high selectivity toward methyl acetate (MeOAc) in dimethyl ether (DME) carbonylation. Nevertheless, unmodified MOR suffers from rapid coking-induced deactivation due to the methanol-to-hydrocarbon (MTH) side reaction. Herein, a highly stable cobalt (Co)-modified HMOR catalyst was developed, in which Co exists as isolated, tetrahedrally coordinated Co2+ species located in both 12-membered ring (12-MR) channels and 8-MR side pockets. The CoHMOR catalyst maintains a DME conversion of ∼30% and MeOAc selectivity of ∼98% over 100 h on stream, whereas pristine HMOR deactivates rapidly within 15 h. Notably, Co species possess high structural stability and remain atomically dispersed throughout the reaction, showing advantages over other metal modifiers (e.g., Cu and Ni). Combined acidity and coke analyses reveal that the catalytic stability of CoHMOR originates from the reduced Brønsted acid site density in the 12-MR channels and the structural robustness of Co species against leaching or sintering. These factors hinder the accumulation and condensation of bulky polyaromatic species after the initial rapid coking stage, thereby preserving mass transfer efficiency within the 12-MR channels.",
+      "date": "2026-09-19",
+      "type": "journal-article",
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
     {
       "doi": "10.1002/anie.2735155",
       "journal": "Angew",
