@@ -102,7 +102,7 @@
   function attemptKey(doi, generatedAt) { return P + 'attempt:' + normalizeDoi(doi) + ':' + String(generatedAt || ''); }
   function failureKey(doi) { return P + 'failure:' + normalizeDoi(doi); }
   function writeToken() {
-    var current = writeToken();
+    var current = String(GM_getValue(TOKEN_KEY, '') || '').trim();
     if (current) return current;
     var legacy = String(GM_getValue(LEGACY_TOKEN_KEY, '') || '').trim();
     if (legacy) {
