@@ -128,6 +128,49 @@ h1 {
   gap: 10px;
   align-items: center;
 }
+.range-filter {
+  margin: -2px 0 12px;
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(180px, 240px) auto;
+  gap: 10px;
+  align-items: end;
+}
+.date-field {
+  display: grid;
+  gap: 5px;
+  color: #667085;
+  font-size: 11px;
+  font-weight: 700;
+}
+.date-field input {
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid #d7deea;
+  border-radius: 12px;
+  background: #fff;
+  color: #172033;
+}
+.clear-custom-filters {
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid #d7deea;
+  border-radius: 12px;
+  background: #fff;
+  color: #48566b;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 750;
+}
+.clear-custom-filters:hover:not(:disabled) {
+  border-color: #b9c8ef;
+  background: #eef3ff;
+  color: #3159bd;
+}
+.clear-custom-filters:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
 .search,
 select {
   min-height: 44px;
@@ -831,6 +874,12 @@ select {
   .toolbar {
     grid-template-columns: 1fr 1fr;
   }
+  .range-filter {
+    grid-template-columns: 1fr 1fr;
+  }
+  .clear-custom-filters {
+    grid-column: 1 / -1;
+  }
   .audit-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -861,6 +910,12 @@ select {
   }
   .toolbar {
     grid-template-columns: 1fr;
+  }
+  .range-filter {
+    grid-template-columns: 1fr;
+  }
+  .clear-custom-filters {
+    grid-column: auto;
   }
   .journal-menu {
     width: 100%;
