@@ -1,0 +1,64 @@
+name: Apply site feedback review status
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'feedback/REVIEW_APPLY.json'
+      - '.github/workflows/site-feedback-review-apply.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-feedback-review-apply
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      STATUS_URL: https://api.gczhouwld.com/api/admin/site-feedback/status
+      OPEN_URL: https://api.gczhouwld.com/api/admin/site-feedback/open?limit=300
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply reviewed and dismissed statuses
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$BRIDGE_WRITE_TOKEN" || { echo 'Missing BRIDGE_WRITE_TOKEN'; exit 1; }
+          node - <<'NODE' > /tmp/site-feedback-status.json
+          const fs = require('fs');
+          const plan = JSON.parse(fs.readFileSync('feedback/REVIEW_APPLY.json', 'utf8'));
+          if (!Array.isArray(plan.updates) || !plan.updates.length) throw new Error('No feedback status updates configured');
+          process.stdout.write(JSON.stringify({ updates: plan.updates }));
+          NODE
+          curl --fail-with-body --silent --show-error             --retry 4 --retry-delay 2             -X POST             -H "authorization: Bearer $BRIDGE_WRITE_TOKEN"             -H "content-type: application/json"             --data-binary @/tmp/site-feedback-status.json             "$STATUS_URL"             -o /tmp/site-feedback-status-result.json
+          cat /tmp/site-feedback-status-result.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const result = JSON.parse(fs.readFileSync('/tmp/site-feedback-status-result.json', 'utf8'));
+          if (Number(result.failed || 0) !== 0) throw new Error('Some feedback status updates failed');
+          if (Number(result.updated || 0) < 1) throw new Error('No feedback status updates were applied');
+          NODE
+
+      - name: Verify only unresolved feedback remains open
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error             --retry 4 --retry-delay 2             -H "authorization: Bearer $BRIDGE_WRITE_TOKEN"             -H "cache-control: no-cache"             "$OPEN_URL"             -o /tmp/site-feedback-open-after-review.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const plan = JSON.parse(fs.readFileSync('feedback/REVIEW_APPLY.json', 'utf8'));
+          const out = JSON.parse(fs.readFileSync('/tmp/site-feedback-open-after-review.json', 'utf8'));
+          const actual = (out.feedback || []).map(item => String(item.id)).sort();
+          const expected = (plan.expectedOpenIds || []).map(String).sort();
+          console.log(JSON.stringify({ count: out.count, actual, expected, sources: out.sources }));
+          if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+            throw new Error(`Unexpected open feedback IDs: ${JSON.stringify(actual)}`);
+          }
+          NODE
