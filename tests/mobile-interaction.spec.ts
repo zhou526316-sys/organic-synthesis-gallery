@@ -66,6 +66,21 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
 
   const actions = page.locator('gallery-paper-actions').first();
 
+  const expectAnchored = async (anchorLocator: ReturnType<typeof actions.locator>, popoverLocator: ReturnType<typeof actions.locator>): Promise<void> => {
+    const anchorBox = await anchorLocator.boundingBox();
+    const popoverBox = await popoverLocator.boundingBox();
+    expect(anchorBox).not.toBeNull();
+    expect(popoverBox).not.toBeNull();
+    if (!anchorBox || !popoverBox) return;
+    const horizontalOverlap = Math.min(anchorBox.x + anchorBox.width, popoverBox.x + popoverBox.width) - Math.max(anchorBox.x, popoverBox.x);
+    const verticalGap = Math.min(
+      Math.abs(popoverBox.y - (anchorBox.y + anchorBox.height)),
+      Math.abs(anchorBox.y - (popoverBox.y + popoverBox.height)),
+    );
+    expect(horizontalOverlap).toBeGreaterThan(0);
+    expect(verticalGap).toBeLessThanOrEqual(18);
+  };
+
   const expectUnlocked = async (): Promise<void> => {
     const state = await page.evaluate(() => ({
       htmlClass: document.documentElement.classList.contains('gallery-user-drawer-open'),
@@ -86,6 +101,7 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   for (let index = 0; index < 30; index += 1) {
     await actions.locator('button[data-action="status"]').click();
     await expect(actions.locator('.overlay')).toBeVisible();
+    if (index === 0) await expectAnchored(actions.locator('button[data-action="status"]'), actions.locator('.drawer'));
 
     const choices = actions.locator('button[data-action^="set-status:"]');
     await expect(choices.first()).toBeVisible();
@@ -109,12 +125,14 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
 
     await actions.locator('button[data-action="note"]').click();
     await expect(actions.locator('.overlay')).toBeVisible();
+    if (index === 0) await expectAnchored(actions.locator('button[data-action="note"]'), actions.locator('.drawer'));
     await actions.locator('button[data-action="close"]').click();
     await expect(actions.locator('.overlay')).toHaveCount(0);
     await expectUnlocked();
 
     await actions.locator('button[data-action="more"]').click();
     await expect(actions.locator('.overlay')).toBeVisible();
+    if (index === 0) await expectAnchored(actions.locator('button[data-action="more"]'), actions.locator('.drawer'));
     await actions.locator('button[data-action="close"]').click();
     await expect(actions.locator('.overlay')).toHaveCount(0);
     await expectUnlocked();
@@ -128,6 +146,20 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
 
   const userShell = page.locator('gallery-user-shell');
   await userShell.locator('button.trigger').click();
+  await expect(userShell.locator('.panel')).toBeVisible();
+  const triggerBox = await userShell.locator('button.trigger').boundingBox();
+  const panelBox = await userShell.locator('.panel').boundingBox();
+  expect(triggerBox).not.toBeNull();
+  expect(panelBox).not.toBeNull();
+  if (triggerBox && panelBox) {
+    const horizontalOverlap = Math.min(triggerBox.x + triggerBox.width, panelBox.x + panelBox.width) - Math.max(triggerBox.x, panelBox.x);
+    const verticalGap = Math.min(
+      Math.abs(panelBox.y - (triggerBox.y + triggerBox.height)),
+      Math.abs(triggerBox.y - (panelBox.y + panelBox.height)),
+    );
+    expect(horizontalOverlap).toBeGreaterThan(0);
+    expect(verticalGap).toBeLessThanOrEqual(18);
+  }
   await userShell.locator('button[data-tab="settings"]').click();
   const content = userShell.locator('.content');
   await expect(content).toBeVisible();
