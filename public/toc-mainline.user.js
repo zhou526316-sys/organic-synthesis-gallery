@@ -16,6 +16,8 @@
 // @match        https://*.sciencedirect.com/*
 // @match        https://www.cell.com/*
 // @match        https://*.cell.com/*
+// @match        https://www.chinesechemsoc.org/*
+// @match        https://*.chinesechemsoc.org/*
 // @match        https://www.ccspublishing.org.cn/*
 // @match        https://*.ccspublishing.org.cn/*
 // @match        https://doi.org/*
