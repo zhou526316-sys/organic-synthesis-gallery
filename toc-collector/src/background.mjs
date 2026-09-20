@@ -1593,7 +1593,7 @@ async function downloadPdfFromPublisherBrowser({ doi, publisher, webContents, pd
 async function probeLocalPublisherWindow(candidateWin, doi, publisher) {
   if (!candidateWin || candidateWin.isDestroyed() || candidateWin.webContents.isDestroyed()) return null;
   try {
-    const details = await candidateWin.webContents.executeJavaScript(\`(() => {
+    const details = await candidateWin.webContents.executeJavaScript(`(() => {
       const text = String(document.body?.innerText || '').slice(0, 160000);
       const href = location.href;
       const title = document.title;
@@ -1605,7 +1605,7 @@ async function probeLocalPublisherWindow(candidateWin, doi, publisher) {
       const articleSignal = /\\babstract\\b|\\breferences\\b|\\bsupporting information\\b|\\barticle\\b/i.test(text) && text.length > 2500;
       const institutionalAccessSignal = /access provided by|institutional access|access through your institution|signed in through|authenticated by/i.test(text);
       return { href, title, textLength: text.length, citationDoi, canonical, challenge, authPage, articleSignal, institutionalAccessSignal };
-    })()\`);
+    })()`);
     const normalized = String(doi || '').toLowerCase();
     const suffix = normalized.split('/').at(-1) || normalized;
     const href = String(details?.href || '');
@@ -1690,7 +1690,7 @@ async function waitForLocalInteractiveArticle(win, doi, publisher, childWindows 
       if (nextStatus !== lastStatus) {
         lastStatus = nextStatus;
         if (waitingForUser) {
-          stageStatus = \`等待你完成 \${manualPublisherLabel(publisher)} 登录/学校验证：\${doi}。窗口会保持，最长等待 \${Math.round(authWaitMs/60000)} 分钟。\`;
+          stageStatus = `等待你完成 ${manualPublisherLabel(publisher)} 登录/学校验证：${doi}。窗口会保持，最长等待 ${Math.round(authWaitMs/60000)} 分钟。`;
           await log('local_interactive_waiting_for_user', {
             doi,
             publisher,
@@ -1701,7 +1701,7 @@ async function waitForLocalInteractiveArticle(win, doi, publisher, childWindows 
             windowId: preferred.windowId,
           });
         } else {
-          stageStatus = \`等待页面完整加载：\${doi}\`;
+          stageStatus = `等待页面完整加载：${doi}`;
         }
         await refreshDashboard();
       }
@@ -1726,9 +1726,9 @@ async function waitForLocalInteractiveArticle(win, doi, publisher, childWindows 
 async function captureRenderedVisual(win, candidate, doi, publisher) {
   if (!win || win.isDestroyed() || !candidate?.src) return null;
   try {
-    const target = await win.webContents.executeJavaScript(\`(() => {
-      const wanted = \${JSON.stringify(String(candidate?.src || ''))};
-      const wantedKind = \${JSON.stringify(String(candidate?.kind || 'official'))};
+    const target = await win.webContents.executeJavaScript(`(() => {
+      const wanted = ${JSON.stringify(String(candidate?.src || ''))};
+      const wantedKind = ${JSON.stringify(String(candidate?.kind || 'official'))};
       const clean = value => {
         try {
           const u = new URL(String(value || ''), location.href);
@@ -1817,16 +1817,16 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
         matchMode: best.matchMode,
         score: best.score,
       };
-    })()\`);
+    })()`);
     if (!target) {
       await log('browser_rendered_visual_not_found', { doi, publisher, kind: candidate.kind || '', candidate: sanitizedPageUrl(candidate.src || '') });
       return null;
     }
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    const refreshed = await win.webContents.executeJavaScript(\`(() => {
-      const wanted = \${JSON.stringify(String(target.matchedSrc || candidate?.src || ''))};
-      const wantedKind = \${JSON.stringify(String(candidate?.kind || 'official'))};
+    const refreshed = await win.webContents.executeJavaScript(`(() => {
+      const wanted = ${JSON.stringify(String(target.matchedSrc || candidate?.src || ''))};
+      const wantedKind = ${JSON.stringify(String(candidate?.kind || 'official'))};
       const clean = value => {
         try { const u = new URL(String(value || ''), location.href); u.hash = ''; return u.href; }
         catch { return String(value || ''); }
@@ -1851,7 +1851,7 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
         if (!best || score > best.score) best = { left: rect.left, top: rect.top, width: rect.width, height: rect.height, score };
       }
       return best;
-    })()\`);
+    })()`);
     if (!refreshed) return null;
 
     const bounds = {
@@ -1885,7 +1885,7 @@ async function captureRenderedVisual(win, candidate, doi, publisher) {
       height: finalImage.getSize().height,
     });
     return {
-      imageData: \`data:image/png;base64,\${buffer.toString('base64')}\`,
+      imageData: `data:image/png;base64,${buffer.toString('base64')}`,
       bytes: buffer.length,
       source: target.matchMode === 'semantic' ? 'rendered_semantic_element' : 'rendered_article_element',
     };
