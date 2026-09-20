@@ -181,9 +181,13 @@ jobs:
           test -f dist/gallery-vpn-bridge-runtime.js
           test -f dist/toc-rescue.js
           test -f dist/toc-mainline.user.js
-          grep -F "// @version      6.1.0" dist/toc-mainline.user.js
+          grep -F "// @version      6.2.0" dist/toc-mainline.user.js
           grep -F "toc-demand-live.json" dist/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" dist/toc-mainline.user.js
+          grep -F "async function iframeCandidates(job, trace)" dist/toc-mainline.user.js
+          grep -F "function waitForDomMutation(timeoutMs)" dist/toc-mainline.user.js
+          grep -F "object[type^=\"image\"],svg image" dist/toc-mainline.user.js
+          grep -F "iframe_cross_origin_or_auth_redirect" dist/toc-mainline.user.js
           test -d dist/media-mirror
           grep -F "// @version      2.2.0" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
