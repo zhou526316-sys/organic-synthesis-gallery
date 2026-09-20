@@ -81,20 +81,28 @@ export class GalleryPaperActions extends HTMLElement {
 
     drawer.style.left = '0px';
     drawer.style.top = '0px';
+    drawer.style.removeProperty('max-height');
     const anchorRect = anchor.getBoundingClientRect();
     const hostRect = this.getBoundingClientRect();
-    const drawerRect = drawer.getBoundingClientRect();
+    const initialRect = drawer.getBoundingClientRect();
     const margin = 8;
     const gap = 6;
 
     let left = anchorRect.left;
-    left = Math.min(left, window.innerWidth - drawerRect.width - margin);
+    left = Math.min(left, window.innerWidth - initialRect.width - margin);
     left = Math.max(margin, left);
 
-    let top = anchorRect.bottom + gap;
-    const above = anchorRect.top - drawerRect.height - gap;
-    if (top + drawerRect.height > window.innerHeight - margin && above >= margin) top = above;
-    top = Math.max(margin, Math.min(top, window.innerHeight - drawerRect.height - margin));
+    const below = Math.max(0, window.innerHeight - anchorRect.bottom - gap - margin);
+    const above = Math.max(0, anchorRect.top - gap - margin);
+    const openBelow = below >= Math.min(initialRect.height, 220) || below >= above;
+    const available = openBelow ? below : above;
+    const cap = window.innerWidth <= 680 ? 520 : 560;
+    drawer.style.maxHeight = `${Math.max(96, Math.min(cap, available))}px`;
+
+    const fittedRect = drawer.getBoundingClientRect();
+    const top = openBelow
+      ? anchorRect.bottom + gap
+      : anchorRect.top - fittedRect.height - gap;
 
     drawer.style.left = `${Math.round(left - hostRect.left)}px`;
     drawer.style.top = `${Math.round(top - hostRect.top)}px`;
