@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.2
+// @version      6.2.3
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -36,7 +36,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.2';
+  var VERSION = '6.2.3';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -349,17 +349,59 @@
     return JSON.parse(String(response.responseText || '{}'));
   }
 
-  async function postJson(url, payload, token) {
-    var response = await gmRequest({
+  async function fetchPostJson(url, payload, token) {
+    var response = await fetch(url, {
       method: 'POST',
-      url: url,
-      timeout: 45000,
+      mode: 'cors',
+      credentials: 'omit',
+      cache: 'no-store',
       headers: {
         'content-type': 'application/json',
         authorization: 'Bearer ' + token
       },
-      data: JSON.stringify(payload)
+      body: JSON.stringify(payload)
     });
+    var text = await response.text();
+    var body = {};
+    try { body = JSON.parse(String(text || '{}')); } catch (_) {}
+    if (!response.ok) {
+      var error = new Error('fetch_upload_http_' + String(response.status || 0));
+      error.httpStatus = Number(response.status || 0);
+      throw error;
+    }
+    try { console.debug('[OSG TOC] Worker POST transport=fetch-fallback', url); } catch (_) {}
+    return body;
+  }
+
+  async function postJson(url, payload, token) {
+    var response;
+    try {
+      response = await gmRequest({
+        method: 'POST',
+        url: url,
+        timeout: 45000,
+        headers: {
+          'content-type': 'application/json',
+          authorization: 'Bearer ' + token
+        },
+        data: JSON.stringify(payload)
+      });
+    } catch (gmError) {
+      try { console.warn('[OSG TOC] GM POST failed; trying fetch fallback', String(gmError && gmError.message || gmError)); } catch (_) {}
+      try {
+        return await fetchPostJson(url, payload, token);
+      } catch (fetchError) {
+        var combined = new Error(
+          'gm_then_fetch_failed:' +
+          String(gmError && gmError.message || gmError) +
+          ';' +
+          String(fetchError && fetchError.message || fetchError)
+        );
+        combined.gmError = String(gmError && gmError.message || gmError);
+        combined.fetchError = String(fetchError && fetchError.message || fetchError);
+        throw combined;
+      }
+    }
     var body = {};
     try { body = JSON.parse(String(response.responseText || '{}')); } catch (_) {}
     var status = Number(response.status || 0);
