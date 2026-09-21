@@ -767,10 +767,24 @@
     var source = sourceName || 'live_dom';
     var rows = [];
     var seen = {};
-    var blocks = Array.prototype.slice.call(scope.querySelectorAll('figure'));
+    var blocks = Array.prototype.slice.call(scope.querySelectorAll([
+      'figure',
+      '[role="figure"]',
+      '[data-figure]',
+      '[class*="article-figure"]',
+      '[class*="figure-viewer"]',
+      '[class*="figure-wrap"]',
+      '[class*="figure-container"]',
+      '[class*="scheme"]',
+      '[class*="chart"]',
+      '[id*="figure"]',
+      '[id*="scheme"]',
+      '[id*="chart"]'
+    ].join(',')));
     blocks.forEach(function (block, blockIndex) {
       var context = String(block.innerText || block.textContent || '').replace(/\s+/g, ' ').trim();
-      if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)/i.test(context.slice(0, 1400))) return;
+      if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)|journal\s*cover|issue\s*cover/i.test(context.slice(0, 1400))) return;
+      if (!/\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b/i.test(context.slice(0, 2200))) return;
       var label = articleFigureLabel(context, blockIndex);
       var caption = context.slice(0, 600);
       Array.prototype.slice.call(block.querySelectorAll('img,source')).forEach(function (node) {
