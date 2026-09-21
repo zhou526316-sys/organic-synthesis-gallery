@@ -138,9 +138,14 @@ export class UserSearchController {
       store.touchOpened(id);
       if (doi) void store.recordOpen(doi);
     };
-    open?.addEventListener('click', opened, { once: true });
-    titleElement.querySelector<HTMLAnchorElement>('a.user-title-link')?.addEventListener('click', opened, { once: true });
-    doiElement?.querySelector<HTMLAnchorElement>('a.user-doi-link')?.addEventListener('click', opened, { once: true });
+    const bindOpened = (anchor: HTMLAnchorElement | null | undefined): void => {
+      if (!anchor || anchor.dataset.readerOpenBound === '1') return;
+      anchor.dataset.readerOpenBound = '1';
+      anchor.addEventListener('click', opened, { once: true });
+    };
+    bindOpened(open);
+    bindOpened(titleElement.querySelector<HTMLAnchorElement>('a.user-title-link'));
+    bindOpened(doiElement?.querySelector<HTMLAnchorElement>('a.user-doi-link'));
     return meta;
   }
 
