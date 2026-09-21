@@ -99,6 +99,12 @@ jobs:
           grep -F "查看出版社脚本心跳" public/toc-mainline.user.js
           grep -F "publisher_script_started" public/toc-mainline.user.js
           grep -F "CAPTURE_INDEX_URL" public/toc-mainline.user.js
+          grep -F "FIGURE_IMPORT_ENDPOINT" public/toc-mainline.user.js
+          grep -F "queue.figureGaps" public/toc-mainline.user.js
+          grep -F "function jobKind(job)" public/toc-mainline.user.js
+          grep -F "failure:figures:" public/toc-mainline.user.js
+          grep -F "figureGapTotal" cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F "MEDIA_INVENTORY_URL" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "figure1_deferred" public/toc-mainline.user.js
           grep -F "heartbeatDeadlineMs = 35000" public/toc-mainline.user.js
           grep -F "action/doSearch?AllField=" public/toc-mainline.user.js
