@@ -249,6 +249,60 @@ async function accountState(env, payload) {
   return { status: 200, body: { account: { userId: session.user_id, revision: nextRevision, updatedAt: now, state: incoming } } };
 }
 
+async function writeMaterializedReaderCounts(env, rows) {
+  if (!rows.length) return;
+  const now = Date.now();
+  const statements = rows.map(({ doi, count }) =>
+    env.DB.prepare(
+      `INSERT OR IGNORE INTO paper_reader_counts (doi, count, updated_at)
+       VALUES (?, ?, ?)`
+    ).bind(doi, count, now)
+  );
+  if (typeof env.DB.batch === 'function') {
+    await env.DB.batch(statements);
+    return;
+  }
+  await Promise.all(statements.map(statement => statement.run()));
+}
+
+async function materializedReaderCounts(env, dois) {
+  const counts = {};
+  for (let offset = 0; offset < dois.length; offset += 80) {
+    const chunk = dois.slice(offset, offset + 80);
+    const placeholders = chunk.map(() => '?').join(',');
+    const cached = await env.DB.prepare(
+      `SELECT doi, count
+       FROM paper_reader_counts
+       WHERE doi IN (${placeholders})`
+    ).bind(...chunk).all();
+
+    for (const row of cached?.results || []) {
+      if (typeof row?.doi === 'string') counts[row.doi] = Math.max(0, Number(row.count || 0));
+    }
+
+    const missing = chunk.filter(doi => !Object.prototype.hasOwnProperty.call(counts, doi));
+    if (!missing.length) continue;
+
+    const missingPlaceholders = missing.map(() => '?').join(',');
+    const source = await env.DB.prepare(
+      `SELECT doi, COUNT(*) AS count
+       FROM paper_readers
+       WHERE doi IN (${missingPlaceholders}) AND profile_id LIKE 'ip:%'
+       GROUP BY doi`
+    ).bind(...missing).all();
+
+    const sourceCounts = Object.fromEntries(
+      (source?.results || [])
+        .filter(row => typeof row?.doi === 'string')
+        .map(row => [row.doi, Math.max(0, Number(row.count || 0))])
+    );
+    const materialized = missing.map(doi => ({ doi, count: sourceCounts[doi] || 0 }));
+    await writeMaterializedReaderCounts(env, materialized);
+    for (const item of materialized) counts[item.doi] = item.count;
+  }
+  return counts;
+}
+
 export async function readerCounts(env, payload) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
   const mode = typeof payload?.mode === 'string' ? payload.mode : '';
@@ -259,21 +313,7 @@ export async function readerCounts(env, payload) {
     .filter(Boolean))].slice(0, 150);
   if (!dois.length) return { status: 200, body: { counts: {} } };
 
-  const counts = {};
-  for (let offset = 0; offset < dois.length; offset += 80) {
-    const chunk = dois.slice(offset, offset + 80);
-    const placeholders = chunk.map(() => '?').join(',');
-    const result = await env.DB.prepare(
-      `SELECT doi, COUNT(*) AS count
-       FROM paper_readers
-       WHERE doi IN (${placeholders}) AND profile_id LIKE 'ip:%'
-       GROUP BY doi`
-    ).bind(...chunk).all();
-    for (const row of result?.results || []) {
-      if (typeof row?.doi === 'string') counts[row.doi] = Number(row.count || 0);
-    }
-  }
-  return { status: 200, body: { counts } };
+  return { status: 200, body: { counts: await materializedReaderCounts(env, dois) } };
 }
 
 export async function markReader(env, payload, request) {
@@ -284,23 +324,33 @@ export async function markReader(env, payload, request) {
   const actorId = await readerIpActor(env, request);
   if (!actorId) return { status: 400, body: { error: 'reader_ip_unavailable' } };
 
+  const initial = await materializedReaderCounts(env, [doi]);
   const now = Date.now();
   const inserted = await env.DB.prepare(
     `INSERT OR IGNORE INTO paper_readers (doi, profile_id, first_read_at, first_status_id)
      VALUES (?, ?, ?, 'card-open')`
   ).bind(doi, actorId, now).run();
+  const unique = Number(inserted?.meta?.changes || 0) > 0;
 
-  const row = await env.DB.prepare(
-    `SELECT COUNT(*) AS count FROM paper_readers
-     WHERE doi = ? AND profile_id LIKE 'ip:%'`
-  ).bind(doi).first();
+  let count = Number(initial[doi] || 0);
+  if (unique) {
+    await env.DB.prepare(
+      `UPDATE paper_reader_counts
+       SET count = count + 1, updated_at = ?
+       WHERE doi = ?`
+    ).bind(now, doi).run();
+    const row = await env.DB.prepare(
+      `SELECT count FROM paper_reader_counts WHERE doi = ?`
+    ).bind(doi).first();
+    count = Math.max(0, Number(row?.count ?? count + 1));
+  }
 
   return {
     status: 200,
     body: {
       doi,
-      count: Number(row?.count || 0),
-      unique: Number(inserted?.meta?.changes || 0) > 0,
+      count,
+      unique,
     },
   };
 }
