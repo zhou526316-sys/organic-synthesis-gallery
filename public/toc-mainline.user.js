@@ -293,6 +293,10 @@
     });
     buckets.forEach(function (rows) {
       rows.sort(function (a, b) {
+        if (String(a.state || '') === 'figure_gap' && String(b.state || '') === 'figure_gap') {
+          var figureDelta = Math.max(0, Number(a.figureCount || 0)) - Math.max(0, Number(b.figureCount || 0));
+          if (figureDelta) return figureDelta;
+        }
         return String(b.date || '').localeCompare(String(a.date || '')) || String(a.doi).localeCompare(String(b.doi));
       });
     });
