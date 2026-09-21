@@ -2,70 +2,51 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "toc_processing",
-  "activeRun": {
+  "phase": "synced",
+  "activeRun": null,
+  "lastCompletedFetch": {
     "id": "work-high-primary-20260921-0800",
-    "startedAt": "2026-09-21T08:01:14+08:00",
+    "finishedAt": "2026-09-21T08:52:00+08:00",
     "windowStart": "2026-09-19",
     "windowEnd": "2026-09-21",
-    "machineSafetyTailStart": "2026-09-15",
-    "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
-    "owner": "Gallery 主更新（Work · High）",
-    "note": "Semantic review complete and authoritative data committed. Waiting for Pages deployment and live TOC demand refresh.",
-    "reviewCommitSha": "06fcde2490aeb1580a4ac53858f39c719f7ea437",
-    "dataCommitSha": "9d33e945e8a93bff2b07aac34035f01257bab766",
-    "acceptedDois": [
-      "10.1021/acs.orglett.6c03612"
-    ],
-    "reviewSummary": {
-      "reviewed": 3,
-      "accepted": 1,
-      "rejected": 2,
-      "pending": 0
-    }
-  },
-  "lastCompletedFetch": {
-    "id": "corrected-primary-review-20260920",
-    "finishedAt": "2026-09-20T13:57:19+08:00",
-    "windowStart": "2026-09-18",
-    "windowEnd": "2026-09-20",
     "sourceSummary": {
-      "sourceRecords": 619,
-      "primaryWindowRecords": 127,
-      "machineSafetyTailAdditionalRecords": 492,
+      "sourceRecords": 528,
+      "primaryWindowRecords": 45,
+      "machineSafetyTailAdditionalRecords": 483,
       "criticalSourceFailures": 0,
       "sourceFamilyGaps": 0,
-      "reviewedDifferenceRecords": 26,
+      "reviewedDifferenceRecords": 3,
       "fullWindowAssistantUnresolved": 0,
-      "closureDate": "2026-09-19",
+      "closureDate": "2026-09-20",
       "closureUnresolved": 0
     },
     "addedThisRun": [
-      "10.1002/anie.4084841",
-      "10.1002/anie.3092581",
-      "10.1021/acs.orglett.6c03072",
-      "10.1021/acs.orglett.6c03822",
-      "10.1021/acs.orglett.6c03588"
+      "10.1021/acs.orglett.6c03612"
     ],
-    "dataCommitSha": "e739953947a5b9ff017f38adb3d6d53a91ae6ea1",
-    "mergeCommitSha": "e739953947a5b9ff017f38adb3d6d53a91ae6ea1",
-    "auditCommitSha": "1158cf15806b2927938c6f683ee935d1d96167c6",
-    "reviewCommitSha": "e739953947a5b9ff017f38adb3d6d53a91ae6ea1",
+    "dataCommitSha": "9d33e945e8a93bff2b07aac34035f01257bab766",
+    "mergeCommitSha": "9d33e945e8a93bff2b07aac34035f01257bab766",
+    "reviewCommitSha": "06fcde2490aeb1580a4ac53858f39c719f7ea437",
+    "auditCommitSha": "55a57bcf4b8b883f8177f25d763105bd8485100e",
     "tocStatus": {
-      "status": "partial",
-      "recentChecked": 5,
+      "status": "queued",
+      "recentChecked": 1,
       "recentComplete": 0,
-      "recentMissing": 5,
+      "recentMissing": 1,
       "directPublisherTocImported": 0,
-      "note": "All five newly accepted cards are live. Cloud direct media repair hit publisher HTTP 403 for ACS/Wiley; TOC remains non-blocking and is delegated to the scheduled TOC task/local VPN Collector."
+      "webpageDoiCount": 484,
+      "visibleGapTotal": 15,
+      "missingOfficialTotal": 87,
+      "officialUpgradeTotal": 72,
+      "queueGeneratedAt": "2026-09-21T00:50:10.549Z",
+      "note": "Accepted ACS DOI is live and queued as a visible no_visual gap for Tampermonkey/unified VPN Bridge. TOC is non-blocking; no access control was bypassed."
     },
     "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af"
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-09-20T13:57:19+08:00",
-    "dataCommitSha": "e739953947a5b9ff017f38adb3d6d53a91ae6ea1",
-    "deploymentCommitSha": "e739953947a5b9ff017f38adb3d6d53a91ae6ea1",
-    "pagesRunId": 35492874285,
+    "finishedAt": "2026-09-21T08:52:00+08:00",
+    "dataCommitSha": "9d33e945e8a93bff2b07aac34035f01257bab766",
+    "deploymentCommitSha": "55a57bcf4b8b883f8177f25d763105bd8485100e",
+    "pagesRunId": 35546879638,
     "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
     "deployment": "success",
     "verification": {
@@ -75,25 +56,27 @@
       "productionAutomationSupplement": "success",
       "productionLiteratureSupplement": "success",
       "newlyAcceptedDoisPresent": [
-        "10.1002/anie.4084841",
-        "10.1002/anie.3092581",
-        "10.1021/acs.orglett.6c03072",
-        "10.1021/acs.orglett.6c03822",
-        "10.1021/acs.orglett.6c03588"
+        "10.1021/acs.orglett.6c03612"
       ],
-      "totalGalleryCards": 483,
-      "galleryDois": 483,
-      "oldDataRegressionCheck": "passed"
+      "totalGalleryCards": 484,
+      "galleryDois": 484,
+      "oldDataRegressionCheck": "passed",
+      "liveCssSmoke": "passed",
+      "note": "Production artifact merged 484 gallery DOIs including the accepted record; Pages deploy and live CSS smoke passed. Direct interactive browser verification timed out, so no manual UI-search claim is made."
     },
     "tocVerification": {
-      "recentChecked": 5,
+      "recentChecked": 1,
       "complete": 0,
-      "missing": 5,
+      "missing": 1,
       "directPublisherTocImported": 0,
-      "note": "The five new papers were published without waiting for TOC. ACS/Wiley direct media fetches returned HTTP 403; later TOC repair remains required."
+      "liveQueueCommitSha": "0d64b345b54a50592de4cced0d2159ff99dad335",
+      "visibleGapTotal": 15,
+      "missingOfficialTotal": 87,
+      "officialUpgradeTotal": 72,
+      "note": "Accepted DOI appears in live visibleGaps as ACS/no_visual and is handed to Tampermonkey/unified VPN Bridge."
     }
   },
-  "verifiedThrough": "2026-09-19",
+  "verifiedThrough": "2026-09-20",
   "capabilityRegistry": "audit/literature-capability.json",
   "lastCapabilitySnapshot": {
     "fingerprint": "02329d1ffd3a385ed5908f6141a11f1d9f96e9e19a68c1a31e87a1c9b8514075",
@@ -180,43 +163,33 @@
     "note": "audit/latest.json persistence conflict is now recoverable and no longer blocks the whole literature pipeline; authoritative literature/TOC data conflicts remain hard stops."
   },
   "lastCompletedReview": {
-    "id": "corrected-review-20260920",
-    "finishedAt": "2026-09-20T13:54:18+08:00",
+    "id": "work-high-review-20260921",
+    "finishedAt": "2026-09-21T08:52:00+08:00",
     "reusedExistingAudit": false,
-    "sourceAuditGeneratedAt": "2026-09-20T05:09:03.885Z",
-    "windowStart": "2026-09-18",
-    "windowEnd": "2026-09-20",
-    "reviewed": 34,
-    "accepted": 5,
-    "rejected": 29,
+    "sourceAuditGeneratedAt": "2026-09-21T00:12:17.052Z",
+    "windowStart": "2026-09-19",
+    "windowEnd": "2026-09-21",
+    "reviewed": 3,
+    "accepted": 1,
+    "rejected": 2,
     "pending": 0,
     "unresolved": 0,
-    "correctionBatch": {
-      "reviewed": 26,
-      "accepted": 5,
-      "rejected": 21,
-      "pending": 0
-    },
-    "closureDate": "2026-09-19",
+    "closureDate": "2026-09-20",
     "closureUnresolved": 0,
-    "reviewFile": "audit/review-2026-09-20.json",
+    "reviewFile": "audit/review-2026-09-21.json",
     "addedDois": [
-      "10.1002/anie.4084841",
-      "10.1002/anie.3092581",
-      "10.1021/acs.orglett.6c03072",
-      "10.1021/acs.orglett.6c03822",
-      "10.1021/acs.orglett.6c03588"
+      "10.1021/acs.orglett.6c03612"
     ],
-    "dataCommitSha": "e739953947a5b9ff017f38adb3d6d53a91ae6ea1",
-    "reviewCommitSha": "e739953947a5b9ff017f38adb3d6d53a91ae6ea1",
-    "closureCommitSha": "1158cf15806b2927938c6f683ee935d1d96167c6",
+    "dataCommitSha": "9d33e945e8a93bff2b07aac34035f01257bab766",
+    "reviewCommitSha": "06fcde2490aeb1580a4ac53858f39c719f7ea437",
+    "closureCommitSha": "55a57bcf4b8b883f8177f25d763105bd8485100e",
     "auditValidation": {
-      "generatedAt": "2026-09-20T05:57:17.640Z",
-      "sourceRecords": 619,
-      "primaryWindowRecords": 127,
-      "machineSafetyTailAdditionalRecords": 492,
-      "rawMissingFromGallery": 546,
-      "previouslyReviewedExcluded": 546,
+      "generatedAt": "2026-09-21T00:12:17.052Z",
+      "sourceRecords": 528,
+      "primaryWindowRecords": 45,
+      "machineSafetyTailAdditionalRecords": 483,
+      "rawMissingFromGallery": 469,
+      "previouslyReviewedExcluded": 469,
       "missingFromGallery": 0,
       "criticalSourceFailures": 0,
       "sourceFamilyGaps": 0,
