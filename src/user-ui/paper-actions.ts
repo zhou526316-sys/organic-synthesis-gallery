@@ -28,6 +28,8 @@ export class GalleryPaperActions extends HTMLElement {
   private feedbackMessage = '';
   private readonly outside = (event: PointerEvent): void => {
     if (this.panel === 'none') return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('[data-gallery-user-cropper]')) return;
     if (event.composedPath().includes(this)) return;
     this.closePanel();
   };
@@ -141,7 +143,7 @@ export class GalleryPaperActions extends HTMLElement {
       @media(max-width:680px){:host{margin-top:2px}.bar{gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:flex}.chips>.chip:not(.status){display:none}.drawer .chips>.chip{display:inline-flex}}
     </style>${this.chips(paper, status)}<div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
-      ${button(s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status))}
+      ${button(status?.style || s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status))}
       ${button(s.note, this.tr('私人备注', 'Private note'), 'note', '✎', Boolean(paper.note))}
       ${button(s.more, this.tr('更多', 'More'), 'more', '•••')}
       <span class='metric'>◉ ${count} ${this.tr('人读过', 'readers')}</span>
@@ -184,7 +186,7 @@ export class GalleryPaperActions extends HTMLElement {
           ${status.style.imageData ? `<button class='remove-image' type='button' data-action='clear-status-image:${escapeHtml(status.id)}'>${this.tr('移除图片', 'Remove image')}</button>` : ''}
         </div>`;
         return `<div class='status-row'><div class='status-main'>
-          <button type='button' class='choice status-choice${paper.statusId === status.id ? ' selected' : ''}' data-action='set-status:${escapeHtml(status.id)}'>${this.statusVisual(status, 'status-choice-label')}${status.countsAsRead ? `<small>· ${this.tr('计入阅读人数', 'counts as read')}</small>` : ''}</button>
+          <button type='button' class='choice status-choice${paper.statusId === status.id ? ' selected' : ''}' data-action='set-status:${escapeHtml(status.id)}'>${this.statusVisual(status, 'status-choice-label')}${status.countsAsRead ? `<small>· ${this.tr('视为已读', 'treated as read')}</small>` : ''}</button>
         </div>${editor}</div>`;
       }).join('')}</div></section>`;
     } else if (this.panel === 'note') {

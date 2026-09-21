@@ -1,3 +1,4 @@
+import { cropUserImage } from './image-cropper';
 export type Language = 'zh' | 'en';
 export type Shape = 'pill' | 'rounded' | 'rectangle' | 'circle' | 'square' | 'diamond' | 'bookmark' | 'star';
 export type RGB = [number, number, number];
@@ -347,12 +348,23 @@ class Store extends EventTarget {
     return 'queued';
   }
   async setImage(target: StyleDef, file: File): Promise<void> {
-    if (!file.type.startsWith('image/') || file.size > 4_000_000) return;
-    const source = await new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(reader.error); reader.readAsDataURL(file); });
-    const image = await new Promise<HTMLImageElement>((resolve, reject) => { const img = new Image(); img.onload = () => resolve(img); img.onerror = reject; img.src = source; });
-    const scale = Math.min(1, 128 / Math.max(image.naturalWidth, image.naturalHeight));
-    const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(image.naturalWidth * scale)); canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-    canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height); target.imageData = canvas.toDataURL('image/png'); this.save();
+    const statusId = this.state.statuses.find(item => item.style === target)?.id;
+    const actionKey = (Object.entries(this.state.actionStyles) as Array<[ActionKey, StyleDef]>).find(([, style]) => style === target)?.[0];
+    const quickTermId = this.state.quickTerms.find(item => item.style === target)?.id;
+    const cropped = await cropUserImage(file);
+    if (!cropped) return;
+
+    const liveTarget = statusId
+      ? this.status(statusId)?.style
+      : actionKey
+        ? this.state.actionStyles[actionKey]
+        : quickTermId
+          ? this.state.quickTerms.find(item => item.id === quickTermId)?.style
+          : target;
+    if (!liveTarget) return;
+    liveTarget.imageData = cropped.imageData;
+    if (cropped.circular) liveTarget.shape = 'circle';
+    this.save();
   }
 }
 
