@@ -71,7 +71,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.2.12" public/toc-mainline.user.js
+          grep -F "// @version      6.2.13" public/toc-mainline.user.js
           grep -F "toc-demand-live.json" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
@@ -103,6 +103,7 @@ jobs:
           grep -F "CAPTURE_INDEX_URL" public/toc-mainline.user.js
           grep -F "FIGURE_IMPORT_ENDPOINT" public/toc-mainline.user.js
           grep -F "FIGURE_STAGE_ENDPOINT" public/toc-mainline.user.js
+          grep -F "figureBudget: Math.max(0, limit - tocBudget)" public/toc-mainline.user.js
           grep -F "/api/article-figures/promote-staged" cloudflare/worker/src/index.js
           grep -F "promoteStagedArticleFigures" cloudflare/worker/src/local-captures.js
           grep -F "ARTICLE_FIGURE_STAGE_PROMOTION_CRON" cloudflare/worker/src/index.js
@@ -134,7 +135,7 @@ jobs:
           grep -F "https://onlinelibrary.wiley.com" cloudflare/worker/src/index.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "loaderVersion = '2.2.12'" cloudflare/scripts/build-bridge-loader.mjs
+          grep -F "loaderVersion = '2.2.13'" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" cloudflare/scripts/build-bridge-loader.mjs
           if grep -Fq "chinesechemsoc.org" public/toc-mainline.user.js; then echo "Obsolete CJC domains must not remain in TOC mainline"; exit 1; fi
           if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
