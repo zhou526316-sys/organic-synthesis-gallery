@@ -13,6 +13,8 @@ interface ViewerStrings {
   actual: string;
   openSource: string;
   sourceSize: string;
+  previous: string;
+  next: string;
 }
 
 function strings(): ViewerStrings {
@@ -26,6 +28,8 @@ function strings(): ViewerStrings {
         actual: '1:1 原始像素',
         openSource: '打开原图',
         sourceSize: '源图',
+        previous: '上一张',
+        next: '下一张',
       }
     : {
         close: 'Close',
@@ -35,6 +39,8 @@ function strings(): ViewerStrings {
         actual: '1:1 actual pixels',
         openSource: 'Open source image',
         sourceSize: 'Source',
+        previous: 'Previous image',
+        next: 'Next image',
       };
 }
 
@@ -92,6 +98,8 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
     return button;
   };
 
+  const previous = makeButton('previous', text.previous, '‹');
+  const next = makeButton('next', text.next, '›');
   const zoomOut = makeButton('zoom-out', text.zoomOut, '−');
   const fit = makeButton('fit', text.fit, 'Fit');
   const actual = makeButton('actual', text.actual, '1:1');
@@ -99,7 +107,7 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
   const openSource = makeButton('open-source', text.openSource, '↗');
   const close = makeButton('close', text.close, '×');
   close.classList.add('media-viewer__close');
-  controls.append(zoomOut, fit, actual, zoomIn, openSource, close);
+  controls.append(previous, next, zoomOut, fit, actual, zoomIn, openSource, close);
   toolbar.append(info, controls);
 
   const viewport = document.createElement('div');
@@ -129,6 +137,23 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
 
   const previousOverflow = document.body.style.overflow;
   document.body.style.overflow = 'hidden';
+
+  const scope = sourceImage.closest<HTMLElement>('.card');
+  const mediaItems = scope
+    ? Array.from(scope.querySelectorAll<HTMLElement>(CLICKABLE_MEDIA)).flatMap(button => {
+        const thumb = button.querySelector<HTMLImageElement>('img');
+        if (!thumb?.src) return [];
+        return [{
+          image: thumb,
+          label: mediaLabel(button, thumb),
+          sourceUrl: button.dataset.masterSrc || thumb.dataset.masterSrc || thumb.currentSrc || thumb.src,
+        }];
+      })
+    : [{ image: sourceImage, label, sourceUrl: sourceUrl || sourceImage.currentSrc || sourceImage.src }];
+  let currentIndex = Math.max(0, mediaItems.findIndex(item => item.image === sourceImage));
+  if (sourceUrl && mediaItems[currentIndex]) mediaItems[currentIndex].sourceUrl = sourceUrl;
+  previous.disabled = mediaItems.length <= 1;
+  next.disabled = mediaItems.length <= 1;
 
   let naturalWidth = 0;
   let naturalHeight = 0;
@@ -170,6 +195,27 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
     zoomIn.disabled = scale >= MAX_SCALE - 0.001;
   };
 
+  const navigationSuffix = (): string => mediaItems.length > 1 ? ` · ${currentIndex + 1}/${mediaItems.length}` : '';
+
+  const navigate = (delta: number): void => {
+    if (mediaItems.length <= 1) return;
+    currentIndex = (currentIndex + delta + mediaItems.length) % mediaItems.length;
+    const item = mediaItems[currentIndex];
+    title.textContent = item.label;
+    overlay.setAttribute('aria-label', item.label);
+    naturalWidth = 0;
+    naturalHeight = 0;
+    image.style.width = '';
+    image.style.height = '';
+    stage.style.width = '';
+    stage.style.height = '';
+    dimensions.textContent = `${text.sourceSize}${navigationSuffix()}`;
+    image.alt = item.image.alt || item.label;
+    image.src = item.sourceUrl;
+    viewport.scrollLeft = 0;
+    viewport.scrollTop = 0;
+  };
+
   const dismiss = (): void => {
     document.body.style.overflow = previousOverflow;
     window.removeEventListener('keydown', onKeyDown, true);
@@ -188,6 +234,12 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
     if (event.key === 'Escape') {
       event.preventDefault();
       dismiss();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      navigate(-1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      navigate(1);
     } else if (event.key === '+' || event.key === '=') {
       event.preventDefault();
       setScale(scale * ZOOM_FACTOR);
@@ -206,6 +258,8 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
   controls.addEventListener('click', event => {
     const action = (event.target as HTMLElement).closest<HTMLButtonElement>('button[data-action]')?.dataset.action;
     if (!action) return;
+    if (action === 'previous') navigate(-1);
+    if (action === 'next') navigate(1);
     if (action === 'zoom-out') setScale(scale / ZOOM_FACTOR);
     if (action === 'zoom-in') setScale(scale * ZOOM_FACTOR);
     if (action === 'fit') setScale(fitScale);
@@ -259,8 +313,8 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
     naturalWidth = image.naturalWidth;
     naturalHeight = image.naturalHeight;
     dimensions.textContent = naturalWidth && naturalHeight
-      ? `${text.sourceSize} ${naturalWidth} × ${naturalHeight}px`
-      : text.sourceSize;
+      ? `${text.sourceSize} ${naturalWidth} × ${naturalHeight}px${navigationSuffix()}`
+      : `${text.sourceSize}${navigationSuffix()}`;
     fitScale = computeFit();
     setScale(fitScale);
     viewport.focus({ preventScroll: true });
