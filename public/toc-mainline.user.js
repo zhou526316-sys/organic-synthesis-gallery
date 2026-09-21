@@ -2225,13 +2225,36 @@
     var figureOnly = queuedFigures.slice();
     var allJobs = visible.concat(upgrades, figureOnly);
     var limit = batchSize();
-    var tocBudget = Math.min(visible.length + upgrades.length, Math.max(1, Math.ceil(limit / 2)));
-    var jobs = selectPriorityBatch(visible, upgrades, tocBudget);
+
+    // Priority:
+    // 1) newest papers with no visual/TOC
+    // 2) remaining no-visual TOC gaps
+    // 3) article figures
+    // 4) fallback-only official TOC upgrades (including Figure 1)
+    var jobs = selectBatchJobs(visible, limit);
+    var selectedDois = {};
+    jobs.forEach(function (job) {
+      var doi = normalizeDoi(job && job.doi);
+      if (doi) selectedDois[doi] = true;
+    });
+
     if (jobs.length < limit) {
-      var selectedDois = {};
-      jobs.forEach(function (job) { var doi = normalizeDoi(job && job.doi); if (doi) selectedDois[doi] = true; });
-      var figureCandidates = figureOnly.filter(function (job) { return !selectedDois[normalizeDoi(job && job.doi)]; });
-      jobs = jobs.concat(selectBatchJobs(figureCandidates, limit - jobs.length));
+      var figureCandidates = figureOnly.filter(function (job) {
+        return !selectedDois[normalizeDoi(job && job.doi)];
+      });
+      var selectedFigures = selectBatchJobs(figureCandidates, limit - jobs.length);
+      jobs = jobs.concat(selectedFigures);
+      selectedFigures.forEach(function (job) {
+        var doi = normalizeDoi(job && job.doi);
+        if (doi) selectedDois[doi] = true;
+      });
+    }
+
+    if (jobs.length < limit) {
+      var delayedUpgrades = upgrades.filter(function (job) {
+        return !selectedDois[normalizeDoi(job && job.doi)];
+      });
+      jobs = jobs.concat(selectBatchJobs(delayedUpgrades, limit - jobs.length));
     }
     var cooling = allJobs.filter(function (queued) {
       var doi = normalizeDoi(queued && queued.doi);
@@ -2249,6 +2272,8 @@
       upgrades: upgrades.length,
       figureGaps: queuedFigures.length,
       figureOnly: figureOnly.length,
+      tocVisiblePriority: visible.length,
+      delayedTocUpgrades: upgrades.length,
       cooldownSkipped: cooldownSkipped,
       filteredByLiveR2: Number(reconciled.filteredByR2 || 0),
       success: 0,
