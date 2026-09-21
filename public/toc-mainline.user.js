@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.10
+// @version      6.2.11
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.10';
+  var VERSION = '6.2.11';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
