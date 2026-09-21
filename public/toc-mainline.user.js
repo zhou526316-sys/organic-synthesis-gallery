@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.14
+// @version      6.2.15
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.14';
+  var VERSION = '6.2.15';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -62,6 +62,8 @@
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
   var DEFAULT_BATCH_SIZE = 8;
+  var NEXT_BATCH_DELAY_MS = 12000;
+  var nextBatchTimer = null;
   var CONTROLLER_ID = String(Date.now()) + '-' + Math.random().toString(36).slice(2);
   var MAX_TRACE = 150;
 
@@ -301,6 +303,19 @@
   function currentPublisherHeartbeat() {
     var hb = GM_getValue(HEARTBEAT_KEY, null);
     return hb && Number(hb.at || 0) > 0 ? hb : null;
+  }
+
+  function alreadySucceeded(job, queueGeneratedAt) {
+    var doi = normalizeDoi(job && job.doi);
+    if (!doi) return false;
+    var prior = GM_getValue(attemptKey(doi, queueGeneratedAt || '', jobKind(job)), null);
+    return Boolean(prior && prior.status === 'success');
+  }
+
+  function executableJobs(allJobs, queueGeneratedAt) {
+    return (allJobs || []).filter(function (job) {
+      return !alreadySucceeded(job, queueGeneratedAt) && !isFailureCooling(job);
+    });
   }
 
   function selectBatchJobs(allJobs, limit) {
@@ -2208,6 +2223,7 @@
 
     var visible = Array.isArray(queue.visibleGaps) ? queue.visibleGaps : [];
     var upgrades = Array.isArray(queue.officialUpgrades) ? queue.officialUpgrades : [];
+    var queueGeneratedAt = String(queue.generatedAt || '');
     var liveCaptures = await readLiveCaptureKinds();
     var reconciled = reconcileQueueWithLiveCaptures(visible, upgrades, liveCaptures);
     visible = reconciled.visible;
@@ -2224,6 +2240,9 @@
     }).filter(function (job) { return Boolean(job.doi); }) : stagedFigureJobs();
     var figureOnly = queuedFigures.slice();
     var allJobs = visible.concat(upgrades, figureOnly);
+    visible = executableJobs(visible, queueGeneratedAt);
+    upgrades = executableJobs(upgrades, queueGeneratedAt);
+    figureOnly = executableJobs(figureOnly, queueGeneratedAt);
     var limit = batchSize();
 
     // Priority:
@@ -2263,7 +2282,7 @@
     var cooldownSkipped = cooling.length;
     var summary = {
       version: VERSION,
-      queueGeneratedAt: queue.generatedAt || '',
+      queueGeneratedAt: queueGeneratedAt,
       startedAt: nowIso(),
       queueTotal: allJobs.length,
       batchSize: limit,
@@ -2289,7 +2308,7 @@
       job.doi = normalizeDoi(job.doi);
       if (!job.doi) continue;
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
-      job.queueGeneratedAt = queue.generatedAt || '';
+      job.queueGeneratedAt = queueGeneratedAt;
       job.startedAt = nowIso();
 
       var taskKind = jobKind(job);
@@ -2342,10 +2361,19 @@
     summary.finishedAt = nowIso();
     GM_setValue(SUMMARY_KEY, summary);
     GM_deleteValue(ACTIVE_JOB_KEY);
+
+    var remaining = executableJobs(allJobs, queueGeneratedAt);
     if (summary.aborted || isAbortRequested()) {
       badge('媒体抓取本批已中止：成功 ' + summary.success + '，失败 ' + summary.failed + '，中止 ' + summary.aborted, '#6b7280');
+    } else if (remaining.length > 0) {
+      badge('媒体抓取本批完成：' + summary.total + '/' + summary.queueTotal + '；成功 ' + summary.success + '，失败 ' + summary.failed + '；约 12 秒后自动继续，剩余 ' + remaining.length, summary.failed ? '#92400e' : '#065f46');
+      if (nextBatchTimer !== null) clearTimeout(nextBatchTimer);
+      nextBatchTimer = window.setTimeout(function () {
+        nextBatchTimer = null;
+        if (GM_getValue(ENABLED_KEY, true) !== false && !isAbortRequested()) controllerRun();
+      }, NEXT_BATCH_DELAY_MS);
     } else {
-      badge('媒体抓取本批完成：' + summary.total + '/' + summary.queueTotal + '；TOC缺口 ' + summary.visible + '；正文图缺口 ' + summary.figureGaps + '；成功 ' + summary.success + '，失败 ' + summary.failed + '，冷却跳过 ' + summary.cooldownSkipped, summary.failed ? '#92400e' : '#065f46');
+      badge('媒体抓取当前可执行队列已完成：成功 ' + summary.success + '，失败 ' + summary.failed + '，冷却跳过 ' + summary.cooldownSkipped, summary.failed ? '#92400e' : '#065f46');
     }
   }
 

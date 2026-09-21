@@ -71,7 +71,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.2.14" public/toc-mainline.user.js
+          grep -F "// @version      6.2.15" public/toc-mainline.user.js
           grep -F "toc-demand-live.json" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
@@ -107,6 +107,9 @@ jobs:
           grep -F "var dates = Array.from(new Set" public/toc-mainline.user.js
           grep -F "delayedTocUpgrades: upgrades.length" public/toc-mainline.user.js
           grep -F "var delayedUpgrades = upgrades.filter" public/toc-mainline.user.js
+          grep -F "NEXT_BATCH_DELAY_MS = 12000" public/toc-mainline.user.js
+          grep -F "function executableJobs" public/toc-mainline.user.js
+          grep -F "约 12 秒后自动继续" public/toc-mainline.user.js
           grep -F "/api/article-figures/promote-staged" cloudflare/worker/src/index.js
           grep -F "promoteStagedArticleFigures" cloudflare/worker/src/local-captures.js
           grep -F "ARTICLE_FIGURE_STAGE_PROMOTION_CRON" cloudflare/worker/src/index.js
@@ -138,7 +141,7 @@ jobs:
           grep -F "https://onlinelibrary.wiley.com" cloudflare/worker/src/index.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "loaderVersion = '2.2.14'" cloudflare/scripts/build-bridge-loader.mjs
+          grep -F "loaderVersion = '2.2.15'" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" cloudflare/scripts/build-bridge-loader.mjs
           if grep -Fq "chinesechemsoc.org" public/toc-mainline.user.js; then echo "Obsolete CJC domains must not remain in TOC mainline"; exit 1; fi
           if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
