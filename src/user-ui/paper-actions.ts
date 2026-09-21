@@ -134,7 +134,8 @@ export class GalleryPaperActions extends HTMLElement {
 
   private render(): void {
     const paper = store.paper(this.paperId); const meta = store.metadata(this.paperId); const status = store.status(paper.statusId || '');
-    const count = meta?.doi ? store.readerCounts[meta.doi] || 0 : 0;
+    const count = meta?.doi ? store.readerCounts[meta.doi] : undefined;
+    const countLabel = typeof count === 'number' ? String(count) : '—';
     const s = store.state.actionStyles;
     this.shadow.innerHTML = `<style>
       :host{display:block;position:relative;margin-top:4px;font:12px/1.4 Inter,system-ui,sans-serif;color:#344054}
@@ -146,7 +147,7 @@ export class GalleryPaperActions extends HTMLElement {
       ${button(s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status))}
       ${button(s.note, this.tr('私人备注', 'Private note'), 'note', '✎', Boolean(paper.note))}
       ${button(s.more, this.tr('更多', 'More'), 'more', '•••')}
-      <span class='metric'>◉ ${count} ${this.tr('人读过', 'readers')}</span>
+      <span class='metric' data-reader-count-known='${typeof count === 'number' ? 'true' : 'false'}'>◉ ${countLabel} ${this.tr('人读过', 'readers')}</span>
     </div>${this.panel === 'none' ? '' : this.drawer(paper)}`;
     this.bind();
     const drawerOpen = this.panel !== 'none' && Boolean(this.shadow.querySelector('.overlay'));
