@@ -28,6 +28,7 @@ export interface UserUiState {
 const STORAGE_KEY = 'organic-gallery-user-ui-v1';
 const PROFILE_KEY = 'organic-gallery-profile-v1';
 const SITE_FEEDBACK_QUEUE_KEY = 'organic-gallery-site-feedback-queue-v1';
+const READER_COUNTS_CACHE_KEY = 'organic-gallery-reader-counts-v1';
 const OPTIONAL_CLOUD_TIMEOUT_MS = 6500;
 const SITE_FEEDBACK_QUEUE_LIMIT = 50;
 export const WORKER_API_BASE = 'https://api.gczhouwld.com';
@@ -196,6 +197,27 @@ function writeSiteFeedbackQueue(items: QueuedSiteFeedback[]): void {
   } catch { /* local fallback is best effort */ }
 }
 
+function readReaderCountsCache(): Record<string, number> {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(READER_COUNTS_CACHE_KEY) || '{}') as Record<string, unknown>;
+    const counts: Record<string, number> = {};
+    for (const [doi, value] of Object.entries(parsed || {})) {
+      const normalized = normalizeDoi(doi);
+      const count = Number(value);
+      if (normalized && Number.isFinite(count) && count >= 0) counts[normalized] = Math.floor(count);
+    }
+    return counts;
+  } catch {
+    return {};
+  }
+}
+
+function writeReaderCountsCache(counts: Record<string, number>): void {
+  try {
+    localStorage.setItem(READER_COUNTS_CACHE_KEY, JSON.stringify(counts));
+  } catch { /* reader-count cache is best effort */ }
+}
+
 function enqueueSiteFeedback(payload: SiteFeedbackPayload): void {
   const queue = readSiteFeedbackQueue();
   queue.push({ id: newId('feedback'), createdAt: Date.now(), attempts: 0, payload });
@@ -232,7 +254,7 @@ async function workerPost<T>(path: string, body: unknown): Promise<T> {
 class Store extends EventTarget {
   state = load();
   readonly profileId = browserProfile();
-  readerCounts: Record<string, number> = {};
+  readerCounts: Record<string, number> = readReaderCountsCache();
   private feedbackFlushRunning = false;
 
   constructor() {
@@ -302,19 +324,24 @@ class Store extends EventTarget {
   async loadCounts(dois: string[]): Promise<void> {
     const unique = [...new Set(dois.map(normalizeDoi).filter((value): value is string => Boolean(value)))];
     let changed = false;
+    let succeeded = false;
     try {
       for (let i = 0; i < unique.length; i += 150) {
         const chunk = unique.slice(i, i + 150);
         const data = await workerPost<{ counts?: Record<string, number> }>('/api/user-ui/reader-counts', { dois: chunk });
         const counts = data.counts || {};
         for (const doi of chunk) {
-          const next = Number(counts[doi] || 0);
+          const next = Number(counts[doi] ?? 0);
           if (this.readerCounts[doi] !== next) changed = true;
           this.readerCounts[doi] = next;
         }
+        succeeded = true;
       }
+      if (succeeded) writeReaderCountsCache(this.readerCounts);
       if (changed) this.dispatchEvent(new CustomEvent('counts', { detail: { dois: unique } }));
-    } catch { /* aggregate counts are optional */ }
+    } catch {
+      // Preserve the last successful values. Missing values remain unknown instead of becoming fake zeros.
+    }
   }
   async recordOpen(doi: string): Promise<void> {
     const normalized = normalizeDoi(doi);
@@ -324,6 +351,7 @@ class Store extends EventTarget {
       if (typeof data.count === 'number') {
         const changed = this.readerCounts[normalized] !== data.count;
         this.readerCounts[normalized] = data.count;
+        writeReaderCountsCache(this.readerCounts);
         if (changed) this.dispatchEvent(new CustomEvent('counts', { detail: { doi: normalized } }));
       }
     } catch { /* article navigation must never be blocked by analytics */ }

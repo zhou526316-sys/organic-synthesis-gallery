@@ -611,6 +611,53 @@ test('media viewer opens raw images, prefers master source, wheel-zooms, and nav
 });
 
 
+test('reader counts preserve last success and never turn API failure into fake zero', async ({ page }) => {
+  test.setTimeout(60_000);
+  let failCounts = false;
+
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/reader-counts')) {
+      if (failCounts) {
+        await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'd1_unavailable' }) });
+        return;
+      }
+      const payload = route.request().postDataJSON() as { dois?: string[] };
+      const counts = Object.fromEntries((payload.dois || []).map(doi => [doi, 7]));
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const metric = page.locator('gallery-paper-actions').first().locator('.metric');
+  await expect(metric).toContainText('7');
+  await expect(metric).toHaveAttribute('data-reader-count-known', 'true');
+
+  failCounts = true;
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  const cachedMetric = page.locator('gallery-paper-actions').first().locator('.metric');
+  await expect(cachedMetric).toContainText('7');
+  await expect(cachedMetric).toHaveAttribute('data-reader-count-known', 'true');
+
+  await page.evaluate(() => localStorage.removeItem('organic-gallery-reader-counts-v1'));
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  const unknownMetric = page.locator('gallery-paper-actions').first().locator('.metric');
+  await expect(unknownMetric).toContainText('—');
+  await expect(unknownMetric).toHaveAttribute('data-reader-count-known', 'false');
+  await expect(unknownMetric).not.toContainText('0');
+});
+
+
 test('journal and date filters persist across reload and clear cleanly', async ({ page }) => {
   test.setTimeout(60_000);
   await page.route('https://api.gczhouwld.com/**', async route => {

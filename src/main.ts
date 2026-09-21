@@ -436,9 +436,13 @@ function filteredPapers(): Paper[] {
       if (sort === 'readers') {
         const aDoi = paperDoi(a);
         const bDoi = paperDoi(b);
-        const aReaders = aDoi ? Number(store.readerCounts[aDoi] ?? store.readerCounts[aDoi.toLowerCase()] ?? 0) : 0;
-        const bReaders = bDoi ? Number(store.readerCounts[bDoi] ?? store.readerCounts[bDoi.toLowerCase()] ?? 0) : 0;
-        return bReaders - aReaders || b.date.localeCompare(a.date);
+        const aRaw = aDoi ? (store.readerCounts[aDoi] ?? store.readerCounts[aDoi.toLowerCase()]) : undefined;
+        const bRaw = bDoi ? (store.readerCounts[bDoi] ?? store.readerCounts[bDoi.toLowerCase()]) : undefined;
+        const aKnown = typeof aRaw === 'number';
+        const bKnown = typeof bRaw === 'number';
+        if (aKnown !== bKnown) return aKnown ? -1 : 1;
+        if (!aKnown && !bKnown) return b.date.localeCompare(a.date);
+        return Number(bRaw) - Number(aRaw) || b.date.localeCompare(a.date);
       }
       return b.date.localeCompare(a.date);
     });
