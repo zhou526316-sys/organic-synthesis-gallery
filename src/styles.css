@@ -851,8 +851,12 @@ select {
   line-height: 28px;
   cursor: pointer;
 }
-.cardfoot {
+gallery-paper-actions {
+  display: block;
   margin-top: auto;
+}
+.cardfoot {
+  margin-top: 0;
   display: flex;
   gap: 12px;
   justify-content: space-between;
@@ -963,7 +967,7 @@ select {
   .gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    align-items: start;
+    align-items: stretch;
   }
   .card {
     min-height: 0;
