@@ -105,6 +105,11 @@ jobs:
           grep -F "failure:figures:" public/toc-mainline.user.js
           grep -F "figureGapTotal" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "MEDIA_INVENTORY_URL" cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F "function figureQuality(row)" cloudflare/worker/src/media.js
+          grep -F "usableFigureCount" cloudflare/worker/src/media.js
+          grep -F "lowResolutionFigureGapTotal" cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F "function articleFigureResolution" public/toc-mainline.user.js
+          grep -F "articleFigureImageUrls" public/toc-mainline.user.js
           grep -F "figure1_deferred" public/toc-mainline.user.js
           grep -F "heartbeatDeadlineMs = 35000" public/toc-mainline.user.js
           grep -F "action/doSearch?AllField=" public/toc-mainline.user.js
