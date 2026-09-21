@@ -216,6 +216,28 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   await expect(cardStatus.locator('.status-image')).toBeVisible();
   await expect(cardStatus).toHaveClass(/shape-square/);
   await expect.poll(async () => cardStatus.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(18, 52, 86)');
+
+  await expect.poll(async () => actions.evaluate(element => {
+    const card = element.closest<HTMLElement>('.card');
+    return {
+      active: Boolean(card?.classList.contains('user-status-card')),
+      statusId: card?.dataset.userStatusId || '',
+      rgb: card?.style.getPropertyValue('--user-status-rgb').trim() || '',
+    };
+  })).toEqual({ active: true, statusId: 'to-read', rgb: '18,52,86' });
+
+  await actions.locator('button[data-action="status"]').click();
+  const activeEditor = actions.locator('[data-status-editor="to-read"]');
+  const activeColor = activeEditor.locator('input[data-status-color="to-read"]');
+  await activeColor.evaluate((element: HTMLInputElement) => {
+    element.value = '#654321';
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await expect.poll(async () => actions.evaluate(element => {
+    const card = element.closest<HTMLElement>('.card');
+    return card?.style.getPropertyValue('--user-status-rgb').trim() || '';
+  })).toBe('101,67,33');
+  await actions.locator('button[data-action="close"]').click();
 });
 
 
