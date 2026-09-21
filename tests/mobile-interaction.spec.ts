@@ -179,7 +179,14 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
     mimeType: 'image/png',
     buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64'),
   });
-  await expect(userShell.locator('[data-style-preview="status:to-read"] img')).toBeVisible();
+  const cropper = page.locator('[role="dialog"][aria-modal="true"]').filter({ hasText: 'Crop image' });
+  await expect(cropper).toBeVisible();
+  await cropper.getByRole('slider').fill('1.25');
+  await cropper.getByRole('button', { name: '圆形 / Circle' }).click();
+  await cropper.getByRole('button', { name: '使用 / Apply' }).click();
+  const statusPreview = userShell.locator('[data-style-preview="status:to-read"]');
+  await expect(statusPreview.locator('img')).toBeVisible();
+  await expect(statusPreview).toHaveClass(/shape-circle/);
 
   await userShell.locator('button[data-action="close"]').click();
   await actions.locator('button[data-action="status"]').click();
