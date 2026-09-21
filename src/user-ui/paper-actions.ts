@@ -28,6 +28,8 @@ export class GalleryPaperActions extends HTMLElement {
   private feedbackMessage = '';
   private readonly outside = (event: PointerEvent): void => {
     if (this.panel === 'none') return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('[data-gallery-user-cropper]')) return;
     if (event.composedPath().includes(this)) return;
     this.closePanel();
   };
