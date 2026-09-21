@@ -1,20 +1,11 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-20T14:16:11.513Z",
+  "generatedAt": "2026-09-21T00:10:48.511Z",
   "webpageDoiCount": 483,
-  "visibleGapTotal": 25,
-  "missingOfficialTotal": 96,
-  "officialUpgradeTotal": 71,
+  "visibleGapTotal": 17,
+  "missingOfficialTotal": 89,
+  "officialUpgradeTotal": 72,
   "visibleGaps": [
-    {
-      "doi": "10.1021/acscatal.6c04593",
-      "journal": "ACS Catalysis",
-      "title": "Glycopeptide Assembly via Selective Manganese(I)-Catalyzed C–H Alkenylations in Organic Media and in Water",
-      "date": "2026-09-18",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
     {
       "doi": "10.1021/acscatal.6c05293",
       "journal": "ACS Catalysis",
@@ -61,33 +52,6 @@
       "existingReason": ""
     },
     {
-      "doi": "10.1021/acs.orglett.6c03588",
-      "journal": "Organic Letters",
-      "title": "Reductive Catalyst Regeneration Enables the General Cu-Catalyzed Atom Transfer Radical Addition with Primary Alkyl Halides",
-      "date": "2026-09-19",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03822",
-      "journal": "Organic Letters",
-      "title": "Photocatalytic 1,4-Alkylation/Carboxylation of 1,3-Enynes with 4-Alkyl-Hantzsch Esters and CO2 for the Synthesis of 2,3-Allenoic Acids",
-      "date": "2026-09-19",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03247",
-      "journal": "Organic Letters",
-      "title": "Direct C6-Alkynylation of Indoles by Palladium/Norbornene Cooperative Catalysis",
-      "date": "2026-09-18",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
       "doi": "10.1021/acs.orglett.6c03255",
       "journal": "Organic Letters",
       "title": "Biomimetic Base-Exchange Reaction for Late-Stage Synthesis of Stereodivergent NAADP+ and NAD(P)+ Derivatives",
@@ -113,42 +77,6 @@
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": "invalid_static_media_pruned"
-    },
-    {
-      "doi": "10.1002/anie.3092581",
-      "journal": "Angew",
-      "title": "Taming the Flexible Eight‐Membered Ring: Enantioselective Synthesis of Inherently Chiral Dibenzo[ a , e ]cyclooctatetraenes Enabled by Pd‐Catalyzed Suzuki–Miyaura Cross‐Coupling",
-      "date": "2026-09-19",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1002/anie.4084841",
-      "journal": "Angew",
-      "title": "Divergent Single‐Oxygen Transmutation of Furans",
-      "date": "2026-09-19",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1002/anie.5852828",
-      "journal": "Angew",
-      "title": "De Novo Design and Structural Optimization of Mn(salen)-Based Artificial Metalloenzymes for Asymmetric Sulfoxidation",
-      "date": "2026-09-18",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1002/anie.6992524",
-      "journal": "Angew",
-      "title": "Deaminative Allylation of Primary Amines",
-      "date": "2026-09-18",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": ""
     },
     {
       "doi": "10.1002/anie.8911828",
@@ -233,6 +161,15 @@
     }
   ],
   "officialUpgrades": [
+    {
+      "doi": "10.1021/acscatal.6c04593",
+      "journal": "ACS Catalysis",
+      "title": "Glycopeptide Assembly via Selective Manganese(I)-Catalyzed C–H Alkenylations in Organic Media and in Water",
+      "date": "2026-09-18",
+      "publisher": "acs",
+      "state": "fallback_only",
+      "existingReason": "figure1_fallback"
+    },
     {
       "doi": "10.1021/acs.orglett.6c03521",
       "journal": "Organic Letters",
@@ -880,8 +817,8 @@
       "title": "Glycopeptide Assembly via Selective Manganese(I)-Catalyzed C–H Alkenylations in Organic Media and in Water",
       "date": "2026-09-18",
       "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
+      "state": "fallback_only",
+      "existingReason": "figure1_fallback"
     },
     {
       "doi": "10.1021/acscatal.6c05293",
@@ -924,33 +861,6 @@
       "journal": "Organic Letters",
       "title": "Biocatalytic Synthesis of Substituted Cinnamaldehydes",
       "date": "2026-09-19",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03588",
-      "journal": "Organic Letters",
-      "title": "Reductive Catalyst Regeneration Enables the General Cu-Catalyzed Atom Transfer Radical Addition with Primary Alkyl Halides",
-      "date": "2026-09-19",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03822",
-      "journal": "Organic Letters",
-      "title": "Photocatalytic 1,4-Alkylation/Carboxylation of 1,3-Enynes with 4-Alkyl-Hantzsch Esters and CO2 for the Synthesis of 2,3-Allenoic Acids",
-      "date": "2026-09-19",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03247",
-      "journal": "Organic Letters",
-      "title": "Direct C6-Alkynylation of Indoles by Palladium/Norbornene Cooperative Catalysis",
-      "date": "2026-09-18",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
@@ -1602,42 +1512,6 @@
       "publisher": "science",
       "state": "fallback_only",
       "existingReason": "figure_fallback:Figure 4"
-    },
-    {
-      "doi": "10.1002/anie.3092581",
-      "journal": "Angew",
-      "title": "Taming the Flexible Eight‐Membered Ring: Enantioselective Synthesis of Inherently Chiral Dibenzo[ a , e ]cyclooctatetraenes Enabled by Pd‐Catalyzed Suzuki–Miyaura Cross‐Coupling",
-      "date": "2026-09-19",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1002/anie.4084841",
-      "journal": "Angew",
-      "title": "Divergent Single‐Oxygen Transmutation of Furans",
-      "date": "2026-09-19",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1002/anie.5852828",
-      "journal": "Angew",
-      "title": "De Novo Design and Structural Optimization of Mn(salen)-Based Artificial Metalloenzymes for Asymmetric Sulfoxidation",
-      "date": "2026-09-18",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1002/anie.6992524",
-      "journal": "Angew",
-      "title": "Deaminative Allylation of Primary Amines",
-      "date": "2026-09-18",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": ""
     },
     {
       "doi": "10.1002/anie.8911828",
