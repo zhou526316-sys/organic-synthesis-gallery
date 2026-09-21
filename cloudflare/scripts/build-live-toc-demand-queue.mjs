@@ -151,10 +151,10 @@ async function fetchMediaInventory(dois) {
         largeSource: String(item?.largeSource || 'none'),
         suspiciousToc: item?.suspiciousToc === true,
         figureCount: Math.max(0, Number(item?.figureCount || 0)),
-        highQualityFigureCount: Math.max(0, Number(item?.highQualityFigureCount || 0)),
-        usableFigureCount: Math.max(0, Number(item?.usableFigureCount || 0)),
-        lowQualityFigureCount: Math.max(0, Number(item?.lowQualityFigureCount || 0)),
-        unknownQualityFigureCount: Math.max(0, Number(item?.unknownQualityFigureCount || 0)),
+        highQualityFigureCount: Math.max(0, Number(item?.highQualityFigureCount ?? 0)),
+        usableFigureCount: Math.max(0, Number(item?.usableFigureCount ?? item?.figureCount ?? 0)),
+        lowQualityFigureCount: Math.max(0, Number(item?.lowQualityFigureCount ?? 0)),
+        unknownQualityFigureCount: Math.max(0, Number(item?.unknownQualityFigureCount ?? 0)),
       });
     }
     return map;
