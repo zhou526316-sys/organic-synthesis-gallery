@@ -680,6 +680,18 @@
     return values;
   }
 
+
+  function articleFigureResolution(width, height) {
+    width = Math.max(0, Number(width || 0));
+    height = Math.max(0, Number(height || 0));
+    if (!width || !height) return { quality: 'unknown', usable: false };
+    var maxSide = Math.max(width, height);
+    var minSide = Math.min(width, height);
+    var pixels = width * height;
+    if (maxSide >= 900 && minSide >= 180 && pixels >= 220000) return { quality: 'high', usable: true };
+    if (maxSide >= 600 && minSide >= 140 && pixels >= 120000) return { quality: 'usable', usable: true };
+    return { quality: 'low', usable: false };
+  }
   function rawTagAttrs(tag) {
     var out = {};
     String(tag || '').replace(/([:\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+))/g, function (_, key, dq, sq, bare) {
@@ -836,7 +848,7 @@
       var label = articleFigureLabel(context, blockIndex);
       var caption = context.slice(0, 600);
       Array.prototype.slice.call(block.querySelectorAll('img,source')).forEach(function (node) {
-        articleFigureImageUrls(node, pageUrl).forEach(function (url) {
+        articleFigureImageUrls(node, pageUrl).forEach(function (url, variantRank) {
           if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
           var key = label.toLowerCase() + '::' + url;
           if (seen[key]) return;
@@ -849,7 +861,7 @@
             label: label,
             text: caption,
             source: source + '_figure',
-            score: /^Figure 1$/i.test(label) ? 100 : /^Figure|^Scheme|^Chart/i.test(label) ? 90 : 70,
+            score: (/^Figure 1$/i.test(label) ? 100 : /^Figure|^Scheme|^Chart/i.test(label) ? 90 : 70) - Math.min(variantRank, 8),
             width: Number(img && (img.naturalWidth || img.width) || 0),
             height: Number(img && (img.naturalHeight || img.height) || 0),
             element: img instanceof HTMLImageElement ? img : null
@@ -863,7 +875,7 @@
         if (!/(?:\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b|substrate\s+scope|reaction\s+scope|mechanis|catalytic\s+cycle|optimization|reaction\s+conditions)/i.test(context)) return;
         if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)/i.test(context.slice(0, 1600))) return;
         var label = articleFigureLabel(context, imageIndex);
-        articleFigureImageUrls(node, pageUrl).forEach(function (url) {
+        articleFigureImageUrls(node, pageUrl).forEach(function (url, variantRank) {
           if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
           var key = label.toLowerCase() + '::' + url;
           if (seen[key]) return;
@@ -876,7 +888,7 @@
             label: label,
             text: context.slice(0, 600),
             source: source + '_context_figure',
-            score: /^Figure 1$/i.test(label) ? 96 : /^Figure|^Scheme|^Chart/i.test(label) ? 86 : 66,
+            score: (/^Figure 1$/i.test(label) ? 96 : /^Figure|^Scheme|^Chart/i.test(label) ? 86 : 66) - Math.min(variantRank, 8),
             width: Number(img && (img.naturalWidth || img.width) || 0),
             height: Number(img && (img.naturalHeight || img.height) || 0),
             element: img instanceof HTMLImageElement ? img : null
@@ -886,13 +898,12 @@
     }
 
     rows.sort(function (a, b) { return b.score - a.score || String(a.label).localeCompare(String(b.label)); });
-    var uniqueLabels = {};
+    var variantsPerLabel = {};
     var selected = rows.filter(function (row) {
       var key = String(row.label || '').toLowerCase();
-      if (uniqueLabels[key]) return false;
-      uniqueLabels[key] = true;
-      return true;
-    }).slice(0, 12);
+      variantsPerLabel[key] = Number(variantsPerLabel[key] || 0) + 1;
+      return variantsPerLabel[key] <= 3;
+    }).slice(0, 24);
     pushTrace(trace, {
       stage: 'figure_discovery',
       event: 'scan_complete',
@@ -1797,18 +1808,37 @@
         if (!figureCandidates.length) {
           figureError = new Error('no_article_figure_candidate_in_live_dom');
         } else {
-          for (var fi = 0; fi < Math.min(6, figureCandidates.length); fi += 1) {
+          var importedFigureLabels = {};
+          for (var fi = 0; fi < Math.min(18, figureCandidates.length); fi += 1) {
             if (isAbortRequested()) throw new Error('user_aborted');
             var figureCandidate = figureCandidates[fi];
+            var figureLabelKey = String(figureCandidate.label || '').toLowerCase();
+            if (importedFigureLabels[figureLabelKey]) continue;
             try {
               var figureImage = await acquireImage(figureCandidate, trace);
               if (!figureImage) {
                 figureError = new Error('article_figure_image_unreadable');
                 continue;
               }
+              var resolution = articleFigureResolution(figureImage.width, figureImage.height);
+              pushTrace(trace, {
+                stage: 'figure_quality',
+                event: 'measured',
+                status: resolution.quality,
+                url: figureCandidate.url,
+                message: String(figureImage.width || 0) + 'x' + String(figureImage.height || 0) + ';label=' + String(figureCandidate.label || ''),
+                imageWidth: Number(figureImage.width || 0),
+                imageHeight: Number(figureImage.height || 0)
+              });
+              if (!resolution.usable) {
+                figureError = new Error('article_figure_resolution_' + resolution.quality);
+                continue;
+              }
               await uploadArticleFigure(job, figureCandidate, figureImage, trace, token, figuresImported);
+              importedFigureLabels[figureLabelKey] = true;
               figureCandidateForReport = figureCandidateForReport || figureCandidate;
               figuresImported += 1;
+              if (figuresImported >= 5) break;
             } catch (oneFigureError) {
               figureError = oneFigureError;
               pushTrace(trace, {
