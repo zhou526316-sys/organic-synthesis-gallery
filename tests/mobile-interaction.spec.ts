@@ -315,6 +315,7 @@ test('desktop personalization wheel reaches the bottom and action slots align ac
   const actions = page.locator('gallery-paper-actions');
   await expect(actions.nth(0)).toBeVisible({ timeout: 30000 });
   await expect(actions.nth(1)).toBeVisible({ timeout: 30000 });
+  await expect(actions.nth(2)).toBeVisible({ timeout: 30000 });
 
   await actions.nth(0).locator('button[data-action="favorite"]').click();
   await actions.nth(0).locator('button[data-action="status"]').click();
@@ -344,6 +345,26 @@ test('desktop personalization wheel reaches the bottom and action slots align ac
   expect(new Set(secondGeometry.map(item => item.y)).size).toBe(1);
   expect(new Set(firstGeometry.map(item => item.h)).size).toBe(1);
   expect(new Set(secondGeometry.map(item => item.h)).size).toBe(1);
+
+  await page.locator('.card').evaluateAll(cards => {
+    [72, 118, 164].forEach((height, index) => {
+      const slot = cards[index]?.querySelector<HTMLElement>('.figure-strip-slot');
+      if (!slot) throw new Error(`figure strip missing for card ${index}`);
+      slot.style.height = `${height}px`;
+      slot.style.minHeight = `${height}px`;
+      slot.style.overflow = 'hidden';
+    });
+  });
+
+  const crossCardActionTops = await actions.evaluateAll(hosts =>
+    hosts.slice(0, 3).map(host => {
+      const button = host.shadowRoot?.querySelector<HTMLElement>('button[data-action="favorite"]');
+      if (!button) throw new Error('favorite button missing');
+      return Math.round(button.getBoundingClientRect().top);
+    })
+  );
+  expect(crossCardActionTops).toHaveLength(3);
+  expect(Math.max(...crossCardActionTops) - Math.min(...crossCardActionTops)).toBeLessThanOrEqual(2);
 
   const userShell = page.locator('gallery-user-shell');
   await userShell.locator('button.trigger').click();
