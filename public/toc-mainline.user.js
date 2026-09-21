@@ -314,6 +314,26 @@
     return out;
   }
 
+  function stagedFigureJobs() {
+    var jobs = [];
+    var seen = {};
+    Array.prototype.slice.call(document.querySelectorAll('[data-media-need][data-doi], [data-media-need] [data-doi]')).forEach(function (node) {
+      var need = String(node.getAttribute('data-media-need') || node.closest('[data-media-need]') && node.closest('[data-media-need]').getAttribute('data-media-need') || '');
+      if (need.indexOf('figures') < 0) return;
+      var doi = normalizeDoi(node.getAttribute('data-doi'));
+      if (!doi || seen[doi]) return;
+      seen[doi] = true;
+      jobs.push({
+        doi: doi,
+        publisher: publisherForDoi(doi),
+        state: 'figure_gap',
+        mediaNeed: need,
+        existingReason: 'gallery_article_figure_gap'
+      });
+    });
+    return jobs;
+  }
+
   function selectPriorityBatch(visible, upgrades, limit) {
     var primary = selectBatchJobs(visible, limit);
     if (primary.length >= limit) return primary;
@@ -1789,9 +1809,33 @@
     var reconciled = reconcileQueueWithLiveCaptures(visible, upgrades, liveCaptures);
     visible = reconciled.visible;
     upgrades = reconciled.upgrades;
-    var allJobs = visible.concat(upgrades);
+    var stagedFigures = stagedFigureJobs();
+    var existingByDoi = {};
+    visible.concat(upgrades).forEach(function (job) {
+      var doi = normalizeDoi(job && job.doi);
+      if (doi) existingByDoi[doi] = job;
+    });
+    var figureOnly = stagedFigures.filter(function (job) {
+      var doi = normalizeDoi(job && job.doi);
+      if (!doi) return false;
+      if (existingByDoi[doi]) {
+        existingByDoi[doi].mediaNeed = String(existingByDoi[doi].mediaNeed || 'toc').indexOf('figures') >= 0
+          ? existingByDoi[doi].mediaNeed
+          : 'toc+figures';
+        return false;
+      }
+      return true;
+    });
+    var allJobs = visible.concat(upgrades, figureOnly);
     var limit = batchSize();
-    var jobs = selectPriorityBatch(visible, upgrades, limit);
+    var tocBudget = Math.min(visible.length + upgrades.length, Math.max(1, Math.ceil(limit / 2)));
+    var jobs = selectPriorityBatch(visible, upgrades, tocBudget);
+    if (jobs.length < limit) {
+      var selectedDois = {};
+      jobs.forEach(function (job) { var doi = normalizeDoi(job && job.doi); if (doi) selectedDois[doi] = true; });
+      var figureCandidates = figureOnly.filter(function (job) { return !selectedDois[normalizeDoi(job && job.doi)]; });
+      jobs = jobs.concat(selectBatchJobs(figureCandidates, limit - jobs.length));
+    }
     var cooling = allJobs.filter(function (queued) {
       var doi = normalizeDoi(queued && queued.doi);
       return doi ? isFailureCooling(doi) : false;
@@ -1806,6 +1850,8 @@
       total: jobs.length,
       visible: visible.length,
       upgrades: upgrades.length,
+      figureGaps: stagedFigures.length,
+      figureOnly: figureOnly.length,
       cooldownSkipped: cooldownSkipped,
       filteredByLiveR2: Number(reconciled.filteredByR2 || 0),
       success: 0,
