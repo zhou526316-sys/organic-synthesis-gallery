@@ -421,6 +421,35 @@ const closureCoverageAnomalies = Object.entries(sourceFamilyHealth)
   .filter(([, health]) => health.closureCoverageWarning)
   .map(([journal, health]) => ({ journal, ...health }));
 
+const byDate = {};
+for (const candidate of universe) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(candidate.date || '')) continue;
+  const row = byDate[candidate.date] ||= {
+    sourceRecords: 0,
+    crossrefOnly: 0,
+    openAlexOnly: 0,
+    multiSource: 0,
+    coveredByGallery: 0,
+    rawMissingFromGallery: 0,
+    previouslyReviewedExcluded: 0,
+    missingFromGallery: 0,
+    potentialGaps: 0,
+    byJournal: {},
+  };
+  const hasCrossref = hasSource(candidate, 'crossref:');
+  const hasOpenAlex = hasSource(candidate, 'openalex:');
+  row.sourceRecords += 1;
+  if (hasCrossref && hasOpenAlex) row.multiSource += 1;
+  else if (hasCrossref) row.crossrefOnly += 1;
+  else if (hasOpenAlex) row.openAlexOnly += 1;
+  if (galleryDois.has(candidate.doi)) row.coveredByGallery += 1;
+  if (rawMissing.some(item => item.doi === candidate.doi)) row.rawMissingFromGallery += 1;
+  if (reviewedExclusions.has(candidate.doi) && rawMissing.some(item => item.doi === candidate.doi)) row.previouslyReviewedExcluded += 1;
+  if (missingCandidates.some(item => item.doi === candidate.doi)) row.missingFromGallery += 1;
+  if (potentialGaps.some(item => item.doi === candidate.doi)) row.potentialGaps += 1;
+  row.byJournal[candidate.journal] = (row.byJournal[candidate.journal] || 0) + 1;
+}
+
 const byJournal = Object.fromEntries(JOURNALS.map(j => {
   const candidates = universe.filter(x => x.journal === j.name);
   const rawMissingForJournal = rawMissing.filter(x => x.journal === j.name);
@@ -502,6 +531,7 @@ const report = {
     verifiedThroughEligible: criticalFailures.length === 0 && closureCoverageAnomalies.length === 0 && closureMissing.length === 0,
     note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse.',
   },
+  byDate,
   byJournal,
   sourceFamilyHealth,
   sourceFamilyGaps,
