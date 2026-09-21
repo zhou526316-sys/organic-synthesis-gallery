@@ -2006,9 +2006,9 @@
       }
       var progress = GM_getValue(progressKey(job.doi), null);
       if (progress && (progress.status === 'auth_wait' || progress.status === 'challenge_wait')) {
-        badge('TOC：等待认证 ' + job.doi + '，请完成出版社页面验证', '#92400e');
+        badge((jobKind(job) === 'figures' ? '正文图' : 'TOC') + '：等待认证 ' + job.doi + '，请完成出版社页面验证', '#92400e');
       } else {
-        badge('TOC：正在抓取 ' + job.doi, '#1f2937');
+        badge((jobKind(job) === 'figures' ? '正文图' : 'TOC') + '：正在抓取 ' + job.doi, '#1f2937');
       }
       await sleep(1200);
     }
@@ -2028,29 +2028,29 @@
   async function controllerRun() {
     if (!isGalleryPage()) return;
     if (GM_getValue(ENABLED_KEY, true) === false) {
-      badge('TOC 主线已暂停', '#6b7280');
+      badge('媒体抓取主线已暂停', '#6b7280');
       return;
     }
     if (isAbortRequested()) {
-      badge('TOC 本批已中止；可从 Tampermonkey 菜单继续', '#6b7280');
+      badge('媒体抓取本批已中止；可从 Tampermonkey 菜单继续', '#6b7280');
       return;
     }
     var token = writeToken();
     if (!token) {
-      badge('TOC 主线：请先从 Tampermonkey 菜单设置 R2 写入令牌', '#991b1b');
+      badge('媒体抓取：请先从 Tampermonkey 菜单设置 R2 写入令牌', '#991b1b');
       return;
     }
     if (!acquireLease()) {
-      badge('TOC 主线：另一个 Gallery 标签正在执行', '#374151');
+      badge('媒体抓取：另一个 Gallery 标签正在执行', '#374151');
       return;
     }
 
     var queue;
     try {
-      badge('TOC 主线：读取实时缺口队列…', '#1f2937');
+      badge('媒体抓取：读取 TOC + 正文图缺口队列…', '#1f2937');
       queue = await getJson(QUEUE_URL + '?ts=' + Date.now());
     } catch (error) {
-      badge('TOC 队列读取失败：' + String(error && error.message || error), '#991b1b');
+      badge('媒体队列读取失败：' + String(error && error.message || error), '#991b1b');
       return;
     }
 
@@ -2126,7 +2126,7 @@
       GM_deleteValue(progressKey(job.doi));
       GM_deleteValue(HEARTBEAT_KEY);
       GM_setValue(ACTIVE_JOB_KEY, job);
-      badge('TOC ' + String(i + 1) + '/' + String(jobs.length) + '：' + job.doi, '#1f2937');
+      badge((jobKind(job) === 'figures' ? '正文图' : 'TOC') + ' ' + String(i + 1) + '/' + String(jobs.length) + '：' + job.doi, '#1f2937');
 
       var tab = null;
       var result = null;
@@ -2166,9 +2166,9 @@
     GM_setValue(SUMMARY_KEY, summary);
     GM_deleteValue(ACTIVE_JOB_KEY);
     if (summary.aborted || isAbortRequested()) {
-      badge('TOC 本批已中止：成功 ' + summary.success + '，失败 ' + summary.failed + '，中止 ' + summary.aborted, '#6b7280');
+      badge('媒体抓取本批已中止：成功 ' + summary.success + '，失败 ' + summary.failed + '，中止 ' + summary.aborted, '#6b7280');
     } else {
-      badge('TOC 本批完成：' + summary.total + '/' + summary.queueTotal + '；成功 ' + summary.success + '，失败 ' + summary.failed + '，R2已完成跳过 ' + summary.filteredByLiveR2 + '，冷却跳过 ' + summary.cooldownSkipped, summary.failed ? '#92400e' : '#065f46');
+      badge('媒体抓取本批完成：' + summary.total + '/' + summary.queueTotal + '；TOC缺口 ' + summary.visible + '；正文图缺口 ' + summary.figureGaps + '；成功 ' + summary.success + '，失败 ' + summary.failed + '，冷却跳过 ' + summary.cooldownSkipped, summary.failed ? '#92400e' : '#065f46');
     }
   }
 
@@ -2221,7 +2221,7 @@
       GM_setValue(BATCH_SIZE_KEY, parsed);
       window.alert('每批抓取数量已设为 ' + parsed + '。');
     });
-    GM_registerMenuCommand('立即运行实时 TOC 队列', function () {
+    GM_registerMenuCommand('立即运行媒体抓取队列', function () {
       GM_deleteValue(ABORT_KEY);
       GM_setValue(ENABLED_KEY, true);
       GM_deleteValue(LEASE_KEY);
@@ -2232,7 +2232,7 @@
       GM_setValue(ABORT_KEY, { at: Date.now(), reason: 'user_aborted' });
       window.alert('已请求中止当前批次。正在运行的出版社标签页会由控制器关闭；人工中止不会计入失败或失败冷却。');
     });
-    GM_registerMenuCommand('继续 TOC 主线', function () {
+    GM_registerMenuCommand('继续媒体抓取主线', function () {
       GM_deleteValue(ABORT_KEY);
       GM_setValue(ENABLED_KEY, true);
       GM_deleteValue(LEASE_KEY);
@@ -2259,7 +2259,7 @@
     GM_registerMenuCommand('暂停/继续 TOC 自动运行', function () {
       var enabled = GM_getValue(ENABLED_KEY, true) !== false;
       GM_setValue(ENABLED_KEY, !enabled);
-      window.alert(enabled ? 'TOC 主线已暂停。' : 'TOC 主线已继续。');
+      window.alert(enabled ? '媒体抓取主线已暂停。' : '媒体抓取主线已继续。');
     });
     GM_registerMenuCommand('查看最近运行摘要', function () {
       window.alert(JSON.stringify(GM_getValue(SUMMARY_KEY, {}), null, 2));
@@ -2272,7 +2272,7 @@
       queueKeys.filter(function (key) { return String(key).indexOf(P + 'failure:') === 0; })
         .forEach(function (key) { try { GM_deleteValue(key); } catch (_) {} });
       GM_deleteValue(LEASE_KEY);
-      window.alert('已清除当前脚本版本的失败冷却。返回 Gallery 后可立即重新运行实时 TOC 队列。');
+      window.alert('已清除当前脚本版本的失败冷却。返回 Gallery 后可立即重新运行媒体抓取队列。');
     });
     GM_registerMenuCommand('清除卡住任务/租约', function () {
       var job = GM_getValue(ACTIVE_JOB_KEY, null);
