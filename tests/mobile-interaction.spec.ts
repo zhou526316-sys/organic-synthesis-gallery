@@ -670,6 +670,52 @@ test('media viewer opens raw images, prefers master source, wheel-zooms, and nav
 });
 
 
+test('reader count marks only trusted article-link clicks', async ({ page }) => {
+  test.setTimeout(60_000);
+  let markCalls = 0;
+
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/reader-counts/mark')) {
+      markCalls += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ count: markCalls, unique: true, generation: 'article-open-v3' }),
+      });
+      return;
+    }
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const titleLink = page.locator('.card .user-title-link').first();
+  await expect(titleLink).toBeVisible({ timeout: 30000 });
+
+  await titleLink.evaluate(anchor => {
+    anchor.addEventListener('click', event => event.preventDefault(), { capture: true });
+    (anchor as HTMLAnchorElement).click();
+  });
+  await page.waitForTimeout(150);
+  expect(markCalls).toBe(0);
+
+  await titleLink.click();
+  await expect.poll(() => markCalls).toBe(1);
+});
+
+
 test('reader counts preserve last success and never turn API failure into fake zero', async ({ page }) => {
   test.setTimeout(60_000);
   let failCounts = false;
@@ -708,7 +754,7 @@ test('reader counts preserve last success and never turn API failure into fake z
   await expect(cachedMetric).toContainText('7');
   await expect(cachedMetric).toHaveAttribute('data-reader-count-known', 'true');
 
-  await page.evaluate(() => localStorage.removeItem('organic-gallery-reader-counts-v2'));
+  await page.evaluate(() => localStorage.removeItem('organic-gallery-reader-counts-v3'));
   await page.reload({ waitUntil: 'domcontentloaded' });
   const unknownMetric = page.locator('gallery-paper-actions').first().locator('.metric');
   await expect(unknownMetric).toContainText('—');

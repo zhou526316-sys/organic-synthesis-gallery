@@ -240,6 +240,24 @@ CREATE TABLE IF NOT EXISTS paper_reader_counts_v2 (
   updated_at INTEGER NOT NULL
 );
 
+-- v3 is the clean public metric: only real article-open events after this
+-- migration, deduplicated permanently by DOI + hashed IP. No legacy status
+-- rows or earlier IP rows are backfilled into this generation.
+CREATE TABLE IF NOT EXISTS paper_open_readers_v3 (
+  doi TEXT NOT NULL,
+  ip_hash TEXT NOT NULL,
+  first_opened_at INTEGER NOT NULL,
+  PRIMARY KEY (doi, ip_hash)
+);
+CREATE INDEX IF NOT EXISTS idx_paper_open_readers_v3_doi
+  ON paper_open_readers_v3(doi);
+
+CREATE TABLE IF NOT EXISTS paper_open_reader_counts_v3 (
+  doi TEXT PRIMARY KEY,
+  count INTEGER NOT NULL DEFAULT 0 CHECK (count >= 0),
+  updated_at INTEGER NOT NULL
+);
+
 -- User-submitted metadata/media corrections enter a review queue; they never edit literature directly.
 CREATE TABLE IF NOT EXISTS paper_feedback (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
