@@ -57,6 +57,9 @@ jobs:
       - name: Install Worker dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Test reader-count materialization
+        run: npm run test:reader-counts
+
       - name: Wrangler dry-run build
         run: npm run check
 
