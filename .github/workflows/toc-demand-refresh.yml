@@ -38,6 +38,12 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
+      - name: Guard dynamic literature inputs
+        shell: bash
+        run: |
+          grep -F "automation-supplement.json" cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F "rolling-supplement.json" cloudflare/scripts/build-live-toc-demand-queue.mjs
+
       - name: Build current TOC demand queues
         run: node cloudflare/scripts/build-live-toc-demand-queue.mjs
       - name: Show demand counts
