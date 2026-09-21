@@ -156,7 +156,7 @@
     return trace.slice(-160).map(function (entry) {
       return Object.assign({}, entry || {}, {
         url: sanitizeDiagnosticUrl(entry && entry.url || ''),
-        message: String(entry && entry.message || '').slice(0, 1200)
+        message: sanitizeTraceMessage(entry && entry.message || '')
       });
     });
   }
