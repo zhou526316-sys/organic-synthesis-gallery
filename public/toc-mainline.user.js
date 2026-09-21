@@ -791,6 +791,34 @@
         });
       });
     });
+    if (rows.length < 2) {
+      Array.prototype.slice.call(scope.querySelectorAll('img,source')).forEach(function (node, imageIndex) {
+        var context = contextFor(node);
+        if (!/(?:\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b|substrate\s+scope|reaction\s+scope|mechanis|catalytic\s+cycle|optimization|reaction\s+conditions)/i.test(context)) return;
+        if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)/i.test(context.slice(0, 1600))) return;
+        var label = articleFigureLabel(context, imageIndex);
+        imageUrls(node, pageUrl).forEach(function (url) {
+          if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
+          var key = label.toLowerCase() + '::' + url;
+          if (seen[key]) return;
+          seen[key] = true;
+          var img = node instanceof HTMLSourceElement ? (node.parentElement && node.parentElement.querySelector('img')) : node;
+          rows.push({
+            url: url,
+            kind: 'article_figure',
+            assetType: 'article_figure',
+            label: label,
+            text: context.slice(0, 600),
+            source: source + '_context_figure',
+            score: /^Figure 1$/i.test(label) ? 96 : /^Figure|^Scheme|^Chart/i.test(label) ? 86 : 66,
+            width: Number(img && (img.naturalWidth || img.width) || 0),
+            height: Number(img && (img.naturalHeight || img.height) || 0),
+            element: img instanceof HTMLImageElement ? img : null
+          });
+        });
+      });
+    }
+
     rows.sort(function (a, b) { return b.score - a.score || String(a.label).localeCompare(String(b.label)); });
     var uniqueLabels = {};
     var selected = rows.filter(function (row) {
