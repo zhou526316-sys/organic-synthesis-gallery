@@ -267,6 +267,88 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
 });
 
 
+test('desktop personalization wheel reaches the bottom and action slots align across cards', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.setViewportSize({ width: 1707, height: 932 });
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          auth: { google: false, wechat: false, qq: false, email: false },
+          payments: { wechat: false, alipay: false },
+        }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const actions = page.locator('gallery-paper-actions');
+  await expect(actions.nth(0)).toBeVisible({ timeout: 30000 });
+  await expect(actions.nth(1)).toBeVisible({ timeout: 30000 });
+
+  await actions.nth(0).locator('button[data-action="favorite"]').click();
+  await actions.nth(0).locator('button[data-action="status"]').click();
+  await actions.nth(0).locator('button[data-action="set-status:to-read"]').click();
+
+  const relativeActionXs = async (index: number): Promise<number[]> =>
+    actions.nth(index).evaluate(host => {
+      const hostRect = host.getBoundingClientRect();
+      const root = host.shadowRoot;
+      if (!root) throw new Error('paper-actions shadow root missing');
+      return ['favorite', 'status', 'note', 'more'].map(action => {
+        const button = root.querySelector<HTMLElement>(`button[data-action="${action}"]`);
+        if (!button) throw new Error(`missing action ${action}`);
+        return Math.round(button.getBoundingClientRect().left - hostRect.left);
+      });
+    });
+
+  const firstXs = await relativeActionXs(0);
+  const secondXs = await relativeActionXs(1);
+  expect(firstXs).toEqual(secondXs);
+
+  const userShell = page.locator('gallery-user-shell');
+  await userShell.locator('button.trigger').click();
+  await userShell.locator('button[data-tab="settings"]').click();
+  const panel = userShell.locator('.panel');
+  const content = userShell.locator('.content');
+  await expect(panel).toBeVisible();
+  await expect(content).toBeVisible();
+
+  const panelMetrics = await panel.evaluate(element => {
+    const style = getComputedStyle(element);
+    return {
+      height: Math.round(element.getBoundingClientRect().height),
+      gridRows: style.gridTemplateRows,
+    };
+  });
+  expect(panelMetrics.height).toBeGreaterThan(500);
+  expect(panelMetrics.height).toBeLessThanOrEqual(760);
+
+  await content.evaluate(element => { (element as HTMLElement).scrollTop = 0; });
+  await content.hover();
+  await page.mouse.wheel(0, 1100);
+  await expect.poll(async () => content.evaluate(element => (element as HTMLElement).scrollTop)).toBeGreaterThan(100);
+
+  for (let index = 0; index < 6; index += 1) await page.mouse.wheel(0, 1200);
+  await expect.poll(async () => content.evaluate(element => {
+    const node = element as HTMLElement;
+    return Math.abs(node.scrollHeight - node.clientHeight - node.scrollTop);
+  })).toBeLessThanOrEqual(3);
+
+  const bottomNotice = content.locator('.notice').last();
+  await expect(bottomNotice).toBeVisible();
+});
+
+
 test('search highlights results, picker closes outside, feedback drags and submits', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.route('https://api.gczhouwld.com/**', async route => {
