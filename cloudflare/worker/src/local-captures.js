@@ -5,6 +5,8 @@ const IMAGE_PREFIX = 'local-captures/images/';
 const DIAGNOSTIC_KEY = 'local-captures/diagnostics/latest.json';
 const TAMPERMONKEY_REPORT_INDEX_KEY = 'local-captures/tampermonkey/report-index.json';
 const TAMPERMONKEY_REPORT_PREFIX = 'local-captures/tampermonkey/reports/';
+const ARTICLE_FIGURE_STAGE_INDEX_KEY = 'local-captures/article-figures/stage-index.json';
+const ARTICLE_FIGURE_STAGE_PREFIX = 'local-captures/article-figures/images/';
 const TAMPERMONKEY_REPORT_HISTORY_LIMIT = 12;
 const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_DIAGNOSTIC_BYTES = 1_500_000;
@@ -73,6 +75,20 @@ async function readIndex(env) {
   try {
     const value = JSON.parse(await object.text());
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('invalid index');
+    value.items = value.items && typeof value.items === 'object' && !Array.isArray(value.items) ? value.items : {};
+    return value;
+  } catch {
+    return { version: 1, updatedAt: 0, items: {} };
+  }
+}
+
+async function readArticleFigureStageIndex(env) {
+  if (!env?.MEDIA) throw new Error('R2 binding MEDIA is not configured');
+  const object = await env.MEDIA.get(ARTICLE_FIGURE_STAGE_INDEX_KEY);
+  if (!object) return { version: 1, updatedAt: 0, items: {} };
+  try {
+    const value = JSON.parse(await object.text());
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('invalid staged figure index');
     value.items = value.items && typeof value.items === 'object' && !Array.isArray(value.items) ? value.items : {};
     return value;
   } catch {
@@ -387,6 +403,117 @@ export async function getTampermonkeyReports(request, env) {
       count: selected.length,
       total: latestItems.length,
       items: selected,
+    },
+  };
+}
+
+export async function importStagedArticleFigure(request, env, payload) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
+  const doi = normalizeDoi(payload?.doi);
+  if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  const image = parseImageData(payload?.imageData);
+  if (!image) return { status: 400, body: { error: 'A valid imageData payload is required.' } };
+
+  const sourceId = safeText(payload?.id || payload?.label || 'figure', 100)
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'figure';
+  const label = safeText(payload?.label || sourceId, 80) || 'Figure';
+  const caption = safeText(payload?.caption || '', 600);
+  const articleUrl = safeUrl(payload?.articleUrl || '');
+  const sourceUrl = safeUrl(payload?.sourceUrl || '');
+  const width = Math.max(0, Math.round(Number(payload?.width || 0)));
+  const height = Math.max(0, Math.round(Number(payload?.height || 0)));
+  const sortOrder = Math.max(0, Math.min(99, Math.round(Number(payload?.order || 0))));
+  const hash = await sha256Hex(image.bytes);
+  const doiHash = await sha256Hex(new TextEncoder().encode(doi));
+  const contentHash = hash.slice(0, 32);
+  const identity = doi + '|' + sourceId;
+  const index = await readArticleFigureStageIndex(env);
+  const previous = index.items[identity];
+  const previousPixels = Math.max(0, Number(previous?.width || 0)) * Math.max(0, Number(previous?.height || 0));
+  const nextPixels = width * height;
+  if (previous && previousPixels > 0 && nextPixels > 0 && previousPixels > nextPixels) {
+    return {
+      status: 200,
+      body: {
+        stored: true,
+        staged: true,
+        retainedHigherResolution: true,
+        doi,
+        id: sourceId,
+        width: Number(previous.width || 0),
+        height: Number(previous.height || 0),
+        imageUrl: previous.r2Key ? publicMediaUrl(request, previous.r2Key) : undefined,
+      },
+    };
+  }
+
+  const key = ARTICLE_FIGURE_STAGE_PREFIX + doiHash.slice(0, 24) + '/' +
+    sourceId + '-' + hash.slice(0, 16) + '.' + extensionFor(image.contentType);
+  await env.MEDIA.put(key, image.bytes, {
+    httpMetadata: { contentType: image.contentType, cacheControl: 'public, max-age=31536000, immutable' },
+    customMetadata: { doi, sourceId, contentHash, source: 'tampermonkey-article-figure-stage' },
+  });
+  if (previous?.r2Key && previous.r2Key !== key) {
+    try { await env.MEDIA.delete(previous.r2Key); } catch {}
+  }
+
+  const now = Date.now();
+  index.items[identity] = {
+    doi,
+    id: sourceId,
+    label,
+    caption,
+    articleUrl,
+    sourceUrl,
+    r2Key: key,
+    contentHash,
+    contentType: image.contentType,
+    byteLength: image.bytes.byteLength,
+    width,
+    height,
+    sortOrder,
+    updatedAt: now,
+  };
+  index.version = 1;
+  index.updatedAt = now;
+  await env.MEDIA.put(ARTICLE_FIGURE_STAGE_INDEX_KEY, JSON.stringify(index), {
+    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
+  });
+
+  return {
+    status: 200,
+    body: {
+      stored: true,
+      staged: true,
+      doi,
+      id: sourceId,
+      width,
+      height,
+      contentHash,
+      imageUrl: publicMediaUrl(request, key),
+      updatedAt: now,
+    },
+  };
+}
+
+export async function getStagedArticleFigures(request, env) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
+  const index = await readArticleFigureStageIndex(env);
+  const url = new URL(request.url);
+  const doi = normalizeDoi(url.searchParams.get('doi') || '');
+  let items = Object.values(index.items || {});
+  if (doi) items = items.filter(item => normalizeDoi(item?.doi) === doi);
+  items.sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
+  return {
+    status: 200,
+    body: {
+      version: Number(index.version || 1),
+      updatedAt: Number(index.updatedAt || 0),
+      count: items.length,
+      items: items.slice(0, 2000).map(item => ({
+        ...item,
+        imageUrl: item?.r2Key ? publicMediaUrl(request, item.r2Key) : undefined,
+      })),
     },
   };
 }
