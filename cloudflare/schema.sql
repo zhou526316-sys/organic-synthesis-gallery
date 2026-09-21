@@ -223,6 +223,14 @@ CREATE TABLE IF NOT EXISTS paper_readers (
 );
 CREATE INDEX IF NOT EXISTS idx_paper_readers_doi ON paper_readers(doi);
 
+-- Materialized public unique-reader counts. paper_readers remains the source of
+-- truth for IP+DOI uniqueness; this table prevents repeated COUNT(*) scans.
+CREATE TABLE IF NOT EXISTS paper_reader_counts (
+  doi TEXT PRIMARY KEY,
+  count INTEGER NOT NULL DEFAULT 0 CHECK (count >= 0),
+  updated_at INTEGER NOT NULL
+);
+
 -- User-submitted metadata/media corrections enter a review queue; they never edit literature directly.
 CREATE TABLE IF NOT EXISTS paper_feedback (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
