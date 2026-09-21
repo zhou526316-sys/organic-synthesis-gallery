@@ -55,6 +55,29 @@ function figureOne(rows) {
   return rows.find(row => String(row.semantic_key || '').toLowerCase() === 'figure-1') || null;
 }
 
+function figureQuality(row) {
+  const width = Math.max(0, Number(row?.width || 0));
+  const height = Math.max(0, Number(row?.height || 0));
+  if (!width || !height) return 'unknown';
+  const maxSide = Math.max(width, height);
+  const minSide = Math.min(width, height);
+  const pixels = width * height;
+  if (maxSide >= 900 && minSide >= 180 && pixels >= 220000) return 'high';
+  if (maxSide >= 600 && minSide >= 140 && pixels >= 120000) return 'usable';
+  return 'low';
+}
+
+function figureQualityCounts(rows) {
+  const counts = { high: 0, usable: 0, low: 0, unknown: 0 };
+  for (const row of rows || []) counts[figureQuality(row)] += 1;
+  return {
+    highQualityFigureCount: counts.high,
+    usableFigureCount: counts.high + counts.usable,
+    lowQualityFigureCount: counts.low,
+    unknownQualityFigureCount: counts.unknown,
+  };
+}
+
 function tocResponse(request, doi, toc, figures, primary, variants = []) {
   const primaryResponse = primaryVisualResponse(request, doi, primary, variants);
   if (primaryResponse.available && primaryResponse.kind === 'official_visual') {
@@ -260,6 +283,7 @@ function inventoryItem(doi, toc, figures, primary, duplicateHashes) {
               : 'figure'
             : 'none';
   const figureCount = figures.length;
+  const qualityCounts = figureQualityCounts(figures);
   const status = trueToc && figureCount > 0
     ? 'complete'
     : trueToc
@@ -277,6 +301,7 @@ function inventoryItem(doi, toc, figures, primary, duplicateHashes) {
     tocMissing: !trueToc,
     tocReason: toc?.reason || (tocStored ? 'cached' : 'cache_miss'),
     figureCount,
+    ...qualityCounts,
     figureOneStored: Boolean(one),
     fallbackLabel: fallback?.label,
     suspiciousToc,
