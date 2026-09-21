@@ -808,6 +808,27 @@
     return selected;
   }
 
+  async function waitForArticleFigures(job, trace) {
+    var started = Date.now();
+    var scrollStep = 0;
+    while (Date.now() - started < 60000) {
+      if (isAbortRequested()) throw new Error('user_aborted');
+      var rows = collectArticleFigureCandidates(job, trace, document, location.href, 'live_dom');
+      if (rows.length) return rows;
+      var elapsed = Date.now() - started;
+      var thresholds = [2500, 6500, 12000, 20000];
+      if (scrollStep < thresholds.length && elapsed > thresholds[scrollStep]) {
+        try {
+          var height = Math.max(document.documentElement.scrollHeight, document.body && document.body.scrollHeight || 0);
+          window.scrollTo({ top: Math.round(height * ((scrollStep + 1) / (thresholds.length + 1))), behavior: 'instant' });
+        } catch (_) {}
+        scrollStep += 1;
+      }
+      await sleep(1800);
+    }
+    return [];
+  }
+
   function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
     var scope = root || document;
     var pageUrl = baseUrl || location.href;
@@ -1612,6 +1633,7 @@
     var page403 = rev.find(function (x) { return x.stage === 'page_fetch' && x.httpStatus === 403; });
     var gm403 = rev.find(function (x) { return x.stage === 'gm_fetch' && x.httpStatus === 403; });
     var canvasFail = rev.find(function (x) { return x.stage === 'rendered_canvas' && x.event === 'failed'; });
+    var figureNone = rev.find(function (x) { return x.stage === 'figure_discovery' && x.event === 'scan_complete' && x.status === 'none'; });
     var none = rev.find(function (x) { return x.stage === 'candidate_discovery' && x.event === 'scan_complete' && x.status === 'none'; });
     if ((page403 || gm403) && canvasFail) return 'image_403_and_rendered_canvas_unreadable';
     if (page403 || gm403) return 'image_http_403';
@@ -1621,6 +1643,7 @@
     if (iframeSecurity) return 'iframe_cross_origin_or_auth_redirect';
     if (none && iframeNone) return 'no_toc_candidate_after_live_and_iframe_scan';
     if (none) return 'no_toc_candidate_in_live_dom';
+    if (figureNone) return 'no_article_figure_candidate_in_live_dom';
     return String(error && error.message || error || 'unknown_failure').slice(0, 220);
   }
 
@@ -1629,7 +1652,16 @@
     var token = writeToken();
     job.publisher = String(job.publisher || publisherForDoi(job.doi));
     job.startedAt = job.startedAt || nowIso();
-    pushTrace(trace, { stage: 'job', event: 'start', status: 'running', url: location.href, message: 'v' + VERSION + ';state=' + String(job.state || '') });
+    var mediaNeed = String(job.mediaNeed || (String(job.state || '') === 'figure_gap' ? 'figures' : 'toc'));
+    var needFigures = mediaNeed.indexOf('figures') >= 0;
+    var needToc = mediaNeed !== 'figures';
+    pushTrace(trace, {
+      stage: 'job',
+      event: 'start',
+      status: 'running',
+      url: location.href,
+      message: 'v' + VERSION + ';state=' + String(job.state || '') + ';need=' + mediaNeed
+    });
 
     if (!token) {
       pushTrace(trace, { stage: 'config', event: 'write_token', status: 'missing', message: 'configure token from Tampermonkey menu' });
@@ -1639,47 +1671,100 @@
     }
 
     try {
-      var candidates = await waitForCandidates(job, trace);
-      if (!candidates.length) throw new Error('no_toc_candidate_in_live_dom');
-      var lastError = null;
-      for (var i = 0; i < Math.min(10, candidates.length); i += 1) {
-        if (isAbortRequested()) throw new Error('user_aborted');
-        var candidate = candidates[i];
-        try {
-          var image = await acquireImage(candidate, trace);
-          if (!image) {
-            lastError = new Error('candidate_image_unreadable');
-            continue;
+      var figuresImported = 0;
+      var figureCandidateForReport = null;
+      var figureError = null;
+
+      if (needFigures) {
+        var figureCandidates = await waitForArticleFigures(job, trace);
+        if (!figureCandidates.length) {
+          figureError = new Error('no_article_figure_candidate_in_live_dom');
+        } else {
+          for (var fi = 0; fi < Math.min(6, figureCandidates.length); fi += 1) {
+            if (isAbortRequested()) throw new Error('user_aborted');
+            var figureCandidate = figureCandidates[fi];
+            try {
+              var figureImage = await acquireImage(figureCandidate, trace);
+              if (!figureImage) {
+                figureError = new Error('article_figure_image_unreadable');
+                continue;
+              }
+              await uploadArticleFigure(job, figureCandidate, figureImage, trace, token, figuresImported);
+              figureCandidateForReport = figureCandidateForReport || figureCandidate;
+              figuresImported += 1;
+            } catch (oneFigureError) {
+              figureError = oneFigureError;
+              pushTrace(trace, {
+                stage: 'figure_candidate',
+                event: 'failed',
+                status: 'failed',
+                url: figureCandidate.url,
+                message: String(oneFigureError && oneFigureError.message || oneFigureError)
+              });
+            }
           }
-          var stored = await uploadCapture(job, candidate, image, trace, token);
-          var reason = 'captured_' + image.method;
-          await uploadReport(job, trace, 'success', reason, candidate, token);
-          GM_setValue(resultKey(job.doi), {
-            doi: job.doi,
-            status: 'success',
-            reason: reason,
-            kind: candidate.kind,
-            assetType: candidate.assetType,
-            imageUrl: stored && stored.imageUrl || '',
-            finishedAt: nowIso()
-          });
-          GM_deleteValue(progressKey(job.doi));
-          return;
-        } catch (candidateError) {
-          lastError = candidateError;
-          pushTrace(trace, {
-            stage: 'candidate',
-            event: 'failed',
-            status: 'failed',
-            url: candidate.url,
-            candidateKind: candidate.kind,
-            candidateSource: candidate.source,
-            candidateScore: candidate.score,
-            message: String(candidateError && candidateError.message || candidateError)
-          });
         }
       }
-      throw lastError || new Error('all_candidates_failed');
+
+      var tocStored = null;
+      var tocCandidateForReport = null;
+      var tocMethod = '';
+
+      if (needToc) {
+        var candidates = await waitForCandidates(job, trace);
+        if (!candidates.length) throw new Error('no_toc_candidate_in_live_dom');
+        var lastError = null;
+        for (var i = 0; i < Math.min(10, candidates.length); i += 1) {
+          if (isAbortRequested()) throw new Error('user_aborted');
+          var candidate = candidates[i];
+          try {
+            var image = await acquireImage(candidate, trace);
+            if (!image) {
+              lastError = new Error('candidate_image_unreadable');
+              continue;
+            }
+            tocStored = await uploadCapture(job, candidate, image, trace, token);
+            tocCandidateForReport = candidate;
+            tocMethod = image.method;
+            break;
+          } catch (candidateError) {
+            lastError = candidateError;
+            pushTrace(trace, {
+              stage: 'candidate',
+              event: 'failed',
+              status: 'failed',
+              url: candidate.url,
+              candidateKind: candidate.kind,
+              candidateSource: candidate.source,
+              candidateScore: candidate.score,
+              message: String(candidateError && candidateError.message || candidateError)
+            });
+          }
+        }
+        if (!tocStored) throw lastError || new Error('all_candidates_failed');
+      }
+
+      if (needFigures && figuresImported < 1) {
+        throw figureError || new Error('article_figure_capture_failed');
+      }
+
+      var reason = needToc
+        ? 'captured_' + tocMethod + (needFigures ? ';figures=' + String(figuresImported) : '')
+        : 'captured_article_figures:' + String(figuresImported);
+      var reportCandidate = tocCandidateForReport || figureCandidateForReport;
+      await uploadReport(job, trace, 'success', reason, reportCandidate, token);
+      GM_setValue(resultKey(job.doi), {
+        doi: job.doi,
+        status: 'success',
+        reason: reason,
+        kind: tocCandidateForReport && tocCandidateForReport.kind || (figuresImported ? 'article_figure' : ''),
+        assetType: tocCandidateForReport && tocCandidateForReport.assetType || (figuresImported ? 'article_figure' : ''),
+        imageUrl: tocStored && tocStored.imageUrl || '',
+        figuresImported: figuresImported,
+        finishedAt: nowIso()
+      });
+      GM_deleteValue(progressKey(job.doi));
+      return;
     } catch (error) {
       if (String(error && error.message || error) === 'user_aborted') {
         pushTrace(trace, { stage: 'job', event: 'aborted', status: 'aborted', message: 'user_aborted' });
