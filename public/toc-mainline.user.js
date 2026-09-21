@@ -44,6 +44,7 @@
   var WORKER = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
   var FIGURE_IMPORT_ENDPOINT = WORKER + '/api/article-figures/import';
+  var FIGURE_STAGE_ENDPOINT = WORKER + '/api/article-figures/stage';
   var CAPTURE_INDEX_URL = WORKER + '/api/media/local-capture-index';
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
   var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
@@ -1627,6 +1628,18 @@
   }
 
   async function uploadArticleFigure(job, candidate, image, trace, token, order) {
+    var payload = {
+      doi: job.doi,
+      articleUrl: location.href,
+      sourceUrl: candidate.url,
+      id: String(candidate.label || ('figure-' + String(order + 1))).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
+      label: candidate.label || ('Figure ' + String(order + 1)),
+      caption: candidate.text || '',
+      order: Number(order || 0),
+      width: Number(image.width || 0) || undefined,
+      height: Number(image.height || 0) || undefined,
+      imageData: image.imageData
+    };
     pushTrace(trace, {
       stage: 'figure_upload',
       event: 'start',
@@ -1636,17 +1649,7 @@
       byteLength: image.byteLength
     });
     try {
-      var result = await postJson(FIGURE_IMPORT_ENDPOINT, {
-        doi: job.doi,
-        articleUrl: location.href,
-        id: String(candidate.label || ('figure-' + String(order + 1))).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
-        label: candidate.label || ('Figure ' + String(order + 1)),
-        caption: candidate.text || '',
-        order: Number(order || 0),
-        width: Number(image.width || 0) || undefined,
-        height: Number(image.height || 0) || undefined,
-        imageData: image.imageData
-      }, token);
+      var result = await postJson(FIGURE_IMPORT_ENDPOINT, payload, token);
       pushTrace(trace, {
         stage: 'figure_upload',
         event: 'complete',
@@ -1655,16 +1658,50 @@
         message: candidate.label || '',
         byteLength: image.byteLength
       });
-      return result;
+      return Object.assign({}, result || {}, { staged: false });
     } catch (error) {
       pushTrace(trace, {
         stage: 'figure_upload',
         event: 'failed',
         status: 'failed',
+        httpStatus: Number(error && error.httpStatus || 0),
         url: candidate.url,
         message: String(error && error.message || error)
       });
-      throw error;
+      var status = Number(error && error.httpStatus || 0);
+      if (status < 500) throw error;
+      pushTrace(trace, {
+        stage: 'figure_stage',
+        event: 'start',
+        status: 'start',
+        url: candidate.url,
+        message: 'D1 import unavailable; preserving figure in R2',
+        byteLength: image.byteLength
+      });
+      try {
+        var staged = await postJson(FIGURE_STAGE_ENDPOINT, payload, token);
+        pushTrace(trace, {
+          stage: 'figure_stage',
+          event: 'complete',
+          status: 'ok',
+          url: staged && staged.imageUrl || candidate.url,
+          message: candidate.label || '',
+          imageWidth: Number(image.width || 0),
+          imageHeight: Number(image.height || 0),
+          byteLength: image.byteLength
+        });
+        return Object.assign({}, staged || {}, { staged: true });
+      } catch (stageError) {
+        pushTrace(trace, {
+          stage: 'figure_stage',
+          event: 'failed',
+          status: 'failed',
+          httpStatus: Number(stageError && stageError.httpStatus || 0),
+          url: candidate.url,
+          message: String(stageError && stageError.message || stageError)
+        });
+        throw stageError;
+      }
     }
   }
 
@@ -1803,6 +1840,7 @@
 
     try {
       var figuresImported = 0;
+      var figuresStaged = 0;
       var figureCandidateForReport = null;
       var figureError = null;
 
@@ -1837,11 +1875,12 @@
                 figureError = new Error('article_figure_resolution_' + resolution.quality);
                 continue;
               }
-              await uploadArticleFigure(job, figureCandidate, figureImage, trace, token, figuresImported);
+              var figureStored = await uploadArticleFigure(job, figureCandidate, figureImage, trace, token, figuresImported + figuresStaged);
               importedFigureLabels[figureLabelKey] = true;
               figureCandidateForReport = figureCandidateForReport || figureCandidate;
-              figuresImported += 1;
-              if (figuresImported >= 5) break;
+              if (figureStored && figureStored.staged) figuresStaged += 1;
+              else figuresImported += 1;
+              if (figuresImported + figuresStaged >= 5) break;
             } catch (oneFigureError) {
               figureError = oneFigureError;
               pushTrace(trace, {
@@ -1894,23 +1933,27 @@
         if (!tocStored) throw lastError || new Error('all_candidates_failed');
       }
 
-      if (needFigures && figuresImported < 1) {
+      if (needFigures && figuresImported + figuresStaged < 1) {
         throw figureError || new Error('article_figure_capture_failed');
       }
 
+      var figureTotal = figuresImported + figuresStaged;
       var reason = needToc
-        ? 'captured_' + tocMethod + (needFigures ? ';figures=' + String(figuresImported) : '')
-        : 'captured_article_figures:' + String(figuresImported);
+        ? 'captured_' + tocMethod + (needFigures ? ';figures=' + String(figureTotal) + ';imported=' + String(figuresImported) + ';staged=' + String(figuresStaged) : '')
+        : figuresStaged > 0
+          ? 'captured_article_figures:' + String(figureTotal) + ';imported=' + String(figuresImported) + ';staged=' + String(figuresStaged)
+          : 'captured_article_figures:' + String(figuresImported);
       var reportCandidate = tocCandidateForReport || figureCandidateForReport;
       await uploadReport(job, trace, 'success', reason, reportCandidate, token);
       GM_setValue(resultKey(job.doi), {
         doi: job.doi,
         status: 'success',
         reason: reason,
-        kind: tocCandidateForReport && tocCandidateForReport.kind || (figuresImported ? 'article_figure' : ''),
-        assetType: tocCandidateForReport && tocCandidateForReport.assetType || (figuresImported ? 'article_figure' : ''),
+        kind: tocCandidateForReport && tocCandidateForReport.kind || (figureTotal ? 'article_figure' : ''),
+        assetType: tocCandidateForReport && tocCandidateForReport.assetType || (figureTotal ? 'article_figure' : ''),
         imageUrl: tocStored && tocStored.imageUrl || '',
         figuresImported: figuresImported,
+        figuresStaged: figuresStaged,
         finishedAt: nowIso()
       });
       GM_deleteValue(progressKey(job.doi));
