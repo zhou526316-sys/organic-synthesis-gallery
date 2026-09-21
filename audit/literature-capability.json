@@ -7,8 +7,8 @@
   "currentKnownStable": {
     "literatureAudit": {
       "path": "cloudflare/scripts/audit-literature.mjs",
-      "blobSha": "18db944416004e46a58d1843820cf185310bbcf5",
-      "validation": "GitHub Actions run 35438640474 succeeded with the completeness guard and DOI-union audit: 15 target journals, primary lookbackDays=3, lateDepositRescueDays=7, multi-source machine safety tail enabled, sourceRecords=591, criticalSourceFailures=0, sourceFamilyGaps=0. The prior 7-day stable audit also reported 591 source records; the two Angew OpenAlex-only edge records that disappeared in the first naïve 3-day attempt were restored by the safety tail.",
+      "blobSha": "84b12c9ba8bd1da835207424894c676b14689b7c",
+      "validation": "Last known stable discovery implementation before the 2026-09-21 source-coverage guard patch. It completed the 2026-09-19..2026-09-21 primary run with a seven-day machine safety tail, 15 target journals, criticalSourceFailures=0 and sourceFamilyGaps=0.",
       "comparisonToPriorStable": "The prior stable implementation used a seven-day window as the routine audit window. The new stable implementation makes three days the primary semantic-review window but retains seven days of machine-only source coverage across Crossref online/published/created and OpenAlex. Already resolved days 4-7 do not become routine GPT re-review work; only genuinely unseen DOI differences surface. verifiedThrough catch-up automatically widens the primary publication range after interrupted/source-failure closure.",
       "semanticImpact": "Complexity reduction without a source-recall downgrade: routine GPT review is three days, while seven-day multi-source safety-tail discovery, Crossref created/deposit rescue, 15-journal coverage, source-family health checks, all-difference review, prospective activation cutoffs, and persistent review decisions remain mandatory."
     },
@@ -20,19 +20,19 @@
     },
     "journalRegistry": {
       "path": "shared/literature-journals.js",
-      "blobSha": "05ccdd8a66522027f35e327082cd45e88e75e897",
-      "validation": "15 canonical target journals are centralized. Chem, Chemical Science, CCS Chemistry, Science Advances, and Chinese Journal of Chemistry have activeFrom=2026-09-19; existing ten journals retain activeFrom=2026-07-01.",
+      "blobSha": "d7356126c01fb178020e4036276d3166925f7097",
+      "validation": "15 canonical target journals are centralized. Chem, Chemical Science, CCS Chemistry, Science Advances, and Green Chemistry have activeFrom=2026-09-19; existing ten journals retain activeFrom=2026-07-01.",
       "semanticImpact": "Prevents duplicated journal lists and prevents the new five journals from being backfilled before 2026-09-19 even when the safety window or late-deposit rescue reaches earlier dates."
     },
     "completenessGuard": {
       "path": "scripts/test-literature-completeness-capability.mjs",
-      "blobSha": "9cfe49263e14ec4cb5707b2b83af37b81e7050e7",
-      "validation": "Passed in GitHub Actions run 35438640474 before the production audit. It enforces 15 journals, three-day primary review, seven-day multi-source safety tail, verifiedThrough catch-up, Crossref online/published/created union, OpenAlex coverage, late-deposit observability, source-family health, and no silent keyword exclusion.",
+      "blobSha": "ce32ba23ea06bbec58dc17c22c0e55edd25ce9bb",
+      "validation": "Last known passing completeness guard before the 2026-09-21 source-coverage regression extension. It enforces 15 journals, three-day primary review, seven-day multi-source safety tail, verifiedThrough catch-up, Crossref online/published/created union, OpenAlex coverage, late-deposit observability, source-family health, and no silent keyword exclusion.",
       "semanticImpact": "CI now rejects either direction of regression: expanding routine GPT work back to seven days or shrinking the machine safety coverage below seven days."
     },
     "tocCollector": {
       "primaryPath": "toc-collector/src/background.mjs",
-      "primaryBlobSha": "78a60e833c102497d03770c58cd6fae4adb5675d",
+      "primaryBlobSha": "f6b93886423c695078fd6c584b31ab58ad9663f9",
       "publisherFallbackPath": ".github/scripts/toc_collector_015_publisher_fallback.py",
       "publisherFallbackBlobSha": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
     },
@@ -50,7 +50,32 @@
       "semanticImpact": "TOC/media repair only. Does not change literature discovery or inclusion decisions."
     }
   },
-  "pendingValidation": [],
+  "pendingValidation": [
+    {
+      "id": "source-coverage-regression-guard-2026-09-21",
+      "mergedAt": "2026-09-21",
+      "scope": "literature discovery completeness / closure verification",
+      "commits": [
+        "9de4041cc6cfb7dc581834f11317953c5960754e",
+        "9f910af8885dac17603d61bc8bbf4abbc9e1f549"
+      ],
+      "candidateComponents": {
+        "literatureAudit": "425c6900465c570d0c55b8757e506652643066c4",
+        "completenessGuard": "fe9f5c6e3229dc69b05f62b9ce0b6c74160bbd38",
+        "literatureWorkflow": "d8219dfe731a2d93370fe720c13160508f3cf8c6",
+        "journalRegistry": "d7356126c01fb178020e4036276d3166925f7097",
+        "tocCollector": "f6b93886423c695078fd6c584b31ab58ad9663f9",
+        "publisherFallback": "a273cbbbfdc0fa7c1b2fad5afeef9690c1e8bfe0"
+      },
+      "changes": [
+        "Record per-journal Crossref/OpenAlex candidate coverage for the full safety window and closure date.",
+        "Flag severe source-family coverage collapse even when HTTP requests technically succeed.",
+        "Block verifiedThroughEligible when the closure date has a severe Crossref/OpenAlex coverage anomaly.",
+        "Expose sourceCoverageAnomalies and closureCoverageAnomalies in audit/latest.json."
+      ],
+      "promotionRule": "Promote only after the literature-audit workflow passes the completeness guard and produces a fresh audit/latest.json containing the new coverage fields with no unexpected closureCoverageAnomalies."
+    }
+  ],
   "discoveryHints": {
     "literature": [
       "cloudflare/scripts/*literature*.mjs",
@@ -81,6 +106,8 @@
     "forceSafetyRescanWhenCapabilityFingerprintChanges": true,
     "legacyForce72HourFieldRetainedForCompatibility": true,
     "machineSafetyTailDays": 7,
-    "lateDepositRescueDays": 7
+    "lateDepositRescueDays": 7,
+    "requireClosureCoverageAgreement": true,
+    "neverTreatHttpSuccessAsSufficientCoverage": true
   }
 }
