@@ -81,16 +81,28 @@ async function readJson(name) {
 async function loadPapers() {
   const encoded = (await readFile(path.join(PUBLIC, 'papers.gz.b64'), 'utf8')).trim();
   const base = JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8'));
-  const [total, manual, audit, supplement] = await Promise.all([
+  const [total, manual, audit, curated, automation, rolling, supplement] = await Promise.all([
     readJson('total-synthesis.json'),
     readJson('manual-supplement.json'),
     readJson('final-audit-supplement.json'),
+    readJson('curated-supplement.json'),
+    readJson('automation-supplement.json'),
+    readJson('rolling-supplement.json'),
     fetch(SUPPLEMENT_URL, { headers: { 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(45000) })
       .then(response => response.ok ? response.json() : { papers: [] })
       .catch(() => ({ papers: [] })),
   ]);
   const merged = new Map();
-  const all = [].concat(Array.isArray(base) ? base : [], total?.papers || [], manual?.papers || [], audit?.papers || [], supplement?.papers || []);
+  const all = [].concat(
+    Array.isArray(base) ? base : [],
+    total?.papers || [],
+    manual?.papers || [],
+    audit?.papers || [],
+    curated?.papers || [],
+    automation?.papers || [],
+    rolling?.papers || [],
+    supplement?.papers || []
+  );
   for (const raw of all) {
     const doi = normalizeDoi(raw?.doi || raw?.url || '');
     if (!doi) continue;
