@@ -52,7 +52,18 @@ jobs:
         run: node cloudflare/scripts/snapshot-production-static.mjs
 
       - name: Build self-contained media mirror
-        run: node cloudflare/scripts/build-pages-mirror.mjs
+        shell: bash
+        run: |
+          set +e
+          node cloudflare/scripts/build-pages-mirror.mjs
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+            exit "$status"
+          fi
+          if [ "$status" -eq 2 ]; then
+            echo "Media mirror reported isolated misses; continuing with the preserved successful snapshot."
+          fi
         env:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
           PAGES_MEDIA_CONCURRENCY: '8'
@@ -106,6 +117,16 @@ jobs:
           curl --fail --silent --show-error --retry 5 --retry-delay 2 "$URL/media-index.json" > /tmp/media-index.json
           curl --fail --silent --show-error --retry 5 --retry-delay 2 "$URL/gallery-vpn-bridge.user.js" > /tmp/bridge.user.js
           curl --fail --silent --show-error --retry 5 --retry-delay 2 "$URL/gallery-vpn-bridge-runtime.js" > /tmp/bridge.runtime.js
+          CSS_PATH=$(grep -Eo 'href="[^"]+\.css"' /tmp/index.html | head -1 | cut -d'"' -f2)
+          test -n "$CSS_PATH"
+          case "$CSS_PATH" in
+            http://*|https://*) CSS_URL="$CSS_PATH" ;;
+            /*) CSS_URL="$URL$CSS_PATH" ;;
+            *) CSS_URL="$URL/$CSS_PATH" ;;
+          esac
+          curl --fail --silent --show-error --retry 5 --retry-delay 2 "$CSS_URL" > /tmp/app.css
+          grep -F "46svh" /tmp/app.css
+          grep -F "grid-template-columns:minmax(0,1fr)" /tmp/app.css
           grep -F "// @version      2.0.1" /tmp/bridge.user.js
           grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" /tmp/bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" /tmp/bridge.user.js
