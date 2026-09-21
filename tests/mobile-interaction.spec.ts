@@ -269,8 +269,11 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
 
 test.describe('desktop feedback regressions', () => {
   test.use({
-    ...devices['Desktop Safari'],
     viewport: { width: 1707, height: 932 },
+    userAgent: devices['Desktop Safari'].userAgent,
+    deviceScaleFactor: 1,
+    isMobile: false,
+    hasTouch: false,
     timezoneId: 'Asia/Shanghai',
   });
 
