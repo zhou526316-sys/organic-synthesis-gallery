@@ -1,21 +1,196 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-21T00:01:14.000Z",
+  "generatedAt": "2026-09-21T00:12:00.000Z",
   "timeZone": "Asia/Shanghai",
-  "phase": "fetching",
-  "sourceAudit": null,
-  "policy": "Fresh three-calendar-day Beijing review (2026-09-19..2026-09-21) with seven-day machine safety tail and late-deposit rescue. Keyword ranking never decides inclusion; every unseen DOI will receive include/exclude/pending.",
-  "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
-  "summary": {
-    "reviewed": 0,
-    "accepted": 0,
-    "rejected": 0,
-    "pending": 0,
-    "closureDate": null,
-    "closureUnresolved": null,
-    "currentDayUnresolved": null
+  "sourceAudit": {
+    "generatedAt": "2026-09-21T00:07:47.936Z",
+    "startDate": "2026-09-19",
+    "endDate": "2026-09-21",
+    "closureDate": "2026-09-20",
+    "sourceRecords": 528,
+    "threeDayPrimaryRecords": 45,
+    "safetyTailAdditionalRecords": 483,
+    "missingFromGallery": 3,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0
   },
-  "accepted": [],
-  "rejected": [],
+  "policy": "All newly unresolved DOI differences in the 2026-09-19..2026-09-21 Beijing primary window received explicit High semantic decisions. Keywords were priority-only. Publisher latest/early-view pages were cross-checked where accessible; blocked official pages are recorded and independent Crossref/OpenAlex union remains healthy. TOC availability did not affect inclusion.",
+  "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
+  "publisherChecks": [
+    {
+      "journal": "Nature",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "checked",
+      "note": "Official Nature research-articles page accessible; newest displayed research articles were 2026-09-16."
+    },
+    {
+      "journal": "Science",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "blocked",
+      "note": "Official current issue/feed returned HTTP 403; Crossref/OpenAlex families healthy."
+    },
+    {
+      "journal": "Nature Catalysis",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "blocked",
+      "note": "Official page redirected to Nature IDP; indexed official result and Crossref/OpenAlex checked."
+    },
+    {
+      "journal": "Nature Synthesis",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "checked",
+      "note": "Official preview research-articles page accessible; newest article 2026-09-17."
+    },
+    {
+      "journal": "Nature Chemistry",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "checked",
+      "note": "Official 2026 research-articles page accessible; newest article 2026-09-17."
+    },
+    {
+      "journal": "Nature Communications",
+      "primaryWindowRecords": 17,
+      "newUnresolved": 1,
+      "status": "checked",
+      "note": "Official article listing accessible; 2026-09-20 memristive SVD article reviewed and excluded."
+    },
+    {
+      "journal": "JACS",
+      "primaryWindowRecords": 8,
+      "newUnresolved": 1,
+      "status": "blocked",
+      "note": "ACS TOC/article pages returned HTTP 403; Crossref abstract and metadata reviewed."
+    },
+    {
+      "journal": "Angew",
+      "primaryWindowRecords": 14,
+      "newUnresolved": 0,
+      "status": "checked",
+      "note": "Wiley Early View accessible; 2026-09-19 entries matched machine union/history."
+    },
+    {
+      "journal": "ACS Catalysis",
+      "primaryWindowRecords": 1,
+      "newUnresolved": 0,
+      "status": "blocked",
+      "note": "ACS TOC returned HTTP 403; Crossref/OpenAlex families healthy."
+    },
+    {
+      "journal": "Organic Letters",
+      "primaryWindowRecords": 5,
+      "newUnresolved": 1,
+      "status": "blocked",
+      "note": "ACS TOC/article page returned HTTP 403; Crossref abstract establishes broad synthetic scope."
+    },
+    {
+      "journal": "Chem",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "blocked",
+      "note": "Cell current page returned access error; Crossref/OpenAlex families healthy."
+    },
+    {
+      "journal": "Chemical Science",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "blocked",
+      "note": "RSC recent-articles page was not rendered by cloud fetch; Crossref/OpenAlex families healthy."
+    },
+    {
+      "journal": "CCS Chemistry",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "blocked",
+      "note": "Official site did not render in cloud fetch; Crossref/OpenAlex families healthy."
+    },
+    {
+      "journal": "Science Advances",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "blocked",
+      "note": "Official current issue/feed returned HTTP 403; Crossref/OpenAlex families healthy."
+    },
+    {
+      "journal": "Green Chemistry",
+      "primaryWindowRecords": 0,
+      "newUnresolved": 0,
+      "status": "blocked",
+      "note": "RSC recent-articles page was not rendered by cloud fetch; Crossref/OpenAlex families healthy."
+    }
+  ],
+  "summary": {
+    "reviewed": 3,
+    "accepted": 1,
+    "rejected": 2,
+    "pending": 0,
+    "closureDate": "2026-09-20",
+    "closureUnresolved": 0,
+    "currentDayUnresolved": 0
+  },
+  "accepted": [
+    {
+      "doi": "10.1021/acs.orglett.6c03612",
+      "journal": "Organic Letters",
+      "date": "2026-09-20",
+      "title": "Development of Deuteroalkylthiolating Reagents for Synthesis of Deuterated Sulfides",
+      "titleZh": "用于氘代硫醚合成的氘代烷硫基化试剂开发",
+      "authors": [
+        "Ziting Huang",
+        "Dan Liu",
+        "Wentao He",
+        "Ke-Fang Yang",
+        "Ying Bai",
+        "Xinxin Shao"
+      ],
+      "reviewPriority": "high",
+      "decision": "include",
+      "classification": "methodology_core",
+      "reason": "general synthetic methodology: S-(alkyl-d2) sulfonothioates act as deuteroalkylthiolating reagents in electrophilic and radical-acceptor modes across aryl/heteroaryl boronic acids, terminal alkynes, NHPI esters, beta-ketoesters and oxindoles, with late-stage modification."
+    }
+  ],
+  "rejected": [
+    {
+      "doi": "10.1021/jacs.6c09156",
+      "journal": "JACS",
+      "date": "2026-09-20",
+      "title": "Flavin Takes Charge: CdS Nanorods Drive Light-To-Dark Electron Flow",
+      "authors": [
+        "Lihini Jayasinghe",
+        "Johanna L. Hall",
+        "Jiaxi Wei",
+        "Julian Feijóo",
+        "Richard D. Schaller",
+        "Peidong Yang"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "CdS-nanorod/flavin charge-transfer, energy-transfer and redox-mechanism study; it does not disclose a general preparative organic synthesis method or total synthesis."
+    },
+    {
+      "doi": "10.1038/s41467-026-76272-2",
+      "journal": "Nature Communications",
+      "date": "2026-09-20",
+      "title": "Memristive singular value decomposition",
+      "authors": [
+        "Chenchen Ding",
+        "Zhengwu Liu",
+        "Yibei Zhang",
+        "Can Li",
+        "Jianshi Tang",
+        "Bin Gao",
+        "Hao Yu",
+        "Huaqiang Wu",
+        "Ngai Wong"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "memristor hardware and numerical-computing method for singular-value decomposition; outside organic synthesis methodology and total-synthesis scope."
+    }
+  ],
   "pending": []
 }
