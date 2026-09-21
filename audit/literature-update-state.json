@@ -2,8 +2,17 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "synced",
-  "activeRun": null,
+  "phase": "fetching",
+  "activeRun": {
+    "id": "work-high-primary-20260921-0800",
+    "startedAt": "2026-09-21T08:01:14+08:00",
+    "windowStart": "2026-09-19",
+    "windowEnd": "2026-09-21",
+    "machineSafetyTailStart": "2026-09-15",
+    "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
+    "owner": "Gallery 主更新（Work · High）",
+    "note": "Fresh Beijing-date primary run. Machine DOI union delegated to repository audit workflow; semantic decisions remain owned by this Work run."
+  },
   "lastCompletedFetch": {
     "id": "corrected-primary-review-20260920",
     "finishedAt": "2026-09-20T13:57:19+08:00",
