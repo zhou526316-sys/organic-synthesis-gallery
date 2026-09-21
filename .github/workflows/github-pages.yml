@@ -208,6 +208,12 @@ jobs:
           grep -F "publisher_script_started" dist/toc-mainline.user.js
           grep -F "CAPTURE_INDEX_URL" dist/toc-mainline.user.js
           grep -F "FIGURE_IMPORT_ENDPOINT" dist/toc-mainline.user.js
+          grep -F "FIGURE_STAGE_ENDPOINT" dist/toc-mainline.user.js
+          grep -F "figuresStaged" dist/toc-mainline.user.js
+          grep -F "D1 import unavailable; preserving figure in R2" dist/toc-mainline.user.js
+          grep -F "/api/article-figures/stage" cloudflare/worker/src/index.js
+          grep -F "importStagedArticleFigure" cloudflare/worker/src/local-captures.js
+          grep -F "getStagedArticleFigures" cloudflare/worker/src/local-captures.js
           grep -F "queue.figureGaps" dist/toc-mainline.user.js
           grep -F "function jobKind(job)" dist/toc-mainline.user.js
           grep -F "failure:figures:" dist/toc-mainline.user.js
