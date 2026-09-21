@@ -53,6 +53,38 @@ function dimensions(bytes, type='') {
       offset += 2 + len;
     }
   }
+  if (mime === 'image/webp' && bytes.length >= 30 && bytes.toString('ascii',0,4)==='RIFF' && bytes.toString('ascii',8,12)==='WEBP') {
+    const chunk = bytes.toString('ascii',12,16);
+    if (chunk === 'VP8X' && bytes.length >= 30) {
+      const width = 1 + bytes[24] + (bytes[25] << 8) + (bytes[26] << 16);
+      const height = 1 + bytes[27] + (bytes[28] << 8) + (bytes[29] << 16);
+      return { width, height };
+    }
+    if (chunk === 'VP8L' && bytes.length >= 25) {
+      const b0 = bytes[21], b1 = bytes[22], b2 = bytes[23], b3 = bytes[24];
+      const width = 1 + (((b2 & 0x3f) << 8) | b1);
+      const height = 1 + (((b3 & 0x0f) << 10) | (b2 >> 6) | ((b3 & 0xf0) << 4));
+      return { width, height };
+    }
+    if (chunk === 'VP8 ' && bytes.length >= 30) {
+      for (let i = 20; i + 9 < Math.min(bytes.length, 80); i++) {
+        if (bytes[i]===0x9d && bytes[i+1]===0x01 && bytes[i+2]===0x2a) {
+          return {
+            width: bytes.readUInt16LE(i+3) & 0x3fff,
+            height: bytes.readUInt16LE(i+5) & 0x3fff,
+          };
+        }
+      }
+    }
+  }
+  if ((mime === 'image/avif' || mime === 'image/heif' || mime === 'image/heic') && bytes.length >= 32) {
+    for (let offset = 0; offset + 20 <= bytes.length; offset += 1) {
+      if (bytes.toString('ascii', offset, offset + 4) !== 'ispe') continue;
+      const width = bytes.readUInt32BE(offset + 8);
+      const height = bytes.readUInt32BE(offset + 12);
+      if (width > 0 && height > 0) return { width, height };
+    }
+  }
   return { width: 0, height: 0 };
 }
 
@@ -60,10 +92,11 @@ async function fetchDimensions(row) {
   try {
     const response = await fetch(mediaUrl(row.r2_key), { signal: AbortSignal.timeout(20000), cache: 'no-store' });
     if (!response.ok) return { ...row, width: 0, height: 0, error: 'HTTP ' + response.status };
+    const mime = (response.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
     const bytes = Buffer.from(await response.arrayBuffer());
-    if (bytes.length < 100 || bytes.length > 4_000_000) return { ...row, width: 0, height: 0, error: 'invalid_bytes:' + bytes.length };
-    const size = dimensions(bytes, response.headers.get('content-type') || '');
-    return { ...row, ...size, bytes: bytes.length };
+    if (bytes.length < 100 || bytes.length > 4_000_000) return { ...row, width: 0, height: 0, mime, error: 'invalid_bytes:' + bytes.length };
+    const size = dimensions(bytes, mime);
+    return { ...row, ...size, mime, bytes: bytes.length };
   } catch (error) {
     return { ...row, width: 0, height: 0, error: String(error?.message || error) };
   }
@@ -92,7 +125,7 @@ async function main() {
     measured: valid.length,
     failed: failed.length,
     limit: LIMIT,
-    failedSample: failed.slice(0,10).map(x => ({ doi:x.doi, semanticKey:x.semantic_key, error:x.error || 'unsupported_image_format' }))
+    failedSample: failed.slice(0,10).map(x => ({ doi:x.doi, semanticKey:x.semantic_key, mime:x.mime || '', error:x.error || 'unsupported_image_format' }))
   }));
 }
 
