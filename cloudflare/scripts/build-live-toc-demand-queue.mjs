@@ -229,7 +229,11 @@ async function main() {
     const unknownQualityFigureCount = Math.max(0, Number(item?.unknownQualityFigureCount || 0));
     if (usableFigureCount >= 2) continue;
     const priority = usableFigureCount === 0
-      ? figureCount > 0 ? 'low_resolution' : 'missing'
+      ? figureCount === 0
+        ? 'missing'
+        : lowQualityFigureCount > 0
+          ? 'low_resolution'
+          : 'quality_unknown'
       : 'sparse';
     figureGaps.push({
       doi,
@@ -251,7 +255,7 @@ async function main() {
   allMissingOfficial.sort(sorter);
   displayGaps.sort(sorter);
   officialUpgrade.sort(sorter);
-  const figurePriority = { missing: 0, low_resolution: 1, sparse: 2 };
+  const figurePriority = { missing: 0, low_resolution: 1, quality_unknown: 2, sparse: 3 };
   figureGaps.sort((a, b) =>
     Number(figurePriority[a.priority] ?? 9) - Number(figurePriority[b.priority] ?? 9)
     || Number(a.usableFigureCount || 0) - Number(b.usableFigureCount || 0)
@@ -299,6 +303,7 @@ async function main() {
     figureGapTotal: figureGaps.length,
     zeroFigureGapTotal: figureGaps.filter(item => item.figureCount === 0).length,
     lowResolutionFigureGapTotal: figureGaps.filter(item => item.priority === 'low_resolution').length,
+    unknownQualityFigureGapTotal: figureGaps.filter(item => item.priority === 'quality_unknown').length,
     sparseFigureGapTotal: figureGaps.filter(item => item.priority === 'sparse').length,
     byPublisher,
     upgradeByPublisher,
@@ -316,6 +321,7 @@ async function main() {
     figureGapTotal: figureGaps.length,
     zeroFigureGapTotal: figureGaps.filter(item => item.figureCount === 0).length,
     lowResolutionFigureGapTotal: figureGaps.filter(item => item.priority === 'low_resolution').length,
+    unknownQualityFigureGapTotal: figureGaps.filter(item => item.priority === 'quality_unknown').length,
     visibleGaps: displayGaps,
     officialUpgrades: officialUpgrade,
     figureGaps,
