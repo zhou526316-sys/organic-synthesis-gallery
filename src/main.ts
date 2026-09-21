@@ -814,7 +814,10 @@ function stageBridgeGaps(inventory: MediaInventoryResponse): void {
   bridgeStageCursor %= gaps.length;
   holder.innerHTML = Array.from({ length: size }, (_, index) => {
     const item = gaps[(bridgeStageCursor + index) % gaps.length];
-    return `<article class='card bridge-staging-card'><div class='toc-slot pending' data-doi='${escapeHtml(item.doi)}'></div></article>`;
+    const needFigures = Number(item.figureCount || 0) < 2;
+    const needToc = item.status !== 'complete' || item.suspiciousToc === true;
+    const need = needFigures && needToc ? 'toc+figures' : needFigures ? 'figures' : 'toc';
+    return `<article class='card bridge-staging-card' data-media-need='${need}' data-figure-count='${Number(item.figureCount || 0)}'><div class='toc-slot pending' data-doi='${escapeHtml(item.doi)}' data-media-need='${need}'></div></article>`;
   }).join('');
   if (bridgeStageTimer !== null) clearTimeout(bridgeStageTimer);
   bridgeStageTimer = window.setTimeout(() => {
