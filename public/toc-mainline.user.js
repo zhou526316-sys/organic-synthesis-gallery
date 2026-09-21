@@ -2208,7 +2208,10 @@
     var figureOnly = queuedFigures.slice();
     var allJobs = visible.concat(upgrades, figureOnly);
     var limit = batchSize();
-    var tocBudget = Math.min(visible.length + upgrades.length, Math.max(1, Math.ceil(limit / 2)));
+    var tocDemand = visible.length + upgrades.length;
+    var tocBudget = figureOnly.length
+      ? Math.min(tocDemand, Math.max(1, Math.floor(limit / 4)))
+      : Math.min(tocDemand, limit);
     var jobs = selectPriorityBatch(visible, upgrades, tocBudget);
     if (jobs.length < limit) {
       var selectedDois = {};
@@ -2232,6 +2235,8 @@
       upgrades: upgrades.length,
       figureGaps: queuedFigures.length,
       figureOnly: figureOnly.length,
+      tocBudget: tocBudget,
+      figureBudget: Math.max(0, limit - tocBudget),
       cooldownSkipped: cooldownSkipped,
       filteredByLiveR2: Number(reconciled.filteredByR2 || 0),
       success: 0,
