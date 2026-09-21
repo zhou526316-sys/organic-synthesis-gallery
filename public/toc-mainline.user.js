@@ -127,8 +127,18 @@
   function resultKey(doi) { return P + 'result:' + normalizeDoi(doi); }
   function progressKey(doi) { return P + 'progress:' + normalizeDoi(doi); }
   function traceKey(doi) { return P + 'trace:' + normalizeDoi(doi); }
-  function attemptKey(doi, generatedAt) { return P + 'attempt:' + normalizeDoi(doi) + ':' + String(generatedAt || ''); }
-  function failureKey(doi) { return P + 'failure:' + normalizeDoi(doi); }
+  function jobKind(job) {
+    return String(job && job.mediaNeed || '') === 'figures' || String(job && job.state || '') === 'figure_gap' ? 'figures' : 'toc';
+  }
+  function attemptKey(doi, generatedAt, kind) {
+    var base = P + 'attempt:' + normalizeDoi(doi) + ':' + String(generatedAt || '');
+    return String(kind || 'toc') === 'figures' ? base + ':figures' : base;
+  }
+  function failureKey(doi, kind) {
+    return String(kind || 'toc') === 'figures'
+      ? P + 'failure:figures:' + normalizeDoi(doi)
+      : P + 'failure:' + normalizeDoi(doi);
+  }
   function writeToken() {
     var current = String(GM_getValue(TOKEN_KEY, '') || '').trim();
     if (current) return current;
@@ -144,8 +154,10 @@
     if (!Number.isFinite(value)) value = DEFAULT_BATCH_SIZE;
     return Math.max(1, Math.min(20, Math.floor(value)));
   }
-  function isFailureCooling(doi) {
-    var failed = GM_getValue(failureKey(doi), null);
+  function isFailureCooling(jobOrDoi) {
+    var job = jobOrDoi && typeof jobOrDoi === 'object' ? jobOrDoi : null;
+    var doi = normalizeDoi(job ? job.doi : jobOrDoi);
+    var failed = GM_getValue(failureKey(doi, jobKind(job)), null);
     if (!failed || Number(failed.at || 0) <= 0) return false;
     if (String(failed.engineRevision || '') !== FAILURE_ENGINE_REVISION) return false;
     return Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS;
@@ -309,7 +321,7 @@
       var rows = buckets.get(publisher) || [];
       while (rows.length) {
         var candidate = rows.shift();
-        if (isFailureCooling(candidate.doi)) continue;
+        if (isFailureCooling(candidate)) continue;
         out.push(candidate);
         break;
       }
@@ -2058,23 +2070,7 @@
       job.figureCount = Math.max(0, Number(job.figureCount || 0));
       return job;
     }).filter(function (job) { return Boolean(job.doi); }) : stagedFigureJobs();
-    var existingByDoi = {};
-    visible.concat(upgrades).forEach(function (job) {
-      var doi = normalizeDoi(job && job.doi);
-      if (doi) existingByDoi[doi] = job;
-    });
-    var figureOnly = queuedFigures.filter(function (job) {
-      var doi = normalizeDoi(job && job.doi);
-      if (!doi) return false;
-      if (existingByDoi[doi]) {
-        existingByDoi[doi].mediaNeed = String(existingByDoi[doi].mediaNeed || 'toc').indexOf('figures') >= 0
-          ? existingByDoi[doi].mediaNeed
-          : 'toc+figures';
-        existingByDoi[doi].figureCount = Math.max(0, Number(job.figureCount || 0));
-        return false;
-      }
-      return true;
-    });
+    var figureOnly = queuedFigures.slice();
     var allJobs = visible.concat(upgrades, figureOnly);
     var limit = batchSize();
     var tocBudget = Math.min(visible.length + upgrades.length, Math.max(1, Math.ceil(limit / 2)));
@@ -2087,7 +2083,7 @@
     }
     var cooling = allJobs.filter(function (queued) {
       var doi = normalizeDoi(queued && queued.doi);
-      return doi ? isFailureCooling(doi) : false;
+      return doi ? isFailureCooling(queued) : false;
     });
     var cooldownSkipped = cooling.length;
     var summary = {
@@ -2119,7 +2115,8 @@
       job.queueGeneratedAt = queue.generatedAt || '';
       job.startedAt = nowIso();
 
-      var prior = GM_getValue(attemptKey(job.doi, job.queueGeneratedAt), null);
+      var taskKind = jobKind(job);
+      var prior = GM_getValue(attemptKey(job.doi, job.queueGeneratedAt, taskKind), null);
       if (prior && prior.status === 'success') {
         summary.skipped += 1;
         continue;
@@ -2146,15 +2143,15 @@
         result = { doi: job.doi, status: 'failed', reason: openReason, diagnosticUploaded: true, finishedAt: nowIso() };
       }
       summary.results.push(result);
-      GM_setValue(attemptKey(job.doi, job.queueGeneratedAt), result);
+      GM_setValue(attemptKey(job.doi, job.queueGeneratedAt, taskKind), result);
       if (result.status === 'success') {
         summary.success += 1;
-        GM_deleteValue(failureKey(job.doi));
+        GM_deleteValue(failureKey(job.doi, taskKind));
       } else if (result.status === 'aborted') {
         summary.aborted += 1;
       } else {
         summary.failed += 1;
-        GM_setValue(failureKey(job.doi), {
+        GM_setValue(failureKey(job.doi, taskKind), {
           at: Date.now(),
           reason: String(result.reason || 'failed').slice(0, 220),
           engineRevision: FAILURE_ENGINE_REVISION
