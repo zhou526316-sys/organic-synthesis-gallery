@@ -1,4 +1,4 @@
-import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport } from './local-captures.js';
+import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteStagedArticleFigures } from './local-captures.js';
 import {
   bridgeQueue,
   getArticleFigures,
@@ -377,6 +377,7 @@ async function handleApi(request, env) {
       '/api/toc/quarantine',
       '/api/article-figures/import',
       '/api/article-figures/stage',
+      '/api/article-figures/promote-staged',
       '/api/article-figures/reset',
       '/api/media/attempt',
       '/api/media/diagnose',
@@ -418,6 +419,9 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/stage') {
     return resultResponse(await importStagedArticleFigure(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/article-figures/promote-staged') {
+    return resultResponse(await promoteStagedArticleFigures(request, env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/reset') {
     return resultResponse(await resetFigures(request, env, await readJson(request)));
