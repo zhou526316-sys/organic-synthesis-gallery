@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-09-21T04:04:11.725Z",
+  "generatedAt": "2026-09-21T05:05:22.123Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 98,
+  "liveLocalCaptures": 105,
   "webpageDoiCount": 484,
   "mediaRecordCount": 478,
-  "visibleGapTotal": 8,
-  "demandTotal": 8,
-  "noVisual": 8,
+  "visibleGapTotal": 1,
+  "demandTotal": 1,
+  "noVisual": 1,
   "fallbackOnlyNeedsOfficialUpgrade": 70,
-  "missingOfficialTotal": 78,
+  "missingOfficialTotal": 71,
   "byPublisher": {
-    "acs": 5,
-    "wiley": 2,
+    "acs": 0,
+    "wiley": 0,
     "nature": 1,
     "science": 0,
     "rsc": 0,
@@ -33,82 +33,15 @@
     "other": 0
   },
   "byJournal": {
-    "ACS Catalysis": 1,
-    "JACS": 2,
-    "Organic Letters": 2,
-    "Nature": 1,
-    "Angew": 2
+    "Nature": 1
   },
   "sample": [
-    {
-      "doi": "10.1021/acscatal.6c05293",
-      "journal": "ACS Catalysis",
-      "title": "Chemoselective Aerobic C3-Hydroxylation of Tetrahydroquinolines Catalyzed by a Hydrophobic Ni–Mn Hybrid Interface",
-      "date": "2026-09-14",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/jacs.6c13760",
-      "journal": "JACS",
-      "title": "Combinatorial Construction of a NIR-II Polymethine Dye Library",
-      "date": "2026-09-16",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/jacs.6c10408",
-      "journal": "JACS",
-      "title": "Overriding Nitrogen-Centered Reactivity of Sulfinamidyl Radicals Enables Sulfoximine Synthesis",
-      "date": "2026-09-14",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03612",
-      "journal": "Organic Letters",
-      "title": "Development of Deuteroalkylthiolating Reagents for Synthesis of Deuterated Sulfides",
-      "date": "2026-09-20",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03072",
-      "journal": "Organic Letters",
-      "title": "Biocatalytic Synthesis of Substituted Cinnamaldehydes",
-      "date": "2026-09-19",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
     {
       "doi": "10.1038/s41586-026-11043-z",
       "journal": "Nature",
       "title": "Dialkyl ether synthesis through heteroatom homolytic substitution",
       "date": "2026-08-20",
       "publisher": "nature",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1002/anie.5070160",
-      "journal": "Angew",
-      "title": "Catalytic Insertion of Pd–Vinylidenes Into B─H Bonds",
-      "date": "2026-09-12",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1002/anie.5617321",
-      "journal": "Angew",
-      "title": "Synergistic Silylium-Ion and Palladium Catalysis Enables Migratory Alkene Silylation With Allylsilanes by Formal C–H/C–Si Metathesis",
-      "date": "2026-09-12",
-      "publisher": "wiley",
       "state": "no_visual",
       "existingReason": "user_observed_no_image"
     }
