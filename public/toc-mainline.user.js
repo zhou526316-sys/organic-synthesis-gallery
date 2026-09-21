@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.3
+// @version      6.2.4
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -36,12 +36,13 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.3';
+  var VERSION = '6.2.4';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
   var WORKER = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
+  var CAPTURE_INDEX_URL = WORKER + '/api/media/local-capture-index';
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
   var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
   var P = 'osg-toc-v6:';
@@ -347,6 +348,62 @@
       throw new Error('queue_http_' + String(response.status || 0));
     }
     return JSON.parse(String(response.responseText || '{}'));
+  }
+
+  async function readLiveCaptureKinds() {
+    try {
+      var payload = await getJson(CAPTURE_INDEX_URL + '?ts=' + Date.now());
+      var map = new Map();
+      var items = Array.isArray(payload && payload.items) ? payload.items : [];
+      items.forEach(function (item) {
+        var doi = normalizeDoi(item && item.doi);
+        var kind = String(item && item.kind || '').toLowerCase();
+        if (!doi || (kind !== 'official' && kind !== 'figure1')) return;
+        map.set(doi, kind);
+      });
+      return map;
+    } catch (error) {
+      try { console.warn('[OSG TOC] live R2 capture reconciliation unavailable', String(error && error.message || error)); } catch (_) {}
+      return new Map();
+    }
+  }
+
+  function reconcileQueueWithLiveCaptures(visible, upgrades, captureKinds) {
+    var visibleOut = [];
+    var upgradeMap = new Map();
+    (Array.isArray(upgrades) ? upgrades : []).forEach(function (raw) {
+      var doi = normalizeDoi(raw && raw.doi);
+      if (!doi) return;
+      var kind = captureKinds.get(doi) || '';
+      if (kind === 'official') return;
+      upgradeMap.set(doi, Object.assign({}, raw, {
+        doi: doi,
+        state: kind === 'figure1' ? 'fallback_only' : String(raw.state || 'fallback_only'),
+        existingReason: kind === 'figure1' ? 'live_r2_figure1_fallback' : String(raw.existingReason || '')
+      }));
+    });
+    (Array.isArray(visible) ? visible : []).forEach(function (raw) {
+      var doi = normalizeDoi(raw && raw.doi);
+      if (!doi) return;
+      var kind = captureKinds.get(doi) || '';
+      if (kind === 'official') return;
+      if (kind === 'figure1') {
+        if (!upgradeMap.has(doi)) {
+          upgradeMap.set(doi, Object.assign({}, raw, {
+            doi: doi,
+            state: 'fallback_only',
+            existingReason: 'live_r2_figure1_fallback'
+          }));
+        }
+        return;
+      }
+      visibleOut.push(Object.assign({}, raw, { doi: doi }));
+    });
+    return {
+      visible: visibleOut,
+      upgrades: Array.from(upgradeMap.values()),
+      filteredByR2: (Array.isArray(visible) ? visible.length : 0) + (Array.isArray(upgrades) ? upgrades.length : 0) - visibleOut.length - upgradeMap.size
+    };
   }
 
   async function fetchPostJson(url, payload, token) {
@@ -785,6 +842,7 @@
       add(location.origin + '/doi/' + doi);
       add(location.origin + '/doi/abs/' + doi);
       add(location.origin + '/doi/full/' + doi);
+      add(location.origin + '/action/doSearch?AllField=' + encodeURIComponent(doi));
     } else if (publisher === 'wiley' && location.hostname.endsWith('onlinelibrary.wiley.com')) {
       add(location.origin + '/doi/' + doi);
       add(location.origin + '/doi/full/' + doi);
@@ -832,6 +890,26 @@
               var win = frame.contentWindow;
               if (!doc || !doc.body) return;
               var current = String(frame.src || url);
+              if (job.publisher === 'acs') {
+                var doiNeedle = normalizeDoi(job.doi);
+                var suffixNeedle = doiNeedle.split('/').pop() || doiNeedle;
+                Array.prototype.slice.call(doc.querySelectorAll('a[href]')).forEach(function (anchor) {
+                  var href = normalizeUrl(anchor.getAttribute('href') || '', current);
+                  if (!href || urls.indexOf(href) >= 0) return;
+                  var low = href.toLowerCase();
+                  if ((low.indexOf('/article/doi/') >= 0 || low.indexOf('/doi/') >= 0) &&
+                      (low.indexOf(doiNeedle) >= 0 || low.indexOf(suffixNeedle) >= 0)) {
+                    urls.push(href);
+                    pushTrace(trace, {
+                      stage: 'acs_route_discovery',
+                      event: 'article_url',
+                      status: 'found',
+                      url: href,
+                      message: 'discovered from authenticated ACS iframe/search DOM'
+                    });
+                  }
+                });
+              }
               var discovered = collectCandidates(job, trace, doc, current, 'iframe_dom', true);
               if (discovered.length) {
                 var merged = new Map();
@@ -916,14 +994,25 @@
     var doi = normalizeDoi(job.doi);
     var suffix = doi.split('/').pop() || doi;
     var doiMatch = citation.indexOf(doi) >= 0 || canonical.indexOf(doi) >= 0 || href.toLowerCase().indexOf(suffix.toLowerCase()) >= 0;
+    var shell = job.publisher === 'acs' && doiMatch && !challenge && !auth && text.length > 0 && text.length < 500;
     pushTrace(trace, {
       stage: 'page',
       event: 'state',
-      status: challenge ? 'challenge' : auth ? 'auth' : 'loaded',
+      status: challenge ? 'challenge' : auth ? 'auth' : shell ? 'shell' : 'loaded',
       url: href,
       message: 'doiMatch=' + String(doiMatch) + ';textLength=' + String(text.length)
     });
-    return { challenge: challenge, auth: auth, doiMatch: doiMatch, textLength: text.length };
+    return { challenge: challenge, auth: auth, shell: shell, doiMatch: doiMatch, textLength: text.length };
+  }
+
+  function mergeFallbackCandidates(existing, rows) {
+    var map = new Map();
+    (existing || []).concat(rows || []).forEach(function (row) {
+      if (!row || row.kind !== 'figure1' || !row.url) return;
+      var old = map.get(row.url);
+      if (!old || Number(row.score || 0) > Number(old.score || 0)) map.set(row.url, row);
+    });
+    return Array.from(map.values()).sort(function (a, b) { return Number(b.score || 0) - Number(a.score || 0); });
   }
 
   async function waitForCandidates(job, trace) {
@@ -932,6 +1021,24 @@
     var lastWait = 0;
     var iframeAttempted = false;
     var mainScrollStep = 0;
+    var fallbackRows = [];
+
+    function acceptRows(rows, sourceLabel) {
+      rows = Array.isArray(rows) ? rows : [];
+      var official = rows.filter(function (row) { return row.kind === 'official'; });
+      fallbackRows = mergeFallbackCandidates(fallbackRows, rows);
+      if (official.length) return official;
+      if (rows.some(function (row) { return row.kind === 'figure1'; })) {
+        pushTrace(trace, {
+          stage: 'fallback_buffer',
+          event: 'figure1_deferred',
+          status: 'waiting_for_official',
+          message: String(sourceLabel || '') + ';buffered=' + String(fallbackRows.length)
+        });
+      }
+      return [];
+    }
+
     while (Date.now() - started < maxMs) {
       if (isAbortRequested()) throw new Error('user_aborted');
       var state = pageState(job, trace);
@@ -957,8 +1064,10 @@
         });
         throw new Error('doi_page_mismatch');
       }
+
       var candidates = collectCandidates(job, trace, document, location.href, 'live_dom', false);
-      if (candidates.length) return candidates;
+      var accepted = acceptRows(candidates, 'live_dom');
+      if (accepted.length) return accepted;
 
       var elapsed = Date.now() - started;
       if (job.publisher === 'acs' && mainScrollStep < 3 && elapsed > [2500, 6000, 10500][mainScrollStep]) {
@@ -976,34 +1085,56 @@
         });
         await waitForDomMutation(900);
         candidates = collectCandidates(job, trace, document, location.href, 'live_dom_after_scroll', false);
-        if (candidates.length) return candidates;
+        accepted = acceptRows(candidates, 'live_dom_after_scroll');
+        if (accepted.length) return accepted;
       }
 
-      if (!iframeAttempted && elapsed > 7000 && (job.publisher === 'acs' || job.publisher === 'wiley' || job.publisher === 'science')) {
+      var iframeThreshold = state.shell && job.publisher === 'acs' ? 2500 : 7000;
+      if (!iframeAttempted && elapsed > iframeThreshold && (job.publisher === 'acs' || job.publisher === 'wiley' || job.publisher === 'science')) {
         iframeAttempted = true;
         if (isAbortRequested()) throw new Error('user_aborted');
         var iframeRows = await iframeCandidates(job, trace);
-        if (iframeRows.length) {
-          iframeRows.slice(0, 10).forEach(function (row) {
-            pushTrace(trace, {
-              stage: 'candidate_discovery',
-              event: 'candidate',
-              status: row.kind,
-              url: row.url,
-              message: row.assetType,
-              candidateKind: row.kind,
-              candidateSource: row.source,
-              candidateScore: row.score,
-              imageWidth: row.width,
-              imageHeight: row.height
-            });
+        iframeRows.slice(0, 10).forEach(function (row) {
+          pushTrace(trace, {
+            stage: 'candidate_discovery',
+            event: 'candidate',
+            status: row.kind,
+            url: row.url,
+            message: row.assetType,
+            candidateKind: row.kind,
+            candidateSource: row.source,
+            candidateScore: row.score,
+            imageWidth: row.width,
+            imageHeight: row.height
           });
-          return iframeRows;
-        }
+        });
+        accepted = acceptRows(iframeRows, 'iframe_dom');
+        if (accepted.length) return accepted;
       }
 
-      if (elapsed > 22000 && state.textLength > 2000) return [];
+      if (elapsed > 22000 && (state.textLength > 2000 || iframeAttempted)) {
+        if (fallbackRows.length) {
+          pushTrace(trace, {
+            stage: 'fallback_buffer',
+            event: 'figure1_release',
+            status: 'fallback',
+            message: 'official TOC search exhausted; releasing Figure 1 fallback'
+          });
+          return fallbackRows;
+        }
+        return [];
+      }
       await waitForDomMutation(1500);
+    }
+
+    if (fallbackRows.length) {
+      pushTrace(trace, {
+        stage: 'fallback_buffer',
+        event: 'figure1_release',
+        status: 'fallback',
+        message: 'publisher wait timeout reached; releasing Figure 1 fallback'
+      });
+      return fallbackRows;
     }
     throw new Error('page_wait_timeout');
   }
@@ -1457,7 +1588,7 @@
   async function waitForResult(job, tab) {
     var timeout = job.publisher === 'wiley' ? 9 * 60 * 1000 : 180000;
     var started = Date.now();
-    var heartbeatDeadlineMs = 12000;
+    var heartbeatDeadlineMs = 35000;
     var heartbeatValidated = false;
     while (Date.now() - started < timeout) {
       renewLease();
@@ -1571,6 +1702,10 @@
 
     var visible = Array.isArray(queue.visibleGaps) ? queue.visibleGaps : [];
     var upgrades = Array.isArray(queue.officialUpgrades) ? queue.officialUpgrades : [];
+    var liveCaptures = await readLiveCaptureKinds();
+    var reconciled = reconcileQueueWithLiveCaptures(visible, upgrades, liveCaptures);
+    visible = reconciled.visible;
+    upgrades = reconciled.upgrades;
     var allJobs = visible.concat(upgrades);
     var limit = batchSize();
     var jobs = selectPriorityBatch(visible, upgrades, limit);
@@ -1589,6 +1724,7 @@
       visible: visible.length,
       upgrades: upgrades.length,
       cooldownSkipped: cooldownSkipped,
+      filteredByLiveR2: Number(reconciled.filteredByR2 || 0),
       success: 0,
       failed: 0,
       skipped: 0,
@@ -1657,7 +1793,7 @@
     if (summary.aborted || isAbortRequested()) {
       badge('TOC 本批已中止：成功 ' + summary.success + '，失败 ' + summary.failed + '，中止 ' + summary.aborted, '#6b7280');
     } else {
-      badge('TOC 本批完成：' + summary.total + '/' + summary.queueTotal + '；成功 ' + summary.success + '，失败 ' + summary.failed + '，冷却跳过 ' + summary.cooldownSkipped, summary.failed ? '#92400e' : '#065f46');
+      badge('TOC 本批完成：' + summary.total + '/' + summary.queueTotal + '；成功 ' + summary.success + '，失败 ' + summary.failed + '，R2已完成跳过 ' + summary.filteredByLiveR2 + '，冷却跳过 ' + summary.cooldownSkipped, summary.failed ? '#92400e' : '#065f46');
     }
   }
 
