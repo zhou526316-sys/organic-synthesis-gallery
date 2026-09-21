@@ -2228,9 +2228,9 @@
       if (isGalleryPage()) controllerRun();
       else window.open('https://' + GALLERY_HOST + GALLERY_PATH, '_blank');
     });
-    GM_registerMenuCommand('中止当前 TOC 批次', function () {
+    GM_registerMenuCommand('中止当前媒体抓取批次', function () {
       GM_setValue(ABORT_KEY, { at: Date.now(), reason: 'user_aborted' });
-      window.alert('已请求中止当前批次。正在运行的出版社标签页会由控制器关闭；人工中止不会计入失败或失败冷却。');
+      window.alert('已请求中止当前媒体抓取批次。正在运行的出版社标签页会由控制器关闭；人工中止不会计入失败或失败冷却。');
     });
     GM_registerMenuCommand('继续媒体抓取主线', function () {
       GM_deleteValue(ABORT_KEY);
