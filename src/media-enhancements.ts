@@ -54,7 +54,7 @@ function removeLegacyLightbox(): void {
   document.querySelector('.image-lightbox')?.remove();
 }
 
-function openViewer(sourceImage: HTMLImageElement, label: string): void {
+function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: string): void {
   document.querySelector('.media-viewer')?.remove();
   removeLegacyLightbox();
 
@@ -111,7 +111,7 @@ function openViewer(sourceImage: HTMLImageElement, label: string): void {
 
   const image = new Image();
   image.className = 'media-viewer__image';
-  image.src = sourceImage.currentSrc || sourceImage.src;
+  image.src = sourceUrl || sourceImage.currentSrc || sourceImage.src;
   image.alt = sourceImage.alt || label;
   image.decoding = 'async';
   image.draggable = false;
@@ -281,7 +281,7 @@ document.addEventListener('click', event => {
   event.preventDefault();
   event.stopPropagation();
   event.stopImmediatePropagation();
-  openViewer(image, mediaLabel(button, image));
+  openViewer(image, mediaLabel(button, image), button.dataset.masterSrc || image.dataset.masterSrc);
 }, true);
 
 export {};
