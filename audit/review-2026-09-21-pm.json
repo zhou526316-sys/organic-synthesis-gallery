@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-21T13:51:19.259Z",
+  "generatedAt": "2026-09-21T16:19:51.566Z",
   "timeZone": "Asia/Shanghai",
   "sourceAudit": {
     "generatedAt": "2026-09-21T13:23:20.185Z",
@@ -16,55 +16,11 @@
   "policy": "PM catch-up review after the missed 18:00 publication pass. Every newly unresolved DOI difference dated 2026-09-17/18/20/21 received an explicit assistant decision. Inclusion requires a general preparative organic-synthesis method, total synthesis, or sufficiently broad substrate scope; materials/energy/mechanism-only and boundary papers without general scope are excluded.",
   "summary": {
     "reviewed": 50,
-    "accepted": 6,
-    "rejected": 44,
+    "accepted": 4,
+    "rejected": 46,
     "pending": 0
   },
   "accepted": [
-    {
-      "doi": "10.1021/acscatal.6c06157",
-      "journal": "ACS Catalysis",
-      "date": "2026-09-21",
-      "title": "Lattice-Confined Rh Single Atoms in SrTiO3 Enable Leaching-Resistant and Durable Heterogeneous Hydroformylation",
-      "titleZh": "SrTiO₃ 晶格限域 Rh 单原子实现抗浸出、耐久的多相氢甲酰化",
-      "authors": [
-        "Yi Zhang",
-        "Shuo Zhang",
-        "Pengzhen Yin",
-        "Yudi Wu",
-        "Shingo Hasegawa",
-        "Ken Motokura",
-        "Zhaozhan Wang",
-        "Yixin Ma",
-        "Shuxin Wang",
-        "Yong Yang"
-      ],
-      "reviewPriority": "high",
-      "decision": "include",
-      "classification": "methodology_core",
-      "reason": "general preparative organic transformation: heterogeneous Rh-catalyzed hydroformylation covers simple and sterically demanding olefins and demonstrates recyclable catalytic scope."
-    },
-    {
-      "doi": "10.1021/acscatal.6c04274",
-      "journal": "ACS Catalysis",
-      "date": "2026-09-21",
-      "title": "Local Hydrogen Field Engineering in Ni-Based Catalysts for Low-Temperature Aromatic Hydrogenation",
-      "titleZh": "Ni 基催化剂局域氢场工程实现低温芳香化合物加氢",
-      "authors": [
-        "Chufei Wang",
-        "Jianing Li",
-        "Tao Zhang",
-        "Zemin Chen",
-        "Aohua Cheng",
-        "Ziyi Zhang",
-        "Ying Zhang",
-        "Aiqin Wang"
-      ],
-      "reviewPriority": "normal",
-      "decision": "include",
-      "classification": "methodology_core",
-      "reason": "general preparative hydrogenation methodology: low-temperature hydrogenation is demonstrated across diverse heteroaromatic and benzenoid substrates."
-    },
     {
       "doi": "10.1002/anie.8290035",
       "journal": "Angew",
@@ -1066,6 +1022,48 @@
       "reviewPriority": "normal",
       "decision": "exclude",
       "reason": "Nature news/commentary content, not a research article in organic synthesis"
+    },
+    {
+      "doi": "10.1021/acscatal.6c06157",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-21",
+      "title": "Lattice-Confined Rh Single Atoms in SrTiO3 Enable Leaching-Resistant and Durable Heterogeneous Hydroformylation",
+      "titleZh": "SrTiO₃ 晶格限域 Rh 单原子实现抗浸出、耐久的多相氢甲酰化",
+      "authors": [
+        "Yi Zhang",
+        "Shuo Zhang",
+        "Pengzhen Yin",
+        "Yudi Wu",
+        "Shingo Hasegawa",
+        "Ken Motokura",
+        "Zhaozhan Wang",
+        "Yixin Ma",
+        "Shuxin Wang",
+        "Yong Yang"
+      ],
+      "reviewPriority": "high",
+      "decision": "exclude",
+      "reason": "heterogeneous/materials-oriented catalysis without sufficient general organic-synthesis substrate expansion; excluded under the Gallery scope rule"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04274",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-21",
+      "title": "Local Hydrogen Field Engineering in Ni-Based Catalysts for Low-Temperature Aromatic Hydrogenation",
+      "titleZh": "Ni 基催化剂局域氢场工程实现低温芳香化合物加氢",
+      "authors": [
+        "Chufei Wang",
+        "Jianing Li",
+        "Tao Zhang",
+        "Zemin Chen",
+        "Aohua Cheng",
+        "Ziyi Zhang",
+        "Ying Zhang",
+        "Aiqin Wang"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "heterogeneous/materials-oriented catalysis without sufficient general organic-synthesis substrate expansion; excluded under the Gallery scope rule"
     }
   ],
   "pending": []
