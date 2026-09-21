@@ -5,6 +5,7 @@ type FeedbackLanguage = 'zh' | 'en';
 const ELEMENT = 'site-feedback-widget';
 const STYLE_ID = 'site-feedback-widget-styles';
 const POSITION_KEY = 'site-feedback-widget-position-v1';
+const TAB_POSITION_KEY = 'site-feedback-tab-position-v1';
 
 const copy = {
   zh: {
@@ -31,6 +32,7 @@ const copy = {
     failed: '提交失败，请稍后重试。',
     tooShort: '请至少写 3 个字。',
     drag: '拖动这里移动窗口',
+    dragTab: '拖动按钮移动位置，点击打开吐槽窗口',
   },
   en: {
     tab: 'Feedback',
@@ -56,6 +58,7 @@ const copy = {
     failed: 'Submission failed. Please try again later.',
     tooShort: 'Please enter at least 3 characters.',
     drag: 'Drag here to move the window',
+    dragTab: 'Drag to move this button; click to open feedback',
   },
 } as const;
 
@@ -77,14 +80,29 @@ function savePosition(position: { left: number; top: number }): void {
   try { localStorage.setItem(POSITION_KEY, JSON.stringify(position)); } catch { /* optional */ }
 }
 
+function loadTabPosition(): { left: number; top: number } | null {
+  try {
+    const raw = JSON.parse(localStorage.getItem(TAB_POSITION_KEY) || 'null') as { left?: unknown; top?: unknown } | null;
+    if (!raw || typeof raw.left !== 'number' || typeof raw.top !== 'number') return null;
+    return { left: raw.left, top: raw.top };
+  } catch {
+    return null;
+  }
+}
+
+function saveTabPosition(position: { left: number; top: number }): void {
+  try { localStorage.setItem(TAB_POSITION_KEY, JSON.stringify(position)); } catch { /* optional */ }
+}
+
 function installStyles(): void {
   if (document.getElementById(STYLE_ID)) return;
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = `
-    ${ELEMENT}{position:fixed;left:0;top:44%;z-index:10060;font:inherit}
-    .site-feedback-tab{border:1px solid #cfd7e6;border-left:0;border-radius:0 12px 12px 0;background:#fff;color:#344054;padding:12px 9px;box-shadow:0 8px 28px rgba(15,23,42,.14);cursor:pointer;font-weight:700;letter-spacing:.04em}
-    .site-feedback-tab:hover{background:#f6f8fc}
+    ${ELEMENT}{position:fixed;left:10px;top:44%;z-index:10060;font:inherit}
+    .site-feedback-tab{border:1px solid #294da8;border-radius:999px;background:linear-gradient(135deg,#3159bd,#466fd2);color:#fff;padding:11px 14px;box-shadow:0 10px 28px rgba(49,89,189,.32),0 2px 8px rgba(15,23,42,.12);cursor:grab;font-weight:800;letter-spacing:.04em;touch-action:none;user-select:none;transition:box-shadow .16s ease,filter .16s ease,transform .16s ease}
+    .site-feedback-tab:hover{filter:brightness(1.06);box-shadow:0 12px 34px rgba(49,89,189,.4),0 3px 10px rgba(15,23,42,.14);transform:translateY(-1px)}
+    .site-feedback-tab.dragging{cursor:grabbing;filter:brightness(1.03);transform:none}
     .site-feedback-panel{position:fixed;left:12px;top:50%;transform:translateY(-50%);width:min(360px,calc(100vw - 24px));max-height:calc(100vh - 32px);overflow:auto;border:1px solid #d7deea;border-radius:16px;background:#fff;color:#273142;box-shadow:0 24px 70px rgba(15,23,42,.22);padding:16px}
     .site-feedback-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;cursor:grab;touch-action:none;user-select:none}.site-feedback-panel.dragging .site-feedback-head{cursor:grabbing}.site-feedback-head-title{display:flex;align-items:center;gap:8px}.site-feedback-drag-grip{color:#98a2b3;font-size:13px;letter-spacing:-.12em}
     .site-feedback-head strong{font-size:15px}
@@ -99,8 +117,8 @@ function installStyles(): void {
     .site-feedback-submit:disabled{opacity:.6;cursor:default}
     .site-feedback-status{margin-top:10px;margin-bottom:0}
     @media(max-width:680px){
-      ${ELEMENT}{top:auto;bottom:88px}
-      .site-feedback-tab{padding:10px 8px;font-size:12px}
+      ${ELEMENT}{left:8px;top:auto;bottom:88px}
+      .site-feedback-tab{padding:10px 12px;font-size:12px}
       .site-feedback-panel{left:12px!important;right:12px;top:auto!important;bottom:12px;transform:none!important;width:auto;max-height:min(72vh,620px)}
       .site-feedback-head{cursor:default}.site-feedback-drag-grip{display:none}
     }
@@ -115,19 +133,33 @@ class SiteFeedbackWidget extends HTMLElement {
   private observer: MutationObserver | null = null;
   private position: { left: number; top: number } | null = loadPosition();
   private drag: { pointerId: number; offsetX: number; offsetY: number } | null = null;
-  private readonly onResize = (): void => this.applyPanelPosition();
+  private tabPosition: { left: number; top: number } | null = loadTabPosition();
+  private tabDrag: { pointerId: number; startX: number; startY: number; left: number; top: number; moved: boolean } | null = null;
+  private suppressTabClick = false;
+  private readonly onResize = (): void => {
+    this.applyPanelPosition();
+    this.applyTabPosition();
+  };
+  private readonly outside = (event: PointerEvent): void => {
+    if (!this.open || event.composedPath().includes(this)) return;
+    this.open = false;
+    this.status = '';
+    this.render();
+  };
 
   connectedCallback(): void {
     installStyles();
     this.render();
     this.observer = new MutationObserver(() => this.rerenderPreservingDraft());
     this.observer.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    document.addEventListener('pointerdown', this.outside);
     window.addEventListener('resize', this.onResize);
   }
 
   disconnectedCallback(): void {
     this.observer?.disconnect();
     this.observer = null;
+    document.removeEventListener('pointerdown', this.outside);
     window.removeEventListener('resize', this.onResize);
   }
 
@@ -145,7 +177,7 @@ class SiteFeedbackWidget extends HTMLElement {
     const lang = language();
     const t = copy[lang];
     this.innerHTML = `
-      <button class="site-feedback-tab" type="button" aria-expanded="${this.open}" aria-controls="site-feedback-panel">${t.tab}</button>
+      <button class="site-feedback-tab" type="button" aria-expanded="${this.open}" aria-controls="site-feedback-panel" title="${t.dragTab}">${t.tab}</button>
       ${this.open ? `
         <section class="site-feedback-panel" id="site-feedback-panel" role="dialog" aria-label="${t.title}">
           <div class="site-feedback-head" title="${t.drag}"><span class="site-feedback-head-title"><strong>${t.title}</strong><span class="site-feedback-drag-grip" aria-hidden="true">⋮⋮</span></span><button class="site-feedback-close" type="button" aria-label="${t.close}">×</button></div>
@@ -163,13 +195,23 @@ class SiteFeedbackWidget extends HTMLElement {
     `;
 
     this.applyPanelPosition();
+    this.applyTabPosition();
     const head = this.querySelector<HTMLElement>('.site-feedback-head');
     head?.addEventListener('pointerdown', event => this.startDrag(event));
     head?.addEventListener('pointermove', event => this.moveDrag(event));
     head?.addEventListener('pointerup', event => this.endDrag(event));
     head?.addEventListener('pointercancel', event => this.endDrag(event));
 
-    this.querySelector<HTMLButtonElement>('.site-feedback-tab')?.addEventListener('click', () => {
+    const tab = this.querySelector<HTMLButtonElement>('.site-feedback-tab');
+    tab?.addEventListener('pointerdown', event => this.startTabDrag(event));
+    tab?.addEventListener('pointermove', event => this.moveTabDrag(event));
+    tab?.addEventListener('pointerup', event => this.endTabDrag(event));
+    tab?.addEventListener('pointercancel', event => this.endTabDrag(event));
+    tab?.addEventListener('click', () => {
+      if (this.suppressTabClick) {
+        this.suppressTabClick = false;
+        return;
+      }
       this.open = !this.open;
       this.status = '';
       this.render();
@@ -190,6 +232,68 @@ class SiteFeedbackWidget extends HTMLElement {
         this.render();
       }
     });
+  }
+
+  private applyTabPosition(): void {
+    if (!this.tabPosition) return;
+    const tab = this.querySelector<HTMLElement>('.site-feedback-tab');
+    if (!tab) return;
+    const margin = 6;
+    const maxLeft = Math.max(margin, window.innerWidth - tab.offsetWidth - margin);
+    const maxTop = Math.max(margin, window.innerHeight - tab.offsetHeight - margin);
+    this.tabPosition = {
+      left: Math.min(maxLeft, Math.max(margin, this.tabPosition.left)),
+      top: Math.min(maxTop, Math.max(margin, this.tabPosition.top)),
+    };
+    this.style.left = `${this.tabPosition.left}px`;
+    this.style.top = `${this.tabPosition.top}px`;
+    this.style.right = 'auto';
+    this.style.bottom = 'auto';
+  }
+
+  private startTabDrag(event: PointerEvent): void {
+    if (event.button !== 0) return;
+    const tab = this.querySelector<HTMLButtonElement>('.site-feedback-tab');
+    if (!tab) return;
+    const rect = tab.getBoundingClientRect();
+    this.tabPosition = { left: rect.left, top: rect.top };
+    this.tabDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      left: rect.left,
+      top: rect.top,
+      moved: false,
+    };
+    tab.classList.add('dragging');
+    tab.setPointerCapture(event.pointerId);
+  }
+
+  private moveTabDrag(event: PointerEvent): void {
+    if (!this.tabDrag || this.tabDrag.pointerId !== event.pointerId) return;
+    const dx = event.clientX - this.tabDrag.startX;
+    const dy = event.clientY - this.tabDrag.startY;
+    if (!this.tabDrag.moved && Math.hypot(dx, dy) >= 5) this.tabDrag.moved = true;
+    if (!this.tabDrag.moved) return;
+    this.tabPosition = {
+      left: this.tabDrag.left + dx,
+      top: this.tabDrag.top + dy,
+    };
+    this.applyTabPosition();
+    event.preventDefault();
+  }
+
+  private endTabDrag(event: PointerEvent): void {
+    if (!this.tabDrag || this.tabDrag.pointerId !== event.pointerId) return;
+    const tab = this.querySelector<HTMLButtonElement>('.site-feedback-tab');
+    if (tab?.hasPointerCapture(event.pointerId)) tab.releasePointerCapture(event.pointerId);
+    tab?.classList.remove('dragging');
+    const moved = this.tabDrag.moved;
+    this.tabDrag = null;
+    if (moved && this.tabPosition) {
+      saveTabPosition(this.tabPosition);
+      this.suppressTabClick = true;
+    }
   }
 
   private applyPanelPosition(): void {
