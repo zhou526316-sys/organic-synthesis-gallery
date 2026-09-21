@@ -38,6 +38,30 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   const initialCards = await page.locator('.card').count();
   expect(initialCards).toBeGreaterThan(400);
 
+  const mobileCardLayout = await page.locator('#gallery').evaluate(gallery => {
+    const cards = Array.from(gallery.querySelectorAll<HTMLElement>('.card')).slice(0, 2);
+    if (cards.length < 2) throw new Error('Need at least two cards');
+    const first = cards[0].getBoundingClientRect();
+    const second = cards[1].getBoundingClientRect();
+    const toc = cards[0].querySelector<HTMLElement>('.toc-slot');
+    const cardStyle = getComputedStyle(cards[0]);
+    return {
+      columns: getComputedStyle(gallery).gridTemplateColumns.trim().split(/\s+/).length,
+      sameX: Math.abs(first.left - second.left),
+      widthDelta: Math.abs(first.width - second.width),
+      verticalGap: second.top - first.bottom,
+      cardMinHeight: Number.parseFloat(cardStyle.minHeight),
+      tocHeight: toc ? toc.getBoundingClientRect().height : 0,
+    };
+  });
+  expect(mobileCardLayout.columns).toBe(1);
+  expect(mobileCardLayout.sameX).toBeLessThanOrEqual(2);
+  expect(mobileCardLayout.widthDelta).toBeLessThanOrEqual(2);
+  expect(mobileCardLayout.verticalGap).toBeGreaterThanOrEqual(8);
+  expect(mobileCardLayout.cardMinHeight).toBeGreaterThanOrEqual(360);
+  expect(mobileCardLayout.cardMinHeight).toBeLessThanOrEqual(430);
+  expect(mobileCardLayout.tocHeight).toBeGreaterThanOrEqual(178);
+
   const journalPicker = page.locator('.journal-picker');
   await journalPicker.locator('summary').click();
   await expect(journalPicker).toHaveAttribute('open', '');
