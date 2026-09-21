@@ -9,6 +9,27 @@ const TAMPERMONKEY_REPORT_HISTORY_LIMIT = 12;
 const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_DIAGNOSTIC_BYTES = 1_500_000;
 
+function embeddedNatureDoi(value) {
+  let decoded = String(value || '');
+  for (let i = 0; i < 2; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  const match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
+  return match ? normalizeDoi(match[0]) : '';
+}
+
+function captureBelongsToDoi(item, doi) {
+  if (!doi || !doi.startsWith('10.1038/')) return true;
+  const embedded = embeddedNatureDoi(item?.sourceUrl || '');
+  return !embedded || embedded === doi;
+}
+
 function sniffImageType(bytes, declaredType = '') {
   const head = bytes.slice(0, Math.min(bytes.byteLength, 1024));
   const text = new TextDecoder().decode(head).replace(/^\uFEFF/, '').trimStart().toLowerCase();
@@ -376,6 +397,9 @@ export async function importLocalCapture(request, env, payload) {
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
   const kind = String(payload?.kind || '').toLowerCase();
   if (!['official', 'figure1'].includes(kind)) return { status: 400, body: { error: 'kind must be official or figure1.' } };
+  if (!captureBelongsToDoi({ sourceUrl: payload?.sourceUrl }, doi)) {
+    return { status: 400, body: { error: 'Nature sourceUrl DOI does not match capture DOI.' } };
+  }
   const image = parseImageData(payload?.imageData);
   if (!image) return { status: 400, body: { error: 'A valid imageData payload is required.' } };
 
@@ -425,7 +449,12 @@ export async function importLocalCapture(request, env, payload) {
 
 export async function getLocalCaptureIndex(request, env) {
   const index = await readIndex(env);
-  const items = Object.values(index.items || {}).map(item => ({
+  const rawItems = Object.values(index.items || {});
+  const validItems = rawItems.filter(item => {
+    const doi = normalizeDoi(item?.doi);
+    return Boolean(doi && captureBelongsToDoi(item, doi));
+  });
+  const items = validItems.map(item => ({
     ...item,
     imageUrl: item?.r2Key ? publicMediaUrl(request, item.r2Key) : undefined,
   }));
@@ -435,6 +464,7 @@ export async function getLocalCaptureIndex(request, env) {
       version: Number(index.version || 1),
       updatedAt: Number(index.updatedAt || 0),
       count: items.length,
+      invalidFiltered: rawItems.length - validItems.length,
       items,
     },
   };

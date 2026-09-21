@@ -19,6 +19,27 @@ export function normalizeDoi(value = '') {
   return /^10\.\d{4,9}\/\S+$/i.test(cleaned) ? cleaned : '';
 }
 
+function embeddedNatureDoi(value = '') {
+  let decoded = String(value || '');
+  for (let i = 0; i < 2; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  const match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
+  return match ? normalizeDoi(match[0]) : '';
+}
+
+function candidateBelongsToDoi(url, doi, publisher) {
+  if (publisher !== 'nature' || !doi) return true;
+  const embedded = embeddedNatureDoi(url);
+  return !embedded || embedded === doi;
+}
+
 export function classifyPublisher(value = '') {
   const doi = normalizeDoi(value);
   if (doi.startsWith('10.1021/')) return 'acs';
@@ -285,7 +306,10 @@ export function extractPublisherMediaCandidates(html, pageUrl, options = {}) {
     });
   }
 
-  return [...map.values()].sort((a, b) => b.score - a.score || a.src.localeCompare(b.src));
+  const targetDoi = normalizeDoi(options.doi || '');
+  return [...map.values()]
+    .filter(item => candidateBelongsToDoi(item.src, targetDoi, publisher))
+    .sort((a, b) => b.score - a.score || a.src.localeCompare(b.src));
 }
 
 export function pickBestPublisherMediaCandidate(html, pageUrl, options = {}) {

@@ -36,6 +36,27 @@ function publisherFor(doi) {
   return 'other';
 }
 
+function embeddedNatureDoi(value) {
+  let decoded = String(value || '');
+  for (let i = 0; i < 2; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  const match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
+  return match ? normalizeDoi(match[0]) : null;
+}
+
+function localCaptureBelongsToDoi(item, doi) {
+  if (!doi?.startsWith('10.1038/')) return true;
+  const embedded = embeddedNatureDoi(item?.sourceUrl || '');
+  return !embedded || embedded === doi;
+}
+
 function isOfficialToc(toc) {
   if (!toc?.available || !toc?.imageUrl) return false;
   const reason = String(toc.reason || '').toLowerCase();
@@ -97,7 +118,11 @@ async function fetchLocalCaptureIndex() {
       const doi = normalizeDoi(item?.doi || '');
       const kind = String(item?.kind || '').toLowerCase();
       if (!doi || !['official','figure1'].includes(kind)) continue;
-      map.set(doi, { kind, updatedAt: Number(item?.updatedAt || 0) });
+      if (!localCaptureBelongsToDoi(item, doi)) {
+        console.warn('TOC_LOCAL_CAPTURE_CROSS_DOI_REJECTED ' + JSON.stringify({ doi, kind }));
+        continue;
+      }
+      map.set(doi, { kind, updatedAt: Number(item?.updatedAt || 0), sourceUrl: String(item?.sourceUrl || '') });
     }
     return map;
   } catch (error) {

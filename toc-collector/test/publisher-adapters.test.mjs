@@ -49,6 +49,20 @@ const fig = pickBestPublisherMediaCandidate('<figure><figcaption>Figure 1. React
 assert.equal(fig.kind, 'figure1');
 assert.equal(fig.assetType, 'figure1_fallback');
 
+const natureCrossDoi = pickBestPublisherMediaCandidate(
+  '<figure><figcaption>Figure 1. Recommended content.</figcaption><img src="https://media.springernature.com/w215h120/springer-static/image/art%3A10.1038%2Fs41586-024-07181-x/MediaObjects/41586_2024_7181_Fig1_HTML.png"></figure>',
+  'https://www.nature.com/articles/s41586-026-11043-z',
+  { doi: '10.1038/s41586-026-11043-z' }
+);
+assert.equal(natureCrossDoi, null);
+
+const natureOwnFigure = pickBestPublisherMediaCandidate(
+  '<figure><figcaption>Figure 1. Target article.</figcaption><img src="https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig1_HTML.png"></figure>',
+  'https://www.nature.com/articles/s41586-026-11043-z',
+  { doi: '10.1038/s41586-026-11043-z' }
+);
+assert.equal(natureOwnFigure.kind, 'figure1');
+
 assert.equal(pickBestPublisherMediaCandidate('<img alt="Journal cover image" src="https://example.org/cover.jpg"><meta property="og:image" content="https://example.org/cover2.jpg">', 'https://example.org/article', { doi: '10.1021/jacs.6c14433' }), null);
 
 const all = extractPublisherMediaCandidates(acsHtml, 'https://pubs.acs.org/doi/10.1021/jacs.6c14433', { doi: '10.1021/jacs.6c14433' });
