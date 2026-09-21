@@ -103,6 +103,9 @@ jobs:
           grep -F "CAPTURE_INDEX_URL" public/toc-mainline.user.js
           grep -F "FIGURE_IMPORT_ENDPOINT" public/toc-mainline.user.js
           grep -F "FIGURE_STAGE_ENDPOINT" public/toc-mainline.user.js
+          grep -F "/api/article-figures/promote-staged" cloudflare/worker/src/index.js
+          grep -F "promoteStagedArticleFigures" cloudflare/worker/src/local-captures.js
+          grep -F "ARTICLE_FIGURE_STAGE_PROMOTION_CRON" cloudflare/worker/src/index.js
           grep -F "figuresStaged" public/toc-mainline.user.js
           grep -F "D1 import unavailable; preserving figure in R2" public/toc-mainline.user.js
           grep -F "/api/article-figures/stage" cloudflare/worker/src/index.js

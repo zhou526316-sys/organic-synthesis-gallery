@@ -1,4 +1,4 @@
-import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport } from './local-captures.js';
+import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteStagedArticleFigures } from './local-captures.js';
 import {
   bridgeQueue,
   getArticleFigures,
@@ -377,6 +377,7 @@ async function handleApi(request, env) {
       '/api/toc/quarantine',
       '/api/article-figures/import',
       '/api/article-figures/stage',
+      '/api/article-figures/promote-staged',
       '/api/article-figures/reset',
       '/api/media/attempt',
       '/api/media/diagnose',
@@ -418,6 +419,9 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/stage') {
     return resultResponse(await importStagedArticleFigure(request, env, await readJson(request)), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/article-figures/promote-staged') {
+    return resultResponse(await promoteStagedArticleFigures(request, env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/reset') {
     return resultResponse(await resetFigures(request, env, await readJson(request)));
@@ -502,6 +506,17 @@ export default {
         console.log('MEDIA_JOB_CRON', JSON.stringify({ mode, claimed: result.claimed, processed: result.processed, results: result.results }));
       }).catch(error => {
         console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
+      })
+    );
+    ctx.waitUntil(
+      promoteStagedArticleFigures(
+        new Request('https://organic-synthesis-gallery.zhou526316.workers.dev/api/article-figures/promote-staged'),
+        env,
+        { limit: 5 }
+      ).then(result => {
+        console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON', JSON.stringify(result?.body || {}));
+      }).catch(error => {
+        console.error('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_FAILED', error instanceof Error ? error.message : String(error));
       })
     );
   },
