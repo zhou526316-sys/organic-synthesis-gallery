@@ -37,7 +37,11 @@ export class GalleryUserShell extends HTMLElement {
   private verifyChallengeId = '';
   private readonly rerender = (): void => this.render();
   private readonly reposition = (): void => { if (this.open) this.positionPanel(); };
-  private readonly outside = (event: PointerEvent): void => { if (this.open && !event.composedPath().includes(this)) { this.open = false; this.render(); } };
+  private readonly outside = (event: PointerEvent): void => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('[data-gallery-user-cropper]')) return;
+    if (this.open && !event.composedPath().includes(this)) { this.open = false; this.render(); }
+  };
 
   static get observedAttributes(): string[] { return ['data-language', 'data-current-query']; }
   connectedCallback(): void {
