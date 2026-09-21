@@ -211,6 +211,8 @@ jobs:
           grep -F "FIGURE_STAGE_ENDPOINT" dist/toc-mainline.user.js
           grep -F "NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000" dist/toc-mainline.user.js
           grep -F "var dates = Array.from(new Set" dist/toc-mainline.user.js
+          grep -F "delayedTocUpgrades: upgrades.length" dist/toc-mainline.user.js
+          grep -F "var delayedUpgrades = upgrades.filter" dist/toc-mainline.user.js
           grep -F "/api/article-figures/promote-staged" cloudflare/worker/src/index.js
           grep -F "promoteStagedArticleFigures" cloudflare/worker/src/local-captures.js
           grep -F "ARTICLE_FIGURE_STAGE_PROMOTION_CRON" cloudflare/worker/src/index.js
