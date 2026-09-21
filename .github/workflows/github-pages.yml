@@ -190,8 +190,8 @@ jobs:
           grep -F "iframe_cross_origin_or_auth_redirect" dist/toc-mainline.user.js
           grep -F "_semantic_window" dist/toc-mainline.user.js
           grep -F "acs_main_scroll_top=" dist/toc-mainline.user.js
-          grep -F "中止当前 TOC 批次" dist/toc-mainline.user.js
-          grep -F "继续 TOC 主线" dist/toc-mainline.user.js
+          grep -F "中止当前媒体抓取批次" dist/toc-mainline.user.js
+          grep -F "继续媒体抓取主线" dist/toc-mainline.user.js
           grep -F "上传本地 TOC 日志" dist/toc-mainline.user.js
           grep -F "@connect      acs.silverchair-cdn.com" dist/toc-mainline.user.js
           grep -F "candidateRequestUrl" dist/toc-mainline.user.js
