@@ -536,8 +536,10 @@
     try { body = JSON.parse(String(response.responseText || '{}')); } catch (_) {}
     var status = Number(response.status || 0);
     if (status < 200 || status >= 300) {
-      var error = new Error('upload_http_' + String(status));
+      var detail = String(body && (body.detail || body.error) || '').replace(/\s+/g, ' ').slice(0, 220);
+      var error = new Error('upload_http_' + String(status) + (detail ? ':' + detail : ''));
       error.httpStatus = status;
+      error.responseError = detail;
       throw error;
     }
     return body;
