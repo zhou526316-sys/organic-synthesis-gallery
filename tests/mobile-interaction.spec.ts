@@ -190,14 +190,23 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   expect(scrollStyle.overflowY).toBe('scroll');
   expect(scrollStyle.gutter).toContain('stable');
 
-  const favoriteColor = userShell.locator('input[data-color="action:favorite"]');
-  await favoriteColor.evaluate((element: HTMLInputElement) => {
-    element.value = '#aa3377';
-    element.dispatchEvent(new Event('change', { bubbles: true }));
-  });
-  await expect.poll(async () =>
-    actions.locator('button[data-action="favorite"]').evaluate(element => getComputedStyle(element).backgroundColor)
-  ).toBe('rgb(170, 51, 119)');
+  const actionColors: Record<string, { hex: string; rgb: string }> = {
+    favorite: { hex: '#aa3377', rgb: 'rgb(170, 51, 119)' },
+    status: { hex: '#336699', rgb: 'rgb(51, 102, 153)' },
+    note: { hex: '#228855', rgb: 'rgb(34, 136, 85)' },
+    more: { hex: '#885522', rgb: 'rgb(136, 85, 34)' },
+  };
+  for (const [action, color] of Object.entries(actionColors)) {
+    const input = userShell.locator(`input[data-color="action:${action}"]`);
+    await expect(input).toBeVisible();
+    await input.evaluate((element: HTMLInputElement, hex) => {
+      element.value = String(hex);
+      element.dispatchEvent(new Event('change', { bubbles: true }));
+    }, color.hex);
+    await expect.poll(async () =>
+      actions.locator(`button[data-action="${action}"]`).evaluate(element => getComputedStyle(element).backgroundColor)
+    ).toBe(color.rgb);
+  }
 
   const statusImageInput = userShell.locator('input[data-image="status:to-read"]');
   await statusImageInput.setInputFiles({
@@ -242,6 +251,9 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   await expect(cardStatus.locator('.status-image')).toBeVisible();
   await expect(cardStatus).toHaveClass(/shape-square/);
   await expect.poll(async () => cardStatus.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(18, 52, 86)');
+  await expect.poll(async () =>
+    actions.locator('button[data-action="status"]').evaluate(element => getComputedStyle(element).backgroundColor)
+  ).toBe('rgb(51, 102, 153)');
 
   await expect.poll(async () => actions.evaluate(element => {
     const card = element.closest<HTMLElement>('.card');
@@ -308,7 +320,7 @@ test('desktop personalization wheel reaches the bottom and action slots align ac
   await actions.nth(0).locator('button[data-action="status"]').click();
   await actions.nth(0).locator('button[data-action="set-status:to-read"]').click();
 
-  const relativeActionXs = async (index: number): Promise<number[]> =>
+  const actionGeometry = async (index: number): Promise<Array<{ x: number; y: number; h: number }>> =>
     actions.nth(index).evaluate(host => {
       const hostRect = host.getBoundingClientRect();
       const root = host.shadowRoot;
@@ -316,13 +328,22 @@ test('desktop personalization wheel reaches the bottom and action slots align ac
       return ['favorite', 'status', 'note', 'more'].map(action => {
         const button = root.querySelector<HTMLElement>(`button[data-action="${action}"]`);
         if (!button) throw new Error(`missing action ${action}`);
-        return Math.round(button.getBoundingClientRect().left - hostRect.left);
+        const rect = button.getBoundingClientRect();
+        return {
+          x: Math.round(rect.left - hostRect.left),
+          y: Math.round(rect.top - hostRect.top),
+          h: Math.round(rect.height),
+        };
       });
     });
 
-  const firstXs = await relativeActionXs(0);
-  const secondXs = await relativeActionXs(1);
-  expect(firstXs).toEqual(secondXs);
+  const firstGeometry = await actionGeometry(0);
+  const secondGeometry = await actionGeometry(1);
+  expect(firstGeometry.map(item => item.x)).toEqual(secondGeometry.map(item => item.x));
+  expect(new Set(firstGeometry.map(item => item.y)).size).toBe(1);
+  expect(new Set(secondGeometry.map(item => item.y)).size).toBe(1);
+  expect(new Set(firstGeometry.map(item => item.h)).size).toBe(1);
+  expect(new Set(secondGeometry.map(item => item.h)).size).toBe(1);
 
   const userShell = page.locator('gallery-user-shell');
   await userShell.locator('button.trigger').click();
