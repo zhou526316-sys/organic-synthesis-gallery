@@ -43,6 +43,7 @@
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
   var WORKER = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
+  var FIGURE_IMPORT_ENDPOINT = WORKER + '/api/article-figures/import';
   var CAPTURE_INDEX_URL = WORKER + '/api/media/local-capture-index';
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
   var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
@@ -742,6 +743,71 @@
     };
   }
 
+  function articleFigureLabel(text, fallbackIndex) {
+    var value = String(text || '').replace(/\s+/g, ' ').trim();
+    var numbered = value.match(/\b(Figure|Fig\.?|Scheme|Chart)\s*([A-Za-z]?\d+[A-Za-z]?)\b/i);
+    if (numbered) {
+      var kind = /^fig/i.test(numbered[1]) ? 'Figure'
+        : numbered[1].charAt(0).toUpperCase() + numbered[1].slice(1).toLowerCase();
+      return kind + ' ' + numbered[2];
+    }
+    if (/substrate\s+scope|reaction\s+scope|scope\s+of/i.test(value)) return 'Scope';
+    if (/mechanis|catalytic\s+cycle|proposed\s+pathway/i.test(value)) return 'Mechanism';
+    if (/optimization|reaction\s+conditions/i.test(value)) return 'Optimization';
+    return 'Figure ' + String(fallbackIndex + 1);
+  }
+
+  function collectArticleFigureCandidates(job, trace, root, baseUrl, sourceName) {
+    var scope = root || document;
+    var pageUrl = baseUrl || location.href;
+    var source = sourceName || 'live_dom';
+    var rows = [];
+    var seen = {};
+    var blocks = Array.prototype.slice.call(scope.querySelectorAll('figure'));
+    blocks.forEach(function (block, blockIndex) {
+      var context = String(block.innerText || block.textContent || '').replace(/\s+/g, ' ').trim();
+      if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)/i.test(context.slice(0, 1400))) return;
+      var label = articleFigureLabel(context, blockIndex);
+      var caption = context.slice(0, 600);
+      Array.prototype.slice.call(block.querySelectorAll('img,source')).forEach(function (node) {
+        imageUrls(node, pageUrl).forEach(function (url) {
+          if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
+          var key = label.toLowerCase() + '::' + url;
+          if (seen[key]) return;
+          seen[key] = true;
+          var img = node instanceof HTMLSourceElement ? (node.parentElement && node.parentElement.querySelector('img')) : node;
+          rows.push({
+            url: url,
+            kind: 'article_figure',
+            assetType: 'article_figure',
+            label: label,
+            text: caption,
+            source: source + '_figure',
+            score: /^Figure 1$/i.test(label) ? 100 : /^Figure|^Scheme|^Chart/i.test(label) ? 90 : 70,
+            width: Number(img && (img.naturalWidth || img.width) || 0),
+            height: Number(img && (img.naturalHeight || img.height) || 0),
+            element: img instanceof HTMLImageElement ? img : null
+          });
+        });
+      });
+    });
+    rows.sort(function (a, b) { return b.score - a.score || String(a.label).localeCompare(String(b.label)); });
+    var uniqueLabels = {};
+    var selected = rows.filter(function (row) {
+      var key = String(row.label || '').toLowerCase();
+      if (uniqueLabels[key]) return false;
+      uniqueLabels[key] = true;
+      return true;
+    }).slice(0, 12);
+    pushTrace(trace, {
+      stage: 'figure_discovery',
+      event: 'scan_complete',
+      status: selected.length ? 'found' : 'none',
+      message: source + ';figures=' + String(selected.length)
+    });
+    return selected;
+  }
+
   function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
     var scope = root || document;
     var pageUrl = baseUrl || location.href;
@@ -1406,6 +1472,48 @@
     image = await gmFetchCandidate(candidate, trace);
     if (image) return image;
     return canvasCandidate(candidate, trace);
+  }
+
+  async function uploadArticleFigure(job, candidate, image, trace, token, order) {
+    pushTrace(trace, {
+      stage: 'figure_upload',
+      event: 'start',
+      status: 'start',
+      url: candidate.url,
+      message: candidate.label || '',
+      byteLength: image.byteLength
+    });
+    try {
+      var result = await postJson(FIGURE_IMPORT_ENDPOINT, {
+        doi: job.doi,
+        articleUrl: location.href,
+        id: String(candidate.label || ('figure-' + String(order + 1))).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
+        label: candidate.label || ('Figure ' + String(order + 1)),
+        caption: candidate.text || '',
+        order: Number(order || 0),
+        width: Number(candidate.width || 0) || undefined,
+        height: Number(candidate.height || 0) || undefined,
+        imageData: image.imageData
+      }, token);
+      pushTrace(trace, {
+        stage: 'figure_upload',
+        event: 'complete',
+        status: 'ok',
+        url: candidate.url,
+        message: candidate.label || '',
+        byteLength: image.byteLength
+      });
+      return result;
+    } catch (error) {
+      pushTrace(trace, {
+        stage: 'figure_upload',
+        event: 'failed',
+        status: 'failed',
+        url: candidate.url,
+        message: String(error && error.message || error)
+      });
+      throw error;
+    }
   }
 
   async function uploadCapture(job, candidate, image, trace, token) {
