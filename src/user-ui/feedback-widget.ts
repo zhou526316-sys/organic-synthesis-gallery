@@ -293,6 +293,7 @@ class SiteFeedbackWidget extends HTMLElement {
     if (moved && this.tabPosition) {
       saveTabPosition(this.tabPosition);
       this.suppressTabClick = true;
+      window.setTimeout(() => { this.suppressTabClick = false; }, 0);
     }
   }
 
