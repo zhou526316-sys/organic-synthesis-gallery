@@ -371,10 +371,25 @@ const missingCandidates = missing
 const potentialGaps = missingCandidates.filter(c => c.reviewPriority === 'high');
 
 const criticalFailures = stats.filter(s => !s.ok);
+const hasSource = (candidate, prefix) => (candidate.sources || []).some(source => source.startsWith(prefix));
 const sourceFamilyHealth = Object.fromEntries(JOURNALS.map(j => {
   const rows = stats.filter(s => s.journal === j.name);
   const crossrefRows = rows.filter(s => s.source === 'crossref');
   const openAlexRows = rows.filter(s => s.source === 'openalex' || s.source === 'openalex-source');
+  const candidates = universe.filter(candidate => candidate.journal === j.name);
+  const closureCandidates = candidates.filter(candidate => candidate.date === CLOSURE_DATE);
+  const crossrefCandidateRecords = candidates.filter(candidate => hasSource(candidate, 'crossref:')).length;
+  const openAlexCandidateRecords = candidates.filter(candidate => hasSource(candidate, 'openalex:')).length;
+  const multiSourceCandidateRecords = candidates.filter(candidate => hasSource(candidate, 'crossref:') && hasSource(candidate, 'openalex:')).length;
+  const closureCrossrefRecords = closureCandidates.filter(candidate => hasSource(candidate, 'crossref:')).length;
+  const closureOpenAlexRecords = closureCandidates.filter(candidate => hasSource(candidate, 'openalex:')).length;
+  const closureMultiSourceRecords = closureCandidates.filter(candidate => hasSource(candidate, 'crossref:') && hasSource(candidate, 'openalex:')).length;
+  const maxWindowFamily = Math.max(crossrefCandidateRecords, openAlexCandidateRecords);
+  const minWindowFamily = Math.min(crossrefCandidateRecords, openAlexCandidateRecords);
+  const maxClosureFamily = Math.max(closureCrossrefRecords, closureOpenAlexRecords);
+  const minClosureFamily = Math.min(closureCrossrefRecords, closureOpenAlexRecords);
+  const coverageWarning = candidates.length >= 8 && maxWindowFamily >= 8 && (minWindowFamily === 0 || minWindowFamily / maxWindowFamily < 0.5);
+  const closureCoverageWarning = closureCandidates.length >= 4 && maxClosureFamily >= 4 && (minClosureFamily === 0 || minClosureFamily / maxClosureFamily < 0.5);
   return [j.name, {
     activeFrom: j.activeFrom || '',
     effectiveStart: auditStartForJournal(j),
@@ -384,10 +399,26 @@ const sourceFamilyHealth = Object.fromEntries(JOURNALS.map(j => {
     openAlexFailures: openAlexRows.filter(s => !s.ok).length,
     crossrefHealthy: crossrefRows.some(s => s.ok),
     openAlexHealthy: openAlexRows.some(s => s.ok),
+    unionCandidateRecords: candidates.length,
+    crossrefCandidateRecords,
+    openAlexCandidateRecords,
+    multiSourceCandidateRecords,
+    closureUnionRecords: closureCandidates.length,
+    closureCrossrefRecords,
+    closureOpenAlexRecords,
+    closureMultiSourceRecords,
+    coverageWarning,
+    closureCoverageWarning,
   }];
 }));
 const sourceFamilyGaps = Object.entries(sourceFamilyHealth)
   .filter(([, health]) => !health.crossrefHealthy || !health.openAlexHealthy)
+  .map(([journal, health]) => ({ journal, ...health }));
+const sourceCoverageAnomalies = Object.entries(sourceFamilyHealth)
+  .filter(([, health]) => health.coverageWarning)
+  .map(([journal, health]) => ({ journal, ...health }));
+const closureCoverageAnomalies = Object.entries(sourceFamilyHealth)
+  .filter(([, health]) => health.closureCoverageWarning)
   .map(([journal, health]) => ({ journal, ...health }));
 
 const byJournal = Object.fromEntries(JOURNALS.map(j => {
@@ -423,9 +454,11 @@ const closureMissing = missingCandidates.filter(c => c.date === CLOSURE_DATE);
 const closurePotentialGaps = closureMissing.filter(c => c.reviewPriority === 'high');
 const closureStatus = criticalFailures.length > 0
   ? 'blocked-source-failure'
-  : closureMissing.length > 0
-    ? 'requires-assistant-review'
-    : 'assistant-decisions-complete';
+  : closureCoverageAnomalies.length > 0
+    ? 'blocked-source-coverage-anomaly'
+    : closureMissing.length > 0
+      ? 'requires-assistant-review'
+      : 'assistant-decisions-complete';
 
 const report = {
   auditVersion: 4,
@@ -440,7 +473,7 @@ const report = {
   startDate: START,
   endDate: END,
   closureDate: CLOSURE_DATE,
-  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail (including Crossref created/deposit rescue and OpenAlex), and automatic catch-up from the first unverified date when verifiedThrough falls behind. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
+  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail (including Crossref created/deposit rescue and OpenAlex), automatic catch-up from the first unverified date when verifiedThrough falls behind, and closure-day source-coverage regression detection. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
   targetJournals: JOURNALS.map(journal => ({ name: journal.name, issns: journal.issns, activeFrom: journal.activeFrom || '', effectiveStart: auditStartForJournal(journal), lateDepositRescueStart: rescueStartForJournal(journal) })),
   summary: {
     galleryDois: galleryDois.size,
@@ -451,6 +484,8 @@ const report = {
     potentialGaps: potentialGaps.length,
     criticalSourceFailures: criticalFailures.length,
     sourceFamilyGaps: sourceFamilyGaps.length,
+    sourceCoverageAnomalies: sourceCoverageAnomalies.length,
+    closureCoverageAnomalies: closureCoverageAnomalies.length,
     unresolved: missing.length,
     excludedByPolicy: excludedUniverse.length,
   },
@@ -463,12 +498,15 @@ const report = {
     missingFromGallery: closureMissing.length,
     potentialGaps: closurePotentialGaps.length,
     criticalSourceFailures: criticalFailures.length,
-    verifiedThroughEligible: criticalFailures.length === 0 && closureMissing.length === 0,
-    note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, and critical source failures must be zero.',
+    sourceCoverageAnomalies: closureCoverageAnomalies,
+    verifiedThroughEligible: criticalFailures.length === 0 && closureCoverageAnomalies.length === 0 && closureMissing.length === 0,
+    note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse.',
   },
   byJournal,
   sourceFamilyHealth,
   sourceFamilyGaps,
+  sourceCoverageAnomalies,
+  closureCoverageAnomalies,
   sourceStats: stats,
   missingCandidates,
   potentialGaps,
