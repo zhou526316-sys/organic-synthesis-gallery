@@ -657,6 +657,7 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
   button.className = 'toc-link';
   const masterImageUrl = result.primary?.masterImageUrl || result.primary?.imageUrl || result.imageUrl;
   const cardImageUrl = result.primary?.thumbnailImageUrl || result.primary?.previewImageUrl || result.imageUrl;
+  button.dataset.masterSrc = masterImageUrl;
   const image = new Image();
   image.src = cardImageUrl;
   image.alt = result.primary?.label || t('toc');
