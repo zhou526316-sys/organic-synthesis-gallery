@@ -644,6 +644,42 @@
     return values;
   }
 
+  function articleFigureImageUrls(node, baseUrl) {
+    var values = [];
+    function add(raw) {
+      if (!raw) return;
+      var url = normalizeUrl(raw, baseUrl);
+      if (url && values.indexOf(url) < 0) values.push(url);
+    }
+    function addSrcset(raw) {
+      var ranked = String(raw || '').split(',').map(function (part) {
+        var bits = part.trim().split(/\s+/);
+        var descriptor = bits[1] || '';
+        var rank = /w$/i.test(descriptor) ? Number(descriptor.replace(/w$/i, '')) * 10
+          : /x$/i.test(descriptor) ? Number(descriptor.replace(/x$/i, '')) * 10000
+          : 0;
+        return { url: bits[0] || '', rank: Number.isFinite(rank) ? rank : 0 };
+      }).filter(function (item) { return Boolean(item.url); })
+        .sort(function (a, b) { return b.rank - a.rank; });
+      ranked.forEach(function (item) { add(item.url); });
+    }
+
+    [
+      'data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large',
+      'data-original','data-large','data-image-src','data-image','data-url'
+    ].forEach(function (name) { add(node.getAttribute && node.getAttribute(name)); });
+    addSrcset(node.getAttribute && node.getAttribute('data-srcset'));
+    addSrcset(node.getAttribute && node.getAttribute('srcset'));
+
+    var link = node.closest && node.closest('a[href]');
+    if (link) add(link.getAttribute('href'));
+
+    ['data-src','data-lazy-src'].forEach(function (name) { add(node.getAttribute && node.getAttribute(name)); });
+    if (node instanceof HTMLImageElement) add(node.currentSrc);
+    add(node.getAttribute && node.getAttribute('src'));
+    return values;
+  }
+
   function rawTagAttrs(tag) {
     var out = {};
     String(tag || '').replace(/([:\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+))/g, function (_, key, dq, sq, bare) {
@@ -800,7 +836,7 @@
       var label = articleFigureLabel(context, blockIndex);
       var caption = context.slice(0, 600);
       Array.prototype.slice.call(block.querySelectorAll('img,source')).forEach(function (node) {
-        imageUrls(node, pageUrl).forEach(function (url) {
+        articleFigureImageUrls(node, pageUrl).forEach(function (url) {
           if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
           var key = label.toLowerCase() + '::' + url;
           if (seen[key]) return;
@@ -827,7 +863,7 @@
         if (!/(?:\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b|substrate\s+scope|reaction\s+scope|mechanis|catalytic\s+cycle|optimization|reaction\s+conditions)/i.test(context)) return;
         if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)/i.test(context.slice(0, 1600))) return;
         var label = articleFigureLabel(context, imageIndex);
-        imageUrls(node, pageUrl).forEach(function (url) {
+        articleFigureImageUrls(node, pageUrl).forEach(function (url) {
           if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
           var key = label.toLowerCase() + '::' + url;
           if (seen[key]) return;
@@ -1545,12 +1581,35 @@
     }
   }
 
+  function measureImageData(imageData) {
+    return new Promise(function (resolve) {
+      try {
+        var probe = new Image();
+        var done = false;
+        var finish = function (width, height) {
+          if (done) return;
+          done = true;
+          resolve({ width: Number(width || 0), height: Number(height || 0) });
+        };
+        probe.onload = function () { finish(probe.naturalWidth, probe.naturalHeight); };
+        probe.onerror = function () { finish(0, 0); };
+        probe.src = imageData;
+        setTimeout(function () { finish(0, 0); }, 5000);
+      } catch (_) {
+        resolve({ width: 0, height: 0 });
+      }
+    });
+  }
+
   async function acquireImage(candidate, trace) {
     var image = await pageFetchCandidate(candidate, trace);
-    if (image) return image;
-    image = await gmFetchCandidate(candidate, trace);
-    if (image) return image;
-    return canvasCandidate(candidate, trace);
+    if (!image) image = await gmFetchCandidate(candidate, trace);
+    if (!image) image = await canvasCandidate(candidate, trace);
+    if (!image) return null;
+    var measured = await measureImageData(image.imageData);
+    image.width = Number(measured.width || 0);
+    image.height = Number(measured.height || 0);
+    return image;
   }
 
   async function uploadArticleFigure(job, candidate, image, trace, token, order) {
@@ -1570,8 +1629,8 @@
         label: candidate.label || ('Figure ' + String(order + 1)),
         caption: candidate.text || '',
         order: Number(order || 0),
-        width: Number(candidate.width || 0) || undefined,
-        height: Number(candidate.height || 0) || undefined,
+        width: Number(image.width || 0) || undefined,
+        height: Number(image.height || 0) || undefined,
         imageData: image.imageData
       }, token);
       pushTrace(trace, {
