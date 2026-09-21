@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.4
+// @version      6.2.5
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -29,6 +29,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @connect      *
+// @connect      acs.silverchair-cdn.com
 // @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
 // @downloadURL  https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
 // ==/UserScript==
@@ -36,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.4';
+  var VERSION = '6.2.5';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -302,6 +303,16 @@
     return primary.concat(selectBatchJobs(remainingUpgrades, limit - primary.length));
   }
 
+  function sanitizeTraceMessage(value) {
+    var text = String(value == null ? '' : value).slice(0, 1600);
+    text = text.replace(/https?:\/\/[^\s"'<>]+/gi, function (raw) {
+      return sanitizeDiagnosticUrl(raw);
+    });
+    text = text.replace(/(authorization\s*:\s*bearer\s+)[^\s;,]+/ig, '$1[redacted]');
+    text = text.replace(/((?:signature|token|key-pair-id|x-amz-signature|x-amz-credential)=)[^&\s]+/ig, '$1[redacted]');
+    return text.slice(0, 1200);
+  }
+
   function pushTrace(trace, data) {
     var row = Object.assign({
       seq: trace.length + 1,
@@ -320,6 +331,8 @@
       imageHeight: 0,
       byteLength: 0
     }, data || {});
+    row.url = sanitizeDiagnosticUrl(row.url || '');
+    row.message = sanitizeTraceMessage(row.message || '');
     trace.push(row);
     if (trace.length > MAX_TRACE) trace.splice(0, trace.length - MAX_TRACE);
     try { console.debug('[OSG TOC]', row.stage, row.event, row.status, row.message || ''); } catch (_) {}
@@ -516,6 +529,41 @@
     } catch (_) {
       return '';
     }
+  }
+
+  function mediaUrlIdentity(value, baseUrl) {
+    var url = normalizeUrl(value, baseUrl);
+    if (!url) return '';
+    try {
+      var parsed = new URL(url);
+      parsed.search = '';
+      parsed.hash = '';
+      return parsed.href;
+    } catch (_) {
+      return url.replace(/[?#].*$/, '');
+    }
+  }
+
+  function findLiveImageElement(scope, targetUrl, baseUrl) {
+    if (!scope || !scope.querySelectorAll) return null;
+    var wanted = mediaUrlIdentity(targetUrl, baseUrl);
+    if (!wanted) return null;
+    var nodes = scope.querySelectorAll('img');
+    for (var i = 0; i < nodes.length; i += 1) {
+      var img = nodes[i];
+      var urls = imageUrls(img, baseUrl);
+      for (var j = 0; j < urls.length; j += 1) {
+        if (mediaUrlIdentity(urls[j], baseUrl) === wanted) return img;
+      }
+    }
+    return null;
+  }
+
+  function candidateRequestUrl(candidate) {
+    var live = candidate && candidate.element && candidate.element.currentSrc
+      ? normalizeUrl(candidate.element.currentSrc, location.href)
+      : '';
+    return live || String(candidate && candidate.url || '');
   }
 
   function imageUrls(node, baseUrl) {
@@ -761,7 +809,7 @@
             text: (ownMarker + ' ' + semanticContext).replace(/\s+/g, ' ').trim().slice(0, 1000),
             width: Number(parsed.attrs.width || 0),
             height: Number(parsed.attrs.height || 0),
-            element: null
+            element: findLiveImageElement(scope, url, pageUrl)
           };
           if (!old || row.score > old.score) map.set(url, row);
         });
@@ -1140,17 +1188,18 @@
   }
 
   async function pageFetchCandidate(candidate, trace) {
+    var requestUrl = candidateRequestUrl(candidate);
     pushTrace(trace, {
       stage: 'page_fetch',
       event: 'request_start',
       status: 'start',
-      url: candidate.url,
+      url: requestUrl,
       candidateKind: candidate.kind,
       candidateSource: candidate.source,
       candidateScore: candidate.score
     });
     try {
-      var response = await fetch(candidate.url, {
+      var response = await fetch(requestUrl, {
         method: 'GET',
         credentials: 'include',
         cache: 'force-cache',
@@ -1164,7 +1213,7 @@
         status: response.ok ? 'ok' : 'http_error',
         httpStatus: response.status,
         contentType: contentType,
-        url: candidate.url
+        url: requestUrl
       });
       if (!response.ok) throw new Error('page_fetch_http_' + response.status);
       var buffer = await response.arrayBuffer();
@@ -1182,7 +1231,7 @@
         stage: 'page_fetch',
         event: 'failed',
         status: 'failed',
-        url: candidate.url,
+        url: requestUrl,
         message: String(error && error.message || error)
       });
       return null;
@@ -1190,11 +1239,12 @@
   }
 
   async function gmFetchCandidate(candidate, trace) {
+    var requestUrl = candidateRequestUrl(candidate);
     pushTrace(trace, {
       stage: 'gm_fetch',
       event: 'request_start',
       status: 'start',
-      url: candidate.url,
+      url: requestUrl,
       candidateKind: candidate.kind,
       candidateSource: candidate.source,
       candidateScore: candidate.score
@@ -1202,7 +1252,7 @@
     try {
       var response = await gmRequest({
         method: 'GET',
-        url: candidate.url,
+        url: requestUrl,
         responseType: 'arraybuffer',
         timeout: 35000,
         headers: {
@@ -1220,7 +1270,7 @@
         status: status >= 200 && status < 300 ? 'ok' : 'http_error',
         httpStatus: status,
         contentType: contentType,
-        url: candidate.url,
+        url: requestUrl,
         byteLength: bytes
       });
       if (status < 200 || status >= 300) {
@@ -1242,7 +1292,7 @@
         event: 'failed',
         status: 'failed',
         httpStatus: Number(error && error.httpStatus || 0),
-        url: candidate.url,
+        url: requestUrl,
         message: String(error && error.message || error)
       });
       return null;
