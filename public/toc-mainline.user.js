@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.9
+// @version      6.2.10
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.9';
+  var VERSION = '6.2.10';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -306,6 +306,11 @@
     buckets.forEach(function (rows) {
       rows.sort(function (a, b) {
         if (String(a.state || '') === 'figure_gap' && String(b.state || '') === 'figure_gap') {
+          var priorityRank = { missing: 0, low_resolution: 1, quality_unknown: 2, sparse: 3 };
+          var priorityDelta = Number(priorityRank[String(a.priority || '')] ?? 9) - Number(priorityRank[String(b.priority || '')] ?? 9);
+          if (priorityDelta) return priorityDelta;
+          var usableDelta = Math.max(0, Number(a.usableFigureCount || 0)) - Math.max(0, Number(b.usableFigureCount || 0));
+          if (usableDelta) return usableDelta;
           var figureDelta = Math.max(0, Number(a.figureCount || 0)) - Math.max(0, Number(b.figureCount || 0));
           if (figureDelta) return figureDelta;
         }
@@ -2162,13 +2167,21 @@
     var figureOnly = queuedFigures.slice();
     var allJobs = visible.concat(upgrades, figureOnly);
     var limit = batchSize();
-    var tocBudget = Math.min(visible.length + upgrades.length, Math.max(1, Math.ceil(limit / 2)));
-    var jobs = selectPriorityBatch(visible, upgrades, tocBudget);
+    var visibleBudget = Math.min(visible.length, 1);
+    var jobs = selectBatchJobs(visible, visibleBudget);
+    var selectedDois = {};
+    jobs.forEach(function (job) { var doi = normalizeDoi(job && job.doi); if (doi) selectedDois[doi] = true; });
+
     if (jobs.length < limit) {
-      var selectedDois = {};
-      jobs.forEach(function (job) { var doi = normalizeDoi(job && job.doi); if (doi) selectedDois[doi] = true; });
       var figureCandidates = figureOnly.filter(function (job) { return !selectedDois[normalizeDoi(job && job.doi)]; });
-      jobs = jobs.concat(selectBatchJobs(figureCandidates, limit - jobs.length));
+      var selectedFigures = selectBatchJobs(figureCandidates, limit - jobs.length);
+      jobs = jobs.concat(selectedFigures);
+      selectedFigures.forEach(function (job) { var doi = normalizeDoi(job && job.doi); if (doi) selectedDois[doi] = true; });
+    }
+
+    if (jobs.length < limit) {
+      var upgradeCandidates = upgrades.filter(function (job) { return !selectedDois[normalizeDoi(job && job.doi)]; });
+      jobs = jobs.concat(selectBatchJobs(upgradeCandidates, limit - jobs.length));
     }
     var cooling = allJobs.filter(function (queued) {
       var doi = normalizeDoi(queued && queued.doi);
