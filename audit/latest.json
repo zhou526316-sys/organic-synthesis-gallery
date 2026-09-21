@@ -1,6 +1,6 @@
 {
   "auditVersion": 4,
-  "generatedAt": "2026-09-21T00:12:17.052Z",
+  "generatedAt": "2026-09-21T03:55:28.054Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -159,14 +159,14 @@
   ],
   "summary": {
     "galleryDois": 484,
-    "sourceRecords": 528,
-    "rawMissingFromGallery": 469,
+    "sourceRecords": 529,
+    "rawMissingFromGallery": 470,
     "previouslyReviewedExcluded": 469,
-    "missingFromGallery": 0,
+    "missingFromGallery": 1,
     "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
-    "unresolved": 0,
+    "unresolved": 1,
     "excludedByPolicy": 0
   },
   "closure": {
@@ -260,16 +260,16 @@
     "Nature Communications": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "sourceRecords": 176,
-      "crossrefOnly": 2,
+      "sourceRecords": 177,
+      "crossrefOnly": 3,
       "openAlexOnly": 3,
       "multiSource": 171,
       "lateIndexed": 156,
       "safetyTail": 159,
       "coveredByGallery": 3,
-      "rawMissingFromGallery": 173,
+      "rawMissingFromGallery": 174,
       "previouslyReviewedExcluded": 173,
-      "missingFromGallery": 0,
+      "missingFromGallery": 1,
       "potentialGaps": 0
     },
     "JACS": {
@@ -824,7 +824,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 174,
+      "count": 175,
       "note": ""
     },
     {
@@ -833,7 +833,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 174,
+      "count": 175,
       "note": ""
     },
     {
@@ -842,7 +842,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 174,
+      "count": 175,
       "note": ""
     },
     {
@@ -1304,6 +1304,39 @@
       "note": ""
     }
   ],
-  "missingCandidates": [],
+  "missingCandidates": [
+    {
+      "doi": "10.1038/s41467-026-77409-z",
+      "journal": "Nature Communications",
+      "title": "Design of white circularly polarized luminescence with high glum across entire visible regions by dual-loop active learning",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Peng Yang",
+        "Xiaoyue He",
+        "Hongli Zhang",
+        "Zeyu Feng",
+        "Liyang Wen",
+        "Li Wen",
+        "Yin Xu",
+        "Bo Chen",
+        "Mingjun Xiao",
+        "Xin Chen",
+        "Gang Zou"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    }
+  ],
   "potentialGaps": []
 }
