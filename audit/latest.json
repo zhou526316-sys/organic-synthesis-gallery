@@ -1,6 +1,6 @@
 {
   "auditVersion": 4,
-  "generatedAt": "2026-09-21T13:11:52.055Z",
+  "generatedAt": "2026-09-21T13:23:20.185Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -159,16 +159,16 @@
   ],
   "summary": {
     "galleryDois": 484,
-    "sourceRecords": 577,
-    "rawMissingFromGallery": 518,
+    "sourceRecords": 578,
+    "rawMissingFromGallery": 519,
     "previouslyReviewedExcluded": 469,
-    "missingFromGallery": 49,
-    "potentialGaps": 12,
+    "missingFromGallery": 50,
+    "potentialGaps": 13,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 0,
-    "unresolved": 49,
+    "unresolved": 50,
     "excludedByPolicy": 0
   },
   "closure": {
@@ -183,6 +183,146 @@
     "sourceCoverageAnomalies": [],
     "verifiedThroughEligible": false,
     "note": "Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse."
+  },
+  "byDate": {
+    "2026-09-15": {
+      "sourceRecords": 137,
+      "crossrefOnly": 1,
+      "openAlexOnly": 2,
+      "multiSource": 134,
+      "coveredByGallery": 18,
+      "rawMissingFromGallery": 119,
+      "previouslyReviewedExcluded": 119,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
+      "byJournal": {
+        "Nature": 13,
+        "Nature Catalysis": 1,
+        "Nature Communications": 47,
+        "JACS": 14,
+        "Angew": 46,
+        "ACS Catalysis": 7,
+        "Organic Letters": 9
+      }
+    },
+    "2026-09-16": {
+      "sourceRecords": 136,
+      "crossrefOnly": 0,
+      "openAlexOnly": 2,
+      "multiSource": 134,
+      "coveredByGallery": 10,
+      "rawMissingFromGallery": 126,
+      "previouslyReviewedExcluded": 126,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
+      "byJournal": {
+        "Nature": 46,
+        "Nature Synthesis": 1,
+        "Nature Communications": 42,
+        "JACS": 17,
+        "Angew": 23,
+        "ACS Catalysis": 3,
+        "Organic Letters": 4
+      }
+    },
+    "2026-09-17": {
+      "sourceRecords": 126,
+      "crossrefOnly": 2,
+      "openAlexOnly": 1,
+      "multiSource": 123,
+      "coveredByGallery": 10,
+      "rawMissingFromGallery": 116,
+      "previouslyReviewedExcluded": 115,
+      "missingFromGallery": 1,
+      "potentialGaps": 0,
+      "byJournal": {
+        "Nature": 9,
+        "Science": 38,
+        "Nature Synthesis": 1,
+        "Nature Chemistry": 2,
+        "Nature Communications": 45,
+        "JACS": 19,
+        "ACS Catalysis": 4,
+        "Organic Letters": 8
+      }
+    },
+    "2026-09-18": {
+      "sourceRecords": 86,
+      "crossrefOnly": 2,
+      "openAlexOnly": 0,
+      "multiSource": 84,
+      "coveredByGallery": 12,
+      "rawMissingFromGallery": 74,
+      "previouslyReviewedExcluded": 73,
+      "missingFromGallery": 1,
+      "potentialGaps": 0,
+      "byJournal": {
+        "Nature": 9,
+        "Nature Synthesis": 1,
+        "Nature Chemistry": 2,
+        "Nature Communications": 25,
+        "JACS": 14,
+        "Angew": 17,
+        "ACS Catalysis": 10,
+        "Organic Letters": 8
+      }
+    },
+    "2026-09-21": {
+      "sourceRecords": 47,
+      "crossrefOnly": 47,
+      "openAlexOnly": 0,
+      "multiSource": 0,
+      "coveredByGallery": 0,
+      "rawMissingFromGallery": 47,
+      "previouslyReviewedExcluded": 0,
+      "missingFromGallery": 47,
+      "potentialGaps": 13,
+      "byJournal": {
+        "Nature": 4,
+        "Nature Catalysis": 1,
+        "Nature Communications": 22,
+        "JACS": 6,
+        "Angew": 6,
+        "ACS Catalysis": 4,
+        "Organic Letters": 3,
+        "CCS Chemistry": 1
+      }
+    },
+    "2026-09-19": {
+      "sourceRecords": 42,
+      "crossrefOnly": 0,
+      "openAlexOnly": 0,
+      "multiSource": 42,
+      "coveredByGallery": 8,
+      "rawMissingFromGallery": 34,
+      "previouslyReviewedExcluded": 34,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
+      "byJournal": {
+        "Nature Communications": 16,
+        "JACS": 7,
+        "Angew": 14,
+        "ACS Catalysis": 1,
+        "Organic Letters": 4
+      }
+    },
+    "2026-09-20": {
+      "sourceRecords": 4,
+      "crossrefOnly": 4,
+      "openAlexOnly": 0,
+      "multiSource": 0,
+      "coveredByGallery": 1,
+      "rawMissingFromGallery": 3,
+      "previouslyReviewedExcluded": 2,
+      "missingFromGallery": 1,
+      "potentialGaps": 0,
+      "byJournal": {
+        "Nature Communications": 1,
+        "JACS": 1,
+        "Organic Letters": 1,
+        "CCS Chemistry": 1
+      }
+    }
   },
   "byJournal": {
     "Nature": {
@@ -308,17 +448,17 @@
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "sourceRecords": 28,
-      "crossrefOnly": 3,
+      "sourceRecords": 29,
+      "crossrefOnly": 4,
       "openAlexOnly": 0,
       "multiSource": 25,
       "lateIndexed": 24,
       "safetyTail": 24,
       "coveredByGallery": 4,
-      "rawMissingFromGallery": 24,
+      "rawMissingFromGallery": 25,
       "previouslyReviewedExcluded": 21,
-      "missingFromGallery": 3,
-      "potentialGaps": 2
+      "missingFromGallery": 4,
+      "potentialGaps": 3
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
@@ -581,8 +721,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 28,
-      "crossrefCandidateRecords": 28,
+      "unionCandidateRecords": 29,
+      "crossrefCandidateRecords": 29,
       "openAlexCandidateRecords": 25,
       "multiSourceCandidateRecords": 25,
       "closureUnionRecords": 0,
@@ -1138,7 +1278,7 @@
       "issn": "2155-5435",
       "mode": "online",
       "ok": true,
-      "count": 28,
+      "count": 29,
       "note": ""
     },
     {
@@ -1147,7 +1287,7 @@
       "issn": "2155-5435",
       "mode": "published",
       "ok": true,
-      "count": 28,
+      "count": 29,
       "note": ""
     },
     {
@@ -1156,7 +1296,7 @@
       "issn": "2155-5435",
       "mode": "created",
       "ok": true,
-      "count": 32,
+      "count": 33,
       "note": ""
     },
     {
@@ -1460,6 +1600,39 @@
     }
   ],
   "missingCandidates": [
+    {
+      "doi": "10.1021/acscatal.6c04738",
+      "journal": "ACS Catalysis",
+      "title": "Interfacial and Confinement Effects in Carbon-Encapsulated FeCo Catalysts for High-Yield CO2 Hydrogenation to Liquid Fuels",
+      "abstract": "Abstract Achieving a high yield of liquid fuels from CO2 hydrogenation remains a significant challenge due to the limited CO2 conversion and the dominant formation of undesired C1 byproducts. Herein, we report a carbon-confined Fe-Co interfacial catalyst that establishes a kinetically coupled reverse water gas shift (RWGS) and Fischer–Tropsch synthesis (FTS) pathway, enabling efficient conversion of CO2 to long-chain hydrocarbons. The introduction of highly dispersed Co species promotes continuous CO generation via RWGS at the Fe3O4 and Co3Fe7 sites, while the carbon encapsulation layer modulates the binding energetics of CO and stabilizes surface intermediates on the reconstructed Fe5C2 phases. This dual regulation ensures a dynamic balance between CO supply and hydrogenation kinetics, leading to increased surface coverage of CHx intermediates and enhanced C–C coupling probability. As a result, the optimized K-Fe/Co@C catalyst, composed of Fe3O4, Co3Fe7, and Fe5C2, achieves a CO2 conversion of 55.1% with a C5+ selectivity of 60.1% and a low CO selectivity of 3.8%, delivering an ultra-high single-pass yield of 31.9% for liquid fuels. This work demonstrates an effective approach to tandem catalyst design through the synergistic integration of CO formation and chain propagation kinetics.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Hao Huang",
+        "Chengwei Wang",
+        "Yingluo He",
+        "Xinze Bi",
+        "Yang Wang",
+        "Prasert Reubroycharoen",
+        "Yao Deng",
+        "Ao Zhang",
+        "Peng Qin",
+        "Guohui Yang",
+        "Mingbo Wu",
+        "Noritatsu Tsubaki"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
     {
       "doi": "10.1021/acscatal.6c06157",
       "journal": "ACS Catalysis",
@@ -3024,6 +3197,39 @@
     }
   ],
   "potentialGaps": [
+    {
+      "doi": "10.1021/acscatal.6c04738",
+      "journal": "ACS Catalysis",
+      "title": "Interfacial and Confinement Effects in Carbon-Encapsulated FeCo Catalysts for High-Yield CO2 Hydrogenation to Liquid Fuels",
+      "abstract": "Abstract Achieving a high yield of liquid fuels from CO2 hydrogenation remains a significant challenge due to the limited CO2 conversion and the dominant formation of undesired C1 byproducts. Herein, we report a carbon-confined Fe-Co interfacial catalyst that establishes a kinetically coupled reverse water gas shift (RWGS) and Fischer–Tropsch synthesis (FTS) pathway, enabling efficient conversion of CO2 to long-chain hydrocarbons. The introduction of highly dispersed Co species promotes continuous CO generation via RWGS at the Fe3O4 and Co3Fe7 sites, while the carbon encapsulation layer modulates the binding energetics of CO and stabilizes surface intermediates on the reconstructed Fe5C2 phases. This dual regulation ensures a dynamic balance between CO supply and hydrogenation kinetics, leading to increased surface coverage of CHx intermediates and enhanced C–C coupling probability. As a result, the optimized K-Fe/Co@C catalyst, composed of Fe3O4, Co3Fe7, and Fe5C2, achieves a CO2 conversion of 55.1% with a C5+ selectivity of 60.1% and a low CO selectivity of 3.8%, delivering an ultra-high single-pass yield of 31.9% for liquid fuels. This work demonstrates an effective approach to tandem catalyst design through the synergistic integration of CO formation and chain propagation kinetics.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Hao Huang",
+        "Chengwei Wang",
+        "Yingluo He",
+        "Xinze Bi",
+        "Yang Wang",
+        "Prasert Reubroycharoen",
+        "Yao Deng",
+        "Ao Zhang",
+        "Peng Qin",
+        "Guohui Yang",
+        "Mingbo Wu",
+        "Noritatsu Tsubaki"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
     {
       "doi": "10.1021/acscatal.6c06157",
       "journal": "ACS Catalysis",
