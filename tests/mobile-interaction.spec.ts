@@ -209,12 +209,26 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   }
 
   const statusImageInput = userShell.locator('input[data-image="status:to-read"]');
+  const tinyPng = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
+  const largePng = Buffer.concat([tinyPng, Buffer.alloc(5_000_000 - tinyPng.length)]);
+  const largeFile = { name: 'large-status.png', mimeType: 'image/png', buffer: largePng };
+
+  await statusImageInput.setInputFiles(largeFile);
+  const cropper = page.locator('[role="dialog"][aria-modal="true"]').filter({ hasText: 'Crop image' });
+  await expect(cropper).toBeVisible();
+  await cropper.getByRole('button', { name: '取消 / Cancel' }).click();
+  await expect(cropper).toHaveCount(0);
+
+  await statusImageInput.setInputFiles(largeFile);
+  await expect(cropper).toBeVisible();
+  await cropper.getByRole('button', { name: '取消 / Cancel' }).click();
+  await expect(cropper).toHaveCount(0);
+
   await statusImageInput.setInputFiles({
     name: 'status.png',
     mimeType: 'image/png',
-    buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64'),
+    buffer: tinyPng,
   });
-  const cropper = page.locator('[role="dialog"][aria-modal="true"]').filter({ hasText: 'Crop image' });
   await expect(cropper).toBeVisible();
   await cropper.getByRole('slider').fill('1.25');
   await cropper.getByRole('button', { name: '圆形 / Circle' }).click();
