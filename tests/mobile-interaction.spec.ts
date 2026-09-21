@@ -267,9 +267,15 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
 });
 
 
+test.describe('desktop feedback regressions', () => {
+  test.use({
+    ...devices['Desktop Safari'],
+    viewport: { width: 1707, height: 932 },
+    timezoneId: 'Asia/Shanghai',
+  });
+
 test('desktop personalization wheel reaches the bottom and action slots align across cards', async ({ page }) => {
   test.setTimeout(60_000);
-  await page.setViewportSize({ width: 1707, height: 932 });
   await page.route('https://api.gczhouwld.com/**', async route => {
     const url = route.request().url();
     if (url.includes('/api/user-ui/reader-counts')) {
@@ -346,6 +352,7 @@ test('desktop personalization wheel reaches the bottom and action slots align ac
 
   const bottomNotice = content.locator('.notice').last();
   await expect(bottomNotice).toBeVisible();
+});
 });
 
 
