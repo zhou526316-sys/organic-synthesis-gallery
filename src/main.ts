@@ -702,7 +702,7 @@ function renderFigures(slot: HTMLElement, result: FigureResponse): void {
     const image = new Image();
     image.src = figure.imageUrl;
     image.alt = figure.label;
-    image.loading = 'eager';
+    image.loading = 'lazy';
     image.decoding = 'async';
     const label = document.createElement('span');
     label.textContent = figure.label;
