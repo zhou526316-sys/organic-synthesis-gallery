@@ -42,6 +42,7 @@ export async function cropUserImage(file: File): Promise<CroppedUserImage | null
   const size = Math.max(160, Math.min(300, window.innerWidth - 48, window.innerHeight - 240));
 
   const overlay = document.createElement('div');
+  overlay.dataset.galleryUserCropper = 'true';
   overlay.setAttribute('role', 'dialog');
   overlay.setAttribute('aria-modal', 'true');
   Object.assign(overlay.style, {
