@@ -762,9 +762,8 @@ select {
   scroll-snap-type: x proximity;
 }
 .figure-thumb {
-  scroll-snap-align: start;
-.figure-thumb {
   position: relative;
+  scroll-snap-align: start;
   flex: 0 0 104px;
   height: 76px;
   padding: 0;
