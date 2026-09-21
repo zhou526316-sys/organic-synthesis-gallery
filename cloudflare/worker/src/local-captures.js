@@ -1,4 +1,5 @@
 import { normalizeDoi } from './media.js';
+import { importFigure } from './media-write.js';
 
 const INDEX_KEY = 'local-captures/index.json';
 const IMAGE_PREFIX = 'local-captures/images/';
@@ -514,6 +515,86 @@ export async function getStagedArticleFigures(request, env) {
         ...item,
         imageUrl: item?.r2Key ? publicMediaUrl(request, item.r2Key) : undefined,
       })),
+    },
+  };
+}
+
+function bytesToBase64(bytes) {
+  let out = '';
+  const step = 0x8000;
+  for (let i = 0; i < bytes.length; i += step) {
+    out += String.fromCharCode(...bytes.subarray(i, Math.min(bytes.length, i + step)));
+  }
+  return btoa(out);
+}
+
+export async function promoteStagedArticleFigures(request, env, payload = {}) {
+  if (!env?.MEDIA || !env?.DB) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
+  const index = await readArticleFigureStageIndex(env);
+  const requestedDoi = normalizeDoi(payload?.doi || '');
+  const limit = Math.max(1, Math.min(100, Number(payload?.limit || 25)));
+  const items = Object.entries(index.items || {})
+    .filter(([, item]) => !requestedDoi || normalizeDoi(item?.doi) === requestedDoi)
+    .sort((a, b) => Number(a[1]?.updatedAt || 0) - Number(b[1]?.updatedAt || 0))
+    .slice(0, limit);
+
+  const promoted = [];
+  const failed = [];
+  let indexChanged = false;
+
+  for (const [identity, item] of items) {
+    try {
+      const object = item?.r2Key ? await env.MEDIA.get(item.r2Key) : null;
+      if (!object) throw new Error('staged_r2_object_missing');
+      const bytes = new Uint8Array(await object.arrayBuffer());
+      if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) throw new Error('staged_image_size_invalid');
+      const contentType = item.contentType || object.httpMetadata?.contentType || 'image/jpeg';
+      const imageData = 'data:' + contentType + ';base64,' + bytesToBase64(bytes);
+      const result = await importFigure(request, env, {
+        doi: item.doi,
+        articleUrl: item.articleUrl,
+        id: item.id,
+        label: item.label,
+        caption: item.caption,
+        order: Number(item.sortOrder || 0),
+        width: Number(item.width || 0) || undefined,
+        height: Number(item.height || 0) || undefined,
+        imageData,
+      });
+      if (Number(result?.status || 500) < 200 || Number(result?.status || 500) >= 300) {
+        throw new Error('figure_import_status_' + String(result?.status || 0));
+      }
+      promoted.push({ doi: item.doi, id: item.id, r2Key: item.r2Key });
+      delete index.items[identity];
+      indexChanged = true;
+      try { await env.MEDIA.delete(item.r2Key); } catch {}
+    } catch (error) {
+      failed.push({
+        doi: item?.doi || '',
+        id: item?.id || '',
+        error: safeText(error instanceof Error ? error.message : error, 240),
+      });
+    }
+  }
+
+  if (indexChanged) {
+    index.version = 1;
+    index.updatedAt = Date.now();
+    await env.MEDIA.put(ARTICLE_FIGURE_STAGE_INDEX_KEY, JSON.stringify(index), {
+      httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
+    });
+  }
+
+  return {
+    status: failed.length && !promoted.length ? 503 : 200,
+    body: {
+      requested: items.length,
+      promoted: promoted.length,
+      failed: failed.length,
+      remaining: Object.keys(index.items || {}).length,
+      promotedItems: promoted,
+      failedItems: failed.slice(0, 20),
+      updatedAt: Date.now(),
     },
   };
 }
