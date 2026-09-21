@@ -78,6 +78,8 @@ jobs:
           grep -F "FAILURE_COOLDOWN_MS" public/toc-mainline.user.js
           grep -F "DEFAULT_BATCH_SIZE = 8" public/toc-mainline.user.js
           grep -F "articlelanding/" public/toc-mainline.user.js
+          grep -F "var figureJob = jobKind(job) === 'figures';" public/toc-mainline.user.js
+          grep -F "figureJob ? 'full/' : ''" public/toc-mainline.user.js
           grep -F "async function iframeCandidates(job, trace)" public/toc-mainline.user.js
           grep -F "function waitForDomMutation(timeoutMs)" public/toc-mainline.user.js
           grep -F "object[type^=\"image\"],svg image" public/toc-mainline.user.js
