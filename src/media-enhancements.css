@@ -10,6 +10,7 @@
 }
 
 .media-viewer__panel {
+  position: relative;
   width: min(1500px, 98vw);
   height: min(960px, 96vh);
   display: grid;
@@ -90,6 +91,38 @@
   margin-left: 2px;
   font-size: 24px;
   line-height: 1;
+}
+
+.media-viewer__nav {
+  position: absolute;
+  top: calc(50% + 26px);
+  z-index: 3;
+  width: 48px;
+  height: 72px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(23, 32, 51, 0.68);
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.24);
+  cursor: pointer;
+  font-size: 42px;
+  line-height: 1;
+  backdrop-filter: blur(8px);
+  transform: translateY(-50%);
+}
+.media-viewer__nav:hover {
+  background: rgba(49, 89, 189, 0.88);
+}
+.media-viewer__nav--previous {
+  left: 16px;
+}
+.media-viewer__nav--next {
+  right: 16px;
+}
+.media-viewer__nav[hidden],
+.media-viewer__nav:disabled {
+  display: none;
 }
 
 .media-viewer__viewport {
@@ -182,6 +215,19 @@
 
   .media-viewer__controls .media-viewer__close {
     font-size: 21px;
+  }
+
+  .media-viewer__nav {
+    top: 52%;
+    width: 40px;
+    height: 58px;
+    font-size: 34px;
+  }
+  .media-viewer__nav--previous {
+    left: 7px;
+  }
+  .media-viewer__nav--next {
+    right: 7px;
   }
 
   .media-viewer__stage {
