@@ -2,6 +2,8 @@
 export const EXCLUDED_DOIS = new Set([
   '10.1038/s41467-026-77616-8',
   '10.1021/jacs.6c13738',
+  '10.1021/acscatal.6c06157',
+  '10.1021/acscatal.6c04274',
 ]);
 
 export function normalizePolicyDoi(value) {
