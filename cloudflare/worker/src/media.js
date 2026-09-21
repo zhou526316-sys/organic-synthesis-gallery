@@ -132,7 +132,7 @@ function tocResponse(request, doi, toc, figures, primary, variants = []) {
 function figureResponse(request, doi, rows) {
   const selected = [...rows]
     .sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0) || Number(b.updated_at || 0) - Number(a.updated_at || 0))
-    .slice(0, 10)
+    .slice(0, 24)
     .map(row => ({
       id: row.source_id,
       label: row.label,
