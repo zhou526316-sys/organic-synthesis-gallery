@@ -59,7 +59,7 @@
   var ABORT_KEY = P + 'abort-request';
   var HEARTBEAT_KEY = P + 'publisher-heartbeat';
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
-  var NATURE_NO_TOC_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+  var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
   var DEFAULT_BATCH_SIZE = 8;
   var CONTROLLER_ID = String(Date.now()) + '-' + Math.random().toString(36).slice(2);
