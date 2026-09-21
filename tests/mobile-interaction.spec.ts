@@ -410,6 +410,20 @@ test('media viewer opens raw images, prefers master source, wheel-zooms, and nav
   await firstCard.evaluate(card => {
     const strip = card.querySelector<HTMLElement>('.figure-strip');
     if (!strip) throw new Error('figure strip missing');
+    if (!strip.closest('.figure-strip-shell')) {
+      const shell = document.createElement('div');
+      shell.className = 'figure-strip-shell';
+      const previous = document.createElement('button');
+      previous.type = 'button';
+      previous.className = 'figure-strip-nav figure-strip-nav--previous';
+      previous.textContent = '‹';
+      const next = document.createElement('button');
+      next.type = 'button';
+      next.className = 'figure-strip-nav figure-strip-nav--next';
+      next.textContent = '›';
+      strip.replaceWith(shell);
+      shell.append(previous, strip, next);
+    }
     strip.replaceChildren();
 
     const makeImage = (label: string, thumbWidth: number, thumbHeight: number, masterWidth: number, masterHeight: number): HTMLImageElement => {
@@ -426,6 +440,33 @@ test('media viewer opens raw images, prefers master source, wheel-zooms, and nav
       makeImage('Synthetic A', 40, 25, 320, 200),
       makeImage('Synthetic B', 50, 30, 640, 400),
     );
+  });
+
+  const stripLayout = await firstCard.locator('.figure-strip-shell').evaluate(shell => {
+    const previous = shell.querySelector<HTMLElement>('.figure-strip-nav--previous');
+    const next = shell.querySelector<HTMLElement>('.figure-strip-nav--next');
+    const strip = shell.querySelector<HTMLElement>('.figure-strip');
+    if (!previous || !next || !strip) throw new Error('figure strip navigation missing');
+    const shellRect = shell.getBoundingClientRect();
+    const previousRect = previous.getBoundingClientRect();
+    const nextRect = next.getBoundingClientRect();
+    const stripStyle = getComputedStyle(strip);
+    return {
+      shellPosition: getComputedStyle(shell).position,
+      navPosition: getComputedStyle(previous).position,
+      previousInset: Math.round(previousRect.left - shellRect.left),
+      nextInset: Math.round(shellRect.right - nextRect.right),
+      paddingLeft: stripStyle.paddingLeft,
+      paddingRight: stripStyle.paddingRight,
+    };
+  });
+  expect(stripLayout).toEqual({
+    shellPosition: 'relative',
+    navPosition: 'absolute',
+    previousInset: 2,
+    nextInset: 2,
+    paddingLeft: '34px',
+    paddingRight: '34px',
   });
 
   const rawImages = firstCard.locator('.figure-strip img');
