@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.8
+// @version      6.2.9
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.8';
+  var VERSION = '6.2.9';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -644,6 +644,54 @@
     return values;
   }
 
+  function articleFigureImageUrls(node, baseUrl) {
+    var values = [];
+    function add(raw) {
+      if (!raw) return;
+      var url = normalizeUrl(raw, baseUrl);
+      if (url && values.indexOf(url) < 0) values.push(url);
+    }
+    function addSrcset(raw) {
+      var ranked = String(raw || '').split(',').map(function (part) {
+        var bits = part.trim().split(/\s+/);
+        var descriptor = bits[1] || '';
+        var rank = /w$/i.test(descriptor) ? Number(descriptor.replace(/w$/i, '')) * 10
+          : /x$/i.test(descriptor) ? Number(descriptor.replace(/x$/i, '')) * 10000
+          : 0;
+        return { url: bits[0] || '', rank: Number.isFinite(rank) ? rank : 0 };
+      }).filter(function (item) { return Boolean(item.url); })
+        .sort(function (a, b) { return b.rank - a.rank; });
+      ranked.forEach(function (item) { add(item.url); });
+    }
+
+    [
+      'data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large',
+      'data-original','data-large','data-image-src','data-image','data-url'
+    ].forEach(function (name) { add(node.getAttribute && node.getAttribute(name)); });
+    addSrcset(node.getAttribute && node.getAttribute('data-srcset'));
+    addSrcset(node.getAttribute && node.getAttribute('srcset'));
+
+    var link = node.closest && node.closest('a[href]');
+    if (link) add(link.getAttribute('href'));
+
+    ['data-src','data-lazy-src'].forEach(function (name) { add(node.getAttribute && node.getAttribute(name)); });
+    if (node instanceof HTMLImageElement) add(node.currentSrc);
+    add(node.getAttribute && node.getAttribute('src'));
+    return values;
+  }
+
+
+  function articleFigureResolution(width, height) {
+    width = Math.max(0, Number(width || 0));
+    height = Math.max(0, Number(height || 0));
+    if (!width || !height) return { quality: 'unknown', usable: false };
+    var maxSide = Math.max(width, height);
+    var minSide = Math.min(width, height);
+    var pixels = width * height;
+    if (maxSide >= 900 && minSide >= 180 && pixels >= 220000) return { quality: 'high', usable: true };
+    if (maxSide >= 600 && minSide >= 140 && pixels >= 120000) return { quality: 'usable', usable: true };
+    return { quality: 'low', usable: false };
+  }
   function rawTagAttrs(tag) {
     var out = {};
     String(tag || '').replace(/([:\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+))/g, function (_, key, dq, sq, bare) {
@@ -800,7 +848,7 @@
       var label = articleFigureLabel(context, blockIndex);
       var caption = context.slice(0, 600);
       Array.prototype.slice.call(block.querySelectorAll('img,source')).forEach(function (node) {
-        imageUrls(node, pageUrl).forEach(function (url) {
+        articleFigureImageUrls(node, pageUrl).forEach(function (url, variantRank) {
           if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
           var key = label.toLowerCase() + '::' + url;
           if (seen[key]) return;
@@ -813,7 +861,7 @@
             label: label,
             text: caption,
             source: source + '_figure',
-            score: /^Figure 1$/i.test(label) ? 100 : /^Figure|^Scheme|^Chart/i.test(label) ? 90 : 70,
+            score: (/^Figure 1$/i.test(label) ? 100 : /^Figure|^Scheme|^Chart/i.test(label) ? 90 : 70) - Math.min(variantRank, 8),
             width: Number(img && (img.naturalWidth || img.width) || 0),
             height: Number(img && (img.naturalHeight || img.height) || 0),
             element: img instanceof HTMLImageElement ? img : null
@@ -827,7 +875,7 @@
         if (!/(?:\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b|substrate\s+scope|reaction\s+scope|mechanis|catalytic\s+cycle|optimization|reaction\s+conditions)/i.test(context)) return;
         if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)/i.test(context.slice(0, 1600))) return;
         var label = articleFigureLabel(context, imageIndex);
-        imageUrls(node, pageUrl).forEach(function (url) {
+        articleFigureImageUrls(node, pageUrl).forEach(function (url, variantRank) {
           if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
           var key = label.toLowerCase() + '::' + url;
           if (seen[key]) return;
@@ -840,7 +888,7 @@
             label: label,
             text: context.slice(0, 600),
             source: source + '_context_figure',
-            score: /^Figure 1$/i.test(label) ? 96 : /^Figure|^Scheme|^Chart/i.test(label) ? 86 : 66,
+            score: (/^Figure 1$/i.test(label) ? 96 : /^Figure|^Scheme|^Chart/i.test(label) ? 86 : 66) - Math.min(variantRank, 8),
             width: Number(img && (img.naturalWidth || img.width) || 0),
             height: Number(img && (img.naturalHeight || img.height) || 0),
             element: img instanceof HTMLImageElement ? img : null
@@ -850,13 +898,12 @@
     }
 
     rows.sort(function (a, b) { return b.score - a.score || String(a.label).localeCompare(String(b.label)); });
-    var uniqueLabels = {};
+    var variantsPerLabel = {};
     var selected = rows.filter(function (row) {
       var key = String(row.label || '').toLowerCase();
-      if (uniqueLabels[key]) return false;
-      uniqueLabels[key] = true;
-      return true;
-    }).slice(0, 12);
+      variantsPerLabel[key] = Number(variantsPerLabel[key] || 0) + 1;
+      return variantsPerLabel[key] <= 3;
+    }).slice(0, 24);
     pushTrace(trace, {
       stage: 'figure_discovery',
       event: 'scan_complete',
@@ -1545,12 +1592,35 @@
     }
   }
 
+  function measureImageData(imageData) {
+    return new Promise(function (resolve) {
+      try {
+        var probe = new Image();
+        var done = false;
+        var finish = function (width, height) {
+          if (done) return;
+          done = true;
+          resolve({ width: Number(width || 0), height: Number(height || 0) });
+        };
+        probe.onload = function () { finish(probe.naturalWidth, probe.naturalHeight); };
+        probe.onerror = function () { finish(0, 0); };
+        probe.src = imageData;
+        setTimeout(function () { finish(0, 0); }, 5000);
+      } catch (_) {
+        resolve({ width: 0, height: 0 });
+      }
+    });
+  }
+
   async function acquireImage(candidate, trace) {
     var image = await pageFetchCandidate(candidate, trace);
-    if (image) return image;
-    image = await gmFetchCandidate(candidate, trace);
-    if (image) return image;
-    return canvasCandidate(candidate, trace);
+    if (!image) image = await gmFetchCandidate(candidate, trace);
+    if (!image) image = await canvasCandidate(candidate, trace);
+    if (!image) return null;
+    var measured = await measureImageData(image.imageData);
+    image.width = Number(measured.width || 0);
+    image.height = Number(measured.height || 0);
+    return image;
   }
 
   async function uploadArticleFigure(job, candidate, image, trace, token, order) {
@@ -1570,8 +1640,8 @@
         label: candidate.label || ('Figure ' + String(order + 1)),
         caption: candidate.text || '',
         order: Number(order || 0),
-        width: Number(candidate.width || 0) || undefined,
-        height: Number(candidate.height || 0) || undefined,
+        width: Number(image.width || 0) || undefined,
+        height: Number(image.height || 0) || undefined,
         imageData: image.imageData
       }, token);
       pushTrace(trace, {
@@ -1738,18 +1808,37 @@
         if (!figureCandidates.length) {
           figureError = new Error('no_article_figure_candidate_in_live_dom');
         } else {
-          for (var fi = 0; fi < Math.min(6, figureCandidates.length); fi += 1) {
+          var importedFigureLabels = {};
+          for (var fi = 0; fi < Math.min(18, figureCandidates.length); fi += 1) {
             if (isAbortRequested()) throw new Error('user_aborted');
             var figureCandidate = figureCandidates[fi];
+            var figureLabelKey = String(figureCandidate.label || '').toLowerCase();
+            if (importedFigureLabels[figureLabelKey]) continue;
             try {
               var figureImage = await acquireImage(figureCandidate, trace);
               if (!figureImage) {
                 figureError = new Error('article_figure_image_unreadable');
                 continue;
               }
+              var resolution = articleFigureResolution(figureImage.width, figureImage.height);
+              pushTrace(trace, {
+                stage: 'figure_quality',
+                event: 'measured',
+                status: resolution.quality,
+                url: figureCandidate.url,
+                message: String(figureImage.width || 0) + 'x' + String(figureImage.height || 0) + ';label=' + String(figureCandidate.label || ''),
+                imageWidth: Number(figureImage.width || 0),
+                imageHeight: Number(figureImage.height || 0)
+              });
+              if (!resolution.usable) {
+                figureError = new Error('article_figure_resolution_' + resolution.quality);
+                continue;
+              }
               await uploadArticleFigure(job, figureCandidate, figureImage, trace, token, figuresImported);
+              importedFigureLabels[figureLabelKey] = true;
               figureCandidateForReport = figureCandidateForReport || figureCandidate;
               figuresImported += 1;
+              if (figuresImported >= 5) break;
             } catch (oneFigureError) {
               figureError = oneFigureError;
               pushTrace(trace, {

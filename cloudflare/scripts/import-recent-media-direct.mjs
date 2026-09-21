@@ -303,7 +303,11 @@ async function importOne(doi) {
     if (figuresImported >= MAX_FIGURES || usedLabels.has(candidate.label)) continue;
     const image = await fetchImage(candidate, candidate.articleUrl);
     if (!image) continue;
-    if (image.width && image.height && (image.width < 260 || image.height < 90 || image.width * image.height < 55_000)) continue;
+    if (image.width && image.height) {
+      const maxSide = Math.max(image.width, image.height);
+      const minSide = Math.min(image.width, image.height);
+      if (maxSide < 600 || minSide < 140 || image.width * image.height < 120_000) continue;
+    }
     await apiPost('/api/article-figures/import', {
       doi,
       articleUrl: candidate.articleUrl,
