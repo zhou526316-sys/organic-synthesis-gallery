@@ -35,6 +35,10 @@ assert.ok(auditSource.includes('createdDiscovered'), 'Late-deposit rescue must r
 assert.ok(auditSource.includes('lateIndexed'), 'Late-indexed records must remain observable in the audit report');
 assert.ok(auditSource.includes('sourceFamilyHealth'), 'Per-journal source-family health must remain reported');
 assert.ok(auditSource.includes('sourceFamilyGaps'), 'Source-family gaps must remain explicit');
+assert.ok(auditSource.includes('sourceCoverageAnomalies'), 'Crossref/OpenAlex coverage regressions must remain explicit');
+assert.ok(auditSource.includes('closureCoverageAnomalies'), 'Closure-day source coverage regressions must remain explicit');
+assert.ok(auditSource.includes('blocked-source-coverage-anomaly'), 'Severe closure-day source collapse must block verified-through eligibility');
+assert.ok(auditSource.includes('closureCoverageAnomalies.length === 0'), 'verifiedThrough eligibility must require healthy closure-day source coverage');
 assert.ok(auditSource.includes('.map(compactCandidate)'), 'All unresolved DOI differences must flow into review output');
 assert.ok(!auditSource.includes('.filter(retainForReview)'), 'Keyword screening must not silently remove DOI differences from review');
 
@@ -49,5 +53,6 @@ console.log(JSON.stringify({
   openAlex: true,
   lateDepositRescue: true,
   sourceFamilyHealth: true,
+  sourceCoverageRegressionGuard: true,
   silentKeywordExclusion: false,
 }));
