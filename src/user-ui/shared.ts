@@ -348,10 +348,22 @@ class Store extends EventTarget {
     return 'queued';
   }
   async setImage(target: StyleDef, file: File): Promise<void> {
+    const statusId = this.state.statuses.find(item => item.style === target)?.id;
+    const actionKey = (Object.entries(this.state.actionStyles) as Array<[ActionKey, StyleDef]>).find(([, style]) => style === target)?.[0];
+    const quickTermId = this.state.quickTerms.find(item => item.style === target)?.id;
     const cropped = await cropUserImage(file);
     if (!cropped) return;
-    target.imageData = cropped.imageData;
-    if (cropped.circular) target.shape = 'circle';
+
+    const liveTarget = statusId
+      ? this.status(statusId)?.style
+      : actionKey
+        ? this.state.actionStyles[actionKey]
+        : quickTermId
+          ? this.state.quickTerms.find(item => item.id === quickTermId)?.style
+          : target;
+    if (!liveTarget) return;
+    liveTarget.imageData = cropped.imageData;
+    if (cropped.circular) liveTarget.shape = 'circle';
     this.save();
   }
 }
