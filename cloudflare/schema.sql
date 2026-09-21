@@ -231,6 +231,15 @@ CREATE TABLE IF NOT EXISTS paper_reader_counts (
   updated_at INTEGER NOT NULL
 );
 
+-- v2 keeps the pre-IP reader total as a conservative historical floor and
+-- tracks new unique-IP readers separately. Public count = max(floor, ip_count).
+CREATE TABLE IF NOT EXISTS paper_reader_counts_v2 (
+  doi TEXT PRIMARY KEY,
+  legacy_floor INTEGER NOT NULL DEFAULT 0 CHECK (legacy_floor >= 0),
+  ip_count INTEGER NOT NULL DEFAULT 0 CHECK (ip_count >= 0),
+  updated_at INTEGER NOT NULL
+);
+
 -- User-submitted metadata/media corrections enter a review queue; they never edit literature directly.
 CREATE TABLE IF NOT EXISTS paper_feedback (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
