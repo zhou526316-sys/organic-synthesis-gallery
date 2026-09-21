@@ -365,6 +365,72 @@ test('search highlights results, picker closes outside, feedback drags and submi
 });
 
 
+test('media viewer opens raw images, prefers master source, wheel-zooms, and navigates', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const firstCard = page.locator('.card').first();
+  await expect(firstCard).toBeVisible({ timeout: 30000 });
+
+  await firstCard.evaluate(card => {
+    const strip = card.querySelector<HTMLElement>('.figure-strip');
+    if (!strip) throw new Error('figure strip missing');
+    strip.replaceChildren();
+
+    const makeImage = (label: string, thumbWidth: number, thumbHeight: number, masterWidth: number, masterHeight: number): HTMLImageElement => {
+      const image = new Image();
+      image.alt = label;
+      const thumbSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${thumbWidth}" height="${thumbHeight}"><rect width="100%" height="100%" fill="white"/><text x="4" y="18">${label} thumb</text></svg>`;
+      const masterSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${masterWidth}" height="${masterHeight}"><rect width="100%" height="100%" fill="white"/><text x="8" y="28">${label} master</text></svg>`;
+      image.src = `data:image/svg+xml,${encodeURIComponent(thumbSvg)}`;
+      image.dataset.masterSrc = `data:image/svg+xml,${encodeURIComponent(masterSvg)}`;
+      return image;
+    };
+
+    strip.append(
+      makeImage('Synthetic A', 40, 25, 320, 200),
+      makeImage('Synthetic B', 50, 30, 640, 400),
+    );
+  });
+
+  const rawImages = firstCard.locator('.figure-strip img');
+  await expect(rawImages).toHaveCount(2);
+  await rawImages.first().click();
+
+  const viewer = page.locator('.media-viewer');
+  await expect(viewer).toBeVisible();
+  await expect(viewer).toHaveAttribute('aria-label', 'Synthetic A');
+  await expect(viewer.locator('.media-viewer__info span')).toContainText('320 × 200px');
+
+  const viewerImage = viewer.locator('.media-viewer__image');
+  const beforeWidth = await viewerImage.evaluate(element => Number.parseFloat((element as HTMLImageElement).style.width || '0'));
+  const viewport = viewer.locator('.media-viewer__viewport');
+  await viewport.dispatchEvent('wheel', { deltaY: -120, bubbles: true, cancelable: true });
+  await expect.poll(async () => viewerImage.evaluate(element => Number.parseFloat((element as HTMLImageElement).style.width || '0'))).toBeGreaterThan(beforeWidth);
+
+  const floatingNext = viewer.locator('.media-viewer__nav--next');
+  await expect(floatingNext).toBeVisible();
+  await floatingNext.click();
+  await expect(viewer).toHaveAttribute('aria-label', 'Synthetic B');
+  await expect(viewer.locator('.media-viewer__info span')).toContainText('640 × 400px');
+
+  await page.keyboard.press('ArrowLeft');
+  await expect(viewer).toHaveAttribute('aria-label', 'Synthetic A');
+
+  await viewer.locator('button[data-action="close"]').click();
+  await expect(viewer).toHaveCount(0);
+});
+
+
 test('journal and date filters persist across reload and clear cleanly', async ({ page }) => {
   test.setTimeout(60_000);
   await page.route('https://api.gczhouwld.com/**', async route => {
