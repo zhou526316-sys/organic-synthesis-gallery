@@ -710,10 +710,35 @@ function renderFigures(slot: HTMLElement, result: FigureResponse): void {
     button.addEventListener('click', () => openLightbox(figure.imageUrl, figure.label, figure.caption));
     strip.appendChild(button);
   }
-  slot.replaceChildren(heading, strip);
+  const stripShell = document.createElement('div');
+  stripShell.className = 'figure-strip-shell';
+  const previous = document.createElement('button');
+  previous.type = 'button';
+  previous.className = 'figure-strip-nav figure-strip-nav--previous';
+  previous.textContent = '‹';
+  previous.setAttribute('aria-label', language === 'zh' ? '向左浏览正文图片' : 'Scroll article figures left');
+  const next = document.createElement('button');
+  next.type = 'button';
+  next.className = 'figure-strip-nav figure-strip-nav--next';
+  next.textContent = '›';
+  next.setAttribute('aria-label', language === 'zh' ? '向右浏览正文图片' : 'Scroll article figures right');
+  const syncNav = (): void => {
+    const max = Math.max(0, strip.scrollWidth - strip.clientWidth);
+    previous.disabled = strip.scrollLeft <= 2;
+    next.disabled = max <= 2 || strip.scrollLeft >= max - 2;
+  };
+  const scrollByPage = (direction: number): void => {
+    strip.scrollBy({ left: direction * Math.max(160, strip.clientWidth * 0.82), behavior: 'smooth' });
+  };
+  previous.addEventListener('click', () => scrollByPage(-1));
+  next.addEventListener('click', () => scrollByPage(1));
+  strip.addEventListener('scroll', syncNav, { passive: true });
+  stripShell.append(previous, strip, next);
+  slot.replaceChildren(heading, stripShell);
   slot.classList.remove('generated');
   slot.classList.add('loaded');
   slot.dataset.state = 'done';
+  requestAnimationFrame(syncNav);
 }
 
 function renderFigureFallback(slot: HTMLElement, imageUrl: string): void {
