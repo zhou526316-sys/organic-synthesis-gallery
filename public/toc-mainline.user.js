@@ -2030,19 +2030,29 @@
     var reconciled = reconcileQueueWithLiveCaptures(visible, upgrades, liveCaptures);
     visible = reconciled.visible;
     upgrades = reconciled.upgrades;
-    var stagedFigures = stagedFigureJobs();
+    var queuedFigures = Array.isArray(queue.figureGaps) ? queue.figureGaps.map(function (raw) {
+      var job = Object.assign({}, raw);
+      job.doi = normalizeDoi(job.doi);
+      job.publisher = String(job.publisher || publisherForDoi(job.doi));
+      job.state = 'figure_gap';
+      job.mediaNeed = 'figures';
+      job.existingReason = String(job.existingReason || 'live_article_figure_gap');
+      job.figureCount = Math.max(0, Number(job.figureCount || 0));
+      return job;
+    }).filter(function (job) { return Boolean(job.doi); }) : stagedFigureJobs();
     var existingByDoi = {};
     visible.concat(upgrades).forEach(function (job) {
       var doi = normalizeDoi(job && job.doi);
       if (doi) existingByDoi[doi] = job;
     });
-    var figureOnly = stagedFigures.filter(function (job) {
+    var figureOnly = queuedFigures.filter(function (job) {
       var doi = normalizeDoi(job && job.doi);
       if (!doi) return false;
       if (existingByDoi[doi]) {
         existingByDoi[doi].mediaNeed = String(existingByDoi[doi].mediaNeed || 'toc').indexOf('figures') >= 0
           ? existingByDoi[doi].mediaNeed
           : 'toc+figures';
+        existingByDoi[doi].figureCount = Math.max(0, Number(job.figureCount || 0));
         return false;
       }
       return true;
@@ -2071,7 +2081,7 @@
       total: jobs.length,
       visible: visible.length,
       upgrades: upgrades.length,
-      figureGaps: stagedFigures.length,
+      figureGaps: queuedFigures.length,
       figureOnly: figureOnly.length,
       cooldownSkipped: cooldownSkipped,
       filteredByLiveR2: Number(reconciled.filteredByR2 || 0),
