@@ -400,7 +400,15 @@ async function handleApi(request, env) {
     return resultResponse(await quarantineToc(request, env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/import') {
-    return resultResponse(await importFigure(request, env, await readJson(request)));
+    try {
+      return resultResponse(await importFigure(request, env, await readJson(request)));
+    } catch (error) {
+      const message = String(error instanceof Error ? error.message : error || 'unknown_error')
+        .replace(/[A-Za-z0-9+/_=-]{32,}/g, '[redacted]')
+        .slice(0, 300);
+      console.error('ARTICLE_FIGURE_IMPORT_FAILED', { message });
+      return json({ error: 'article_figure_import_failed', detail: message }, { status: 500, headers: cors });
+    }
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/reset') {
     return resultResponse(await resetFigures(request, env, await readJson(request)));
