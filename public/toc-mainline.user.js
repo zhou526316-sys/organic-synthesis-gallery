@@ -59,6 +59,7 @@
   var ABORT_KEY = P + 'abort-request';
   var HEARTBEAT_KEY = P + 'publisher-heartbeat';
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+  var NATURE_NO_TOC_COOLDOWN_MS = 24 * 60 * 60 * 1000;
   var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
   var DEFAULT_BATCH_SIZE = 8;
   var CONTROLLER_ID = String(Date.now()) + '-' + Math.random().toString(36).slice(2);
@@ -162,7 +163,14 @@
     var failed = GM_getValue(failureKey(doi, jobKind(job)), null);
     if (!failed || Number(failed.at || 0) <= 0) return false;
     if (String(failed.engineRevision || '') !== FAILURE_ENGINE_REVISION) return false;
-    return Date.now() - Number(failed.at) < FAILURE_COOLDOWN_MS;
+    var reason = String(failed.reason || '');
+    var publisher = String(job && job.publisher || publisherForDoi(doi));
+    var cooldown = publisher === 'nature'
+      && jobKind(job) === 'toc'
+      && /^no_toc_candidate_/.test(reason)
+        ? NATURE_NO_TOC_COOLDOWN_MS
+        : FAILURE_COOLDOWN_MS;
+    return Date.now() - Number(failed.at) < cooldown;
   }
 
   function abortRequest() {
@@ -296,39 +304,48 @@
   }
 
   function selectBatchJobs(allJobs, limit) {
-    var buckets = new Map();
+    var normalized = [];
     allJobs.forEach(function (raw) {
       var job = Object.assign({}, raw);
       job.doi = normalizeDoi(job.doi);
-      if (!job.doi) return;
+      if (!job.doi || isFailureCooling(job)) return;
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
-      if (!buckets.has(job.publisher)) buckets.set(job.publisher, []);
-      buckets.get(job.publisher).push(job);
+      normalized.push(job);
     });
-    buckets.forEach(function (rows) {
-      rows.sort(function (a, b) {
-        if (String(a.state || '') === 'figure_gap' && String(b.state || '') === 'figure_gap') {
-          var figureDelta = Math.max(0, Number(a.figureCount || 0)) - Math.max(0, Number(b.figureCount || 0));
-          if (figureDelta) return figureDelta;
-        }
-        return String(b.date || '').localeCompare(String(a.date || '')) || String(a.doi).localeCompare(String(b.doi));
-      });
+    var dates = Array.from(new Set(normalized.map(function (job) {
+      return String(job.date || '');
+    }))).sort(function (a, b) {
+      return String(b).localeCompare(String(a));
     });
-    var publishers = Array.from(buckets.keys()).sort();
     var out = [];
-    var index = 0;
-    while (out.length < limit && publishers.length) {
-      if (index >= publishers.length) index = 0;
-      var publisher = publishers[index];
-      var rows = buckets.get(publisher) || [];
-      while (rows.length) {
-        var candidate = rows.shift();
-        if (isFailureCooling(candidate)) continue;
-        out.push(candidate);
-        break;
+    for (var di = 0; di < dates.length && out.length < limit; di += 1) {
+      var date = dates[di];
+      var buckets = new Map();
+      normalized.filter(function (job) {
+        return String(job.date || '') === date;
+      }).forEach(function (job) {
+        if (!buckets.has(job.publisher)) buckets.set(job.publisher, []);
+        buckets.get(job.publisher).push(job);
+      });
+      buckets.forEach(function (rows) {
+        rows.sort(function (a, b) {
+          if (String(a.state || '') === 'figure_gap' && String(b.state || '') === 'figure_gap') {
+            var figureDelta = Math.max(0, Number(a.figureCount || 0)) - Math.max(0, Number(b.figureCount || 0));
+            if (figureDelta) return figureDelta;
+          }
+          return String(a.doi).localeCompare(String(b.doi));
+        });
+      });
+      var publishers = Array.from(buckets.keys()).sort();
+      var index = 0;
+      while (out.length < limit && publishers.length) {
+        if (index >= publishers.length) index = 0;
+        var publisher = publishers[index];
+        var rows = buckets.get(publisher) || [];
+        if (rows.length) out.push(rows.shift());
+        if (!rows.length) publishers.splice(index, 1);
+        else index += 1;
       }
-      if (!rows.length) publishers.splice(index, 1);
-      else index += 1;
     }
     return out;
   }
