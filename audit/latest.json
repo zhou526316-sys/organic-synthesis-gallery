@@ -1,16 +1,16 @@
 {
   "auditVersion": 4,
-  "generatedAt": "2026-09-21T13:53:37.361Z",
+  "generatedAt": "2026-09-21T16:19:43.413Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
   "lateDepositRescueDays": 7,
-  "baseStartDate": "2026-09-19",
-  "lateDepositRescueStartDate": "2026-09-15",
+  "baseStartDate": "2026-09-20",
+  "lateDepositRescueStartDate": "2026-09-16",
   "catchupStartDate": null,
-  "startDate": "2026-09-19",
-  "endDate": "2026-09-21",
-  "closureDate": "2026-09-20",
+  "startDate": "2026-09-20",
+  "endDate": "2026-09-22",
+  "closureDate": "2026-09-21",
   "policy": "Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail (including Crossref created/deposit rescue and OpenAlex), automatic catch-up from the first unverified date when verifiedThrough falls behind, and closure-day source-coverage regression detection. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.",
   "targetJournals": [
     {
@@ -20,8 +20,8 @@
         "1476-4687"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "Science",
@@ -30,8 +30,8 @@
         "1095-9203"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "Nature Catalysis",
@@ -39,8 +39,8 @@
         "2520-1158"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "Nature Synthesis",
@@ -48,8 +48,8 @@
         "2731-0582"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "Nature Chemistry",
@@ -58,8 +58,8 @@
         "1755-4349"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "Nature Communications",
@@ -67,8 +67,8 @@
         "2041-1723"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "JACS",
@@ -77,8 +77,8 @@
         "1520-5126"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "Angew",
@@ -87,8 +87,8 @@
         "1521-3773"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "ACS Catalysis",
@@ -96,8 +96,8 @@
         "2155-5435"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "Organic Letters",
@@ -106,8 +106,8 @@
         "1523-7060"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-15"
+      "effectiveStart": "2026-09-20",
+      "lateDepositRescueStart": "2026-09-16"
     },
     {
       "name": "Chem",
@@ -115,7 +115,7 @@
         "2451-9294"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "lateDepositRescueStart": "2026-09-19"
     },
     {
@@ -125,7 +125,7 @@
         "2041-6539"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "lateDepositRescueStart": "2026-09-19"
     },
     {
@@ -134,7 +134,7 @@
         "2096-5745"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "lateDepositRescueStart": "2026-09-19"
     },
     {
@@ -143,7 +143,7 @@
         "2375-2548"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "lateDepositRescueStart": "2026-09-19"
     },
     {
@@ -153,58 +153,144 @@
         "1463-9270"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "lateDepositRescueStart": "2026-09-19"
     }
   ],
   "summary": {
     "galleryDois": 490,
-    "sourceRecords": 578,
-    "rawMissingFromGallery": 513,
-    "previouslyReviewedExcluded": 513,
-    "missingFromGallery": 0,
-    "potentialGaps": 0,
+    "sourceRecords": 472,
+    "rawMissingFromGallery": 425,
+    "previouslyReviewedExcluded": 394,
+    "missingFromGallery": 31,
+    "potentialGaps": 8,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 0,
-    "unresolved": 0,
+    "closureCoverageAnomalies": 5,
+    "unresolved": 31,
     "excludedByPolicy": 0
   },
   "closure": {
-    "date": "2026-09-20",
-    "status": "assistant-decisions-complete",
-    "sourceRecords": 4,
-    "rawMissingFromGallery": 3,
-    "previouslyReviewedExcluded": 3,
-    "missingFromGallery": 0,
-    "potentialGaps": 0,
+    "date": "2026-09-21",
+    "status": "blocked-source-coverage-anomaly",
+    "sourceRecords": 78,
+    "rawMissingFromGallery": 72,
+    "previouslyReviewedExcluded": 41,
+    "missingFromGallery": 31,
+    "potentialGaps": 8,
     "criticalSourceFailures": 0,
-    "sourceCoverageAnomalies": [],
-    "verifiedThroughEligible": true,
+    "sourceCoverageAnomalies": [
+      {
+        "journal": "Nature",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefRequests": 6,
+        "crossrefFailures": 0,
+        "openAlexRequests": 1,
+        "openAlexFailures": 0,
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 71,
+        "crossrefCandidateRecords": 71,
+        "openAlexCandidateRecords": 62,
+        "multiSourceCandidateRecords": 62,
+        "closureUnionRecords": 7,
+        "closureCrossrefRecords": 7,
+        "closureOpenAlexRecords": 0,
+        "closureMultiSourceRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      {
+        "journal": "Nature Communications",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefRequests": 3,
+        "crossrefFailures": 0,
+        "openAlexRequests": 1,
+        "openAlexFailures": 0,
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 158,
+        "crossrefCandidateRecords": 157,
+        "openAlexCandidateRecords": 127,
+        "multiSourceCandidateRecords": 126,
+        "closureUnionRecords": 29,
+        "closureCrossrefRecords": 29,
+        "closureOpenAlexRecords": 0,
+        "closureMultiSourceRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      {
+        "journal": "JACS",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefRequests": 6,
+        "crossrefFailures": 0,
+        "openAlexRequests": 1,
+        "openAlexFailures": 0,
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 68,
+        "crossrefCandidateRecords": 68,
+        "openAlexCandidateRecords": 57,
+        "multiSourceCandidateRecords": 57,
+        "closureUnionRecords": 10,
+        "closureCrossrefRecords": 10,
+        "closureOpenAlexRecords": 0,
+        "closureMultiSourceRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      {
+        "journal": "Angew",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefRequests": 6,
+        "crossrefFailures": 0,
+        "openAlexRequests": 1,
+        "openAlexFailures": 0,
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 77,
+        "crossrefCandidateRecords": 75,
+        "openAlexCandidateRecords": 54,
+        "multiSourceCandidateRecords": 52,
+        "closureUnionRecords": 23,
+        "closureCrossrefRecords": 23,
+        "closureOpenAlexRecords": 0,
+        "closureMultiSourceRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      {
+        "journal": "ACS Catalysis",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefRequests": 3,
+        "crossrefFailures": 0,
+        "openAlexRequests": 1,
+        "openAlexFailures": 0,
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 22,
+        "crossrefCandidateRecords": 22,
+        "openAlexCandidateRecords": 18,
+        "multiSourceCandidateRecords": 18,
+        "closureUnionRecords": 4,
+        "closureCrossrefRecords": 4,
+        "closureOpenAlexRecords": 0,
+        "closureMultiSourceRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    ],
+    "verifiedThroughEligible": false,
     "note": "Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse."
   },
   "byDate": {
-    "2026-09-15": {
-      "sourceRecords": 137,
-      "crossrefOnly": 1,
-      "openAlexOnly": 2,
-      "multiSource": 134,
-      "coveredByGallery": 18,
-      "rawMissingFromGallery": 119,
-      "previouslyReviewedExcluded": 119,
-      "missingFromGallery": 0,
-      "potentialGaps": 0,
-      "byJournal": {
-        "Nature": 13,
-        "Nature Catalysis": 1,
-        "Nature Communications": 47,
-        "JACS": 14,
-        "Angew": 46,
-        "ACS Catalysis": 7,
-        "Organic Letters": 9
-      }
-    },
     "2026-09-16": {
       "sourceRecords": 136,
       "crossrefOnly": 0,
@@ -268,21 +354,21 @@
       }
     },
     "2026-09-21": {
-      "sourceRecords": 47,
-      "crossrefOnly": 47,
+      "sourceRecords": 78,
+      "crossrefOnly": 78,
       "openAlexOnly": 0,
       "multiSource": 0,
       "coveredByGallery": 6,
-      "rawMissingFromGallery": 41,
+      "rawMissingFromGallery": 72,
       "previouslyReviewedExcluded": 41,
-      "missingFromGallery": 0,
-      "potentialGaps": 0,
+      "missingFromGallery": 31,
+      "potentialGaps": 8,
       "byJournal": {
-        "Nature": 4,
+        "Nature": 7,
         "Nature Catalysis": 1,
-        "Nature Communications": 22,
-        "JACS": 6,
-        "Angew": 6,
+        "Nature Communications": 29,
+        "JACS": 10,
+        "Angew": 23,
         "ACS Catalysis": 4,
         "Organic Letters": 3,
         "CCS Chemistry": 1
@@ -327,22 +413,22 @@
   "byJournal": {
     "Nature": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "sourceRecords": 81,
-      "crossrefOnly": 6,
+      "effectiveStart": "2026-09-20",
+      "sourceRecords": 71,
+      "crossrefOnly": 9,
       "openAlexOnly": 0,
-      "multiSource": 75,
-      "lateIndexed": 77,
-      "safetyTail": 77,
+      "multiSource": 62,
+      "lateIndexed": 64,
+      "safetyTail": 64,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 81,
-      "previouslyReviewedExcluded": 81,
-      "missingFromGallery": 0,
+      "rawMissingFromGallery": 71,
+      "previouslyReviewedExcluded": 68,
+      "missingFromGallery": 3,
       "potentialGaps": 0
     },
     "Science": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "sourceRecords": 38,
       "crossrefOnly": 1,
       "openAlexOnly": 0,
@@ -357,14 +443,14 @@
     },
     "Nature Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "sourceRecords": 2,
+      "effectiveStart": "2026-09-20",
+      "sourceRecords": 1,
       "crossrefOnly": 1,
       "openAlexOnly": 0,
-      "multiSource": 1,
-      "lateIndexed": 1,
-      "safetyTail": 1,
-      "coveredByGallery": 1,
+      "multiSource": 0,
+      "lateIndexed": 0,
+      "safetyTail": 0,
+      "coveredByGallery": 0,
       "rawMissingFromGallery": 1,
       "previouslyReviewedExcluded": 1,
       "missingFromGallery": 0,
@@ -372,7 +458,7 @@
     },
     "Nature Synthesis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "sourceRecords": 3,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
@@ -387,7 +473,7 @@
     },
     "Nature Chemistry": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "sourceRecords": 4,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
@@ -402,82 +488,82 @@
     },
     "Nature Communications": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "sourceRecords": 198,
-      "crossrefOnly": 24,
-      "openAlexOnly": 3,
-      "multiSource": 171,
-      "lateIndexed": 156,
-      "safetyTail": 159,
-      "coveredByGallery": 3,
-      "rawMissingFromGallery": 195,
-      "previouslyReviewedExcluded": 195,
-      "missingFromGallery": 0,
+      "effectiveStart": "2026-09-20",
+      "sourceRecords": 158,
+      "crossrefOnly": 31,
+      "openAlexOnly": 1,
+      "multiSource": 126,
+      "lateIndexed": 127,
+      "safetyTail": 128,
+      "coveredByGallery": 1,
+      "rawMissingFromGallery": 157,
+      "previouslyReviewedExcluded": 150,
+      "missingFromGallery": 7,
       "potentialGaps": 0
     },
     "JACS": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "sourceRecords": 78,
-      "crossrefOnly": 7,
+      "effectiveStart": "2026-09-20",
+      "sourceRecords": 68,
+      "crossrefOnly": 11,
       "openAlexOnly": 0,
-      "multiSource": 71,
-      "lateIndexed": 64,
-      "safetyTail": 64,
-      "coveredByGallery": 14,
-      "rawMissingFromGallery": 64,
-      "previouslyReviewedExcluded": 64,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "multiSource": 57,
+      "lateIndexed": 57,
+      "safetyTail": 57,
+      "coveredByGallery": 11,
+      "rawMissingFromGallery": 57,
+      "previouslyReviewedExcluded": 53,
+      "missingFromGallery": 4,
+      "potentialGaps": 2
     },
     "Angew": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "sourceRecords": 106,
-      "crossrefOnly": 7,
+      "effectiveStart": "2026-09-20",
+      "sourceRecords": 77,
+      "crossrefOnly": 23,
       "openAlexOnly": 2,
-      "multiSource": 97,
-      "lateIndexed": 84,
-      "safetyTail": 86,
-      "coveredByGallery": 12,
-      "rawMissingFromGallery": 94,
-      "previouslyReviewedExcluded": 94,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "multiSource": 52,
+      "lateIndexed": 52,
+      "safetyTail": 54,
+      "coveredByGallery": 9,
+      "rawMissingFromGallery": 68,
+      "previouslyReviewedExcluded": 51,
+      "missingFromGallery": 17,
+      "potentialGaps": 6
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "sourceRecords": 29,
+      "effectiveStart": "2026-09-20",
+      "sourceRecords": 22,
       "crossrefOnly": 4,
       "openAlexOnly": 0,
-      "multiSource": 25,
-      "lateIndexed": 24,
-      "safetyTail": 24,
-      "coveredByGallery": 6,
-      "rawMissingFromGallery": 23,
-      "previouslyReviewedExcluded": 23,
+      "multiSource": 18,
+      "lateIndexed": 18,
+      "safetyTail": 18,
+      "coveredByGallery": 4,
+      "rawMissingFromGallery": 18,
+      "previouslyReviewedExcluded": 18,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
-      "sourceRecords": 37,
+      "effectiveStart": "2026-09-20",
+      "sourceRecords": 28,
       "crossrefOnly": 4,
       "openAlexOnly": 0,
-      "multiSource": 33,
-      "lateIndexed": 29,
-      "safetyTail": 29,
-      "coveredByGallery": 28,
-      "rawMissingFromGallery": 9,
-      "previouslyReviewedExcluded": 9,
+      "multiSource": 24,
+      "lateIndexed": 24,
+      "safetyTail": 24,
+      "coveredByGallery": 21,
+      "rawMissingFromGallery": 7,
+      "previouslyReviewedExcluded": 7,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "Chem": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "sourceRecords": 0,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
@@ -492,7 +578,7 @@
     },
     "Chemical Science": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "sourceRecords": 0,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
@@ -507,7 +593,7 @@
     },
     "CCS Chemistry": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "sourceRecords": 2,
       "crossrefOnly": 2,
       "openAlexOnly": 0,
@@ -522,7 +608,7 @@
     },
     "Science Advances": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "sourceRecords": 0,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
@@ -537,7 +623,7 @@
     },
     "Green Chemistry": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "sourceRecords": 0,
       "crossrefOnly": 0,
       "openAlexOnly": 0,
@@ -554,27 +640,27 @@
   "sourceFamilyHealth": {
     "Nature": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 81,
-      "crossrefCandidateRecords": 81,
-      "openAlexCandidateRecords": 75,
-      "multiSourceCandidateRecords": 75,
-      "closureUnionRecords": 0,
-      "closureCrossrefRecords": 0,
+      "unionCandidateRecords": 71,
+      "crossrefCandidateRecords": 71,
+      "openAlexCandidateRecords": 62,
+      "multiSourceCandidateRecords": 62,
+      "closureUnionRecords": 7,
+      "closureCrossrefRecords": 7,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": false
+      "closureCoverageWarning": true
     },
     "Science": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -594,19 +680,19 @@
     },
     "Nature Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 2,
-      "crossrefCandidateRecords": 2,
-      "openAlexCandidateRecords": 1,
-      "multiSourceCandidateRecords": 1,
-      "closureUnionRecords": 0,
-      "closureCrossrefRecords": 0,
+      "unionCandidateRecords": 1,
+      "crossrefCandidateRecords": 1,
+      "openAlexCandidateRecords": 0,
+      "multiSourceCandidateRecords": 0,
+      "closureUnionRecords": 1,
+      "closureCrossrefRecords": 1,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -614,7 +700,7 @@
     },
     "Nature Synthesis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -634,7 +720,7 @@
     },
     "Nature Chemistry": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -654,99 +740,99 @@
     },
     "Nature Communications": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 198,
-      "crossrefCandidateRecords": 195,
-      "openAlexCandidateRecords": 174,
-      "multiSourceCandidateRecords": 171,
-      "closureUnionRecords": 1,
-      "closureCrossrefRecords": 1,
+      "unionCandidateRecords": 158,
+      "crossrefCandidateRecords": 157,
+      "openAlexCandidateRecords": 127,
+      "multiSourceCandidateRecords": 126,
+      "closureUnionRecords": 29,
+      "closureCrossrefRecords": 29,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": false
+      "closureCoverageWarning": true
     },
     "JACS": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 78,
-      "crossrefCandidateRecords": 78,
-      "openAlexCandidateRecords": 71,
-      "multiSourceCandidateRecords": 71,
-      "closureUnionRecords": 1,
-      "closureCrossrefRecords": 1,
+      "unionCandidateRecords": 68,
+      "crossrefCandidateRecords": 68,
+      "openAlexCandidateRecords": 57,
+      "multiSourceCandidateRecords": 57,
+      "closureUnionRecords": 10,
+      "closureCrossrefRecords": 10,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": false
+      "closureCoverageWarning": true
     },
     "Angew": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 106,
-      "crossrefCandidateRecords": 104,
-      "openAlexCandidateRecords": 99,
-      "multiSourceCandidateRecords": 97,
-      "closureUnionRecords": 0,
-      "closureCrossrefRecords": 0,
+      "unionCandidateRecords": 77,
+      "crossrefCandidateRecords": 75,
+      "openAlexCandidateRecords": 54,
+      "multiSourceCandidateRecords": 52,
+      "closureUnionRecords": 23,
+      "closureCrossrefRecords": 23,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": false
+      "closureCoverageWarning": true
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 29,
-      "crossrefCandidateRecords": 29,
-      "openAlexCandidateRecords": 25,
-      "multiSourceCandidateRecords": 25,
-      "closureUnionRecords": 0,
-      "closureCrossrefRecords": 0,
+      "unionCandidateRecords": 22,
+      "crossrefCandidateRecords": 22,
+      "openAlexCandidateRecords": 18,
+      "multiSourceCandidateRecords": 18,
+      "closureUnionRecords": 4,
+      "closureCrossrefRecords": 4,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": false
+      "closureCoverageWarning": true
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 37,
-      "crossrefCandidateRecords": 37,
-      "openAlexCandidateRecords": 33,
-      "multiSourceCandidateRecords": 33,
-      "closureUnionRecords": 1,
-      "closureCrossrefRecords": 1,
+      "unionCandidateRecords": 28,
+      "crossrefCandidateRecords": 28,
+      "openAlexCandidateRecords": 24,
+      "multiSourceCandidateRecords": 24,
+      "closureUnionRecords": 3,
+      "closureCrossrefRecords": 3,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -754,7 +840,7 @@
     },
     "Chem": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -774,7 +860,7 @@
     },
     "Chemical Science": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -794,7 +880,7 @@
     },
     "CCS Chemistry": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -814,7 +900,7 @@
     },
     "Science Advances": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -834,7 +920,7 @@
     },
     "Green Chemistry": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-19",
+      "effectiveStart": "2026-09-20",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
@@ -855,7 +941,113 @@
   },
   "sourceFamilyGaps": [],
   "sourceCoverageAnomalies": [],
-  "closureCoverageAnomalies": [],
+  "closureCoverageAnomalies": [
+    {
+      "journal": "Nature",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "crossrefRequests": 6,
+      "crossrefFailures": 0,
+      "openAlexRequests": 1,
+      "openAlexFailures": 0,
+      "crossrefHealthy": true,
+      "openAlexHealthy": true,
+      "unionCandidateRecords": 71,
+      "crossrefCandidateRecords": 71,
+      "openAlexCandidateRecords": 62,
+      "multiSourceCandidateRecords": 62,
+      "closureUnionRecords": 7,
+      "closureCrossrefRecords": 7,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
+      "coverageWarning": false,
+      "closureCoverageWarning": true
+    },
+    {
+      "journal": "Nature Communications",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "crossrefRequests": 3,
+      "crossrefFailures": 0,
+      "openAlexRequests": 1,
+      "openAlexFailures": 0,
+      "crossrefHealthy": true,
+      "openAlexHealthy": true,
+      "unionCandidateRecords": 158,
+      "crossrefCandidateRecords": 157,
+      "openAlexCandidateRecords": 127,
+      "multiSourceCandidateRecords": 126,
+      "closureUnionRecords": 29,
+      "closureCrossrefRecords": 29,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
+      "coverageWarning": false,
+      "closureCoverageWarning": true
+    },
+    {
+      "journal": "JACS",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "crossrefRequests": 6,
+      "crossrefFailures": 0,
+      "openAlexRequests": 1,
+      "openAlexFailures": 0,
+      "crossrefHealthy": true,
+      "openAlexHealthy": true,
+      "unionCandidateRecords": 68,
+      "crossrefCandidateRecords": 68,
+      "openAlexCandidateRecords": 57,
+      "multiSourceCandidateRecords": 57,
+      "closureUnionRecords": 10,
+      "closureCrossrefRecords": 10,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
+      "coverageWarning": false,
+      "closureCoverageWarning": true
+    },
+    {
+      "journal": "Angew",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "crossrefRequests": 6,
+      "crossrefFailures": 0,
+      "openAlexRequests": 1,
+      "openAlexFailures": 0,
+      "crossrefHealthy": true,
+      "openAlexHealthy": true,
+      "unionCandidateRecords": 77,
+      "crossrefCandidateRecords": 75,
+      "openAlexCandidateRecords": 54,
+      "multiSourceCandidateRecords": 52,
+      "closureUnionRecords": 23,
+      "closureCrossrefRecords": 23,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
+      "coverageWarning": false,
+      "closureCoverageWarning": true
+    },
+    {
+      "journal": "ACS Catalysis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "crossrefRequests": 3,
+      "crossrefFailures": 0,
+      "openAlexRequests": 1,
+      "openAlexFailures": 0,
+      "crossrefHealthy": true,
+      "openAlexHealthy": true,
+      "unionCandidateRecords": 22,
+      "crossrefCandidateRecords": 22,
+      "openAlexCandidateRecords": 18,
+      "multiSourceCandidateRecords": 18,
+      "closureUnionRecords": 4,
+      "closureCrossrefRecords": 4,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
+      "coverageWarning": false,
+      "closureCoverageWarning": true
+    }
+  ],
   "sourceStats": [
     {
       "source": "crossref",
@@ -863,7 +1055,7 @@
       "issn": "0028-0836",
       "mode": "online",
       "ok": true,
-      "count": 81,
+      "count": 71,
       "note": ""
     },
     {
@@ -872,7 +1064,7 @@
       "issn": "0028-0836",
       "mode": "published",
       "ok": true,
-      "count": 81,
+      "count": 71,
       "note": ""
     },
     {
@@ -881,7 +1073,7 @@
       "issn": "0028-0836",
       "mode": "created",
       "ok": true,
-      "count": 82,
+      "count": 72,
       "note": ""
     },
     {
@@ -890,7 +1082,7 @@
       "issn": "1476-4687",
       "mode": "online",
       "ok": true,
-      "count": 81,
+      "count": 71,
       "note": ""
     },
     {
@@ -899,7 +1091,7 @@
       "issn": "1476-4687",
       "mode": "published",
       "ok": true,
-      "count": 81,
+      "count": 71,
       "note": ""
     },
     {
@@ -908,7 +1100,7 @@
       "issn": "1476-4687",
       "mode": "created",
       "ok": true,
-      "count": 82,
+      "count": 72,
       "note": ""
     },
     {
@@ -916,7 +1108,7 @@
       "journal": "Nature",
       "sourceId": "S137773608",
       "ok": true,
-      "count": 75,
+      "count": 62,
       "note": ""
     },
     {
@@ -987,7 +1179,7 @@
       "issn": "2520-1158",
       "mode": "online",
       "ok": true,
-      "count": 2,
+      "count": 1,
       "note": ""
     },
     {
@@ -996,7 +1188,7 @@
       "issn": "2520-1158",
       "mode": "published",
       "ok": true,
-      "count": 2,
+      "count": 1,
       "note": ""
     },
     {
@@ -1005,7 +1197,7 @@
       "issn": "2520-1158",
       "mode": "created",
       "ok": true,
-      "count": 2,
+      "count": 1,
       "note": ""
     },
     {
@@ -1013,7 +1205,7 @@
       "journal": "Nature Catalysis",
       "sourceId": "S4210229375",
       "ok": true,
-      "count": 1,
+      "count": 0,
       "note": ""
     },
     {
@@ -1119,7 +1311,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 196,
+      "count": 158,
       "note": ""
     },
     {
@@ -1128,7 +1320,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 196,
+      "count": 158,
       "note": ""
     },
     {
@@ -1137,7 +1329,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 196,
+      "count": 158,
       "note": ""
     },
     {
@@ -1145,7 +1337,7 @@
       "journal": "Nature Communications",
       "sourceId": "S64187185",
       "ok": true,
-      "count": 175,
+      "count": 128,
       "note": ""
     },
     {
@@ -1154,7 +1346,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 79,
+      "count": 69,
       "note": ""
     },
     {
@@ -1163,7 +1355,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 79,
+      "count": 69,
       "note": ""
     },
     {
@@ -1172,7 +1364,7 @@
       "issn": "0002-7863",
       "mode": "created",
       "ok": true,
-      "count": 79,
+      "count": 69,
       "note": ""
     },
     {
@@ -1181,7 +1373,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 79,
+      "count": 69,
       "note": ""
     },
     {
@@ -1190,7 +1382,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 79,
+      "count": 69,
       "note": ""
     },
     {
@@ -1199,7 +1391,7 @@
       "issn": "1520-5126",
       "mode": "created",
       "ok": true,
-      "count": 79,
+      "count": 69,
       "note": ""
     },
     {
@@ -1207,7 +1399,7 @@
       "journal": "JACS",
       "sourceId": "S111155417",
       "ok": true,
-      "count": 72,
+      "count": 58,
       "note": ""
     },
     {
@@ -1216,7 +1408,7 @@
       "issn": "1433-7851",
       "mode": "online",
       "ok": true,
-      "count": 104,
+      "count": 74,
       "note": ""
     },
     {
@@ -1225,7 +1417,7 @@
       "issn": "1433-7851",
       "mode": "published",
       "ok": true,
-      "count": 104,
+      "count": 75,
       "note": ""
     },
     {
@@ -1234,7 +1426,7 @@
       "issn": "1433-7851",
       "mode": "created",
       "ok": true,
-      "count": 104,
+      "count": 108,
       "note": ""
     },
     {
@@ -1243,7 +1435,7 @@
       "issn": "1521-3773",
       "mode": "online",
       "ok": true,
-      "count": 104,
+      "count": 74,
       "note": ""
     },
     {
@@ -1252,7 +1444,7 @@
       "issn": "1521-3773",
       "mode": "published",
       "ok": true,
-      "count": 104,
+      "count": 75,
       "note": ""
     },
     {
@@ -1261,7 +1453,7 @@
       "issn": "1521-3773",
       "mode": "created",
       "ok": true,
-      "count": 104,
+      "count": 108,
       "note": ""
     },
     {
@@ -1269,7 +1461,7 @@
       "journal": "Angew",
       "sourceId": "S67393510",
       "ok": true,
-      "count": 99,
+      "count": 54,
       "note": ""
     },
     {
@@ -1278,7 +1470,7 @@
       "issn": "2155-5435",
       "mode": "online",
       "ok": true,
-      "count": 29,
+      "count": 22,
       "note": ""
     },
     {
@@ -1287,7 +1479,7 @@
       "issn": "2155-5435",
       "mode": "published",
       "ok": true,
-      "count": 29,
+      "count": 22,
       "note": ""
     },
     {
@@ -1296,7 +1488,7 @@
       "issn": "2155-5435",
       "mode": "created",
       "ok": true,
-      "count": 33,
+      "count": 26,
       "note": ""
     },
     {
@@ -1304,7 +1496,7 @@
       "journal": "ACS Catalysis",
       "sourceId": "S37391459",
       "ok": true,
-      "count": 25,
+      "count": 18,
       "note": ""
     },
     {
@@ -1313,7 +1505,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 37,
+      "count": 28,
       "note": ""
     },
     {
@@ -1322,7 +1514,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 37,
+      "count": 28,
       "note": ""
     },
     {
@@ -1331,7 +1523,7 @@
       "issn": "1523-7052",
       "mode": "created",
       "ok": true,
-      "count": 37,
+      "count": 28,
       "note": ""
     },
     {
@@ -1340,7 +1532,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 37,
+      "count": 28,
       "note": ""
     },
     {
@@ -1349,7 +1541,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 37,
+      "count": 28,
       "note": ""
     },
     {
@@ -1358,7 +1550,7 @@
       "issn": "1523-7060",
       "mode": "created",
       "ok": true,
-      "count": 37,
+      "count": 28,
       "note": ""
     },
     {
@@ -1366,7 +1558,7 @@
       "journal": "Organic Letters",
       "sourceId": "S201989124",
       "ok": true,
-      "count": 33,
+      "count": 24,
       "note": ""
     },
     {
@@ -1599,6 +1791,1285 @@
       "note": ""
     }
   ],
-  "missingCandidates": [],
-  "potentialGaps": []
+  "missingCandidates": [
+    {
+      "doi": "10.1002/anie.v65.39",
+      "journal": "Angew",
+      "title": "",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-issue",
+      "authors": [],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.3685338",
+      "journal": "Angew",
+      "title": "A Ruthenium(CAAC‐5) Olefin Metathesis Catalyst for Bioconjugation",
+      "abstract": "ABSTRACT Olefin metathesis is a powerful transformation for carbon–carbon bond formation, yet its application in biological settings is challenged by the instability of most ruthenium catalysts in aqueous media. Herein, we report a Ru(CAAC‐5) olefin metathesis catalyst bearing a functional handle for bioconjugation. The resulting hybrid catalyst catalyzes ring‐closing metathesis (RCM) and displays extended lifetimes in aqueous media. Functionalized CAAC‐5 ligands bearing a protected aniline linker were prepared via enamine alkylation and coordinated to ruthenium to afford the corresponding Ru(CAAC‐5) complex. In a benchmark RCM reaction under biologically relevant conditions, the ruthenium complex exhibits enhanced catalytic robustness and reaches turnover numbers of up to 600. Deprotection of an amine‐functionalized handle enables the bioconjugation to proteins and peptides. Using this platform, the catalyst was anchored to biomolecules through supramolecular anchoring to human carbonic anhydrase II (hCA II), click conjugation to peptides (SS01), and covalent attachment to ubiquitin (Ubi). To the best of our knowledge, this aniline‐functionalized Ru(CAAC‐5) complex is the first CAAC‐bearing metathesis catalyst amenable to bioconjugation, while retaining the prolonged catalytic activity characteristic of CAAC‐based systems in aqueous media.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Damian Alexander Graf",
+        "Mikhail Boym",
+        "María Álvarez",
+        "Tsvetan Kardashliev",
+        "Thomas R. Ward"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.7907592",
+      "journal": "Angew",
+      "title": "Bidentate Phosphonate Bridges Enable Buried Interface Reconstruction for Thermomechanically Robust Sn–Pb Perovskite Solar Cells",
+      "abstract": "ABSTRACT Tin–lead (Sn–Pb) mixed perovskite solar cells (PSCs) are promising for high‐efficiency tandem photovoltaics. However, substantial temperature fluctuations during device operation generate mechanical stresses that, coupled with insufficient adhesion at the perovskite/hole transport layer (HTL) interface, induce perovskite cracking and interfacial delamination. These structural degradations hinder efficient hole extraction and compromise long‐term device stability. In this study, we introduce 1,2‐ethylenediphosphonic acid (EDPA) as an interfacial molecular bridge to reconstruct the contact interface between the perovskite and HTL. The terminal phosphonic acid groups of EDPA simultaneously anchored to poly(3,4‐ethylenedioxythiophene)(styrenesulfonate) (PEDOT:PSS) and coordinated with B‐site metal ions in the perovskite, enhancing interfacial adhesion and generating pre‐compressive stress during film formation, effectively counteracting thermally induced tensile stress during device operation. Concurrently, EDPA disrupts the intrinsic electrostatic interactions within HTL via hydrogen‐bonding interactions, facilitating the segregation of insulating PSS chains, exposing the conductive PEDOT network, and reconstructing a more efficient hole‑extraction interface. Given these synergistic mechanical and electrical enhancements, the optimized PSC achieves a 23.96% power conversion efficiency (PCE), retaining 90.4% of its initial efficiency after 1200 h of thermal cycling (25°C–85°C). This study establishes a buried‐interface reconstruction strategy for realizing thermomechanically robust Sn–Pb perovskite photovoltaics under practical operating conditions.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Mingjun Ma",
+        "Wei Tan",
+        "Cheng Peng",
+        "Shuo Jiao",
+        "Weilin Wu",
+        "Jiakang Zhang",
+        "Wenjian Yan",
+        "Mingzhe Zhu",
+        "Fang Yue",
+        "Zhongmin Zhou"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "title": "Fine Tuning of Catalyst Active Sites to Access Advanced Ultrahigh‐Melting Polyolefins",
+      "abstract": "ABSTRACT Polyolefins with melting temperatures above 200°C are rare, as their synthesis typically relies on the polymerization of highly sterically congested α‐olefins, which is challenging for both industrial Ziegler–Natta and homogeneous catalysts. Pyridylamido‐Hf complexes are molecular catalysts known for their high activity and ability to incorporate sterically demanding monomers, for example, allyltrimethylsilane (ATMS) giving isotactic poly(allyltrimethylsilane) with a melting temperature of 310°C and high turnover frequency. However, they are unable to polymerize efficiently monomers such as vinylcyclohexane (VCH) or 4,4‐dimethyl‐1‐pentene (44DMP). In this study, we report a novel synthetic strategy that enables the polymerization of such sterically challenging monomers, based on a pre‐activation of the Hf catalyst by using ATMS as ligand modifier in situ. We show that ATMS acts as an effective pre‐activator of the Hf complex, enabling controlled formation of highly active species and unlocking the polymerization of sterically demanding α‐olefins. This afforded the first synthesis of isotactic poly(4,4‐dimethyl‐1‐pentene) with an unprecedented melting temperature of 420°C, and efficient polymerization of VCH and 3‐methyl‐1‐butene. These findings demonstrate how the tuning of the pyridylamido‐Hf active species through rational choice of the activating monomer can be leveraged to expand the access to ultrahigh melting temperature polyolefins.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Fabio De Stefano",
+        "Olga D'Anania",
+        "Giovanni Talarico",
+        "Claudio De Rosa"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.1404527",
+      "journal": "Angew",
+      "title": "From Stable Radicals to Radical‑Trapping Antioxidants: Blatter Radicals Potently Inhibit Autoxidation and Suppress Ferroptosis",
+      "abstract": "ABSTRACT Ferroptosis is a clinically important form of regulated cell death implicated in numerous degenerative pathologies, making the discovery of novel ferroptosis inhibitors of great translational interest. Radical‑trapping antioxidants (RTAs) effectively prevent lipid peroxidation (LPO) and constitute the largest and most important class of ferroptosis inhibitors. However, current approaches for compound discovery and mechanistic studies rely almost exclusively on phenolic or aromatic amine scaffolds, which are typically identified via labor‑intensive high‑throughput screening or adapted from classical antioxidants. Here, we demonstrate that Blatter radicals potently inhibit autoxidation and suppress ferroptosis. Beyond their intrinsic potent radical‑trapping capability, these compounds exhibit super‑stoichiometric activity in inhibiting (phospho)lipid peroxidation through an unusual catalytic cross‑dismutation of lipid peroxyl radicals (LOO•) and hydroperoxyl radicals (HOO•). Importantly, this potent chemical reactivity translates effectively into biological systems: Blatter radicals confer broad anti‑ferroptotic cytoprotection at low nanomolar concentrations, effectively protect against oxygen‑glucose deprivation/reperfusion (OGD/R) injury, and exert strong anti‑inflammatory effects in lipopolysaccharide (LPS)‑stimulated BV2 microglial cells. Collectively, our results highlight the unprecedented versatility of Blatter radicals—extending from stable radicals to RTAs—and validate a rational design strategy for potent ferroptosis inhibitors.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Cuiling Ouyang",
+        "Jiaying Huang",
+        "Yuting He",
+        "Zhengsen Yu",
+        "Zijun Wu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.8683437",
+      "journal": "Angew",
+      "title": "Gain‐of‐Function Engineering of the NifEN Scaffold Into a Self‐Assembling Nitrogenase",
+      "abstract": "ABSTRACT Biological nitrogen fixation by Mo‐nitrogenase is a complex process requiring coordinated electron transfer through specialized metal clusters. NifEN, an α 2 β 2 heterotetrameric homolog of the nitrogenase catalytic component NifDK, naturally serves as a maturation scaffold but exhibits only trace catalytic activity due to its “imperfect” cluster environments. In this study, we systematically engineered NifEN to reconstruct the structural features of NifDK, specifically targeting the P→M cluster electron relay and the active‐site M‐cluster environment. Specifically, we developed a series of variants, culminating in NifEN P/M_S2B , which incorporates a restored P‐cluster species and a refined M‐cluster coordination site and S2B‐associated belt region. Spectroscopic analysis confirmed the successful installation of the target clusters. Moreover, activity assays and nanoSIMS analysis demonstrated that NifEN P/M_S2B supported ATP‐dependent N 2 reduction both in vitro and in vivo. Structural modeling further identified remaining catalytic bottlenecks, particularly those in the S3A and S5A regions, highlighting the importance of precise cofactor belt organization for substrate reduction. Together, these findings establish NifEN as a self‐assembling, catalytically competent nitrogenase scaffold that bypasses the need for complex cofactor transfer steps, providing a streamlined platform for mechanistic studies and engineering efforts of biological nitrogen fixation.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Yimo Yang",
+        "Chi Chung Lee",
+        "Steve Ortiz",
+        "Markus W. Ribbe",
+        "Yilin Hu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.1222129",
+      "journal": "Angew",
+      "title": "Glutaredoxins Rapidly Reduce Glutathione Hydroper‐ and Polysulfides",
+      "abstract": "ABSTRACT Hydropersulfides have gained attention as excellent biochemical nucleophiles and membrane‐protective radical scavengers. They form perthiyl radicals, which terminate radical chain reactions through self‐recombination, yielding polysulfides. It is currently unknown exactly how polysulfides are subsequently reduced. Using stopped–flow kinetic measurements in combination with mass spectrometry, we show that the model class I glutaredoxin from Plasmodium falciparum (PfGrx) rapidly reduces the polysulfides glutathione trisulfide (GS 3 G) and tetrasulfide (GS 4 G), yielding glutathionylated PfGrx and the corresponding glutathione hydropersulfide (GSSH) and hydrotrisulfide (GS 3 H). The second‐order rate constants of these reductions ≥10 7 M −1 s −1 are even slightly higher than for glutathione disulfide (GSSG). In contrast, PfGrx was inactive or only moderately active toward cystine or cysteine trisulfide. GSSH and GS 3 H are further reduced by PfGrx with second‐order rate constants on the order of 10 6− 10 7 M −1 s −1 , yielding glutathionylated PfGrx and hydrogen sulfide (H 2 S) or hydrogen disulfide (H 2 S 2 ), respectively. Thus, glutaredoxins specifically recognize the glutathione moiety of glutathione (hydro)per/polysulfides. Since reduced glutathione (GSH) rapidly reduces glutathionylated glutaredoxins, glutathione (hydro)per/polysulfides are efficiently converted to GSSG and H 2 S or the corresponding hydrogen polysulfides. As a consequence, the steady‐state concentration of glutathione (hydro)per/polysulfides should be tightly controlled in subcellular compartments containing active glutaredoxins and high GSH concentrations.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Philipp Reinert",
+        "Seiryo Ogata",
+        "Laura Leiskau",
+        "Sernur Sena Yildiz",
+        "Takaaki Akaike",
+        "Uladzimir Barayeu",
+        "Marcel Deponte"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2026-m1709012500",
+      "journal": "Angew",
+      "title": "Inside Back Cover: Flavin Catalysts in Organic Synthesis",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Jan Freudenberg",
+        "Golo Storch"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2026-m1709013400",
+      "journal": "Angew",
+      "title": "Inside Back Cover: Synergizing Schottky/S‐Scheme Dual‐Junction With Cu/Pb Dual‐Site in a 0D/3D Cu@CsPbBr 3 /G‐C 3 N 4 Heterojunction for Efficient CO 2 ‐to‐C 2 H 4 Photoreduction",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Zexiang Wang",
+        "Feng Xiang",
+        "Haixia Wang",
+        "Mingyue Zheng",
+        "Yuxia Wang",
+        "Ying Wang",
+        "Ruizhi Li",
+        "Xian Zhao",
+        "Weiliu Fan"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.2026-m1709014100",
+      "journal": "Angew",
+      "title": "Inside Front Cover: In Silico to In Cerebro—Development of the Orexin Receptor Antagonist “Photorexant” for Photomodulation In Vitro and in Mouse Brains",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Marcus Angermann",
+        "Marie H. Deventer",
+        "Vicente Ledesma‐Martin",
+        "Nuno Filipe RodriguesMartinho",
+        "Alix Flake",
+        "Silvia Mori",
+        "Angel Nuñez",
+        "Jaime Pignatelli",
+        "Rita C. Guedes",
+        "Christophe P. Stove",
+        "Michael Decker"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.2026-m1709012800",
+      "journal": "Angew",
+      "title": "Outside Back Cover: Positional Effects of Single‐Atom Active Sites in 1D Porphyrinic COFs on Photocatalytic CO 2 Reduction",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Yu Zhao",
+        "Xiuli Ye",
+        "Shangqing Liu",
+        "Li Fang",
+        "Guolong Xing",
+        "Bo Song",
+        "Teng Ben"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.2026-m1709014400",
+      "journal": "Angew",
+      "title": "Outside Front Cover: Directional Second Sphere Effect on CO 2 Activation and Reduction by Iron Porphyrin in Aprotic and Protic Media",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Ashutosh Vishwakarma",
+        "Sami Essid",
+        "Sarah Bouery",
+        "Régis Guillot",
+        "Bernard Boitrel",
+        "Philipp Gotico",
+        "Marie Sircoglou",
+        "Zakaria Halime"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.6095254",
+      "journal": "Angew",
+      "title": "Regeneration‐Optimized Chemisorbents: Evaluating Hybrid Coordination Networks for Atmospheric Water Harvesting",
+      "abstract": "ABSTRACT Atmospheric water harvesting (AWH) can be enabled by solid desiccants that exhibit S‐shaped adsorption isotherms with one or more steps at low relative humidity (RH, 30%) and mild regeneration temperatures ( 60°C). There remains a dearth of such regeneration‐optimized sorbents (ROSs), which thus far are limited exclusively to physisorbents mainly because chemisorbents typically require elevated temperatures for water recovery. Herein, the first comprehensive water sorption study of the SIFSIX‐3‐Ni family of hybrid coordination networks (HCNs) and a new, related family of HCNs, reveals a shared cooperative chemisorption mechanism with markedly different RH thresholds and regeneration requirements. Whereas the SIFSIX‐3‐Ni family operates outside the RH and regeneration limits of ROSs, four M′FSIX‐25‐M analogues (M = Co 2+ , Ni 2+ ; M' = Si 4+ , Ti 4+ , 25 = 1,4‐bis(imidazol‐1‐yl)naphthalene) exhibit both low‐RH chemisorption and regeneration from 34‐44°C. The lead regeneration optimized chemisorbent, ROC‐1 ( TIFSIX‐25‐Ni ), has a projected water‐harvesting productivity of ca. 3.5 L sorbent −1 d −1 . Density functional theory calculations provide insight into the energetics and mechanism of hydration/dehydration in these first‐generation ROCs. This work establishes ROCs as a new class of desiccants that offers reversible chemisorption within the low‐RH and mild‐regeneration conditions relevant to AWH in arid environments.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Xiang‐Jing Kong",
+        "Asif Raza",
+        "Lilia Croitor",
+        "Andrey Bezrukov",
+        "Xia Li",
+        "Angela Shipman",
+        "William Morris",
+        "Carlos J. Solanilla‐Salinas",
+        "Adam Hogan",
+        "Brian Space",
+        "Volodymyr Bon",
+        "Stefan Kaskel",
+        "Soumya Mukherjee",
+        "Alan C. Eaby",
+        "Tao He",
+        "Michael J. Zaworotko"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.6455772",
+      "journal": "Angew",
+      "title": "Role of Graphene Oxide in the Nucleation and Growth of Gold Nanoparticles Revealed by Operando Time‐Resolved Studies",
+      "abstract": "ABSTRACT Understanding nanoparticle growth in complex composite systems remains a central challenge in materials chemistry. Herein, we elucidate the stepwise formation mechanism of gold nanoparticles (AuNPs) in graphene oxide (GO) aqueous systems under well‐defined reductive conditions. Pulse radiolysis reveals that GO significantly accelerates AuCl 4 − reduction by hydrated electrons ( e aq − ), thereby altering early‐stage kinetics. Operando synchrotron small‐angle x‐ray scattering (SAXS) and time‐resolved UV–vis absorption spectroscopy enable direct observation of AuNP nucleation and growth. Au(III) reduction precedes GO reduction, and nascent Au clusters preferentially anchor at GO edges through interactions with carboxyl groups, resulting in anisotropic, size‐constrained growth. As GO becomes progressively reduced, depletion of oxygen‐containing functional groups weakens interfacial stabilization and promotes nanoparticle coalescence. This stepwise mechanism integrates kinetic, spectroscopic, structural, and theoretical evidence, identifying GO as both a kinetic modulator and a spatial growth regulator. The insights provide general design principles for size‐controlled nanoparticle growth in graphene‐based composite systems.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Liran Hu",
+        "Carine Clavaguéra",
+        "Zhenpeng Cui",
+        "Zhiwen Jiang",
+        "Thomas Bizien",
+        "Filippo Ferdeghini",
+        "Nguyen‐Thi Van‐Oanh",
+        "Michel Goldmann",
+        "François Muller",
+        "Samy Remita"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.4453766",
+      "journal": "Angew",
+      "title": "Tailoring and Unraveling Surface Functionalization of Nanomaterials via Self‐Reporting NIR‐Induced Upconversion Energy Transfer Process",
+      "abstract": "ABSTRACT The surface functionalization chemistry of nanomaterials remains a black box, where the dynamic modification process is conventionally imperceptible, which severely limits the rational design of advanced nanohybrids. Herein, a holistic strategy that transforms upconversion nanorods (UCNR) surface functionalization from an empirically treated outcome into an optically self‐reporting process via near‐infrared (NIR)‐mediated photoinduced electron/energy transfer‐reversible addition‐fragmentation chain transfer (PET‐RAFT) polymerization is present. This three‐in‐one design, where the UCNR concurrently acts as a NIR‐harvesting antenna, polymerization substrate, and optical signaling unit, enables the precise, temporally controlled growth and monitoring of polymer shells with tunable thickness and grafting density. Critically, a linear correlation between the evolving polymer shell architecture and the upconversion luminescence intensity was unraveled, thereby turning the optical signal into a real‐time, nondestructive probe that reveals the invisible surface modification process. Building upon this self‐monitoring capability, the polymer brushes were further engineered to template the in situ growth of gold nanoparticles, establishing a cascaded energy transfer pathway for efficient photothermal conversion. Using the nanohybrids as a built‐in ratiometric fluorescent nanothermometer, the nanohybrid enables real‐time temperature feedback during NIR irradiation as precise nanothermometry. This work establishes a new paradigm for creating intelligent, self‐sensing nanoplatforms with profound implications for precision theranostics and adaptive photonic materials.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Guangli He",
+        "Wenhui Li",
+        "Jingyi Hao",
+        "Junle Zhang",
+        "Meng Chen",
+        "Xuejing Zhai",
+        "Mengjie Zhou",
+        "Ge Shi",
+        "Xiaoguang Qiao",
+        "Yanjie He",
+        "Wenjie Zhang",
+        "Xinchang Pang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.6605459",
+      "journal": "Angew",
+      "title": "Two‐Dimensional SnS 2 Interlayers Enable Vacancy‐Guided Ion Migration for Stable Diffusive Memristors and Bioinspired Nociception",
+      "abstract": "ABSTRACT The realization of sophisticated autonomous interaction in humanoid robots is currently constrained by the complexity and stochasticity of conventional sensory hardware. Volatile memristors provide a promising biomimetic alternative; however, their performance is often limited by uncontrolled ionic dynamics in disordered oxides. Here, we report two‐dimensional SnS 2 interlayers as an effective platform for vacancy‐guided ion migration in oxide‐based diffusive memristors. A solution‐processed SnS 2 layer with tunable sulfur vacancy density is introduced into an Ag/TaO x /SnS 2 /ITO heterostructure to regulate filament formation. Under electrical bias, sulfur vacancies of SnS 2 layer locally enhance the electric field and provide deterministic pathways for Ag + migration. This enables atomic‐scale confinement of conductive filaments, resulting in highly uniform threshold switching (variability ≈ 10.9%), ultralow switching energy (∼ 10.9 pJ), and stable operation over 5,000 cycles. Furthermore, modulation of the vacancy landscape allows dynamic reconfiguration of switching polarity, enabling a transition from unidirectional to bidirectional volatile switching. Beyond improved electrical performance, the devices reproduce key nociceptive behaviors and can be integrated into an 8 × 8 crossbar array to achieve spatially resolved perception of mechanical stimuli.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Jingzhou Shi",
+        "Zening Gao",
+        "Xinming Ma",
+        "Gangri Cai",
+        "Xianjin Feng",
+        "Jinshi Zhao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.7271276",
+      "journal": "Angew",
+      "title": "Unlocking High‐Performance Te‐Free p‐Type Thermoelectrics via Cu Doping in Entropy‐Engineered Cd 0.5 Zn 0.5 Sb Zintl",
+      "abstract": "ABSTRACT Zintl phases are crucial for Te‐free power generation and electrical cooling modules, which are considered next‐generation thermoelectric (TE) technology. While n‐type Zintl materials, such as Mg 3 Sb 2 , have achieved remarkable performance, their p‐type counterparts are restricted by electron‐phonon coupling. This work demonstrates a cost‐effective p‐type CdSb‐based Zintl material with high TE performance. We find that applying entropy engineering can sharply enhance the solid solubility of Cu in CdSb. Cu doping in entropy‐engineered Cd 0.5 Zn 0.5 Sb raises carrier concentration. More importantly, Cu boosts carrier mobility to about 222 cm 2 V −1 s −1 by screening ionized impurity scattering and enhancing covalent bonding across the cleavage plane along the [1 0 0] direction. Additionally, Cu doping induces dislocation scattering and lattice softening, significantly reducing lattice thermal conductivity. As a result, the Cd 0.46 Cu 0.04 Zn 0.5 Sb material achieves a high ZT of 1.5 at 573 K. Its high performance is verified by integrated TE devices. This work validates Cd 1− x Zn x Sb Zintl phases as highly efficient p‐type TE materials for practical applications.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Chen Li",
+        "Jie Huang",
+        "Yujie Zhang",
+        "Hao Yang",
+        "Haorui Hua",
+        "Dan Feng",
+        "Zhen‐Hua Ge",
+        "Ming Huang",
+        "Xiyang Wang",
+        "Dan Zhang",
+        "Liangwei Fu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c12732",
+      "journal": "JACS",
+      "title": "Activating the Anomalous Jahn–Teller Effect in NASICON-Type Mixed Phosphate Cathode via Crystal Field Engineering",
+      "abstract": "Abstract High-voltage Mn3+/Mn2+ redox reactions in polyanionic cathodes offer the potential to increase energy density while reducing the cost of batteries. However, its practical application is hindered by sluggish reaction kinetics and asymmetric Jahn–Teller distortion. Herein, we report a NASICON-type cathode, Na3.85□0.15Mn1.35Fe1.5V0.15(PO4)2(P2O7) (□ denotes Na vacancy, NFMPP-V), in which vanadium substitution reconfigures the Mn3+-induced Jahn–Teller distortion and couples it with multivalent redox processes, achieving enhanced energy density and reaction kinetics. Remarkably, the Na+ mobility increases with the Jahn–Teller distortion, exhibiting an anomalous behavior opposite to that of conventional Mn-based cathodes, which is associated with an ordered anisotropic distortion of the [MnO6] octahedra. As a result, NFMPP-V delivers a high reversible capacity of 120.2 mAh g–1 and achieves a capacity retention of 82.3% for 500 cycles at 5C. This work demonstrates that Jahn–Teller distortion can be rationally re-engineered into a kinetic advantage and provides new insights into the design of high-energy-density NASICON-type cathodes for batteries.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Peiyao Li",
+        "Yingde Huang",
+        "Dinghao Le",
+        "Yujing Chen",
+        "Pei Yang",
+        "Tian Chen",
+        "Kunmei Yang",
+        "Qing Wu",
+        "Guodong Ren",
+        "Xiahui Zhang",
+        "Junchao Zheng"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c13641",
+      "journal": "JACS",
+      "title": "Alternating Copolymerization of Arynes and Aldehydes Enabled by an N -Arylamine Initiator",
+      "abstract": "Abstract Here, we report the direct alternating copolymerization of arynes and aldehydes initiated by a simple N-arylamine. The N-arylamine framework is critical for suppressing competing aryne homopolymerization and promotes selective alternating polymerization through a Smiles-type rearrangement pathway. Regeneration of a neutral N-arylamine chain end during each propagation cycle enables complex polymer architectures, including block copolymers and cyclic polymers, through ring-expansion alternating copolymerization. The resulting polymers contain embedded ether linkages that impart an acid-triggered degradability.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Shisato Yamamura",
+        "Ryota Murakami",
+        "Hayato Fujimoto",
+        "Mamoru Tobisu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c12433",
+      "journal": "JACS",
+      "title": "Phase Boundary Engineering Enables Multivalley Activation for High-Performance ZrCoSb Half-Heuslers",
+      "abstract": "Abstract P-type ZrCoSb-based half-Heusler compounds are promising thermoelectric materials for high-temperature power generation because of their excellent thermal stability and mechanical robustness. However, their performance still lags behind that of state-of-the-art p-type ZrCoBi systems, mainly due to the limited doping efficiency of conventional aliovalent doping strategies, which hinders the realization of highly degenerate carrier transport and consequently restricts power factor optimization. This study highlights the pivotal role of phase diagram engineering in maximizing the thermoelectric performance of ZrCoSb-based half-Heusler materials. Through precisely tuning the Co content guided by experimental phase diagrams, simultaneous enhancement of electronic transport properties and suppression of lattice thermal conductivity have been realized. Under Co-deficient conditions, the Sn doping efficiency approaches 100%, increasing the hole concentration to 3.8 × 1021 cm–3 and activating the secondary Γ valence-band valley in addition to the primary L valleys. The resulting multivalley transport increases the effective valley degeneracy from 8 to 10 and yields a peak power factor of 40.4 μW cm–1 K–2 and an average power factor of 37.6 μW cm–1 K–2 over 300–973 K, representing the high reported value to date among p-type ZrCoSb-based half-Heuslers. The synergistic effect of Co vacancy engineering and Hf alloying suppresses thermal transport, culminating in a peak zT of 1.2 at 973 K. Finally, a single-stage thermoelectric module was fabricated using the optimized material, demonstrating a conversion efficiency of ∼11% at a temperature difference of 673 K, overperforming all previously reported ZrCoSb-based single-stage thermoelectric devices. This work establishes pha",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Sichen Duan",
+        "Honghao Yao",
+        "Li Yin",
+        "Xiaofang Li",
+        "Xiuyuan Wang",
+        "Zehua Pei",
+        "Xiaodong Wang",
+        "Xiaojing Ma",
+        "Feng Jiang",
+        "Jinfeng Dong",
+        "Yue Chen",
+        "Jun Mao",
+        "Feng Cao",
+        "Yumei Wang",
+        "Qingyu Yan",
+        "Qian Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c13577",
+      "journal": "JACS",
+      "title": "Pt Nanoparticles Supported on Ta-Doped TiO2 for Durable Proton Exchange Membrane Water Electrolysis",
+      "abstract": "Abstract Platinum (Pt) is more earth-abundant and corrosion-resistant than iridium (Ir), yet its deployment as an acidic oxygen anode has been abandoned due to the formation of a self-passivating, insulating PtO2 film. Here, we show that this century-old bottleneck can be alleviated by an electron-shuttling junction in which Pt nanoparticles are anchored to a tantalum (Ta)-doped titanium dioxide support, with Fermi level higher than Pt. The built-in contact potential injects electrons into Pt via Pt–O–Ta/Ti bridges and continuously bleeds the bypass oxygen evolution electrons to Pt at high bias, thereby suppressing the formation of a passivating α–PtO2 layer. In situ spectroscopies reveal the successful preservation of Pt 5d occupancy, along with strengthened surficial water adsorption (alleviated reversed Stark effect of νOH). The assembled electrolyzer, with a Pt loading of only 350 μgPt cm–2, achieves 3 A cm–2 at 2.262 V and operates for 1500 h under 1 A cm–2 without noticeable passivation. Life cycle cost analysis estimates a green hydrogen price of US$1.56 kg–1, below both the US DOE 2026 target and the costs of contemporary alkaline electrolyzers. This concept relocates the stability problem from the noble metal to a tunable oxide, providing a general blueprint for passivation-free, platinum-based acid water-splitting catalysts.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Hao Yu",
+        "Bingbao Mei",
+        "Wenmin Ma",
+        "Xian Wang",
+        "Hengjie Liu",
+        "Weiyi Zhao",
+        "Wenhui Wang",
+        "Xiaoke Xi",
+        "Tianqi Shang",
+        "Wenwen Gao",
+        "Ruiguo Cao",
+        "Huijun Jiang",
+        "Zheng Jiang",
+        "Junjie Ge"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02981-9",
+      "journal": "Nature",
+      "title": "'Epigenetic' editing is here: gene-tagging technique banishes hepatitis B virus",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Miryam Naddaf"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41586-026-11160-9",
+      "journal": "Nature",
+      "title": "Chemist-aligned retrosynthesis by ensembling diverse inductive bias models",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Krzysztof Maziarz",
+        "Guoqing Liu",
+        "Felix Pultar",
+        "John Gardner",
+        "Tobias Gensch",
+        "Jean Helie",
+        "Hubert Misztela",
+        "Austin Tripp",
+        "Junren Li",
+        "Aleksei Kornev",
+        "Piotr Gaiński",
+        "Holger Hoefling",
+        "Mike Fortunato",
+        "Rishi Gupta",
+        "Andrew Baxter",
+        "Darren L. Poole",
+        "Jennifer M. Elward",
+        "Adrian Krzyzanowski",
+        "Peter Pogány",
+        "Stephen D. Pickett",
+        "Ian D. Wall",
+        "Christopher M. Bishop",
+        "Philip G. Humphreys",
+        "James A. Lumley",
+        "Mario P. Wiesenfeldt",
+        "Marwin H. S. Segler"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02987-3",
+      "journal": "Nature",
+      "title": "Edible batteries inspired by rice paper power medical devices in the body",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Katherine Bourzac"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77928-9",
+      "journal": "Nature Communications",
+      "title": "Five-country analysis of geographic and dietary drivers of gut microbiome composition and genomic variation",
+      "abstract": "Abstract Human diet and lifestyle vary widely across cultures, shaping global diversity in gut microbiome composition and function. However, comparable cross-population studies have been limited by methodological heterogeneity. The Human Diets and Microbiome Initiative (THDMI) integrates standardized recruitment, dietary assessment, and shotgun metagenomics across 1,976 participants from the United States, United Kingdom, Spain, Mexico, and Japan to disentangle biological from technical variation. We observed pronounced geographic differences in nutrient intake, food consumption, and microbial composition, with both shared and country-specific features linked to diet. Sparse canonical correlation and machine-learning analyses revealed that microbiome–diet associations were largely population-specific, with limited cross-country generalization. Strain-level analyses further uncovered significant genomic differentiation of gut microbes, consistent with localized dietary and ecological differences. Together, these results show that while core microbial responses to healthy eating exist, the structure and function of the human gut microbiome varies strongly with culture, geography, and long-term dietary practices.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Lora Khatib",
+        "Renee Oles",
+        "Alejandra Ríos Hernández",
+        "Tyler Myers",
+        "Jianshu Zhao",
+        "Megha Kumar",
+        "Ana Laroya",
+        "Veronica Tolosa-Enguis",
+        "Nobuko Matsunami",
+        "Daisuke Suzuki",
+        "Nodoka Chiba",
+        "Katharine E. Gilbert",
+        "Promi Das",
+        "Jon G. Sanders",
+        "Lucas Patel",
+        "Nicole Litwin",
+        "Brent Nowinski",
+        "Amanda Birmingham",
+        "Sawyer Farmer",
+        "Caitriona Brennan",
+        "MacKenzie Bryant",
+        "Caitlin Tribelhorn",
+        "Karenina Sanders-Bodai",
+        "Charles Cowart",
+        "Oliver Nizet",
+        "Edgar A. Diaz",
+        "Patrick Veiga",
+        "Sudarshan A. Shetty",
+        "Jan Knol",
+        "Christophe Lay",
+        "Hana Koutnikova",
+        "Soline Chaumont",
+        "Julien Tap",
+        "Aurélie Cotillard",
+        "Muriel Derrien",
+        "Manolo Laiola",
+        "Antonio González",
+        "Armando R. Tovar",
+        "Nimbe Torres",
+        "Yolanda Sanz",
+        "Takuji Yamada",
+        "Daniel McDonald",
+        "Se Jin Song",
+        "Andrew Bartko",
+        "Rob Knight"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77607-9",
+      "journal": "Nature Communications",
+      "title": "Generating protein hydrogels with customizable stress relaxation behavior via deep learning-driven entanglement design",
+      "abstract": "Abstract Protein hydrogels are promising artificial extracellular matrices (ECMs) for 3D stem cell and organoid culture due to their favorable stress relaxation behavior (a decrease in stress in response to strain). Inter-chain entangled motifs, in which different protein chains are interlaced, represent a powerful strategy to synthesize such hydrogels. However, designing these motifs with tailored properties such as binding energy remains a major challenge due to the difficulty of simultaneously controlling these properties while ensuring entanglement. Here, we introduce TangleDiff, a deep learning framework for the de novo design of homodimeric entangled proteins with programmable features. TangleDiff generates diverse foldable entangled sequences with an in-silico success rate exceeding 70%, markedly outperforming current models (~1%). By conditioning TangleDiff on inter-chain binding energy, we generate novel protein dimers whose binding energies closely match the specified ranges, with approximately 70% of successful designs conforming to expected values. We experimentally validate TangleDiff by designing nine homodimers targeting various binding energies; seven successfully form hydrogels, with stress relaxation dynamics correlated with specified binding energies. This work establishes a general strategy for entangled protein design, opening avenues for entanglement-based biomaterial innovation.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Puqing Deng",
+        "Yutong Wu",
+        "Hong Kiu Francis Fok",
+        "Linyan Li",
+        "Wen-Bin Zhang",
+        "Fei Sun",
+        "Hanyu Gao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77453-9",
+      "journal": "Nature Communications",
+      "title": "Genetic variants associated with cell-type-specific intra-individual gene expression variability reveal mechanisms of genome regulation",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Angli Xue",
+        "Seyhan Yazar",
+        "José Alquicira-Hernández",
+        "Anna S. E. Cuomo",
+        "Anne Senabouth",
+        "Gracie Gordon",
+        "Pooja Kathail",
+        "Chun Jimmie Ye",
+        "Alex W. Hewitt",
+        "Joseph E. Powell"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78003-z",
+      "journal": "Nature Communications",
+      "title": "Inductive charging systems empowered by stress-annealed nanocrystalline alloys with high induced magnetic anisotropy",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Yibo Wang",
+        "Xuesong Li",
+        "Jing Zhou",
+        "Liping Mo",
+        "Xiaosheng Wang",
+        "Ben Zhang",
+        "Ruibo Li",
+        "Tianlu Ma",
+        "Weisheng Guo",
+        "Yue Liu",
+        "Sheng Ren",
+        "Junhui Yang",
+        "Zhaozheng Zhu",
+        "Hao Guo",
+        "K. T. Chau",
+        "Han Wang",
+        "Yuhao Zhang",
+        "Grant A. Covic",
+        "Baoan Sun",
+        "Teng Long",
+        "Haiyang Bai",
+        "C. Q. Jiang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77626-6",
+      "journal": "Nature Communications",
+      "title": "Post-2020 conservation priorities are threatened by global mining",
+      "abstract": "Abstract The United Nations has committed to halting and reversing biodiversity loss by 2030. Despite this commitment, mining remains a major driver of biodiversity decline, particularly in conservation priority zones (CPZs) and areas with high species extinction risk. Regardless of growing awareness, the full extent of current and future mining threats to biodiversity remains inadequately quantified, limiting effective global conservation strategies. Here, we quantify the threats of 145,000 km² of current mining land to biodiversity. We find that 34% (49,000 km²) of these mining areas overlap with CPZs, intersecting the ranges of more than 2,300 species, including many classified as threatened. These threats span 14 biomes, with disproportionately high relative impacts in fragile ecosystems such as Mangroves and the Mediterranean. Furthermore, an additional 43% (12 million km²), 29% (2 million km²), and 37% (4 million km²) of land potentially exploitable for metals, non-metals, and coal, respectively, overlap with CPZs, highlighting the heightened risks from future mining expansion without consideration for biodiversity. Our findings offer actionable insights for policymakers and industry stakeholders, guiding conservation efforts to mitigate biodiversity loss and align mining practices with global conservation goals, including the UN Sustainable Development Goals and the Kunming-Montreal Global Biodiversity Framework.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Kaixuan Pan",
+        "Niels Raes",
+        "Wassim Le Lann",
+        "Leon Marshall",
+        "Ana Feijoo Quezada",
+        "Valerio Barbarossa",
+        "Merijn Moens",
+        "Sarah Anderson",
+        "Rene Kleijn",
+        "Jacobus C. Biesmeijer"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77763-y",
+      "journal": "Nature Communications",
+      "title": "Vacuum ultraviolet dual-comb spectroscopy",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "John J. McCauley",
+        "Dylan P. Tooley",
+        "R. Jason Jones"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77186-9",
+      "journal": "Nature Communications",
+      "title": "Wafer-scale 2D MoS₂ transistors with sub-5 nm channel length and subthreshold performance beyond the silicon limit",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "S. Lin",
+        "T. Huang",
+        "N. Yang",
+        "X. Zheng",
+        "H. Yang",
+        "H. S. Yun",
+        "G. Turner",
+        "Y. Zhong",
+        "J. Zou",
+        "K. Zhang",
+        "J. Wu",
+        "J. Grajal",
+        "Y. C. Lin",
+        "K. Y. Xie",
+        "H. Wang",
+        "J. Kong",
+        "J. Guo",
+        "S. Shen",
+        "X. Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    }
+  ],
+  "potentialGaps": [
+    {
+      "doi": "10.1002/anie.3685338",
+      "journal": "Angew",
+      "title": "A Ruthenium(CAAC‐5) Olefin Metathesis Catalyst for Bioconjugation",
+      "abstract": "ABSTRACT Olefin metathesis is a powerful transformation for carbon–carbon bond formation, yet its application in biological settings is challenged by the instability of most ruthenium catalysts in aqueous media. Herein, we report a Ru(CAAC‐5) olefin metathesis catalyst bearing a functional handle for bioconjugation. The resulting hybrid catalyst catalyzes ring‐closing metathesis (RCM) and displays extended lifetimes in aqueous media. Functionalized CAAC‐5 ligands bearing a protected aniline linker were prepared via enamine alkylation and coordinated to ruthenium to afford the corresponding Ru(CAAC‐5) complex. In a benchmark RCM reaction under biologically relevant conditions, the ruthenium complex exhibits enhanced catalytic robustness and reaches turnover numbers of up to 600. Deprotection of an amine‐functionalized handle enables the bioconjugation to proteins and peptides. Using this platform, the catalyst was anchored to biomolecules through supramolecular anchoring to human carbonic anhydrase II (hCA II), click conjugation to peptides (SS01), and covalent attachment to ubiquitin (Ubi). To the best of our knowledge, this aniline‐functionalized Ru(CAAC‐5) complex is the first CAAC‐bearing metathesis catalyst amenable to bioconjugation, while retaining the prolonged catalytic activity characteristic of CAAC‐based systems in aqueous media.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Damian Alexander Graf",
+        "Mikhail Boym",
+        "María Álvarez",
+        "Tsvetan Kardashliev",
+        "Thomas R. Ward"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "title": "Fine Tuning of Catalyst Active Sites to Access Advanced Ultrahigh‐Melting Polyolefins",
+      "abstract": "ABSTRACT Polyolefins with melting temperatures above 200°C are rare, as their synthesis typically relies on the polymerization of highly sterically congested α‐olefins, which is challenging for both industrial Ziegler–Natta and homogeneous catalysts. Pyridylamido‐Hf complexes are molecular catalysts known for their high activity and ability to incorporate sterically demanding monomers, for example, allyltrimethylsilane (ATMS) giving isotactic poly(allyltrimethylsilane) with a melting temperature of 310°C and high turnover frequency. However, they are unable to polymerize efficiently monomers such as vinylcyclohexane (VCH) or 4,4‐dimethyl‐1‐pentene (44DMP). In this study, we report a novel synthetic strategy that enables the polymerization of such sterically challenging monomers, based on a pre‐activation of the Hf catalyst by using ATMS as ligand modifier in situ. We show that ATMS acts as an effective pre‐activator of the Hf complex, enabling controlled formation of highly active species and unlocking the polymerization of sterically demanding α‐olefins. This afforded the first synthesis of isotactic poly(4,4‐dimethyl‐1‐pentene) with an unprecedented melting temperature of 420°C, and efficient polymerization of VCH and 3‐methyl‐1‐butene. These findings demonstrate how the tuning of the pyridylamido‐Hf active species through rational choice of the activating monomer can be leveraged to expand the access to ultrahigh melting temperature polyolefins.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Fabio De Stefano",
+        "Olga D'Anania",
+        "Giovanni Talarico",
+        "Claudio De Rosa"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.1404527",
+      "journal": "Angew",
+      "title": "From Stable Radicals to Radical‑Trapping Antioxidants: Blatter Radicals Potently Inhibit Autoxidation and Suppress Ferroptosis",
+      "abstract": "ABSTRACT Ferroptosis is a clinically important form of regulated cell death implicated in numerous degenerative pathologies, making the discovery of novel ferroptosis inhibitors of great translational interest. Radical‑trapping antioxidants (RTAs) effectively prevent lipid peroxidation (LPO) and constitute the largest and most important class of ferroptosis inhibitors. However, current approaches for compound discovery and mechanistic studies rely almost exclusively on phenolic or aromatic amine scaffolds, which are typically identified via labor‑intensive high‑throughput screening or adapted from classical antioxidants. Here, we demonstrate that Blatter radicals potently inhibit autoxidation and suppress ferroptosis. Beyond their intrinsic potent radical‑trapping capability, these compounds exhibit super‑stoichiometric activity in inhibiting (phospho)lipid peroxidation through an unusual catalytic cross‑dismutation of lipid peroxyl radicals (LOO•) and hydroperoxyl radicals (HOO•). Importantly, this potent chemical reactivity translates effectively into biological systems: Blatter radicals confer broad anti‑ferroptotic cytoprotection at low nanomolar concentrations, effectively protect against oxygen‑glucose deprivation/reperfusion (OGD/R) injury, and exert strong anti‑inflammatory effects in lipopolysaccharide (LPS)‑stimulated BV2 microglial cells. Collectively, our results highlight the unprecedented versatility of Blatter radicals—extending from stable radicals to RTAs—and validate a rational design strategy for potent ferroptosis inhibitors.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Cuiling Ouyang",
+        "Jiaying Huang",
+        "Yuting He",
+        "Zhengsen Yu",
+        "Zijun Wu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.1222129",
+      "journal": "Angew",
+      "title": "Glutaredoxins Rapidly Reduce Glutathione Hydroper‐ and Polysulfides",
+      "abstract": "ABSTRACT Hydropersulfides have gained attention as excellent biochemical nucleophiles and membrane‐protective radical scavengers. They form perthiyl radicals, which terminate radical chain reactions through self‐recombination, yielding polysulfides. It is currently unknown exactly how polysulfides are subsequently reduced. Using stopped–flow kinetic measurements in combination with mass spectrometry, we show that the model class I glutaredoxin from Plasmodium falciparum (PfGrx) rapidly reduces the polysulfides glutathione trisulfide (GS 3 G) and tetrasulfide (GS 4 G), yielding glutathionylated PfGrx and the corresponding glutathione hydropersulfide (GSSH) and hydrotrisulfide (GS 3 H). The second‐order rate constants of these reductions ≥10 7 M −1 s −1 are even slightly higher than for glutathione disulfide (GSSG). In contrast, PfGrx was inactive or only moderately active toward cystine or cysteine trisulfide. GSSH and GS 3 H are further reduced by PfGrx with second‐order rate constants on the order of 10 6− 10 7 M −1 s −1 , yielding glutathionylated PfGrx and hydrogen sulfide (H 2 S) or hydrogen disulfide (H 2 S 2 ), respectively. Thus, glutaredoxins specifically recognize the glutathione moiety of glutathione (hydro)per/polysulfides. Since reduced glutathione (GSH) rapidly reduces glutathionylated glutaredoxins, glutathione (hydro)per/polysulfides are efficiently converted to GSSG and H 2 S or the corresponding hydrogen polysulfides. As a consequence, the steady‐state concentration of glutathione (hydro)per/polysulfides should be tightly controlled in subcellular compartments containing active glutaredoxins and high GSH concentrations.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Philipp Reinert",
+        "Seiryo Ogata",
+        "Laura Leiskau",
+        "Sernur Sena Yildiz",
+        "Takaaki Akaike",
+        "Uladzimir Barayeu",
+        "Marcel Deponte"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2026-m1709012500",
+      "journal": "Angew",
+      "title": "Inside Back Cover: Flavin Catalysts in Organic Synthesis",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Jan Freudenberg",
+        "Golo Storch"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.6455772",
+      "journal": "Angew",
+      "title": "Role of Graphene Oxide in the Nucleation and Growth of Gold Nanoparticles Revealed by Operando Time‐Resolved Studies",
+      "abstract": "ABSTRACT Understanding nanoparticle growth in complex composite systems remains a central challenge in materials chemistry. Herein, we elucidate the stepwise formation mechanism of gold nanoparticles (AuNPs) in graphene oxide (GO) aqueous systems under well‐defined reductive conditions. Pulse radiolysis reveals that GO significantly accelerates AuCl 4 − reduction by hydrated electrons ( e aq − ), thereby altering early‐stage kinetics. Operando synchrotron small‐angle x‐ray scattering (SAXS) and time‐resolved UV–vis absorption spectroscopy enable direct observation of AuNP nucleation and growth. Au(III) reduction precedes GO reduction, and nascent Au clusters preferentially anchor at GO edges through interactions with carboxyl groups, resulting in anisotropic, size‐constrained growth. As GO becomes progressively reduced, depletion of oxygen‐containing functional groups weakens interfacial stabilization and promotes nanoparticle coalescence. This stepwise mechanism integrates kinetic, spectroscopic, structural, and theoretical evidence, identifying GO as both a kinetic modulator and a spatial growth regulator. The insights provide general design principles for size‐controlled nanoparticle growth in graphene‐based composite systems.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Liran Hu",
+        "Carine Clavaguéra",
+        "Zhenpeng Cui",
+        "Zhiwen Jiang",
+        "Thomas Bizien",
+        "Filippo Ferdeghini",
+        "Nguyen‐Thi Van‐Oanh",
+        "Michel Goldmann",
+        "François Muller",
+        "Samy Remita"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c12732",
+      "journal": "JACS",
+      "title": "Activating the Anomalous Jahn–Teller Effect in NASICON-Type Mixed Phosphate Cathode via Crystal Field Engineering",
+      "abstract": "Abstract High-voltage Mn3+/Mn2+ redox reactions in polyanionic cathodes offer the potential to increase energy density while reducing the cost of batteries. However, its practical application is hindered by sluggish reaction kinetics and asymmetric Jahn–Teller distortion. Herein, we report a NASICON-type cathode, Na3.85□0.15Mn1.35Fe1.5V0.15(PO4)2(P2O7) (□ denotes Na vacancy, NFMPP-V), in which vanadium substitution reconfigures the Mn3+-induced Jahn–Teller distortion and couples it with multivalent redox processes, achieving enhanced energy density and reaction kinetics. Remarkably, the Na+ mobility increases with the Jahn–Teller distortion, exhibiting an anomalous behavior opposite to that of conventional Mn-based cathodes, which is associated with an ordered anisotropic distortion of the [MnO6] octahedra. As a result, NFMPP-V delivers a high reversible capacity of 120.2 mAh g–1 and achieves a capacity retention of 82.3% for 500 cycles at 5C. This work demonstrates that Jahn–Teller distortion can be rationally re-engineered into a kinetic advantage and provides new insights into the design of high-energy-density NASICON-type cathodes for batteries.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Peiyao Li",
+        "Yingde Huang",
+        "Dinghao Le",
+        "Yujing Chen",
+        "Pei Yang",
+        "Tian Chen",
+        "Kunmei Yang",
+        "Qing Wu",
+        "Guodong Ren",
+        "Xiahui Zhang",
+        "Junchao Zheng"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c13641",
+      "journal": "JACS",
+      "title": "Alternating Copolymerization of Arynes and Aldehydes Enabled by an N -Arylamine Initiator",
+      "abstract": "Abstract Here, we report the direct alternating copolymerization of arynes and aldehydes initiated by a simple N-arylamine. The N-arylamine framework is critical for suppressing competing aryne homopolymerization and promotes selective alternating polymerization through a Smiles-type rearrangement pathway. Regeneration of a neutral N-arylamine chain end during each propagation cycle enables complex polymer architectures, including block copolymers and cyclic polymers, through ring-expansion alternating copolymerization. The resulting polymers contain embedded ether linkages that impart an acid-triggered degradability.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Shisato Yamamura",
+        "Ryota Murakami",
+        "Hayato Fujimoto",
+        "Mamoru Tobisu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    }
+  ]
 }
