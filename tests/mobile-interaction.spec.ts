@@ -190,14 +190,23 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   expect(scrollStyle.overflowY).toBe('scroll');
   expect(scrollStyle.gutter).toContain('stable');
 
-  const favoriteColor = userShell.locator('input[data-color="action:favorite"]');
-  await favoriteColor.evaluate((element: HTMLInputElement) => {
-    element.value = '#aa3377';
-    element.dispatchEvent(new Event('change', { bubbles: true }));
-  });
-  await expect.poll(async () =>
-    actions.locator('button[data-action="favorite"]').evaluate(element => getComputedStyle(element).backgroundColor)
-  ).toBe('rgb(170, 51, 119)');
+  const actionColors: Record<string, { hex: string; rgb: string }> = {
+    favorite: { hex: '#aa3377', rgb: 'rgb(170, 51, 119)' },
+    status: { hex: '#336699', rgb: 'rgb(51, 102, 153)' },
+    note: { hex: '#228855', rgb: 'rgb(34, 136, 85)' },
+    more: { hex: '#885522', rgb: 'rgb(136, 85, 34)' },
+  };
+  for (const [action, color] of Object.entries(actionColors)) {
+    const input = userShell.locator(`input[data-color="action:${action}"]`);
+    await expect(input).toBeVisible();
+    await input.evaluate((element: HTMLInputElement, hex) => {
+      element.value = String(hex);
+      element.dispatchEvent(new Event('change', { bubbles: true }));
+    }, color.hex);
+    await expect.poll(async () =>
+      actions.locator(`button[data-action="${action}"]`).evaluate(element => getComputedStyle(element).backgroundColor)
+    ).toBe(color.rgb);
+  }
 
   const statusImageInput = userShell.locator('input[data-image="status:to-read"]');
   await statusImageInput.setInputFiles({
@@ -242,6 +251,9 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   await expect(cardStatus.locator('.status-image')).toBeVisible();
   await expect(cardStatus).toHaveClass(/shape-square/);
   await expect.poll(async () => cardStatus.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(18, 52, 86)');
+  await expect.poll(async () =>
+    actions.locator('button[data-action="status"]').evaluate(element => getComputedStyle(element).backgroundColor)
+  ).toBe('rgb(51, 102, 153)');
 
   await expect.poll(async () => actions.evaluate(element => {
     const card = element.closest<HTMLElement>('.card');
@@ -264,6 +276,107 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
     return card?.style.getPropertyValue('--user-status-rgb').trim() || '';
   })).toBe('101,67,33');
   await actions.locator('button[data-action="close"]').click();
+});
+
+
+test.describe('desktop feedback regressions', () => {
+  test.use({
+    viewport: { width: 1707, height: 932 },
+    userAgent: devices['Desktop Safari'].userAgent,
+    deviceScaleFactor: 1,
+    isMobile: false,
+    hasTouch: false,
+    timezoneId: 'Asia/Shanghai',
+  });
+
+test('desktop personalization wheel reaches the bottom and action slots align across cards', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          auth: { google: false, wechat: false, qq: false, email: false },
+          payments: { wechat: false, alipay: false },
+        }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const actions = page.locator('gallery-paper-actions');
+  await expect(actions.nth(0)).toBeVisible({ timeout: 30000 });
+  await expect(actions.nth(1)).toBeVisible({ timeout: 30000 });
+
+  await actions.nth(0).locator('button[data-action="favorite"]').click();
+  await actions.nth(0).locator('button[data-action="status"]').click();
+  await actions.nth(0).locator('button[data-action="set-status:to-read"]').click();
+
+  const actionGeometry = async (index: number): Promise<Array<{ x: number; y: number; h: number }>> =>
+    actions.nth(index).evaluate(host => {
+      const hostRect = host.getBoundingClientRect();
+      const root = host.shadowRoot;
+      if (!root) throw new Error('paper-actions shadow root missing');
+      return ['favorite', 'status', 'note', 'more'].map(action => {
+        const button = root.querySelector<HTMLElement>(`button[data-action="${action}"]`);
+        if (!button) throw new Error(`missing action ${action}`);
+        const rect = button.getBoundingClientRect();
+        return {
+          x: Math.round(rect.left - hostRect.left),
+          y: Math.round(rect.top - hostRect.top),
+          h: Math.round(rect.height),
+        };
+      });
+    });
+
+  const firstGeometry = await actionGeometry(0);
+  const secondGeometry = await actionGeometry(1);
+  expect(firstGeometry.map(item => item.x)).toEqual(secondGeometry.map(item => item.x));
+  expect(new Set(firstGeometry.map(item => item.y)).size).toBe(1);
+  expect(new Set(secondGeometry.map(item => item.y)).size).toBe(1);
+  expect(new Set(firstGeometry.map(item => item.h)).size).toBe(1);
+  expect(new Set(secondGeometry.map(item => item.h)).size).toBe(1);
+
+  const userShell = page.locator('gallery-user-shell');
+  await userShell.locator('button.trigger').click();
+  await userShell.locator('button[data-tab="settings"]').click();
+  const panel = userShell.locator('.panel');
+  const content = userShell.locator('.content');
+  await expect(panel).toBeVisible();
+  await expect(content).toBeVisible();
+
+  const panelMetrics = await panel.evaluate(element => {
+    const style = getComputedStyle(element);
+    return {
+      height: Math.round(element.getBoundingClientRect().height),
+      gridRows: style.gridTemplateRows,
+    };
+  });
+  expect(panelMetrics.height).toBeGreaterThan(500);
+  expect(panelMetrics.height).toBeLessThanOrEqual(760);
+
+  await content.evaluate(element => { (element as HTMLElement).scrollTop = 0; });
+  await content.hover();
+  await page.mouse.wheel(0, 1100);
+  await expect.poll(async () => content.evaluate(element => (element as HTMLElement).scrollTop)).toBeGreaterThan(100);
+
+  for (let index = 0; index < 6; index += 1) await page.mouse.wheel(0, 1200);
+  await expect.poll(async () => content.evaluate(element => {
+    const node = element as HTMLElement;
+    return Math.abs(node.scrollHeight - node.clientHeight - node.scrollTop);
+  })).toBeLessThanOrEqual(3);
+
+  const bottomNotice = content.locator('.notice').last();
+  await expect(bottomNotice).toBeVisible();
+});
 });
 
 
