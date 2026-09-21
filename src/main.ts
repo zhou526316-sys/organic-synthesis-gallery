@@ -822,8 +822,7 @@ function stageBridgeGaps(inventory: MediaInventoryResponse): void {
   if (bridgeStageTimer !== null) clearTimeout(bridgeStageTimer);
   bridgeStageTimer = window.setTimeout(() => {
     bridgeStageCursor = (bridgeStageCursor + size) % gaps.length;
-    inventoryFingerprint = '';
-    scheduleInventory();
+    stageBridgeGaps(inventory);
   }, 22_000);
 }
 
