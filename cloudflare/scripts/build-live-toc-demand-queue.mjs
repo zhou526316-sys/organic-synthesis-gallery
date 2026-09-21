@@ -9,6 +9,7 @@ const PUBLIC_QUEUE = path.join(PUBLIC, 'toc-demand-live.json');
 const MEDIA_URL = process.env.MEDIA_INDEX_URL || 'https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json';
 const SUPPLEMENT_URL = process.env.LITERATURE_SUPPLEMENT_URL || 'https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json';
 const LOCAL_CAPTURE_URL = process.env.LOCAL_CAPTURE_INDEX_URL || 'https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index';
+const MEDIA_INVENTORY_URL = process.env.MEDIA_INVENTORY_URL || 'https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory';
 const DISPLAY_GAP_OVERRIDES = 'toc-display-gap-overrides.json';
 
 function normalizeDoi(value) {
@@ -131,6 +132,34 @@ async function fetchLocalCaptureIndex() {
   }
 }
 
+async function fetchMediaInventory(dois) {
+  try {
+    const response = await fetch(MEDIA_INVENTORY_URL, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'cache-control': 'no-cache' },
+      body: JSON.stringify({ dois }),
+      signal: AbortSignal.timeout(60000),
+    });
+    if (!response.ok) throw new Error('media-inventory HTTP ' + response.status);
+    const json = await response.json();
+    const map = new Map();
+    for (const item of Array.isArray(json?.items) ? json.items : []) {
+      const doi = normalizeDoi(item?.doi || '');
+      if (!doi) continue;
+      map.set(doi, {
+        status: String(item?.status || 'missing'),
+        largeSource: String(item?.largeSource || 'none'),
+        suspiciousToc: item?.suspiciousToc === true,
+        figureCount: Math.max(0, Number(item?.figureCount || 0)),
+      });
+    }
+    return map;
+  } catch (error) {
+    console.warn('MEDIA_INVENTORY_UNAVAILABLE ' + String(error instanceof Error ? error.message : error));
+    return new Map();
+  }
+}
+
 async function loadDisplayGapOverrides() {
   const payload = await readJson(DISPLAY_GAP_OVERRIDES);
   const map = new Map();
@@ -154,6 +183,7 @@ async function main() {
     fetchLocalCaptureIndex(),
     loadDisplayGapOverrides(),
   ]);
+  const inventory = await fetchMediaInventory([...papers.keys()]);
   const allMissingOfficial = [];
   const displayGaps = [];
   const officialUpgrade = [];
@@ -185,10 +215,28 @@ async function main() {
     if (anyVisual) officialUpgrade.push(row);
     else displayGaps.push(row);
   }
+  const figureGaps = [];
+  for (const [doi, paper] of papers) {
+    const item = inventory.get(doi);
+    const figureCount = Math.max(0, Number(item?.figureCount || 0));
+    if (figureCount >= 2) continue;
+    figureGaps.push({
+      doi,
+      journal: paper.journal,
+      title: paper.title,
+      date: paper.date,
+      publisher: publisherFor(doi),
+      figureCount,
+      need: 'figures',
+      priority: figureCount === 0 ? 'missing' : 'sparse',
+    });
+  }
+
   const sorter = (a,b) => a.publisher.localeCompare(b.publisher) || a.journal.localeCompare(b.journal) || b.date.localeCompare(a.date) || a.doi.localeCompare(b.doi);
   allMissingOfficial.sort(sorter);
   displayGaps.sort(sorter);
   officialUpgrade.sort(sorter);
+  figureGaps.sort((a, b) => Number(a.figureCount || 0) - Number(b.figureCount || 0) || sorter(a, b));
   const rows = displayGaps;
   const publishers = ['acs','wiley','nature','science','rsc','elsevier','ccs','other'];
   await mkdir(OUT, { recursive: true });
@@ -218,6 +266,8 @@ async function main() {
     literatureSupplementUrl: SUPPLEMENT_URL,
     manualDisplayGapOverrides: displayGapOverrides.size,
     liveLocalCaptures: localCaptures.size,
+    mediaInventoryUrl: MEDIA_INVENTORY_URL,
+    mediaInventoryCount: inventory.size,
     webpageDoiCount: papers.size,
     mediaRecordCount: Object.keys(media).length,
     visibleGapTotal: displayGaps.length,
@@ -225,6 +275,9 @@ async function main() {
     noVisual: displayGaps.length,
     fallbackOnlyNeedsOfficialUpgrade: officialUpgrade.length,
     missingOfficialTotal: allMissingOfficial.length,
+    figureGapTotal: figureGaps.length,
+    zeroFigureGapTotal: figureGaps.filter(item => item.figureCount === 0).length,
+    sparseFigureGapTotal: figureGaps.filter(item => item.figureCount === 1).length,
     byPublisher,
     upgradeByPublisher,
     byJournal,
@@ -238,13 +291,16 @@ async function main() {
     visibleGapTotal: displayGaps.length,
     missingOfficialTotal: allMissingOfficial.length,
     officialUpgradeTotal: officialUpgrade.length,
+    figureGapTotal: figureGaps.length,
+    zeroFigureGapTotal: figureGaps.filter(item => item.figureCount === 0).length,
     visibleGaps: displayGaps,
     officialUpgrades: officialUpgrade,
+    figureGaps,
     allMissingOfficial,
   };
   await writeFile(PUBLIC_QUEUE, JSON.stringify(liveQueue, null, 2) + '\n');
   console.log('TOC_DEMAND_SUMMARY ' + JSON.stringify(summary));
-  console.log('TOC_LIVE_QUEUE ' + JSON.stringify({ path: PUBLIC_QUEUE, visible: displayGaps.length, upgrades: officialUpgrade.length }));
+  console.log('TOC_LIVE_QUEUE ' + JSON.stringify({ path: PUBLIC_QUEUE, visible: displayGaps.length, upgrades: officialUpgrade.length, figureGaps: figureGaps.length, zeroFigureGaps: figureGaps.filter(item => item.figureCount === 0).length }));
 }
 
 await main();

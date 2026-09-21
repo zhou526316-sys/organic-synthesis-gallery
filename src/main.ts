@@ -657,6 +657,7 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
   button.className = 'toc-link';
   const masterImageUrl = result.primary?.masterImageUrl || result.primary?.imageUrl || result.imageUrl;
   const cardImageUrl = result.primary?.thumbnailImageUrl || result.primary?.previewImageUrl || result.imageUrl;
+  button.dataset.masterSrc = masterImageUrl;
   const image = new Image();
   image.src = cardImageUrl;
   image.alt = result.primary?.label || t('toc');
@@ -701,7 +702,7 @@ function renderFigures(slot: HTMLElement, result: FigureResponse): void {
     const image = new Image();
     image.src = figure.imageUrl;
     image.alt = figure.label;
-    image.loading = 'eager';
+    image.loading = 'lazy';
     image.decoding = 'async';
     const label = document.createElement('span');
     label.textContent = figure.label;
@@ -709,10 +710,35 @@ function renderFigures(slot: HTMLElement, result: FigureResponse): void {
     button.addEventListener('click', () => openLightbox(figure.imageUrl, figure.label, figure.caption));
     strip.appendChild(button);
   }
-  slot.replaceChildren(heading, strip);
+  const stripShell = document.createElement('div');
+  stripShell.className = 'figure-strip-shell';
+  const previous = document.createElement('button');
+  previous.type = 'button';
+  previous.className = 'figure-strip-nav figure-strip-nav--previous';
+  previous.textContent = '‹';
+  previous.setAttribute('aria-label', language === 'zh' ? '向左浏览正文图片' : 'Scroll article figures left');
+  const next = document.createElement('button');
+  next.type = 'button';
+  next.className = 'figure-strip-nav figure-strip-nav--next';
+  next.textContent = '›';
+  next.setAttribute('aria-label', language === 'zh' ? '向右浏览正文图片' : 'Scroll article figures right');
+  const syncNav = (): void => {
+    const max = Math.max(0, strip.scrollWidth - strip.clientWidth);
+    previous.disabled = strip.scrollLeft <= 2;
+    next.disabled = max <= 2 || strip.scrollLeft >= max - 2;
+  };
+  const scrollByPage = (direction: number): void => {
+    strip.scrollBy({ left: direction * Math.max(160, strip.clientWidth * 0.82), behavior: 'smooth' });
+  };
+  previous.addEventListener('click', () => scrollByPage(-1));
+  next.addEventListener('click', () => scrollByPage(1));
+  strip.addEventListener('scroll', syncNav, { passive: true });
+  stripShell.append(previous, strip, next);
+  slot.replaceChildren(heading, stripShell);
   slot.classList.remove('generated');
   slot.classList.add('loaded');
   slot.dataset.state = 'done';
+  requestAnimationFrame(syncNav);
 }
 
 function renderFigureFallback(slot: HTMLElement, imageUrl: string): void {
@@ -788,7 +814,10 @@ function stageBridgeGaps(inventory: MediaInventoryResponse): void {
   bridgeStageCursor %= gaps.length;
   holder.innerHTML = Array.from({ length: size }, (_, index) => {
     const item = gaps[(bridgeStageCursor + index) % gaps.length];
-    return `<article class='card bridge-staging-card'><div class='toc-slot pending' data-doi='${escapeHtml(item.doi)}'></div></article>`;
+    const needFigures = Number(item.figureCount || 0) < 2;
+    const needToc = item.largeSource === 'none' || item.suspiciousToc === true;
+    const need = needFigures && needToc ? 'toc+figures' : needFigures ? 'figures' : 'toc';
+    return `<article class='card bridge-staging-card' data-media-need='${need}' data-figure-count='${Number(item.figureCount || 0)}'><div class='toc-slot pending' data-doi='${escapeHtml(item.doi)}' data-media-need='${need}'></div></article>`;
   }).join('');
   if (bridgeStageTimer !== null) clearTimeout(bridgeStageTimer);
   bridgeStageTimer = window.setTimeout(() => {
