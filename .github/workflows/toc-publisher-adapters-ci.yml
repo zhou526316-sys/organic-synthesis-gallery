@@ -71,7 +71,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.2.11" public/toc-mainline.user.js
+          grep -F "// @version      6.2.12" public/toc-mainline.user.js
           grep -F "toc-demand-live.json" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
@@ -102,6 +102,12 @@ jobs:
           grep -F "publisher_script_started" public/toc-mainline.user.js
           grep -F "CAPTURE_INDEX_URL" public/toc-mainline.user.js
           grep -F "FIGURE_IMPORT_ENDPOINT" public/toc-mainline.user.js
+          grep -F "FIGURE_STAGE_ENDPOINT" public/toc-mainline.user.js
+          grep -F "figuresStaged" public/toc-mainline.user.js
+          grep -F "D1 import unavailable; preserving figure in R2" public/toc-mainline.user.js
+          grep -F "/api/article-figures/stage" cloudflare/worker/src/index.js
+          grep -F "importStagedArticleFigure" cloudflare/worker/src/local-captures.js
+          grep -F "getStagedArticleFigures" cloudflare/worker/src/local-captures.js
           grep -F "queue.figureGaps" public/toc-mainline.user.js
           grep -F "function jobKind(job)" public/toc-mainline.user.js
           grep -F "failure:figures:" public/toc-mainline.user.js
@@ -125,7 +131,7 @@ jobs:
           grep -F "https://onlinelibrary.wiley.com" cloudflare/worker/src/index.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "loaderVersion = '2.2.11'" cloudflare/scripts/build-bridge-loader.mjs
+          grep -F "loaderVersion = '2.2.12'" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" cloudflare/scripts/build-bridge-loader.mjs
           if grep -Fq "chinesechemsoc.org" public/toc-mainline.user.js; then echo "Obsolete CJC domains must not remain in TOC mainline"; exit 1; fi
           if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
