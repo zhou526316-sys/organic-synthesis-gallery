@@ -181,7 +181,9 @@ jobs:
           test -f dist/gallery-vpn-bridge-runtime.js
           test -f dist/toc-rescue.js
           test -f dist/toc-mainline.user.js
-          grep -F "// @version      6.2.9" dist/toc-mainline.user.js
+          grep -F "// @version      6.2.10" dist/toc-mainline.user.js
+          grep -F "var figureJob = jobKind(job) === 'figures';" dist/toc-mainline.user.js
+          grep -F "figureJob ? 'full/' : ''" dist/toc-mainline.user.js
           grep -F "toc-demand-live.json" dist/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" dist/toc-mainline.user.js
           grep -F "async function iframeCandidates(job, trace)" dist/toc-mainline.user.js
@@ -224,7 +226,7 @@ jobs:
           grep -F "gm_then_fetch_failed:" dist/toc-mainline.user.js
           grep -F "TAMPERMONKEY_CORS_WRITE_PATHS" cloudflare/worker/src/index.js
           test -d dist/media-mirror
-          grep -F "// @version      2.2.9" dist/gallery-vpn-bridge.user.js
+          grep -F "// @version      2.2.10" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
@@ -236,7 +238,7 @@ jobs:
           grep -F "organicGalleryCloudflareBridgeWriteToken" dist/gallery-vpn-bridge.user.js
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" dist/gallery-vpn-bridge.user.js
           grep -F "toc-demand-live.json" dist/gallery-vpn-bridge.user.js
-          grep -F "VPN Bridge 2.2.9 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
+          grep -F "VPN Bridge 2.2.10 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
           grep -F "const VERSION = '1.2.0';" dist/gallery-vpn-bridge.user.js
           grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge.user.js
           if grep -Eq "\beval\s*\(" dist/gallery-vpn-bridge.user.js; then echo "Bridge userscript must not use eval"; exit 1; fi

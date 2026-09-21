@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.9
+// @version      6.2.10
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.9';
+  var VERSION = '6.2.10';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -113,10 +113,11 @@
     var doi = normalizeDoi(job && job.doi);
     var publisher = String(job && job.publisher || publisherForDoi(doi));
     var suffix = doi.split('/')[1] || '';
-    if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + doi;
-    if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + doi;
+    var figureJob = jobKind(job) === 'figures';
+    if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + (figureJob ? 'full/' : '') + doi;
+    if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
-    if (publisher === 'science') return 'https://www.science.org/doi/' + doi;
+    if (publisher === 'science') return 'https://www.science.org/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'rsc') {
       var rsc = /^([a-z])(\d)([a-z]{2})/i.exec(suffix);
       if (rsc) return 'https://pubs.rsc.org/en/content/articlelanding/' + String(2020 + Number(rsc[2])) + '/' + rsc[3].toLowerCase() + '/' + suffix.toLowerCase();

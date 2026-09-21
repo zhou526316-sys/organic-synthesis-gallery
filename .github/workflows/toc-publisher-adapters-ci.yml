@@ -71,13 +71,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.2.9" public/toc-mainline.user.js
+          grep -F "// @version      6.2.10" public/toc-mainline.user.js
           grep -F "toc-demand-live.json" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
           grep -F "FAILURE_COOLDOWN_MS" public/toc-mainline.user.js
           grep -F "DEFAULT_BATCH_SIZE = 8" public/toc-mainline.user.js
           grep -F "articlelanding/" public/toc-mainline.user.js
+          grep -F "var figureJob = jobKind(job) === 'figures';" public/toc-mainline.user.js
+          grep -F "figureJob ? 'full/' : ''" public/toc-mainline.user.js
           grep -F "async function iframeCandidates(job, trace)" public/toc-mainline.user.js
           grep -F "function waitForDomMutation(timeoutMs)" public/toc-mainline.user.js
           grep -F "object[type^=\"image\"],svg image" public/toc-mainline.user.js
@@ -123,7 +125,7 @@ jobs:
           grep -F "https://onlinelibrary.wiley.com" cloudflare/worker/src/index.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "loaderVersion = '2.2.9'" cloudflare/scripts/build-bridge-loader.mjs
+          grep -F "loaderVersion = '2.2.10'" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" cloudflare/scripts/build-bridge-loader.mjs
           if grep -Fq "chinesechemsoc.org" public/toc-mainline.user.js; then echo "Obsolete CJC domains must not remain in TOC mainline"; exit 1; fi
           if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
