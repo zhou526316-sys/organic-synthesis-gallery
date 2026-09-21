@@ -670,7 +670,7 @@ test('reader counts preserve last success and never turn API failure into fake z
   await expect(cachedMetric).toContainText('7');
   await expect(cachedMetric).toHaveAttribute('data-reader-count-known', 'true');
 
-  await page.evaluate(() => localStorage.removeItem('organic-gallery-reader-counts-v1'));
+  await page.evaluate(() => localStorage.removeItem('organic-gallery-reader-counts-v2'));
   await page.reload({ waitUntil: 'domcontentloaded' });
   const unknownMetric = page.locator('gallery-paper-actions').first().locator('.metric');
   await expect(unknownMetric).toContainText('—');
