@@ -508,5 +508,16 @@ export default {
         console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
       })
     );
+    ctx.waitUntil(
+      promoteStagedArticleFigures(
+        new Request('https://organic-synthesis-gallery.zhou526316.workers.dev/api/article-figures/promote-staged'),
+        env,
+        { limit: 5 }
+      ).then(result => {
+        console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON', JSON.stringify(result?.body || {}));
+      }).catch(error => {
+        console.error('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_FAILED', error instanceof Error ? error.message : String(error));
+      })
+    );
   },
 };
