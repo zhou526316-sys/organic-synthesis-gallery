@@ -65,6 +65,17 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   });
 
   const actions = page.locator('gallery-paper-actions').first();
+  const actionBar = actions.locator('.bar');
+  await expect(actionBar).toBeVisible();
+  expect(await actionBar.evaluate(element => getComputedStyle(element).flexWrap)).toBe('nowrap');
+  const actionBoxes = await actions.locator('.bar > button.action').evaluateAll(elements =>
+    elements.map(element => {
+      const rect = element.getBoundingClientRect();
+      return { top: Math.round(rect.top), bottom: Math.round(rect.bottom) };
+    })
+  );
+  expect(actionBoxes.length).toBeGreaterThanOrEqual(4);
+  expect(Math.max(...actionBoxes.map(box => box.top)) - Math.min(...actionBoxes.map(box => box.top))).toBeLessThanOrEqual(2);
 
   const expectAnchored = async (anchorLocator: Locator, popoverLocator: Locator): Promise<void> => {
     const anchorBox = await anchorLocator.boundingBox();
@@ -172,6 +183,21 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   });
   expect(scrollability.scrollHeight).toBeGreaterThan(scrollability.clientHeight);
   expect(scrollability.after).toBeGreaterThan(scrollability.before);
+  const scrollStyle = await content.evaluate(element => {
+    const style = getComputedStyle(element);
+    return { overflowY: style.overflowY, gutter: style.scrollbarGutter };
+  });
+  expect(scrollStyle.overflowY).toBe('scroll');
+  expect(scrollStyle.gutter).toContain('stable');
+
+  const favoriteColor = userShell.locator('input[data-color="action:favorite"]');
+  await favoriteColor.evaluate((element: HTMLInputElement) => {
+    element.value = '#aa3377';
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await expect.poll(async () =>
+    actions.locator('button[data-action="favorite"]').evaluate(element => getComputedStyle(element).backgroundColor)
+  ).toBe('rgb(170, 51, 119)');
 
   const statusImageInput = userShell.locator('input[data-image="status:to-read"]');
   await statusImageInput.setInputFiles({
