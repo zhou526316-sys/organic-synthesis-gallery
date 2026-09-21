@@ -151,6 +151,10 @@ async function fetchMediaInventory(dois) {
         largeSource: String(item?.largeSource || 'none'),
         suspiciousToc: item?.suspiciousToc === true,
         figureCount: Math.max(0, Number(item?.figureCount || 0)),
+        highQualityFigureCount: Math.max(0, Number(item?.highQualityFigureCount || 0)),
+        usableFigureCount: Math.max(0, Number(item?.usableFigureCount || 0)),
+        lowQualityFigureCount: Math.max(0, Number(item?.lowQualityFigureCount || 0)),
+        unknownQualityFigureCount: Math.max(0, Number(item?.unknownQualityFigureCount || 0)),
       });
     }
     return map;
@@ -219,7 +223,14 @@ async function main() {
   for (const [doi, paper] of papers) {
     const item = inventory.get(doi);
     const figureCount = Math.max(0, Number(item?.figureCount || 0));
-    if (figureCount >= 2) continue;
+    const highQualityFigureCount = Math.max(0, Number(item?.highQualityFigureCount || 0));
+    const usableFigureCount = Math.max(0, Number(item?.usableFigureCount || 0));
+    const lowQualityFigureCount = Math.max(0, Number(item?.lowQualityFigureCount || 0));
+    const unknownQualityFigureCount = Math.max(0, Number(item?.unknownQualityFigureCount || 0));
+    if (usableFigureCount >= 2) continue;
+    const priority = usableFigureCount === 0
+      ? figureCount > 0 ? 'low_resolution' : 'missing'
+      : 'sparse';
     figureGaps.push({
       doi,
       journal: paper.journal,
@@ -227,8 +238,12 @@ async function main() {
       date: paper.date,
       publisher: publisherFor(doi),
       figureCount,
+      highQualityFigureCount,
+      usableFigureCount,
+      lowQualityFigureCount,
+      unknownQualityFigureCount,
       need: 'figures',
-      priority: figureCount === 0 ? 'missing' : 'sparse',
+      priority,
     });
   }
 
@@ -236,7 +251,13 @@ async function main() {
   allMissingOfficial.sort(sorter);
   displayGaps.sort(sorter);
   officialUpgrade.sort(sorter);
-  figureGaps.sort((a, b) => Number(a.figureCount || 0) - Number(b.figureCount || 0) || sorter(a, b));
+  const figurePriority = { missing: 0, low_resolution: 1, sparse: 2 };
+  figureGaps.sort((a, b) =>
+    Number(figurePriority[a.priority] ?? 9) - Number(figurePriority[b.priority] ?? 9)
+    || Number(a.usableFigureCount || 0) - Number(b.usableFigureCount || 0)
+    || Number(a.figureCount || 0) - Number(b.figureCount || 0)
+    || sorter(a, b)
+  );
   const rows = displayGaps;
   const publishers = ['acs','wiley','nature','science','rsc','elsevier','ccs','other'];
   await mkdir(OUT, { recursive: true });
@@ -277,7 +298,8 @@ async function main() {
     missingOfficialTotal: allMissingOfficial.length,
     figureGapTotal: figureGaps.length,
     zeroFigureGapTotal: figureGaps.filter(item => item.figureCount === 0).length,
-    sparseFigureGapTotal: figureGaps.filter(item => item.figureCount === 1).length,
+    lowResolutionFigureGapTotal: figureGaps.filter(item => item.priority === 'low_resolution').length,
+    sparseFigureGapTotal: figureGaps.filter(item => item.priority === 'sparse').length,
     byPublisher,
     upgradeByPublisher,
     byJournal,
@@ -293,6 +315,7 @@ async function main() {
     officialUpgradeTotal: officialUpgrade.length,
     figureGapTotal: figureGaps.length,
     zeroFigureGapTotal: figureGaps.filter(item => item.figureCount === 0).length,
+    lowResolutionFigureGapTotal: figureGaps.filter(item => item.priority === 'low_resolution').length,
     visibleGaps: displayGaps,
     officialUpgrades: officialUpgrade,
     figureGaps,
