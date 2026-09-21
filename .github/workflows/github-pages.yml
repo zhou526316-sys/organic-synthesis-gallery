@@ -182,6 +182,8 @@ jobs:
           test -f dist/toc-rescue.js
           test -f dist/toc-mainline.user.js
           grep -F "// @version      6.2.10" dist/toc-mainline.user.js
+          grep -F "var figureJob = jobKind(job) === 'figures';" dist/toc-mainline.user.js
+          grep -F "figureJob ? 'full/' : ''" dist/toc-mainline.user.js
           grep -F "toc-demand-live.json" dist/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" dist/toc-mainline.user.js
           grep -F "async function iframeCandidates(job, trace)" dist/toc-mainline.user.js
