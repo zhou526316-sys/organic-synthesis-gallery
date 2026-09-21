@@ -28,7 +28,7 @@ export interface UserUiState {
 const STORAGE_KEY = 'organic-gallery-user-ui-v1';
 const PROFILE_KEY = 'organic-gallery-profile-v1';
 const SITE_FEEDBACK_QUEUE_KEY = 'organic-gallery-site-feedback-queue-v1';
-const READER_COUNTS_CACHE_KEY = 'organic-gallery-reader-counts-v2';
+const READER_COUNTS_CACHE_KEY = 'organic-gallery-reader-counts-v3';
 const OPTIONAL_CLOUD_TIMEOUT_MS = 6500;
 const SITE_FEEDBACK_QUEUE_LIMIT = 50;
 export const WORKER_API_BASE = 'https://api.gczhouwld.com';
