@@ -82,3 +82,42 @@ jobs:
             echo "===== COUNT $table ====="
             npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "SELECT COUNT(*) AS row_count FROM $table;" || true
           done
+
+      - name: Diagnose reader-count storage
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "===== PAPER_READERS SUMMARY ====="
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "
+            SELECT
+              COUNT(*) AS total_rows,
+              SUM(CASE WHEN profile_id LIKE 'ip:%' THEN 1 ELSE 0 END) AS ip_rows,
+              SUM(CASE WHEN profile_id NOT LIKE 'ip:%' THEN 1 ELSE 0 END) AS legacy_rows,
+              COUNT(DISTINCT doi) AS total_dois,
+              COUNT(DISTINCT CASE WHEN profile_id LIKE 'ip:%' THEN doi END) AS ip_dois,
+              COUNT(DISTINCT CASE WHEN profile_id NOT LIKE 'ip:%' THEN doi END) AS legacy_dois
+            FROM paper_readers;
+          "
+          echo "===== PAPER_READERS BY SOURCE ====="
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "
+            SELECT
+              CASE WHEN profile_id LIKE 'ip:%' THEN 'ip' ELSE 'legacy' END AS source,
+              COUNT(*) AS rows,
+              COUNT(DISTINCT doi) AS dois
+            FROM paper_readers
+            GROUP BY source
+            ORDER BY source;
+          "
+          echo "===== TOP DOI COUNTS (AGGREGATED ONLY) ====="
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "
+            SELECT
+              doi,
+              COUNT(*) AS all_count,
+              SUM(CASE WHEN profile_id LIKE 'ip:%' THEN 1 ELSE 0 END) AS ip_count,
+              SUM(CASE WHEN profile_id NOT LIKE 'ip:%' THEN 1 ELSE 0 END) AS legacy_count
+            FROM paper_readers
+            GROUP BY doi
+            ORDER BY all_count DESC, doi
+            LIMIT 20;
+          "
