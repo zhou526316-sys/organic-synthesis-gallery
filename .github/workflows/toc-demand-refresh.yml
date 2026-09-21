@@ -20,6 +20,7 @@ on:
       - 'public/rolling-supplement.json'
       - 'public/literature-supplement.json'
       - 'public/media-index.json'
+      - 'public/toc-display-gap-overrides.json'
 
 permissions:
   contents: write
