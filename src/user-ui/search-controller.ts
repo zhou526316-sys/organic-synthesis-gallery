@@ -134,7 +134,13 @@ export class UserSearchController {
     if (href && !titleElement.querySelector('.user-title-link')) titleElement.innerHTML = `<a class='user-title-link' href='${href}' target='_blank' rel='noopener noreferrer'>${titleElement.innerHTML}</a>`;
     if (href && doiElement && !doiElement.querySelector('.user-doi-link')) doiElement.innerHTML = `<a class='user-doi-link' href='${href}' target='_blank' rel='noopener noreferrer'>${doiElement.textContent || ''}</a>`;
     if (!card.querySelector(PAPER_ACTION_ELEMENT)) { const actions = document.createElement(PAPER_ACTION_ELEMENT); actions.setAttribute('data-paper-id', id); actions.setAttribute('data-language', this.language); card.querySelector('.cardfoot')?.before(actions); }
-    open?.addEventListener('click', () => store.touchOpened(id), { once: true }); titleElement.querySelector('a')?.addEventListener('click', () => store.touchOpened(id), { once: true });
+    const opened = (): void => {
+      store.touchOpened(id);
+      if (doi) void store.recordOpen(doi);
+    };
+    open?.addEventListener('click', opened, { once: true });
+    titleElement.querySelector<HTMLAnchorElement>('a.user-title-link')?.addEventListener('click', opened, { once: true });
+    doiElement?.querySelector<HTMLAnchorElement>('a.user-doi-link')?.addEventListener('click', opened, { once: true });
     return meta;
   }
 
