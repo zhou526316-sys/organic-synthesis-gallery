@@ -292,10 +292,33 @@ test('search highlights results, picker closes outside, feedback drags and submi
   await expect(doiCard.locator('.user-doi-link')).toHaveAttribute('href', canonicalDoiHref);
 
   const feedback = page.locator('site-feedback-widget');
-  await expect(feedback.locator('.site-feedback-tab')).toBeVisible();
-  await feedback.locator('.site-feedback-tab').click();
+  const feedbackTab = feedback.locator('.site-feedback-tab');
+  await expect(feedbackTab).toBeVisible();
 
+  const tabBefore = await feedbackTab.boundingBox();
+  expect(tabBefore).not.toBeNull();
+  if (tabBefore) {
+    await page.mouse.move(tabBefore.x + tabBefore.width / 2, tabBefore.y + tabBefore.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(tabBefore.x + tabBefore.width / 2 + 180, tabBefore.y + tabBefore.height / 2 + 90, { steps: 6 });
+    await page.mouse.up();
+    const tabAfter = await feedbackTab.boundingBox();
+    expect(tabAfter).not.toBeNull();
+    if (tabAfter) {
+      expect(Math.abs(tabAfter.x - tabBefore.x) + Math.abs(tabAfter.y - tabBefore.y)).toBeGreaterThan(100);
+    }
+  }
+  await expect(feedback.locator('.site-feedback-panel')).toHaveCount(0);
+
+  await feedbackTab.click();
   const panel = feedback.locator('.site-feedback-panel');
+  await expect(panel).toBeVisible();
+
+  await search.click();
+  await expect(panel).toHaveCount(0);
+
+  await feedbackTab.click();
+  await expect(panel).toBeVisible();
   const head = feedback.locator('.site-feedback-head');
   const before = await panel.boundingBox();
   const handle = await head.boundingBox();
