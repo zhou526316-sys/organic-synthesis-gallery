@@ -46,6 +46,8 @@ jobs:
           node --check toc-collector/src/background.mjs
           node --check cloudflare/scripts/import-recent-media-direct.mjs
           node --check cloudflare/scripts/build-bridge-loader.mjs
+          node --check cloudflare/scripts/build-live-toc-demand-queue.mjs
+          node --check public/toc-rescue.js
           node --check public/toc-mainline.user.js
           node --check cloudflare/worker/src/index.js
           node --check cloudflare/worker/src/local-captures.js
