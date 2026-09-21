@@ -10,7 +10,8 @@
     "d1:apply": "wrangler d1 execute organic-synthesis-gallery --remote --file ../schema.sql",
     "d1:seed-priority": "wrangler d1 execute organic-synthesis-gallery --remote --file ../seeds/user-reported-media-priority.sql",
     "test:feedback-fallback": "node scripts/test-site-feedback-fallback.mjs",
-    "test:tampermonkey-reports": "node scripts/test-tampermonkey-report-history.mjs"
+    "test:tampermonkey-reports": "node scripts/test-tampermonkey-report-history.mjs",
+    "test:reader-counts": "node scripts/test-reader-counts.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.37.1"
