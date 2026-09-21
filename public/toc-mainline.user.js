@@ -1565,6 +1565,110 @@
     }
   }
 
+  function bodyFigureLabel(node, index) {
+    var context = node && node.textContent ? String(node.textContent).replace(/\s+/g, ' ').trim() : '';
+    var match = context.match(/\b(Figure|Fig\.?|Scheme|Chart)\s*([A-Za-z]?\d+[A-Za-z]?)\b/i);
+    if (match) {
+      var kind = /^fig/i.test(match[1]) ? 'Figure' : match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase();
+      return kind + ' ' + match[2];
+    }
+    return 'Figure ' + String(index + 1);
+  }
+
+  function bodyFigurePriority(label) {
+    var match = /^(Figure|Scheme|Chart)\s+(\d+)/i.exec(String(label || ''));
+    if (!match) return 80;
+    var n = Number(match[2] || 99);
+    return String(match[1]).toLowerCase() === 'figure' ? n : 20 + n;
+  }
+
+  function collectBodyFigureCandidates(root, baseUrl, trace) {
+    var scope = root || document;
+    var pageUrl = baseUrl || location.href;
+    var rows = [];
+    var seen = new Set();
+    var containers = Array.prototype.slice.call(scope.querySelectorAll('figure, [class*="figure"], [id*="figure"], [class*="scheme"], [id*="scheme"], [class*="chart"], [id*="chart"]'));
+    containers.forEach(function (container, index) {
+      var context = String(container.textContent || '').replace(/\s+/g, ' ').trim();
+      if (/graphical\s*abstract|visual\s*abstract|toc\s*(?:graphic|image)|journal\s*cover|issue\s*cover/i.test(context)) return;
+      if (!/\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b/i.test(context)) return;
+      var label = bodyFigureLabel(container, index);
+      var caption = context.slice(0, 600);
+      var images = Array.prototype.slice.call(container.querySelectorAll('img,source'));
+      images.forEach(function (node) {
+        imageUrls(node, pageUrl).forEach(function (url) {
+          if (!url || reject(context, url)) return;
+          var key = label.toLowerCase() + '::' + mediaUrlIdentity(url, pageUrl);
+          if (seen.has(key)) return;
+          seen.add(key);
+          var img = node instanceof HTMLSourceElement ? (node.parentElement && node.parentElement.querySelector('img')) : node;
+          rows.push({
+            url: url,
+            kind: 'article_figure',
+            assetType: 'article_figure',
+            label: label,
+            text: caption,
+            score: 300 - bodyFigurePriority(label),
+            order: bodyFigurePriority(label),
+            source: 'body_dom',
+            element: img instanceof HTMLImageElement ? img : null
+          });
+        });
+      });
+    });
+    rows.sort(function (a, b) { return a.order - b.order || b.score - a.score; });
+    pushTrace(trace, {
+      stage: 'figure_discovery',
+      event: 'scan_complete',
+      status: rows.length ? 'found' : 'none',
+      message: 'bodyFigures=' + String(rows.length)
+    });
+    return rows.slice(0, 20);
+  }
+
+  async function uploadArticleFigure(job, candidate, image, trace, token, order) {
+    pushTrace(trace, {
+      stage: 'figure_upload',
+      event: 'start',
+      status: 'start',
+      url: candidate.url,
+      candidateKind: candidate.kind,
+      candidateSource: candidate.source,
+      byteLength: image.byteLength
+    });
+    try {
+      var id = String(candidate.label || ('Figure ' + String(order + 1))).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || ('figure-' + String(order + 1));
+      var result = await postJson(FIGURE_IMPORT_ENDPOINT, {
+        doi: job.doi,
+        articleUrl: location.href,
+        id: id,
+        label: candidate.label || ('Figure ' + String(order + 1)),
+        caption: candidate.text || '',
+        order: order,
+        imageData: image.imageData
+      }, token);
+      pushTrace(trace, {
+        stage: 'figure_upload',
+        event: 'complete',
+        status: 'ok',
+        url: candidate.url,
+        message: image.method,
+        byteLength: image.byteLength
+      });
+      return result;
+    } catch (error) {
+      pushTrace(trace, {
+        stage: 'figure_upload',
+        event: 'failed',
+        status: 'failed',
+        httpStatus: Number(error && error.httpStatus || 0),
+        url: candidate.url,
+        message: String(error && error.message || error)
+      });
+      throw error;
+    }
+  }
+
   async function uploadCapture(job, candidate, image, trace, token) {
     pushTrace(trace, {
       stage: 'r2_upload',
