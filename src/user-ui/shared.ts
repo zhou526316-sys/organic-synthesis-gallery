@@ -293,8 +293,6 @@ class Store extends EventTarget {
   }
   setStatus(id: string, statusId: string): void {
     this.updatePaper(id, paper => { if (statusId) paper.statusId = statusId; else delete paper.statusId; });
-    const meta = this.metadata(id); const status = this.status(statusId);
-    if (meta?.doi && status?.countsAsRead) void this.markRead(meta.doi, statusId);
   }
   setNote(id: string, note: string, broadcast = false): void { this.updatePaper(id, paper => { paper.note = note; paper.noteUpdatedAt = Date.now(); }, broadcast); }
   touchOpened(id: string): void { this.updatePaper(id, paper => { paper.lastOpenedAt = Date.now(); }, false, false); }
@@ -302,22 +300,32 @@ class Store extends EventTarget {
   follow(query: string): void { const value = query.trim(); if (value && !this.state.followedSearches.some(item => item.toLowerCase() === value.toLowerCase())) { this.state.followedSearches.unshift(value); this.save(); } }
   async loadCounts(dois: string[]): Promise<void> {
     const unique = [...new Set(dois.map(normalizeDoi).filter((value): value is string => Boolean(value)))];
+    let changed = false;
     try {
       for (let i = 0; i < unique.length; i += 150) {
-        const data = await workerPost<{ counts?: Record<string, number> }>('/api/user-ui/reader-counts', { dois: unique.slice(i, i + 150) });
-        Object.assign(this.readerCounts, data.counts || {});
+        const chunk = unique.slice(i, i + 150);
+        const data = await workerPost<{ counts?: Record<string, number> }>('/api/user-ui/reader-counts', { dois: chunk });
+        const counts = data.counts || {};
+        for (const doi of chunk) {
+          const next = Number(counts[doi] || 0);
+          if (this.readerCounts[doi] !== next) changed = true;
+          this.readerCounts[doi] = next;
+        }
       }
-      this.dispatchEvent(new CustomEvent('counts', { detail: { dois: unique } }));
+      if (changed) this.dispatchEvent(new CustomEvent('counts', { detail: { dois: unique } }));
     } catch { /* aggregate counts are optional */ }
   }
-  private async markRead(doi: string, statusId: string): Promise<void> {
+  async recordOpen(doi: string): Promise<void> {
+    const normalized = normalizeDoi(doi);
+    if (!normalized) return;
     try {
-      const data = await workerPost<{ count?: number }>('/api/user-ui/reader-counts/mark', { doi, profileId: this.profileId, statusId });
+      const data = await workerPost<{ count?: number }>('/api/user-ui/reader-counts/mark', { doi: normalized });
       if (typeof data.count === 'number') {
-        this.readerCounts[doi] = data.count;
-        this.dispatchEvent(new CustomEvent('counts', { detail: { doi } }));
+        const changed = this.readerCounts[normalized] !== data.count;
+        this.readerCounts[normalized] = data.count;
+        if (changed) this.dispatchEvent(new CustomEvent('counts', { detail: { doi: normalized } }));
       }
-    } catch { /* local reading state still succeeds */ }
+    } catch { /* article navigation must never be blocked by analytics */ }
   }
   async feedback(doi: string, kind: string, note: string): Promise<boolean> {
     try { await workerPost('/api/user-ui/feedback', { doi, profileId: this.profileId, kind, note: note.slice(0, 1000) }); return true; } catch { return false; }

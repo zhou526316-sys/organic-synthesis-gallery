@@ -3,6 +3,7 @@ import './styles.css';
 import { mountUserShell } from './user-shell';
 import { earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
+import { store } from './user-ui/shared';
 
 interface Paper {
   journal: string;
@@ -91,6 +92,7 @@ const copy = {
     journalsSelected: '个期刊已选',
     newest: '最新优先',
     oldest: '最早优先',
+    mostRead: '阅读人数最多',
     onlyNew: '仅新增',
     dateFrom: '起始日期',
     dateTo: '结束日期',
@@ -123,6 +125,7 @@ const copy = {
     journalsSelected: 'journals selected',
     newest: 'Newest first',
     oldest: 'Oldest first',
+    mostRead: 'Most readers',
     onlyNew: 'Only new',
     dateFrom: 'From date',
     dateTo: 'To date',
@@ -159,7 +162,7 @@ const app = appElement;
 let language: Language = initialLanguage();
 let papers: Paper[] = [];
 let query = '';
-let sort: 'newest' | 'oldest' = 'newest';
+let sort: 'newest' | 'oldest' | 'readers' = 'newest';
 let onlyNew = false;
 const selectedJournals = new Set<string>();
 let dateFrom = '';
@@ -177,6 +180,10 @@ let bridgeStageTimer: number | null = null;
 let bridgeStageCursor = 0;
 let newnessTimer: number | null = null;
 let journalPickerAbort: AbortController | null = null;
+
+store.addEventListener('counts', () => {
+  if (sort === 'readers') renderCards();
+});
 
 hydrateFilterPreferences();
 hydrateBrowserCaches();
@@ -424,7 +431,17 @@ function filteredPapers(): Paper[] {
         paper.date,
       ].some(value => value.toLowerCase().includes(needle));
     })
-    .sort((a, b) => sort === 'oldest' ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
+    .sort((a, b) => {
+      if (sort === 'oldest') return a.date.localeCompare(b.date);
+      if (sort === 'readers') {
+        const aDoi = paperDoi(a);
+        const bDoi = paperDoi(b);
+        const aReaders = aDoi ? Number(store.readerCounts[aDoi] ?? store.readerCounts[aDoi.toLowerCase()] ?? 0) : 0;
+        const bReaders = bDoi ? Number(store.readerCounts[bDoi] ?? store.readerCounts[bDoi.toLowerCase()] ?? 0) : 0;
+        return bReaders - aReaders || b.date.localeCompare(a.date);
+      }
+      return b.date.localeCompare(a.date);
+    });
 }
 
 function synthesisBadge(paper: Paper): string {
@@ -476,7 +493,7 @@ function mount(): void {
   const earliest = dates[0] || '';
   const latest = dates[dates.length - 1] || '';
   document.title = t('title');
-  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='stats'><div class='stat'><strong>${papers.length}</strong><span>${escapeHtml(t('total'))}</span></div><div class='stat'><strong>${journals.length}</strong><span>${escapeHtml(t('journals'))}</span></div><div class='stat'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => `<label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}><span>${escapeHtml(journal)}</span></label>`).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'${earliest ? ` min='${escapeHtml(earliest)}'` : ''}${(dateTo || latest) ? ` max='${escapeHtml(dateTo || latest)}'` : ''}></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'${(dateFrom || earliest) ? ` min='${escapeHtml(dateFrom || earliest)}'` : ''}${latest ? ` max='${escapeHtml(latest)}'` : ''}></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div><section id='gallery' class='gallery' aria-live='polite'></section><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
+  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='stats'><div class='stat'><strong>${papers.length}</strong><span>${escapeHtml(t('total'))}</span></div><div class='stat'><strong>${journals.length}</strong><span>${escapeHtml(t('journals'))}</span></div><div class='stat'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => `<label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}><span>${escapeHtml(journal)}</span></label>`).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'${earliest ? ` min='${escapeHtml(earliest)}'` : ''}${(dateTo || latest) ? ` max='${escapeHtml(dateTo || latest)}'` : ''}></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'${(dateFrom || earliest) ? ` min='${escapeHtml(dateFrom || earliest)}'` : ''}${latest ? ` max='${escapeHtml(latest)}'` : ''}></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div><section id='gallery' class='gallery' aria-live='polite'></section><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
   mountUserShell(app, language);
 
   document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.addEventListener('click', () => {
@@ -509,7 +526,8 @@ function mount(): void {
     renderCards();
   });
   document.querySelector<HTMLSelectElement>('#sort')?.addEventListener('change', event => {
-    sort = (event.target as HTMLSelectElement).value === 'oldest' ? 'oldest' : 'newest';
+    const value = (event.target as HTMLSelectElement).value;
+    sort = value === 'oldest' || value === 'readers' ? value : 'newest';
     renderCards();
   });
   document.querySelector<HTMLInputElement>('#newOnly')?.addEventListener('change', event => {

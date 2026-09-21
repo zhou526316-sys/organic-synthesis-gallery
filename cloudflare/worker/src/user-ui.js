@@ -22,6 +22,21 @@ async function sha256Hex(value) {
   return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
+function requestReaderIp(request) {
+  const value = request?.headers?.get?.('CF-Connecting-IP')?.trim() || '';
+  if (!value || value.length > 96 || /\s/.test(value)) return '';
+  return value;
+}
+
+async function readerIpActor(env, request) {
+  const ip = requestReaderIp(request);
+  const secret = typeof env?.READER_HASH_SECRET === 'string' && env.READER_HASH_SECRET.trim()
+    ? env.READER_HASH_SECRET.trim()
+    : (typeof env?.BRIDGE_WRITE_TOKEN === 'string' ? env.BRIDGE_WRITE_TOKEN.trim() : '');
+  if (!ip || !secret) return '';
+  return `ip:${await sha256Hex(`${secret}\n${ip}`)}`;
+}
+
 async function authenticatedSession(env, rawToken) {
   const token = typeof rawToken === 'string' ? rawToken.trim() : '';
   if (!token || token.length > 512) return null;
@@ -249,7 +264,10 @@ export async function readerCounts(env, payload) {
     const chunk = dois.slice(offset, offset + 80);
     const placeholders = chunk.map(() => '?').join(',');
     const result = await env.DB.prepare(
-      `SELECT doi, COUNT(*) AS count FROM paper_readers WHERE doi IN (${placeholders}) GROUP BY doi`
+      `SELECT doi, COUNT(*) AS count
+       FROM paper_readers
+       WHERE doi IN (${placeholders}) AND profile_id LIKE 'ip:%'
+       GROUP BY doi`
     ).bind(...chunk).all();
     for (const row of result?.results || []) {
       if (typeof row?.doi === 'string') counts[row.doi] = Number(row.count || 0);
@@ -258,36 +276,33 @@ export async function readerCounts(env, payload) {
   return { status: 200, body: { counts } };
 }
 
-export async function markReader(env, payload) {
+export async function markReader(env, payload, request) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
-  const profileId = normalizeProfileId(payload?.profileId);
-  const statusId = normalizeStatusId(payload?.statusId);
-  if (!doi || !profileId || !statusId) return { status: 400, body: { error: 'invalid_reader_mark' } };
+  if (!doi) return { status: 400, body: { error: 'invalid_reader_mark' } };
+
+  const actorId = await readerIpActor(env, request);
+  if (!actorId) return { status: 400, body: { error: 'reader_ip_unavailable' } };
 
   const now = Date.now();
-  const linked = await env.DB.prepare(
-    `SELECT p.user_id
-     FROM user_profile_sessions p
-     JOIN user_sessions s ON s.token_hash = p.session_token_hash AND s.user_id = p.user_id
-     WHERE p.profile_id = ? AND s.expires_at > ?`
-  ).bind(profileId, now).first();
-  const actorId = linked?.user_id ? `user:${linked.user_id}` : profileId;
-
-  if (actorId !== profileId) {
-    await env.DB.prepare(
-      `INSERT OR IGNORE INTO paper_readers (doi, profile_id, first_read_at, first_status_id)
-       SELECT doi, ?, first_read_at, first_status_id FROM paper_readers WHERE doi = ? AND profile_id = ?`
-    ).bind(actorId, doi, profileId).run();
-    await env.DB.prepare('DELETE FROM paper_readers WHERE doi = ? AND profile_id = ?').bind(doi, profileId).run();
-  }
-
-  await env.DB.prepare(
+  const inserted = await env.DB.prepare(
     `INSERT OR IGNORE INTO paper_readers (doi, profile_id, first_read_at, first_status_id)
-     VALUES (?, ?, ?, ?)`
-  ).bind(doi, actorId, now, statusId).run();
-  const row = await env.DB.prepare('SELECT COUNT(*) AS count FROM paper_readers WHERE doi = ?').bind(doi).first();
-  return { status: 200, body: { doi, count: Number(row?.count || 0) } };
+     VALUES (?, ?, ?, 'card-open')`
+  ).bind(doi, actorId, now).run();
+
+  const row = await env.DB.prepare(
+    `SELECT COUNT(*) AS count FROM paper_readers
+     WHERE doi = ? AND profile_id LIKE 'ip:%'`
+  ).bind(doi).first();
+
+  return {
+    status: 200,
+    body: {
+      doi,
+      count: Number(row?.count || 0),
+      unique: Number(inserted?.meta?.changes || 0) > 0,
+    },
+  };
 }
 
 export async function submitPaperFeedback(env, payload) {

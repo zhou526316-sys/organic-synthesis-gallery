@@ -203,7 +203,7 @@ async function handleApi(request, env) {
     return resultResponse(await readerCounts(env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark') {
-    return resultResponse(await markReader(env, await readJson(request)), cors);
+    return resultResponse(await markReader(env, await readJson(request), request), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/feedback') {
     return resultResponse(await submitPaperFeedback(env, await readJson(request)), cors);
