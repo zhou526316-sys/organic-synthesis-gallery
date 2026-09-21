@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.5
+// @version      6.2.6
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.5';
+  var VERSION = '6.2.6';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -73,6 +73,28 @@
     try { s = decodeURIComponent(s); } catch (_) {}
     s = s.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '').replace(/[?#].*$/, '');
     return /^10\.\d{4,9}\/\S+$/i.test(s) ? s : '';
+  }
+
+  function embeddedNatureDoi(value) {
+    var decoded = String(value || '');
+    for (var i = 0; i < 2; i += 1) {
+      try {
+        var next = decodeURIComponent(decoded);
+        if (next === decoded) break;
+        decoded = next;
+      } catch (_) {
+        break;
+      }
+    }
+    var match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
+    return match ? normalizeDoi(match[0]) : '';
+  }
+
+  function candidateBelongsToJob(url, job) {
+    var doi = normalizeDoi(job && job.doi);
+    if (!doi || publisherForDoi(doi) !== 'nature') return true;
+    var embedded = embeddedNatureDoi(url);
+    return !embedded || embedded === doi;
   }
 
   function publisherForDoi(doi) {
@@ -816,10 +838,21 @@
       }
     }
 
-    var rows = Array.from(map.values()).sort(function (a, b) {
+    var allRows = Array.from(map.values());
+    var rows = allRows.filter(function (row) {
+      return candidateBelongsToJob(row.url, job);
+    }).sort(function (a, b) {
       if (a.kind !== b.kind) return a.kind === 'official' ? -1 : 1;
       return b.score - a.score;
     });
+    if (!quiet && allRows.length !== rows.length) {
+      pushTrace(trace, {
+        stage: 'candidate_discovery',
+        event: 'cross_doi_rejected',
+        status: 'filtered',
+        message: source + ';rejected=' + String(allRows.length - rows.length)
+      });
+    }
     if (!quiet) {
       pushTrace(trace, {
         stage: 'candidate_discovery',
