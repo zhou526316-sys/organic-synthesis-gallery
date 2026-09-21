@@ -8,6 +8,8 @@ const OUT = path.join(ROOT, 'toc-collector', 'queues');
 const PUBLIC_QUEUE = path.join(PUBLIC, 'toc-demand-live.json');
 const MEDIA_URL = process.env.MEDIA_INDEX_URL || 'https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json';
 const SUPPLEMENT_URL = process.env.LITERATURE_SUPPLEMENT_URL || 'https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json';
+const LOCAL_CAPTURE_URL = process.env.LOCAL_CAPTURE_INDEX_URL || 'https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index';
+const DISPLAY_GAP_OVERRIDES = 'toc-display-gap-overrides.json';
 
 function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
@@ -85,22 +87,66 @@ async function fetchMediaIndex() {
   return json?.items && typeof json.items === 'object' ? json.items : {};
 }
 
+async function fetchLocalCaptureIndex() {
+  try {
+    const response = await fetch(LOCAL_CAPTURE_URL, { headers: { 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(45000) });
+    if (!response.ok) throw new Error('local-capture-index HTTP ' + response.status);
+    const json = await response.json();
+    const map = new Map();
+    for (const item of Array.isArray(json?.items) ? json.items : []) {
+      const doi = normalizeDoi(item?.doi || '');
+      const kind = String(item?.kind || '').toLowerCase();
+      if (!doi || !['official','figure1'].includes(kind)) continue;
+      map.set(doi, { kind, updatedAt: Number(item?.updatedAt || 0) });
+    }
+    return map;
+  } catch (error) {
+    console.warn('TOC_LOCAL_CAPTURE_INDEX_UNAVAILABLE ' + String(error instanceof Error ? error.message : error));
+    return new Map();
+  }
+}
+
+async function loadDisplayGapOverrides() {
+  const payload = await readJson(DISPLAY_GAP_OVERRIDES);
+  const map = new Map();
+  for (const item of Array.isArray(payload?.items) ? payload.items : []) {
+    const doi = normalizeDoi(item?.doi || '');
+    if (!doi) continue;
+    map.set(doi, String(item?.reason || 'manual_display_gap_override'));
+  }
+  return map;
+}
+
 function csvEscape(value='') {
   const s = String(value);
   return /[\",\n]/.test(s) ? '"' + s.replaceAll('"','""') + '"' : s;
 }
 
 async function main() {
-  const papers = await loadPapers();
-  const media = await fetchMediaIndex();
+  const [papers, media, localCaptures, displayGapOverrides] = await Promise.all([
+    loadPapers(),
+    fetchMediaIndex(),
+    fetchLocalCaptureIndex(),
+    loadDisplayGapOverrides(),
+  ]);
   const allMissingOfficial = [];
   const displayGaps = [];
   const officialUpgrade = [];
   for (const [doi, paper] of papers) {
     const record = media[doi] || null;
-    const official = isOfficialToc(record?.toc);
-    const anyVisual = hasAnyVisual(record);
+    const liveCapture = localCaptures.get(doi) || null;
+    const manualGapReason = displayGapOverrides.get(doi) || '';
+    const official = liveCapture?.kind === 'official' || (!manualGapReason && isOfficialToc(record?.toc));
     if (official) continue;
+
+    const anyVisual = liveCapture?.kind === 'figure1'
+      || (!manualGapReason && hasAnyVisual(record));
+
+    let existingReason = '';
+    if (liveCapture?.kind === 'figure1') existingReason = 'live_r2_figure1_fallback';
+    else if (manualGapReason) existingReason = manualGapReason;
+    else existingReason = String(record?.toc?.reason || '');
+
     const row = {
       doi,
       journal: paper.journal,
@@ -108,7 +154,7 @@ async function main() {
       date: paper.date,
       publisher: publisherFor(doi),
       state: anyVisual ? 'fallback_only' : 'no_visual',
-      existingReason: String(record?.toc?.reason || ''),
+      existingReason,
     };
     allMissingOfficial.push(row);
     if (anyVisual) officialUpgrade.push(row);
@@ -143,7 +189,10 @@ async function main() {
   const summary = {
     generatedAt: new Date().toISOString(),
     mediaIndexUrl: MEDIA_URL,
+    localCaptureIndexUrl: LOCAL_CAPTURE_URL,
     literatureSupplementUrl: SUPPLEMENT_URL,
+    manualDisplayGapOverrides: displayGapOverrides.size,
+    liveLocalCaptures: localCaptures.size,
     webpageDoiCount: papers.size,
     mediaRecordCount: Object.keys(media).length,
     visibleGapTotal: displayGaps.length,
@@ -158,7 +207,7 @@ async function main() {
   };
   await writeFile(path.join(OUT, 'toc-demand-summary.json'), JSON.stringify(summary, null, 2) + '\n');
   const liveQueue = {
-    version: 1,
+    version: 2,
     generatedAt: summary.generatedAt,
     webpageDoiCount: summary.webpageDoiCount,
     visibleGapTotal: displayGaps.length,
