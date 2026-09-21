@@ -17,6 +17,27 @@ function normalizeDoi(value) {
   return /^10\.\d{4,9}\/\S+$/i.test(cleaned) ? cleaned : null;
 }
 
+function embeddedNatureDoi(value) {
+  let decoded = String(value || '');
+  for (let i = 0; i < 2; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  const match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
+  return match ? normalizeDoi(match[0]) : null;
+}
+
+function captureBelongsToDoi(capture, doi) {
+  if (!doi?.startsWith('10.1038/')) return true;
+  const embedded = embeddedNatureDoi(capture?.sourceUrl || '');
+  return !embedded || embedded === doi;
+}
+
 function trueToc(toc) {
   return Boolean(
     toc?.available &&
@@ -122,6 +143,10 @@ async function main() {
     const kind = String(capture?.kind || '').toLowerCase();
     const imageUrl = typeof capture?.imageUrl === 'string' ? capture.imageUrl : '';
     if (!doi || !['official','figure1'].includes(kind) || !imageUrl) continue;
+    if (!captureBelongsToDoi(capture, doi)) {
+      console.warn('LOCAL_CAPTURE_CROSS_DOI_REJECTED ' + JSON.stringify({ doi, kind }));
+      continue;
+    }
 
     try {
       const mirrored = await downloadCapture(capture);
