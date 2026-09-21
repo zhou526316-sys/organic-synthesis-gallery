@@ -78,24 +78,29 @@ export class GalleryUserShell extends HTMLElement {
     const margin = 8;
     const gap = 7;
     const triggerRect = trigger.getBoundingClientRect();
-    const panelRect = panel.getBoundingClientRect();
-    const panelWidth = Math.min(panelRect.width || 780, window.innerWidth - margin * 2);
-    const panelHeight = Math.min(panelRect.height || 760, window.innerHeight - margin * 2);
+    const compact = window.innerWidth <= 680;
+    const desiredHeight = compact ? 620 : 760;
+    const availableBelow = Math.max(0, window.innerHeight - triggerRect.bottom - gap - margin);
+    const availableAbove = Math.max(0, triggerRect.top - gap - margin);
+    const openBelow = availableBelow >= Math.min(desiredHeight, 360) || availableBelow >= availableAbove;
+    const available = openBelow ? availableBelow : availableAbove;
+    const panelHeight = Math.max(220, Math.min(desiredHeight, available));
+    panel.style.height = `${Math.round(panelHeight)}px`;
 
+    const panelWidth = Math.min(panel.getBoundingClientRect().width || (compact ? 520 : 780), window.innerWidth - margin * 2);
     let left = triggerRect.right - panelWidth;
     left = Math.max(margin, Math.min(left, window.innerWidth - panelWidth - margin));
 
-    const below = triggerRect.bottom + gap;
-    const above = triggerRect.top - panelHeight - gap;
-    let top = below;
-    if (below + panelHeight > window.innerHeight - margin && above >= margin) top = above;
-    top = Math.max(margin, Math.min(top, window.innerHeight - panelHeight - margin));
+    const top = openBelow
+      ? triggerRect.bottom + gap
+      : triggerRect.top - panelHeight - gap;
 
     panel.style.left = `${Math.round(left)}px`;
-    panel.style.top = `${Math.round(top)}px`;
+    panel.style.top = `${Math.round(Math.max(margin, top))}px`;
     panel.style.right = 'auto';
     panel.style.bottom = 'auto';
     panel.dataset.anchor = 'user-center';
+    panel.dataset.side = openBelow ? 'below' : 'above';
   }
 
   private panelMarkup(): string {
