@@ -3,7 +3,9 @@
   const VIEWPORT_MARGIN = 1200;
   const attempts = new Map();
   let manifestPromise = null;
+  let liveCapturePromise = null;
   let scanTimer = null;
+  const LIVE_CAPTURE_INDEX_URL = 'https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index';
 
   function assetUrl(path) {
     if (/^(?:https?:|data:|blob:)/i.test(path)) return path;
@@ -35,6 +37,39 @@
         .catch(() => ({ items: {} }));
     }
     return manifestPromise;
+  }
+
+  async function loadLiveCaptures() {
+    if (!liveCapturePromise) {
+      liveCapturePromise = fetch(LIVE_CAPTURE_INDEX_URL + '?ts=' + Date.now(), {
+        credentials: 'omit',
+        cache: 'no-store',
+      })
+        .then(response => response.ok ? response.json() : { items: [] })
+        .then(payload => {
+          const map = new Map();
+          for (const item of Array.isArray(payload?.items) ? payload.items : []) {
+            const doi = normalizeDoi(item?.doi || '');
+            const kind = String(item?.kind || '').toLowerCase();
+            if (!doi || !['official','figure1'].includes(kind) || !item?.imageUrl) continue;
+            const prev = map.get(doi);
+            if (!prev || kind === 'official' || Number(item?.updatedAt || 0) > Number(prev?.updatedAt || 0)) {
+              map.set(doi, item);
+            }
+          }
+          return map;
+        })
+        .catch(() => new Map());
+    }
+    return liveCapturePromise;
+  }
+
+  function liveCaptureImage(item) {
+    if (!item?.imageUrl) return null;
+    const kind = String(item.kind || '').toLowerCase();
+    if (kind === 'official') return { url: item.imageUrl, label: 'Article graphic / TOC' };
+    if (kind === 'figure1') return { url: item.imageUrl, label: 'Figure 1' };
+    return null;
   }
 
   function tocLabel(toc) {
@@ -126,15 +161,18 @@
   }
 
   async function scan() {
-    const manifest = await loadManifest();
+    const [manifest, liveCaptures] = await Promise.all([loadManifest(), loadLiveCaptures()]);
     const items = manifest?.items || {};
     for (const slot of document.querySelectorAll('.toc-slot[data-doi]')) {
       if (!isNearViewport(slot)) continue;
       const doi = normalizeDoi(slot.dataset.doi);
       if (!doi) continue;
-      const imageInfo = pickLargeImage(items[doi]);
+      const liveInfo = liveCaptureImage(liveCaptures.get(doi));
+      const imageInfo = liveInfo || pickLargeImage(items[doi]);
       if (!imageInfo) continue;
-      if (slot.classList.contains('loaded') && slot.querySelector('img.toc-image')) continue;
+
+      const absoluteUrl = assetUrl(imageInfo.url);
+      if (slot.classList.contains('loaded') && slot.querySelector('img.toc-image') && slot.dataset.tocRescueUrl === absoluteUrl) continue;
       restoreSlot(slot, imageInfo);
     }
   }
@@ -154,6 +192,7 @@
   window.addEventListener('resize', () => scheduleScan(80), { passive: true });
   window.addEventListener('gallery-assets-updated', () => {
     manifestPromise = null;
+    liveCapturePromise = null;
     scheduleScan(0);
   });
   scheduleScan(0);
