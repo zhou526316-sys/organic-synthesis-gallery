@@ -3,6 +3,67 @@ export interface CroppedUserImage {
   circular: boolean;
 }
 
+const MAX_SOURCE_IMAGE_BYTES = 20_000_000;
+
+function noticeOverlay(message: string, error = false): { close: () => void; done: Promise<void> } {
+  const overlay = document.createElement('div');
+  overlay.dataset.galleryUserCropper = 'true';
+  overlay.setAttribute('role', error ? 'alertdialog' : 'status');
+  if (error) overlay.setAttribute('aria-modal', 'true');
+  Object.assign(overlay.style, {
+    position: 'fixed',
+    inset: '0',
+    zIndex: '2147483646',
+    display: 'grid',
+    placeItems: 'center',
+    padding: '14px',
+    background: 'rgba(15,23,42,.46)',
+    backdropFilter: 'blur(2px)',
+  });
+
+  const card = document.createElement('div');
+  Object.assign(card.style, {
+    width: 'min(420px, calc(100vw - 28px))',
+    padding: '18px',
+    borderRadius: '16px',
+    background: '#fff',
+    color: error ? '#b42318' : '#344054',
+    boxShadow: '0 18px 60px rgba(15,23,42,.28)',
+    font: '600 13px/1.5 Inter,system-ui,sans-serif',
+    textAlign: 'center',
+  });
+  card.textContent = message;
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+
+  let resolveDone: (() => void) | null = null;
+  const done = new Promise<void>(resolve => { resolveDone = resolve; });
+  const close = (): void => {
+    if (!overlay.isConnected) return;
+    overlay.remove();
+    resolveDone?.();
+  };
+
+  if (error) {
+    const ok = button('知道了 / OK');
+    Object.assign(ok.style, {
+      display: 'block',
+      margin: '14px auto 0',
+      border: '0',
+      background: '#3159bd',
+      color: '#fff',
+      fontWeight: '750',
+    });
+    card.appendChild(ok);
+    ok.addEventListener('click', close);
+    overlay.addEventListener('pointerdown', event => {
+      if (event.target === overlay) close();
+    });
+  }
+
+  return { close, done };
+}
+
 function readFile(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -36,9 +97,29 @@ function button(label: string): HTMLButtonElement {
 }
 
 export async function cropUserImage(file: File): Promise<CroppedUserImage | null> {
-  if (!file.type.startsWith('image/') || file.size > 4_000_000) return null;
+  if (!file.type.startsWith('image/')) {
+    const notice = noticeOverlay('无法读取该文件：请选择 JPG、PNG 或 WebP 图片。 / Please choose a JPG, PNG, or WebP image.', true);
+    await notice.done;
+    return null;
+  }
+  if (file.size > MAX_SOURCE_IMAGE_BYTES) {
+    const notice = noticeOverlay('图片文件过大，请选择 20 MB 以内的图片。 / Please choose an image smaller than 20 MB.', true);
+    await notice.done;
+    return null;
+  }
 
-  const image = await loadImage(await readFile(file));
+  const loading = noticeOverlay('正在读取图片… / Loading image…');
+  let image: HTMLImageElement;
+  try {
+    image = await loadImage(await readFile(file));
+  } catch {
+    loading.close();
+    const notice = noticeOverlay('图片无法解码，请转换为 JPG、PNG 或 WebP 后重试。 / This image cannot be decoded. Convert it to JPG, PNG, or WebP and try again.', true);
+    await notice.done;
+    return null;
+  }
+  loading.close();
+
   const size = Math.max(160, Math.min(300, window.innerWidth - 48, window.innerHeight - 240));
 
   const overlay = document.createElement('div');
