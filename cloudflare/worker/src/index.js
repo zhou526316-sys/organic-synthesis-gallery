@@ -1,4 +1,4 @@
-import { getLocalCaptureIndex, getLocalDiagnostics, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importTampermonkeyReport } from './local-captures.js';
+import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport } from './local-captures.js';
 import {
   bridgeQueue,
   getArticleFigures,
@@ -79,6 +79,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/literature/supplement',
   '/api/toc',
   '/api/article-figures',
+  '/api/article-figures/staged',
   '/api/media/batch',
   '/api/media/inventory',
   '/api/media/bridge-queue',
@@ -90,6 +91,7 @@ const BROWSER_READ_PATHS = new Set([
 ]);
 
 const TAMPERMONKEY_CORS_WRITE_PATHS = new Set([
+  '/api/article-figures/stage',
   '/api/media/local-capture/import',
   '/api/media/local-diagnostics/import',
   '/api/media/tampermonkey-report/import',
@@ -331,6 +333,9 @@ async function handleApi(request, env) {
   if (request.method === 'GET' && url.pathname === '/api/article-figures') {
     return resultResponse(await getArticleFigures(request, env), cors);
   }
+  if (request.method === 'GET' && url.pathname === '/api/article-figures/staged') {
+    return resultResponse(await getStagedArticleFigures(request, env), cors);
+  }
   if (request.method === 'POST' && url.pathname === '/api/media/batch') {
     return resultResponse(await mediaBatch(request, env, await readJson(request)), cors);
   }
@@ -371,6 +376,7 @@ async function handleApi(request, env) {
       '/api/toc/import',
       '/api/toc/quarantine',
       '/api/article-figures/import',
+      '/api/article-figures/stage',
       '/api/article-figures/reset',
       '/api/media/attempt',
       '/api/media/diagnose',
@@ -409,6 +415,9 @@ async function handleApi(request, env) {
       console.error('ARTICLE_FIGURE_IMPORT_FAILED', { message });
       return json({ error: 'article_figure_import_failed', detail: message }, { status: 500, headers: cors });
     }
+  }
+  if (request.method === 'POST' && url.pathname === '/api/article-figures/stage') {
+    return resultResponse(await importStagedArticleFigure(request, env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/reset') {
     return resultResponse(await resetFigures(request, env, await readJson(request)));
