@@ -726,15 +726,18 @@ select {
   text-transform: uppercase;
 }
 .figure-strip-shell {
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) 28px;
-  gap: 5px;
-  align-items: center;
+  position: relative;
+  display: block;
+  min-width: 0;
 }
 .figure-strip-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
   width: 28px;
   height: 52px;
   padding: 0;
+  transform: translateY(-50%);
   border: 1px solid #dfe5ee;
   border-radius: 8px;
   background: #fff;
@@ -752,12 +755,18 @@ select {
   opacity: 0.28;
   cursor: default;
 }
+.figure-strip-nav--previous {
+  left: 2px;
+}
+.figure-strip-nav--next {
+  right: 2px;
+}
 .figure-strip {
   display: flex;
   gap: 7px;
   min-width: 0;
   overflow-x: auto;
-  padding: 1px 1px 5px;
+  padding: 1px 34px 5px;
   scrollbar-width: thin;
   scroll-snap-type: x proximity;
 }
