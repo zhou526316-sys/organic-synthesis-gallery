@@ -82,6 +82,15 @@ function safeUrl(value) {
   }
 }
 
+function sanitizeTraceMessage(value) {
+  let text = safeText(value || '', 1600);
+  text = text.replace(/https?:\/\/[^\s"'<>]+/gi, raw => safeUrl(raw));
+  text = text.replace(/(authorization\s*:\s*bearer\s+)[^\s;,]+/ig, '$1[redacted]');
+  text = text.replace(/((?:signature|token|key-pair-id|x-amz-signature|x-amz-credential)=)[^&\s]+/ig, '$1[redacted]');
+  text = text.replace(/(cookie\s*[:=]\s*)[^\r\n]+/ig, '$1[redacted]');
+  return safeText(text, 500);
+}
+
 function sanitizeTrace(trace) {
   if (!Array.isArray(trace)) return [];
   return trace.slice(-160).map((entry, index) => ({
@@ -93,7 +102,7 @@ function sanitizeTrace(trace) {
     httpStatus: Number(entry?.httpStatus || 0),
     contentType: safeText(entry?.contentType || '', 120),
     url: safeUrl(entry?.url || ''),
-    message: safeText(entry?.message || '', 500),
+    message: sanitizeTraceMessage(entry?.message || ''),
     candidateKind: safeText(entry?.candidateKind || '', 80),
     candidateSource: safeText(entry?.candidateSource || '', 120),
     candidateScore: Number(entry?.candidateScore || 0),
