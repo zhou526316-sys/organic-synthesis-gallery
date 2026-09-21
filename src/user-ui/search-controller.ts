@@ -144,14 +144,15 @@ export class UserSearchController {
     if (href && !titleElement.querySelector('.user-title-link')) titleElement.innerHTML = `<a class='user-title-link' href='${href}' target='_blank' rel='noopener noreferrer'>${titleElement.innerHTML}</a>`;
     if (href && doiElement && !doiElement.querySelector('.user-doi-link')) doiElement.innerHTML = `<a class='user-doi-link' href='${href}' target='_blank' rel='noopener noreferrer'>${doiElement.textContent || ''}</a>`;
     if (!card.querySelector(PAPER_ACTION_ELEMENT)) { const actions = document.createElement(PAPER_ACTION_ELEMENT); actions.setAttribute('data-paper-id', id); actions.setAttribute('data-language', this.language); card.querySelector('.cardfoot')?.before(actions); }
-    const opened = (): void => {
+    const opened = (event: MouseEvent): void => {
+      if (!event.isTrusted) return;
       store.touchOpened(id);
       if (doi) void store.recordOpen(doi);
     };
     const bindOpened = (anchor: HTMLAnchorElement | null | undefined): void => {
       if (!anchor || anchor.dataset.readerOpenBound === '1') return;
       anchor.dataset.readerOpenBound = '1';
-      anchor.addEventListener('click', opened, { once: true });
+      anchor.addEventListener('click', opened);
     };
     bindOpened(open);
     bindOpened(titleElement.querySelector<HTMLAnchorElement>('a.user-title-link'));
