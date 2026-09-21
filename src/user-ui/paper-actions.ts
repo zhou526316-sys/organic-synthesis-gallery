@@ -226,10 +226,15 @@ export class GalleryPaperActions extends HTMLElement {
       status.style.shape = select.value as Shape;
       store.save();
     }));
-    this.shadow.querySelectorAll<HTMLInputElement>('[data-status-image]').forEach(input => input.addEventListener('change', () => {
+    this.shadow.querySelectorAll<HTMLInputElement>('[data-status-image]').forEach(input => input.addEventListener('change', async () => {
       const status = store.status(input.dataset.statusImage || '');
       const file = input.files?.[0];
-      if (status && file) void store.setImage(status.style, file);
+      if (!status || !file) return;
+      try {
+        await store.setImage(status.style, file);
+      } finally {
+        input.value = '';
+      }
     }));
   }
 

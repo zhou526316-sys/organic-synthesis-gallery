@@ -269,7 +269,16 @@ export class GalleryUserShell extends HTMLElement {
     this.shadow.querySelectorAll<HTMLInputElement>('[data-status-read]').forEach(input => input.addEventListener('change', () => { const item = store.status(input.dataset.statusRead || ''); if (item) { item.countsAsRead = input.checked; store.save(); } }));
     this.shadow.querySelectorAll<HTMLInputElement>('[data-color]').forEach(input => input.addEventListener('change', () => { const target = this.styleTarget(input.dataset.color || ''); if (target) { target.rgb = hexToRgb(input.value); store.save(); } }));
     this.shadow.querySelectorAll<HTMLSelectElement>('[data-shape]').forEach(select => select.addEventListener('change', () => { const target = this.styleTarget(select.dataset.shape || ''); if (target) { target.shape = select.value as Shape; store.save(); } }));
-    this.shadow.querySelectorAll<HTMLInputElement>('[data-image]').forEach(input => input.addEventListener('change', () => { const target = this.styleTarget(input.dataset.image || ''); const file = input.files?.[0]; if (target && file) void store.setImage(target, file); }));
+    this.shadow.querySelectorAll<HTMLInputElement>('[data-image]').forEach(input => input.addEventListener('change', async () => {
+      const target = this.styleTarget(input.dataset.image || '');
+      const file = input.files?.[0];
+      if (!target || !file) return;
+      try {
+        await store.setImage(target, file);
+      } finally {
+        input.value = '';
+      }
+    }));
   }
 
   private styleTarget(value: string): StyleDef | undefined { const [kind, id] = value.split(':'); return kind === 'status' ? store.status(id)?.style : kind === 'action' ? store.state.actionStyles[id as ActionKey] : undefined; }
