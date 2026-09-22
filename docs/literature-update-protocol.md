@@ -64,6 +64,48 @@ Every state transition must fetch the current blob SHA and use that SHA for the 
 
 A conflict on authoritative literature data, TOC mappings, or the coordination state remains a hard stop: do not overwrite it. A conflict that occurs only while persisting the derived audit report `audit/latest.json` is recoverable and must not block the whole literature run. The audit workflow uploads the fresh report as an artifact first, then refetches the newest `main`, compares `generatedAt`, and retries a non-force commit of only `audit/latest.json`. If persistence still loses repeated races, keep the artifact as the recovery source and report a warning rather than setting the project phase to `blocked_by_concurrent_change`.
 
+## Mandatory quality gates
+
+A literature run is not complete merely because a scheduled task ran or because `missingFromGallery=0`. Every completed run must satisfy four independent gates.
+
+### Gate 1 — Discovery completeness
+
+- Candidate discovery is the DOI union across every configured ISSN, Crossref online/published/created, OpenAlex, and publisher live sources where accessible.
+- A source request returning HTTP 200 is not sufficient evidence of completeness. Per-journal source-family counts and cross-source ratios must be checked.
+- The seven-day machine safety tail and Crossref created/deposit rescue remain mandatory.
+- The audit must compare the current source union against DOI-level historical review decisions inside the safety tail. If a DOI that was previously reviewed disappears from the current source union without an explicit global policy exclusion, record `historicalCoverageLosses`.
+- Any `criticalSourceFailures`, `sourceFamilyGaps`, `sourceCoverageAnomalies`, or `historicalCoverageLosses` prevents the discovery gate from passing. Closure-day coverage anomalies prevent `verifiedThrough` from advancing.
+
+### Gate 2 — Semantic review quality
+
+Semantic correctness cannot be proven by one model pass. Beginning with reviews generated after 2026-09-22 18:00 Asia/Shanghai, every run uses a two-pass adversarial review:
+
+1. First pass assigns include/exclude/pending to every unresolved DOI.
+2. Challenge pass tries to falsify the first decision. For every accepted paper, actively search for reasons it should be excluded under Gallery scope. For every high-priority rejected paper, actively search for evidence that it is actually a general preparative synthetic method.
+3. A decision is final only when the challenge pass independently reaches the same result and records `evidenceBasis`, `challengeDecision`, and `challengeReason`.
+4. Any first/challenge disagreement remains `pending` until resolved with stronger abstract/full-text/publisher evidence. It must not be published or silently excluded.
+5. Materials/heterogeneous/polymer catalysis requires affirmative evidence of broad preparative organic substrate scope; an organic transformation alone is insufficient.
+
+The review artifact must record `qualityControl.secondPassCompleted=true` and `qualityControl.unresolvedDisagreements=0` before a run may be marked complete.
+
+### Gate 3 — Publication consistency
+
+- Every accepted DOI must exist in repository-owned authoritative literature data.
+- Every accepted DOI must also be present in the deployed GitHub Pages data before it is reported as live.
+- Every DOI rejected by the latest review must be absent from both repository and deployed data unless a later explicit correction supersedes that decision.
+- The deployed unique DOI count must match the count recorded in `lastWebsiteSync.verification`.
+- TOC/Graphical Abstract availability is not a publication gate; missing media is allowed to remain pending.
+
+### Gate 4 — Regression correctness
+
+- The stable capability guard must pass before discovery.
+- DOI-level historical coverage loss inside the safety tail is a hard regression signal.
+- Previously reviewed DOI sets, per-date/per-journal counts, source-family health, and policy exclusions are compared against current output.
+- A capability change must trigger a fresh primary-window rescan; old results may not be reused across a discovery-capability fingerprint change.
+- The end-to-end validator `scripts/validate-literature-quality-gate.mjs` must pass against repository data, deployed data, latest audit, latest review, and coordination state before the run may claim a clean completion.
+
+The GitHub workflow `.github/workflows/literature-quality-gate.yml` independently runs these machine-verifiable invariants. A failed quality gate means the corresponding update remains incomplete even if the scheduler itself reported success.
+
 ## Scheduled fallback
 
 The primary task runs at 08:00 and 18:00 Asia/Shanghai. Each fresh primary run uses a three-day primary semantic-review window subject to each journal's prospective `activeFrom` cutoff, while a seven-day machine-only multi-source safety tail, Crossref created/deposit rescue, and verifiedThrough catch-up remain enabled. GPT TOC repair runs at 08:30 and 18:30; the sync-only fallback runs at 09:00 and 19:00 Asia/Shanghai and is explicitly forbidden from re-fetching literature or TOCs.
