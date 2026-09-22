@@ -2,8 +2,7 @@ name: UI status original images workbench
 on:
   push:
     branches: [feat/ui-status-original-images-20260922]
-    paths:
-      - '.github/workflows/ui-status-original-workbench.yml'
+    paths: ['.github/workflows/ui-status-original-workbench.yml']
 permissions:
   contents: write
 concurrency:
@@ -55,7 +54,7 @@ jobs:
       - name: Test original images without production traffic
         run: |
           set -o pipefail
-          npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts --browser=webkit --workers=1 --max-failures=1 --reporter=line --output=ui-image-evidence/original-tests 2>&1 | tee ui-image-evidence/original-tests.log
+          npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts --browser=webkit --workers=1 --reporter=line --output=ui-image-evidence/original-tests 2>&1 | tee ui-image-evidence/original-tests.log
       - name: Preserve existing mobile interaction coverage
         run: |
           set -o pipefail
