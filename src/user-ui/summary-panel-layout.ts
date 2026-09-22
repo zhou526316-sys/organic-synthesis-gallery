@@ -6,6 +6,7 @@ export const SUMMARY_PANEL_STYLES = `
   .summary-drawer .head h3{font-size:20px;line-height:1.4}
   .summary-drawer .close{width:40px;height:40px;flex:0 0 40px;font-size:18px}
   .summary-drawer .summary-layout{grid-template-columns:minmax(220px,34%) minmax(0,1fr);gap:24px}
+  .summary-drawer .summary-main:only-child{grid-column:1/-1}
   .summary-drawer .summary-toc{min-height:220px;padding:14px}
   .summary-drawer .summary-toc img{max-height:400px}
   .summary-drawer .summary-text{font-size:15px;line-height:1.85;overflow-wrap:anywhere}
