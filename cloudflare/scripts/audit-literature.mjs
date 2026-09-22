@@ -51,7 +51,6 @@ const START = catchupStart || BASE_START;
 const CLOSURE_DATE = shiftDate(END, -1);
 const SITE = (process.env.GALLERY_SITE || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/$/, '');
 const OUT = path.resolve(process.env.AUDIT_OUTPUT || 'audit/latest.json');
-const REVIEW_INPUT_OUT = path.resolve(process.env.AUDIT_REVIEW_INPUT_OUTPUT || 'audit/unresolved-latest.json');
 const UNRESOLVED_OUT = path.resolve(process.env.AUDIT_UNRESOLVED_OUTPUT || 'audit/unresolved-latest.json');
 
 const JOURNALS = TARGET_JOURNALS;
