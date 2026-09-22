@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "context": "Implementation batch 1 from scheduled-task evaluation: actual Pages literature authorization",
+  "verifiedAt": "2026-09-22T22:35:36+08:00",
+  "batchStatus": "implemented_and_verified",
+  "overallRequestedImprovementsStatus": "implementation_in_progress",
+  "implementationCommit": "8bd89bf3095d1a9f46c2b9c00d8fa2685875ac4c",
+  "implementationParent": "d3699e7acd9a10b16b59bd15830b2bcb4d1ed77f",
+  "changedFiles": [
+    ".github/workflows/github-pages.yml",
+    "scripts/validate-pages-literature-authorization.mjs",
+    "scripts/test-pages-literature-authorization.mjs",
+    "docs/publication-release-contract.md",
+    "audit/gpt-responses/2026-09-22/222950-release-gate-batch1-progress.md"
+  ],
+  "actualRun": {
+    "id": 35740910761,
+    "headSha": "8bd89bf3095d1a9f46c2b9c00d8fa2685875ac4c",
+    "event": "push",
+    "workflow": ".github/workflows/github-pages.yml",
+    "authorization": { "jobId": 106790109195, "status": "completed", "conclusion": "success" },
+    "build": { "jobId": 106790197815, "status": "completed", "conclusion": "success" },
+    "deploy": { "jobId": 106790411347, "status": "completed", "conclusion": "success", "deployedSearchCssSmoke": "success" },
+    "authorizationArtifact": { "name": "pages-literature-authorization", "id": 10698558975 }
+  },
+  "actualAuthorizationOutput": {
+    "ok": true,
+    "mode": "bootstrap",
+    "markerCommit": "3c9bcd16ab34a24fcbe0efda5a7e1d5905ca71fa",
+    "protectedFiles": 8,
+    "protectedInputsMatch": true,
+    "productionCardsFromMarker": 512,
+    "frozenValidation": null,
+    "failures": [],
+    "interpretation": "The existing authorized literature inputs matched all eight immutable bootstrap hashes. This is not a new independent recount of live cards, nor a real schema-v2 slot-release test."
+  },
+  "regressionTests": {
+    "testCount": 14,
+    "passed": 14,
+    "failed": 0,
+    "cases": [
+      "unchanged_literature_permits_ui_media_deployment",
+      "changed_literature_without_marker_is_blocked",
+      "omitting_protected_file_is_not_a_bypass",
+      "missing_sha_never_means_unchanged",
+      "one_pending_does_not_block_verified_release_subset",
+      "pending_cannot_enter_publication_allowlist",
+      "pending_cannot_silently_become_excluded",
+      "deferred_evidence_and_retry_cannot_be_dropped",
+      "normal_formal_rows_need_no_internal_decision_field",
+      "mismatched_challenge_is_blocked",
+      "formal_counts_and_required_reason_are_enforced",
+      "missing_explicit_second_pass_fields_are_not_zero",
+      "different_snapshot_or_slot_is_blocked",
+      "pages_build_and_deploy_depend_on_real_gate"
+    ],
+    "productionWrites": false,
+    "networkRequests": false,
+    "scope": "Isolated authorization/hash/partition fixtures and workflow dependency assertions; not a complete new-literature production release simulation."
+  },
+  "implemented": {
+    "removedDisabledGateAndUnverifiedMediaOnlyEcho": true,
+    "buildNeeds": ["literature_authorization"],
+    "deployNeeds": ["literature_authorization", "build"],
+    "checkoutPinnedToDeploymentCommit": true,
+    "authorizationCheckoutFullHistory": true,
+    "exactProtectedInputRegistry": true,
+    "newSlotReleaseRequiresAtomicReviewDataMarkerCommit": true,
+    "newSlotReleaseRequiresPinnedStagingHandoffDiagnosticBlobs": true,
+    "newSlotReleaseRevalidatesFrozenPrepublishEvidence": true,
+    "pendingMayOnlyBeDeferredNotPublishedOrExcluded": true,
+    "pendingQueueRequiresEvidenceAndFutureFixedSlot": true,
+    "releaseContractFile": "docs/publication-release-contract.md"
+  },
+  "automation": {
+    "changedTaskId": "6ab1edf330608191b89c92864890d997",
+    "promptUpdatedAt": "2026-09-22T14:32:30.474539Z",
+    "change": "Added marker schema-v2, atomic Git tree transaction, frozen blob references, actual Pages gate and exact pending-queue contract to the existing release task.",
+    "scheduleChanged": false,
+    "newTasksCreated": 0,
+    "notificationSwitchesChanged": false,
+    "note": "The three existing stages remain; notification/email switches were not changed by the available update action."
+  },
+  "concurrency": {
+    "initialNonFastForwardRejected": true,
+    "unrelatedConcurrentChangesChecked": true,
+    "treeRebuiltOnNewMain": true,
+    "forcedPush": false,
+    "unrelatedChangesPreserved": true
+  },
+  "productionScope": {
+    "productionLiteratureFilesChanged": false,
+    "publicationMarkerChanged": false,
+    "semanticDecisionsChanged": false,
+    "newLiteraturePublishedByThisBatch": 0,
+    "freshDiscoveryTriggered": false,
+    "existingPagesPipelineTriggered": true,
+    "mediaAcquisitionImplementationChanged": false,
+    "oaPdfHtmlExtractionIntroduced": false
+  },
+  "notYetVerifiedInThisBatch": [
+    "Real next-slot schema-v2 atomic literature release and its post-deployment DOI/search consistency",
+    "Deterministic staging-to-formal conversion and compatibility with the older end-to-end quality validator",
+    "Generated artifact DOI-set equality and same-release online verification ordering",
+    "Unified commit-time policy replacing the existing 20-minute technical bound",
+    "Audit lock/deduplication, final-notification configuration, and canonical current-slot versus last-verified-production state cleanup"
+  ],
+  "limits": "This batch fixes an actual skipped deployment gate and verifies it in the real Pages workflow. It does not claim that the entire requested improvement programme or tomorrow's automatic literature publication is guaranteed to succeed."
+}
