@@ -1,0 +1,147 @@
+name: Read uploaded Tampermonkey acceptance evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tm-local-acceptance-read.yml'
+      - 'audit/automation-triggers/tm-acceptance-read.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tm-local-acceptance-read
+  cancel-in-progress: false
+
+jobs:
+  read-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Read public diagnostics without writes or credentials
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures, datetime, json, re, urllib.request, urllib.parse
+
+          worker = 'https://organic-synthesis-gallery.zhou526316.workers.dev'
+          site = 'https://zhou526316-sys.github.io/organic-synthesis-gallery'
+          cutoff = 1790082000000
+          endpoints = {
+              'local': worker + '/api/media/local-diagnostics',
+              'reports': worker + '/api/media/tampermonkey-reports?limit=8',
+              'staged': worker + '/api/article-figures/staged',
+              'captures': worker + '/api/media/local-capture-index',
+              'pages': site + '/media-index.json',
+              'queue': site + '/toc-demand-live.json',
+          }
+
+          def safe_url(value):
+              try:
+                  u = urllib.parse.urlsplit(str(value or ''))
+                  if u.scheme not in ('https', 'http') or not u.hostname:
+                      return ''
+                  return urllib.parse.urlunsplit((u.scheme, u.hostname, u.path, '', ''))[:1400]
+              except Exception:
+                  return ''
+
+          def clean(value, limit=300):
+              text = str(value or '')
+              text = re.sub(r'https?://[^\s<>\"\']+', lambda m: safe_url(m.group()), text)
+              text = re.sub(r'(?i)Bearer\s+\S+|(?:token|secret|password|cookie|authorization)\s*[:=]\s*\S+', '[redacted]', text)
+              return text[:limit]
+
+          def pick(row, keys):
+              if not isinstance(row, dict):
+                  return {}
+              result = {}
+              for key in keys:
+                  if key not in row:
+                      continue
+                  value = row[key]
+                  if isinstance(value, (dict, list)):
+                      continue
+                  if key.lower().endswith('url') or key == 'href':
+                      result[key] = safe_url(value)
+                  elif isinstance(value, str):
+                      result[key] = clean(value, 600 if key == 'caption' else 300)
+                  else:
+                      result[key] = value
+              return result
+
+          def emit(kind, value):
+              print('TM_ACCEPTANCE_' + kind + ' ' + json.dumps(value, ensure_ascii=False, separators=(',', ':')), flush=True)
+
+          def fetch(item):
+              name, url = item
+              try:
+                  request = urllib.request.Request(url, headers={'Accept': 'application/json', 'Cache-Control': 'no-cache'})
+                  with urllib.request.urlopen(request, timeout=18) as response:
+                      raw = response.read(2400001)
+                      if len(raw) > 2400000:
+                          raise ValueError('response_size_limit')
+                      data = json.loads(raw)
+                      if not isinstance(data, dict):
+                          raise ValueError('expected_json_object')
+                      return name, data, {'name': name, 'httpStatus': response.status, 'bytes': len(raw), 'keys': list(data)[:25]}
+              except Exception as error:
+                  return name, None, {'name': name, 'error': clean(error)}
+
+          emit('READ_AT', {'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'cutoverMs': cutoff, 'readOnly': True})
+          data = {}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+              for name, body, meta in pool.map(fetch, endpoints.items()):
+                  emit('HTTP', meta)
+                  data[name] = body
+
+          local = data.get('local') or {}
+          emit('UPLOAD', pick(local, ['available', 'uploadedAt', 'version', 'source', 'kind', 'uploadedReason', 'total']))
+          summary = local.get('summary') or {}
+          emit('SUMMARY', pick(summary, ['version', 'queueGeneratedAt', 'startedAt', 'finishedAt', 'queueTotal', 'batchSize', 'total', 'visible', 'upgrades', 'figureGaps', 'success', 'failed', 'skipped', 'aborted', 'cooldownSkipped']))
+          result_keys = ['doi', 'version', 'status', 'reason', 'finishedAt', 'kind', 'assetType', 'figuresImported', 'figuresStaged', 'diagnosticUploaded', 'articleUrl', 'sourceUrl', 'imageUrl']
+          for row in (summary.get('results') or [])[:12]:
+              emit('BATCH_RESULT', pick(row, result_keys))
+          for name in ['activeJob', 'progress', 'publisherHeartbeat']:
+              emit(name.upper(), pick(local.get(name), ['doi', 'publisher', 'version', 'startedAt', 'queueGeneratedAt', 'status', 'state', 'at', 'atIso', 'host', 'url', 'href']))
+          traces = local.get('traces') or []
+          if not isinstance(traces, list):
+              traces = []
+          traces = sorted(traces, key=lambda x: str(x.get('finishedAt', '')), reverse=True)
+          emit('TRACE_COUNT', {'retained': len(traces)})
+          trace_keys = ['seq', 'at', 'stage', 'event', 'status', 'httpStatus', 'url', 'message', 'candidateKind', 'candidateSource', 'imageWidth', 'imageHeight', 'byteLength']
+          for row in traces[:8]:
+              emit('TRACE_HEADER', pick(row, ['doi', 'status', 'reason', 'finishedAt']))
+              events = row.get('trace') or []
+              selected = [e for e in events if e.get('stage') in ['job', 'figure_quality', 'figure_upload', 'figure_stage', 'r2_upload', 'page_doi_guard', 'page_identity', 'report_upload']]
+              for event in selected[:14]:
+                  emit('TRACE_EVENT', {'doi': row.get('doi'), **pick(event, trace_keys)})
+              if not selected:
+                  for event in events[-3:]:
+                      emit('TRACE_EVENT', {'doi': row.get('doi'), **pick(event, trace_keys)})
+
+          def rows(body):
+              items = (body or {}).get('items') or []
+              return list(items.values()) if isinstance(items, dict) else items if isinstance(items, list) else []
+
+          for row in rows(data.get('reports'))[:8]:
+              emit('REPORT', pick(row, result_keys + ['updatedAt', 'uploadedAt', 'startedAt', 'attemptCount', 'successCount', 'failureCount', 'queueGeneratedAt']))
+          asset_keys = ['doi', 'id', 'label', 'caption', 'kind', 'source', 'articleUrl', 'sourceUrl', 'imageUrl', 'width', 'height', 'byteLength', 'capturedAt', 'updatedAt', 'contentHash']
+          for name in ['captures', 'staged']:
+              body = data.get(name)
+              if body is None:
+                  continue
+              emit(name.upper() + '_SUMMARY', pick(body, ['version', 'count', 'updatedAt', 'invalidFiltered']))
+              items = sorted(rows(body), key=lambda x: float(x.get('updatedAt') or 0), reverse=True)
+              for item in items[:12]:
+                  emit(name.upper() + '_ASSET', pick(item, asset_keys))
+          pages = data.get('pages')
+          if pages is not None:
+              items = rows(pages)
+              emit('PAGES', {'generatedAt': pages.get('generatedAt'), 'records': len(items), 'figures': sum(len((x.get('figures') or {}).get('figures') or []) for x in items)})
+          queue = data.get('queue')
+          if queue is not None:
+              emit('QUEUE', pick(queue, ['generatedAt', 'webpageDoiCount', 'visibleGapTotal', 'missingOfficialTotal', 'officialUpgradeTotal', 'figureGapTotal']))
+          if not data.get('local'):
+              raise SystemExit('Uploaded local diagnostic body unavailable; acceptance remains incomplete.')
+          PY
