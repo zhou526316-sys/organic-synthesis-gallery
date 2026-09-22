@@ -1,0 +1,75 @@
+name: Unified capture release build
+on:
+  push:
+    branches: [integration/tm220-final-unified]
+    paths: ['.github/workflows/tm-unified-capability-build.yml','scripts/assemble-unified-tm221.py','scripts/finish-unified-tm221.py']
+permissions:
+  contents: write
+concurrency:
+  group: tm-unified-capability-build
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: integration/tm220-final-unified
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply only the eight inspected conflict resolutions
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin 2e2aa23e99434ced71e285250f5e8269cb60fbd8
+          if grep -Fq "var VERSION = '6.2.20';" public/toc-mainline.user.js; then python3 scripts/assemble-unified-tm221.py; fi
+          if test -f scripts/finish-unified-tm221.py; then python3 scripts/finish-unified-tm221.py; fi
+          git diff --check
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/verified-browser-media.js
+      - name: Verify task binding storage receipts and real SQLite image publication
+        run: |
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm-night-release.mjs
+      - name: Test combined image capture and cross-origin tab persistence in Chromium
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install chromium
+          node scripts/test-tm-paired-capture.mjs
+          node scripts/test-tm-night-browser.mjs
+      - name: Build actual installer and complete current corpus queue
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: |
+          node cloudflare/scripts/build-live-toc-demand-queue.mjs
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm-release.mjs public
+          npx tsc --noEmit
+          npm run build
+          node scripts/validate-tm-release.mjs dist
+      - name: Preserve exact release evidence
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/unified-release"
+          tar -cf "$RUNNER_TEMP/unified-release/source.tar" public/toc-mainline.user.js public/toc-demand-live.json public/capture-launch.html cloudflare/worker/src cloudflare/scripts scripts src/platform-api.ts audit/tm221-release-contracts 2>/dev/null || true
+          cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/unified-release/" 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unified-capture-release
+          path: ${{ runner.temp }}/unified-release/
+          retention-days: 3
+      - name: Commit tested source only, with no workflow or literature edits
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/integration/tm220-final-unified
+          git add public/toc-mainline.user.js public/toc-demand-live.json public/capture-launch.html cloudflare/scripts/build-bridge-loader.mjs cloudflare/scripts/build-live-toc-demand-queue.mjs cloudflare/scripts/merge-worker-media.mjs cloudflare/worker/src/local-captures.js cloudflare/worker/src/media-write.js cloudflare/worker/src/media.js cloudflare/worker/src/index.js cloudflare/worker/src/verified-browser-media.js src/platform-api.ts scripts/test-media-identity-v220.mjs scripts/test-tm-stage-first.mjs scripts/test-tm-paired-capture.mjs scripts/test-tm-night-release.mjs scripts/test-tm-night-browser.mjs scripts/validate-tm-release.mjs audit/tm221-release-contracts
+          if ! git diff --cached --quiet; then git commit -m 'release: tested unified Bridge2.2.21 capture and verified publication'; git push origin HEAD:integration/tm220-final-unified; fi
+          echo "UNIFIED_TESTED_HEAD=$(git rev-parse HEAD)"
