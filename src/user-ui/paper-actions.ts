@@ -2,6 +2,8 @@ import { escapeHtml, rgbCss, SHAPES, statusLabel, store, styleVars, type Article
 
 import { hydrateStatusImages, statusImageError, statusImageTag, viewStatusImage } from './status-image-assets';
 
+import { positionSummaryPanel, SUMMARY_PANEL_STYLES } from './summary-panel-layout';
+
 const NAME = 'gallery-paper-actions';
 
 function icon(style: StyleDef, fallback: string): string {
@@ -107,6 +109,8 @@ export class GalleryPaperActions extends HTMLElement {
     store.addEventListener('counts', this.countsChanged);
     document.addEventListener('pointerdown', this.outside);
     window.addEventListener('resize', this.reposition);
+    window.visualViewport?.addEventListener('resize', this.reposition);
+    window.visualViewport?.addEventListener('scroll', this.reposition);
     window.addEventListener('scroll', this.reposition, true);
     this.render();
   }
@@ -115,6 +119,8 @@ export class GalleryPaperActions extends HTMLElement {
     store.removeEventListener('counts', this.countsChanged);
     document.removeEventListener('pointerdown', this.outside);
     window.removeEventListener('resize', this.reposition);
+    window.visualViewport?.removeEventListener('resize', this.reposition);
+    window.visualViewport?.removeEventListener('scroll', this.reposition);
     window.removeEventListener('scroll', this.reposition, true);
     this.closePanel(false);
   }
@@ -139,6 +145,10 @@ export class GalleryPaperActions extends HTMLElement {
     const anchor = this.shadow.querySelector<HTMLElement>(`button[data-action="${this.panel}"]`);
     const drawer = this.shadow.querySelector<HTMLElement>('.drawer');
     if (!anchor || !drawer) return;
+    if (this.panel === 'summary') {
+      positionSummaryPanel(drawer, anchor, this);
+      return;
+    }
 
     drawer.style.left = '0px';
     drawer.style.top = '0px';
@@ -157,7 +167,7 @@ export class GalleryPaperActions extends HTMLElement {
     const above = Math.max(0, anchorRect.top - gap - margin);
     const openBelow = below >= Math.min(initialRect.height, 220) || below >= above;
     const available = openBelow ? below : above;
-    const cap = this.panel === 'summary' ? (window.innerWidth <= 680 ? 620 : 680) : (window.innerWidth <= 680 ? 520 : 560);
+    const cap = window.innerWidth <= 680 ? 520 : 560;
     drawer.style.maxHeight = `${Math.max(96, Math.min(cap, available))}px`;
 
     const fittedRect = drawer.getBoundingClientRect();
@@ -269,6 +279,7 @@ export class GalleryPaperActions extends HTMLElement {
       .status-style-editor .image-options{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       .image-options label{display:flex;align-items:center;gap:4px}.image-options button{border:0;background:transparent;color:#3159bd;padding:4px}
       .image-help{grid-column:1/-1;line-height:1.5;overflow-wrap:anywhere}
+      ${SUMMARY_PANEL_STYLES}
     </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('全文摘要', 'Full-text summary')}</button></div><div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
       ${button(status ? { ...s.status, rgb: status.style.rgb } : s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status), status?.style.imageOriginal ? status.style : undefined)}
