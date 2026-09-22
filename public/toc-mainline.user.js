@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.19
+// @version      6.2.20
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.19';
+  var VERSION = '6.2.20';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -95,11 +95,75 @@
     return match ? normalizeDoi(match[0]) : '';
   }
 
+function embeddedJobDois(value) {
+  let decoded = String(value || '').split(/[?#]/, 1)[0];
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch { break; }
+  }
+  const found = new Set();
+  const pattern = /10\.(1021|1002|1038|1126|1039|1016|31635)[/_]([a-z0-9._()-]+)/ig;
+  for (const match of decoded.matchAll(pattern)) {
+    const doi = normalizeDoi('10.' + match[1] + '/' + match[2]);
+    if (doi) found.add(doi);
+  }
+  try {
+    const url = new URL(decoded);
+    if (/^(?:www\.)?nature\.com$/i.test(url.hostname)) {
+      const match = url.pathname.match(/^\/articles\/(s\d+-\d+-\d+[a-z0-9-]*)/i);
+      if (match) found.add(normalizeDoi('10.1038/' + match[1]));
+    }
+  } catch {}
+  return [...found].filter(Boolean);
+}
+
+  function publisherPageDois() {
+    var ids = embeddedJobDois(location.href);
+    document.querySelectorAll('head meta[name="citation_doi"],head meta[name="dc.Identifier"],head meta[name="DC.Identifier"],head meta[property="citation_doi"],head link[rel="canonical"]').forEach(function (node) {
+      ids = ids.concat(embeddedJobDois(node.getAttribute('content') || node.getAttribute('href') || ''));
+    });
+    return Array.from(new Set(ids));
+  }
+
+  function assertBoundCaptureJob(job, sourceUrl) {
+    var live = GM_getValue(ACTIVE_JOB_KEY, null);
+    if (!job || !job.jobId || !live || live.jobId !== job.jobId || live.doi !== job.doi || job.captureVersion !== VERSION) {
+      throw new Error('capture_job_stale_or_unbound');
+    }
+    var binding = '';
+    try { binding = sessionStorage.getItem(P + 'tab-job-binding') || ''; } catch (_) {}
+    if (binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
+    var page = publisherPageDois();
+    if (!page.length) throw new Error('page_doi_unverified');
+    if (page.some(function (doi) { return doi !== normalizeDoi(job.doi); })) throw new Error('page_doi_mismatch');
+    var source = embeddedJobDois(sourceUrl || '');
+    if (source.some(function (doi) { return doi !== normalizeDoi(job.doi); })) throw new Error('media_source_doi_mismatch');
+    return normalizeDoi(job.doi);
+  }
+
+  async function bindPublisherCaptureJob(job) {
+    var match = String(location.hash || '').match(/(?:^#|&)osg-job=([a-z0-9-]{16,80})(?:&|$)/i);
+    var binding = '';
+    try {
+      if (match) sessionStorage.setItem(P + 'tab-job-binding', match[1]);
+      binding = sessionStorage.getItem(P + 'tab-job-binding') || '';
+    } catch (_) {}
+    if (!job.jobId || binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
+    for (var i = 0; i < 8; i += 1) {
+      try { return assertBoundCaptureJob(job); }
+      catch (error) {
+        if (String(error.message) !== 'page_doi_unverified' || i === 7) throw error;
+        await sleep(400);
+      }
+    }
+  }
+
   function candidateBelongsToJob(url, job) {
     var doi = normalizeDoi(job && job.doi);
-    if (!doi || publisherForDoi(doi) !== 'nature') return true;
-    var embedded = embeddedNatureDoi(url);
-    return !embedded || embedded === doi;
+    return Boolean(doi && embeddedJobDois(url).every(function (value) { return value === doi; }));
   }
 
   function publisherForDoi(doi) {
@@ -1660,8 +1724,12 @@
   }
 
   async function uploadArticleFigure(job, candidate, image, trace, token, order) {
+    assertBoundCaptureJob(job, candidate.url);
     var payload = {
       doi: job.doi,
+      jobId: job.jobId,
+      captureVersion: VERSION,
+      pageDoi: normalizeDoi(job.doi),
       articleUrl: location.href,
       sourceUrl: candidate.url,
       id: String(candidate.label || ('figure-' + String(order + 1))).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
@@ -1738,6 +1806,7 @@
   }
 
   async function uploadCapture(job, candidate, image, trace, token) {
+    assertBoundCaptureJob(job, candidate.url);
     pushTrace(trace, {
       stage: 'r2_upload',
       event: 'start',
@@ -1750,6 +1819,9 @@
     try {
       var result = await postJson(CAPTURE_ENDPOINT, {
         doi: job.doi,
+      jobId: job.jobId,
+      captureVersion: VERSION,
+      pageDoi: normalizeDoi(job.doi),
         kind: candidate.kind,
         imageData: image.imageData,
         articleUrl: location.href,
@@ -1848,6 +1920,7 @@
   }
 
   async function runPublisherJob(job) {
+    assertBoundCaptureJob(job);
     var trace = [];
     var token = writeToken();
     job.publisher = String(job.publisher || publisherForDoi(job.doi));
@@ -2302,6 +2375,8 @@
       results: []
     };
 
+    GM_setValue(SUMMARY_KEY, summary);
+
     for (var i = 0; i < jobs.length; i += 1) {
       if (GM_getValue(ENABLED_KEY, true) === false || isAbortRequested()) break;
       var job = Object.assign({}, jobs[i]);
@@ -2310,6 +2385,8 @@
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
       job.queueGeneratedAt = queueGeneratedAt;
       job.startedAt = nowIso();
+      job.jobId = crypto.randomUUID();
+      job.captureVersion = VERSION;
 
       var taskKind = jobKind(job);
       var prior = GM_getValue(attemptKey(job.doi, job.queueGeneratedAt, taskKind), null);
@@ -2327,7 +2404,7 @@
       var tab = null;
       var result = null;
       try {
-        tab = GM_openInTab(articleUrl(job), {
+        tab = GM_openInTab(articleUrl(job) + '#osg-job=' + encodeURIComponent(job.jobId), {
           active: job.publisher === 'wiley',
           insert: true,
           setParent: true
@@ -2383,6 +2460,13 @@
     var job = GM_getValue(ACTIVE_JOB_KEY, null);
     if (!job || !normalizeDoi(job.doi)) {
       writePublisherHeartbeat(null, 'active_job_missing');
+      return;
+    }
+    try {
+      await bindPublisherCaptureJob(job);
+    } catch (error) {
+      // Do not complete or overwrite the active job from an unrelated tab.
+      await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
       return;
     }
     writePublisherHeartbeat(job, 'active_job_seen');
@@ -2467,7 +2551,8 @@
       window.alert(enabled ? '媒体抓取主线已暂停。' : '媒体抓取主线已继续。');
     });
     GM_registerMenuCommand('查看最近运行摘要', function () {
-      window.alert(JSON.stringify(GM_getValue(SUMMARY_KEY, {}), null, 2));
+      var summary = GM_getValue(SUMMARY_KEY, {});
+      window.alert(JSON.stringify({ runtimeVersion: VERSION, summaryIsCurrentVersion: summary.version === VERSION, activeJob: GM_getValue(ACTIVE_JOB_KEY, null), summary: summary }, null, 2));
     });
     GM_registerMenuCommand('清除 TOC 失败冷却并立即重试', function () {
       var queueKeys = [];

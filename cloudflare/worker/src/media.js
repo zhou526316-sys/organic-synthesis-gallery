@@ -37,22 +37,33 @@ function decodedIdentityText(value) {
 }
 
 function embeddedKnownDois(value) {
-  const decoded = decodedIdentityText(value);
-  const patterns = [
-    /10\.1021\/[a-z0-9._-]+/ig,
-    /10\.1002\/[a-z0-9._-]+/ig,
-    /10\.1038\/[a-z0-9._-]+/ig,
-    /10\.1126\/[a-z0-9._-]+/ig,
-    /10\.1039\/[a-z0-9._-]+/ig,
-    /10\.1016\/[a-z0-9._()-]+/ig,
-    /10\.31635\/[a-z0-9._-]+/ig,
-  ];
-  return [...new Set(patterns.flatMap(pattern => (decoded.match(pattern) || []).map(normalizeDoi).filter(Boolean)))];
+  let decoded = String(value || '').split(/[?#]/, 1)[0];
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch { break; }
+  }
+  const found = new Set();
+  const pattern = /10\.(1021|1002|1038|1126|1039|1016|31635)[/_]([a-z0-9._()-]+)/ig;
+  for (const match of decoded.matchAll(pattern)) {
+    const doi = normalizeDoi('10.' + match[1] + '/' + match[2]);
+    if (doi) found.add(doi);
+  }
+  try {
+    const url = new URL(decoded);
+    if (/^(?:www\.)?nature\.com$/i.test(url.hostname)) {
+      const match = url.pathname.match(/^\/articles\/(s\d+-\d+-\d+[a-z0-9-]*)/i);
+      if (match) found.add(normalizeDoi('10.1038/' + match[1]));
+    }
+  } catch {}
+  return [...found].filter(Boolean);
 }
 
 function articleUrlMatchesDoi(value, doi) {
   const embedded = embeddedKnownDois(value);
-  return embedded.length === 0 || embedded.includes(String(doi || '').toLowerCase());
+  return embedded.every(value => value === String(doi || '').toLowerCase());
 }
 
 function mediaUrl(request, key) {
