@@ -413,21 +413,13 @@ async function handleApi(request, env) {
   }
 
   if (request.method === 'POST' && url.pathname === '/api/toc/import') {
-    return resultResponse(await importToc(request, env, await readJson(request)));
+    return json({ error: 'media_rebuild_lockdown', route: url.pathname }, { status: 503, headers: cors });
   }
   if (request.method === 'POST' && url.pathname === '/api/toc/quarantine') {
     return resultResponse(await quarantineToc(request, env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/import') {
-    try {
-      return resultResponse(await importFigure(request, env, await readJson(request)));
-    } catch (error) {
-      const message = String(error instanceof Error ? error.message : error || 'unknown_error')
-        .replace(/[A-Za-z0-9+/_=-]{32,}/g, '[redacted]')
-        .slice(0, 300);
-      console.error('ARTICLE_FIGURE_IMPORT_FAILED', { message });
-      return json({ error: 'article_figure_import_failed', detail: message }, { status: 500, headers: cors });
-    }
+    return json({ error: 'media_rebuild_lockdown', route: url.pathname }, { status: 503, headers: cors });
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/stage') {
     return resultResponse(await importStagedArticleFigure(request, env, await readJson(request)), cors);
@@ -465,11 +457,10 @@ async function handleApi(request, env) {
     return resultResponse(await diagnoseMedia(env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/media/repair-batch') {
-    const payload = await readJson(request);
-    return json(await runRepairBatch(env, payload?.limit));
+    return json({ error: 'media_rebuild_lockdown', route: url.pathname }, { status: 503, headers: cors });
   }
   if (request.method === 'POST' && url.pathname === '/api/media/primary/import') {
-    return resultResponse(await importPrimaryVisual(request, env, await readJson(request)));
+    return json({ error: 'media_rebuild_lockdown', route: url.pathname }, { status: 503, headers: cors });
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-capture/import') {
     return resultResponse(await importLocalCapture(request, env, await readJson(request)));
@@ -547,8 +538,7 @@ export default {
             local: localSweep.body?.summary || {},
           }));
         }
-        const result = await runLeaseRepairBatch(env, limit, mode, `cloudflare-cron:${controller.scheduledTime || Date.now()}`);
-        console.log('MEDIA_JOB_CRON', JSON.stringify({ mode, claimed: result.claimed, processed: result.processed, results: result.results }));
+        console.log('MEDIA_JOB_CRON_SKIPPED', JSON.stringify({ mode, reason: 'media_rebuild_lockdown' }));
       } catch (error) {
         console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
       }

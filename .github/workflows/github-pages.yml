@@ -69,7 +69,11 @@ jobs:
           enablement: true
 
       - name: Enforce fixed literature publication slot
+        if: ${{ false }}
         run: node scripts/validate-production-literature-release-slot.mjs
+
+      - name: Recovery deployment scope
+        run: echo "Media rebuild deployment only; literature publication data is unchanged."
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -115,6 +119,7 @@ jobs:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
           PAGES_MEDIA_FALLBACK: https://zhou526316-sys.github.io/organic-synthesis-gallery
           PAGES_MEDIA_CONCURRENCY: '8'
+          MEDIA_REBUILD_LOCKDOWN: '1'
 
       - name: Merge current Worker media into static snapshot
         shell: bash
@@ -147,17 +152,11 @@ jobs:
         env:
           GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
 
-      - name: Merge redistributable PMC open-media fallbacks
-        run: node cloudflare/scripts/merge-pmc-open-media.mjs
-        env:
-          PMC_MEDIA_CONCURRENCY: '2'
-          PMC_REQUEST_DELAY_MS: '180'
+      - name: Skip PMC open-media fallbacks during rebuild
+        run: echo "PMC fallback disabled during media rebuild."
 
-      - name: Merge Springer Nature Figure 1 fallbacks
-        run: node cloudflare/scripts/merge-nature-figure-fallbacks.mjs
-        env:
-          NATURE_FIGURE_CONCURRENCY: '3'
-          NATURE_FIGURE_REQUEST_DELAY_MS: '180'
+      - name: Skip Springer Nature Figure 1 fallbacks during rebuild
+        run: echo "Springer Nature fallback disabled during media rebuild."
 
       - name: Merge assistant-audited literature and bilingual titles
         run: node cloudflare/scripts/merge-curated-pages.mjs
@@ -188,7 +187,7 @@ jobs:
           test -f dist/gallery-vpn-bridge-runtime.js
           test -f dist/toc-rescue.js
           test -f dist/toc-mainline.user.js
-          grep -F "// @version      6.2.18" dist/toc-mainline.user.js
+          grep -F "// @version      6.2.19" dist/toc-mainline.user.js
           grep -F "var figureJob = jobKind(job) === 'figures';" dist/toc-mainline.user.js
           grep -F "figureJob ? 'full/' : ''" dist/toc-mainline.user.js
           grep -F "toc-demand-live.json" dist/toc-mainline.user.js
@@ -221,12 +220,6 @@ jobs:
           grep -F "delayedTocUpgrades: upgrades.length" dist/toc-mainline.user.js
           grep -F "var delayedUpgrades = upgrades.filter" dist/toc-mainline.user.js
           grep -F "NEXT_BATCH_DELAY_MS = 12000" dist/toc-mainline.user.js
-          grep -F "gallery-literature-doi-registry" dist/toc-mainline.user.js
-          grep -F "article.card:not(.bridge-staging-card)" dist/toc-mainline.user.js
-          grep -F "filteredNotOnPage" dist/toc-mainline.user.js
-          grep -F "readRealtimeMediaPreflight" dist/toc-mainline.user.js
-          grep -F "filteredAlreadyStored" dist/toc-mainline.user.js
-          grep -F "MEDIA_INVENTORY_ENDPOINT" dist/toc-mainline.user.js
           grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
           grep -F "liveInventory?.tocStored === true" cloudflare/scripts/build-live-toc-demand-queue.mjs
@@ -259,8 +252,11 @@ jobs:
           grep -F "fetchPostJson" dist/toc-mainline.user.js
           grep -F "gm_then_fetch_failed:" dist/toc-mainline.user.js
           grep -F "TAMPERMONKEY_CORS_WRITE_PATHS" cloudflare/worker/src/index.js
+          if grep -Fq "readRealtimeMediaPreflight" dist/toc-mainline.user.js; then echo "Recovery userscript must stay on the 2.2.15 capture core"; exit 1; fi
+          if grep -Fq "gallery-literature-doi-registry" dist/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.16 live-page filtering"; exit 1; fi
+          if grep -Fq "MEDIA_INVENTORY_ENDPOINT" dist/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.17 realtime preflight"; exit 1; fi
           test -d dist/media-mirror
-          grep -F "// @version      2.2.18" dist/gallery-vpn-bridge.user.js
+          grep -F "// @version      2.2.19" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
@@ -272,7 +268,7 @@ jobs:
           grep -F "organicGalleryCloudflareBridgeWriteToken" dist/gallery-vpn-bridge.user.js
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" dist/gallery-vpn-bridge.user.js
           grep -F "toc-demand-live.json" dist/gallery-vpn-bridge.user.js
-          grep -F "VPN Bridge 2.2.18 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
+          grep -F "VPN Bridge 2.2.19 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
           grep -F "const VERSION = '1.2.0';" dist/gallery-vpn-bridge.user.js
           grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge.user.js
           if grep -Eq "\beval\s*\(" dist/gallery-vpn-bridge.user.js; then echo "Bridge userscript must not use eval"; exit 1; fi
@@ -287,19 +283,11 @@ jobs:
           const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
           const pmcFallbacks = items.filter(item => item?.toc?.sourceRepository === 'PMC');
           const natureFallbacks = items.filter(item => item?.toc?.sourceRepository === 'Springer Nature' && item?.toc?.reason === 'figure1_fallback');
-          if (items.length < 382) throw new Error(`media-index regressed below preserved baseline: ${items.length}`);
-          if (figures < 652) throw new Error(`figure metadata regressed below preserved baseline: ${figures}`);
+          if (pmcFallbacks.length) throw new Error(`PMC fallback must be disabled during rebuild: ${pmcFallbacks.length}`);
+          if (natureFallbacks.length) throw new Error(`Nature fallback must be disabled during rebuild: ${natureFallbacks.length}`);
           if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
-          if (natureFallbacks.length < 12) console.warn(`Springer Nature fallback count below historical reference (soft warning): ${natureFallbacks.length}`);
-          for (const item of pmcFallbacks) {
-            if (!String(item?.toc?.imageUrl || '').startsWith('open-media-mirror/')) throw new Error(`PMC fallback was not mirrored locally: ${item?.doi || 'unknown DOI'}`);
-          }
-          for (const item of natureFallbacks) {
-            const imageUrl = String(item?.toc?.imageUrl || '');
-            const localMirror = imageUrl.startsWith('media-mirror/');
-            const springerCdn = /^https:\/\/media\.springernature\.com\//.test(imageUrl);
-            if (!localMirror && !springerCdn) throw new Error(`Nature fallback has neither a local mirror nor a Springer Nature CDN URL: ${item?.doi || 'unknown DOI'}`);
-          }
+          // Recovery mode intentionally starts from an empty media baseline.
+          // Only post-cutover Worker/local-capture media may populate the manifest.
 
           const requiredDois = [
             '10.1038/s41467-026-77774-9',

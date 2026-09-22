@@ -2,24 +2,6 @@ name: Repair recent literature media
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/recent-media-repair.yml'
-      - 'cloudflare/scripts/prepare-recent-media-repair.mjs'
-      - 'cloudflare/scripts/import-recent-media-direct.mjs'
-      - 'public/papers.gz.b64'
-      - 'public/curated-supplement.json'
-      - 'public/automation-supplement.json'
-      - 'public/total-synthesis.json'
-      - 'public/manual-supplement.json'
-      - 'public/final-audit-supplement.json'
-  workflow_run:
-    workflows:
-      - 'Deploy Worker additions'
-    types:
-      - completed
 
 permissions:
   contents: read
