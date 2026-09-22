@@ -50,24 +50,46 @@ function installBrowserApiFallback(): void {
       }
     } catch { /* preserve the original fetch target */ }
 
-    let lastError: unknown = new TypeError('Failed to fetch');
-    for (const target of targets) {
-      const fetchInit: RequestInit = { ...(init || {}) };
-      let timeout = 0;
-      if (!fetchInit.signal) {
-        const controller = new AbortController();
-        fetchInit.signal = controller.signal;
-        timeout = window.setTimeout(() => controller.abort(), 12000);
+    // WebKit can reject pending fetches before pagehide during navigation.
+    // Observe beforeunload too, without cancelling navigation or showing a prompt.
+    // These listeners exist only while a retry-capable request is pending.
+    let navigationStarted = false;
+    const onNavigation = (): void => { navigationStarted = true; };
+    const canRetry = targets.length > 1;
+    if (canRetry) {
+      window.addEventListener('beforeunload', onNavigation);
+      window.addEventListener('pagehide', onNavigation);
+    }
+    try {
+      let lastError: unknown = new TypeError('Failed to fetch');
+      for (const target of targets) {
+        const fetchInit: RequestInit = { ...(init || {}) };
+        let timeout = 0;
+        let timedOut = false;
+        if (!fetchInit.signal) {
+          const controller = new AbortController();
+          fetchInit.signal = controller.signal;
+          timeout = window.setTimeout(() => { timedOut = true; controller.abort(); }, 12000);
+        }
+        try {
+          return await nativeFetch(target, fetchInit);
+        } catch (error) {
+          // Cancellation is not a network outage. Preserve its original reason.
+          // Our own per-attempt timeout still permits the existing backup attempt.
+          if (navigationStarted || init?.signal?.aborted ||
+              (!timedOut && error instanceof Error && error.name === 'AbortError')) throw error;
+          lastError = error;
+        } finally {
+          if (timeout) window.clearTimeout(timeout);
+        }
       }
-      try {
-        return await nativeFetch(target, fetchInit);
-      } catch (error) {
-        lastError = error;
-      } finally {
-        if (timeout) window.clearTimeout(timeout);
+      throw lastError;
+    } finally {
+      if (canRetry) {
+        window.removeEventListener('beforeunload', onNavigation);
+        window.removeEventListener('pagehide', onNavigation);
       }
     }
-    throw lastError;
   }) as typeof window.fetch;
 }
 
