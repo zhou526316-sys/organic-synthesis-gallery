@@ -1,50 +1,50 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-22T13:37:57.398Z",
+  "generatedAt": "2026-09-22T23:10:45.037Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
-  "startDate": "2026-09-20",
-  "endDate": "2026-09-22",
-  "closureDate": "2026-09-21",
+  "startDate": "2026-09-21",
+  "endDate": "2026-09-23",
+  "closureDate": "2026-09-22",
   "summary": {
     "galleryDois": 512,
-    "sourceRecords": 573,
-    "rawMissingFromGallery": 505,
-    "previouslyReviewedExcluded": 479,
-    "missingFromGallery": 26,
-    "potentialGaps": 11,
+    "sourceRecords": 487,
+    "rawMissingFromGallery": 429,
+    "previouslyReviewedExcluded": 353,
+    "missingFromGallery": 76,
+    "potentialGaps": 27,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 2,
     "historicalCoverageLosses": 0,
-    "unresolved": 26,
+    "unresolved": 76,
     "excludedByPolicy": 0
   },
   "discoveryGate": {
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 2,
     "historicalCoverageLosses": 0
   },
   "activeJournals": [
     {
       "name": "Nature",
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 81,
-        "crossrefCandidateRecords": 81,
-        "openAlexCandidateRecords": 72,
-        "multiSourceCandidateRecords": 72,
-        "closureUnionRecords": 8,
-        "closureCrossrefRecords": 8,
-        "closureOpenAlexRecords": 8,
+        "unionCandidateRecords": 41,
+        "crossrefCandidateRecords": 41,
+        "openAlexCandidateRecords": 36,
+        "multiSourceCandidateRecords": 36,
+        "closureUnionRecords": 14,
+        "closureCrossrefRecords": 14,
+        "closureOpenAlexRecords": 10,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
@@ -52,10 +52,10 @@
     {
       "name": "Science",
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
         "unionCandidateRecords": 38,
@@ -72,16 +72,36 @@
     {
       "name": "Nature Catalysis",
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 1,
-        "crossrefCandidateRecords": 1,
+        "unionCandidateRecords": 2,
+        "crossrefCandidateRecords": 2,
         "openAlexCandidateRecords": 1,
         "multiSourceCandidateRecords": 1,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Synthesis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 3,
+        "crossrefCandidateRecords": 3,
+        "openAlexCandidateRecords": 3,
+        "multiSourceCandidateRecords": 3,
         "closureUnionRecords": 1,
         "closureCrossrefRecords": 1,
         "closureOpenAlexRecords": 1,
@@ -90,41 +110,21 @@
       }
     },
     {
-      "name": "Nature Synthesis",
-      "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
-      "sourceHealth": {
-        "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
-        "crossrefHealthy": true,
-        "openAlexHealthy": true,
-        "unionCandidateRecords": 4,
-        "crossrefCandidateRecords": 4,
-        "openAlexCandidateRecords": 3,
-        "multiSourceCandidateRecords": 3,
-        "closureUnionRecords": 0,
-        "closureCrossrefRecords": 0,
-        "closureOpenAlexRecords": 0,
-        "coverageWarning": false,
-        "closureCoverageWarning": false
-      }
-    },
-    {
       "name": "Nature Chemistry",
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
         "unionCandidateRecords": 7,
         "crossrefCandidateRecords": 7,
-        "openAlexCandidateRecords": 4,
-        "multiSourceCandidateRecords": 4,
-        "closureUnionRecords": 0,
-        "closureCrossrefRecords": 0,
-        "closureOpenAlexRecords": 0,
+        "openAlexCandidateRecords": 7,
+        "multiSourceCandidateRecords": 7,
+        "closureUnionRecords": 3,
+        "closureCrossrefRecords": 3,
+        "closureOpenAlexRecords": 3,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
@@ -132,39 +132,39 @@
     {
       "name": "Nature Communications",
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 178,
-        "crossrefCandidateRecords": 177,
-        "openAlexCandidateRecords": 165,
-        "multiSourceCandidateRecords": 164,
-        "closureUnionRecords": 35,
-        "closureCrossrefRecords": 35,
-        "closureOpenAlexRecords": 35,
+        "unionCandidateRecords": 159,
+        "crossrefCandidateRecords": 158,
+        "openAlexCandidateRecords": 134,
+        "multiSourceCandidateRecords": 133,
+        "closureUnionRecords": 37,
+        "closureCrossrefRecords": 37,
+        "closureOpenAlexRecords": 14,
         "coverageWarning": false,
-        "closureCoverageWarning": false
+        "closureCoverageWarning": true
       }
     },
     {
       "name": "JACS",
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 86,
-        "crossrefCandidateRecords": 86,
-        "openAlexCandidateRecords": 74,
-        "multiSourceCandidateRecords": 74,
-        "closureUnionRecords": 15,
-        "closureCrossrefRecords": 15,
-        "closureOpenAlexRecords": 15,
+        "unionCandidateRecords": 77,
+        "crossrefCandidateRecords": 77,
+        "openAlexCandidateRecords": 71,
+        "multiSourceCandidateRecords": 71,
+        "closureUnionRecords": 19,
+        "closureCrossrefRecords": 19,
+        "closureOpenAlexRecords": 13,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
@@ -172,19 +172,19 @@
     {
       "name": "Angew",
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 98,
-        "crossrefCandidateRecords": 96,
-        "openAlexCandidateRecords": 77,
-        "multiSourceCandidateRecords": 75,
-        "closureUnionRecords": 32,
-        "closureCrossrefRecords": 32,
-        "closureOpenAlexRecords": 23,
+        "unionCandidateRecords": 76,
+        "crossrefCandidateRecords": 76,
+        "openAlexCandidateRecords": 74,
+        "multiSourceCandidateRecords": 74,
+        "closureUnionRecords": 13,
+        "closureCrossrefRecords": 13,
+        "closureOpenAlexRecords": 12,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
@@ -192,19 +192,19 @@
     {
       "name": "ACS Catalysis",
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 30,
-        "crossrefCandidateRecords": 30,
-        "openAlexCandidateRecords": 29,
-        "multiSourceCandidateRecords": 29,
-        "closureUnionRecords": 11,
-        "closureCrossrefRecords": 11,
-        "closureOpenAlexRecords": 11,
+        "unionCandidateRecords": 27,
+        "crossrefCandidateRecords": 27,
+        "openAlexCandidateRecords": 27,
+        "multiSourceCandidateRecords": 27,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 1,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
@@ -212,30 +212,30 @@
     {
       "name": "Organic Letters",
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 40,
-        "crossrefCandidateRecords": 40,
-        "openAlexCandidateRecords": 34,
-        "multiSourceCandidateRecords": 34,
-        "closureUnionRecords": 9,
-        "closureCrossrefRecords": 9,
-        "closureOpenAlexRecords": 9,
+        "unionCandidateRecords": 46,
+        "crossrefCandidateRecords": 46,
+        "openAlexCandidateRecords": 36,
+        "multiSourceCandidateRecords": 36,
+        "closureUnionRecords": 16,
+        "closureCrossrefRecords": 16,
+        "closureOpenAlexRecords": 6,
         "coverageWarning": false,
-        "closureCoverageWarning": false
+        "closureCoverageWarning": true
       }
     },
     {
       "name": "Chem",
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-09-19",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
         "unionCandidateRecords": 0,
@@ -252,10 +252,10 @@
     {
       "name": "Chemical Science",
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-09-19",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
         "unionCandidateRecords": 0,
@@ -272,16 +272,16 @@
     {
       "name": "CCS Chemistry",
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-09-19",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
         "unionCandidateRecords": 3,
         "crossrefCandidateRecords": 3,
-        "openAlexCandidateRecords": 2,
-        "multiSourceCandidateRecords": 2,
+        "openAlexCandidateRecords": 3,
+        "multiSourceCandidateRecords": 3,
         "closureUnionRecords": 1,
         "closureCrossrefRecords": 1,
         "closureOpenAlexRecords": 1,
@@ -292,10 +292,10 @@
     {
       "name": "Science Advances",
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-09-19",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
         "unionCandidateRecords": 0,
@@ -312,10 +312,10 @@
     {
       "name": "Green Chemistry",
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-20",
+      "effectiveStart": "2026-09-21",
       "sourceHealth": {
         "activeFrom": "2026-09-19",
-        "effectiveStart": "2026-09-20",
+        "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
         "unionCandidateRecords": 0,
@@ -338,19 +338,67 @@
         "effectiveStart": "2026-09-22",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 7,
-        "crossrefCandidateRecords": 7,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
-        "closureUnionRecords": 0,
-        "closureCrossrefRecords": 0,
-        "closureOpenAlexRecords": 0,
+        "unionCandidateRecords": 8,
+        "crossrefCandidateRecords": 8,
+        "openAlexCandidateRecords": 7,
+        "multiSourceCandidateRecords": 7,
+        "closureUnionRecords": 8,
+        "closureCrossrefRecords": 8,
+        "closureOpenAlexRecords": 7,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
     }
   ],
   "unresolved": [
+    {
+      "doi": "10.1021/jav148i037_2133129",
+      "journal": "JACS",
+      "title": "Issue Editorial Masthead",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jav148i037_2133128",
+      "journal": "JACS",
+      "title": "Issue Publication Information",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
     {
       "doi": "10.1002/anie.2946344",
       "journal": "Angew",
@@ -371,14 +419,22 @@
         "Dongyuan Zhao",
         "Xiaomin Li"
       ],
-      "topics": [],
+      "topics": [
+        "Advanced biosensing and bioanalysis techniques",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Nanoparticle-Based Drug Delivery",
+        "RNA Interference and Gene Delivery"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -401,6 +457,43 @@
         "Shin‐ichi Ohkoshi",
         "Szymon Chorazy"
       ],
+      "topics": [
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Magnetism in coordination complexes",
+        "Luminescence and Fluorescent Materials"
+      ],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2211678",
+      "journal": "Angew",
+      "title": "Structure and Biosynthesis of Mangotoxin Produced by the Plant Pathogen Pseudomonas syringae",
+      "abstract": "ABSTRACT Pathogenic bacteria interfere with plant metabolism through specialized metabolites and mechanisms. Mangotoxin was identified in 2003 from Pseudomonas syringae pv. syringae , which causes devastating diseases globally in various crops, including mango. Mangotoxin was found to inhibit arginine biosynthesis in tomato and Escherichia coli ; however, its chemical structure remained unknown. We determined the structure of mangotoxin from the native bacterial producer P. syringae to be an alanine‐citrulline dipeptide that contains an internal alkyne on citrulline. We showed that mangotoxin also inhibits the growth of a multidrug‐resistant human pathogen Klebsiella pneumoniae strain. In vitro characterization of mangotoxin biosynthesis revealed that alkyne formation is catalyzed by a heme oxygenase‐like domain‐containing oxidase with a redox partner on a tripeptide intermediate. We discovered that the mangotoxin biosynthetic enzymes can couple various canonical and noncanonical amino acids into tripeptides and install two‐ or four‐electron oxidations on several tripeptides, providing a foundation for bioengineering of the pathway. Our work answered a two‐decade‐old question on the structure of an elusive toxin and will facilitate the elucidation of the molecular mechanism used by mangotoxin to inhibit amino acid metabolism in plants and bacteria.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Alexis H. Murray",
+        "Sohan Hazra",
+        "Ryan W. Mull",
+        "Erinn M. O'Neill",
+        "Bo Li"
+      ],
       "topics": [],
       "sources": [
         "crossref:1433-7851:online",
@@ -414,7 +507,7 @@
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "high"
+      "reviewPriority": "normal"
     },
     {
       "doi": "10.1002/anie.6397678",
@@ -433,14 +526,22 @@
         "Xinyi Cui",
         "Yaxuan Jing"
       ],
-      "topics": [],
+      "topics": [
+        "Per- and polyfluoroalkyl substances research",
+        "Environmental Chemistry",
+        "Environmental Science",
+        "Physical Sciences",
+        "Fluoride Effects and Removal",
+        "Surface Modification and Superhydrophobicity"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -465,13 +566,56 @@
         "Hao Xu",
         "Tian-Sheng Mei"
       ],
-      "topics": [],
+      "topics": [
+        "CO2 Reduction Techniques and Catalysts",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "Carbon dioxide utilization in catalysis",
+        "Ammonia Synthesis and Nitrogen Reduction"
+      ],
       "sources": [
         "crossref:2096-5745:online",
         "crossref:2096-5745:published",
-        "crossref:2096-5745:created"
+        "crossref:2096-5745:created",
+        "openalex:S4210239486"
       ],
       "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c11268",
+      "journal": "JACS",
+      "title": "“Electronic Sponge” Strategy Enables Polyether Electrolytes for High-Voltage and Fast-Charging Quasi-Solid-State Batteries",
+      "abstract": "Abstract Polyether electrolytes are promising for lithium (Li) metal batteries yet suffer from insufficient Li+ conductivity, low oxidative thresholds, and unstable electrolyte–electrode interphases under high-voltage and fast-charging conditions. Herein, inspired by a natural sponge’s water absorption and release, we develop a unique “electronic sponge” (ES) strategy for bidirectional electron-transfer regulation. The ES withdraws electron density from ether oxygens to weaken Li+–oxygen coordination and stabilize lone-pair electrons while donating electrons to Li-salt anions to promote anion-derived decomposition toward robust LiF-rich solid electrolyte interphase (SEI)/cathode electrolyte interphase (CEI). This straightforward strategy synergistically improves Li+ transport, oxidative stability, and interphase stability. The resulting electrolyte achieves an ionic conductivity of 1.61 mS cm–1 at 25 °C, a Li+ transference number of 0.84, and an extended electrochemical stability window of 5.2 V. Li∥Li symmetric cells cycle stably for over 1000 h at 0.5 mA cm–2. Notably, Li∥LiNi0.8Co0.1Mn0.1O2 cells retain 82.5% capacity after 300 cycles at 4.6 V and sustain 500 cycles with ∼100% Coulombic efficiency and 82.6% capacity retention at 4.5 V and 5C. This work pioneers a universal electron regulation paradigm for designing advanced polyether electrolytes and stable interphases towar",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Lifen Zhang",
+        "Song Duan",
+        "Bingsen Qin",
+        "Zongtao Lu",
+        "Hongyao Wang",
+        "Peng Wang",
+        "Zhenghao Li",
+        "Zhiyang Yu",
+        "Wei Yan",
+        "Jiujun Zhang",
+        "Yun Zheng"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
@@ -487,6 +631,45 @@
       "authors": [
         "Morgan Kim",
         "Seung Youn Hong"
+      ],
+      "topics": [
+        "Catalytic C–H Functionalization Methods",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Radical Photochemical Reactions",
+        "Click Chemistry and Applications"
+      ],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c09019",
+      "journal": "JACS",
+      "title": "Diastereodivergent Access to cis , cis - and cis , trans -Angular Triquinanes: Total Synthesis of (±)-Arnicenone",
+      "abstract": "Abstract Angular triquinanes constitute an important class of polycyclic natural products characterized by compact, angularly fused ring systems and multiple contiguous stereocenters. Herein, we report a diastereodivergent strategy for stereocontrolled access to both cis,trans- and cis,cis-angular triquinanes from common allene precursors. The cis,trans-fused triquinanes were constructed through a Lewis acid-promoted intramolecular [3+2] Danheiser annulation, whereas the complementary cis,cis frameworks were accessed via photochemical [2+2] cycloaddition followed by oxidative ring expansion. Notably, substitution at the R1 position of the allene precursor reversed the diastereoselectivity of the [3+2] annulation, providing direct access to a cis,cis-angular triquinane. DFT calculations indicate that the initial spirocyclization governs both the reactivity and stereochemical outcome of the [3+2] pathway, with substrate-dependent steric interactions accounting for the observed diastereodivergence. The synthetic utility of this strategy was demonstrated through the total synthesis of (±)-arnicenone via the [2+2] cycloaddition/oxidative ring-expansion pathway, while an alternative synthesis from the cis,cis-[3+2] Danheiser annulation product further highlights the complementary nature of the two approaches. Together, these results establish a unified platform for stereodivergent ac",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Chia-Hao Liu",
+        "Hung-Tse Huang",
+        "Han-Jung Li",
+        "Shubham A. Dighe",
+        "Deng-Lian Hou",
+        "Li-Yun Wu",
+        "Yu-Wen Huang"
       ],
       "topics": [],
       "sources": [
@@ -504,16 +687,20 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1021/jacs.6c14114",
+      "doi": "10.1021/jacs.6c11730",
       "journal": "JACS",
-      "title": "Disentangling Electronic and Lattice Contributions to Transient Absorption in Metal Halide Perovskites: A First-Principles Study of CH3NH3PbBr3",
-      "abstract": "Abstract Soft lattices combined with strong electron–phonon coupling in metal halide perovskites result in a complex interplay between electronic and lattice degrees of freedom. This interplay complicates the interpretation of time-resolved spectroscopic signals, such as transient absorption spectra. Here, we develop a first-principles approach that combines a nonequilibrium extension of the Bethe-Salpeter equation with ab initio molecular dynamics to resolve the origin of transient absorption. This approach can quantitatively disentangle electronic and thermal lattice contributions across femtosecond-to-picosecond time scales. Exemplified with CH3NH3PbBr3, we find that on the femtosecond scale, both X-ray and optical transient absorption spectra are dominated by electronic contributions: Photoinduced Coulomb screening weakens the effective electron–hole interaction and blueshifts the excitonic resonances, whereas Pauli blocking is negligible in the X-ray region but non-negligible in the optical one. On the picosecond scale, thermal lattice contributions become essential, with distinct mechanisms dominating different spectral regions: Lattice vibrations lead to spectral redistribution in the X-ray transient absorption spectrum, whereas lattice expansion blueshifts the optical transient absorption spectrum.",
+      "title": "Disentangling Direct Coupling from Charge-Transfer-Mediated Coupling in Singlet Fission of Weakly Interacting Dimers",
+      "abstract": "Abstract The efficiency of the excitation energy transfer between molecules is driven by the coupling of their excited states. However, experimental details about such excitonic coupling often remain elusive, partly because of the involvement of dark states, limiting its characterization. This is most apparent within singlet fission (SF), where a bright singlet state transforms into two triplet states, mediated by dark states: the correlated triplet-pair and charge-transfer (CT) states. We address this lack of direct experimental characterization of excitonic coupling in intramolecular SF (i-SF) by applying transient two-dimensional electronic spectroscopy to spiro-conjugated dimers. Specific modification of the dihedral arrangements of the monomeric units affects i-SF dynamics, resulting from alterations in the excitonic coupling strengths. Our findings support a primarily direct i-SF mechanism, facilitated by weak, yet direct excitonic coupling between singlet- and triplet-pair states, that decreases with increasing dihedral angle, while superexchange coupling via the dark CT states increases. Through these insights, we provide experimental access to the interaction between bright singlet and dark intermediate states, which has previously been characterized primarily through theory.",
       "date": "2026-09-22",
       "type": "journal-article",
       "authors": [
-        "Lu Qiao",
-        "Ronaldo Rodrigues Pela",
-        "Claudia Draxl"
+        "Oskar Kefer",
+        "Pavel V. Kolesnichenko",
+        "Lukas Ahrens",
+        "Andreas Dreuw",
+        "Jan Freudenberg",
+        "Uwe H. F. Bunz",
+        "Tiago Buckup"
       ],
       "topics": [],
       "sources": [
@@ -531,6 +718,41 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1021/jacs.6c14114",
+      "journal": "JACS",
+      "title": "Disentangling Electronic and Lattice Contributions to Transient Absorption in Metal Halide Perovskites: A First-Principles Study of CH3NH3PbBr3",
+      "abstract": "Abstract Soft lattices combined with strong electron–phonon coupling in metal halide perovskites result in a complex interplay between electronic and lattice degrees of freedom. This interplay complicates the interpretation of time-resolved spectroscopic signals, such as transient absorption spectra. Here, we develop a first-principles approach that combines a nonequilibrium extension of the Bethe-Salpeter equation with ab initio molecular dynamics to resolve the origin of transient absorption. This approach can quantitatively disentangle electronic and thermal lattice contributions across femtosecond-to-picosecond time scales. Exemplified with CH3NH3PbBr3, we find that on the femtosecond scale, both X-ray and optical transient absorption spectra are dominated by electronic contributions: Photoinduced Coulomb screening weakens the effective electron–hole interaction and blueshifts the excitonic resonances, whereas Pauli blocking is negligible in the X-ray region but non-negligible in the optical one. On the picosecond scale, thermal lattice contributions become essential, with distinct mechanisms dominating different spectral regions: Lattice vibrations lead to spectral redistribution in the X-ray transient absorption spectrum, whereas lattice expansion blueshifts the optical transient absorption spectrum.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Lu Qiao",
+        "Ronaldo Rodrigues Pela",
+        "Claudia Draxl"
+      ],
+      "topics": [
+        "Perovskite Materials and Applications",
+        "Electrical and Electronic Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Organic and Molecular Conductors Research",
+        "Inorganic Chemistry and Materials"
+      ],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/jacs.6c17644",
       "journal": "JACS",
       "title": "Enantioselective Defluorinative C(sp2)–H Allylation of Acrylamides Enabled by CpxRh(III) Catalysis",
@@ -545,14 +767,22 @@
         "Dong Wu",
         "Shou-Guo Wang"
       ],
-      "topics": [],
+      "topics": [
+        "Fluorine in Organic Chemistry",
+        "Pharmaceutical Science",
+        "Pharmacology, Toxicology and Pharmaceutics",
+        "Life Sciences",
+        "Catalytic C–H Functionalization Methods",
+        "Radical Photochemical Reactions"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -572,14 +802,22 @@
         "Jason Yang",
         "Frances H. Arnold"
       ],
-      "topics": [],
+      "topics": [
+        "Machine Learning in Materials Science",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Protein Structure and Dynamics",
+        "Machine Learning in Bioinformatics"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -602,14 +840,22 @@
         "Beibei Zhan",
         "Xiaheng Zhang"
       ],
-      "topics": [],
+      "topics": [
+        "Radical Photochemical Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalytic C–H Functionalization Methods",
+        "Cyclopropane Reaction Mechanisms"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -618,19 +864,22 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1021/jacs.6c16062",
+      "doi": "10.1021/jacs.6c14913",
       "journal": "JACS",
-      "title": "Non-Canonical Peptide Self-Assembly for Mitochondria-Specific Cargo Delivery",
-      "abstract": "Abstract Targeting mitochondria is a promising strategy for precision tumor therapy, yet ligand-free mitochondrial drug delivery remains challenging. Here, we report a minimalist, intrinsically mitochondria-targeting noncanonical tetrapeptide, X-GNNpY, comprising one glycine, two (S)-2-amino-3-(naphthalen-1-yl)-propanoic acid residues (N), and one phosphorylated tyrosine (pY). Without external targeting ligands, X-GNNpY selectively accumulates in tumor-cell mitochondria through enzyme-instructed self-assembly. Conjugating chlorambucil (CLB) yields CLB-GNNpY, which efficiently redirects CLB to mitochondria. CLB-GNNpY exhibits good cellular selectivity, induces mitochondrial stress and immunogenic cell death, promotes M1-like macrophage polarization, and markedly enhances antitumor phagocytosis. This proof-of-concept study establishes noncanonical peptide self-assembly as a ligand-free supramolecular strategy for mitochondrial drug delivery and immune modulation in tumor therapy.",
+      "title": "Millisecond Lifetime Free Carriers from Symmetry-Breaking Charge Separation in Morphology-Engineered Tetrachloroperylenediimide Crystals",
+      "abstract": "Abstract Photodriven symmetry-breaking charge separation (SB-CS) has been proposed as a method for producing free charge carriers in organic electronic materials because charge separation can occur with minimal photon energy loss. The challenge in achieving this goal lies in minimizing the rapid charge recombination of the initial charge transfer (CT) exciton to permit charge diffusion away from the site at which the CT exciton is created. Here, we leverage specific crystal packing motifs elicited by hydrogen-bonding core-twisted 1,6,7,12-tetrachloroperylenediimide derivatives substituted at their imide nitrogen atoms with 2-(2-hydroxyethoxy)ethyl or 5-hydroxypentyl chains. Femtosecond transient absorption microscopy reveals that photoexcitation of these derivatives in single crystals results in subpicosecond SB-CS. The initial CT exciton then separates to give mobile charge carriers that live for over 1 ms, as determined by time-resolved microwave conductivity. This investigation shows how controlling crystal morphology and environment can generate high-energy free charge carriers following SB-CS in solid-state organic materials.",
       "date": "2026-09-22",
       "type": "journal-article",
       "authors": [
-        "Ziyu Jia",
-        "Jian Wen",
-        "Shengyi Zhang",
-        "Yinghao Ding",
-        "Zhimou Yang",
-        "Zhi-Wen Hu"
+        "Georgia C. Mantel",
+        "Kathryn R. Peinkofer",
+        "Kyle T. Kairys",
+        "Yi Xie",
+        "Matthew D. Krzyaniak",
+        "Chad A. Mirkin",
+        "Roel Tempelaar",
+        "Ryan M. Young",
+        "Michael R. Wasielewski"
       ],
       "topics": [],
       "sources": [
@@ -648,6 +897,134 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1021/jacs.6c16062",
+      "journal": "JACS",
+      "title": "Non-Canonical Peptide Self-Assembly for Mitochondria-Specific Cargo Delivery",
+      "abstract": "Abstract Targeting mitochondria is a promising strategy for precision tumor therapy, yet ligand-free mitochondrial drug delivery remains challenging. Here, we report a minimalist, intrinsically mitochondria-targeting noncanonical tetrapeptide, X-GNNpY, comprising one glycine, two (S)-2-amino-3-(naphthalen-1-yl)-propanoic acid residues (N), and one phosphorylated tyrosine (pY). Without external targeting ligands, X-GNNpY selectively accumulates in tumor-cell mitochondria through enzyme-instructed self-assembly. Conjugating chlorambucil (CLB) yields CLB-GNNpY, which efficiently redirects CLB to mitochondria. CLB-GNNpY exhibits good cellular selectivity, induces mitochondrial stress and immunogenic cell death, promotes M1-like macrophage polarization, and markedly enhances antitumor phagocytosis. This proof-of-concept study establishes noncanonical peptide self-assembly as a ligand-free supramolecular strategy for mitochondrial drug delivery and immune modulation in tumor therapy.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Ziyu Jia",
+        "Jian Wen",
+        "Shengyi Zhang",
+        "Yinghao Ding",
+        "Zhimou Yang",
+        "Zhi-Wen Hu"
+      ],
+      "topics": [
+        "Supramolecular Self-Assembly in Materials",
+        "Biomaterials",
+        "Materials Science",
+        "Physical Sciences",
+        "Nanoplatforms for cancer theranostics",
+        "Supramolecular Chemistry and Complexes"
+      ],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c10701",
+      "journal": "JACS",
+      "title": "Programming Interfacial Function through Alternating Sequence in Amphiphilic Copolymers",
+      "abstract": "Abstract Control over monomer sequence in synthetic polymers remains a fundamental challenge, particularly for amphiphilic systems where spatial organization governs interfacial function. While recent advances have enabled alternating copolymer formation in select vinyl systems, translation of these strategies to functional amphiphilic polymers has remained largely unexplored. Here, we report a transformable bulky-monomer strategy that extends alternating copolymerization to methacrylamide–acrylate systems and enables the synthesis of cationic alternating copolymers with well-defined amphiphilic sequences. Post-polymerization modification affords polymers in which hydrophobic and charged units are uniformly distributed along the backbone, allowing direct comparison with composition-matched gradient or random analogues. Comparative experimental analysis reveals that sequence dictates interfacial behavior: the alternating architecture promotes more efficient engagement with lipopolysaccharide-rich membranes, leading to enhanced outer-membrane permeabilization, reduced hemolytic activity, and improved antibiotic potentiation. Molecular dynamics simulations provide a mechanistic basis for these observations by showing that alternating chains adsorb more favorably to the Escherichia coli outer membrane, adopt a curled conformation with extended cationic side chains more evenly expos",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Alimi Abiodun",
+        "Jiahuiyu Fang",
+        "Adam Parris",
+        "Xiaoxue Qin",
+        "Md Waliullah Hossain",
+        "Swagatam Barman",
+        "Tao Wei",
+        "Chuanbing Tang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c16907",
+      "journal": "JACS",
+      "title": "Selective C18-Methyl Oxidation of Sclareol via an Engineered P450 Enables the Synthesis of Spiromyrrhene B",
+      "abstract": "Abstract While selective oxidation of unactivated C–H bonds has emerged as an effective tactic to reshape retrosynthetic strategies in the synthesis of natural products, the primary methyl C–H bonds remain inert and inaccessible to contemporary methods without preinstalled directing groups. Herein, we report a biocatalytic C–H oxidation strategy that leverages an engineered P450BM3 platform for the selective C18-methyl hydroxylation of sclareol. Through five rounds of directed evolution, variant Ox18M3–3 was developed, elevating the regioselectivity from 4% to gt;99% alongside a 2.2-fold increase in catalytic activity. The site-specific enzymatic hydroxylation facilitated the first synthesis of the complex heptacyclic tumor stemness inhibitor spiromyrrhene B in 10 steps (longest linear sequence) from sclareol, underscoring the benefits of merging precision biocatalysis with classical synthesis to streamline access to bioactive natural products.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Chenhao Zhang",
+        "Shugong Liu",
+        "Guanwen Chen",
+        "Ying Shi",
+        "Liran Chen",
+        "Dao-Feng Chen",
+        "Fuzhuo Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01696",
+      "journal": "JOC",
+      "title": "An Efficient Platform for Enantioselective aza -Michael Addition to Both Linear and Cyclic Enones",
+      "abstract": "Abstract We report a bifunctional phase-transfer catalytic system for the enantioselective aza-Michael addition to both linear and cyclic enones, providing β-amino carbonyls in yields up to 99% and enantioselectivities up to 98% ee. The method was evaluated across 61 examples spanning structurally diverse linear and cyclic enones, including variation in aryl and heteroaryl substitution, alkyl substitution, ring size, and cyclic acceptor class. The resulting aza-Michael adducts were further utilized as synthetic intermediates for the preparation of biologically relevant motifs, including enantioenriched divergent cyclic 1,3-amino alcohols. The synthetic utility of the method was further demonstrated through the preparation of a key intermediate en route to N14-desacetoxytubulysin H. Mechanistic studies, including control experiments, 1H NMR titration studies, and DFT calculations, are consistent with a working bifunctional dual-organization model involving cooperative catalyst–substrate interactions.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Jaeyong Lee",
+        "So Young Jang",
+        "Hyeung-geun Park"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.joc.6c01559",
       "journal": "JOC",
       "title": "Isoindole-Based Multicomponent Synthesis of Pyrimido[6,1,2- cd ]pyrrolizine Fluorophores with Unsymmetrical Urea Handles: Photophysical, Theoretical, and Antifungal Imaging Studies",
@@ -663,14 +1040,22 @@
         "Suganya Kannan",
         "Vasuki Gnanasambandam"
       ],
-      "topics": [],
+      "topics": [
+        "Multicomponent Synthesis of Heterocycles",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Synthesis and Characterization of Pyrroles",
+        "Nanoplatforms for cancer theranostics"
+      ],
       "sources": [
         "crossref:0022-3263:online",
         "crossref:0022-3263:published",
         "crossref:0022-3263:created",
         "crossref:1520-6904:online",
         "crossref:1520-6904:published",
-        "crossref:1520-6904:created"
+        "crossref:1520-6904:created",
+        "openalex:S205050996"
       ],
       "activeFrom": "2026-09-22",
       "dateUnverified": false,
@@ -693,20 +1078,53 @@
         "Qingxiang Guo",
         "Ning Zhu"
       ],
-      "topics": [],
+      "topics": [
+        "Organoselenium and organotellurium chemistry",
+        "Toxicology",
+        "Pharmacology, Toxicology and Pharmaceutics",
+        "Life Sciences",
+        "Sulfur-Based Synthesis Techniques",
+        "Catalytic Cross-Coupling Reactions"
+      ],
       "sources": [
         "crossref:0022-3263:online",
         "crossref:0022-3263:published",
         "crossref:0022-3263:created",
         "crossref:1520-6904:online",
         "crossref:1520-6904:published",
-        "crossref:1520-6904:created"
+        "crossref:1520-6904:created",
+        "openalex:S205050996"
       ],
       "activeFrom": "2026-09-22",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/d41586-026-02369-9",
+      "journal": "Nature",
+      "title": "About to give your first lecture? Read this first",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Hannah Docter-Loeb"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
     },
     {
       "doi": "10.1038/d41586-026-02929-z",
@@ -718,6 +1136,37 @@
       "authors": [
         "Amber Dance"
       ],
+      "topics": [
+        "RNA Research and Splicing",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Cellular Mechanics and Interactions",
+        "Pluripotent Stem Cells Research"
+      ],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created",
+        "openalex:S137773608"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02979-3",
+      "journal": "Nature",
+      "title": "Dust in the wind is on the decline",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [],
       "topics": [],
       "sources": [
         "crossref:0028-0836:online",
@@ -743,14 +1192,22 @@
       "authors": [
         "Dalmeet Singh Chawla"
       ],
-      "topics": [],
+      "topics": [
+        "Academic Publishing and Open Access",
+        "Information Systems and Management",
+        "Decision Sciences",
+        "Social Sciences",
+        "scientometrics and bibliometrics research",
+        "Biotechnology and Related Fields"
+      ],
       "sources": [
         "crossref:0028-0836:online",
         "crossref:0028-0836:published",
         "crossref:0028-0836:created",
         "crossref:1476-4687:online",
         "crossref:1476-4687:published",
-        "crossref:1476-4687:created"
+        "crossref:1476-4687:created",
+        "openalex:S137773608"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -766,6 +1223,39 @@
       "date": "2026-09-22",
       "type": "journal-article",
       "authors": [],
+      "topics": [
+        "Biotechnology and Related Fields",
+        "Public Health, Environmental and Occupational Health",
+        "Medicine",
+        "Health Sciences",
+        "Climate Change, Adaptation, Migration",
+        "Science, Research, and Medicine"
+      ],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created",
+        "openalex:S137773608"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02942-2",
+      "journal": "Nature",
+      "title": "This super-cold microscope could spur a quantum revolution",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Isabel Gil"
+      ],
       "topics": [],
       "sources": [
         "crossref:0028-0836:online",
@@ -791,6 +1281,70 @@
       "authors": [
         "Chris Simms"
       ],
+      "topics": [
+        "Scientific Computing and Data Management",
+        "Information Systems and Management",
+        "Decision Sciences",
+        "Social Sciences",
+        "Science Education and Perceptions",
+        "Origins and Evolution of Life"
+      ],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created",
+        "openalex:S137773608"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02724-w",
+      "journal": "Nature",
+      "title": "What happens in Vegas: one lecturer’s hunt for a projector",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [],
+      "topics": [
+        "Art, Technology, and Culture",
+        "Visual Arts and Performing Arts",
+        "Arts and Humanities",
+        "Social Sciences",
+        "Geography Education and Pedagogy",
+        "Science Education and Perceptions"
+      ],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created",
+        "openalex:S137773608"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-03014-1",
+      "journal": "Nature",
+      "title": "Why AI companies can’t be trusted to self-regulate",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Heidy Khlaaf"
+      ],
       "topics": [],
       "sources": [
         "crossref:0028-0836:online",
@@ -807,21 +1361,78 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1038/d41586-026-02724-w",
+      "doi": "10.1038/d41586-026-02941-3",
       "journal": "Nature",
-      "title": "What happens in Vegas: one lecturer’s hunt for a projector",
+      "title": "Will AI really kill us all? The science behind the hype",
       "abstract": "",
       "date": "2026-09-22",
       "type": "journal-article",
-      "authors": [],
-      "topics": [],
+      "authors": [
+        "Elizabeth Gibney"
+      ],
+      "topics": [
+        "Artificial Intelligence in Healthcare and Education",
+        "Health Informatics",
+        "Medicine",
+        "Health Sciences",
+        "Ethics and Social Impacts of AI",
+        "AI in Service Interactions"
+      ],
       "sources": [
         "crossref:0028-0836:online",
         "crossref:0028-0836:published",
         "crossref:0028-0836:created",
         "crossref:1476-4687:online",
         "crossref:1476-4687:published",
-        "crossref:1476-4687:created"
+        "crossref:1476-4687:created",
+        "openalex:S137773608"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41929-026-01614-8",
+      "journal": "Nature Catalysis",
+      "title": "Engineering cellular nitrene chemistry",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Jan-Stefan Völler"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2520-1158:online",
+        "crossref:2520-1158:published",
+        "crossref:2520-1158:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-76978-3",
+      "journal": "Nature Communications",
+      "title": "A Hadean timeline for the emergence of the RNA World",
+      "abstract": "Abstract Estimates for when life emerged on Earth range from ca. 3.8 Ga (Eoarchean) to the Hadean eon (≥4.0-4.5 Ga). Here, we conclude that a proposed early stage of life – the RNA World – appeared at ca. 4.33 Ga by tracking the near-surface thermal stability of key biomolecules comprising postulated RNA organisms. We apply a global three-dimensional numerical model to analyse the thermal evolution profile of Hadean crust in response to late accretion bombardment. Results show that frequent global sterilization events persisted up until about 4.4 Ga owing to hot ejecta deposition, rock vapour condensation, and enhanced geothermal gradients. Later, conditions became favorable to persistent biochemistry by supporting interconnected zones of biomolecule stability associated with extensive energy-rich hydrothermal oases. We identify an optimal time for the RNA World that dovetails with the emergence of the Last Universal Common Ancestor (LUCA) population.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Oleg Abramov",
+        "Anna Medvegy",
+        "Barbara Kremer",
+        "Stephen J. Mojzsis"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -863,6 +1474,196 @@
         "Aditya Bardia",
         "Gad Getz"
       ],
+      "topics": [
+        "Cancer Genomics and Diagnostics",
+        "Cancer Research",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "PARP inhibition in cancer therapy",
+        "Lung Cancer Treatments and Mutations"
+      ],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created",
+        "openalex:S64187185"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77897-z",
+      "journal": "Nature Communications",
+      "title": "Attractin-like protein 1 is an essential partner of MC4R to regulate body weight",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Paul Buscaglia",
+        "Kate R. Bowman",
+        "Katherine Lawler",
+        "Ciria C. Hernandez",
+        "Jacopo Scotucci",
+        "Rebecca Bounds",
+        "Julia M. Keogh",
+        "Elana Henning",
+        "Roger D. Cone",
+        "I. Sadaf Farooqi",
+        "Julien A. Sebag"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78081-z",
+      "journal": "Nature Communications",
+      "title": "Author Correction: A longitudinal cohort study uncovers plasma protein biomarkers predating clinical onset and treatment response of rheumatoid arthritis",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Siyu He",
+        "Chenxi Zhu",
+        "Yi Liu",
+        "Zhiqiang Xu",
+        "Rui Sun",
+        "Bin Yang",
+        "Xin Guo",
+        "Martin Herrmann i",
+        "Luis E. Muñoz",
+        "Inger Gjertsson",
+        "Rikard Holmdahl",
+        "Lunzhi Dai",
+        "Yi Zhao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78084-w",
+      "journal": "Nature Communications",
+      "title": "Author Correction: Increased shallower tropical cyclones under extreme warm climates",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Tingyu Zhang",
+        "Tianjun Zhou",
+        "Zhun Guo",
+        "Linqiang He",
+        "Zikun Ren"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78086-8",
+      "journal": "Nature Communications",
+      "title": "Author Correction: Self-referencing ultrafast wide-field pump-probe microscopy",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Rihan Wu",
+        "Yaqing Zhang",
+        "Md Shahjahan",
+        "Elad Harel"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78087-7",
+      "journal": "Nature Communications",
+      "title": "Author Correction: Wireless IoT-enabled microneedle electroceutical for personalized and connected pain management",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Heesoo Kim",
+        "Se Kyun Bang",
+        "Suk-Yun Kang",
+        "Sung Woo Kim",
+        "Jae-Soon Yang",
+        "Daehyuk Kim",
+        "Choong Yeon Kim",
+        "Sangeun Han",
+        "Yeji Jang",
+        "Juhyun Lee",
+        "Karen-Christian Agno",
+        "Jun-Bo Yoon",
+        "Sanghun Lee",
+        "Jae-Woong Jeong"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77935-w",
+      "journal": "Nature Communications",
+      "title": "Cross-talk of filter gate and lower helices drives polymodal regulation and disease in TREK channels",
+      "abstract": "Abstract The TREK two-pore domain potassium channels regulate membrane excitability and respond to diverse physiological stimuli. Single-site mutations of TREK are associated with neurodevelopmental disorders and can cause pathological channel hyperactivation. Here, using the OneOPES enhanced-sampling molecular dynamics framework, we characterize the energetics of conformational transition along a predefined pathway connecting the up and down states of TREK-2, together with initial conformational rearrangements of the selectivity filter under physiological stimuli and disease-mimicking conditions. The simulations reveal a shared energetic axis coupling the lower helices, proximal C-terminus, and selectivity filter to govern channel gating. Predicted conformational effects of a disease-mimicking mutation were validated electrophysiologically using a conformation-sensitive TREK-2 inhibitor. Together with our previous unbiased MD simulations, these results establish an energetic framework for TREK-2 regulation and dysfunction, complementing prior structural and mechanistic studies while highlighting the potential and methodological challenges of advanced enhanced-sampling approaches for resolving complex conformational landscapes of ion channels.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Berke Türkaydin",
+        "Valerio Rizzi",
+        "Chaimae Benkerdagh",
+        "Simon Ghysbrecht",
+        "Simone Aureli",
+        "Thomas Baukrowitz",
+        "Marcus Schewe",
+        "Francesco Luigi Gervasio",
+        "Han Sun"
+      ],
       "topics": [],
       "sources": [
         "crossref:2041-1723:online",
@@ -886,6 +1687,140 @@
         "Vincent C. Brockers",
         "David A. Ehrlich",
         "Viola Priesemann"
+      ],
+      "topics": [
+        "Computational and Text Analysis Methods",
+        "General Social Sciences",
+        "Social Sciences",
+        "Opinion Dynamics and Social Influence",
+        "Hate Speech and Cyberbullying Detection"
+      ],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created",
+        "openalex:S64187185"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77858-6",
+      "journal": "Nature Communications",
+      "title": "EpOME functionally antagonises prostaglandin signalling in Spodoptera exigua via a specific GPCR conserved across metazoans",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Niayesh Shahmohammadi",
+        "Falguni Khan",
+        "Haneol Jang",
+        "Il-Hwan Kim",
+        "Donghee Lee",
+        "Joseph Wallen",
+        "Hyeok Jin Choi",
+        "Jin Boo Jeong",
+        "Anders Vik",
+        "Yonggyun Kim"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77994-z",
+      "journal": "Nature Communications",
+      "title": "Extensive horizontal gene transfer drives microbial adaptation and diversification in Kermadec Trench hadal microbiomes",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Peiyu Liu",
+        "Yongxin Lv",
+        "Yu Zhang",
+        "Yinzhao Wang",
+        "Kelei Zhu",
+        "Zhaoyang Cao",
+        "Liang Dong",
+        "Xiang Xiao",
+        "Yongxin Pan",
+        "Jinhua Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77921-2",
+      "journal": "Nature Communications",
+      "title": "Functional abiotic metabolite assembly hypothesis for the early events in the origin of life",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Poulami Chakraborty",
+        "Chengqian Yuan",
+        "Shon A. Levkovich",
+        "Dana Laor Bar–Yosef",
+        "Xuehai Yan",
+        "Ehud Gazit"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77963-6",
+      "journal": "Nature Communications",
+      "title": "Generative AI designs functional thiolation domains for reprogramming non-ribosomal peptide synthetases",
+      "abstract": "Abstract Large language models and generative protein design promise to accelerate biotechnology, but it remains unclear whether they can engineer dynamic megasynth(et)ases whose activity depends on transient, context-specific domain interfaces. Non-ribosomal peptide synthetases (NRPSs) exemplify this challenge and produce many clinically used therapeutics. Here we integrate pretrained generative models (ESM3, ProteinMPNN and EvoDiff) with design–build–test–learn cycles and data-guided prioritization to generate 76 de novo thiolation (T) domains. We build and test 578 recombinant NRPS variants in vivo spanning minimal, full-length, and hybrid assembly lines. AI-designed T-domains support product formation across architectures, enable catalytically active hybrids at recombined junctions, and increase yields by up to ~3-fold relative to NRPSs carrying the native T-domain. A representative design shows improved soluble expression, refolding, and a 12 °C higher melting temperature, while molecular dynamics simulations indicate preserved global stability but reshaped, state-dependent interdomain contact networks. Together, these results establish generative design as an effective route to context-conditioned engineering and reprogramming of biosynthetic assembly lines.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Emre F. Bülbül",
+        "Seounggun Bang",
+        "Kevin George",
+        "Gabriele Bianchi",
+        "Prateek Raj",
+        "Seonyong Chung",
+        "Vincent Pauline",
+        "Ramon Hochstrasser",
+        "Hannah A. Minas",
+        "Walid A. M. Elgaher",
+        "Andreas M. Kany",
+        "Anna K. H. Hirsch",
+        "Steven Schmitt",
+        "Dirk W. Heinz",
+        "Olga V. Kalinina",
+        "Dietrich Klakow",
+        "Kenan A. J. Bozhüyük"
       ],
       "topics": [],
       "sources": [
@@ -924,6 +1859,46 @@
         "Quanjun Li",
         "Lijun Zhang",
         "Bingbing Liu"
+      ],
+      "topics": [
+        "Chalcogenide Semiconductor Thin Films",
+        "Electrical and Electronic Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Advanced Semiconductor Detectors and Materials",
+        "Semiconductor materials and interfaces"
+      ],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created",
+        "openalex:S64187185"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77904-3",
+      "journal": "Nature Communications",
+      "title": "Histone deacetylase inhibition induces an antitumor IRF8-dependent trained immunity-like status in macrophages",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Xueting Qin",
+        "Meida Xiang",
+        "Yaqing Guo",
+        "Yixin Chang",
+        "Zilong Zhang",
+        "Jiejie Liu",
+        "Xin Zhang",
+        "Yuting Pan",
+        "Hebing Chen",
+        "Weidong Han",
+        "Jing Nie"
       ],
       "topics": [],
       "sources": [
@@ -967,11 +1942,19 @@
         "Mihai Udrescu",
         "Paul Bogdan"
       ],
-      "topics": [],
+      "topics": [
+        "Obstructive Sleep Apnea Research",
+        "Physiology",
+        "Medicine",
+        "Health Sciences",
+        "EEG and Brain-Computer Interfaces",
+        "Non-Invasive Vital Sign Monitoring"
+      ],
       "sources": [
         "crossref:2041-1723:online",
         "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
+        "crossref:2041-1723:created",
+        "openalex:S64187185"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -995,6 +1978,53 @@
         "Josiah L. Kephart",
         "Bruce Western"
       ],
+      "topics": [
+        "Climate Change and Health Impacts",
+        "Health, Toxicology and Mutagenesis",
+        "Environmental Science",
+        "Physical Sciences",
+        "Thermal Regulation in Medicine",
+        "Burn Injury Management and Outcomes"
+      ],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created",
+        "openalex:S64187185"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77868-4",
+      "journal": "Nature Communications",
+      "title": "p38α orchestrates BRAFV600E-melanoma progression and immunotherapy response via tumor fitness and immune microenvironment modulation",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Paula Granado-Martínez",
+        "Kimberley McGrail",
+        "Roberto Orsenigo",
+        "Ginevra Caratù",
+        "Paula Nieto",
+        "Yuxin Ding",
+        "Ángel Nebreda",
+        "Juan Martín-Caballero",
+        "Iván Ortega",
+        "Herena Eixarch",
+        "Carmen Espejo",
+        "Adrià Molero-Valenzuela",
+        "Javier Hernandez-Losa",
+        "Berta Ferrer",
+        "Holger Heyn",
+        "Eva Muñoz-Couselo",
+        "Vicenç García-Patos",
+        "Juan A. Recio"
+      ],
       "topics": [],
       "sources": [
         "crossref:2041-1723:online",
@@ -1008,6 +2038,382 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/s41467-026-77330-5",
+      "journal": "Nature Communications",
+      "title": "Patient-derived separation-of-function mutations reveal specific role for BRCA1 coiled coil domain in genome stability",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Bernadett Szikriszt",
+        "Eszter Németh",
+        "Bayejid Hosen",
+        "Michał Krawczyk",
+        "Regina Martinek",
+        "Bendegúz Szabó",
+        "Ádám Póti",
+        "Zoltán Szeltner",
+        "György Várady",
+        "Zsófia Sztupinszki",
+        "Zoltan Szallasi",
+        "Dana Branzei",
+        "Andrea L. Richardson",
+        "Dávid Szüts"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77867-5",
+      "journal": "Nature Communications",
+      "title": "Resilience of blue carbon microbiomes in response to ecological and anthropogenic filtering",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Leilei Xiao",
+        "Jian Liu",
+        "Andrew J. Tanentzap",
+        "Carlos M. Duarte",
+        "Chuancheng Fu",
+        "Lifeng Zhou",
+        "Run Dang",
+        "Meng Zhou",
+        "Min Luo",
+        "Peng Zhang",
+        "Jiafeng Yu",
+        "Yingjiang Xu",
+        "Judith Rosentreter",
+        "Robert G. M. Spencer",
+        "Eric Lichtfouse",
+        "Yongming Luo",
+        "Guangxuan Han"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77685-9",
+      "journal": "Nature Communications",
+      "title": "Short-term memory of past caspase activity biases cell elimination in vivo",
+      "abstract": "Abstract Apoptosis is triggered by the activation of Caspases leading to irreversible engagement in cell death. However, recent data outline numerous non-apoptotic functions of caspases as well as quite ubiquitous sublethal activation of effector caspases in vivo, opening the question of what drives the bifurcation between cell death and survival. Using quantitative live imaging combined with machine learning and optogenetics in the Drosophila pupal notum (a single-layer epithelium), we reveal the existence of a large heterogeneity of caspase activity thresholds between cells and distinct spatial domains with low or high sensitivity to caspases. We outline the central role of past exposure to sublethal caspase activity, which sensitises cells to apoptosis for several hours and reduces their threshold, and can bias single-cell elimination. Altogether, this work reveals the role of a cell's past history for apoptosis regulation in vivo, which can bias clonal selection and the spatial pattern of cell death.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Tom Cumming",
+        "Alexis Villars",
+        "Anđela Davidović",
+        "Florence Levillayer",
+        "Léo Valon",
+        "Romain Levayer"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77750-3",
+      "journal": "Nature Communications",
+      "title": "Single-cell TimeLapse-seq reveals MTA is an essential retrotransposon orchestrating mouse zygotic genome activation",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "You Wu",
+        "Hanxi Shi",
+        "Rushuang Yan",
+        "Jiang Wu",
+        "Lei Yang",
+        "Lingfeng Xu",
+        "Xiaochen Kou",
+        "Yanhong Zhao",
+        "Xuelian Liu",
+        "Lingling Lai",
+        "Silin Tian",
+        "Yujie Hu",
+        "Qiyue Wang",
+        "Hong Wang",
+        "Shaorong Gao",
+        "Xiao-Ou Zhang",
+        "Yawei Gao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77972-5",
+      "journal": "Nature Communications",
+      "title": "Strong acoustic meta-aerogels enabled by nanoconfined directional freezing and in-situ polymerization",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Junkai Wang",
+        "Zhangyu Wu",
+        "Weichun Huang",
+        "Ao Zhou",
+        "Jingbo Zhuo",
+        "Yonghua Yu",
+        "Changwen Miao",
+        "Ming-Hui Lu",
+        "Wei She"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77991-2",
+      "journal": "Nature Communications",
+      "title": "Structure and functional divergence of the non-canonical BoNT-like toxin PG1 and PG2",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "JinBo Yang",
+        "Zheng Liu",
+        "Linlin Jiang",
+        "Xiaoyan Ye",
+        "Yuwen Chao",
+        "Jing Ren",
+        "Xiaofeng Zhu",
+        "Shaoyu Yang",
+        "Xinyuan Guo",
+        "Ji Zeng",
+        "Hua Wu",
+        "Peng Chen",
+        "Sicai Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77857-7",
+      "journal": "Nature Communications",
+      "title": "The role of shape and interaction directionality in the crystalline phase behaviour of octahedral metal-organic cages",
+      "abstract": "Abstract Despite advances in crystal engineering, predicting the packing of metal-containing molecules remains a significant challenge due to their increased structural complexity and computational cost relative to purely organic compounds. Yet, predicting solid-state structures is critical for understanding structureproperty relationships, particularly in modular porous systems such as metal–organic cages (MOCs), where packing governs access to the internal pores and thereby impacts functionality. Here, we present a computationally inexpensive methodology that combines semi-empirical dimer calculations with coarse-grained modelling to predict the packing behaviour of MOCs. This approach enables a priori prediction of the solid state and allows insight into how molecular shape and intermolecular interactions influence the crystalline phase behaviour of MOCs. Our findings provide a foundation for the rational design of MOCs with tailored solid-state structures and properties.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Emma H. Wolpert",
+        "Andrew Tarzia",
+        "Yuhang Zhu",
+        "Kim E. Jelfs"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77878-2",
+      "journal": "Nature Communications",
+      "title": "Transport evidence for the orbital Nernst effect",
+      "abstract": "Abstract Orbital Hall effects have recently attracted significant attention for generating substantial orbital angular momentum currents in both strong- and weak-spin-orbit-coupling materials. Despite extensive theoretical and experimental progress on the orbital Hall effect, its thermal counterpart, in which a temperature gradient drives a transverse orbital current, known as the orbital Nernst effect, has remained experimentally elusive. Here, we report the first experimental evidence for the orbital Nernst effect by measuring the magneto-thermopower in the yttrium iron garnet (YIG)/Pt/CuO x heterostructures. Through systematic comparison with the YIG/Pt and YIG/CuO x heterostructures, we show that both the magneto-thermopower and the magnetoresistance for YIG/Pt/CuO x are markedly enhanced due to the contributions from the orbital Nernst effect and the orbital Hall effect in CuO x , respectively. Our experimental evidence for the orbital Nernst effect supports the orbital degree of freedom as a promising route for heat-energy harvesting and orbital angular momentum thermal transport in earth-abundant materials.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Wen-Yuan Li",
+        "Chun-Chi Chang",
+        "Ssu-Yen Huang",
+        "Danru Qu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77827-z",
+      "journal": "Nature Communications",
+      "title": "Unveiling structural determinants of peptide recognition by public and private SARS-CoV-2-specific T-cell receptors",
+      "abstract": "Abstract Public T cell receptors (TCRs) recurrently emerge across individuals in response to common pathogens, yet the structural and biophysical basis distinguishing public from private clonotypes remains incompletely defined. Here, we combine epitope mapping, single-cell TCR sequencing, and single-particle cryo-electron microscopy to dissect CD8 + T cell responses to the immunodominant SARS-CoV-2 ORF3a (207-215) epitope presented by HLA-A*01:01. Among responding clonotypes, we identify a public TCR (TCR pub ), shared across donors, and a private TCR (TCR priv ) that uses nearly identical β chains but distinct α chains. Despite comparable micromolar affinities and functional avidities, cryo-EM structures at ~3 Å resolution reveal that the two receptors engage the peptide-MHC complex through distinct CDR-loop configurations and contact footprints. TCR pub establishes contacts with the peptide and the MHC α2-helix primarily through the CDR2β and CDR3β loops, whereas TCR priv distributes contacts across both MHC α-helices and engages the peptide via multiple CDR loops. In agreement with these observations, alanine-scanning mutagenesis reveals that TCR pub shows greater sensitivity to peptide substitutions, consistent with its peptide-focused binding mode. These findings demonstrate how alternative α-chain pairing reconfigures the antigen-binding interface within a shared β-chain.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Caner Akıl",
+        "Yanchun Peng",
+        "Julia McCarthy",
+        "Yanan Zhu",
+        "Nathan Hardenbrook",
+        "Yunkai Yang",
+        "Danning Dong",
+        "Elie Antoun",
+        "Xuan Yao",
+        "Guihai Liu",
+        "Ji-li Chen",
+        "Esra Balıkçı",
+        "Raul Cioaca",
+        "Alexander J. Mentzer",
+        "Julian C. Knight",
+        "Ricardo A. Fernandes",
+        "Tao Dong",
+        "Peijun Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77801-9",
+      "journal": "Nature Communications",
+      "title": "Woody plant encroachment enhanced negative interactions in Arctic plant communities over the last 24,000 years",
+      "abstract": "Abstract Woody taxa encroachment in the Arctic has been widely observed. However, it remains uncertain how plant interactions are affected by such encroachment due to the lack of long-term observational data. Here, we reconstruct plant composition and functional trait turnover during post-glacial woody encroachment using sedimentary ancient DNA from nine lakes in the Siberia-Alaska region. Environmentally constrained null models are applied to partition plant interactions from the pure environment driven plant co-occurrence signal. Our results show that plant interactions shifted from predominantly positive interactions (e.g., nurse-plant facilitation) during the glacial period to more negative interactions (e.g., competition) during the Holocene. This shift coincided with a community transition from herbaceous to woody taxa, leading to an increase in average plant height and root length, as evidenced by leveraging plant trait information. We suggest that climate (an external factor) supported the widespread woody taxa expansion at the end of last glacial, which shifted the plant interaction (an internal process) that further exacerbated the expansion. This mechanism may provide an analogy with contemporary “arctic greening”. Furthermore, woody encroachment is likely to constrain the geographical ranges of native species, increasing the risk of local native taxa loss, while enh",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Ying Liu",
+        "Weihan Jia",
+        "Sisi Liu",
+        "Simeon Lisovski",
+        "Kathleen R. Stoof-Leichsenring",
+        "Luca Zsofia Farkas",
+        "Ulrike Herzschuh"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03511",
+      "journal": "Organic Letters",
+      "title": "Accelerated Green SN1 Reactions of the 9-Phenyl-9-fluorenyl Group",
+      "abstract": "Abstract Unimolecular nucleophilic substitution (SN1) reactions are expedited by resonant acoustic mixing (RAM). 9-Phenyl-9-fluorenyl (PhF) halides were rapidly made from PhF-OH by RAM of concentrated toluene/mineral acid mixtures. By RAM of PhF-Br and Et3N in environmentally benign propylene carbonate, N-PhF-amino esters were synthesized from hydrochlorides, including serine and hydroxyproline esters without alcohol side-chain protection. Ester saponification with RAM gave efficiently N-PhF-amino acid. The RAM-assisted SN1 chemistry proved to be proficient for greener PhF installation.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Kinshuk Ghosh",
+        "Kajumee P. Bora Bhowal",
+        "Samaneh Zarei",
+        "Chloé Ding",
+        "Felix Polyak",
+        "William D. Lubell"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03434",
+      "journal": "Organic Letters",
+      "title": "Cobalt-Catalyzed Nitrile Hydration/Alkyne Hydroarylation Using 2-Cyano-Substituted Arylboronic Acids",
+      "abstract": "Abstract We developed a novel method for the synthesis of 2-alkenyl primary benzamides. This method is a unique cobalt-catalyzed tandem nitrile hydration/regioselective alkyne hydroarylation employing 2-cyano-substituted phenylboronic acids and 1-aryl-2-trimethylsilylacetylenes. A prominent feature of this reaction is its excellent chemoselectivity, regioselectivity, and stereoselectivity.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Mitsuhiro Ueda",
+        "Satsuki Fujise",
+        "Shunsuke Yoshioka"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03473",
       "journal": "Organic Letters",
       "title": "Direct C1–H Amination of Free NH Carbazoles Enabled by the Catellani Reaction",
@@ -1019,6 +2425,189 @@
         "Paolo Pio Mazzeo",
         "Elena Motti",
         "Nicola Della Ca’"
+      ],
+      "topics": [
+        "Catalytic C–H Functionalization Methods",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Synthesis and Catalytic Reactions",
+        "Catalytic Cross-Coupling Reactions"
+      ],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03704",
+      "journal": "Organic Letters",
+      "title": "Divergent and Stereoselective Synthesis of Enamides via Visible Light-Driven Ligand-to-Metal Charge Transfer of Copper Catalyst",
+      "abstract": "Abstract We herein report the divergent and stereoselective synthesis of enamides based on a hydrogen atom transfer (HAT) process coordinating with ligand-to-metal charge transfer (LMCT) and single-electron transfer (SET) processes using a copper catalyst. The key to success in furnishing the reaction was the formation of an acyl radical via LMCT and HAT processes, which can also regenerate the active Cu(II) species to realize the catalytic cycle of copper. This approach exhibits substrate-controlled chemoselectivity and stereoselectivity as well as excellent functional group tolerance, which was applicable to the late-stage functionalization of pharmaceuticals, such as ibuprofen, flurbiprofen, naproxen, and carbamazepine.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Yu-Rong Yang",
+        "Xin-Yu Zhang",
+        "Cheng-He Zhou",
+        "Zhong-Lin Zang",
+        "Gui-Xin Cai"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03239",
+      "journal": "Organic Letters",
+      "title": "Iron-Catalyzed Defluorinative Alkylation for Accessing Cyclic Acetal– gem -Difluoroalkenes",
+      "abstract": "Abstract Cyclic acetals and gem-difluoroalkenes are proven structural motifs in medicinal chemistry, yet their modular incorporation into a densely functionalized hybrid architecture remains an uncharted frontier. Herein, we disclose an Fe-catalyzed reductive defluorinative cross-coupling between trifluoromethyl alkenes and 1,3-dioxolanyl- or 1,3-dioxepanyl-substituted alkyl iodides, enabling the rapid assembly of five- or seven-membered cyclic acetal-embodied fluorinated scaffolds, respectively. This protocol enriches defluorinative coupling versatility and offers streamlined access to structurally diverse pharmaceutically relevant scaffolds.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Xiao-Tong Wang",
+        "Pui Ying Choy",
+        "Chi Wai Cheung",
+        "Fuk Yee Kwong"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03660",
+      "journal": "Organic Letters",
+      "title": "Ligand-Free Eu(OTf)3-Enabled Photoactivation for Strain-Release Photocycloadditions of Bicyclo[1.1.0]butanes with Substituted Alkenes",
+      "abstract": "Abstract Generating 1,3-diradicals from bicyclo[1.1.0]butanes typically requires precious-metal photocatalysts or sensitizers. We report that commercial, ligand-free Eu(OTf)3 coordinates N-phenylacylimidazole BCBs, enabling direct 420 nm absorption to access a BCB-derived diradical without external chromophores. This single platform enables strain-release [2σ+2π] and [2σ+3π] photocycloadditions with electron-poor and aryl alkenes and annulations with α-vinyl azides. Mechanistic studies, gram-scale synthesis, and a sonidegib bioisostere demonstrate broad utility for sp3-rich scaffold construction.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Qiujie Qin",
+        "Sicong Tu",
+        "Yunzhi Xie",
+        "Zijie Qin",
+        "Zixi Wang",
+        "Mingzhiyuan Bao",
+        "Xinchen Zhang",
+        "Yanjun Li",
+        "Zijun Zhou"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03836",
+      "journal": "Organic Letters",
+      "title": "Pd-Catalyzed Skeletal Remodeling of Bicyclo[1.1.0]butane Carboxamides to Azabicyclo[3.1.0]hexan-2-ones via a Pd(II)–Carbene Intermediate",
+      "abstract": "Abstract We report the efficient and versatile Pd-catalyzed skeletal remodeling of bicyclo[1.1.0]butane carboxamides to azabicyclo[3.1.0]hexan-2-ones via an in situ-generated transient and highly reactive Pd(II)–carbene intermediate. This transformation enabled access to functionalized allyl-tethered 3-azabicyclo[3.1.0]hexan-2-one scaffolds via skeletal remodeling. The excellent tolerance of the reaction to functional groups across structurally and electronically diverse substrates demonstrates their broad applicability. The operational simplicity and practical utility of this protocol scale to gram-scale synthesis of azabicyclo[3.1.0]hexan-2-ones as well as to synthetic utility and late-stage structural modifications.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Mohammad Saleem",
+        "Sandeep Singh Bisht",
+        "Ankit K. Nakum",
+        "Dongari Yadagiri"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03499",
+      "journal": "Organic Letters",
+      "title": "Protonation-Gated Strain-Release Generation of Amino- o -quinodimethanes",
+      "abstract": "Abstract Free amino-benzocyclobutenes remain underexplored as precursors to amino-ortho-quinodimethanes, and the influence of the protonation state on their electrocyclic reactivity is unknown. Here, we show that amino-benzocyclobutenes function as protonation-gated, strain-release precursors to highly reactive amino-o-quinodimethanes. Protonation toggles electrocyclic ring opening off and on by removing or restoring n(N) → σ*(C–C) stabilization, shifting the activation barrier by gt;50 kJ mol–1. Kinetic measurements define a gt;103-fold reactivity window, while computed barriers reproduce experimental half-life trends quantitatively. No amino-o-quinodimethane intermediate is detected, consistent with [4 + 2] trapping outcompeting its accumulation following electrocyclic ring opening. This acid–base switch enables the use of stable ammonium precursors and on-demand generation of transient intermediates under mild conditions, providing practical protonation-state control over the storage and activation of amino-BCB precursors.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Domenic Kronenberg",
+        "Asja A. Kroeger",
+        "Jiao Yu J. Wang",
+        "Michael G. Gardiner",
+        "Michelle L. Coote",
+        "Michael S. Sherburn"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03459",
+      "journal": "Organic Letters",
+      "title": "Synthesis of Benzylic Quaternary Centers via Arylation with Aryl(TMP)iodonium Salts",
+      "abstract": "Abstract Benzylic quaternary centers are important molecular scaffolds, but their synthesis via the arylation of tertiary malonates remains underdeveloped. Herein, we exploit the metal-like reactivity of diaryliodonium salts to realize this transformation. Design of experiment (DoE) is used to discover mild conditions with a broad scope of aryl electrophiles in high yields, including the coupling of electron-rich aryl rings. Telescoping diaryliodonium synthesis and C–C coupling into a one-pot sequence opens a new possibility for C–C coupling with aryl iodides.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Joseph Hatton",
+        "Nikhil Bonagiri",
+        "David R. Stuart"
       ],
       "topics": [],
       "sources": [
@@ -1050,14 +2639,22 @@
         "Saurabh S. Satpute",
         "Kami L. Hull"
       ],
-      "topics": [],
+      "topics": [
+        "Radical Photochemical Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Organophosphorus compounds synthesis",
+        "Sulfur-Based Synthesis Techniques"
+      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
         "crossref:1523-7052:created",
         "crossref:1523-7060:online",
         "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1082,6 +2679,45 @@
         "Shengwen Yang",
         "Wei-Cheng Yuan",
         "Jian-Qiang Zhao"
+      ],
+      "topics": [
+        "Fluorine in Organic Chemistry",
+        "Pharmaceutical Science",
+        "Pharmacology, Toxicology and Pharmaceutics",
+        "Life Sciences",
+        "Inorganic Fluorides and Related Compounds",
+        "Synthesis and Characterization of Pyrroles"
+      ],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03228",
+      "journal": "Organic Letters",
+      "title": "Visible Light-Driven Chlorodifluoromethylation of Unactivated Alkenes",
+      "abstract": "Abstract A visible-light-driven regioselective chlorodifluoromethylation of unactivated alkenes has been developed. In this process, readily available difluoroacetic acid serves as a difluoromethyl radical precursor and, upon activation with (diacetoxyiodo)benzene under visible-light irradiation, generates the CF2H radical species. Subsequent addition to terminal, di-, or trisubstituted alkenes, followed by trapping with N-chlorosuccinimide, furnishes the chlorodifluoromethylated products in good yields. Notably, the method has been used for the chlorodifluoromethylation of natural products and functional molecules, and the resulting C–Cl bond can undergo diverse derivatizations including replacement with heteroatoms.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Ziyan Zhang",
+        "Yan Lu",
+        "Zhuoyuan Jian",
+        "Zhirui Shi",
+        "Ling He",
+        "Chenyang Wang",
+        "Min Zhang"
       ],
       "topics": [],
       "sources": [
@@ -1113,6 +2749,45 @@
         "Hailing Liu",
         "Weibing Liu"
       ],
+      "topics": [
+        "Radical Photochemical Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalytic C–H Functionalization Methods",
+        "Sulfur-Based Synthesis Techniques"
+      ],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03759",
+      "journal": "Organic Letters",
+      "title": "Visible-Light-Promoted O-Glycosylation Mediated by Halogen Bonding of Selenoglycosides to the Diphenyliodonium Ion",
+      "abstract": "Abstract The activation of chalcogenoglycosides for O-glycosylation often requires strong electrophiles and a low temperature. However, visible-light irradiation of electron donor–acceptor (EDA) complexes between chalcogenoglycosides and less reactive electrophiles can circumvent this problem. Herein, we demonstrate high-yielding, room-temperature O-glycosylation with selenoglycosides in the presence of diphenyliodonium salts. Experimental and computational evidence indicates the formation of halogen-bonded EDA complexes and photoinduced electron transfer as critical steps.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Vinayak Pradeep",
+        "Afsana Mimi",
+        "Marina Descoubes",
+        "Erik Alvarez Valenzuela",
+        "Semin Lee",
+        "Anne Milet",
+        "Justin R. Ragains"
+      ],
       "topics": [],
       "sources": [
         "crossref:1523-7052:online",
@@ -1127,19 +2802,60 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/d41586-026-03008-z",
+      "journal": "Nature",
+      "title": "Daily briefing: The first new cat species described by science in a century",
+      "abstract": "",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Flora Graham"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
     }
   ],
   "potentialGapDois": [
     "10.1002/anie.4451248",
+    "10.31635/ccschem.026.202608262",
     "10.1021/jacs.6c16812",
+    "10.1021/jacs.6c09019",
+    "10.1021/jacs.6c14114",
     "10.1021/jacs.6c17644",
     "10.1021/jacs.6c14064",
     "10.1021/jacs.6c12532",
+    "10.1021/jacs.6c10701",
+    "10.1021/jacs.6c16907",
+    "10.1021/acs.joc.6c01696",
     "10.1021/acs.joc.6c01559",
     "10.1021/acs.joc.6c01653",
+    "10.1021/acs.orglett.6c03511",
+    "10.1021/acs.orglett.6c03434",
     "10.1021/acs.orglett.6c03473",
+    "10.1021/acs.orglett.6c03704",
+    "10.1021/acs.orglett.6c03239",
+    "10.1021/acs.orglett.6c03660",
+    "10.1021/acs.orglett.6c03836",
+    "10.1021/acs.orglett.6c03499",
+    "10.1021/acs.orglett.6c03459",
     "10.1021/acs.orglett.6c03586",
     "10.1021/acs.orglett.6c03313",
-    "10.1021/acs.orglett.6c03394"
+    "10.1021/acs.orglett.6c03228",
+    "10.1021/acs.orglett.6c03394",
+    "10.1021/acs.orglett.6c03759"
   ]
 }
