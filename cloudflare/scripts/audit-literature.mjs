@@ -153,25 +153,32 @@ async function loadGalleryDois() {
 }
 
 async function loadReviewExclusions() {
-  const excluded = new Set();
+  const latestDecision = new Map();
   const files = await readdir(path.resolve('audit')).catch(() => []);
   for (const file of files.filter(name => /^review-.*\.json$/i.test(name)).sort()) {
     try {
       const payload = JSON.parse(await readFile(path.resolve('audit', file), 'utf8'));
-      for (const item of payload?.rejected || []) {
-        const doi = normalizeDoi(item?.doi);
-        if (doi) excluded.add(doi);
-      }
+      const apply = (items, decision) => {
+        for (const item of items || []) {
+          const doi = normalizeDoi(item?.doi);
+          if (!doi) continue;
+          latestDecision.set(doi, decision);
+        }
+      };
+      apply(payload?.accepted, 'include');
+      apply(payload?.rejected, 'exclude');
+      apply(payload?.pending, 'pending');
       for (const item of payload?.decisions || []) {
-        if (String(item?.decision || '').toLowerCase() !== 'exclude') continue;
         const doi = normalizeDoi(item?.doi);
-        if (doi) excluded.add(doi);
+        const decision = String(item?.decision || '').toLowerCase();
+        if (!doi || !['include', 'exclude', 'pending'].includes(decision)) continue;
+        latestDecision.set(doi, decision);
       }
     } catch (error) {
       console.warn(`Review decision file unavailable: ${file}: ${error.message}`);
     }
   }
-  return excluded;
+  return new Set([...latestDecision.entries()].filter(([, decision]) => decision === 'exclude').map(([doi]) => doi));
 }
 
 async function loadReviewedHistory() {
