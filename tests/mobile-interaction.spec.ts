@@ -229,7 +229,9 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
     }, color.hex);
     await expect.poll(async () =>
       actions.locator(`button[data-action="${action}"]`).evaluate(element => getComputedStyle(element).backgroundColor)
-    ).toBe(color.rgb);
+    ).toBe(action === 'status'
+      ? await actions.locator('.chip.status').evaluate(element => getComputedStyle(element).backgroundColor)
+      : color.rgb);
   }
 
   const statusImageInput = userShell.locator('input[data-image="status:to-read"]');
@@ -291,7 +293,7 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   await expect.poll(async () => cardStatus.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(18, 52, 86)');
   await expect.poll(async () =>
     actions.locator('button[data-action="status"]').evaluate(element => getComputedStyle(element).backgroundColor)
-  ).toBe('rgb(51, 102, 153)');
+  ).toBe('rgb(18, 52, 86)');
 
   await expect.poll(async () => actions.evaluate(element => {
     const card = element.closest<HTMLElement>('.card');
@@ -439,7 +441,7 @@ test('desktop personalization wheel reaches the bottom and action slots align ac
 });
 
 
-test('More quick choices map directly to customizable folders', async ({ page }) => {
+test('Favorite quick choices map directly to customizable folders', async ({ page }) => {
   test.setTimeout(60_000);
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.route('https://api.gczhouwld.com/**', async route => {
@@ -463,7 +465,7 @@ test('More quick choices map directly to customizable folders', async ({ page })
   const actions = page.locator('gallery-paper-actions').first();
   await expect(actions).toBeVisible({ timeout: 30000 });
 
-  await actions.locator('button[data-action="more"]').click();
+  await actions.locator('button[data-action="favorite"]').click();
   await expect(actions.locator('.drawer')).toContainText(/快速选择（收藏夹）|Quick choices \(folders\)/);
   await expect(actions.locator('input[data-collection]')).toHaveCount(3);
   await expect(actions.locator('input[data-quick]')).toHaveCount(0);
@@ -1070,3 +1072,120 @@ test('journal and date filters persist across reload and clear cleanly', async (
   await expect(page.locator('input[data-journal-option][value="JACS"]')).not.toBeChecked();
   await expect.poll(async () => galleryCards.count()).toBe(initialCards);
 });
+
+
+for (const width of [390, 1280]) {
+  test(`feedback 26/27: favorite folders and status colors persist at ${width}px`, async ({ page }, testInfo) => {
+    test.setTimeout(90_000);
+    await page.setViewportSize({ width, height: 900 });
+    const errors: string[] = [];
+    const diagnostics: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('console', message => { if (message.type() === 'error') diagnostics.push(`console: ${message.text()}`); });
+    page.on('requestfailed', request => diagnostics.push(`requestfailed: ${request.url()} ${request.failure()?.errorText || ''}`));
+    page.on('response', response => { if (response.url().includes('/api/user-ui/')) diagnostics.push(`api: ${response.status()} ${response.url()}`); });
+    await page.route('https://api.gczhouwld.com/**', async route => {
+      const url = route.request().url();
+      const body = url.includes('/api/user-ui/reader-counts') ? { counts: {} }
+        : url.includes('/api/user-ui/integrations') ? { auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }
+        : {};
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
+    });
+    // Static preview has no media backend. Keep these UI-only tests independent of
+    // relative-endpoint redirects and reload cancellation in WebKit.
+    await page.route('**/api/media/batch**', route => route.fulfill({
+      status: 200,
+      headers: { 'access-control-allow-origin': '*' },
+      contentType: 'application/json',
+      body: JSON.stringify({ items: [] }),
+    }));
+    await page.route('**/api/media/inventory**', route => route.fulfill({
+      status: 200,
+      headers: { 'access-control-allow-origin': '*' },
+      contentType: 'application/json',
+      body: JSON.stringify({ generatedAt: Date.now(), items: [] }),
+    }));
+    // UI-only fixture for the unrelated live-capture endpoint; production capture code is unchanged.
+    await page.route('https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index**', route => route.fulfill({
+      status: 200,
+      headers: { 'access-control-allow-origin': '*' },
+      contentType: 'application/json',
+      body: JSON.stringify({ items: [] }),
+    }));
+    try {
+      await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+      const actions = page.locator('gallery-paper-actions').first();
+      await expect(actions).toBeVisible({ timeout: 30000 });
+      await expect(actions.locator('.bar > button.action')).toHaveCount(4);
+      const favorite = actions.locator('button[data-action="favorite"]');
+      await favorite.click();
+      const drawer = actions.locator('.drawer');
+      await expect(drawer).toHaveAttribute('data-anchor', 'favorite');
+      const anchorBox = await favorite.boundingBox();
+      const drawerBox = await drawer.boundingBox();
+      expect(anchorBox).not.toBeNull();
+      expect(drawerBox).not.toBeNull();
+      if (anchorBox && drawerBox) {
+        expect(drawerBox.x).toBeGreaterThanOrEqual(0);
+        expect(drawerBox.x + drawerBox.width).toBeLessThanOrEqual(width);
+        expect(Math.min(Math.abs(drawerBox.y - anchorBox.y - anchorBox.height), Math.abs(anchorBox.y - drawerBox.y - drawerBox.height))).toBeLessThanOrEqual(18);
+      }
+      const project = actions.locator('input[data-collection="project"]');
+      await project.check();
+      await expect(project).toBeChecked();
+      await page.screenshot({ path: testInfo.outputPath('favorite-picker.png'), fullPage: false });
+      await expect(favorite).toHaveAttribute('title', /已收藏|Saved/);
+      await favorite.click();
+      await expect(actions.locator('.drawer')).toHaveCount(0);
+      await expect(favorite).toHaveAttribute('title', /已收藏|Saved/);
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await expect(favorite).toHaveAttribute('title', /已收藏|Saved/);
+      await favorite.click();
+      await expect(project).toBeChecked();
+      await actions.locator('button[data-action="close"]').click();
+      await actions.locator('button[data-action="more"]').click();
+      await expect(actions.locator('input[data-collection]')).toHaveCount(0);
+      await expect(actions.locator('[data-citation-style]')).toBeVisible();
+      await actions.locator('button[data-action="close"]').click();
+
+      const statusButton = actions.locator('button[data-action="status"]');
+      const originalShape = await statusButton.getAttribute('class');
+      await statusButton.click();
+      const statusChoice = actions.locator('button[data-action^="set-status:"]').first();
+      const statusId = (await statusChoice.getAttribute('data-action'))!.slice('set-status:'.length);
+      const color = await statusChoice.locator('.status-choice-label').evaluate(element => getComputedStyle(element).backgroundColor);
+      await statusChoice.click();
+      await expect.poll(() => statusButton.evaluate(element => getComputedStyle(element).backgroundColor)).toBe(color);
+      await statusButton.click();
+      const matchingColor = actions.locator(`input[data-status-color="${statusId}"]`);
+      await matchingColor.evaluate((element: HTMLInputElement) => {
+        element.value = '#13579b';
+        element.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      await expect.poll(() => statusButton.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(19, 87, 155)');
+      await expect.poll(() => actions.locator('.chips > .chip.status').first().evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(19, 87, 155)');
+      expect((await statusButton.getAttribute('class'))?.replace(' active', '')).toBe(originalShape?.replace(' active', ''));
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await expect.poll(() => statusButton.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(19, 87, 155)');
+      await statusButton.scrollIntoViewIfNeeded();
+      await page.screenshot({ path: testInfo.outputPath('status-color-persisted.png'), fullPage: false });
+      await favorite.click();
+      await actions.locator('button[data-action="toggle-favorite"]').click();
+      await expect(project).not.toBeChecked();
+      await expect(favorite).toHaveAttribute('title', /^(收藏|Save)$/);
+      await expect(actions.locator('.bar > button.action')).toHaveCount(4);
+      expect(errors).toEqual([]);
+    } catch (error) {
+      try {
+        const screenshot = testInfo.outputPath('feedback-actions-failure.png');
+        await page.screenshot({ path: screenshot, fullPage: false });
+        await testInfo.attach('feedback-actions-failure', { path: screenshot, contentType: 'image/png' });
+      } catch { /* Preserve the original failure even when screenshot capture fails. */ }
+      throw error;
+    } finally {
+      const diagnosticsPath = testInfo.outputPath('feedback-actions-diagnostics.json');
+      await (await import('node:fs/promises')).writeFile(diagnosticsPath, JSON.stringify({ errors, diagnostics }, null, 2));
+      await testInfo.attach('feedback-actions-diagnostics', { path: diagnosticsPath, contentType: 'application/json' });
+    }
+  });
+}
