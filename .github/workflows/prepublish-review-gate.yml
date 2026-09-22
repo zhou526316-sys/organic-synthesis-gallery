@@ -13,6 +13,8 @@ on:
       - 'scripts/test-per-doi-release.mjs'
       - 'scripts/validate-literature-quality-gate.mjs'
       - 'scripts/test-deferred-publication-quality.mjs'
+      - 'scripts/convert-prepublish-review.mjs'
+      - 'scripts/test-formal-review-conversion.mjs'
       - 'shared/literature-journals.js'
       - 'audit/latest.json'
       - 'audit/unresolved-latest.json'
@@ -51,6 +53,9 @@ jobs:
       - name: Test published subset and deferred backlog consistency
         run: node scripts/test-deferred-publication-quality.mjs
 
+      - name: Test deterministic staging-to-formal conversion
+        run: node scripts/test-formal-review-conversion.mjs
+
       - name: Locate canonical staging review
         id: locate
         shell: bash
@@ -72,6 +77,13 @@ jobs:
           set -euo pipefail
           node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}" --allow-deferred | tee "$RUNNER_TEMP/prepublish-validation.json"
 
+      - name: Preview formal conversion without canonical writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/convert-prepublish-review.mjs "${{ steps.locate.outputs.review }}" > "$RUNNER_TEMP/formal-conversion-preview.json"
+          node -e 'const fs=require("fs");const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/formal-conversion-preview.json","utf8"));console.log(JSON.stringify({conversionValid:r.conversionValid,publicationReady:r.publicationReady,summary:r.formalReview?.summary,markerFields:r.markerFields,productionDataModified:r.productionDataModified},null,2))'
+
       - name: Require reviewed DOI subset for publication readiness
         shell: bash
         run: |
@@ -85,6 +97,13 @@ jobs:
           set -euo pipefail
           node scripts/check-prepublish-readiness.mjs "${{ steps.locate.outputs.review }}" --allow-deferred --require-ready | tee "$RUNNER_TEMP/prepublish-slot-readiness.json"
 
+      - name: Build strict release bundle without publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/convert-prepublish-review.mjs "${{ steps.locate.outputs.review }}" --require-ready > "$RUNNER_TEMP/formal-release-bundle.json"
+          node -e 'const fs=require("fs");const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/formal-release-bundle.json","utf8"));if(r.conversionValid!==true||r.publicationReady!==true)throw new Error("strict conversion not ready");console.log(JSON.stringify({conversionValid:true,publicationReady:true,summary:r.formalReview.summary,markerFields:r.markerFields,productionDataModified:false},null,2))'
+
       - name: Preserve staging and readiness evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -94,5 +113,7 @@ jobs:
             ${{ runner.temp }}/prepublish-validation.json
             ${{ runner.temp }}/prepublish-readiness.json
             ${{ runner.temp }}/prepublish-slot-readiness.json
+            ${{ runner.temp }}/formal-conversion-preview.json
+            ${{ runner.temp }}/formal-release-bundle.json
           if-no-files-found: warn
           retention-days: 14

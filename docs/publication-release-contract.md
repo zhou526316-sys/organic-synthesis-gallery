@@ -1,6 +1,6 @@
 # Production literature release authorization contract
 
-Status: batch 1 deployment-gate implementation, 2026-09-22. This document does not authorize an off-slot literature release or claim that the full pipeline migration is finished.
+Status: batch 1 deployment gate plus batch 2 deterministic formal conversion, 2026-09-22. This document does not authorize an off-slot literature release or claim that the full pipeline migration is finished.
 
 ## Unit of publication
 
@@ -34,10 +34,12 @@ The gate re-runs `check-prepublish-readiness.mjs --require-ready --allow-deferre
 
 ## Formal review structure
 
-Formal reviews must have `publicationSlot`, `handoffGeneratedAt`, `generatedAt`, `accepted[]`, `rejected[]`, `pending[]`, exact `summary.reviewed/accepted/rejected/pending`, and the sourceChecks/qualityControl from the reviewed snapshot. Each row must preserve DOI, title, journal, date, priority, evidence and challenge fields and must have a substantive `reason`. Every accepted/rejected row must have matching challengeDecision and evidenceBasis/challengeReason. Do not merely rename a staging `decisions[]` file. The automatic deterministic converter and full post-deploy sequencing are follow-up work; do not claim their completion from this gate change.
+Formal reviews must have `publicationSlot`, `handoffGeneratedAt`, `generatedAt`, `accepted[]`, `rejected[]`, `pending[]`, exact `summary.reviewed/accepted/rejected/pending`, and the sourceChecks/qualityControl from the reviewed snapshot. Each row must preserve DOI, title, journal, date, priority, evidence and challenge fields and must have a substantive `reason`. Every accepted/rejected row must have matching challengeDecision and evidenceBasis/challengeReason. Do not merely rename a staging `decisions[]` file.
+
+Use `scripts/convert-prepublish-review.mjs` as described in `docs/formal-review-conversion.md`. Its default stdout-only preview is not publishable. The strict `--require-ready` bundle is produced only after the existing per-DOI target-slot preflight succeeds. The existing prepublish workflow runs both conversion regression tests and the current-staging preview; it produces a strict bundle only when the slot check succeeds. Formal data and per-release pending queue must use the exact serialized bytes bound by their emitted SHA values. A converter failure must be resolved in staging or code, not bypassed by manual JSON rearrangement. Conversion still does not write production or replace atomic release authorization.
 
 ## Scope and remaining work
 
 No new scheduled task or new fetch cycle is added by this change. The existing 07:05/17:05, 07:35/17:35 and 08:00/18:00 stages remain. Fixed-slot commit-time handling retains the existing slot validator for this batch; its 20-minute technical bound is NOT approval for another task to perform arbitrary late publication. The release task must also enforce logical slot, frozen review cutoff, and actual deployment-time reporting. Timing-policy consolidation is not silently solved by this document.
 
-This batch authorizes repository inputs before building. It does not yet prove final generated artifact DOI equality, post-deployment DOI/search equality, or automatic `synced` state. Those must be verified separately against the same release version before declaring publication success. The known `_decision` bug in the older end-to-end validator, deterministic conversion, downstream ordering, audit deduplication and notification settings are separate remaining items.
+Authorization and formal conversion do not yet prove final generated artifact DOI equality, post-deployment DOI/search equality, or automatic `synced` state. Those must be verified separately against the same release version before declaring publication success. The older validator's annotated-row challenge fix is already in main and covered by its existing deferred-publication regression tests; downstream sequencing, audit deduplication and notification settings remain separate work.
