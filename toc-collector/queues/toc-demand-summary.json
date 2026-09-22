@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-22T15:00:13.404Z",
+  "generatedAt": "2026-09-22T16:30:47.570Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
@@ -8,21 +8,21 @@
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
   "mediaInventoryCount": 512,
   "webpageDoiCount": 512,
-  "mediaRecordCount": 9,
-  "visibleGapTotal": 503,
-  "demandTotal": 503,
-  "noVisual": 503,
+  "mediaRecordCount": 92,
+  "visibleGapTotal": 426,
+  "demandTotal": 426,
+  "noVisual": 426,
   "fallbackOnlyNeedsOfficialUpgrade": 2,
-  "missingOfficialTotal": 505,
+  "missingOfficialTotal": 428,
   "figureGapTotal": 512,
   "zeroFigureGapTotal": 512,
   "lowResolutionFigureGapTotal": 0,
   "unknownQualityFigureGapTotal": 0,
   "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 351,
+    "acs": 275,
     "wiley": 55,
-    "nature": 94,
+    "nature": 93,
     "science": 3,
     "rsc": 0,
     "elsevier": 0,
@@ -40,40 +40,22 @@
     "other": 0
   },
   "byJournal": {
-    "ACS Catalysis": 38,
-    "JACS": 102,
-    "Organic Letters": 211,
+    "ACS Catalysis": 33,
+    "JACS": 82,
+    "Organic Letters": 160,
     "Nature": 9,
     "Nature Catalysis": 12,
     "Nature Chemistry": 11,
     "Nature Communications": 47,
-    "Nature Synthesis": 15,
+    "Nature Synthesis": 14,
     "Science": 3,
     "Angew": 55
   },
   "sample": [
     {
-      "doi": "10.1021/acscatal.6c05381",
-      "journal": "ACS Catalysis",
-      "title": "A Sequence-to-Scaffold Platform Enables Programmable Carrier-Supported Biocatalysis for Nucleoside Analog Synthesis",
-      "date": "2026-09-21",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
       "doi": "10.1021/acscatal.6c04593",
       "journal": "ACS Catalysis",
       "title": "Glycopeptide Assembly via Selective Manganese(I)-Catalyzed C–H Alkenylations in Organic Media and in Water",
-      "date": "2026-09-18",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c05065",
-      "journal": "ACS Catalysis",
-      "title": "Synergistic Effects of Brønsted Acid Site and Lewis Acid Site of Nb2O5 on the Direct Amination of Alcohols",
       "date": "2026-09-18",
       "publisher": "acs",
       "state": "no_visual",
@@ -107,15 +89,6 @@
       "existingReason": "user_observed_no_image"
     },
     {
-      "doi": "10.1021/acscatal.6c04996",
-      "journal": "ACS Catalysis",
-      "title": "Enantioconvergent Assembly of Chiral Difluoromethyl Stereocenters by Nickel-Catalyzed Reductive Cross-Coupling",
-      "date": "2026-09-13",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
       "doi": "10.1021/acscatal.6c05422",
       "journal": "ACS Catalysis",
       "title": "DiploPhos: A Hemilabile Bisphosphine for Sterically Hindered Ni-Catalyzed Suzuki–Miyaura Couplings",
@@ -129,24 +102,6 @@
       "journal": "ACS Catalysis",
       "title": "Diverse Bicyclic Heterocyclic Scaffolds via Palladium-Catalyzed C(sp3)–H Activation of Amides and Amines",
       "date": "2026-09-10",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c05675",
-      "journal": "ACS Catalysis",
-      "title": "Organocatalytic Enantioselective [3+3] Annulation toward Chromene-Fused Helicenes Bearing Central and Helical Chirality With Chiroptical Properties",
-      "date": "2026-09-10",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c05106",
-      "journal": "ACS Catalysis",
-      "title": "Visible Light-Mediated Decarboxylative Annulations of Oxamic Acids and Alkynes via Hydrogen Atom Transfer",
-      "date": "2026-09-09",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
@@ -273,6 +228,51 @@
       "journal": "ACS Catalysis",
       "title": "Lewis-acid-catalyzed cross-coupling of electronically different bicyclo[1.1.0]butanes",
       "date": "2026-08-13",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05079",
+      "journal": "ACS Catalysis",
+      "title": "Highly Enantioselective Synthesis of Boron-Stereogenic Scaffolds via Bioinspired Bisphosphonium Salt-Catalyzed SNAr Reaction",
+      "date": "2026-08-07",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c04479",
+      "journal": "ACS Catalysis",
+      "title": "Catalytic Enantioselective Allenylation of Zincke Imine",
+      "date": "2026-07-27",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c03885",
+      "journal": "ACS Catalysis",
+      "title": "Photothermal C–N cross-coupling",
+      "date": "2026-07-25",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c04193",
+      "journal": "ACS Catalysis",
+      "title": "Enantioselective C(sp3)–H Sulfilimination via Dual Photoredox/Copper Catalysis",
+      "date": "2026-07-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c03556",
+      "journal": "ACS Catalysis",
+      "title": "Aldehyde/Triazolium-Catalyzed Transformation of C(sp3)–H Bonds via HAT Photocatalysis and Electron-Shuttle Process: Unexplored Merging of Aldehyde and Triazolium",
+      "date": "2026-07-21",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""

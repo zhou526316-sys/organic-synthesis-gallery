@@ -1,0 +1,89 @@
+name: Tampermonkey 2.2.20 release workbench
+on:
+  push:
+    branches: [release/tampermonkey-2.2.20]
+    paths: ['.github/workflows/tm220-release-workbench.yml','scripts/finalize-tm220-release.py','scripts/test-tm220-release.mjs','scripts/validate-tm220-artifacts.mjs']
+permissions:
+  contents: write
+concurrency:
+  group: tm220-release-workbench
+  cancel-in-progress: false
+jobs:
+  release-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Integrate only reviewed media code using three-way merge
+        run: |
+          set -euo pipefail
+          SOURCE=4746f9edb970995039e95dfa21a4da442b843733
+          BASE=$(git merge-base HEAD "$SOURCE")
+          paths=(public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs cloudflare/scripts/build-live-toc-demand-queue.mjs cloudflare/worker/src/media.js cloudflare/worker/src/media-write.js cloudflare/worker/src/local-captures.js scripts/test-media-identity-v220.mjs scripts/test-tm-stage-first.mjs scripts/test-tm-paired-capture.mjs)
+          if ! grep -Fq "var VERSION = '6.2.20';" public/toc-mainline.user.js; then
+            git diff "$BASE" "$SOURCE" -- "${paths[@]}" > "$RUNNER_TEMP/tm220-reviewed.patch"
+            git apply --3way --index "$RUNNER_TEMP/tm220-reviewed.patch"
+          fi
+          python3 scripts/finalize-tm220-release.py
+          git diff --check
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/index.js
+          node --check cloudflare/worker/src/local-captures.js
+      - name: Verify task guards storage receipts and overnight limits
+        run: |
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/validate-tm220-artifacts.mjs source
+      - name: Build complete recovery queue without editing literature
+        run: |
+          node cloudflare/scripts/build-live-toc-demand-queue.mjs
+          node -e "const q=require('./public/toc-demand-live.json'); if(q.articles.length!==q.webpageDoiCount||q.articles.length<400)throw Error('incomplete queue'); console.log('TM220_QUEUE',q.articles.length,q.generatedAt)"
+      - name: Build installable self-contained userscript
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          BRIDGE_UPDATE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
+          BRIDGE_RUNTIME_OUTPUT: public/gallery-vpn-bridge-runtime.js
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+      - name: Install bounded Chromium regression dependencies
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install chromium
+      - name: Exercise single-visit paired capture in actual browser engine
+        run: node scripts/test-tm-paired-capture.mjs
+      - name: Commit tested media-only release files to release branch
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/release/tampermonkey-2.2.20
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/toc-mainline.user.js public/toc-demand-live.json cloudflare/scripts/build-bridge-loader.mjs cloudflare/scripts/build-live-toc-demand-queue.mjs cloudflare/worker/src/media.js cloudflare/worker/src/media-write.js cloudflare/worker/src/local-captures.js cloudflare/worker/src/index.js scripts/test-media-identity-v220.mjs scripts/test-tm-stage-first.mjs scripts/test-tm-paired-capture.mjs toc-collector/queues
+          git diff --cached --name-only | grep -Eq '^(src/|public/(papers.gz.b64|.*supplement.json|total-synthesis.json))' && exit 1 || true
+          if ! git diff --cached --quiet; then
+            git commit -m 'release: publish tested 2.2.20 paired capture and complete recovery queue'
+            git push origin HEAD:release/tampermonkey-2.2.20
+          fi
+          echo "TESTED_RELEASE_HEAD=$(git rev-parse HEAD)"
+      - name: Preserve tested installable artifact
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm220-release"
+          cp public/gallery-vpn-bridge.user.js public/toc-mainline.user.js public/toc-demand-live.json "$RUNNER_TEMP/tm220-release/" || true
+          git rev-parse HEAD > "$RUNNER_TEMP/tm220-release/head.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm220-release
+          path: ${{ runner.temp }}/tm220-release/
+          retention-days: 7

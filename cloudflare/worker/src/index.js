@@ -89,6 +89,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/repair-status',
   '/api/media/jobs/status',
   '/api/media/local-capture-index',
+  '/api/media/capture-capabilities',
   '/api/media/local-diagnostics',
   '/api/media/tampermonkey-reports',
 ]);
@@ -350,6 +351,9 @@ async function handleApi(request, env) {
   if (request.method === 'GET' && url.pathname === '/api/article-figures') {
     return resultResponse(await getArticleFigures(request, env), cors);
   }
+  if(request.method==='GET' && url.pathname==='/api/media/capture-capabilities') {
+    return json({captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:false}, {headers:cors});
+  }
   if (request.method === 'GET' && url.pathname === '/api/article-figures/staged') {
     return resultResponse(await getStagedArticleFigures(request, env), cors);
   }
@@ -431,7 +435,7 @@ async function handleApi(request, env) {
     return resultResponse(await importStagedArticleFigure(request, env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/promote-staged') {
-    return resultResponse(await promoteStagedArticleFigures(request, env, await readJson(request)));
+    return json({error:'verified_promotion_pending',stagedObjectsRetained:true},{status:503,headers:cors});
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/reset') {
     return resultResponse(await resetFigures(request, env, await readJson(request)));
@@ -554,16 +558,6 @@ export default {
         console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
       }
     })());
-    ctx.waitUntil(
-      promoteStagedArticleFigures(
-        new Request('https://organic-synthesis-gallery.zhou526316.workers.dev/api/article-figures/promote-staged'),
-        env,
-        { limit: 5 }
-      ).then(result => {
-        console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON', JSON.stringify(result?.body || {}));
-      }).catch(error => {
-        console.error('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_FAILED', error instanceof Error ? error.message : String(error));
-      })
-    );
+    console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_SKIPPED', 'verified_staging_release;retain_original_objects');
   },
 };

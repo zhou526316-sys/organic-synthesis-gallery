@@ -1,5 +1,4 @@
 name: Publisher TOC adapter CI
-
 on:
   workflow_dispatch:
   pull_request:
@@ -25,21 +24,17 @@ on:
       - 'toc-collector/package.json'
       - 'cloudflare/scripts/import-recent-media-direct.mjs'
       - '.github/workflows/toc-publisher-adapters-ci.yml'
-
 permissions:
   contents: read
-
 jobs:
   adapters:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-
       - name: Syntax check
         run: |
           node --check toc-collector/src/publisher-adapters.mjs
@@ -51,13 +46,10 @@ jobs:
           node --check public/toc-mainline.user.js
           node --check cloudflare/worker/src/index.js
           node --check cloudflare/worker/src/local-captures.js
-
       - name: Run publisher adapter fixtures
         run: node toc-collector/test/publisher-adapters.test.mjs
-
       - name: Test Tampermonkey diagnostic history
         run: node cloudflare/worker/scripts/test-tampermonkey-report-history.mjs
-
       - name: Verify direct importer uses shared adapter
         shell: bash
         run: |
@@ -65,98 +57,26 @@ jobs:
           grep -F "publisher-adapters.mjs" cloudflare/scripts/import-recent-media-direct.mjs
           grep -F "extractPublisherMediaCandidates" cloudflare/scripts/import-recent-media-direct.mjs
           grep -F "pickBestPublisherMediaCandidate" toc-collector/src/background.mjs
-
-
-      - name: Verify Tampermonkey mainline contract
+      - name: Verify paired Tampermonkey contract and identity regressions
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.2.19" public/toc-mainline.user.js
-          grep -F "toc-demand-live.json" public/toc-mainline.user.js
-          grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
+          node scripts/validate-tm220-artifacts.mjs source
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm220-release.mjs
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
-          grep -F "FAILURE_COOLDOWN_MS" public/toc-mainline.user.js
-          grep -F "DEFAULT_BATCH_SIZE = 8" public/toc-mainline.user.js
-          grep -F "articlelanding/" public/toc-mainline.user.js
-          grep -F "var figureJob = jobKind(job) === 'figures';" public/toc-mainline.user.js
-          grep -F "figureJob ? 'full/' : ''" public/toc-mainline.user.js
-          grep -F "async function iframeCandidates(job, trace)" public/toc-mainline.user.js
-          grep -F "function waitForDomMutation(timeoutMs)" public/toc-mainline.user.js
-          grep -F "object[type^=\"image\"],svg image" public/toc-mainline.user.js
-          grep -F "iframe_cross_origin_or_auth_redirect" public/toc-mainline.user.js
-          grep -F "_semantic_window" public/toc-mainline.user.js
-          grep -F "acs_main_scroll_top=" public/toc-mainline.user.js
-          grep -F "中止当前媒体抓取批次" public/toc-mainline.user.js
-          grep -F "继续媒体抓取主线" public/toc-mainline.user.js
-          grep -F "上传本地 TOC 日志" public/toc-mainline.user.js
-          grep -F "@connect      acs.silverchair-cdn.com" public/toc-mainline.user.js
-          grep -F "candidateRequestUrl" public/toc-mainline.user.js
-          grep -F "candidateBelongsToJob" public/toc-mainline.user.js
           grep -F "captureBelongsToDoi" cloudflare/worker/src/local-captures.js
-          grep -F "currentSrc" public/toc-mainline.user.js
-          grep -F "sanitizeTraceMessage" public/toc-mainline.user.js
           grep -F "sanitizeTraceMessage" cloudflare/worker/src/local-captures.js
-          grep -F "publisher_userscript_not_running" public/toc-mainline.user.js
-          grep -F "publisher_userscript_running_job_not_seen" public/toc-mainline.user.js
-          grep -F "查看出版社脚本心跳" public/toc-mainline.user.js
-          grep -F "publisher_script_started" public/toc-mainline.user.js
-          grep -F "CAPTURE_INDEX_URL" public/toc-mainline.user.js
-          grep -F "FIGURE_IMPORT_ENDPOINT" public/toc-mainline.user.js
-          grep -F "FIGURE_STAGE_ENDPOINT" public/toc-mainline.user.js
-          grep -F "NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000" public/toc-mainline.user.js
-          grep -F "var dates = Array.from(new Set" public/toc-mainline.user.js
-          grep -F "delayedTocUpgrades: upgrades.length" public/toc-mainline.user.js
-          grep -F "var delayedUpgrades = upgrades.filter" public/toc-mainline.user.js
-          grep -F "NEXT_BATCH_DELAY_MS = 12000" public/toc-mainline.user.js
           grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
-          grep -F "liveInventory?.tocStored === true" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "isExcludedDoi(doi)" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "gallery-literature-doi-registry" src/main.ts
-          grep -F "function executableJobs" public/toc-mainline.user.js
-          grep -F "约 12 秒后自动继续" public/toc-mainline.user.js
-          grep -F "/api/article-figures/promote-staged" cloudflare/worker/src/index.js
-          grep -F "promoteStagedArticleFigures" cloudflare/worker/src/local-captures.js
-          grep -F "ARTICLE_FIGURE_STAGE_PROMOTION_CRON" cloudflare/worker/src/index.js
-          grep -F "figuresStaged" public/toc-mainline.user.js
-          grep -F "D1 import unavailable; preserving figure in R2" public/toc-mainline.user.js
-          grep -F "/api/article-figures/stage" cloudflare/worker/src/index.js
-          grep -F "importStagedArticleFigure" cloudflare/worker/src/local-captures.js
-          grep -F "getStagedArticleFigures" cloudflare/worker/src/local-captures.js
-          grep -F "queue.figureGaps" public/toc-mainline.user.js
-          grep -F "function jobKind(job)" public/toc-mainline.user.js
-          grep -F "failure:figures:" public/toc-mainline.user.js
-          grep -F "figureGapTotal" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "MEDIA_INVENTORY_URL" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "function figureQuality(row)" cloudflare/worker/src/media.js
-          grep -F "usableFigureCount" cloudflare/worker/src/media.js
-          grep -F "lowResolutionFigureGapTotal" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "function articleFigureResolution" public/toc-mainline.user.js
-          grep -F "articleFigureImageUrls" public/toc-mainline.user.js
-          grep -F "figure1_deferred" public/toc-mainline.user.js
-          grep -F "heartbeatDeadlineMs = 35000" public/toc-mainline.user.js
-          grep -F "action/doSearch?AllField=" public/toc-mainline.user.js
-          grep -F "toc-display-gap-overrides.json" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "LOCAL_CAPTURE_INDEX_URL" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "LIVE_CAPTURE_INDEX_URL" public/toc-rescue.js
-          grep -F "fetchPostJson" public/toc-mainline.user.js
-          grep -F "gm_then_fetch_failed:" public/toc-mainline.user.js
           grep -F "TAMPERMONKEY_CORS_WRITE_PATHS" cloudflare/worker/src/index.js
-          grep -F "https://pubs.acs.org" cloudflare/worker/src/index.js
-          grep -F "https://onlinelibrary.wiley.com" cloudflare/worker/src/index.js
-          grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "loaderVersion = '2.2.19'" cloudflare/scripts/build-bridge-loader.mjs
-          if grep -Fq "readRealtimeMediaPreflight" public/toc-mainline.user.js; then echo "Recovery userscript must stay on the 2.2.15 capture core"; exit 1; fi
-          if grep -Fq "gallery-literature-doi-registry" public/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.16 live-page filtering"; exit 1; fi
-          if grep -Fq "MEDIA_INVENTORY_ENDPOINT" public/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.17 realtime preflight"; exit 1; fi
-          grep -F "__OSG_TOC_BROWSER_MAINLINE__" cloudflare/scripts/build-bridge-loader.mjs
-          if grep -Fq "chinesechemsoc.org" public/toc-mainline.user.js; then echo "Obsolete CJC domains must not remain in TOC mainline"; exit 1; fi
           if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
             echo "Userscript must not embed a write token"
             exit 1
           fi
-
   windows-collector-smoke:
     runs-on: windows-latest
     timeout-minutes: 15
@@ -165,22 +85,17 @@ jobs:
         working-directory: toc-collector
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-
       - name: Install Collector dependencies
         run: npm ci --no-audit --no-fund
-
       - name: Run Collector checks and adapter fixtures
         run: npm run check
-
       - name: Build unpacked Collector
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
         run: npm run dist:unpacked
-
       - name: Verify unpacked executable and shared adapter
         shell: pwsh
         run: |
