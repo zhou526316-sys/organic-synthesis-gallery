@@ -1,0 +1,127 @@
+{
+  "recordedAt": "2026-09-23T01:39:30+08:00",
+  "context": "UI and feedback continuation after two 继续 messages; feedback29 larger nonfullscreen summary",
+  "status": "deployed_with_partial_live_acceptance",
+  "implementation": {
+    "pullRequest": 139,
+    "testedHead": "44ef4ee3b44c82d03443fe04fc63457ab4cf31ac",
+    "mergeSha": "b00b03aa03d3dccb7a46ac6bd54d51392029de34",
+    "mergedAt": "2026-09-22T17:22:38Z",
+    "releaseFiles": ["src/user-ui/paper-actions.ts", "src/user-ui/summary-panel-layout.ts", "tests/mobile-interaction.spec.ts", "tests/summary-readable.spec.ts", ".github/workflows/summary-readable-ci.yml"],
+    "temporaryPatchWorkflowsRemovedBeforePullRequest": true,
+    "features": {
+      "maxWidthPx": 1080,
+      "maxHeightViewportFraction": 0.86,
+      "maxHeightPx": 900,
+      "desktopBodyPx": 15,
+      "mobileBodyPx": 14,
+      "desktopLineHeight": 1.85,
+      "mobileLineHeight": 1.8,
+      "closeButtonPx": 40,
+      "mobileOuterMarginPx": 12,
+      "desktopOuterMarginPx": 16,
+      "fullscreen": false,
+      "notes": "TOC plus cached bilingual switching retained. Prefer the triggering card when there is space; otherwise fit the bounded reading panel inside the visual viewport instead of shrinking it into a strip. Refit from actual offsets after viewport/card/image reflow. Dispose observers when the panel is removed. The other four management buttons and anchored popovers remain."
+    }
+  },
+  "mergeChecks": {
+    "summary": {"runId": 35759623704, "passed": 6, "failed": 0, "skipped": 0, "flaky": 0},
+    "originalImages": {"runId": 35759623789, "conclusion": "success"},
+    "requiredQualityGate": {"runId": 35759623853, "conclusion": "success"},
+    "data": {"runId": 35759625692, "conclusion": "success"},
+    "migration": {"runId": 35759623715, "conclusion": "success"}
+  },
+  "retainedCiHistory": [
+    {"runId": 35758123577, "artifactId": 10708094247, "passed": 1, "failed": 5, "sha256": "228f35f83cb98f224abf6021e08bd00dbc15663dfbd2f1225eef4f31f581f0af", "cause": "SVG fixture intrinsic metrics and responsive edge checks; changed to decoded fixed-pixel PNG and retained exact image checks."},
+    {"runId": 35758810404, "artifactId": 10709420615, "passed": 5, "failed": 1, "sha256": "ccca77b137f841e1643425d44dd2e6114f44946a3e0f65a6091f50552bbf2e84", "cause": "Open-panel resize put the bottom at427px in a420px viewport. Fixed actual-offset positioning and observed card/host/drawer reflow, without relaxing edge limits."},
+    {"runId": 35759623704, "artifactId": 10709267519, "passed": 6, "failed": 0, "sha256": "b7efee0189eaace9ea15a15186c312cbe7b65eabc2ed439164d5aeefd8f29a1a"}
+  ],
+  "deployment": {
+    "githubPages": {"runId": 35760282353, "conclusion": "success"},
+    "worker": {"runId": 35760296073, "conclusion": "success"},
+    "workerSync": {"runId": 35760282394, "conclusion": "success"},
+    "cloudflarePagesFallback": {"runId": 35760282360, "conclusion": "failure", "failureStepInspectedThisTurn": false}
+  },
+  "liveAcceptance": {
+    "workflow": ".github/workflows/ui-feedback29-live-smoke.yml",
+    "reviewedProductCommit": "b00b03aa03d3dccb7a46ac6bd54d51392029de34",
+    "latestRunId": 35761048963,
+    "workflowCommit": "e1ede7ae5a15b1bffc0a0abfbaef4c27d263d9dc",
+    "overallConclusion": "failure",
+    "browser": "Playwright 1.55.0 WebKit",
+    "observedAssetOnBothAvailableEntries": "assets/index-C1I8tMFt.js",
+    "productJavaScriptOrStylesOverriddenByTests": false,
+    "productionWritesAllowed": false,
+    "allApiRequestsMocked": true,
+    "summariesAndTocAreSyntheticLayoutFixtures": true,
+    "backendSummaryContentQualityVerified": false,
+    "githubPages": {
+      "httpStatus": 200,
+      "passed": 5, "failed": 1, "skipped": 0, "flaky": 0,
+      "jobId": 106858895745,
+      "artifactId": 10709133748,
+      "sha256": "540a988bd03acbf4efb8b292fa3b8cea8131920c60dcfc4ccf6a66a40ac1058d",
+      "passedCoverage": "All four viewport cases including readable fonts, decoded TOC, cached Chinese/English switching, scroll/close controls, four management buttons, and unfiltered zero-pageerror checks. Open-panel resizing and unaffected favorite anchoring also passed.",
+      "unacceptedCase": "Missing-fulltext plus no-TOC: unavailable text/no fabricated summary checks passed, but the new explicit .summary-toc count=0 precondition found1. A real TOC remained in the actual test DOM after removal of all three card input selectors. The no-TOC live layout case has not been established and must not be reported as accepted.",
+      "observedGeometry": [
+        {"viewport": "1280x900", "x": 184, "y": 110.0625, "width": 1080, "height": 774, "bodyFontPx": 15},
+        {"viewport": "390x900", "x": 12, "y": 58, "width": 366, "height": 774, "bodyFontPx": 14},
+        {"viewport": "320x568", "x": 12, "y": 49.50244140625, "width": 296, "height": 488.46875, "bodyFontPx": 14},
+        {"viewport": "900x420", "x": 16, "y": 28.788330078125, "width": 868, "height": 361.1875, "bodyFontPx": 15}
+      ]
+    },
+    "worker": {
+      "httpStatus": 200,
+      "passed": 6, "failed": 0, "skipped": 0, "flaky": 0,
+      "jobId": 106858895908,
+      "artifactId": 10709739461,
+      "sha256": "de68b6ec091de8c81881a58e726c6a1d04ed2d60e5054e99623ca7099392cb07",
+      "coverage": "All six presentation tests, including the missing-fulltext/no-TOC case. Not a verification of production AI summary generation."
+    },
+    "cloudflarePagesFallback": {
+      "jobId": 106858895429,
+      "artifactId": 10709133528,
+      "sha256": "8b69c8147fd38d8e8d849b0c0e3ec2676c0743e05640eda58e81c7564db58310",
+      "checkedAt": "2026-09-22T17:29:55.795Z",
+      "result": "DNS lookup and HTTP returned ENOTFOUND from the Actions runner; no browser tests ran. Not evidence of a universal user-side outage."
+    },
+    "firstLiveRun": {
+      "runId": 35760427985,
+      "workflowCommit": "511dd3a21b62ca7cdcbfcf81bf5d9e67987c04c0",
+      "workerPassed": 6,
+      "githubPassed": 5,
+      "githubFailed": 1,
+      "githubArtifactId": 10710132865,
+      "githubSha256": "4d025d82a691ed3e0bfca2398e7a9706b9439096cab94a34ef6bbb2e08a62b53",
+      "failure": "No-TOC test cleared only .toc-slot but actual .toc-link images remained; full-width text expected>900px, received661.09375px with a TOC column present."
+    },
+    "fixtureCorrection": "The next adapter clears .toc-image, .toc-link img and .toc-slot img, matching the production tocImageUrl selector. It adds a zero-TOC precondition and retains all existing assertions. This precondition still fails on GitHub, so the original failure is not hidden and the feature is not fully closed. No product methods or capture behavior are mocked to force the result green.",
+    "evidenceInspection": "Downloaded latest three live ZIPs and CI artifacts, checked SHA256, parsed results/network JSON, and visually inspected actual GitHub mobile and desktop screenshots. Screenshots show clearly labelled synthetic layout examples."
+  },
+  "concurrentWork": {
+    "previewPr137": {"mergeSha": "e474cc4b027ea8ed0842eeed7f9fb869a186d2a0", "reusedWithoutDuplicateSourceChanges": true, "fullLiveAcceptanceNotClaimedByThisChat": true},
+    "overlappingSummaryPr138": "Discovered during testing, posted coordination comments5780886292/5780910890. Selected PR139 after all its current-head gates passed. Did not merge, overwrite or delete the other branch. A second conflicting layout must not replace the single verified mainline implementation without reconciliation."
+  },
+  "feedback": {
+    "latestInspectedExportRunId": 35760616501,
+    "artifactId": 10710292482,
+    "generatedAt": "2026-09-22T17:25:47.705Z",
+    "d1Available": true, "r2Available": true,
+    "openIds": [8, 20, 21, 22, 23, 24, 25, 28, 29, 30],
+    "statusWritesThisTurn": [],
+    "feedback29ClosedByThisChat": false,
+    "feedback28ClosedByThisChat": false,
+    "feedback30": "Optional surrounding reading-status glow remains unimplemented by this batch."
+  },
+  "scope": {
+    "productionLiteratureDataChanged": false,
+    "publicationSlotsOrGatesChanged": false,
+    "captureTampermonkeyBridgeSourceChanged": false,
+    "backendSummaryGenerationChanged": false,
+    "realReaderEventsWritten": false,
+    "readerCountingSemanticsChanged": false,
+    "readerCountBusinessIssueResolved": false
+  },
+  "nextBoundedWork": "Make the no-TOC test input deterministic before asserting its full-width layout, retaining a separate real-TOC case and without overriding product methods. Then continue feedback30 and the separate reader-count investigation. The fallback-site availability issue does not erase the verified larger-summary functionality on the two working entries.",
+  "conversationArtifacts": ["summary29-live-mobile.png", "summary29-live-desktop.png", "summary29-release-evidence.zip"]
+}
