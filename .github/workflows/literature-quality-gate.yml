@@ -9,6 +9,8 @@ on:
       - '.github/workflows/literature-quality-gate.yml'
       - 'docs/literature-update-protocol.md'
       - 'scripts/validate-literature-quality-gate.mjs'
+      - 'audit/publication-release-state.json'
+      - 'scripts/validate-production-literature-release-slot.mjs'
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'shared/literature-journals.js'
       - 'shared/literature-policy.js'
@@ -46,6 +48,9 @@ jobs:
 
       - name: Verify discovery capability invariants
         run: node scripts/test-literature-completeness-capability.mjs
+
+      - name: Validate fixed production publication slot
+        run: node scripts/validate-production-literature-release-slot.mjs
 
       - name: Validate discovery, semantic review, deployment, and regression invariants
         env:
