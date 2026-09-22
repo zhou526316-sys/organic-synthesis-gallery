@@ -44,15 +44,26 @@ The primary scheduled literature task owns capability selection, candidate disco
 
 The primary task must always use the currently selected latest stable capability rather than a permanently hard-coded historical scraping implementation.
 
-## Immediate publication after review
+## Fixed production release slots: 08:00 / 18:00 Asia/Shanghai
 
-When a primary 08:00/18:00 run finishes semantic review and has one or more accepted papers, those accepted papers must be committed to the authoritative literature dataset and deployed to the production website in the same run. Do not wait for the 08:30/18:30 TOC-repair task, the next scheduled literature run, or a separate sync fallback.
+The production Gallery has exactly two literature release slots each day: **08:00 and 18:00 Asia/Shanghai**. Discovery, machine audit, publisher checking, semantic review, and challenge review happen before those slots. They must not cause production literature cards to appear early.
 
-TOC/Graphical Abstract availability is downstream and non-blocking. Newly accepted cards may go live with TOC explicitly pending; the TOC task can fill or upgrade media afterwards.
+The release pipeline is staged:
 
-Every accepted-literature data commit must also feed the browser-side TOC acquisition path. Changes to authoritative literature supplements trigger `Refresh live TOC demand queue`, which rebuilds `public/toc-demand-live.json`. Tampermonkey is the preferred authenticated/browser-context acquisition path for publisher TOC/Graphical Abstract and Figure 1 fallback: it consumes the live queue, prioritizes `visibleGaps`, then `officialUpgrades`, and writes captured media through the existing authenticated Worker media-import path. The 08:20/18:20 Asia/Shanghai queue refresh is a fallback; the accepted-paper commit should trigger the queue refresh immediately. Tampermonkey/TOC failure must never delay literature-card publication. The primary run must trigger the existing production deployment path immediately after the authoritative literature-data commit, then verify that every newly accepted DOI is visible/searchable in production and report the resulting total card count. If deployment fails, record `sync_failed` with the concrete reason and retry deployment when safe; never report an accepted DOI as live until production verification succeeds.
+1. Around 06:55 / 16:55, GitHub Actions runs an independent machine discovery safety audit.
+2. At 07:05 / 17:05, the primary assistant pre-review refreshes the explicit push-trigger bridge, consumes a fresh audit, and performs the first complete semantic/challenge review pass.
+3. At 07:35 / 17:35, the pre-release recovery task refreshes machine discovery again when needed, reviews any late-arriving DOI delta, and brings the staging review to `ready_to_publish`.
+4. At exactly 08:00 / 18:00, the production release task is the only scheduled task allowed to convert the staging review into a formal `audit/review-*.json`, write accepted papers into authoritative production literature data, refresh `public/toc-demand-live.json`, and trigger the production Pages update.
 
-The primary run must also report two distinct discovery counts: (1) unique records whose publication date falls inside the three-calendar-day primary review window, and (2) additional records included only by the seven-day machine safety tail / late-deposit rescue. Do not present their union as if every record were newly published inside the three-day window.
+Pre-release assistant work must persist decisions only to `audit/prepublish-review-YYYY-MM-DD-0800.json` or `audit/prepublish-review-YYYY-MM-DD-1800.json`. These files are deliberately outside the formal `review-*.json` decision namespace and do not alter the authoritative accepted/excluded history.
+
+If the staging review is incomplete at 08:00 / 18:00, the release slot fails closed: keep the previous verified production snapshot, record `publication_missed` / `incomplete_review`, and carry the unresolved work into the next fixed release slot. Do not publish new literature later at an arbitrary off-slot time merely because review eventually finished.
+
+A Pages deployment may take a few minutes after the 08:00 / 18:00 release commit. The logical production release event is the slot-time authoritative-data commit; online verification must record the actual deployment completion time. No other scheduled task may introduce new production literature data between the two release slots.
+
+TOC/Graphical Abstract availability remains downstream and non-blocking. Every accepted-literature production commit must feed the browser-side TOC demand path. Tampermonkey/VPN Bridge remains the sole publisher-media acquisition mainline for TOC/Graphical Abstract/Figure 1/body figures; OA PDF/HTML extraction is not part of the literature-release pipeline.
+
+Each release report must separately state (1) records inside the three-calendar-day primary review window and (2) additional records surfaced only by the seven-day safety tail / late-deposit rescue.
 
 ## Sync-only workflow
 
@@ -85,7 +96,7 @@ Semantic correctness cannot be proven by one model pass. Beginning with reviews 
 2. Challenge pass tries to falsify the first decision. For every accepted paper, actively search for reasons it should be excluded under Gallery scope. For every high-priority rejected paper, actively search for evidence that it is actually a general preparative synthetic method.
 3. A decision is final only when the challenge pass independently reaches the same result and records `evidenceBasis`, `challengeDecision`, and `challengeReason`.
 4. Any first/challenge disagreement remains `pending` until resolved with stronger abstract/full-text/publisher evidence. It must not be published or silently excluded.
-5. Materials/heterogeneous/polymer catalysis requires affirmative evidence of broad preparative organic substrate scope; an organic transformation alone is insufficient.
+5. Materials/heterogeneous catalysis requires affirmative evidence of a general preparative organic-synthesis scope; an organic transformation alone is insufficient. Polymer synthesis methodology itself is in scope when the central contribution is a new or substantially advanced polymerization reaction, catalyst, monomer scope, chain-control strategy, sequence/architecture control, or access to previously inaccessible polymer structures. Exclude polymer/material papers only when polymerization is merely a fabrication/application step without a general polymer-synthesis method.
 
 The review artifact must record `qualityControl.secondPassCompleted=true` and `qualityControl.unresolvedDisagreements=0` before a run may be marked complete.
 
@@ -119,6 +130,14 @@ ChatGPT scheduled-task runtimes are not required to have a local Node runner or 
 - If the trigger push succeeds but the Actions run fails or fails to persist a fresh audit, record the concrete Actions run id and failure as `source_gap` / `incomplete_review`.
 - Never create a fake semantic review merely to trigger the workflow; use the dedicated automation-trigger file.
 
-## Scheduled fallback
+## Scheduled automation
 
-The primary task runs at 08:00 and 18:00 Asia/Shanghai. Each fresh primary run uses a three-day primary semantic-review window subject to each journal's prospective `activeFrom` cutoff, while a seven-day machine-only multi-source safety tail, Crossref created/deposit rescue, and verifiedThrough catch-up remain enabled. GPT TOC repair runs at 08:30 and 18:30; the sync-only fallback runs at 09:00 and 19:00 Asia/Shanghai and is explicitly forbidden from re-fetching literature or TOCs.
+The fixed production publication slots are 08:00 and 18:00 Asia/Shanghai.
+
+- GitHub independent machine audit safety run: approximately 06:55 / 16:55.
+- Assistant primary pre-review: 07:05 / 17:05.
+- Assistant pre-release recovery/review delta: 07:35 / 17:35.
+- Production literature release and deployment trigger: 08:00 / 18:00 only.
+- TOC/media work remains outside the literature release gate and is handled by Tampermonkey/VPN Bridge.
+
+All morning and evening cycles follow the same staged theory. Pre-release failures may be recovered before the slot; after the slot, a failed literature release is recorded rather than silently publishing at an arbitrary later time.
