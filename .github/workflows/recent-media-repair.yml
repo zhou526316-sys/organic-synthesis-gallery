@@ -8,10 +8,13 @@ on:
     paths:
       - '.github/workflows/recent-media-repair.yml'
       - 'cloudflare/scripts/prepare-recent-media-repair.mjs'
+      - 'cloudflare/scripts/seed-all-repair.mjs'
       - 'cloudflare/scripts/import-recent-media-direct.mjs'
       - 'public/papers.gz.b64'
       - 'public/curated-supplement.json'
       - 'public/automation-supplement.json'
+      - 'public/rolling-supplement.json'
+      - 'public/literature-supplement.json'
       - 'public/total-synthesis.json'
       - 'public/manual-supplement.json'
       - 'public/final-audit-supplement.json'
@@ -64,6 +67,13 @@ jobs:
           test -n "$CLOUDFLARE_API_TOKEN"
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           test -n "$BRIDGE_WRITE_TOKEN"
+
+      - name: Seed full gallery DOI media inventory
+        shell: bash
+        env:
+          SOURCE_API: ${{ env.WORKER_URL }}
+          TARGET_API_BASE: ${{ env.WORKER_URL }}
+        run: node cloudflare/scripts/seed-all-repair.mjs | tee /tmp/all-media-seed.log
 
       - name: Prepare recent media gaps
         shell: bash
@@ -166,6 +176,7 @@ jobs:
           {
             echo '## Recent media repair'
             echo
+            grep '^REPAIR_SEED_SUMMARY ' /tmp/all-media-seed.log || true
             grep '^RECENT_MEDIA_PREPARE_SUMMARY ' /tmp/recent-media-prepare.log || true
             grep '^DIRECT_MEDIA_SUMMARY ' /tmp/direct-media-import.log || true
             grep '^RECENT_MEDIA_PREPARE_SUMMARY ' /tmp/recent-media-after-direct.log | tail -1 || true

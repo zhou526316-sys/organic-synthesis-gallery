@@ -2,7 +2,7 @@ import { primaryVisualResponse } from './primary-visual.js';
 import { publisherForDoi } from '../../../shared/publishers.js';
 
 const DOI_PATTERN = /^10\.\d{4,9}\/\S+$/i;
-const DOI_LIMIT = 1200;
+const DOI_LIMIT = 5000;
 const QUERY_CHUNK = 80;
 
 export function normalizeDoi(value) {
@@ -309,8 +309,9 @@ function inventoryItem(doi, toc, figures, primary, duplicateHashes) {
     figures.some(item => item.content_hash === toc.content_hash && String(item.semantic_key || '').toLowerCase() !== 'figure-1')
   );
   const suspiciousToc = Boolean(nonFigureOneMatch || (toc?.content_hash && duplicateHashes.has(toc.content_hash)));
-  const trueToc = tocStored && !suspiciousToc;
   const primaryKind = primary?.kind || '';
+  const primaryOfficial = Boolean(primaryKind === 'official_visual' && primary?.r2_key);
+  const trueToc = primaryOfficial || (tocStored && !suspiciousToc);
   const largeSource = primaryKind === 'official_visual'
     ? 'toc'
     : trueToc
@@ -340,6 +341,7 @@ function inventoryItem(doi, toc, figures, primary, duplicateHashes) {
     largeSource,
     tocStored: trueToc,
     tocRawStored: tocStored,
+    primaryOfficialStored: primaryOfficial,
     tocMissing: !trueToc,
     tocReason: toc?.reason || (tocStored ? 'cached' : 'cache_miss'),
     figureCount,
@@ -443,6 +445,66 @@ export async function mediaInventory(request, env, payload) {
     withFigure1: items.filter(item => item.figureOneStored).length,
   };
   return { status: 200, body: { generatedAt: Date.now(), summary, items } };
+}
+
+export async function tocGaps(request, env) {
+  const url = new URL(request.url);
+  const limit = Math.max(1, Math.min(DOI_LIMIT, Number(url.searchParams.get('limit')) || DOI_LIMIT));
+  const offset = Math.max(0, Number(url.searchParams.get('offset')) || 0);
+  const now = Date.now();
+  const [countRow, rows] = await Promise.all([
+    env.DB.prepare('SELECT COUNT(*) AS count FROM media_repair_state').first(),
+    allRows(env.DB.prepare(
+      'SELECT doi, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at FROM media_repair_state ORDER BY reported_priority DESC, updated_at DESC, doi ASC LIMIT ? OFFSET ?'
+    ).bind(limit, offset)),
+  ]);
+  const dois = rows.map(row => row.doi).filter(Boolean);
+  const media = await loadMediaRows(env, dois);
+  const stateByDoi = new Map(rows.map(row => [String(row.doi).toLowerCase(), row]));
+  const items = media.dois
+    .map(doi => {
+      const inventory = inventoryItem(
+        doi,
+        media.tocByDoi.get(doi),
+        media.figuresByDoi.get(doi) || [],
+        media.primaryByDoi.get(doi),
+        media.duplicateHashes
+      );
+      const repair = stateByDoi.get(doi) || {};
+      return {
+        ...inventory,
+        attempts: Number(repair.attempts || 0),
+        lastAttemptAt: Number(repair.last_attempt_at || 0),
+        nextRetryAt: Number(repair.next_retry_at || 0),
+        lastRootCause: repair.last_root_cause || '',
+        lastOutcome: repair.last_outcome || '',
+        reportedPriority: Number(repair.reported_priority || 0) === 1,
+        repairUpdatedAt: Number(repair.updated_at || 0),
+      };
+    })
+    .filter(item => item.tocMissing || item.suspiciousToc)
+    .sort((a, b) =>
+      Number(b.reportedPriority) - Number(a.reportedPriority) ||
+      Number(b.suspiciousToc) - Number(a.suspiciousToc) ||
+      b.repairUpdatedAt - a.repairUpdatedAt ||
+      a.doi.localeCompare(b.doi)
+    );
+  const tracked = Number(countRow?.count || 0);
+  return {
+    status: 200,
+    body: {
+      updatedAt: now,
+      source: 'media_repair_state_full_inventory',
+      semantics: 'All tracked gallery DOIs without a verified publisher TOC/graphical abstract. Figure 1 and other fallbacks remain in this backlog.',
+      tracked,
+      offset,
+      scanned: rows.length,
+      count: items.length,
+      completePage: rows.length < limit,
+      nextOffset: rows.length === limit ? offset + rows.length : null,
+      items,
+    },
+  };
 }
 
 export async function bridgeQueue(request, env) {
