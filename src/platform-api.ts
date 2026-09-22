@@ -18,6 +18,8 @@ interface StaticFigure {
   caption?: string;
   imageUrl: string;
   order: number;
+  width?: number;
+  height?: number;
 }
 
 interface StaticMediaItem {
@@ -130,23 +132,28 @@ function mediaItemHasToc(item: StaticMediaItem | undefined): boolean {
   return Boolean(item?.toc?.available && item.toc.imageUrl);
 }
 
-function mediaItemHasFigures(item: StaticMediaItem | undefined): boolean {
-  return Boolean(item?.figures?.available && item.figures.figures?.length);
-}
-
+// tm620-live-figure-union: a static Figure 1 must not hide later verified body figures.
 function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMediaItem | undefined): StaticMediaItem | undefined {
   if (!local) return dynamic;
   if (!dynamic) return local;
-  const toc = mediaItemHasToc(local) ? local.toc : dynamic.toc;
-  const figures = mediaItemHasFigures(local) ? local.figures : dynamic.figures;
+  const official = (t: StaticToc) => Boolean(t?.available && t.imageUrl && !/fallback/i.test(t.reason || ''));
+  const toc = official(local.toc) ? local.toc : official(dynamic.toc) ? dynamic.toc : mediaItemHasToc(local) ? local.toc : dynamic.toc;
+  const figuresByLabel = new Map<string, StaticFigure>();
+  for (const figure of [...(local.figures?.figures || []), ...(dynamic.figures?.figures || [])]) {
+    const key = String(figure.label || figure.id).toLowerCase().replace(/^fig(?:\.\s*|\s+)/, 'figure ').replace(/[^a-z0-9]+/g, '-');
+    const old = figuresByLabel.get(key);
+    const pixels = (f: StaticFigure) => Number(f.width || 0) * Number(f.height || 0);
+    if (!old || (pixels(old) > 0 && pixels(figure) > pixels(old))) figuresByLabel.set(key, figure);
+  }
+  const collection = [...figuresByLabel.values()].sort((a,b) => Number(a.order || 0)-Number(b.order || 0) || a.label.localeCompare(b.label,undefined,{numeric:true}));
   return {
-    ...dynamic,
-    ...local,
-    toc,
-    figures,
+    ...dynamic, ...local, toc,
+    figures: { ...local.figures, available: collection.length > 0, doi: local.doi, figures: collection },
     inventory: {
-      ...(dynamic.inventory || {}),
-      ...(local.inventory || {}),
+      ...(dynamic.inventory || {}), ...(local.inventory || {}),
+      status: toc?.available && collection.length ? 'complete' : toc?.available ? 'large_only' : collection.length ? 'figures_only' : 'missing',
+      largeSource: official(toc) ? 'toc' : collection.length ? 'figure' : 'none',
+      figureCount: collection.length,
     },
   };
 }
@@ -250,7 +257,7 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
 
     if (staticFrontendOnly() && incomplete.length) {
       try {
-        const dynamic = await workerRequest<{ generatedAt?: number; items?: InventoryItem[] }>('POST', path, { dois: incomplete });
+        const dynamic = await workerRequest<{ generatedAt?: number; items?: InventoryItem[] }>('POST', path, { dois: incomplete, readOnly: true });
         for (const item of dynamic.data?.items || []) {
           const doi = normalizeDoi(item?.doi);
           if (!doi) continue;
@@ -282,16 +289,14 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
       if (item) localByDoi.set(doi, normalizeMediaItem(item, 'static'));
     }
 
-    const incomplete = requested.filter(doi => {
-      const item = localByDoi.get(doi);
-      return !mediaItemHasToc(item) || !mediaItemHasFigures(item);
-    });
+    // Individual static images do not prove a complete collection; query the current batch once.
+    const incomplete = requested;
 
     if (incomplete.length) {
       try {
         const dynamic = staticFrontendOnly()
           ? await workerRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>('POST', path, { dois: incomplete })
-          : await rawRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>('POST', path, { dois: incomplete });
+          : await rawRequest<{ generatedAt?: number; items?: StaticMediaItem[] }>('POST', path, { dois: incomplete, readOnly: true });
         const dynamicByDoi = new Map<string, StaticMediaItem>();
         for (const item of dynamic.data?.items || []) {
           const doi = normalizeDoi(item?.doi);

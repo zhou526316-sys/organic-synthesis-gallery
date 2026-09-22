@@ -206,6 +206,12 @@ async function handleApi(request, env) {
     });
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/media/capture-capabilities') {
+    return json({ captureVersion: '6.2.20', bridgeVersion: '2.2.20', mediaGeneration: 1790082000000,
+      staging: true, boundCaptureIndexing: true, safeSvg: true, directServerRepair: false,
+      bodyCollection: 'bounded-single-visit', maxNewFiguresPerVisit: 20 }, { headers: { ...cors, 'cache-control': 'no-store' } });
+  }
+
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
     return resultResponse(await getArticleSummary(env, url.searchParams.get('doi')), cors);
   }
