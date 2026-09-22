@@ -1,4 +1,4 @@
-import { escapeHtml, rgbCss, SHAPES, statusLabel, store, styleVars, type Language, type PaperUserState, type Shape, type StyleDef } from './shared';
+import { escapeHtml, rgbCss, SHAPES, statusLabel, store, styleVars, type ArticleSummaryResult, type Language, type PaperUserState, type Shape, type StyleDef } from './shared';
 
 const NAME = 'gallery-paper-actions';
 
@@ -68,10 +68,14 @@ function citationText(meta: CitationMeta, style: CitationStyle): string {
 
 export class GalleryPaperActions extends HTMLElement {
   private readonly shadow = this.attachShadow({ mode: 'open' });
-  private panel: 'none' | 'status' | 'note' | 'more' = 'none';
+  private panel: 'none' | 'status' | 'note' | 'more' | 'summary' = 'none';
   private feedbackMessage = '';
   private citationStyle: CitationStyle = 'acs';
   private citationMessage = '';
+  private summaryLanguage: Language = 'zh';
+  private summaryData: ArticleSummaryResult | null = null;
+  private summaryLoading = false;
+  private summaryError = '';
   private readonly outside = (event: PointerEvent): void => {
     if (this.panel === 'none') return;
     const target = event.target instanceof Element ? event.target : null;
@@ -149,7 +153,7 @@ export class GalleryPaperActions extends HTMLElement {
     const above = Math.max(0, anchorRect.top - gap - margin);
     const openBelow = below >= Math.min(initialRect.height, 220) || below >= above;
     const available = openBelow ? below : above;
-    const cap = window.innerWidth <= 680 ? 520 : 560;
+    const cap = this.panel === 'summary' ? (window.innerWidth <= 680 ? 620 : 680) : (window.innerWidth <= 680 ? 520 : 560);
     drawer.style.maxHeight = `${Math.max(96, Math.min(cap, available))}px`;
 
     const fittedRect = drawer.getBoundingClientRect();
@@ -162,7 +166,7 @@ export class GalleryPaperActions extends HTMLElement {
     drawer.dataset.anchor = this.panel;
   }
 
-  private openPanel(panel: 'status' | 'note' | 'more'): void {
+  private openPanel(panel: 'status' | 'note' | 'more' | 'summary'): void {
     this.panel = panel;
     this.dataset.drawerOpen = 'true';
     this.render();
@@ -178,6 +182,69 @@ export class GalleryPaperActions extends HTMLElement {
     queueMicrotask(() => this.syncScrollLock());
   }
 
+  private tocImageUrl(): string {
+    const card = this.closest<HTMLElement>('.card');
+    const image = card?.querySelector<HTMLImageElement>('.toc-image, .toc-link img, .toc-slot img');
+    return image?.currentSrc || image?.src || '';
+  }
+
+  private async openSummary(): Promise<void> {
+    const doi = store.metadata(this.paperId)?.doi;
+    this.panel = 'summary';
+    this.dataset.drawerOpen = 'true';
+    this.summaryError = '';
+    this.summaryLoading = Boolean(doi);
+    this.render();
+    this.syncScrollLock();
+    if (!doi) {
+      this.summaryData = null;
+      this.summaryLoading = false;
+      this.summaryError = this.tr('该文献 DOI 尚未核验，暂不能生成全文摘要。', 'This paper has no verified DOI yet.');
+      this.render();
+      return;
+    }
+    try {
+      this.summaryData = await store.articleSummary(doi);
+    } catch {
+      this.summaryData = null;
+      this.summaryError = this.tr('摘要服务暂时不可用，请稍后重试。', 'Summary service is temporarily unavailable.');
+    } finally {
+      this.summaryLoading = false;
+      this.render();
+    }
+  }
+
+  private summaryMarkup(): string {
+    const meta = store.metadata(this.paperId);
+    const toc = this.tocImageUrl();
+    const data = this.summaryData;
+    let content = '';
+    if (this.summaryLoading) {
+      content = `<div class='summary-state'>${this.tr('正在读取全文缓存并生成摘要…', 'Loading synced full text and generating the summary…')}</div>`;
+    } else if (this.summaryError) {
+      content = `<div class='summary-state error'>${escapeHtml(this.summaryError)}</div>`;
+    } else if (!data?.available) {
+      const message = data?.reason === 'ai_unavailable'
+        ? this.tr('全文已同步，但 AI 摘要服务暂时未启用。', 'Full text is synced, but AI summarization is not enabled yet.')
+        : this.tr('全文尚未同步，暂不能生成“全文摘要”。', 'Full text has not been synced yet, so a full-text summary cannot be generated.');
+      content = `<div class='summary-state'>${message}</div>`;
+    } else {
+      const text = this.summaryLanguage === 'zh' ? data.zh || '' : data.en || '';
+      content = `<div class='summary-tabs'>
+        <button type='button' class='${this.summaryLanguage === 'zh' ? 'selected' : ''}' data-action='summary-lang:zh'>中文</button>
+        <button type='button' class='${this.summaryLanguage === 'en' ? 'selected' : ''}' data-action='summary-lang:en'>English</button>
+      </div><div class='summary-text'>${escapeHtml(text).replace(/\n/g, '<br>')}</div>`;
+    }
+    return `<section class='summary-layout'>
+      ${toc ? `<div class='summary-toc'><img src='${escapeHtml(toc)}' alt='TOC / graphical abstract'></div>` : ''}
+      <div class='summary-main'>
+        ${content}
+        ${data?.generatedAt ? `<div class='summary-meta'>${this.tr('生成于', 'Generated')} ${formatTime(data.generatedAt)} · ${data.cached ? this.tr('缓存', 'cached') : this.tr('新生成', 'new')}</div>` : ''}
+        ${meta?.href ? `<a class='summary-open' data-summary-open href='${escapeHtml(meta.href)}' target='_blank' rel='noopener noreferrer'>${this.tr('打开原文 ↗', 'Open original ↗')}</a>` : ''}
+      </div>
+    </section>`;
+  }
+
   private render(): void {
     const paper = store.paper(this.paperId); const meta = store.metadata(this.paperId); const status = store.status(paper.statusId || '');
     const count = meta?.doi ? store.readerCounts[meta.doi] : undefined;
@@ -186,9 +253,12 @@ export class GalleryPaperActions extends HTMLElement {
     this.shadow.innerHTML = `<style>
       :host{display:block;position:relative;margin-top:4px;font:12px/1.4 Inter,system-ui,sans-serif;color:#344054}
       *{box-sizing:border-box}button,input,textarea,select{font:inherit}button{cursor:pointer}.bar{display:grid;grid-template-columns:84px 110px 96px 64px max-content;align-items:center;gap:6px;margin:6px 0 10px;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain}.bar::-webkit-scrollbar{display:none}.action{display:inline-flex;justify-self:stretch;align-self:center;width:100%;max-width:100%;height:32px;min-height:32px;white-space:nowrap;align-items:center;justify-content:center;gap:5px;padding:5px 8px;border:0;background:var(--u-color);color:var(--u-text);font-size:11px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}.action.active{box-shadow:0 0 0 2px rgba(49,89,189,.18)}.action .icon{width:15px;height:15px;object-fit:contain}.shape-pill{border-radius:999px}.shape-rounded{border-radius:9px}.shape-rectangle{border-radius:2px}.shape-circle{width:32px;min-width:32px;height:32px;padding:0;border-radius:50%;justify-self:center}.shape-circle span:last-child,.shape-square span:last-child,.shape-diamond span:last-child,.shape-star span:last-child,.shape-bookmark span:last-child{display:none}.shape-square{width:32px;min-width:32px;height:32px;padding:0;border-radius:5px;justify-self:center}.shape-diamond{width:29px;min-width:29px;height:29px;min-height:29px;padding:0;border-radius:5px;transform:rotate(45deg);justify-self:center}.shape-diamond>*{transform:rotate(-45deg)}.shape-bookmark{border-radius:6px 6px 2px 2px;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}.shape-star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%);width:34px;min-width:34px;height:34px;min-height:34px;padding:0;justify-self:center}.metric{justify-self:end;margin-left:0;color:#7a8494;font-size:10px;white-space:nowrap}.chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}.chip{padding:3px 6px;border-radius:999px;background:#f2f5fb;color:#526071;font-size:9px}.chip.status,.status-choice-label{display:inline-flex;align-items:center;gap:5px;color:#fff}.status-image{width:16px;height:16px;object-fit:contain;border-radius:4px;background:rgba(255,255,255,.16)}.status-row{display:grid;gap:6px}.status-main{display:block}.status-choice{display:flex;align-items:center;gap:7px}.status-choice-label{padding:4px 7px;min-width:0}.status-choice small{color:#7a8494;font-size:9px}.status-style-editor{display:grid;grid-template-columns:72px minmax(78px,1fr) minmax(92px,1.2fr);gap:7px;padding:7px 9px;border:1px solid #e3e8f1;border-radius:10px;background:#fafbfc}.status-style-editor label{display:grid;gap:4px;color:#667085;font-size:9px}.status-style-editor input[type=color]{width:100%;height:30px;border:0;padding:0;background:transparent}.status-style-editor select,.status-style-editor input[type=file]{width:100%;min-width:0;font-size:9px}.status-style-editor .remove-image{grid-column:1/-1;width:auto;justify-self:start;border:0;background:transparent;color:#b42318;padding:2px 0}.status{background:${status ? rgbCss(status.style.rgb) : '#f2f5fb'};color:${status ? '#fff' : '#526071'}}
-      .overlay{position:absolute;left:0;top:0;width:100%;height:0;z-index:10020;background:transparent;pointer-events:none}.drawer{position:absolute;pointer-events:auto;width:min(350px,calc(100vw - 24px));height:auto;max-height:min(68dvh,560px);overflow:auto;padding:15px;background:#fff;border:1px solid #dfe5ef;border-radius:16px;box-shadow:0 14px 38px rgba(15,23,42,.18)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:18px 0 10px;z-index:2}.head h3{margin:0;font-size:17px}.close{border:0;background:#f2f4f7;border-radius:9px;width:30px;height:30px}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.stack{display:grid;gap:6px}.choice,.secondary{width:100%;text-align:left;padding:8px 10px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;color:#344054}.choice.selected{border-color:#8aa5ef;background:#f5f7ff}.check{display:flex;align-items:center;gap:8px;padding:5px 0}.input,textarea{width:100%;border:1px solid #d7deea;border-radius:10px;padding:9px;outline:none}textarea{min-height:150px;resize:vertical}.help{margin-top:6px;color:#8a93a3;font-size:10px}.preview{margin-top:8px;padding:9px;border-radius:10px;background:#f8fafc;overflow-wrap:anywhere}.preview a{color:#3159bd}.check-preview{display:flex;gap:6px}.citation-tools{display:grid;grid-template-columns:minmax(110px,140px) 1fr;gap:7px;align-items:start}.citation-tools select{width:100%;border:1px solid #d7deea;border-radius:9px;padding:8px;background:#fff}.citation-preview{grid-column:1/-1;white-space:pre-wrap;word-break:break-word;max-height:190px;overflow:auto;padding:9px;border-radius:10px;background:#f8fafc;color:#344054;font:10px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.citation-copy{width:100%;padding:8px 10px;border:1px solid #d7deea;border-radius:9px;background:#fff;color:#3159bd;font-weight:750}.citation-note{grid-column:1/-1;color:#667085;font-size:10px}.tag-row{display:flex;gap:6px}.tag-row .input{flex:1}.tag-row .secondary{width:auto}.danger{color:#b42318}.feedback{margin-top:7px;color:#667085;font-size:10px}
-      @media(max-width:680px){:host{margin-top:2px}.bar{grid-template-columns:36px 36px 36px 36px max-content;gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:flex}.chips>.chip:not(.status){display:none}.drawer .chips>.chip{display:inline-flex}}
-    </style>${this.chips(paper, status)}<div class='bar'>
+      .overlay{position:absolute;left:0;top:0;width:100%;height:0;z-index:10020;background:transparent;pointer-events:none}.drawer{position:absolute;pointer-events:auto;width:min(350px,calc(100vw - 24px));height:auto;max-height:min(68dvh,560px);overflow:auto;padding:15px;background:#fff;border:1px solid #dfe5ef;border-radius:16px;box-shadow:0 14px 38px rgba(15,23,42,.18)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:18px 0 10px;z-index:2}.head h3{margin:0;font-size:17px}.close{border:0;background:#f2f4f7;border-radius:9px;width:30px;height:30px}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.stack{display:grid;gap:6px}.choice,.secondary{width:100%;text-align:left;padding:8px 10px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;color:#344054}.choice.selected{border-color:#8aa5ef;background:#f5f7ff}.check{display:flex;align-items:center;gap:8px;padding:5px 0}.input,textarea{width:100%;border:1px solid #d7deea;border-radius:10px;padding:9px;outline:none}textarea{min-height:150px;resize:vertical}.help{margin-top:6px;color:#8a93a3;font-size:10px}.preview{margin-top:8px;padding:9px;border-radius:10px;background:#f8fafc;overflow-wrap:anywhere}.preview a{color:#3159bd}.check-preview{display:flex;gap:6px}.citation-tools{display:grid;grid-template-columns:minmax(110px,140px) 1fr;gap:7px;align-items:start}.citation-tools select{width:100%;border:1px solid #d7deea;border-radius:9px;padding:8px;background:#fff}.citation-preview{grid-column:1/-1;white-space:pre-wrap;word-break:break-word;max-height:190px;overflow:auto;padding:9px;border-radius:10px;background:#f8fafc;color:#344054;font:10px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.citation-copy{width:100%;padding:8px 10px;border:1px solid #d7deea;border-radius:9px;background:#fff;color:#3159bd;font-weight:750}.citation-note{grid-column:1/-1;color:#667085;font-size:10px}
+      .summary-entry{display:flex;justify-content:flex-end;margin:3px 0 2px}.summary-trigger{border:1px solid #cfd8ec;border-radius:999px;background:#f6f8ff;color:#3159bd;padding:5px 10px;font-size:10px;font-weight:800;white-space:nowrap}
+      .drawer.summary-drawer{width:min(740px,calc(100vw - 24px));max-height:min(72dvh,680px);padding:16px}.summary-layout{display:grid;grid-template-columns:minmax(190px,38%) minmax(0,1fr);gap:16px;align-items:start}.summary-toc{display:grid;place-items:center;min-height:180px;padding:10px;border-radius:12px;background:#f7f8fb}.summary-toc img{display:block;width:100%;max-height:300px;object-fit:contain}.summary-main{min-width:0}.summary-tabs{display:flex;gap:6px;margin-bottom:10px}.summary-tabs button{border:1px solid #d8dfec;border-radius:999px;background:#fff;color:#667085;padding:6px 11px;font-weight:750}.summary-tabs button.selected{background:#3159bd;color:#fff;border-color:#3159bd}.summary-text{overflow-wrap:anywhere;font-size:12px;line-height:1.7;color:#344054}.summary-state{padding:18px;border-radius:12px;background:#f7f8fb;color:#667085;line-height:1.65}.summary-state.error{color:#b42318;background:#fff4f2}.summary-meta{margin-top:12px;color:#98a2b3;font-size:9px}.summary-open{display:inline-flex;margin-top:12px;padding:8px 12px;border-radius:9px;background:#3159bd;color:#fff;text-decoration:none;font-weight:800}
+      .tag-row{display:flex;gap:6px}.tag-row .input{flex:1}.tag-row .secondary{width:auto}.danger{color:#b42318}.feedback{margin-top:7px;color:#667085;font-size:10px}
+      @media(max-width:680px){:host{margin-top:2px}.bar{grid-template-columns:36px 36px 36px 36px max-content;gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:flex}.chips>.chip:not(.status){display:none}.drawer .chips>.chip{display:inline-flex}.drawer.summary-drawer{width:min(520px,calc(100vw - 16px));max-height:min(70dvh,620px)}.summary-layout{grid-template-columns:1fr;gap:10px}.summary-toc{min-height:140px}.summary-toc img{max-height:210px}.summary-text{font-size:11px;line-height:1.65}}
+    </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('全文摘要', 'Full-text summary')}</button></div><div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
       ${button(s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status))}
       ${button(s.note, this.tr('私人备注', 'Private note'), 'note', '✎', Boolean(paper.note))}
@@ -251,9 +321,11 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private drawer(paper: PaperUserState): string {
-    const meta = store.metadata(this.paperId); const title = this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
+    const meta = store.metadata(this.paperId); const title = this.panel === 'summary' ? this.tr('AI 全文摘要', 'AI full-text summary') : this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
     let body = '';
-    if (this.panel === 'status') {
+    if (this.panel === 'summary') {
+      body = this.summaryMarkup();
+    } else if (this.panel === 'status') {
       body = `<section class='section'><div class='stack'>${store.state.statuses.map(status => {
         const editor = `<div class='status-style-editor' data-status-editor='${escapeHtml(status.id)}'>
           <label>${this.tr('颜色', 'Color')}<input type='color' data-status-color='${escapeHtml(status.id)}' value='${rgbToHex(status.style.rgb)}'></label>
@@ -273,12 +345,17 @@ export class GalleryPaperActions extends HTMLElement {
       <section class='section'><h4>${this.tr('自定义标签', 'Custom tags')}</h4><div class='tag-row'><input class='input' data-tag placeholder='${this.tr('例如：需要复现', 'e.g. reproduce')}'><button class='secondary' type='button' data-action='add-tag'>${this.tr('添加', 'Add')}</button></div><div class='chips' style='margin-top:8px'>${paper.tags.map(tag => `<span class='chip'>${escapeHtml(tag)} <button class='danger' style='border:0;background:transparent' data-action='remove-tag:${escapeHtml(tag)}'>×</button></span>`).join('')}</div></section>
       <section class='section'><div class='stack'><button class='secondary' type='button' data-action='similar'>${this.tr('查找相似文献', 'Find similar papers')}</button><button class='secondary' type='button' data-action='feedback'>${this.tr('报告文献问题', 'Report a paper issue')}</button>${meta?.href ? `<a class='secondary' data-close-panel='true' style='text-decoration:none' href='${escapeHtml(meta.href)}' target='_blank' rel='noopener noreferrer'>${this.tr('打开原文 ↗', 'Open original ↗')}</a>` : ''}</div>${this.feedbackMessage ? `<div class='feedback'>${escapeHtml(this.feedbackMessage)}</div>` : ''}</section>`;
     }
-    return `<div class='overlay'><aside class='drawer'><div class='head'><div><h3>${title}</h3><div class='help'>${escapeHtml(meta?.title || '')}</div></div><button class='close' type='button' data-action='close'>×</button></div>${body}</aside></div>`;
+    return `<div class='overlay'><aside class='drawer${this.panel === 'summary' ? ' summary-drawer' : ''}'><div class='head'><div><h3>${title}</h3><div class='help'>${escapeHtml(meta?.title || '')}</div></div><button class='close' type='button' data-action='close'>×</button></div>${body}</aside></div>`;
   }
 
   private bind(): void {
     this.shadow.querySelectorAll<HTMLElement>('[data-action]').forEach(element => element.addEventListener('click', () => { void this.action(element.dataset.action || ''); }));
     this.shadow.querySelectorAll<HTMLElement>('[data-close-panel]').forEach(element => element.addEventListener('click', () => this.closePanel()));
+    this.shadow.querySelector<HTMLAnchorElement>('[data-summary-open]')?.addEventListener('click', event => {
+      if (!event.isTrusted) return;
+      const doi = store.metadata(this.paperId)?.doi;
+      if (doi) void store.recordOpen(doi);
+    });
     this.shadow.querySelector<HTMLTextAreaElement>('[data-note]')?.addEventListener('input', event => store.setNote(this.paperId, (event.target as HTMLTextAreaElement).value, false));
     this.shadow.querySelector<HTMLTextAreaElement>('[data-note]')?.addEventListener('blur', event => {
       store.setNote(this.paperId, (event.target as HTMLTextAreaElement).value, false);
@@ -317,7 +394,13 @@ export class GalleryPaperActions extends HTMLElement {
 
   private async action(action: string): Promise<void> {
     if (action === 'favorite') { store.toggleFavorite(this.paperId); return; }
+    if (action === 'summary') { await this.openSummary(); return; }
     if (action === 'status' || action === 'note' || action === 'more') { this.openPanel(action); return; }
+    if (action === 'summary-lang:zh' || action === 'summary-lang:en') {
+      this.summaryLanguage = action.endsWith(':en') ? 'en' : 'zh';
+      this.render();
+      return;
+    }
     if (action === 'close') { this.closePanel(); return; }
     if (action.startsWith('clear-status-image:')) {
       const statusId = action.slice('clear-status-image:'.length);
