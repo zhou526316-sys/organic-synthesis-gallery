@@ -27,6 +27,8 @@ export function hydrateStatusImages(root: ShadowRoot): void {
 
 export function statusImageError(error: unknown): string {
   const code = error instanceof Error ? error.message : '';
+  // Error class/message only; never log image contents or account state.
+  console.warn('status-image-error', error instanceof Error ? error.name : 'UnknownError', code);
   if (code === 'image_too_large') return '图片超过 30 MB（30,000,000 字节），原标记未改变。 / Maximum 30 MB; previous image kept.';
   if (code === 'image_type_unsupported') return '请选择 PNG、JPG、WebP 或 GIF 原图；文件内容须与格式一致。 / Choose a valid PNG, JPG, WebP or GIF.';
   if (code === 'image_decode_failed' || code === 'image_preview_failed') return '图片无法解码，原标记未改变。 / Image cannot be decoded; previous image kept.';
