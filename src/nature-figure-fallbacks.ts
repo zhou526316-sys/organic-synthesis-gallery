@@ -1,21 +1,5 @@
-const NATURE_VISUAL_GAPS = new Set([
-  '10.1038/s41467-026-74378-1',
-  '10.1038/s41467-026-76455-x',
-  '10.1038/s41467-026-76749-0',
-  '10.1038/s41467-026-76869-7',
-  '10.1038/s41467-026-77092-0',
-  '10.1038/s41467-026-77184-x',
-  '10.1038/s41467-026-77185-w',
-  '10.1038/s41467-026-77336-z',
-  '10.1038/s41467-026-77436-w',
-  '10.1038/s41467-026-77468-2',
-  '10.1038/s41467-026-77482-4',
-  '10.1038/s41467-026-77633-7',
-  '10.1038/s41467-026-77715-6',
-  '10.1038/s41467-026-77739-y',
-  '10.1038/s41467-026-77774-9',
-  '10.1038/s41586-026-11043-z',
-]);
+const NATURE_VISUAL_GAPS = new Set<string>();
+// Disabled during the 2.2.17 media rebuild so quarantined Nature images cannot reappear via runtime fallback.
 
 const pending = new Set<string>();
 let scanTimer: number | null = null;

@@ -4,6 +4,8 @@ import { publisherForDoi } from '../../../shared/publishers.js';
 const DOI_PATTERN = /^10\.\d{4,9}\/\S+$/i;
 const DOI_LIMIT = 1200;
 const QUERY_CHUNK = 80;
+// Media written before the 2.2.17 contamination recovery cutover is quarantined.
+const MEDIA_REBUILD_EPOCH = 1790077800000;
 
 export function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
@@ -265,8 +267,13 @@ async function loadMediaRows(env, rawDois) {
       dois,
       { optional: true, label: 'primary_visual_variants' }
     ),
-    allRowsOptional(env.DB.prepare("SELECT content_hash, COUNT(*) AS owners FROM toc_assets WHERE available = 1 AND content_hash IS NOT NULL AND content_hash <> '' GROUP BY content_hash HAVING COUNT(*) > 1"), 'duplicate_toc_hashes'),
+    allRowsOptional(env.DB.prepare("SELECT content_hash, COUNT(*) AS owners FROM toc_assets WHERE available = 1 AND updated_at >= ? AND content_hash IS NOT NULL AND content_hash <> '' GROUP BY content_hash HAVING COUNT(*) > 1").bind(MEDIA_REBUILD_EPOCH), 'duplicate_toc_hashes'),
   ]);
+
+  tocRows.splice(0, tocRows.length, ...tocRows.filter(row => Number(row.updated_at || 0) >= MEDIA_REBUILD_EPOCH));
+  figureRows.splice(0, figureRows.length, ...figureRows.filter(row => Number(row.updated_at || 0) >= MEDIA_REBUILD_EPOCH));
+  primaryRows.splice(0, primaryRows.length, ...primaryRows.filter(row => Number(row.updated_at || row.retrieved_at || 0) >= MEDIA_REBUILD_EPOCH));
+  primaryVariantRows.splice(0, primaryVariantRows.length, ...primaryVariantRows.filter(row => Number(row.updated_at || 0) >= MEDIA_REBUILD_EPOCH));
 
   const tocByDoi = new Map();
   for (const row of tocRows) {

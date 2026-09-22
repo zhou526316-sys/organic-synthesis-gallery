@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.18
+// @version      6.2.19
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.18';
+  var VERSION = '6.2.19';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -45,8 +45,6 @@
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
   var FIGURE_IMPORT_ENDPOINT = WORKER + '/api/article-figures/import';
   var FIGURE_STAGE_ENDPOINT = WORKER + '/api/article-figures/stage';
-  var FIGURE_STAGED_INDEX_ENDPOINT = WORKER + '/api/article-figures/staged';
-  var MEDIA_INVENTORY_ENDPOINT = WORKER + '/api/media/inventory';
   var CAPTURE_INDEX_URL = WORKER + '/api/media/local-capture-index';
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
   var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
@@ -82,7 +80,7 @@
     return /^10\.\d{4,9}\/\S+$/i.test(s) ? s : '';
   }
 
-  function decodedIdentityText(value) {
+  function embeddedNatureDoi(value) {
     var decoded = String(value || '');
     for (var i = 0; i < 2; i += 1) {
       try {
@@ -93,79 +91,15 @@
         break;
       }
     }
-    return decoded.toLowerCase();
-  }
-
-  function embeddedKnownDois(value) {
-    var decoded = decodedIdentityText(value);
-    var patterns = [
-      /10\.1021\/[a-z0-9._-]+/ig,
-      /10\.1002\/[a-z0-9._-]+/ig,
-      /10\.1038\/[a-z0-9._-]+/ig,
-      /10\.1126\/[a-z0-9._-]+/ig,
-      /10\.1039\/[a-z0-9._-]+/ig,
-      /10\.1016\/[a-z0-9._()-]+/ig,
-      /10\.31635\/[a-z0-9._-]+/ig
-    ];
-    var out = [];
-    patterns.forEach(function (pattern) {
-      var matches = decoded.match(pattern) || [];
-      matches.forEach(function (match) {
-        var doi = normalizeDoi(match);
-        if (doi && out.indexOf(doi) < 0) out.push(doi);
-      });
-    });
-    return out;
+    var match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
+    return match ? normalizeDoi(match[0]) : '';
   }
 
   function candidateBelongsToJob(url, job) {
     var doi = normalizeDoi(job && job.doi);
-    if (!doi) return true;
-    var embedded = embeddedKnownDois(url);
-    return !embedded.length || embedded.indexOf(doi) >= 0;
-  }
-
-  function currentPageIdentityDois() {
-    var values = [location.href];
-    var canonical = document.querySelector('link[rel="canonical"][href]');
-    if (canonical) values.push(canonical.getAttribute('href') || '');
-    [
-      'meta[name="citation_doi"]',
-      'meta[name="dc.identifier"]',
-      'meta[name="DC.Identifier"]',
-      'meta[name="prism.doi"]',
-      'meta[property="citation_doi"]'
-    ].forEach(function (selector) {
-      var node = document.querySelector(selector);
-      if (node) values.push(node.getAttribute('content') || '');
-    });
-    var out = [];
-    values.forEach(function (value) {
-      var direct = normalizeDoi(value);
-      if (direct && out.indexOf(direct) < 0) out.push(direct);
-      embeddedKnownDois(value).forEach(function (doi) {
-        if (out.indexOf(doi) < 0) out.push(doi);
-      });
-    });
-    return out;
-  }
-
-  async function verifyPublisherPageIdentity(job) {
-    var expected = normalizeDoi(job && job.doi);
-    if (!expected) return { ok: false, reason: 'job_doi_missing', identities: [] };
-    var identities = [];
-    for (var attempt = 0; attempt < 24; attempt += 1) {
-      identities = currentPageIdentityDois();
-      if (identities.length) break;
-      await sleep(250);
-    }
-    if (!identities.length) {
-      return { ok: false, reason: 'page_doi_unverified', identities: [] };
-    }
-    if (identities.indexOf(expected) < 0) {
-      return { ok: false, reason: 'page_doi_mismatch', identities: identities };
-    }
-    return { ok: true, reason: 'page_doi_match', identities: identities };
+    if (!doi || publisherForDoi(doi) !== 'nature') return true;
+    var embedded = embeddedNatureDoi(url);
+    return !embedded || embedded === doi;
   }
 
   function publisherForDoi(doi) {
@@ -520,84 +454,6 @@
       throw new Error('queue_http_' + String(response.status || 0));
     }
     return JSON.parse(String(response.responseText || '{}'));
-  }
-
-  async function postReadJson(url, payload) {
-    var response = await gmRequest({
-      method: 'POST',
-      url: url,
-      timeout: 45000,
-      headers: {
-        'content-type': 'application/json',
-        'cache-control': 'no-cache',
-        pragma: 'no-cache'
-      },
-      data: JSON.stringify(payload || {})
-    });
-    if (Number(response.status || 0) < 200 || Number(response.status || 0) >= 300) {
-      throw new Error('read_post_http_' + String(response.status || 0));
-    }
-    return JSON.parse(String(response.responseText || '{}'));
-  }
-
-  async function readRealtimeMediaPreflight(jobs) {
-    var dois = Array.from(new Set((jobs || []).map(function (job) {
-      return normalizeDoi(job && job.doi);
-    }).filter(Boolean)));
-    if (!dois.length) return { inventory: new Map(), stagedCounts: new Map(), available: true };
-
-    try {
-      var results = await Promise.all([
-        postReadJson(MEDIA_INVENTORY_ENDPOINT, { dois: dois, readOnly: true }),
-        getJson(FIGURE_STAGED_INDEX_ENDPOINT + '?ts=' + Date.now())
-      ]);
-      var inventoryPayload = results[0] || {};
-      var stagedPayload = results[1] || {};
-      var inventory = new Map();
-      (Array.isArray(inventoryPayload.items) ? inventoryPayload.items : []).forEach(function (item) {
-        var doi = normalizeDoi(item && item.doi);
-        if (doi) inventory.set(doi, item);
-      });
-
-      var stagedSets = new Map();
-      (Array.isArray(stagedPayload.items) ? stagedPayload.items : []).forEach(function (item) {
-        var doi = normalizeDoi(item && item.doi);
-        if (!doi || dois.indexOf(doi) < 0) return;
-        if (!stagedSets.has(doi)) stagedSets.set(doi, new Set());
-        stagedSets.get(doi).add(String(item && item.id || item && item.r2Key || 'figure'));
-      });
-      var stagedCounts = new Map();
-      stagedSets.forEach(function (ids, doi) { stagedCounts.set(doi, ids.size); });
-      return { inventory: inventory, stagedCounts: stagedCounts, available: true };
-    } catch (error) {
-      try { console.warn('[OSG TOC] realtime media preflight unavailable', String(error && error.message || error)); } catch (_) {}
-      return { inventory: new Map(), stagedCounts: new Map(), available: false };
-    }
-  }
-
-  function filterJobsByRealtimeMediaState(jobs, preflight) {
-    var filtered = [];
-    var skipped = 0;
-    (jobs || []).forEach(function (job) {
-      var doi = normalizeDoi(job && job.doi);
-      if (!doi) return;
-      var item = preflight && preflight.inventory ? preflight.inventory.get(doi) : null;
-      var stagedCount = preflight && preflight.stagedCounts ? Number(preflight.stagedCounts.get(doi) || 0) : 0;
-      if (jobKind(job) === 'toc') {
-        if (item && item.tocStored === true) {
-          skipped += 1;
-          return;
-        }
-      } else {
-        var usable = Math.max(0, Number(item && item.usableFigureCount || 0)) + stagedCount;
-        if (usable >= 2) {
-          skipped += 1;
-          return;
-        }
-      }
-      filtered.push(job);
-    });
-    return { jobs: filtered, skipped: skipped };
   }
 
   async function readLiveCaptureKinds() {
@@ -1022,22 +878,6 @@
       '[id*="chart"]'
     ].join(',')));
     blocks.forEach(function (block, blockIndex) {
-      var excludedAncestor = block.closest && block.closest([
-        'aside',
-        'nav',
-        'footer',
-        '[class*="related"]',
-        '[class*="recommend"]',
-        '[class*="reference"]',
-        '[class*="citation"]',
-        '[class*="supporting"]',
-        '[class*="supplement"]',
-        '[id*="related"]',
-        '[id*="recommend"]',
-        '[id*="reference"]',
-        '[id*="supporting"]'
-      ].join(','));
-      if (excludedAncestor) return;
       var context = String(block.innerText || block.textContent || '').replace(/\s+/g, ' ').trim();
       if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)|journal\s*cover|issue\s*cover/i.test(context.slice(0, 1400))) return;
       if (!/\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b/i.test(context.slice(0, 2200))) return;
@@ -2012,32 +1852,6 @@
     var token = writeToken();
     job.publisher = String(job.publisher || publisherForDoi(job.doi));
     job.startedAt = job.startedAt || nowIso();
-    var pageIdentityDois = currentPageIdentityDois();
-    var normalizedJobDoi = normalizeDoi(job.doi);
-    if (pageIdentityDois.length && pageIdentityDois.indexOf(normalizedJobDoi) < 0) {
-      var pageMismatchReason = 'publisher_page_doi_mismatch:' + pageIdentityDois.join(',');
-      pushTrace(trace, {
-        stage: 'job',
-        event: 'page_identity',
-        status: 'rejected',
-        url: location.href,
-        message: pageMismatchReason
-      });
-      GM_setValue(resultKey(job.doi), {
-        doi: job.doi,
-        status: 'failed',
-        reason: pageMismatchReason,
-        finishedAt: nowIso()
-      });
-      GM_setValue(traceKey(job.doi), {
-        doi: job.doi,
-        status: 'failed',
-        reason: pageMismatchReason,
-        trace: trace,
-        finishedAt: nowIso()
-      });
-      return;
-    }
     var mediaNeed = String(job.mediaNeed || (String(job.state || '') === 'figure_gap' ? 'figures' : 'toc'));
     var needFigures = mediaNeed.indexOf('figures') >= 0;
     var needToc = mediaNeed !== 'figures';
@@ -2378,43 +2192,6 @@
     };
   }
 
-  function currentGalleryDoiAuthority() {
-    var registry = document.getElementById('gallery-literature-doi-registry');
-    if (registry) {
-      try {
-        var payload = JSON.parse(String(registry.textContent || '{}'));
-        var registryDois = Array.isArray(payload && payload.dois) ? payload.dois : [];
-        var registrySet = new Set(registryDois.map(normalizeDoi).filter(Boolean));
-        if (registrySet.size) return { source: 'registry', dois: registrySet, count: registrySet.size };
-      } catch (_) {}
-    }
-
-    var fallbackSet = new Set();
-    Array.prototype.slice.call(document.querySelectorAll('article.card:not(.bridge-staging-card) .toc-slot[data-doi]')).forEach(function (node) {
-      var doi = normalizeDoi(node.getAttribute('data-doi'));
-      if (doi) fallbackSet.add(doi);
-    });
-    if (fallbackSet.size) return { source: 'rendered_cards', dois: fallbackSet, count: fallbackSet.size };
-    return null;
-  }
-
-  async function waitForGalleryDoiAuthority() {
-    for (var attempt = 0; attempt < 30; attempt += 1) {
-      var authority = currentGalleryDoiAuthority();
-      if (authority && authority.count > 0) return authority;
-      await sleep(250);
-    }
-    return null;
-  }
-
-  function filterJobsByGalleryAuthority(rows, authority) {
-    if (!authority || !authority.dois) return [];
-    return (rows || []).filter(function (job) {
-      var doi = normalizeDoi(job && job.doi);
-      return doi && authority.dois.has(doi);
-    });
-  }
-
   async function controllerRun() {
     if (!isGalleryPage()) return;
     if (GM_getValue(ENABLED_KEY, true) === false) {
@@ -2444,24 +2221,14 @@
       return;
     }
 
-    var authority = await waitForGalleryDoiAuthority();
-    if (!authority) {
-      badge('媒体抓取：等待当前 Gallery 文献清单，未打开任何出版社页面', '#92400e');
-      GM_deleteValue(LEASE_KEY);
-      return;
-    }
-
-    var rawVisible = Array.isArray(queue.visibleGaps) ? queue.visibleGaps : [];
-    var rawUpgrades = Array.isArray(queue.officialUpgrades) ? queue.officialUpgrades : [];
-    var visible = filterJobsByGalleryAuthority(rawVisible, authority);
-    var upgrades = filterJobsByGalleryAuthority(rawUpgrades, authority);
+    var visible = Array.isArray(queue.visibleGaps) ? queue.visibleGaps : [];
+    var upgrades = Array.isArray(queue.officialUpgrades) ? queue.officialUpgrades : [];
     var queueGeneratedAt = String(queue.generatedAt || '');
-    var filteredNotOnPage = (rawVisible.length - visible.length) + (rawUpgrades.length - upgrades.length);
     var liveCaptures = await readLiveCaptureKinds();
     var reconciled = reconcileQueueWithLiveCaptures(visible, upgrades, liveCaptures);
     visible = reconciled.visible;
     upgrades = reconciled.upgrades;
-    var rawQueuedFigures = Array.isArray(queue.figureGaps) ? queue.figureGaps.map(function (raw) {
+    var queuedFigures = Array.isArray(queue.figureGaps) ? queue.figureGaps.map(function (raw) {
       var job = Object.assign({}, raw);
       job.doi = normalizeDoi(job.doi);
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
@@ -2471,8 +2238,6 @@
       job.figureCount = Math.max(0, Number(job.figureCount || 0));
       return job;
     }).filter(function (job) { return Boolean(job.doi); }) : stagedFigureJobs();
-    var queuedFigures = filterJobsByGalleryAuthority(rawQueuedFigures, authority);
-    filteredNotOnPage += rawQueuedFigures.length - queuedFigures.length;
     var figureOnly = queuedFigures.slice();
     var allJobs = visible.concat(upgrades, figureOnly);
     visible = executableJobs(visible, queueGeneratedAt);
@@ -2485,39 +2250,31 @@
     // 2) remaining no-visual TOC gaps
     // 3) article figures
     // 4) fallback-only official TOC upgrades (including Figure 1)
-    // Preflight a wider window so stale completed jobs do not consume batch slots.
-    var candidateLimit = Math.min(40, Math.max(limit, limit * 3));
-    var candidateJobs = selectBatchJobs(visible, candidateLimit);
+    var jobs = selectBatchJobs(visible, limit);
     var selectedDois = {};
-    candidateJobs.forEach(function (job) {
+    jobs.forEach(function (job) {
       var doi = normalizeDoi(job && job.doi);
       if (doi) selectedDois[doi] = true;
     });
 
-    if (candidateJobs.length < candidateLimit) {
+    if (jobs.length < limit) {
       var figureCandidates = figureOnly.filter(function (job) {
         return !selectedDois[normalizeDoi(job && job.doi)];
       });
-      var selectedFigures = selectBatchJobs(figureCandidates, candidateLimit - candidateJobs.length);
-      candidateJobs = candidateJobs.concat(selectedFigures);
+      var selectedFigures = selectBatchJobs(figureCandidates, limit - jobs.length);
+      jobs = jobs.concat(selectedFigures);
       selectedFigures.forEach(function (job) {
         var doi = normalizeDoi(job && job.doi);
         if (doi) selectedDois[doi] = true;
       });
     }
 
-    if (candidateJobs.length < candidateLimit) {
+    if (jobs.length < limit) {
       var delayedUpgrades = upgrades.filter(function (job) {
         return !selectedDois[normalizeDoi(job && job.doi)];
       });
-      candidateJobs = candidateJobs.concat(selectBatchJobs(delayedUpgrades, candidateLimit - candidateJobs.length));
+      jobs = jobs.concat(selectBatchJobs(delayedUpgrades, limit - jobs.length));
     }
-
-    var realtimePreflight = await readRealtimeMediaPreflight(candidateJobs);
-    var realtimeFiltered = realtimePreflight.available
-      ? filterJobsByRealtimeMediaState(candidateJobs, realtimePreflight)
-      : { jobs: candidateJobs, skipped: 0 };
-    var jobs = realtimeFiltered.jobs.slice(0, limit);
     var cooling = allJobs.filter(function (queued) {
       var doi = normalizeDoi(queued && queued.doi);
       return doi ? isFailureCooling(queued) : false;
@@ -2538,11 +2295,6 @@
       delayedTocUpgrades: upgrades.length,
       cooldownSkipped: cooldownSkipped,
       filteredByLiveR2: Number(reconciled.filteredByR2 || 0),
-      galleryAuthoritySource: authority.source,
-      galleryAuthorityCount: authority.count,
-      filteredNotOnPage: filteredNotOnPage,
-      filteredAlreadyStored: Number(realtimeFiltered.skipped || 0),
-      realtimePreflightAvailable: realtimePreflight.available === true,
       success: 0,
       failed: 0,
       skipped: 0,
@@ -2555,14 +2307,6 @@
       var job = Object.assign({}, jobs[i]);
       job.doi = normalizeDoi(job.doi);
       if (!job.doi) continue;
-
-      var liveAuthority = currentGalleryDoiAuthority();
-      if (!liveAuthority || !liveAuthority.dois.has(job.doi)) {
-        summary.skipped += 1;
-        summary.filteredNotOnPage += 1;
-        continue;
-      }
-
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
       job.queueGeneratedAt = queueGeneratedAt;
       job.startedAt = nowIso();
@@ -2656,53 +2400,6 @@
     });
     writePublisherHeartbeat(job, 'publisher_script_started');
     await sleep(900);
-
-    var identity = await verifyPublisherPageIdentity(job);
-    if (!identity.ok) {
-      var reason = identity.reason + (identity.identities.length ? ':' + identity.identities.join(',') : '');
-      GM_setValue(progressKey(job.doi), {
-        status: identity.reason,
-        at: nowIso(),
-        url: location.href,
-        version: VERSION,
-        host: location.hostname,
-        expectedDoi: normalizeDoi(job.doi),
-        pageDois: identity.identities
-      });
-      GM_setValue(resultKey(job.doi), {
-        doi: normalizeDoi(job.doi),
-        status: 'failed',
-        reason: reason,
-        finishedAt: nowIso()
-      });
-      GM_setValue(traceKey(job.doi), {
-        doi: normalizeDoi(job.doi),
-        status: 'failed',
-        reason: reason,
-        trace: [{
-          seq: 1,
-          at: nowIso(),
-          stage: 'page_identity',
-          event: 'verify',
-          status: identity.reason,
-          httpStatus: 0,
-          contentType: '',
-          url: sanitizeDiagnosticUrl(location.href),
-          message: 'expected=' + normalizeDoi(job.doi) + ';page=' + identity.identities.join(','),
-          candidateKind: '',
-          candidateSource: '',
-          candidateScore: 0,
-          imageWidth: 0,
-          imageHeight: 0,
-          byteLength: 0
-        }],
-        finishedAt: nowIso()
-      });
-      writePublisherHeartbeat(job, identity.reason);
-      return;
-    }
-
-    writePublisherHeartbeat(job, 'page_doi_verified');
     await runPublisherJob(job);
   }
 

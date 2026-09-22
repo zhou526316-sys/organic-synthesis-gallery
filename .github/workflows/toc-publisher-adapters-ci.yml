@@ -71,7 +71,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.2.18" public/toc-mainline.user.js
+          grep -F "// @version      6.2.19" public/toc-mainline.user.js
           grep -F "toc-demand-live.json" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
@@ -108,12 +108,6 @@ jobs:
           grep -F "delayedTocUpgrades: upgrades.length" public/toc-mainline.user.js
           grep -F "var delayedUpgrades = upgrades.filter" public/toc-mainline.user.js
           grep -F "NEXT_BATCH_DELAY_MS = 12000" public/toc-mainline.user.js
-          grep -F "gallery-literature-doi-registry" public/toc-mainline.user.js
-          grep -F "article.card:not(.bridge-staging-card)" public/toc-mainline.user.js
-          grep -F "filteredNotOnPage" public/toc-mainline.user.js
-          grep -F "readRealtimeMediaPreflight" public/toc-mainline.user.js
-          grep -F "filteredAlreadyStored" public/toc-mainline.user.js
-          grep -F "MEDIA_INVENTORY_ENDPOINT" public/toc-mainline.user.js
           grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
           grep -F "liveInventory?.tocStored === true" cloudflare/scripts/build-live-toc-demand-queue.mjs
@@ -152,7 +146,10 @@ jobs:
           grep -F "https://onlinelibrary.wiley.com" cloudflare/worker/src/index.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "loaderVersion = '2.2.18'" cloudflare/scripts/build-bridge-loader.mjs
+          grep -F "loaderVersion = '2.2.19'" cloudflare/scripts/build-bridge-loader.mjs
+          if grep -Fq "readRealtimeMediaPreflight" public/toc-mainline.user.js; then echo "Recovery userscript must stay on the 2.2.15 capture core"; exit 1; fi
+          if grep -Fq "gallery-literature-doi-registry" public/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.16 live-page filtering"; exit 1; fi
+          if grep -Fq "MEDIA_INVENTORY_ENDPOINT" public/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.17 realtime preflight"; exit 1; fi
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" cloudflare/scripts/build-bridge-loader.mjs
           if grep -Fq "chinesechemsoc.org" public/toc-mainline.user.js; then echo "Obsolete CJC domains must not remain in TOC mainline"; exit 1; fi
           if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
