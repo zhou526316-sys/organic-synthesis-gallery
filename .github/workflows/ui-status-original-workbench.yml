@@ -5,29 +5,76 @@ on:
     paths:
       - '.github/workflows/ui-status-original-workbench.yml'
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: ui-status-original-workbench
+  cancel-in-progress: false
 jobs:
-  snapshot:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
         with:
-          persist-credentials: false
-      - name: Archive tracked source only
+          node-version: '22'
+      - name: Apply exact guarded UI integration
         run: |
-          mkdir -p /tmp/ui-status-source
-          git archive --format=zip HEAD -o /tmp/ui-status-source/source.zip
-          git rev-parse HEAD > /tmp/ui-status-source/source-sha.txt
-      - name: Read open feedback without changing status
-        env:
-          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+          set -euo pipefail
+          test "$(git hash-object src/user-ui/shared.ts)" = eeadbdba8e2fb7aba21d61783f209b9f408964cd
+          test "$(git hash-object src/user-ui/paper-actions.ts)" = 0406c1c1dc569c03dbe539294f24accb2ef78330
+          test "$(git hash-object src/user-ui/library-shell.ts)" = 8201a5a73e288b7b7ebff1a328b0cb6d25832e1f
+          python scripts/workbench/status-image-store.py
+          python scripts/workbench/status-image-card.py
+          python scripts/workbench/status-image-events.py
+          python scripts/workbench/status-image-shell.py
+          git diff --check
+          mkdir -p ui-image-evidence
+          git diff -- src/user-ui tests > ui-image-evidence/integration.diff
+          sha256sum src/user-ui/*.ts tests/*status* tests/mobile-interaction.spec.ts > ui-image-evidence/source-sha256.txt
+          zip -q ui-image-evidence/tested-source.zip src/user-ui/*.ts tests/*status* tests/mobile-interaction.spec.ts
+      - name: Install frontend and pinned browser test dependencies
         run: |
-          test -n "$BRIDGE_WRITE_TOKEN"
-          curl --fail-with-body --silent --show-error --max-time 45 --retry 2 -H "authorization: Bearer $BRIDGE_WRITE_TOKEN" -H 'cache-control: no-cache' 'https://api.gczhouwld.com/api/admin/site-feedback/open?limit=300' -o /tmp/ui-status-source/open-feedback.json
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit
+      - name: Type-check and build
+        run: |
+          set -o pipefail
+          npx tsc --noEmit 2>&1 | tee ui-image-evidence/typecheck.log
+          npm run build 2>&1 | tee ui-image-evidence/build.log
+      - name: Start isolated preview
+        run: |
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/ui-image-preview.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/ui-image-preview.log
+          exit 1
+      - name: Test original images without production traffic
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts --browser=webkit --workers=1 --reporter=line --output=ui-image-evidence/original-tests 2>&1 | tee ui-image-evidence/original-tests.log
+      - name: Preserve existing mobile interaction coverage
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/mobile-interaction.spec.ts --browser=webkit --workers=1 --reporter=line --output=ui-image-evidence/legacy-tests 2>&1 | tee ui-image-evidence/legacy-tests.log
+      - name: Commit verified integration on feature branch only
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = feat/ui-status-original-images-20260922
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/user-ui/shared.ts src/user-ui/paper-actions.ts src/user-ui/library-shell.ts tests/mobile-interaction.spec.ts
+          git rm .github/workflows/ui-status-original-workbench.yml scripts/workbench/status-image-store.py scripts/workbench/status-image-card.py scripts/workbench/status-image-events.py scripts/workbench/status-image-shell.py audit/workbench/status-image-bundle.b64
+          git commit -m 'feat(ui): apply tested original status images and remove temporary workbench'
+          git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+          git rev-parse HEAD > ui-image-evidence/verified-commit.txt
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: ui-status-source
-          path: /tmp/ui-status-source/
-          retention-days: 3
-          if-no-files-found: error
+          name: ui-original-image-verification
+          path: ui-image-evidence/
+          retention-days: 7
+          if-no-files-found: warn
