@@ -125,6 +125,45 @@ jobs:
             FROM paper_open_reader_counts_v3;
           "
 
+      - name: Diagnose legacy reader floor distribution
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "===== LEGACY READER FLOOR DISTRIBUTION ====="
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "
+            WITH per_doi AS (
+              SELECT
+                doi,
+                SUM(CASE WHEN profile_id NOT LIKE 'ip:%' THEN 1 ELSE 0 END) AS legacy_readers,
+                SUM(CASE WHEN profile_id LIKE 'ip:%' AND first_status_id = 'card-open' THEN 1 ELSE 0 END) AS genuine_open_readers,
+                COUNT(*) AS all_rows
+              FROM paper_readers
+              GROUP BY doi
+            )
+            SELECT
+              COUNT(*) AS dois_with_any_reader_history,
+              SUM(CASE WHEN legacy_readers = 1 THEN 1 ELSE 0 END) AS legacy_eq_1,
+              SUM(CASE WHEN legacy_readers = 2 THEN 1 ELSE 0 END) AS legacy_eq_2,
+              SUM(CASE WHEN legacy_readers >= 3 THEN 1 ELSE 0 END) AS legacy_ge_3,
+              MAX(legacy_readers) AS legacy_max,
+              ROUND(AVG(legacy_readers), 2) AS legacy_avg,
+              MAX(all_rows) AS all_rows_max
+            FROM per_doi;
+          "
+          echo "===== TOP HISTORICAL READER COUNTS ====="
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "
+            SELECT
+              doi,
+              SUM(CASE WHEN profile_id NOT LIKE 'ip:%' THEN 1 ELSE 0 END) AS legacy_readers,
+              SUM(CASE WHEN profile_id LIKE 'ip:%' AND first_status_id = 'card-open' THEN 1 ELSE 0 END) AS genuine_open_readers,
+              COUNT(*) AS all_rows
+            FROM paper_readers
+            GROUP BY doi
+            ORDER BY all_rows DESC, doi
+            LIMIT 20;
+          "
+
       - name: Diagnose reader-count storage
         working-directory: cloudflare/worker
         shell: bash
