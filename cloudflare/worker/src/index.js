@@ -538,13 +538,13 @@ export default {
     ctx.waitUntil((async () => {
       try {
         const [databaseSweep, localSweep] = await Promise.all([
-          purgeCrossDoiMedia(env, { dryRun: false }),
-          purgeCrossDoiLocalMedia(env, { dryRun: false }),
+          purgeCrossDoiMedia(env, { dryRun: true }),
+          purgeCrossDoiLocalMedia(env, { dryRun: true }),
         ]);
         const purged = Number(databaseSweep.body?.summary?.affectedDois || 0) +
           Number(localSweep.body?.summary?.affectedDois || 0);
         if (purged > 0) {
-          console.warn('CROSS_DOI_MEDIA_PURGED', JSON.stringify({
+          console.warn('CROSS_DOI_MEDIA_AUDIT_ONLY', JSON.stringify({
             database: databaseSweep.body?.summary || {},
             local: localSweep.body?.summary || {},
           }));

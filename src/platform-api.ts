@@ -138,7 +138,12 @@ function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMedia
   if (!local) return dynamic;
   if (!dynamic) return local;
   const toc = mediaItemHasToc(local) ? local.toc : dynamic.toc;
-  const figures = mediaItemHasFigures(local) ? local.figures : dynamic.figures;
+  // Keep reviewed local image bytes, but do not let one cached Figure 1 hide a new body collection.
+  const byFigure = new Map<string, StaticFigure>();
+  for (const figure of dynamic.figures?.figures || []) byFigure.set(String(figure.id || figure.label).toLowerCase(), figure);
+  for (const figure of local.figures?.figures || []) byFigure.set(String(figure.id || figure.label).toLowerCase(), figure);
+  const mergedFigures = [...byFigure.values()].sort((a,b) => a.order-b.order);
+  const figures = {...(dynamic.figures || local.figures), doi: local.doi, available: mergedFigures.length > 0, figures: mergedFigures};
   return {
     ...dynamic,
     ...local,
@@ -284,7 +289,7 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
 
     const incomplete = requested.filter(doi => {
       const item = localByDoi.get(doi);
-      return !mediaItemHasToc(item) || !mediaItemHasFigures(item);
+      return !mediaItemHasToc(item) || !mediaItemHasFigures(item) || item?.toc?.reason === 'figure1_fallback';
     });
 
     if (incomplete.length) {

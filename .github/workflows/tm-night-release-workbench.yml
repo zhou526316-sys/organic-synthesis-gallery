@@ -1,0 +1,94 @@
+name: Night capture release workbench
+on:
+  push:
+    branches: [release/tm-220-night-run]
+    paths:
+      - '.github/workflows/tm-night-release-workbench.yml'
+      - 'scripts/apply-tm-night-release.py'
+      - 'scripts/prepare-night-release-final.py'
+      - 'scripts/test-tm-night-release.mjs'
+      - 'scripts/test-tm-night-browser.mjs'
+      - 'scripts/tm-night-controller.part.js'
+      - 'cloudflare/worker/src/verified-browser-media.js'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: tm-night-release-workbench
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/release/tm-220-night-run'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          show-progress: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply exact previously tested core and scoped nightly fixes
+        run: |
+          git fetch -q origin fix/media-identity-v220
+          python3 scripts/apply-tm-night-release.py
+          python3 scripts/prepare-night-release-final.py
+          git diff --check
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/local-captures.js
+          node --check cloudflare/worker/src/verified-browser-media.js
+      - name: Identity, receipt and real SQLite integration tests
+        run: |
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm-night-release.mjs
+      - name: Install isolated browser tests
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install chromium
+      - name: Exercise paired capture and cross-origin tab binding in Chromium
+        run: |
+          node scripts/test-tm-paired-capture.mjs
+          node scripts/test-tm-night-browser.mjs
+      - name: Build current complete capture registry without literature writes
+        run: |
+          node cloudflare/scripts/build-live-toc-demand-queue.mjs
+          node scripts/validate-tm-release.mjs public
+      - name: Verify integrated userscript packaging and frontend
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          npx tsc --noEmit
+          npm run build
+          node scripts/validate-tm-release.mjs dist
+      - name: Preserve exact candidate sources and browser evidence
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/night-source"
+          tar -cf "$RUNNER_TEMP/night-source/source.tar" public/toc-mainline.user.js public/toc-demand-live.json public/capture-launch.html cloudflare/worker/src cloudflare/scripts shared scripts .github/workflows src/platform-api.ts package.json
+          cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/night-source/" 2>/dev/null || true
+          cp "$RUNNER_TEMP/paired-capture-fixture.png" "$RUNNER_TEMP/night-source/" 2>/dev/null || true
+          git rev-parse HEAD > "$RUNNER_TEMP/night-source/head.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: night-release-source
+          path: ${{ runner.temp }}/night-source/
+          retention-days: 3
+      - name: Save tested release code to feature branch only
+        run: |
+          test "$GITHUB_REF" = refs/heads/release/tm-220-night-run
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/toc-mainline.user.js public/toc-demand-live.json public/capture-launch.html cloudflare/scripts/build-bridge-loader.mjs cloudflare/scripts/build-live-toc-demand-queue.mjs cloudflare/scripts/merge-worker-media.mjs cloudflare/worker/src/local-captures.js cloudflare/worker/src/media-write.js cloudflare/worker/src/media.js cloudflare/worker/src/index.js src/platform-api.ts scripts/test-media-identity-v220.mjs scripts/test-tm-stage-first.mjs scripts/test-tm-paired-capture.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m 'release: tested nightly paired capture with safe verified publication'
+            git push origin HEAD:release/tm-220-night-run
+          fi
+          echo "TESTED_NIGHT_RELEASE=$(git rev-parse HEAD)"
