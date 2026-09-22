@@ -1,0 +1,47 @@
+name: Diagnose capture release UI media request
+on:
+  push:
+    branches: [integration/tm220-final-unified]
+    paths: ['.github/workflows/tm-release-ui-diagnostic.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install and build exact release source
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --package-lock=false @playwright/test@1.55.1
+          npx playwright install --with-deps webkit
+          npm run build -- --sourcemap
+      - name: Add diagnostics only to runner copy of unchanged assertions
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/mobile-interaction.spec.ts');s=p.read_text()
+          a="    const errors: string[] = [];\n    page.on('pageerror', error => errors.push(error.message));"
+          b="    const errors: string[] = [];\n    page.on('pageerror', error => { errors.push(error.message); console.log('EXACT_PAGE_ERROR', JSON.stringify({message:error.message,stack:error.stack})); });\n    page.on('requestfailed', request => console.log('EXACT_REQUEST_FAILURE', JSON.stringify({url:request.url(),method:request.method(),error:request.failure()})));\n    page.on('console', message => {if(message.type()==='error')console.log('EXACT_BROWSER_CONSOLE',message.text());});"
+          assert s.count(a)==1
+          p.write_text(s.replace(a,b))
+          PY
+          grep -R -n 'window.fetch\|originalFetch\|nativeFetch\|\.finally(' src public/*.js | head -80 || true
+      - name: Run unchanged failing UI scenario with request diagnostics
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/preview.log 2>&1 &
+          npx playwright test tests/mobile-interaction.spec.ts --grep 'feedback 26/27' --workers=1 --reporter=list
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-release-ui-diagnostic
+          path: |
+            test-results/
+            dist/assets/*.map
+            src/
+            tests/mobile-interaction.spec.ts
+          retention-days: 3
