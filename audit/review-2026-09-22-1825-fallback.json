@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 2,
+  "runId": "fallback-20260922-1825",
+  "generatedAt": "2026-09-22T18:29:00+08:00",
+  "windowStart": "2026-09-20",
+  "windowEnd": "2026-09-22",
+  "status": "incomplete_review",
+  "reason": "The 18:05 primary run did not persist a fresh review/data/state closure. Fallback inspected the current main baseline and production state, but the connected runtime cannot execute the repository Node discovery/validator scripts or workflow_dispatch. A clean completion cannot be claimed without a fresh 16-journal DOI-union audit plus the mandatory per-journal publisher sourceChecks and two-pass adversarial review.",
+  "baseline": {
+    "latestAuditGeneratedAt": "2026-09-22T08:56:28.459Z",
+    "latestAuditWindow": ["2026-09-20", "2026-09-22"],
+    "latestCompletedReview": "manual-midday-review-20260922",
+    "productionGalleryCards": 503,
+    "phaseBeforeFallback": "synced"
+  },
+  "capability": {
+    "targetJournalCount": 16,
+    "jocActiveFrom": "2026-09-22",
+    "completenessGuardPresent": true,
+    "qualityGateValidatorPresent": true
+  },
+  "qualityControl": {
+    "secondPassCompleted": false,
+    "unresolvedDisagreements": null,
+    "qualityGatePassed": false,
+    "blocker": "fresh discovery output unavailable in this runtime"
+  },
+  "sourceChecks": [],
+  "reviewed": 0,
+  "accepted": 0,
+  "rejected": 0,
+  "pending": 0,
+  "notes": [
+    "JOC is now prospectively active from 2026-09-22 and therefore must be included in the next executable full audit.",
+    "TOC/Graphical Abstract/Figure media remains delegated to Tampermonkey/VPN Bridge; no OA PDF/HTML extraction path was introduced or executed.",
+    "No literature data was modified because the mandatory discovery and semantic quality gates could not be completed safely."
+  ]
+}
