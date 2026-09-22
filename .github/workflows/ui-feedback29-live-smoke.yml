@@ -57,8 +57,9 @@ jobs:
           npm install --no-audit --no-fund
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/live-summary-browser.log 2>&1 || { tail -80 /tmp/live-summary-browser.log; exit 1; }
-      - name: Adapt navigation and test transport only
+      - name: Adapt navigation and declared layout inputs only
         run: |
+          sha256sum tests/summary-readable.spec.ts src/user-ui/summary-panel-layout.ts src/user-ui/paper-actions.ts > live-summary-results/reviewed-source-sha256.txt
           python - <<'PY'
           from pathlib import Path
           p = Path('tests/status-image-fixtures.ts')
@@ -100,12 +101,24 @@ jobs:
           assert text.count(needle) == 1
           text = text.replace(needle, "await page.goto(process.env.LIVE_SITE_URL!, { waitUntil: 'domcontentloaded' });\n  console.log('LIVE_ENTRY', JSON.stringify({ url: page.url(), scripts: await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => (node as HTMLScriptElement).src)) }));")
           p.write_text(text)
+          # The deployed Pages card can also contain .toc-link images outside
+          # .toc-slot. Clear every input read by tocImageUrl for the declared
+          # no-TOC fixture, not just one container. Do not modify app output/styles.
+          p = Path('tests/summary-readable.spec.ts')
+          text = p.read_text()
+          needle = '    slot.replaceChildren();'
+          assert text.count(needle) == 1
+          text = text.replace(needle, "    if (!enabled) element.querySelectorAll('.toc-image, .toc-link img, .toc-slot img').forEach(image => image.remove());\n" + needle)
+          needle = '  expect((await drawer.locator(\'.summary-main\').boundingBox())!.width).toBeGreaterThan(900);'
+          assert text.count(needle) == 1
+          text = text.replace(needle, "  await expect(drawer.locator('.summary-toc')).toHaveCount(0);\n" + needle)
+          p.write_text(text)
           PY
           git diff --check
-          git diff -- tests/status-image-fixtures.ts > live-summary-results/transport-only.diff
+          git diff -- tests/status-image-fixtures.ts tests/summary-readable.spec.ts > live-summary-results/transport-and-input-fixtures.diff
           git rev-parse HEAD > live-summary-results/reviewed-commit.txt
-          sha256sum tests/summary-readable.spec.ts src/user-ui/summary-panel-layout.ts src/user-ui/paper-actions.ts > live-summary-results/source-sha256.txt
-      - name: Run unchanged summary layout assertions against deployed frontend
+          sha256sum tests/summary-readable.spec.ts src/user-ui/summary-panel-layout.ts src/user-ui/paper-actions.ts > live-summary-results/executed-source-sha256.txt
+      - name: Run all summary assertions with explicit missing-TOC precondition
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: live-summary-results/results.json
         run: |
