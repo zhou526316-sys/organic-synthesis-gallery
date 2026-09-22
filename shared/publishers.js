@@ -12,7 +12,7 @@ export const PUBLISHER_LABELS = {
 };
 
 export const TARGET_JOURNALS_BY_PUBLISHER = {
-  acs: ['JACS', 'ACS Catalysis', 'Organic Letters'],
+  acs: ['JACS', 'ACS Catalysis', 'Organic Letters', 'JOC'],
   wiley: ['Angew'],
   springer_nature: ['Nature', 'Nature Communications', 'Nature Chemistry', 'Nature Catalysis', 'Nature Synthesis'],
   aaas: ['Science', 'Science Advances'],
