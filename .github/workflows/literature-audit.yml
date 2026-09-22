@@ -62,18 +62,22 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: literature-audit
-          path: audit/latest.json
+          path: |
+            audit/latest.json
+            audit/unresolved-latest.json
           retention-days: 14
 
-      - name: Persist latest audit report without blocking the audit
+      - name: Persist latest audit snapshot without blocking the audit
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
-          candidate="$RUNNER_TEMP/literature-audit-latest.json"
-          cp audit/latest.json "$candidate"
+          candidate_latest="$RUNNER_TEMP/literature-audit-latest.json"
+          candidate_review="$RUNNER_TEMP/literature-audit-unresolved-latest.json"
+          cp audit/latest.json "$candidate_latest"
+          cp audit/unresolved-latest.json "$candidate_review"
 
           for attempt in 1 2 3; do
             echo "Persist attempt $attempt"
@@ -81,37 +85,55 @@ jobs:
             git reset --hard origin/main
             mkdir -p audit
 
-            if [ -s audit/latest.json ]; then
-              node - "$candidate" audit/latest.json <<'NODE'
+            set +e
+            node - "$candidate_latest" "$candidate_review" audit/latest.json audit/unresolved-latest.json <<'NODE'
           const fs = require('fs');
-          const [candidatePath, existingPath] = process.argv.slice(2);
-          const candidate = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
-          const existing = JSON.parse(fs.readFileSync(existingPath, 'utf8'));
-          const candidateTime = Date.parse(candidate.generatedAt || 0) || 0;
-          const existingTime = Date.parse(existing.generatedAt || 0) || 0;
-          if (existingTime >= candidateTime) {
-            console.log('A same-age or newer audit report is already on main; nothing to persist.');
+          const [candidateLatestPath, candidateReviewPath, existingLatestPath, existingReviewPath] = process.argv.slice(2);
+          const readJson = path => {
+            if (!fs.existsSync(path) || fs.statSync(path).size === 0) return null;
+            return JSON.parse(fs.readFileSync(path, 'utf8'));
+          };
+          const candidateLatest = readJson(candidateLatestPath);
+          const candidateReview = readJson(candidateReviewPath);
+          const existingLatest = readJson(existingLatestPath);
+          const existingReview = readJson(existingReviewPath);
+          const candidateTime = Date.parse(candidateLatest?.generatedAt || 0) || 0;
+          const reviewTime = Date.parse(candidateReview?.generatedAt || 0) || 0;
+          if (!candidateTime || reviewTime !== candidateTime) {
+            console.error('Candidate latest/review-input generation mismatch.');
+            process.exit(3);
+          }
+          const existingLatestTime = Date.parse(existingLatest?.generatedAt || 0) || 0;
+          const existingReviewTime = Date.parse(existingReview?.generatedAt || 0) || 0;
+          if (existingLatestTime > candidateTime) {
+            console.log('A newer audit snapshot is already on main; skipping older candidate.');
             process.exit(42);
           }
+          if (existingLatestTime === candidateTime && existingReviewTime >= candidateTime) {
+            console.log('The same-age audit and compact review input are already on main.');
+            process.exit(42);
+          }
+          process.exit(0);
           NODE
-              status=$?
-              if [ "$status" -eq 42 ]; then
-                exit 0
-              elif [ "$status" -ne 0 ]; then
-                exit "$status"
-              fi
+            status=$?
+            set -e
+            if [ "$status" -eq 42 ]; then
+              exit 0
+            elif [ "$status" -ne 0 ]; then
+              exit "$status"
             fi
 
-            cp "$candidate" audit/latest.json
-            git add audit/latest.json
+            cp "$candidate_latest" audit/latest.json
+            cp "$candidate_review" audit/unresolved-latest.json
+            git add audit/latest.json audit/unresolved-latest.json
             if git diff --cached --quiet; then
-              echo 'Audit report unchanged.'
+              echo 'Audit snapshot unchanged.'
               exit 0
             fi
 
-            git commit -m 'audit: refresh literature completeness report'
+            git commit -m 'audit: refresh literature completeness snapshot'
             if git push origin HEAD:main; then
-              echo 'Audit report persisted.'
+              echo 'Audit snapshot persisted.'
               exit 0
             fi
 
@@ -119,4 +141,4 @@ jobs:
             sleep $((attempt * 2))
           done
 
-          echo "::warning::Fresh audit artifact was uploaded successfully, but audit/latest.json could not be persisted after 3 non-force attempts. The audit run remains successful and the artifact is the recovery source."
+          echo "::warning::Fresh audit artifacts were uploaded successfully, but the snapshot could not be persisted after 3 non-force attempts. The artifact remains the recovery source."
