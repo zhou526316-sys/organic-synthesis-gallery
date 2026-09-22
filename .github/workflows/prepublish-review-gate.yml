@@ -7,7 +7,9 @@ on:
     paths:
       - '.github/workflows/prepublish-review-gate.yml'
       - 'scripts/validate-prepublish-review.mjs'
+      - 'scripts/test-prepublish-readiness.mjs'
       - 'shared/literature-journals.js'
+      - 'audit/latest.json'
       - 'audit/unresolved-latest.json'
       - 'audit/prepublish-review-*.json'
 
@@ -32,6 +34,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Test staging versus release-readiness invariants
+        run: node scripts/test-prepublish-readiness.mjs
+
       - name: Locate canonical staging review
         id: locate
         shell: bash
@@ -48,4 +53,24 @@ jobs:
           echo "Validating $review"
 
       - name: Validate compact handoff and semantic staging review
-        run: node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}"
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}" | tee "$RUNNER_TEMP/prepublish-validation.json"
+
+      - name: Require finalized review for publication readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}" --require-ready | tee "$RUNNER_TEMP/prepublish-readiness.json"
+
+      - name: Preserve staging and readiness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prepublish-readiness-evidence
+          path: |
+            ${{ runner.temp }}/prepublish-validation.json
+            ${{ runner.temp }}/prepublish-readiness.json
+          if-no-files-found: warn
+          retention-days: 14
