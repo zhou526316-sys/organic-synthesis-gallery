@@ -2,13 +2,27 @@
 
 This repository uses `audit/literature-update-state.json` as the single coordination source for literature retrieval, TOC collection, capability selection, and website synchronization. The capability registry is `audit/literature-capability.json`.
 
+## Publication policy amendment — per-DOI release, 2026-09-22
+
+The user's latest instruction is: **one pending paper must not block other papers that have completed evidence-based two-pass review**. This section supersedes earlier all-or-nothing pending/zero-unresolved wording, including historical task prompts and audit notes. It does not weaken discovery completeness, semantic evidence requirements, fixed publication times or concurrency protection.
+
+- The complete fresh compact handoff must be accounted for: every DOI has an evidence-based include/exclude/pending outcome. Missing candidate rows, truncated handoffs, unfinished challenge review, unaccounted evidence gaps, unhealthy discovery sources, stale snapshots, or concurrent authoritative conflicts remain global blockers. Do not relabel unread work as pending merely to pass a gate.
+- Include records must each have evidenceBasis and a confirming challenge decision/reason. Only the validator's explicit `publishableDois` allowlist can enter production. Exclude records remain excluded. A narrowly justified pending record retains both passes, attempted evidence URLs, missing-evidence details and a retry action; it stays out of production.
+- At 08:00 / 18:00, release the verified include subset even when documented pending DOI(s) remain. Do not change pending into exclude, delete its audit history, or invent evidence to unblock a release. No arbitrary later off-slot publication is authorized.
+- Production preflight uses `scripts/validate-prepublish-review.mjs <review> --allow-deferred --require-ready` AND `scripts/check-prepublish-readiness.mjs <review> --allow-deferred --require-ready`. Both actual runner checks must succeed for the current snapshot/code. Default checks without `--allow-deferred` measure full-review closure, not permission to release the verified subset.
+- `ready_with_pending` means a verified subset is ready, not that every paper is finalized. `reviewComplete=false` and the actual pending count must remain visible. Legacy staging `incomplete_review` flags caused solely by documented pending records must not reintroduce an all-or-nothing block; readiness is recomputed from the full decision set. Explicit global blockers and approval/concurrent-conflict states still stop release.
+- Persist all pending objects in the formal review's `pending[]` and `state.pendingReviewBacklog[]`, merging previous unresolved backlog rather than replacing it. Each backlog object preserves DOI, title, journal, original publication date, missing evidence, attempted sources, `sourceReviewFile` and `nextAction`. Read this backlog before every subsequent pre-review/recovery, including when a DOI moves outside the rolling window. Remove it only after a later evidenced final decision. Previously pending is never equivalent to rejected.
+- Formal partial-release reviews contain `releasePolicy: {"mode":"per-doi"}` and normal accepted/rejected/pending arrays and counts. After successful deployment/online verification, use `state.phase=synced_with_pending`, record the actual live card count and backlog, and report `publicationChecksPassed=true`, `reviewComplete=false`. Do not overwrite the last fully completed review with an unfinished one or claim a full clean closure.
+- The downstream quality gate accepts nonzero machine unresolved only when the exact unresolved DOI list is covered by the formal pending decisions AND the durable state backlog. An unknown/unreviewed DOI still fails. Pending must be absent from production. Repository and deployed DOI sets/counts must match. No numerical allowance for unexplained missing papers is permitted.
+- Hold `verifiedThrough` before the earliest unresolved publication date and any source-coverage gap. Pending blocks closure of its affected dates, not publication of other verified papers. Preserve 7-day safety rescue/catch-up. A run with no publishable include and pending remaining is not a final zero-new result; zero-new proof still applies when claiming no qualifying new literature.
+
 ## Mandatory rule for every ChatGPT window/task
 
 Before any literature-related action, read `audit/literature-update-state.json`.
 
 - `fetching` / `toc_processing` with a fresh lock (<120 min): another run is active. Do not start a second literature or TOC crawl.
 - `ready_to_sync` / `sync_failed`: reuse the completed fetch and TOC output. Perform sync/deploy only. Do not query Crossref/OpenAlex/publisher TOC pages again.
-- `synced` with matching `dataCommitSha`: do not fetch or redeploy. Only perform lightweight production verification if requested.
+- `synced` with matching `dataCommitSha`: do not fetch or redeploy. Only perform lightweight production verification if requested. `synced_with_pending` also prohibits redundant deployment, but the next scheduled pre-review must resume the durable pending backlog.
 - `needs_approval` / `blocked_by_concurrent_change`: do not bypass approval or overwrite concurrent work.
 - stale/missing state: do not silently assume a new crawl is required; report the state problem to the primary literature-update workflow.
 
@@ -26,21 +40,21 @@ Do not automatically adopt an experimental or failing implementation merely beca
 
 The canonical target list is `shared/literature-journals.js`. Do not maintain a second independent hard-coded list in fetch logic.
 
-The original ten journals remain in scope from 2026-07-01. The following five journals are prospective additions and are in scope only from 2026-09-19 (Asia/Shanghai), inclusive: Chem, Chemical Science, CCS Chemistry, Science Advances, and Green Chemistry. A wider safety lookback must never backfill these five before their `activeFrom` date.
+The original ten journals remain in scope from 2026-07-01. The following five journals are prospective additions and are in scope only from 2026-09-19 (Asia/Shanghai), inclusive: Chem, Chemical Science, CCS Chemistry, Science Advances, and Green Chemistry. A wider safety lookback must never backfill these five before their `activeFrom` date. JOC is active prospectively from 2026-09-22 as recorded in the canonical registry.
 
 ## Completeness standard
 
-The default primary audit is a three-calendar-day Beijing publication rescan, not a narrow one-day delta. The normal GPT semantic-review window is limited to three days. Recall is protected separately by a seven-day machine-only source safety tail across Crossref online/published/created and OpenAlex. Records in days 4–7 that are already accepted/excluded/pending are not re-reviewed; only a genuinely unseen DOI is surfaced again. Crossref created/deposit remains the explicit late-registration rescue, and if `verifiedThrough` falls behind because of source failures or an interrupted run, the next primary audit automatically extends the primary publication start back to the first unverified date until closure catches up.
+The default primary audit is a three-calendar-day Beijing publication rescan, not a narrow one-day delta. The normal GPT semantic-review window is limited to three days. Recall is protected separately by a seven-day machine-only source safety tail across Crossref online/published/created and OpenAlex. Records in days 4–7 already finalized are not re-reviewed absent new evidence; genuinely unseen DOI records and the explicit pending backlog remain reviewable. Crossref created/deposit remains the explicit late-registration rescue, and if `verifiedThrough` falls behind because of source failures, pending evidence or an interrupted run, the next primary audit automatically extends the primary publication start back to the first unverified date until closure catches up.
 
 For every active journal, candidate discovery must use the union of all configured ISSNs across Crossref online-publication date, Crossref published date, Crossref created/deposit date, and OpenAlex publication date. All source families retain a seven-day machine-only safety tail so shortening the primary GPT review window cannot reduce source recall. Crossref created/deposit queries are additionally evaluated by deposit time: when a DOI is newly deposited there, keep it in the review universe even if its publication date predates the rolling three-day publication window, provided that publication date is not earlier than that journal's `activeFrom`. This late-deposit rescue is mandatory and specifically recovers delayed metadata registration. DOI normalization/deduplication happens only after the union is formed. A record found by only one source is not discarded; it remains in the review universe and the audit report must expose cross-source disagreement.
 
 The audit must report source-family health per journal. A source failure is never interpreted as proof that there were no papers. When an official publisher TOC/Early View/ASAP/latest-articles source is accessible, the primary assistant review must cross-check it before advancing `verifiedThrough`. If a publisher page is blocked, record that limitation explicitly and rely on the independent metadata-source union plus the overlapping safety rescan rather than silently treating the publisher check as passed.
 
-All DOI differences must end as `include`, `exclude`, or narrowly justified `pending`. Keyword rules may prioritize review but may not silently exclude candidates. A day is eligible for closure only after the active journals for that date have no unresolved DOI differences, critical discovery-source failures are zero, and accepted records have been written to the authoritative dataset.
+All DOI differences must end as `include`, `exclude`, or narrowly justified `pending`. Keyword rules may prioritize review but may not silently exclude candidates. A day is eligible for closure only after the active journals for that date have no unresolved DOI differences, critical discovery-source failures are zero, and accepted records have been written to the authoritative dataset. Closure and release of a verified subset are separate outcomes.
 
 ## Fetch workflow
 
-The primary scheduled literature task owns capability selection, candidate discovery, LLM review, metadata verification, TOC retrieval, data commits, and first-attempt website synchronization. It must update the state file through `fetching -> toc_processing -> ready_to_sync -> syncing -> synced` (or an explicit failure state).
+The primary scheduled literature task owns capability selection, candidate discovery, LLM review, metadata verification, literature data commits and first-attempt synchronization. Staging work records `preparing`, `ready_to_publish` or `ready_with_pending`; fixed-slot publication records `syncing -> synced` or `synced_with_pending`, or an explicit failure state. Media acquisition remains exclusively downstream in Tampermonkey/VPN Bridge.
 
 The primary task must always use the currently selected latest stable capability rather than a permanently hard-coded historical scraping implementation.
 
@@ -51,15 +65,17 @@ The production Gallery has exactly two literature release slots each day: **08:0
 The release pipeline is staged:
 
 1. Around 06:55 / 16:55, GitHub Actions runs an independent machine discovery safety audit.
-2. At 07:05 / 17:05, the primary assistant pre-review refreshes the explicit push-trigger bridge, consumes a fresh audit, and performs the first complete semantic/challenge review pass.
-3. At 07:35 / 17:35, the pre-release recovery task refreshes machine discovery again when needed, reviews any late-arriving DOI delta, and brings the staging review to `ready_to_publish`.
-4. At exactly 08:00 / 18:00, the production release task is the only scheduled task allowed to convert the staging review into a formal `audit/review-*.json`, write accepted papers into authoritative production literature data, refresh `public/toc-demand-live.json`, and trigger the production Pages update.
+2. At 07:05 / 17:05, the primary assistant pre-review consumes a fresh snapshot, using the explicit push-trigger bridge only when needed, and performs semantic/challenge review.
+3. At 07:35 / 17:35, the pre-release recovery task refreshes machine discovery when needed and reviews the late-arriving DOI delta plus pending evidence. Do not cancel a healthy current audit by repeatedly triggering it.
+4. At 08:00 / 18:00, the production release task alone converts staging into formal `audit/review-*.json`, writes the verified include subset into production literature data, refreshes `public/toc-demand-live.json`, and triggers Pages.
 
 Pre-release assistant work must persist decisions only to `audit/prepublish-review-YYYY-MM-DD-0800.json` or `audit/prepublish-review-YYYY-MM-DD-1800.json`. These files are deliberately outside the formal `review-*.json` decision namespace and do not alter the authoritative accepted/excluded history.
 
-If the staging review is incomplete at 08:00 / 18:00, the release slot fails closed: keep the previous verified production snapshot, record `publication_missed` / `incomplete_review`, and carry the unresolved work into the next fixed release slot. Do not publish new literature later at an arbitrary off-slot time merely because review eventually finished.
+Global incompleteness at the slot fails closed: keep the previous verified production snapshot, record `publication_missed` / `incomplete_review`, and carry the unfinished work to the next slot. Documented single-paper pending is not global incompleteness: apply the per-DOI amendment above. Do not publish at arbitrary off-slot times merely because review eventually finishes.
 
-A Pages deployment may take a few minutes after the 08:00 / 18:00 release commit. The logical production release event is the slot-time authoritative-data commit; online verification must record the actual deployment completion time. No other scheduled task may introduce new production literature data between the two release slots.
+Snapshot `generatedAt` must fall in the target slot's preceding 65 minutes and not after the slot; both diagnostic and compact `endDate` must be the target Beijing date. A prior-evening test snapshot is not the next morning's fresh audit. Never backdate a newer audit.
+
+A Pages deployment may take a few minutes after the slot-time release commit. Record the logical production release event and actual deployment completion separately. No other scheduled task may introduce new production literature data between the two release slots.
 
 TOC/Graphical Abstract availability remains downstream and non-blocking. Every accepted-literature production commit must feed the browser-side TOC demand path. Tampermonkey/VPN Bridge remains the sole publisher-media acquisition mainline for TOC/Graphical Abstract/Figure 1/body figures; OA PDF/HTML extraction is not part of the literature-release pipeline.
 
@@ -73,73 +89,47 @@ A request such as “同步一下网页 / 同步文献到网站” is a sync-onl
 
 Every state transition must fetch the current blob SHA and use that SHA for the write. Literature data and TOC updates should use minimal diffs and must not modify unrelated UI/user/account/search/API code.
 
-A conflict on authoritative literature data, TOC mappings, or the coordination state remains a hard stop: do not overwrite it. A conflict that occurs only while persisting the derived audit report `audit/latest.json` is recoverable and must not block the whole literature run. The audit workflow uploads the fresh report as an artifact first, then refetches the newest `main`, compares `generatedAt`, and retries a non-force commit of only `audit/latest.json`. If persistence still loses repeated races, keep the artifact as the recovery source and report a warning rather than setting the project phase to `blocked_by_concurrent_change`.
+A conflict on authoritative literature data, TOC mappings, or coordination state is a hard stop: do not overwrite it. A conflict only in persisting derived audit reports is recoverable. Upload the fresh diagnostic and compact reports as artifacts first, refetch newest main, compare generatedAt, and retry a non-force commit of the paired snapshot. Preserve artifacts and report warnings if persistence loses repeated races; do not discard completed semantic work.
 
 ## Mandatory quality gates
 
-A literature run is not complete merely because a scheduled task ran or because `missingFromGallery=0`. Every completed run must satisfy four independent gates.
+A scheduled task firing or `missingFromGallery=0` alone is not completion. Four independent checks remain mandatory; partial publication must report its scope and pending backlog separately from full closure.
 
 ### Gate 1 — Discovery completeness
 
-- Candidate discovery is the DOI union across every configured ISSN, Crossref online/published/created, OpenAlex, and publisher live sources where accessible.
-- Beginning with reviews generated after 2026-09-22 18:00 Asia/Shanghai, the review artifact must contain a `sourceChecks` row for every active journal. Each row records `journal`, `status` (`checked`/`blocked`/`unavailable`), `candidateCount`, `syntheticTitleCount`, source page/type, and a reason when blocked/unavailable. A missing row is a quality-gate failure.
-- A source request returning HTTP 200 is not sufficient evidence of completeness. Per-journal source-family counts and cross-source ratios must be checked.
-- The seven-day machine safety tail and Crossref created/deposit rescue remain mandatory.
-- The audit must compare the current source union against DOI-level historical review decisions inside the safety tail. If a DOI that was previously reviewed disappears from the current source union without an explicit global policy exclusion, record `historicalCoverageLosses`.
-- Any `criticalSourceFailures`, `sourceFamilyGaps`, `sourceCoverageAnomalies`, or `historicalCoverageLosses` prevents the discovery gate from passing. Closure-day coverage anomalies prevent `verifiedThrough` from advancing.
+- Use all configured ISSNs, Crossref online/published/created, OpenAlex, and publisher live sources where accessible.
+- Reviews after 2026-09-22 18:00 Asia/Shanghai require a sourceChecks row for every active journal: journal, checked/blocked/unavailable status, candidateCount, syntheticTitleCount, source page/type, and reasons for missing access. Unavailable counts are unknown, not zero. Machine metadata health is never a publisher live check.
+- HTTP 200 alone does not establish completeness: check per-journal counts and cross-source ratios.
+- Retain the seven-day safety tail and created/deposit rescue.
+- Compare DOI-level historical decisions within the safety tail. Disappearance without explicit global policy exclusion records historicalCoverageLosses.
+- criticalSourceFailures, sourceFamilyGaps, sourceCoverageAnomalies and historicalCoverageLosses block the discovery gate. Closure coverage anomalies block verifiedThrough progression.
 
 ### Gate 2 — Semantic review quality
 
-Semantic correctness cannot be proven by one model pass. Beginning with reviews generated after 2026-09-22 18:00 Asia/Shanghai, every run uses a two-pass adversarial review:
+Every new/unresolved DOI gets first-pass include/exclude/pending and a challenge pass. Challenge accepted papers for out-of-scope evidence, and high-priority exclusions for general preparative scope. Final include/exclude requires matching evidenceBasis, challengeDecision and challengeReason. Disagreement is attached to its pending DOI, which cannot be released. Unaccounted disagreements or incomplete challenge work remain blockers.
 
-1. First pass assigns include/exclude/pending to every unresolved DOI.
-2. Challenge pass tries to falsify the first decision. For every accepted paper, actively search for reasons it should be excluded under Gallery scope. For every high-priority rejected paper, actively search for evidence that it is actually a general preparative synthetic method.
-3. A decision is final only when the challenge pass independently reaches the same result and records `evidenceBasis`, `challengeDecision`, and `challengeReason`.
-4. Any first/challenge disagreement remains `pending` until resolved with stronger abstract/full-text/publisher evidence. It must not be published or silently excluded.
-5. Materials/heterogeneous catalysis requires affirmative evidence of a general preparative organic-synthesis scope; an organic transformation alone is insufficient. Polymer synthesis methodology itself is in scope when the central contribution is a new or substantially advanced polymerization reaction, catalyst, monomer scope, chain-control strategy, sequence/architecture control, or access to previously inaccessible polymer structures. Exclude polymer/material papers only when polymerization is merely a fabrication/application step without a general polymer-synthesis method.
+Materials/heterogeneous catalysis requires affirmative general preparative organic-synthesis scope; an organic transformation alone is insufficient. Polymer synthesis methodology is in scope when the central advance is a polymerization reaction, catalyst, monomer scope, chain/sequence/architecture control, or access to previously inaccessible polymer structures. Exclude when polymerization is merely fabrication/application without general methodology.
 
-The review artifact must record `qualityControl.secondPassCompleted=true` and `qualityControl.unresolvedDisagreements=0` before a run may be marked complete.
+Record qualityControl.secondPassCompleted=true. Full closure requires unresolvedDisagreements=0; subset release may retain only exactly accounted disagreements confined to deferred DOI records. Do not present two passes as different models/reviewers unless they actually were.
 
 ### Gate 3 — Publication consistency
 
-- Every accepted DOI must exist in repository-owned authoritative literature data.
-- Every accepted DOI must also be present in the deployed GitHub Pages data before it is reported as live.
-- Every DOI rejected by the latest review must be absent from both repository and deployed data unless a later explicit correction supersedes that decision.
-- The deployed unique DOI count must match the count recorded in `lastWebsiteSync.verification`.
-- TOC/Graphical Abstract availability is not a publication gate; missing media is allowed to remain pending.
+Every released accepted DOI must exist in repository-owned authoritative data AND deployed data. Every latest rejected DOI must be absent unless a later explicit correction supersedes it. Pending DOI(s) are not new production cards. Deployed unique DOI count must match lastWebsiteSync.verification. Record partial success as synced_with_pending with durable backlog; media gaps remain nonblocking.
 
 ### Gate 4 — Regression correctness
 
-- The stable capability guard must pass before discovery.
-- DOI-level historical coverage loss inside the safety tail is a hard regression signal.
-- Previously reviewed DOI sets, per-date/per-journal counts, source-family health, and policy exclusions are compared against current output.
-- A capability change must trigger a fresh primary-window rescan; old results may not be reused across a discovery-capability fingerprint change.
-- The end-to-end validator `scripts/validate-literature-quality-gate.mjs` must pass against repository data, deployed data, latest audit, latest review, and coordination state before the run may claim a clean completion.
-
-The GitHub workflow `.github/workflows/literature-quality-gate.yml` independently runs these machine-verifiable invariants. A failed quality gate means the corresponding update remains incomplete even if the scheduler itself reported success.
+Run the stable capability guard before discovery. Preserve historical DOI/date/journal/source health regression checks and the capability-change rescan. The end-to-end `scripts/validate-literature-quality-gate.mjs` checks review, audit, repository/deployed data and coordination state. For per-DOI releases it distinguishes exact known deferred DOI(s) from unknown gaps and reports publicationChecksPassed separately from reviewComplete. A failing publication-consistency gate is not success; a documented pending backlog is not a reason to undo other correctly published cards.
 
 ## ChatGPT-to-GitHub execution bridge
 
-ChatGPT scheduled-task runtimes are not required to have a local Node runner or a workflow-dispatch action. The supported execution bridge is a minimal GitHub write to `audit/automation-triggers/literature-audit-request.json`.
+Local Node and workflow_dispatch are not required in ChatGPT tasks. The formal bridge is a minimal write to `audit/automation-triggers/literature-audit-request.json` on main, which triggers `.github/workflows/literature-audit.yml`.
 
-- Updating that file on `main` is an explicit machine-audit request. The push must trigger `.github/workflows/literature-audit.yml`.
-- The GitHub Actions runner, not the ChatGPT task runtime, executes the repository capability guard and DOI-union audit.
-- GitHub Actions persists two files from the same audit generation: `audit/latest.json` is the full diagnostic report, while `audit/unresolved-latest.json` is the compact semantic-review handoff containing the complete unresolved candidate array plus active-journal source health. Both files must share the same `generatedAt`.
-- Pre-release ChatGPT tasks must consume `audit/unresolved-latest.json` for DOI-by-DOI semantic review and use `audit/latest.json` only for deep diagnostics. This prevents connector truncation of the large full report from silently dropping candidates.
-- A ChatGPT task must inspect the resulting Actions run and consume the newly persisted compact handoff; absence of local Node or workflow_dispatch is not itself a blocker when the push-trigger bridge is available.
-- If the scheduled primary task dies after writing the trigger, the machine discovery still proceeds in GitHub. A later semantic-review/terminal task may consume the fresh audit without repeating discovery.
-- Semantic include/exclude/pending review remains an assistant responsibility. Machine audit success never implies semantic-review completion.
-- If the trigger push succeeds but the Actions run fails or fails to persist a fresh audit, record the concrete Actions run id and failure as `source_gap` / `incomplete_review`.
-- Never create a fake semantic review merely to trigger the workflow; use the dedicated automation-trigger file.
+The GitHub runner executes the capability guard, discovery and validators. It persists diagnostic `audit/latest.json` and compact `audit/unresolved-latest.json` with the same generatedAt. Consume the complete compact unresolved array for semantic work; use latest only for diagnostics/summary. Counts and generations must match. Read large files in complete, SHA-consistent chunks; never guess missing candidates from truncation.
+
+Inspect the actual run. If the triggering task ends after the push, later tasks consume the fresh artifact without needless rediscovery. Machine audit success never implies semantic completion. Report concrete run IDs and failures when push/Actions/persistence/source access actually fail. Do not create a fake semantic review as a trigger.
 
 ## Scheduled automation
 
-The fixed production publication slots are 08:00 and 18:00 Asia/Shanghai.
+Morning and evening follow identical staged rules: independent machine audit approximately 06:55/16:55, assistant main review 07:05/17:05, recovery 07:35/17:35, production release 08:00/18:00 only. Do not self-disable, reschedule, or create replacement tasks while executing a scheduled run. Media remains Tampermonkey/VPN Bridge only.
 
-- GitHub independent machine audit safety run: approximately 06:55 / 16:55.
-- Assistant primary pre-review: 07:05 / 17:05.
-- Assistant pre-release recovery/review delta: 07:35 / 17:35.
-- Production literature release and deployment trigger: 08:00 / 18:00 only.
-- TOC/media work remains outside the literature release gate and is handled by Tampermonkey/VPN Bridge.
-
-All morning and evening cycles follow the same staged theory. Pre-release failures may be recovered before the slot; after the slot, a failed literature release is recorded rather than silently publishing at an arbitrary later time.
+Before final user-visible reporting, synchronize the full response under audit/gpt-responses as required by PROJECT_RULES.md. Report actual published and deferred counts, source limitations, commits/runs, deployment/online verification, TOC demand and separate publication/closure status.
