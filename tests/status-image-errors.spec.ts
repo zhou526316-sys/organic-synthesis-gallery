@@ -35,16 +35,28 @@ for (const failure of ['indexedDB', 'preferences']) {
     await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
     const before = (await state(page)).statuses[0].style;
     await page.evaluate(mode => {
-      if (mode === 'indexedDB') indexedDB.open = () => { throw new DOMException('Test storage denied', 'SecurityError'); };
-      else {
+      const root = window as Window & { __statusStorageFaults: number };
+      root.__statusStorageFaults = 0;
+      if (mode === 'indexedDB') {
+        // Patch the factory prototype: WebKit may expose another wrapper on
+        // the next window.indexedDB access, ignoring an instance-only patch.
+        IDBFactory.prototype.open = () => {
+          root.__statusStorageFaults += 1;
+          throw new DOMException('Test storage denied', 'SecurityError');
+        };
+      } else {
         const original = Storage.prototype.setItem;
         Storage.prototype.setItem = function (key: string, value: string): void {
-          if (key === 'organic-gallery-user-ui-v1') throw new DOMException('Test quota', 'QuotaExceededError');
+          if (key === 'organic-gallery-user-ui-v1') {
+            root.__statusStorageFaults += 1;
+            throw new DOMException('Test quota', 'QuotaExceededError');
+          }
           original.call(this, key, value);
         };
       }
     }, failure);
     await input.setInputFiles({ name: 'replacement.png', mimeType: 'image/png', buffer: PNG });
+    await expect.poll(() => page.evaluate(() => (window as Window & { __statusStorageFaults: number }).__statusStorageFaults)).toBeGreaterThan(0);
     await expect(actions.locator('[data-status-image-message]')).toContainText(/未能保存|Could not save/);
     expect((await state(page)).statuses[0].style).toEqual(before);
     await expect(actions.locator('button[data-action="set-status:to-read"] .status-image')).toHaveAttribute('data-status-asset', before.imageOriginal.id);
