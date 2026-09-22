@@ -68,7 +68,7 @@ function citationText(meta: CitationMeta, style: CitationStyle): string {
 
 export class GalleryPaperActions extends HTMLElement {
   private readonly shadow = this.attachShadow({ mode: 'open' });
-  private panel: 'none' | 'status' | 'note' | 'more' | 'summary' = 'none';
+  private panel: 'none' | 'favorite' | 'status' | 'note' | 'more' | 'summary' = 'none';
   private feedbackMessage = '';
   private citationStyle: CitationStyle = 'acs';
   private citationMessage = '';
@@ -166,7 +166,7 @@ export class GalleryPaperActions extends HTMLElement {
     drawer.dataset.anchor = this.panel;
   }
 
-  private openPanel(panel: 'status' | 'note' | 'more' | 'summary'): void {
+  private openPanel(panel: 'favorite' | 'status' | 'note' | 'more' | 'summary'): void {
     this.panel = panel;
     this.dataset.drawerOpen = 'true';
     this.render();
@@ -260,7 +260,7 @@ export class GalleryPaperActions extends HTMLElement {
       @media(max-width:680px){:host{margin-top:2px}.bar{grid-template-columns:36px 36px 36px 36px max-content;gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:flex}.chips>.chip:not(.status){display:none}.drawer .chips>.chip{display:inline-flex}.drawer.summary-drawer{width:min(520px,calc(100vw - 16px));max-height:min(70dvh,620px)}.summary-layout{grid-template-columns:1fr;gap:10px}.summary-toc{min-height:140px}.summary-toc img{max-height:210px}.summary-text{font-size:11px;line-height:1.65}}
     </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('全文摘要', 'Full-text summary')}</button></div><div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
-      ${button(s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status))}
+      ${button(status ? { ...s.status, rgb: status.style.rgb } : s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status))}
       ${button(s.note, this.tr('私人备注', 'Private note'), 'note', '✎', Boolean(paper.note))}
       ${button(s.more, this.tr('更多', 'More'), 'more', '•••')}
       <span class='metric' data-reader-count-known='${typeof count === 'number' ? 'true' : 'false'}'>◉ ${countLabel} ${this.tr('人读过', 'readers')}</span>
@@ -321,7 +321,7 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private drawer(paper: PaperUserState): string {
-    const meta = store.metadata(this.paperId); const title = this.panel === 'summary' ? this.tr('AI 全文摘要', 'AI full-text summary') : this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
+    const meta = store.metadata(this.paperId); const title = this.panel === 'favorite' ? this.tr('收藏与收藏夹', 'Saved papers and folders') : this.panel === 'summary' ? this.tr('AI 全文摘要', 'AI full-text summary') : this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
     let body = '';
     if (this.panel === 'summary') {
       body = this.summaryMarkup();
@@ -339,8 +339,11 @@ export class GalleryPaperActions extends HTMLElement {
       }).join('')}</div></section>`;
     } else if (this.panel === 'note') {
       body = `<section class='section'><textarea data-note placeholder='${this.tr('支持 Markdown 文本、DOI/URL、- [ ] checklist', 'Markdown text, DOI/URL and - [ ] checklist are supported')}'>${escapeHtml(paper.note)}</textarea><div class='help'>${paper.noteUpdatedAt ? `${this.tr('修改于', 'Modified')} ${formatTime(paper.noteUpdatedAt)}` : this.tr('自动保存到当前浏览器', 'Autosaved in this browser')}</div>${paper.note ? `<div class='preview'>${notePreview(paper.note)}</div>` : ''}</section>`;
-    } else {
+    } else if (this.panel === 'favorite') {
       body = `<section class='section'><h4>${this.tr('快速选择（收藏夹）', 'Quick choices (folders)')}</h4><div class='help' style='margin-bottom:7px'>${this.tr('这里的每一项都对应一个收藏夹。', 'Every quick choice maps directly to a folder.')}</div><div class='stack'>${store.state.collections.map(item => `<label class='check'><input type='checkbox' data-collection='${escapeHtml(item.id)}' ${paper.collections.includes(item.id) ? 'checked' : ''}><span class='chip shape-${item.style.shape}' style='background:${rgbCss(item.style.rgb)};color:#fff'>${escapeHtml(item.name)}</span></label>`).join('')}</div></section>
+      <section class='section'><button class='secondary${paper.favorite ? ' danger' : ''}' type='button' data-action='toggle-favorite'>${paper.favorite ? this.tr('取消收藏并移出所有收藏夹', 'Remove from saved and all folders') : this.tr('仅收藏（不分类）', 'Save without a folder')}</button><div class='help'>${this.tr('可选择多个收藏夹。取消某个分类不会取消收藏；取消收藏请使用上方按钮。', 'Choose multiple folders. Unchecking a folder keeps the paper saved; use the button above to remove it from saved papers.')}</div></section>`;
+    } else {
+      body = `
       ${this.citationMarkup()}
       <section class='section'><h4>${this.tr('自定义标签', 'Custom tags')}</h4><div class='tag-row'><input class='input' data-tag placeholder='${this.tr('例如：需要复现', 'e.g. reproduce')}'><button class='secondary' type='button' data-action='add-tag'>${this.tr('添加', 'Add')}</button></div><div class='chips' style='margin-top:8px'>${paper.tags.map(tag => `<span class='chip'>${escapeHtml(tag)} <button class='danger' style='border:0;background:transparent' data-action='remove-tag:${escapeHtml(tag)}'>×</button></span>`).join('')}</div></section>
       <section class='section'><div class='stack'><button class='secondary' type='button' data-action='similar'>${this.tr('查找相似文献', 'Find similar papers')}</button><button class='secondary' type='button' data-action='feedback'>${this.tr('报告文献问题', 'Report a paper issue')}</button>${meta?.href ? `<a class='secondary' data-close-panel='true' style='text-decoration:none' href='${escapeHtml(meta.href)}' target='_blank' rel='noopener noreferrer'>${this.tr('打开原文 ↗', 'Open original ↗')}</a>` : ''}</div>${this.feedbackMessage ? `<div class='feedback'>${escapeHtml(this.feedbackMessage)}</div>` : ''}</section>`;
@@ -393,7 +396,18 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private async action(action: string): Promise<void> {
-    if (action === 'favorite') { store.toggleFavorite(this.paperId); return; }
+    if (action === 'favorite') {
+      if (this.panel === 'favorite') this.closePanel();
+      else this.openPanel('favorite');
+      return;
+    }
+    if (action === 'toggle-favorite') {
+      store.updatePaper(this.paperId, paper => {
+        paper.favorite = !paper.favorite;
+        if (!paper.favorite) paper.collections = [];
+      });
+      return;
+    }
     if (action === 'summary') { await this.openSummary(); return; }
     if (action === 'status' || action === 'note' || action === 'more') { this.openPanel(action); return; }
     if (action === 'summary-lang:zh' || action === 'summary-lang:en') {
