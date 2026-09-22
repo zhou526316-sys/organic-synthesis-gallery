@@ -1,6 +1,9 @@
 // Summary panels are deliberately larger than anchored management drawers,
 // but keep margins around the viewport and never request fullscreen.
-export function positionSummaryDrawer(drawer: HTMLElement, host: DOMRect): void {
+let activeDrawer: WeakRef<HTMLElement> | undefined;
+let layoutFrame = 0;
+
+function fitSummaryDrawer(drawer: HTMLElement, host: DOMRect): void {
   const viewport = window.visualViewport;
   const width = viewport?.width || window.innerWidth;
   const height = viewport?.height || window.innerHeight;
@@ -14,6 +17,28 @@ export function positionSummaryDrawer(drawer: HTMLElement, host: DOMRect): void 
   drawer.style.top = `${Math.round(top - host.top)}px`;
   drawer.dataset.anchor = 'summary';
   drawer.dataset.summaryLayout = 'reading';
+}
+
+function queueViewportLayout(): void {
+  if (layoutFrame) return;
+  layoutFrame = requestAnimationFrame(() => {
+    layoutFrame = 0;
+    const drawer = activeDrawer?.deref();
+    if (!drawer?.isConnected) { activeDrawer = undefined; return; }
+    const root = drawer.getRootNode();
+    if (root instanceof ShadowRoot) fitSummaryDrawer(drawer, root.host.getBoundingClientRect());
+  });
+}
+
+// Visual viewport changes need not arrive with window.resize. Remeasure the
+// live host after responsive layout settles, without retaining closed drawers.
+window.visualViewport?.addEventListener('resize', queueViewportLayout);
+window.visualViewport?.addEventListener('scroll', queueViewportLayout);
+
+export function positionSummaryDrawer(drawer: HTMLElement, host: DOMRect): void {
+  activeDrawer = new WeakRef(drawer);
+  fitSummaryDrawer(drawer, host);
+  queueViewportLayout();
 }
 
 export const SUMMARY_LAYOUT_CSS = `
