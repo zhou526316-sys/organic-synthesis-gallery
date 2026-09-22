@@ -5,7 +5,7 @@ const DOI_PATTERN = /^10\.\d{4,9}\/\S+$/i;
 const DOI_LIMIT = 1200;
 const QUERY_CHUNK = 80;
 // Media written before the 2.2.17 contamination recovery cutover is quarantined.
-const MEDIA_REBUILD_EPOCH = 1790080200000;
+const MEDIA_REBUILD_EPOCH = 1790082000000;
 
 export function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
