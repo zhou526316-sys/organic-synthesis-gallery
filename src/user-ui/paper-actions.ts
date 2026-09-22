@@ -22,10 +22,56 @@ function notePreview(value: string): string {
   return safe.replace(/\n/g, '<br>');
 }
 
+type CitationStyle = 'acs' | 'nature' | 'apa' | 'bibtex' | 'ris';
+interface CitationMeta {
+  title: string;
+  journal: string;
+  doi?: string;
+  authors: string[];
+  date?: string;
+}
+function citationYear(date?: string): string {
+  return /^\d{4}/.test(date || '') ? String(date).slice(0, 4) : 'n.d.';
+}
+function authorText(authors: string[], separator = '; '): string {
+  return authors.length ? authors.join(separator) : 'Unknown author';
+}
+function bibKey(meta: CitationMeta): string {
+  const first = meta.authors[0]?.trim().split(/\s+/).slice(-1)[0]?.replace(/[^A-Za-z0-9]/g, '') || 'paper';
+  return `${first}${citationYear(meta.date).replace(/\D/g, '') || 'nd'}`;
+}
+function citationText(meta: CitationMeta, style: CitationStyle): string {
+  const year = citationYear(meta.date);
+  const doiUrl = meta.doi ? `https://doi.org/${meta.doi}` : '';
+  if (style === 'nature') {
+    return `${authorText(meta.authors, ', ')}. ${meta.title}. ${meta.journal} (${year}).${doiUrl ? ` ${doiUrl}` : ''}`;
+  }
+  if (style === 'apa') {
+    return `${authorText(meta.authors, ', ')} (${year}). ${meta.title}. ${meta.journal}.${doiUrl ? ` ${doiUrl}` : ''}`;
+  }
+  if (style === 'bibtex') {
+    return `@article{${bibKey(meta)},\n  author = {${meta.authors.join(' and ')}},\n  title = {${meta.title}},\n  journal = {${meta.journal}},\n  year = {${year}},${meta.doi ? `\n  doi = {${meta.doi}},\n  url = {${doiUrl}},` : ''}\n}`;
+  }
+  if (style === 'ris') {
+    return [
+      'TY  - JOUR',
+      `TI  - ${meta.title}`,
+      ...meta.authors.map(author => `AU  - ${author}`),
+      `JO  - ${meta.journal}`,
+      `PY  - ${year}`,
+      ...(meta.doi ? [`DO  - ${meta.doi}`, `UR  - ${doiUrl}`] : []),
+      'ER  -',
+    ].join('\n');
+  }
+  return `${authorText(meta.authors)}. ${meta.title}. ${meta.journal} ${year}.${doiUrl ? ` ${doiUrl}` : ''}`;
+}
+
 export class GalleryPaperActions extends HTMLElement {
   private readonly shadow = this.attachShadow({ mode: 'open' });
   private panel: 'none' | 'status' | 'note' | 'more' = 'none';
   private feedbackMessage = '';
+  private citationStyle: CitationStyle = 'acs';
+  private citationMessage = '';
   private readonly outside = (event: PointerEvent): void => {
     if (this.panel === 'none') return;
     const target = event.target instanceof Element ? event.target : null;
@@ -140,7 +186,7 @@ export class GalleryPaperActions extends HTMLElement {
     this.shadow.innerHTML = `<style>
       :host{display:block;position:relative;margin-top:4px;font:12px/1.4 Inter,system-ui,sans-serif;color:#344054}
       *{box-sizing:border-box}button,input,textarea,select{font:inherit}button{cursor:pointer}.bar{display:grid;grid-template-columns:84px 110px 96px 64px max-content;align-items:center;gap:6px;margin:6px 0 10px;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain}.bar::-webkit-scrollbar{display:none}.action{display:inline-flex;justify-self:stretch;align-self:center;width:100%;max-width:100%;height:32px;min-height:32px;white-space:nowrap;align-items:center;justify-content:center;gap:5px;padding:5px 8px;border:0;background:var(--u-color);color:var(--u-text);font-size:11px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}.action.active{box-shadow:0 0 0 2px rgba(49,89,189,.18)}.action .icon{width:15px;height:15px;object-fit:contain}.shape-pill{border-radius:999px}.shape-rounded{border-radius:9px}.shape-rectangle{border-radius:2px}.shape-circle{width:32px;min-width:32px;height:32px;padding:0;border-radius:50%;justify-self:center}.shape-circle span:last-child,.shape-square span:last-child,.shape-diamond span:last-child,.shape-star span:last-child,.shape-bookmark span:last-child{display:none}.shape-square{width:32px;min-width:32px;height:32px;padding:0;border-radius:5px;justify-self:center}.shape-diamond{width:29px;min-width:29px;height:29px;min-height:29px;padding:0;border-radius:5px;transform:rotate(45deg);justify-self:center}.shape-diamond>*{transform:rotate(-45deg)}.shape-bookmark{border-radius:6px 6px 2px 2px;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}.shape-star{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%);width:34px;min-width:34px;height:34px;min-height:34px;padding:0;justify-self:center}.metric{justify-self:end;margin-left:0;color:#7a8494;font-size:10px;white-space:nowrap}.chips{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}.chip{padding:3px 6px;border-radius:999px;background:#f2f5fb;color:#526071;font-size:9px}.chip.status,.status-choice-label{display:inline-flex;align-items:center;gap:5px;color:#fff}.status-image{width:16px;height:16px;object-fit:contain;border-radius:4px;background:rgba(255,255,255,.16)}.status-row{display:grid;gap:6px}.status-main{display:block}.status-choice{display:flex;align-items:center;gap:7px}.status-choice-label{padding:4px 7px;min-width:0}.status-choice small{color:#7a8494;font-size:9px}.status-style-editor{display:grid;grid-template-columns:72px minmax(78px,1fr) minmax(92px,1.2fr);gap:7px;padding:7px 9px;border:1px solid #e3e8f1;border-radius:10px;background:#fafbfc}.status-style-editor label{display:grid;gap:4px;color:#667085;font-size:9px}.status-style-editor input[type=color]{width:100%;height:30px;border:0;padding:0;background:transparent}.status-style-editor select,.status-style-editor input[type=file]{width:100%;min-width:0;font-size:9px}.status-style-editor .remove-image{grid-column:1/-1;width:auto;justify-self:start;border:0;background:transparent;color:#b42318;padding:2px 0}.status{background:${status ? rgbCss(status.style.rgb) : '#f2f5fb'};color:${status ? '#fff' : '#526071'}}
-      .overlay{position:absolute;left:0;top:0;width:100%;height:0;z-index:10020;background:transparent;pointer-events:none}.drawer{position:absolute;pointer-events:auto;width:min(350px,calc(100vw - 24px));height:auto;max-height:min(68dvh,560px);overflow:auto;padding:15px;background:#fff;border:1px solid #dfe5ef;border-radius:16px;box-shadow:0 14px 38px rgba(15,23,42,.18)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:18px 0 10px;z-index:2}.head h3{margin:0;font-size:17px}.close{border:0;background:#f2f4f7;border-radius:9px;width:30px;height:30px}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.stack{display:grid;gap:6px}.choice,.secondary{width:100%;text-align:left;padding:8px 10px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;color:#344054}.choice.selected{border-color:#8aa5ef;background:#f5f7ff}.check{display:flex;align-items:center;gap:8px;padding:5px 0}.input,textarea{width:100%;border:1px solid #d7deea;border-radius:10px;padding:9px;outline:none}textarea{min-height:150px;resize:vertical}.help{margin-top:6px;color:#8a93a3;font-size:10px}.preview{margin-top:8px;padding:9px;border-radius:10px;background:#f8fafc;overflow-wrap:anywhere}.preview a{color:#3159bd}.check-preview{display:flex;gap:6px}.tag-row{display:flex;gap:6px}.tag-row .input{flex:1}.tag-row .secondary{width:auto}.danger{color:#b42318}.feedback{margin-top:7px;color:#667085;font-size:10px}
+      .overlay{position:absolute;left:0;top:0;width:100%;height:0;z-index:10020;background:transparent;pointer-events:none}.drawer{position:absolute;pointer-events:auto;width:min(350px,calc(100vw - 24px));height:auto;max-height:min(68dvh,560px);overflow:auto;padding:15px;background:#fff;border:1px solid #dfe5ef;border-radius:16px;box-shadow:0 14px 38px rgba(15,23,42,.18)}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:sticky;top:-18px;background:#fff;padding:18px 0 10px;z-index:2}.head h3{margin:0;font-size:17px}.close{border:0;background:#f2f4f7;border-radius:9px;width:30px;height:30px}.section{padding:12px 0;border-top:1px solid #edf0f4}.section h4{margin:0 0 8px}.stack{display:grid;gap:6px}.choice,.secondary{width:100%;text-align:left;padding:8px 10px;border:1px solid #e1e6ee;border-radius:10px;background:#fff;color:#344054}.choice.selected{border-color:#8aa5ef;background:#f5f7ff}.check{display:flex;align-items:center;gap:8px;padding:5px 0}.input,textarea{width:100%;border:1px solid #d7deea;border-radius:10px;padding:9px;outline:none}textarea{min-height:150px;resize:vertical}.help{margin-top:6px;color:#8a93a3;font-size:10px}.preview{margin-top:8px;padding:9px;border-radius:10px;background:#f8fafc;overflow-wrap:anywhere}.preview a{color:#3159bd}.check-preview{display:flex;gap:6px}.citation-tools{display:grid;grid-template-columns:minmax(110px,140px) 1fr;gap:7px;align-items:start}.citation-tools select{width:100%;border:1px solid #d7deea;border-radius:9px;padding:8px;background:#fff}.citation-preview{grid-column:1/-1;white-space:pre-wrap;word-break:break-word;max-height:190px;overflow:auto;padding:9px;border-radius:10px;background:#f8fafc;color:#344054;font:10px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.citation-copy{width:100%;padding:8px 10px;border:1px solid #d7deea;border-radius:9px;background:#fff;color:#3159bd;font-weight:750}.citation-note{grid-column:1/-1;color:#667085;font-size:10px}.tag-row{display:flex;gap:6px}.tag-row .input{flex:1}.tag-row .secondary{width:auto}.danger{color:#b42318}.feedback{margin-top:7px;color:#667085;font-size:10px}
       @media(max-width:680px){:host{margin-top:2px}.bar{grid-template-columns:36px 36px 36px 36px max-content;gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:flex}.chips>.chip:not(.status){display:none}.drawer .chips>.chip{display:inline-flex}}
     </style>${this.chips(paper, status)}<div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
@@ -179,6 +225,31 @@ export class GalleryPaperActions extends HTMLElement {
     return values.some(Boolean) ? `<div class='chips'>${values.join('')}</div>` : '';
   }
 
+  private citationMeta(): CitationMeta {
+    const meta = store.metadata(this.paperId);
+    const card = this.closest<HTMLElement>('.card');
+    const authors = (card?.dataset.authors || '').split('|').map(value => value.trim()).filter(Boolean);
+    return {
+      title: meta?.title || this.paperId,
+      journal: meta?.journal || '',
+      doi: meta?.doi,
+      authors,
+      date: card?.dataset.date || undefined,
+    };
+  }
+
+  private citationMarkup(): string {
+    const citation = citationText(this.citationMeta(), this.citationStyle);
+    const options: Array<[CitationStyle, string]> = [
+      ['acs', 'ACS'],
+      ['nature', 'Nature'],
+      ['apa', 'APA'],
+      ['bibtex', 'BibTeX'],
+      ['ris', 'RIS'],
+    ];
+    return `<section class='section'><h4>${this.tr('Cite / 参考文献', 'Cite / reference')}</h4><div class='citation-tools'><select data-citation-style aria-label='${this.tr('引用格式', 'Citation style')}'>${options.map(([value, label]) => `<option value='${value}' ${this.citationStyle === value ? 'selected' : ''}>${label}</option>`).join('')}</select><button class='citation-copy' type='button' data-action='copy-citation'>${this.tr('复制引用', 'Copy citation')}</button><div class='citation-preview' data-citation-preview>${escapeHtml(citation)}</div><div class='citation-note'>${escapeHtml(this.citationMessage || this.tr('基于当前卡片已有元数据生成；缺失卷期页码时不会自动虚构。', 'Generated from current card metadata; missing volume/issue/pages are not invented.'))}</div></div></section>`;
+  }
+
   private drawer(paper: PaperUserState): string {
     const meta = store.metadata(this.paperId); const title = this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
     let body = '';
@@ -198,6 +269,7 @@ export class GalleryPaperActions extends HTMLElement {
       body = `<section class='section'><textarea data-note placeholder='${this.tr('支持 Markdown 文本、DOI/URL、- [ ] checklist', 'Markdown text, DOI/URL and - [ ] checklist are supported')}'>${escapeHtml(paper.note)}</textarea><div class='help'>${paper.noteUpdatedAt ? `${this.tr('修改于', 'Modified')} ${formatTime(paper.noteUpdatedAt)}` : this.tr('自动保存到当前浏览器', 'Autosaved in this browser')}</div>${paper.note ? `<div class='preview'>${notePreview(paper.note)}</div>` : ''}</section>`;
     } else {
       body = `<section class='section'><h4>${this.tr('快速选择（收藏夹）', 'Quick choices (folders)')}</h4><div class='help' style='margin-bottom:7px'>${this.tr('这里的每一项都对应一个收藏夹。', 'Every quick choice maps directly to a folder.')}</div><div class='stack'>${store.state.collections.map(item => `<label class='check'><input type='checkbox' data-collection='${escapeHtml(item.id)}' ${paper.collections.includes(item.id) ? 'checked' : ''}><span class='chip shape-${item.style.shape}' style='background:${rgbCss(item.style.rgb)};color:#fff'>${escapeHtml(item.name)}</span></label>`).join('')}</div></section>
+      ${this.citationMarkup()}
       <section class='section'><h4>${this.tr('自定义标签', 'Custom tags')}</h4><div class='tag-row'><input class='input' data-tag placeholder='${this.tr('例如：需要复现', 'e.g. reproduce')}'><button class='secondary' type='button' data-action='add-tag'>${this.tr('添加', 'Add')}</button></div><div class='chips' style='margin-top:8px'>${paper.tags.map(tag => `<span class='chip'>${escapeHtml(tag)} <button class='danger' style='border:0;background:transparent' data-action='remove-tag:${escapeHtml(tag)}'>×</button></span>`).join('')}</div></section>
       <section class='section'><div class='stack'><button class='secondary' type='button' data-action='similar'>${this.tr('查找相似文献', 'Find similar papers')}</button><button class='secondary' type='button' data-action='feedback'>${this.tr('报告文献问题', 'Report a paper issue')}</button>${meta?.href ? `<a class='secondary' data-close-panel='true' style='text-decoration:none' href='${escapeHtml(meta.href)}' target='_blank' rel='noopener noreferrer'>${this.tr('打开原文 ↗', 'Open original ↗')}</a>` : ''}</div>${this.feedbackMessage ? `<div class='feedback'>${escapeHtml(this.feedbackMessage)}</div>` : ''}</section>`;
     }
@@ -214,7 +286,12 @@ export class GalleryPaperActions extends HTMLElement {
     this.shadow.querySelectorAll<HTMLInputElement>('[data-collection]').forEach(input => input.addEventListener('change', () => store.updatePaper(this.paperId, paper => {
       const id = input.dataset.collection || ''; paper.collections = input.checked ? [...new Set([...paper.collections, id])] : paper.collections.filter(value => value !== id); paper.favorite = paper.collections.length > 0 || paper.favorite;
     })));
-    this.shadow.querySelectorAll<HTMLInputElement>('[data-status-color]').forEach(input => input.addEventListener('change', () => {
+    this.shadow.querySelector<HTMLSelectElement>('[data-citation-style]')?.addEventListener('change', event => {
+      this.citationStyle = (event.currentTarget as HTMLSelectElement).value as CitationStyle;
+      this.citationMessage = '';
+      this.render();
+    });
+        this.shadow.querySelectorAll<HTMLInputElement>('[data-status-color]').forEach(input => input.addEventListener('change', () => {
       const status = store.status(input.dataset.statusColor || '');
       if (!status) return;
       status.style.rgb = hexToRgb(input.value);
@@ -257,7 +334,18 @@ export class GalleryPaperActions extends HTMLElement {
       store.setStatus(this.paperId, statusId);
       return;
     }
-    if (action === 'add-tag') { const input = this.shadow.querySelector<HTMLInputElement>('[data-tag]'); const tag = input?.value.trim(); if (tag) store.updatePaper(this.paperId, paper => { if (!paper.tags.includes(tag)) paper.tags.push(tag); }); return; }
+    if (action === 'copy-citation') {
+      const text = citationText(this.citationMeta(), this.citationStyle);
+      try {
+        await navigator.clipboard.writeText(text);
+        this.citationMessage = this.tr('已复制到剪贴板。', 'Copied to clipboard.');
+      } catch {
+        this.citationMessage = this.tr('复制失败，请手动选择上方文本。', 'Copy failed; select the text above manually.');
+      }
+      this.render();
+      return;
+    }
+        if (action === 'add-tag') { const input = this.shadow.querySelector<HTMLInputElement>('[data-tag]'); const tag = input?.value.trim(); if (tag) store.updatePaper(this.paperId, paper => { if (!paper.tags.includes(tag)) paper.tags.push(tag); }); return; }
     if (action.startsWith('remove-tag:')) { const tag = action.slice(11); store.updatePaper(this.paperId, paper => { paper.tags = paper.tags.filter(value => value !== tag); }); return; }
     if (action === 'similar') {
       const paperId = this.paperId;
