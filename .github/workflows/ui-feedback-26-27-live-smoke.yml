@@ -24,7 +24,8 @@ jobs:
         with:
           node-version: '22'
       - name: Install existing browser-test dependencies
-        run: npm ci --no-audit --no-fund
+        # Match the existing quality gate: the repository has no root npm lockfile.
+        run: npm install --no-audit --no-fund
       - name: Install WebKit
         run: npx playwright install --with-deps webkit
       - name: Check live public frontends without production writes
