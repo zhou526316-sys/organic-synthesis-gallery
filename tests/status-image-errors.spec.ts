@@ -83,3 +83,32 @@ test('removal while original is loading prevents stale upload from restoring the
   expect((await state(page)).statuses[0].style.imageOriginal).toBeUndefined();
   await expect(actions.locator('button[data-action="set-status:to-read"] img')).toHaveCount(0);
 });
+
+test('API fallback keeps blob image reads local for string URL and Request inputs', async ({ page }) => {
+  const marker = '__gallery_blob_routing_check__';
+  const remapped: string[] = [];
+  page.on('request', request => {
+    if (/^https?:/.test(request.url()) && request.url().includes(marker)) remapped.push(request.url());
+  });
+  await open(page);
+  const result = await page.evaluate(async marker => {
+    const rejected: boolean[] = [];
+    // These intentionally missing blob handles must fail locally, not turn into
+    // HTTP requests. The isolated fixture intercepts all external HTTP traffic.
+    for (const origin of ['https://api.gczhouwld.com', 'https://organic-synthesis-gallery.zhou526316.workers.dev']) {
+      const value = `blob:${origin}/${marker}`;
+      for (const input of [value, new URL(value)]) {
+        try { await fetch(input); rejected.push(false); } catch { rejected.push(true); }
+      }
+    }
+    const url = URL.createObjectURL(new Blob(['original-status-bytes'], { type: 'text/plain' }));
+    const texts: string[] = [];
+    try {
+      for (const input of [url, new URL(url), new Request(url)]) texts.push(await (await fetch(input)).text());
+    } finally { URL.revokeObjectURL(url); }
+    return { rejected, texts };
+  }, marker);
+  expect(result.rejected).toEqual([true, true, true, true]);
+  expect(result.texts).toEqual(['original-status-bytes', 'original-status-bytes', 'original-status-bytes']);
+  expect(remapped).toEqual([]);
+});

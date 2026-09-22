@@ -38,7 +38,9 @@ function installBrowserApiFallback(): void {
     let targets: Array<RequestInfo | URL> = [input];
     try {
       const parsed = new URL(typeof input === 'string' ? input : input.toString(), window.location.href);
-      if (BROWSER_API_ORIGINS.has(parsed.origin)) {
+      // Blob URLs inherit their creator's origin but are not network API URLs.
+      // Preserve local original-image reads instead of rewriting them to HTTPS.
+      if ((parsed.protocol === 'http:' || parsed.protocol === 'https:') && BROWSER_API_ORIGINS.has(parsed.origin)) {
         const suffix = `${parsed.pathname}${parsed.search}${parsed.hash}`;
         targets = [
           new URL(suffix, BROWSER_API_BASE).toString(),
