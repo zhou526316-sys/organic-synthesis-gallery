@@ -86,6 +86,7 @@ async function mapConcurrent(items, concurrency, worker) {
 function extensionFor(contentType, url) {
   const type = String(contentType || '').split(';')[0].trim().toLowerCase();
   if (type === 'image/svg+xml') return 'svg';
+  if (type === 'image/svg+xml') return 'svg';
   if (type === 'image/png') return 'png';
   if (type === 'image/webp') return 'webp';
   if (type === 'image/gif') return 'gif';

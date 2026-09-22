@@ -484,22 +484,6 @@ export async function importStagedArticleFigure(request, env, payload) {
   const previous = index.items[identity];
   const previousPixels = Math.max(0, Number(previous?.width || 0)) * Math.max(0, Number(previous?.height || 0));
   const nextPixels = width * height;
-  if (false && previous && previous.captureVersion==='6.2.20' && Number(previous.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(previous, doi) && previousPixels > 0 && nextPixels > 0 && previousPixels > nextPixels) {
-    return {
-      status: 200,
-      body: {
-        stored: true,
-        staged: true,
-        retainedHigherResolution: true,
-        doi,
-        id: sourceId,
-        width: Number(previous.width || 0),
-        height: Number(previous.height || 0),
-        imageUrl: previous.r2Key ? publicMediaUrl(request, previous.r2Key) : undefined,
-      },
-    };
-  }
-
   const key = ARTICLE_FIGURE_STAGE_PREFIX + doiHash.slice(0, 24) + '/' +
     sourceId + '-' + hash.slice(0, 16) + '.' + extensionFor(image.contentType);
   await env.MEDIA.put(key, image.bytes, {
