@@ -1,0 +1,54 @@
+name: Summary readability regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/user-ui/paper-actions.ts'
+      - 'src/user-ui/summary-layout.ts'
+      - 'tests/summary-readability.spec.ts'
+      - '.github/workflows/summary-readability-ci.yml'
+permissions:
+  contents: read
+concurrency:
+  group: summary-readability-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  summary-layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned test dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/summary-browser-install.log 2>&1 || { tail -60 /tmp/summary-browser-install.log; exit 1; }
+      - name: Typecheck and build exact PR integration
+        run: |
+          npx tsc --noEmit
+          npm run build
+      - name: Start isolated preview
+        run: |
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/summary-preview.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/summary-preview.log
+          exit 1
+      - name: Verify readable nonfullscreen layout with mocked summaries
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: summary-layout-results/results.json
+        run: npx --no-install playwright test tests/summary-readability.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=summary-layout-results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: summary-readability-results
+          path: summary-layout-results/
+          retention-days: 7
+          if-no-files-found: warn
