@@ -24,6 +24,7 @@ on:
       - 'public/automation-supplement.json'
       - 'public/rolling-supplement.json'
       - 'audit/review-*.json'
+      - 'audit/automation-triggers/literature-audit-request.json'
 
 permissions:
   contents: write
