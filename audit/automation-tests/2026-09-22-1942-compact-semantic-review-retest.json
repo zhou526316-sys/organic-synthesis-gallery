@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "test": "compact-semantic-review-handoff-retest",
+  "finishedAt": "2026-09-22T19:46:00+08:00",
+  "publicationSlot": "2026-09-23T08:00:00+08:00",
+  "result": "success",
+  "productionDataModified": false,
+  "pagesPublicationTriggered": false,
+  "oaPdfHtmlExtractionUsed": false,
+  "handoff": {
+    "path": "audit/unresolved-latest.json",
+    "sha": "38f7afac0d24005c26dd6e97f784a72a536d26c8",
+    "generatedAt": "2026-09-22T11:35:29.420Z",
+    "latestGeneratedAt": "2026-09-22T11:35:29.420Z",
+    "generationMatched": true,
+    "summaryUnresolved": 8,
+    "unresolvedArrayLength": 8,
+    "activeJournalCount": 16,
+    "candidateTruncationEliminated": true,
+    "note": "The connector's default whole-file response can still be clipped by response budget, but line-ranged reads of the compact handoff returned the complete unresolved array. No candidate was inferred from audit/latest.json."
+  },
+  "discoveryGate": {"criticalSourceFailures":0,"sourceFamilyGaps":0,"sourceCoverageAnomalies":0,"closureCoverageAnomalies":0,"historicalCoverageLosses":0},
+  "semanticReview": {
+    "reviewed": 8,
+    "accepted": 3,
+    "rejected": 5,
+    "pending": 0,
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0,
+    "acceptedDois": ["10.1021/jacs.6c17644","10.1021/acs.joc.6c01559","10.1021/acs.orglett.6c03473"],
+    "rejectedDois": ["10.31635/ccschem.026.202608262","10.1021/jacs.6c14114","10.1021/jacs.6c16062","10.1038/d41586-026-02929-z","10.1038/d41586-026-02818-5"]
+  },
+  "stagingReview": {"path":"audit/prepublish-review-2026-09-23-0800.json","commit":"dbe271f88a02e319b284e4854250cae34910fe18"},
+  "conclusion": "Node audit -> compact handoff -> Scheduled Task semantic review succeeded end-to-end for the staging layer. The new eighth candidate was visible and reviewed; the previous large-audit candidate truncation no longer prevents complete semantic review. Production remains frozen until the fixed 08:00 release slot."
+}
