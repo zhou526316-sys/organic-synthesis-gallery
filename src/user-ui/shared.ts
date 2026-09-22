@@ -28,9 +28,11 @@ export interface UserUiState {
 const STORAGE_KEY = 'organic-gallery-user-ui-v1';
 const PROFILE_KEY = 'organic-gallery-profile-v1';
 const SITE_FEEDBACK_QUEUE_KEY = 'organic-gallery-site-feedback-queue-v1';
+const READER_OPEN_QUEUE_KEY = 'organic-gallery-reader-open-queue-v1';
 const READER_COUNTS_CACHE_KEY = 'organic-gallery-reader-counts-v3';
 const OPTIONAL_CLOUD_TIMEOUT_MS = 6500;
 const SITE_FEEDBACK_QUEUE_LIMIT = 50;
+const READER_OPEN_QUEUE_LIMIT = 100;
 export const WORKER_API_BASE = 'https://api.gczhouwld.com';
 export const SHAPES: Shape[] = ['pill', 'rounded', 'rectangle', 'circle', 'square', 'diamond', 'bookmark', 'star'];
 
@@ -218,6 +220,40 @@ function writeReaderCountsCache(counts: Record<string, number>): void {
   } catch { /* reader-count cache is best effort */ }
 }
 
+function readReaderOpenQueue(): string[] {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(READER_OPEN_QUEUE_KEY) || '[]') as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return [...new Set(parsed.map(value => normalizeDoi(String(value))).filter((value): value is string => Boolean(value)))].slice(-READER_OPEN_QUEUE_LIMIT);
+  } catch {
+    return [];
+  }
+}
+
+function writeReaderOpenQueue(dois: string[]): void {
+  try {
+    localStorage.setItem(READER_OPEN_QUEUE_KEY, JSON.stringify([...new Set(dois)].slice(-READER_OPEN_QUEUE_LIMIT)));
+  } catch { /* reader-open queue is best effort */ }
+}
+
+function enqueueReaderOpen(doi: string): void {
+  const queue = readReaderOpenQueue();
+  if (!queue.includes(doi)) queue.push(doi);
+  writeReaderOpenQueue(queue);
+}
+
+async function postReaderOpen(doi: string): Promise<{ count?: number }> {
+  const response = await fetch(`${WORKER_API_BASE}/api/user-ui/reader-counts/mark`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ doi }),
+    keepalive: true,
+    signal: AbortSignal.timeout(OPTIONAL_CLOUD_TIMEOUT_MS),
+  });
+  if (!response.ok) throw new Error(`Worker ${response.status}`);
+  return response.json() as Promise<{ count?: number }>;
+}
+
 function enqueueSiteFeedback(payload: SiteFeedbackPayload): void {
   const queue = readSiteFeedbackQueue();
   queue.push({ id: newId('feedback'), createdAt: Date.now(), attempts: 0, payload });
@@ -256,13 +292,51 @@ class Store extends EventTarget {
   readonly profileId = browserProfile();
   readerCounts: Record<string, number> = readReaderCountsCache();
   private feedbackFlushRunning = false;
+  private readerOpenFlushRunning = false;
 
   constructor() {
     super();
     if (typeof window !== 'undefined') {
-      window.addEventListener('online', () => void this.flushSiteFeedbackQueue());
-      window.setInterval(() => void this.flushSiteFeedbackQueue(), 5 * 60 * 1000);
-      window.setTimeout(() => void this.flushSiteFeedbackQueue(), 1500);
+      window.addEventListener('online', () => {
+        void this.flushSiteFeedbackQueue();
+        void this.flushReaderOpenQueue();
+      });
+      window.setInterval(() => {
+        void this.flushSiteFeedbackQueue();
+        void this.flushReaderOpenQueue();
+      }, 5 * 60 * 1000);
+      window.setTimeout(() => {
+        void this.flushSiteFeedbackQueue();
+        void this.flushReaderOpenQueue();
+      }, 1500);
+    }
+  }
+
+  private async flushReaderOpenQueue(): Promise<void> {
+    if (this.readerOpenFlushRunning) return;
+    const queue = readReaderOpenQueue();
+    if (!queue.length) return;
+    this.readerOpenFlushRunning = true;
+    const remaining: string[] = [];
+    try {
+      for (let index = 0; index < queue.length; index += 1) {
+        const doi = queue[index];
+        try {
+          const data = await postReaderOpen(doi);
+          if (typeof data.count === 'number') {
+            const changed = this.readerCounts[doi] !== data.count;
+            this.readerCounts[doi] = data.count;
+            writeReaderCountsCache(this.readerCounts);
+            if (changed) this.dispatchEvent(new CustomEvent('counts', { detail: { doi } }));
+          }
+        } catch {
+          remaining.push(...queue.slice(index));
+          break;
+        }
+      }
+    } finally {
+      writeReaderOpenQueue(remaining);
+      this.readerOpenFlushRunning = false;
     }
   }
 
@@ -346,15 +420,8 @@ class Store extends EventTarget {
   async recordOpen(doi: string): Promise<void> {
     const normalized = normalizeDoi(doi);
     if (!normalized) return;
-    try {
-      const data = await workerPost<{ count?: number }>('/api/user-ui/reader-counts/mark', { doi: normalized });
-      if (typeof data.count === 'number') {
-        const changed = this.readerCounts[normalized] !== data.count;
-        this.readerCounts[normalized] = data.count;
-        writeReaderCountsCache(this.readerCounts);
-        if (changed) this.dispatchEvent(new CustomEvent('counts', { detail: { doi: normalized } }));
-      }
-    } catch { /* article navigation must never be blocked by analytics */ }
+    enqueueReaderOpen(normalized);
+    await this.flushReaderOpenQueue();
   }
   async feedback(doi: string, kind: string, note: string): Promise<boolean> {
     try { await workerPost('/api/user-ui/feedback', { doi, profileId: this.profileId, kind, note: note.slice(0, 1000) }); return true; } catch { return false; }

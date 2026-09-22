@@ -716,6 +716,68 @@ test('reader count marks only trusted article-link clicks', async ({ page }) => 
 });
 
 
+test('failed article-open marks persist and retry after reload', async ({ page }) => {
+  test.setTimeout(60_000);
+  let failMark = true;
+  let markCalls = 0;
+
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/reader-counts/mark')) {
+      markCalls += 1;
+      if (failMark) {
+        await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'd1_unavailable' }) });
+        return;
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ count: 2, unique: true, generation: 'article-open-v3' }),
+      });
+      return;
+    }
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const titleLink = page.locator('.card .user-title-link').first();
+  await expect(titleLink).toBeVisible({ timeout: 30000 });
+  const doi = await titleLink.evaluate(anchor => {
+    const match = String((anchor as HTMLAnchorElement).href || '').match(/doi\.org\/(.+)$/i);
+    return match?.[1]?.toLowerCase() || '';
+  });
+  expect(doi).toBeTruthy();
+
+  await titleLink.click();
+  await expect.poll(() => markCalls).toBe(1);
+  await expect.poll(async () => page.evaluate(() => {
+    return JSON.parse(localStorage.getItem('organic-gallery-reader-open-queue-v1') || '[]').length;
+  })).toBe(1);
+
+  failMark = false;
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await expect.poll(() => markCalls, { timeout: 10000 }).toBeGreaterThanOrEqual(2);
+  await expect.poll(async () => page.evaluate(() => {
+    return JSON.parse(localStorage.getItem('organic-gallery-reader-open-queue-v1') || '[]').length;
+  })).toBe(0);
+
+  const metric = page.locator('gallery-paper-actions').first().locator('.metric');
+  await expect(metric).toContainText('2');
+});
+
+
 test('reader counts preserve last success and never turn API failure into fake zero', async ({ page }) => {
   test.setTimeout(60_000);
   let failCounts = false;

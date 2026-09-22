@@ -258,6 +258,30 @@ CREATE TABLE IF NOT EXISTS paper_open_reader_counts_v3 (
   updated_at INTEGER NOT NULL
 );
 
+-- Recover only historical rows that were already produced by genuine card-open
+-- events under hashed-IP semantics. Reading-status/profile rows are excluded.
+INSERT OR IGNORE INTO paper_open_readers_v3 (doi, ip_hash, first_opened_at)
+SELECT
+  doi,
+  substr(profile_id, 4),
+  first_read_at
+FROM paper_readers
+WHERE profile_id LIKE 'ip:%'
+  AND first_status_id = 'card-open'
+  AND length(profile_id) > 3;
+
+-- Rebuild the compact v3 counters from the deduplicated source-of-truth rows.
+INSERT INTO paper_open_reader_counts_v3 (doi, count, updated_at)
+SELECT
+  doi,
+  COUNT(*) AS count,
+  MAX(first_opened_at) AS updated_at
+FROM paper_open_readers_v3
+GROUP BY doi
+ON CONFLICT(doi) DO UPDATE SET
+  count = excluded.count,
+  updated_at = excluded.updated_at;
+
 
 -- Site-level pageview analytics from this schema generation onward.
 -- ip_hash is salted server-side from CF-Connecting-IP; raw IP addresses are never stored.
