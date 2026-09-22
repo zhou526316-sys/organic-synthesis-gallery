@@ -9,6 +9,7 @@ const PUBLIC_DIR = path.resolve('public');
 const MEDIA_DIR = path.join(PUBLIC_DIR, 'media-mirror');
 const CONCURRENCY = Math.max(2, Math.min(12, Number(process.env.PAGES_MEDIA_CONCURRENCY || 8)));
 const MAX_IMAGE_BYTES = 4_000_000;
+const MEDIA_REBUILD_LOCKDOWN = process.env.MEDIA_REBUILD_LOCKDOWN === '1';
 
 async function fetchRetry(url, init = {}, attempts = 4) {
   let lastError;
@@ -195,6 +196,14 @@ async function mapConcurrent(items, concurrency, worker) {
 }
 
 async function mirrorMedia() {
+  if (MEDIA_REBUILD_LOCKDOWN) {
+    await rm(MEDIA_DIR, { recursive: true, force: true });
+    await mkdir(MEDIA_DIR, { recursive: true });
+    const manifest = { version: 2, generatedAt: Date.now(), items: {} };
+    await writeFile(path.join(PUBLIC_DIR, 'media-index.json'), JSON.stringify(manifest));
+    return { mediaSource: 'rebuild-empty-baseline', manifestItems: 0, mediaObjects: 0, failures: 0, bytesTotal: 0 };
+  }
+
   let manifest = await jsonGet(`${SOURCE}/media-index.json`);
   let mediaBase = SOURCE;
   let mediaSource = 'worker';
