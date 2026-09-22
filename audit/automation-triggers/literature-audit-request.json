@@ -1,10 +1,11 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-22T19:38:00+08:00",
-  "requestedBy": "compact-handoff-validation",
-  "reason": "Validate audit/unresolved-latest.json generation and persistence for fixed-slot prepublish review.",
+  "requestedAt": "2026-09-22T21:35:10+08:00",
+  "requestedBy": "prepublish-recovery-20260922-213510",
+  "reason": "Refresh the nearly two-hour-old 19:35 compact handoff before recovery review; challenge unsupported CCS exclusion and correct publisher sourceChecks without production literature or media changes.",
   "targetBranch": "main",
   "publicationSlot": "2026-09-23T08:00:00+08:00",
+  "baselineMainSha": "e6958906b6222577e8f286d6de773f97ef41810b",
   "primaryWindow": {
     "timezone": "Asia/Shanghai",
     "startDate": "2026-09-20",
@@ -12,9 +13,13 @@
     "days": 3
   },
   "safetyTailDays": 7,
+  "previousAuditGeneratedAt": "2026-09-22T11:35:29.420Z",
+  "previousCompactHandoffSha": "38f7afac0d24005c26dd6e97f784a72a536d26c8",
   "validation": [
     "audit/latest.json and audit/unresolved-latest.json share generatedAt",
     "compact unresolved count equals latest.summary.unresolved",
-    "no production literature mutation"
+    "all 16 active journal source-health rows retained",
+    "push-triggered literature-audit.yml capability guard and DOI-union audit succeed",
+    "prepublish-only recovery; no production literature mutation; no Pages deployment; no publisher-media acquisition"
   ]
 }
