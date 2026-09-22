@@ -240,9 +240,9 @@ CREATE TABLE IF NOT EXISTS paper_reader_counts_v2 (
   updated_at INTEGER NOT NULL
 );
 
--- v3 is the clean public metric: only real article-open events after this
--- migration, deduplicated permanently by DOI + hashed IP. No legacy status
--- rows or earlier IP rows are backfilled into this generation.
+-- v3 is the clean public metric: real article-open events only, deduplicated
+-- permanently by DOI + hashed IP. Legacy reading-status/profile rows are
+-- excluded; only historical rows explicitly tagged card-open are backfilled.
 CREATE TABLE IF NOT EXISTS paper_open_readers_v3 (
   doi TEXT NOT NULL,
   ip_hash TEXT NOT NULL,
@@ -257,6 +257,31 @@ CREATE TABLE IF NOT EXISTS paper_open_reader_counts_v3 (
   count INTEGER NOT NULL DEFAULT 0 CHECK (count >= 0),
   updated_at INTEGER NOT NULL
 );
+
+-- Recover only genuine historical article opens recorded by the prior IP-based
+-- generation. This is idempotent and deliberately excludes status/profile rows.
+INSERT OR IGNORE INTO paper_open_readers_v3 (doi, ip_hash, first_opened_at)
+SELECT doi, substr(profile_id, 4), first_read_at
+FROM paper_readers
+WHERE profile_id LIKE 'ip:%'
+  AND first_status_id = 'card-open';
+
+-- Recompute counters only for DOI values touched by the historical card-open
+-- backfill. Existing v3 opens are included, while unrelated DOI counters are
+-- left untouched.
+INSERT OR REPLACE INTO paper_open_reader_counts_v3 (doi, count, updated_at)
+SELECT
+  opened.doi,
+  COUNT(*) AS count,
+  COALESCE(MAX(opened.first_opened_at), 0) AS updated_at
+FROM paper_open_readers_v3 AS opened
+WHERE opened.doi IN (
+  SELECT DISTINCT doi
+  FROM paper_readers
+  WHERE profile_id LIKE 'ip:%'
+    AND first_status_id = 'card-open'
+)
+GROUP BY opened.doi;
 
 -- User-submitted metadata/media corrections enter a review queue; they never edit literature directly.
 CREATE TABLE IF NOT EXISTS paper_feedback (
