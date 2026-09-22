@@ -1091,6 +1091,20 @@ for (const width of [390, 1280]) {
         : {};
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
     });
+    // Static preview has no media backend. Keep these UI-only tests independent of
+    // relative-endpoint redirects and reload cancellation in WebKit.
+    await page.route('**/api/media/batch**', route => route.fulfill({
+      status: 200,
+      headers: { 'access-control-allow-origin': '*' },
+      contentType: 'application/json',
+      body: JSON.stringify({ items: [] }),
+    }));
+    await page.route('**/api/media/inventory**', route => route.fulfill({
+      status: 200,
+      headers: { 'access-control-allow-origin': '*' },
+      contentType: 'application/json',
+      body: JSON.stringify({ generatedAt: Date.now(), items: [] }),
+    }));
     // UI-only fixture for the unrelated live-capture endpoint; production capture code is unchanged.
     await page.route('https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index**', route => route.fulfill({
       status: 200,
@@ -1153,6 +1167,7 @@ for (const width of [390, 1280]) {
       expect((await statusButton.getAttribute('class'))?.replace(' active', '')).toBe(originalShape?.replace(' active', ''));
       await page.reload({ waitUntil: 'domcontentloaded' });
       await expect.poll(() => statusButton.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(19, 87, 155)');
+      await statusButton.scrollIntoViewIfNeeded();
       await page.screenshot({ path: testInfo.outputPath('status-color-persisted.png'), fullPage: false });
       await favorite.click();
       await actions.locator('button[data-action="toggle-favorite"]').click();
