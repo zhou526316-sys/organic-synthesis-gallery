@@ -1,9 +1,17 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-22T18:33:00+08:00",
-  "requestedBy": "chatgpt-recovery-design",
-  "reason": "Formalize push-trigger bridge so ChatGPT scheduled tasks can invoke the GitHub Node literature audit without workflow_dispatch.",
+  "requestedAt": "2026-09-22T18:59:06+08:00",
+  "requestedBy": "scheduled-automation-bridge-test",
+  "testRunId": "20260922-185906-auto-bridge",
+  "reason": "End-to-end scheduled automation bridge validation without modifying production literature decisions.",
   "targetBranch": "main",
-  "windowPolicy": "Asia/Shanghai current day plus previous two calendar days; retain seven-day safety tail",
-  "note": "Updating this file is a signal only. The GitHub workflow owns machine discovery/audit; semantic include/exclude remains a ChatGPT review responsibility."
+  "primaryWindow": {
+    "timezone": "Asia/Shanghai",
+    "startDate": "2026-09-20",
+    "endDate": "2026-09-22",
+    "days": 3
+  },
+  "safetyTailDays": 7,
+  "windowPolicy": "Asia/Shanghai current day plus previous two calendar days; retain seven-day machine safety tail",
+  "note": "Signal only. GitHub Actions owns machine discovery/audit; this test must not modify accepted/rejected production literature data."
 }
