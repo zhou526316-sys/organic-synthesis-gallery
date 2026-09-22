@@ -1,0 +1,44 @@
+name: Apply reviewed summary layout integration once
+on:
+  push:
+    branches: [fix/ui-summary-readable-20260923]
+    paths: [.github/workflows/ui29-apply-layout-once.yml]
+permissions:
+  contents: write
+jobs:
+  integrate:
+    if: github.repository == 'zhou526316-sys/organic-synthesis-gallery'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Apply only the previously inspected component edits
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          p = Path('src/user-ui/paper-actions.ts')
+          assert subprocess.check_output(['git', 'hash-object', str(p)], text=True).strip() == 'fb9bb7b09d1903014ac171bc7c56164e6ab51416', 'Component changed: re-review before applying'
+          text = p.read_text()
+          def replace(old, new):
+              global text
+              assert text.count(old) == 1, ('Expected one integration point', old)
+              text = text.replace(old, new)
+          replace("const NAME = 'gallery-paper-actions';", "import { positionSummaryPanel, SUMMARY_PANEL_STYLES } from './summary-panel-layout';\n\nconst NAME = 'gallery-paper-actions';")
+          replace('    if (!anchor || !drawer) return;\n', "    if (!anchor || !drawer) return;\n    if (this.panel === 'summary') {\n      positionSummaryPanel(drawer, anchor, this);\n      return;\n    }\n")
+          replace("    window.addEventListener('resize', this.reposition);", "    window.addEventListener('resize', this.reposition);\n    window.visualViewport?.addEventListener('resize', this.reposition);\n    window.visualViewport?.addEventListener('scroll', this.reposition);")
+          replace("    window.removeEventListener('resize', this.reposition);", "    window.removeEventListener('resize', this.reposition);\n    window.visualViewport?.removeEventListener('resize', this.reposition);\n    window.visualViewport?.removeEventListener('scroll', this.reposition);")
+          replace('    </style>${this.chips(paper, status)}', '      ${SUMMARY_PANEL_STYLES}\n    </style>${this.chips(paper, status)}')
+          # The early summary return narrows this.panel; keep other caps unchanged.
+          replace("    const cap = this.panel === 'summary' ? (window.innerWidth <= 680 ? 620 : 680) : (window.innerWidth <= 680 ? 520 : 560);", "    const cap = window.innerWidth <= 680 ? 520 : 560;")
+          p.write_text(text)
+          PY
+          git diff --check
+          git diff -- src/user-ui/paper-actions.ts
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/user-ui/paper-actions.ts
+          git commit -m 'feat(ui): connect larger summary-only layout and visual viewport resizing'
+          git push origin HEAD:fix/ui-summary-readable-20260923
