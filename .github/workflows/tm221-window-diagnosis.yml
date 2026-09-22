@@ -1,0 +1,43 @@
+name: Diagnose Tampermonkey window burst
+on:
+  push:
+    branches: [fix/tm221-window-burst]
+    paths: ['.github/workflows/tm221-window-diagnosis.yml']
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read latest user-uploaded diagnostics and public release
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm221"
+          node --input-type=module - <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          const root=process.env.RUNNER_TEMP+'/tm221/';
+          const worker='https://organic-synthesis-gallery.zhou526316.workers.dev';
+          const site='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+          for(const [name,url] of [['diagnostics.json',worker+'/api/media/local-diagnostics'],['reports.json',worker+'/api/media/tampermonkey-reports?limit=40'],['live-bridge.user.js',site+'gallery-vpn-bridge.user.js'],['capabilities.json',worker+'/api/media/capture-capabilities']]){
+            const r=await fetch(url,{headers:{origin:'https://zhou526316-sys.github.io','cache-control':'no-cache'},signal:AbortSignal.timeout(20000)});
+            const text=await r.text();
+            console.log(name,r.status,text.length);
+            if(!r.ok) throw new Error(name+' HTTP '+r.status);
+            if(text.length>4000000)throw new Error('oversized response');
+            await writeFile(root+name,text);
+          }
+          JS
+      - name: Snapshot exact baseline for bounded repair
+        run: |
+          git rev-parse HEAD > "$RUNNER_TEMP/tm221/head.txt"
+          tar -czf "$RUNNER_TEMP/tm221/source.tar.gz" public/toc-mainline.user.js cloudflare/scripts cloudflare/worker/src cloudflare/worker/package.json scripts shared .github/workflows package.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm221-window-evidence
+          path: ${{ runner.temp }}/tm221
+          retention-days: 3
