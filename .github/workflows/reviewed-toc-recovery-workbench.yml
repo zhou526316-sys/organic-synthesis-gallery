@@ -1,0 +1,60 @@
+name: Reviewed TOC recovery workbench
+on:
+  push:
+    branches: [fix/restore-reviewed-toc-batch1]
+    paths:
+      - '.github/workflows/reviewed-toc-recovery-workbench.yml'
+      - 'scripts/materialize-reviewed-toc-batch1.py'
+      - 'cloudflare/scripts/merge-reviewed-toc.mjs'
+      - 'scripts/test-reviewed-toc.mjs'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: reviewed-toc-recovery-workbench
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/fix/restore-reviewed-toc-batch1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/restore-reviewed-toc-batch1
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Materialize exact approved evidence and preserve release gates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/materialize-reviewed-toc-batch1.py
+      - name: Test TOC-only recovery safety
+        run: |
+          node --check cloudflare/scripts/merge-reviewed-toc.mjs
+          node scripts/test-reviewed-toc.mjs
+          git diff --check
+      - name: Verify full reviewed bundle against current literature membership
+        run: |
+          printf '{"version":2,"items":{}}' > public/media-index.json
+          node cloudflare/scripts/merge-reviewed-toc.mjs
+          node cloudflare/scripts/verify-static-media-integrity.mjs
+          cp public/toc-recovery-status.json "$RUNNER_TEMP/toc-recovery-dry-run.json"
+      - name: Preserve validation counts
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewed-toc-recovery-dry-run
+          path: ${{ runner.temp }}/toc-recovery-dry-run.json
+          retention-days: 14
+      - name: Save verified bundle to feature branch only
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/fix/restore-reviewed-toc-batch1
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit/media-recovery/assets audit/media-recovery/toc-batch1-manifest.json .github/workflows/github-pages.yml
+          if ! git diff --cached --quiet; then
+            git commit -m 'recovery: preserve reviewed TOC bytes and integrate gated static publication'
+            git push origin HEAD:fix/restore-reviewed-toc-batch1
+          fi
+          echo "VERIFIED_TOC_HEAD=$(git rev-parse HEAD)"
