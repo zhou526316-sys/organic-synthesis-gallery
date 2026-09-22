@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-22T14:28:00+08:00",
+  "timeZone": "Asia/Shanghai",
+  "type": "late-candidate-review",
+  "summary": {
+    "reviewed": 4,
+    "accepted": 0,
+    "rejected": 4,
+    "pending": 0
+  },
+  "accepted": [],
+  "rejected": [
+    {
+      "doi": "10.1021/jacs.6c12434",
+      "journal": "JACS",
+      "date": "2026-09-22",
+      "title": "Tower Loop Engineering Converts a Low-Potential Bacterial Laccase into a High-Potential Laccase with Tunable Catalytic Activity",
+      "authors": [
+        "Jing-Xiang Wang",
+        "Evan N. Mirts",
+        "Lucas H. Williams",
+        "Yi Lu"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "high",
+      "reason": "Protein/metalloenzyme engineering and redox-property tuning rather than development of a general preparative organic synthesis methodology.",
+      "evidenceBasis": "The abstract centers on insertion and mutation of a protein loop around the T1Cu site, tuning laccase reduction potential and catalytic efficiency for biomass valorization/bioelectrocatalysis.",
+      "challengeDecision": "exclude",
+      "challengeReason": "Although the engineered enzyme may be useful as a biocatalyst, the paper does not establish a defined organic preparative transformation with substrate scope; the primary methodology is protein engineering."
+    },
+    {
+      "doi": "10.1002/anie.7061287",
+      "journal": "Angew",
+      "date": "2026-09-21",
+      "title": "Light‐Gated Control of Brownian Rotation by a Molecular Motor",
+      "authors": [
+        "Lukáš Severa",
+        "Kateřina Bezděková",
+        "Katarina Majerová Varga",
+        "Guillaume Bastien",
+        "Miroslav Stroka",
+        "Ivana Císařová",
+        "Martin Dračínský",
+        "Jiří Kaleta"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "reason": "Molecular-machine dynamics/physical-organic study rather than a general preparative reaction or synthesis methodology.",
+      "evidenceBasis": "The abstract focuses on photoisomerization of an overcrowded alkene motor that gates anthracene Brownian rotation, quantified by VT-NMR and DFT.",
+      "challengeDecision": "exclude",
+      "challengeReason": "The molecule itself is synthetically constructed, but the scientific advance is motion control and rotational dynamics, not a transferable synthesis method."
+    },
+    {
+      "doi": "10.1002/anie.4724561",
+      "journal": "Angew",
+      "date": "2026-09-21",
+      "title": "Strong Second‐Order Nonlinear Optical Activities in Chiral Hybrid Copper(I) Bromide Microplates",
+      "authors": [
+        "Zhihang Guo",
+        "Yujie Hong",
+        "Yecheng Leng",
+        "Wenguang Tu",
+        "Xi Zhu",
+        "Tingchao He"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "reason": "Inorganic/hybrid photonic materials study centered on nonlinear optical properties and information encoding, outside organic-synthesis methodology scope.",
+      "evidenceBasis": "The abstract emphasizes chiral Cu(I) bromide microplates, SHG intensity, laser-damage threshold, SHG circular dichroism, and photonic tagging/decoding.",
+      "challengeDecision": "exclude",
+      "challengeReason": "Preparation of the microplates is a materials synthesis step, not a broadly general organic or polymer reaction methodology."
+    },
+    {
+      "doi": "10.1002/anie.2739215",
+      "journal": "Angew",
+      "date": "2026-09-21",
+      "title": "Vacuum‐Induced Surface Reconstruction of Mn–Ce Oxides for Low‐Temperature Coupled Redox Catalysis",
+      "authors": [
+        "Yong Yin",
+        "Yide Jiang",
+        "Zichen Xu",
+        "Min Liu",
+        "Emiliano Cortés",
+        "Yifei Sun"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "high",
+      "reason": "Heterogeneous mixed-oxide catalyst/materials study for NOx removal and chlorobenzene oxidation, without general preparative organic substrate scope.",
+      "evidenceBasis": "The abstract centers on vacuum/O2 reconstruction of Mn–Ce oxide surfaces, oxygen activation, NH3-SCR, and pollutant chlorobenzene oxidation performance.",
+      "challengeDecision": "exclude",
+      "challengeReason": "An organic molecule is oxidized, but the target is environmental redox catalysis and catalyst-material optimization rather than synthesis of organic products; it fails the Gallery's preparative-scope criterion."
+    }
+  ],
+  "pending": [],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0
+  }
+}
