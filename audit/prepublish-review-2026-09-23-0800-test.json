@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "kind": "prepublish-review-test",
+  "targetPublicationSlot": "2026-09-23T08:00:00+08:00",
+  "createdAt": "2026-09-22T19:22:00+08:00",
+  "productionMutationAllowed": false,
+  "sourceAuditGeneratedAt": "2026-09-22T11:09:37.107Z",
+  "sourceAuditSummary": {
+    "sourceRecords": 554,
+    "galleryDois": 512,
+    "missingFromGallery": 7,
+    "unresolved": 7,
+    "potentialGaps": 3,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 0,
+    "historicalCoverageLosses": 0
+  },
+  "result": "incomplete_review",
+  "reviewed": 0,
+  "accepted": 0,
+  "rejected": 0,
+  "pending": 7,
+  "remainingUnresolvedCount": 7,
+  "qualityControl": {
+    "secondPassCompleted": false,
+    "unresolvedDisagreements": 7,
+    "failClosed": true,
+    "reason": "The fresh audit is valid, but the connected GitHub read surface truncates the large one-line audit/latest.json before exposing the complete seven-record unresolved candidate array. The task can verify the aggregate unresolved count and several visible candidates, but cannot honestly claim exhaustive DOI-level two-pass review without the complete candidate payload. No decisions were fabricated."
+  },
+  "sourceChecks": [
+    {"journal":"Nature","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"This chain test used the fresh machine DOI-union audit; exhaustive publisher-page cross-check was not completed before the test write."},
+    {"journal":"Science","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Nature Catalysis","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Nature Synthesis","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Nature Chemistry","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Nature Communications","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"JACS","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Angew","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"ACS Catalysis","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Organic Letters","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Chem","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Chemical Science","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"CCS Chemistry","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Science Advances","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"Green Chemistry","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."},
+    {"journal":"JOC","status":"unavailable","candidateCount":null,"syntheticTitleCount":0,"sourceType":"test-runtime","reason":"Same."}
+  ],
+  "visibleCandidateEvidence": [
+    {"doi":"10.1021/jacs.6c17644","provisionalScope":"include","reason":"Abstract describes a broad enantioselective C(sp2)-H allylation/defluorinative coupling with substrate scope and high ee; final decision withheld because the required exhaustive batch and challenge pass were not completed."},
+    {"doi":"10.1021/acs.joc.6c01559","provisionalScope":"include","reason":"Abstract describes a diversity-oriented one-pot multicomponent synthetic strategy/library; final decision withheld pending exhaustive batch/challenge pass."},
+    {"doi":"10.1021/acs.orglett.6c03473","provisionalScope":"include","reason":"Abstract describes a Pd/NBE Catellani C1-H amination with broad cyclic-amine scope and functional-group tolerance; final decision withheld pending exhaustive batch/challenge pass."},
+    {"doi":"10.1038/d41586-026-02818-5","provisionalScope":"exclude","reason":"Nature news item about journal fees, not synthetic methodology; final decision withheld pending exhaustive batch/challenge pass."}
+  ],
+  "productionDataChanged": false,
+  "oaPdfHtmlExtractionRun": false,
+  "nextAction": "Improve the audit handoff so semantic-review tasks receive a compact complete unresolved-candidate artifact rather than depending on a very large one-line audit/latest.json. Until then the fixed-slot release must fail closed when any candidate cannot be exhaustively reviewed."
+}
