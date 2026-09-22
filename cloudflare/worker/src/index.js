@@ -352,7 +352,7 @@ async function handleApi(request, env) {
     return resultResponse(await getArticleFigures(request, env), cors);
   }
   if(request.method==='GET' && url.pathname==='/api/media/capture-capabilities') {
-    return json({captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:false}, {headers:cors});
+    return json({captureVersion:'6.2.21',mediaGeneration:1790082000000,mode:'verified-browser-publication',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:true}, {headers:cors});
   }
   if (request.method === 'GET' && url.pathname === '/api/article-figures/staged') {
     return resultResponse(await getStagedArticleFigures(request, env), cors);
@@ -542,13 +542,13 @@ export default {
     ctx.waitUntil((async () => {
       try {
         const [databaseSweep, localSweep] = await Promise.all([
-          purgeCrossDoiMedia(env, { dryRun: false }),
-          purgeCrossDoiLocalMedia(env, { dryRun: false }),
+          purgeCrossDoiMedia(env, { dryRun: true }),
+          purgeCrossDoiLocalMedia(env, { dryRun: true }),
         ]);
         const purged = Number(databaseSweep.body?.summary?.affectedDois || 0) +
           Number(localSweep.body?.summary?.affectedDois || 0);
         if (purged > 0) {
-          console.warn('CROSS_DOI_MEDIA_PURGED', JSON.stringify({
+          console.warn('CROSS_DOI_MEDIA_AUDIT_ONLY', JSON.stringify({
             database: databaseSweep.body?.summary || {},
             local: localSweep.body?.summary || {},
           }));

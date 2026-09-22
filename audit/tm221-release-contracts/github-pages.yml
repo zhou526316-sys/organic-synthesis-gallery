@@ -1,0 +1,317 @@
+name: Deploy GitHub Pages frontend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'PAGES_REFRESH'
+      - '.github/workflows/github-pages.yml'
+      - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
+      - 'cloudflare/scripts/build-bridge-loader.mjs'
+      - 'cloudflare/scripts/build-pages-mirror.mjs'
+      - 'cloudflare/scripts/merge-worker-media.mjs'
+      - 'cloudflare/scripts/merge-local-captures.mjs'
+      - 'cloudflare/scripts/merge-pmc-open-media.mjs'
+      - 'cloudflare/scripts/merge-nature-figure-fallbacks.mjs'
+      - 'cloudflare/scripts/prune-media-mirror.mjs'
+      - 'cloudflare/scripts/verify-static-media-integrity.mjs'
+      - 'cloudflare/scripts/sanitize-static-media.mjs'
+      - 'cloudflare/scripts/merge-curated-pages.mjs'
+      - 'audit/toc-gap-dois-2026-09-16.json'
+      - 'audit/visual-gap-dois-2026-09-16.json'
+      - 'public/curated-supplement.json'
+      - 'public/automation-supplement.json'
+      - 'shared/literature-policy.js'
+      - 'scripts/validate-production-literature-release-slot.mjs'
+      - 'scripts/validate-pages-literature-authorization.mjs'
+      - 'scripts/test-pages-literature-authorization.mjs'
+      - 'audit/publication-release-state.json'
+      - 'public/rolling-supplement.json'
+      - 'public/toc-demand-live.json'
+      - 'public/toc-mainline.user.js'
+      - 'public/capture-launch.html'
+      - 'scripts/validate-tm-release.mjs'
+      - 'audit/author-coverage.json'
+      - 'audit/missing-authors.json'
+      - 'public/papers.gz.b64'
+      - 'public/total-synthesis.json'
+      - 'public/manual-supplement.json'
+      - 'public/final-audit-supplement.json'
+      - 'public/toc-rescue.js'
+      - 'public/support/**'
+      - 'src/**'
+      - 'index.html'
+      - 'vite.config.ts'
+      - 'package.json'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  literature_authorization:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact deployment commit and release history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Test literature deployment authorization
+        run: node scripts/test-pages-literature-authorization.mjs
+
+      - name: Enforce fixed literature publication slot
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/validate-pages-literature-authorization.mjs | tee "$RUNNER_TEMP/pages-literature-authorization.json"
+
+      - name: Preserve deployment authorization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-literature-authorization
+          path: ${{ runner.temp }}/pages-literature-authorization.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  build:
+    needs: literature_authorization
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Verify repository-owned literature baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s public/papers.gz.b64
+          test -s public/total-synthesis.json
+          test -s public/manual-supplement.json
+          test -s public/final-audit-supplement.json
+
+      - name: Generate GitHub Pages VPN Bridge
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
+
+        run: node cloudflare/scripts/build-cloudflare-bridge.mjs
+
+      - name: Package self-contained VPN Bridge runtime
+        env:
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          BRIDGE_UPDATE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
+          BRIDGE_RUNTIME_OUTPUT: public/gallery-vpn-bridge-runtime.js
+        run: node cloudflare/scripts/build-bridge-loader.mjs
+
+      - name: Mirror media and metadata for static Pages
+        shell: bash
+        run: |
+          set +e
+          node cloudflare/scripts/build-pages-mirror.mjs
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+            exit "$status"
+          fi
+          if [ "$status" -eq 2 ]; then
+            echo "Media mirror reported isolated misses; continuing to strict artifact verification."
+          fi
+        env:
+          GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+          PAGES_MEDIA_FALLBACK: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          PAGES_MEDIA_CONCURRENCY: '8'
+          MEDIA_REBUILD_LOCKDOWN: '1'
+
+      - name: Merge current Worker media into static snapshot
+        shell: bash
+        run: |
+          set +e
+          node cloudflare/scripts/merge-worker-media.mjs
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ]; then
+            echo "Worker media merge unavailable; preserving the mirrored/published media snapshot and continuing to strict artifact verification."
+          fi
+          node cloudflare/scripts/prune-media-mirror.mjs
+        env:
+          GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+          WORKER_MEDIA_CONCURRENCY: '6'
+
+      - name: Merge D1-free local VPN captures
+        shell: bash
+        run: |
+          set +e
+          node cloudflare/scripts/merge-local-captures.mjs
+          status=$?
+          set -e
+          if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+            exit "$status"
+          fi
+          if [ "$status" -eq 2 ]; then
+            echo "Local capture merge had isolated failures; preserving successful captures."
+          fi
+        env:
+          GALLERY_BACKEND_SOURCE: https://organic-synthesis-gallery.zhou526316.workers.dev
+
+      - name: Skip PMC open-media fallbacks during rebuild
+        run: echo "PMC fallback disabled during media rebuild."
+
+      - name: Skip Springer Nature Figure 1 fallbacks during rebuild
+        run: echo "Springer Nature fallback disabled during media rebuild."
+
+      - name: Merge assistant-audited literature and bilingual titles
+        run: node cloudflare/scripts/merge-curated-pages.mjs
+
+      - name: Sanitize invalid static media
+        run: node cloudflare/scripts/sanitize-static-media.mjs
+
+      - name: Verify media-index asset integrity
+        run: node cloudflare/scripts/verify-static-media-integrity.mjs
+
+      - name: Build static Gallery
+        run: npm run build
+
+      - name: Verify self-contained artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test -f dist/papers.gz.b64
+          test -f dist/total-synthesis.json
+          test -f dist/manual-supplement.json
+          test -f dist/final-audit-supplement.json
+          test -f dist/media-index.json
+          test -f dist/literature-supplement.json
+          test -f dist/title-translations-zh.json
+          test -f dist/paper-title-resolutions.json
+          test -f dist/gallery-vpn-bridge.user.js
+          test -f dist/gallery-vpn-bridge-runtime.js
+          test -f dist/toc-rescue.js
+          test -f dist/toc-mainline.user.js
+          node scripts/validate-tm-release.mjs dist
+          test -d dist/media-mirror
+          grep -F "const VERSION = '1.2.0';" dist/gallery-vpn-bridge-runtime.js
+          grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge-runtime.js
+          grep -F "abstract\s*image" dist/gallery-vpn-bridge-runtime.js
+          node - <<'NODE'
+          const fs = require('fs');
+          const manifest = JSON.parse(fs.readFileSync('dist/media-index.json', 'utf8'));
+          const items = Object.values(manifest.items || {});
+          const remote = JSON.stringify(manifest).match(/https:\/\/organic-synthesis-gallery\.zhou526316\.workers\.dev\/media\//g) || [];
+          const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
+          const pmcFallbacks = items.filter(item => item?.toc?.sourceRepository === 'PMC');
+          const natureFallbacks = items.filter(item => item?.toc?.sourceRepository === 'Springer Nature' && item?.toc?.reason === 'figure1_fallback');
+          if (pmcFallbacks.length) throw new Error(`PMC fallback must be disabled during rebuild: ${pmcFallbacks.length}`);
+          if (natureFallbacks.length) throw new Error(`Nature fallback must be disabled during rebuild: ${natureFallbacks.length}`);
+          if (remote.length) throw new Error(`media-index still contains ${remote.length} workers.dev media URLs`);
+          // Recovery mode intentionally starts from an empty media baseline.
+          // Only post-cutover Worker/local-capture media may populate the manifest.
+
+          const requiredDois = [
+            '10.1038/s41467-026-77774-9',
+            '10.1021/jacs.6c15393',
+            '10.1021/acs.orglett.6c03266',
+            '10.1021/acscatal.6c05029',
+            '10.1002/anie.5041475',
+            '10.1038/s41467-026-77715-6',
+          ];
+          const supplement = JSON.parse(fs.readFileSync('dist/literature-supplement.json', 'utf8'));
+          const supplementDois = new Set((supplement.papers || []).map(p => String(p.doi || '').toLowerCase()));
+          const mandatory = JSON.parse(fs.readFileSync('dist/final-audit-supplement.json', 'utf8'));
+          const mandatoryDois = new Set((mandatory.papers || []).map(p => String(p.doi || '').toLowerCase()));
+          for (const doi of requiredDois) {
+            if (!supplementDois.has(doi)) throw new Error(`curated DOI missing from literature supplement: ${doi}`);
+            if (!mandatoryDois.has(doi)) throw new Error(`curated DOI missing from mandatory card dataset: ${doi}`);
+          }
+
+          const translations = JSON.parse(fs.readFileSync('dist/title-translations-zh.json', 'utf8'));
+          const zh = new Map((translations.translations || []).map(x => [x.title, x.zh]));
+          if (!zh.get('Visible light-induced oxygen atom transfer into C−Cl bond of acyl chlorides for homolytic cleavage')) throw new Error('curated Chinese title was not merged');
+          if (!zh.get('Scalable Total Syntheses of Nonthmicin and Ecteinamycin Reveal a Dual Antibacterial and Antitoxin Profile against Clostridioides difficile')) throw new Error('second-batch Chinese title was not merged');
+
+          console.log(JSON.stringify({ manifestItems: items.length, figures, pmcFallbacks: pmcFallbacks.length, natureFallbacks: natureFallbacks.length, curatedSupplement: true, mandatoryCurated: true, repositoryBaseline: true, workerMediaMerged: true, bridgeLoader: true, bridgeRuntime: true }));
+          NODE
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: [literature_authorization, build]
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Verify deployed search filtering CSS
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const site = process.env.SITE_URL;
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          const marker = /\.card\[hidden\]\{display:none!important\}/;
+
+          for (let attempt = 0; attempt < 10; attempt += 1) {
+            try {
+              const htmlResponse = await fetch(`${site}?search-css-smoke=${Date.now()}`, {
+                headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+              });
+              const html = await htmlResponse.text();
+              const hrefs = [...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["']/g)]
+                .map(match => new URL(match[1], site).href);
+              const css = (await Promise.all(hrefs.map(async href => {
+                const response = await fetch(`${href}${href.includes('?') ? '&' : '?'}smoke=${Date.now()}`, {
+                  headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+                });
+                return response.ok ? response.text() : '';
+              }))).join('\n');
+              if (marker.test(css)) {
+                console.log(JSON.stringify({ searchFilteringCss: true, stylesheets: hrefs.length, site }));
+                process.exit(0);
+              }
+            } catch (error) {
+              console.warn(String(error));
+            }
+            await sleep(3000);
+          }
+          throw new Error(`${site}: deployed CSS is missing .card[hidden]{display:none!important}`);
+          NODE

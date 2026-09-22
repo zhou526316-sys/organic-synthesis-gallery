@@ -8,7 +8,7 @@ assert.ok(a >= 0 && b > a);
 const fn = source.slice(a, b);
 assert.ok(!fn.includes('FIGURE_IMPORT_ENDPOINT'), 'Recovery capture must not call the deliberately locked import route');
 const doi = '10.1021/acs.joc.6c01302';
-const job = { doi, jobId: '12345678-1234-1234-1234-123456789012', captureVersion: '6.2.20' };
+const job = { doi, jobId: '12345678-1234-1234-1234-123456789012', captureVersion: '6.2.21' };
 const candidate = { label: 'Scheme 3', text: 'Substrate scope', url: 'https://pubs.acs.org/view-large/figure/257975651/jo6c01302_0003.svg' };
 const image = { width: 668, height: 468, byteLength: 200, imageData: 'data:image/svg+xml;base64,PHN2Zy8+' };
 const valid = { doi, id: 'scheme-3', stored: true, staged: true, width: 668, height: 468, imageUrl: 'https://example.test/media/a.svg' };
@@ -16,7 +16,7 @@ let passed = 0;
 async function scenario(name, options = {}) {
   const requests = []; const trace = []; let guardCalls = 0;
   const ctx = vm.createContext({
-    VERSION: '6.2.20', location: { href: 'https://pubs.acs.org/doi/' + doi },
+    VERSION: '6.2.21', location: { href: 'https://pubs.acs.org/doi/' + doi },
     FIGURE_STAGE_ENDPOINT: '/api/article-figures/stage',
     normalizeDoi: x => String(x || '').toLowerCase(),
     assertBoundCaptureJob: () => {

@@ -31,7 +31,7 @@ try{
  });
  await page.goto(base+'/doi/full/'+doi+'#osg-job='+jobId);
  await page.evaluate(({doi,jobId})=>{
-  const storage={'osg-toc-v6:active-job':{doi,jobId,captureVersion:'6.2.20',publisher:'acs',mediaNeed:'toc+figures',captureToc:true,startedAt:new Date().toISOString()},'osg-toc-v6:write-token':'fixture-only-no-production-token'};
+  const storage={'osg-toc-v6:active-job':{doi,jobId,captureVersion:'6.2.21',publisher:'acs',mediaNeed:'toc+figures',captureToc:true,startedAt:new Date().toISOString()},'osg-toc-v6:write-token':'fixture-only-no-production-token'};
   window.__gm=storage;window.GM_getValue=(k,d)=>k in storage?storage[k]:d;window.GM_setValue=(k,v)=>{storage[k]=v;};window.GM_deleteValue=k=>{delete storage[k];};
   window.GM_listValues=()=>Object.keys(storage);window.GM_registerMenuCommand=()=>{};
   window.GM_xmlhttpRequest=opts=>{
@@ -74,12 +74,12 @@ try{
  test('paired success does not claim publication',result.published===false&&result.figuresImported===0);
  test('nonce-specific result acknowledgement is written',await page.evaluate(jobId=>__gm['osg-toc-v6:result:10.1021/acs.joc.6c01302'].jobId===jobId,jobId));
  const before=posts.length;
- await page.evaluate(()=>{Object.keys(__gm).filter(k=>k.includes('verified-capture:')).forEach(k=>delete __gm[k]);__gm['osg-toc-v6:active-job'].captureToc=true;document.querySelector('#graphicalAbstract').remove();});
+ await page.evaluate(()=>{document.querySelector('#graphicalAbstract').remove();Object.keys(__gm).filter(k=>k.includes('checkpoint:')).forEach(k=>delete __gm[k]);});
  const partial=await page.evaluate(async()=>__captureTest.runPublisherJob(__gm['osg-toc-v6:active-job']));
  test('missing TOC does not stop body capture',partial.figuresStaged===2&&partial.toc.status==='not_found'&&partial.status==='partial');
  test('body still receives two storage receipts without TOC',posts.slice(before).filter(r=>r.url.endsWith('/stage')).length===2);
  await page.evaluate(()=>{__gm['osg-toc-v6:active-job'].jobId='old-task-must-not-bind';});
- let rejected=false;try{await page.evaluate(({doi,jobId})=>__captureTest.runPublisherJob({doi,jobId,captureVersion:'6.2.20'}),{doi,jobId});}catch(_){rejected=true;}
+ let rejected=false;try{await page.evaluate(({doi,jobId})=>__captureTest.runPublisherJob({doi,jobId,captureVersion:'6.2.21'}),{doi,jobId});}catch(_){rejected=true;}
  test('stale task is refused before capture',rejected);
  const out=process.env.RUNNER_TEMP||'/tmp';
  await page.screenshot({path:out+'/paired-capture-fixture.png',fullPage:true});

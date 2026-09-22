@@ -1,3 +1,4 @@
+import { inspectBrowserImage, publishVerifiedBrowserMedia, fullDigest } from './verified-browser-media.js';
 import { normalizeDoi } from './media.js';
 import { importFigure } from './media-write.js';
 
@@ -63,7 +64,7 @@ function captureBelongsToDoi(item, doi) {
 }
 
 function captureIntakeError(payload, doi) {
-  if (payload?.captureVersion !== '6.2.20') return 'capture_client_upgrade_required';
+  if (payload?.captureVersion !== '6.2.21') return 'capture_client_upgrade_required';
   if (!/^[a-z0-9-]{16,80}$/i.test(String(payload?.jobId || ''))) return 'capture_job_binding_missing';
   if (normalizeDoi(payload?.pageDoi || '') !== doi) return 'capture_page_doi_unverified';
   if (!safeUrl(payload?.articleUrl) || !safeUrl(payload?.sourceUrl)) return 'capture_source_evidence_missing';
@@ -91,14 +92,7 @@ function parseImageData(value) {
   if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) return null;
   const declaredType = match[1].toLowerCase().replace('image/jpg', 'image/jpeg');
   const contentType = sniffImageType(bytes, declaredType);
-  if (contentType === 'image/svg+xml') {
-    const xml = new TextDecoder().decode(bytes);
-    if (!/<svg[\s>]/i.test(xml) || /<!DOCTYPE|<!ENTITY|<(?:script|foreignObject|iframe|object|embed|animate\w*|set)\b|\son[a-z]+\s*=|@import/i.test(xml)) return null;
-    for (const m of xml.matchAll(/(?:xlink:)?href\s*=\s*(["'])(.*?)\1/gi)) {
-      if (!m[2].startsWith('#') && !/^data:image\/(?:png|jpeg|gif|webp);base64,/i.test(m[2])) return null;
-    }
-    if (/url\(\s*["']?\s*(?:https?:|\/\/|data:)|&#(?:x[0-9a-f]+|\d+);/i.test(xml)) return null;
-  }
+  if(!inspectBrowserImage(bytes,contentType))return null;
   return { bytes, contentType };
 }
 
@@ -490,31 +484,13 @@ export async function importStagedArticleFigure(request, env, payload) {
   const previous = index.items[identity];
   const previousPixels = Math.max(0, Number(previous?.width || 0)) * Math.max(0, Number(previous?.height || 0));
   const nextPixels = width * height;
-  if (previous && previous.captureVersion==='6.2.20' && previous.pageDoi===doi && Number(previous.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(previous, doi) && previousPixels > 0 && nextPixels > 0 && previousPixels > nextPixels) {
-    return {
-      status: 200,
-      body: {
-        stored: true,
-        staged: true,
-        retainedHigherResolution: true,
-        doi,
-        id: sourceId,
-        width: Number(previous.width || 0),
-        height: Number(previous.height || 0),
-        imageUrl: previous.r2Key ? publicMediaUrl(request, previous.r2Key) : undefined,
-      },
-    };
-  }
-
   const key = ARTICLE_FIGURE_STAGE_PREFIX + doiHash.slice(0, 24) + '/' +
     sourceId + '-' + hash.slice(0, 16) + '.' + extensionFor(image.contentType);
   await env.MEDIA.put(key, image.bytes, {
     httpMetadata: { contentType: image.contentType, cacheControl: 'public, max-age=31536000, immutable' },
     customMetadata: { doi, sourceId, contentHash, source: 'tampermonkey-article-figure-stage' },
   });
-  if (previous?.r2Key && previous.r2Key !== key) {
-    try { await env.MEDIA.delete(previous.r2Key); } catch {}
-  }
+  // Never delete an immutable image referenced by a formal D1 record.
 
   const now = Date.now();
   index.items[identity] = {
@@ -523,6 +499,7 @@ export async function importStagedArticleFigure(request, env, payload) {
     captureVersion: payload.captureVersion,
     pageDoi: payload.pageDoi,
     mediaGeneration: MEDIA_REBUILD_EPOCH,
+    sha256: hash,
     id: sourceId,
     label,
     caption,
@@ -543,9 +520,11 @@ export async function importStagedArticleFigure(request, env, payload) {
     httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
   });
 
+  const publication=await publishVerifiedBrowserMedia(env,index.items[identity],image.bytes);
   return {
     status: 200,
     body: {
+      ...publication,
       stored: true,
       staged: true,
       doi,
@@ -595,77 +574,14 @@ function bytesToBase64(bytes) {
   return btoa(out);
 }
 
-export async function promoteStagedArticleFigures(request, env, payload = {}) {
-  if (!env?.MEDIA || !env?.DB) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
-  const index = await readArticleFigureStageIndex(env);
-  const requestedDoi = normalizeDoi(payload?.doi || '');
-  const limit = Math.max(1, Math.min(100, Number(payload?.limit || 25)));
-  const items = Object.entries(index.items || {})
-    .filter(([, item]) => Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(item, item?.doi))
-    .filter(([, item]) => !requestedDoi || normalizeDoi(item?.doi) === requestedDoi)
-    .sort((a, b) => Number(a[1]?.updatedAt || 0) - Number(b[1]?.updatedAt || 0))
-    .slice(0, limit);
-
-  const promoted = [];
-  const failed = [];
-  let indexChanged = false;
-
-  for (const [identity, item] of items) {
-    try {
-      const object = item?.r2Key ? await env.MEDIA.get(item.r2Key) : null;
-      if (!object) throw new Error('staged_r2_object_missing');
-      const bytes = new Uint8Array(await object.arrayBuffer());
-      if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) throw new Error('staged_image_size_invalid');
-      const contentType = item.contentType || object.httpMetadata?.contentType || 'image/jpeg';
-      const imageData = 'data:' + contentType + ';base64,' + bytesToBase64(bytes);
-      const result = await importFigure(request, env, {
-        doi: item.doi,
-        articleUrl: item.articleUrl,
-        sourceUrl: item.sourceUrl,
-        id: item.id,
-        label: item.label,
-        caption: item.caption,
-        order: Number(item.sortOrder || 0),
-        width: Number(item.width || 0) || undefined,
-        height: Number(item.height || 0) || undefined,
-        imageData,
-      });
-      if (Number(result?.status || 500) < 200 || Number(result?.status || 500) >= 300) {
-        throw new Error('figure_import_status_' + String(result?.status || 0));
-      }
-      promoted.push({ doi: item.doi, id: item.id, r2Key: item.r2Key });
-      delete index.items[identity];
-      indexChanged = true;
-      try { await env.MEDIA.delete(item.r2Key); } catch {}
-    } catch (error) {
-      failed.push({
-        doi: item?.doi || '',
-        id: item?.id || '',
-        error: safeText(error instanceof Error ? error.message : error, 240),
-      });
-    }
-  }
-
-  if (indexChanged) {
-    index.version = 1;
-    index.updatedAt = Date.now();
-    await env.MEDIA.put(ARTICLE_FIGURE_STAGE_INDEX_KEY, JSON.stringify(index), {
-      httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
-    });
-  }
-
-  return {
-    status: failed.length && !promoted.length ? 503 : 200,
-    body: {
-      requested: items.length,
-      promoted: promoted.length,
-      failed: failed.length,
-      remaining: Object.keys(index.items || {}).length,
-      promotedItems: promoted,
-      failedItems: failed.slice(0, 20),
-      updatedAt: Date.now(),
-    },
-  };
+export async function promoteStagedArticleFigures(request,env,payload={}) {
+  if(!env?.MEDIA||!env?.DB)return {status:503,body:{error:'Media bindings unavailable'}};
+  const index=await readArticleFigureStageIndex(env);
+  const selected=Object.values(index.items||{}).filter(item=>item.captureVersion==='6.2.21'&&item.sha256&&Number(item.updatedAt)>=MEDIA_REBUILD_EPOCH&&captureBelongsToDoi(item,item.doi)&&(!payload.doi||item.doi===normalizeDoi(payload.doi))).slice(0,Math.min(100,Number(payload.limit||25)));
+  const results=[];
+  for(const item of selected)results.push({doi:item.doi,id:item.id,...await publishVerifiedBrowserMedia(env,item)});
+  // Do not mutate the shared staging index or delete R2 evidence while a browser is capturing.
+  return {status:200,body:{requested:selected.length,promoted:results.filter(r=>r.apiAvailable).length,failed:results.filter(r=>!r.apiAvailable).length,retainedEvidence:true,results}};
 }
 
 export async function importLocalCapture(request, env, payload) {
@@ -699,6 +615,7 @@ export async function importLocalCapture(request, env, payload) {
     captureVersion: payload.captureVersion,
     pageDoi: payload.pageDoi,
     mediaGeneration: MEDIA_REBUILD_EPOCH,
+    sha256: hash,
     kind,
     r2Key: key,
     contentHash: hash.slice(0, 32),
@@ -717,9 +634,11 @@ export async function importLocalCapture(request, env, payload) {
     httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
   });
 
+  const publication=await publishVerifiedBrowserMedia(env,index.items[identity],image.bytes);
   return {
     status: 200,
     body: {
+      ...publication,
       stored: true,
       doi,
       kind,
@@ -744,6 +663,9 @@ export async function getLocalCaptureIndex(request, env) {
   return {
     status: 200,
     body: {
+      captureVersion: '6.2.21',
+      verifiedPublication: true,
+      mediaGeneration: MEDIA_REBUILD_EPOCH,
       version: Number(index.version || 1),
       updatedAt: Number(index.updatedAt || 0),
       count: items.length,

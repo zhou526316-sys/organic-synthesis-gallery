@@ -85,6 +85,9 @@ async function mapConcurrent(items, concurrency, worker) {
 
 function extensionFor(contentType, url) {
   const type = String(contentType || '').split(';')[0].trim().toLowerCase();
+  if (type === 'image/svg+xml') return 'svg';
+  if (type === 'image/svg+xml') return 'svg';
+  if (type === 'image/svg+xml') return 'svg';
   if (type === 'image/png') return 'png';
   if (type === 'image/webp') return 'webp';
   if (type === 'image/gif') return 'gif';
@@ -143,7 +146,7 @@ function mergeFigures(existing = [], incoming = []) {
   }
   return [...merged.values()]
     .sort((a, b) => Number(a?.order || 0) - Number(b?.order || 0))
-    .slice(0, 10);
+    .slice(0, 24);
 }
 
 function inventoryFor(item) {
