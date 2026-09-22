@@ -258,6 +258,28 @@ CREATE TABLE IF NOT EXISTS paper_open_reader_counts_v3 (
   updated_at INTEGER NOT NULL
 );
 
+
+-- Site-level pageview analytics from this schema generation onward.
+-- ip_hash is salted server-side from CF-Connecting-IP; raw IP addresses are never stored.
+-- page_path excludes query strings; referrer_host stores only the hostname.
+CREATE TABLE IF NOT EXISTS site_pageviews_v1 (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ip_hash TEXT NOT NULL,
+  page_path TEXT NOT NULL,
+  referrer_host TEXT NOT NULL DEFAULT '',
+  device_type TEXT NOT NULL CHECK (device_type IN ('desktop', 'mobile', 'tablet', 'other')),
+  beijing_date TEXT NOT NULL,
+  viewed_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_site_pageviews_v1_date
+  ON site_pageviews_v1(beijing_date, viewed_at);
+CREATE INDEX IF NOT EXISTS idx_site_pageviews_v1_ip
+  ON site_pageviews_v1(ip_hash, viewed_at);
+CREATE INDEX IF NOT EXISTS idx_site_pageviews_v1_referrer
+  ON site_pageviews_v1(referrer_host, viewed_at);
+CREATE INDEX IF NOT EXISTS idx_site_pageviews_v1_device
+  ON site_pageviews_v1(device_type, viewed_at);
+
 -- User-submitted metadata/media corrections enter a review queue; they never edit literature directly.
 CREATE TABLE IF NOT EXISTS paper_feedback (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
