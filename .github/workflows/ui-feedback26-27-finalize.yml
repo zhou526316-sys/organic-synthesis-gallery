@@ -1,0 +1,127 @@
+name: Finalize isolated UI feedback 26 and 27
+
+on:
+  push:
+    branches: [fix/ui-feedback-26-27-20260922]
+    paths: ['.github/workflows/ui-feedback26-27-finalize.yml']
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/ui-feedback-26-27-20260922
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Restore exact first-run candidate, not production data
+        uses: actions/download-artifact@v4
+        with:
+          name: ui-feedback-26-27-verification
+          run-id: 35735548337
+          github-token: ${{ github.token }}
+          path: /tmp/ui-feedback-candidate
+      - name: Align changed requirements and deterministic test fixtures
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, subprocess
+          expected = {
+            'src/user-ui/paper-actions.ts': ('c7348580f8a92fa0a0865d37896671507a7caede', '3d3da5289d75cf4a33f6e43aec3f14d201185ac6dcb8bc894ae5050a0ece37cd'),
+            'tests/mobile-interaction.spec.ts': ('25aa5f7cca8fb5e0a5e6804ec7da572faedda080', 'e0b7e766d17da6a5c4b8c0a58d036f5a353890fd630b6a7eb8a989f17dd6c073'),
+          }
+          for name, (blob, digest) in expected.items():
+              assert subprocess.check_output(['git', 'hash-object', name], text=True).strip() == blob, 'Baseline changed; review required'
+              data = (Path('/tmp/ui-feedback-candidate') / name).read_bytes()
+              assert hashlib.sha256(data).hexdigest() == digest, 'Unexpected candidate bytes'
+              Path(name).write_bytes(data)
+          path = Path('tests/mobile-interaction.spec.ts')
+          t = path.read_text()
+          old = "    ).toBe(color.rgb);"
+          assert t.count(old) == 1
+          t = t.replace(old, "    ).toBe(action === 'status'\n      ? await actions.locator('.chip.status').evaluate(element => getComputedStyle(element).backgroundColor)\n      : color.rgb);", 1)
+          old = "  ).toBe('rgb(51, 102, 153)');"
+          assert t.count(old) == 1
+          t = t.replace(old, "  ).toBe('rgb(18, 52, 86)');", 1)
+          marker = 'for (const width of [390, 1280]) {'
+          assert t.count(marker) == 1
+          before, new_tests = t.split(marker, 1)
+          unused = "      const colorInput = actions.locator('input[data-status-color]').filter({ visible: true });\n"
+          assert new_tests.count(unused) == 1
+          new_tests = new_tests.replace(unused, '', 1)
+          old = "    try {\n      await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });"
+          assert new_tests.count(old) == 1
+          new_tests = new_tests.replace(old, """    // UI-only fixture for the unrelated live-capture endpoint; production capture code is unchanged.
+              await page.route('https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index**', route => route.fulfill({
+                status: 200,
+                headers: { 'access-control-allow-origin': '*' },
+                contentType: 'application/json',
+                body: JSON.stringify({ items: [] }),
+              }));
+              try {
+                await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });""", 1)
+          old = "      await expect(project).toBeChecked();\n      await expect(favorite).toHaveAttribute('title', /已收藏|Saved/);"
+          assert new_tests.count(old) == 1
+          new_tests = new_tests.replace(old, "      await expect(project).toBeChecked();\n      await page.screenshot({ path: testInfo.outputPath('favorite-picker.png'), fullPage: false });\n      await expect(favorite).toHaveAttribute('title', /已收藏|Saved/);", 1)
+          old = "      await page.reload({ waitUntil: 'domcontentloaded' });\n      await expect.poll(() => statusButton.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(19, 87, 155)');"
+          assert new_tests.count(old) == 1
+          new_tests = new_tests.replace(old, old + "\n      await page.screenshot({ path: testInfo.outputPath('status-color-persisted.png'), fullPage: false });", 1)
+          old = "      await testInfo.attach('feedback-actions-failure', { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' });"
+          assert new_tests.count(old) == 1
+          new_tests = new_tests.replace(old, """      try {
+                  const screenshot = testInfo.outputPath('feedback-actions-failure.png');
+                  await page.screenshot({ path: screenshot, fullPage: false });
+                  await testInfo.attach('feedback-actions-failure', { path: screenshot, contentType: 'image/png' });
+                } catch { /* Preserve the original failure even when screenshot capture fails. */ }""", 1)
+          old = "      await testInfo.attach('feedback-actions-diagnostics', { body: JSON.stringify({ errors, diagnostics }, null, 2), contentType: 'application/json' });"
+          assert new_tests.count(old) == 1
+          new_tests = new_tests.replace(old, """      const diagnosticsPath = testInfo.outputPath('feedback-actions-diagnostics.json');
+                await (await import('node:fs/promises')).writeFile(diagnosticsPath, JSON.stringify({ errors, diagnostics }, null, 2));
+                await testInfo.attach('feedback-actions-diagnostics', { path: diagnosticsPath, contentType: 'application/json' });""", 1)
+          path.write_text(before + marker + new_tests)
+          print(subprocess.check_output(['git', 'diff', '--stat'], text=True))
+          PY
+      - name: Install, typecheck and build
+        run: |
+          npm install --no-audit --no-fund
+          npx tsc --noEmit
+          npm run build
+          npm install --no-save --no-package-lock @playwright/test@1.55.0
+          npx playwright install --with-deps webkit
+      - name: Run complete interaction suite with normal CI tracing settings
+        shell: bash
+        run: |
+          set -euo pipefail
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gallery-preview.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then break; fi
+            sleep 1
+          done
+          npx playwright test tests/mobile-interaction.spec.ts --reporter=line --workers=1
+      - name: Save reviewable screenshots and candidate source
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-feedback-26-27-final-verification
+          path: |
+            test-results/
+            src/user-ui/paper-actions.ts
+            tests/mobile-interaction.spec.ts
+          retention-days: 7
+      - name: Commit passing source and tests to the isolated branch only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/user-ui/paper-actions.ts tests/mobile-interaction.spec.ts
+          git diff --cached --name-only
+          git commit -m 'fix(ui): put folder choices on Save and inherit selected reading-status color'
+          git push origin HEAD:fix/ui-feedback-26-27-20260922
