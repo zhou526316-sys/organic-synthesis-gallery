@@ -1,0 +1,104 @@
+{
+  "recordedAt": "2026-09-23T00:41:24+08:00",
+  "context": "UI and feedback continuation after the user's two 继续 messages",
+  "status": "routing_and_cancellation_repair_deployed_partial_feature28_acceptance",
+  "implementationCommit": "15198e4ad8b069e7715faa1954c5f7aea759affe",
+  "pr": 133,
+  "mergedCommit": "d9e11e82b1e32289b2e968005ee124836d4ebf25",
+  "mergeObservation": "This chat re-read PR133 and found its exact tested head already merged by a concurrent operation. No duplicate merge was attempted.",
+  "changes": [
+    "API fallback is restricted to HTTP(S), known API origins and exact /api or /api/ descendants; static data/media retain their requested origins, and blob URLs remain local.",
+    "Cancellation or document navigation no longer triggers an old request's backup attempt. Temporary beforeunload/pagehide observers exist only while a retry-capable call is pending and are removed in finally. They do not prevent navigation or show prompts.",
+    "Caller cancellation and native AbortError preserve the original rejection. The wrapper's own 12-second per-attempt timeout and genuine network failures retain the existing fallback behavior. No response errors or pageerror assertions were suppressed."
+  ],
+  "beforeFix": {
+    "runId": 35753697141,
+    "artifactId": 10705888957,
+    "sha256": "98cd053bf41fef454c882ffb9bc895ad4a2cb2d1ac33883cfc04e7064a86d342",
+    "passed": 7,
+    "failed": 5,
+    "deterministicFailures": ["pre-aborted request starts backup", "in-flight cancellation starts backup", "document reload retries an old request"],
+    "detail": "See audit/ui-feedback/2026-09-23-002901-pr133-cancellation-reproduction.json. The observed navigation retry and access-control error precede pagehide, establishing why a pagehide-only guard would be insufficient for this sequence."
+  },
+  "afterFixCI": {
+    "runId": 35754382060,
+    "artifactId": 10707408668,
+    "sha256": "7a3889dd3e017212b72ad5bddbefe5fcc3a34f3d1918b8b34ad86936ea6b986e",
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "otherSuccessfulChecks": {
+      "siteQualityGate": 35754382014,
+      "migrationCI": 35754382155,
+      "dataValidation": 35754381923
+    },
+    "assertionsRemoved": false,
+    "timeoutsRelaxed": false,
+    "unchangedRerunToGetGreen": false
+  },
+  "deployment": {
+    "workerDeploymentRun": 35754934795,
+    "workerDeploymentConclusion": "success",
+    "liveEntryAssetOnBothAvailableSites": "assets/index-DTfPASUi.js",
+    "liveWorkflowCommit": "75377dd9bc70c5f7a47bb489887f211bb0bee976",
+    "concurrentWorkflowEdit": "This chat's attempted workflow update received HTTP409. Latest main already targeted d9e11e82 and added lifecycle assertions/network evidence. Those changes were preserved and the already-running test was reused. No second overwrite or duplicate run was made."
+  },
+  "liveAcceptance": {
+    "runId": 35755124915,
+    "reviewedCommit": "d9e11e82b1e32289b2e968005ee124836d4ebf25",
+    "browser": "Playwright 1.55.0 WebKit",
+    "backendWritesMocked": true,
+    "productionWritesAllowed": false,
+    "originalArticleLinksClicked": false,
+    "allPublicEntriesAccepted": false,
+    "worker": {
+      "artifactId": 10707534792,
+      "sha256": "40a4a23da46a1a0c368ee4726b64544b2e24b49d141fce2fc10f3301a902c963",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "covered": "Pre-abort, in-flight abort, real reload, exact 30 MB hash, invalid/oversized replacements, IndexedDB and preference failure rollback, removal during upload, blob routing and full original GIF lifecycle at 390px and 1280px including frame changes, reload, bounded viewer, separate-context preview, removal and unfiltered zero-pageErrors assertions."
+    },
+    "githubPages": {
+      "artifactId": 10708370249,
+      "sha256": "1032efecfe43b66aac360f109ab5c0c1ecee4e0450e2e69f2072e68c3a248359",
+      "passed": 8,
+      "failed": 2,
+      "skipped": 0,
+      "flaky": 0,
+      "failures": "Both GIF cases failed at the separate-browser-context data-image-source=preview marker, missing after the unchanged 5-second expectation. The HTML already contained a data:image/png preview; original hash, frame changes, reload and viewer assertions had passed before this point. No universal GIF failure or absent-image claim is justified. Final post-preview removal/pageerror assertions were not reached in these two cases.",
+      "lifecycleRegressions": "All three cancellation/reload regressions passed on the deployed frontend, including the reload test's unfiltered zero-pageErrors check."
+    },
+    "cloudflarePages": {
+      "artifactId": 10707620427,
+      "sha256": "a91eead7d83df5197c04f0b6ad703091c4558d888e8d642e42060c3f8c671664",
+      "checkedAt": "2026-09-22T16:35:43.547Z",
+      "result": "ENOTFOUND for DNS lookup/A/AAAA and HTTP from the Actions runner; browser cases did not execute. Not a claim of a universal outage."
+    },
+    "evidenceInspected": "Downloaded and parsed all three live artifact archives and both before/after CI archives, verified ZIP SHA256 values, and retained source hashes, timelines and screenshots."
+  },
+  "feedbackQueue": {
+    "exportRunId": 35754609698,
+    "artifactId": 10706809054,
+    "generatedAt": "2026-09-22T16:30:58.618Z",
+    "d1Available": true,
+    "r2FallbackAvailable": true,
+    "openIds": [8, 20, 21, 22, 23, 24, 25, 28, 29, 30],
+    "statusWritesByThisChat": [],
+    "feedback28ClosedByThisChat": false,
+    "29": "Larger full-text summary window, still nonfullscreen; not implemented by this batch",
+    "30": "Selectable reading-status surrounding glow effects; not implemented by this batch"
+  },
+  "nextBoundedTask": "Correct initial preview-source state while origin-local original lookup is pending, with a regression for delayed/unavailable IndexedDB. Then enlarge the nonfullscreen summary for feedback29. Do not hold unrelated UI work indefinitely behind the separate Cloudflare Pages availability problem.",
+  "scope": {
+    "productionLiteratureChanged": false,
+    "publicationSlotsChanged": false,
+    "captureTampermonkeyBridgeSourceChanged": false,
+    "productionReaderEventsWritten": false,
+    "businessReaderCountIssueClaimedResolved": false,
+    "originalStorageBoundary": "Current browser and site origin; existing account sync carries only a static preview. Not original/GIF cloud backup."
+  },
+  "conversationFiles": ["ui133-release-evidence.zip", "ui133-live-status-original-390.png", "ui133-live-status-viewer-1280.png"]
+}
