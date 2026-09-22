@@ -11,13 +11,14 @@
     "missingFromGallery": 61,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 6
+    "closureCoverageAnomalies": 6,
+    "latestCatchupGeneratedAt": "2026-09-22T02:03:38.156Z"
   },
   "policy": "Manual AM catch-up after the 08:00 automation failed to persist a completed review. All 61 newly unresolved DOI differences received explicit semantic decisions. Include general preparative organic-synthesis methodology and sufficiently broad biocatalytic/synthetic reaction scope; exclude materials/energy/devices, biomedical/biological work, news/cover metadata, polymer/materials-focused work, mechanism-only studies without general preparation, and catalyst/material engineering lacking sufficient organic substrate expansion.",
   "summary": {
-    "reviewed": 61,
+    "reviewed": 62,
     "accepted": 11,
-    "rejected": 50,
+    "rejected": 51,
     "pending": 0
   },
   "accepted": [
@@ -1270,6 +1271,22 @@
       "reviewPriority": "normal",
       "decision": "exclude",
       "reason": "materials/energy/device-focused research without a general preparative organic-synthesis substrate scope."
+    },
+    {
+      "doi": "10.1021/jacs.6c16754",
+      "journal": "JACS",
+      "date": "2026-09-22",
+      "title": "Decongested 2D IR Spectra Reveal N-Terminal Helices in Amyloid Oligomers Associated with Type 2 Diabetes",
+      "authors": [
+        "Shivani T. Shivani",
+        "Josée Maurais",
+        "Brynn E. LeMasters",
+        "Harrison J. Esterly",
+        "Martin T. Zanni"
+      ],
+      "reviewPriority": "normal",
+      "decision": "exclude",
+      "reason": "protein/amyloid structural spectroscopy and disease-related biophysics; no preparative organic-synthesis methodology."
     }
   ],
   "pending": []
