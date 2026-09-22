@@ -469,7 +469,25 @@ function figureMarkup(paper: Paper): string {
   return `<div class='figure-strip-slot loaded generated' data-state='idle'${doi ? ` data-figure-doi='${escapeHtml(doi)}'` : ''} data-title='${escapeHtml(visibleTitle(paper))}' data-journal='${escapeHtml(paper.journal)}'><div class='figure-strip-heading'>${escapeHtml(t('figures'))}</div><div class='figure-strip'><div class='figure-thumb generated-thumb'>${generatedGraphic(paper, true)}</div></div></div>`;
 }
 
+function syncLiteratureDoiRegistry(): void {
+  const dois = [...new Set(
+    papers
+      .map(paperDoi)
+      .filter((doi): doi is string => Boolean(doi))
+      .map(doi => doi.toLowerCase())
+  )].sort();
+  let node = document.getElementById('gallery-literature-doi-registry') as HTMLScriptElement | null;
+  if (!node) {
+    node = document.createElement('script');
+    node.id = 'gallery-literature-doi-registry';
+    node.type = 'application/json';
+    document.body.appendChild(node);
+  }
+  node.textContent = JSON.stringify({ updatedAt: new Date().toISOString(), count: dois.length, dois });
+}
+
 function renderCards(): void {
+  syncLiteratureDoiRegistry();
   const gallery = document.querySelector<HTMLElement>('#gallery');
   const count = document.querySelector<HTMLElement>('#resultCount');
   if (!gallery || !count) return;
