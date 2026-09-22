@@ -24,4 +24,5 @@ jobs:
         with:
           name: tm-release-source
           path: ${{ runner.temp }}/tm-preparation
+          include-hidden-files: true
           retention-days: 3
