@@ -1,0 +1,51 @@
+name: Validate literature update quality
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/validate-literature-quality-gate.mjs'
+      - 'cloudflare/scripts/audit-literature.mjs'
+      - 'shared/literature-journals.js'
+      - 'shared/literature-policy.js'
+      - 'public/papers.gz.b64'
+      - 'public/total-synthesis.json'
+      - 'public/manual-supplement.json'
+      - 'public/final-audit-supplement.json'
+      - 'public/curated-supplement.json'
+      - 'public/automation-supplement.json'
+      - 'public/rolling-supplement.json'
+      - 'audit/latest.json'
+      - 'audit/review-*.json'
+      - 'audit/literature-update-state.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: literature-quality-gate
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Verify discovery capability invariants
+        run: node scripts/test-literature-completeness-capability.mjs
+
+      - name: Validate discovery, semantic review, deployment, and regression invariants
+        env:
+          GALLERY_SITE: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: node scripts/validate-literature-quality-gate.mjs
