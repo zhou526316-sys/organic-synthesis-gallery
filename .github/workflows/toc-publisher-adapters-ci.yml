@@ -108,6 +108,11 @@ jobs:
           grep -F "delayedTocUpgrades: upgrades.length" public/toc-mainline.user.js
           grep -F "var delayedUpgrades = upgrades.filter" public/toc-mainline.user.js
           grep -F "NEXT_BATCH_DELAY_MS = 12000" public/toc-mainline.user.js
+          grep -F "gallery-literature-doi-registry" public/toc-mainline.user.js
+          grep -F "article.card:not(.bridge-staging-card)" public/toc-mainline.user.js
+          grep -F "filteredNotOnPage" public/toc-mainline.user.js
+          grep -F "isExcludedDoi(doi)" cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F "gallery-literature-doi-registry" src/main.ts
           grep -F "function executableJobs" public/toc-mainline.user.js
           grep -F "约 12 秒后自动继续" public/toc-mainline.user.js
           grep -F "/api/article-figures/promote-staged" cloudflare/worker/src/index.js
