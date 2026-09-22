@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-09-23T01:19:35+08:00",
+  "context": "UI/feedback continuation after user 继续; immediate status previews and larger nonfullscreen summary",
+  "preview": {
+    "pr": 137,
+    "testedHead": "a71e2be550a098dc2d56f3ca3653db69b1b2f3dd",
+    "mergedSha": "e474cc4b027ea8ed0842eeed7f9fb869a186d2a0",
+    "changes": ["Initial rendered PNG is marked as preview immediately; original lookup has a separate pending/available/unavailable state.", "View image opens immediately with the preview, then upgrades only after original decoding succeeds.", "Denied/missing/corrupt storage keeps a usable preview; disconnected or closed viewers cannot be restored by late results."],
+    "ci": {
+      "runId": 35757190914,
+      "artifactId": 10708778322,
+      "sha256": "664e654ede406ca17fd9edab7e519db4c654cb96464515c460404c9c3f1c1f5a",
+      "passed": 17, "failed": 0, "skipped": 0, "flaky": 0,
+      "otherSuccessfulChecks": [35757190940, 35757190924, 35757191036]
+    },
+    "live": {
+      "runId": 35758775401,
+      "workflowCommit": "74bcec725aadc0af5fa0c7e9571a34a8afd85f39",
+      "reviewedSha": "e474cc4b027ea8ed0842eeed7f9fb869a186d2a0",
+      "observedEntryAssetBothAvailableSites": "assets/index-DZD66gNv.js",
+      "browser": "Playwright 1.55.0 WebKit",
+      "backendWritesMocked": true,
+      "productionWritesAllowed": false,
+      "github": {
+        "artifactId": 10710145787,
+        "sha256": "6d3ced5c5f29be910d50484d9c5a8da3966ccd503c1892bf8be939164bf53404",
+        "passed": 13, "failed": 2, "skipped": 0, "flaky": 0,
+        "failures": ["390px original case now passes immediate preview source/src checks, then times out waiting for the independent context's PNG naturalWidth query. Do not label this as full decoded-preview acceptance.", "1280px original case times out detecting multiple GIF screenshot frames. Original bytes and dimensions had passed, but later assertions were not reached."],
+        "newReadinessCases": "All five new delayed/denied/corrupt-storage and close/remove readiness cases passed."
+      },
+      "worker": {
+        "artifactId": 10709685788,
+        "sha256": "e139af14d9a88ffd5aa24890524fd85f8fbc5f7acb6a6131d2de700a7dd476af",
+        "passed": 14, "failed": 1, "skipped": 0, "flaky": 0,
+        "failure": "Denied-storage case completed its preview decode, usable viewer and unchanged-setting assertions but failed the final unfiltered pageErrors check on reader-counts access-control errors at both API origins. Reader-counts POST responses are intercepted in this UI test, so this does not establish a production counting or CORS outage.",
+        "otherCases": "Both full original GIF cases and the other new readiness cases passed."
+      },
+      "cloudflarePages": {
+        "artifactId": 10709175755,
+        "sha256": "7da1b225f952b6e96b4435dc08a2e293380f3ef219a52b8b1d0ab83faf4864c8",
+        "checkedAt": "2026-09-22T17:09:02.024Z",
+        "result": "Actions runner DNS and HTTP preflight ENOTFOUND; no browser cases ran. Not a universal outage claim."
+      },
+      "allEntriesAccepted": false,
+      "feedback28Closed": false,
+      "evidenceInspected": "All three live ZIP archives and CI artifact downloaded, SHA256 verified, JSON and actual viewport screenshots inspected."
+    },
+    "storageBoundary": "Original bytes and GIF animation stay within this browser and origin; account preference sync includes only a static preview, not original cloud backup."
+  },
+  "summary": {
+    "feedbackId": 29,
+    "pr": 138,
+    "branch": "feat/ui-summary-readable-20260923",
+    "latestHead": "db5a5230fac180f1cfb9e807c316c4d06f149bce",
+    "merged": false,
+    "design": {"maxWidthPx": 1200, "maxHeightPx": 920, "maxVisibleViewportHeightFraction": 0.84, "edgeMarginPx": 16, "desktopFontPx": 16, "mobileFontPx": 15, "fullscreen": false},
+    "unchanged": ["Bilingual summary cache and server generation", "Small favorite/status/note/more drawers stay anchored"],
+    "retainedFailureHistory": [
+      {"runId": 35757868058, "finding": "Typecheck caught an unreachable legacy summary comparison after early-return extraction; removed redundant cap branch."},
+      {"runId": 35758328760, "artifactId": 10709270262, "sha256": "9d5aa12c0d18976103e2ca1170a58a5271ae96f66e234675bf1454f6e84218c8", "passed": 1, "failed": 4, "finding": "SVG fixture naturalWidth depended on rendered layout; replaced fixture with a 600x320 PNG while retaining exact decode assertion."},
+      {"runId": 35758706249, "artifactId": 10710290065, "sha256": "792792388b71abf22766d19ef82506369d57316fc84e63f8618b97711d8c11fd", "passed": 4, "failed": 1, "finding": "390px-to-desktop resize bounds failed after initial sizing/fonts/TOC/language checks; added coalesced next-frame/visualViewport remeasurement without relaxing margins."},
+      {"runId": 35759341318, "finding": "Initial remeasurement used WeakRef outside the project's ES2020 type target; replaced with discovery of currently open panels rather than raising compiler target."}
+    ],
+    "latestChecks": {"summary": 35759684487, "quality": 35759684570, "originals": 35759684380, "data": 35759684343, "migration": 35759684325},
+    "latestAcceptance": "Pending at this checkpoint; do not claim summary deployed or feedback29 closed.",
+    "temporaryStagingWorkflowInReleaseDiff": false
+  },
+  "feedbackExport": {"runId": 35758423944, "artifactId": 10709360078, "generatedAt": "2026-09-22T17:05:41.720Z", "d1Available": true, "r2Available": true, "openIds": [8,20,21,22,23,24,25,28,29,30]},
+  "scope": {"literatureInputsChanged": false, "publicationSlotsChanged": false, "captureOrBridgeSourceChanged": false, "syntheticProductionReaderEvents": false, "businessReaderCountingClaimedFixed": false, "feedbackStatusWrites": [], "feedback30Implemented": false}
+}
