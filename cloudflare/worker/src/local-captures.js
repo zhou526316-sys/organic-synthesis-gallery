@@ -647,6 +647,8 @@ export async function promoteStagedArticleFigures(request, env, payload = {}) {
       if (Number(result?.status || 500) < 200 || Number(result?.status || 500) >= 300) {
         throw new Error('figure_import_status_' + String(result?.status || 0));
       }
+      const stored = await env.DB.prepare('SELECT content_hash FROM figure_assets WHERE doi = ? AND source_id = ?').bind(item.doi, item.id).first();
+      if (stored?.content_hash !== item.contentHash) throw new Error('staged_index_receipt_mismatch');
       promoted.push({ doi: item.doi, id: item.id, r2Key: item.r2Key });
       item.indexed = true;
       item.indexedAt = Date.now();

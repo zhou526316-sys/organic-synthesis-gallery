@@ -1543,6 +1543,8 @@ function embeddedJobDois(value) {
         capturedAt: nowIso(),
         source: 'tampermonkey-toc-mainline'
       }, token);
+      assertBoundCaptureJob(job, image.sourceUrl || candidate.url);
+      if (!result || result.stored !== true || normalizeDoi(result.doi) !== normalizeDoi(job.doi) || result.kind !== candidate.kind) throw new Error('toc_capture_receipt_invalid');
       pushTrace(trace, {
         stage: 'r2_upload',
         event: 'complete',
@@ -1569,6 +1571,8 @@ function embeddedJobDois(value) {
     GM_setValue(traceKey(job.doi), {
       doi: job.doi,
       status: status,
+      version: VERSION,
+      jobId: job.jobId,
       reason: reason,
       trace: trace,
       finishedAt: nowIso()
@@ -1577,6 +1581,8 @@ function embeddedJobDois(value) {
       await postJson(REPORT_ENDPOINT, {
         doi: job.doi,
         publisher: job.publisher,
+        captureVersion: VERSION,
+        jobId: job.jobId,
         status: status,
         reason: reason,
         assetType: candidate && candidate.assetType || '',
