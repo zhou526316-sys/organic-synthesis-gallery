@@ -1,0 +1,585 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-22T11:32:13.996Z",
+  "auditVersion": 5,
+  "timeZone": "Asia/Shanghai",
+  "startDate": "2026-09-20",
+  "endDate": "2026-09-22",
+  "closureDate": "2026-09-21",
+  "summary": {
+    "galleryDois": 512,
+    "sourceRecords": 555,
+    "rawMissingFromGallery": 487,
+    "previouslyReviewedExcluded": 479,
+    "missingFromGallery": 8,
+    "potentialGaps": 3,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 0,
+    "historicalCoverageLosses": 0,
+    "unresolved": 8,
+    "excludedByPolicy": 0
+  },
+  "discoveryGate": {
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 0,
+    "historicalCoverageLosses": 0
+  },
+  "activeJournals": [
+    {
+      "name": "Nature",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 78,
+        "crossrefCandidateRecords": 78,
+        "openAlexCandidateRecords": 72,
+        "multiSourceCandidateRecords": 72,
+        "closureUnionRecords": 8,
+        "closureCrossrefRecords": 8,
+        "closureOpenAlexRecords": 8,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Science",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 38,
+        "crossrefCandidateRecords": 38,
+        "openAlexCandidateRecords": 37,
+        "multiSourceCandidateRecords": 37,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Catalysis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 1,
+        "crossrefCandidateRecords": 1,
+        "openAlexCandidateRecords": 1,
+        "multiSourceCandidateRecords": 1,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 1,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Synthesis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 4,
+        "crossrefCandidateRecords": 4,
+        "openAlexCandidateRecords": 3,
+        "multiSourceCandidateRecords": 3,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Chemistry",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 7,
+        "crossrefCandidateRecords": 7,
+        "openAlexCandidateRecords": 4,
+        "multiSourceCandidateRecords": 4,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Communications",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 173,
+        "crossrefCandidateRecords": 172,
+        "openAlexCandidateRecords": 165,
+        "multiSourceCandidateRecords": 164,
+        "closureUnionRecords": 35,
+        "closureCrossrefRecords": 35,
+        "closureOpenAlexRecords": 35,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "JACS",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 83,
+        "crossrefCandidateRecords": 83,
+        "openAlexCandidateRecords": 74,
+        "multiSourceCandidateRecords": 74,
+        "closureUnionRecords": 15,
+        "closureCrossrefRecords": 15,
+        "closureOpenAlexRecords": 15,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Angew",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 95,
+        "crossrefCandidateRecords": 93,
+        "openAlexCandidateRecords": 77,
+        "multiSourceCandidateRecords": 75,
+        "closureUnionRecords": 32,
+        "closureCrossrefRecords": 32,
+        "closureOpenAlexRecords": 23,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "ACS Catalysis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 30,
+        "crossrefCandidateRecords": 30,
+        "openAlexCandidateRecords": 29,
+        "multiSourceCandidateRecords": 29,
+        "closureUnionRecords": 11,
+        "closureCrossrefRecords": 11,
+        "closureOpenAlexRecords": 11,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Organic Letters",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 37,
+        "crossrefCandidateRecords": 37,
+        "openAlexCandidateRecords": 34,
+        "multiSourceCandidateRecords": 34,
+        "closureUnionRecords": 9,
+        "closureCrossrefRecords": 9,
+        "closureOpenAlexRecords": 9,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Chem",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Chemical Science",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "CCS Chemistry",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 3,
+        "crossrefCandidateRecords": 3,
+        "openAlexCandidateRecords": 2,
+        "multiSourceCandidateRecords": 2,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 1,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Science Advances",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Green Chemistry",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-20",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-20",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "JOC",
+      "activeFrom": "2026-09-22",
+      "effectiveStart": "2026-09-22",
+      "sourceHealth": {
+        "activeFrom": "2026-09-22",
+        "effectiveStart": "2026-09-22",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 6,
+        "crossrefCandidateRecords": 6,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    }
+  ],
+  "unresolved": [
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "journal": "CCS Chemistry",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Liang-Min Xiong",
+        "Cong Ma",
+        "Jian-Feng Guo",
+        "Yi-Fan Chen",
+        "Zi-Meng Li",
+        "Hai-Qi Li",
+        "Hao Xu",
+        "Tian-Sheng Mei"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2096-5745:online",
+        "crossref:2096-5745:published",
+        "crossref:2096-5745:created"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c14114",
+      "journal": "JACS",
+      "title": "Disentangling Electronic and Lattice Contributions to Transient Absorption in Metal Halide Perovskites: A First-Principles Study of CH3NH3PbBr3",
+      "abstract": "Abstract Soft lattices combined with strong electron–phonon coupling in metal halide perovskites result in a complex interplay between electronic and lattice degrees of freedom. This interplay complicates the interpretation of time-resolved spectroscopic signals, such as transient absorption spectra. Here, we develop a first-principles approach that combines a nonequilibrium extension of the Bethe-Salpeter equation with ab initio molecular dynamics to resolve the origin of transient absorption. This approach can quantitatively disentangle electronic and thermal lattice contributions across femtosecond-to-picosecond time scales. Exemplified with CH3NH3PbBr3, we find that on the femtosecond scale, both X-ray and optical transient absorption spectra are dominated by electronic contributions: Photoinduced Coulomb screening weakens the effective electron–hole interaction and blueshifts the excitonic resonances, whereas Pauli blocking is negligible in the X-ray region but non-negligible in the optical one. On the picosecond scale, thermal lattice contributions become essential, with distinct mechanisms dominating different spectral regions: Lattice vibrations lead to spectral redistribution in the X-ray transient absorption spectrum, whereas lattice expansion blueshifts the optical transient absorption spectrum.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Lu Qiao",
+        "Ronaldo Rodrigues Pela",
+        "Claudia Draxl"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c17644",
+      "journal": "JACS",
+      "title": "Enantioselective Defluorinative C(sp2)–H Allylation of Acrylamides Enabled by CpxRh(III) Catalysis",
+      "abstract": "Abstract Chiral fluoroalkenes are high-value synthetic targets; however, the development of efficient catalytic asymmetric methods for their assembly from abundant precursors remains a formidable challenge. Herein, we report a convergent strategy that merges asymmetric alkenyl C(sp2)–H functionalization with defluorinative coupling, enabling the direct, enantioselective synthesis of fluorinated skipped 1,4-dienes from readily available starting materials. Facilitated by a chiral CpxRh(III) catalyst, this enantioselective olefin–olefin cross-coupling leverages abundant acrylamides and amide-substituted allylic difluorides to provide streamlined access to a structurally diverse array of enantioenriched fluorinated 1,4-dienes with high efficiency and excellent stereocontrol (up to 99% yield, 99% ee). Mechanistic studies suggest that the transformation proceeds via a sequence of site-selective alkenyl C–H activation, enantioselective migratory insertion, and β-fluoride elimination. Remarkably, ester-derived allylic difluorides induce divergent cascade reactivity, allowing efficient construction of valuable chiral 2-piperidones with excellent enantio- and diastereoselectivity. This step-economical protocol offers a versatile platform for the rapid construction of complex fluorinated motifs from simple chemical feedstocks.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Shu-Bin Mou",
+        "Mu-Peng Luo",
+        "Chen-Yu Dou",
+        "Shi Cao",
+        "Dong Wu",
+        "Shou-Guo Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c16062",
+      "journal": "JACS",
+      "title": "Non-Canonical Peptide Self-Assembly for Mitochondria-Specific Cargo Delivery",
+      "abstract": "Abstract Targeting mitochondria is a promising strategy for precision tumor therapy, yet ligand-free mitochondrial drug delivery remains challenging. Here, we report a minimalist, intrinsically mitochondria-targeting noncanonical tetrapeptide, X-GNNpY, comprising one glycine, two (S)-2-amino-3-(naphthalen-1-yl)-propanoic acid residues (N), and one phosphorylated tyrosine (pY). Without external targeting ligands, X-GNNpY selectively accumulates in tumor-cell mitochondria through enzyme-instructed self-assembly. Conjugating chlorambucil (CLB) yields CLB-GNNpY, which efficiently redirects CLB to mitochondria. CLB-GNNpY exhibits good cellular selectivity, induces mitochondrial stress and immunogenic cell death, promotes M1-like macrophage polarization, and markedly enhances antitumor phagocytosis. This proof-of-concept study establishes noncanonical peptide self-assembly as a ligand-free supramolecular strategy for mitochondrial drug delivery and immune modulation in tumor therapy.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Ziyu Jia",
+        "Jian Wen",
+        "Shengyi Zhang",
+        "Yinghao Ding",
+        "Zhimou Yang",
+        "Zhi-Wen Hu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01559",
+      "journal": "JOC",
+      "title": "Isoindole-Based Multicomponent Synthesis of Pyrimido[6,1,2- cd ]pyrrolizine Fluorophores with Unsymmetrical Urea Handles: Photophysical, Theoretical, and Antifungal Imaging Studies",
+      "abstract": "Abstract A diversity-oriented, one-pot synthetic strategy was successfully employed to generate a library of pyrimido[6,1,2-cd]pyrrolizine (PP)-based fluorophores incorporating unsymmetrical urea functionality, which function as versatile fluorescent probes and pharmacophores. These PP derivatives, efficiently constructed via multicomponent reaction pathways from readily accessible precursors, exhibit an intense orange-red fluorescence in solution. Incorporation of appendage diversity in the side chain induces significant solid-state bathochromic shifts, with emission maxima extending close to the near-infrared region (NIR). Single-crystal X-ray diffraction analysis elucidated the intermolecular interactions and the packing motifs. Complementary theoretical investigations (DFT and TD-DFT) and molecular electrostatic potential (MEP) analyses provided mechanistic insight into their photophysical properties. Furthermore, cellular imaging studies in Candida albicans demonstrated efficient uptake and distinct intracellular localization, highlighting the potential of PP fluorophores as versatile probes for advanced biological applications. Collectively, the PP framework represents a promising fluorescent pharmacophore, exhibiting measurable antifungal activity while enabling precise fluorescent staining and imaging of Candida species.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Dhanavardini Mouttousadeappane",
+        "Nithya Natarajan",
+        "Thamarainathan Doulassiramane",
+        "Kokila Manickam",
+        "Ramanathan Padmanaban",
+        "Suganya Kannan",
+        "Vasuki Gnanasambandam"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/d41586-026-02929-z",
+      "journal": "Nature",
+      "title": "All the ways a cell can die — and why the variety matters",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Amber Dance"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02818-5",
+      "journal": "Nature",
+      "title": "Hundreds of ‘free’ academic journals have started charging fees",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Dalmeet Singh Chawla"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03473",
+      "journal": "Organic Letters",
+      "title": "Direct C1–H Amination of Free NH Carbazoles Enabled by the Catellani Reaction",
+      "abstract": "Abstract Carbazoles are valuable building blocks for emerging pharmaceuticals and bioactive compounds. However, methods to access C1–H-aminated carbazoles remain underdeveloped. Current approaches often require multistep syntheses or the use of toxic metals. Herein, we report the first Pd/NBE-catalyzed C1–H amination of NH-free carbazoles. The method introduces a broad range of cyclic amines onto carbazole scaffold and tolerates several functional groups, including acyl, pivaloyl, and halogen substituents. This approach expands the scope of the Catellani reactions to the direct amination of unprotected carbazoles, offering a concise entry to otherwise challenging C1-aminated scaffolds.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Ganesh Shivayogappa Sorabad",
+        "Paolo Pio Mazzeo",
+        "Elena Motti",
+        "Nicola Della Ca’"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    }
+  ],
+  "potentialGapDois": [
+    "10.1021/jacs.6c17644",
+    "10.1021/acs.joc.6c01559",
+    "10.1021/acs.orglett.6c03473"
+  ]
+}
