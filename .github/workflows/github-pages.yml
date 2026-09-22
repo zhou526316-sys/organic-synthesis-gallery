@@ -23,6 +23,10 @@ on:
       - 'audit/visual-gap-dois-2026-09-16.json'
       - 'public/curated-supplement.json'
       - 'public/automation-supplement.json'
+      - 'shared/literature-policy.js'
+      - 'scripts/validate-production-literature-release-slot.mjs'
+      - 'audit/publication-release-state.json'
+      - 'public/rolling-supplement.json'
       - 'public/toc-demand-live.json'
       - 'public/toc-mainline.user.js'
       - 'audit/author-coverage.json'
@@ -63,6 +67,9 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+
+      - name: Enforce fixed literature publication slot
+        run: node scripts/validate-production-literature-release-slot.mjs
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
