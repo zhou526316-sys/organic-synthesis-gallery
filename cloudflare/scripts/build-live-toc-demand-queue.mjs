@@ -150,7 +150,7 @@ async function fetchMediaInventory(dois) {
     const response = await fetch(MEDIA_INVENTORY_URL, {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'cache-control': 'no-cache' },
-      body: JSON.stringify({ dois }),
+      body: JSON.stringify({ dois, readOnly: true }),
       signal: AbortSignal.timeout(60000),
     });
     if (!response.ok) throw new Error('media-inventory HTTP ' + response.status);
@@ -162,6 +162,8 @@ async function fetchMediaInventory(dois) {
       map.set(doi, {
         status: String(item?.status || 'missing'),
         largeSource: String(item?.largeSource || 'none'),
+        tocStored: item?.tocStored === true,
+        tocMissing: item?.tocMissing !== false,
         suspiciousToc: item?.suspiciousToc === true,
         figureCount: Math.max(0, Number(item?.figureCount || 0)),
         highQualityFigureCount: Math.max(0, Number(item?.highQualityFigureCount ?? 0)),
@@ -208,7 +210,10 @@ async function main() {
     const record = media[doi] || null;
     const liveCapture = localCaptures.get(doi) || null;
     const manualGapReason = displayGapOverrides.get(doi) || '';
-    const official = liveCapture?.kind === 'official' || (!manualGapReason && isOfficialToc(record?.toc));
+    const liveInventory = inventory.get(doi);
+    const official = liveInventory?.tocStored === true
+      || liveCapture?.kind === 'official'
+      || (!manualGapReason && isOfficialToc(record?.toc));
     if (official) continue;
 
     const anyVisual = liveCapture?.kind === 'figure1'
