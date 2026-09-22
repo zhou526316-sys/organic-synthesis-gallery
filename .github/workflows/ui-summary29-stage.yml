@@ -1,0 +1,46 @@
+name: Stage bounded summary29 source integration
+on:
+  push:
+    branches: ['feat/ui-summary-readable-20260923']
+    paths: ['.github/workflows/ui-summary29-stage.yml']
+permissions:
+  contents: write
+concurrency:
+  group: summary29-source-staging
+  cancel-in-progress: false
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/ui-summary-readable-20260923
+      - name: Integrate only the inspected source file
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          p = Path('src/user-ui/paper-actions.ts')
+          data = p.read_bytes()
+          actual = hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+          assert actual == 'fb9bb7b09d1903014ac171bc7c56164e6ab51416', f'Concurrent source changed: {actual}'
+          text = data.decode('utf-8')
+          edits = [
+            ("const NAME = 'gallery-paper-actions';", "import { positionSummaryDrawer, SUMMARY_LAYOUT_CSS } from './summary-layout';\n\nconst NAME = 'gallery-paper-actions';"),
+            ("    if (!anchor || !drawer) return;\n", "    if (!anchor || !drawer) return;\n    if (this.panel === 'summary') {\n      positionSummaryDrawer(drawer, this.getBoundingClientRect());\n      return;\n    }\n"),
+            ("    </style>", "      ${SUMMARY_LAYOUT_CSS}\n    </style>"),
+          ]
+          for old, new in edits:
+            assert text.count(old) == 1, f'Expected one integration anchor: {old!r}'
+            text = text.replace(old, new)
+          p.write_text(text, encoding='utf-8')
+          PY
+          git diff --check
+          git diff --stat
+          test "$(git diff --name-only)" = 'src/user-ui/paper-actions.ts'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/user-ui/paper-actions.ts
+          git commit -m 'feat(ui): use the larger nonfullscreen summary reading layout'
+          git push origin HEAD:refs/heads/feat/ui-summary-readable-20260923
