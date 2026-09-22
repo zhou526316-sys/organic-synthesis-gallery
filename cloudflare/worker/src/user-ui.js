@@ -280,6 +280,42 @@ export async function readerCounts(env, payload) {
   return { status: 200, body: { counts: await cleanOpenReaderCounts(env, dois) } };
 }
 
+export async function readerStats(env) {
+  if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
+  const row = await env.DB.prepare(
+    `SELECT
+       COUNT(*) AS unique_paper_reads,
+       COUNT(DISTINCT ip_hash) AS unique_ips,
+       COUNT(DISTINCT doi) AS papers_with_readers,
+       MIN(first_opened_at) AS first_opened_at,
+       MAX(first_opened_at) AS last_opened_at
+     FROM paper_open_readers_v3`
+  ).first();
+  const counter = await env.DB.prepare(
+    'SELECT COALESCE(SUM(count), 0) AS summed_reader_counts FROM paper_open_reader_counts_v3'
+  ).first();
+
+  const uniquePaperReads = Math.max(0, Number(row?.unique_paper_reads || 0));
+  const uniqueIps = Math.max(0, Number(row?.unique_ips || 0));
+  const summedReaderCounts = Math.max(0, Number(counter?.summed_reader_counts || 0));
+
+  return {
+    status: 200,
+    body: {
+      generation: 'article-open-v3',
+      uniquePaperReads,
+      uniqueIps,
+      papersWithReaders: Math.max(0, Number(row?.papers_with_readers || 0)),
+      firstOpenedAt: Number(row?.first_opened_at || 0) || null,
+      lastOpenedAt: Number(row?.last_opened_at || 0) || null,
+      summedReaderCounts,
+      countersConsistent: uniquePaperReads === summedReaderCounts,
+      rawPageViewsTracked: false,
+      note: 'Counts are de-duplicated by DOI + hashed CF-Connecting-IP. Repeated opens of the same DOI from the same IP are not counted again; raw site page views are not stored in D1.',
+    },
+  };
+}
+
 export async function markReader(env, payload, request) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
