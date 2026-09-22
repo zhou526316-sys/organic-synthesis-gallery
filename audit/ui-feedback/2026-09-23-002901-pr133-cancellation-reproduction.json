@@ -1,0 +1,44 @@
+{
+  "recordedAt": "2026-09-23T00:29:01+08:00",
+  "context": "UI and feedback continuation, user requested 继续 twice after PR133 checkpoint",
+  "pr": 133,
+  "baselineHead": "33da89ee55cd47f0e8f0c68cc459877f25a6e5c7",
+  "beforeFix": {
+    "runId": 35753697141,
+    "artifactId": 10705888957,
+    "zipSha256": "98cd053bf41fef454c882ffb9bc895ad4a2cb2d1ac33883cfc04e7064a86d342",
+    "artifactDownloadedAndParsed": true,
+    "testsPassed": 7,
+    "testsFailed": 5,
+    "testsSkipped": 0,
+    "testsFlaky": 0,
+    "newDeterministicFailures": [
+      "An already aborted API request attempted the backup origin with aborted=true.",
+      "Aborting an in-flight API request still attempted the backup origin.",
+      "Reloading the document retried the old pending API request at the backup origin."
+    ],
+    "navigationTimeline": [
+      { "epochMs": 1790094326446, "event": "fetch:start", "origin": "primary", "path": "/api/__gallery_lifecycle_probe__" },
+      { "epochMs": 1790094326455, "event": "fetch:reject", "name": "TypeError", "message": "Load failed", "signalAborted": false },
+      { "epochMs": 1790094326456, "event": "fetch:start", "origin": "backup", "path": "/api/__gallery_lifecycle_probe__" },
+      { "epochMs": 1790094326459, "event": "pageerror", "message": "Backup lifecycle probe failed access-control checks during navigation." },
+      { "epochMs": 1790094326464, "event": "pagehide" }
+    ],
+    "otherFailures": "Both original-GIF tests completed their functional assertions but failed the final pageErrors assertion on the mocked reader-counts access-control error.",
+    "interpretation": "A real front-end lifecycle defect is reproduced in isolated browser tests. Error handling retries cancelled/tearing-down calls indiscriminately. This is not evidence of an externally observed production CORS outage or proof of any correction to business reader totals."
+  },
+  "fixSubmitted": {
+    "commit": "15198e4ad8b069e7715faa1954c5f7aea759affe",
+    "path": "src/user-shell.ts",
+    "description": "Preserve /api path eligibility. During retry-capable calls only, observe beforeunload and pagehide without preventing navigation. Do not retry caller aborts, native AbortError not caused by the wrapper timeout, or calls whose document started navigating. Remove temporary lifecycle listeners in finally. Preserve original rejection and existing network/internal-timeout backup behavior.",
+    "notYetVerified": true,
+    "notYetMerged": true
+  },
+  "scope": {
+    "productionLiteratureChanged": false,
+    "publicationSlotsChanged": false,
+    "captureBridgeChanged": false,
+    "realReaderEventsWritten": false,
+    "feedbackStatusChanged": false
+  }
+}
