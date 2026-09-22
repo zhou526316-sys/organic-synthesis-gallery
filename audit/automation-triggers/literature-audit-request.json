@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-22T18:59:06+08:00",
-  "requestedBy": "scheduled-automation-bridge-test",
-  "testRunId": "20260922-185906-auto-bridge",
-  "reason": "End-to-end scheduled automation bridge validation without modifying production literature decisions.",
+  "requestedAt": "2026-09-22T19:38:00+08:00",
+  "requestedBy": "compact-handoff-validation",
+  "reason": "Validate audit/unresolved-latest.json generation and persistence for fixed-slot prepublish review.",
   "targetBranch": "main",
+  "publicationSlot": "2026-09-23T08:00:00+08:00",
   "primaryWindow": {
     "timezone": "Asia/Shanghai",
     "startDate": "2026-09-20",
@@ -12,6 +12,9 @@
     "days": 3
   },
   "safetyTailDays": 7,
-  "windowPolicy": "Asia/Shanghai current day plus previous two calendar days; retain seven-day machine safety tail",
-  "note": "Signal only. GitHub Actions owns machine discovery/audit; this test must not modify accepted/rejected production literature data."
+  "validation": [
+    "audit/latest.json and audit/unresolved-latest.json share generatedAt",
+    "compact unresolved count equals latest.summary.unresolved",
+    "no production literature mutation"
+  ]
 }
