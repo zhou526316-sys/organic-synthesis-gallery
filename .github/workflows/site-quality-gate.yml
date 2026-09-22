@@ -66,6 +66,9 @@ jobs:
       - name: Test reader-count materialization
         run: npm run test:reader-counts
 
+      - name: Test fulltext-backed article summaries
+        run: npm run test:article-summary
+
       - name: Compile Worker with Wrangler
         run: npm run check
 
