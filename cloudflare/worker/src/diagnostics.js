@@ -240,6 +240,7 @@ export async function mediaAudit(env) {
     )),
   ]);
 
+  const activeTocRows = tocRows.filter(row => Number(row.available) === 1);
   const figuresByDoi = new Map();
   for (const row of figureRows) {
     const doi = String(row.doi).toLowerCase();
@@ -249,7 +250,7 @@ export async function mediaAudit(env) {
   }
 
   const hashOwners = new Map();
-  for (const row of tocRows) {
+  for (const row of activeTocRows) {
     if (!row.content_hash) continue;
     const owners = hashOwners.get(row.content_hash) || [];
     owners.push(String(row.doi).toLowerCase());
@@ -279,7 +280,7 @@ export async function mediaAudit(env) {
 
   let tocMatchesNonFigure1 = 0;
   let noValidToc = 0;
-  for (const toc of tocRows) {
+  for (const toc of activeTocRows) {
     const doi = String(toc.doi).toLowerCase();
     const figures = figuresByDoi.get(doi) || [];
     const wrongMatch = Boolean(toc.content_hash && figures.some(item =>
@@ -291,9 +292,9 @@ export async function mediaAudit(env) {
     }
   }
 
-  const allDois = new Set([...tocRows.map(row => String(row.doi).toLowerCase()), ...figureRows.map(row => String(row.doi).toLowerCase())]);
+  const allDois = new Set([...activeTocRows.map(row => String(row.doi).toLowerCase()), ...figureRows.map(row => String(row.doi).toLowerCase())]);
   for (const doi of allDois) {
-    const toc = tocRows.find(row => String(row.doi).toLowerCase() === doi);
+    const toc = activeTocRows.find(row => String(row.doi).toLowerCase() === doi);
     const figures = figuresByDoi.get(doi) || [];
     if (!toc && figures.length === 0) {
       noValidToc += 1;
@@ -307,7 +308,7 @@ export async function mediaAudit(env) {
       generatedAt: Date.now(),
       summary: {
         tocMetadata: tocRows.length,
-        activeToc: tocRows.length,
+        activeToc: activeTocRows.length,
         figureMetadata: figureRows.length,
         primaryVisualMetadata: primaryRows.length,
         duplicateTocGroups: duplicateGroups.length,
