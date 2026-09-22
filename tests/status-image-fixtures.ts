@@ -1,10 +1,12 @@
 import { expect, type Page, type BrowserContext, type Locator } from '@playwright/test';
+import { recordStatusNetwork } from './status-network-evidence';
 export const KEY = 'organic-gallery-user-ui-v1';
 export const GIF = Buffer.from('R0lGODlheAA8AIEAAP8AAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQAKAAAACwAAAAAeAA8AAAIigABCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duzwDAgAh+QQBKAABACwAAAAAeAA8AIEAAP8AAAAAAAAAAAAIigABCBxIsKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6bNmzhz6tzJs6fPn0CDCh1KtKjRo0iTKl3KtKnTp1CjSp1KtarVq1izat3KtavXr2DDih1LtqzZs2jTql3Ltq3bt3Djyp1Lt67duzwDAgA7', 'base64');
 export const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
 export const gifFile = { name: 'animated-status.gif', mimeType: 'image/gif', buffer: GIF };
 
 export async function isolate(context: BrowserContext): Promise<void> {
+  await recordStatusNetwork(context);
   // No production traffic, including reader events, feedback, accounts or media writes.
   await context.route('**/*', async route => {
     const request = route.request();
