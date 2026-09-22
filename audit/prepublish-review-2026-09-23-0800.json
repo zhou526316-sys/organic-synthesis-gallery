@@ -2,121 +2,41 @@
   "schemaVersion": 1,
   "reviewType": "prepublish_staging",
   "publicationSlot": "2026-09-23T08:00:00+08:00",
-  "createdAt": "2026-09-22T19:20:00+08:00",
-  "sourceAudit": {
-    "generatedAt": "2026-09-22T11:09:37.107Z",
-    "auditBlobSha": "1009bdfad43ecae24ca65089c7b70a26e55db225",
-    "sourceRecords": 554,
-    "galleryDois": 512,
-    "missingFromGallery": 7,
-    "unresolved": 7,
-    "criticalSourceFailures": 0,
-    "sourceFamilyGaps": 0,
-    "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 0,
-    "historicalCoverageLosses": 0
-  },
-  "summary": {"reviewed": 7, "accepted": 3, "rejected": 4, "pending": 0},
-  "acceptedDois": [
-    "10.1021/jacs.6c17644",
-    "10.1021/acs.joc.6c01559",
-    "10.1021/acs.orglett.6c03473"
-  ],
-  "rejectedDois": [
-    "10.31635/ccschem.026.202608262",
-    "10.1021/jacs.6c14114",
-    "10.1021/jacs.6c16062",
-    "10.1038/d41586-026-02818-5"
-  ],
+  "createdAt": "2026-09-22T19:44:00+08:00",
+  "handoffGeneratedAt": "2026-09-22T11:35:29.420Z",
+  "compactHandoffSha": "38f7afac0d24005c26dd6e97f784a72a536d26c8",
+  "sourceAudit": {"generatedAt":"2026-09-22T11:35:29.420Z","auditBlobSha":"2be969e903984220435398215c4de6a4b6ab0d9a","sourceRecords":555,"galleryDois":512,"missingFromGallery":8,"unresolved":8,"criticalSourceFailures":0,"sourceFamilyGaps":0,"sourceCoverageAnomalies":0,"closureCoverageAnomalies":0,"historicalCoverageLosses":0},
+  "summary": {"reviewed":8,"accepted":3,"rejected":5,"pending":0},
+  "acceptedDois": ["10.1021/jacs.6c17644","10.1021/acs.joc.6c01559","10.1021/acs.orglett.6c03473"],
+  "rejectedDois": ["10.31635/ccschem.026.202608262","10.1021/jacs.6c14114","10.1021/jacs.6c16062","10.1038/d41586-026-02929-z","10.1038/d41586-026-02818-5"],
   "pendingDois": [],
   "decisions": [
-    {
-      "doi": "10.31635/ccschem.026.202608262",
-      "journal": "CCS Chemistry",
-      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
-      "decision": "exclude",
-      "evidenceBasis": "Fresh audit title and source metadata identify an electrocatalytic paired CO2-reduction/alcohol-oxidation study; no abstract or evidence in the audit establishes a general preparative organic-synthesis method or substrate-scope contribution.",
-      "challengeDecision": "exclude",
-      "challengeReason": "Challenge considered whether paired alcohol oxidation could constitute synthetic electrosynthesis. With no affirmative evidence of a general preparative organic product method, the protocol's materials/electrocatalysis rule requires exclusion rather than inference from an organic half-reaction."
-    },
-    {
-      "doi": "10.1021/jacs.6c14114",
-      "journal": "JACS",
-      "title": "Disentangling Electronic and Lattice Contributions to Transient Absorption in Metal Halide Perovskites: A First-Principles Study of CH3NH3PbBr3",
-      "decision": "exclude",
-      "evidenceBasis": "Abstract is a first-principles transient-absorption study of a metal-halide perovskite and contains no preparative organic synthesis method.",
-      "challengeDecision": "exclude",
-      "challengeReason": "No substrate scope, bond-forming synthetic protocol, total synthesis, or polymerization methodology is present; this is computational/materials photophysics."
-    },
-    {
-      "doi": "10.1021/jacs.6c17644",
-      "journal": "JACS",
-      "title": "Enantioselective Defluorinative C(sp2)–H Allylation of Acrylamides Enabled by CpxRh(III) Catalysis",
-      "decision": "include",
-      "evidenceBasis": "Abstract reports a convergent CpxRh(III)-catalyzed enantioselective olefin–olefin cross-coupling of acrylamides and allylic difluorides, broad structural diversity, up to 99% yield/99% ee, and divergent access to chiral 2-piperidones.",
-      "challengeDecision": "include",
-      "challengeReason": "Challenge found no scope exclusion: the central contribution is a general preparative asymmetric C–H functionalization/defluorinative coupling method with substrate scope and synthetic products."
-    },
-    {
-      "doi": "10.1021/jacs.6c16062",
-      "journal": "JACS",
-      "title": "Non-Canonical Peptide Self-Assembly for Mitochondria-Specific Cargo Delivery",
-      "decision": "exclude",
-      "evidenceBasis": "Abstract centers on peptide self-assembly, mitochondrial cargo delivery and antitumor immune effects rather than a general organic synthesis method.",
-      "challengeDecision": "exclude",
-      "challengeReason": "Although a defined tetrapeptide/conjugate is prepared, synthesis is enabling material for a biomedical delivery study and is not the methodological contribution."
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01559",
-      "journal": "JOC",
-      "title": "Isoindole-Based Multicomponent Synthesis of Pyrimido[6,1,2-cd]pyrrolizine Fluorophores with Unsymmetrical Urea Handles: Photophysical, Theoretical, and Antifungal Imaging Studies",
-      "decision": "include",
-      "evidenceBasis": "Abstract explicitly reports a diversity-oriented one-pot multicomponent synthetic strategy generating a library of PP fluorophores with unsymmetrical urea functionality from readily accessible precursors.",
-      "challengeDecision": "include",
-      "challengeReason": "Challenge considered the downstream photophysical and antifungal-imaging emphasis, but the paper contains an explicit library-generating multicomponent preparative method; the synthetic methodology is substantive rather than incidental."
-    },
-    {
-      "doi": "10.1038/d41586-026-02818-5",
-      "journal": "Nature",
-      "title": "Hundreds of ‘free’ academic journals have started charging fees",
-      "decision": "exclude",
-      "evidenceBasis": "Nature d41586 identifier and title identify a news/reporting article about journal fees, not chemical research.",
-      "challengeDecision": "exclude",
-      "challengeReason": "No synthetic chemistry method, preparative scope, total synthesis or polymerization methodology exists."
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03473",
-      "journal": "Organic Letters",
-      "title": "Direct C1–H Amination of Free NH Carbazoles Enabled by the Catellani Reaction",
-      "decision": "include",
-      "evidenceBasis": "Abstract reports the first Pd/NBE-catalyzed C1–H amination of unprotected carbazoles, broad cyclic-amine scope and functional-group tolerance, providing concise access to C1-aminated scaffolds.",
-      "challengeDecision": "include",
-      "challengeReason": "Challenge found the central contribution is unequivocally a general preparative C–H amination methodology with scope; no exclusion criterion applies."
-    }
+    {"doi":"10.31635/ccschem.026.202608262","journal":"CCS Chemistry","title":"Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation","decision":"exclude","evidenceBasis":"Compact handoff title/source metadata identify an electrocatalytic paired CO2-reduction/alcohol-oxidation study; no abstract or affirmative evidence establishes a general preparative organic-synthesis method or substrate-scope contribution.","challengeDecision":"exclude","challengeReason":"Challenge considered whether paired alcohol oxidation could qualify as synthetic electrosynthesis; absent evidence of a general preparative organic product method, the protocol requires exclusion rather than inference from an organic half-reaction."},
+    {"doi":"10.1021/jacs.6c14114","journal":"JACS","title":"Disentangling Electronic and Lattice Contributions to Transient Absorption in Metal Halide Perovskites: A First-Principles Study of CH3NH3PbBr3","decision":"exclude","evidenceBasis":"Compact handoff abstract is a first-principles transient-absorption study of a metal-halide perovskite and contains no preparative organic synthesis method.","challengeDecision":"exclude","challengeReason":"No substrate scope, bond-forming synthetic protocol, total synthesis or polymerization methodology is present; this is computational/materials photophysics."},
+    {"doi":"10.1021/jacs.6c17644","journal":"JACS","title":"Enantioselective Defluorinative C(sp2)–H Allylation of Acrylamides Enabled by CpxRh(III) Catalysis","decision":"include","evidenceBasis":"Compact handoff abstract reports a convergent CpxRh(III)-catalyzed enantioselective olefin–olefin cross-coupling of acrylamides and allylic difluorides, broad structural diversity, up to 99% yield/99% ee, and divergent access to chiral 2-piperidones.","challengeDecision":"include","challengeReason":"The central contribution is a general preparative asymmetric C–H functionalization/defluorinative coupling method with substrate scope and synthetic products; no exclusion criterion applies."},
+    {"doi":"10.1021/jacs.6c16062","journal":"JACS","title":"Non-Canonical Peptide Self-Assembly for Mitochondria-Specific Cargo Delivery","decision":"exclude","evidenceBasis":"Compact handoff abstract centers on peptide self-assembly, mitochondrial cargo delivery and antitumor immune effects rather than a general organic synthesis method.","challengeDecision":"exclude","challengeReason":"Although a defined tetrapeptide/conjugate is prepared, synthesis is enabling material for a biomedical delivery study and is not the methodological contribution."},
+    {"doi":"10.1021/acs.joc.6c01559","journal":"JOC","title":"Isoindole-Based Multicomponent Synthesis of Pyrimido[6,1,2-cd]pyrrolizine Fluorophores with Unsymmetrical Urea Handles: Photophysical, Theoretical, and Antifungal Imaging Studies","decision":"include","evidenceBasis":"Compact handoff abstract explicitly reports a diversity-oriented one-pot multicomponent synthetic strategy generating a library of PP fluorophores with unsymmetrical urea functionality from readily accessible precursors.","challengeDecision":"include","challengeReason":"Despite downstream photophysical and antifungal-imaging studies, the paper contains an explicit library-generating multicomponent preparative method; the synthetic methodology is substantive rather than incidental."},
+    {"doi":"10.1038/d41586-026-02929-z","journal":"Nature","title":"All the ways a cell can die — and why the variety matters","decision":"exclude","evidenceBasis":"Nature d41586 identifier and title identify a news/feature article about modes of cell death; compact handoff contains no synthetic-method abstract or preparative chemistry evidence.","challengeDecision":"exclude","challengeReason":"No general organic synthesis method, total synthesis, substrate scope or polymerization methodology is indicated; the subject is cell biology/news rather than synthetic chemistry."},
+    {"doi":"10.1038/d41586-026-02818-5","journal":"Nature","title":"Hundreds of ‘free’ academic journals have started charging fees","decision":"exclude","evidenceBasis":"Nature d41586 identifier and title identify a news/reporting article about journal fees, not chemical research.","challengeDecision":"exclude","challengeReason":"No synthetic chemistry method, preparative scope, total synthesis or polymerization methodology exists."},
+    {"doi":"10.1021/acs.orglett.6c03473","journal":"Organic Letters","title":"Direct C1–H Amination of Free NH Carbazoles Enabled by the Catellani Reaction","decision":"include","evidenceBasis":"Compact handoff abstract reports the first Pd/NBE-catalyzed C1–H amination of unprotected carbazoles, broad cyclic-amine scope and functional-group tolerance, providing concise access to C1-aminated scaffolds.","challengeDecision":"include","challengeReason":"The central contribution is unequivocally a general preparative C–H amination methodology with scope; no exclusion criterion applies."}
   ],
-  "qualityControl": {
-    "secondPassCompleted": true,
-    "unresolvedDisagreements": 0,
-    "allFreshAuditUnresolvedReviewed": true,
-    "productionDataModified": false,
-    "oaPdfHtmlExtractionUsed": false
-  },
+  "qualityControl": {"secondPassCompleted":true,"unresolvedDisagreements":0,"allFreshAuditUnresolvedReviewed":true,"compactHandoffComplete":true,"productionDataModified":false,"oaPdfHtmlExtractionUsed":false},
   "sourceChecks": [
-    {"journal":"Nature","status":"checked","candidateCount":77,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union; live publisher web spot-check","sourcePage":"nature.com","reason":"Machine source families healthy; live Nature content accessible."},
-    {"journal":"Science","status":"checked","candidateCount":38,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"science.org","reason":"Machine source families healthy; no unresolved DOI."},
-    {"journal":"Nature Catalysis","status":"checked","candidateCount":1,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"nature.com/natcatal","reason":"Machine source families healthy; no unresolved DOI."},
-    {"journal":"Nature Synthesis","status":"checked","candidateCount":4,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"nature.com/natsynth","reason":"Machine source families healthy; no unresolved DOI."},
-    {"journal":"Nature Chemistry","status":"checked","candidateCount":7,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union; live publisher web spot-check","sourcePage":"nature.com/nchem","reason":"Machine source families healthy; live Nature Chemistry research content accessible."},
-    {"journal":"Nature Communications","status":"checked","candidateCount":173,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"nature.com/ncomms","reason":"Machine source families healthy; no unresolved DOI."},
-    {"journal":"JACS","status":"checked","candidateCount":83,"syntheticTitleCount":1,"sourceType":"Crossref online/published/created + OpenAlex DOI union; ACS candidate abstract evidence","sourcePage":"pubs.acs.org/journal/jacsat","reason":"Three unresolved candidates reviewed; two excluded and one included."},
-    {"journal":"Angew","status":"checked","candidateCount":95,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union; Wiley live web spot-check","sourcePage":"onlinelibrary.wiley.com/journal/15213773","reason":"Machine source families healthy; Wiley current content accessible; no unresolved DOI."},
-    {"journal":"ACS Catalysis","status":"checked","candidateCount":30,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"pubs.acs.org/journal/accacs","reason":"Machine source families healthy; no unresolved DOI."},
-    {"journal":"Organic Letters","status":"checked","candidateCount":37,"syntheticTitleCount":1,"sourceType":"Crossref online/published/created + OpenAlex DOI union; ACS candidate abstract evidence","sourcePage":"pubs.acs.org/journal/orlef7","reason":"One unresolved candidate reviewed and included."},
-    {"journal":"Chem","status":"checked","candidateCount":0,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"cell.com/chem","reason":"Both machine source families healthy and returned zero in active window."},
-    {"journal":"Chemical Science","status":"checked","candidateCount":0,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"pubs.rsc.org/en/journals/journalissues/sc","reason":"Machine union has no active-window candidates; created/deposit rescue still queried."},
-    {"journal":"CCS Chemistry","status":"checked","candidateCount":3,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"ccspublishing.org.cn","reason":"One unresolved electrocatalysis candidate reviewed and excluded for lack of affirmative general preparative synthesis evidence."},
-    {"journal":"Science Advances","status":"checked","candidateCount":0,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"science.org/journal/sciadv","reason":"Both machine source families healthy and returned zero in active window."},
-    {"journal":"Green Chemistry","status":"checked","candidateCount":0,"syntheticTitleCount":0,"sourceType":"Crossref online/published/created + OpenAlex DOI union","sourcePage":"pubs.rsc.org/en/journals/journalissues/gc","reason":"Machine union has no active-window candidates; created/deposit rescue still queried."},
-    {"journal":"JOC","status":"checked","candidateCount":6,"syntheticTitleCount":1,"sourceType":"Crossref online/published/created + OpenAlex DOI union; ACS candidate abstract evidence","sourcePage":"pubs.acs.org/journal/joceah","reason":"Prospective activeFrom=2026-09-22 respected; one unresolved candidate reviewed and included."}
+    {"journal":"Nature","status":"checked","candidateCount":78,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health + semantic handoff","sourcePage":"nature.com","reason":"Machine source families healthy; two Nature news candidates excluded."},
+    {"journal":"Science","status":"checked","candidateCount":38,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"science.org","reason":"Machine source families healthy; no unresolved DOI."},
+    {"journal":"Nature Catalysis","status":"checked","candidateCount":1,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"nature.com/natcatal","reason":"Machine source families healthy; no unresolved DOI."},
+    {"journal":"Nature Synthesis","status":"checked","candidateCount":4,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"nature.com/natsynth","reason":"Machine source families healthy; no unresolved DOI."},
+    {"journal":"Nature Chemistry","status":"checked","candidateCount":7,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"nature.com/nchem","reason":"Machine source families healthy; no unresolved DOI."},
+    {"journal":"Nature Communications","status":"checked","candidateCount":173,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"nature.com/ncomms","reason":"Machine source families healthy; no unresolved DOI."},
+    {"journal":"JACS","status":"checked","candidateCount":83,"syntheticTitleCount":1,"sourceType":"compact Crossref/OpenAlex union health + candidate abstracts","sourcePage":"pubs.acs.org/journal/jacsat","reason":"Three unresolved candidates reviewed; two excluded and one included."},
+    {"journal":"Angew","status":"checked","candidateCount":95,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"onlinelibrary.wiley.com/journal/15213773","reason":"Machine source families healthy; no unresolved DOI."},
+    {"journal":"ACS Catalysis","status":"checked","candidateCount":30,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"pubs.acs.org/journal/accacs","reason":"Machine source families healthy; no unresolved DOI."},
+    {"journal":"Organic Letters","status":"checked","candidateCount":37,"syntheticTitleCount":1,"sourceType":"compact Crossref/OpenAlex union health + candidate abstract","sourcePage":"pubs.acs.org/journal/orlef7","reason":"One unresolved candidate reviewed and included."},
+    {"journal":"Chem","status":"checked","candidateCount":0,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"cell.com/chem","reason":"Both machine source families healthy and returned zero in active window."},
+    {"journal":"Chemical Science","status":"checked","candidateCount":0,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"pubs.rsc.org/en/journals/journalissues/sc","reason":"Both machine source families healthy and returned zero in active window."},
+    {"journal":"CCS Chemistry","status":"checked","candidateCount":3,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health + candidate metadata","sourcePage":"ccspublishing.org.cn","reason":"One unresolved electrocatalysis candidate reviewed and excluded for lack of affirmative general preparative synthesis evidence."},
+    {"journal":"Science Advances","status":"checked","candidateCount":0,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"science.org/journal/sciadv","reason":"Both machine source families healthy and returned zero in active window."},
+    {"journal":"Green Chemistry","status":"checked","candidateCount":0,"syntheticTitleCount":0,"sourceType":"compact Crossref/OpenAlex union health","sourcePage":"pubs.rsc.org/en/journals/journalissues/gc","reason":"Both machine source families healthy and returned zero in active window."},
+    {"journal":"JOC","status":"checked","candidateCount":6,"syntheticTitleCount":1,"sourceType":"compact Crossref/OpenAlex union health + candidate abstract","sourcePage":"pubs.acs.org/journal/joceah","reason":"Prospective activeFrom=2026-09-22 respected; one unresolved candidate reviewed and included."}
   ]
 }
