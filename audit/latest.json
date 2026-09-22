@@ -1,6 +1,6 @@
 {
   "auditVersion": 4,
-  "generatedAt": "2026-09-22T02:02:31.000Z",
+  "generatedAt": "2026-09-22T02:03:38.156Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -158,27 +158,27 @@
     }
   ],
   "summary": {
-    "galleryDois": 488,
+    "galleryDois": 499,
     "sourceRecords": 501,
-    "rawMissingFromGallery": 456,
+    "rawMissingFromGallery": 445,
     "previouslyReviewedExcluded": 444,
-    "missingFromGallery": 12,
-    "potentialGaps": 10,
+    "missingFromGallery": 1,
+    "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 6,
-    "unresolved": 12,
+    "unresolved": 1,
     "excludedByPolicy": 0
   },
   "closure": {
     "date": "2026-09-21",
     "status": "blocked-source-coverage-anomaly",
     "sourceRecords": 104,
-    "rawMissingFromGallery": 100,
+    "rawMissingFromGallery": 89,
     "previouslyReviewedExcluded": 89,
-    "missingFromGallery": 11,
-    "potentialGaps": 10,
+    "missingFromGallery": 0,
+    "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
       {
@@ -379,11 +379,11 @@
       "crossrefOnly": 103,
       "openAlexOnly": 0,
       "multiSource": 1,
-      "coveredByGallery": 4,
-      "rawMissingFromGallery": 100,
+      "coveredByGallery": 15,
+      "rawMissingFromGallery": 89,
       "previouslyReviewedExcluded": 89,
-      "missingFromGallery": 11,
-      "potentialGaps": 10,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
       "byJournal": {
         "Nature": 8,
         "Nature Catalysis": 1,
@@ -531,10 +531,10 @@
       "multiSource": 128,
       "lateIndexed": 127,
       "safetyTail": 128,
-      "coveredByGallery": 1,
-      "rawMissingFromGallery": 165,
+      "coveredByGallery": 2,
+      "rawMissingFromGallery": 164,
       "previouslyReviewedExcluded": 164,
-      "missingFromGallery": 1,
+      "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "JACS": {
@@ -546,11 +546,11 @@
       "multiSource": 58,
       "lateIndexed": 57,
       "safetyTail": 57,
-      "coveredByGallery": 11,
-      "rawMissingFromGallery": 63,
+      "coveredByGallery": 13,
+      "rawMissingFromGallery": 61,
       "previouslyReviewedExcluded": 60,
-      "missingFromGallery": 3,
-      "potentialGaps": 2
+      "missingFromGallery": 1,
+      "potentialGaps": 0
     },
     "Angew": {
       "activeFrom": "2026-07-01",
@@ -561,11 +561,11 @@
       "multiSource": 52,
       "lateIndexed": 52,
       "safetyTail": 54,
-      "coveredByGallery": 9,
-      "rawMissingFromGallery": 69,
+      "coveredByGallery": 10,
+      "rawMissingFromGallery": 68,
       "previouslyReviewedExcluded": 68,
-      "missingFromGallery": 1,
-      "potentialGaps": 1
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
@@ -576,11 +576,11 @@
       "multiSource": 18,
       "lateIndexed": 18,
       "safetyTail": 18,
-      "coveredByGallery": 2,
-      "rawMissingFromGallery": 27,
+      "coveredByGallery": 3,
+      "rawMissingFromGallery": 26,
       "previouslyReviewedExcluded": 26,
-      "missingFromGallery": 1,
-      "potentialGaps": 1
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
@@ -591,11 +591,11 @@
       "multiSource": 25,
       "lateIndexed": 24,
       "safetyTail": 24,
-      "coveredByGallery": 21,
-      "rawMissingFromGallery": 13,
+      "coveredByGallery": 27,
+      "rawMissingFromGallery": 7,
       "previouslyReviewedExcluded": 7,
-      "missingFromGallery": 6,
-      "potentialGaps": 6
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -1677,7 +1677,7 @@
       "issn": "2041-6520",
       "mode": "created",
       "ok": true,
-      "count": 7,
+      "count": 8,
       "note": ""
     },
     {
@@ -1704,7 +1704,7 @@
       "issn": "2041-6539",
       "mode": "created",
       "ok": true,
-      "count": 7,
+      "count": 8,
       "note": ""
     },
     {
@@ -1877,640 +1877,7 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1021/acscatal.6c05381",
-      "journal": "ACS Catalysis",
-      "title": "A Sequence-to-Scaffold Platform Enables Programmable Carrier-Supported Biocatalysis for Nucleoside Analog Synthesis",
-      "abstract": "Abstract Industrial biocatalysis increasingly requires strategies that convert enzyme discovery into robust catalyst systems for process implementation. Here, we report Spatially Programmable Assembly of Computationally Mined Enzymes (SPACE), a sequence-to-scaffold workflow coupling multiparametric enzyme mining with programmable immobilized assembly. Using nucleoside phosphorylase biocatalysis as a model, SPACE prioritizes enzyme candidates through multiparametric, language-model-assisted mining and organizes them on porous agarose-hydroxypropyl methylcellulose (agarose-HPMC) microsphere carriers through site-specific bioorthogonal scaffold assembly. Scaffold valency tuned enzyme density, balancing loading, catalytic accessibility, and operational stability in single-enzyme catalysts, whereas orthogonal Spy/Snoop assembly adjusted local stoichiometry to coordinate dual-enzyme cascade flux. These architectures improved single-enzyme 5-fluorouridine production and dual-enzyme 2-fluoroadenosine synthesis and extended performance gains across 15 additional nucleoside analog reactions relative to free-enzyme and whole-cell controls. These results establish spatially programmable enzyme immobilization as a platform strategy for transforming computationally mined enzymes into process-oriented biocatalysts.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Qiang Wang",
-        "Teng Bao",
-        "Jia-He Qiu",
-        "Mengkai Hu",
-        "Zhen Qin",
-        "Yujue Wang",
-        "Xian Zhang",
-        "Ke-Wei Chen",
-        "Zhiming Rao"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.3685338",
-      "journal": "Angew",
-      "title": "A Ruthenium(CAAC‐5) Olefin Metathesis Catalyst for Bioconjugation",
-      "abstract": "ABSTRACT Olefin metathesis is a powerful transformation for carbon–carbon bond formation, yet its application in biological settings is challenged by the instability of most ruthenium catalysts in aqueous media. Herein, we report a Ru(CAAC‐5) olefin metathesis catalyst bearing a functional handle for bioconjugation. The resulting hybrid catalyst catalyzes ring‐closing metathesis (RCM) and displays extended lifetimes in aqueous media. Functionalized CAAC‐5 ligands bearing a protected aniline linker were prepared via enamine alkylation and coordinated to ruthenium to afford the corresponding Ru(CAAC‐5) complex. In a benchmark RCM reaction under biologically relevant conditions, the ruthenium complex exhibits enhanced catalytic robustness and reaches turnover numbers of up to 600. Deprotection of an amine‐functionalized handle enables the bioconjugation to proteins and peptides. Using this platform, the catalyst was anchored to biomolecules through supramolecular anchoring to human carbonic anhydrase II (hCA II), click conjugation to peptides (SS01), and covalent attachment to ubiquitin (Ubi). To the best of our knowledge, this aniline‐functionalized Ru(CAAC‐5) complex is the first CAAC‐bearing metathesis catalyst amenable to bioconjugation, while retaining the prolonged catalytic activity characteristic of CAAC‐based systems in aqueous media.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Damian Alexander Graf",
-        "Mikhail Boym",
-        "María Álvarez",
-        "Tsvetan Kardashliev",
-        "Thomas R. Ward"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/jacs.6c16373",
-      "journal": "JACS",
-      "title": "Ligand-Shell-Enabled Silver Catalysis on Gold Nanoclusters for the Straightforward Synthesis of β-Naphthol Ethers from Alkynes",
-      "abstract": "Abstract The use of gold chlorides alongside cationic silver is widely regarded as a standard approach for generating cationic gold in π-acid-mediated organic reactions; however, in many cases, presynthesized cationic gold alone is insufficient to catalyze such transformations. Herein, we present a rare example of employing chloride-containing gold nanoclusters to form Au–Cl–Ag reactive intermediates within protective ligand shells, enabling the isomerization/cyclization of alkynes to directly construct naphthalene rings. Notably, this tandem reaction occurs at the silver active site and is initiated by an unusual alkyne-to-allene isomerization. Beyond providing an efficient synthetic route to multisubstituted β-naphthol derivatives, these findings shed new light on the fundamental mechanisms underlying homogeneous gold/silver dual catalysis and open fresh avenues for designing catalytic applications with metal nanoclusters.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Li-Juan Liu",
-        "Bo Li",
-        "Yang Lin",
-        "Jun Guo",
-        "Mao-Mao Zhang",
-        "Jiu Chen",
-        "De-en Jiang",
-        "Jian He"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:0002-7863:created",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/jacs.6c10810",
-      "journal": "JACS",
-      "title": "Using Data Science Tools to Explore Rate Matching in a Nickel-Catalyzed Cross-Electrophile Coupling of Alkyl and Aryl Halides (Cl, Br) with a Tridentate Monoanionic Ligand",
-      "abstract": "Abstract Nickel-catalyzed cross-electrophile coupling (XEC) between aryl and alkyl electrophiles has emerged as an enabling synthetic method, yet predicting the outcomes of specific electrophile pairs is difficult due to the complexity of the mechanistic pathways. It has been proposed that “rate matching” between the oxidative addition of the aryl halide and the rate of formation of the alkyl radical, in addition to the stability of the Ni(II)–Ar complex, dictates the yield of the cross-coupling product. To probe this quantitatively, we developed a new tridentate monoanionic ligand that activatesalkyl and aryl chlorides and exhibits well-behaved electrochemistry, allowing the measurement of relative rate constants. This provides a framework to interrogate the rate-matching concept using both aryl and alkyl bromides and chlorides in cross-electrophile coupling. By combining an electroanalytical workflow with machine learning, the prediction of activation rate constants for all aryl/alkyl chlorides and bromides was achieved and correlated with reaction yields. We found that productive coupling occurs in a specific rate regime, and the synthetic performance could be predictably modulated by choosing the “matched” halide (either chloride or bromide) for each coupling partner.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Haruka Takenaka",
-        "Alexandra J. Ring",
-        "Avijit Hazra",
-        "Therese H. Wild",
-        "Samuel M. R. Powell",
-        "Tianhua Tang",
-        "Sarah E. Reisman",
-        "Matthew S. Sigman"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:0002-7863:created",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1038/s41467-026-77981-4",
-      "journal": "Nature Communications",
-      "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
-      "abstract": "",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Wenhao Yin",
-        "Ranran Xia",
-        "Li Xu",
-        "Lianggui Li",
-        "Yang Li"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03740",
-      "journal": "Organic Letters",
-      "title": "Additional Reductant-Free Visible-Light-Driven Davis–Beirut-Type Reaction: Access to Indazolin-3-ones from o -Nitrobenzaldimines",
-      "abstract": "Abstract The reduction cyclization of o-nitrobenzaldimines is an important method for the construction of nitrogen-containing heterocycles. However, existing methods typically require additional reducing agents to reduce the nitro groups. Disclosed here is a direct photochemical oxygen atom transfer reaction in which bromoalkanes play a dual role that efficiently constructs a series of indazolin-3-one derivatives in moderate to good isolated yields. The developed protocol boasts a wide substrate scope and excellent step economy and does not require photocatalysts, transition metals, or reductants. Furthermore, scale-up synthesis and derivatization demonstrate the synthetic utility of the developed method.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Dong-Qun Huang",
-        "Shi-Ying Wu",
-        "Lei Yang",
-        "Jian-Qiang Zhao",
-        "Yong You",
-        "Yan-Ping Zhang",
-        "Wei-Cheng Yuan",
-        "Zhen-Hua Wang"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03340",
-      "journal": "Organic Letters",
-      "title": "Copper-Catalyzed Formal [5 + 1] Annulation of Diynes with 1 H -Indole-2-ethanols: Construction of Tetrahydropyrano Indoles",
-      "abstract": "Abstract Transition-metal-catalyzed annulation of diynes with nucleophiles is a powerful tool for constructing valuable complex (hetero)cycles. However, reports on the cascade annulation of diynes with dinucleophiles are rare and confined to noble-metal catalysts, narrow diyne scopes, and specific reaction types. Herein, we describe a copper-catalyzed formal [5 + 1] annulation of 1,6-diynes with 1H-indole-2-ethanols via vinyl cations, leading to the concise and practical synthesis of tetrahydropyrano indoles. Significantly, this protocol represents the first non-noble-metal-catalyzed annulation of diynes with dinucleophiles.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Yin-Zhu Kong",
-        "Chen-Yong Weng",
-        "Fu-Wen Tan",
-        "Maxim A. Novikov",
-        "Roman A. Novikov",
-        "Gongde Wu",
-        "Fu-Shuai Li",
-        "Bo Zhou",
-        "Long-Wu Ye"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03243",
-      "journal": "Organic Letters",
-      "title": "Leveraging Iodomethylboronic Ester Reactivity to Access Late-Stage Dehydroalanine and Dehydrovaline onto Peptides in Water",
-      "abstract": "Abstract We report a mild, chemoselective late-stage conversion of cysteine and penicillamine residues into dehydroalanine (Dha) and dehydrovaline (ΔVal), respectively, in peptides via rapid bis-alkylation with the commercially available iodomethylboronic acid pinacol ester (IMBpin) in PBS buffer. This operationally simple method affords largely excellent conversion to Dha/ΔVal containing peptide substrates. Such in situ generation of reactive alkene handles provides a powerful method for synthesizing post-translational mimetics, as demonstrated by the facile conjugation of thiol-bearing cargos (drugs, lipids, fluorophores, glutathione) under mild conditions in the same pot or with purified Dha-peptide, highlighting the method’s potential in peptide engineering.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Sagnika Ghosh",
-        "Saurav Chatterjee",
-        "Anupam Bandyopadhyay"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02993",
-      "journal": "Organic Letters",
-      "title": "Nickel-Catalyzed Diastereoselective Cascade Cyclization/Cross-Coupling for the Synthesis of Dibenzazepines",
-      "abstract": "Abstract Here, we report a nickel-catalyzed system for intramolecular cascade cyclization/cross-coupling, affording diverse dibenzazepines with exclusive diastereoselectivity. Reversible dissociation of a labile ligand generates an open coordination site, enabling alkene binding and a key eight- to nine-membered nickelacycle transition state, supported by DFT calculations. The method features broad substrate scope and good functional group tolerance and provides straightforward access to dibenzazepines.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Shijun Liu",
-        "Keyong Zhu",
-        "Peng Yan",
-        "Yizhong Wang",
-        "Shizhao Xu",
-        "Min Gao",
-        "Luqing Lin"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03335",
-      "journal": "Organic Letters",
-      "title": "Rh(III)-Catalyzed [4 + 2] Spiroannulation of 2-Phenylbenzimidazoles with Isomerizable 3-Methylmaleimides: Synthesis of Spiro-Fused Benzimidazoisoquinoline Succinimides",
-      "abstract": "Abstract A Rh(III)-catalyzed exclusive [4 + 2] cascade cyclization of 2-phenylbenzimidazoles with 3-methylmaleimides for the synthesis of spiro-fused benzimidazoisoquinoline succinimides via C–H activation is reported. The detailed mechanistic study revealed that the reaction proceeds through N-directed C–H activation of 2-phenylbenzimidazole. Subsequent migratory insertion of the rhodium-mediated formation of isomeric maleimide into the Rh–C bond and reductive elimination affords the polycyclic spiro-fused benzimidazoisoquinoline succinimide",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Wei-Jung Chiu",
-        "Meng-Han Shih",
-        "Indrajeet J. Barve",
-        "Chung-Ming Sun"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03418",
-      "journal": "Organic Letters",
-      "title": "Sequential Strecker–Ugi, Pictet–Spengler, and Ring-Expansion Reactions for the Synthesis of the Imidazopyridine-Fused Azocinoindole Scaffold",
-      "abstract": "Abstract A method involving sequential Strecker–Ugi, Pictet–Spengler, and ring-expansion reactions is developed for the synthesis of an imidazopyridine-fused azocinoindole scaffold. It is highly efficient for the regioselective preparation of a novel polycyclic scaffold. The three-component Strecker–Ugi reaction assembles five-membered imidazole; the regioselective Pictet–Spengler reaction at C-4 of indole affords seven-membered azepinoindole, and ipso ring expansion of azepinoindole at C-4 of indole results in eight-membered azocinoindole.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Ashutosh Nath",
-        "Jiaming Zhu",
-        "Piyush Mishra",
-        "Janiery Sanchez",
-        "Wei Zhang"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
     }
   ],
-  "potentialGaps": [
-    {
-      "doi": "10.1021/acscatal.6c05381",
-      "journal": "ACS Catalysis",
-      "title": "A Sequence-to-Scaffold Platform Enables Programmable Carrier-Supported Biocatalysis for Nucleoside Analog Synthesis",
-      "abstract": "Abstract Industrial biocatalysis increasingly requires strategies that convert enzyme discovery into robust catalyst systems for process implementation. Here, we report Spatially Programmable Assembly of Computationally Mined Enzymes (SPACE), a sequence-to-scaffold workflow coupling multiparametric enzyme mining with programmable immobilized assembly. Using nucleoside phosphorylase biocatalysis as a model, SPACE prioritizes enzyme candidates through multiparametric, language-model-assisted mining and organizes them on porous agarose-hydroxypropyl methylcellulose (agarose-HPMC) microsphere carriers through site-specific bioorthogonal scaffold assembly. Scaffold valency tuned enzyme density, balancing loading, catalytic accessibility, and operational stability in single-enzyme catalysts, whereas orthogonal Spy/Snoop assembly adjusted local stoichiometry to coordinate dual-enzyme cascade flux. These architectures improved single-enzyme 5-fluorouridine production and dual-enzyme 2-fluoroadenosine synthesis and extended performance gains across 15 additional nucleoside analog reactions relative to free-enzyme and whole-cell controls. These results establish spatially programmable enzyme immobilization as a platform strategy for transforming computationally mined enzymes into process-oriented biocatalysts.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Qiang Wang",
-        "Teng Bao",
-        "Jia-He Qiu",
-        "Mengkai Hu",
-        "Zhen Qin",
-        "Yujue Wang",
-        "Xian Zhang",
-        "Ke-Wei Chen",
-        "Zhiming Rao"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.3685338",
-      "journal": "Angew",
-      "title": "A Ruthenium(CAAC‐5) Olefin Metathesis Catalyst for Bioconjugation",
-      "abstract": "ABSTRACT Olefin metathesis is a powerful transformation for carbon–carbon bond formation, yet its application in biological settings is challenged by the instability of most ruthenium catalysts in aqueous media. Herein, we report a Ru(CAAC‐5) olefin metathesis catalyst bearing a functional handle for bioconjugation. The resulting hybrid catalyst catalyzes ring‐closing metathesis (RCM) and displays extended lifetimes in aqueous media. Functionalized CAAC‐5 ligands bearing a protected aniline linker were prepared via enamine alkylation and coordinated to ruthenium to afford the corresponding Ru(CAAC‐5) complex. In a benchmark RCM reaction under biologically relevant conditions, the ruthenium complex exhibits enhanced catalytic robustness and reaches turnover numbers of up to 600. Deprotection of an amine‐functionalized handle enables the bioconjugation to proteins and peptides. Using this platform, the catalyst was anchored to biomolecules through supramolecular anchoring to human carbonic anhydrase II (hCA II), click conjugation to peptides (SS01), and covalent attachment to ubiquitin (Ubi). To the best of our knowledge, this aniline‐functionalized Ru(CAAC‐5) complex is the first CAAC‐bearing metathesis catalyst amenable to bioconjugation, while retaining the prolonged catalytic activity characteristic of CAAC‐based systems in aqueous media.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Damian Alexander Graf",
-        "Mikhail Boym",
-        "María Álvarez",
-        "Tsvetan Kardashliev",
-        "Thomas R. Ward"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/jacs.6c16373",
-      "journal": "JACS",
-      "title": "Ligand-Shell-Enabled Silver Catalysis on Gold Nanoclusters for the Straightforward Synthesis of β-Naphthol Ethers from Alkynes",
-      "abstract": "Abstract The use of gold chlorides alongside cationic silver is widely regarded as a standard approach for generating cationic gold in π-acid-mediated organic reactions; however, in many cases, presynthesized cationic gold alone is insufficient to catalyze such transformations. Herein, we present a rare example of employing chloride-containing gold nanoclusters to form Au–Cl–Ag reactive intermediates within protective ligand shells, enabling the isomerization/cyclization of alkynes to directly construct naphthalene rings. Notably, this tandem reaction occurs at the silver active site and is initiated by an unusual alkyne-to-allene isomerization. Beyond providing an efficient synthetic route to multisubstituted β-naphthol derivatives, these findings shed new light on the fundamental mechanisms underlying homogeneous gold/silver dual catalysis and open fresh avenues for designing catalytic applications with metal nanoclusters.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Li-Juan Liu",
-        "Bo Li",
-        "Yang Lin",
-        "Jun Guo",
-        "Mao-Mao Zhang",
-        "Jiu Chen",
-        "De-en Jiang",
-        "Jian He"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:0002-7863:created",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/jacs.6c10810",
-      "journal": "JACS",
-      "title": "Using Data Science Tools to Explore Rate Matching in a Nickel-Catalyzed Cross-Electrophile Coupling of Alkyl and Aryl Halides (Cl, Br) with a Tridentate Monoanionic Ligand",
-      "abstract": "Abstract Nickel-catalyzed cross-electrophile coupling (XEC) between aryl and alkyl electrophiles has emerged as an enabling synthetic method, yet predicting the outcomes of specific electrophile pairs is difficult due to the complexity of the mechanistic pathways. It has been proposed that “rate matching” between the oxidative addition of the aryl halide and the rate of formation of the alkyl radical, in addition to the stability of the Ni(II)–Ar complex, dictates the yield of the cross-coupling product. To probe this quantitatively, we developed a new tridentate monoanionic ligand that activatesalkyl and aryl chlorides and exhibits well-behaved electrochemistry, allowing the measurement of relative rate constants. This provides a framework to interrogate the rate-matching concept using both aryl and alkyl bromides and chlorides in cross-electrophile coupling. By combining an electroanalytical workflow with machine learning, the prediction of activation rate constants for all aryl/alkyl chlorides and bromides was achieved and correlated with reaction yields. We found that productive coupling occurs in a specific rate regime, and the synthetic performance could be predictably modulated by choosing the “matched” halide (either chloride or bromide) for each coupling partner.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Haruka Takenaka",
-        "Alexandra J. Ring",
-        "Avijit Hazra",
-        "Therese H. Wild",
-        "Samuel M. R. Powell",
-        "Tianhua Tang",
-        "Sarah E. Reisman",
-        "Matthew S. Sigman"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:0002-7863:created",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03740",
-      "journal": "Organic Letters",
-      "title": "Additional Reductant-Free Visible-Light-Driven Davis–Beirut-Type Reaction: Access to Indazolin-3-ones from o -Nitrobenzaldimines",
-      "abstract": "Abstract The reduction cyclization of o-nitrobenzaldimines is an important method for the construction of nitrogen-containing heterocycles. However, existing methods typically require additional reducing agents to reduce the nitro groups. Disclosed here is a direct photochemical oxygen atom transfer reaction in which bromoalkanes play a dual role that efficiently constructs a series of indazolin-3-one derivatives in moderate to good isolated yields. The developed protocol boasts a wide substrate scope and excellent step economy and does not require photocatalysts, transition metals, or reductants. Furthermore, scale-up synthesis and derivatization demonstrate the synthetic utility of the developed method.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Dong-Qun Huang",
-        "Shi-Ying Wu",
-        "Lei Yang",
-        "Jian-Qiang Zhao",
-        "Yong You",
-        "Yan-Ping Zhang",
-        "Wei-Cheng Yuan",
-        "Zhen-Hua Wang"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03340",
-      "journal": "Organic Letters",
-      "title": "Copper-Catalyzed Formal [5 + 1] Annulation of Diynes with 1 H -Indole-2-ethanols: Construction of Tetrahydropyrano Indoles",
-      "abstract": "Abstract Transition-metal-catalyzed annulation of diynes with nucleophiles is a powerful tool for constructing valuable complex (hetero)cycles. However, reports on the cascade annulation of diynes with dinucleophiles are rare and confined to noble-metal catalysts, narrow diyne scopes, and specific reaction types. Herein, we describe a copper-catalyzed formal [5 + 1] annulation of 1,6-diynes with 1H-indole-2-ethanols via vinyl cations, leading to the concise and practical synthesis of tetrahydropyrano indoles. Significantly, this protocol represents the first non-noble-metal-catalyzed annulation of diynes with dinucleophiles.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Yin-Zhu Kong",
-        "Chen-Yong Weng",
-        "Fu-Wen Tan",
-        "Maxim A. Novikov",
-        "Roman A. Novikov",
-        "Gongde Wu",
-        "Fu-Shuai Li",
-        "Bo Zhou",
-        "Long-Wu Ye"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03243",
-      "journal": "Organic Letters",
-      "title": "Leveraging Iodomethylboronic Ester Reactivity to Access Late-Stage Dehydroalanine and Dehydrovaline onto Peptides in Water",
-      "abstract": "Abstract We report a mild, chemoselective late-stage conversion of cysteine and penicillamine residues into dehydroalanine (Dha) and dehydrovaline (ΔVal), respectively, in peptides via rapid bis-alkylation with the commercially available iodomethylboronic acid pinacol ester (IMBpin) in PBS buffer. This operationally simple method affords largely excellent conversion to Dha/ΔVal containing peptide substrates. Such in situ generation of reactive alkene handles provides a powerful method for synthesizing post-translational mimetics, as demonstrated by the facile conjugation of thiol-bearing cargos (drugs, lipids, fluorophores, glutathione) under mild conditions in the same pot or with purified Dha-peptide, highlighting the method’s potential in peptide engineering.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Sagnika Ghosh",
-        "Saurav Chatterjee",
-        "Anupam Bandyopadhyay"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02993",
-      "journal": "Organic Letters",
-      "title": "Nickel-Catalyzed Diastereoselective Cascade Cyclization/Cross-Coupling for the Synthesis of Dibenzazepines",
-      "abstract": "Abstract Here, we report a nickel-catalyzed system for intramolecular cascade cyclization/cross-coupling, affording diverse dibenzazepines with exclusive diastereoselectivity. Reversible dissociation of a labile ligand generates an open coordination site, enabling alkene binding and a key eight- to nine-membered nickelacycle transition state, supported by DFT calculations. The method features broad substrate scope and good functional group tolerance and provides straightforward access to dibenzazepines.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Shijun Liu",
-        "Keyong Zhu",
-        "Peng Yan",
-        "Yizhong Wang",
-        "Shizhao Xu",
-        "Min Gao",
-        "Luqing Lin"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03335",
-      "journal": "Organic Letters",
-      "title": "Rh(III)-Catalyzed [4 + 2] Spiroannulation of 2-Phenylbenzimidazoles with Isomerizable 3-Methylmaleimides: Synthesis of Spiro-Fused Benzimidazoisoquinoline Succinimides",
-      "abstract": "Abstract A Rh(III)-catalyzed exclusive [4 + 2] cascade cyclization of 2-phenylbenzimidazoles with 3-methylmaleimides for the synthesis of spiro-fused benzimidazoisoquinoline succinimides via C–H activation is reported. The detailed mechanistic study revealed that the reaction proceeds through N-directed C–H activation of 2-phenylbenzimidazole. Subsequent migratory insertion of the rhodium-mediated formation of isomeric maleimide into the Rh–C bond and reductive elimination affords the polycyclic spiro-fused benzimidazoisoquinoline succinimide",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Wei-Jung Chiu",
-        "Meng-Han Shih",
-        "Indrajeet J. Barve",
-        "Chung-Ming Sun"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03418",
-      "journal": "Organic Letters",
-      "title": "Sequential Strecker–Ugi, Pictet–Spengler, and Ring-Expansion Reactions for the Synthesis of the Imidazopyridine-Fused Azocinoindole Scaffold",
-      "abstract": "Abstract A method involving sequential Strecker–Ugi, Pictet–Spengler, and ring-expansion reactions is developed for the synthesis of an imidazopyridine-fused azocinoindole scaffold. It is highly efficient for the regioselective preparation of a novel polycyclic scaffold. The three-component Strecker–Ugi reaction assembles five-membered imidazole; the regioselective Pictet–Spengler reaction at C-4 of indole affords seven-membered azepinoindole, and ipso ring expansion of azepinoindole at C-4 of indole results in eight-membered azocinoindole.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Ashutosh Nath",
-        "Jiaming Zhu",
-        "Piyush Mishra",
-        "Janiery Sanchez",
-        "Wei Zhang"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    }
-  ]
+  "potentialGaps": []
 }
