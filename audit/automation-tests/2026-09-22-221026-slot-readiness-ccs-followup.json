@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-22T22:10:26+08:00",
+  "context": "Continuation after the 21:51 prepublish recovery report; bounded CCS evidence check and fixed-slot readiness regression",
+  "publicationSlot": "2026-09-23T08:00:00+08:00",
+  "result": "readiness_guards_verified_publication_still_blocked",
+  "existingStaging": {
+    "file": "audit/prepublish-review-2026-09-23-0800.json",
+    "blobSha": "4dd9b5543efd01c08fc1946b9b41e3bfe88102da",
+    "handoffGeneratedAt": "2026-09-22T13:37:57.398Z",
+    "compactBlobSha": "9de05665f88100a34d882045eca97440b2d09080",
+    "sourceRecords": 573,
+    "auditGalleryDois": 512,
+    "reviewed": 26,
+    "accepted": 9,
+    "rejected": 16,
+    "pending": 1,
+    "phase": "preparing",
+    "status": "incomplete_review",
+    "note": "These are the existing staged semantic decisions, verified by the runner. This follow-up does not claim a new 26-paper semantic review or a new machine discovery run."
+  },
+  "pendingEvidenceCheck": {
+    "doi": "10.31635/ccschem.026.202608262",
+    "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+    "decisionUnchanged": "pending",
+    "evidenceObtained": "Official publisher search/listing confirms title and publication listing only; no usable DOI-matched abstract, product details or preparative substrate scope obtained in this follow-up.",
+    "attemptedPrimaryUrls": [
+      "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+      "https://pubs.chemsoc.org.cn/doi/10.31635/ccschem.026.202608262",
+      "https://api.crossref.org/works/10.31635/ccschem.026.202608262"
+    ],
+    "interactiveBrowserAttempt": {
+      "provider": "TinyFish",
+      "started": false,
+      "reason": "wallet_out_of_funds",
+      "retried": false,
+      "note": "This is a newly observed failure of this optional interactive request, not a claim that wallet state caused all prior publisher access failures. Checkout links and wallet tokens are not persisted."
+    },
+    "stillNeeded": "DOI-matched abstract or article evidence identifying products, alcohol scope, preparative utility and the main scientific contribution. Neither title nor author identity establishes inclusion or exclusion."
+  },
+  "changes": {
+    "readinessWrapperCommit": "914ddf999883c39e7e9655acf866f26815ad91ee",
+    "slotRegressionTestsCommit": "42b8941dfa4afd2dda288c44d0fc229bd621ada9",
+    "workflowCommit": "34c0b1915b85ac95942599fa6511ab727ae789a2",
+    "documentationCommit": "2cc51abe873eac53a717e7e34df8bc648fc2111b",
+    "concurrency": "Retained the concurrently added base-validator readiness mode and its existing seven regression cases; did not overwrite the other chat's test file. Added a separate slot-freshness wrapper and six complementary cases."
+  },
+  "githubRunnerVerification": {
+    "runId": 35738079314,
+    "jobId": 106780367769,
+    "headSha": "34c0b1915b85ac95942599fa6511ab727ae789a2",
+    "runConclusion": "failure",
+    "expectedReason": "Real staged publication remains blocked; regression suites and record validation passed, while the two strict publication-readiness steps intentionally failed.",
+    "existingReadinessRegressionCases": 7,
+    "existingReadinessRegressionConclusion": "success",
+    "newSlotRegressionCases": 6,
+    "newSlotRegressionConclusion": "success",
+    "recordValidationPassed": true,
+    "semanticReady": false,
+    "snapshotFreshForSlot": false,
+    "publicationReady": false,
+    "pendingCount": 1,
+    "pendingDois": ["10.31635/ccschem.026.202608262"],
+    "semanticBlockers": ["pending_evidence", "open_evidence_gaps", "unfinalized_candidates", "staging_not_marked_ready"],
+    "slotBlocker": "snapshot_not_from_target_slot_prerelease_window",
+    "artifactId": 10698610054,
+    "artifactName": "prepublish-readiness-evidence",
+    "artifactFiles": ["prepublish-validation.json", "prepublish-readiness.json", "prepublish-slot-readiness.json"],
+    "runtime": "GitHub Actions runner; no local Node execution"
+  },
+  "automationConfiguration": {
+    "formalReleasePromptUpdated": true,
+    "formalReleaseScheduleUnchanged": ["08:00", "18:00"],
+    "requiredReadinessSteps": ["Require finalized review for publication readiness", "Require fresh snapshot for the target 08 or 18 slot"],
+    "nextMorningPrimaryDateWindow": ["2026-09-21", "2026-09-23"],
+    "nextMorningFreshAuditInterval": ["2026-09-23T06:55:00+08:00", "2026-09-23T08:00:00+08:00"],
+    "newScheduledTasksCreated": false
+  },
+  "safety": {
+    "productionLiteratureDataModified": false,
+    "semanticDecisionsModified": false,
+    "coordinatorStateOverwritten": false,
+    "pagesDeploymentTriggeredByThisFollowup": false,
+    "fullDiscoveryRescanStarted": false,
+    "oaPdfHtmlImageExtractionRun": false,
+    "mediaAcquisitionRun": false,
+    "liveProductionCardCountReverified": false
+  },
+  "nextAction": "Resolve the CCS evidence gap without inventing a final decision, then reconcile staging with a fresh target-date audit during the morning pre-release window. Do not report this regression run as a successful literature release."
+}
