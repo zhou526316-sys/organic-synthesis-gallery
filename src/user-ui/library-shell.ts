@@ -134,8 +134,7 @@ export class GalleryUserShell extends HTMLElement {
     const actions: Array<[ActionKey, string]> = [['favorite', this.tr('收藏', 'Save')], ['status', this.tr('阅读状态', 'Reading status')], ['note', this.tr('私人备注', 'Private note')], ['more', this.tr('更多', 'More')]];
     return `<section class='section action-appearance-section' style='border-top:0;padding-top:0'><h4>${this.tr('卡片操作按钮', 'Card action buttons')}</h4><div class='help' style='margin-bottom:8px'>${this.tr('这里调整“收藏 / 阅读状态 / 私人备注 / 更多”四个按钮本身的颜色和外观；“将读/粗读/深读”等状态颜色在下方单独设置。', 'These controls change the Save / Reading status / Private note / More buttons themselves. Reading-state colors are configured separately below.')}</div>${actions.map(([key, label]) => styleRow(store.state.actionStyles[key], `action:${key}`, label)).join('')}</section><section class='section'><label class='row'><input type='checkbox' data-hide-read ${store.state.hideRead ? 'checked' : ''}>${this.tr('隐藏已读', 'Hide read')}</label></section>
     <section class='section'><h4>${this.tr('阅读状态', 'Reading status')}</h4><div class='manage'>${store.state.statuses.map(status => `<div class='manage-row'><div class='top'><input type='text' data-status-name='${escapeHtml(status.id)}' value='${escapeHtml(status.name)}'><label><input type='checkbox' data-status-read='${escapeHtml(status.id)}' ${status.countsAsRead ? 'checked' : ''}> ${this.tr('视为已读', 'Treat as read')}</label><button class='link danger' type='button' data-action='delete-status:${escapeHtml(status.id)}'>${this.tr('删除', 'Delete')}</button></div>${styleRow(status.style, `status:${status.id}`, '')}</div>`).join('')}</div><button class='secondary' type='button' data-action='add-status'>＋ ${this.tr('添加状态', 'Add status')}</button><div class='help'>${this.tr('默认状态和自定义状态都可以删除；至少保留一个状态。删除后，使用该状态的文献会恢复为未设置状态。', 'Default and custom statuses can both be deleted; at least one status is retained. Papers using a deleted status become unset.')}</div></section>
-    <section class='section'><h4>${this.tr('收藏夹', 'Folders')}</h4><div class='row'>${store.state.collections.map(item => `<span>${escapeHtml(item.name)}</span>`).join(' · ')}</div><button class='secondary' type='button' data-action='add-collection'>＋ ${this.tr('新建收藏夹', 'New folder')}</button></section>
-    <section class='section'><h4>${this.tr('快速选择', 'Quick choices')}</h4><div class='row'>${store.state.quickTerms.map(item => `<span>${escapeHtml(item.label)}</span>`).join(' · ')}</div><button class='secondary' type='button' data-action='add-quick'>＋ ${this.tr('添加词条', 'Add term')}</button></section>
+    <section class='section'><h4>${this.tr('收藏夹 / 快速选择', 'Folders / quick choices')}</h4><div class='help' style='margin-bottom:8px'>${this.tr('“更多”里的快速选择直接使用这些收藏夹。这里可分别调整每个收藏夹的颜色、形状和图片。', 'Quick choices in More use these folders directly. Customize each folder color, shape, or image here.')}</div><div class='manage'>${store.state.collections.map(item => `<div class='manage-row'><div class='top'><strong>${escapeHtml(item.name)}</strong></div>${styleRow(item.style, `collection:${item.id}`, '')}</div>`).join('')}</div><button class='secondary' type='button' data-action='add-collection'>＋ ${this.tr('新建收藏夹', 'New folder')}</button></section>
     <section class='section'><h4>${this.tr('同义词 / 别名组', 'Synonym / alias groups')}</h4>${store.state.aliases.map(item => `<div class='item'><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.terms.join(' · '))}</small><button class='link danger' type='button' data-action='delete-alias:${escapeHtml(item.id)}'>${this.tr('删除', 'Delete')}</button></div>`).join('')}<button class='secondary' type='button' data-action='add-alias'>＋ ${this.tr('添加别名组', 'Add alias group')}</button></section>
     <div class='notice'>${this.tr('公共阅读人数只在实际打开论文时记录，并按同一 IP + DOI 永久去重；服务端只保存加盐哈希，不保存明文 IP。个人阅读状态仅用于你的筛选与标记。', 'Public reader counts are recorded only when an article is actually opened and are permanently deduplicated by IP + DOI. Only a salted server-side hash is stored, never the plaintext IP. Personal reading status is only for your own filtering and labels.')}</div>`;
   }
@@ -281,7 +280,13 @@ export class GalleryUserShell extends HTMLElement {
     }));
   }
 
-  private styleTarget(value: string): StyleDef | undefined { const [kind, id] = value.split(':'); return kind === 'status' ? store.status(id)?.style : kind === 'action' ? store.state.actionStyles[id as ActionKey] : undefined; }
+  private styleTarget(value: string): StyleDef | undefined {
+    const [kind, id] = value.split(':');
+    if (kind === 'status') return store.status(id)?.style;
+    if (kind === 'action') return store.state.actionStyles[id as ActionKey];
+    if (kind === 'collection') return store.state.collections.find(item => item.id === id)?.style;
+    return undefined;
+  }
 
   private setAuthMessage(message: string): void {
     this.integrationMessage = message;
@@ -622,8 +627,7 @@ export class GalleryUserShell extends HTMLElement {
       Object.values(store.state.papers).forEach(paper => { if (paper.statusId === id) delete paper.statusId; });
       store.save(); return;
     }
-    if (action === 'add-collection') { const name = prompt(this.tr('收藏夹名称', 'Folder name')); if (name?.trim()) { store.state.collections.push({ id: makeId('collection'), name: name.trim() }); store.save(); } return; }
-    if (action === 'add-quick') { const label = prompt(this.tr('快速选择词条', 'Quick-choice term')); if (label?.trim()) { store.state.quickTerms.push({ id: makeId('quick'), label: label.trim(), style: { rgb: [96,116,145], shape: 'pill' } }); store.save(); } return; }
+    if (action === 'add-collection') { const name = prompt(this.tr('收藏夹名称', 'Folder name')); if (name?.trim()) { store.state.collections.push({ id: makeId('collection'), name: name.trim(), style: { rgb: [96,116,145], shape: 'pill' } }); store.save(); } return; }
     if (action === 'add-alias') { const name = prompt(this.tr('概念组名称', 'Concept group name')); if (!name?.trim()) return; const raw = prompt(this.tr('同义词/别名，用逗号分隔', 'Synonyms/aliases separated by commas')); const terms = (raw || '').split(/[,，;]/).map(value => value.trim()).filter(Boolean); if (terms.length) { store.state.aliases.push({ id: makeId('alias'), name: name.trim(), terms }); store.save(); } return; }
     if (action.startsWith('delete-alias:')) { store.state.aliases = store.state.aliases.filter(item => item.id !== action.slice(13)); store.save(); return; }
     if (action.startsWith('clear-image:')) { const target = this.styleTarget(action.slice(12)); if (target) { delete target.imageData; store.save(); } return; }
