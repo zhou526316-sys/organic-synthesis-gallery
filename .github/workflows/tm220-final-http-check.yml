@@ -1,0 +1,54 @@
+name: Tampermonkey 2.2.20 final HTTP check
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/tm220-final-http-check.yml']
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read actual public installer queue and browser-origin capability handshake
+        run: |
+          node --input-type=module - <<'NODE'
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          import {writeFile} from 'node:fs/promises';
+          const site='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+          const worker='https://organic-synthesis-gallery.zhou526316.workers.dev';
+          async function get(url,origin=false){
+            const headers={'cache-control':'no-cache'};
+            if(origin)headers.origin='https://zhou526316-sys.github.io';
+            const response=await fetch(url,{headers,signal:AbortSignal.timeout(15000)});
+            const text=await response.text();
+            console.log('PUBLIC_HTTP',JSON.stringify({url,status:response.status,contentType:response.headers.get('content-type'),acao:response.headers.get('access-control-allow-origin'),error:response.ok?undefined:text.slice(0,300)}));
+            assert.equal(response.status,200,'Non-200 public response: '+url);
+            return text;
+          }
+          const suffix='?finalCheck='+Date.now();
+          const script=await get(site+'gallery-vpn-bridge.user.js'+suffix);
+          assert.match(script,/@version\s+2\.2\.20(?:\s|$)/);
+          for(const marker of ["var VERSION = '6.2.20';",'pairedJobs','overnightRetryEligible','checkpointKey','assertBoundCaptureJob','GM_listValues','pending_verified_promotion'])assert.ok(script.includes(marker),marker);
+          const queue=JSON.parse(await get(site+'toc-demand-live.json'+suffix));
+          assert.equal(queue.mediaGeneration,1790082000000);assert.equal(queue.pairedCaptureRegistry,true);
+          assert.equal(queue.articles.length,queue.webpageDoiCount);assert.ok(queue.articles.length>400);assert.equal(new Set(queue.articles.map(x=>x.doi)).size,queue.articles.length);
+          const caps=JSON.parse(await get(worker+'/api/media/capture-capabilities'+suffix,true));
+          assert.equal(caps.captureVersion,'6.2.20');assert.equal(caps.mode,'verified-staging');assert.equal(caps.bodyFigures,true);assert.equal(caps.publishedAutomatically,false);
+          const media=JSON.parse(await get(site+'media-index.json'+suffix));
+          const retained=Object.values(media.items).filter(x=>x.toc?.recoveryId==='toc-batch1-20260922').length;assert.ok(retained>=83);
+          const report={verifiedAt:new Date().toISOString(),installationUrl:site+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.20',captureVersion:'6.2.20',scriptBytes:Buffer.byteLength(script),scriptSha256:createHash('sha256').update(script).digest('hex'),queueArticles:queue.articles.length,queueGeneratedAt:queue.generatedAt,retainedReviewedTocs:retained,workerCapabilities:caps,publicReadOnly:true,publisherAuthenticationVerified:false};
+          console.log('TM220_LIVE_VERIFIED',JSON.stringify(report));
+          await writeFile(process.env.RUNNER_TEMP+'/tm220-live.json',JSON.stringify(report,null,2));
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm220-final-live-verification
+          path: ${{ runner.temp }}/tm220-live.json
+          retention-days: 14
+          if-no-files-found: warn
