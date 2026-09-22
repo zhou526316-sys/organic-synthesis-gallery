@@ -2,6 +2,8 @@ import { escapeHtml, rgbCss, SHAPES, statusLabel, store, styleVars, type Article
 
 import { hydrateStatusImages, statusImageError, statusImageTag, viewStatusImage } from './status-image-assets';
 
+import { positionSummaryDrawer, SUMMARY_LAYOUT_CSS } from './summary-layout';
+
 const NAME = 'gallery-paper-actions';
 
 function icon(style: StyleDef, fallback: string): string {
@@ -139,6 +141,10 @@ export class GalleryPaperActions extends HTMLElement {
     const anchor = this.shadow.querySelector<HTMLElement>(`button[data-action="${this.panel}"]`);
     const drawer = this.shadow.querySelector<HTMLElement>('.drawer');
     if (!anchor || !drawer) return;
+    if (this.panel === 'summary') {
+      positionSummaryDrawer(drawer, this.getBoundingClientRect());
+      return;
+    }
 
     drawer.style.left = '0px';
     drawer.style.top = '0px';
@@ -269,6 +275,7 @@ export class GalleryPaperActions extends HTMLElement {
       .status-style-editor .image-options{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       .image-options label{display:flex;align-items:center;gap:4px}.image-options button{border:0;background:transparent;color:#3159bd;padding:4px}
       .image-help{grid-column:1/-1;line-height:1.5;overflow-wrap:anywhere}
+      ${SUMMARY_LAYOUT_CSS}
     </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('全文摘要', 'Full-text summary')}</button></div><div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
       ${button(status ? { ...s.status, rgb: status.style.rgb } : s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status), status?.style.imageOriginal ? status.style : undefined)}
