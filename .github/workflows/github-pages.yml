@@ -31,6 +31,8 @@ on:
       - 'public/rolling-supplement.json'
       - 'public/toc-demand-live.json'
       - 'public/toc-mainline.user.js'
+      - 'public/capture-launch.html'
+      - 'scripts/validate-tm-release.mjs'
       - 'audit/author-coverage.json'
       - 'audit/missing-authors.json'
       - 'public/papers.gz.b64'
@@ -218,93 +220,11 @@ jobs:
           test -f dist/gallery-vpn-bridge-runtime.js
           test -f dist/toc-rescue.js
           test -f dist/toc-mainline.user.js
-          grep -F "// @version      6.2.19" dist/toc-mainline.user.js
-          grep -F "var figureJob = jobKind(job) === 'figures';" dist/toc-mainline.user.js
-          grep -F "figureJob ? 'full/' : ''" dist/toc-mainline.user.js
-          grep -F "toc-demand-live.json" dist/toc-mainline.user.js
-          grep -F "/api/media/tampermonkey-report/import" dist/toc-mainline.user.js
-          grep -F "async function iframeCandidates(job, trace)" dist/toc-mainline.user.js
-          grep -F "function waitForDomMutation(timeoutMs)" dist/toc-mainline.user.js
-          grep -F "object[type^=\"image\"],svg image" dist/toc-mainline.user.js
-          grep -F "iframe_cross_origin_or_auth_redirect" dist/toc-mainline.user.js
-          grep -F "_semantic_window" dist/toc-mainline.user.js
-          grep -F "acs_main_scroll_top=" dist/toc-mainline.user.js
-          grep -F "中止当前媒体抓取批次" dist/toc-mainline.user.js
-          grep -F "继续媒体抓取主线" dist/toc-mainline.user.js
-          grep -F "上传本地 TOC 日志" dist/toc-mainline.user.js
-          grep -F "@connect      acs.silverchair-cdn.com" dist/toc-mainline.user.js
-          grep -F "candidateRequestUrl" dist/toc-mainline.user.js
-          grep -F "candidateBelongsToJob" dist/toc-mainline.user.js
-          grep -F "captureBelongsToDoi" cloudflare/worker/src/local-captures.js
-          grep -F "currentSrc" dist/toc-mainline.user.js
-          grep -F "sanitizeTraceMessage" dist/toc-mainline.user.js
-          grep -F "sanitizeTraceMessage" cloudflare/worker/src/local-captures.js
-          grep -F "publisher_userscript_not_running" dist/toc-mainline.user.js
-          grep -F "publisher_userscript_running_job_not_seen" dist/toc-mainline.user.js
-          grep -F "查看出版社脚本心跳" dist/toc-mainline.user.js
-          grep -F "publisher_script_started" dist/toc-mainline.user.js
-          grep -F "CAPTURE_INDEX_URL" dist/toc-mainline.user.js
-          grep -F "FIGURE_IMPORT_ENDPOINT" dist/toc-mainline.user.js
-          grep -F "FIGURE_STAGE_ENDPOINT" dist/toc-mainline.user.js
-          grep -F "NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000" dist/toc-mainline.user.js
-          grep -F "var dates = Array.from(new Set" dist/toc-mainline.user.js
-          grep -F "delayedTocUpgrades: upgrades.length" dist/toc-mainline.user.js
-          grep -F "NEXT_BATCH_DELAY_MS = 12000" dist/toc-mainline.user.js
-          grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
-          grep -F "liveInventory?.tocStored === true" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "isExcludedDoi(doi)" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "gallery-literature-doi-registry" src/main.ts
-          grep -F "function executableJobs" dist/toc-mainline.user.js
-          grep -F "约 12 秒后自动继续" dist/toc-mainline.user.js
-          grep -F "/api/article-figures/promote-staged" cloudflare/worker/src/index.js
-          grep -F "promoteStagedArticleFigures" cloudflare/worker/src/local-captures.js
-          grep -F "ARTICLE_FIGURE_STAGE_PROMOTION_CRON" cloudflare/worker/src/index.js
-          grep -F "figuresStaged" dist/toc-mainline.user.js
-          grep -F "D1 import unavailable; preserving figure in R2" dist/toc-mainline.user.js
-          grep -F "/api/article-figures/stage" cloudflare/worker/src/index.js
-          grep -F "importStagedArticleFigure" cloudflare/worker/src/local-captures.js
-          grep -F "getStagedArticleFigures" cloudflare/worker/src/local-captures.js
-          grep -F "queue.figureGaps" dist/toc-mainline.user.js
-          grep -F "function jobKind(job)" dist/toc-mainline.user.js
-          grep -F "failure:figures:" dist/toc-mainline.user.js
-          grep -F "figureGapTotal" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "MEDIA_INVENTORY_URL" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "function figureQuality(row)" cloudflare/worker/src/media.js
-          grep -F "usableFigureCount" cloudflare/worker/src/media.js
-          grep -F "lowResolutionFigureGapTotal" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "function articleFigureResolution" dist/toc-mainline.user.js
-          grep -F "articleFigureImageUrls" dist/toc-mainline.user.js
-          grep -F "figure1_deferred" dist/toc-mainline.user.js
-          grep -F "heartbeatDeadlineMs = 35000" dist/toc-mainline.user.js
-          grep -F "action/doSearch?AllField=" dist/toc-mainline.user.js
-          grep -F "LIVE_CAPTURE_INDEX_URL" dist/toc-rescue.js
-          grep -F "fetchPostJson" dist/toc-mainline.user.js
-          grep -F "gm_then_fetch_failed:" dist/toc-mainline.user.js
-          grep -F "TAMPERMONKEY_CORS_WRITE_PATHS" cloudflare/worker/src/index.js
-          if grep -Fq "readRealtimeMediaPreflight" dist/toc-mainline.user.js; then echo "Recovery userscript must stay on the 2.2.15 capture core"; exit 1; fi
-          if grep -Fq "gallery-literature-doi-registry" dist/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.16 live-page filtering"; exit 1; fi
-          if grep -Fq "MEDIA_INVENTORY_ENDPOINT" dist/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.17 realtime preflight"; exit 1; fi
+          node scripts/validate-tm-release.mjs dist
           test -d dist/media-mirror
-          grep -F "// @version      2.2.19" dist/gallery-vpn-bridge.user.js
-          grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
-          grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" dist/gallery-vpn-bridge.user.js
-          grep -F "// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
-          grep -F "// @connect      *" dist/gallery-vpn-bridge.user.js
-          grep -F "// @match        https://pubs.acs.org/*" dist/gallery-vpn-bridge.user.js
-          grep -F "// @match        https://onlinelibrary.wiley.com/*" dist/gallery-vpn-bridge.user.js
-          grep -F "// @match        https://pubs.rsc.org/*" dist/gallery-vpn-bridge.user.js
-          grep -F "// @grant        GM_openInTab" dist/gallery-vpn-bridge.user.js
-          grep -F "organicGalleryCloudflareBridgeWriteToken" dist/gallery-vpn-bridge.user.js
-          grep -F "__OSG_TOC_BROWSER_MAINLINE__" dist/gallery-vpn-bridge.user.js
-          grep -F "toc-demand-live.json" dist/gallery-vpn-bridge.user.js
-          grep -F "VPN Bridge 2.2.19 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
-          grep -F "const VERSION = '1.2.0';" dist/gallery-vpn-bridge.user.js
-          grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge.user.js
-          if grep -Eq "\beval\s*\(" dist/gallery-vpn-bridge.user.js; then echo "Bridge userscript must not use eval"; exit 1; fi
           grep -F "const VERSION = '1.2.0';" dist/gallery-vpn-bridge-runtime.js
           grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge-runtime.js
-          grep -F "abstract\\s*image" dist/gallery-vpn-bridge-runtime.js
+          grep -F "abstract\s*image" dist/gallery-vpn-bridge-runtime.js
           node - <<'NODE'
           const fs = require('fs');
           const manifest = JSON.parse(fs.readFileSync('dist/media-index.json', 'utf8'));
