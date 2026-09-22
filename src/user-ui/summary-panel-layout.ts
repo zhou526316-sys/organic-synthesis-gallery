@@ -25,20 +25,9 @@ export const SUMMARY_PANEL_STYLES = `
     .summary-drawer .summary-text{font-size:14px;line-height:1.8}
   }
 `;
-const watchedPanels = new WeakSet<HTMLElement>();
+const panels = new WeakMap<HTMLElement, () => void>();
 
-/** Prefer the triggering card; fit inside the visual viewport when neither side
- * has enough reading space. Never resize the panel into a narrow vertical strip. */
-export function positionSummaryPanel(drawer: HTMLElement, anchor: HTMLElement, host: HTMLElement): void {
-  if (!drawer.isConnected || !anchor.isConnected || !host.isConnected) return;
-  if (!watchedPanels.has(drawer)) {
-    watchedPanels.add(drawer);
-    // These listeners belong to the disposable drawer, not window/document.
-    // Late TOC decoding can change the panel height after its initial layout.
-    const refit = (): void => { if (drawer.isConnected) positionSummaryPanel(drawer, anchor, host); };
-    drawer.addEventListener('load', refit, true);
-    requestAnimationFrame(refit);
-  }
+function fitPanel(drawer: HTMLElement, anchor: HTMLElement): void {
   const viewport = window.visualViewport;
   const width = viewport?.width || window.innerWidth;
   const height = viewport?.height || window.innerHeight;
@@ -51,7 +40,6 @@ export function positionSummaryPanel(drawer: HTMLElement, anchor: HTMLElement, h
 
   const bounds = drawer.getBoundingClientRect();
   const trigger = anchor.getBoundingClientRect();
-  const parent = host.getBoundingClientRect();
   const left = Math.max(originX + margin, Math.min(trigger.left, originX + width - bounds.width - margin));
   const below = trigger.bottom + gap;
   const above = trigger.top - bounds.height - gap;
@@ -66,7 +54,56 @@ export function positionSummaryPanel(drawer: HTMLElement, anchor: HTMLElement, h
     top = Math.max(originY + margin, Math.min(below, originY + height - bounds.height - margin));
     drawer.dataset.placement = 'viewport-fit';
   }
-  drawer.style.left = `${left - parent.left}px`;
-  drawer.style.top = `${top - parent.top}px`;
+  // Correct from the panel's actual position instead of assuming its containing
+  // block and the host share an origin during responsive card reflow.
+  const offsetX = parseFloat(drawer.style.left) || 0;
+  const offsetY = parseFloat(drawer.style.top) || 0;
+  drawer.style.left = `${offsetX + left - bounds.left}px`;
+  drawer.style.top = `${offsetY + top - bounds.top}px`;
   drawer.dataset.anchor = 'summary';
+}
+
+function watchPanel(drawer: HTMLElement, anchor: HTMLElement, host: HTMLElement): () => void {
+  let frame = 0;
+  let disposed = false;
+  const connected = (): boolean => drawer.isConnected && anchor.isConnected && host.isConnected;
+  const schedule = (): void => {
+    if (disposed || frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      if (!connected()) { dispose(); return; }
+      fitPanel(drawer, anchor);
+    });
+  };
+  // A resize event can precede card reflow. Observe the actual box changes and
+  // coalesce them into a frame rather than guessing a settling delay.
+  const resize = new ResizeObserver(schedule);
+  const card = host.closest('.card');
+  resize.observe(drawer);
+  resize.observe(host);
+  if (card) resize.observe(card);
+  const removal = new MutationObserver(() => { if (!connected()) dispose(); });
+  if (host.shadowRoot) removal.observe(host.shadowRoot, { childList: true });
+  const owner = card?.parentNode || host.parentNode;
+  if (owner) removal.observe(owner, { childList: true, subtree: true });
+  const dispose = (): void => {
+    if (disposed) return;
+    disposed = true;
+    cancelAnimationFrame(frame);
+    resize.disconnect();
+    removal.disconnect();
+    drawer.removeEventListener('load', schedule, true);
+    panels.delete(drawer);
+  };
+  drawer.addEventListener('load', schedule, true);
+  return schedule;
+}
+
+/** Prefer the triggering card; use a bounded viewport fit when it lacks room. */
+export function positionSummaryPanel(drawer: HTMLElement, anchor: HTMLElement, host: HTMLElement): void {
+  if (!drawer.isConnected || !anchor.isConnected || !host.isConnected) return;
+  let schedule = panels.get(drawer);
+  if (!schedule) { schedule = watchPanel(drawer, anchor, host); panels.set(drawer, schedule); }
+  fitPanel(drawer, anchor);
+  schedule();
 }
