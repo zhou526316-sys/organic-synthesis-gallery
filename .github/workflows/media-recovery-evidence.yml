@@ -1,0 +1,43 @@
+name: Verify media recovery evidence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/media-recovery-evidence.yml'
+      - 'cloudflare/scripts/verify-media-recovery-evidence.py'
+      - 'audit/automation-triggers/media-recovery-evidence.json'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: media-recovery-evidence
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check audit syntax
+        run: python3 -m py_compile cloudflare/scripts/verify-media-recovery-evidence.py
+      - name: Read evidence and verify stored object hashes without media writes
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 cloudflare/scripts/verify-media-recovery-evidence.py
+      - name: Preserve sanitized report and verified image evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: media-recovery-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/recovery-evidence/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Remove temporary runner evidence
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/recovery-evidence"
