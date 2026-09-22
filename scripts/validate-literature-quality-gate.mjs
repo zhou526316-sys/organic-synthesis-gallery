@@ -1,6 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
+import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 
 const ROOT = process.cwd();
 const SITE = (process.env.GALLERY_SITE || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/$/, '');
@@ -128,6 +129,29 @@ for (const item of rejected) {
 
 const reviewTime = Date.parse(review.generatedAt || '') || 0;
 if (reviewTime >= DOUBLE_PASS_EFFECTIVE_AT) {
+  const reviewDate = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit'
+  }).format(new Date(reviewTime));
+  const activeJournals = TARGET_JOURNALS.filter(j => !j.activeFrom || j.activeFrom <= reviewDate).map(j => j.name);
+  const sourceChecks = Array.isArray(review.sourceChecks) ? review.sourceChecks : [];
+  const sourceCheckMap = new Map(sourceChecks.map(row => [String(row?.journal || ''), row]));
+  for (const journal of activeJournals) {
+    const row = sourceCheckMap.get(journal);
+    assert(Boolean(row), `discovery: missing publisher live-source check for ${journal}`, failures);
+    if (!row) continue;
+    const status = String(row.status || '').toLowerCase();
+    assert(['checked','blocked','unavailable'].includes(status),
+      `discovery: invalid publisher source-check status for ${journal}`, failures);
+    assert(Number.isFinite(row.candidateCount) && row.candidateCount >= 0,
+      `discovery: candidateCount missing for publisher check ${journal}`, failures);
+    assert(Number.isFinite(row.syntheticTitleCount) && row.syntheticTitleCount >= 0,
+      `discovery: syntheticTitleCount missing for publisher check ${journal}`, failures);
+    if (status !== 'checked') {
+      assert(String(row.reason || '').trim().length >= 16,
+        `discovery: blocked/unavailable publisher check lacks reason for ${journal}`, failures);
+      warnings.push(`publisher live source ${status}: ${journal}`);
+    }
+  }
   assert(review.qualityControl?.secondPassCompleted === true, 'semantic: second-pass challenge review not completed', failures);
   assert((review.qualityControl?.unresolvedDisagreements ?? 0) === 0, 'semantic: unresolved first/second-pass disagreements exist', failures);
   for (const item of [...accepted, ...rejected.filter(x => x.reviewPriority === 'high')]) {
