@@ -12,7 +12,7 @@ const TAMPERMONKEY_REPORT_HISTORY_LIMIT = 12;
 const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_DIAGNOSTIC_BYTES = 1_500_000;
 
-function embeddedNatureDoi(value) {
+function decodedIdentityText(value) {
   let decoded = String(value || '');
   for (let i = 0; i < 2; i += 1) {
     try {
@@ -23,14 +23,45 @@ function embeddedNatureDoi(value) {
       break;
     }
   }
-  const match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
-  return match ? normalizeDoi(match[0]) : '';
+  return decoded.toLowerCase();
+}
+
+function embeddedKnownDois(value) {
+  const decoded = decodedIdentityText(value);
+  const patterns = [
+    /10\.1021\/[a-z0-9._-]+/ig,
+    /10\.1002\/[a-z0-9._-]+/ig,
+    /10\.1038\/[a-z0-9._-]+/ig,
+    /10\.1126\/[a-z0-9._-]+/ig,
+    /10\.1039\/[a-z0-9._-]+/ig,
+    /10\.1016\/[a-z0-9._()-]+/ig,
+    /10\.31635\/[a-z0-9._-]+/ig,
+  ];
+  return [...new Set(patterns.flatMap(pattern => (decoded.match(pattern) || []).map(normalizeDoi).filter(Boolean)))];
+}
+
+function urlBelongsToDoi(value, doi) {
+  const embedded = embeddedKnownDois(value);
+  return embedded.length === 0 || embedded.includes(String(doi || '').toLowerCase());
 }
 
 function captureBelongsToDoi(item, doi) {
-  if (!doi || !doi.startsWith('10.1038/')) return true;
-  const embedded = embeddedNatureDoi(item?.sourceUrl || '');
-  return !embedded || embedded === doi;
+  if (!doi) return false;
+  return urlBelongsToDoi(item?.articleUrl || '', doi)
+    && urlBelongsToDoi(item?.sourceUrl || '', doi);
+}
+
+function rejectCrossDoiCapture(payload, doi) {
+  const checks = [
+    ['articleUrl', payload?.articleUrl],
+    ['sourceUrl', payload?.sourceUrl],
+  ];
+  for (const [field, value] of checks) {
+    if (value && !urlBelongsToDoi(value, doi)) {
+      return { field, embeddedDois: embeddedKnownDois(value) };
+    }
+  }
+  return null;
 }
 
 function sniffImageType(bytes, declaredType = '') {
@@ -412,6 +443,19 @@ export async function importStagedArticleFigure(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  const stagedMismatch = rejectCrossDoiCapture(payload, doi);
+  if (stagedMismatch) {
+    return {
+      status: 409,
+      body: {
+        error: 'Media source DOI does not match the requested article DOI.',
+        code: 'media_source_doi_mismatch',
+        doi,
+        field: stagedMismatch.field,
+        embeddedDois: stagedMismatch.embeddedDois,
+      },
+    };
+  }
   const image = parseImageData(payload?.imageData);
   if (!image) return { status: 400, body: { error: 'A valid imageData payload is required.' } };
 
@@ -605,8 +649,18 @@ export async function importLocalCapture(request, env, payload) {
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
   const kind = String(payload?.kind || '').toLowerCase();
   if (!['official', 'figure1'].includes(kind)) return { status: 400, body: { error: 'kind must be official or figure1.' } };
-  if (!captureBelongsToDoi({ sourceUrl: payload?.sourceUrl }, doi)) {
-    return { status: 400, body: { error: 'Nature sourceUrl DOI does not match capture DOI.' } };
+  const captureMismatch = rejectCrossDoiCapture(payload, doi);
+  if (captureMismatch) {
+    return {
+      status: 409,
+      body: {
+        error: 'Media source DOI does not match the requested article DOI.',
+        code: 'media_source_doi_mismatch',
+        doi,
+        field: captureMismatch.field,
+        embeddedDois: captureMismatch.embeddedDois,
+      },
+    };
   }
   const image = parseImageData(payload?.imageData);
   if (!image) return { status: 400, body: { error: 'A valid imageData payload is required.' } };
