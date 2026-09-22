@@ -18,9 +18,11 @@ export async function isolate(context: BrowserContext): Promise<void> {
   });
 }
 export async function open(page: Page, width = 390): Promise<Locator> {
+  page.on('console', message => { if (message.text().startsWith('status-image-error')) console.log(message.text()); });
   await isolate(page.context());
   await page.setViewportSize({ width, height: 900 });
   await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  console.log('image capabilities', await page.evaluate(() => ({ secure: isSecureContext, digest: typeof crypto.subtle?.digest, database: typeof indexedDB.open, arrayBuffer: typeof Blob.prototype.arrayBuffer })));
   const actions = page.locator('gallery-paper-actions').first();
   await expect(actions).toBeVisible({ timeout: 30000 });
   await actions.locator('button[data-action="status"]').click();
