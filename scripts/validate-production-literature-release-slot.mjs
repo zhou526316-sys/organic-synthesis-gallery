@@ -7,6 +7,7 @@ const execFileAsync = promisify(execFile);
 const ROOT = process.cwd();
 const MARKER = path.resolve(ROOT, 'audit/publication-release-state.json');
 const BOOTSTRAP_ID = 'fixed-slots-cutover-2026-09-22';
+const BOOTSTRAP_MARKER_COMMIT = '3c9bcd16ab34a24fcbe0efda5a7e1d5905ca71fa';
 const SLOT_GRACE_MINUTES = 20;
 
 const marker = JSON.parse(await readFile(MARKER, 'utf8'));
@@ -41,6 +42,17 @@ if (mode === 'bootstrap') {
     'release-slot: invalid bootstrap marker');
   check(marker?.productionCards === 512,
     'release-slot: bootstrap production card count must remain the cutover baseline of 512');
+  try {
+    const { stdout } = await execFileAsync(
+      'git',
+      ['log', '-1', '--format=%H', '--', 'audit/publication-release-state.json'],
+      { cwd: ROOT },
+    );
+    check(stdout.trim() === BOOTSTRAP_MARKER_COMMIT,
+      `release-slot: bootstrap marker was modified after cutover; expected marker commit ${BOOTSTRAP_MARKER_COMMIT}, got ${stdout.trim() || '-'}`);
+  } catch (error) {
+    failures.push(`release-slot: cannot verify immutable bootstrap marker: ${error.message}`);
+  }
 } else if (mode === 'slot-release') {
   const slot = String(marker?.publicationSlot || '');
   check(/^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(slot),
