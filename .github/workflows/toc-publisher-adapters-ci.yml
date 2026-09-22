@@ -111,6 +111,12 @@ jobs:
           grep -F "gallery-literature-doi-registry" public/toc-mainline.user.js
           grep -F "article.card:not(.bridge-staging-card)" public/toc-mainline.user.js
           grep -F "filteredNotOnPage" public/toc-mainline.user.js
+          grep -F "readRealtimeMediaPreflight" public/toc-mainline.user.js
+          grep -F "filteredAlreadyStored" public/toc-mainline.user.js
+          grep -F "MEDIA_INVENTORY_ENDPOINT" public/toc-mainline.user.js
+          grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
+          grep -F "liveInventory?.tocStored === true" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "isExcludedDoi(doi)" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "gallery-literature-doi-registry" src/main.ts
           grep -F "function executableJobs" public/toc-mainline.user.js
