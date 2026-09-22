@@ -1,0 +1,56 @@
+name: Media identity workbench
+
+on:
+  push:
+    branches: [fix/media-identity-v220]
+    paths:
+      - '.github/workflows/media-identity-workbench.yml'
+      - 'scripts/apply-media-identity-v220.py'
+      - 'scripts/test-media-identity-v220.mjs'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: media-identity-workbench
+  cancel-in-progress: false
+
+jobs:
+  guard-tests:
+    if: github.ref == 'refs/heads/fix/media-identity-v220'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/media-identity-v220
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply reviewed deterministic patch or verify prior application
+        run: |
+          if grep -Fq "var VERSION = '6.2.19';" public/toc-mainline.user.js; then
+            python3 scripts/apply-media-identity-v220.py
+          else
+            grep -F "var VERSION = '6.2.20';" public/toc-mainline.user.js
+          fi
+          git diff --check
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/scripts/build-bridge-loader.mjs
+          node --check cloudflare/worker/src/local-captures.js
+          node --check cloudflare/worker/src/media-write.js
+          node --check cloudflare/worker/src/media.js
+      - name: Prove identity and quarantine guards without network or credentials
+        run: node scripts/test-media-identity-v220.mjs
+      - name: Save tested patch only to feature branch
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = 'refs/heads/fix/media-identity-v220'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs cloudflare/worker/src/local-captures.js cloudflare/worker/src/media-write.js cloudflare/worker/src/media.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: apply tested 2.2.20 page/task/source guards on feature branch'
+            git push origin HEAD:fix/media-identity-v220
+          fi
+          echo "TESTED_MEDIA_HEAD=$(git rev-parse HEAD)"
