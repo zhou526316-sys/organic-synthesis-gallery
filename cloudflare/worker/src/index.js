@@ -73,6 +73,7 @@ const json = (value, init = {}) => new Response(JSON.stringify(value), {
   },
 });
 
+// Site analytics routes live under /api/user-ui/ and inherit browser CORS.
 const BROWSER_READ_PATHS = new Set([
   '/api/paper-titles/resolve',
   '/api/title-translations/zh',
