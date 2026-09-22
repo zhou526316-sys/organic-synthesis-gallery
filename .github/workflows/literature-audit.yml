@@ -62,7 +62,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: literature-audit
-          path: audit/latest.json
+          path: |
+            audit/latest.json
+            audit/unresolved-latest.json
           retention-days: 14
 
       - name: Persist latest audit report without blocking the audit
@@ -73,7 +75,9 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
           candidate="$RUNNER_TEMP/literature-audit-latest.json"
+          unresolved_candidate="$RUNNER_TEMP/literature-audit-unresolved-latest.json"
           cp audit/latest.json "$candidate"
+          cp audit/unresolved-latest.json "$unresolved_candidate"
 
           for attempt in 1 2 3; do
             echo "Persist attempt $attempt"
@@ -103,7 +107,8 @@ jobs:
             fi
 
             cp "$candidate" audit/latest.json
-            git add audit/latest.json
+            cp "$unresolved_candidate" audit/unresolved-latest.json
+            git add audit/latest.json audit/unresolved-latest.json
             if git diff --cached --quiet; then
               echo 'Audit report unchanged.'
               exit 0
@@ -119,4 +124,4 @@ jobs:
             sleep $((attempt * 2))
           done
 
-          echo "::warning::Fresh audit artifact was uploaded successfully, but audit/latest.json could not be persisted after 3 non-force attempts. The audit run remains successful and the artifact is the recovery source."
+          echo "::warning::Fresh audit artifacts were uploaded successfully, but audit/latest.json + audit/unresolved-latest.json could not be persisted after 3 non-force attempts. The audit run remains successful and the artifact is the recovery source."
