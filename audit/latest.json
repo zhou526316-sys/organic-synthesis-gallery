@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-22T05:38:24.057Z",
+  "generatedAt": "2026-09-22T06:22:17.211Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -158,28 +158,28 @@
     }
   ],
   "summary": {
-    "galleryDois": 502,
-    "sourceRecords": 507,
-    "rawMissingFromGallery": 449,
-    "previouslyReviewedExcluded": 443,
-    "missingFromGallery": 6,
-    "potentialGaps": 4,
+    "galleryDois": 503,
+    "sourceRecords": 511,
+    "rawMissingFromGallery": 452,
+    "previouslyReviewedExcluded": 448,
+    "missingFromGallery": 4,
+    "potentialGaps": 2,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 6,
     "historicalCoverageLosses": 0,
-    "unresolved": 6,
+    "unresolved": 4,
     "excludedByPolicy": 0
   },
   "closure": {
     "date": "2026-09-21",
     "status": "blocked-source-coverage-anomaly",
-    "sourceRecords": 109,
-    "rawMissingFromGallery": 92,
-    "previouslyReviewedExcluded": 87,
-    "missingFromGallery": 5,
-    "potentialGaps": 3,
+    "sourceRecords": 112,
+    "rawMissingFromGallery": 95,
+    "previouslyReviewedExcluded": 92,
+    "missingFromGallery": 3,
+    "potentialGaps": 1,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
       {
@@ -234,8 +234,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 74,
-        "crossrefCandidateRecords": 74,
+        "unionCandidateRecords": 75,
+        "crossrefCandidateRecords": 75,
         "openAlexCandidateRecords": 58,
         "multiSourceCandidateRecords": 58,
         "closureUnionRecords": 15,
@@ -255,12 +255,12 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 83,
-        "crossrefCandidateRecords": 81,
+        "unionCandidateRecords": 86,
+        "crossrefCandidateRecords": 84,
         "openAlexCandidateRecords": 54,
         "multiSourceCandidateRecords": 52,
-        "closureUnionRecords": 29,
-        "closureCrossrefRecords": 29,
+        "closureUnionRecords": 32,
+        "closureCrossrefRecords": 32,
         "closureOpenAlexRecords": 0,
         "closureMultiSourceRecords": 0,
         "coverageWarning": false,
@@ -377,21 +377,21 @@
       }
     },
     "2026-09-21": {
-      "sourceRecords": 109,
-      "crossrefOnly": 108,
+      "sourceRecords": 112,
+      "crossrefOnly": 111,
       "openAlexOnly": 0,
       "multiSource": 1,
       "coveredByGallery": 17,
-      "rawMissingFromGallery": 92,
-      "previouslyReviewedExcluded": 87,
-      "missingFromGallery": 5,
-      "potentialGaps": 3,
+      "rawMissingFromGallery": 95,
+      "previouslyReviewedExcluded": 92,
+      "missingFromGallery": 3,
+      "potentialGaps": 1,
       "byJournal": {
         "Nature": 8,
         "Nature Catalysis": 1,
         "Nature Communications": 35,
         "JACS": 15,
-        "Angew": 29,
+        "Angew": 32,
         "ACS Catalysis": 11,
         "Organic Letters": 9,
         "CCS Chemistry": 1
@@ -433,18 +433,18 @@
       }
     },
     "2026-09-22": {
-      "sourceRecords": 4,
-      "crossrefOnly": 4,
+      "sourceRecords": 5,
+      "crossrefOnly": 5,
       "openAlexOnly": 0,
       "multiSource": 0,
-      "coveredByGallery": 0,
+      "coveredByGallery": 1,
       "rawMissingFromGallery": 4,
       "previouslyReviewedExcluded": 3,
       "missingFromGallery": 1,
       "potentialGaps": 1,
       "byJournal": {
         "Nature Communications": 2,
-        "JACS": 1,
+        "JACS": 2,
         "Organic Letters": 1
       }
     }
@@ -543,32 +543,32 @@
     "JACS": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
-      "sourceRecords": 74,
-      "crossrefOnly": 16,
+      "sourceRecords": 75,
+      "crossrefOnly": 17,
       "openAlexOnly": 0,
       "multiSource": 58,
       "lateIndexed": 57,
       "safetyTail": 57,
       "coveredByGallery": 14,
-      "rawMissingFromGallery": 60,
+      "rawMissingFromGallery": 61,
       "previouslyReviewedExcluded": 60,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 1,
+      "potentialGaps": 1
     },
     "Angew": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
-      "sourceRecords": 83,
-      "crossrefOnly": 29,
+      "sourceRecords": 86,
+      "crossrefOnly": 32,
       "openAlexOnly": 2,
       "multiSource": 52,
       "lateIndexed": 52,
       "safetyTail": 54,
       "coveredByGallery": 11,
-      "rawMissingFromGallery": 72,
-      "previouslyReviewedExcluded": 67,
-      "missingFromGallery": 5,
-      "potentialGaps": 3
+      "rawMissingFromGallery": 75,
+      "previouslyReviewedExcluded": 72,
+      "missingFromGallery": 3,
+      "potentialGaps": 1
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
@@ -594,11 +594,11 @@
       "multiSource": 25,
       "lateIndexed": 24,
       "safetyTail": 24,
-      "coveredByGallery": 27,
-      "rawMissingFromGallery": 8,
+      "coveredByGallery": 28,
+      "rawMissingFromGallery": 7,
       "previouslyReviewedExcluded": 7,
-      "missingFromGallery": 1,
-      "potentialGaps": 1
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -806,8 +806,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 74,
-      "crossrefCandidateRecords": 74,
+      "unionCandidateRecords": 75,
+      "crossrefCandidateRecords": 75,
       "openAlexCandidateRecords": 58,
       "multiSourceCandidateRecords": 58,
       "closureUnionRecords": 15,
@@ -826,12 +826,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 83,
-      "crossrefCandidateRecords": 81,
+      "unionCandidateRecords": 86,
+      "crossrefCandidateRecords": 84,
       "openAlexCandidateRecords": 54,
       "multiSourceCandidateRecords": 52,
-      "closureUnionRecords": 29,
-      "closureCrossrefRecords": 29,
+      "closureUnionRecords": 32,
+      "closureCrossrefRecords": 32,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -1033,8 +1033,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 74,
-      "crossrefCandidateRecords": 74,
+      "unionCandidateRecords": 75,
+      "crossrefCandidateRecords": 75,
       "openAlexCandidateRecords": 58,
       "multiSourceCandidateRecords": 58,
       "closureUnionRecords": 15,
@@ -1054,12 +1054,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 83,
-      "crossrefCandidateRecords": 81,
+      "unionCandidateRecords": 86,
+      "crossrefCandidateRecords": 84,
       "openAlexCandidateRecords": 54,
       "multiSourceCandidateRecords": 52,
-      "closureUnionRecords": 29,
-      "closureCrossrefRecords": 29,
+      "closureUnionRecords": 32,
+      "closureCrossrefRecords": 32,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -1407,7 +1407,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 75,
+      "count": 76,
       "note": ""
     },
     {
@@ -1416,7 +1416,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 75,
+      "count": 76,
       "note": ""
     },
     {
@@ -1425,7 +1425,7 @@
       "issn": "0002-7863",
       "mode": "created",
       "ok": true,
-      "count": 77,
+      "count": 78,
       "note": ""
     },
     {
@@ -1434,7 +1434,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 75,
+      "count": 76,
       "note": ""
     },
     {
@@ -1443,7 +1443,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 75,
+      "count": 76,
       "note": ""
     },
     {
@@ -1452,7 +1452,7 @@
       "issn": "1520-5126",
       "mode": "created",
       "ok": true,
-      "count": 77,
+      "count": 78,
       "note": ""
     },
     {
@@ -1469,7 +1469,7 @@
       "issn": "1433-7851",
       "mode": "online",
       "ok": true,
-      "count": 80,
+      "count": 83,
       "note": ""
     },
     {
@@ -1478,7 +1478,7 @@
       "issn": "1433-7851",
       "mode": "published",
       "ok": true,
-      "count": 81,
+      "count": 84,
       "note": ""
     },
     {
@@ -1487,7 +1487,7 @@
       "issn": "1433-7851",
       "mode": "created",
       "ok": true,
-      "count": 114,
+      "count": 117,
       "note": ""
     },
     {
@@ -1496,7 +1496,7 @@
       "issn": "1521-3773",
       "mode": "online",
       "ok": true,
-      "count": 80,
+      "count": 83,
       "note": ""
     },
     {
@@ -1505,7 +1505,7 @@
       "issn": "1521-3773",
       "mode": "published",
       "ok": true,
-      "count": 81,
+      "count": 84,
       "note": ""
     },
     {
@@ -1514,7 +1514,7 @@
       "issn": "1521-3773",
       "mode": "created",
       "ok": true,
-      "count": 114,
+      "count": 117,
       "note": ""
     },
     {
@@ -1854,28 +1854,26 @@
   ],
   "missingCandidates": [
     {
-      "doi": "10.1021/acs.orglett.6c03921",
-      "journal": "Organic Letters",
-      "title": "Cascade Spirocyclization–Difunctionalization or Rearrangement of Bicyclobutyl-Tethered Aldehyde Hydrazones via Strain Release",
-      "abstract": "Abstract A cascade spirocyclization–difunctionalization of bicyclobutyl-tethered aldehyde hydrazones with N-halosuccinimides was smoothly performed to access diverse halo-succinimide-containing diazaspiro[3.3]heptan-3-ones. Meanwhile, the three-component rearrangement of bicyclobutyl-tethered aldehyde hydrazones, N-halosuccinimides, and NH-sulfoximines also proceeded under similar conditions to give various halo-sulfoximine-featured phenyldiazenyl cyclobutane-1-carboxamides. In addition, some scaled-up experiments and complex substrates were explored in system application studies. Finally, a plausible reaction process was proposed according to mechanistic studies.",
+      "doi": "10.1021/jacs.6c12434",
+      "journal": "JACS",
+      "title": "Tower Loop Engineering Converts a Low-Potential Bacterial Laccase into a High-Potential Laccase with Tunable Catalytic Activity",
+      "abstract": "Abstract The reduction potential of type 1 copper (T1Cu) centers in laccases governs their catalytic efficiency and substrate scope, yet strategies to elevate low-potential bacterial laccases into the high-potential regime of fungal enzymes remain elusive. Here, we report a loop-engineering approach that enables large, tunable increases in T1Cu potential by redesigning the protein environment beyond the primary and secondary coordination spheres. Guided by structural comparison with fungal laccases, we introduce a “Tower loop” into the bacterial small laccase from Streptomyces coelicolor (SLAC), which shields the T1Cu site from solvent exposure and stabilizes favorable axial coordination. When combined with axial and secondary coordination-sphere mutations, this design elevates the T1Cu reduction potential from 367 mV to 708 mV vs. SHE, converting a low-potential bacterial laccase into a high-potential laccase. X-ray structural and spectroscopic analyses reveal that the introduced loop prevents solvent access and suppresses detrimental axial reorientation, providing a mechanistic basis for redox tuning. Kinetic studies further demonstrate a positive correlation between catalytic efficiency and the redox potential difference between the enzyme and substrate. These findings establish loop engineering as a general strategy for tuning redox-active metalloenzymes and provide a blueprint for designing high-performance biocatalysts for different applications from biomass valorization to bioelectrocatalysis.",
       "date": "2026-09-22",
       "type": "journal-article",
       "authors": [
-        "Haiyang Sun",
-        "Lijun Li",
-        "Qinqin Yan",
-        "Lijun Tu",
-        "Zhong-Quan Liu",
-        "Zejiang Li"
+        "Jing-Xiang Wang",
+        "Evan N. Mirts",
+        "Lucas H. Williams",
+        "Yi Lu"
       ],
       "topics": [],
       "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1884,124 +1882,21 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1002/anie.9362433",
+      "doi": "10.1002/anie.7061287",
       "journal": "Angew",
-      "title": "Cyclodextrin‐Directed Assembly of Dynamic Polyoxometalate Pseudo‐Rotaxanes",
-      "abstract": "ABSTRACT Cyclodextrins (CDs) are widely used as host molecules in supramolecular chemistry, yet their capacity to actively direct structural reorganization of inorganic clusters remains largely unexplored. Here, we demonstrate that α ‐CD can direct inorganic cluster reorganization during self‐assembly, enabling the synthesis of previously inaccessible azobenzene‐functionalized polyoxometalate (POM) pseudo‐rotaxanes, in which the macrocycle not only encapsulates the organic axle but also governs the structural evolution of the inorganic core. Upon complexation with α ‐CD, a flat arsonate‐functionalized {Mo 6 } cluster reorganizes into a bent analogue, yielding a dynamic pseudo ‐rotaxane assembly ( 1a @ α ‐CD). Fine pH modulation subsequently induces a CD‐mediated transformation into an inverted‐Keggin {Mo 12 } pseudo ‐rotaxane threaded by four α ‐CD units. NMR/ITC titration, DOSY/NOESY analyses, and single‐crystal x‐ray diffraction collectively reveal dual threading pathways and delineate the dynamic {Mo 6 } to {Mo 12 } reorganization process. Crucially, α ‐CD suppresses precipitation of hydrophobic ligands under strongly acidic conditions and stabilizes transient coordination states, thereby enabling cluster growth pathways inaccessible under identical synthetic conditions in the absence of α ‐CD. These findings demonstrate that CDs can actively direct inorganic self‐assembly through host‐guest interactions, providing a supramolecular route to previously inaccessible POM pseudo ‐rotaxanes and opening new opportunities for adaptive hybrid architectures.",
+      "title": "Light‐Gated Control of Brownian Rotation by a Molecular Motor",
+      "abstract": "ABSTRACT Controlling stochastic molecular motion in a predictable manner remains a major challenge in the development of functional molecular systems. Here we demonstrate that a light‐driven molecular motor can reversibly regulate Brownian rotation through remote steric interactions. We integrate an overcrowded alkene motor within a rigid triptycene scaffold, where it acts as a reversible steric gate for an alkynyl‐linked anthracene rotor. Photoisomerization modulates the steric environment around the rotor axis, switching the system between fast Brownian rotation and a sterically hindered regime. Variable‐temperature NMR spectroscopy reveals that one thermodynamically stable motor state exhibits rapid Brownian rotation of the anthracene unit about the alkynyl C─C≡C─C axis, whereas the other stable state displays hindered rotation, giving rise to two distinct rotameric states at low temperature. Density functional theory (DFT) calculations reproduce this behavior and show that the rotational barrier changes by 31 kJ mol −1 between the two states, corresponding to an approximately five‐order‐of‐magnitude difference in the calculated rotational rates at 20 °C. These results demonstrate that light‐driven molecular motors can reversibly regulate stochastic molecular motion through steric control, providing a general strategy for coupling directional and Brownian dynamics within a single molecular system.",
       "date": "2026-09-21",
       "type": "journal-article",
       "authors": [
-        "Yun‐Jing Mu",
-        "Cheng‐Shuai Liu",
-        "Chun‐Yan Liu",
-        "Yi‐An Yin",
-        "Chang‐Gen Lin",
-        "Haralampos N. Miras",
-        "Ulrich Kortz",
-        "Yu‐Fei Song"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.1587126",
-      "journal": "Angew",
-      "title": "Hydrogen‐Bond Encoding in a Structurally Minimal Cyclochiral Monomer Enables Assembly of Large Cavities Displaying Supramolecular Isomerism",
-      "abstract": "ABSTRACT Large, well‐defined molecular cavities are typically constructed from rigid covalent scaffolds, which can limit structural adaptability and increase synthetic complexity. Here, we introduce a hydrogen‐bond encoded supramolecular strategy that enables structurally minimal, flexible monomers to assemble into discrete fullerene‐binding capsules. The monomer combines intra‐ and intermolecular hydrogen‐bonding motifs that restrict conformational freedom, induce cyclochirality, and guide controlled self‐assembly into oligomeric or cyclic aggregates. Spectroscopic and crystallographic analyses show that guest‐induced self‐sorting with fullerenes drives the formation of homochiral tetrameric capsules with high binding affinity and distinct structural isomerism. X‐ray structures confirm compact host–guest complexes stabilized by cooperative hydrogen bonding and C─H···π interactions. This work demonstrates that minimal monomer design can encode complex supramolecular behaviour, providing an adaptive platform for molecular recognition, catalysis, and materials science.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Qixun Shi",
-        "Liangshun Guo",
-        "Nojus Radzevičius",
-        "Yi Long",
-        "Nana Zhao",
-        "Yue Cao",
-        "Fengxia Zhu",
-        "Vytautas Klimavicius",
-        "Gediminas Kreiza",
-        "Audrius Padarauskas",
-        "Chuan Wang",
-        "Edvinas Orentas"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.2808034",
-      "journal": "Angew",
-      "title": "Janus Covalent Organic Framework Films With Macroscopic Directional Carrier Migration for Switchable Gas Sensing",
-      "abstract": "ABSTRACT Macroscopic directional migration of photogenerated carriers in covalent organic framework (COF)‐based heterojunction films is typically hindered by random carrier diffusion and interfacial structural disorder. In this study, we report for the first time the construction of sequence‐controlled Janus COF films from lattice‐matched isoreticular COFs (COF‐366/COF‐366‐OH). The intimate interfacial assembly and the energy‐level offset induce a built‐in electric field that drives electrons and holes to migrate directionally toward opposite sides across the entire film. This asymmetric charge distribution endows the two sides of the film with distinct redox activities, enabling switchable and highly sensitive detection of both oxidizing and reducing gases by simply flipping the film. Such a unique feature is unprecedented for a single film. Moreover, the response of Janus COF film surpasses that of single‐component counterparts by 5.2‐fold for NO 2 and 5.3‐fold for NH 3 . This work offers a general strategy for macroscopic directional carrier migration in COF films and paves a new route for advanced sensing materials.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Yong‐Jun Chen",
-        "Yi‐Ming Xu",
-        "Zhi‐Peng Luo",
-        "Guang‐Ling Liang",
-        "Jiang‐Feng Lu",
-        "Guan‐E Wang",
-        "Shuang Wang",
-        "Gang Xu"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.8540595",
-      "journal": "Angew",
-      "title": "Single‐Atom O/S/Se Substitution at the Glycosidic Linkage in Glycopeptide Cancer Vaccines Reveals Divergent Performance",
-      "abstract": "ABSTRACT Single‐atom substitution provides an exceptionally subtle means of editing molecular structure, yet how such minimal atom‐level modifications propagate into biological function remains poorly understood. Here, we report streamlined access to Se ‐linked Tn glycopeptides which, together with their O ‐ and S ‐linked counterparts, enable systematic atom‐level editing at the glycosidic linkage of MUC1 glycopeptide antigens. Surface plasmon resonance established a clear hierarchy of antigen recognition that was rationalized by molecular dynamics simulations and independently validated by STD‐NMR epitope mapping, revealing that O→S→Se substitution subtly remodels glycopeptide presentation while preserving the overall 5E5 recognition epitope. Translation of these structurally defined antigens into CRM 197 glycoconjugate vaccines with comparable antigen loading showed that neither antigen‐binding affinity nor antibody levels alone predict therapeutic efficacy. Instead, the results demonstrate that minimal atom‐level editing propagates from molecular recognition to biological function through a nonlinear structure–function relationship, highlighting that therapeutic efficacy cannot be inferred directly from antigen affinity alone.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Carmen Bretón",
-        "Ana Guerreiro",
-        "Paula Oroz",
-        "Noelia Osés",
-        "Irene Ginés‐Alcober",
-        "Francisco Javier Cañada",
-        "Ramón Hurtado‐Guerrero",
-        "Juan L. Asensio",
-        "Jesús M. Peregrina",
-        "Gonçalo J. L. Bernardes",
-        "Francisco Corzana"
+        "Lukáš Severa",
+        "Kateřina Bezděková",
+        "Katarina Majerová Varga",
+        "Guillaume Bastien",
+        "Miroslav Stroka",
+        "Ivana Císařová",
+        "Martin Dračínský",
+        "Jiří Kaleta"
       ],
       "topics": [],
       "sources": [
@@ -2019,20 +1914,19 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1002/anie.5372994",
+      "doi": "10.1002/anie.4724561",
       "journal": "Angew",
-      "title": "Tailoring Local Anion Chemistry Affinity Enables Stable Halide–Sulfide Interfaces and Fast Ion Transport in Dual‐Electrolyte all‐Solid‐State Batteries",
-      "abstract": "ABSTRACT All‐solid‐state batteries (ASSBs) employing halide/sulfide bilayer electrolytes offer a promising route toward high energy density by combining the high oxidative stability of halides with the superior reductive stability of sulfides. However, severe halide–sulfide interfacial incompatibility induces continuous interfacial degradation and undermines Li + transport. Unlike conventional interfacial engineering approaches that rely on coatings or artificial buffer layers, we report a local chemistry–driven intrinsic compatibility strategy that fundamentally stabilizes halide–sulfide interfaces. By sulfurizing amorphous halide electrolytes Li 2 O–TaCl 5 , the short‐range coordination chemistry and medium‐range topology are simultaneously reconstructed, in which sulfur‐rich local motifs become thermodynamically more resistant to further sulfur substitution, whereas sulfur‐containing medium‐range networks exhibit stronger binding with PS 4 units in Li 6 PS 5 Cl, thereby intrinsically stabilizing the halide–sulfide interface and suppressing interfacial decomposition. Simultaneously, the sulfurized framework exhibits enhanced structural heterogeneity and interconnected Li + migration pathways, achieving an ultrahigh ionic conductivity of 14.2 mS cm −1 . As a result, the assembled NCM89|8S‐LTOC|LPSC|Li‐In ASSBs exhibit outstanding electrochemical performance from −50°C to 100°C, including 131 mAh g −1 at −50°C, 2000‐cycle stability at 15 C, and high areal capacities up to 21.7 mAh cm −2 . This work highlights local anion chemistry regulation as an effective strategy for developing robust halide–sulfide ASSBs.",
+      "title": "Strong Second‐Order Nonlinear Optical Activities in Chiral Hybrid Copper(I) Bromide Microplates",
+      "abstract": "ABSTRACT Organic–inorganic chiral hybrid metal halides (HMHs) with efficient second‐order nonlinear optical responses are promising for various photonic applications. However, chiral HMHs that simultaneously deliver strong second‐harmonic generation (SHG) and pronounced nonlinear chiroptical responses remain limited. Herein, we report a pair of chiral hybrid copper(I) bromide microplates, ( R ‐ and S ‐MPZ)Cu 2 Br 4 (MPZ = 2‐methylpiperazinediium), which crystallize in the noncentrosymmetric space group P 2 1 2 1 2 1 and feature distinctive one‐dimensional zigzag chains constructed from three‐coordinate trigonal–planar CuBr 3 units. Benefiting from the highly distorted Cu─Br frameworks, the microplates exhibit an SHG intensity approximately 376 times that of Y‐cut quartz at 870 nm, together with a high laser damage threshold of up to 11.14 mJ cm −2 . More importantly, the ( R ‐ and S ‐MPZ)Cu 2 Br 4 microplates display effective SHG circular dichroism (SHG‐CD) and circularly polarized SHG responses, enabling a conceptual chirality‐encoded SHG tagging and decoding protocol. This work highlights chiral hybrid copper(I) halides as a versatile lead‐free platform for integrating efficient frequency conversion, nonlinear chiroptical functionality, and information encryption capabilities.",
       "date": "2026-09-21",
       "type": "journal-article",
       "authors": [
-        "Jie Qu",
-        "Xingyu Wang",
-        "Huaimin Jin",
-        "Changtai Zhao",
-        "Jianwen Liang",
-        "Xueliang Sun",
-        "Xiaona Li"
+        "Zhihang Guo",
+        "Yujie Hong",
+        "Yecheng Leng",
+        "Wenguang Tu",
+        "Xi Zhu",
+        "Tingchao He"
       ],
       "topics": [],
       "sources": [
@@ -2048,32 +1942,60 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.2739215",
+      "journal": "Angew",
+      "title": "Vacuum‐Induced Surface Reconstruction of Mn–Ce Oxides for Low‐Temperature Coupled Redox Catalysis",
+      "abstract": "ABSTRACT Low‐temperature redox catalysis over mixed oxides is typically optimized by tuning bulk composition, yet the decisive chemistry occurs at the surface and subsurface interface. Here, we show that this interface can be deliberately reconstructed to enhance Mn–Ce oxide catalysis. Sequential vacuum annealing followed by reduced‐pressure O 2 treatment induces near‐surface Mn enrichment in an as‐prepared Mn–Ce oxide while largely preserving the fluorite CeO 2 framework. This reconstruction increases the near‐surface abundance of Mn‐containing species, modifies the Mn–Ce–O interfacial electronic and redox environment, and facilitates oxygen activation and redox cycling. Under coupled conditions, R‐MnCe achieved 95.5% NO x conversion at 100°C and complete chlorobenzene conversion at 200°C. In situ spectroscopy and DFT calculations reveal that interfacial electron redistribution lowers the oxygen activation barrier and sustains activated oxygen species that connect NH 3 ‐SCR and chlorobenzene oxidation through a shared oxygen‐mediated pathway. These results highlight near‐surface reconstruction as a promising postsynthetic strategy for improving noble‐metal‐free mixed‐oxide catalysts.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Yong Yin",
+        "Yide Jiang",
+        "Zichen Xu",
+        "Min Liu",
+        "Emiliano Cortés",
+        "Yifei Sun"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
     }
   ],
   "potentialGaps": [
     {
-      "doi": "10.1021/acs.orglett.6c03921",
-      "journal": "Organic Letters",
-      "title": "Cascade Spirocyclization–Difunctionalization or Rearrangement of Bicyclobutyl-Tethered Aldehyde Hydrazones via Strain Release",
-      "abstract": "Abstract A cascade spirocyclization–difunctionalization of bicyclobutyl-tethered aldehyde hydrazones with N-halosuccinimides was smoothly performed to access diverse halo-succinimide-containing diazaspiro[3.3]heptan-3-ones. Meanwhile, the three-component rearrangement of bicyclobutyl-tethered aldehyde hydrazones, N-halosuccinimides, and NH-sulfoximines also proceeded under similar conditions to give various halo-sulfoximine-featured phenyldiazenyl cyclobutane-1-carboxamides. In addition, some scaled-up experiments and complex substrates were explored in system application studies. Finally, a plausible reaction process was proposed according to mechanistic studies.",
+      "doi": "10.1021/jacs.6c12434",
+      "journal": "JACS",
+      "title": "Tower Loop Engineering Converts a Low-Potential Bacterial Laccase into a High-Potential Laccase with Tunable Catalytic Activity",
+      "abstract": "Abstract The reduction potential of type 1 copper (T1Cu) centers in laccases governs their catalytic efficiency and substrate scope, yet strategies to elevate low-potential bacterial laccases into the high-potential regime of fungal enzymes remain elusive. Here, we report a loop-engineering approach that enables large, tunable increases in T1Cu potential by redesigning the protein environment beyond the primary and secondary coordination spheres. Guided by structural comparison with fungal laccases, we introduce a “Tower loop” into the bacterial small laccase from Streptomyces coelicolor (SLAC), which shields the T1Cu site from solvent exposure and stabilizes favorable axial coordination. When combined with axial and secondary coordination-sphere mutations, this design elevates the T1Cu reduction potential from 367 mV to 708 mV vs. SHE, converting a low-potential bacterial laccase into a high-potential laccase. X-ray structural and spectroscopic analyses reveal that the introduced loop prevents solvent access and suppresses detrimental axial reorientation, providing a mechanistic basis for redox tuning. Kinetic studies further demonstrate a positive correlation between catalytic efficiency and the redox potential difference between the enzyme and substrate. These findings establish loop engineering as a general strategy for tuning redox-active metalloenzymes and provide a blueprint for designing high-performance biocatalysts for different applications from biomass valorization to bioelectrocatalysis.",
       "date": "2026-09-22",
       "type": "journal-article",
       "authors": [
-        "Haiyang Sun",
-        "Lijun Li",
-        "Qinqin Yan",
-        "Lijun Tu",
-        "Zhong-Quan Liu",
-        "Zejiang Li"
+        "Jing-Xiang Wang",
+        "Evan N. Mirts",
+        "Lucas H. Williams",
+        "Yi Lu"
       ],
       "topics": [],
       "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2082,89 +2004,19 @@
       "reviewPriority": "high"
     },
     {
-      "doi": "10.1002/anie.9362433",
+      "doi": "10.1002/anie.2739215",
       "journal": "Angew",
-      "title": "Cyclodextrin‐Directed Assembly of Dynamic Polyoxometalate Pseudo‐Rotaxanes",
-      "abstract": "ABSTRACT Cyclodextrins (CDs) are widely used as host molecules in supramolecular chemistry, yet their capacity to actively direct structural reorganization of inorganic clusters remains largely unexplored. Here, we demonstrate that α ‐CD can direct inorganic cluster reorganization during self‐assembly, enabling the synthesis of previously inaccessible azobenzene‐functionalized polyoxometalate (POM) pseudo‐rotaxanes, in which the macrocycle not only encapsulates the organic axle but also governs the structural evolution of the inorganic core. Upon complexation with α ‐CD, a flat arsonate‐functionalized {Mo 6 } cluster reorganizes into a bent analogue, yielding a dynamic pseudo ‐rotaxane assembly ( 1a @ α ‐CD). Fine pH modulation subsequently induces a CD‐mediated transformation into an inverted‐Keggin {Mo 12 } pseudo ‐rotaxane threaded by four α ‐CD units. NMR/ITC titration, DOSY/NOESY analyses, and single‐crystal x‐ray diffraction collectively reveal dual threading pathways and delineate the dynamic {Mo 6 } to {Mo 12 } reorganization process. Crucially, α ‐CD suppresses precipitation of hydrophobic ligands under strongly acidic conditions and stabilizes transient coordination states, thereby enabling cluster growth pathways inaccessible under identical synthetic conditions in the absence of α ‐CD. These findings demonstrate that CDs can actively direct inorganic self‐assembly through host‐guest interactions, providing a supramolecular route to previously inaccessible POM pseudo ‐rotaxanes and opening new opportunities for adaptive hybrid architectures.",
+      "title": "Vacuum‐Induced Surface Reconstruction of Mn–Ce Oxides for Low‐Temperature Coupled Redox Catalysis",
+      "abstract": "ABSTRACT Low‐temperature redox catalysis over mixed oxides is typically optimized by tuning bulk composition, yet the decisive chemistry occurs at the surface and subsurface interface. Here, we show that this interface can be deliberately reconstructed to enhance Mn–Ce oxide catalysis. Sequential vacuum annealing followed by reduced‐pressure O 2 treatment induces near‐surface Mn enrichment in an as‐prepared Mn–Ce oxide while largely preserving the fluorite CeO 2 framework. This reconstruction increases the near‐surface abundance of Mn‐containing species, modifies the Mn–Ce–O interfacial electronic and redox environment, and facilitates oxygen activation and redox cycling. Under coupled conditions, R‐MnCe achieved 95.5% NO x conversion at 100°C and complete chlorobenzene conversion at 200°C. In situ spectroscopy and DFT calculations reveal that interfacial electron redistribution lowers the oxygen activation barrier and sustains activated oxygen species that connect NH 3 ‐SCR and chlorobenzene oxidation through a shared oxygen‐mediated pathway. These results highlight near‐surface reconstruction as a promising postsynthetic strategy for improving noble‐metal‐free mixed‐oxide catalysts.",
       "date": "2026-09-21",
       "type": "journal-article",
       "authors": [
-        "Yun‐Jing Mu",
-        "Cheng‐Shuai Liu",
-        "Chun‐Yan Liu",
-        "Yi‐An Yin",
-        "Chang‐Gen Lin",
-        "Haralampos N. Miras",
-        "Ulrich Kortz",
-        "Yu‐Fei Song"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.1587126",
-      "journal": "Angew",
-      "title": "Hydrogen‐Bond Encoding in a Structurally Minimal Cyclochiral Monomer Enables Assembly of Large Cavities Displaying Supramolecular Isomerism",
-      "abstract": "ABSTRACT Large, well‐defined molecular cavities are typically constructed from rigid covalent scaffolds, which can limit structural adaptability and increase synthetic complexity. Here, we introduce a hydrogen‐bond encoded supramolecular strategy that enables structurally minimal, flexible monomers to assemble into discrete fullerene‐binding capsules. The monomer combines intra‐ and intermolecular hydrogen‐bonding motifs that restrict conformational freedom, induce cyclochirality, and guide controlled self‐assembly into oligomeric or cyclic aggregates. Spectroscopic and crystallographic analyses show that guest‐induced self‐sorting with fullerenes drives the formation of homochiral tetrameric capsules with high binding affinity and distinct structural isomerism. X‐ray structures confirm compact host–guest complexes stabilized by cooperative hydrogen bonding and C─H···π interactions. This work demonstrates that minimal monomer design can encode complex supramolecular behaviour, providing an adaptive platform for molecular recognition, catalysis, and materials science.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Qixun Shi",
-        "Liangshun Guo",
-        "Nojus Radzevičius",
-        "Yi Long",
-        "Nana Zhao",
-        "Yue Cao",
-        "Fengxia Zhu",
-        "Vytautas Klimavicius",
-        "Gediminas Kreiza",
-        "Audrius Padarauskas",
-        "Chuan Wang",
-        "Edvinas Orentas"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.2808034",
-      "journal": "Angew",
-      "title": "Janus Covalent Organic Framework Films With Macroscopic Directional Carrier Migration for Switchable Gas Sensing",
-      "abstract": "ABSTRACT Macroscopic directional migration of photogenerated carriers in covalent organic framework (COF)‐based heterojunction films is typically hindered by random carrier diffusion and interfacial structural disorder. In this study, we report for the first time the construction of sequence‐controlled Janus COF films from lattice‐matched isoreticular COFs (COF‐366/COF‐366‐OH). The intimate interfacial assembly and the energy‐level offset induce a built‐in electric field that drives electrons and holes to migrate directionally toward opposite sides across the entire film. This asymmetric charge distribution endows the two sides of the film with distinct redox activities, enabling switchable and highly sensitive detection of both oxidizing and reducing gases by simply flipping the film. Such a unique feature is unprecedented for a single film. Moreover, the response of Janus COF film surpasses that of single‐component counterparts by 5.2‐fold for NO 2 and 5.3‐fold for NH 3 . This work offers a general strategy for macroscopic directional carrier migration in COF films and paves a new route for advanced sensing materials.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Yong‐Jun Chen",
-        "Yi‐Ming Xu",
-        "Zhi‐Peng Luo",
-        "Guang‐Ling Liang",
-        "Jiang‐Feng Lu",
-        "Guan‐E Wang",
-        "Shuang Wang",
-        "Gang Xu"
+        "Yong Yin",
+        "Yide Jiang",
+        "Zichen Xu",
+        "Min Liu",
+        "Emiliano Cortés",
+        "Yifei Sun"
       ],
       "topics": [],
       "sources": [
