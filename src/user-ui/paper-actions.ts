@@ -163,7 +163,7 @@ export class GalleryPaperActions extends HTMLElement {
     const above = Math.max(0, anchorRect.top - gap - margin);
     const openBelow = below >= Math.min(initialRect.height, 220) || below >= above;
     const available = openBelow ? below : above;
-    const cap = this.panel === 'summary' ? (window.innerWidth <= 680 ? 620 : 680) : (window.innerWidth <= 680 ? 520 : 560);
+    const cap = window.innerWidth <= 680 ? 520 : 560;
     drawer.style.maxHeight = `${Math.max(96, Math.min(cap, available))}px`;
 
     const fittedRect = drawer.getBoundingClientRect();
