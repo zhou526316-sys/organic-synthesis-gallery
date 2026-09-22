@@ -20,21 +20,9 @@
       "closureUnresolved": 0,
       "fullWindowAssistantUnresolved": 0
     },
-    "addedThisRun": [
-      "10.1021/jacs.6c13641",
-      "10.1002/anie.7101768",
-      "10.1002/anie.9519061",
-      "10.1021/acs.orglett.6c03921"
-    ],
-    "dataCommitShas": [
-      "98b77b23cbb62886fd277c84a2495fbf3563fa91",
-      "fc0dac7b75cbfedbae064fafd113b9d5d277c7bc"
-    ],
-    "reviewCommitShas": [
-      "a014fb73b8ed11502b8c649bb9e901001a1d8b47",
-      "8dd4fdb7201991f3ce912c637ae894a1000c4c76",
-      "f21af075dad107bad55d7d961e972a5d4a2c1ae2"
-    ],
+    "addedThisRun": ["10.1021/jacs.6c13641", "10.1002/anie.7101768", "10.1002/anie.9519061", "10.1021/acs.orglett.6c03921"],
+    "dataCommitShas": ["98b77b23cbb62886fd277c84a2495fbf3563fa91", "fc0dac7b75cbfedbae064fafd113b9d5d277c7bc"],
+    "reviewCommitShas": ["a014fb73b8ed11502b8c649bb9e901001a1d8b47", "8dd4fdb7201991f3ce912c637ae894a1000c4c76", "f21af075dad107bad55d7d961e972a5d4a2c1ae2"],
     "auditCommitSha": "9cfb50ed88238067036b3e219377ce3519a0b80a",
     "auditGeneratedAt": "2026-09-22T06:27:34.374Z",
     "note": "Consolidated the polymer-method scope correction and subsequent late-indexed candidates. Current audit reports galleryDois=503, missingFromGallery=0, unresolved=0."
@@ -46,12 +34,7 @@
     "deployment": "success-live-verified",
     "verification": {
       "productionGitHubPages": "success",
-      "newlyAcceptedDoisPresent": [
-        "10.1021/jacs.6c13641",
-        "10.1002/anie.7101768",
-        "10.1002/anie.9519061",
-        "10.1021/acs.orglett.6c03921"
-      ],
+      "newlyAcceptedDoisPresent": ["10.1021/jacs.6c13641", "10.1002/anie.7101768", "10.1002/anie.9519061", "10.1021/acs.orglett.6c03921"],
       "totalGalleryCards": 503,
       "galleryDois": 503,
       "note": "Deployed automation-supplement.json directly verified; current audit independently reports galleryDois=503."
@@ -78,17 +61,8 @@
     "rejected": 9,
     "pending": 0,
     "unresolved": 0,
-    "reviewFiles": [
-      "audit/review-2026-09-22-scope-correction.json",
-      "audit/review-2026-09-22-late-6.json",
-      "audit/review-2026-09-22-late-4.json"
-    ],
-    "addedDois": [
-      "10.1021/jacs.6c13641",
-      "10.1002/anie.7101768",
-      "10.1002/anie.9519061",
-      "10.1021/acs.orglett.6c03921"
-    ]
+    "reviewFiles": ["audit/review-2026-09-22-scope-correction.json", "audit/review-2026-09-22-late-6.json", "audit/review-2026-09-22-late-4.json"],
+    "addedDois": ["10.1021/jacs.6c13641", "10.1002/anie.7101768", "10.1002/anie.9519061", "10.1021/acs.orglett.6c03921"]
   },
   "rules": {
     "freshFetchLockMinutes": 120,
@@ -104,47 +78,42 @@
     "mode": "github-push-trigger",
     "triggerFile": "audit/automation-triggers/literature-audit-request.json",
     "workflow": ".github/workflows/literature-audit.yml",
-    "verifiedAt": "2026-09-22T18:40:23+08:00",
-    "verifiedRunId": 35716850448,
+    "verifiedAt": "2026-09-22T21:48:19+08:00",
+    "verifiedRunId": 35734483158,
     "verifiedRunConclusion": "success",
-    "triggerCommitSha": "1cd8e25b17738a8903e92327523167ed3b7b1588",
-    "note": "ChatGPT scheduled tasks do not need local Node or workflow_dispatch. Updating the trigger file starts the GitHub Node audit by push."
+    "triggerCommitSha": "2452ddf00017180dee9bfa73572dc0bfc2691ab7",
+    "note": "The dedicated trigger push executed the GitHub runner capability guard, DOI-union audit, artifact upload and paired snapshot persistence successfully. No local Node or workflow_dispatch was used."
   },
   "latestMachineAudit": {
-    "generatedAt": "2026-09-22T11:35:29.420Z",
-    "sourceRecords": 555,
+    "generatedAt": "2026-09-22T13:37:57.398Z",
+    "sourceRecords": 573,
     "galleryDois": 512,
-    "missingFromGallery": 8,
-    "unresolved": 8,
-    "potentialGaps": 3,
+    "missingFromGallery": 26,
+    "unresolved": 26,
+    "potentialGaps": 11,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 0,
     "historicalCoverageLosses": 0,
     "closureDate": "2026-09-21",
-    "status": "semantic_review_complete_staging",
-    "compactHandoffSha": "38f7afac0d24005c26dd6e97f784a72a536d26c8"
+    "status": "semantic_review_incomplete_staging",
+    "compactHandoffSha": "9de05665f88100a34d882045eca97440b2d09080",
+    "latestBlobSha": "db0a4f8914d11c41aa5306c46d006f7d1666721a",
+    "runId": 35734483158,
+    "runConclusion": "success",
+    "semanticReviewed": 26,
+    "semanticFinalized": 25,
+    "semanticPending": 1,
+    "note": "Machine unresolved=26 remains expected because prepublish staging is not formal review history. All 26 have two-pass staging outcomes, but one pending DOI still blocks publication."
   },
   "publicationPolicy": {
     "updatedAt": "2026-09-22T19:12:00+08:00",
     "timeZone": "Asia/Shanghai",
-    "productionReleaseSlots": [
-      "08:00",
-      "18:00"
-    ],
-    "machineAuditSafetySchedule": [
-      "06:55",
-      "16:55"
-    ],
-    "primaryPreReviewSchedule": [
-      "07:05",
-      "17:05"
-    ],
-    "preReleaseRecoverySchedule": [
-      "07:35",
-      "17:35"
-    ],
+    "productionReleaseSlots": ["08:00", "18:00"],
+    "machineAuditSafetySchedule": ["06:55", "16:55"],
+    "primaryPreReviewSchedule": ["07:05", "17:05"],
+    "preReleaseRecoverySchedule": ["07:35", "17:35"],
     "offSlotProductionLiteratureWritesAllowed": false,
     "stagingReviewPattern": "audit/prepublish-review-YYYY-MM-DD-HHMM.json",
     "missedSlotBehavior": "Keep previous verified production snapshot; record publication_missed/incomplete_review; carry unresolved work to the next fixed release slot.",
@@ -165,43 +134,65 @@
   },
   "prepublishStaging": {
     "publicationSlot": "2026-09-23T08:00:00+08:00",
-    "freshAuditGeneratedAt": "2026-09-22T11:35:29.420Z",
-    "compactHandoffSha": "38f7afac0d24005c26dd6e97f784a72a536d26c8",
+    "status": "incomplete_review",
+    "readyToPublish": false,
+    "freshAuditGeneratedAt": "2026-09-22T13:37:57.398Z",
+    "compactHandoffSha": "9de05665f88100a34d882045eca97440b2d09080",
     "reviewFile": "audit/prepublish-review-2026-09-23-0800.json",
-    "reviewCommit": "dbe271f88a02e319b284e4854250cae34910fe18",
-    "reviewed": 8,
-    "accepted": 3,
-    "rejected": 5,
-    "pending": 0,
-    "remainingUnresolved": [],
+    "reviewCommit": "e54d103aac5b10f0ace126ccc79e72c9b7a58d19",
+    "reviewBlobSha": "4dd9b5543efd01c08fc1946b9b41e3bfe88102da",
+    "reviewed": 26,
+    "accepted": 9,
+    "rejected": 16,
+    "pending": 1,
+    "newlyReviewed": 18,
+    "remainingUnresolved": ["10.31635/ccschem.026.202608262"],
     "secondPassCompleted": true,
     "unresolvedDisagreements": 0,
     "productionDataModified": false,
     "compactHandoffRetest": "success",
     "publisherSourceChecksComplete": false,
-    "prepublishGateRunId": 35726702971,
-    "prepublishGateConclusion": "failure"
+    "publisherSourceCheckRowsComplete": true,
+    "publisherSourceCheckCounts": {"checked": 3, "blocked": 8, "unavailable": 5},
+    "prepublishGateRunId": 35735834120,
+    "prepublishGateConclusion": "success",
+    "note": "All current candidates are reviewed and all 16 sourceCheck rows are correctly typed. One unresolved evidence gap prevents ready_to_publish even though the machine staging validator passed. Publisher live coverage is not fully verified."
   },
   "nextPublicationSlot": "2026-09-23T08:00:00+08:00",
   "prepublish": {
-    "status": "preparing",
+    "status": "incomplete_review",
+    "phase": "preparing",
     "publicationSlot": "2026-09-23T08:00:00+08:00",
     "reviewFile": "audit/prepublish-review-2026-09-23-0800.json",
-    "reviewCommitSha": "974dadb9c707637fceecab051c633605cc70f612",
-    "freshAuditGeneratedAt": "2026-09-22T11:35:29.420Z",
-    "compactHandoffSha": "38f7afac0d24005c26dd6e97f784a72a536d26c8",
-    "reviewed": 8,
-    "accepted": 3,
-    "rejected": 5,
-    "pending": 0,
-    "remainingUnresolved": [],
+    "reviewCommitSha": "e54d103aac5b10f0ace126ccc79e72c9b7a58d19",
+    "freshAuditGeneratedAt": "2026-09-22T13:37:57.398Z",
+    "compactHandoffSha": "9de05665f88100a34d882045eca97440b2d09080",
+    "reviewed": 26,
+    "accepted": 9,
+    "rejected": 16,
+    "pending": 1,
+    "finalized": 25,
+    "remainingUnresolved": ["10.31635/ccschem.026.202608262"],
     "qualityControl": {
       "secondPassCompleted": true,
-      "unresolvedDisagreements": 0
+      "unresolvedDisagreements": 0,
+      "allHandoffCandidatesReviewed": true,
+      "allHandoffCandidatesFinalized": false,
+      "openEvidenceGaps": 1,
+      "sourceCheckRows": 16,
+      "publisherCoverageFullyVerified": false
     },
     "productionMutation": false,
-    "updatedAt": "2026-09-22T19:49:00+08:00",
+    "readyToPublish": false,
+    "updatedAt": "2026-09-22T21:48:19+08:00",
     "prepublishGate": {
+      "runId": 35735834120,
+      "conclusion": "success",
+      "checkedAt": "2026-09-22T21:48:19+08:00",
+      "reason": "The read-only staging gate validates the exact 26-DOI handoff coverage and corrected publisher-source records. Its success does not authorize publication while pendingCount=1.",
+      "productionReadiness": "blocked_pending_evidence"
+    },
+    "previousPrepublishGate": {
       "runId": 35726702971,
       "conclusion": "failure",
       "checkedAt": "2026-09-22T20:22:00+08:00",
@@ -220,5 +211,40 @@
     "secondPassCompleted": true,
     "unresolvedDisagreements": 0,
     "evidence": "audit/automation-tests/2026-09-22-1938-compact-handoff-review.json"
+  },
+  "lastPrepublishRecovery": {
+    "id": "prepublish-recovery-20260922-213510",
+    "finishedAt": "2026-09-22T21:48:19+08:00",
+    "publicationSlot": "2026-09-23T08:00:00+08:00",
+    "result": "incomplete_review",
+    "freshAuditGeneratedAt": "2026-09-22T13:37:57.398Z",
+    "compactHandoffSha": "9de05665f88100a34d882045eca97440b2d09080",
+    "triggerCommitSha": "2452ddf00017180dee9bfa73572dc0bfc2691ab7",
+    "machineAuditRunId": 35734483158,
+    "machineAuditConclusion": "success",
+    "capabilitySnapshotRef": "2452ddf00017180dee9bfa73572dc0bfc2691ab7",
+    "capabilityGuardConclusion": "success",
+    "reviewCommitSha": "e54d103aac5b10f0ace126ccc79e72c9b7a58d19",
+    "prepublishGateRunId": 35735834120,
+    "prepublishGateConclusion": "success",
+    "priorCandidateCount": 8,
+    "newCandidateCount": 18,
+    "candidateCount": 26,
+    "reviewed": 26,
+    "accepted": 9,
+    "rejected": 16,
+    "pending": 1,
+    "primaryWindowCandidates": 26,
+    "additionalSafetyTailOnlyCandidates": 0,
+    "additionalLateDepositRescueOnlyCandidates": 0,
+    "remainingDois": ["10.31635/ccschem.026.202608262"],
+    "reopenedPriorExclusions": ["10.31635/ccschem.026.202608262"],
+    "blocker": "CCS paired CO2-reduction/alcohol-oxidation paper has no abstract in the compact handoff, and publisher evidence could not be obtained. Both current passes retain pending rather than infer include/exclude from its title.",
+    "productionDataModified": false,
+    "formalReviewWritten": false,
+    "pagesDeploymentRequested": false,
+    "mediaAcquisitionPerformed": false,
+    "verifiedThroughAdvanced": false,
+    "automationDisabled": false
   }
 }
