@@ -172,6 +172,8 @@ type SiteFeedbackPayload = {
   searchQuery?: string;
   viewportWidth?: number;
   viewportHeight?: number;
+  imageData?: string;
+  imageName?: string;
 };
 
 type QueuedSiteFeedback = {
@@ -426,7 +428,7 @@ class Store extends EventTarget {
   async feedback(doi: string, kind: string, note: string): Promise<boolean> {
     try { await workerPost('/api/user-ui/feedback', { doi, profileId: this.profileId, kind, note: note.slice(0, 1000) }); return true; } catch { return false; }
   }
-  async siteFeedback(category: string, message: string, context: { pagePath?: string; language?: string; searchQuery?: string; viewportWidth?: number; viewportHeight?: number } = {}): Promise<'accepted' | 'queued' | 'rate_limited'> {
+  async siteFeedback(category: string, message: string, context: { pagePath?: string; language?: string; searchQuery?: string; viewportWidth?: number; viewportHeight?: number; imageData?: string; imageName?: string } = {}): Promise<'accepted' | 'queued' | 'rate_limited'> {
     const payload: SiteFeedbackPayload = {
       profileId: this.profileId,
       category,
