@@ -52,9 +52,8 @@ const legacyResult=await publishVerifiedBrowserMedia(env,legacy);
 test('legacy promotion fails closed',()=>assert.equal(legacyResult.apiAvailable,false));
 const webp=new Uint8Array(100);webp.set(Buffer.from('RIFF'),0);webp.set(Buffer.from('WEBPVP8X'),8);webp[24]=175;webp[25]=4;webp[27]=31;webp[28]=3;
 test('real WebP dimensions are decoded without client claims',()=>assert.deepEqual(inspectBrowserImage(webp,'image/webp'),{width:1200,height:800,quality:'raster'}));
-// Policy tests run the exact new functions, not copied pseudo-logic.
 const parts=fs.readFileSync('scripts/tm-night-controller.part.js','utf8');
-const storage=new Map();const context=vm.createContext({VERSION:'6.2.20',P:'osg-toc-v6:',Date,Math,JSON,normalizeDoi:x=>String(x||'').toLowerCase(),attemptKey:(d,g)=>d+'|'+g,GM_getValue:(k,v)=>storage.has(k)?storage.get(k):v,GM_setValue:(k,v)=>storage.set(k,v)});
+const storage=new Map();const context=vm.createContext({VERSION:'6.2.20',P:'osg-toc-v6:',Date,Math,JSON,nowIso:()=>new Date().toISOString(),normalizeDoi:x=>String(x||'').toLowerCase(),attemptKey:(d,g)=>d+'|'+g,GM_getValue:(k,v)=>storage.has(k)?storage.get(k):v,GM_setValue:(k,v)=>storage.set(k,v)});
 vm.runInContext(parts,context);const policy=vm.runInContext('({stableCaptureGeneration,nightRetryState,storeNightOutcome,readCaptureCheckpoint,saveCaptureCheckpoint})',context);
 const generation=policy.stableCaptureGeneration({mediaGeneration:1790082000000,generatedAt:'old'});
 test('queue timestamp refresh does not invalidate successful work',()=>assert.equal(generation,policy.stableCaptureGeneration({mediaGeneration:1790082000000,generatedAt:'new'})));
