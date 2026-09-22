@@ -11,7 +11,7 @@ const ARTICLE_FIGURE_STAGE_PREFIX = 'local-captures/article-figures/images/';
 const TAMPERMONKEY_REPORT_HISTORY_LIMIT = 12;
 const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_DIAGNOSTIC_BYTES = 1_500_000;
-const MEDIA_REBUILD_EPOCH = 1790077800000;
+const MEDIA_REBUILD_EPOCH = 1790079000000;
 
 function decodedIdentityText(value) {
   let decoded = String(value || '');
