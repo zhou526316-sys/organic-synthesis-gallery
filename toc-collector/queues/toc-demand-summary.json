@@ -1,27 +1,27 @@
 {
-  "generatedAt": "2026-09-22T05:06:45.913Z",
+  "generatedAt": "2026-09-22T05:32:00.335Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
   "liveLocalCaptures": 126,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
-  "mediaInventoryCount": 499,
-  "webpageDoiCount": 499,
+  "mediaInventoryCount": 502,
+  "webpageDoiCount": 502,
   "mediaRecordCount": 499,
-  "visibleGapTotal": 1,
-  "demandTotal": 1,
-  "noVisual": 1,
+  "visibleGapTotal": 4,
+  "demandTotal": 4,
+  "noVisual": 4,
   "fallbackOnlyNeedsOfficialUpgrade": 65,
-  "missingOfficialTotal": 66,
-  "figureGapTotal": 368,
-  "zeroFigureGapTotal": 235,
+  "missingOfficialTotal": 69,
+  "figureGapTotal": 369,
+  "zeroFigureGapTotal": 237,
   "lowResolutionFigureGapTotal": 68,
   "unknownQualityFigureGapTotal": 1,
-  "sparseFigureGapTotal": 64,
+  "sparseFigureGapTotal": 63,
   "byPublisher": {
-    "acs": 0,
-    "wiley": 0,
+    "acs": 1,
+    "wiley": 2,
     "nature": 1,
     "science": 0,
     "rsc": 0,
@@ -40,15 +40,44 @@
     "other": 0
   },
   "byJournal": {
-    "Nature Communications": 1
+    "JACS": 1,
+    "Nature Communications": 1,
+    "Angew": 2
   },
   "sample": [
+    {
+      "doi": "10.1021/jacs.6c13641",
+      "journal": "JACS",
+      "title": "Alternating Copolymerization of Arynes and Aldehydes Enabled by an N-Arylamine Initiator",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
     {
       "doi": "10.1038/s41467-026-77981-4",
       "journal": "Nature Communications",
       "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
       "date": "2026-09-21",
       "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "title": "Fine Tuning of Catalyst Active Sites to Access Advanced Ultrahigh-Melting Polyolefins",
+      "date": "2026-09-21",
+      "publisher": "wiley",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1002/anie.7101768",
+      "journal": "Angew",
+      "title": "Controlled Cationic Ring-Opening Polymerization Enables Chemically Recyclable Polyacetal-Based Polyurethanes",
+      "date": "2026-09-15",
+      "publisher": "wiley",
       "state": "no_visual",
       "existingReason": ""
     }

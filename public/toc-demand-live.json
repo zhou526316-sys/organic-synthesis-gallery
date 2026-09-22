@@ -1,21 +1,48 @@
 {
   "version": 2,
-  "generatedAt": "2026-09-22T05:06:45.913Z",
-  "webpageDoiCount": 499,
-  "visibleGapTotal": 1,
-  "missingOfficialTotal": 66,
+  "generatedAt": "2026-09-22T05:32:00.335Z",
+  "webpageDoiCount": 502,
+  "visibleGapTotal": 4,
+  "missingOfficialTotal": 69,
   "officialUpgradeTotal": 65,
-  "figureGapTotal": 368,
-  "zeroFigureGapTotal": 235,
+  "figureGapTotal": 369,
+  "zeroFigureGapTotal": 237,
   "lowResolutionFigureGapTotal": 68,
   "unknownQualityFigureGapTotal": 1,
   "visibleGaps": [
+    {
+      "doi": "10.1021/jacs.6c13641",
+      "journal": "JACS",
+      "title": "Alternating Copolymerization of Arynes and Aldehydes Enabled by an N-Arylamine Initiator",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
     {
       "doi": "10.1038/s41467-026-77981-4",
       "journal": "Nature Communications",
       "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
       "date": "2026-09-21",
       "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "title": "Fine Tuning of Catalyst Active Sites to Access Advanced Ultrahigh-Melting Polyolefins",
+      "date": "2026-09-21",
+      "publisher": "wiley",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1002/anie.7101768",
+      "journal": "Angew",
+      "title": "Controlled Cationic Ring-Opening Polymerization Enables Chemically Recyclable Polyacetal-Based Polyurethanes",
+      "date": "2026-09-15",
+      "publisher": "wiley",
       "state": "no_visual",
       "existingReason": ""
     }
@@ -623,20 +650,6 @@
       "priority": "missing"
     },
     {
-      "doi": "10.1021/acscatal.6c05065",
-      "journal": "ACS Catalysis",
-      "title": "Synergistic Effects of Brønsted Acid Site and Lewis Acid Site of Nb2O5 on the Direct Amination of Alcohols",
-      "date": "2026-09-18",
-      "publisher": "acs",
-      "figureCount": 0,
-      "highQualityFigureCount": 0,
-      "usableFigureCount": 0,
-      "lowQualityFigureCount": 0,
-      "unknownQualityFigureCount": 0,
-      "need": "figures",
-      "priority": "missing"
-    },
-    {
       "doi": "10.1021/acscatal.6c05029",
       "journal": "ACS Catalysis",
       "title": "Kinetic Resolution of Ferrocenyl Halide Racemates via Palladium/Chiral Norbornene Cooperative Catalysis",
@@ -906,6 +919,20 @@
       "doi": "10.1021/jacs.6c10810",
       "journal": "JACS",
       "title": "Using Data Science Tools to Explore Rate Matching in a Nickel-Catalyzed Cross-Electrophile Coupling of Alkyl and Aryl Halides (Cl, Br) with a Tridentate Monoanionic Ligand",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1021/jacs.6c13641",
+      "journal": "JACS",
+      "title": "Alternating Copolymerization of Arynes and Aldehydes Enabled by an N-Arylamine Initiator",
       "date": "2026-09-21",
       "publisher": "acs",
       "figureCount": 0,
@@ -3731,6 +3758,20 @@
       "priority": "missing"
     },
     {
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "title": "Fine Tuning of Catalyst Active Sites to Access Advanced Ultrahigh-Melting Polyolefins",
+      "date": "2026-09-21",
+      "publisher": "wiley",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
       "doi": "10.1002/anie.1537547",
       "journal": "Angew",
       "title": "Nonnative Thiol and Aniline Methylation, Including Enantioselective Dithiol Desymmetrization, by Multicomponent Cobamide-Dependent Methyltransferases Using Unactivated Methyl Donors",
@@ -3790,6 +3831,20 @@
       "doi": "10.1002/anie.5041475",
       "journal": "Angew",
       "title": "DMSO-Modulated Divergent Fluoroalcohol Addition to Alkenes via Cooperative Iron/Disulfide Photocatalysis",
+      "date": "2026-09-15",
+      "publisher": "wiley",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1002/anie.7101768",
+      "journal": "Angew",
+      "title": "Controlled Cationic Ring-Opening Polymerization Enables Chemically Recyclable Polyacetal-Based Polyurethanes",
       "date": "2026-09-15",
       "publisher": "wiley",
       "figureCount": 0,
@@ -5745,23 +5800,18 @@
       "unknownQualityFigureCount": 0,
       "need": "figures",
       "priority": "sparse"
-    },
-    {
-      "doi": "10.1038/s44160-026-01158-6",
-      "journal": "Nature Synthesis",
-      "title": "Chemoselective Ni-catalysed directed C(sp2)–H alkylation at low temperature using alkyl sulfonylhydrazides",
-      "date": "2026-09-17",
-      "publisher": "nature",
-      "figureCount": 5,
-      "highQualityFigureCount": 1,
-      "usableFigureCount": 1,
-      "lowQualityFigureCount": 4,
-      "unknownQualityFigureCount": 0,
-      "need": "figures",
-      "priority": "sparse"
     }
   ],
   "allMissingOfficial": [
+    {
+      "doi": "10.1021/jacs.6c13641",
+      "journal": "JACS",
+      "title": "Alternating Copolymerization of Arynes and Aldehydes Enabled by an N-Arylamine Initiator",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
     {
       "doi": "10.1038/s41586-026-11091-5",
       "journal": "Nature",
@@ -6355,6 +6405,24 @@
       "publisher": "science",
       "state": "fallback_only",
       "existingReason": "figure1_fallback"
+    },
+    {
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "title": "Fine Tuning of Catalyst Active Sites to Access Advanced Ultrahigh-Melting Polyolefins",
+      "date": "2026-09-21",
+      "publisher": "wiley",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1002/anie.7101768",
+      "journal": "Angew",
+      "title": "Controlled Cationic Ring-Opening Polymerization Enables Chemically Recyclable Polyacetal-Based Polyurethanes",
+      "date": "2026-09-15",
+      "publisher": "wiley",
+      "state": "no_visual",
+      "existingReason": ""
     }
   ]
 }
