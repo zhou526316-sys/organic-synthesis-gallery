@@ -1,6 +1,6 @@
 {
-  "auditVersion": 4,
-  "generatedAt": "2026-09-22T02:05:42.205Z",
+  "auditVersion": 5,
+  "generatedAt": "2026-09-22T03:13:52.426Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -168,6 +168,7 @@
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 6,
+    "historicalCoverageLosses": 0,
     "unresolved": 0,
     "excludedByPolicy": 0
   },
@@ -308,6 +309,7 @@
         "closureCoverageWarning": true
       }
     ],
+    "historicalCoverageLosses": [],
     "verifiedThroughEligible": false,
     "note": "Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse."
   },
@@ -1105,6 +1107,7 @@
       "closureCoverageWarning": true
     }
   ],
+  "historicalCoverageLosses": [],
   "sourceStats": [
     {
       "source": "crossref",
