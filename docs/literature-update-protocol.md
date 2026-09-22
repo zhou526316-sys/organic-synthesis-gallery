@@ -124,7 +124,9 @@ ChatGPT scheduled-task runtimes are not required to have a local Node runner or 
 
 - Updating that file on `main` is an explicit machine-audit request. The push must trigger `.github/workflows/literature-audit.yml`.
 - The GitHub Actions runner, not the ChatGPT task runtime, executes the repository capability guard and DOI-union audit.
-- A ChatGPT task must inspect the resulting Actions run and consume the newly persisted `audit/latest.json`; absence of local Node or workflow_dispatch is not itself a blocker when the push-trigger bridge is available.
+- GitHub Actions persists two files from the same audit generation: `audit/latest.json` is the full diagnostic report, while `audit/unresolved-latest.json` is the compact semantic-review handoff containing the complete unresolved candidate array plus active-journal source health. Both files must share the same `generatedAt`.
+- Pre-release ChatGPT tasks must consume `audit/unresolved-latest.json` for DOI-by-DOI semantic review and use `audit/latest.json` only for deep diagnostics. This prevents connector truncation of the large full report from silently dropping candidates.
+- A ChatGPT task must inspect the resulting Actions run and consume the newly persisted compact handoff; absence of local Node or workflow_dispatch is not itself a blocker when the push-trigger bridge is available.
 - If the scheduled primary task dies after writing the trigger, the machine discovery still proceeds in GitHub. A later semantic-review/terminal task may consume the fresh audit without repeating discovery.
 - Semantic include/exclude/pending review remains an assistant responsibility. Machine audit success never implies semantic-review completion.
 - If the trigger push succeeds but the Actions run fails or fails to persist a fresh audit, record the concrete Actions run id and failure as `source_gap` / `incomplete_review`.
