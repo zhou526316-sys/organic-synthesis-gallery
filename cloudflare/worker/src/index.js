@@ -32,6 +32,7 @@ import { runLeaseRepairBatch, runRepairBatch } from './repair.js';
 import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
+import { getArticleSummary, importArticleFulltext } from './article-summary.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import {
   alipayNotify,
@@ -94,6 +95,7 @@ const BROWSER_READ_PATHS = new Set([
 
 const TAMPERMONKEY_CORS_WRITE_PATHS = new Set([
   '/api/article-figures/stage',
+  '/api/article-summary/fulltext/import',
   '/api/media/local-capture/import',
   '/api/media/local-diagnostics/import',
   '/api/media/tampermonkey-report/import',
@@ -197,12 +199,16 @@ async function handleApi(request, env) {
       migration: true,
       d1: Boolean(env.DB),
       r2: Boolean(env.MEDIA),
+      ai: Boolean(env.AI),
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       integrations: integrationStatus(env).body,
     });
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
+    return resultResponse(await getArticleSummary(env, url.searchParams.get('doi')), cors);
+  }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts') {
     return resultResponse(await readerCounts(env, await readJson(request)), cors);
   }
@@ -470,6 +476,11 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/primary/import') {
     return resultResponse(await importPrimaryVisual(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/article-summary/fulltext/import') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await importArticleFulltext(env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-capture/import') {
     return resultResponse(await importLocalCapture(request, env, await readJson(request)));
