@@ -1,6 +1,7 @@
 import { gunzipSync } from 'node:zlib';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { isExcludedDoi } from '../../shared/literature-policy.js';
 
 const ROOT = process.cwd();
 const PUBLIC = path.join(ROOT, 'public');
@@ -105,7 +106,7 @@ async function loadPapers() {
   );
   for (const raw of all) {
     const doi = normalizeDoi(raw?.doi || raw?.url || '');
-    if (!doi) continue;
+    if (!doi || isExcludedDoi(doi)) continue;
     const paper = { doi, journal: canonicalJournal(raw?.journal || ''), title: typeof raw?.title === 'string' ? raw.title : '', date: typeof raw?.date === 'string' ? raw.date : '' };
     const prev = merged.get(doi);
     if (!prev) merged.set(doi, paper);
