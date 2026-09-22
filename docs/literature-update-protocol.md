@@ -107,6 +107,18 @@ The review artifact must record `qualityControl.secondPassCompleted=true` and `q
 
 The GitHub workflow `.github/workflows/literature-quality-gate.yml` independently runs these machine-verifiable invariants. A failed quality gate means the corresponding update remains incomplete even if the scheduler itself reported success.
 
+## ChatGPT-to-GitHub execution bridge
+
+ChatGPT scheduled-task runtimes are not required to have a local Node runner or a workflow-dispatch action. The supported execution bridge is a minimal GitHub write to `audit/automation-triggers/literature-audit-request.json`.
+
+- Updating that file on `main` is an explicit machine-audit request. The push must trigger `.github/workflows/literature-audit.yml`.
+- The GitHub Actions runner, not the ChatGPT task runtime, executes the repository capability guard and DOI-union audit.
+- A ChatGPT task must inspect the resulting Actions run and consume the newly persisted `audit/latest.json`; absence of local Node or workflow_dispatch is not itself a blocker when the push-trigger bridge is available.
+- If the scheduled primary task dies after writing the trigger, the machine discovery still proceeds in GitHub. A later semantic-review/terminal task may consume the fresh audit without repeating discovery.
+- Semantic include/exclude/pending review remains an assistant responsibility. Machine audit success never implies semantic-review completion.
+- If the trigger push succeeds but the Actions run fails or fails to persist a fresh audit, record the concrete Actions run id and failure as `source_gap` / `incomplete_review`.
+- Never create a fake semantic review merely to trigger the workflow; use the dedicated automation-trigger file.
+
 ## Scheduled fallback
 
 The primary task runs at 08:00 and 18:00 Asia/Shanghai. Each fresh primary run uses a three-day primary semantic-review window subject to each journal's prospective `activeFrom` cutoff, while a seven-day machine-only multi-source safety tail, Crossref created/deposit rescue, and verifiedThrough catch-up remain enabled. GPT TOC repair runs at 08:30 and 18:30; the sync-only fallback runs at 09:00 and 19:00 Asia/Shanghai and is explicitly forbidden from re-fetching literature or TOCs.
