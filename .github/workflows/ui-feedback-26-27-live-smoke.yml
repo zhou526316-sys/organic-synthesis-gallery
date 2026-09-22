@@ -1,0 +1,157 @@
+name: Verify deployed UI feedback 26 and 27
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ui-feedback-26-27-live-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-feedback-26-27-live-smoke
+  cancel-in-progress: false
+
+jobs:
+  verify-live-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install existing browser-test dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Install WebKit
+        run: npx playwright install --with-deps webkit
+      - name: Check live public frontends without production writes
+        run: |
+          mkdir -p live-ui-results
+          node --input-type=module <<'NODE'
+          import { webkit, expect } from '@playwright/test';
+          import { writeFile } from 'node:fs/promises';
+          const sites = [
+            ['pages', 'https://organic-synthesis-gallery-public.pages.dev/'],
+            ['github', 'https://zhou526316-sys.github.io/organic-synthesis-gallery/'],
+          ];
+          const results = [];
+          const browser = await webkit.launch();
+          try {
+            for (const [name, site] of sites) {
+              for (const width of [390, 1280]) {
+                const result = { site, width, status: 'running', assertions: [], pageErrors: [], blockedWrites: [] };
+                results.push(result);
+                const context = await browser.newContext({ viewport: { width, height: 900 }, serviceWorkers: 'block' });
+                const page = await context.newPage();
+                page.setDefaultTimeout(15000);
+                page.setDefaultNavigationTimeout(45000);
+                page.on('pageerror', error => result.pageErrors.push(error.message));
+                // Fresh anonymous contexts only. Never publish test feedback, reader events,
+                // synced user state, captures, or generated summaries into production.
+                await context.route('**/*', async route => {
+                  const request = route.request();
+                  if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method())) {
+                    result.blockedWrites.push({ method: request.method(), path: new URL(request.url()).pathname });
+                    await route.fulfill({ status: 409, contentType: 'application/json', body: JSON.stringify({ error: 'live_ui_smoke_write_blocked' }) });
+                  } else await route.continue();
+                });
+                try {
+                  const response = await page.goto(`${site}?ui-smoke=${process.env.GITHUB_SHA}`, { waitUntil: 'domcontentloaded' });
+                  if (!response?.ok()) throw new Error(`Public page HTTP ${response?.status()}`);
+                  result.finalUrl = page.url();
+                  result.entryScripts = await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => node.src));
+                  const actions = page.locator('gallery-paper-actions').first();
+                  await expect(actions).toBeVisible({ timeout: 45000 });
+                  result.paperId = await actions.getAttribute('data-paper-id');
+                  await expect(actions.locator('.bar > button.action')).toHaveCount(4);
+                  await expect(actions.locator('button[data-action="summary"]')).toHaveCount(1);
+                  result.assertions.push('four management buttons and separate summary entry');
+                  const favorite = actions.locator('button[data-action="favorite"]');
+                  await favorite.click();
+                  const drawer = actions.locator('.drawer');
+                  await expect(drawer).toHaveAttribute('data-anchor', 'favorite');
+                  await expect(drawer).toContainText(/收藏与收藏夹|Saved papers and folders/);
+                  await expect(actions.locator('button[data-action="toggle-favorite"]')).toBeVisible();
+                  const folder = actions.locator('input[data-collection="project"]');
+                  await folder.check();
+                  await expect(folder).toBeChecked();
+                  await expect(favorite).toHaveAttribute('title', /已收藏|Saved/);
+                  const anchor = await favorite.boundingBox();
+                  const panel = await drawer.boundingBox();
+                  if (!anchor || !panel) throw new Error('Favorite anchor geometry missing');
+                  if (panel.x < -1 || panel.x + panel.width > width + 1) throw new Error('Favorite panel exceeds viewport');
+                  const gap = Math.min(Math.abs(panel.y - anchor.y - anchor.height), Math.abs(anchor.y - panel.y - panel.height));
+                  if (gap > 18) throw new Error(`Favorite panel is not anchored: gap=${gap}`);
+                  result.favoriteGeometry = { anchor, panel, gap };
+                  await page.screenshot({ path: `live-ui-results/${name}-${width}-favorite.png`, fullPage: false, timeout: 15000 });
+                  await favorite.click();
+                  await expect(drawer).toHaveCount(0);
+                  await expect(favorite).toHaveAttribute('title', /已收藏|Saved/);
+                  result.assertions.push('anchored favorite picker; choosing a folder saves; reopening never unsaves');
+                  await page.reload({ waitUntil: 'domcontentloaded' });
+                  await expect(favorite).toHaveAttribute('title', /已收藏|Saved/);
+                  await favorite.click();
+                  await expect(folder).toBeChecked();
+                  await actions.locator('button[data-action="close"]').click();
+                  await actions.locator('button[data-action="more"]').click();
+                  await expect(actions.locator('input[data-collection]')).toHaveCount(0);
+                  await expect(actions.locator('[data-citation-style]')).toBeVisible();
+                  await actions.locator('button[data-action="close"]').click();
+                  result.assertions.push('favorite folder persists after reload; More retains citations without duplicate folders');
+                  const status = actions.locator('button[data-action="status"]');
+                  const originalClass = await status.getAttribute('class');
+                  await status.click();
+                  // Select only the fresh default non-read status; never select read.
+                  const choice = actions.locator('button[data-action="set-status:to-read"]');
+                  await expect(choice).toBeVisible();
+                  await expect(choice.locator('small')).toHaveCount(0);
+                  const originalColor = await choice.locator('.status-choice-label').evaluate(element => getComputedStyle(element).backgroundColor);
+                  await choice.click();
+                  await expect.poll(() => status.evaluate(element => getComputedStyle(element).backgroundColor)).toBe(originalColor);
+                  await status.click();
+                  await actions.locator('input[data-status-color="to-read"]').evaluate(element => {
+                    element.value = '#13579b';
+                    element.dispatchEvent(new Event('change', { bubbles: true }));
+                  });
+                  await expect.poll(() => status.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(19, 87, 155)');
+                  await expect.poll(() => actions.locator('.chips > .chip.status').first().evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(19, 87, 155)');
+                  expect((await status.getAttribute('class'))?.replace(' active', '')).toBe(originalClass?.replace(' active', ''));
+                  await actions.locator('button[data-action="close"]').click();
+                  await page.reload({ waitUntil: 'domcontentloaded' });
+                  await expect.poll(() => status.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(19, 87, 155)');
+                  await status.scrollIntoViewIfNeeded();
+                  await page.screenshot({ path: `live-ui-results/${name}-${width}-status.png`, fullPage: false, timeout: 15000 });
+                  result.assertions.push('selected status color and customized color match the button and persist; action shape unchanged');
+                  await favorite.click();
+                  await actions.locator('button[data-action="toggle-favorite"]').click();
+                  await expect(folder).not.toBeChecked();
+                  await expect(favorite).toHaveAttribute('title', /^(收藏|Save)$/);
+                  await expect(actions.locator('.bar > button.action')).toHaveCount(4);
+                  result.assertions.push('explicit removal clears favorite and folder; management buttons remain four');
+                  expect(result.pageErrors).toEqual([]);
+                  result.status = 'passed';
+                } catch (error) {
+                  result.status = 'failed';
+                  result.error = String(error?.stack || error);
+                  try { await page.screenshot({ path: `live-ui-results/${name}-${width}-failure.png`, fullPage: false, timeout: 10000 }); } catch {}
+                } finally {
+                  await context.close();
+                  await writeFile('live-ui-results/results.json', JSON.stringify({ generatedAt: new Date().toISOString(), sourceSha: process.env.GITHUB_SHA, productionWritesAllowed: false, results }, null, 2));
+                  console.log(JSON.stringify(result));
+                }
+              }
+            }
+          } finally { await browser.close(); }
+          if (results.length !== 4 || results.some(result => result.status !== 'passed')) process.exitCode = 1;
+          NODE
+      - name: Retain live evidence even when a check fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-ui-feedback-26-27
+          path: live-ui-results/
+          retention-days: 7
+          if-no-files-found: warn
