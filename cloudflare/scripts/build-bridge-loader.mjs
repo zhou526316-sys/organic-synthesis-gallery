@@ -52,6 +52,14 @@ replaceRequired(
   'disable duplicate legacy server backlog when browser mainline is integrated'
 );
 
+// legacy_runtime_media_disabled: all media acquisition belongs to the bound mainline.
+for (const signature of ['  function queueDoi(doi, priority = false) {','  function pump() {','  function scan() {']) {
+  replaceRequired(signature, signature + '\n    if (globalThis.__OSG_TOC_BROWSER_MAINLINE__) return;', 'disable legacy '+signature);
+}
+replaceRequired('  function updateStatus() {',
+  "  function updateStatus() {\n    if (globalThis.__OSG_TOC_BROWSER_MAINLINE__) { const node=statusNode(); node.textContent='VPN Bridge 2.2.20 · 抓取由主线控制'; node.title='从 Tampermonkey 菜单启动夜间连续抓取；本按钮保留密钥设置。'; return; }",
+  'do not display obsolete legacy acquisition counts');
+
 await writeFile(RUNTIME_OUTPUT, runtime, 'utf8');
 
 const runtimeBody = runtime.replace(/^\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==\s*/, '').trim();
