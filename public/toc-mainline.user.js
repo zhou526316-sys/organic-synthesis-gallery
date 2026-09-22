@@ -2226,7 +2226,7 @@ function embeddedJobDois(value) {
       GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,version:VERSION,status:status,trace:trace,finishedAt:nowIso()});
       // The controller sees a nonce-bound media receipt even if diagnostic upload is slow.
       GM_setValue(resultKey(job.doi,job.jobId),{doi:job.doi,jobId:job.jobId,version:VERSION,status:status,reason:reason,tocStored:Boolean(toc),figuresStaged:stored,figuresIndexed:indexed,scanComplete:scanComplete,reportPending:true,finishedAt:nowIso()});
-      await uploadReport(job,trace,status==='partial'?'success':status,reason,tocCandidate,token);
+      await uploadReport(job,trace,status,reason,tocCandidate,token);
       var result=GM_getValue(resultKey(job.doi,job.jobId),{});result.reportPending=false;GM_setValue(resultKey(job.doi,job.jobId),result);
     }catch(e){
       var reason=String(e.message),status=reason==='user_aborted'?'aborted':'failed';saveReceipt(false);
