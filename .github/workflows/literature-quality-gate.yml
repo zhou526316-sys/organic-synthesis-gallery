@@ -6,6 +6,8 @@ on:
     branches:
       - main
     paths:
+      - '.github/workflows/literature-quality-gate.yml'
+      - 'docs/literature-update-protocol.md'
       - 'scripts/validate-literature-quality-gate.mjs'
       - 'cloudflare/scripts/audit-literature.mjs'
       - 'shared/literature-journals.js'
