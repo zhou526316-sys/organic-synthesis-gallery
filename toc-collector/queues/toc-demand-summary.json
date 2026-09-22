@@ -1,28 +1,28 @@
 {
-  "generatedAt": "2026-09-22T08:53:01.703Z",
+  "generatedAt": "2026-09-22T10:54:03.285Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
   "liveLocalCaptures": 130,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
-  "mediaInventoryCount": 503,
-  "webpageDoiCount": 503,
+  "mediaInventoryCount": 512,
+  "webpageDoiCount": 512,
   "mediaRecordCount": 504,
-  "visibleGapTotal": 1,
-  "demandTotal": 1,
-  "noVisual": 1,
+  "visibleGapTotal": 10,
+  "demandTotal": 10,
+  "noVisual": 10,
   "fallbackOnlyNeedsOfficialUpgrade": 63,
-  "missingOfficialTotal": 64,
-  "figureGapTotal": 362,
-  "zeroFigureGapTotal": 226,
+  "missingOfficialTotal": 73,
+  "figureGapTotal": 371,
+  "zeroFigureGapTotal": 235,
   "lowResolutionFigureGapTotal": 68,
   "unknownQualityFigureGapTotal": 1,
   "sparseFigureGapTotal": 67,
   "byPublisher": {
-    "acs": 0,
+    "acs": 7,
     "wiley": 0,
-    "nature": 1,
+    "nature": 3,
     "science": 0,
     "rsc": 0,
     "elsevier": 0,
@@ -40,14 +40,100 @@
     "other": 0
   },
   "byJournal": {
-    "Nature Communications": 1
+    "JACS": 2,
+    "JOC": 4,
+    "Organic Letters": 1,
+    "Nature Chemistry": 1,
+    "Nature Communications": 1,
+    "Nature Synthesis": 1
   },
   "sample": [
+    {
+      "doi": "10.1021/jacs.6c13517",
+      "journal": "JACS",
+      "title": "Nonalternating Chain Walking Polymerization Enables In-Chain Ketone Polyolefin Elastomers",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c14159",
+      "journal": "JACS",
+      "title": "Pd-Catalyzed Enantioselective [3+3] Annulation of Vinyldiazos with 2-Iodoanilines Enabled by Sadphos",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01270",
+      "journal": "JOC",
+      "title": "Synthesis of Conjugated Bromoenynoates via Electrophilic Bromination of Enynyl Hydrazones",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01295",
+      "journal": "JOC",
+      "title": "Site-Selective C(sp3)–H Bromination via Radical Relay",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01302",
+      "journal": "JOC",
+      "title": "Borane-Catalyzed Divergent Hydrogenative and Silylative Reduction of Quinolinium Salts",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01469",
+      "journal": "JOC",
+      "title": "Selectfluor-Mediated Radical Cyclization of N-Arylbicyclo[1.1.0]butane-1-carboxamides with Diaryldiselenides",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "title": "Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1038/s41557-026-02258-8",
+      "journal": "Nature Chemistry",
+      "title": "De novo synthesis of threofuranoses via a triple-carbonylation cascade of aldehydes",
+      "date": "2026-09-22",
+      "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
+    },
     {
       "doi": "10.1038/s41467-026-77981-4",
       "journal": "Nature Communications",
       "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
       "date": "2026-09-21",
+      "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1038/s44160-026-01155-9",
+      "journal": "Nature Synthesis",
+      "title": "Enantio- and diastereoselective synthesis of multi-helical nanographenes",
+      "date": "2026-09-22",
       "publisher": "nature",
       "state": "no_visual",
       "existingReason": ""

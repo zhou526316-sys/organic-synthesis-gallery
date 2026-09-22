@@ -1,20 +1,101 @@
 {
   "version": 2,
-  "generatedAt": "2026-09-22T08:53:01.703Z",
-  "webpageDoiCount": 503,
-  "visibleGapTotal": 1,
-  "missingOfficialTotal": 64,
+  "generatedAt": "2026-09-22T10:54:03.285Z",
+  "webpageDoiCount": 512,
+  "visibleGapTotal": 10,
+  "missingOfficialTotal": 73,
   "officialUpgradeTotal": 63,
-  "figureGapTotal": 362,
-  "zeroFigureGapTotal": 226,
+  "figureGapTotal": 371,
+  "zeroFigureGapTotal": 235,
   "lowResolutionFigureGapTotal": 68,
   "unknownQualityFigureGapTotal": 1,
   "visibleGaps": [
+    {
+      "doi": "10.1021/jacs.6c13517",
+      "journal": "JACS",
+      "title": "Nonalternating Chain Walking Polymerization Enables In-Chain Ketone Polyolefin Elastomers",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c14159",
+      "journal": "JACS",
+      "title": "Pd-Catalyzed Enantioselective [3+3] Annulation of Vinyldiazos with 2-Iodoanilines Enabled by Sadphos",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01270",
+      "journal": "JOC",
+      "title": "Synthesis of Conjugated Bromoenynoates via Electrophilic Bromination of Enynyl Hydrazones",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01295",
+      "journal": "JOC",
+      "title": "Site-Selective C(sp3)–H Bromination via Radical Relay",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01302",
+      "journal": "JOC",
+      "title": "Borane-Catalyzed Divergent Hydrogenative and Silylative Reduction of Quinolinium Salts",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01469",
+      "journal": "JOC",
+      "title": "Selectfluor-Mediated Radical Cyclization of N-Arylbicyclo[1.1.0]butane-1-carboxamides with Diaryldiselenides",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "title": "Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1038/s41557-026-02258-8",
+      "journal": "Nature Chemistry",
+      "title": "De novo synthesis of threofuranoses via a triple-carbonylation cascade of aldehydes",
+      "date": "2026-09-22",
+      "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
+    },
     {
       "doi": "10.1038/s41467-026-77981-4",
       "journal": "Nature Communications",
       "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
       "date": "2026-09-21",
+      "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1038/s44160-026-01155-9",
+      "journal": "Nature Synthesis",
+      "title": "Enantio- and diastereoselective synthesis of multi-helical nanographenes",
+      "date": "2026-09-22",
       "publisher": "nature",
       "state": "no_visual",
       "existingReason": ""
@@ -885,6 +966,34 @@
       "priority": "missing"
     },
     {
+      "doi": "10.1021/jacs.6c13517",
+      "journal": "JACS",
+      "title": "Nonalternating Chain Walking Polymerization Enables In-Chain Ketone Polyolefin Elastomers",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1021/jacs.6c14159",
+      "journal": "JACS",
+      "title": "Pd-Catalyzed Enantioselective [3+3] Annulation of Vinyldiazos with 2-Iodoanilines Enabled by Sadphos",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
       "doi": "10.1021/jacs.6c13641",
       "journal": "JACS",
       "title": "Alternating Copolymerization of Arynes and Aldehydes Enabled by an N-Arylamine Initiator",
@@ -1673,6 +1782,76 @@
       "journal": "JACS",
       "title": "Synthesis of Chiral Cyclophanes via Pd(II)-Catalyzed Atroposelective C–H Macrocyclization: Total Synthesis of Isoplagiochin D",
       "date": "2026-07-01",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01270",
+      "journal": "JOC",
+      "title": "Synthesis of Conjugated Bromoenynoates via Electrophilic Bromination of Enynyl Hydrazones",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01295",
+      "journal": "JOC",
+      "title": "Site-Selective C(sp3)–H Bromination via Radical Relay",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01302",
+      "journal": "JOC",
+      "title": "Borane-Catalyzed Divergent Hydrogenative and Silylative Reduction of Quinolinium Salts",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01469",
+      "journal": "JOC",
+      "title": "Selectfluor-Mediated Radical Cyclization of N-Arylbicyclo[1.1.0]butane-1-carboxamides with Diaryldiselenides",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "title": "Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment",
+      "date": "2026-09-22",
       "publisher": "acs",
       "figureCount": 0,
       "highQualityFigureCount": 0,
@@ -3405,6 +3584,20 @@
       "priority": "missing"
     },
     {
+      "doi": "10.1038/s41557-026-02258-8",
+      "journal": "Nature Chemistry",
+      "title": "De novo synthesis of threofuranoses via a triple-carbonylation cascade of aldehydes",
+      "date": "2026-09-22",
+      "publisher": "nature",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
       "doi": "10.1038/s41467-026-77981-4",
       "journal": "Nature Communications",
       "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
@@ -3633,6 +3826,20 @@
       "journal": "Nature Communications",
       "title": "",
       "date": "2026-08-20",
+      "publisher": "nature",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1038/s44160-026-01155-9",
+      "journal": "Nature Synthesis",
+      "title": "Enantio- and diastereoselective synthesis of multi-helical nanographenes",
+      "date": "2026-09-22",
       "publisher": "nature",
       "figureCount": 0,
       "highQualityFigureCount": 0,
@@ -5661,6 +5868,69 @@
   ],
   "allMissingOfficial": [
     {
+      "doi": "10.1021/jacs.6c13517",
+      "journal": "JACS",
+      "title": "Nonalternating Chain Walking Polymerization Enables In-Chain Ketone Polyolefin Elastomers",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c14159",
+      "journal": "JACS",
+      "title": "Pd-Catalyzed Enantioselective [3+3] Annulation of Vinyldiazos with 2-Iodoanilines Enabled by Sadphos",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01270",
+      "journal": "JOC",
+      "title": "Synthesis of Conjugated Bromoenynoates via Electrophilic Bromination of Enynyl Hydrazones",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01295",
+      "journal": "JOC",
+      "title": "Site-Selective C(sp3)–H Bromination via Radical Relay",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01302",
+      "journal": "JOC",
+      "title": "Borane-Catalyzed Divergent Hydrogenative and Silylative Reduction of Quinolinium Salts",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01469",
+      "journal": "JOC",
+      "title": "Selectfluor-Mediated Radical Cyclization of N-Arylbicyclo[1.1.0]butane-1-carboxamides with Diaryldiselenides",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "title": "Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment",
+      "date": "2026-09-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
       "doi": "10.1038/s41586-026-11091-5",
       "journal": "Nature",
       "title": "Ketone homologation via palladium-catalysed decarboxylative rearrangement",
@@ -5812,6 +6082,15 @@
       "publisher": "nature",
       "state": "fallback_only",
       "existingReason": "figure_fallback:Figure 2"
+    },
+    {
+      "doi": "10.1038/s41557-026-02258-8",
+      "journal": "Nature Chemistry",
+      "title": "De novo synthesis of threofuranoses via a triple-carbonylation cascade of aldehydes",
+      "date": "2026-09-22",
+      "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
     },
     {
       "doi": "10.1038/s41557-026-02204-8",
@@ -6172,6 +6451,15 @@
       "publisher": "nature",
       "state": "fallback_only",
       "existingReason": "figure1_fallback"
+    },
+    {
+      "doi": "10.1038/s44160-026-01155-9",
+      "journal": "Nature Synthesis",
+      "title": "Enantio- and diastereoselective synthesis of multi-helical nanographenes",
+      "date": "2026-09-22",
+      "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
     },
     {
       "doi": "10.1038/s44160-026-01149-7",
