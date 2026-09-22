@@ -49,6 +49,8 @@ const media = new MemoryR2();
 const env = { DB: throwingDb, MEDIA: media };
 const profileId = 'profile-feedback-fallback-test';
 
+const feedbackImageData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+
 for (let index = 0; index < 5; index += 1) {
   const result = await submitSiteFeedback(env, {
     profileId,
@@ -59,6 +61,7 @@ for (let index = 0; index < 5; index += 1) {
     searchQuery: 'photoredox',
     viewportWidth: 1280,
     viewportHeight: 900,
+    ...(index === 0 ? { imageData: feedbackImageData, imageName: 'screenshot.png' } : {}),
   });
   assert.equal(result.status, 200);
   assert.equal(result.body.accepted, true);
@@ -80,6 +83,12 @@ assert.equal(exported.body.count, 5);
 assert.equal(exported.body.sources.d1.available, false);
 assert.equal(exported.body.sources.r2Fallback.count, 5);
 assert.ok(exported.body.feedback.every(item => item.source === 'r2-fallback'));
+
+const imageFeedback = exported.body.feedback.find(item => item.message === 'fallback feedback 0');
+assert.ok(imageFeedback);
+assert.equal(imageFeedback.attachment?.name, 'screenshot.png');
+assert.equal(imageFeedback.attachment?.imageData, feedbackImageData);
+assert.ok([...media.map.keys()].some(key => key.startsWith('private/site-feedback-attachments/')));
 
 const reviewedId = exported.body.feedback[0].id;
 const statusUpdate = await updateSiteFeedbackStatuses(env, {
@@ -109,4 +118,5 @@ console.log(JSON.stringify({
   mergedExport: true,
   statusUpdate: true,
   privateMediaBlocked: true,
+  privateImageAttachmentRoundTrip: true,
 }));

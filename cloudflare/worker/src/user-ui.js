@@ -608,6 +608,43 @@ async function fallbackFeedbackObjectsForWindow(env, profileId, now) {
   return objects;
 }
 
+function feedbackImagePayload(value) {
+  if (typeof value !== 'string' || !value) return '';
+  if (value.length > 1_250_000) return '';
+  return /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/i.test(value) ? value : '';
+}
+
+function cleanFeedbackImageName(value) {
+  return cleanFeedbackText(value, 120).replace(/[\\/]+/g, '_');
+}
+
+async function storeSiteFeedbackAttachment(env, profileId, imageData, imageName, createdAt) {
+  const data = feedbackImagePayload(imageData);
+  if (!data) return null;
+  if (!env?.MEDIA) throw new Error('feedback_attachment_storage_unavailable');
+  const token = await feedbackProfileToken(profileId);
+  const key = `private/site-feedback-attachments/${token}/${createdAt}-${crypto.randomUUID()}.dataurl`;
+  const name = cleanFeedbackImageName(imageName) || 'feedback-image.webp';
+  await env.MEDIA.put(key, data, {
+    httpMetadata: { contentType: 'text/plain; charset=utf-8' },
+    customMetadata: { kind: 'site-feedback-attachment', name },
+  });
+  return { key, name };
+}
+
+async function loadSiteFeedbackAttachment(env, context) {
+  const key = typeof context?.attachment?.key === 'string' ? context.attachment.key : '';
+  if (!key || !key.startsWith('private/site-feedback-attachments/') || !env?.MEDIA) return null;
+  const object = await env.MEDIA.get(key);
+  if (!object) return null;
+  const imageData = await object.text();
+  if (!feedbackImagePayload(imageData)) return null;
+  return {
+    name: cleanFeedbackImageName(context?.attachment?.name) || 'feedback-image.webp',
+    imageData,
+  };
+}
+
 async function storeSiteFeedbackFallback(env, record) {
   if (!env?.MEDIA) {
     return { status: 503, body: { error: 'feedback_storage_unavailable' } };
@@ -628,6 +665,13 @@ async function storeSiteFeedbackFallback(env, record) {
     return { status: 429, body: { error: 'feedback_rate_limited', retryAfterSeconds: 3600 } };
   }
 
+  const attachment = record.context?.attachment || await storeSiteFeedbackAttachment(
+    env,
+    record.profileId,
+    record.imageData,
+    record.imageName,
+    record.createdAt,
+  );
   const token = await feedbackProfileToken(record.profileId);
   const fallbackId = crypto.randomUUID();
   const key = `${SITE_FEEDBACK_R2_PREFIX}${token}/${feedbackHourBucket(record.createdAt)}/${record.createdAt}-${fallbackId}.json`;
@@ -637,7 +681,10 @@ async function storeSiteFeedbackFallback(env, record) {
     message: record.message,
     pagePath: record.pagePath,
     language: record.language,
-    context: record.context,
+    context: {
+      ...(record.context || {}),
+      ...(attachment ? { attachment } : {}),
+    },
     status: 'open',
     createdAt: record.createdAt,
   };
@@ -663,6 +710,10 @@ export async function submitSiteFeedback(env, payload) {
   const pagePath = cleanFeedbackText(payload?.pagePath, 400);
   const language = cleanFeedbackText(payload?.language, 16);
   const searchQuery = cleanFeedbackText(payload?.searchQuery, 300);
+  const imageData = feedbackImagePayload(payload?.imageData);
+  const imageName = cleanFeedbackImageName(payload?.imageName);
+
+  if (payload?.imageData && !imageData) return { status: 400, body: { error: 'invalid_feedback_image' } };
 
   if (!profileId) return { status: 400, body: { error: 'invalid_profile_id' } };
   if (message.length < 3) return { status: 400, body: { error: 'feedback_too_short' } };
@@ -673,7 +724,7 @@ export async function submitSiteFeedback(env, payload) {
     viewportWidth: boundedDimension(payload?.viewportWidth),
     viewportHeight: boundedDimension(payload?.viewportHeight),
   };
-  const record = { profileId, category, message, pagePath, language, context, createdAt: now };
+  const record = { profileId, category, message, pagePath, language, context, imageData, imageName, createdAt: now };
 
   if (env?.DB) {
     try {
@@ -685,6 +736,8 @@ export async function submitSiteFeedback(env, payload) {
         return { status: 429, body: { error: 'feedback_rate_limited', retryAfterSeconds: 3600 } };
       }
 
+      const attachment = await storeSiteFeedbackAttachment(env, profileId, imageData, imageName, now);
+      if (attachment) context.attachment = attachment;
       const result = await env.DB.prepare(
         `INSERT INTO site_feedback (profile_id, category, message, page_path, language, context_json, status, created_at)
          VALUES (?, ?, ?, ?, ?, ?, 'open', ?)`
@@ -699,6 +752,7 @@ export async function submitSiteFeedback(env, payload) {
         },
       };
     } catch (error) {
+      record.context = context;
       console.warn('SITE_FEEDBACK_D1_FALLBACK', JSON.stringify({
         message: String(error?.message || error).slice(0, 300),
       }));
@@ -734,6 +788,7 @@ async function r2OpenSiteFeedback(env, limit) {
         try {
           const parsed = JSON.parse(await object.text());
           if (parsed?.status !== 'open') return null;
+          const context = parsed.context && typeof parsed.context === 'object' ? parsed.context : {};
           return {
             id: `r2:${parsed.fallbackId || item.key}`,
             source: 'r2-fallback',
@@ -741,7 +796,8 @@ async function r2OpenSiteFeedback(env, limit) {
             message: parsed.message || '',
             pagePath: parsed.pagePath || '',
             language: parsed.language || '',
-            context: parsed.context && typeof parsed.context === 'object' ? parsed.context : {},
+            context,
+            attachment: await loadSiteFeedbackAttachment(env, context),
             createdAt: Number(parsed.createdAt || 0),
           };
         } catch {
@@ -779,6 +835,7 @@ export async function exportOpenSiteFeedback(env, limit = 300) {
           pagePath: row.page_path || '',
           language: row.language || '',
           context,
+          attachment: await loadSiteFeedbackAttachment(env, context),
           createdAt: Number(row.created_at || 0),
         });
       }
