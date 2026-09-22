@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "context": "Bounded batch 2: deterministic staging-to-formal review conversion; no literature publication",
+  "observedThrough": "2026-09-22T22:54:37+08:00",
+  "repository": "zhou526316-sys/organic-synthesis-gallery",
+  "baselineCommit": "55a668baf0fe392ba6f4074592a776dea188c9c9",
+  "implementationCommit": "d5a203692d96cb8a151085f6092fda4e7dc84506",
+  "converterVersion": "1.0.0",
+  "run": {
+    "id": 35742939330,
+    "jobId": 106797092169,
+    "workflow": ".github/workflows/prepublish-review-gate.yml",
+    "event": "push",
+    "headSha": "d5a203692d96cb8a151085f6092fda4e7dc84506",
+    "createdAt": "2026-09-22T14:48:56Z",
+    "completedAt": "2026-09-22T14:49:19Z",
+    "status": "completed",
+    "conclusion": "failure",
+    "evidenceMethod": "Read actual GitHub workflow job steps and complete job log, and compare implementation commit against its parent. A failed target-slot check is not represented as a successful overall workflow."
+  },
+  "regressions": {
+    "newConversionTests": 30,
+    "existingTests": 34,
+    "totalPassed": 64,
+    "failed": 0,
+    "suites": {
+      "stagingVersusFullReviewClosure": 7,
+      "targetSlotFreshnessAndZeroNewProof": 6,
+      "perDoiRelease": 14,
+      "deferredPublicationQuality": 7,
+      "deterministicFormalConversion": 30
+    },
+    "fixtures": "Synthetic isolated fixtures; old post-publication suite uses loopback only. No external discovery or production writes."
+  },
+  "realStagingPreview": {
+    "reviewFile": "audit/prepublish-review-2026-09-23-0800.json",
+    "publicationSlot": "2026-09-23T08:00:00+08:00",
+    "handoffGeneratedAt": "2026-09-22T13:37:57.398Z",
+    "stagingReviewBlobSha": "4dd9b5543efd01c08fc1946b9b41e3bfe88102da",
+    "handoffBlobSha": "9de05665f88100a34d882045eca97440b2d09080",
+    "auditBlobSha": "db0a4f8914d11c41aa5306c46d006f7d1666721a",
+    "conversionValid": true,
+    "publicationReady": false,
+    "mode": "preview-only",
+    "summary": { "reviewed": 26, "accepted": 9, "rejected": 16, "pending": 1 },
+    "pendingDois": ["10.31635/ccschem.026.202608262"],
+    "previewFormalPayloadBlobSha": "0f628d4fb89862ce0cd6f909b055180f1116d171",
+    "previewPendingPayloadBlobSha": "3228ed9bb855ee33855e5cd1de2d74be3871d74d",
+    "canonicalFormalFilesWritten": false,
+    "note": "The two preview payload SHA values identify serialization inside a temporary CI artifact. They do not establish that those files were committed to audit/review-* or published. The 26 decisions are previously completed staging assessments, not 26 newly conducted semantic reviews in this batch."
+  },
+  "actualSteps": {
+    "completeCandidateRecordValidation": "success",
+    "previewFormalConversion": "success",
+    "perDoiSemanticSubsetReadiness": "success",
+    "targetSlotFreshness": "failure",
+    "strictReleaseBundle": "skipped",
+    "artifactPreservation": "success"
+  },
+  "slotPreflight": {
+    "recordValidationPassed": true,
+    "semanticReady": true,
+    "snapshotFreshForSlot": false,
+    "publicationReady": false,
+    "reviewComplete": false,
+    "blockers": ["snapshot_not_from_target_slot_prerelease_window"],
+    "note": "The night snapshot must not replace the next morning's fresh audit. The documented single pending DOI is not blocking the nine approved DOI subset."
+  },
+  "artifact": {
+    "id": 10701145438,
+    "name": "prepublish-readiness-evidence",
+    "sizeBytes": 24771,
+    "sha256": "d951f10a1ec559f5a5d150ab7be55f414d46748546d67e88b34eac22a212a9f8",
+    "files": ["prepublish-validation.json", "prepublish-readiness.json", "prepublish-slot-readiness.json", "formal-conversion-preview.json"],
+    "strictBundlePresent": false,
+    "source": "Actual Actions upload log; strict converter was skipped."
+  },
+  "converterContract": {
+    "completePartitionRequired": true,
+    "decisionsChanged": false,
+    "evidencePreserved": true,
+    "missingReasonCopiesExistingEvidenceBasisVerbatim": true,
+    "presentShortReasonRejected": true,
+    "sameDoiMetadataEnrichmentOnly": true,
+    "pendingKeptOutOfPublishableAllowlist": true,
+    "pendingRetainsDateEvidenceAttemptsAndNextFixedSlot": true,
+    "serialization": "JSON.stringify(value, null, 2) + newline",
+    "blobHashesComparedWithGitHashObject": true,
+    "sourceBytesRereadAfterConversion": true,
+    "defaultPreviewIsNotPublicationAuthorization": true,
+    "strictConversionRequiresExistingPerDoiSlotPreflight": true
+  },
+  "automationUpdate": {
+    "taskId": "6ab1edf330608191b89c92864890d997",
+    "updatedAt": "2026-09-22T14:54:37.326870Z",
+    "status": "success",
+    "scheduleChanged": false,
+    "newTasksCreated": false,
+    "requiredProductionInput": "Matching mode=release-preflight formal-release-bundle.json with conversionValid=true and publicationReady=true, or equivalent actual GitHub runner strict conversion output",
+    "previewAndSkippedStepsDoNotAuthorizeRelease": true,
+    "manualJsonRearrangementToBypassConverterForbidden": true
+  },
+  "changedImplementationFiles": [
+    "scripts/convert-prepublish-review.mjs",
+    "scripts/test-formal-review-conversion.mjs",
+    ".github/workflows/prepublish-review-gate.yml",
+    "docs/formal-review-conversion.md",
+    "docs/publication-release-contract.md",
+    "audit/gpt-responses/2026-09-22/224000-formal-conversion-batch-start.md"
+  ],
+  "productionDataModified": false,
+  "semanticDecisionsModified": false,
+  "publicationMarkerModified": false,
+  "coordinationStateModified": false,
+  "pagesDeploymentTriggered": false,
+  "newMachineDiscoveryTriggered": false,
+  "oaOrPublisherMediaAcquisitionExecuted": false,
+  "onlineCardCountReverified": false,
+  "remainingWork": [
+    "Deterministic production data/marker atomic writer integration",
+    "Generated artifact DOI equality against authorized release",
+    "Version-pinned post-deployment DOI/search verification and ordered completion",
+    "Timing policy consolidation, audit deduplication, coordination-state consolidation and notification settings"
+  ],
+  "result": "conversion_batch_verified_not_a_production_release"
+}
