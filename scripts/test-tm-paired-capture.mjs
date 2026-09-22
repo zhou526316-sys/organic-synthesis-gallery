@@ -20,6 +20,7 @@ try{
  const posts=[];
  await page.route('**/*',async route=>{
   const req=route.request(),u=new URL(req.url());
+  if(req.method()==='OPTIONS') return route.fulfill({status:204,headers:{'access-control-allow-origin':'*','access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'authorization,content-type'}});
   if(req.method()==='POST'){
    const p=req.postDataJSON();posts.push({url:u.pathname,payload:p});
    if(u.pathname.includes('tampermonkey-report'))return route.fulfill({json:{stored:true},headers:{'access-control-allow-origin':'*'}});
