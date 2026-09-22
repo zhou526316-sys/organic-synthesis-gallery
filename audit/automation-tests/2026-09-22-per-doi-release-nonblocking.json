@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "context": "User correction: a single pending article must not block other reviewed articles.",
+  "timeZone": "Asia/Shanghai",
+  "evidenceRunCompletedAt": "2026-09-22T22:30:10+08:00",
+  "repository": "zhou526316-sys/organic-synthesis-gallery",
+  "branch": "main",
+  "policy": {
+    "mode": "per-doi",
+    "fixedPublicationSlots": ["08:00", "18:00"],
+    "singleDocumentedPendingBlocksOtherIncludes": false,
+    "globalDiscoveryAndSnapshotFailuresStillBlock": true,
+    "completeCandidateAccountingRequired": true,
+    "unreviewedWorkMayBeRelabeledPending": false,
+    "pendingMayEnterProduction": false,
+    "pendingMustRetainEvidenceAndRetryInstructions": true,
+    "postPublishPhaseWithPending": "synced_with_pending",
+    "pendingPreventsFullClosureNotVerifiedSubsetPublication": true
+  },
+  "run": {
+    "id": 35740719877,
+    "jobId": 106789464964,
+    "headSha": "94245a7d50281e1c2bb7d405e08aae3d21598795",
+    "workflow": ".github/workflows/prepublish-review-gate.yml",
+    "event": "push",
+    "conclusion": "failure",
+    "onlyFailedCheck": "Require fresh snapshot for the target 08 or 18 slot",
+    "evidenceMethod": "Read actual GitHub job step results and decoded job log. Do not infer success from task scheduling."
+  },
+  "regressionTests": {
+    "existingFullClosureTests": 7,
+    "existingSlotFreshnessTests": 6,
+    "newPerDoiReleaseTests": 14,
+    "newPostPublicationBacklogTests": 7,
+    "total": 34,
+    "passed": 34,
+    "failed": 0,
+    "fixtures": "Temporary isolated synthetic files; post-publication tests use only a local loopback HTTP fixture server, not production or publisher requests."
+  },
+  "realStagingCheck": {
+    "reviewFile": "audit/prepublish-review-2026-09-23-0800.json",
+    "publicationSlot": "2026-09-23T08:00:00+08:00",
+    "handoffGeneratedAt": "2026-09-22T13:37:57.398Z",
+    "reviewed": 26,
+    "includeCount": 9,
+    "excludeCount": 16,
+    "pendingCount": 1,
+    "activeJournals": 16,
+    "recordValidationPassed": true,
+    "semanticReady": true,
+    "semanticBlockers": [],
+    "reviewComplete": false,
+    "snapshotFreshForSlot": false,
+    "publicationReady": false,
+    "blockers": ["snapshot_not_from_target_slot_prerelease_window"],
+    "publishableDois": [
+      "10.1021/jacs.6c16812", "10.1021/jacs.6c17644", "10.1021/jacs.6c12532",
+      "10.1021/acs.joc.6c01559", "10.1021/acs.joc.6c01653",
+      "10.1021/acs.orglett.6c03473", "10.1021/acs.orglett.6c03586",
+      "10.1021/acs.orglett.6c03313", "10.1021/acs.orglett.6c03394"
+    ],
+    "deferredDois": ["10.31635/ccschem.026.202608262"],
+    "publisherCoverageFullyVerified": false,
+    "explanation": "The existing reviewed include subset passes despite one documented pending. The run remains red only because tonight's snapshot is not a fresh next-morning snapshot. This is not a claim of publication or a guarantee of the next scheduled execution."
+  },
+  "changes": {
+    "prepublishValidatorCommit": "3531339e0d0fc92b7c83efa23b2b8ffd059a6b74",
+    "slotPreflightCommit": "20285482c4f4ea12668548182ba5fff303c8151b",
+    "downstreamQualityCommit": "aa8a81306c1fb8efbf28465f63260ae3677982ab",
+    "perDoiTestsCommit": "f3f564836b101dba68af9ce75e7c481c0caf033a",
+    "postPublicationTestsCommit": "5bc178307ecd0a5647e52a320ed0b61f8d459bf3",
+    "protocolCommit": "863bc1b75cf01ef50d6277df2cc4727fea50bc39",
+    "workflowCommit": "94245a7d50281e1c2bb7d405e08aae3d21598795"
+  },
+  "taskPromptSynchronization": {
+    "primary": {"id": "6aafcf84ef7481919d285caa33ebe93d", "updatedAt": "2026-09-22T14:30:18.496787Z"},
+    "recovery": {"id": "6ab1ed8ba52481919ac21fd5a454b1aa", "updatedAt": "2026-09-22T14:30:44.674453Z"},
+    "publication": {"id": "6ab1edf330608191b89c92864890d997", "updatedAt": "2026-09-22T14:31:12.975692Z"},
+    "schedulesChanged": false,
+    "allThreeEnabled": true,
+    "bothPublicationPreflightCommandsUseAllowDeferred": true
+  },
+  "productionLiteratureModified": false,
+  "stagingDecisionsModified": false,
+  "newDiscoveryRunRequested": false,
+  "pagesProductionDeploymentRequested": false,
+  "mediaAcquisitionExecuted": false,
+  "note": "Existing candidate decisions and coordination state were not falsely marked fully complete. Current pending evidence remains preserved in canonical staging; the next real release must persist formal pending arrays and durable state backlog before claiming partial publication consistency."
+}
