@@ -4,7 +4,6 @@ import { open } from './status-image-fixtures';
 test.use({ serviceWorkers: 'block' });
 const ZH = '摘要布局测试：研究目标、反应条件、底物范围及局限。';
 const EN = 'Summary layout fixture: objective, conditions, scope and limitations.';
-const TOC = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="640" height="360" fill="white"/><text x="80" y="180" font-size="40">TOC layout fixture</text></svg>');
 
 async function prepare(page: Page, width: number, height: number, available = true, toc = true): Promise<{ actions: Locator; calls: () => number }> {
   let calls = 0;
@@ -27,12 +26,21 @@ async function prepare(page: Page, width: number, height: number, available = tr
   await actions.locator('button[data-action="close"]').click();
   await page.setViewportSize({ width, height });
   const card = page.locator('.card').filter({ has: actions }).first();
-  await card.evaluate((element, source) => {
+  await card.evaluate(async (element, enabled) => {
     let slot = element.querySelector<HTMLElement>('.toc-slot');
     if (!slot) { slot = document.createElement('div'); slot.className = 'toc-slot'; element.prepend(slot); }
     slot.replaceChildren();
-    if (source) { const image = document.createElement('img'); image.className = 'toc-image'; image.alt = 'TOC test fixture'; image.src = source; slot.append(image); }
-  }, toc ? TOC : '');
+    if (enabled) {
+      // Fixed raster dimensions, rather than an SVG whose intrinsic metrics can
+      // be affected by the browser's SVG sizing path. Keep the exact 640px check.
+      const canvas = document.createElement('canvas'); canvas.width = 640; canvas.height = 360;
+      const ctx = canvas.getContext('2d')!;
+      ctx.fillStyle = 'white'; ctx.fillRect(0, 0, 640, 360);
+      ctx.fillStyle = '#344054'; ctx.font = '32px sans-serif'; ctx.fillText('TOC layout fixture', 80, 180);
+      const image = document.createElement('img'); image.className = 'toc-image'; image.alt = 'TOC test fixture';
+      image.src = canvas.toDataURL('image/png'); slot.append(image); await image.decode();
+    }
+  }, toc);
   await actions.locator('button[data-action="summary"]').click();
   return { actions, calls: () => calls };
 }
@@ -40,14 +48,18 @@ async function prepare(page: Page, width: number, height: number, available = tr
 async function bounded(drawer: Locator, width: number, height: number): Promise<void> {
   await expect(drawer).toBeVisible();
   await expect(drawer).toHaveAttribute('data-anchor', 'summary');
-  const box = (await drawer.boundingBox())!;
-  expect(box.width).toBeLessThan(width - 18);
-  expect(box.height).toBeLessThan(height * 0.9);
-  expect(box.x).toBeGreaterThanOrEqual(10);
-  expect(box.y).toBeGreaterThanOrEqual(10);
-  expect(box.x + box.width).toBeLessThanOrEqual(width - 10);
-  expect(box.y + box.height).toBeLessThanOrEqual(height - 10);
-  expect(await drawer.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+  // Resize and image load are asynchronous. Retain the same strict edges and
+  // default 5-second expectation window, not an arbitrary settling sleep.
+  await expect(async () => {
+    const box = (await drawer.boundingBox())!;
+    expect(box.width).toBeLessThan(width - 18);
+    expect(box.height).toBeLessThan(height * 0.9);
+    expect(box.x).toBeGreaterThanOrEqual(10);
+    expect(box.y).toBeGreaterThanOrEqual(10);
+    expect(box.x + box.width).toBeLessThanOrEqual(width - 10);
+    expect(box.y + box.height).toBeLessThanOrEqual(height - 10);
+    expect(await drawer.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+  }).toPass({ timeout: 5000 });
 }
 
 for (const { width, height } of [{ width: 1280, height: 900 }, { width: 390, height: 900 }, { width: 320, height: 568 }, { width: 900, height: 420 }]) {
@@ -61,10 +73,13 @@ for (const { width, height } of [{ width: 1280, height: 900 }, { width: 390, hei
     const box = (await drawer.boundingBox())!;
     if (width >= 1200) expect(box.width).toBeGreaterThan(1000);
     expect(box.height).toBeGreaterThan(height * 0.75);
-    expect(await drawer.locator('.summary-text').evaluate(element => parseFloat(getComputedStyle(element).fontSize))).toBeGreaterThanOrEqual(width <= 680 ? 14 : 15);
+    const fontSize = await drawer.locator('.summary-text').evaluate(element => parseFloat(getComputedStyle(element).fontSize));
+    expect(fontSize).toBeGreaterThanOrEqual(width <= 680 ? 14 : 15);
     await expect(drawer.locator('.summary-toc img')).toBeVisible();
+    await expect(drawer.locator('.summary-toc img')).toHaveAttribute('src', /^data:image\/png/);
     expect(await drawer.locator('.summary-toc img').evaluate(element => (element as HTMLImageElement).naturalWidth)).toBe(640);
     await expect(actions.locator('.bar > button.action')).toHaveCount(4);
+    await info.attach('summary-geometry', { body: Buffer.from(JSON.stringify({ width, height, box, fontSize })), contentType: 'application/json' });
     await page.screenshot({ path: info.outputPath(`summary-${width}x${height}.png`), fullPage: false });
     await drawer.locator('[data-action="summary-lang:en"]').click();
     await expect(drawer.locator('.summary-text')).toContainText(EN);
