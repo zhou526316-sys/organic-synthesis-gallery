@@ -14,31 +14,29 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-      - name: Apply only the previously inspected component edits
+      - name: Update only the superseded summary dimensions and empty-TOC layout
         run: |
           python - <<'PY'
           from pathlib import Path
           import subprocess
-          p = Path('src/user-ui/paper-actions.ts')
-          assert subprocess.check_output(['git', 'hash-object', str(p)], text=True).strip() == 'fb9bb7b09d1903014ac171bc7c56164e6ab51416', 'Component changed: re-review before applying'
+          p = Path('tests/mobile-interaction.spec.ts')
+          assert subprocess.check_output(['git', 'hash-object', str(p)], text=True).strip() == '85e9fd2c4475a0813cfc0d25a7ba334a09fd365d'
           text = p.read_text()
-          def replace(old, new):
-              global text
-              assert text.count(old) == 1, ('Expected one integration point', old)
-              text = text.replace(old, new)
-          replace("const NAME = 'gallery-paper-actions';", "import { positionSummaryPanel, SUMMARY_PANEL_STYLES } from './summary-panel-layout';\n\nconst NAME = 'gallery-paper-actions';")
-          replace('    if (!anchor || !drawer) return;\n', "    if (!anchor || !drawer) return;\n    if (this.panel === 'summary') {\n      positionSummaryPanel(drawer, anchor, this);\n      return;\n    }\n")
-          replace("    window.addEventListener('resize', this.reposition);", "    window.addEventListener('resize', this.reposition);\n    window.visualViewport?.addEventListener('resize', this.reposition);\n    window.visualViewport?.addEventListener('scroll', this.reposition);")
-          replace("    window.removeEventListener('resize', this.reposition);", "    window.removeEventListener('resize', this.reposition);\n    window.visualViewport?.removeEventListener('resize', this.reposition);\n    window.visualViewport?.removeEventListener('scroll', this.reposition);")
-          replace('    </style>${this.chips(paper, status)}', '      ${SUMMARY_PANEL_STYLES}\n    </style>${this.chips(paper, status)}')
-          # The early summary return narrows this.panel; keep other caps unchanged.
-          replace("    const cap = this.panel === 'summary' ? (window.innerWidth <= 680 ? 620 : 680) : (window.innerWidth <= 680 ? 520 : 560);", "    const cap = window.innerWidth <= 680 ? 520 : 560;")
+          old = '    expect(box.width).toBeLessThan(780);\n    expect(box.width).toBeLessThan(1280 * 0.8);\n    expect(box.height).toBeLessThan(900 * 0.8);'
+          new = '    // Feedback 29 explicitly enlarges the previous 740px summary panel.\n    expect(box.width).toBeGreaterThan(1000);\n    expect(box.width).toBeLessThanOrEqual(1080);\n    expect(box.width).toBeLessThan(1280 - 24);\n    expect(box.height).toBeLessThan(900 * 0.9);'
+          assert text.count(old) == 1
+          p.write_text(text.replace(old, new))
+          p = Path('src/user-ui/summary-panel-layout.ts')
+          text = p.read_text()
+          old = '  .summary-drawer .summary-toc{'
+          assert text.count(old) == 2
+          text = text.replace(old, '  .summary-drawer .summary-main:only-child{grid-column:1/-1}\n'+old, 1)
           p.write_text(text)
           PY
           git diff --check
-          git diff -- src/user-ui/paper-actions.ts
+          git diff --stat
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/user-ui/paper-actions.ts
-          git commit -m 'feat(ui): connect larger summary-only layout and visual viewport resizing'
+          git add tests/mobile-interaction.spec.ts src/user-ui/summary-panel-layout.ts
+          git commit -m 'test(ui): update requested summary size contract; span empty-TOC states'
           git push origin HEAD:fix/ui-summary-readable-20260923
