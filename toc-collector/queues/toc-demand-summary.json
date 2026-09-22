@@ -1,28 +1,28 @@
 {
-  "generatedAt": "2026-09-21T16:29:43.272Z",
+  "generatedAt": "2026-09-22T02:03:07.385Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
   "liveLocalCaptures": 116,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
-  "mediaInventoryCount": 0,
-  "webpageDoiCount": 488,
+  "mediaInventoryCount": 499,
+  "webpageDoiCount": 499,
   "mediaRecordCount": 491,
-  "visibleGapTotal": 0,
-  "demandTotal": 0,
-  "noVisual": 0,
+  "visibleGapTotal": 11,
+  "demandTotal": 11,
+  "noVisual": 11,
   "fallbackOnlyNeedsOfficialUpgrade": 65,
-  "missingOfficialTotal": 65,
-  "figureGapTotal": 488,
-  "zeroFigureGapTotal": 488,
-  "lowResolutionFigureGapTotal": 0,
-  "unknownQualityFigureGapTotal": 0,
-  "sparseFigureGapTotal": 0,
+  "missingOfficialTotal": 76,
+  "figureGapTotal": 371,
+  "zeroFigureGapTotal": 238,
+  "lowResolutionFigureGapTotal": 68,
+  "unknownQualityFigureGapTotal": 1,
+  "sparseFigureGapTotal": 64,
   "byPublisher": {
-    "acs": 0,
-    "wiley": 0,
-    "nature": 0,
+    "acs": 9,
+    "wiley": 1,
+    "nature": 1,
     "science": 0,
     "rsc": 0,
     "elsevier": 0,
@@ -39,6 +39,112 @@
     "ccs": 0,
     "other": 0
   },
-  "byJournal": {},
-  "sample": []
+  "byJournal": {
+    "ACS Catalysis": 1,
+    "JACS": 2,
+    "Organic Letters": 6,
+    "Nature Communications": 1,
+    "Angew": 1
+  },
+  "sample": [
+    {
+      "doi": "10.1021/acscatal.6c05381",
+      "journal": "ACS Catalysis",
+      "title": "A Sequence-to-Scaffold Platform Enables Programmable Carrier-Supported Biocatalysis for Nucleoside Analog Synthesis",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c10810",
+      "journal": "JACS",
+      "title": "Using Data Science Tools to Explore Rate Matching in a Nickel-Catalyzed Cross-Electrophile Coupling of Alkyl and Aryl Halides (Cl, Br) with a Tridentate Monoanionic Ligand",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c16373",
+      "journal": "JACS",
+      "title": "Ligand-Shell-Enabled Silver Catalysis on Gold Nanoclusters for the Straightforward Synthesis of β-Naphthol Ethers from Alkynes",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02993",
+      "journal": "Organic Letters",
+      "title": "Nickel-Catalyzed Diastereoselective Cascade Cyclization/Cross-Coupling for the Synthesis of Dibenzazepines",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03243",
+      "journal": "Organic Letters",
+      "title": "Leveraging Iodomethylboronic Ester Reactivity to Access Late-Stage Dehydroalanine and Dehydrovaline onto Peptides in Water",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03335",
+      "journal": "Organic Letters",
+      "title": "Rh(III)-Catalyzed [4 + 2] Spiroannulation of 2-Phenylbenzimidazoles with Isomerizable 3-Methylmaleimides: Synthesis of Spiro-Fused Benzimidazoisoquinoline Succinimides",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03340",
+      "journal": "Organic Letters",
+      "title": "Copper-Catalyzed Formal [5 + 1] Annulation of Diynes with 1 H -Indole-2-ethanols: Construction of Tetrahydropyrano Indoles",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03418",
+      "journal": "Organic Letters",
+      "title": "Sequential Strecker–Ugi, Pictet–Spengler, and Ring-Expansion Reactions for the Synthesis of the Imidazopyridine-Fused Azocinoindole Scaffold",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03740",
+      "journal": "Organic Letters",
+      "title": "Additional Reductant-Free Visible-Light-Driven Davis–Beirut-Type Reaction: Access to Indazolin-3-ones from o -Nitrobenzaldimines",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1038/s41467-026-77981-4",
+      "journal": "Nature Communications",
+      "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
+      "date": "2026-09-21",
+      "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1002/anie.3685338",
+      "journal": "Angew",
+      "title": "A Ruthenium(CAAC‐5) Olefin Metathesis Catalyst for Bioconjugation",
+      "date": "2026-09-21",
+      "publisher": "wiley",
+      "state": "no_visual",
+      "existingReason": ""
+    }
+  ]
 }
