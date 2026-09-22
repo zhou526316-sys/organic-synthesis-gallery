@@ -26,8 +26,13 @@ jobs:
       - name: Install existing browser-test dependencies
         # Match the existing quality gate: the repository has no root npm lockfile.
         run: npm install --no-audit --no-fund
-      - name: Install WebKit
-        run: npx playwright install --with-deps webkit
+      - name: Install pinned Playwright and matching WebKit
+        # Root package.json does not contain @playwright/test. Install the same
+        # explicit version as mobile-interaction-ci.yml before importing it.
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          node --input-type=module -e "import { webkit, expect } from '@playwright/test'; if (!webkit || !expect) process.exit(1)"
+          npx --no-install playwright install --with-deps webkit
       - name: Check live public frontends without production writes
         run: |
           mkdir -p live-ui-results
