@@ -29,11 +29,11 @@ jobs:
     timeout-minutes: 8
     env:
       LIVE_SITE_URL: ${{ matrix.site }}
-      REVIEWED_SHA: 0067a4930c855f481f7f10fa971227d9e04e93d8
+      REVIEWED_SHA: d9e11e82b1e32289b2e968005ee124836d4ebf25
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 0067a4930c855f481f7f10fa971227d9e04e93d8
+          ref: d9e11e82b1e32289b2e968005ee124836d4ebf25
           persist-credentials: false
       - uses: actions/setup-node@v5
         with:
@@ -67,7 +67,7 @@ jobs:
           npx --no-install playwright install --with-deps webkit >/tmp/live-browser-install.log 2>&1 || { tail -80 /tmp/live-browser-install.log; exit 1; }
       - name: Adapt only test transport to deployed sites
         run: |
-          sha256sum tests/status-original-images.spec.ts tests/status-image-errors.spec.ts src/user-ui/status-image-*.ts src/user-shell.ts > live-status-results/reviewed-source-sha256.txt
+          sha256sum tests/status-original-images.spec.ts tests/status-image-errors.spec.ts tests/status-fetch-lifecycle.spec.ts tests/status-network-evidence.ts src/user-ui/status-image-*.ts src/user-shell.ts > live-status-results/reviewed-source-sha256.txt
           python - <<'PY'
           from pathlib import Path
           p = Path('tests/status-image-fixtures.ts')
@@ -75,6 +75,7 @@ jobs:
           start = text.index('export async function isolate(')
           end = text.index('export async function open(', start)
           transport = '''export async function isolate(context: BrowserContext): Promise<void> {
+            await recordStatusNetwork(context);
             // Fresh anonymous test contexts. Network writes and summary generation
             // are blocked; original images remain private to the discarded context.
             await context.route('**/*', async route => {
@@ -90,7 +91,7 @@ jobs:
                 'vary': 'Origin',
               };
               if (request.method() === 'OPTIONS') { await route.fulfill({ status: 204, headers }); return; }
-              if (path.includes('__gallery_blob_routing_check__')) { await route.fulfill({ status: 409, headers, body: 'local blob routing regression' }); return; }
+              if (path.includes('__gallery_blob_routing_check__') || path.includes('__gallery_lifecycle_probe__')) { await route.fulfill({ status: 409, headers, body: 'local routing regression' }); return; }
               if (['GET', 'HEAD'].includes(request.method()) && !path.includes('/article-summary')) { await route.continue(); return; }
               console.log('BLOCKED_LIVE_WRITE', request.method(), path);
               const countRead = path.endsWith('/api/user-ui/reader-counts');
@@ -110,16 +111,22 @@ jobs:
           needle = "await otherPage.goto('http://127.0.0.1:4173/');"
           assert text.count(needle) == 1
           p.write_text(text.replace(needle, "await otherPage.goto(process.env.LIVE_SITE_URL!, { waitUntil: 'domcontentloaded' });"))
+          # Only adapt the synthetic response origin in the held-request test.
+          p = Path('tests/status-fetch-lifecycle.spec.ts')
+          text = p.read_text()
+          needle = "'access-control-allow-origin': 'http://127.0.0.1:4173'"
+          assert text.count(needle) == 1
+          p.write_text(text.replace(needle, "'access-control-allow-origin': new globalThis.URL(process.env.LIVE_SITE_URL!).origin"))
           PY
           git diff --check
-          git diff -- tests/status-image-fixtures.ts tests/status-original-images.spec.ts > live-status-results/transport-only.diff
+          git diff -- tests/status-image-fixtures.ts tests/status-original-images.spec.ts tests/status-fetch-lifecycle.spec.ts > live-status-results/transport-only.diff
           git rev-parse HEAD > live-status-results/reviewed-commit.txt
-      - name: Run unchanged original, GIF, boundary and failure assertions on live frontend
+      - name: Run original, GIF, boundary, failure and navigation assertions on live frontend
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: live-status-results/results.json
         run: |
           set -o pipefail
-          npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=live-status-results/tests 2>&1 | tee live-status-results/tests.log
+          npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts tests/status-fetch-lifecycle.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=live-status-results/tests 2>&1 | tee live-status-results/tests.log
       - name: Retain live evidence, including unavailable entries
         if: always()
         uses: actions/upload-artifact@v4
