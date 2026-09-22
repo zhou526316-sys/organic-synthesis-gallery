@@ -441,9 +441,11 @@ test('desktop personalization wheel reaches the bottom and action slots align ac
 
 test('search highlights results, picker closes outside, feedback drags and submits', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
+  let submittedFeedback: Record<string, unknown> | null = null;
   await page.route('https://api.gczhouwld.com/**', async route => {
     const url = route.request().url();
     if (url.includes('/api/user-ui/site-feedback')) {
+      submittedFeedback = route.request().postDataJSON() as Record<string, unknown>;
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ accepted: true, id: 1 }) });
       return;
     }
@@ -558,8 +560,18 @@ test('search highlights results, picker closes outside, feedback drags and submi
 
   await feedback.locator('[data-feedback-category]').selectOption('search');
   await feedback.locator('[data-feedback-message]').fill('搜索框输入时不应该闪烁或清空。');
+  const feedbackImage = feedback.locator('input[data-feedback-image]');
+  await feedbackImage.setInputFiles({
+    name: 'feedback.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64'),
+  });
+  await expect(feedback.locator('.site-feedback-image-preview')).toBeVisible();
+  await expect(feedback.locator('.site-feedback-image-preview img')).toHaveAttribute('src', /^data:image\/webp;base64,/);
   await feedback.locator('[data-feedback-submit]').click();
   await expect(feedback.locator('.site-feedback-status')).toContainText(/已收到|Received/);
+  expect(String(submittedFeedback?.imageData || '')).toMatch(/^data:image\/webp;base64,/);
+  expect(submittedFeedback?.imageName).toBe('feedback.png');
 });
 
 
