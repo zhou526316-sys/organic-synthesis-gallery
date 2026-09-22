@@ -5,12 +5,12 @@ import { TARGET_JOURNALS, effectiveJournalStart } from '../shared/literature-jou
 const auditSource = await readFile(new URL('../cloudflare/scripts/audit-literature.mjs', import.meta.url), 'utf8');
 
 const names = TARGET_JOURNALS.map(journal => journal.name);
-assert.equal(TARGET_JOURNALS.length, 15, 'Completeness audit must cover exactly the current 15 target journals');
+assert.equal(TARGET_JOURNALS.length, 16, 'Completeness audit must cover exactly the current 16 target journals');
 
 for (const name of [
   'Nature', 'Science', 'Nature Catalysis', 'Nature Synthesis', 'Nature Chemistry',
   'Nature Communications', 'JACS', 'Angew', 'ACS Catalysis', 'Organic Letters',
-  'Chem', 'Chemical Science', 'CCS Chemistry', 'Science Advances', 'Green Chemistry',
+  'Chem', 'Chemical Science', 'CCS Chemistry', 'Science Advances', 'Green Chemistry', 'JOC',
 ]) {
   assert.ok(names.includes(name), `Missing target journal: ${name}`);
 }
@@ -20,6 +20,10 @@ for (const name of ['Chem', 'Chemical Science', 'CCS Chemistry', 'Science Advanc
   assert.equal(journal?.activeFrom, '2026-09-19', `${name} must remain prospective from 2026-09-19`);
   assert.equal(effectiveJournalStart(journal, '2026-09-13'), '2026-09-19', `${name} must not be backfilled before activation`);
 }
+
+const joc = TARGET_JOURNALS.find(item => item.name === 'JOC');
+assert.equal(joc?.activeFrom, '2026-09-22', 'JOC must be prospective from 2026-09-22');
+assert.equal(effectiveJournalStart(joc, '2026-09-13'), '2026-09-22', 'JOC must not be backfilled before activation');
 
 const jacs = TARGET_JOURNALS.find(item => item.name === 'JACS');
 assert.equal(effectiveJournalStart(jacs, '2026-09-13'), '2026-09-13', 'Existing journals must retain the full safety lookback');
@@ -50,7 +54,7 @@ assert.ok(!auditSource.includes('.filter(retainForReview)'), 'Keyword screening 
 
 console.log(JSON.stringify({
   targetJournals: TARGET_JOURNALS.length,
-  prospectiveFrom: '2026-09-19',
+  prospectiveFrom: { existingAdditions: '2026-09-19', JOC: '2026-09-22' },
   lookbackDays: 3,
   lateDepositRescueDays: 7,
   verifiedThroughCatchup: true,
