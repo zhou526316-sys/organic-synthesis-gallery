@@ -3,266 +3,448 @@
   "reviewType": "prepublish_staging",
   "publicationSlot": "2026-09-23T08:00:00+08:00",
   "createdAt": "2026-09-22T19:49:00+08:00",
-  "handoffGeneratedAt": "2026-09-22T11:35:29.420Z",
-  "compactHandoffSha": "38f7afac0d24005c26dd6e97f784a72a536d26c8",
+  "updatedAt": "2026-09-22T21:43:49+08:00",
+  "taskId": "prepublish-recovery-20260922-213510",
+  "phase": "preparing",
+  "status": "incomplete_review",
+  "readyToPublish": false,
+  "handoffGeneratedAt": "2026-09-22T13:37:57.398Z",
+  "freshAuditGeneratedAt": "2026-09-22T13:37:57.398Z",
+  "compactHandoffSha": "9de05665f88100a34d882045eca97440b2d09080",
   "sourceAudit": {
-    "generatedAt": "2026-09-22T11:35:29.420Z",
-    "sourceRecords": 555,
+    "generatedAt": "2026-09-22T13:37:57.398Z",
+    "latestBlobSha": "db0a4f8914d11c41aa5306c46d006f7d1666721a",
+    "compactBlobSha": "9de05665f88100a34d882045eca97440b2d09080",
+    "runId": 35734483158,
+    "jobId": 106768088143,
+    "runConclusion": "success",
+    "triggerCommitSha": "2452ddf00017180dee9bfa73572dc0bfc2691ab7",
+    "capabilitySnapshotRef": "2452ddf00017180dee9bfa73572dc0bfc2691ab7",
+    "capabilityGuardConclusion": "success",
+    "sourceRecords": 573,
     "galleryDois": 512,
-    "missingFromGallery": 8,
-    "unresolved": 8,
+    "missingFromGallery": 26,
+    "unresolved": 26,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 0,
-    "historicalCoverageLosses": 0
+    "historicalCoverageLosses": 0,
+    "handoffReadMethod": "Read the compact JSON in contiguous line ranges through the closing unresolved array and closing document. Every chunk returned the same compact blob SHA. Read latest generatedAt and summary separately; both generation and unresolved count match. No candidate inferred from the large diagnostic report."
   },
-  "summary": {
-    "reviewed": 8,
-    "accepted": 3,
-    "rejected": 5,
-    "pending": 0
+  "windowAccounting": {
+    "timeZone": "Asia/Shanghai",
+    "primaryStart": "2026-09-20",
+    "primaryEnd": "2026-09-22",
+    "machineSafetyTailStart": "2026-09-16",
+    "primaryWindowCandidates": 26,
+    "additionalSafetyTailOnlyCandidates": 0,
+    "additionalLateDepositRescueOnlyCandidates": 0,
+    "allCandidatePublicationDates": "2026-09-22",
+    "activeFromValidated": true,
+    "note": "All 26 compact candidates have safetyTail=false and lateIndexed=false. JOC is admitted only from 2026-09-22; the five 2026-09-19 additions are not backfilled before activation."
   },
+  "deltaReview": {
+    "previousHandoffGeneratedAt": "2026-09-22T11:35:29.420Z",
+    "previousCompactHandoffSha": "38f7afac0d24005c26dd6e97f784a72a536d26c8",
+    "previousReviewBlobSha": "d963424f86c9e5d009a2720e9a869db495296550",
+    "previousDecidedCount": 8,
+    "currentCandidateCount": 26,
+    "newCandidateCount": 18,
+    "newDois": [
+      "10.1002/anie.2946344", "10.1002/anie.4451248", "10.1002/anie.6397678",
+      "10.1021/jacs.6c16812", "10.1021/jacs.6c14064", "10.1021/jacs.6c12532",
+      "10.1021/acs.joc.6c01653",
+      "10.1038/d41586-026-03000-7", "10.1038/d41586-026-02920-8", "10.1038/d41586-026-02724-w",
+      "10.1038/s41467-026-75976-9", "10.1038/s41467-026-77340-3", "10.1038/s41467-026-77652-4", "10.1038/s41467-026-76274-0", "10.1038/s41467-026-78012-y",
+      "10.1021/acs.orglett.6c03586", "10.1021/acs.orglett.6c03313", "10.1021/acs.orglett.6c03394"
+    ],
+    "removedDois": [],
+    "materialMetadataChangedDois": [],
+    "metadataComparison": "Compared the eight overlapping DOI records against the previously read compact snapshot, including available abstracts, dates, journals and titles. No material change observed; whitespace and typesetting differences in the old staging JOC title are cosmetic. All eight were challenged again regardless.",
+    "reopenedDois": ["10.31635/ccschem.026.202608262"],
+    "reopeningReason": "The inherited CCS exclusion inferred an energy-conversion focus from a title despite an empty abstract. The current two passes both conclude pending until affirmative scope evidence is available. This is not a silent exclusion."
+  },
+  "summary": {"reviewed": 26, "accepted": 9, "rejected": 16, "pending": 1, "finalized": 25, "newlyReviewed": 18},
+  "reviewed": 26,
+  "acceptedCount": 9,
+  "rejectedCount": 16,
+  "pendingCount": 1,
   "acceptedDois": [
-    "10.1021/jacs.6c17644",
-    "10.1021/acs.joc.6c01559",
-    "10.1021/acs.orglett.6c03473"
+    "10.1021/jacs.6c16812", "10.1021/jacs.6c17644", "10.1021/jacs.6c12532",
+    "10.1021/acs.joc.6c01559", "10.1021/acs.joc.6c01653",
+    "10.1021/acs.orglett.6c03473", "10.1021/acs.orglett.6c03586", "10.1021/acs.orglett.6c03313", "10.1021/acs.orglett.6c03394"
   ],
   "rejectedDois": [
-    "10.31635/ccschem.026.202608262",
-    "10.1021/jacs.6c14114",
-    "10.1021/jacs.6c16062",
-    "10.1038/d41586-026-02929-z",
-    "10.1038/d41586-026-02818-5"
+    "10.1002/anie.2946344", "10.1002/anie.4451248", "10.1002/anie.6397678",
+    "10.1021/jacs.6c14114", "10.1021/jacs.6c14064", "10.1021/jacs.6c16062",
+    "10.1038/d41586-026-02929-z", "10.1038/d41586-026-02818-5", "10.1038/d41586-026-03000-7", "10.1038/d41586-026-02920-8", "10.1038/d41586-026-02724-w",
+    "10.1038/s41467-026-75976-9", "10.1038/s41467-026-77340-3", "10.1038/s41467-026-77652-4", "10.1038/s41467-026-76274-0", "10.1038/s41467-026-78012-y"
   ],
-  "pendingDois": [],
+  "pendingDois": ["10.31635/ccschem.026.202608262"],
+  "remainingUnresolved": ["10.31635/ccschem.026.202608262"],
+  "remainingDois": ["10.31635/ccschem.026.202608262"],
+  "decisionEvidencePolicy": "All decisions cite the DOI-matched metadata/abstract available in compact blob 9de05665f88100a34d882045eca97440b2d09080. Available abstract excerpts are not represented as full text. Publisher live evidence is additional and its access limitations are recorded separately. First and challenge passes are separate assessments in this assistant task, not a claim of two different models or reviewers.",
   "decisions": [
     {
-      "doi": "10.31635/ccschem.026.202608262",
-      "journal": "CCS Chemistry",
+      "doi": "10.1002/anie.2946344", "journal": "Angew", "date": "2026-09-22",
+      "title": "Mechanical Programming of Hollow DNA Nanocapsules Rewires In Vivo Trafficking",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The abstract and Wiley Early View description identify stiffness-programmed DNA nanocapsules, protein-corona remodeling, biodistribution and antisense delivery as the contribution. Chemical identity is held constant while capsule mechanics are changed.",
+      "challengeDecision": "exclude",
+      "challengeReason": "Considered whether interfacial assembly establishes an in-scope polymer-synthesis method. The described advance is nanocapsule fabrication and biological trafficking, not a new covalent polymerization, monomer scope or preparative organic transformation.",
+      "publisherEvidence": "https://onlinelibrary.wiley.com/toc/15213773/0/0"
+    },
+    {
+      "doi": "10.1002/anie.4451248", "journal": "Angew", "date": "2026-09-22",
+      "title": "Ratiometric Luminescent Thermo-Hygrometry, Metal-Dependent Second Harmonic Generation, and Humidity-Variable Magnetic Relaxation in a Manganese(II)-Doped Zinc(II) Molecular Halide",
+      "firstPassDecision": "exclude", "decision": "exclude", "reviewPriority": "high",
+      "evidenceBasis": "Compact abstract and Wiley description concern Mn doping of a Zn molecular halide and coupled luminescence, humidity sensing, nonlinear optical and magnetic properties. The prepared objects are multifunctional coordination materials.",
+      "challengeDecision": "exclude",
+      "challengeReason": "Actively tested the synthetic-strategy wording: it describes assembly/doping of a sensor material, not a general organic reaction or polymerization methodology. Organic ligands alone do not establish the required preparative organic scope.",
+      "publisherEvidence": "https://onlinelibrary.wiley.com/toc/15213773/0/0"
+    },
+    {
+      "doi": "10.1002/anie.6397678", "journal": "Angew", "date": "2026-09-22",
+      "title": "Unlocking the Catalytic Potential of PFAS: Upcycling Forever Chemicals Into Effective Catalysts",
+      "firstPassDecision": "exclude", "decision": "exclude", "semanticRelevance": "high-borderline",
+      "evidenceBasis": "The abstract and publisher listing describe conversion of PFAS-containing wastewater into fluorinated heterogeneous catalyst materials, demonstrated in PET methanolysis/hydrolysis and recycling of 23 real-world plastic-waste samples.",
+      "challengeDecision": "exclude",
+      "challengeReason": "Considered ester cleavage and monomer recovery as preparative chemistry. The affirmative scope shown is pollutant-derived catalyst fabrication and PET-waste recycling, not a general diverse-organic-substrate synthetic method or a new polymerization/chain-control strategy. Different waste specimens do not by themselves establish such a method. Exclusion is not based merely on the presence of a polymer.",
+      "publisherEvidence": "https://onlinelibrary.wiley.com/toc/15213773/0/0"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608262", "journal": "CCS Chemistry", "date": "2026-09-22",
       "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
-      "decision": "exclude",
-      "evidenceBasis": "Electrocatalytic CO2-reduction/alcohol-oxidation paired process; primary contribution is electrocatalysis/energy conversion rather than a general preparative organic method.",
-      "challengeDecision": "exclude",
-      "challengeReason": "Alcohol oxidation is synthetically recognizable, but absent evidence of a general preparative organic-method scope, the energy/electrocatalysis exclusion controls."
+      "previousDecision": "exclude", "firstPassDecision": "pending", "decision": "pending", "semanticRelevance": "high-borderline",
+      "evidenceBasis": "The complete compact record supplies a title, DOI, authors and date but an empty abstract. The title permits both preparative paired electrosynthesis and an energy/electrocatalysis interpretation. Direct publisher DOI, abstract and full-text landing-page probes yielded no usable article text; exact DOI/title searches supplied no matching affirmative scope evidence.",
+      "challengeDecision": "pending",
+      "challengeReason": "Tried to falsify both possible final outcomes. CO2 reduction does not prove an energy-only contribution, and alcohol oxidation does not prove general preparative substrate scope. Neither include nor exclude can presently be defended. Both current passes agree to retain an evidence-gap pending; the inherited exclusion is withdrawn from staging.",
+      "evidenceNeeded": "Publisher abstract or accessible article text identifying products, alcohol/substrate scope, preparative utility and whether the central contribution is organic synthesis versus energy/material electrocatalysis.",
+      "attemptedEvidencePages": ["https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262", "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608262", "https://www.chinesechemsoc.org/doi/full/10.31635/ccschem.026.202608262"],
+      "publicationBlocked": true
     },
     {
-      "doi": "10.1021/jacs.6c14114",
-      "journal": "JACS",
+      "doi": "10.1021/jacs.6c16812", "journal": "JACS", "date": "2026-09-22",
+      "title": "Bidirectional Alkene-Nucleophile Coupling at a Single Carbon Center Enabled by a Methylene-Bridged Thianthrenium Dication",
+      "firstPassDecision": "include", "decision": "include",
+      "evidenceBasis": "The compact abstract describes a methylene-bridged thianthrenium reagent enabling sequential alkene hydroalkylation and nucleophile incorporation. Multiple N, O, B, S, Se, C and halide nucleophile classes establish a modular preparative coupling scope.",
+      "challengeDecision": "include",
+      "challengeReason": "Tested whether this is only reagent-property characterization or a medicinal application. The central demonstrated advance is general bond construction across a methylene unit, with divergent reaction manifolds and broad partner classes; drug examples are downstream utility."
+    },
+    {
+      "doi": "10.1021/jacs.6c14114", "journal": "JACS", "date": "2026-09-22",
       "title": "Disentangling Electronic and Lattice Contributions to Transient Absorption in Metal Halide Perovskites: A First-Principles Study of CH3NH3PbBr3",
-      "decision": "exclude",
-      "evidenceBasis": "First-principles transient-absorption theory and molecular dynamics for a metal-halide perovskite; no preparative organic transformation.",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The abstract develops nonequilibrium Bethe-Salpeter calculations and molecular dynamics to interpret electronic and lattice contributions to transient absorption in a metal-halide perovskite.",
       "challengeDecision": "exclude",
-      "challengeReason": "Perovskite spectroscopy/theory is outside synthetic methodology."
+      "challengeReason": "No preparative organic reaction is presented in the available abstract; the described advance is computational spectroscopy of an inorganic/hybrid material, not synthetic methodology."
     },
     {
-      "doi": "10.1021/jacs.6c17644",
-      "journal": "JACS",
-      "title": "Enantioselective Defluorinative C(sp2)–H Allylation of Acrylamides Enabled by CpxRh(III) Catalysis",
-      "decision": "include",
-      "evidenceBasis": "New catalytic asymmetric C(sp2)-H functionalization/defluorinative coupling with broad scope, up to 99% yield and 99% ee, plus divergent chiral 2-piperidone synthesis.",
+      "doi": "10.1021/jacs.6c17644", "journal": "JACS", "date": "2026-09-22",
+      "title": "Enantioselective Defluorinative C(sp2)-H Allylation of Acrylamides Enabled by CpxRh(III) Catalysis",
+      "firstPassDecision": "include", "decision": "include",
+      "evidenceBasis": "The abstract reports asymmetric acrylamide C(sp2)-H functionalization with allylic difluorides to diverse enantioenriched fluorinated 1,4-dienes and divergent chiral piperidone synthesis, with explicit substrate diversity and stereocontrol.",
       "challengeDecision": "include",
-      "challengeReason": "Direct general synthetic methodology with substrate scope and stereocontrol."
+      "challengeReason": "The outcome is a general catalytic bond-forming protocol, not merely synthesis of one functional molecule, mechanistic analysis or biological testing. Broad coupling scope and divergent preparative utility confirm inclusion."
     },
     {
-      "doi": "10.1021/jacs.6c16062",
-      "journal": "JACS",
+      "doi": "10.1021/jacs.6c14064", "journal": "JACS", "date": "2026-09-22",
+      "title": "EZSolver: Template-Free Prediction of Polar Enzymatic Mechanisms via Bidirectional Flow Matching and Search",
+      "firstPassDecision": "exclude", "decision": "exclude", "reviewPriority": "high",
+      "evidenceBasis": "The abstract describes a generative flow-matching and beam-search model evaluated on prediction accuracy and chemical plausibility for enzymatic mechanisms. Its reported achievements are computational prediction and out-of-distribution inference.",
+      "challengeDecision": "exclude",
+      "challengeReason": "Actively considered the biocatalyst-design claim. Future enzyme discovery is a proposed application; the abstract does not report a new experimental preparative biocatalytic transformation with synthetic substrate scope. A mechanism-prediction method alone is outside this Gallery's preparative-method scope."
+    },
+    {
+      "doi": "10.1021/jacs.6c12532", "journal": "JACS", "date": "2026-09-22",
+      "title": "Functional Group Transpositional Trimolecular Cross-Coupling via Interrupted Homolytic Substitution",
+      "firstPassDecision": "include", "decision": "include",
+      "evidenceBasis": "The abstract reports nickel/photoredox trimolecular coupling of allylamines through interrupted homolytic substitution, amino migration and radical sorting, furnishing over 60 varied alkylamines with functional-group tolerance and regioselectivity.",
+      "challengeDecision": "include",
+      "challengeReason": "Drug-discovery motivation does not control scope: the core result is a demonstrated general three-component synthetic transformation, not a biomedical assay or purely proposed mechanism. Diverse radical partners and product scope support inclusion."
+    },
+    {
+      "doi": "10.1021/jacs.6c16062", "journal": "JACS", "date": "2026-09-22",
       "title": "Non-Canonical Peptide Self-Assembly for Mitochondria-Specific Cargo Delivery",
-      "decision": "exclude",
-      "evidenceBasis": "Biomedical peptide self-assembly, mitochondrial drug delivery and immune modulation; synthesis is enabling rather than methodological.",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The abstract identifies a tetrapeptide self-assembly platform and chlorambucil conjugate for mitochondrial delivery, tumor-cell selectivity, immune modulation and antitumor effects.",
       "challengeDecision": "exclude",
-      "challengeReason": "Biomedical delivery study, not a general synthetic method."
+      "challengeReason": "Considered the noncanonical peptide chemistry and conjugation. They enable a biomedical delivery study rather than establish a general peptide-bond-forming, organic-synthetic or polymerization method; self-assembly is not itself proof of such a method."
     },
     {
-      "doi": "10.1021/acs.joc.6c01559",
-      "journal": "JOC",
+      "doi": "10.1021/acs.joc.6c01559", "journal": "JOC", "date": "2026-09-22",
       "title": "Isoindole-Based Multicomponent Synthesis of Pyrimido[6,1,2-cd]pyrrolizine Fluorophores with Unsymmetrical Urea Handles: Photophysical, Theoretical, and Antifungal Imaging Studies",
-      "decision": "include",
-      "evidenceBasis": "Diversity-oriented one-pot multicomponent strategy generates a library of fluorophores from accessible precursors; imaging is downstream application.",
+      "firstPassDecision": "include", "decision": "include",
+      "evidenceBasis": "The available abstract affirmatively describes diversity-oriented one-pot multicomponent construction of a library of unsymmetrical-urea PP heterocycles from accessible precursors, with side-chain diversification. Imaging and photophysics follow this preparative route.",
       "challengeDecision": "include",
-      "challengeReason": "General multicomponent library-synthesis method with structural diversity satisfies methodology scope despite application-heavy characterization."
+      "challengeReason": "Actively tested the application-heavy title against the materials/biomedical exclusion. The library-forming multicomponent strategy and structural diversification provide affirmative synthetic-method scope beyond a single probe fabrication. The 2026-09-22 publication meets JOC's activation date.",
+      "evidenceLimitation": "Abstract-level review; direct ACS article access was unavailable. No full-text or scheme inspection is claimed."
     },
     {
-      "doi": "10.1038/d41586-026-02929-z",
-      "journal": "Nature",
+      "doi": "10.1021/acs.joc.6c01653", "journal": "JOC", "date": "2026-09-22",
+      "title": "K2S-Mediated Tandem Selenylation and Cyclization of CaC2 with Diselenides: Synthesis of 2-Methylbenzoselenazole",
+      "firstPassDecision": "include", "decision": "include",
+      "evidenceBasis": "The abstract reports a one-step diselenide/calcium-carbide selenylation-cyclization strategy mediated by K2S for benzoselenazole derivatives, with mechanistic controls and subsequent functional-group derivatizations.",
+      "challengeDecision": "include",
+      "challengeReason": "The central result is a new preparative selenium-heterocycle construction route, not inorganic carbide characterization or biological activity. Derivative preparation and synthetic elaboration support method scope; publication is on JOC's inclusive activation date."
+    },
+    {
+      "doi": "10.1038/d41586-026-02929-z", "journal": "Nature", "date": "2026-09-22",
       "title": "All the ways a cell can die — and why the variety matters",
-      "decision": "exclude",
-      "evidenceBasis": "Nature d41586 news/features item on cell-death biology.",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The DOI-matched Nature title and feature-style metadata concern cell-death biology; no organic preparative claim appears in the record.",
       "challengeDecision": "exclude",
-      "challengeReason": "News/editorial biological coverage is explicitly excluded."
+      "challengeReason": "The subject is biological explanatory coverage rather than an original synthetic method. The exclusion follows the substantive topic and article context, not merely the absence of an abstract."
     },
     {
-      "doi": "10.1038/d41586-026-02818-5",
-      "journal": "Nature",
+      "doi": "10.1038/d41586-026-02818-5", "journal": "Nature", "date": "2026-09-22",
       "title": "Hundreds of ‘free’ academic journals have started charging fees",
-      "decision": "exclude",
-      "evidenceBasis": "Nature d41586 news/features item on academic publishing fees.",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The DOI-matched title is reporting on academic-journal publishing charges, with no chemical synthesis subject.",
       "challengeDecision": "exclude",
-      "challengeReason": "News/editorial content is explicitly excluded."
+      "challengeReason": "Neither a preparative reaction nor original organic chemistry is claimed; publishing-news coverage is out of scope."
     },
     {
-      "doi": "10.1021/acs.orglett.6c03473",
-      "journal": "Organic Letters",
-      "title": "Direct C1–H Amination of Free NH Carbazoles Enabled by the Catellani Reaction",
-      "decision": "include",
-      "evidenceBasis": "First Pd/NBE-catalyzed direct C1-H amination of unprotected carbazoles with broad cyclic-amine scope and functional-group tolerance.",
+      "doi": "10.1038/d41586-026-03000-7", "journal": "Nature", "date": "2026-09-22",
+      "title": "Nepal floods pose biggest test yet for UN climate loss and damage fund",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The DOI-matched title concerns flooding and climate-loss funding, not a chemical transformation.",
+      "challengeDecision": "exclude",
+      "challengeReason": "Environmental-policy news is not a preparative organic-synthesis study; there is no ambiguous synthetic-method claim requiring a chemical-scope inference."
+    },
+    {
+      "doi": "10.1038/d41586-026-02920-8", "journal": "Nature", "date": "2026-09-22",
+      "title": "Watch scientists decipher burnt scrolls without unrolling them",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The DOI-matched title describes deciphering historical scrolls without unrolling them, a non-synthetic science-reporting subject.",
+      "challengeDecision": "exclude",
+      "challengeReason": "Potential imaging or analytical techniques do not turn this historical-document report into a preparative organic method. No synthesis contribution is claimed."
+    },
+    {
+      "doi": "10.1038/d41586-026-02724-w", "journal": "Nature", "date": "2026-09-22",
+      "title": "What happens in Vegas: one lecturer’s hunt for a projector",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The DOI-matched title is a lecturer's projector-related anecdote, not an original chemical-method report.",
+      "challengeDecision": "exclude",
+      "challengeReason": "A teaching/academic-life story has no preparative synthetic scope; no relevant organic transformation is suggested by the actual record."
+    },
+    {
+      "doi": "10.1038/s41467-026-75976-9", "journal": "Nature Communications", "date": "2026-09-22",
+      "title": "Actionable genetic landscape and dynamics in circulating DNA from 12,827 patients with metastatic breast cancer",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The abstract analyzes cell-free DNA samples, tumor mutations and therapy-related genomic patterns in a large metastatic-breast-cancer cohort; the publisher research listing corroborates this topic.",
+      "challengeDecision": "exclude",
+      "challengeReason": "The work is clinical/genomic data analysis, not synthesis of DNA, drug molecules or a general organic method. Therapeutic relevance does not supply a preparative contribution."
+    },
+    {
+      "doi": "10.1038/s41467-026-77340-3", "journal": "Nature Communications", "date": "2026-09-22",
+      "title": "Disentangling interaction and bias effects in opinion dynamics of large language models",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The abstract develops a Bayesian analysis of opinion dynamics and biases in language-model discussions across non-chemical questions.",
+      "challengeDecision": "exclude",
+      "challengeReason": "This is a computational/social-modeling study rather than even a chemistry-specific prediction method, and contains no preparative organic transformation."
+    },
+    {
+      "doi": "10.1038/s41467-026-77652-4", "journal": "Nature Communications", "date": "2026-09-22",
+      "title": "Giant In-Plane Bulk Photovoltaic Response in γ-type Indium Selenide from Pressure-Induced Symmetry Breaking",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The DOI-matched title and official research listing identify pressure-induced symmetry breaking and the photovoltaic response of indium selenide, an inorganic semiconductor.",
+      "challengeDecision": "exclude",
+      "challengeReason": "The explicit contribution is a physical/electronic material property, not preparative organic or polymerization chemistry. This is an affirmative topic-based exclusion, not an inference from the empty compact abstract."
+    },
+    {
+      "doi": "10.1038/s41467-026-76274-0", "journal": "Nature Communications", "date": "2026-09-22",
+      "title": "Long-range interdependencies aware signal analysis for rapid and accurate obstructive sleep apnea prediction",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The DOI-matched title and official listing describe biomedical signal analysis for sleep-apnea prediction.",
+      "challengeDecision": "exclude",
+      "challengeReason": "A diagnostic signal-analysis method is not a preparative chemical synthesis. The actual subject is unambiguously outside scope even though the compact abstract is empty."
+    },
+    {
+      "doi": "10.1038/s41467-026-78012-y", "journal": "Nature Communications", "date": "2026-09-22",
+      "title": "Mortality and healthcare services in Pennsylvania state prisons following extreme ambient temperatures",
+      "firstPassDecision": "exclude", "decision": "exclude",
+      "evidenceBasis": "The DOI-matched title and official listing concern temperature exposure, mortality and healthcare use in prisons.",
+      "challengeDecision": "exclude",
+      "challengeReason": "The described public-health/epidemiology question does not claim chemical preparation or an organic transformation. No synthetic-scope ambiguity is present."
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03473", "journal": "Organic Letters", "date": "2026-09-22",
+      "title": "Direct C1-H Amination of Free NH Carbazoles Enabled by the Catellani Reaction",
+      "firstPassDecision": "include", "decision": "include",
+      "evidenceBasis": "The abstract reports Pd/NBE-catalyzed direct C1-H amination of unprotected carbazoles, a broad range of cyclic amine partners and tolerance of several functional-group classes.",
       "challengeDecision": "include",
-      "challengeReason": "Explicit new catalytic C-H amination methodology with scope and synthetic utility."
+      "challengeReason": "Pharmaceutical motivation is ancillary: the actual advance is a site-selective catalytic C-H amination with partner scope, rather than biological testing or a single target-specific synthesis."
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03586", "journal": "Organic Letters", "date": "2026-09-22",
+      "title": "Synthesis of α-Halophosphonates via Copper-Catalyzed Atom Transfer Radical Addition",
+      "firstPassDecision": "include", "decision": "include",
+      "evidenceBasis": "The abstract reports copper-catalyzed atom-transfer radical addition to vinylphosphonates, spanning primary, secondary and tertiary haloalkanes and substituted alkene partners, with product derivatization.",
+      "challengeDecision": "include",
+      "challengeReason": "The work develops a preparative reaction scope and product access, not merely Cu redox kinetics or properties of phosphorus compounds. Broad donor classes and synthetic elaborations confirm general method relevance."
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03313", "journal": "Organic Letters", "date": "2026-09-22",
+      "title": "Unified Copper-Catalyzed Stereoselective Addition: Construction of Vicinal F/CFx-Containing Stereocenters",
+      "firstPassDecision": "include", "decision": "include",
+      "evidenceBasis": "The abstract describes asymmetric copper-catalyzed Michael addition producing vicinal F/CF3, F/CHF2 and F/CH2F stereocenters, with stereocontrol, scale-up and downstream functionalizations.",
+      "challengeDecision": "include",
+      "challengeReason": "The mechanistic calculations support an experimentally demonstrated stereoselective synthetic method. Multiple fluorinated partner classes and preparative demonstrations rule out a purely theoretical or single-probe study."
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03394", "journal": "Organic Letters", "date": "2026-09-22",
+      "title": "Visible-Light-Catalyzed In Situ Generation of Nitrile Oxides from Aryl Trichloromethane and TBN for [3 + 2] Cycloaddition to Access Isoxazoline/Isoxazole Scaffolds",
+      "firstPassDecision": "include", "decision": "include",
+      "evidenceBasis": "The abstract reports a visible-light three-component synthetic protocol using aryl trichloromethanes, unsaturated partners and tert-butyl nitrite for functionalized isoxazoline/isoxazole access, with functional-group compatibility and mechanistic controls.",
+      "challengeDecision": "include",
+      "challengeReason": "Biological utility is only prospective. The central result is a preparative heterocycle-forming protocol with reaction scope; the proposed nitrile-oxide pathway is not mistaken for independently proven mechanistic fact."
     }
   ],
   "qualityControl": {
     "secondPassCompleted": true,
     "unresolvedDisagreements": 0,
     "allHandoffCandidatesReviewed": true,
+    "allHandoffCandidatesFinalized": false,
     "handoffCountMatched": true,
+    "handoffGeneratedAtMatched": true,
+    "decisionSetExactlyMatchesHandoff": true,
+    "openEvidenceGaps": 1,
+    "inheritedDecisionsReopened": 1,
+    "publisherSourceChecksRecordedForAllActiveJournals": true,
+    "publisherCheckedCount": 3,
+    "publisherBlockedCount": 8,
+    "publisherUnavailableCount": 5,
+    "publisherCoverageFullyVerified": false,
     "productionDataModified": false,
-    "oaPdfHtmlExtractionUsed": false
+    "productionPublicationAllowed": false,
+    "oaPdfHtmlExtractionUsed": false,
+    "mediaAcquisitionPerformed": false,
+    "verifiedThroughAdvanced": false,
+    "note": "Both current passes agree on the one pending evidence gap, so current-pass disagreements are zero but publication is still blocked. A machine staging validator passing with pending>0 must not be interpreted as ready_to_publish. No media extraction was performed; publisher HTML was read only for semantic/source checks."
+  },
+  "sourceCheckPolicy": {
+    "checkedWindowStart": "2026-09-20",
+    "checkedWindowEnd": "2026-09-22",
+    "checkedAt": "2026-09-22T21:43:49+08:00",
+    "machineHealthSource": "audit/unresolved-latest.json@9de05665f88100a34d882045eca97440b2d09080#activeJournals[].sourceHealth",
+    "publisherCountsMeaning": "Counts refer only to inspected publisher listings in the primary window, not seven-day metadata-union counts. syntheticTitleCount is a broad triage count including borderline titles, not an inclusion count. Null means not established, never zero papers.",
+    "coverageLimitation": "Publisher access is partial across journals. Available research/Early View listings were inspected; no all-source closure or verifiedThrough advancement is claimed. Blocked publisher pages rely on the independent machine-source union and overlapping safety tail, not a fabricated passed check."
   },
   "sourceChecks": [
     {
-      "journal": "Nature",
-      "status": "checked",
-      "candidateCount": 78,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Nature",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Nature", "status": "checked", "candidateCount": 1, "syntheticTitleCount": 1,
+      "sourceType": "Publisher research-article listing", "sourcePage": "https://www.nature.com/nature/research-articles",
+      "coverageScope": "Research listing only; one September 21 item before the list reaches September 16. News/features are not represented by this count.",
+      "observedSyntheticTitles": ["Chemist-aligned retrosynthesis by ensembling diverse inductive bias models"],
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":81,"crossrefCandidateRecords":81,"openAlexCandidateRecords":72,"multiSourceCandidateRecords":72,"closureUnionRecords":8,"closureCrossrefRecords":8,"closureOpenAlexRecords":8,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Science",
-      "status": "checked",
-      "candidateCount": 38,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Science",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Science", "status": "blocked", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher current/First Release listing", "sourcePage": "https://www.science.org/toc/science/0/0",
+      "reason": "Publisher request returned HTTP 403; no complete live candidate enumeration was available.",
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":38,"crossrefCandidateRecords":38,"openAlexCandidateRecords":37,"multiSourceCandidateRecords":37,"closureUnionRecords":0,"closureCrossrefRecords":0,"closureOpenAlexRecords":0,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Nature Catalysis",
-      "status": "checked",
-      "candidateCount": 1,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Nature Catalysis",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Nature Catalysis", "status": "blocked", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher research-article listing", "sourcePage": "https://www.nature.com/natcatal/research-articles",
+      "reason": "Research-listing and year-filter probes failed through the publisher identity/cookie redirect, including an HTTP 500 result; no usable complete listing.",
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":1,"crossrefCandidateRecords":1,"openAlexCandidateRecords":1,"multiSourceCandidateRecords":1,"closureUnionRecords":1,"closureCrossrefRecords":1,"closureOpenAlexRecords":1,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Nature Synthesis",
-      "status": "checked",
-      "candidateCount": 4,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Nature Synthesis",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Nature Synthesis", "status": "checked", "candidateCount": 1, "syntheticTitleCount": 1,
+      "sourceType": "Publisher research-article listing", "sourcePage": "https://www.nature.com/natsynth/research-articles",
+      "coverageScope": "One September 22 research item before the descending listing reaches September 17; article-detail navigation was unavailable.",
+      "observedSyntheticTitles": ["Enantio- and diastereoselective synthesis of multi-helical nanographenes"],
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":4,"crossrefCandidateRecords":4,"openAlexCandidateRecords":3,"multiSourceCandidateRecords":3,"closureUnionRecords":0,"closureCrossrefRecords":0,"closureOpenAlexRecords":0,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Nature Chemistry",
-      "status": "checked",
-      "candidateCount": 7,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Nature Chemistry",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Nature Chemistry", "status": "blocked", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher research-article listing", "sourcePage": "https://www.nature.com/nchem/research-articles",
+      "reason": "Research-listing and year-filter probes failed through publisher identity/cookie redirects, including HTTP 500; no complete publisher enumeration obtained.",
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":7,"crossrefCandidateRecords":7,"openAlexCandidateRecords":4,"multiSourceCandidateRecords":4,"closureUnionRecords":0,"closureCrossrefRecords":0,"closureOpenAlexRecords":0,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Nature Communications",
-      "status": "checked",
-      "candidateCount": 173,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Nature Communications",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Nature Communications", "status": "blocked", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher research-article listing with pagination", "sourcePage": "https://www.nature.com/ncomms/research-articles",
+      "reason": "Page 1 was readable, but pages 2 and 3 failed via identity/cookie redirects with HTTP 500. A partial first page is not a complete window check.",
+      "observedPageCandidateCount": 20, "observedPageSyntheticTitleCount": 1,
+      "observedSyntheticTitles": ["Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions"],
+      "attemptedPages": ["https://www.nature.com/ncomms/research-articles?page=2", "https://www.nature.com/ncomms/research-articles?page=3"],
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":178,"crossrefCandidateRecords":177,"openAlexCandidateRecords":165,"multiSourceCandidateRecords":164,"closureUnionRecords":35,"closureCrossrefRecords":35,"closureOpenAlexRecords":35,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "JACS",
-      "status": "checked",
-      "candidateCount": 83,
-      "syntheticTitleCount": 1,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "JACS",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "JACS", "status": "blocked", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher ASAP/latest-articles listing", "sourcePage": "https://pubs.acs.org/jacsat/latest-articles",
+      "reason": "Both ACS ASAP TOC and latest-articles requests returned HTTP 403; metadata health is preserved separately and not labeled publisher checked.",
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":86,"crossrefCandidateRecords":86,"openAlexCandidateRecords":74,"multiSourceCandidateRecords":74,"closureUnionRecords":15,"closureCrossrefRecords":15,"closureOpenAlexRecords":15,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Angew",
-      "status": "checked",
-      "candidateCount": 95,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Angew",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Angew", "status": "checked", "candidateCount": 43, "syntheticTitleCount": 10,
+      "sourceType": "Publisher Early View listing, pages 1-3", "sourcePage": "https://onlinelibrary.wiley.com/toc/15213773/0/0",
+      "sourcePages": ["https://onlinelibrary.wiley.com/toc/15213773/0/0", "https://onlinelibrary.wiley.com/toc/15213773/0/0?page=2", "https://onlinelibrary.wiley.com/toc/15213773/0/0?page=3"],
+      "coverageScope": "Inspected 20+20+3 Early View entries dated September 21-22, stopping when page 3 reaches September 19. candidateCount includes cover notices and is not a unique research-article count. Triage titles include borderline synthesis/materials/recycling cases, not automatic acceptance.",
+      "syntheticTitleDois": ["10.1002/anie.6564456", "10.1002/anie.3685338", "10.1002/anie.6397678", "10.1002/anie.9519061", "10.1002/anie.4453766", "10.1002/anie.2808034", "10.1002/anie.8540595", "10.1002/anie.8471593", "10.1002/anie.7868412", "10.1002/anie.8290035"],
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":98,"crossrefCandidateRecords":96,"openAlexCandidateRecords":77,"multiSourceCandidateRecords":75,"closureUnionRecords":32,"closureCrossrefRecords":32,"closureOpenAlexRecords":23,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "ACS Catalysis",
-      "status": "checked",
-      "candidateCount": 30,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "ACS Catalysis",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "ACS Catalysis", "status": "blocked", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher ASAP/latest-articles listing", "sourcePage": "https://pubs.acs.org/accacs/latest-articles",
+      "reason": "Publisher TOC was unavailable and the latest-articles probe returned HTTP 403; no complete live enumeration could be established.",
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":30,"crossrefCandidateRecords":30,"openAlexCandidateRecords":29,"multiSourceCandidateRecords":29,"closureUnionRecords":11,"closureCrossrefRecords":11,"closureOpenAlexRecords":11,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Organic Letters",
-      "status": "checked",
-      "candidateCount": 37,
-      "syntheticTitleCount": 1,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Organic Letters",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Organic Letters", "status": "blocked", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher ASAP/latest-articles listing", "sourcePage": "https://pubs.acs.org/orlef7/latest-articles",
+      "reason": "Publisher TOC was unavailable and the latest-articles probe returned HTTP 403; live publisher counts remain unknown, not zero.",
+      "machineSourceHealth": {"activeFrom":"2026-07-01","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":40,"crossrefCandidateRecords":40,"openAlexCandidateRecords":34,"multiSourceCandidateRecords":34,"closureUnionRecords":9,"closureCrossrefRecords":9,"closureOpenAlexRecords":9,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Chem",
-      "status": "checked",
-      "candidateCount": 0,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Chem",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Chem", "status": "unavailable", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher new-articles listing", "sourcePage": "https://www.cell.com/chem/newarticles",
+      "reason": "The publisher new-articles request returned no usable page content in this runtime. The healthy zero-record metadata union is not evidence of a checked publisher page.",
+      "machineSourceHealth": {"activeFrom":"2026-09-19","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":0,"crossrefCandidateRecords":0,"openAlexCandidateRecords":0,"multiSourceCandidateRecords":0,"closureUnionRecords":0,"closureCrossrefRecords":0,"closureOpenAlexRecords":0,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Chemical Science",
-      "status": "checked",
-      "candidateCount": 0,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Chemical Science",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Chemical Science", "status": "unavailable", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher journal/latest-article pages", "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/sc",
+      "reason": "Both journalissues/sc and journal/SC requests returned no usable publisher content; no live candidate count could be established.",
+      "machineSourceHealth": {"activeFrom":"2026-09-19","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":0,"crossrefCandidateRecords":0,"openAlexCandidateRecords":0,"multiSourceCandidateRecords":0,"closureUnionRecords":0,"closureCrossrefRecords":0,"closureOpenAlexRecords":0,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "CCS Chemistry",
-      "status": "checked",
-      "candidateCount": 3,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "CCS Chemistry",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "CCS Chemistry", "status": "unavailable", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher ASAP/TOC and article landing pages", "sourcePage": "https://www.chinesechemsoc.org/toc/ccschem/0/0",
+      "reason": "Publisher TOC and the pending DOI's landing/abstract/full-text requests returned no usable content. Missing evidence is retained as an explicit pending, not interpreted as no papers or an energy-only scope.",
+      "machineSourceHealth": {"activeFrom":"2026-09-19","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":3,"crossrefCandidateRecords":3,"openAlexCandidateRecords":2,"multiSourceCandidateRecords":2,"closureUnionRecords":1,"closureCrossrefRecords":1,"closureOpenAlexRecords":1,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Science Advances",
-      "status": "checked",
-      "candidateCount": 0,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Science Advances",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Science Advances", "status": "unavailable", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher current-articles listing", "sourcePage": "https://www.science.org/toc/sciadv/0/0",
+      "reason": "The publisher listing did not yield usable content in this runtime; source completeness cannot be inferred from the empty metadata count.",
+      "machineSourceHealth": {"activeFrom":"2026-09-19","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":0,"crossrefCandidateRecords":0,"openAlexCandidateRecords":0,"multiSourceCandidateRecords":0,"closureUnionRecords":0,"closureCrossrefRecords":0,"closureOpenAlexRecords":0,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "Green Chemistry",
-      "status": "checked",
-      "candidateCount": 0,
-      "syntheticTitleCount": 0,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "Green Chemistry",
-      "reason": "Compact handoff source-family health passed; no coverage warning."
+      "journal": "Green Chemistry", "status": "unavailable", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher journal/latest-article pages", "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/gc",
+      "reason": "Both journalissues/gc and journal/GC requests returned no usable publisher content; a live publisher enumeration is unavailable.",
+      "machineSourceHealth": {"activeFrom":"2026-09-19","effectiveStart":"2026-09-20","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":0,"crossrefCandidateRecords":0,"openAlexCandidateRecords":0,"multiSourceCandidateRecords":0,"closureUnionRecords":0,"closureCrossrefRecords":0,"closureOpenAlexRecords":0,"coverageWarning":false,"closureCoverageWarning":false}
     },
     {
-      "journal": "JOC",
-      "status": "checked",
-      "candidateCount": 6,
-      "syntheticTitleCount": 1,
-      "sourceType": "Crossref online/published/created + OpenAlex DOI union",
-      "sourcePage": "JOC",
-      "reason": "Crossref healthy; OpenAlex zero on prospective activation day; no coverage anomaly"
+      "journal": "JOC", "status": "blocked", "candidateCount": null, "syntheticTitleCount": null,
+      "sourceType": "Publisher ASAP/latest-articles listing", "sourcePage": "https://pubs.acs.org/joceah/latest-articles",
+      "reason": "Publisher TOC was unavailable and latest-articles returned HTTP 403. Crossref's seven records and OpenAlex's zero on the activation day are retained as machine observations, not publisher checks.",
+      "machineSourceHealth": {"activeFrom":"2026-09-22","effectiveStart":"2026-09-22","crossrefHealthy":true,"openAlexHealthy":true,"unionCandidateRecords":7,"crossrefCandidateRecords":7,"openAlexCandidateRecords":0,"multiSourceCandidateRecords":0,"closureUnionRecords":0,"closureCrossrefRecords":0,"closureOpenAlexRecords":0,"coverageWarning":false,"closureCoverageWarning":false}
     }
   ],
-  "status": "ready_to_publish"
+  "publicationSafety": {
+    "productionDataModified": false,
+    "formalReviewWritten": false,
+    "pagesDeploymentRequested": false,
+    "tocDemandModified": false,
+    "mediaAcquisition": "none; Tampermonkey/VPN Bridge remains sole acquisition path",
+    "verifiedThroughUnchanged": "2026-09-20",
+    "blockers": ["Pending scope evidence for 10.31635/ccschem.026.202608262"],
+    "nextAction": "Obtain affirmative abstract/article scope evidence for the pending DOI, challenge it again, and compare against the next fresh compact handoff before the fixed publication slot. Never publish this staging file off-slot."
+  }
 }
