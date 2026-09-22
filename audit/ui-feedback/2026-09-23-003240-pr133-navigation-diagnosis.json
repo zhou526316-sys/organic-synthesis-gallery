@@ -1,0 +1,48 @@
+{
+  "recordedAt": "2026-09-23T00:32:40+08:00",
+  "context": "UI and feedback continuation; PR133 static routing and final reader-count CORS regression",
+  "status": "isolated_regressions_passed_release_not_yet_accepted",
+  "pr": 133,
+  "originalHead": "64bdd71d1c9acd8bfdb6413781ab3a182fc282cb",
+  "diagnosticHead": "33da89ee55cd47f0e8f0c68cc459877f25a6e5c7",
+  "testedFixHead": "15198e4ad8b069e7715faa1954c5f7aea759affe",
+  "diagnosis": {
+    "beforeRun": 35753697141,
+    "beforeArtifact": 10705888957,
+    "beforeArtifactSha256": "98cd053bf41fef454c882ffb9bc895ad4a2cb2d1ac33883cfc04e7064a86d342",
+    "beforeResults": {"passed": 7, "failed": 5, "skipped": 0},
+    "reproducedFailures": ["Already-aborted API still tries backup", "In-flight cancellation still tries backup", "Reload of document still retries old request", "390px original GIF final pageErrors assertion", "1280px original GIF final pageErrors assertion"],
+    "desktopTimelineEpochMs": {
+      "readerPostStarted": 1790094361755,
+      "primaryRejectedTypeErrorLoadFailed": 1790094361760,
+      "requestFailedLoadRequestCancelled": 1790094361761,
+      "backupFetchStarted": 1790094361761,
+      "backupAccessControlPageError": 1790094361764,
+      "pagehide": 1790094361768
+    },
+    "conclusion": "In the isolated WebKit runner, navigation cancellation is incorrectly classified as a host failure. Backup retry starts before pagehide and causes a pageerror. A pagehide-only guard is too late. This evidence does not diagnose a production server CORS outage."
+  },
+  "fix": {
+    "source": "src/user-shell.ts",
+    "blobSha": "4e0fc3bdae02cecfc00bf109f7c2e604ca314c61",
+    "behavior": ["Retain exact /api or /api/ path restriction for fallback", "Observe beforeunload and pagehide only while a retry-capable API request is pending", "Never prevent navigation or show a confirmation prompt", "Preserve existing in-flight keepalive writes", "Do not retry explicit signal cancellations or native AbortError unless caused by the wrapper's own per-host timeout", "Remove navigation listeners in finally", "Preserve normal network-failure failover and HTTP-response passthrough"],
+    "concurrentWrite": "A targeted src/user-shell.ts write received HTTP409. Latest branch was reread and already contained the equivalent fix at 15198e4. That change was retained without overwrite. This session added deterministic regressions and request lifecycle evidence and independently inspected the results."
+  },
+  "after": {
+    "run": 35754382060,
+    "artifact": 10707408668,
+    "artifactSha256": "7a3889dd3e017212b72ad5bddbefe5fcc3a34f3d1918b8b34ad86936ea6b986e",
+    "results": {"passed": 12, "failed": 0, "skipped": 0, "flaky": 0},
+    "resultsParsedFromDownloadedArtifact": true,
+    "coverage": ["81 static/relative/third-party URL combinations", "API primary-first/network-failure fallback/POST body/HTTP503/Request passthrough", "Pre-abort and in-flight caller cancellation", "Real document reload with held request", "30MB boundary and invalid replacement protection", "IndexedDB/preferences failures preserve prior image", "Removal during upload", "Blob reads stay local", "390px and 1280px GIF bytes/frame changes/reload/preview fallback/viewer/removal/pageErrors"]
+  },
+  "releaseBoundaries": {
+    "productionFrontendAcceptedByThisRecord": false,
+    "feedback28Closed": false,
+    "readerCountBusinessIssueResolved": false,
+    "productionReaderEventsWritten": false,
+    "productionLiteratureDataChanged": false,
+    "captureOrBridgeCodeChanged": false,
+    "feedback29And30Implemented": false
+  }
+}
