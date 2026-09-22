@@ -1,0 +1,50 @@
+name: Verify Bridge 2.2.21 window guard live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/tm221-live-check.json']
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && contains(github.event.workflow_run.head_commit.message, '#141'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read actual installer queue and version-compatible Worker
+        shell: bash
+        run: |
+          node --input-type=module - <<'JS'
+          import assert from 'node:assert/strict';
+          import {writeFile} from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
+          const site='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+          const worker='https://organic-synthesis-gallery.zhou526316.workers.dev';
+          const suffix='?tm221Acceptance='+Date.now();
+          async function get(url){const r=await fetch(url,{headers:{origin:'https://zhou526316-sys.github.io','cache-control':'no-cache'},signal:AbortSignal.timeout(20000)});assert.equal(r.status,200,url);return r.text();}
+          const script=await get(site+'gallery-vpn-bridge.user.js'+suffix);
+          assert.match(script,/^\/\/ @version\s+2\.2\.21\s*$/m);
+          for(const x of ["var CONTROLLER_REVISION = '2.2.21';",'requestControllerStart','previous_task_tab_not_closed','clearOwnedJob','CONTROLLER_STOP_REASON','await acquireLease()','assertBoundCaptureJob','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch'])assert.ok(script.includes(x),x);
+          for(const n of ['queueDoi','pump','scan'])assert.match(script,new RegExp('function '+n+'\\([^\\n]*\\) \\{\\n    if \\(globalThis.__OSG_TOC_BROWSER_MAINLINE__\\) return;'));
+          const q=JSON.parse(await get(site+'toc-demand-live.json'+suffix));
+          assert.equal(q.articles.length,q.webpageDoiCount);assert.ok(q.articles.length>400);assert.equal(q.mediaGeneration,1790082000000);
+          const cap=JSON.parse(await get(worker+'/api/media/capture-capabilities'+suffix));
+          assert.equal(cap.captureVersion,'6.2.20');assert.equal(cap.mode,'verified-staging');assert.equal(cap.publishedAutomatically,false);
+          const m=JSON.parse(await get(site+'media-index.json'+suffix));
+          const retained=Object.values(m.items).filter(x=>x.toc?.recoveryId==='toc-batch1-20260922').length;assert.ok(retained>=83);
+          const report={checkedAt:new Date().toISOString(),installer:site+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.21',captureProtocol:'6.2.20',scriptBytes:Buffer.byteLength(script),scriptSha256:createHash('sha256').update(script).digest('hex'),queueArticles:q.articles.length,retainedReviewedToc:retained,workerCapabilities:cap,productionMediaWrites:0,liveUserExtensionVerified:false};
+          console.log('TM221_LIVE_ACCEPTED '+JSON.stringify(report));
+          await writeFile(process.env.RUNNER_TEMP+'/tm221-live.json',JSON.stringify(report,null,2));
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm221-live-acceptance
+          path: ${{ runner.temp }}/tm221-live.json
+          retention-days: 14
