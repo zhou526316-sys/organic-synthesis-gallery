@@ -1,0 +1,13 @@
+{
+  "schemaVersion":1,
+  "test":"compact-handoff-semantic-review",
+  "finishedAt":"2026-09-22T19:46:00+08:00",
+  "publicationSlot":"2026-09-23T08:00:00+08:00",
+  "result":"semantic-review-complete",
+  "handoffGeneratedAt":"2026-09-22T11:35:29.420Z",
+  "handoffValidation":{"summaryUnresolved":8,"retrievedCandidates":8,"activeJournalCount":16,"registryActiveJournalCount":16,"criticalSourceFailures":0,"sourceFamilyGaps":0,"sourceCoverageAnomalies":0,"historicalCoverageLosses":0,"latestGenerationMatched":true},
+  "review":{"reviewed":8,"accepted":3,"rejected":5,"pending":0,"secondPassCompleted":true,"unresolvedDisagreements":0,"acceptedDois":["10.1021/jacs.6c17644","10.1021/acs.joc.6c01559","10.1021/acs.orglett.6c03473"],"rejectedDois":["10.31635/ccschem.026.202608262","10.1021/jacs.6c14114","10.1021/jacs.6c16062","10.1038/d41586-026-02929-z","10.1038/d41586-026-02818-5"]},
+  "productionMutation":false,
+  "mediaMutation":false,
+  "note":"Compact handoff was completely recoverable by bounded line-range reads even though a single full-file connector response is truncated. All 8 candidates were reviewed twice. Production remains unchanged until the fixed 08:00 release slot."
+}
