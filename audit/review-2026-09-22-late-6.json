@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-22T14:20:00+08:00",
+  "timeZone": "Asia/Shanghai",
+  "type": "late-candidate-review",
+  "summary": {
+    "reviewed": 6,
+    "accepted": 1,
+    "rejected": 5,
+    "pending": 0
+  },
+  "accepted": [
+    {
+      "doi": "10.1021/acs.orglett.6c03921",
+      "journal": "Organic Letters",
+      "date": "2026-09-22",
+      "title": "Cascade Spirocyclization–Difunctionalization or Rearrangement of Bicyclobutyl-Tethered Aldehyde Hydrazones via Strain Release",
+      "titleZh": "应变释放驱动的双环丁烷连接醛腙级联螺环化-双官能化或重排",
+      "authors": [
+        "Haiyang Sun",
+        "Lijun Li",
+        "Qinqin Yan",
+        "Lijun Tu",
+        "Zhong-Quan Liu",
+        "Zejiang Li"
+      ],
+      "decision": "include",
+      "classification": "methodology_core",
+      "reviewPriority": "high",
+      "reason": "Develops divergent strain-release synthetic methodology from bicyclobutyl-tethered aldehyde hydrazones, including cascade spirocyclization–difunctionalization and a three-component rearrangement, with diverse products, scale-up, and complex-substrate demonstrations.",
+      "evidenceBasis": "Crossref publisher abstract reports diverse halo-succinimide-containing diazaspiro[3.3]heptan-3-ones and halo-sulfoximine-featured cyclobutane carboxamides from two related reaction manifolds, plus scaled-up experiments and complex substrates.",
+      "challengeDecision": "include",
+      "challengeReason": "Although mechanistic studies are also presented, the primary contribution is a preparative reaction platform with product diversity, multi-component scope, scale-up, and complex-substrate application, so it clearly meets the Gallery methodology criterion."
+    }
+  ],
+  "rejected": [
+    {
+      "doi": "10.1002/anie.9362433",
+      "journal": "Angew",
+      "date": "2026-09-21",
+      "title": "Cyclodextrin‐Directed Assembly of Dynamic Polyoxometalate Pseudo‐Rotaxanes",
+      "authors": [
+        "Yun‐Jing Mu",
+        "Cheng‐Shuai Liu",
+        "Chun‐Yan Liu",
+        "Yi‐An Yin",
+        "Chang‐Gen Lin",
+        "Haralampos N. Miras",
+        "Ulrich Kortz",
+        "Yu‐Fei Song"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "high",
+      "reason": "Supramolecular/inorganic polyoxometalate cluster reorganization and host–guest assembly rather than a general organic or polymer synthesis methodology.",
+      "evidenceBasis": "The abstract centers on α-cyclodextrin-directed reorganization of Mo6/Mo12 polyoxometalate clusters into pseudo-rotaxanes, characterized by NMR/ITC and crystallography; the synthetic objective is adaptive inorganic supramolecular architecture.",
+      "challengeDecision": "exclude",
+      "challengeReason": "It does synthesize new assemblies, but the generalizable advance is inorganic cluster self-assembly rather than preparative organic/polymer reaction methodology, so inclusion would broaden the Gallery beyond its defined scope."
+    },
+    {
+      "doi": "10.1002/anie.1587126",
+      "journal": "Angew",
+      "date": "2026-09-21",
+      "title": "Hydrogen‐Bond Encoding in a Structurally Minimal Cyclochiral Monomer Enables Assembly of Large Cavities Displaying Supramolecular Isomerism",
+      "authors": [
+        "Qixun Shi",
+        "Liangshun Guo",
+        "Nojus Radzevičius",
+        "Yi Long",
+        "Nana Zhao",
+        "Yue Cao",
+        "Fengxia Zhu",
+        "Vytautas Klimavicius",
+        "Gediminas Kreiza",
+        "Audrius Padarauskas",
+        "Chuan Wang",
+        "Edvinas Orentas"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "high",
+      "reason": "Supramolecular host–guest self-assembly and molecular-recognition study; no general preparative organic reaction or polymerization method is developed.",
+      "evidenceBasis": "The abstract focuses on hydrogen-bond-encoded monomers assembling into fullerene-binding tetrameric capsules, guest-induced self-sorting, supramolecular isomerism, and recognition/catalysis potential.",
+      "challengeDecision": "exclude",
+      "challengeReason": "The work uses a designed organic monomer, but the central advance is noncovalent assembly behavior, not a broadly applicable covalent synthesis or polymerization methodology."
+    },
+    {
+      "doi": "10.1002/anie.2808034",
+      "journal": "Angew",
+      "date": "2026-09-21",
+      "title": "Janus Covalent Organic Framework Films With Macroscopic Directional Carrier Migration for Switchable Gas Sensing",
+      "authors": [
+        "Yong‐Jun Chen",
+        "Yi‐Ming Xu",
+        "Zhi‐Peng Luo",
+        "Guang‐Ling Liang",
+        "Jiang‐Feng Lu",
+        "Guan‐E Wang",
+        "Shuang Wang",
+        "Gang Xu"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "high",
+      "reason": "COF film/device materials research centered on directional carrier migration and gas sensing, without a general organic/polymer synthesis methodology.",
+      "evidenceBasis": "The abstract emphasizes sequence-controlled Janus COF films, built-in electric fields, carrier migration, and enhanced NO2/NH3 sensing performance.",
+      "challengeDecision": "exclude",
+      "challengeReason": "Although COF construction is synthetic, it is a specific materials fabrication step supporting device/sensing performance rather than a broadly transferable synthesis method."
+    },
+    {
+      "doi": "10.1002/anie.8540595",
+      "journal": "Angew",
+      "date": "2026-09-21",
+      "title": "Single‐Atom O/S/Se Substitution at the Glycosidic Linkage in Glycopeptide Cancer Vaccines Reveals Divergent Performance",
+      "authors": [
+        "Carmen Bretón",
+        "Ana Guerreiro",
+        "Paula Oroz",
+        "Noelia Osés",
+        "Irene Ginés‐Alcober",
+        "Francisco Javier Cañada",
+        "Ramón Hurtado‐Guerrero",
+        "Juan L. Asensio",
+        "Jesús M. Peregrina",
+        "Gonçalo J. L. Bernardes",
+        "Francisco Corzana"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "reason": "Chemical-biology/vaccine structure–function study using defined glycopeptide analogues; the main advance is biological performance, not a general synthetic methodology.",
+      "evidenceBasis": "The abstract mentions streamlined access to Se-linked Tn glycopeptides, but most of the study concerns antigen recognition, molecular dynamics, STD-NMR, vaccine conjugation, antibody response, and therapeutic efficacy.",
+      "challengeDecision": "exclude",
+      "challengeReason": "The synthetic access is enabling rather than the central generalized methodological contribution; there is no demonstrated broad reaction/substrate platform comparable to the Gallery's synthesis-method criterion."
+    },
+    {
+      "doi": "10.1002/anie.5372994",
+      "journal": "Angew",
+      "date": "2026-09-21",
+      "title": "Tailoring Local Anion Chemistry Affinity Enables Stable Halide–Sulfide Interfaces and Fast Ion Transport in Dual‐Electrolyte all‐Solid‐State Batteries",
+      "authors": [
+        "Jie Qu",
+        "Xingyu Wang",
+        "Huaimin Jin",
+        "Changtai Zhao",
+        "Jianwen Liang",
+        "Xueliang Sun",
+        "Xiaona Li"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "reason": "All-solid-state battery electrolyte/interface materials research, outside organic-synthesis methodology scope.",
+      "evidenceBasis": "The abstract centers on sulfurized halide electrolytes, halide–sulfide interface stabilization, Li+ conductivity, cycling performance, and areal capacity.",
+      "challengeDecision": "exclude",
+      "challengeReason": "The chemistry modifies inorganic electrolyte materials and battery interfaces; it does not develop a preparative organic or polymer synthesis method."
+    }
+  ],
+  "pending": [],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0,
+    "note": "Every accepted and high-priority rejected candidate received an adversarial challenge pass; normal-priority rejections also received explicit challenge review in this batch."
+  }
+}
