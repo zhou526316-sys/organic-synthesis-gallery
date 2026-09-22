@@ -1,0 +1,78 @@
+name: Tampermonkey window guard regression
+on:
+  push:
+    branches: [fix/tm221-window-burst]
+    paths: ['scripts/patch-tm221-window-guard.py', 'scripts/test-tm221-window-guard.mjs', '.github/workflows/tm221-window-guard.yml']
+  pull_request:
+    branches: [main]
+    paths: ['public/toc-mainline.user.js', 'cloudflare/scripts/build-bridge-loader.mjs', 'scripts/test-tm221-window-guard.mjs']
+permissions:
+  contents: write
+concurrency:
+  group: tm221-window-guard-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply exact scoped fix
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm221"
+          if ! grep -q 'CONTROLLER_REVISION' public/toc-mainline.user.js; then cp public/toc-mainline.user.js "$RUNNER_TEMP/tm221/baseline.js"; fi
+          python3 scripts/patch-tm221-window-guard.py
+          node --check public/toc-mainline.user.js
+          git diff --check
+      - name: Reproduce production failure and verify controller and capture regressions
+        run: |
+          if test -f "$RUNNER_TEMP/tm221/baseline.js"; then export TM221_BASELINE="$RUNNER_TEMP/tm221/baseline.js"; fi
+          node scripts/test-tm221-window-guard.mjs | tee "$RUNNER_TEMP/tm221/window-tests.txt"
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm220-release.mjs
+      - name: Package versioned self-contained installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          node --input-type=module - <<'JS'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          const s=fs.readFileSync('public/gallery-vpn-bridge.user.js','utf8');
+          for(const name of ['queueDoi','pump','scan'])assert.match(s,new RegExp('function '+name+'\\([^\\n]*\\) \\{\\n    if \\(globalThis.__OSG_TOC_BROWSER_MAINLINE__\\) return;'));
+          console.log('PACKAGED_LEGACY_ENGINES_DISABLED');
+          JS
+          cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/tm221/"
+      - name: Run existing paired capture browser fixture
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install chromium
+          node scripts/test-tm-paired-capture.mjs
+      - name: Commit only tested source changes to feature branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/fix/tm221-window-burst'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs scripts/validate-tm220-artifacts.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: publish tested controller lease and tab-close guards as Bridge 2.2.21'
+            git push origin HEAD:fix/tm221-window-burst
+          fi
+          git rev-parse HEAD > "$RUNNER_TEMP/tm221/tested-head.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm221-window-guard-tested
+          path: ${{ runner.temp }}/tm221/
+          retention-days: 7

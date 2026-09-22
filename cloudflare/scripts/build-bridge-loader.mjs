@@ -52,6 +52,11 @@ replaceRequired(
   'disable duplicate legacy server backlog when browser mainline is integrated'
 );
 
+// legacy_runtime_media_disabled: only the bound mainline may collect media.
+for (const signature of ['  function queueDoi(doi, priority = false) {', '  function pump() {', '  function scan() {']) {
+  replaceRequired(signature, signature + '\n    if (globalThis.__OSG_TOC_BROWSER_MAINLINE__) return;', 'single media engine: '+signature);
+}
+
 await writeFile(RUNTIME_OUTPUT, runtime, 'utf8');
 
 const runtimeBody = runtime.replace(/^\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==\s*/, '').trim();
@@ -78,7 +83,7 @@ const matchLines = [...new Set([
 ])].join('\n');
 const galleryHosts = [...new Set(PUBLIC_SITE_ORIGINS.map(origin => new URL(origin).hostname))];
 const galleryHostExpression = galleryHosts.map(host => `location.hostname === '${host}'`).join(' || ');
-const loaderVersion = '2.2.20';
+const loaderVersion = '2.2.21';
 
 const loader = `// ==UserScript==
 // @name         Organic Synthesis Gallery VPN Literature Bridge

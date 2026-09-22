@@ -37,7 +37,9 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.20';
+  var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
+  var CONTROLLER_REVISION = '2.2.21';
+  var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -1776,12 +1778,14 @@ function embeddedJobDois(value) {
     node.style.background = color || '#111827';
   }
 
-  function acquireLease() {
+  async function acquireLease() {
     var now = Date.now();
     var lease = GM_getValue(LEASE_KEY, null);
     if (lease && Number(lease.expiresAt || 0) > now && lease.owner !== CONTROLLER_ID) return false;
     GM_setValue(LEASE_KEY, { owner: CONTROLLER_ID, expiresAt: now + 90000 });
-    return true;
+    await sleep(250); // Let competing control pages settle before any dispatch.
+    var confirmed = GM_getValue(LEASE_KEY, null);
+    return Boolean(confirmed && confirmed.owner === CONTROLLER_ID);
   }
 
   function renewLease() {
@@ -1873,61 +1877,119 @@ function embeddedJobDois(value) {
     return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
   }
 
+  function clearOwnedJob(job) {
+    var live=GM_getValue(ACTIVE_JOB_KEY,null);
+    if(live && live.jobId===job.jobId && live.controllerId===CONTROLLER_ID) GM_deleteValue(ACTIVE_JOB_KEY);
+  }
+
+  async function closeTaskTab(tab) {
+    if(!tab || typeof tab.close!=='function') return false;
+    try { tab.close(); } catch(_) { return false; }
+    for(var i=0;i<30;i+=1) {
+      if(tab.closed===true) return true;
+      await sleep(100);
+    }
+    return tab.closed===true;
+  }
+
+  function requestControllerStart() {
+    if(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__) {badge('当前批次正在运行，不重复派发','#374151');return;}
+    var lease=GM_getValue(LEASE_KEY,null);
+    if(lease && lease.owner!==CONTROLLER_ID && Number(lease.expiresAt)>Date.now()) {badge('另一个 Gallery 控制页正在运行，请勿重复启动','#92400e');return;}
+    CONTROLLER_STOP_REASON='';
+    GM_deleteValue(ABORT_KEY);
+    GM_setValue(ENABLED_KEY,true);
+    if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
+    if(isGalleryPage()) controllerRun();
+    else window.open('https://'+GALLERY_HOST+GALLERY_PATH,'_blank');
+  }
+
   async function controllerRun() {
     if (!isGalleryPage() || globalThis.__OSG_PAIRED_CONTROLLER_BUSY__) return;
+    if(CONTROLLER_STOP_REASON){badge('已停止开页：'+CONTROLLER_STOP_REASON,'#991b1b');return;}
     if (GM_getValue(ENABLED_KEY,true)===false||isAbortRequested()) {badge('媒体抓取已暂停','#6b7280');return;}
     if (!writeToken()) {badge('请保留并配置原有 R2 写入令牌','#991b1b');return;}
-    if (!acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
     globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=true;
-    var renew=setInterval(renewLease,15000),summary=null;
+    var renew=null,summary=null,stopReason='';
     try {
+      if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
+      renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var media=await getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json?ts='+Date.now());
       var jobs=pairedJobs(queue,media);
-      var generation=VERSION+':paired:'+String(queue.mediaGeneration); // Stable across metadata-only queue refreshes.
+      var generation=VERSION+':paired:'+String(queue.mediaGeneration);
       function eligible(job) {
         var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
+        // A scheduler failure is not a failed publisher/article capture.
+        if(prior && prior.reason==='controller_lease_lost')return true;
         if (prior && prior.version===VERSION && prior.status==='success') return false;
         if (prior && !overnightRetryEligible(prior,Date.now())) return false;
         return true;
       }
       var available=jobs.filter(eligible),batch=selectBatchJobs(available,batchSize());
-      summary={version:VERSION,queueGeneratedAt:queue.generatedAt,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,tocStored:0,figuresStaged:0,published:0,results:[]};
+      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,tocStored:0,figuresStaged:0,published:0,results:[]};
       GM_setValue(SUMMARY_KEY,summary);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
+        // Fail before opening any page, and never dispatch after loss of ownership.
+        if(!renewLease()) {stopReason='controller_lease_lost';break;}
+        if(GM_getValue(ACTIVE_JOB_KEY,null)) {stopReason='another_task_still_active';break;}
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,generation,'figures'),null);
-        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt});
+        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
         badge('TOC＋正文图 '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
-        var tab=null,result;
+        var tab=null,result=null,closed=true;
         try {
-          tab=GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true});
+          if(!renewLease())throw new Error('controller_lease_lost');
+          tab=await Promise.resolve(GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
+          if(!tab || typeof tab.close!=='function')throw new Error('task_tab_handle_unavailable');
           result=await waitForResult(job,tab);
-        } catch(error) {result={doi:job.doi,jobId:job.jobId,version:VERSION,status:'failed',reason:String(error.message),finishedAt:nowIso()};}
-        finally {try{if(tab&&tab.close)tab.close();}catch(_){} GM_deleteValue(ACTIVE_JOB_KEY);}
-        result.version=VERSION;
-        result.retryCount=Number(priorAttempt&&priorAttempt.retryCount||0)+1;
-        summary.results.push(result);summary[result.status]=(summary[result.status]||0)+1;
-        summary.tocStored+=result.toc&&result.toc.status==='stored'?1:0;
-        summary.figuresStaged+=Number(result.figuresStaged||0);
-        GM_setValue(attemptKey(job.doi,generation,'figures'),result);GM_setValue(SUMMARY_KEY,summary);
-        if(result.status==='aborted')break;
+        } catch(error) {
+          if(/controller_lease_lost|task_tab_handle_unavailable/.test(String(error.message)))stopReason=String(error.message);
+          else result={doi:job.doi,jobId:job.jobId,version:VERSION,status:'failed',reason:String(error.message),finishedAt:nowIso()};
+        } finally {
+          // Invalidate this job before closing; never delete another controller's job.
+          clearOwnedJob(job);
+          if(tab)closed=await closeTaskTab(tab);
+          if(!closed)stopReason=stopReason||'previous_task_tab_not_closed';
+        }
+        if(result && !stopReason) {
+          result.version=VERSION;
+          result.retryCount=Number(priorAttempt&&priorAttempt.reason!=='controller_lease_lost'&&priorAttempt.retryCount||0)+1;
+          summary.results.push(result);summary[result.status]=(summary[result.status]||0)+1;
+          summary.tocStored+=result.toc&&result.toc.status==='stored'?1:0;
+          summary.figuresStaged+=Number(result.figuresStaged||0);
+          GM_setValue(attemptKey(job.doi,generation,'figures'),result);
+        }
+        if(result && result.reason==='bound_publisher_heartbeat_missing')stopReason=result.reason;
+        if(stopReason){summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);break;}
+        GM_setValue(SUMMARY_KEY,summary);
+        if(result && result.status==='aborted')break;
         await sleep(3500);
       }
-      summary.finishedAt=nowIso();GM_setValue(SUMMARY_KEY,summary);
-      badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；完整抓取 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'（暂存不等于发布）','#374151');
-      if(jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
+      if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
+      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；完整抓取 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'（暂存不等于发布）','#374151');
+      if(!stopReason&&jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
       }
     } catch(error) {
-      badge('媒体主线暂缓：'+String(error.message)+'；60 秒后检查重连','#991b1b');
-      if(!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {clearTimeout(nextBatchTimer);nextBatchTimer=setTimeout(controllerRun,60000);}
+      stopReason=String(error.message);
+      if(!renewLease() || /capture_server_upgrade_pending/.test(stopReason))badge('媒体主线已停止：'+stopReason,'#991b1b');
+      else {
+        badge('媒体主线暂缓：'+stopReason+'；60 秒后检查重连','#991b1b');
+        if(!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {clearTimeout(nextBatchTimer);nextBatchTimer=setTimeout(controllerRun,60000);}
+      }
+    } finally {
+      clearInterval(renew);
+      if(/controller_lease_lost|task_tab_handle_unavailable|previous_task_tab_not_closed|another_task_still_active|bound_publisher_heartbeat_missing|capture_server_upgrade_pending/.test(stopReason)){CONTROLLER_STOP_REASON=stopReason;if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}}
+      globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=false;
+      var lease=GM_getValue(LEASE_KEY,null);
+      if(lease&&lease.owner===CONTROLLER_ID)GM_deleteValue(LEASE_KEY);
     }
-    finally {clearInterval(renew);globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=false;var lease=GM_getValue(LEASE_KEY,null);if(lease&&lease.owner===CONTROLLER_ID)GM_deleteValue(LEASE_KEY);}
   }
 
   async function publisherBoot() {
@@ -1984,27 +2046,14 @@ function embeddedJobDois(value) {
       GM_setValue(BATCH_SIZE_KEY, parsed);
       window.alert('每批抓取数量已设为 ' + parsed + '。');
     });
-    GM_registerMenuCommand('立即运行媒体抓取队列', function () {
-      GM_deleteValue(ABORT_KEY);
-      GM_setValue(ENABLED_KEY, true);
-      GM_deleteValue(LEASE_KEY);
-      if (isGalleryPage()) controllerRun();
-      else window.open('https://' + GALLERY_HOST + GALLERY_PATH, '_blank');
-    });
+    GM_registerMenuCommand('立即运行媒体抓取队列', requestControllerStart);
     GM_registerMenuCommand('中止当前媒体抓取批次', function () {
       GM_setValue(ABORT_KEY, { at: Date.now(), reason: 'user_aborted' });
+      GM_setValue(ENABLED_KEY,false);
+      if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
       window.alert('已请求中止当前媒体抓取批次。正在运行的出版社标签页会由控制器关闭；人工中止不会计入失败或失败冷却。');
     });
-    GM_registerMenuCommand('继续媒体抓取主线', function () {
-      GM_deleteValue(ABORT_KEY);
-      GM_setValue(ENABLED_KEY, true);
-      GM_deleteValue(LEASE_KEY);
-      if (isGalleryPage()) {
-        setTimeout(controllerRun, 100);
-      } else {
-        window.open('https://' + GALLERY_HOST + GALLERY_PATH, '_blank');
-      }
-    });
+    GM_registerMenuCommand('继续媒体抓取主线', requestControllerStart);
     GM_registerMenuCommand('上传本地 TOC 日志', function () {
       uploadLocalDiagnostics().catch(function () {});
     });
@@ -2035,18 +2084,19 @@ function embeddedJobDois(value) {
       } catch (_) {}
       queueKeys.filter(function (key) { return String(key).indexOf(P + 'failure:') === 0; })
         .forEach(function (key) { try { GM_deleteValue(key); } catch (_) {} });
-      GM_deleteValue(LEASE_KEY);
       window.alert('已清除当前脚本版本的失败冷却。返回 Gallery 后可立即重新运行媒体抓取队列。');
     });
     GM_registerMenuCommand('清除卡住任务/租约', function () {
-      var job = GM_getValue(ACTIVE_JOB_KEY, null);
-      if (job && job.doi) {
-        GM_deleteValue(resultKey(job.doi));
-        GM_deleteValue(progressKey(job.doi));
+      GM_setValue(ABORT_KEY,{at:Date.now(),reason:'user_aborted'});
+      GM_setValue(ENABLED_KEY,false);
+      if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
+      var lease=GM_getValue(LEASE_KEY,null);
+      if(lease && Number(lease.expiresAt)>Date.now()) {
+        window.alert('已请求暂停。当前控制器退出后再清理；不会抢占运行中的任务锁。');return;
       }
       GM_deleteValue(ACTIVE_JOB_KEY);
       GM_deleteValue(LEASE_KEY);
-      window.alert('已清除当前任务和控制器租约。');
+      window.alert('已清除过期任务和租约，保持暂停。关闭旧任务页后可继续。');
     });
   }
 
