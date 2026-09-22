@@ -109,3 +109,7 @@ console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({
   mandatoryStatic: mandatoryStaticPapers.length,
   translations: translations.size,
 })}`);
+
+// Reuse only individually reviewed, digest-bound TOCs; do not restore the quarantined baseline.
+const { mergeReviewedToc } = await import('./merge-reviewed-toc.mjs');
+await mergeReviewedToc();
