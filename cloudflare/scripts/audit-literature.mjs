@@ -644,7 +644,7 @@ const compactSourceHealth = Object.fromEntries(Object.entries(sourceFamilyHealth
   closureCoverageWarning: health.closureCoverageWarning,
 }]));
 
-const unresolvedReport = {
+const reviewInput = {
   schemaVersion: 1,
   generatedAt: report.generatedAt,
   auditVersion: report.auditVersion,
@@ -673,7 +673,7 @@ const unresolvedReport = {
 await mkdir(path.dirname(OUT), { recursive: true });
 await writeFile(OUT, JSON.stringify(report, null, 2));
 await mkdir(path.dirname(UNRESOLVED_OUT), { recursive: true });
-await writeFile(UNRESOLVED_OUT, JSON.stringify(unresolvedReport, null, 2));
+await writeFile(UNRESOLVED_OUT, JSON.stringify(reviewInput, null, 2));
 console.log(`AUDIT_WINDOW ${START}..${END} closure=${CLOSURE_DATE} timezone=${TIME_ZONE} lookbackDays=${LOOKBACK_DAYS} rescueDays=${LATE_DEPOSIT_RESCUE_DAYS} rescueStart=${RESCUE_START} catchupStart=${catchupStart || '-'}`);
 console.log(`AUDIT_RESULT ${JSON.stringify(report.summary)}`);
-console.log(`AUDIT_UNRESOLVED_HANDOFF count=${unresolvedReviewCandidates.length} path=${UNRESOLVED_OUT}`);
+console.log(`AUDIT_REVIEW_INPUT count=${unresolvedReviewCandidates.length} path=${UNRESOLVED_OUT}`);
