@@ -1,0 +1,71 @@
+name: Verify Tampermonkey 620 release live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/tm620-live-check.json']
+permissions:
+  contents: read
+concurrency:
+  group: tm620-live-release-check
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify actual published script, complete queue and backend version without media writes
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures,datetime,hashlib,json,os,pathlib,re,time,urllib.request
+          site='https://zhou526316-sys.github.io/organic-synthesis-gallery/'
+          worker='https://organic-synthesis-gallery.zhou526316.workers.dev'
+          def get(url):
+              req=urllib.request.Request(url,headers={'Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=25) as r: raw=r.read(5000001)
+              assert len(raw)<=5000000,'oversized response'
+              return raw
+          script=get(site+'gallery-vpn-bridge.user.js?release='+str(int(time.time())))
+          text=script.decode()
+          assert re.search(r'^// @version\s+2\.2\.20\s*$',text,re.M),'new installer is not live'
+          assert "var VERSION = '6.2.20';" in text and 'chooseBestImage' in text and 'bindPublisherCaptureJob' in text
+          assert re.search(r'^// @grant\s+GM_listValues\s*$',text,re.M)
+          assert 'toc_capture_receipt_invalid' in text and 'buildRecoveryJobs' in text
+          assert 'readRealtimeMediaPreflight' not in text
+          cap=None
+          for i in range(6):
+              try:
+                  cap=json.loads(get(worker+'/api/media/capture-capabilities?release='+str(int(time.time()))))
+                  if cap.get('captureVersion')=='6.2.20':break
+              except Exception:pass
+              time.sleep(10)
+          assert cap and cap.get('captureVersion')=='6.2.20' and cap.get('boundCaptureIndexing') is True,'new Worker is not live'
+          q=json.loads(get(site+'toc-demand-live.json?release='+str(int(time.time()))))
+          assert q['version']==3 and q['captureVersion']=='6.2.20' and q['mediaGeneration']==1790082000000
+          assert len(q['allPapers'])==q['webpageDoiCount'] and len({p['doi'] for p in q['allPapers']})==q['webpageDoiCount']
+          m=json.loads(get(site+'media-index.json?release='+str(int(time.time()))))
+          plan=json.loads(pathlib.Path('audit/media-recovery/toc-batch1-manifest.json').read_text())
+          recovered=[(d,r['toc']) for d,r in m['items'].items() if r.get('toc',{}).get('recoveryId')=='toc-batch1-20260922']
+          approved={r['doi']:r for r in plan['items']}
+          def verify(row):
+              doi,toc=row
+              path=toc['imageUrl'];assert path.startswith('media-mirror/recovered-') and '..' not in path
+              return hashlib.sha256(get(site+path)).hexdigest()==approved[doi]['sha256']==toc['verifiedSha256']
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool: hashes=list(pool.map(verify,recovered))
+          assert len(hashes)>=83 and all(hashes),'restored TOC regression'
+          report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'site':site,'installerVersion':'2.2.20','coreVersion':'6.2.20','installerSha256':hashlib.sha256(script).hexdigest(),'workerCapabilities':cap,'queueGeneratedAt':q['generatedAt'],'queueCorpusVersion':q['corpusVersion'],'queueDoiCount':q['webpageDoiCount'],'remainingOfficialToc':q['missingOfficialTotal'],'restoredTocHashVerified':len(hashes),'publishedOfficialToc':sum(bool(r.get('toc',{}).get('available') and 'fallback' not in str(r.get('toc',{}).get('reason',''))) for r in m['items'].values()),'productionMediaWrites':0,'authenticatedPublisherCaptureVerified':False}
+          pathlib.Path(os.environ['RUNNER_TEMP'],'tm620-live-release.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print('TM620_LIVE_RELEASE '+json.dumps(report,ensure_ascii=False))
+          PY
+      - name: Preserve live release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tm620-live-release
+          path: ${{ runner.temp }}/tm620-live-release.json
+          retention-days: 14
+          if-no-files-found: warn
