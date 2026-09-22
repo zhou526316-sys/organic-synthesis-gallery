@@ -3,6 +3,7 @@ import type { StatusImageStyle } from './status-image-types';
 export { prepareStatusImage } from './status-image-source';
 export type { OriginalStatusImage } from './status-image-types';
 const ID_PATTERN = /^[a-f0-9]{64}$/;
+const hydrationJobs = new WeakMap<HTMLImageElement, object>();
 
 function escape(value: string): string {
   return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
@@ -11,18 +12,45 @@ function escape(value: string): string {
 export function statusImageTag(style: StatusImageStyle, className: string, label: string): string {
   if (!style.imageData) return '';
   const id = style.imageOriginal?.id;
-  return `<img class='${className}' src='${escape(style.imageData)}' ${id && ID_PATTERN.test(id) ? `data-status-asset='${id}'` : ''} alt='${escape(label)}' title='${escape(label)}'>`;
+  // This source is already a usable preview, even while local storage is pending.
+  // Source and lookup state are separate: pending does not mean no image.
+  return `<img class='${className}' src='${escape(style.imageData)}' data-image-source='preview' ${id && ID_PATTERN.test(id) ? `data-status-asset='${id}' data-original-state='pending'` : ''} alt='${escape(label)}' title='${escape(label)}'>`;
+}
+
+function hydrateImage(image: HTMLImageElement, resolved?: (original: boolean) => void): void {
+  const id = image.dataset.statusAsset || '';
+  const preview = image.getAttribute('src') || '';
+  const job = {};
+  hydrationJobs.set(image, job);
+  const current = (): boolean => image.isConnected && image.dataset.statusAsset === id && hydrationJobs.get(image) === job;
+  void (async () => {
+    const url = await originalUrl(id);
+    if (!current()) return;
+    if (url) {
+      // Never replace a displayed preview with an undecodable original.
+      const original = new Image();
+      original.src = url;
+      await original.decode();
+      if (!current()) return;
+      image.src = url;
+      image.dataset.imageSource = 'original';
+      image.dataset.originalState = 'available';
+      resolved?.(true);
+    } else {
+      image.dataset.originalState = 'unavailable';
+      resolved?.(false);
+    }
+  })().catch(() => {
+    if (!current()) return;
+    image.src = preview;
+    image.dataset.imageSource = 'preview';
+    image.dataset.originalState = 'unavailable';
+    resolved?.(false);
+  });
 }
 
 export function hydrateStatusImages(root: ShadowRoot): void {
-  root.querySelectorAll<HTMLImageElement>('img[data-status-asset]').forEach(image => {
-    const id = image.dataset.statusAsset || '';
-    void originalUrl(id).then(url => {
-      if (!image.isConnected || image.dataset.statusAsset !== id) return;
-      image.dataset.imageSource = url ? 'original' : 'preview';
-      if (url) image.src = url;
-    });
-  });
+  root.querySelectorAll<HTMLImageElement>('img[data-status-asset]').forEach(image => hydrateImage(image));
 }
 
 export function statusImageError(error: unknown): string {
@@ -36,9 +64,9 @@ export function statusImageError(error: unknown): string {
 }
 
 export async function viewStatusImage(style: StatusImageStyle): Promise<void> {
-  const url = style.imageOriginal?.id ? await originalUrl(style.imageOriginal.id) : null;
-  const source = url || style.imageData;
-  if (!source) return;
+  // Open immediately using the synced preview. Looking up a local original must
+  // not delay the user's click or reopen a viewer that has already been closed.
+  if (!style.imageData) return;
   const previousFocus = document.activeElement;
   const dialog = document.createElement('dialog');
   dialog.dataset.galleryUserCropper = 'true';
@@ -50,9 +78,19 @@ export async function viewStatusImage(style: StatusImageStyle): Promise<void> {
   close.textContent = '关闭 / Close';
   close.addEventListener('click', () => dialog.close());
   const message = document.createElement('p');
-  message.textContent = url ? '原图 · 仅当前浏览器保存 / Original · stored in this browser' : '此浏览器无原图，显示同步预览（GIF 为静态预览）。 / Original unavailable here; showing synced preview (GIF is static).';
+  const unavailable = '此浏览器无可用原图，显示同步预览（GIF 为静态预览）。 / Original unavailable here; showing synced preview (GIF is static).';
+  const id = style.imageOriginal?.id;
+  const hasOriginal = Boolean(id && ID_PATTERN.test(id));
+  message.textContent = hasOriginal
+    ? '先显示预览，正在读取本地原图… / Showing preview while loading the local original…'
+    : unavailable;
   const image = document.createElement('img');
-  image.src = source;
+  image.src = style.imageData;
+  image.dataset.imageSource = 'preview';
+  if (hasOriginal) {
+    image.dataset.statusAsset = id!;
+    image.dataset.originalState = 'pending';
+  }
   image.alt = style.imageOriginal?.name || '状态图片 / Status image';
   Object.assign(image.style, { display: 'block', maxWidth: '100%', maxHeight: '65dvh', objectFit: 'contain', margin: '12px auto' });
   dialog.append(close, message, image);
@@ -60,4 +98,8 @@ export async function viewStatusImage(style: StatusImageStyle): Promise<void> {
   dialog.addEventListener('close', () => { dialog.remove(); if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus({ preventScroll: true }); }, { once: true });
   document.body.appendChild(dialog);
   dialog.showModal();
+  if (hasOriginal) hydrateImage(image, original => {
+    if (!dialog.open) return;
+    message.textContent = original ? '原图 · 仅当前浏览器保存 / Original · stored in this browser' : unavailable;
+  });
 }
