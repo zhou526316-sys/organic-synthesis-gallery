@@ -2192,6 +2192,43 @@
     };
   }
 
+  function currentGalleryDoiAuthority() {
+    var registry = document.getElementById('gallery-literature-doi-registry');
+    if (registry) {
+      try {
+        var payload = JSON.parse(String(registry.textContent || '{}'));
+        var registryDois = Array.isArray(payload && payload.dois) ? payload.dois : [];
+        var registrySet = new Set(registryDois.map(normalizeDoi).filter(Boolean));
+        if (registrySet.size) return { source: 'registry', dois: registrySet, count: registrySet.size };
+      } catch (_) {}
+    }
+
+    var fallbackSet = new Set();
+    Array.prototype.slice.call(document.querySelectorAll('article.card:not(.bridge-staging-card) .toc-slot[data-doi]')).forEach(function (node) {
+      var doi = normalizeDoi(node.getAttribute('data-doi'));
+      if (doi) fallbackSet.add(doi);
+    });
+    if (fallbackSet.size) return { source: 'rendered_cards', dois: fallbackSet, count: fallbackSet.size };
+    return null;
+  }
+
+  async function waitForGalleryDoiAuthority() {
+    for (var attempt = 0; attempt < 30; attempt += 1) {
+      var authority = currentGalleryDoiAuthority();
+      if (authority && authority.count > 0) return authority;
+      await sleep(250);
+    }
+    return null;
+  }
+
+  function filterJobsByGalleryAuthority(rows, authority) {
+    if (!authority || !authority.dois) return [];
+    return (rows || []).filter(function (job) {
+      var doi = normalizeDoi(job && job.doi);
+      return doi && authority.dois.has(doi);
+    });
+  }
+
   async function controllerRun() {
     if (!isGalleryPage()) return;
     if (GM_getValue(ENABLED_KEY, true) === false) {
@@ -2221,14 +2258,24 @@
       return;
     }
 
-    var visible = Array.isArray(queue.visibleGaps) ? queue.visibleGaps : [];
-    var upgrades = Array.isArray(queue.officialUpgrades) ? queue.officialUpgrades : [];
+    var authority = await waitForGalleryDoiAuthority();
+    if (!authority) {
+      badge('媒体抓取：等待当前 Gallery 文献清单，未打开任何出版社页面', '#92400e');
+      GM_deleteValue(LEASE_KEY);
+      return;
+    }
+
+    var rawVisible = Array.isArray(queue.visibleGaps) ? queue.visibleGaps : [];
+    var rawUpgrades = Array.isArray(queue.officialUpgrades) ? queue.officialUpgrades : [];
+    var visible = filterJobsByGalleryAuthority(rawVisible, authority);
+    var upgrades = filterJobsByGalleryAuthority(rawUpgrades, authority);
     var queueGeneratedAt = String(queue.generatedAt || '');
+    var filteredNotOnPage = (rawVisible.length - visible.length) + (rawUpgrades.length - upgrades.length);
     var liveCaptures = await readLiveCaptureKinds();
     var reconciled = reconcileQueueWithLiveCaptures(visible, upgrades, liveCaptures);
     visible = reconciled.visible;
     upgrades = reconciled.upgrades;
-    var queuedFigures = Array.isArray(queue.figureGaps) ? queue.figureGaps.map(function (raw) {
+    var rawQueuedFigures = Array.isArray(queue.figureGaps) ? queue.figureGaps.map(function (raw) {
       var job = Object.assign({}, raw);
       job.doi = normalizeDoi(job.doi);
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
@@ -2238,6 +2285,8 @@
       job.figureCount = Math.max(0, Number(job.figureCount || 0));
       return job;
     }).filter(function (job) { return Boolean(job.doi); }) : stagedFigureJobs();
+    var queuedFigures = filterJobsByGalleryAuthority(rawQueuedFigures, authority);
+    filteredNotOnPage += rawQueuedFigures.length - queuedFigures.length;
     var figureOnly = queuedFigures.slice();
     var allJobs = visible.concat(upgrades, figureOnly);
     visible = executableJobs(visible, queueGeneratedAt);
@@ -2295,6 +2344,9 @@
       delayedTocUpgrades: upgrades.length,
       cooldownSkipped: cooldownSkipped,
       filteredByLiveR2: Number(reconciled.filteredByR2 || 0),
+      galleryAuthoritySource: authority.source,
+      galleryAuthorityCount: authority.count,
+      filteredNotOnPage: filteredNotOnPage,
       success: 0,
       failed: 0,
       skipped: 0,
@@ -2307,6 +2359,14 @@
       var job = Object.assign({}, jobs[i]);
       job.doi = normalizeDoi(job.doi);
       if (!job.doi) continue;
+
+      var liveAuthority = currentGalleryDoiAuthority();
+      if (!liveAuthority || !liveAuthority.dois.has(job.doi)) {
+        summary.skipped += 1;
+        summary.filteredNotOnPage += 1;
+        continue;
+      }
+
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
       job.queueGeneratedAt = queueGeneratedAt;
       job.startedAt = nowIso();
