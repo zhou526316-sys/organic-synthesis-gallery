@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-22T03:26:46.323Z",
+  "generatedAt": "2026-09-22T05:26:23.949Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -159,27 +159,27 @@
   ],
   "summary": {
     "galleryDois": 499,
-    "sourceRecords": 501,
-    "rawMissingFromGallery": 445,
+    "sourceRecords": 507,
+    "rawMissingFromGallery": 451,
     "previouslyReviewedExcluded": 445,
-    "missingFromGallery": 0,
-    "potentialGaps": 0,
+    "missingFromGallery": 6,
+    "potentialGaps": 4,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 6,
     "historicalCoverageLosses": 0,
-    "unresolved": 0,
+    "unresolved": 6,
     "excludedByPolicy": 0
   },
   "closure": {
     "date": "2026-09-21",
     "status": "blocked-source-coverage-anomaly",
-    "sourceRecords": 104,
-    "rawMissingFromGallery": 89,
+    "sourceRecords": 109,
+    "rawMissingFromGallery": 94,
     "previouslyReviewedExcluded": 89,
-    "missingFromGallery": 0,
-    "potentialGaps": 0,
+    "missingFromGallery": 5,
+    "potentialGaps": 3,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
       {
@@ -255,12 +255,12 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 78,
-        "crossrefCandidateRecords": 76,
+        "unionCandidateRecords": 83,
+        "crossrefCandidateRecords": 81,
         "openAlexCandidateRecords": 54,
         "multiSourceCandidateRecords": 52,
-        "closureUnionRecords": 24,
-        "closureCrossrefRecords": 24,
+        "closureUnionRecords": 29,
+        "closureCrossrefRecords": 29,
         "closureOpenAlexRecords": 0,
         "closureMultiSourceRecords": 0,
         "coverageWarning": false,
@@ -297,8 +297,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 34,
-        "crossrefCandidateRecords": 34,
+        "unionCandidateRecords": 35,
+        "crossrefCandidateRecords": 35,
         "openAlexCandidateRecords": 25,
         "multiSourceCandidateRecords": 25,
         "closureUnionRecords": 9,
@@ -377,21 +377,21 @@
       }
     },
     "2026-09-21": {
-      "sourceRecords": 104,
-      "crossrefOnly": 103,
+      "sourceRecords": 109,
+      "crossrefOnly": 108,
       "openAlexOnly": 0,
       "multiSource": 1,
       "coveredByGallery": 15,
-      "rawMissingFromGallery": 89,
+      "rawMissingFromGallery": 94,
       "previouslyReviewedExcluded": 89,
-      "missingFromGallery": 0,
-      "potentialGaps": 0,
+      "missingFromGallery": 5,
+      "potentialGaps": 3,
       "byJournal": {
         "Nature": 8,
         "Nature Catalysis": 1,
         "Nature Communications": 35,
         "JACS": 15,
-        "Angew": 24,
+        "Angew": 29,
         "ACS Catalysis": 11,
         "Organic Letters": 9,
         "CCS Chemistry": 1
@@ -433,18 +433,19 @@
       }
     },
     "2026-09-22": {
-      "sourceRecords": 3,
-      "crossrefOnly": 3,
+      "sourceRecords": 4,
+      "crossrefOnly": 4,
       "openAlexOnly": 0,
       "multiSource": 0,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 3,
+      "rawMissingFromGallery": 4,
       "previouslyReviewedExcluded": 3,
-      "missingFromGallery": 0,
-      "potentialGaps": 0,
+      "missingFromGallery": 1,
+      "potentialGaps": 1,
       "byJournal": {
         "Nature Communications": 2,
-        "JACS": 1
+        "JACS": 1,
+        "Organic Letters": 1
       }
     }
   },
@@ -557,17 +558,17 @@
     "Angew": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
-      "sourceRecords": 78,
-      "crossrefOnly": 24,
+      "sourceRecords": 83,
+      "crossrefOnly": 29,
       "openAlexOnly": 2,
       "multiSource": 52,
       "lateIndexed": 52,
       "safetyTail": 54,
       "coveredByGallery": 10,
-      "rawMissingFromGallery": 68,
+      "rawMissingFromGallery": 73,
       "previouslyReviewedExcluded": 68,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 5,
+      "potentialGaps": 3
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
@@ -587,17 +588,17 @@
     "Organic Letters": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
-      "sourceRecords": 34,
-      "crossrefOnly": 9,
+      "sourceRecords": 35,
+      "crossrefOnly": 10,
       "openAlexOnly": 0,
       "multiSource": 25,
       "lateIndexed": 24,
       "safetyTail": 24,
       "coveredByGallery": 27,
-      "rawMissingFromGallery": 7,
+      "rawMissingFromGallery": 8,
       "previouslyReviewedExcluded": 7,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 1,
+      "potentialGaps": 1
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -825,12 +826,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 78,
-      "crossrefCandidateRecords": 76,
+      "unionCandidateRecords": 83,
+      "crossrefCandidateRecords": 81,
       "openAlexCandidateRecords": 54,
       "multiSourceCandidateRecords": 52,
-      "closureUnionRecords": 24,
-      "closureCrossrefRecords": 24,
+      "closureUnionRecords": 29,
+      "closureCrossrefRecords": 29,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -865,8 +866,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 34,
-      "crossrefCandidateRecords": 34,
+      "unionCandidateRecords": 35,
+      "crossrefCandidateRecords": 35,
       "openAlexCandidateRecords": 25,
       "multiSourceCandidateRecords": 25,
       "closureUnionRecords": 9,
@@ -1053,12 +1054,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 78,
-      "crossrefCandidateRecords": 76,
+      "unionCandidateRecords": 83,
+      "crossrefCandidateRecords": 81,
       "openAlexCandidateRecords": 54,
       "multiSourceCandidateRecords": 52,
-      "closureUnionRecords": 24,
-      "closureCrossrefRecords": 24,
+      "closureUnionRecords": 29,
+      "closureCrossrefRecords": 29,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -1095,8 +1096,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 34,
-      "crossrefCandidateRecords": 34,
+      "unionCandidateRecords": 35,
+      "crossrefCandidateRecords": 35,
       "openAlexCandidateRecords": 25,
       "multiSourceCandidateRecords": 25,
       "closureUnionRecords": 9,
@@ -1468,7 +1469,7 @@
       "issn": "1433-7851",
       "mode": "online",
       "ok": true,
-      "count": 75,
+      "count": 80,
       "note": ""
     },
     {
@@ -1477,7 +1478,7 @@
       "issn": "1433-7851",
       "mode": "published",
       "ok": true,
-      "count": 76,
+      "count": 81,
       "note": ""
     },
     {
@@ -1486,7 +1487,7 @@
       "issn": "1433-7851",
       "mode": "created",
       "ok": true,
-      "count": 109,
+      "count": 114,
       "note": ""
     },
     {
@@ -1495,7 +1496,7 @@
       "issn": "1521-3773",
       "mode": "online",
       "ok": true,
-      "count": 75,
+      "count": 80,
       "note": ""
     },
     {
@@ -1504,7 +1505,7 @@
       "issn": "1521-3773",
       "mode": "published",
       "ok": true,
-      "count": 76,
+      "count": 81,
       "note": ""
     },
     {
@@ -1513,7 +1514,7 @@
       "issn": "1521-3773",
       "mode": "created",
       "ok": true,
-      "count": 109,
+      "count": 114,
       "note": ""
     },
     {
@@ -1565,7 +1566,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -1574,7 +1575,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -1583,7 +1584,7 @@
       "issn": "1523-7052",
       "mode": "created",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -1592,7 +1593,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -1601,7 +1602,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -1610,7 +1611,7 @@
       "issn": "1523-7060",
       "mode": "created",
       "ok": true,
-      "count": 34,
+      "count": 35,
       "note": ""
     },
     {
@@ -1851,6 +1852,334 @@
       "note": ""
     }
   ],
-  "missingCandidates": [],
-  "potentialGaps": []
+  "missingCandidates": [
+    {
+      "doi": "10.1021/acs.orglett.6c03921",
+      "journal": "Organic Letters",
+      "title": "Cascade Spirocyclization–Difunctionalization or Rearrangement of Bicyclobutyl-Tethered Aldehyde Hydrazones via Strain Release",
+      "abstract": "Abstract A cascade spirocyclization–difunctionalization of bicyclobutyl-tethered aldehyde hydrazones with N-halosuccinimides was smoothly performed to access diverse halo-succinimide-containing diazaspiro[3.3]heptan-3-ones. Meanwhile, the three-component rearrangement of bicyclobutyl-tethered aldehyde hydrazones, N-halosuccinimides, and NH-sulfoximines also proceeded under similar conditions to give various halo-sulfoximine-featured phenyldiazenyl cyclobutane-1-carboxamides. In addition, some scaled-up experiments and complex substrates were explored in system application studies. Finally, a plausible reaction process was proposed according to mechanistic studies.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Haiyang Sun",
+        "Lijun Li",
+        "Qinqin Yan",
+        "Lijun Tu",
+        "Zhong-Quan Liu",
+        "Zejiang Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.9362433",
+      "journal": "Angew",
+      "title": "Cyclodextrin‐Directed Assembly of Dynamic Polyoxometalate Pseudo‐Rotaxanes",
+      "abstract": "ABSTRACT Cyclodextrins (CDs) are widely used as host molecules in supramolecular chemistry, yet their capacity to actively direct structural reorganization of inorganic clusters remains largely unexplored. Here, we demonstrate that α ‐CD can direct inorganic cluster reorganization during self‐assembly, enabling the synthesis of previously inaccessible azobenzene‐functionalized polyoxometalate (POM) pseudo‐rotaxanes, in which the macrocycle not only encapsulates the organic axle but also governs the structural evolution of the inorganic core. Upon complexation with α ‐CD, a flat arsonate‐functionalized {Mo 6 } cluster reorganizes into a bent analogue, yielding a dynamic pseudo ‐rotaxane assembly ( 1a @ α ‐CD). Fine pH modulation subsequently induces a CD‐mediated transformation into an inverted‐Keggin {Mo 12 } pseudo ‐rotaxane threaded by four α ‐CD units. NMR/ITC titration, DOSY/NOESY analyses, and single‐crystal x‐ray diffraction collectively reveal dual threading pathways and delineate the dynamic {Mo 6 } to {Mo 12 } reorganization process. Crucially, α ‐CD suppresses precipitation of hydrophobic ligands under strongly acidic conditions and stabilizes transient coordination states, thereby enabling cluster growth pathways inaccessible under identical synthetic conditions in the absence of α ‐CD. These findings demonstrate that CDs can actively direct inorganic self‐assembly through host‐guest interactions, providing a supramolecular route to previously inaccessible POM pseudo ‐rotaxanes and opening new opportunities for adaptive hybrid architectures.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Yun‐Jing Mu",
+        "Cheng‐Shuai Liu",
+        "Chun‐Yan Liu",
+        "Yi‐An Yin",
+        "Chang‐Gen Lin",
+        "Haralampos N. Miras",
+        "Ulrich Kortz",
+        "Yu‐Fei Song"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.1587126",
+      "journal": "Angew",
+      "title": "Hydrogen‐Bond Encoding in a Structurally Minimal Cyclochiral Monomer Enables Assembly of Large Cavities Displaying Supramolecular Isomerism",
+      "abstract": "ABSTRACT Large, well‐defined molecular cavities are typically constructed from rigid covalent scaffolds, which can limit structural adaptability and increase synthetic complexity. Here, we introduce a hydrogen‐bond encoded supramolecular strategy that enables structurally minimal, flexible monomers to assemble into discrete fullerene‐binding capsules. The monomer combines intra‐ and intermolecular hydrogen‐bonding motifs that restrict conformational freedom, induce cyclochirality, and guide controlled self‐assembly into oligomeric or cyclic aggregates. Spectroscopic and crystallographic analyses show that guest‐induced self‐sorting with fullerenes drives the formation of homochiral tetrameric capsules with high binding affinity and distinct structural isomerism. X‐ray structures confirm compact host–guest complexes stabilized by cooperative hydrogen bonding and C─H···π interactions. This work demonstrates that minimal monomer design can encode complex supramolecular behaviour, providing an adaptive platform for molecular recognition, catalysis, and materials science.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Qixun Shi",
+        "Liangshun Guo",
+        "Nojus Radzevičius",
+        "Yi Long",
+        "Nana Zhao",
+        "Yue Cao",
+        "Fengxia Zhu",
+        "Vytautas Klimavicius",
+        "Gediminas Kreiza",
+        "Audrius Padarauskas",
+        "Chuan Wang",
+        "Edvinas Orentas"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2808034",
+      "journal": "Angew",
+      "title": "Janus Covalent Organic Framework Films With Macroscopic Directional Carrier Migration for Switchable Gas Sensing",
+      "abstract": "ABSTRACT Macroscopic directional migration of photogenerated carriers in covalent organic framework (COF)‐based heterojunction films is typically hindered by random carrier diffusion and interfacial structural disorder. In this study, we report for the first time the construction of sequence‐controlled Janus COF films from lattice‐matched isoreticular COFs (COF‐366/COF‐366‐OH). The intimate interfacial assembly and the energy‐level offset induce a built‐in electric field that drives electrons and holes to migrate directionally toward opposite sides across the entire film. This asymmetric charge distribution endows the two sides of the film with distinct redox activities, enabling switchable and highly sensitive detection of both oxidizing and reducing gases by simply flipping the film. Such a unique feature is unprecedented for a single film. Moreover, the response of Janus COF film surpasses that of single‐component counterparts by 5.2‐fold for NO 2 and 5.3‐fold for NH 3 . This work offers a general strategy for macroscopic directional carrier migration in COF films and paves a new route for advanced sensing materials.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Yong‐Jun Chen",
+        "Yi‐Ming Xu",
+        "Zhi‐Peng Luo",
+        "Guang‐Ling Liang",
+        "Jiang‐Feng Lu",
+        "Guan‐E Wang",
+        "Shuang Wang",
+        "Gang Xu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.8540595",
+      "journal": "Angew",
+      "title": "Single‐Atom O/S/Se Substitution at the Glycosidic Linkage in Glycopeptide Cancer Vaccines Reveals Divergent Performance",
+      "abstract": "ABSTRACT Single‐atom substitution provides an exceptionally subtle means of editing molecular structure, yet how such minimal atom‐level modifications propagate into biological function remains poorly understood. Here, we report streamlined access to Se ‐linked Tn glycopeptides which, together with their O ‐ and S ‐linked counterparts, enable systematic atom‐level editing at the glycosidic linkage of MUC1 glycopeptide antigens. Surface plasmon resonance established a clear hierarchy of antigen recognition that was rationalized by molecular dynamics simulations and independently validated by STD‐NMR epitope mapping, revealing that O→S→Se substitution subtly remodels glycopeptide presentation while preserving the overall 5E5 recognition epitope. Translation of these structurally defined antigens into CRM 197 glycoconjugate vaccines with comparable antigen loading showed that neither antigen‐binding affinity nor antibody levels alone predict therapeutic efficacy. Instead, the results demonstrate that minimal atom‐level editing propagates from molecular recognition to biological function through a nonlinear structure–function relationship, highlighting that therapeutic efficacy cannot be inferred directly from antigen affinity alone.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Carmen Bretón",
+        "Ana Guerreiro",
+        "Paula Oroz",
+        "Noelia Osés",
+        "Irene Ginés‐Alcober",
+        "Francisco Javier Cañada",
+        "Ramón Hurtado‐Guerrero",
+        "Juan L. Asensio",
+        "Jesús M. Peregrina",
+        "Gonçalo J. L. Bernardes",
+        "Francisco Corzana"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.5372994",
+      "journal": "Angew",
+      "title": "Tailoring Local Anion Chemistry Affinity Enables Stable Halide–Sulfide Interfaces and Fast Ion Transport in Dual‐Electrolyte all‐Solid‐State Batteries",
+      "abstract": "ABSTRACT All‐solid‐state batteries (ASSBs) employing halide/sulfide bilayer electrolytes offer a promising route toward high energy density by combining the high oxidative stability of halides with the superior reductive stability of sulfides. However, severe halide–sulfide interfacial incompatibility induces continuous interfacial degradation and undermines Li + transport. Unlike conventional interfacial engineering approaches that rely on coatings or artificial buffer layers, we report a local chemistry–driven intrinsic compatibility strategy that fundamentally stabilizes halide–sulfide interfaces. By sulfurizing amorphous halide electrolytes Li 2 O–TaCl 5 , the short‐range coordination chemistry and medium‐range topology are simultaneously reconstructed, in which sulfur‐rich local motifs become thermodynamically more resistant to further sulfur substitution, whereas sulfur‐containing medium‐range networks exhibit stronger binding with PS 4 units in Li 6 PS 5 Cl, thereby intrinsically stabilizing the halide–sulfide interface and suppressing interfacial decomposition. Simultaneously, the sulfurized framework exhibits enhanced structural heterogeneity and interconnected Li + migration pathways, achieving an ultrahigh ionic conductivity of 14.2 mS cm −1 . As a result, the assembled NCM89|8S‐LTOC|LPSC|Li‐In ASSBs exhibit outstanding electrochemical performance from −50°C to 100°C, including 131 mAh g −1 at −50°C, 2000‐cycle stability at 15 C, and high areal capacities up to 21.7 mAh cm −2 . This work highlights local anion chemistry regulation as an effective strategy for developing robust halide–sulfide ASSBs.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Jie Qu",
+        "Xingyu Wang",
+        "Huaimin Jin",
+        "Changtai Zhao",
+        "Jianwen Liang",
+        "Xueliang Sun",
+        "Xiaona Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    }
+  ],
+  "potentialGaps": [
+    {
+      "doi": "10.1021/acs.orglett.6c03921",
+      "journal": "Organic Letters",
+      "title": "Cascade Spirocyclization–Difunctionalization or Rearrangement of Bicyclobutyl-Tethered Aldehyde Hydrazones via Strain Release",
+      "abstract": "Abstract A cascade spirocyclization–difunctionalization of bicyclobutyl-tethered aldehyde hydrazones with N-halosuccinimides was smoothly performed to access diverse halo-succinimide-containing diazaspiro[3.3]heptan-3-ones. Meanwhile, the three-component rearrangement of bicyclobutyl-tethered aldehyde hydrazones, N-halosuccinimides, and NH-sulfoximines also proceeded under similar conditions to give various halo-sulfoximine-featured phenyldiazenyl cyclobutane-1-carboxamides. In addition, some scaled-up experiments and complex substrates were explored in system application studies. Finally, a plausible reaction process was proposed according to mechanistic studies.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Haiyang Sun",
+        "Lijun Li",
+        "Qinqin Yan",
+        "Lijun Tu",
+        "Zhong-Quan Liu",
+        "Zejiang Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.9362433",
+      "journal": "Angew",
+      "title": "Cyclodextrin‐Directed Assembly of Dynamic Polyoxometalate Pseudo‐Rotaxanes",
+      "abstract": "ABSTRACT Cyclodextrins (CDs) are widely used as host molecules in supramolecular chemistry, yet their capacity to actively direct structural reorganization of inorganic clusters remains largely unexplored. Here, we demonstrate that α ‐CD can direct inorganic cluster reorganization during self‐assembly, enabling the synthesis of previously inaccessible azobenzene‐functionalized polyoxometalate (POM) pseudo‐rotaxanes, in which the macrocycle not only encapsulates the organic axle but also governs the structural evolution of the inorganic core. Upon complexation with α ‐CD, a flat arsonate‐functionalized {Mo 6 } cluster reorganizes into a bent analogue, yielding a dynamic pseudo ‐rotaxane assembly ( 1a @ α ‐CD). Fine pH modulation subsequently induces a CD‐mediated transformation into an inverted‐Keggin {Mo 12 } pseudo ‐rotaxane threaded by four α ‐CD units. NMR/ITC titration, DOSY/NOESY analyses, and single‐crystal x‐ray diffraction collectively reveal dual threading pathways and delineate the dynamic {Mo 6 } to {Mo 12 } reorganization process. Crucially, α ‐CD suppresses precipitation of hydrophobic ligands under strongly acidic conditions and stabilizes transient coordination states, thereby enabling cluster growth pathways inaccessible under identical synthetic conditions in the absence of α ‐CD. These findings demonstrate that CDs can actively direct inorganic self‐assembly through host‐guest interactions, providing a supramolecular route to previously inaccessible POM pseudo ‐rotaxanes and opening new opportunities for adaptive hybrid architectures.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Yun‐Jing Mu",
+        "Cheng‐Shuai Liu",
+        "Chun‐Yan Liu",
+        "Yi‐An Yin",
+        "Chang‐Gen Lin",
+        "Haralampos N. Miras",
+        "Ulrich Kortz",
+        "Yu‐Fei Song"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.1587126",
+      "journal": "Angew",
+      "title": "Hydrogen‐Bond Encoding in a Structurally Minimal Cyclochiral Monomer Enables Assembly of Large Cavities Displaying Supramolecular Isomerism",
+      "abstract": "ABSTRACT Large, well‐defined molecular cavities are typically constructed from rigid covalent scaffolds, which can limit structural adaptability and increase synthetic complexity. Here, we introduce a hydrogen‐bond encoded supramolecular strategy that enables structurally minimal, flexible monomers to assemble into discrete fullerene‐binding capsules. The monomer combines intra‐ and intermolecular hydrogen‐bonding motifs that restrict conformational freedom, induce cyclochirality, and guide controlled self‐assembly into oligomeric or cyclic aggregates. Spectroscopic and crystallographic analyses show that guest‐induced self‐sorting with fullerenes drives the formation of homochiral tetrameric capsules with high binding affinity and distinct structural isomerism. X‐ray structures confirm compact host–guest complexes stabilized by cooperative hydrogen bonding and C─H···π interactions. This work demonstrates that minimal monomer design can encode complex supramolecular behaviour, providing an adaptive platform for molecular recognition, catalysis, and materials science.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Qixun Shi",
+        "Liangshun Guo",
+        "Nojus Radzevičius",
+        "Yi Long",
+        "Nana Zhao",
+        "Yue Cao",
+        "Fengxia Zhu",
+        "Vytautas Klimavicius",
+        "Gediminas Kreiza",
+        "Audrius Padarauskas",
+        "Chuan Wang",
+        "Edvinas Orentas"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2808034",
+      "journal": "Angew",
+      "title": "Janus Covalent Organic Framework Films With Macroscopic Directional Carrier Migration for Switchable Gas Sensing",
+      "abstract": "ABSTRACT Macroscopic directional migration of photogenerated carriers in covalent organic framework (COF)‐based heterojunction films is typically hindered by random carrier diffusion and interfacial structural disorder. In this study, we report for the first time the construction of sequence‐controlled Janus COF films from lattice‐matched isoreticular COFs (COF‐366/COF‐366‐OH). The intimate interfacial assembly and the energy‐level offset induce a built‐in electric field that drives electrons and holes to migrate directionally toward opposite sides across the entire film. This asymmetric charge distribution endows the two sides of the film with distinct redox activities, enabling switchable and highly sensitive detection of both oxidizing and reducing gases by simply flipping the film. Such a unique feature is unprecedented for a single film. Moreover, the response of Janus COF film surpasses that of single‐component counterparts by 5.2‐fold for NO 2 and 5.3‐fold for NH 3 . This work offers a general strategy for macroscopic directional carrier migration in COF films and paves a new route for advanced sensing materials.",
+      "date": "2026-09-21",
+      "type": "journal-article",
+      "authors": [
+        "Yong‐Jun Chen",
+        "Yi‐Ming Xu",
+        "Zhi‐Peng Luo",
+        "Guang‐Ling Liang",
+        "Jiang‐Feng Lu",
+        "Guan‐E Wang",
+        "Shuang Wang",
+        "Gang Xu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    }
+  ]
 }
