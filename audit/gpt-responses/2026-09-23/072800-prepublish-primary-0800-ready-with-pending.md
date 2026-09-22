@@ -101,3 +101,7 @@
 - review blob SHA：`54aac96476d89aa1f547769cc2bedd41e4f15be0`
 
 本任务只改动 trigger/audit staging/state/本摘要；未修改生产 public 文献数据，未触发 Pages 文献部署，未修改 `public/toc-demand-live.json`，未执行 OA PDF/正文图提取。媒体继续只交给 Tampermonkey/VPN Bridge。08:00 正式发布任务只能消费上述 24 个 publishableDois，不能发布 pending DOI，也不能推进 verifiedThrough 越过待定项或 closure 覆盖异常。
+
+## 通用 literature quality workflow 说明
+
+state 提交同时触发了旧的全审核闭环工作流 [35797447719](https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/35797447719)，其结论为 failure。该工作流读取最近的正式 review `review-2026-09-22-evening-36.json`，按旧的 `full-review-closure` 模式要求当前机器 audit 的 unresolved=0，因此在预发布 staging 尚未转换为正式 review 时必然失败；日志同时显示它没有读取本轮 76-DOI staging partition。它不否定本轮专用 per-DOI gate 的 success，也不授权提前转换、发布或修改 production public 数据。08:00 发布任务应使用已通过的 prepublish gate 和严格转换 bundle；届时再由正式 review/生产数据闭环清除通用 gate 的旧状态。
