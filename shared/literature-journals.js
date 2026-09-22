@@ -18,6 +18,9 @@ export const TARGET_JOURNALS = Object.freeze([
   { name: 'CCS Chemistry', issns: ['2096-5745'], activeFrom: '2026-09-19' },
   { name: 'Science Advances', issns: ['2375-2548'], activeFrom: '2026-09-19' },
   { name: 'Green Chemistry', issns: ['1463-9262', '1463-9270'], activeFrom: '2026-09-19' },
+
+  // Added prospectively on 2026-09-22. Do not backfill before this date.
+  { name: 'JOC', issns: ['0022-3263', '1520-6904'], activeFrom: '2026-09-22' },
 ]);
 
 export function effectiveJournalStart(journal, requestedStart) {
