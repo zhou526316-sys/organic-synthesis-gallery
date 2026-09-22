@@ -1,0 +1,15 @@
+{
+  "release": "2.2.20",
+  "core": "6.2.20",
+  "context": "Single-visit TOC and body-image capability upgrade after cross-DOI contamination recovery",
+  "mediaGeneration": 1790082000000,
+  "finalWorkbenchRun": 35753992222,
+  "workbenchConclusion": "success",
+  "controlledTests": {"identity": 21, "receipts": 9, "workerIndexing": 13, "chromiumCapture": 15, "liveStaticUnion": 6},
+  "reportSemantics": "partial remains partial; never converted into success",
+  "fixturePublisherRequests": 0,
+  "fixtureProductionWrites": 0,
+  "liveDeploymentVerified": false,
+  "authenticatedPublisherTrialVerified": false,
+  "releaseCondition": "All final PR checks pass, then coordinated Worker/Pages deployment and live installer/queue/capability verification; preserve restored TOCs and publication authorization."
+}
