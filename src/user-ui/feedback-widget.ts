@@ -23,6 +23,13 @@ const copy = {
     },
     placeholder: '例如：搜索 “photoredox nickel” 时结果不符合预期……',
     privacy: '请不要填写密码、验证码或其他敏感信息。',
+    image: '附图（可选）',
+    chooseImage: '上传图片',
+    removeImage: '移除图片',
+    imageReady: '图片已准备好，会随吐槽一起提交。',
+    imageLoading: '正在压缩图片…',
+    imageFailed: '图片无法读取，请使用 JPG、PNG 或 WebP。',
+    imageTooLarge: '图片过大，请选择 20 MB 以内的图片。',
     submit: '提交吐槽',
     sending: '提交中…',
     close: '关闭',
@@ -49,6 +56,13 @@ const copy = {
     },
     placeholder: 'Example: searching “photoredox nickel” gives unexpected results…',
     privacy: 'Do not include passwords, verification codes, or other sensitive information.',
+    image: 'Image (optional)',
+    chooseImage: 'Upload image',
+    removeImage: 'Remove image',
+    imageReady: 'Image is ready and will be submitted with the feedback.',
+    imageLoading: 'Compressing image…',
+    imageFailed: 'Could not read this image. Use JPG, PNG, or WebP.',
+    imageTooLarge: 'Please choose an image smaller than 20 MB.',
     submit: 'Send feedback',
     sending: 'Sending…',
     close: 'Close',
@@ -94,6 +108,38 @@ function saveTabPosition(position: { left: number; top: number }): void {
   try { localStorage.setItem(TAB_POSITION_KEY, JSON.stringify(position)); } catch { /* optional */ }
 }
 
+async function prepareFeedbackImage(file: File): Promise<string | null> {
+  if (!file.type.startsWith('image/') || file.size > 20_000_000) return null;
+  const source = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('read_failed'));
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.readAsDataURL(file);
+  });
+  const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const element = new Image();
+    element.onload = () => resolve(element);
+    element.onerror = () => reject(new Error('decode_failed'));
+    element.src = source;
+  });
+  const maxSide = 1440;
+  const scale = Math.min(1, maxSide / Math.max(image.naturalWidth || 1, image.naturalHeight || 1));
+  const width = Math.max(1, Math.round(image.naturalWidth * scale));
+  const height = Math.max(1, Math.round(image.naturalHeight * scale));
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext('2d');
+  if (!context) return null;
+  context.drawImage(image, 0, 0, width, height);
+
+  for (const quality of [0.86, 0.74, 0.62, 0.5]) {
+    const data = canvas.toDataURL('image/webp', quality);
+    if (data.length <= 1_200_000) return data;
+  }
+  return null;
+}
+
 function installStyles(): void {
   if (document.getElementById(STYLE_ID)) return;
   const style = document.createElement('style');
@@ -113,6 +159,12 @@ function installStyles(): void {
     .site-feedback-select{height:38px;padding:0 10px}
     .site-feedback-textarea{min-height:122px;resize:vertical;padding:10px 11px;line-height:1.5}
     .site-feedback-select:focus,.site-feedback-textarea:focus{outline:2px solid rgba(49,89,189,.18);border-color:#6f89d5}
+    .site-feedback-image-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .site-feedback-image-pick,.site-feedback-image-remove{display:inline-flex;align-items:center;justify-content:center;border:1px solid #cfd7e6;border-radius:9px;background:#fff;color:#344054;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}
+    .site-feedback-image-pick input{display:none}
+    .site-feedback-image-preview{display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px;border:1px solid #e1e6ef;border-radius:10px;background:#f8fafc}
+    .site-feedback-image-preview img{width:72px;height:54px;object-fit:contain;border-radius:6px;background:#fff}
+    .site-feedback-image-meta{min-width:0;flex:1;color:#667085;font-size:11px;line-height:1.45}
     .site-feedback-submit{width:100%;border:0;border-radius:10px;background:#3159bd;color:#fff;padding:10px 12px;font-weight:700;cursor:pointer}
     .site-feedback-submit:disabled{opacity:.6;cursor:default}
     .site-feedback-status{margin-top:10px;margin-bottom:0}
@@ -136,6 +188,9 @@ class SiteFeedbackWidget extends HTMLElement {
   private tabPosition: { left: number; top: number } | null = loadTabPosition();
   private tabDrag: { pointerId: number; startX: number; startY: number; left: number; top: number; moved: boolean } | null = null;
   private suppressTabClick = false;
+  private attachmentData = '';
+  private attachmentName = '';
+  private imageBusy = false;
   private readonly onResize = (): void => {
     this.applyPanelPosition();
     this.applyTabPosition();
@@ -187,6 +242,11 @@ class SiteFeedbackWidget extends HTMLElement {
             ${Object.entries(t.categories).map(([value, label]) => `<option value="${value}">${label}</option>`).join('')}
           </select>
           <textarea class="site-feedback-textarea" data-feedback-message maxlength="2000" placeholder="${t.placeholder}"></textarea>
+          <label class="site-feedback-label">${t.image}</label>
+          <div class="site-feedback-image-row">
+            <label class="site-feedback-image-pick">${this.imageBusy ? t.imageLoading : t.chooseImage}<input data-feedback-image type="file" accept="image/png,image/jpeg,image/webp,image/*" ${this.imageBusy ? 'disabled' : ''}></label>
+          </div>
+          ${this.attachmentData ? `<div class="site-feedback-image-preview"><img src="${this.attachmentData}" alt=""><div class="site-feedback-image-meta">${t.imageReady}<br>${this.attachmentName}</div><button class="site-feedback-image-remove" data-feedback-image-remove type="button">${t.removeImage}</button></div>` : ''}
           <p class="site-feedback-privacy">${t.privacy}</p>
           <button class="site-feedback-submit" data-feedback-submit type="button" ${this.busy ? 'disabled' : ''}>${this.busy ? t.sending : t.submit}</button>
           ${this.status ? `<p class="site-feedback-status" role="status">${this.status}</p>` : ''}
@@ -222,6 +282,13 @@ class SiteFeedbackWidget extends HTMLElement {
       this.render();
     });
     this.querySelector<HTMLButtonElement>('[data-feedback-submit]')?.addEventListener('click', () => void this.submit());
+    this.querySelector<HTMLInputElement>('[data-feedback-image]')?.addEventListener('change', event => void this.selectImage(event));
+    this.querySelector<HTMLButtonElement>('[data-feedback-image-remove]')?.addEventListener('click', () => {
+      this.attachmentData = '';
+      this.attachmentName = '';
+      this.status = '';
+      this.rerenderPreservingDraft();
+    });
     this.querySelector<HTMLTextAreaElement>('[data-feedback-message]')?.addEventListener('keydown', event => {
       if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
         event.preventDefault();
@@ -351,6 +418,36 @@ class SiteFeedbackWidget extends HTMLElement {
     if (this.position) savePosition(this.position);
   }
 
+  private async selectImage(event: Event): Promise<void> {
+    const input = event.currentTarget as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    const t = copy[language()];
+    if (file.size > 20_000_000) {
+      this.status = t.imageTooLarge;
+      input.value = '';
+      this.rerenderPreservingDraft();
+      return;
+    }
+    this.imageBusy = true;
+    this.status = t.imageLoading;
+    this.rerenderPreservingDraft();
+    try {
+      const data = await prepareFeedbackImage(file);
+      if (!data) throw new Error('image_too_large_after_compression');
+      this.attachmentData = data;
+      this.attachmentName = file.name.slice(0, 120);
+      this.status = t.imageReady;
+    } catch {
+      this.attachmentData = '';
+      this.attachmentName = '';
+      this.status = t.imageFailed;
+    } finally {
+      this.imageBusy = false;
+      this.rerenderPreservingDraft();
+    }
+  }
+
   private async submit(): Promise<void> {
     if (this.busy) return;
     const lang = language();
@@ -374,11 +471,15 @@ class SiteFeedbackWidget extends HTMLElement {
       searchQuery,
       viewportWidth: window.innerWidth,
       viewportHeight: window.innerHeight,
+      imageData: this.attachmentData || undefined,
+      imageName: this.attachmentName || undefined,
     });
     this.busy = false;
 
     if (result === 'accepted' || result === 'queued') {
       this.status = result === 'accepted' ? t.accepted : t.queued;
+      this.attachmentData = '';
+      this.attachmentName = '';
       this.render();
       const nextCategory = this.querySelector<HTMLSelectElement>('[data-feedback-category]');
       if (nextCategory) nextCategory.value = select?.value || 'general';
