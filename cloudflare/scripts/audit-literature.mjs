@@ -51,6 +51,7 @@ const START = catchupStart || BASE_START;
 const CLOSURE_DATE = shiftDate(END, -1);
 const SITE = (process.env.GALLERY_SITE || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/$/, '');
 const OUT = path.resolve(process.env.AUDIT_OUTPUT || 'audit/latest.json');
+const UNRESOLVED_OUT = path.resolve(process.env.AUDIT_UNRESOLVED_OUTPUT || 'audit/unresolved-latest.json');
 
 const JOURNALS = TARGET_JOURNALS;
 const JOURNAL_BY_NAME = new Map(JOURNALS.map(journal => [journal.name, journal]));
@@ -609,7 +610,69 @@ const report = {
   potentialGaps,
 };
 
+const unresolvedReviewCandidates = missingCandidates.map(candidate => ({
+  doi: candidate.doi,
+  journal: candidate.journal,
+  title: candidate.title,
+  abstract: String(candidate.abstract || '').slice(0, 1400),
+  date: candidate.date,
+  type: candidate.type,
+  authors: candidate.authors,
+  topics: candidate.topics,
+  sources: candidate.sources,
+  activeFrom: candidate.activeFrom,
+  dateUnverified: candidate.dateUnverified,
+  lateIndexed: candidate.lateIndexed,
+  safetyTail: candidate.safetyTail,
+  reviewPriority: candidate.reviewPriority,
+}));
+
+const compactSourceHealth = Object.fromEntries(Object.entries(sourceFamilyHealth).map(([journal, health]) => [journal, {
+  activeFrom: health.activeFrom,
+  effectiveStart: health.effectiveStart,
+  crossrefHealthy: health.crossrefHealthy,
+  openAlexHealthy: health.openAlexHealthy,
+  unionCandidateRecords: health.unionCandidateRecords,
+  crossrefCandidateRecords: health.crossrefCandidateRecords,
+  openAlexCandidateRecords: health.openAlexCandidateRecords,
+  multiSourceCandidateRecords: health.multiSourceCandidateRecords,
+  closureUnionRecords: health.closureUnionRecords,
+  closureCrossrefRecords: health.closureCrossrefRecords,
+  closureOpenAlexRecords: health.closureOpenAlexRecords,
+  coverageWarning: health.coverageWarning,
+  closureCoverageWarning: health.closureCoverageWarning,
+}]));
+
+const reviewInput = {
+  schemaVersion: 1,
+  generatedAt: report.generatedAt,
+  auditVersion: report.auditVersion,
+  timeZone: report.timeZone,
+  startDate: report.startDate,
+  endDate: report.endDate,
+  closureDate: report.closureDate,
+  summary: report.summary,
+  discoveryGate: {
+    criticalSourceFailures: report.summary.criticalSourceFailures,
+    sourceFamilyGaps: report.summary.sourceFamilyGaps,
+    sourceCoverageAnomalies: report.summary.sourceCoverageAnomalies,
+    closureCoverageAnomalies: report.summary.closureCoverageAnomalies,
+    historicalCoverageLosses: report.summary.historicalCoverageLosses,
+  },
+  activeJournals: report.targetJournals.map(journal => ({
+    name: journal.name,
+    activeFrom: journal.activeFrom,
+    effectiveStart: journal.effectiveStart,
+    sourceHealth: compactSourceHealth[journal.name] || null,
+  })),
+  unresolved: unresolvedReviewCandidates,
+  potentialGapDois: potentialGaps.map(candidate => candidate.doi),
+};
+
 await mkdir(path.dirname(OUT), { recursive: true });
 await writeFile(OUT, JSON.stringify(report, null, 2));
+await mkdir(path.dirname(UNRESOLVED_OUT), { recursive: true });
+await writeFile(UNRESOLVED_OUT, JSON.stringify(reviewInput, null, 2));
 console.log(`AUDIT_WINDOW ${START}..${END} closure=${CLOSURE_DATE} timezone=${TIME_ZONE} lookbackDays=${LOOKBACK_DAYS} rescueDays=${LATE_DEPOSIT_RESCUE_DAYS} rescueStart=${RESCUE_START} catchupStart=${catchupStart || '-'}`);
 console.log(`AUDIT_RESULT ${JSON.stringify(report.summary)}`);
+console.log(`AUDIT_REVIEW_INPUT count=${unresolvedReviewCandidates.length} path=${UNRESOLVED_OUT}`);
