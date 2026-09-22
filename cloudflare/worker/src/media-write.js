@@ -387,3 +387,74 @@ export async function resetFigures(request, env, payload) {
   const result = await env.DB.prepare('DELETE FROM figure_assets WHERE doi = ?').bind(doi).run();
   return { status: 200, body: { reset: true, doi, deleted: Number(result?.meta?.changes || 0) } };
 }
+
+async function rows(statement) {
+  const result = await statement.all();
+  return Array.isArray(result?.results) ? result.results : [];
+}
+
+export async function purgeCrossDoiMedia(env, payload = {}) {
+  if (!env?.DB || !env?.MEDIA) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
+  const dryRun = payload?.dryRun === true;
+  const [tocRows, figureRows, primaryRows] = await Promise.all([
+    rows(env.DB.prepare('SELECT doi, article_url, r2_key FROM toc_assets WHERE r2_key IS NOT NULL')),
+    rows(env.DB.prepare('SELECT doi, semantic_key, article_url, r2_key FROM figure_assets WHERE r2_key IS NOT NULL')),
+    rows(env.DB.prepare('SELECT doi, article_url, source_url, r2_key FROM primary_visual_assets WHERE r2_key IS NOT NULL')),
+  ]);
+
+  const badToc = tocRows.filter(row => !mediaUrlMatchesDoi(row.article_url, row.doi));
+  const badFigures = figureRows.filter(row => !mediaUrlMatchesDoi(row.article_url, row.doi));
+  const badPrimary = primaryRows.filter(row =>
+    !mediaUrlMatchesDoi(row.article_url, row.doi) || !mediaUrlMatchesDoi(row.source_url, row.doi)
+  );
+  const affectedDois = [...new Set([...badToc, ...badFigures, ...badPrimary].map(row => String(row.doi).toLowerCase()))];
+  const objectKeys = [...new Set([...badToc, ...badFigures, ...badPrimary].map(row => row.r2_key).filter(Boolean))];
+
+  if (!dryRun) {
+    for (const row of badToc) {
+      await env.DB.prepare(
+        `UPDATE toc_assets
+         SET available = 0, reason = 'cross_doi_media_quarantined', checked_at = ?, updated_at = ?
+         WHERE doi = ? AND r2_key = ?`
+      ).bind(Date.now(), Date.now(), String(row.doi).toLowerCase(), row.r2_key).run();
+    }
+    for (const row of badFigures) {
+      await env.DB.prepare('DELETE FROM figure_assets WHERE doi = ? AND semantic_key = ?')
+        .bind(String(row.doi).toLowerCase(), row.semantic_key).run();
+    }
+    for (const row of badPrimary) {
+      await env.DB.prepare('DELETE FROM primary_visual_assets WHERE doi = ?').bind(String(row.doi).toLowerCase()).run();
+      await env.DB.prepare('DELETE FROM primary_visual_variants WHERE doi = ?').bind(String(row.doi).toLowerCase()).run();
+    }
+    if (objectKeys.length) await env.MEDIA.delete(objectKeys);
+    const now = Date.now();
+    for (const doi of affectedDois) {
+      await env.DB.prepare(
+        `INSERT INTO media_repair_state
+          (doi, repair_version, attempts, last_attempt_at, next_retry_at, last_root_cause, last_outcome, reported_priority, updated_at)
+         VALUES (?, 1, 0, 0, 0, 'cross_doi_media_purged', 'missing', 1, ?)
+         ON CONFLICT(doi) DO UPDATE SET
+           next_retry_at = 0,
+           last_root_cause = 'cross_doi_media_purged',
+           last_outcome = 'missing',
+           reported_priority = 1,
+           updated_at = excluded.updated_at`
+      ).bind(doi, now).run();
+    }
+  }
+
+  return {
+    status: 200,
+    body: {
+      dryRun,
+      affectedDois,
+      summary: {
+        tocRows: badToc.length,
+        figureRows: badFigures.length,
+        primaryRows: badPrimary.length,
+        objectKeys: objectKeys.length,
+        affectedDois: affectedDois.length,
+      },
+    },
+  };
+}
