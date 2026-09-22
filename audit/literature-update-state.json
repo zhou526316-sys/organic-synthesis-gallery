@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "ready_to_publish",
+  "phase": "preparing",
   "activeRun": null,
   "lastCompletedFetch": {
     "id": "manual-midday-catchup-20260922",
@@ -171,11 +171,14 @@
     "secondPassCompleted": true,
     "unresolvedDisagreements": 0,
     "productionDataModified": false,
-    "compactHandoffRetest": "success"
+    "compactHandoffRetest": "success",
+    "publisherSourceChecksComplete": false,
+    "prepublishGateRunId": 35726702971,
+    "prepublishGateConclusion": "failure"
   },
   "nextPublicationSlot": "2026-09-23T08:00:00+08:00",
   "prepublish": {
-    "status": "ready_to_publish",
+    "status": "preparing",
     "publicationSlot": "2026-09-23T08:00:00+08:00",
     "reviewFile": "audit/prepublish-review-2026-09-23-0800.json",
     "reviewCommitSha": "974dadb9c707637fceecab051c633605cc70f612",
@@ -191,7 +194,13 @@
       "unresolvedDisagreements": 0
     },
     "productionMutation": false,
-    "updatedAt": "2026-09-22T19:49:00+08:00"
+    "updatedAt": "2026-09-22T19:49:00+08:00",
+    "prepublishGate": {
+      "runId": 35726702971,
+      "conclusion": "failure",
+      "checkedAt": "2026-09-22T20:22:00+08:00",
+      "reason": "Semantic decisions cover all 8 compact-handoff candidates, but all 16 sourceChecks mislabeled Crossref/OpenAlex machine health as publisher live checks. Publisher live-source evidence must be corrected before ready_to_publish."
+    }
   },
   "automaticCompactHandoffTest": {
     "result": "success",
