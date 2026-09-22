@@ -310,8 +310,201 @@ export async function readerStats(env) {
       lastOpenedAt: Number(row?.last_opened_at || 0) || null,
       summedReaderCounts,
       countersConsistent: uniquePaperReads === summedReaderCounts,
-      rawPageViewsTracked: false,
-      note: 'Counts are de-duplicated by DOI + hashed CF-Connecting-IP. Repeated opens of the same DOI from the same IP are not counted again; raw site page views are not stored in D1.',
+      rawPageViewsTracked: true,
+      note: 'Article-open counts are de-duplicated by DOI + hashed CF-Connecting-IP. Site pageviews are tracked separately in site_pageviews_v1.',
+    },
+  };
+}
+
+function cleanAnalyticsPath(value) {
+  if (typeof value !== 'string') return '/';
+  const trimmed = value.trim();
+  if (!trimmed) return '/';
+  try {
+    const url = new URL(trimmed, 'https://gallery.invalid');
+    return (url.pathname || '/').slice(0, 300);
+  } catch {
+    const path = trimmed.split(/[?#]/, 1)[0] || '/';
+    return (path.startsWith('/') ? path : `/${path}`).slice(0, 300);
+  }
+}
+
+function cleanReferrerHost(value) {
+  if (typeof value !== 'string' || !value.trim()) return '';
+  try {
+    return new URL(value.trim()).hostname.toLowerCase().replace(/^www\./, '').slice(0, 180);
+  } catch {
+    return '';
+  }
+}
+
+function analyticsDeviceType(request) {
+  const ua = request?.headers?.get?.('user-agent') || '';
+  if (/ipad|tablet|kindle|silk|playbook/i.test(ua)) return 'tablet';
+  if (/mobile|iphone|ipod|android.*mobile|windows phone/i.test(ua)) return 'mobile';
+  if (/android/i.test(ua)) return 'tablet';
+  if (ua) return 'desktop';
+  return 'other';
+}
+
+function analyticsBotRequest(request) {
+  const ua = request?.headers?.get?.('user-agent') || '';
+  return /bot|crawler|spider|slurp|headless|lighthouse|pagespeed|preview|facebookexternalhit|twitterbot|github-actions|uptime|monitor/i.test(ua);
+}
+
+function beijingDate(timestamp) {
+  return new Date(Number(timestamp) + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+function dateDaysAgoBeijing(days, now = Date.now()) {
+  const shifted = Number(now) + 8 * 60 * 60 * 1000 - Number(days) * 24 * 60 * 60 * 1000;
+  return new Date(shifted).toISOString().slice(0, 10);
+}
+
+function fillDailyTrend(rows, days, now = Date.now()) {
+  const byDate = new Map((rows || []).map(row => [String(row.beijing_date || ''), {
+    date: String(row.beijing_date || ''),
+    pv: Math.max(0, Number(row.pv || 0)),
+    uv: Math.max(0, Number(row.uv || 0)),
+  }]));
+  const result = [];
+  for (let offset = days - 1; offset >= 0; offset -= 1) {
+    const date = dateDaysAgoBeijing(offset, now);
+    result.push(byDate.get(date) || { date, pv: 0, uv: 0 });
+  }
+  return result;
+}
+
+export async function trackPageView(env, payload, request) {
+  if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
+  if (analyticsBotRequest(request)) {
+    return { status: 200, body: { accepted: false, reason: 'bot_filtered', generation: 'site-pageview-v1' } };
+  }
+
+  const actorId = await readerIpActor(env, request);
+  if (!actorId) return { status: 400, body: { error: 'visitor_ip_unavailable' } };
+  const ipHash = actorId.replace(/^ip:/, '');
+  const now = Date.now();
+  const pagePath = cleanAnalyticsPath(payload?.path);
+  const referrerHost = cleanReferrerHost(payload?.referrer);
+  const deviceType = analyticsDeviceType(request);
+  const date = beijingDate(now);
+
+  await env.DB.prepare(
+    `INSERT INTO site_pageviews_v1
+      (ip_hash, page_path, referrer_host, device_type, beijing_date, viewed_at)
+     VALUES (?, ?, ?, ?, ?, ?)`
+  ).bind(ipHash, pagePath, referrerHost, deviceType, date, now).run();
+
+  return {
+    status: 200,
+    body: {
+      accepted: true,
+      generation: 'site-pageview-v1',
+      date,
+    },
+  };
+}
+
+export async function siteAnalyticsStats(env) {
+  if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
+  const now = Date.now();
+  const today = beijingDate(now);
+  const start30 = dateDaysAgoBeijing(29, now);
+
+  const [allTime, todayRow, dailyRows, referrers, devices] = await Promise.all([
+    env.DB.prepare(
+      `SELECT
+         COUNT(*) AS pv,
+         COUNT(DISTINCT ip_hash) AS uv,
+         MIN(viewed_at) AS first_viewed_at,
+         MAX(viewed_at) AS last_viewed_at,
+         COUNT(DISTINCT CASE
+           WHEN EXISTS (SELECT 1 FROM paper_open_readers_v3 r WHERE r.ip_hash = p.ip_hash)
+           THEN p.ip_hash END) AS visitors_with_paper_open
+       FROM site_pageviews_v1 p`
+    ).first(),
+    env.DB.prepare(
+      `SELECT
+         COUNT(*) AS pv,
+         COUNT(DISTINCT ip_hash) AS uv,
+         COUNT(DISTINCT CASE
+           WHEN EXISTS (SELECT 1 FROM paper_open_readers_v3 r WHERE r.ip_hash = p.ip_hash)
+           THEN p.ip_hash END) AS visitors_with_paper_open
+       FROM site_pageviews_v1 p
+       WHERE beijing_date = ?`
+    ).bind(today).first(),
+    env.DB.prepare(
+      `SELECT beijing_date, COUNT(*) AS pv, COUNT(DISTINCT ip_hash) AS uv
+       FROM site_pageviews_v1
+       WHERE beijing_date >= ?
+       GROUP BY beijing_date
+       ORDER BY beijing_date ASC`
+    ).bind(start30).all(),
+    env.DB.prepare(
+      `SELECT
+         CASE WHEN referrer_host = '' THEN '(direct)' ELSE referrer_host END AS source,
+         COUNT(*) AS pv,
+         COUNT(DISTINCT ip_hash) AS uv
+       FROM site_pageviews_v1
+       WHERE beijing_date >= ?
+       GROUP BY referrer_host
+       ORDER BY pv DESC, uv DESC, source ASC
+       LIMIT 20`
+    ).bind(start30).all(),
+    env.DB.prepare(
+      `SELECT device_type AS device, COUNT(*) AS pv, COUNT(DISTINCT ip_hash) AS uv
+       FROM site_pageviews_v1
+       WHERE beijing_date >= ?
+       GROUP BY device_type
+       ORDER BY pv DESC, uv DESC, device ASC`
+    ).bind(start30).all(),
+  ]);
+
+  const allUv = Math.max(0, Number(allTime?.uv || 0));
+  const allWithPaperOpen = Math.max(0, Number(allTime?.visitors_with_paper_open || 0));
+  const todayUv = Math.max(0, Number(todayRow?.uv || 0));
+  const todayWithPaperOpen = Math.max(0, Number(todayRow?.visitors_with_paper_open || 0));
+  const trend30 = fillDailyTrend(dailyRows?.results || [], 30, now);
+
+  return {
+    status: 200,
+    body: {
+      generation: 'site-pageview-v1',
+      timeZone: 'Asia/Shanghai',
+      trackingStartedAt: Number(allTime?.first_viewed_at || 0) || null,
+      lastPageViewAt: Number(allTime?.last_viewed_at || 0) || null,
+      allTime: {
+        pv: Math.max(0, Number(allTime?.pv || 0)),
+        uv: allUv,
+        visitorsWithPaperOpen: allWithPaperOpen,
+        visitorsWithoutPaperOpen: Math.max(0, allUv - allWithPaperOpen),
+      },
+      today: {
+        date: today,
+        pv: Math.max(0, Number(todayRow?.pv || 0)),
+        uv: todayUv,
+        visitorsWithPaperOpen: todayWithPaperOpen,
+        visitorsWithoutPaperOpen: Math.max(0, todayUv - todayWithPaperOpen),
+      },
+      last7Days: trend30.slice(-7),
+      last30Days: trend30,
+      topReferrers30Days: (referrers?.results || []).map(row => ({
+        source: String(row.source || '(direct)'),
+        pv: Math.max(0, Number(row.pv || 0)),
+        uv: Math.max(0, Number(row.uv || 0)),
+      })),
+      devices30Days: (devices?.results || []).map(row => ({
+        device: String(row.device || 'other'),
+        pv: Math.max(0, Number(row.pv || 0)),
+        uv: Math.max(0, Number(row.uv || 0)),
+      })),
+      definitions: {
+        pv: 'One successfully recorded real browser page load.',
+        uv: 'Distinct salted CF-Connecting-IP hashes.',
+        visitorsWithoutPaperOpen: 'Site UVs whose IP hash has no paper_open_readers_v3 record.',
+        privacy: 'Raw IP addresses are never stored; referrers are reduced to hostname only and query strings are not stored.',
+      },
     },
   };
 }
