@@ -1,0 +1,51 @@
+name: Validate prepublish literature review
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/prepublish-review-gate.yml'
+      - 'scripts/validate-prepublish-review.mjs'
+      - 'shared/literature-journals.js'
+      - 'audit/unresolved-latest.json'
+      - 'audit/prepublish-review-*.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prepublish-literature-review
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Locate canonical staging review
+        id: locate
+        shell: bash
+        run: |
+          set -euo pipefail
+          changed="$(git diff-tree --no-commit-id --name-only -r HEAD | grep -E '^audit/prepublish-review-[0-9]{4}-[0-9]{2}-[0-9]{2}-(0800|1800)\.json$' || true)"
+          if [ -n "$changed" ]; then
+            review="$(printf '%s\n' "$changed" | tail -n 1)"
+          else
+            review="$(find audit -maxdepth 1 -type f -regextype posix-extended -regex '.*/prepublish-review-[0-9]{4}-[0-9]{2}-[0-9]{2}-(0800|1800)\.json' | sort | tail -n 1)"
+          fi
+          test -n "$review"
+          echo "review=$review" >> "$GITHUB_OUTPUT"
+          echo "Validating $review"
+
+      - name: Validate compact handoff and semantic staging review
+        run: node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}"
