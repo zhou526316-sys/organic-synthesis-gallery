@@ -31,7 +31,7 @@ jobs:
           mkdir -p ui-image-evidence
           git diff -- src/user-ui tests > ui-image-evidence/integration.diff
           sha256sum src/user-ui/*.ts tests/*status* tests/mobile-interaction.spec.ts > ui-image-evidence/source-sha256.txt
-          zip -q ui-image-evidence/tested-source.zip src/user-ui/*.ts tests/*status* tests/mobile-interaction.spec.ts
+          zip -q ui-image-evidence/tested-source.zip src/user-ui/*.ts tests/*status* tests/mobile-interaction.spec.ts docs/status-images.md
       - name: Install frontend and pinned browser test dependencies
         run: |
           npm install --no-audit --no-fund
