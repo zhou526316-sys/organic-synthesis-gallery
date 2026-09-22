@@ -1,0 +1,47 @@
+name: Tampermonkey 2.2.20 release workbench
+on:
+  push:
+    branches: [release/tampermonkey-2.2.20]
+    paths: ['.github/workflows/tm220-release-workbench.yml', 'scripts/finalize-tm220-release.py', 'scripts/test-tm220-release.mjs']
+permissions:
+  contents: write
+concurrency:
+  group: tm220-release-workbench
+  cancel-in-progress: false
+jobs:
+  release-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Integrate only reviewed media code using three-way merge
+        run: |
+          set -euo pipefail
+          SOURCE=4746f9edb970995039e95dfa21a4da442b843733
+          BASE=$(git merge-base HEAD "$SOURCE")
+          paths=(public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs cloudflare/scripts/build-live-toc-demand-queue.mjs cloudflare/worker/src/media.js cloudflare/worker/src/media-write.js cloudflare/worker/src/local-captures.js scripts/test-media-identity-v220.mjs scripts/test-tm-stage-first.mjs scripts/test-tm-paired-capture.mjs)
+          if ! grep -Fq "var VERSION = '6.2.20';" public/toc-mainline.user.js; then
+            git diff "$BASE" "$SOURCE" -- "${paths[@]}" > "$RUNNER_TEMP/tm220-reviewed.patch"
+            git apply --3way --index "$RUNNER_TEMP/tm220-reviewed.patch"
+          fi
+          if [ -f scripts/finalize-tm220-release.py ]; then python3 scripts/finalize-tm220-release.py; fi
+          git diff --check
+      - name: Preserve exact integrated source for release review
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm220-integration"
+          tar -cf "$RUNNER_TEMP/tm220-integration/source.tar" public cloudflare/worker/src cloudflare/worker/package.json cloudflare/scripts shared scripts .github/workflows package.json index.html src audit/publication-release-state.json
+          git diff HEAD --stat > "$RUNNER_TEMP/tm220-integration/diff-stat.txt"
+          git rev-parse HEAD > "$RUNNER_TEMP/tm220-integration/head.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm220-integration
+          path: ${{ runner.temp }}/tm220-integration/
+          retention-days: 3
