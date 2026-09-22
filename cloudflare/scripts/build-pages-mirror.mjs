@@ -214,7 +214,10 @@ async function mirrorMedia() {
     mediaSource = 'published-pages-fallback';
   }
   if (!manifest?.items || typeof manifest.items !== 'object' || Object.keys(manifest.items).length === 0) {
-    throw new Error('Neither Worker nor published Pages provides a non-empty media-index.json.');
+    console.warn('Neither Worker nor published Pages currently has verified media. Publishing a valid empty media baseline while the authenticated browser repopulates TOC/figure assets.');
+    manifest = { version: 2, generatedAt: Date.now(), items: {} };
+    mediaBase = SOURCE;
+    mediaSource = 'empty-media-baseline';
   }
 
   await rm(MEDIA_DIR, { recursive: true, force: true });
