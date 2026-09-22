@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.20
+// @version      6.2.21
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -25,6 +25,8 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @grant        GM_listValues
+// @grant        GM_getTab
+// @grant        GM_saveTab
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
@@ -37,7 +39,8 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.20';
+  var VERSION = '6.2.21';
+  // NIGHT_RELEASE_V220: paired, checkpointed, serial browser capture.
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -145,19 +148,18 @@ function embeddedJobDois(value) {
   }
 
   async function bindPublisherCaptureJob(job) {
-    var match = String(location.hash || '').match(/(?:^#|&)osg-job=([a-z0-9-]{16,80})(?:&|$)/i);
-    var binding = '';
-    try {
-      if (match) sessionStorage.setItem(P + 'tab-job-binding', match[1]);
-      binding = sessionStorage.getItem(P + 'tab-job-binding') || '';
-    } catch (_) {}
-    if (!job.jobId || binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
-    for (var i = 0; i < 8; i += 1) {
-      try { return assertBoundCaptureJob(job); }
-      catch (error) {
-        if (String(error.message) !== 'page_doi_unverified' || i === 7) throw error;
-        await sleep(400);
-      }
+    if(typeof GM_getTab==='function'){
+      var tab=await readPersistentTab(),bound=tab.osgBoundCapture;
+      if(!bound||bound.jobId!==job.jobId||bound.doi!==job.doi||bound.version!==VERSION)throw new Error('capture_tab_job_mismatch');
+      sessionStorage.setItem(P+'tab-job-binding',bound.jobId);
+    } else {
+      // Standalone fixture/older API fallback still requires a nonce carried by this tab.
+      var match=String(location.hash||'').match(/(?:^#|&)osg-job=([a-z0-9-]{16,80})(?:&|$)/i);
+      if(match)sessionStorage.setItem(P+'tab-job-binding',match[1]);
+    }
+    for(var i=0;i<10;i+=1){
+      try{return assertBoundCaptureJob(job);}
+      catch(error){if(String(error.message)!=='page_doi_unverified'||i===9)throw error;await sleep(500);}
     }
   }
 
@@ -1560,8 +1562,8 @@ function embeddedJobDois(value) {
         byteLength: image.byteLength
       });
       return Object.assign({}, result, {
-        staged: true, imported: false, published: false,
-        publicationState: 'pending_verified_promotion'
+        staged: true, imported: result.apiAvailable===true, published: false,
+        publicationState: result.apiAvailable===true?'api_available':'pending_verified_promotion'
       });
     } catch (error) {
       pushTrace(trace, {
@@ -1693,10 +1695,10 @@ function embeddedJobDois(value) {
   async function runPublisherJob(job) {
     assertBoundCaptureJob(job);
     var token=writeToken(),trace=[],cache=new Map();
-    var checkpoint=readCheckpoint(job.doi);checkpoint.figures=checkpoint.figures||{};
-    if(checkpoint.toc&&checkpoint.toc.status==='stored'&&Date.now()-checkpoint.updatedAt<6*60*60*1000)job.captureToc=false;
     job.publisher=job.publisher||publisherForDoi(job.doi);
     job.captureDeadline=Date.now()+6*60*1000;
+    var checkpoint=readCaptureCheckpoint(job.doi);
+    if(checkpoint.toc&&checkpoint.toc.kind==='official')job.captureToc=false;
     var result={status:'failed',reason:'',toc:{status:job.captureToc===false?'already_available':'pending'},figures:{status:'pending',discovered:0,stored:0,failed:0,items:[]},figuresImported:0,figuresStaged:0,published:false};
     pushTrace(trace,{stage:'job',event:'start',status:'running',url:location.href,message:'v'+VERSION+';paired_capture=1;need='+String(job.mediaNeed)});
     try {
@@ -1709,8 +1711,8 @@ function embeddedJobDois(value) {
           var best=await acquireBestVisual(job,candidates,trace,cache,'toc');
           if (best) {
             var receipt=await uploadCapture(job,best.candidate,best.image,trace,token);
-            result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl};
-            checkpoint.toc=result.toc;saveCheckpoint(job.doi,checkpoint);
+            result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl,apiAvailable:receipt.apiAvailable===true};
+            checkpoint.toc={kind:best.candidate.kind,contentHash:receipt.contentHash,sourceUrl:best.candidate.url};saveCaptureCheckpoint(job.doi,checkpoint);
           } else result.toc={status:'not_found',reason:'no_usable_official_or_figure1'};
         } catch(error) {
           if (/doi_mismatch|stale|unbound|user_aborted/.test(String(error.message))) throw error;
@@ -1722,30 +1724,27 @@ function embeddedJobDois(value) {
       result.figures.discovered=groups.size;
       var labels=Array.from(groups.keys());
       // Twenty semantic figures per article, not twenty variants of the same image.
-      var downloadedThisVisit=0;
+      var newlyProcessed=0;
       for (var i=0;i<labels.length;i+=1) {
+        if(checkpoint.figures[labels[i]]){result.figures.resumed=(result.figures.resumed||0)+1;continue;}
+        if(newlyProcessed>=20){result.figures.limitReached=true;break;}
+        newlyProcessed+=1;
         if (Date.now()>job.captureDeadline) {result.figures.limitReached=true;break;}
         var label=labels[i];
-        var saved=checkpoint.figures[label];
-        if(saved&&saved.contentHash&&saved.sourceUrl&&groups.get(label).some(function(c){return c.url===saved.sourceUrl;})) {
-          result.figures.items.push(Object.assign({},saved,{status:'already_staged'}));result.figures.stored+=1;continue;
-        }
-        if(downloadedThisVisit>=20){result.figures.limitReached=true;break;}
-        downloadedThisVisit+=1;
         try {
           var chosen=await acquireBestVisual(job,groups.get(label),trace,cache,'figure');
           if (!chosen) throw new Error('no_usable_figure_variant');
           var stored=await uploadArticleFigure(job,chosen.candidate,chosen.image,trace,token,i);
           result.figures.items.push({label:label,status:'staged',quality:chosen.quality.quality,width:chosen.image.width,height:chosen.image.height,sourceUrl:chosen.candidate.url,contentHash:stored.contentHash});
-          result.figures.stored+=1;result.figuresStaged+=1;
-          checkpoint.figures[label]=result.figures.items[result.figures.items.length-1];saveCheckpoint(job.doi,checkpoint);
+          result.figures.stored+=1;result.figuresStaged+=1;result.figuresImported+=stored.apiAvailable===true?1:0;
+          checkpoint.figures[label]={contentHash:stored.contentHash,sourceUrl:chosen.candidate.url,apiAvailable:stored.apiAvailable===true};saveCaptureCheckpoint(job.doi,checkpoint);
         } catch(error) {
           if (/doi_mismatch|stale|unbound|user_aborted/.test(String(error.message))) throw error;
           result.figures.failed+=1;
           result.figures.items.push({label:label,status:'failed',reason:String(error.message)});
         }
       }
-      if (result.figures.stored+result.figures.failed<labels.length) result.figures.limitReached=true;
+      if(labels.some(function(label){return !checkpoint.figures[label];}))result.figures.limitReached=true;
       result.figures.status=!labels.length?'not_found':result.figures.failed||result.figures.limitReached?'partial':'staged';
       var tocOk=result.toc.status==='stored'||result.toc.status==='already_available';
       result.status=tocOk && result.figures.status==='staged'?'success':tocOk||result.figures.stored?'partial':'failed';
@@ -1780,14 +1779,14 @@ function embeddedJobDois(value) {
     var now = Date.now();
     var lease = GM_getValue(LEASE_KEY, null);
     if (lease && Number(lease.expiresAt || 0) > now && lease.owner !== CONTROLLER_ID) return false;
-    GM_setValue(LEASE_KEY, { owner: CONTROLLER_ID, expiresAt: now + 90000 });
+    GM_setValue(LEASE_KEY, { owner: CONTROLLER_ID, expiresAt: now + 300000 });
     return true;
   }
 
   function renewLease() {
     var lease = GM_getValue(LEASE_KEY, null);
     if (!lease || lease.owner !== CONTROLLER_ID) return false;
-    GM_setValue(LEASE_KEY, { owner: CONTROLLER_ID, expiresAt: Date.now() + 90000 });
+    GM_setValue(LEASE_KEY, { owner: CONTROLLER_ID, expiresAt: Date.now() + 300000 });
     return true;
   }
 
@@ -1859,75 +1858,82 @@ function embeddedJobDois(value) {
 
   async function waitForResult(job,tab) {
     var started=Date.now();
-    while(Date.now()-started<8*60*1000) {
+    while(Date.now()-started<9*60*1000){
       if(!renewLease())throw new Error('controller_lease_lost');
-      if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false) return {doi:job.doi,jobId:job.jobId,status:'aborted',reason:'user_aborted',finishedAt:nowIso()};
+      if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)return {doi:job.doi,jobId:job.jobId,status:'aborted',reason:'user_aborted',finishedAt:nowIso()};
       var result=GM_getValue(resultKey(job.doi),null);
-      if(result&&result.jobId===job.jobId&&result.version===VERSION&&result.finishedAt) return result;
+      if(result&&result.jobId===job.jobId&&result.version===VERSION&&result.finishedAt)return result;
       var hb=currentPublisherHeartbeat();
-      if(Date.now()-started>60000 && (!hb||hb.jobId!==job.jobId)) return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
+      if(Date.now()-started>150000&&(!hb||hb.jobId!==job.jobId))return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
       var progress=GM_getValue(progressKey(job.doi),null);
-      if(progress&&/auth_wait|challenge_wait/.test(progress.status))badge('等待出版社验证：'+job.doi,'#92400e');
+      if(progress&&progress.jobId===job.jobId&&/auth_wait|challenge_wait/.test(progress.status))badge('出版社需要登录或验证，将暂缓该站点：'+job.doi,'#92400e');
       await sleep(1000);
     }
     return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
   }
 
   async function controllerRun() {
-    if (!isGalleryPage() || globalThis.__OSG_PAIRED_CONTROLLER_BUSY__) return;
-    if (GM_getValue(ENABLED_KEY,true)===false||isAbortRequested()) {badge('媒体抓取已暂停','#6b7280');return;}
-    if (!writeToken()) {badge('请保留并配置原有 R2 写入令牌','#991b1b');return;}
-    if (!acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
+    if(!isGalleryPage()||globalThis.__OSG_PAIRED_CONTROLLER_BUSY__)return;
+    if(GM_getValue(ENABLED_KEY,true)===false||isAbortRequested()){badge('媒体抓取已暂停','#6b7280');return;}
+    if(!writeToken()){badge('保留原有设置；需要有效的 R2 写入令牌','#991b1b');return;}
+    if(!acquireLease()){scheduleNightContinuation(60000,'另一个控制页正在运行；本页等待，不重复领任务');return;}
     globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=true;
-    var renew=setInterval(renewLease,15000),summary=null;
-    try {
-      var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging')throw new Error('capture_server_upgrade_pending');
+    var renew=setInterval(renewLease,20000),summary=null;
+    try{
+      var server=await getJson(CAPTURE_INDEX_URL+'?capabilities=1&ts='+Date.now());
+      if(server.captureVersion!==VERSION||server.verifiedPublication!==true)throw new Error('worker_capture_release_not_ready');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var media=await getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json?ts='+Date.now());
-      var jobs=pairedJobs(queue,media);
-      var generation=VERSION+':paired:'+String(queue.mediaGeneration); // Stable across metadata-only queue refreshes.
-      function eligible(job) {
-        var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
-        if (prior && prior.version===VERSION && prior.status==='success') return false;
-        if (prior && !overnightRetryEligible(prior,Date.now())) return false;
-        return true;
-      }
-      var available=jobs.filter(eligible),batch=selectBatchJobs(available,batchSize());
-      summary={version:VERSION,queueGeneratedAt:queue.generatedAt,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,tocStored:0,figuresStaged:0,published:0,results:[]};
+      var jobs=pairedJobs(queue,media),generation=stableCaptureGeneration(queue);
+      // A reloaded controller can acknowledge its surviving task before creating another.
+      var orphan=GM_getValue(ACTIVE_JOB_KEY,null);
+      if(orphan&&orphan.captureVersion===VERSION){
+        var age=Date.now()-Date.parse(orphan.startedAt||'');
+        if(age>=0&&age<9*60*1000){
+          var survived=await waitForResult(orphan,null);
+          storeNightOutcome(orphan,generation,survived);
+        }
+        if(GM_getValue(ACTIVE_JOB_KEY,null)?.jobId===orphan.jobId)GM_deleteValue(ACTIVE_JOB_KEY);
+      } else if(orphan)GM_deleteValue(ACTIVE_JOB_KEY);
+      var available=jobs.filter(function(j){return nightRetryState(j,generation).eligible;});
+      var batch=selectBatchJobs(available,batchSize());
+      summary={version:VERSION,queueGeneratedAt:queue.generatedAt,mediaGeneration:queue.mediaGeneration,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,tocStored:0,figuresStaged:0,apiAvailableFigures:0,published:0,results:[]};
       GM_setValue(SUMMARY_KEY,summary);
-      for (var i=0;i<batch.length;i+=1) {
+      for(var i=0;i<batch.length;i+=1){
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
-        var priorAttempt=GM_getValue(attemptKey(batch[i].doi,generation,'figures'),null);
+        if(!nightRetryState(batch[i],generation).eligible)continue;
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt});
+        var saved=readCaptureCheckpoint(job.doi);if(saved.toc?.kind==='official')job.captureToc=false;
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
-        badge('TOC＋正文图 '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
+        badge('连续抓取 '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result;
-        try {
-          tab=GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true});
+        try{
+          var launcher='https://'+GALLERY_HOST+GALLERY_PATH+'capture-launch.html#osg-job='+encodeURIComponent(job.jobId);
+          tab=GM_openInTab(launcher,{active:GM_getValue(P+'night-mode',false)===true||job.publisher==='wiley',insert:true,setParent:true});
           result=await waitForResult(job,tab);
-        } catch(error) {result={doi:job.doi,jobId:job.jobId,version:VERSION,status:'failed',reason:String(error.message),finishedAt:nowIso()};}
-        finally {try{if(tab&&tab.close)tab.close();}catch(_){} GM_deleteValue(ACTIVE_JOB_KEY);}
-        result.version=VERSION;
-        result.retryCount=Number(priorAttempt&&priorAttempt.retryCount||0)+1;
+        }catch(error){result={doi:job.doi,jobId:job.jobId,version:VERSION,status:'failed',reason:String(error.message),finishedAt:nowIso()};}
+        finally{
+          var active=GM_getValue(ACTIVE_JOB_KEY,null);
+          if(active&&active.jobId===job.jobId)GM_deleteValue(ACTIVE_JOB_KEY);
+          try{if(tab&&tab.close)tab.close();}catch(_){}
+        }
+        storeNightOutcome(job,generation,result);
         summary.results.push(result);summary[result.status]=(summary[result.status]||0)+1;
-        summary.tocStored+=result.toc&&result.toc.status==='stored'?1:0;
-        summary.figuresStaged+=Number(result.figuresStaged||0);
-        GM_setValue(attemptKey(job.doi,generation,'figures'),result);GM_setValue(SUMMARY_KEY,summary);
+        summary.tocStored+=result.toc?.status==='stored'?1:0;
+        summary.figuresStaged+=Number(result.figuresStaged||0);summary.apiAvailableFigures+=Number(result.figuresImported||0);
+        GM_setValue(SUMMARY_KEY,summary);
         if(result.status==='aborted')break;
-        await sleep(3500);
+        if(/(?:upload_http_|fetch_upload_http_)(401|403)|write_token_missing/.test(String(result.reason))){GM_setValue(ENABLED_KEY,false);break;}
+        await sleep(5000);
       }
       summary.finishedAt=nowIso();GM_setValue(SUMMARY_KEY,summary);
-      badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；完整抓取 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'（暂存不等于发布）','#374151');
-      if(jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
-        if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
-        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
-      }
-    } catch(error) {
-      badge('媒体主线暂缓：'+String(error.message)+'；60 秒后检查重连','#991b1b');
-      if(!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {clearTimeout(nextBatchTimer);nextBatchTimer=setTimeout(controllerRun,60000);}
-    }
-    finally {clearInterval(renew);globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=false;var lease=GM_getValue(LEASE_KEY,null);if(lease&&lease.owner===CONTROLLER_ID)GM_deleteValue(LEASE_KEY);}
+      var pending=jobs.map(function(j){return nightRetryState(j,generation);});
+      var canRun=pending.some(function(p){return p.eligible;});
+      var waits=pending.filter(function(p){return p.nextAt;}).map(function(p){return p.nextAt-Date.now();});
+      var delay=canRun?NEXT_BATCH_DELAY_MS:waits.length?Math.min.apply(null,waits):30*60*1000;
+      scheduleNightContinuation(delay,'本批 TOC '+summary.tocStored+'；正文图保存 '+summary.figuresStaged+'，API可读 '+summary.apiAvailableFigures+'。'+(canRun?'约12秒后继续。':waits.length?'待重试项目冷却中，稍后自动检查。':'当前队列已处理，定期检查新增。'));
+    }catch(error){scheduleNightContinuation(60000,'抓取暂缓，60秒后重试：'+String(error.message).slice(0,120));}
+    finally{clearInterval(renew);globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=false;var lease=GM_getValue(LEASE_KEY,null);if(lease&&lease.owner===CONTROLLER_ID)GM_deleteValue(LEASE_KEY);}
   }
 
   async function publisherBoot() {
@@ -1939,8 +1945,8 @@ function embeddedJobDois(value) {
     try {
       await bindPublisherCaptureJob(job);
     } catch (error) {
-      // Do not complete or overwrite the active job from an unrelated tab.
-      await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
+      // A stale/manual tab cannot overwrite the current task's report or receipt.
+      GM_setValue(P+'last-guard-rejection',{at:nowIso(),reason:String(error.message),page:sanitizeDiagnosticUrl(location.href)});
       return;
     }
     writePublisherHeartbeat(job, 'active_job_seen');
@@ -1962,6 +1968,7 @@ function embeddedJobDois(value) {
   }
 
   function installMenu() {
+    GM_registerMenuCommand('启动夜间连续抓取（TOC＋正文图）',function(){GM_setValue(P+'night-mode',true);GM_deleteValue(ABORT_KEY);GM_setValue(ENABLED_KEY,true);if(isGalleryPage())controllerRun();else window.open('https://'+GALLERY_HOST+GALLERY_PATH,'_blank');});
     GM_registerMenuCommand('设置 R2 写入令牌', function () {
       var value = window.prompt('输入 BRIDGE_WRITE_TOKEN。只保存在本机 Tampermonkey 存储，不会写入 Git/R2 日志。', '');
       if (value === null) return;
@@ -1987,7 +1994,6 @@ function embeddedJobDois(value) {
     GM_registerMenuCommand('立即运行媒体抓取队列', function () {
       GM_deleteValue(ABORT_KEY);
       GM_setValue(ENABLED_KEY, true);
-      GM_deleteValue(LEASE_KEY);
       if (isGalleryPage()) controllerRun();
       else window.open('https://' + GALLERY_HOST + GALLERY_PATH, '_blank');
     });
@@ -1998,7 +2004,6 @@ function embeddedJobDois(value) {
     GM_registerMenuCommand('继续媒体抓取主线', function () {
       GM_deleteValue(ABORT_KEY);
       GM_setValue(ENABLED_KEY, true);
-      GM_deleteValue(LEASE_KEY);
       if (isGalleryPage()) {
         setTimeout(controllerRun, 100);
       } else {
@@ -2152,6 +2157,7 @@ function embeddedJobDois(value) {
       var state=pageState(job,trace);
       if (state.auth || state.challenge) {
         GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:state.auth?'auth_wait':'challenge_wait',at:nowIso()});
+        if(Date.now()-started>20000)throw new Error(state.auth?'publisher_login_required':'publisher_challenge_required');
         await sleep(2000); continue;
       }
       toc=collectCandidates(job,trace,document,location.href,'paired_dom',true);
@@ -2178,26 +2184,6 @@ function embeddedJobDois(value) {
     return result;
   }
 
-
-  function overnightRetryEligible(prior, now) {
-    if (!prior) return true;
-    if (prior.status==='success') return false;
-    var elapsed=now-Date.parse(prior.finishedAt||0);
-    var count=Number(prior.retryCount||1);
-    if (count>=3 && elapsed<12*60*60*1000) return false;
-    if (prior.figures && prior.figures.status==='staged' && (prior.toc||{}).status!=='failed') return elapsed>=6*60*60*1000;
-    return elapsed>=Math.min(count*30,180)*60*1000;
-  }
-  function checkpointKey(doi) { return P+'verified-capture:'+VERSION+':1790082000000:'+normalizeDoi(doi); }
-  function readCheckpoint(doi) {
-    var stored=GM_getValue(checkpointKey(doi),null);
-    return stored&&stored.doi===normalizeDoi(doi)&&stored.version===VERSION?stored:{doi:normalizeDoi(doi),version:VERSION,figures:{}};
-  }
-  function saveCheckpoint(doi, value) {
-    value.doi=normalizeDoi(doi);value.version=VERSION;value.updatedAt=Date.now();
-    GM_setValue(checkpointKey(doi),value);
-  }
-
   function pairedJobs(queue,media) {
     if (!Array.isArray(queue.articles) || queue.articles.length!==Number(queue.webpageDoiCount) || Number(queue.mediaGeneration)!==1790082000000) throw new Error('paired_queue_requires_current_complete_registry');
     var seen=new Set();
@@ -2210,6 +2196,92 @@ function embeddedJobDois(value) {
       return Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),mediaNeed:'toc+figures',state:official?'figure_gap':'no_visual',captureToc:!official,allowFigureOne:!official});
     });
   }
+
+  function stableCaptureGeneration(queue) {
+    return VERSION + ':paired:' + String(queue.mediaGeneration);
+  }
+
+  function captureCheckpointKey(doi) {
+    return P + 'checkpoint:' + VERSION + ':1790082000000:' + normalizeDoi(doi);
+  }
+
+  function readCaptureCheckpoint(doi) {
+    var state=GM_getValue(captureCheckpointKey(doi),null);
+    return state && state.doi===normalizeDoi(doi) && state.version===VERSION ? state : {doi:normalizeDoi(doi),version:VERSION,figures:{},toc:null};
+  }
+
+  function saveCaptureCheckpoint(doi,state) {
+    state.doi=normalizeDoi(doi);state.version=VERSION;state.updatedAt=nowIso();
+    GM_setValue(captureCheckpointKey(doi),state);
+  }
+
+  function readPersistentTab() {
+    return new Promise(function(resolve,reject){
+      if(typeof GM_getTab!=='function') {reject(new Error('tampermonkey_tab_permission_missing'));return;}
+      var timer=setTimeout(function(){reject(new Error('tampermonkey_tab_read_timeout'));},5000);
+      GM_getTab(function(tab){clearTimeout(timer);resolve(tab||{});});
+    });
+  }
+
+  async function launchBoundPublisherTab() {
+    var id=(String(location.hash).match(/osg-job=([a-z0-9-]{16,80})/i)||[])[1];
+    var job=GM_getValue(ACTIVE_JOB_KEY,null);
+    if(!job||job.jobId!==id||job.captureVersion!==VERSION||isAbortRequested())throw new Error('capture_launcher_stale');
+    if(typeof GM_saveTab!=='function')throw new Error('tampermonkey_tab_permission_missing');
+    var tab=await readPersistentTab();
+    tab.osgBoundCapture={doi:job.doi,jobId:id,version:VERSION};
+    GM_saveTab(tab);
+    for(var i=0;i<20;i+=1){
+      var saved=await readPersistentTab();
+      if(saved.osgBoundCapture && saved.osgBoundCapture.jobId===id){
+        var active=GM_getValue(ACTIVE_JOB_KEY,null);
+        if(!active||active.jobId!==id||isAbortRequested())throw new Error('capture_launcher_stale');
+        location.replace(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(id));
+        return;
+      }
+      await sleep(100);
+    }
+    throw new Error('tampermonkey_tab_save_unverified');
+  }
+
+  function nightRetryState(job,generation) {
+    var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
+    var pub=GM_getValue(P+'publisher-pause:'+job.publisher,null);
+    var now=Date.now();
+    if(pub&&Number(pub.until)>now)return {eligible:false,nextAt:Number(pub.until)};
+    if(prior&&prior.version===VERSION){
+      if(prior.status==='success')return {eligible:false,done:true};
+      if(Number(prior.nextRetryAt)>now)return {eligible:false,nextAt:Number(prior.nextRetryAt)};
+    }
+    return {eligible:true};
+  }
+
+  function storeNightOutcome(job,generation,result) {
+    var key=attemptKey(job.doi,generation,'figures'),prior=GM_getValue(key,null);
+    result.version=VERSION;
+    result.attemptCount=(prior&&prior.version===VERSION?Number(prior.attemptCount||0):0)+1;
+    var reason=String(result.reason||'')+' '+JSON.stringify(result.figures?.items||[]);
+    var delay=result.status==='success'?0:result.status==='partial'?2*60*60*1000:30*60*1000;
+    if(result.attemptCount>=3&&result.status!=='success')delay=6*60*60*1000;
+    if(/publisher_(?:login|challenge)|auth_not_completed|challenge_not_completed|(?:http_|http\s+)(?:403|429)/i.test(reason)){
+      var until=Date.now()+60*60*1000;
+      GM_setValue(P+'publisher-pause:'+job.publisher,{until:until,reason:reason.slice(0,160)});
+      delay=Math.max(delay,60*60*1000);
+    }
+    if(/capture_client_upgrade_required|capture_source_evidence_missing|media_source_doi_mismatch|page_doi_mismatch|capture_figure_identity_invalid/.test(reason))delay=6*60*60*1000;
+    result.nextRetryAt=result.status==='aborted'?Date.now():Date.now()+delay;
+    GM_setValue(key,result);
+    return result;
+  }
+
+  function scheduleNightContinuation(delay,message) {
+    if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
+    if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)return;
+    if(message)badge(message,'#374151');
+    nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},Math.max(12000,Math.min(30*60*1000,delay||12000)));
+  }
+
+  if(isGalleryPage() && location.pathname.endsWith('/capture-launch.html')) { launchBoundPublisherTab().catch(function(e){document.body.textContent='任务未启动：'+String(e.message);}); return; }
 
   installMenu();
 

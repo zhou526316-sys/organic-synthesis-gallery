@@ -2,12 +2,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import { webcrypto } from 'node:crypto';
+import {inspectBrowserImage,publishVerifiedBrowserMedia,fullDigest} from '../cloudflare/worker/src/verified-browser-media.js';
 
 const normalizeDoi = value => {
   const s = String(value || '').toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//, '').trim();
   return /^10\.\d{4,9}\/\S+$/.test(s) ? s : null;
 };
-const ctx = vm.createContext({ URL, Request, Response, TextEncoder, TextDecoder, atob, btoa, crypto: webcrypto, console, normalizeDoi });
+const ctx = vm.createContext({ URL, Request, Response, TextEncoder, TextDecoder, atob, btoa, crypto: webcrypto, console, normalizeDoi, inspectBrowserImage,publishVerifiedBrowserMedia,fullDigest });
 const file = fs.readFileSync('cloudflare/worker/src/local-captures.js', 'utf8');
 vm.runInContext(file.replace(/^import .*;\n/gm, '').replace(/^export /gm, ''), ctx);
 const local = vm.runInContext('({captureBelongsToDoi,captureIntakeError,importLocalCapture,importStagedArticleFigure,promoteStagedArticleFigures})', ctx);
@@ -17,7 +18,7 @@ const doi = '10.1021/acscatal.6c05065';
 const other = '10.1021/acscatal.6c05381';
 const page = 'https://pubs.acs.org/doi/' + doi;
 const image = 'https://acs.silverchair-cdn.com/acs/content_public/journal/accacs/pap/10.1021_acscatal.6c05065/1/m.png';
-const good = { doi, articleUrl: page, sourceUrl: image, pageDoi: doi, captureVersion: '6.2.20', jobId: '12345678-1234-1234-1234-123456789012' };
+const good = { doi, articleUrl: page, sourceUrl: image, pageDoi: doi, captureVersion: '6.2.21', jobId: '12345678-1234-1234-1234-123456789012' };
 check('same DOI ACS metadata', () => assert.equal(local.captureBelongsToDoi(good, doi), true));
 check('correct page cannot mask foreign ACS asset', () => assert.equal(local.captureBelongsToDoi({ ...good, sourceUrl: image.replace('6c05065', '6c05381') }, doi), false));
 check('foreign page cannot mask correct asset', () => assert.equal(local.captureBelongsToDoi({ ...good, articleUrl: page.replace('6c05065', '6c05381') }, doi), false));
@@ -41,10 +42,10 @@ check('quarantined staged image cannot be laundered through promotion', () => { 
 const browser = fs.readFileSync('public/toc-mainline.user.js', 'utf8');
 const start = browser.indexOf('function embeddedJobDois(');
 const end = browser.indexOf('  function candidateBelongsToJob(', start);
-let live = { doi, jobId: good.jobId, captureVersion: '6.2.20' };
+let live = { doi, jobId: good.jobId, captureVersion: '6.2.21' };
 let binding = good.jobId;
 let meta = [];
-const bctx = vm.createContext({ URL, normalizeDoi, VERSION: '6.2.20', P: 'osg-toc-v6:', ACTIVE_JOB_KEY: 'active', location: { href: page, hash: '#osg-job=' + good.jobId }, GM_getValue: () => live, sessionStorage: { getItem: () => binding, setItem: (_key, value) => { binding = value; } }, document: { querySelectorAll: () => meta }, sleep: async () => {} });
+const bctx = vm.createContext({ URL, normalizeDoi, VERSION: '6.2.21', P: 'osg-toc-v6:', ACTIVE_JOB_KEY: 'active', location: { href: page, hash: '#osg-job=' + good.jobId }, GM_getValue: () => live, sessionStorage: { getItem: () => binding, setItem: (_key, value) => { binding = value; } }, document: { querySelectorAll: () => meta }, sleep: async () => {} });
 vm.runInContext(browser.slice(start, end), bctx);
 const guard = vm.runInContext('assertBoundCaptureJob', bctx);
 check('bound publisher tab passes', () => assert.equal(guard({ ...live }, image), doi));

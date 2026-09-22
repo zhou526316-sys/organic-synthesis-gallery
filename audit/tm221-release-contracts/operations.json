@@ -1,0 +1,10 @@
+{
+  "delete": [
+    ".github/workflows/tm220-live-validation.yml"
+  ],
+  "update": [
+    ".github/workflows/github-pages.yml",
+    ".github/workflows/toc-publisher-adapters-ci.yml",
+    ".github/workflows/tm-night-live-acceptance.yml"
+  ]
+}

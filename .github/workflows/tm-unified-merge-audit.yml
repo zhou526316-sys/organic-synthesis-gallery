@@ -1,0 +1,43 @@
+name: Audit unified Tampermonkey release merge
+on:
+  push:
+    branches: [integration/tm220-final-unified]
+    paths: ['.github/workflows/tm-unified-merge-audit.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Attempt ordinary three-way merge and preserve exact conflict evidence only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin 2e2aa23e99434ced71e285250f5e8269cb60fbd8
+          mkdir -p "$RUNNER_TEMP/tm-merge-audit"
+          git merge --no-commit --no-ff 2e2aa23e99434ced71e285250f5e8269cb60fbd8 > "$RUNNER_TEMP/tm-merge-audit/merge.txt" 2>&1 || true
+          git ls-files -u > "$RUNNER_TEMP/tm-merge-audit/unmerged.txt"
+          git diff --name-only --diff-filter=U > "$RUNNER_TEMP/tm-merge-audit/conflicts.txt"
+          python3 - <<'PY'
+          import json,os,pathlib,subprocess
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'tm-merge-audit'
+          paths=(out/'conflicts.txt').read_text().splitlines()
+          report={'sourceHead':'2e2aa23e99434ced71e285250f5e8269cb60fbd8','baseHead':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'conflicts':paths,'productionWrites':0}
+          for path in paths:
+            for stage in [1,2,3]:
+              result=subprocess.run(['git','show',':'+str(stage)+':'+path],capture_output=True)
+              if result.returncode==0:
+                p=out/('stage'+str(stage))/path;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(result.stdout)
+          (out/'report.json').write_text(json.dumps(report,indent=2))
+          print('TM_UNIFIED_MERGE_AUDIT '+json.dumps(report))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tm-unified-merge-audit
+          path: ${{ runner.temp }}/tm-merge-audit/
+          include-hidden-files: true
+          retention-days: 3
