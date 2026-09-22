@@ -10,11 +10,20 @@ export async function isolate(context: BrowserContext): Promise<void> {
     const request = route.request();
     const url = request.url();
     if (url.startsWith('http://127.0.0.1:4173/') || url.startsWith('blob:') || url.startsWith('data:')) { await route.continue(); return; }
-    const headers = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'GET,POST,OPTIONS' };
+    // Synthetic cross-origin responses must satisfy browser CORS checks too.
+    // Keep the page-error assertions; do not mistake a fixture error for an app error.
+    const headers = {
+      'access-control-allow-origin': request.headers().origin || 'http://127.0.0.1:4173',
+      'access-control-allow-credentials': 'true',
+      'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization',
+      'access-control-allow-methods': 'GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS',
+      'vary': 'Origin',
+    };
+    if (request.method() === 'OPTIONS') { await route.fulfill({ status: 204, headers }); return; }
     const body = url.includes('/reader-counts') ? { counts: {}, count: 0 }
       : url.includes('/integrations') ? { auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }
       : { items: [], generatedAt: Date.now() };
-    await route.fulfill({ status: request.method() === 'OPTIONS' ? 204 : 200, headers, contentType: 'application/json', body: request.method() === 'OPTIONS' ? '' : JSON.stringify(body) });
+    await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify(body) });
   });
 }
 export async function open(page: Page, width = 390): Promise<Locator> {
