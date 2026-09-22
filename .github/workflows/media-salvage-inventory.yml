@@ -1,0 +1,39 @@
+name: Read media salvage inventory
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/media-salvage-inventory.yml'
+      - 'cloudflare/scripts/audit-media-salvage.py'
+      - 'audit/automation-triggers/media-salvage-inventory.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: media-salvage-inventory
+  cancel-in-progress: false
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read only existing D1 media tables and R2 indexes
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: python3 cloudflare/scripts/audit-media-salvage.py
+      - name: Preserve sanitized candidate inventory
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: media-salvage-inventory-${{ github.run_id }}
+          path: ${{ runner.temp }}/media-salvage/*.json
+          retention-days: 7
+          if-no-files-found: error
+      - name: Remove runner-only evidence copy
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/media-salvage"
