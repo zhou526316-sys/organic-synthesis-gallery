@@ -47,6 +47,9 @@ assert.ok(auditSource.includes('blocked-source-coverage-anomaly'), 'Severe closu
 assert.ok(auditSource.includes('closureCoverageAnomalies.length === 0'), 'verifiedThrough eligibility must require healthy closure-day source coverage');
 assert.ok(auditSource.includes('loadReviewedHistory'), 'Audit must load historical review decisions for DOI-level regression checks');
 assert.ok(auditSource.includes('historicalCoverageLosses'), 'Audit must expose historical DOI coverage losses');
+assert.ok(auditSource.includes("audit/unresolved-latest.json"), 'Compact semantic-review handoff must be emitted for Scheduled Tasks');
+assert.ok(auditSource.includes('const reviewInput = {'), 'Audit must construct a compact semantic-review input');
+assert.ok(auditSource.includes('AUDIT_REVIEW_INPUT'), 'Audit must report compact review-input generation in logs');
 assert.ok(auditSource.includes('blocked-historical-coverage-loss'), 'Known DOI disappearance must block closure eligibility');
 assert.ok(auditSource.includes('closureHistoricalCoverageLosses.length === 0'), 'verifiedThrough eligibility must require zero closure-day historical DOI losses');
 assert.ok(auditSource.includes('.map(compactCandidate)'), 'All unresolved DOI differences must flow into review output');
