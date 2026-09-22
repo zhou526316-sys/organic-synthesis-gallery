@@ -11,9 +11,7 @@ assert "var VERSION = '6.2.20';" in Path('public/toc-mainline.user.js').read_tex
 result=subprocess.run(['git','merge','--no-commit','--no-ff',PIN],capture_output=True,text=True)
 conflicts=set(git('diff','--name-only','--diff-filter=U').splitlines())
 assert conflicts==EXPECTED, json.dumps({'unexpectedConflicts':sorted(conflicts),'mergeOutput':result.stdout[-2000:]})
-# These exact differences were inspected from all three stages in run35756658596.
-# The consolidated implementation retains checkpoints/retries, adds persistent-tab binding,
-# actual-byte publication and a capability handshake on an existing public endpoint.
+# Exact differences inspected from all three stages in run35756658596.
 for name in sorted(conflicts):
     Path(name).write_bytes(subprocess.check_output(['git','show',':3:'+name]))
     subprocess.check_call(['git','add',name])
@@ -23,10 +21,8 @@ assert 'node scripts/validate-pages-literature-authorization.mjs' in Path('.gith
 changed=git('diff','--name-only','HEAD').splitlines()
 allowed_public={'public/toc-mainline.user.js','public/toc-demand-live.json','public/capture-launch.html'}
 assert all(not n.startswith('public/') or n in allowed_public for n in changed),changed
-# No duplicate live contract for the earlier staging-only build.
 old=Path('.github/workflows/tm220-live-validation.yml')
 if old.exists():old.unlink()
-# Forward-only release number avoids publishing two incompatible scripts as 2.2.20.
 versioned=[
  'public/toc-mainline.user.js','cloudflare/scripts/build-bridge-loader.mjs',
  'cloudflare/scripts/build-live-toc-demand-queue.mjs','cloudflare/worker/src/local-captures.js',
@@ -39,25 +35,22 @@ versioned=[
 for name in versioned:
     p=Path(name)
     if p.exists():p.write_text(p.read_text().replace('6.2.20','6.2.21').replace('2.2.20','2.2.21'))
-# The old dedicated capability endpoint must not contradict the new verified-publication intake.
 p=Path('cloudflare/worker/src/index.js');text=p.read_text()
 text=text.replace("mode:'verified-staging'","mode:'verified-browser-publication'").replace("mode: 'verified-staging'","mode: 'verified-browser-publication'")
 text=text.replace('publishedAutomatically:false','publishedAutomatically:true').replace('publishedAutomatically: false','publishedAutomatically: true')
 p.write_text(text)
-# Retain the existing XML entity/CSS hardening from the deployed staging intake as well.
+# Preserve the deployed SVG entity/CSS hardening, in the actual byte inspector.
 p=Path('cloudflare/worker/src/verified-browser-media.js');text=p.read_text()
-needle="function svgInfo(bytes) {\n  const text=new TextDecoder().decode(bytes);"
-assert needle in text
-text=text.replace(needle,needle+"\n  if (/&#(?:x[0-9a-f]+|\\d+);|\\\\/i.test(text)) throw new Error('svg_encoded_reference_rejected');",1)
+needle="  if (type==='image/svg+xml') {\n    const text=new TextDecoder().decode(bytes);"
+assert text.count(needle)==1
+text=text.replace(needle,needle+"\n    if (/&#(?:x[0-9a-f]+|\\d+);|\\\\/i.test(text)) return null;",1)
 p.write_text(text)
-# Put exact release workflow proposals in ordinary blobs. An authorized connector applies
-# these later; a workflow token never edits workflow definitions or circumvents gates.
 out=Path('audit/tm221-release-contracts');out.mkdir(parents=True,exist_ok=True)
 for name in ['github-pages.yml','toc-publisher-adapters-ci.yml','tm-night-live-acceptance.yml']:
     (out/name).write_text(Path('.github/workflows',name).read_text())
 (out/'operations.json').write_text(json.dumps({'delete':['.github/workflows/tm220-live-validation.yml'],'update':['.github/workflows/'+n for n in ['github-pages.yml','toc-publisher-adapters-ci.yml','tm-night-live-acceptance.yml']]},indent=2))
-# All functional merged changes become a normal main-derived integration commit, not a
-# history rewrite. Resetting the index preserves the reviewed working-tree merge.
+# Persist functional changes as a normal main-derived commit. Authorized connector applies
+# workflow proposals separately; no Actions-token workflow mutation or release-gate bypass.
 subprocess.check_call(['git','reset','--mixed','HEAD'])
 subprocess.check_call(['git','restore','--source=HEAD','--worktree','--','.github/workflows'])
 print('UNIFIED_TM221_ASSEMBLED '+json.dumps({'source':PIN,'resolvedConflicts':sorted(conflicts),'captureVersion':'6.2.21','productionMediaWrites':0,'quarantineCutoverUnchanged':1790082000000}))
