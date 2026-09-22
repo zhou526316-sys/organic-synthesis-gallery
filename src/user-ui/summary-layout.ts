@@ -1,6 +1,5 @@
 // Summary panels are deliberately larger than anchored management drawers,
 // but keep margins around the viewport and never request fullscreen.
-let activeDrawer: WeakRef<HTMLElement> | undefined;
 let layoutFrame = 0;
 
 function fitSummaryDrawer(drawer: HTMLElement, host: DOMRect): void {
@@ -23,20 +22,21 @@ function queueViewportLayout(): void {
   if (layoutFrame) return;
   layoutFrame = requestAnimationFrame(() => {
     layoutFrame = 0;
-    const drawer = activeDrawer?.deref();
-    if (!drawer?.isConnected) { activeDrawer = undefined; return; }
-    const root = drawer.getRootNode();
-    if (root instanceof ShadowRoot) fitSummaryDrawer(drawer, root.host.getBoundingClientRect());
+    // Discover only currently open panels; do not retain detached DOM nodes
+    // or require WeakRef, which is outside the project's ES2020 type target.
+    document.querySelectorAll<HTMLElement>('gallery-paper-actions[data-drawer-open="true"]').forEach(host => {
+      const drawer = host.shadowRoot?.querySelector<HTMLElement>('.drawer.summary-drawer');
+      if (drawer?.isConnected) fitSummaryDrawer(drawer, host.getBoundingClientRect());
+    });
   });
 }
 
 // Visual viewport changes need not arrive with window.resize. Remeasure the
-// live host after responsive layout settles, without retaining closed drawers.
+// current host after responsive layout settles without retaining closed drawers.
 window.visualViewport?.addEventListener('resize', queueViewportLayout);
 window.visualViewport?.addEventListener('scroll', queueViewportLayout);
 
 export function positionSummaryDrawer(drawer: HTMLElement, host: DOMRect): void {
-  activeDrawer = new WeakRef(drawer);
   fitSummaryDrawer(drawer, host);
   queueViewportLayout();
 }
