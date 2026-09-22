@@ -150,6 +150,24 @@
     return out;
   }
 
+  async function verifyPublisherPageIdentity(job) {
+    var expected = normalizeDoi(job && job.doi);
+    if (!expected) return { ok: false, reason: 'job_doi_missing', identities: [] };
+    var identities = [];
+    for (var attempt = 0; attempt < 24; attempt += 1) {
+      identities = currentPageIdentityDois();
+      if (identities.length) break;
+      await sleep(250);
+    }
+    if (!identities.length) {
+      return { ok: false, reason: 'page_doi_unverified', identities: [] };
+    }
+    if (identities.indexOf(expected) < 0) {
+      return { ok: false, reason: 'page_doi_mismatch', identities: identities };
+    }
+    return { ok: true, reason: 'page_doi_match', identities: identities };
+  }
+
   function publisherForDoi(doi) {
     if (doi.indexOf('10.1021/') === 0) return 'acs';
     if (doi.indexOf('10.1002/') === 0) return 'wiley';
@@ -2638,6 +2656,53 @@
     });
     writePublisherHeartbeat(job, 'publisher_script_started');
     await sleep(900);
+
+    var identity = await verifyPublisherPageIdentity(job);
+    if (!identity.ok) {
+      var reason = identity.reason + (identity.identities.length ? ':' + identity.identities.join(',') : '');
+      GM_setValue(progressKey(job.doi), {
+        status: identity.reason,
+        at: nowIso(),
+        url: location.href,
+        version: VERSION,
+        host: location.hostname,
+        expectedDoi: normalizeDoi(job.doi),
+        pageDois: identity.identities
+      });
+      GM_setValue(resultKey(job.doi), {
+        doi: normalizeDoi(job.doi),
+        status: 'failed',
+        reason: reason,
+        finishedAt: nowIso()
+      });
+      GM_setValue(traceKey(job.doi), {
+        doi: normalizeDoi(job.doi),
+        status: 'failed',
+        reason: reason,
+        trace: [{
+          seq: 1,
+          at: nowIso(),
+          stage: 'page_identity',
+          event: 'verify',
+          status: identity.reason,
+          httpStatus: 0,
+          contentType: '',
+          url: sanitizeDiagnosticUrl(location.href),
+          message: 'expected=' + normalizeDoi(job.doi) + ';page=' + identity.identities.join(','),
+          candidateKind: '',
+          candidateSource: '',
+          candidateScore: 0,
+          imageWidth: 0,
+          imageHeight: 0,
+          byteLength: 0
+        }],
+        finishedAt: nowIso()
+      });
+      writePublisherHeartbeat(job, identity.reason);
+      return;
+    }
+
+    writePublisherHeartbeat(job, 'page_doi_verified');
     await runPublisherJob(job);
   }
 

@@ -12,7 +12,7 @@ const TAMPERMONKEY_REPORT_HISTORY_LIMIT = 12;
 const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_DIAGNOSTIC_BYTES = 1_500_000;
 
-function embeddedNatureDoi(value) {
+function decodedIdentityText(value) {
   let decoded = String(value || '');
   for (let i = 0; i < 2; i += 1) {
     try {
@@ -23,14 +23,31 @@ function embeddedNatureDoi(value) {
       break;
     }
   }
-  const match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
-  return match ? normalizeDoi(match[0]) : '';
+  return decoded.toLowerCase();
+}
+
+function embeddedKnownDois(value) {
+  const decoded = decodedIdentityText(value);
+  const patterns = [
+    /10\.1021\/[a-z0-9._-]+/ig,
+    /10\.1002\/[a-z0-9._-]+/ig,
+    /10\.1038\/[a-z0-9._-]+/ig,
+    /10\.1126\/[a-z0-9._-]+/ig,
+    /10\.1039\/[a-z0-9._-]+/ig,
+    /10\.1016\/[a-z0-9._()-]+/ig,
+    /10\.31635\/[a-z0-9._-]+/ig,
+  ];
+  return [...new Set(patterns.flatMap(pattern => (decoded.match(pattern) || []).map(normalizeDoi).filter(Boolean)))];
 }
 
 function captureBelongsToDoi(item, doi) {
-  if (!doi || !doi.startsWith('10.1038/')) return true;
-  const embedded = embeddedNatureDoi(item?.sourceUrl || '');
-  return !embedded || embedded === doi;
+  const target = normalizeDoi(doi || '');
+  if (!target) return false;
+  const embedded = [...new Set([
+    ...embeddedKnownDois(item?.articleUrl || ''),
+    ...embeddedKnownDois(item?.sourceUrl || ''),
+  ])];
+  return embedded.length === 0 || embedded.includes(target);
 }
 
 function sniffImageType(bytes, declaredType = '') {
@@ -412,6 +429,16 @@ export async function importStagedArticleFigure(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  if (!captureBelongsToDoi({ articleUrl: payload?.articleUrl, sourceUrl: payload?.sourceUrl }, doi)) {
+    return {
+      status: 409,
+      body: {
+        error: 'Staged figure source DOI does not match capture DOI.',
+        code: 'staged_media_source_doi_mismatch',
+        doi,
+      },
+    };
+  }
   const image = parseImageData(payload?.imageData);
   if (!image) return { status: 400, body: { error: 'A valid imageData payload is required.' } };
 
@@ -502,7 +529,11 @@ export async function getStagedArticleFigures(request, env) {
   const index = await readArticleFigureStageIndex(env);
   const url = new URL(request.url);
   const doi = normalizeDoi(url.searchParams.get('doi') || '');
-  let items = Object.values(index.items || {});
+  const rawItems = Object.values(index.items || {});
+  let items = rawItems.filter(item => {
+    const itemDoi = normalizeDoi(item?.doi);
+    return Boolean(itemDoi && captureBelongsToDoi(item, itemDoi));
+  });
   if (doi) items = items.filter(item => normalizeDoi(item?.doi) === doi);
   items.sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
   return {
@@ -511,6 +542,7 @@ export async function getStagedArticleFigures(request, env) {
       version: Number(index.version || 1),
       updatedAt: Number(index.updatedAt || 0),
       count: items.length,
+      invalidFiltered: rawItems.length - items.length,
       items: items.slice(0, 2000).map(item => ({
         ...item,
         imageUrl: item?.r2Key ? publicMediaUrl(request, item.r2Key) : undefined,
@@ -605,8 +637,8 @@ export async function importLocalCapture(request, env, payload) {
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
   const kind = String(payload?.kind || '').toLowerCase();
   if (!['official', 'figure1'].includes(kind)) return { status: 400, body: { error: 'kind must be official or figure1.' } };
-  if (!captureBelongsToDoi({ sourceUrl: payload?.sourceUrl }, doi)) {
-    return { status: 400, body: { error: 'Nature sourceUrl DOI does not match capture DOI.' } };
+  if (!captureBelongsToDoi({ articleUrl: payload?.articleUrl, sourceUrl: payload?.sourceUrl }, doi)) {
+    return { status: 409, body: { error: 'Local capture source DOI does not match capture DOI.', code: 'local_media_source_doi_mismatch' } };
   }
   const image = parseImageData(payload?.imageData);
   if (!image) return { status: 400, body: { error: 'A valid imageData payload is required.' } };
@@ -678,6 +710,67 @@ export async function getLocalCaptureIndex(request, env) {
   };
 }
 
+
+export async function purgeCrossDoiLocalMedia(env, payload = {}) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
+  const dryRun = payload?.dryRun === true;
+  const [stageIndex, localIndex] = await Promise.all([
+    readArticleFigureStageIndex(env),
+    readIndex(env),
+  ]);
+
+  const badStage = Object.entries(stageIndex.items || {}).filter(([, item]) => {
+    const doi = normalizeDoi(item?.doi);
+    return !doi || !captureBelongsToDoi(item, doi);
+  });
+  const badLocal = Object.entries(localIndex.items || {}).filter(([, item]) => {
+    const doi = normalizeDoi(item?.doi);
+    return !doi || !captureBelongsToDoi(item, doi);
+  });
+  const affectedDois = [...new Set([...badStage, ...badLocal]
+    .map(([, item]) => normalizeDoi(item?.doi))
+    .filter(Boolean))];
+
+  if (!dryRun) {
+    for (const [identity, item] of badStage) {
+      if (item?.r2Key) {
+        try { await env.MEDIA.delete(item.r2Key); } catch {}
+      }
+      delete stageIndex.items[identity];
+    }
+    for (const [identity, item] of badLocal) {
+      if (item?.r2Key) {
+        try { await env.MEDIA.delete(item.r2Key); } catch {}
+      }
+      delete localIndex.items[identity];
+    }
+    if (badStage.length) {
+      stageIndex.updatedAt = Date.now();
+      await env.MEDIA.put(ARTICLE_FIGURE_STAGE_INDEX_KEY, JSON.stringify(stageIndex), {
+        httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
+      });
+    }
+    if (badLocal.length) {
+      localIndex.updatedAt = Date.now();
+      await env.MEDIA.put(INDEX_KEY, JSON.stringify(localIndex), {
+        httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
+      });
+    }
+  }
+
+  return {
+    status: 200,
+    body: {
+      dryRun,
+      affectedDois,
+      summary: {
+        stagedRows: badStage.length,
+        localCaptureRows: badLocal.length,
+        affectedDois: affectedDois.length,
+      },
+    },
+  };
+}
 
 export async function importLocalDiagnostics(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
