@@ -146,6 +146,12 @@ if (reviewTime >= DOUBLE_PASS_EFFECTIVE_AT) {
       `discovery: candidateCount missing for publisher check ${journal}`, failures);
     assert(Number.isFinite(row.syntheticTitleCount) && row.syntheticTitleCount >= 0,
       `discovery: syntheticTitleCount missing for publisher check ${journal}`, failures);
+    assert(String(row.sourceType || '').trim().length >= 3,
+      `discovery: sourceType missing for publisher check ${journal}`, failures);
+    if (status === 'checked') {
+      assert(String(row.sourcePage || '').trim().length >= 8,
+        `discovery: sourcePage missing for checked publisher source ${journal}`, failures);
+    }
     if (status !== 'checked') {
       assert(String(row.reason || '').trim().length >= 16,
         `discovery: blocked/unavailable publisher check lacks reason for ${journal}`, failures);
