@@ -136,5 +136,43 @@
     "closureDate": "2026-09-21",
     "status": "awaiting_semantic_review",
     "note": "Fresh 16-journal machine audit succeeded via push-trigger bridge. The 36 unresolved DOI candidates still require complete two-pass semantic review before this evening run may close."
-  }
+  },
+  "publicationPolicy": {
+    "updatedAt": "2026-09-22T19:12:00+08:00",
+    "timeZone": "Asia/Shanghai",
+    "productionReleaseSlots": [
+      "08:00",
+      "18:00"
+    ],
+    "machineAuditSafetySchedule": [
+      "06:55",
+      "16:55"
+    ],
+    "primaryPreReviewSchedule": [
+      "07:05",
+      "17:05"
+    ],
+    "preReleaseRecoverySchedule": [
+      "07:35",
+      "17:35"
+    ],
+    "offSlotProductionLiteratureWritesAllowed": false,
+    "stagingReviewPattern": "audit/prepublish-review-YYYY-MM-DD-HHMM.json",
+    "missedSlotBehavior": "Keep previous verified production snapshot; record publication_missed/incomplete_review; carry unresolved work to the next fixed release slot.",
+    "mediaPolicy": "TOC/Graphical Abstract/Figure1/body figures remain Tampermonkey/VPN Bridge only."
+  },
+  "lastAutomationBridgeTest": {
+    "testRunId": "20260922-185906-auto-bridge",
+    "result": "success",
+    "finishedAt": "2026-09-22T19:03:00+08:00",
+    "triggerCommitSha": "91d5cf325b4dc7454c67a8d5491174e4ffcddfa6",
+    "auditRunId": 35718952993,
+    "auditGeneratedAt": "2026-09-22T11:02:53.955Z",
+    "sourceRecords": 547,
+    "galleryDois": 512,
+    "missingFromGallery": 0,
+    "unresolved": 0,
+    "note": "Scheduled Task -> GitHub trigger push -> GitHub Node audit -> fresh audit persistence succeeded without local Node or workflow_dispatch."
+  },
+  "nextPublicationSlot": "2026-09-23T08:00:00+08:00"
 }
