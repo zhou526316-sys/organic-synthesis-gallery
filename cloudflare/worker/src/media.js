@@ -381,7 +381,7 @@ export async function mediaBatch(request, env, payload) {
 export async function mediaInventory(request, env, payload) {
   const input = Array.isArray(payload?.dois) ? payload.dois : [];
   const media = await loadMediaRows(env, input);
-  await ensureRepairRows(env, media.dois);
+  if (payload?.readOnly !== true) await ensureRepairRows(env, media.dois);
   const items = media.dois.map(doi => inventoryItem(
     doi,
     media.tocByDoi.get(doi),
