@@ -1,29 +1,29 @@
 {
-  "generatedAt": "2026-09-22T10:54:03.285Z",
+  "generatedAt": "2026-09-22T15:00:13.404Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 130,
+  "liveLocalCaptures": 9,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
   "mediaInventoryCount": 512,
   "webpageDoiCount": 512,
-  "mediaRecordCount": 504,
-  "visibleGapTotal": 10,
-  "demandTotal": 10,
-  "noVisual": 10,
-  "fallbackOnlyNeedsOfficialUpgrade": 63,
-  "missingOfficialTotal": 73,
-  "figureGapTotal": 371,
-  "zeroFigureGapTotal": 235,
-  "lowResolutionFigureGapTotal": 68,
-  "unknownQualityFigureGapTotal": 1,
-  "sparseFigureGapTotal": 67,
+  "mediaRecordCount": 9,
+  "visibleGapTotal": 503,
+  "demandTotal": 503,
+  "noVisual": 503,
+  "fallbackOnlyNeedsOfficialUpgrade": 2,
+  "missingOfficialTotal": 505,
+  "figureGapTotal": 512,
+  "zeroFigureGapTotal": 512,
+  "lowResolutionFigureGapTotal": 0,
+  "unknownQualityFigureGapTotal": 0,
+  "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 7,
-    "wiley": 0,
-    "nature": 3,
-    "science": 0,
+    "acs": 351,
+    "wiley": 55,
+    "nature": 94,
+    "science": 3,
     "rsc": 0,
     "elsevier": 0,
     "ccs": 0,
@@ -32,109 +32,248 @@
   "upgradeByPublisher": {
     "acs": 0,
     "wiley": 0,
-    "nature": 61,
-    "science": 2,
+    "nature": 2,
+    "science": 0,
     "rsc": 0,
     "elsevier": 0,
     "ccs": 0,
     "other": 0
   },
   "byJournal": {
-    "JACS": 2,
-    "JOC": 4,
-    "Organic Letters": 1,
-    "Nature Chemistry": 1,
-    "Nature Communications": 1,
-    "Nature Synthesis": 1
+    "ACS Catalysis": 38,
+    "JACS": 102,
+    "Organic Letters": 211,
+    "Nature": 9,
+    "Nature Catalysis": 12,
+    "Nature Chemistry": 11,
+    "Nature Communications": 47,
+    "Nature Synthesis": 15,
+    "Science": 3,
+    "Angew": 55
   },
   "sample": [
     {
-      "doi": "10.1021/jacs.6c13517",
-      "journal": "JACS",
-      "title": "Nonalternating Chain Walking Polymerization Enables In-Chain Ketone Polyolefin Elastomers",
-      "date": "2026-09-22",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/jacs.6c14159",
-      "journal": "JACS",
-      "title": "Pd-Catalyzed Enantioselective [3+3] Annulation of Vinyldiazos with 2-Iodoanilines Enabled by Sadphos",
-      "date": "2026-09-22",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01270",
-      "journal": "JOC",
-      "title": "Synthesis of Conjugated Bromoenynoates via Electrophilic Bromination of Enynyl Hydrazones",
-      "date": "2026-09-22",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01295",
-      "journal": "JOC",
-      "title": "Site-Selective C(sp3)–H Bromination via Radical Relay",
-      "date": "2026-09-22",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01302",
-      "journal": "JOC",
-      "title": "Borane-Catalyzed Divergent Hydrogenative and Silylative Reduction of Quinolinium Salts",
-      "date": "2026-09-22",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01469",
-      "journal": "JOC",
-      "title": "Selectfluor-Mediated Radical Cyclization of N-Arylbicyclo[1.1.0]butane-1-carboxamides with Diaryldiselenides",
-      "date": "2026-09-22",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03386",
-      "journal": "Organic Letters",
-      "title": "Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment",
-      "date": "2026-09-22",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1038/s41557-026-02258-8",
-      "journal": "Nature Chemistry",
-      "title": "De novo synthesis of threofuranoses via a triple-carbonylation cascade of aldehydes",
-      "date": "2026-09-22",
-      "publisher": "nature",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1038/s41467-026-77981-4",
-      "journal": "Nature Communications",
-      "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
+      "doi": "10.1021/acscatal.6c05381",
+      "journal": "ACS Catalysis",
+      "title": "A Sequence-to-Scaffold Platform Enables Programmable Carrier-Supported Biocatalysis for Nucleoside Analog Synthesis",
       "date": "2026-09-21",
-      "publisher": "nature",
+      "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
     },
     {
-      "doi": "10.1038/s44160-026-01155-9",
-      "journal": "Nature Synthesis",
-      "title": "Enantio- and diastereoselective synthesis of multi-helical nanographenes",
-      "date": "2026-09-22",
-      "publisher": "nature",
+      "doi": "10.1021/acscatal.6c04593",
+      "journal": "ACS Catalysis",
+      "title": "Glycopeptide Assembly via Selective Manganese(I)-Catalyzed C–H Alkenylations in Organic Media and in Water",
+      "date": "2026-09-18",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05065",
+      "journal": "ACS Catalysis",
+      "title": "Synergistic Effects of Brønsted Acid Site and Lewis Acid Site of Nb2O5 on the Direct Amination of Alcohols",
+      "date": "2026-09-18",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05029",
+      "journal": "ACS Catalysis",
+      "title": "Kinetic Resolution of Ferrocenyl Halide Racemates via Palladium/Chiral Norbornene Cooperative Catalysis",
+      "date": "2026-09-15",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05787",
+      "journal": "ACS Catalysis",
+      "title": "Ligand-Controlled Zinc Catalysis for Selective Transformations of Alcohols",
+      "date": "2026-09-15",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05293",
+      "journal": "ACS Catalysis",
+      "title": "Chemoselective Aerobic C3-Hydroxylation of Tetrahydroquinolines Catalyzed by a Hydrophobic Ni–Mn Hybrid Interface",
+      "date": "2026-09-14",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": "user_observed_no_image"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04996",
+      "journal": "ACS Catalysis",
+      "title": "Enantioconvergent Assembly of Chiral Difluoromethyl Stereocenters by Nickel-Catalyzed Reductive Cross-Coupling",
+      "date": "2026-09-13",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05422",
+      "journal": "ACS Catalysis",
+      "title": "DiploPhos: A Hemilabile Bisphosphine for Sterically Hindered Ni-Catalyzed Suzuki–Miyaura Couplings",
+      "date": "2026-09-12",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c02896",
+      "journal": "ACS Catalysis",
+      "title": "Diverse Bicyclic Heterocyclic Scaffolds via Palladium-Catalyzed C(sp3)–H Activation of Amides and Amines",
+      "date": "2026-09-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05675",
+      "journal": "ACS Catalysis",
+      "title": "Organocatalytic Enantioselective [3+3] Annulation toward Chromene-Fused Helicenes Bearing Central and Helical Chirality With Chiroptical Properties",
+      "date": "2026-09-10",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05106",
+      "journal": "ACS Catalysis",
+      "title": "Visible Light-Mediated Decarboxylative Annulations of Oxamic Acids and Alkynes via Hydrogen Atom Transfer",
+      "date": "2026-09-09",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05271",
+      "journal": "ACS Catalysis",
+      "title": "Enantioselective Synthesis of P(V)-Stereogenic Phosphacycles by N-Heterocyclic Carbene (NHC)-Catalyzed Desymmetric Annulation",
+      "date": "2026-09-09",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05384",
+      "journal": "ACS Catalysis",
+      "title": "Adaptive Photocatalytic Regimes Enabled by CO2·– and Two-Photon Excitation Synergy: Cyclization-Carboxylation of Aryl Halides with CO2",
+      "date": "2026-09-09",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c06151",
+      "journal": "ACS Catalysis",
+      "title": "Construction of Axial Chirality via Amino-Acid-Catalyzed Asymmetric Reductive Desymmetrization of 2-Aryl-isophthalaldehydes",
+      "date": "2026-09-09",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c04640",
+      "journal": "ACS Catalysis",
+      "title": "Suzuki–Miyaura Cross-Coupling Using Ketones for the Synthesis of Multisubstituted Alkenes",
+      "date": "2026-09-05",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05682",
+      "journal": "ACS Catalysis",
+      "title": "Intermolecular Formal [2 + 1] Cycloaddition with Sulfoxonium Ylides via Energy Transfer Photocatalysis",
+      "date": "2026-09-05",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c06367",
+      "journal": "ACS Catalysis",
+      "title": "Synthesis of Chiral Benzylamines via Nickel-Catalyzed Enantioselective C–H Alkynylation",
+      "date": "2026-09-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05002",
+      "journal": "ACS Catalysis",
+      "title": "Photoinduced Iron-Catalyzed Intermolecular Dearomative Hydroalkylation of Unactivated Indoles with Alkanes",
+      "date": "2026-08-26",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05584",
+      "journal": "ACS Catalysis",
+      "title": "Aerobic Oxidative Cascade Reaction of ortho-Alkenylphenols for Asymmetric Synthesis of Benzoxanthenones",
+      "date": "2026-08-25",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05596",
+      "journal": "ACS Catalysis",
+      "title": "Regiodivergent olefin-transfer hydrothiocarbonylation",
+      "date": "2026-08-25",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c04222",
+      "journal": "ACS Catalysis",
+      "title": "Sterically Controlled Chemoselective Synthesis of Chiral [3.3.1]-Bridged N-Heterocycles via Organocatalytic Asymmetric Multicomponent Dearomatization",
+      "date": "2026-08-24",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05099",
+      "journal": "ACS Catalysis",
+      "title": "Ir-catalyzed enantioselective nucleophilic coupling of sulfoxonium ylides with ylide retention",
+      "date": "2026-08-22",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c04974",
+      "journal": "ACS Catalysis",
+      "title": "Photochemical Cobalt-Catalyzed Selective Olefin Hydrogenation and One-Bond Transposition",
+      "date": "2026-08-14",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c04800",
+      "journal": "ACS Catalysis",
+      "title": "Metallaphotocatalytic Assembly of Unsymmetrical 1,4-Diketones via Dual Acyl Units: Divergent Initiation of Carboxylic Acids and Aldehydes",
+      "date": "2026-08-13",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c05701",
+      "journal": "ACS Catalysis",
+      "title": "Lewis-acid-catalyzed cross-coupling of electronically different bicyclo[1.1.0]butanes",
+      "date": "2026-08-13",
+      "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
     }
