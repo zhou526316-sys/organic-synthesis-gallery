@@ -71,6 +71,7 @@ A literature run is not complete merely because a scheduled task ran or because 
 ### Gate 1 — Discovery completeness
 
 - Candidate discovery is the DOI union across every configured ISSN, Crossref online/published/created, OpenAlex, and publisher live sources where accessible.
+- Beginning with reviews generated after 2026-09-22 18:00 Asia/Shanghai, the review artifact must contain a `sourceChecks` row for every active journal. Each row records `journal`, `status` (`checked`/`blocked`/`unavailable`), `candidateCount`, `syntheticTitleCount`, source page/type, and a reason when blocked/unavailable. A missing row is a quality-gate failure.
 - A source request returning HTTP 200 is not sufficient evidence of completeness. Per-journal source-family counts and cross-source ratios must be checked.
 - The seven-day machine safety tail and Crossref created/deposit rescue remain mandatory.
 - The audit must compare the current source union against DOI-level historical review decisions inside the safety tail. If a DOI that was previously reviewed disappears from the current source union without an explicit global policy exclusion, record `historicalCoverageLosses`.
