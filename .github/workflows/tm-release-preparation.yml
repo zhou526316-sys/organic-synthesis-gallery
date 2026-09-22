@@ -1,0 +1,28 @@
+name: Tampermonkey release preparation
+on:
+  push:
+    branches: [fix/media-identity-v220]
+    paths: ['.github/workflows/tm-release-preparation.yml']
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Preserve exact main and tested browser source
+        run: |
+          git fetch --depth=1 origin main
+          mkdir -p "$RUNNER_TEMP/tm-preparation/branch" "$RUNNER_TEMP/tm-preparation/main"
+          git archive HEAD public/toc-mainline.user.js cloudflare/scripts cloudflare/worker/src cloudflare/worker/wrangler.toml scripts shared .github/workflows package.json public/toc-demand-live.json docs/literature-update-protocol.md | tar -xf - -C "$RUNNER_TEMP/tm-preparation/branch"
+          git archive FETCH_HEAD public/toc-mainline.user.js cloudflare/scripts cloudflare/worker/src cloudflare/worker/wrangler.toml scripts shared .github/workflows package.json public/toc-demand-live.json docs/literature-update-protocol.md | tar -xf - -C "$RUNNER_TEMP/tm-preparation/main"
+          printf '{"main":"%s","branch":"%s"}\n' "$(git rev-parse FETCH_HEAD)" "$(git rev-parse HEAD)" > "$RUNNER_TEMP/tm-preparation/refs.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tm-release-source
+          path: ${{ runner.temp }}/tm-preparation
+          include-hidden-files: true
+          retention-days: 3

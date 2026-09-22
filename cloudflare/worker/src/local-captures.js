@@ -28,17 +28,28 @@ function decodedIdentityText(value) {
 }
 
 function embeddedKnownDois(value) {
-  const decoded = decodedIdentityText(value);
-  const patterns = [
-    /10\.1021\/[a-z0-9._-]+/ig,
-    /10\.1002\/[a-z0-9._-]+/ig,
-    /10\.1038\/[a-z0-9._-]+/ig,
-    /10\.1126\/[a-z0-9._-]+/ig,
-    /10\.1039\/[a-z0-9._-]+/ig,
-    /10\.1016\/[a-z0-9._()-]+/ig,
-    /10\.31635\/[a-z0-9._-]+/ig,
-  ];
-  return [...new Set(patterns.flatMap(pattern => (decoded.match(pattern) || []).map(normalizeDoi).filter(Boolean)))];
+  let decoded = String(value || '').split(/[?#]/, 1)[0];
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch { break; }
+  }
+  const found = new Set();
+  const pattern = /10\.(1021|1002|1038|1126|1039|1016|31635)[/_]([a-z0-9._()-]+)/ig;
+  for (const match of decoded.matchAll(pattern)) {
+    const doi = normalizeDoi('10.' + match[1] + '/' + match[2]);
+    if (doi) found.add(doi);
+  }
+  try {
+    const url = new URL(decoded);
+    if (/^(?:www\.)?nature\.com$/i.test(url.hostname)) {
+      const match = url.pathname.match(/^\/articles\/(s\d+-\d+-\d+[a-z0-9-]*)/i);
+      if (match) found.add(normalizeDoi('10.1038/' + match[1]));
+    }
+  } catch {}
+  return [...found].filter(Boolean);
 }
 
 function captureBelongsToDoi(item, doi) {
@@ -48,7 +59,16 @@ function captureBelongsToDoi(item, doi) {
     ...embeddedKnownDois(item?.articleUrl || ''),
     ...embeddedKnownDois(item?.sourceUrl || ''),
   ])];
-  return embedded.length === 0 || embedded.includes(target);
+  return embedded.every(value => value === target);
+}
+
+function captureIntakeError(payload, doi) {
+  if (payload?.captureVersion !== '6.2.20') return 'capture_client_upgrade_required';
+  if (!/^[a-z0-9-]{16,80}$/i.test(String(payload?.jobId || ''))) return 'capture_job_binding_missing';
+  if (normalizeDoi(payload?.pageDoi || '') !== doi) return 'capture_page_doi_unverified';
+  if (!safeUrl(payload?.articleUrl) || !safeUrl(payload?.sourceUrl)) return 'capture_source_evidence_missing';
+  if (!captureBelongsToDoi(payload, doi)) return 'media_source_doi_mismatch';
+  return '';
 }
 
 function sniffImageType(bytes, declaredType = '') {
@@ -430,6 +450,8 @@ export async function importStagedArticleFigure(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  const intakeError = captureIntakeError(payload, doi);
+  if (intakeError) return { status: 409, body: { code: intakeError, error: intakeError, doi } };
   if (!captureBelongsToDoi({ articleUrl: payload?.articleUrl, sourceUrl: payload?.sourceUrl }, doi)) {
     return {
       status: 409,
@@ -460,7 +482,7 @@ export async function importStagedArticleFigure(request, env, payload) {
   const previous = index.items[identity];
   const previousPixels = Math.max(0, Number(previous?.width || 0)) * Math.max(0, Number(previous?.height || 0));
   const nextPixels = width * height;
-  if (previous && previousPixels > 0 && nextPixels > 0 && previousPixels > nextPixels) {
+  if (previous && Number(previous.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(previous, doi) && previousPixels > 0 && nextPixels > 0 && previousPixels > nextPixels) {
     return {
       status: 200,
       body: {
@@ -489,6 +511,10 @@ export async function importStagedArticleFigure(request, env, payload) {
   const now = Date.now();
   index.items[identity] = {
     doi,
+    jobId: payload.jobId,
+    captureVersion: payload.captureVersion,
+    pageDoi: payload.pageDoi,
+    mediaGeneration: MEDIA_REBUILD_EPOCH,
     id: sourceId,
     label,
     caption,
@@ -567,6 +593,7 @@ export async function promoteStagedArticleFigures(request, env, payload = {}) {
   const requestedDoi = normalizeDoi(payload?.doi || '');
   const limit = Math.max(1, Math.min(100, Number(payload?.limit || 25)));
   const items = Object.entries(index.items || {})
+    .filter(([, item]) => Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(item, item?.doi))
     .filter(([, item]) => !requestedDoi || normalizeDoi(item?.doi) === requestedDoi)
     .sort((a, b) => Number(a[1]?.updatedAt || 0) - Number(b[1]?.updatedAt || 0))
     .slice(0, limit);
@@ -586,6 +613,7 @@ export async function promoteStagedArticleFigures(request, env, payload = {}) {
       const result = await importFigure(request, env, {
         doi: item.doi,
         articleUrl: item.articleUrl,
+        sourceUrl: item.sourceUrl,
         id: item.id,
         label: item.label,
         caption: item.caption,
@@ -636,6 +664,8 @@ export async function importLocalCapture(request, env, payload) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  const intakeError = captureIntakeError(payload, doi);
+  if (intakeError) return { status: 409, body: { code: intakeError, error: intakeError, doi } };
   const kind = String(payload?.kind || '').toLowerCase();
   if (!['official', 'figure1'].includes(kind)) return { status: 400, body: { error: 'kind must be official or figure1.' } };
   if (!captureBelongsToDoi({ articleUrl: payload?.articleUrl, sourceUrl: payload?.sourceUrl }, doi)) {
@@ -657,6 +687,10 @@ export async function importLocalCapture(request, env, payload) {
   const identity = `${doi}|${kind}`;
   index.items[identity] = {
     doi,
+    jobId: payload.jobId,
+    captureVersion: payload.captureVersion,
+    pageDoi: payload.pageDoi,
+    mediaGeneration: MEDIA_REBUILD_EPOCH,
     kind,
     r2Key: key,
     contentHash: hash.slice(0, 32),

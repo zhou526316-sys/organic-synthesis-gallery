@@ -330,7 +330,10 @@ async function main() {
   };
   await writeFile(path.join(OUT, 'toc-demand-summary.json'), JSON.stringify(summary, null, 2) + '\n');
   const liveQueue = {
-    version: 2,
+    version: 3,
+    pairedCaptureRegistry: true,
+    mediaGeneration: 1790082000000,
+    articles: [...papers.values()].map(paper => ({...paper, publisher: publisherFor(paper.doi)})),
     generatedAt: summary.generatedAt,
     webpageDoiCount: summary.webpageDoiCount,
     visibleGapTotal: displayGaps.length,
