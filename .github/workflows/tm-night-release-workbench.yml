@@ -1,0 +1,38 @@
+name: Night capture release workbench
+on:
+  push:
+    branches: [release/tm-220-night-run]
+    paths:
+      - '.github/workflows/tm-night-release-workbench.yml'
+      - 'scripts/apply-tm-night-release.py'
+      - 'scripts/test-tm-night-release.mjs'
+      - 'scripts/test-tm-night-browser.mjs'
+      - 'cloudflare/worker/src/verified-browser-media.js'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: tm-night-release-workbench
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Snapshot exact current sources
+        run: |
+          mkdir -p "$RUNNER_TEMP/night-source"
+          tar -cf "$RUNNER_TEMP/night-source/source.tar" public/toc-mainline.user.js public/papers.gz.b64 public/*supplement.json public/rolling-supplement.json public/total-synthesis.json public/toc-demand-live.json cloudflare/worker/src cloudflare/worker/package.json cloudflare/scripts shared scripts .github/workflows src/platform-api.ts src/static-api.ts package.json 2>/dev/null || true
+          git rev-parse HEAD > "$RUNNER_TEMP/night-source/head.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: night-main-source
+          path: ${{ runner.temp }}/night-source/
+          retention-days: 3
