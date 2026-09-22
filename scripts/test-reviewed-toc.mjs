@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {mkdtemp, mkdir, writeFile, readFile, rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
+import {gzipSync} from 'node:zlib';
+import {verifyReviewedAsset, mergeReviewedToc, trueToc} from '../cloudflare/scripts/merge-reviewed-toc.mjs';
+const bytes=Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><rect x="2" y="2" width="790" height="390" fill="white"/><text x="10" y="30">reaction overview</text></svg>');
+const hash=createHash('sha256').update(bytes).digest('hex');
+const doi='10.1021/acs.orglett.6c03147';
+const item={doi, kind:'official', approved:true, sha256:hash, contentHash:hash.slice(0,32), byteLength:bytes.length, contentType:'image/svg+xml', articleUrl:'https://pubs.acs.org/doi/'+doi, sourceUrl:'https://acs.silverchair-cdn.com/10.1021_acs.orglett.6c03147/1/m.svg', assetPath:'audit/media-recovery/assets/'+hash+'.svg', originalUpdatedAt:1789879444988};
+let passed=0;
+function test(name, fn){fn();passed++;console.log('REVIEWED_TOC_PASS '+name)}
+test('approved same-DOI vector survives byte verification',()=>assert.equal(verifyReviewedAsset(item,bytes),'svg'));
+test('wrong image-source DOI rejected',()=>assert.throws(()=>verifyReviewedAsset({...item,sourceUrl:item.sourceUrl.replace('6c03147','6c03151')},bytes),/doi_conflict/));
+test('wrong article-page DOI rejected',()=>assert.throws(()=>verifyReviewedAsset({...item,articleUrl:item.articleUrl.replace('6c03147','6c03151')},bytes),/doi_conflict/));
+test('tampered bytes rejected',()=>assert.throws(()=>verifyReviewedAsset(item,Buffer.alloc(bytes.length)),/hash_mismatch/));
+test('Figure 1 cannot be restored as official TOC',()=>assert.throws(()=>verifyReviewedAsset({...item,kind:'figure1'},bytes),/official_review_required/));
+test('fallback is never counted as official',()=>assert.equal(trueToc({available:true,imageUrl:'a.png',reason:'figure1_fallback'}),false));
+const root=await mkdtemp(path.join(tmpdir(),'toc-recovery-test-'));
+try{
+ await mkdir(path.join(root,'public/media-mirror'),{recursive:true});
+ await mkdir(path.join(root,'audit/media-recovery/assets'),{recursive:true});
+ await writeFile(path.join(root,item.assetPath),bytes);
+ const base=[{doi,journal:'Organic Letters'},...Array.from({length:120},(_,i)=>({doi:'10.1021/fixture.'+i,journal:'JACS'}))];
+ await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(base))).toString('base64'));
+ for(const name of ['total-synthesis','manual-supplement','final-audit-supplement','curated-supplement','automation-supplement','rolling-supplement']) await writeFile(path.join(root,'public/'+name+'.json'),'{"papers":[]}');
+ const plan={recoveryId:'toc-batch1-20260922',quarantineCutoverUnchanged:1790082000000,reviewedCount:1,items:[item]};
+ await writeFile(path.join(root,'audit/media-recovery/toc-batch1-manifest.json'),JSON.stringify(plan));
+ const figures={available:true,doi,figures:[{id:'scheme-1',imageUrl:'existing.png'}]};
+ await writeFile(path.join(root,'public/media-index.json'),JSON.stringify({version:2,items:{[doi]:{doi,figures}}}));
+ const result=await mergeReviewedToc(root);
+ const after=JSON.parse(await readFile(path.join(root,'public/media-index.json'),'utf8'));
+ test('only verified TOC restored',()=>assert.equal(result.restored,1));
+ test('body figures preserved byte-for-byte as metadata',()=>assert.deepEqual(after.items[doi].figures,figures));
+ test('original capture time is not rewritten',()=>assert.equal(after.items[doi].toc.originalUpdatedAt,item.originalUpdatedAt));
+ test('second merge is idempotent',()=>assert.equal(trueToc(after.items[doi].toc),true));
+ const second=await mergeReviewedToc(root);test('existing official TOC is not overwritten',()=>assert.equal(second.restored,0));
+ base[0]={doi:'10.1021/fixture.removed',journal:'Organic Letters'};
+ await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(base))).toString('base64'));
+ await writeFile(path.join(root,'public/media-index.json'),'{"version":2,"items":{}}');
+ const excluded=await mergeReviewedToc(root);test('removed card not resurrected',()=>{assert.equal(excluded.restored,0);assert.deepEqual(excluded.notPublished,[doi])});
+}finally{await rm(root,{recursive:true,force:true})}
+console.log('REVIEWED_TOC_TESTS '+JSON.stringify({passed}));
