@@ -1,6 +1,8 @@
 import { test, expect, type Page, type Locator } from '@playwright/test';
 import { open } from './status-image-fixtures';
 
+test.use({ screenshot: 'only-on-failure', trace: 'retain-on-failure' });
+
 async function summary(page: Page, width: number, withToc = true): Promise<{ actions: Locator; drawer: Locator; calls: () => number }> {
   const actions = await open(page, width);
   await actions.locator('button[data-action="close"]').click();
@@ -52,7 +54,26 @@ async function insideViewport(page: Page, drawer: Locator): Promise<void> {
   await expect.poll(async () => {
     const box = await drawer.boundingBox();
     const viewport = page.viewportSize()!;
-    return Boolean(box && box.x >= 15 && box.y >= 15 && box.x + box.width <= viewport.width - 15 && box.y + box.height <= viewport.height - 15);
+    const inside = Boolean(box && box.x >= 15 && box.y >= 15 && box.x + box.width <= viewport.width - 15 && box.y + box.height <= viewport.height - 15);
+    if (!inside) {
+      // Observe actual layout state; no style changes, retries or relaxed bounds.
+      const geometry = await drawer.evaluate(node => {
+        const root = node.getRootNode();
+        const host = root instanceof ShadowRoot ? root.host : null;
+        const v = window.visualViewport;
+        return {
+          window: { width: innerWidth, height: innerHeight, scrollX, scrollY },
+          visual: v ? { width: v.width, height: v.height, scale: v.scale, left: v.offsetLeft, top: v.offsetTop } : null,
+          document: { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight, scrollWidth: document.documentElement.scrollWidth },
+          host: host?.getBoundingClientRect().toJSON(),
+          drawer: node.getBoundingClientRect().toJSON(),
+          inlineStyle: node.getAttribute('style'),
+          hostOpen: host?.getAttribute('data-drawer-open'),
+        };
+      });
+      console.log('SUMMARY_BOUNDS_FAILURE', JSON.stringify({ viewport, box, geometry }));
+    }
+    return inside;
   }).toBe(true);
   const box = (await drawer.boundingBox())!;
   const viewport = page.viewportSize()!;
