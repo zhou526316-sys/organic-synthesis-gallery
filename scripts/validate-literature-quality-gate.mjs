@@ -142,17 +142,20 @@ if (reviewTime >= DOUBLE_PASS_EFFECTIVE_AT) {
     const status = String(row.status || '').toLowerCase();
     assert(['checked','blocked','unavailable'].includes(status),
       `discovery: invalid publisher source-check status for ${journal}`, failures);
-    assert(Number.isFinite(row.candidateCount) && row.candidateCount >= 0,
-      `discovery: candidateCount missing for publisher check ${journal}`, failures);
-    assert(Number.isFinite(row.syntheticTitleCount) && row.syntheticTitleCount >= 0,
-      `discovery: syntheticTitleCount missing for publisher check ${journal}`, failures);
     assert(String(row.sourceType || '').trim().length >= 3,
       `discovery: sourceType missing for publisher check ${journal}`, failures);
     if (status === 'checked') {
+      assert(Number.isFinite(row.candidateCount) && row.candidateCount >= 0,
+        `discovery: candidateCount missing for checked publisher source ${journal}`, failures);
+      assert(Number.isFinite(row.syntheticTitleCount) && row.syntheticTitleCount >= 0,
+        `discovery: syntheticTitleCount missing for checked publisher source ${journal}`, failures);
       assert(String(row.sourcePage || '').trim().length >= 8,
         `discovery: sourcePage missing for checked publisher source ${journal}`, failures);
-    }
-    if (status !== 'checked') {
+    } else {
+      const countKnown = row.candidateCount == null || (Number.isFinite(row.candidateCount) && row.candidateCount >= 0);
+      const synthKnown = row.syntheticTitleCount == null || (Number.isFinite(row.syntheticTitleCount) && row.syntheticTitleCount >= 0);
+      assert(countKnown, `discovery: invalid candidateCount for blocked/unavailable publisher source ${journal}`, failures);
+      assert(synthKnown, `discovery: invalid syntheticTitleCount for blocked/unavailable publisher source ${journal}`, failures);
       assert(String(row.reason || '').trim().length >= 16,
         `discovery: blocked/unavailable publisher check lacks reason for ${journal}`, failures);
       warnings.push(`publisher live source ${status}: ${journal}`);
