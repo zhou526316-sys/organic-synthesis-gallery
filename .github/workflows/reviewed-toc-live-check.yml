@@ -1,0 +1,65 @@
+name: Verify restored TOCs live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/reviewed-toc-check.json']
+permissions:
+  contents: read
+concurrency:
+  group: reviewed-toc-live-check
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read live manifest and verify every recovered image digest
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures,datetime,hashlib,json,os,pathlib,time,urllib.request
+          base='https://zhou526316-sys.github.io/organic-synthesis-gallery/'
+          def get(p):
+              req=urllib.request.Request(base+p,headers={'Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=20) as response:
+                  body=response.read(5000001)
+              if len(body)>5000000: raise ValueError('response too large')
+              return body
+          status=json.loads(get('toc-recovery-status.json?audit='+str(int(time.time()))))
+          manifest=json.loads(get('media-index.json?audit='+str(int(time.time()))))
+          assert status['recoveryId']=='toc-batch1-20260922'
+          plan=json.loads(pathlib.Path('audit/media-recovery/toc-batch1-manifest.json').read_text())
+          approved={r['doi']:r for r in plan['items']}
+          rows=[(doi,r['toc']) for doi,r in manifest['items'].items() if r.get('toc',{}).get('recoveryId')==status['recoveryId']]
+          assert len(rows)==status['restored'] and len(rows)>0, 'live recovery count mismatch'
+          def check(pair):
+              doi,toc=pair
+              try:
+                  path=toc['imageUrl']
+                  assert path.startswith('media-mirror/recovered-') and '..' not in path
+                  raw=get(path)
+                  digest=hashlib.sha256(raw).hexdigest()
+                  assert digest==toc['verifiedSha256']==approved[doi]['sha256']
+                  return {'doi':doi,'ok':True,'bytes':len(raw),'sha256':digest}
+              except Exception as error:
+                  return {'doi':doi,'ok':False,'errorType':type(error).__name__}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+              results=list(pool.map(check,rows))
+          report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'pagesOrigin':base,'recoveryStatus':status,'verifiedLiveFiles':sum(r['ok'] for r in results),'failedLiveFiles':sum(not r['ok'] for r in results),'publishedMediaRecords':len(manifest['items']),'publishedOfficialToc':sum(bool(r.get('toc',{}).get('available') and 'fallback' not in str(r.get('toc',{}).get('reason',''))) for r in manifest['items'].values()),'results':results,'mediaWrites':0,'browserRenderingVerified':False}
+          pathlib.Path(os.environ['RUNNER_TEMP'],'toc-live-verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print('TOC_LIVE_VERIFICATION '+json.dumps({k:v for k,v in report.items() if k!='results'},ensure_ascii=False))
+          assert report['failedLiveFiles']==0, 'some restored images are not accessible or differ from reviewed bytes'
+          PY
+      - name: Preserve live verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: restored-toc-live-verification
+          path: ${{ runner.temp }}/toc-live-verification.json
+          retention-days: 14
+          if-no-files-found: warn
