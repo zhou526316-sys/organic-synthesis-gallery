@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "kind": "read-only-readiness-guard-verification",
+  "checkedAt": "2026-09-22T22:09:04+08:00",
+  "context": "Main chat continuation after the 21:51 prepublish recovery report",
+  "publicationSlot": "2026-09-23T08:00:00+08:00",
+  "workflowRunId": 35738079314,
+  "jobId": 106780367769,
+  "workflowHeadSha": "34c0b1915b85ac95942599fa6511ab727ae789a2",
+  "workflowConclusion": "failure",
+  "interpretation": "Guard implementation and synthetic regressions pass; current real staging is correctly blocked by pending evidence and a snapshot outside the next morning prepublication window. This is not a successful production publication.",
+  "changesFromThisChat": {
+    "regressionTestsCommit": "709586bd840643720b8a1311f6b6ea9fd793112a",
+    "validatorCommit": "5363a4ca20f099a622d4fc9b530849ae2ece218f",
+    "workflowCommit": "89f5597c834ca589de173d50f8887543a0fcfdae",
+    "pendingEvidenceCommit": "a7c09fc75874af150f89498ddd0a8ae2d2205d83"
+  },
+  "regressionTests": {
+    "readinessCasesPassed": 7,
+    "readinessCases": [
+      "valid_pending_staging_is_not_ready",
+      "strict_mode_rejects_pending",
+      "forged_ready_flag_with_pending_fails",
+      "fully_finalized_fixture_passes_strict_mode",
+      "mismatched_latest_generation_fails",
+      "missing_discovery_health_is_not_zero",
+      "diagnostic_compact_count_mismatch_fails"
+    ],
+    "slotWindowCasesOnCurrentMainPassed": 6,
+    "slotWindowCases": [
+      "fresh_complete_staging_is_ready",
+      "record_success_is_not_pending_release_permission",
+      "previous_evening_is_not_next_morning_audit",
+      "after_slot_discovery_cannot_be_backdated",
+      "only_0800_and_1800_slots",
+      "zero_new_requires_real_publisher_proof"
+    ],
+    "executionLocation": "GitHub Actions Node runner",
+    "localNodeExecuted": false,
+    "syntheticFixturesOnly": true,
+    "semanticCorrectnessProvenByTests": false
+  },
+  "actualStagingResult": {
+    "reviewFile": "audit/prepublish-review-2026-09-23-0800.json",
+    "handoffGeneratedAt": "2026-09-22T13:37:57.398Z",
+    "unresolvedCandidates": 26,
+    "decisions": 26,
+    "includeCount": 9,
+    "excludeCount": 16,
+    "pendingCount": 1,
+    "activeJournals": 16,
+    "validationOk": true,
+    "readyToPublish": false,
+    "stagingExitCode": 0,
+    "strictReadinessExitCode": 1,
+    "readinessBlockers": ["pending_evidence", "open_evidence_gaps", "unfinalized_candidates", "staging_not_marked_ready"]
+  },
+  "actualSlotReadinessResult": {
+    "recordValidationPassed": true,
+    "semanticReady": false,
+    "snapshotFreshForSlot": false,
+    "publicationReady": false,
+    "exitCode": 1,
+    "publisherCoverageFullyVerified": false,
+    "additionalBlocker": "snapshot_not_from_target_slot_prerelease_window"
+  },
+  "pendingDois": ["10.31635/ccschem.026.202608262"],
+  "pendingEvidenceFile": "audit/prepublish-evidence/2026-09-23-0800/220447-ccschem-202608262.json",
+  "artifact": {
+    "name": "prepublish-readiness-evidence",
+    "id": 10698610054,
+    "uploadSucceeded": true,
+    "files": ["prepublish-validation.json", "prepublish-readiness.json", "prepublish-slot-readiness.json"]
+  },
+  "publicationAutomation": {
+    "promptUpdatedAt": "2026-09-22T22:05:55+08:00",
+    "scheduleChanged": false,
+    "productionSlots": ["08:00", "18:00"],
+    "strictReadinessRequired": true,
+    "previousEveningSnapshotCannotAuthorizeMorningRelease": true
+  },
+  "productionDataModifiedByThisBatch": false,
+  "canonicalReviewModifiedByThisBatch": false,
+  "coordinationStateModifiedByThisBatch": false,
+  "productionDeploymentTriggeredByThisBatch": false,
+  "productionLiveDoiCountReverifiedThisBatch": false,
+  "mediaExtractionRun": false,
+  "nextRequiredWork": "Obtain sufficient DOI-matched CCS organic products and substrate-scope evidence; refresh the date-correct prepublication snapshot tomorrow, review all newly arriving candidates and run strict readiness before the fixed 08:00 release. Do not force pending to exclude to make CI green."
+}
