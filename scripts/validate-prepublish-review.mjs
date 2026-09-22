@@ -4,8 +4,9 @@ import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 
 const ROOT = process.cwd();
 const reviewFile = process.argv[2] || process.env.PREPUBLISH_FILE;
+const requireReady = process.argv.includes('--require-ready') || process.env.PREPUBLISH_REQUIRE_READY === '1';
 if (!reviewFile) {
-  console.error('Usage: node scripts/validate-prepublish-review.mjs <audit/prepublish-review-...json>');
+  console.error('Usage: node scripts/validate-prepublish-review.mjs <audit/prepublish-review-...json> [--require-ready]');
   process.exit(2);
 }
 
@@ -15,9 +16,10 @@ const normalizeDoi = value => String(value || '').trim().toLowerCase()
   .replace(/[?#].*$/, '');
 
 const readJson = async file => JSON.parse(await readFile(path.resolve(ROOT, file), 'utf8'));
-const [review, handoff] = await Promise.all([
+const [review, handoff, latest] = await Promise.all([
   readJson(reviewFile),
   readJson('audit/unresolved-latest.json'),
+  readJson('audit/latest.json'),
 ]);
 
 const failures = [];
@@ -27,16 +29,25 @@ const check = (ok, message) => { if (!ok) failures.push(message); };
 check(Boolean(review?.handoffGeneratedAt), 'handoff: review.handoffGeneratedAt missing');
 check(review?.handoffGeneratedAt === handoff?.generatedAt,
   `handoff: review generation ${review?.handoffGeneratedAt || '-'} != compact handoff ${handoff?.generatedAt || '-'}`);
+check(Boolean(handoff?.generatedAt) && latest?.generatedAt === handoff.generatedAt,
+  'handoff: latest diagnostic and compact generation mismatch');
 
 const unresolved = Array.isArray(handoff?.unresolved) ? handoff.unresolved : [];
-check(Number(handoff?.summary?.unresolved) === unresolved.length,
+check(Array.isArray(handoff?.unresolved), 'handoff: unresolved array missing');
+check(Number.isSafeInteger(handoff?.summary?.unresolved) && handoff.summary.unresolved === unresolved.length,
   `handoff: summary.unresolved ${handoff?.summary?.unresolved} != unresolved[] length ${unresolved.length}`);
+check(Number.isSafeInteger(latest?.summary?.unresolved) && latest.summary.unresolved === unresolved.length,
+  'handoff: latest diagnostic unresolved count differs from compact candidate array');
 
 for (const key of ['criticalSourceFailures','sourceFamilyGaps','sourceCoverageAnomalies','historicalCoverageLosses']) {
-  check(Number(handoff?.discoveryGate?.[key] ?? 0) === 0, `discovery: ${key} > 0`);
+  check(Number.isSafeInteger(handoff?.discoveryGate?.[key]) && handoff.discoveryGate[key] === 0,
+    `discovery: ${key} must be an explicit integer zero, not missing or unhealthy`);
+  check(Number.isSafeInteger(latest?.summary?.[key]) && latest.summary[key] === handoff?.discoveryGate?.[key],
+    `discovery: diagnostic/compact ${key} mismatch`);
 }
 
 const expectedByDoi = new Map(unresolved.map(item => [normalizeDoi(item?.doi), item]));
+check(!expectedByDoi.has('') && expectedByDoi.size === unresolved.length, 'handoff: empty or duplicate candidate DOI');
 const decisions = Array.isArray(review?.decisions) ? review.decisions : [];
 const decisionDois = decisions.map(item => normalizeDoi(item?.doi)).filter(Boolean);
 check(decisions.length === unresolved.length,
@@ -124,8 +135,33 @@ for (const journal of activeNames) {
 
 check(sourceMap.size >= activeNames.length, 'discovery: sourceChecks does not cover all active journals');
 
+// A well-formed pending review is valid staging, but is never a release-ready review.
+const claimsReady = review?.readyToPublish === true || review?.status === 'ready_to_publish' || review?.phase === 'ready_to_publish';
+const openEvidenceGaps = review?.qualityControl?.openEvidenceGaps;
+const hasOpenEvidenceGaps = openEvidenceGaps != null && (!Number.isSafeInteger(openEvidenceGaps) || openEvidenceGaps !== 0);
+const finalized = includeCount + excludeCount === unresolved.length;
+if (claimsReady) {
+  check(pendingCount === 0, 'readiness: review claims ready_to_publish while pending decisions remain');
+  check(!hasOpenEvidenceGaps, 'readiness: review claims ready_to_publish with open/invalid evidence gaps');
+  check(review?.qualityControl?.allHandoffCandidatesFinalized !== false && finalized,
+    'readiness: review claims ready_to_publish without finalized handoff decisions');
+  check(review?.readyToPublish !== false, 'readiness: contradictory ready status and readyToPublish=false');
+}
+const validationOk = failures.length === 0;
+const readinessBlockers = [];
+if (!validationOk) readinessBlockers.push('validation_failed');
+if (pendingCount > 0) readinessBlockers.push('pending_evidence');
+if (hasOpenEvidenceGaps) readinessBlockers.push('open_evidence_gaps');
+if (!finalized || review?.qualityControl?.allHandoffCandidatesFinalized === false) readinessBlockers.push('unfinalized_candidates');
+if (!claimsReady || review?.readyToPublish === false) readinessBlockers.push('staging_not_marked_ready');
+const readyToPublish = validationOk && readinessBlockers.length === 0;
+
 const result = {
-  ok: failures.length === 0,
+  ok: validationOk && (!requireReady || readyToPublish),
+  validationOk,
+  readyToPublish,
+  validationMode: requireReady ? 'require-ready' : 'staging',
+  readinessBlockers,
   reviewFile,
   publicationSlot: review?.publicationSlot || null,
   handoffGeneratedAt: handoff?.generatedAt || null,
@@ -137,7 +173,8 @@ const result = {
   activeJournals: activeNames.length,
   failures,
   warnings,
+  note: 'Review readiness alone does not authorize an off-slot publication or prove deployment success; the fixed-slot release and production checks remain mandatory.',
 };
 
 console.log(JSON.stringify(result, null, 2));
-if (failures.length) process.exit(1);
+if (!result.ok) process.exit(1);
