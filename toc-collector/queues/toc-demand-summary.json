@@ -1,27 +1,27 @@
 {
-  "generatedAt": "2026-09-22T05:37:26.684Z",
+  "generatedAt": "2026-09-22T06:02:00.473Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 126,
+  "liveLocalCaptures": 128,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
   "mediaInventoryCount": 502,
   "webpageDoiCount": 502,
   "mediaRecordCount": 501,
-  "visibleGapTotal": 4,
-  "demandTotal": 4,
-  "noVisual": 4,
+  "visibleGapTotal": 2,
+  "demandTotal": 2,
+  "noVisual": 2,
   "fallbackOnlyNeedsOfficialUpgrade": 65,
-  "missingOfficialTotal": 69,
-  "figureGapTotal": 369,
-  "zeroFigureGapTotal": 237,
+  "missingOfficialTotal": 67,
+  "figureGapTotal": 364,
+  "zeroFigureGapTotal": 231,
   "lowResolutionFigureGapTotal": 68,
   "unknownQualityFigureGapTotal": 1,
-  "sparseFigureGapTotal": 63,
+  "sparseFigureGapTotal": 64,
   "byPublisher": {
     "acs": 1,
-    "wiley": 2,
+    "wiley": 0,
     "nature": 1,
     "science": 0,
     "rsc": 0,
@@ -41,8 +41,7 @@
   },
   "byJournal": {
     "JACS": 1,
-    "Nature Communications": 1,
-    "Angew": 2
+    "Nature Communications": 1
   },
   "sample": [
     {
@@ -60,24 +59,6 @@
       "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
       "date": "2026-09-21",
       "publisher": "nature",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1002/anie.9519061",
-      "journal": "Angew",
-      "title": "Fine Tuning of Catalyst Active Sites to Access Advanced Ultrahigh-Melting Polyolefins",
-      "date": "2026-09-21",
-      "publisher": "wiley",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1002/anie.7101768",
-      "journal": "Angew",
-      "title": "Controlled Cationic Ring-Opening Polymerization Enables Chemically Recyclable Polyacetal-Based Polyurethanes",
-      "date": "2026-09-15",
-      "publisher": "wiley",
       "state": "no_visual",
       "existingReason": ""
     }
