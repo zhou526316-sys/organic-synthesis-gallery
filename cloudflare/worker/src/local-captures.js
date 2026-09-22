@@ -11,6 +11,7 @@ const ARTICLE_FIGURE_STAGE_PREFIX = 'local-captures/article-figures/images/';
 const TAMPERMONKEY_REPORT_HISTORY_LIMIT = 12;
 const MAX_IMAGE_BYTES = 4_000_000;
 const MAX_DIAGNOSTIC_BYTES = 1_500_000;
+const MEDIA_REBUILD_EPOCH = 1790077800000;
 
 function decodedIdentityText(value) {
   let decoded = String(value || '');
@@ -532,7 +533,7 @@ export async function getStagedArticleFigures(request, env) {
   const rawItems = Object.values(index.items || {});
   let items = rawItems.filter(item => {
     const itemDoi = normalizeDoi(item?.doi);
-    return Boolean(itemDoi && captureBelongsToDoi(item, itemDoi));
+    return Boolean(itemDoi && Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(item, itemDoi));
   });
   if (doi) items = items.filter(item => normalizeDoi(item?.doi) === doi);
   items.sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
@@ -692,7 +693,7 @@ export async function getLocalCaptureIndex(request, env) {
   const rawItems = Object.values(index.items || {});
   const validItems = rawItems.filter(item => {
     const doi = normalizeDoi(item?.doi);
-    return Boolean(doi && captureBelongsToDoi(item, doi));
+    return Boolean(doi && Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(item, doi));
   });
   const items = validItems.map(item => ({
     ...item,
