@@ -113,3 +113,6 @@ console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({
 // Reuse only individually reviewed, digest-bound TOCs; do not restore the quarantined baseline.
 const { mergeReviewedToc } = await import('./merge-reviewed-toc.mjs');
 await mergeReviewedToc();
+
+const { writeRecoveryQueue } = await import('./build-tm-recovery-queue.mjs');
+await writeRecoveryQueue();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.19
+// @version      6.2.20
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.19';
+  var VERSION = '6.2.20';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -58,7 +58,7 @@
   var BATCH_SIZE_KEY = P + 'batch-size';
   var ABORT_KEY = P + 'abort-request';
   var HEARTBEAT_KEY = P + 'publisher-heartbeat';
-  var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+  var FAILURE_COOLDOWN_MS = 30 * 60 * 1000;
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
   var DEFAULT_BATCH_SIZE = 8;
@@ -95,11 +95,75 @@
     return match ? normalizeDoi(match[0]) : '';
   }
 
+function embeddedJobDois(value) {
+  let decoded = String(value || '').split(/[?#]/, 1)[0];
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch { break; }
+  }
+  const found = new Set();
+  const pattern = /10\.(1021|1002|1038|1126|1039|1016|31635)[/_]([a-z0-9._()-]+)/ig;
+  for (const match of decoded.matchAll(pattern)) {
+    const doi = normalizeDoi('10.' + match[1] + '/' + match[2]);
+    if (doi) found.add(doi);
+  }
+  try {
+    const url = new URL(decoded);
+    if (/^(?:www\.)?nature\.com$/i.test(url.hostname)) {
+      const match = url.pathname.match(/^\/articles\/(s\d+-\d+-\d+[a-z0-9-]*)/i);
+      if (match) found.add(normalizeDoi('10.1038/' + match[1]));
+    }
+  } catch {}
+  return [...found].filter(Boolean);
+}
+
+  function publisherPageDois() {
+    var ids = embeddedJobDois(location.href);
+    document.querySelectorAll('head meta[name="citation_doi"],head meta[name="dc.Identifier"],head meta[name="DC.Identifier"],head meta[property="citation_doi"],head link[rel="canonical"]').forEach(function (node) {
+      ids = ids.concat(embeddedJobDois(node.getAttribute('content') || node.getAttribute('href') || ''));
+    });
+    return Array.from(new Set(ids));
+  }
+
+  function assertBoundCaptureJob(job, sourceUrl) {
+    var live = GM_getValue(ACTIVE_JOB_KEY, null);
+    if (!job || !job.jobId || !live || live.jobId !== job.jobId || live.doi !== job.doi || job.captureVersion !== VERSION) {
+      throw new Error('capture_job_stale_or_unbound');
+    }
+    var binding = '';
+    try { binding = sessionStorage.getItem(P + 'tab-job-binding') || ''; } catch (_) {}
+    if (binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
+    var page = publisherPageDois();
+    if (!page.length) throw new Error('page_doi_unverified');
+    if (page.some(function (doi) { return doi !== normalizeDoi(job.doi); })) throw new Error('page_doi_mismatch');
+    var source = embeddedJobDois(sourceUrl || '');
+    if (source.some(function (doi) { return doi !== normalizeDoi(job.doi); })) throw new Error('media_source_doi_mismatch');
+    return normalizeDoi(job.doi);
+  }
+
+  async function bindPublisherCaptureJob(job) {
+    var match = String(location.hash || '').match(/(?:^#|&)osg-job=([a-z0-9-]{16,80})(?:&|$)/i);
+    var binding = '';
+    try {
+      if (match) sessionStorage.setItem(P + 'tab-job-binding', match[1]);
+      binding = sessionStorage.getItem(P + 'tab-job-binding') || '';
+    } catch (_) {}
+    if (!job.jobId || binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
+    for (var i = 0; i < 8; i += 1) {
+      try { return assertBoundCaptureJob(job); }
+      catch (error) {
+        if (String(error.message) !== 'page_doi_unverified' || i === 7) throw error;
+        await sleep(400);
+      }
+    }
+  }
+
   function candidateBelongsToJob(url, job) {
     var doi = normalizeDoi(job && job.doi);
-    if (!doi || publisherForDoi(doi) !== 'nature') return true;
-    var embedded = embeddedNatureDoi(url);
-    return !embedded || embedded === doi;
+    return Boolean(doi && embeddedJobDois(url).every(function (value) { return value === doi; }));
   }
 
   function publisherForDoi(doi) {
@@ -117,7 +181,7 @@
     var doi = normalizeDoi(job && job.doi);
     var publisher = String(job && job.publisher || publisherForDoi(doi));
     var suffix = doi.split('/')[1] || '';
-    var figureJob = jobKind(job) === 'figures';
+    var figureJob = String(job.mediaNeed || '').indexOf('figures') >= 0;
     if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
@@ -129,14 +193,14 @@
     return 'https://doi.org/' + doi;
   }
 
-  function resultKey(doi) { return P + 'result:' + normalizeDoi(doi); }
+  function resultKey(doi, jobId) { return P + 'result:6.2.20:' + normalizeDoi(doi) + ':' + String(jobId || ''); }
   function progressKey(doi) { return P + 'progress:' + normalizeDoi(doi); }
   function traceKey(doi) { return P + 'trace:' + normalizeDoi(doi); }
   function jobKind(job) {
-    return String(job && job.mediaNeed || '') === 'figures' || String(job && job.state || '') === 'figure_gap' ? 'figures' : 'toc';
+    return String(job && job.mediaNeed || '').indexOf('figures') >= 0 || String(job && job.state || '') === 'figure_gap' ? 'figures' : 'toc';
   }
   function attemptKey(doi, generatedAt, kind) {
-    var base = P + 'attempt:' + normalizeDoi(doi) + ':' + String(generatedAt || '');
+    var base = P + 'attempt:6.2.20:' + normalizeDoi(doi) + ':' + String(generatedAt || '');
     return String(kind || 'toc') === 'figures' ? base + ':figures' : base;
   }
   function failureKey(doi, kind) {
@@ -288,6 +352,7 @@
     var publisher = doi ? String(job.publisher || publisherForDoi(doi)) : publisherForDoi(normalizeDoi(location.href));
     var row = {
       doi: doi,
+      jobId: job && job.jobId || '',
       publisher: publisher || '',
       host: String(location.hostname || ''),
       href: sanitizeDiagnosticUrl(location.href),
@@ -309,7 +374,7 @@
     var doi = normalizeDoi(job && job.doi);
     if (!doi) return false;
     var prior = GM_getValue(attemptKey(doi, queueGeneratedAt || '', jobKind(job)), null);
-    return Boolean(prior && prior.status === 'success');
+    return Boolean(prior && prior.version === VERSION && prior.status === 'success' && Date.now()-Date.parse(prior.finishedAt||'') < 6*60*60*1000);
   }
 
   function executableJobs(allJobs, queueGeneratedAt) {
@@ -658,7 +723,7 @@
     var live = candidate && candidate.element && candidate.element.currentSrc
       ? normalizeUrl(candidate.element.currentSrc, location.href)
       : '';
-    return live || String(candidate && candidate.url || '');
+    return String(candidate && candidate.url || '') || live;
   }
 
   function imageUrls(node, baseUrl) {
@@ -707,6 +772,8 @@
     addSrcset(node.getAttribute && node.getAttribute('data-srcset'));
     addSrcset(node.getAttribute && node.getAttribute('srcset'));
 
+    var block=node.closest&&node.closest('figure,.figure,.fig-section,.fig-group,[role=figure]');
+    if(block)block.querySelectorAll('a[href]').forEach(function(a){if(/full.size|large|download/i.test(a.textContent||a.title||'')||/\.(svg|png|jpe?g|webp)([?#]|$)/i.test(a.href))add(a.href);});
     var link = node.closest && node.closest('a[href]');
     if (link) add(link.getAttribute('href'));
 
@@ -855,275 +922,6 @@
     if (/mechanis|catalytic\s+cycle|proposed\s+pathway/i.test(value)) return 'Mechanism';
     if (/optimization|reaction\s+conditions/i.test(value)) return 'Optimization';
     return 'Figure ' + String(fallbackIndex + 1);
-  }
-
-  function collectArticleFigureCandidates(job, trace, root, baseUrl, sourceName) {
-    var scope = root || document;
-    var pageUrl = baseUrl || location.href;
-    var source = sourceName || 'live_dom';
-    var rows = [];
-    var seen = {};
-    var blocks = Array.prototype.slice.call(scope.querySelectorAll([
-      'figure',
-      '[role="figure"]',
-      '[data-figure]',
-      '[class*="article-figure"]',
-      '[class*="figure-viewer"]',
-      '[class*="figure-wrap"]',
-      '[class*="figure-container"]',
-      '[class*="scheme"]',
-      '[class*="chart"]',
-      '[id*="figure"]',
-      '[id*="scheme"]',
-      '[id*="chart"]'
-    ].join(',')));
-    blocks.forEach(function (block, blockIndex) {
-      var context = String(block.innerText || block.textContent || '').replace(/\s+/g, ' ').trim();
-      if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)|journal\s*cover|issue\s*cover/i.test(context.slice(0, 1400))) return;
-      if (!/\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b/i.test(context.slice(0, 2200))) return;
-      var label = articleFigureLabel(context, blockIndex);
-      var caption = context.slice(0, 600);
-      Array.prototype.slice.call(block.querySelectorAll('img,source')).forEach(function (node) {
-        articleFigureImageUrls(node, pageUrl).forEach(function (url, variantRank) {
-          if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
-          var key = label.toLowerCase() + '::' + url;
-          if (seen[key]) return;
-          seen[key] = true;
-          var img = node instanceof HTMLSourceElement ? (node.parentElement && node.parentElement.querySelector('img')) : node;
-          rows.push({
-            url: url,
-            kind: 'article_figure',
-            assetType: 'article_figure',
-            label: label,
-            text: caption,
-            source: source + '_figure',
-            score: (/^Figure 1$/i.test(label) ? 100 : /^Figure|^Scheme|^Chart/i.test(label) ? 90 : 70) - Math.min(variantRank, 8),
-            width: Number(img && (img.naturalWidth || img.width) || 0),
-            height: Number(img && (img.naturalHeight || img.height) || 0),
-            element: img instanceof HTMLImageElement ? img : null
-          });
-        });
-      });
-    });
-    if (rows.length < 2) {
-      Array.prototype.slice.call(scope.querySelectorAll('img,source')).forEach(function (node, imageIndex) {
-        var context = contextFor(node);
-        if (!/(?:\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b|substrate\s+scope|reaction\s+scope|mechanis|catalytic\s+cycle|optimization|reaction\s+conditions)/i.test(context)) return;
-        if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)/i.test(context.slice(0, 1600))) return;
-        var label = articleFigureLabel(context, imageIndex);
-        articleFigureImageUrls(node, pageUrl).forEach(function (url, variantRank) {
-          if (!url || reject(context, url) || !candidateBelongsToJob(url, job)) return;
-          var key = label.toLowerCase() + '::' + url;
-          if (seen[key]) return;
-          seen[key] = true;
-          var img = node instanceof HTMLSourceElement ? (node.parentElement && node.parentElement.querySelector('img')) : node;
-          rows.push({
-            url: url,
-            kind: 'article_figure',
-            assetType: 'article_figure',
-            label: label,
-            text: context.slice(0, 600),
-            source: source + '_context_figure',
-            score: (/^Figure 1$/i.test(label) ? 96 : /^Figure|^Scheme|^Chart/i.test(label) ? 86 : 66) - Math.min(variantRank, 8),
-            width: Number(img && (img.naturalWidth || img.width) || 0),
-            height: Number(img && (img.naturalHeight || img.height) || 0),
-            element: img instanceof HTMLImageElement ? img : null
-          });
-        });
-      });
-    }
-
-    rows.sort(function (a, b) { return b.score - a.score || String(a.label).localeCompare(String(b.label)); });
-    var variantsPerLabel = {};
-    var selected = rows.filter(function (row) {
-      var key = String(row.label || '').toLowerCase();
-      variantsPerLabel[key] = Number(variantsPerLabel[key] || 0) + 1;
-      return variantsPerLabel[key] <= 3;
-    }).slice(0, 24);
-    pushTrace(trace, {
-      stage: 'figure_discovery',
-      event: 'scan_complete',
-      status: selected.length ? 'found' : 'none',
-      message: source + ';figures=' + String(selected.length)
-    });
-    return selected;
-  }
-
-  async function waitForArticleFigures(job, trace) {
-    var started = Date.now();
-    var scrollStep = 0;
-    while (Date.now() - started < 60000) {
-      if (isAbortRequested()) throw new Error('user_aborted');
-      var rows = collectArticleFigureCandidates(job, trace, document, location.href, 'live_dom');
-      if (rows.length) return rows;
-      var elapsed = Date.now() - started;
-      var thresholds = [2500, 6500, 12000, 20000];
-      if (scrollStep < thresholds.length && elapsed > thresholds[scrollStep]) {
-        try {
-          var height = Math.max(document.documentElement.scrollHeight, document.body && document.body.scrollHeight || 0);
-          window.scrollTo({ top: Math.round(height * ((scrollStep + 1) / (thresholds.length + 1))), behavior: 'instant' });
-        } catch (_) {}
-        scrollStep += 1;
-      }
-      await sleep(1800);
-    }
-    return [];
-  }
-
-  function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
-    var scope = root || document;
-    var pageUrl = baseUrl || location.href;
-    var publisher = String(job.publisher || publisherForDoi(job.doi));
-    var allowFigureOne = String(job.state || '') === 'no_visual';
-    var source = sourceName || 'live_dom';
-    var map = new Map();
-
-    scope.querySelectorAll('img,source,object[type^="image"],svg image').forEach(function (node) {
-      imageUrls(node, pageUrl).forEach(function (url) {
-        var row = scoreCandidate(node, url, publisher, allowFigureOne, source);
-        if (!row) return;
-        var old = map.get(url);
-        if (!old || row.score > old.score) map.set(url, row);
-      });
-    });
-
-    scope.querySelectorAll('meta[name="citation_graphical_abstract"],meta[name="citation_visual_abstract"],meta[name="citation_toc_graphic"],meta[name="citation_abstract_image"],meta[name="graphical_abstract"],meta[property="citation_graphical_abstract"],meta[property="citation_visual_abstract"],meta[property="citation_toc_graphic"]').forEach(function (meta) {
-      var url = normalizeUrl(meta.getAttribute('content') || '', pageUrl);
-      if (!url || map.has(url) || reject('', url)) return;
-      var key = String(meta.getAttribute('name') || meta.getAttribute('property') || '').toLowerCase();
-      var type = key.indexOf('toc') >= 0 ? 'toc_graphic'
-        : key.indexOf('abstract_image') >= 0 ? 'abstract_image'
-        : 'graphical_abstract';
-      map.set(url, {
-        url: url,
-        kind: 'official',
-        assetType: type,
-        score: 640,
-        source: source + '_metadata',
-        text: key || 'graphical abstract metadata',
-        width: 0,
-        height: 0,
-        element: null
-      });
-    });
-
-    var html = '';
-    try {
-      html = scope.documentElement ? scope.documentElement.innerHTML : (scope.outerHTML || '');
-    } catch (_) {}
-    var patterns = [
-      /["']([^"']*(?:graphical[-_]?abstract|visual[-_]?abstract|toc[-_]?(?:graphic|image)|central[-_]?illustration)[^"']*\.(?:avif|webp|png|jpe?g|gif|svg)(?:\?[^"']*)?)["']/gi,
-      /["']([^"']*(?:-gra-0*1|[\/_-](?:ga|fx)0*1)[^"']*\.(?:avif|webp|png|jpe?g|gif|svg)(?:\?[^"']*)?)["']/gi,
-      /["']([^"']*(?:-fig-?0*1|[\/_-]fig(?:ure)?0*1|_fig0*1_html|[\/_-](?:f|gr)0*1)[^"']*\.(?:avif|webp|png|jpe?g|gif|svg)(?:\?[^"']*)?)["']/gi
-    ];
-    patterns.forEach(function (pattern) {
-      var match;
-      var count = 0;
-      while ((match = pattern.exec(html)) !== null && count < 100) {
-        count += 1;
-        var raw = String(match[1] || '').replace(/\\u002f/gi, '/').replace(/\\\//g, '/').replace(/&amp;/g, '&');
-        var url = normalizeUrl(raw, pageUrl);
-        if (!url || map.has(url) || reject('', url)) continue;
-        var type = officialType('', url, publisher);
-        var kind = type ? 'official' : '';
-        if (!kind && allowFigureOne && isFigureOne(url)) {
-          kind = 'figure1';
-          type = 'figure1_fallback';
-        }
-        if (!kind) continue;
-        map.set(url, {
-          url: url,
-          kind: kind,
-          assetType: type,
-          score: kind === 'official' ? 380 : 220,
-          source: source + '_raw_html',
-          text: '',
-          width: 0,
-          height: 0,
-          element: null
-        });
-      }
-    });
-
-    // ACS/Silverchair and some publisher pages use generic image filenames
-    // (for example m_ol..._0007.svg) while the surrounding HTML says
-    // "Visual Abstract". Recover those images from semantic windows instead
-    // of requiring the filename itself to contain toc/graphical/visual.
-    var strongSemantic = /toc\s*(?:and\s*abstract\s*)?(?:graphic|image)|graphical\s*abstract|visual\s*abstract|graphical\s*(?:summary|synopsis)|visual\s*summary|abstract\s*(?:graphic|image)|table\s*of\s*contents\s*(?:graphic|image)|first\s+page\s+image/gi;
-    var semanticMatch;
-    var semanticWindows = 0;
-    while ((semanticMatch = strongSemantic.exec(html)) !== null && semanticWindows < 30) {
-      semanticWindows += 1;
-      var fragment = html.slice(semanticMatch.index, Math.min(html.length, semanticMatch.index + 7000));
-      var semanticContext = htmlText(fragment).slice(0, 2600);
-      var semanticType = officialType(semanticContext, '', publisher);
-      if (!semanticType) continue;
-      var tags = String(fragment).match(/<(?:img|source)\b[^>]*>/gi) || [];
-      for (var ti = 0; ti < Math.min(tags.length, 12); ti += 1) {
-        var parsed = rawTagImageUrls(tags[ti], pageUrl);
-        var ownMarker = [
-          parsed.attrs.alt, parsed.attrs.title, parsed.attrs.id, parsed.attrs.class, parsed.attrs['aria-label']
-        ].filter(Boolean).join(' ');
-        var ownType = officialType(ownMarker, '', publisher);
-        if (!ownType && ti > 0) continue;
-        if (!ownType && isFigureOne(ownMarker)) continue;
-        parsed.urls.forEach(function (url) {
-          if (!url || reject(ownMarker + ' ' + semanticContext, url)) return;
-          var old = map.get(url);
-          var row = {
-            url: url,
-            kind: 'official',
-            assetType: ownType || semanticType,
-            score: ownType ? 610 : 540,
-            source: source + '_semantic_window',
-            text: (ownMarker + ' ' + semanticContext).replace(/\s+/g, ' ').trim().slice(0, 1000),
-            width: Number(parsed.attrs.width || 0),
-            height: Number(parsed.attrs.height || 0),
-            element: findLiveImageElement(scope, url, pageUrl)
-          };
-          if (!old || row.score > old.score) map.set(url, row);
-        });
-      }
-    }
-
-    var allRows = Array.from(map.values());
-    var rows = allRows.filter(function (row) {
-      return candidateBelongsToJob(row.url, job);
-    }).sort(function (a, b) {
-      if (a.kind !== b.kind) return a.kind === 'official' ? -1 : 1;
-      return b.score - a.score;
-    });
-    if (!quiet && allRows.length !== rows.length) {
-      pushTrace(trace, {
-        stage: 'candidate_discovery',
-        event: 'cross_doi_rejected',
-        status: 'filtered',
-        message: source + ';rejected=' + String(allRows.length - rows.length)
-      });
-    }
-    if (!quiet) {
-      pushTrace(trace, {
-        stage: 'candidate_discovery',
-        event: 'scan_complete',
-        status: rows.length ? 'found' : 'none',
-        message: source + ';official=' + rows.filter(function (x) { return x.kind === 'official'; }).length + ';figure1=' + rows.filter(function (x) { return x.kind === 'figure1'; }).length
-      });
-      rows.slice(0, 10).forEach(function (row) {
-        pushTrace(trace, {
-          stage: 'candidate_discovery',
-          event: 'candidate',
-          status: row.kind,
-          url: row.url,
-          message: row.assetType,
-          candidateKind: row.kind,
-          candidateSource: row.source,
-          candidateScore: row.score,
-          imageWidth: row.width,
-          imageHeight: row.height
-        });
-      });
-    }
-    return rows;
   }
 
   function waitForDomMutation(timeoutMs) {
@@ -1485,7 +1283,8 @@
         credentials: 'include',
         cache: 'force-cache',
         redirect: 'follow',
-        referrer: location.href
+        referrer: location.href,
+        signal: AbortSignal.timeout(18000)
       });
       var contentType = String(response.headers.get('content-type') || '');
       pushTrace(trace, {
@@ -1505,6 +1304,7 @@
         imageData: 'data:' + contentType + ';base64,' + toBase64(buffer),
         contentType: contentType,
         byteLength: buffer.byteLength,
+        sourceUrl: response.url || requestUrl,
         method: 'page_fetch'
       };
     } catch (error) {
@@ -1565,6 +1365,7 @@
         imageData: 'data:' + contentType + ';base64,' + toBase64(buffer),
         contentType: contentType,
         byteLength: bytes,
+        sourceUrl: response.finalUrl || requestUrl,
         method: 'gm_fetch'
       };
     } catch (error) {
@@ -1582,7 +1383,7 @@
 
   async function canvasCandidate(candidate, trace) {
     var image = candidate.element;
-    if (!image || !image.complete || image.naturalWidth < 1) {
+    if (!image || !image.complete || image.naturalWidth < 1 || mediaUrlIdentity(candidate.url,location.href) !== mediaUrlIdentity(image.currentSrc || image.src,location.href)) {
       pushTrace(trace, {
         stage: 'rendered_canvas',
         event: 'unavailable',
@@ -1614,6 +1415,7 @@
         imageData: data,
         contentType: 'image/png',
         byteLength: Math.floor(data.length * 0.75),
+        sourceUrl: image.currentSrc || image.src,
         method: 'rendered_canvas'
       };
     } catch (error) {
@@ -1656,12 +1458,19 @@
     var measured = await measureImageData(image.imageData);
     image.width = Number(measured.width || 0);
     image.height = Number(measured.height || 0);
+    if(image.sourceUrl && candidate.doi && !candidateBelongsToJob(image.sourceUrl,{doi:candidate.doi}))return null;
     return image;
   }
 
   async function uploadArticleFigure(job, candidate, image, trace, token, order) {
+    // recovery_direct_stage_v1: /import is deliberately locked during recovery.
+    // Store once in R2; a positive staging receipt is not publication completion.
+    var pageDoi = assertBoundCaptureJob(job, candidate.url);
     var payload = {
       doi: job.doi,
+      jobId: job.jobId,
+      captureVersion: VERSION,
+      pageDoi: pageDoi,
       articleUrl: location.href,
       sourceUrl: candidate.url,
       id: String(candidate.label || ('figure-' + String(order + 1))).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
@@ -1673,71 +1482,44 @@
       imageData: image.imageData
     };
     pushTrace(trace, {
-      stage: 'figure_upload',
-      event: 'start',
-      status: 'start',
-      url: candidate.url,
-      message: candidate.label || '',
+      stage: 'figure_stage', event: 'start', status: 'start',
+      url: candidate.url, message: 'recovery_direct_stage:' + payload.label,
       byteLength: image.byteLength
     });
     try {
-      var result = await postJson(FIGURE_IMPORT_ENDPOINT, payload, token);
+      var result = await postJson(FIGURE_STAGE_ENDPOINT, payload, token);
+      if (!result || result.stored !== true || result.staged !== true ||
+          normalizeDoi(result.doi) !== normalizeDoi(job.doi) ||
+          String(result.id || '') !== payload.id) {
+        throw new Error('figure_stage_receipt_invalid');
+      }
+      // A delayed response from the previous task must not complete a new job.
+      assertBoundCaptureJob(job, candidate.url);
       pushTrace(trace, {
-        stage: 'figure_upload',
-        event: 'complete',
-        status: 'ok',
-        url: candidate.url,
-        message: candidate.label || '',
+        stage: 'figure_stage', event: 'complete', status: 'ok',
+        url: result.imageUrl || candidate.url,
+        message: payload.label + ';stored=1;published=0',
+        imageWidth: Number(result.width || image.width || 0),
+        imageHeight: Number(result.height || image.height || 0),
         byteLength: image.byteLength
       });
-      return Object.assign({}, result || {}, { staged: false });
+      return Object.assign({}, result, {
+        staged: true, imported: result.indexed === true, published: false,
+        publicationState: result.indexed === true ? 'indexed_live_api' : 'pending_verified_promotion'
+      });
     } catch (error) {
       pushTrace(trace, {
-        stage: 'figure_upload',
-        event: 'failed',
-        status: 'failed',
+        stage: 'figure_stage', event: 'failed', status: 'failed',
         httpStatus: Number(error && error.httpStatus || 0),
         url: candidate.url,
         message: String(error && error.message || error)
       });
-      var status = Number(error && error.httpStatus || 0);
-      if (status < 500) throw error;
-      pushTrace(trace, {
-        stage: 'figure_stage',
-        event: 'start',
-        status: 'start',
-        url: candidate.url,
-        message: 'D1 import unavailable; preserving figure in R2',
-        byteLength: image.byteLength
-      });
-      try {
-        var staged = await postJson(FIGURE_STAGE_ENDPOINT, payload, token);
-        pushTrace(trace, {
-          stage: 'figure_stage',
-          event: 'complete',
-          status: 'ok',
-          url: staged && staged.imageUrl || candidate.url,
-          message: candidate.label || '',
-          imageWidth: Number(image.width || 0),
-          imageHeight: Number(image.height || 0),
-          byteLength: image.byteLength
-        });
-        return Object.assign({}, staged || {}, { staged: true });
-      } catch (stageError) {
-        pushTrace(trace, {
-          stage: 'figure_stage',
-          event: 'failed',
-          status: 'failed',
-          httpStatus: Number(stageError && stageError.httpStatus || 0),
-          url: candidate.url,
-          message: String(stageError && stageError.message || stageError)
-        });
-        throw stageError;
-      }
+      throw error;
     }
   }
 
   async function uploadCapture(job, candidate, image, trace, token) {
+    assertBoundCaptureJob(job, candidate.url);
     pushTrace(trace, {
       stage: 'r2_upload',
       event: 'start',
@@ -1750,10 +1532,13 @@
     try {
       var result = await postJson(CAPTURE_ENDPOINT, {
         doi: job.doi,
+      jobId: job.jobId,
+      captureVersion: VERSION,
+      pageDoi: normalizeDoi(job.doi),
         kind: candidate.kind,
         imageData: image.imageData,
         articleUrl: location.href,
-        sourceUrl: candidate.url,
+        sourceUrl: image.sourceUrl || candidate.url,
         caption: candidate.text || '',
         capturedAt: nowIso(),
         source: 'tampermonkey-toc-mainline'
@@ -1845,166 +1630,6 @@
     if (none) return 'no_toc_candidate_in_live_dom';
     if (figureNone) return 'no_article_figure_candidate_in_live_dom';
     return String(error && error.message || error || 'unknown_failure').slice(0, 220);
-  }
-
-  async function runPublisherJob(job) {
-    var trace = [];
-    var token = writeToken();
-    job.publisher = String(job.publisher || publisherForDoi(job.doi));
-    job.startedAt = job.startedAt || nowIso();
-    var mediaNeed = String(job.mediaNeed || (String(job.state || '') === 'figure_gap' ? 'figures' : 'toc'));
-    var needFigures = mediaNeed.indexOf('figures') >= 0;
-    var needToc = mediaNeed !== 'figures';
-    pushTrace(trace, {
-      stage: 'job',
-      event: 'start',
-      status: 'running',
-      url: location.href,
-      message: 'v' + VERSION + ';state=' + String(job.state || '') + ';need=' + mediaNeed
-    });
-
-    if (!token) {
-      pushTrace(trace, { stage: 'config', event: 'write_token', status: 'missing', message: 'configure token from Tampermonkey menu' });
-      GM_setValue(resultKey(job.doi), { doi: job.doi, status: 'failed', reason: 'write_token_missing', finishedAt: nowIso() });
-      GM_setValue(traceKey(job.doi), { doi: job.doi, status: 'failed', reason: 'write_token_missing', trace: trace, finishedAt: nowIso() });
-      return;
-    }
-
-    try {
-      var figuresImported = 0;
-      var figuresStaged = 0;
-      var figureCandidateForReport = null;
-      var figureError = null;
-
-      if (needFigures) {
-        var figureCandidates = await waitForArticleFigures(job, trace);
-        if (!figureCandidates.length) {
-          figureError = new Error('no_article_figure_candidate_in_live_dom');
-        } else {
-          var importedFigureLabels = {};
-          for (var fi = 0; fi < Math.min(18, figureCandidates.length); fi += 1) {
-            if (isAbortRequested()) throw new Error('user_aborted');
-            var figureCandidate = figureCandidates[fi];
-            var figureLabelKey = String(figureCandidate.label || '').toLowerCase();
-            if (importedFigureLabels[figureLabelKey]) continue;
-            try {
-              var figureImage = await acquireImage(figureCandidate, trace);
-              if (!figureImage) {
-                figureError = new Error('article_figure_image_unreadable');
-                continue;
-              }
-              var resolution = articleFigureResolution(figureImage.width, figureImage.height);
-              pushTrace(trace, {
-                stage: 'figure_quality',
-                event: 'measured',
-                status: resolution.quality,
-                url: figureCandidate.url,
-                message: String(figureImage.width || 0) + 'x' + String(figureImage.height || 0) + ';label=' + String(figureCandidate.label || ''),
-                imageWidth: Number(figureImage.width || 0),
-                imageHeight: Number(figureImage.height || 0)
-              });
-              if (!resolution.usable) {
-                figureError = new Error('article_figure_resolution_' + resolution.quality);
-                continue;
-              }
-              var figureStored = await uploadArticleFigure(job, figureCandidate, figureImage, trace, token, figuresImported + figuresStaged);
-              importedFigureLabels[figureLabelKey] = true;
-              figureCandidateForReport = figureCandidateForReport || figureCandidate;
-              if (figureStored && figureStored.staged) figuresStaged += 1;
-              else figuresImported += 1;
-              if (figuresImported + figuresStaged >= 5) break;
-            } catch (oneFigureError) {
-              figureError = oneFigureError;
-              pushTrace(trace, {
-                stage: 'figure_candidate',
-                event: 'failed',
-                status: 'failed',
-                url: figureCandidate.url,
-                message: String(oneFigureError && oneFigureError.message || oneFigureError)
-              });
-            }
-          }
-        }
-      }
-
-      var tocStored = null;
-      var tocCandidateForReport = null;
-      var tocMethod = '';
-
-      if (needToc) {
-        var candidates = await waitForCandidates(job, trace);
-        if (!candidates.length) throw new Error('no_toc_candidate_in_live_dom');
-        var lastError = null;
-        for (var i = 0; i < Math.min(10, candidates.length); i += 1) {
-          if (isAbortRequested()) throw new Error('user_aborted');
-          var candidate = candidates[i];
-          try {
-            var image = await acquireImage(candidate, trace);
-            if (!image) {
-              lastError = new Error('candidate_image_unreadable');
-              continue;
-            }
-            tocStored = await uploadCapture(job, candidate, image, trace, token);
-            tocCandidateForReport = candidate;
-            tocMethod = image.method;
-            break;
-          } catch (candidateError) {
-            lastError = candidateError;
-            pushTrace(trace, {
-              stage: 'candidate',
-              event: 'failed',
-              status: 'failed',
-              url: candidate.url,
-              candidateKind: candidate.kind,
-              candidateSource: candidate.source,
-              candidateScore: candidate.score,
-              message: String(candidateError && candidateError.message || candidateError)
-            });
-          }
-        }
-        if (!tocStored) throw lastError || new Error('all_candidates_failed');
-      }
-
-      if (needFigures && figuresImported + figuresStaged < 1) {
-        throw figureError || new Error('article_figure_capture_failed');
-      }
-
-      var figureTotal = figuresImported + figuresStaged;
-      var reason = needToc
-        ? 'captured_' + tocMethod + (needFigures ? ';figures=' + String(figureTotal) + ';imported=' + String(figuresImported) + ';staged=' + String(figuresStaged) : '')
-        : figuresStaged > 0
-          ? 'captured_article_figures:' + String(figureTotal) + ';imported=' + String(figuresImported) + ';staged=' + String(figuresStaged)
-          : 'captured_article_figures:' + String(figuresImported);
-      var reportCandidate = tocCandidateForReport || figureCandidateForReport;
-      await uploadReport(job, trace, 'success', reason, reportCandidate, token);
-      GM_setValue(resultKey(job.doi), {
-        doi: job.doi,
-        status: 'success',
-        reason: reason,
-        kind: tocCandidateForReport && tocCandidateForReport.kind || (figureTotal ? 'article_figure' : ''),
-        assetType: tocCandidateForReport && tocCandidateForReport.assetType || (figureTotal ? 'article_figure' : ''),
-        imageUrl: tocStored && tocStored.imageUrl || '',
-        figuresImported: figuresImported,
-        figuresStaged: figuresStaged,
-        finishedAt: nowIso()
-      });
-      GM_deleteValue(progressKey(job.doi));
-      return;
-    } catch (error) {
-      if (String(error && error.message || error) === 'user_aborted') {
-        pushTrace(trace, { stage: 'job', event: 'aborted', status: 'aborted', message: 'user_aborted' });
-        await uploadReport(job, trace, 'aborted', 'user_aborted', null, token);
-        GM_setValue(resultKey(job.doi), { doi: job.doi, status: 'aborted', reason: 'user_aborted', finishedAt: nowIso() });
-        GM_setValue(traceKey(job.doi), { doi: job.doi, status: 'aborted', reason: 'user_aborted', trace: trace, finishedAt: nowIso() });
-        GM_deleteValue(progressKey(job.doi));
-        return;
-      }
-      var reason = failureReason(trace, error);
-      pushTrace(trace, { stage: 'job', event: 'failed', status: 'failed', message: reason });
-      await uploadReport(job, trace, 'failed', reason, null, token);
-      GM_setValue(resultKey(job.doi), { doi: job.doi, status: 'failed', reason: reason, finishedAt: nowIso() });
-      GM_deleteValue(progressKey(job.doi));
-    }
   }
 
   function isGalleryPage() {
@@ -2107,7 +1732,7 @@
   }
 
   async function waitForResult(job, tab) {
-    var timeout = job.publisher === 'wiley' ? 9 * 60 * 1000 : 180000;
+    var timeout = 12 * 60 * 1000;
     var started = Date.now();
     var heartbeatDeadlineMs = 35000;
     var heartbeatValidated = false;
@@ -2119,7 +1744,7 @@
         var elapsedForHeartbeat = Date.now() - started;
         if (hb && Number(hb.at || 0) >= started - 2000) {
           var hbDoi = normalizeDoi(hb.doi || '');
-          if (hbDoi === normalizeDoi(job.doi) && String(hb.version || '')) {
+          if (hbDoi === normalizeDoi(job.doi) && hb.jobId === job.jobId && hb.version === VERSION) {
             heartbeatValidated = true;
             GM_setValue(progressKey(job.doi), {
               status: 'publisher_heartbeat_ok',
@@ -2166,8 +1791,8 @@
         try { if (tab && tab.close) tab.close(); } catch (_) {}
         return { doi: job.doi, status: 'aborted', reason: 'user_aborted', diagnosticUploaded: true, finishedAt: nowIso() };
       }
-      var result = GM_getValue(resultKey(job.doi), null);
-      if (result && result.finishedAt) {
+      var result = GM_getValue(resultKey(job.doi,job.jobId), null);
+      if (result && result.jobId === job.jobId && result.version === VERSION && result.finishedAt && (!result.reportPending || Date.now()-Date.parse(result.finishedAt)>25000)) {
         try { if (tab && tab.close) tab.close(); } catch (_) {}
         return result;
       }
@@ -2221,60 +1846,23 @@
       return;
     }
 
-    var visible = Array.isArray(queue.visibleGaps) ? queue.visibleGaps : [];
-    var upgrades = Array.isArray(queue.officialUpgrades) ? queue.officialUpgrades : [];
-    var queueGeneratedAt = String(queue.generatedAt || '');
-    var liveCaptures = await readLiveCaptureKinds();
-    var reconciled = reconcileQueueWithLiveCaptures(visible, upgrades, liveCaptures);
-    visible = reconciled.visible;
-    upgrades = reconciled.upgrades;
-    var queuedFigures = Array.isArray(queue.figureGaps) ? queue.figureGaps.map(function (raw) {
-      var job = Object.assign({}, raw);
-      job.doi = normalizeDoi(job.doi);
-      job.publisher = String(job.publisher || publisherForDoi(job.doi));
-      job.state = 'figure_gap';
-      job.mediaNeed = 'figures';
-      job.existingReason = String(job.existingReason || 'live_article_figure_gap');
-      job.figureCount = Math.max(0, Number(job.figureCount || 0));
-      return job;
-    }).filter(function (job) { return Boolean(job.doi); }) : stagedFigureJobs();
-    var figureOnly = queuedFigures.slice();
-    var allJobs = visible.concat(upgrades, figureOnly);
-    visible = executableJobs(visible, queueGeneratedAt);
-    upgrades = executableJobs(upgrades, queueGeneratedAt);
-    figureOnly = executableJobs(figureOnly, queueGeneratedAt);
-    var limit = batchSize();
-
-    // Priority:
-    // 1) newest papers with no visual/TOC
-    // 2) remaining no-visual TOC gaps
-    // 3) article figures
-    // 4) fallback-only official TOC upgrades (including Figure 1)
-    var jobs = selectBatchJobs(visible, limit);
-    var selectedDois = {};
-    jobs.forEach(function (job) {
-      var doi = normalizeDoi(job && job.doi);
-      if (doi) selectedDois[doi] = true;
-    });
-
-    if (jobs.length < limit) {
-      var figureCandidates = figureOnly.filter(function (job) {
-        return !selectedDois[normalizeDoi(job && job.doi)];
-      });
-      var selectedFigures = selectBatchJobs(figureCandidates, limit - jobs.length);
-      jobs = jobs.concat(selectedFigures);
-      selectedFigures.forEach(function (job) {
-        var doi = normalizeDoi(job && job.doi);
-        if (doi) selectedDois[doi] = true;
-      });
+    var manifest, staged;
+    try {
+      manifest = await getJson(new URL('media-index.json?ts='+Date.now(),QUEUE_URL).href);
+      staged = await getJson(WORKER+'/api/article-figures/staged?ts='+Date.now());
+      var allJobs = buildRecoveryJobs(queue,manifest,staged);
+    } catch(error) {
+      badge('媒体清单尚未就绪：'+String(error.message),'#991b1b');
+      return;
     }
-
-    if (jobs.length < limit) {
-      var delayedUpgrades = upgrades.filter(function (job) {
-        return !selectedDois[normalizeDoi(job && job.doi)];
-      });
-      jobs = jobs.concat(selectBatchJobs(delayedUpgrades, limit - jobs.length));
-    }
+    var queueGeneratedAt = String(queue.corpusVersion || queue.generatedAt || '');
+    var visible=allJobs.filter(function(j){return j.state==='no_visual';});
+    var upgrades=allJobs.filter(function(j){return j.state==='fallback_only';});
+    var figureOnly=allJobs.filter(function(j){return j.state==='figure_gap';});
+    var queuedFigures=allJobs.filter(function(j){return j.mediaNeed.indexOf('figures')>=0;});
+    var reconciled={filteredByR2:queue.allPapers.length-allJobs.length};
+    var limit=batchSize();
+    var jobs=selectBatchJobs(executableJobs(allJobs,queueGeneratedAt),limit);
     var cooling = allJobs.filter(function (queued) {
       var doi = normalizeDoi(queued && queued.doi);
       return doi ? isFailureCooling(queued) : false;
@@ -2302,6 +1890,8 @@
       results: []
     };
 
+    GM_setValue(SUMMARY_KEY, summary);
+
     for (var i = 0; i < jobs.length; i += 1) {
       if (GM_getValue(ENABLED_KEY, true) === false || isAbortRequested()) break;
       var job = Object.assign({}, jobs[i]);
@@ -2310,15 +1900,17 @@
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
       job.queueGeneratedAt = queueGeneratedAt;
       job.startedAt = nowIso();
+      job.jobId = crypto.randomUUID();
+      job.captureVersion = VERSION;
 
       var taskKind = jobKind(job);
       var prior = GM_getValue(attemptKey(job.doi, job.queueGeneratedAt, taskKind), null);
-      if (prior && prior.status === 'success') {
+      if (alreadySucceeded(job,job.queueGeneratedAt)) {
         summary.skipped += 1;
         continue;
       }
 
-      GM_deleteValue(resultKey(job.doi));
+      GM_deleteValue(resultKey(job.doi,job.jobId));
       GM_deleteValue(progressKey(job.doi));
       GM_deleteValue(HEARTBEAT_KEY);
       GM_setValue(ACTIVE_JOB_KEY, job);
@@ -2327,7 +1919,7 @@
       var tab = null;
       var result = null;
       try {
-        tab = GM_openInTab(articleUrl(job), {
+        tab = GM_openInTab(articleUrl(job) + '#osg-job=' + encodeURIComponent(job.jobId), {
           active: job.publisher === 'wiley',
           insert: true,
           setParent: true
@@ -2339,10 +1931,14 @@
         result = { doi: job.doi, status: 'failed', reason: openReason, diagnosticUploaded: true, finishedAt: nowIso() };
       }
       summary.results.push(result);
+      GM_setValue(SUMMARY_KEY,summary);
       GM_setValue(attemptKey(job.doi, job.queueGeneratedAt, taskKind), result);
       if (result.status === 'success') {
         summary.success += 1;
         GM_deleteValue(failureKey(job.doi, taskKind));
+      } else if (result.status === 'partial') {
+        summary.partial = Number(summary.partial || 0)+1;
+        GM_setValue(failureKey(job.doi,taskKind),{at:Date.now(),reason:result.reason,engineRevision:FAILURE_ENGINE_REVISION});
       } else if (result.status === 'aborted') {
         summary.aborted += 1;
       } else {
@@ -2379,10 +1975,17 @@
 
   async function publisherBoot() {
     if (location.hostname === 'doi.org') return;
-    writePublisherHeartbeat(null, 'script_loaded');
+
     var job = GM_getValue(ACTIVE_JOB_KEY, null);
     if (!job || !normalizeDoi(job.doi)) {
-      writePublisherHeartbeat(null, 'active_job_missing');
+
+      return;
+    }
+    try {
+      await bindPublisherCaptureJob(job);
+    } catch (error) {
+      // Do not complete or overwrite the active job from an unrelated tab.
+      await uploadReport(job, [{ stage: 'page_doi_guard', event: 'rejected', status: 'failed', url: location.href, message: String(error.message) }], 'failed', String(error.message), null, writeToken());
       return;
     }
     writePublisherHeartbeat(job, 'active_job_seen');
@@ -2401,6 +2004,230 @@
     writePublisherHeartbeat(job, 'publisher_script_started');
     await sleep(900);
     await runPublisherJob(job);
+  }
+
+// Functions embedded into the self-contained userscript by the release workbench.
+  function captureContext(node) {
+    for(var a=node;a&&a!==document.body;a=a.parentElement){if(/^(ASIDE|NAV|FOOTER)$/.test(a.tagName||'')||/recommend|related[-_ ]|references|ref-list|sidebar/i.test(String(a.id||'')+' '+String(a.className||'')))return '';}
+    var own = [node.getAttribute && node.getAttribute('alt'), node.getAttribute && node.getAttribute('title')].filter(Boolean).join(' ');
+    var root = node;
+    for (var depth = 0; root && depth < 7; depth += 1, root = root.parentElement) {
+      var marker = String(root.id || '') + ' ' + String(root.className || '');
+      if (/recommend|related[-_ ]|references|ref-list|most-read|advert|sidebar|navigation/i.test(marker) || /^(ASIDE|NAV|FOOTER)$/.test(root.tagName || '')) return '';
+      if (depth === 0) continue;
+      var captions = root.querySelectorAll('figcaption,.caption,.figure-caption,.fig-caption,.fig-label,.figure-title,.graphicAbstractTitle');
+      var texts = Array.from(captions).map(function (x) { return String(x.textContent || '').trim(); });
+      var text = texts.join(' ') || String(root.innerText || root.textContent || '').trim();
+      var labels = Array.from(new Set((text.match(/\b(?:Figure|Fig\.?|Scheme|Chart)\s*\d+[A-Za-z]?\b/gi) || []).map(function (x) { return x.toLowerCase(); })));
+      var images = root.querySelectorAll('img');
+      // Never inherit a TOC marker from a parent containing several unrelated figures.
+      if (images.length <= 2 && (captions.length || /figure|fig-section|fig-group|graphical|graphicAbstract|visual.?abstract|toc.?graphic/i.test(marker) || root.tagName === 'FIGURE')) {
+        return (own + ' ' + marker + ' ' + text).replace(/\s+/g,' ').trim().slice(0,1800);
+      }
+      if (labels.length > 1 || images.length > 3 || /^(MAIN|ARTICLE|BODY)$/.test(root.tagName || '')) break;
+    }
+    return own;
+  }
+
+  function figureLabelKey(value) {
+    return String(value || '').toLowerCase().replace(/^fig(?:\.\s*|\s+)/, 'figure ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function collectArticleFigureCandidates(job, trace, root, baseUrl, sourceName) {
+    var scope = root || document;
+    var rows = [], seen = new Set();
+    scope.querySelectorAll('img,source').forEach(function (node) {
+      var context = captureContext(node);
+      if (!context || !/\b(?:Figure|Fig\.?|Scheme|Chart)\s*\d+[A-Za-z]?\b/i.test(context)) return;
+      if (/graphical\s*abstract|visual\s*abstract|toc\s*(?:graphic|image)/i.test(context)) return;
+      var label = articleFigureLabel(context, 0);
+      articleFigureImageUrls(node, baseUrl || location.href).forEach(function (url, rank) {
+        var key = figureLabelKey(label) + ':' + url;
+        if (seen.has(key) || reject(context,url) || !candidateBelongsToJob(url,job)) return;
+        seen.add(key);
+        rows.push({url:url,doi:job.doi,label:label,kind:'article_figure',assetType:'article_figure',text:context.slice(0,600),source:(sourceName || 'live_dom')+'_bounded_figure',score:100-rank,element:node.tagName==='IMG'?node:null});
+      });
+    });
+    rows.sort(function(a,b){return String(a.label).localeCompare(String(b.label),undefined,{numeric:true}) || b.score-a.score;});
+    var counts = {};
+    rows = rows.filter(function(r){var k=figureLabelKey(r.label);counts[k]=(counts[k]||0)+1;return counts[k]<=4;}).slice(0,120);
+    pushTrace(trace,{stage:'figure_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'bounded_dom;labels='+Object.keys(counts).length+';candidates='+rows.length});
+    return rows;
+  }
+
+  async function waitForArticleFigures(job, trace) {
+    var accumulated = new Map();
+    // Collect lazy-loaded later figures; do not stop on the first visible Figure 1.
+    for (var pass=0;pass<7;pass+=1) {
+      assertBoundCaptureJob(job);
+      if(isAbortRequested()) throw new Error('user_aborted');
+      collectArticleFigureCandidates(job,trace,document,location.href,'live_dom').forEach(function(r){accumulated.set(figureLabelKey(r.label)+':'+r.url,r);});
+      if(pass<6){
+        var h=Math.max(document.documentElement.scrollHeight,document.body&&document.body.scrollHeight||0);
+        try{window.scrollTo({top:Math.round(h*(pass+1)/7),behavior:'instant'});}catch(_){}
+        await sleep(900);
+      }
+    }
+    return Array.from(accumulated.values());
+  }
+
+  function collectCandidates(job,trace,root,baseUrl,sourceName,quiet) {
+    var scope=root||document, pageUrl=baseUrl||location.href, publisher=job.publisher||publisherForDoi(job.doi), map=new Map();
+    scope.querySelectorAll('img,source,object[type^="image"],svg image').forEach(function(node){
+      var context=captureContext(node);
+      if(!context)return;
+      articleFigureImageUrls(node,pageUrl).forEach(function(url,rank){
+        if(reject(context,url)||!candidateBelongsToJob(url,job))return;
+        var type=officialType(context,url,publisher);
+        // Numbered body figures never become official because a distant ancestor mentions GA.
+        if(/\b(?:Figure|Fig\.?|Scheme|Chart)\s*\d+\b/i.test(context) && !/^(?:Graphical|Visual)\s*Abstract/i.test(context))type='';
+        var kind=type?'official':(job.state==='no_visual'&&isFigureOne(context)?'figure1':'');
+        if(!kind)return;
+        var row={url:url,doi:job.doi,kind:kind,assetType:type||'figure1_fallback',score:(kind==='official'?600:200)-rank,text:context.slice(0,600),source:(sourceName||'live_dom')+'_bounded_semantics',element:node.tagName==='IMG'?node:null};
+        if(!map.has(url)||map.get(url).score<row.score)map.set(url,row);
+      });
+    });
+    scope.querySelectorAll('head meta[name="citation_graphical_abstract"],head meta[name="citation_visual_abstract"],head meta[name="citation_toc_graphic"],head meta[name="citation_abstract_image"]').forEach(function(node){
+      var url=normalizeUrl(node.content,pageUrl);if(!url||!candidateBelongsToJob(url,job))return;
+      map.set(url,{url:url,doi:job.doi,kind:'official',assetType:'graphical_abstract',score:700,text:node.name,source:'explicit_graphical_metadata'});
+    });
+    var rows=Array.from(map.values()).sort(function(a,b){return b.score-a.score;});
+    if(!quiet)pushTrace(trace,{stage:'candidate_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'bounded_semantics;official='+rows.filter(function(r){return r.kind==='official';}).length});
+    return rows;
+  }
+
+  function imageQuality(image) {
+    if(image.contentType==='image/svg+xml'){
+      try{
+        var xml=atob(image.imageData.split(',')[1]);
+        var doc=new DOMParser().parseFromString(xml,'image/svg+xml');
+        if(doc.querySelector('parsererror')||doc.documentElement.localName!=='svg')return {usable:false,quality:'invalid_svg',rank:0};
+        if(doc.querySelector('script,foreignObject,iframe,object,embed'))return {usable:false,quality:'unsafe_svg',rank:0};
+        var vectors=doc.querySelectorAll('path,line,polyline,polygon,circle,ellipse,text').length;
+        var mixed=doc.querySelectorAll('image').length>0;
+        if(vectors>0)return {usable:true,quality:mixed?'vector_mixed':'vector',rank:mixed?200000000:300000000};
+      }catch(_){}
+    }
+    var q=articleFigureResolution(image.width,image.height);
+    return {usable:q.usable,quality:q.quality,rank:Math.max(0,image.width*image.height)};
+  }
+
+  async function resolveImageLanding(candidate,trace) {
+    if(/\.(?:svg|png|jpe?g|webp)(?:[?#]|$)/i.test(candidate.url))return [candidate];
+    if(!/\/figures\/\d+(?:[?#]|$)|\/view-large\//i.test(candidate.url))return [candidate];
+    try{
+      var response=await gmRequest({method:'GET',url:candidate.url,timeout:18000});
+      if(Number(response.status)!==200)return [];
+      if(!candidateBelongsToJob(response.finalUrl||candidate.url,{doi:candidate.doi}))return [];
+      var html=String(response.responseText||'');if(html.length>2500000)return [];
+      var doc=new DOMParser().parseFromString(html,'text/html');
+      var pageIds=[];doc.querySelectorAll('head meta[name="citation_doi"],head link[rel="canonical"]').forEach(function(n){pageIds=pageIds.concat(embeddedJobDois(n.content||n.href));});
+      if(pageIds.some(function(d){return d!==candidate.doi;}))return [];
+      var out=[], scope=doc.querySelector('main')||doc;
+      scope.querySelectorAll('figure img,.figure img,.fig-section img,.c-figure__image,img[data-test="figure-image"],a[href]').forEach(function(n){
+        articleFigureImageUrls(n,response.finalUrl||candidate.url).forEach(function(url){
+          if(!/\.(?:png|jpe?g|svg|webp)(?:[?#]|$)/i.test(url)||reject(n.alt||'',url)||!candidateBelongsToJob(url,{doi:candidate.doi}))return;
+          // Dedicated figure page: accept an actual DOI-bearing source, not recommendations.
+          var ids=embeddedJobDois(url);if(ids.length!==1||ids[0]!==candidate.doi)return;
+          if(candidate.label&&/^Figure /i.test(candidate.label)){
+            var number=String(candidate.label).match(/\d+/)[0], m=decodeURIComponent(url).match(/_Fig(\d+)_/i);
+            if(m&&Number(m[1])!==Number(number))return;
+          }
+          out.push(Object.assign({},candidate,{url:url,element:null,source:'same_doi_figure_landing'}));
+        });
+      });
+      var seen=new Set();return out.filter(function(r){if(seen.has(r.url))return false;seen.add(r.url);return true;}).sort(function(a,b){return (/\/full\//.test(b.url)?1:0)-(/\/full\//.test(a.url)?1:0);}).slice(0,3);
+    }catch(e){pushTrace(trace,{stage:'image_landing',event:'failed',status:'failed',url:candidate.url,message:String(e.message)});return [];}
+  }
+
+  async function chooseBestImage(candidates,job,trace) {
+    var best=null,attempts=0;
+    for(var i=0;i<candidates.length&&attempts<4;i+=1){
+      var variants=await resolveImageLanding(candidates[i],trace);
+      for(var j=0;j<variants.length&&attempts<4;j+=1){
+        attempts+=1;var c=variants[j];assertBoundCaptureJob(job,c.url);
+        var image=await acquireImage(c,trace);if(!image)continue;
+        var finalUrl=image.sourceUrl||c.url;assertBoundCaptureJob(job,finalUrl);
+        var quality=imageQuality(image);
+        pushTrace(trace,{stage:'figure_quality',event:'measured',status:quality.quality,url:finalUrl,imageWidth:image.width,imageHeight:image.height,message:'actual_bytes;'+(c.label||c.kind)});
+        if(!best||quality.rank>best.quality.rank)best={candidate:Object.assign({},c,{url:finalUrl}),image:image,quality:quality};
+        if(quality.quality==='vector'||(image.width>=1600&&quality.usable))return best;
+      }
+    }
+    return best;
+  }
+
+  function buildRecoveryJobs(queue,manifest,staged) {
+    if(!Array.isArray(queue.allPapers)||queue.allPapers.length!==Number(queue.webpageDoiCount)||queue.mediaGeneration!==1790082000000)throw new Error('recovery_queue_not_ready');
+    var stageMap=new Map();(staged.items||[]).forEach(function(r){if(r.captureVersion!=='6.2.20'||r.pageDoi!==r.doi)return;if(!stageMap.has(r.doi))stageMap.set(r.doi,[]);stageMap.get(r.doi).push(r);});
+    return queue.allPapers.map(function(p){
+      var record=(manifest.items||{})[p.doi]||{};
+      var toc=record.toc||{},receipt=GM_getValue(P+'receipt:6.2.20:'+p.doi,null)||{};
+      var official=Boolean(toc.available&&toc.imageUrl&&!/fallback/i.test(toc.reason||''))||receipt.officialToc===true;
+      var known={};((record.figures||{}).figures||[]).forEach(function(f){known[figureLabelKey(f.label||f.id)]=true;});
+      (stageMap.get(p.doi)||[]).forEach(function(f){known[figureLabelKey(f.label||f.id)]=true;});
+      Object.keys(receipt.labels||{}).forEach(function(k){known[k]=true;});
+      var scanDone=receipt.scanComplete===true&&receipt.corpusVersion===queue.corpusVersion;
+      if(official&&scanDone)return null;
+      return Object.assign({},p,{state:official?'figure_gap':toc.available?'fallback_only':'no_visual',mediaNeed:official?'figures':scanDone?'toc':'toc+figures',knownFigureLabels:known,knownOfficialToc:official,corpusVersion:queue.corpusVersion});
+    }).filter(Boolean);
+  }
+
+  async function runPublisherJob(job) {
+    var trace=[],token=writeToken(),toc=null,tocCandidate=null,figureError='',tocError='',labels={},allLabels=[],stored=0,indexed=0;
+    var receipt=GM_getValue(P+'receipt:6.2.20:'+job.doi,null)||{};
+    Object.assign(labels,job.knownFigureLabels||{},receipt.labels||{});
+    var needToc=job.mediaNeed!=='figures',needFigures=job.mediaNeed!=='toc';
+    var heartbeat=setInterval(function(){var active=GM_getValue(ACTIVE_JOB_KEY,null);if(active&&active.jobId===job.jobId)writePublisherHeartbeat(job,'capturing');},4000);
+    function saveReceipt(done){GM_setValue(P+'receipt:6.2.20:'+job.doi,{officialToc:Boolean(receipt.officialToc||job.knownOfficialToc||tocCandidate&&tocCandidate.kind==='official'),labels:labels,scanComplete:done,corpusVersion:job.corpusVersion,at:Date.now()});}
+    try{
+      assertBoundCaptureJob(job);if(!token)throw new Error('write_token_missing');
+      pushTrace(trace,{stage:'job',event:'start',status:'running',url:location.href,message:'v'+VERSION+';job='+job.jobId+';need='+job.mediaNeed});
+      // Main visual first, then collect the body's lazy-loaded Figures/Schemes on this same page.
+      if(needToc){
+        try{
+          var candidates=await waitForCandidates(job,trace);
+          var officials=candidates.filter(function(c){return c.kind==='official';});
+          var pool=(officials.length?officials:candidates).slice(0,4);
+          pool.forEach(function(c){c.doi=job.doi;});
+          var best=await chooseBestImage(pool,job,trace);
+          if(!best)throw new Error('no_toc_candidate_in_live_dom');
+          toc=await uploadCapture(job,best.candidate,best.image,trace,token);tocCandidate=best.candidate;saveReceipt(false);
+        }catch(e){tocError=String(e.message);}
+      }
+      if(needFigures){
+        var rows=await waitForArticleFigures(job,trace),groups=new Map();
+        rows.forEach(function(c){var k=figureLabelKey(c.label);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(c);});
+        allLabels=Array.from(groups.keys());
+        for(var entry of groups){
+          if(isAbortRequested())throw new Error('user_aborted');
+          if(labels[entry[0]])continue;
+          if(stored>=20){figureError='per_visit_limit_resume_required';break;}
+          try{
+            var selected=await chooseBestImage(entry[1],job,trace);
+            if(!selected||!selected.quality.usable)throw new Error('article_figure_no_usable_source');
+            var res=await uploadArticleFigure(job,selected.candidate,selected.image,trace,token,allLabels.indexOf(entry[0]));
+            labels[entry[0]]=true;stored+=1;if(res.indexed===true)indexed+=1;saveReceipt(false);
+          }catch(e){figureError=String(e.message);}
+        }
+      }
+      var scanComplete=needFigures&&allLabels.length>0&&allLabels.every(function(k){return labels[k];});
+      if(!needFigures)scanComplete=receipt.scanComplete===true;
+      saveReceipt(scanComplete);
+      var okToc=!needToc||Boolean(toc),okFigures=!needFigures||scanComplete;
+      var status=okToc&&okFigures?'success':(toc||stored)?'partial':'failed';
+      var reason='toc='+(toc?1:0)+';figuresStored='+stored+';figuresIndexed='+indexed+';scanComplete='+scanComplete+';'+tocError+';'+figureError;
+      GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,version:VERSION,status:status,trace:trace,finishedAt:nowIso()});
+      // The controller sees a nonce-bound media receipt even if diagnostic upload is slow.
+      GM_setValue(resultKey(job.doi,job.jobId),{doi:job.doi,jobId:job.jobId,version:VERSION,status:status,reason:reason,tocStored:Boolean(toc),figuresStaged:stored,figuresIndexed:indexed,scanComplete:scanComplete,reportPending:true,finishedAt:nowIso()});
+      await uploadReport(job,trace,status==='partial'?'success':status,reason,tocCandidate,token);
+      var result=GM_getValue(resultKey(job.doi,job.jobId),{});result.reportPending=false;GM_setValue(resultKey(job.doi,job.jobId),result);
+    }catch(e){
+      var reason=String(e.message),status=reason==='user_aborted'?'aborted':'failed';saveReceipt(false);
+      GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,version:VERSION,status:status,trace:trace,finishedAt:nowIso()});
+      GM_setValue(resultKey(job.doi,job.jobId),{doi:job.doi,jobId:job.jobId,version:VERSION,status:status,reason:reason,finishedAt:nowIso()});
+      await uploadReport(job,trace,status,reason,null,token);
+    }finally{clearInterval(heartbeat);}
   }
 
   function installMenu() {
@@ -2467,7 +2294,8 @@
       window.alert(enabled ? '媒体抓取主线已暂停。' : '媒体抓取主线已继续。');
     });
     GM_registerMenuCommand('查看最近运行摘要', function () {
-      window.alert(JSON.stringify(GM_getValue(SUMMARY_KEY, {}), null, 2));
+      var summary = GM_getValue(SUMMARY_KEY, {});
+      window.alert(JSON.stringify({ runtimeVersion: VERSION, summaryIsCurrentVersion: summary.version === VERSION, activeJob: GM_getValue(ACTIVE_JOB_KEY, null), summary: summary }, null, 2));
     });
     GM_registerMenuCommand('清除 TOC 失败冷却并立即重试', function () {
       var queueKeys = [];
@@ -2482,7 +2310,7 @@
     GM_registerMenuCommand('清除卡住任务/租约', function () {
       var job = GM_getValue(ACTIVE_JOB_KEY, null);
       if (job && job.doi) {
-        GM_deleteValue(resultKey(job.doi));
+        GM_deleteValue(resultKey(job.doi,job.jobId));
         GM_deleteValue(progressKey(job.doi));
       }
       GM_deleteValue(ACTIVE_JOB_KEY);

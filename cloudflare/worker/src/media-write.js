@@ -1,3 +1,4 @@
+import { safeSvgInfo } from './safe-svg.js';
 import { getArticleFigures, getToc, normalizeDoi } from './media.js';
 
 const MAX_IMAGE_BYTES = 4_000_000;
@@ -66,22 +67,33 @@ function decodedIdentityText(value) {
 }
 
 function embeddedKnownDois(value) {
-  const decoded = decodedIdentityText(value);
-  const patterns = [
-    /10\.1021\/[a-z0-9._-]+/ig,
-    /10\.1002\/[a-z0-9._-]+/ig,
-    /10\.1038\/[a-z0-9._-]+/ig,
-    /10\.1126\/[a-z0-9._-]+/ig,
-    /10\.1039\/[a-z0-9._-]+/ig,
-    /10\.1016\/[a-z0-9._()-]+/ig,
-    /10\.31635\/[a-z0-9._-]+/ig,
-  ];
-  return [...new Set(patterns.flatMap(pattern => (decoded.match(pattern) || []).map(normalizeDoi).filter(Boolean)))];
+  let decoded = String(value || '').split(/[?#]/, 1)[0];
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch { break; }
+  }
+  const found = new Set();
+  const pattern = /10\.(1021|1002|1038|1126|1039|1016|31635)[/_]([a-z0-9._()-]+)/ig;
+  for (const match of decoded.matchAll(pattern)) {
+    const doi = normalizeDoi('10.' + match[1] + '/' + match[2]);
+    if (doi) found.add(doi);
+  }
+  try {
+    const url = new URL(decoded);
+    if (/^(?:www\.)?nature\.com$/i.test(url.hostname)) {
+      const match = url.pathname.match(/^\/articles\/(s\d+-\d+-\d+[a-z0-9-]*)/i);
+      if (match) found.add(normalizeDoi('10.1038/' + match[1]));
+    }
+  } catch {}
+  return [...found].filter(Boolean);
 }
 
 function mediaUrlMatchesDoi(value, doi) {
   const embedded = embeddedKnownDois(value);
-  return embedded.length === 0 || embedded.includes(String(doi || '').toLowerCase());
+  return embedded.every(value => value === String(doi || '').toLowerCase());
 }
 
 function rejectCrossDoiMedia(payload, doi) {
@@ -118,16 +130,18 @@ function bytesFromBase64(base64) {
 
 function parseImageData(value) {
   if (typeof value !== 'string') return null;
-  const match = /^data:(image\/(?:png|jpe?g|gif|webp));base64,([A-Za-z0-9+/=\r\n]+)$/i.exec(value);
+  const match = /^data:(image\/(?:png|jpe?g|gif|webp|svg\+xml));base64,([A-Za-z0-9+/=\r\n]+)$/i.exec(value);
   if (!match) return null;
   const contentType = match[1].toLowerCase().replace('image/jpg', 'image/jpeg');
   const base64 = match[2].replace(/\s+/g, '');
   const bytes = bytesFromBase64(base64);
   if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) return null;
+  if (contentType === 'image/svg+xml' && !safeSvgInfo(bytes)) return null;
   return { contentType, bytes };
 }
 
 function imageDimensions(bytes, contentType) {
+  if (contentType === 'image/svg+xml') return safeSvgInfo(bytes);
   if (!(bytes instanceof Uint8Array) || bytes.byteLength < 10) return null;
 
   if (contentType === 'image/png' && bytes.byteLength >= 24) {
@@ -177,6 +191,7 @@ function imageDimensions(bytes, contentType) {
 }
 
 function extensionForContentType(contentType) {
+  if (contentType === 'image/svg+xml') return 'svg';
   if (contentType === 'image/png') return 'png';
   if (contentType === 'image/webp') return 'webp';
   if (contentType === 'image/gif') return 'gif';
@@ -269,9 +284,9 @@ export async function importToc(request, env, payload) {
 
   const [token, fullHash] = await Promise.all([doiToken(doi), sha256Hex(image.bytes)]);
   const contentHash = fullHash.slice(0, 32);
-  const r2Key = `toc-cache/images/${token}.${extensionForContentType(image.contentType)}`;
+  const r2Key = `toc-cache/images/${token}/${fullHash}.${extensionForContentType(image.contentType)}`;
   const now = Date.now();
-  await env.MEDIA.put(r2Key, image.bytes, { httpMetadata: { contentType: image.contentType } });
+  await env.MEDIA.put(r2Key, image.bytes, { httpMetadata: { contentType: image.contentType }, customMetadata: { doi, contentHash, articleUrl, sourceUrl: String(payload.sourceUrl || '').slice(0,1500), captureVersion: String(payload.captureVersion || '') } });
   await env.DB.prepare(
     `INSERT INTO toc_assets (doi, article_url, r2_key, content_hash, reason, available, checked_at, updated_at)
      VALUES (?, ?, ?, ?, 'imported', 1, ?, ?)
@@ -349,9 +364,9 @@ export async function importFigure(request, env, payload) {
     'SELECT semantic_key FROM figure_assets WHERE doi = ? AND content_hash = ? LIMIT 1'
   ).bind(doi, contentHash).first();
   if (!duplicate || duplicate.semantic_key === key) {
-    const r2Key = `figure-cache/images/${token}/${sourceId}.${extensionForContentType(image.contentType)}`;
+    const r2Key = `figure-cache/images/${token}/${sourceId}-${fullHash.slice(0,32)}.${extensionForContentType(image.contentType)}`;
     const now = Date.now();
-    await env.MEDIA.put(r2Key, image.bytes, { httpMetadata: { contentType: image.contentType } });
+    await env.MEDIA.put(r2Key, image.bytes, { httpMetadata: { contentType: image.contentType }, customMetadata: { doi, contentHash, articleUrl, sourceUrl: String(payload.sourceUrl || '').slice(0,1500), captureVersion: String(payload.captureVersion || '') } });
     await env.DB.prepare(
       `INSERT INTO figure_assets
         (doi, semantic_key, source_id, label, caption, article_url, r2_key, content_hash, width, height, sort_order, updated_at)
@@ -368,7 +383,8 @@ export async function importFigure(request, env, payload) {
          sort_order = excluded.sort_order,
          updated_at = excluded.updated_at
        WHERE
-         COALESCE(figure_assets.width, 0) = 0
+         COALESCE(figure_assets.updated_at, 0) < 1790082000000
+         OR COALESCE(figure_assets.width, 0) = 0
          OR COALESCE(figure_assets.height, 0) = 0
          OR COALESCE(excluded.width, 0) * COALESCE(excluded.height, 0) >=
             COALESCE(figure_assets.width, 0) * COALESCE(figure_assets.height, 0)`
