@@ -1,1 +1,140 @@
-{"schemaVersion":2,"purpose":"Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.","timezone":"Asia/Shanghai","phase":"synced","activeRun":null,"lastCompletedFetch":{"id":"manual-midday-catchup-20260922","finishedAt":"2026-09-22T14:35:00+08:00","windowStart":"2026-09-20","windowEnd":"2026-09-22","sourceSummary":{"sourceRecords":511,"criticalSourceFailures":0,"sourceFamilyGaps":0,"sourceCoverageAnomalies":0,"closureCoverageAnomalies":6,"historicalCoverageLosses":0,"closureDate":"2026-09-21","closureUnresolved":0,"fullWindowAssistantUnresolved":0},"addedThisRun":["10.1021/jacs.6c13641","10.1002/anie.7101768","10.1002/anie.9519061","10.1021/acs.orglett.6c03921"],"dataCommitShas":["98b77b23cbb62886fd277c84a2495fbf3563fa91","fc0dac7b75cbfedbae064fafd113b9d5d277c7bc"],"reviewCommitShas":["a014fb73b8ed11502b8c649bb9e901001a1d8b47","8dd4fdb7201991f3ce912c637ae894a1000c4c76","f21af075dad107bad55d7d961e972a5d4a2c1ae2"],"auditCommitSha":"9cfb50ed88238067036b3e219377ce3519a0b80a","auditGeneratedAt":"2026-09-22T06:27:34.374Z","note":"Consolidated the polymer-method scope correction and subsequent late-indexed candidates. Current audit reports galleryDois=503, missingFromGallery=0, unresolved=0."},"lastWebsiteSync":{"finishedAt":"2026-09-22T14:35:00+08:00","dataCommitSha":"fc0dac7b75cbfedbae064fafd113b9d5d277c7bc","capabilityFingerprint":"2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af","deployment":"success-live-verified","verification":{"productionGitHubPages":"success","newlyAcceptedDoisPresent":["10.1021/jacs.6c13641","10.1002/anie.7101768","10.1002/anie.9519061","10.1021/acs.orglett.6c03921"],"totalGalleryCards":503,"galleryDois":503,"note":"Deployed automation-supplement.json directly verified; current audit independently reports galleryDois=503."},"tocVerification":{"liveQueueCommitSha":"7d5f217a82b45f0fbf16aeab9e251c4af99ece35","visibleGapTotal":2,"missingOfficialTotal":67,"officialUpgradeTotal":65,"note":"TOC/Figure media delegated only to Tampermonkey/VPN Bridge. OA PDF extraction is not part of the literature-update pipeline."}},"verifiedThrough":"2026-09-20","capabilityRegistry":"audit/literature-capability.json","currentStableCapabilityFingerprint":"2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af","lastCompletedReview":{"id":"manual-midday-review-20260922","finishedAt":"2026-09-22T14:35:00+08:00","sourceAuditGeneratedAt":"2026-09-22T06:27:34.374Z","windowStart":"2026-09-20","windowEnd":"2026-09-22","reviewed":13,"accepted":4,"rejected":9,"pending":0,"unresolved":0,"reviewFiles":["audit/review-2026-09-22-scope-correction.json","audit/review-2026-09-22-late-6.json","audit/review-2026-09-22-late-4.json"]},"lastFallbackAttempt":{"id":"fallback-20260922-1825","finishedAt":"2026-09-22T18:29:00+08:00","result":"incomplete_review","reviewFile":"audit/review-2026-09-22-1825-fallback.json","reviewCommitSha":"f8d35327c5059ef3149d2a4d0a9381f1636cb3e7","reason":"Primary 18:05 run did not persist a fresh closure. This fallback runtime could inspect/write GitHub and live web sources but could not execute repository Node discovery/quality-gate scripts or dispatch the audit workflow; therefore mandatory fresh 16-journal DOI-union discovery, per-journal sourceChecks, two-pass adversarial review and end-to-end validator were not safely completable.","productionGalleryCards":503,"tocPolicy":"Tampermonkey/VPN Bridge only; no OA extraction","nextAction":"Next executable primary/fallback must run the full 16-journal audit and quality gate before claiming completion."},"rules":{"freshFetchLockMinutes":120,"reuseCompletedFetchHours":24,"syncOnlyMustNotRefetch":true,"preferLatestCompatibleStableCapability":true,"pinCapabilityDuringRun":true,"forceRefetchOnCapabilityFingerprintChange":true,"machineSafetyTailDays":7,"lateDepositRescueDays":7}}
+{
+  "schemaVersion": 2,
+  "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
+  "timezone": "Asia/Shanghai",
+  "phase": "awaiting_semantic_review",
+  "activeRun": null,
+  "lastCompletedFetch": {
+    "id": "manual-midday-catchup-20260922",
+    "finishedAt": "2026-09-22T14:35:00+08:00",
+    "windowStart": "2026-09-20",
+    "windowEnd": "2026-09-22",
+    "sourceSummary": {
+      "sourceRecords": 511,
+      "criticalSourceFailures": 0,
+      "sourceFamilyGaps": 0,
+      "sourceCoverageAnomalies": 0,
+      "closureCoverageAnomalies": 6,
+      "historicalCoverageLosses": 0,
+      "closureDate": "2026-09-21",
+      "closureUnresolved": 0,
+      "fullWindowAssistantUnresolved": 0
+    },
+    "addedThisRun": [
+      "10.1021/jacs.6c13641",
+      "10.1002/anie.7101768",
+      "10.1002/anie.9519061",
+      "10.1021/acs.orglett.6c03921"
+    ],
+    "dataCommitShas": [
+      "98b77b23cbb62886fd277c84a2495fbf3563fa91",
+      "fc0dac7b75cbfedbae064fafd113b9d5d277c7bc"
+    ],
+    "reviewCommitShas": [
+      "a014fb73b8ed11502b8c649bb9e901001a1d8b47",
+      "8dd4fdb7201991f3ce912c637ae894a1000c4c76",
+      "f21af075dad107bad55d7d961e972a5d4a2c1ae2"
+    ],
+    "auditCommitSha": "9cfb50ed88238067036b3e219377ce3519a0b80a",
+    "auditGeneratedAt": "2026-09-22T06:27:34.374Z",
+    "note": "Consolidated the polymer-method scope correction and subsequent late-indexed candidates. Current audit reports galleryDois=503, missingFromGallery=0, unresolved=0."
+  },
+  "lastWebsiteSync": {
+    "finishedAt": "2026-09-22T14:35:00+08:00",
+    "dataCommitSha": "fc0dac7b75cbfedbae064fafd113b9d5d277c7bc",
+    "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
+    "deployment": "success-live-verified",
+    "verification": {
+      "productionGitHubPages": "success",
+      "newlyAcceptedDoisPresent": [
+        "10.1021/jacs.6c13641",
+        "10.1002/anie.7101768",
+        "10.1002/anie.9519061",
+        "10.1021/acs.orglett.6c03921"
+      ],
+      "totalGalleryCards": 503,
+      "galleryDois": 503,
+      "note": "Deployed automation-supplement.json directly verified; current audit independently reports galleryDois=503."
+    },
+    "tocVerification": {
+      "liveQueueCommitSha": "7d5f217a82b45f0fbf16aeab9e251c4af99ece35",
+      "visibleGapTotal": 2,
+      "missingOfficialTotal": 67,
+      "officialUpgradeTotal": 65,
+      "note": "TOC/Figure media delegated only to Tampermonkey/VPN Bridge. OA PDF extraction is not part of the literature-update pipeline."
+    }
+  },
+  "verifiedThrough": "2026-09-20",
+  "capabilityRegistry": "audit/literature-capability.json",
+  "currentStableCapabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
+  "lastCompletedReview": {
+    "id": "manual-midday-review-20260922",
+    "finishedAt": "2026-09-22T14:35:00+08:00",
+    "sourceAuditGeneratedAt": "2026-09-22T06:27:34.374Z",
+    "windowStart": "2026-09-20",
+    "windowEnd": "2026-09-22",
+    "reviewed": 13,
+    "accepted": 4,
+    "rejected": 9,
+    "pending": 0,
+    "unresolved": 0,
+    "reviewFiles": [
+      "audit/review-2026-09-22-scope-correction.json",
+      "audit/review-2026-09-22-late-6.json",
+      "audit/review-2026-09-22-late-4.json"
+    ]
+  },
+  "lastFallbackAttempt": {
+    "id": "fallback-20260922-1825",
+    "finishedAt": "2026-09-22T18:29:00+08:00",
+    "result": "incomplete_review",
+    "reviewFile": "audit/review-2026-09-22-1825-fallback.json",
+    "reviewCommitSha": "f8d35327c5059ef3149d2a4d0a9381f1636cb3e7",
+    "reason": "Primary 18:05 run did not persist a fresh closure. This fallback runtime could inspect/write GitHub and live web sources but could not execute repository Node discovery/quality-gate scripts or dispatch the audit workflow; therefore mandatory fresh 16-journal DOI-union discovery, per-journal sourceChecks, two-pass adversarial review and end-to-end validator were not safely completable.",
+    "productionGalleryCards": 503,
+    "tocPolicy": "Tampermonkey/VPN Bridge only; no OA extraction",
+    "nextAction": "Next executable primary/fallback must run the full 16-journal audit and quality gate before claiming completion.",
+    "correctedInterpretationAt": "2026-09-22T18:40:23+08:00",
+    "machineAuditTriggeredByReviewPush": true,
+    "machineAuditRunId": 35715987941,
+    "laterDedicatedBridgeRunId": 35716850448,
+    "correctedReason": "The fallback runtime lacked local Node/workflow_dispatch, but its GitHub write did trigger the repository audit workflow by push. A dedicated trigger-file bridge is now the supported path. Current blocker is semantic review of 36 unresolved DOI, not absence of a GitHub runner."
+  },
+  "rules": {
+    "freshFetchLockMinutes": 120,
+    "reuseCompletedFetchHours": 24,
+    "syncOnlyMustNotRefetch": true,
+    "preferLatestCompatibleStableCapability": true,
+    "pinCapabilityDuringRun": true,
+    "forceRefetchOnCapabilityFingerprintChange": true,
+    "machineSafetyTailDays": 7,
+    "lateDepositRescueDays": 7
+  },
+  "automationBridge": {
+    "mode": "github-push-trigger",
+    "triggerFile": "audit/automation-triggers/literature-audit-request.json",
+    "workflow": ".github/workflows/literature-audit.yml",
+    "verifiedAt": "2026-09-22T18:40:23+08:00",
+    "verifiedRunId": 35716850448,
+    "verifiedRunConclusion": "success",
+    "triggerCommitSha": "1cd8e25b17738a8903e92327523167ed3b7b1588",
+    "note": "ChatGPT scheduled tasks do not need local Node or workflow_dispatch. Updating the trigger file starts the GitHub Node audit by push."
+  },
+  "latestMachineAudit": {
+    "generatedAt": "2026-09-22T10:40:12.032Z",
+    "runId": 35716850448,
+    "sourceRecords": 547,
+    "galleryDois": 503,
+    "missingFromGallery": 36,
+    "unresolved": 36,
+    "potentialGaps": 19,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 6,
+    "historicalCoverageLosses": 0,
+    "closureDate": "2026-09-21",
+    "status": "awaiting_semantic_review",
+    "note": "Fresh 16-journal machine audit succeeded via push-trigger bridge. The 36 unresolved DOI candidates still require complete two-pass semantic review before this evening run may close."
+  }
+}
