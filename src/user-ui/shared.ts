@@ -8,7 +8,7 @@ export type SuggestionType = 'author' | 'keyword' | 'journal' | 'doi';
 export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; }
 export interface StatusDef { id: string; name: string; style: StyleDef; countsAsRead: boolean; }
 export interface QuickTerm { id: string; label: string; style: StyleDef; }
-export interface CollectionDef { id: string; name: string; }
+export interface CollectionDef { id: string; name: string; style: StyleDef; }
 export interface AliasGroup { id: string; name: string; terms: string[]; }
 export interface PaperMeta { id: string; doi?: string; title: string; journal: string; href?: string; authors: string[]; topics: string[]; }
 export interface PaperUserState { favorite: boolean; collections: string[]; statusId?: string; note: string; noteUpdatedAt?: number; quickTerms: string[]; tags: string[]; lastOpenedAt?: number; updatedAt?: number; }
@@ -54,9 +54,9 @@ function defaults(): UserUiState {
       { id: 'group', label: 'Group Meeting', style: style([174, 86, 132], 'pill') },
     ],
     collections: [
-      { id: 'default', name: '默认收藏' },
-      { id: 'project', name: '我的课题' },
-      { id: 'group', name: 'Group Meeting' },
+      { id: 'default', name: '默认收藏', style: style([49, 89, 189], 'pill') },
+      { id: 'project', name: '我的课题', style: style([72, 137, 165], 'pill') },
+      { id: 'group', name: 'Group Meeting', style: style([174, 86, 132], 'pill') },
     ],
     aliases: [
       { id: 'photoredox', name: 'Photoredox', terms: ['photoredox', 'photoredox catalysis', 'photocatalysis', 'visible-light catalysis', '光氧化还原', '光催化'] },
@@ -80,7 +80,12 @@ function load(): UserUiState {
       ...base, ...saved,
       statuses: Array.isArray(saved.statuses) && saved.statuses.length ? saved.statuses.map(item => ({ ...item, countsAsRead: typeof item.countsAsRead === 'boolean' ? item.countsAsRead : item.id !== 'to-read' })) : base.statuses,
       quickTerms: Array.isArray(saved.quickTerms) && saved.quickTerms.length ? saved.quickTerms : base.quickTerms,
-      collections: Array.isArray(saved.collections) && saved.collections.length ? saved.collections : base.collections,
+      collections: Array.isArray(saved.collections) && saved.collections.length
+        ? saved.collections.map((item, index) => ({
+            ...item,
+            style: item.style || base.collections[index % base.collections.length]?.style || style([96, 116, 145], 'pill'),
+          }))
+        : base.collections,
       aliases: Array.isArray(saved.aliases) ? saved.aliases : base.aliases,
       actionStyles: { ...base.actionStyles, ...(saved.actionStyles || {}) },
       papers: saved.papers || {}, metadata: saved.metadata || {},
@@ -448,6 +453,7 @@ class Store extends EventTarget {
     const statusId = this.state.statuses.find(item => item.style === target)?.id;
     const actionKey = (Object.entries(this.state.actionStyles) as Array<[ActionKey, StyleDef]>).find(([, style]) => style === target)?.[0];
     const quickTermId = this.state.quickTerms.find(item => item.style === target)?.id;
+    const collectionId = this.state.collections.find(item => item.style === target)?.id;
     const cropped = await cropUserImage(file);
     if (!cropped) return;
 
@@ -457,7 +463,9 @@ class Store extends EventTarget {
         ? this.state.actionStyles[actionKey]
         : quickTermId
           ? this.state.quickTerms.find(item => item.id === quickTermId)?.style
-          : target;
+          : collectionId
+            ? this.state.collections.find(item => item.id === collectionId)?.style
+            : target;
     if (!liveTarget) return;
     liveTarget.imageData = cropped.imageData;
     if (cropped.circular) liveTarget.shape = 'circle';

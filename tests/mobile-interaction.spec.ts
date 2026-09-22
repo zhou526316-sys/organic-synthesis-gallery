@@ -439,6 +439,55 @@ test('desktop personalization wheel reaches the bottom and action slots align ac
 });
 
 
+test('More quick choices map directly to customizable folders', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const actions = page.locator('gallery-paper-actions').first();
+  await expect(actions).toBeVisible({ timeout: 30000 });
+
+  await actions.locator('button[data-action="more"]').click();
+  await expect(actions.locator('.drawer')).toContainText(/快速选择（收藏夹）|Quick choices \(folders\)/);
+  await expect(actions.locator('input[data-collection]')).toHaveCount(3);
+  await expect(actions.locator('input[data-quick]')).toHaveCount(0);
+
+  const projectFolder = actions.locator('input[data-collection="project"]');
+  await projectFolder.check();
+  await expect(projectFolder).toBeChecked();
+  await actions.locator('button[data-action="close"]').click();
+  const projectChip = actions.locator('.chip').filter({ hasText: '我的课题' });
+  await expect(projectChip).toBeVisible();
+
+  const userShell = page.locator('gallery-user-shell');
+  await userShell.locator('button.trigger').click();
+  await userShell.locator('button[data-tab="settings"]').click();
+  const folderColor = userShell.locator('input[data-color="collection:project"]');
+  await expect(folderColor).toBeVisible();
+  await folderColor.evaluate((element: HTMLInputElement) => {
+    element.value = '#13579b';
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await expect.poll(async () => projectChip.evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(19, 87, 155)');
+});
+
+
 test('search highlights results, picker closes outside, feedback drags and submits', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   let submittedFeedback: Record<string, unknown> | null = null;

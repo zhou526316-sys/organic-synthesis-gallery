@@ -170,8 +170,12 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private chips(paper: PaperUserState, status: ReturnType<typeof store.status>): string {
-    const quick = store.state.quickTerms.filter(item => paper.quickTerms.includes(item.id));
-    const values = [status ? this.statusVisual(status, 'chip status') : '', ...quick.map(item => `<span class='chip'>${escapeHtml(item.label)}</span>`), ...paper.tags.map(tag => `<span class='chip'>${escapeHtml(tag)}</span>`)];
+    const collections = store.state.collections.filter(item => paper.collections.includes(item.id));
+    const values = [
+      status ? this.statusVisual(status, 'chip status') : '',
+      ...collections.map(item => `<span class='chip shape-${item.style.shape}' style='background:${rgbCss(item.style.rgb)};color:#fff'>${escapeHtml(item.name)}</span>`),
+      ...paper.tags.map(tag => `<span class='chip'>${escapeHtml(tag)}</span>`),
+    ];
     return values.some(Boolean) ? `<div class='chips'>${values.join('')}</div>` : '';
   }
 
@@ -193,8 +197,7 @@ export class GalleryPaperActions extends HTMLElement {
     } else if (this.panel === 'note') {
       body = `<section class='section'><textarea data-note placeholder='${this.tr('支持 Markdown 文本、DOI/URL、- [ ] checklist', 'Markdown text, DOI/URL and - [ ] checklist are supported')}'>${escapeHtml(paper.note)}</textarea><div class='help'>${paper.noteUpdatedAt ? `${this.tr('修改于', 'Modified')} ${formatTime(paper.noteUpdatedAt)}` : this.tr('自动保存到当前浏览器', 'Autosaved in this browser')}</div>${paper.note ? `<div class='preview'>${notePreview(paper.note)}</div>` : ''}</section>`;
     } else {
-      body = `<section class='section'><h4>${this.tr('收藏夹', 'Folders')}</h4><div class='stack'>${store.state.collections.map(item => `<label class='check'><input type='checkbox' data-collection='${escapeHtml(item.id)}' ${paper.collections.includes(item.id) ? 'checked' : ''}>${escapeHtml(item.name)}</label>`).join('')}</div></section>
-      <section class='section'><h4>${this.tr('快速选择', 'Quick choices')}</h4><div class='stack'>${store.state.quickTerms.map(item => `<label class='check'><input type='checkbox' data-quick='${escapeHtml(item.id)}' ${paper.quickTerms.includes(item.id) ? 'checked' : ''}>${escapeHtml(item.label)}</label>`).join('')}</div></section>
+      body = `<section class='section'><h4>${this.tr('快速选择（收藏夹）', 'Quick choices (folders)')}</h4><div class='help' style='margin-bottom:7px'>${this.tr('这里的每一项都对应一个收藏夹。', 'Every quick choice maps directly to a folder.')}</div><div class='stack'>${store.state.collections.map(item => `<label class='check'><input type='checkbox' data-collection='${escapeHtml(item.id)}' ${paper.collections.includes(item.id) ? 'checked' : ''}><span class='chip shape-${item.style.shape}' style='background:${rgbCss(item.style.rgb)};color:#fff'>${escapeHtml(item.name)}</span></label>`).join('')}</div></section>
       <section class='section'><h4>${this.tr('自定义标签', 'Custom tags')}</h4><div class='tag-row'><input class='input' data-tag placeholder='${this.tr('例如：需要复现', 'e.g. reproduce')}'><button class='secondary' type='button' data-action='add-tag'>${this.tr('添加', 'Add')}</button></div><div class='chips' style='margin-top:8px'>${paper.tags.map(tag => `<span class='chip'>${escapeHtml(tag)} <button class='danger' style='border:0;background:transparent' data-action='remove-tag:${escapeHtml(tag)}'>×</button></span>`).join('')}</div></section>
       <section class='section'><div class='stack'><button class='secondary' type='button' data-action='similar'>${this.tr('查找相似文献', 'Find similar papers')}</button><button class='secondary' type='button' data-action='feedback'>${this.tr('报告文献问题', 'Report a paper issue')}</button>${meta?.href ? `<a class='secondary' data-close-panel='true' style='text-decoration:none' href='${escapeHtml(meta.href)}' target='_blank' rel='noopener noreferrer'>${this.tr('打开原文 ↗', 'Open original ↗')}</a>` : ''}</div>${this.feedbackMessage ? `<div class='feedback'>${escapeHtml(this.feedbackMessage)}</div>` : ''}</section>`;
     }
@@ -210,9 +213,6 @@ export class GalleryPaperActions extends HTMLElement {
     });
     this.shadow.querySelectorAll<HTMLInputElement>('[data-collection]').forEach(input => input.addEventListener('change', () => store.updatePaper(this.paperId, paper => {
       const id = input.dataset.collection || ''; paper.collections = input.checked ? [...new Set([...paper.collections, id])] : paper.collections.filter(value => value !== id); paper.favorite = paper.collections.length > 0 || paper.favorite;
-    })));
-    this.shadow.querySelectorAll<HTMLInputElement>('[data-quick]').forEach(input => input.addEventListener('change', () => store.updatePaper(this.paperId, paper => {
-      const id = input.dataset.quick || ''; paper.quickTerms = input.checked ? [...new Set([...paper.quickTerms, id])] : paper.quickTerms.filter(value => value !== id);
     })));
     this.shadow.querySelectorAll<HTMLInputElement>('[data-status-color]').forEach(input => input.addEventListener('change', () => {
       const status = store.status(input.dataset.statusColor || '');
