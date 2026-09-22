@@ -11,6 +11,7 @@ import {
 import {
   importFigure,
   importToc,
+  purgeCrossDoiMedia,
   quarantineToc,
   resetFigures,
 } from './media-write.js';
@@ -389,6 +390,7 @@ async function handleApi(request, env) {
       '/api/article-figures/stage',
       '/api/article-figures/promote-staged',
       '/api/article-figures/reset',
+      '/api/media/purge-cross-doi',
       '/api/media/attempt',
       '/api/media/diagnose',
       '/api/media/repair-batch',
@@ -435,6 +437,9 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/reset') {
     return resultResponse(await resetFigures(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/purge-cross-doi') {
+    return resultResponse(await purgeCrossDoiMedia(env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/media/attempt') {
     return resultResponse(await persistMediaAttempt(env, await readJson(request)));
