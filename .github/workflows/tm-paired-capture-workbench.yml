@@ -5,9 +5,10 @@ on:
     paths:
       - '.github/workflows/tm-paired-capture-workbench.yml'
       - 'scripts/apply-tm-paired-capture.py'
+      - 'scripts/tm-paired-capture-functions.js'
       - 'scripts/test-tm-paired-capture.mjs'
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: tm-paired-capture-workbench
   cancel-in-progress: false
@@ -20,13 +21,55 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-      - name: Preserve exact sources for bounded code review
-        shell: bash
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply scoped paired-capture changes
+        run: |
+          python3 scripts/apply-tm-paired-capture.py
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/scripts/build-live-toc-demand-queue.mjs
+          git diff --check
+      - name: Check task guards and staging receipts
+        run: |
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+      - name: Install isolated browser test dependencies
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install chromium
+      - name: Exercise paired capture and quality in Chromium without real publisher writes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/test-tm-paired-capture.mjs');s=p.read_text()
+          anchor="  if(req.method()==='POST'){"
+          if "req.method()==='OPTIONS'" not in s:
+              s=s.replace(anchor,"  if(req.method()==='OPTIONS') return route.fulfill({status:204,headers:{'access-control-allow-origin':'*','access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'authorization,content-type'}});\n"+anchor,1)
+              p.write_text(s)
+          PY
+          node scripts/test-tm-paired-capture.mjs
+      - name: Save tested changes only to upgrade branch
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/fix/media-identity-v220
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/toc-mainline.user.js cloudflare/scripts/build-live-toc-demand-queue.mjs scripts/test-tm-paired-capture.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m 'feat: pair TOC and body-figure capture with tested scope and quality selection'
+            git push origin HEAD:fix/media-identity-v220
+          fi
+          echo "TESTED_PAIRED_HEAD=$(git rev-parse HEAD)"
+      - name: Preserve exact sources and browser evidence
+        if: always()
         run: |
           mkdir -p "$RUNNER_TEMP/tm-paired-source"
-          tar -cf "$RUNNER_TEMP/tm-paired-source/source.tar" public/toc-mainline.user.js cloudflare/scripts cloudflare/worker/src cloudflare/worker/wrangler.toml cloudflare/worker/package.json shared scripts .github/workflows package.json public/toc-demand-live.json
-          echo "$GITHUB_SHA" > "$RUNNER_TEMP/tm-paired-source/head.txt"
+          tar -cf "$RUNNER_TEMP/tm-paired-source/source.tar" public/toc-mainline.user.js cloudflare/scripts cloudflare/worker/src shared scripts .github/workflows package.json public/toc-demand-live.json
+          git rev-parse HEAD > "$RUNNER_TEMP/tm-paired-source/head.txt"
+          cp "$RUNNER_TEMP/paired-capture-fixture.png" "$RUNNER_TEMP/tm-paired-source/" 2>/dev/null || true
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: tm-paired-source
           path: ${{ runner.temp }}/tm-paired-source/
