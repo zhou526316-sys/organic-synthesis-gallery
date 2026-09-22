@@ -615,11 +615,18 @@ test('full-text summary opens as a non-fullscreen TOC-backed bilingual panel', a
   const box = await drawer.boundingBox();
   expect(box).not.toBeNull();
   if (box) {
-    expect(box.width).toBeLessThan(780);
-    expect(box.width).toBeLessThan(1280 * 0.8);
-    expect(box.height).toBeLessThan(900 * 0.8);
+    // Feedback29 deliberately enlarges the old 740px panel; retain bounded,
+    // nonfullscreen behavior rather than enforcing the obsolete small size.
+    expect(box.width).toBeGreaterThanOrEqual(1000);
+    expect(box.width).toBeLessThanOrEqual(1200);
+    expect(box.x).toBeGreaterThanOrEqual(16);
+    expect(box.x + box.width).toBeLessThanOrEqual(1280 - 16);
+    expect(box.y).toBeGreaterThanOrEqual(16);
+    expect(box.y + box.height).toBeLessThanOrEqual(900 - 16);
+    expect(box.height).toBeLessThanOrEqual(900 * 0.84 + 1);
   }
 
+  expect(await drawer.locator('.summary-text').evaluate(node => parseFloat(getComputedStyle(node).fontSize))).toBeGreaterThanOrEqual(16);
   await drawer.locator('button[data-action="summary-lang:en"]').click();
   await expect(drawer.locator('.summary-text')).toContainText('English full-text summary');
   await expect(drawer.locator('a[data-summary-open]')).toBeVisible();
