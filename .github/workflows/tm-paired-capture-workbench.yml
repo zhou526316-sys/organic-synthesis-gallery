@@ -1,0 +1,33 @@
+name: Paired article capture workbench
+on:
+  push:
+    branches: [fix/media-identity-v220]
+    paths:
+      - '.github/workflows/tm-paired-capture-workbench.yml'
+      - 'scripts/apply-tm-paired-capture.py'
+      - 'scripts/test-tm-paired-capture.mjs'
+permissions:
+  contents: read
+concurrency:
+  group: tm-paired-capture-workbench
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/fix/media-identity-v220'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Preserve exact sources for bounded code review
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm-paired-source"
+          tar -cf "$RUNNER_TEMP/tm-paired-source/source.tar" public/toc-mainline.user.js cloudflare/scripts cloudflare/worker/src cloudflare/worker/wrangler.toml cloudflare/worker/package.json shared scripts .github/workflows package.json public/toc-demand-live.json
+          echo "$GITHUB_SHA" > "$RUNNER_TEMP/tm-paired-source/head.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tm-paired-source
+          path: ${{ runner.temp }}/tm-paired-source/
+          retention-days: 3
