@@ -239,17 +239,23 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   const largePng = Buffer.concat([tinyPng, Buffer.alloc(5_000_000 - tinyPng.length)]);
   const largeFile = { name: 'large-status.png', mimeType: 'image/png', buffer: largePng };
 
+  // Original/GIF display is the default; legacy cropping is now explicit.
+  await userShell.locator('input[data-image-crop="status:to-read"]').check();
   await statusImageInput.setInputFiles(largeFile);
   const cropper = page.locator('[role="dialog"][aria-modal="true"]').filter({ hasText: 'Crop image' });
   await expect(cropper).toBeVisible();
   await cropper.getByRole('button', { name: '取消 / Cancel' }).click();
   await expect(cropper).toHaveCount(0);
 
+  // Original/GIF display is the default; legacy cropping is now explicit.
+  await userShell.locator('input[data-image-crop="status:to-read"]').check();
   await statusImageInput.setInputFiles(largeFile);
   await expect(cropper).toBeVisible();
   await cropper.getByRole('button', { name: '取消 / Cancel' }).click();
   await expect(cropper).toHaveCount(0);
 
+  // Original/GIF display is the default; legacy cropping is now explicit.
+  await userShell.locator('input[data-image-crop="status:to-read"]').check();
   await statusImageInput.setInputFiles({
     name: 'status.png',
     mimeType: 'image/png',

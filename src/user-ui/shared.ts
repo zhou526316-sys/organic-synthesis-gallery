@@ -1,11 +1,12 @@
 import { cropUserImage } from './image-cropper';
+import { prepareStatusImage, type OriginalStatusImage } from './status-image-assets';
 export type Language = 'zh' | 'en';
 export type Shape = 'pill' | 'rounded' | 'rectangle' | 'circle' | 'square' | 'diamond' | 'bookmark' | 'star';
 export type RGB = [number, number, number];
 export type ActionKey = 'favorite' | 'status' | 'note' | 'more' | 'login' | 'support';
 export type SuggestionType = 'author' | 'keyword' | 'journal' | 'doi';
 
-export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; }
+export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; imageOriginal?: OriginalStatusImage; }
 export interface StatusDef { id: string; name: string; style: StyleDef; countsAsRead: boolean; }
 export interface QuickTerm { id: string; label: string; style: StyleDef; }
 export interface CollectionDef { id: string; name: string; style: StyleDef; }
@@ -483,12 +484,48 @@ class Store extends EventTarget {
     enqueueSiteFeedback(payload);
     return 'queued';
   }
+  private readonly statusImageJobs = new Map<string, symbol>();
+  async setOriginalStatusImage(target: StyleDef, file: File): Promise<boolean> {
+    const statusId = this.state.statuses.find(item => item.style === target)?.id;
+    if (!statusId) return false;
+    const job = Symbol('status-image');
+    this.statusImageJobs.set(statusId, job);
+    const previousData = target.imageData;
+    const previousId = target.imageOriginal?.id;
+    const prepared = await prepareStatusImage(file);
+    const live = this.status(statusId)?.style;
+    // Newer selections/removal or a remote image replacement win over this load.
+    if (this.statusImageJobs.get(statusId) !== job || !live || live.imageData !== previousData || live.imageOriginal?.id !== previousId) return false;
+    const previous = { imageData: live.imageData, imageOriginal: live.imageOriginal };
+    Object.assign(live, prepared);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+    } catch (error) {
+      delete live.imageData;
+      delete live.imageOriginal;
+      if (previous.imageData !== undefined) live.imageData = previous.imageData;
+      if (previous.imageOriginal !== undefined) live.imageOriginal = previous.imageOriginal;
+      throw error;
+    }
+    this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'global' } }));
+    return true;
+  }
+  clearImage(target: StyleDef): void {
+    const statusId = this.state.statuses.find(item => item.style === target)?.id;
+    if (statusId) this.statusImageJobs.set(statusId, Symbol('removed'));
+    delete target.imageData;
+    delete target.imageOriginal;
+    this.save();
+  }
   async setImage(target: StyleDef, file: File): Promise<void> {
     const statusId = this.state.statuses.find(item => item.style === target)?.id;
     const actionKey = (Object.entries(this.state.actionStyles) as Array<[ActionKey, StyleDef]>).find(([, style]) => style === target)?.[0];
     const quickTermId = this.state.quickTerms.find(item => item.style === target)?.id;
     const collectionId = this.state.collections.find(item => item.style === target)?.id;
+    const job = Symbol('cropped-image');
+    if (statusId) this.statusImageJobs.set(statusId, job);
     const cropped = await cropUserImage(file);
+    if (statusId && this.statusImageJobs.get(statusId) !== job) return;
     if (!cropped) return;
 
     const liveTarget = statusId
@@ -501,6 +538,7 @@ class Store extends EventTarget {
             ? this.state.collections.find(item => item.id === collectionId)?.style
             : target;
     if (!liveTarget) return;
+    delete liveTarget.imageOriginal;
     liveTarget.imageData = cropped.imageData;
     if (cropped.circular) liveTarget.shape = 'circle';
     this.save();

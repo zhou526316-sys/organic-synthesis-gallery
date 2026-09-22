@@ -1,12 +1,14 @@
 import { escapeHtml, rgbCss, SHAPES, statusLabel, store, styleVars, type ArticleSummaryResult, type Language, type PaperUserState, type Shape, type StyleDef } from './shared';
 
+import { hydrateStatusImages, statusImageError, statusImageTag, viewStatusImage } from './status-image-assets';
+
 const NAME = 'gallery-paper-actions';
 
 function icon(style: StyleDef, fallback: string): string {
   return style.imageData ? `<img class='icon' src='${escapeHtml(style.imageData)}' alt=''>` : `<span aria-hidden='true'>${fallback}</span>`;
 }
-function button(style: StyleDef, label: string, action: string, fallback: string, active = false): string {
-  return `<button type='button' class='action shape-${style.shape}${active ? ' active' : ''}' style='${styleVars(style)}' data-action='${action}' title='${escapeHtml(label)}'>${icon(style, fallback)}<span>${escapeHtml(label)}</span></button>`;
+function button(style: StyleDef, label: string, action: string, fallback: string, active = false, original?: StyleDef): string {
+  return `<button type='button' aria-label='${escapeHtml(label)}' class='action shape-${style.shape}${active ? ' active' : ''}${original ? ' status-artwork' : ''}' style='${styleVars(style)}' data-action='${action}' title='${escapeHtml(label)}'>${original ? statusImageTag(original, 'status-original-action', label) : `${icon(style, fallback)}<span>${escapeHtml(label)}</span>`}</button>`;
 }
 function formatTime(value?: number): string { return value ? new Date(value).toLocaleString() : ''; }
 function rgbToHex(rgb: [number, number, number]): string { return `#${rgb.map(value => Math.max(0, Math.min(255, value)).toString(16).padStart(2, '0')).join('')}`; }
@@ -70,6 +72,8 @@ export class GalleryPaperActions extends HTMLElement {
   private readonly shadow = this.attachShadow({ mode: 'open' });
   private panel: 'none' | 'favorite' | 'status' | 'note' | 'more' | 'summary' = 'none';
   private feedbackMessage = '';
+  private imageMessage = '';
+  private imageBusy = false;
   private citationStyle: CitationStyle = 'acs';
   private citationMessage = '';
   private summaryLanguage: Language = 'zh';
@@ -258,14 +262,22 @@ export class GalleryPaperActions extends HTMLElement {
       .drawer.summary-drawer{width:min(740px,calc(100vw - 24px));max-height:min(72dvh,680px);padding:16px}.summary-layout{display:grid;grid-template-columns:minmax(190px,38%) minmax(0,1fr);gap:16px;align-items:start}.summary-toc{display:grid;place-items:center;min-height:180px;padding:10px;border-radius:12px;background:#f7f8fb}.summary-toc img{display:block;width:100%;max-height:300px;object-fit:contain}.summary-main{min-width:0}.summary-tabs{display:flex;gap:6px;margin-bottom:10px}.summary-tabs button{border:1px solid #d8dfec;border-radius:999px;background:#fff;color:#667085;padding:6px 11px;font-weight:750}.summary-tabs button.selected{background:#3159bd;color:#fff;border-color:#3159bd}.summary-text{overflow-wrap:anywhere;font-size:12px;line-height:1.7;color:#344054}.summary-state{padding:18px;border-radius:12px;background:#f7f8fb;color:#667085;line-height:1.65}.summary-state.error{color:#b42318;background:#fff4f2}.summary-meta{margin-top:12px;color:#98a2b3;font-size:9px}.summary-open{display:inline-flex;margin-top:12px;padding:8px 12px;border-radius:9px;background:#3159bd;color:#fff;text-decoration:none;font-weight:800}
       .tag-row{display:flex;gap:6px}.tag-row .input{flex:1}.tag-row .secondary{width:auto}.danger{color:#b42318}.feedback{margin-top:7px;color:#667085;font-size:10px}
       @media(max-width:680px){:host{margin-top:2px}.bar{grid-template-columns:36px 36px 36px 36px max-content;gap:4px;margin:4px 0 7px}.action{min-height:26px;padding:4px 6px;font-size:9px}.action span:last-child{display:none}.metric{font-size:8px}.drawer{width:min(330px,calc(100vw - 16px));height:auto;max-height:min(64dvh,520px);padding:13px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px}.chips{display:flex}.chips>.chip:not(.status){display:none}.drawer .chips>.chip{display:inline-flex}.drawer.summary-drawer{width:min(520px,calc(100vw - 16px));max-height:min(70dvh,620px)}.summary-layout{grid-template-columns:1fr;gap:10px}.summary-toc{min-height:140px}.summary-toc img{max-height:210px}.summary-text{font-size:11px;line-height:1.65}}
+      .status-original{padding:2px!important;width:auto!important;max-width:128px;height:40px;min-height:0;background:transparent!important;border-radius:0;clip-path:none;transform:none}
+      .status-original .status-image{width:auto;height:36px;max-width:124px;object-fit:contain;border-radius:0;background:transparent;transform:none}
+      .action.status-artwork{clip-path:none;transform:none;width:100%;max-width:100%;padding:2px 5px}
+      .status-original-action{display:block;width:100%;height:28px;object-fit:contain;transform:none}
+      .status-style-editor .image-options{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+      .image-options label{display:flex;align-items:center;gap:4px}.image-options button{border:0;background:transparent;color:#3159bd;padding:4px}
+      .image-help{grid-column:1/-1;line-height:1.5;overflow-wrap:anywhere}
     </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('全文摘要', 'Full-text summary')}</button></div><div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
-      ${button(status ? { ...s.status, rgb: status.style.rgb } : s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status))}
+      ${button(status ? { ...s.status, rgb: status.style.rgb } : s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status), status?.style.imageOriginal ? status.style : undefined)}
       ${button(s.note, this.tr('私人备注', 'Private note'), 'note', '✎', Boolean(paper.note))}
       ${button(s.more, this.tr('更多', 'More'), 'more', '•••')}
       <span class='metric' data-reader-count-known='${typeof count === 'number' ? 'true' : 'false'}'>◉ ${countLabel} ${this.tr('人读过', 'readers')}</span>
     </div>${this.panel === 'none' ? '' : this.drawer(paper)}`;
     this.bind();
+    hydrateStatusImages(this.shadow);
     const drawerOpen = this.panel !== 'none' && Boolean(this.shadow.querySelector('.overlay'));
     if (drawerOpen) {
       this.dataset.drawerOpen = 'true';
@@ -279,6 +291,9 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private statusVisual(status: NonNullable<ReturnType<typeof store.status>>, className: string): string {
+    if (status.style.imageOriginal && status.style.imageData) {
+      return `<span class='${className} status-original' title='${escapeHtml(statusLabel(status, this.language))}'>${statusImageTag(status.style, 'status-image', statusLabel(status, this.language))}</span>`;
+    }
     const image = status.style.imageData
       ? `<img class='status-image' src='${escapeHtml(status.style.imageData)}' alt=''>`
       : '';
@@ -326,11 +341,13 @@ export class GalleryPaperActions extends HTMLElement {
     if (this.panel === 'summary') {
       body = this.summaryMarkup();
     } else if (this.panel === 'status') {
-      body = `<section class='section'><div class='stack'>${store.state.statuses.map(status => {
+      body = `<section class='section'><div class='help' role='status' data-status-image-message>${escapeHtml(this.imageMessage)}</div><div class='stack'>${store.state.statuses.map(status => {
         const editor = `<div class='status-style-editor' data-status-editor='${escapeHtml(status.id)}'>
           <label>${this.tr('颜色', 'Color')}<input type='color' data-status-color='${escapeHtml(status.id)}' value='${rgbToHex(status.style.rgb)}'></label>
           <label>${this.tr('形状', 'Shape')}<select data-status-shape='${escapeHtml(status.id)}'>${SHAPES.map(shape => `<option value='${shape}' ${status.style.shape === shape ? 'selected' : ''}>${shape}</option>`).join('')}</select></label>
-          <label>${this.tr('图片', 'Image')}<input type='file' accept='image/png,image/jpeg,image/webp' data-status-image='${escapeHtml(status.id)}'></label>
+          <label>${this.tr('图片', 'Image')}<input type='file' accept='image/png,image/jpeg,image/webp,image/gif' ${this.imageBusy ? 'disabled' : ''} data-status-image='${escapeHtml(status.id)}'></label>
+          <div class='image-options'><label><input type='checkbox' data-status-crop='${escapeHtml(status.id)}'>${this.tr('静态裁切（可选）', 'Static crop (optional)')}</label>${status.style.imageData ? `<button type='button' data-action='view-status-image:${escapeHtml(status.id)}'>${this.tr('查看图片', 'View image')}</button>` : ''}</div>
+          <div class='help image-help'>${this.tr('PNG / JPG / WebP / GIF，最大 30 MB。默认保留原图和动画，仅存在当前浏览器；账号同步预览图。静态裁切最大 20 MB。', 'PNG / JPG / WebP / GIF, up to 30 MB. Originals and animation stay in this browser; accounts sync a preview. Static crop: up to 20 MB.')}</div>
           ${status.style.imageData ? `<button class='remove-image' type='button' data-action='clear-status-image:${escapeHtml(status.id)}'>${this.tr('移除图片', 'Remove image')}</button>` : ''}
         </div>`;
         return `<div class='status-row'><div class='status-main'>
@@ -387,11 +404,18 @@ export class GalleryPaperActions extends HTMLElement {
       const status = store.status(input.dataset.statusImage || '');
       const file = input.files?.[0];
       if (!status || !file) return;
+      const crop = this.shadow.querySelector<HTMLInputElement>(`input[data-status-crop="${CSS.escape(status.id)}"]`)?.checked;
+      this.imageBusy = true;
+      this.imageMessage = this.tr('正在保存图片…', 'Saving image…');
+      this.render();
       try {
-        await store.setImage(status.style, file);
-      } finally {
-        input.value = '';
-      }
+        if (crop) { await store.setImage(status.style, file); this.imageMessage = ''; }
+        else {
+          const saved = await store.setOriginalStatusImage(status.style, file);
+          this.imageMessage = saved ? this.tr('原图已保存在当前浏览器；刷新后仍可显示。', 'Original saved in this browser and available after reload.') : this.tr('已取消，保留更新后的设置。', 'Cancelled; newer settings kept.');
+        }
+      } catch (error) { this.imageMessage = statusImageError(error); }
+      finally { this.imageBusy = false; input.value = ''; this.render(); }
     }));
   }
 
@@ -416,12 +440,17 @@ export class GalleryPaperActions extends HTMLElement {
       return;
     }
     if (action === 'close') { this.closePanel(); return; }
+    if (action.startsWith('view-status-image:')) {
+      const status = store.status(action.slice('view-status-image:'.length));
+      if (status) await viewStatusImage(status.style);
+      return;
+    }
     if (action.startsWith('clear-status-image:')) {
       const statusId = action.slice('clear-status-image:'.length);
       const status = store.status(statusId);
       if (status?.style.imageData) {
-        delete status.style.imageData;
-        store.save();
+        this.imageMessage = '';
+        store.clearImage(status.style);
       }
       return;
     }
