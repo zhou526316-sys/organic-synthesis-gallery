@@ -1,0 +1,90 @@
+name: Tampermonkey 620 capability workbench
+on:
+  push:
+    branches: [release/tm620-capture-upgrade]
+    paths:
+      - '.github/workflows/tm620-capability-workbench.yml'
+      - 'scripts/prepare-tm620-release.py'
+      - 'scripts/tm-capability-functions.js'
+      - 'scripts/test-tm620-indexing.mjs'
+      - 'scripts/test-tm-capability-browser.py'
+      - 'scripts/finalize-tm620-release.py'
+permissions:
+  contents: write
+concurrency:
+  group: tm620-capability-workbench
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/release/tm620-capture-upgrade'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/tm620-capture-upgrade
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Assemble exact tested safety patch and capability upgrade
+        run: |
+          git fetch --depth=1 origin 9feda06c2a014623c0b19b822929ce8d4bae54dc
+          if grep -Fq "var VERSION = '6.2.19';" public/toc-mainline.user.js; then python3 scripts/prepare-tm620-release.py; fi
+          if test -f scripts/finalize-tm620-release.py; then python3 scripts/finalize-tm620-release.py; fi
+          git diff --check
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/local-captures.js
+          node --check cloudflare/worker/src/media-write.js
+          node --check cloudflare/worker/src/media.js
+          node --check cloudflare/worker/src/safe-svg.js
+      - name: Identity and quarantine regressions
+        run: node scripts/test-media-identity-v220.mjs
+      - name: Truthful staging receipts
+        run: node scripts/test-tm-stage-first.mjs
+      - name: Real Worker staging and SVG indexing in isolated stores
+        run: node scripts/test-tm620-indexing.mjs
+      - name: Chromium combined capture and image-quality regressions
+        run: |
+          python3 -m pip install --quiet 'playwright==1.55.0' 'Pillow==11.3.0'
+          python3 scripts/test-tm-capability-browser.py
+      - name: Build self-contained installation artifact
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          BRIDGE_UPDATE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
+          BRIDGE_RUNTIME_OUTPUT: public/gallery-vpn-bridge-runtime.js
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          grep -F '@version      2.2.20' public/gallery-vpn-bridge.user.js
+          grep -F 'GM_listValues' public/gallery-vpn-bridge.user.js >/dev/null
+      - name: Rebuild recovery queue against actual current media snapshot
+        run: |
+          curl --fail --silent --show-error --max-time 30 'https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json' -o public/media-index.json
+          node cloudflare/scripts/merge-curated-pages.mjs
+          node -e "const q=JSON.parse(require('fs').readFileSync('public/toc-demand-live.json')); if(q.version!==3 || q.allPapers.length!==q.webpageDoiCount || q.captureVersion!=='6.2.20')throw Error('queue contract');console.log(JSON.stringify({papers:q.webpageDoiCount,missingToc:q.missingOfficialTotal,version:q.version}))"
+      - name: Save tested source without touching publication inputs or workflows
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/release/tm620-capture-upgrade
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/toc-mainline.user.js cloudflare/worker/src/local-captures.js cloudflare/worker/src/media.js cloudflare/worker/src/media-write.js cloudflare/scripts/build-bridge-loader.mjs cloudflare/scripts/merge-curated-pages.mjs scripts/test-media-identity-v220.mjs scripts/test-tm-stage-first.mjs audit/tm620-release-contracts
+          if git diff --name-only | grep -Fxq 'src/platform-api.ts'; then git add src/platform-api.ts; fi
+          if ! git diff --cached --quiet; then git commit -m 'feat: assemble tested single-visit capture and verified media indexing'; git push origin HEAD:release/tm620-capture-upgrade; fi
+          echo "TESTED_RELEASE_HEAD=$(git rev-parse HEAD)"
+      - name: Preserve generated source and install artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tm620-release-validation
+          path: |
+            public/gallery-vpn-bridge.user.js
+            public/gallery-vpn-bridge-runtime.js
+            public/toc-mainline.user.js
+            public/toc-demand-live.json
+            cloudflare/worker/src/
+            audit/tm620-release-contracts/
+          retention-days: 3
