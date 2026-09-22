@@ -39,12 +39,12 @@ jobs:
               cap=json.loads(get(worker+'/api/media/local-capture-index?capabilities=1'))
               launcher=get(site+'capture-launch.html').decode()
               assert re.search(r'@version\s+2\.2\.20\b',text)
-              assert "var VERSION = '6.2.20';" in text and "var VERSION = '6.2.20';" in core
+              assert "var VERSION = '6.2.21';" in text and "var VERSION = '6.2.21';" in core
               for marker in ['GM_getTab','GM_saveTab','GM_listValues','启动夜间连续抓取（TOC＋正文图）','function stableCaptureGeneration','function readCaptureCheckpoint','function launchBoundPublisherTab','assertBoundCaptureJob','publishVerifiedBrowserMedia']:
                 if marker=='publishVerifiedBrowserMedia':continue
                 assert marker in text,marker
               assert 'readRealtimeMediaPreflight' not in core and 'MEDIA_INVENTORY_ENDPOINT' not in core
-              assert cap.get('captureVersion')=='6.2.20' and cap.get('verifiedPublication') is True
+              assert cap.get('captureVersion')=='6.2.21' and cap.get('verifiedPublication') is True
               assert cap.get('mediaGeneration')==queue.get('mediaGeneration')==1790082000000
               assert len(queue['articles'])==queue['webpageDoiCount'] and len(queue['articles'])>=100
               assert len({r['doi'] for r in queue['articles']})==len(queue['articles'])
@@ -52,7 +52,7 @@ jobs:
               media=json.loads(get(site+'media-index.json'))
               restored=[doi for doi,r in media['items'].items() if r.get('toc',{}).get('recoveryId')=='toc-batch1-20260922']
               assert len(restored)==83, 'reviewed TOC baseline changed'
-              report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'bridgeVersion':'2.2.20','coreVersion':'6.2.20','installerSha256':hashlib.sha256(raw).hexdigest(),'coreSha256':hashlib.sha256(core.encode()).hexdigest(),'installerUrl':site+'gallery-vpn-bridge.user.js','articleCount':len(queue['articles']),'queueGeneratedAt':queue['generatedAt'],'mediaGeneration':queue['mediaGeneration'],'verifiedPublicationCapability':True,'boundLauncherAvailable':True,'preservedReviewedTocs':len(restored),'noProductionWrites':True,'realUserBrowserOvernightVerified':False}
+              report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'bridgeVersion':'2.2.21','coreVersion':'6.2.21','installerSha256':hashlib.sha256(raw).hexdigest(),'coreSha256':hashlib.sha256(core.encode()).hexdigest(),'installerUrl':site+'gallery-vpn-bridge.user.js','articleCount':len(queue['articles']),'queueGeneratedAt':queue['generatedAt'],'mediaGeneration':queue['mediaGeneration'],'verifiedPublicationCapability':True,'boundLauncherAvailable':True,'preservedReviewedTocs':len(restored),'noProductionWrites':True,'realUserBrowserOvernightVerified':False}
               pathlib.Path(os.environ['RUNNER_TEMP'],'night-live-acceptance.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
               print('NIGHT_LIVE_ACCEPTANCE '+json.dumps(report,ensure_ascii=False));break
             except Exception as exc:

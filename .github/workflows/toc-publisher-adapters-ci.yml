@@ -1,4 +1,5 @@
 name: Publisher TOC adapter CI
+
 on:
   workflow_dispatch:
   pull_request:
@@ -12,8 +13,12 @@ on:
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'cloudflare/worker/src/local-captures.js'
+      - 'cloudflare/worker/src/verified-browser-media.js'
       - 'cloudflare/worker/src/index.js'
       - 'public/toc-mainline.user.js'
+      - 'public/capture-launch.html'
+      - 'scripts/validate-tm-release.mjs'
+      - 'scripts/test-tm*.mjs'
       - '.github/workflows/toc-publisher-adapters-ci.yml'
   push:
     branches: [main]
@@ -24,12 +29,14 @@ on:
       - 'toc-collector/package.json'
       - 'cloudflare/scripts/import-recent-media-direct.mjs'
       - '.github/workflows/toc-publisher-adapters-ci.yml'
+
 permissions:
   contents: read
+
 jobs:
   adapters:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v5
@@ -46,6 +53,7 @@ jobs:
           node --check public/toc-mainline.user.js
           node --check cloudflare/worker/src/index.js
           node --check cloudflare/worker/src/local-captures.js
+          node --check cloudflare/worker/src/verified-browser-media.js
       - name: Run publisher adapter fixtures
         run: node toc-collector/test/publisher-adapters.test.mjs
       - name: Test Tampermonkey diagnostic history
@@ -57,26 +65,22 @@ jobs:
           grep -F "publisher-adapters.mjs" cloudflare/scripts/import-recent-media-direct.mjs
           grep -F "extractPublisherMediaCandidates" cloudflare/scripts/import-recent-media-direct.mjs
           grep -F "pickBestPublisherMediaCandidate" toc-collector/src/background.mjs
-      - name: Verify paired Tampermonkey contract and identity regressions
-        shell: bash
+      - name: Verify released capture version, complete queue and pairing contracts
+        run: node scripts/validate-tm-release.mjs public
+      - name: Test wrong-DOI rejection, receipt checks and actual SQLite publication
         run: |
-          set -euo pipefail
-          node scripts/validate-tm220-artifacts.mjs source
           node scripts/test-media-identity-v220.mjs
           node scripts/test-tm-stage-first.mjs
-          node scripts/test-tm220-release.mjs
-          grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
-          grep -F "captureBelongsToDoi" cloudflare/worker/src/local-captures.js
-          grep -F "sanitizeTraceMessage" cloudflare/worker/src/local-captures.js
-          grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
-          grep -F "isExcludedDoi(doi)" cloudflare/scripts/build-live-toc-demand-queue.mjs
-          grep -F "gallery-literature-doi-registry" src/main.ts
-          grep -F "TAMPERMONKEY_CORS_WRITE_PATHS" cloudflare/worker/src/index.js
-          if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
-            echo "Userscript must not embed a write token"
-            exit 1
-          fi
+          node scripts/test-tm-night-release.mjs
+      - name: Install isolated Chromium tests
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install chromium
+      - name: Test DOM scope, paired capture and persistent tab checkpoints
+        run: |
+          node scripts/test-tm-paired-capture.mjs
+          node scripts/test-tm-night-browser.mjs
+
   windows-collector-smoke:
     runs-on: windows-latest
     timeout-minutes: 15
