@@ -71,20 +71,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.2.19" public/toc-mainline.user.js
+          grep -F "// @version      6.2.20" public/toc-mainline.user.js
           grep -F "toc-demand-live.json" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
           grep -F "FAILURE_COOLDOWN_MS" public/toc-mainline.user.js
           grep -F "DEFAULT_BATCH_SIZE = 8" public/toc-mainline.user.js
           grep -F "articlelanding/" public/toc-mainline.user.js
-          grep -F "var figureJob = jobKind(job) === 'figures';" public/toc-mainline.user.js
+          grep -F "var figureJob = String(job.mediaNeed || '').indexOf('figures') >= 0;" public/toc-mainline.user.js
           grep -F "figureJob ? 'full/' : ''" public/toc-mainline.user.js
           grep -F "async function iframeCandidates(job, trace)" public/toc-mainline.user.js
           grep -F "function waitForDomMutation(timeoutMs)" public/toc-mainline.user.js
           grep -F "object[type^=\"image\"],svg image" public/toc-mainline.user.js
           grep -F "iframe_cross_origin_or_auth_redirect" public/toc-mainline.user.js
-          grep -F "_semantic_window" public/toc-mainline.user.js
+          grep -F "_bounded_semantics" public/toc-mainline.user.js
           grep -F "acs_main_scroll_top=" public/toc-mainline.user.js
           grep -F "中止当前媒体抓取批次" public/toc-mainline.user.js
           grep -F "继续媒体抓取主线" public/toc-mainline.user.js
@@ -106,7 +106,7 @@ jobs:
           grep -F "NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000" public/toc-mainline.user.js
           grep -F "var dates = Array.from(new Set" public/toc-mainline.user.js
           grep -F "delayedTocUpgrades: upgrades.length" public/toc-mainline.user.js
-          grep -F "var delayedUpgrades = upgrades.filter" public/toc-mainline.user.js
+          grep -F "var jobs=selectBatchJobs(executableJobs(allJobs,queueGeneratedAt),limit)" public/toc-mainline.user.js
           grep -F "NEXT_BATCH_DELAY_MS = 12000" public/toc-mainline.user.js
           grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
@@ -119,11 +119,11 @@ jobs:
           grep -F "promoteStagedArticleFigures" cloudflare/worker/src/local-captures.js
           grep -F "ARTICLE_FIGURE_STAGE_PROMOTION_CRON" cloudflare/worker/src/index.js
           grep -F "figuresStaged" public/toc-mainline.user.js
-          grep -F "D1 import unavailable; preserving figure in R2" public/toc-mainline.user.js
+          grep -F "indexed_live_api" public/toc-mainline.user.js
           grep -F "/api/article-figures/stage" cloudflare/worker/src/index.js
           grep -F "importStagedArticleFigure" cloudflare/worker/src/local-captures.js
           grep -F "getStagedArticleFigures" cloudflare/worker/src/local-captures.js
-          grep -F "queue.figureGaps" public/toc-mainline.user.js
+          grep -F "queue.allPapers" public/toc-mainline.user.js
           grep -F "function jobKind(job)" public/toc-mainline.user.js
           grep -F "failure:figures:" public/toc-mainline.user.js
           grep -F "figureGapTotal" cloudflare/scripts/build-live-toc-demand-queue.mjs
@@ -146,7 +146,7 @@ jobs:
           grep -F "https://onlinelibrary.wiley.com" cloudflare/worker/src/index.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "loaderVersion = '2.2.19'" cloudflare/scripts/build-bridge-loader.mjs
+          grep -F "loaderVersion = '2.2.20'" cloudflare/scripts/build-bridge-loader.mjs
           if grep -Fq "readRealtimeMediaPreflight" public/toc-mainline.user.js; then echo "Recovery userscript must stay on the 2.2.15 capture core"; exit 1; fi
           if grep -Fq "gallery-literature-doi-registry" public/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.16 live-page filtering"; exit 1; fi
           if grep -Fq "MEDIA_INVENTORY_ENDPOINT" public/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.17 realtime preflight"; exit 1; fi

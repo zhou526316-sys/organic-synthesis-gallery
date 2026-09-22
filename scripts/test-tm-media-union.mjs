@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+const doi='10.1038/s44160-026-01155-9';
+const manifest={version:2,items:{[doi]:{doi,toc:{available:true,imageUrl:'restored.svg',reason:'reviewed_official_toc_recovery'},figures:{available:true,doi,figures:[{id:'figure-1',label:'Figure 1',imageUrl:'large.png',order:0}]}}}};
+let calls=0;
+globalThis.location={hostname:'zhou526316-sys.github.io',protocol:'https:'};
+globalThis.fetch=async(url,init)=>{
+ if(String(url)==='media-index.json')return Response.json(manifest);
+ assert.ok(String(url).endsWith('/api/media/batch'));
+ assert.deepEqual(JSON.parse(init.body).dois,[doi]);calls++;
+ return Response.json({items:[{doi,toc:{available:true,imageUrl:'other.svg',reason:'imported'},figures:{available:true,doi,figures:[{id:'figure-1',label:'Figure 1',imageUrl:'https://fixture.test/small.png',order:0,width:685,height:453},{id:'figure-2',label:'Figure 2',imageUrl:'https://fixture.test/f2.svg',order:1},{id:'scheme-1',label:'Scheme 1',imageUrl:'https://fixture.test/s1.svg',order:2}]}}]});
+};
+const {api}=await import('../src/platform-api.ts');
+const {data}=await api.post('/api/media/batch',{dois:[doi]});
+assert.equal(calls,1,'existing one-image static collection must query live body collection');
+assert.equal(data.items.length,1);
+assert.equal(data.items[0].toc.imageUrl,'restored.svg','restored official TOC must survive');
+assert.equal(data.items[0].figures.figures.length,3);
+assert.equal(data.items[0].figures.figures[0].imageUrl,'large.png','unknown-size retained Fig1 must not silently be downgraded');
+assert.equal(data.items[0].inventory.figureCount,3);
+console.log('TM_MEDIA_UNION_TESTS '+JSON.stringify({passed:6,productionWrites:0}));

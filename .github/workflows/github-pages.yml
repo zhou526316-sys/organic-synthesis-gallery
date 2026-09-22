@@ -218,8 +218,8 @@ jobs:
           test -f dist/gallery-vpn-bridge-runtime.js
           test -f dist/toc-rescue.js
           test -f dist/toc-mainline.user.js
-          grep -F "// @version      6.2.19" dist/toc-mainline.user.js
-          grep -F "var figureJob = jobKind(job) === 'figures';" dist/toc-mainline.user.js
+          grep -F "// @version      6.2.20" dist/toc-mainline.user.js
+          grep -F "var figureJob = String(job.mediaNeed || '').indexOf('figures') >= 0;" dist/toc-mainline.user.js
           grep -F "figureJob ? 'full/' : ''" dist/toc-mainline.user.js
           grep -F "toc-demand-live.json" dist/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" dist/toc-mainline.user.js
@@ -227,7 +227,7 @@ jobs:
           grep -F "function waitForDomMutation(timeoutMs)" dist/toc-mainline.user.js
           grep -F "object[type^=\"image\"],svg image" dist/toc-mainline.user.js
           grep -F "iframe_cross_origin_or_auth_redirect" dist/toc-mainline.user.js
-          grep -F "_semantic_window" dist/toc-mainline.user.js
+          grep -F "_bounded_semantics" dist/toc-mainline.user.js
           grep -F "acs_main_scroll_top=" dist/toc-mainline.user.js
           grep -F "中止当前媒体抓取批次" dist/toc-mainline.user.js
           grep -F "继续媒体抓取主线" dist/toc-mainline.user.js
@@ -261,11 +261,11 @@ jobs:
           grep -F "promoteStagedArticleFigures" cloudflare/worker/src/local-captures.js
           grep -F "ARTICLE_FIGURE_STAGE_PROMOTION_CRON" cloudflare/worker/src/index.js
           grep -F "figuresStaged" dist/toc-mainline.user.js
-          grep -F "D1 import unavailable; preserving figure in R2" dist/toc-mainline.user.js
+          grep -F "indexed_live_api" dist/toc-mainline.user.js
           grep -F "/api/article-figures/stage" cloudflare/worker/src/index.js
           grep -F "importStagedArticleFigure" cloudflare/worker/src/local-captures.js
           grep -F "getStagedArticleFigures" cloudflare/worker/src/local-captures.js
-          grep -F "queue.figureGaps" dist/toc-mainline.user.js
+          grep -F "queue.allPapers" dist/toc-mainline.user.js
           grep -F "function jobKind(job)" dist/toc-mainline.user.js
           grep -F "failure:figures:" dist/toc-mainline.user.js
           grep -F "figureGapTotal" cloudflare/scripts/build-live-toc-demand-queue.mjs
@@ -286,7 +286,7 @@ jobs:
           if grep -Fq "gallery-literature-doi-registry" dist/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.16 live-page filtering"; exit 1; fi
           if grep -Fq "MEDIA_INVENTORY_ENDPOINT" dist/toc-mainline.user.js; then echo "Recovery userscript must not contain 2.2.17 realtime preflight"; exit 1; fi
           test -d dist/media-mirror
-          grep -F "// @version      2.2.19" dist/gallery-vpn-bridge.user.js
+          grep -F "// @version      2.2.20" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
@@ -298,7 +298,7 @@ jobs:
           grep -F "organicGalleryCloudflareBridgeWriteToken" dist/gallery-vpn-bridge.user.js
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" dist/gallery-vpn-bridge.user.js
           grep -F "toc-demand-live.json" dist/gallery-vpn-bridge.user.js
-          grep -F "VPN Bridge 2.2.19 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
+          grep -F "VPN Bridge 2.2.20 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
           grep -F "const VERSION = '1.2.0';" dist/gallery-vpn-bridge.user.js
           grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge.user.js
           if grep -Eq "\beval\s*\(" dist/gallery-vpn-bridge.user.js; then echo "Bridge userscript must not use eval"; exit 1; fi

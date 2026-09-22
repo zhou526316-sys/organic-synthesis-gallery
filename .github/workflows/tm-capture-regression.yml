@@ -1,0 +1,29 @@
+name: Tampermonkey capture regression
+on:
+  pull_request:
+    branches: [main]
+    paths: ['public/toc-mainline.user.js','cloudflare/worker/src/**','src/platform-api.ts','scripts/test-tm*.mjs','scripts/test-tm*.py','.github/workflows/tm-capture-regression.yml']
+  push:
+    branches: [main, release/tm620-capture-upgrade]
+    paths: ['public/toc-mainline.user.js','cloudflare/worker/src/**','src/platform-api.ts','scripts/test-tm*.mjs','scripts/test-tm*.py','.github/workflows/tm-capture-regression.yml']
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Test task identity, receipts, SVG indexing and body collection merging
+        run: |
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm620-indexing.mjs
+          node --experimental-strip-types scripts/test-tm-media-union.mjs
+      - name: Chromium same-visit capture and actual source decoding
+        run: |
+          python3 -m pip install --quiet 'playwright==1.55.0' 'Pillow==11.3.0'
+          python3 scripts/test-tm-capability-browser.py
