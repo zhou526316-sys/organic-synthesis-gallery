@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "testRunId": "20260922-185906-auto-bridge",
+  "startedAt": "2026-09-22T18:59:06+08:00",
+  "result": "success",
+  "scope": "Scheduled Task -> GitHub trigger commit -> push-triggered Node audit -> fresh audit persisted",
+  "productionLiteratureMutatedByTest": false,
+  "trigger": {
+    "path": "audit/automation-triggers/literature-audit-request.json",
+    "commitSha": "91d5cf325b4dc7454c67a8d5491174e4ffcddfa6",
+    "event": "push"
+  },
+  "workflow": {
+    "name": "Audit literature completeness",
+    "path": ".github/workflows/literature-audit.yml",
+    "runId": 35718952993,
+    "runNumber": 67,
+    "conclusion": "success",
+    "capabilityGuard": "success",
+    "doiUnionAudit": "success",
+    "artifactUpload": "success",
+    "persistLatestAudit": "success"
+  },
+  "freshAudit": {
+    "generatedAt": "2026-09-22T11:02:53.955Z",
+    "timeZone": "Asia/Shanghai",
+    "startDate": "2026-09-20",
+    "endDate": "2026-09-22",
+    "lateDepositRescueStartDate": "2026-09-16",
+    "galleryDois": 512,
+    "sourceRecords": 547,
+    "missingFromGallery": 0,
+    "unresolved": 0,
+    "potentialGaps": 0,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 0,
+    "historicalCoverageLosses": 0
+  },
+  "verdict": "The scheduled automation can autonomously write the trigger file, cause the repository Node audit to run on GitHub Actions, wait for successful completion, and read the fresh persisted audit without local Node or workflow_dispatch."
+}
