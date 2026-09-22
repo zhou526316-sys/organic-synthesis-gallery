@@ -31,7 +31,7 @@ import { runLeaseRepairBatch, runRepairBatch } from './repair.js';
 import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
-import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, submitPaperFeedback, submitSiteFeedback, updateSiteFeedbackStatuses } from './user-ui.js';
+import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import {
   alipayNotify,
   authCallback,
@@ -206,6 +206,12 @@ async function handleApi(request, env) {
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/reader-stats') {
     return resultResponse(await readerStats(env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/pageview') {
+    return resultResponse(await trackPageView(env, await readJson(request), request), cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats') {
+    return resultResponse(await siteAnalyticsStats(env), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark') {
     return resultResponse(await markReader(env, await readJson(request), request), cors);
