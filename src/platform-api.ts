@@ -132,10 +132,6 @@ function mediaItemHasToc(item: StaticMediaItem | undefined): boolean {
   return Boolean(item?.toc?.available && item.toc.imageUrl);
 }
 
-function mediaItemHasFigures(item: StaticMediaItem | undefined): boolean {
-  return Boolean(item?.figures?.available && item.figures.figures?.length);
-}
-
 // tm620-live-figure-union: a static Figure 1 must not hide later verified body figures.
 function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMediaItem | undefined): StaticMediaItem | undefined {
   if (!local) return dynamic;
