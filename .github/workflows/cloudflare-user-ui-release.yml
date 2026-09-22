@@ -9,6 +9,7 @@ on:
       - 'cloudflare/schema.sql'
       - 'cloudflare/worker/src/index.js'
       - 'cloudflare/worker/src/user-ui.js'
+      - 'cloudflare/worker/src/article-summary.js'
       - 'cloudflare/worker/src/integrations.js'
       - 'cloudflare/worker/src/media.js'
       - 'cloudflare/worker/src/media-write.js'
@@ -111,6 +112,9 @@ jobs:
 
           [vars]
           MIGRATION_STAGE = "staging"
+
+          [ai]
+          binding = "AI"
 
           [triggers]
           crons = ["0 */6 * * *"]
