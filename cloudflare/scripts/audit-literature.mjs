@@ -174,6 +174,50 @@ async function loadReviewExclusions() {
   return excluded;
 }
 
+async function loadReviewedHistory() {
+  const reviewed = new Map();
+  const files = await readdir(path.resolve('audit')).catch(() => []);
+  for (const file of files.filter(name => /^review-.*\.json$/i.test(name)).sort()) {
+    try {
+      const payload = JSON.parse(await readFile(path.resolve('audit', file), 'utf8'));
+      const collect = (items, decision) => {
+        for (const item of items || []) {
+          const doi = normalizeDoi(item?.doi);
+          if (!doi) continue;
+          reviewed.set(doi, {
+            doi,
+            journal: clean(item?.journal),
+            date: clean(item?.date),
+            title: clean(item?.title),
+            decision,
+            reviewFile: file,
+          });
+        }
+      };
+      collect(payload?.accepted, 'include');
+      collect(payload?.rejected, 'exclude');
+      collect(payload?.pending, 'pending');
+      for (const item of payload?.decisions || []) {
+        const decision = String(item?.decision || '').toLowerCase();
+        if (!['include', 'exclude', 'pending'].includes(decision)) continue;
+        const doi = normalizeDoi(item?.doi);
+        if (!doi) continue;
+        reviewed.set(doi, {
+          doi,
+          journal: clean(item?.journal),
+          date: clean(item?.date),
+          title: clean(item?.title),
+          decision,
+          reviewFile: file,
+        });
+      }
+    } catch (error) {
+      console.warn(`Review history file unavailable: ${file}: ${error.message}`);
+    }
+  }
+  return reviewed;
+}
+
 function candidateAuthors(value) {
   if (!Array.isArray(value)) return [];
   return value.map(name => clean(name)).filter(Boolean);
@@ -338,7 +382,7 @@ function compactCandidate(c) {
   };
 }
 
-const [galleryDois, reviewedExclusions] = await Promise.all([loadGalleryDois(), loadReviewExclusions()]);
+const [galleryDois, reviewedExclusions, reviewedHistory] = await Promise.all([loadGalleryDois(), loadReviewExclusions(), loadReviewedHistory()]);
 const merged = new Map();
 const stats = [];
 
@@ -360,6 +404,16 @@ const universe = [...merged.values()].filter(c => {
   if (c.date > END || c.date < activeFrom) return false;
   return c.date >= effectiveStart || (sourceDiscovered && c.date >= rescueStart);
 });
+const universeDoiSet = new Set(universe.map(candidate => normalizeDoi(candidate.doi)));
+const historicalCoverageLosses = [...reviewedHistory.values()].filter(item => {
+  if (!item.date || !/^\d{4}-\d{2}-\d{2}$/.test(item.date)) return false;
+  if (item.date < RESCUE_START || item.date > END) return false;
+  if (isExcludedDoi(item.doi)) return false;
+  const journal = JOURNAL_BY_NAME.get(item.journal);
+  if (journal?.activeFrom && item.date < journal.activeFrom) return false;
+  return !universeDoiSet.has(item.doi);
+});
+
 const excludedUniverse = universe.filter(c => isExcludedDoi(c.doi));
 const rawMissing = universe.filter(c => !galleryDois.has(c.doi));
 const reviewableMissing = rawMissing.filter(c => !isExcludedDoi(c.doi));
@@ -481,16 +535,19 @@ const closureRawMissing = rawMissing.filter(c => c.date === CLOSURE_DATE);
 const closureReviewedExcluded = closureRawMissing.filter(c => reviewedExclusions.has(c.doi));
 const closureMissing = missingCandidates.filter(c => c.date === CLOSURE_DATE);
 const closurePotentialGaps = closureMissing.filter(c => c.reviewPriority === 'high');
+const closureHistoricalCoverageLosses = historicalCoverageLosses.filter(item => item.date === CLOSURE_DATE);
 const closureStatus = criticalFailures.length > 0
   ? 'blocked-source-failure'
-  : closureCoverageAnomalies.length > 0
+  : closureHistoricalCoverageLosses.length > 0
+    ? 'blocked-historical-coverage-loss'
+    : closureCoverageAnomalies.length > 0
     ? 'blocked-source-coverage-anomaly'
     : closureMissing.length > 0
       ? 'requires-assistant-review'
       : 'assistant-decisions-complete';
 
 const report = {
-  auditVersion: 4,
+  auditVersion: 5,
   generatedAt: new Date().toISOString(),
   timeZone: TIME_ZONE,
   windowMode: process.env.AUDIT_START || process.env.AUDIT_END ? 'explicit' : catchupStart ? 'rolling-3d-with-catchup' : 'rolling-3d-calendar',
@@ -515,6 +572,7 @@ const report = {
     sourceFamilyGaps: sourceFamilyGaps.length,
     sourceCoverageAnomalies: sourceCoverageAnomalies.length,
     closureCoverageAnomalies: closureCoverageAnomalies.length,
+    historicalCoverageLosses: historicalCoverageLosses.length,
     unresolved: missing.length,
     excludedByPolicy: excludedUniverse.length,
   },
@@ -528,7 +586,8 @@ const report = {
     potentialGaps: closurePotentialGaps.length,
     criticalSourceFailures: criticalFailures.length,
     sourceCoverageAnomalies: closureCoverageAnomalies,
-    verifiedThroughEligible: criticalFailures.length === 0 && closureCoverageAnomalies.length === 0 && closureMissing.length === 0,
+    historicalCoverageLosses: closureHistoricalCoverageLosses,
+    verifiedThroughEligible: criticalFailures.length === 0 && closureCoverageAnomalies.length === 0 && closureHistoricalCoverageLosses.length === 0 && closureMissing.length === 0,
     note: 'Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse.',
   },
   byDate,
@@ -537,6 +596,7 @@ const report = {
   sourceFamilyGaps,
   sourceCoverageAnomalies,
   closureCoverageAnomalies,
+  historicalCoverageLosses,
   sourceStats: stats,
   missingCandidates,
   potentialGaps,
