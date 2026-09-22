@@ -20,18 +20,17 @@ jobs:
           npm install --no-save --package-lock=false @playwright/test@1.55.1
           npx playwright install --with-deps webkit
           npm run build -- --sourcemap
-      - name: Add diagnostics only to runner copy of unchanged assertions
+      - name: Add error stack diagnostics to runner copy only
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p=Path('tests/mobile-interaction.spec.ts');s=p.read_text()
-          a="    const errors: string[] = [];\n    page.on('pageerror', error => errors.push(error.message));"
-          b="    const errors: string[] = [];\n    page.on('pageerror', error => { errors.push(error.message); console.log('EXACT_PAGE_ERROR', JSON.stringify({message:error.message,stack:error.stack})); });\n    page.on('requestfailed', request => console.log('EXACT_REQUEST_FAILURE', JSON.stringify({url:request.url(),method:request.method(),error:request.failure()})));\n    page.on('console', message => {if(message.type()==='error')console.log('EXACT_BROWSER_CONSOLE',message.text());});"
-          assert s.count(a)==1
+          a="page.on('pageerror', error => errors.push(error.message));"
+          b="page.on('pageerror', error => { errors.push(error.message); console.log('EXACT_PAGE_ERROR', JSON.stringify({message:error.message,stack:error.stack})); });"
+          assert a in s
           p.write_text(s.replace(a,b))
           PY
-          grep -R -n 'window.fetch\|originalFetch\|nativeFetch\|\.finally(' src public/*.js | head -80 || true
-      - name: Run unchanged failing UI scenario with request diagnostics
+      - name: Run unchanged failing UI scenario
         run: |
           npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/preview.log 2>&1 &
           npx playwright test tests/mobile-interaction.spec.ts --grep 'feedback 26/27' --workers=1 --reporter=list
