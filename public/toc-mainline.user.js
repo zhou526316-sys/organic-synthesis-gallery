@@ -2379,31 +2379,39 @@
     // 2) remaining no-visual TOC gaps
     // 3) article figures
     // 4) fallback-only official TOC upgrades (including Figure 1)
-    var jobs = selectBatchJobs(visible, limit);
+    // Preflight a wider window so stale completed jobs do not consume batch slots.
+    var candidateLimit = Math.min(40, Math.max(limit, limit * 3));
+    var candidateJobs = selectBatchJobs(visible, candidateLimit);
     var selectedDois = {};
-    jobs.forEach(function (job) {
+    candidateJobs.forEach(function (job) {
       var doi = normalizeDoi(job && job.doi);
       if (doi) selectedDois[doi] = true;
     });
 
-    if (jobs.length < limit) {
+    if (candidateJobs.length < candidateLimit) {
       var figureCandidates = figureOnly.filter(function (job) {
         return !selectedDois[normalizeDoi(job && job.doi)];
       });
-      var selectedFigures = selectBatchJobs(figureCandidates, limit - jobs.length);
-      jobs = jobs.concat(selectedFigures);
+      var selectedFigures = selectBatchJobs(figureCandidates, candidateLimit - candidateJobs.length);
+      candidateJobs = candidateJobs.concat(selectedFigures);
       selectedFigures.forEach(function (job) {
         var doi = normalizeDoi(job && job.doi);
         if (doi) selectedDois[doi] = true;
       });
     }
 
-    if (jobs.length < limit) {
+    if (candidateJobs.length < candidateLimit) {
       var delayedUpgrades = upgrades.filter(function (job) {
         return !selectedDois[normalizeDoi(job && job.doi)];
       });
-      jobs = jobs.concat(selectBatchJobs(delayedUpgrades, limit - jobs.length));
+      candidateJobs = candidateJobs.concat(selectBatchJobs(delayedUpgrades, candidateLimit - candidateJobs.length));
     }
+
+    var realtimePreflight = await readRealtimeMediaPreflight(candidateJobs);
+    var realtimeFiltered = realtimePreflight.available
+      ? filterJobsByRealtimeMediaState(candidateJobs, realtimePreflight)
+      : { jobs: candidateJobs, skipped: 0 };
+    var jobs = realtimeFiltered.jobs.slice(0, limit);
     var cooling = allJobs.filter(function (queued) {
       var doi = normalizeDoi(queued && queued.doi);
       return doi ? isFailureCooling(queued) : false;
@@ -2427,6 +2435,8 @@
       galleryAuthoritySource: authority.source,
       galleryAuthorityCount: authority.count,
       filteredNotOnPage: filteredNotOnPage,
+      filteredAlreadyStored: Number(realtimeFiltered.skipped || 0),
+      realtimePreflightAvailable: realtimePreflight.available === true,
       success: 0,
       failed: 0,
       skipped: 0,
