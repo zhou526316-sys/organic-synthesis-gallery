@@ -1724,12 +1724,14 @@ function embeddedJobDois(value) {
   }
 
   async function uploadArticleFigure(job, candidate, image, trace, token, order) {
-    assertBoundCaptureJob(job, candidate.url);
+    // recovery_direct_stage_v1: /import is deliberately locked during recovery.
+    // Store once in R2; a positive staging receipt is not publication completion.
+    var pageDoi = assertBoundCaptureJob(job, candidate.url);
     var payload = {
       doi: job.doi,
       jobId: job.jobId,
       captureVersion: VERSION,
-      pageDoi: normalizeDoi(job.doi),
+      pageDoi: pageDoi,
       articleUrl: location.href,
       sourceUrl: candidate.url,
       id: String(candidate.label || ('figure-' + String(order + 1))).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
@@ -1741,67 +1743,39 @@ function embeddedJobDois(value) {
       imageData: image.imageData
     };
     pushTrace(trace, {
-      stage: 'figure_upload',
-      event: 'start',
-      status: 'start',
-      url: candidate.url,
-      message: candidate.label || '',
+      stage: 'figure_stage', event: 'start', status: 'start',
+      url: candidate.url, message: 'recovery_direct_stage:' + payload.label,
       byteLength: image.byteLength
     });
     try {
-      var result = await postJson(FIGURE_IMPORT_ENDPOINT, payload, token);
+      var result = await postJson(FIGURE_STAGE_ENDPOINT, payload, token);
+      if (!result || result.stored !== true || result.staged !== true ||
+          normalizeDoi(result.doi) !== normalizeDoi(job.doi) ||
+          String(result.id || '') !== payload.id) {
+        throw new Error('figure_stage_receipt_invalid');
+      }
+      // A delayed response from the previous task must not complete a new job.
+      assertBoundCaptureJob(job, candidate.url);
       pushTrace(trace, {
-        stage: 'figure_upload',
-        event: 'complete',
-        status: 'ok',
-        url: candidate.url,
-        message: candidate.label || '',
+        stage: 'figure_stage', event: 'complete', status: 'ok',
+        url: result.imageUrl || candidate.url,
+        message: payload.label + ';stored=1;published=0',
+        imageWidth: Number(result.width || image.width || 0),
+        imageHeight: Number(result.height || image.height || 0),
         byteLength: image.byteLength
       });
-      return Object.assign({}, result || {}, { staged: false });
+      return Object.assign({}, result, {
+        staged: true, imported: false, published: false,
+        publicationState: 'pending_verified_promotion'
+      });
     } catch (error) {
       pushTrace(trace, {
-        stage: 'figure_upload',
-        event: 'failed',
-        status: 'failed',
+        stage: 'figure_stage', event: 'failed', status: 'failed',
         httpStatus: Number(error && error.httpStatus || 0),
         url: candidate.url,
         message: String(error && error.message || error)
       });
-      var status = Number(error && error.httpStatus || 0);
-      if (status < 500) throw error;
-      pushTrace(trace, {
-        stage: 'figure_stage',
-        event: 'start',
-        status: 'start',
-        url: candidate.url,
-        message: 'D1 import unavailable; preserving figure in R2',
-        byteLength: image.byteLength
-      });
-      try {
-        var staged = await postJson(FIGURE_STAGE_ENDPOINT, payload, token);
-        pushTrace(trace, {
-          stage: 'figure_stage',
-          event: 'complete',
-          status: 'ok',
-          url: staged && staged.imageUrl || candidate.url,
-          message: candidate.label || '',
-          imageWidth: Number(image.width || 0),
-          imageHeight: Number(image.height || 0),
-          byteLength: image.byteLength
-        });
-        return Object.assign({}, staged || {}, { staged: true });
-      } catch (stageError) {
-        pushTrace(trace, {
-          stage: 'figure_stage',
-          event: 'failed',
-          status: 'failed',
-          httpStatus: Number(stageError && stageError.httpStatus || 0),
-          url: candidate.url,
-          message: String(stageError && stageError.message || stageError)
-        });
-        throw stageError;
-      }
+      throw error;
     }
   }
 
