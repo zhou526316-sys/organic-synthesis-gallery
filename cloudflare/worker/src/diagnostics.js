@@ -13,6 +13,41 @@ function normalizedFigureKey(label) {
     .trim();
 }
 
+function decodedIdentityText(value) {
+  let decoded = String(value || '');
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  return decoded.toLowerCase();
+}
+
+function embeddedKnownDois(value) {
+  const decoded = decodedIdentityText(value);
+  const patterns = [
+    /10\.1021\/[a-z0-9._-]+/ig,
+    /10\.1002\/[a-z0-9._-]+/ig,
+    /10\.1038\/[a-z0-9._-]+/ig,
+    /10\.1126\/[a-z0-9._-]+/ig,
+    /10\.1039\/[a-z0-9._-]+/ig,
+    /10\.1016\/[a-z0-9._()-]+/ig,
+    /10\.31635\/[a-z0-9._-]+/ig,
+  ];
+  return [...new Set(patterns.flatMap(pattern => (decoded.match(pattern) || []).map(normalizeDoi).filter(Boolean)))];
+}
+
+function crossDoiDetails(doi, ...values) {
+  const target = String(doi || '').toLowerCase();
+  const embedded = [...new Set(values.flatMap(embeddedKnownDois))];
+  const foreign = embedded.filter(value => value !== target);
+  return foreign.length ? { embedded, foreign } : null;
+}
+
 async function mediaState(env, doi) {
   const [toc, figures] = await Promise.all([
     env.DB.prepare(
@@ -187,16 +222,21 @@ export async function mediaDiagnostics(env) {
 }
 
 export async function mediaAudit(env) {
-  const [tocRows, figureRows] = await Promise.all([
+  const [tocRows, figureRows, primaryRows] = await Promise.all([
     allRows(env.DB.prepare(
-      `SELECT doi, content_hash, reason, available, r2_key
+      `SELECT doi, article_url, content_hash, reason, available, r2_key
        FROM toc_assets
-       WHERE available = 1 AND r2_key IS NOT NULL`
+       WHERE r2_key IS NOT NULL`
     )),
     allRows(env.DB.prepare(
-      `SELECT doi, semantic_key, label, content_hash, r2_key
+      `SELECT doi, semantic_key, label, article_url, content_hash, r2_key
        FROM figure_assets
        ORDER BY doi, sort_order`
+    )),
+    allRows(env.DB.prepare(
+      `SELECT doi, kind, source, source_url, article_url, content_hash, r2_key
+       FROM primary_visual_assets
+       WHERE r2_key IS NOT NULL`
     )),
   ]);
 
@@ -221,6 +261,21 @@ export async function mediaAudit(env) {
 
   const issues = [];
   for (const group of duplicateGroups) issues.push({ type: 'duplicate_toc_hash', ...group });
+
+  const crossDoiRows = [];
+  for (const row of tocRows) {
+    const mismatch = crossDoiDetails(row.doi, row.article_url);
+    if (mismatch) crossDoiRows.push({ table: 'toc_assets', doi: String(row.doi).toLowerCase(), articleUrl: row.article_url || '', ...mismatch });
+  }
+  for (const row of figureRows) {
+    const mismatch = crossDoiDetails(row.doi, row.article_url);
+    if (mismatch) crossDoiRows.push({ table: 'figure_assets', doi: String(row.doi).toLowerCase(), semanticKey: row.semantic_key || '', articleUrl: row.article_url || '', ...mismatch });
+  }
+  for (const row of primaryRows) {
+    const mismatch = crossDoiDetails(row.doi, row.article_url, row.source_url);
+    if (mismatch) crossDoiRows.push({ table: 'primary_visual_assets', doi: String(row.doi).toLowerCase(), kind: row.kind || '', articleUrl: row.article_url || '', sourceUrl: row.source_url || '', ...mismatch });
+  }
+  for (const row of crossDoiRows) issues.push({ type: 'cross_doi_media', ...row });
 
   let tocMatchesNonFigure1 = 0;
   let noValidToc = 0;
@@ -254,7 +309,10 @@ export async function mediaAudit(env) {
         tocMetadata: tocRows.length,
         activeToc: tocRows.length,
         figureMetadata: figureRows.length,
+        primaryVisualMetadata: primaryRows.length,
         duplicateTocGroups: duplicateGroups.length,
+        crossDoiMediaRows: crossDoiRows.length,
+        crossDoiMediaDois: new Set(crossDoiRows.map(row => row.doi)).size,
         tocMatchesNonFigure1,
         noValidToc,
       },
