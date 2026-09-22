@@ -42,10 +42,10 @@ jobs:
           done
           cat /tmp/status-images-preview.log
           exit 1
-      - name: Verify originals, animation, limits, routing and failure preservation
+      - name: Verify originals, animation, routing, cancellation and failure preservation
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: status-image-test-results/results.json
-        run: npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts tests/status-api-routing.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=status-image-test-results
+        run: npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts tests/status-api-routing.spec.ts tests/status-fetch-lifecycle.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=status-image-test-results
       - uses: actions/upload-artifact@v4
         if: always()
         with:
