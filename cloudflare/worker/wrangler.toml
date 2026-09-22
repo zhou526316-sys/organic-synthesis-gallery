@@ -6,6 +6,9 @@ workers_dev = true
 [vars]
 MIGRATION_STAGE = "staging"
 
+[ai]
+binding = "AI"
+
 [triggers]
 crons = ["*/5 * * * *"]
 
