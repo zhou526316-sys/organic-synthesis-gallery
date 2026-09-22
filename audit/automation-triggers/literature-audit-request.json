@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "requestedAt": "2026-09-22T18:33:00+08:00",
+  "requestedBy": "chatgpt-recovery-design",
+  "reason": "Formalize push-trigger bridge so ChatGPT scheduled tasks can invoke the GitHub Node literature audit without workflow_dispatch.",
+  "targetBranch": "main",
+  "windowPolicy": "Asia/Shanghai current day plus previous two calendar days; retain seven-day safety tail",
+  "note": "Updating this file is a signal only. The GitHub workflow owns machine discovery/audit; semantic include/exclude remains a ChatGPT review responsibility."
+}
