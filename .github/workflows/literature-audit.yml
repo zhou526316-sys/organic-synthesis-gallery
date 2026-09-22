@@ -10,7 +10,8 @@ on:
         description: Optional audit end date (YYYY-MM-DD); blank = current Beijing date
         required: false
   schedule:
-    - cron: '0 0,10 * * *'
+    # Avoid GitHub's top-of-hour scheduler congestion; Beijing 08:07 / 18:07.
+    - cron: '7 0,10 * * *'
   push:
     branches:
       - main
