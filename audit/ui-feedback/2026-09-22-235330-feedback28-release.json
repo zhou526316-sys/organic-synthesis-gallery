@@ -1,0 +1,103 @@
+{
+  "recordedAt": "2026-09-22T23:53:30+08:00",
+  "context": "UI and feedback continuation after user request 继续; feedback 28 original images and GIF",
+  "status": "deployed_partial_acceptance",
+  "feedback28Closed": false,
+  "implementation": {
+    "pr131": { "merged": true, "mergeSha": "004779910a2ff384dd0224201bb48a8d61442a48" },
+    "pr132": { "merged": true, "mergeSha": "0067a4930c855f481f7f10fa971227d9e04e93d8", "testedHead": "abfa3ad29050ca7dc898cc4447377556412f04dc" },
+    "fix": "Restrict the existing API-origin rewrite to HTTP(S), so local blob string/URL reads are not rewritten to HTTPS. Existing HTTP routing is otherwise unchanged.",
+    "scope": "UI original-image feature and front-end fetch routing, test fixtures and workflows. No literature datasets, publication slots, capture/Tampermonkey/Bridge source, or server media repair gates changed."
+  },
+  "pr132Checks": {
+    "siteQualityGate": { "runId": 35749048911, "conclusion": "success" },
+    "originalImageRegression": { "runId": 35749048945, "conclusion": "success", "tests": 7 },
+    "dataValidation": { "runId": 35749048903, "conclusion": "success" },
+    "migrationCi": { "runId": 35749048931, "conclusion": "success" }
+  },
+  "deployment": {
+    "github": { "runId": 35749611103, "conclusion": "success" },
+    "worker": { "runId": 35749622943, "jobId": 106820070865, "conclusion": "success" },
+    "workerSync": { "runId": 35749611090, "conclusion": "success" },
+    "observedEntryAssetBothSites": "assets/index-UtQH8MgQ.js",
+    "cloudflarePages": "Not accepted. Earlier deployment 35747331123 failed at Bridge runtime packaging; latest live DNS/HTTP check still failed. Do not bypass Bridge validation in UI work."
+  },
+  "liveAcceptance": {
+    "runId": 35749692904,
+    "workflowCommit": "7d06f4c08356b83d5e072d41419623faefd7674a",
+    "reviewedCommit": "0067a4930c855f481f7f10fa971227d9e04e93d8",
+    "conclusion": "failure",
+    "browser": "Playwright 1.55.0 WebKit",
+    "productionWritesAllowed": false,
+    "backendWritesMocked": true,
+    "backendServiceBehaviorAccepted": false,
+    "github": {
+      "url": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
+      "httpStatus": 200,
+      "artifactId": 10703454965,
+      "artifactSha256": "4901422c35fea5f3e6ea2296cf55634072827a8a2b9b751cd7b79d2e7615e844",
+      "passed": 5,
+      "failed": 2,
+      "skipped": 0,
+      "failures": [
+        "390px GIF case: source bytes, animation, reload and bounded viewer passed before the other-context preview marker failed to settle within 5 seconds. A static PNG preview was already present; do not describe this as proof that no image displayed.",
+        "1280px GIF case: the screenshot-frame-change assertion saw only one frame before the 6-second polling timeout. Do not infer that every user's GIF is broken; production-load versus test timing needs reproduction."
+      ]
+    },
+    "worker": {
+      "url": "https://organic-synthesis-gallery.zhou526316.workers.dev/",
+      "httpStatus": 200,
+      "artifactId": 10704219271,
+      "artifactSha256": "c75eb977d7a582d9c464e78e9e50e5e7ec1e42a1ac182b2e626584486c2bc792",
+      "passed": 5,
+      "failed": 2,
+      "skipped": 0,
+      "failures": [
+        "Both 390px and 1280px GIF cases reached the final pageErrors assertion after passing original hash, actual animation, reload, bounded viewer, separate-context preview fallback and removal assertions.",
+        "The final assertion failed on CORS errors for static files requested from api.gczhouwld.com, including papers.gz.b64, manual-supplement.json, total-synthesis.json, final-audit-supplement.json, media-index.json and title-translations-zh.json. The 390px case also recorded a reader-counts access-control error. Real GET responses were not mocked; do not dismiss all these as fixture errors."
+      ]
+    },
+    "cloudflarePages": {
+      "url": "https://organic-synthesis-gallery-public.pages.dev/",
+      "artifactId": 10704343896,
+      "artifactSha256": "3403ab1fa486e8a50e828c7981627754f323cff6c3e84f73b4ab12171da04444",
+      "checkedAt": "2026-09-22T15:47:46.342Z",
+      "result": "ENOTFOUND for lookup, A, AAAA and HTTP preflight from the Actions runner; no browser cases ran. This observation is not a claim of universal DNS failure."
+    },
+    "fivePassedCasesOnEachAvailableEntry": [
+      "Exact 30,000,000-byte original hash and preservation on oversized/invalid/corrupt replacements",
+      "IndexedDB failure preserves prior image and reports failure",
+      "Preference storage failure preserves prior image and reports failure",
+      "Removal during pending upload prevents stale restoration",
+      "Local blob reads stay local for string, URL and Request inputs; no HTTP remapping"
+    ],
+    "evidenceInspection": "Downloaded all three artifacts, parsed results.json/network.json, checked ZIP SHA256 values, inspected actual Worker 390px original and 1280px viewer screenshots. Not an all-green result."
+  },
+  "userFacingCapabilitiesAndLimits": {
+    "originalSourceLimitBytes": 30000000,
+    "formats": ["PNG", "JPEG", "WebP", "GIF"],
+    "defaultOriginalWithoutCropping": true,
+    "optionalStaticCropLimitBytes": 20000000,
+    "viewerFullscreen": false,
+    "originalStorage": "Current browser and origin only; other devices/origins receive static preview through existing preference sync. Not original/GIF cloud backup; clearing site data can lose originals.",
+    "readerCountIssueResolvedByThisBatch": false
+  },
+  "feedbackQueue": {
+    "exportRunId": 35749782938,
+    "artifactId": 10705100084,
+    "generatedAt": "2026-09-22T15:48:37.612Z",
+    "d1Available": true,
+    "r2FallbackAvailable": true,
+    "openIds": [8, 20, 21, 22, 23, 24, 25, 28, 29, 30],
+    "newRequests": [
+      { "id": 29, "request": "Larger, more readable full-text summary window; retain the user's nonfullscreen requirement", "status": "queued_not_implemented" },
+      { "id": 30, "request": "More selectable surrounding glow effects for reading statuses", "status": "queued_not_implemented" }
+    ],
+    "statusWritesAppliedThisTurn": []
+  },
+  "nextBatch": [
+    "Investigate static requests being rewritten across API origins by src/user-shell.ts. Consider limiting API fallback to API paths while keeping static files on their requested origin; not implemented yet. No capture-chain changes needed to investigate this frontend routing issue.",
+    "Reproduce preview hydration timing and GIF frame detection under real page loading; preserve all acceptance assertions.",
+    "Then address feedback 29 summary size and feedback 30 optional glow effects in small batches."
+  ]
+}
