@@ -62,7 +62,7 @@ if (/\beval\s*\(/.test(runtimeBody)) throw new Error('Runtime unexpectedly conta
 
 const tocMatchLines = tocMainline.match(/^\/\/ @match\s+.+$/gm) || [];
 let tocBody = tocMainline.replace(/^\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==\s*/, '').trim();
-if (!tocBody.includes("var VERSION = '6.2.17';")) throw new Error('TOC mainline version/content changed unexpectedly.');
+if (!tocBody.includes("var VERSION = '6.2.18';")) throw new Error('TOC mainline version/content changed unexpectedly.');
 tocBody = tocBody
   .replace("var TOKEN_KEY = P + 'write-token';", "var TOKEN_KEY = 'organicGalleryCloudflareBridgeWriteToken';")
   .replace("var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';", "var LEGACY_TOKEN_KEY = TOKEN_KEY;")
@@ -78,7 +78,7 @@ const matchLines = [...new Set([
 ])].join('\n');
 const galleryHosts = [...new Set(PUBLIC_SITE_ORIGINS.map(origin => new URL(origin).hostname))];
 const galleryHostExpression = galleryHosts.map(host => `location.hostname === '${host}'`).join(' || ');
-const loaderVersion = '2.2.17';
+const loaderVersion = '2.2.18';
 
 const loader = `// ==UserScript==
 // @name         Organic Synthesis Gallery VPN Literature Bridge

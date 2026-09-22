@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.17
+// @version      6.2.18
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
@@ -37,7 +37,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '6.2.17';
+  var VERSION = '6.2.18';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
@@ -82,7 +82,7 @@
     return /^10\.\d{4,9}\/\S+$/i.test(s) ? s : '';
   }
 
-  function embeddedNatureDoi(value) {
+  function decodedIdentityText(value) {
     var decoded = String(value || '');
     for (var i = 0; i < 2; i += 1) {
       try {
@@ -93,15 +93,61 @@
         break;
       }
     }
-    var match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
-    return match ? normalizeDoi(match[0]) : '';
+    return decoded.toLowerCase();
+  }
+
+  function embeddedKnownDois(value) {
+    var decoded = decodedIdentityText(value);
+    var patterns = [
+      /10\.1021\/[a-z0-9._-]+/ig,
+      /10\.1002\/[a-z0-9._-]+/ig,
+      /10\.1038\/[a-z0-9._-]+/ig,
+      /10\.1126\/[a-z0-9._-]+/ig,
+      /10\.1039\/[a-z0-9._-]+/ig,
+      /10\.1016\/[a-z0-9._()-]+/ig,
+      /10\.31635\/[a-z0-9._-]+/ig
+    ];
+    var out = [];
+    patterns.forEach(function (pattern) {
+      var matches = decoded.match(pattern) || [];
+      matches.forEach(function (match) {
+        var doi = normalizeDoi(match);
+        if (doi && out.indexOf(doi) < 0) out.push(doi);
+      });
+    });
+    return out;
   }
 
   function candidateBelongsToJob(url, job) {
     var doi = normalizeDoi(job && job.doi);
-    if (!doi || publisherForDoi(doi) !== 'nature') return true;
-    var embedded = embeddedNatureDoi(url);
-    return !embedded || embedded === doi;
+    if (!doi) return true;
+    var embedded = embeddedKnownDois(url);
+    return !embedded.length || embedded.indexOf(doi) >= 0;
+  }
+
+  function currentPageIdentityDois() {
+    var values = [location.href];
+    var canonical = document.querySelector('link[rel="canonical"][href]');
+    if (canonical) values.push(canonical.getAttribute('href') || '');
+    [
+      'meta[name="citation_doi"]',
+      'meta[name="dc.identifier"]',
+      'meta[name="DC.Identifier"]',
+      'meta[name="prism.doi"]',
+      'meta[property="citation_doi"]'
+    ].forEach(function (selector) {
+      var node = document.querySelector(selector);
+      if (node) values.push(node.getAttribute('content') || '');
+    });
+    var out = [];
+    values.forEach(function (value) {
+      var direct = normalizeDoi(value);
+      if (direct && out.indexOf(direct) < 0) out.push(direct);
+      embeddedKnownDois(value).forEach(function (doi) {
+        if (out.indexOf(doi) < 0) out.push(doi);
+      });
+    });
+    return out;
   }
 
   function publisherForDoi(doi) {
@@ -958,6 +1004,22 @@
       '[id*="chart"]'
     ].join(',')));
     blocks.forEach(function (block, blockIndex) {
+      var excludedAncestor = block.closest && block.closest([
+        'aside',
+        'nav',
+        'footer',
+        '[class*="related"]',
+        '[class*="recommend"]',
+        '[class*="reference"]',
+        '[class*="citation"]',
+        '[class*="supporting"]',
+        '[class*="supplement"]',
+        '[id*="related"]',
+        '[id*="recommend"]',
+        '[id*="reference"]',
+        '[id*="supporting"]'
+      ].join(','));
+      if (excludedAncestor) return;
       var context = String(block.innerText || block.textContent || '').replace(/\s+/g, ' ').trim();
       if (/visual\s*abstract|graphical\s*abstract|toc\s*(?:graphic|image)|journal\s*cover|issue\s*cover/i.test(context.slice(0, 1400))) return;
       if (!/\b(?:Figure|Fig\.?|Scheme|Chart)\s*[A-Za-z]?\d+[A-Za-z]?\b/i.test(context.slice(0, 2200))) return;
@@ -1932,6 +1994,32 @@
     var token = writeToken();
     job.publisher = String(job.publisher || publisherForDoi(job.doi));
     job.startedAt = job.startedAt || nowIso();
+    var pageIdentityDois = currentPageIdentityDois();
+    var normalizedJobDoi = normalizeDoi(job.doi);
+    if (pageIdentityDois.length && pageIdentityDois.indexOf(normalizedJobDoi) < 0) {
+      var pageMismatchReason = 'publisher_page_doi_mismatch:' + pageIdentityDois.join(',');
+      pushTrace(trace, {
+        stage: 'job',
+        event: 'page_identity',
+        status: 'rejected',
+        url: location.href,
+        message: pageMismatchReason
+      });
+      GM_setValue(resultKey(job.doi), {
+        doi: job.doi,
+        status: 'failed',
+        reason: pageMismatchReason,
+        finishedAt: nowIso()
+      });
+      GM_setValue(traceKey(job.doi), {
+        doi: job.doi,
+        status: 'failed',
+        reason: pageMismatchReason,
+        trace: trace,
+        finishedAt: nowIso()
+      });
+      return;
+    }
     var mediaNeed = String(job.mediaNeed || (String(job.state || '') === 'figure_gap' ? 'figures' : 'toc'));
     var needFigures = mediaNeed.indexOf('figures') >= 0;
     var needToc = mediaNeed !== 'figures';

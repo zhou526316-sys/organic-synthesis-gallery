@@ -20,6 +20,39 @@ export function normalizeDoi(value) {
   return DOI_PATTERN.test(cleaned) ? cleaned.toLowerCase() : null;
 }
 
+function decodedIdentityText(value) {
+  let decoded = String(value || '');
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  return decoded.toLowerCase();
+}
+
+function embeddedKnownDois(value) {
+  const decoded = decodedIdentityText(value);
+  const patterns = [
+    /10\.1021\/[a-z0-9._-]+/ig,
+    /10\.1002\/[a-z0-9._-]+/ig,
+    /10\.1038\/[a-z0-9._-]+/ig,
+    /10\.1126\/[a-z0-9._-]+/ig,
+    /10\.1039\/[a-z0-9._-]+/ig,
+    /10\.1016\/[a-z0-9._()-]+/ig,
+    /10\.31635\/[a-z0-9._-]+/ig,
+  ];
+  return [...new Set(patterns.flatMap(pattern => (decoded.match(pattern) || []).map(normalizeDoi).filter(Boolean)))];
+}
+
+function articleUrlMatchesDoi(value, doi) {
+  const embedded = embeddedKnownDois(value);
+  return embedded.length === 0 || embedded.includes(String(doi || '').toLowerCase());
+}
+
 function mediaUrl(request, key) {
   if (!key) return undefined;
   const url = new URL(request.url);
@@ -236,16 +269,25 @@ async function loadMediaRows(env, rawDois) {
   ]);
 
   const tocByDoi = new Map();
-  for (const row of tocRows) tocByDoi.set(String(row.doi).toLowerCase(), row);
+  for (const row of tocRows) {
+    const doi = String(row.doi).toLowerCase();
+    if (!articleUrlMatchesDoi(row.article_url, doi)) continue;
+    tocByDoi.set(doi, row);
+  }
   const figuresByDoi = new Map();
   for (const row of figureRows) {
     const doi = String(row.doi).toLowerCase();
+    if (!articleUrlMatchesDoi(row.article_url, doi)) continue;
     const group = figuresByDoi.get(doi) || [];
     group.push(row);
     figuresByDoi.set(doi, group);
   }
   const primaryByDoi = new Map();
-  for (const row of primaryRows) primaryByDoi.set(String(row.doi).toLowerCase(), row);
+  for (const row of primaryRows) {
+    const doi = String(row.doi).toLowerCase();
+    if (!articleUrlMatchesDoi(row.article_url, doi)) continue;
+    primaryByDoi.set(doi, row);
+  }
   const primaryVariantsByDoi = new Map();
   for (const row of primaryVariantRows) {
     const doi = String(row.doi).toLowerCase();

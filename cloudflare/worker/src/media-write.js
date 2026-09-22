@@ -51,6 +51,53 @@ function normalizeArticleUrl(value, doi) {
   }
 }
 
+function decodedIdentityText(value) {
+  let decoded = String(value || '');
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  return decoded.toLowerCase();
+}
+
+function embeddedKnownDois(value) {
+  const decoded = decodedIdentityText(value);
+  const patterns = [
+    /10\.1021\/[a-z0-9._-]+/ig,
+    /10\.1002\/[a-z0-9._-]+/ig,
+    /10\.1038\/[a-z0-9._-]+/ig,
+    /10\.1126\/[a-z0-9._-]+/ig,
+    /10\.1039\/[a-z0-9._-]+/ig,
+    /10\.1016\/[a-z0-9._()-]+/ig,
+    /10\.31635\/[a-z0-9._-]+/ig,
+  ];
+  return [...new Set(patterns.flatMap(pattern => (decoded.match(pattern) || []).map(normalizeDoi).filter(Boolean)))];
+}
+
+function mediaUrlMatchesDoi(value, doi) {
+  const embedded = embeddedKnownDois(value);
+  return embedded.length === 0 || embedded.includes(String(doi || '').toLowerCase());
+}
+
+function rejectCrossDoiMedia(payload, doi) {
+  const checks = [
+    ['articleUrl', payload?.articleUrl],
+    ['sourceUrl', payload?.sourceUrl],
+    ['imageUrl', payload?.imageUrl],
+  ];
+  for (const [field, value] of checks) {
+    if (value && !mediaUrlMatchesDoi(value, doi)) {
+      return { field, embeddedDois: embeddedKnownDois(value) };
+    }
+  }
+  return null;
+}
+
 function normalizeImageUrl(value) {
   if (typeof value !== 'string' || !value.trim()) return null;
   try {
@@ -192,6 +239,19 @@ export async function importToc(request, env, payload) {
   if (!env?.DB || !env?.MEDIA) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
   const doi = normalizeDoi(payload?.doi);
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  const tocMismatch = rejectCrossDoiMedia(payload, doi);
+  if (tocMismatch) {
+    return {
+      status: 409,
+      body: {
+        error: 'Media source DOI does not match the requested article DOI.',
+        code: 'media_source_doi_mismatch',
+        doi,
+        field: tocMismatch.field,
+        embeddedDois: tocMismatch.embeddedDois,
+      },
+    };
+  }
 
   const existing = await env.DB.prepare('SELECT available, r2_key FROM toc_assets WHERE doi = ?').bind(doi).first();
   if (existing && Number(existing.available) === 1 && existing.r2_key && payload?.replace !== true) {
@@ -245,6 +305,19 @@ export async function importFigure(request, env, payload) {
   if (!env?.DB || !env?.MEDIA) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
   const doi = normalizeDoi(payload?.doi);
   if (!doi) return { status: 400, body: { error: 'A valid DOI is required.' } };
+  const figureMismatch = rejectCrossDoiMedia(payload, doi);
+  if (figureMismatch) {
+    return {
+      status: 409,
+      body: {
+        error: 'Media source DOI does not match the requested article DOI.',
+        code: 'media_source_doi_mismatch',
+        doi,
+        field: figureMismatch.field,
+        embeddedDois: figureMismatch.embeddedDois,
+      },
+    };
+  }
   const image = parseImageData(payload?.imageData);
   if (!image) return { status: 400, body: { error: 'A valid figure imageData is required.' } };
 
@@ -263,6 +336,14 @@ export async function importFigure(request, env, payload) {
   const sortOrder = Number.isFinite(payload?.order) ? Math.max(0, Math.min(99, Math.round(payload.order))) : 0;
   const [token, fullHash] = await Promise.all([doiToken(doi), sha256Hex(image.bytes)]);
   const contentHash = fullHash.slice(0, 32);
+
+  const stale = await env.DB.prepare(
+    'SELECT article_url, r2_key FROM figure_assets WHERE doi = ? AND semantic_key = ? LIMIT 1'
+  ).bind(doi, key).first();
+  if (stale && !mediaUrlMatchesDoi(stale.article_url, doi)) {
+    if (stale.r2_key && env?.MEDIA) await env.MEDIA.delete(stale.r2_key);
+    await env.DB.prepare('DELETE FROM figure_assets WHERE doi = ? AND semantic_key = ?').bind(doi, key).run();
+  }
 
   const duplicate = await env.DB.prepare(
     'SELECT semantic_key FROM figure_assets WHERE doi = ? AND content_hash = ? LIMIT 1'
