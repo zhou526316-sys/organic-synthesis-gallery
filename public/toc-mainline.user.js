@@ -45,6 +45,8 @@
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
   var FIGURE_IMPORT_ENDPOINT = WORKER + '/api/article-figures/import';
   var FIGURE_STAGE_ENDPOINT = WORKER + '/api/article-figures/stage';
+  var FIGURE_STAGED_INDEX_ENDPOINT = WORKER + '/api/article-figures/staged';
+  var MEDIA_INVENTORY_ENDPOINT = WORKER + '/api/media/inventory';
   var CAPTURE_INDEX_URL = WORKER + '/api/media/local-capture-index';
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
   var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
@@ -454,6 +456,84 @@
       throw new Error('queue_http_' + String(response.status || 0));
     }
     return JSON.parse(String(response.responseText || '{}'));
+  }
+
+  async function postReadJson(url, payload) {
+    var response = await gmRequest({
+      method: 'POST',
+      url: url,
+      timeout: 45000,
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-cache',
+        pragma: 'no-cache'
+      },
+      data: JSON.stringify(payload || {})
+    });
+    if (Number(response.status || 0) < 200 || Number(response.status || 0) >= 300) {
+      throw new Error('read_post_http_' + String(response.status || 0));
+    }
+    return JSON.parse(String(response.responseText || '{}'));
+  }
+
+  async function readRealtimeMediaPreflight(jobs) {
+    var dois = Array.from(new Set((jobs || []).map(function (job) {
+      return normalizeDoi(job && job.doi);
+    }).filter(Boolean)));
+    if (!dois.length) return { inventory: new Map(), stagedCounts: new Map(), available: true };
+
+    try {
+      var results = await Promise.all([
+        postReadJson(MEDIA_INVENTORY_ENDPOINT, { dois: dois, readOnly: true }),
+        getJson(FIGURE_STAGED_INDEX_ENDPOINT + '?ts=' + Date.now())
+      ]);
+      var inventoryPayload = results[0] || {};
+      var stagedPayload = results[1] || {};
+      var inventory = new Map();
+      (Array.isArray(inventoryPayload.items) ? inventoryPayload.items : []).forEach(function (item) {
+        var doi = normalizeDoi(item && item.doi);
+        if (doi) inventory.set(doi, item);
+      });
+
+      var stagedSets = new Map();
+      (Array.isArray(stagedPayload.items) ? stagedPayload.items : []).forEach(function (item) {
+        var doi = normalizeDoi(item && item.doi);
+        if (!doi || dois.indexOf(doi) < 0) return;
+        if (!stagedSets.has(doi)) stagedSets.set(doi, new Set());
+        stagedSets.get(doi).add(String(item && item.id || item && item.r2Key || 'figure'));
+      });
+      var stagedCounts = new Map();
+      stagedSets.forEach(function (ids, doi) { stagedCounts.set(doi, ids.size); });
+      return { inventory: inventory, stagedCounts: stagedCounts, available: true };
+    } catch (error) {
+      try { console.warn('[OSG TOC] realtime media preflight unavailable', String(error && error.message || error)); } catch (_) {}
+      return { inventory: new Map(), stagedCounts: new Map(), available: false };
+    }
+  }
+
+  function filterJobsByRealtimeMediaState(jobs, preflight) {
+    var filtered = [];
+    var skipped = 0;
+    (jobs || []).forEach(function (job) {
+      var doi = normalizeDoi(job && job.doi);
+      if (!doi) return;
+      var item = preflight && preflight.inventory ? preflight.inventory.get(doi) : null;
+      var stagedCount = preflight && preflight.stagedCounts ? Number(preflight.stagedCounts.get(doi) || 0) : 0;
+      if (jobKind(job) === 'toc') {
+        if (item && item.tocStored === true) {
+          skipped += 1;
+          return;
+        }
+      } else {
+        var usable = Math.max(0, Number(item && item.usableFigureCount || 0)) + stagedCount;
+        if (usable >= 2) {
+          skipped += 1;
+          return;
+        }
+      }
+      filtered.push(job);
+    });
+    return { jobs: filtered, skipped: skipped };
   }
 
   async function readLiveCaptureKinds() {
