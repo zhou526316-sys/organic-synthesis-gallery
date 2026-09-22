@@ -41,6 +41,8 @@ for (const width of [390, 1280]) {
     await actions.locator('button[data-action="view-status-image:to-read"]').click();
     const viewer = page.locator('dialog[data-status-image-viewer]');
     await expect(viewer).toBeVisible();
+    // The viewer now opens with a preview; it must still upgrade to exact bytes.
+    await expect(viewer.locator('img')).toHaveAttribute('data-image-source', 'original');
     const bounds = await viewer.boundingBox();
     expect(bounds!.width).toBeLessThan(width);
     expect(bounds!.height).toBeLessThan(900);
@@ -58,6 +60,7 @@ for (const width of [390, 1280]) {
       const otherAction = otherPage.locator('gallery-paper-actions').first().locator('button[data-action="status"]');
       await expect(otherAction.locator('img')).toHaveAttribute('data-image-source', 'preview');
       await expect(otherAction.locator('img')).toHaveAttribute('src', /^data:image\/png/);
+      await expect.poll(() => otherAction.locator('img').evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
     } finally { await other.close(); }
     await actions.locator('button[data-action="clear-status-image:to-read"]').click();
     await expect(action.locator('img')).toHaveCount(0);
