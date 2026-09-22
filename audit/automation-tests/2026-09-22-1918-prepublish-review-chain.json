@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "test": "prepublish-review-chain",
+  "startedAt": "2026-09-22T19:18:02+08:00",
+  "finishedAt": "2026-09-22T19:23:00+08:00",
+  "targetPublicationSlot": "2026-09-23T08:00:00+08:00",
+  "freshAuditGeneratedAt": "2026-09-22T11:09:37.107Z",
+  "sourceRecords": 554,
+  "galleryDois": 512,
+  "unresolvedInput": 7,
+  "reviewed": 0,
+  "accepted": 0,
+  "rejected": 0,
+  "pending": 7,
+  "remainingUnresolved": 7,
+  "testResult": "incomplete_review",
+  "qualityControl": {
+    "secondPassCompleted": false,
+    "unresolvedDisagreements": 7,
+    "failClosed": true
+  },
+  "stagingArtifact": "audit/prepublish-review-2026-09-23-0800-test.json",
+  "stagingCommit": "f458073dce7388eb0d75e479c06eb77b265fba1b",
+  "productionDataChanged": false,
+  "productionCardsBefore": 512,
+  "productionCardsAfter": 512,
+  "oaPdfHtmlExtractionRun": false,
+  "finding": "Machine-audit bridge is healthy, but the semantic-review handoff is not yet robust: the GitHub connector truncates the large one-line audit/latest.json before the complete unresolved candidate array is exposed. The fixed-slot fail-closed policy worked: no production mutation was attempted and no include/exclude decision was fabricated.",
+  "recommendedFix": "Have the GitHub audit workflow additionally persist a compact audit/unresolved-latest.json containing only generatedAt, summary, active-journal source health, and the complete unresolved/potential-gap records. Pre-review tasks should consume that compact artifact."
+}
