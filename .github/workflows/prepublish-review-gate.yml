@@ -8,6 +8,8 @@ on:
       - '.github/workflows/prepublish-review-gate.yml'
       - 'scripts/validate-prepublish-review.mjs'
       - 'scripts/test-prepublish-readiness.mjs'
+      - 'scripts/check-prepublish-readiness.mjs'
+      - 'scripts/test-prepublish-slot-window.mjs'
       - 'shared/literature-journals.js'
       - 'audit/latest.json'
       - 'audit/unresolved-latest.json'
@@ -37,6 +39,9 @@ jobs:
       - name: Test staging versus release-readiness invariants
         run: node scripts/test-prepublish-readiness.mjs
 
+      - name: Test target-slot freshness and zero-new proof
+        run: node scripts/test-prepublish-slot-window.mjs
+
       - name: Locate canonical staging review
         id: locate
         shell: bash
@@ -64,6 +69,13 @@ jobs:
           set -euo pipefail
           node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}" --require-ready | tee "$RUNNER_TEMP/prepublish-readiness.json"
 
+      - name: Require fresh snapshot for the target 08 or 18 slot
+        if: always() && steps.locate.outputs.review != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/check-prepublish-readiness.mjs "${{ steps.locate.outputs.review }}" --require-ready | tee "$RUNNER_TEMP/prepublish-slot-readiness.json"
+
       - name: Preserve staging and readiness evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -72,5 +84,6 @@ jobs:
           path: |
             ${{ runner.temp }}/prepublish-validation.json
             ${{ runner.temp }}/prepublish-readiness.json
+            ${{ runner.temp }}/prepublish-slot-readiness.json
           if-no-files-found: warn
           retention-days: 14
