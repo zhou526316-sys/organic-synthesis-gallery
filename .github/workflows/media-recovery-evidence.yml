@@ -29,7 +29,18 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           GH_TOKEN: ${{ github.token }}
-        run: python3 cloudflare/scripts/verify-media-recovery-evidence.py
+        run: |
+          python3 - <<'PY'
+          import runpy, urllib.request as ur, urllib.parse as up
+          class OriginBoundRedirect(ur.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  redirected = super().redirect_request(req, fp, code, msg, headers, newurl)
+                  if redirected is not None and up.urlsplit(req.full_url).netloc != up.urlsplit(newurl).netloc:
+                      redirected.remove_header('Authorization')
+                  return redirected
+          ur.install_opener(ur.build_opener(OriginBoundRedirect()))
+          runpy.run_path('cloudflare/scripts/verify-media-recovery-evidence.py', run_name='__main__')
+          PY
       - name: Preserve sanitized report and verified image evidence
         if: always()
         uses: actions/upload-artifact@v4
