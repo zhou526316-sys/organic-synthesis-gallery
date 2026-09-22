@@ -1,3 +1,4 @@
+// Re-run PR checks against the latest main review state.
 import assert from 'node:assert/strict';
 import { getArticleSummary, importArticleFulltext } from '../src/article-summary.js';
 
