@@ -1,0 +1,78 @@
+{
+  "recordedAt": "2026-09-22T22:33:03+08:00",
+  "context": "UI and feedback continuation; production verification for feedback 26 and 27",
+  "status": "partial_verified",
+  "implementationPullRequest": 128,
+  "verificationCommits": [
+    "0790653c383fa0fe77d5c7912e55dbd0dcb82bb7",
+    "eab2d9d4f2e4a43b27d3a6e4af24b37c150dd313"
+  ],
+  "workflow": ".github/workflows/ui-feedback-26-27-live-smoke.yml",
+  "runId": 35740626361,
+  "runConclusion": "failure",
+  "artifact": {
+    "id": 10698734642,
+    "name": "live-ui-feedback-26-27",
+    "digest": "sha256:4dc6e0d8c8f8f1de1d4e459c624eccbaed81e28805e679d2c6340d705d673254"
+  },
+  "verifiedEntry": {
+    "url": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
+    "httpStatus": 200,
+    "browser": "Playwright 1.55.0 WebKit",
+    "viewportWidths": [390, 1280],
+    "viewportHeight": 900,
+    "results": [
+      { "width": 390, "status": "passed", "pageErrors": [], "favoritePanelAnchorGapPx": 6 },
+      { "width": 1280, "status": "passed", "pageErrors": [], "favoritePanelAnchorGapPx": 6 }
+    ],
+    "entryScript": "assets/index-Cl-0QXkD.js",
+    "assertions": [
+      "Four management buttons remain; summary has a separate entry.",
+      "Favorite directly opens an anchored folder picker within the viewport.",
+      "Selecting a folder saves the article; closing and reopening the picker never removes the favorite.",
+      "Favorite and folder persist after reload; More retains citations without duplicated folder controls.",
+      "Reading-status button matches the selected status color and a custom color after reload; button shape is preserved.",
+      "Explicitly removing the favorite clears all folder memberships."
+    ]
+  },
+  "unverifiedEntry": {
+    "url": "https://organic-synthesis-gallery-public.pages.dev/",
+    "viewportWidths": [390, 1280],
+    "reason": "dns_resolution_failed",
+    "nodeLookup": "ENOTFOUND",
+    "dnsA": "ENOTFOUND",
+    "dnsAAAA": "ENOTFOUND",
+    "httpFetch": "getaddrinfo ENOTFOUND",
+    "webkitNavigation": "Name or service not known",
+    "observedAt": "2026-09-22T14:30:13.356Z",
+    "scopeOfClaim": "Observed from the GitHub Actions runner. Do not infer a global outage or report this entry as verified."
+  },
+  "testInfrastructureRepairs": [
+    "Install explicit @playwright/test@1.55.0 before importing it; use the matching WebKit binary.",
+    "Include CORS headers and preflight handling on synthetic blocked-write responses, rather than producing a fixture-induced access-control error.",
+    "Retain real public DNS and HTTP diagnostics separately from UI assertions; do not remove the unavailable entry to make the workflow green."
+  ],
+  "safetyAndScope": {
+    "productionWritesAllowedByBrowserTest": false,
+    "backendWritesMocked": true,
+    "backendServiceBehaviorVerified": false,
+    "readerEventsWritten": false,
+    "originalArticleLinksClicked": false,
+    "productionLiteratureDataChanged": false,
+    "mediaCaptureCodeChanged": false,
+    "feedbackStatusUpdatesApplied": [],
+    "allPublicEntriesAccepted": false
+  },
+  "feedbackHandoff": {
+    "sourceExportRunId": 35738483707,
+    "sourceExportGeneratedAt": "2026-09-22T14:10:45.636Z",
+    "nextUiFeedbackId": 28,
+    "requestedCapabilities": ["Direct display of uploaded reading-status images", "Preserve original image", "Animated GIF support", "30 MB source files"],
+    "implementationStatus": "not_implemented_in_this_batch",
+    "inspectionNotes": [
+      "Current src/user-ui/image-cropper.ts has a 20,000,000-byte source limit and an image-cropping flow.",
+      "Current reading-status file input accepts PNG, JPEG and WebP; status image CSS is 16 by 16 pixels.",
+      "StyleDef.imageData is embedded in the user UI state persisted in localStorage. Original 30 MB files need storage and synchronization design, not only a larger numeric input limit."
+    ]
+  }
+}
