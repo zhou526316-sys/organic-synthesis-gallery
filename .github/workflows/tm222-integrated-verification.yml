@@ -1,0 +1,73 @@
+name: Verify integrated capture and window safety
+on:
+  push:
+    branches: [integration/tm220-final-unified]
+    paths: ['.github/workflows/tm222-integrated-verification.yml','scripts/integrate-tm222-window-safety.py','scripts/finish-tm222-safety.py']
+permissions:
+  contents: write
+concurrency:
+  group: tm222-integrated-verification
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: integration/tm220-final-unified
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Integrate inspected main safety without changing media or literature
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin b00b03aa03d3dccb7a46ac6bd54d51392029de34
+          if grep -Fq "var VERSION = '6.2.21';" public/toc-mainline.user.js; then python3 scripts/integrate-tm222-window-safety.py; fi
+          if test -f scripts/finish-tm222-safety.py; then python3 scripts/finish-tm222-safety.py; fi
+          git diff --check
+          node --check public/toc-mainline.user.js
+      - name: Verify storage and ownership with unchanged safety expectations
+        run: |
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm-night-release.mjs
+          node scripts/test-tm222-window-guard.mjs
+      - name: Verify actual Chromium paired capture and persistent publisher identity
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.55.1
+          npx playwright install chromium
+          node scripts/test-tm-paired-capture.mjs
+          node scripts/test-tm-night-browser.mjs
+      - name: Build complete queue and actual installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: |
+          node cloudflare/scripts/build-live-toc-demand-queue.mjs
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm-release.mjs public
+          npx tsc --noEmit
+          npm run build
+          node scripts/validate-tm-release.mjs dist
+      - name: Save validated source only
+        run: |
+          git add public/toc-mainline.user.js public/toc-demand-live.json cloudflare/scripts/build-bridge-loader.mjs cloudflare/scripts/build-live-toc-demand-queue.mjs cloudflare/worker/src/index.js cloudflare/worker/src/local-captures.js cloudflare/worker/src/verified-browser-media.js scripts/validate-tm-release.mjs scripts/validate-tm220-artifacts.mjs scripts/test-media-identity-v220.mjs scripts/test-tm-stage-first.mjs scripts/test-tm-night-release.mjs scripts/test-tm-night-browser.mjs scripts/test-tm-paired-capture.mjs scripts/test-tm222-window-guard.mjs scripts/test-tm221-window-guard.mjs audit/tm222-release-contracts
+          if ! git diff --cached --quiet; then git commit -m 'release: verified 2.2.22 full capture with confirmed single-tab safety'; git push origin HEAD:integration/tm220-final-unified; fi
+          echo "TM222_TESTED_HEAD=$(git rev-parse HEAD)"
+      - name: Preserve reproducible source and installer
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm222"
+          tar -cf "$RUNNER_TEMP/tm222/source.tar" public/toc-mainline.user.js public/toc-demand-live.json cloudflare/worker/src cloudflare/scripts scripts audit/tm222-release-contracts 2>/dev/null || true
+          cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/tm222/" 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm222-verified-source
+          path: ${{ runner.temp }}/tm222/
+          retention-days: 3
