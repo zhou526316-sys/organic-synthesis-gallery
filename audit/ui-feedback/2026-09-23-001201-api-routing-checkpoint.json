@@ -1,0 +1,69 @@
+{
+  "recordedAt": "2026-09-23T00:12:01+08:00",
+  "context": "UI and feedback continuation; user request 继续",
+  "status": "implemented_on_branch_blocked_by_regression",
+  "pullRequest": 133,
+  "branch": "fix/ui-api-path-routing-20260923",
+  "headSha": "64bdd71d1c9acd8bfdb6413781ab3a182fc282cb",
+  "productionChangeCommit": "08985ce6405da0dd6671494bf213040651c26c56",
+  "productionChange": "In src/user-shell.ts retain HTTP(S) and known-origin checks, additionally require exact /api or /api/ descendants before API failover. Static data, translations and media remain on their requested origins. Existing Request passthrough, timeout and API fallback semantics remain unchanged.",
+  "changedFiles": ["src/user-shell.ts", "tests/status-api-routing.spec.ts", ".github/workflows/status-original-images-ci.yml"],
+  "pullRequestChecks": {
+    "siteQualityGate": { "runId": 35751685913, "conclusion": "success" },
+    "migrationCi": { "runId": 35751686002, "conclusion": "success" },
+    "dataValidation": { "runId": 35751686163, "conclusion": "success" },
+    "originalImageRegression": {
+      "runId": 35751685985,
+      "jobId": 106827155087,
+      "conclusion": "failure",
+      "passed": 8,
+      "failed": 1,
+      "skipped": 0,
+      "flaky": 0,
+      "artifactId": 10705418251,
+      "artifactName": "status-original-image-results",
+      "artifactSha256": "cf95da0c9603e6e0110b40afa2f49c844f55e37840a0085963d4e901c2099555",
+      "artifactDownloadedAndResultsInspected": true,
+      "passedCases": [
+        "81 static/relative/third-party URL input combinations preserve origin: string, URL and Request; API-like prefixes are not API routes",
+        "API primary-first routing, network failure fallback, POST body preservation, HTTP 503 non-retry and Request passthrough remain unchanged",
+        "Exact 30,000,000-byte original plus oversized/invalid/corrupt replacement protection",
+        "IndexedDB failure preserves the prior image",
+        "Preference storage failure preserves the prior image",
+        "Removal while uploading prevents stale restoration",
+        "Blob string/URL/Request reads stay local",
+        "390px original GIF byte identity, frame changes, reload, bounded viewer, separate-context preview fallback, removal and zero page errors"
+      ],
+      "failedCase": {
+        "title": "original GIF is animated, byte-exact and persistent at 1280px",
+        "stage": "Final unfiltered pageErrors assertion after functional assertions completed",
+        "message": "/organic-synthesis-gallery.zhou526316.workers.dev/api/user-ui/reader-counts due to access control checks.",
+        "causeStatus": "not_established",
+        "interpretation": "This isolated suite intercepts external traffic. Do not infer a production CORS outage, universal GIF failure, or a fixed reader-count business issue. Mock transport, navigation cancellation/fallback timing and other frontend causes require further evidence."
+      }
+    }
+  },
+  "release": {
+    "mergedThisTurn": false,
+    "deployedThisTurn": false,
+    "liveAcceptanceRunThisTurn": false,
+    "feedback28Closed": false,
+    "feedbackStatusWrites": [],
+    "productionReaderEventsWritten": false,
+    "productionReaderCountIssueResolved": false,
+    "productionLiteratureDataChanged": false,
+    "publicationSlotsChanged": false,
+    "captureOrBridgeSourceChanged": false,
+    "mediaRepairGatesChanged": false
+  },
+  "testIntegrity": {
+    "existingAcceptanceAssertionsRemoved": false,
+    "acceptanceTimeoutsRelaxed": false,
+    "unchangedRerunToObtainGreen": false,
+    "nextEvidenceNeeded": "Capture request failures together with navigation/unload timestamps before changing mock CORS headers or production fetch lifecycle."
+  },
+  "remainingUiRequests": {
+    "29": "Larger non-fullscreen summary window; not implemented in this batch",
+    "30": "Optional surrounding reading-status glow effects; not implemented in this batch"
+  }
+}
