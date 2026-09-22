@@ -1,0 +1,122 @@
+name: Verify deployed status originals and GIF
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui-feedback28-live-smoke.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-feedback28-live-smoke
+  cancel-in-progress: false
+
+jobs:
+  verify-live:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+          - entry: pages
+            site: https://organic-synthesis-gallery-public.pages.dev/
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      LIVE_SITE_URL: ${{ matrix.site }}
+      REVIEWED_SHA: 004779910a2ff384dd0224201bb48a8d61442a48
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 004779910a2ff384dd0224201bb48a8d61442a48
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Record real public entry availability before browser tests
+        run: |
+          mkdir -p live-status-results
+          node --input-type=module <<'NODE'
+          import { lookup, resolve4, resolve6 } from 'node:dns/promises';
+          import { writeFile } from 'node:fs/promises';
+          const site = process.env.LIVE_SITE_URL;
+          const host = new URL(site).hostname;
+          const evidence = { site, checkedAt: new Date().toISOString(), reviewedSha: process.env.REVIEWED_SHA, dns: {}, productionWritesAllowed: false, backendWritesMocked: true };
+          for (const [name, query] of Object.entries({ lookup: () => lookup(host, { all: true }), A: () => resolve4(host), AAAA: () => resolve6(host) })) {
+            try { evidence.dns[name] = await query(); } catch (error) { evidence.dns[name] = { code: error.code, message: error.message }; }
+          }
+          try {
+            const response = await fetch(site, { signal: AbortSignal.timeout(15000), headers: { 'cache-control': 'no-cache' } });
+            evidence.http = { status: response.status, url: response.url };
+            evidence.available = response.ok;
+            await response.body?.cancel();
+          } catch (error) { evidence.available = false; evidence.http = { error: String(error), cause: String(error.cause || '') }; }
+          await writeFile('live-status-results/network.json', JSON.stringify(evidence, null, 2));
+          console.log(JSON.stringify(evidence));
+          if (!evidence.available) process.exitCode = 1;
+          NODE
+      - name: Install pinned browser test dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/live-browser-install.log 2>&1 || { tail -80 /tmp/live-browser-install.log; exit 1; }
+      - name: Adapt only test transport to deployed sites
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('tests/status-image-fixtures.ts')
+          text = p.read_text()
+          start = text.index('export async function isolate(')
+          end = text.index('export async function open(', start)
+          transport = '''export async function isolate(context: BrowserContext): Promise<void> {
+            // Fresh anonymous test contexts. Network writes and summary generation
+            // are blocked; original images remain private to the discarded context.
+            await context.route('**/*', async route => {
+              const request = route.request();
+              const url = request.url();
+              if (url.startsWith('blob:') || url.startsWith('data:')) { await route.continue(); return; }
+              const path = new URL(url).pathname;
+              const headers = {
+                'access-control-allow-origin': request.headers().origin || new URL(process.env.LIVE_SITE_URL!).origin,
+                'access-control-allow-credentials': 'true',
+                'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization',
+                'access-control-allow-methods': 'GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE',
+                'vary': 'Origin',
+              };
+              if (request.method() === 'OPTIONS') { await route.fulfill({ status: 204, headers }); return; }
+              if (['GET', 'HEAD'].includes(request.method()) && !path.includes('/article-summary')) { await route.continue(); return; }
+              console.log('BLOCKED_LIVE_WRITE', request.method(), path);
+              const countRead = path.endsWith('/api/user-ui/reader-counts');
+              await route.fulfill({ status: countRead ? 200 : 409, headers, contentType: 'application/json', body: JSON.stringify(countRead ? { counts: {} } : { error: 'live_test_write_blocked' }) });
+            });
+          }
+          '''
+          text = text[:start] + transport + text[end:]
+          needle = "await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });"
+          assert text.count(needle) == 1
+          text = text.replace(needle, "await page.goto(process.env.LIVE_SITE_URL!, { waitUntil: 'domcontentloaded' });\n  console.log('LIVE_ENTRY', JSON.stringify({ site: process.env.LIVE_SITE_URL, url: page.url(), scripts: await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => (node as HTMLScriptElement).src)) }));")
+          p.write_text(text)
+          PY
+          git diff --check
+          git diff -- tests/status-image-fixtures.ts > live-status-results/transport-only.diff
+          sha256sum tests/status-original-images.spec.ts tests/status-image-errors.spec.ts src/user-ui/status-image-*.ts > live-status-results/reviewed-source-sha256.txt
+          git rev-parse HEAD > live-status-results/reviewed-commit.txt
+      - name: Run unchanged original, GIF, boundary and failure assertions on live frontend
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: live-status-results/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=live-status-results/tests 2>&1 | tee live-status-results/tests.log
+      - name: Retain live evidence, including unavailable entries
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-status-images-${{ matrix.entry }}
+          path: live-status-results/
+          retention-days: 7
+          if-no-files-found: error
