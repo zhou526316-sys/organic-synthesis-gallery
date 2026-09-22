@@ -10,6 +10,7 @@ on:
       - 'scripts/test-prepublish-readiness.mjs'
       - 'scripts/check-prepublish-readiness.mjs'
       - 'scripts/test-prepublish-slot-window.mjs'
+      - 'scripts/test-per-doi-release.mjs'
       - 'shared/literature-journals.js'
       - 'audit/latest.json'
       - 'audit/unresolved-latest.json'
@@ -36,11 +37,14 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Test staging versus release-readiness invariants
+      - name: Test staging versus full-review closure invariants
         run: node scripts/test-prepublish-readiness.mjs
 
       - name: Test target-slot freshness and zero-new proof
         run: node scripts/test-prepublish-slot-window.mjs
+
+      - name: Test per-DOI publication and durable deferrals
+        run: node scripts/test-per-doi-release.mjs
 
       - name: Locate canonical staging review
         id: locate
@@ -57,24 +61,24 @@ jobs:
           echo "review=$review" >> "$GITHUB_OUTPUT"
           echo "Validating $review"
 
-      - name: Validate compact handoff and semantic staging review
+      - name: Validate complete handoff and documented decisions
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}" | tee "$RUNNER_TEMP/prepublish-validation.json"
+          node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}" --allow-deferred | tee "$RUNNER_TEMP/prepublish-validation.json"
 
-      - name: Require finalized review for publication readiness
+      - name: Require reviewed DOI subset for publication readiness
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}" --require-ready | tee "$RUNNER_TEMP/prepublish-readiness.json"
+          node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}" --allow-deferred --require-ready | tee "$RUNNER_TEMP/prepublish-readiness.json"
 
       - name: Require fresh snapshot for the target 08 or 18 slot
         if: always() && steps.locate.outputs.review != ''
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/check-prepublish-readiness.mjs "${{ steps.locate.outputs.review }}" --require-ready | tee "$RUNNER_TEMP/prepublish-slot-readiness.json"
+          node scripts/check-prepublish-readiness.mjs "${{ steps.locate.outputs.review }}" --allow-deferred --require-ready | tee "$RUNNER_TEMP/prepublish-slot-readiness.json"
 
       - name: Preserve staging and readiness evidence
         if: always()
