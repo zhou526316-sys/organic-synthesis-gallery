@@ -1,4 +1,4 @@
-import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteStagedArticleFigures } from './local-captures.js';
+import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteStagedArticleFigures, purgeCrossDoiLocalMedia } from './local-captures.js';
 import {
   bridgeQueue,
   getArticleFigures,
@@ -11,6 +11,7 @@ import {
 import {
   importFigure,
   importToc,
+  purgeCrossDoiMedia,
   quarantineToc,
   resetFigures,
 } from './media-write.js';
@@ -389,6 +390,7 @@ async function handleApi(request, env) {
       '/api/article-figures/stage',
       '/api/article-figures/promote-staged',
       '/api/article-figures/reset',
+      '/api/media/purge-cross-doi',
       '/api/media/attempt',
       '/api/media/diagnose',
       '/api/media/repair-batch',
@@ -435,6 +437,26 @@ async function handleApi(request, env) {
   }
   if (request.method === 'POST' && url.pathname === '/api/article-figures/reset') {
     return resultResponse(await resetFigures(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/media/purge-cross-doi') {
+    const payload = await readJson(request);
+    const [database, local] = await Promise.all([
+      purgeCrossDoiMedia(env, payload),
+      purgeCrossDoiLocalMedia(env, payload),
+    ]);
+    const affectedDois = [...new Set([
+      ...(database.body?.affectedDois || []),
+      ...(local.body?.affectedDois || []),
+    ])];
+    return resultResponse({
+      status: Math.max(Number(database.status || 200), Number(local.status || 200)),
+      body: {
+        dryRun: payload?.dryRun === true,
+        affectedDois,
+        database: database.body,
+        local: local.body,
+      },
+    });
   }
   if (request.method === 'POST' && url.pathname === '/api/media/attempt') {
     return resultResponse(await persistMediaAttempt(env, await readJson(request)));
@@ -511,13 +533,26 @@ export default {
     const minute = new Date(controller.scheduledTime || Date.now()).getUTCMinutes();
     const mode = minute === 0 ? 'upgrade' : 'coverage';
     const limit = mode === 'upgrade' ? 1 : 2;
-    ctx.waitUntil(
-      runLeaseRepairBatch(env, limit, mode, `cloudflare-cron:${controller.scheduledTime || Date.now()}`).then(result => {
+    ctx.waitUntil((async () => {
+      try {
+        const [databaseSweep, localSweep] = await Promise.all([
+          purgeCrossDoiMedia(env, { dryRun: false }),
+          purgeCrossDoiLocalMedia(env, { dryRun: false }),
+        ]);
+        const purged = Number(databaseSweep.body?.summary?.affectedDois || 0) +
+          Number(localSweep.body?.summary?.affectedDois || 0);
+        if (purged > 0) {
+          console.warn('CROSS_DOI_MEDIA_PURGED', JSON.stringify({
+            database: databaseSweep.body?.summary || {},
+            local: localSweep.body?.summary || {},
+          }));
+        }
+        const result = await runLeaseRepairBatch(env, limit, mode, `cloudflare-cron:${controller.scheduledTime || Date.now()}`);
         console.log('MEDIA_JOB_CRON', JSON.stringify({ mode, claimed: result.claimed, processed: result.processed, results: result.results }));
-      }).catch(error => {
+      } catch (error) {
         console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
-      })
-    );
+      }
+    })());
     ctx.waitUntil(
       promoteStagedArticleFigures(
         new Request('https://organic-synthesis-gallery.zhou526316.workers.dev/api/article-figures/promote-staged'),
