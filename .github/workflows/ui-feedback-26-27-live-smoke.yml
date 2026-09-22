@@ -33,6 +33,30 @@ jobs:
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           node --input-type=module -e "import { webkit, expect } from '@playwright/test'; if (!webkit || !expect) process.exit(1)"
           npx --no-install playwright install --with-deps webkit
+      - name: Retain public entry DNS and HTTP diagnostics
+        run: |
+          mkdir -p live-ui-results
+          node --input-type=module <<'NODE'
+          import { lookup, resolve4, resolve6 } from 'node:dns/promises';
+          import { writeFile } from 'node:fs/promises';
+          const sites = ['https://organic-synthesis-gallery-public.pages.dev/', 'https://zhou526316-sys.github.io/organic-synthesis-gallery/'];
+          const diagnostics = [];
+          for (const site of sites) {
+            const host = new URL(site).hostname;
+            const item = { site, generatedAt: new Date().toISOString(), dns: {} };
+            for (const [name, query] of Object.entries({ lookup: () => lookup(host, { all: true }), A: () => resolve4(host), AAAA: () => resolve6(host) })) {
+              try { item.dns[name] = await query(); } catch (error) { item.dns[name] = { code: error.code, message: error.message }; }
+            }
+            try {
+              const response = await fetch(site, { signal: AbortSignal.timeout(15000) });
+              item.http = { status: response.status, url: response.url };
+              await response.body?.cancel();
+            } catch (error) { item.http = { error: String(error), cause: String(error.cause || '') }; }
+            diagnostics.push(item);
+          }
+          await writeFile('live-ui-results/network-diagnostics.json', JSON.stringify(diagnostics, null, 2));
+          console.log(JSON.stringify(diagnostics));
+          NODE
       - name: Check live public frontends without production writes
         run: |
           mkdir -p live-ui-results
@@ -57,11 +81,22 @@ jobs:
                 page.on('pageerror', error => result.pageErrors.push(error.message));
                 // Fresh anonymous contexts only. Never publish test feedback, reader events,
                 // synced user state, captures, or generated summaries into production.
+                // Synthetic responses need CORS headers too; otherwise this fixture itself
+                // creates WebKit access-control errors unrelated to the deployed UI.
                 await context.route('**/*', async route => {
                   const request = route.request();
-                  if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method())) {
+                  const headers = {
+                    'access-control-allow-origin': request.headers().origin || new URL(site).origin,
+                    'access-control-allow-credentials': 'true',
+                    'access-control-allow-methods': 'GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE',
+                    'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization',
+                    'vary': 'Origin',
+                  };
+                  if (request.method() === 'OPTIONS') {
+                    await route.fulfill({ status: 204, headers });
+                  } else if (!['GET', 'HEAD'].includes(request.method())) {
                     result.blockedWrites.push({ method: request.method(), path: new URL(request.url()).pathname });
-                    await route.fulfill({ status: 409, contentType: 'application/json', body: JSON.stringify({ error: 'live_ui_smoke_write_blocked' }) });
+                    await route.fulfill({ status: 409, headers, contentType: 'application/json', body: JSON.stringify({ error: 'live_ui_smoke_write_blocked' }) });
                   } else await route.continue();
                 });
                 try {
@@ -145,7 +180,7 @@ jobs:
                   try { await page.screenshot({ path: `live-ui-results/${name}-${width}-failure.png`, fullPage: false, timeout: 10000 }); } catch {}
                 } finally {
                   await context.close();
-                  await writeFile('live-ui-results/results.json', JSON.stringify({ generatedAt: new Date().toISOString(), sourceSha: process.env.GITHUB_SHA, productionWritesAllowed: false, results }, null, 2));
+                  await writeFile('live-ui-results/results.json', JSON.stringify({ generatedAt: new Date().toISOString(), sourceSha: process.env.GITHUB_SHA, productionWritesAllowed: false, backendWritesMocked: true, results }, null, 2));
                   console.log(JSON.stringify(result));
                 }
               }
