@@ -25,10 +25,20 @@ export const SUMMARY_PANEL_STYLES = `
     .summary-drawer .summary-text{font-size:14px;line-height:1.8}
   }
 `;
+const watchedPanels = new WeakSet<HTMLElement>();
 
 /** Prefer the triggering card; fit inside the visual viewport when neither side
  * has enough reading space. Never resize the panel into a narrow vertical strip. */
 export function positionSummaryPanel(drawer: HTMLElement, anchor: HTMLElement, host: HTMLElement): void {
+  if (!drawer.isConnected || !anchor.isConnected || !host.isConnected) return;
+  if (!watchedPanels.has(drawer)) {
+    watchedPanels.add(drawer);
+    // These listeners belong to the disposable drawer, not window/document.
+    // Late TOC decoding can change the panel height after its initial layout.
+    const refit = (): void => { if (drawer.isConnected) positionSummaryPanel(drawer, anchor, host); };
+    drawer.addEventListener('load', refit, true);
+    requestAnimationFrame(refit);
+  }
   const viewport = window.visualViewport;
   const width = viewport?.width || window.innerWidth;
   const height = viewport?.height || window.innerHeight;
@@ -56,7 +66,7 @@ export function positionSummaryPanel(drawer: HTMLElement, anchor: HTMLElement, h
     top = Math.max(originY + margin, Math.min(below, originY + height - bounds.height - margin));
     drawer.dataset.placement = 'viewport-fit';
   }
-  drawer.style.left = `${Math.round(left - parent.left)}px`;
-  drawer.style.top = `${Math.round(top - parent.top)}px`;
+  drawer.style.left = `${left - parent.left}px`;
+  drawer.style.top = `${top - parent.top}px`;
   drawer.dataset.anchor = 'summary';
 }
