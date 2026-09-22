@@ -1,0 +1,121 @@
+name: Verify deployed readable summaries
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui-feedback29-live-smoke.yml']
+permissions:
+  contents: read
+concurrency:
+  group: ui-feedback29-live-smoke
+  cancel-in-progress: false
+jobs:
+  summary-live:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+          - entry: pages
+            site: https://organic-synthesis-gallery-public.pages.dev/
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      LIVE_SITE_URL: ${{ matrix.site }}
+      REVIEWED_SHA: b00b03aa03d3dccb7a46ac6bd54d51392029de34
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b00b03aa03d3dccb7a46ac6bd54d51392029de34
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Record actual public entry availability
+        run: |
+          mkdir -p live-summary-results
+          node --input-type=module <<'NODE'
+          import { lookup } from 'node:dns/promises';
+          import { writeFile } from 'node:fs/promises';
+          const site = process.env.LIVE_SITE_URL;
+          const result = { site, checkedAt: new Date().toISOString(), reviewedSha: process.env.REVIEWED_SHA, productionWritesAllowed: false, summariesAndBackendMocked: true };
+          try { result.dns = await lookup(new URL(site).hostname, { all: true }); } catch(error) { result.dns = { code: error.code, message: error.message }; }
+          try {
+            const response = await fetch(site, { headers: { 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(15000) });
+            result.http = { status: response.status, url: response.url };
+            result.available = response.ok;
+            result.entryHtml = (await response.text()).slice(0, 2000);
+          } catch(error) { result.available = false; result.http = { error: String(error), cause: String(error.cause || '') }; }
+          await writeFile('live-summary-results/network.json', JSON.stringify(result, null, 2));
+          console.log(JSON.stringify(result));
+          if (!result.available) process.exitCode = 1;
+          NODE
+      - name: Install pinned browser dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/live-summary-browser.log 2>&1 || { tail -80 /tmp/live-summary-browser.log; exit 1; }
+      - name: Adapt navigation and test transport only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('tests/status-image-fixtures.ts')
+          text = p.read_text()
+          start = text.index('export async function isolate(')
+          end = text.index('export async function open(', start)
+          transport = '''export async function isolate(context: BrowserContext): Promise<void> {
+            await recordStatusNetwork(context);
+            // Fetch the actual deployed page, scripts and static data. All API
+            // calls and all network writes are replaced in anonymous test contexts.
+            // The summary test supplies clearly named local layout fixtures.
+            await context.route('**/*', async route => {
+              const request = route.request();
+              const value = request.url();
+              if (value.startsWith('blob:') || value.startsWith('data:')) { await route.continue(); return; }
+              const path = new URL(value).pathname;
+              const headers = {
+                'access-control-allow-origin': request.headers().origin || new URL(process.env.LIVE_SITE_URL!).origin,
+                'access-control-allow-credentials': 'true',
+                'access-control-allow-methods': 'GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE',
+                'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization',
+                'vary': 'Origin',
+              };
+              if (request.method() === 'OPTIONS') { await route.fulfill({ status: 204, headers }); return; }
+              const api = path === '/api' || path.startsWith('/api/');
+              if (['GET', 'HEAD'].includes(request.method()) && !api) { await route.continue(); return; }
+              const countRead = path.endsWith('/reader-counts');
+              const integrationRead = path.endsWith('/integrations');
+              const body = countRead ? { counts: {}, count: 0 }
+                : integrationRead ? { auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }
+                : { error: 'summary_layout_test_api_blocked', items: [], generatedAt: Date.now() };
+              console.log('MOCKED_LIVE_API', request.method(), path);
+              await route.fulfill({ status: countRead || integrationRead ? 200 : 409, headers, contentType: 'application/json', body: JSON.stringify(body) });
+            });
+          }
+          '''
+          text = text[:start] + transport + text[end:]
+          needle = "await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });"
+          assert text.count(needle) == 1
+          text = text.replace(needle, "await page.goto(process.env.LIVE_SITE_URL!, { waitUntil: 'domcontentloaded' });\n  console.log('LIVE_ENTRY', JSON.stringify({ url: page.url(), scripts: await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => (node as HTMLScriptElement).src)) }));")
+          p.write_text(text)
+          PY
+          git diff --check
+          git diff -- tests/status-image-fixtures.ts > live-summary-results/transport-only.diff
+          git rev-parse HEAD > live-summary-results/reviewed-commit.txt
+          sha256sum tests/summary-readable.spec.ts src/user-ui/summary-panel-layout.ts src/user-ui/paper-actions.ts > live-summary-results/source-sha256.txt
+      - name: Run unchanged summary layout assertions against deployed frontend
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: live-summary-results/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/summary-readable.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=live-summary-results/tests 2>&1 | tee live-summary-results/tests.log
+      - name: Retain evidence including unavailable entries
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-summary-${{ matrix.entry }}
+          path: live-summary-results/
+          retention-days: 7
+          if-no-files-found: error
