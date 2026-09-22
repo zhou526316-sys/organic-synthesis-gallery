@@ -488,6 +488,60 @@ test('More quick choices map directly to customizable folders', async ({ page })
 });
 
 
+test('Cite formats references and copies the selected style', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: async (value: string) => {
+          (window as Window & { __copiedCitation?: string }).__copiedCitation = value;
+        },
+      },
+    });
+  });
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const actions = page.locator('gallery-paper-actions').first();
+  await expect(actions).toBeVisible({ timeout: 30000 });
+  await actions.locator('button[data-action="more"]').click();
+
+  const select = actions.locator('select[data-citation-style]');
+  await expect(select).toBeVisible();
+  await expect(select.locator('option')).toHaveCount(5);
+  await select.selectOption('bibtex');
+
+  const preview = actions.locator('[data-citation-preview]');
+  await expect(preview).toContainText('@article{');
+  await expect(preview).toContainText(/title = \{/);
+  await expect(preview).toContainText(/journal = \{/);
+  await expect(preview).toContainText(/doi = \{/);
+
+  const expected = await preview.textContent();
+  await actions.locator('button[data-action="copy-citation"]').click();
+  await expect(actions.locator('.citation-note')).toContainText(/已复制|Copied/);
+  const copied = await page.evaluate(() => (window as Window & { __copiedCitation?: string }).__copiedCitation || '');
+  expect(copied).toBe(expected);
+});
+
+
 test('search highlights results, picker closes outside, feedback drags and submits', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   let submittedFeedback: Record<string, unknown> | null = null;
