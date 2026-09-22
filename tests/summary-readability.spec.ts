@@ -24,7 +24,19 @@ async function summary(page: Page, width: number, withToc = true): Promise<{ act
       const image = document.createElement('img');
       image.className = 'toc-image';
       image.alt = 'TOC fixture';
-      image.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="320"><rect width="600" height="320" fill="white"/><text x="40" y="160" font-size="42">TOC layout test</text></svg>');
+      // The PNG has an invariant 600x320 intrinsic size. The previous SVG
+      // fixture exposed layout-dependent naturalWidth in this WebKit build.
+      const canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 320;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('TOC fixture canvas unavailable');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, 600, 320);
+      ctx.fillStyle = '#111';
+      ctx.font = '42px sans-serif';
+      ctx.fillText('TOC layout test', 40, 160);
+      image.src = canvas.toDataURL('image/png');
       const slot = card.querySelector('.toc-slot') || card;
       slot.append(image);
     }
