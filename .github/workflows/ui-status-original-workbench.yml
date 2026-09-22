@@ -1,0 +1,33 @@
+name: UI status original images workbench
+on:
+  push:
+    branches: [feat/ui-status-original-images-20260922]
+    paths:
+      - '.github/workflows/ui-status-original-workbench.yml'
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Archive tracked source only
+        run: |
+          mkdir -p /tmp/ui-status-source
+          git archive --format=zip HEAD -o /tmp/ui-status-source/source.zip
+          git rev-parse HEAD > /tmp/ui-status-source/source-sha.txt
+      - name: Read open feedback without changing status
+        env:
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          test -n "$BRIDGE_WRITE_TOKEN"
+          curl --fail-with-body --silent --show-error --max-time 45 --retry 2 -H "authorization: Bearer $BRIDGE_WRITE_TOKEN" -H 'cache-control: no-cache' 'https://api.gczhouwld.com/api/admin/site-feedback/open?limit=300' -o /tmp/ui-status-source/open-feedback.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ui-status-source
+          path: /tmp/ui-status-source/
+          retention-days: 3
+          if-no-files-found: error
