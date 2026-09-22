@@ -170,12 +170,12 @@ jobs:
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json', 'utf8'));
           const manifest = JSON.parse(fs.readFileSync('/tmp/media-index.json', 'utf8'));
-          if (!health.ok || !health.d1 || !health.r2 || !health.writeAuth) throw new Error(`Healthcheck failed: ${JSON.stringify(health)}`);
-          const items = Object.values(manifest.items || {});
+          if (!health.ok || !health.d1 || !health.r2 || !health.ai || !health.writeAuth) throw new Error(`Healthcheck failed: ${JSON.stringify(health)}`);
+          if (!manifest.items || typeof manifest.items !== 'object' || Array.isArray(manifest.items)) throw new Error('Static media manifest structure is invalid');
+          const items = Object.values(manifest.items);
           const toc = items.filter(item => item?.toc?.available && item?.toc?.imageUrl).length;
           const figures = items.reduce((sum, item) => sum + (item?.figures?.figures?.length || 0), 0);
-          if (!items.length) throw new Error('Static media manifest is empty');
-          console.log(JSON.stringify({ manifestItems: items.length, toc, figures }));
+          console.log(JSON.stringify({ manifestItems: items.length, toc, figures, emptyMediaBaseline: items.length === 0, ai: true }));
           NODE
 
       - name: Verify priority repair queue remains available

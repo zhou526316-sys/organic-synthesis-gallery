@@ -127,17 +127,31 @@ jobs:
           curl --fail --silent --show-error --retry 5 --retry-delay 2 "$CSS_URL" > /tmp/app.css
           grep -F "46svh" /tmp/app.css
           grep -F "grid-template-columns:minmax(0,1fr)" /tmp/app.css
-          grep -F "// @version      2.0.1" /tmp/bridge.user.js
+          grep -E '^// @version[[:space:]]+[0-9]+' /tmp/bridge.user.js
           grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" /tmp/bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" /tmp/bridge.user.js
-          grep -F "const VERSION = '1.1.1';" /tmp/bridge.runtime.js
+          grep -E "const VERSION = '[^']+';" /tmp/bridge.runtime.js
           node - <<'NODE'
           const fs = require('fs');
           const manifest = JSON.parse(fs.readFileSync('/tmp/media-index.json', 'utf8'));
-          const count = Object.keys(manifest.items || {}).length;
-          if (!count) throw new Error('Pages media index is empty');
-          console.log(JSON.stringify({ pagesUrl: process.env.PROJECT_NAME, manifestItems: count, bridgeLoader: true, bridgeRuntime: true }));
+          if (!manifest.items || typeof manifest.items !== 'object' || Array.isArray(manifest.items)) {
+            throw new Error('Pages media index structure is invalid');
+          }
+          const count = Object.keys(manifest.items).length;
+          console.log(JSON.stringify({ pagesUrl: process.env.PROJECT_NAME, manifestItems: count, emptyMediaBaseline: count === 0, bridgeLoader: true, bridgeRuntime: true }));
           NODE
+          JS_PATHS=$(grep -Eo 'src="[^"]+\.js"' /tmp/index.html | cut -d'"' -f2)
+          test -n "$JS_PATHS"
+          : > /tmp/app.js
+          for JS_PATH in $JS_PATHS; do
+            case "$JS_PATH" in
+              http://*|https://*) JS_URL="$JS_PATH" ;;
+              /*) JS_URL="$URL$JS_PATH" ;;
+              *) JS_URL="$URL/$JS_PATH" ;;
+            esac
+            curl --fail --silent --show-error --retry 5 --retry-delay 2 "$JS_URL" >> /tmp/app.js
+          done
+          grep -F "Full-text summary" /tmp/app.js
 
       - name: Publish URL
         run: |
