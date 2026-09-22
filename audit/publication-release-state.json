@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "mode": "bootstrap",
+  "bootstrapId": "fixed-slots-cutover-2026-09-22",
+  "cutoverAt": "2026-09-22T20:00:00+08:00",
+  "productionCards": 512,
+  "publicationSlot": null,
+  "reviewFile": null,
+  "handoffGeneratedAt": null,
+  "note": "Baseline frozen when fixed 08:00/18:00 production publication slots became mandatory. This does not retroactively validate the 18:53 off-slot write; it prevents any further production-literature drift from reaching Pages until the next authorized slot release.",
+  "protectedBlobs": {
+    "public/papers.gz.b64": "5bcbb86807040306cb1a1ed68a727921c8de2dfd",
+    "public/total-synthesis.json": "d5ef10b1c02ce8237a8e14be262598b2833426a8",
+    "public/manual-supplement.json": "f4cac04a6ae5b4bf8e19edfc228124b88559afff",
+    "public/final-audit-supplement.json": "e77ad07dc077104abb0eb468434c72113d62f03c",
+    "public/curated-supplement.json": "9ed78104fb209d2de2facd90059c7bf28b4eaa58",
+    "public/automation-supplement.json": "03c348df0bf78619e2090aaf83be520e2e39796b",
+    "public/rolling-supplement.json": "3dfdd4e85279eacf4b4ad96d90af5f8e2f8fd4f7",
+    "shared/literature-policy.js": "41e8dc782a4a0e97fdaff569f17aad8284262450"
+  }
+}
