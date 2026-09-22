@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-22T06:27:34.374Z",
+  "generatedAt": "2026-09-22T08:56:28.459Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -155,21 +155,31 @@
       "activeFrom": "2026-09-19",
       "effectiveStart": "2026-09-20",
       "lateDepositRescueStart": "2026-09-19"
+    },
+    {
+      "name": "JOC",
+      "issns": [
+        "0022-3263",
+        "1520-6904"
+      ],
+      "activeFrom": "2026-09-22",
+      "effectiveStart": "2026-09-22",
+      "lateDepositRescueStart": "2026-09-22"
     }
   ],
   "summary": {
     "galleryDois": 503,
-    "sourceRecords": 511,
-    "rawMissingFromGallery": 452,
+    "sourceRecords": 524,
+    "rawMissingFromGallery": 465,
     "previouslyReviewedExcluded": 452,
-    "missingFromGallery": 0,
-    "potentialGaps": 0,
+    "missingFromGallery": 13,
+    "potentialGaps": 7,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 6,
     "historicalCoverageLosses": 0,
-    "unresolved": 0,
+    "unresolved": 13,
     "excludedByPolicy": 0
   },
   "closure": {
@@ -192,8 +202,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 72,
-        "crossrefCandidateRecords": 72,
+        "unionCandidateRecords": 76,
+        "crossrefCandidateRecords": 76,
         "openAlexCandidateRecords": 62,
         "multiSourceCandidateRecords": 62,
         "closureUnionRecords": 8,
@@ -213,14 +223,14 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 166,
-        "crossrefCandidateRecords": 165,
-        "openAlexCandidateRecords": 129,
-        "multiSourceCandidateRecords": 128,
+        "unionCandidateRecords": 167,
+        "crossrefCandidateRecords": 166,
+        "openAlexCandidateRecords": 130,
+        "multiSourceCandidateRecords": 129,
         "closureUnionRecords": 35,
         "closureCrossrefRecords": 35,
-        "closureOpenAlexRecords": 1,
-        "closureMultiSourceRecords": 1,
+        "closureOpenAlexRecords": 2,
+        "closureMultiSourceRecords": 2,
         "coverageWarning": false,
         "closureCoverageWarning": true
       },
@@ -234,8 +244,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 75,
-        "crossrefCandidateRecords": 75,
+        "unionCandidateRecords": 78,
+        "crossrefCandidateRecords": 78,
         "openAlexCandidateRecords": 58,
         "multiSourceCandidateRecords": 58,
         "closureUnionRecords": 15,
@@ -297,8 +307,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 35,
-        "crossrefCandidateRecords": 35,
+        "unionCandidateRecords": 36,
+        "crossrefCandidateRecords": 36,
         "openAlexCandidateRecords": 25,
         "multiSourceCandidateRecords": 25,
         "closureUnionRecords": 9,
@@ -378,9 +388,9 @@
     },
     "2026-09-21": {
       "sourceRecords": 112,
-      "crossrefOnly": 111,
+      "crossrefOnly": 109,
       "openAlexOnly": 0,
-      "multiSource": 1,
+      "multiSource": 3,
       "coveredByGallery": 17,
       "rawMissingFromGallery": 95,
       "previouslyReviewedExcluded": 95,
@@ -395,6 +405,24 @@
         "ACS Catalysis": 11,
         "Organic Letters": 9,
         "CCS Chemistry": 1
+      }
+    },
+    "2026-09-22": {
+      "sourceRecords": 18,
+      "crossrefOnly": 18,
+      "openAlexOnly": 0,
+      "multiSource": 0,
+      "coveredByGallery": 1,
+      "rawMissingFromGallery": 17,
+      "previouslyReviewedExcluded": 4,
+      "missingFromGallery": 13,
+      "potentialGaps": 7,
+      "byJournal": {
+        "Nature": 4,
+        "Nature Communications": 3,
+        "JACS": 5,
+        "Organic Letters": 2,
+        "JOC": 4
       }
     },
     "2026-09-19": {
@@ -431,38 +459,22 @@
         "Organic Letters": 1,
         "CCS Chemistry": 1
       }
-    },
-    "2026-09-22": {
-      "sourceRecords": 5,
-      "crossrefOnly": 5,
-      "openAlexOnly": 0,
-      "multiSource": 0,
-      "coveredByGallery": 1,
-      "rawMissingFromGallery": 4,
-      "previouslyReviewedExcluded": 4,
-      "missingFromGallery": 0,
-      "potentialGaps": 0,
-      "byJournal": {
-        "Nature Communications": 2,
-        "JACS": 2,
-        "Organic Letters": 1
-      }
     }
   },
   "byJournal": {
     "Nature": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
-      "sourceRecords": 72,
-      "crossrefOnly": 10,
+      "sourceRecords": 76,
+      "crossrefOnly": 14,
       "openAlexOnly": 0,
       "multiSource": 62,
       "lateIndexed": 64,
       "safetyTail": 64,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 72,
+      "rawMissingFromGallery": 76,
       "previouslyReviewedExcluded": 72,
-      "missingFromGallery": 0,
+      "missingFromGallery": 4,
       "potentialGaps": 0
     },
     "Science": {
@@ -484,9 +496,9 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
       "sourceRecords": 1,
-      "crossrefOnly": 1,
+      "crossrefOnly": 0,
       "openAlexOnly": 0,
-      "multiSource": 0,
+      "multiSource": 1,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 0,
@@ -528,32 +540,32 @@
     "Nature Communications": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
-      "sourceRecords": 166,
+      "sourceRecords": 167,
       "crossrefOnly": 37,
       "openAlexOnly": 1,
-      "multiSource": 128,
+      "multiSource": 129,
       "lateIndexed": 127,
       "safetyTail": 128,
       "coveredByGallery": 2,
-      "rawMissingFromGallery": 164,
+      "rawMissingFromGallery": 165,
       "previouslyReviewedExcluded": 164,
-      "missingFromGallery": 0,
+      "missingFromGallery": 1,
       "potentialGaps": 0
     },
     "JACS": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
-      "sourceRecords": 75,
-      "crossrefOnly": 17,
+      "sourceRecords": 78,
+      "crossrefOnly": 20,
       "openAlexOnly": 0,
       "multiSource": 58,
       "lateIndexed": 57,
       "safetyTail": 57,
       "coveredByGallery": 14,
-      "rawMissingFromGallery": 61,
+      "rawMissingFromGallery": 64,
       "previouslyReviewedExcluded": 61,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 3,
+      "potentialGaps": 2
     },
     "Angew": {
       "activeFrom": "2026-07-01",
@@ -588,17 +600,17 @@
     "Organic Letters": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
-      "sourceRecords": 35,
-      "crossrefOnly": 10,
+      "sourceRecords": 36,
+      "crossrefOnly": 11,
       "openAlexOnly": 0,
       "multiSource": 25,
       "lateIndexed": 24,
       "safetyTail": 24,
       "coveredByGallery": 28,
-      "rawMissingFromGallery": 7,
+      "rawMissingFromGallery": 8,
       "previouslyReviewedExcluded": 7,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 1,
+      "potentialGaps": 1
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -674,6 +686,21 @@
       "previouslyReviewedExcluded": 0,
       "missingFromGallery": 0,
       "potentialGaps": 0
+    },
+    "JOC": {
+      "activeFrom": "2026-09-22",
+      "effectiveStart": "2026-09-22",
+      "sourceRecords": 4,
+      "crossrefOnly": 4,
+      "openAlexOnly": 0,
+      "multiSource": 0,
+      "lateIndexed": 0,
+      "safetyTail": 0,
+      "coveredByGallery": 0,
+      "rawMissingFromGallery": 4,
+      "previouslyReviewedExcluded": 0,
+      "missingFromGallery": 4,
+      "potentialGaps": 4
     }
   },
   "sourceFamilyHealth": {
@@ -686,8 +713,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 72,
-      "crossrefCandidateRecords": 72,
+      "unionCandidateRecords": 76,
+      "crossrefCandidateRecords": 76,
       "openAlexCandidateRecords": 62,
       "multiSourceCandidateRecords": 62,
       "closureUnionRecords": 8,
@@ -728,12 +755,12 @@
       "openAlexHealthy": true,
       "unionCandidateRecords": 1,
       "crossrefCandidateRecords": 1,
-      "openAlexCandidateRecords": 0,
-      "multiSourceCandidateRecords": 0,
+      "openAlexCandidateRecords": 1,
+      "multiSourceCandidateRecords": 1,
       "closureUnionRecords": 1,
       "closureCrossrefRecords": 1,
-      "closureOpenAlexRecords": 0,
-      "closureMultiSourceRecords": 0,
+      "closureOpenAlexRecords": 1,
+      "closureMultiSourceRecords": 1,
       "coverageWarning": false,
       "closureCoverageWarning": false
     },
@@ -786,14 +813,14 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 166,
-      "crossrefCandidateRecords": 165,
-      "openAlexCandidateRecords": 129,
-      "multiSourceCandidateRecords": 128,
+      "unionCandidateRecords": 167,
+      "crossrefCandidateRecords": 166,
+      "openAlexCandidateRecords": 130,
+      "multiSourceCandidateRecords": 129,
       "closureUnionRecords": 35,
       "closureCrossrefRecords": 35,
-      "closureOpenAlexRecords": 1,
-      "closureMultiSourceRecords": 1,
+      "closureOpenAlexRecords": 2,
+      "closureMultiSourceRecords": 2,
       "coverageWarning": false,
       "closureCoverageWarning": true
     },
@@ -806,8 +833,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 75,
-      "crossrefCandidateRecords": 75,
+      "unionCandidateRecords": 78,
+      "crossrefCandidateRecords": 78,
       "openAlexCandidateRecords": 58,
       "multiSourceCandidateRecords": 58,
       "closureUnionRecords": 15,
@@ -866,8 +893,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 35,
-      "crossrefCandidateRecords": 35,
+      "unionCandidateRecords": 36,
+      "crossrefCandidateRecords": 36,
       "openAlexCandidateRecords": 25,
       "multiSourceCandidateRecords": 25,
       "closureUnionRecords": 9,
@@ -976,6 +1003,26 @@
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
       "closureCoverageWarning": false
+    },
+    "JOC": {
+      "activeFrom": "2026-09-22",
+      "effectiveStart": "2026-09-22",
+      "crossrefRequests": 6,
+      "crossrefFailures": 0,
+      "openAlexRequests": 1,
+      "openAlexFailures": 0,
+      "crossrefHealthy": true,
+      "openAlexHealthy": true,
+      "unionCandidateRecords": 4,
+      "crossrefCandidateRecords": 4,
+      "openAlexCandidateRecords": 0,
+      "multiSourceCandidateRecords": 0,
+      "closureUnionRecords": 0,
+      "closureCrossrefRecords": 0,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
+      "coverageWarning": false,
+      "closureCoverageWarning": false
     }
   },
   "sourceFamilyGaps": [],
@@ -991,8 +1038,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 72,
-      "crossrefCandidateRecords": 72,
+      "unionCandidateRecords": 76,
+      "crossrefCandidateRecords": 76,
       "openAlexCandidateRecords": 62,
       "multiSourceCandidateRecords": 62,
       "closureUnionRecords": 8,
@@ -1012,14 +1059,14 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 166,
-      "crossrefCandidateRecords": 165,
-      "openAlexCandidateRecords": 129,
-      "multiSourceCandidateRecords": 128,
+      "unionCandidateRecords": 167,
+      "crossrefCandidateRecords": 166,
+      "openAlexCandidateRecords": 130,
+      "multiSourceCandidateRecords": 129,
       "closureUnionRecords": 35,
       "closureCrossrefRecords": 35,
-      "closureOpenAlexRecords": 1,
-      "closureMultiSourceRecords": 1,
+      "closureOpenAlexRecords": 2,
+      "closureMultiSourceRecords": 2,
       "coverageWarning": false,
       "closureCoverageWarning": true
     },
@@ -1033,8 +1080,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 75,
-      "crossrefCandidateRecords": 75,
+      "unionCandidateRecords": 78,
+      "crossrefCandidateRecords": 78,
       "openAlexCandidateRecords": 58,
       "multiSourceCandidateRecords": 58,
       "closureUnionRecords": 15,
@@ -1096,8 +1143,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 35,
-      "crossrefCandidateRecords": 35,
+      "unionCandidateRecords": 36,
+      "crossrefCandidateRecords": 36,
       "openAlexCandidateRecords": 25,
       "multiSourceCandidateRecords": 25,
       "closureUnionRecords": 9,
@@ -1116,7 +1163,7 @@
       "issn": "0028-0836",
       "mode": "online",
       "ok": true,
-      "count": 72,
+      "count": 76,
       "note": ""
     },
     {
@@ -1125,7 +1172,7 @@
       "issn": "0028-0836",
       "mode": "published",
       "ok": true,
-      "count": 72,
+      "count": 76,
       "note": ""
     },
     {
@@ -1134,7 +1181,7 @@
       "issn": "0028-0836",
       "mode": "created",
       "ok": true,
-      "count": 73,
+      "count": 77,
       "note": ""
     },
     {
@@ -1143,7 +1190,7 @@
       "issn": "1476-4687",
       "mode": "online",
       "ok": true,
-      "count": 72,
+      "count": 76,
       "note": ""
     },
     {
@@ -1152,7 +1199,7 @@
       "issn": "1476-4687",
       "mode": "published",
       "ok": true,
-      "count": 72,
+      "count": 76,
       "note": ""
     },
     {
@@ -1161,7 +1208,7 @@
       "issn": "1476-4687",
       "mode": "created",
       "ok": true,
-      "count": 73,
+      "count": 77,
       "note": ""
     },
     {
@@ -1266,7 +1313,7 @@
       "journal": "Nature Catalysis",
       "sourceId": "S4210229375",
       "ok": true,
-      "count": 0,
+      "count": 1,
       "note": ""
     },
     {
@@ -1372,7 +1419,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 166,
+      "count": 167,
       "note": ""
     },
     {
@@ -1381,7 +1428,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 166,
+      "count": 167,
       "note": ""
     },
     {
@@ -1390,7 +1437,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 166,
+      "count": 167,
       "note": ""
     },
     {
@@ -1398,7 +1445,7 @@
       "journal": "Nature Communications",
       "sourceId": "S64187185",
       "ok": true,
-      "count": 130,
+      "count": 131,
       "note": ""
     },
     {
@@ -1407,7 +1454,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 76,
+      "count": 79,
       "note": ""
     },
     {
@@ -1416,7 +1463,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 76,
+      "count": 79,
       "note": ""
     },
     {
@@ -1425,7 +1472,7 @@
       "issn": "0002-7863",
       "mode": "created",
       "ok": true,
-      "count": 78,
+      "count": 81,
       "note": ""
     },
     {
@@ -1434,7 +1481,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 76,
+      "count": 79,
       "note": ""
     },
     {
@@ -1443,7 +1490,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 76,
+      "count": 79,
       "note": ""
     },
     {
@@ -1452,7 +1499,7 @@
       "issn": "1520-5126",
       "mode": "created",
       "ok": true,
-      "count": 78,
+      "count": 81,
       "note": ""
     },
     {
@@ -1566,7 +1613,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 35,
+      "count": 36,
       "note": ""
     },
     {
@@ -1575,7 +1622,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 35,
+      "count": 36,
       "note": ""
     },
     {
@@ -1584,7 +1631,7 @@
       "issn": "1523-7052",
       "mode": "created",
       "ok": true,
-      "count": 35,
+      "count": 36,
       "note": ""
     },
     {
@@ -1593,7 +1640,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 35,
+      "count": 36,
       "note": ""
     },
     {
@@ -1602,7 +1649,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 35,
+      "count": 36,
       "note": ""
     },
     {
@@ -1611,7 +1658,7 @@
       "issn": "1523-7060",
       "mode": "created",
       "ok": true,
-      "count": 35,
+      "count": 36,
       "note": ""
     },
     {
@@ -1813,7 +1860,7 @@
       "issn": "1463-9262",
       "mode": "created",
       "ok": true,
-      "count": 7,
+      "count": 9,
       "note": ""
     },
     {
@@ -1840,7 +1887,7 @@
       "issn": "1463-9270",
       "mode": "created",
       "ok": true,
-      "count": 7,
+      "count": 9,
       "note": ""
     },
     {
@@ -1850,8 +1897,662 @@
       "ok": true,
       "count": 0,
       "note": ""
+    },
+    {
+      "source": "crossref",
+      "journal": "JOC",
+      "issn": "0022-3263",
+      "mode": "online",
+      "ok": true,
+      "count": 4,
+      "note": ""
+    },
+    {
+      "source": "crossref",
+      "journal": "JOC",
+      "issn": "0022-3263",
+      "mode": "published",
+      "ok": true,
+      "count": 4,
+      "note": ""
+    },
+    {
+      "source": "crossref",
+      "journal": "JOC",
+      "issn": "0022-3263",
+      "mode": "created",
+      "ok": true,
+      "count": 4,
+      "note": ""
+    },
+    {
+      "source": "crossref",
+      "journal": "JOC",
+      "issn": "1520-6904",
+      "mode": "online",
+      "ok": true,
+      "count": 4,
+      "note": ""
+    },
+    {
+      "source": "crossref",
+      "journal": "JOC",
+      "issn": "1520-6904",
+      "mode": "published",
+      "ok": true,
+      "count": 4,
+      "note": ""
+    },
+    {
+      "source": "crossref",
+      "journal": "JOC",
+      "issn": "1520-6904",
+      "mode": "created",
+      "ok": true,
+      "count": 4,
+      "note": ""
+    },
+    {
+      "source": "openalex",
+      "journal": "JOC",
+      "sourceId": "S205050996",
+      "ok": true,
+      "count": 0,
+      "note": ""
     }
   ],
-  "missingCandidates": [],
-  "potentialGaps": []
+  "missingCandidates": [
+    {
+      "doi": "10.1021/jacs.6c02674",
+      "journal": "JACS",
+      "title": "Holistic Assessment of Actinide-Borohydride Covalency Using NMR and X-ray Absorption Spectroscopies",
+      "abstract": "Abstract The influence of metal-ligand covalency on actinide electronic properties and reactivity continues to be a topic of intense interest given its implications for nuclear and radiochemical applications. Extensive work has focused on developing spectroscopic methods that can be used to quantify metal-ligand covalency within actinide complexes for benchmarking and comparison with theoretical efforts. Ligand K-edge X-ray absorption spectroscopy (XAS) and NMR spectroscopy are two physical methods that have dominated these efforts, but surprisingly, they have not been used together on the same systems to see how the methods compare. Herein, we report the first comparative assessment of actinide-ligand covalency using B K-edge XAS and multinuclear NMR spectroscopy. The B K-edge XAS spectra of An(κ3-BH4)(NR2)3 (R = SiMe3) with An = Th (1) and U (2) reveal a dominant feature assigned to B 1s → An–H–B π* MOs due to covalent three-center, two-electron bonding with the actinide 6d orbitals, as revealed by comparison with time-dependent density functional theory (TDDFT) calculations. By contrast, the data indicate that 5f-orbital contributions to the bonds are significantly smaller. These findings were corroborated by 1H and 11B NMR studies of diamagnetic 1 and DFT calculations used to quantify the impact of orbital mixing via spin-orbit coupling on the chemical shifts. These results represent the first instance of using B K-edge XAS and 11B NMR spectroscopy to assess covalency in actinide complexes. Moreover, they demonstrate how ligand K-edge XAS, which provides rich orbital-specific information relevant to chemical bonding, and NMR spectroscopy, which is routinely available in most chemical research settings, can be used as complementary techniques to provide a holistic as",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Hannah M. Hansen",
+        "Nathan R. Loutsch",
+        "Thien H. Nguyen",
+        "Aaron Christianson",
+        "Jacob J. Schuely",
+        "Mai Yer Yang",
+        "Peter A. Zacher",
+        "Lucia Zuin",
+        "Trevor W. Hayton",
+        "Bess Vlaisavljevich",
+        "Scott R. Daly"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c13136",
+      "journal": "JACS",
+      "title": "Nanoparticle-Mediated Synthesis of Single-Crystal Covalent Organic Frameworks of Uniform Size and Shape",
+      "abstract": "Abstract The synthesis of highly crystalline covalent organic frameworks (COFs) has recently been achieved, but strategies to obtain monodispersed single crystals of uniform size and shape remain elusive. Here, we show that simply adding silica nanoparticles (SiNPs) to a conventional solvothermal synthesis directs imine-based COFs (e.g., COF-300) to grow into monodispersed, polyhedral single-crystal microparticles. Our experiments suggest dual functions of these nanoparticles. They promote burst nucleation of COFs via monomer adsorption and, then, by adhering to the crystal surface, prevent crystal aggregation and nonclassical crystallization pathways. This nanoparticle-mediated strategy is compatible with common small-molecule modulation to tune COF morphologies and shapes while maintaining low size dispersity. The method also extends to other three-dimensional (3D) imine COFs, such as LZU-111 and LZU-79. Notably, the obtained microcrystals show excellent colloidal stability and can assemble into superstructures reflecting their anisotropic shape. This work paves the way for COF-based crystalline materials and applications where size and shape uniformity are essential.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Ji Ao",
+        "Xinyu Zhang",
+        "Zeqi Li",
+        "Barry Chi Hong Lai",
+        "Wendi Duan",
+        "Zhisheng Wang",
+        "Seungkyu Lee",
+        "Yoonseob Kim",
+        "Yijiang Mu",
+        "Yufeng Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c13084",
+      "journal": "JACS",
+      "title": "On-Surface Heptagon Contraction Enables Rearrangement Driven Selective C–C Coupling",
+      "abstract": "Abstract On-surface synthesis commonly relies on preinstalled C–X activation sites to initiate intermolecular coupling, which limits reactivity to precursor-encoded positions and can be impractical for frameworks that are difficult to halogenate in solution. Here, we report a rearrangement-driven coupling reaction on Au(111) in which a heptagon undergoes a [7 → 6 + 1] contraction before intermolecular bond formation, thereby generating reactive termini for subsequent covalent growth. A dibromotropone model establishes the mechanistic feasibility of this process and reveals a facile contraction that can be directly interrogated on the surface. A dual-heptagon precursor then demonstrates the synthetic consequence of the same principle, where contraction-generated termini drive intermolecular coupling with in situ formation of ethynylene bridges. This reaction sequence provides a complementary on-surface strategy for precursors whose coupling sites cannot be readily pre-encoded by conventional halogen substitution.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Jianmin Huang",
+        "Yanbo Li",
+        "Yilin Shu",
+        "Xi-Sha Zhang",
+        "Chuanxu Ma",
+        "Shijing Tan",
+        "Deqing Zhang",
+        "Qitang Fan",
+        "Bing Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01469",
+      "journal": "JOC",
+      "title": "Selectfluor-Mediated Radical Cyclization of N -Arylbicyclo[1.1.0]butane-1-carboxamides with Diaryldiselenides",
+      "abstract": "Abstract Herein, we report a Selectfluor-mediated radical cascade cyclization of bicyclo[1.1.0]butanes (BCBs) with diaryl selenides through strain-promoted C–C σ-bond cleavage. This protocol provides a facile and efficient approach to selenium-decorated 3-spirocyclobutyl oxindoles in up to 99% yield for 30 examples. Moreover, the reaction is readily scalable to the gram scale, demonstrating its practical applicability. This protocol features a broad scope of substrate, peroxide-free, rapid, mild, and environmentally benign conditions, with excellent tolerance of broad functional groups.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Yuze Lin",
+        "Yina Liu",
+        "Gang Yang",
+        "Yadong Feng",
+        "Xiuling Cui"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01295",
+      "journal": "JOC",
+      "title": "Site-Selective C(sp3)–H Bromination via Radical Relay",
+      "abstract": "Abstract A cobalt-catalyzed site-selective C(sp3)–H bromination via radical relay is reported. The mild and practical protocol uses NBS as the brominating reagent with only 1 mol % CoBr2 as the catalyst and achieves excellent benzylic selectivity ( gt;20:1) over aliphatic C–H bonds, overcoming limitations of conventional bromination methods. It also features a broad substrate scope, good functional group tolerance, and scalability and enables late-stage bromination of complex bioactive natural products and pharmaceutical molecules.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Ziheng Xu",
+        "Jianghao Wu",
+        "Xiaotong Song",
+        "Haojie Gao",
+        "Jing Qin",
+        "Di Song",
+        "Qian Wan",
+        "Gang Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01270",
+      "journal": "JOC",
+      "title": "Synthesis of Conjugated Bromoenynoates via Electrophilic Bromination of Enynyl Hydrazones",
+      "abstract": "Abstract A remote electrophilic bromination of conjugated enynyl hydrazone carboxylates has been developed for the synthesis of densely functionalized bromoenynoates. The protocol enables a substrate-controlled approach for (Z)-bromoenynoates (up to 80% yield and gt;20:1 Z/E) and (E)-bromodienynoates (up to 96% yield and gt;20:1 E/Z). The divergence in the product formation is rationalized by invoking an allylic 1,3-strain. Gram-scale reactions and the downstream synthetic transformations of the resulting bromoenynoates are demonstrated toward obtaining useful scaffolds.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Kavita Devi",
+        "Paru Jamwal",
+        "Ramani Gurubrahamam"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01313",
+      "journal": "JOC",
+      "title": "Tuning the Photophysical Properties of Corannulene-Based D–A–A Emitters via Steric Isolation and Conformational Flexibility",
+      "abstract": "Abstract We report an asymmetric donor–acceptor–acceptor (D–A–A) strategy to investigate the photophysical properties of corannulene luminogens through the integration of phenylene bridges. Comparison of bridge-free, single-bridged, and double-bridged architectures reveals distinct emission behaviors. The single-bridged framework provides steric isolation that restricts non-radiative decay while maintaining conformational flexibility. This structural modification affords corannulene emitters exhibiting large Stokes shifts and photoluminescence quantum yields exceeding 92%.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Peng Fu",
+        "Rui Li",
+        "Yuzhu Sun",
+        "Yali Wang",
+        "Jianhui Huang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/d41586-026-02995-3",
+      "journal": "Nature",
+      "title": "A global safety net for climate-risk intelligence is urgently needed",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Safdar Bashir",
+        "Muhammad Adil"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02996-2",
+      "journal": "Nature",
+      "title": "Biosecurity must protect human functional capacity",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Nicolas Paccini"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02939-x",
+      "journal": "Nature",
+      "title": "The worst El Niño in recorded history is brewing — here’s how governments must prepare",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Zeke Hausfather"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02997-1",
+      "journal": "Nature",
+      "title": "Why insects need their own protected areas",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Jiangwei Zhu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77859-5",
+      "journal": "Nature Communications",
+      "title": "Oropouche virus disrupts neurodevelopment and exhibits congenital infection potential",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Carl Bannerman",
+        "Drake T. Philip",
+        "Elizabeth A. Kennedy",
+        "Stephanie Liu",
+        "Peter Hewins",
+        "Yennifer Barajas",
+        "Taylor Miller-Ensminger",
+        "Kristen Walsh",
+        "Seble G. Negatu",
+        "Guo-li Ming",
+        "Kellie A. Jurado"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "title": "Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment",
+      "abstract": "Abstract C19-Diterpenoid alkaloids (C19 DTAs) represent a large family of structurally and biologically complex natural products. Within this class, C6-oxidized natural products have remained largely unsynthesized. Herein, we report an expedient synthesis of the fully functionalized AF-ring fragment of chasmanine. Key to our approach was the use of a Piancatelli rearrangement to access the F ring, which then enabled a Mg alkoxide-templated [4+2] cycloaddition to form the AF-ring fragment. We also report a bench-stable oxidative nitrilation reagent for the conversion of aldehydes into nitriles.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Colton E. Johnson",
+        "Mrinmay Baidya",
+        "Mark Lautens"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    }
+  ],
+  "potentialGaps": [
+    {
+      "doi": "10.1021/jacs.6c13136",
+      "journal": "JACS",
+      "title": "Nanoparticle-Mediated Synthesis of Single-Crystal Covalent Organic Frameworks of Uniform Size and Shape",
+      "abstract": "Abstract The synthesis of highly crystalline covalent organic frameworks (COFs) has recently been achieved, but strategies to obtain monodispersed single crystals of uniform size and shape remain elusive. Here, we show that simply adding silica nanoparticles (SiNPs) to a conventional solvothermal synthesis directs imine-based COFs (e.g., COF-300) to grow into monodispersed, polyhedral single-crystal microparticles. Our experiments suggest dual functions of these nanoparticles. They promote burst nucleation of COFs via monomer adsorption and, then, by adhering to the crystal surface, prevent crystal aggregation and nonclassical crystallization pathways. This nanoparticle-mediated strategy is compatible with common small-molecule modulation to tune COF morphologies and shapes while maintaining low size dispersity. The method also extends to other three-dimensional (3D) imine COFs, such as LZU-111 and LZU-79. Notably, the obtained microcrystals show excellent colloidal stability and can assemble into superstructures reflecting their anisotropic shape. This work paves the way for COF-based crystalline materials and applications where size and shape uniformity are essential.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Ji Ao",
+        "Xinyu Zhang",
+        "Zeqi Li",
+        "Barry Chi Hong Lai",
+        "Wendi Duan",
+        "Zhisheng Wang",
+        "Seungkyu Lee",
+        "Yoonseob Kim",
+        "Yijiang Mu",
+        "Yufeng Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c13084",
+      "journal": "JACS",
+      "title": "On-Surface Heptagon Contraction Enables Rearrangement Driven Selective C–C Coupling",
+      "abstract": "Abstract On-surface synthesis commonly relies on preinstalled C–X activation sites to initiate intermolecular coupling, which limits reactivity to precursor-encoded positions and can be impractical for frameworks that are difficult to halogenate in solution. Here, we report a rearrangement-driven coupling reaction on Au(111) in which a heptagon undergoes a [7 → 6 + 1] contraction before intermolecular bond formation, thereby generating reactive termini for subsequent covalent growth. A dibromotropone model establishes the mechanistic feasibility of this process and reveals a facile contraction that can be directly interrogated on the surface. A dual-heptagon precursor then demonstrates the synthetic consequence of the same principle, where contraction-generated termini drive intermolecular coupling with in situ formation of ethynylene bridges. This reaction sequence provides a complementary on-surface strategy for precursors whose coupling sites cannot be readily pre-encoded by conventional halogen substitution.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Jianmin Huang",
+        "Yanbo Li",
+        "Yilin Shu",
+        "Xi-Sha Zhang",
+        "Chuanxu Ma",
+        "Shijing Tan",
+        "Deqing Zhang",
+        "Qitang Fan",
+        "Bing Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01469",
+      "journal": "JOC",
+      "title": "Selectfluor-Mediated Radical Cyclization of N -Arylbicyclo[1.1.0]butane-1-carboxamides with Diaryldiselenides",
+      "abstract": "Abstract Herein, we report a Selectfluor-mediated radical cascade cyclization of bicyclo[1.1.0]butanes (BCBs) with diaryl selenides through strain-promoted C–C σ-bond cleavage. This protocol provides a facile and efficient approach to selenium-decorated 3-spirocyclobutyl oxindoles in up to 99% yield for 30 examples. Moreover, the reaction is readily scalable to the gram scale, demonstrating its practical applicability. This protocol features a broad scope of substrate, peroxide-free, rapid, mild, and environmentally benign conditions, with excellent tolerance of broad functional groups.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Yuze Lin",
+        "Yina Liu",
+        "Gang Yang",
+        "Yadong Feng",
+        "Xiuling Cui"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01295",
+      "journal": "JOC",
+      "title": "Site-Selective C(sp3)–H Bromination via Radical Relay",
+      "abstract": "Abstract A cobalt-catalyzed site-selective C(sp3)–H bromination via radical relay is reported. The mild and practical protocol uses NBS as the brominating reagent with only 1 mol % CoBr2 as the catalyst and achieves excellent benzylic selectivity ( gt;20:1) over aliphatic C–H bonds, overcoming limitations of conventional bromination methods. It also features a broad substrate scope, good functional group tolerance, and scalability and enables late-stage bromination of complex bioactive natural products and pharmaceutical molecules.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Ziheng Xu",
+        "Jianghao Wu",
+        "Xiaotong Song",
+        "Haojie Gao",
+        "Jing Qin",
+        "Di Song",
+        "Qian Wan",
+        "Gang Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01270",
+      "journal": "JOC",
+      "title": "Synthesis of Conjugated Bromoenynoates via Electrophilic Bromination of Enynyl Hydrazones",
+      "abstract": "Abstract A remote electrophilic bromination of conjugated enynyl hydrazone carboxylates has been developed for the synthesis of densely functionalized bromoenynoates. The protocol enables a substrate-controlled approach for (Z)-bromoenynoates (up to 80% yield and gt;20:1 Z/E) and (E)-bromodienynoates (up to 96% yield and gt;20:1 E/Z). The divergence in the product formation is rationalized by invoking an allylic 1,3-strain. Gram-scale reactions and the downstream synthetic transformations of the resulting bromoenynoates are demonstrated toward obtaining useful scaffolds.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Kavita Devi",
+        "Paru Jamwal",
+        "Ramani Gurubrahamam"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01313",
+      "journal": "JOC",
+      "title": "Tuning the Photophysical Properties of Corannulene-Based D–A–A Emitters via Steric Isolation and Conformational Flexibility",
+      "abstract": "Abstract We report an asymmetric donor–acceptor–acceptor (D–A–A) strategy to investigate the photophysical properties of corannulene luminogens through the integration of phenylene bridges. Comparison of bridge-free, single-bridged, and double-bridged architectures reveals distinct emission behaviors. The single-bridged framework provides steric isolation that restricts non-radiative decay while maintaining conformational flexibility. This structural modification affords corannulene emitters exhibiting large Stokes shifts and photoluminescence quantum yields exceeding 92%.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Peng Fu",
+        "Rui Li",
+        "Yuzhu Sun",
+        "Yali Wang",
+        "Jianhui Huang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "title": "Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment",
+      "abstract": "Abstract C19-Diterpenoid alkaloids (C19 DTAs) represent a large family of structurally and biologically complex natural products. Within this class, C6-oxidized natural products have remained largely unsynthesized. Herein, we report an expedient synthesis of the fully functionalized AF-ring fragment of chasmanine. Key to our approach was the use of a Piancatelli rearrangement to access the F ring, which then enabled a Mg alkoxide-templated [4+2] cycloaddition to form the AF-ring fragment. We also report a bench-stable oxidative nitrilation reagent for the conversion of aldehydes into nitriles.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Colton E. Johnson",
+        "Mrinmay Baidya",
+        "Mark Lautens"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    }
+  ]
 }
