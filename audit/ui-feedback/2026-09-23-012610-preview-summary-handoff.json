@@ -1,0 +1,49 @@
+{
+  "recordedAt": "2026-09-23T01:26:10+08:00",
+  "context": "UI/feedback continuation; current bounded batch final handoff",
+  "priorCheckpoint": "audit/ui-feedback/2026-09-23-011935-preview-summary-checkpoint.json",
+  "preview": {
+    "pr": 137,
+    "mergeSha": "e474cc4b027ea8ed0842eeed7f9fb869a186d2a0",
+    "deployedAssetsObserved": "Both GitHub Pages and Worker served assets/index-DZD66gNv.js in live run 35758775401.",
+    "implemented": "Immediate preview-source initialization, nonblocking bounded viewer, decode-before-original-promotion and stale/closed-viewer protection. Storage format and 30,000,000-byte cap unchanged.",
+    "ci": {"runId": 35757190914, "artifactId": 10708778322, "passed": 17, "failed": 0, "skipped": 0, "flaky": 0},
+    "live": {
+      "runId": 35758775401,
+      "github": {"artifactId": 10710145787, "passed": 13, "failed": 2, "findings": ["Independent-context PNG naturalWidth evaluation timed out in the mobile original-GIF case; immediate preview marker/src checks now passed.", "Desktop original-GIF screenshot-frame detection timed out."]},
+      "worker": {"artifactId": 10709685788, "passed": 14, "failed": 1, "finding": "Denied-storage case passed preview/viewer functionality but failed the final unfiltered pageErrors assertion on intercepted reader-counts request access-control errors. Do not infer production business-count failure or correction."},
+      "pages": {"artifactId": 10709175755, "result": "ENOTFOUND from the Actions runner; no browser cases executed; not a universal outage claim."},
+      "allEntriesAccepted": false,
+      "backendWritesMocked": true,
+      "productionWritesAllowed": false
+    },
+    "originalStorageBoundary": "Current browser and origin only; cross-device preference sync carries static PNG preview, not original/GIF cloud backup."
+  },
+  "summary": {
+    "feedbackId": 29,
+    "pr": 138,
+    "state": "open_not_merged_not_deployed",
+    "branch": "feat/ui-summary-readable-20260923",
+    "productionSourceHead": "db5a5230fac180f1cfb9e807c316c4d06f149bce",
+    "latestDiagnosticHead": "e38ed7d9138eea113df43a260f89cd916ff05933",
+    "design": {"maxWidthPx": 1200, "maxHeightPx": 920, "viewportHeightCap": 0.84, "edgeMarginPx": 16, "desktopTextPx": 16, "mobileTextPx": 15, "fullscreen": false, "bilingualCacheChanged": false, "managementDrawerAnchoringChanged": false},
+    "latestCompletedLayoutTest": {
+      "runId": 35759684487,
+      "artifactId": 10709816780,
+      "artifactSha256": "ec903a14c0bfcabb78df080d523133576a5ab0e19258ab3c5ee30db39a7804ee",
+      "sourceHead": "db5a5230fac180f1cfb9e807c316c4d06f149bce",
+      "passed": 4, "failed": 1, "skipped": 0, "flaky": 0,
+      "failure": "390px scenario still fails viewport bounds after changing the viewport to 1280x760. Coalesced next-frame/visualViewport remeasurement did NOT close this defect.",
+      "passedCoverage": "768/1280/2134 scenarios and missing-TOC scenario pass. The 390px scenario passes initial typography, dimensions, decoded TOC and bilingual checks before its resize failure."
+    },
+    "diagnosticChange": "Latest e38ed7d adds actual bounding boxes, visual/layout viewport dimensions, host geometry, inline style and open marker to failed-boundary logs, plus failure screenshots and retained traces. It does not change application source, relax assertions or claim the resize failure is fixed.",
+    "latestDiagnosticResult": "Not obtained before handoff; fetch_commit_workflow_runs initially returned an empty list for e38ed7d. Check the exact head before continuing.",
+    "temporaryPatchWorkflowInFinalDiff": false,
+    "screenshotsAreDeployedEvidence": false,
+    "screenshotsDescription": "Isolated source-test screenshots with explicitly labelled simulated summary text and TOC; not AI analysis of the underlying paper."
+  },
+  "feedback": {"exportRunId": 35758423944, "generatedAt": "2026-09-22T17:05:41.720Z", "openIds": [8,20,21,22,23,24,25,28,29,30], "statusWrites": [], "feedback28Closed": false, "feedback29Closed": false, "feedback30Implemented": false},
+  "scope": {"literatureInputsChanged": false, "publicationGatesChanged": false, "captureBridgeSourceChanged": false, "syntheticProductionReaderEventsWritten": false, "businessReaderCountsClaimedFixed": false},
+  "conversationEvidenceFiles": ["gallery-summary29-desktop-preview.png", "gallery-summary29-mobile-preview.png", "gallery-preview-summary29-evidence.zip"],
+  "nextBoundedTask": "Read e38ed7d geometry diagnostics and fix summary resizing from concrete viewport/host evidence before considering PR138 merge. Keep the preview rollout's separate live failures open; do not repeat already completed PR133 routing work."
+}
