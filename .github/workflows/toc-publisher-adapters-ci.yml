@@ -71,7 +71,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -F "// @version      6.2.17" public/toc-mainline.user.js
+          grep -F "// @version      6.2.18" public/toc-mainline.user.js
           grep -F "toc-demand-live.json" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-report/import" public/toc-mainline.user.js
           grep -F "/api/media/tampermonkey-reports" cloudflare/worker/src/index.js
@@ -152,7 +152,7 @@ jobs:
           grep -F "https://onlinelibrary.wiley.com" cloudflare/worker/src/index.js
           grep -F "TOC_MAINLINE_INPUT" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "organicGalleryCloudflareBridgeWriteToken" cloudflare/scripts/build-bridge-loader.mjs
-          grep -F "loaderVersion = '2.2.17'" cloudflare/scripts/build-bridge-loader.mjs
+          grep -F "loaderVersion = '2.2.18'" cloudflare/scripts/build-bridge-loader.mjs
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" cloudflare/scripts/build-bridge-loader.mjs
           if grep -Fq "chinesechemsoc.org" public/toc-mainline.user.js; then echo "Obsolete CJC domains must not remain in TOC mainline"; exit 1; fi
           if grep -Eq "BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}" public/toc-mainline.user.js; then
