@@ -83,6 +83,48 @@ jobs:
             npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "SELECT COUNT(*) AS row_count FROM $table;" || true
           done
 
+      - name: Diagnose genuine historical article opens
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "===== CARD-OPEN READER HISTORY ====="
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "
+            SELECT
+              COUNT(*) AS genuine_open_rows,
+              COUNT(DISTINCT doi) AS dois_with_genuine_opens
+            FROM paper_readers
+            WHERE profile_id LIKE 'ip:%'
+              AND first_status_id = 'card-open';
+          "
+          echo "===== GENUINE OPEN COUNT DISTRIBUTION ====="
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "
+            WITH per_doi AS (
+              SELECT doi, COUNT(*) AS readers
+              FROM paper_readers
+              WHERE profile_id LIKE 'ip:%'
+                AND first_status_id = 'card-open'
+              GROUP BY doi
+            )
+            SELECT
+              SUM(CASE WHEN readers = 1 THEN 1 ELSE 0 END) AS dois_eq_1,
+              SUM(CASE WHEN readers = 2 THEN 1 ELSE 0 END) AS dois_eq_2,
+              SUM(CASE WHEN readers >= 3 THEN 1 ELSE 0 END) AS dois_ge_3,
+              MAX(readers) AS max_readers,
+              ROUND(AVG(readers), 2) AS avg_readers
+            FROM per_doi;
+          "
+          echo "===== V3 CURRENT DISTRIBUTION ====="
+          npx wrangler d1 execute "$D1_NAME" --remote --config wrangler.diagnose.toml --command "
+            SELECT
+              COUNT(*) AS v3_dois,
+              SUM(CASE WHEN count = 1 THEN 1 ELSE 0 END) AS v3_eq_1,
+              SUM(CASE WHEN count = 2 THEN 1 ELSE 0 END) AS v3_eq_2,
+              SUM(CASE WHEN count >= 3 THEN 1 ELSE 0 END) AS v3_ge_3,
+              MAX(count) AS v3_max
+            FROM paper_open_reader_counts_v3;
+          "
+
       - name: Diagnose reader-count storage
         working-directory: cloudflare/worker
         shell: bash
