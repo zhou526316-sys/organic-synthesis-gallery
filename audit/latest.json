@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-22T06:22:17.211Z",
+  "generatedAt": "2026-09-22T06:27:34.374Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -161,15 +161,15 @@
     "galleryDois": 503,
     "sourceRecords": 511,
     "rawMissingFromGallery": 452,
-    "previouslyReviewedExcluded": 448,
-    "missingFromGallery": 4,
-    "potentialGaps": 2,
+    "previouslyReviewedExcluded": 452,
+    "missingFromGallery": 0,
+    "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 6,
     "historicalCoverageLosses": 0,
-    "unresolved": 4,
+    "unresolved": 0,
     "excludedByPolicy": 0
   },
   "closure": {
@@ -177,9 +177,9 @@
     "status": "blocked-source-coverage-anomaly",
     "sourceRecords": 112,
     "rawMissingFromGallery": 95,
-    "previouslyReviewedExcluded": 92,
-    "missingFromGallery": 3,
-    "potentialGaps": 1,
+    "previouslyReviewedExcluded": 95,
+    "missingFromGallery": 0,
+    "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
       {
@@ -383,9 +383,9 @@
       "multiSource": 1,
       "coveredByGallery": 17,
       "rawMissingFromGallery": 95,
-      "previouslyReviewedExcluded": 92,
-      "missingFromGallery": 3,
-      "potentialGaps": 1,
+      "previouslyReviewedExcluded": 95,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
       "byJournal": {
         "Nature": 8,
         "Nature Catalysis": 1,
@@ -439,9 +439,9 @@
       "multiSource": 0,
       "coveredByGallery": 1,
       "rawMissingFromGallery": 4,
-      "previouslyReviewedExcluded": 3,
-      "missingFromGallery": 1,
-      "potentialGaps": 1,
+      "previouslyReviewedExcluded": 4,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
       "byJournal": {
         "Nature Communications": 2,
         "JACS": 2,
@@ -551,9 +551,9 @@
       "safetyTail": 57,
       "coveredByGallery": 14,
       "rawMissingFromGallery": 61,
-      "previouslyReviewedExcluded": 60,
-      "missingFromGallery": 1,
-      "potentialGaps": 1
+      "previouslyReviewedExcluded": 61,
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "Angew": {
       "activeFrom": "2026-07-01",
@@ -566,9 +566,9 @@
       "safetyTail": 54,
       "coveredByGallery": 11,
       "rawMissingFromGallery": 75,
-      "previouslyReviewedExcluded": 72,
-      "missingFromGallery": 3,
-      "potentialGaps": 1
+      "previouslyReviewedExcluded": 75,
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
@@ -1852,186 +1852,6 @@
       "note": ""
     }
   ],
-  "missingCandidates": [
-    {
-      "doi": "10.1021/jacs.6c12434",
-      "journal": "JACS",
-      "title": "Tower Loop Engineering Converts a Low-Potential Bacterial Laccase into a High-Potential Laccase with Tunable Catalytic Activity",
-      "abstract": "Abstract The reduction potential of type 1 copper (T1Cu) centers in laccases governs their catalytic efficiency and substrate scope, yet strategies to elevate low-potential bacterial laccases into the high-potential regime of fungal enzymes remain elusive. Here, we report a loop-engineering approach that enables large, tunable increases in T1Cu potential by redesigning the protein environment beyond the primary and secondary coordination spheres. Guided by structural comparison with fungal laccases, we introduce a “Tower loop” into the bacterial small laccase from Streptomyces coelicolor (SLAC), which shields the T1Cu site from solvent exposure and stabilizes favorable axial coordination. When combined with axial and secondary coordination-sphere mutations, this design elevates the T1Cu reduction potential from 367 mV to 708 mV vs. SHE, converting a low-potential bacterial laccase into a high-potential laccase. X-ray structural and spectroscopic analyses reveal that the introduced loop prevents solvent access and suppresses detrimental axial reorientation, providing a mechanistic basis for redox tuning. Kinetic studies further demonstrate a positive correlation between catalytic efficiency and the redox potential difference between the enzyme and substrate. These findings establish loop engineering as a general strategy for tuning redox-active metalloenzymes and provide a blueprint for designing high-performance biocatalysts for different applications from biomass valorization to bioelectrocatalysis.",
-      "date": "2026-09-22",
-      "type": "journal-article",
-      "authors": [
-        "Jing-Xiang Wang",
-        "Evan N. Mirts",
-        "Lucas H. Williams",
-        "Yi Lu"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:0002-7863:created",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.7061287",
-      "journal": "Angew",
-      "title": "Light‐Gated Control of Brownian Rotation by a Molecular Motor",
-      "abstract": "ABSTRACT Controlling stochastic molecular motion in a predictable manner remains a major challenge in the development of functional molecular systems. Here we demonstrate that a light‐driven molecular motor can reversibly regulate Brownian rotation through remote steric interactions. We integrate an overcrowded alkene motor within a rigid triptycene scaffold, where it acts as a reversible steric gate for an alkynyl‐linked anthracene rotor. Photoisomerization modulates the steric environment around the rotor axis, switching the system between fast Brownian rotation and a sterically hindered regime. Variable‐temperature NMR spectroscopy reveals that one thermodynamically stable motor state exhibits rapid Brownian rotation of the anthracene unit about the alkynyl C─C≡C─C axis, whereas the other stable state displays hindered rotation, giving rise to two distinct rotameric states at low temperature. Density functional theory (DFT) calculations reproduce this behavior and show that the rotational barrier changes by 31 kJ mol −1 between the two states, corresponding to an approximately five‐order‐of‐magnitude difference in the calculated rotational rates at 20 °C. These results demonstrate that light‐driven molecular motors can reversibly regulate stochastic molecular motion through steric control, providing a general strategy for coupling directional and Brownian dynamics within a single molecular system.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Lukáš Severa",
-        "Kateřina Bezděková",
-        "Katarina Majerová Varga",
-        "Guillaume Bastien",
-        "Miroslav Stroka",
-        "Ivana Císařová",
-        "Martin Dračínský",
-        "Jiří Kaleta"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1002/anie.4724561",
-      "journal": "Angew",
-      "title": "Strong Second‐Order Nonlinear Optical Activities in Chiral Hybrid Copper(I) Bromide Microplates",
-      "abstract": "ABSTRACT Organic–inorganic chiral hybrid metal halides (HMHs) with efficient second‐order nonlinear optical responses are promising for various photonic applications. However, chiral HMHs that simultaneously deliver strong second‐harmonic generation (SHG) and pronounced nonlinear chiroptical responses remain limited. Herein, we report a pair of chiral hybrid copper(I) bromide microplates, ( R ‐ and S ‐MPZ)Cu 2 Br 4 (MPZ = 2‐methylpiperazinediium), which crystallize in the noncentrosymmetric space group P 2 1 2 1 2 1 and feature distinctive one‐dimensional zigzag chains constructed from three‐coordinate trigonal–planar CuBr 3 units. Benefiting from the highly distorted Cu─Br frameworks, the microplates exhibit an SHG intensity approximately 376 times that of Y‐cut quartz at 870 nm, together with a high laser damage threshold of up to 11.14 mJ cm −2 . More importantly, the ( R ‐ and S ‐MPZ)Cu 2 Br 4 microplates display effective SHG circular dichroism (SHG‐CD) and circularly polarized SHG responses, enabling a conceptual chirality‐encoded SHG tagging and decoding protocol. This work highlights chiral hybrid copper(I) halides as a versatile lead‐free platform for integrating efficient frequency conversion, nonlinear chiroptical functionality, and information encryption capabilities.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Zhihang Guo",
-        "Yujie Hong",
-        "Yecheng Leng",
-        "Wenguang Tu",
-        "Xi Zhu",
-        "Tingchao He"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1002/anie.2739215",
-      "journal": "Angew",
-      "title": "Vacuum‐Induced Surface Reconstruction of Mn–Ce Oxides for Low‐Temperature Coupled Redox Catalysis",
-      "abstract": "ABSTRACT Low‐temperature redox catalysis over mixed oxides is typically optimized by tuning bulk composition, yet the decisive chemistry occurs at the surface and subsurface interface. Here, we show that this interface can be deliberately reconstructed to enhance Mn–Ce oxide catalysis. Sequential vacuum annealing followed by reduced‐pressure O 2 treatment induces near‐surface Mn enrichment in an as‐prepared Mn–Ce oxide while largely preserving the fluorite CeO 2 framework. This reconstruction increases the near‐surface abundance of Mn‐containing species, modifies the Mn–Ce–O interfacial electronic and redox environment, and facilitates oxygen activation and redox cycling. Under coupled conditions, R‐MnCe achieved 95.5% NO x conversion at 100°C and complete chlorobenzene conversion at 200°C. In situ spectroscopy and DFT calculations reveal that interfacial electron redistribution lowers the oxygen activation barrier and sustains activated oxygen species that connect NH 3 ‐SCR and chlorobenzene oxidation through a shared oxygen‐mediated pathway. These results highlight near‐surface reconstruction as a promising postsynthetic strategy for improving noble‐metal‐free mixed‐oxide catalysts.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Yong Yin",
-        "Yide Jiang",
-        "Zichen Xu",
-        "Min Liu",
-        "Emiliano Cortés",
-        "Yifei Sun"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    }
-  ],
-  "potentialGaps": [
-    {
-      "doi": "10.1021/jacs.6c12434",
-      "journal": "JACS",
-      "title": "Tower Loop Engineering Converts a Low-Potential Bacterial Laccase into a High-Potential Laccase with Tunable Catalytic Activity",
-      "abstract": "Abstract The reduction potential of type 1 copper (T1Cu) centers in laccases governs their catalytic efficiency and substrate scope, yet strategies to elevate low-potential bacterial laccases into the high-potential regime of fungal enzymes remain elusive. Here, we report a loop-engineering approach that enables large, tunable increases in T1Cu potential by redesigning the protein environment beyond the primary and secondary coordination spheres. Guided by structural comparison with fungal laccases, we introduce a “Tower loop” into the bacterial small laccase from Streptomyces coelicolor (SLAC), which shields the T1Cu site from solvent exposure and stabilizes favorable axial coordination. When combined with axial and secondary coordination-sphere mutations, this design elevates the T1Cu reduction potential from 367 mV to 708 mV vs. SHE, converting a low-potential bacterial laccase into a high-potential laccase. X-ray structural and spectroscopic analyses reveal that the introduced loop prevents solvent access and suppresses detrimental axial reorientation, providing a mechanistic basis for redox tuning. Kinetic studies further demonstrate a positive correlation between catalytic efficiency and the redox potential difference between the enzyme and substrate. These findings establish loop engineering as a general strategy for tuning redox-active metalloenzymes and provide a blueprint for designing high-performance biocatalysts for different applications from biomass valorization to bioelectrocatalysis.",
-      "date": "2026-09-22",
-      "type": "journal-article",
-      "authors": [
-        "Jing-Xiang Wang",
-        "Evan N. Mirts",
-        "Lucas H. Williams",
-        "Yi Lu"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:0002-7863:created",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.2739215",
-      "journal": "Angew",
-      "title": "Vacuum‐Induced Surface Reconstruction of Mn–Ce Oxides for Low‐Temperature Coupled Redox Catalysis",
-      "abstract": "ABSTRACT Low‐temperature redox catalysis over mixed oxides is typically optimized by tuning bulk composition, yet the decisive chemistry occurs at the surface and subsurface interface. Here, we show that this interface can be deliberately reconstructed to enhance Mn–Ce oxide catalysis. Sequential vacuum annealing followed by reduced‐pressure O 2 treatment induces near‐surface Mn enrichment in an as‐prepared Mn–Ce oxide while largely preserving the fluorite CeO 2 framework. This reconstruction increases the near‐surface abundance of Mn‐containing species, modifies the Mn–Ce–O interfacial electronic and redox environment, and facilitates oxygen activation and redox cycling. Under coupled conditions, R‐MnCe achieved 95.5% NO x conversion at 100°C and complete chlorobenzene conversion at 200°C. In situ spectroscopy and DFT calculations reveal that interfacial electron redistribution lowers the oxygen activation barrier and sustains activated oxygen species that connect NH 3 ‐SCR and chlorobenzene oxidation through a shared oxygen‐mediated pathway. These results highlight near‐surface reconstruction as a promising postsynthetic strategy for improving noble‐metal‐free mixed‐oxide catalysts.",
-      "date": "2026-09-21",
-      "type": "journal-article",
-      "authors": [
-        "Yong Yin",
-        "Yide Jiang",
-        "Zichen Xu",
-        "Min Liu",
-        "Emiliano Cortés",
-        "Yifei Sun"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    }
-  ]
+  "missingCandidates": [],
+  "potentialGaps": []
 }
