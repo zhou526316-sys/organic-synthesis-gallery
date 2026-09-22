@@ -85,6 +85,9 @@ jobs:
           [vars]
           MIGRATION_STAGE = "staging"
 
+          [ai]
+          binding = "AI"
+
           [triggers]
           crons = ["0 */6 * * *"]
 

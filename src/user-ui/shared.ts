@@ -11,6 +11,17 @@ export interface QuickTerm { id: string; label: string; style: StyleDef; }
 export interface CollectionDef { id: string; name: string; style: StyleDef; }
 export interface AliasGroup { id: string; name: string; terms: string[]; }
 export interface PaperMeta { id: string; doi?: string; title: string; journal: string; href?: string; authors: string[]; topics: string[]; }
+export interface ArticleSummaryResult {
+  doi: string;
+  available: boolean;
+  fulltextAvailable: boolean;
+  reason?: 'fulltext_missing' | 'ai_unavailable';
+  source?: 'fulltext';
+  cached?: boolean;
+  zh?: string;
+  en?: string;
+  generatedAt?: number;
+}
 export interface PaperUserState { favorite: boolean; collections: string[]; statusId?: string; note: string; noteUpdatedAt?: number; quickTerms: string[]; tags: string[]; lastOpenedAt?: number; updatedAt?: number; }
 export interface UserUiState {
   statuses: StatusDef[];
@@ -294,12 +305,23 @@ async function workerPost<T>(path: string, body: unknown): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+async function workerGet<T>(path: string): Promise<T> {
+  const response = await fetch(`${WORKER_API_BASE}${path}`, {
+    method: 'GET',
+    headers: { accept: 'application/json' },
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!response.ok) throw new Error(`Worker ${response.status}`);
+  return response.json() as Promise<T>;
+}
+
 class Store extends EventTarget {
   state = load();
   readonly profileId = browserProfile();
   readerCounts: Record<string, number> = readReaderCountsCache();
   private feedbackFlushRunning = false;
   private readerOpenFlushRunning = false;
+  private readonly summaryCache = new Map<string, ArticleSummaryResult>();
 
   constructor() {
     super();
@@ -367,6 +389,18 @@ class Store extends EventTarget {
     } finally {
       this.feedbackFlushRunning = false;
     }
+  }
+
+  async articleSummary(doi: string, refresh = false): Promise<ArticleSummaryResult> {
+    const normalized = normalizeDoi(doi);
+    if (!normalized) throw new Error('invalid_doi');
+    if (!refresh) {
+      const cached = this.summaryCache.get(normalized);
+      if (cached) return cached;
+    }
+    const data = await workerGet<ArticleSummaryResult>(`/api/user-ui/article-summary?doi=${encodeURIComponent(normalized)}`);
+    this.summaryCache.set(normalized, data);
+    return data;
   }
 
   save(broadcast = true, detail?: { paperId?: string; scope?: 'paper' | 'global' }): void {
