@@ -10,8 +10,9 @@ on:
         description: Optional audit end date (YYYY-MM-DD); blank = current Beijing date
         required: false
   schedule:
-    # Avoid GitHub's top-of-hour scheduler congestion; Beijing 08:07 / 18:07.
-    - cron: '7 0,10 * * *'
+    # Independent pre-release discovery safety net. Beijing 06:55 / 16:55,
+    # leaving about one hour for semantic review before the fixed 08:00 / 18:00 release slots.
+    - cron: '55 22,8 * * *'
   push:
     branches:
       - main
