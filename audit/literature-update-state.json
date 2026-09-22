@@ -244,5 +244,35 @@
       "10.1021/acscatal.6c04274"
     ],
     "rule": "Do not include heterogeneous/materials-focused catalysis papers unless they provide sufficiently broad preparative organic substrate scope."
+  },
+  "lastAutomationRepair": {
+    "repairedAt": "2026-09-22T10:17:05+08:00",
+    "reason": "The Sep 22 08:00 ChatGPT task triggered but did not persist review/data changes; the GitHub scheduled audit had no Sep 22 08:00 scheduled run.",
+    "chatgptTask": {
+      "title": "Gallery 主更新（Work · High）",
+      "enabled": true,
+      "oldSchedule": "08:00/18:00 Asia/Shanghai",
+      "newSchedule": "08:05/18:05 Asia/Shanghai",
+      "change": "Removed the brittle requirement to abort solely because the task cannot self-verify an exact model/thinking label; it must now perform the best available full semantic review and only report incomplete_review for genuine source/tool/write blockers."
+    },
+    "githubAudit": {
+      "oldSchedule": "08:00/18:00 Asia/Shanghai",
+      "newSchedule": "08:07/18:07 Asia/Shanghai",
+      "fixCommitSha": "6e33e2fd0442dd94f7fdf681e3e9c9e4212b5952",
+      "note": "Offset from the top of the hour to reduce scheduler congestion risk; the public GitHub API did not expose a definitive cause for the missing scheduled run."
+    },
+    "validation": {
+      "manualCatchupCompleted": true,
+      "reviewed": 62,
+      "accepted": 11,
+      "rejected": 51,
+      "pending": 0,
+      "finalUnresolved": 0,
+      "productionCards": 499,
+      "productionVisibility": "all 11 accepted DOIs verified visible",
+      "tocVisibleGapTotal": 11,
+      "tocMissingOfficialTotal": 76,
+      "tocOfficialUpgradeTotal": 65
+    }
   }
 }
