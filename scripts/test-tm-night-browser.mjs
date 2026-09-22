@@ -34,8 +34,9 @@ try{
      return route.fulfill({json:{stored:true,staged:u.pathname.endsWith('/stage'),apiAvailable:true,doi:p.doi,id:p.id,kind:p.kind,contentHash:'fixture-content',imageUrl:'https://object.test/a.svg'},headers});
    }
    if(u.pathname.endsWith('.svg'))return route.fulfill({body:svg,contentType:'image/svg+xml',headers});
-   if(u.hostname==='pubs.acs.org'&&!u.searchParams.has('authenticated'))return route.fulfill({status:302,headers:{location:'https://auth.example.test/login'}});
-   if(u.hostname==='auth.example.test')return route.fulfill({status:302,headers:{location:'https://pubs.acs.org/doi/full/'+doi+'?authenticated=1#'}});
+   // Explicit navigation keeps every synthetic origin request under route interception.
+   if(u.hostname==='pubs.acs.org'&&!u.searchParams.has('authenticated'))return route.fulfill({body:'<html><script>location.replace("https://auth.example.test/login")</script></html>',contentType:'text/html'});
+   if(u.hostname==='auth.example.test')return route.fulfill({body:'<html><script>location.replace("https://pubs.acs.org/doi/full/'+doi+'?authenticated=1")</script></html>',contentType:'text/html'});
    const body=u.pathname.endsWith('capture-launch.html')?'<html><body>Binding task</body></html>':'<html><head><meta name="citation_doi" content="'+doi+'"></head><body><article><figure id="graphicalAbstract"><figcaption>Visual Abstract</figcaption><img src="/10.1021_acs.joc.6c01302/toc.svg"></figure><figure><figcaption>Scheme 1. Scope</figcaption><img src="/10.1021_acs.joc.6c01302/scheme.svg"></figure></article></body></html>';
    return route.fulfill({body,contentType:'text/html'});
  });
@@ -45,9 +46,9 @@ try{
  await page.waitForURL(u=>u.hostname==='pubs.acs.org'&&u.searchParams.has('authenticated'),{timeout:15000});
  await page.addScriptTag({content:exposed});
  check('launcher persists nonce before cross-origin navigation',tabs.get(page)?.osgBoundCapture?.jobId===nonce);
- check('redirect chain can finish without relying on URL fragment',!new URL(page.url()).hash);
+ check('login-navigation chain finishes without URL fragment',!new URL(page.url()).hash);
  const bound=await page.evaluate(()=>__nightTest.bindPublisherCaptureJob(__gm['osg-toc-v6:active-job']));
- check('persistent tab binding survives login-origin redirects',bound===doi);
+ check('persistent tab binding survives login-origin navigation',bound===doi);
  const result=await page.evaluate(()=>__nightTest.runPublisherJob(__gm['osg-toc-v6:active-job']));
  check('bound visit obtains both TOC and body receipts',result.toc.status==='stored'&&result.figuresStaged===1&&result.figuresImported===1);
  const before=posts.filter(r=>!r.path.includes('report')).length;
@@ -61,5 +62,5 @@ try{
  await page.evaluate(()=>{__gm['osg-toc-v6:active-job'].jobId='87654321-1234-1234-1234-123456789012';});
  rejected=false;try{await page.evaluate(({doi,nonce})=>__nightTest.assertBoundCaptureJob({doi,jobId:nonce,captureVersion:'6.2.20'}),{doi,nonce});}catch(e){rejected=String(e).includes('capture_job_stale_or_unbound');}
  check('old publisher after job change cannot upload',rejected);
- console.log('NIGHT_BROWSER_TEST_SUMMARY '+JSON.stringify({passed,realBrowser:'Chromium',tampermonkeyApis:'mocked',crossOriginRedirects:true,realPublisherAccess:false,productionWrites:0}));
+ console.log('NIGHT_BROWSER_TEST_SUMMARY '+JSON.stringify({passed,realBrowser:'Chromium',tampermonkeyApis:'mocked',crossOriginNavigation:true,realPublisherAccess:false,productionWrites:0}));
 }finally{await browser.close();}
