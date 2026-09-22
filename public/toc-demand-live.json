@@ -1,24 +1,15 @@
 {
   "version": 2,
-  "generatedAt": "2026-09-22T06:19:15.083Z",
+  "generatedAt": "2026-09-22T08:53:01.703Z",
   "webpageDoiCount": 503,
-  "visibleGapTotal": 2,
-  "missingOfficialTotal": 67,
-  "officialUpgradeTotal": 65,
-  "figureGapTotal": 363,
-  "zeroFigureGapTotal": 230,
+  "visibleGapTotal": 1,
+  "missingOfficialTotal": 64,
+  "officialUpgradeTotal": 63,
+  "figureGapTotal": 362,
+  "zeroFigureGapTotal": 226,
   "lowResolutionFigureGapTotal": 68,
   "unknownQualityFigureGapTotal": 1,
   "visibleGaps": [
-    {
-      "doi": "10.1021/acs.orglett.6c03921",
-      "journal": "Organic Letters",
-      "title": "Cascade Spirocyclization–Difunctionalization or Rearrangement of Bicyclobutyl-Tethered Aldehyde Hydrazones via Strain Release",
-      "date": "2026-09-22",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
     {
       "doi": "10.1038/s41467-026-77981-4",
       "journal": "Nature Communications",
@@ -535,15 +526,6 @@
       "existingReason": "figure1_fallback"
     },
     {
-      "doi": "10.1038/s44160-026-01147-9",
-      "journal": "Nature Synthesis",
-      "title": "Enantioselective synthesis of chiral 2-azaspiro[3.3]heptanes and their application as piperidine bioisosteres",
-      "date": "2026-09-10",
-      "publisher": "nature",
-      "state": "fallback_only",
-      "existingReason": "figure1_fallback"
-    },
-    {
       "doi": "10.1038/s44160-026-01149-7",
       "journal": "Nature Synthesis",
       "title": "Modular assembly of bioisosteric bridged aza-frameworks via ring strain release",
@@ -557,15 +539,6 @@
       "journal": "Nature Synthesis",
       "title": "Orthogonal hydrogenation of alkenes enabled by multifunctional phosphine",
       "date": "2026-08-11",
-      "publisher": "nature",
-      "state": "fallback_only",
-      "existingReason": "figure1_fallback"
-    },
-    {
-      "doi": "10.1038/s44160-026-01128-y",
-      "journal": "Nature Synthesis",
-      "title": "Electrochemical C(sp3)–C(sp3) cross-coupling of alcohols",
-      "date": "2026-07-24",
       "publisher": "nature",
       "state": "fallback_only",
       "existingReason": "figure1_fallback"
@@ -621,6 +594,20 @@
       "doi": "10.1021/acscatal.6c04593",
       "journal": "ACS Catalysis",
       "title": "Glycopeptide Assembly via Selective Manganese(I)-Catalyzed C–H Alkenylations in Organic Media and in Water",
+      "date": "2026-09-18",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05065",
+      "journal": "ACS Catalysis",
+      "title": "Synergistic Effects of Brønsted Acid Site and Lewis Acid Site of Nb2O5 on the Direct Amination of Alcohols",
       "date": "2026-09-18",
       "publisher": "acs",
       "figureCount": 0,
@@ -898,20 +885,6 @@
       "priority": "missing"
     },
     {
-      "doi": "10.1021/jacs.6c10810",
-      "journal": "JACS",
-      "title": "Using Data Science Tools to Explore Rate Matching in a Nickel-Catalyzed Cross-Electrophile Coupling of Alkyl and Aryl Halides (Cl, Br) with a Tridentate Monoanionic Ligand",
-      "date": "2026-09-21",
-      "publisher": "acs",
-      "figureCount": 0,
-      "highQualityFigureCount": 0,
-      "usableFigureCount": 0,
-      "lowQualityFigureCount": 0,
-      "unknownQualityFigureCount": 0,
-      "need": "figures",
-      "priority": "missing"
-    },
-    {
       "doi": "10.1021/jacs.6c13641",
       "journal": "JACS",
       "title": "Alternating Copolymerization of Arynes and Aldehydes Enabled by an N-Arylamine Initiator",
@@ -996,37 +969,9 @@
       "priority": "missing"
     },
     {
-      "doi": "10.1021/jacs.6c08663",
-      "journal": "JACS",
-      "title": "Diastereo- and Enantioselective Photobiocatalytic α-Alkylation of α-Heteroaryl Amines Enabled by Pyridoxal Photochemistry",
-      "date": "2026-09-17",
-      "publisher": "acs",
-      "figureCount": 0,
-      "highQualityFigureCount": 0,
-      "usableFigureCount": 0,
-      "lowQualityFigureCount": 0,
-      "unknownQualityFigureCount": 0,
-      "need": "figures",
-      "priority": "missing"
-    },
-    {
       "doi": "10.1021/jacs.6c09678",
       "journal": "JACS",
       "title": "Spiroketal Synthesis Via Uncatalyzed Inverse Electron-Demand Hetero-Diels-Alder Reactions at Ambient Temperature",
-      "date": "2026-09-17",
-      "publisher": "acs",
-      "figureCount": 0,
-      "highQualityFigureCount": 0,
-      "usableFigureCount": 0,
-      "lowQualityFigureCount": 0,
-      "unknownQualityFigureCount": 0,
-      "need": "figures",
-      "priority": "missing"
-    },
-    {
-      "doi": "10.1021/jacs.6c13635",
-      "journal": "JACS",
-      "title": "Direct Decarboxylative Borylation",
       "date": "2026-09-17",
       "publisher": "acs",
       "figureCount": 0,
@@ -1780,6 +1725,20 @@
       "priority": "missing"
     },
     {
+      "doi": "10.1021/acs.orglett.6c03279",
+      "journal": "Organic Letters",
+      "title": "Photoinduced Decarboxylative Radioiodination of (Hetero)aryl Carboxylic Acids",
+      "date": "2026-09-21",
+      "publisher": "acs",
+      "figureCount": 0,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 0,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "missing"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03335",
       "journal": "Organic Letters",
       "title": "Rh(III)-Catalyzed [4 + 2] Spiroannulation of 2-Phenylbenzimidazoles with Isomerizable 3-Methylmaleimides: Synthesis of Spiro-Fused Benzimidazoisoquinoline Succinimides",
@@ -1920,34 +1879,6 @@
       "priority": "missing"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03247",
-      "journal": "Organic Letters",
-      "title": "Direct C6-Alkynylation of Indoles by Palladium/Norbornene Cooperative Catalysis",
-      "date": "2026-09-18",
-      "publisher": "acs",
-      "figureCount": 0,
-      "highQualityFigureCount": 0,
-      "usableFigureCount": 0,
-      "lowQualityFigureCount": 0,
-      "unknownQualityFigureCount": 0,
-      "need": "figures",
-      "priority": "missing"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03255",
-      "journal": "Organic Letters",
-      "title": "Biomimetic Base-Exchange Reaction for Late-Stage Synthesis of Stereodivergent NAADP+ and NAD(P)+ Derivatives",
-      "date": "2026-09-18",
-      "publisher": "acs",
-      "figureCount": 0,
-      "highQualityFigureCount": 0,
-      "usableFigureCount": 0,
-      "lowQualityFigureCount": 0,
-      "unknownQualityFigureCount": 0,
-      "need": "figures",
-      "priority": "missing"
-    },
-    {
       "doi": "10.1021/acs.orglett.6c03339",
       "journal": "Organic Letters",
       "title": "Rh(III)-Catalyzed C–H Activation/[3 + 2] Cycloaddition for the Synthesis of Functionalized Pyrrolo[1,2-a]imidazole Derivatives",
@@ -2035,20 +1966,6 @@
       "doi": "10.1021/acs.orglett.6c03272",
       "journal": "Organic Letters",
       "title": "Reaction of α-Iodoalkyldifluoroboranes with Copper(II) Carboxylates via a Tetracoordinate Boron Intermediate",
-      "date": "2026-09-16",
-      "publisher": "acs",
-      "figureCount": 0,
-      "highQualityFigureCount": 0,
-      "usableFigureCount": 0,
-      "lowQualityFigureCount": 0,
-      "unknownQualityFigureCount": 0,
-      "need": "figures",
-      "priority": "missing"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03353",
-      "journal": "Organic Letters",
-      "title": "Radical Fluoroalkoxylation of α-Mono/Trihalo Ketones",
       "date": "2026-09-16",
       "publisher": "acs",
       "figureCount": 0,
@@ -4860,6 +4777,20 @@
       "priority": "sparse"
     },
     {
+      "doi": "10.1021/jacs.6c08663",
+      "journal": "JACS",
+      "title": "Diastereo- and Enantioselective Photobiocatalytic α-Alkylation of α-Heteroaryl Amines Enabled by Pyridoxal Photochemistry",
+      "date": "2026-09-17",
+      "publisher": "acs",
+      "figureCount": 1,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 1,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "sparse"
+    },
+    {
       "doi": "10.1021/jacs.6c12963",
       "journal": "JACS",
       "title": "Concise Asymmetric Total Synthesis of (−)-Cribrostatin 4 via Development of a Rh-Catalyzed Asymmetric Hydrogenation of 2,5-Diketopiperazine-Derived Enamides",
@@ -4948,6 +4879,34 @@
       "journal": "Organic Letters",
       "title": "Arylcarboxylation/Cyclization/Hydrogenation Cascade of Arylalkynes with Formate: Synthesis of Ester-Substituted Dioxodihydrodibenzothiazepine Derivatives",
       "date": "2026-09-19",
+      "publisher": "acs",
+      "figureCount": 1,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 1,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "sparse"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03247",
+      "journal": "Organic Letters",
+      "title": "Direct C6-Alkynylation of Indoles by Palladium/Norbornene Cooperative Catalysis",
+      "date": "2026-09-18",
+      "publisher": "acs",
+      "figureCount": 1,
+      "highQualityFigureCount": 0,
+      "usableFigureCount": 1,
+      "lowQualityFigureCount": 0,
+      "unknownQualityFigureCount": 0,
+      "need": "figures",
+      "priority": "sparse"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03353",
+      "journal": "Organic Letters",
+      "title": "Radical Fluoroalkoxylation of α-Mono/Trihalo Ketones",
+      "date": "2026-09-16",
       "publisher": "acs",
       "figureCount": 1,
       "highQualityFigureCount": 0,
@@ -5702,15 +5661,6 @@
   ],
   "allMissingOfficial": [
     {
-      "doi": "10.1021/acs.orglett.6c03921",
-      "journal": "Organic Letters",
-      "title": "Cascade Spirocyclization–Difunctionalization or Rearrangement of Bicyclobutyl-Tethered Aldehyde Hydrazones via Strain Release",
-      "date": "2026-09-22",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
       "doi": "10.1038/s41586-026-11091-5",
       "journal": "Nature",
       "title": "Ketone homologation via palladium-catalysed decarboxylative rearrangement",
@@ -6224,15 +6174,6 @@
       "existingReason": "figure1_fallback"
     },
     {
-      "doi": "10.1038/s44160-026-01147-9",
-      "journal": "Nature Synthesis",
-      "title": "Enantioselective synthesis of chiral 2-azaspiro[3.3]heptanes and their application as piperidine bioisosteres",
-      "date": "2026-09-10",
-      "publisher": "nature",
-      "state": "fallback_only",
-      "existingReason": "figure1_fallback"
-    },
-    {
       "doi": "10.1038/s44160-026-01149-7",
       "journal": "Nature Synthesis",
       "title": "Modular assembly of bioisosteric bridged aza-frameworks via ring strain release",
@@ -6246,15 +6187,6 @@
       "journal": "Nature Synthesis",
       "title": "Orthogonal hydrogenation of alkenes enabled by multifunctional phosphine",
       "date": "2026-08-11",
-      "publisher": "nature",
-      "state": "fallback_only",
-      "existingReason": "figure1_fallback"
-    },
-    {
-      "doi": "10.1038/s44160-026-01128-y",
-      "journal": "Nature Synthesis",
-      "title": "Electrochemical C(sp3)–C(sp3) cross-coupling of alcohols",
-      "date": "2026-07-24",
       "publisher": "nature",
       "state": "fallback_only",
       "existingReason": "figure1_fallback"
