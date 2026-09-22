@@ -615,9 +615,11 @@ test('full-text summary opens as a non-fullscreen TOC-backed bilingual panel', a
   const box = await drawer.boundingBox();
   expect(box).not.toBeNull();
   if (box) {
-    expect(box.width).toBeLessThan(780);
-    expect(box.width).toBeLessThan(1280 * 0.8);
-    expect(box.height).toBeLessThan(900 * 0.8);
+    // Feedback 29 explicitly enlarges the previous 740px summary panel.
+    expect(box.width).toBeGreaterThan(1000);
+    expect(box.width).toBeLessThanOrEqual(1080);
+    expect(box.width).toBeLessThan(1280 - 24);
+    expect(box.height).toBeLessThan(900 * 0.9);
   }
 
   await drawer.locator('button[data-action="summary-lang:en"]').click();
