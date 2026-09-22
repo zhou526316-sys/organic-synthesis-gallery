@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-22T11:09:37.107Z",
+  "generatedAt": "2026-09-22T11:27:42.358Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -169,17 +169,17 @@
   ],
   "summary": {
     "galleryDois": 512,
-    "sourceRecords": 554,
-    "rawMissingFromGallery": 486,
+    "sourceRecords": 555,
+    "rawMissingFromGallery": 487,
     "previouslyReviewedExcluded": 479,
-    "missingFromGallery": 7,
+    "missingFromGallery": 8,
     "potentialGaps": 3,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 0,
     "historicalCoverageLosses": 0,
-    "unresolved": 7,
+    "unresolved": 8,
     "excludedByPolicy": 0
   },
   "closure": {
@@ -281,17 +281,17 @@
       }
     },
     "2026-09-22": {
-      "sourceRecords": 48,
-      "crossrefOnly": 45,
+      "sourceRecords": 49,
+      "crossrefOnly": 46,
       "openAlexOnly": 0,
       "multiSource": 3,
       "coveredByGallery": 10,
-      "rawMissingFromGallery": 38,
+      "rawMissingFromGallery": 39,
       "previouslyReviewedExcluded": 31,
-      "missingFromGallery": 7,
+      "missingFromGallery": 8,
       "potentialGaps": 3,
       "byJournal": {
-        "Nature": 5,
+        "Nature": 6,
         "Nature Synthesis": 1,
         "Nature Chemistry": 3,
         "Nature Communications": 9,
@@ -343,16 +343,16 @@
     "Nature": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-20",
-      "sourceRecords": 77,
-      "crossrefOnly": 5,
+      "sourceRecords": 78,
+      "crossrefOnly": 6,
       "openAlexOnly": 0,
       "multiSource": 72,
       "lateIndexed": 64,
       "safetyTail": 64,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 77,
+      "rawMissingFromGallery": 78,
       "previouslyReviewedExcluded": 76,
-      "missingFromGallery": 1,
+      "missingFromGallery": 2,
       "potentialGaps": 0
     },
     "Science": {
@@ -591,8 +591,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 77,
-      "crossrefCandidateRecords": 77,
+      "unionCandidateRecords": 78,
+      "crossrefCandidateRecords": 78,
       "openAlexCandidateRecords": 72,
       "multiSourceCandidateRecords": 72,
       "closureUnionRecords": 8,
@@ -914,7 +914,7 @@
       "issn": "0028-0836",
       "mode": "online",
       "ok": true,
-      "count": 77,
+      "count": 78,
       "note": ""
     },
     {
@@ -923,7 +923,7 @@
       "issn": "0028-0836",
       "mode": "published",
       "ok": true,
-      "count": 77,
+      "count": 78,
       "note": ""
     },
     {
@@ -932,7 +932,7 @@
       "issn": "0028-0836",
       "mode": "created",
       "ok": true,
-      "count": 78,
+      "count": 79,
       "note": ""
     },
     {
@@ -941,7 +941,7 @@
       "issn": "1476-4687",
       "mode": "online",
       "ok": true,
-      "count": 77,
+      "count": 78,
       "note": ""
     },
     {
@@ -950,7 +950,7 @@
       "issn": "1476-4687",
       "mode": "published",
       "ok": true,
-      "count": 77,
+      "count": 78,
       "note": ""
     },
     {
@@ -959,7 +959,7 @@
       "issn": "1476-4687",
       "mode": "created",
       "ok": true,
-      "count": 78,
+      "count": 79,
       "note": ""
     },
     {
@@ -1859,6 +1859,31 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/d41586-026-02929-z",
+      "journal": "Nature",
+      "title": "All the ways a cell can die — and why the variety matters",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Amber Dance"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
     },
     {
       "doi": "10.1038/d41586-026-02818-5",
