@@ -11,6 +11,8 @@ on:
       - 'scripts/check-prepublish-readiness.mjs'
       - 'scripts/test-prepublish-slot-window.mjs'
       - 'scripts/test-per-doi-release.mjs'
+      - 'scripts/validate-literature-quality-gate.mjs'
+      - 'scripts/test-deferred-publication-quality.mjs'
       - 'shared/literature-journals.js'
       - 'audit/latest.json'
       - 'audit/unresolved-latest.json'
@@ -45,6 +47,9 @@ jobs:
 
       - name: Test per-DOI publication and durable deferrals
         run: node scripts/test-per-doi-release.mjs
+
+      - name: Test published subset and deferred backlog consistency
+        run: node scripts/test-deferred-publication-quality.mjs
 
       - name: Locate canonical staging review
         id: locate
