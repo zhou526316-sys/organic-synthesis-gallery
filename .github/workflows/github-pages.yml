@@ -181,7 +181,7 @@ jobs:
           test -f dist/gallery-vpn-bridge-runtime.js
           test -f dist/toc-rescue.js
           test -f dist/toc-mainline.user.js
-          grep -F "// @version      6.2.16" dist/toc-mainline.user.js
+          grep -F "// @version      6.2.17" dist/toc-mainline.user.js
           grep -F "var figureJob = jobKind(job) === 'figures';" dist/toc-mainline.user.js
           grep -F "figureJob ? 'full/' : ''" dist/toc-mainline.user.js
           grep -F "toc-demand-live.json" dist/toc-mainline.user.js
@@ -217,6 +217,12 @@ jobs:
           grep -F "gallery-literature-doi-registry" dist/toc-mainline.user.js
           grep -F "article.card:not(.bridge-staging-card)" dist/toc-mainline.user.js
           grep -F "filteredNotOnPage" dist/toc-mainline.user.js
+          grep -F "readRealtimeMediaPreflight" dist/toc-mainline.user.js
+          grep -F "filteredAlreadyStored" dist/toc-mainline.user.js
+          grep -F "MEDIA_INVENTORY_ENDPOINT" dist/toc-mainline.user.js
+          grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
+          grep -F "liveInventory?.tocStored === true" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "isExcludedDoi(doi)" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "gallery-literature-doi-registry" src/main.ts
           grep -F "function executableJobs" dist/toc-mainline.user.js
@@ -247,7 +253,7 @@ jobs:
           grep -F "gm_then_fetch_failed:" dist/toc-mainline.user.js
           grep -F "TAMPERMONKEY_CORS_WRITE_PATHS" cloudflare/worker/src/index.js
           test -d dist/media-mirror
-          grep -F "// @version      2.2.16" dist/gallery-vpn-bridge.user.js
+          grep -F "// @version      2.2.17" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
@@ -259,7 +265,7 @@ jobs:
           grep -F "organicGalleryCloudflareBridgeWriteToken" dist/gallery-vpn-bridge.user.js
           grep -F "__OSG_TOC_BROWSER_MAINLINE__" dist/gallery-vpn-bridge.user.js
           grep -F "toc-demand-live.json" dist/gallery-vpn-bridge.user.js
-          grep -F "VPN Bridge 2.2.16 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
+          grep -F "VPN Bridge 2.2.17 · 正在启动 Runtime" dist/gallery-vpn-bridge.user.js
           grep -F "const VERSION = '1.2.0';" dist/gallery-vpn-bridge.user.js
           grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" dist/gallery-vpn-bridge.user.js
           if grep -Eq "\beval\s*\(" dist/gallery-vpn-bridge.user.js; then echo "Bridge userscript must not use eval"; exit 1; fi
