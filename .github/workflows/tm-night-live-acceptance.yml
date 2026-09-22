@@ -1,0 +1,71 @@
+name: Verify night capture release live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend','Deploy Worker frontend assets']
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/tm-night-live-acceptance.json']
+permissions:
+  contents: read
+concurrency:
+  group: tm-night-live-acceptance
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify public installer and backend are the same release
+        run: |
+          python3 - <<'PY'
+          import datetime,hashlib,json,os,pathlib,re,time,urllib.request
+          site='https://zhou526316-sys.github.io/organic-synthesis-gallery/'
+          worker='https://organic-synthesis-gallery.zhou526316.workers.dev'
+          def get(url):
+            request=urllib.request.Request(url+('&' if '?' in url else '?')+'release-check='+str(time.time_ns()),headers={'Cache-Control':'no-cache'})
+            with urllib.request.urlopen(request,timeout=15) as response:
+              raw=response.read(5000001)
+            assert len(raw)<=5000000
+            return raw
+          error='not_attempted'
+          for attempt in range(12):
+            try:
+              raw=get(site+'gallery-vpn-bridge.user.js');text=raw.decode()
+              core=get(site+'toc-mainline.user.js').decode()
+              queue=json.loads(get(site+'toc-demand-live.json'))
+              cap=json.loads(get(worker+'/api/media/local-capture-index?capabilities=1'))
+              launcher=get(site+'capture-launch.html').decode()
+              assert re.search(r'@version\s+2\.2\.20\b',text)
+              assert "var VERSION = '6.2.20';" in text and "var VERSION = '6.2.20';" in core
+              for marker in ['GM_getTab','GM_saveTab','GM_listValues','启动夜间连续抓取（TOC＋正文图）','function stableCaptureGeneration','function readCaptureCheckpoint','function launchBoundPublisherTab','assertBoundCaptureJob','publishVerifiedBrowserMedia']:
+                if marker=='publishVerifiedBrowserMedia':continue
+                assert marker in text,marker
+              assert 'readRealtimeMediaPreflight' not in core and 'MEDIA_INVENTORY_ENDPOINT' not in core
+              assert cap.get('captureVersion')=='6.2.20' and cap.get('verifiedPublication') is True
+              assert cap.get('mediaGeneration')==queue.get('mediaGeneration')==1790082000000
+              assert len(queue['articles'])==queue['webpageDoiCount'] and len(queue['articles'])>=100
+              assert len({r['doi'] for r in queue['articles']})==len(queue['articles'])
+              assert '正在绑定本标签页' in launcher
+              media=json.loads(get(site+'media-index.json'))
+              restored=[doi for doi,r in media['items'].items() if r.get('toc',{}).get('recoveryId')=='toc-batch1-20260922']
+              assert len(restored)==83, 'reviewed TOC baseline changed'
+              report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'bridgeVersion':'2.2.20','coreVersion':'6.2.20','installerSha256':hashlib.sha256(raw).hexdigest(),'coreSha256':hashlib.sha256(core.encode()).hexdigest(),'installerUrl':site+'gallery-vpn-bridge.user.js','articleCount':len(queue['articles']),'queueGeneratedAt':queue['generatedAt'],'mediaGeneration':queue['mediaGeneration'],'verifiedPublicationCapability':True,'boundLauncherAvailable':True,'preservedReviewedTocs':len(restored),'noProductionWrites':True,'realUserBrowserOvernightVerified':False}
+              pathlib.Path(os.environ['RUNNER_TEMP'],'night-live-acceptance.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+              print('NIGHT_LIVE_ACCEPTANCE '+json.dumps(report,ensure_ascii=False));break
+            except Exception as exc:
+              error=type(exc).__name__+':'+str(exc)[:180]
+              print('NIGHT_DEPLOY_WAIT',attempt+1,error)
+              time.sleep(10)
+          else:raise SystemExit('Night release did not pass live checks: '+error)
+          PY
+      - name: Preserve live acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: night-live-acceptance
+          path: ${{ runner.temp }}/night-live-acceptance.json
+          retention-days: 14
+          if-no-files-found: warn
