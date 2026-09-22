@@ -1,0 +1,96 @@
+{
+  "recordedAt": "2026-09-23T00:42:49+08:00",
+  "context": "UI and feedback continuation after user request 继续; final PR133 release checkpoint",
+  "status": "deployed_partial_acceptance",
+  "pullRequest": 133,
+  "mergeSha": "d9e11e82b1e32289b2e968005ee124836d4ebf25",
+  "testedHead": "15198e4ad8b069e7715faa1954c5f7aea759affe",
+  "rootCauseEvidence": "audit/ui-feedback/2026-09-23-003240-pr133-navigation-diagnosis.json",
+  "changes": [
+    "Restrict API-origin failover to HTTP(S) /api or /api/ descendants; static data, translations and media retain the requested origin.",
+    "Do not retry caller-cancelled or navigation-cancelled API requests. Observe beforeunload and pagehide while retry-capable requests are pending, because WebKit can cancel a request before pagehide.",
+    "Remove navigation listeners when requests settle. No navigation prompt or preventDefault, no artificial retry delay, no active cancellation of existing keepalive writes.",
+    "Retain normal network-failure failover, wrapper-owned per-host timeouts, HTTP response passthrough and Request input passthrough."
+  ],
+  "concurrentWriteHandling": "This session's source write received HTTP409. Reread branch contained equivalent source fix at 15198e4; retained without overwrite, verified and merged exact tested head. This session added deterministic evidence and regression tests.",
+  "checks": {
+    "before": {"runId": 35753697141, "passed": 7, "failed": 5, "artifactId": 10705888957, "sha256": "98cd053bf41fef454c882ffb9bc895ad4a2cb2d1ac33883cfc04e7064a86d342"},
+    "after": {"runId": 35754382060, "passed": 12, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10707408668, "sha256": "7a3889dd3e017212b72ad5bddbefe5fcc3a34f3d1918b8b34ad86936ea6b986e"},
+    "siteQualityGate": {"runId": 35754382014, "conclusion": "success"},
+    "dataValidation": {"runId": 35754381923, "conclusion": "success"},
+    "migrationCi": {"runId": 35754382155, "conclusion": "success"}
+  },
+  "deployments": {
+    "githubPages": {"runId": 35754923660, "conclusion": "success"},
+    "worker": {"runId": 35754934795, "conclusion": "success"},
+    "cloudflarePagesFallback": {"runId": 35754923925, "conclusion": "failure", "specificFailureStepInspectedThisTurn": false}
+  },
+  "live": {
+    "runId": 35755124915,
+    "workflowCommit": "75377dd9bc70c5f7a47bb489887f211bb0bee976",
+    "reviewedSha": "d9e11e82b1e32289b2e968005ee124836d4ebf25",
+    "overallConclusion": "failure",
+    "browser": "Playwright 1.55.0 WebKit",
+    "productionWritesAllowed": false,
+    "backendWritesMocked": true,
+    "realGetResponsesMocked": false,
+    "summaryGenerationBlocked": true,
+    "readerCountPostMocked": true,
+    "worker": {
+      "site": "https://organic-synthesis-gallery.zhou526316.workers.dev/",
+      "jobId": 106838840435,
+      "conclusion": "success",
+      "httpStatus": 200,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "entryAsset": "assets/index-DTfPASUi.js",
+      "artifactId": 10707534792,
+      "artifactSha256": "40a4a23da46a1a0c368ee4726b64544b2e24b49d141fce2fc10f3301a902c963",
+      "coverage": "30MB boundary and invalid replacement, storage failure preservation, removal race, local blob routing, all three cancellation/reload regressions, 390px and 1280px GIF original hashes/frame changes/reload/viewer/independent-context preview/removal/unfiltered final pageErrors."
+    },
+    "githubPages": {
+      "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
+      "jobId": 106838840748,
+      "conclusion": "failure",
+      "httpStatus": 200,
+      "passed": 8,
+      "failed": 2,
+      "skipped": 0,
+      "flaky": 0,
+      "entryAsset": "assets/index-DTfPASUi.js",
+      "artifactId": 10708370249,
+      "artifactSha256": "1032efecfe43b66aac360f109ab5c0c1ecee4e0450e2e69f2072e68c3a248359",
+      "passedCases": "All three cancellation/reload tests and five boundary/failure/blob tests.",
+      "failedCases": "Both 390px and 1280px original GIF cases time out at the independent new-context expectation for data-image-source=preview after 5000ms. The DOM already contains an img with a static PNG data URL, but its data-image-source attribute remains unset.",
+      "interpretation": "The original bytes, GIF frame changes, reload persistence and bounded viewer assertions passed before that failure point. Do not claim no image is displayed or GIF animation is broken. Removal and final pageErrors assertions after the failure point were not executed on this entry; full acceptance remains incomplete."
+    },
+    "cloudflarePagesFallback": {
+      "site": "https://organic-synthesis-gallery-public.pages.dev/",
+      "jobId": 106838840932,
+      "conclusion": "failure",
+      "checkedAt": "2026-09-22T16:35:43.547Z",
+      "result": "DNS lookup, A, AAAA and HTTP fetch returned ENOTFOUND in the Actions runner. No browser cases ran; not evidence of universal user-side DNS failure.",
+      "artifactId": 10707620427,
+      "artifactSha256": "a91eead7d83df5197c04f0b6ad703091c4558d888e8d642e42060c3f8c671664"
+    },
+    "evidenceInspection": "Downloaded all artifacts, verified ZIP SHA256 values, parsed JSON test stats and failure details, inspected actual Worker viewer screenshot. Before and after CI evidence and all live artifacts are retained."
+  },
+  "remaining": {
+    "feedback28Closed": false,
+    "feedback29": "Larger non-fullscreen summary window; not implemented this batch",
+    "feedback30": "Selectable surrounding status glow; not implemented this batch",
+    "nextImageIssue": "Independent-context preview-state initialization/hydration remains to be fixed and retested without treating an already visible static preview as an unavailable image.",
+    "readerCountBusinessIssueResolved": false
+  },
+  "scope": {
+    "productionReaderEventsWritten": false,
+    "feedbackStatusWrites": [],
+    "productionLiteratureDataChanged": false,
+    "publicationSlotsOrGatesChanged": false,
+    "captureTampermonkeyBridgeSourceChanged": false,
+    "serverCountingSemanticsChanged": false,
+    "originalImageStorageBoundary": "Original images and GIF animation remain current-browser and current-origin local; preference sync contains static preview only, not original cloud backup."
+  }
+}
