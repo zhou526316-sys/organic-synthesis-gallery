@@ -66,8 +66,11 @@ class GalleryPageNavigation extends HTMLElement {
     const button = target.closest<HTMLButtonElement>('button[data-page-jump]');
     if (!button || button.disabled) return;
     const top = button.dataset.pageJump === 'top' ? 0 : this.extent();
+    // Large smooth traversals across lazy-rendered cards can stop before the
+    // current document end. Jump directly for >2 screens; keep short moves soft.
+    const direct = Math.abs(top - window.scrollY) > window.innerHeight * 2 || matchMedia('(prefers-reduced-motion: reduce)').matches;
     // Only scroll the page. No paper links, stored preferences or reader events.
-    window.scrollTo({ top, left: window.scrollX, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    window.scrollTo({ top, left: window.scrollX, behavior: direct ? 'instant' : 'smooth' });
   };
 
   private update(): void {
