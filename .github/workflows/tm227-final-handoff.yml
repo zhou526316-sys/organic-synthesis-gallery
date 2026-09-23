@@ -80,6 +80,6 @@ jobs:
           path: |
             public/gallery-vpn-bridge.user.js
             public/toc-mainline.user.js
-            ${{ runner.temp }}/tm226-acquisition.log
+            ${{ runner.temp }}/tm227-acquisition.log
           retention-days: 7
           if-no-files-found: warn
