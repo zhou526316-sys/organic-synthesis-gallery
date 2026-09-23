@@ -24,6 +24,7 @@ on:
       - 'audit/latest.json'
       - 'audit/review-*.json'
       - 'audit/literature-update-state.json'
+      - 'audit/automation-triggers/literature-quality-gate-request.json'
 
 permissions:
   contents: read

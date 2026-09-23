@@ -1,0 +1,70 @@
+name: Finalize fixed-slot literature release state
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/literature-finalize-request.json'
+      - '.github/workflows/literature-finalize-release.yml'
+      - 'scripts/finalize-fixed-slot-literature-state.mjs'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: fixed-slot-literature-finalization
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Verify referenced GitHub Actions runs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          request='audit/automation-triggers/literature-finalize-request.json'
+          for key in prepublishGateRunId releaseWriterRunId postReleaseAuditRunId pagesRunId tocRefreshRunId; do
+            run_id="$(node -p "require('./${request}')[process.argv[1]]" "$key")"
+            test -n "$run_id"
+            conclusion="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" --jq '.conclusion')"
+            echo "$key=$run_id conclusion=$conclusion"
+            test "$conclusion" = success
+          done
+
+      - name: Finalize coordination state from deployed release evidence
+        run: node scripts/finalize-fixed-slot-literature-state.mjs audit/automation-triggers/literature-finalize-request.json
+
+      - name: Commit final release state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audit/literature-update-state.json audit/release-finalization-result.json
+          test -n "$(git status --porcelain -- audit/literature-update-state.json audit/release-finalization-result.json)"
+          git commit -m "audit: finalize fixed-slot literature release state"
+          git push origin HEAD:main
+
+      - name: Preserve finalization result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fixed-slot-release-finalization
+          path: audit/release-finalization-result.json
+          if-no-files-found: warn
+          retention-days: 14
