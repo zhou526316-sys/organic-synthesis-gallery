@@ -63,11 +63,20 @@ jobs:
         run: |
           set -euo pipefail
           git diff --exit-code -- public shared/literature-policy.js audit/publication-release-state.json
-          git add src/main.ts src/bootstrap.ts cloudflare/scripts/audit-literature.mjs scripts/validate-prepublish-review.mjs scripts/apply-fixed-slot-literature-release.mjs .github/workflows/prepublish-review-gate.yml .github/workflows/literature-fixed-slot-release.yml docs/literature-update-protocol.md
+          files=(src/main.ts src/bootstrap.ts cloudflare/scripts/audit-literature.mjs scripts/validate-prepublish-review.mjs scripts/apply-fixed-slot-literature-release.mjs .github/workflows/prepublish-review-gate.yml .github/workflows/literature-fixed-slot-release.yml docs/literature-update-protocol.md)
+          git add "${files[@]}"
           if git diff --cached --quiet; then echo 'Already patched'; exit 0; fi
+          mkdir -p /tmp/scope-title-patched
+          for file in "${files[@]}"; do mkdir -p "/tmp/scope-title-patched/$(dirname "$file")"; cp "$file" "/tmp/scope-title-patched/$file"; done
+          git diff --cached --binary > /tmp/scope-title.patch
           base=$(git rev-parse HEAD)
+          echo "$base" > /tmp/scope-title-base.txt
           git fetch origin main
-          test "$(git rev-parse origin/main)" = "$base"
+          if [ "$(git rev-parse origin/main)" != "$base" ]; then
+            git diff --exit-code "$base" origin/main -- "${files[@]}" shared/chinese-title-overrides.js scripts/lib/scope-corrections.mjs audit/literature-scope-corrections.json public/rolling-supplement.json
+            git reset --hard origin/main
+            git apply --index /tmp/scope-title.patch
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'fix(literature): preserve explicit scope exclusions and render bundled Chinese titles'
@@ -81,5 +90,9 @@ jobs:
           path: |
             /tmp/scope-title-tests.json
             /tmp/scope-title-code-commit.txt
+            /tmp/scope-title-base.txt
+            /tmp/scope-title.patch
+            /tmp/scope-title-patched
+          include-hidden-files: true
           retention-days: 14
           if-no-files-found: warn
