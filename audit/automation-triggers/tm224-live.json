@@ -1,9 +1,9 @@
 {
-  "requestedAt": "2026-09-23T10:55:00Z",
-  "bridgeVersion": "2.2.24",
+  "requestedAt": "2026-09-23T13:00:00Z",
+  "bridgeVersion": "2.2.25",
   "captureProtocol": "6.2.20",
   "readOnly": true,
   "mediaWrites": 0,
   "publisherRequests": 0,
-  "reason": "Rerun corrected live verifier contracts against the already deployed fixed installer."
+  "reason": "Rerun corrected live verifier against deployed Bridge 2.2.25 after fixing stale installerVersion contract."
 }
