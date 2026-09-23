@@ -12,6 +12,9 @@ on:
 permissions:
   contents: write
   actions: read
+defaults:
+  run:
+    shell: bash
 concurrency:
   group: new-body-auto-workbench
   cancel-in-progress: false
@@ -54,11 +57,13 @@ jobs:
         env:
           BODY_AUTO_FIXTURE: ${{ runner.temp }}/auto-fixture
         run: |
+          set -euo pipefail
           npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
           npx playwright install --with-deps chromium
           node --check cloudflare/scripts/new-body-auto-validation.mjs
           node --check cloudflare/scripts/merge-new-body-auto.mjs
-          node scripts/test-new-body-auto.mjs | tee "$RUNNER_TEMP/new-body-auto-tests.log"
+          node scripts/test-new-body-auto.mjs 2>&1 | tee "$RUNNER_TEMP/new-body-auto-tests.log"
+          grep -F 'NEW_BODY_AUTO_TESTS ' "$RUNNER_TEMP/new-body-auto-tests.log"
           node scripts/test-reviewed-body.mjs
           node scripts/test-body-review-markers.mjs
           git diff --check
