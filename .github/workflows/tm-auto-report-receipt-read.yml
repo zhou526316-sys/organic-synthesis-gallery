@@ -1,0 +1,89 @@
+name: Read automatic capture report receipts
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tm-auto-report-receipt-read.yml'
+      - 'audit/automation-triggers/tm-auto-report-receipt-read.json'
+permissions:
+  contents: read
+concurrency:
+  group: tm-auto-report-receipt-read
+  cancel-in-progress: false
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Read newest delivered reports and distinguish automatic from manual evidence
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures,datetime,json,os,pathlib,re,time,urllib.parse,urllib.request
+          base='https://organic-synthesis-gallery.zhou526316.workers.dev'
+          def safe_url(value):
+              try:
+                  u=urllib.parse.urlsplit(str(value or ''))
+                  return urllib.parse.urlunsplit((u.scheme,u.hostname or '',u.path,'','')) if u.scheme in ('https','http') else ''
+              except ValueError: return ''
+          def text(value):
+              s=re.sub(r'https?://[^\s\"\'<>]+',lambda m:safe_url(m.group()),str(value or ''))
+              return re.sub(r'(?i)Bearer\s+\S+|(?:token|secret|password|cookie|authorization|signature)\s*[\"\s]*[:=]\s*[^\s;,]+','[redacted]',s)[:1200]
+          def get(path):
+              req=urllib.request.Request(base+path+('&' if '?' in path else '?')+'readAt='+str(time.time_ns()),headers={'Origin':'https://zhou526316-sys.github.io','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  body=r.read(6000001)
+              if len(body)>6000000: raise ValueError('size_limit')
+              return json.loads(body)
+          def pick(r,fields):
+              if not isinstance(r,dict): return {}
+              return {k:(safe_url(r[k]) if k.lower().endswith('url') else text(r[k]) if isinstance(r[k],str) else r[k]) for k in fields if k in r and not isinstance(r[k],(dict,list))}
+          fields=['doi','status','reason','candidateSource','assetType','startedAt','finishedAt','updatedAt','attemptId','attemptCount','articleUrl','sourceUrl','traceEvents','retainedAttempts']
+          report={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'readOnly':True,'mediaWrites':0,'errors':[],'index':[],'details':[]}
+          try:
+              index=get('/api/media/tampermonkey-reports?limit=12')
+              report['indexUpdatedAt']=index.get('updatedAt')
+              items=index.get('items',[])
+              if isinstance(items,dict): items=list(items.values())
+              if not isinstance(items,list): raise ValueError('index_items_missing')
+              items=sorted(items,key=lambda x:float(x.get('updatedAt') or 0),reverse=True)
+              report['index']=[pick(r,fields) for r in items]
+              dois=list(dict.fromkeys(r['doi'] for r in items if r.get('doi')))[:5]
+              def detail(doi):
+                  try:
+                      body=get('/api/media/tampermonkey-reports?doi='+urllib.parse.quote(doi,safe='')+'&history=1&limit=5')
+                      attempts=body.get('attempts',[]) or [body.get('latest',body)]
+                      out=[]
+                      for r in attempts:
+                          item=pick(r,fields+['available','error'])
+                          events=r.get('trace',[])
+                          context=[e for e in events if e.get('stage') in ('diagnostic_context','job','paired_result')]
+                          failures=[e for e in events if e.get('event')=='failed' or float(e.get('httpStatus') or 0)>=400 or e.get('stage')=='page_doi_guard']
+                          event_fields=['seq','at','stage','event','status','httpStatus','url','message','contentType','imageWidth','imageHeight','byteLength']
+                          item['context']=[pick(e,event_fields) for e in context[:3]+context[3:][-2:]]
+                          item['failureEvents']=[pick(e,event_fields) for e in failures[-8:]]
+                          out.append(item)
+                      return {'doi':doi,'attempts':out}
+                  except Exception as e: return {'doi':doi,'readError':type(e).__name__,'httpStatus':getattr(e,'code',None)}
+              with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool: report['details']=list(pool.map(detail,dois))
+          except Exception as e: report['errors'].append({'source':'reportIndex','type':type(e).__name__,'httpStatus':getattr(e,'code',None)})
+          try:
+              local=get('/api/media/local-diagnostics')
+              report['manualSnapshot']=pick(local,['uploadedAt','version','source','kind','uploadedReason'])
+              report['manualSummary']=pick(local.get('summary',{}),['controllerRevision','startedAt','finishedAt','success','partial','failed','tocStored','figuresStaged'])
+          except Exception as e: report['errors'].append({'source':'manualSnapshot','type':type(e).__name__,'httpStatus':getattr(e,'code',None)})
+          report['readCompletedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          pathlib.Path(os.environ['RUNNER_TEMP'],'tm-auto-report-receipts.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print('AUTO_REPORT_RECEIPT_SUMMARY '+json.dumps({k:v for k,v in report.items() if k not in ('details','index')},ensure_ascii=False),flush=True)
+          for row in report['index']: print('AUTO_REPORT_INDEX '+json.dumps(row,ensure_ascii=False),flush=True)
+          for row in report['details']: print('AUTO_REPORT_DETAIL '+json.dumps(row,ensure_ascii=False),flush=True)
+          if report['errors']: raise SystemExit('Read coverage incomplete; inspect explicit errors.')
+          PY
+      - name: Preserve sanitized current receipt evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tm-auto-report-receipts
+          path: ${{ runner.temp }}/tm-auto-report-receipts.json
+          retention-days: 7
+          if-no-files-found: warn
