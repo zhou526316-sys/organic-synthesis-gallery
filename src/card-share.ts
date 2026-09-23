@@ -216,7 +216,7 @@ function shareText(info: ShareInfo): string {
   ].filter(Boolean).join('\n');
 }
 
-function showToast(message: string): void {
+function showToast(message: string, duration = 1800): void {
   document.querySelector('.card-share-toast')?.remove();
   const toast = document.createElement('div');
   toast.className = 'card-share-toast';
@@ -226,7 +226,7 @@ function showToast(message: string): void {
   window.setTimeout(() => {
     toast.classList.remove('visible');
     window.setTimeout(() => toast.remove(), 180);
-  }, 1800);
+  }, duration);
 }
 
 function closePanel(): void {
@@ -289,6 +289,13 @@ async function loadQr(panel: HTMLElement, info: ShareInfo): Promise<void> {
 
 function openPanel(anchor: HTMLElement, info: ShareInfo): void {
   closePanel();
+  const weChatContext = isWeChatBrowser() && isWeChatJsSdkHost();
+  const weChatTip = weChatContext
+    ? tr('微信图文卡片必须通过微信右上角“…”→“分享给朋友”发送；不要把链接复制粘贴到聊天框，粘贴只会显示普通链接。', 'WeChat rich cards must be sent from the top-right WeChat menu → Share with friends. Pasting the URL into chat only sends a plain link.')
+    : tr('要生成微信图文卡片，请先在微信内打开这篇文献，再用右上角“…”→“分享给朋友”。复制粘贴链接到聊天框不会生成卡片。', 'To create a WeChat rich card, open this paper inside WeChat and use the top-right menu → Share with friends. Pasting the URL into chat does not create a card.');
+  const weChatActionLabel = weChatContext
+    ? tr('准备微信卡片', 'Prepare WeChat card')
+    : tr('复制微信内打开链接', 'Copy link to open in WeChat');
   const panel = document.createElement('section');
   panel.className = 'card-share-panel';
   panel.dataset.shareUrl = info.url;
@@ -303,9 +310,9 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
       <button type="button" class="card-share-close" data-share-close aria-label="${tr('关闭', 'Close')}">×</button>
     </div>
     <div class="card-share-meta"></div>
-    <div class="card-share-wechat-tip">${tr('微信用“微信卡片”：复制专用链接后到聊天框粘贴发送；“系统分享”保留给短信、邮件及系统分享面板里的其他应用。', 'Use “WeChat card” for WeChat: copy the dedicated rich link and paste it into a chat. “System share” remains available for Messages, Mail, and other apps in the OS share sheet.')}</div>
+    <div class="card-share-wechat-tip">${weChatTip}</div>
     <div class="card-share-actions-grid">
-      <button type="button" data-share-action="wechat-copy">${tr('微信卡片', 'WeChat card')}</button>
+      <button type="button" data-share-action="wechat-copy">${weChatActionLabel}</button>
       <button type="button" data-share-action="native">${tr('系统分享', 'System share')}</button>
       <button type="button" data-share-action="copy-link">${tr('复制卡片链接', 'Copy card link')}</button>
       <button type="button" data-share-action="copy-text">${tr('复制标题 + DOI + 链接', 'Copy title + DOI + link')}</button>
@@ -329,12 +336,12 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
         if (isWeChatBrowser() && isWeChatJsSdkHost()) {
           try {
             await configureWeChatShare(info);
-            showToast(tr('微信卡片已准备好，请点右上角“…”→“分享给朋友”', 'WeChat card is ready. Use the top-right menu → Share with friends.'));
+            showToast(tr('微信卡片已准备好：请点右上角“…”→“分享给朋友”。不要复制粘贴链接。', 'WeChat card is ready: use the top-right menu → Share with friends. Do not paste the URL into chat.'), 3600);
           } catch (error) {
             console.warn('WECHAT_SHARE_CONFIG_FAILED', error);
             try {
               await copyText(info.url);
-              showToast(tr('微信接口暂未就绪，已复制卡片链接，可直接粘贴发送', 'WeChat API is not ready; the rich-card link was copied instead.'));
+              showToast(tr('微信接口暂未就绪，已复制微信内打开链接；直接粘贴到聊天框只会显示普通链接。', 'WeChat API is not ready. A link to open inside WeChat was copied; pasting it into chat only sends a plain link.'), 3600);
             } catch {
               showToast(tr('微信分享配置失败，请使用二维码。', 'WeChat share setup failed. Use the QR code.'));
             }
@@ -342,7 +349,7 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
         } else {
           try {
             await copyText(info.url);
-            showToast(tr('微信卡片链接已复制；到微信聊天框粘贴发送，或在微信内打开网页后用右上角分享', 'WeChat card link copied. Paste it into a WeChat chat, or open the page in WeChat and use the top-right share menu.'));
+            showToast(tr('已复制微信内打开链接。请在微信里打开后用右上角“…”→“分享给朋友”；直接粘贴到聊天框只会显示普通链接。', 'Link copied. Open it inside WeChat, then use the top-right menu → Share with friends; pasting it into chat only sends a plain link.'), 4200);
           } catch {
             showToast(tr('复制失败，请使用“复制卡片链接”。', 'Copy failed. Use “Copy card link”.'));
           }
@@ -443,7 +450,11 @@ function focusDeepLinkCard(): void {
     if (isWeChatBrowser() && isWeChatJsSdkHost()) {
       const shareButton = card.querySelector<HTMLElement>('[data-card-share]');
       const info = shareButton ? infoFromButton(shareButton) : null;
-      if (info) void configureWeChatShare(info).catch(error => console.warn('WECHAT_AUTO_SHARE_CONFIG_FAILED', error));
+      if (info) {
+        void configureWeChatShare(info)
+          .then(() => showToast(tr('微信分享卡片已自动准备好：点右上角“…”→“分享给朋友”。', 'WeChat share card is ready. Use the top-right menu → Share with friends.'), 3600))
+          .catch(error => console.warn('WECHAT_AUTO_SHARE_CONFIG_FAILED', error));
+      }
     }
   }
 

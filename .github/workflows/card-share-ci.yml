@@ -55,6 +55,7 @@ jobs:
           grep -F "jweixin-1.6.0.js" dist/assets/card-share-*.js
           grep -F "updateAppMessageShareData" dist/assets/card-share-*.js
           grep -F "/api/wechat/js-sdk-signature" dist/assets/card-share-*.js
+          grep -F "Pasting the URL into chat only sends a plain link." dist/assets/card-share-*.js
 
       - name: Verify 20-second halo contract
         run: |
