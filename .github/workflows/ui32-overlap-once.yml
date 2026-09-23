@@ -23,37 +23,12 @@ jobs:
           text=p.read_text()
           needle='    .site-feedback-tab{border:1px solid #294da8;'
           assert text.count(needle)==1
-          rule='''    /* The floating launcher must not intercept fields in an open card editor.
-       Keep its saved position and keep an already-open feedback panel available. */
-    body:has(gallery-paper-actions[data-drawer-open="true"]) ${ELEMENT}:not(:has(.site-feedback-panel)){visibility:hidden;pointer-events:none}
-          '''
+          rule='    /* Do not let the floating launcher intercept an active card editor. Keep its saved position and any already-open feedback panel. */\n    body:has(gallery-paper-actions[data-drawer-open="true"]) ${ELEMENT}:not(:has(.site-feedback-panel)){visibility:hidden;pointer-events:none}\n'
           p.write_text(text.replace(needle,rule+needle))
           p=Path('tests/status-glow-width.spec.ts');text=p.read_text()
           assert 'real drag previews continuously' in text and 'launcher yields' not in text
-          text+='''
-
-test('feedback launcher yields to an open editor then restores without losing position', async ({ page }) => {
-  const evidence = watch(page);
-  const actions = await open(page, 390);
-  const launcher = page.locator('site-feedback-widget .site-feedback-tab');
-  await actions.locator('[data-action="close"]').click();
-  await expect(launcher).toBeVisible();
-  const before = (await launcher.boundingBox())!;
-  const positionKeys = await page.evaluate(() => [localStorage.getItem('site-feedback-tab-position-v1'), localStorage.getItem('site-feedback-widget-position-v1')]);
-  await button(actions).click();
-  await expect(range(actions)).toBeVisible();
-  await expect(launcher).not.toBeVisible();
-  await actions.locator('[data-action="close"]').click();
-  await expect(launcher).toBeVisible();
-  const after = (await launcher.boundingBox())!;
-  expect(after.x).toBe(before.x); expect(after.y).toBe(before.y);
-  expect(await page.evaluate(() => [localStorage.getItem('site-feedback-tab-position-v1'), localStorage.getItem('site-feedback-widget-position-v1')])).toEqual(positionKeys);
-  await launcher.click();
-  await expect(page.locator('.site-feedback-panel')).toBeVisible();
-  expect(evidence.errors).toEqual([]); expect(evidence.marks).toEqual([]);
-});
-'''
-          p.write_text(text)
+          added="\n\ntest('feedback launcher yields to an open editor then restores without losing position', async ({ page }) => {\n  const evidence = watch(page);\n  const actions = await open(page, 390);\n  const launcher = page.locator('site-feedback-widget .site-feedback-tab');\n  await actions.locator('[data-action=\"close\"]').click();\n  await expect(launcher).toBeVisible();\n  const before = (await launcher.boundingBox())!;\n  const positionKeys = await page.evaluate(() => [localStorage.getItem('site-feedback-tab-position-v1'), localStorage.getItem('site-feedback-widget-position-v1')]);\n  await button(actions).click();\n  await expect(range(actions)).toBeVisible();\n  await expect(launcher).not.toBeVisible();\n  await actions.locator('[data-action=\"close\"]').click();\n  await expect(launcher).toBeVisible();\n  const after = (await launcher.boundingBox())!;\n  expect(after.x).toBe(before.x); expect(after.y).toBe(before.y);\n  expect(await page.evaluate(() => [localStorage.getItem('site-feedback-tab-position-v1'), localStorage.getItem('site-feedback-widget-position-v1')])).toEqual(positionKeys);\n  await launcher.click();\n  await expect(page.locator('.site-feedback-panel')).toBeVisible();\n  expect(evidence.errors).toEqual([]); expect(evidence.marks).toEqual([]);\n});\n"
+          p.write_text(text+added)
           PY
           git diff --check
           git config user.name 'github-actions[bot]'
