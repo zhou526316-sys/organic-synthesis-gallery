@@ -1,0 +1,68 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,cp,mkdtemp,mkdir,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
+import {sha256,checkNewBodyIdentity,checkRoleReport,verifyNewBodyBytes,conflictKeys,scopedHolds} from '../cloudflare/scripts/new-body-auto-validation.mjs';
+import {loadNewBodyContext,mergeNewBodyAuto} from '../cloudflare/scripts/merge-new-body-auto.mjs';
+const dir=process.env.NEW_BODY_FIXTURE;assert.ok(dir);
+const evidence=JSON.parse(await readFile(path.join(dir,'evidence.json'),'utf8'));
+const stage=JSON.parse(await readFile(path.join(dir,'stage-index.json'),'utf8'));
+const reports=JSON.parse(await readFile(path.join(dir,'report-index.json'),'utf8'));
+const live=JSON.parse(await readFile(path.join(dir,'public-media-index.json'),'utf8'));
+const policy=JSON.parse(await readFile('shared/new-body-auto-policy.json','utf8'));
+const sample=evidence.images.find(r=>r.reviewMarker&&r.contentType==='image/png');assert.ok(sample);
+const corpus=new Map([[sample.doi,{}]]),held=new Set();let passed=0;
+async function test(name,fn){await fn();passed++;console.log('NEW_BODY_AUTO_PASS '+name);}
+await test('real confirmed new marker accepted as evidence',()=>checkNewBodyIdentity(sample,policy,corpus,held));
+await test('historical objects without server markers are held',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,reviewMarker:undefined},policy,corpus,held),/marker_missing/));
+await test('pre-quarantine timestamp cannot pass',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,updatedAt:1790081999000},policy,corpus,held),/generation/));
+await test('page DOI is independently bound',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,pageDoi:'10.1021/jacs.wrong'},policy,corpus,held),/binding/));
+await test('another article image is rejected',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,sourceUrl:sample.sourceUrl.replace('6c13760','6c00000')},policy,corpus,held),/doi_conflict/));
+await test('lookalike publisher host cannot pass',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,sourceUrl:sample.sourceUrl.replace('acs.silverchair-cdn.com','acs.silverchair-cdn.com.evil.test')},policy,corpus,held),/host/));
+await test('unknown and opaque sources stay outside automatic profile',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,sourceUrl:'https://onlinelibrary.wiley.com/cms/asset/a.jpg'},policy,corpus,held),/host/));
+await test('source query credentials are not copied to public ledger',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,sourceUrl:sample.sourceUrl+'?token=private'},policy,corpus,held),/noncanonical/));
+await test('TOC cannot be relabelled into a body image',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,caption:'Visual Abstract'},policy,corpus,held),/caption/));
+await test('caption mutation invalidates the existing evidence',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,caption:'Other caption for this exact file'},policy,corpus,held),/marker_evidence/));
+await test('wrong figure number rejected',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,label:'Scheme 99'},policy,corpus,held),/label/));
+await test('wrong object namespace rejected',()=>assert.rejects(()=>checkNewBodyIdentity({...sample,r2Key:sample.r2Key.replace('images/','images/wrong/')},policy,corpus,held),/object_identity/));
+await test('removed card remains absent',()=>assert.rejects(()=>checkNewBodyIdentity(sample,policy,new Map(),held),/current/));
+await test('open scope recheck is held without excluding the card',()=>assert.rejects(()=>checkNewBodyIdentity(sample,policy,corpus,new Set([sample.doi])),/scope/));
+await test('a server marker alone cannot substitute for isolated-figure report',()=>assert.throws(()=>checkRoleReport(sample,[],policy),/report_pending/));
+await test('real same-job report binds exact figure source and object',()=>assert.equal(checkRoleReport(sample,evidence.reports,policy).storedObject,sample.r2Key));
+const wrongReports=structuredClone(evidence.reports);for(const x of wrongReports)for(const e of x.report.trace||[])if(e.stage==='diagnostic_context')e.message=e.message.replace(sample.jobId,'00000000-0000-0000-0000-000000000000');
+await test('another job cannot supply the proof',()=>assert.throws(()=>checkRoleReport(sample,wrongReports,policy),/report_pending/));
+const noRole=structuredClone(evidence.reports);for(const x of noRole)for(const e of x.report.trace||[])e.candidateSource='recommended_content';
+await test('recommended content fails role proof even under the correct DOI',()=>assert.throws(()=>checkRoleReport(sample,noRole,policy),/report_pending/));
+const bytes=await readFile(path.join(dir,sample.file));
+await test('actual PNG bytes and dimensions validate',()=>verifyNewBodyBytes(sample,bytes));
+await test('corrupt image with same metadata rejected',()=>assert.throws(()=>verifyNewBodyBytes(sample,Buffer.alloc(bytes.length)),/bytes_mismatch/));
+await test('cross-DOI duplicate byte ownership held',()=>assert.ok(conflictKeys([sample,{...sample,doi:'10.1021/jacs.other'}],{items:{}}).has(sample.doi+'|'+sample.id)));
+await test('one image URL under two figure labels held',()=>assert.ok(conflictKeys([sample,{...sample,id:'figure-99'}],{items:{}}).size===2));
+await test('pending scope collection remains case-exact',()=>assert.ok(scopedHolds({schemaVersion:2,pendingScopeReviewBacklog:[{doi:sample.doi,status:'pending'}]},policy).has(sample.doi)));
+const root=await mkdtemp(path.join(tmpdir(),'new-body-replay-'));
+try{
+ for(const d of ['shared','audit','public','scripts'])await mkdir(path.join(root,d),{recursive:true});
+ for(const f of ['shared/new-body-auto-policy.json','audit/literature-update-state.json','scripts/decode-new-body-image.py']){await mkdir(path.dirname(path.join(root,f)),{recursive:true});await cp(f,path.join(root,f));}
+ for(const f of ['papers.gz.b64','total-synthesis.json','manual-supplement.json','final-audit-supplement.json','curated-supplement.json','automation-supplement.json','rolling-supplement.json'])await cp('public/'+f,path.join(root,'public',f));
+ await writeFile(path.join(root,'public/media-index.json'),JSON.stringify(live));
+ const imageMap=new Map(evidence.images.map(r=>[r.r2Key,r])),reportMap=new Map(evidence.reports.map(r=>[r.key,r.report]));
+ const io={r2:async key=>{if(key.endsWith('article-figures/stage-index.json'))return Buffer.from(JSON.stringify(stage));if(key.endsWith('tampermonkey/report-index.json'))return Buffer.from(JSON.stringify(reports));if(imageMap.has(key))return readFile(path.join(dir,imageMap.get(key).file));if(reportMap.has(key))return Buffer.from(JSON.stringify(reportMap.get(key)));throw new Error('fixture_object_not_selected');},siteJson:async name=>name==='media-index.json'?live:null};
+ const context=await loadNewBodyContext(root,io);assert.ok(context.eligible.length>0);
+ const result=await mergeNewBodyAuto(context);
+ await test('frozen real-image replay publishes only validated new files',()=>{assert.ok(result.summary.added.length>0);assert.ok(result.summary.added.length<=30);assert.ok(result.summary.newPapers.length<=5);});
+ await test('existing TOC fields retained exactly',()=>{for(const [d,r] of Object.entries(live.items))assert.deepEqual(result.media.items[d].toc,r.toc);});
+ await test('no human review approval was fabricated',()=>{for(const x of result.ledger.items){assert.equal(x.validation.decision,'machine_validated');assert.equal(x.validation.semanticReview,'not_performed');assert.equal(x.capture.reviewMarker.semanticReview,'not_reviewed');assert.equal(x.capture.reviewMarker.published,false);}});
+ await test('all published copies equal frozen original SHA256',async()=>{for(const r of result.ledger.items)assert.equal(sha256(await readFile(path.join(root,'public',r.imageUrl))),r.sha256);});
+ await test('every new image has separately checked role and positive receipt',()=>{for(const x of result.ledger.items)assert.equal(x.validation.receiptProof.sourceRole,'isolated_figure_caption');});
+ const first=result.summary.added.length;
+ // Fresh deployment starts from a clean human/static baseline, then retains prior validated copies.
+ await writeFile(path.join(root,'public/media-index.json'),JSON.stringify(live));
+ const next={...context,eligible:[],previous:result.ledger,io:{...io,publicBytes:async p=>readFile(path.join(root,'public',p))}};
+ const second=await mergeNewBodyAuto(next);
+ await test('prior automatic copies survive a clean rebuild without recapture',()=>{assert.equal(second.summary.added.length,0);assert.equal(second.summary.carried.length,first);assert.equal(second.ledger.count,first);});
+ await writeFile(path.join(root,'public/media-index.json'),JSON.stringify(live));
+ const tampered=structuredClone(result.ledger);tampered.items[0].capture.caption='Tampered caption';
+ await test('changed evidence cannot reuse prior automatic publication',()=>assert.rejects(()=>mergeNewBodyAuto({...next,previous:tampered}),/not_preserved/));
+ await writeFile(process.env.RUNNER_TEMP+'/new-body-auto-replay.json',JSON.stringify({passed,new:result.summary.added,held:result.summary.held,readOnlyR2:true,stagingWrites:0},null,2));
+}finally{await rm(root,{recursive:true,force:true});}
+console.log('NEW_BODY_AUTO_TESTS '+JSON.stringify({passed}));
