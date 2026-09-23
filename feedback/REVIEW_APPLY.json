@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-09-23T10:18:00+08:00",
+  "generatedAt": "2026-09-23T18:57:00+08:00",
   "updates": [
-    { "id": 30, "status": "reviewed" }
+    { "id": 33, "status": "reviewed" }
   ],
-  "expectedOpenIds": [8, 20, 21, 22, 23, 24, 25, 28, 31, 32],
+  "expectedOpenIds": [8, 20, 21, 22, 23, 24, 25, 28, 31, 32, 34],
   "reviewBasis": {
-    "implementation": "PR142 f5446507a49ac612dbf53aaa069d1a8343c1e01d, exact tested head fa6014af177a7b0b0460a973b9f65f22d7bf92ca.",
-    "liveRunId": 35809447014,
-    "liveWorkflowCommit": "f54b253dad6e61e513c59afbbe84f646aa1265aa",
-    "github": { "passed": 7, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729780375 },
-    "worker": { "passed": 7, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729196589 },
-    "scope": "Actual deployed WebKit controls, five effects, color following, caption readability, raw-image hashes, reload, reduced motion, rollback, unknown mode safety. Production API writes mocked and no reader marks sent.",
-    "previousApply": "Run35809663399 updated29 successfully (updated1 failed0); open-ID verification then detected newly submitted32. Do not retry29 or close32. This plan preserves32 and only updates30.",
-    "remaining": "31 includes intelligent/person/circular cropping not implemented here and stays open despite completed caption layering.28 broader original-image live acceptance and reader-count business issue remain open. Cloudflare Pages fallback not accepted by these active-entry tests."
+    "userApproval": "User explicitly approved continuing navigation33 after the feedback approval gate.",
+    "originalFeedback": "建议加个回到顶部/底部的按钮",
+    "implementation": "PR150 merged d15afca8aead58a5422f7054fde9487d0f637ce1; eager-load follow-up PR166 merged 778740547bd1ecb7d0fc0175744e0727329b4ce9.",
+    "preMerge": "Navigation behavior run35847997946 passed6/6 Chromium and6/6 WebKit. Follow-up run35850499048 passed7/7 Chromium and7/7 WebKit including navigation visible within2.5s while optional user chunks were deliberately delayed5s. Site quality35850499036, migration35850499025 and data35850499099 passed.",
+    "deployment": "Worker sync35851005619 and GitHub Pages35851005572 succeeded.",
+    "liveAcceptance": "Run35851322926 passed6/6 on GitHub Chromium, GitHub WebKit, Worker Chromium and Worker WebKit. API writes were mocked; no reader marks.",
+    "diagnosisRetained": "Initial live run35848845588 exposed GitHub WebKit late registration. Read-only run35849271899 found no network/page errors; sequential optional module loading delayed navigation. PR166 moved navigation before optional modules rather than relaxing the5s live assertion.",
+    "scope": "Only navigation33 is reviewed. Reader-count feedback remains open because current one-IP-per-DOI semantics explain many one-reader cards;31/32/34/28 and all other feedback remain open."
   }
 }
