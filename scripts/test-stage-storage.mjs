@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {storeVerifiedStage,storageCause,STAGE_INDEX_KEY} from '../cloudflare/worker/src/stage-storage.js';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const svg=Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"><path d="M1 1L700 300L1 300Z" fill="none" stroke="black"/></svg>');
+const hash=sha(svg),doi='10.1021/acs.orglett.6c03279',key='local-captures/article-figures/images/validated/figure-1-'+hash.slice(0,16)+'.svg';
+const entry={doi,id:'figure-1',r2Key:key,contentHash:hash.slice(0,32),jobId:'12345678-1234-1234-1234-123456789012',captureVersion:'6.2.20',pageDoi:doi,contentType:'image/svg+xml',byteLength:svg.length,width:800,height:400};
+class Bucket {
+ constructor(){this.map=new Map();this.events=[];this.rev=0;this.hook=null;}
+ seed(k,b){this.map.set(k,{bytes:Buffer.from(b),etag:'v'+(++this.rev)});}
+ async get(k){this.events.push(['get',k]);if(this.hook)await this.hook('get',k);const r=this.map.get(k);if(!r)return null;const b=Buffer.from(r.bytes);return {etag:r.etag,size:b.length,text:async()=>b.toString(),arrayBuffer:async()=>b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength)};}
+ async put(k,b,opt={}){
+  this.events.push(['put',k]);if(this.hook)await this.hook('put',k,opt);
+  const prev=this.map.get(k),condition=opt.onlyIf;
+  if(condition?.etagMatches&&prev?.etag!==condition.etagMatches)return null;
+  if(condition?.etagDoesNotMatch==='*'&&prev)return null;
+  if(opt.sha256)assert.equal(Buffer.from(opt.sha256).toString('hex'),sha(b));
+  this.seed(k,b);return {etag:this.map.get(k).etag};
+ }
+ async delete(){throw Error('Restaging must not delete any old media');}
+}
+let passed=0;
+async function test(name,f){await f();passed++;console.log('STAGE_STORAGE_PASS '+name);}
+const previous={...entry,updatedAt:1790130000000};
+const trusted=r=>r.doi===doi&&r.id===entry.id&&r.pageDoi===doi&&r.captureVersion==='6.2.20';
+async function run(b){let pauses=[];const result=await storeVerifiedStage(new Request('https://worker.test/api/article-figures/stage'),{MEDIA:b},entry,svg,hash,trusted,{sleep:async ms=>pauses.push(ms),now:()=>1790140000000});return {result,pauses};}
+const seeded=()=>{const b=new Bucket();b.seed(STAGE_INDEX_KEY,JSON.stringify({version:1,items:{old:{doi:'10.1021/jacs.known',r2Key:'old.png'}}}));return b;};
+await test('normal write needs confirmed image and conditional index',async()=>{const b=seeded();const {result}=await run(b);assert.equal(result.body.stored,true);assert.equal(result.body.published,false);assert.ok(JSON.parse(b.map.get(STAGE_INDEX_KEY).bytes).items.old);assert.equal(b.events.filter(x=>x[0]==='put').length,2);});
+await test('transient object 503 retried using exact same bytes',async()=>{const b=seeded();let once=true;b.hook=async(op,k)=>{if(op==='put'&&k===key&&once){once=false;throw Object.assign(Error('R2 temporarily unavailable (10043)'),{status:503});}};const {result,pauses}=await run(b);assert.equal(result.status,200);assert.deepEqual(pauses,[1100]);assert.equal(result.body.storageRetryCount,1);});
+await test('index 503 retains bytes and retries only index write',async()=>{const b=seeded();let once=true;b.hook=async(op,k)=>{if(op==='put'&&k===STAGE_INDEX_KEY&&once){once=false;throw Object.assign(Error('503'),{status:503});}};const {result}=await run(b);assert.equal(result.body.stored,true);assert.equal(b.events.filter(x=>x[0]==='put'&&x[1]===key).length,1);});
+await test('permanent index failure cannot claim staged success or delete old reference',async()=>{const b=seeded();b.hook=async(op,k)=>{if(op==='put'&&k===STAGE_INDEX_KEY)throw Object.assign(Error('503'),{status:503});};const {result,pauses}=await run(b);assert.equal(result.status,503);assert.equal(result.body.stored,false);assert.equal(result.body.objectStored,true);assert.equal(result.body.operation,'index_write');assert.equal(result.body.indexCommitted,false);assert.equal(pauses.length,3);assert.ok(b.map.has(key));assert.ok(JSON.parse(b.map.get(STAGE_INDEX_KEY).bytes).items.old);});
+await test('unconfirmed prior upload reused on next attempt without image download or rewrite',async()=>{const b=seeded();b.seed(key,svg);const {result}=await run(b);assert.equal(result.body.stored,true);assert.equal(b.events.filter(x=>x[0]==='put'&&x[1]===key).length,0);});
+await test('matching stored receipt is idempotent and checksum is actually checked',async()=>{const b=seeded();b.seed(key,svg);b.seed(STAGE_INDEX_KEY,JSON.stringify({items:{[doi+'|figure-1']:previous}}));const {result}=await run(b);assert.equal(result.body.reusedExistingObject,true);assert.equal(b.events.filter(x=>x[0]==='put').length,0);});
+await test('damaged stored bytes are not trusted or overwritten',async()=>{const b=seeded();b.seed(key,Buffer.alloc(svg.length));b.seed(STAGE_INDEX_KEY,JSON.stringify({items:{[doi+'|figure-1']:previous}}));const {result}=await run(b);assert.equal(result.body.stored,false);assert.match(result.body.code,/object_integrity_mismatch/);assert.equal(b.events.filter(x=>x[0]==='put').length,0);});
+await test('malformed index is fail-closed rather than replaced with an empty library',async()=>{const b=new Bucket();b.seed(STAGE_INDEX_KEY,'{broken');const {result}=await run(b);assert.equal(result.body.stored,false);assert.match(result.body.code,/index_invalid/);assert.equal(b.events.filter(x=>x[0]==='put').length,0);});
+await test('missing index etag is fail-closed',async()=>{const b=seeded();b.map.get(STAGE_INDEX_KEY).etag=null;const {result}=await run(b);assert.match(result.body.code,/index_etag_missing/);assert.equal(b.events.filter(x=>x[0]==='put').length,0);});
+await test('compare-and-swap conflict refetches another article instead of losing it',async()=>{const b=seeded();let once=true;b.hook=async(op,k)=>{if(op==='put'&&k===STAGE_INDEX_KEY&&once){once=false;const ix=JSON.parse(b.map.get(k).bytes);ix.items.concurrent={doi:'10.1021/jacs.concurrent'};b.seed(k,JSON.stringify(ix));}};const {result,pauses}=await run(b);assert.equal(result.status,200);assert.ok(JSON.parse(b.map.get(STAGE_INDEX_KEY).bytes).items.concurrent);assert.equal(pauses.length,1);});
+await test('upstream access error is not hammered with retries',async()=>{const b=seeded();b.hook=async(op,k)=>{if(op==='put'&&k===key)throw Object.assign(Error('denied'),{status:403});};const {result,pauses}=await run(b);assert.equal(result.body.retryable,false);assert.equal(result.body.upstreamStatus,403);assert.equal(pauses.length,0);});
+await test('R2 numeric throttling and service errors retain separate causes',async()=>{assert.equal(storageCause(Error('put: too many requests (10058)')).cause,'rate_limited');assert.equal(storageCause(Error('R2 (10043)')).cause,'service_unavailable');assert.equal(storageCause(Error('unknown')).retryable,false);});
+await test('quarantined higher-resolution record is not silently reused or refreshed',async()=>{const b=seeded();b.seed(STAGE_INDEX_KEY,JSON.stringify({items:{[doi+'|figure-1']:{...previous,width:1600,updatedAt:1790081999999,r2Key:'old.svg'}}}));b.seed('old.svg',svg);const {result}=await run(b);assert.equal(result.body.stored,true);assert.ok(!result.body.retainedHigherResolution);assert.ok(b.map.has('old.svg'));});
+console.log('STAGE_STORAGE_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherDownloads:0}));

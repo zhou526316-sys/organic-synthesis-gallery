@@ -8,7 +8,7 @@ def once(s, a, b):
 p = Path('public/toc-mainline.user.js')
 s = p.read_text()
 if 'BEGIN OSG_LIVE_PROGRESS_V1' in s:
-    assert "var CONTROLLER_REVISION = '2.2.22';" in s
+    assert any("var CONTROLLER_REVISION = '"+v+"';" in s for v in ('2.2.22','2.2.23'))
     print('TM222_ALREADY_APPLIED')
     raise SystemExit(0)
 assert "var CONTROLLER_REVISION = '2.2.21';" in s

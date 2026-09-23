@@ -1,3 +1,4 @@
+import { storeVerifiedStage } from './stage-storage.js';
 import { normalizeDoi } from './media.js';
 import { importFigure } from './media-write.js';
 
@@ -485,78 +486,15 @@ export async function importStagedArticleFigure(request, env, payload) {
   const hash = await sha256Hex(image.bytes);
   const doiHash = await sha256Hex(new TextEncoder().encode(doi));
   const contentHash = hash.slice(0, 32);
-  const identity = doi + '|' + sourceId;
-  const index = await readArticleFigureStageIndex(env);
-  const previous = index.items[identity];
-  const previousPixels = Math.max(0, Number(previous?.width || 0)) * Math.max(0, Number(previous?.height || 0));
-  const nextPixels = width * height;
-  if (previous && previous.captureVersion==='6.2.20' && previous.pageDoi===doi && Number(previous.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(previous, doi) && previousPixels > 0 && nextPixels > 0 && previousPixels > nextPixels) {
-    return {
-      status: 200,
-      body: {
-        stored: true,
-        staged: true,
-        retainedHigherResolution: true,
-        doi,
-        id: sourceId,
-        width: Number(previous.width || 0),
-        height: Number(previous.height || 0),
-        imageUrl: previous.r2Key ? publicMediaUrl(request, previous.r2Key) : undefined,
-      },
-    };
-  }
-
   const key = ARTICLE_FIGURE_STAGE_PREFIX + doiHash.slice(0, 24) + '/' +
     sourceId + '-' + hash.slice(0, 16) + '.' + extensionFor(image.contentType);
-  await env.MEDIA.put(key, image.bytes, {
-    httpMetadata: { contentType: image.contentType, cacheControl: 'public, max-age=31536000, immutable' },
-    customMetadata: { doi, sourceId, contentHash, source: 'tampermonkey-article-figure-stage' },
-  });
-  if (previous?.r2Key && previous.r2Key !== key) {
-    try { await env.MEDIA.delete(previous.r2Key); } catch {}
-  }
-
-  const now = Date.now();
-  index.items[identity] = {
-    doi,
-    jobId: payload.jobId,
-    captureVersion: payload.captureVersion,
-    pageDoi: payload.pageDoi,
-    mediaGeneration: MEDIA_REBUILD_EPOCH,
-    id: sourceId,
-    label,
-    caption,
-    articleUrl,
-    sourceUrl,
-    r2Key: key,
-    contentHash,
-    contentType: image.contentType,
-    byteLength: image.bytes.byteLength,
-    width,
-    height,
-    sortOrder,
-    updatedAt: now,
-  };
-  index.version = 1;
-  index.updatedAt = now;
-  await env.MEDIA.put(ARTICLE_FIGURE_STAGE_INDEX_KEY, JSON.stringify(index), {
-    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
-  });
-
-  return {
-    status: 200,
-    body: {
-      stored: true,
-      staged: true,
-      doi,
-      id: sourceId,
-      width,
-      height,
-      contentHash,
-      imageUrl: publicMediaUrl(request, key),
-      updatedAt: now,
-    },
-  };
+  const entry = {doi, id: sourceId, label, caption, articleUrl, sourceUrl, r2Key: key,
+    contentHash, contentType: image.contentType, byteLength: image.bytes.byteLength,
+    width, height, sortOrder, jobId: payload.jobId, captureVersion: payload.captureVersion,
+    pageDoi: payload.pageDoi, mediaGeneration: MEDIA_REBUILD_EPOCH};
+  return storeVerifiedStage(request, env, entry, image.bytes, hash, previous =>
+    previous.doi === doi && previous.id === sourceId && previous.captureVersion === '6.2.20' &&
+    previous.pageDoi === doi && captureBelongsToDoi(previous, doi));
 }
 
 export async function getStagedArticleFigures(request, env) {

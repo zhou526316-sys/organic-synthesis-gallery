@@ -16,6 +16,7 @@ let passed = 0;
 async function scenario(name, options = {}) {
   const requests = []; const trace = []; let guardCalls = 0;
   const ctx = vm.createContext({
+    sleep: async () => {},
     captureLiveUpdate: () => {}, // The observer has independent ownership/count/privacy tests.
     VERSION: '6.2.20', location: { href: 'https://pubs.acs.org/doi/' + doi },
     FIGURE_STAGE_ENDPOINT: '/api/article-figures/stage',
@@ -32,6 +33,8 @@ async function scenario(name, options = {}) {
       return options.receipt === undefined ? valid : options.receipt;
     }
   });
+  // Test the actual upload-only retry wrapper, not a replacement stub.
+  if (source.includes('BEGIN OSG_UPLOAD_EVIDENCE_V1')) vm.runInContext(source.slice(source.indexOf('  function retryableImageUpload('), source.indexOf('  // END OSG_UPLOAD_EVIDENCE_V1')), ctx);
   vm.runInContext(fn, ctx);
   const run = vm.runInContext('uploadArticleFigure', ctx);
   if (options.reject) {
