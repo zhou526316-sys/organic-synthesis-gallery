@@ -39,7 +39,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.26';
+  var CONTROLLER_REVISION = '2.2.27';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
@@ -2199,20 +2199,40 @@ function embeddedJobDois(value) {
     }
   }
 
+  function readCompletedPublisherResult(job) {
+    var result=GM_getValue(resultKey(job.doi),null);
+    if(result&&result.jobId===job.jobId&&result.version===VERSION&&result.finishedAt) return result;
+    var progress=GM_getValue(progressKey(job.doi),null);
+    var mirrored=progress&&progress.jobId===job.jobId&&progress.status==='finished'?progress.result:null;
+    if(mirrored&&mirrored.jobId===job.jobId&&mirrored.version===VERSION&&mirrored.finishedAt) return mirrored;
+    return null;
+  }
+
   async function waitForResult(job,tab) {
-    var started=Date.now();
-    while(Date.now()-started<8*60*1000) {
+    var started=Date.now(), timeoutMs=8*60*1000;
+    while(true) {
+      // Always consume a publisher completion before evaluating elapsed time. Browser
+      // background throttling may delay this controller timer well past timeout even
+      // though the publisher tab finished minutes earlier.
+      var completed=readCompletedPublisherResult(job);
+      if(completed) return completed;
+      if(Date.now()-started>=timeoutMs) {
+        completed=readCompletedPublisherResult(job);
+        if(completed) return completed;
+        return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
+      }
       if(!renewLease())throw new Error('controller_lease_lost');
       if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false) return {doi:job.doi,jobId:job.jobId,status:'aborted',reason:'user_aborted',finishedAt:nowIso()};
-      var result=GM_getValue(resultKey(job.doi),null);
-      if(result&&result.jobId===job.jobId&&result.version===VERSION&&result.finishedAt) return result;
       var hb=currentPublisherHeartbeat();
-      if(Date.now()-started>60000 && (!hb||hb.jobId!==job.jobId)) return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
+      if(Date.now()-started>60000 && (!hb||hb.jobId!==job.jobId)) {
+        completed=readCompletedPublisherResult(job);
+        if(completed) return completed;
+        return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
+      }
       var progress=GM_getValue(progressKey(job.doi),null);
       if(progress&&/auth_wait|challenge_wait/.test(progress.status))badge('等待出版社验证：'+job.doi,'#92400e');
       await sleep(1000);
     }
-    return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
   }
 
   function clearOwnedJob(job) {
@@ -2612,9 +2632,11 @@ function embeddedJobDois(value) {
     result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.finishedAt=nowIso();
     GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,status:result.status,trace:trace,finishedAt:result.finishedAt});
     enqueueCaptureReport(job,trace,result.status,result.reason,true);
-    // Durable local report is queued BEFORE the controller can close this publisher tab.
+    // Keep two independent local completion signals. The Gallery controller may be a
+    // throttled background tab; either result key can wake it without turning a
+    // completed publisher job into a later controller_timeout.
+    GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:'finished',at:result.finishedAt,result:result});
     GM_setValue(resultKey(job.doi),result);
-    GM_deleteValue(progressKey(job.doi));
     // The persistent Gallery sender sends/acknowledges the report independently of this tab.
     autoReportJob=null;
     return result;
