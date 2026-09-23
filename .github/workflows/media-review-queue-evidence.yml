@@ -1,7 +1,7 @@
 name: Read incremental media review evidence
 on:
   push:
-    branches: [main, 'media/body-batch-*']
+    branches: [main, 'media/body-batch-*', feat/media-batch20-paired-toc-body]
     paths: ['.github/workflows/media-review-queue-evidence.yml','audit/automation-triggers/media-review-queue-evidence.json','audit/media-review-read-request.json']
 permissions:
   contents: read
@@ -11,7 +11,7 @@ concurrency:
 jobs:
   read:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v5
@@ -36,8 +36,8 @@ jobs:
           corpus=json.loads(pathlib.Path(os.environ['RUNNER_TEMP'],'media-review-corpus.json').read_text())
           configPath=pathlib.Path('audit/media-review-read-request.json')
           config=json.loads(configPath.read_text()) if configPath.exists() else {}
-          articles=config.get('maxArticles',5);maxImages=config.get('maxImages',30);perArticle=config.get('maxImagesPerArticle',10)
-          assert isinstance(articles,int) and 1<=articles<=20 and isinstance(maxImages,int) and 1<=maxImages<=150 and isinstance(perArticle,int) and 1<=perArticle<=10
+          articles=config.get('maxArticles',20);maxImages=config.get('maxImages',150);perArticle=config.get('maxImagesPerArticle',10)
+          assert isinstance(articles,int) and 20<=articles<=20 and isinstance(maxImages,int) and articles<=maxImages<=150 and isinstance(perArticle,int) and 1<=perArticle<=10
           assert config.get('readOnly',True) is True
           state=json.loads(pathlib.Path('audit/literature-update-state.json').read_text())
           excluded=set(config.get('excludeDois',[]))|{x.get('doi') for x in state.get('pendingScopeReviewBacklog',[]) if isinstance(x,dict)}
@@ -77,12 +77,20 @@ jobs:
               try:date=datetime.date.fromisoformat(raw).toordinal()
               except ValueError:date=0
               return (-date,not d.startswith('10.1021/jacs.'),min(r.get('updatedAt',0) for r in groups[d]),d)
-          ordered=sorted(groups,key=rank);selected=[];take=[]
+          ordered=sorted(groups,key=rank);selected=[];take=[];parts={}
+          # First guarantee breadth: when twenty eligible DOI exist, reserve one image for each.
           for doi in ordered:
-              if len(selected)>=articles or len(take)>=maxImages:break
+              if len(selected)>=articles:break
               available=max(0,perArticle-len(media['items'].get(doi,{}).get('figures',{}).get('figures',[])))
-              part=sorted(groups[doi],key=lambda r:(r.get('sortOrder',0),r.get('id','')))[:min(available,maxImages-len(take))]
-              if part:selected.append(doi);take.extend(part)
+              part=sorted(groups[doi],key=lambda r:(r.get('sortOrder',0),r.get('id','')))[:available]
+              if not part:continue
+              selected.append(doi);parts[doi]=part;take.append(part[0])
+          # Then fill remaining per-article images without reducing article breadth.
+          for doi in selected:
+              for row in parts[doi][1:]:
+                  if len(take)>=maxImages:break
+                  take.append(row)
+              if len(take)>=maxImages:break
           evidence.update(boundRows=len(bound),unpublishedBoundRows=len(pending),unpublishedBoundDois=len(groups),selectedDois=selected,selectedPapers={d:corpus[d] for d in selected},heldDois=sorted(d for d in excluded if d))
           def image(pair):
               n,r=pair;item=clean(r);item['reviewId']='next-%03d'%n;item['approved']=False
