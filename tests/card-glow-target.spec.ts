@@ -11,7 +11,10 @@ for (const width of [390, 1280]) {
     const statusButton = actions.locator('[data-action="status"]');
     await actions.locator('[data-action="set-status:to-read"]').click();
     await statusButton.click();
-    const before = (await card.boundingBox())!;
+    // Compare DOMRect to DOMRect; mixing the protocol boundingBox with DOMRect
+    // produced 700.000061 versus 700 in the retained WebKit failure. A 0.001px
+    // ceiling still rejects even a 1/64 CSS-pixel layout change.
+    const before = await card.evaluate(node => node.getBoundingClientRect().toJSON());
     const originalButton = (await statusButton.boundingBox())!;
     await expect(actions.locator('[data-status-editor="to-read"] .status-glow-control > span:first-child')).toHaveText(/卡片光效|Card glow/);
     await expect(actions.locator('[data-status-editor="to-read"] .status-glow-width-control > label')).toHaveText(/卡片光效粗细|Card glow thickness/);
@@ -29,7 +32,8 @@ for (const width of [390, 1280]) {
       return { width: effect.borderTopWidth, inset: effect.inset, pointer: effect.pointerEvents, size: node.getBoundingClientRect().toJSON() };
     });
     expect(edge.width).toBe('6px'); expect(edge.inset).toBe('0px'); expect(edge.pointer).toBe('none');
-    expect(edge.size.width).toBe(before.width); expect(edge.size.height).toBe(before.height);
+    expect(Math.abs(edge.size.width - before.width)).toBeLessThan(0.001);
+    expect(Math.abs(edge.size.height - before.height)).toBeLessThan(0.001);
     const afterButton = (await statusButton.boundingBox())!;
     expect(afterButton.width).toBe(originalButton.width); expect(afterButton.height).toBe(originalButton.height);
     await expect(actions.locator('[data-status-glow],[data-card-glow]')).toHaveCount(0);
