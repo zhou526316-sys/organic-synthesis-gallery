@@ -1,0 +1,84 @@
+name: Body review markers workbench
+on:
+  push:
+    branches: [feat/body-review-markers-batch2]
+    paths: ['.github/workflows/body-review-markers-workbench.yml','cloudflare/worker/src/body-review-marker.js','scripts/apply-body-review-batch2.py','scripts/test-body-review-markers.mjs','cloudflare/scripts/merge-reviewed-body-releases.mjs']
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: body-review-markers-workbench
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/body-review-markers-batch2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply reviewed evidence stamps and frozen media subset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/apply-body-review-batch2.py
+      - name: Check server evidence and preserve storage behavior
+        run: |
+          node --check cloudflare/worker/src/stage-storage.js
+          node --check cloudflare/worker/src/index.js
+          node --check cloudflare/scripts/merge-reviewed-body.mjs
+          node --check cloudflare/scripts/merge-reviewed-body-releases.mjs
+          node scripts/test-body-review-markers.mjs
+          node scripts/test-stage-storage.mjs
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-reviewed-body.mjs
+          git diff --check
+      - name: Verify both old recoveries and the incremental release together
+        run: |
+          printf '{"version":2,"items":{}}' > public/media-index.json
+          node cloudflare/scripts/merge-reviewed-toc.mjs
+          node cloudflare/scripts/merge-sealed-media-batch2.mjs
+          node cloudflare/scripts/merge-reviewed-body.mjs
+          node cloudflare/scripts/merge-reviewed-body-releases.mjs
+          node cloudflare/scripts/verify-static-media-integrity.mjs
+          node --input-type=module - <<'JS'
+          import assert from 'node:assert/strict';
+          import {readFile,writeFile} from 'node:fs/promises';
+          import {mergeReviewedBodyReleases} from './cloudflare/scripts/merge-reviewed-body-releases.mjs';
+          const before=JSON.parse(await readFile('public/media-index.json'));
+          const body=JSON.parse(await readFile('public/body-publication-batch2-status.json'));
+          assert.equal(body.added.length,31);assert.equal(body.perDoi.length,6);assert.equal(body.retainedBatch1,83);assert.equal(body.retainedBatch2Official,18);
+          const second=await mergeReviewedBodyReleases();assert.equal(second.batches[0].added.length,0);assert.equal(second.batches[0].retainedExisting.length,31);
+          assert.deepEqual(JSON.parse(await readFile('public/media-index.json')).items,before.items);
+          assert.equal(second.ledger.count,63);
+          const path='audit/media-recovery/body-releases.json',original=await readFile(path,'utf8');
+          const corrupted=JSON.parse(original);corrupted.releases[0].manifestSha256='0'.repeat(64);await writeFile(path,JSON.stringify(corrupted));
+          const old=await readFile('public/media-index.json','utf8');await assert.rejects(()=>mergeReviewedBodyReleases(),/manifest_hash/);assert.equal(await readFile('public/media-index.json','utf8'),old);await writeFile(path,original);
+          await writeFile(process.env.RUNNER_TEMP+'/body-marker-dry-run.json',JSON.stringify({added:body.added.length,perDoi:body.perDoi,retainedBatch1:body.retainedBatch1,retainedBatch2Official:body.retainedBatch2Official,ledgerCount:second.ledger.count,registryChecksPassed:3}));
+          console.log('BODY_INCREMENTAL_TESTS passed=3');
+          JS
+          git diff --exit-code -- public/toc-mainline.user.js public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json src
+      - name: Persist tested sources only on feature branch
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/feat/body-review-markers-batch2
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit/media-recovery/body-batch2 audit/media-recovery/body-releases.json cloudflare/worker/src/stage-storage.js cloudflare/worker/src/index.js cloudflare/scripts/merge-reviewed-body.mjs cloudflare/scripts/merge-curated-pages.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m 'media: stamp stored body evidence and integrate registered reviewed releases'
+            git push origin HEAD:feat/body-review-markers-batch2
+          fi
+          git rev-parse HEAD > "$RUNNER_TEMP/body-marker-tested-head.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: body-review-markers-tested
+          path: |
+            ${{ runner.temp }}/body-marker-dry-run.json
+            ${{ runner.temp }}/body-marker-tested-head.txt
+          retention-days: 7
+          if-no-files-found: warn
