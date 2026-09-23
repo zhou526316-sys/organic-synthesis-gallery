@@ -52,6 +52,9 @@ jobs:
           grep -F "wechat-copy" dist/assets/card-share-*.js
           grep -F "navigator.share" dist/assets/card-share-*.js
           grep -F "System share is unavailable; the card link was copied instead." dist/assets/card-share-*.js
+          grep -F "jweixin-1.6.0.js" dist/assets/card-share-*.js
+          grep -F "updateAppMessageShareData" dist/assets/card-share-*.js
+          grep -F "/api/wechat/js-sdk-signature" dist/assets/card-share-*.js
 
       - name: Verify 20-second halo contract
         run: |

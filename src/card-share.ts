@@ -6,6 +6,7 @@ interface ShareInfo {
   journal: string;
   date: string;
   url: string;
+  imageUrl?: string;
 }
 
 let activePanel: HTMLElement | null = null;
@@ -46,6 +47,128 @@ function shareUrl(doi: string): string {
   return `${RICH_SHARE_ORIGIN}/share/${shareSlug(doi)}.html`;
 }
 
+type WeChatSdk = {
+  config: (config: Record<string, unknown>) => void;
+  ready: (callback: () => void) => void;
+  error: (callback: (error: unknown) => void) => void;
+  updateAppMessageShareData?: (data: Record<string, unknown>) => void;
+  updateTimelineShareData?: (data: Record<string, unknown>) => void;
+};
+
+let weChatSdkPromise: Promise<WeChatSdk> | null = null;
+let weChatReadyPromise: Promise<WeChatSdk> | null = null;
+let weChatSignedUrl = '';
+
+function isWeChatBrowser(): boolean {
+  return /MicroMessenger/i.test(navigator.userAgent);
+}
+
+function isWeChatJsSdkHost(): boolean {
+  return window.location.protocol === 'https:' && window.location.hostname.toLowerCase() === 'api.gczhouwld.com';
+}
+
+function currentWeChatSignedUrl(): string {
+  return window.location.href.split('#')[0];
+}
+
+function loadWeChatSdk(): Promise<WeChatSdk> {
+  const existing = (window as Window & { wx?: WeChatSdk }).wx;
+  if (existing) return Promise.resolve(existing);
+  if (weChatSdkPromise) return weChatSdkPromise;
+  weChatSdkPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js';
+    script.async = true;
+    script.onload = () => {
+      const wx = (window as Window & { wx?: WeChatSdk }).wx;
+      if (wx) resolve(wx);
+      else reject(new Error('wechat_sdk_missing_after_load'));
+    };
+    script.onerror = () => reject(new Error('wechat_sdk_load_failed'));
+    document.head.appendChild(script);
+  });
+  return weChatSdkPromise;
+}
+
+async function ensureWeChatReady(): Promise<WeChatSdk> {
+  if (!isWeChatBrowser()) throw new Error('not_wechat_browser');
+  if (!isWeChatJsSdkHost()) throw new Error('wechat_js_sdk_host_not_configured');
+  const signedUrl = currentWeChatSignedUrl();
+  if (weChatReadyPromise && weChatSignedUrl === signedUrl) return weChatReadyPromise;
+  weChatSignedUrl = signedUrl;
+  weChatReadyPromise = (async () => {
+    const [wx, response] = await Promise.all([
+      loadWeChatSdk(),
+      fetch(`${RICH_SHARE_ORIGIN}/api/wechat/js-sdk-signature?url=${encodeURIComponent(signedUrl)}`, {
+        headers: { accept: 'application/json' },
+        cache: 'no-store',
+      }),
+    ]);
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || body?.ok !== true) {
+      const error = new Error(String(body?.error || 'wechat_signature_failed'));
+      (error as Error & { details?: unknown }).details = body;
+      throw error;
+    }
+    return await new Promise<WeChatSdk>((resolve, reject) => {
+      let settled = false;
+      const timeout = window.setTimeout(() => {
+        if (!settled) { settled = true; reject(new Error('wechat_config_timeout')); }
+      }, 12000);
+      wx.ready(() => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeout);
+        resolve(wx);
+      });
+      wx.error(error => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeout);
+        reject(error instanceof Error ? error : new Error('wechat_config_error'));
+      });
+      wx.config({
+        debug: false,
+        appId: body.appId,
+        timestamp: body.timestamp,
+        nonceStr: body.nonceStr,
+        signature: body.signature,
+        jsApiList: body.jsApiList || ['updateAppMessageShareData', 'updateTimelineShareData'],
+      });
+    });
+  })();
+  try { return await weChatReadyPromise; }
+  catch (error) { weChatReadyPromise = null; throw error; }
+}
+
+async function shareImageUrl(info: ShareInfo): Promise<string> {
+  if (info.imageUrl && !info.imageUrl.includes('share-default.png')) return info.imageUrl;
+  try {
+    const response = await fetch(info.url, { cache: 'no-store' });
+    if (response.ok) {
+      const html = await response.text();
+      const parsed = new DOMParser().parseFromString(html, 'text/html');
+      const image = parsed.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.content;
+      if (image) return new URL(image, info.url).toString();
+    }
+  } catch {}
+  return `${RICH_SHARE_ORIGIN}/share-default.png`;
+}
+
+async function configureWeChatShare(info: ShareInfo): Promise<void> {
+  const wx = await ensureWeChatReady();
+  const imgUrl = await shareImageUrl(info);
+  const desc = [info.journal, info.date, `DOI: ${info.doi}`].filter(Boolean).join(' · ');
+  if (typeof wx.updateAppMessageShareData !== 'function') throw new Error('wechat_friend_share_api_missing');
+  if (typeof wx.updateTimelineShareData !== 'function') throw new Error('wechat_timeline_share_api_missing');
+  wx.updateAppMessageShareData({ title: info.title, desc, link: info.url, imgUrl });
+  wx.updateTimelineShareData({
+    title: [info.title, info.journal].filter(Boolean).join(' · '),
+    link: info.url,
+    imgUrl,
+  });
+}
+
 function infoFromButton(button: HTMLElement): ShareInfo | null {
   const card = button.closest<HTMLElement>('.card');
   if (!card) return null;
@@ -57,6 +180,7 @@ function infoFromButton(button: HTMLElement): ShareInfo | null {
     journal: card.dataset.journal || '',
     date: card.dataset.date || '',
     url: shareUrl(doi),
+    imageUrl: card.querySelector<HTMLImageElement>('.toc-image')?.src || `${RICH_SHARE_ORIGIN}/share-default.png`,
   };
 }
 
@@ -202,11 +326,26 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
     if (!action) return;
     void (async () => {
       if (action === 'wechat-copy') {
-        try {
-          await copyText(info.url);
-          showToast(tr('微信卡片链接已复制，请到微信聊天框粘贴发送', 'WeChat card link copied. Paste it into a WeChat chat.'));
-        } catch {
-          showToast(tr('复制失败，请使用“复制卡片链接”。', 'Copy failed. Use “Copy card link”.'));
+        if (isWeChatBrowser() && isWeChatJsSdkHost()) {
+          try {
+            await configureWeChatShare(info);
+            showToast(tr('微信卡片已准备好，请点右上角“…”→“分享给朋友”', 'WeChat card is ready. Use the top-right menu → Share with friends.'));
+          } catch (error) {
+            console.warn('WECHAT_SHARE_CONFIG_FAILED', error);
+            try {
+              await copyText(info.url);
+              showToast(tr('微信接口暂未就绪，已复制卡片链接，可直接粘贴发送', 'WeChat API is not ready; the rich-card link was copied instead.'));
+            } catch {
+              showToast(tr('微信分享配置失败，请使用二维码。', 'WeChat share setup failed. Use the QR code.'));
+            }
+          }
+        } else {
+          try {
+            await copyText(info.url);
+            showToast(tr('微信卡片链接已复制；到微信聊天框粘贴发送，或在微信内打开网页后用右上角分享', 'WeChat card link copied. Paste it into a WeChat chat, or open the page in WeChat and use the top-right share menu.'));
+          } catch {
+            showToast(tr('复制失败，请使用“复制卡片链接”。', 'Copy failed. Use “Copy card link”.'));
+          }
         }
         return;
       }
@@ -301,6 +440,11 @@ function focusDeepLinkCard(): void {
     const title = card.querySelector<HTMLElement>('.title')?.textContent?.trim();
     if (title) document.title = `${title} | Organic Synthesis Gallery`;
     requestAnimationFrame(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    if (isWeChatBrowser() && isWeChatJsSdkHost()) {
+      const shareButton = card.querySelector<HTMLElement>('[data-card-share]');
+      const info = shareButton ? infoFromButton(shareButton) : null;
+      if (info) void configureWeChatShare(info).catch(error => console.warn('WECHAT_AUTO_SHARE_CONFIG_FAILED', error));
+    }
   }
 
   if (highlightUntil > Date.now()) {
