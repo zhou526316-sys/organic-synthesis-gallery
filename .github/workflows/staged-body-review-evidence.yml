@@ -1,0 +1,85 @@
+name: Read staged body review evidence
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/staged-body-review-evidence.yml','audit/automation-triggers/staged-body-review.json']
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read exact staged objects, public manifest and latest diagnostics
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures,datetime,hashlib,json,os,pathlib,re,urllib.parse,urllib.request,zipfile
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'body-review';(out/'images').mkdir(parents=True)
+          base='https://api.cloudflare.com/client/v4/accounts/'+os.environ['CLOUDFLARE_ACCOUNT_ID']+'/r2/buckets/organic-synthesis-gallery-media/objects/'
+          selected={'10.1021/acs.joc.6c01302','10.1038/s41557-026-02258-8','10.1038/s44160-026-01155-9','10.1021/jacs.6c14159','10.1021/acs.orglett.6c03418'}
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*a,**k):return None
+          def get(key):
+              assert key.startswith(('local-captures/article-figures/','local-captures/tampermonkey/')) and '..' not in key and '?' not in key
+              req=urllib.request.Request(base+urllib.parse.quote(key,safe='/'),headers={'Authorization':'Bearer '+os.environ['CLOUDFLARE_API_TOKEN']})
+              with urllib.request.build_opener(NoRedirect()).open(req,timeout=20) as res:raw=res.read(8000001)
+              assert len(raw)<=8000000
+              return raw
+          def clean(v):
+              if isinstance(v,dict):return {k:clean(x) for k,x in v.items() if not re.search(r'token|secret|password|cookie|authorization|imageData|html',k,re.I)}
+              if isinstance(v,list):return [clean(x) for x in v]
+              if not isinstance(v,str):return v
+              def u(m):
+                  a=urllib.parse.urlsplit(m.group());return urllib.parse.urlunsplit((a.scheme,a.hostname or '',a.path,'',''))
+              return re.sub(r'(?i)Bearer\s+\S+|(?:token|secret|password|cookie|authorization|signature)\s*[:=]\s*[^\s;,]+','[redacted]',re.sub(r'https?://[^\s\"\'<>]+',u,v))
+          def rows(index):
+              a=index['items'];return list(a.values()) if isinstance(a,dict) else a
+          evidence={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'baseSha':os.environ['GITHUB_SHA'],'readOnly':True,'mediaWrites':0,'atomicSnapshot':False,'errors':[],'images':[],'reports':[]}
+          stage_raw=get('local-captures/article-figures/stage-index.json');stage=json.loads(stage_raw);sr=rows(stage)
+          evidence['stageIndexSha256']=hashlib.sha256(stage_raw).hexdigest();evidence['stageRows']=len(sr);evidence['postCutoverRows']=sum(r.get('updatedAt',0)>=1790082000000 for r in sr)
+          (out/'stage-index.json').write_text(json.dumps(clean(stage),ensure_ascii=False))
+          take=sorted([r for r in sr if r.get('doi') in selected and r.get('updatedAt',0)>=1790082000000],key=lambda r:(r['doi'],r.get('sortOrder',0),r.get('id','')))
+          assert 0<len(take)<=60
+          def read_image(pair):
+              n,r=pair;item=clean(r);item['reviewId']='body-%03d'%n
+              try:
+                  assert r.get('captureVersion')=='6.2.20' and r.get('pageDoi')==r['doi'] and re.fullmatch(r'[a-zA-Z0-9-]{16,80}',r.get('jobId',''))
+                  raw=get(r['r2Key']);digest=hashlib.sha256(raw).hexdigest();assert digest.startswith(r['contentHash'])
+                  ext=pathlib.PurePosixPath(r['r2Key']).suffix;assert ext in ('.svg','.png','.jpg','.jpeg','.webp','.gif')
+                  file='images/'+item['reviewId']+ext;(out/file).write_bytes(raw)
+                  item.update(file=file,sha256=digest,actualBytes=len(raw),hashVerified=True)
+              except Exception as e:item.update(error=type(e).__name__,httpStatus=getattr(e,'code',None))
+              return item
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:evidence['images']=list(pool.map(read_image,enumerate(take,1)))
+          ix=json.loads(get('local-captures/tampermonkey/report-index.json'));rr=rows(ix);evidence['reportDois']=len(rr);evidence['automaticDois']=sum(str(r.get('candidateSource','')).startswith('auto_') for r in rr)
+          details=sorted(rr,key=lambda r:r.get('updatedAt',0),reverse=True)[:8]
+          details+=[r for r in rr if r.get('doi') in selected and r not in details]
+          for r in details:
+              a=(r.get('attempts') or [r])[0]
+              try:evidence['reports'].append(clean(json.loads(get(a['reportKey']))))
+              except Exception as e:evidence['errors'].append({'doi':r.get('doi'),'kind':'report','error':type(e).__name__})
+          for name,url in [('public-media-index','https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json'),('capabilities','https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/capture-capabilities')]:
+              try:
+                  with urllib.request.urlopen(url+'?body_review='+str(int(datetime.datetime.now().timestamp())),timeout=20) as res:data=res.read(8000001)
+                  assert len(data)<=8000000
+                  (out/(name+'.json')).write_bytes(data)
+              except Exception as e:evidence['errors'].append({'kind':name,'error':type(e).__name__})
+          with zipfile.ZipFile(out/'publication-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              names=['public/papers.gz.b64','public/total-synthesis.json','public/manual-supplement.json','public/final-audit-supplement.json','public/curated-supplement.json','public/automation-supplement.json','public/rolling-supplement.json','src/main.ts','src/style.css']
+              names+=['cloudflare/scripts/'+n for n in ['merge-reviewed-toc.mjs','merge-curated-pages.mjs','merge-sealed-media-batch2.mjs','verify-static-media-integrity.mjs','sanitize-static-media.mjs']]
+              for name in names:
+                  if pathlib.Path(name).exists():z.write(name,name)
+          evidence['readCompletedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat();(out/'evidence.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2))
+          print('BODY_REVIEW_READ '+json.dumps({k:v for k,v in evidence.items() if k not in ('images','reports')},ensure_ascii=False));print('BODY_REVIEW_FILES '+json.dumps({'selected':len(take),'verified':sum(r.get('hashVerified',False) for r in evidence['images'])}))
+          if evidence['errors'] or any('error' in r for r in evidence['images']):raise SystemExit('Read incomplete; do not auto-publish')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: staged-body-review-evidence
+          path: ${{ runner.temp }}/body-review/*
+          retention-days: 7
