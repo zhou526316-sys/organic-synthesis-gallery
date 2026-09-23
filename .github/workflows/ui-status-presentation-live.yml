@@ -34,28 +34,49 @@ jobs:
         run: |
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/glow-live-browser.log 2>&1 || { tail -60 /tmp/glow-live-browser.log; exit 1; }
-      - name: Wait for actual deployed presentation asset, not just a successful build
+      - name: Verify actual rendered controls after dynamic module loading
         run: |
           mkdir -p live-presentation-results
           node --input-type=module <<'NODE'
+          import { webkit, expect } from '@playwright/test';
           import { writeFile } from 'node:fs/promises';
           const site = process.env.LIVE_SITE_URL;
-          const evidence = { site, reviewedCommit: 'f5446507a49ac612dbf53aaa069d1a8343c1e01d', attempts: [], productionWritesAllowed: false, apiMocked: true, fallbackPagesChecked: false };
-          for (let attempt = 0; attempt < 18; attempt++) {
-            try {
-              const response = await fetch(site, { headers: { 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(10000) });
-              const html = await response.text();
-              const script = [...html.matchAll(/src=["']([^"']+)["']/g)].map(match => match[1]).find(value => value.includes('/assets/index-') && value.endsWith('.js'));
-              const asset = script ? new URL(script, site).href : '';
-              const body = asset ? await (await fetch(asset, { signal: AbortSignal.timeout(10000) })).text() : '';
-              const ready = response.ok && body.includes('status-glow-control') && body.includes('status-action-label');
-              evidence.attempts.push({ checkedAt: new Date().toISOString(), status: response.status, asset, ready });
-              if (ready) { evidence.ready = true; break; }
-            } catch (error) { evidence.attempts.push({ checkedAt: new Date().toISOString(), error: String(error) }); }
-            await new Promise(resolve => setTimeout(resolve, 10000));
+          const evidence = { site, checkedAt: new Date().toISOString(), reviewedCommit: 'f5446507a49ac612dbf53aaa069d1a8343c1e01d', scripts: [], pageErrors: [], productionWritesAllowed: false, apiMocked: true, fallbackPagesChecked: false };
+          const browser = await webkit.launch();
+          const context = await browser.newContext({ viewport: { width: 390, height: 900 }, serviceWorkers: 'block' });
+          const page = await context.newPage();
+          page.on('response', response => { if (new URL(response.url()).pathname.endsWith('.js')) evidence.scripts.push({ url: response.url(), status: response.status() }); });
+          page.on('pageerror', error => evidence.pageErrors.push(error.message));
+          await context.route('**/*', async route => {
+            const request = route.request(); const path = new URL(request.url()).pathname;
+            const headers = { 'access-control-allow-origin': request.headers().origin || new URL(site).origin, 'access-control-allow-credentials': 'true', 'access-control-allow-methods': 'GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE', 'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization', 'vary': 'Origin' };
+            if (request.method() === 'OPTIONS') { await route.fulfill({ status: 204, headers }); return; }
+            const api = path === '/api' || path.startsWith('/api/');
+            if (['GET', 'HEAD'].includes(request.method()) && !api) { await route.continue(); return; }
+            const body = path.endsWith('/reader-counts') ? { counts: {}, count: 0 } : path.endsWith('/integrations') ? { auth: {}, payments: {} } : { items: [] };
+            await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify(body) });
+          });
+          try {
+            const response = await page.goto(site, { waitUntil: 'domcontentloaded', timeout: 45000 });
+            evidence.httpStatus = response?.status();
+            if (!response?.ok()) throw new Error(`Entry HTTP ${response?.status()}`);
+            // index is now bootstrap only. Inspect the real initialized component,
+            // not a string search limited to the first JavaScript file.
+            const actions = page.locator('gallery-paper-actions').first();
+            await expect(actions).toBeVisible({ timeout: 45000 });
+            await expect(actions.locator('[data-action="status"]')).toHaveAttribute('data-status-glow', 'none');
+            await actions.locator('[data-action="status"]').click();
+            await expect(actions.locator('[data-status-glow-choice="to-read"] option')).toHaveCount(5);
+            evidence.optionValues = await actions.locator('[data-status-glow-choice="to-read"] option').evaluateAll(nodes => nodes.map(node => node.value));
+            expect(evidence.optionValues).toEqual(['none', 'soft', 'pulse', 'orbit', 'rainbow']);
+            expect(evidence.pageErrors).toEqual([]);
+            evidence.ready = true;
+          } catch (error) { evidence.ready = false; evidence.error = String(error?.stack || error); }
+          finally {
+            await writeFile('live-presentation-results/readiness.json', JSON.stringify(evidence, null, 2));
+            console.log(JSON.stringify(evidence));
+            await context.close(); await browser.close();
           }
-          await writeFile('live-presentation-results/readiness.json', JSON.stringify(evidence, null, 2));
-          console.log(JSON.stringify(evidence));
           if (!evidence.ready) process.exitCode = 1;
           NODE
       - name: Adapt test transport only and preserve all acceptance assertions
