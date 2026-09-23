@@ -12,8 +12,13 @@ export function figureId(value){
  return m?`${/^fig/i.test(m[1])?'figure':m[1].toLowerCase()}-${Number(m[2])}`:'';
 }
 export function verifyReviewedBody(item,bytes){
+ demand(item.approved===true,'body_approval_required');
+ return verifyBodyFile(item,bytes);
+}
+// File/identity checks are reusable; this function does NOT grant human review approval.
+export function verifyBodyFile(item,bytes){
  const doi=normalizeDoi(item.doi);
- demand(doi&&item.approved===true&&item.role==='article_figure','body_approval_required');
+ demand(doi&&item.role==='article_figure','body_approval_required');
  demand(item.id===figureId(item.label)&&item.id===figureId(item.id),'body_label_identity_mismatch');
  demand(item.captureVersion==='6.2.20'&&item.pageDoi===doi&&/^[a-z0-9-]{16,80}$/i.test(item.jobId||''),'bound_capture_required');
  demand(item.mediaGeneration===CUTOVER&&item.originalUpdatedAt>=CUTOVER,'wrong_media_generation');

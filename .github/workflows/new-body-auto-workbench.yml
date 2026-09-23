@@ -1,0 +1,93 @@
+name: New body automatic validation workbench
+on:
+  push:
+    branches: [feat/new-body-validated-autopublish]
+    paths:
+      - '.github/workflows/new-body-auto-workbench.yml'
+      - 'cloudflare/scripts/new-body-auto-validation.mjs'
+      - 'cloudflare/scripts/merge-new-body-auto.mjs'
+      - 'scripts/apply-new-body-auto-integration.py'
+      - 'scripts/test-new-body-auto.mjs'
+      - 'audit/media-auto-policy.json'
+permissions:
+  contents: write
+  actions: read
+defaults:
+  run:
+    shell: bash
+concurrency:
+  group: new-body-auto-workbench
+  cancel-in-progress: false
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/new-body-validated-autopublish
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply feature integration without any production write
+        run: python3 scripts/apply-new-body-auto-integration.py
+      - name: Extract only the frozen current-image test fixture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,io,json,os,pathlib,re,urllib.parse,urllib.request,zipfile
+          class BoundRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,req,fp,code,msg,headers,newurl):
+                  result=super().redirect_request(req,fp,code,msg,headers,newurl)
+                  if result is not None and urllib.parse.urlsplit(req.full_url).netloc!=urllib.parse.urlsplit(newurl).netloc:result.remove_header('Authorization')
+                  return result
+          req=urllib.request.Request('https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/artifacts/10737978319/zip',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+          with urllib.request.build_opener(BoundRedirect()).open(req,timeout=40) as r:raw=r.read(32000001)
+          assert len(raw)<=32000000 and hashlib.sha256(raw).hexdigest()=='d2ca8159ecdabb4ee21aa389f92f621de0c962eec657ba9514e31f584ded782c'
+          z=zipfile.ZipFile(io.BytesIO(raw));ev=json.loads(z.read('evidence.json'));assert not ev['errors']
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'auto-fixture';(out/'images').mkdir(parents=True)
+          (out/'evidence.json').write_text(json.dumps(ev))
+          for row in ev['images']:
+              if row.get('reviewMarker',{}).get('revision')!='1':continue
+              assert re.fullmatch(r'images/next-\d{3}\.(svg|png|webp)',row['file'])
+              b=z.read(row['file']);assert hashlib.sha256(b).hexdigest()==row['sha256'];(out/row['file']).write_bytes(b)
+          PY
+      - name: Install isolated decoder and run regression challenges
+        env:
+          BODY_AUTO_FIXTURE: ${{ runner.temp }}/auto-fixture
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node --check cloudflare/scripts/new-body-auto-validation.mjs
+          node --check cloudflare/scripts/merge-new-body-auto.mjs
+          node scripts/test-new-body-auto.mjs 2>&1 | tee "$RUNNER_TEMP/new-body-auto-tests.log"
+          grep -F 'NEW_BODY_AUTO_TESTS ' "$RUNNER_TEMP/new-body-auto-tests.log"
+          node scripts/test-reviewed-body.mjs
+          node scripts/test-body-review-markers.mjs
+          git diff --check
+          git diff --exit-code -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json public/toc-mainline.user.js src cloudflare/worker
+      - name: Preserve tested non-workflow integration on feature branch only
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/feat/new-body-validated-autopublish
+          cp .github/workflows/github-pages.yml "$RUNNER_TEMP/github-pages-patched.yml"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add cloudflare/scripts/merge-reviewed-body.mjs cloudflare/scripts/new-body-auto-validation.mjs cloudflare/scripts/merge-new-body-auto.mjs docs/body-media-publication.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'media: preserve tested independent new-body validation integration'
+            git push origin HEAD:feat/new-body-validated-autopublish
+          fi
+          git rev-parse HEAD > "$RUNNER_TEMP/new-body-auto-tested-head.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: new-body-auto-workbench
+          path: |
+            ${{ runner.temp }}/new-body-auto-tests.log
+            ${{ runner.temp }}/github-pages-patched.yml
+            ${{ runner.temp }}/new-body-auto-tested-head.txt
+          retention-days: 14
+          if-no-files-found: warn

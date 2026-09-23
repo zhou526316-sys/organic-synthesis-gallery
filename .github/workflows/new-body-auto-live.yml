@@ -1,0 +1,36 @@
+name: Verify new body automatic publication live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend', 'Publish validated new body figures']
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/new-body-auto-live.json']
+permissions:
+  contents: read
+concurrency:
+  group: new-body-auto-live
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install read-only browser verifier
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Verify deployed byte identities and exact card labels and URLs
+        run: node scripts/verify-new-body-auto-live.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: new-body-auto-live
+          path: ${{ runner.temp }}/new-body-auto-live/*
+          retention-days: 14
+          if-no-files-found: warn
