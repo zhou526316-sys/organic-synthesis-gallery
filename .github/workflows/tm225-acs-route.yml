@@ -1,0 +1,82 @@
+name: Bridge 2.2.25 ACS canonical route regression
+
+on:
+  push:
+    branches: [fix/tm225-acs-modern-route]
+    paths:
+      - '.github/workflows/tm225-acs-route.yml'
+      - '.github/workflows/tm224-live-acceptance.yml'
+      - '.github/workflows/tm222-live-acceptance.yml'
+      - 'public/toc-mainline.user.js'
+      - 'cloudflare/scripts/build-bridge-loader.mjs'
+      - 'scripts/validate-tm220-artifacts.mjs'
+      - 'scripts/test-tm221-window-guard.mjs'
+      - 'scripts/patch-tm221-window-guard.py'
+      - 'scripts/apply-tm222-live-progress.py'
+      - 'scripts/apply-tm223-upload.py'
+      - 'scripts/apply-tm224-acquisition.py'
+      - 'scripts/test-tm224-acquisition.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Validate source and retained safety contracts
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          python3 scripts/apply-tm222-live-progress.py
+          python3 scripts/apply-tm223-upload.py
+          python3 scripts/apply-tm224-acquisition.py
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-tm221-window-guard.mjs
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
+
+      - name: Run Chromium ACS acquisition and route regression
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node scripts/test-tm224-acquisition.mjs | tee "$RUNNER_TEMP/tm225-acquisition.log"
+          grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm225-acquisition.log"
+          node scripts/test-tm-paired-capture.mjs
+          node scripts/test-tm222-live-progress.mjs
+
+      - name: Build exact Bridge 2.2.25 installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.25' public/gallery-vpn-bridge.user.js
+          grep -F "var VERSION = '6.2.20';" public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.25';" public/gallery-vpn-bridge.user.js
+          grep -F "if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + doi;" public/gallery-vpn-bridge.user.js
+          grep -F 'sameFigureCurrentSrcFallback' public/gallery-vpn-bridge.user.js
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm225-acs-route-tested
+          path: |
+            public/gallery-vpn-bridge.user.js
+            public/toc-mainline.user.js
+            ${{ runner.temp }}/tm225-acquisition.log
+          retention-days: 7
+          if-no-files-found: warn
