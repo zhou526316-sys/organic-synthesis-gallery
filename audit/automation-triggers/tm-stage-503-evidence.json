@@ -1,1 +1,8 @@
-{"requestedAt":"2026-09-23T06:02:05Z","context":"Continue after body-gallery batch one is live. Read current automatic reports, upload response identities and stage coverage before fixing remaining 2.2.23 upload failures. Do not recapture, reset, promote or delete media; preserve current production literature and UI.","readOnly":true,"mediaWrites":0}
+{
+  "requestedAt": "2026-09-23T12:17:00Z",
+  "context": "Read the latest actual Tampermonkey reports after Bridge 2.2.24 production rollout. Distinguish acquisition-format fallback, page discovery, controller, upload HTTP/transport, object/index write, and successful staged receipts. Specifically inspect whether ACS TIFF/octet-stream candidates now reach same-figure fallback. Read only; no recapture, promotion, reset, delete, publisher access, literature or UI changes.",
+  "bridgeVersion": "2.2.24",
+  "captureProtocol": "6.2.20",
+  "readOnly": true,
+  "mediaWrites": 0
+}
