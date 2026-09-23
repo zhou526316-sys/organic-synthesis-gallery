@@ -12,11 +12,12 @@ test('revision changes without capture protocol migration',()=>{
 
 test('publisher deadline remains below controller wait budget',()=>{
   const pub=/job\.captureDeadline=Date\.now\(\)\+(\d+)\*60\*1000/.exec(source);
-  const controller=/while\(Date\.now\(\)-started<(\d+)\*60\*1000\)/.exec(source);
+  const controller=/timeoutMs=(\d+)\*60\*1000/.exec(source) || /while\(Date\.now\(\)-started<(\d+)\*60\*1000\)/.exec(source);
   assert.ok(pub&&controller);
   assert.equal(Number(pub[1]),6);
   assert.equal(Number(controller[1]),8);
   assert.ok(Number(controller[1])>Number(pub[1]));
+  assert.ok(source.includes('completedPublisherResult(job)'),'publisher final result precedence must remain ahead of timeout');
 });
 
 test('network acquisition uses remaining publisher deadline',()=>{
