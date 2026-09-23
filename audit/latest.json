@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-23T04:25:52.436Z",
+  "generatedAt": "2026-09-23T09:13:15.174Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -169,53 +169,32 @@
   ],
   "summary": {
     "galleryDois": 532,
-    "sourceRecords": 496,
-    "rawMissingFromGallery": 417,
+    "sourceRecords": 530,
+    "rawMissingFromGallery": 451,
     "previouslyReviewedExcluded": 407,
-    "missingFromGallery": 10,
-    "potentialGaps": 3,
+    "missingFromGallery": 44,
+    "potentialGaps": 22,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 2,
+    "closureCoverageAnomalies": 1,
     "historicalCoverageLosses": 0,
-    "unresolved": 10,
+    "unresolved": 44,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
   "closure": {
     "date": "2026-09-22",
     "status": "blocked-source-coverage-anomaly",
-    "sourceRecords": 118,
-    "rawMissingFromGallery": 87,
+    "sourceRecords": 128,
+    "rawMissingFromGallery": 97,
     "previouslyReviewedExcluded": 82,
-    "missingFromGallery": 5,
-    "potentialGaps": 1,
+    "missingFromGallery": 15,
+    "potentialGaps": 6,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
       {
-        "journal": "Nature Communications",
-        "activeFrom": "2026-07-01",
-        "effectiveStart": "2026-09-21",
-        "crossrefRequests": 3,
-        "crossrefFailures": 0,
-        "openAlexRequests": 1,
-        "openAlexFailures": 0,
-        "crossrefHealthy": true,
-        "openAlexHealthy": true,
-        "unionCandidateRecords": 162,
-        "crossrefCandidateRecords": 161,
-        "openAlexCandidateRecords": 134,
-        "multiSourceCandidateRecords": 133,
-        "closureUnionRecords": 37,
-        "closureCrossrefRecords": 37,
-        "closureOpenAlexRecords": 14,
-        "closureMultiSourceRecords": 14,
-        "coverageWarning": false,
-        "closureCoverageWarning": true
-      },
-      {
-        "journal": "Organic Letters",
+        "journal": "Angew",
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefRequests": 6,
@@ -224,14 +203,14 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 48,
-        "crossrefCandidateRecords": 48,
-        "openAlexCandidateRecords": 36,
-        "multiSourceCandidateRecords": 36,
-        "closureUnionRecords": 16,
-        "closureCrossrefRecords": 16,
-        "closureOpenAlexRecords": 6,
-        "closureMultiSourceRecords": 6,
+        "unionCandidateRecords": 96,
+        "crossrefCandidateRecords": 96,
+        "openAlexCandidateRecords": 75,
+        "multiSourceCandidateRecords": 75,
+        "closureUnionRecords": 27,
+        "closureCrossrefRecords": 27,
+        "closureOpenAlexRecords": 13,
+        "closureMultiSourceRecords": 13,
         "coverageWarning": false,
         "closureCoverageWarning": true
       }
@@ -285,9 +264,9 @@
     },
     "2026-09-21": {
       "sourceRecords": 113,
-      "crossrefOnly": 2,
+      "crossrefOnly": 1,
       "openAlexOnly": 0,
-      "multiSource": 111,
+      "multiSource": 112,
       "coveredByGallery": 17,
       "rawMissingFromGallery": 96,
       "previouslyReviewedExcluded": 96,
@@ -305,15 +284,15 @@
       }
     },
     "2026-09-22": {
-      "sourceRecords": 118,
-      "crossrefOnly": 50,
+      "sourceRecords": 128,
+      "crossrefOnly": 14,
       "openAlexOnly": 0,
-      "multiSource": 68,
+      "multiSource": 114,
       "coveredByGallery": 31,
-      "rawMissingFromGallery": 87,
+      "rawMissingFromGallery": 97,
       "previouslyReviewedExcluded": 82,
-      "missingFromGallery": 5,
-      "potentialGaps": 1,
+      "missingFromGallery": 15,
+      "potentialGaps": 6,
       "byJournal": {
         "Nature": 14,
         "Nature Catalysis": 1,
@@ -321,11 +300,30 @@
         "Nature Chemistry": 3,
         "Nature Communications": 37,
         "JACS": 19,
-        "Angew": 17,
+        "Angew": 27,
         "ACS Catalysis": 1,
         "Organic Letters": 16,
         "CCS Chemistry": 1,
         "JOC": 8
+      }
+    },
+    "2026-09-23": {
+      "sourceRecords": 31,
+      "crossrefOnly": 27,
+      "openAlexOnly": 0,
+      "multiSource": 4,
+      "coveredByGallery": 0,
+      "rawMissingFromGallery": 31,
+      "previouslyReviewedExcluded": 2,
+      "missingFromGallery": 29,
+      "potentialGaps": 16,
+      "byJournal": {
+        "Nature": 2,
+        "Nature Communications": 6,
+        "JACS": 8,
+        "Angew": 6,
+        "Organic Letters": 8,
+        "JOC": 1
       }
     },
     "2026-09-19": {
@@ -362,38 +360,22 @@
         "Organic Letters": 1,
         "CCS Chemistry": 1
       }
-    },
-    "2026-09-23": {
-      "sourceRecords": 7,
-      "crossrefOnly": 5,
-      "openAlexOnly": 0,
-      "multiSource": 2,
-      "coveredByGallery": 0,
-      "rawMissingFromGallery": 7,
-      "previouslyReviewedExcluded": 2,
-      "missingFromGallery": 5,
-      "potentialGaps": 2,
-      "byJournal": {
-        "Nature Communications": 3,
-        "JACS": 2,
-        "Organic Letters": 2
-      }
     }
   },
   "byJournal": {
     "Nature": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 41,
-      "crossrefOnly": 5,
+      "sourceRecords": 43,
+      "crossrefOnly": 2,
       "openAlexOnly": 0,
-      "multiSource": 36,
+      "multiSource": 41,
       "lateIndexed": 18,
       "safetyTail": 18,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 41,
+      "rawMissingFromGallery": 43,
       "previouslyReviewedExcluded": 41,
-      "missingFromGallery": 0,
+      "missingFromGallery": 2,
       "potentialGaps": 0
     },
     "Science": {
@@ -415,9 +397,9 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
       "sourceRecords": 2,
-      "crossrefOnly": 1,
+      "crossrefOnly": 0,
       "openAlexOnly": 0,
-      "multiSource": 1,
+      "multiSource": 2,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 0,
@@ -459,47 +441,47 @@
     "Nature Communications": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 162,
-      "crossrefOnly": 28,
+      "sourceRecords": 165,
+      "crossrefOnly": 7,
       "openAlexOnly": 1,
-      "multiSource": 133,
+      "multiSource": 157,
       "lateIndexed": 85,
       "safetyTail": 87,
       "coveredByGallery": 1,
-      "rawMissingFromGallery": 161,
+      "rawMissingFromGallery": 164,
       "previouslyReviewedExcluded": 158,
-      "missingFromGallery": 3,
-      "potentialGaps": 0
+      "missingFromGallery": 6,
+      "potentialGaps": 1
     },
     "JACS": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 77,
+      "sourceRecords": 83,
       "crossrefOnly": 6,
       "openAlexOnly": 0,
-      "multiSource": 71,
+      "multiSource": 77,
       "lateIndexed": 41,
       "safetyTail": 41,
       "coveredByGallery": 18,
-      "rawMissingFromGallery": 59,
+      "rawMissingFromGallery": 65,
       "previouslyReviewedExcluded": 59,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 6,
+      "potentialGaps": 4
     },
     "Angew": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 80,
-      "crossrefOnly": 6,
+      "sourceRecords": 96,
+      "crossrefOnly": 21,
       "openAlexOnly": 0,
-      "multiSource": 74,
+      "multiSource": 75,
       "lateIndexed": 31,
       "safetyTail": 31,
       "coveredByGallery": 8,
-      "rawMissingFromGallery": 72,
+      "rawMissingFromGallery": 88,
       "previouslyReviewedExcluded": 68,
-      "missingFromGallery": 4,
-      "potentialGaps": 0
+      "missingFromGallery": 20,
+      "potentialGaps": 7
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
@@ -519,17 +501,17 @@
     "Organic Letters": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 48,
-      "crossrefOnly": 12,
+      "sourceRecords": 54,
+      "crossrefOnly": 7,
       "openAlexOnly": 0,
-      "multiSource": 36,
+      "multiSource": 47,
       "lateIndexed": 21,
       "safetyTail": 21,
       "coveredByGallery": 39,
-      "rawMissingFromGallery": 9,
+      "rawMissingFromGallery": 15,
       "previouslyReviewedExcluded": 7,
-      "missingFromGallery": 2,
-      "potentialGaps": 2
+      "missingFromGallery": 8,
+      "potentialGaps": 8
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -609,17 +591,17 @@
     "JOC": {
       "activeFrom": "2026-09-22",
       "effectiveStart": "2026-09-22",
-      "sourceRecords": 8,
+      "sourceRecords": 9,
       "crossrefOnly": 1,
       "openAlexOnly": 0,
-      "multiSource": 7,
+      "multiSource": 8,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 7,
-      "rawMissingFromGallery": 1,
+      "rawMissingFromGallery": 2,
       "previouslyReviewedExcluded": 1,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 1,
+      "potentialGaps": 1
     }
   },
   "sourceFamilyHealth": {
@@ -632,14 +614,14 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 41,
-      "crossrefCandidateRecords": 41,
-      "openAlexCandidateRecords": 36,
-      "multiSourceCandidateRecords": 36,
+      "unionCandidateRecords": 43,
+      "crossrefCandidateRecords": 43,
+      "openAlexCandidateRecords": 41,
+      "multiSourceCandidateRecords": 41,
       "closureUnionRecords": 14,
       "closureCrossrefRecords": 14,
-      "closureOpenAlexRecords": 10,
-      "closureMultiSourceRecords": 10,
+      "closureOpenAlexRecords": 14,
+      "closureMultiSourceRecords": 14,
       "coverageWarning": false,
       "closureCoverageWarning": false
     },
@@ -674,12 +656,12 @@
       "openAlexHealthy": true,
       "unionCandidateRecords": 2,
       "crossrefCandidateRecords": 2,
-      "openAlexCandidateRecords": 1,
-      "multiSourceCandidateRecords": 1,
+      "openAlexCandidateRecords": 2,
+      "multiSourceCandidateRecords": 2,
       "closureUnionRecords": 1,
       "closureCrossrefRecords": 1,
-      "closureOpenAlexRecords": 0,
-      "closureMultiSourceRecords": 0,
+      "closureOpenAlexRecords": 1,
+      "closureMultiSourceRecords": 1,
       "coverageWarning": false,
       "closureCoverageWarning": false
     },
@@ -732,16 +714,16 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 162,
-      "crossrefCandidateRecords": 161,
-      "openAlexCandidateRecords": 134,
-      "multiSourceCandidateRecords": 133,
+      "unionCandidateRecords": 165,
+      "crossrefCandidateRecords": 164,
+      "openAlexCandidateRecords": 158,
+      "multiSourceCandidateRecords": 157,
       "closureUnionRecords": 37,
       "closureCrossrefRecords": 37,
-      "closureOpenAlexRecords": 14,
-      "closureMultiSourceRecords": 14,
+      "closureOpenAlexRecords": 37,
+      "closureMultiSourceRecords": 37,
       "coverageWarning": false,
-      "closureCoverageWarning": true
+      "closureCoverageWarning": false
     },
     "JACS": {
       "activeFrom": "2026-07-01",
@@ -752,14 +734,14 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 77,
-      "crossrefCandidateRecords": 77,
-      "openAlexCandidateRecords": 71,
-      "multiSourceCandidateRecords": 71,
+      "unionCandidateRecords": 83,
+      "crossrefCandidateRecords": 83,
+      "openAlexCandidateRecords": 77,
+      "multiSourceCandidateRecords": 77,
       "closureUnionRecords": 19,
       "closureCrossrefRecords": 19,
-      "closureOpenAlexRecords": 13,
-      "closureMultiSourceRecords": 13,
+      "closureOpenAlexRecords": 19,
+      "closureMultiSourceRecords": 19,
       "coverageWarning": false,
       "closureCoverageWarning": false
     },
@@ -772,16 +754,16 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 80,
-      "crossrefCandidateRecords": 80,
-      "openAlexCandidateRecords": 74,
-      "multiSourceCandidateRecords": 74,
-      "closureUnionRecords": 17,
-      "closureCrossrefRecords": 17,
-      "closureOpenAlexRecords": 12,
-      "closureMultiSourceRecords": 12,
+      "unionCandidateRecords": 96,
+      "crossrefCandidateRecords": 96,
+      "openAlexCandidateRecords": 75,
+      "multiSourceCandidateRecords": 75,
+      "closureUnionRecords": 27,
+      "closureCrossrefRecords": 27,
+      "closureOpenAlexRecords": 13,
+      "closureMultiSourceRecords": 13,
       "coverageWarning": false,
-      "closureCoverageWarning": false
+      "closureCoverageWarning": true
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
@@ -812,16 +794,16 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 48,
-      "crossrefCandidateRecords": 48,
-      "openAlexCandidateRecords": 36,
-      "multiSourceCandidateRecords": 36,
+      "unionCandidateRecords": 54,
+      "crossrefCandidateRecords": 54,
+      "openAlexCandidateRecords": 47,
+      "multiSourceCandidateRecords": 47,
       "closureUnionRecords": 16,
       "closureCrossrefRecords": 16,
-      "closureOpenAlexRecords": 6,
-      "closureMultiSourceRecords": 6,
+      "closureOpenAlexRecords": 16,
+      "closureMultiSourceRecords": 16,
       "coverageWarning": false,
-      "closureCoverageWarning": true
+      "closureCoverageWarning": false
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -932,14 +914,14 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 8,
-      "crossrefCandidateRecords": 8,
-      "openAlexCandidateRecords": 7,
-      "multiSourceCandidateRecords": 7,
+      "unionCandidateRecords": 9,
+      "crossrefCandidateRecords": 9,
+      "openAlexCandidateRecords": 8,
+      "multiSourceCandidateRecords": 8,
       "closureUnionRecords": 8,
       "closureCrossrefRecords": 8,
-      "closureOpenAlexRecords": 7,
-      "closureMultiSourceRecords": 7,
+      "closureOpenAlexRecords": 8,
+      "closureMultiSourceRecords": 8,
       "coverageWarning": false,
       "closureCoverageWarning": false
     }
@@ -948,28 +930,7 @@
   "sourceCoverageAnomalies": [],
   "closureCoverageAnomalies": [
     {
-      "journal": "Nature Communications",
-      "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "crossrefRequests": 3,
-      "crossrefFailures": 0,
-      "openAlexRequests": 1,
-      "openAlexFailures": 0,
-      "crossrefHealthy": true,
-      "openAlexHealthy": true,
-      "unionCandidateRecords": 162,
-      "crossrefCandidateRecords": 161,
-      "openAlexCandidateRecords": 134,
-      "multiSourceCandidateRecords": 133,
-      "closureUnionRecords": 37,
-      "closureCrossrefRecords": 37,
-      "closureOpenAlexRecords": 14,
-      "closureMultiSourceRecords": 14,
-      "coverageWarning": false,
-      "closureCoverageWarning": true
-    },
-    {
-      "journal": "Organic Letters",
+      "journal": "Angew",
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
       "crossrefRequests": 6,
@@ -978,14 +939,14 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 48,
-      "crossrefCandidateRecords": 48,
-      "openAlexCandidateRecords": 36,
-      "multiSourceCandidateRecords": 36,
-      "closureUnionRecords": 16,
-      "closureCrossrefRecords": 16,
-      "closureOpenAlexRecords": 6,
-      "closureMultiSourceRecords": 6,
+      "unionCandidateRecords": 96,
+      "crossrefCandidateRecords": 96,
+      "openAlexCandidateRecords": 75,
+      "multiSourceCandidateRecords": 75,
+      "closureUnionRecords": 27,
+      "closureCrossrefRecords": 27,
+      "closureOpenAlexRecords": 13,
+      "closureMultiSourceRecords": 13,
       "coverageWarning": false,
       "closureCoverageWarning": true
     }
@@ -998,7 +959,7 @@
       "issn": "0028-0836",
       "mode": "online",
       "ok": true,
-      "count": 41,
+      "count": 43,
       "note": ""
     },
     {
@@ -1007,7 +968,7 @@
       "issn": "0028-0836",
       "mode": "published",
       "ok": true,
-      "count": 41,
+      "count": 43,
       "note": ""
     },
     {
@@ -1016,7 +977,7 @@
       "issn": "0028-0836",
       "mode": "created",
       "ok": true,
-      "count": 43,
+      "count": 45,
       "note": ""
     },
     {
@@ -1025,7 +986,7 @@
       "issn": "1476-4687",
       "mode": "online",
       "ok": true,
-      "count": 41,
+      "count": 43,
       "note": ""
     },
     {
@@ -1034,7 +995,7 @@
       "issn": "1476-4687",
       "mode": "published",
       "ok": true,
-      "count": 41,
+      "count": 43,
       "note": ""
     },
     {
@@ -1043,7 +1004,7 @@
       "issn": "1476-4687",
       "mode": "created",
       "ok": true,
-      "count": 43,
+      "count": 45,
       "note": ""
     },
     {
@@ -1051,7 +1012,7 @@
       "journal": "Nature",
       "sourceId": "S137773608",
       "ok": true,
-      "count": 36,
+      "count": 41,
       "note": ""
     },
     {
@@ -1148,7 +1109,7 @@
       "journal": "Nature Catalysis",
       "sourceId": "S4210229375",
       "ok": true,
-      "count": 1,
+      "count": 2,
       "note": ""
     },
     {
@@ -1254,7 +1215,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 162,
+      "count": 165,
       "note": ""
     },
     {
@@ -1263,7 +1224,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 162,
+      "count": 165,
       "note": ""
     },
     {
@@ -1272,7 +1233,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 161,
+      "count": 164,
       "note": ""
     },
     {
@@ -1280,7 +1241,7 @@
       "journal": "Nature Communications",
       "sourceId": "S64187185",
       "ok": true,
-      "count": 135,
+      "count": 159,
       "note": ""
     },
     {
@@ -1289,7 +1250,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 77,
+      "count": 83,
       "note": ""
     },
     {
@@ -1298,7 +1259,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 77,
+      "count": 83,
       "note": ""
     },
     {
@@ -1307,7 +1268,7 @@
       "issn": "0002-7863",
       "mode": "created",
       "ok": true,
-      "count": 77,
+      "count": 83,
       "note": ""
     },
     {
@@ -1316,7 +1277,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 77,
+      "count": 83,
       "note": ""
     },
     {
@@ -1325,7 +1286,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 77,
+      "count": 83,
       "note": ""
     },
     {
@@ -1334,7 +1295,7 @@
       "issn": "1520-5126",
       "mode": "created",
       "ok": true,
-      "count": 77,
+      "count": 83,
       "note": ""
     },
     {
@@ -1342,7 +1303,7 @@
       "journal": "JACS",
       "sourceId": "S111155417",
       "ok": true,
-      "count": 71,
+      "count": 77,
       "note": ""
     },
     {
@@ -1351,7 +1312,7 @@
       "issn": "1433-7851",
       "mode": "online",
       "ok": true,
-      "count": 79,
+      "count": 94,
       "note": ""
     },
     {
@@ -1360,7 +1321,7 @@
       "issn": "1433-7851",
       "mode": "published",
       "ok": true,
-      "count": 80,
+      "count": 96,
       "note": ""
     },
     {
@@ -1369,7 +1330,7 @@
       "issn": "1433-7851",
       "mode": "created",
       "ok": true,
-      "count": 93,
+      "count": 109,
       "note": ""
     },
     {
@@ -1378,7 +1339,7 @@
       "issn": "1521-3773",
       "mode": "online",
       "ok": true,
-      "count": 79,
+      "count": 95,
       "note": ""
     },
     {
@@ -1387,7 +1348,7 @@
       "issn": "1521-3773",
       "mode": "published",
       "ok": true,
-      "count": 80,
+      "count": 96,
       "note": ""
     },
     {
@@ -1396,7 +1357,7 @@
       "issn": "1521-3773",
       "mode": "created",
       "ok": true,
-      "count": 93,
+      "count": 109,
       "note": ""
     },
     {
@@ -1404,7 +1365,7 @@
       "journal": "Angew",
       "sourceId": "S67393510",
       "ok": true,
-      "count": 74,
+      "count": 75,
       "note": ""
     },
     {
@@ -1448,7 +1409,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 48,
+      "count": 54,
       "note": ""
     },
     {
@@ -1457,7 +1418,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 48,
+      "count": 54,
       "note": ""
     },
     {
@@ -1466,7 +1427,7 @@
       "issn": "1523-7052",
       "mode": "created",
       "ok": true,
-      "count": 48,
+      "count": 54,
       "note": ""
     },
     {
@@ -1475,7 +1436,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 48,
+      "count": 54,
       "note": ""
     },
     {
@@ -1484,7 +1445,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 48,
+      "count": 54,
       "note": ""
     },
     {
@@ -1493,7 +1454,7 @@
       "issn": "1523-7060",
       "mode": "created",
       "ok": true,
-      "count": 48,
+      "count": 54,
       "note": ""
     },
     {
@@ -1501,7 +1462,7 @@
       "journal": "Organic Letters",
       "sourceId": "S201989124",
       "ok": true,
-      "count": 36,
+      "count": 47,
       "note": ""
     },
     {
@@ -1563,7 +1524,7 @@
       "issn": "2041-6520",
       "mode": "created",
       "ok": true,
-      "count": 18,
+      "count": 21,
       "note": ""
     },
     {
@@ -1590,7 +1551,7 @@
       "issn": "2041-6539",
       "mode": "created",
       "ok": true,
-      "count": 18,
+      "count": 21,
       "note": ""
     },
     {
@@ -1739,7 +1700,7 @@
       "issn": "0022-3263",
       "mode": "online",
       "ok": true,
-      "count": 8,
+      "count": 9,
       "note": ""
     },
     {
@@ -1748,7 +1709,7 @@
       "issn": "0022-3263",
       "mode": "published",
       "ok": true,
-      "count": 8,
+      "count": 9,
       "note": ""
     },
     {
@@ -1757,7 +1718,7 @@
       "issn": "0022-3263",
       "mode": "created",
       "ok": true,
-      "count": 8,
+      "count": 9,
       "note": ""
     },
     {
@@ -1766,7 +1727,7 @@
       "issn": "1520-6904",
       "mode": "online",
       "ok": true,
-      "count": 8,
+      "count": 9,
       "note": ""
     },
     {
@@ -1775,7 +1736,7 @@
       "issn": "1520-6904",
       "mode": "published",
       "ok": true,
-      "count": 8,
+      "count": 9,
       "note": ""
     },
     {
@@ -1784,7 +1745,7 @@
       "issn": "1520-6904",
       "mode": "created",
       "ok": true,
-      "count": 8,
+      "count": 9,
       "note": ""
     },
     {
@@ -1792,11 +1753,602 @@
       "journal": "JOC",
       "sourceId": "S205050996",
       "ok": true,
-      "count": 7,
+      "count": 8,
       "note": ""
     }
   ],
   "missingCandidates": [
+    {
+      "doi": "10.1002/anie.7409022",
+      "journal": "Angew",
+      "title": "Aromaticity Regulation in Isostructural Metal‐Organic Frameworks for Propyne Storage and Propylene Purification",
+      "abstract": "ABSTRACT We report the exceptional propyne (C 3 H 4 ) storage and propylene (C 3 H 6 ) purification in a metal‐organic framework, PKU‐101, controlled via regulation of aromaticity. The pyrene‐fused pore interior of PKU‐101 provides multiple C─H···π interactions for alkyne, resulting in a record C 3 H 4 adsorption of 250 cm 3 cm −3 at 298 K and 1 bar, representing a benchmark sorbent for C 3 H 4 . Additionally, the supramolecular interactions enable fine thermodynamic discrimination for alkenes, resulting in excellent separation of C 2 H 4 /C 3 H 6 ( v / v = 1/1), delivering simultaneously high productivities of C 3 H 6 and C 2 H 4 (267 and 174 L kg −1 , respectively; C 2 H 4 purity 99.9 %). Effective separation of C 3 H 6 /C 3 H 8 ( v / v = 1/1) and C 3 H 4 /C 3 H 6 ( v / v = 1/99) with a high C 3 H 6 productivity of 532 L kg −1 (purity of 99.99 %) has also been achieved by PKU‐101. In situ crystallographic and spectroscopic studies confirmed the key role of enhanced aromaticity on the discrimination of alkanes/alkenes/alkynes. Importantly, these weak supramolecular interactions enable complete regeneration at only 318 K.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Yukun Ye",
+        "Lixia Guo",
+        "Jiarui Fan",
+        "Zhixin Wang",
+        "Zhaozhao Hu",
+        "Ruohan Li",
+        "Siyu Zhou",
+        "Lifei Lin",
+        "Yiheng Wang",
+        "Mark R. Warren",
+        "Ben Coulson",
+        "Pascal Manuel",
+        "Sarah J. Day",
+        "Eamonn T. Connolly",
+        "Jiangnan Li",
+        "Sihai Yang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.1050964",
+      "journal": "Angew",
+      "title": "Complete Pathway Refactoring and Combinatorial Biosynthesis of Anthracyclines for Modulation of Histone Eviction and DNA Damage Bioactivities",
+      "abstract": "ABSTRACT Anthracyclines including doxorubicin are cornerstone chemotherapeutic agents with high cytotoxic potency, but their use in cancer treatment is limited by irreversible dose‐dependent cardiotoxicity. Recent investigations indicate that cardiotoxicity‐free anthracyclines may be achieved through uncoupling DNA damage from chromatin damage. However, semi‐synthetic derivatization is complicated by anthracycline structural complexity. Here, we report a modular synthetic biology platform for the complete refactoring and combinatorial biosynthesis of anthracyclines in Streptomyces coelicolor M1152Δ matAB . Using standardized synthetic DNA parts, we refactored three full biosynthetic pathways of nogalamycin (38 genes), doxorubicin (31 genes), and aclacinomycin (31 genes). The pathways were organized into four functional modules (aglycone biosynthesis, TDP‐carbohydrate formation, glycosylation, and tailoring reactions) to facilitate efficient reconstruction. The modular design facilitated streamlined combinatorial biosynthesis yielding 16 derivatives, including 13 novel analogs. Bioactivity profiling across human cancer cell lines identified six potent congeners. Their cytotoxicity correlated with in vitro DNA binding affinities. Two hit molecules harbored desired bioactivity profiles promoting histone eviction at a faster rate than doxorubicin, without causing DNA double strand breaks. Our approach highlights the power of synthetic biology in rational natural product engineering and provides a scalable strategy for exploring new and improved anthracycline anti‐cancer agents.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Rongbin Wang",
+        "Heli Tirkkonen",
+        "Sabina Y. van der Zanden",
+        "Larissa Ponomareva",
+        "Isaline Fagon",
+        "Leslie Fève",
+        "Kendall Paige",
+        "Courtney L. Brown",
+        "Nora Schwartz",
+        "Jacob Hecht",
+        "Jennifer Nguyen",
+        "Jon S. Thorson",
+        "Jacques Neefjes",
+        "S. Eric Nybo",
+        "Khaled A. Shaaban",
+        "Mikko Metsä‐Ketelä"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.4407565",
+      "journal": "Angew",
+      "title": "Engineering van der Waals Heterojunctions Within a 2D Hydrogen‐Bonded Organic Framework for Boosting CO 2 Electroreduction",
+      "abstract": "ABSTRACT Unlike conventional strategies that regulate charge transport in framework electrocatalysts by modifying covalent skeletons or compositions, we demonstrate efficient directional electron transfer by constructing interlayer van der Waals donor–acceptor (D–A) heterojunctions within a hydrogen‐bonded organic frameworks (HOFs). The porphyrin‐based HOF, PFC‐45‐Co, is assembled from electron‐donating 5,10,15,20‐tetra(4‐carboxyphenyl)porphyrin (Co‐TPyP) and electron‐accepting cobalt 5,10,15,20‐tetra(4‐carboxyphenyl)porphyrin (Co‐TCPP) through strong O─H···N hydrogen bonds, while periodic alternating interlayer π–π stacking generates vertical D–A heterojunctions. Mechanistic studies show that close π–π contacts enable through‐space charge transport, and the D–A energy offset drives electron transfer from Co‐TPyP to Co‐TCPP, producing electron‐enriched Co‐TCPP sites that promote CO 2 activation and suppress hydrogen evolution. As a result, PFC‐45‐Co outperforms the single‐component HOF PFC‐72‐Co in both neutral and acidic media. In neutral electrolyte, PFC‐45‐Co delivers a CO Faradaic efficiency (FE CO ) of 98.4% at −0.9 V versus reversible hydrogen electrode (vs. RHE) and a CO partial current density ( j CO ) of 31.3 mA cm −2 at −1.2 V versus RHE. In acidic media, it maintains FE CO values of 92%–99% and achieves j CO of 111.1 mA cm −2 at −1.6 V versus RHE. This work establishes interlayer van der Waals D–A heterojunctions as an effective motif for regulating charge transfer in HOF electrocatalysts.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Qiu‐Jin Wu",
+        "An‐An Zhang",
+        "Jia‐Tong Huang",
+        "Duan‐Hui Si",
+        "Xu Yang",
+        "Rong Cao",
+        "Tian‐Fu Liu",
+        "Yuan‐Biao Huang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.2372199",
+      "journal": "Angew",
+      "title": "Heavy‐Atom Tunneling at Room Temperature Revealed by Instanton Theory",
+      "abstract": "ABSTRACT Quantum‐mechanical tunneling enables molecules to react even when their energy is below the activation barrier. Nonetheless, it is not normally expected that the dominant mechanism of chemical reactions relies on tunneling except at very low temperatures, especially when heavy atoms are involved. This assumption is valid for most adiabatic reactions proceeding on a single potential energy surface. However, we argue that heavy‐atom tunneling at room temperature may be more important than previously supposed in the case of nonadiabatic processes, such as spin‐forbidden reactions. In this work, we employ a recently developed computational approach (called nonadiabatic instanton theory) to capture the optimal multidimensional tunneling pathway for the ring closing of various strained organic triplet diradicals to form housane and a cage dione (which is a precursor for cubane). Surprisingly, we find that these reactions are dominated by the tunneling of heavy carbon atoms even at room temperature. This highlights the role of tunneling in spin‐forbidden reactions and may open up the possibility for tunneling control in the synthesis of strained molecules, not just at cryogenic temperatures, but under ordinary laboratory conditions.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Debaarjun Mukherjee",
+        "Kamil D. Petryczkiewicz",
+        "Jeremy O. Richardson"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.6314537",
+      "journal": "Angew",
+      "title": "Noncovalent‐Interaction–Driven Single‐Molecule Exchange Enables Enantiomer Discrimination of Selected Amino Acids in a Nanopore",
+      "abstract": "ABSTRACT Chiral discrimination of amino acids and short peptides remains challenging due to their subtle stereochemical differences and the limited resolution of conventional analytical techniques. Here, we report a single‐molecule nanopore sensing strategy in which noncovalent‐interaction–driven molecular exchange enables robust discrimination of specific amino acid enantiomers and diastereomeric peptides. By integrating cucurbit[7]uril with an engineered α‐hemolysin nanopore, transient molecular pairs are formed and undergo configuration‐dependent exchange, converting enantiomeric analytes into pseudo‐diastereomeric complexes that generate distinct ionic current signatures. We demonstrate enantiomeric discrimination for selected proteinogenic, and unnatural amino acids bearing aromatic or aliphatic side chains and provide mechanistic insight through symmetry analysis and density functional theory calculations. Beyond amino acids, this platform resolves enzymatically cleaved diastereomeric peptides and enables quantitative monitoring of enzymatic conversion via enantiomeric excess measurements. This work establishes a mechanistic framework for stereochemical recognition under nanoscale confinement and offers a rational design principle for next‐generation nanopore sensors targeting chiral biomolecules.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Wenying Hao",
+        "Jing Zhan",
+        "Jianchuan Liu",
+        "Mingqian Zhang",
+        "Xiaobin Huang",
+        "Ke Zhou",
+        "Dongmei Xi",
+        "Lei Liu",
+        "Hai‐Chen Wu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.2971119",
+      "journal": "Angew",
+      "title": "Oleylamine‐Assisted Construction of Bi‐Bi 2 O 2 CO 3 Heterojunction With a Self‐Release‐Replenishing Mars‐van Krevelen‐Type Mechanism for Efficient CO 2 Electroreduction",
+      "abstract": "ABSTRACT Bismuth‐based catalysts for the electrochemical CO 2 reduction (CO 2 RR) to formate have been extensively developed, yet the limited mass transport of gaseous CO 2 remains a sspersistent challenge. Herein, we report a novel Bi‐Bi 2 O 2 CO 3 heterojunction electrocatalyst (Bi‐BOC‐OLA) constructed via an oleylamine‐assisted strategy and disclose a new self‐release‐replenishing Mars‐van Krevelen‐type mechanism that alleviates this constraint. Oleylamine‐induced expansion of [Bi 2 O 2 ] 2+ layers enables the Bi 2 O 2 CO 3 lattice in Bi‐BOC‐OLA to function as an in situ carbon reservoir that continuously supplies carbon–oxygen intermediates to active Bi centers. External CO 2 replenishes lattice vacancies, creating an energy‐efficient cycle that reduces reliance on gaseous CO 2 transport. Consequently, Bi‐BOC‐OLA achieves a formate Faradaic efficiency of 97%, a record partial current density of −1.4 A cm −2 and stable operation for 160 h at −400 mA cm −2 . This work reveals how dynamic lattice participation in Bi‐Bi 2 O 2 CO 3 heterojunctions enables high‐rate CO 2 ‐to‐formate conversion and provides a new mechanistic basis for the design of Bi‐based CO 2 RR catalysts.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Jiarui Zhang",
+        "Haidong Shen",
+        "Zhanwei Chen",
+        "Peng Zhao",
+        "ShiLong Song",
+        "Hao Jiang",
+        "Yanjun Wen",
+        "Shaowei Yang",
+        "Qiuyu Zhang",
+        "Hepeng Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c15207",
+      "journal": "JACS",
+      "title": "A Coordination Cage That Shrinks via Single-Site Labilization to Reshape Encapsulated Guests",
+      "abstract": "Abstract To achieve on-demand mechanical control over encapsulated guests, a molecular host must be both structurally robust and dynamically responsive, which are notoriously difficult to reconcile in self-assembled systems. Here, we introduce a single-site labilization strategy, where a single labile site is installed into an otherwise kinetically inert coordination cage. We synthesized a heterometallic PdPt8L6 cage with a chemically detachable site by incorporating one labile Pd(II) unit onto a stable Pt8L6 scaffold. This design enables the cage to switch between expanded and contracted states without releasing its guest, thereby mechanically controlling the guest’s shape. This mechanical control translates into a hierarchical function: regulating secondary guest binding to the encapsulated host molecule. This approach provides a blueprint for designing advanced molecular machinery with multistate, on-demand functions.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Kenta Iizuka",
+        "Hiroki Takezawa",
+        "Makoto Fujita"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c16346",
+      "journal": "JACS",
+      "title": "Biocatalytic Redox Cascade Enabled Site-Selective Direct β-Alkylation of Cyclopentanones",
+      "abstract": "Abstract Alkylation of carbonyl compounds is among the most widely practiced transformations in organic synthesis. While extensive methods exist for functionalization at the ipso and α-positions, direct β-alkylation remains a significant challenge, especially for cyclic ketones. Furthermore, catalyst-controlled site selectivity in the β-alkylation of α-aryl- or alkyl-substituted cyclic ketones is rarely achieved using existing methods. Herein, we report a highly site-selective direct β-C(sp3)–H alkylation of α-nonacyl-substituted cyclopentanones via photobiocatalysis. Through mechanism-driven enzyme repurposing, a single flavin-dependent ‘ene’-reductase (ERED) orchestrates two mechanistically distinct transformations, desaturation and Giese-type radical addition, in one redox cascade. Precise enzyme control over site selectivity in the desaturation step ensures site-specific installation of diverse alkyl groups at the β-position adjacent to the α-substituent, providing trans-α,β-disubstituted cyclopentanones with excellent diastereoselectivity. A site-divergent alkylation is also achieved through synergistic tuning of enzyme catalyst and light activation, underscoring the catalytic versatility of EREDs and their potential in streamlining complex molecule synthesis.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Rupeng Dai",
+        "Hui Wang",
+        "Jincheng Lei",
+        "Yuxuan Ye"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c17163",
+      "journal": "JACS",
+      "title": "Electrochemical Upgrading of Lignin-Derived Phenolics via Vanadium Redox-Mediated Decoupling",
+      "abstract": "Abstract Electrochemical upgrading of biomass-derived phenolics represents a sustainable pathway to high-value chemicals yet remains hindered by mass transfer limitations when processing industrially relevant current densities and high-concentration substrates. Here, using phenol as a model, we report a redox-mediated strategy that spatially decouples electrode reactions from catalytic hydrogenation steps via a V3+/V2+ shuttle, effectively bypassing the interfacial diffusion barrier. By selecting a bimetallic PtRu/C catalyst, we synergistically optimize phenol activation on Ru sites and H* adsorption on Pt sites, achieving a balanced modulation of hydrogen coverage and substrate activation that effectively lowers the reaction barrier. This mediator-driven approach achieves a cyclohexanol Faradaic efficiency of 82.6% at 70 °C and −200 mA cm–2 in a dilute aqueous system. Separately, the biphasic configuration enables continuous processing of high-concentration phenol ( gt;11 mol L–1 in the organic phase), while the system also demonstrates stable operation for over 310 h under continuous-flow conditions. This mediator-decoupling strategy is extended to the efficient hydrogenation of other lignin-derived platform molecules, and it establishes a scalable paradigm for electrified biomass conversion, thereby providing a practical approach toward advancing renewable-power-driven biomass valorization from laboratory electrosynthesis to industrial chemical manufacturing.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Zhihong Chen",
+        "Wangxin Ge",
+        "Lei Dong",
+        "Wenfei Zhang",
+        "Hongliang Jiang",
+        "Chunzhong Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c12613",
+      "journal": "JACS",
+      "title": "Isocyanoalkynes: Leveraging a High-Energy Interstellar Lead for Unique Multi-Bond-Forming Cascades",
+      "abstract": "Abstract The reactivity of isocyanoalkynes─alkynes bearing a terminal isocyanide─is an unexplored frontier. The absence of any isocyanoalkyne-based reactions stems from their particularly challenging synthesis, a route originally developed to determine the possible presence of isocyanoacetylene in interstellar gas clouds. The difficult flash-vacuum, pyrolysis-condensation synthesis (240 → −196 °C), the low yield ( lt;10%), and the rapid polymerization of simple isocyanoacetylenes likely dissuaded attempts to investigate the chemistry of these highly energetic molecules. Described here is a robust, scalable synthesis of substituted isocyanoalkynes bearing aromatic, heterocyclic, and aliphatic substituents, and a structural analysis complemented by computations that identify molecular hot spots. These analyses have been particularly important in developing several exploratory reactions that reveal the high reactivity of isocyanoalkynes in unique, multi-bond-forming cascades. The synthesis, structural analyses, and reactivity of isocyanoalkynes provides a robust foundation for exploring, what augurs to be, a versatile new family of nitrogen-substituted alkynes.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Huan Tian",
+        "Tore Brinck",
+        "Christopher Absil",
+        "Fraser F. Fleming"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c04230",
+      "journal": "JACS",
+      "title": "Operando and Postmortem Study of Iridium-Decorated Titanium-Based Catalysts in PEM Water Electrolysis",
+      "abstract": "Abstract Understanding the dynamic degradation of oxygen-evolution electrocatalysts under realistic operating conditions is essential for advancing the performance and efficiency of proton exchange membrane (PEM) water electrolyzers. By combining operando Small-Angle and Wide-Angle X-ray Scattering (SAXS/WAXS) with electrochemical measurements, the evolution of iridium nanoparticles supported on TiO2, TiC, and TiN, loaded on full membrane electrode assemblies, and undergoing accelerated stress testing in these assemblies has been monitored in real time. SAXS analysis shows pronounced Ostwald ripening of Ir on TiO2, resulting in particle growth from 1.5 to 2.2 nm and a corresponding loss of electrochemically active surface area. In contrast, Ir supported on TiC remains morphologically stable. However, the TiC support undergoes severe degradation, losing approximately 80% crystallinity and releasing Ti species that migrate across the membrane. TiN exhibits an intermediate behavior, showing partial oxidation, moderate Ir growth, and limited Ti migration. Postmortem transmission electron microscopy, energy-dispersive X-ray spectroscopy, X-ray photoelectron spectroscopy, and X-ray absorption spectroscopy corroborate results from operando analyses. Results confirm the dissolution and oxidation of Ti in TiC and TiN, as well as the structural stability of TiO2, and better describe the boundaries of the trade-off between nanoparticle stability and support robustness. Moreover, results underscore the need to design catalyst–support systems capable of simultaneously suppressing Ir ripening and mitigating support corrosion. Finally, this study demonstrates the capabilities of operando SAXS/WAXS analysis from full membrane electrode assemblies to elucidate degradation pathways and i",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Lucinda Blanco-Redondo",
+        "Yevheniia Lobko",
+        "Marco Bogar",
+        "Yurii Yakovlev",
+        "Jaroslava Nováková",
+        "Simone Pollastri",
+        "Alina Madalina Darabut",
+        "Miquel Gamón Rodríguez",
+        "Giovanna Marussi",
+        "Matteo Crosera",
+        "Michal Mazur",
+        "Milan Dopita",
+        "Viacheslav Kalinovych",
+        "Roberto Biagi",
+        "Heinz Amenitsch",
+        "Rodolfo Taccani",
+        "Iva Matolínová"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c16766",
+      "journal": "JACS",
+      "title": "Tyrosinase-Catalyzed Tyr–Aniline Coupling Enables Peptide Editing, Macrocyclization, and Phage-Display-Based Selection",
+      "abstract": "Abstract Tyrosine-selective peptide modification provides a valuable route to late-stage diversification, yet current methods remain largely limited to site-specific labeling and rarely extend to macrocyclization or ligand discovery within a unified platform. Here, we report a tyrosinase-catalyzed tyrosine–aniline coupling platform that enables peptide editing, conjugation, macrocyclization, and phage-display-based ligand discovery within a single reaction manifold. Under mild aqueous conditions, this enzymatic oxidative coupling proceeds rapidly within minutes and exhibits broad compatibility with unprotected peptide substrates containing diverse proteinogenic side chains. Structurally diverse and readily accessible arylamines can be directly introduced onto unprotected peptides to install functional, fluorophore, bioactive, and bifunctional modules. Moreover, bifunctional arylamines enable tyrosine-directed peptide conjugation and macrocyclization in a modular manner. Importantly, this chemistry is compatible with phage display and enables post-translational diversification of genetically encoded peptide libraries through on-phage macrocyclization. The resulting platform was applied to dual-tyrosine randomized peptide libraries for target-directed biopanning, yielding cyclic peptide ligands against two independent protein targets, Keap1 and EphA4. The lead cyclic peptide CM1 bound Keap1 with a Kd of 211 ± 60 nM, while the independently identified EphA4 ligand CN1 further demonstrated the transferability of the platform beyond a single-target system. Alanine-scanning analysis and 1H–15N-heteronuclear single quantum coherence (HSQC) titration NMR experiments further supported direct and sequence-dependent recognition of CM1 toward Keap1. Collectively, this work establis",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Wei Ming",
+        "Xiang Liu",
+        "Xiaoqin Yang",
+        "Zehao Zhang",
+        "Weikang Zhai",
+        "Xindan Zhang",
+        "Liwen Bai",
+        "Xinxiang Lei"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01866",
+      "journal": "JOC",
+      "title": "Photosensitizer-Free Synthesis of Arylsulfonated 4,5-Fused Polycyclic Coumarin Derivatives via Photoinduced Cascade Sulfonylation/Cyclization of 4-( N -Alkyl- N -acrylamido)coumarins",
+      "abstract": "Abstract A practical visible-light-induced cascade sulfonylation/cyclization of 4-(N-alkyl-N-acrylamido)coumarins bearing unactivated alkenes with arylsulfonyl chlorides has been developed for the synthesis of arylsulfonylated 4,5-fused polycyclic coumarin derivatives. The reaction proceeds at room temperature under external photosensitizer-, base-, and oxidant-free conditions. This protocol features mild conditions, a broad substrate scope, good functional group tolerance, and moderate to excellent yields. Synthetic utility was further demonstrated by a gram-scale reaction and successful irradiation with natural sunlight. Additionally, preliminary mechanistic studies support a radical cascade pathway initiated by energy transfer (EnT) from the photoexcited 4-(N-alkyl-N-acrylamido)coumarin framework to arylsulfonyl chlorides, followed by S–Cl bond hemolysis and intramolecular cyclization.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Sanyu Zhang",
+        "Dongliang Xing",
+        "Lili Wang",
+        "Jinwei Yuan",
+        "Zhenhua Dong",
+        "Yongmei Xiao",
+        "Liangru Yang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/d41586-026-02930-6",
+      "journal": "Nature",
+      "title": "How to stay smart in the age of AI: the science of critical thinking",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Helen Pearson"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02949-9",
+      "journal": "Nature",
+      "title": "In praise of human teachers: universities must resist outsourcing everything to AI",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77874-6",
+      "journal": "Nature Communications",
+      "title": "A spatiotemporal single-cell transcriptomic atlas reveals fertilization-induced auxin signaling driving strawberry fruit set and development",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Zhimin Ma",
+        "Meng Zhang",
+        "Gezi Tian",
+        "Wenle Li",
+        "Yongqi Zhang",
+        "Xia Liang",
+        "Shenglan Gao",
+        "Xiaodan Zhao",
+        "Caicun Zhu",
+        "Yuting Guo",
+        "Chunying Kang",
+        "Hongli Lian",
+        "Pengbo Xu",
+        "Jialin Yu",
+        "Teng Liu",
+        "Wei Xiao",
+        "Ling Li",
+        "Zhongchi Liu",
+        "Xue Han",
+        "Junhui Zhou"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77996-x",
+      "journal": "Nature Communications",
+      "title": "Inducible chronic NAD deficiency in mice reveals multi-systemic phenotypical, metabolic, and transcriptional changes",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Andres Benitez-Rosendo",
+        "Morgan B. Feuz",
+        "Claudia C. S. Chini",
+        "Gina M. Warner",
+        "Gina L. Ciccio Lopez",
+        "Gustavo H. Souza",
+        "Katrina Rae Bueser",
+        "Sonu Kashyap",
+        "Laura Colman",
+        "Katie L. Thompson",
+        "Delaram Zamani Mazdeh",
+        "Sierra A. Lopez",
+        "Laura B. Miller",
+        "Alexie E. Zwerdling",
+        "Miles K. Wandersee",
+        "Thais R. Peclat",
+        "Sara Peixoto Rabelo",
+        "Karina S. Kanamori",
+        "Fernanda C. Pereira",
+        "Heidi S. Cordeiro",
+        "Jessica L. Strange",
+        "Naiara C. Lucredi",
+        "Luiza Palmieri Serrano",
+        "Rakesh Kaundal",
+        "Jason D. Doles",
+        "Jennifer L. Rowsey",
+        "Joshua N. Farr",
+        "Sundeep Khosla",
+        "Ralph G. Meyer",
+        "Mirella L. Meyer-Ficca",
+        "Eduardo N. Chini"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78015-9",
+      "journal": "Nature Communications",
+      "title": "Solid–vapor synthesis of dynamic crystalline one-dimensional supramolecular polymers from amorphous macrocycles",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Qian Yang",
+        "Zhen Sun",
+        "Linnan Zhang",
+        "Jingwei Huang",
+        "Wang Xie",
+        "Leyong Wang",
+        "Kecheng Jie"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
     {
       "doi": "10.1038/s41467-026-77936-9",
       "journal": "Nature Communications",
@@ -1819,11 +2371,19 @@
         "Yih-Ling Tzeng",
         "David S. Stephens"
       ],
-      "topics": [],
+      "topics": [
+        "Bacterial Infections and Vaccines",
+        "Microbiology",
+        "Immunology and Microbiology",
+        "Life Sciences",
+        "Neonatal and Maternal Infections",
+        "Reproductive tract infections research"
+      ],
       "sources": [
         "crossref:2041-1723:online",
         "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
+        "crossref:2041-1723:created",
+        "openalex:S64187185"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1906,6 +2466,98 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1021/acs.orglett.6c03733",
+      "journal": "Organic Letters",
+      "title": "Construction of Tetrahydropyridobenzimidazoles via Ni–Al Bimetal-Catalyzed Tandem C(sp2)/C(sp3)–H Annulation",
+      "abstract": "Abstract Tetrahydropyridobenzimidazoles are privileged heterocyclic motifs prevalent in bioactive molecules. While transition-metal-catalyzed C–H annulation of benzimidazoles has emerged as a highly atom-economical approach, current strategies are largely limited to single C–H and dual C(sp2)–H annulation; these systems afford (hydro)pyridobenzimidazoles but cannot access tetrahydropyrido-fused analogues, because they are hampered by the low reactivity of aliphatic C(sp3)–H bonds. Herein, we report a tandem C(sp2)–H/C(sp3)–H annulation of N-alkyl benzimidazoles with alkynes enabled by a phosphine oxide-ligating Ni–Al bimetallic catalyst, furnishing various tetrahydropyridobenzimidazoles in 40–98% yields from readily available starting materials.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Shao-Long Qi",
+        "Weiwei Xu",
+        "Mengchun Ye"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03569",
+      "journal": "Organic Letters",
+      "title": "Dipyrrin-Strapped NiII Porphyrins",
+      "abstract": "Abstract A dipyrrin-strapped NiII porphyrin and its anthracene-bridged dimer were synthesized as the first examples of free base carbasubporphyrins-fused porphyrins by Suzuki–Miyaura coupling reaction of 2,18-bis(5-borylpyrr-2-yl)-substituted NiII porphyrin with 9,10-bis(2,2′-dibromoethenyl)anthracene. Upon treatment with BPhCl2 and triethylamine (TEA), these porphyrins were converted into the corresponding BIII carbasubporphyrin complexes. A similar coupling reaction of the diborylated NiII porphyrin with 9-(2,2′-dibromoethenyl)fluorene gave a meso-fluorenyl adduct, which was also converted into a similar BIII complex. These BIII complexes have a dual electronic system consisting of aromatic 18π-porphyrin and a global antiaromatic 24π circuit.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Boyu Xiao",
+        "Le Liu",
+        "Yutao Rao",
+        "Ling Xu",
+        "Bangshao Yin",
+        "Mingbo Zhou",
+        "Atsuhiro Osuka",
+        "Jianxin Song"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03403",
+      "journal": "Organic Letters",
+      "title": "Nonplanar S-Shaped Bisanthene: Synthesis, Structures, and Properties",
+      "abstract": "Abstract Spiro-fused polycyclic aromatic compounds have attracted increasing attention. In this work, we designed a nonplanar S-shaped compound hel-BA featuring dual [4]helicene. Its synthesis adopts an efficient cationic radical-mediated direct C–H aromatic nucleophilic substitution. X-ray diffraction reveals tight columnar stacking, with its photoluminescence quantum yield in the powder state being 28%. hel-BA displays reversible multiple redox, with the charged states showing near-infrared (NIR) absorption and promising NIR electrochromic materials. These results provide a new perspective on extended helicenes.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Yangyang Zhao",
+        "Laiyun Zhou",
+        "Xinyu Zhang",
+        "Zenghui Li",
+        "Yihua Zhang",
+        "Zehua Wu",
+        "Bin Rao",
+        "Zhicheng Zhang",
+        "Qing Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03301",
       "journal": "Organic Letters",
       "title": "Palladium-Catalyzed Site-Selective C–H Arylation of Arenes: Using Diaryl Disulfides as an Arylation Reagent",
@@ -1935,6 +2587,96 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1021/acs.orglett.6c03516",
+      "journal": "Organic Letters",
+      "title": "Spiro-Directed Hierarchical Dynamic Covalent Assembly: From Molecular Configuration to Adaptive Porous Networks",
+      "abstract": "Abstract Hierarchical control over both the molecular configuration and supramolecular architecture in radical-based dynamic covalent systems remains challenging. Herein, we designed rigid spiro scaffolds fused with flexible diarylethene units as coupling linkers to regulate the assembly of dicyanomethyl radicals. Spiro congestion enforces the formation of trans-configured dispiromacrocycles and further drives their intermolecular assembly into porous networks, which exhibit reversible mechano- and thermochromic behaviors. This work provides a versatile platform for constructing smart, adaptive porous architectures.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Xianhua Zhuo",
+        "Yuting He",
+        "Shu Yang",
+        "Jiali Deng",
+        "Zhaochen Liu",
+        "Kun Yang",
+        "Zebing Zeng",
+        "Caiyun Peng",
+        "Wei Wang",
+        "Zhibiao Zhou"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03166",
+      "journal": "Organic Letters",
+      "title": "Stereoselective Polyglucuronic Acid Assembly via the Iron-Catalyzed Stereospecific Glycosylation with Glycal Epoxides",
+      "abstract": "Abstract Polyglucuronic acids (PGAs) are directly involved in essential biological processes, but catalytic methods for stereoselective PGA synthesis are underdeveloped because glucuronic acid (GlcA) donors are intrinsically difficult to activate. We report herein a convergent and stereoselective PGA assembly method via iron-catalyzed iterative and stereospecific glycosylation with glycal epoxides. This method is effective in the assembly of an array of GlcA-β-1,4-GlcA linkages in complex glycans and readily provides PGA octasaccharides in high stereoselectivity.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Xiao-Wen Zhang",
+        "Zixiang Jiang",
+        "Hao Xu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03732",
+      "journal": "Organic Letters",
+      "title": "Trifluoroallyl Sulfonium Salts: Reagents for Highly Regioselective Trifluoroallylation",
+      "abstract": "Abstract We report the design, synthesis, and application of novel bench-stable and scalable trifluoroallylating reagents, trifluoroallyl sulfonium salts (TFASs), which readily react with a series of organozinc reagents under copper catalysis to afford allylic trifluoromethyl-terminal alkenes with high efficiency and regioselectivity. Subsequent transformations of the resulting products further demonstrate the synthetic utility of these reagents.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Yuan-Zhan Han",
+        "Zhi-Yuan Yang",
+        "Hai-Yang Zhao",
+        "Qiao-Qiao Min",
+        "Xingang Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03574",
       "journal": "Organic Letters",
       "title": "Visible Light-Mediated Dearomative Remote Functionalization of Arenes via a Tandem Strain-Release Spirocyclization Relay",
@@ -1945,14 +2687,22 @@
         "Apurba Samanta",
         "Soumitra Maity"
       ],
-      "topics": [],
+      "topics": [
+        "Radical Photochemical Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Organoboron and organosilicon chemistry",
+        "Photochromic and Fluorescence Chemistry"
+      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
         "crossref:1523-7052:created",
         "crossref:1523-7060:online",
         "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1975,6 +2725,106 @@
         "Yan Zhao",
         "Wei Tian",
         "Hongxia Yan"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.6379738",
+      "journal": "Angew",
+      "title": "Beyond Radical Emitters: Hot‐Exciton Electroluminescence From Singlet Diradicaloids",
+      "abstract": "ABSTRACT Overcoming the 25% spin‐statistical limit of fluorescent emitters remains a central challenge in organic electroluminescence. Although radical emitters efficiently harvest doublet excitons in organic light‐emitting diodes, their optoelectronic performance can be affected by limited charge‐carrier mobility and efficiency roll‐off. Here we introduce trityl‐based singlet diradicaloids with small diradical character as a new class of open‐shell emitters and demonstrate their operation in organic light‐emitting transistors (OLETs) using the polychlorinated Thiele hydrocarbon ( TTH ) as emitter. Comparison with previously reported radical‐based devices reveals spin utilization around or exceeding 0.38 in TTH ‐based OLETs. Time‐resolved electroluminescence, fs and ns transient absorption measurements, and quantum‐chemical calculations demonstrate that this enhancement does not originate from triplet–triplet annihilation but from hot‐exciton mechanism enabled by the diradical electronic structure, where the T 2 state efficiently repopulates the emissive singlet via reverse intersystem crossing (RISC). Unlike conventional hot‐exciton emitters based on donor–acceptor architectures, this system demonstrates hot‐exciton behavior in a singlet diradicaloid framework. Reduced charge trapping further highlights singlet diradicaloids with small diradical character as promising platforms for efficient and stable electroluminescent devices.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Mario Prosa",
+        "Eugenio Lunedei",
+        "Michele Orza",
+        "Davide Mesto",
+        "Roberto Cantoni",
+        "Francesco Reginato",
+        "Angela Punzi",
+        "Arthur R. J. Barreto",
+        "Yasi Dai",
+        "Benedetta Carlotti",
+        "Fabrizia Negri",
+        "Stefano Toffanin",
+        "Davide Blasi"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.7229401",
+      "journal": "Angew",
+      "title": "Bioelectronic Photocommutator to Regulate Extracellular Electron Transfer Circuits for Microbial Photovoltaic Energy Storage",
+      "abstract": "ABSTRACT Precise control over bioelectronic circuits is crucial for advancing bioelectrochemical systems, yet achieving dynamic, external regulation of electron flow has remained a fundamental challenge. Here, we create a biotic–abiotic hybrid system where the biosynthesized cadmium sulfide quantum dots (CdS QDs) are interfaced with the extracellular electron transfer (EET) pathway of Shewanella oneidensis MR‐1, forming a bioelectronic photocommutator. This biotic–abiotic hybrid enables light‐dependent, bidirectional control of electron transfer. Under 405 nm illumination, the system enhances outward EET, while switching to inward electron flow under 450 nm illumination. We elucidate the switching mechanism through photoelectrochemical, spectroscopic, XPS, and electrochemiluminescence experiments, revealing that the connection between CdS and EET proteins regulates the energy band structure of CdS via defect‐state passivation, thus establishing two distinct electron transfer circuits. This switching mechanisim allows the QD‐protein nanohybrid to function as the photocommutator on microbial electron transport pathway. Based on this principle, we have constructed a bioelectrochemical system, the microbial photovoltaic cell (MPC), that can be charged and discharged with light, and further demonstrated its application as a thin‐film, flexible power source. This work provides a nano‐bio interface for the active regulation of bioelectrochemical processes, opening an avenue for programmable biotic–abiotic nanohybrids in bioenergy storage and bioelectronics.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Bing Li",
+        "Tianrui Liu",
+        "Xinrui Yang",
+        "Huafeng Wang",
+        "Jinming Zhao",
+        "Tao Gao",
+        "Tianxiang Wei",
+        "Zhihui Dai"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.3588313",
+      "journal": "Angew",
+      "title": "Boosting Charge Storage in Ferri/Ferrocyanide‐Based Alkaline Redox Flow Batteries",
+      "abstract": "ABSTRACT The ferri/ferrocyanide redox couple has long served as a benchmark catholyte in aqueous redox flow batteries (RBFs), particularly under highly alkaline conditions. However, the limited alkaline solubilities of commercially available Na + and K + forms constrain the attainable energy density of these systems. Here, we demonstrate that Li + substitution substantially boosts the alkaline solubility of ferri/ferrocyanide, offering a promising route to overcome the long‐standing energy density limitation. Complementary spectroscopic and computational analyses reveal a distinct solubilization mechanism in which Li + promotes mixed‐solvation and aggregate‐rich solution structures that sustain highly concentrated, fully dissolved electrolytes beyond the saturation behavior of Na + and K + analogs. When Li 3/4 Fe(CN) 6 is paired with polysulfide or organic anolytes, the resulting flow cells demonstrate exceptional cycling stability and energy density in alkaline environments. Using symmetric flow cell configurations, we further elucidate the stability and decomposition mechanisms of the corresponding redox materials, revealing contrasting effects of electrolyte alkalinity: it compromises ferri/ferrocyanide stability while substantially enhancing polysulfide stability. These findings establish complementary molecular insights into redox materials solubilization and stabilization, providing a mechanistic foundation for developing energy‐dense and durable alkaline RBFs.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Mahla Sarfaraz Khabbaz",
+        "Kuldeepsinh Raj",
+        "Lucas Zhang",
+        "Sepideh Biabanialitappeh",
+        "J. David Bazak",
+        "Nav Nidhi Rajput",
+        "Xiaoliang Wei"
       ],
       "topics": [],
       "sources": [
@@ -2027,6 +2877,97 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1002/anie.1983375",
+      "journal": "Angew",
+      "title": "Electronic Confinement Induced Single Atom Functionality in Hydroxylamine Synthesis Unveiled by Constant Potential Simulation",
+      "abstract": "ABSTRACT Electrochemical nitric oxide (NO) reduction offers a sustainable route for hydroxylamine (NH 2 OH) synthesis. Single‐atom catalysts (SACs), featuring isolated metal centers and weaker adsorbate binding than extended metals, are widely regarded as ideal NH 2 OH‐selective catalysts. However, the recent observation of NH 2 OH production on highly reactive metals challenges this conventional viewpoint and indicates that SACs are not indispensable in hydroxylamine electrosynthesis. Here, we establish a unified picture in which electronic confinement induces single‐atom functionality that underlies NH 2 OH selectivity. Specifically, our constant‐potential simulations identify the competition between *HNO and *NOH formation as a key determinant of NH 2 OH versus NH 3 selectivity, with preferential *HNO formation directing the reaction toward NH 2 OH production. Grand canonical Monte Carlo simulations further reveal that highly reactive metals undergo operando surface restructuring, generating isolated metal centers that acquire single‐atom functionality and preferentially stabilize *HNO. Electronic structure analysis uncovers a unified origin of *HNO preference: heteroatom coordination induces strong orbital hybridization, narrowing the metal d‐band and localizing the electronic states of the isolated metal centers. This electronic confinement enables balanced *HNO‐metal interactions while preserving the intramolecular N─O bond, thereby stabilizing *HNO and promoting NH 2 OH selectivity. These findings establish electronic confinement as a promising and general design principle for developing NH 2 OH‐selective electrocatalysts beyond predefined SACs.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Changgeng Wei",
+        "Huan Li",
+        "Qianxiao Wang",
+        "Chenyu Yang",
+        "Thomas Frauenheim",
+        "Jianping Xiao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.7843737",
+      "journal": "Angew",
+      "title": "Manipulating Fluorinated Nanochannels in Porous Aromatic Frameworks for Ultra‐Stable Sodium‐Ion Transport",
+      "abstract": "ABSTRACT Quasi‐solid‐state sodium metal batteries suffer from sluggish Na + transport and unstable interphases due to strong ion pairing and unfavorable solvation structures. Herein, fluorinated nanochannels are constructed by grafting flexible perfluoroalkyl chains into porous aromatic frameworks (PAF‐1‐F), generating a weakly coordinating environment that promotes ion‐pair dissociation and fluorine‐polarization‐assisted Na + transport. The resulting PAF‐1‐F quasi‐solid‐state electrolyte exhibits an impressive ionic conductivity of 2.79 × 10 −4 S cm −1 , a high Na + transference number of 0.562, and a wide electrochemical stability window of 4.98 V. The fluorine‐rich nanochannels further induce the formation of uniform NaF‐rich interphases, enabling stable Na plating/stripping for over 5700 h with suppressed dendritic growth. When evaluated in full cells, the PAF‐1‐F quasi‐solid‐state electrolyte achieves stable cycling over 1300 cycles with 91.3% capacity retention and maintains durable operation for more than 4000 cycles even at −20°C. This work establishes nanochannel‐mediated weak coordination as a strategy for coupling ion transport and interfacial stability in quasi‐solid‐state electrolytes.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Zihao Wang",
+        "Chuan‐Wei Zhou",
+        "Heng‐Guo Wang",
+        "Jiangtao Jia",
+        "Guangshan Zhu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.7046071",
+      "journal": "Angew",
+      "title": "Regulating Metal–Support Interaction via WO 3 Crystal Phase Engineering for Enhanced Acidic Water Oxidation",
+      "abstract": "ABSTRACT Metal–support interaction (MSI) is pivotal in tuning the intrinsic activity and structural stability of heterogeneous catalysts, yet precise control of MSI strength remains a major challenge. Herein, we demonstrate crystal‐phase engineering of WO 3 supports—monoclinic (M‐WO 3 ), orthorhombic (O‐WO 3 ), and tetragonal (T‐WO 3 )—to modulate MSI in Ir single‐atom catalysts. The three WO 3 crystals exhibit distinct distortion degrees (M‐WO 3 O‐WO 3 T‐WO 3 ), where stronger distortion enhances Ir activity but compromises stability. Notably, O‐WO 3 achieves an optimal modulation balance: the moderate W─O bond strength and distortion induce the strongest MSI, elevating the Ir oxidation state to +5.74, shortening the Ir─O bond, and reinforcing Ir─O covalency. Such favorable electronic and structural modulation substantially promotes intrinsic oxygen evolution reaction (OER) activity. The O─WO 3 ─Ir catalyst exhibits a low overpotential of 219 mV at 10 mA cm −2 and demonstrates outstanding acidic OER stability, with a cumulative operation time over 1000 h under sequential testing at different current densities. The optimized MSI promotes high‐valence Ir formation, accelerates *OO intermediate generation, and suppresses Ir dissolution, thereby addressing sluggish kinetics and unstable active sites. This work provides new insights into regulating MSI strength via crystal‐phase engineering to advance durable and efficient acidic OER catalysts.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Chaolong Wang",
+        "Chaofan Yang",
+        "Yuna Han",
+        "Jiacong Lei",
+        "Shasha Gao",
+        "Dong Guo",
+        "Gonglei Shao",
+        "Zhen Zhou"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1002/anie.5230240",
       "journal": "Angew",
       "title": "Sandwich‐Like Supramolecular Clamp‐Templated Manganese(II) Bromide Scintillators for Multimodal Visualization",
@@ -2043,6 +2984,155 @@
         "Hong‐Ming Chen",
         "Zai‐Lai Xie",
         "Mei‐Jin Lin"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.4147834",
+      "journal": "Angew",
+      "title": "Single Atoms Couple Molecular Coordination to Near‐Resonant Charge Transfer in Surface‐Enhanced Raman Scattering",
+      "abstract": "ABSTRACT Chemical enhancement in surface‐enhanced Raman scattering (SERS) is generally attributed to interfacial charge transfer, yet how atomically defined coordination converts molecular binding into enhanced vibrational polarizability remains unresolved. Here we show that Au‐coordinated Pt single atoms function as charge‐transfer bridges within a TiO x nanocavity/Au nanoparticle architecture, coupling molecular coordination to near‐resonant Raman enhancement. The Pt single atoms serve three interdependent roles: binding target molecules, modulating interfacial electronic states, and mediating charge transfer. Together with photonic confinement and plasmonic hotspots, this atomically defined pathway produces an apparent SERS enhancement factor of 3.6 × 10 11 and enables measurements within a statistically defined single‐molecule occupancy regime. We term this cooperative process Spatial–Plasmonic Atomic Coupling Enhancement (SPACE), which connects atomic‐scale coordination and energy‐level alignment with macroscopic Raman amplification. As a proof of analytical utility, cysteamine functionalization couples benzaldehyde capture through Schiff‐base formation to the single‐atom‐mediated enhancement pathway, enabling gas‐phase detection down to 0.3 ppbv. These findings establish single‐atom coordination as a general design principle for transforming interfacial molecular binding into near‐resonant vibrational amplification.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Dawei Xu",
+        "Xue Zhou",
+        "Bing Wang",
+        "Chaomin Wu",
+        "Guoyue Shi",
+        "Zhonghai Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.1466065",
+      "journal": "Angew",
+      "title": "Sustainable Low‐Valent Iridium Active Sites in Rhenium Doped Perovskite Iridates for Efficient Acidic Oxygen Evolution Reaction via Hybridized Reaction Pathways",
+      "abstract": "ABSTRACT Proton exchange membrane water electrolysis (PEMWE) is a promising route for sustainable hydrogen production, yet its adoption is limited by the scarcity and cost of Ir‐based oxygen evolution reaction (OER) catalysts. Here, we first report that a Re‐doped SrZr x Ir 1‐x O 3 (Re‐SZIO) perovskite iridate exhibits outstanding OER performance in acid media, combining a low overpotential (250 mV at 10 mA cm −2 ) and high Ir mass activity ( 1,300 A gIr −1 ) with robust durability. High‐valent Re doping stabilizes an active low‐valent Ir species in Re‐SZIO, suppresses overoxidation, and promotes sustainable formation of active sites. Combinational mechanistic studies using in situ spectroscopy and grand canonical density functional theory (GC‐DFT) with microkinetic modeling reveal that dynamic Re–Ir–O interactions open an additional oxide path mechanism (OPM) branch alongside the conventional adsorbate evolution mechanism (AEM), yielding a hybrid pathway in which the OPM contributes at low overpotentials while the AEM remains dominant at higher overpotentials. This work demonstrates a viable strategy for designing robust, efficient, and low‐Ir based OER catalysts via precise electronic modulation of both the reaction pathway and the framework stability.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "SungJae Park",
+        "Jaekyum Kim",
+        "Daehee Yang",
+        "Jinkyu Lim",
+        "Seong Hyun Park",
+        "Min Gyu Choi",
+        "Kang Taek Lee",
+        "Jihye Lee",
+        "Ashishi Gaur",
+        "Ghulam Ali",
+        "Haryeon Baek",
+        "In‐Hui Hwang",
+        "Mingony Kim",
+        "Kyung Yoon Chung",
+        "Jung Kyu Kim",
+        "Young‐Min Kim",
+        "Byung‐Hyun Kim",
+        "HyukSu Han"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.5026257",
+      "journal": "Angew",
+      "title": "Synergistic Integration of Thermocatalysis and Electrocatalysis for Isopropanol Dehydrogenation Toward Efficient Hydrogen Production",
+      "abstract": "ABSTRACT Isopropanol dehydrogenation represents a pivotal step in the liquid organic hydrogen carrier cycle. Conventional thermocatalytic routes require high temperatures and entail substantial energy penalties, while low‐temperature electrocatalytic processes suffer from sluggish reaction kinetics. Herein, we report an integrated thermo‐electrocatalytic strategy within a high‐temperature proton exchange membrane electrolyzer (HT‐PEME), enabling highly efficient isopropanol dehydrogenation. A RuIr bimetallic catalyst was designed, wherein Ru sites effectively promote the cleavage of both O─H and C─H bonds in isopropanol, while the incorporation of Ir optimizes the adsorption behavior of reaction intermediates, thereby mitigating Ru site poisoning and significantly enhancing catalytic stability. At 200°C and 0.5 V, the integrated system delivers an exceptional anodic acetone production rate of 1336.36 mmol g −1 h −1 , coupled with a cathodic H 2 evolution rate of 1451.31 mmol g −1 h −1 . This synergistic approach provides a robust and broadly applicable pathway for efficient H 2 production.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Jingjing Wang",
+        "Sijie Tang",
+        "Tingting Han",
+        "Yabin Xu",
+        "Zuyao Jiang",
+        "Yaping Gu",
+        "Xiaolin Xiang",
+        "Le Zhang",
+        "Tehua Wang",
+        "Zhuofeng Hu",
+        "Shuangyin Wang",
+        "Li Tao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.3111048",
+      "journal": "Angew",
+      "title": "Synergistic Vibrational Suppression and Aggregation Control via a Rigid Dimeric Acceptor for 21.13% Organic Solar Cells",
+      "abstract": "ABSTRACT The efficiency bottleneck of organic solar cells (OSCs) is predominantly hindered by severe non‐radiative energy loss (Δ E 3 ), which primarily originates from strong electron‐phonon coupling and detrimental charge recombination into darker state traps. Herein, we designed and synthesized a highly rigid and polarized dimeric acceptor, DY‐SO by incorporating a sulfone bridged unit. It is revealed that the sulfone bridge's steric hindrance restricts backbone torsion and suppresses molecular vibration, enabling DY‐SO with significantly reduced reorganization energy compared to small molecule L8‐BO, which reduces non‐radiative triplet trapping (CT→T 1 ) and yields photoluminescence quantum yield (PLQY) of 11.70% and exceptionally low Δ E 3 of 0.149 eV. Upon deploying DY‐SO into the D18:L8‐BO baseline matrix to evaluate its photovoltaic potential, we further discovered that the inclusion of this rigid dimer successfully tames the film‐formation kinetics, effectively suppressing the excessive self‐agglomeration inherent to rigid structures and promoting more ordered molecular packing and a favorable phase‐separated morphology. Benefiting from these synergistic modulations, the optimal ternary D18:L8‐BO:DY‐SO OSC achieves an outstanding power conversion efficiency of 21.13% (certified as 20.70%). This work demonstrates that by introducing structurally rigidified, highly polarized dimeric acceptor to suppress molecular vibrational coupling, and mitigate non‐radiative dissipation is of great significance for improving the performance of OSCs.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Qingao Chen",
+        "Chen Zhang",
+        "Jinyang Yu",
+        "Di Wu",
+        "Haiming Zhu",
+        "Xianqiang Xie",
+        "Shiyong You",
+        "Laju Bu",
+        "Guanghao Lu",
+        "Xunchang Wang",
+        "Renqiang Yang",
+        "Jiawei Deng",
+        "Junjie Zhang",
+        "Mingxu Zhou",
+        "Shilin Li",
+        "Jiali Song",
+        "Yanming Sun"
       ],
       "topics": [],
       "sources": [
@@ -2146,6 +3236,341 @@
   ],
   "potentialGaps": [
     {
+      "doi": "10.1002/anie.1050964",
+      "journal": "Angew",
+      "title": "Complete Pathway Refactoring and Combinatorial Biosynthesis of Anthracyclines for Modulation of Histone Eviction and DNA Damage Bioactivities",
+      "abstract": "ABSTRACT Anthracyclines including doxorubicin are cornerstone chemotherapeutic agents with high cytotoxic potency, but their use in cancer treatment is limited by irreversible dose‐dependent cardiotoxicity. Recent investigations indicate that cardiotoxicity‐free anthracyclines may be achieved through uncoupling DNA damage from chromatin damage. However, semi‐synthetic derivatization is complicated by anthracycline structural complexity. Here, we report a modular synthetic biology platform for the complete refactoring and combinatorial biosynthesis of anthracyclines in Streptomyces coelicolor M1152Δ matAB . Using standardized synthetic DNA parts, we refactored three full biosynthetic pathways of nogalamycin (38 genes), doxorubicin (31 genes), and aclacinomycin (31 genes). The pathways were organized into four functional modules (aglycone biosynthesis, TDP‐carbohydrate formation, glycosylation, and tailoring reactions) to facilitate efficient reconstruction. The modular design facilitated streamlined combinatorial biosynthesis yielding 16 derivatives, including 13 novel analogs. Bioactivity profiling across human cancer cell lines identified six potent congeners. Their cytotoxicity correlated with in vitro DNA binding affinities. Two hit molecules harbored desired bioactivity profiles promoting histone eviction at a faster rate than doxorubicin, without causing DNA double strand breaks. Our approach highlights the power of synthetic biology in rational natural product engineering and provides a scalable strategy for exploring new and improved anthracycline anti‐cancer agents.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Rongbin Wang",
+        "Heli Tirkkonen",
+        "Sabina Y. van der Zanden",
+        "Larissa Ponomareva",
+        "Isaline Fagon",
+        "Leslie Fève",
+        "Kendall Paige",
+        "Courtney L. Brown",
+        "Nora Schwartz",
+        "Jacob Hecht",
+        "Jennifer Nguyen",
+        "Jon S. Thorson",
+        "Jacques Neefjes",
+        "S. Eric Nybo",
+        "Khaled A. Shaaban",
+        "Mikko Metsä‐Ketelä"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.2372199",
+      "journal": "Angew",
+      "title": "Heavy‐Atom Tunneling at Room Temperature Revealed by Instanton Theory",
+      "abstract": "ABSTRACT Quantum‐mechanical tunneling enables molecules to react even when their energy is below the activation barrier. Nonetheless, it is not normally expected that the dominant mechanism of chemical reactions relies on tunneling except at very low temperatures, especially when heavy atoms are involved. This assumption is valid for most adiabatic reactions proceeding on a single potential energy surface. However, we argue that heavy‐atom tunneling at room temperature may be more important than previously supposed in the case of nonadiabatic processes, such as spin‐forbidden reactions. In this work, we employ a recently developed computational approach (called nonadiabatic instanton theory) to capture the optimal multidimensional tunneling pathway for the ring closing of various strained organic triplet diradicals to form housane and a cage dione (which is a precursor for cubane). Surprisingly, we find that these reactions are dominated by the tunneling of heavy carbon atoms even at room temperature. This highlights the role of tunneling in spin‐forbidden reactions and may open up the possibility for tunneling control in the synthesis of strained molecules, not just at cryogenic temperatures, but under ordinary laboratory conditions.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Debaarjun Mukherjee",
+        "Kamil D. Petryczkiewicz",
+        "Jeremy O. Richardson"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c16346",
+      "journal": "JACS",
+      "title": "Biocatalytic Redox Cascade Enabled Site-Selective Direct β-Alkylation of Cyclopentanones",
+      "abstract": "Abstract Alkylation of carbonyl compounds is among the most widely practiced transformations in organic synthesis. While extensive methods exist for functionalization at the ipso and α-positions, direct β-alkylation remains a significant challenge, especially for cyclic ketones. Furthermore, catalyst-controlled site selectivity in the β-alkylation of α-aryl- or alkyl-substituted cyclic ketones is rarely achieved using existing methods. Herein, we report a highly site-selective direct β-C(sp3)–H alkylation of α-nonacyl-substituted cyclopentanones via photobiocatalysis. Through mechanism-driven enzyme repurposing, a single flavin-dependent ‘ene’-reductase (ERED) orchestrates two mechanistically distinct transformations, desaturation and Giese-type radical addition, in one redox cascade. Precise enzyme control over site selectivity in the desaturation step ensures site-specific installation of diverse alkyl groups at the β-position adjacent to the α-substituent, providing trans-α,β-disubstituted cyclopentanones with excellent diastereoselectivity. A site-divergent alkylation is also achieved through synergistic tuning of enzyme catalyst and light activation, underscoring the catalytic versatility of EREDs and their potential in streamlining complex molecule synthesis.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Rupeng Dai",
+        "Hui Wang",
+        "Jincheng Lei",
+        "Yuxuan Ye"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c17163",
+      "journal": "JACS",
+      "title": "Electrochemical Upgrading of Lignin-Derived Phenolics via Vanadium Redox-Mediated Decoupling",
+      "abstract": "Abstract Electrochemical upgrading of biomass-derived phenolics represents a sustainable pathway to high-value chemicals yet remains hindered by mass transfer limitations when processing industrially relevant current densities and high-concentration substrates. Here, using phenol as a model, we report a redox-mediated strategy that spatially decouples electrode reactions from catalytic hydrogenation steps via a V3+/V2+ shuttle, effectively bypassing the interfacial diffusion barrier. By selecting a bimetallic PtRu/C catalyst, we synergistically optimize phenol activation on Ru sites and H* adsorption on Pt sites, achieving a balanced modulation of hydrogen coverage and substrate activation that effectively lowers the reaction barrier. This mediator-driven approach achieves a cyclohexanol Faradaic efficiency of 82.6% at 70 °C and −200 mA cm–2 in a dilute aqueous system. Separately, the biphasic configuration enables continuous processing of high-concentration phenol ( gt;11 mol L–1 in the organic phase), while the system also demonstrates stable operation for over 310 h under continuous-flow conditions. This mediator-decoupling strategy is extended to the efficient hydrogenation of other lignin-derived platform molecules, and it establishes a scalable paradigm for electrified biomass conversion, thereby providing a practical approach toward advancing renewable-power-driven biomass valorization from laboratory electrosynthesis to industrial chemical manufacturing.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Zhihong Chen",
+        "Wangxin Ge",
+        "Lei Dong",
+        "Wenfei Zhang",
+        "Hongliang Jiang",
+        "Chunzhong Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c12613",
+      "journal": "JACS",
+      "title": "Isocyanoalkynes: Leveraging a High-Energy Interstellar Lead for Unique Multi-Bond-Forming Cascades",
+      "abstract": "Abstract The reactivity of isocyanoalkynes─alkynes bearing a terminal isocyanide─is an unexplored frontier. The absence of any isocyanoalkyne-based reactions stems from their particularly challenging synthesis, a route originally developed to determine the possible presence of isocyanoacetylene in interstellar gas clouds. The difficult flash-vacuum, pyrolysis-condensation synthesis (240 → −196 °C), the low yield ( lt;10%), and the rapid polymerization of simple isocyanoacetylenes likely dissuaded attempts to investigate the chemistry of these highly energetic molecules. Described here is a robust, scalable synthesis of substituted isocyanoalkynes bearing aromatic, heterocyclic, and aliphatic substituents, and a structural analysis complemented by computations that identify molecular hot spots. These analyses have been particularly important in developing several exploratory reactions that reveal the high reactivity of isocyanoalkynes in unique, multi-bond-forming cascades. The synthesis, structural analyses, and reactivity of isocyanoalkynes provides a robust foundation for exploring, what augurs to be, a versatile new family of nitrogen-substituted alkynes.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Huan Tian",
+        "Tore Brinck",
+        "Christopher Absil",
+        "Fraser F. Fleming"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c16766",
+      "journal": "JACS",
+      "title": "Tyrosinase-Catalyzed Tyr–Aniline Coupling Enables Peptide Editing, Macrocyclization, and Phage-Display-Based Selection",
+      "abstract": "Abstract Tyrosine-selective peptide modification provides a valuable route to late-stage diversification, yet current methods remain largely limited to site-specific labeling and rarely extend to macrocyclization or ligand discovery within a unified platform. Here, we report a tyrosinase-catalyzed tyrosine–aniline coupling platform that enables peptide editing, conjugation, macrocyclization, and phage-display-based ligand discovery within a single reaction manifold. Under mild aqueous conditions, this enzymatic oxidative coupling proceeds rapidly within minutes and exhibits broad compatibility with unprotected peptide substrates containing diverse proteinogenic side chains. Structurally diverse and readily accessible arylamines can be directly introduced onto unprotected peptides to install functional, fluorophore, bioactive, and bifunctional modules. Moreover, bifunctional arylamines enable tyrosine-directed peptide conjugation and macrocyclization in a modular manner. Importantly, this chemistry is compatible with phage display and enables post-translational diversification of genetically encoded peptide libraries through on-phage macrocyclization. The resulting platform was applied to dual-tyrosine randomized peptide libraries for target-directed biopanning, yielding cyclic peptide ligands against two independent protein targets, Keap1 and EphA4. The lead cyclic peptide CM1 bound Keap1 with a Kd of 211 ± 60 nM, while the independently identified EphA4 ligand CN1 further demonstrated the transferability of the platform beyond a single-target system. Alanine-scanning analysis and 1H–15N-heteronuclear single quantum coherence (HSQC) titration NMR experiments further supported direct and sequence-dependent recognition of CM1 toward Keap1. Collectively, this work establis",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Wei Ming",
+        "Xiang Liu",
+        "Xiaoqin Yang",
+        "Zehao Zhang",
+        "Weikang Zhai",
+        "Xindan Zhang",
+        "Liwen Bai",
+        "Xinxiang Lei"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01866",
+      "journal": "JOC",
+      "title": "Photosensitizer-Free Synthesis of Arylsulfonated 4,5-Fused Polycyclic Coumarin Derivatives via Photoinduced Cascade Sulfonylation/Cyclization of 4-( N -Alkyl- N -acrylamido)coumarins",
+      "abstract": "Abstract A practical visible-light-induced cascade sulfonylation/cyclization of 4-(N-alkyl-N-acrylamido)coumarins bearing unactivated alkenes with arylsulfonyl chlorides has been developed for the synthesis of arylsulfonylated 4,5-fused polycyclic coumarin derivatives. The reaction proceeds at room temperature under external photosensitizer-, base-, and oxidant-free conditions. This protocol features mild conditions, a broad substrate scope, good functional group tolerance, and moderate to excellent yields. Synthetic utility was further demonstrated by a gram-scale reaction and successful irradiation with natural sunlight. Additionally, preliminary mechanistic studies support a radical cascade pathway initiated by energy transfer (EnT) from the photoexcited 4-(N-alkyl-N-acrylamido)coumarin framework to arylsulfonyl chlorides, followed by S–Cl bond hemolysis and intramolecular cyclization.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Sanyu Zhang",
+        "Dongliang Xing",
+        "Lili Wang",
+        "Jinwei Yuan",
+        "Zhenhua Dong",
+        "Yongmei Xiao",
+        "Liangru Yang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/s41467-026-78015-9",
+      "journal": "Nature Communications",
+      "title": "Solid–vapor synthesis of dynamic crystalline one-dimensional supramolecular polymers from amorphous macrocycles",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Qian Yang",
+        "Zhen Sun",
+        "Linnan Zhang",
+        "Jingwei Huang",
+        "Wang Xie",
+        "Leyong Wang",
+        "Kecheng Jie"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03733",
+      "journal": "Organic Letters",
+      "title": "Construction of Tetrahydropyridobenzimidazoles via Ni–Al Bimetal-Catalyzed Tandem C(sp2)/C(sp3)–H Annulation",
+      "abstract": "Abstract Tetrahydropyridobenzimidazoles are privileged heterocyclic motifs prevalent in bioactive molecules. While transition-metal-catalyzed C–H annulation of benzimidazoles has emerged as a highly atom-economical approach, current strategies are largely limited to single C–H and dual C(sp2)–H annulation; these systems afford (hydro)pyridobenzimidazoles but cannot access tetrahydropyrido-fused analogues, because they are hampered by the low reactivity of aliphatic C(sp3)–H bonds. Herein, we report a tandem C(sp2)–H/C(sp3)–H annulation of N-alkyl benzimidazoles with alkynes enabled by a phosphine oxide-ligating Ni–Al bimetallic catalyst, furnishing various tetrahydropyridobenzimidazoles in 40–98% yields from readily available starting materials.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Shao-Long Qi",
+        "Weiwei Xu",
+        "Mengchun Ye"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03569",
+      "journal": "Organic Letters",
+      "title": "Dipyrrin-Strapped NiII Porphyrins",
+      "abstract": "Abstract A dipyrrin-strapped NiII porphyrin and its anthracene-bridged dimer were synthesized as the first examples of free base carbasubporphyrins-fused porphyrins by Suzuki–Miyaura coupling reaction of 2,18-bis(5-borylpyrr-2-yl)-substituted NiII porphyrin with 9,10-bis(2,2′-dibromoethenyl)anthracene. Upon treatment with BPhCl2 and triethylamine (TEA), these porphyrins were converted into the corresponding BIII carbasubporphyrin complexes. A similar coupling reaction of the diborylated NiII porphyrin with 9-(2,2′-dibromoethenyl)fluorene gave a meso-fluorenyl adduct, which was also converted into a similar BIII complex. These BIII complexes have a dual electronic system consisting of aromatic 18π-porphyrin and a global antiaromatic 24π circuit.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Boyu Xiao",
+        "Le Liu",
+        "Yutao Rao",
+        "Ling Xu",
+        "Bangshao Yin",
+        "Mingbo Zhou",
+        "Atsuhiro Osuka",
+        "Jianxin Song"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03403",
+      "journal": "Organic Letters",
+      "title": "Nonplanar S-Shaped Bisanthene: Synthesis, Structures, and Properties",
+      "abstract": "Abstract Spiro-fused polycyclic aromatic compounds have attracted increasing attention. In this work, we designed a nonplanar S-shaped compound hel-BA featuring dual [4]helicene. Its synthesis adopts an efficient cationic radical-mediated direct C–H aromatic nucleophilic substitution. X-ray diffraction reveals tight columnar stacking, with its photoluminescence quantum yield in the powder state being 28%. hel-BA displays reversible multiple redox, with the charged states showing near-infrared (NIR) absorption and promising NIR electrochromic materials. These results provide a new perspective on extended helicenes.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Yangyang Zhao",
+        "Laiyun Zhou",
+        "Xinyu Zhang",
+        "Zenghui Li",
+        "Yihua Zhang",
+        "Zehua Wu",
+        "Bin Rao",
+        "Zhicheng Zhang",
+        "Qing Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03301",
       "journal": "Organic Letters",
       "title": "Palladium-Catalyzed Site-Selective C–H Arylation of Arenes: Using Diaryl Disulfides as an Arylation Reagent",
@@ -2175,6 +3600,96 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1021/acs.orglett.6c03516",
+      "journal": "Organic Letters",
+      "title": "Spiro-Directed Hierarchical Dynamic Covalent Assembly: From Molecular Configuration to Adaptive Porous Networks",
+      "abstract": "Abstract Hierarchical control over both the molecular configuration and supramolecular architecture in radical-based dynamic covalent systems remains challenging. Herein, we designed rigid spiro scaffolds fused with flexible diarylethene units as coupling linkers to regulate the assembly of dicyanomethyl radicals. Spiro congestion enforces the formation of trans-configured dispiromacrocycles and further drives their intermolecular assembly into porous networks, which exhibit reversible mechano- and thermochromic behaviors. This work provides a versatile platform for constructing smart, adaptive porous architectures.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Xianhua Zhuo",
+        "Yuting He",
+        "Shu Yang",
+        "Jiali Deng",
+        "Zhaochen Liu",
+        "Kun Yang",
+        "Zebing Zeng",
+        "Caiyun Peng",
+        "Wei Wang",
+        "Zhibiao Zhou"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03166",
+      "journal": "Organic Letters",
+      "title": "Stereoselective Polyglucuronic Acid Assembly via the Iron-Catalyzed Stereospecific Glycosylation with Glycal Epoxides",
+      "abstract": "Abstract Polyglucuronic acids (PGAs) are directly involved in essential biological processes, but catalytic methods for stereoselective PGA synthesis are underdeveloped because glucuronic acid (GlcA) donors are intrinsically difficult to activate. We report herein a convergent and stereoselective PGA assembly method via iron-catalyzed iterative and stereospecific glycosylation with glycal epoxides. This method is effective in the assembly of an array of GlcA-β-1,4-GlcA linkages in complex glycans and readily provides PGA octasaccharides in high stereoselectivity.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Xiao-Wen Zhang",
+        "Zixiang Jiang",
+        "Hao Xu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03732",
+      "journal": "Organic Letters",
+      "title": "Trifluoroallyl Sulfonium Salts: Reagents for Highly Regioselective Trifluoroallylation",
+      "abstract": "Abstract We report the design, synthesis, and application of novel bench-stable and scalable trifluoroallylating reagents, trifluoroallyl sulfonium salts (TFASs), which readily react with a series of organozinc reagents under copper catalysis to afford allylic trifluoromethyl-terminal alkenes with high efficiency and regioselectivity. Subsequent transformations of the resulting products further demonstrate the synthetic utility of these reagents.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Yuan-Zhan Han",
+        "Zhi-Yuan Yang",
+        "Hai-Yang Zhao",
+        "Qiao-Qiao Min",
+        "Xingang Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03574",
       "journal": "Organic Letters",
       "title": "Visible Light-Mediated Dearomative Remote Functionalization of Arenes via a Tandem Strain-Release Spirocyclization Relay",
@@ -2185,14 +3700,199 @@
         "Apurba Samanta",
         "Soumitra Maity"
       ],
-      "topics": [],
+      "topics": [
+        "Radical Photochemical Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Organoboron and organosilicon chemistry",
+        "Photochromic and Fluorescence Chemistry"
+      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
         "crossref:1523-7052:created",
         "crossref:1523-7060:online",
         "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.6379738",
+      "journal": "Angew",
+      "title": "Beyond Radical Emitters: Hot‐Exciton Electroluminescence From Singlet Diradicaloids",
+      "abstract": "ABSTRACT Overcoming the 25% spin‐statistical limit of fluorescent emitters remains a central challenge in organic electroluminescence. Although radical emitters efficiently harvest doublet excitons in organic light‐emitting diodes, their optoelectronic performance can be affected by limited charge‐carrier mobility and efficiency roll‐off. Here we introduce trityl‐based singlet diradicaloids with small diradical character as a new class of open‐shell emitters and demonstrate their operation in organic light‐emitting transistors (OLETs) using the polychlorinated Thiele hydrocarbon ( TTH ) as emitter. Comparison with previously reported radical‐based devices reveals spin utilization around or exceeding 0.38 in TTH ‐based OLETs. Time‐resolved electroluminescence, fs and ns transient absorption measurements, and quantum‐chemical calculations demonstrate that this enhancement does not originate from triplet–triplet annihilation but from hot‐exciton mechanism enabled by the diradical electronic structure, where the T 2 state efficiently repopulates the emissive singlet via reverse intersystem crossing (RISC). Unlike conventional hot‐exciton emitters based on donor–acceptor architectures, this system demonstrates hot‐exciton behavior in a singlet diradicaloid framework. Reduced charge trapping further highlights singlet diradicaloids with small diradical character as promising platforms for efficient and stable electroluminescent devices.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Mario Prosa",
+        "Eugenio Lunedei",
+        "Michele Orza",
+        "Davide Mesto",
+        "Roberto Cantoni",
+        "Francesco Reginato",
+        "Angela Punzi",
+        "Arthur R. J. Barreto",
+        "Yasi Dai",
+        "Benedetta Carlotti",
+        "Fabrizia Negri",
+        "Stefano Toffanin",
+        "Davide Blasi"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.1983375",
+      "journal": "Angew",
+      "title": "Electronic Confinement Induced Single Atom Functionality in Hydroxylamine Synthesis Unveiled by Constant Potential Simulation",
+      "abstract": "ABSTRACT Electrochemical nitric oxide (NO) reduction offers a sustainable route for hydroxylamine (NH 2 OH) synthesis. Single‐atom catalysts (SACs), featuring isolated metal centers and weaker adsorbate binding than extended metals, are widely regarded as ideal NH 2 OH‐selective catalysts. However, the recent observation of NH 2 OH production on highly reactive metals challenges this conventional viewpoint and indicates that SACs are not indispensable in hydroxylamine electrosynthesis. Here, we establish a unified picture in which electronic confinement induces single‐atom functionality that underlies NH 2 OH selectivity. Specifically, our constant‐potential simulations identify the competition between *HNO and *NOH formation as a key determinant of NH 2 OH versus NH 3 selectivity, with preferential *HNO formation directing the reaction toward NH 2 OH production. Grand canonical Monte Carlo simulations further reveal that highly reactive metals undergo operando surface restructuring, generating isolated metal centers that acquire single‐atom functionality and preferentially stabilize *HNO. Electronic structure analysis uncovers a unified origin of *HNO preference: heteroatom coordination induces strong orbital hybridization, narrowing the metal d‐band and localizing the electronic states of the isolated metal centers. This electronic confinement enables balanced *HNO‐metal interactions while preserving the intramolecular N─O bond, thereby stabilizing *HNO and promoting NH 2 OH selectivity. These findings establish electronic confinement as a promising and general design principle for developing NH 2 OH‐selective electrocatalysts beyond predefined SACs.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Changgeng Wei",
+        "Huan Li",
+        "Qianxiao Wang",
+        "Chenyu Yang",
+        "Thomas Frauenheim",
+        "Jianping Xiao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.7046071",
+      "journal": "Angew",
+      "title": "Regulating Metal–Support Interaction via WO 3 Crystal Phase Engineering for Enhanced Acidic Water Oxidation",
+      "abstract": "ABSTRACT Metal–support interaction (MSI) is pivotal in tuning the intrinsic activity and structural stability of heterogeneous catalysts, yet precise control of MSI strength remains a major challenge. Herein, we demonstrate crystal‐phase engineering of WO 3 supports—monoclinic (M‐WO 3 ), orthorhombic (O‐WO 3 ), and tetragonal (T‐WO 3 )—to modulate MSI in Ir single‐atom catalysts. The three WO 3 crystals exhibit distinct distortion degrees (M‐WO 3 O‐WO 3 T‐WO 3 ), where stronger distortion enhances Ir activity but compromises stability. Notably, O‐WO 3 achieves an optimal modulation balance: the moderate W─O bond strength and distortion induce the strongest MSI, elevating the Ir oxidation state to +5.74, shortening the Ir─O bond, and reinforcing Ir─O covalency. Such favorable electronic and structural modulation substantially promotes intrinsic oxygen evolution reaction (OER) activity. The O─WO 3 ─Ir catalyst exhibits a low overpotential of 219 mV at 10 mA cm −2 and demonstrates outstanding acidic OER stability, with a cumulative operation time over 1000 h under sequential testing at different current densities. The optimized MSI promotes high‐valence Ir formation, accelerates *OO intermediate generation, and suppresses Ir dissolution, thereby addressing sluggish kinetics and unstable active sites. This work provides new insights into regulating MSI strength via crystal‐phase engineering to advance durable and efficient acidic OER catalysts.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Chaolong Wang",
+        "Chaofan Yang",
+        "Yuna Han",
+        "Jiacong Lei",
+        "Shasha Gao",
+        "Dong Guo",
+        "Gonglei Shao",
+        "Zhen Zhou"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.1466065",
+      "journal": "Angew",
+      "title": "Sustainable Low‐Valent Iridium Active Sites in Rhenium Doped Perovskite Iridates for Efficient Acidic Oxygen Evolution Reaction via Hybridized Reaction Pathways",
+      "abstract": "ABSTRACT Proton exchange membrane water electrolysis (PEMWE) is a promising route for sustainable hydrogen production, yet its adoption is limited by the scarcity and cost of Ir‐based oxygen evolution reaction (OER) catalysts. Here, we first report that a Re‐doped SrZr x Ir 1‐x O 3 (Re‐SZIO) perovskite iridate exhibits outstanding OER performance in acid media, combining a low overpotential (250 mV at 10 mA cm −2 ) and high Ir mass activity ( 1,300 A gIr −1 ) with robust durability. High‐valent Re doping stabilizes an active low‐valent Ir species in Re‐SZIO, suppresses overoxidation, and promotes sustainable formation of active sites. Combinational mechanistic studies using in situ spectroscopy and grand canonical density functional theory (GC‐DFT) with microkinetic modeling reveal that dynamic Re–Ir–O interactions open an additional oxide path mechanism (OPM) branch alongside the conventional adsorbate evolution mechanism (AEM), yielding a hybrid pathway in which the OPM contributes at low overpotentials while the AEM remains dominant at higher overpotentials. This work demonstrates a viable strategy for designing robust, efficient, and low‐Ir based OER catalysts via precise electronic modulation of both the reaction pathway and the framework stability.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "SungJae Park",
+        "Jaekyum Kim",
+        "Daehee Yang",
+        "Jinkyu Lim",
+        "Seong Hyun Park",
+        "Min Gyu Choi",
+        "Kang Taek Lee",
+        "Jihye Lee",
+        "Ashishi Gaur",
+        "Ghulam Ali",
+        "Haryeon Baek",
+        "In‐Hui Hwang",
+        "Mingony Kim",
+        "Kyung Yoon Chung",
+        "Jung Kyu Kim",
+        "Young‐Min Kim",
+        "Byung‐Hyun Kim",
+        "HyukSu Han"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.5026257",
+      "journal": "Angew",
+      "title": "Synergistic Integration of Thermocatalysis and Electrocatalysis for Isopropanol Dehydrogenation Toward Efficient Hydrogen Production",
+      "abstract": "ABSTRACT Isopropanol dehydrogenation represents a pivotal step in the liquid organic hydrogen carrier cycle. Conventional thermocatalytic routes require high temperatures and entail substantial energy penalties, while low‐temperature electrocatalytic processes suffer from sluggish reaction kinetics. Herein, we report an integrated thermo‐electrocatalytic strategy within a high‐temperature proton exchange membrane electrolyzer (HT‐PEME), enabling highly efficient isopropanol dehydrogenation. A RuIr bimetallic catalyst was designed, wherein Ru sites effectively promote the cleavage of both O─H and C─H bonds in isopropanol, while the incorporation of Ir optimizes the adsorption behavior of reaction intermediates, thereby mitigating Ru site poisoning and significantly enhancing catalytic stability. At 200°C and 0.5 V, the integrated system delivers an exceptional anodic acetone production rate of 1336.36 mmol g −1 h −1 , coupled with a cathodic H 2 evolution rate of 1451.31 mmol g −1 h −1 . This synergistic approach provides a robust and broadly applicable pathway for efficient H 2 production.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Jingjing Wang",
+        "Sijie Tang",
+        "Tingting Han",
+        "Yabin Xu",
+        "Zuyao Jiang",
+        "Yaping Gu",
+        "Xiaolin Xiang",
+        "Le Zhang",
+        "Tehua Wang",
+        "Zhuofeng Hu",
+        "Shuangyin Wang",
+        "Li Tao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
