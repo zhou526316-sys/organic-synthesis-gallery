@@ -11,10 +11,10 @@ function escape(value: string): string {
 
 export function statusImageTag(style: StatusImageStyle, className: string, label: string): string {
   if (!style.imageData) return '';
-  const id = style.imageOriginal?.id;
+  const id = style.imageCrop ? undefined : style.imageOriginal?.id;
   // This source is already a usable preview, even while local storage is pending.
   // Source and lookup state are separate: pending does not mean no image.
-  return `<img class='${className}' src='${escape(style.imageData)}' data-image-source='preview' ${id && ID_PATTERN.test(id) ? `data-status-asset='${id}' data-original-state='pending'` : ''} alt='${escape(label)}' title='${escape(label)}'>`;
+  return `<img class='${className}' src='${escape(style.imageData)}' data-image-source='${style.imageCrop ? 'crop' : 'preview'}' ${id && ID_PATTERN.test(id) ? `data-status-asset='${id}' data-original-state='pending'` : ''} alt='${escape(label)}' title='${escape(label)}'>`;
 }
 
 function hydrateImage(image: HTMLImageElement, resolved?: (original: boolean) => void): void {
@@ -79,14 +79,14 @@ export async function viewStatusImage(style: StatusImageStyle): Promise<void> {
   close.addEventListener('click', () => dialog.close());
   const message = document.createElement('p');
   const unavailable = '此浏览器无可用原图，显示同步预览（GIF 为静态预览）。 / Original unavailable here; showing synced preview (GIF is static).';
-  const id = style.imageOriginal?.id;
+  const id = style.imageCrop ? undefined : style.imageOriginal?.id;
   const hasOriginal = Boolean(id && ID_PATTERN.test(id));
   message.textContent = hasOriginal
     ? '先显示预览，正在读取本地原图… / Showing preview while loading the local original…'
-    : unavailable;
+    : style.imageCrop ? '裁切结果（静态）· 原图保留，可恢复 / Static crop · original retained and restorable' : unavailable;
   const image = document.createElement('img');
   image.src = style.imageData;
-  image.dataset.imageSource = 'preview';
+  image.dataset.imageSource = style.imageCrop ? 'crop' : 'preview';
   if (hasOriginal) {
     image.dataset.statusAsset = id!;
     image.dataset.originalState = 'pending';

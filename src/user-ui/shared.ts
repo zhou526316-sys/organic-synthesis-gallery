@@ -1,5 +1,7 @@
 import { ReaderCountLoader } from './reader-count-loader';
 import { cropUserImage } from './image-cropper';
+import { prepareCroppedStatusImage, imageFingerprint } from './status-image-edit';
+import type { StatusImageCrop, StatusImageStyle } from './status-image-types';
 import { prepareStatusImage, type OriginalStatusImage } from './status-image-assets';
 export type Language = 'zh' | 'en';
 export type Shape = 'pill' | 'rounded' | 'rectangle' | 'circle' | 'square' | 'diamond' | 'bookmark' | 'star';
@@ -9,7 +11,7 @@ export type SuggestionType = 'author' | 'keyword' | 'journal' | 'doi';
 
 export type StatusGlow = 'none' | 'soft' | 'pulse' | 'orbit' | 'rainbow';
 export const STATUS_GLOWS: StatusGlow[] = ['none', 'soft', 'pulse', 'orbit', 'rainbow'];
-export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; imageOriginal?: OriginalStatusImage; glow?: StatusGlow; glowWidth?: number; }
+export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; imageOriginal?: OriginalStatusImage; imageCrop?: StatusImageCrop; glow?: StatusGlow; glowWidth?: number; }
 export interface StatusDef { id: string; name: string; style: StyleDef; countsAsRead: boolean; }
 export interface QuickTerm { id: string; label: string; style: StyleDef; }
 export interface CollectionDef { id: string; name: string; style: StyleDef; }
@@ -522,6 +524,37 @@ class Store extends EventTarget {
     enqueueSiteFeedback(payload);
     return 'queued';
   }
+  private commitStatusImage(target: StyleDef, next: StatusImageStyle): void {
+    const keys = ['imageData', 'imageOriginal', 'imageCrop'] as const;
+    const previous: StatusImageStyle = { imageData: target.imageData, imageOriginal: target.imageOriginal, imageCrop: target.imageCrop };
+    const assign = (value: StatusImageStyle): void => {
+      for (const key of keys) delete target[key];
+      Object.assign(target, Object.fromEntries(Object.entries(value).filter(([, value]) => value !== undefined)));
+    };
+    assign(next);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); }
+    catch (error) { assign(previous); throw error; }
+    this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'global' } }));
+  }
+  async cropStatusImage(target: StyleDef, file?: File): Promise<boolean> {
+    const id = this.state.statuses.find(item => item.style === target)?.id;
+    if (!id || (!file && !target.imageData)) return false;
+    const job = Symbol('crop-status-image'); this.statusImageJobs.set(id, job);
+    const fingerprint = imageFingerprint(target);
+    const snapshot = structuredClone({ imageData: target.imageData, imageOriginal: target.imageOriginal, imageCrop: target.imageCrop });
+    const prepared = await prepareCroppedStatusImage(snapshot, file);
+    const live = this.status(id)?.style;
+    if (!prepared || this.statusImageJobs.get(id) !== job || !live || imageFingerprint(live) !== fingerprint) return false;
+    this.commitStatusImage(live, prepared);
+    return true;
+  }
+  restoreStatusImage(target: StyleDef): boolean {
+    const id = this.state.statuses.find(item => item.style === target)?.id;
+    if (!id || !target.imageCrop) return false;
+    this.statusImageJobs.set(id, Symbol('restore-status-image'));
+    this.commitStatusImage(target, { imageData: target.imageCrop.sourcePreview, imageOriginal: target.imageOriginal });
+    return true;
+  }
   private readonly statusImageJobs = new Map<string, symbol>();
   async setOriginalStatusImage(target: StyleDef, file: File): Promise<boolean> {
     const statusId = this.state.statuses.find(item => item.style === target)?.id;
@@ -534,18 +567,7 @@ class Store extends EventTarget {
     const live = this.status(statusId)?.style;
     // Newer selections/removal or a remote image replacement win over this load.
     if (this.statusImageJobs.get(statusId) !== job || !live || live.imageData !== previousData || live.imageOriginal?.id !== previousId) return false;
-    const previous = { imageData: live.imageData, imageOriginal: live.imageOriginal };
-    Object.assign(live, prepared);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-    } catch (error) {
-      delete live.imageData;
-      delete live.imageOriginal;
-      if (previous.imageData !== undefined) live.imageData = previous.imageData;
-      if (previous.imageOriginal !== undefined) live.imageOriginal = previous.imageOriginal;
-      throw error;
-    }
-    this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'global' } }));
+    this.commitStatusImage(live, prepared);
     return true;
   }
   clearImage(target: StyleDef): void {
@@ -553,10 +575,12 @@ class Store extends EventTarget {
     if (statusId) this.statusImageJobs.set(statusId, Symbol('removed'));
     delete target.imageData;
     delete target.imageOriginal;
+    delete target.imageCrop;
     this.save();
   }
   async setImage(target: StyleDef, file: File): Promise<void> {
     const statusId = this.state.statuses.find(item => item.style === target)?.id;
+    if (statusId) { await this.cropStatusImage(target, file); return; }
     const actionKey = (Object.entries(this.state.actionStyles) as Array<[ActionKey, StyleDef]>).find(([, style]) => style === target)?.[0];
     const quickTermId = this.state.quickTerms.find(item => item.style === target)?.id;
     const collectionId = this.state.collections.find(item => item.style === target)?.id;

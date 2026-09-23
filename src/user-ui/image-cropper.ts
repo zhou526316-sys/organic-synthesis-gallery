@@ -75,9 +75,9 @@ export async function cropUserImage(file: Blob, initial?: CropRecipe, sourceNoti
   URL.revokeObjectURL(url);
   const W = image.naturalWidth, H = image.naturalHeight;
   let recipe: CropRecipe = { x: 0, y: 0, width: 1, height: 1, mode: 'square' };
-  let strokes: CropStroke[] = (initial?.strokes || []).filter(s => [s.x, s.y, s.radius].every(Number.isFinite)).slice(0, 1024).map(s => ({ x: bound(s.x, 0, 1), y: bound(s.y, 0, 1), radius: bound(s.radius, .001, .2), erase: s.erase === true }));
+  let strokes: CropStroke[] = (Array.isArray(initial?.strokes) ? initial.strokes : []).filter(s => [s.x, s.y, s.radius].every(Number.isFinite)).slice(0, 1024).map(s => ({ x: bound(s.x, 0, 1), y: bound(s.y, 0, 1), radius: bound(s.radius, .001, .2), erase: s.erase === true }));
   let tool: 'move' | 'erase' | 'restore' = 'move';
-  let background = initial?.background === undefined ? undefined : bound(initial.background, 0, 100);
+  let background = initial?.background === undefined ? undefined : bound(finite(initial.background, 24), 0, 100);
 
   const dialog = document.createElement('dialog');
   dialog.dataset.galleryUserCropper = 'true'; dialog.dataset.cropEditor = 'true';
@@ -164,6 +164,7 @@ export async function cropUserImage(file: Blob, initial?: CropRecipe, sourceNoti
     const x = recipe.x * canvas.width, y = recipe.y * canvas.height, w = recipe.width * canvas.width, h = recipe.height * canvas.height;
     ctx.fillStyle = 'rgba(15,23,42,.55)'; ctx.beginPath(); ctx.rect(0, 0, canvas.width, canvas.height); ctx.rect(x, y, w, h); ctx.fill('evenodd');
     const result = output(384); preview.width = result.width; preview.height = result.height; preview.getContext('2d')!.drawImage(result, 0, 0);
+    ctx.clearRect(x, y, w, h); ctx.fillStyle = '#e8edf4'; ctx.fillRect(x, y, w, h); ctx.drawImage(result, x, y, w, h);
     ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.strokeRect(x, y, w, h);
     if (recipe.mode === 'circle') { ctx.beginPath(); ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2); ctx.stroke(); }
     ctx.fillStyle = '#3159bd'; ctx.fillRect(x + w - 7, y + h - 7, 14, 14);
