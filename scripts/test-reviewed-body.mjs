@@ -28,7 +28,7 @@ try{
  await cp('audit/media-recovery/body-batches',path.join(root,'audit/media-recovery/body-batches'),{recursive:true});
  const allPlans=[legacy,...newPlans],allItems=allPlans.flatMap(p=>p.items),dois=[...new Set(allItems.map(r=>r.doi))];
  const corpus=[...dois.map(doi=>({doi,title:'Controlled publication fixture '+doi,journal:doi.startsWith('10.1038/')?'Nature Synthesis':'JACS'})),...Array.from({length:110},(_,i)=>({doi:'10.1021/fixture.'+i,journal:'JACS'}))];
- await mkdir(path.join(root,'public'),{recursive:true});await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(corpus))).toString('base64'));
+ await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(corpus))).toString('base64'));
  for(const f of ['total-synthesis','manual-supplement','final-audit-supplement','curated-supplement','automation-supplement','rolling-supplement'])await writeFile(path.join(root,'public/'+f+'.json'),'{"papers":[]}');
  const pre={version:2,items:{}};for(const doi of dois)pre.items[doi]={doi,toc:{available:true,imageUrl:'media-mirror/original.svg',reason:'official',contentHash:'keep'},figures:{available:false,doi,figures:[]}};
  await writeFile(path.join(root,'public/media-mirror/original.svg'),legacyBytes);
@@ -45,11 +45,11 @@ try{
  const second=await mergeReviewedBody(root),secondIndex=JSON.parse(await readFile(path.join(root,'public/body-publication-index.json'),'utf8'));
  test('repeat build is idempotent across all reviewed batches',()=>{assert.equal(secondIndex.totals.added,0);assert.equal(secondIndex.totals.retainedExisting,allItems.length);assert.equal(second.added.length,0);});
  const removedDoi=newItem.doi;
- await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(corpus.filter(r=>r.doi!==removedDoi))).toString('base64'));
+ await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(corpus.filter(r=>r.doi!==removedDoi)))).toString('base64'));
  delete pre.items[removedDoi];await writeFile(file,JSON.stringify(pre));
  const removed=await mergeReviewedBody(root),removedMedia=JSON.parse(await readFile(file,'utf8')),removedIndex=JSON.parse(await readFile(path.join(root,'public/body-publication-index.json'),'utf8'));
  const removedApproved=allItems.filter(x=>x.doi===removedDoi).length;
- test('removed DOI is not resurrected by immutable media approvals',()=>{assert.equal(removedMedia.items[removedDoi],undefined);assert.equal(removedIndex.totals.notPublished,removedApproved);});
+ test('removed DOI is not resurrected by immutable media approvals',()=>{assert.equal(removedMedia.items[removedDoi],undefined);assert.equal(removedIndex.totals.notPublished,removedApproved);assert.equal(removed.notPublished.length,legacy.items.filter(x=>x.doi===removedDoi).length);});
  const manifestPath=path.join(root,`audit/media-recovery/body-batches/${newest.batchId}/manifest.json`),broken=structuredClone(newest);broken.items[0].label='Figure 99';await writeFile(manifestPath,JSON.stringify(broken));
  const before=await readFile(file,'utf8');await assert.rejects(()=>mergeReviewedBody(root),/label_identity/);test('entire aggregate bundle validates before publishing any output',()=>{});assert.equal(await readFile(file,'utf8'),before);
 }finally{await rm(root,{recursive:true,force:true});}
