@@ -1,29 +1,36 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-23T12:23:35+08:00",
-  "requestedBy": "prepublish-recovery-20260923-1800-scope-v1-preparation",
-  "reason": "The paired latest/compact snapshot at 2026-09-23T01:00:47.232Z predates the verified deletion-only correction (536 -> 532). No in-progress or queued main workflow was found, activeRun is null, and the 18:00 staging file is absent. Refresh discovery once against corrected main for preparatory scope review. This midday audit is NOT a fresh target-slot audit: final release still requires generatedAt within 16:55-18:00 Asia/Shanghai. Keep the existing 16:55/17:05/17:35/18:00 schedules unchanged.",
+  "requestedAt": "2026-09-23T17:08:00+08:00",
+  "requestedBy": "prepublish-primary-20260923-1800-scope-v1",
+  "reason": "The required 16:55-18:00 Asia/Shanghai paired snapshot is absent. Current latest/compact generatedAt is 2026-09-23T04:25:52.436Z (12:25:52+08) and the existing 18:00 staging explicitly marks snapshotFreshForSlot=false. No queued or in-progress literature-audit run was found and no 16:55 schedule run exists. Request one fresh audit against current main; do not cancel or restart any healthy run.",
   "targetBranch": "main",
   "publicationSlot": "2026-09-23T18:00:00+08:00",
-  "executionMode": "preparatory_off_slot_no_publication",
-  "inputCommitSha": "863ec3b43293c9194c773c812d63091869a9f886",
-  "inputCompactBlobSha": "e576f9de1782ed8eaea1b8785a0210c0a323d974",
-  "inputLatestBlobSha": "c963f51608dbe4732350148ab4cc7a27a5c16987",
+  "executionMode": "scheduled_prepublish_fresh_snapshot",
+  "inputCommitSha": "87047528f0c17e7308c1d2730bf76c6a72ab467f",
+  "inputCompactBlobSha": "4954c911bb843d1c360511c2180f7a68e5923118",
+  "inputLatestBlobSha": "357783bfe5a69b034034cb6785ab4ac0655095e5",
   "scopeRulesVersion": "scope-2026-09-23-v1",
   "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
   "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
-  "deduplicationKey": "2026-09-23T18:00:00+08:00|e576f9de1782ed8eaea1b8785a0210c0a323d974|040902a773f72057dff59de5c66d27f568984813",
-  "primaryWindow": {"timezone":"Asia/Shanghai","startDate":"2026-09-21","endDate":"2026-09-23","days":3},
+  "deduplicationKey": "2026-09-23T18:00:00+08:00|4954c911bb843d1c360511c2180f7a68e5923118|040902a773f72057dff59de5c66d27f568984813",
+  "primaryWindow": {
+    "timezone": "Asia/Shanghai",
+    "startDate": "2026-09-21",
+    "endDate": "2026-09-23",
+    "days": 3
+  },
   "safetyTailDays": 7,
   "lateDepositRescueDays": 7,
   "verifiedThrough": "2026-09-20",
   "expectedProductionCards": 532,
-  "expectedDeferredDois": ["10.31635/ccschem.026.202608262"],
+  "expectedDeferredDois": [
+    "10.31635/ccschem.026.202608262"
+  ],
   "validation": [
     "Run the merged main completeness capability guard and all canonical active journals with activeFrom",
     "Union all configured ISSNs across Crossref online/published/created and OpenAlex, retaining safety-tail and late-deposit rescue",
     "Paired latest and compact generatedAt match and both summary.unresolved equal complete unresolved array length",
-    "Explicit scope corrections supersede historical includes without restoring deleted cards",
+    "Bind handoff to scope-2026-09-23-v1 and the current scope-corrections blob",
     "No production data, Pages request or media acquisition; TOC/body figures remain Tampermonkey/VPN Bridge"
   ]
 }
