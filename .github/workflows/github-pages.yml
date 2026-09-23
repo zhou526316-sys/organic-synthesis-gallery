@@ -1,5 +1,6 @@
 name: Deploy GitHub Pages frontend
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     branches: [main]
@@ -17,6 +18,9 @@ on:
       - 'cloudflare/scripts/verify-static-media-integrity.mjs'
       - 'cloudflare/scripts/sanitize-static-media.mjs'
       - 'cloudflare/scripts/merge-curated-pages.mjs'
+      - 'cloudflare/scripts/new-body-auto-validation.mjs'
+      - 'cloudflare/scripts/merge-new-body-auto.mjs'
+      - 'audit/media-auto-policy.json'
       - 'audit/toc-gap-dois-2026-09-16.json'
       - 'audit/visual-gap-dois-2026-09-16.json'
       - 'public/curated-supplement.json'
@@ -159,6 +163,21 @@ jobs:
         run: echo "Springer Nature fallback disabled during media rebuild."
       - name: Merge assistant-audited literature and bilingual titles
         run: node cloudflare/scripts/merge-curated-pages.mjs
+      - name: Independently validate and publish newly marked body captures
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node cloudflare/scripts/merge-new-body-auto.mjs
+      - name: Preserve automatic media validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: new-body-auto-validation
+          path: |
+            public/auto-body-status.json
+            public/auto-body-publication.json
+          retention-days: 14
+          if-no-files-found: warn
       - name: Sanitize invalid static media
         run: node cloudflare/scripts/sanitize-static-media.mjs
       - name: Verify media-index asset integrity
