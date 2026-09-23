@@ -7,6 +7,8 @@ on:
       - 'src/card-share.ts'
       - 'src/card-share.css'
       - 'package.json'
+      - 'scripts/build-share-pages.mjs'
+      - 'public/share-default.png'
       - '.github/workflows/card-share-ci.yml'
   push:
     branches: [main]
@@ -16,6 +18,8 @@ on:
       - 'src/card-share.ts'
       - 'src/card-share.css'
       - 'package.json'
+      - 'scripts/build-share-pages.mjs'
+      - 'public/share-default.png'
       - '.github/workflows/card-share-ci.yml'
 
 permissions:
@@ -34,6 +38,15 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Build
         run: npm run build
+      - name: Verify rich share-card output
+        run: |
+          test -n "$(find dist/share -name '*.html' -print -quit)"
+          SHARE_PAGE="$(find dist/share -name '*.html' -print -quit)"
+          grep -F 'property="og:type" content="article"' "$SHARE_PAGE"
+          grep -F 'property="og:image"' "$SHARE_PAGE"
+          grep -F 'location.replace' "$SHARE_PAGE"
+          test -s dist/share-default.png
+
       - name: Verify 20-second halo contract
         run: |
           grep -F "const SHARED_CARD_HIGHLIGHT_MS = 20_000;" src/card-share.ts
@@ -89,6 +102,10 @@ jobs:
             await shareButton.click();
             const panel = page.locator('.card-share-panel');
             await panel.waitFor({ state: 'visible' });
+            const richShareUrl = await panel.getAttribute('data-share-url');
+            if (!richShareUrl || !/\/share\/[A-Za-z0-9_-]+\.html$/.test(richShareUrl)) {
+              throw new Error('share URL is not a rich per-paper share page: ' + richShareUrl);
+            }
             await panel.locator('[data-share-action="qr"]').click();
             await panel.locator('.card-share-qr-image').waitFor({ state: 'visible', timeout: 10000 });
 
