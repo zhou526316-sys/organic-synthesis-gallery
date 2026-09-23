@@ -1,0 +1,62 @@
+name: Status glow width regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/user-ui/**'
+      - 'tests/status-*.ts'
+      - '.github/workflows/status-glow-width-ci.yml'
+permissions:
+  contents: read
+concurrency:
+  group: status-glow-width-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  thickness:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [webkit, chromium]
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned browsers and existing build dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/width-browser.log 2>&1 || { tail -60 /tmp/width-browser.log; exit 1; }
+      - name: Typecheck and build
+        run: |
+          npx tsc --noEmit
+          npm run build
+      - name: Start isolated preview
+        run: |
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/width-preview.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/width-preview.log
+          exit 1
+      - name: Verify real drag, keyboard, rollback, cancellation and original image preservation
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: glow-width-results/results.json
+        run: |
+          mkdir -p glow-width-results
+          git rev-parse HEAD > glow-width-results/tested-commit.txt
+          sha256sum src/user-ui/status-glow-width.ts src/user-ui/status-presentation.ts src/user-ui/shared.ts tests/status-glow-width.spec.ts > glow-width-results/source-sha256.txt
+          set -o pipefail
+          npx --no-install playwright test tests/status-glow-width.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=glow-width-results/tests 2>&1 | tee glow-width-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: glow-width-${{ matrix.browser }}
+          path: glow-width-results/
+          retention-days: 7
+          if-no-files-found: warn

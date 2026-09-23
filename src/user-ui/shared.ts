@@ -8,7 +8,7 @@ export type SuggestionType = 'author' | 'keyword' | 'journal' | 'doi';
 
 export type StatusGlow = 'none' | 'soft' | 'pulse' | 'orbit' | 'rainbow';
 export const STATUS_GLOWS: StatusGlow[] = ['none', 'soft', 'pulse', 'orbit', 'rainbow'];
-export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; imageOriginal?: OriginalStatusImage; glow?: StatusGlow; }
+export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; imageOriginal?: OriginalStatusImage; glow?: StatusGlow; glowWidth?: number; }
 export interface StatusDef { id: string; name: string; style: StyleDef; countsAsRead: boolean; }
 export interface QuickTerm { id: string; label: string; style: StyleDef; }
 export interface CollectionDef { id: string; name: string; style: StyleDef; }
@@ -440,6 +440,19 @@ class Store extends EventTarget {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); }
     catch {
       if (previous === undefined) delete target.glow; else target.glow = previous;
+      return false;
+    }
+    this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'global' } }));
+    return true;
+  }
+  setStatusGlowWidth(id: string, width: number): boolean {
+    const target = this.status(id)?.style;
+    if (!target || !Number.isInteger(width) || width < 1 || width > 6) return false;
+    const previous = target.glowWidth;
+    target.glowWidth = width;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); }
+    catch {
+      if (previous === undefined) delete target.glowWidth; else target.glowWidth = previous;
       return false;
     }
     this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'global' } }));

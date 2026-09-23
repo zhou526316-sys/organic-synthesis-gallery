@@ -146,6 +146,8 @@ function installStyles(): void {
   style.id = STYLE_ID;
   style.textContent = `
     ${ELEMENT}{position:fixed;left:10px;top:44%;z-index:10060;font:inherit}
+    /* Do not let the floating launcher intercept an active card editor. Keep its saved position and any already-open feedback panel. */
+    body:has(gallery-paper-actions[data-drawer-open="true"]) ${ELEMENT}:not(:has(.site-feedback-panel)){visibility:hidden;pointer-events:none}
     .site-feedback-tab{border:1px solid #294da8;border-radius:999px;background:linear-gradient(135deg,#3159bd,#466fd2);color:#fff;padding:11px 14px;box-shadow:0 10px 28px rgba(49,89,189,.32),0 2px 8px rgba(15,23,42,.12);cursor:grab;font-weight:800;letter-spacing:.04em;touch-action:none;user-select:none;transition:box-shadow .16s ease,filter .16s ease,transform .16s ease}
     .site-feedback-tab:hover{filter:brightness(1.06);box-shadow:0 12px 34px rgba(49,89,189,.4),0 3px 10px rgba(15,23,42,.14);transform:translateY(-1px)}
     .site-feedback-tab.dragging{cursor:grabbing;filter:brightness(1.03);transform:none}
