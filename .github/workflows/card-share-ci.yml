@@ -55,7 +55,8 @@ jobs:
           throw new Error('preview server did not start');
           NODE
       - name: Playwright card share smoke
-        run: node - <<'NODE'
+        run: |
+          node - <<'NODE'
           const { chromium } = require('playwright');
           (async () => {
             const browser = await chromium.launch({ headless: true });
