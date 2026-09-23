@@ -6,6 +6,7 @@ on:
       - 'src/bootstrap.ts'
       - 'src/user-ui/page-navigation.ts'
       - 'tests/page-navigation.spec.ts'
+      - 'tests/page-navigation-loading.spec.ts'
       - '.github/workflows/page-navigation-ci.yml'
 permissions:
   contents: read
@@ -40,15 +41,15 @@ jobs:
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           cat /tmp/navigation-preview.log
           exit 1
-      - name: Verify endpoints, layouts, focus and dialog coexistence with blocked production writes
+      - name: Verify endpoints, layouts, focus and early loading with blocked production writes
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: navigation-results/results.json
         run: |
           mkdir -p navigation-results
           git rev-parse HEAD > navigation-results/tested-commit.txt
-          sha256sum src/bootstrap.ts src/user-ui/page-navigation.ts tests/page-navigation.spec.ts > navigation-results/source-sha256.txt
+          sha256sum src/bootstrap.ts src/user-ui/page-navigation.ts tests/page-navigation.spec.ts tests/page-navigation-loading.spec.ts > navigation-results/source-sha256.txt
           set -o pipefail
-          npx --no-install playwright test tests/page-navigation.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=navigation-results/tests 2>&1 | tee navigation-results/tests.log
+          npx --no-install playwright test tests/page-navigation.spec.ts tests/page-navigation-loading.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=navigation-results/tests 2>&1 | tee navigation-results/tests.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
