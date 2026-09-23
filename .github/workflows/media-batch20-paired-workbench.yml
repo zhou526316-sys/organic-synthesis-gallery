@@ -5,6 +5,12 @@ on:
     paths:
       - '.github/workflows/media-batch20-paired-workbench.yml'
       - 'scripts/test-media-batch20-paired.mjs'
+      - 'audit/media-auto-policy.json'
+      - 'cloudflare/scripts/merge-new-body-auto.mjs'
+      - 'cloudflare/scripts/merge-local-captures.mjs'
+      - '.github/workflows/new-body-continuous.yml'
+      - 'docs/body-media-publication.md'
+      - 'scripts/test-new-body-auto.mjs'
 permissions:
   contents: write
   actions: read
