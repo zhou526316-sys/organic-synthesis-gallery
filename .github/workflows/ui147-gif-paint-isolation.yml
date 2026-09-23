@@ -23,7 +23,7 @@ jobs:
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/gif-paint-install.log 2>&1 || { tail -60 /tmp/gif-paint-install.log; exit 1; }
           npm run build
-      - name: Isolate native control rendering without release edits
+      - name: Bisect rendering styles only inside disposable test contexts
         run: |
           mkdir -p gif-paint
           cat > tests/pr147-paint-isolation.spec.ts <<'TS'
@@ -31,20 +31,20 @@ jobs:
           import { open, gifFile, originalHash } from './status-image-fixtures';
           import { expectAnimatedImage } from './animated-image-evidence';
           test.use({trace:'off',serviceWorkers:'block'});
-          for(const mode of ['baseline','appearance-none','div-instead-of-button','image-outside-button','no-overflow-lock']) test(mode,async({page},info)=>{
+          for(const mode of ['baseline','overflow-visible','overflow-scroll','intrinsic-size','without-shadow-css','root-copy']) test(mode,async({page},info)=>{
             const actions=await open(page,390);
             await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
             await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
             let image=actions.locator('[data-action="set-status:to-read"] .status-image');
             await expect(image).toHaveAttribute('data-image-source','original');
             const hash=await originalHash(image);
-            if(mode==='appearance-none')await image.evaluate(node=>{const button=node.closest('button')!;button.style.setProperty('appearance','none');button.style.setProperty('-webkit-appearance','none');});
-            if(mode==='div-instead-of-button')await image.evaluate(node=>{const button=node.closest('button')!;const div=document.createElement('div');for(const a of button.attributes)div.setAttribute(a.name,a.value);while(button.firstChild)div.appendChild(button.firstChild);button.replaceWith(div);});
-            if(mode==='image-outside-button'){
-              await image.evaluate(node=>{const box=node.getBoundingClientRect();const root=node.getRootNode() as ShadowRoot;const copy=node.cloneNode(true) as HTMLImageElement;copy.id='outside-button';copy.style.cssText=`position:fixed;left:${box.x}px;top:${box.y}px;width:${box.width}px;height:${box.height}px;z-index:999999;pointer-events:none`;root.appendChild(copy);});
-              image=actions.locator('#outside-button');
+            if(mode.startsWith('overflow-'))await actions.locator('.drawer').evaluate((node,value)=>(node as HTMLElement).style.overflow=value,mode.slice(9));
+            if(mode==='intrinsic-size')await image.evaluate(node=>(node as HTMLElement).style.cssText='width:120px;height:60px;object-fit:fill');
+            if(mode==='without-shadow-css')await actions.evaluate(host=>{host.shadowRoot!.querySelectorAll('style').forEach(s=>s.remove());});
+            if(mode==='root-copy'){
+              await image.evaluate(node=>{const box=node.getBoundingClientRect();const root=node.getRootNode() as ShadowRoot;const copy=node.cloneNode(true) as HTMLImageElement;copy.id='root-gif-copy';copy.style.cssText=`position:fixed;left:${box.x}px;top:${box.y}px;width:${box.width}px;height:${box.height}px;z-index:999999;pointer-events:auto`;root.appendChild(copy);});
+              image=actions.locator('#root-gif-copy');
             }
-            if(mode==='no-overflow-lock')await page.evaluate(()=>{const s=document.createElement('style');s.textContent='html.gallery-user-drawer-open,html.gallery-user-drawer-open body{overflow:auto!important;overscroll-behavior:auto!important}';document.head.append(s);});
             await info.attach('mode.json',{body:JSON.stringify({mode,hash}),contentType:'application/json'});
             await expectAnimatedImage(image,info);
             expect(await originalHash(image)).toBe(hash);
@@ -54,7 +54,7 @@ jobs:
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-paint-preview.log 2>&1 &
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           exit 1
-      - name: Keep all six-second animation and byte assertions
+      - name: Retain frame and byte checks with tracing disabled
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: gif-paint/results.json
         run: |
