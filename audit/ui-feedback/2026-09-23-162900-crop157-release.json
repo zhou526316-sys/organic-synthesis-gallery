@@ -1,0 +1,62 @@
+{
+  "recordedAt": "2026-09-23T16:29:00+08:00",
+  "context": "User requested direct image cropping because only whole images were available, then continued the crop task.",
+  "status": "deployed_and_verified_on_two_active_entries",
+  "pr": 157,
+  "testedHead": "a4c035eed4911d1759509c989d13ce57ba46e0d4",
+  "mergeSha": "583c084322d456a01f32b884f3cab7e9638e7a66",
+  "implementation": {
+    "entry": "Reading status -> uploaded image -> Crop image / cutout. Existing images need no re-upload or pre-upload checkbox. User-center status settings also expose crop and restore.",
+    "modes": ["square", "transparent circle", "free rectangle", "wide 3:1"],
+    "editing": ["drag selection", "resize handle", "pixel coordinates and dimensions", "keyboard arrows", "selection zoom", "live output preview", "portrait aspect preserved"],
+    "cutout": "Local edge-connected simple-background removal, erase/restore brushes and undo. No semantic AI person recognition.",
+    "persistence": "imageCrop distinguishes selected display from retained original. Reload never hydrates the crop back to the full original. Re-edit, view crop, view original and restore original are separate. Cancellation, stale jobs and failed preference save preserve the current image.",
+    "limits": {"sourceBytes": 30000000, "workingCanvasLongEdge": 2048, "cropOutputLongEdge": 512},
+    "gif": "Crop result is static PNG; retained original GIF bytes are unchanged and recoverable in the browser/origin holding the original.",
+    "cloudBoundary": "Existing account state carries static crop/source preview, not original files. Preview-only devices receive a resolution warning. No physical-device or real signed-in synchronization test is claimed."
+  },
+  "currentTurnCorrections": {
+    "cropStyles": "Retained source metadata no longer routes a crop into the original-only status wrapper; configurable color/shape and crop source marker survive.",
+    "originalReadiness": "Bounded shared validation accepts genuine successful load or decode. A pending-decode test and corrupt-original negative control pass. This is not a claim that the earlier isolated pending case proved a specific browser defect.",
+    "fixture": "Mock same-origin API POSTs instead of passing them to the static preview server. Keep pageerror assertions and preserve all original/GIF byte/frame checks.",
+    "portrait": "Constrain canvas maximum width to its intrinsic rendered aspect so capped portrait height cannot introduce coordinate-misaligned letterboxing. Real drag and saved-pixel control pass.",
+    "noWeakenedAcceptance": true
+  },
+  "ci": {
+    "allNineWorkflowsSucceeded": true,
+    "runs": {"crop": 35835945572, "originals": 35835945558, "cardGlow": 35835945517, "presentation": 35835945498, "summary": 35835945544, "refresh": 35835945627, "quality": 35835945529, "migration": 35835945596, "data": 35835945614},
+    "cropAndReadiness": {"webkitPassed": 13, "chromiumPassed": 13, "unitPixelControlsEachJob": 3, "failed": 0, "skipped": 0, "flaky": 0},
+    "originals": {"passed": 18, "failed": 0, "skipped": 0, "flaky": 0},
+    "artifacts": [10738967942, 10739481629, 10739376177]
+  },
+  "deployments": {"githubPagesRun": 35836549349, "githubPagesConclusion": "success", "workerRun": 35836567428, "workerConclusion": "success"},
+  "live": {
+    "runId": 35836653591,
+    "workflowCommit": "7d473d1a57d486420c79f63cf44ad12da7e6726a",
+    "exactReviewedTestsUnmodified": true,
+    "localServerUsed": false,
+    "apiMocked": true,
+    "productionReaderMarks": 0,
+    "fallbackPagesVerified": false,
+    "entryAsset": "assets/index-CAipL8yH.js",
+    "results": [
+      {"entry": "github", "browser": "chromium", "passed": 10, "failed": 0, "skipped": 0, "flaky": 0, "artifact": 10738584686, "sha256": "bcf65e83446435f19a57c0408b3eba4bb2c55cbc13f096c8708ae1f300f9c706"},
+      {"entry": "github", "browser": "webkit", "passed": 10, "failed": 0, "skipped": 0, "flaky": 0, "artifact": 10738994132, "sha256": "79adaabde4286fdc7537b0b95ea8541b60cce3e85a95f1d5c0717044eecc9bdd"},
+      {"entry": "worker", "browser": "chromium", "passed": 10, "failed": 0, "skipped": 0, "flaky": 0, "artifact": 10739985090, "sha256": "cbed6fad8ae5e584df24229af49cf29f4f60eca64366943e21add1c68c443341"},
+      {"entry": "worker", "browser": "webkit", "passed": 10, "failed": 0, "skipped": 0, "flaky": 0, "artifact": 10739048811, "sha256": "3a39ff8ac0f427a095e72e5e1b93020ddf6fbde354488e49e8a98456756dbe96"}
+    ],
+    "evidenceInspected": "All four archives downloaded, SHA256 checked and JSON parsed. Actual mobile selection screenshot inspected; it uses explicit test color blocks, not a real paper image. Pixel/alpha assertions verify actual cropped output rather than whole-image scaling."
+  },
+  "feedback": {
+    "exportRun": 35836143802,
+    "generatedAt": "2026-09-23T08:16:02.259Z",
+    "d1Available": true,
+    "r2Available": true,
+    "openIds": [8, 20, 21, 22, 23, 24, 25, 28, 31, 32, 33, 34],
+    "statusWrites": [],
+    "31": "Direct cropping/circular output/manual cutout sub-scope delivered. Automatic person extraction remains unimplemented; full feedback item stays open."
+  },
+  "scopePreserved": ["literature data and publication gates", "Tampermonkey/Bridge acquisition", "whole-card-only glow", "business reader-count semantics", "held navigation PR150 source"],
+  "otherOutstanding": "Navigation33, previous unrelated32/34 live timing/opening checks,28 broader acceptance and true reader-count concerns are not declared solved by this crop batch.",
+  "conversationArtifacts": ["image-crop-live-mobile.png", "image-crop-live-circle.png", "image-crop-live-portrait.png", "image-crop-release-evidence.zip"]
+}
