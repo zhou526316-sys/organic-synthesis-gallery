@@ -1,0 +1,81 @@
+name: Paired TOC body batch20 workbench
+on:
+  push:
+    branches: [feat/media-batch20-paired-toc-body]
+    paths:
+      - '.github/workflows/new-body-batch20-workbench.yml'
+      - 'audit/media-auto-policy.json'
+      - 'cloudflare/scripts/merge-new-body-auto.mjs'
+      - 'scripts/test-new-body-auto.mjs'
+      - 'scripts/verify-new-body-auto-live.mjs'
+      - '.github/workflows/new-body-continuous.yml'
+      - '.github/workflows/new-body-auto-live.yml'
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: paired-toc-body-batch20
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/media-batch20-paired-toc-body
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Extract frozen real capture fixture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,io,json,os,pathlib,re,urllib.parse,urllib.request,zipfile
+          class BoundRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,req,fp,code,msg,headers,newurl):
+                  result=super().redirect_request(req,fp,code,msg,headers,newurl)
+                  if result is not None and urllib.parse.urlsplit(req.full_url).netloc!=urllib.parse.urlsplit(newurl).netloc: result.remove_header('Authorization')
+                  return result
+          req=urllib.request.Request('https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/artifacts/10737978319/zip',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+          with urllib.request.build_opener(BoundRedirect()).open(req,timeout=40) as r: raw=r.read(32000001)
+          assert len(raw)<=32000000 and hashlib.sha256(raw).hexdigest()=='d2ca8159ecdabb4ee21aa389f92f621de0c962eec657ba9514e31f584ded782c'
+          z=zipfile.ZipFile(io.BytesIO(raw)); ev=json.loads(z.read('evidence.json')); assert not ev['errors']
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'auto-fixture'; (out/'images').mkdir(parents=True)
+          (out/'evidence.json').write_text(json.dumps(ev))
+          n=0
+          for row in ev['images']:
+              if row.get('reviewMarker',{}).get('revision')!='1': continue
+              assert re.fullmatch(r'images/next-\d{3}\.(svg|png|webp)',row['file'])
+              b=z.read(row['file']); assert hashlib.sha256(b).hexdigest()==row['sha256']; (out/row['file']).write_bytes(b); n+=1
+          assert n==9
+          print('REAL_FIXTURE_FILES',n)
+          PY
+      - name: Run batch20 and existing body safety regressions
+        env:
+          BODY_AUTO_FIXTURE: ${{ runner.temp }}/auto-fixture
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node --check cloudflare/scripts/merge-new-body-auto.mjs
+          node --check scripts/test-new-body-auto.mjs
+          node --check scripts/verify-new-body-auto-live.mjs
+          node scripts/test-new-body-auto.mjs 2>&1 | tee "$RUNNER_TEMP/batch20-tests.log"
+          grep -F 'NEW_BODY_AUTO_TESTS ' "$RUNNER_TEMP/batch20-tests.log"
+          node scripts/test-body-review-markers.mjs
+          node scripts/test-reviewed-body.mjs
+          git diff --check
+      - name: Assert production literature and capture client are untouched
+        run: |
+          set -euo pipefail
+          test -z "$(git diff --name-only origin/main...HEAD -- public/toc-mainline.user.js cloudflare/worker public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json src)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: paired-toc-body-batch20-tests
+          path: ${{ runner.temp }}/batch20-tests.log
+          retention-days: 14
+          if-no-files-found: warn

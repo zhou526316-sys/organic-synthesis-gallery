@@ -5,13 +5,23 @@
   "mediaGeneration": 1790082000000,
   "requiredCaptureVersion": "6.2.20",
   "requiredMarkerRevision": "1",
-  "publishers": ["acs"],
-  "maxNewImages": 30,
-  "maxNewArticles": 5,
+  "publishers": [
+    "acs"
+  ],
+  "maxNewImages": 250,
+  "maxNewArticles": 25,
   "maxFiguresPerCard": 10,
   "maxSnapshotItems": 2000,
-  "heldDois": [{"doi":"10.1021/jacs.6c13641","reason":"Existing media review deferred pending literature scope clarification; not an image contamination finding."}],
+  "heldDois": [
+    {
+      "doi": "10.1021/jacs.6c13641",
+      "reason": "Existing media review deferred pending literature scope clarification; not an image contamination finding."
+    }
+  ],
   "verificationMode": "automated_source_identity_digest_and_image_decode",
   "individualSemanticReview": false,
-  "notes": "New server-marked current-generation body figures only. No historical unquarantine, publisher downloads, TOC changes, image replacement, or literature additions. Opaque sources remain in the separate review task. Existing manually reviewed approvals are preserved."
+  "notes": "New server-marked current-generation ACS body figures only. Publish in batches of at least 20 and at most 25 articles. A body figure may enter a new batch only when the same Pages build already contains an official TOC for that DOI, so freshly captured TOC and body media can go live together. No historical unquarantine, publisher downloads, TOC replacement, image replacement, or literature additions. Opaque sources remain in the separate review task. Existing manually reviewed approvals are preserved.",
+  "minNewArticles": 20,
+  "requireOfficialTocInBuild": true,
+  "reviewBatchTarget": "20-25 articles"
 }
