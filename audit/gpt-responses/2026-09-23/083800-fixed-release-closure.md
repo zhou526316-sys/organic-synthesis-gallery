@@ -1,0 +1,13 @@
+北京时间 2026-09-23 08:00 固定发布槽已经完成闭环。最终状态是 **`synced_with_pending`**：本槽审核共 76 篇，24 篇已发布、51 篇排除、1 篇继续暂缓；暂缓 DOI 为 `10.31635/ccschem.026.202608262`，它没有阻挡其余 24 篇上线，也没有被强行改成 exclude。生产总 DOI/卡片数为 **536**。fileciteturn614file0L2-L2
+
+生产发布走的是严格的逐篇准入链。预发布 gate run `35797233277` 全部步骤成功，包括完整 handoff 校验、目标槽新鲜度、固定 staging→formal 转换和严格 release bundle；原子 release writer run `35801004618` 成功，生成生产提交 `9803b4c32e0bf14520fe77e6b1a0c56476759158`。发布 marker 为 schema v2 / `slot-release` / `per-doi`，固定了 8 个受保护文件 SHA、正式 review、staging、compact handoff、audit 及 publishable/rejected/deferred DOI 分区。fileciteturn617file0L2-L2
+
+Pages run `35801188584` 实际成功：`literature_authorization`、build、deploy 三个 job 均为 success；不是通过关闭门禁获得绿色结果。逻辑 publicationSlot 是 **08:00**，Pages 实际部署完成时间记录为 **08:15:41**；这只是本次固定发布任务的部署完成时间，不构成其它任务在任意时点补发生产文献的许可。线上校验记录确认 24 个 accepted DOI 均存在、51 个 rejected DOI 均不存在、pending DOI 不在生产，线上与仓库均为 536 DOI。fileciteturn613file0L2-L2
+
+post-release audit run `35801367846` 成功。最新机器快照生成于 `2026-09-23T00:18:35.461Z`，仓库/线上 536 DOI，`unresolved=1`，且唯一 unresolved 正是上述 CCS Chemistry pending DOI；`criticalSourceFailures=0`、`sourceFamilyGaps=0`、`sourceCoverageAnomalies=0`、`historicalCoverageLosses=0`。`closureCoverageAnomalies=2`，因此 `verifiedThrough` 正确保留在 **2026-09-20**，只影响 closure 前进，不影响已经验证的卡片上线。fileciteturn622file0L2-L2 fileciteturn623file0L2-L2
+
+质量门这里发现并修正了一个时序问题：较早的 run `35801701176` 失败，是因为它在最终 state 持久化前执行，当时 validator 看到 pending backlog 的重试元数据/`synced_with_pending` 状态尚未写齐；不是文献发布内容本身错误。随后我通过专用 `audit/automation-triggers/literature-quality-gate-request.json` 显式触发 post-release quality gate，run **`35802454941` 已成功**，输出 `publicationChecksPassed=true`、repositoryDois=536、deployedDois=536、1 个 deferred DOI 精确匹配 durable backlog、failures=[]。之后把 quality gate run 纳入 finalizer 的必验依赖，并由 finalizer run `35802791353` 成功写回 state；当前 `lastPublication.qualityGateRun=35802454941`，同时保留 `reviewComplete=false`。fileciteturn614file0L2-L2
+
+TOC demand 也已刷新，commit `75f9007612b85e3bed0ae92b70b5b65e7a2bfdbc`；当前记录 `visibleGapTotal=450`、`missingOfficialTotal=452`、`officialUpgradeTotal=2`、`figureGapTotal=536`。这些媒体缺口继续只交给 Tampermonkey/VPN Bridge，未启用 OA PDF/HTML 自动提图，也不影响文献卡片发布。最终闭环结果文件记录为：published=24、deferred=1、productionCards=536、Pages run `35801188584`、quality gate run `35802454941`、post-release audit run `35801367846`。fileciteturn624file0L2-L2
+
+本轮在 08:00 发布完成后没有再次修改任何受保护的生产文献数据；后续提交只用于显式触发质量复验、把 quality gate run 写入最终 state，以及修正 finalizer 的质量门依赖记录。下一固定生产发布槽仍为北京时间 **18:00**。
