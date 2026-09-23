@@ -152,6 +152,27 @@ jobs:
           echo "WeChat MP verification file did not become live in time" >&2
           exit 1
 
+      - name: Verify WeChat JS-SDK signature endpoint
+        env:
+          SITE_URL: https://api.gczhouwld.com
+        run: |
+          node - <<'NODE'
+          const target = process.env.SITE_URL + '/?doi=10.1021/jacs.6c15393';
+          const url = new URL('/api/wechat/js-sdk-signature', process.env.SITE_URL);
+          url.searchParams.set('url', target);
+          const response = await fetch(url, { headers: { 'cache-control': 'no-cache' } });
+          const text = await response.text();
+          let body = {};
+          try { body = text ? JSON.parse(text) : {}; } catch {}
+          console.log(JSON.stringify({ status: response.status, body }));
+          if (!response.ok || body?.ok !== true || !body?.signature) {
+            throw new Error('WeChat JS-SDK signature probe failed: ' + JSON.stringify({ status: response.status, body }));
+          }
+          if (body.appId !== 'wx28b0fa5a3e28387c') {
+            throw new Error('WeChat JS-SDK returned an unexpected AppID');
+          }
+          NODE
+
       - name: Probe configured email delivery
         env:
           WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
