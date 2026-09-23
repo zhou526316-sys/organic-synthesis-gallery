@@ -102,6 +102,7 @@ ${matchLines}
 // @grant        GM_openInTab
 // @connect      *
 // @connect      acs.silverchair-cdn.com
+// @connect      media.springernature.com
 // @run-at       document-idle
 // @noframes
 // ==/UserScript==

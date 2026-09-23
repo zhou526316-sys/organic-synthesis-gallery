@@ -1,6 +1,10 @@
 from pathlib import Path
 import hashlib
 p=Path('public/toc-mainline.user.js');s=p.read_text()
+if "var CONTROLLER_REVISION = '2.2.22';" in s:
+    assert all(x in s for x in ['requestControllerStart','previous_task_tab_not_closed','clearOwnedJob','await acquireLease()','assertBoundCaptureJob'])
+    print('TM222_RETAINS_WINDOW_GUARDS: run behavioral regression unchanged')
+    raise SystemExit(0)
 if "var CONTROLLER_REVISION = '2.2.21';" not in s:
     assert hashlib.sha1(b'blob '+str(len(s.encode())).encode()+b'\0'+s.encode()).hexdigest()=='4e31fc949efa6021fa6be32b02728dd239e04536','Current media source changed; reconcile before patching'
     s=s.replace("  var VERSION = '6.2.20';","  var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.\n  var CONTROLLER_REVISION = '2.2.21';\n  var CONTROLLER_STOP_REASON = '';",1)

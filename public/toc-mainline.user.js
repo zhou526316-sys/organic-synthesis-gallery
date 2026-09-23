@@ -30,6 +30,7 @@
 // @grant        GM_openInTab
 // @connect      *
 // @connect      acs.silverchair-cdn.com
+// @connect      media.springernature.com
 // @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
 // @downloadURL  https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
 // ==/UserScript==
@@ -235,6 +236,7 @@
   function autoReportCause(event) {
     var m=String(event.message||'');var status=Number(event.httpStatus||0);
     if(/doi_mismatch|tab_job_mismatch|stale_or_unbound/.test(m))return 'identity_rejected';
+    if(/Request was blocked by the user|Refused to connect.*blocked/i.test(m))return 'extension_connection_denied';
     if(status===401)return 'authentication_http_401';
     if(status===403)return 'access_denied_http_403';
     if(status===429)return 'rate_limited_http_429';
