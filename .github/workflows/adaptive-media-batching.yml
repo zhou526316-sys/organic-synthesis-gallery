@@ -1,7 +1,7 @@
 name: Adaptive paired media batching regression
 on:
-  push:
-    branches: [fix/media-batch20-toc-readiness]
+  pull_request:
+    branches: [main]
     paths:
       - '.github/workflows/adaptive-media-batching.yml'
       - 'audit/media-auto-policy.json'
@@ -22,8 +22,6 @@ jobs:
     timeout-minutes: 9
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: fix/media-batch20-toc-readiness
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
