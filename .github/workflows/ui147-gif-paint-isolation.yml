@@ -23,53 +23,38 @@ jobs:
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/gif-paint-install.log 2>&1 || { tail -60 /tmp/gif-paint-install.log; exit 1; }
           npm run build
-      - name: Observe shadow bounds and preparation; preserve product and assertions
+      - name: Isolate native control rendering without release edits
         run: |
           mkdir -p gif-paint
           cat > tests/pr147-paint-isolation.spec.ts <<'TS'
           import { test, expect } from '@playwright/test';
-          import { createHash } from 'node:crypto';
-          import { open, gifFile, GIF } from './status-image-fixtures';
-          test.use({trace:'off',serviceWorkers:'block',viewport:{width:390,height:900}});
-          for(const mode of ['baseline','caret-initial','host-box','bare-shadow','no-scroll-lock']) test(mode,async({page},info)=>{
-            let image;
-            if(mode==='bare-shadow'){
-              await page.setContent('<div id="host"></div>');
-              await page.locator('#host').evaluate((host,base64)=>{const root=host.attachShadow({mode:'open'});root.innerHTML='<img style="width:72px;height:36px;position:fixed;left:79px;top:485px" src="data:image/gif;base64,'+base64+'">';},GIF.toString('base64'));
-              image=page.locator('#host img');
-            }else{
-              const actions=await open(page,390);
-              await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
-              await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
-              image=actions.locator('[data-action="set-status:to-read"] .status-image');
-              await expect(image).toHaveAttribute('data-image-source','original');
-              if(mode==='host-box')await actions.evaluate(host=>{
-                const root=host.shadowRoot!;const drawer=root.querySelector('.drawer') as HTMLElement;const r=drawer.getBoundingClientRect();
-                (host as HTMLElement).style.cssText='position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:999999;pointer-events:none';
-                drawer.style.position='absolute';drawer.style.left=r.x+'px';drawer.style.top=r.y+'px';drawer.style.pointerEvents='auto';
-              });
-              if(mode==='no-scroll-lock')await page.evaluate(()=>document.documentElement.classList.remove('gallery-user-drawer-open'));
+          import { open, gifFile, originalHash } from './status-image-fixtures';
+          import { expectAnimatedImage } from './animated-image-evidence';
+          test.use({trace:'off',serviceWorkers:'block'});
+          for(const mode of ['baseline','appearance-none','div-instead-of-button','image-outside-button','no-overflow-lock']) test(mode,async({page},info)=>{
+            const actions=await open(page,390);
+            await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
+            await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
+            let image=actions.locator('[data-action="set-status:to-read"] .status-image');
+            await expect(image).toHaveAttribute('data-image-source','original');
+            const hash=await originalHash(image);
+            if(mode==='appearance-none')await image.evaluate(node=>{const button=node.closest('button')!;button.style.setProperty('appearance','none');button.style.setProperty('-webkit-appearance','none');});
+            if(mode==='div-instead-of-button')await image.evaluate(node=>{const button=node.closest('button')!;const div=document.createElement('div');for(const a of button.attributes)div.setAttribute(a.name,a.value);while(button.firstChild)div.appendChild(button.firstChild);button.replaceWith(div);});
+            if(mode==='image-outside-button'){
+              await image.evaluate(node=>{const box=node.getBoundingClientRect();const root=node.getRootNode() as ShadowRoot;const copy=node.cloneNode(true) as HTMLImageElement;copy.id='outside-button';copy.style.cssText=`position:fixed;left:${box.x}px;top:${box.y}px;width:${box.width}px;height:${box.height}px;z-index:999999;pointer-events:none`;root.appendChild(copy);});
+              image=actions.locator('#outside-button');
             }
-            await image.scrollIntoViewIfNeeded();
-            const geometry=await image.evaluate(node=>{const out=[];let x:Element|null=node;while(x){out.push({tag:x.tagName,cls:x.className,box:x.getBoundingClientRect().toJSON()});x=x.parentElement||((x.getRootNode() as ShadowRoot).host??null);}return out;});
-            const frames=new Map<string,Buffer>();const samples:any[]=[];
-            try{
-              await expect.poll(async()=>{
-                const box=(await image.boundingBox())!;
-                const pixels=await page.screenshot({clip:box,animations:'allow',caret:mode==='caret-initial'?'initial':'hide'});
-                const hash=createHash('sha256').update(pixels).digest('hex');frames.set(hash,pixels);samples.push({at:Date.now(),hash});return frames.size;
-              },{timeout:6000,intervals:[150,230,310]}).toBeGreaterThan(1);
-            }finally{
-              await info.attach('conditions.json',{body:JSON.stringify({mode,geometry,samples}),contentType:'application/json'});
-              let i=0;for(const bytes of frames.values())await info.attach(`frame-${i++}.png`,{body:bytes,contentType:'image/png'});
-            }
+            if(mode==='no-overflow-lock')await page.evaluate(()=>{const s=document.createElement('style');s.textContent='html.gallery-user-drawer-open,html.gallery-user-drawer-open body{overflow:auto!important;overscroll-behavior:auto!important}';document.head.append(s);});
+            await info.attach('mode.json',{body:JSON.stringify({mode,hash}),contentType:'application/json'});
+            await expectAnimatedImage(image,info);
+            expect(await originalHash(image)).toBe(hash);
           });
           TS
           git diff --exit-code -- src/ public/ shared/
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-paint-preview.log 2>&1 &
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           exit 1
-      - name: Retain coordinate and pixel evidence for all conditions
+      - name: Keep all six-second animation and byte assertions
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: gif-paint/results.json
         run: |
