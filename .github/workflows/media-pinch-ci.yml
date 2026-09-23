@@ -7,6 +7,7 @@ on:
       - 'src/media-enhancements.css'
       - 'src/user-ui/media-gestures.ts'
       - 'tests/media-pinch.spec.ts'
+      - 'tests/media-gestures.test.cjs'
       - '.github/workflows/media-pinch-ci.yml'
 permissions:
   contents: read
@@ -37,6 +38,12 @@ jobs:
           npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/pinch-browser.log 2>&1 || { tail -60 /tmp/pinch-browser.log; exit 1; }
           npx tsc --noEmit
           npm run build
+      - name: Check input-stream isolation and cleanup
+        run: |
+          mkdir -p pinch-results
+          npx --no-install esbuild src/user-ui/media-gestures.ts --bundle --platform=node --format=cjs --outfile=/tmp/gallery-media-gestures.cjs
+          set -o pipefail
+          node --test tests/media-gestures.test.cjs 2>&1 | tee pinch-results/unit-controls.log
       - name: Start isolated preview
         run: |
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/pinch-preview.log 2>&1 &
