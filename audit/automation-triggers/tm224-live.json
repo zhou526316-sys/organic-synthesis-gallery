@@ -1,9 +1,9 @@
 {
-  "requestedAt": "2026-09-23T13:03:00Z",
-  "bridgeVersion": "2.2.25",
+  "requestedAt": "2026-09-23T13:36:00Z",
+  "bridgeVersion": "2.2.26",
   "captureProtocol": "6.2.20",
   "readOnly": true,
   "mediaWrites": 0,
   "publisherRequests": 0,
-  "reason": "Rerun both corrected Bridge 2.2.25 live verifiers after removing stale 2.2.24 installer assertions."
+  "reason": "Rerun Bridge 2.2.26 live verifiers after Pages deployment propagation; build artifact independently confirmed @version 2.2.26 and controllerRevision 2.2.26."
 }
