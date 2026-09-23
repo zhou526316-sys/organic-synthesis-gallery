@@ -9,6 +9,9 @@ on:
       - 'scripts/lib/scope-corrections.mjs'
       - 'shared/chinese-title-overrides.js'
       - 'audit/literature-scope-corrections.json'
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
 permissions:
   contents: read
 concurrency:
@@ -16,13 +19,22 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
+      - name: Record exact verified source and upstream deployment
+        env:
+          UPSTREAM_RUN: ${{ github.event.workflow_run.id || '' }}
+          UPSTREAM_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          node -e 'const fs=require("fs"),cp=require("child_process");const actual=cp.execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();if(actual!==process.env.UPSTREAM_SHA)throw new Error("verification checkout mismatch");fs.writeFileSync("/tmp/scope-verification-version.json",JSON.stringify({sourceCommit:actual,upstreamPagesRun:process.env.UPSTREAM_RUN||null,event:process.env.GITHUB_EVENT_NAME,productionDataModified:false},null,2))'
       - name: Test explicit exclusions and complete Chinese-title coverage
         shell: bash
         run: |
@@ -45,5 +57,6 @@ jobs:
             /tmp/live-chinese-title-smoke.json
             /tmp/scope-title-regression.json
             /tmp/discovery-capability-regression.json
+            /tmp/scope-verification-version.json
           if-no-files-found: warn
           retention-days: 14
