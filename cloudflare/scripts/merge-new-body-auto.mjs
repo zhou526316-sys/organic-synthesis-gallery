@@ -129,11 +129,12 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   const now=options.now||Date.now(),inputs=options.inputs||await readLiveInputs();
   const {policy,holds,papers,rows}=await pendingNewRows({root,inputs,now});
   const mediaPath=path.join(root,'public/media-index.json'),media=JSON.parse(await readFile(mediaPath,'utf8'));media.items||={};
+  const ledgerPath=path.join(root,'public/body-publication-ledger.json'),ledger=JSON.parse(await readFile(ledgerPath,'utf8'));requireBody(Array.isArray(ledger.items),'auto_ledger_contract');
   const beforeToc=JSON.stringify(Object.fromEntries(Object.entries(media.items).map(([d,r])=>[d,r.toc]))),originalDois=Object.keys(media.items);
   const decoder=options.decoder||await createImageDecoder();
   const getNew=options.getNew||((row)=>fetchStored(WORKER+'/media/'+row.r2Key,4000000));
   const getOld=options.getOld||((old)=>fetchStored(old.imageUrl,4000000));
-  const attempts={...(inputs.previous.attempts||{})},retained=[],held=[],added=[],newDois=new Set(),tocWaitingDois=new Set();
+  const attempts={...(inputs.previous.attempts||{})},retained=[],supersededByReviewed=[],held=[],added=[],newDois=new Set(),tocWaitingDois=new Set();
   let prepared=[];
   const candidateDois=[];
   for(const row of rows)if(!candidateDois.includes(row.doi)&&candidateDois.length<policy.maxNewArticles)candidateDois.push(row.doi);
@@ -148,7 +149,12 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
       const {ext}=await validateNewBodyMetadata(row,policy,now);
       requireBody(old.imageUrl==='media-mirror/body-auto-'+row.sha256+'.'+ext,'auto_previous_image_path');
       const existing=(media.items?.[row.doi]?.figures?.figures||[]).find(f=>f.id===row.id);
-      if(existing)requireBody(existing.publicationId===POLICY_ID&&existing.verifiedSha256===row.sha256&&existing.imageUrl===old.imageUrl&&existing.evidenceSha256===old.evidenceSha256&&existing.label===row.label,'auto_prior_publication_changed');
+      if(existing){
+        const sameAuto=existing.publicationId===POLICY_ID&&existing.verifiedSha256===row.sha256&&existing.imageUrl===old.imageUrl&&existing.evidenceSha256===old.evidenceSha256&&existing.label===row.label;
+        const reviewedHandoff=!sameAuto&&existing.verifiedSha256===row.sha256&&existing.evidenceSha256===old.evidenceSha256&&existing.label===row.label&&ledger.items.some(item=>item.publicationId!==POLICY_ID&&item.state==='published'&&item.doi===row.doi&&item.id===row.id&&item.sha256===row.sha256&&item.evidenceSha256===old.evidenceSha256&&item.label===row.label&&item.imageUrl===existing.imageUrl);
+        requireBody(sameAuto||reviewedHandoff,'auto_prior_publication_changed');
+        if(reviewedHandoff){supersededByReviewed.push({doi:row.doi,id:row.id,sha256:row.sha256,publicationId:existing.publicationId,imageUrl:existing.imageUrl});continue;}
+      }
       const bytes=await getOld(old);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
       prepared.push({row,bytes,ext,admittedAt:old.admittedAt,isNew:false,alreadyPublished:Boolean(existing),existingImageUrl:existing?.imageUrl||null});retained.push({doi:row.doi,id:row.id});
     }
@@ -200,13 +206,11 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
     entries.push({policyId:POLICY_ID,record:row,imageUrl,evidenceSha256:evidenceKey(row),admittedAt,validationMode:'automated_provenance_bytes_and_decode',individualSemanticReview:false});
   }
   requireBody(JSON.stringify(Object.fromEntries(originalDois.map(d=>[d,media.items[d].toc])))===beforeToc,'auto_modified_toc');
-  const ledgerPath=path.join(root,'public/body-publication-ledger.json');
-  const ledger=JSON.parse(await readFile(ledgerPath,'utf8'));requireBody(Array.isArray(ledger.items),'auto_ledger_contract');
   ledger.items=ledger.items.filter(x=>x.publicationId!==POLICY_ID);
   for(const e of entries)ledger.items.push({assetKey:exactKey(e.record),doi:e.record.doi,id:e.record.id,sha256:e.record.sha256,evidenceSha256:e.evidenceSha256,label:e.record.label,imageUrl:e.imageUrl,state:'published',publicationId:POLICY_ID,validationMode:e.validationMode,individualSemanticReview:false,originalUpdatedAt:e.record.updatedAt});
   ledger.count=ledger.items.length;ledger.generatedAt=now;ledger.mediaManifestGeneratedAt=now;media.generatedAt=now;
   const snapshot={schemaVersion:1,policyId:POLICY_ID,generatedAt:now,mediaGeneration:policy.mediaGeneration,items:entries,count:entries.length,attempts};
-  const status={schemaVersion:1,policyId:POLICY_ID,checkedAt:now,enabled:policy.enabled,stageRows:inputs.stage?.count??null,stageReadError:inputs.stageError||null,localCaptureError:inputs.localCaptureError||null,newEligible:rows.length,eligibleArticles:eligibleArticleCount,candidateArticles:candidateDois.length,validatedNewArticles:validatedNewArticleCount,releaseReady:releaseGate.ready,preferredTargetMet:releaseGate.targetReady,tailFlushReady:releaseGate.tailReady,releaseMode:releaseGate.mode,eligibleIdleMinutes:releaseGate.idleMinutes,oldestEligibleAgeMinutes:releaseGate.backlogAgeMinutes,backlogMaxWaitMinutes:policy.backlogMaxWaitMinutes,agedBacklogReady:releaseGate.backlogReady,tailFlushIdleMinutes:policy.tailFlushIdleMinutes,targetBatchArticles:policy.minNewArticles,maximumBatchArticles:policy.maxNewArticles,waitingForMore:candidateDois.length>0&&!releaseGate.ready,tocPairedRequired:policy.requireOfficialTocInBuild,tocWaitingArticles:tocWaitingDois.size,publishedNewArticles:new Set(added.map(x=>x.doi)).size,added,retained,held,autoPublishedCount:entries.length,totalPublicFigures:Object.values(media.items).reduce((n,r)=>n+(r.figures?.figures||[]).length,0),stagingWrites:0,stagingDeletes:0,publisherRequests:0,individualSemanticReview:false};
+  const status={schemaVersion:1,policyId:POLICY_ID,checkedAt:now,enabled:policy.enabled,stageRows:inputs.stage?.count??null,stageReadError:inputs.stageError||null,localCaptureError:inputs.localCaptureError||null,newEligible:rows.length,eligibleArticles:eligibleArticleCount,candidateArticles:candidateDois.length,validatedNewArticles:validatedNewArticleCount,releaseReady:releaseGate.ready,preferredTargetMet:releaseGate.targetReady,tailFlushReady:releaseGate.tailReady,releaseMode:releaseGate.mode,eligibleIdleMinutes:releaseGate.idleMinutes,oldestEligibleAgeMinutes:releaseGate.backlogAgeMinutes,backlogMaxWaitMinutes:policy.backlogMaxWaitMinutes,agedBacklogReady:releaseGate.backlogReady,tailFlushIdleMinutes:policy.tailFlushIdleMinutes,targetBatchArticles:policy.minNewArticles,maximumBatchArticles:policy.maxNewArticles,waitingForMore:candidateDois.length>0&&!releaseGate.ready,tocPairedRequired:policy.requireOfficialTocInBuild,tocWaitingArticles:tocWaitingDois.size,publishedNewArticles:new Set(added.map(x=>x.doi)).size,added,retained,supersededByReviewed,held,autoPublishedCount:entries.length,totalPublicFigures:Object.values(media.items).reduce((n,r)=>n+(r.figures?.figures||[]).length,0),stagingWrites:0,stagingDeletes:0,publisherRequests:0,individualSemanticReview:false};
   await writeFile(mediaPath,JSON.stringify(media));await writeFile(ledgerPath,JSON.stringify(ledger));await writeFile(path.join(root,'public',SNAPSHOT),JSON.stringify(snapshot));await writeFile(path.join(root,'public/auto-body-status.json'),JSON.stringify(status));
   console.log('NEW_BODY_AUTO_PUBLICATION '+JSON.stringify(status));return {status,snapshot,media,ledger};
 }
