@@ -23,7 +23,7 @@ jobs:
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/gif-paint-install.log 2>&1 || { tail -60 /tmp/gif-paint-install.log; exit 1; }
           npm run build
-      - name: Partition exact stylesheet rules in fresh disposable contexts
+      - name: Compare neutral inspection, timing and CSSOM read controls
         run: |
           mkdir -p gif-paint
           cat > tests/pr147-paint-isolation.spec.ts <<'TS'
@@ -31,21 +31,21 @@ jobs:
           import { open, gifFile, originalHash } from './status-image-fixtures';
           import { expectAnimatedImage } from './animated-image-evidence';
           test.use({trace:'off',serviceWorkers:'block'});
-          for(const [start,end] of [[0,0],[0,1],[0,.5],[.5,1],[0,.25],[.25,.5],[.5,.75],[.75,1]]) test(`omit rules ${start}-${end}`,async({page},info)=>{
+          for(const mode of ['baseline','noop','delay-120ms','computed-image','style-text','css-rules-length','css-rules-text']) test(mode,async({page},info)=>{
             const actions=await open(page,390);
             await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
             await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
             const image=actions.locator('[data-action="set-status:to-read"] .status-image');
             await expect(image).toHaveAttribute('data-image-source','original');
             const hash=await originalHash(image);
-            const rules=await actions.evaluate((host,bounds)=>{
-              const sheets=Array.from(host.shadowRoot!.querySelectorAll('style')).map(el=>el.sheet!).filter(Boolean);
-              const all=sheets.flatMap(sheet=>Array.from(sheet.cssRules).map(rule=>rule.cssText));
-              let offset=0;
-              for(const sheet of sheets){const len=sheet.cssRules.length;for(let i=len-1;i>=0;i--){const index=offset+i;if(index>=Math.floor(all.length*bounds[0])&&index<Math.floor(all.length*bounds[1]))sheet.deleteRule(i);}offset+=len;}
-              return {all,removed:all.slice(Math.floor(all.length*bounds[0]),Math.floor(all.length*bounds[1]))};
-            },[start,end]);
-            await info.attach('rules.json',{body:JSON.stringify({start,end,hash,...rules},null,2),contentType:'application/json'});
+            let inspected:unknown=null;
+            if(mode==='noop')inspected=await actions.evaluate(()=>true);
+            if(mode==='delay-120ms')await page.waitForTimeout(120);
+            if(mode==='computed-image')inspected=await image.evaluate(node=>getComputedStyle(node).width);
+            if(mode==='style-text')inspected=await actions.evaluate(host=>Array.from(host.shadowRoot!.querySelectorAll('style')).map(s=>s.textContent));
+            if(mode==='css-rules-length')inspected=await actions.evaluate(host=>Array.from(host.shadowRoot!.querySelectorAll('style')).map(s=>s.sheet!.cssRules.length));
+            if(mode==='css-rules-text')inspected=await actions.evaluate(host=>Array.from(host.shadowRoot!.querySelectorAll('style')).flatMap(s=>Array.from(s.sheet!.cssRules).map(r=>r.cssText)));
+            await info.attach('inspection.json',{body:JSON.stringify({mode,hash,inspected}),contentType:'application/json'});
             await expectAnimatedImage(image,info);
             expect(await originalHash(image)).toBe(hash);
           });
@@ -54,7 +54,7 @@ jobs:
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-paint-preview.log 2>&1 &
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           exit 1
-      - name: Keep real pixel, byte and six-second acceptance criteria
+      - name: Retain pixel and byte checks with tracing disabled
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: gif-paint/results.json
         run: |
