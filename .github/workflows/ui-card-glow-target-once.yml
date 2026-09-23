@@ -1,4 +1,4 @@
-name: Apply reviewed card-only glow correction once
+name: Apply reviewed card-only glow source correction
 on:
   push:
     branches: [fix/ui-refresh-cost-20260923-1115]
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
-      - name: Apply the user's explicit card-not-button target to inspected source
+      - name: Apply inspected source and tests only, without modifying any workflow
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -43,11 +43,9 @@ jobs:
           p.write_text(text)
           p,text=load('src/user-ui/status-glow-width.ts','1d5d44e7ebbadaf96d7e440f014ea2b23489d26f')
           text=text.replace("tr('光效粗细', 'Glow thickness')","tr('卡片光效粗细', 'Card glow thickness')")
-          text=once(text,"'1–6px；拖动预览，松开保存。光效关闭时只保存粗细.', '1–6px; drag to preview, release to save. Off stays off.'", "'1–6px；拖动预览，松开保存。光效关闭时只保存粗细.', '1–6px; drag to preview, release to save. Off stays off.'") if "粗细.'" in text else text
           text=once(text,"'1–6px；拖动预览，松开保存。光效关闭时只保存粗细。', '1–6px; drag to preview, release to save. Off stays off.'","'1–6px 卡片外沿；拖动预览，松开保存。按钮不发光，关闭时不显示光效。', '1–6px card edge; drag to preview, release to save. Buttons do not glow. Off stays off.'")
           old="    root.querySelectorAll<HTMLElement>('[data-status-glow-id]').forEach(node => {\n      if (node.dataset.statusGlowId === id) applyGlowWidth(node, width);\n    });"
-          new="    const card = (root.host as HTMLElement).closest<HTMLElement>('#gallery > .card');\n    if (card?.dataset.statusGlowId === id) applyGlowWidth(card, width);"
-          text=once(text,old,new)
+          text=once(text,old,"    const card = (root.host as HTMLElement).closest<HTMLElement>('#gallery > .card');\n    if (card?.dataset.statusGlowId === id) applyGlowWidth(card, width);")
           start=text.index('\n[data-status-glow]');text=text[:start]+'\n`;\n'
           text=text.replace('Preview touches only this disposable card render.', 'Preview touches only the current matching literature card.')
           p.write_text(text)
@@ -78,17 +76,15 @@ jobs:
           p=Path('tests/card-glow-target.spec.ts');text=p.read_text()
           needle="    const statusButton = actions.locator('[data-action=\"status\"]');"
           text=once(text,needle,needle+"\n    await actions.locator('[data-action=\"set-status:to-read\"]').click();\n    await statusButton.click();")
-          p.write_text(text)
-          p,text=load('.github/workflows/status-glow-width-ci.yml','ccfd840ae785ba91b00fc71f300357e67cc92db7')
-          text=once(text,"      - 'tests/status-*.ts'","      - 'tests/status-*.ts'\n      - 'tests/card-glow-target.spec.ts'")
-          text=once(text,'playwright test tests/status-glow-width.spec.ts --browser','playwright test tests/status-glow-width.spec.ts tests/card-glow-target.spec.ts --browser')
+          text=once(text,"actions.locator('.status-glow-control > span')","actions.locator('[data-status-editor=\"to-read\"] .status-glow-control > span')")
+          text=once(text,"actions.locator('.status-glow-width-control > label')","actions.locator('[data-status-editor=\"to-read\"] .status-glow-width-control > label')")
           p.write_text(text)
           PY
           git diff --check
+          git diff --exit-code -- .github/workflows/
           git diff --stat
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/user-ui/card-glow.ts src/user-ui/status-presentation.ts src/user-ui/status-glow-width.ts tests/status-presentation.spec.ts tests/status-glow-width.spec.ts tests/card-glow-target.spec.ts .github/workflows/status-glow-width-ci.yml
-          git rm .github/workflows/ui-card-glow-target-once.yml
-          git commit -m 'fix(ui): apply glow and thickness to full cards, remove button glow per user correction'
+          git add src/user-ui/card-glow.ts src/user-ui/status-presentation.ts src/user-ui/status-glow-width.ts tests/status-presentation.spec.ts tests/status-glow-width.spec.ts tests/card-glow-target.spec.ts
+          git commit -m 'fix(ui): card-only glow and thickness per explicit user correction'
           git push origin HEAD:fix/ui-refresh-cost-20260923-1115
