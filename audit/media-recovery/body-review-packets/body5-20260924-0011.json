@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-0011",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T16:10:09Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10762463898,
+  "evidenceArchiveSha256": "d9e12b173db1f2658a46e600a7cc7f1b5089acb57b43d3a6b0f355b462278b5d",
+  "evidenceRunId": 35886066052,
+  "approvedCount": 18,
+  "reviewMethod": "All 18 selected stored SVG files across five current-corpus articles were independently rehashed against the frozen GitHub evidence archive, byte-length checked, XML-parsed, rendered on white and visually reviewed against the owning paper theme plus each isolated Figure/Scheme caption. Task/page/article/source DOI bindings, captureVersion 6.2.20, job IDs, media generation 1790082000000, content-addressed R2 keys, current public media index, public publication ledger and existing same-ID body figures were checked. The two newly marked JOC rows had their canonical evidence fingerprints independently recomputed and matched the server markers; older unmarked rows were accepted only after equivalent frozen-byte/source/caption evidence was independently checked. Capture reports or success markers were provenance evidence only and were not treated as semantic approval. No publisher recrawl, R2 write, server-side import/repair, literature-data change, scope change or userscript change was performed.",
+  "quality": "All 18 approved files are SVG captures that parse and render successfully, with no external HTTP image references. Candidate full SHA256 values are unique and none collides with a current published TOC/body-file hash. Existing official TOCs for the four Organic Letters papers remain distinct source assets and are preserved. JOC 10.1021/acs.joc.6c01653 currently has no official TOC; this packet adds only missing Scheme 3 and Scheme 6 alongside its existing reviewed body figures. Organic Letters 10.1021/acs.orglett.6c03356 keeps its existing Scheme 2; this packet adds Scheme 3 and Scheme 4. For 10.1021/acs.orglett.6c03248, Scheme 2 is not present in this frozen selection and remains unapproved/pending without blocking the six individually verified figures in this packet.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.joc.6c01653",
+      "images": [
+        ["next-001", "scheme-3", "Viewed the K2S/CaC2 tandem selenylation/cyclization substrate scope to 2-methylbenzoselenazoles; product series and conditions match Scheme 3 and the paper theme."],
+        ["next-016", "scheme-6", "Viewed the proposed tandem mechanism using CaC2-derived acetylene, selenium/sulfide intermediates and cyclization to 2-methylbenzoselenazole; matches Scheme 6."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03356",
+      "images": [
+        ["next-002", "scheme-3", "Viewed downstream gamma-arylation/deuteration applications, including ethambutol and dobutamine derivatives; matches Scheme 3 synthetic/application caption."],
+        ["next-017", "scheme-4", "Viewed transient-directing-group controls, one-pot gamma-deuteration/gamma-arylation and KIE experiment; matches Scheme 4 mechanistic studies."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03494",
+      "images": [
+        ["next-003", "scheme-1", "Viewed previous BCB Ni-carbene cyclopropanation limitations versus the paper's Ni-carbene alkyne metathesis/cycloaddition concept; matches Scheme 1."],
+        ["next-018", "scheme-2", "Viewed broad BCB/alkyne substrate scope for cyclopropanation and cycloaddition products under Ni conditions; matches Scheme 2."],
+        ["next-019", "scheme-3", "Viewed late-stage cyclopropanation/cycloaddition and synthetic-utility transformations of complex substrates/products; matches Scheme 3."],
+        ["next-020", "scheme-4", "Viewed Ni-carbene trapping plus the proposed catalytic cycle with cyclopropanation/cycloaddition branches; matches Scheme 4."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03078",
+      "images": [
+        ["next-004", "scheme-1", "Viewed biologically relevant alkynyl motifs, prior Sonogashira context and Uracil-TT BF4 coupling concept/significance; matches Scheme 1."],
+        ["next-021", "scheme-2", "Viewed the broad aryl/heteroaryl/alkyne scope for uracil alkynylation under the reported Pd/Cu conditions; matches Scheme 2."],
+        ["next-022", "scheme-3", "Viewed gram-scale synthesis, product transformations and downstream deprotection/hydrolysis examples; matches Scheme 3."],
+        ["next-023", "scheme-4", "Viewed the proposed oxidative-addition/transmetalation/reductive-elimination Pd/Cu Sonogashira cycle for uracil alkynylation; matches Scheme 4."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03248",
+      "images": [
+        ["next-005", "figure-1", "Viewed the cyclic-voltammetry traces used to characterize the electrochemical macrocyclization system; matches Figure 1 and is retained strictly as a body figure, not TOC."],
+        ["next-024", "scheme-1", "Viewed bioactive macrocycle examples and the work's Rh-catalyzed vinyl C-H activation macrocyclization concept; matches Scheme 1."],
+        ["next-025", "scheme-3", "Viewed linker-length/macrocycle substrate scope with ring-size annotations and isolated yields; matches Scheme 3."],
+        ["next-026", "scheme-4", "Viewed gram-scale macrocyclization and downstream product transformation; matches Scheme 4."],
+        ["next-027", "scheme-5", "Viewed H/D exchange, KIE, no-current/control, stoichiometric Rh complex/X-ray and competition experiments; matches Scheme 5 mechanistic studies."],
+        ["next-028", "scheme-6", "Viewed the proposed Rh catalytic cycle with C-H activation, alkyne coordination/migratory insertion and reductive elimination; matches Scheme 6."]
+      ]
+    }
+  ]
+}
