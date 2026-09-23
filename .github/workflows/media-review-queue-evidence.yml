@@ -1,8 +1,8 @@
 name: Read incremental media review evidence
 on:
   push:
-    branches: [main]
-    paths: ['.github/workflows/media-review-queue-evidence.yml','audit/automation-triggers/media-review-queue-evidence.json']
+    branches: [main, 'media/body-batch-*']
+    paths: ['.github/workflows/media-review-queue-evidence.yml','audit/automation-triggers/media-review-queue-evidence.json','audit/media-review-read-request.json']
 permissions:
   contents: read
 concurrency:
@@ -14,14 +14,33 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read current corpus without changing literature
+        run: |
+          node --input-type=module - <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          import {readPapers} from './cloudflare/scripts/merge-reviewed-toc.mjs';
+          const papers=await readPapers(process.cwd());
+          await writeFile(process.env.RUNNER_TEMP+'/media-review-corpus.json',JSON.stringify(Object.fromEntries(papers)));
+          JS
       - name: Freeze source and bounded unreviewed images without storage mutation
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           python3 - <<'PY'
-          import concurrent.futures,collections,datetime,hashlib,json,os,pathlib,re,subprocess,urllib.parse,urllib.request,zipfile
+          import concurrent.futures,collections,datetime,hashlib,json,os,pathlib,re,subprocess,urllib.parse,urllib.request
           out=pathlib.Path(os.environ['RUNNER_TEMP'])/'review-queue';(out/'images').mkdir(parents=True)
+          corpus=json.loads(pathlib.Path(os.environ['RUNNER_TEMP'],'media-review-corpus.json').read_text())
+          configPath=pathlib.Path('audit/media-review-read-request.json')
+          config=json.loads(configPath.read_text()) if configPath.exists() else {}
+          articles=config.get('maxArticles',5);maxImages=config.get('maxImages',30);perArticle=config.get('maxImagesPerArticle',10)
+          assert isinstance(articles,int) and 1<=articles<=20 and isinstance(maxImages,int) and 1<=maxImages<=150 and isinstance(perArticle,int) and 1<=perArticle<=10
+          assert config.get('readOnly',True) is True
+          state=json.loads(pathlib.Path('audit/literature-update-state.json').read_text())
+          excluded=set(config.get('excludeDois',[]))|{x.get('doi') for x in state.get('pendingScopeReviewBacklog',[]) if isinstance(x,dict)}
           base='https://api.cloudflare.com/client/v4/accounts/'+os.environ['CLOUDFLARE_ACCOUNT_ID']+'/r2/buckets/organic-synthesis-gallery-media/objects/'
           class NoRedirect(urllib.request.HTTPRedirectHandler):
               def redirect_request(self,*a,**k):return None
@@ -39,25 +58,32 @@ jobs:
                   a=urllib.parse.urlsplit(m.group());return urllib.parse.urlunsplit((a.scheme,a.hostname or '',a.path,'',''))
               return re.sub(r'(?i)Bearer\s+\S+|(?:token|secret|password|cookie|authorization|signature)\s*[:=]\s*[^\s;,]+','[redacted]',re.sub(r'https?://[^\s\"\'<>]+',u,v))
           def rows(v):
-              a=v['items'];return list(a.values()) if isinstance(a,dict) else a
-          evidence={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'baseSha':os.environ['GITHUB_SHA'],'readOnly':True,'mediaWrites':0,'atomicSnapshot':False,'errors':[]}
+              a=v['items'];assert isinstance(a,(dict,list));return list(a.values()) if isinstance(a,dict) else a
+          evidence={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'baseSha':os.environ['GITHUB_SHA'],'readOnly':True,'mediaWrites':0,'atomicSnapshot':False,'errors':[],'limits':{'articles':articles,'images':maxImages,'perArticle':perArticle},'selectionOrder':'publication date descending; equal-date JACS first; then oldest stored wait'}
           st_raw=get('local-captures/article-figures/stage-index.json');stage=json.loads(st_raw);sr=rows(stage)
           ri=json.loads(get('local-captures/tampermonkey/report-index.json'));rr=rows(ri)
           evidence.update(stageRows=len(sr),postCutoverRows=sum(r.get('updatedAt',0)>=1790082000000 for r in sr),stageIndexSha256=hashlib.sha256(st_raw).hexdigest(),reportDois=len(rr),automaticDois=sum(str(r.get('candidateSource','')).startswith('auto_') for r in rr))
           with urllib.request.urlopen('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json?review='+str(int(datetime.datetime.now().timestamp())),timeout=20) as r:media=json.load(r)
           (out/'public-media-index.json').write_text(json.dumps(media,ensure_ascii=False))
+          with urllib.request.urlopen('https://zhou526316-sys.github.io/organic-synthesis-gallery/body-publication-ledger.json',timeout=20) as r:ledger=json.load(r)
+          (out/'published-ledger.json').write_text(json.dumps(ledger,ensure_ascii=False))
           published={(d,str(f.get('id','')).lower()) for d,x in media['items'].items() for f in x.get('figures',{}).get('figures',[])}
           bound=[r for r in sr if r.get('updatedAt',0)>=1790082000000 and r.get('captureVersion')=='6.2.20' and r.get('pageDoi')==r.get('doi') and r.get('jobId')]
-          pending=[r for r in bound if (r['doi'],r.get('id')) not in published]
+          pending=[r for r in bound if (r['doi'],r.get('id')) not in published and r['doi'] in corpus and r['doi'] not in excluded]
           groups=collections.defaultdict(list)
           for r in pending:groups[r['doi']].append(r)
-          # Prefer a bounded JACS subset for this manual review, then other ACS/Nature papers.
-          selected=sorted(groups,key=lambda d:(not d.startswith('10.1021/jacs.'),-max(r.get('updatedAt',0) for r in groups[d])))[:7]
-          take=[]
-          for doi in selected:
-              part=sorted(groups[doi],key=lambda r:(r.get('sortOrder',0),r.get('id','')))
-              take.extend(part[:max(0,40-len(take))])
-          evidence.update(boundRows=len(bound),unpublishedBoundRows=len(pending),selectedDois=selected)
+          def rank(d):
+              raw=str(corpus[d].get('date') or '')[:10]
+              try:date=datetime.date.fromisoformat(raw).toordinal()
+              except ValueError:date=0
+              return (-date,not d.startswith('10.1021/jacs.'),min(r.get('updatedAt',0) for r in groups[d]),d)
+          ordered=sorted(groups,key=rank);selected=[];take=[]
+          for doi in ordered:
+              if len(selected)>=articles or len(take)>=maxImages:break
+              available=max(0,perArticle-len(media['items'].get(doi,{}).get('figures',{}).get('figures',[])))
+              part=sorted(groups[doi],key=lambda r:(r.get('sortOrder',0),r.get('id','')))[:min(available,maxImages-len(take))]
+              if part:selected.append(doi);take.extend(part)
+          evidence.update(boundRows=len(bound),unpublishedBoundRows=len(pending),unpublishedBoundDois=len(groups),selectedDois=selected,selectedPapers={d:corpus[d] for d in selected},heldDois=sorted(d for d in excluded if d))
           def image(pair):
               n,r=pair;item=clean(r);item['reviewId']='next-%03d'%n;item['approved']=False
               try:
@@ -67,20 +93,19 @@ jobs:
               except Exception as e:item.update(error=type(e).__name__,httpStatus=getattr(e,'code',None))
               return item
           with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:evidence['images']=list(pool.map(image,enumerate(take,1)))
-          latest=sorted(rr,key=lambda r:r.get('updatedAt',0),reverse=True)
-          keys=[]
-          for r in latest[:8]+[r for r in rr if r.get('doi') in selected]:
+          latest=sorted(rr,key=lambda r:r.get('updatedAt',0),reverse=True);keys=[]
+          for r in [r for r in rr if r.get('doi') in selected]+latest[:8]:
               for a in (r.get('attempts') or [r])[:2]:
                   if a.get('reportKey') and a['reportKey'] not in keys:keys.append(a['reportKey'])
-          evidence['reports']=[]
-          for key in keys[:25]:
-              try:evidence['reports'].append({'key':key,'report':clean(json.loads(get(key)))})
-              except Exception as e:evidence['errors'].append({'kind':'report','key':key,'error':type(e).__name__})
-          (out/'stage-index.json').write_text(json.dumps(clean(stage),ensure_ascii=False))
-          (out/'report-index.json').write_text(json.dumps(clean(ri),ensure_ascii=False))
+          def report(key):
+              try:return {'key':key,'report':clean(json.loads(get(key)))}
+              except Exception as e:return {'key':key,'error':type(e).__name__}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:evidence['reports']=list(pool.map(report,keys[:56]))
+          evidence['errors'].extend({'kind':'report','key':r['key'],'error':r['error']} for r in evidence['reports'] if r.get('error'))
+          (out/'stage-index.json').write_text(json.dumps(clean(stage),ensure_ascii=False));(out/'report-index.json').write_text(json.dumps(clean(ri),ensure_ascii=False))
           evidence['readCompletedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat();(out/'evidence.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2))
           subprocess.run(['git','archive','--format=zip','--output='+str(out/'source.zip'),'HEAD'],check=True)
-          print('INCREMENTAL_REVIEW_READ '+json.dumps({k:v for k,v in evidence.items() if k not in ('images','reports')},ensure_ascii=False))
+          print('INCREMENTAL_REVIEW_READ '+json.dumps({k:v for k,v in evidence.items() if k not in ('images','reports','selectedPapers')},ensure_ascii=False))
           print('IMAGE_FILES '+json.dumps({'selected':len(take),'verified':sum(r.get('hashVerified',False) for r in evidence['images'])}))
           if evidence['errors'] or any('error' in r for r in evidence['images']):raise SystemExit('Partial evidence, not approval')
           PY
