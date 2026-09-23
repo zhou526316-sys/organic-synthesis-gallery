@@ -1,4 +1,4 @@
-name: Verify Bridge 2.2.26 live
+name: Verify Bridge 2.2.27 live
 on:
   workflow_run:
     workflows: ['Deploy GitHub Pages frontend']
@@ -28,16 +28,17 @@ jobs:
           for(let n=0;n<12;n++){
             try{
               const [a,b]=await Promise.all([
-                fetch(base+'gallery-vpn-bridge.user.js?tm226='+Date.now(),{headers:{'cache-control':'no-cache'}}),
-                fetch(base+'toc-mainline.user.js?tm226='+Date.now(),{headers:{'cache-control':'no-cache'}})
+                fetch(base+'gallery-vpn-bridge.user.js?tm227='+Date.now(),{headers:{'cache-control':'no-cache'}}),
+                fetch(base+'toc-mainline.user.js?tm227='+Date.now(),{headers:{'cache-control':'no-cache'}})
               ]);
               if(!a.ok||!b.ok)throw new Error('HTTP '+a.status+'/'+b.status);
               const installer=await a.text(),mainline=await b.text();
               const checks={
                 installerVersion:/^\/\/ @version\s+2\.2\.26$/m.test(installer),
-                controller:installer.includes("var CONTROLLER_REVISION = '2.2.26';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.26';"),
+                controller:installer.includes("var CONTROLLER_REVISION = '2.2.27';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.27';"),
                 protocol:installer.includes("var VERSION = '6.2.20';")&&mainline.includes("var VERSION = '6.2.20';"),
                 fallback:installer.includes('sameFigureCurrentSrcFallback')&&mainline.includes('sameFigureCurrentSrcFallback'),
+                stageOutbox:['BEGIN OSG_FIGURE_STAGE_OUTBOX_V1','enqueueFigureStageRetry','drainFigureStageOutbox'].every(x=>installer.includes(x)&&mainline.includes(x)),
                 tiff:installer.includes("return 'image/tiff'")&&mainline.includes("return 'image/tiff'"),
                 ordering:installer.includes('missing official TOC comes first; then JACS')&&mainline.includes('missing official TOC comes first; then JACS'),
                 guards:['capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch'].every(x=>installer.includes(x)&&mainline.includes(x)),
