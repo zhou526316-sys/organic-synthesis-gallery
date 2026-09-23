@@ -28,11 +28,14 @@ void preloadChineseTitleCache().finally(async () => {
   } finally {
     restoreLegacyMediaListeners();
   }
+  // Navigation is independent and latency-sensitive: load it before optional
+  // user/account/feedback modules so a slow dynamic chunk cannot postpone the
+  // basic page escape controls.
+  await import('./user-ui/page-navigation');
   await import('./user-ui/user-center-management');
   await import('./user-ui/interaction-stability');
   await import('./user-ui/account-sync');
   await import('./user-ui/feedback-widget');
-  await import('./user-ui/page-navigation');
   await import('./site-analytics');
   await import('./media-enhancements');
   await import('./runtime-recovery');
