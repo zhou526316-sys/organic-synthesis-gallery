@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {chromium} from 'playwright';
 import {sha256,exactKey,evidenceKey,validateNewBodyMetadata,validateNewBodyBytes} from '../cloudflare/scripts/new-body-auto-validation.mjs';
+import {selectLiveVerificationBatch} from './select-new-body-live-dois.mjs';
 const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
 const out=process.env.RUNNER_TEMP+'/new-body-auto-live';await mkdir(out,{recursive:true});
 async function get(p){const u=new URL(p,base);assert.equal(u.origin,new URL(base).origin);assert.ok(u.pathname.startsWith('/organic-synthesis-gallery/'));const r=await fetch(u,{redirect:'error',headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(25000)});assert.equal(r.status,200,u.pathname);return Buffer.from(await r.arrayBuffer());}
@@ -28,6 +29,10 @@ try{
  }
  result.status=status;result.manualLedgerEntries=ledger.items.length-auto.length;
  const addedDois=[...new Set(status.added.map(x=>x.doi))];
+ const verification=selectLiveVerificationBatch(status,snapshot);
+ result.liveVerification=verification;
+ assert.ok(verification.dois.length>0,'no current or retained automatic body batch available for card verification');
+ assert.ok(verification.dois.length<=policy.maxNewArticles,'live verification batch exceeds maximum article count');
  if(addedDois.length){
    assert.equal(status.releaseReady,true,'published batch did not pass release gate');
    assert.equal(status.publishedNewArticles,addedDois.length,'published article count does not match added DOI identities');
@@ -45,7 +50,7 @@ try{
      assert.ok(Number(status.oldestEligibleAgeMinutes)>=Number(policy.backlogMaxWaitMinutes),'aged backlog published before maximum wait');
    }else assert.fail('unknown release mode for nonempty published batch: '+String(status.releaseMode));
  }
- for(const doi of addedDois){
+ for(const doi of verification.dois){
    const toc=media.items[doi]?.toc;
    assert.ok(toc?.available&&toc?.imageUrl&&!/fallback/i.test(String(toc.reason||''))&&!String(toc.reason||'').startsWith('figure_fallback:'),'body published without official TOC '+doi);
    result.pairedToc.push({doi,imageUrl:toc.imageUrl,contentHash:toc.contentHash||null,reason:toc.reason||null,official:true});
@@ -58,7 +63,7 @@ try{
   await context.route('**/*',route=>['GET','HEAD','OPTIONS'].includes(route.request().method())?route.continue():route.fulfill({status:503,body:'read-only acceptance blocks production writes'}));
   const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e.message)));
   await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});await page.locator('#search').waitFor({timeout:30000});
-  const dois=[...new Set(status.added.map(x=>x.doi))];
+  const dois=verification.dois;
   for(const [i,doi] of dois.entries()){
    await page.locator('#search').fill(doi);await page.locator('#search').press('Escape');
    const selector='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=page.locator(selector);await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
