@@ -29,7 +29,7 @@ await test('removed card remains absent',()=>assert.rejects(()=>checkNewBodyIden
 await test('open scope recheck is held without excluding the card',()=>assert.rejects(()=>checkNewBodyIdentity(sample,policy,corpus,new Set([sample.doi])),/scope/));
 await test('a server marker alone cannot substitute for isolated-figure report',()=>assert.throws(()=>checkRoleReport(sample,[],policy),/report_pending/));
 await test('real same-job report binds exact figure source and object',()=>assert.equal(checkRoleReport(sample,evidence.reports,policy).storedObject,sample.r2Key));
-const wrongReports=structuredClone(evidence.reports);for(const x of wrongReports)for(const e of x.report.trace||[])if(e.stage==='diagnostic_context')e.message=e.message.replace(sample.jobId,'00000000-0000-0000-0000-000000000000');
+const wrongReports=structuredClone(evidence.reports);for(const x of wrongReports)for(const e of x.report.trace||[])if(e.stage==='diagnostic_context')e.message=e.message.replaceAll(sample.jobId,'00000000-0000-0000-0000-000000000000');
 await test('another job cannot supply the proof',()=>assert.throws(()=>checkRoleReport(sample,wrongReports,policy),/report_pending/));
 const noRole=structuredClone(evidence.reports);for(const x of noRole)for(const e of x.report.trace||[])e.candidateSource='recommended_content';
 await test('recommended content fails role proof even under the correct DOI',()=>assert.throws(()=>checkRoleReport(sample,noRole,policy),/report_pending/));
@@ -55,7 +55,6 @@ try{
  await test('all published copies equal frozen original SHA256',async()=>{for(const r of result.ledger.items)assert.equal(sha256(await readFile(path.join(root,'public',r.imageUrl))),r.sha256);});
  await test('every new image has separately checked role and positive receipt',()=>{for(const x of result.ledger.items)assert.equal(x.validation.receiptProof.sourceRole,'isolated_figure_caption');});
  const first=result.summary.added.length;
- // Fresh deployment starts from a clean human/static baseline, then retains prior validated copies.
  await writeFile(path.join(root,'public/media-index.json'),JSON.stringify(live));
  const next={...context,eligible:[],previous:result.ledger,io:{...io,publicBytes:async p=>readFile(path.join(root,'public',p))}};
  const second=await mergeNewBodyAuto(next);
