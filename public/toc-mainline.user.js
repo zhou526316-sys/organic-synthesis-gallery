@@ -2231,20 +2231,45 @@ function embeddedJobDois(value) {
     }
   }
 
+  function completedPublisherResult(job) {
+    var result=GM_getValue(resultKey(job.doi),null);
+    return result&&result.jobId===job.jobId&&result.version===VERSION&&result.finishedAt?result:null;
+  }
+
   async function waitForResult(job,tab) {
-    var started=Date.now();
-    while(Date.now()-started<8*60*1000) {
+    var started=Date.now(), timeoutMs=8*60*1000;
+    while(true) {
       if(!renewLease())throw new Error('controller_lease_lost');
       if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false) return {doi:job.doi,jobId:job.jobId,status:'aborted',reason:'user_aborted',finishedAt:nowIso()};
-      var result=GM_getValue(resultKey(job.doi),null);
-      if(result&&result.jobId===job.jobId&&result.version===VERSION&&result.finishedAt) return result;
+
+      // publisher final results over controller timeouts: always prefer a completed publisher result first.
+      // Background-tab/browser suspension can advance Date.now() by many minutes
+      // between two controller polls even though the publisher already finished.
+      var result=completedPublisherResult(job);
+      if(result) return result;
+
+      var elapsed=Date.now()-started;
+      if(elapsed>=timeoutMs) {
+        // One short grace window covers a final result racing with controller wake-up.
+        for(var grace=0;grace<4;grace+=1) {
+          await sleep(250);
+          result=completedPublisherResult(job);
+          if(result) return result;
+        }
+        return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
+      }
+
       var hb=currentPublisherHeartbeat();
-      if(Date.now()-started>60000 && (!hb||hb.jobId!==job.jobId)) return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
+      if(elapsed>60000 && (!hb||hb.jobId!==job.jobId)) {
+        // The publisher may have finished between heartbeat sampling and this branch.
+        result=completedPublisherResult(job);
+        if(result) return result;
+        return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'bound_publisher_heartbeat_missing',finishedAt:nowIso()};
+      }
       var progress=GM_getValue(progressKey(job.doi),null);
       if(progress&&/auth_wait|challenge_wait/.test(progress.status))badge('等待出版社验证：'+job.doi,'#92400e');
       await sleep(1000);
     }
-    return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
   }
 
   function clearOwnedJob(job) {
