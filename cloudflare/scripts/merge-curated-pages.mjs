@@ -121,3 +121,7 @@ await mergeSealedMediaBatch2();
 // Reviewed current-generation body files only; keep Worker promotion and quarantine unchanged.
 const {mergeReviewedBody}=await import('./merge-reviewed-body.mjs');
 await mergeReviewedBody();
+
+// Data-only, individually approved body batches; capture markers alone cannot publish.
+const {mergeApprovedBodyBatches}=await import('./merge-approved-body-batches.mjs');
+await mergeApprovedBodyBatches();
