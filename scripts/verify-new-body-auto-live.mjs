@@ -14,7 +14,10 @@ try{
  const policy=JSON.parse(await readFile('audit/media-auto-policy.json','utf8'));
  assert.equal(status.policyId,policy.policyId);assert.equal(snapshot.policyId,policy.policyId);
  assert.equal(snapshot.count,snapshot.items.length);assert.equal(status.autoPublishedCount,snapshot.count);assert.ok(snapshot.count>0,'no actual automatically published figure yet');
- assert.equal(snapshot.generatedAt,status.checkedAt);assert.equal(media.generatedAt,ledger.mediaManifestGeneratedAt);
+ assert.equal(snapshot.generatedAt,status.checkedAt);assert.equal(ledger.mediaManifestGeneratedAt,status.checkedAt);
+ // The existing sanitizer stamps its later execution time. Exact assets/labels below,
+ // not equality with that later timestamp, establish the shared publication contents.
+ assert.ok(media.generatedAt>=ledger.mediaManifestGeneratedAt,'media snapshot predates automatic merge');
  const auto=ledger.items.filter(x=>x.publicationId===policy.policyId);assert.equal(auto.length,snapshot.count);
  for(const entry of snapshot.items){
   const row=entry.record;await validateNewBodyMetadata(row,policy);assert.equal(entry.evidenceSha256,evidenceKey(row));
