@@ -1,5 +1,7 @@
 import './card-share.css';
 
+declare const __GALLERY_BUILD_ID__: string;
+
 interface ShareInfo {
   doi: string;
   title: string;
@@ -42,9 +44,16 @@ function shareSlug(doi: string): string {
 }
 
 const RICH_SHARE_ORIGIN = 'https://api.gczhouwld.com';
+const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_BUILD_ID__
+  ? __GALLERY_BUILD_ID__
+  : 'runtime';
+
+function galleryDeepLink(doi: string): string {
+  return `${RICH_SHARE_ORIGIN}/?doi=${encodeURIComponent(doi)}&sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
+}
 
 function shareUrl(doi: string): string {
-  return `${RICH_SHARE_ORIGIN}/share/${shareSlug(doi)}.html`;
+  return `${RICH_SHARE_ORIGIN}/share/${shareSlug(doi)}.html?sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
 }
 
 type WeChatSdk = {
@@ -161,10 +170,11 @@ async function configureWeChatShare(info: ShareInfo): Promise<void> {
   const desc = [info.journal, info.date, `DOI: ${info.doi}`].filter(Boolean).join(' · ');
   if (typeof wx.updateAppMessageShareData !== 'function') throw new Error('wechat_friend_share_api_missing');
   if (typeof wx.updateTimelineShareData !== 'function') throw new Error('wechat_timeline_share_api_missing');
-  wx.updateAppMessageShareData({ title: info.title, desc, link: info.url, imgUrl });
+  const link = galleryDeepLink(info.doi);
+  wx.updateAppMessageShareData({ title: info.title, desc, link, imgUrl });
   wx.updateTimelineShareData({
     title: [info.title, info.journal].filter(Boolean).join(' · '),
-    link: info.url,
+    link,
     imgUrl,
   });
 }

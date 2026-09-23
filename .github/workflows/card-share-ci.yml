@@ -55,6 +55,9 @@ jobs:
           grep -F "jweixin-1.6.0.js" dist/assets/card-share-*.js
           grep -F "updateAppMessageShareData" dist/assets/card-share-*.js
           grep -F "/api/wechat/js-sdk-signature" dist/assets/card-share-*.js
+          grep -F "sharev=" dist/assets/card-share-*.js
+          grep -F "galleryDeepLink" src/card-share.ts
+          grep -F "&sharev=" scripts/build-share-pages.mjs
           grep -F "Pasting the URL into chat only sends a plain link." dist/assets/card-share-*.js
 
       - name: Verify 20-second halo contract
@@ -119,7 +122,7 @@ jobs:
             const panel = page.locator('.card-share-panel');
             await panel.waitFor({ state: 'visible' });
             const richShareUrl = await panel.getAttribute('data-share-url');
-            if (!richShareUrl || !/^https:\/\/api\.gczhouwld\.com\/share\/[A-Za-z0-9_-]+\.html$/.test(richShareUrl)) {
+            if (!richShareUrl || !/^https:\/\/api\.gczhouwld\.com\/share\/[A-Za-z0-9_-]+\.html\?sharev=[A-Za-z0-9_-]+$/.test(richShareUrl)) {
               throw new Error('share URL is not the custom-domain rich paper card: ' + richShareUrl);
             }
             await panel.locator('[data-share-action="native"]').click();

@@ -5,6 +5,7 @@ import path from 'node:path';
 
 const SITE_BASE = (process.env.SHARE_SITE_ORIGIN || 'https://api.gczhouwld.com').replace(/\/+$/, '');
 const GALLERY_BASE = (process.env.SHARE_GALLERY_ORIGIN || SITE_BASE).replace(/\/+$/, '');
+const SHARE_BUILD_ID = String(process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA || Date.now().toString(36)).slice(0, 12);
 const PUBLISHED_PAGES_BASE = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
 const PUBLIC = path.resolve('public');
 const OUT = path.join(PUBLIC, 'share');
@@ -167,7 +168,7 @@ function html(meta, selected) {
   const doi = meta.doi;
   const id = slug(doi);
   const share = `${SITE_BASE}/share/${id}.html`;
-  const target = `${GALLERY_BASE}/?doi=${encodeURIComponent(doi)}`;
+  const target = `${GALLERY_BASE}/?doi=${encodeURIComponent(doi)}&sharev=${encodeURIComponent(SHARE_BUILD_ID)}`;
   const image = selected?.image || DEFAULT_IMAGE;
   const title = meta.titleZh || meta.title || doi;
   const secondary = [meta.journal, meta.date, `DOI: ${doi}`].filter(Boolean).join(' · ');
@@ -178,7 +179,7 @@ function html(meta, selected) {
   const imageDims = width > 0 && height > 0
     ? `<meta property="og:image:width" content="${width}"><meta property="og:image:height" content="${height}">`
     : '';
-  return `<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  return `<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
 <title>${esc(title)} | Organic Synthesis Gallery</title>
 <meta name="description" content="${esc(description)}"><meta name="robots" content="noindex,follow">
 <meta itemprop="name" content="${esc(title)}"><meta itemprop="description" content="${esc(description)}"><meta itemprop="image" content="${esc(image)}">
@@ -228,4 +229,5 @@ console.log('SHARE_PAGES_SUMMARY ' + JSON.stringify({
   fallbackCoverCount: merged.size - tocCoverCount,
   siteBase: SITE_BASE,
   galleryBase: GALLERY_BASE,
+  shareBuildId: SHARE_BUILD_ID,
 }));
