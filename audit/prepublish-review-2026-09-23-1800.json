@@ -1,301 +1,1638 @@
 {
   "schemaVersion": 3,
-  "reviewType": "prepublish_recovery",
+  "reviewType": "prepublish_primary",
   "publicationSlot": "2026-09-23T18:00:00+08:00",
-  "createdAt": "2026-09-23T12:37:18+08:00",
-  "evidenceAsOf": "2026-09-23T12:37:18+08:00",
-  "executionMode": "off_slot_preparation_only",
-  "phase": "preparing",
-  "status": "incomplete_review",
-  "readyToPublish": false,
-  "publishableSubsetReady": false,
+  "createdAt": "2026-09-23T17:26:00+08:00",
+  "evidenceAsOf": "2026-09-23T17:26:00+08:00",
+  "executionMode": "scheduled_prepublish_no_publication",
+  "phase": "ready_with_pending",
+  "status": "ready_with_pending",
+  "readyToPublish": true,
+  "publishableSubsetReady": true,
   "reviewComplete": false,
-  "releasePolicy": {"mode":"per-doi"},
-  "handoffGeneratedAt": "2026-09-23T04:25:52.436Z",
-  "freshAuditGeneratedAt": "2026-09-23T04:25:52.436Z",
-  "snapshotFreshForSlot": false,
-  "requiredSnapshotWindow": {"start":"2026-09-23T16:55:00+08:00","end":"2026-09-23T18:00:00+08:00"},
-  "handoffCommitSha": "9624b1e815f89a006a04eaba4d776f54804afe81",
+  "releasePolicy": {
+    "mode": "per-doi"
+  },
+  "handoffGeneratedAt": "2026-09-23T09:13:15.174Z",
+  "freshAuditGeneratedAt": "2026-09-23T09:13:15.174Z",
+  "snapshotFreshForSlot": true,
+  "requiredSnapshotWindow": {
+    "start": "2026-09-23T16:55:00+08:00",
+    "end": "2026-09-23T18:00:00+08:00"
+  },
+  "handoffCommitSha": "fab9edda8c988db12f23fc9e77d7f1673b05afcc",
   "handoffFile": "audit/unresolved-latest.json",
-  "handoffBlobSha": "4954c911bb843d1c360511c2180f7a68e5923118",
-  "compactHandoffSha": "4954c911bb843d1c360511c2180f7a68e5923118",
-  "latestBlobSha": "357783bfe5a69b034034cb6785ab4ac0655095e5",
+  "handoffBlobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+  "compactHandoffSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+  "latestBlobSha": "63ec27535507a04d04e99ad92bcbfd672c73e478",
   "scopeRulesVersion": "scope-2026-09-23-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
   "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
   "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
   "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
   "sourceAudit": {
-    "runId":35818168242,"conclusion":"success","capabilityGuardConclusion":"success",
-    "triggerCommitSha":"9ffb893d132660e122e95e4c5dff5413a2a9fd92",
-    "snapshotCommitSha":"9624b1e815f89a006a04eaba4d776f54804afe81",
-    "generatedAt":"2026-09-23T04:25:52.436Z",
-    "galleryDois":532,"sourceRecords":496,"unresolved":10,
-    "criticalSourceFailures":0,"sourceFamilyGaps":0,"sourceCoverageAnomalies":0,
-    "closureCoverageAnomalies":2,"historicalCoverageLosses":0,
-    "sameGenerationAndCountsVerified":true,
-    "activeJournals":16,"canonicalRegistryBlobSha":"57050105998284ccbf87b1a5fe513b256b648949",
-    "refreshReason":"Previous paired snapshot described 536 cards before the verified deletion-only correction. This one refresh uses corrected 532-card discovery; it is preparatory and is not fresh for the evening release.",
-    "healthyRunsCancelledOrRestarted":0
+    "runId": 35841359058,
+    "conclusion": "success",
+    "capabilityGuardConclusion": "success",
+    "triggerCommitSha": "1ba2f62cab2427fba4dcccd03f9ca69fd53a3784",
+    "snapshotCommitSha": "fab9edda8c988db12f23fc9e77d7f1673b05afcc",
+    "generatedAt": "2026-09-23T09:13:15.174Z",
+    "galleryDois": 532,
+    "sourceRecords": 530,
+    "unresolved": 44,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 1,
+    "historicalCoverageLosses": 0,
+    "sameGenerationAndCountsVerified": true,
+    "activeJournals": 16,
+    "canonicalRegistryBlobSha": "57050105998284ccbf87b1a5fe513b256b648949",
+    "healthyRunsCancelledOrRestarted": 0
   },
   "windowAccounting": {
-    "timeZone":"Asia/Shanghai","primaryStart":"2026-09-21","primaryEnd":"2026-09-23","primaryDays":3,
-    "machineSafetyTailDays":7,"lateDepositRescueDays":7,"lateDepositRescueStart":"2026-09-17",
-    "verifiedThrough":"2026-09-20","verifiedThroughAdvanced":false,
-    "catchupStartDate":null,"catchupExplanation":"The next unverified date is already the main-window start; no earlier catch-up start is needed.",
-    "multiIssnCrossrefModes":["online","published","created"],"openAlexUnion":true,
-    "activeFromApplied":true,"keywordsUsedOnlyForPriority":true,
-    "primaryWindowCandidates":10,"additionalSafetyTailOnlyCandidates":0,
-    "completeCompactReadRanges":["1-220","221-420","421-520","521-620","621-EOF"],
-    "allRangesFromSameCommitAndBlob":true
+    "timeZone": "Asia/Shanghai",
+    "primaryStart": "2026-09-21",
+    "primaryEnd": "2026-09-23",
+    "primaryDays": 3,
+    "machineSafetyTailDays": 7,
+    "lateDepositRescueDays": 7,
+    "lateDepositRescueStart": "2026-09-17",
+    "verifiedThrough": "2026-09-20",
+    "verifiedThroughAdvanced": false,
+    "catchupStartDate": null,
+    "primaryWindowRecords": 272,
+    "additionalSafetyTailRecords": 258,
+    "multiIssnCrossrefModes": [
+      "online",
+      "published",
+      "created"
+    ],
+    "openAlexUnion": true,
+    "activeFromApplied": true,
+    "keywordsUsedOnlyForPriority": true,
+    "completeCompactRead": true
   },
-  "setDifference": {
-    "previousCompactBlobSha":"e576f9de1782ed8eaea1b8785a0210c0a323d974","previousCandidateCount":1,
-    "newCandidateCount":9,
-    "newDois":["10.1038/s41467-026-77936-9","10.1038/s41467-026-77765-w","10.1038/s41467-026-77877-3","10.1021/acs.orglett.6c03301","10.1021/acs.orglett.6c03574","10.1002/anie.7471326","10.1002/anie.5198340","10.1002/anie.5230240","10.1002/anie.4624632"],
-    "unchangedCandidateDois":["10.31635/ccschem.026.202608262"],
-    "materialMetadataChangedDois":[],
-    "historicalPendingReexamined":["10.31635/ccschem.026.202608262"],
-    "targetStagingPreviouslyExisted":false
+  "reviewed": 44,
+  "acceptedCount": 10,
+  "rejectedCount": 32,
+  "pendingCount": 2,
+  "summary": {
+    "reviewed": 44,
+    "accepted": 10,
+    "rejected": 32,
+    "pending": 2
   },
-  "reviewed":10,"acceptedCount":2,"rejectedCount":7,"pendingCount":1,
-  "summary":{"reviewed":10,"accepted":2,"rejected":7,"pending":1},
-  "acceptedDois":["10.1021/acs.orglett.6c03301","10.1021/acs.orglett.6c03574"],
-  "proposedPublishableDois":["10.1021/acs.orglett.6c03301","10.1021/acs.orglett.6c03574"],
-  "publishableDois":[],
-  "pendingDois":["10.31635/ccschem.026.202608262"],
-  "deferredDois":["10.31635/ccschem.026.202608262"],
-  "remainingDois":["10.31635/ccschem.026.202608262"],
-  "remainingUnresolved":["10.31635/ccschem.026.202608262"],
+  "acceptedDois": [
+    "10.1021/jacs.6c16346",
+    "10.1021/jacs.6c17163",
+    "10.1021/jacs.6c12613",
+    "10.1021/jacs.6c16766",
+    "10.1021/acs.joc.6c01866",
+    "10.1021/acs.orglett.6c03733",
+    "10.1021/acs.orglett.6c03301",
+    "10.1021/acs.orglett.6c03166",
+    "10.1021/acs.orglett.6c03732",
+    "10.1021/acs.orglett.6c03574"
+  ],
+  "proposedPublishableDois": [
+    "10.1021/jacs.6c16346",
+    "10.1021/jacs.6c17163",
+    "10.1021/jacs.6c12613",
+    "10.1021/jacs.6c16766",
+    "10.1021/acs.joc.6c01866",
+    "10.1021/acs.orglett.6c03733",
+    "10.1021/acs.orglett.6c03301",
+    "10.1021/acs.orglett.6c03166",
+    "10.1021/acs.orglett.6c03732",
+    "10.1021/acs.orglett.6c03574"
+  ],
+  "publishableDois": [
+    "10.1021/jacs.6c16346",
+    "10.1021/jacs.6c17163",
+    "10.1021/jacs.6c12613",
+    "10.1021/jacs.6c16766",
+    "10.1021/acs.joc.6c01866",
+    "10.1021/acs.orglett.6c03733",
+    "10.1021/acs.orglett.6c03301",
+    "10.1021/acs.orglett.6c03166",
+    "10.1021/acs.orglett.6c03732",
+    "10.1021/acs.orglett.6c03574"
+  ],
+  "rejectedDois": [
+    "10.1002/anie.7409022",
+    "10.1002/anie.1050964",
+    "10.1002/anie.4407565",
+    "10.1002/anie.2372199",
+    "10.1002/anie.6314537",
+    "10.1002/anie.2971119",
+    "10.1021/jacs.6c15207",
+    "10.1021/jacs.6c04230",
+    "10.1038/d41586-026-02930-6",
+    "10.1038/d41586-026-02949-9",
+    "10.1038/s41467-026-77874-6",
+    "10.1038/s41467-026-77996-x",
+    "10.1038/s41467-026-77936-9",
+    "10.1038/s41467-026-77765-w",
+    "10.1038/s41467-026-77877-3",
+    "10.1021/acs.orglett.6c03569",
+    "10.1021/acs.orglett.6c03403",
+    "10.1021/acs.orglett.6c03516",
+    "10.1002/anie.7471326",
+    "10.1002/anie.6379738",
+    "10.1002/anie.7229401",
+    "10.1002/anie.3588313",
+    "10.1002/anie.5198340",
+    "10.1002/anie.1983375",
+    "10.1002/anie.7843737",
+    "10.1002/anie.7046071",
+    "10.1002/anie.5230240",
+    "10.1002/anie.4147834",
+    "10.1002/anie.1466065",
+    "10.1002/anie.5026257",
+    "10.1002/anie.3111048",
+    "10.1002/anie.4624632"
+  ],
+  "pendingDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "deferredDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "remainingDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "remainingUnresolved": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
   "decisions": [
     {
-      "doi":"10.1038/s41467-026-77936-9","journal":"Nature Communications","date":"2026-09-23",
-      "title":"Systemic and Mucosal Antibody Responses Against Neisseria gonorrhoeae (Ng) Outer Membrane Vesicle Antigens following Four-Component Meningococcal Serogroup B (4CMenB) Immunization in Healthy Adults: A Randomized Phase II Trial",
-      "decision":"exclude","firstPassDecision":"exclude","challengeDecision":"exclude",
-      "reason":"This is a randomized human immunization and antibody-response trial, outside preparative organic-synthesis methodology.",
-      "evidenceBasis":"The complete compact title explicitly identifies healthy adult immunization, systemic and mucosal antibody responses, and a randomized phase II trial. The compact abstract is empty, and the attempted Nature article could not be read. The exclusion relies on this unambiguous clinical-study identity, not an invented abstract or experimental chemistry.",
-      "challengeReason":"Antigens and vaccine components are chemical entities, but the stated study objective is human immune response rather than a substrate-to-product preparation or a synthetic route. No borderline synthetic-method claim is being dismissed by a keyword filter.",
-      "evidencePages":["https://www.nature.com/articles/s41467-026-77936-9"],
-      "evidenceSource":"complete compact bibliographic title; publisher article access unavailable"
+      "doi": "10.1002/anie.7409022",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Aromaticity Regulation in Isostructural Metal‐Organic Frameworks for Propyne Storage and Propylene Purification",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Metal-organic-framework adsorption and gas-separation performance are the principal contribution, not organic preparation.",
+      "evidenceBasis": "The abstract centers on PKU-101 aromaticity, propyne adsorption, alkene/alkane/alkyne separation, crystallography and regeneration temperature.",
+      "challengeReason": "Although a framework was synthesized, the study does not present a transferable organic reaction, polymerization method or general building-block route; preparation serves sorbent evaluation.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.7409022"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
     },
     {
-      "doi":"10.1038/s41467-026-77765-w","journal":"Nature Communications","date":"2026-09-23",
-      "title":"The biogeography of giant viruses and interactions with Eukaryotes across European lakes",
-      "decision":"exclude","firstPassDecision":"exclude","challengeDecision":"exclude",
-      "reason":"Lake-virus genomics, host interactions and aquatic ecology are the principal contribution, not organic preparation.",
-      "evidenceBasis":"The actual compact abstract describes recovery of viral genomes from European lakes, virus-host linkages, latitudinal abundance, light and resource effects, and associations with primary production. Its mention of aromatic organic matter concerns the lake environment, not a preparative reaction.",
-      "challengeReason":"The second pass checked whether genomic methods or organic-matter terminology hid a synthesis contribution. The reported outputs are ecological distributions and host relationships; no organic reaction platform or completed synthetic route is identified.",
-      "evidencePages":["https://www.nature.com/articles/s41467-026-77765-w"],
-      "evidenceSource":"publisher-deposited title and abstract preserved in the pinned compact"
+      "doi": "10.1002/anie.1050964",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Complete Pathway Refactoring and Combinatorial Biosynthesis of Anthracyclines for Modulation of Histone Eviction and DNA Damage Bioactivities",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Complete pathway refactoring and combinatorial biosynthetic assembly-line engineering are central, not a general organic substrate-to-product method.",
+      "evidenceBasis": "The abstract describes reconstruction of three 31–38-gene anthracycline pathways in Streptomyces, four modules, 16 derivatives and bioactivity profiling.",
+      "challengeReason": "Producing many analogues is real chemical output, but the scope contract specifically distinguishes pathway reprogramming from general preparative biocatalysis. No reusable enzyme-catalyzed transformation or chemical route scope is established as the main contribution.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.1050964"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
     },
     {
-      "doi":"10.1038/s41467-026-77877-3","journal":"Nature Communications","date":"2026-09-23",
-      "title":"The elongation of Mest transcript into MestXL sustains, but does not initiate, the maternal allele bias of its convergent gene Copg2 during neurogenesis",
-      "decision":"exclude","firstPassDecision":"exclude","challengeDecision":"exclude",
-      "reason":"The paper explains stage-dependent imprinted-gene dosage regulation during neural differentiation, not preparative biocatalysis.",
-      "evidenceBasis":"The compact abstract reports a brain-organoid model, multi-omics, chromatin mapping and functional assays. Its two-step account concerns activation of the maternal Copg2 allele and subsequent MestXL-dependent repression of the paternal allele, rather than preparation of organic products.",
-      "challengeReason":"The use of engineered cellular models does not itself constitute organic biosynthetic methodology. Unlike an enzyme-catalyzed transformation embedded in a chemical route, the article's stated outcome is a gene-regulatory mechanism, so exclusion is confirmed.",
-      "evidencePages":["https://www.nature.com/articles/s41467-026-77877-3"],
-      "evidenceSource":"publisher-deposited title and abstract preserved in the pinned compact"
+      "doi": "10.1002/anie.4407565",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Engineering van der Waals Heterojunctions Within a 2D Hydrogen‐Bonded Organic Framework for Boosting CO 2 Electroreduction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Porphyrin HOF heterojunction engineering for CO2 electroreduction is a framework-electrocatalyst performance study.",
+      "evidenceBasis": "The abstract emphasizes interlayer donor–acceptor charge transport, CO Faradaic efficiency/current density and suppression of hydrogen evolution.",
+      "challengeReason": "Framework assembly and CO formation are acknowledged, but no general organic product synthesis or preparative substrate scope is reported.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.4407565"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
     },
     {
-      "doi":"10.1021/acs.orglett.6c03301","journal":"Organic Letters","date":"2026-09-23",
-      "title":"Palladium-Catalyzed Site-Selective C–H Arylation of Arenes: Using Diaryl Disulfides as an Arylation Reagent",
-      "titleZh":"钯催化芳烃位点选择性 C–H 芳基化：以二芳基二硫化物为芳基化试剂",
-      "decision":"include","firstPassDecision":"include","challengeDecision":"include","scopeTag":"organic_synthesis_methodology","totalSynthesis":false,
-      "reason":"Arenes undergo preparative site-selective arylation using diaryl disulfides as masked aryl donors, with the method addressing both electron-rich and electron-deficient arene classes.",
-      "evidenceBasis":"The actual compact abstract identifies readily available diaryl disulfides as a new masked arylating reagent and explicitly states applicability to electron-rich and electron-deficient arenes, including the difficult meta functionalization problem for electron-deficient substrates. The reported electrophilic-substitution interpretation explains site selection; it is not the sole contribution. No substrate count, isolated-yield range or scale is asserted here.",
-      "challengeReason":"The specific alternative interpretation was a mechanism-only discussion of site selectivity. It is rejected because the abstract presents an aryl-donor strategy that changes preparative access across both electronic classes of arene. This is not a materials-performance study and is not supported merely by its C–H keyword.",
-      "scopeAssessment":{
-        "primaryContribution":"A diaryl-disulfide aryl-donor strategy for palladium-catalyzed site-selective arylation of arenes.",
-        "preparativeTransformation":"Arene C–H positions are converted to aryl-substituted arenes using diaryl disulfides as masked arylating reagents.",
-        "generalityEvidence":"The deposited abstract explicitly identifies electron-rich and electron-deficient arenes and discusses predictable site selection in multisubstituted arenes. Numerical scope, isolated yields and scale are not supplied by the obtained evidence and are not claimed.",
-        "sourceEvidence":{"type":"publisher-deposited-abstract-via-Crossref","file":"audit/unresolved-latest.json","blobSha":"4954c911bb843d1c360511c2180f7a68e5923118","locator":"unresolved DOI 10.1021/acs.orglett.6c03301","publisherPage":"https://pubs.acs.org/doi/10.1021/acs.orglett.6c03301","directPublisherAccess":"bot_blocked"},
-        "boundaryChallenge":"SEAr mechanistic language was tested against the actual method claim: the new arylating-reagent approach and applicability to contrasting arene classes establish a preparative contribution independently of the mechanistic explanation."
+      "doi": "10.1002/anie.2372199",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Heavy‐Atom Tunneling at Room Temperature Revealed by Instanton Theory",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "A computational instanton-theory study of heavy-atom tunneling, without a demonstrated general preparative method.",
+      "evidenceBasis": "The abstract reports calculated tunneling pathways for ring closure of strained triplet diradicals and possible future tunneling control.",
+      "challengeReason": "Housane/cage-dione formation is a modeled mechanistic case; the article does not establish practical synthesis, substrate scope or isolated products.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.2372199"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.6314537",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Noncovalent‐Interaction–Driven Single‐Molecule Exchange Enables Enantiomer Discrimination of Selected Amino Acids in a Nanopore",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nanopore stereochemical sensing and enzymatic-conversion monitoring are the main objectives.",
+      "evidenceBasis": "The abstract reports cucurbituril/α-hemolysin recognition, ionic-current signatures and selected amino-acid/peptide discrimination.",
+      "challengeReason": "Transient complexes and analyte exchange are analytical operations, not a general covalent preparation or synthetic route.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.6314537"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.2971119",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Oleylamine‐Assisted Construction of Bi‐Bi 2 O 2 CO 3 Heterojunction With a Self‐Release‐Replenishing Mars‐van Krevelen‐Type Mechanism for Efficient CO 2 Electroreduction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Oleylamine-assisted Bi/oxide electrocatalyst construction and CO2-to-formate performance dominate the study.",
+      "evidenceBasis": "The abstract focuses on lattice-carbon reservoirs, Faradaic efficiency, current density and catalyst stability.",
+      "challengeReason": "Formate production is acknowledged, but the evidence gives no organic substrate scope or broader preparative transformation; catalyst/material engineering is primary.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.2971119"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1021/jacs.6c15207",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "A Coordination Cage That Shrinks via Single-Site Labilization to Reshape Encapsulated Guests",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "A single responsive coordination cage and guest-shape control are the main contribution.",
+      "evidenceBasis": "The abstract reports one heterometallic PdPt8L6 cage that contracts after single-site labilization and regulates guest binding.",
+      "challengeReason": "The cage is genuinely synthesized, but one host-machine architecture does not establish a general organic preparative route or product family.",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c15207"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1021/jacs.6c16346",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Biocatalytic Redox Cascade Enabled Site-Selective Direct β-Alkylation of Cyclopentanones",
+      "titleZh": "生物催化氧化还原级联实现环戊酮位点选择性直接 β-烷基化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "A repurposed flavin-dependent ene-reductase performs a preparative desaturation/Giese cascade that installs diverse alkyl groups at a defined β-C(sp3)–H site of substituted cyclopentanones.",
+      "evidenceBasis": "The deposited JACS abstract states that one ERED orchestrates mechanistically distinct desaturation and Giese radical addition steps, provides diverse β-alkyl groups on α-substituted cyclopentanones, gives trans products with excellent diastereoselectivity, and permits site-divergent alkylation by tuning enzyme and light. These are direct substrate-to-product and selectivity claims; no unreported scope count or yields are invented.",
+      "challengeReason": "The strongest contrary reading is enzyme engineering rather than synthesis. Here the enzyme is the catalyst for an explicit carbon–carbon bond-forming transformation on cyclic ketone substrates, unlike protein-domain compatibility or pathway-reprogramming studies; the preparative transformation is the main result.",
+      "scopeAssessment": {
+        "primaryContribution": "Site-selective photobiocatalytic β-C(sp3)–H alkylation of α-substituted cyclopentanones.",
+        "preparativeTransformation": "Cyclopentanones are enzymatically desaturated and undergo Giese-type radical addition to furnish trans α,β-disubstituted cyclopentanones.",
+        "generalityEvidence": "The abstract explicitly reports diverse alkyl groups, α-aryl and α-alkyl substituted substrates, high diastereoselectivity and a site-divergent variant.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/jacs.6c16346",
+          "publisherPage": "https://doi.org/10.1021/jacs.6c16346",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "Enzyme repurposing is not itself the inclusion basis; the decisive evidence is the general catalytic carbonyl-compound transformation and product-selectivity scope."
       },
-      "evidencePages":["https://pubs.acs.org/doi/10.1021/acs.orglett.6c03301"]
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c16346"
+      ]
     },
     {
-      "doi":"10.1021/acs.orglett.6c03574","journal":"Organic Letters","date":"2026-09-23",
-      "title":"Visible Light-Mediated Dearomative Remote Functionalization of Arenes via a Tandem Strain-Release Spirocyclization Relay",
-      "titleZh":"串联应变释放螺环化接力实现可见光介导的芳烃去芳构化远程官能团化",
-      "decision":"include","firstPassDecision":"include","challengeDecision":"include","scopeTag":"organic_synthesis_methodology","totalSynthesis":false,
-      "reason":"The central advance is a small-molecule preparative strain-release/dearomative spirocyclization relay, not biological evaluation of a fixed scaffold.",
-      "evidenceBasis":"The actual deposited abstract describes a photocatalyst-free visible-light reaction platform combining bicyclo[1.1.0]butane strain release with remote dearomative functionalization of arenes. It identifies nitrosamine reagents and installation of sulfonamide and oxime functionalities into three-dimensional spirocyclic structures. These are article-specific transformations; no unobserved substrate number, yield, scheme or scale-up is claimed.",
-      "challengeReason":"The reference to medicinally relevant functionalities could be mistaken for a medicinal-application paper. Here the reported contribution is the bond-forming relay and access to functionalized spirocycles, not imaging or pharmacological readouts. The abstract supports a transferable reaction mode with the named functional installations, so the preparative-method decision survives the challenge.",
-      "scopeAssessment":{
-        "primaryContribution":"Photocatalyst-free visible-light remote dearomative functionalization coupled to a strain-release spirocyclization relay.",
-        "preparativeTransformation":"BCB-based strain-release addition/cyclization is combined with arene dearomatization and nitrosamine-mediated functional installation to furnish sulfonamide- and oxime-bearing spirocyclic products.",
-        "generalityEvidence":"The obtained abstract specifies a reaction platform and the sulfonamide/oxime functionalization outputs rather than a single biological test compound. It does not provide numerical substrate scope, isolated yields or scale; those details remain unclaimed.",
-        "sourceEvidence":{"type":"publisher-deposited-abstract-via-Crossref","file":"audit/unresolved-latest.json","blobSha":"4954c911bb843d1c360511c2180f7a68e5923118","locator":"unresolved DOI 10.1021/acs.orglett.6c03574","publisherPage":"https://pubs.acs.org/doi/10.1021/acs.orglett.6c03574","directPublisherAccess":"bot_blocked"},
-        "boundaryChallenge":"Medicinal motivation does not replace the preparative assessment. The actual evidence is the BCB strain-release/dearomative relay and identified functionalized spirocyclic product access; no drug activity is being used as inclusion evidence."
+      "doi": "10.1021/jacs.6c17163",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Electrochemical Upgrading of Lignin-Derived Phenolics via Vanadium Redox-Mediated Decoupling",
+      "titleZh": "通过钒氧化还原介导的解耦实现木质素来源酚类的电化学升级转化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "A V3+/V2+ mediator decouples electrochemistry from catalytic hydrogenation, enabling phenol-to-cyclohexanol conversion and extension to other lignin-derived platform molecules under concentrated continuous-flow conditions.",
+      "evidenceBasis": "The JACS abstract identifies phenol hydrogenation to cyclohexanol, reports extension to other lignin-derived platform molecules, and describes continuous processing of high-concentration phenol. Faradaic efficiency and flow lifetime are acknowledged as process evidence, not substituted for the stated product transformation and substrate extension.",
+      "challengeReason": "The paper is electrocatalytic and process-oriented, so it risks falling under energy engineering. It survives because its central output is a transferable preparative hydrogenation of biomass phenolics, with named organic product and extension beyond a single model substrate; it is not merely electrode-material optimization.",
+      "scopeAssessment": {
+        "primaryContribution": "Redox-mediated electrochemical hydrogenation/upgrading of lignin-derived phenolics.",
+        "preparativeTransformation": "Phenolic substrates, exemplified by phenol, are hydrogenated to cycloalkanol products such as cyclohexanol through a vanadium shuttle and PtRu/C catalyst.",
+        "generalityEvidence": "The abstract explicitly extends the strategy to other lignin-derived platform molecules and demonstrates concentrated continuous processing; no unreported substrate count is claimed.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/jacs.6c17163",
+          "publisherPage": "https://doi.org/10.1021/jacs.6c17163",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "Electrochemical performance metrics alone would be insufficient, but the named organic conversion and platform-molecule extension establish preparative scope."
       },
-      "evidencePages":["https://pubs.acs.org/doi/10.1021/acs.orglett.6c03574"]
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c17163"
+      ]
     },
     {
-      "doi":"10.1002/anie.7471326","journal":"Angew","date":"2026-09-22",
-      "title":"Ammonia‐Gated Guanyl Hydrazone Photoisomerization Enables Sequential Solid‐State Optical Response in Hydrogen‐Bonded Organic Frameworks",
-      "decision":"exclude","firstPassDecision":"exclude","challengeDecision":"exclude",
-      "reason":"The principal advance is gated solid-state photoswitching and sequence-dependent optical behavior of a hydrogen-bonded framework.",
-      "evidenceBasis":"The obtained abstract names a tetrasulfonate tetraphenylethylene host and guanyl-hydrazone guest, cooperative framework assembly, acid-base-triggered crystalline/amorphous switching, fluorescence/color modulation and information encryption. These are specific photofunctional-material design and response measurements, not evidence of a general organic preparative method. The final abstract sentence is truncated in the compact and is not reconstructed.",
-      "challengeReason":"Hydrazone isomerization and framework preparation are real chemical operations, so this is not excluded merely because it contains a framework. Their role in the stated work is control of solid-state optical output; the obtained evidence does not establish a general covalent synthetic or polymerization platform as its principal contribution.",
-      "evidencePages":["https://onlinelibrary.wiley.com/doi/10.1002/anie.7471326"],
-      "evidenceSource":"actual publisher-deposited abstract in compact, final sentence truncated"
+      "doi": "10.1021/jacs.6c12613",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Isocyanoalkynes: Leveraging a High-Energy Interstellar Lead for Unique Multi-Bond-Forming Cascades",
+      "titleZh": "异氰基炔：利用高能星际线索实现独特的多键形成级联反应",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "The work replaces an impractical low-yield route with a robust scalable synthesis of substituted isocyanoalkynes and demonstrates several multi-bond-forming cascade reactions of the resulting building-block family.",
+      "evidenceBasis": "The JACS abstract explicitly contrasts the prior flash-vacuum route with a robust, scalable synthesis covering aromatic, heterocyclic and aliphatic substituents, then reports several exploratory multi-bond-forming cascades. These are article-specific building-block and reactivity claims.",
+      "challengeReason": "Structural analysis and computation occupy part of the article, but they support rather than replace the preparative contribution. The synthesis spans several substituent classes and creates a reusable reactive building-block family, not one characterized molecule.",
+      "scopeAssessment": {
+        "primaryContribution": "General preparation and synthetic exploitation of substituted isocyanoalkynes.",
+        "preparativeTransformation": "Substituted alkyne-isocyanide building blocks are prepared by a scalable route and converted through multi-bond-forming cascades.",
+        "generalityEvidence": "Aromatic, heterocyclic and aliphatic substituent classes plus several distinct cascade reactions are stated in the abstract.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/jacs.6c12613",
+          "publisherPage": "https://doi.org/10.1021/jacs.6c12613",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "High-energy/interstellar motivation is contextual; the inclusion rests on the scalable building-block route and transferable cascade chemistry."
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c12613"
+      ]
     },
     {
-      "doi":"10.1002/anie.5198340","journal":"Angew","date":"2026-09-22",
-      "title":"C 60 ‐Mediated d‐π Conjugation Induces Electronic Reconstruction to Boost Charge Storage of Nb 2 C/Nb 2 O 5 Heterostructure Anode",
-      "decision":"exclude","firstPassDecision":"exclude","challengeDecision":"exclude",
-      "reason":"Fullerene-mediated interfacial electronic engineering of a capacitor anode, rather than general organic synthesis, is the central contribution.",
-      "evidenceBasis":"The actual abstract describes C60/Nb2C/Nb2O5 interfaces, charge transfer, electronic conductivity, lithium adsorption and anode/hybrid-capacitor charge-storage performance. C60 is an interfacial component; the reported platform produces and evaluates an electrode heterostructure rather than an organic product class. The final compact sentence is truncated and not invented.",
-      "challengeReason":"The presence of an organic fullerene does not by itself establish an organic preparative method. The countercheck finds that the stated variations and measurements address interfacial orbitals and charge storage, not transferable carbon-bond construction or polymerization chemistry.",
-      "evidencePages":["https://onlinelibrary.wiley.com/doi/10.1002/anie.5198340"],
-      "evidenceSource":"actual publisher-deposited abstract in compact, final sentence truncated"
+      "doi": "10.1021/jacs.6c04230",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Operando and Postmortem Study of Iridium-Decorated Titanium-Based Catalysts in PEM Water Electrolysis",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Operando degradation analysis of PEM water-electrolysis catalysts is outside scope.",
+      "evidenceBasis": "The abstract tracks Ir/TiO2, Ir/TiC and Ir/TiN morphology, support degradation and metal migration under stress testing.",
+      "challengeReason": "Multiple catalyst supports do not constitute organic substrate scope; no preparative organic transformation is present.",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c04230"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
     },
     {
-      "doi":"10.1002/anie.5230240","journal":"Angew","date":"2026-09-22",
-      "title":"Sandwich‐Like Supramolecular Clamp‐Templated Manganese(II) Bromide Scintillators for Multimodal Visualization",
-      "decision":"exclude","firstPassDecision":"exclude","challengeDecision":"exclude",
-      "reason":"Crown-ether/metal-bromide assembly is used to engineer scintillation and glass formation, not to establish general organic preparation.",
-      "evidenceBasis":"The actual compact abstract reports four manganese bromides with benzo-15-crown-5/metal clamps, changing the associated cation to regulate tetrahedral geometry, X-ray charge collection, vitrification and light yield. The four prepared compounds are genuine materials examples; their number is not treated as organic substrate scope. The truncated final sentence remains unknown.",
-      "challengeReason":"The challenge explicitly acknowledges preparation of four assemblies. Their comparison tests scintillator and glass behavior; it does not demonstrate a general organic reaction or a polymerization method. Exclusion follows the principal contribution, not a blanket prohibition on supramolecular chemistry.",
-      "evidencePages":["https://onlinelibrary.wiley.com/doi/10.1002/anie.5230240"],
-      "evidenceSource":"actual publisher-deposited abstract in compact, final sentence truncated"
+      "doi": "10.1021/jacs.6c16766",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Tyrosinase-Catalyzed Tyr–Aniline Coupling Enables Peptide Editing, Macrocyclization, and Phage-Display-Based Selection",
+      "titleZh": "酪氨酸酶催化的酪氨酸–苯胺偶联实现肽编辑、宏环化及基于噬菌体展示的筛选",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "Tyrosinase catalyzes a broadly compatible Tyr–aniline oxidative coupling that edits unprotected peptides and enables modular conjugation and macrocyclization.",
+      "evidenceBasis": "The JACS abstract states rapid coupling under mild aqueous conditions, compatibility with unprotected peptides bearing diverse proteinogenic side chains, introduction of structurally diverse arylamines, and bifunctional-arylamine peptide conjugation/macrocyclization. Phage-display selection is a downstream application, not the sole contribution.",
+      "challengeReason": "The ligand-discovery and phage-display application could make this appear primarily biomedical. The actual core is a general enzyme-catalyzed covalent peptide transformation with substrate and arylamine compatibility, satisfying the contract's biocatalytic-preparation boundary.",
+      "scopeAssessment": {
+        "primaryContribution": "Tyrosinase-catalyzed late-stage Tyr–aniline coupling for peptide modification and macrocyclization.",
+        "preparativeTransformation": "Tyrosine residues in unprotected peptides are oxidatively coupled with arylamines; bifunctional arylamines close or conjugate peptide chains.",
+        "generalityEvidence": "The abstract specifies diverse unprotected peptide side chains, structurally diverse arylamines, several installed module classes and both conjugation and macrocyclization modes.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/jacs.6c16766",
+          "publisherPage": "https://doi.org/10.1021/jacs.6c16766",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "Biological screening is downstream. Inclusion is based on the explicit preparative peptide-bond-editing platform, not target activity."
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c16766"
+      ]
     },
     {
-      "doi":"10.1002/anie.4624632","journal":"Angew","date":"2026-09-22",
-      "title":"Ultrafast and High Charge Capability Aluminum‐Ion Storage With Long Term Stability",
-      "decision":"exclude","firstPassDecision":"exclude","challengeDecision":"exclude",
-      "reason":"The work develops a nickel-engineered Prussian-blue-analogue cathode for fast and durable aluminum-ion storage.",
-      "evidenceBasis":"The actual deposited abstract centers on nickel-induced electronic self-compensation in NiCuHCF, suppression of lattice distortion, aluminum-ion diffusion, charge rate and cycling retention. Its production/scale language concerns an inorganic cathode material, not preparative organic or polymer synthesis. The final truncated clause is not extrapolated.",
-      "challengeReason":"Large-scale material production is real preparation but not automatically an in-scope organic method. The article-specific countercheck ties that production to battery charging/stability and inorganic framework engineering; no general organic transformation is established by the obtained evidence.",
-      "evidencePages":["https://onlinelibrary.wiley.com/doi/10.1002/anie.4624632"],
-      "evidenceSource":"actual publisher-deposited abstract in compact, final sentence truncated"
+      "doi": "10.1021/acs.joc.6c01866",
+      "journal": "JOC",
+      "date": "2026-09-23",
+      "title": "Photosensitizer-Free Synthesis of Arylsulfonated 4,5-Fused Polycyclic Coumarin Derivatives via Photoinduced Cascade Sulfonylation/Cyclization of 4-( N -Alkyl- N -acrylamido)coumarins",
+      "titleZh": "无光敏剂条件下 4-(N-烷基-N-丙烯酰胺基)香豆素光诱导磺酰化/环化级联合成芳基磺酰化 4,5-稠合多环香豆素衍生物",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "A photosensitizer-free visible-light sulfonylation/cyclization cascade furnishes fused polycyclic coumarins from acrylamide-bearing coumarins and arylsulfonyl chlorides.",
+      "evidenceBasis": "The deposited JOC abstract reports broad substrate scope, functional-group tolerance, moderate-to-excellent yields, gram-scale execution and sunlight irradiation, along with the radical cascade mechanism. These are direct preparative claims.",
+      "challengeReason": "Coumarin photochemistry and mechanistic energy-transfer language could be mistaken for a photophysical study. The main output is isolated fused-coumarin synthesis across a stated broad scope and gram scale, so the preparation claim is primary.",
+      "scopeAssessment": {
+        "primaryContribution": "Visible-light cascade construction of arylsulfonylated fused polycyclic coumarins.",
+        "preparativeTransformation": "Acrylamido-coumarins and arylsulfonyl chlorides undergo radical sulfonylation followed by intramolecular cyclization.",
+        "generalityEvidence": "Broad substrate scope, functional-group tolerance, moderate-to-excellent yields, gram scale and sunlight operation are expressly reported.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/acs.joc.6c01866",
+          "publisherPage": "https://doi.org/10.1021/acs.joc.6c01866",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "Mechanistic studies explain a clearly demonstrated preparative cascade; they do not replace it."
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01866"
+      ]
     },
     {
-      "doi":"10.31635/ccschem.026.202608262","journal":"CCS Chemistry","date":"2026-09-22",
-      "title":"Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
-      "decision":"pending","firstPassDecision":"pending","challengeDecision":"pending",
-      "reason":"Paired electrolysis may represent genuine organic electrosynthesis, but the obtained evidence still does not resolve the preparative contribution.",
-      "evidenceBasis":"The refreshed compact still contains no abstract for this DOI. A publisher search snippet mentions pairing cathodic CO2 valorization with high-value anodic organic oxidation, but the article/abstract/TOC fetches did not provide a readable full abstract, substrate-to-product scope or preparative evidence; the browser reader returned bot_blocked. The snippet is recorded as partial evidence, not a full abstract.",
-      "challengeReason":"The title and energy-related index topics cannot justify exclusion, because a paired organic electrosynthetic method is plausible. Conversely, organic oxidation wording alone cannot prove a general preparative platform. Both passes therefore retain this specific DOI as pending; the missing evidence is not attributed to other reviewed candidates.",
-      "evidenceNeeded":"Obtain the publisher abstract or relevant text/SI describing the alcohol substrates and oxidation products, the transferable preparative transformation, and scope or isolated-product/route evidence; distinguish this from an electrode/energy-performance-only study.",
-      "attemptedEvidencePages":["https://doi.org/10.31635/ccschem.026.202608262","https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262","https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608262","https://www.chinesechemsoc.org/toc/ccschem/0/0"],
-      "nextAction":"Retry the article's textual abstract or supporting preparative sections in the next existing pre-review cycle; retain the original date and source review even after this DOI leaves the discovery window. Do not infer scope from keywords or retrieve TOC/body images for this review.",
-      "originalDate":"2026-09-22","firstRecordedAt":"2026-09-22T21:48:19+08:00",
-      "sourceReviewFile":"audit/review-2026-09-23-0800.json"
+      "doi": "10.1038/d41586-026-02930-6",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "How to stay smart in the age of AI: the science of critical thinking",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature news/commentary on critical thinking in the AI era, not a research article in synthesis.",
+      "evidenceBasis": "The exact title and d41586 metadata identify editorial/news content; no synthesis abstract is present.",
+      "challengeReason": "There is no plausible preparative chemistry contribution to rescue on challenge.",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02930-6"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1038/d41586-026-02949-9",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "In praise of human teachers: universities must resist outsourcing everything to AI",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature opinion/editorial about human teachers and AI, not synthesis research.",
+      "evidenceBasis": "The exact title and d41586 metadata identify commentary; no research abstract or chemical method is present.",
+      "challengeReason": "No organic preparation could be hidden by the topic wording.",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02949-9"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1038/s41467-026-77874-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "A spatiotemporal single-cell transcriptomic atlas reveals fertilization-induced auxin signaling driving strawberry fruit set and development",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Single-cell transcriptomics of strawberry fruit development is biological regulation research.",
+      "evidenceBasis": "The exact title identifies fertilization-induced auxin signaling and a spatiotemporal cell atlas; no abstract was deposited.",
+      "challengeReason": "Plant development can involve metabolites, but the stated contribution is transcriptomic signaling rather than a preparative biosynthetic route.",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77874-6"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1038/s41467-026-77996-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Inducible chronic NAD deficiency in mice reveals multi-systemic phenotypical, metabolic, and transcriptional changes",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "A mouse NAD-deficiency phenotyping study, not organic synthesis.",
+      "evidenceBasis": "The title identifies inducible chronic NAD deficiency and systemic metabolic/transcriptional changes; no abstract was deposited.",
+      "challengeReason": "Use or perturbation of a metabolite does not amount to a preparation method.",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77996-x"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1038/s41467-026-78015-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Solid–vapor synthesis of dynamic crystalline one-dimensional supramolecular polymers from amorphous macrocycles",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "The publisher listing confirms a new solid–vapor host–guest synthesis of a dynamic crystalline supramolecular polymer, but the accessible evidence does not show monomer/host–guest breadth or whether the method is transferable beyond one material system.",
+      "evidenceBasis": "The fresh compact has no abstract. A same-day Nature Communications research listing describes a highly dynamic crystalline supramolecular polymer made by a unique solid–vapor host–guest-driven synthesis. That establishes more than a title keyword, but not the article-specific generality required to decide whether this is in-scope polymer synthesis methodology or target-specific responsive-material assembly.",
+      "challengeReason": "It cannot be excluded merely as a material because polymer assembly is the principal synthetic act, and true polymer/architecture-control methods may qualify. It also cannot be included from one publisher teaser without preparative breadth. Both passes therefore defer this DOI only.",
+      "evidenceNeeded": "Full publisher abstract or body/SI showing macrocycle/guest variation, reproducible solid–vapor assembly scope, and whether the synthesis controls a transferable chain/architecture feature rather than one target material.",
+      "attemptedEvidencePages": [
+        "https://www.nature.com/articles/s41467-026-78015-9",
+        "https://www.nature.com/ncomms/research-articles?type=article",
+        "https://www.nature.com/subjects/physical-sciences/ncomms"
+      ],
+      "nextAction": "Use the existing browser/VPN evidence path to read the article abstract or relevant preparation section; do not infer generality from the listing teaser.",
+      "originalDate": "2026-09-23",
+      "firstRecordedAt": "2026-09-23T17:13:15+08:00",
+      "sourceReviewFile": "audit/prepublish-review-2026-09-23-1800.json"
+    },
+    {
+      "doi": "10.1038/s41467-026-77936-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Systemic and Mucosal Antibody Responses Against Neisseria gonorrhoeae (Ng) Outer Membrane Vesicle Antigens following Four-Component Meningococcal Serogroup B (4CMenB) Immunization in Healthy Adults: A Randomized Phase II Trial",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Randomized human immunization and antibody-response trial, outside preparative synthesis.",
+      "evidenceBasis": "The title explicitly identifies healthy-adult immunization, systemic/mucosal antibody responses and a phase II trial; the fresh compact adds biomedical topics but no synthesis abstract.",
+      "challengeReason": "Antigens are chemical entities, yet the study objective is immune response, not molecule preparation.",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77936-9"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1038/s41467-026-77765-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "The biogeography of giant viruses and interactions with Eukaryotes across European lakes",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Lake-virus biogeography and host ecology are the principal contribution.",
+      "evidenceBasis": "The abstract reports viral genomes, virus-host links, latitudinal abundance and primary-production associations.",
+      "challengeReason": "Aromatic organic matter is an environmental descriptor, not evidence of organic synthesis.",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77765-w"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1038/s41467-026-77877-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "The elongation of Mest transcript into MestXL sustains, but does not initiate, the maternal allele bias of its convergent gene Copg2 during neurogenesis",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Imprinted-gene regulation during neurogenesis, not preparative biocatalysis.",
+      "evidenceBasis": "The abstract reports brain organoids, multi-omics, chromatin mapping and MestXL/Copg2 allele regulation.",
+      "challengeReason": "Engineered cellular models do not become synthesis methods absent an explicit substrate-to-product transformation.",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77877-3"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03733",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Construction of Tetrahydropyridobenzimidazoles via Ni–Al Bimetal-Catalyzed Tandem C(sp2)/C(sp3)–H Annulation",
+      "titleZh": "Ni–Al 双金属催化串联 C(sp²)/C(sp³)–H 环化构建四氢吡啶并苯并咪唑",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "Ni–Al bimetallic catalysis joins N-alkyl benzimidazoles and alkynes through tandem aryl and aliphatic C–H annulation to access a previously difficult fused heterocycle class.",
+      "evidenceBasis": "The Organic Letters abstract states a tandem C(sp2)–H/C(sp3)–H annulation, readily available starting materials, various tetrahydropyridobenzimidazoles and a reported 40–98% yield range.",
+      "challengeReason": "Bioactive-motif motivation alone would not qualify, but the paper supplies a distinct tandem bond-forming method and a varied product class. Inclusion does not rely on medicinal relevance.",
+      "scopeAssessment": {
+        "primaryContribution": "Tandem Ni–Al-catalyzed aryl/aliphatic C–H annulation for fused heterocycle synthesis.",
+        "preparativeTransformation": "N-alkyl benzimidazoles and alkynes are annulated across C(sp2)–H and C(sp3)–H sites to tetrahydropyridobenzimidazoles.",
+        "generalityEvidence": "The abstract reports various products from readily available inputs with yields of 40–98%.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/acs.orglett.6c03733",
+          "publisherPage": "https://doi.org/10.1021/acs.orglett.6c03733",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "The privileged-scaffold framing is secondary to the new tandem annulation and explicit product scope."
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03733"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03569",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Dipyrrin-Strapped NiII Porphyrins",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Preparation of a small set of strapped porphyrin architectures followed by electronic-structure characterization, without general route scope.",
+      "evidenceBasis": "The abstract describes specific Suzuki couplings to one cage-like porphyrin, a dimer and a fluorenyl analogue, then conversion to BIII complexes and aromaticity analysis.",
+      "challengeReason": "Real bond formation is acknowledged, but the paper's evidence supports target-specific molecular-structure synthesis rather than a transferable method or sufficiently general building-block route.",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03569"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03403",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Nonplanar S-Shaped Bisanthene: Synthesis, Structures, and Properties",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Target-specific synthesis and optoelectronic characterization of one nonplanar S-shaped bisanthene.",
+      "evidenceBasis": "The abstract reports hel-BA synthesis, X-ray stacking, photoluminescence, redox and NIR electrochromic properties.",
+      "challengeReason": "A cation-radical-mediated C–H substitution is used, but no substrate or product generality is stated; materials properties are the main outcome.",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03403"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03301",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Palladium-Catalyzed Site-Selective C–H Arylation of Arenes: Using Diaryl Disulfides as an Arylation Reagent",
+      "titleZh": "钯催化芳烃位点选择性 C–H 芳基化：以二芳基二硫化物为芳基化试剂",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "Diaryl disulfides act as masked aryl donors in palladium-catalyzed site-selective arylation of both electron-rich and electron-deficient arenes.",
+      "evidenceBasis": "The fresh compact preserves the abstract stating broader substrate scope, both electronic arene classes and predictable site selectivity for multisubstituted arenes. The mechanism explains rather than substitutes for the preparative method.",
+      "challengeReason": "A mechanism-only reading was re-tested against the fresh handoff. The new arylating-reagent strategy changes preparative access across contrasting arene classes, so inclusion remains compatible with scope-2026-09-23-v1.",
+      "scopeAssessment": {
+        "primaryContribution": "Palladium-catalyzed site-selective arene C–H arylation using diaryl disulfides.",
+        "preparativeTransformation": "Arene C–H bonds are converted to aryl-substituted arenes with diaryl disulfides as masked arylating reagents.",
+        "generalityEvidence": "Electron-rich, electron-deficient and multisubstituted arenes are explicitly covered in the abstract.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/acs.orglett.6c03301",
+          "publisherPage": "https://doi.org/10.1021/acs.orglett.6c03301",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "SEAr discussion is not the inclusion basis; contrasting substrate classes and a new donor strategy establish the method."
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03301"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03516",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Spiro-Directed Hierarchical Dynamic Covalent Assembly: From Molecular Configuration to Adaptive Porous Networks",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Dynamic covalent assembly is used to build adaptive porous networks and chromic materials, not general organic preparation.",
+      "evidenceBasis": "The abstract emphasizes spiro-controlled macrocycle/network assembly and mechano-/thermochromic behavior.",
+      "challengeReason": "Formation of the linkers and radicals is acknowledged, but the reported platform is a materials architecture without preparative substrate scope.",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03516"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03166",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Stereoselective Polyglucuronic Acid Assembly via the Iron-Catalyzed Stereospecific Glycosylation with Glycal Epoxides",
+      "titleZh": "铁催化糖烯环氧化物立体专一性糖基化实现聚葡糖醛酸的立体选择性组装",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "Iron-catalyzed iterative stereospecific glycosylation provides a convergent method for assembling glucuronic-acid linkages and polyglucuronic acid oligomers.",
+      "evidenceBasis": "The Organic Letters abstract states application to an array of GlcA-β-1,4-GlcA linkages in complex glycans and ready access to PGA octasaccharides with high stereoselectivity.",
+      "challengeReason": "The biological importance of PGAs is introductory, not the inclusion ground. The central advance is an iterative catalytic glycosylation and convergent oligosaccharide assembly method.",
+      "scopeAssessment": {
+        "primaryContribution": "Stereoselective iterative assembly of polyglucuronic acids.",
+        "preparativeTransformation": "Glycal epoxide donors undergo iron-catalyzed stereospecific glycosylation to build β-1,4-linked glucuronic-acid oligomers.",
+        "generalityEvidence": "An array of linkages in complex glycans and PGA octasaccharide construction are explicitly reported.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/acs.orglett.6c03166",
+          "publisherPage": "https://doi.org/10.1021/acs.orglett.6c03166",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "This is covalent carbohydrate synthesis rather than a biological-property study."
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03166"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03732",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Trifluoroallyl Sulfonium Salts: Reagents for Highly Regioselective Trifluoroallylation",
+      "titleZh": "三氟烯丙基锍盐：用于高区域选择性三氟烯丙基化的试剂",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "Bench-stable, scalable trifluoroallyl sulfonium salts enable copper-catalyzed regioselective trifluoroallylation of a series of organozinc reagents.",
+      "evidenceBasis": "The Organic Letters abstract explicitly reports reagent design and synthesis, bench stability, scale-up, reaction with a series of organozinc reagents, high efficiency/regioselectivity and downstream product transformations.",
+      "challengeReason": "A new reagent is not automatically a general method, but here its use across a stated organozinc series and product derivatizations demonstrates transferable preparative utility.",
+      "scopeAssessment": {
+        "primaryContribution": "Design and application of scalable trifluoroallylating sulfonium reagents.",
+        "preparativeTransformation": "Organozinc reagents are copper-catalytically converted to allylic trifluoromethyl-terminal alkenes using trifluoroallyl sulfonium salts.",
+        "generalityEvidence": "A series of organozinc reagents, high regioselectivity, scalable reagent preparation and subsequent transformations are stated.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/acs.orglett.6c03732",
+          "publisherPage": "https://doi.org/10.1021/acs.orglett.6c03732",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "Inclusion rests on demonstrated reagent scope and transformations, not fluorine relevance alone."
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03732"
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03574",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Visible Light-Mediated Dearomative Remote Functionalization of Arenes via a Tandem Strain-Release Spirocyclization Relay",
+      "titleZh": "串联应变释放螺环化接力实现可见光介导的芳烃去芳构化远程官能团化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "scopeTag": "organic_synthesis_methodology",
+      "totalSynthesis": false,
+      "reason": "A photocatalyst-free visible-light blueprint couples bicyclobutane strain release with remote arene dearomatization to form functionalized three-dimensional spirocycles.",
+      "evidenceBasis": "The fresh compact abstract identifies nitrosamines as reagents and sulfonamide/oxime installation in spirocyclic products. No unreported numerical scope or yield is claimed.",
+      "challengeReason": "Medicinally relevant functionality is only motivation; the actual contribution is the bond-forming strain-release/dearomatization relay. The earlier include remains compatible with the new contract.",
+      "scopeAssessment": {
+        "primaryContribution": "Visible-light remote dearomative functionalization coupled to strain-release spirocyclization.",
+        "preparativeTransformation": "BCB strain release and arene dearomatization install sulfonamide or oxime functionality in spirocyclic products.",
+        "generalityEvidence": "The abstract presents a reaction blueprint with two named functional-installation modes; numerical scope remains unclaimed.",
+        "sourceEvidence": {
+          "type": "publisher-deposited abstract in fresh paired compact",
+          "file": "audit/unresolved-latest.json",
+          "blobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+          "locator": "unresolved DOI 10.1021/acs.orglett.6c03574",
+          "publisherPage": "https://doi.org/10.1021/acs.orglett.6c03574",
+          "directPublisherAccess": "not_required_for_deposited_abstract"
+        },
+        "boundaryChallenge": "The method is assessed on covalent scaffold construction, not medicinal relevance."
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03574"
+      ]
+    },
+    {
+      "doi": "10.1002/anie.7471326",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Ammonia‐Gated Guanyl Hydrazone Photoisomerization Enables Sequential Solid‐State Optical Response in Hydrogen‐Bonded Organic Frameworks",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Solid-state photoswitching and sequence-dependent optical response in a HOF are primary.",
+      "evidenceBasis": "The abstract reports host–guest assembly, acid/base gated phase switching, fluorescence/color modulation and information encryption.",
+      "challengeReason": "Hydrazone isomerization is a materials-response mechanism, not a general covalent synthesis platform.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.7471326"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.6379738",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Beyond Radical Emitters: Hot‐Exciton Electroluminescence From Singlet Diradicaloids",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Organic transistor emitter physics and hot-exciton electroluminescence are central.",
+      "evidenceBasis": "The abstract studies a trityl singlet diradicaloid emitter, OLET operation, spin utilization and excited-state dynamics.",
+      "challengeReason": "A molecule is present, but no general synthesis method or route scope is reported; device performance dominates.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.6379738"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.7229401",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Bioelectronic Photocommutator to Regulate Extracellular Electron Transfer Circuits for Microbial Photovoltaic Energy Storage",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "A microbial photovoltaic bioelectronic device and light-gated electron transfer are the main contribution.",
+      "evidenceBasis": "The abstract describes biosynthesized CdS dots interfaced with Shewanella, photocommutation and a flexible power source.",
+      "challengeReason": "Biosynthesis here fabricates a bioelectronic nanohybrid; it is not a general organic product transformation.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.7229401"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.3588313",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Boosting Charge Storage in Ferri/Ferrocyanide‐Based Alkaline Redox Flow Batteries",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Alkaline redox-flow-battery electrolyte solubility and cycling stability are the focus.",
+      "evidenceBasis": "The abstract compares Li/Na/K ferri-ferrocyanide solvation and battery performance with polysulfide/organic anolytes.",
+      "challengeReason": "Use of organic anolytes does not establish organic preparation; no covalent synthetic method is reported.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.3588313"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.5198340",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "C 60 ‐Mediated d‐π Conjugation Induces Electronic Reconstruction to Boost Charge Storage of Nb 2 C/Nb 2 O 5 Heterostructure Anode",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "C60-mediated interfacial engineering of a capacitor anode, not organic synthesis.",
+      "evidenceBasis": "The abstract covers Nb2C/Nb2O5/C60 charge transfer, lithium adsorption and hybrid-capacitor performance.",
+      "challengeReason": "C60 is a functional interface component; no organic product class or preparation scope is demonstrated.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5198340"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.1983375",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Electronic Confinement Induced Single Atom Functionality in Hydroxylamine Synthesis Unveiled by Constant Potential Simulation",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Constant-potential simulation of hydroxylamine-selective NO reduction is mechanistic and computational.",
+      "evidenceBasis": "The abstract identifies modeled *HNO/*NOH competition and operando restructuring concepts without a preparative experimental scope.",
+      "challengeReason": "Hydroxylamine is a product, but simulation of selectivity mechanisms alone is not a general preparation method.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.1983375"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.7843737",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Manipulating Fluorinated Nanochannels in Porous Aromatic Frameworks for Ultra‐Stable Sodium‐Ion Transport",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Fluorinated porous-framework electrolyte engineering for sodium-metal batteries is primary.",
+      "evidenceBasis": "The abstract reports PAF-1-F ion transport, NaF-rich interphases and long battery cycling.",
+      "challengeReason": "Perfluoroalkyl grafting is a materials fabrication step; no general organic/polymer synthesis method is established.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.7843737"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.7046071",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Regulating Metal–Support Interaction via WO 3 Crystal Phase Engineering for Enhanced Acidic Water Oxidation",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "WO3 phase engineering of Ir single-atom catalysts for acidic water oxidation is outside scope.",
+      "evidenceBasis": "The abstract emphasizes metal–support interaction, OER overpotential, stability and Ir electronic structure.",
+      "challengeReason": "Different crystal phases are catalyst materials, not organic substrate scope or preparation.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.7046071"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.5230240",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Sandwich‐Like Supramolecular Clamp‐Templated Manganese(II) Bromide Scintillators for Multimodal Visualization",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Crown-ether/metal-bromide scintillator and glass engineering is the main contribution.",
+      "evidenceBasis": "The abstract reports four Mn bromide assemblies, light yield, X-ray charge collection and vitrification.",
+      "challengeReason": "Four prepared materials are genuine examples but do not form organic substrate scope; performance comparison dominates.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5230240"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.4147834",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Single Atoms Couple Molecular Coordination to Near‐Resonant Charge Transfer in Surface‐Enhanced Raman Scattering",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Single-atom-enabled SERS sensing is an analytical nanomaterial study.",
+      "evidenceBasis": "The abstract reports Pt/Au/TiOx architecture, Raman enhancement and benzaldehyde gas detection via Schiff-base capture.",
+      "challengeReason": "The capture reaction is a sensing step, not a general preparative method or product synthesis.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.4147834"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.1466065",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Sustainable Low‐Valent Iridium Active Sites in Rhenium Doped Perovskite Iridates for Efficient Acidic Oxygen Evolution Reaction via Hybridized Reaction Pathways",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Re-doped perovskite OER catalyst design and water-electrolysis performance are central.",
+      "evidenceBasis": "The abstract focuses on Ir oxidation state, hybrid OER pathways, overpotential and catalyst durability.",
+      "challengeReason": "No organic transformation or preparative product scope is present.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.1466065"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.5026257",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Synergistic Integration of Thermocatalysis and Electrocatalysis for Isopropanol Dehydrogenation Toward Efficient Hydrogen Production",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Thermo-electrocatalytic isopropanol dehydrogenation is framed and evidenced as hydrogen-production engineering with one model alcohol.",
+      "evidenceBasis": "The abstract reports a RuIr HT-PEME, acetone/H2 production rates and catalyst stability at 200 °C.",
+      "challengeReason": "The isopropanol-to-acetone reaction is real, but no transferable substrate scope is shown; the stated objective and evidence are a liquid-organic-hydrogen-carrier energy process.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5026257"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.3111048",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Synergistic Vibrational Suppression and Aggregation Control via a Rigid Dimeric Acceptor for 21.13% Organic Solar Cells",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Molecular design for organic-solar-cell efficiency is primary.",
+      "evidenceBasis": "The abstract reports one rigid dimeric acceptor, film formation, energy loss and photovoltaic efficiency.",
+      "challengeReason": "Synthesis of an acceptor molecule supports device optimization; no general preparation route or product scope is established.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.3111048"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.1002/anie.4624632",
+      "journal": "Angew",
+      "date": "2026-09-22",
+      "title": "Ultrafast and High Charge Capability Aluminum‐Ion Storage With Long Term Stability",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nickel-engineered Prussian-blue cathode for aluminum-ion storage, not organic synthesis.",
+      "evidenceBasis": "The abstract centers on lattice distortion, Al-ion diffusion, charge rate and cycling retention.",
+      "challengeReason": "Large-scale cathode production is materials preparation, not a general organic reaction or polymerization method.",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.4624632"
+      ],
+      "evidenceSource": "fresh paired compact title/abstract unless explicitly stated"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "journal": "CCS Chemistry",
+      "date": "2026-09-22",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "Paired electrolysis may represent genuine organic electrosynthesis, but the obtained evidence still does not resolve the preparative contribution.",
+      "evidenceBasis": "The fresh 17:13 compact still contains no abstract. The earlier publisher article/abstract/TOC attempts were bot-blocked, while a search excerpt only suggested cathodic CO2 valorization paired with anodic alcohol oxidation; no alcohol-product scope or preparative evidence was obtained.",
+      "challengeReason": "Energy-related indexing is not enough to exclude a possibly genuine paired organic electrosynthesis, while the title and snippet are not enough to include it. The DOI remains individually deferred.",
+      "evidenceNeeded": "Obtain the publisher abstract or relevant text/SI describing the alcohol substrates and oxidation products, the transferable preparative transformation, and scope or isolated-product/route evidence; distinguish this from an electrode/energy-performance-only study.",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/toc/ccschem/0/0"
+      ],
+      "nextAction": "Obtain textual publisher abstract or preparative sections showing alcohol substrates, products, scope and isolated/preparative evidence through the existing browser/VPN review path.",
+      "originalDate": "2026-09-22",
+      "firstRecordedAt": "2026-09-22T21:48:19+08:00",
+      "sourceReviewFile": "audit/review-2026-09-23-0800.json"
     }
   ],
-  "scopeRechecks": [
+  "historicalScopeRechecks": [
     {
-      "doi":"10.1021/acs.joc.6c01559","journal":"JOC","originalDate":"2026-09-22",
-      "title":"Isoindole-Based Multicomponent Synthesis of Pyrimido[6,1,2-cd]pyrrolizine Fluorophores with Unsymmetrical Urea Handles: Photophysical, Theoretical, and Antifungal Imaging Studies",
-      "reviewKind":"existing_card_scope_recheck","decision":"pending","firstPassDecision":"pending","challengeDecision":"pending",
-      "evidenceBasis":"The ACS Figshare landing page for supplement 10.1021/acs.joc.6c01559.s001 supplies the actual article abstract. It describes a one-pot multicomponent PP-fluorophore library with unsymmetrical urea handles, then side-chain-dependent emission, crystal packing, calculations and Candida imaging. This confirms real synthesis but does not by itself resolve whether the main reusable advance is preparation or probe-property diversification. The SI download redirected to an inaccessible signed PDF; no SI contents or figures were read.",
-      "challengeReason":"Fluorescence and imaging do not automatically exclude a genuine multicomponent synthetic method. Equally, the word library and side-chain variation do not prove adequate general preparative scope. The actual reaction-partner variation and preparative section are still needed before affirming or overturning the old inclusion.",
-      "evidenceNeeded":"Read the reaction design and substrate/partner scope plus preparative product evidence, sufficient to distinguish a transferable multicomponent synthesis from appendage tuning of an imaging scaffold.",
-      "attemptedEvidencePages":["https://pubs.acs.org/doi/10.1021/acs.joc.6c01559","https://acs.figshare.com/articles/journal_contribution/Isoindole-Based_Multicomponent_Synthesis_of_Pyrimido_6_1_2-cd_pyrrolizine_Fluorophores_with_Unsymmetrical_Urea_Handles_Photophysical_Theoretical_and_Antifungal_Imaging_Studies/33963375","https://acs.figshare.com/ndownloader/files/69214923"],
-      "nextAction":"Obtain textual preparative evidence from the article or SI and repeat the primary-contribution challenge. Keep the existing card pending; do not delete it on the basis of access failure.",
-      "sourceReviewFile":"audit/scope-rechecks/2026-09-23-morning-24.json","priorAdmissionReviewFile":"audit/review-2026-09-23-0800.json","cardAction":"retain_while_pending"
+      "doi": "10.1021/acs.joc.6c01559",
+      "journal": "JOC",
+      "originalDate": "2026-09-22",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "cardAction": "retain",
+      "evidenceBasis": "A newly indexed full abstract text describes a diversity-oriented one-pot multicomponent library, mild metal-free conditions and broad scope across primary/secondary amines and primary benzamides. The ACS JOC latest listing independently confirms the article and title.",
+      "challengeReason": "Photophysics and antifungal imaging are substantial downstream studies, but the article also establishes a broad multicomponent preparation across distinct reaction-partner classes; fluorescence therefore does not erase the preparative method.",
+      "evidencePages": [
+        "https://pubs.acs.org/joceah/latest-articles",
+        "https://pubs.acs.org/doi/10.1021/acs.joc.6c01559"
+      ],
+      "resolvedAt": "2026-09-23T17:24:00+08:00"
     },
     {
-      "doi":"10.1021/acs.orglett.6c03499","journal":"Organic Letters","originalDate":"2026-09-22",
-      "title":"Protonation-Gated Strain-Release Generation of Amino-o-quinodimethanes",
-      "reviewKind":"existing_card_scope_recheck","decision":"pending","firstPassDecision":"pending","challengeDecision":"pending",
-      "evidenceBasis":"The ACS Figshare page for supplement 10.1021/acs.orglett.6c03499.s002 provides the actual abstract: protonation controls amino-BCB opening, with kinetic/barrier and half-life analysis, rapid [4+2] trapping and stable ammonium-precursor storage. These are genuine precursor/trapping operations, but the obtained text does not establish the preparative breadth of trapped products. The linked supporting file could not be read.",
-      "challengeReason":"A storable precursor and on-demand generation strategy can have reusable synthetic value, so a mechanism-only exclusion would be premature. The counterpoint is that kinetics and gating dominate the obtained abstract; without the preparative trapping evidence, the old template-based include is not reconfirmed.",
-      "evidenceNeeded":"Obtain substrate and trapping-partner variation, actual product preparation, and the article's preparative-method claim beyond barrier and lifetime measurements.",
-      "attemptedEvidencePages":["https://pubs.acs.org/doi/10.1021/acs.orglett.6c03499","https://acs.figshare.com/articles/journal_contribution/Protonation-Gated_Strain-Release_Generation_of_Amino_o_quinodimethanes/33965903","https://api.figshare.com/v2/articles/33965903"],
-      "nextAction":"Read the trapping/product-preparation sections and decide on general reagent/method value. Retain the existing card while this evidence remains incomplete.",
-      "sourceReviewFile":"audit/scope-rechecks/2026-09-23-morning-24.json","priorAdmissionReviewFile":"audit/review-2026-09-23-0800.json","cardAction":"retain_while_pending"
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "originalDate": "2026-09-21",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "cardAction": "retain",
+      "evidenceBasis": "The live Wiley article states an in-situ ATMS pre-activation strategy for a pyridylamido Hf catalyst and homogeneous polymerization of several sterically demanding α-olefins including 44DMP, 3MB and VCH.",
+      "challengeReason": "High melting temperature is an application/property outcome, but the article's explicit new catalyst-activation strategy unlocks polymerization across multiple difficult monomers. This is genuine polymer synthesis methodology under the contract, not merely property optimization.",
+      "evidencePages": [
+        "https://onlinelibrary.wiley.com/doi/10.1002/anie.9519061"
+      ],
+      "resolvedAt": "2026-09-23T17:24:00+08:00"
     },
     {
-      "doi":"10.1021/acs.orglett.6c03386","journal":"Organic Letters","originalDate":null,"originalDateStatus":"not_recovered_in_this_recheck; do not overwrite the production date",
-      "title":"Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment",
-      "reviewKind":"existing_card_scope_recheck","decision":"pending","firstPassDecision":"pending","challengeDecision":"pending",
-      "evidenceBasis":"The exact publisher title and the earlier scope-recheck queue identify a fully functionalized Chasmanine AF-ring fragment, not a completed synthesis of Chasmanine. A publisher search excerpt describes a stereoselective fragment route, but the complete article abstract/text was inaccessible. The route's independent general building-block value remains unverified; no full-text or original-date verification is claimed.",
-      "challengeReason":"A fragment must not be labelled a completed total synthesis, but fragment preparation is not automatically out of scope when it supplies a general route or building block. The available title/search excerpt does not settle that separate preparative-value question, so neither deletion nor a new include is justified.",
-      "evidenceNeeded":"Recover the authoritative first-online date without changing it, and read the actual abstract/route section to determine transferable building-block or methodological value and actual route completion.",
-      "attemptedEvidencePages":["https://pubs.acs.org/doi/10.1021/acs.orglett.6c03386","https://pubs.acs.org/orlef7/article/doi/10.1021/acs.orglett.6c03386/5434841/Synthesis-of-a-Fully-Functionalized-Chasmanine-AF?searchresult=1"],
-      "nextAction":"Recover the stored date and primary article text, then assess general fragment-route value separately from total-synthesis labeling. Do not delete the pending card or change its date.",
-      "sourceReviewFile":"audit/scope-rechecks/2026-09-23-morning-24.json","cardAction":"retain_while_pending"
+      "doi": "10.1021/acs.orglett.6c03499",
+      "journal": "Organic Letters",
+      "originalDate": "2026-09-22",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "pending",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "pending",
+      "cardAction": "retain_while_pending",
+      "evidenceBasis": "The ACS repository abstract now confirms protonation-controlled amino-BCB ring opening, a >50 kJ mol−1 barrier shift, >10^3-fold kinetic window and rapid [4+2] trapping, but gives no trapping-partner/product breadth.",
+      "challengeReason": "The work may be a useful reagent-activation method, yet the available abstract is dominated by kinetics and reactive-intermediate control. Without product/preparative scope, a final mechanism-only exclusion or method inclusion would both overclaim.",
+      "evidenceNeeded": "Trapping-partner scope, isolated cycloadducts/yields and whether stable ammonium precursors are applied as a general preparation platform.",
+      "attemptedEvidencePages": [
+        "https://acs.figshare.com/articles/journal_contribution/Protonation-Gated_Strain-Release_Generation_of_Amino_o_quinodimethanes/33965903",
+        "https://pubs.acs.org/orlef7/latest-articles"
+      ],
+      "nextAction": "Read the reaction/scope table through the existing browser/VPN path; retain the current card until resolved."
     },
     {
-      "doi":"10.1002/anie.9519061","journal":"Angew","originalDate":"2026-09-21",
-      "title":"Fine Tuning of Catalyst Active Sites to Access Advanced Ultrahigh-Melting Polyolefins",
-      "reviewKind":"existing_card_scope_recheck","decision":"pending","firstPassDecision":"include","challengeDecision":"pending",
-      "evidenceBasis":"The preserved 2026-09-22 scope-correction review attributes an article-specific Wiley Early View statement to precontacting a pyridylamido Hf catalyst with allyltrimethylsilane, enabling polymerization of sterically demanding alpha-olefins. That is substantive synthesis counterevidence to a property-only exclusion. Current direct Wiley access was bot_blocked, so the actual monomer/preparation section was not reobtained under the new contract.",
-      "challengeReason":"The first pass considered the preserved catalyst/monomer-access evidence sufficient to favor the old include. The challenge requires checking whether the claimed active-site method and monomer applicability, rather than ultrahigh melting behavior alone, are the article's demonstrated primary advance. The missing direct preparative evidence leaves this one existing-card disagreement explicitly assigned to pending.",
-      "evidenceNeeded":"Read the publisher abstract and relevant catalyst/monomer-preparation evidence to resolve the relative contribution of polymerization method and material melting properties.",
-      "attemptedEvidencePages":["https://onlinelibrary.wiley.com/doi/10.1002/anie.9519061","https://doi.org/10.1002/anie.9519061"],
-      "nextAction":"Reobtain the primary article's textual catalyst and monomer evidence and resolve the recorded include-versus-pending challenge. Keep the existing card unchanged meanwhile.",
-      "sourceReviewFile":"audit/scope-rechecks/2026-09-23-morning-24.json","priorScopeDecisionFile":"audit/review-2026-09-22-scope-correction.json","priorScopeDecisionBlobSha":"fd3c6c16238c06ee804a92f07406a84a63b5682d","cardAction":"retain_while_pending"
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "originalDate": null,
+      "originalDateStatus": "not_recovered; production date must not be overwritten",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "cardAction": "retain_while_pending",
+      "evidenceBasis": "The publisher title and ACS repository excerpt establish an expedient synthesis of a fully functionalized Chasmanine AF-ring fragment, but not a completed total synthesis or a broadly reusable building-block route.",
+      "challengeReason": "A single fragment cannot be labeled total synthesis, yet a fragment route may independently qualify if it introduces a transferable building-block strategy. The available evidence does not decide that question.",
+      "evidenceNeeded": "Full abstract/route evidence, synthetic generality beyond the single target fragment, and the preserved original date from authoritative production data.",
+      "attemptedEvidencePages": [
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03386",
+        "https://acs.figshare.com/articles/journal_contribution/Synthesis_of_a_Fully_Functionalized_Chasmanine_AF-Ring_Fragment/33962722"
+      ],
+      "nextAction": "Read the route/abstract through the existing browser/VPN path; keep the card unchanged and do not label it total synthesis."
     }
   ],
-  "confirmedCorrectionsReused":{
-    "sourceFile":"audit/literature-scope-corrections.json","sourceBlobSha":"040902a773f72057dff59de5c66d27f568984813",
-    "actualRemovalReviewFile":"audit/scope-rechecks/scope-correction-20260923024323204.json","actualRemovalReviewBlobSha":"e3555195e903ba5ecbbada6338c49db0b53072f3",
-    "verifiedRemovalFile":"audit/scope-rechecks/scope-correction-20260923024323204-live-verified.json","previousVerificationRun":35812427881,
-    "dois":["10.1021/jacs.6c13517","10.1021/jacs.6c10701","10.1038/s41467-026-77963-6","10.1002/anie.7784614"],
-    "newExclusionsCreated":0,"newDeletionsPerformed":0,
-    "reusePolicy":"Reuse the actual explicit-user correction and matching first/challenge evidence. No fictitious new reviewer or duplicate double-pass is created. Genuine polymerization and the extra furfuryl/benzyl-alcohol examples in anie.7784614 remain acknowledged.",
-    "status":"previously_removed_and_verified; no resurrection or duplicate removal"
-  },
-  "historicalScopeWorkStillUnfinished":{
-    "sourceReviewFile":"audit/review-2026-09-23-0800.json","sourceReviewBlobSha":"8932a2151eb3987b5492c4f7cd563e0d78503ef7",
-    "triageFile":"audit/scope-rechecks/2026-09-23-morning-24.json","triageBlobSha":"1b161a75e9850f27cefde09531a1a2a01ca73585",
-    "status":"unfinished_compatibility_coverage_not_pending",
-    "note":"The earlier 24-card triage and its article-specific evidence were inspected, but this recovery does not certify completion of every rule-affected old decision or the remaining historical review inventory. The earlier 20 retain-on-abstract rows are not converted into invented fresh double-pass records. The additional polymer decisions in audit/review-2026-09-22-scope-correction.json require compatibility accounting, not a blanket polymer exclusion.",
-    "allGalleryPapersRechecked":false,
-    "nextAction":"At the existing primary/recovery cycle, compare remaining old decisions with the current scope contract, reuse actually compatible evidence with references, and challenge substantively affected cases. Complete the affected-set accounting before clearing the global blocker. Do not require indiscriminate re-fetching of unaffected papers."
-  },
-  "sourceChecks":[
-    {"journal":"Nature","status":"unavailable","sourceType":"publisher_latest_listing","sourcePage":"https://www.nature.com/nature/articles","candidateCount":null,"syntheticTitleCount":null,"reason":"The browser fetch exposed page metadata but no auditable full listing content in the returned evidence. Publisher candidate counts are unknown, not zero."},
-    {"journal":"Science","status":"unavailable","sourceType":"publisher_first_release","sourcePage":"https://www.science.org/toc/science/0/0","candidateCount":null,"syntheticTitleCount":null,"reason":"The First Release page metadata was returned without a readable complete title/date listing. No publisher count or zero-new proof is claimed."},
-    {"journal":"Nature Catalysis","status":"unavailable","sourceType":"publisher_latest_listing","sourcePage":"https://www.nature.com/natcatal/articles","candidateCount":null,"syntheticTitleCount":null,"reason":"Returned page metadata did not expose auditable complete listing content. Current publisher counts remain unknown rather than being copied from machine sourceHealth."},
-    {"journal":"Nature Synthesis","status":"unavailable","sourceType":"publisher_latest_listing","sourcePage":"https://www.nature.com/natsynth/articles","candidateCount":null,"syntheticTitleCount":null,"reason":"Only page-level metadata was exposed by the listing fetch, insufficient for complete title/date enumeration. Counts therefore remain null."},
-    {"journal":"Nature Chemistry","status":"unavailable","sourceType":"publisher_latest_listing","sourcePage":"https://www.nature.com/nchem/articles","candidateCount":null,"syntheticTitleCount":null,"reason":"The fetched page metadata is not a complete publisher title/date listing. Publisher enumeration and synthetic-title counts remain unknown."},
-    {"journal":"Nature Communications","status":"unavailable","sourceType":"publisher_latest_listing","sourcePage":"https://www.nature.com/ncomms/articles","candidateCount":null,"syntheticTitleCount":null,"reason":"Page metadata indicates a current article listing but readable complete entries/pagination were not obtained. The machine closure anomaly is retained separately; no publisher zero is inferred."},
-    {"journal":"JACS","status":"unavailable","sourceType":"publisher_asap","sourcePage":"https://pubs.acs.org/jacsat/latest-articles","candidateCount":null,"syntheticTitleCount":null,"reason":"The batch fetch did not expose readable JACS ASAP listing contents. It cannot substantiate a complete publisher count; machine candidate counts are not substituted."},
-    {"journal":"Angew","status":"unavailable","sourceType":"publisher_early_view","sourcePage":"https://onlinelibrary.wiley.com/toc/15213773/0/0","candidateCount":null,"syntheticTitleCount":null,"reason":"Readable Early View listing evidence was not returned; separate direct article reading was bot-blocked. Current publisher enumeration remains unknown."},
-    {"journal":"ACS Catalysis","status":"unavailable","sourceType":"publisher_asap","sourcePage":"https://pubs.acs.org/accacs/latest-articles","candidateCount":null,"syntheticTitleCount":null,"reason":"No readable complete ASAP listing was exposed in the returned batch evidence. This is an unavailable publisher check, not a zero count."},
-    {"journal":"Organic Letters","status":"unavailable","sourceType":"publisher_asap","sourcePage":"https://pubs.acs.org/orlef7/latest-articles","candidateCount":null,"syntheticTitleCount":null,"reason":"Search snippets and selected ACS supplement abstracts are available, but the complete ASAP title/date listing and pagination were not obtained. These partial sources cannot establish a full publisher count."},
-    {"journal":"Chem","status":"blocked","sourceType":"publisher_latest_listing","sourcePage":"https://www.cell.com/chem/newarticles","candidateCount":null,"syntheticTitleCount":null,"reason":"The current browser text fetch returned bot_blocked for the publisher new-articles page. Publisher candidate numbers remain unknown."},
-    {"journal":"Chemical Science","status":"blocked","sourceType":"publisher_latest_listing","sourcePage":"https://pubs.rsc.org/en/journals/journalissues/sc","candidateCount":null,"syntheticTitleCount":null,"reason":"The current publisher listing fetch returned bot_blocked. No zero-publication or complete-enumeration claim is made."},
-    {"journal":"CCS Chemistry","status":"blocked","sourceType":"publisher_asap","sourcePage":"https://www.chinesechemsoc.org/toc/ccschem/0/0","candidateCount":null,"syntheticTitleCount":null,"reason":"Both publisher article and TOC browser reads were bot_blocked. The historical paired-electrolysis DOI remains individually pending; listing counts are unknown."},
-    {"journal":"Science Advances","status":"blocked","sourceType":"publisher_latest_listing","sourcePage":"https://www.science.org/toc/sciadv/0/0","candidateCount":null,"syntheticTitleCount":null,"reason":"The publisher table-of-contents fetch returned bot_blocked. Machine records, including machine zero counts, are not presented as a publisher check."},
-    {"journal":"Green Chemistry","status":"blocked","sourceType":"publisher_latest_listing","sourcePage":"https://pubs.rsc.org/en/journals/journalissues/gc","candidateCount":null,"syntheticTitleCount":null,"reason":"The publisher listing fetch returned bot_blocked. Its candidate count and complete title/date enumeration remain unknown."},
-    {"journal":"JOC","status":"blocked","sourceType":"publisher_asap","sourcePage":"https://pubs.acs.org/joceah/latest-articles","candidateCount":null,"syntheticTitleCount":null,"reason":"The current ASAP listing request returned bot_blocked. A specific Figshare abstract was read separately, but it does not establish a complete journal count."}
+  "historicalPendingDois": [
+    "10.1021/acs.orglett.6c03499",
+    "10.1021/acs.orglett.6c03386"
   ],
-  "machineSourceHealth":{
-    "sourceFile":"audit/unresolved-latest.json","sourceBlobSha":"4954c911bb843d1c360511c2180f7a68e5923118","locator":"activeJournals[].sourceHealth",
-    "allCanonicalActiveJournalsPresent":true,"all16CrossrefHealthy":true,"all16OpenAlexHealthy":true,
-    "publisherChecksIndependent":true,"closureAnomalyJournals":["Nature Communications","Organic Letters"]
-  },
-  "qualityControl":{
-    "secondPassCompleted":true,"twoPassScope":"all 10 compact candidates only; one assistant performed first and challenge passes, not independent human reviewers",
-    "unresolvedDisagreements":0,"allHandoffCandidatesReviewed":true,"allHandoffCandidatesFinalized":false,
-    "unfinishedHandoffDois":[],"openEvidenceGaps":1,
-    "sourceCheckRows":16,"publisherCoverageFullyVerified":false,"publisherSourceCheckCounts":{"checked":0,"blocked":6,"unavailable":10},
-    "scopeContract":{
-      "scopeRulesVersion":"scope-2026-09-23-v1","scopeRulesFile":"docs/literature-scope-contract.md","scopeRulesBlobSha":"4ca6a9343ee46c617f08166062940f8919e311de",
-      "scopeCorrectionsFile":"audit/literature-scope-corrections.json","scopeCorrectionsBlobSha":"040902a773f72057dff59de5c66d27f568984813",
-      "handoffCommitSha":"9624b1e815f89a006a04eaba4d776f54804afe81","handoffBlobSha":"4954c911bb843d1c360511c2180f7a68e5923118",
-      "ruleChangeTriggeredHistoricalReview":true,"newIncludesArticleSpecificAssessmentsComplete":true,
-      "explicitBoundaryRechecks":4,"existingCardPending":4,"assignedExistingCardDisagreements":1,
-      "confirmedCorrectionRecordsReused":4,"affectedHistoricalCoverageComplete":false,
-      "allGalleryPapersRechecked":false,
-      "inheritance":"Formal conversion must retain this object via qualityControl.scopeContract; top-level references alone are not relied on."
+  "sourceChecks": [
+    {
+      "journal": "Nature",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/nature/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The browser fetch exposed page metadata but no auditable full listing content in the returned evidence. Publisher candidate counts are unknown, not zero.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
     },
-    "titleZhPreparedForAllNewIncludes":true,"placeholderTranslations":0,
-    "productionDataModified":false,"mediaAcquisitionPerformed":false,"pagesDeploymentRequested":false
+    {
+      "journal": "Science",
+      "status": "unavailable",
+      "sourceType": "publisher_first_release",
+      "sourcePage": "https://www.science.org/toc/science/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The First Release page metadata was returned without a readable complete title/date listing. No publisher count or zero-new proof is claimed.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Nature Catalysis",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/natcatal/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Returned page metadata did not expose auditable complete listing content. Current publisher counts remain unknown rather than being copied from machine sourceHealth.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Nature Synthesis",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/natsynth/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Only page-level metadata was exposed by the listing fetch, insufficient for complete title/date enumeration. Counts therefore remain null.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Nature Chemistry",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/nchem/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The fetched page metadata is not a complete publisher title/date listing. Publisher enumeration and synthetic-title counts remain unknown.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Nature Communications",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/ncomms/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Page metadata indicates a current article listing but readable complete entries/pagination were not obtained. The machine closure anomaly is retained separately; no publisher zero is inferred. A 17:24 same-day publisher research listing independently exposed the 2026-09-23 supramolecular-polymer title and teaser, but still did not provide complete pagination/counts; status remains unavailable for full enumeration.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49",
+      "observedArticles": [
+        {
+          "doi": "10.1038/s41467-026-78015-9",
+          "title": "Solid–vapor synthesis of dynamic crystalline one-dimensional supramolecular polymers from amorphous macrocycles",
+          "observation": "publisher listing and teaser readable"
+        }
+      ]
+    },
+    {
+      "journal": "JACS",
+      "status": "unavailable",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/jacsat/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The batch fetch did not expose readable JACS ASAP listing contents. It cannot substantiate a complete publisher count; machine candidate counts are not substituted.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Angew",
+      "status": "unavailable",
+      "sourceType": "publisher_early_view",
+      "sourcePage": "https://onlinelibrary.wiley.com/toc/15213773/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Readable Early View listing evidence was not returned; separate direct article reading was bot-blocked. Current publisher enumeration remains unknown.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "ACS Catalysis",
+      "status": "unavailable",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/accacs/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "No readable complete ASAP listing was exposed in the returned batch evidence. This is an unavailable publisher check, not a zero count.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Organic Letters",
+      "status": "unavailable",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/orlef7/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Search snippets and selected ACS supplement abstracts are available, but the complete ASAP title/date listing and pagination were not obtained. These partial sources cannot establish a full publisher count.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Chem",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.cell.com/chem/newarticles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The current browser text fetch returned bot_blocked for the publisher new-articles page. Publisher candidate numbers remain unknown.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Chemical Science",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/sc",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The current publisher listing fetch returned bot_blocked. No zero-publication or complete-enumeration claim is made.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "CCS Chemistry",
+      "status": "blocked",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://www.chinesechemsoc.org/toc/ccschem/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Both publisher article and TOC browser reads were bot_blocked. The historical paired-electrolysis DOI remains individually pending; listing counts are unknown.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Science Advances",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.science.org/toc/sciadv/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The publisher table-of-contents fetch returned bot_blocked. Machine records, including machine zero counts, are not presented as a publisher check.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "Green Chemistry",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/gc",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The publisher listing fetch returned bot_blocked. Its candidate count and complete title/date enumeration remain unknown.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    },
+    {
+      "journal": "JOC",
+      "status": "blocked",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/joceah/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The current ASAP listing request returned bot_blocked. A specific Figshare abstract was read separately, but it does not establish a complete journal count.",
+      "checkedAt": "2026-09-23T17:24:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@febd6cafde31c8ca36ba8e2c94c034658c9f4a49"
+    }
+  ],
+  "machineSourceHealth": {
+    "sourceFile": "audit/unresolved-latest.json",
+    "sourceBlobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+    "locator": "activeJournals[].sourceHealth",
+    "allCanonicalActiveJournalsPresent": true,
+    "all16CrossrefHealthy": true,
+    "all16OpenAlexHealthy": true,
+    "publisherChecksIndependent": true,
+    "byJournal": [
+      {
+        "journal": "Nature",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 43,
+        "crossrefCandidateRecords": 43,
+        "openAlexCandidateRecords": 41,
+        "multiSourceCandidateRecords": 41,
+        "closureUnionRecords": 14,
+        "closureCrossrefRecords": 14,
+        "closureOpenAlexRecords": 14,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Science",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 38,
+        "crossrefCandidateRecords": 38,
+        "openAlexCandidateRecords": 37,
+        "multiSourceCandidateRecords": 37,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Nature Catalysis",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 2,
+        "crossrefCandidateRecords": 2,
+        "openAlexCandidateRecords": 2,
+        "multiSourceCandidateRecords": 2,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 1,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Nature Synthesis",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 3,
+        "crossrefCandidateRecords": 3,
+        "openAlexCandidateRecords": 3,
+        "multiSourceCandidateRecords": 3,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 1,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Nature Chemistry",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 7,
+        "crossrefCandidateRecords": 7,
+        "openAlexCandidateRecords": 7,
+        "multiSourceCandidateRecords": 7,
+        "closureUnionRecords": 3,
+        "closureCrossrefRecords": 3,
+        "closureOpenAlexRecords": 3,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Nature Communications",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 165,
+        "crossrefCandidateRecords": 164,
+        "openAlexCandidateRecords": 158,
+        "multiSourceCandidateRecords": 157,
+        "closureUnionRecords": 37,
+        "closureCrossrefRecords": 37,
+        "closureOpenAlexRecords": 37,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "JACS",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 83,
+        "crossrefCandidateRecords": 83,
+        "openAlexCandidateRecords": 77,
+        "multiSourceCandidateRecords": 77,
+        "closureUnionRecords": 19,
+        "closureCrossrefRecords": 19,
+        "closureOpenAlexRecords": 19,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Angew",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 96,
+        "crossrefCandidateRecords": 96,
+        "openAlexCandidateRecords": 75,
+        "multiSourceCandidateRecords": 75,
+        "closureUnionRecords": 27,
+        "closureCrossrefRecords": 27,
+        "closureOpenAlexRecords": 13,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      {
+        "journal": "ACS Catalysis",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 27,
+        "crossrefCandidateRecords": 27,
+        "openAlexCandidateRecords": 27,
+        "multiSourceCandidateRecords": 27,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 1,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Organic Letters",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 54,
+        "crossrefCandidateRecords": 54,
+        "openAlexCandidateRecords": 47,
+        "multiSourceCandidateRecords": 47,
+        "closureUnionRecords": 16,
+        "closureCrossrefRecords": 16,
+        "closureOpenAlexRecords": 16,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Chem",
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Chemical Science",
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "CCS Chemistry",
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 3,
+        "crossrefCandidateRecords": 3,
+        "openAlexCandidateRecords": 3,
+        "multiSourceCandidateRecords": 3,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 1,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Science Advances",
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "Green Chemistry",
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      {
+        "journal": "JOC",
+        "activeFrom": "2026-09-22",
+        "effectiveStart": "2026-09-22",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 9,
+        "crossrefCandidateRecords": 9,
+        "openAlexCandidateRecords": 8,
+        "multiSourceCandidateRecords": 8,
+        "closureUnionRecords": 8,
+        "closureCrossrefRecords": 8,
+        "closureOpenAlexRecords": 8,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    ],
+    "closureAnomalyJournals": [
+      "Angew"
+    ]
   },
-  "globalBlockers":["affected_historical_scope_compatibility_coverage_incomplete"],
-  "publicationBlockers":["snapshot_not_from_target_slot_prerelease_window","affected_historical_scope_compatibility_coverage_incomplete"],
-  "gateEvidenceFile":"audit/prepublish-readiness-evidence-2026-09-23-1800.json",
-  "requestedGateCommands":["node scripts/validate-prepublish-review.mjs audit/prepublish-review-2026-09-23-1800.json --allow-deferred --require-ready","node scripts/check-prepublish-readiness.mjs audit/prepublish-review-2026-09-23-1800.json --allow-deferred --require-ready"],
-  "concurrencyProtection":{"preWriteMainSha":"77880fb857aa21e26d8b6b63f0d4a77b920386ea","inputCommitSha":"9624b1e815f89a006a04eaba4d776f54804afe81","interveningCommitsCompared":4,"protectedReviewInputsChanged":false,"newStagingAbsenceRechecked":true,"stateBaselineBlobSha":"57988e0d341492db4f66cd2fcf2c44aa3e0d6e3e"},
-  "productionAction":{"newAdmissions":0,"newRemovals":0,"retainedCardsEdited":0,"pagesRequested":false,"formalReviewWritten":false,"mediaDemandModified":false},
-  "scheduleAction":{"schedulesChanged":false,"tasksDisabled":false,"replacementTasksCreated":false},
-  "note":"All ten machine candidates have real first/challenge outcomes. The two proposed new includes are not a release authorization while global scope work and target-slot freshness remain unresolved. Four already-published boundary papers are separately tracked scope pending, not new-admission deferrals and not deletion targets. Unfinished historical compatibility work is not disguised as pending."
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "twoPassScope": "all 44 compact candidates plus four rule-change historical boundary rechecks",
+    "unresolvedDisagreements": 0,
+    "allHandoffCandidatesReviewed": true,
+    "allHandoffCandidatesFinalized": false,
+    "unfinishedHandoffDois": [],
+    "openEvidenceGaps": 2,
+    "sourceCheckRows": 16,
+    "publisherCoverageFullyVerified": false,
+    "publisherSourceCheckCounts": {
+      "checked": 0,
+      "blocked": 6,
+      "unavailable": 10
+    },
+    "scopeContract": {
+      "scopeRulesVersion": "scope-2026-09-23-v1",
+      "scopeRulesFile": "docs/literature-scope-contract.md",
+      "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
+      "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+      "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+      "handoffCommitSha": "fab9edda8c988db12f23fc9e77d7f1673b05afcc",
+      "handoffBlobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+      "ruleChangeTriggeredHistoricalReview": true,
+      "newIncludesArticleSpecificAssessmentsComplete": true,
+      "explicitBoundaryRechecks": 4,
+      "affectedHistoricalCoverageComplete": true,
+      "resolvedHistoricalRetain": 2,
+      "historicalPendingAssigned": 2,
+      "confirmedCorrectionRecordsReused": 4,
+      "allGalleryPapersRechecked": false,
+      "inheritance": "Formal conversion must retain this object."
+    },
+    "titleZhPreparedForAllNewIncludes": true,
+    "placeholderTranslations": 0,
+    "productionDataModified": false,
+    "mediaAcquisitionPerformed": false,
+    "pagesDeploymentRequested": false
+  },
+  "globalBlockers": [],
+  "publicationBlockers": [],
+  "closure": {
+    "closureDate": "2026-09-22",
+    "verifiedThrough": "2026-09-20",
+    "verifiedThroughAdvanced": false,
+    "reason": "Angew closure-day OpenAlex/Crossref depth anomaly and deferred DOIs prevent advancement; per-DOI reviewed subset remains releasable."
+  },
+  "productionDataModified": false,
+  "pagesDeploymentRequested": false,
+  "mediaAcquisitionPerformed": false,
+  "notes": [
+    "This task writes staging/audit/state only and does not publish cards.",
+    "Two compact DOI deferrals do not block the ten reviewed includes.",
+    "Two historical card scope questions remain durable pending items and are not removals.",
+    "Four confirmed scope corrections were already removed and live-verified in a separate deletion-only transaction; no removal is executed here."
+  ]
 }
