@@ -5,14 +5,11 @@ import {tmpdir} from 'node:os';
 import {gzipSync} from 'node:zlib';
 import {buildBodyReviewMarker} from '../shared/body-media-evidence.js';
 import {validateNewBodyMetadata,validateNewBodyBytes,conflictKeys,createImageDecoder,exactKey} from '../cloudflare/scripts/new-body-auto-validation.mjs';
-import {mergeNewBodyAuto,fetchStored} from '../cloudflare/scripts/merge-new-body-auto.mjs';
-const fixture=process.env.BODY_AUTO_FIXTURE;
-assert.ok(fixture,'frozen controlled evidence fixture required');
+import {mergeNewBodyAuto,fetchStored,assertSnapshotCoherence} from '../cloudflare/scripts/merge-new-body-auto.mjs';
+const fixture=process.env.BODY_AUTO_FIXTURE;assert.ok(fixture,'frozen controlled evidence fixture required');
 const evidence=JSON.parse(await readFile(path.join(fixture,'evidence.json'),'utf8'));
-const rows=evidence.images.filter(r=>r.reviewMarker?.revision==='1');
-assert.equal(rows.length,9);
-const policy=JSON.parse(await readFile('audit/media-auto-policy.json','utf8'));
-const now=Date.now();let passed=0;
+const rows=evidence.images.filter(r=>r.reviewMarker?.revision==='1');assert.equal(rows.length,9);
+const policy=JSON.parse(await readFile('audit/media-auto-policy.json','utf8'));const now=Date.now();let passed=0;
 async function test(name,fn){await fn();passed++;console.log('NEW_BODY_AUTO_PASS '+name);}
 const vector=rows.find(r=>r.contentType==='image/svg+xml'),png=rows.find(r=>r.contentType==='image/png');
 const data=new Map();for(const r of rows)data.set(exactKey(r),await readFile(path.join(fixture,r.file)));
@@ -42,10 +39,13 @@ try{
  async function reset(){await writeFile(mediaPath,JSON.stringify(base));await writeFile(ledgerPath,JSON.stringify({schemaVersion:1,count:0,items:[]}));}
  await reset();const inputs={previous:{policyId:policy.policyId,items:[],attempts:{}},live:base,stage:{count:rows.length,items:rows},stageError:null};
  let decodeCount=0;
- const decoder={decode:async()=>{decodeCount++;return {width:1,height:1};},close:async()=>{}}; // Real browser decode was separately tested above.
+ const decoder={decode:async()=>{decodeCount++;return {width:1,height:1};},close:async()=>{}};
  const opts={inputs,now,decoder,getNew:async r=>data.get(exactKey(r)),getOld:async e=>data.get(exactKey(e.record))};
  const first=await mergeNewBodyAuto(root,opts);
  await test('first-time new images are published without invented individual semantic approvals',()=>{assert.equal(first.status.added.length,9);assert.equal(first.snapshot.items.length,9);assert.equal(decodeCount,9);assert.ok(first.ledger.items.every(x=>x.state==='published'&&x.individualSemanticReview===false));});
+ await test('stale shorter auto snapshot cannot lose newer published figures',()=>{const stale={...first.snapshot,items:first.snapshot.items.slice(0,-1)};assert.throws(()=>assertSnapshotCoherence(stale,first.media),/snapshots_incoherent/);});
+ await test('new snapshot paired with stale media is rejected',()=>assert.throws(()=>assertSnapshotCoherence(first.snapshot,base),/snapshots_incoherent/));
+ await test('same-count public snapshot must match exact labels URLs hashes and evidence',()=>{const changed=structuredClone(first.media);changed.items[rows[0].doi].figures.figures[0].evidenceSha256='0'.repeat(64);assert.throws(()=>assertSnapshotCoherence(first.snapshot,changed),/snapshots_incoherent_identity/);});
  await test('all original TOCs remain unchanged',()=>{for(const doi of dois)assert.deepEqual(first.media.items[doi].toc,base.items[doi].toc);});
  await reset();const nextInputs={...inputs,previous:first.snapshot,live:first.media};
  const second=await mergeNewBodyAuto(root,{...opts,inputs:nextInputs});
