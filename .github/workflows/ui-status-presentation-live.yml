@@ -1,0 +1,105 @@
+name: Verify deployed status glow and photo captions
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui-status-presentation-live.yml']
+permissions:
+  contents: read
+concurrency:
+  group: ui-status-presentation-live
+  cancel-in-progress: false
+jobs:
+  live:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      LIVE_SITE_URL: ${{ matrix.site }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: f5446507a49ac612dbf53aaa069d1a8343c1e01d
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned browser dependencies
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/glow-live-browser.log 2>&1 || { tail -60 /tmp/glow-live-browser.log; exit 1; }
+      - name: Wait for actual deployed presentation asset, not just a successful build
+        run: |
+          mkdir -p live-presentation-results
+          node --input-type=module <<'NODE'
+          import { writeFile } from 'node:fs/promises';
+          const site = process.env.LIVE_SITE_URL;
+          const evidence = { site, reviewedCommit: 'f5446507a49ac612dbf53aaa069d1a8343c1e01d', attempts: [], productionWritesAllowed: false, apiMocked: true, fallbackPagesChecked: false };
+          for (let attempt = 0; attempt < 18; attempt++) {
+            try {
+              const response = await fetch(site, { headers: { 'cache-control': 'no-cache' }, signal: AbortSignal.timeout(10000) });
+              const html = await response.text();
+              const script = [...html.matchAll(/src=["']([^"']+)["']/g)].map(match => match[1]).find(value => value.includes('/assets/index-') && value.endsWith('.js'));
+              const asset = script ? new URL(script, site).href : '';
+              const body = asset ? await (await fetch(asset, { signal: AbortSignal.timeout(10000) })).text() : '';
+              const ready = response.ok && body.includes('status-glow-control') && body.includes('status-action-label');
+              evidence.attempts.push({ checkedAt: new Date().toISOString(), status: response.status, asset, ready });
+              if (ready) { evidence.ready = true; break; }
+            } catch (error) { evidence.attempts.push({ checkedAt: new Date().toISOString(), error: String(error) }); }
+            await new Promise(resolve => setTimeout(resolve, 10000));
+          }
+          await writeFile('live-presentation-results/readiness.json', JSON.stringify(evidence, null, 2));
+          console.log(JSON.stringify(evidence));
+          if (!evidence.ready) process.exitCode = 1;
+          NODE
+      - name: Adapt test transport only and preserve all acceptance assertions
+        run: |
+          sha256sum tests/status-presentation.spec.ts src/user-ui/status-presentation.ts src/user-ui/paper-actions.ts > live-presentation-results/source-sha256.txt
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tests/status-image-fixtures.ts');text=p.read_text()
+          start=text.index('export async function isolate(');end=text.index('export async function open(',start)
+          transport='''export async function isolate(context: BrowserContext): Promise<void> {
+            await recordStatusNetwork(context);
+            await context.route('**/*', async route => {
+              const request=route.request(); const url=request.url();
+              if (url.startsWith('blob:') || url.startsWith('data:')) { await route.continue(); return; }
+              const path=new URL(url).pathname;
+              const headers={ 'access-control-allow-origin':request.headers().origin || new URL(process.env.LIVE_SITE_URL!).origin, 'access-control-allow-credentials':'true', 'access-control-allow-methods':'GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE', 'access-control-allow-headers':request.headers()['access-control-request-headers'] || 'content-type, authorization', 'vary':'Origin' };
+              if (request.method()==='OPTIONS') { await route.fulfill({status:204,headers}); return; }
+              const api=path==='/api' || path.startsWith('/api/');
+              if (['GET','HEAD'].includes(request.method()) && !api) { await route.continue(); return; }
+              console.log('MOCKED_LIVE_API',request.method(),path);
+              const body=path.endsWith('/reader-counts') ? {counts:{},count:0} : path.endsWith('/integrations') ? {auth:{},payments:{}} : {items:[]};
+              await route.fulfill({status:200,headers,contentType:'application/json',body:JSON.stringify(body)});
+            });
+          }
+          '''
+          text=text[:start]+transport+text[end:]
+          needle="await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });"
+          assert text.count(needle)==1
+          text=text.replace(needle,"await page.goto(process.env.LIVE_SITE_URL!, { waitUntil: 'domcontentloaded' });\n  console.log('LIVE_ENTRY', JSON.stringify({ url: page.url(), scripts: await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => (node as HTMLScriptElement).src)) }));")
+          p.write_text(text)
+          PY
+          git diff --check
+          git diff -- tests/status-image-fixtures.ts > live-presentation-results/transport-only.diff
+          git diff --exit-code -- tests/status-presentation.spec.ts src/user-ui/
+      - name: Execute unchanged glow, contrast, persistence, reduced-motion and rollback checks
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: live-presentation-results/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/status-presentation.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=live-presentation-results/tests 2>&1 | tee live-presentation-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-status-presentation-${{ matrix.entry }}
+          path: live-presentation-results/
+          retention-days: 7
+          if-no-files-found: warn
