@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-23T09:35:00+08:00",
+  "updatedAt": "2026-09-23T10:16:00+08:00",
   "policy": "Explicit user-approved exclusions. Consume these records in candidate handoff and the next fixed-slot release; never restore a DOI merely because an older review included it. No off-slot production-data change is authorized by this file.",
   "items": [
     {
@@ -45,6 +45,25 @@
       "evidenceBasis": "The publisher abstract reports AI design of 76 thiolation domains and testing 578 recombinant NRPS variants in vivo; the readouts are domain compatibility, product formation/yield, soluble expression, refolding and thermal stability. The central contribution is context-dependent protein/domain engineering and biosynthetic assembly-line reprogramming, not a general substrate-to-product organic transformation with preparative substrate scope.",
       "challengeReason": "The presence of peptide products and increased biosynthetic yields does not make every NRPS engineering study an organic-synthesis method. A new broadly preparative biocatalytic transformation or demonstrated chemical total synthesis would be a different case; neither is established by this article's stated principal contribution. The publisher evidence and the user's explicit instruction agree on exclusion.",
       "evidencePages": ["https://www.nature.com/articles/s41467-026-77963-6"],
+      "source": "explicit_user_scope_correction_and_live_publisher_abstract",
+      "nextReviewSlot": "2026-09-23T18:00:00+08:00"
+    },
+    {
+      "doi": "10.1002/anie.7784614",
+      "title": "Singlet Oxygen From Lattice Oxygen-Adsorbate Hybridization Drives Highly Selective Electrooxidation of Methallyl Alcohol to Methacrolein",
+      "journal": "Angew",
+      "date": "2026-08-25",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Explicit user exclusion under the Gallery scope: electrocatalyst-material and reactive-oxygen engineering focused on methallyl-alcohol oxidation, rather than the requested broadly preparative organic methodology.",
+      "evidenceBasis": "The Wiley article identifies a Mn-doped NiMoO4/copper-oxide electrode, coupled lattice/adsorbate oxygen pathways, singlet-oxygen generation and selective methacrolein production. The abstract also reports applications to furfuryl and benzyl alcohols and flow scale-up; therefore this correction does not claim the paper has no substrate extension. The user expressly excludes the article's materials/mechanistic-performance focus.",
+      "challengeReason": "Alcohol-to-aldehyde synthesis and additional alcohol examples are genuine counterevidence to a blanket no-synthesis label. They do not override the user's explicit scope decision. Exclude this DOI without banning all heterogeneous electrosynthesis. Preserve its publisher first-online date, 2026-08-25, so an existing wrong card is corrected even outside the current three-day/seven-day discovery windows.",
+      "evidencePages": [
+        "https://onlinelibrary.wiley.com/doi/10.1002/anie.7784614",
+        "https://pubmed.ncbi.nlm.nih.gov/42642838/"
+      ],
+      "evidenceLevel": "publisher_abstract_and_independent_bibliographic_date; not full substrate-scope table review",
       "source": "explicit_user_scope_correction_and_live_publisher_abstract",
       "nextReviewSlot": "2026-09-23T18:00:00+08:00"
     }
