@@ -33,7 +33,7 @@ export function assertSnapshotCoherence(previous,live){
 }
 async function configuration(root){
   const policy=JSON.parse(await readFile(path.join(root,'audit/media-auto-policy.json'),'utf8'));
-  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&policy.maxNewImages<=30&&policy.maxNewArticles<=5&&policy.maxFiguresPerCard<=10,'auto_invalid_configuration');
+  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=20&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard<=10&&policy.requireOfficialTocInBuild===true,'auto_invalid_configuration');
   const state=JSON.parse(await readFile(path.join(root,'audit/literature-update-state.json'),'utf8'));
   const holds=new Set([...(policy.heldDois||[]),...(state.pendingScopeReviewBacklog||[])].map(x=>x.doi));
   return {policy,holds,papers:await readPapers(root)};
@@ -52,6 +52,10 @@ export async function readLiveInputs(){
 }
 function alreadyIn(media,row){return (media.items?.[row.doi]?.figures?.figures||[]).some(f=>f.id===row.id);}
 function heldAttempts(previous,row,now){const a=previous.attempts?.[exactKey(row)];return a?.evidenceSha256===evidenceKey(row)&&(!a.retryAfter||a.retryAfter>now);}
+function officialToc(record){
+  const toc=record?.toc;
+  return Boolean(toc?.available&&toc?.imageUrl&&!/fallback/i.test(String(toc.reason||''))&&!String(toc.reason||'').startsWith('figure_fallback:'));
+}
 export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()}){
   assertSnapshotCoherence(inputs.previous,inputs.live);
   const cfg=await configuration(root),{policy,holds,papers}=cfg;
@@ -73,7 +77,12 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   const decoder=options.decoder||await createImageDecoder();
   const getNew=options.getNew||((row)=>fetchStored(WORKER+'/media/'+row.r2Key,4000000));
   const getOld=options.getOld||((old)=>fetchStored(old.imageUrl,4000000));
-  const attempts={...(inputs.previous.attempts||{})},prepared=[],retained=[],held=[],added=[],newDois=new Set();
+  const attempts={...(inputs.previous.attempts||{})},retained=[],held=[],added=[],newDois=new Set(),tocWaitingDois=new Set();
+  let prepared=[];
+  const candidateDois=[];
+  for(const row of rows)if(!candidateDois.includes(row.doi)&&candidateDois.length<policy.maxNewArticles)candidateDois.push(row.doi);
+  const candidateDoiSet=new Set(candidateDois);
+  const eligibleArticleCount=new Set(rows.map(row=>row.doi)).size;
   const conflicts=conflictKeys((inputs.stage?.items||[]).filter(x=>x.mediaGeneration===policy.mediaGeneration&&x.updatedAt>=policy.mediaGeneration));
   try{
     for(const old of inputs.previous.items){
@@ -84,12 +93,15 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
       const {ext}=await validateNewBodyMetadata(row,policy,now);
       requireBody(old.imageUrl==='media-mirror/body-auto-'+row.sha256+'.'+ext,'auto_previous_image_path');
       const bytes=await getOld(old);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
-      prepared.push({row,bytes,ext,admittedAt:old.admittedAt});retained.push({doi:row.doi,id:row.id});
+      prepared.push({row,bytes,ext,admittedAt:old.admittedAt,isNew:false});retained.push({doi:row.doi,id:row.id});
     }
     for(const row of rows){
       if(added.length>=policy.maxNewImages)break;
-      if(!newDois.has(row.doi)&&newDois.size>=policy.maxNewArticles)continue;
-      if(alreadyIn(media,row))continue;
+      if(!candidateDoiSet.has(row.doi)||alreadyIn(media,row))continue;
+      if(policy.requireOfficialTocInBuild&&!officialToc(media.items[row.doi])){
+        if(!tocWaitingDois.has(row.doi))held.push({doi:row.doi,id:null,reason:'waiting_for_official_toc_in_same_build'});
+        tocWaitingDois.add(row.doi);continue;
+      }
       const key=exactKey(row),fingerprint=evidenceKey(row),identity=row.doi+'|'+row.id;
       try{
         requireBody(!conflicts.has(identity),'auto_cross_identity_conflict');
@@ -97,7 +109,7 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
         requireBody(count<policy.maxFiguresPerCard,'auto_card_display_limit');
         const {ext}=await validateNewBodyMetadata(row,policy,now);
         const bytes=await getNew(row);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
-        prepared.push({row,bytes,ext,admittedAt:now});newDois.add(row.doi);added.push({doi:row.doi,id:row.id,sha256:row.sha256});delete attempts[key];
+        prepared.push({row,bytes,ext,admittedAt:now,isNew:true});newDois.add(row.doi);added.push({doi:row.doi,id:row.id,sha256:row.sha256});delete attempts[key];
       }catch(e){
         const reason=String(e.message).slice(0,180),n=(attempts[key]?.attempts||0)+1;
         const transient=/auto_read_http_5|fetch failed|timeout|aborted/i.test(reason);
@@ -106,6 +118,13 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
       }
     }
   }finally{await decoder.close();}
+  const validatedNewArticleCount=newDois.size;
+  const waitingForMinimumBatch=validatedNewArticleCount>0&&validatedNewArticleCount<policy.minNewArticles;
+  if(waitingForMinimumBatch){
+    prepared=prepared.filter(item=>!item.isNew);
+    added.length=0;
+    newDois.clear();
+  }
   await mkdir(path.join(root,'public/media-mirror'),{recursive:true});
   const entries=[];
   for(const {row,bytes,ext,admittedAt} of prepared){
@@ -125,14 +144,15 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   for(const e of entries)ledger.items.push({assetKey:exactKey(e.record),doi:e.record.doi,id:e.record.id,sha256:e.record.sha256,evidenceSha256:e.evidenceSha256,label:e.record.label,imageUrl:e.imageUrl,state:'published',publicationId:POLICY_ID,validationMode:e.validationMode,individualSemanticReview:false,originalUpdatedAt:e.record.updatedAt});
   ledger.count=ledger.items.length;ledger.generatedAt=now;ledger.mediaManifestGeneratedAt=now;media.generatedAt=now;
   const snapshot={schemaVersion:1,policyId:POLICY_ID,generatedAt:now,mediaGeneration:policy.mediaGeneration,items:entries,count:entries.length,attempts};
-  const status={schemaVersion:1,policyId:POLICY_ID,checkedAt:now,enabled:policy.enabled,stageRows:inputs.stage?.count??null,stageReadError:inputs.stageError||null,newEligible:rows.length,added,retained,held,autoPublishedCount:entries.length,totalPublicFigures:Object.values(media.items).reduce((n,r)=>n+(r.figures?.figures?.length||0),0),stagingWrites:0,stagingDeletes:0,publisherRequests:0,individualSemanticReview:false};
+  const status={schemaVersion:1,policyId:POLICY_ID,checkedAt:now,enabled:policy.enabled,stageRows:inputs.stage?.count??null,stageReadError:inputs.stageError||null,newEligible:rows.length,eligibleArticles:eligibleArticleCount,candidateArticles:candidateDois.length,validatedNewArticles:validatedNewArticleCount,minimumBatchArticles:policy.minNewArticles,maximumBatchArticles:policy.maxNewArticles,waitingForMinimumBatch,tocPairedRequired:policy.requireOfficialTocInBuild,tocWaitingArticles:tocWaitingDois.size,publishedNewArticles:new Set(added.map(x=>x.doi)).size,added,retained,held,autoPublishedCount:entries.length,totalPublicFigures:Object.values(media.items).reduce((n,r)=>n+(r.figures?.figures?.length||0),0),stagingWrites:0,stagingDeletes:0,publisherRequests:0,individualSemanticReview:false};
   await writeFile(mediaPath,JSON.stringify(media));await writeFile(ledgerPath,JSON.stringify(ledger));await writeFile(path.join(root,'public',SNAPSHOT),JSON.stringify(snapshot));await writeFile(path.join(root,'public/auto-body-status.json'),JSON.stringify(status));
   console.log('NEW_BODY_AUTO_PUBLICATION '+JSON.stringify(status));return {status,snapshot,media,ledger};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   if(process.argv.includes('--poll')){
-    const inputs=await readLiveInputs(),{rows}=await pendingNewRows({inputs});
-    console.log('NEW_BODY_AUTO_PENDING '+JSON.stringify({count:rows.length,stageError:inputs.stageError}));
-    if(process.env.GITHUB_OUTPUT)await writeFile(process.env.GITHUB_OUTPUT,'changed='+(rows.length?'true':'false')+'\n',{flag:'a'});
+    const inputs=await readLiveInputs(),{rows,policy}=await pendingNewRows({inputs});
+    const articleCount=new Set(rows.map(row=>row.doi)).size,ready=articleCount>=policy.minNewArticles;
+    console.log('NEW_BODY_AUTO_PENDING '+JSON.stringify({count:rows.length,articles:articleCount,minimumBatchArticles:policy.minNewArticles,ready,stageError:inputs.stageError}));
+    if(process.env.GITHUB_OUTPUT)await writeFile(process.env.GITHUB_OUTPUT,'changed='+(ready?'true':'false')+'\narticles='+articleCount+'\n',{flag:'a'});
   }else await mergeNewBodyAuto();
 }
