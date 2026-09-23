@@ -1,0 +1,62 @@
+name: Status glow and caption regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/user-ui/**'
+      - 'tests/status-*.ts'
+      - '.github/workflows/status-presentation-ci.yml'
+permissions:
+  contents: read
+concurrency:
+  group: status-presentation-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  presentation:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [webkit, chromium]
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned browser test dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/status-browser.log 2>&1 || { tail -60 /tmp/status-browser.log; exit 1; }
+      - name: Typecheck and build exact reviewed source
+        run: |
+          npx tsc --noEmit
+          npm run build
+      - name: Start isolated preview
+        run: |
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/status-preview.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/status-preview.log
+          exit 1
+      - name: Verify all glow and caption cases without production API writes
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: status-presentation-results/results.json
+        run: |
+          mkdir -p status-presentation-results
+          git rev-parse HEAD > status-presentation-results/tested-commit.txt
+          sha256sum src/user-ui/status-presentation.ts src/user-ui/shared.ts src/user-ui/paper-actions.ts tests/status-presentation.spec.ts > status-presentation-results/source-sha256.txt
+          set -o pipefail
+          npx --no-install playwright test tests/status-presentation.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=status-presentation-results/tests 2>&1 | tee status-presentation-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: status-presentation-${{ matrix.browser }}
+          path: status-presentation-results/
+          retention-days: 7
+          if-no-files-found: warn

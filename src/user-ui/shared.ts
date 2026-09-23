@@ -6,7 +6,9 @@ export type RGB = [number, number, number];
 export type ActionKey = 'favorite' | 'status' | 'note' | 'more' | 'login' | 'support';
 export type SuggestionType = 'author' | 'keyword' | 'journal' | 'doi';
 
-export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; imageOriginal?: OriginalStatusImage; }
+export type StatusGlow = 'none' | 'soft' | 'pulse' | 'orbit' | 'rainbow';
+export const STATUS_GLOWS: StatusGlow[] = ['none', 'soft', 'pulse', 'orbit', 'rainbow'];
+export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; imageOriginal?: OriginalStatusImage; glow?: StatusGlow; }
 export interface StatusDef { id: string; name: string; style: StyleDef; countsAsRead: boolean; }
 export interface QuickTerm { id: string; label: string; style: StyleDef; }
 export interface CollectionDef { id: string; name: string; style: StyleDef; }
@@ -429,6 +431,19 @@ class Store extends EventTarget {
       if (paper.favorite && !paper.collections.length) paper.collections = ['default'];
       if (!paper.favorite) paper.collections = [];
     });
+  }
+  setStatusGlow(id: string, glow: StatusGlow): boolean {
+    const target = this.status(id)?.style;
+    if (!target || !STATUS_GLOWS.includes(glow)) return false;
+    const previous = target.glow;
+    target.glow = glow;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); }
+    catch {
+      if (previous === undefined) delete target.glow; else target.glow = previous;
+      return false;
+    }
+    this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'global' } }));
+    return true;
   }
   setStatus(id: string, statusId: string): void {
     this.updatePaper(id, paper => { if (statusId) paper.statusId = statusId; else delete paper.statusId; });

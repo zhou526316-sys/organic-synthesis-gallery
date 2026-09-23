@@ -4,13 +4,15 @@ import { hydrateStatusImages, statusImageError, statusImageTag, viewStatusImage 
 
 import { positionSummaryPanel, SUMMARY_PANEL_STYLES } from './summary-panel-layout';
 
+import { bindStatusPresentation, STATUS_PRESENTATION_CSS } from './status-presentation';
+
 const NAME = 'gallery-paper-actions';
 
 function icon(style: StyleDef, fallback: string): string {
   return style.imageData ? `<img class='icon' src='${escapeHtml(style.imageData)}' alt=''>` : `<span aria-hidden='true'>${fallback}</span>`;
 }
 function button(style: StyleDef, label: string, action: string, fallback: string, active = false, original?: StyleDef): string {
-  return `<button type='button' aria-label='${escapeHtml(label)}' class='action shape-${style.shape}${active ? ' active' : ''}${original ? ' status-artwork' : ''}' style='${styleVars(style)}' data-action='${action}' title='${escapeHtml(label)}'>${original ? statusImageTag(original, 'status-original-action', label) : `${icon(style, fallback)}<span>${escapeHtml(label)}</span>`}</button>`;
+  return `<button type='button' aria-label='${escapeHtml(label)}' class='action shape-${style.shape}${active ? ' active' : ''}${original ? ' status-artwork' : ''}' style='${styleVars(style)}' data-action='${action}' title='${escapeHtml(label)}'>${original ? statusImageTag(original, 'status-original-action', label) + `<span class='status-action-label'>${escapeHtml(label)}</span>` : `${icon(style, fallback)}<span>${escapeHtml(label)}</span>`}</button>`;
 }
 function formatTime(value?: number): string { return value ? new Date(value).toLocaleString() : ''; }
 function rgbToHex(rgb: [number, number, number]): string { return `#${rgb.map(value => Math.max(0, Math.min(255, value)).toString(16).padStart(2, '0')).join('')}`; }
@@ -280,15 +282,17 @@ export class GalleryPaperActions extends HTMLElement {
       .image-options label{display:flex;align-items:center;gap:4px}.image-options button{border:0;background:transparent;color:#3159bd;padding:4px}
       .image-help{grid-column:1/-1;line-height:1.5;overflow-wrap:anywhere}
       ${SUMMARY_PANEL_STYLES}
+      ${STATUS_PRESENTATION_CSS}
     </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('全文摘要', 'Full-text summary')}</button></div><div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
-      ${button(status ? { ...s.status, rgb: status.style.rgb } : s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status), status?.style.imageOriginal ? status.style : undefined)}
+      ${button(status ? { ...s.status, rgb: status.style.rgb } : s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status), status?.style.imageData ? status.style : undefined)}
       ${button(s.note, this.tr('私人备注', 'Private note'), 'note', '✎', Boolean(paper.note))}
       ${button(s.more, this.tr('更多', 'More'), 'more', '•••')}
       <span class='metric' data-reader-count-known='${typeof count === 'number' ? 'true' : 'false'}'>◉ ${countLabel} ${this.tr('人读过', 'readers')}</span>
     </div>${this.panel === 'none' ? '' : this.drawer(paper)}`;
     this.bind();
     hydrateStatusImages(this.shadow);
+    bindStatusPresentation(this.shadow, this.language, this.paperId);
     const drawerOpen = this.panel !== 'none' && Boolean(this.shadow.querySelector('.overlay'));
     if (drawerOpen) {
       this.dataset.drawerOpen = 'true';
