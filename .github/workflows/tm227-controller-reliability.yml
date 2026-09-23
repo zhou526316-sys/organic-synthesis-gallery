@@ -12,6 +12,7 @@ on:
       - 'scripts/test-tm227-controller-reliability.mjs'
       - 'scripts/test-tm224-acquisition.mjs'
       - 'scripts/test-tm-paired-capture.mjs'
+      - 'scripts/validate-tm220-artifacts.mjs'
   pull_request:
     branches: [main]
     paths:
@@ -22,6 +23,7 @@ on:
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'scripts/test-tm227-controller-reliability.mjs'
       - 'scripts/test-tm224-acquisition.mjs'
+      - 'scripts/validate-tm220-artifacts.mjs'
 
 permissions:
   contents: read
