@@ -161,3 +161,51 @@ test('saved crop remains a crop without local originals in an independent browse
     const record=records.get(otherPage)!;expect(record.errors).toEqual([]);expect(record.marks).toEqual([]);
   } finally { await other.close(); }
 });
+
+test('cropped status keeps its color and shape without becoming the retained full original',async({page})=>{
+  const actions=await open(page);await upload(page,actions);
+  const dialog=await crop(page,actions);
+  await dialog.locator('[data-crop-mode="circle"]').click();await dialog.locator('[data-crop-apply]').click();
+  await expect.poll(async()=>(await state(page)).imageCrop?.recipe.mode).toBe('circle');
+  await actions.locator('[data-status-color="to-read"]').evaluate(node=>{
+    (node as HTMLInputElement).value='#123456';node.dispatchEvent(new Event('change',{bubbles:true}));
+  });
+  await actions.locator('[data-status-shape="to-read"]').selectOption('square');
+  const choice=actions.locator('[data-action="set-status:to-read"] .status-choice-label');
+  await expect(choice).toHaveClass(/shape-square/);
+  await expect.poll(()=>choice.evaluate(node=>getComputedStyle(node).backgroundColor)).toBe('rgb(18, 52, 86)');
+  await expect(choice.locator('img')).toHaveAttribute('data-image-source','crop');
+  await actions.locator('[data-action="set-status:to-read"]').click();
+  const chip=actions.locator('.chip.status');
+  await expect(chip).toHaveClass(/shape-square/);
+  await expect.poll(()=>chip.evaluate(node=>getComputedStyle(node).backgroundColor)).toBe('rgb(18, 52, 86)');
+  await expect(chip.locator('img')).toHaveAttribute('data-image-source','crop');
+  expect((await pixels(page,(await state(page)).imageData)).corner[3]).toBe(0);
+  await expect(actions.locator('[data-action="status"] img')).toHaveAttribute('data-image-source','crop');
+});
+
+test('drag, resize, keyboard, zoom and wide mode change the saved selection',async({page})=>{
+  const actions=await open(page,1280);await upload(page,actions);
+  const dialog=await crop(page,actions);const canvas=dialog.locator('[data-crop-canvas]');
+  const box=(await canvas.boundingBox())!;
+  const xfield=dialog.locator('[data-crop-field="x"]');
+  const originalX=Number(await xfield.inputValue());
+  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();
+  await page.mouse.move(box.x+box.width/2+24,box.y+box.height/2,{steps:3});await page.mouse.up();
+  expect(Number(await xfield.inputValue())).toBeGreaterThan(originalX);
+  const selectedX=Number(await xfield.inputValue());
+  const selectedWidth=Number(await dialog.locator('[data-crop-field="width"]').inputValue());
+  const edgeX=box.x+(selectedX+selectedWidth)/600*box.width-2;
+  await page.mouse.move(edgeX,box.y+box.height-3);await page.mouse.down();
+  await page.mouse.move(edgeX-24,box.y+box.height-24,{steps:3});await page.mouse.up();
+  expect(Number(await dialog.locator('[data-crop-field="width"]').inputValue())).toBeLessThan(selectedWidth);
+  const xBeforeKey=Number(await xfield.inputValue());
+  await canvas.focus();await page.keyboard.press('ArrowRight');
+  expect(Number(await xfield.inputValue())).toBe(xBeforeKey+1);
+  await dialog.locator('[data-crop-zoom]').fill('2');
+  await expect(dialog.locator('[data-crop-field="width"]')).toHaveValue('100');
+  await dialog.locator('[data-crop-mode="wide"]').click();await dialog.locator('[data-crop-apply]').click();
+  await expect.poll(async()=>(await state(page)).imageCrop?.recipe.mode).toBe('wide');
+  const result=await pixels(page,(await state(page)).imageData);
+  expect(Math.abs(result.width-3*result.height)).toBeLessThanOrEqual(1);
+});

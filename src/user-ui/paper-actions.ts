@@ -308,11 +308,12 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private statusVisual(status: NonNullable<ReturnType<typeof store.status>>, className: string): string {
-    if (status.style.imageOriginal && status.style.imageData) {
+    // A retained source does not turn a static crop into original display.
+    if (status.style.imageOriginal && status.style.imageData && !status.style.imageCrop) {
       return `<span class='${className} status-original' title='${escapeHtml(statusLabel(status, this.language))}'>${statusImageTag(status.style, 'status-image', statusLabel(status, this.language))}</span>`;
     }
     const image = status.style.imageData
-      ? `<img class='status-image' src='${escapeHtml(status.style.imageData)}' alt=''>`
+      ? statusImageTag(status.style, 'status-image', statusLabel(status, this.language))
       : '';
     return `<span class='${className} shape-${status.style.shape}' style='background:${rgbCss(status.style.rgb)}'>${image}<span>${escapeHtml(statusLabel(status, this.language))}</span></span>`;
   }
