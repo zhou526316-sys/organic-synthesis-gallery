@@ -23,29 +23,50 @@ jobs:
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/gif-control-install.log 2>&1 || { tail -60 /tmp/gif-control-install.log; exit 1; }
           npm run build
-      - name: Compare independent instrumentation conditions
+      - name: Create standalone positive and negative controls as well as unchanged Gallery
         run: |
           mkdir -p gif-controls
           python - <<'PY'
           from pathlib import Path
           body='''import { test, expect } from '@playwright/test';
-          import { open, gifFile, originalHash } from './status-image-fixtures';
+          import { open, gifFile, GIF, originalHash } from './status-image-fixtures';
           import { expectAnimatedImage } from './animated-image-evidence';
-          test.use({trace: TRACE,headless: HEADLESS,serviceWorkers:'block'});
-          for(const readBytes of [false,true]) test(`MODE GIF with byte read ${readBytes}`,async({page},info)=>{
-            const actions=await open(page,390);
-            await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
-            await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
-            const image=actions.locator('[data-action="set-status:to-read"] .status-image');
-            await expect(image).toHaveAttribute('data-image-source','original');
-            const before=await page.evaluate(()=>({visibility:document.visibilityState,focus:document.hasFocus()}));
-            const hash=readBytes ? await originalHash(image) : null;
-            console.log('CONTROL',JSON.stringify({mode:'MODE',readBytes,before,hash}));
-            await expectAnimatedImage(image,info);
+          test.use({trace: TRACE,serviceWorkers:'block'});
+          for(const kind of ['plain-data','plain-blob','gallery','static-negative']) test(`MODE ${kind}`,async({page},info)=>{
+            let image;
+            if(kind==='gallery') {
+              const actions=await open(page,390);
+              await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
+              await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
+              image=actions.locator('[data-action="set-status:to-read"] .status-image');
+              await expect(image).toHaveAttribute('data-image-source','original');
+              await originalHash(image);
+            } else {
+              // No Gallery scripts/styles/IndexedDB or URL hydration run here.
+              await page.setContent('<img id="control" alt="Standalone animation control" style="width:72px;height:36px">');
+              await page.locator('#control').evaluate((node,args)=>{
+                if(args.kind==='static-negative') {
+                  const c=document.createElement('canvas'); c.width=120;c.height=60;
+                  const ctx=c.getContext('2d')!;ctx.fillStyle='#f00';ctx.fillRect(0,0,120,60);
+                  (node as HTMLImageElement).src=c.toDataURL();return;
+                }
+                const data='data:image/gif;base64,'+args.base64;
+                const bytes=Uint8Array.from(atob(args.base64),c=>c.charCodeAt(0));
+                (node as HTMLImageElement).src=args.kind==='plain-data'?data:URL.createObjectURL(new Blob([bytes],{type:'image/gif'}));
+              },{kind,base64:GIF.toString('base64')});
+              image=page.locator('#control');
+              await expect.poll(()=>image.evaluate(node=>(node as HTMLImageElement).naturalWidth)).toBe(120);
+            }
+            console.log('CONTROL',JSON.stringify({mode:'MODE',kind,visibility:await page.evaluate(()=>document.visibilityState)}));
+            if(kind==='static-negative') {
+              let failed=false;
+              try {await expectAnimatedImage(image,info);} catch(error) {failed=true;expect(String(error)).toContain('toBeGreaterThan');}
+              expect(failed).toBe(true);
+            } else await expectAnimatedImage(image,info);
           });
           '''
-          for mode,trace,headless in [('off','off','true'),('on','on','true'),('headed','off','false')]:
-              Path('tests/pr147-gif-control-'+mode+'.spec.ts').write_text(body.replace('TRACE',repr(trace)).replace('HEADLESS',headless).replace('MODE',mode))
+          for mode in ['off','on']:
+              Path('tests/pr147-gif-control-'+mode+'.spec.ts').write_text(body.replace('TRACE',repr(mode)).replace('MODE',mode))
           PY
           git diff --exit-code -- src/ public/ shared/
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-control-preview.log 2>&1 &
@@ -56,7 +77,7 @@ jobs:
           PLAYWRIGHT_JSON_OUTPUT_FILE: gif-controls/results.json
         run: |
           set -o pipefail
-          xvfb-run --auto-servernum npx --no-install playwright test tests/pr147-gif-control- --browser=webkit --workers=1 --reporter=line,json --output=gif-controls/tests 2>&1 | tee gif-controls/tests.log
+          npx --no-install playwright test tests/pr147-gif-control- --browser=webkit --workers=1 --reporter=line,json --output=gif-controls/tests 2>&1 | tee gif-controls/tests.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
