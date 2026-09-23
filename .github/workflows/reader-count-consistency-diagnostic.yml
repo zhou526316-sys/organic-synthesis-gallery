@@ -1,0 +1,80 @@
+name: Diagnose reader counter consistency without production writes
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/reader-count-consistency-diagnostic.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Reproduce current counter failure with real SQL in memory
+        run: |
+          mkdir -p reader-diagnostic
+          node --input-type=module <<'NODE'
+          import { DatabaseSync } from 'node:sqlite';
+          import { writeFile } from 'node:fs/promises';
+          import { markReader } from './cloudflare/worker/src/user-ui.js';
+          const sql = new DatabaseSync(':memory:');
+          sql.exec(`CREATE TABLE paper_open_readers_v3 (doi TEXT NOT NULL, ip_hash TEXT NOT NULL, first_opened_at INTEGER NOT NULL, PRIMARY KEY(doi,ip_hash));
+            CREATE TABLE paper_open_reader_counts_v3 (doi TEXT PRIMARY KEY, count INTEGER NOT NULL, updated_at INTEGER NOT NULL);`);
+          let failCounter = true;
+          const DB = { prepare(text) { return { bind(...args) { return {
+            async run() {
+              if (failCounter && /INSERT INTO paper_open_reader_counts_v3/.test(text)) { failCounter = false; throw new Error('injected_counter_write_failure'); }
+              const result = sql.prepare(text).run(...args); return { meta: { changes: Number(result.changes) } };
+            },
+            async first() { return sql.prepare(text).get(...args) || null; },
+            async all() { return { results: sql.prepare(text).all(...args) }; }
+          }; } }; } };
+          const env = { DB, READER_HASH_SECRET: 'isolated-sql-test-only' };
+          const request = new Request('https://example.invalid/test', { headers: { 'CF-Connecting-IP': '203.0.113.10' } });
+          const doi = '10.1000/isolated-reader-consistency';
+          let injectedError;
+          try { await markReader(env, { doi }, request); } catch(error) { injectedError = error.message; }
+          const retry = await markReader(env, { doi }, request);
+          const events = sql.prepare('SELECT COUNT(*) AS n FROM paper_open_readers_v3').get().n;
+          const counters = sql.prepare('SELECT COALESCE(SUM(count),0) AS n FROM paper_open_reader_counts_v3').get().n;
+          const result = { checkedAt: new Date().toISOString(), sourceSha: process.env.GITHUB_SHA, isolated: true, productionWrites: false,
+            injectedError, events, counters, retry: retry.body, reproduced: events === 1 && counters === 0 && retry.body.count === 0 && retry.body.unique === false };
+          await writeFile('reader-diagnostic/split-write-reproduction.json', JSON.stringify(result,null,2));
+          console.log(JSON.stringify(result));
+          sql.close();
+          if (!result.reproduced) throw new Error('Expected reproduction was not observed; inspect before changing production code.');
+          NODE
+      - name: Read actual aggregate statistics from both API origins
+        if: always()
+        run: |
+          mkdir -p reader-diagnostic
+          node --input-type=module <<'NODE'
+          import { writeFile } from 'node:fs/promises';
+          const results = [];
+          for (const base of ['https://api.gczhouwld.com', 'https://organic-synthesis-gallery.zhou526316.workers.dev']) {
+            for (const path of ['/api/user-ui/reader-stats','/api/user-ui/site-stats']) {
+              const item = { url: base + path, checkedAt: new Date().toISOString() };
+              try {
+                const response = await fetch(item.url, { method: 'GET', headers: { 'cache-control': 'no-cache', accept: 'application/json' }, signal: AbortSignal.timeout(15000) });
+                item.status = response.status; item.data = await response.json();
+              } catch(error) { item.error = String(error); }
+              results.push(item);
+            }
+          }
+          await writeFile('reader-diagnostic/live-aggregate-readonly.json', JSON.stringify({ sourceSha: process.env.GITHUB_SHA, productionWrites: false, rawIpsExported: false, results },null,2));
+          console.log(JSON.stringify(results));
+          NODE
+      - name: Preserve reproduction and live read evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reader-count-diagnostic
+          path: reader-diagnostic/
+          retention-days: 7
+          if-no-files-found: error
