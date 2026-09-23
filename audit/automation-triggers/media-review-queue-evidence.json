@@ -1,7 +1,6 @@
 {
-  "requestedAt": "2026-09-23T16:20:00+08:00",
-  "task": "Gallery 正文图逐图核验上架 1620",
+  "requestedAt": "2026-09-23T17:16:00+08:00",
+  "task": "Continue body publication and evidence-driven Bridge update after PR162",
   "mode": "read-only-evidence",
-  "limits": {"maxPapers": 5, "maxImages": 30},
-  "notes": "Previous read completed at15:41; reuse its valid byte evidence and fetch current full inventory/reports once. This task does not authorize marker-only or automatic semantic approval. No publisher requests, promotion, R2 mutation, literature change, userscript release, or task schedule changes."
+  "notes": "User requested continued body publication and a new capture-script update. Reuse the existing bounded reader and current 20-article config. Previous read preceded deployment of body20; refresh once to avoid selecting its now-live files. Read current full stage/report indices and exact stored bytes; no publisher requests, R2 changes, promotion, literature changes, or schedule changes. Script changes require separately tested PR and must retain DOI, tab/lease, generation and receipt guards."
 }
