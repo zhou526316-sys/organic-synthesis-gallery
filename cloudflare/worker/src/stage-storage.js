@@ -1,3 +1,5 @@
+import {buildBodyReviewMarker} from '../../../shared/body-media-evidence.js';
+
 // Storage only: caller must validate capture/task/page/source identity before entering.
 // No publisher requests, historical promotion, D1 writes, or object deletion.
 export const STAGE_STORAGE_REVISION = '2026-09-23.1';
@@ -60,14 +62,16 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
     if (!object) return false;
     if (object.size > 4000000) throw integrityError('object_integrity_mismatch');
     const raw = new Uint8Array(await object.arrayBuffer());
-    if (raw.length < 100 || raw.length > 4000000 || (expectedSize && raw.length !== expectedSize) || !(await digest(raw)).startsWith(hashPrefix)) throw integrityError('object_integrity_mismatch');
-    return true;
+    const actualDigest = await digest(raw);
+    if (raw.length < 100 || raw.length > 4000000 || (expectedSize && raw.length !== expectedSize) || !actualDigest.startsWith(hashPrefix)) throw integrityError('object_integrity_mismatch');
+    return actualDigest;
   };
   const receipt = (record, extra = {}) => ({status: 200, body: {
     stored: true, staged: true, published: false, doi: record.doi, id: record.id,
     width: Number(record.width || 0), height: Number(record.height || 0), contentHash: record.contentHash,
     imageUrl: new URL(request.url).origin + '/media/' + record.r2Key.split('/').map(encodeURIComponent).join('/'),
     updatedAt: record.updatedAt, stageStorageRevision: STAGE_STORAGE_REVISION,
+    sha256: record.sha256, reviewMarker: record.reviewMarker,
     requestId, storageRetryCount: retryCount, ...extra
   }});
   const retained = async previous => {
@@ -76,7 +80,7 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
     const higher = Number(previous.width || 0) * Number(previous.height || 0) > Number(entry.width || 0) * Number(entry.height || 0) && entry.width > 0 && entry.height > 0;
     if (!same && !higher) return null;
     const exists = await attemptOperation('retained_object_read', () => verifiedObject(previous.r2Key, previous.contentHash, previous.byteLength));
-    return exists ? receipt(previous, {reusedExistingObject: same, retainedHigherResolution: !same}) : null;
+    return exists ? receipt({...previous, sha256: exists, reviewMarker: await buildBodyReviewMarker(previous, exists)}, {reusedExistingObject: same, retainedHigherResolution: !same}) : null;
   };
   try {
     const first = await attemptOperation('index_read', readIndex);
@@ -100,7 +104,7 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
         const current = await readIndex();
         const prior = await retained(current.index.items[identity]);
         if (prior) return prior;
-        const record = {...entry, updatedAt: now(), stageStorageRevision: STAGE_STORAGE_REVISION};
+        const record = {...entry, sha256: fullHash, reviewMarker: await buildBodyReviewMarker(entry, fullHash), updatedAt: now(), stageStorageRevision: STAGE_STORAGE_REVISION};
         current.index.items[identity] = record;
         current.index.version = 1; current.index.updatedAt = record.updatedAt;
         operation = 'index_write';

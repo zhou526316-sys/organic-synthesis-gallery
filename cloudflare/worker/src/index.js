@@ -354,7 +354,7 @@ async function handleApi(request, env) {
     return resultResponse(await getArticleFigures(request, env), cors);
   }
   if(request.method==='GET' && url.pathname==='/api/media/capture-capabilities') {
-    return json({captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION}, {headers:cors});
+    return json({captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION,bodyReviewMarkerRevision:'1'}, {headers:cors});
   }
   if (request.method === 'GET' && url.pathname === '/api/article-figures/staged') {
     return resultResponse(await getStagedArticleFigures(request, env), cors);

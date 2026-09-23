@@ -1,0 +1,83 @@
+name: Body review markers and incremental publication
+on:
+  push:
+    branches: [fix/body-review-markers-20260923]
+    paths:
+      - '.github/workflows/body-review-markers.yml'
+      - '.github/workflows/materialize-approved-body-assets.yml'
+      - 'shared/body-media-evidence.js'
+      - 'scripts/apply-body-review-markers.py'
+      - 'scripts/materialize-approved-body-assets.py'
+      - 'scripts/test-body-review-markers.mjs'
+      - 'cloudflare/scripts/merge-approved-body-batches.mjs'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/body-review-markers.yml'
+      - '.github/workflows/materialize-approved-body-assets.yml'
+      - 'shared/body-media-evidence.js'
+      - 'scripts/materialize-approved-body-assets.py'
+      - 'cloudflare/scripts/merge-approved-body-batches.mjs'
+      - 'audit/media-recovery/body-batches/**'
+permissions:
+  contents: write
+concurrency:
+  group: body-review-markers-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply additive server markers and approved-batch hook only
+        run: |
+          python3 scripts/apply-body-review-markers.py
+          python3 -m py_compile scripts/materialize-approved-body-assets.py
+          node --check shared/body-media-evidence.js
+          node --check cloudflare/worker/src/stage-storage.js
+          node --check cloudflare/worker/src/index.js
+          node --check cloudflare/scripts/merge-approved-body-batches.mjs
+          git diff --check
+      - name: Verify markers cannot authorize publication or alter old image bytes
+        run: |
+          node scripts/test-body-review-markers.mjs
+          node scripts/test-stage-storage.mjs
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-reviewed-body.mjs
+          node scripts/test-reviewed-toc.mjs
+      - name: Rebuild reviewed media with an exact publication ledger
+        run: |
+          printf '{"version":2,"items":{}}' > public/media-index.json
+          node cloudflare/scripts/merge-reviewed-toc.mjs
+          node cloudflare/scripts/merge-sealed-media-batch2.mjs
+          node cloudflare/scripts/merge-reviewed-body.mjs
+          node cloudflare/scripts/merge-approved-body-batches.mjs
+          node cloudflare/scripts/verify-static-media-integrity.mjs
+          cp public/body-publication-ledger.json "$RUNNER_TEMP/body-marker-ledger.json"
+          cp public/body-batches-status.json "$RUNNER_TEMP/body-marker-status.json"
+          git diff --exit-code -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json public/toc-mainline.user.js src
+      - name: Save tested source patch on isolated feature branch only
+        if: github.event_name == 'push' && github.ref == 'refs/heads/fix/body-review-markers-20260923'
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add cloudflare/worker/src/stage-storage.js cloudflare/worker/src/index.js cloudflare/scripts/merge-curated-pages.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m 'media: persist confirmed body review markers and build publication ledger'
+            git push origin HEAD:fix/body-review-markers-20260923
+          fi
+          git rev-parse HEAD > "$RUNNER_TEMP/body-marker-head.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: body-review-marker-tests
+          path: |
+            ${{ runner.temp }}/body-marker-*.json
+            ${{ runner.temp }}/body-marker-head.txt
+          retention-days: 7
+          if-no-files-found: warn

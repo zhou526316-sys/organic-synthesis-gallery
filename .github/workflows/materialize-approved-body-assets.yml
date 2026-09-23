@@ -1,0 +1,84 @@
+name: Materialize approved body assets
+on:
+  push:
+    branches:
+      - 'media/body-batch-*'
+    paths:
+      - 'audit/media-recovery/body-batches/*.json'
+permissions:
+  contents: write
+concurrency:
+  group: materialize-approved-body-assets-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  materialize:
+    if: github.actor == 'zhou526316-sys'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Resolve newly committed approved manifests
+        id: manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          before='${{ github.event.before }}'
+          after='${{ github.sha }}'
+          if [[ "$before" =~ ^0+$ ]]; then before="${after}^"; fi
+          mapfile -t files < <(git diff --diff-filter=AM --name-only "$before" "$after" -- 'audit/media-recovery/body-batches/*.json')
+          test "${#files[@]}" -gt 0
+          test "${#files[@]}" -le 5
+          printf '%s\n' "${files[@]}" > "$RUNNER_TEMP/body-manifests.txt"
+          printf 'count=%s\n' "${#files[@]}" >> "$GITHUB_OUTPUT"
+      - name: Validate explicit review fingerprints before storage read
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import {readFile} from 'node:fs/promises';
+          import {evidenceDigest} from './cloudflare/scripts/merge-approved-body-batches.mjs';
+          const paths=(await readFile(process.env.RUNNER_TEMP+'/body-manifests.txt','utf8')).trim().split(/\n+/).filter(Boolean);
+          for(const path of paths){
+            const batch=JSON.parse(await readFile(path,'utf8'));
+            if(batch.schemaVersion!==1||batch.mediaGeneration!==1790082000000||batch.approvedCount!==batch.items?.length||batch.items.length<1||batch.items.length>30||new Set(batch.items.map(x=>x.doi)).size>5) throw new Error('invalid_approved_batch:'+path);
+            for(const item of batch.items){
+              if(item.approved!==true||item.review?.decision!=='approved'||item.review?.evidenceSha256!==evidenceDigest(item)) throw new Error('invalid_review_fingerprint:'+item.doi+'|'+item.id);
+            }
+          }
+          NODE
+      - name: Fetch only exact approved staged objects from R2
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t files < "$RUNNER_TEMP/body-manifests.txt"
+          python3 scripts/materialize-approved-body-assets.py "${files[@]}"
+      - name: Verify exact assets through the existing publication builder
+        shell: bash
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/merge-approved-body-batches.mjs
+          node cloudflare/scripts/verify-static-media-integrity.mjs
+          git diff --exit-code -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json public/toc-mainline.user.js src
+      - name: Commit immutable approved asset copies only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git reset --hard HEAD -- public || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit/media-recovery/body-batches/assets
+          if git diff --cached --quiet; then
+            echo 'No new asset bytes to commit.'
+            exit 0
+          fi
+          git diff --cached --name-only | grep -Ev '^audit/media-recovery/body-batches/assets/[a-f0-9]{64}\.(svg|png|webp)$' && exit 1 || true
+          git commit -m 'media: materialize approved body assets'
+          git push origin HEAD:"${GITHUB_REF_NAME}"
