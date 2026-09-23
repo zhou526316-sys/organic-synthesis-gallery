@@ -13,14 +13,20 @@ concurrency:
 jobs:
   read:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 4
     steps:
-      - name: Read newest delivered reports and distinguish automatic from manual evidence
+      - name: Read newest stored reports with existing R2 authorization only
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         shell: bash
         run: |
           python3 - <<'PY'
-          import concurrent.futures,datetime,json,os,pathlib,re,time,urllib.parse,urllib.request
-          base='https://organic-synthesis-gallery.zhou526316.workers.dev'
+          import concurrent.futures,datetime,json,os,pathlib,re,urllib.parse,urllib.request
+          base='https://api.cloudflare.com/client/v4/accounts/'+os.environ['CLOUDFLARE_ACCOUNT_ID']+'/r2/buckets/organic-synthesis-gallery-media/objects/'
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*args,**kwargs): return None
+          opener=urllib.request.build_opener(NoRedirect())
           def safe_url(value):
               try:
                   u=urllib.parse.urlsplit(str(value or ''))
@@ -29,33 +35,34 @@ jobs:
           def text(value):
               s=re.sub(r'https?://[^\s\"\'<>]+',lambda m:safe_url(m.group()),str(value or ''))
               return re.sub(r'(?i)Bearer\s+\S+|(?:token|secret|password|cookie|authorization|signature)\s*[\"\s]*[:=]\s*[^\s;,]+','[redacted]',s)[:1200]
-          def get(path):
-              req=urllib.request.Request(base+path+('&' if '?' in path else '?')+'readAt='+str(time.time_ns()),headers={'Origin':'https://zhou526316-sys.github.io','Cache-Control':'no-cache'})
-              with urllib.request.urlopen(req,timeout=20) as r:
-                  body=r.read(6000001)
+          def get(key):
+              if key not in ('local-captures/tampermonkey/report-index.json','local-captures/diagnostics/latest.json') and not re.fullmatch(r'local-captures/tampermonkey/reports/[A-Za-z0-9_/-]+\.json',key):
+                  raise ValueError('unexpected_report_key')
+              req=urllib.request.Request(base+urllib.parse.quote(key,safe='/'),headers={'Authorization':'Bearer '+os.environ['CLOUDFLARE_API_TOKEN'],'Cache-Control':'no-cache'})
+              with opener.open(req,timeout=20) as r: body=r.read(6000001)
               if len(body)>6000000: raise ValueError('size_limit')
               return json.loads(body)
           def pick(r,fields):
               if not isinstance(r,dict): return {}
               return {k:(safe_url(r[k]) if k.lower().endswith('url') else text(r[k]) if isinstance(r[k],str) else r[k]) for k in fields if k in r and not isinstance(r[k],(dict,list))}
           fields=['doi','status','reason','candidateSource','assetType','startedAt','finishedAt','updatedAt','attemptId','attemptCount','articleUrl','sourceUrl','traceEvents','retainedAttempts']
-          report={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'readOnly':True,'mediaWrites':0,'errors':[],'index':[],'details':[]}
+          report={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'transport':'authenticated_R2_GET','readOnly':True,'mediaWrites':0,'errors':[],'index':[],'details':[]}
           try:
-              index=get('/api/media/tampermonkey-reports?limit=12')
+              index=get('local-captures/tampermonkey/report-index.json')
               report['indexUpdatedAt']=index.get('updatedAt')
-              items=index.get('items',[])
+              items=index.get('items')
               if isinstance(items,dict): items=list(items.values())
               if not isinstance(items,list): raise ValueError('index_items_missing')
               items=sorted(items,key=lambda x:float(x.get('updatedAt') or 0),reverse=True)
-              report['index']=[pick(r,fields) for r in items]
-              dois=list(dict.fromkeys(r['doi'] for r in items if r.get('doi')))[:5]
-              def detail(doi):
-                  try:
-                      body=get('/api/media/tampermonkey-reports?doi='+urllib.parse.quote(doi,safe='')+'&history=1&limit=5')
-                      attempts=body.get('attempts',[]) or [body.get('latest',body)]
-                      out=[]
-                      for r in attempts:
-                          item=pick(r,fields+['available','error'])
+              report['indexDoiCount']=len(items)
+              report['index']=[pick(r,fields) for r in items[:12]]
+              report['automaticDoiCountInIndex']=sum(str(r.get('candidateSource','')).startswith('auto_') for r in items)
+              def detail(row):
+                  out=[]
+                  attempts=(row.get('attempts') or [row])[:4]
+                  for a in attempts:
+                      try:
+                          r=get(a['reportKey']); item=pick(r,fields+['available','error'])
                           events=r.get('trace',[])
                           context=[e for e in events if e.get('stage') in ('diagnostic_context','job','paired_result')]
                           failures=[e for e in events if e.get('event')=='failed' or float(e.get('httpStatus') or 0)>=400 or e.get('stage')=='page_doi_guard']
@@ -63,12 +70,12 @@ jobs:
                           item['context']=[pick(e,event_fields) for e in context[:3]+context[3:][-2:]]
                           item['failureEvents']=[pick(e,event_fields) for e in failures[-8:]]
                           out.append(item)
-                      return {'doi':doi,'attempts':out}
-                  except Exception as e: return {'doi':doi,'readError':type(e).__name__,'httpStatus':getattr(e,'code',None)}
-              with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool: report['details']=list(pool.map(detail,dois))
+                      except Exception as e: out.append({'attemptId':a.get('attemptId'),'readError':type(e).__name__,'httpStatus':getattr(e,'code',None)})
+                  return {'doi':row.get('doi'),'attempts':out}
+              with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool: report['details']=list(pool.map(detail,items[:5]))
           except Exception as e: report['errors'].append({'source':'reportIndex','type':type(e).__name__,'httpStatus':getattr(e,'code',None)})
           try:
-              local=get('/api/media/local-diagnostics')
+              local=get('local-captures/diagnostics/latest.json')
               report['manualSnapshot']=pick(local,['uploadedAt','version','source','kind','uploadedReason'])
               report['manualSummary']=pick(local.get('summary',{}),['controllerRevision','startedAt','finishedAt','success','partial','failed','tocStored','figuresStaged'])
           except Exception as e: report['errors'].append({'source':'manualSnapshot','type':type(e).__name__,'httpStatus':getattr(e,'code',None)})
