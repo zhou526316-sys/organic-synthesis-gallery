@@ -25,7 +25,8 @@ for (const width of [390, 1280]) {
     const action = actions.locator('button[data-action="status"]');
     await expect(action.locator('img')).toHaveAttribute('data-image-source', 'original');
     await expect(action).toHaveAttribute('aria-label', /将读|To read/);
-    await expect(action.locator('span')).toHaveCount(0);
+    await expect(action.locator('.status-action-label')).toBeVisible();
+    await expect(action.locator('.status-action-label')).toContainText(/将读|To read/);
     await expect(actions.locator('.bar > button.action')).toHaveCount(4);
     await expect(actions.locator('.chip.status img')).toBeVisible();
     await action.scrollIntoViewIfNeeded();
