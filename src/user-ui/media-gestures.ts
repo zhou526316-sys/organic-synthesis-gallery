@@ -39,7 +39,9 @@ export function installMediaGestures(options: GestureOptions): { reset: () => vo
 
   const move = (event: PointerEvent): void => {
     const old = pointers.get(event.pointerId);
-    if (!old) return;
+    // A hover/compatibility event from another input device cannot take over
+    // the tracked touch even if its numeric pointer ID is reused.
+    if (!old || old.type !== event.pointerType) return;
     const before = [...pointers.entries()].slice(0, 2);
     pointers.set(event.pointerId, { ...old, x: event.clientX, y: event.clientY });
     const after = [...pointers.entries()].slice(0, 2);
@@ -69,7 +71,9 @@ export function installMediaGestures(options: GestureOptions): { reset: () => vo
   };
 
   const end = (event: PointerEvent): void => {
-    if (!pointers.delete(event.pointerId)) return;
+    const tracked = pointers.get(event.pointerId);
+    if (!tracked || tracked.type !== event.pointerType) return;
+    pointers.delete(event.pointerId);
     release(event.pointerId);
     // Remaining pointers already hold their latest coordinates, so lifting one
     // finger resumes panning without stale pinch distance or scroll baselines.
