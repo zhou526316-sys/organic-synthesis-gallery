@@ -1,4 +1,4 @@
-name: Verify Bridge 2.2.24 live
+name: Verify Bridge 2.2.25 live
 on:
   workflow_run:
     workflows: ['Deploy GitHub Pages frontend']
@@ -35,7 +35,7 @@ jobs:
               const installer=await a.text(),mainline=await b.text();
               const checks={
                 installerVersion:/^\/\/ @version\s+2\.2\.24$/m.test(installer),
-                controller:installer.includes("var CONTROLLER_REVISION = '2.2.24';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.24';"),
+                controller:installer.includes("var CONTROLLER_REVISION = '2.2.25';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.25';"),
                 protocol:installer.includes("var VERSION = '6.2.20';")&&mainline.includes("var VERSION = '6.2.20';"),
                 fallback:installer.includes('sameFigureCurrentSrcFallback')&&mainline.includes('sameFigureCurrentSrcFallback'),
                 tiff:installer.includes("return 'image/tiff'")&&mainline.includes("return 'image/tiff'"),
