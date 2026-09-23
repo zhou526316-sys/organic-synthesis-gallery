@@ -28,7 +28,23 @@ try{
  }
  result.status=status;result.manualLedgerEntries=ledger.items.length-auto.length;
  const addedDois=[...new Set(status.added.map(x=>x.doi))];
- if(addedDois.length){assert.ok(addedDois.length>=policy.minNewArticles,'published batch below minimum article count');assert.ok(addedDois.length<=policy.maxNewArticles,'published batch above maximum article count');}
+ if(addedDois.length){
+   assert.equal(status.releaseReady,true,'published batch did not pass release gate');
+   assert.equal(status.publishedNewArticles,addedDois.length,'published article count does not match added DOI identities');
+   assert.ok(addedDois.length<=policy.maxNewArticles,'published batch above maximum article count');
+   if(status.releaseMode==='target_batch'){
+     assert.ok(addedDois.length>=policy.minNewArticles,'target batch below preferred minimum');
+     assert.equal(status.preferredTargetMet,true,'target batch missing preferred-target evidence');
+   }else if(status.releaseMode==='quiet_tail'){
+     assert.ok(addedDois.length<policy.minNewArticles,'quiet tail should only apply below preferred target');
+     assert.equal(status.tailFlushReady,true,'quiet tail missing tail gate evidence');
+     assert.ok(Number(status.eligibleIdleMinutes)>=Number(policy.tailFlushIdleMinutes),'quiet tail published before idle threshold');
+   }else if(status.releaseMode==='aged_backlog'){
+     assert.ok(addedDois.length<policy.minNewArticles,'aged backlog should only apply below preferred target');
+     assert.equal(status.agedBacklogReady,true,'aged backlog missing anti-starvation gate evidence');
+     assert.ok(Number(status.oldestEligibleAgeMinutes)>=Number(policy.backlogMaxWaitMinutes),'aged backlog published before maximum wait');
+   }else assert.fail('unknown release mode for nonempty published batch: '+String(status.releaseMode));
+ }
  for(const doi of addedDois){
    const toc=media.items[doi]?.toc;
    assert.ok(toc?.available&&toc?.imageUrl&&!/fallback/i.test(String(toc.reason||''))&&!String(toc.reason||'').startsWith('figure_fallback:'),'body published without official TOC '+doi);
