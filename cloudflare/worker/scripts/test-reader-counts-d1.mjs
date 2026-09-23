@@ -8,11 +8,12 @@ import { markReader, readerCounts } from '../src/user-ui.js';
 test('local D1 binding enforces the reader-ledger transaction', async t => {
   const mf = new Miniflare({
     workers: [{
-      name: 'reader-counter-isolated-test',
       modules: true,
       script: 'export default { fetch() { return new Response("isolated reader test"); } };',
-      compatibilityDate: '2025-09-01',
-      config: {},
+      config: {
+        name: 'reader-counter-isolated-test',
+        compatibilityDate: '2025-09-01',
+      },
       d1Databases: { DB: '11111111-1111-4111-8111-111111111111' },
     }],
   });
