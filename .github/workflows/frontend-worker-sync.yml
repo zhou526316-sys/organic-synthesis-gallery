@@ -18,6 +18,7 @@ on:
       - 'public/final-audit-supplement.json'
       - 'public/curated-supplement.json'
       - 'public/rolling-supplement.json'
+      - 'public/MP_verify_*.txt'
   workflow_dispatch:
 
 permissions:
