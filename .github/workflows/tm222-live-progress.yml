@@ -9,6 +9,7 @@ on:
       - 'scripts/tm-auto-report.fragment.js'
       - 'scripts/apply-tm222-auto-report.py'
       - 'scripts/test-tm222-auto-report.mjs'
+      - 'scripts/finish-tm222-contracts.py'
       - '.github/workflows/tm222-live-progress.yml'
   pull_request:
     branches: [main]
@@ -34,6 +35,7 @@ jobs:
         run: |
           python3 scripts/apply-tm222-live-progress.py
           python3 scripts/apply-tm222-auto-report.py
+          python3 scripts/finish-tm222-contracts.py
           node --check public/toc-mainline.user.js
           git diff --check
       - name: Keep controller identity receipts and report-delivery checks
@@ -65,9 +67,9 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs scripts/validate-tm220-artifacts.mjs scripts/test-tm221-window-guard.mjs scripts/test-tm-stage-first.mjs scripts/tm-live-progress.fragment.js scripts/test-tm222-live-progress.mjs
+          git add public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs scripts/validate-tm220-artifacts.mjs scripts/test-tm221-window-guard.mjs scripts/test-tm-stage-first.mjs scripts/tm-live-progress.fragment.js scripts/test-tm222-live-progress.mjs scripts/patch-tm221-window-guard.py scripts/tm-auto-report.fragment.js scripts/test-tm222-auto-report.mjs
           if ! git diff --cached --quiet; then
-            git commit -m 'fix: preserve per-image failures and final reports before closing publisher tabs'
+            git commit -m 'fix: finalize report delivery and explicit Nature permission diagnostics'
             git push origin HEAD:feat/tm222-live-progress
           fi
           git rev-parse HEAD > "$RUNNER_TEMP/tm222-tested-head.txt"
