@@ -11,6 +11,9 @@ on:
       - 'cloudflare/scripts/merge-local-captures.mjs'
       - 'scripts/test-adaptive-media-batching.mjs'
       - 'scripts/test-new-body-auto.mjs'
+      - 'scripts/select-new-body-live-dois.mjs'
+      - 'scripts/test-new-body-live-selection.mjs'
+      - 'scripts/verify-new-body-auto-live.mjs'
       - 'docs/body-media-publication.md'
 permissions:
   contents: read
@@ -35,6 +38,8 @@ jobs:
           node --check scripts/test-adaptive-media-batching.mjs
           node scripts/test-adaptive-media-batching.mjs | tee "$RUNNER_TEMP/adaptive-media.log"
           grep -F 'ADAPTIVE_BATCH_TEST_SUMMARY ' "$RUNNER_TEMP/adaptive-media.log"
+          node scripts/test-new-body-live-selection.mjs
+          node --check scripts/verify-new-body-auto-live.mjs
           node --input-type=module - <<'JS'
           import assert from 'node:assert/strict';
           import fs from 'node:fs';
