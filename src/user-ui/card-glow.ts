@@ -33,7 +33,7 @@ content:'';position:absolute;inset:0;box-sizing:border-box;border-radius:inherit
 border:var(--status-glow-width,1px) solid rgba(var(--status-glow-rgb),.8);
 box-shadow:inset 0 0 var(--status-glow-blur,7px) var(--status-glow-width,1px) rgba(var(--status-glow-rgb),.35),0 0 var(--status-glow-outer-blur,5px) rgba(var(--status-glow-rgb),.32)
 }
-#gallery > .card[data-card-glow="rainbow"]::after{
+#gallery > .card[data-card-glow][data-card-glow="rainbow"]::after{
 border-color:#a78bfa;
 box-shadow:inset var(--status-glow-rainbow-size,2px) 0 var(--status-glow-outer-blur,5px) #38bdf8,inset calc(-1 * var(--status-glow-rainbow-size,2px)) 0 var(--status-glow-outer-blur,5px) #e879f9,inset 0 var(--status-glow-rainbow-size,2px) var(--status-glow-outer-blur,5px) #facc15,inset 0 calc(-1 * var(--status-glow-rainbow-size,2px)) var(--status-glow-outer-blur,5px) #34d399
 }
