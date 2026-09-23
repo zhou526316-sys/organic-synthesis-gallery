@@ -61,9 +61,13 @@ jobs:
           (async () => {
             const browser = await chromium.launch({ headless: true });
             const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-            const pageErrors = [];
-            page.on('pageerror', error => pageErrors.push(String(error)));
+            const diagnostics = [];
+            page.on('pageerror', error => diagnostics.push('pageerror: ' + String(error)));
+            page.on('console', message => {
+              if (message.type() === 'error') diagnostics.push('console: ' + message.text());
+            });
             await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+            await page.locator('html[data-card-share-ready="true"]').waitFor({ state: 'attached', timeout: 15000 });
             const firstCard = page.locator('.card[data-doi]:not([data-doi=""])').first();
             await firstCard.waitFor({ state: 'visible', timeout: 30000 });
             const doi = await firstCard.getAttribute('data-doi');
@@ -87,7 +91,7 @@ jobs:
             if ((firstVisibleDoi || '').toLowerCase() !== doi.toLowerCase()) {
               throw new Error('shared DOI was not promoted to the first visible card');
             }
-            if (pageErrors.length) throw new Error('page errors: ' + pageErrors.join(' | '));
+            if (diagnostics.length) throw new Error('browser diagnostics: ' + diagnostics.join(' | '));
             console.log(JSON.stringify({ cardShare: true, qr: true, deepLink: true, doi }));
             await browser.close();
           })().catch(error => { console.error(error); process.exit(1); });

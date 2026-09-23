@@ -1,4 +1,3 @@
-import QRCode from 'qrcode';
 import './card-share.css';
 
 interface ShareInfo {
@@ -10,6 +9,8 @@ interface ShareInfo {
 }
 
 let activePanel: HTMLElement | null = null;
+let activeAnchor: HTMLElement | null = null;
+let panelPositionFrame: number | null = null;
 let deepLinkFocused = false;
 let focusTimer: number | null = null;
 
@@ -98,6 +99,9 @@ function showToast(message: string): void {
 function closePanel(): void {
   activePanel?.remove();
   activePanel = null;
+  activeAnchor = null;
+  if (panelPositionFrame !== null) cancelAnimationFrame(panelPositionFrame);
+  panelPositionFrame = null;
   document.removeEventListener('keydown', onKeydown);
 }
 
@@ -136,7 +140,8 @@ async function loadQr(panel: HTMLElement, info: ShareInfo): Promise<void> {
   holder.hidden = false;
   holder.innerHTML = `<div class="card-share-qr-loading">${tr('正在生成二维码…', 'Generating QR code…')}</div>`;
   try {
-    const dataUrl = await QRCode.toDataURL(info.url, {
+    const qrModule = await import('qrcode');
+    const dataUrl = await qrModule.default.toDataURL(info.url, {
       width: 320,
       margin: 2,
       errorCorrectionLevel: 'M',
@@ -222,6 +227,7 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
 
   document.body.appendChild(panel);
   activePanel = panel;
+  activeAnchor = anchor;
   requestAnimationFrame(() => positionPanel(panel, anchor));
   document.addEventListener('keydown', onKeydown);
 }
@@ -270,8 +276,18 @@ document.addEventListener('click', event => {
   if (activePanel && !event.composedPath().includes(activePanel)) closePanel();
 });
 
-window.addEventListener('resize', closePanel, { passive: true });
-window.addEventListener('scroll', closePanel, { passive: true, capture: true });
+function schedulePanelPosition(): void {
+  if (!activePanel || !activeAnchor || panelPositionFrame !== null) return;
+  panelPositionFrame = requestAnimationFrame(() => {
+    panelPositionFrame = null;
+    if (activePanel && activeAnchor) positionPanel(activePanel, activeAnchor);
+  });
+}
+
+window.addEventListener('resize', schedulePanelPosition, { passive: true });
+window.addEventListener('scroll', schedulePanelPosition, { passive: true, capture: true });
+
+document.documentElement.dataset.cardShareReady = 'true';
 
 const observer = new MutationObserver(() => scheduleDeepLinkFocus());
 observer.observe(document.documentElement, { childList: true, subtree: true });
