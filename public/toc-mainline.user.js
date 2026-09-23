@@ -2307,13 +2307,13 @@ function embeddedJobDois(value) {
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
         if(GM_getValue(ACTIVE_JOB_KEY,null)) {stopReason='another_task_still_active';break;}
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,generation,'figures'),null);
-        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
+        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1,forceForeground:Boolean(priorAttempt&&priorAttempt.reason==='controller_timeout')});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
         badge('TOC＋正文图 '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result=null,closed=true;
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
-          tab=await Promise.resolve(GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
+          tab=await Promise.resolve(GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley'||job.forceForeground===true,insert:true,setParent:true}));
           if(!tab || typeof tab.close!=='function')throw new Error('task_tab_handle_unavailable');
           result=await waitForResult(job,tab);
         } catch(error) {
@@ -2328,7 +2328,11 @@ function embeddedJobDois(value) {
         if((result && !result.toc && result.status==='failed') || stopReason) {
           var observed=currentPublisherHeartbeat();
           var observedUrl=observed&&observed.jobId===job.jobId?observed.href:'';
-          enqueueCaptureReport(job,[{at:nowIso(),stage:'controller',event:'stopped',status:'failed',message:stopReason||(result&&result.reason)||'unknown_controller_failure',url:observedUrl}], 'controller_error',stopReason||(result&&result.reason),true,observedUrl);
+          var lastProgress=GM_getValue(progressKey(job.doi),null);
+          var controllerTrace=[{at:nowIso(),stage:'controller',event:'stopped',status:'failed',message:stopReason||(result&&result.reason)||'unknown_controller_failure',url:observedUrl}];
+          if(lastProgress&&lastProgress.status)controllerTrace.push({at:String(lastProgress.at||nowIso()),stage:'controller',event:'last_progress',status:String(lastProgress.status),url:String(lastProgress.url||observedUrl||''),message:'last publisher-page progress visible to Gallery controller'});
+          if(observed&&observed.jobId===job.jobId)controllerTrace.push({at:String(observed.atIso||nowIso()),stage:'controller',event:'last_heartbeat',status:String(observed.state||'heartbeat'),url:String(observed.href||''),message:'last bound publisher heartbeat'});
+          enqueueCaptureReport(job,controllerTrace,'controller_error',stopReason||(result&&result.reason),true,observedUrl);
         }
         if(result && !stopReason) {
           result.version=VERSION;
@@ -2339,17 +2343,20 @@ function embeddedJobDois(value) {
           GM_setValue(attemptKey(job.doi,generation,'figures'),result);
         }
         if(result && result.reason==='bound_publisher_heartbeat_missing')stopReason=result.reason;
+        if(result && result.reason==='controller_timeout')stopReason='controller_timeout_transient_pause';
         if(stopReason){summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);break;}
         GM_setValue(SUMMARY_KEY,summary);
         if(result && result.status==='aborted')break;
         await sleep(3500);
       }
       summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
-      if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
+      if(stopReason==='controller_timeout_transient_pause')badge('控制器超时，当前批次已暂停；2 分钟后从其余可处理文献继续','#92400e');
+      else if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
       else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；完整抓取 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'（暂存不等于发布）','#374151');
-      if(!stopReason&&jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      if((!stopReason||stopReason==='controller_timeout_transient_pause')&&jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
-        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
+        var resumeDelay=stopReason==='controller_timeout_transient_pause'?120000:NEXT_BATCH_DELAY_MS;
+        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},resumeDelay);
       }
     } catch(error) {
       stopReason=String(error.message);
@@ -2680,6 +2687,7 @@ function embeddedJobDois(value) {
     if (!prior) return true;
     if (prior.status==='success') return false;
     var elapsed=now-Date.parse(prior.finishedAt||0);
+    if (prior.reason==='controller_timeout') return elapsed>=10*60*1000;
     var count=Number(prior.retryCount||1);
     if (count>=3 && elapsed<12*60*60*1000) return false;
     if (prior.figures && prior.figures.status==='staged' && (prior.toc||{}).status!=='failed') return elapsed>=6*60*60*1000;
