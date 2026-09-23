@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "context": "Immediate correction deployment plus automatic-scope-rule adoption",
+  "evidenceAsOf": "2026-09-23T10:54:24+08:00",
+  "scopeConfigurationRecord": "audit/automation-config/2026-09-23-scope-contract-adoption.json",
+  "scopeRulesVersion": "scope-2026-09-23-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesCommit": "ed670e035fc9b049dc26640f6dc3f96bfd874d5f",
+  "existingThreeAutomationsUpdated": true,
+  "schedulesChanged": false,
+  "newScheduledTasksCreated": false,
+  "productionCorrection": {
+    "correctionId": "scope-correction-20260923024323204",
+    "mode": "deletion-only",
+    "beforeRepositoryDois": 536,
+    "afterRepositoryDois": 532,
+    "newAdmissions": 0,
+    "removedDois": ["10.1021/jacs.6c13517", "10.1021/jacs.6c10701", "10.1038/s41467-026-77963-6", "10.1002/anie.7784614"]
+  },
+  "pages": {
+    "deploymentTriggerCommit": "e9e3f813ed93c02242c8c22af7ce2b9676277da9",
+    "runId": 35811912247,
+    "authorization": "success",
+    "build": "success",
+    "deploy": "success",
+    "postDeployCssSmoke": "success"
+  },
+  "liveBrowserVerification": {
+    "runId": 35812111922,
+    "sourceCommit": "1b1fade43cef254e6cf14799482cdd4bad356a68",
+    "conclusion": "success",
+    "checkedAt": "2026-09-23T02:53:26.681Z",
+    "artifactId": 10730625484,
+    "artifactSha256": "a21760b37441982a1833acf595f3dbd6ea6417d2bae37194062f8468ef63ee60",
+    "repositoryDoiCount": 532,
+    "fourRemovedDoisAbsentFromSearch": true,
+    "scopeCorrectionPresence": [
+      {"doi":"10.1021/jacs.6c13517","present":false,"expectedPresent":false,"status":"absent_from_production"},
+      {"doi":"10.1021/jacs.6c10701","present":false,"expectedPresent":false,"status":"absent_from_production"},
+      {"doi":"10.1038/s41467-026-77963-6","present":false,"expectedPresent":false,"status":"absent_from_production"},
+      {"doi":"10.1002/anie.7784614","present":false,"expectedPresent":false,"status":"absent_from_production"}
+    ],
+    "retainedMorningCardsChecked": 22,
+    "chineseTitlesPassed": 22,
+    "englishTitlesPassed": 22,
+    "chineseSearchPassed": true,
+    "translationRequestsObserved": 0,
+    "blockedWriteRequests": 122,
+    "failures": [],
+    "fullDeployedDoiSetRecountClaimedByThisBrowserRecord": false,
+    "note": "24 morning additions minus the two removed morning papers leaves 22 retained bilingual references. The other two removals were older cards. This proves four exact search absences and bilingual retention; 532 is the repository-union count in this artifact, not a separate browser-wide count."
+  },
+  "regression": {"existingScopeTitleTestsPassed":48,"discoveryCapabilityGuardPassed":true,"newSemanticAlgorithmTestsClaimed":false},
+  "futureCheckWiring": {
+    "workflow": ".github/workflows/scope-title-maintenance.yml",
+    "newHook": "workflow_run after successful Deploy GitHub Pages frontend on this repository main",
+    "versionBinding": "Checkout the upstream deployment head_sha and record the exact checked commit",
+    "currentVerificationEvent": "push",
+    "workflowRunHookEndToEndClaimed": false
+  },
+  "allGalleryPapersRechecked": false,
+  "unfinalizedBoundaryArticlesRemainUnfinalized": true,
+  "nextScheduledSemanticRunSuccessClaimed": false,
+  "coordinationStateFinalization": "Separate exact deployed-set verification/finalization is running; do not use this file to fabricate completion of that step."
+}
