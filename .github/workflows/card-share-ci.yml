@@ -2,6 +2,8 @@ name: Card sharing CI
 on:
   pull_request:
     paths:
+      - 'index.html'
+      - 'index.html'
       - 'src/main.ts'
       - 'src/bootstrap.ts'
       - 'src/card-share.ts'
@@ -59,6 +61,12 @@ jobs:
           grep -F "galleryDeepLink" src/card-share.ts
           grep -F "&sharev=" scripts/build-share-pages.mjs
           grep -F "Pasting the URL into chat only sends a plain link." dist/assets/card-share-*.js
+
+      - name: Verify legacy GitHub Pages quarantine
+        run: |
+          grep -F "LEGACY_GITHUB_PAGES_HOST = 'zhou526316-sys.github.io'" index.html
+          grep -F "new URL('https://api.gczhouwld.com/')" index.html
+          grep -F "window.location.replace(destination.toString())" index.html
 
       - name: Verify 20-second halo contract
         run: |

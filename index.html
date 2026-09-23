@@ -4,6 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Organic Synthesis Literature Gallery</title>
+    <script>
+      (() => {
+        const LEGACY_GITHUB_PAGES_HOST = 'zhou526316-sys.github.io';
+        const LEGACY_GALLERY_PREFIX = '/organic-synthesis-gallery';
+        if (
+          window.location.hostname.toLowerCase() === LEGACY_GITHUB_PAGES_HOST &&
+          window.location.pathname.startsWith(LEGACY_GALLERY_PREFIX)
+        ) {
+          const current = new URL(window.location.href);
+          const destination = new URL('https://api.gczhouwld.com/');
+          destination.search = current.search;
+          destination.hash = current.hash;
+          document.documentElement.style.visibility = 'hidden';
+          window.location.replace(destination.toString());
+        }
+      })();
+    </script>
     <link rel="stylesheet" href="./src/styles.css" />
   </head>
   <body>
