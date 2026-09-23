@@ -121,7 +121,7 @@ jobs:
           if (process.env.RESEND_API_KEY) values.RESEND_API_KEY = process.env.RESEND_API_KEY;
           if (process.env.EMAIL_FROM) values.EMAIL_FROM = process.env.EMAIL_FROM;
           if (process.env.WECHAT_MP_APP_SECRET) values.WECHAT_MP_APP_SECRET = process.env.WECHAT_MP_APP_SECRET;
-          if (!process.env.WECHAT_MP_APP_SECRET) throw new Error('WECHAT_MP_APP_SECRET is missing');
+          if (!process.env.WECHAT_MP_APP_SECRET) console.warn('WECHAT_MP_APP_SECRET is not configured; WeChat JS-SDK signing will remain disabled until the repository secret is added.');
           if (!Object.keys(values).length) throw new Error('Runtime secrets are missing');
           fs.writeFileSync('/tmp/runtime-secrets.json', JSON.stringify(values));
           console.log(`Prepared ${Object.keys(values).length} email secrets.`);
