@@ -14,6 +14,7 @@ store.set(activeKey,{doi,jobId:job.jobId,startedAt:job.startedAt,journal:'JACS'}
 const writes=[];
 class Clock extends Date {static now(){return now;}}
 const ctx=vm.createContext({Date:Clock,P:'osg-toc-v6:',VERSION:'6.2.20',CONTROLLER_REVISION:'2.2.22',CONTROLLER_STOP_REASON:'',ACTIVE_JOB_KEY:activeKey,SUMMARY_KEY:summaryKey,ENABLED_KEY:'enabled',ABORT_KEY:'abort',
+ automaticReportDisplay:()=> '自动报告测试',
  normalizeDoi:s=>String(s||'').toLowerCase(),progressKey:d=>'progress:'+d,
  GM_getValue:(k,d)=>store.has(k)?structuredClone(store.get(k)):d,
  GM_setValue:(k,v)=>{writes.push(k);store.set(k,structuredClone(v));},
@@ -49,7 +50,7 @@ try{
  const fixture={active:{doi,jobId:'browser-task',journal:'JACS',startedAt:new Date().toISOString()},summary:{total:8,results:[],figuresStaged:0},row:{doi,jobId:'browser-task',phase:'uploading',label:'Scheme 2',at:Date.now(),discoveryDone:true,discovered:8,stored:2,failed:0,stagedReceipts:2,reused:0,tocStatus:'already_available',lastError:'',quality:'vector',width:640,height:468}};
  await page.evaluate(({moduleSource,fixture})=>{
    window.P='osg-toc-v6:';window.VERSION='6.2.20';window.CONTROLLER_REVISION='2.2.22';window.CONTROLLER_STOP_REASON='';window.ACTIVE_JOB_KEY='active';window.SUMMARY_KEY='summary';window.ENABLED_KEY='enabled';window.ABORT_KEY='abort';
-   window.normalizeDoi=s=>String(s||'').toLowerCase();window.progressKey=d=>'progress:'+d;window.isGalleryPage=()=>true;
+   window.automaticReportDisplay=()=> '自动报告测试';window.normalizeDoi=s=>String(s||'').toLowerCase();window.progressKey=d=>'progress:'+d;window.isGalleryPage=()=>true;
    window.fixtureStore=new Map([['active',fixture.active],['summary',fixture.summary],['osg-toc-v6:live-progress-v1',fixture.row]]);
    window.GM_getValue=(k,d)=>window.fixtureStore.has(k)?structuredClone(window.fixtureStore.get(k)):d;
    window.GM_setValue=(k,v)=>{if(k!=='osg-toc-v6:live-panel-open-v1')throw Error('Unexpected control write');window.fixtureStore.set(k,v);};
