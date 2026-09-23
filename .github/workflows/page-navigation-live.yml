@@ -1,0 +1,73 @@
+name: Verify deployed page navigation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/page-navigation-live.yml']
+permissions:
+  contents: read
+concurrency:
+  group: page-navigation-live
+  cancel-in-progress: false
+jobs:
+  live:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+            browser: chromium
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+            browser: webkit
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+            browser: chromium
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+            browser: webkit
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      LIVE_SITE_URL: ${{ matrix.site }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d15afca8aead58a5422f7054fde9487d0f637ce1
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install reviewed browser dependencies only
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/navigation-live-browser.log 2>&1 || { tail -60 /tmp/navigation-live-browser.log; exit 1; }
+      - name: Record public entry and reviewed source
+        run: |
+          mkdir -p navigation-live-results
+          git rev-parse HEAD > navigation-live-results/reviewed-commit.txt
+          sha256sum tests/page-navigation.spec.ts src/user-ui/page-navigation.ts > navigation-live-results/source-sha256.txt
+          node --input-type=module <<'NODE'
+          import { writeFile } from 'node:fs/promises';
+          const site=process.env.LIVE_SITE_URL;
+          const response=await fetch(site,{headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(15000)});
+          const evidence={site,checkedAt:new Date().toISOString(),status:response.status,url:response.url,productionWritesAllowed:false,apiMocked:true};
+          await response.body?.cancel();
+          await writeFile('navigation-live-results/entry.json',JSON.stringify(evidence,null,2));
+          if(!response.ok) throw new Error('entry HTTP '+response.status);
+          NODE
+      - name: Run unchanged navigation acceptance on deployed frontend
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: navigation-live-results/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/page-navigation.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=navigation-live-results/tests 2>&1 | tee navigation-live-results/tests.log
+          git diff --exit-code -- src/ tests/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: navigation-live-${{ matrix.entry }}-${{ matrix.browser }}
+          path: navigation-live-results/
+          retention-days: 7
+          if-no-files-found: error
