@@ -9,7 +9,7 @@ let passed=0;
 function check(name,fn){fn();passed+=1;console.log('WILEY_DIAG_PASS '+name);}
 try{
   const page=await browser.newPage();
-  await page.goto('https://onlinelibrary.wiley.com/doi/full/10.1002/anie.2539581');
+  await page.goto('about:blank');
   await page.evaluate(()=>{
     const storage={};
     window.GM_getValue=(k,d)=>k in storage?storage[k]:d;
