@@ -251,6 +251,11 @@ CREATE TABLE IF NOT EXISTS paper_open_readers_v3 (
 );
 CREATE INDEX IF NOT EXISTS idx_paper_open_readers_v3_doi
   ON paper_open_readers_v3(doi);
+-- siteAnalyticsStats correlates pageview IP hashes with article-open IP hashes.
+-- The (doi, ip_hash) primary key cannot efficiently serve an ip_hash-only lookup,
+-- so keep a dedicated index to avoid repeated reader-table scans.
+CREATE INDEX IF NOT EXISTS idx_paper_open_readers_v3_ip_hash
+  ON paper_open_readers_v3(ip_hash);
 
 CREATE TABLE IF NOT EXISTS paper_open_reader_counts_v3 (
   doi TEXT PRIMARY KEY,
