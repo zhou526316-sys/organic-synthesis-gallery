@@ -39,7 +39,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.26';
+  var CONTROLLER_REVISION = '2.2.27';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
@@ -2469,6 +2469,21 @@ function embeddedJobDois(value) {
     return { block: block, label: label, caption: (numbered[0] || texts[0] || own).slice(0, 600), official: !label && /graphical[\s_-]*abstract|visual[\s_-]*abstract|toc[\s_-]*(?:graphic|image)|abstract[\s_-]*image/i.test(marker) };
   }
 
+  function acsVisualUrlPriority(value) {
+    var url;
+    try { url = new URL(String(value || ''), location.href); } catch (_) { return 10; }
+    var host = String(url.hostname || '').toLowerCase();
+    var path = String(url.pathname || '').toLowerCase();
+    // Real 2.2.26 captures show DOI-bound content_public SVGs are often immediately usable
+    // while DownloadImage/view-large variants return TIFF/octet-stream or 403. Prefer the
+    // directly rendered publisher asset first, but keep every quality check unchanged.
+    if (host === 'acs.silverchair-cdn.com' && path.indexOf('/acs/content_public/') >= 0 &&
+        /\.(?:svg|png|jpe?g|webp|gif)$/.test(path)) return 0;
+    if (/\/view-large\//.test(path)) return 20;
+    if (host === 'acs.silverchair-cdn.com' && /\/downloadfile\/downloadimage\.aspx$/.test(path)) return 30;
+    return 10;
+  }
+
   function visualUrls(node, block, baseUrl) {
     var urls = articleFigureImageUrls(node, baseUrl);
     if (block) {
@@ -2478,7 +2493,11 @@ function embeddedJobDois(value) {
         if (link.tagName.toLowerCase() === 'source') urls = articleFigureImageUrls(link, baseUrl).concat(urls);
       });
     }
-    return Array.from(new Set(urls.filter(Boolean))).slice(0, 6);
+    return Array.from(new Set(urls.filter(Boolean))).map(function(url,index) {
+      return {url:url,index:index,priority:acsVisualUrlPriority(url)};
+    }).sort(function(a,b) {
+      return a.priority-b.priority || a.index-b.index;
+    }).slice(0,6).map(function(row){return row.url;});
   }
 
   function svgQuality(image) {
