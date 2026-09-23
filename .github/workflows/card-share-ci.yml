@@ -44,6 +44,9 @@ jobs:
           SHARE_PAGE="$(find dist/share -name '*.html' -print -quit)"
           grep -F 'property="og:type" content="article"' "$SHARE_PAGE"
           grep -F 'property="og:image"' "$SHARE_PAGE"
+          grep -F 'meta itemprop="image"' "$SHARE_PAGE"
+          grep -F 'https://api.gczhouwld.com/share/' "$SHARE_PAGE"
+          grep -F 'https://api.gczhouwld.com/?doi=' "$SHARE_PAGE"
           grep -F 'location.replace' "$SHARE_PAGE"
           test -s dist/share-default.png
 
@@ -103,8 +106,8 @@ jobs:
             const panel = page.locator('.card-share-panel');
             await panel.waitFor({ state: 'visible' });
             const richShareUrl = await panel.getAttribute('data-share-url');
-            if (!richShareUrl || !/\/share\/[A-Za-z0-9_-]+\.html$/.test(richShareUrl)) {
-              throw new Error('share URL is not a rich per-paper share page: ' + richShareUrl);
+            if (!richShareUrl || !/^https:\/\/api\.gczhouwld\.com\/share\/[A-Za-z0-9_-]+\.html$/.test(richShareUrl)) {
+              throw new Error('share URL is not the custom-domain rich paper card: ' + richShareUrl);
             }
             await panel.locator('[data-share-action="qr"]').click();
             await panel.locator('.card-share-qr-image').waitFor({ state: 'visible', timeout: 10000 });

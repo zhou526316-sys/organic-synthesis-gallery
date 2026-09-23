@@ -36,6 +36,8 @@ on:
       - 'scripts/validate-pages-literature-authorization.mjs'
       - 'scripts/test-pages-literature-authorization.mjs'
       - 'scripts/validate-tm220-artifacts.mjs'
+      - 'scripts/build-share-pages.mjs'
+      - 'public/share-default.png'
       - 'audit/publication-release-state.json'
       - 'public/rolling-supplement.json'
       - 'public/toc-demand-live.json'

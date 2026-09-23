@@ -40,8 +40,10 @@ function shareSlug(doi: string): string {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
+const RICH_SHARE_ORIGIN = 'https://api.gczhouwld.com';
+
 function shareUrl(doi: string): string {
-  return new URL(`share/${shareSlug(doi)}.html`, document.baseURI).toString();
+  return `${RICH_SHARE_ORIGIN}/share/${shareSlug(doi)}.html`;
 }
 
 function infoFromButton(button: HTMLElement): ShareInfo | null {

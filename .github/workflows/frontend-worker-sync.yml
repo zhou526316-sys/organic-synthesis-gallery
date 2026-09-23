@@ -9,6 +9,8 @@ on:
       - 'index.html'
       - 'vite.config.ts'
       - 'package.json'
+      - 'scripts/build-share-pages.mjs'
+      - 'public/share-default.png'
       - 'public/papers.gz.b64'
       - 'public/total-synthesis.json'
       - 'public/automation-supplement.json'
@@ -62,9 +64,10 @@ jobs:
         env:
           GITHUB_PAGES_URL: https://zhou526316-sys.github.io/organic-synthesis-gallery/
           WORKER_SITE_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/
+          CUSTOM_SITE_URL: https://api.gczhouwld.com/
         run: |
           node - <<'NODE'
-          const sites = [process.env.GITHUB_PAGES_URL, process.env.WORKER_SITE_URL];
+          const sites = [process.env.GITHUB_PAGES_URL, process.env.WORKER_SITE_URL, process.env.CUSTOM_SITE_URL];
           const required = [
             ['site-feedback-widget', 'feedback widget'],
             ['user-search-summary', 'search results summary'],
@@ -128,5 +131,12 @@ jobs:
 
           const results = [];
           for (const site of sites) results.push(await inspect(site));
-          console.log(JSON.stringify({ ok: true, results }));
+
+          const sampleSlug = Buffer.from('10.1021/jacs.6c15393', 'utf8').toString('base64url');
+          const shareHtml = await get(`${process.env.CUSTOM_SITE_URL}share/${sampleSlug}.html?frontend-sync=${Date.now()}`);
+          if (!shareHtml.includes('property="og:type" content="article"')) throw new Error('custom-domain share card is missing Open Graph article metadata');
+          if (!shareHtml.includes('property="og:image"')) throw new Error('custom-domain share card is missing a cover image');
+          if (!shareHtml.includes('10.1021/jacs.6c15393')) throw new Error('custom-domain share card points at the wrong paper');
+
+          console.log(JSON.stringify({ ok: true, results, customShareCard: true }));
           NODE

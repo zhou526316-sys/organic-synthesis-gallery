@@ -12,6 +12,7 @@ on:
       - 'vite.config.ts'
       - 'package.json'
       - 'package-lock.json'
+      - 'scripts/build-share-pages.mjs'
       - 'public/**'
 
 permissions:
