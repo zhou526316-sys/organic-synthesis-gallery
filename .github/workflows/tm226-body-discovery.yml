@@ -4,7 +4,7 @@ on:
   push:
     branches: [fix/tm226-body-discovery-stability]
     paths:
-      - '.github/workflows/tm225-acs-route.yml'
+      - '.github/workflows/tm226-body-discovery.yml'
       - '.github/workflows/tm224-live-acceptance.yml'
       - '.github/workflows/tm222-live-acceptance.yml'
       - 'public/toc-mainline.user.js'
