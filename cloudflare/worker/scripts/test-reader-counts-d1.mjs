@@ -12,6 +12,7 @@ test('local D1 binding enforces the reader-ledger transaction', async t => {
       modules: true,
       script: 'export default { fetch() { return new Response("isolated reader test"); } };',
       compatibilityDate: '2025-09-01',
+      config: {},
       d1Databases: { DB: '11111111-1111-4111-8111-111111111111' },
     }],
   });
