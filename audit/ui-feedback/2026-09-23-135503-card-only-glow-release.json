@@ -1,0 +1,119 @@
+{
+  "recordedAt": "2026-09-23T13:55:03+08:00",
+  "context": "UI/feedback continuation after the explicit card-not-button correction",
+  "userInstruction": "光效粗细说的是卡片的光效，按钮不需要",
+  "status": "deployed_on_both_active_entries_partial_full_live_acceptance",
+  "implementation": {
+    "pr": 147,
+    "testedHead": "299777da6c10617f6b370f08fb8d13215938fabf",
+    "mergeSha": "516df79c6b86593ab841314b2f0628e6780578aa",
+    "mergedAt": "2026-09-23T05:43:08Z",
+    "surface": "Entire #gallery > .card; not status buttons, chips or option labels.",
+    "options": ["Off", "Soft", "Breathing", "Orbit", "Rainbow"],
+    "width": "1–6px; live drag preview, release-to-save, keyboard control, reset, cancel/close restoration and save-error rollback.",
+    "preferences": "Reuse existing per-status glow and glowWidth settings on cards. Explicit labels: 卡片光效 / Card glow and 卡片光效粗细 / Card glow thickness.",
+    "preserved": "Ordinary button colors, shapes, image-backed visible captions, raw original/GIF bytes and four management actions. Effect overlay is noninteractive; Off removes the old unconditional card animation; reduced motion stops decoration.",
+    "performance": "Metadata persistence is batched and unchanged registrations are skipped. Appearance edits do not repeat corpus count reads. Count reads coalesce and reject stale pre-mark results; backend IP deduplication/count semantics remain authoritative and unchanged.",
+    "displayObserverScheduling": "Head-only mutation batches are excluded from runtime-recovery/performance-runtime display scans. Body/card, root-language and mixed batches still scan; initial work and explicit asset signals are preserved. Four unit cases cover the boundary. This optimization alone did not fix the GIF screenshot gate.",
+    "noTemporaryMutationWorkflowInRelease": true
+  },
+  "finalHeadCI": {
+    "allSevenWorkflowsPassed": true,
+    "cardWidth": {"runId": 35823118900, "webkitPassed": 11, "chromiumPassed": 11, "failed": 0, "skipped": 0, "flaky": 0},
+    "originalImages": {"runId": 35823118884, "passed": 18, "failed": 0, "skipped": 0, "flaky": 0},
+    "presentation": {"runId": 35823118855, "conclusion": "success"},
+    "refreshCost": {"runId": 35823118874, "conclusion": "success"},
+    "quality": {"runId": 35823118888, "conclusion": "success"},
+    "migration": {"runId": 35823118867, "conclusion": "success"},
+    "data": {"runId": 35823118856, "conclusion": "success"},
+    "inspectedArtifacts": [
+      {"id": 10734775283, "name": "glow-width-webkit", "sha256": "2f173cc376fc5f659d251b832cb67164f9ad167de27b3fc9f7fa4201bdce2f41"},
+      {"id": 10734230875, "name": "glow-width-chromium", "sha256": "c79c83adcccad352cccfdcfc68034f3141317e28b210bcc6d521d05a272689b5"},
+      {"id": 10734565564, "name": "status-original-image-results", "sha256": "8898f8828001187d2a738631c1074449842546e8f09da36e90d3855a55dc138d"}
+    ]
+  },
+  "animationMeasurement": {
+    "scope": "Test-driver compatibility only, not a production GIF-data fix.",
+    "pairedRunId": 35821659876,
+    "pairedSource": "03f0d46178dd702077c97004e9f8d3dcb015ce00",
+    "defaultPreparation": {"passed": 1, "failed": 2, "artifactId": 10733917006, "sha256": "3a27ba2ecf7b0b146e558c0e795e3a7fbbe8607b4a607a65f88717a87813c258"},
+    "withoutSyntheticStyleToggle": {"passed": 3, "failed": 0, "artifactId": 10733043615, "sha256": "c5f95e223396d04f4ab01c4bb6b31377ba64929cc8ffe3ac7a66b8b2b68258f0"},
+    "explanation": "Stock WebKit screenshot preparation inserts/removes a temporary body stylesheet even when animations are allowed. The isolated paired test changes only that preparation; exact GIF lifecycle assertions and the static negative control remain.",
+    "formalPreparationScript": "tests/prepare-animation-screenshots.cjs",
+    "pinnedVersion": "Playwright 1.55.0",
+    "testDriverModified": true,
+    "sourceHash": "9aaff6c173c6a9a1c80e831dd92ccc24097243d49ad600dc87c4bc1fad9c625b",
+    "modifiedHash": "27d5c7307f40ef9461d38c67eb765a8163c13d7e9d70e18b5fbcf27db324a61d",
+    "exactChange": "const syncAnimations = disableAnimations && this._page.delegate.shouldToggleStyleSheetToSyncAnimations();",
+    "safeguards": "Strict version/source-hash/unique-line checks; unknown versions fail closed. The disabled-animation path is preserved. Browser binaries, image source, original bytes, six-second frame criterion and static negative control are unchanged. No trace-on bypass or timeout relaxation.",
+    "pixelInspection": "Final CI and live reports retain actual red and blue 72x36 PNG frames; the static negative control retains only red. Raw originals are hash-checked independently.",
+    "independentCurrentBrowserRun": {"runId": 35822507628, "source": "58e0a99cceeae5c85f187400674d37ab620bfcae", "version": "1.63.0", "unmodifiedChromiumPassed": 14, "unmodifiedWebkitPassed": 12, "unmodifiedWebkitFailed": 2, "interpretation": "Upgrading alone did not solve the WebKit sampling interference. Do not represent the stock WebKit run as green."},
+    "rejectedHypotheses": "URL scheme, popup positioning, simple size/overflow changes and individual CSS rules were not established as remedies. The CSS partition no-deletion control also passed; subsequent neutral CSS-inspection controls failed. Those observations do not justify a CSSOM-read product workaround. All diagnostic runs are retained on main."
+  },
+  "deployment": {
+    "githubPagesRun": 35823572488,
+    "githubPagesConclusion": "success",
+    "workerRun": 35823577801,
+    "workerConclusion": "success",
+    "frontendSyncRun": 35823572452,
+    "frontendSyncConclusion": "success"
+  },
+  "liveAcceptance": {
+    "runId": 35823626613,
+    "workflowCommit": "abc20b89595317fc639ce39f923e10d2518c7fd6",
+    "reviewedSource": "516df79c6b86593ab841314b2f0628e6780578aa",
+    "workflowConclusion": "failure",
+    "allEntriesFullyAccepted": false,
+    "apiMocked": true,
+    "productionWritesAllowed": false,
+    "testDriverCompatibilityApplied": true,
+    "productSourceOverridden": false,
+    "acceptanceAssertionsRemoved": false,
+    "timeoutsExpanded": false,
+    "worker": {
+      "passed": 14, "failed": 0, "skipped": 0, "flaky": 0,
+      "artifactId": 10734221578,
+      "sha256": "5af3c17e796b0a4f49c8ab2fdcc7dfef2ba691315091e4262dee130a0ea0e32f",
+      "mainAsset": "assets/main-C5YTG3F4.js",
+      "bootstrapAsset": "assets/index-BW8RdJnd.js"
+    },
+    "githubPages": {
+      "passed": 12, "failed": 2, "skipped": 0, "flaky": 0,
+      "artifactId": 10734710863,
+      "sha256": "d1d09d863b29eb09bd80be13f9f62d5117c9ece4bd6502d4f68fdd89cfca1355",
+      "failures": [
+        "Desktop real-drag sequence exceeded the unchanged overall 30-second test budget. Its trace reaches reload, reset and four-button assertions; the overall case remains timedOut, not passed.",
+        "Malformed/legacy preferences multi-reload sequence exceeded the same 30-second budget while awaiting the card after reload. Remaining iterations are not assumed passed."
+      ],
+      "scopeOfInterpretation": "Timing failures in these combined live cases; not evidence of a remaining wrong glow target or broken GIF bytes. Root contributions from transport, instrumentation and UI work still need separation. No blind rerun performed."
+    },
+    "passedOnBoth": "Whole-card target at390px/1280px; ordinary buttons/chips/options; correct control labels; card geometry; Off behavior; mobile real drag; keyboard/reset; saved widths across effects; reduced motion; save rollback; cancelled previews; original-byte caption preservation at320px; feedback-launcher restoration; both390px/1280px full original GIF lifecycle cases and static negative control.",
+    "screenshots": "Actual deployed component with test-local status settings. Mocked APIs mean displayed reader numbers and media placeholders are not production counts or media-inventory evidence.",
+    "fallbackPages": "Not tested by this run. Earlier separate Cloudflare Pages availability/deployment issue is not declared resolved."
+  },
+  "feedback": {
+    "exportRunId": 35823175854,
+    "artifactId": 10734420563,
+    "generatedAt": "2026-09-23T05:37:31.768Z",
+    "sha256": "b2ee84d13bbd3de6d221fd47ac046fb4f2799bd751b90b649e3284bea92ee004",
+    "d1Available": true, "r2Available": true,
+    "openIdsAtRead": [8,20,21,22,23,24,25,28,31,32,33,34],
+    "statusWritesThisTurn": [],
+    "32Closed": false,
+    "33": "Return-to-top/bottom buttons: received, not implemented this turn.",
+    "34": "Mobile two-finger image zoom: received, not implemented this turn.",
+    "otherPending": "31 intelligent/person/circular cropping,28 remaining original-image acceptance and actual low reader totals remain separate."
+  },
+  "scope": {
+    "literatureDataChanged": false,
+    "publicationGatesOrSlotsChanged": false,
+    "captureTampermonkeyBridgeSourceChanged": false,
+    "mediaAcquisitionLogicChanged": false,
+    "displayObserverSchedulingChanged": true,
+    "syntheticProductionReaderEventsWritten": false,
+    "backendCountingSemanticsChanged": false,
+    "originalCloudBackupAdded": false
+  },
+  "nextBoundedTask": "Separate live navigation/instrumentation overhead from interaction cost in the two retained GitHub timing failures. Do not redo the corrected card target or restart disproven GIF/CSS probes. New33/34 and cropping/count issues stay explicitly pending.",
+  "conversationArtifacts": ["card-glow-live-mobile.png", "card-glow-live-desktop.png", "card-glow-release-evidence.zip"]
+}
