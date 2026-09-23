@@ -7,10 +7,20 @@ let memoryJsapiTicket = null;
 
 function result(status, body) { return { status, body }; }
 
+function relayConfigured(env) {
+  return Boolean(
+    typeof env?.WECHAT_TICKET_RELAY_URL === 'string' && env.WECHAT_TICKET_RELAY_URL.trim() &&
+    typeof env?.WECHAT_TICKET_RELAY_KEY === 'string' && env.WECHAT_TICKET_RELAY_KEY.trim()
+  );
+}
+
 function configured(env) {
   return Boolean(
     typeof env?.WECHAT_MP_APP_ID === 'string' && env.WECHAT_MP_APP_ID.trim() &&
-    typeof env?.WECHAT_MP_APP_SECRET === 'string' && env.WECHAT_MP_APP_SECRET.trim()
+    (
+      relayConfigured(env) ||
+      (typeof env?.WECHAT_MP_APP_SECRET === 'string' && env.WECHAT_MP_APP_SECRET.trim())
+    )
   );
 }
 
@@ -76,6 +86,28 @@ async function accessToken(env) {
   return body.access_token;
 }
 
+async function relayTicket(env) {
+  const response = await fetch(env.WECHAT_TICKET_RELAY_URL.trim(), {
+    headers: {
+      accept: 'application/json',
+      authorization: `Bearer ${env.WECHAT_TICKET_RELAY_KEY.trim()}`,
+    },
+    signal: AbortSignal.timeout(15000),
+  });
+  const text = await response.text();
+  let body = {};
+  try { body = text ? JSON.parse(text) : {}; } catch {}
+  if (!response.ok || body?.ok !== true || typeof body?.ticket !== 'string' || !body.ticket) {
+    const error = new Error('wechat_ticket_relay_error');
+    error.details = body;
+    throw error;
+  }
+  return {
+    ticket: body.ticket,
+    expiresIn: Math.max(60, Number(body.expiresIn || body.expires_in || 7200)),
+  };
+}
+
 async function jsapiTicket(env) {
   const appId = env.WECHAT_MP_APP_ID.trim();
   const now = Date.now();
@@ -85,6 +117,14 @@ async function jsapiTicket(env) {
     memoryJsapiTicket = { value: edge.value, expiresAt: now + 30 * 60 * 1000 };
     return edge.value;
   }
+  if (relayConfigured(env)) {
+    const relay = await relayTicket(env);
+    const ttl = safeExpiry(relay.expiresIn);
+    memoryJsapiTicket = { value: relay.ticket, expiresAt: now + ttl * 1000 };
+    await writeEdgeCache('jsapi-ticket', appId, relay.ticket, ttl);
+    return relay.ticket;
+  }
+
   const token = await accessToken(env);
   const url = new URL('https://api.weixin.qq.com/cgi-bin/ticket/getticket');
   url.searchParams.set('access_token', token);

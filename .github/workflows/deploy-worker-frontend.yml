@@ -31,6 +31,8 @@ jobs:
       EMAIL_FROM: 'Organic Synthesis Gallery <login@mail.gczhouwld.com>'
       WECHAT_MP_APP_ID: wx28b0fa5a3e28387c
       WECHAT_MP_APP_SECRET: ${{ secrets.WECHAT_MP_APP_SECRET }}
+      WECHAT_TICKET_RELAY_URL: ${{ secrets.WECHAT_TICKET_RELAY_URL }}
+      WECHAT_TICKET_RELAY_KEY: ${{ secrets.WECHAT_TICKET_RELAY_KEY }}
 
     steps:
       - name: Checkout main
@@ -87,6 +89,7 @@ jobs:
           [vars]
           MIGRATION_STAGE = "staging"
           WECHAT_MP_APP_ID = "$WECHAT_MP_APP_ID"
+          WECHAT_TICKET_RELAY_URL = "$WECHAT_TICKET_RELAY_URL"
 
           [ai]
           binding = "AI"
@@ -121,6 +124,7 @@ jobs:
           if (process.env.RESEND_API_KEY) values.RESEND_API_KEY = process.env.RESEND_API_KEY;
           if (process.env.EMAIL_FROM) values.EMAIL_FROM = process.env.EMAIL_FROM;
           if (process.env.WECHAT_MP_APP_SECRET) values.WECHAT_MP_APP_SECRET = process.env.WECHAT_MP_APP_SECRET;
+          if (process.env.WECHAT_TICKET_RELAY_KEY) values.WECHAT_TICKET_RELAY_KEY = process.env.WECHAT_TICKET_RELAY_KEY;
           if (!process.env.WECHAT_MP_APP_SECRET) console.warn('WECHAT_MP_APP_SECRET is not configured; WeChat JS-SDK signing will remain disabled until the repository secret is added.');
           if (!Object.keys(values).length) throw new Error('Runtime secrets are missing');
           fs.writeFileSync('/tmp/runtime-secrets.json', JSON.stringify(values));
