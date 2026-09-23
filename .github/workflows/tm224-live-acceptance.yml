@@ -20,7 +20,8 @@ jobs:
       - name: Verify fixed installer and standalone mainline from deployed Pages
         run: |
           set -euo pipefail
-          node - <<'NODE'
+          node --input-type=module - <<'NODE'
+          import {writeFile} from 'node:fs/promises';
           const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           let report={checkedAt:new Date().toISOString(),productionWrites:0,publisherRequests:0,ok:false};
@@ -47,7 +48,7 @@ jobs:
             }catch(e){report.lastError=String(e.message);report.lastAttempt=n+1;}
             await sleep(5000);
           }
-          require('fs').writeFileSync(process.env.RUNNER_TEMP+'/tm224-live.json',JSON.stringify(report,null,2));
+          await writeFile(process.env.RUNNER_TEMP+'/tm224-live.json',JSON.stringify(report,null,2));
           console.log('TM224_LIVE '+JSON.stringify(report));
           if(!report.ok)process.exit(1);
           NODE
