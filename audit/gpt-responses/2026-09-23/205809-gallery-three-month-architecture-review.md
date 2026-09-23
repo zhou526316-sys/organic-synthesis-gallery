@@ -1,5 +1,6 @@
 Beijing time: 2026-09-23 20:58:09 +08:00
 Context: Gallery long-term three-month hot-window architecture review
+Related Git commit SHA: c3b697408829e992faed56bfee77e7b87d25e269
 
 是的，这个架构值得先定清楚再动代码。我刚重新检查了当前 main：生产卡片已经到 542 篇，`public/toc-demand-live.json` 约 634 KB，首页目前仍是把筛选结果整体生成 DOM，而 GitHub Pages 构建还会镜像媒体。因此我现在会修正上一版里一个最关键的思路：
 
