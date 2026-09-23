@@ -1,0 +1,36 @@
+name: Verify incremental body review release live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend', 'Deploy Worker frontend assets']
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/body-review-batch2-live.json']
+permissions:
+  contents: read
+concurrency:
+  group: body-review-batch2-live
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install browser acceptance
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Verify real card images, exact bytes and deployed marker support
+        run: node scripts/verify-body-review-batch2-live.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: body-review-batch2-live
+          path: ${{ runner.temp }}/body-batch2-live/*
+          retention-days: 7
+          if-no-files-found: warn
