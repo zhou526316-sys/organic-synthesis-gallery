@@ -21,8 +21,11 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Install existing Worker test dependencies
-        run: npm install --prefix cloudflare/worker --no-audit --no-fund
+      - name: Install existing Worker dependencies and pinned stable Miniflare
+        run: |
+          npm install --prefix cloudflare/worker --no-audit --no-fund
+          npm install --prefix cloudflare/worker --no-save --no-package-lock --no-audit --no-fund miniflare@4.20260730.0
+          node -e "const p=require('./cloudflare/worker/node_modules/miniflare/package.json'); if(p.version!=='4.20260730.0') throw new Error(p.version)"
       - name: Execute actual SQL fault recovery and duplicate-reader regressions
         run: |
           mkdir -p reader-atomic-results
