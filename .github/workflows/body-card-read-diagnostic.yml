@@ -1,0 +1,65 @@
+name: Read body card rendering diagnostics
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/body-card-read-diagnostic.yml','audit/automation-triggers/body-card-read-diagnostic.json']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install read-only browser
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Observe all five figure strips and search transitions
+        run: |
+          node --input-type=module - <<'JS'
+          import {chromium} from 'playwright';
+          import {mkdir,writeFile} from 'node:fs/promises';
+          const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+          const out=process.env.RUNNER_TEMP+'/body-card-diagnostic';await mkdir(out,{recursive:true});
+          const status=await (await fetch(base+'body-publication-status.json?diagnostic='+Date.now())).json();
+          const result={readAt:new Date().toISOString(),productionWrites:0,cards:[],errors:[],requests:[],scripts:[]};
+          const browser=await chromium.launch();
+          try{
+            const ctx=await browser.newContext({viewport:{width:1360,height:1000}});
+            await ctx.route('**/*',r=>!['GET','HEAD','OPTIONS'].includes(r.request().method())?r.fulfill({status:503,body:'read-only diagnostic blocks production writes'}):r.continue());
+            const page=await ctx.newPage();
+            page.on('pageerror',e=>result.errors.push(String(e.message).slice(0,500)));
+            page.on('requestfailed',r=>result.requests.push({kind:'failed',url:r.url().split('?')[0],error:r.failure()?.errorText}));
+            page.on('response',async r=>{if(r.url().includes('media-index.json')){try{const m=await r.json();result.requests.push({kind:'media-index',status:r.status(),url:r.url(),selected:status.perDoi.map(p=>({doi:p.doi,n:m.items?.[p.doi]?.figures?.figures?.length}))});}catch{}}});
+            await page.goto(base,{waitUntil:'domcontentloaded'});await page.locator('#search').waitFor();
+            for(const [i,p] of status.perDoi.entries()){
+              const selector='.figure-strip-slot[data-figure-doi="'+p.doi+'"]';
+              const entry={doi:p.doi,expected:p.figures};
+              try{
+                await page.locator('#search').fill(p.doi);await page.locator('#search').press('Escape');
+                await page.locator(selector).waitFor({timeout:12000});await page.locator(selector).scrollIntoViewIfNeeded();
+                await page.waitForTimeout(6000);
+                entry.state=await page.locator(selector).evaluate(el=>({state:el.dataset.state,count:el.querySelectorAll('.figure-thumb img').length,html:el.outerHTML.slice(0,18000),images:[...el.querySelectorAll('img')].map(x=>({alt:x.alt,src:x.currentSrc||x.src,w:x.naturalWidth,h:x.naturalHeight,complete:x.complete})),rect:{top:el.getBoundingClientRect().top,bottom:el.getBoundingClientRect().bottom}}));
+                entry.search=await page.locator('#search').inputValue();
+                await page.screenshot({path:out+'/page-'+i+'.png'});
+                if(entry.state.count!==p.figures){
+                  await page.reload({waitUntil:'domcontentloaded'});await page.locator('#search').waitFor();await page.locator('#search').fill(p.doi);await page.locator('#search').press('Escape');
+                  await page.locator(selector).waitFor({timeout:12000});await page.locator(selector).scrollIntoViewIfNeeded();await page.waitForTimeout(6000);
+                  entry.afterReload=await page.locator(selector).evaluate(el=>({state:el.dataset.state,count:el.querySelectorAll('.figure-thumb img').length,html:el.outerHTML.slice(0,18000)}));
+                }
+              }catch(e){entry.error=String(e.message).slice(0,1000);}
+              result.cards.push(entry);
+            }
+            result.scripts=await page.locator('script[src]').evaluateAll(es=>es.map(e=>e.src));
+          }finally{await browser.close();await writeFile(out+'/diagnostic.json',JSON.stringify(result,null,2));console.log('BODY_CARD_DIAGNOSTIC '+JSON.stringify({cards:result.cards.map(x=>({doi:x.doi,expected:x.expected,state:x.state?.state,count:x.state?.count,reloaded:x.afterReload?.count,error:x.error})),errors:result.errors}));}
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: body-card-read-diagnostic
+          path: ${{ runner.temp }}/body-card-diagnostic/*
+          retention-days: 7
+          if-no-files-found: warn
