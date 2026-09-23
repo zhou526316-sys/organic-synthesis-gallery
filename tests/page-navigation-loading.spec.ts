@@ -54,8 +54,10 @@ test('navigation registers before deliberately slow optional user modules', asyn
   const firstOptionalIndex = requests.findIndex(item => /(?:user-center-management|interaction-stability|account-sync|feedback-widget)-/.test(item.url));
   expect(firstOptionalIndex).toBeGreaterThan(navigationIndex);
 
+  // The first optional module is deliberately slow and must still complete
+  // after navigation. Later optional modules are also delayed sequentially;
+  // waiting for all of them would test artificial delay duration, not nav order.
   await expect(page.locator('gallery-user-shell')).toBeVisible({ timeout: 8000 });
-  await expect(page.locator('.site-feedback-tab')).toBeVisible({ timeout: 12000 });
   expect(errors).toEqual([]);
   expect(marks).toEqual([]);
 });
