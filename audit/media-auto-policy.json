@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "policyId": "new-body-auto-20260923-v1",
+  "enabled": true,
+  "mediaGeneration": 1790082000000,
+  "requiredCaptureVersion": "6.2.20",
+  "requiredMarkerRevision": "1",
+  "publishers": ["acs"],
+  "maxNewImages": 30,
+  "maxNewArticles": 5,
+  "maxFiguresPerCard": 10,
+  "maxSnapshotItems": 2000,
+  "heldDois": [{"doi":"10.1021/jacs.6c13641","reason":"Existing media review deferred pending literature scope clarification; not an image contamination finding."}],
+  "verificationMode": "automated_source_identity_digest_and_image_decode",
+  "individualSemanticReview": false,
+  "notes": "New server-marked current-generation body figures only. No historical unquarantine, publisher downloads, TOC changes, image replacement, or literature additions. Opaque sources remain in the separate review task. Existing manually reviewed approvals are preserved."
+}
