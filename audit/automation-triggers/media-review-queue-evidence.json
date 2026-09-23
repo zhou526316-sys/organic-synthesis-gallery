@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T20:29:00+08:00",
+  "requestedAt": "2026-09-23T23:55:00+08:00",
   "task": "Continue bounded semantic review and publication of stored body figures only",
   "mode": "read-only-evidence",
-  "notes": "Refresh exactly once because the latest confirmed stage/report snapshot advanced after the prior 19:28 Beijing review artifact. Read the full current stage/report indices, deployed media index/ledger and exact stored bytes through the existing bounded reader. Keep the current 20-article read config and scope hold. No publisher requests, R2/D1 writes, direct import/repair, promotion, literature/card/title/scope changes, user-script changes, or schedule changes. Reuse unchanged published DOI+figure+SHA256+evidence conclusions and preserve parallel work."
+  "notes": "Refresh exactly once after the body5-2241 production publication so this review uses the current deployed media index/ledger together with the latest stored stage/report indices and exact R2 bytes. Keep the current 20-article bounded reader and existing scope holds. No publisher requests, R2/D1 writes, direct import/repair, promotion, literature/card/title/scope changes, user-script changes, or schedule changes. Reuse unchanged published DOI+figure+full SHA256+evidence conclusions and preserve parallel work."
 }
