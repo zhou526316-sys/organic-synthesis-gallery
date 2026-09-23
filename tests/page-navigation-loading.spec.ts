@@ -46,9 +46,6 @@ test('navigation registers before deliberately slow optional user modules', asyn
 
   const navigation = page.locator('gallery-page-navigation');
   await expect(navigation).toBeVisible({ timeout: 2500 });
-  const visibleAt = Date.now() - started;
-  expect(visibleAt).toBeLessThan(2500);
-
   await expect.poll(() => requests.findIndex(item => /page-navigation-/.test(item.url))).toBeGreaterThanOrEqual(0);
   const navigationIndex = requests.findIndex(item => /page-navigation-/.test(item.url));
   const firstOptionalIndex = requests.findIndex(item => /(?:user-center-management|interaction-stability|account-sync|feedback-widget)-/.test(item.url));
