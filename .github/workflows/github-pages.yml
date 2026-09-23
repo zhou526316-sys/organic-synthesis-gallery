@@ -1,6 +1,12 @@
 name: Deploy GitHub Pages frontend
 on:
   workflow_call:
+    inputs:
+      deployment_ref:
+        description: Exact commit SHA/ref to deploy when called by another workflow
+        required: false
+        type: string
+        default: ''
   workflow_dispatch:
   push:
     branches: [main]
@@ -61,7 +67,7 @@ jobs:
       - name: Checkout exact deployment commit and release history
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.deployment_ref != '' && inputs.deployment_ref || github.sha }}
           fetch-depth: 0
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -89,7 +95,7 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.deployment_ref != '' && inputs.deployment_ref || github.sha }}
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
