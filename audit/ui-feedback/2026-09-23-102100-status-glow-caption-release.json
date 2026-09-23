@@ -1,0 +1,80 @@
+{
+  "recordedAt": "2026-09-23T10:21:00+08:00",
+  "context": "UI and feedback continuation; user requested 继续 after summary29 release",
+  "status": "deployed_and_verified_on_two_active_entries",
+  "implementation": {
+    "pr": 142,
+    "testedHead": "fa6014af177a7b0b0460a973b9f65f22d7bf92ca",
+    "mergeSha": "f5446507a49ac612dbf53aaa069d1a8343c1e01d",
+    "mergedAt": "2026-09-23T02:06:36Z",
+    "branch": "feat/ui-glow-caption-20260923-0955",
+    "feedback30": "Per-status Off (default), Soft, Breathing, Orbit and Rainbow choices. Persist through existing style preferences, follow status RGB except rainbow, rollback and report failed saves. Invalid modes display Off. Decorative animations stop under reduced-motion; forced-color rendering remains usable. No reading-status or countsAsRead changes.",
+    "feedback31A": "Uploaded original/GIF or static cropped image covers the status button below a visible state caption. Sample only the small synced preview to select dark/light text and an opaque-enough contrasting backplate. No frame-by-frame smart analysis claim. Mobile image-backed state column is80px; four management buttons and separate summary remain. Original bytes and original viewer are unchanged.",
+    "notImplemented": ["Intelligent/person/background-removal cropping", "New circular smart-cropping workflow", "Glow thickness control requested in new32", "Original/GIF cloud backup", "Business reader-count repair"],
+    "typeOnlyBaselineFix": "shared/chinese-title-overrides.d.ts describes the existing JS helper after initial TS7016. No runtime translation or literature data was changed; strict type checking was retained.",
+    "temporaryIntegrationWorkflow": "Checksum-guarded branch-only hook integration removed itself before PR creation; no mutation workflow remains in release diff.",
+    "concurrentWork": "Existing feat/ui-status-glow-20260923 branch was not overwritten. PR139 remains the single deployed summary implementation. Conflicting PR138 and acquisition PRs were not merged or modified."
+  },
+  "ci": {
+    "presentation": {"runId": 35808551539, "webkit": {"passed": 7, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729076109, "sha256": "621d3e0de8782467160cc0cfaa88469a5b1cc8992dff6b7e19af966725488ca3"}, "chromium": {"passed": 7, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10728144633, "sha256": "3990200b40cfd92f711952c87b7da1190598b61deb7f49b09bf0307cba45b81c"}},
+    "originalImages": {"runId": 35808551528, "passed": 17, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729275112, "sha256": "f82c53590eefc72ac3c73ef8d8471ed044ef4a4c0f47146f505b16d255fbdcef"},
+    "summary": {"runId": 35808551485, "conclusion": "success"},
+    "qualityGate": {"runId": 35808551469, "conclusion": "success"},
+    "migration": {"runId": 35808551467, "conclusion": "success"},
+    "dataValidation": {"runId": 35808551533, "conclusion": "success"},
+    "retainedFailure": "Initial presentation run35808435605 failed before browser execution on inherited missing JS declaration; fixed with types only.",
+    "assertionChange": "Only superseded original-image span-count-zero expectation was changed to require a visible status caption per feedback31. Byte/hash/GIF/frame/viewer/limit/error assertions retained."
+  },
+  "deployment": {
+    "githubPages": {"runId": 35809042820, "conclusion": "success"},
+    "worker": {"runId": 35809049236, "conclusion": "success"}
+  },
+  "livePresentation": {
+    "runId": 35809447014,
+    "workflowCommit": "f54b253dad6e61e513c59afbbe84f646aa1265aa",
+    "reviewedSource": "f5446507a49ac612dbf53aaa069d1a8343c1e01d",
+    "browser": "Playwright1.55 WebKit",
+    "actualMainChunk": "assets/main-BafLGywA.js",
+    "bootstrapChunk": "assets/index-p5Xz1mBB.js",
+    "github": {"passed": 7, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729780375, "sha256": "0b4b3be5acab81fc55f7a8a02c4a0f1a99a4e0f2744b3eea0a1b807de0a8f073"},
+    "worker": {"passed": 7, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729196589, "sha256": "c7a47bf4a35d4f27f949f0038a482374f782111c2219e26c2b9f87acc3cd4607"},
+    "coverage": "390px/1280px five choices, persistence, actual pulse opacity, color following, unchanged geometry/reading definitions, bright/dark caption layers and colors, original hashes, GIF reload/removal, reduced motion, failed-save rollback and invalid preference safety. Unfiltered pageErrors and no-reader-mark checks retained.",
+    "productionWritesAllowed": false,
+    "apiMocked": true,
+    "productSourceOrTestAssertionsOverridden": false,
+    "fallbackPagesChecked": false,
+    "retainedReadinessFailure": "Run35809092420 searched only the bootstrap asset and did not execute browser cases. Confirmed dynamic import in src/bootstrap.ts; replaced the incorrect single-file search with actual rendered controls and five-option readiness before running the unchanged suite. No product change or timeout relaxation used to hide this failure."
+  },
+  "summary29Closeout": {
+    "implementation": "PR139 b00b03aa retained",
+    "priorLive": "Run35761048963 had passed four normal viewport cases and resize/anchoring on both active entries; GitHub's missing-TOC input was not established.",
+    "controlledEmptyStateRunId": 35809187579,
+    "workflowCommit": "78ffd12edf726b74f97610721ce7ccf91d9aec41",
+    "github": {"passed": 4, "failed": 0, "artifactId": 10729280898, "sha256": "fb634fbef7a62b6a0075894f241581bcb4f4769318c23f8e0d76c05d78a0e3aa"},
+    "worker": {"passed": 4, "failed": 0, "artifactId": 10728329959, "sha256": "0d08b0f8b553f87714185894e6d048f20465c2967ef1a1b3f468d1b3b714c8f9"},
+    "coverage": "Actual deployed registered component with a standalone controlled absent-TOC card.390px/1280px with available/missing full text, full-width text, explicit zero TOC, bounded window, bilingual switch without extra call, normal close and zero page errors. Text width332px mobile and1038px desktop on both entries. All API responses mocked; no production AI content-quality claim.",
+    "fixtureCorrection": "First standalone test run35808698805 had desktop close clicks intercepted by #app because the synthetic parent was outside app stacking. Final input parent has its own visible stacking layer; component methods/styles and click actionability are not overridden. Real cards/images were not removed or altered. Retained first Worker artifact10728658794."
+  },
+  "feedback": {
+    "initialExport": {"runId": 35807957055, "generatedAt": "2026-09-23T01:50:37.250Z", "count": 11},
+    "reviewed29": {"runId": 35809663399, "applyResult": "updated1 failed0; id29 reviewed", "workflowConclusion": "failure", "reason": "Post-write equality check discovered newly submitted32;29 itself was applied and was not retried."},
+    "reviewed30": {"runId": 35809802263, "workflowConclusion": "success", "planCommit": "1761fdf796cc1065b0cfff5ac7bcbbf295d61951"},
+    "latestExport": {"runId": 35809826286, "artifactId": 10728803559, "sha256": "7a5135794c7eb76e7d26f900f7ab64050bb4af2c2d61c4112263bcd2ab82a554", "generatedAt": "2026-09-23T02:18:36.440Z", "d1Available": true, "r2Available": true, "openIds": [8,20,21,22,23,24,25,28,31,32]},
+    "new32": "光效可以改变粗度就好了",
+    "new32Status": "Received and kept open; not implemented in this batch.",
+    "31Status": "Caption layering completed; intelligent/person/circular cropping remains open.",
+    "28Status": "Broader original-image acceptance remains open; this batch does not erase earlier unrelated live failures."
+  },
+  "scope": {
+    "literatureDataChanged": false,
+    "publicationSlotsOrGatesChanged": false,
+    "captureTampermonkeyBridgeChanged": false,
+    "realReaderEventsWritten": false,
+    "businessReaderCountIssueResolved": false,
+    "originalStorage": "Current browser/current site origin; account sync contains static previews only.",
+    "cloudflarePagesFallback": "Not revalidated here. Earlier availability/deployment problem remains separate; no universal outage or recovery claim."
+  },
+  "evidenceInspection": "Downloaded and SHA256-checked CI and final live ZIPs, parsed all presentation/original/empty-state results, inspected actual mobile controls and bright/dark caption screenshots. Screenshots use test status images, not a real user's uploaded photo.",
+  "nextBoundedWork": "New32 glow thickness and remaining31 intelligent/circular cropping; independent business reader-count investigation remains pending. Do not redo completed29/30 or merge overlapping138.",
+  "conversationArtifacts": ["status-glow-caption-release-evidence.zip", "status-glow-live-mobile.png", "status-caption-live-desktop.png"]
+}
