@@ -93,7 +93,7 @@ export const STATUS_GLOW_WIDTH_CSS = `
 .status-glow-width-row :focus-visible{outline:2px solid #3159bd;outline-offset:2px}
 .status-glow-width-help{font-size:10px;line-height:1.55;color:#667085;overflow-wrap:anywhere}
 [data-status-glow]:not([data-status-glow="none"])::after{box-sizing:border-box;border-width:var(--status-glow-width,1px);box-shadow:inset 0 0 var(--status-glow-blur,7px) var(--status-glow-width,1px) rgba(var(--status-glow-rgb),.6),0 0 var(--status-glow-outer-blur,5px) rgba(var(--status-glow-rgb),.4)}
-[data-status-glow="rainbow"]::after{box-shadow:inset var(--status-glow-rainbow-size,2px) 0 var(--status-glow-outer-blur,5px) #38bdf8,inset calc(-1 * var(--status-glow-rainbow-size,2px)) 0 var(--status-glow-outer-blur,5px) #e879f9,inset 0 var(--status-glow-rainbow-size,2px) var(--status-glow-outer-blur,5px) #facc15,inset 0 calc(-1 * var(--status-glow-rainbow-size,2px)) var(--status-glow-outer-blur,5px) #34d399}
+[data-status-glow][data-status-glow="rainbow"]::after{box-shadow:inset var(--status-glow-rainbow-size,2px) 0 var(--status-glow-outer-blur,5px) #38bdf8,inset calc(-1 * var(--status-glow-rainbow-size,2px)) 0 var(--status-glow-outer-blur,5px) #e879f9,inset 0 var(--status-glow-rainbow-size,2px) var(--status-glow-outer-blur,5px) #facc15,inset 0 calc(-1 * var(--status-glow-rainbow-size,2px)) var(--status-glow-outer-blur,5px) #34d399}
 @keyframes status-glow-orbit{
 0%,100%{box-shadow:inset var(--status-glow-orbit-size,3px) 0 var(--status-glow-blur,7px) rgba(var(--status-glow-rgb),.95)}
 25%{box-shadow:inset 0 var(--status-glow-orbit-size,3px) var(--status-glow-blur,7px) rgba(var(--status-glow-rgb),.95)}

@@ -1,5 +1,7 @@
 import { STATUS_GLOWS, store, statusLabel, type Language, type StatusGlow, type StyleDef } from './shared';
 
+import { applyGlowWidth, bindGlowWidth, STATUS_GLOW_WIDTH_CSS } from './status-glow-width';
+
 const LABELS: Record<StatusGlow, [string, string]> = {
   none: ['关闭', 'Off'], soft: ['柔光', 'Soft'], pulse: ['呼吸', 'Breathing'],
   orbit: ['环绕', 'Orbit'], rainbow: ['彩虹', 'Rainbow'],
@@ -10,7 +12,9 @@ export function safeStatusGlow(value: unknown): StatusGlow {
   return STATUS_GLOWS.includes(value as StatusGlow) ? value as StatusGlow : 'none';
 }
 
-function applyGlow(node: HTMLElement, style?: StyleDef): void {
+function applyGlow(node: HTMLElement, style?: StyleDef, statusId = ''): void {
+  node.dataset.statusGlowId = statusId;
+  applyGlowWidth(node, style?.glowWidth);
   node.dataset.statusGlow = safeStatusGlow(style?.glow);
   const rgb = (style?.rgb || [93, 109, 219]).map(value => Number.isFinite(value) ? Math.max(0, Math.min(255, Math.round(value))) : 0);
   node.style.setProperty('--status-glow-rgb', rgb.join(','));
@@ -60,7 +64,7 @@ export function bindStatusPresentation(root: ShadowRoot, language: Language, pap
   const selected = store.status(store.paper(paperId).statusId || '');
   const action = root.querySelector<HTMLButtonElement>('button[data-action="status"]');
   if (action) {
-    applyGlow(action, selected?.style);
+    applyGlow(action, selected?.style, selected?.id || '');
     if (selected?.style.imageData && action.querySelector('.status-action-label')) {
       const source = selected.style.imageData;
       action.dataset.captionTone = 'light';
@@ -70,13 +74,13 @@ export function bindStatusPresentation(root: ShadowRoot, language: Language, pap
       });
     }
   }
-  root.querySelectorAll<HTMLElement>('.chips > .chip.status').forEach(node => applyGlow(node, selected?.style));
+  root.querySelectorAll<HTMLElement>('.chips > .chip.status').forEach(node => applyGlow(node, selected?.style, selected?.id || ''));
   root.querySelectorAll<HTMLElement>('[data-status-editor]').forEach(editor => {
     const id = editor.dataset.statusEditor || '';
     const status = store.status(id);
     if (!status) return;
     const choice = Array.from(root.querySelectorAll<HTMLElement>('button[data-action]')).find(node => node.dataset.action === `set-status:${id}`)?.querySelector<HTMLElement>('.status-choice-label');
-    if (choice) applyGlow(choice, status.style);
+    if (choice) applyGlow(choice, status.style, id);
     const label = document.createElement('label'); label.className = 'status-glow-control';
     const name = document.createElement('span'); name.textContent = language === 'zh' ? '环绕光效' : 'Surrounding glow';
     const select = document.createElement('select'); select.dataset.statusGlowChoice = id;
@@ -97,6 +101,7 @@ export function bindStatusPresentation(root: ShadowRoot, language: Language, pap
       }
     });
     label.append(name, select, message); editor.append(label);
+    bindGlowWidth(editor, root, id, language);
   });
 }
 
@@ -121,4 +126,5 @@ export const STATUS_PRESENTATION_CSS = `
 .action.status-artwork .status-action-label{display:block!important;position:relative;z-index:4;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:2px 6px;border-radius:999px;line-height:1.35;font-weight:800;color:#fff;background:rgba(0,0,0,.76);transform:none;pointer-events:none}
 .action.status-artwork[data-caption-tone="dark"] .status-action-label{color:#111827;background:rgba(255,255,255,.88)}
 @media(max-width:680px){.bar:has(> .status-artwork){grid-template-columns:36px 80px 36px 36px max-content}.action.status-artwork .status-action-label{font-size:10px;padding:2px 5px}}
+${STATUS_GLOW_WIDTH_CSS}
 `;
