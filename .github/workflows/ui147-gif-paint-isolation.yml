@@ -17,70 +17,59 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Build candidate and install pinned browser and pixel decoder
+      - name: Build unchanged source with pinned browser
         run: |
           npm install --no-audit --no-fund
-          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0 pngjs@7.0.0
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/gif-paint-install.log 2>&1 || { tail -60 /tmp/gif-paint-install.log; exit 1; }
           npm run build
-      - name: Create coordinate-controlled screenshot probes, no product changes
+      - name: Observe shadow bounds and preparation; preserve product and assertions
         run: |
           mkdir -p gif-paint
           cat > tests/pr147-paint-isolation.spec.ts <<'TS'
           import { test, expect } from '@playwright/test';
           import { createHash } from 'node:crypto';
-          import { PNG } from 'pngjs';
-          import { open, gifFile, GIF, originalHash } from './status-image-fixtures';
-          test.use({trace:'off',serviceWorkers:'block',viewport:{width:390,height:900},deviceScaleFactor:1});
-          for(const kind of ['plain-offset','gallery','static-offset']) for(const capture of ['clip','viewport']) test(`${kind} ${capture}`,async({page},info)=>{
+          import { open, gifFile, GIF } from './status-image-fixtures';
+          test.use({trace:'off',serviceWorkers:'block',viewport:{width:390,height:900}});
+          for(const mode of ['baseline','caret-initial','host-box','bare-shadow','no-scroll-lock']) test(mode,async({page},info)=>{
             let image;
-            if(kind==='gallery') {
+            if(mode==='bare-shadow'){
+              await page.setContent('<div id="host"></div>');
+              await page.locator('#host').evaluate((host,base64)=>{const root=host.attachShadow({mode:'open'});root.innerHTML='<img style="width:72px;height:36px;position:fixed;left:79px;top:485px" src="data:image/gif;base64,'+base64+'">';},GIF.toString('base64'));
+              image=page.locator('#host img');
+            }else{
               const actions=await open(page,390);
               await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
               await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
               image=actions.locator('[data-action="set-status:to-read"] .status-image');
               await expect(image).toHaveAttribute('data-image-source','original');
-              console.log('ORIGINAL',await originalHash(image));
-            } else {
-              await page.setContent('<img id="test" style="position:absolute;left:79px;top:485px;width:72px;height:36px" alt="Screenshot coordinate control">');
-              image=page.locator('#test');
-              await image.evaluate((node,args)=>{
-                if(args.kind==='static-offset') {
-                  const c=document.createElement('canvas');c.width=120;c.height=60;
-                  const ctx=c.getContext('2d')!;ctx.fillStyle='#f00';ctx.fillRect(0,0,120,60);
-                  (node as HTMLImageElement).src=c.toDataURL();
-                } else (node as HTMLImageElement).src='data:image/gif;base64,'+args.base64;
-              },{kind,base64:GIF.toString('base64')});
-              await expect.poll(()=>image.evaluate(node=>(node as HTMLImageElement).naturalWidth)).toBe(120);
+              if(mode==='host-box')await actions.evaluate(host=>{
+                const root=host.shadowRoot!;const drawer=root.querySelector('.drawer') as HTMLElement;const r=drawer.getBoundingClientRect();
+                (host as HTMLElement).style.cssText='position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:999999;pointer-events:none';
+                drawer.style.position='absolute';drawer.style.left=r.x+'px';drawer.style.top=r.y+'px';drawer.style.pointerEvents='auto';
+              });
+              if(mode==='no-scroll-lock')await page.evaluate(()=>document.documentElement.classList.remove('gallery-user-drawer-open'));
             }
             await image.scrollIntoViewIfNeeded();
-            const frames=new Set<string>();const samples:any[]=[];const unique=new Map<string,Buffer>();
-            let failure:unknown;
-            try {
+            const geometry=await image.evaluate(node=>{const out=[];let x:Element|null=node;while(x){out.push({tag:x.tagName,cls:x.className,box:x.getBoundingClientRect().toJSON()});x=x.parentElement||((x.getRootNode() as ShadowRoot).host??null);}return out;});
+            const frames=new Map<string,Buffer>();const samples:any[]=[];
+            try{
               await expect.poll(async()=>{
                 const box=(await image.boundingBox())!;
-                const shot=await page.screenshot({...(capture==='clip'?{clip:box}:{}),animations:'allow',scale:'css'});
-                const source=PNG.sync.read(shot);
-                const x=capture==='clip'?0:Math.round(box.x),y=capture==='clip'?0:Math.round(box.y);
-                const w=Math.round(box.width),h=Math.round(box.height);
-                const cut=new PNG({width:w,height:h});
-                PNG.bitblt(source,cut,x,y,w,h,0,0);
-                const hash=createHash('sha256').update(cut.data).digest('hex');
-                frames.add(hash);unique.set(hash,PNG.sync.write(cut));samples.push({at:Date.now(),box,hash,pixel:Array.from(cut.data.subarray(0,4))});
-                return frames.size;
+                const pixels=await page.screenshot({clip:box,animations:'allow',caret:mode==='caret-initial'?'initial':'hide'});
+                const hash=createHash('sha256').update(pixels).digest('hex');frames.set(hash,pixels);samples.push({at:Date.now(),hash});return frames.size;
               },{timeout:6000,intervals:[150,230,310]}).toBeGreaterThan(1);
-            }catch(error){failure=error;}
-            await info.attach('samples.json',{body:JSON.stringify({kind,capture,samples}),contentType:'application/json'});
-            let index=0;for(const bytes of unique.values())await info.attach(`frame-${index++}.png`,{body:bytes,contentType:'image/png'});
-            if(kind==='static-offset') expect(Boolean(failure)).toBe(true);
-            else if(failure)throw failure;
+            }finally{
+              await info.attach('conditions.json',{body:JSON.stringify({mode,geometry,samples}),contentType:'application/json'});
+              let i=0;for(const bytes of frames.values())await info.attach(`frame-${i++}.png`,{body:bytes,contentType:'image/png'});
+            }
           });
           TS
           git diff --exit-code -- src/ public/ shared/
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-paint-preview.log 2>&1 &
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           exit 1
-      - name: Compare six-second frame checks and static negative controls
+      - name: Retain coordinate and pixel evidence for all conditions
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: gif-paint/results.json
         run: |
