@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T12:23:30Z",
-  "context": "Inspect current paired official-TOC/body readiness using the deployed adaptive policy. Prefer 20-25 articles; if only 1-19 eligible articles remain and the eligible set has been quiet for at least 15 minutes, release the stable tail. Reuse stored R2 captures and public media only; do not recrawl publishers or modify literature data.",
+  "requestedAt": "2026-09-23T13:32:00Z",
+  "context": "Continue publishing both newly captured and previously staged current-generation body figures. Inspect the full unpublished eligible stage backlog, including age of oldest and newest eligible records, and release under the current adaptive policy when ready. No publisher recrawl and no literature-data changes.",
   "mediaOnly": true,
   "readOnlyInspect": false,
   "productionLiteratureWrites": false,
