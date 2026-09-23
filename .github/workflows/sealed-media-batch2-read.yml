@@ -1,0 +1,30 @@
+name: Read sealed media batch two
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sealed-media-batch2-read.yml'
+      - 'scripts/read-sealed-media-batch2.py'
+permissions:
+  contents: read
+concurrency:
+  group: sealed-media-batch2-read
+  cancel-in-progress: false
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read only stored objects and existing reports
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: python3 scripts/read-sealed-media-batch2.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sealed-media-batch2-evidence
+          path: ${{ runner.temp }}/sealed-media-batch2/
+          retention-days: 7
+          if-no-files-found: error
