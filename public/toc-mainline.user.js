@@ -2584,7 +2584,15 @@ function embeddedJobDois(value) {
 
   async function waitForPairedVisuals(job,trace) {
     var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started;
-    var toc=[],figures=[];
+    var toc=[],figures=[],pairedIframeAttempted=false,pairedIframeToc=[],pairedIframeFigures=[];
+    function mergeVisualRows(primary,extra) {
+      var seen=new Set(),out=[];
+      (primary||[]).concat(extra||[]).forEach(function(row){
+        var key=String(row&&row.kind||'')+'|'+String(row&&row.label||'')+'|'+String(row&&row.url||'');
+        if(!row||!row.url||seen.has(key))return;seen.add(key);out.push(row);
+      });
+      return out;
+    }
     while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
       if (isAbortRequested()) throw new Error('user_aborted');
       assertBoundCaptureJob(job);
@@ -2594,8 +2602,19 @@ function embeddedJobDois(value) {
         GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:state.auth?'auth_wait':'challenge_wait',at:nowIso()});
         await sleep(2000); continue;
       }
-      toc=collectCandidates(job,trace,document,location.href,'paired_dom',true);
-      figures=collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom');
+      var liveToc=collectCandidates(job,trace,document,location.href,'paired_dom',true);
+      var liveFigures=collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom');
+      var elapsedNow=Date.now()-started;
+      if(job.publisher==='wiley'&&!pairedIframeAttempted&&elapsedNow>7000&&(!liveToc.length||!liveFigures.length)){
+        pairedIframeAttempted=true;
+        var pairedIframeRows=await iframeCandidates(job,trace,'paired');
+        pairedIframeToc=pairedIframeRows.filter(function(row){return row.kind!=='article_figure';});
+        pairedIframeFigures=pairedIframeRows.filter(function(row){return row.kind==='article_figure';});
+        pushTrace(trace,{stage:'paired_iframe_fallback',event:'complete',status:pairedIframeRows.length?'found':'none',
+          message:'toc='+pairedIframeToc.length+';figures='+new Set(pairedIframeFigures.map(function(row){return row.label;})).size});
+      }
+      toc=mergeVisualRows(liveToc,pairedIframeToc);
+      figures=mergeVisualRows(liveFigures,pairedIframeFigures);
       var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
       if (figureSignature!==lastFigureSignature) {lastFigureSignature=figureSignature;figureChangedAt=Date.now();}
       var signature=toc.map(function(x){return x.url;}).join('|')+'::'+figureSignature;
