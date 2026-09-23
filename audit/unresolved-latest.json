@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-23T10:07:15.330Z",
+  "generatedAt": "2026-09-23T13:55:07.275Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-21",
@@ -8,17 +8,17 @@
   "closureDate": "2026-09-22",
   "summary": {
     "galleryDois": 542,
-    "sourceRecords": 541,
-    "rawMissingFromGallery": 452,
+    "sourceRecords": 563,
+    "rawMissingFromGallery": 474,
     "previouslyReviewedExcluded": 439,
-    "missingFromGallery": 13,
-    "potentialGaps": 5,
+    "missingFromGallery": 35,
+    "potentialGaps": 9,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 1,
+    "closureCoverageAnomalies": 0,
     "historicalCoverageLosses": 0,
-    "unresolved": 13,
+    "unresolved": 35,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -26,7 +26,7 @@
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 1,
+    "closureCoverageAnomalies": 0,
     "historicalCoverageLosses": 0
   },
   "activeJournals": [
@@ -39,8 +39,8 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 44,
-        "crossrefCandidateRecords": 44,
+        "unionCandidateRecords": 51,
+        "crossrefCandidateRecords": 51,
         "openAlexCandidateRecords": 41,
         "multiSourceCandidateRecords": 41,
         "closureUnionRecords": 14,
@@ -79,8 +79,8 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 2,
-        "crossrefCandidateRecords": 2,
+        "unionCandidateRecords": 3,
+        "crossrefCandidateRecords": 3,
         "openAlexCandidateRecords": 2,
         "multiSourceCandidateRecords": 2,
         "closureUnionRecords": 1,
@@ -139,10 +139,10 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 168,
-        "crossrefCandidateRecords": 167,
-        "openAlexCandidateRecords": 158,
-        "multiSourceCandidateRecords": 157,
+        "unionCandidateRecords": 176,
+        "crossrefCandidateRecords": 175,
+        "openAlexCandidateRecords": 160,
+        "multiSourceCandidateRecords": 159,
         "closureUnionRecords": 37,
         "closureCrossrefRecords": 37,
         "closureOpenAlexRecords": 37,
@@ -159,10 +159,10 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 83,
-        "crossrefCandidateRecords": 83,
-        "openAlexCandidateRecords": 77,
-        "multiSourceCandidateRecords": 77,
+        "unionCandidateRecords": 86,
+        "crossrefCandidateRecords": 86,
+        "openAlexCandidateRecords": 79,
+        "multiSourceCandidateRecords": 79,
         "closureUnionRecords": 19,
         "closureCrossrefRecords": 19,
         "closureOpenAlexRecords": 19,
@@ -181,13 +181,13 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 97,
         "crossrefCandidateRecords": 97,
-        "openAlexCandidateRecords": 75,
-        "multiSourceCandidateRecords": 75,
+        "openAlexCandidateRecords": 80,
+        "multiSourceCandidateRecords": 80,
         "closureUnionRecords": 27,
         "closureCrossrefRecords": 27,
-        "closureOpenAlexRecords": 13,
+        "closureOpenAlexRecords": 18,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -199,8 +199,8 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 27,
-        "crossrefCandidateRecords": 27,
+        "unionCandidateRecords": 28,
+        "crossrefCandidateRecords": 28,
         "openAlexCandidateRecords": 27,
         "multiSourceCandidateRecords": 27,
         "closureUnionRecords": 1,
@@ -219,10 +219,10 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 55,
-        "crossrefCandidateRecords": 55,
-        "openAlexCandidateRecords": 47,
-        "multiSourceCandidateRecords": 47,
+        "unionCandidateRecords": 56,
+        "crossrefCandidateRecords": 56,
+        "openAlexCandidateRecords": 52,
+        "multiSourceCandidateRecords": 52,
         "closureUnionRecords": 16,
         "closureCrossrefRecords": 16,
         "closureOpenAlexRecords": 16,
@@ -339,8 +339,8 @@
         "effectiveStart": "2026-09-22",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 9,
-        "crossrefCandidateRecords": 9,
+        "unionCandidateRecords": 10,
+        "crossrefCandidateRecords": 10,
         "openAlexCandidateRecords": 8,
         "multiSourceCandidateRecords": 8,
         "closureUnionRecords": 8,
@@ -352,6 +352,35 @@
     }
   ],
   "unresolved": [
+    {
+      "doi": "10.1021/acscatal.6c04954",
+      "journal": "ACS Catalysis",
+      "title": "Enantioselective Synthesis of Azahelicenes via Rh-Catalyzed C–H Functionalization of 6-Hydroxyisoquinoline Derivatives with Alkynes",
+      "abstract": "Abstract Herein, we report an asymmetric C–H functionalization of 6-hydroxyisoquinoline derivatives and annulation with internal alkynes. The reaction is catalyzed by a chiral cyclopentadienyl (Cp)-Rh complex in combination with a modified chiral amino acid. A series of azahelicenes is afforded in good yields (up to 93%) with high enantioselectivity (up to 99% ee). A plausible catalytic cycle is proposed based on control experiments and DFT calculations, involving the reductive elimination from a high-valent Rh intermediate.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Wen-Wen Zhang",
+        "Pei-Pei Xie",
+        "Qiang Wang",
+        "Rui-Xiang Wang",
+        "Yi-Liang Gong",
+        "Yanze Li",
+        "Chao Zheng",
+        "Shu-Li You"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
     {
       "doi": "10.1002/anie.7127460",
       "journal": "Angew",
@@ -389,6 +418,213 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1021/jacs.6c13134",
+      "journal": "JACS",
+      "title": "Photodynamic Hijacking of APE1 Converts Tumor Defenses into Therapeutic Vulnerabilities via a Bidirectionally Gated Prodrug",
+      "abstract": "Abstract Photodynamic therapy (PDT) for melanoma is chronically undermined by adaptive resistance, a long-overlooked challenge rooted in coordinated antioxidant buffering and DNA repair defenses. Herein, we propose a novel photodynamic sabotage approach that converts tumor defenses into therapeutic vulnerabilities by hijacking one important defense hub, the APE1 protein. This was achieved through creating a bidirectionally gated theranostic prodrug, APE-BDP, which covalently links an iodine-engineered BODIPY to the APE1 inhibitor CRT through a photocleavable bridge. Beyond pioneering the master regulator APE1, as a photodynamic target, the molecular design strategically repurposes the inherent nitro group on CRT as an endogenous quencher that establishes a photoinduced electron transfer process to silence the iodinated BODIPY. Meanwhile, the steric bulk of the conjugate concurrently physically blocks the CRT–APE1 engagement. This bidirectional gating mechanism ensures reciprocal deactivation in the dark. A single green light trigger initiates near-instantaneous (∼100% within minutes) and synchronous liberation of both warheads, enabling a cooperative dual assault that potently disrupts redox homeostasis and inactivates the APE1-mediated DNA repair machinery. This concerted hijacking of the defense network within the tumor triggers multiple cell death pathways. After formulation",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Hui Bian",
+        "Dandan Ma",
+        "Fei Pan",
+        "Zhihan Guo",
+        "Haoyang Song",
+        "Nan Yi",
+        "Myung Hwa Kim",
+        "Danhong Zhou",
+        "Haidong Li",
+        "Xiaoqiang Chen",
+        "Xiaojun Peng",
+        "Juyoung Yoon"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c16323",
+      "journal": "JACS",
+      "title": "Radical Disconnection Logic Enables Direct Conversion of α-Amino Acids into Differentiated Vicinal Diamines",
+      "abstract": "Abstract Functional group interconversions (FGIs) are foundational to synthesis, yet classical acid-to-aminomethyl transformations remain intrinsically step- and redox-intensive. Here we introduce a radical disconnection strategy that enables the direct conversion of α-amino acids into differentiated vicinal diamines in a single step. The method relies on photocatalytic decarboxylation of readily available amino acids to generate α-amino radicals, which are selectively trapped by an in situ-formed, unstabilized N-protected formimine, a transient and previously inaccessible aminomethyl equivalent. This operationally simple approach circumvents harsh hydride reductions, tolerates hydride-sensitive functionalities, and offers broad generality. The robustness of the reaction is showcased by safe and intensified continuous-flow scale-up, with a gt;400-fold increase in space-time yield. Moreover, the differentiated diamines allow selective downstream functionalization and provide streamlined access to fragments of pharmaceutically active molecules. This work establishes radical disconnection as a powerful blueprint for redox-economical FGIs and unlocks a direct route to privileged vicinal diamine architectures.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Jonas Djossou",
+        "Francesco Pasca",
+        "Merve Akdeniz",
+        "Stefano Bonciolini",
+        "Antonio Pulcinella",
+        "Oliver M. Bayley",
+        "Zhiyuan He",
+        "Magnus J. Johansson",
+        "Marco Colella",
+        "Renzo Luisi",
+        "Bas de Bruin",
+        "Timothy Noël"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c14601",
+      "journal": "JACS",
+      "title": "Unlocking Sulfurdiimide Reagents as Radical Traps in the Decarboxylative Synthesis of Sulfinamidines",
+      "abstract": "Abstract Aza-sulfur(IV) and (VI) compounds are emerging motifs in medicinal and crop protection chemistry, creating a demand for new methodologies for their challenging synthesis. Sulfurdiimides, the diaza analogues of sulfur dioxide, remain underexplored in their potential to access aza-sulfur compounds, in particular their use as radical traps has not been reported. Here, we describe the synthesis of a new series of stable unsymmetrical sulfurdiimide reagents, which through choice of N-substituent, can be electronically tuned to unlock radical trapping reactivity. Taking advantage of the wide abundance of commercially available carboxylic acids, we have developed an acridine/copper cocatalyzed decarboxylative addition into sulfurdiimide reagents, to deliver a diverse range of sulfinamidine products. The method is scalable, and exhibits good functional group tolerance, and provides an efficient platform to access complex aza-sulfur(VI) functional groups.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Suzanne E. Davison",
+        "Jonathan A. Andrews",
+        "Agamemnon E. Crumpton",
+        "Cherry Chung",
+        "Mireia Sidera Portela",
+        "Michael C. Willis"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01347",
+      "journal": "JOC",
+      "title": "A New Carbocation Formation via Lewis Acid-Catalyzed C–O Bond Cleavage of N -Tosyl Carbamates",
+      "abstract": "Abstract A novel Lewis acid-catalyzed C–O bond cleavage of N-tosyl carbamates derived from secondary benzyl alcohols has been developed. In the presence of catalytic FeCl3, these carbamates undergo rapid C–O bond cleavage to generate reactive benzylic carbocation intermediates, which are efficiently intercepted by exogenous nucleophiles. The resulting intermolecular Friedel–Crafts alkylations and annulations proceed under mild conditions at 25 °C within 5 min to 5 h, affording diverse products in up to 96% yield. Control experiments demonstrate that the incorporation of N-tosylisocyanate substantially enhances the efficiency of benzylic alcohol activation under the present conditions. This method provides a rapid and versatile approach to diverse benzylic functionalization products from readily accessible secondary benzyl alcohols.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Hongchen Li",
+        "Xingyong Wang",
+        "Yang Cheng",
+        "Dayun Huang",
+        "Ruoqian Zhang",
+        "He Chen",
+        "Wanru Feng",
+        "Zerun Zhao",
+        "Zhanggui Hou",
+        "Songbao Fu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02855-0",
+      "journal": "Nature",
+      "title": "‘Remarkably encouraging’: stem-cell treatments for autoimmune diseases enter new phase",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Rachel Nuwer"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02858-x",
+      "journal": "Nature",
+      "title": "A guide to the Nature Index",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02856-z",
+      "journal": "Nature",
+      "title": "Competition heats up in the regenerative-medicine ranks",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/d41586-026-02563-9",
       "journal": "Nature",
       "title": "How do I rekindle my motivation for earning my PhD?",
@@ -406,6 +642,141 @@
         "crossref:1476-4687:online",
         "crossref:1476-4687:published",
         "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02986-4",
+      "journal": "Nature",
+      "title": "Huge hoard of metal bars hints at vast Iron Age trade",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02857-y",
+      "journal": "Nature",
+      "title": "Lack of female researchers and participants in regenerative-medicine research holds everyone back",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Doris A. Taylor"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02861-2",
+      "journal": "Nature",
+      "title": "The courier",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Joel Glover"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02854-1",
+      "journal": "Nature",
+      "title": "What is needed for regenerative medicine to flourish?",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Alexia Austin"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41929-026-01623-7",
+      "journal": "Nature Catalysis",
+      "title": "Author Correction: Alkali metal cation impurities stabilize Cu+ in oxide-derived copper for CO2 electrolysis",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Haesol Kim",
+        "Seunghoon Lee",
+        "Jihoon Son",
+        "Hansol Choi",
+        "Junsic Cho",
+        "Baptiste Gault",
+        "Won-Hyoung Lee",
+        "Benedikt Paul Klein",
+        "Cheolho Jeon",
+        "Joonhee Moon",
+        "Da Hye Won",
+        "Dae-Hyun Nam",
+        "Gyeongwon Kang",
+        "Hyeyoung Shin",
+        "Se-Ho Kim",
+        "Chang Hyuck Choi"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2520-1158:online",
+        "crossref:2520-1158:published",
+        "crossref:2520-1158:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -557,6 +928,64 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/s41467-026-78052-4",
+      "journal": "Nature Communications",
+      "title": "Berry curvature dipole generation and nonreciprocal spin photocurrents in ferroelectricity polarized heterostructures",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Yilin Zhang",
+        "Yuting Qian",
+        "Ganyu Chen",
+        "Caiyu Qiu",
+        "Qizheng Sun",
+        "Xi Deng",
+        "Wenyao Chang",
+        "Xiangyu Bi",
+        "Bohm-Jung Yang",
+        "Hongtao Yuan"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77390-7",
+      "journal": "Nature Communications",
+      "title": "Biocompatible piezoionic eutectogel sensor for self-powered physiological monitoring",
+      "abstract": "Abstract Piezoionics holds promise for self-powered bioelectronics, yet existing hydrogel and elastomer systems are often limited by poor biocompatibility, environmental instability, and low output. Here, we report a biocompatible deep eutectic solvent-polyvinyl alcohol (DES-PVA) eutectogel featuring a robust piezoionic response and practical wearable sensing capabilities. By incorporating a choline chloride-glycerol DES into a PVA network, we engineer tailored hydrogen bonds that selectively constrain choline cations while enabling rapid chloride anion transport, thereby amplifying the piezoionic response to achieve a sensitivity of 60 mV kPa –1 . In vitro assays verify the excellent biocompatibility of the eutectogel. Furthermore, practical application demonstrations underscore its capability for precise and continuous monitoring of diverse physiological signals, including pulse waveform and electrocardiograms (ECG), with fidelity comparable to commercial sensors. Overall, this work establishes a self-powered, bio-compliant epidermal platform for advanced iontronics and bioelectronics.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Bo Wu",
+        "Xuejie Liu",
+        "Zhiheng Zeng",
+        "Bolong Li",
+        "Haoyu Fang",
+        "Derek Ho"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/s41467-026-77863-9",
       "journal": "Nature Communications",
       "title": "Coupled increases in pelagic fish productivity and export productivity during the Paleocene-Eocene Thermal Maximum",
@@ -569,6 +998,190 @@
         "Man-Yin Tsang",
         "Mingsong Li",
         "Weiqi Yao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77984-1",
+      "journal": "Nature Communications",
+      "title": "Efficient field-free magnetization switching through orbital-current-enhanced magnon torque",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Guoyi Shi",
+        "Hua Bai",
+        "Chenhui Zhang",
+        "Lei Han",
+        "Jiankun Dai",
+        "Hui Ru Tan",
+        "Meining Du",
+        "Yuchen Pu",
+        "Wenqing He",
+        "Zhaohui Li",
+        "Anjan Soumyanarayanan",
+        "Cheng Song",
+        "Mehrdad Elyasi",
+        "Hyunsoo Yang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77741-4",
+      "journal": "Nature Communications",
+      "title": "Ghost Neuron preparation unlocks high-resolution structural mapping of intracellular architecture in axons",
+      "abstract": "Abstract Cellular cryo-electron microscopy (cryo-EM) offers powerful tools to reveal molecular architecture inside cells, but dense cytoplasm often obscures fine molecular features, especially in narrow neuronal projections. Here, we introduce the Ghost Neuron technique, a preparation combining brief hypotonic treatment with controlled mechanical rupture immediately before freezing, facilitating high-contrast imaging of neuronal ultrastructure within its neurite topology. By removing the plasma membrane and reducing cytoplasmic density, the method allows high-resolution structural analysis while preserving the overall geometry of neurites. The method allows structural information to be mapped back onto neuronal architecture. The preparation also releases endogeneous macromolecular complexes onto EM grids, creating particle-rich regions suitable for high-resolution structural analysis. Using Ghost Neuron , we resolved axonal microtubules at 3.59 Å and 3.9 Å resolution, distinguishing expanded and compact lattice states, and mapped these states as interspersed patches along individual microtubules within axons. We also resolved axonal actin filaments and identified cofilin-decorated actin. These results establish Ghost Neuron as a discovery platform for linking molecular structure to neuronal organization.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Satish Bodakuntla",
+        "Julia Marelli",
+        "Victor Vasquez-Montes",
+        "Simon Glauser",
+        "Christian Biertümpfel",
+        "Naoko Mizuno"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77961-8",
+      "journal": "Nature Communications",
+      "title": "Gα12/13 deficiency attenuates obesity-associated adipose tissue inflammation and promotes energy expenditure",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Yeonho Son",
+        "Seokyoung Hwang",
+        "Honghyun Jo",
+        "Junhyuck Lee",
+        "Chaehui Yoon",
+        "Seunghyeon Shin",
+        "Yejin Moon",
+        "Cheoljun Choi",
+        "Ja Hyun Koo",
+        "Je Kyung Seong",
+        "Sik Namgoong",
+        "Zachary Gerhart-Hines",
+        "Minsoo Noh",
+        "Sang Geon Kim",
+        "Yun-Hee Lee"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77912-3",
+      "journal": "Nature Communications",
+      "title": "Iodide-bridged interfacial hydrogen bonds enable ampere-level electrosynthesis of deuterated acetic acid",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Qian Li",
+        "Rui Li",
+        "Meng He",
+        "Mengmei Qin",
+        "Chuanqi Cheng",
+        "Bin Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77283-9",
+      "journal": "Nature Communications",
+      "title": "Loss of intestinal Akt elicits rapid mortality via intestinal damage which is rescued by mTORC1 activation",
+      "abstract": "Abstract Combined Akt1 and Akt2 systemic deletion in adult mice elicits rapid mortality, preceded by body weight loss, diarrhea, and inflammation. Here, we show that lethality induced by systemic Akt1/Akt2 deletion is caused by intestinal damage, as intestinal Akt1/Akt2 deletion induces mortality phenocopying systemic deletion. Consistently, Akt ablation impairs intestinal organoid formation in vitro. Both in vivo and in vitro results show that Akt is essential for the survival of Paneth cells and survival and proliferation of Lgr5 + and transit-amplifying cells. Additional intestinal deletion of either FoxO1 or Tsc1 activates mTORC1 and rescues this phenotype. Thus, mTORC1 emerges as the most critical downstream effector of Akt in maintaining intestinal integrity. Indeed, mTORC1 inhibition by Raptor deletion phenocopies intestinal deletion of Akt1/Akt2 . Remarkably, systemic Akt1/Akt2 deletion is tolerated when FoxO1 is deleted concurrently. This study unravels a critical role for Akt in maintaining intestinal homeostasis and the interplay between its downstream effectors FoxO1 and mTORC1.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Ahmed Magdy",
+        "Hyunsoo Rho",
+        "Muzamil Mushtaq",
+        "William Putzbach",
+        "Veronique Nogueira",
+        "Vaibhav Chand",
+        "Nissim Hay"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77729-0",
+      "journal": "Nature Communications",
+      "title": "Niche specialization and prevalence of comammox Nitrospira in the alkaline sediments of thermokarst lakes on the Tibetan Plateau",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Kang Song",
+        "Yuren Wang",
+        "Lu Li",
+        "Min Deng",
+        "Fengchang Wu",
+        "Zhiwei Xia",
+        "Xiaoli Zhao",
+        "Chris Greening",
+        "Sebastian Lücker",
+        "Jianhua Guo"
       ],
       "topics": [],
       "sources": [
@@ -682,6 +1295,37 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1021/acs.orglett.6c03346",
+      "journal": "Organic Letters",
+      "title": "Catalytic Asymmetric Total Synthesis of Roridin E",
+      "abstract": "Abstract We report the first catalytic asymmetric total synthesis of roridin E, a macrocyclic type D trichothecene. Phase-transfer-catalyzed alkylation of a β-keto ester made in one step from an inexpensive enone delivers the first stereodefined (−)-verrucarol precursor in quantitative yield and gt;99% ee on a decagram scale, and a Z-selective intramolecular Horner–Wadsworth–Emmons macrocyclization completes the route in 33 steps (longest linear sequence). Synthetic roridin E matched the natural isolate in cytotoxicity across six cancer cell lines.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Seungbin Park",
+        "Geetanjali B. Gone",
+        "Jisu Do",
+        "Minjoo Kim",
+        "Eunseok Choi",
+        "Ki Hyun Kim",
+        "Sang J. Chung"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03520",
       "journal": "Organic Letters",
       "title": "Gold(I)-Catalyzed Regioselective C≡C Bond Cleavage of o -Alkynyl Anilines with tert -Butyl Nitrite to Prepare 2-Aminobenzonitriles",
@@ -753,9 +1397,13 @@
     }
   ],
   "potentialGapDois": [
+    "10.1021/acscatal.6c04954",
+    "10.1021/jacs.6c16323",
+    "10.1021/jacs.6c14601",
     "10.1038/s41557-026-02247-x",
     "10.1038/s41467-026-78015-9",
     "10.1038/s41467-026-77480-6",
+    "10.1021/acs.orglett.6c03346",
     "10.1021/acs.orglett.6c03520",
     "10.31635/ccschem.026.202608262"
   ]
