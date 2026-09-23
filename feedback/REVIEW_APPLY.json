@@ -1,15 +1,17 @@
 {
-  "generatedAt": "2026-09-23T10:16:00+08:00",
+  "generatedAt": "2026-09-23T10:18:00+08:00",
   "updates": [
-    { "id": 29, "status": "reviewed" }
+    { "id": 30, "status": "reviewed" }
   ],
-  "expectedOpenIds": [8, 20, 21, 22, 23, 24, 25, 28, 30, 31],
+  "expectedOpenIds": [8, 20, 21, 22, 23, 24, 25, 28, 31, 32],
   "reviewBasis": {
-    "issueScope": "Feedback29 larger nonfullscreen full-text summary presentation, not production AI content or fulltext acquisition.",
-    "implementation": "PR139 b00b03aa03d3dccb7a46ac6bd54d51392029de34 preserved by PR142 f5446507a49ac612dbf53aaa069d1a8343c1e01d.",
-    "priorLive": "Run35761048963: all four viewport presentation cases and resize/anchoring passed on both active entries; only the declared no-TOC test input was not established on GitHub.",
-    "emptyStateLive": "Run35809187579: 4/4 on GitHub and 4/4 on Worker. Actual deployed custom element with controlled absent-TOC card inputs, available and missing-fulltext responses, 390px/1280px, decoded display, full-width text, bounds, language switching, normal close clicks and zero page errors. All API traffic mocked, production writes disallowed.",
-    "artifacts": [10729280898, 10728329959],
-    "unclosed": "Feedback28 original-image full acceptance, feedback30 pending complete live regression, feedback31 intelligent/person/circular cropping, and existing reader-count issues remain open. Cloudflare Pages fallback availability is separate and not rechecked here."
+    "implementation": "PR142 f5446507a49ac612dbf53aaa069d1a8343c1e01d, exact tested head fa6014af177a7b0b0460a973b9f65f22d7bf92ca.",
+    "liveRunId": 35809447014,
+    "liveWorkflowCommit": "f54b253dad6e61e513c59afbbe84f646aa1265aa",
+    "github": { "passed": 7, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729780375 },
+    "worker": { "passed": 7, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729196589 },
+    "scope": "Actual deployed WebKit controls, five effects, color following, caption readability, raw-image hashes, reload, reduced motion, rollback, unknown mode safety. Production API writes mocked and no reader marks sent.",
+    "previousApply": "Run35809663399 updated29 successfully (updated1 failed0); open-ID verification then detected newly submitted32. Do not retry29 or close32. This plan preserves32 and only updates30.",
+    "remaining": "31 includes intelligent/person/circular cropping not implemented here and stays open despite completed caption layering.28 broader original-image live acceptance and reader-count business issue remain open. Cloudflare Pages fallback not accepted by these active-entry tests."
   }
 }
