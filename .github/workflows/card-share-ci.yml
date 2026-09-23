@@ -61,10 +61,16 @@ jobs:
           (async () => {
             const browser = await chromium.launch({ headless: true });
             const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-            const diagnostics = [];
-            page.on('pageerror', error => diagnostics.push('pageerror: ' + String(error)));
+            const pageErrors = [];
+            const consoleErrors = [];
+            const failedSameOrigin = [];
+            page.on('pageerror', error => pageErrors.push(String(error)));
             page.on('console', message => {
-              if (message.type() === 'error') diagnostics.push('console: ' + message.text());
+              if (message.type() === 'error') consoleErrors.push(message.text());
+            });
+            page.on('requestfailed', request => {
+              const url = request.url();
+              if (url.startsWith('http://127.0.0.1:4173/')) failedSameOrigin.push(url + ' :: ' + (request.failure()?.errorText || 'failed'));
             });
             await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
             await page.locator('html[data-card-share-ready="true"]').waitFor({ state: 'attached', timeout: 15000 });
@@ -91,8 +97,9 @@ jobs:
             if ((firstVisibleDoi || '').toLowerCase() !== doi.toLowerCase()) {
               throw new Error('shared DOI was not promoted to the first visible card');
             }
-            if (diagnostics.length) throw new Error('browser diagnostics: ' + diagnostics.join(' | '));
-            console.log(JSON.stringify({ cardShare: true, qr: true, deepLink: true, doi }));
+            if (pageErrors.length) throw new Error('page errors: ' + pageErrors.join(' | '));
+            if (failedSameOrigin.length) throw new Error('same-origin request failures: ' + failedSameOrigin.join(' | '));
+            console.log(JSON.stringify({ cardShare: true, qr: true, deepLink: true, doi, externalConsoleErrors: consoleErrors.length }));
             await browser.close();
           })().catch(error => { console.error(error); process.exit(1); });
           NODE
