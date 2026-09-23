@@ -4,7 +4,6 @@ on:
     branches: [feat/media-batch20-paired-toc-body]
     paths:
       - '.github/workflows/media-batch20-paired-workbench.yml'
-      - 'scripts/apply-media-batch20-paired.py'
       - 'scripts/test-media-batch20-paired.mjs'
 permissions:
   contents: write
@@ -23,10 +22,9 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Apply batch20 paired publication patch
+      - name: Check current paired publication implementation
         run: |
           set -euo pipefail
-          python3 scripts/apply-media-batch20-paired.py
           node --check cloudflare/scripts/merge-new-body-auto.mjs
           node --check cloudflare/scripts/merge-local-captures.mjs
           node --check scripts/test-media-batch20-paired.mjs
@@ -46,7 +44,7 @@ jobs:
           const c=fs.readFileSync('.github/workflows/new-body-continuous.yml','utf8');
           assert.match(c,/cron:\s*'\*\/5 \* \* \* \*'/);
           const p=JSON.parse(fs.readFileSync('audit/media-auto-policy.json','utf8'));
-          assert.equal(p.targetNewArticles,20);assert.equal(p.tailFlushAfterMinutes,15);assert.equal(p.requireOfficialToc,true);
+          assert.equal(p.targetNewArticles,20);assert.equal(p.tailFlushAfterMinutes,15);assert.equal(p.requireOfficialTocInBuild,true);
           console.log('BATCH20_WORKFLOW_ORDER_OK');
           JS
       - name: Extract frozen actual marked-image fixture
