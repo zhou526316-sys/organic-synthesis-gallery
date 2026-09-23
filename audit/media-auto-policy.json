@@ -20,8 +20,9 @@
   ],
   "verificationMode": "automated_source_identity_digest_and_image_decode",
   "individualSemanticReview": false,
-  "notes": "New server-marked current-generation ACS body figures only. Publish in batches of at least 20 and at most 25 articles. A body figure may enter a new batch only when the same Pages build already contains an official TOC for that DOI, so freshly captured TOC and body media can go live together. No historical unquarantine, publisher downloads, TOC replacement, image replacement, or literature additions. Opaque sources remain in the separate review task. Existing manually reviewed approvals are preserved.",
-  "minNewArticles": 20,
+  "notes": "New server-marked current-generation ACS body figures only. Normally publish 20-25 distinct articles per deployment. If only 1-19 eligible articles remain and qualifying TOC/body evidence has not changed for 15 minutes, flush the stable tail instead of waiting indefinitely. A body figure may enter a new batch only when the same Pages build already contains an official non-fallback TOC for that DOI, so freshly captured TOC and body media can go live together. No historical unquarantine, publisher downloads, TOC replacement, image replacement, or literature additions. Opaque sources remain in the separate review task. Existing manually reviewed approvals are preserved.",
   "requireOfficialTocInBuild": true,
-  "reviewBatchTarget": "20-25 articles"
+  "reviewBatchTarget": "normally 20-25 articles; flush stable tail after 15 minutes",
+  "targetNewArticles": 20,
+  "tailFlushAfterMinutes": 15
 }
