@@ -1,0 +1,42 @@
+name: Verify live progress installer
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read public installer and passive panel contracts
+        run: |
+          node --input-type=module - <<'JS'
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          import {writeFile} from 'node:fs/promises';
+          const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+          const worker='https://organic-synthesis-gallery.zhou526316.workers.dev';
+          async function get(url){const r=await fetch(url+'?tm222='+Date.now(),{headers:{origin:'https://zhou526316-sys.github.io','cache-control':'no-cache'},signal:AbortSignal.timeout(20000)});assert.equal(r.status,200,url);return r.text();}
+          const script=await get(base+'gallery-vpn-bridge.user.js');
+          assert.match(script,/^\/\/ @version\s+2\.2\.22\s*$/m);
+          for(const s of ['BEGIN OSG_LIVE_PROGRESS_V1','captureLiveUpdate','captureLiveSnapshot','mountCaptureLivePanel','查看实时抓取进度','setInterval(render, 1000)',"var VERSION = '6.2.20';",'assertBoundCaptureJob','previous_task_tab_not_closed','requestControllerStart','pending_verified_promotion'])assert.ok(script.includes(s),s);
+          const cap=JSON.parse(await get(worker+'/api/media/capture-capabilities'));
+          assert.equal(cap.captureVersion,'6.2.20');assert.equal(cap.publishedAutomatically,false);
+          const m=JSON.parse(await get(base+'media-index.json'));
+          const retained=Object.values(m.items).filter(r=>r.toc?.recoveryId==='toc-batch1-20260922').length;
+          assert.ok(retained>=83);
+          const report={checkedAt:new Date().toISOString(),installer:base+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.22',captureProtocol:'6.2.20',scriptBytes:Buffer.byteLength(script),scriptSha256:createHash('sha256').update(script).digest('hex'),retainedReviewedToc:retained,workerCapabilities:cap,panelPollSeconds:1,pollSource:'local Tampermonkey storage, no server polling',writes:0,liveUserExtensionVerified:false};
+          await writeFile(process.env.RUNNER_TEMP+'/tm222-live-acceptance.json',JSON.stringify(report,null,2));
+          console.log('TM222_LIVE_ACCEPTED '+JSON.stringify(report));
+          JS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tm222-live-acceptance
+          path: ${{ runner.temp }}/tm222-live-acceptance.json
+          retention-days: 7
