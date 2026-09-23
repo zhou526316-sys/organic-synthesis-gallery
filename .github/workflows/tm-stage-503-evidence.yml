@@ -1,0 +1,77 @@
+name: Read stage upload failure evidence
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/tm-stage-503-evidence.yml','audit/automation-triggers/tm-stage-503-evidence.json']
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preserve exact nonsecret capture and Worker source
+        run: |
+          python3 - <<'PY'
+          import os,pathlib,subprocess,zipfile
+          dest=pathlib.Path(os.environ['RUNNER_TEMP'])/'stage503';dest.mkdir()
+          names=subprocess.check_output(['git','ls-files'],text=True).splitlines()
+          with zipfile.ZipFile(dest/'source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in names:
+                  if name.startswith(('cloudflare/worker/src/','cloudflare/worker/scripts/','cloudflare/scripts/','shared/','scripts/','.github/workflows/')) and name.endswith(('.js','.mjs','.py','.yml','.json','.ts')) or name in ('public/toc-mainline.user.js','package.json','PROJECT_RULES.md','docs/literature-update-protocol.md','cloudflare/worker/wrangler.jsonc','cloudflare/worker/package.json'):
+                      z.write(name,name)
+          (dest/'base-sha.txt').write_text(os.environ['GITHUB_SHA'])
+          PY
+      - name: Read actual recent stored reports and stage coverage
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import datetime,json,os,pathlib,re,urllib.parse,urllib.request
+          base='https://api.cloudflare.com/client/v4/accounts/'+os.environ['CLOUDFLARE_ACCOUNT_ID']+'/r2/buckets/organic-synthesis-gallery-media/objects/'
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*a,**k): return None
+          opener=urllib.request.build_opener(NoRedirect())
+          def get(key):
+              assert key in ('local-captures/tampermonkey/report-index.json','local-captures/article-figures/stage-index.json') or re.fullmatch(r'local-captures/tampermonkey/reports/[A-Za-z0-9_/-]+\.json',key)
+              req=urllib.request.Request(base+urllib.parse.quote(key,safe='/'),headers={'Authorization':'Bearer '+os.environ['CLOUDFLARE_API_TOKEN']})
+              with opener.open(req,timeout=20) as r: raw=r.read(6000001)
+              assert len(raw)<=6000000
+              return json.loads(raw)
+          def clean(v):
+              if isinstance(v,dict): return {k:clean(x) for k,x in v.items() if not re.search(r'token|secret|password|cookie|authorization|imageData|html',k,re.I)}
+              if isinstance(v,list): return [clean(x) for x in v]
+              if not isinstance(v,str): return v
+              def u(m):
+                  try:
+                      x=urllib.parse.urlsplit(m.group());return urllib.parse.urlunsplit((x.scheme,x.hostname or '',x.path,'',''))
+                  except ValueError:return '[url]'
+              v=re.sub(r'https?://[^\s\"\'<>]+',u,v)
+              return re.sub(r'(?i)Bearer\s+\S+|(?:token|secret|password|cookie|authorization|signature)\s*[:=]\s*[^\s;,]+','[redacted]',v)
+          out={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'readOnly':True,'mediaWrites':0,'errors':[],'details':[]}
+          try:
+              ix=get('local-captures/tampermonkey/report-index.json');items=ix['items'];items=list(items.values()) if isinstance(items,dict) else items
+              items=sorted(items,key=lambda r:r.get('updatedAt',0),reverse=True)
+              out.update(indexDoiCount=len(items),automaticDois=sum(str(x.get('candidateSource','')).startswith('auto_') for x in items),indexUpdatedAt=ix.get('updatedAt'))
+              out['latest']=clean([{k:v for k,v in r.items() if k!='attempts'} for r in items[:12]])
+              for row in items[:8]:
+                  a=(row.get('attempts') or [row])[0]
+                  try:out['details'].append(clean(get(a['reportKey'])))
+                  except Exception as e:out['errors'].append({'doi':row.get('doi'),'error':type(e).__name__,'httpStatus':getattr(e,'code',None)})
+              st=get('local-captures/article-figures/stage-index.json');si=st['items'];si=list(si.values()) if isinstance(si,dict) else si
+              live=[r for r in si if r.get('updatedAt',0)>=1790082000000]
+              out['stage']={'rows':len(si),'postCutoverRows':len(live),'updatedAt':st.get('updatedAt'),'latest':clean(sorted(live,key=lambda r:r.get('updatedAt',0),reverse=True)[:10])}
+          except Exception as e:out['errors'].append({'error':type(e).__name__,'httpStatus':getattr(e,'code',None)})
+          out['readCompletedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          pathlib.Path(os.environ['RUNNER_TEMP'],'stage503','evidence.json').write_text(json.dumps(out,ensure_ascii=False,indent=2))
+          print('STAGE503_READ '+json.dumps({k:v for k,v in out.items() if k not in ('latest','details','stage')},ensure_ascii=False))
+          if out['errors']:raise SystemExit('Read incomplete; not evidence of zero captures')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-stage-503-source-evidence
+          path: ${{ runner.temp }}/stage503/*
+          retention-days: 7
