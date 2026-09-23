@@ -1,4 +1,5 @@
 import './media-enhancements.css';
+import { installMediaGestures } from './user-ui/media-gestures';
 
 const MIN_SCALE = 0.2;
 const MAX_SCALE = 6;
@@ -100,7 +101,7 @@ function likelyImageHref(host: HTMLElement): string | undefined {
 function preferredSource(host: HTMLElement, image: HTMLImageElement): string {
   return absoluteUrl(host.dataset.masterSrc)
     || absoluteUrl(image.dataset.masterSrc)
-    || bestSrcsetUrl(image)
+    || bestSrcsetUrlUrl(image)
     || likelyImageHref(host)
     || image.currentSrc
     || image.src;
@@ -258,11 +259,6 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
   let naturalHeight = 0;
   let fitScale = 1;
   let scale = 1;
-  let dragging = false;
-  let dragStartX = 0;
-  let dragStartY = 0;
-  let scrollStartLeft = 0;
-  let scrollStartTop = 0;
 
   const syncStage = (recenter = false): void => {
     if (!naturalWidth || !naturalHeight) return;
@@ -294,10 +290,15 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
     zoomIn.disabled = scale >= MAX_SCALE - 0.001;
   };
 
+  const gestures = installMediaGestures({
+    viewport, image, getScale: () => scale,
+    setScale: next => setScale(next, false), minScale: MIN_SCALE, maxScale: MAX_SCALE,
+  });
   const navigationSuffix = (): string => mediaItems.length > 1 ? ` · ${currentIndex + 1}/${mediaItems.length}` : '';
 
   const navigate = (delta: number): void => {
     if (mediaItems.length <= 1) return;
+    gestures.reset();
     currentIndex = (currentIndex + delta + mediaItems.length) % mediaItems.length;
     const item = mediaItems[currentIndex];
     title.textContent = item.label;
@@ -318,6 +319,7 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
   };
 
   const dismiss = (): void => {
+    gestures.destroy();
     document.body.style.overflow = previousOverflow;
     window.removeEventListener('keydown', onKeyDown, true);
     window.removeEventListener('resize', onResize);
@@ -325,6 +327,7 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
   };
 
   const onResize = (): void => {
+    gestures.reset();
     fitScale = computeFit();
     setScale(Math.min(scale, Math.max(1, fitScale)), false);
     syncStage(false);
@@ -357,6 +360,7 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
   };
 
   const handleAction = (action: string): void => {
+    gestures.reset();
     if (action === 'previous') navigate(-1);
     if (action === 'next') navigate(1);
     if (action === 'zoom-out') setScale(scale / ZOOM_FACTOR);
@@ -389,32 +393,6 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
     setScale(scale * factor, false);
   }, { passive: false });
 
-  viewport.addEventListener('pointerdown', event => {
-    if (event.button !== 0 || (stage.scrollWidth <= viewport.clientWidth && stage.scrollHeight <= viewport.clientHeight)) return;
-    dragging = true;
-    dragStartX = event.clientX;
-    dragStartY = event.clientY;
-    scrollStartLeft = viewport.scrollLeft;
-    scrollStartTop = viewport.scrollTop;
-    viewport.classList.add('dragging');
-    viewport.setPointerCapture(event.pointerId);
-  });
-
-  viewport.addEventListener('pointermove', event => {
-    if (!dragging) return;
-    viewport.scrollLeft = scrollStartLeft - (event.clientX - dragStartX);
-    viewport.scrollTop = scrollStartTop - (event.clientY - dragStartY);
-  });
-
-  const stopDragging = (event: PointerEvent): void => {
-    if (!dragging) return;
-    dragging = false;
-    viewport.classList.remove('dragging');
-    if (viewport.hasPointerCapture(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
-  };
-  viewport.addEventListener('pointerup', stopDragging);
-  viewport.addEventListener('pointercancel', stopDragging);
-
   image.addEventListener('error', () => {
     const fallback = image.dataset.fallbackSrc || '';
     if (fallback && image.dataset.fallbackTried !== '1' && image.src !== fallback) {
@@ -424,6 +402,7 @@ function openViewer(sourceImage: HTMLImageElement, label: string, sourceUrl?: st
   });
 
   image.addEventListener('load', () => {
+    gestures.reset();
     naturalWidth = image.naturalWidth;
     naturalHeight = image.naturalHeight;
     dimensions.textContent = naturalWidth && naturalHeight
