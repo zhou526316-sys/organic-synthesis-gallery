@@ -39,7 +39,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.25';
+  var CONTROLLER_REVISION = '2.2.26';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
@@ -2567,8 +2567,18 @@ function embeddedJobDois(value) {
     return best;
   }
 
+  function pairedDiscoveryReady(job, stable, tocCount, figureCount, elapsedMs, figureQuietMs) {
+    if (stable < 2) return false;
+    var wantsFigures = String(job && job.mediaNeed || '').indexOf('figures') >= 0;
+    if (!wantsFigures) return Boolean(tocCount || elapsedMs >= 18000);
+    // A TOC can appear several seconds before ACS lazy body figures. Do not let it
+    // terminate a body job before the full-page scroll has had time to settle.
+    if (!figureCount) return elapsedMs >= 18000;
+    return elapsedMs >= 8000 && figureQuietMs >= 4000;
+  }
+
   async function waitForPairedVisuals(job,trace) {
-    var started=Date.now(),step=0,lastSignature='',stable=0;
+    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started;
     var toc=[],figures=[];
     while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
       if (isAbortRequested()) throw new Error('user_aborted');
@@ -2581,13 +2591,18 @@ function embeddedJobDois(value) {
       }
       toc=collectCandidates(job,trace,document,location.href,'paired_dom',true);
       figures=collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom');
-      var signature=toc.map(function(x){return x.url;}).join('|')+'::'+figures.map(function(x){return x.label+'|'+x.url;}).join('|');
+      var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
+      if (figureSignature!==lastFigureSignature) {lastFigureSignature=figureSignature;figureChangedAt=Date.now();}
+      var signature=toc.map(function(x){return x.url;}).join('|')+'::'+figureSignature;
       stable=signature===lastSignature?stable+1:0;lastSignature=signature;
       if (step<5) {
         var h=Math.max(document.documentElement.scrollHeight,document.body?document.body.scrollHeight:0);
         try {window.scrollTo(0,Math.floor(h*step/4));}catch(_){}
         step+=1;stable=0;
-      } else if (stable>=2 && (toc.length||figures.length||Date.now()-started>=18000)) break;
+      } else {
+        var now=Date.now(),elapsed=now-started,figureQuiet=now-figureChangedAt;
+        if (pairedDiscoveryReady(job,stable,toc.length,figures.length,elapsed,figureQuiet)) break;
+      }
       await sleep(800);
     }
     return {toc:toc,figures:figures};
