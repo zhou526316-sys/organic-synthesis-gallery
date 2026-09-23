@@ -20,8 +20,10 @@
   ],
   "verificationMode": "automated_source_identity_digest_and_image_decode",
   "individualSemanticReview": false,
-  "notes": "New server-marked current-generation ACS body figures only. Publish in batches of at least 20 and at most 25 articles. A body figure may enter a new batch only when the same Pages build already contains an official TOC for that DOI, so freshly captured TOC and body media can go live together. No historical unquarantine, publisher downloads, TOC replacement, image replacement, or literature additions. Opaque sources remain in the separate review task. Existing manually reviewed approvals are preserved.",
+  "notes": "New server-marked current-generation ACS body figures only. Prefer 20-25 article releases; if fewer than 20 paired TOC+body articles remain and no eligible capture has updated for 15 minutes, release the smaller validated tail instead of waiting indefinitely. A body figure may enter only when the same Pages build already contains an official TOC for that DOI. No historical unquarantine, publisher downloads, TOC fallback substitution, image replacement, or literature additions.",
   "minNewArticles": 20,
   "requireOfficialTocInBuild": true,
-  "reviewBatchTarget": "20-25 articles"
+  "reviewBatchTarget": "prefer 20-25 articles; flush smaller validated tail after 15 quiet minutes",
+  "tailFlushIdleMinutes": 15,
+  "tailFlushMinArticles": 1
 }

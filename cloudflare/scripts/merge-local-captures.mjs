@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const SOURCE = (process.env.GALLERY_BACKEND_SOURCE || 'https://organic-synthesis-gallery.zhou526316.workers.dev').replace(/\/$/, '');
 const PUBLIC_DIR = path.resolve('public');
@@ -17,25 +18,33 @@ function normalizeDoi(value) {
   return /^10\.\d{4,9}\/\S+$/i.test(cleaned) ? cleaned : null;
 }
 
-function embeddedNatureDoi(value) {
-  let decoded = String(value || '');
-  for (let i = 0; i < 2; i += 1) {
-    try {
-      const next = decodeURIComponent(decoded);
-      if (next === decoded) break;
-      decoded = next;
-    } catch {
-      break;
-    }
+export function embeddedKnownDois(value) {
+  let decoded=String(value||'').split(/[?#]/,1)[0];
+  for(let i=0;i<3;i+=1){
+    try{const next=decodeURIComponent(decoded);if(next===decoded)break;decoded=next;}catch{break;}
   }
-  const match = decoded.match(/10\.1038\/s\d+-\d+-\d+[a-z0-9-]*/i);
-  return match ? normalizeDoi(match[0]) : null;
+  const found=new Set();
+  for(const match of decoded.matchAll(/10\.(1021|1002|1038|1126|1039|1016|31635)[\/_]([a-z0-9._()-]+)/ig)){
+    const doi=normalizeDoi('10.'+match[1]+'/'+match[2]);if(doi)found.add(doi);
+  }
+  try{
+    const u=new URL(decoded);
+    if(/^(?:www\.)?nature\.com$/i.test(u.hostname)){
+      const m=u.pathname.match(/^\/articles\/(s\d+-\d+-\d+[a-z0-9-]*)/i);
+      if(m)found.add(normalizeDoi('10.1038/'+m[1]));
+    }
+  }catch{}
+  return [...found].filter(Boolean);
 }
 
-function captureBelongsToDoi(capture, doi) {
-  if (!doi?.startsWith('10.1038/')) return true;
-  const embedded = embeddedNatureDoi(capture?.sourceUrl || '');
-  return !embedded || embedded === doi;
+export function captureBelongsToDoi(capture, doi) {
+  const target=normalizeDoi(doi||'');
+  if(!target)return false;
+  const embedded=[...new Set([
+    ...embeddedKnownDois(capture?.articleUrl||''),
+    ...embeddedKnownDois(capture?.sourceUrl||'')
+  ])];
+  return embedded.every(value=>value===target);
 }
 
 function trueToc(toc) {
@@ -242,4 +251,4 @@ async function main() {
   if (failures && merged === 0) process.exitCode = 2;
 }
 
-await main();
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();

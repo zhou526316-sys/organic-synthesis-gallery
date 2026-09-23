@@ -1,0 +1,96 @@
+name: Adaptive paired media batching regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/adaptive-media-batching.yml'
+      - 'audit/media-auto-policy.json'
+      - 'cloudflare/scripts/merge-new-body-auto.mjs'
+      - 'cloudflare/scripts/merge-local-captures.mjs'
+      - 'scripts/test-adaptive-media-batching.mjs'
+      - 'scripts/test-new-body-auto.mjs'
+      - 'docs/body-media-publication.md'
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: adaptive-media-batching
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Check code and adaptive batch contracts
+        run: |
+          set -euo pipefail
+          node --check cloudflare/scripts/merge-new-body-auto.mjs
+          node --check cloudflare/scripts/merge-local-captures.mjs
+          node --check scripts/test-adaptive-media-batching.mjs
+          node scripts/test-adaptive-media-batching.mjs | tee "$RUNNER_TEMP/adaptive-media.log"
+          grep -F 'ADAPTIVE_BATCH_TEST_SUMMARY ' "$RUNNER_TEMP/adaptive-media.log"
+          node --input-type=module - <<'JS'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          const continuous=fs.readFileSync('.github/workflows/new-body-continuous.yml','utf8');
+          assert.match(continuous,/cron:\s*'\*\/5 \* \* \* \*'/);
+          const pages=fs.readFileSync('.github/workflows/github-pages.yml','utf8');
+          const toc=pages.indexOf('Merge D1-free local VPN captures');
+          const body=pages.indexOf('Independently validate and publish newly marked body captures');
+          assert.ok(toc>0&&body>toc,'same-build local TOC merge must precede body publication');
+          const policy=JSON.parse(fs.readFileSync('audit/media-auto-policy.json','utf8'));
+          assert.equal(policy.minNewArticles,20);assert.equal(policy.maxNewArticles,25);assert.equal(policy.tailFlushIdleMinutes,15);
+          const tm=fs.readFileSync('public/toc-mainline.user.js','utf8');
+          assert.ok(tm.includes('BEGIN OSG_AUTO_REPORT_V1')&&tm.includes('enqueueCaptureReport')&&tm.includes("var CONTROLLER_REVISION = '2.2.24';"));
+          console.log('ADAPTIVE_WORKFLOW_ORDER_OK');
+          JS
+          git diff --check
+      - name: Extract frozen real new-image fixture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,io,json,os,pathlib,re,urllib.parse,urllib.request,zipfile
+          class BoundRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,req,fp,code,msg,headers,newurl):
+                  result=super().redirect_request(req,fp,code,msg,headers,newurl)
+                  if result is not None and urllib.parse.urlsplit(req.full_url).netloc!=urllib.parse.urlsplit(newurl).netloc:
+                      result.remove_header('Authorization')
+                  return result
+          req=urllib.request.Request('https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/artifacts/10737978319/zip',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+          with urllib.request.build_opener(BoundRedirect()).open(req,timeout=40) as r: raw=r.read(32000001)
+          assert len(raw)<=32000000 and hashlib.sha256(raw).hexdigest()=='d2ca8159ecdabb4ee21aa389f92f621de0c962eec657ba9514e31f584ded782c'
+          z=zipfile.ZipFile(io.BytesIO(raw));ev=json.loads(z.read('evidence.json'));assert not ev['errors']
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'auto-fixture';(out/'images').mkdir(parents=True)
+          (out/'evidence.json').write_text(json.dumps(ev))
+          for row in ev['images']:
+              if row.get('reviewMarker',{}).get('revision')!='1': continue
+              assert re.fullmatch(r'images/next-\d{3}\.(svg|png|webp)',row['file'])
+              b=z.read(row['file']);assert hashlib.sha256(b).hexdigest()==row['sha256'];(out/row['file']).write_bytes(b)
+          PY
+      - name: Run actual-byte and prior publication regressions
+        env:
+          BODY_AUTO_FIXTURE: ${{ runner.temp }}/auto-fixture
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node scripts/test-new-body-auto.mjs | tee "$RUNNER_TEMP/new-body-auto.log"
+          grep -F 'NEW_BODY_AUTO_TESTS ' "$RUNNER_TEMP/new-body-auto.log"
+          node scripts/test-reviewed-body.mjs
+          node scripts/test-body-review-markers.mjs
+          git diff --check
+          git diff --exit-code -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json public/toc-mainline.user.js src cloudflare/worker
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: adaptive-media-batching-tested
+          path: |
+            ${{ runner.temp }}/adaptive-media.log
+            ${{ runner.temp }}/new-body-auto.log
+          retention-days: 14
+          if-no-files-found: warn

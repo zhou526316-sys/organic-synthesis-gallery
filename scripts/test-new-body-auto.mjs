@@ -56,18 +56,28 @@ try{
   }
   function mediaFor(count,officialCount=count){return {items:Object.fromEntries(synthetic.slice(0,count).map((x,i)=>[x.row.doi,record(x.row.doi,i<officialCount)]))};}
   function liveFor(count){return {items:Object.fromEntries(synthetic.slice(0,count).map(x=>[x.row.doi,record(x.row.doi,false)]))};}
+  function localOfficial(row){return {doi:row.doi,kind:'official',captureVersion:'6.2.20',pageDoi:row.doi,mediaGeneration:BODY_MEDIA_GENERATION,updatedAt:row.updatedAt,
+    articleUrl:row.articleUrl,sourceUrl:row.sourceUrl};}
   async function reset(media){await writeFile(mediaPath,JSON.stringify(media));await writeFile(ledgerPath,JSON.stringify({schemaVersion:1,count:0,items:[]}));}
-  function inputs(count,previous={policyId:policy.policyId,items:[],attempts:{}}){return {previous,live:liveFor(count),stage:{count,items:synthetic.slice(0,count).map(x=>x.row)},stageError:null};}
+  function inputs(count,previous={policyId:policy.policyId,items:[],attempts:{}},overrideItems=null){
+    const items=overrideItems||synthetic.slice(0,count).map(x=>x.row);
+    return {previous,live:liveFor(count),stage:{count:items.length,items},stageError:null,localCaptures:{count:items.length,items:items.map(localOfficial)},localCaptureError:null};
+  }
   const decoder={decode:async row=>({width:row.width,height:row.height}),close:async()=>{}};
   const getNew=async r=>bytesByKey.get(exactKey(r)),getOld=async e=>bytesByKey.get(exactKey(e.record));
 
   await reset(mediaFor(19));
   const nineteen=await mergeNewBodyAuto(root,{inputs:inputs(19),now,decoder,getNew,getOld});
-  await test('nineteen validated articles never publish even under direct build invocation',()=>{assert.equal(nineteen.status.validatedNewArticles,19);assert.equal(nineteen.status.meetsMinimumBatch,false);assert.equal(nineteen.status.added.length,0);assert.equal(nineteen.snapshot.count,0);assert.equal(nineteen.status.waitingForMinimumBatch,true);});
+  await test('nineteen validated articles never publish even under direct build invocation',()=>{assert.equal(nineteen.status.validatedNewArticles,19);assert.equal(nineteen.status.releaseReady,false);assert.equal(nineteen.status.preferredTargetMet,false);assert.equal(nineteen.status.releaseMode,'waiting');assert.equal(nineteen.status.added.length,0);assert.equal(nineteen.snapshot.count,0);assert.equal(nineteen.status.waitingForMore,true);});
+
+  const quietRows=synthetic.slice(0,7).map(x=>({...x.row,updatedAt:now-16*60000}));
+  await reset(mediaFor(7));
+  const quietTail=await mergeNewBodyAuto(root,{inputs:inputs(7,{policyId:policy.policyId,items:[],attempts:{}},quietRows),now,decoder,getNew,getOld});
+  await test('seven quiet paired articles publish as an adaptive tail after fifteen minutes',()=>{assert.equal(quietTail.status.validatedNewArticles,7);assert.equal(quietTail.status.releaseReady,true);assert.equal(quietTail.status.preferredTargetMet,false);assert.equal(quietTail.status.tailFlushReady,true);assert.equal(quietTail.status.releaseMode,'quiet_tail');assert.equal(quietTail.status.added.length,7);assert.equal(quietTail.snapshot.count,7);});
 
   await reset(mediaFor(20));
   const twenty=await mergeNewBodyAuto(root,{inputs:inputs(20),now,decoder,getNew,getOld});
-  await test('twenty articles publish as the minimum paired batch',()=>{assert.equal(twenty.status.validatedNewArticles,20);assert.equal(twenty.status.publishedNewArticles,20);assert.equal(twenty.status.added.length,20);assert.equal(twenty.snapshot.count,20);assert.equal(twenty.status.meetsMinimumBatch,true);});
+  await test('twenty articles publish as the minimum paired batch',()=>{assert.equal(twenty.status.validatedNewArticles,20);assert.equal(twenty.status.publishedNewArticles,20);assert.equal(twenty.status.added.length,20);assert.equal(twenty.snapshot.count,20);assert.equal(twenty.status.releaseReady,true);assert.equal(twenty.status.preferredTargetMet,true);assert.equal(twenty.status.releaseMode,'target_batch');});
   await test('fresh TOCs merged earlier in the same build are sufficient even when prior live site had no TOC',()=>{assert.ok(twenty.status.added.every(x=>twenty.media.items[x.doi].toc.reason==='local_vpn_official_toc'));assert.ok(twenty.status.tocPairedRequired);});
   await test('automatic body publication preserves every same-build official TOC unchanged',()=>{const expected=mediaFor(20);for(const [doi,r] of Object.entries(expected.items))assert.deepEqual(twenty.media.items[doi].toc,r.toc);});
 
