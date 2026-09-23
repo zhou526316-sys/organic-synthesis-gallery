@@ -50,6 +50,16 @@ const [audit, state, repositoryDois, deployedDois, reviewRow] = await Promise.al
   readJson('audit/latest.json'), readJson('audit/literature-update-state.json'),
   loadRepositoryDois(), loadDeployedDois(), latestReview(),
 ]);
+let appliedRemovalDois = new Set();
+try {
+  const marker = await readJson('audit/publication-release-state.json');
+  if (marker.mode === 'scope-correction') {
+    const { authorizeScopeCorrection } = await import('./lib/immediate-scope-correction.mjs');
+    const proof = await authorizeScopeCorrection(ROOT);
+    if (!proof.ok) throw new Error('Invalid scope correction: ' + proof.failures.join('; '));
+    appliedRemovalDois = new Set(proof.effectiveRemovedDois || proof.removedDois);
+  }
+} catch (error) { if (error.code !== 'ENOENT') throw error; }
 const review = reviewRow.payload;
 const accepted = review.accepted || [], rejected = review.rejected || [], pending = review.pending || [];
 const all = [...accepted.map(x => ({ ...x, _decision: 'include' })), ...rejected.map(x => ({ ...x, _decision: 'exclude' })), ...pending.map(x => ({ ...x, _decision: 'pending' }))];
@@ -68,6 +78,10 @@ for (const item of all) {
 }
 for (const item of accepted) {
   const doi = normalizeDoi(item.doi);
+  if (appliedRemovalDois.has(doi)) {
+    assert(!repositoryDois.has(doi) && !deployedDois.has(doi), `precision: corrected old include remains visible: ${doi}`);
+    continue;
+  }
   assert(repositoryDois.has(doi), `publication: accepted DOI absent from repository data: ${doi}`);
   assert(deployedDois.has(doi), `publication: accepted DOI absent from deployed data: ${doi}`);
 }

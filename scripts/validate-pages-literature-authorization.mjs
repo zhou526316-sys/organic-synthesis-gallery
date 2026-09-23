@@ -1,4 +1,5 @@
 import { readFile, mkdir, mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { authorizeScopeCorrection } from './lib/immediate-scope-correction.mjs';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
@@ -83,6 +84,7 @@ export async function authorize(root = process.cwd()) {
   const failures = [];
   const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 }).trim();
   const marker = JSON.parse(await readFile(path.join(root, markerPath), 'utf8'));
+  if (marker.mode === 'scope-correction') return authorizeScopeCorrection(root);
   const actual = {};
   for (const file of PROTECTED_FILES) {
     try { actual[file] = git(['hash-object', '--', file]); } catch { actual[file] = null; }

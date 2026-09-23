@@ -181,6 +181,7 @@ async function loadReviewExclusions() {
       console.warn(`Review decision file unavailable: ${file}: ${error.message}`);
     }
   }
+  for (const row of await loadScopeCorrections()) latestDecision.set(normalizeDoi(row.doi), 'exclude');
   return new Set([...latestDecision.entries()].filter(([, decision]) => decision === 'exclude').map(([doi]) => doi));
 }
 
@@ -225,6 +226,7 @@ async function loadReviewedHistory() {
       console.warn(`Review history file unavailable: ${file}: ${error.message}`);
     }
   }
+  for (const row of await loadScopeCorrections()) reviewed.set(normalizeDoi(row.doi), {doi:normalizeDoi(row.doi), journal:row.journal, date:row.date, title:row.title, decision:'exclude', reviewFile:'literature-scope-corrections.json'});
   return reviewed;
 }
 

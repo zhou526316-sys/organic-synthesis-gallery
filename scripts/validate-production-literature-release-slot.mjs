@@ -11,6 +11,12 @@ const BOOTSTRAP_MARKER_COMMIT = '3c9bcd16ab34a24fcbe0efda5a7e1d5905ca71fa';
 const SLOT_GRACE_MINUTES = 20;
 
 const marker = JSON.parse(await readFile(MARKER, 'utf8'));
+if (marker.mode === 'scope-correction') {
+  const { authorizeScopeCorrection } = await import('./lib/immediate-scope-correction.mjs');
+  const correction = await authorizeScopeCorrection(ROOT);
+  console.log(JSON.stringify(correction, null, 2));
+  process.exit(correction.ok ? 0 : 1);
+}
 const failures = [];
 const check = (ok, message) => { if (!ok) failures.push(message); };
 
