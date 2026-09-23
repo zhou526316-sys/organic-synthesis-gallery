@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "context": "User explicitly requested this manual round to cover up to 20 articles. This is read-only evidence acquisition from existing R2, not automatic approval or publication.",
+  "context": "Bounded media-only continuation run. Read existing current-generation R2 evidence only; semantic review/publication remains capped at 5 articles and 30 body images for this round. This trigger is not approval and does not modify literature data.",
   "maxArticles": 20,
-  "maxImages": 140,
+  "maxImages": 30,
   "maxImagesPerArticle": 10,
   "readOnly": true,
   "excludeDois": ["10.1021/jacs.6c13641"],
-  "excludeReason": "Existing unresolved scope review; no new scope decision and no contamination allegation."
+  "excludeReason": "Existing unresolved scope review; current literature-update-state pendingScopeReviewBacklog is additionally excluded by the reader."
 }
