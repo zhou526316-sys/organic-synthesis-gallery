@@ -5,13 +5,13 @@ import {tmpdir} from 'node:os';
 import {gzipSync} from 'node:zlib';
 import {buildBodyReviewMarker,BODY_MEDIA_GENERATION} from '../shared/body-media-evidence.js';
 import {validateNewBodyMetadata,validateNewBodyBytes,conflictKeys,createImageDecoder,exactKey,sha256} from '../cloudflare/scripts/new-body-auto-validation.mjs';
-import {mergeNewBodyAuto,fetchStored,assertSnapshotCoherence} from '../cloudflare/scripts/merge-new-body-auto.mjs';
+import {mergeNewBodyAuto,fetchStored,assertSnapshotCoherence,batchReadiness,strongOfficialCapture} from '../cloudflare/scripts/merge-new-body-auto.mjs';
 
 const fixture=process.env.BODY_AUTO_FIXTURE;assert.ok(fixture,'frozen controlled evidence fixture required');
 const evidence=JSON.parse(await readFile(path.join(fixture,'evidence.json'),'utf8'));
 const realRows=evidence.images.filter(r=>r.reviewMarker?.revision==='1');assert.equal(realRows.length,9);
 const policy=JSON.parse(await readFile('audit/media-auto-policy.json','utf8'));
-assert.equal(policy.minNewArticles,20);assert.equal(policy.maxNewArticles,25);assert.equal(policy.requireOfficialTocInBuild,true);
+assert.equal(policy.minNewArticles,20);assert.equal(policy.maxNewArticles,25);assert.equal(policy.tailFlushAfterMinutes,15);assert.equal(policy.requireOfficialTocInBuild,true);
 const now=Date.now();let passed=0;
 async function test(name,fn){await fn();passed++;console.log('NEW_BODY_AUTO_PASS '+name);}
 const realData=new Map();for(const r of realRows)realData.set(exactKey(r),await readFile(path.join(fixture,r.file)));
@@ -39,6 +39,30 @@ async function makeRow(i){
   row.reviewMarker=await buildBodyReviewMarker(row,full);assert.equal(row.reviewMarker.state,'pending_review');return {row,raw};
 }
 const synthetic=[];for(let i=1;i<=26;i++)synthetic.push(await makeRow(i));
+
+await test('nineteen recent articles are not a release batch yet',()=>{
+  const rows=synthetic.slice(0,19).map(x=>x.row);
+  const state=batchReadiness(rows,policy,now);
+  assert.equal(state.articleCount,19);assert.equal(state.tailStable,false);assert.equal(state.ready,false);assert.equal(state.releaseReason,'waiting');
+});
+await test('nineteen unchanged articles become a stable tail after fifteen minutes',()=>{
+  const rows=synthetic.slice(0,19).map(x=>({...x.row,updatedAt:now-20*60*1000}));
+  const state=batchReadiness(rows,policy,now);
+  assert.equal(state.articleCount,19);assert.equal(state.tailStable,true);assert.equal(state.ready,true);assert.equal(state.releaseReason,'stable_tail');
+});
+await test('twenty articles remain the normal immediate target',()=>{
+  const rows=synthetic.slice(0,20).map(x=>x.row);
+  const state=batchReadiness(rows,policy,now);
+  assert.equal(state.articleCount,20);assert.equal(state.targetReached,true);assert.equal(state.ready,true);assert.equal(state.releaseReason,'target_reached');
+});
+await test('official TOC poll evidence must be bound to the same ACS DOI',()=>{
+  const r=synthetic[0].row,d=r.doi,code=d.split('/')[1];
+  const good={doi:d,kind:'official',captureVersion:'6.2.20',pageDoi:d,mediaGeneration:BODY_MEDIA_GENERATION,updatedAt:now,
+    articleUrl:'https://pubs.acs.org/jacs/article/doi/'+d+'/fixture',
+    sourceUrl:'https://acs.silverchair-cdn.com/acs/content_public/journal/jacs/10.1021_'+code+'/1/m_ja'+code+'_0009.svg'};
+  assert.equal(strongOfficialCapture(good),true);
+  assert.equal(strongOfficialCapture({...good,sourceUrl:good.sourceUrl.replace(code,'jacs.6c00000')}),false);
+});
 await test('twenty-six synthetic current records have unique byte/source identities',()=>{assert.equal(new Set(synthetic.map(x=>x.row.sha256)).size,26);assert.equal(conflictKeys(synthetic.map(x=>x.row)).size,0);});
 
 const root=await mkdtemp(path.join(tmpdir(),'new-body-batch20-'));
@@ -63,7 +87,13 @@ try{
 
   await reset(mediaFor(19));
   const nineteen=await mergeNewBodyAuto(root,{inputs:inputs(19),now,decoder,getNew,getOld});
-  await test('nineteen validated articles never publish even under direct build invocation',()=>{assert.equal(nineteen.status.validatedNewArticles,19);assert.equal(nineteen.status.meetsMinimumBatch,false);assert.equal(nineteen.status.added.length,0);assert.equal(nineteen.snapshot.count,0);assert.equal(nineteen.status.waitingForMinimumBatch,true);});
+  await test('nineteen recent validated articles wait instead of publishing',()=>{assert.equal(nineteen.status.releaseReason,'waiting');assert.equal(nineteen.status.validatedNewArticles,0);assert.equal(nineteen.status.added.length,0);assert.equal(nineteen.snapshot.count,0);assert.equal(nineteen.status.waitingForMinimumBatch,true);});
+
+  const staleRows=synthetic.slice(0,7).map(x=>({...x.row,updatedAt:now-20*60*1000}));
+  await reset(mediaFor(7));
+  const staleInputs={previous:{policyId:policy.policyId,items:[],attempts:{}},live:liveFor(7),stage:{count:7,items:staleRows},stageError:null,localCaptures:null,localCaptureError:null};
+  const tail=await mergeNewBodyAuto(root,{inputs:staleInputs,now,decoder,getNew:async r=>bytesByKey.get(r.doi+'|'+r.id+'|'+r.sha256),getOld});
+  await test('stable seven-article tail publishes without waiting for an artificial twentieth',()=>{assert.equal(tail.status.releaseReason,'stable_tail');assert.equal(tail.status.tailStable,true);assert.equal(tail.status.requiredValidatedArticles,1);assert.equal(tail.status.publishedNewArticles,7);assert.equal(tail.status.added.length,7);assert.equal(tail.snapshot.count,7);});
 
   await reset(mediaFor(20));
   const twenty=await mergeNewBodyAuto(root,{inputs:inputs(20),now,decoder,getNew,getOld});
@@ -92,4 +122,4 @@ try{
   await test('shorter stale publication snapshot is still rejected',()=>{const stale={...first.snapshot,items:first.snapshot.items.slice(0,-1)};assert.throws(()=>assertSnapshotCoherence(stale,first.media),/snapshots_incoherent/);});
 }finally{await rm(root,{recursive:true,force:true});}
 
-console.log('NEW_BODY_AUTO_TESTS '+JSON.stringify({passed,realStoredFilesDecoded:9,batchMinimumArticles:20,batchMaximumArticles:25,pairedOfficialTocRequired:true,productionWrites:0,publisherRequests:0}));
+console.log('NEW_BODY_AUTO_TESTS '+JSON.stringify({passed,realStoredFilesDecoded:9,batchTargetArticles:20,batchMaximumArticles:25,stableTailMinutes:15,pairedOfficialTocRequired:true,productionWrites:0,publisherRequests:0}));
