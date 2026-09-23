@@ -1,0 +1,51 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir,mkdtemp,cp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import path from 'node:path';
+import {gzipSync} from 'node:zlib';
+import {mergeReviewedBody,verifyReviewedBody} from '../cloudflare/scripts/merge-reviewed-body.mjs';
+const plan=JSON.parse(await readFile('audit/media-recovery/body-batch1/manifest.json','utf8'));
+const item=plan.items[0],bytes=await readFile(item.assetPath);let passed=0;
+function test(name,fn){fn();passed++;console.log('REVIEWED_BODY_PASS '+name);}
+test('all 32 approved bytes validate',()=>{for(const r of plan.items)assert.ok(r.sha256.length===64);assert.equal(verifyReviewedBody(item,bytes),'svg');});
+test('TOC role cannot enter body approval',()=>assert.throws(()=>verifyReviewedBody({...item,role:'official'},bytes),/body_approval_required/));
+test('wrong label cannot share asset identity',()=>assert.throws(()=>verifyReviewedBody({...item,label:'Scheme 19'},bytes),/label_identity/));
+test('foreign source DOI is rejected even with correct page',()=>assert.throws(()=>verifyReviewedBody({...item,sourceUrl:item.sourceUrl.replace('6c01302','6c01303')},bytes),/source_doi/));
+test('foreign page DOI rejected',()=>assert.throws(()=>verifyReviewedBody({...item,articleUrl:item.articleUrl.replace('6c01302','6c01303')},bytes),/source_doi/));
+test('unbound historical capture cannot be laundered',()=>assert.throws(()=>verifyReviewedBody({...item,pageDoi:''},bytes),/bound_capture/));
+test('fixed quarantine stays closed',()=>assert.throws(()=>verifyReviewedBody({...item,originalUpdatedAt:1790081999999},bytes),/media_generation/));
+test('tampered file rejected',()=>assert.throws(()=>verifyReviewedBody(item,Buffer.alloc(bytes.length)),/digest/));
+test('foreign object namespace rejected',()=>assert.throws(()=>verifyReviewedBody({...item,originalR2Key:item.originalR2Key.replace('images/','images/foreign/')},bytes),/object_binding/));
+const root=await mkdtemp(path.join(tmpdir(),'body-review-'));
+try{
+ await mkdir(path.join(root,'public/media-mirror'),{recursive:true});
+ await cp('audit/media-recovery/body-batch1',path.join(root,'audit/media-recovery/body-batch1'),{recursive:true});
+ const dois=[...new Set(plan.items.map(r=>r.doi))];
+ const corpus=[...dois.map(doi=>({doi,title:'Controlled publication fixture',journal:'JACS'})),...Array.from({length:110},(_,i)=>({doi:'10.1021/fixture.'+i,journal:'JACS'}))];
+ await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(corpus))).toString('base64'));
+ for(const f of ['total-synthesis','manual-supplement','final-audit-supplement','curated-supplement','automation-supplement','rolling-supplement'])await writeFile(path.join(root,'public/'+f+'.json'),'{"papers":[]}');
+ const pre={version:2,items:{}};
+ for(const doi of dois)pre.items[doi]={doi,toc:{available:true,imageUrl:'media-mirror/original.svg',reason:'official',contentHash:'keep'},figures:{available:false,doi,figures:[]}};
+ await writeFile(path.join(root,'public/media-mirror/original.svg'),bytes);
+ const nature=dois.filter(d=>d.startsWith('10.1038/'));
+ for(const d of nature)pre.items[d].figures={available:true,doi:d,figures:[{id:'figure-1',label:'Figure 1',imageUrl:'media-mirror/original.svg',order:0,fixture:'existing published record; do not overwrite'}]};
+ const file=path.join(root,'public/media-index.json');await writeFile(file,JSON.stringify(pre));
+ const r=await mergeReviewedBody(root);const after=JSON.parse(await readFile(file,'utf8'));
+ test('adds thirty body figures and keeps two existing Figure 1s',()=>{assert.equal(r.added.length,30);assert.equal(r.retainedExisting.length,2);});
+ test('publishes five per-DOI galleries',()=>{assert.equal(r.perDoi.length,5);assert.deepEqual(r.perDoi.map(x=>x.figures),[8,9,6,3,6]);});
+ test('all existing TOCs stay byte-identical as metadata',()=>{for(const d of dois)assert.deepEqual(after.items[d].toc,pre.items[d].toc);});
+ test('existing published Figure 1 is not downgraded',()=>{for(const d of nature)assert.deepEqual(after.items[d].figures.figures[0],pre.items[d].figures.figures[0]);});
+ test('new SVG is a body role and retains source timestamp',()=>{const f=after.items[item.doi].figures.figures[0];assert.equal(f.originalUpdatedAt,item.originalUpdatedAt);assert.equal(f.role,'article_figure');});
+ const second=await mergeReviewedBody(root);
+ test('repeat build is idempotent',()=>{assert.equal(second.added.length,0);assert.equal(second.retainedExisting.length,32);});
+ // Removed paper stays absent even though its preserved media approval still exists.
+ await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(corpus.filter(r=>r.doi!==dois[0])))).toString('base64'));
+ delete pre.items[dois[0]];await writeFile(file,JSON.stringify(pre));
+ const removed=await mergeReviewedBody(root);const removedMedia=JSON.parse(await readFile(file,'utf8'));
+ test('removed DOI is not resurrected',()=>{assert.equal(removed.notPublished.length,8);assert.equal(removedMedia.items[dois[0]],undefined);});
+ const manifestPath=path.join(root,'audit/media-recovery/body-batch1/manifest.json');
+ const broken=structuredClone(plan);broken.items[1].label='Figure 99';await writeFile(manifestPath,JSON.stringify(broken));
+ const before=await readFile(file,'utf8');await assert.rejects(()=>mergeReviewedBody(root),/label_identity/);
+ test('entire bundle validated before publishing any output',()=>{});assert.equal(await readFile(file,'utf8'),before);
+}finally{await rm(root,{recursive:true,force:true});}
+console.log('REVIEWED_BODY_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0}));

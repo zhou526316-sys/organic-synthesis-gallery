@@ -1,0 +1,36 @@
+name: Verify reviewed body figures live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/reviewed-body-live.json']
+permissions:
+  contents: read
+concurrency:
+  group: reviewed-body-live
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install browser verification only
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Verify deployed bytes and real card figures with all writes blocked
+        run: node scripts/verify-reviewed-body-live.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reviewed-body-live
+          path: ${{ runner.temp }}/body-live/*
+          retention-days: 7
+          if-no-files-found: warn
