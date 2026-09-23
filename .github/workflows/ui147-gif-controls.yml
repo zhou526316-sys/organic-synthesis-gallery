@@ -1,0 +1,63 @@
+name: Isolate GIF rendering versus test instrumentation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui147-gif-controls.yml']
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 03f0d46178dd702077c97004e9f8d3dcb015ce00
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Build unchanged candidate and install pinned browser
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/gif-control-install.log 2>&1 || { tail -60 /tmp/gif-control-install.log; exit 1; }
+          npm run build
+      - name: Compare independent instrumentation conditions
+        run: |
+          mkdir -p gif-controls
+          cat > tests/pr147-gif-controls.spec.ts <<'TS'
+          import { test, expect } from '@playwright/test';
+          import { open, gifFile, originalHash } from './status-image-fixtures';
+          import { expectAnimatedImage } from './animated-image-evidence';
+          for(const trace of ['off','on'] as const) test.describe(`trace ${trace}`,()=>{
+            test.use({trace,serviceWorkers:'block'});
+            for(const readBytes of [false,true]) test(`GIF with byte read ${readBytes}`,async({page},info)=>{
+              const actions=await open(page,390);
+              await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
+              await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
+              const image=actions.locator('[data-action="set-status:to-read"] .status-image');
+              await expect(image).toHaveAttribute('data-image-source','original');
+              const before=await page.evaluate(()=>({visibility:document.visibilityState,focus:document.hasFocus()}));
+              const hash=readBytes ? await originalHash(image) : null;
+              console.log('CONTROL',JSON.stringify({trace,readBytes,before,hash}));
+              await expectAnimatedImage(image,info);
+            });
+          });
+          TS
+          git diff --exit-code -- src/ public/ shared/
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-control-preview.log 2>&1 &
+          for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
+          exit 1
+      - name: Run controls and retain every result
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: gif-controls/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/pr147-gif-controls.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=gif-controls/tests 2>&1 | tee gif-controls/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr147-gif-controls
+          path: gif-controls/
+          retention-days: 7
