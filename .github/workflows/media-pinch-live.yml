@@ -1,0 +1,76 @@
+name: Verify deployed image pinch gestures
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/media-pinch-live.yml']
+permissions:
+  contents: read
+concurrency:
+  group: media-pinch-live
+  cancel-in-progress: false
+jobs:
+  live:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [webkit, chromium]
+        entry: [github, worker]
+        include:
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      LIVE_SITE_URL: ${{ matrix.site }}
+      TEST_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cd3cca0e1e2e0066895af167bd306276df0357fb
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install unchanged pinned browser for live frontend testing
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/pinch-live-browser.log 2>&1 || { tail -60 /tmp/pinch-live-browser.log; exit 1; }
+      - name: Record actual entry and exact acceptance source
+        run: |
+          mkdir -p pinch-live-results
+          git rev-parse HEAD > pinch-live-results/reviewed-test-commit.txt
+          sha256sum tests/media-pinch.spec.ts src/user-ui/media-gestures.ts src/media-enhancements.ts > pinch-live-results/source-sha256.txt
+          node --input-type=module <<'NODE'
+          import { writeFile } from 'node:fs/promises';
+          import { createHash } from 'node:crypto';
+          const evidence = { site: process.env.LIVE_SITE_URL, browser: process.env.TEST_BROWSER, checkedAt: new Date().toISOString(), reviewedTestCommit: 'cd3cca0e1e2e0066895af167bd306276df0357fb', productionWritesAllowed: false, apiMocked: true, sourceMethodsOverridden: false, physicalDeviceTested: false };
+          try {
+            const response = await fetch(evidence.site, { signal: AbortSignal.timeout(15000), headers: { 'cache-control': 'no-cache' } });
+            const html = await response.text();
+            evidence.http = { status: response.status, finalUrl: response.url, htmlSha256: createHash('sha256').update(html).digest('hex') };
+            evidence.entryScripts = [...html.matchAll(/<script[^>]+src=["']([^"']+)["']/g)].map(match => new URL(match[1], response.url).href);
+            evidence.available = response.ok;
+          } catch (error) { evidence.available = false; evidence.error = String(error); }
+          await writeFile('pinch-live-results/entry.json', JSON.stringify(evidence, null, 2));
+          console.log(JSON.stringify(evidence));
+          if (!evidence.available) process.exitCode = 1;
+          NODE
+      - name: Run original gesture assertions directly against the deployed website
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: pinch-live-results/results.json
+        run: |
+          # The reviewed test already accepts LIVE_SITE_URL and blocks all API
+          # traffic in anonymous contexts. No source patch or local server.
+          git diff --exit-code -- tests/media-pinch.spec.ts src/
+          set -o pipefail
+          npx --no-install playwright test tests/media-pinch.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=pinch-live-results/tests 2>&1 | tee pinch-live-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pinch-live-${{ matrix.entry }}-${{ matrix.browser }}
+          path: pinch-live-results/
+          retention-days: 7
+          if-no-files-found: warn
