@@ -48,7 +48,8 @@ jobs:
           grep -F 'meta itemprop="image"' "$SHARE_PAGE"
           grep -F 'https://api.gczhouwld.com/share/' "$SHARE_PAGE"
           grep -F 'https://zhou526316-sys.github.io/organic-synthesis-gallery/?doi=' "$SHARE_PAGE"
-          grep -F 'location.replace' "$SHARE_PAGE"
+          ! grep -F 'location.replace' "$SHARE_PAGE"
+          grep -F '本介绍页不会自动跳走' "$SHARE_PAGE"
           test -s dist/share-default.png
           grep -F "wechat-copy" dist/assets/card-share-*.js
           grep -F "navigator.share" dist/assets/card-share-*.js
