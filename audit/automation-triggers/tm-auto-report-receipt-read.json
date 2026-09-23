@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T12:15:00Z",
-  "reason": "Verify Bridge 2.2.24 automatic diagnostic outbox continues storing current success/failure reports independently of adaptive media publication.",
+  "requestedAt": "2026-09-23T12:23:00Z",
+  "reason": "Fresh read-only receipt check after Bridge 2.2.24 rollout: determine whether any actual local extension report now carries controllerRevision 2.2.24 before considering another client revision.",
   "readOnly": true,
   "mediaWrites": 0
 }
