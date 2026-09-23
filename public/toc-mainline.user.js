@@ -1231,6 +1231,63 @@ function embeddedJobDois(value) {
     return 'Figure ' + String(fallbackIndex + 1);
   }
 
+  function wileyZeroFigureDomDiagnostic(job, trace, root) {
+    if (!job || job.publisher !== 'wiley') return;
+    var scope = root || document;
+    function short(value, max) {
+      return String(value || '').replace(/\s+/g, ' ').trim().slice(0, max || 120);
+    }
+    function cls(node) {
+      var value = node && node.className;
+      if (value && typeof value === 'object' && 'baseVal' in value) value = value.baseVal;
+      return short(value, 180);
+    }
+    var counts = {
+      figures: scope.querySelectorAll('figure').length,
+      roleFigures: scope.querySelectorAll('[role="figure"]').length,
+      figcaptions: scope.querySelectorAll('figcaption').length,
+      pictures: scope.querySelectorAll('picture').length,
+      images: scope.querySelectorAll('img').length,
+      imageObjects: scope.querySelectorAll('object[type^="image"]').length,
+      classFigure: scope.querySelectorAll('[class*="figure" i]').length,
+      classFig: scope.querySelectorAll('[class*="fig" i]').length
+    };
+    pushTrace(trace,{stage:'wiley_dom_diagnostic',event:'summary',status:'info',
+      message:JSON.stringify(counts)});
+
+    var nodes = Array.from(scope.querySelectorAll('figure,[role="figure"],picture,img,object[type^="image"]')).slice(0,10);
+    nodes.forEach(function (node, index) {
+      var image = node.matches && node.matches('img,object[type^="image"]') ? node : node.querySelector && node.querySelector('img,object[type^="image"]');
+      var container = node.closest && node.closest('figure,[role="figure"],[class*="figure" i],[class*="fig" i]') || node.parentElement;
+      var caption = container && container.querySelector && container.querySelector('figcaption,.caption,[class*="caption" i],[class*="legend" i],[class*="title" i]');
+      var parent = node.parentElement;
+      var attrNames = image && image.getAttributeNames ? image.getAttributeNames().filter(function(name){
+        return /^(?:src|srcset|data-|alt$|title$|class$|id$)/i.test(name);
+      }).slice(0,12) : [];
+      var imageUrl = '';
+      if (image) imageUrl = normalizeUrl(image.currentSrc || image.getAttribute && (image.getAttribute('src') || image.getAttribute('data-src') || image.getAttribute('data-original')) || '', location.href);
+      pushTrace(trace,{stage:'wiley_dom_diagnostic',event:'sample',status:'info',url:imageUrl,
+        message:JSON.stringify({
+          index:index,
+          tag:String(node.tagName || '').toLowerCase(),
+          id:short(node.id,120),
+          className:cls(node),
+          parentTag:String(parent && parent.tagName || '').toLowerCase(),
+          parentClass:cls(parent),
+          containerTag:String(container && container.tagName || '').toLowerCase(),
+          containerClass:cls(container),
+          imageTag:String(image && image.tagName || '').toLowerCase(),
+          imageClass:cls(image),
+          imageAlt:short(image && image.getAttribute && image.getAttribute('alt'),120),
+          imageTitle:short(image && image.getAttribute && image.getAttribute('title'),120),
+          imageAttrs:attrNames,
+          captionTag:String(caption && caption.tagName || '').toLowerCase(),
+          captionClass:cls(caption),
+          captionPrefix:short(caption && caption.textContent,140)
+        })});
+    });
+  }
+
   function collectArticleFigureCandidates(job, trace, root, baseUrl, sourceName) {
     var scope = root || document, rows = [], seen = new Set();
     scope.querySelectorAll('img,object[type^="image"]').forEach(function (node) {
@@ -2036,6 +2093,7 @@ function embeddedJobDois(value) {
       var discovered=await waitForPairedVisuals(job,trace);
       job._liveDiscoveryDone=true;
       result.figures.discovered=new Set(discovered.figures.map(function(c){return c.label;})).size;
+      if (job.publisher === 'wiley' && result.figures.discovered === 0) wileyZeroFigureDomDiagnostic(job,trace,document);
       captureLiveUpdate(job,'discovering');
       if (job.captureToc!==false) {
         try {
