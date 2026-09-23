@@ -1,0 +1,58 @@
+name: Fixed-slot literature release writer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/literature-release-request.json'
+      - '.github/workflows/literature-fixed-slot-release.yml'
+      - 'scripts/apply-fixed-slot-literature-release.mjs'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fixed-slot-literature-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact request commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Prepare fixed-slot release from strict per-DOI bundle
+        run: node scripts/apply-fixed-slot-literature-release.mjs audit/automation-triggers/literature-release-request.json
+
+      - name: Commit atomic literature release
+        shell: bash
+        run: |
+          set -euo pipefail
+          slot="$(node -p "require('./audit/automation-triggers/literature-release-request.json').publicationSlot")"
+          review="$(node -p "require('./audit/release-execution-result.json').formalReviewFile")"
+          queue="$(node -p "require('./audit/release-execution-result.json').pendingQueueFile")"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$review" "$queue" public/rolling-supplement.json audit/publication-release-state.json audit/release-execution-result.json
+          test -n "$(git status --porcelain -- "$review" "$queue" public/rolling-supplement.json audit/publication-release-state.json)"
+          git commit -m "release(literature): publish reviewed subset for ${slot}"
+          git push origin HEAD:main
+          echo "release_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Preserve release writer result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fixed-slot-literature-release-result
+          path: audit/release-execution-result.json
+          if-no-files-found: warn
+          retention-days: 14
