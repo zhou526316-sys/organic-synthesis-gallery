@@ -1,0 +1,2990 @@
+{
+  "schemaVersion": 3,
+  "reviewType": "prepublish_primary",
+  "publicationSlot": "2026-09-24T08:00:00+08:00",
+  "createdAt": "2026-09-24T07:22:00+08:00",
+  "evidenceAsOf": "2026-09-24T07:22:00+08:00",
+  "executionMode": "scheduled_prepublish_no_publication",
+  "phase": "preparing",
+  "status": "incomplete_review",
+  "readyToPublish": false,
+  "publishableSubsetReady": false,
+  "reviewComplete": false,
+  "releasePolicy": {
+    "mode": "per-doi"
+  },
+  "handoffGeneratedAt": "2026-09-23T23:10:55.807Z",
+  "freshAuditGeneratedAt": "2026-09-23T23:10:55.807Z",
+  "snapshotFreshForSlot": true,
+  "requiredSnapshotWindow": {
+    "start": "2026-09-24T06:55:00+08:00",
+    "end": "2026-09-24T08:00:00+08:00"
+  },
+  "handoffCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
+  "handoffFile": "audit/unresolved-latest.json",
+  "handoffBlobSha": "6e1cd99a6227b0b1ad25b835af0336f317aecdbb",
+  "compactHandoffSha": "6e1cd99a6227b0b1ad25b835af0336f317aecdbb",
+  "latestBlobSha": "5036d6d04f05765bcc42a78ccb25250a2c2f9c21",
+  "scopeRulesVersion": "scope-2026-09-23-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+  "sourceAudit": {
+    "runId": 35932176599,
+    "conclusion": "success",
+    "capabilityGuardConclusion": "success",
+    "triggerCommitSha": "9befaeb45a3712f05c9123f0eb0a088d88566ffe",
+    "snapshotCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
+    "generatedAt": "2026-09-23T23:10:55.807Z",
+    "galleryDois": 542,
+    "sourceRecords": 525,
+    "unresolved": 123,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 2,
+    "closureCoverageAnomalies": 8,
+    "historicalCoverageLosses": 0,
+    "sameGenerationAndCountsVerified": true,
+    "activeJournals": 16,
+    "canonicalRegistryBlobSha": "57050105998284ccbf87b1a5fe513b256b648949",
+    "healthyRunsCancelledOrRestarted": 0
+  },
+  "windowAccounting": {
+    "timeZone": "Asia/Shanghai",
+    "primaryStart": "2026-09-22",
+    "primaryEnd": "2026-09-24",
+    "auditStart": "2026-09-21",
+    "machineSafetyTailDays": 7,
+    "lateDepositRescueDays": 7,
+    "verifiedThrough": "2026-09-20",
+    "verifiedThroughAdvanced": false,
+    "catchupStartDate": "2026-09-21",
+    "multiIssnCrossrefModes": [
+      "online",
+      "published",
+      "created"
+    ],
+    "openAlexUnion": true,
+    "activeFromApplied": true,
+    "keywordsUsedOnlyForPriority": true,
+    "completeCompactRead": true
+  },
+  "reviewed": 123,
+  "acceptedCount": 15,
+  "rejectedCount": 106,
+  "pendingCount": 2,
+  "summary": {
+    "reviewed": 123,
+    "accepted": 15,
+    "rejected": 106,
+    "pending": 2
+  },
+  "acceptedDois": [
+    "10.1021/acscatal.6c04954",
+    "10.1021/acscatal.6c05820",
+    "10.31635/ccschem.026.202608315",
+    "10.1021/jacs.6c16323",
+    "10.1021/jacs.6c14601",
+    "10.1021/acs.joc.6c01347",
+    "10.1021/acs.joc.6c01498",
+    "10.1038/s41586-026-11169-0",
+    "10.1038/s41557-026-02247-x",
+    "10.1021/acs.orglett.6c03346",
+    "10.1021/acs.orglett.6c03455",
+    "10.1021/acs.orglett.6c03520",
+    "10.1021/acs.orglett.6c03276",
+    "10.1021/acs.orglett.6c03373",
+    "10.1021/acs.orglett.6c03854"
+  ],
+  "proposedPublishableDois": [
+    "10.1021/acscatal.6c04954",
+    "10.1021/acscatal.6c05820",
+    "10.31635/ccschem.026.202608315",
+    "10.1021/jacs.6c16323",
+    "10.1021/jacs.6c14601",
+    "10.1021/acs.joc.6c01347",
+    "10.1021/acs.joc.6c01498",
+    "10.1038/s41586-026-11169-0",
+    "10.1038/s41557-026-02247-x",
+    "10.1021/acs.orglett.6c03346",
+    "10.1021/acs.orglett.6c03455",
+    "10.1021/acs.orglett.6c03520",
+    "10.1021/acs.orglett.6c03276",
+    "10.1021/acs.orglett.6c03373",
+    "10.1021/acs.orglett.6c03854"
+  ],
+  "publishableDois": [],
+  "rejectedDois": [
+    "10.1038/s41467-026-77923-0",
+    "10.1038/s41467-026-78059-x",
+    "10.1038/s41467-026-78061-3",
+    "10.1002/anie.1975103",
+    "10.1002/anie.7127460",
+    "10.1002/anie.1885847",
+    "10.1002/anie.4098089",
+    "10.31635/ccschem.026.202608210",
+    "10.31635/ccschem.026.202608355",
+    "10.31635/ccschem.026.202608342",
+    "10.31635/ccschem.026.202608341",
+    "10.1021/jacs.6c14579",
+    "10.1021/jacs.6c10989",
+    "10.1021/jacs.6c13568",
+    "10.1021/jacs.6c07726",
+    "10.1021/jacs.6c03134",
+    "10.1021/jacs.6c13197",
+    "10.1021/jacs.6c13134",
+    "10.1021/jacs.6c09191",
+    "10.1021/jacs.6c15764",
+    "10.1021/acs.joc.6c01427",
+    "10.1038/d41586-026-02855-0",
+    "10.1038/s41586-026-11056-8",
+    "10.1038/d41586-026-02858-x",
+    "10.1038/s41586-026-11028-y",
+    "10.1038/d41586-026-02789-7",
+    "10.1038/s41586-026-11102-5",
+    "10.1038/d41586-026-02646-7",
+    "10.1038/s41586-026-11040-2",
+    "10.1038/s41586-026-11033-1",
+    "10.1038/s41586-026-11189-w",
+    "10.1038/d41586-026-03021-2",
+    "10.1038/s41586-026-11049-7",
+    "10.1038/d41586-026-03019-w",
+    "10.1038/d41586-026-02772-2",
+    "10.1038/d41586-026-02856-z",
+    "10.1038/d41586-026-02771-3",
+    "10.1038/d41586-026-02937-z",
+    "10.1038/d41586-026-02637-8",
+    "10.1038/d41586-026-02773-1",
+    "10.1038/s41586-026-10999-2",
+    "10.1038/d41586-026-03018-x",
+    "10.1038/s41586-026-11051-z",
+    "10.1038/d41586-026-02563-9",
+    "10.1038/d41586-026-02986-4",
+    "10.1038/d41586-026-02857-y",
+    "10.1038/d41586-026-02947-x",
+    "10.1038/s41586-026-10271-7",
+    "10.1038/s41586-026-11031-3",
+    "10.1038/s41586-026-11029-x",
+    "10.1038/s41586-026-11072-8",
+    "10.1038/s41586-026-11048-8",
+    "10.1038/s41586-026-11054-w",
+    "10.1038/s41586-026-11041-1",
+    "10.1038/s41586-026-11074-6",
+    "10.1038/s41586-026-11007-3",
+    "10.1038/s41586-026-11016-2",
+    "10.1038/s41586-025-09573-z",
+    "10.1038/s41586-026-10836-6",
+    "10.1038/s41586-026-11069-3",
+    "10.1038/d41586-026-02774-0",
+    "10.1038/s41586-026-11059-5",
+    "10.1038/s41586-026-11058-6",
+    "10.1038/d41586-026-02861-2",
+    "10.1038/s41586-026-11053-x",
+    "10.1038/d41586-026-02775-z",
+    "10.1038/s41586-026-11050-0",
+    "10.1038/s41586-026-11046-w",
+    "10.1038/s41586-026-11052-y",
+    "10.1038/d41586-026-02854-1",
+    "10.1038/s41929-026-01623-7",
+    "10.1038/s41557-026-02267-7",
+    "10.1038/s41557-026-02246-y",
+    "10.1038/s41557-026-02261-z",
+    "10.1038/s41467-026-77813-5",
+    "10.1038/s41467-026-78047-1",
+    "10.1038/s41467-026-77836-y",
+    "10.1038/s41467-026-78052-4",
+    "10.1038/s41467-026-77390-7",
+    "10.1038/s41467-026-77891-5",
+    "10.1038/s41467-026-77938-7",
+    "10.1038/s41467-026-77742-3",
+    "10.1038/s41467-026-77863-9",
+    "10.1038/s41467-026-77927-w",
+    "10.1038/s41467-026-75680-8",
+    "10.1038/s41467-026-77984-1",
+    "10.1038/s41467-026-77756-x",
+    "10.1038/s41467-026-77944-9",
+    "10.1038/s41467-026-77866-6",
+    "10.1038/s41467-026-75681-7",
+    "10.1038/s41467-026-77741-4",
+    "10.1038/s41467-026-77961-8",
+    "10.1038/s41467-026-77932-z",
+    "10.1038/s41467-026-77912-3",
+    "10.1038/s41467-026-77283-9",
+    "10.1038/s41467-026-77546-5",
+    "10.1038/s41467-026-77729-0",
+    "10.1038/s41467-026-77762-z",
+    "10.1038/s41467-026-72310-1",
+    "10.1038/s41467-026-76451-1",
+    "10.1038/s41467-026-78108-5",
+    "10.1038/s41467-026-77789-2",
+    "10.1038/s41467-026-77480-6",
+    "10.1038/s41467-026-78120-9",
+    "10.1038/s44160-026-01157-7",
+    "10.1021/acs.orglett.6c03423"
+  ],
+  "pendingDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "deferredDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "remainingDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "remainingUnresolved": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "decisions": [
+    {
+      "doi": "10.1038/s41467-026-77923-0",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "Chronic stress activates a hypothalamic vagal circuit to promote hepatocellular carcinoma progression in male mice",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Chronic stress activates a hypothalamic vagal circuit to promote hepatocellular carcinoma progression in male mice”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77923-0"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-78059-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "High-throughput label-free single-cell proteomics enabled by multicolumn NanoLC",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“High-throughput label-free single-cell proteomics enabled by multicolumn NanoLC”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78059-x"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-78061-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "SATB1 lowers the T cell receptor signaling threshold for thymocyte positive selection via super-enhancer reprogramming",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“SATB1 lowers the T cell receptor signaling threshold for thymocyte positive selection via super-enhancer reprogramming”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78061-3"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04954",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-23",
+      "title": "Enantioselective Synthesis of Azahelicenes via Rh-Catalyzed C–H Functionalization of 6-Hydroxyisoquinoline Derivatives with Alkynes",
+      "titleZh": "Rh催化6-羟基异喹啉衍生物与炔烃C–H官能化实现氮杂螺烯的不对称合成",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "手性Cp–Rh/改性手性氨基酸协同催化的6-羟基异喹啉与内炔不对称C–H官能化/环化。",
+      "evidenceBasis": "fresh compact摘要支持：摘要报告一系列产物，最高93%收率和99% ee。",
+      "challengeReason": "机理和DFT服务于解释；系列产物与高对映选择性证明主要贡献是制备方法。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c04954"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "手性Cp–Rh/改性手性氨基酸协同催化的6-羟基异喹啉与内炔不对称C–H官能化/环化。",
+        "preparativeTransformation": "6-羟基异喹啉衍生物与内炔转化为手性氮杂螺烯。",
+        "generalityEvidence": "摘要报告一系列产物，最高93%收率和99% ee。",
+        "sourceEvidence": "fresh compact摘要支持：摘要报告一系列产物，最高93%收率和99% ee。 摘要原始事实摘录：Abstract Herein, we report an asymmetric C–H functionalization of 6-hydroxyisoquinoline derivatives and annulation with internal alkynes. The reaction is catalyzed by a chiral cyclopentadienyl (Cp)-Rh complex in combination with a modified chiral amino acid. A series of azahelicenes is afforded in good yields (up to 93%) with high enantioselectivity (up to 99% ee). A plausible catalytic cycle is proposed based on control experiments and DFT calcu",
+        "boundaryChallenge": "机理和DFT服务于解释；系列产物与高对映选择性证明主要贡献是制备方法。"
+      }
+    },
+    {
+      "doi": "10.1021/acscatal.6c05820",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-23",
+      "title": "Phosphine/AgF-Catalyzed Ethynylative Addition of Allenoates to Enones",
+      "titleZh": "膦/AgF共催化联烯酸酯对烯酮的乙炔基化加成",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "膦/AgF共催化α-取代联烯酸酯对烯酮的乙炔基化加成及不对称版本。",
+      "evidenceBasis": "fresh compact摘要支持：摘要明确报告新反应模式和利用Ag(I)/手性双齿配体的高对映选择性变体。",
+      "challengeReason": "Ag(I)–P(V)中间体属于机理解释；此前惰性α-碳成键和不对称制备是核心。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c05820"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "膦/AgF共催化α-取代联烯酸酯对烯酮的乙炔基化加成及不对称版本。",
+        "preparativeTransformation": "联烯酸酯与烯酮形成带全碳季碳中心的非环状乙炔基化产物。",
+        "generalityEvidence": "摘要明确报告新反应模式和利用Ag(I)/手性双齿配体的高对映选择性变体。",
+        "sourceEvidence": "fresh compact摘要支持：摘要明确报告新反应模式和利用Ag(I)/手性双齿配体的高对映选择性变体。 摘要原始事实摘录：Abstract While α-substituted allenoates are well established as versatile 4C-synthons in phosphine-catalyzed (4+n) annulations for the construction of cyclic frameworks, their α-carbons typically remain inert toward bond formation, implying an intrinsic limitation of classical phosphine catalysis. Herein, we report a phosphine/AgF cocatalysis that can enable the ethynylative addition of α-substituted allenoates to enones, affording acyclic produc",
+        "boundaryChallenge": "Ag(I)–P(V)中间体属于机理解释；此前惰性α-碳成键和不对称制备是核心。"
+      }
+    },
+    {
+      "doi": "10.1002/anie.1975103",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Biomimetic Confined Crystallization of Large‐Sized Single‐Crystalline Multicomponent Mesoporous Metal Oxides",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact摘要事实：ABSTRACT The performance of mesoporous metal oxides (MMOs) depends strongly on the composition, crystallinity, and size. However, soft‐templating synthesis of multicomponent systems is typically constrained by poor structural control arising from phase separation, uncontrolled nucleation, and structural collapse. Inspired by biomineralization, this study proposes a biomimetic confined crystallization strategy based on constructing a 3D continuous poly(acrylic acid) matrix. This matrix forms a flexible organic–inorganic network that stabilizes intermediate species, regulates crystallization kinetics, suppresses burst nucleation, and promotes integrated crystal growth, thereby playing a role a",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.1975103"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.7127460",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Low‐Threshold Red Lasing in Diketopyrrolopyrrole‐Based Organic Semiconductor Films",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact摘要事实：ABSTRACT Achieving low‐lasing threshold organic semiconductor lasers (OSLs) in the red to deep‐red region remains challenging due to the intrinsic trade‐off between long‐wavelength emission and high optical gain. Extended π‐conjugation required for red‐shifted emission typically enhances nonradiative decay and aggregation‐induced quenching, resulting in reduced radiative rate constants ( k r ) and increased lasing thresholds ( E th ). Here, we report molecular design strategies based on a diketopyrrolopyrrole (DPP) scaffold that independently address high radiative decay and advanced molecular orientation control aimed at low‐threshold red OSLs. For solution‐processed architectures, donor ri",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.7127460"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.1885847",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Second‐Sphere Aromatic Substitutions That Tune H‐Atom Transfer Reactivity Observed for a Series of S = 1 Nonheme Fe IV =O Complexes: An Enthalpy‐Entropy Compensation Effect",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Fe(IV)=O配合物系列用于研究HAT速率及焓熵补偿，核心是机理关系。",
+      "evidenceBasis": "fresh compact摘要事实：ABSTRACT Synthetic nonheme Fe IV ═O complexes reported thus far often have S = 1 ground states, demonstrating markedly lower oxidative reactivity in C─H bond breakage compared to their S = 2 counterparts. Recently, we have identified that incorporating cycloalkyl groups into the second coordination sphere of the nitrilotris(benzimidazole) ligand produce the most reactive Fe IV ═O complexes within the tripodal ligand family, exhibiting an S = 1 ground state. Here, we have synthesized six S = 1 complexes having the NTB ligand framework with either electron‐rich or electron‐poor aromatic groups in the secondary coordination sphere of the ligand. These complexes have been characterized by Mössba",
+      "challengeReason": "配合物制备真实，但未建立一般有机产物制备法。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.1885847"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.4098089",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Tandem Interphase Design Achieves Two‐Year Cycling of Aqueous Zinc Metal Batteries Under Extreme Conditions",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact摘要事实：ABSTRACT The development of aqueous zinc metal batteries (AZMBs) is impeded by their limited lifespan, especially at extreme conditions (high current, low temperature etc.), primarily because the solid electrolyte interphase (SEI) on Zn anode cannot simultaneously balance the solvation/desolvation kinetics and deposition/stripping stability of Zn 2 + . The inherent incompatibility of the two properties stems from the inability of the SEI to simultaneously achieve hydrophilic‐zincophobicity for rapid desolvation and hydrophobic‐zincophilicity for stable deposition, which are inherently contradictory characteristics. Herein, we present a tandem structure SEI possessing outer‐hydrophilicity/inn",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.4098089"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608315",
+      "journal": "CCS Chemistry",
+      "date": "2026-09-23",
+      "title": "Enantiodivergent Total Syntheses of Minfiensine Enantiomers Enable Comparative Anticancer Profiling in Breast Cancer Cell Models",
+      "titleZh": "Minfiensine对映体的对映分歧全合成及其在乳腺癌细胞模型中的抗癌活性比较",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "完成Minfiensine两个对映体的对映分歧全合成。",
+      "evidenceBasis": "官方出版社页面与fresh compact支持：CCS Chemistry官方文章题名明确为Enantiodivergent Total Syntheses。",
+      "challengeReason": "抗癌比较是下游应用，不改变已完成两个对映体全合成的核心贡献。",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608315"
+      ],
+      "evidenceSource": "official_publisher_and_fresh_compact",
+      "scopeAssessment": {
+        "primaryContribution": "完成Minfiensine两个对映体的对映分歧全合成。",
+        "preparativeTransformation": "通过对映分歧路线分别构建Minfiensine的两个对映体。",
+        "generalityEvidence": "CCS Chemistry官方文章题名明确为Enantiodivergent Total Syntheses。",
+        "sourceEvidence": "官方出版社页面与fresh compact支持：CCS Chemistry官方文章题名明确为Enantiodivergent Total Syntheses。",
+        "boundaryChallenge": "抗癌比较是下游应用，不改变已完成两个对映体全合成的核心贡献。"
+      }
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608210",
+      "journal": "CCS Chemistry",
+      "date": "2026-09-23",
+      "title": "Frustrated Lewis Pair-Driven Targeted Li–O Bonds Activation for Efficient Li 2 CO 3 Decomposition",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "核心是能源/电催化/多相催化或反应机理性能。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Frustrated Lewis Pair-Driven Targeted Li–O Bonds Activation for Efficient Li 2 CO 3 Decomposition”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "存在化学转化，但缺少可推广有机底物和分离产物范围。",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608210"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608355",
+      "journal": "CCS Chemistry",
+      "date": "2026-09-23",
+      "title": "Metal–Organic Framework-Assisted Structure Determination Techniques",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Metal–Organic Framework-Assisted Structure Determination Techniques”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608355"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608342",
+      "journal": "CCS Chemistry",
+      "date": "2026-09-23",
+      "title": "Nanopatterning Strategy Based on Triphenyl Tin Carboxylate and Photoacid Generator-Assisted Unlocking of Dual-Tone Lithography",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Nanopatterning Strategy Based on Triphenyl Tin Carboxylate and Photoacid Generator-Assisted Unlocking of Dual-Tone Lithography”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608342"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608341",
+      "journal": "CCS Chemistry",
+      "date": "2026-09-23",
+      "title": "Ultrabroadband Omnidirectional Super-Black Hierarchical Metamaterials",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Ultrabroadband Omnidirectional Super-Black Hierarchical Metamaterials”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608341"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1021/jacs.6c14579",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Beyond Direct Two-Electron Oxidation: High-Potential Formaldehyde Oxidation on Palladium Still Generates Hydrogen Atoms",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Janus钯膜用于检测甲醛电氧化中的氢原子，核心是表面机理定量。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Electrochemical oxidation is typically regarded as incompatible with hydrogen intermediate formation, particularly at highly positive potentials where surface hydrogen species are expected to be rapidly oxidized. Formaldehyde oxidation reaction (FOR) on palladium represents a prominent example: low-potential FOR has been associated with hydrogen generation, whereas high-potential FOR is commonly interpreted as a direct two-electron oxidation to formate that bypasses hydrogen intermediates. Here we challenge this conventional view using a Janus palladium membrane electrode (J-Pdm) that spatially decouples hydrogen generation, absorption, permeation, and detection. By monitoring the h",
+      "challengeReason": "甲醛反应真实，但无通用制备范围，仍属纯机理边界。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c14579"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c10989",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Crystallographic Alignment of α-FAPbI3 {100} Facets at the Buried Interface for Efficient Perovskite Photovoltaics",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract At the SnO2/perovskite buried interface, the poorly controlled crystallization of black-phase α-FAPbI3 typically gives rise to a disordered interfacial facet configuration involving {100}, {110}, and {111} facets, which introduces a significant energetic barrier for electron injection and obscures the facet-dependent mechanisms governing carrier extraction and transport. Here, we identify buried-interface molecules that integrate a perovskite-interacting heterocycle with a substrate-anchoring carboxyl group, enabling the ordered alignment of {100} facets at the SnO2/perovskite interface. This crystallographic regulation reduces the interfacial electrostatic potential discontinuity, ",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c10989"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c13568",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Decoding CO2 Adsorption Modes and CO Yield Variation on TM–N4 Single-Atom Catalysts via Constant-Potential Computation and Machine-Learning Investigation",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以计算、表征、仪器、地学、生态或分析为主要贡献。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Transition metal-based TM–N4 single-atom catalysts (SACs) are promising materials for electrochemical CO2 reduction reactions (CO2RR) toward CO formation. In this study, we employed the constant-potential method to investigate CO2 adsorption and reduction on 10 TM–N4 SACs (TM = Sc–Zn), with a particular focus on Ni–N4. We first evaluated the CO2 adsorption mode on the TM active site as a function of the applied electrode potential, U. Landau free energy analysis revealed a transition in CO2 adsorption mode from physisorption (D∞h–D2h) to chemisorption (C2v–C2v) at a critical electrode potential, referred to as the “transorption” potential (Utrans). Walsh diagram and machine-learning",
+      "challengeReason": "研究对象可能含有化学物质，但无一般制备转化。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c13568"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c07726",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Differential Effects of α-Synuclein Monomers and Seeds on the Material Properties of Tau Condensates",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Tau and α-Synuclein (αSyn) frequently coaggregate in various neurodegenerative disorders. Recently, Tau has been shown to form dynamic, liquid-like condensates that can recruit αSyn, and potentially serve as a precursor to pathological crosstalk and aggregation. However, the quantitative impact of αSyn on the material properties of these condensates remains elusive. Here, we measure the viscosity and interfacial tension of Tau condensates and determine how these properties are modulated by αSyn monomers and fibril seeds. We find that while both forms of αSyn partition efficiently into Tau condensates, they exert vastly different effects on the condensate’s material state. The viscos",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c07726"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c03134",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Dual-Atom-Doped Metastable Iridium Oxide with Multichamber Nanostructure for Durable Low-Iridium PEM Electrolyzers",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract The pursuit of efficient and durable proton exchange membrane water electrolysis (PEMWE) under ultralow Ir loadings is critically hindered by the intrinsic activity–stability trade-off of Ir-based oxygen evolution reaction (OER) catalysts and inefficient Ir utilization within low-loading anode catalyst layers. Herein, we report a class of Hf/Co dual-atom-doped multichamber 3R-IrO2 electrocatalysts by integrating mesoscale structural engineering with atomic-scale electronic regulation to achieve a durable low-Ir PEM electrolyzer. We demonstrate that the multichamber architecture lowers the effective volumetric Ir density and enlarges the electrochemically accessible interface, while ",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c03134"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c13197",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Low-Voltage Electrophoretic Deposition in Water with Metal–Organic Framework Nanoparticles",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Electrophoretic deposition (EPD) constitutes a major industrial method for solution-processed fabrication of thin films and coatings. Conventional protocols require high applied voltages (50–1000 V) that induce parasitic electrochemical reactions, limit substrate compatibility, and create safety hazards. Here, we demonstrate that intrinsic surface charge density of size-controlled metal–organic framework (MOF) nanoparticles, together with particle size and solvent properties, governs electrophoretic mobility and enables high-quality EPD in aqueous media at 1 V, well below the threshold for water electrolysis. Compact, uniform films of MOF nanoparticles with thicknesses gt;10 μm depo",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c13197"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c13134",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Photodynamic Hijacking of APE1 Converts Tumor Defenses into Therapeutic Vulnerabilities via a Bidirectionally Gated Prodrug",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "双门控前药用于光动力黑色素瘤治疗，核心是生医疗效。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Photodynamic therapy (PDT) for melanoma is chronically undermined by adaptive resistance, a long-overlooked challenge rooted in coordinated antioxidant buffering and DNA repair defenses. Herein, we propose a novel photodynamic sabotage approach that converts tumor defenses into therapeutic vulnerabilities by hijacking one important defense hub, the APE1 protein. This was achieved through creating a bidirectionally gated theranostic prodrug, APE-BDP, which covalently links an iodine-engineered BODIPY to the APE1 inhibitor CRT through a photocleavable bridge. Beyond pioneering the master regulator APE1, as a photodynamic target, the molecular design strategically repurposes the inhere",
+      "challengeReason": "前药制备不自动形成一般合成方法，摘要无底物范围。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c13134"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c09191",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Pressure-Induced Interlayer Bonding in Arsenic Revealed by Single-Crystal Synchrotron X-ray Diffraction in a Diamond Anvil Cell",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以计算、表征、仪器、地学、生态或分析为主要贡献。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Arsenic was studied by single-crystal synchrotron X-ray diffraction during room T compression up to 37.8 GPa across the rhombohedral (As–I, A7) to simple cubic (As–II, sc) phase transition, using a diamond anvil cell for pressure generation and He as a pressure-transmitting medium. The pressure dependence of the rhombohedral lattice parameter a, angle α, atomic position parameter u, and first (d1) and second (d2) neighbor distances provides experimental evidence for a two-step pressure-induced interlayer bond formation mechanism, underlying the transition from the layered A7 structure to the nonlayered simple cubic one. Consistent with phosphorus, our data demonstrate the existence ",
+      "challengeReason": "研究对象可能含有化学物质，但无一般制备转化。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c09191"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c16323",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Radical Disconnection Logic Enables Direct Conversion of α-Amino Acids into Differentiated Vicinal Diamines",
+      "titleZh": "自由基断键策略实现α-氨基酸直接转化为差异化邻二胺",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "提出α-氨基酸直接脱羧构建差异化邻二胺的自由基断键方法。",
+      "evidenceBasis": "fresh compact摘要支持：摘要明确称为direct conversion，并针对传统酸到氨甲基路线的多步/氧化还原负担。",
+      "challengeReason": "断键逻辑同时交付直接制备转化，不是仅有概念或机理。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c16323"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "提出α-氨基酸直接脱羧构建差异化邻二胺的自由基断键方法。",
+        "preparativeTransformation": "α-氨基酸转化为两个氮取代可区分的邻二胺。",
+        "generalityEvidence": "摘要明确称为direct conversion，并针对传统酸到氨甲基路线的多步/氧化还原负担。",
+        "sourceEvidence": "fresh compact摘要支持：摘要明确称为direct conversion，并针对传统酸到氨甲基路线的多步/氧化还原负担。 摘要原始事实摘录：Abstract Functional group interconversions (FGIs) are foundational to synthesis, yet classical acid-to-aminomethyl transformations remain intrinsically step- and redox-intensive. Here we introduce a radical disconnection strategy that enables the direct conversion of α-amino acids into differentiated vicinal diamines in a single step. The method relies on photocatalytic decarboxylation of readily available amino acids to generate α-amino radicals",
+        "boundaryChallenge": "断键逻辑同时交付直接制备转化，不是仅有概念或机理。"
+      }
+    },
+    {
+      "doi": "10.1021/jacs.6c15764",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Unlocking 17O Natural-Abundance Nuclear Magnetic Resonance Detection in Solids",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名和可得摘要未显示一般有机合成方法、通用砌块路线或完成的全合成。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Oxygen is an essential component of a wide variety of organic and inorganic materials, whether natural or synthetic. Therefore, characterizing its bonding patterns is essential to a wide range of scientific disciplines. Solid-state nuclear magnetic resonance is the technique of choice for this purpose but is insensitive to oxygen. Here, we demonstrate how to overcome this issue by using high magnetic fields in combination with cryogenic detection. This method enables us to obtain 17O NMR spectra with excellent signal-to-noise ratios and natural abundance within minutes using samples at room temperature and straight from the shelf. This paves the way for observing systems that cannot",
+      "challengeReason": "已反向检查可能的合成信号，当前证据不足以证明可推广制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c15764"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c14601",
+      "journal": "JACS",
+      "date": "2026-09-23",
+      "title": "Unlocking Sulfurdiimide Reagents as Radical Traps in the Decarboxylative Synthesis of Sulfinamidines",
+      "titleZh": "硫二亚胺作为自由基捕获剂的脱羧合成亚磺酰胺",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "开发硫二亚胺捕获脱羧自由基合成亚磺酰胺。",
+      "evidenceBasis": "fresh compact摘要支持：摘要以解决氮杂硫(IV/VI)化合物难合成为目标并给出脱羧合成平台。",
+      "challengeReason": "自由基捕获是方法基础，最终形成目标亚磺酰胺而非只观察中间体。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c14601"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "开发硫二亚胺捕获脱羧自由基合成亚磺酰胺。",
+        "preparativeTransformation": "羧酸衍生自由基与硫二亚胺构建亚磺酰胺。",
+        "generalityEvidence": "摘要以解决氮杂硫(IV/VI)化合物难合成为目标并给出脱羧合成平台。",
+        "sourceEvidence": "fresh compact摘要支持：摘要以解决氮杂硫(IV/VI)化合物难合成为目标并给出脱羧合成平台。 摘要原始事实摘录：Abstract Aza-sulfur(IV) and (VI) compounds are emerging motifs in medicinal and crop protection chemistry, creating a demand for new methodologies for their challenging synthesis. Sulfurdiimides, the diaza analogues of sulfur dioxide, remain underexplored in their potential to access aza-sulfur compounds, in particular their use as radical traps has not been reported. Here, we describe the synthesis of a new series of stable unsymmetrical sulfurd",
+        "boundaryChallenge": "自由基捕获是方法基础，最终形成目标亚磺酰胺而非只观察中间体。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01347",
+      "journal": "JOC",
+      "date": "2026-09-23",
+      "title": "A New Carbocation Formation via Lewis Acid-Catalyzed C–O Bond Cleavage of N -Tosyl Carbamates",
+      "titleZh": "路易斯酸催化N-磺酰氨基甲酸酯C–O键断裂形成碳正离子的新方法",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "FeCl3催化N-磺酰氨基甲酸酯C–O断裂并捕获苄基碳正离子。",
+      "evidenceBasis": "fresh compact摘要支持：摘要明确给出催化断裂和外部亲核体高效捕获。",
+      "challengeReason": "虽然题名强调中间体，摘要同时给出亲核捕获的制备反应，非纯机理。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01347"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "FeCl3催化N-磺酰氨基甲酸酯C–O断裂并捕获苄基碳正离子。",
+        "preparativeTransformation": "仲苄醇来源底物形成碳正离子并被外加亲核体捕获。",
+        "generalityEvidence": "摘要明确给出催化断裂和外部亲核体高效捕获。",
+        "sourceEvidence": "fresh compact摘要支持：摘要明确给出催化断裂和外部亲核体高效捕获。 摘要原始事实摘录：Abstract A novel Lewis acid-catalyzed C–O bond cleavage of N-tosyl carbamates derived from secondary benzyl alcohols has been developed. In the presence of catalytic FeCl3, these carbamates undergo rapid C–O bond cleavage to generate reactive benzylic carbocation intermediates, which are efficiently intercepted by exogenous nucleophiles. The resulting intermolecular Friedel–Crafts alkylations and annulations proceed under mild conditions at 25 °C",
+        "boundaryChallenge": "虽然题名强调中间体，摘要同时给出亲核捕获的制备反应，非纯机理。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01498",
+      "journal": "JOC",
+      "date": "2026-09-23",
+      "title": "Ag(I)-Promoted Cascade Cyclization of 1-Isocyano-2-((2-alkoxyphenyl)ethynyl)benzenes to Access Benzofuro[2,3- b ]quinolines",
+      "titleZh": "Ag(I)促进异氰基炔级联环化合成苯并呋喃并喹啉",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "Ag(I)促进异氰基炔级联环化，一锅构建苯并呋喃并喹啉。",
+      "evidenceBasis": "fresh compact摘要支持：摘要称为替代合成路线并描述由相应甲酰胺衍生物出发的一锅过程。",
+      "challengeReason": "级联机理仍交付可重复的稠合杂环制备路线。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01498"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "Ag(I)促进异氰基炔级联环化，一锅构建苯并呋喃并喹啉。",
+        "preparativeTransformation": "1-异氰基-2-[(2-烷氧基苯基)乙炔基]苯转化为稠合杂环。",
+        "generalityEvidence": "摘要称为替代合成路线并描述由相应甲酰胺衍生物出发的一锅过程。",
+        "sourceEvidence": "fresh compact摘要支持：摘要称为替代合成路线并描述由相应甲酰胺衍生物出发的一锅过程。 摘要原始事实摘录：Abstract This work discloses an alternative synthetic route to access benzofuro[2,3-b]quinolines. The reaction proceeds via Ag(I)-assisted cascade cyclization of 1-isocyano-2-((2-alkoxyphenyl)ethynyl)benzenes, derived from the corresponding N-(2-((2-alkoxyphenyl)ethynyl)phenyl)formamide derivatives, allowing a one-pot, two-step assembly of the benzofuroquinoline scaffolds with four fused rings. The salient features of the synthetic method are bro",
+        "boundaryChallenge": "级联机理仍交付可重复的稠合杂环制备路线。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01427",
+      "journal": "JOC",
+      "date": "2026-09-23",
+      "title": "Nitric Acid Concentration-Controlled Chemoselective Divergence of a Nitrogen-Rich 5,6,5-Fused Tricyclic Scaffold to Thermally Stable Salts and High-Energy Diazonium Materials",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "单一含氮稠合母体在硝酸中转为盐和高能重氮材料，核心是高能材料制备/热稳定性。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract A nitric acid concentration- and temperature-controlled aqueous chemoselective divergence strategy is reported using a nitrogen-rich 5,6,5-fused tricyclic parent compound 1. In the nitric acid system, 70% nitric acid induces only monoprotonation to afford nitrate salt 2 (Tdec = 225.88 °C), whereas fuming nitric acid at 80 °C triggers protonation, diazotization, and one-pot multicomponent cocrystal self-assembly to give diazonium cocrystal 4 ([C6H4N9+]2·[NO3–]2·HNO3·H2O, Tdec = 181 °C). As an extension of the protonation pathway, treatment with perchloric acid affords perchlorate salt 3 (Tdec = 294.85 °C). Further neutralization of 4 gives neutral diazonium inner salt 5 (Tdec = 179.5",
+      "challengeReason": "真实转化仅围绕一个母体，未显示可推广底物范围。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01427"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/d41586-026-02855-0",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "‘Remarkably encouraging’: stem-cell treatments for autoimmune diseases enter new phase",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“‘Remarkably encouraging’: stem-cell treatments for autoimmune diseases enter new phase”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02855-0"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11056-8",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "A design approach for bitopic kinase inhibitors",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "核心是ABL1/EGFR双位点抑制剂的药物设计与生物性能，不是新的通用成键路线。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Traditional kinase inhibitors face a trade-off between potency and selectivity because their affinity depends on limited molecular interactions in a single highly conserved binding site. Bitopic inhibitors overcome this limitation by engaging multiple sites on the same target 1 . Here, using ABL1 and EGFR as model kinases, we systematically explore the bitopic-specific design parameters of ligand choice, linkage vector and linker length and show that they affect potency through inter-ligand cooperativity and linker entropy. We apply this approach to address an unmet clinical need: existing inhibitors of ABL1, an important target in BCR :: ABL1 -driven leukaemias, are constrained by ",
+      "challengeReason": "分子合成服务于配体选择和药理优化，未建立一般合成方法。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11056-8"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/d41586-026-02858-x",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "A guide to the Nature Index",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“A guide to the Nature Index”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02858-x"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11028-y",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "A methanogen hydrolase reveals the structure of archaeal peptidoglycan",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名和可得摘要未显示一般有机合成方法、通用砌块路线或完成的全合成。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“A methanogen hydrolase reveals the structure of archaeal peptidoglycan”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "已反向检查可能的合成信号，当前证据不足以证明可推广制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11028-y"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02789-7",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "A plant that reproduces sexually but has clone-like offspring",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“A plant that reproduces sexually but has clone-like offspring”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02789-7"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11102-5",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "A quadruped robot designed to complete a marathon on a single battery charge",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“A quadruped robot designed to complete a marathon on a single battery charge”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11102-5"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02646-7",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "A widespread agricultural practice is an unexpected CO2 sink",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“A widespread agricultural practice is an unexpected CO2 sink”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02646-7"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11040-2",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Agricultural liming is a carbon sink in the Mississippi River Basin",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以计算、表征、仪器、地学、生态或分析为主要贡献。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Agricultural liming is a carbon sink in the Mississippi River Basin”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "研究对象可能含有化学物质，但无一般制备转化。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11040-2"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11033-1",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Anomalous metal and superconducting phases in rhombohedral graphene",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Anomalous metal and superconducting phases in rhombohedral graphene”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11033-1"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11189-w",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Author Correction: Large recoverable elastic energy in chiral metamaterials via twist buckling",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "校正记录，不是新的原创研究论文。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Author Correction: Large recoverable elastic energy in chiral metamaterials via twist buckling”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "校正可能修改原文，但不得作为新合成论文重复收录。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11189-w"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-03021-2",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Bank accounts reveal the fingerprints of abusive financial control",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Bank accounts reveal the fingerprints of abusive financial control”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-03021-2"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11049-7",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Banking records reveal characteristics of financial abuse",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名和可得摘要未显示一般有机合成方法、通用砌块路线或完成的全合成。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract The experience of financial abuse, a form of domestic abuse involving control over money and finances, can be severe and long-lasting 1–3 , yet difficult to document 4 . Evidence on the everyday experiences of victim-survivors in the context of financial abuse is drawn primarily from small-scale, qualitative surveys 5,6 . Using anonymized banking data from a major UK retail bank, we compared the financial outcomes of a group of female victim-survivors of financial abuse ( n = 5,428; identified from customer disclosures to the bank) with a control group ( n = 15,602; consisting of individuals with no known disclosures). The control group matched the demographic and socioeconomic char",
+      "challengeReason": "已反向检查可能的合成信号，当前证据不足以证明可推广制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11049-7"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/d41586-026-03019-w",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Best clock ever: timekeeper based on lutetium atoms wows researchers",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Best clock ever: timekeeper based on lutetium atoms wows researchers”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-03019-w"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02772-2",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Brain lipids are organized into zones — and reorganized during pregnancy",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Brain lipids are organized into zones — and reorganized during pregnancy”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02772-2"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11169-0",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Chiral oxazolidinones via biocatalytic aziridination of unactivated alkenes",
+      "titleZh": "未活化烯烃生物催化氮杂环丙烷化合成手性噁唑烷酮",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "血红素蛋白催化未活化烯烃氮杂环丙烷化/扩环，不对称合成手性噁唑烷酮。",
+      "evidenceBasis": "官方出版社页面与fresh compact支持：Nature官方摘要给出临床相关/发现阶段产物，SI列有分析与制备规模反应。",
+      "challengeReason": "定向进化是催化剂开发手段；明确底物到手性杂环及制备规模验证属于生物催化合成。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11169-0"
+      ],
+      "evidenceSource": "official_publisher_and_fresh_compact",
+      "scopeAssessment": {
+        "primaryContribution": "血红素蛋白催化未活化烯烃氮杂环丙烷化/扩环，不对称合成手性噁唑烷酮。",
+        "preparativeTransformation": "简单未活化烯烃经酶催化氮烯转移和扩环形成5位手性噁唑烷酮。",
+        "generalityEvidence": "Nature官方摘要给出临床相关/发现阶段产物，SI列有分析与制备规模反应。",
+        "sourceEvidence": "官方出版社页面与fresh compact支持：Nature官方摘要给出临床相关/发现阶段产物，SI列有分析与制备规模反应。",
+        "boundaryChallenge": "定向进化是催化剂开发手段；明确底物到手性杂环及制备规模验证属于生物催化合成。"
+      }
+    },
+    {
+      "doi": "10.1038/d41586-026-02856-z",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Competition heats up in the regenerative-medicine ranks",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Competition heats up in the regenerative-medicine ranks”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02856-z"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02771-3",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Conifer trees can prosper half a world away from their usual home",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Conifer trees can prosper half a world away from their usual home”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02771-3"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02937-z",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Efficient yet stable large perovskite solar modules made using surface treatment",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Efficient yet stable large perovskite solar modules made using surface treatment”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02937-z"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02637-8",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Genome project opens the next chapter for studying bat evolution",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Genome project opens the next chapter for studying bat evolution”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02637-8"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02773-1",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Gravitational forces inside Earth drag some decades out — and make others fly by",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Gravitational forces inside Earth drag some decades out — and make others fly by”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02773-1"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-10999-2",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Gravitational torque drives multidecadal variations in length of day",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以计算、表征、仪器、地学、生态或分析为主要贡献。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Gravitational torque drives multidecadal variations in length of day”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "研究对象可能含有化学物质，但无一般制备转化。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-10999-2"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-03018-x",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Gravitational tug-of-war inside Earth is changing the length of our days",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Gravitational tug-of-war inside Earth is changing the length of our days”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-03018-x"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11051-z",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Hepatocytes promote liver metastasis of pancreatic cancer by providing serine",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Hepatocytes promote liver metastasis of pancreatic cancer by providing serine”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11051-z"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02563-9",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "How do I rekindle my motivation for earning my PhD?",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“How do I rekindle my motivation for earning my PhD?”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02563-9"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02986-4",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Huge hoard of metal bars hints at vast Iron Age trade",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Huge hoard of metal bars hints at vast Iron Age trade”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02986-4"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02857-y",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Lack of female researchers and participants in regenerative-medicine research holds everyone back",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Lack of female researchers and participants in regenerative-medicine research holds everyone back”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02857-y"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02947-x",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Landmark map of human brain’s gene activity holds clues to Alzheimer’s disease and more",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Landmark map of human brain’s gene activity holds clues to Alzheimer’s disease and more”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02947-x"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-10271-7",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Lifespan single-cell transcriptomic atlas of the human prefrontal cortex",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Lifespan single-cell transcriptomic atlas of the human prefrontal cortex”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-10271-7"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11031-3",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Lsp2 links early-life diet to adult translation and lifespan in Drosophila",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名和可得摘要未显示一般有机合成方法、通用砌块路线或完成的全合成。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Nearly a century ago, restricting diet during early-life periods was suggested to extend lifespan in rats and in Daphnia 1,2 . The effect of juvenile diet on adult physiology and lifespan has subsequently been described in other model organisms, including fruit flies 3–5 and mice 6–8 ; however, its mechanism remains poorly understood. Here, using Drosophila as a model, we show that restricting protein intake during the larval stage (early-life protein restriction; ePR) promotes adult lifespan by reducing the levels of storage proteins. Using stable-isotope tracing, we show that dietary amino acids obtained in the larval stage are retained into early adulthood, and are incorporated i",
+      "challengeReason": "已反向检查可能的合成信号，当前证据不足以证明可推广制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11031-3"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-026-11029-x",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Lsp2 links mTORC1 to TOP mRNA translation and lifespan in Drosophila",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名和可得摘要未显示一般有机合成方法、通用砌块路线或完成的全合成。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Lsp2 links mTORC1 to TOP mRNA translation and lifespan in Drosophila”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "已反向检查可能的合成信号，当前证据不足以证明可推广制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11029-x"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11072-8",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Lu+ optical frequency references with accuracy verified at the 19th digit",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名和可得摘要未显示一般有机合成方法、通用砌块路线或完成的全合成。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Lu+ optical frequency references with accuracy verified at the 19th digit”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "已反向检查可能的合成信号，当前证据不足以证明可推广制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11072-8"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11048-8",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "MMEJ repair of breaks at TA repeats maintains ecDNA and cancer fitness",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“MMEJ repair of breaks at TA repeats maintains ecDNA and cancer fitness”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11048-8"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11054-w",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "mTORC1 drives cell-autonomous astrocyte reactivity in tuberous sclerosis",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Tuberous sclerosis complex (TSC) is a genetic neurodevelopmental disorder characterized by focal brain malformations called cortical tubers, which are associated with severe, intractable epilepsy 1 . Tubers are thought to result from somatic second-hit mutations that disrupt the TSC1 or TSC2 genes in neural progenitor cells, driving hyperactive mTORC1 signalling 2 . Glial abnormalities are commonly observed in tubers 3 ; however, whether glia actively cause disease or merely result from chronic seizure activity has remained unclear. To address this question, we used human brain organoid models to track the developmental fate of mutated progenitor cells in the absence of seizures. He",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11054-w"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-026-11041-1",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Neuronal detection of social actions directs collective escape behaviour",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Animals in groups obtain information from social partners to engage in adaptive behaviour 1–3 . Social information transmission is observed in fish schools 4–6 , bird flocks 7,8 and human groups 9,10 , but the neural representation of such socially acquired information is poorly understood 3,11,12 . Here we show that, in the schooling glassfish Danionella cerebrum 13–15 , collective escape from danger can be mediated by an individual’s visual perception of other escaping animals. To understand the neural basis of socially transmitted escape behaviour, we imaged neural activity from adult glassfish viewing the actions of virtual conspecifics. Visual neurons in the midbrain optic tect",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11041-1"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-026-11074-6",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Organic two-dimensional van der Waals heterostructures",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "核心是有机二维晶体范德华异质结构组装及电子/光学物性。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Van der Waals heterostructures based on graphene and inorganic two-dimensional (2D) crystals enable exquisite control of interlayer coupling, and emergent electronic and optical phenomena 1,2 . Extending this concept to organic 2D crystals has been hindered by weak, non-directional interlayer interactions that frustrate lattice registry. Here we introduce a bottom-up strategy for programmable lattice engineering in organic van der Waals heterostructures of 2D polymers. Sequential on-water-surface assembly enables layer-by-layer stacking of chemically distinct 2D polymers with defined lattice registry, stacking sequence and thickness, yielding both lattice-matched and controlled latt",
+      "challengeReason": "分子层组装真实存在，但缺少通用有机反应或聚合反应。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11074-6"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-026-11007-3",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Reference genomes and fossils revise bat family phylogeny and biogeography",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以计算、表征、仪器、地学、生态或分析为主要贡献。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Bats are extraordinary among mammals, having uniquely evolved powered flight and laryngeal echolocation, along with disease resistance, extended healthspans and the ability to hibernate 1 . However, the evolutionary history of bats and the understanding of these adaptations remain unresolved. We analysed chromosome-level, long-read genome assemblies from 103 bat species, including 42 new assemblies, representing all 21 bat families. This dataset, expanded in scope and assembly quality, yielded a new bat phylogeny. We placed Myzopodidae as the earliest branch within Vespertilionoidea, and resolved yangochiropteran relationships, identifying Emballonuroidea and Vespertilionoidea as si",
+      "challengeReason": "研究对象可能含有化学物质，但无一般制备转化。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11007-3"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-026-11016-2",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Sequence-encoded hexagonal lattices in multichannel peptide nanofibrils",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "九肽序列编码纳米纤维六方晶格，核心是超分子材料组装。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Structural complexity in biological matter arises from molecular information that encodes supramolecular assembly across length scales 1–3 . Here we show that minimal nine-residue peptides can encode discrete lateral interaction motifs that direct supramolecular organization. These motifs generate hexagonal pores and hierarchically tile into multichannel nanofibrils with defined topology. Sequence-encoded amphiphilicity combines a cross-β-dimer, an inversion point and a trimeric junction to create complementary interfaces that couple lateral growth to axial stacking, yielding honeycomb lattices with continuous approximately 5-nm solvent-accessible nanochannels. Cryo-electron microsc",
+      "challengeReason": "序列控制不等于新的共价聚合或一般小分子制备方法。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11016-2"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-025-09573-z",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Single-cell atlas of transcriptomic vulnerability across brain disorders",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Neurodegenerative and neuropsychiatric diseases impose a considerable societal and public health burden. However, our understanding of the molecular mechanisms underlying these highly complex conditions remains limited 1,2 . Here, to gain deeper insights into the aetiology of different brain diseases, we used specimens from 1,494 unique donors to generate a population-scale single-cell transcriptomic atlas of the human dorsolateral prefrontal cortex, comprising over 6.3 million individual nuclei. The cohort includes neurotypical controls, as well as donors affected by eight common and complex brain disorders: Alzheimer’s disease (AD), diffuse Lewy body disease (DLBD), vascular demen",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-025-09573-z"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-026-10836-6",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Single-nucleus transcriptome-wide association study of human brain disorders",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Common brain disorders impose a substantial health burden, but localizing their genetic risk in the brain remains challenging 1 . Although genome-wide association studies have identified numerous loci associated with neuropsychiatric and neurodegenerative disorders, many of these loci lie in non-coding regions that influence gene expression in specific cell types 2–5 . Traditional bulk brain transcriptomic analyses, which often focus on European ancestry cohorts, average over cellular diversity, obscuring genetic risk-related changes in gene expression. Here we use single-nucleus gene expression profiles from the dorsolateral prefrontal cortex in the multi-ancestry PsychAD cohort to",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-10836-6"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-026-11069-3",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Stacking-induced direct band gap in CVD-grown 1H MoS2 bilayers",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名和可得摘要未显示一般有机合成方法、通用砌块路线或完成的全合成。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Stacking-induced direct band gap in CVD-grown 1H MoS2 bilayers”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "已反向检查可能的合成信号，当前证据不足以证明可推广制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11069-3"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02774-0",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Surprising protein links dietary restriction to increased lifespan in flies",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Surprising protein links dietary restriction to increased lifespan in flies”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02774-0"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11059-5",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "Targeting ZMYND8 unleashes IL-2 signalling to override T cell exhaustion",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Targeting ZMYND8 unleashes IL-2 signalling to override T cell exhaustion”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11059-5"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11058-6",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "The anthropogenic fingerprint on emerging infectious diseases",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Emerging infectious diseases are a hallmark of the Anthropocene 1,2 . Human-driven ecosystem changes and human–wildlife–livestock contact can drive the emergence of zoonotic and vector-borne diseases 3–5 , but how much these processes shape landscapes of outbreak risk is poorly understood, beyond a few well-studied systems 6–8 . Here we consolidate 58,319 outbreak event records for 32 diseases and systematically test how 16 hypothesized social and environmental drivers impact outbreak geographies, while accounting for detection and reporting biases. We show that outbreak risks are typically highest in mosaic landscapes where people and livestock live alongside forests and fragmented",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11058-6"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/d41586-026-02861-2",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "The courier",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“The courier”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02861-2"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11053-x",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "The gene-regulatory evolution of the human skeleton",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Skeletal modifications were central to human evolution, enabling adaptations for bipedalism, large cranial vaults and childbirth 1 . Despite their importance, the genetic changes that gave rise to the unique human form remain mostly unknown 2 . Here we systematically map the gene-regulatory changes that shaped human skeletal evolution. Using massively parallel reporter assays (MPRAs) in chondrocytes, we assayed 561,410 human-derived substitutions in promoters and enhancers, identifying 15,077 loci with human-specific regulatory activity. We then generated human–ape hybrid cells and differentiated them into osteochondral progenitors. Integrating the hybrid cells with MPRA measurement",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11053-x"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/d41586-026-02775-z",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "The human skeleton’s unique adaptations relied on gene regulatory changes",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“The human skeleton’s unique adaptations relied on gene regulatory changes”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02775-z"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41586-026-11050-0",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "The lipidomic architecture of the mouse brain",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Lipids are fundamental components of the brain, crucial for synaptic transmission and signal propagation. Altered brain lipid composition is associated with common and rare neuropathologies, yet the spatial organization of the mammalian brain lipidome remains insufficiently characterized compared with other modalities 1–6 . Here we mapped the membrane-lipid architecture of the adult mouse brain at micrometric scale, across sexes and during pregnancy. This lipid brain atlas reveals that lipids describe a fine-grained biochemical structure that aligns with functional anatomy. Membrane-lipid spatial heterogeneity clusters into territories, which we termed ‘lipizones’. Lipizones partial",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11050-0"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-026-11046-w",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "The mutational dynamics of the Arabidopsis centromeres",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Centromeres are essential for faithful chromosome segregation during cell division. Yet despite their conserved function, many centromeres contain highly variable but internally remarkably homogenized tandem-repeat arrays 1–5 whose evolutionary dynamics remain poorly understood. Here, using replicated genome assemblies of mutation accumulation lines, we define the centromere-specific mutation spectrum in Arabidopsis thaliana . We find that kilobase-sized insertion–deletion mutations (indels) occur frequently and consistently preserve tandem-repeat arrays by adding or removing only complete repeat units. Point mutations accumulate at an almost tenfold higher rate than elsewhere in th",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11046-w"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41586-026-11052-y",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "TRAM promotes Toll-like-receptor-free myddosome signal transduction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“TRAM promotes Toll-like-receptor-free myddosome signal transduction”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41586-026-11052-y"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/d41586-026-02854-1",
+      "journal": "Nature",
+      "date": "2026-09-23",
+      "title": "What is needed for regenerative medicine to flourish?",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Nature新闻、播客、Research Highlight、Nature Index或评论记录，不是原创合成Article。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“What is needed for regenerative medicine to flourish?”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "即使涉及化学，其内容类型没有实验制备证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/d41586-026-02854-1"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41929-026-01623-7",
+      "journal": "Nature Catalysis",
+      "date": "2026-09-23",
+      "title": "Author Correction: Alkali metal cation impurities stabilize Cu+ in oxide-derived copper for CO2 electrolysis",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "校正记录，不是新的原创研究论文。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Author Correction: Alkali metal cation impurities stabilize Cu+ in oxide-derived copper for CO2 electrolysis”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "校正可能修改原文，但不得作为新合成论文重复收录。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41929-026-01623-7"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41557-026-02267-7",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-23",
+      "title": "An open-framework boron allotrope exhibiting high conductivity and plasticity",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“An open-framework boron allotrope exhibiting high conductivity and plasticity”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41557-026-02267-7"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41557-026-02246-y",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-23",
+      "title": "Breaking N-alkyl aziridines for cross-coupling reactions",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "这是对原创论文10.1038/s41557-026-02247-x的编辑性研究摘要。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Breaking N-alkyl aziridines for cross-coupling reactions”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "官方页明确“This is a summary of”；新闻/摘要元数据不得重复收录。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41557-026-02246-y"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41557-026-02247-x",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-23",
+      "title": "Divergent ring opening and functionalization of N-alkyl aziridines via boryl radical fragmentation",
+      "titleZh": "硼基自由基裂解实现N-烷基氮杂环丙烷的发散开环与官能化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "BH3配位/硼基自由基β-裂解激活N-烷基氮杂环丙烷的发散官能化平台。",
+      "evidenceBasis": "官方出版社页面与fresh compact支持：官方摘要给出两套平台及芳基硼酸、腈、硫化物和芳基溴化物伙伴。",
+      "challengeReason": "机理创新落地为多类伙伴和两套催化体系的通用β-官能化胺制备。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41557-026-02247-x"
+      ],
+      "evidenceSource": "official_publisher_and_fresh_compact",
+      "scopeAssessment": {
+        "primaryContribution": "BH3配位/硼基自由基β-裂解激活N-烷基氮杂环丙烷的发散官能化平台。",
+        "preparativeTransformation": "开环生成β-氨基烷基自由基，再经铜催化或光/镍催化偶联。",
+        "generalityEvidence": "官方摘要给出两套平台及芳基硼酸、腈、硫化物和芳基溴化物伙伴。",
+        "sourceEvidence": "官方出版社页面与fresh compact支持：官方摘要给出两套平台及芳基硼酸、腈、硫化物和芳基溴化物伙伴。 摘要原始事实摘录：Abstract Aziridine ring opening is a powerful platform for molecular diversification. Unactivated N-alkyl aziridines have long resisted ring opening and cross-coupling, so the installation and removal of N-activating groups followed by N-alkylation remains the most applicable route for aziridine diversification. Here we report a general radical activation mode that directly engages N-alkyl aziridines in ring-opening and divergent functionalizatio",
+        "boundaryChallenge": "机理创新落地为多类伙伴和两套催化体系的通用β-官能化胺制备。"
+      }
+    },
+    {
+      "doi": "10.1038/s41557-026-02261-z",
+      "journal": "Nature Chemistry",
+      "date": "2026-09-23",
+      "title": "Sterically gated Lewis acid and base pairs enable orthogonal defect passivation in perovskite solar cells",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Sterically gated Lewis acid and base pairs enable orthogonal defect passivation in perovskite solar cells”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41557-026-02261-z"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77813-5",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "A principal-stress rule for cell division in epithelia",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Dense active materials must continuously relieve internal mechanical stress to remain structurally stable as they are driven far from equilibrium. In epithelial tissues, this relief occurs through cell division, where, according to Hertwig’s century-old rule, cells divide along their long axis. We show that as epithelia densify, this geometric rule is superseded by a mechanical one: cells divide along the principal axis of anisotropic stress, independently of the isotropic stress state. Using direct force measurements and stress inference, we demonstrate that stress orientation governs division across mechanically distinct systems, from fluid-like to jammed monolayers and structural",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77813-5"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-78047-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Author Correction: Non-toxic silver telluride colloidal quantum dot mid-infrared photodetector",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "校正记录，不是新的原创研究论文。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Author Correction: Non-toxic silver telluride colloidal quantum dot mid-infrared photodetector”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "校正可能修改原文，但不得作为新合成论文重复收录。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78047-1"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77836-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Author Correction: Roll-to-roll AgNWs networks/Ag finger by self-masking protection for large-area monolithic flexible organic solar cells",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "校正记录，不是新的原创研究论文。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Author Correction: Roll-to-roll AgNWs networks/Ag finger by self-masking protection for large-area monolithic flexible organic solar cells”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "校正可能修改原文，但不得作为新合成论文重复收录。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77836-y"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-78052-4",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Berry curvature dipole generation and nonreciprocal spin photocurrents in ferroelectricity polarized heterostructures",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Berry curvature dipole generation and nonreciprocal spin photocurrents in ferroelectricity polarized heterostructures”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78052-4"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77390-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Biocompatible piezoionic eutectogel sensor for self-powered physiological monitoring",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Piezoionics holds promise for self-powered bioelectronics, yet existing hydrogel and elastomer systems are often limited by poor biocompatibility, environmental instability, and low output. Here, we report a biocompatible deep eutectic solvent-polyvinyl alcohol (DES-PVA) eutectogel featuring a robust piezoionic response and practical wearable sensing capabilities. By incorporating a choline chloride-glycerol DES into a PVA network, we engineer tailored hydrogen bonds that selectively constrain choline cations while enabling rapid chloride anion transport, thereby amplifying the piezoionic response to achieve a sensitivity of 60 mV kPa –1 . In vitro assays verify the excellent biocom",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77390-7"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77891-5",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Calcium induced N-terminal gating and pore collapse in connexin-46/50 gap junctions",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Calcium induced N-terminal gating and pore collapse in connexin-46/50 gap junctions”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77891-5"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77938-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Canonical Notch2 signaling regulates development and maintenance of iron-recycling macrophages and iron homeostasis",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Red pulp macrophages (RPM) and bone marrow macrophages (BMM) are iron-recycling cells, involved in iron homeostasis and erythropoiesis. Here we show, by conditional deletion strategies using Cx3cr1Cre-mediated targeting to inactivate Notch signalling components in mice, that canonical Notch2 signalling regulates the development of RPM and BMM. Loss of functional Notch2, or its nuclear mediator Rbpj, impair RPM and BMM development and cause iron overload in the spleen and bone marrow. In the absence of Notch2, prototypic RPM genes are downregulated, which is accompanied by splenic extramedullary haematopoiesis and changes in splenic microarchitecture. Treatment of mice with an anti-N",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77938-7"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77742-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Chromium isotope constraints on deep mantle oxidation from the Early Archean to Paleoproterozoic",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以计算、表征、仪器、地学、生态或分析为主要贡献。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Chromium isotope constraints on deep mantle oxidation from the Early Archean to Paleoproterozoic”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "研究对象可能含有化学物质，但无一般制备转化。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77742-3"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77863-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Coupled increases in pelagic fish productivity and export productivity during the Paleocene-Eocene Thermal Maximum",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以计算、表征、仪器、地学、生态或分析为主要贡献。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Coupled increases in pelagic fish productivity and export productivity during the Paleocene-Eocene Thermal Maximum”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "研究对象可能含有化学物质，但无一般制备转化。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77863-9"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77927-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "CPT1A-mediated IDO1 succinylation shapes EGFRvIII-driven resistance to tumor electric field therapy in glioblastoma",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Tumor Electric Field Therapy (TEFT) disrupts mitosis in glioblastoma (GBM), but responses vary markedly among patients. In a retrospective cohort of TEFT-treated GBM, EGFR variant III (EGFRvIII) alteration is associated with shorter progression-free survival, prompting us to investigate a genotype-linked resistance mechanism. TEFT triggers a broadly shared bioenergetic stress response marked by activation of the AMPK-PPARα-CPT1A axis, whereas EGFRvIII primes IDO1 transcription through NF-κB. CPT1A further stabilizes IDO1 by promoting succinylation at lysine 377 through non-canonical LSTase-related activity, thereby limiting TRIM21-dependent ubiquitination and proteasomal degradation",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77927-w"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-75680-8",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Efficient differential expression analysis of large-scale single-cell transcriptomics data using Dreamlet",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Advances in single-cell and -nucleus transcriptomics have enabled generation of increasingly large-scale datasets from hundreds of subjects and millions of cells. These studies promise to give unprecedented insight into the cell type specific biology of human disease. Yet performing differential expression analyses across subjects remains difficult due to challenges in statistical modeling of these complex studies and scaling analyses to large datasets. Our open-source R package dreamlet ( DiseaseNeurogenomics.github.io/dreamlet ) uses a pseudobulk approach based on precision-weighted linear mixed models to identify genes differentially expressed with traits across subjects for each",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-75680-8"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77984-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Efficient field-free magnetization switching through orbital-current-enhanced magnon torque",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Efficient field-free magnetization switching through orbital-current-enhanced magnon torque”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77984-1"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77756-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Elevated ozone activates maternal immunity to drive offspring IgG-mediated anaphylaxis through IgG glycosylation alterations",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Global allergic disease burden is rising, driven by environmental factors like ozone (O 3 )-induced oxidative stress. Epidemiological studies have linked prenatal oxidative stress to offspring allergy susceptibility, but causality remains unproven. Here, our retrospective analysis including 5,299 pregnancies postulates that mid-to-late gestational O 3 exposure triggers maternal immune activation (MIA), increasing neutrophil/monocyte abnormality risks. Using an animal model of prenatal O 3 exposure-induced MIA, we demonstrate that offspring of MIA dams—especially males—exhibit heightened allergy susceptibility. Mechanistically, MIA disrupts maternal-fetal IgG transfer and neonatal gl",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77756-x"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77944-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Enhanced alkene productivity in methanol-to-hydrocarbons conversion using a secondary catalyst component and hydrogen co-feeds",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "核心是甲醇制烃催化过程的抗积碳与低碳烯烃生产率。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract The methanol-to-hydrocarbons conversion over unidimensional 10-membered ring zeolites offers an attractive route to produce C 3 –C 5 alkenes, central building blocks for the production of sustainable aviation fuels. However, the application of such zeolites is limited by a rapid deactivation due to coke formation. We present a novel catalyst design concept to significantly enhance coke resistance, achieved by physically mixing the zeolite with a secondary catalyst component exhibiting hydrogenation activity and operating under near ambient-pressure hydrogen co-feeds. Among the tested materials, Pd/SiO 2 provides the highest stability enhancement, leading up to 10× higher cumulative ",
+      "challengeReason": "烯烃是产物，但无离散底物/分离产物方法学范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77944-9"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77866-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Expandable and scalable production of cellulose nanofibrils via highly efficient swelling-modification in deep eutectic solvent",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Expandable and scalable production of cellulose nanofibrils via highly efficient swelling-modification in deep eutectic solvent”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77866-6"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-75681-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Fast, flexible analysis of differences in cellular composition with crumblr",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以计算、表征、仪器、地学、生态或分析为主要贡献。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Changes in cell type composition play an important role in human health and disease. Recent advances in single-cell technology have enabled the measurement of cell type composition at increasing cell lineage resolution across large cohorts of individuals. Yet this raises new challenges for statistical analysis of these compositional data to identify changes in cell type frequency. We introduce crumblr ( DiseaseNeurogenomics.github.io/crumblr ), a scalable statistical method for analyzing count ratio data using precision-weighted linear mixed models incorporating random effects for complex study designs. Uniquely, crumblr performs statistical testing at multiple levels of the cell li",
+      "challengeReason": "研究对象可能含有化学物质，但无一般制备转化。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-75681-7"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77741-4",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Ghost Neuron preparation unlocks high-resolution structural mapping of intracellular architecture in axons",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Cellular cryo-electron microscopy (cryo-EM) offers powerful tools to reveal molecular architecture inside cells, but dense cytoplasm often obscures fine molecular features, especially in narrow neuronal projections. Here, we introduce the Ghost Neuron technique, a preparation combining brief hypotonic treatment with controlled mechanical rupture immediately before freezing, facilitating high-contrast imaging of neuronal ultrastructure within its neurite topology. By removing the plasma membrane and reducing cytoplasmic density, the method allows high-resolution structural analysis while preserving the overall geometry of neurites. The method allows structural information to be mappe",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77741-4"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77961-8",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Gα12/13 deficiency attenuates obesity-associated adipose tissue inflammation and promotes energy expenditure",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Gα12/13 deficiency attenuates obesity-associated adipose tissue inflammation and promotes energy expenditure”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77961-8"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77932-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Hydrogen sulfide engages catalytic zinc in HDAC6 to modulate an alternative deacetylation pathway",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Hydrogen sulfide engages catalytic zinc in HDAC6 to modulate an alternative deacetylation pathway”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77932-z"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77912-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Iodide-bridged interfacial hydrogen bonds enable ampere-level electrosynthesis of deuterated acetic acid",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "碘修饰铜界面促进单氯乙酸氘化，核心是界面氢键、速率和安培级放大。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Iodide-bridged interfacial hydrogen bonds enable ampere-level electrosynthesis of deuterated acetic acid”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "官方摘要确认19.8 g AA-d4，但仅单一底物/产物且缺可推广范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77912-3"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77283-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Loss of intestinal Akt elicits rapid mortality via intestinal damage which is rescued by mTORC1 activation",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Combined Akt1 and Akt2 systemic deletion in adult mice elicits rapid mortality, preceded by body weight loss, diarrhea, and inflammation. Here, we show that lethality induced by systemic Akt1/Akt2 deletion is caused by intestinal damage, as intestinal Akt1/Akt2 deletion induces mortality phenocopying systemic deletion. Consistently, Akt ablation impairs intestinal organoid formation in vitro. Both in vivo and in vitro results show that Akt is essential for the survival of Paneth cells and survival and proliferation of Lgr5 + and transit-amplifying cells. Additional intestinal deletion of either FoxO1 or Tsc1 activates mTORC1 and rescues this phenotype. Thus, mTORC1 emerges as the mo",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77283-9"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77546-5",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Neoadjuvant chemotherapy interferes with tertiary lymphoid structure formation in Epstein-Barr virus-associated gastric cancer",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Neoadjuvant chemotherapy interferes with tertiary lymphoid structure formation in Epstein-Barr virus-associated gastric cancer”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77546-5"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77729-0",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Niche specialization and prevalence of comammox Nitrospira in the alkaline sediments of thermokarst lakes on the Tibetan Plateau",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名和可得摘要未显示一般有机合成方法、通用砌块路线或完成的全合成。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Niche specialization and prevalence of comammox Nitrospira in the alkaline sediments of thermokarst lakes on the Tibetan Plateau”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "已反向检查可能的合成信号，当前证据不足以证明可推广制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77729-0"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77762-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Payoff selectivity drives collective intelligence during dynamic resource tracking in humans",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名和可得摘要未显示一般有机合成方法、通用砌块路线或完成的全合成。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Humans’ abilities for complex social learning and collective adaptation stand out across species. Yet it is largely unknown how people integrate dynamically changing personal and social cues in realistic environments, resulting in collective intelligence or maladaptive behavior. Here, we report an online 3D immersive-reality experiment in which participants ( n = 621) search for and track a mobile resource under realistic visual–spatial constraints. Participants complete the task either alone or in groups of five with different types of social information and resource speeds. Contrasting earlier work, participants in groups outperform solitary individuals, but only when payoff infor",
+      "challengeReason": "已反向检查可能的合成信号，当前证据不足以证明可推广制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77762-z"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-72310-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Personalized single-cell transcriptomics reveals molecular diversity in Alzheimer’s disease",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Personalized single-cell transcriptomics reveals molecular diversity in Alzheimer’s disease”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-72310-1"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-76451-1",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Single-cell mapping of chromosome breaks identifies multiple fragile site classes with distinct DNA replication timing landscapes",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Common fragile sites (CFSs) are genomic regions susceptible to chromosome breaks. However, because they were identified using cell populations, low-frequency fragile sites (non-CFSs) could have been overlooked. Here we perform single-cell genome-wide mapping and classification of aphidicolin-induced chromosome breaks. In human osteosarcoma cells, 42% of breaks exhibit features of CFSs. The remaining 58% are non-CFSs that are ‘rare’ and replicate throughout the S-phase. Among non-CFSs, we identify early-S replicating breaks associated with transcription-replication conflicts, as well as two additional break classes. One is dependent on transcription and coincides with early-to-late-S",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-76451-1"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-78015-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Solid–vapor synthesis of dynamic crystalline one-dimensional supramolecular polymers from amorphous macrocycles",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "The publisher listing confirms a new solid–vapor host–guest synthesis of a dynamic crystalline supramolecular polymer, but the accessible evidence does not show monomer/host–guest breadth or whether the method is transferable beyond one material system.",
+      "evidenceBasis": "The fresh compact has no abstract. A same-day Nature Communications research listing describes a highly dynamic crystalline supramolecular polymer made by a unique solid–vapor host–guest-driven synthesis. That establishes more than a title keyword, but not the article-specific generality required to decide whether this is in-scope polymer synthesis methodology or target-specific responsive-material assembly.",
+      "challengeReason": "It cannot be excluded merely as a material because polymer assembly is the principal synthetic act, and true polymer/architecture-control methods may qualify. It also cannot be included from one publisher teaser without preparative breadth. Both passes therefore defer this DOI only.",
+      "evidenceNeeded": "Full publisher abstract or body/SI showing macrocycle/guest variation, reproducible solid–vapor assembly scope, and whether the synthesis controls a transferable chain/architecture feature rather than one target material.",
+      "attemptedEvidencePages": [
+        "https://www.nature.com/articles/s41467-026-78015-9",
+        "https://www.nature.com/ncomms/research-articles?type=article",
+        "https://www.nature.com/subjects/physical-sciences/ncomms"
+      ],
+      "nextAction": "Use the existing browser/VPN evidence path to read the article abstract or relevant preparation section; do not infer generality from the listing teaser.",
+      "originalDate": "2026-09-23",
+      "firstRecordedAt": "2026-09-23T17:13:15+08:00",
+      "sourceReviewFile": "audit/prepublish-review-2026-09-23-1800.json"
+    },
+    {
+      "doi": "10.1038/s41467-026-78108-5",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Stiffen and toughen poly(vinyl alcohol) gels via synergistic dehydration and salting out",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "脱水/盐析增强PVA凝胶力学性能，聚合物是材料加工对象。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Stiffen and toughen poly(vinyl alcohol) gels via synergistic dehydration and salting out”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "无新聚合反应、单体范围或链结构控制方法。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78108-5"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77789-2",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Stress-engineered 0.34 nm graphene memristors for low-power probabilistic computing",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Stress-engineered 0.34 nm graphene memristors for low-power probabilistic computing”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77789-2"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77480-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Structural basis of step II spliced leader RNA trans-splicing in trypanosomatid parasites",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要研究生物、医学、组学或疾病机制，未提出一般有机制备方法。",
+      "evidenceBasis": "fresh compact摘要事实：Abstract Messenger RNA (mRNA) synthesis is fundamental to eukaryotic gene expression. In kinetoplastid parasites, including the human pathogens Trypanosoma and Leishmania , mRNAs are produced through a mechanism called Spliced Leader (SL) RNA trans-splicing. In this process, a short SL exon from a small noncoding RNA is joined to the 5’ end of every mRNA, ensuring transcript stability and translation. Despite decades of study, the structural and mechanistic basis of SL trans-splicing remains elusive. Here, we report cryogenic electron microscopy structures of step II SL trans-splicing machineries from Leishmania tarentolae . These structures reveal the molecular mechanism of SL exon ligation",
+      "challengeReason": "样品处理或分子干预不等于可迁移的底物—产物合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77480-6"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-78120-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "The phosphorus analogues of diazomethane and isomeric diazirine",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "制备并表征重氮甲烷和二氮杂环丙烯的两个磷类似物，核心是基础主族化学发现。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“The phosphorus analogues of diazomethane and isomeric diazirine”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "真实合成应承认，但无通用路线、底物系列或可推广砌块证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78120-9"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s44160-026-01157-7",
+      "journal": "Nature Synthesis",
+      "date": "2026-09-23",
+      "title": "Crystallization control for narrow-linewidth perovskite LEDs",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是材料、电池、器件、薄膜、界面或性能优化。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Crystallization control for narrow-linewidth perovskite LEDs”。未把访问不到摘要写成没有实验。",
+      "challengeReason": "材料制备真实，但无跨底物有机反应、聚合催化或通用砌块路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s44160-026-01157-7"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03346",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Catalytic Asymmetric Total Synthesis of Roridin E",
+      "titleZh": "Roridin E的催化不对称全合成",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "首次完成Roridin E的催化不对称全合成。",
+      "evidenceBasis": "fresh compact摘要支持：摘要给出33步最长线性序列、>99% ee及分克级前体。",
+      "challengeReason": "路线针对单一天然产物，但完成的首次全合成是契约明确纳入类型。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03346"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "首次完成Roridin E的催化不对称全合成。",
+        "preparativeTransformation": "相转移催化烷基化建立手性，Z选择性分子内HWE完成大环化。",
+        "generalityEvidence": "摘要给出33步最长线性序列、>99% ee及分克级前体。",
+        "sourceEvidence": "fresh compact摘要支持：摘要给出33步最长线性序列、>99% ee及分克级前体。 摘要原始事实摘录：Abstract We report the first catalytic asymmetric total synthesis of roridin E, a macrocyclic type D trichothecene. Phase-transfer-catalyzed alkylation of a β-keto ester made in one step from an inexpensive enone delivers the first stereodefined (−)-verrucarol precursor in quantitative yield and gt;99% ee on a decagram scale, and a Z-selective intramolecular Horner–Wadsworth–Emmons macrocyclization completes the route in 33 steps (longest linear ",
+        "boundaryChallenge": "路线针对单一天然产物，但完成的首次全合成是契约明确纳入类型。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03423",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Correction to “Enantioselective Construction of Spirocyclohexadienones Via NHC-Catalyzed Formal [5 + 1] Annulation Reaction of Dienals”",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "校正记录，不是新的原创研究论文。",
+      "evidenceBasis": "fresh compact仅有题名/期刊/类型/日期而无摘要；题名所示主要贡献为“Correction to “Enantioselective Construction of Spirocyclohexadienones Via NHC-Catalyzed Formal [5 + 1] Annulation Reaction of Dienals””。未把访问不到摘要写成没有实验。",
+      "challengeReason": "校正可能修改原文，但不得作为新合成论文重复收录。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03423"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03455",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Electrophilic Iodination Reagent-Catalyzed Oxidative Annulation of Alkynoates and Nitriles to Oxazoles via Putative α,α′-Dicarbonyl Iodocarbenoids",
+      "titleZh": "亲电碘化试剂催化炔酸酯与腈氧化环化构建噁唑",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "二碘海因催化炔酸酯与腈氧化[3+2]环化合成噁唑。",
+      "evidenceBasis": "fresh compact摘要支持：摘要报告广底物范围、良好放大性和多样化衍生。",
+      "challengeReason": "碘卡宾机理与DFT不掩盖宽底物和可放大的制备贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03455"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "二碘海因催化炔酸酯与腈氧化[3+2]环化合成噁唑。",
+        "preparativeTransformation": "炔酸酯氧化形成碘卡宾样中间体并由腈捕获环化。",
+        "generalityEvidence": "摘要报告广底物范围、良好放大性和多样化衍生。",
+        "sourceEvidence": "fresh compact摘要支持：摘要报告广底物范围、良好放大性和多样化衍生。 摘要原始事实摘录：Abstract Electrophilic halogenation reagent-promoted alkyne functionalizations are among the most essential reactions in organic synthesis but have predominantly remained restricted to 1,2-difunctionalizations. Thus, developing new reaction modes is crucial not only for accessing new structural types but also for discovering new mechanisms and reactive intermediates. Herein, we report a diiodohydantoin (DIH)-catalyzed oxidative [3+2] annulation o",
+        "boundaryChallenge": "碘卡宾机理与DFT不掩盖宽底物和可放大的制备贡献。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03520",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Gold(I)-Catalyzed Regioselective C≡C Bond Cleavage of o -Alkynyl Anilines with tert -Butyl Nitrite to Prepare 2-Aminobenzonitriles",
+      "titleZh": "金(I)催化邻炔基苯胺碳碳三键裂解合成2-氨基苯甲腈",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "金(I)催化邻炔基苯胺与亚硝酸叔丁酯区域选择性裂解制备2-氨基苯甲腈。",
+      "evidenceBasis": "fresh compact摘要支持：摘要报告多种产物、中等至良好收率、广底物范围和官能团兼容性。",
+      "challengeReason": "详细机理服务于解释，广范围腈制备证明并非纯机理。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03520"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "金(I)催化邻炔基苯胺与亚硝酸叔丁酯区域选择性裂解制备2-氨基苯甲腈。",
+        "preparativeTransformation": "经吲哚形成、亚硝化和C–C断裂三步串联形成芳基腈。",
+        "generalityEvidence": "摘要报告多种产物、中等至良好收率、广底物范围和官能团兼容性。",
+        "sourceEvidence": "fresh compact摘要支持：摘要报告多种产物、中等至良好收率、广底物范围和官能团兼容性。 摘要原始事实摘录：Abstract In this work, a variety of 2-aminobenzonitriles were prepared in moderate to good yields through a gold(I)-catalyzed regioselective C≡C bond cleavage of o-alkynyl anilines with tert-butyl nitrite (TBN). The mechanistic studies revealed that the reaction involved a gold(I)-catalyzed 5-endo-dig cyclization of the o-alkynyl anilines to indoles, TBN-mediated nitrosation of indoles, and gold(I)-catalyzed C–C bond cleavage over three steps. Th",
+        "boundaryChallenge": "详细机理服务于解释，广范围腈制备证明并非纯机理。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03276",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Palladium-Catalyzed Tandem Dearomative Heck Reaction of N -Propiolyl Indoles or Pyrroles with Aryl Bromides",
+      "titleZh": "钯催化N-丙炔酰基吲哚或吡咯与芳基溴化物的串联去芳构化Heck反应",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "钯催化N-丙炔酰基吲哚/吡咯与芳基溴化物串联去芳构化Heck。",
+      "evidenceBasis": "fresh compact摘要支持：摘要报告系列产物、中高收率、季碳中心/四取代烯烃及后续转化。",
+      "challengeReason": "系列稠合产物和衍生应用构成一般制备方法。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03276"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "钯催化N-丙炔酰基吲哚/吡咯与芳基溴化物串联去芳构化Heck。",
+        "preparativeTransformation": "串联芳基钯化、异构化和环化生成苯并吡咯嗪酮/吡咯嗪酮。",
+        "generalityEvidence": "摘要报告系列产物、中高收率、季碳中心/四取代烯烃及后续转化。",
+        "sourceEvidence": "fresh compact摘要支持：摘要报告系列产物、中高收率、季碳中心/四取代烯烃及后续转化。 摘要原始事实摘录：Abstract An efficient Pd-catalyzed tandem dearomative Heck reaction of N-propiolylindoles or pyrroles with aryl bromides has been developed. The protocol provides access to a series of benzopyrrolizinone and pyrrolizinone derivatives bearing a quaternary stereocenter and a tetrasubstituted olefin moiety in moderate to high yields by employing Pd(PtBu3)2 as the catalyst. We propose that the reaction might proceed through a cascade sequence involvi",
+        "boundaryChallenge": "系列稠合产物和衍生应用构成一般制备方法。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03373",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Solvent-Controlled Diastereoconvergent Synthesis of Spirochromeno[4,3- b ][1,3]pyrrole-Cyclopropanes through 2,3-Rearrangement-Driven Cyclopropanation of O -Propargyl Oximes with Sulfur Ylides",
+      "titleZh": "2,3-重排驱动的O-炔丙基肟与硫叶立德环丙烷化：溶剂控制的非对映汇聚合成",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "铜(I)催化2,3-重排驱动环丙烷化，非对映汇聚构建多立体中心螺环。",
+      "evidenceBasis": "fresh compact摘要支持：摘要报告多种产物、中等至良好收率、高dr和广底物范围。",
+      "challengeReason": "溶剂/机理研究服务于选择性；广底物复杂骨架制备是核心。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03373"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "铜(I)催化2,3-重排驱动环丙烷化，非对映汇聚构建多立体中心螺环。",
+        "preparativeTransformation": "O-炔丙基肟与硫叶立德一锅形成三环及四个连续立体中心。",
+        "generalityEvidence": "摘要报告多种产物、中等至良好收率、高dr和广底物范围。",
+        "sourceEvidence": "fresh compact摘要支持：摘要报告多种产物、中等至良好收率、高dr和广底物范围。 摘要原始事实摘录：Abstract Herein, a variety of spirochromeno[4,3-b][1,3]pyrrole-cyclopropanes bearing four contiguous stereocenters were prepared in moderate to good yields with high diastereoselectivity through copper(I)-catalyzed 2,3-rearrangement-driven cyclopropanation of O-propargylic oximes with sulfur ylides. Mechanistic studies revealed that the MeCN solvent played an important role in the control of the diastereoselectivity of products. The present metho",
+        "boundaryChallenge": "溶剂/机理研究服务于选择性；广底物复杂骨架制备是核心。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03854",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Total Synthesis of the Dimeric Cephalotaxus Alkaloid (−)-Cephalancetine C",
+      "titleZh": "二聚型三尖杉生物碱(−)-Cephalancetine C的全合成",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "首次完成(−)-Cephalancetine C全合成。",
+      "evidenceBasis": "fresh compact摘要支持：摘要明确first synthesized并给出完成路线关键成键。",
+      "challengeReason": "此前失败仿生尝试不影响已完成首次全合成，属于明确纳入类型。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03854"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "首次完成(−)-Cephalancetine C全合成。",
+        "preparativeTransformation": "汇聚两片段路线，以羟醛和立体专一5-exo-trig氮杂Michael加成为关键步骤。",
+        "generalityEvidence": "摘要明确first synthesized并给出完成路线关键成键。",
+        "sourceEvidence": "fresh compact摘要支持：摘要明确first synthesized并给出完成路线关键成键。 摘要原始事实摘录：Abstract Cephalancetine C, a prototype of the dimeric Cephalotaxus alkaloids, was first synthesized in the laboratory via a convergent two-segment approach. Key steps included an aldol reaction and a stereospecific 5-exo-trig aza-Michael addition. This strategy was developed after an unsuccessful attempt to pursue a biomimetic pathway in which a Polonovski-type reaction of 7 unexpectedly produced conjugated cyclic enamine 8.",
+        "boundaryChallenge": "此前失败仿生尝试不影响已完成首次全合成，属于明确纳入类型。"
+      }
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "journal": "CCS Chemistry",
+      "date": "2026-09-22",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "Paired electrolysis may represent genuine organic electrosynthesis, but the obtained evidence still does not resolve the preparative contribution.",
+      "evidenceBasis": "The fresh 17:13 compact still contains no abstract. The earlier publisher article/abstract/TOC attempts were bot-blocked, while a search excerpt only suggested cathodic CO2 valorization paired with anodic alcohol oxidation; no alcohol-product scope or preparative evidence was obtained.",
+      "challengeReason": "Energy-related indexing is not enough to exclude a possibly genuine paired organic electrosynthesis, while the title and snippet are not enough to include it. The DOI remains individually deferred.",
+      "evidenceNeeded": "Obtain the publisher abstract or relevant text/SI describing the alcohol substrates and oxidation products, the transferable preparative transformation, and scope or isolated-product/route evidence; distinguish this from an electrode/energy-performance-only study.",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/toc/ccschem/0/0"
+      ],
+      "nextAction": "Obtain textual publisher abstract or preparative sections showing alcohol substrates, products, scope and isolated/preparative evidence through the existing browser/VPN review path.",
+      "originalDate": "2026-09-22",
+      "firstRecordedAt": "2026-09-22T21:48:19+08:00",
+      "sourceReviewFile": "audit/review-2026-09-23-0800.json"
+    }
+  ],
+  "historicalScopeRechecks": [
+    {
+      "doi": "10.1021/acs.joc.6c01559",
+      "journal": "JOC",
+      "originalDate": "2026-09-22",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "cardAction": "retain",
+      "evidenceBasis": "A newly indexed full abstract text describes a diversity-oriented one-pot multicomponent library, mild metal-free conditions and broad scope across primary/secondary amines and primary benzamides. The ACS JOC latest listing independently confirms the article and title.",
+      "challengeReason": "Photophysics and antifungal imaging are substantial downstream studies, but the article also establishes a broad multicomponent preparation across distinct reaction-partner classes; fluorescence therefore does not erase the preparative method.",
+      "evidencePages": [
+        "https://pubs.acs.org/joceah/latest-articles",
+        "https://pubs.acs.org/doi/10.1021/acs.joc.6c01559"
+      ],
+      "resolvedAt": "2026-09-23T17:24:00+08:00"
+    },
+    {
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "originalDate": "2026-09-21",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "cardAction": "retain",
+      "evidenceBasis": "The live Wiley article states an in-situ ATMS pre-activation strategy for a pyridylamido Hf catalyst and homogeneous polymerization of several sterically demanding α-olefins including 44DMP, 3MB and VCH.",
+      "challengeReason": "High melting temperature is an application/property outcome, but the article's explicit new catalyst-activation strategy unlocks polymerization across multiple difficult monomers. This is genuine polymer synthesis methodology under the contract, not merely property optimization.",
+      "evidencePages": [
+        "https://onlinelibrary.wiley.com/doi/10.1002/anie.9519061"
+      ],
+      "resolvedAt": "2026-09-23T17:24:00+08:00"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03499",
+      "journal": "Organic Letters",
+      "originalDate": "2026-09-22",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "pending",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "pending",
+      "cardAction": "retain_while_pending",
+      "evidenceBasis": "The ACS repository abstract now confirms protonation-controlled amino-BCB ring opening, a >50 kJ mol−1 barrier shift, >10^3-fold kinetic window and rapid [4+2] trapping, but gives no trapping-partner/product breadth.",
+      "challengeReason": "The work may be a useful reagent-activation method, yet the available abstract is dominated by kinetics and reactive-intermediate control. Without product/preparative scope, a final mechanism-only exclusion or method inclusion would both overclaim.",
+      "evidenceNeeded": "Trapping-partner scope, isolated cycloadducts/yields and whether stable ammonium precursors are applied as a general preparation platform.",
+      "attemptedEvidencePages": [
+        "https://acs.figshare.com/articles/journal_contribution/Protonation-Gated_Strain-Release_Generation_of_Amino_o_quinodimethanes/33965903",
+        "https://pubs.acs.org/orlef7/latest-articles"
+      ],
+      "nextAction": "Read the reaction/scope table through the existing browser/VPN path; retain the current card until resolved."
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "originalDate": null,
+      "originalDateStatus": "not_recovered; production date must not be overwritten",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "cardAction": "retain_while_pending",
+      "evidenceBasis": "The publisher title and ACS repository excerpt establish an expedient synthesis of a fully functionalized Chasmanine AF-ring fragment, but not a completed total synthesis or a broadly reusable building-block route.",
+      "challengeReason": "A single fragment cannot be labeled total synthesis, yet a fragment route may independently qualify if it introduces a transferable building-block strategy. The available evidence does not decide that question.",
+      "evidenceNeeded": "Full abstract/route evidence, synthetic generality beyond the single target fragment, and the preserved original date from authoritative production data.",
+      "attemptedEvidencePages": [
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03386",
+        "https://acs.figshare.com/articles/journal_contribution/Synthesis_of_a_Fully_Functionalized_Chasmanine_AF-Ring_Fragment/33962722"
+      ],
+      "nextAction": "Read the route/abstract through the existing browser/VPN path; keep the card unchanged and do not label it total synthesis."
+    }
+  ],
+  "historicalPendingDois": [
+    "10.1021/acs.orglett.6c03499",
+    "10.1021/acs.orglett.6c03386"
+  ],
+  "sourceChecks": [
+    {
+      "journal": "Nature",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/nature/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The browser fetch exposed page metadata but no auditable full listing content in the returned evidence. Publisher candidate counts are unknown, not zero. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Science",
+      "status": "unavailable",
+      "sourceType": "publisher_first_release",
+      "sourcePage": "https://www.science.org/toc/science/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The First Release page metadata was returned without a readable complete title/date listing. No publisher count or zero-new proof is claimed. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Nature Catalysis",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/natcatal/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Returned page metadata did not expose auditable complete listing content. Current publisher counts remain unknown rather than being copied from machine sourceHealth. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Nature Synthesis",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/natsynth/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Only page-level metadata was exposed by the listing fetch, insufficient for complete title/date enumeration. Counts therefore remain null. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Nature Chemistry",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/nchem/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The fetched page metadata is not a complete publisher title/date listing. Publisher enumeration and synthetic-title counts remain unknown. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Nature Communications",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/ncomms/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Page metadata indicates a current article listing but readable complete entries/pagination were not obtained. The machine closure anomaly is retained separately; no publisher zero is inferred. A 17:24 same-day publisher research listing independently exposed the 2026-09-23 supramolecular-polymer title and teaser, but still did not provide complete pagination/counts; status remains unavailable for full enumeration. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9",
+      "observedArticles": [
+        {
+          "doi": "10.1038/s41467-026-78015-9",
+          "title": "Solid–vapor synthesis of dynamic crystalline one-dimensional supramolecular polymers from amorphous macrocycles",
+          "observation": "publisher listing and teaser readable"
+        }
+      ]
+    },
+    {
+      "journal": "JACS",
+      "status": "unavailable",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/jacsat/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The batch fetch did not expose readable JACS ASAP listing contents. It cannot substantiate a complete publisher count; machine candidate counts are not substituted. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Angew",
+      "status": "unavailable",
+      "sourceType": "publisher_early_view",
+      "sourcePage": "https://onlinelibrary.wiley.com/toc/15213773/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Readable Early View listing evidence was not returned; separate direct article reading was bot-blocked. Current publisher enumeration remains unknown. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "ACS Catalysis",
+      "status": "unavailable",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/accacs/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "No readable complete ASAP listing was exposed in the returned batch evidence. This is an unavailable publisher check, not a zero count. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Organic Letters",
+      "status": "unavailable",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/orlef7/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Search snippets and selected ACS supplement abstracts are available, but the complete ASAP title/date listing and pagination were not obtained. These partial sources cannot establish a full publisher count. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Chem",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.cell.com/chem/newarticles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The current browser text fetch returned bot_blocked for the publisher new-articles page. Publisher candidate numbers remain unknown. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Chemical Science",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/sc",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The current publisher listing fetch returned bot_blocked. No zero-publication or complete-enumeration claim is made. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "CCS Chemistry",
+      "status": "blocked",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://www.chinesechemsoc.org/toc/ccschem/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "Both publisher article and TOC browser reads were bot_blocked. The historical paired-electrolysis DOI remains individually pending; listing counts are unknown. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Science Advances",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.science.org/toc/sciadv/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The publisher table-of-contents fetch returned bot_blocked. Machine records, including machine zero counts, are not presented as a publisher check. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "Green Chemistry",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/gc",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The publisher listing fetch returned bot_blocked. Its candidate count and complete title/date enumeration remain unknown. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    },
+    {
+      "journal": "JOC",
+      "status": "blocked",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/joceah/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "The current ASAP listing request returned bot_blocked. A specific Figshare abstract was read separately, but it does not establish a complete journal count. Rechecked for the 2026-09-24 08:00 slot; complete publisher enumeration remains unavailable, so counts stay unknown.",
+      "checkedAt": "2026-09-24T07:22:00+08:00",
+      "carriedFromReview": "audit/prepublish-review-2026-09-23-1800.json@e8d4f88a7a27d29225da3ace6f55318833ded5f9"
+    }
+  ],
+  "machineSourceHealth": [
+    {
+      "name": "Nature",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 84,
+        "crossrefCandidateRecords": 84,
+        "openAlexCandidateRecords": 32,
+        "multiSourceCandidateRecords": 32,
+        "closureUnionRecords": 52,
+        "closureCrossrefRecords": 52,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": true,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Science",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Catalysis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 3,
+        "crossrefCandidateRecords": 3,
+        "openAlexCandidateRecords": 2,
+        "multiSourceCandidateRecords": 2,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Synthesis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 3,
+        "crossrefCandidateRecords": 3,
+        "openAlexCandidateRecords": 2,
+        "multiSourceCandidateRecords": 2,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Chemistry",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 9,
+        "crossrefCandidateRecords": 9,
+        "openAlexCandidateRecords": 5,
+        "multiSourceCandidateRecords": 5,
+        "closureUnionRecords": 4,
+        "closureCrossrefRecords": 4,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Nature Communications",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 153,
+        "crossrefCandidateRecords": 153,
+        "openAlexCandidateRecords": 115,
+        "multiSourceCandidateRecords": 115,
+        "closureUnionRecords": 36,
+        "closureCrossrefRecords": 36,
+        "closureOpenAlexRecords": 3,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "JACS",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 75,
+        "crossrefCandidateRecords": 75,
+        "openAlexCandidateRecords": 60,
+        "multiSourceCandidateRecords": 60,
+        "closureUnionRecords": 19,
+        "closureCrossrefRecords": 19,
+        "closureOpenAlexRecords": 4,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Angew",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 100,
+        "crossrefCandidateRecords": 100,
+        "openAlexCandidateRecords": 80,
+        "multiSourceCandidateRecords": 80,
+        "closureUnionRecords": 10,
+        "closureCrossrefRecords": 10,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "ACS Catalysis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 25,
+        "crossrefCandidateRecords": 25,
+        "openAlexCandidateRecords": 23,
+        "multiSourceCandidateRecords": 23,
+        "closureUnionRecords": 2,
+        "closureCrossrefRecords": 2,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Organic Letters",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 53,
+        "crossrefCandidateRecords": 53,
+        "openAlexCandidateRecords": 44,
+        "multiSourceCandidateRecords": 44,
+        "closureUnionRecords": 15,
+        "closureCrossrefRecords": 15,
+        "closureOpenAlexRecords": 6,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Chem",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Chemical Science",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "CCS Chemistry",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 8,
+        "crossrefCandidateRecords": 8,
+        "openAlexCandidateRecords": 3,
+        "multiSourceCandidateRecords": 3,
+        "closureUnionRecords": 5,
+        "closureCrossrefRecords": 5,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": true,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Science Advances",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Green Chemistry",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "JOC",
+      "activeFrom": "2026-09-22",
+      "effectiveStart": "2026-09-22",
+      "sourceHealth": {
+        "activeFrom": "2026-09-22",
+        "effectiveStart": "2026-09-22",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 12,
+        "crossrefCandidateRecords": 12,
+        "openAlexCandidateRecords": 8,
+        "multiSourceCandidateRecords": 8,
+        "closureUnionRecords": 4,
+        "closureCrossrefRecords": 4,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    }
+  ],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "twoPassScope": "all 123 compact candidates plus four carried historical boundary rechecks",
+    "unresolvedDisagreements": 0,
+    "allHandoffCandidatesReviewed": true,
+    "allHandoffCandidatesFinalized": false,
+    "unfinishedHandoffDois": [],
+    "openEvidenceGaps": 2,
+    "sourceCheckRows": 16,
+    "publisherCoverageFullyVerified": false,
+    "publisherSourceCheckCounts": {
+      "checked": 0,
+      "blocked": 6,
+      "unavailable": 10
+    },
+    "scopeContract": {
+      "scopeRulesVersion": "scope-2026-09-23-v1",
+      "scopeRulesFile": "docs/literature-scope-contract.md",
+      "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
+      "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+      "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+      "handoffCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
+      "handoffBlobSha": "6e1cd99a6227b0b1ad25b835af0336f317aecdbb",
+      "ruleChangeTriggeredHistoricalReview": false,
+      "ruleCompatibilityChecked": true,
+      "ruleCompatibilityConclusion": "Scope and correction blob SHAs are unchanged from the 2026-09-23 18:00 staging; four historical boundary rechecks were reused and all fresh compact candidates were evaluated under the same contract.",
+      "newIncludesArticleSpecificAssessmentsComplete": true,
+      "explicitBoundaryRechecks": 4,
+      "affectedHistoricalCoverageComplete": true,
+      "resolvedHistoricalRetain": 2,
+      "historicalPendingAssigned": 2,
+      "confirmedCorrectionRecordsReused": 4,
+      "allGalleryPapersRechecked": false,
+      "inheritance": "Formal conversion must retain this object."
+    },
+    "titleZhPreparedForAllNewIncludes": true,
+    "placeholderTranslations": 0,
+    "productionDataModified": false,
+    "mediaAcquisitionPerformed": false,
+    "pagesDeploymentRequested": false
+  },
+  "globalBlockers": [
+    "sourceCoverageAnomalies=2 (Nature and CCS Chemistry machine-union overlap warnings)",
+    "closureCoverageAnomalies=8; verifiedThrough must not advance and the current generation is not publication-ready"
+  ],
+  "publicationBlockers": [
+    "Fresh machine snapshot has nonzero sourceCoverageAnomalies, so require-ready checks must fail closed."
+  ],
+  "closure": {
+    "closureDate": "2026-09-23",
+    "verifiedThrough": "2026-09-20",
+    "verifiedThroughAdvanced": false,
+    "reason": "Two source-coverage and eight closure-depth warnings remain; do not release the proposed include set until a later fresh snapshot clears the discovery gate."
+  },
+  "productionDataModified": false,
+  "pagesDeploymentRequested": false,
+  "mediaAcquisitionPerformed": false,
+  "notes": [
+    "No production literature or media files were changed.",
+    "The include decisions are a proposed reviewed subset only; publishableDois remains empty while discovery is unhealthy.",
+    "Pending records and historical retain-only boundary items were preserved."
+  ]
+}
