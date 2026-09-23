@@ -1,0 +1,149 @@
+name: Verify deployed whole-card glow and original images
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui-card-only-glow-live.yml']
+permissions:
+  contents: read
+concurrency:
+  group: ui-card-only-glow-live
+  cancel-in-progress: false
+jobs:
+  live:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    env:
+      LIVE_SITE_URL: ${{ matrix.site }}
+      REVIEWED_SHA: 516df79c6b86593ab841314b2f0628e6780578aa
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 516df79c6b86593ab841314b2f0628e6780578aa
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned browser and audited non-invasive animation capture
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/card-live-browser.log 2>&1 || { tail -60 /tmp/card-live-browser.log; exit 1; }
+          mkdir -p live-card-glow-results
+          node tests/prepare-animation-screenshots.cjs live-card-glow-results/screenshot-driver.json
+      - name: Verify deployed card-only controls before acceptance
+        run: |
+          node --input-type=module <<'NODE'
+          import { webkit, expect } from '@playwright/test';
+          import { writeFile } from 'node:fs/promises';
+          const site = process.env.LIVE_SITE_URL;
+          const evidence = { site, reviewedSha: process.env.REVIEWED_SHA, attempts: [], productionWritesAllowed: false, apiMocked: true, fallbackPagesChecked: false };
+          const browser = await webkit.launch();
+          try {
+            for (let attempt = 0; attempt < 6; attempt++) {
+              const item = { at: new Date().toISOString(), scripts: [], errors: [] };
+              evidence.attempts.push(item);
+              const context = await browser.newContext({ viewport: { width: 390, height: 900 }, serviceWorkers: 'block' });
+              const page = await context.newPage();
+              page.on('response', response => { if (new URL(response.url()).pathname.endsWith('.js')) item.scripts.push({ url: response.url(), status: response.status() }); });
+              page.on('pageerror', error => item.errors.push(error.message));
+              await context.route('**/*', async route => {
+                const request = route.request();
+                const path = new URL(request.url()).pathname;
+                const headers = { 'access-control-allow-origin': request.headers().origin || new URL(site).origin, 'access-control-allow-credentials': 'true', 'access-control-allow-methods': 'GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE', 'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization', 'vary': 'Origin' };
+                if (request.method() === 'OPTIONS') { await route.fulfill({ status: 204, headers }); return; }
+                const api = path === '/api' || path.startsWith('/api/');
+                if (['GET', 'HEAD'].includes(request.method()) && !api) { await route.continue(); return; }
+                const body = path.endsWith('/reader-counts') ? { counts: {}, count: 0 } : path.endsWith('/integrations') ? { auth: {}, payments: {} } : { items: [] };
+                await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify(body) });
+              });
+              try {
+                const response = await page.goto(site, { waitUntil: 'domcontentloaded', timeout: 45000 });
+                item.httpStatus = response?.status();
+                if (!response?.ok()) throw new Error(`Entry HTTP ${response?.status()}`);
+                const actions = page.locator('#gallery > .card gallery-paper-actions').first();
+                await expect(actions).toBeVisible({ timeout: 30000 });
+                const card = actions.locator('..');
+                const status = actions.locator('[data-action="status"]');
+                await expect(card).toHaveAttribute('data-card-glow', 'none');
+                await expect(actions.locator('[data-status-glow],[data-card-glow]')).toHaveCount(0);
+                expect(await status.evaluate(node => getComputedStyle(node, '::after').content)).toBe('none');
+                await status.click();
+                await expect(actions.locator('[data-status-editor="to-read"] .status-glow-control > span:first-child')).toHaveText(/卡片光效|Card glow/);
+                await expect(actions.locator('[data-status-glow-choice="to-read"] option')).toHaveCount(5);
+                await expect(actions.locator('[data-status-glow-width="to-read"]')).toHaveAttribute('max', '6');
+                expect(item.errors).toEqual([]);
+                item.ready = true;
+                evidence.ready = true;
+              } catch (error) { item.ready = false; item.error = String(error?.stack || error); }
+              finally { await context.close(); }
+              if (evidence.ready) break;
+              await new Promise(resolve => setTimeout(resolve, 12000));
+            }
+          } finally {
+            await browser.close();
+            await writeFile('live-card-glow-results/readiness.json', JSON.stringify(evidence, null, 2));
+            console.log(JSON.stringify(evidence));
+          }
+          if (!evidence.ready) process.exitCode = 1;
+          NODE
+      - name: Adapt only test transport and browser-origin URLs
+        run: |
+          git rev-parse HEAD > live-card-glow-results/reviewed-commit.txt
+          sha256sum tests/card-glow-target.spec.ts tests/status-glow-width.spec.ts tests/status-original-images.spec.ts tests/animated-image-evidence.ts src/user-ui/card-glow.ts src/user-ui/status-glow-width.ts src/user-ui/status-presentation.ts > live-card-glow-results/source-sha256.txt
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tests/status-image-fixtures.ts');text=p.read_text()
+          start=text.index('export async function isolate(');end=text.index('export async function open(',start)
+          transport='''export async function isolate(context: BrowserContext): Promise<void> {
+            await recordStatusNetwork(context);
+            await context.route('**/*', async route => {
+              const request=route.request(); const url=request.url();
+              if (url.startsWith('blob:') || url.startsWith('data:')) { await route.continue(); return; }
+              const path=new URL(url).pathname;
+              const headers={ 'access-control-allow-origin':request.headers().origin || new URL(process.env.LIVE_SITE_URL!).origin, 'access-control-allow-credentials':'true', 'access-control-allow-methods':'GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE', 'access-control-allow-headers':request.headers()['access-control-request-headers'] || 'content-type, authorization', 'vary':'Origin' };
+              if (request.method()==='OPTIONS') { await route.fulfill({status:204,headers}); return; }
+              const api=path==='/api' || path.startsWith('/api/');
+              if (['GET','HEAD'].includes(request.method()) && !api) { await route.continue(); return; }
+              console.log('MOCKED_LIVE_API',request.method(),path);
+              const body=path.endsWith('/reader-counts') ? {counts:{},count:0} : path.endsWith('/integrations') ? {auth:{},payments:{}} : {items:[]};
+              await route.fulfill({status:200,headers,contentType:'application/json',body:JSON.stringify(body)});
+            });
+          }
+          '''
+          text=text[:start]+transport+text[end:]
+          needle="await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });"
+          assert text.count(needle)==1
+          text=text.replace(needle,"await page.goto(process.env.LIVE_SITE_URL!, { waitUntil: 'domcontentloaded' });")
+          p.write_text(text)
+          p=Path('tests/status-original-images.spec.ts');text=p.read_text()
+          needle="await otherPage.goto('http://127.0.0.1:4173/');"
+          assert text.count(needle)==1
+          text=text.replace(needle,"await otherPage.goto(process.env.LIVE_SITE_URL!, { waitUntil: 'domcontentloaded' });")
+          needle='const other = await browser.newContext();'
+          assert text.count(needle)==1
+          text=text.replace(needle,"const other = await browser.newContext({ serviceWorkers: 'block' });")
+          p.write_text("test.use({ serviceWorkers: 'block' });\n"+text)
+          PY
+          git diff --check
+          git diff -- tests/status-image-fixtures.ts tests/status-original-images.spec.ts > live-card-glow-results/transport-only.diff
+          git diff --exit-code -- src/ public/ shared/ tests/card-glow-target.spec.ts tests/status-glow-width.spec.ts tests/animated-image-evidence.ts
+      - name: Verify full-card effects, ordinary buttons, persistence and exact original GIFs
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: live-card-glow-results/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/card-glow-target.spec.ts tests/status-glow-width.spec.ts tests/status-original-images.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=live-card-glow-results/tests 2>&1 | tee live-card-glow-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-card-glow-${{ matrix.entry }}
+          path: live-card-glow-results/
+          retention-days: 7
+          if-no-files-found: warn
