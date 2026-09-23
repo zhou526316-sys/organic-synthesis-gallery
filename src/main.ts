@@ -114,6 +114,7 @@ const copy = {
     noResults: '没有符合当前筛选条件的文献。',
     loadError: '无法加载文献数据库。',
     close: '关闭大图',
+    share: '分享',
   },
   en: {
     title: 'Organic Synthesis Literature Gallery',
@@ -147,6 +148,7 @@ const copy = {
     noResults: 'No papers match the current filters.',
     loadError: 'Unable to load the literature database.',
     close: 'Close enlarged image',
+    share: 'Share',
   },
 } as const;
 
@@ -320,6 +322,14 @@ function paperDoi(paper: Paper): string | null {
   return null;
 }
 
+function sharedDoiFromLocation(): string | null {
+  try {
+    return normalizeDoi(new URL(window.location.href).searchParams.get('doi'));
+  } catch {
+    return null;
+  }
+}
+
 function pendingTitle(value: string | null | undefined): boolean {
   if (!value || !value.trim()) return true;
   const normalized = value.trim().toLowerCase().replace(/[：:….]/g, '').replace(/\s+/g, ' ');
@@ -418,7 +428,7 @@ function scheduleNewnessBoundary(): void {
 
 function filteredPapers(): Paper[] {
   const needle = query.trim().toLowerCase();
-  return papers
+  const filtered = papers
     .filter(paper => selectedJournals.size === 0 || selectedJournals.has(paper.journal))
     .filter(paper => !dateFrom || paper.date >= dateFrom)
     .filter(paper => !dateTo || paper.date <= dateTo)
@@ -449,6 +459,12 @@ function filteredPapers(): Paper[] {
       }
       return b.date.localeCompare(a.date);
     });
+
+  const sharedDoi = sharedDoiFromLocation()?.toLowerCase();
+  if (!sharedDoi) return filtered;
+  const sharedPaper = papers.find(paper => paperDoi(paper)?.toLowerCase() === sharedDoi);
+  if (!sharedPaper) return filtered;
+  return [sharedPaper, ...filtered.filter(paper => paper !== sharedPaper)];
 }
 
 function synthesisBadge(paper: Paper): string {
@@ -499,7 +515,7 @@ function renderCards(): void {
   gallery.innerHTML = list.length ? list.map(paper => {
     const doi = paperDoi(paper);
     const href = doi ? `https://doi.org/${doi}` : (paper.url || '');
-    return `<article class='card' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></article>`;
+    return `<article class='card' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);

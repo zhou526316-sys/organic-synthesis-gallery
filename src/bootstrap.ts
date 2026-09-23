@@ -31,6 +31,7 @@ void preloadChineseTitleCache().finally(async () => {
   // Navigation is independent and latency-sensitive: load it before optional
   // user/account/feedback modules so a slow dynamic chunk cannot postpone the
   // basic page escape controls.
+  await import('./card-share');
   await import('./user-ui/page-navigation');
   await import('./user-ui/user-center-management');
   await import('./user-ui/interaction-stability');

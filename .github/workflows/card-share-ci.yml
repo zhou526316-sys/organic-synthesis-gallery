@@ -1,0 +1,93 @@
+name: Card sharing CI
+on:
+  pull_request:
+    paths:
+      - 'src/main.ts'
+      - 'src/bootstrap.ts'
+      - 'src/card-share.ts'
+      - 'src/card-share.css'
+      - 'package.json'
+      - '.github/workflows/card-share-ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/main.ts'
+      - 'src/bootstrap.ts'
+      - 'src/card-share.ts'
+      - 'src/card-share.css'
+      - 'package.json'
+      - '.github/workflows/card-share-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  share-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install app dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build
+        run: npm run build
+      - name: Install Playwright
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Start preview server
+        shell: bash
+        run: |
+          nohup npx vite preview --host 127.0.0.1 --port 4173 >"$RUNNER_TEMP/share-preview.log" 2>&1 &
+          echo $! >"$RUNNER_TEMP/share-preview.pid"
+          node - <<'NODE'
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          for (let i = 0; i < 60; i++) {
+            try {
+              const res = await fetch('http://127.0.0.1:4173/');
+              if (res.ok) process.exit(0);
+            } catch {}
+            await sleep(500);
+          }
+          throw new Error('preview server did not start');
+          NODE
+      - name: Playwright card share smoke
+        run: node - <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+            const pageErrors = [];
+            page.on('pageerror', error => pageErrors.push(String(error)));
+            await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+            const firstCard = page.locator('.card[data-doi]:not([data-doi=""])').first();
+            await firstCard.waitFor({ state: 'visible', timeout: 30000 });
+            const doi = await firstCard.getAttribute('data-doi');
+            if (!doi) throw new Error('first shareable card has no DOI');
+
+            const shareButton = firstCard.locator('[data-card-share]');
+            await shareButton.click();
+            const panel = page.locator('.card-share-panel');
+            await panel.waitFor({ state: 'visible' });
+            await panel.locator('[data-share-action="qr"]').click();
+            await panel.locator('.card-share-qr-image').waitFor({ state: 'visible', timeout: 10000 });
+
+            await page.goto('http://127.0.0.1:4173/?doi=' + encodeURIComponent(doi), { waitUntil: 'domcontentloaded' });
+            const targeted = page.locator('.card.shared-card-target');
+            await targeted.waitFor({ state: 'visible', timeout: 30000 });
+            const targetedDoi = await targeted.getAttribute('data-doi');
+            if ((targetedDoi || '').toLowerCase() !== doi.toLowerCase()) {
+              throw new Error('deep-link target DOI mismatch: ' + targetedDoi + ' vs ' + doi);
+            }
+            const firstVisibleDoi = await page.locator('.card[data-doi]:not([data-doi=""])').first().getAttribute('data-doi');
+            if ((firstVisibleDoi || '').toLowerCase() !== doi.toLowerCase()) {
+              throw new Error('shared DOI was not promoted to the first visible card');
+            }
+            if (pageErrors.length) throw new Error('page errors: ' + pageErrors.join(' | '));
+            console.log(JSON.stringify({ cardShare: true, qr: true, deepLink: true, doi }));
+            await browser.close();
+          })().catch(error => { console.error(error); process.exit(1); });
+          NODE
