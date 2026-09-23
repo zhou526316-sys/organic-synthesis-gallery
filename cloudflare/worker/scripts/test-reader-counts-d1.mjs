@@ -3,19 +3,14 @@ import { test } from 'node:test';
 import { Miniflare } from 'miniflare';
 import { markReader, readerCounts } from '../src/user-ui.js';
 
-// Uses the Miniflare D1 binding bundled with this repository's Wrangler, never
-// remote D1, a deployed /mark endpoint or any real visitor identity.
+// Pinned Miniflare 4 uses the documented top-level D1 API. This is fully local:
+// no remote D1, deployed /mark endpoint, or real visitor identity is used.
 test('local D1 binding enforces the reader-ledger transaction', async t => {
   const mf = new Miniflare({
-    workers: [{
-      modules: true,
-      script: 'export default { fetch() { return new Response("isolated reader test"); } };',
-      config: {
-        name: 'reader-counter-isolated-test',
-        compatibilityDate: '2025-09-01',
-      },
-      d1Databases: { DB: '11111111-1111-4111-8111-111111111111' },
-    }],
+    modules: true,
+    script: 'export default { fetch() { return new Response("isolated reader test"); } };',
+    compatibilityDate: '2025-09-01',
+    d1Databases: { DB: '11111111-1111-4111-8111-111111111111' },
   });
   t.after(() => mf.dispose());
   const db = await mf.getD1Database('DB');
