@@ -4,16 +4,49 @@ export { prepareStatusImage } from './status-image-source';
 export type { OriginalStatusImage } from './status-image-types';
 const ID_PATTERN = /^[a-f0-9]{64}$/;
 const hydrationJobs = new WeakMap<HTMLImageElement, object>();
+const readyImages = new Map<string, Promise<void>>();
 
 function escape(value: string): string {
   return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 }
 
+/** Both load and decode are valid image-readiness signals. Do not leave a
+ * displayed preview waiting indefinitely on decode(), or re-decode the same
+ * local original once per card on every global preference change. */
+function validateOriginal(url: string): Promise<void> {
+  const cached = readyImages.get(url);
+  if (cached) return cached;
+  const pending = new Promise<void>((resolve, reject) => {
+    const original = new Image();
+    let settled = false;
+    const finish = (valid: boolean): void => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      original.onload = null;
+      original.onerror = null;
+      if (valid && original.naturalWidth > 0 && original.naturalHeight > 0) resolve();
+      else reject(new Error('image_decode_failed'));
+    };
+    const timer = window.setTimeout(() => finish(false), 8000);
+    original.onload = () => finish(true);
+    original.onerror = () => finish(false);
+    original.src = url;
+    void original.decode().then(() => finish(true), () => {
+      // An error event is authoritative; a decode rejection alone can also
+      // describe a superseded decode task. Keep the bounded load/error path.
+    });
+  });
+  if (readyImages.size >= 32) readyImages.delete(readyImages.keys().next().value!);
+  readyImages.set(url, pending);
+  void pending.catch(() => { if (readyImages.get(url) === pending) readyImages.delete(url); });
+  return pending;
+}
+
 export function statusImageTag(style: StatusImageStyle, className: string, label: string): string {
   if (!style.imageData) return '';
   const id = style.imageCrop ? undefined : style.imageOriginal?.id;
-  // This source is already a usable preview, even while local storage is pending.
-  // Source and lookup state are separate: pending does not mean no image.
+  // A crop remains the selected display even when an original is retained.
   return `<img class='${className}' src='${escape(style.imageData)}' data-image-source='${style.imageCrop ? 'crop' : 'preview'}' ${id && ID_PATTERN.test(id) ? `data-status-asset='${id}' data-original-state='pending'` : ''} alt='${escape(label)}' title='${escape(label)}'>`;
 }
 
@@ -27,10 +60,9 @@ function hydrateImage(image: HTMLImageElement, resolved?: (original: boolean) =>
     const url = await originalUrl(id);
     if (!current()) return;
     if (url) {
-      // Never replace a displayed preview with an undecodable original.
-      const original = new Image();
-      original.src = url;
-      await original.decode();
+      // Never replace a preview with an undecodable original; validation is
+      // shared but the current-element/job guard remains independent.
+      await validateOriginal(url);
       if (!current()) return;
       image.src = url;
       image.dataset.imageSource = 'original';
@@ -55,7 +87,6 @@ export function hydrateStatusImages(root: ShadowRoot): void {
 
 export function statusImageError(error: unknown): string {
   const code = error instanceof Error ? error.message : '';
-  // Error class/message only; never log image contents or account state.
   console.warn('status-image-error', error instanceof Error ? error.name : 'UnknownError', code);
   if (code === 'image_too_large') return '图片超过 30 MB（30,000,000 字节），原标记未改变。 / Maximum 30 MB; previous image kept.';
   if (code === 'image_type_unsupported') return '请选择 PNG、JPG、WebP 或 GIF 原图；文件内容须与格式一致。 / Choose a valid PNG, JPG, WebP or GIF.';
@@ -64,8 +95,6 @@ export function statusImageError(error: unknown): string {
 }
 
 export async function viewStatusImage(style: StatusImageStyle): Promise<void> {
-  // Open immediately using the synced preview. Looking up a local original must
-  // not delay the user's click or reopen a viewer that has already been closed.
   if (!style.imageData) return;
   const previousFocus = document.activeElement;
   const dialog = document.createElement('dialog');
