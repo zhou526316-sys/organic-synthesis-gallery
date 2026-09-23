@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
-  "packetPath": "audit/media-recovery/body-review-packets/body5-20260923-1815-a.json",
+  "packetPath": "audit/media-recovery/body-review-packets/body5-20260923-2008-b.json",
   "preservedToc": [
     {
-      "doi": "10.1021/acs.orglett.6c03473",
-      "contentHash": "744f6ee968bc3708ce07feddbcaf1d85"
+      "doi": "10.1021/acscatal.6c05381",
+      "contentHash": "8a89234defabc8bec12568c1694151d9"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03511",
-      "contentHash": "015dbc0886e7f0e92c1769edc8f1612e"
+      "doi": "10.1021/acs.orglett.6c03612",
+      "contentHash": "f6facfedbfde9291c4f887b7ae86dfe0"
     },
     {
-      "doi": "10.1021/jacs.6c10810",
-      "contentHash": "aa4df73e286cf1191a7986ebbd5c7301"
+      "doi": "10.1021/acs.orglett.6c03505",
+      "contentHash": "eaab14b4a183f9f461f362db4c6bbc62"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03340",
-      "contentHash": "1246452d1173163f4eca43947da5441d"
+      "doi": "10.1021/acs.orglett.6c03588",
+      "contentHash": "7381a379edde43a2b2592ad70ffec4c4"
     },
     {
-      "doi": "10.1021/acs.orglett.6c03636",
-      "contentHash": "bdf2263cecfab979abd55cc8fc888d1e"
+      "doi": "10.1021/acs.orglett.6c03822",
+      "contentHash": "a77ebd4f1f54cdc2a42679835c24d37f"
     }
   ],
   "initiallyNoToc": [],
-  "note": "Live acceptance target for PR164. Verify 18 reviewed body figures on five real cards while preserving all five pre-existing official TOC hashes. This config changes verification scope only; it does not publish media or literature."
+  "note": "Live acceptance target for body5-20260923-2008-b: verify 18 individually reviewed body figures on five real cards while preserving all five pre-existing official TOC hashes. Read-only acceptance scope only."
 }
