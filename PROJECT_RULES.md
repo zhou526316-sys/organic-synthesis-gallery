@@ -20,3 +20,13 @@ Operational rules:
 10. If GitHub is temporarily unavailable, queue the response for the next successful Git operation rather than silently dropping it.
 11. A chat must not opt out of this rule merely because it is a separate conversation window; the project scope is the controlling scope.
 
+## Feedback verification and user approval
+
+Effective from the user's 2026-09-23 instruction: **“吐槽不要直接修，要先给我核实，我来决定。”** This rule applies to feedback handling across project chats and supersedes earlier blanket instructions to repair all feedback.
+
+1. First read and verify the feedback. Report its ID/original request, reproduction result or evidence, affected scope, proposed change and material risks or trade-offs. Distinguish confirmed defects from preferences, test-only failures and unverified reports.
+2. Present the verified items to the user for a decision. Do not choose which feedback to implement on the user's behalf.
+3. Before explicit approval for the particular item or clearly enumerated batch, do not implement repair code (including in branches), merge/deploy a repair, modify production data for the complaint, or mark the feedback reviewed/resolved/dismissed. Read-only diagnosis and documenting evidence or this approval hold are allowed; production test writes are not.
+4. An unqualified “继续” continues verification and reporting, not permission to start unapproved feedback repairs. Clearly approved work may proceed only within its approved scope.
+5. Pending feedback-driven changes are held for the user's decision; being implemented in a branch or passing CI is not approval. At adoption, navigation PR #150 and reader-counter PR #163 remain unmerged and must not be advanced or published without explicit user approval. Do not revert already deployed features merely because this process changed.
+6. Keep scope separate: this feedback approval gate does not itself disable, reschedule or alter independently authorized literature publication or media-acquisition workflows. Follow their existing contracts and permissions.
