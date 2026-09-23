@@ -1,0 +1,86 @@
+name: Diagnose PR147 GIF display without changing product
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui147-gif-diagnostic.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 5bf098d7cfb70bee03feca8ae953fddb33ea613e
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install existing pinned browser and build
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/gif-browser.log 2>&1 || { tail -60 /tmp/gif-browser.log; exit 1; }
+          npm run build
+      - name: Add independent observation test, never alter original tests or runtime
+        run: |
+          mkdir -p gif-diagnostic-results
+          git rev-parse HEAD > gif-diagnostic-results/source.txt
+          cat > tests/pr147-gif-observation.spec.ts <<'TS'
+          import { test, expect } from '@playwright/test';
+          import { createHash } from 'node:crypto';
+          import { open, gifFile } from './status-image-fixtures';
+          test.use({serviceWorkers:'block',trace:'on'});
+          for(const width of [390,1280]) test(`observe original GIF and lifecycle ${width}`,async({page},info)=>{
+            const errors:string[]=[]; page.on('pageerror',e=>errors.push(e.message));
+            const actions=await open(page,width);
+            await actions.evaluate(host=>{
+              const root=host.shadowRoot!;
+              (window as any).__gifEvents=[];
+              const log=(kind:string,el:any)=>(window as any).__gifEvents.push({at:performance.now(),kind,tag:el?.tagName,src:el?.getAttribute?.('src')?.slice(0,80),asset:el?.dataset?.statusAsset});
+              new MutationObserver(records=>records.forEach(r=>{
+                if(r.type==='attributes') log(r.attributeName!,r.target);
+                else {r.addedNodes.forEach(n=>log('added',n));r.removedNodes.forEach(n=>log('removed',n));}
+              })).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['src','data-image-source','data-original-state']});
+            });
+            await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
+            await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
+            const image=actions.locator('[data-action="set-status:to-read"] .status-image');
+            await expect(image).toHaveAttribute('data-image-source','original');
+            const samples:any[]=[];
+            for(let i=0;i<8;i++){
+              const details=await image.evaluate(img=>{
+                const node=img as HTMLImageElement;const rect=node.getBoundingClientRect(); const root=node.getRootNode() as ShadowRoot;
+                const top=root.elementFromPoint(rect.x+rect.width/2,rect.y+rect.height/2) as HTMLElement|null;
+                const chain=[];let x:Element|null=node;
+                while(x){const s=getComputedStyle(x);chain.push({tag:x.tagName,cls:x.className,rect:x.getBoundingClientRect().toJSON(),opacity:s.opacity,visibility:s.visibility,overflow:s.overflow,cv:s.contentVisibility});x=x.parentElement;}
+                return {src:node.src,complete:node.complete,natural:[node.naturalWidth,node.naturalHeight],top:top?.outerHTML.slice(0,250),chain};
+              });
+              const bytes=await image.screenshot();
+              samples.push({i,at:Date.now(),hash:createHash('sha256').update(bytes).digest('hex'),details});
+              await info.attach(`image-${i}.png`,{body:bytes,contentType:'image/png'});
+              if(i===0)await page.screenshot({path:info.outputPath('whole-page.png')});
+              await page.waitForTimeout([173,251,367][i%3]);
+            }
+            await info.attach('observations.json',{body:JSON.stringify({width,samples,errors,events:await page.evaluate(()=>(window as any).__gifEvents)},null,2),contentType:'application/json'});
+            console.log('OBSERVATIONS',JSON.stringify({width,hashes:samples.map(x=>x.hash),errors}));
+            expect(new Set(samples.map(x=>x.hash)).size).toBeGreaterThan(1);
+          });
+          TS
+          git diff --exit-code -- src/ public/ shared/
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-preview.log 2>&1 &
+          for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
+          exit 1
+      - name: Capture actual pixels, clipping and DOM changes without filtering page errors
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: gif-diagnostic-results/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/pr147-gif-observation.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=gif-diagnostic-results/tests 2>&1 | tee gif-diagnostic-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr147-gif-observation
+          path: gif-diagnostic-results/
+          retention-days: 7
