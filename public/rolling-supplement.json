@@ -1,16 +1,577 @@
 {
-  "generatedAt": "2026-09-22T19:01:00+08:00",
-  "auditWindow": {"start":"2026-09-20","end":"2026-09-22"},
+  "generatedAt": "2026-09-23T08:12:22.688+08:00",
+  "auditWindow": {
+    "start": "2026-09-21",
+    "end": "2026-09-23"
+  },
   "papers": [
-    {"journal":"JACS","title":"Nonalternating Chain Walking Polymerization Enables In-Chain Ketone Polyolefin Elastomers","titleZh":"非交替链行走聚合构建主链含酮聚烯烃弹性体","doi":"10.1021/jacs.6c13517","date":"2026-09-22","url":"https://doi.org/10.1021/jacs.6c13517","new":true,"authors":["Zhi-Hao Zhang","Ji-Ning Zhang","Shi-Yu Chen","Xiao-Bing Lu","Ye Liu"],"addedDate":"2026-09-22"},
-    {"journal":"JACS","title":"Pd-Catalyzed Enantioselective [3+3] Annulation of Vinyldiazos with 2-Iodoanilines Enabled by Sadphos","titleZh":"Sadphos 促进的钯催化乙烯基重氮化合物与 2-碘苯胺对映选择性 [3+3] 环加成","doi":"10.1021/jacs.6c14159","date":"2026-09-22","url":"https://doi.org/10.1021/jacs.6c14159","new":true,"authors":["Dan Zhao","Zhou Luo","Jingyan Luo","Junliang Zhang","Yuanyuan Liu"],"addedDate":"2026-09-22"},
-    {"journal":"JOC","title":"Borane-Catalyzed Divergent Hydrogenative and Silylative Reduction of Quinolinium Salts","titleZh":"硼烷催化喹啉鎓盐的发散式氢化与硅基化还原","doi":"10.1021/acs.joc.6c01302","date":"2026-09-22","url":"https://doi.org/10.1021/acs.joc.6c01302","new":true,"authors":["Runze Luan","Xiangqing Feng","Haifeng Du"],"addedDate":"2026-09-22"},
-    {"journal":"JOC","title":"Selectfluor-Mediated Radical Cyclization of N-Arylbicyclo[1.1.0]butane-1-carboxamides with Diaryldiselenides","titleZh":"Selectfluor 介导 N-芳基双环[1.1.0]丁烷甲酰胺与二芳基二硒化物自由基环化","doi":"10.1021/acs.joc.6c01469","date":"2026-09-22","url":"https://doi.org/10.1021/acs.joc.6c01469","new":true,"authors":["Yuze Lin","Yina Liu","Gang Yang","Yadong Feng","Xiuling Cui"],"addedDate":"2026-09-22"},
-    {"journal":"JOC","title":"Site-Selective C(sp3)–H Bromination via Radical Relay","titleZh":"自由基接力实现位点选择性 C(sp3)–H 溴化","doi":"10.1021/acs.joc.6c01295","date":"2026-09-22","url":"https://doi.org/10.1021/acs.joc.6c01295","new":true,"authors":["Ziheng Xu","Jianghao Wu","Xiaotong Song","Haojie Gao","Jing Qin","Di Song","Qian Wan","Gang Wang"],"addedDate":"2026-09-22"},
-    {"journal":"JOC","title":"Synthesis of Conjugated Bromoenynoates via Electrophilic Bromination of Enynyl Hydrazones","titleZh":"烯炔基腙的亲电溴化合成共轭溴代烯炔酸酯","doi":"10.1021/acs.joc.6c01270","date":"2026-09-22","url":"https://doi.org/10.1021/acs.joc.6c01270","new":true,"authors":["Kavita Devi","Paru Jamwal","Ramani Gurubrahamam"],"addedDate":"2026-09-22"},
-    {"journal":"Nature Chemistry","title":"De novo synthesis of threofuranoses via a triple-carbonylation cascade of aldehydes","titleZh":"醛的三重羰基化级联反应从头合成苏式呋喃糖","doi":"10.1038/s41557-026-02258-8","date":"2026-09-22","url":"https://doi.org/10.1038/s41557-026-02258-8","new":true,"authors":["Xiaotong Shen","Ruifang Nie","Wenjun Jiang","Suhua Li"],"addedDate":"2026-09-22"},
-    {"journal":"Nature Synthesis","title":"Enantio- and diastereoselective synthesis of multi-helical nanographenes","titleZh":"多螺旋纳米石墨烯的对映与非对映选择性合成","doi":"10.1038/s44160-026-01155-9","date":"2026-09-22","url":"https://doi.org/10.1038/s44160-026-01155-9","new":true,"authors":["Ryota Shimizu","Juntaro Nogami","Yuko Kishida","Futo Morita","Chihiro Maeda","Hidehiro Uekusa","Ken Tanaka"],"addedDate":"2026-09-22"},
-    {"journal":"Organic Letters","title":"Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment","titleZh":"Chasmanine 全官能化 AF 环片段的合成","doi":"10.1021/acs.orglett.6c03386","date":"2026-09-22","url":"https://doi.org/10.1021/acs.orglett.6c03386","new":true,"authors":["Colton E. Johnson","Mrinmay Baidya","Mark Lautens"],"addedDate":"2026-09-22"}
+    {
+      "journal": "JACS",
+      "title": "Nonalternating Chain Walking Polymerization Enables In-Chain Ketone Polyolefin Elastomers",
+      "titleZh": "非交替链行走聚合构建主链含酮聚烯烃弹性体",
+      "doi": "10.1021/jacs.6c13517",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/jacs.6c13517",
+      "new": true,
+      "authors": [
+        "Zhi-Hao Zhang",
+        "Ji-Ning Zhang",
+        "Shi-Yu Chen",
+        "Xiao-Bing Lu",
+        "Ye Liu"
+      ],
+      "addedDate": "2026-09-22"
+    },
+    {
+      "journal": "JACS",
+      "title": "Pd-Catalyzed Enantioselective [3+3] Annulation of Vinyldiazos with 2-Iodoanilines Enabled by Sadphos",
+      "titleZh": "Sadphos 促进的钯催化乙烯基重氮化合物与 2-碘苯胺对映选择性 [3+3] 环加成",
+      "doi": "10.1021/jacs.6c14159",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/jacs.6c14159",
+      "new": true,
+      "authors": [
+        "Dan Zhao",
+        "Zhou Luo",
+        "Jingyan Luo",
+        "Junliang Zhang",
+        "Yuanyuan Liu"
+      ],
+      "addedDate": "2026-09-22"
+    },
+    {
+      "journal": "JOC",
+      "title": "Borane-Catalyzed Divergent Hydrogenative and Silylative Reduction of Quinolinium Salts",
+      "titleZh": "硼烷催化喹啉鎓盐的发散式氢化与硅基化还原",
+      "doi": "10.1021/acs.joc.6c01302",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.joc.6c01302",
+      "new": true,
+      "authors": [
+        "Runze Luan",
+        "Xiangqing Feng",
+        "Haifeng Du"
+      ],
+      "addedDate": "2026-09-22"
+    },
+    {
+      "journal": "JOC",
+      "title": "Selectfluor-Mediated Radical Cyclization of N-Arylbicyclo[1.1.0]butane-1-carboxamides with Diaryldiselenides",
+      "titleZh": "Selectfluor 介导 N-芳基双环[1.1.0]丁烷甲酰胺与二芳基二硒化物自由基环化",
+      "doi": "10.1021/acs.joc.6c01469",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.joc.6c01469",
+      "new": true,
+      "authors": [
+        "Yuze Lin",
+        "Yina Liu",
+        "Gang Yang",
+        "Yadong Feng",
+        "Xiuling Cui"
+      ],
+      "addedDate": "2026-09-22"
+    },
+    {
+      "journal": "JOC",
+      "title": "Site-Selective C(sp3)–H Bromination via Radical Relay",
+      "titleZh": "自由基接力实现位点选择性 C(sp3)–H 溴化",
+      "doi": "10.1021/acs.joc.6c01295",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.joc.6c01295",
+      "new": true,
+      "authors": [
+        "Ziheng Xu",
+        "Jianghao Wu",
+        "Xiaotong Song",
+        "Haojie Gao",
+        "Jing Qin",
+        "Di Song",
+        "Qian Wan",
+        "Gang Wang"
+      ],
+      "addedDate": "2026-09-22"
+    },
+    {
+      "journal": "JOC",
+      "title": "Synthesis of Conjugated Bromoenynoates via Electrophilic Bromination of Enynyl Hydrazones",
+      "titleZh": "烯炔基腙的亲电溴化合成共轭溴代烯炔酸酯",
+      "doi": "10.1021/acs.joc.6c01270",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.joc.6c01270",
+      "new": true,
+      "authors": [
+        "Kavita Devi",
+        "Paru Jamwal",
+        "Ramani Gurubrahamam"
+      ],
+      "addedDate": "2026-09-22"
+    },
+    {
+      "journal": "Nature Chemistry",
+      "title": "De novo synthesis of threofuranoses via a triple-carbonylation cascade of aldehydes",
+      "titleZh": "醛的三重羰基化级联反应从头合成苏式呋喃糖",
+      "doi": "10.1038/s41557-026-02258-8",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1038/s41557-026-02258-8",
+      "new": true,
+      "authors": [
+        "Xiaotong Shen",
+        "Ruifang Nie",
+        "Wenjun Jiang",
+        "Suhua Li"
+      ],
+      "addedDate": "2026-09-22"
+    },
+    {
+      "journal": "Nature Synthesis",
+      "title": "Enantio- and diastereoselective synthesis of multi-helical nanographenes",
+      "titleZh": "多螺旋纳米石墨烯的对映与非对映选择性合成",
+      "doi": "10.1038/s44160-026-01155-9",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1038/s44160-026-01155-9",
+      "new": true,
+      "authors": [
+        "Ryota Shimizu",
+        "Juntaro Nogami",
+        "Yuko Kishida",
+        "Futo Morita",
+        "Chihiro Maeda",
+        "Hidehiro Uekusa",
+        "Ken Tanaka"
+      ],
+      "addedDate": "2026-09-22"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Synthesis of a Fully Functionalized Chasmanine AF-Ring Fragment",
+      "titleZh": "Chasmanine 全官能化 AF 环片段的合成",
+      "doi": "10.1021/acs.orglett.6c03386",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03386",
+      "new": true,
+      "authors": [
+        "Colton E. Johnson",
+        "Mrinmay Baidya",
+        "Mark Lautens"
+      ],
+      "addedDate": "2026-09-22"
+    },
+    {
+      "journal": "JACS",
+      "title": "Bidirectional Alkene-Nucleophile Coupling at a Single Carbon Center Enabled by a Methylene-Bridged Thianthrenium Dication",
+      "doi": "10.1021/jacs.6c16812",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/jacs.6c16812",
+      "new": true,
+      "authors": [
+        "Morgan Kim",
+        "Seung Youn Hong"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "JACS",
+      "title": "Diastereodivergent Access to cis , cis - and cis , trans -Angular Triquinanes: Total Synthesis of (±)-Arnicenone",
+      "doi": "10.1021/jacs.6c09019",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/jacs.6c09019",
+      "new": true,
+      "authors": [
+        "Chia-Hao Liu",
+        "Hung-Tse Huang",
+        "Han-Jung Li",
+        "Shubham A. Dighe",
+        "Deng-Lian Hou",
+        "Li-Yun Wu",
+        "Yu-Wen Huang"
+      ],
+      "addedDate": "2026-09-23",
+      "totalSynthesis": true,
+      "cardLabel": "Total Synthesis"
+    },
+    {
+      "journal": "JACS",
+      "title": "Enantioselective Defluorinative C(sp2)–H Allylation of Acrylamides Enabled by CpxRh(III) Catalysis",
+      "doi": "10.1021/jacs.6c17644",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/jacs.6c17644",
+      "new": true,
+      "authors": [
+        "Shu-Bin Mou",
+        "Mu-Peng Luo",
+        "Chen-Yu Dou",
+        "Shi Cao",
+        "Dong Wu",
+        "Shou-Guo Wang"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "JACS",
+      "title": "Functional Group Transpositional Trimolecular Cross-Coupling via Interrupted Homolytic Substitution",
+      "doi": "10.1021/jacs.6c12532",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/jacs.6c12532",
+      "new": true,
+      "authors": [
+        "Yuang Cui",
+        "Hui Lv",
+        "Yizhou Chen",
+        "Yang Zhou",
+        "Beibei Zhan",
+        "Xiaheng Zhang"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "JACS",
+      "title": "Programming Interfacial Function through Alternating Sequence in Amphiphilic Copolymers",
+      "doi": "10.1021/jacs.6c10701",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/jacs.6c10701",
+      "new": true,
+      "authors": [
+        "Alimi Abiodun",
+        "Jiahuiyu Fang",
+        "Adam Parris",
+        "Xiaoxue Qin",
+        "Md Waliullah Hossain",
+        "Swagatam Barman",
+        "Tao Wei",
+        "Chuanbing Tang"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "JACS",
+      "title": "Selective C18-Methyl Oxidation of Sclareol via an Engineered P450 Enables the Synthesis of Spiromyrrhene B",
+      "doi": "10.1021/jacs.6c16907",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/jacs.6c16907",
+      "new": true,
+      "authors": [
+        "Chenhao Zhang",
+        "Shugong Liu",
+        "Guanwen Chen",
+        "Ying Shi",
+        "Liran Chen",
+        "Dao-Feng Chen",
+        "Fuzhuo Li"
+      ],
+      "addedDate": "2026-09-23",
+      "totalSynthesis": true,
+      "cardLabel": "Total Synthesis"
+    },
+    {
+      "journal": "JOC",
+      "title": "An Efficient Platform for Enantioselective aza -Michael Addition to Both Linear and Cyclic Enones",
+      "doi": "10.1021/acs.joc.6c01696",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.joc.6c01696",
+      "new": true,
+      "authors": [
+        "Jaeyong Lee",
+        "So Young Jang",
+        "Hyeung-geun Park"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "JOC",
+      "title": "Isoindole-Based Multicomponent Synthesis of Pyrimido[6,1,2- cd ]pyrrolizine Fluorophores with Unsymmetrical Urea Handles: Photophysical, Theoretical, and Antifungal Imaging Studies",
+      "doi": "10.1021/acs.joc.6c01559",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.joc.6c01559",
+      "new": true,
+      "authors": [
+        "Dhanavardini Mouttousadeappane",
+        "Nithya Natarajan",
+        "Thamarainathan Doulassiramane",
+        "Kokila Manickam",
+        "Ramanathan Padmanaban",
+        "Suganya Kannan",
+        "Vasuki Gnanasambandam"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "JOC",
+      "title": "K2S-Mediated Tandem Selenylation and Cyclization of CaC2 with Diselenides: Synthesis of 2-Methylbenzoselenazole",
+      "doi": "10.1021/acs.joc.6c01653",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.joc.6c01653",
+      "new": true,
+      "authors": [
+        "Yu-Wei Wang",
+        "Tian-Xing Zhang",
+        "Xiao-Wei Zhang",
+        "Hui-Min Liang",
+        "Qingxiang Guo",
+        "Ning Zhu"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Nature Communications",
+      "title": "Generative AI designs functional thiolation domains for reprogramming non-ribosomal peptide synthetases",
+      "doi": "10.1038/s41467-026-77963-6",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1038/s41467-026-77963-6",
+      "new": true,
+      "authors": [
+        "Emre F. Bülbül",
+        "Seounggun Bang",
+        "Kevin George",
+        "Gabriele Bianchi",
+        "Prateek Raj",
+        "Seonyong Chung",
+        "Vincent Pauline",
+        "Ramon Hochstrasser",
+        "Hannah A. Minas",
+        "Walid A. M. Elgaher",
+        "Andreas M. Kany",
+        "Anna K. H. Hirsch",
+        "Steven Schmitt",
+        "Dirk W. Heinz",
+        "Olga V. Kalinina",
+        "Dietrich Klakow",
+        "Kenan A. J. Bozhüyük"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Accelerated Green SN1 Reactions of the 9-Phenyl-9-fluorenyl Group",
+      "doi": "10.1021/acs.orglett.6c03511",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03511",
+      "new": true,
+      "authors": [
+        "Kinshuk Ghosh",
+        "Kajumee P. Bora Bhowal",
+        "Samaneh Zarei",
+        "Chloé Ding",
+        "Felix Polyak",
+        "William D. Lubell"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Cobalt-Catalyzed Nitrile Hydration/Alkyne Hydroarylation Using 2-Cyano-Substituted Arylboronic Acids",
+      "doi": "10.1021/acs.orglett.6c03434",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03434",
+      "new": true,
+      "authors": [
+        "Mitsuhiro Ueda",
+        "Satsuki Fujise",
+        "Shunsuke Yoshioka"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Direct C1–H Amination of Free NH Carbazoles Enabled by the Catellani Reaction",
+      "doi": "10.1021/acs.orglett.6c03473",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03473",
+      "new": true,
+      "authors": [
+        "Ganesh Shivayogappa Sorabad",
+        "Paolo Pio Mazzeo",
+        "Elena Motti",
+        "Nicola Della Ca’"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Divergent and Stereoselective Synthesis of Enamides via Visible Light-Driven Ligand-to-Metal Charge Transfer of Copper Catalyst",
+      "doi": "10.1021/acs.orglett.6c03704",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03704",
+      "new": true,
+      "authors": [
+        "Yu-Rong Yang",
+        "Xin-Yu Zhang",
+        "Cheng-He Zhou",
+        "Zhong-Lin Zang",
+        "Gui-Xin Cai"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Iron-Catalyzed Defluorinative Alkylation for Accessing Cyclic Acetal– gem -Difluoroalkenes",
+      "doi": "10.1021/acs.orglett.6c03239",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03239",
+      "new": true,
+      "authors": [
+        "Xiao-Tong Wang",
+        "Pui Ying Choy",
+        "Chi Wai Cheung",
+        "Fuk Yee Kwong"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Ligand-Free Eu(OTf)3-Enabled Photoactivation for Strain-Release Photocycloadditions of Bicyclo[1.1.0]butanes with Substituted Alkenes",
+      "doi": "10.1021/acs.orglett.6c03660",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03660",
+      "new": true,
+      "authors": [
+        "Qiujie Qin",
+        "Sicong Tu",
+        "Yunzhi Xie",
+        "Zijie Qin",
+        "Zixi Wang",
+        "Mingzhiyuan Bao",
+        "Xinchen Zhang",
+        "Yanjun Li",
+        "Zijun Zhou"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Pd-Catalyzed Skeletal Remodeling of Bicyclo[1.1.0]butane Carboxamides to Azabicyclo[3.1.0]hexan-2-ones via a Pd(II)–Carbene Intermediate",
+      "doi": "10.1021/acs.orglett.6c03836",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03836",
+      "new": true,
+      "authors": [
+        "Mohammad Saleem",
+        "Sandeep Singh Bisht",
+        "Ankit K. Nakum",
+        "Dongari Yadagiri"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Protonation-Gated Strain-Release Generation of Amino- o -quinodimethanes",
+      "doi": "10.1021/acs.orglett.6c03499",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03499",
+      "new": true,
+      "authors": [
+        "Domenic Kronenberg",
+        "Asja A. Kroeger",
+        "Jiao Yu J. Wang",
+        "Michael G. Gardiner",
+        "Michelle L. Coote",
+        "Michael S. Sherburn"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Synthesis of Benzylic Quaternary Centers via Arylation with Aryl(TMP)iodonium Salts",
+      "doi": "10.1021/acs.orglett.6c03459",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03459",
+      "new": true,
+      "authors": [
+        "Joseph Hatton",
+        "Nikhil Bonagiri",
+        "David R. Stuart"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Synthesis of α-Halophosphonates via Copper-Catalyzed Atom Transfer Radical Addition",
+      "doi": "10.1021/acs.orglett.6c03586",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03586",
+      "new": true,
+      "authors": [
+        "Jacob A. Utley",
+        "Tam D. Ho",
+        "Byung Joo Lee",
+        "Jake R. Elliott",
+        "Saurabh S. Satpute",
+        "Kami L. Hull"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Unified Copper-Catalyzed Stereoselective Addition: Construction of Vicinal F/CF x -Containing Stereocenters",
+      "doi": "10.1021/acs.orglett.6c03313",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03313",
+      "new": true,
+      "authors": [
+        "Lei Yang",
+        "Saisai Yu",
+        "Yi-Ping Liu",
+        "Min Zou",
+        "Zhen-Hua Wang",
+        "Yong You",
+        "Shengwen Yang",
+        "Wei-Cheng Yuan",
+        "Jian-Qiang Zhao"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Visible Light-Driven Chlorodifluoromethylation of Unactivated Alkenes",
+      "doi": "10.1021/acs.orglett.6c03228",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03228",
+      "new": true,
+      "authors": [
+        "Ziyan Zhang",
+        "Yan Lu",
+        "Zhuoyuan Jian",
+        "Zhirui Shi",
+        "Ling He",
+        "Chenyang Wang",
+        "Min Zhang"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Visible-Light-Catalyzed In Situ Generation of Nitrile Oxides from Aryl Trichloromethane and TBN for [3 + 2] Cycloaddition to Access Isoxazoline/Isoxazole Scaffolds",
+      "doi": "10.1021/acs.orglett.6c03394",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03394",
+      "new": true,
+      "authors": [
+        "Yanfu Jiang",
+        "Jiantao Zhang",
+        "Renhua Su",
+        "Xian Jiang",
+        "Hailing Liu",
+        "Weibing Liu"
+      ],
+      "addedDate": "2026-09-23"
+    },
+    {
+      "journal": "Organic Letters",
+      "title": "Visible-Light-Promoted O-Glycosylation Mediated by Halogen Bonding of Selenoglycosides to the Diphenyliodonium Ion",
+      "doi": "10.1021/acs.orglett.6c03759",
+      "date": "2026-09-22",
+      "url": "https://doi.org/10.1021/acs.orglett.6c03759",
+      "new": true,
+      "authors": [
+        "Vinayak Pradeep",
+        "Afsana Mimi",
+        "Marina Descoubes",
+        "Erik Alvarez Valenzuela",
+        "Semin Lee",
+        "Anne Milet",
+        "Justin R. Ragains"
+      ],
+      "addedDate": "2026-09-23"
+    }
   ],
-  "policyFilteredAt":"2026-09-22"
+  "policyFilteredAt": "2026-09-23"
 }
