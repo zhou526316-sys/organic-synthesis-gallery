@@ -33,7 +33,7 @@ export function assertSnapshotCoherence(previous,live){
 }
 async function configuration(root){
   const policy=JSON.parse(await readFile(path.join(root,'audit/media-auto-policy.json'),'utf8'));
-  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=20&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard<=10&&policy.requireOfficialTocInBuild===true&&Number.isInteger(policy.tailFlushIdleMinutes)&&policy.tailFlushIdleMinutes>=5&&policy.tailFlushIdleMinutes<=120&&Number.isInteger(policy.tailFlushMinArticles)&&policy.tailFlushMinArticles>=1&&policy.tailFlushMinArticles<policy.minNewArticles,'auto_invalid_configuration');
+  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=20&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard<=10&&policy.requireOfficialTocInBuild===true&&Number.isInteger(policy.tailFlushIdleMinutes)&&policy.tailFlushIdleMinutes>=5&&policy.tailFlushIdleMinutes<=120&&Number.isInteger(policy.tailFlushMinArticles)&&policy.tailFlushMinArticles>=1&&policy.tailFlushMinArticles<policy.minNewArticles&&Number.isInteger(policy.backlogMaxWaitMinutes)&&policy.backlogMaxWaitMinutes>=policy.tailFlushIdleMinutes&&policy.backlogMaxWaitMinutes<=360,'auto_invalid_configuration');
   const state=JSON.parse(await readFile(path.join(root,'audit/literature-update-state.json'),'utf8'));
   const holds=new Set([...(policy.heldDois||[]),...(state.pendingScopeReviewBacklog||[])].map(x=>x.doi));
   return {policy,holds,papers:await readPapers(root)};
@@ -89,16 +89,22 @@ export function tocReadyDois(inputs){
 }
 export function adaptiveBatchGate(rows,policy,now=Date.now()){
   const dois=new Set();
-  let latestUpdatedAt=0;
+  let latestUpdatedAt=0,oldestUpdatedAt=0;
   for(const row of rows||[]){
     const doi=normalizeDoi(row?.doi||'');if(doi)dois.add(doi);
-    const updated=Number(row?.updatedAt||0);if(Number.isFinite(updated)&&updated>latestUpdatedAt)latestUpdatedAt=updated;
+    const updated=Number(row?.updatedAt||0);
+    if(Number.isFinite(updated)&&updated>0){
+      if(updated>latestUpdatedAt)latestUpdatedAt=updated;
+      if(!oldestUpdatedAt||updated<oldestUpdatedAt)oldestUpdatedAt=updated;
+    }
   }
   const articleCount=dois.size;
   const idleMinutes=latestUpdatedAt?Math.max(0,(Number(now)-latestUpdatedAt)/60000):null;
+  const backlogAgeMinutes=oldestUpdatedAt?Math.max(0,(Number(now)-oldestUpdatedAt)/60000):null;
   const targetReady=articleCount>=policy.minNewArticles;
   const tailReady=!targetReady&&articleCount>=policy.tailFlushMinArticles&&idleMinutes!==null&&idleMinutes>=policy.tailFlushIdleMinutes;
-  return {ready:targetReady||tailReady,mode:targetReady?'target_batch':tailReady?'quiet_tail':'waiting',articleCount,targetArticles:policy.minNewArticles,latestUpdatedAt,idleMinutes,targetReady,tailReady};
+  const backlogReady=!targetReady&&!tailReady&&articleCount>=policy.tailFlushMinArticles&&backlogAgeMinutes!==null&&backlogAgeMinutes>=policy.backlogMaxWaitMinutes;
+  return {ready:targetReady||tailReady||backlogReady,mode:targetReady?'target_batch':tailReady?'quiet_tail':backlogReady?'aged_backlog':'waiting',articleCount,targetArticles:policy.minNewArticles,latestUpdatedAt,oldestUpdatedAt,idleMinutes,backlogAgeMinutes,targetReady,tailReady,backlogReady};
 }
 export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()}){
   assertSnapshotCoherence(inputs.previous,inputs.live);
@@ -110,7 +116,13 @@ export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()})
     if(oldKeys.has(exactKey(row))||!papers.has(row.doi)||holds.has(row.doi)||alreadyIn(inputs.live,row)||heldAttempts(inputs.previous,row,now)||!tocReady.has(row.doi))continue;
     try{await validateNewBodyMetadata(row,policy,now);rows.push(row);}catch{}
   }
-  rows.sort((a,b)=>String(papers.get(b.doi)?.date||'').localeCompare(String(papers.get(a.doi)?.date||''))||Number(!a.doi.startsWith('10.1021/jacs.'))-Number(!b.doi.startsWith('10.1021/jacs.'))||b.updatedAt-a.updatedAt);
+  rows.sort((a,b)=>{
+    const agedA=Number(now)-Number(a.updatedAt||0)>=policy.backlogMaxWaitMinutes*60000;
+    const agedB=Number(now)-Number(b.updatedAt||0)>=policy.backlogMaxWaitMinutes*60000;
+    if(agedA!==agedB)return agedA?-1:1;
+    if(agedA&&agedB)return Number(a.updatedAt||0)-Number(b.updatedAt||0)||Number(!a.doi.startsWith('10.1021/jacs.'))-Number(!b.doi.startsWith('10.1021/jacs.'));
+    return String(papers.get(b.doi)?.date||'').localeCompare(String(papers.get(a.doi)?.date||''))||Number(!a.doi.startsWith('10.1021/jacs.'))-Number(!b.doi.startsWith('10.1021/jacs.'))||b.updatedAt-a.updatedAt;
+  });
   return {...cfg,rows,tocReady};
 }
 export async function mergeNewBodyAuto(root=process.cwd(),options={}){
@@ -194,7 +206,7 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   for(const e of entries)ledger.items.push({assetKey:exactKey(e.record),doi:e.record.doi,id:e.record.id,sha256:e.record.sha256,evidenceSha256:e.evidenceSha256,label:e.record.label,imageUrl:e.imageUrl,state:'published',publicationId:POLICY_ID,validationMode:e.validationMode,individualSemanticReview:false,originalUpdatedAt:e.record.updatedAt});
   ledger.count=ledger.items.length;ledger.generatedAt=now;ledger.mediaManifestGeneratedAt=now;media.generatedAt=now;
   const snapshot={schemaVersion:1,policyId:POLICY_ID,generatedAt:now,mediaGeneration:policy.mediaGeneration,items:entries,count:entries.length,attempts};
-  const status={schemaVersion:1,policyId:POLICY_ID,checkedAt:now,enabled:policy.enabled,stageRows:inputs.stage?.count??null,stageReadError:inputs.stageError||null,localCaptureError:inputs.localCaptureError||null,newEligible:rows.length,eligibleArticles:eligibleArticleCount,candidateArticles:candidateDois.length,validatedNewArticles:validatedNewArticleCount,releaseReady:releaseGate.ready,preferredTargetMet:releaseGate.targetReady,tailFlushReady:releaseGate.tailReady,releaseMode:releaseGate.mode,eligibleIdleMinutes:releaseGate.idleMinutes,tailFlushIdleMinutes:policy.tailFlushIdleMinutes,targetBatchArticles:policy.minNewArticles,maximumBatchArticles:policy.maxNewArticles,waitingForMore:candidateDois.length>0&&!releaseGate.ready,tocPairedRequired:policy.requireOfficialTocInBuild,tocWaitingArticles:tocWaitingDois.size,publishedNewArticles:new Set(added.map(x=>x.doi)).size,added,retained,held,autoPublishedCount:entries.length,totalPublicFigures:Object.values(media.items).reduce((n,r)=>n+(r.figures?.figures||[]).length,0),stagingWrites:0,stagingDeletes:0,publisherRequests:0,individualSemanticReview:false};
+  const status={schemaVersion:1,policyId:POLICY_ID,checkedAt:now,enabled:policy.enabled,stageRows:inputs.stage?.count??null,stageReadError:inputs.stageError||null,localCaptureError:inputs.localCaptureError||null,newEligible:rows.length,eligibleArticles:eligibleArticleCount,candidateArticles:candidateDois.length,validatedNewArticles:validatedNewArticleCount,releaseReady:releaseGate.ready,preferredTargetMet:releaseGate.targetReady,tailFlushReady:releaseGate.tailReady,releaseMode:releaseGate.mode,eligibleIdleMinutes:releaseGate.idleMinutes,oldestEligibleAgeMinutes:releaseGate.backlogAgeMinutes,backlogMaxWaitMinutes:policy.backlogMaxWaitMinutes,agedBacklogReady:releaseGate.backlogReady,tailFlushIdleMinutes:policy.tailFlushIdleMinutes,targetBatchArticles:policy.minNewArticles,maximumBatchArticles:policy.maxNewArticles,waitingForMore:candidateDois.length>0&&!releaseGate.ready,tocPairedRequired:policy.requireOfficialTocInBuild,tocWaitingArticles:tocWaitingDois.size,publishedNewArticles:new Set(added.map(x=>x.doi)).size,added,retained,held,autoPublishedCount:entries.length,totalPublicFigures:Object.values(media.items).reduce((n,r)=>n+(r.figures?.figures||[]).length,0),stagingWrites:0,stagingDeletes:0,publisherRequests:0,individualSemanticReview:false};
   await writeFile(mediaPath,JSON.stringify(media));await writeFile(ledgerPath,JSON.stringify(ledger));await writeFile(path.join(root,'public',SNAPSHOT),JSON.stringify(snapshot));await writeFile(path.join(root,'public/auto-body-status.json'),JSON.stringify(status));
   console.log('NEW_BODY_AUTO_PUBLICATION '+JSON.stringify(status));return {status,snapshot,media,ledger};
 }
@@ -202,7 +214,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   if(process.argv.includes('--poll')){
     const inputs=await readLiveInputs(),{rows,policy}=await pendingNewRows({inputs});
     const gate=adaptiveBatchGate(rows,policy,Date.now());
-    console.log('NEW_BODY_AUTO_PENDING '+JSON.stringify({count:rows.length,articles:gate.articleCount,targetArticles:gate.targetArticles,ready:gate.ready,mode:gate.mode,idleMinutes:gate.idleMinutes,tailFlushIdleMinutes:policy.tailFlushIdleMinutes,stageError:inputs.stageError,localCaptureError:inputs.localCaptureError}));
+    console.log('NEW_BODY_AUTO_PENDING '+JSON.stringify({count:rows.length,articles:gate.articleCount,targetArticles:gate.targetArticles,ready:gate.ready,mode:gate.mode,idleMinutes:gate.idleMinutes,oldestEligibleAgeMinutes:gate.backlogAgeMinutes,backlogMaxWaitMinutes:policy.backlogMaxWaitMinutes,tailFlushIdleMinutes:policy.tailFlushIdleMinutes,stageError:inputs.stageError,localCaptureError:inputs.localCaptureError}));
     if(process.env.GITHUB_OUTPUT)await writeFile(process.env.GITHUB_OUTPUT,'changed='+(gate.ready?'true':'false')+'\narticles='+gate.articleCount+'\nmode='+gate.mode+'\n',{flag:'a'});
   }else await mergeNewBodyAuto();
 }
