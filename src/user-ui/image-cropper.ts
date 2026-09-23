@@ -81,6 +81,8 @@ export async function cropUserImage(file: Blob, initial?: CropRecipe, sourceNoti
 
   const dialog = document.createElement('dialog');
   dialog.dataset.galleryUserCropper = 'true'; dialog.dataset.cropEditor = 'true';
+  dialog.setAttribute('role', 'dialog');
+  dialog.setAttribute('aria-modal', 'true');
   dialog.setAttribute('aria-label', tr('裁切图片', 'Crop image'));
   dialog.innerHTML = `<style>
   dialog[data-crop-editor]{box-sizing:border-box;width:min(740px,94vw);max-height:92dvh;padding:18px;border:1px solid #d6deea;border-radius:16px;color:#172033;background:#fff;font:13px/1.55 system-ui,sans-serif;overflow:auto}
@@ -100,7 +102,7 @@ export async function cropUserImage(file: Blob, initial?: CropRecipe, sourceNoti
   [data-crop-editor] [data-crop-apply]{background:#3159bd;color:white;border:0}
   @media(max-width:520px){dialog[data-crop-editor]{padding:12px}.crop-surface{grid-template-columns:minmax(0,1fr)!important}[data-crop-editor] .crop-preview-wrap{display:flex;gap:10px;align-items:center}[data-crop-editor] canvas[data-crop-preview]{max-height:70px;max-width:100px;margin:0}[data-crop-editor] .crop-fields{grid-template-columns:repeat(2,minmax(0,1fr))}[data-crop-editor] .crop-footer{bottom:-12px}}
   </style>
-  <div class='crop-row'><h3>${tr('裁切图片 / 抠图', 'Crop image / cutout')}</h3><button type='button' data-crop-cancel style='margin-left:auto' aria-label='${tr('关闭', 'Close')}'>×</button></div>
+  <div class='crop-row'><h3>${tr('裁切图片 / Crop image', 'Crop image / cutout')}</h3><button type='button' data-crop-cancel style='margin-left:auto' aria-label='${tr('关闭', 'Close')}'>×</button></div>
   <p class='crop-help' data-crop-notice></p>
   <div class='crop-row' data-crop-modes>
     <button type='button' data-crop-mode='square'>方形 / Square</button><button type='button' data-crop-mode='circle'>圆形 / Circle</button>
