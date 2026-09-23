@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T15:03:00Z",
-  "reason": "Fresh read-only comparison of actual Bridge 2.2.26 local-client reports. Quantify recent final_result captures by discovered/stored figure counts, identify complete successes versus partial/0-figure outcomes, and classify remaining ACS acquisition failures into TIFF/application-octet-stream, HTTP 403, transport, low-resolution fallback, or other causes. Compare same-DOI retained 2.2.25 evidence where available. No media writes.",
+  "requestedAt": "2026-09-23T15:12:00Z",
+  "reason": "Urgent read-only diagnosis: user reports the five most recent capture attempts all failed. Read the five newest actual local-client automatic reports in chronological order and preserve DOI, controllerRevision, final status/reason, discovered/stored figure counts, TOC status, last progress, and failure-event classification (controller timeout, heartbeat, discovery, TIFF/octet-stream, HTTP 403, transport, low-resolution, upload/staging 5xx, identity guard, auth/challenge). Compare whether they share one systemic failure. No media writes.",
   "readOnly": true,
   "mediaWrites": 0
 }
