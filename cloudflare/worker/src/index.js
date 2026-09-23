@@ -35,6 +35,7 @@ import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeM
 import { resolvePaperTitles } from './title-resolution.js';
 import { getArticleSummary, importArticleFulltext } from './article-summary.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
+import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
   alipayNotify,
   authCallback,
@@ -93,6 +94,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/capture-capabilities',
   '/api/media/local-diagnostics',
   '/api/media/tampermonkey-reports',
+  '/api/wechat/js-sdk-signature',
 ]);
 
 const TAMPERMONKEY_CORS_WRITE_PATHS = new Set([
@@ -121,6 +123,7 @@ function browserCorsOriginAllowed(origin) {
     'https://zhou526316-sys.github.io',
     'https://organic-synthesis-gallery.zhou526316.workers.dev',
     'https://organic-synthesis-gallery-public.pages.dev',
+    'https://api.gczhouwld.com',
     'https://pubs.acs.org',
     'https://onlinelibrary.wiley.com',
     'https://pubs.rsc.org',
@@ -205,8 +208,13 @@ async function handleApi(request, env) {
       ai: Boolean(env.AI),
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
+      wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
       integrations: integrationStatus(env).body,
     });
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/wechat/js-sdk-signature') {
+    return resultResponse(await getWeChatJsSdkSignature(request, env), cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {

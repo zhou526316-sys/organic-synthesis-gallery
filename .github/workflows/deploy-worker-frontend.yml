@@ -30,6 +30,7 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       EMAIL_FROM: 'Organic Synthesis Gallery <login@mail.gczhouwld.com>'
       WECHAT_MP_APP_ID: wx28b0fa5a3e28387c
+      WECHAT_MP_APP_SECRET: ${{ secrets.WECHAT_MP_APP_SECRET }}
 
     steps:
       - name: Checkout main
@@ -109,7 +110,7 @@ jobs:
           database_id = "$D1_ID"
           EOF
 
-      - name: Sync configured email secrets
+      - name: Sync configured runtime secrets
         working-directory: cloudflare/worker
         shell: bash
         run: |
@@ -119,12 +120,14 @@ jobs:
           const values = {};
           if (process.env.RESEND_API_KEY) values.RESEND_API_KEY = process.env.RESEND_API_KEY;
           if (process.env.EMAIL_FROM) values.EMAIL_FROM = process.env.EMAIL_FROM;
-          if (!Object.keys(values).length) throw new Error('Email secrets are missing');
-          fs.writeFileSync('/tmp/email-secrets.json', JSON.stringify(values));
+          if (process.env.WECHAT_MP_APP_SECRET) values.WECHAT_MP_APP_SECRET = process.env.WECHAT_MP_APP_SECRET;
+          if (!process.env.WECHAT_MP_APP_SECRET) throw new Error('WECHAT_MP_APP_SECRET is missing');
+          if (!Object.keys(values).length) throw new Error('Runtime secrets are missing');
+          fs.writeFileSync('/tmp/runtime-secrets.json', JSON.stringify(values));
           console.log(`Prepared ${Object.keys(values).length} email secrets.`);
           NODE
-          npx wrangler secret bulk /tmp/email-secrets.json --config wrangler.frontend.toml >/dev/null
-          rm -f /tmp/email-secrets.json
+          npx wrangler secret bulk /tmp/runtime-secrets.json --config wrangler.frontend.toml >/dev/null
+          rm -f /tmp/runtime-secrets.json
 
       - name: Dry-run frontend Worker bundle
         working-directory: cloudflare/worker
