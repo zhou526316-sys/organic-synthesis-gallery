@@ -113,3 +113,7 @@ console.log(`CURATED_MERGE_SUMMARY ${JSON.stringify({
 // Reuse only individually reviewed, digest-bound TOCs; do not restore the quarantined baseline.
 const { mergeReviewedToc } = await import('./merge-reviewed-toc.mjs');
 await mergeReviewedToc();
+
+// Exact asset allowlist only; original quarantine and first recovery stay unchanged.
+const {mergeSealedMediaBatch2}=await import('./merge-sealed-media-batch2.mjs');
+await mergeSealedMediaBatch2();

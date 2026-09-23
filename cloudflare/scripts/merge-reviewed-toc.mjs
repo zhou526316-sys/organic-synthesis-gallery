@@ -54,7 +54,7 @@ export function verifyReviewedAsset(item, bytes) {
 export function trueToc(toc) {
   return Boolean(toc?.available && toc?.imageUrl && !/fallback/i.test(toc.reason || ''));
 }
-async function readPapers(root) {
+export async function readPapers(root) {
   const pub = path.join(root, 'public');
   const encoded = (await readFile(path.join(pub, 'papers.gz.b64'), 'utf8')).trim();
   const base = JSON.parse(gunzipSync(Buffer.from(encoded, 'base64')).toString('utf8'));
