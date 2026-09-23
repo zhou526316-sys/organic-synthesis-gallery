@@ -5,6 +5,10 @@ on:
     paths:
       - '.github/workflows/scope-title-maintenance.yml'
       - 'scripts/smoke-live-chinese-titles.mjs'
+      - 'scripts/test-scope-title-corrections.mjs'
+      - 'scripts/lib/scope-corrections.mjs'
+      - 'shared/chinese-title-overrides.js'
+      - 'audit/literature-scope-corrections.json'
 permissions:
   contents: read
 concurrency:
@@ -20,9 +24,11 @@ jobs:
         with:
           node-version: '22'
       - name: Test explicit exclusions and complete Chinese-title coverage
+        shell: bash
         run: |
-          node scripts/test-scope-title-corrections.mjs
-          node scripts/test-literature-completeness-capability.mjs
+          set -euo pipefail
+          node scripts/test-scope-title-corrections.mjs | tee /tmp/scope-title-regression.json
+          node scripts/test-literature-completeness-capability.mjs | tee /tmp/discovery-capability-regression.json
       - name: Install isolated browser test tools
         run: |
           npm install --no-audit --no-fund
@@ -35,6 +41,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: live-chinese-title-verification
-          path: /tmp/live-chinese-title-smoke.json
+          path: |
+            /tmp/live-chinese-title-smoke.json
+            /tmp/scope-title-regression.json
+            /tmp/discovery-capability-regression.json
           if-no-files-found: warn
           retention-days: 14
