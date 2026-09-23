@@ -1,0 +1,65 @@
+name: Integrate reviewed status glow and caption hooks once
+on:
+  push:
+    branches: [feat/ui-glow-caption-20260923-0955]
+    paths: [.github/workflows/ui30-31-integrate-once.yml]
+permissions:
+  contents: write
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Apply exact reviewed source edits, without production changes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          def load(path, sha):
+              p=Path(path)
+              assert subprocess.check_output(['git','hash-object',str(p)],text=True).strip()==sha, 'Re-review changed source: '+path
+              return p,p.read_text()
+          def replace(text,old,new):
+              assert text.count(old)==1, ('Expected unique integration point', old)
+              return text.replace(old,new)
+          p,text=load('src/user-ui/shared.ts','d5b3c3db1c0fc51bf814f85c75fc2b8f9c7e048a')
+          text=replace(text,"export interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; imageOriginal?: OriginalStatusImage; }", "export type StatusGlow = 'none' | 'soft' | 'pulse' | 'orbit' | 'rainbow';\nexport const STATUS_GLOWS: StatusGlow[] = ['none', 'soft', 'pulse', 'orbit', 'rainbow'];\nexport interface StyleDef { rgb: RGB; shape: Shape; imageData?: string; imageOriginal?: OriginalStatusImage; glow?: StatusGlow; }")
+          method='''  setStatusGlow(id: string, glow: StatusGlow): boolean {
+              const target = this.status(id)?.style;
+              if (!target || !STATUS_GLOWS.includes(glow)) return false;
+              const previous = target.glow;
+              target.glow = glow;
+              try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); }
+              catch {
+                if (previous === undefined) delete target.glow; else target.glow = previous;
+                return false;
+              }
+              this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'global' } }));
+              return true;
+            }
+          '''
+          text=replace(text,'  setStatus(id: string, statusId: string): void {',method+'  setStatus(id: string, statusId: string): void {')
+          p.write_text(text)
+          p,text=load('src/user-ui/paper-actions.ts','7b98a9d4edb7033aec35e2422fb25a52f75a2d75')
+          text=replace(text,"const NAME = 'gallery-paper-actions';","import { bindStatusPresentation, STATUS_PRESENTATION_CSS } from './status-presentation';\n\nconst NAME = 'gallery-paper-actions';")
+          text=replace(text,"statusImageTag(original, 'status-original-action', label)","statusImageTag(original, 'status-original-action', label) + `<span class='status-action-label'>${escapeHtml(label)}</span>`")
+          text=replace(text,"status?.style.imageOriginal ? status.style : undefined","status?.style.imageData ? status.style : undefined")
+          text=replace(text,'      ${SUMMARY_PANEL_STYLES}','      ${SUMMARY_PANEL_STYLES}\n      ${STATUS_PRESENTATION_CSS}')
+          text=replace(text,'    hydrateStatusImages(this.shadow);','    hydrateStatusImages(this.shadow);\n    bindStatusPresentation(this.shadow, this.language, this.paperId);')
+          p.write_text(text)
+          p=Path('tests/status-original-images.spec.ts');text=p.read_text()
+          # Feedback31 supersedes image-only buttons, not original-byte/GIF checks.
+          text=replace(text,"    await expect(action.locator('span')).toHaveCount(0);","    await expect(action.locator('.status-action-label')).toBeVisible();\n    await expect(action.locator('.status-action-label')).toContainText(/将读|To read/);")
+          p.write_text(text)
+          PY
+          git diff --check
+          git diff --stat
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/user-ui/shared.ts src/user-ui/paper-actions.ts tests/status-original-images.spec.ts
+          git rm .github/workflows/ui30-31-integrate-once.yml
+          git commit -m 'feat(ui): connect selectable glow and status labels above original images'
+          git push origin HEAD:feat/ui-glow-caption-20260923-0955
