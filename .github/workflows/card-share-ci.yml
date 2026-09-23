@@ -49,6 +49,11 @@ jobs:
           grep -F 'https://api.gczhouwld.com/?doi=' "$SHARE_PAGE"
           grep -F 'location.replace' "$SHARE_PAGE"
           test -s dist/share-default.png
+          grep -F "data-share-action=\"wechat-copy\"" dist/assets/card-share-*.js || grep -F "wechat-copy" dist/assets/card-share-*.js
+          if grep -F "data-share-action=\"native\"" dist/assets/card-share-*.js; then
+            echo "navigator.share/native share button must not be exposed for WeChat sharing" >&2
+            exit 1
+          fi
 
       - name: Verify 20-second halo contract
         run: |

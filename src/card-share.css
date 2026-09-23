@@ -102,10 +102,20 @@
   line-height: 1;
 }
 .card-share-meta {
-  margin: 8px 0 12px;
+  margin: 8px 0 10px;
   color: #7a8494;
   font: 10px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   overflow-wrap: anywhere;
+}
+.card-share-wechat-tip {
+  margin: 0 0 12px;
+  padding: 9px 10px;
+  border: 1px solid #dce8ff;
+  border-radius: 10px;
+  background: #f6f9ff;
+  color: #526071;
+  font-size: 10px;
+  line-height: 1.55;
 }
 .card-share-actions-grid {
   display: grid;

@@ -179,9 +179,10 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
       <button type="button" class="card-share-close" data-share-close aria-label="${tr('关闭', 'Close')}">×</button>
     </div>
     <div class="card-share-meta"></div>
+    <div class="card-share-wechat-tip">${tr('微信里建议用“微信分享”：它会复制专用卡片链接；到聊天框直接粘贴发送，让微信读取网页卡片预览。', 'For WeChat, use “WeChat share”: it copies the dedicated rich-card link so WeChat can unfurl it when pasted into a chat.')}</div>
     <div class="card-share-actions-grid">
-      <button type="button" data-share-action="native">${tr('系统分享', 'Share…')}</button>
-      <button type="button" data-share-action="copy-link">${tr('复制链接', 'Copy link')}</button>
+      <button type="button" data-share-action="wechat-copy">${tr('微信分享', 'WeChat share')}</button>
+      <button type="button" data-share-action="copy-link">${tr('复制卡片链接', 'Copy card link')}</button>
       <button type="button" data-share-action="copy-text">${tr('复制标题 + DOI + 链接', 'Copy title + DOI + link')}</button>
       <button type="button" data-share-action="qr">${tr('生成二维码', 'Generate QR')}</button>
     </div>
@@ -189,9 +190,6 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
   `;
   panel.querySelector<HTMLElement>('.card-share-title')!.textContent = info.title;
   panel.querySelector<HTMLElement>('.card-share-meta')!.textContent = [info.journal, info.date, info.doi].filter(Boolean).join(' · ');
-  const nativeButton = panel.querySelector<HTMLButtonElement>('[data-share-action="native"]');
-  if (!navigator.share && nativeButton) nativeButton.hidden = true;
-
   panel.addEventListener('click', event => {
     const target = event.target instanceof Element ? event.target : null;
     if (!target) return;
@@ -202,14 +200,12 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
     const action = target.closest<HTMLElement>('[data-share-action]')?.dataset.shareAction;
     if (!action) return;
     void (async () => {
-      if (action === 'native' && navigator.share) {
+      if (action === 'wechat-copy') {
         try {
-          await navigator.share({ title: info.title, text: `${info.journal} · DOI: ${info.doi}`, url: info.url });
-          closePanel();
-        } catch (error) {
-          if (!(error instanceof DOMException && error.name === 'AbortError')) {
-            showToast(tr('系统分享未完成，可改用复制链接。', 'System share did not complete. Use Copy link instead.'));
-          }
+          await copyText(info.url);
+          showToast(tr('微信卡片链接已复制，请到微信聊天框粘贴发送', 'WeChat card link copied. Paste it into a WeChat chat.'));
+        } catch {
+          showToast(tr('复制失败，请使用“复制卡片链接”。', 'Copy failed. Use “Copy card link”.'));
         }
         return;
       }

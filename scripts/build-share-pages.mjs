@@ -1,16 +1,17 @@
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
 
 const SITE_BASE = (process.env.SHARE_SITE_ORIGIN || 'https://api.gczhouwld.com').replace(/\/+$/, '');
 const GALLERY_BASE = (process.env.SHARE_GALLERY_ORIGIN || SITE_BASE).replace(/\/+$/, '');
-const MEDIA_SOURCE = (process.env.GALLERY_BACKEND_SOURCE || 'https://organic-synthesis-gallery.zhou526316.workers.dev').replace(/\/+$/, '');
-const GITHUB_PAGES_BASE = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
+const PUBLISHED_PAGES_BASE = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
 const PUBLIC = path.resolve('public');
 const OUT = path.join(PUBLIC, 'share');
+const COVER_OUT = path.join(PUBLIC, 'share-media');
 const DEFAULT_IMAGE = `${SITE_BASE}/share-default.png`;
-const MEDIA_BATCH_SIZE = 60;
-const MEDIA_CONCURRENCY = 4;
+const MAX_COVER_BYTES = 4_000_000;
+const COVER_CONCURRENCY = 8;
 
 const normalizeDoi = value => {
   if (typeof value !== 'string') return null;
@@ -73,6 +74,21 @@ async function records() {
   return all;
 }
 
+async function publishedMediaIndex() {
+  try {
+    const response = await fetch(`${PUBLISHED_PAGES_BASE}/media-index.json?share-build=${Date.now()}`, {
+      headers: { 'cache-control': 'no-cache', 'user-agent': 'osg-rich-share-builder/2.0' },
+      signal: AbortSignal.timeout(20_000),
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    return payload?.items && typeof payload.items === 'object' ? payload : { items: {} };
+  } catch (error) {
+    console.warn('SHARE_PUBLISHED_MEDIA_INDEX_FAILED', error instanceof Error ? error.message : String(error));
+    return { items: {} };
+  }
+}
+
 async function mapConcurrent(items, concurrency, worker) {
   let cursor = 0;
   await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, async () => {
@@ -84,68 +100,67 @@ async function mapConcurrent(items, concurrency, worker) {
   }));
 }
 
-async function liveMedia(dois) {
-  const result = new Map();
-  const batches = [];
-  for (let offset = 0; offset < dois.length; offset += MEDIA_BATCH_SIZE) {
-    batches.push(dois.slice(offset, offset + MEDIA_BATCH_SIZE));
+function coverExtension(contentType, sourceUrl) {
+  const type = String(contentType || '').split(';')[0].trim().toLowerCase();
+  if (type === 'image/png') return 'png';
+  if (type === 'image/webp') return 'webp';
+  if (type === 'image/gif') return 'gif';
+  if (type === 'image/avif') return 'avif';
+  if (type === 'image/jpeg' || type === 'image/jpg') return 'jpg';
+  try {
+    const ext = new URL(sourceUrl).pathname.match(/\.([a-z0-9]{2,5})$/i)?.[1]?.toLowerCase();
+    if (['png','webp','gif','avif','jpg','jpeg'].includes(ext || '')) return ext === 'jpeg' ? 'jpg' : ext;
+  } catch {}
+  return 'jpg';
+}
+
+function sourceTocUrl(item) {
+  if (!official(item?.toc)) return null;
+  const value = String(item.toc.imageUrl || '').trim();
+  if (!value) return null;
+  try {
+    return new URL(value, `${PUBLISHED_PAGES_BASE}/`).toString();
+  } catch {
+    return null;
   }
+}
+
+async function mirrorPublishedCovers(media, dois) {
+  const result = new Map();
   let failures = 0;
-  await mapConcurrent(batches, MEDIA_CONCURRENCY, async batch => {
+  let candidates = 0;
+  await rm(COVER_OUT, { recursive: true, force: true });
+  await mkdir(COVER_OUT, { recursive: true });
+
+  await mapConcurrent(dois, COVER_CONCURRENCY, async doi => {
+    const item = media?.items?.[doi] || media?.items?.[doi.toLowerCase()] || null;
+    const source = sourceTocUrl(item);
+    if (!source) return;
+    candidates += 1;
     try {
-      const response = await fetch(`${MEDIA_SOURCE}/api/media/batch`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'user-agent': 'osg-rich-share-builder/1.0',
-        },
-        body: JSON.stringify({ dois: batch }),
-        signal: AbortSignal.timeout(15_000),
+      const response = await fetch(source, {
+        headers: { 'cache-control': 'no-cache', 'user-agent': 'osg-rich-share-cover-mirror/1.0' },
+        signal: AbortSignal.timeout(20_000),
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const payload = await response.json();
-      for (const item of payload?.items || []) {
-        const doi = normalizeDoi(item?.doi);
-        if (doi) result.set(doi, item);
-      }
+      const bytes = Buffer.from(await response.arrayBuffer());
+      if (bytes.length < 100 || bytes.length > MAX_COVER_BYTES) throw new Error(`invalid image size ${bytes.length}`);
+      const type = response.headers.get('content-type') || '';
+      if (type && !type.toLowerCase().startsWith('image/')) throw new Error(`invalid content type ${type}`);
+      const ext = coverExtension(type, source);
+      const name = `${createHash('sha256').update(doi + '|' + source).digest('hex').slice(0, 28)}.${ext}`;
+      await writeFile(path.join(COVER_OUT, name), bytes);
+      result.set(doi, {
+        image: `${SITE_BASE}/share-media/${name}`,
+        toc: item.toc,
+      });
     } catch (error) {
       failures += 1;
-      console.warn('SHARE_MEDIA_BATCH_FAILED', error instanceof Error ? error.message : String(error));
+      console.warn('SHARE_TOC_COVER_FAILED', doi, error instanceof Error ? error.message : String(error));
     }
   });
-  return { result, failures, batches: batches.length };
-}
 
-function mediaUrl(value, allowGithubMirror = false) {
-  if (typeof value !== 'string' || !value.trim()) return null;
-  const raw = value.trim();
-  try {
-    const parsed = new URL(raw, `${SITE_BASE}/`);
-    const host = parsed.hostname.toLowerCase();
-    if (
-      parsed.pathname.startsWith('/media/') &&
-      (host === 'organic-synthesis-gallery.zhou526316.workers.dev' || host === 'api.gczhouwld.com')
-    ) {
-      return `${SITE_BASE}${parsed.pathname}${parsed.search}`;
-    }
-    if (/^https?:\/\//i.test(raw)) return parsed.toString();
-    if (allowGithubMirror && /^\/?media-mirror\//i.test(raw)) {
-      return new URL(raw.replace(/^\//, ''), `${GITHUB_PAGES_BASE}/`).toString();
-    }
-  } catch {}
-  return null;
-}
-
-function chooseToc(liveItem, localItem) {
-  if (official(liveItem?.toc)) {
-    const image = mediaUrl(liveItem.toc.imageUrl);
-    if (image) return { toc: liveItem.toc, image, source: 'live-worker' };
-  }
-  if (official(localItem?.toc)) {
-    const image = mediaUrl(localItem.toc.imageUrl, true);
-    if (image) return { toc: localItem.toc, image, source: 'local-manifest' };
-  }
-  return { toc: null, image: DEFAULT_IMAGE, source: 'fallback' };
+  return { result, candidates, failures };
 }
 
 function html(meta, selected) {
@@ -153,13 +168,13 @@ function html(meta, selected) {
   const id = slug(doi);
   const share = `${SITE_BASE}/share/${id}.html`;
   const target = `${GALLERY_BASE}/?doi=${encodeURIComponent(doi)}`;
-  const image = selected.image || DEFAULT_IMAGE;
+  const image = selected?.image || DEFAULT_IMAGE;
   const title = meta.titleZh || meta.title || doi;
   const secondary = [meta.journal, meta.date, `DOI: ${doi}`].filter(Boolean).join(' · ');
   const description = `${secondary}${secondary ? ' — ' : ''}点击进入 Organic Synthesis Gallery，直接定位并高亮这篇文献卡片。`;
   const targetJson = JSON.stringify(target).replace(/</g, '\\u003c');
-  const width = Number(selected.toc?.primary?.width || selected.toc?.width || 0);
-  const height = Number(selected.toc?.primary?.height || selected.toc?.height || 0);
+  const width = Number(selected?.toc?.primary?.width || selected?.toc?.width || 0);
+  const height = Number(selected?.toc?.primary?.height || selected?.toc?.height || 0);
   const imageDims = width > 0 && height > 0
     ? `<meta property="og:image:width" content="${width}"><meta property="og:image:height" content="${height}">`
     : '';
@@ -172,7 +187,7 @@ function html(meta, selected) {
 <meta property="og:url" content="${esc(share)}"><meta property="og:image" content="${esc(image)}"><meta property="og:image:secure_url" content="${esc(image)}">${imageDims}
 <meta property="og:image:alt" content="${esc(title)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(image)}">
 <link rel="image_src" href="${esc(image)}"><link rel="canonical" href="${esc(share)}"><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f5f7fb;color:#172033;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.paper{width:min(560px,100%);overflow:hidden;border:1px solid #dfe5ef;border-radius:20px;background:#fff;box-shadow:0 18px 48px rgba(23,32,51,.12)}.cover{display:grid;place-items:center;min-height:260px;padding:18px;background:#f8fafc}.cover img{display:block;width:100%;max-height:360px;object-fit:contain}.body{padding:18px}.site{color:#3159bd;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}h1{margin:8px 0 10px;font-size:20px;line-height:1.42}.meta{color:#667085;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.open{display:inline-flex;margin-top:15px;padding:10px 14px;border-radius:10px;background:#3159bd;color:#fff;text-decoration:none;font-size:13px;font-weight:800}.hint{margin-top:10px;color:#98a2b3;font-size:10px}</style></head><body>
-<article class="paper"><div class="cover"><img src="${esc(image)}" alt="${esc(title)}"></div><div class="body"><div class="site">Organic Synthesis Gallery</div><h1>${esc(title)}</h1><div class="meta">${esc(secondary)}</div><a class="open" href="${esc(target)}">进入网页并定位这篇文献 →</a><div class="hint">分享卡片封面优先使用官方 TOC；打开后目标卡片会保持 20 秒光环高亮。</div></div></article>
+<article class="paper"><div class="cover"><img src="${esc(image)}" alt="${esc(title)}"></div><div class="body"><div class="site">Organic Synthesis Gallery</div><h1>${esc(title)}</h1><div class="meta">${esc(secondary)}</div><a class="open" href="${esc(target)}">进入网页并定位这篇文献 →</a><div class="hint">微信分享卡片优先使用官方 TOC；打开后目标卡片会保持 20 秒光环高亮。</div></div></article>
 <script>(()=>{const t=${targetJson};setTimeout(()=>location.replace(t),120)})()</script></body></html>`;
 }
 
@@ -192,32 +207,25 @@ for (const record of await records()) {
   merged.set(doi, old);
 }
 
-const localMedia = await readJson('media-index.json', { items: {} });
-const live = await liveMedia([...merged.keys()]);
+const publishedMedia = await publishedMediaIndex();
+const covers = await mirrorPublishedCovers(publishedMedia, [...merged.keys()]);
 await rm(OUT, { recursive: true, force: true });
 await mkdir(OUT, { recursive: true });
 
 let tocCoverCount = 0;
-let liveTocCoverCount = 0;
-let localTocCoverCount = 0;
 for (const [doi, meta] of merged) {
-  const liveItem = live.result.get(doi) || null;
-  const localItem = localMedia?.items?.[doi] || localMedia?.items?.[doi.toLowerCase()] || null;
-  const selected = chooseToc(liveItem, localItem);
-  if (selected.source !== 'fallback') tocCoverCount += 1;
-  if (selected.source === 'live-worker') liveTocCoverCount += 1;
-  if (selected.source === 'local-manifest') localTocCoverCount += 1;
+  const selected = covers.result.get(doi) || null;
+  if (selected) tocCoverCount += 1;
   await writeFile(path.join(OUT, `${slug(doi)}.html`), html(meta, selected), 'utf8');
 }
 
 console.log('SHARE_PAGES_SUMMARY ' + JSON.stringify({
   pages: merged.size,
+  publishedMediaItems: Object.keys(publishedMedia?.items || {}).length,
+  tocCoverCandidates: covers.candidates,
   tocCoverCount,
-  liveTocCoverCount,
-  localTocCoverCount,
+  tocCoverFailures: covers.failures,
   fallbackCoverCount: merged.size - tocCoverCount,
-  mediaBatches: live.batches,
-  mediaBatchFailures: live.failures,
   siteBase: SITE_BASE,
   galleryBase: GALLERY_BASE,
 }));
