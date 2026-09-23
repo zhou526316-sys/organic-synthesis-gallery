@@ -28,13 +28,13 @@ jobs:
           for(let n=0;n<12;n++){
             try{
               const [a,b]=await Promise.all([
-                fetch(base+'gallery-vpn-bridge.user.js?tm224='+Date.now(),{headers:{'cache-control':'no-cache'}}),
-                fetch(base+'toc-mainline.user.js?tm224='+Date.now(),{headers:{'cache-control':'no-cache'}})
+                fetch(base+'gallery-vpn-bridge.user.js?tm225='+Date.now(),{headers:{'cache-control':'no-cache'}}),
+                fetch(base+'toc-mainline.user.js?tm225='+Date.now(),{headers:{'cache-control':'no-cache'}})
               ]);
               if(!a.ok||!b.ok)throw new Error('HTTP '+a.status+'/'+b.status);
               const installer=await a.text(),mainline=await b.text();
               const checks={
-                installerVersion:/^\/\/ @version\s+2\.2\.24$/m.test(installer),
+                installerVersion:/^\/\/ @version\s+2\.2\.25$/m.test(installer),
                 controller:installer.includes("var CONTROLLER_REVISION = '2.2.25';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.25';"),
                 protocol:installer.includes("var VERSION = '6.2.20';")&&mainline.includes("var VERSION = '6.2.20';"),
                 fallback:installer.includes('sameFigureCurrentSrcFallback')&&mainline.includes('sameFigureCurrentSrcFallback'),
