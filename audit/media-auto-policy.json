@@ -20,10 +20,11 @@
   ],
   "verificationMode": "automated_source_identity_digest_and_image_decode",
   "individualSemanticReview": false,
-  "notes": "New server-marked current-generation ACS body figures only. Prefer 20-25 article releases; if fewer than 20 paired TOC+body articles remain and no eligible capture has updated for 15 minutes, release the smaller validated tail instead of waiting indefinitely. A body figure may enter only when the same Pages build already contains an official TOC for that DOI. No historical unquarantine, publisher downloads, TOC fallback substitution, image replacement, or literature additions.",
+  "notes": "Current-generation ACS body figures, including previously staged eligible backlog, are continuously reconsidered. Prefer 20-25 article releases; if fewer than 20 paired TOC+body articles remain and no eligible capture has updated for 15 minutes, release the quiet tail. Independently, if the oldest eligible unpublished staged record has waited 30 minutes, release the aged backlog even while newer captures continue arriving. A body figure may enter only when the same Pages build already contains an official TOC for that DOI. No historical unquarantine, publisher downloads, TOC fallback substitution, image replacement, or literature additions.",
   "minNewArticles": 20,
   "requireOfficialTocInBuild": true,
-  "reviewBatchTarget": "prefer 20-25 articles; flush smaller validated tail after 15 quiet minutes",
+  "reviewBatchTarget": "prefer 20-25 articles; flush quiet tail after 15 minutes or aged eligible backlog after 30 minutes",
   "tailFlushIdleMinutes": 15,
-  "tailFlushMinArticles": 1
+  "tailFlushMinArticles": 1,
+  "backlogMaxWaitMinutes": 30
 }
