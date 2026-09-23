@@ -149,7 +149,7 @@ test('disconnect/reconnect creates no duplicate controls or handlers and print h
 });
 
 
-test('gallery growth reveals navigation without window resize or unrelated module events', async ({ page }) => {
+test('content-root growth reveals navigation without window resize or unrelated module events', async ({ page }) => {
   const evidence = await open(page, 390);
   const nav = page.locator('gallery-page-navigation');
   await page.evaluate(() => {
@@ -163,25 +163,23 @@ test('gallery growth reveals navigation without window resize or unrelated modul
     }
     document.body.style.cssText = 'min-height:0!important;height:auto!important;overflow:visible!important';
     document.documentElement.style.cssText = 'min-height:0!important;height:auto!important;overflow:visible!important';
-    app.style.cssText = 'display:block!important;position:static!important;min-height:0!important;height:auto!important;overflow:visible!important;contain:none!important';
     gallery.replaceChildren();
     gallery.style.cssText = 'display:block!important;position:static!important;min-height:0!important;height:10px!important;overflow:hidden!important;contain:none!important';
+    app.style.cssText = 'display:block!important;position:static!important;min-height:0!important;height:10px!important;overflow:hidden!important;contain:none!important';
   });
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeLessThan(80);
   await expect(nav).toBeHidden();
 
-  // No resize/scroll/custom event is dispatched here. Only the already-observed
-  // content box grows; its resize must refresh the page-extent decision.
+  // No resize/scroll/custom event is dispatched here. The observed #app box
+  // itself grows, mirroring late card layout increasing the application height.
   await page.evaluate(() => {
-    const gallery = document.querySelector<HTMLElement>('#gallery')!;
-    gallery.style.setProperty('height', '2500px', 'important');
+    document.querySelector<HTMLElement>('#app')!.style.setProperty('height', '2500px', 'important');
   });
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeGreaterThan(1000);
   await expect(nav).toBeVisible({ timeout: 1500 });
 
   await page.evaluate(() => {
-    const gallery = document.querySelector<HTMLElement>('#gallery')!;
-    gallery.style.setProperty('height', '10px', 'important');
+    document.querySelector<HTMLElement>('#app')!.style.setProperty('height', '10px', 'important');
   });
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeLessThan(80);
   await expect(nav).toBeHidden({ timeout: 1500 });
