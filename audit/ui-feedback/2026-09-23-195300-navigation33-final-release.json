@@ -1,0 +1,120 @@
+{
+  "recordedAt": "2026-09-23T19:53:00+08:00",
+  "context": "User-approved feedback33 top-bottom navigation final closeout",
+  "status": "product_complete_feedback_status_pending",
+  "approval": "User explicitly approved continuing navigation33 and reader-count work.",
+  "release": {
+    "finalPr": 171,
+    "mergeSha": "039706f1cd5bf6b49ea909d9e4c926c9dde6545a",
+    "deployment": {
+      "githubPagesRun": 35858146093,
+      "githubPagesConclusion": "success",
+      "workerSyncRun": 35858146126,
+      "workerSyncConclusion": "success"
+    }
+  },
+  "implementation": {
+    "previousApprovedChain": [
+      150,
+      166,
+      168,
+      171
+    ],
+    "finalStartupFix": "A startup-only MutationObserver waits for asynchronously inserted #gallery, attaches #app/#gallery to the existing ResizeObserver, schedules the normal update, and disconnects immediately once #gallery exists.",
+    "permanentPolling": false,
+    "readerMarksGenerated": false,
+    "scopeUnchanged": [
+      "reader-count semantics",
+      "literature/publication",
+      "Tampermonkey/Bridge acquisition",
+      "media",
+      "crop",
+      "pinch",
+      "card glow"
+    ]
+  },
+  "premerge": {
+    "head": "b06b1273b06b4aeb628aa3c2ade8e36d9081b29d",
+    "run": 35857567494,
+    "chromium": {
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "artifact": 10748380621,
+      "sha256": "cccde80651b25220d7e042107a2fca7c6662a3f72467b2fdb720710e054971e9"
+    },
+    "webkit": {
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "artifact": 10747379009,
+      "sha256": "e303287371f923084aade60c585847ba5fb767b286eb747f7ceaec9e48058165"
+    },
+    "allCurrentHeadWorkflowsPassed": true
+  },
+  "live": {
+    "run": 35858462991,
+    "reviewedCommit": "039706f1cd5bf6b49ea909d9e4c926c9dde6545a",
+    "apiWritesMocked": true,
+    "productionReaderMarks": 0,
+    "results": [
+      {
+        "entry": "github",
+        "browser": "chromium",
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "artifact": 10748417317,
+        "sha256": "3f22bf3a50a1d68cce6972a6896ab9edf6a9a8b6fa4b41e7e503fa471b0aa8e0"
+      },
+      {
+        "entry": "github",
+        "browser": "webkit",
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "artifact": 10748279402,
+        "sha256": "dbf39f9e264faec40881eecdc9df1a330f5ef236ed73b8a130f71d7e6589a636"
+      },
+      {
+        "entry": "worker",
+        "browser": "chromium",
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "artifact": 10748308910,
+        "sha256": "f0c05658113198b88d21223891b487178cd6e18c67d181d8f7c1285f9f82f0c6"
+      },
+      {
+        "entry": "worker",
+        "browser": "webkit",
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "artifact": 10748472182,
+        "sha256": "c26515756963cb45858bf17cde90ce5d5f777d6de1170991d6975eeeb749a255"
+      }
+    ]
+  },
+  "feedbackCloseout": {
+    "exportRun": 35858965950,
+    "generatedAt": "2026-09-23T12:11:46.463Z",
+    "d1Available": false,
+    "d1Error": "D1 free-tier daily row read limit exhausted",
+    "r2FallbackAvailable": true,
+    "r2FallbackCount": 0,
+    "statusWriteAttempted": false,
+    "reason": "Could not safely reconfirm current open ID33 from D1, so no blind reviewed-status write was performed."
+  },
+  "conversationArtifacts": [
+    "navigation33-release-evidence.zip",
+    "navigation33-live-mobile-top.png",
+    "navigation33-live-mobile-end.png"
+  ]
+}
