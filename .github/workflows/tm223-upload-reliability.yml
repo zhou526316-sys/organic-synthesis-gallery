@@ -1,0 +1,91 @@
+name: Tampermonkey upload reliability regression
+on:
+  push:
+    branches: [fix/stage-storage-reliability]
+    paths:
+      - '.github/workflows/tm223-upload-reliability.yml'
+      - 'scripts/apply-tm223-upload.py'
+      - 'scripts/tm-upload-evidence.fragment.js'
+      - 'scripts/test-tm223-upload.mjs'
+      - 'scripts/test-stage-storage.mjs'
+      - 'cloudflare/worker/src/stage-storage.js'
+  pull_request:
+    branches: [main]
+    paths: ['cloudflare/worker/src/stage-storage.js','scripts/tm-upload-evidence.fragment.js','scripts/test-tm223-upload.mjs']
+permissions:
+  contents: write
+concurrency:
+  group: tm223-upload-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply only upload reliability changes
+        run: |
+          python3 scripts/apply-tm223-upload.py
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/local-captures.js
+          node --check cloudflare/worker/src/stage-storage.js
+          node --check cloudflare/worker/src/index.js
+          git diff --check
+      - name: Reproduce failures and verify bounded retries with zero publisher requests
+        run: |
+          node scripts/test-stage-storage.mjs
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-tm221-window-guard.mjs
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
+      - name: Build actual self-contained installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+      - name: Retain paired capture and passive panel browser regressions
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install chromium
+          node scripts/test-tm-paired-capture.mjs
+          node scripts/test-tm222-live-progress.mjs
+      - name: Commit tested source to feature branch only
+        if: github.event_name == 'push' && github.ref == 'refs/heads/fix/stage-storage-reliability'
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/toc-mainline.user.js cloudflare/worker/src/local-captures.js cloudflare/worker/src/index.js cloudflare/scripts/build-bridge-loader.mjs scripts/validate-tm220-artifacts.mjs scripts/test-tm221-window-guard.mjs scripts/apply-tm222-live-progress.py scripts/patch-tm221-window-guard.py scripts/test-tm-stage-first.mjs
+          # The existing live-check workflow must keep the installer forward revision.
+          # Bot workflow-write permission may be absent; its separate reviewed source patch is handled before PR.
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: apply tested upload-only retries and preserved stage index writes'
+            git push origin HEAD:fix/stage-storage-reliability
+          fi
+          git rev-parse HEAD > "$RUNNER_TEMP/tm223-tested-head.txt"
+      - name: Preserve exact tested code and installer
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tm223-upload-tested
+          path: |
+            public/gallery-vpn-bridge.user.js
+            public/toc-mainline.user.js
+            cloudflare/worker/src/stage-storage.js
+            cloudflare/worker/src/local-captures.js
+            cloudflare/worker/src/index.js
+            scripts/apply-tm223-upload.py
+            scripts/tm-upload-evidence.fragment.js
+            scripts/test-tm223-upload.mjs
+            scripts/test-stage-storage.mjs
+            ${{ runner.temp }}/tm223-tested-head.txt
+          retention-days: 7
