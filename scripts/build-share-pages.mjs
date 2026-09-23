@@ -4,9 +4,10 @@ import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
 
 const SITE_BASE = (process.env.SHARE_SITE_ORIGIN || 'https://api.gczhouwld.com').replace(/\/+$/, '');
-const GALLERY_BASE = (process.env.SHARE_GALLERY_ORIGIN || SITE_BASE).replace(/\/+$/, '');
+const CANONICAL_GALLERY_BASE = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
+const GALLERY_BASE = (process.env.SHARE_GALLERY_ORIGIN || CANONICAL_GALLERY_BASE).replace(/\/+$/, '');
 const SHARE_BUILD_ID = String(process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA || Date.now().toString(36)).slice(0, 12);
-const PUBLISHED_PAGES_BASE = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
+const PUBLISHED_PAGES_BASE = CANONICAL_GALLERY_BASE;
 const PUBLIC = path.resolve('public');
 const OUT = path.join(PUBLIC, 'share');
 const COVER_OUT = path.join(PUBLIC, 'share-media');

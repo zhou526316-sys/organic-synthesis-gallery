@@ -3,7 +3,6 @@ on:
   pull_request:
     paths:
       - 'index.html'
-      - 'index.html'
       - 'src/main.ts'
       - 'src/bootstrap.ts'
       - 'src/card-share.ts'
@@ -48,7 +47,7 @@ jobs:
           grep -F 'property="og:image"' "$SHARE_PAGE"
           grep -F 'meta itemprop="image"' "$SHARE_PAGE"
           grep -F 'https://api.gczhouwld.com/share/' "$SHARE_PAGE"
-          grep -F 'https://api.gczhouwld.com/?doi=' "$SHARE_PAGE"
+          grep -F 'https://zhou526316-sys.github.io/organic-synthesis-gallery/?doi=' "$SHARE_PAGE"
           grep -F 'location.replace' "$SHARE_PAGE"
           test -s dist/share-default.png
           grep -F "wechat-copy" dist/assets/card-share-*.js
@@ -62,11 +61,14 @@ jobs:
           grep -F "&sharev=" scripts/build-share-pages.mjs
           grep -F "Pasting the URL into chat only sends a plain link." dist/assets/card-share-*.js
 
-      - name: Verify legacy GitHub Pages quarantine
+      - name: Verify canonical Gallery routing
         run: |
-          grep -F "LEGACY_GITHUB_PAGES_HOST = 'zhou526316-sys.github.io'" index.html
-          grep -F "new URL('https://api.gczhouwld.com/')" index.html
-          grep -F "window.location.replace(destination.toString())" index.html
+          grep -F "const CANONICAL_GALLERY = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/'" index.html
+          grep -F "host === 'organic-synthesis-gallery-public.pages.dev'" index.html
+          ! grep -F "LEGACY_GITHUB_PAGES_HOST" index.html
+          ! grep -F "new URL('https://api.gczhouwld.com/')" index.html
+          grep -F "const CANONICAL_GALLERY_ORIGIN = 'https://zhou526316-sys.github.io/organic-synthesis-gallery'" src/card-share.ts
+          grep -F "const CANONICAL_GALLERY_BASE = 'https://zhou526316-sys.github.io/organic-synthesis-gallery'" scripts/build-share-pages.mjs
 
       - name: Verify 20-second halo contract
         run: |

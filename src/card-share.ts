@@ -44,12 +44,13 @@ function shareSlug(doi: string): string {
 }
 
 const RICH_SHARE_ORIGIN = 'https://api.gczhouwld.com';
+const CANONICAL_GALLERY_ORIGIN = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
 const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_BUILD_ID__
   ? __GALLERY_BUILD_ID__
   : 'runtime';
 
 function galleryDeepLink(doi: string): string {
-  return `${RICH_SHARE_ORIGIN}/?doi=${encodeURIComponent(doi)}&sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
+  return `${CANONICAL_GALLERY_ORIGIN}/?doi=${encodeURIComponent(doi)}&sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
 }
 
 function shareUrl(doi: string): string {
@@ -170,7 +171,7 @@ async function configureWeChatShare(info: ShareInfo): Promise<void> {
   const desc = [info.journal, info.date, `DOI: ${info.doi}`].filter(Boolean).join(' · ');
   if (typeof wx.updateAppMessageShareData !== 'function') throw new Error('wechat_friend_share_api_missing');
   if (typeof wx.updateTimelineShareData !== 'function') throw new Error('wechat_timeline_share_api_missing');
-  const link = galleryDeepLink(info.doi);
+  const link = info.url;
   wx.updateAppMessageShareData({ title: info.title, desc, link, imgUrl });
   wx.updateTimelineShareData({
     title: [info.title, info.journal].filter(Boolean).join(' · '),
