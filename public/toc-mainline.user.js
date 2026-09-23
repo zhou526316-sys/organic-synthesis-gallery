@@ -1638,7 +1638,24 @@ function embeddedJobDois(value) {
     throw new Error('page_wait_timeout');
   }
 
-  async function pageFetchCandidate(candidate, trace) {
+  function captureRemainingMs(job) {
+    if (!job || !Number(job.captureDeadline)) return Infinity;
+    return Number(job.captureDeadline) - Date.now();
+  }
+
+  function captureRequestTimeout(job, preferredMs) {
+    var remaining=captureRemainingMs(job);
+    if (!Number.isFinite(remaining)) return Number(preferredMs||12000);
+    if (remaining <= 1500) return 0;
+    return Math.max(1000,Math.min(Number(preferredMs||12000),remaining-1000));
+  }
+
+  function captureDeadlineNear(job,reserveMs) {
+    var remaining=captureRemainingMs(job);
+    return Number.isFinite(remaining) && remaining <= Number(reserveMs||1500);
+  }
+
+  async function pageFetchCandidate(job, candidate, trace) {
     var requestUrl = candidateRequestUrl(candidate);
     pushTrace(trace, {
       stage: 'page_fetch',
@@ -1650,12 +1667,17 @@ function embeddedJobDois(value) {
       candidateScore: candidate.score
     });
     var requestStarted=Date.now();
+    var requestTimeout=captureRequestTimeout(job,12000);
+    if(!requestTimeout){
+      pushTrace(trace,{stage:'capture_deadline',event:'candidate_skipped',status:'deadline',url:requestUrl,message:'page_fetch_not_started;remainingMs='+Math.max(0,captureRemainingMs(job))});
+      return null;
+    }
     try {
       var response = await fetch(requestUrl, {
         method: 'GET',
         credentials: 'include',
         cache: 'force-cache',
-        signal: AbortSignal.timeout(12000),
+        signal: AbortSignal.timeout(requestTimeout),
         redirect: 'follow',
         referrer: location.href
       });
@@ -1694,7 +1716,7 @@ function embeddedJobDois(value) {
     }
   }
 
-  async function gmFetchCandidate(candidate, trace) {
+  async function gmFetchCandidate(job, candidate, trace) {
     var requestUrl = candidateRequestUrl(candidate);
     pushTrace(trace, {
       stage: 'gm_fetch',
@@ -1706,12 +1728,17 @@ function embeddedJobDois(value) {
       candidateScore: candidate.score
     });
     var requestStarted=Date.now();
+    var requestTimeout=captureRequestTimeout(job,12000);
+    if(!requestTimeout){
+      pushTrace(trace,{stage:'capture_deadline',event:'candidate_skipped',status:'deadline',url:requestUrl,message:'gm_fetch_not_started;remainingMs='+Math.max(0,captureRemainingMs(job))});
+      return null;
+    }
     try {
       var response = await gmRequest({
         method: 'GET',
         url: requestUrl,
         responseType: 'arraybuffer',
-        timeout: 12000,
+        timeout: requestTimeout,
         headers: {
           Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
           Referer: location.href
@@ -1828,15 +1855,15 @@ function embeddedJobDois(value) {
     });
   }
 
-  async function acquireImage(candidate, trace) {
-    var image = await pageFetchCandidate(candidate, trace);
+  async function acquireImage(job, candidate, trace) {
+    var image = await pageFetchCandidate(job, candidate, trace);
     if (image && image.contentType === 'image/tiff') {
       pushTrace(trace,{stage:'candidate_format',event:'unsupported_tiff',status:'unsupported',url:image.sourceUrl||candidate.url,contentType:'image/tiff',byteLength:image.byteLength,message:'browser/Worker protocol does not accept TIFF; try another variant from the same labelled figure'});
       image = null;
       // Do not download the identical TIFF again through GM; move directly to a page-rendered fallback.
       image = await canvasCandidate(candidate, trace);
     } else if (!image) {
-      image = await gmFetchCandidate(candidate, trace);
+      image = await gmFetchCandidate(job, candidate, trace);
       if (image && image.contentType === 'image/tiff') {
         pushTrace(trace,{stage:'candidate_format',event:'unsupported_tiff',status:'unsupported',url:image.sourceUrl||candidate.url,contentType:'image/tiff',byteLength:image.byteLength,message:'browser/Worker protocol does not accept TIFF; try another variant from the same labelled figure'});
         image = null;
@@ -2520,6 +2547,7 @@ function embeddedJobDois(value) {
   async function sameFigureCurrentSrcFallback(job, candidates, trace, cache, role) {
     if (role !== 'figure' || job.publisher !== 'acs') return null;
     for (var i = 0; i < candidates.length; i += 1) {
+      if (captureDeadlineNear(job,1500)) break;
       var candidate = candidates[i], element = candidate && candidate.element;
       if (!(element instanceof HTMLImageElement) || !element.complete || element.naturalWidth < 1) continue;
       var scope = visualScope(element);
@@ -2531,7 +2559,7 @@ function embeddedJobDois(value) {
       assertBoundCaptureJob(job,current);
       var fallback = Object.assign({},candidate,{url:current,source:'same_figure_current_src',element:element});
       var image = cache.get(current);
-      if (image === undefined) { image = await acquireImage(fallback,trace); cache.set(current,image); }
+      if (image === undefined) { image = await acquireImage(job,fallback,trace); cache.set(current,image); }
       if (!image) continue;
       var quality = measuredQuality(image,role);
       pushTrace(trace,{stage:'same_figure_fallback',event:'measured',status:quality.quality,url:image.sourceUrl||current,
@@ -2545,14 +2573,17 @@ function embeddedJobDois(value) {
   async function acquireBestVisual(job, candidates, trace, cache, role) {
     var best=null;
     for (var i=0;i<Math.min(candidates.length,4);i+=1) {
-      if (Date.now()>job.captureDeadline) break;
+      if (captureDeadlineNear(job,1500)) {
+        pushTrace(trace,{stage:'capture_deadline',event:'candidate_loop_stop',status:'deadline',message:'role='+role+';remainingMs='+Math.max(0,captureRemainingMs(job))});
+        break;
+      }
       if (isAbortRequested()) throw new Error('user_aborted');
       var candidate=candidates[i];
       assertBoundCaptureJob(job,candidate.url);
       captureLiveUpdate(job,'downloading',{label:role==='toc'?'TOC':candidate.label});
       try {
         var image=cache.get(candidate.url);
-        if (image===undefined) { image=await acquireImage(candidate,trace); cache.set(candidate.url,image); }
+        if (image===undefined) { image=await acquireImage(job,candidate,trace); cache.set(candidate.url,image); }
         if (!image) continue;
         // Preserve the URL that actually supplied the bytes, including canvas and redirects.
         var actual=image.sourceUrl||candidate.url;
