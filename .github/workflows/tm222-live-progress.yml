@@ -6,10 +6,13 @@ on:
       - 'scripts/tm-live-progress.fragment.js'
       - 'scripts/apply-tm222-live-progress.py'
       - 'scripts/test-tm222-live-progress.mjs'
+      - 'scripts/tm-auto-report.fragment.js'
+      - 'scripts/apply-tm222-auto-report.py'
+      - 'scripts/test-tm222-auto-report.mjs'
       - '.github/workflows/tm222-live-progress.yml'
   pull_request:
     branches: [main]
-    paths: ['public/toc-mainline.user.js', 'scripts/test-tm222-live-progress.mjs', 'scripts/tm-live-progress.fragment.js']
+    paths: ['public/toc-mainline.user.js', 'scripts/test-tm222-live-progress.mjs', 'scripts/tm-live-progress.fragment.js', 'scripts/tm-auto-report.fragment.js']
 permissions:
   contents: write
 concurrency:
@@ -27,17 +30,19 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Apply exact observer-only patch
+      - name: Apply exact observer and durable-report patches
         run: |
           python3 scripts/apply-tm222-live-progress.py
+          python3 scripts/apply-tm222-auto-report.py
           node --check public/toc-mainline.user.js
           git diff --check
-      - name: Keep all controller identity and receipt checks
+      - name: Keep controller identity receipts and report-delivery checks
         run: |
           node scripts/test-tm221-window-guard.mjs
           node scripts/test-media-identity-v220.mjs
           node scripts/test-tm-stage-first.mjs
           node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
       - name: Build actual installable Bridge
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
@@ -53,24 +58,27 @@ jobs:
           npx playwright install chromium
           node scripts/test-tm-paired-capture.mjs
           node scripts/test-tm222-live-progress.mjs
+      - name: Read detailed existing user failure evidence without media writes
+        run: node scripts/read-tm-current-failures.mjs
       - name: Preserve tested sources on isolated branch
         if: github.event_name == 'push' && github.ref == 'refs/heads/feat/tm222-live-progress'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs scripts/validate-tm220-artifacts.mjs scripts/test-tm221-window-guard.mjs scripts/test-tm-stage-first.mjs scripts/tm-live-progress.fragment.js
+          git add public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs scripts/validate-tm220-artifacts.mjs scripts/test-tm221-window-guard.mjs scripts/test-tm-stage-first.mjs scripts/tm-live-progress.fragment.js scripts/test-tm222-live-progress.mjs
           if ! git diff --cached --quiet; then
-            git commit -m 'feat: add tested per-image live progress as Bridge 2.2.22'
+            git commit -m 'fix: preserve per-image failures and final reports before closing publisher tabs'
             git push origin HEAD:feat/tm222-live-progress
           fi
           git rev-parse HEAD > "$RUNNER_TEMP/tm222-tested-head.txt"
-      - name: Preserve panel rendering evidence
+      - name: Preserve panel and delivery evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tm222-live-panel-tested
           path: |
             ${{ runner.temp }}/tm222-*.png
+            ${{ runner.temp }}/tm222-*.json
             ${{ runner.temp }}/tm222-tested-head.txt
             public/toc-mainline.user.js
             public/gallery-vpn-bridge.user.js
