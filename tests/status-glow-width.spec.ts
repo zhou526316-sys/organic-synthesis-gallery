@@ -206,3 +206,25 @@ test('thick glow does not cover status text or change original GIF bytes on a na
   await expect(actions.locator('.bar > button.action')).toHaveCount(4);
   expect(evidence.errors).toEqual([]); expect(evidence.marks).toEqual([]);
 });
+
+
+test('feedback launcher yields to an open editor then restores without losing position', async ({ page }) => {
+  const evidence = watch(page);
+  const actions = await open(page, 390);
+  const launcher = page.locator('site-feedback-widget .site-feedback-tab');
+  await actions.locator('[data-action="close"]').click();
+  await expect(launcher).toBeVisible();
+  const before = (await launcher.boundingBox())!;
+  const positionKeys = await page.evaluate(() => [localStorage.getItem('site-feedback-tab-position-v1'), localStorage.getItem('site-feedback-widget-position-v1')]);
+  await button(actions).click();
+  await expect(range(actions)).toBeVisible();
+  await expect(launcher).not.toBeVisible();
+  await actions.locator('[data-action="close"]').click();
+  await expect(launcher).toBeVisible();
+  const after = (await launcher.boundingBox())!;
+  expect(after.x).toBe(before.x); expect(after.y).toBe(before.y);
+  expect(await page.evaluate(() => [localStorage.getItem('site-feedback-tab-position-v1'), localStorage.getItem('site-feedback-widget-position-v1')])).toEqual(positionKeys);
+  await launcher.click();
+  await expect(page.locator('.site-feedback-panel')).toBeVisible();
+  expect(evidence.errors).toEqual([]); expect(evidence.marks).toEqual([]);
+});
