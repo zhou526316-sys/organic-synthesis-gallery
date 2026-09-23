@@ -1,0 +1,52 @@
+name: Verify PR147 on current unmodified browser engines
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui147-current-browser-compatibility.yml']
+permissions:
+  contents: read
+jobs:
+  compatibility:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [webkit, chromium]
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 58e0a99cceeae5c85f187400674d37ab620bfcae
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install official Playwright1.63 and its matching browser without patches
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.63.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/current-browser-install.log 2>&1 || { tail -60 /tmp/current-browser-install.log; exit 1; }
+          npx tsc --noEmit
+          npm run build
+      - name: Record exact source and untouched acceptance tests
+        run: |
+          mkdir -p current-browser-results
+          git rev-parse HEAD > current-browser-results/source.txt
+          npx --no-install playwright --version > current-browser-results/browser-tool.txt
+          sha256sum tests/status-original-images.spec.ts tests/animated-image-evidence.ts tests/status-glow-width.spec.ts tests/card-glow-target.spec.ts > current-browser-results/test-hashes.txt
+          git diff --exit-code -- src/ public/ shared/ tests/
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/current-browser-preview.log 2>&1 &
+          for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
+          exit 1
+      - name: Run unchanged card target, thickness, GIF lifecycle and static negative control
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: current-browser-results/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/card-glow-target.spec.ts tests/status-glow-width.spec.ts tests/status-original-images.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=current-browser-results/tests 2>&1 | tee current-browser-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: current-browser-${{ matrix.browser }}
+          path: current-browser-results/
+          retention-days: 7
