@@ -1,0 +1,35 @@
+{
+  "recordedAt": "2026-09-23T11:47:44+08:00",
+  "context": "User interrupted the UI continuation with a scope correction",
+  "userInstruction": "光效粗细说的是卡片的光效，按钮不需要",
+  "correctTarget": "The complete literature card (#gallery > .card), not reading-status buttons, chips or choice labels.",
+  "previousInterpretation": "Earlier button glow/thickness implementation and its acceptance results do not fulfill this clarified requirement.",
+  "candidate": {
+    "pr": 147,
+    "head": "54f61a2b06524d16320a349a7e0f351a6e0bc42a",
+    "status": "implemented_pending_verification_not_deployed",
+    "source": ["src/user-ui/card-glow.ts", "src/user-ui/status-presentation.ts", "src/user-ui/status-glow-width.ts"],
+    "behavior": [
+      "Existing per-status glow mode and1–6px width apply to the complete card edge.",
+      "No decorative glow is applied to buttons, state chips or editor choice labels; their existing colors, image and caption remain.",
+      "Controls explicitly read 卡片光效 and 卡片光效粗细.",
+      "Preview affects the current matching-status card; committed preferences update matching cards through the existing store.",
+      "Card overlay cannot intercept clicks and does not alter layout dimensions. Off removes both the new effect and the old unconditional card border animation.",
+      "Preview cancellation/close and save failure restore saved appearance; existing reduced-motion handling remains."
+    ]
+  },
+  "verification": {
+    "cardWidthRunId": 35815577994,
+    "coverage": "Existing9 drag/keyboard/storage/cancel/GIF cases retargeted to the card; added2 explicit full-card/zero-button-glow cases. No acceptance timeouts increased.",
+    "pending": true,
+    "productionReaderWritesAllowed": false
+  },
+  "scope": {
+    "captureBridgeChanged": false,
+    "productionLiteratureChanged": false,
+    "publicationGateChanged": false,
+    "feedback32Closed": false,
+    "businessReaderCountIssueClaimedResolved": false
+  },
+  "integrationNote": "Initial Actions source integration also tried to alter a workflow and its push was rejected for lacking workflows permission. No branch change resulted. Corrected integration used contents-only changes; workflow edits and helper removal used the authorized GitHub connector."
+}
