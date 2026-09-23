@@ -1,0 +1,53 @@
+name: Sealed media recovery batch two tests
+on:
+  push:
+    branches: [fix/sealed-media-recovery-batch2]
+    paths:
+      - 'scripts/materialize-sealed-media-batch2.py'
+      - 'scripts/test-sealed-media-batch2.mjs'
+      - 'cloudflare/scripts/merge-sealed-media-batch2.mjs'
+      - '.github/workflows/sealed-media-batch2-workbench.yml'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: sealed-media-batch2-workbench
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Materialize only the reviewed frozen objects
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/materialize-sealed-media-batch2.py
+      - name: Validate identity role integrity and corpus preservation
+        run: |
+          node --check cloudflare/scripts/merge-sealed-media-batch2.mjs
+          node scripts/test-reviewed-toc.mjs
+          node scripts/test-sealed-media-batch2.mjs
+          node cloudflare/scripts/verify-static-media-integrity.mjs
+          git diff --check
+      - name: Preserve tested bundle on feature branch only
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = 'refs/heads/fix/sealed-media-recovery-batch2'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit/media-recovery/batch2 cloudflare/scripts/merge-reviewed-toc.mjs cloudflare/scripts/merge-curated-pages.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m 'recovery: preserve verified historical TOC and Figure 1 objects'
+            git push origin HEAD:fix/sealed-media-recovery-batch2
+          fi
+          git rev-parse HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sealed-media-batch2-dryrun
+          path: ${{ runner.temp }}/sealed-recovery-dryrun.json
+          retention-days: 7
