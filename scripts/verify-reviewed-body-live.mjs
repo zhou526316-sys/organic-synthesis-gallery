@@ -5,7 +5,7 @@ import {chromium} from 'playwright';
 const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
 const out=process.env.RUNNER_TEMP+'/body-live';await mkdir(out,{recursive:true});
 async function get(p){const r=await fetch(new URL(p,base),{headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(25000)});assert.equal(r.status,200,p);return Buffer.from(await r.arrayBuffer());}
-const report={checkedAt:new Date().toISOString(),productionWrites:0,publicationId:'reviewed-body-batch1-20260923',files:[],cards:[],browserRenderingVerified:false};
+const report={checkedAt:new Date().toISOString(),productionWrites:0,publicationId:'reviewed-body-batch1-20260923',files:[],cards:[],browserRenderingVerified:false,browserErrors:[],failureSnapshot:null};
 try{
  const status=JSON.parse(await get('body-publication-status.json?audit='+Date.now()));
  const media=JSON.parse(await get('media-index.json?audit='+Date.now()));
@@ -32,18 +32,27 @@ try{
    const r=route.request();if(!['GET','HEAD','OPTIONS'].includes(r.method()))return route.fulfill({status:503,body:'read-only browser acceptance; production write blocked'});
    return route.continue();
   });
-  const page=await context.newPage();await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});await page.locator('#search').waitFor({timeout:30000});
+  const page=await context.newPage();page.on('pageerror',e=>report.browserErrors.push(String(e.message).slice(0,500)));
+  await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});await page.locator('#search').waitFor({timeout:30000});
   for(const [i,paper] of status.perDoi.entries()){
-   await page.locator('#search').fill(paper.doi);
-   const strip=page.locator('.figure-strip-slot[data-figure-doi="'+paper.doi+'"]');await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
-   await page.waitForFunction(({doi,n})=>document.querySelectorAll('.figure-strip-slot[data-figure-doi="'+doi+'"] .figure-thumb img').length===n,{doi:paper.doi,n:paper.figures},{timeout:20000});
-   await strip.locator('.figure-thumb img').evaluateAll(images=>images.forEach(image=>{image.loading='eager';}));
-   await page.waitForFunction(doi=>[...document.querySelectorAll('.figure-strip-slot[data-figure-doi="'+doi+'"] .figure-thumb img')].every(x=>x.complete&&x.naturalWidth>0),paper.doi,{timeout:25000});
-   const figures=await strip.locator('.figure-thumb img').evaluateAll(images=>images.map(x=>({label:x.alt,url:x.currentSrc||x.src,width:x.naturalWidth,height:x.naturalHeight})));
-   assert.equal(figures.length,paper.figures);assert.ok(await strip.isVisible());
-   const rect=await strip.boundingBox();assert.ok(rect&&rect.height>0&&rect.width>0);
-   const card=strip.locator('xpath=ancestor::article[1]');await card.screenshot({path:out+'/card-'+i+'.png'});
-   report.cards.push({doi:paper.doi,visible:true,figures:figures.length,allImagesDecoded:true,images:figures,screenshot:'card-'+i+'.png'});
+   const selector='.figure-strip-slot[data-figure-doi="'+paper.doi+'"]';
+   try{
+    await page.locator('#search').fill(paper.doi);
+    // Normal keyboard dismissal, without rewriting card DOM or replacing application data.
+    await page.locator('#search').press('Escape');
+    const strip=page.locator(selector);await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
+    await page.waitForFunction(({doi,n})=>document.querySelectorAll('.figure-strip-slot[data-figure-doi="'+doi+'"] .figure-thumb img').length===n,{doi:paper.doi,n:paper.figures},{timeout:20000});
+    await strip.locator('.figure-thumb img').evaluateAll(images=>images.forEach(image=>{image.loading='eager';}));
+    await page.waitForFunction(doi=>[...document.querySelectorAll('.figure-strip-slot[data-figure-doi="'+doi+'"] .figure-thumb img')].every(x=>x.complete&&x.naturalWidth>0),paper.doi,{timeout:25000});
+    const figures=await strip.locator('.figure-thumb img').evaluateAll(images=>images.map(x=>({label:x.alt,url:x.currentSrc||x.src,width:x.naturalWidth,height:x.naturalHeight})));
+    assert.equal(figures.length,paper.figures);assert.ok(await strip.isVisible());
+    const rect=await strip.boundingBox();assert.ok(rect&&rect.height>0&&rect.width>0);
+    const card=strip.locator('xpath=ancestor::article[1]');await card.screenshot({path:out+'/card-'+i+'.png'});
+    report.cards.push({doi:paper.doi,visible:true,figures:figures.length,allImagesDecoded:true,lazyImagesMadeEagerForDecodeCheck:true,images:figures,screenshot:'card-'+i+'.png'});
+   }catch(e){
+    report.failureSnapshot=await page.evaluate(({selector,doi})=>({doi,search:document.querySelector('#search')?.value,count:document.querySelectorAll(selector+' .figure-thumb img').length,html:document.querySelector(selector)?.outerHTML?.slice(0,20000)}),{selector,doi:paper.doi});
+    await page.screenshot({path:out+'/failure.png'});throw e;
+   }
   }
   report.browserRenderingVerified=true;
  }finally{await browser.close();}
