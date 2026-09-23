@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const SOURCE = (process.env.GALLERY_BACKEND_SOURCE || 'https://organic-synthesis-gallery.zhou526316.workers.dev').replace(/\/$/, '');
 const PUBLIC_DIR = path.resolve('public');
@@ -17,7 +18,7 @@ function normalizeDoi(value) {
   return /^10\.\d{4,9}\/\S+$/i.test(cleaned) ? cleaned : null;
 }
 
-function embeddedKnownDois(value) {
+export function embeddedKnownDois(value) {
   let decoded=String(value||'').split(/[?#]/,1)[0];
   for(let i=0;i<3;i+=1){
     try{const next=decodeURIComponent(decoded);if(next===decoded)break;decoded=next;}catch{break;}
@@ -36,7 +37,7 @@ function embeddedKnownDois(value) {
   return [...found].filter(Boolean);
 }
 
-function captureBelongsToDoi(capture, doi) {
+export function captureBelongsToDoi(capture, doi) {
   const target=normalizeDoi(doi||'');
   if(!target)return false;
   const embedded=[...new Set([
@@ -250,4 +251,4 @@ async function main() {
   if (failures && merged === 0) process.exitCode = 2;
 }
 
-await main();
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();
