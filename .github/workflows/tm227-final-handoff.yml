@@ -4,7 +4,7 @@ on:
   push:
     branches: [fix/tm227-final-result-handoff]
     paths:
-      - '.github/workflows/tm226-body-discovery.yml'
+      - '.github/workflows/tm227-final-handoff.yml'
       - '.github/workflows/tm224-live-acceptance.yml'
       - '.github/workflows/tm222-live-acceptance.yml'
       - 'public/toc-mainline.user.js'
@@ -49,8 +49,8 @@ jobs:
           set -euo pipefail
           npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
           npx playwright install --with-deps chromium
-          node scripts/test-tm224-acquisition.mjs | tee "$RUNNER_TEMP/tm226-acquisition.log"
-          grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm226-acquisition.log"
+          node scripts/test-tm224-acquisition.mjs | tee "$RUNNER_TEMP/tm227-acquisition.log"
+          grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm227-acquisition.log"
           node scripts/test-tm-paired-capture.mjs
           node scripts/test-tm222-live-progress.mjs
 
