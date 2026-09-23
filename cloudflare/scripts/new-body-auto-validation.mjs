@@ -49,7 +49,7 @@ export function conflictKeys(rows){
   const owners=new Map(),identities=new Map(),sources=new Map(),conflicts=new Set();
   for(const row of rows){
     const key=row.doi+'|'+row.id;
-    for(const [map,value,owner] of [[owners,row.sha256||row.contentHash,row.doi],[identities,key,(row.sha256||row.contentHash)],[sources,row.sourceUrl,key]]){
+    for(const [map,value,owner] of [[owners,String(row.sha256||row.contentHash||'').slice(0,32),key],[identities,key,(row.sha256||row.contentHash)],[sources,row.sourceUrl,key]]){
       if(!value)continue;
       const prev=map.get(value);
       if(prev&&prev.owner!==owner){conflicts.add(prev.key);conflicts.add(key);}
@@ -68,7 +68,7 @@ export async function createImageDecoder(){
     async decode(row,bytes){
       const result=await page.evaluate(async({data,type})=>{
         if(type==='image/svg+xml'){
-          const raw=atob(data);const xml=new DOMParser().parseFromString(raw,'image/svg+xml');
+          const raw=new TextDecoder().decode(Uint8Array.from(atob(data),c=>c.charCodeAt(0)));const xml=new DOMParser().parseFromString(raw,'image/svg+xml');
           if(xml.querySelector('parsererror')||xml.documentElement.localName!=='svg')throw new Error('auto_svg_parse_error');
           if(xml.getElementsByTagName('*').length>100000)throw new Error('auto_svg_too_complex');
         }

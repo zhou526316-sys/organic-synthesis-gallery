@@ -27,7 +27,8 @@ async function configuration(root){
 export async function readLiveInputs(){
   const [priorBytes,mediaBytes]=await Promise.all([fetchStored(SNAPSHOT,20000000,true),fetchStored('media-index.json')]);
   const live=JSON.parse(mediaBytes),previous=priorBytes?JSON.parse(priorBytes):{policyId:POLICY_ID,items:[],attempts:{}};
-  requireBody(previous.policyId===POLICY_ID&&Array.isArray(previous.items)&&previous.items.length<=2000,'auto_previous_snapshot_invalid');
+  requireBody(previous.policyId===POLICY_ID&&Array.isArray(previous.items)&&previous.items.length<=2000&&(!priorBytes||previous.count===previous.items.length),'auto_previous_snapshot_invalid');
+  requireBody(new Set(previous.items.map(x=>x.record.doi+'|'+x.record.id)).size===previous.items.length,'auto_previous_duplicate_identity');
   if(!priorBytes)requireBody(!Object.values(live.items||{}).some(x=>x.figures?.figures?.some(f=>f.publicationId===POLICY_ID)),'auto_previous_snapshot_missing');
   let stage=null,stageError=null;
   try{stage=JSON.parse(await fetchStored(WORKER+'/api/article-figures/staged'));requireBody(Array.isArray(stage.items)&&stage.count===stage.items.length&&stage.count<=2000,'auto_stage_truncated_or_invalid');}
