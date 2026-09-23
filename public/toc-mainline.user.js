@@ -39,7 +39,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.26';
+  var CONTROLLER_REVISION = '2.2.27';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
@@ -1240,7 +1240,7 @@ function embeddedJobDois(value) {
         var key = context.label + '|' + url;
         if (seen.has(key) || reject(context.caption, url) || !candidateBelongsToJob(url, job)) return;
         seen.add(key);
-        rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:context.label,text:context.caption,source:'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
+        rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:context.label,text:context.caption,source:sourceName||'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
       });
     });
     rows.sort(function (a,b) { return String(a.label).localeCompare(String(b.label),undefined,{numeric:true}) || b.score-a.score; });
@@ -1348,7 +1348,8 @@ function embeddedJobDois(value) {
     return urls;
   }
 
-  async function iframeCandidates(job, trace) {
+  async function iframeCandidates(job, trace, mode) {
+    mode = mode || 'toc';
     var urls = iframeSourceUrls(job);
     if (!urls.length) return [];
     var best = [];
@@ -1404,7 +1405,11 @@ function embeddedJobDois(value) {
                   }
                 });
               }
-              var discovered = collectCandidates(job, trace, doc, current, 'iframe_dom', true);
+              var discovered = mode === 'paired'
+                ? collectCandidates(job, trace, doc, current, 'iframe_dom', true).concat(collectArticleFigureCandidates(job, trace, doc, current, 'iframe_body'))
+                : mode === 'figures'
+                  ? collectArticleFigureCandidates(job, trace, doc, current, 'iframe_body')
+                  : collectCandidates(job, trace, doc, current, 'iframe_dom', true);
               if (discovered.length) {
                 var merged = new Map();
                 bestRows.concat(discovered).forEach(function (row) {
@@ -1416,7 +1421,7 @@ function embeddedJobDois(value) {
                   return b.score - a.score;
                 });
               }
-              if (bestRows.some(function (row) { return row.kind === 'official'; })) return finish(bestRows);
+              if (mode !== 'figures' && bestRows.some(function (row) { return row.kind === 'official'; }) && (mode !== 'paired' || bestRows.some(function (row) { return row.kind === 'article_figure'; }))) return finish(bestRows);
               var elapsed = Date.now() - started;
               if (!scrolled && elapsed > 3000 && win) {
                 scrolled = true;
@@ -1459,7 +1464,7 @@ function embeddedJobDois(value) {
             url: url,
             message: 'candidates=' + String(rows.length)
           });
-          if (rows.some(function (row) { return row.kind === 'official'; })) return rows;
+          if (mode !== 'figures' && rows.some(function (row) { return row.kind === 'official'; }) && (mode !== 'paired' || rows.some(function (row) { return row.kind === 'article_figure'; }))) return rows;
         } else {
           pushTrace(trace, { stage: 'iframe_dom_scan', event: 'complete', status: 'none', url: url });
         }
