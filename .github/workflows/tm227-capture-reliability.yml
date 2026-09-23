@@ -17,6 +17,7 @@ on:
       - 'scripts/apply-tm224-acquisition.py'
       - 'scripts/test-tm224-acquisition.mjs'
       - 'scripts/test-tm227-reliability.mjs'
+      - 'scripts/test-tm227-result-precedence.mjs'
 
 permissions:
   contents: read
@@ -36,6 +37,7 @@ jobs:
           set -euo pipefail
           node --check public/toc-mainline.user.js
           node scripts/test-tm227-reliability.mjs
+          node scripts/test-tm227-result-precedence.mjs
           python3 scripts/apply-tm222-live-progress.py
           python3 scripts/apply-tm223-upload.py
           python3 scripts/apply-tm224-acquisition.py
