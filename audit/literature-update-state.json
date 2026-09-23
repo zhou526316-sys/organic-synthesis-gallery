@@ -47,6 +47,7 @@
     "verification": {
       "productionGitHubPages": "success",
       "pagesRun": 35801188584,
+      "qualityGateRun": 35802454941,
       "deploymentTriggerCommit": "478194ad50b6289995b1881b473aab8bc96d3cc1",
       "newlyAcceptedDoisPresent": [
         "10.1021/jacs.6c16812",
@@ -132,7 +133,7 @@
       ],
       "totalGalleryCards": 536,
       "galleryDois": 536,
-      "note": "Pages authorization/build/deploy succeeded; post-release DOI-union audit reports the same repository/deployed gallery count and only the explicitly deferred DOI remains unresolved."
+      "note": "Pages authorization/build/deploy and post-release quality gate succeeded; post-release DOI-union audit reports the same repository/deployed gallery count and only the explicitly deferred DOI remains unresolved."
     },
     "tocVerification": {
       "liveQueueCommitSha": "75f9007612b85e3bed0ae92b70b5b65e7a2bfdbc",
@@ -315,7 +316,8 @@
     "pagesDeploymentRequested": true,
     "publicationCommit": "9803b4c32e0bf14520fe77e6b1a0c56476759158",
     "pagesRun": 35801188584,
-    "postReleaseAuditRun": 35801367846
+    "postReleaseAuditRun": 35801367846,
+    "qualityGateRun": 35802454941
   },
   "nextPublicationSlot": "2026-09-23T18:00:00+08:00",
   "prepublish": {
@@ -424,7 +426,8 @@
     "publicationCommit": "9803b4c32e0bf14520fe77e6b1a0c56476759158",
     "pagesRun": 35801188584,
     "postReleaseAuditRun": 35801367846,
-    "publicationChecksPassed": true
+    "publicationChecksPassed": true,
+    "qualityGateRun": 35802454941
   },
   "automaticCompactHandoffTest": {
     "result": "success",
@@ -578,6 +581,7 @@
     "releaseWriterRun": 35801004618,
     "preReleaseAuditRun": 35796033573,
     "postReleaseAuditRun": 35801367846,
+    "qualityGateRun": 35802454941,
     "pagesRun": 35801188584,
     "tocRefreshRun": 35801107506,
     "tocDemandCommit": "75f9007612b85e3bed0ae92b70b5b65e7a2bfdbc",
@@ -667,6 +671,13 @@
     "publicationChecksPassed": true,
     "reviewComplete": false,
     "publishedAt": "2026-09-23T08:15:41+08:00",
-    "finalizedAt": "2026-09-23T08:21:59.361+08:00"
+    "finalizedAt": "2026-09-23T08:36:32.235+08:00"
+  },
+  "lastQualityGate": {
+    "runId": 35802454941,
+    "conclusion": "success",
+    "publicationSlot": "2026-09-23T08:00:00+08:00",
+    "triggerCommit": "31377c5616096272a0d7c76030b0a213dadcdd3e",
+    "verifiedAt": "2026-09-23T08:36:32.235+08:00"
   }
 }
