@@ -1,7 +1,13 @@
 {
-  "requestedAt": "2026-09-23T12:15:30Z",
-  "context": "Read current paired official-TOC/body readiness after adaptive tail release deployment. Expect target batch when >=20 articles, quiet-tail only after 15 eligible quiet minutes, and no heavy Pages publication before either release gate. Preserve existing automatic publication snapshot and all literature/media data.",
+  "requestedAt": "2026-09-23T12:23:30Z",
+  "context": "Inspect current paired official-TOC/body readiness using the deployed adaptive policy. Prefer 20-25 articles; if only 1-19 eligible articles remain and the eligible set has been quiet for at least 15 minutes, release the stable tail. Reuse stored R2 captures and public media only; do not recrawl publishers or modify literature data.",
   "mediaOnly": true,
-  "readOnlyInspect": true,
-  "productionLiteratureWrites": false
+  "readOnlyInspect": false,
+  "productionLiteratureWrites": false,
+  "expectedPolicy": {
+    "targetArticles": 20,
+    "maxArticles": 25,
+    "quietTailMinutes": 15,
+    "officialTocRequiredInSameBuild": true
+  }
 }
