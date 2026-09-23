@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/scope-title-maintenance.yml'
       - 'scripts/smoke-live-chinese-titles.mjs'
+      - 'scripts/finalize-verified-scope-correction.mjs'
       - 'scripts/test-scope-title-corrections.mjs'
       - 'scripts/lib/scope-corrections.mjs'
       - 'shared/chinese-title-overrides.js'
@@ -22,6 +23,8 @@ jobs:
     if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 8
+    outputs:
+      source_sha: ${{ steps.version.outputs.source_sha }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,11 +33,12 @@ jobs:
         with:
           node-version: '22'
       - name: Record exact verified source and upstream deployment
+        id: version
         env:
           UPSTREAM_RUN: ${{ github.event.workflow_run.id || '' }}
           UPSTREAM_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
-          node -e 'const fs=require("fs"),cp=require("child_process");const actual=cp.execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();if(actual!==process.env.UPSTREAM_SHA)throw new Error("verification checkout mismatch");fs.writeFileSync("/tmp/scope-verification-version.json",JSON.stringify({sourceCommit:actual,upstreamPagesRun:process.env.UPSTREAM_RUN||null,event:process.env.GITHUB_EVENT_NAME,productionDataModified:false},null,2))'
+          node -e 'const fs=require("fs"),cp=require("child_process");const actual=cp.execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();if(actual!==process.env.UPSTREAM_SHA)throw new Error("verification checkout mismatch");fs.writeFileSync("/tmp/scope-verification-version.json",JSON.stringify({sourceCommit:actual,upstreamPagesRun:process.env.UPSTREAM_RUN||null,event:process.env.GITHUB_EVENT_NAME,productionDataModified:false},null,2));fs.appendFileSync(process.env.GITHUB_OUTPUT,"source_sha="+actual+"\n")'
       - name: Test explicit exclusions and complete Chinese-title coverage
         shell: bash
         run: |
@@ -58,5 +62,61 @@ jobs:
             /tmp/scope-title-regression.json
             /tmp/discovery-capability-regression.json
             /tmp/scope-verification-version.json
+          if-no-files-found: warn
+          retention-days: 14
+  finalize_scope_correction:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.verify.outputs.source_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Reconcile only after exact live DOI-set equality
+        env:
+          UPSTREAM_PAGES_RUN: ${{ github.event.workflow_run.id || '' }}
+        run: |
+          node --check scripts/finalize-verified-scope-correction.mjs
+          node scripts/finalize-verified-scope-correction.mjs
+      - name: Validate full publication quality against corrected state
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/validate-literature-quality-gate.mjs | tee /tmp/scope-correction-quality.json
+      - name: Persist only verified coordination state and evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f /tmp/scope-correction-state-finalized.json ]; then echo 'No unverified correction'; exit 0; fi
+          evidence="$(node -p "require('/tmp/scope-correction-state-finalized.json').evidenceFile")"
+          git diff --exit-code -- public shared .github/workflows audit/publication-release-state.json
+          git add audit/literature-update-state.json "$evidence"
+          git diff --cached --binary > /tmp/scope-state-finalize.patch
+          base=$(git rev-parse HEAD)
+          git fetch origin main
+          if [ "$(git rev-parse origin/main)" != "$base" ]; then
+            git diff --exit-code "$base" origin/main -- audit/literature-update-state.json audit/publication-release-state.json audit/literature-scope-corrections.json "$evidence" public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json shared/literature-policy.js
+            git reset --hard origin/main
+            git apply --index /tmp/scope-state-finalize.patch
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'audit(scope): reconcile verified four-DOI removal and exact live snapshot'
+          git push origin HEAD:main
+      - name: Preserve verification and quality evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scope-correction-finalization
+          path: |
+            /tmp/scope-correction-state-finalized.json
+            /tmp/scope-correction-quality.json
           if-no-files-found: warn
           retention-days: 14
