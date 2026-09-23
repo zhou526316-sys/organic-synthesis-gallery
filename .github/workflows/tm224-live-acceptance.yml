@@ -34,12 +34,13 @@ jobs:
               if(!a.ok||!b.ok)throw new Error('HTTP '+a.status+'/'+b.status);
               const installer=await a.text(),mainline=await b.text();
               const checks={
-                installerVersion:/^\/\/ @version\s+2\.2\.26$/m.test(installer),
+                installerVersion:/^\/\/ @version\s+2\.2\.27$/m.test(installer),
                 controller:installer.includes("var CONTROLLER_REVISION = '2.2.27';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.27';"),
                 protocol:installer.includes("var VERSION = '6.2.20';")&&mainline.includes("var VERSION = '6.2.20';"),
                 fallback:installer.includes('sameFigureCurrentSrcFallback')&&mainline.includes('sameFigureCurrentSrcFallback'),
                 tiff:installer.includes("return 'image/tiff'")&&mainline.includes("return 'image/tiff'"),
                 ordering:installer.includes('missing official TOC comes first; then JACS')&&mainline.includes('missing official TOC comes first; then JACS'),
+                resultPrecedence:installer.includes('completedPublisherResult')&&mainline.includes('completedPublisherResult')&&installer.includes('publisher final results over controller timeouts')&&mainline.includes('publisher final results over controller timeouts'),
                 guards:['capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch'].every(x=>installer.includes(x)&&mainline.includes(x)),
                 noEval:!(/\beval\s*\(/.test(installer))
               };
