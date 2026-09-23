@@ -6,6 +6,7 @@ class GalleryPageNavigation extends HTMLElement {
   private readonly root = this.attachShadow({ mode: 'open' });
   private frame = 0;
   private sizes: ResizeObserver | null = null;
+  private startupContent: MutationObserver | null = null;
   private language: MutationObserver | null = null;
   private lastLanguage = '';
   private jumpEdge: 'top' | 'bottom' | null = null;
@@ -30,6 +31,15 @@ class GalleryPageNavigation extends HTMLElement {
     this.schedule();
   };
 
+  private observeLayoutRoots(): boolean {
+    if (!this.sizes) return false;
+    const app = document.querySelector('#app');
+    const gallery = document.querySelector('#gallery');
+    if (app instanceof Element) this.sizes.observe(app);
+    if (gallery instanceof Element) this.sizes.observe(gallery);
+    return gallery instanceof Element;
+  }
+
   connectedCallback(): void {
     this.root.innerHTML = `<style>
       :host{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:9000;display:block;width:46px;font:11px/1.2 system-ui,sans-serif;color:#344054}
@@ -53,11 +63,23 @@ class GalleryPageNavigation extends HTMLElement {
     window.visualViewport?.addEventListener('resize', this.onResize, { passive: true });
     for (const type of INTERRUPT_EVENTS) window.addEventListener(type, this.stopJump, { capture: true, passive: true });
     this.sizes = new ResizeObserver(this.schedule);
-    // body/html border boxes do not reliably change when only their scrollHeight
-    // grows (notably WebKit on the static GitHub Pages build). Observe the actual
-    // content containers too so late card layout cannot leave the nav hidden.
-    for (const node of [document.body, document.documentElement, document.querySelector('#app'), document.querySelector('#gallery')]) {
-      if (node instanceof Element) this.sizes.observe(node);
+    this.sizes.observe(document.body);
+    this.sizes.observe(document.documentElement);
+    // main() can finish importing before its asynchronous render inserts
+    // #gallery. Watch only that startup phase so the eventual content root is
+    // attached to ResizeObserver; stop the DOM observer immediately afterwards.
+    this.startupContent = new MutationObserver(() => {
+      const ready = this.observeLayoutRoots();
+      this.schedule();
+      if (ready) {
+        this.startupContent?.disconnect();
+        this.startupContent = null;
+      }
+    });
+    this.startupContent.observe(document.body, { childList: true, subtree: true });
+    if (this.observeLayoutRoots()) {
+      this.startupContent.disconnect();
+      this.startupContent = null;
     }
     this.language = new MutationObserver(this.schedule);
     this.language.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
@@ -73,6 +95,7 @@ class GalleryPageNavigation extends HTMLElement {
     this.frame = 0;
     this.stopJump();
     this.sizes?.disconnect(); this.sizes = null;
+    this.startupContent?.disconnect(); this.startupContent = null;
     this.language?.disconnect(); this.language = null;
     this.root.removeEventListener('click', this.onClick);
     window.removeEventListener('scroll', this.schedule);
