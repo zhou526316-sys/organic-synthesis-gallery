@@ -1,0 +1,92 @@
+name: Diagnose GitHub Pages WebKit navigation module loading
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/page-navigation-webkit-diagnostic.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      LIVE_SITE_URL: ${{ matrix.site }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d15afca8aead58a5422f7054fde9487d0f637ce1
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned WebKit only
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/nav-webkit-diag-install.log 2>&1 || { tail -60 /tmp/nav-webkit-diag-install.log; exit 1; }
+      - name: Record module/network timeline without changing the page or sending API writes
+        run: |
+          mkdir -p nav-webkit-diagnostic
+          node --input-type=module <<'NODE'
+          import { webkit } from '@playwright/test';
+          import { writeFile } from 'node:fs/promises';
+          const site=process.env.LIVE_SITE_URL;
+          const browser=await webkit.launch();
+          const context=await browser.newContext({viewport:{width:390,height:900},serviceWorkers:'block'});
+          const page=await context.newPage();
+          const started=Date.now();
+          const evidence={site,reviewedCommit:'d15afca8aead58a5422f7054fde9487d0f637ce1',productionWritesAllowed:false,
+            console:[],pageErrors:[],requests:[],responses:[],checks:[]};
+          page.on('console',m=>evidence.console.push({at:Date.now()-started,type:m.type(),text:m.text()}));
+          page.on('pageerror',e=>evidence.pageErrors.push({at:Date.now()-started,message:e.message,stack:e.stack||''}));
+          page.on('requestfailed',r=>evidence.requests.push({at:Date.now()-started,url:r.url(),method:r.method(),failure:r.failure()?.errorText||''}));
+          page.on('response',r=>{
+            const path=new URL(r.url()).pathname;
+            if(path.endsWith('.js')||path.endsWith('.css')||path.endsWith('/')) evidence.responses.push({at:Date.now()-started,url:r.url(),status:r.status(),contentType:r.headers()['content-type']||''});
+          });
+          await context.route('**/*',async route=>{
+            const request=route.request();const url=new URL(request.url());
+            if(['blob:','data:'].includes(url.protocol)){await route.continue();return;}
+            const api=url.pathname==='/api'||url.pathname.startsWith('/api/');
+            if(['GET','HEAD'].includes(request.method())&&!api){await route.continue();return;}
+            const headers={'access-control-allow-origin':request.headers().origin||new URL(site).origin,'access-control-allow-credentials':'true','access-control-allow-methods':'GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE','access-control-allow-headers':request.headers()['access-control-request-headers']||'content-type, authorization','vary':'Origin'};
+            if(request.method()==='OPTIONS'){await route.fulfill({status:204,headers});return;}
+            const body=url.pathname.endsWith('/reader-counts')?{counts:{}}:url.pathname.endsWith('/integrations')?{auth:{},payments:{}}:{items:[]};
+            await route.fulfill({status:200,headers,contentType:'application/json',body:JSON.stringify(body)});
+          });
+          const response=await page.goto(site,{waitUntil:'domcontentloaded',timeout:45000});
+          evidence.entryStatus=response?.status()||0;
+          for(const ms of [0,1000,3000,5000,10000,20000]){
+            const elapsed=Date.now()-started;
+            if(ms>elapsed) await page.waitForTimeout(ms-elapsed);
+            evidence.checks.push(await page.evaluate(at=>({
+              at,
+              navCount:document.querySelectorAll('gallery-page-navigation').length,
+              navDefined:Boolean(customElements.get('gallery-page-navigation')),
+              feedbackCount:document.querySelectorAll('.site-feedback-tab').length,
+              cards:document.querySelectorAll('#gallery > .card').length,
+              lang:document.documentElement.lang,
+              ready:document.readyState,
+              scripts:Array.from(document.querySelectorAll('script[src]')).map(node=>node.src),
+            }),Date.now()-started));
+          }
+          await page.screenshot({path:'nav-webkit-diagnostic/page.png'});
+          await writeFile('nav-webkit-diagnostic/evidence.json',JSON.stringify(evidence,null,2));
+          console.log(JSON.stringify(evidence));
+          await context.close();await browser.close();
+          if(!evidence.entryStatus||evidence.entryStatus>=400)process.exitCode=1;
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: navigation-webkit-diagnostic-${{ matrix.entry }}
+          path: nav-webkit-diagnostic/
+          retention-days: 7
+          if-no-files-found: error
