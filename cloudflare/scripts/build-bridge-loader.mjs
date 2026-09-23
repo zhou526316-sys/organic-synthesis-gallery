@@ -83,7 +83,7 @@ const matchLines = [...new Set([
 ])].join('\n');
 const galleryHosts = [...new Set(PUBLIC_SITE_ORIGINS.map(origin => new URL(origin).hostname))];
 const galleryHostExpression = galleryHosts.map(host => `location.hostname === '${host}'`).join(' || ');
-const loaderVersion = '2.2.21';
+const loaderVersion = '2.2.22';
 
 const loader = `// ==UserScript==
 // @name         Organic Synthesis Gallery VPN Literature Bridge
@@ -102,6 +102,7 @@ ${matchLines}
 // @grant        GM_openInTab
 // @connect      *
 // @connect      acs.silverchair-cdn.com
+// @connect      media.springernature.com
 // @run-at       document-idle
 // @noframes
 // ==/UserScript==

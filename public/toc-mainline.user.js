@@ -30,6 +30,7 @@
 // @grant        GM_openInTab
 // @connect      *
 // @connect      acs.silverchair-cdn.com
+// @connect      media.springernature.com
 // @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
 // @downloadURL  https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
 // ==/UserScript==
@@ -38,7 +39,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.21';
+  var CONTROLLER_REVISION = '2.2.22';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
@@ -68,6 +69,279 @@
   var nextBatchTimer = null;
   var CONTROLLER_ID = String(Date.now()) + '-' + Math.random().toString(36).slice(2);
   var MAX_TRACE = 150;
+
+  // BEGIN OSG_LIVE_PROGRESS_V1 -- local telemetry only; never drives capture.
+  var LIVE_VIEW_KEY = P + 'live-progress-v1';
+  var LIVE_PANEL_KEY = P + 'live-panel-open-v1';
+
+  function captureLiveError(value) {
+    return String(value || '').replace(/https?:\/\/\S+/gi, '[url]')
+      .replace(/(?:Bearer\s+\S+|(?:token|secret|password|cookie|authorization)\s*[:=]\s*[^\s;,]+)/gi, '[redacted]')
+      .replace(/[A-Za-z0-9+/_=-]{40,}/g, '[redacted]').slice(0, 180);
+  }
+
+  function captureLiveUpdate(job, phase, detail) {
+    try {
+      // A retired/foreign tab must not overwrite the current task's telemetry.
+      assertBoundCaptureJob(job);
+      var live = GM_getValue(ACTIVE_JOB_KEY, null);
+      if (!live || live.jobId !== job.jobId || live.doi !== job.doi) return false;
+      var result = job._liveResult || {};
+      var figures = result.figures || {};
+      var prev = GM_getValue(LIVE_VIEW_KEY, null);
+      var same = prev && prev.jobId === job.jobId && prev.doi === job.doi;
+      detail = detail || {};
+      var sameImage = same && prev.label === String(detail.label || job._liveLabel || '');
+      var row = {
+        jobId: job.jobId, doi: normalizeDoi(job.doi), controllerRevision: CONTROLLER_REVISION,
+        captureProtocol: VERSION, phase: String(phase || 'working').slice(0, 40),
+        at: Date.now(), startedAt: job.startedAt,
+        label: String(detail.label || job._liveLabel || '').slice(0, 40),
+        tocStatus: String((result.toc || {}).status || 'pending'),
+        tocKind: String((result.toc || {}).kind || ''),
+        discovered: Math.max(0, Number(figures.discovered || 0)),
+        discoveryDone: Boolean(job._liveDiscoveryDone),
+        stored: Math.max(0, Number(figures.stored || 0)),
+        stagedReceipts: Math.max(0, Number(result.figuresStaged || 0)),
+        reused: (figures.items || []).filter(function (x) { return x.status === 'already_staged'; }).length,
+        failed: Math.max(0, Number(figures.failed || 0)),
+        quality: String(detail.quality || (sameImage && prev.quality) || '').slice(0, 30),
+        width: Math.max(0, Number(detail.width || (sameImage && prev.width) || 0)), height: Math.max(0, Number(detail.height || (sameImage && prev.height) || 0)),
+        lastError: detail.error ? captureLiveError(detail.error) : String(same && prev.lastError || ''),
+        resultStatus: String(result.status || ''),
+        // This release retains the deployed verified-staging protocol.
+        publicationState: 'not_published'
+      };
+      GM_setValue(LIVE_VIEW_KEY, row);
+      return true;
+    } catch (_) { return false; } // Monitoring failure must not fail a capture.
+  }
+
+  function captureLiveSnapshot(now) {
+    var active = GM_getValue(ACTIVE_JOB_KEY, null);
+    var summary = GM_getValue(SUMMARY_KEY, {}) || {};
+    var raw = GM_getValue(LIVE_VIEW_KEY, null);
+    var matching = Boolean(active && raw && raw.jobId === active.jobId && raw.doi === active.doi);
+    var row = matching ? raw : null;
+    var paused = GM_getValue(ENABLED_KEY, true) === false || Boolean(GM_getValue(ABORT_KEY, null));
+    var progress = active ? GM_getValue(progressKey(active.doi), null) : null;
+    var state = CONTROLLER_STOP_REASON || summary.stopReason || '';
+    if (active) state = paused ? 'pausing' : row ? row.phase : 'awaiting_publisher';
+    else if (paused) state = 'paused';
+    else if (!state) state = summary.finishedAt ? 'between_batches' : 'idle';
+    // Startup/auth progress is a separate local source; do not fabricate fresh activity.
+    if (active && !paused && progress && /^(auth_wait|challenge_wait)$/.test(progress.status) &&
+        progress.jobId === active.jobId && (!row || Date.parse(progress.at) > row.at)) state = progress.status;
+    var last = row ? Number(row.at) : active ? Date.parse(active.startedAt || '') : Date.parse(summary.finishedAt || summary.startedAt || '');
+    return {
+      state: state, active: Boolean(active), doi: active ? normalizeDoi(active.doi) : '',
+      journal: active ? String(active.journal || '').slice(0, 80) : '',
+      row: row, ageSeconds: Number.isFinite(last) ? Math.max(0, Math.floor((now - last) / 1000)) : null,
+      lastAt: Number.isFinite(last) ? last : null,
+      completed: (summary.results || []).length, total: Math.max(0, Number(summary.total || 0)),
+      batchToc: Math.max(0, Number(summary.tocStored || 0)),
+      batchStaged: Math.max(0, Number(summary.figuresStaged || 0)),
+      batchFailed: Math.max(0, Number(summary.failed || 0)),
+      lastResult: (summary.results || []).length ? summary.results[summary.results.length - 1] : null,
+      // Summary is committed after each paper. The active row is displayed separately, never added twice.
+      publication: '已保存至 R2 暂存；未自动发布到文献卡片'
+    };
+  }
+
+  function captureLiveText(s) {
+    var phaseNames = {
+      idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
+      awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
+      auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
+      comparing:'比较清晰度／矢量结构', uploading:'上传并等待存储回执', saved:'已收到存储回执',
+      reused:'复用已保存图片', image_failed:'该图片失败，保留其他结果', finished:'本篇处理结束'
+    };
+    var tocNames = {pending:'待处理',already_available:'保留已有 TOC',stored:'已保存',not_found:'未找到可用主图',failed:'失败'};
+    var r = s.row;
+    var quality = {vector:'矢量',vector_mixed:'混合矢量／位图',high:'高分辨率',usable:'可用分辨率',low:'低分辨率'};
+    var toc = r ? (tocNames[r.tocStatus] || r.tocStatus) : '等待本篇数据';
+    if (r && r.tocStatus === 'stored' && r.tocKind === 'figure1') toc += '（Figure 1 替代图，非官方 TOC）';
+    var lastError = r ? r.lastError : s.lastResult && s.lastResult.status !== 'success' ? captureLiveError(s.lastResult.reason) : '';
+    return {
+      state: phaseNames[s.state] || ('已停止：' + captureLiveError(s.state)),
+      doi: s.doi || '当前没有任务页', journal: s.journal,
+      label: r && r.label || '—', toc: toc,
+      figures: r ? '已保存 ' + r.stored + '／' + (r.discoveryDone ? r.discovered : '识别中') + ' · 失败 ' + r.failed : '等待本篇数据',
+      receipts: r ? '本次暂存回执 ' + r.stagedReceipts + ' · 断点复用 ' + r.reused : '—',
+      quality: r ? (quality[r.quality] || '尚未测量') + (r.width && r.height ? ' · ' + r.width + '×' + r.height : '') : '—',
+      batch: '已结束 ' + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 失败 ' + s.batchFailed,
+      last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + s.ageSeconds + ' 秒前' : '尚无进度记录',
+      stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
+      error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()
+    };
+  }
+
+  function mountCaptureLivePanel() {
+    if (!isGalleryPage() || globalThis.__OSG_CAPTURE_LIVE_PANEL__) return;
+    var host = document.createElement('section');
+    host.id = 'osg-capture-live-panel';
+    host.style.cssText = 'position:fixed;right:14px;bottom:112px;z-index:2147483646;max-width:calc(100vw - 28px);width:365px';
+    var root = host.attachShadow({ mode: 'open' });
+    var style = document.createElement('style');
+    style.textContent = ':host{font:12px/1.5 system-ui,sans-serif;color:#172b4d}details{background:#fff;border:1px solid #bac8db;border-radius:10px;box-shadow:0 5px 24px #0002;overflow:hidden}summary{padding:9px 12px;font-weight:650;cursor:pointer;background:#edf3fa}main{padding:10px 12px;max-height:50vh;overflow:auto}dl{display:grid;grid-template-columns:64px minmax(0,1fr);gap:6px 10px;margin:0}dt{color:#5a687b}dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}p{margin:9px 0 0;color:#53627a}#stale,#error:not([data-empty]){color:#9a3412}button{margin-top:10px;border:1px solid #9bb0c9;border-radius:6px;background:#f3f6fa;padding:5px 10px;cursor:pointer}small{display:block;margin-top:8px;color:#64748b}';
+    root.appendChild(style);
+    var details = document.createElement('details');
+    details.open = GM_getValue(LIVE_PANEL_KEY, true) !== false;
+    var heading = document.createElement('summary');
+    heading.textContent = '抓取实时进度 · ' + CONTROLLER_REVISION;
+    details.appendChild(heading);
+    var main = document.createElement('main');
+    var dl = document.createElement('dl');
+    var fields = {};
+    [['state','状态'],['doi','当前 DOI'],['journal','期刊'],['label','当前图片'],['toc','主图'],['figures','正文图片'],['receipts','保存记录'],['quality','清晰度'],['batch','本批累计'],['last','最后进展'],['error','最近问题']].forEach(function (pair) {
+      var dt = document.createElement('dt'), dd = document.createElement('dd');
+      dt.textContent = pair[1]; dd.id = pair[0]; fields[pair[0]] = dd; dl.appendChild(dt); dl.appendChild(dd);
+    });
+    main.appendChild(dl);
+    ['stale','publication','delivery'].forEach(function (key) { var p = document.createElement('p'); p.id = key; fields[key] = p; main.appendChild(p); });
+    var note = document.createElement('small');
+    note.textContent = '每秒读取本机进度；后台标签页可能延迟。发现数量不是出版社全文总图数。';
+    main.appendChild(note);
+    details.appendChild(main); root.appendChild(details);
+    (document.body || document.documentElement).appendChild(host);
+    details.addEventListener('toggle', function () { try { GM_setValue(LIVE_PANEL_KEY, details.open); } catch (_) {} });
+    function render() {
+      try {
+        var text = captureLiveText(captureLiveSnapshot(Date.now()));
+        Object.keys(fields).forEach(function (key) { if (fields[key].textContent !== text[key]) fields[key].textContent = text[key]; });
+        fields.stale.hidden = !text.stale;
+        fields.error.toggleAttribute('data-empty', text.error === '无');
+      } catch (_) { fields.state.textContent = '读取本机进度失败；抓取逻辑不受影响'; }
+    }
+    render();
+    var timer = setInterval(render, 1000);
+    globalThis.__OSG_CAPTURE_LIVE_PANEL__ = { show: function () { details.open = true; render(); }, stop: function () { clearInterval(timer); } };
+    window.addEventListener('pagehide', function (event) { if (!event.persisted) clearInterval(timer); });
+  }
+  // END OSG_LIVE_PROGRESS_V1
+
+  // BEGIN OSG_AUTO_REPORT_V1 -- diagnostic writes only; never authorizes media.
+  var AUTO_REPORT_PREFIX=P+'auto-report-v1:';
+  var AUTO_REPORT_ACK=P+'auto-report-ack-v1';
+  var AUTO_REPORT_LOCK=P+'auto-report-lock-v1';
+  var autoReportBusy=false, autoReportJob=null;
+
+  function autoReportUrl(value) {
+    try {var u=new URL(String(value||''));if(!/^https?:$/.test(u.protocol))return '';u.username='';u.password='';u.search='';u.hash='';return u.href.slice(0,1200);}catch(_){return '';}
+  }
+  function autoReportText(value) {
+    return String(value||'').replace(/https?:\/\/[^\s"'<>]+/gi,function(v){return autoReportUrl(v);})
+      .replace(/Bearer\s+\S+|(?:token|secret|password|cookie|authorization)\s*[:=]\s*[^\s;,]+/gi,'[redacted]').slice(0,450);
+  }
+  function autoReportCause(event) {
+    var m=String(event.message||'');var status=Number(event.httpStatus||0);
+    if(/doi_mismatch|tab_job_mismatch|stale_or_unbound/.test(m))return 'identity_rejected';
+    if(/Request was blocked by the user|Refused to connect.*blocked/i.test(m))return 'extension_connection_denied';
+    if(status===401)return 'authentication_http_401';
+    if(status===403)return 'access_denied_http_403';
+    if(status===429)return 'rate_limited_http_429';
+    if(status===503&&/lockdown/.test(m))return 'server_recovery_lockdown';
+    if(status>=500)return 'server_http_5xx';
+    if(status>=400)return 'http_error';
+    if(/timeout|TimeoutError|AbortError/.test(m))return 'request_timeout_or_abort';
+    if(/not_image|image_type|unsupported|svg/.test(m))return 'format_or_content_rejected';
+    if(event.status==='low'||/resolution|no_usable/.test(m))return 'quality_or_candidates_insufficient';
+    if(/lease|heartbeat|tab_handle|task_tab/.test(m))return 'controller_or_page_startup';
+    if(/fetch_failed|Failed to fetch|gm_request_error|NetworkError/.test(m))return 'transport_error_cause_unverified';
+    return 'inspect_stage_evidence';
+  }
+  function autoReportEvent(e) {
+    return {seq:Number(e.seq||0),at:String(e.at||nowIso()),stage:String(e.stage||'').slice(0,60),event:String(e.event||'').slice(0,80),status:String(e.status||'').slice(0,40),httpStatus:Number(e.httpStatus||0),contentType:String(e.contentType||'').slice(0,80),url:autoReportUrl(e.url),message:autoReportText(e.message),candidateKind:String(e.candidateKind||'').slice(0,40),candidateSource:String(e.candidateSource||'').slice(0,80),imageWidth:Number(e.imageWidth||0),imageHeight:Number(e.imageHeight||0),byteLength:Number(e.byteLength||0)};
+  }
+  function autoReportKeys() {
+    try{return GM_listValues().filter(function(k){return String(k).indexOf(AUTO_REPORT_PREFIX)===0;});}catch(_){return [];}
+  }
+  function enqueueCaptureReport(job,trace,status,reason,final,actualPageUrl) {
+    try {
+      var doi=normalizeDoi(job&&job.doi);if(!doi||!job.jobId)return false;
+      var key=AUTO_REPORT_PREFIX+job.jobId+(final?':final':':checkpoint');
+      var prior=GM_getValue(key,null), keys=autoReportKeys();
+      if(!prior&&keys.length>=200){GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'outbox_full',pending:keys.length,error:'本机诊断队列已满；保留现有记录，停止新增自动报告'});return false;}
+      var revision=Number(prior&&prior.revision||0)+1;
+      var important=(job._diagnosticFailures||[]).slice(-48);
+      var recent=(trace||[]).slice(-32).map(autoReportEvent);
+      var seen=new Set();var events=important.concat(recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
+      var page=autoReportUrl(actualPageUrl===undefined?location.href:actualPageUrl);
+      var last=important.length?important[important.length-1]:recent[recent.length-1]||{};
+      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,controllerRevision:CONTROLLER_REVISION,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
+      var context={at:nowIso(),seq:0,stage:'diagnostic_context',event:final?'final_result':'failure_checkpoint',status:'info',url:page,message:JSON.stringify(metadata)};
+      var payload={doi:doi,publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',trace:[context].concat(events)};
+      GM_setValue(key,{revision:revision,payload:payload,createdAt:prior?prior.createdAt:Date.now(),tries:Number(prior&&prior.tries||0),nextAt:Number(prior&&prior.nextAt||0)});
+      if(final)GM_deleteValue(AUTO_REPORT_PREFIX+job.jobId+':checkpoint');
+      return true;
+    }catch(_){return false;}
+  }
+  function captureDiagnosticEvent(trace,row) {
+    try {
+      var job=autoReportJob,active=GM_getValue(ACTIVE_JOB_KEY,null);
+      if(!job||!active||active.jobId!==job.jobId||active.doi!==job.doi)return;
+      if(row.stage==='report_upload')return;
+      if(row.event==='failed'||row.status==='low'||Number(row.httpStatus)>=400) {
+        job._diagnosticFailures=job._diagnosticFailures||[];
+        var event=autoReportEvent(row);
+        event.message=autoReportText('label='+(job._liveLabel||'')+';cause='+autoReportCause(row)+';'+row.message);
+        job._diagnosticFailures.push(event);if(job._diagnosticFailures.length>48)job._diagnosticFailures.shift();
+        enqueueCaptureReport(job,trace,'progress','',false);
+      }
+    }catch(_){}
+  }
+  async function sendAutomaticReport(payload,token) {
+    var response;
+    try {
+      response=await gmRequest({method:'POST',url:REPORT_ENDPOINT,timeout:10000,headers:{'content-type':'application/json',authorization:'Bearer '+token},data:JSON.stringify(payload)});
+    }catch(error){
+      var r=await fetch(REPORT_ENDPOINT,{method:'POST',credentials:'omit',mode:'cors',signal:AbortSignal.timeout(10000),headers:{'content-type':'application/json',authorization:'Bearer '+token},body:JSON.stringify(payload)});
+      response={status:r.status,responseText:await r.text()};
+    }
+    var body={};try{body=JSON.parse(response.responseText||'{}');}catch(_){}
+    if(response.status<200||response.status>=300){var e=new Error('diagnostic_http_'+response.status+':'+autoReportText(body.code||body.error));e.httpStatus=response.status;throw e;}
+    if(body.stored!==true||normalizeDoi(body.doi)!==payload.doi||!body.attemptId)throw new Error('diagnostic_receipt_invalid');
+    return body;
+  }
+  async function drainAutomaticReports() {
+    if(!isGalleryPage()||autoReportBusy||!writeToken())return;
+    autoReportBusy=true;
+    var owner=CONTROLLER_ID+':diagnostics',key='',item=null;
+    try {
+      var lock=GM_getValue(AUTO_REPORT_LOCK,null);
+      if(lock&&lock.owner!==owner&&lock.expiresAt>Date.now())return;
+      GM_setValue(AUTO_REPORT_LOCK,{owner:owner,expiresAt:Date.now()+60000});
+      await sleep(75);
+      if((GM_getValue(AUTO_REPORT_LOCK,{})||{}).owner!==owner)return;
+      var ready=autoReportKeys().map(function(k){return {key:k,value:GM_getValue(k,null)};}).filter(function(x){return x.value&&Number(x.value.nextAt||0)<=Date.now();});
+      ready.sort(function(a,b){return a.value.createdAt-b.value.createdAt;});
+      if(!ready.length)return;key=ready[0].key;item=ready[0].value;
+      var receipt=await sendAutomaticReport(item.payload,writeToken());
+      // A newly queued revision must survive acknowledgement of an earlier snapshot.
+      var current=GM_getValue(key,null);
+      if(current&&current.revision===item.revision)GM_deleteValue(key);
+      GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'delivered',doi:item.payload.doi,attemptId:receipt.attemptId,kind:item.payload.candidateSource,pending:autoReportKeys().length,error:''});
+    }catch(error){
+      if(key&&item){var current=GM_getValue(key,null);if(current){current.tries=Number(current.tries||0)+1;current.nextAt=Date.now()+Math.min(300000,15000*Math.pow(2,Math.min(current.tries,5)));GM_setValue(key,current);}}
+      GM_setValue(AUTO_REPORT_ACK,{at:Date.now(),state:'pending_retry',pending:autoReportKeys().length,error:autoReportText(error&&error.message||error)});
+    }finally{
+      var held=GM_getValue(AUTO_REPORT_LOCK,null);if(held&&held.owner===owner)GM_deleteValue(AUTO_REPORT_LOCK);
+      autoReportBusy=false;
+    }
+  }
+  function startAutomaticCaptureReports() {
+    if(!isGalleryPage()||globalThis.__OSG_AUTO_REPORT_STARTED__)return;
+    globalThis.__OSG_AUTO_REPORT_STARTED__=true;
+    // A durable Gallery sender survives publisher-tab closure. One request at a time.
+    setInterval(function(){drainAutomaticReports().catch(function(){});},10000);
+    drainAutomaticReports().catch(function(){});
+  }
+  function automaticReportDisplay() {
+    var ack=GM_getValue(AUTO_REPORT_ACK,null),pending=autoReportKeys().length;
+    if(!ack)return '自动上报已启用；待发送 '+pending+' 份';
+    return (ack.state==='delivered'?'服务器已确认接收':'报告未送达：'+String(ack.error||ack.state))+' · 待发送 '+pending+' · '+new Date(ack.at).toLocaleTimeString();
+  }
+  // END OSG_AUTO_REPORT_V1
 
   function nowIso() { return new Date().toISOString(); }
 
@@ -494,6 +768,7 @@ function embeddedJobDois(value) {
     row.url = sanitizeDiagnosticUrl(row.url || '');
     row.message = sanitizeTraceMessage(row.message || '');
     trace.push(row);
+    captureDiagnosticEvent(trace,row);
     if (trace.length > MAX_TRACE) trace.splice(0, trace.length - MAX_TRACE);
     try { console.debug('[OSG TOC]', row.stage, row.event, row.status, row.message || ''); } catch (_) {}
     return row;
@@ -595,7 +870,9 @@ function embeddedJobDois(value) {
     var body = {};
     try { body = JSON.parse(String(text || '{}')); } catch (_) {}
     if (!response.ok) {
-      var error = new Error('fetch_upload_http_' + String(response.status || 0));
+      var detail=autoReportText(body.code||body.detail||body.error||'');
+      var error = new Error('fetch_upload_http_' + String(response.status || 0)+(detail?':'+detail:''));
+      error.responseError=detail;
       error.httpStatus = Number(response.status || 0);
       throw error;
     }
@@ -629,6 +906,8 @@ function embeddedJobDois(value) {
         );
         combined.gmError = String(gmError && gmError.message || gmError);
         combined.fetchError = String(fetchError && fetchError.message || fetchError);
+        combined.httpStatus=Number(fetchError&&fetchError.httpStatus||gmError&&gmError.httpStatus||0);
+        combined.responseError=String(fetchError&&fetchError.responseError||'');
         throw combined;
       }
     }
@@ -1335,6 +1614,7 @@ function embeddedJobDois(value) {
       candidateSource: candidate.source,
       candidateScore: candidate.score
     });
+    var requestStarted=Date.now();
     try {
       var response = await fetch(requestUrl, {
         method: 'GET',
@@ -1351,7 +1631,8 @@ function embeddedJobDois(value) {
         status: response.ok ? 'ok' : 'http_error',
         httpStatus: response.status,
         contentType: contentType,
-        url: requestUrl
+        url: response.url || requestUrl,
+        message:'durationMs='+(Date.now()-requestStarted)+';retryAfter='+String(response.headers.get('retry-after')||'').slice(0,80)
       });
       if (!response.ok) throw new Error('page_fetch_http_' + response.status);
       var buffer = await response.arrayBuffer();
@@ -1370,8 +1651,9 @@ function embeddedJobDois(value) {
         stage: 'page_fetch',
         event: 'failed',
         status: 'failed',
-        url: requestUrl,
-        message: String(error && error.message || error)
+        httpStatus:Number(response&&response.status||0),
+        url: response&&response.url || requestUrl,
+        message: String(error&&error.name||'Error')+':'+String(error && error.message || error)+';durationMs='+(Date.now()-requestStarted)
       });
       return null;
     }
@@ -1388,6 +1670,7 @@ function embeddedJobDois(value) {
       candidateSource: candidate.source,
       candidateScore: candidate.score
     });
+    var requestStarted=Date.now();
     try {
       var response = await gmRequest({
         method: 'GET',
@@ -1409,7 +1692,8 @@ function embeddedJobDois(value) {
         status: status >= 200 && status < 300 ? 'ok' : 'http_error',
         httpStatus: status,
         contentType: contentType,
-        url: requestUrl,
+        url: response.finalUrl || requestUrl,
+        message:'durationMs='+(Date.now()-requestStarted)+';retryAfter='+headerValue(response.responseHeaders,'retry-after').slice(0,80),
         byteLength: bytes
       });
       if (status < 200 || status >= 300) {
@@ -1524,6 +1808,7 @@ function embeddedJobDois(value) {
     // recovery_direct_stage_v1: /import is deliberately locked during recovery.
     // Store once in R2; a positive staging receipt is not publication completion.
     var pageDoi = assertBoundCaptureJob(job, candidate.url);
+    captureLiveUpdate(job,'uploading',{label:candidate.label});
     var payload = {
       doi: job.doi,
       jobId: job.jobId,
@@ -1578,6 +1863,7 @@ function embeddedJobDois(value) {
 
   async function uploadCapture(job, candidate, image, trace, token) {
     assertBoundCaptureJob(job, candidate.url);
+    captureLiveUpdate(job,'uploading',{label:candidate.kind==='figure1'?'Figure 1 替代图':'TOC'});
     pushTrace(trace, {
       stage: 'r2_upload',
       event: 'start',
@@ -1700,10 +1986,16 @@ function embeddedJobDois(value) {
     job.publisher=job.publisher||publisherForDoi(job.doi);
     job.captureDeadline=Date.now()+6*60*1000;
     var result={status:'failed',reason:'',toc:{status:job.captureToc===false?'already_available':'pending'},figures:{status:'pending',discovered:0,stored:0,failed:0,items:[]},figuresImported:0,figuresStaged:0,published:false};
+    job._liveResult=result;
+    autoReportJob=job;
+    captureLiveUpdate(job,'discovering');
     pushTrace(trace,{stage:'job',event:'start',status:'running',url:location.href,message:'v'+VERSION+';paired_capture=1;need='+String(job.mediaNeed)});
     try {
       if (!token) throw new Error('write_token_missing');
       var discovered=await waitForPairedVisuals(job,trace);
+      job._liveDiscoveryDone=true;
+      result.figures.discovered=new Set(discovered.figures.map(function(c){return c.label;})).size;
+      captureLiveUpdate(job,'discovering');
       if (job.captureToc!==false) {
         try {
           var officials=discovered.toc.filter(function(c){return c.kind==='official';});
@@ -1713,10 +2005,12 @@ function embeddedJobDois(value) {
             var receipt=await uploadCapture(job,best.candidate,best.image,trace,token);
             result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl};
             checkpoint.toc=result.toc;saveCheckpoint(job.doi,checkpoint);
+            captureLiveUpdate(job,'saved',{label:best.candidate.kind==='figure1'?'Figure 1 替代图':'TOC'});
           } else result.toc={status:'not_found',reason:'no_usable_official_or_figure1'};
         } catch(error) {
           if (/doi_mismatch|stale|unbound|user_aborted/.test(String(error.message))) throw error;
           result.toc={status:'failed',reason:String(error.message)};
+          captureLiveUpdate(job,'image_failed',{label:'TOC',error:error.message});
         }
       }
       var groups=new Map();
@@ -1727,10 +2021,10 @@ function embeddedJobDois(value) {
       var downloadedThisVisit=0;
       for (var i=0;i<labels.length;i+=1) {
         if (Date.now()>job.captureDeadline) {result.figures.limitReached=true;break;}
-        var label=labels[i];
+        var label=labels[i];job._liveLabel=label;
         var saved=checkpoint.figures[label];
         if(saved&&saved.contentHash&&saved.sourceUrl&&groups.get(label).some(function(c){return c.url===saved.sourceUrl;})) {
-          result.figures.items.push(Object.assign({},saved,{status:'already_staged'}));result.figures.stored+=1;continue;
+          result.figures.items.push(Object.assign({},saved,{status:'already_staged'}));result.figures.stored+=1;captureLiveUpdate(job,'reused',{label:label});continue;
         }
         if(downloadedThisVisit>=20){result.figures.limitReached=true;break;}
         downloadedThisVisit+=1;
@@ -1741,10 +2035,12 @@ function embeddedJobDois(value) {
           result.figures.items.push({label:label,status:'staged',quality:chosen.quality.quality,width:chosen.image.width,height:chosen.image.height,sourceUrl:chosen.candidate.url,contentHash:stored.contentHash});
           result.figures.stored+=1;result.figuresStaged+=1;
           checkpoint.figures[label]=result.figures.items[result.figures.items.length-1];saveCheckpoint(job.doi,checkpoint);
+          captureLiveUpdate(job,'saved',{label:label,quality:chosen.quality.quality,width:chosen.image.width,height:chosen.image.height});
         } catch(error) {
           if (/doi_mismatch|stale|unbound|user_aborted/.test(String(error.message))) throw error;
           result.figures.failed+=1;
           result.figures.items.push({label:label,status:'failed',reason:String(error.message)});
+          captureLiveUpdate(job,'image_failed',{label:label,error:error.message});
         }
       }
       if (result.figures.stored+result.figures.failed<labels.length) result.figures.limitReached=true;
@@ -1757,6 +2053,7 @@ function embeddedJobDois(value) {
       result.reason=String(error.message);
     }
     pushTrace(trace,{stage:'paired_result',event:'complete',status:result.status,message:result.reason});
+    captureLiveUpdate(job,'finished',{error:result.status==='failed'?result.reason:''});
     return finishPairedJob(job,result,trace,token);
   }
 
@@ -1937,7 +2234,7 @@ function embeddedJobDois(value) {
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
         if(GM_getValue(ACTIVE_JOB_KEY,null)) {stopReason='another_task_still_active';break;}
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,generation,'figures'),null);
-        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt});
+        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
         badge('TOC＋正文图 '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result=null,closed=true;
@@ -1954,6 +2251,11 @@ function embeddedJobDois(value) {
           clearOwnedJob(job);
           if(tab)closed=await closeTaskTab(tab);
           if(!closed)stopReason=stopReason||'previous_task_tab_not_closed';
+        }
+        if((result && !result.toc && result.status==='failed') || stopReason) {
+          var observed=currentPublisherHeartbeat();
+          var observedUrl=observed&&observed.jobId===job.jobId?observed.href:'';
+          enqueueCaptureReport(job,[{at:nowIso(),stage:'controller',event:'stopped',status:'failed',message:stopReason||(result&&result.reason)||'unknown_controller_failure',url:observedUrl}], 'controller_error',stopReason||(result&&result.reason),true,observedUrl);
         }
         if(result && !stopReason) {
           result.version=VERSION;
@@ -2024,6 +2326,9 @@ function embeddedJobDois(value) {
   }
 
   function installMenu() {
+    GM_registerMenuCommand('查看实时抓取进度', function () {
+      if(isGalleryPage()){mountCaptureLivePanel();globalThis.__OSG_CAPTURE_LIVE_PANEL__.show();}
+    });
     GM_registerMenuCommand('设置 R2 写入令牌', function () {
       var value = window.prompt('输入 BRIDGE_WRITE_TOKEN。只保存在本机 Tampermonkey 存储，不会写入 Git/R2 日志。', '');
       if (value === null) return;
@@ -2173,6 +2478,7 @@ function embeddedJobDois(value) {
       if (isAbortRequested()) throw new Error('user_aborted');
       var candidate=candidates[i];
       assertBoundCaptureJob(job,candidate.url);
+      captureLiveUpdate(job,'downloading',{label:role==='toc'?'TOC':candidate.label});
       try {
         var image=cache.get(candidate.url);
         if (image===undefined) { image=await acquireImage(candidate,trace); cache.set(candidate.url,image); }
@@ -2181,6 +2487,7 @@ function embeddedJobDois(value) {
         var actual=image.sourceUrl||candidate.url;
         assertBoundCaptureJob(job,actual);
         var quality=measuredQuality(image,role);
+        captureLiveUpdate(job,'comparing',{label:role==='toc'?'TOC':candidate.label,quality:quality.quality,width:image.width,height:image.height});
         pushTrace(trace,{stage:'figure_quality',event:'measured',status:quality.quality,url:actual,imageWidth:image.width,imageHeight:image.height,message:role+';label='+(candidate.label||candidate.kind)+';method='+image.method});
         if (!quality.usable) continue;
         if (!best || quality.rank>best.quality.rank) best={candidate:Object.assign({},candidate,{url:actual}),image:image,quality:quality};
@@ -2201,6 +2508,7 @@ function embeddedJobDois(value) {
       assertBoundCaptureJob(job);
       var state=pageState(job,trace);
       if (state.auth || state.challenge) {
+        captureLiveUpdate(job,state.auth?'auth_wait':'challenge_wait');
         GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:state.auth?'auth_wait':'challenge_wait',at:nowIso()});
         await sleep(2000); continue;
       }
@@ -2221,10 +2529,12 @@ function embeddedJobDois(value) {
   async function finishPairedJob(job,result,trace,token) {
     result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.finishedAt=nowIso();
     GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,status:result.status,trace:trace,finishedAt:result.finishedAt});
-    // The controller acknowledges completed capture independently of diagnostic transport.
+    enqueueCaptureReport(job,trace,result.status,result.reason,true);
+    // Durable local report is queued BEFORE the controller can close this publisher tab.
     GM_setValue(resultKey(job.doi),result);
     GM_deleteValue(progressKey(job.doi));
-    await uploadReport(job,trace,result.status,result.reason,null,token);
+    // The persistent Gallery sender sends/acknowledges the report independently of this tab.
+    autoReportJob=null;
     return result;
   }
 
@@ -2264,6 +2574,8 @@ function embeddedJobDois(value) {
   installMenu();
 
   if (isGalleryPage()) {
+    mountCaptureLivePanel();
+    startAutomaticCaptureReports();
     setTimeout(controllerRun, 1500);
     setInterval(function () {
       if (!GM_getValue(ACTIVE_JOB_KEY, null)) controllerRun();

@@ -16,6 +16,7 @@ let passed = 0;
 async function scenario(name, options = {}) {
   const requests = []; const trace = []; let guardCalls = 0;
   const ctx = vm.createContext({
+    captureLiveUpdate: () => {}, // The observer has independent ownership/count/privacy tests.
     VERSION: '6.2.20', location: { href: 'https://pubs.acs.org/doi/' + doi },
     FIGURE_STAGE_ENDPOINT: '/api/article-figures/stage',
     normalizeDoi: x => String(x || '').toLowerCase(),

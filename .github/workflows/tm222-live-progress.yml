@@ -1,0 +1,87 @@
+name: Tampermonkey live progress regression
+on:
+  push:
+    branches: [feat/tm222-live-progress]
+    paths:
+      - 'scripts/tm-live-progress.fragment.js'
+      - 'scripts/apply-tm222-live-progress.py'
+      - 'scripts/test-tm222-live-progress.mjs'
+      - 'scripts/tm-auto-report.fragment.js'
+      - 'scripts/apply-tm222-auto-report.py'
+      - 'scripts/test-tm222-auto-report.mjs'
+      - 'scripts/finish-tm222-contracts.py'
+      - '.github/workflows/tm222-live-progress.yml'
+  pull_request:
+    branches: [main]
+    paths: ['public/toc-mainline.user.js', 'scripts/test-tm222-live-progress.mjs', 'scripts/tm-live-progress.fragment.js', 'scripts/tm-auto-report.fragment.js']
+permissions:
+  contents: write
+concurrency:
+  group: tm222-live-progress-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply exact observer and durable-report patches
+        run: |
+          python3 scripts/apply-tm222-live-progress.py
+          python3 scripts/apply-tm222-auto-report.py
+          python3 scripts/finish-tm222-contracts.py
+          node --check public/toc-mainline.user.js
+          git diff --check
+      - name: Keep controller identity receipts and report-delivery checks
+        run: |
+          node scripts/test-tm221-window-guard.mjs
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
+      - name: Build actual installable Bridge
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+      - name: Test paired capture and actual nonmodal progress panel in Chromium
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install chromium
+          node scripts/test-tm-paired-capture.mjs
+          node scripts/test-tm222-live-progress.mjs
+      - name: Read detailed existing user failure evidence without media writes
+        run: node scripts/read-tm-current-failures.mjs
+      - name: Preserve tested sources on isolated branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/tm222-live-progress'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs scripts/validate-tm220-artifacts.mjs scripts/test-tm221-window-guard.mjs scripts/test-tm-stage-first.mjs scripts/tm-live-progress.fragment.js scripts/test-tm222-live-progress.mjs scripts/patch-tm221-window-guard.py scripts/tm-auto-report.fragment.js scripts/test-tm222-auto-report.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: finalize report delivery and explicit Nature permission diagnostics'
+            git push origin HEAD:feat/tm222-live-progress
+          fi
+          git rev-parse HEAD > "$RUNNER_TEMP/tm222-tested-head.txt"
+      - name: Preserve panel and delivery evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tm222-live-panel-tested
+          path: |
+            ${{ runner.temp }}/tm222-*.png
+            ${{ runner.temp }}/tm222-*.json
+            ${{ runner.temp }}/tm222-tested-head.txt
+            public/toc-mainline.user.js
+            public/gallery-vpn-bridge.user.js
+          retention-days: 7
