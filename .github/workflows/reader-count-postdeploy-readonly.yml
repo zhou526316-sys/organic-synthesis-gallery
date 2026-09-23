@@ -1,0 +1,43 @@
+name: Read-only reader-count postdeploy acceptance
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/reader-count-postdeploy-readonly.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Read both production aggregate endpoints without marking readers
+        run: |
+          mkdir -p reader-postdeploy
+          node --input-type=module <<'NODE'
+          import { writeFile } from 'node:fs/promises';
+          const bases = ['https://api.gczhouwld.com','https://organic-synthesis-gallery.zhou526316.workers.dev'];
+          const evidence = { checkedAt: new Date().toISOString(), productionWrites: false, markRequests: 0, results: [] };
+          for (const base of bases) {
+            const item = { base };
+            for (const endpoint of ['/api/user-ui/reader-stats','/api/user-ui/site-stats']) {
+              const response = await fetch(base + endpoint, { method:'GET', headers:{'cache-control':'no-cache','accept':'application/json'}, signal:AbortSignal.timeout(15000) });
+              if (!response.ok) throw new Error(base + endpoint + ' HTTP ' + response.status);
+              item[endpoint] = await response.json();
+            }
+            evidence.results.push(item);
+          }
+          const [left,right] = evidence.results.map(item=>item['/api/user-ui/reader-stats']);
+          if (left.generation !== 'article-open-v3' || right.generation !== 'article-open-v3') throw new Error('generation mismatch');
+          for (const key of ['uniquePaperReads','uniqueIps','papersWithReaders','summedReaderCounts']) {
+            if (left[key] !== right[key]) throw new Error('origin mismatch ' + key);
+          }
+          if (!left.countersConsistent || !right.countersConsistent) throw new Error('materialized counter mismatch');
+          if (left.uniquePaperReads !== left.summedReaderCounts) throw new Error('ledger/materialized mismatch');
+          await writeFile('reader-postdeploy/evidence.json', JSON.stringify(evidence,null,2));
+          console.log(JSON.stringify({reader:left,site:evidence.results[0]['/api/user-ui/site-stats'].allTime}));
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reader-count-postdeploy-readonly
+          path: reader-postdeploy/evidence.json
+          retention-days: 7
