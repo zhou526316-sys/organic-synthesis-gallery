@@ -56,8 +56,13 @@ try{
   }
   function mediaFor(count,officialCount=count){return {items:Object.fromEntries(synthetic.slice(0,count).map((x,i)=>[x.row.doi,record(x.row.doi,i<officialCount)]))};}
   function liveFor(count){return {items:Object.fromEntries(synthetic.slice(0,count).map(x=>[x.row.doi,record(x.row.doi,false)]))};}
+  function localOfficial(row){return {doi:row.doi,kind:'official',captureVersion:'6.2.20',pageDoi:row.doi,mediaGeneration:BODY_MEDIA_GENERATION,updatedAt:row.updatedAt,
+    articleUrl:row.articleUrl,sourceUrl:row.sourceUrl};}
   async function reset(media){await writeFile(mediaPath,JSON.stringify(media));await writeFile(ledgerPath,JSON.stringify({schemaVersion:1,count:0,items:[]}));}
-  function inputs(count,previous={policyId:policy.policyId,items:[],attempts:{}}){return {previous,live:liveFor(count),stage:{count,items:synthetic.slice(0,count).map(x=>x.row)},stageError:null};}
+  function inputs(count,previous={policyId:policy.policyId,items:[],attempts:{}}){
+    const items=synthetic.slice(0,count).map(x=>x.row);
+    return {previous,live:liveFor(count),stage:{count,items},stageError:null,localCaptures:{count,items:items.map(localOfficial)},localCaptureError:null};
+  }
   const decoder={decode:async row=>({width:row.width,height:row.height}),close:async()=>{}};
   const getNew=async r=>bytesByKey.get(exactKey(r)),getOld=async e=>bytesByKey.get(exactKey(e.record));
 
