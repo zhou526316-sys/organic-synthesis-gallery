@@ -1,0 +1,73 @@
+name: Compare GIF source and shadow rendering boundaries
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui147-gif-source-boundary.yml']
+permissions:
+  contents: read
+jobs:
+  boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 03f0d46178dd702077c97004e9f8d3dcb015ce00
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Build unchanged candidate and install pinned browser
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/gif-source.log 2>&1 || { tail -60 /tmp/gif-source.log; exit 1; }
+          npm run build
+      - name: Create byte-identical source controls without changing product source
+        run: |
+          mkdir -p gif-boundary
+          cat > tests/pr147-gif-boundary.spec.ts <<'TS'
+          import { test, expect } from '@playwright/test';
+          import { open, gifFile, GIF, originalHash } from './status-image-fixtures';
+          import { expectAnimatedImage } from './animated-image-evidence';
+          test.use({trace:'off',serviceWorkers:'block',viewport:{width:390,height:900}});
+          for(const mode of ['shadow-blob','gallery-blob','gallery-data']) test(mode,async({page},info)=>{
+            let image;
+            if(mode==='shadow-blob'){
+              await page.setContent('<div id="host"></div>');
+              await page.locator('#host').evaluate((host,base64)=>{
+                const root=host.attachShadow({mode:'open'});const bytes=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));
+                const image=document.createElement('img');image.src=URL.createObjectURL(new Blob([bytes],{type:'image/gif'}));
+                image.style.cssText='width:72px;height:36px;position:fixed;left:79px;top:485px';root.appendChild(image);
+              },GIF.toString('base64'));
+              image=page.locator('#host img');
+              await expect.poll(()=>image.evaluate(node=>(node as HTMLImageElement).naturalWidth)).toBe(120);
+            }else{
+              const actions=await open(page,390);
+              await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
+              await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
+              image=actions.locator('[data-action="set-status:to-read"] .status-image');
+              await expect(image).toHaveAttribute('data-image-source','original');
+              if(mode==='gallery-data')await image.evaluate((node,base64)=>(node as HTMLImageElement).src='data:image/gif;base64,'+base64,GIF.toString('base64'));
+            }
+            const hash=await originalHash(image);await info.attach('source.json',{body:JSON.stringify({mode,hash}),contentType:'application/json'});
+            await expectAnimatedImage(image,info);
+            expect(await originalHash(image)).toBe(hash);
+          });
+          TS
+          git diff --exit-code -- src/ public/ shared/
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-source-preview.log 2>&1 &
+          for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
+          exit 1
+      - name: Run untraced pixel and byte controls
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: gif-boundary/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/pr147-gif-boundary.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=gif-boundary/tests 2>&1 | tee gif-boundary/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr147-gif-source-boundary
+          path: gif-boundary/
+          retention-days: 7
