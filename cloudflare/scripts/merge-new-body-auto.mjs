@@ -104,7 +104,7 @@ export function tailFlushState(rows,inputs,policy,now=Date.now()){
 export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()}){
   assertSnapshotCoherence(inputs.previous,inputs.live);
   const cfg=await configuration(root),{policy,holds,papers}=cfg;
-  if(!policy.enabled||!inputs.stage)return {...cfg,rows:[]};
+  if(!policy.enabled||!inputs.stage)return {...cfg,rows:[],tocReady:new Set(),tail:{stable:false,newestEvidenceAt:0,ageMs:null,waitMs:Math.max(1,Number(policy.tailFlushAfterMinutes||15))*60*1000}};
   const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=tocReadyDois(inputs);
   const rows=[];
   for(const row of inputs.stage.items){
