@@ -1,3 +1,4 @@
+import { recordReaderOpen } from './reader-count-ledger.js';
 import { normalizeDoi } from './media.js';
 
 const FEEDBACK_KINDS = new Set(['toc', 'image', 'title', 'date', 'duplicate', 'classification', 'other']);
@@ -519,31 +520,13 @@ export async function markReader(env, payload, request) {
   const ipHash = actorId.replace(/^ip:/, '');
   const now = Date.now();
 
-  const inserted = await env.DB.prepare(
-    `INSERT OR IGNORE INTO paper_open_readers_v3 (doi, ip_hash, first_opened_at)
-     VALUES (?, ?, ?)`
-  ).bind(doi, ipHash, now).run();
-  const unique = Number(inserted?.meta?.changes || 0) > 0;
-
-  if (unique) {
-    await env.DB.prepare(
-      `INSERT INTO paper_open_reader_counts_v3 (doi, count, updated_at)
-       VALUES (?, 1, ?)
-       ON CONFLICT(doi) DO UPDATE SET
-         count = paper_open_reader_counts_v3.count + 1,
-         updated_at = excluded.updated_at`
-    ).bind(doi, now).run();
-  }
-
-  const row = await env.DB.prepare(
-    `SELECT count FROM paper_open_reader_counts_v3 WHERE doi = ?`
-  ).bind(doi).first();
+  const { unique, count } = await recordReaderOpen(env.DB, doi, ipHash, now);
 
   return {
     status: 200,
     body: {
       doi,
-      count: Math.max(0, Number(row?.count || 0)),
+      count,
       unique,
       generation: 'article-open-v3',
     },

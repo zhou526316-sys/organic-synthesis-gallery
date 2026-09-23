@@ -1,0 +1,48 @@
+name: Atomic reader counter regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/worker/**'
+      - '.github/workflows/reader-counter-atomic-ci.yml'
+permissions:
+  contents: read
+concurrency:
+  group: reader-atomic-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  readers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install existing Worker dependencies and pinned stable Miniflare
+        run: |
+          npm install --prefix cloudflare/worker --no-audit --no-fund
+          npm install --prefix cloudflare/worker --no-save --no-package-lock --no-audit --no-fund miniflare@4.20260730.0
+          node -e "const p=require('./cloudflare/worker/node_modules/miniflare/package.json'); if(p.version!=='4.20260730.0') throw new Error(p.version)"
+      - name: Execute actual SQL fault recovery and duplicate-reader regressions
+        run: |
+          mkdir -p reader-atomic-results
+          git rev-parse HEAD > reader-atomic-results/tested-commit.txt
+          git archive --format=zip HEAD cloudflare/worker/src cloudflare/worker/scripts > reader-atomic-results/reviewed-source.zip
+          set -o pipefail
+          node --test cloudflare/worker/scripts/test-reader-counts.mjs 2>&1 | tee reader-atomic-results/sqlite.tap
+      - name: Verify transactions through an actual local D1 binding, never production
+        run: |
+          set -o pipefail
+          node --test cloudflare/worker/scripts/test-reader-counts-d1.mjs 2>&1 | tee reader-atomic-results/miniflare-d1.tap
+      - name: Compile deployable Worker without publishing
+        run: npm --prefix cloudflare/worker run check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reader-atomic-results
+          path: reader-atomic-results/
+          retention-days: 7
+          if-no-files-found: error
