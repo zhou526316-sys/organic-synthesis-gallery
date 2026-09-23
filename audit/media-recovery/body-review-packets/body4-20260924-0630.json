@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body4-20260924-0630",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T22:33:00Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10777122857,
+  "evidenceArchiveSha256": "f6278d35ec2f6d2583b94d8dba7224816900fd1337624f2877b45311b7a3e3f4",
+  "evidenceRunId": 35921664450,
+  "evidenceBaseSha": "8aff005465d31c6a2fc6c5fc70ee48db0dcdcf86",
+  "stageIndexSha256": "c1085c100e7628b4eedda0e15dc812cbc9fe77f6b3f5d10a5d6398f8b4f6fe7a",
+  "approvedCount": 16,
+  "reviewMethod": "Each selected stored file was independently re-hashed from the frozen GitHub evidence archive and visually inspected against its owning caption and paper theme. Task/page/article/source DOI binding, original figure identity, capture protocol 6.2.20, fixed media generation, publisher source path, image role, clarity, duplicate/same-ID publication risk and current-corpus continuity were checked. All selected SVGs were checked for self-contained references and absence of active script/foreignObject content. Capture success and review markers were treated only as provenance evidence. Partial article-level captures were not expanded beyond the exact individually verified stored files. No publisher recrawl, R2 write, server-side direct import/repair, literature-data change or userscript change was performed.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.orglett.6c03356",
+      "images": [
+        ["next-001", "scheme-3", "Viewed the gamma-arylation and downstream synthesis applications of the deuterated amines; structures, deuterium labels, conditions and products match Scheme 3 and its caption. Exact 677,560-byte self-contained SVG re-hashes to c68eb7a75162e8bb517293df93bf385378947b5ff7ee014a3a0404ac6e617594 and does not duplicate the already-published Scheme 2."],
+        ["next-013", "scheme-4", "Viewed transient-directing-group controls, one-pot gamma-deuteration/gamma-arylation and the KIE experiment; chemistry and labels match Scheme 4 and its caption. Exact 459,644-byte self-contained SVG re-hashes to 46ebfaeba29fc7f329cfdb1da1d113b4341cfc4e841706afa4191fbc32f96727. The article report is partial, so only these exact reviewed files are approved."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03494",
+      "images": [
+        ["next-002", "scheme-1", "Viewed the BCB-to-N-heterocycle concept, prior-work comparison and proposed Ni(II)-carbene generation/reactivity; article-specific design and labels match Scheme 1 and its caption. Exact 619,607-byte self-contained SVG re-hashes to 83d4ebcd405523ff651c35cbf34547b943c2d82c350621f3806b150746b16823."],
+        ["next-014", "scheme-2", "Viewed the cyclopropanation/cycloaddition substrate-scope panel with BCB carboxamide products and substituent series; content matches Scheme 2 and its caption. Exact 1,395,102-byte self-contained SVG re-hashes to 2c7dbdcfea6558459735fc98bd49f63a713ad1eac82b68ce2c8a710d6b867c55."],
+        ["next-015", "scheme-3", "Viewed late-stage functionalization and synthetic-utility examples on complex molecules; structures and transformations match Scheme 3 and its caption. Exact 1,156,711-byte self-contained SVG re-hashes to cd6ebc69d9a5a85b2b3eade18bf637fe53474957ac8978f4322a57d71ee12fc6."],
+        ["next-016", "scheme-4", "Viewed the Ni(II)-carbene trapping experiment and plausible catalytic cycles for the BCB transformations; chemistry matches Scheme 4 and its mechanistic-study caption. Exact 653,876-byte self-contained SVG re-hashes to 097cfe4d87d33db1bf619bee917c2da86113508fb51bb8d7e9e70fc1460ca896."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03078",
+      "images": [
+        ["next-003", "scheme-1", "Viewed biological context, prior uracil functionalization approaches and the present Uracil-TT+ Sonogashira coupling concept; content matches Scheme 1 and its caption. Exact 891,594-byte self-contained SVG re-hashes to 171f8bf4cdbd7d68490a007e85fd1bd8cc5102acecad081da3c551162c90b3b1."],
+        ["next-017", "scheme-2", "Viewed the broad 5-alkynyl uracil substrate scope, including alkynes, bioactive-molecule tagging and N-protected uracils; product panel matches Scheme 2 and its caption. Exact 1,893,262-byte self-contained SVG re-hashes to 0e4138121a1b695e69ee038bf39e181b1799dd8b6fff07d55d8b606ce3057e97."],
+        ["next-018", "scheme-3", "Viewed the gram-scale reaction and synthetic applications of the alkynyl uracil products; transformations and product structures match Scheme 3 and its caption. Exact 866,259-byte self-contained SVG re-hashes to 6350ee0833af685a086dbefde54e373995bf155a11bdf5f87af32fb23bf433cb."],
+        ["next-019", "scheme-4", "Viewed the proposed Pd/Cu Sonogashira catalytic cycle involving uracil-thianthrenium coupling; intermediates and labels match Scheme 4 and its caption. Exact 158,583-byte self-contained SVG re-hashes to 4b47598eacd5e3883d1a69b201df2be13b05854f736269188f71b25eb22941cb."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03248",
+      "images": [
+        ["next-004", "figure-1", "Viewed cyclic-voltammetry traces with blank, substrate and rhodium-complex conditions; graph and potential annotations match Figure 1 and its caption. Exact 483,166-byte self-contained SVG re-hashes to a337b03dc39cfdaa4bd2efe7f9a4fd166866b8bb0806f31a0dd82a040906ff4b and is strictly a body Figure 1, never TOC."],
+        ["next-020", "scheme-1", "Viewed macrocyclic bioactive examples, prior Rh/Ir vinylic C-H activation precedents and the present Rh-electrocatalytic macrocyclization concept; content matches Scheme 1 and its caption. Exact 734,189-byte self-contained SVG re-hashes to 4310103940ad4cf6362b1111037598322e202c5a98f21444aba9d3ba7e4aa612."],
+        ["next-021", "scheme-3", "Viewed the alkyl-chain-length scope of the electrochemical Rh-catalyzed macrocyclization, macrocyclic products and crystallographic example; content matches Scheme 3 and its caption. Exact 479,750-byte self-contained SVG re-hashes to d717bce41cb9f6fe178db3115a768fb52422e32bc0b60c8e21c6e81d855aa131."],
+        ["next-022", "scheme-4", "Viewed the gram-scale synthesis and product transformation for the macrocyclic iminoisocoumarin chemistry; content matches Scheme 4 and its synthetic-application caption. Exact 262,163-byte self-contained SVG re-hashes to 8bca6272a406fdec566a7b29de0eafc08cf5dc165b7ca6175dd079fc66a5a0ea."],
+        ["next-023", "scheme-5", "Viewed H/D exchange, KIE, no-current stoichiometric, complex electrolysis, catalytic and competition experiments; panel matches Scheme 5 and its mechanistic-study caption. Exact 950,321-byte self-contained SVG re-hashes to 046ee3dfa3365af6406d2326e83260c54e27264e3e86c0b91952e2fa9a8fd01a."],
+        ["next-024", "scheme-6", "Viewed the proposed Rh electrocatalytic cycle with anodic oxidation, C-H activation, alkyne coordination, migratory insertion and reductive elimination; content matches Scheme 6 and its caption. Exact 304,953-byte self-contained SVG re-hashes to bb9c092d1ebf12e74c20f852f3ccad73f3824b83b40a24f3ef5bd6e5089eefda. Article capture is 6/7, so missing Scheme 2 remains unapproved."]
+      ]
+    }
+  ]
+}
