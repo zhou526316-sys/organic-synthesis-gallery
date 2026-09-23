@@ -97,16 +97,22 @@ jobs:
           t=replace(t,"  private async action(action: string): Promise<void> {", "  private async action(action: string): Promise<void> {\n"+handler)
           p.write_text(t)
           p,t=load('src/user-ui/status-image-assets.ts','5eb9ae30b99666609050a8f509e25cd9675d3e1e')
-          t=replace(t,"  const id = style.imageOriginal?.id;", "  const id = style.imageCrop ? undefined : style.imageOriginal?.id;") if t.count("  const id = style.imageOriginal?.id;")==1 else t.replace("  const id = style.imageOriginal?.id;", "  const id = style.imageCrop ? undefined : style.imageOriginal?.id;")
+          assert t.count('  const id = style.imageOriginal?.id;')==2
+          t=t.replace('  const id = style.imageOriginal?.id;', '  const id = style.imageCrop ? undefined : style.imageOriginal?.id;')
           t=replace(t,"data-image-source='preview' ${id", "data-image-source='${style.imageCrop ? 'crop' : 'preview'}' ${id")
-          t=replace(t,"  image.dataset.imageSource = 'preview';", "  image.dataset.imageSource = style.imageCrop ? 'crop' : 'preview';")
+          t=replace(t,"\n  image.dataset.imageSource = 'preview';", "\n  image.dataset.imageSource = style.imageCrop ? 'crop' : 'preview';")
           t=replace(t,"    : unavailable;", "    : style.imageCrop ? '裁切结果（静态）· 原图保留，可恢复 / Static crop · original retained and restorable' : unavailable;")
+          p.write_text(t)
+          p,t=load('src/user-ui/image-cropper.ts','a4fb125be43e83e84aed2f096797eeaaa6489470')
+          t=replace(t,"(initial?.strokes || []).filter", "(Array.isArray(initial?.strokes) ? initial.strokes : []).filter")
+          t=replace(t,"bound(initial.background, 0, 100)", "bound(finite(initial.background, 24), 0, 100)")
+          t=replace(t,"    ctx.strokeStyle = '#fff';", "    ctx.clearRect(x, y, w, h); ctx.fillStyle = '#e8edf4'; ctx.fillRect(x, y, w, h); ctx.drawImage(result, x, y, w, h);\n    ctx.strokeStyle = '#fff';")
           p.write_text(t)
           PY
           git diff --check
           git diff --stat
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/user-ui/shared.ts src/user-ui/paper-actions.ts src/user-ui/status-image-assets.ts
-          git commit -m 'feat(ui): connect direct reversible crop editing and prevent full-original override'
+          git add src/user-ui/shared.ts src/user-ui/paper-actions.ts src/user-ui/status-image-assets.ts src/user-ui/image-cropper.ts
+          git commit -m 'feat(ui): connect reversible crop editing and prevent full-original override'
           git push origin HEAD:feat/ui-image-crop-edit-20260923
