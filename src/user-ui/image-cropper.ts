@@ -123,6 +123,10 @@ export async function cropUserImage(file: Blob, initial?: CropRecipe, sourceNoti
   const canvas = q<HTMLCanvasElement>('[data-crop-canvas]'), preview = q<HTMLCanvasElement>('[data-crop-preview]');
   const ratio = Math.min(1, 600 / W, 340 / H);
   canvas.width = Math.max(1, Math.round(W * ratio)); canvas.height = Math.max(1, Math.round(H * ratio));
+  // A portrait canvas must not stretch to the grid column while its height
+  // is capped; letterboxing would misalign pointer and source coordinates.
+  canvas.style.maxWidth = `${canvas.width}px`;
+  canvas.style.justifySelf = 'center';
   const ctx = canvas.getContext('2d')!;
   const normalize = (): void => {
     recipe.width = bound(finite(recipe.width, 1), 1 / W, 1); recipe.height = bound(finite(recipe.height, 1), 1 / H, 1);

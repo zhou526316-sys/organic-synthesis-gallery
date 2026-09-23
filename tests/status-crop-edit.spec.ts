@@ -209,3 +209,25 @@ test('drag, resize, keyboard, zoom and wide mode change the saved selection',asy
   const result=await pixels(page,(await state(page)).imageData);
   expect(Math.abs(result.width-3*result.height)).toBeLessThanOrEqual(1);
 });
+
+test('portrait source coordinates stay aligned with the visible crop canvas',async({page},info)=>{
+  const actions=await open(page,390);
+  const bytes=await page.evaluate(()=>{
+    const c=document.createElement('canvas');c.width=200;c.height=600;
+    const x=c.getContext('2d')!;
+    ['#ff0000','#00ff00','#0000ff'].forEach((color,i)=>{x.fillStyle=color;x.fillRect(0,i*200,200,200);});
+    return c.toDataURL().split(',')[1];
+  });
+  await actions.locator('[data-status-image="to-read"]').setInputFiles({name:'portrait.png',mimeType:'image/png',buffer:Buffer.from(bytes,'base64')});
+  await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
+  const dialog=await crop(page,actions);const canvas=dialog.locator('[data-crop-canvas]');
+  const box=(await canvas.boundingBox())!;
+  expect(Math.abs((box.width-2)/(box.height-2)-1/3)).toBeLessThan(.01);
+  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();
+  await page.mouse.move(box.x+box.width/2,box.y+box.height/2-box.height/3,{steps:4});await page.mouse.up();
+  expect(Number(await dialog.locator('[data-crop-field="y"]').inputValue())).toBeLessThanOrEqual(2);
+  await page.screenshot({path:info.outputPath('portrait-crop-aligned.png')});
+  await dialog.locator('[data-crop-apply]').click();
+  await expect.poll(async()=>(await state(page)).imageCrop?.recipe.mode).toBe('square');
+  expect((await pixels(page,(await state(page)).imageData)).center).toEqual([255,0,0,255]);
+});
