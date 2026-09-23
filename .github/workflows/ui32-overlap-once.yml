@@ -1,0 +1,64 @@
+name: Repair observed editor and feedback-launcher overlap once
+on:
+  push:
+    branches: [feat/ui-glow-width-20260923-b32]
+    paths: ['.github/workflows/ui32-overlap-once.yml']
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Preserve positions; suspend only the launcher behind an active editor
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          p=Path('src/user-ui/feedback-widget.ts')
+          assert subprocess.check_output(['git','hash-object',str(p)],text=True).strip()=='14692c1056983ccf61e03e74e072545945bf7f2c'
+          text=p.read_text()
+          needle='    .site-feedback-tab{border:1px solid #294da8;'
+          assert text.count(needle)==1
+          rule='''    /* The floating launcher must not intercept fields in an open card editor.
+       Keep its saved position and keep an already-open feedback panel available. */
+    body:has(gallery-paper-actions[data-drawer-open="true"]) ${ELEMENT}:not(:has(.site-feedback-panel)){visibility:hidden;pointer-events:none}
+          '''
+          p.write_text(text.replace(needle,rule+needle))
+          p=Path('tests/status-glow-width.spec.ts');text=p.read_text()
+          assert 'real drag previews continuously' in text and 'launcher yields' not in text
+          text+='''
+
+test('feedback launcher yields to an open editor then restores without losing position', async ({ page }) => {
+  const evidence = watch(page);
+  const actions = await open(page, 390);
+  const launcher = page.locator('site-feedback-widget .site-feedback-tab');
+  await actions.locator('[data-action="close"]').click();
+  await expect(launcher).toBeVisible();
+  const before = (await launcher.boundingBox())!;
+  const positionKeys = await page.evaluate(() => [localStorage.getItem('site-feedback-tab-position-v1'), localStorage.getItem('site-feedback-widget-position-v1')]);
+  await button(actions).click();
+  await expect(range(actions)).toBeVisible();
+  await expect(launcher).not.toBeVisible();
+  await actions.locator('[data-action="close"]').click();
+  await expect(launcher).toBeVisible();
+  const after = (await launcher.boundingBox())!;
+  expect(after.x).toBe(before.x); expect(after.y).toBe(before.y);
+  expect(await page.evaluate(() => [localStorage.getItem('site-feedback-tab-position-v1'), localStorage.getItem('site-feedback-widget-position-v1')])).toEqual(positionKeys);
+  await launcher.click();
+  await expect(page.locator('.site-feedback-panel')).toBeVisible();
+  expect(evidence.errors).toEqual([]); expect(evidence.marks).toEqual([]);
+});
+'''
+          p.write_text(text)
+          PY
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/user-ui/feedback-widget.ts tests/status-glow-width.spec.ts
+          git rm .github/workflows/ui32-overlap-once.yml
+          git commit -m 'fix(ui): prevent floating feedback launcher intercepting active card controls'
+          git push origin HEAD:feat/ui-glow-width-20260923-b32
