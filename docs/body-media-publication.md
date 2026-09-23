@@ -55,3 +55,18 @@ Read actual stage inventory, current public ledger/index, per-DOI immutable capt
 Review individual figure content, owning caption, source role and consistency with the paper, including cross-DOI/related-content risks. Preserve useful images even when another figure or TOC is missing. Numeric ACS asset suffixes do not necessarily equal Figure/Scheme numbers. Preserve SVG; identify mixed raster/vector and actual pixel dimensions honestly. Do not claim full article coverage merely from collector counts.
 
 Publish approved copies through the existing pipeline; leave ambiguous records pending with reasons. Every actual publication is followed by online hash checks and a bounded browser check. The current frontend may render only the first ten figures in a strip; a larger stored count is not proof every image is shown. Do not change unrelated UI code in this maintenance task. No meaningful change means no user notification. Record successful changes and new major failures in audit/media-acceptance and synchronize the complete user reply to audit/gpt-responses.
+
+
+## New ACS body-image automatic path — user-authorized 2026-09-23
+
+This amendment separates NEW captured body media from historical recovery. The existing explicit human-review contract remains unchanged for old sealed files, opaque publisher sources, same-ID replacements and non-enabled publisher profiles. New machine decisions are NOT written as human `review.decision=approved`; storage markers retain `semanticReview=not_reviewed`.
+
+The gated Pages build may publish new ACS files under `shared/new-body-auto-policy.json` after current-corpus and scope checks; server marker and recomputed canonical evidence; exact page/source/task DOI; article-scoped CDN filename; same-job report binding isolated body-caption discovery to exact upload start and completed R2 object; actual SHA256 and safe decoding; cross-DOI conflict checks; and final stage-index consistency verification. Missing evidence is held per image, not converted into approval.
+
+Separate `new-body-auto-ledger.json` and `new-body-auto-status.json` identify machine-validated copies. The existing human-reviewed ledger is unchanged. Machine validation establishes consistency, provenance and decodability, not independent visual/semantic judgment or maximum resolution. Existing TOCs and same-ID published images are preserved; more than ten figures per card remain outside this initial profile.
+
+The media-only schedule checks at minutes 7/22/37/52. No-change preflight skips builds. Each build processes at most five articles/thirty new files and carries forward exact previously validated copies. All literature_authorization tests and checks remain mandatory; no corpus input or 08:00/18:00 literature release time changes. The schedule is not a guaranteed fifteen-minute delivery SLA.
+
+Acquisition remains Tampermonkey/VPN Bridge only: this feature reads stored R2 objects/reports, never publisher pages. It does not write/delete staging, import/repair media directly, reopen quarantine or rewrite capture timestamps. Failed builds retain the prior deployed site. Live byte/ledger and bounded browser verification are separate from a successful storage receipt.
+
+Bridge 2.2.23 remains compatible and requires no reinstall. A historical staged receipt describes that upload transaction, while the later publication ledger identifies what is now live. This is an application publishing schedule, not a permanently running assistant code-repair service.
