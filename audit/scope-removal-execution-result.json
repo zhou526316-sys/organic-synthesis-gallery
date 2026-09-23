@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "id": "scope-correction-20260923024323204",
+  "mode": "deletion-only",
+  "correctedAt": "2026-09-23T02:43:23.204Z",
+  "previousReleaseCommit": "5143fe8e863334af24797fcabcb3dfc7fa91af1e",
+  "removedDois": [
+    "10.1021/jacs.6c13517",
+    "10.1021/jacs.6c10701",
+    "10.1038/s41467-026-77963-6",
+    "10.1002/anie.7784614"
+  ],
+  "beforeCards": 536,
+  "afterCards": 532,
+  "reviewFile": "audit/scope-rechecks/scope-correction-20260923024323204.json",
+  "files": [
+    "public/papers.gz.b64",
+    "public/rolling-supplement.json",
+    "audit/scope-rechecks/scope-correction-20260923024323204.json",
+    "audit/publication-release-state.json",
+    "audit/literature-update-state.json",
+    "audit/scope-removal-execution-result.json"
+  ],
+  "deploymentVerified": false,
+  "producedNewPapers": 0
+}

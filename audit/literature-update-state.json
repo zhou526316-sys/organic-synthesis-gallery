@@ -679,5 +679,21 @@
     "publicationSlot": "2026-09-23T08:00:00+08:00",
     "triggerCommit": "31377c5616096272a0d7c76030b0a213dadcdd3e",
     "verifiedAt": "2026-09-23T08:36:32.235+08:00"
+  },
+  "lastScopeCorrection": {
+    "id": "scope-correction-20260923024323204",
+    "mode": "deletion-only",
+    "status": "awaiting_deployment",
+    "correctedAt": "2026-09-23T02:43:23.204Z",
+    "removedDois": [
+      "10.1021/jacs.6c13517",
+      "10.1021/jacs.6c10701",
+      "10.1038/s41467-026-77963-6",
+      "10.1002/anie.7784614"
+    ],
+    "beforeCards": 536,
+    "afterCards": 532,
+    "reviewFile": "audit/scope-rechecks/scope-correction-20260923024323204.json",
+    "reviewBlobSha": "e3555195e903ba5ecbbada6338c49db0b53072f3"
   }
 }
