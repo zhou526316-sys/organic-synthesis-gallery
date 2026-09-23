@@ -6,12 +6,16 @@
     <title>Organic Synthesis Literature Gallery</title>
     <script>
       (() => {
-        const LEGACY_GITHUB_PAGES_HOST = 'zhou526316-sys.github.io';
-        const LEGACY_GALLERY_PREFIX = '/organic-synthesis-gallery';
-        if (
-          window.location.hostname.toLowerCase() === LEGACY_GITHUB_PAGES_HOST &&
-          window.location.pathname.startsWith(LEGACY_GALLERY_PREFIX)
-        ) {
+        const LEGACY_UI_HOSTS = new Set([
+          'zhou526316-sys.github.io',
+          'organic-synthesis-gallery-public.pages.dev',
+        ]);
+        const host = window.location.hostname.toLowerCase();
+        const legacyGithubPages =
+          host === 'zhou526316-sys.github.io' &&
+          window.location.pathname.startsWith('/organic-synthesis-gallery');
+        const legacyFallback = host === 'organic-synthesis-gallery-public.pages.dev';
+        if (LEGACY_UI_HOSTS.has(host) && (legacyGithubPages || legacyFallback)) {
           const current = new URL(window.location.href);
           const destination = new URL('https://api.gczhouwld.com/');
           destination.search = current.search;
