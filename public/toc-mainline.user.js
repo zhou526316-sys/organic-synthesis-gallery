@@ -39,7 +39,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.26';
+  var CONTROLLER_REVISION = '2.2.27';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
@@ -2281,7 +2281,9 @@ function embeddedJobDois(value) {
         var tab=null,result=null,closed=true;
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
-          tab=await Promise.resolve(GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
+          // Publisher DOM work must remain foreground-visible; background tabs can be timer-throttled or suspended
+          // long enough to outlive both the publisher deadline and the Gallery controller budget.
+          tab=await Promise.resolve(GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:true,insert:true,setParent:true}));
           if(!tab || typeof tab.close!=='function')throw new Error('task_tab_handle_unavailable');
           result=await waitForResult(job,tab);
         } catch(error) {
@@ -2296,7 +2298,10 @@ function embeddedJobDois(value) {
         if((result && !result.toc && result.status==='failed') || stopReason) {
           var observed=currentPublisherHeartbeat();
           var observedUrl=observed&&observed.jobId===job.jobId?observed.href:'';
-          enqueueCaptureReport(job,[{at:nowIso(),stage:'controller',event:'stopped',status:'failed',message:stopReason||(result&&result.reason)||'unknown_controller_failure',url:observedUrl}], 'controller_error',stopReason||(result&&result.reason),true,observedUrl);
+          var lastProgress=GM_getValue(progressKey(job.doi),null);
+          var controllerTrace=[{at:nowIso(),stage:'controller',event:'stopped',status:'failed',message:stopReason||(result&&result.reason)||'unknown_controller_failure',url:observedUrl}];
+          if(lastProgress&&lastProgress.status)controllerTrace.push({at:String(lastProgress.at||nowIso()),stage:'controller',event:'last_progress',status:String(lastProgress.status||''),message:'last publisher-page progress visible to Gallery controller',url:String(lastProgress.url||observedUrl||'')});
+          enqueueCaptureReport(job,controllerTrace, 'controller_error',stopReason||(result&&result.reason),true,observedUrl);
         }
         if(result && !stopReason) {
           result.version=VERSION;
@@ -2363,7 +2368,12 @@ function embeddedJobDois(value) {
     });
     writePublisherHeartbeat(job, 'publisher_script_started');
     await sleep(900);
-    await runPublisherJob(job);
+    var finalResult=await runPublisherJob(job);
+    writePublisherHeartbeat(job,'publisher_job_finished');
+    // The task tab was opened by the controller. Close it after durable final_result/result writes
+    // so focus returns to the Gallery controller and the next DOI does not inherit a throttled background loop.
+    setTimeout(function(){try{window.close();}catch(_){}},250);
+    return finalResult;
   }
 
   function installMenu() {
