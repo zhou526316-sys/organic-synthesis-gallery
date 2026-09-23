@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T15:05:00Z",
-  "context": "Read-only Bridge 2.2.26 acquisition-layer diagnosis. Inspect latest stored Tampermonkey reports, especially 10.1021/acs.orglett.6c03543, 10.1021/jacs.6c10408, 10.1021/jacs.6c05496 and 10.1021/acscatal.6c05293, to distinguish discovered-but-unacquired figures from TIFF/application-octet-stream, HTTP 403, transport, low-resolution fallback, upload/storage, or controller causes. Also preserve current stage coverage. No recapture, promotion, reset, delete, publisher access, literature or UI changes.",
+  "requestedAt": "2026-09-23T15:17:00Z",
+  "context": "Read-only diagnosis of the five newest failed Tampermonkey jobs. Preserve full sanitized raw traces for the latest eight reports so controller_error entries retain controller last_progress. Determine whether recent controller_timeout jobs were last seen in discovering, downloading, comparing, uploading/staging, auth/challenge, or finished states, and compare against each publisher job captureDeadline. No recapture, promotion, reset, delete, publisher access, literature or UI changes.",
   "bridgeVersion": "2.2.26",
   "captureProtocol": "6.2.20",
   "readOnly": true,
