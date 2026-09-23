@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
     paths: ['audit/automation-triggers/new-body-continuous.json']
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
   workflow_dispatch:
 permissions:
   contents: read
@@ -15,24 +18,36 @@ concurrency:
   cancel-in-progress: false
 jobs:
   inspect:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 3
     outputs:
       changed: ${{ steps.pending.outputs.changed }}
+      deployment_ref: ${{ steps.deployment.outputs.ref }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: main
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
       - name: Read stored metadata and apply adaptive batch/backlog gates
         id: pending
         run: node cloudflare/scripts/merge-new-body-auto.mjs --poll
+      - name: Resolve exact latest main ref for any publication
+        id: deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          ref="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          test "${#ref}" -eq 40
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
   publish:
     needs: inspect
     if: needs.inspect.outputs.changed == 'true'
     uses: ./.github/workflows/github-pages.yml
+    with:
+      deployment_ref: ${{ needs.inspect.outputs.deployment_ref }}
     permissions:
       contents: read
       pages: write
