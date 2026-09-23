@@ -39,7 +39,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.26';
+  var CONTROLLER_REVISION = '2.2.27';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
@@ -944,6 +944,132 @@ function embeddedJobDois(value) {
   }
   // END OSG_UPLOAD_EVIDENCE_V1
 
+  // BEGIN OSG_FIGURE_STAGE_OUTBOX_V1 -- acquired bytes only; never re-downloads publishers.
+  var FIGURE_STAGE_OUTBOX_PREFIX=P+'figure-stage-outbox-v1:';
+  var FIGURE_STAGE_OUTBOX_LOCK=P+'figure-stage-outbox-lock-v1';
+  var FIGURE_STAGE_OUTBOX_ACK=P+'figure-stage-outbox-ack-v1';
+  var FIGURE_STAGE_OUTBOX_MAX_ITEMS=12;
+  var FIGURE_STAGE_OUTBOX_MAX_CHARS=26000000;
+  var figureStageOutboxBusy=false;
+
+  function figureStageOutboxKeys() {
+    try{return GM_listValues().filter(function(k){return String(k).indexOf(FIGURE_STAGE_OUTBOX_PREFIX)===0;});}catch(_){return [];}
+  }
+  function figureStageOutboxKey(payload) {
+    var doi=normalizeDoi(payload&&payload.doi),id=String(payload&&payload.id||'').replace(/[^a-z0-9-]+/ig,'-').slice(0,100);
+    return doi&&id?FIGURE_STAGE_OUTBOX_PREFIX+encodeURIComponent(doi)+':'+encodeURIComponent(id):'';
+  }
+  function figureStageOutboxChars(keys) {
+    var total=0;
+    (keys||figureStageOutboxKeys()).forEach(function(key){var row=GM_getValue(key,null);total+=String(row&&row.payload&&row.payload.imageData||'').length;});
+    return total;
+  }
+  function enqueueFigureStageRetry(job,candidate,image,payload,quality,error) {
+    try {
+      if(!job||!candidate||!image||!payload||!retryableImageUpload(error))return false;
+      if(!quality||quality.usable!==true)return false;
+      var doi=normalizeDoi(payload.doi),pageDoi=normalizeDoi(payload.pageDoi);
+      if(!doi||pageDoi!==doi||doi!==normalizeDoi(job.doi))return false;
+      if(String(payload.captureVersion||'')!==VERSION||!String(payload.jobId||'').match(/^[a-z0-9-]{16,80}$/i))return false;
+      var data=String(payload.imageData||'');
+      if(!/^data:image\/(?:png|jpeg|jpg|gif|webp|svg\+xml);base64,/i.test(data))return false;
+      var bytes=Number(image.byteLength||0);if(bytes<100||bytes>4000000||data.length>5500000)return false;
+      var key=figureStageOutboxKey(payload);if(!key)return false;
+      var keys=figureStageOutboxKeys(),prior=GM_getValue(key,null);
+      var otherKeys=keys.filter(function(k){return k!==key;});
+      if(!prior&&(otherKeys.length>=FIGURE_STAGE_OUTBOX_MAX_ITEMS||figureStageOutboxChars(otherKeys)+data.length>FIGURE_STAGE_OUTBOX_MAX_CHARS)){
+        GM_setValue(FIGURE_STAGE_OUTBOX_ACK,{at:Date.now(),state:'outbox_full',pending:keys.length,error:'正文图暂存重试队列已满；未丢弃已有排队图片'});
+        return false;
+      }
+      var priorArea=Number(prior&&prior.payload&&prior.payload.width||0)*Number(prior&&prior.payload&&prior.payload.height||0);
+      var nextArea=Number(payload.width||0)*Number(payload.height||0);
+      if(prior&&priorArea>nextArea&&prior.payload&&prior.payload.imageData)return true;
+      var revision=Number(prior&&prior.revision||0)+1;
+      GM_setValue(key,{
+        revision:revision,
+        payload:payload,
+        quality:String(quality.quality||'').slice(0,30),
+        byteLength:bytes,
+        createdAt:prior?Number(prior.createdAt||Date.now()):Date.now(),
+        updatedAt:Date.now(),
+        tries:Number(prior&&prior.tries||0),
+        nextAt:Math.min(Number(prior&&prior.nextAt||0),Date.now()),
+        lastError:autoReportText(error&&error.message||error)
+      });
+      GM_setValue(FIGURE_STAGE_OUTBOX_ACK,{at:Date.now(),state:'queued',doi:doi,id:payload.id,pending:figureStageOutboxKeys().length,error:''});
+      return true;
+    } catch (_) {return false;}
+  }
+  function validateDeferredStageReceipt(receipt,payload) {
+    if(!receipt||receipt.stored!==true||receipt.staged!==true)throw new Error('figure_stage_deferred_receipt_invalid');
+    if(normalizeDoi(receipt.doi)!==normalizeDoi(payload.doi)||String(receipt.id||'')!==String(payload.id||''))throw new Error('figure_stage_deferred_identity_mismatch');
+    return receipt;
+  }
+  function saveDeferredStageCheckpoint(item,receipt) {
+    try {
+      var payload=item.payload||{},checkpoint=readCheckpoint(payload.doi);
+      checkpoint.figures=checkpoint.figures||{};
+      checkpoint.figures[payload.label]={
+        label:payload.label,status:'staged',quality:item.quality||'',
+        width:Number(receipt.width||payload.width||0),height:Number(receipt.height||payload.height||0),
+        sourceUrl:payload.sourceUrl,contentHash:String(receipt.contentHash||'')
+      };
+      saveCheckpoint(payload.doi,checkpoint);
+    } catch (_) {}
+  }
+  async function drainFigureStageOutbox() {
+    if(!isGalleryPage()||figureStageOutboxBusy||!writeToken())return;
+    figureStageOutboxBusy=true;
+    var owner=CONTROLLER_ID+':figure-stage-outbox',key='',item=null;
+    try {
+      var held=GM_getValue(FIGURE_STAGE_OUTBOX_LOCK,null);
+      if(held&&held.owner!==owner&&Number(held.expiresAt||0)>Date.now())return;
+      GM_setValue(FIGURE_STAGE_OUTBOX_LOCK,{owner:owner,expiresAt:Date.now()+90000});
+      await sleep(50);
+      if((GM_getValue(FIGURE_STAGE_OUTBOX_LOCK,{})||{}).owner!==owner)return;
+      var ready=figureStageOutboxKeys().map(function(k){return {key:k,value:GM_getValue(k,null)};})
+        .filter(function(x){return x.value&&x.value.payload&&Number(x.value.nextAt||0)<=Date.now();});
+      ready.sort(function(a,b){return Number(a.value.createdAt||0)-Number(b.value.createdAt||0);});
+      if(!ready.length)return;
+      key=ready[0].key;item=ready[0].value;
+      var receipt=validateDeferredStageReceipt(await postJson(FIGURE_STAGE_ENDPOINT,item.payload,writeToken()),item.payload);
+      var current=GM_getValue(key,null);
+      if(current&&Number(current.revision||0)===Number(item.revision||0)){
+        saveDeferredStageCheckpoint(item,receipt);
+        GM_deleteValue(key);
+      }
+      GM_setValue(FIGURE_STAGE_OUTBOX_ACK,{at:Date.now(),state:'delivered',doi:item.payload.doi,id:item.payload.id,pending:figureStageOutboxKeys().length,error:''});
+    } catch(error) {
+      if(key&&item){
+        var current=GM_getValue(key,null);
+        if(current&&Number(current.revision||0)===Number(item.revision||0)){
+          current.tries=Number(current.tries||0)+1;
+          current.lastError=autoReportText(error&&error.message||error);
+          var retryable=retryableImageUpload(error);
+          current.nextAt=Date.now()+(retryable?Math.min(300000,15000*Math.pow(2,Math.min(current.tries-1,5))):6*60*60*1000);
+          current.blocked=!retryable;
+          GM_setValue(key,current);
+        }
+      }
+      GM_setValue(FIGURE_STAGE_OUTBOX_ACK,{at:Date.now(),state:retryableImageUpload(error)?'pending_retry':'blocked',pending:figureStageOutboxKeys().length,error:autoReportText(error&&error.message||error)});
+    } finally {
+      var lock=GM_getValue(FIGURE_STAGE_OUTBOX_LOCK,null);if(lock&&lock.owner===owner)GM_deleteValue(FIGURE_STAGE_OUTBOX_LOCK);
+      figureStageOutboxBusy=false;
+    }
+  }
+  function startFigureStageOutbox() {
+    if(!isGalleryPage()||globalThis.__OSG_FIGURE_STAGE_OUTBOX_STARTED__)return;
+    globalThis.__OSG_FIGURE_STAGE_OUTBOX_STARTED__=true;
+    setInterval(function(){drainFigureStageOutbox().catch(function(){});},15000);
+    drainFigureStageOutbox().catch(function(){});
+  }
+  function figureStageOutboxDisplay() {
+    var ack=GM_getValue(FIGURE_STAGE_OUTBOX_ACK,null),pending=figureStageOutboxKeys().length;
+    if(!ack)return '正文图补传队列 '+pending+' 张';
+    return (ack.state==='delivered'?'最近补传成功':ack.state==='queued'?'已排队补传':'补传状态：'+String(ack.state||''))+' · 待处理 '+pending+(ack.error?' · '+String(ack.error):'');
+  }
+  // END OSG_FIGURE_STAGE_OUTBOX_V1
+
   function headerValue(headers, name) {
     var wanted = String(name || '').toLowerCase();
     var lines = String(headers || '').split(/\r?\n/);
@@ -1845,7 +1971,7 @@ function embeddedJobDois(value) {
     return image;
   }
 
-  async function uploadArticleFigure(job, candidate, image, trace, token, order) {
+  async function uploadArticleFigure(job, candidate, image, trace, token, order, quality) {
     // recovery_direct_stage_v1: /import is deliberately locked during recovery.
     // Store once in R2; a positive staging receipt is not publication completion.
     var pageDoi = assertBoundCaptureJob(job, candidate.url);
@@ -1892,11 +2018,12 @@ function embeddedJobDois(value) {
         publicationState: 'pending_verified_promotion'
       });
     } catch (error) {
+      var queued=enqueueFigureStageRetry(job,candidate,image,payload,quality,error);
       pushTrace(trace, {
-        stage: 'figure_stage', event: 'failed', status: 'failed',
+        stage: 'figure_stage', event: queued?'queued_retry':'failed', status: queued?'deferred':'failed',
         httpStatus: Number(error && error.httpStatus || 0),
         url: candidate.url,
-        message: String(error && error.message || error)
+        message: (queued?'durable_same_acquired_image_retry;publisherDownloads=0;':'')+String(error && error.message || error)
       });
       throw error;
     }
@@ -2072,7 +2199,7 @@ function embeddedJobDois(value) {
         try {
           var chosen=await acquireBestVisual(job,groups.get(label),trace,cache,'figure');
           if (!chosen) throw new Error('no_usable_figure_variant');
-          var stored=await uploadArticleFigure(job,chosen.candidate,chosen.image,trace,token,i);
+          var stored=await uploadArticleFigure(job,chosen.candidate,chosen.image,trace,token,i,chosen.quality);
           result.figures.items.push({label:label,status:'staged',quality:chosen.quality.quality,width:chosen.image.width,height:chosen.image.height,sourceUrl:chosen.candidate.url,contentHash:stored.contentHash});
           result.figures.stored+=1;result.figuresStaged+=1;
           checkpoint.figures[label]=result.figures.items[result.figures.items.length-1];saveCheckpoint(job.doi,checkpoint);
@@ -2423,6 +2550,9 @@ function embeddedJobDois(value) {
       var summary = GM_getValue(SUMMARY_KEY, {});
       window.alert(JSON.stringify({ runtimeVersion: VERSION, summaryIsCurrentVersion: summary.version === VERSION, activeJob: GM_getValue(ACTIVE_JOB_KEY, null), summary: summary }, null, 2));
     });
+    GM_registerMenuCommand('查看正文图补传队列', function () {
+      window.alert(figureStageOutboxDisplay());
+    });
     GM_registerMenuCommand('清除 TOC 失败冷却并立即重试', function () {
       var queueKeys = [];
       try {
@@ -2669,6 +2799,7 @@ function embeddedJobDois(value) {
   if (isGalleryPage()) {
     mountCaptureLivePanel();
     startAutomaticCaptureReports();
+    startFigureStageOutbox();
     setTimeout(controllerRun, 1500);
     setInterval(function () {
       if (!GM_getValue(ACTIVE_JOB_KEY, null)) controllerRun();
