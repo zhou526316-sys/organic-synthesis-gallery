@@ -1,0 +1,92 @@
+name: New body automatic publication regression
+on:
+  push:
+    branches: [feat/new-body-automatic-publication]
+    paths:
+      - '.github/workflows/new-body-auto-workbench.yml'
+      - 'shared/new-body-auto-policy.json'
+      - 'cloudflare/scripts/new-body-auto-validation.mjs'
+      - 'cloudflare/scripts/merge-new-body-auto.mjs'
+      - 'scripts/decode-new-body-image.py'
+      - 'scripts/test-new-body-auto.mjs'
+      - 'scripts/integrate-new-body-auto.py'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/github-pages.yml'
+      - 'shared/new-body-auto-policy.json'
+      - 'cloudflare/scripts/*new-body-auto*.mjs'
+      - 'scripts/*new-body*.py'
+      - 'scripts/test-new-body-auto.mjs'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: new-body-auto-regression-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Integrate and check media-only workflow changes
+        run: |
+          python3 scripts/integrate-new-body-auto.py
+          python3 -m pip install --disable-pip-version-check --quiet Pillow==11.3.0 CairoSVG==2.8.2 defusedxml==0.7.1
+          node --check cloudflare/scripts/new-body-auto-validation.mjs
+          node --check cloudflare/scripts/merge-new-body-auto.mjs
+          python3 -m py_compile scripts/decode-new-body-image.py
+      - name: Read exact frozen real-capture fixtures
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,io,os,pathlib,urllib.request,urllib.parse,zipfile
+          class BoundRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self,req,fp,code,msg,headers,newurl):
+              r=super().redirect_request(req,fp,code,msg,headers,newurl)
+              if r is not None and urllib.parse.urlsplit(req.full_url).netloc!=urllib.parse.urlsplit(newurl).netloc:r.remove_header('Authorization')
+              return r
+          req=urllib.request.Request('https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/artifacts/10737978319/zip',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+          with urllib.request.build_opener(BoundRedirect()).open(req,timeout=35) as r:b=r.read(32000001)
+          assert hashlib.sha256(b).hexdigest()=='d2ca8159ecdabb4ee21aa389f92f621de0c962eec657ba9514e31f584ded782c'
+          z=zipfile.ZipFile(io.BytesIO(b));out=pathlib.Path(os.environ['RUNNER_TEMP'])/'new-body-fixture';out.mkdir()
+          for n in z.namelist():
+            if n in ['evidence.json','stage-index.json','report-index.json','public-media-index.json'] or n.startswith('images/'):
+              assert '..' not in n and not n.startswith('/')
+              p=out/n;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(z.read(n))
+          PY
+      - name: Test source identity, actual decoding, report proof, preservation and replay
+        env:
+          NEW_BODY_FIXTURE: ${{ runner.temp }}/new-body-fixture
+        run: |
+          node scripts/test-new-body-auto.mjs
+          node scripts/test-body-review-markers.mjs
+          node scripts/test-reviewed-body.mjs
+          node scripts/test-pages-literature-authorization.mjs
+          git diff --check
+          git diff --exit-code -- public src shared/body-media-evidence.js shared/literature-policy.js cloudflare/worker
+      - name: Preserve tested integration on feature branch only
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/new-body-automatic-publication'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/github-pages.yml docs/body-media-publication.md cloudflare/scripts/merge-new-body-auto.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m 'media: integrate bounded automatic new-body publication with unchanged literature gates'
+            git push origin HEAD:feat/new-body-automatic-publication
+          fi
+          git rev-parse HEAD > "$RUNNER_TEMP/new-body-auto-tested-head.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: new-body-auto-regression
+          path: |
+            ${{ runner.temp }}/new-body-auto-replay.json
+            ${{ runner.temp }}/new-body-auto-tested-head.txt
+          retention-days: 7
+          if-no-files-found: warn
