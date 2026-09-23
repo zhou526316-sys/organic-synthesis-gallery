@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/adaptive-media-batching.yml'
+      - '.github/workflows/new-body-continuous.yml'
+      - '.github/workflows/github-pages.yml'
       - 'audit/media-auto-policy.json'
       - 'cloudflare/scripts/merge-new-body-auto.mjs'
       - 'cloudflare/scripts/merge-local-captures.mjs'
@@ -38,6 +40,9 @@ jobs:
           import fs from 'node:fs';
           const continuous=fs.readFileSync('.github/workflows/new-body-continuous.yml','utf8');
           assert.match(continuous,/cron:\s*'\*\/5 \* \* \* \*'/);
+          assert.match(continuous,/workflow_run:[\s\S]*Deploy GitHub Pages frontend/);
+          assert.ok(continuous.includes('ref: main')&&continuous.includes('deployment_ref: ${{ needs.inspect.outputs.deployment_ref }}')&&continuous.includes('git ls-remote origin refs/heads/main'));
+          assert.ok(pages.includes("deployment_ref:")&&pages.includes("inputs.deployment_ref != '' && inputs.deployment_ref || github.sha"));
           const pages=fs.readFileSync('.github/workflows/github-pages.yml','utf8');
           const toc=pages.indexOf('Merge D1-free local VPN captures');
           const body=pages.indexOf('Independently validate and publish newly marked body captures');
