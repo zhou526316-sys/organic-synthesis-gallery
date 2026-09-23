@@ -1,0 +1,12 @@
+{
+  "context": "UI feedback32 glow thickness; mobile drag failure investigated before release",
+  "beforeHead": "8d8afd38921efce9a6e14e3586c630af1cb05eac",
+  "beforeRun": 35811077805,
+  "beforeResults": { "webkit": { "passed": 7, "failed": 1, "artifact": 10729392958 }, "chromium": { "passed": 8, "failed": 0, "artifact": 10729258532 } },
+  "sha256": { "webkit": "5607655f9170d54bf1aad19dd596baac7065b2ac9c83df727e3ebd59454c9d9f", "chromium": "51fd2bef0dc1a756e3186146fff47f6f156f3f8a57bddfc9dfde0cb3a80aa23e" },
+  "failure": "390px WebKit real drag lost the editor at mouseDown. Trace screencast immediately before mouseDown at14957.633ms shows the floating Feedback tab covering the slider start (79,788). Its host z-index10060 is above the card editor. Other7 tests including keyboard/rollback/GIF passed.",
+  "repair": "Production feedback-widget CSS temporarily hides only a collapsed launcher while a card editor is open. An already-open feedback panel remains available. Saved coordinates remain unchanged; launcher returns when the editor closes. Adds a normal-click restoration test. The original drag test and all8 assertions remain unchanged.",
+  "scope": { "forceClicks": false, "testTimeoutsRelaxed": false, "testWidgetRemoved": false, "productionReaderWrites": false, "literatureOrCaptureChanges": false },
+  "repairWorkflow": "The first branch-only repair YAML had an indentation error and never executed. The corrected workflow applied the checksum-guarded source edit and removed itself before this checkpoint. No such mutation workflow is included in the release diff.",
+  "acceptance": "Pending latest-head CI and independent deployed checks; feedback32 remains open."
+}
