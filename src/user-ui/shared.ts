@@ -1,3 +1,4 @@
+import { ReaderCountLoader } from './reader-count-loader';
 import { cropUserImage } from './image-cropper';
 import { prepareStatusImage, type OriginalStatusImage } from './status-image-assets';
 export type Language = 'zh' | 'en';
@@ -325,6 +326,21 @@ class Store extends EventTarget {
   private feedbackFlushRunning = false;
   private readerOpenFlushRunning = false;
   private readonly summaryCache = new Map<string, ArticleSummaryResult>();
+  private metadataSaveQueued = false;
+  private readonly countLoader = new ReaderCountLoader(
+    async dois => (await workerPost<{ counts?: Record<string, number> }>('/api/user-ui/reader-counts', { dois })).counts,
+    counts => {
+      let changed = false;
+      for (const [doi, count] of Object.entries(counts)) {
+        if (this.readerCounts[doi] !== count) changed = true;
+        this.readerCounts[doi] = count;
+      }
+      if (changed) {
+        writeReaderCountsCache(this.readerCounts);
+        this.dispatchEvent(new CustomEvent('counts', { detail: { dois: Object.keys(counts) } }));
+      }
+    },
+  );
 
   constructor() {
     super();
@@ -356,6 +372,7 @@ class Store extends EventTarget {
         try {
           const data = await postReaderOpen(doi);
           if (typeof data.count === 'number') {
+            this.countLoader.noteMark(doi);
             const changed = this.readerCounts[doi] !== data.count;
             this.readerCounts[doi] = data.count;
             writeReaderCountsCache(this.readerCounts);
@@ -407,6 +424,7 @@ class Store extends EventTarget {
   }
 
   save(broadcast = true, detail?: { paperId?: string; scope?: 'paper' | 'global' }): void {
+    this.metadataSaveQueued = false;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); } catch { /* optional */ }
     if (broadcast) this.dispatchEvent(new CustomEvent('change', { detail: detail || { scope: 'global' } }));
   }
@@ -421,7 +439,17 @@ class Store extends EventTarget {
       this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'paper', paperId: id } }));
     }
   }
-  registerMeta(meta: PaperMeta): void { this.state.metadata[meta.id] = { id: meta.id, doi: meta.doi, title: meta.title, journal: meta.journal, href: meta.href }; this.save(false); }
+  registerMeta(meta: PaperMeta): void {
+    const next = { id: meta.id, doi: meta.doi, title: meta.title, journal: meta.journal, href: meta.href };
+    const previous = this.state.metadata[meta.id];
+    if (previous && previous.id === next.id && previous.doi === next.doi && previous.title === next.title && previous.journal === next.journal && previous.href === next.href) return;
+    // Metadata is immediately available to newly mounted components, but
+    // serialize the full state only once for this synchronous card batch.
+    this.state.metadata[meta.id] = next;
+    if (this.metadataSaveQueued) return;
+    this.metadataSaveQueued = true;
+    queueMicrotask(() => { if (this.metadataSaveQueued) this.save(false); });
+  }
   metadata(id: string): Omit<PaperMeta, 'authors' | 'topics'> | undefined { return this.state.metadata[id]; }
   status(id: string): StatusDef | undefined { return this.state.statuses.find(item => item.id === id); }
   isRead(id: string): boolean { const status = this.status(this.paper(id).statusId || ''); return status?.countsAsRead === true; }
@@ -467,25 +495,7 @@ class Store extends EventTarget {
   follow(query: string): void { const value = query.trim(); if (value && !this.state.followedSearches.some(item => item.toLowerCase() === value.toLowerCase())) { this.state.followedSearches.unshift(value); this.save(); } }
   async loadCounts(dois: string[]): Promise<void> {
     const unique = [...new Set(dois.map(normalizeDoi).filter((value): value is string => Boolean(value)))];
-    let changed = false;
-    let succeeded = false;
-    try {
-      for (let i = 0; i < unique.length; i += 150) {
-        const chunk = unique.slice(i, i + 150);
-        const data = await workerPost<{ counts?: Record<string, number> }>('/api/user-ui/reader-counts', { dois: chunk });
-        const counts = data.counts || {};
-        for (const doi of chunk) {
-          const next = Number(counts[doi] ?? 0);
-          if (this.readerCounts[doi] !== next) changed = true;
-          this.readerCounts[doi] = next;
-        }
-        succeeded = true;
-      }
-      if (succeeded) writeReaderCountsCache(this.readerCounts);
-      if (changed) this.dispatchEvent(new CustomEvent('counts', { detail: { dois: unique } }));
-    } catch {
-      // Preserve the last successful values. Missing values remain unknown instead of becoming fake zeros.
-    }
+    await this.countLoader.load(unique);
   }
   async recordOpen(doi: string): Promise<void> {
     const normalized = normalizeDoi(doi);

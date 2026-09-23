@@ -24,7 +24,15 @@ export class UserSearchController {
   private candidates: Candidate[] = [];
   private refreshQueued = false;
   private composing = false;
-  private readonly storeChanged = (): void => this.refresh();
+  private cards: HTMLElement[] = [];
+  private metas: PaperMeta[] = [];
+  private aliasKey = '';
+  private readFilterKey = '';
+  private stopped = false;
+  private readonly storeChanged = (): void => this.refreshPreferences();
+  private readonly refreshCounts = (): void => {
+    if (!this.stopped && document.visibilityState !== 'hidden') void store.loadCounts(this.metas.flatMap(meta => meta.doi ? [meta.doi] : []));
+  };
   private readonly resize = (): void => this.positionPopover();
   private readonly onInput = (event: Event): void => {
     // The legacy Gallery still has an input listener that rebuilds every card.
@@ -35,7 +43,7 @@ export class UserSearchController {
     this.fullQuery = this.searchInput.value;
     this.updateShellQuery();
     if (this.composing || (event instanceof InputEvent && event.isComposing)) return;
-    this.refresh();
+    this.refreshPreferences(true);
     this.renderSuggestions();
   };
   private readonly onCompositionStart = (): void => { this.composing = true; };
@@ -44,7 +52,7 @@ export class UserSearchController {
     if (!this.searchInput) return;
     this.fullQuery = this.searchInput.value;
     this.updateShellQuery();
-    this.refresh();
+    this.refreshPreferences(true);
     this.renderSuggestions();
   };
 
@@ -75,6 +83,8 @@ export class UserSearchController {
     this.root.addEventListener('gallery-similar', this.handleSimilar as EventListener);
     store.addEventListener('change', this.storeChanged);
     window.addEventListener('resize', this.resize);
+    window.addEventListener('focus', this.refreshCounts);
+    document.addEventListener('visibilitychange', this.refreshCounts);
     window.addEventListener('scroll', this.resize, true);
     this.observer = new MutationObserver(() => this.queueRefresh());
     this.observer.observe(this.gallery, { childList: true });
@@ -83,6 +93,8 @@ export class UserSearchController {
   }
 
   destroy(): void {
+    this.stopped = true;
+    this.cards = []; this.metas = [];
     this.observer?.disconnect(); this.observer = null;
     this.searchInput?.removeEventListener('input', this.onInput, true);
     this.searchInput?.removeEventListener('compositionstart', this.onCompositionStart);
@@ -91,6 +103,8 @@ export class UserSearchController {
     this.root.removeEventListener('gallery-similar', this.handleSimilar as EventListener);
     store.removeEventListener('change', this.storeChanged);
     window.removeEventListener('resize', this.resize);
+    window.removeEventListener('focus', this.refreshCounts);
+    document.removeEventListener('visibilitychange', this.refreshCounts);
     window.removeEventListener('scroll', this.resize, true);
     this.popover?.remove(); this.popover = null;
   }
@@ -113,25 +127,46 @@ export class UserSearchController {
   private updateShellQuery(): void { this.root.querySelector<HTMLElement>(USER_SHELL_ELEMENT)?.setAttribute('data-current-query', this.fullQuery); }
   private queueRefresh(): void { if (this.refreshQueued) return; this.refreshQueued = true; queueMicrotask(() => { this.refreshQueued = false; this.refresh(); }); }
 
-  private refresh(): void {
-    if (!this.gallery) return;
-    this.observer?.disconnect();
-    const cards = [...this.gallery.querySelectorAll<HTMLElement>('.card')];
-    const metas = cards.flatMap(card => { const meta = this.decorate(card); return meta ? [meta] : []; });
-    this.buildCandidates(metas);
-    this.applyFilters(cards);
-    this.observer?.observe(this.gallery, { childList: true });
-    void store.loadCounts(metas.flatMap(meta => meta.doi ? [meta.doi] : []));
+  private currentReadFilterKey(): string {
+    return store.state.hideRead ? JSON.stringify([
+      store.state.statuses.map(status => [status.id, status.countsAsRead]),
+      this.cards.map(card => store.paper(card.dataset.userPaperId || '').statusId || ''),
+    ]) : 'show-all';
   }
 
-  private decorate(card: HTMLElement): PaperMeta | null {
-    const titleElement = card.querySelector<HTMLElement>('.title'); const doiElement = card.querySelector<HTMLElement>('.doi'); const open = card.querySelector<HTMLAnchorElement>('a.open');
-    if (!titleElement) return null;
-    const title = titleElement.textContent?.trim() || ''; const journal = card.querySelector<HTMLElement>('.meta .tag')?.textContent?.trim() || ''; const doi = normalizeDoi(doiElement?.textContent || ''); const href = doi ? `https://doi.org/${doi}` : open?.href;
-    const id = doi || `title:${normalizeSearch(title).slice(0, 120)}`; if (!id) return null;
-    const authors = (card.dataset.authors || '').split('|').map(value => value.trim()).filter(Boolean); const topics = (card.dataset.topics || '').split('|').map(value => value.trim()).filter(Boolean);
-    const meta: PaperMeta = { id, doi, title, journal, href, authors, topics }; store.registerMeta(meta); card.dataset.userPaperId = id;
-    const status = store.status(store.paper(id).statusId || '');
+  private refreshPreferences(searchChanged = false): void {
+    if (!this.gallery || this.stopped) return;
+    // Appearance/notes/favorites do not change the corpus or reader counts.
+    // Preserve live aliases and hide-read filtering without rebuilding links,
+    // serializing every paper, or querying the same numbers after each edit.
+    this.cards.forEach(card => this.paintStatus(card));
+    const aliasKey = JSON.stringify(store.state.aliases);
+    const aliasesChanged = aliasKey !== this.aliasKey;
+    if (aliasesChanged) { this.buildCandidates(this.metas); this.aliasKey = aliasKey; }
+    const readKey = this.currentReadFilterKey();
+    if (searchChanged || aliasesChanged || readKey !== this.readFilterKey) {
+      this.observer?.disconnect();
+      try { this.applyFilters(this.cards); this.readFilterKey = readKey; }
+      finally { this.observer?.observe(this.gallery, { childList: true }); }
+    }
+  }
+
+  private refresh(): void {
+    if (!this.gallery || this.stopped) return;
+    this.observer?.disconnect();
+    try {
+      this.cards = [...this.gallery.querySelectorAll<HTMLElement>('.card')];
+      this.metas = this.cards.flatMap(card => { const meta = this.decorate(card); return meta ? [meta] : []; });
+      this.buildCandidates(this.metas);
+      this.aliasKey = JSON.stringify(store.state.aliases);
+      this.applyFilters(this.cards);
+      this.readFilterKey = this.currentReadFilterKey();
+    } finally { this.observer?.observe(this.gallery, { childList: true }); }
+    this.refreshCounts();
+  }
+
+  private paintStatus(card: HTMLElement): void {
+    const status = store.status(store.paper(card.dataset.userPaperId || '').statusId || '');
     if (status) {
       card.classList.add('user-status-card');
       card.dataset.userStatusId = status.id;
@@ -141,6 +176,16 @@ export class UserSearchController {
       delete card.dataset.userStatusId;
       card.style.removeProperty('--user-status-rgb');
     }
+  }
+
+  private decorate(card: HTMLElement): PaperMeta | null {
+    const titleElement = card.querySelector<HTMLElement>('.title'); const doiElement = card.querySelector<HTMLElement>('.doi'); const open = card.querySelector<HTMLAnchorElement>('a.open');
+    if (!titleElement) return null;
+    const title = titleElement.textContent?.trim() || ''; const journal = card.querySelector<HTMLElement>('.meta .tag')?.textContent?.trim() || ''; const doi = normalizeDoi(doiElement?.textContent || ''); const href = doi ? `https://doi.org/${doi}` : open?.href;
+    const id = doi || `title:${normalizeSearch(title).slice(0, 120)}`; if (!id) return null;
+    const authors = (card.dataset.authors || '').split('|').map(value => value.trim()).filter(Boolean); const topics = (card.dataset.topics || '').split('|').map(value => value.trim()).filter(Boolean);
+    const meta: PaperMeta = { id, doi, title, journal, href, authors, topics }; store.registerMeta(meta); card.dataset.userPaperId = id;
+    this.paintStatus(card);
     if (href && !titleElement.querySelector('.user-title-link')) titleElement.innerHTML = `<a class='user-title-link' href='${href}' target='_blank' rel='noopener noreferrer'>${titleElement.innerHTML}</a>`;
     if (href && doiElement && !doiElement.querySelector('.user-doi-link')) doiElement.innerHTML = `<a class='user-doi-link' href='${href}' target='_blank' rel='noopener noreferrer'>${doiElement.textContent || ''}</a>`;
     if (!card.querySelector(PAPER_ACTION_ELEMENT)) { const actions = document.createElement(PAPER_ACTION_ELEMENT); actions.setAttribute('data-paper-id', id); actions.setAttribute('data-language', this.language); card.querySelector('.cardfoot')?.before(actions); }
