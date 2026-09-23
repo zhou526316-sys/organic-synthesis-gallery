@@ -1,0 +1,92 @@
+name: Read incremental media review evidence
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/media-review-queue-evidence.yml','audit/automation-triggers/media-review-queue-evidence.json']
+permissions:
+  contents: read
+concurrency:
+  group: media-review-queue-evidence
+  cancel-in-progress: false
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Freeze source and bounded unreviewed images without storage mutation
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures,collections,datetime,hashlib,json,os,pathlib,re,subprocess,urllib.parse,urllib.request,zipfile
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'review-queue';(out/'images').mkdir(parents=True)
+          base='https://api.cloudflare.com/client/v4/accounts/'+os.environ['CLOUDFLARE_ACCOUNT_ID']+'/r2/buckets/organic-synthesis-gallery-media/objects/'
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*a,**k):return None
+          def get(key):
+              assert re.fullmatch(r'local-captures/[A-Za-z0-9_./-]+',key) and '..' not in key
+              req=urllib.request.Request(base+urllib.parse.quote(key,safe='/'),headers={'Authorization':'Bearer '+os.environ['CLOUDFLARE_API_TOKEN']})
+              with urllib.request.build_opener(NoRedirect()).open(req,timeout=20) as r:raw=r.read(10000001)
+              assert len(raw)<=10000000
+              return raw
+          def clean(v):
+              if isinstance(v,dict):return {k:clean(x) for k,x in v.items() if not re.search(r'token|secret|password|cookie|authorization|imageData|html',k,re.I)}
+              if isinstance(v,list):return [clean(x) for x in v]
+              if not isinstance(v,str):return v
+              def u(m):
+                  a=urllib.parse.urlsplit(m.group());return urllib.parse.urlunsplit((a.scheme,a.hostname or '',a.path,'',''))
+              return re.sub(r'(?i)Bearer\s+\S+|(?:token|secret|password|cookie|authorization|signature)\s*[:=]\s*[^\s;,]+','[redacted]',re.sub(r'https?://[^\s\"\'<>]+',u,v))
+          def rows(v):
+              a=v['items'];return list(a.values()) if isinstance(a,dict) else a
+          evidence={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'baseSha':os.environ['GITHUB_SHA'],'readOnly':True,'mediaWrites':0,'atomicSnapshot':False,'errors':[]}
+          st_raw=get('local-captures/article-figures/stage-index.json');stage=json.loads(st_raw);sr=rows(stage)
+          ri=json.loads(get('local-captures/tampermonkey/report-index.json'));rr=rows(ri)
+          evidence.update(stageRows=len(sr),postCutoverRows=sum(r.get('updatedAt',0)>=1790082000000 for r in sr),stageIndexSha256=hashlib.sha256(st_raw).hexdigest(),reportDois=len(rr),automaticDois=sum(str(r.get('candidateSource','')).startswith('auto_') for r in rr))
+          with urllib.request.urlopen('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json?review='+str(int(datetime.datetime.now().timestamp())),timeout=20) as r:media=json.load(r)
+          (out/'public-media-index.json').write_text(json.dumps(media,ensure_ascii=False))
+          published={(d,str(f.get('id','')).lower()) for d,x in media['items'].items() for f in x.get('figures',{}).get('figures',[])}
+          bound=[r for r in sr if r.get('updatedAt',0)>=1790082000000 and r.get('captureVersion')=='6.2.20' and r.get('pageDoi')==r.get('doi') and r.get('jobId')]
+          pending=[r for r in bound if (r['doi'],r.get('id')) not in published]
+          groups=collections.defaultdict(list)
+          for r in pending:groups[r['doi']].append(r)
+          # Prefer a bounded JACS subset for this manual review, then other ACS/Nature papers.
+          selected=sorted(groups,key=lambda d:(not d.startswith('10.1021/jacs.'),-max(r.get('updatedAt',0) for r in groups[d])))[:7]
+          take=[]
+          for doi in selected:
+              part=sorted(groups[doi],key=lambda r:(r.get('sortOrder',0),r.get('id','')))
+              take.extend(part[:max(0,40-len(take))])
+          evidence.update(boundRows=len(bound),unpublishedBoundRows=len(pending),selectedDois=selected)
+          def image(pair):
+              n,r=pair;item=clean(r);item['reviewId']='next-%03d'%n;item['approved']=False
+              try:
+                  raw=get(r['r2Key']);digest=hashlib.sha256(raw).hexdigest();assert digest.startswith(r['contentHash']) and 100<=len(raw)<=4000000
+                  ext=pathlib.PurePosixPath(r['r2Key']).suffix;assert ext in ('.svg','.png','.webp','.jpg','.jpeg','.gif')
+                  file='images/'+item['reviewId']+ext;(out/file).write_bytes(raw);item.update(file=file,sha256=digest,actualBytes=len(raw),hashVerified=True)
+              except Exception as e:item.update(error=type(e).__name__,httpStatus=getattr(e,'code',None))
+              return item
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:evidence['images']=list(pool.map(image,enumerate(take,1)))
+          latest=sorted(rr,key=lambda r:r.get('updatedAt',0),reverse=True)
+          keys=[]
+          for r in latest[:8]+[r for r in rr if r.get('doi') in selected]:
+              for a in (r.get('attempts') or [r])[:2]:
+                  if a.get('reportKey') and a['reportKey'] not in keys:keys.append(a['reportKey'])
+          evidence['reports']=[]
+          for key in keys[:25]:
+              try:evidence['reports'].append({'key':key,'report':clean(json.loads(get(key)))})
+              except Exception as e:evidence['errors'].append({'kind':'report','key':key,'error':type(e).__name__})
+          (out/'stage-index.json').write_text(json.dumps(clean(stage),ensure_ascii=False))
+          (out/'report-index.json').write_text(json.dumps(clean(ri),ensure_ascii=False))
+          evidence['readCompletedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat();(out/'evidence.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2))
+          subprocess.run(['git','archive','--format=zip','--output='+str(out/'source.zip'),'HEAD'],check=True)
+          print('INCREMENTAL_REVIEW_READ '+json.dumps({k:v for k,v in evidence.items() if k not in ('images','reports')},ensure_ascii=False))
+          print('IMAGE_FILES '+json.dumps({'selected':len(take),'verified':sum(r.get('hashVerified',False) for r in evidence['images'])}))
+          if evidence['errors'] or any('error' in r for r in evidence['images']):raise SystemExit('Partial evidence, not approval')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: media-review-queue-evidence
+          path: ${{ runner.temp }}/review-queue/*
+          retention-days: 7
