@@ -33,7 +33,7 @@ export function assertSnapshotCoherence(previous,live){
 }
 async function configuration(root){
   const policy=JSON.parse(await readFile(path.join(root,'audit/media-auto-policy.json'),'utf8'));
-  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=20&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard<=10&&policy.requireOfficialTocInBuild===true,'auto_invalid_configuration');
+  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=20&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard<=10&&policy.requireOfficialTocInBuild===true&&Number.isInteger(policy.tailFlushIdleMinutes)&&policy.tailFlushIdleMinutes>=5&&policy.tailFlushIdleMinutes<=120&&Number.isInteger(policy.tailFlushMinArticles)&&policy.tailFlushMinArticles>=1&&policy.tailFlushMinArticles<policy.minNewArticles,'auto_invalid_configuration');
   const state=JSON.parse(await readFile(path.join(root,'audit/literature-update-state.json'),'utf8'));
   const holds=new Set([...(policy.heldDois||[]),...(state.pendingScopeReviewBacklog||[])].map(x=>x.doi));
   return {policy,holds,papers:await readPapers(root)};
@@ -82,6 +82,19 @@ export function tocReadyDois(inputs){
   for(const [doi,record] of Object.entries(inputs?.live?.items||{}))if(officialToc(record))ready.add(normalizeDoi(doi)||doi);
   for(const row of inputs?.localCaptures?.items||[])if(strongOfficialCapture(row))ready.add(normalizeDoi(row.doi));
   return ready;
+}
+export function adaptiveBatchGate(rows,policy,now=Date.now()){
+  const dois=new Set();
+  let latestUpdatedAt=0;
+  for(const row of rows||[]){
+    const doi=normalizeDoi(row?.doi||'');if(doi)dois.add(doi);
+    const updated=Number(row?.updatedAt||0);if(Number.isFinite(updated)&&updated>latestUpdatedAt)latestUpdatedAt=updated;
+  }
+  const articleCount=dois.size;
+  const idleMinutes=latestUpdatedAt?Math.max(0,(Number(now)-latestUpdatedAt)/60000):null;
+  const targetReady=articleCount>=policy.minNewArticles;
+  const tailReady=!targetReady&&articleCount>=policy.tailFlushMinArticles&&idleMinutes!==null&&idleMinutes>=policy.tailFlushIdleMinutes;
+  return {ready:targetReady||tailReady,mode:targetReady?'target_batch':tailReady?'quiet_tail':'waiting',articleCount,targetArticles:policy.minNewArticles,latestUpdatedAt,idleMinutes,targetReady,tailReady};
 }
 export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()}){
   assertSnapshotCoherence(inputs.previous,inputs.live);
@@ -146,10 +159,12 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
       }
     }
   }finally{await decoder.close();}
+  const validatedRows=prepared.filter(item=>item.isNew).map(item=>item.row);
+  const releaseGate=adaptiveBatchGate(validatedRows,policy,now);
   const validatedNewArticleCount=newDois.size;
-  const meetsMinimumBatch=validatedNewArticleCount>=policy.minNewArticles;
-  const waitingForMinimumBatch=candidateDois.length>0&&!meetsMinimumBatch;
-  if(!meetsMinimumBatch){
+  const meetsMinimumBatch=releaseGate.ready;
+  const waitingForMinimumBatch=candidateDois.length>0&&!releaseGate.ready;
+  if(!releaseGate.ready){
     prepared=prepared.filter(item=>!item.isNew);
     added.length=0;
     newDois.clear();
@@ -182,8 +197,8 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   if(process.argv.includes('--poll')){
     const inputs=await readLiveInputs(),{rows,policy}=await pendingNewRows({inputs});
-    const articleCount=new Set(rows.map(row=>row.doi)).size,ready=articleCount>=policy.minNewArticles;
-    console.log('NEW_BODY_AUTO_PENDING '+JSON.stringify({count:rows.length,articles:articleCount,minimumBatchArticles:policy.minNewArticles,ready,stageError:inputs.stageError,localCaptureError:inputs.localCaptureError}));
-    if(process.env.GITHUB_OUTPUT)await writeFile(process.env.GITHUB_OUTPUT,'changed='+(ready?'true':'false')+'\narticles='+articleCount+'\n',{flag:'a'});
+    const gate=adaptiveBatchGate(rows,policy,Date.now());
+    console.log('NEW_BODY_AUTO_PENDING '+JSON.stringify({count:rows.length,articles:gate.articleCount,targetArticles:gate.targetArticles,ready:gate.ready,mode:gate.mode,idleMinutes:gate.idleMinutes,tailFlushIdleMinutes:policy.tailFlushIdleMinutes,stageError:inputs.stageError,localCaptureError:inputs.localCaptureError}));
+    if(process.env.GITHUB_OUTPUT)await writeFile(process.env.GITHUB_OUTPUT,'changed='+(gate.ready?'true':'false')+'\narticles='+gate.articleCount+'\nmode='+gate.mode+'\n',{flag:'a'});
   }else await mergeNewBodyAuto();
 }
