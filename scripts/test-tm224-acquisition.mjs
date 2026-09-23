@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import {chromium} from 'playwright';
 
 const source=await fs.readFile('public/toc-mainline.user.js','utf8');
-const names=['sniffContentType','articleFigureResolution','visualScope','collectArticleFigureCandidates','acquireBestVisual','pairedJobs'];
+const names=['sniffContentType','articleFigureResolution','visualScope','collectArticleFigureCandidates','acquireBestVisual','pairedJobs','articleUrl'];
 const exposed=source.replace('  installMenu();','  globalThis.__tm224={'+names.join(',')+'}; return;\n  installMenu();');
 const doi='10.1021/acs.orglett.6c03512',foreign='10.1021/jacs.6c00000';
 const jobId='12345678-1234-1234-1234-123456789012';
@@ -87,6 +87,16 @@ try{
  test('queue sorts date first then missing TOC then JACS',JSON.stringify(ordering.map(x=>x.doi))===JSON.stringify([
    '10.1021/jacs.6c00002','10.1021/acs.orglett.6c00004','10.1021/jacs.6c00003','10.1021/acs.joc.6c00001','10.1021/jacs.6c00005']));
  test('existing TOC remains body-only despite reordered queue',ordering.find(x=>x.doi==='10.1021/acs.joc.6c00001').captureToc===false);
- test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.24';"));
+
+ const routes=await page.evaluate(()=>({
+   acsFigure:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'figures'}),
+   acsToc:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'toc'}),
+   wileyFigure:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'figures'}),
+   scienceFigure:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'figures'})
+ }));
+ test('ACS TOC and body jobs both enter through the canonical DOI route',routes.acsFigure==='https://pubs.acs.org/doi/10.1021/acs.orglett.6c03487'&&routes.acsToc===routes.acsFigure);
+ test('ACS body jobs no longer force the legacy doi/full shell route',!routes.acsFigure.includes('/doi/full/'));
+ test('non-ACS full-text routes remain unchanged',routes.wileyFigure==='https://onlinelibrary.wiley.com/doi/full/10.1002/anie.202600001'&&routes.scienceFigure==='https://www.science.org/doi/full/10.1126/science.abc1234');
+ test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.25';"));
 }finally{await browser.close();}
 console.log('TM224_ACQUISITION_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherFixtureOnly:true,captureProtocol:'6.2.20'}));
