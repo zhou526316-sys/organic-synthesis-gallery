@@ -5,6 +5,8 @@ on:
     paths:
       - 'src/user-ui/**'
       - 'tests/status-crop-edit.spec.ts'
+      - 'tests/status-image-hydration.spec.ts'
+      - 'tests/status-image-fixtures.ts'
       - 'tests/crop-pixels.test.cjs'
       - '.github/workflows/status-crop-edit-ci.yml'
 permissions:
@@ -44,14 +46,14 @@ jobs:
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           cat /tmp/crop-preview.log
           exit 1
-      - name: Verify actual crop pixels, alpha, reload, original restore and save failures
+      - name: Verify crop pixels, alpha, reversible sources and bounded original readiness
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: crop-results/results.json
         run: |
           git rev-parse HEAD > crop-results/tested-commit.txt
-          sha256sum src/user-ui/image-cropper.ts src/user-ui/shared.ts tests/status-crop-edit.spec.ts > crop-results/source-sha256.txt
+          sha256sum src/user-ui/image-cropper.ts src/user-ui/shared.ts src/user-ui/status-image-assets.ts tests/status-crop-edit.spec.ts tests/status-image-hydration.spec.ts > crop-results/source-sha256.txt
           set -o pipefail
-          npx --no-install playwright test tests/status-crop-edit.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=crop-results/tests 2>&1 | tee crop-results/tests.log
+          npx --no-install playwright test tests/status-crop-edit.spec.ts tests/status-image-hydration.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=crop-results/tests 2>&1 | tee crop-results/tests.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
