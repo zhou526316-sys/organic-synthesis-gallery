@@ -66,10 +66,10 @@
   </section>
 </main>
 <script>
-const API='https://organic-synthesis-gallery.zhou526316.workers.dev';
+const API='https://api.gczhouwld.com';
 const fmt=n=>new Intl.NumberFormat('zh-CN').format(Number(n||0));
 const dt=ms=>ms?new Date(ms).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false}):'尚无记录';
-function card(label,value,hint=''){return '<div class="card"><div class="label">'+label+'</div><div class="value">'+fmt(value)+'</div><div class="hint">'+hint+'</div></div>'}
+function card(label,value,hint=''){return '<div class="card"><div class="label">'+label+'</div><div class="value">'+(value===null||value===undefined?'—':fmt(value))+'</div><div class="hint">'+hint+'</div></div>'}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function bars(rows,labelKey){
   if(!rows?.length)return '<div class="muted">暂无数据</div>';
@@ -86,39 +86,67 @@ function drawChart(rows){
   poly(points('pv'),'#0f172a'); poly(points('uv'),'#64748b');
   const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',W-180);t.setAttribute('y',18);t.setAttribute('font-size','14');t.textContent='深色 PV · 浅色 UV';svg.appendChild(t);
 }
-async function load(){
-  const status=document.getElementById('status'); status.textContent='刷新中…';
-  try{
-    const [s,r]=await Promise.all([
-      fetch(API+'/api/user-ui/site-stats',{cache:'no-store'}).then(x=>x.json()),
-      fetch(API+'/api/user-ui/reader-stats',{cache:'no-store'}).then(x=>x.json())
-    ]);
-    document.getElementById('cards').innerHTML=[
-      card('累计 PV',s.allTime?.pv,'从 2026-09-22 新统计启用后开始'),
-      card('累计 UV',s.allTime?.uv,'按加盐 IP hash 去重'),
-      card('今日 PV',s.today?.pv,s.today?.date||''),
-      card('今日 UV',s.today?.uv,''),
-      card('访问但未点文献',s.allTime?.visitorsWithoutPaperOpen,'全站 UV 中尚无文献打开事件'),
-      card('访问且点过文献',s.allTime?.visitorsWithPaperOpen,''),
-      card('文献去重阅读人次',r.uniquePaperReads,'DOI × IP 去重'),
-      card('文献阅读独立 IP',r.uniqueIps,'')
-    ].join('');
-    document.getElementById('trend7').innerHTML=(s.last7Days||[]).map(x=>'<tr><td>'+esc(x.date)+'</td><td>'+fmt(x.pv)+'</td><td>'+fmt(x.uv)+'</td></tr>').join('');
-    document.getElementById('readerStats').innerHTML=[
-      ['DOI×IP 去重阅读',r.uniquePaperReads],['独立阅读 IP',r.uniqueIps],['被读过的文献',r.papersWithReaders],
-      ['最早阅读记录',dt(r.firstOpenedAt)],['最近阅读记录',dt(r.lastOpenedAt)]
-    ].map(x=>'<tr><th>'+esc(x[0])+'</th><td>'+esc(x[1])+'</td></tr>').join('');
-    document.getElementById('referrers').innerHTML=bars(s.topReferrers30Days,'source');
-    document.getElementById('devices').innerHTML=bars(s.devices30Days,'device');
-    drawChart(s.last30Days||[]);
-    status.textContent='最后刷新：'+new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false})+' · 首次 PV 记录：'+dt(s.trackingStartedAt);
-  }catch(e){
-    status.innerHTML='<div class="error">加载失败：'+esc(e?.message||e)+'</div>';
+async function fetchJson(path){
+  const response=await fetch(API+path,{cache:'no-store',headers:{accept:'application/json'}});
+  if(!response.ok)throw new Error(path+' HTTP '+response.status);
+  return response.json();
+}
+function renderSiteStats(s,r){
+  document.getElementById('cards').innerHTML=[
+    card('累计 PV',s.allTime?.pv,'从 2026-09-22 新统计启用后开始'),
+    card('累计 UV',s.allTime?.uv,'按加盐 IP hash 去重'),
+    card('今日 PV',s.today?.pv,s.today?.date||''),
+    card('今日 UV',s.today?.uv,''),
+    card('访问但未点文献',s.allTime?.visitorsWithoutPaperOpen,'全站 UV 中尚无文献打开事件'),
+    card('访问且点过文献',s.allTime?.visitorsWithPaperOpen,''),
+    card('文献去重阅读人次',r?.uniquePaperReads??null,r?'DOI × IP 去重':'阅读统计暂不可用'),
+    card('文献阅读独立 IP',r?.uniqueIps??null,r?'':'阅读统计暂不可用')
+  ].join('');
+  document.getElementById('trend7').innerHTML=(s.last7Days||[]).map(x=>'<tr><td>'+esc(x.date)+'</td><td>'+fmt(x.pv)+'</td><td>'+fmt(x.uv)+'</td></tr>').join('');
+  document.getElementById('referrers').innerHTML=bars(s.topReferrers30Days,'source');
+  document.getElementById('devices').innerHTML=bars(s.devices30Days,'device');
+  drawChart(s.last30Days||[]);
+}
+function renderReaderStats(r){
+  const target=document.getElementById('readerStats');
+  if(!r){
+    target.innerHTML='<tr><td colspan="2"><div class="muted">文献阅读统计暂不可用；PV / UV 不受影响。</div></td></tr>';
+    return;
   }
+  target.innerHTML=[
+    ['DOI×IP 去重阅读',r.uniquePaperReads],['独立阅读 IP',r.uniqueIps],['被读过的文献',r.papersWithReaders],
+    ['最早阅读记录',dt(r.firstOpenedAt)],['最近阅读记录',dt(r.lastOpenedAt)]
+  ].map(x=>'<tr><th>'+esc(x[0])+'</th><td>'+esc(x[1])+'</td></tr>').join('');
+}
+async function load(){
+  const status=document.getElementById('status');
+  const refresh=document.getElementById('refresh');
+  status.textContent='刷新中…';
+  refresh.disabled=true;
+  const [siteResult,readerResult]=await Promise.allSettled([
+    fetchJson('/api/user-ui/site-stats'),
+    fetchJson('/api/user-ui/reader-stats')
+  ]);
+  const site=siteResult.status==='fulfilled'?siteResult.value:null;
+  const reader=readerResult.status==='fulfilled'?readerResult.value:null;
+  if(site){
+    renderSiteStats(site,reader);
+    renderReaderStats(reader);
+    const readerNote=reader?'':' · 文献阅读统计暂不可用';
+    status.textContent='最后刷新：'+new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false})+' · 首次 PV 记录：'+dt(site.trackingStartedAt)+readerNote;
+  }else{
+    document.getElementById('cards').innerHTML='<div class="error" style="grid-column:1/-1">访问统计暂不可用：'+esc(siteResult.reason?.message||siteResult.reason||'未知错误')+'</div>';
+    document.getElementById('trend7').innerHTML='';
+    document.getElementById('referrers').innerHTML='<div class="muted">暂无数据</div>';
+    document.getElementById('devices').innerHTML='<div class="muted">暂无数据</div>';
+    drawChart([]);
+    renderReaderStats(reader);
+    status.innerHTML='<div class="error">访问统计加载失败；请稍后手动刷新。'+(reader?' 文献阅读统计仍可读取。':'')+'</div>';
+  }
+  refresh.disabled=false;
 }
 document.getElementById('refresh').addEventListener('click',load);
 load();
-setInterval(load,60000);
 </script>
 </body>
 </html>
