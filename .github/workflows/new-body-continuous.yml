@@ -1,0 +1,39 @@
+name: Publish validated new body figures
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/new-body-continuous.json']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: new-body-continuous
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      changed: ${{ steps.pending.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read stored metadata and current publication ledger only
+        id: pending
+        run: node cloudflare/scripts/merge-new-body-auto.mjs --poll
+  publish:
+    needs: inspect
+    if: needs.inspect.outputs.changed == 'true'
+    uses: ./.github/workflows/github-pages.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
