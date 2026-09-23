@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "context": "User exclusion of anie.7784614; continuation of scope correction and new-card Chinese title repair",
+  "evidenceAsOf": "2026-09-23T10:24:02+08:00",
+  "changeCommit": "07edbd0e7fda7cca3526cd62d4d06ac2fca92d34",
+  "pullRequest": 144,
+  "scopeRegistry": "audit/literature-scope-corrections.json",
+  "scopeRegistryBlobSha": "3ad55a43b9e553e8d87c77da5b1ede9748cddc8b",
+  "newExclusion": {
+    "doi": "10.1002/anie.7784614",
+    "publisherFirstOnlineDate": "2026-08-25",
+    "decision": "exclude",
+    "evidenceSources": ["https://onlinelibrary.wiley.com/doi/10.1002/anie.7784614", "https://pubmed.ncbi.nlm.nih.gov/42642838/"],
+    "reason": "User-directed scope exclusion of electrocatalyst material/reactive-oxygen engineering centered on methallyl alcohol to methacrolein. Publisher abstract mentions furfuryl/benzyl alcohol applications; do not misreport absence of all substrate extension.",
+    "limitation": "Publisher abstract and date checked; full substrate table not reviewed. Exclusion is explicit user scope policy, not denial of the work's scientific or synthetic value."
+  },
+  "regressionRun": {
+    "id": 35810091967,
+    "headSha": "07edbd0e7fda7cca3526cd62d4d06ac2fca92d34",
+    "conclusion": "success",
+    "testsPassed": 48,
+    "artifactId": 10728404500,
+    "artifactName": "live-chinese-title-verification",
+    "artifactSha256": "f081b42965d83a69fc7519a206e86597417ecf230bc8918bc85859b396ce78ff",
+    "changesVerified": [
+      "A user correction for a visible August article enters handoff despite being outside September's three-day/seven-day discovery windows.",
+      "Correction candidates preserve actual article dates and do not invent publisher-source discovery records.",
+      "Corrections can grow beyond three or four entries without hardcoded-count regression failure.",
+      "Old include decisions cannot supersede explicit user exclusions.",
+      "Bilingual live verification uses actual production membership and distinguishes legitimate removals from lost cards."
+    ]
+  },
+  "liveBrowserVerification": {
+    "checkedAt": "2026-09-23T02:23:13.996Z",
+    "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
+    "ok": true,
+    "expectedBilingualCards": 24,
+    "chinesePassed": 24,
+    "englishPassed": 24,
+    "chineseSearchPassed": true,
+    "translationRequestsObserved": 0,
+    "nonReadRequestsBlocked": 130,
+    "testHadEnglishAsChineseCacheValues": true,
+    "scopeCorrectionPresence": [
+      {"doi":"10.1021/jacs.6c13517","present":true,"expectedPresent":true,"status":"queued_not_removed"},
+      {"doi":"10.1021/jacs.6c10701","present":true,"expectedPresent":true,"status":"queued_not_removed"},
+      {"doi":"10.1038/s41467-026-77963-6","present":true,"expectedPresent":true,"status":"queued_not_removed"},
+      {"doi":"10.1002/anie.7784614","present":true,"expectedPresent":true,"status":"queued_not_removed"}
+    ],
+    "repositoryDoiCount": 536,
+    "fullLiveCardCountRecounted": false,
+    "failures": []
+  },
+  "discoveryCapabilityRegression": {
+    "targetJournals": 16,
+    "lookbackDays": 3,
+    "lateDepositRescueDays": 7,
+    "crossrefModes": ["online","published","created"],
+    "openAlex": true,
+    "verifiedThroughCatchup": true,
+    "silentKeywordExclusion": false,
+    "note": "Code regression only; this batch did not launch a fresh multi-journal discovery audit."
+  },
+  "furtherBoundaryEvidenceAttempts": [
+    {"doi":"10.1021/acs.joc.6c01559","publisherAttempt":"https://pubs.acs.org/doi/10.1021/acs.joc.6c01559","result":"Article page unavailable through the browsing tool; exact DOI/title searches yielded no usable additional article-specific primary source.","stillNeeded":"Preparative multicomponent substrate/product scope and isolated yields, distinct from fluorophore-property and imaging evaluation.","decisionChanged":false},
+    {"doi":"10.1021/acs.orglett.6c03499","publisherAttempt":"https://pubs.acs.org/doi/10.1021/acs.orglett.6c03499","result":"Article page unavailable through the browsing tool; exact DOI/title searches yielded no usable additional article-specific primary source.","stillNeeded":"Preparative trapping product and substrate diversity with isolated yields, distinct from kinetics/barrier measurements.","decisionChanged":false}
+  ],
+  "publication": {
+    "targetSlot": "2026-09-23T18:00:00+08:00",
+    "phase": "scope_corrections_queued_translation_verified",
+    "productionDataModifiedThisBatch": false,
+    "pagesDeploymentTriggeredThisBatch": false,
+    "scopeRemovalsAlreadyLive": false,
+    "note": "All four specified cards remain searchable at verification. Do not call the registry update a completed removal. Removal is reserved for the existing fixed-slot release with reviewed corrections and matching protected-data hashes."
+  },
+  "allGalleryArticlesSemanticallyRechecked": false,
+  "mediaAcquisitionExecuted": false,
+  "newScheduledTasksCreated": false
+}
