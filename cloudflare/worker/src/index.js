@@ -209,6 +209,8 @@ async function handleApi(request, env) {
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
+      wechatTicketRelay: Boolean(env.WECHAT_TICKET_RELAY_URL && env.WECHAT_TICKET_RELAY_KEY),
+      wechatTicketRelayHost: (() => { try { return env.WECHAT_TICKET_RELAY_URL ? new URL(env.WECHAT_TICKET_RELAY_URL).hostname : null; } catch { return null; } })(),
       integrations: integrationStatus(env).body,
     });
   }
