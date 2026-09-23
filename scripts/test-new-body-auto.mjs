@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir,mkdtemp,rm} from 'node:fs/promises';
+import path from 'node:path';
+import {tmpdir} from 'node:os';
+import {gzipSync} from 'node:zlib';
+import {buildBodyReviewMarker} from '../shared/body-media-evidence.js';
+import {validateNewBodyMetadata,validateNewBodyBytes,conflictKeys,createImageDecoder,exactKey} from '../cloudflare/scripts/new-body-auto-validation.mjs';
+import {mergeNewBodyAuto,fetchStored} from '../cloudflare/scripts/merge-new-body-auto.mjs';
+const fixture=process.env.BODY_AUTO_FIXTURE;
+assert.ok(fixture,'frozen controlled evidence fixture required');
+const evidence=JSON.parse(await readFile(path.join(fixture,'evidence.json'),'utf8'));
+const rows=evidence.images.filter(r=>r.reviewMarker?.revision==='1');
+assert.equal(rows.length,9);
+const policy=JSON.parse(await readFile('audit/media-auto-policy.json','utf8'));
+const now=Date.now();let passed=0;
+async function test(name,fn){await fn();passed++;console.log('NEW_BODY_AUTO_PASS '+name);}
+const vector=rows.find(r=>r.contentType==='image/svg+xml'),png=rows.find(r=>r.contentType==='image/png');
+const data=new Map();for(const r of rows)data.set(exactKey(r),await readFile(path.join(fixture,r.file)));
+await test('nine real current server-marked files pass independent metadata and byte validation',async()=>{for(const r of rows){await validateNewBodyMetadata(r,policy,now);validateNewBodyBytes(r,data.get(exactKey(r)));}});
+await test('old sealed generation cannot enter the new-image path',async()=>assert.rejects(()=>validateNewBodyMetadata({...vector,updatedAt:1790081999999,mediaGeneration:0},policy,now),/generation/));
+await test('unmarked capture is not assumed safe because it is new',async()=>assert.rejects(()=>validateNewBodyMetadata({...vector,reviewMarker:undefined},policy,now),/marker_missing/));
+await test('caption mutation cannot reuse server evidence',async()=>assert.rejects(()=>validateNewBodyMetadata({...vector,caption:vector.caption+' changed'},policy,now),/marker_changed/));
+await test('client approved flag cannot fix foreign source DOI',async()=>{const r={...vector,approved:true,sourceUrl:vector.sourceUrl.replace(vector.doi.split('/')[1],'jacs.6c00000')};r.reviewMarker=await buildBodyReviewMarker(r,r.sha256);await assert.rejects(()=>validateNewBodyMetadata(r,policy,now),/provenance/);});
+await test('nonpublisher source host cannot pass a DOI-looking URL',async()=>{const r={...vector,sourceUrl:vector.sourceUrl.replace('acs.silverchair-cdn.com','untrusted.example')};r.reviewMarker=await buildBodyReviewMarker(r,r.sha256);await assert.rejects(()=>validateNewBodyMetadata(r,policy,now),/host_not_enabled/);});
+await test('opaque Wiley sources do not enter first ACS rollout',async()=>{const r={...vector,sourceUrl:'https://onlinelibrary.wiley.com/cms/asset/image.png'};r.reviewMarker=await buildBodyReviewMarker(r,r.sha256);await assert.rejects(()=>validateNewBodyMetadata(r,policy,now));});
+await test('TOC caption is not promoted into a body figure',async()=>{const r={...vector,caption:'Visual Abstract: graphical overview'};r.reviewMarker=await buildBodyReviewMarker(r,r.sha256);await assert.rejects(()=>validateNewBodyMetadata(r,policy,now),/toc_role/);});
+await test('tampered PNG bytes fail before decode',()=>assert.throws(()=>validateNewBodyBytes(png,Buffer.alloc(data.get(exactKey(png)).length)),/digest/));
+await test('cross DOI and relabelled same-byte duplicates are both held',()=>{const a={...vector},b={...vector,doi:'10.1021/jacs.6c00001'},c={...vector,id:'figure-88',sourceUrl:vector.sourceUrl+'-other'};const conflicts=conflictKeys([a,b,c]);for(const r of [a,b,c])assert.ok(conflicts.has(r.doi+'|'+r.id));});
+await test('network helper refuses publisher downloads and arbitrary hosts',async()=>{await assert.rejects(()=>fetchStored(vector.sourceUrl),/not_stored/);await assert.rejects(()=>fetchStored('https://example.org/image.png'),/not_stored/);});
+const native=await createImageDecoder();
+try{await test('isolated Chromium decodes all nine actual stored files',async()=>{for(const r of rows){const d=await native.decode(r,data.get(exactKey(r)));assert.ok(d.width>0&&d.height>0);}});}finally{await native.close();}
+const root=await mkdtemp(path.join(tmpdir(),'new-body-auto-'));
+try{
+ await mkdir(path.join(root,'audit'),{recursive:true});await mkdir(path.join(root,'public'),{recursive:true});
+ await writeFile(path.join(root,'audit/media-auto-policy.json'),JSON.stringify(policy));
+ await writeFile(path.join(root,'audit/literature-update-state.json'),JSON.stringify({pendingScopeReviewBacklog:[]}));
+ const dois=[...new Set(rows.map(r=>r.doi))];const papers=[...dois.map(doi=>({doi,journal:'JACS',title:'controlled real-byte test',date:'2026-09-23'})),...Array.from({length:110},(_,i)=>({doi:'10.1021/fixture.'+i,journal:'JACS'}))];
+ await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(papers))).toString('base64'));
+ for(const f of ['total-synthesis','manual-supplement','final-audit-supplement','curated-supplement','automation-supplement','rolling-supplement'])await writeFile(path.join(root,'public',f+'.json'),'{"papers":[]}');
+ const base={items:Object.fromEntries(dois.map(doi=>[doi,{doi,toc:{available:true,imageUrl:'existing-toc.svg',source:'do-not-overwrite'},figures:{available:false,doi,figures:[]}}]))};
+ const mediaPath=path.join(root,'public/media-index.json'),ledgerPath=path.join(root,'public/body-publication-ledger.json');
+ async function reset(){await writeFile(mediaPath,JSON.stringify(base));await writeFile(ledgerPath,JSON.stringify({schemaVersion:1,count:0,items:[]}));}
+ await reset();const inputs={previous:{policyId:policy.policyId,items:[],attempts:{}},live:base,stage:{count:rows.length,items:rows},stageError:null};
+ let decodeCount=0;
+ const decoder={decode:async()=>{decodeCount++;return {width:1,height:1};},close:async()=>{}}; // Real browser decode was separately tested above.
+ const opts={inputs,now,decoder,getNew:async r=>data.get(exactKey(r)),getOld:async e=>data.get(exactKey(e.record))};
+ const first=await mergeNewBodyAuto(root,opts);
+ await test('first-time new images are published without invented individual semantic approvals',()=>{assert.equal(first.status.added.length,9);assert.equal(first.snapshot.items.length,9);assert.equal(decodeCount,9);assert.ok(first.ledger.items.every(x=>x.state==='published'&&x.individualSemanticReview===false));});
+ await test('all original TOCs remain unchanged',()=>{for(const doi of dois)assert.deepEqual(first.media.items[doi].toc,base.items[doi].toc);});
+ await reset();const nextInputs={...inputs,previous:first.snapshot,live:first.media};
+ const second=await mergeNewBodyAuto(root,{...opts,inputs:nextInputs});
+ await test('next build reuses prior publication and adds no duplicate',()=>{assert.equal(second.status.added.length,0);assert.equal(second.status.retained.length,9);assert.equal(second.snapshot.count,9);});
+ await reset();const degraded=await mergeNewBodyAuto(root,{...opts,inputs:{...nextInputs,stage:null,stageError:'controlled HTTP 503'}});
+ await test('stage outage preserves all nine previously published images',()=>{assert.equal(degraded.snapshot.count,9);assert.equal(degraded.status.stageReadError,'controlled HTTP 503');});
+ await reset();const before=await readFile(mediaPath,'utf8');
+ await assert.rejects(()=>mergeNewBodyAuto(root,{...opts,inputs:nextInputs,getOld:async()=>{throw new Error('controlled prior image unavailable');}}),/prior image/);
+ await test('failed prior-file validation cannot silently publish a stripped gallery',async()=>assert.equal(await readFile(mediaPath,'utf8'),before));
+ await reset();const blocked=structuredClone(policy);blocked.heldDois=[{doi:rows[0].doi,reason:'pending scope'}];await writeFile(path.join(root,'audit/media-auto-policy.json'),JSON.stringify(blocked));
+ const held=await mergeNewBodyAuto(root,opts);
+ await test('held scope record cannot be admitted automatically',()=>assert.ok(!held.status.added.some(x=>x.doi===rows[0].doi)));
+ await reset();await writeFile(path.join(root,'audit/media-auto-policy.json'),JSON.stringify(policy));
+ await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(papers.filter(p=>p.doi!==rows[0].doi)))).toString('base64'));
+ const removed=await mergeNewBodyAuto(root,opts);
+ await test('removed corpus DOI is not resurrected by a marker',()=>assert.ok(!removed.status.added.some(x=>x.doi===rows[0].doi)));
+}finally{await rm(root,{recursive:true,force:true});}
+console.log('NEW_BODY_AUTO_TESTS '+JSON.stringify({passed,realStoredFilesDecoded:9,productionWrites:0,publisherRequests:0}));
