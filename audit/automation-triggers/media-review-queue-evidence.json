@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-24T02:08:00+08:00",
+  "requestedAt": "2026-09-24T05:18:30+08:00",
   "task": "Continue bounded semantic review and publication of stored body figures only",
   "mode": "read-only-evidence",
-  "notes": "Refresh exactly once from the current main after the repeated auto_prior_publication_changed gate failure. Read the current deployed media index/ledger plus the latest stored stage/report indices and exact R2 bytes so the existing auto-publication snapshot can be compared against current local captures. No publisher requests, R2/D1 writes, direct import/repair, promotion, literature/card/title/scope changes, user-script changes, schedule changes, or controller changes. Reuse unchanged DOI+figure+full SHA256+evidence conclusions and preserve parallel work."
+  "notes": "Refresh once from current main for this media-only maintenance pass after prior selected evidence was exhausted into reviewed batches/PRs. Read deployed media index/ledger, current staged/report indices and exact stored R2 bytes only. No publisher requests, no R2/D1 writes, no direct import/repair or promotion, no literature/card/title/scope changes, no userscript or schedule changes. Reuse unchanged DOI+figure+full SHA256+evidence conclusions; preserve parallel media PRs and the fixed generation 1790082000000."
 }
