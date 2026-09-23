@@ -87,13 +87,14 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   try{
     for(const old of inputs.previous.items){
       const row=old.record;if(!papers.has(row.doi))continue;
-      if(alreadyIn(media,row))continue;
       await validateNewBodyMetadata(row,policy,now);
       requireBody(old.policyId===POLICY_ID&&old.evidenceSha256===evidenceKey(row),'auto_prior_evidence_changed');
       const {ext}=await validateNewBodyMetadata(row,policy,now);
       requireBody(old.imageUrl==='media-mirror/body-auto-'+row.sha256+'.'+ext,'auto_previous_image_path');
+      const existing=(media.items?.[row.doi]?.figures?.figures||[]).find(f=>f.id===row.id);
+      if(existing)requireBody(existing.publicationId===POLICY_ID&&existing.verifiedSha256===row.sha256&&existing.imageUrl===old.imageUrl&&existing.evidenceSha256===old.evidenceSha256&&existing.label===row.label,'auto_prior_publication_changed');
       const bytes=await getOld(old);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
-      prepared.push({row,bytes,ext,admittedAt:old.admittedAt,isNew:false});retained.push({doi:row.doi,id:row.id});
+      prepared.push({row,bytes,ext,admittedAt:old.admittedAt,isNew:false,alreadyPublished:Boolean(existing),existingImageUrl:existing?.imageUrl||null});retained.push({doi:row.doi,id:row.id});
     }
     for(const row of rows){
       if(added.length>=policy.maxNewImages)break;
@@ -128,14 +129,16 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   }
   await mkdir(path.join(root,'public/media-mirror'),{recursive:true});
   const entries=[];
-  for(const {row,bytes,ext,admittedAt} of prepared){
-    const imageUrl='media-mirror/body-auto-'+row.sha256+'.'+ext;
-    await writeFile(path.join(root,'public',imageUrl),bytes);
-    const record=media.items[row.doi]||{doi:row.doi,toc:{doi:row.doi,available:false},figures:{doi:row.doi,available:false,figures:[]}};
-    const f={doi:row.doi,id:row.id,label:row.label,caption:row.caption,articleUrl:row.articleUrl,sourceUrl:row.sourceUrl,imageUrl,order:row.sortOrder,width:row.width,height:row.height,contentType:row.contentType,contentHash:row.contentHash,verifiedSha256:row.sha256,evidenceSha256:evidenceKey(row),originalUpdatedAt:row.updatedAt,publicationId:POLICY_ID,role:'article_figure',source:'automated-verified-new-capture',validationMode:'automated_provenance_bytes_and_decode',individualSemanticReview:false};
-    const figures=[...(record.figures?.figures||[]),f].sort((a,b)=>Number(a.order||0)-Number(b.order||0)||String(a.id).localeCompare(String(b.id),'en',{numeric:true}));
-    record.figures={...(record.figures||{}),available:true,doi:row.doi,articleUrl:row.articleUrl,figures};
-    record.inventory={...(record.inventory||{}),status:record.toc?.available?'complete':'figures_only',figureCount:figures.length,fullArticleFiguresVerified:false};media.items[row.doi]=record;
+  for(const {row,bytes,ext,admittedAt,alreadyPublished,existingImageUrl} of prepared){
+    const imageUrl=existingImageUrl||('media-mirror/body-auto-'+row.sha256+'.'+ext);
+    if(!alreadyPublished){
+      await writeFile(path.join(root,'public',imageUrl),bytes);
+      const record=media.items[row.doi]||{doi:row.doi,toc:{doi:row.doi,available:false},figures:{doi:row.doi,available:false,figures:[]}};
+      const f={doi:row.doi,id:row.id,label:row.label,caption:row.caption,articleUrl:row.articleUrl,sourceUrl:row.sourceUrl,imageUrl,order:row.sortOrder,width:row.width,height:row.height,contentType:row.contentType,contentHash:row.contentHash,verifiedSha256:row.sha256,evidenceSha256:evidenceKey(row),originalUpdatedAt:row.updatedAt,publicationId:POLICY_ID,role:'article_figure',source:'automated-verified-new-capture',validationMode:'automated_provenance_bytes_and_decode',individualSemanticReview:false};
+      const figures=[...(record.figures?.figures||[]),f].sort((a,b)=>Number(a.order||0)-Number(b.order||0)||String(a.id).localeCompare(String(b.id),'en',{numeric:true}));
+      record.figures={...(record.figures||{}),available:true,doi:row.doi,articleUrl:row.articleUrl,figures};
+      record.inventory={...(record.inventory||{}),status:record.toc?.available?'complete':'figures_only',figureCount:figures.length,fullArticleFiguresVerified:false};media.items[row.doi]=record;
+    }
     entries.push({policyId:POLICY_ID,record:row,imageUrl,evidenceSha256:evidenceKey(row),admittedAt,validationMode:'automated_provenance_bytes_and_decode',individualSemanticReview:false});
   }
   requireBody(JSON.stringify(Object.fromEntries(originalDois.map(d=>[d,media.items[d].toc])))===beforeToc,'auto_modified_toc');
