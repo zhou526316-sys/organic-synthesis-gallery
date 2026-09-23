@@ -1,0 +1,61 @@
+name: Reviewed body publication workbench
+on:
+  push:
+    branches: [fix/body-stage-display-20260923]
+    paths: ['.github/workflows/reviewed-body-workbench.yml','scripts/materialize-reviewed-body-batch1.py','scripts/test-reviewed-body.mjs','cloudflare/scripts/merge-reviewed-body.mjs']
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: reviewed-body-workbench
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/body-stage-display-20260923
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Materialize exact approved evidence without touching staged objects
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/materialize-reviewed-body-batch1.py
+      - name: Prove body identity, no TOC replacement and idempotency
+        run: |
+          node --check cloudflare/scripts/merge-reviewed-body.mjs
+          node --check cloudflare/scripts/merge-curated-pages.mjs
+          node scripts/test-reviewed-body.mjs
+          git diff --check
+      - name: Verify approved images alongside both previous recovery batches
+        run: |
+          printf '{"version":2,"items":{}}' > public/media-index.json
+          node cloudflare/scripts/merge-reviewed-toc.mjs
+          node cloudflare/scripts/merge-sealed-media-batch2.mjs
+          node cloudflare/scripts/merge-reviewed-body.mjs
+          node cloudflare/scripts/verify-static-media-integrity.mjs
+          cp public/body-publication-status.json "$RUNNER_TEMP/body-dry-run.json"
+          git diff --exit-code -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json public/toc-mainline.user.js src
+      - name: Commit tested media sources on feature branch only
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/fix/body-stage-display-20260923
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit/media-recovery/body-batch1 cloudflare/scripts/merge-curated-pages.mjs
+          if ! git diff --cached --quiet; then
+            git commit -m 'media: preserve reviewed body bytes and integrate existing gated Pages media build'
+            git push origin HEAD:fix/body-stage-display-20260923
+          fi
+          git rev-parse HEAD > "$RUNNER_TEMP/body-tested-head.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reviewed-body-dry-run
+          path: |
+            ${{ runner.temp }}/body-dry-run.json
+            ${{ runner.temp }}/body-tested-head.txt
+          retention-days: 7
