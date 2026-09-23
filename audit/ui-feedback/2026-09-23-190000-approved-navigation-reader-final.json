@@ -1,0 +1,86 @@
+{
+  "recordedAt": "2026-09-23T19:00:00+08:00",
+  "context": "User explicitly approved continuing feedback33 navigation and reader-count repair after feedback approval gate.",
+  "readerCount": {
+    "pr": 163,
+    "merged": true,
+    "mergeSha": "19ca396cd5b72d8a843d200a17ca0d8fd0e45659",
+    "atomicRun": 35841592886,
+    "sqlite": {"passed": 11, "failed": 0},
+    "localD1": {"passed": 6, "failed": 0},
+    "qualityRun": 35841592972,
+    "migrationRun": 35841592838,
+    "workerDeployRun": 35842249869,
+    "postDeployReadonlyRun": 35842399078,
+    "postDeploy": {
+      "markRequests": 0,
+      "uniquePaperReads": 130,
+      "summedReaderCounts": 130,
+      "uniqueIps": 18,
+      "papersWithReaders": 106,
+      "countersConsistent": true
+    },
+    "interpretation": "The split-write permanent-undercount defect is fixed. Production ledger and materialized totals were consistent at the read-only snapshot, so no historical bulk correction was performed. With 130 DOI×IP opens across 106 papers, at least 82 papers necessarily have exactly one counted reader under the current one-IP-per-DOI rule.",
+    "feedbackClosed": false
+  },
+  "navigation": {
+    "feedbackId": 33,
+    "userApproved": true,
+    "pr150": {
+      "mergeSha": "d15afca8aead58a5422f7054fde9487d0f637ce1",
+      "behaviorRun": 35847997946,
+      "chromium": "6/6",
+      "webkit": "6/6"
+    },
+    "initialLiveRun": 35848845588,
+    "initialLiveIssue": "GitHub Pages WebKit did not register gallery-page-navigation within the existing5s live deadline; GitHub Chromium and both Worker browsers passed.",
+    "diagnosticRun": 35849271899,
+    "diagnosis": "No page errors, failed module requests or 404s. Sequential bootstrap awaits optional user/account/feedback chunks before navigation delayed the navigation chunk on GitHub Pages WebKit.",
+    "pr166": {
+      "mergeSha": "778740547bd1ecb7d0fc0175744e0727329b4ce9",
+      "testedHead": "5c535e8ffe94397fc7e34bd4c0efe2f1c7fa0f5a",
+      "navigationRun": 35850499048,
+      "chromium": "7/7",
+      "webkit": "7/7",
+      "loadingRequirement": "Navigation visible within2.5s while optional user modules were deliberately delayed5s.",
+      "qualityRun": 35850499036,
+      "migrationRun": 35850499025,
+      "dataRun": 35850499099
+    },
+    "deployments": {
+      "githubPagesRun": 35851005572,
+      "githubPagesConclusion": "success",
+      "workerSyncRun": 35851005619,
+      "workerConclusion": "success"
+    },
+    "finalLive": {
+      "run": 35851322926,
+      "reviewedCommit": "778740547bd1ecb7d0fc0175744e0727329b4ce9",
+      "githubChromium": {"passed": 6, "failed": 0, "artifact": 10746140502, "sha256": "ce1aa0ab611733fc2533114fea697d827b3f1144f9eeeca6466ce4328d026d60"},
+      "githubWebkit": {"passed": 6, "failed": 0, "artifact": 10746020985, "sha256": "70a36ad136dcf739c105eedd4494ff967c8193d3d996acec5e2ad80c18181611"},
+      "workerChromium": {"passed": 6, "failed": 0, "artifact": 10746105550, "sha256": "239924cd1342454116f77439f3b3a021c008e023c114bc95570da6b79bfdd50e"},
+      "workerWebkit": {"passed": 6, "failed": 0, "artifact": 10746036114, "sha256": "f46dd7e97412b62ec471e059fa7e89473a346c3ed5f3bb5d7e2587afa6022046"},
+      "apiWritesMocked": true,
+      "readerMarks": 0
+    },
+    "feedbackExportRun": 35851604933,
+    "feedbackOriginal": "建议加个回到顶部/底部的按钮",
+    "feedbackApplyRun": 35851770271,
+    "feedbackApplyConclusion": "success",
+    "feedbackStatus": "reviewed"
+  },
+  "scope": {
+    "otherFeedbackChanged": false,
+    "literatureDataChanged": false,
+    "publicationOrAcquisitionChanged": false,
+    "tampermonkeyBridgeChanged": false,
+    "syntheticProductionReaderMarks": 0,
+    "cloudflarePagesFallbackAccepted": false
+  },
+  "conversationArtifacts": [
+    "navigation-reader-approved-release-evidence.zip",
+    "navigation-final-mobile-top.png",
+    "navigation-final-mobile-end.png",
+    "reader-count-release-evidence.zip"
+  ]
+}
