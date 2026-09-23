@@ -68,11 +68,11 @@ try{
 
   await reset(mediaFor(19));
   const nineteen=await mergeNewBodyAuto(root,{inputs:inputs(19),now,decoder,getNew,getOld});
-  await test('nineteen validated articles never publish even under direct build invocation',()=>{assert.equal(nineteen.status.validatedNewArticles,19);assert.equal(nineteen.status.meetsMinimumBatch,false);assert.equal(nineteen.status.added.length,0);assert.equal(nineteen.snapshot.count,0);assert.equal(nineteen.status.waitingForMinimumBatch,true);});
+  await test('nineteen validated articles never publish even under direct build invocation',()=>{assert.equal(nineteen.status.validatedNewArticles,19);assert.equal(nineteen.status.releaseReady,false);assert.equal(nineteen.status.preferredTargetMet,false);assert.equal(nineteen.status.releaseMode,'waiting');assert.equal(nineteen.status.added.length,0);assert.equal(nineteen.snapshot.count,0);assert.equal(nineteen.status.waitingForMore,true);});
 
   await reset(mediaFor(20));
   const twenty=await mergeNewBodyAuto(root,{inputs:inputs(20),now,decoder,getNew,getOld});
-  await test('twenty articles publish as the minimum paired batch',()=>{assert.equal(twenty.status.validatedNewArticles,20);assert.equal(twenty.status.publishedNewArticles,20);assert.equal(twenty.status.added.length,20);assert.equal(twenty.snapshot.count,20);assert.equal(twenty.status.meetsMinimumBatch,true);});
+  await test('twenty articles publish as the minimum paired batch',()=>{assert.equal(twenty.status.validatedNewArticles,20);assert.equal(twenty.status.publishedNewArticles,20);assert.equal(twenty.status.added.length,20);assert.equal(twenty.snapshot.count,20);assert.equal(twenty.status.releaseReady,true);assert.equal(twenty.status.preferredTargetMet,true);assert.equal(twenty.status.releaseMode,'target_batch');});
   await test('fresh TOCs merged earlier in the same build are sufficient even when prior live site had no TOC',()=>{assert.ok(twenty.status.added.every(x=>twenty.media.items[x.doi].toc.reason==='local_vpn_official_toc'));assert.ok(twenty.status.tocPairedRequired);});
   await test('automatic body publication preserves every same-build official TOC unchanged',()=>{const expected=mediaFor(20);for(const [doi,r] of Object.entries(expected.items))assert.deepEqual(twenty.media.items[doi].toc,r.toc);});
 
