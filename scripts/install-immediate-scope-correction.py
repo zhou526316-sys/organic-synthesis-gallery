@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import json
+
+changed=[]
+def patch(file, old, new):
+    p=Path(file); text=p.read_text()
+    if new in text: return
+    if text.count(old)!=1: raise RuntimeError('Concurrent source/anchor change: '+file)
+    p.write_text(text.replace(old,new,1)); changed.append(file)
+
+patch('scripts/validate-pages-literature-authorization.mjs', "import { readFile, mkdir, mkdtemp, writeFile, rm } from 'node:fs/promises';", "import { readFile, mkdir, mkdtemp, writeFile, rm } from 'node:fs/promises';\nimport { authorizeScopeCorrection } from './lib/immediate-scope-correction.mjs';")
+patch('scripts/validate-pages-literature-authorization.mjs', "  const marker = JSON.parse(await readFile(path.join(root, markerPath), 'utf8'));", "  const marker = JSON.parse(await readFile(path.join(root, markerPath), 'utf8'));\n  if (marker.mode === 'scope-correction') return authorizeScopeCorrection(root);")
+patch('scripts/validate-production-literature-release-slot.mjs', "const marker = JSON.parse(await readFile(MARKER, 'utf8'));", "const marker = JSON.parse(await readFile(MARKER, 'utf8'));\nif (marker.mode === 'scope-correction') {\n  const { authorizeScopeCorrection } = await import('./lib/immediate-scope-correction.mjs');\n  const correction = await authorizeScopeCorrection(ROOT);\n  console.log(JSON.stringify(correction, null, 2));\n  process.exit(correction.ok ? 0 : 1);\n}")
+patch('scripts/lib/immediate-scope-correction.mjs', 'productionCards:marker.productionCards,removedDois:removed,', 'productionCards:marker.productionCards,removedDois:removed,effectiveRemovedDois:[...new Set([...removed,...(priorAuthorization?.effectiveRemovedDois || [])])],')
+patch('scripts/validate-literature-quality-gate.mjs', 'const review = reviewRow.payload;', "let appliedRemovalDois = new Set();\ntry {\n  const marker = await readJson('audit/publication-release-state.json');\n  if (marker.mode === 'scope-correction') {\n    const { authorizeScopeCorrection } = await import('./lib/immediate-scope-correction.mjs');\n    const proof = await authorizeScopeCorrection(ROOT);\n    if (!proof.ok) throw new Error('Invalid scope correction: ' + proof.failures.join('; '));\n    appliedRemovalDois = new Set(proof.effectiveRemovedDois || proof.removedDois);\n  }\n} catch (error) { if (error.code !== 'ENOENT') throw error; }\nconst review = reviewRow.payload;")
+patch('scripts/validate-literature-quality-gate.mjs', "for (const item of accepted) {\n  const doi = normalizeDoi(item.doi);", "for (const item of accepted) {\n  const doi = normalizeDoi(item.doi);\n  if (appliedRemovalDois.has(doi)) {\n    assert(!repositoryDois.has(doi) && !deployedDois.has(doi), `precision: corrected old include remains visible: ${doi}`);\n    continue;\n  }")
+patch('cloudflare/scripts/audit-literature.mjs', "  return new Set([...latestDecision.entries()].filter(([, decision]) => decision === 'exclude').map(([doi]) => doi));", "  for (const row of await loadScopeCorrections()) latestDecision.set(normalizeDoi(row.doi), 'exclude');\n  return new Set([...latestDecision.entries()].filter(([, decision]) => decision === 'exclude').map(([doi]) => doi));")
+patch('cloudflare/scripts/audit-literature.mjs', '  return reviewed;\n}', "  for (const row of await loadScopeCorrections()) reviewed.set(normalizeDoi(row.doi), {doi:normalizeDoi(row.doi), journal:row.journal, date:row.date, title:row.title, decision:'exclude', reviewFile:'literature-scope-corrections.json'});\n  return reviewed;\n}")
+
+section='''\n\n## Immediate confirmed scope removals — user amendment, 2026-09-23\n\nThe user explicitly authorizes immediate removal of confirmed out-of-scope articles, without waiting for 18:00. This amendment supersedes earlier wording that required deletions to wait for a fixed slot. New admissions remain restricted to 08:00/18:00, and pending or insufficiently reviewed articles must not be disguised as confirmed exclusions.\n\nThe dedicated `scope-correction` marker (schema 3) allows ONLY removal of explicitly reviewed, registered DOI(s), with no added DOI, no changes to retained records or scope-policy code. It binds the previous authorized marker/parent, the exact correction registry, the two-pass correction review and the user's recorded authorization by Git blob SHA. All affected production data and the marker/review are committed atomically. The Pages gate verifies deletion-only differences and revalidates the previous authorized snapshot; it is never disabled. Historical pending and source-closure dates are preserved.\n\nA correction registry entry is not proof of an online removal. Use `awaiting_deployment` until actual deployment and a DOI search/data-set comparison establish that the specified papers are absent and retained papers remain. Record correctedAt and deployedAt separately from the last fixed admission slot. Normal pre-review and fixed-slot release continue to read the correction registry and cannot restore old include decisions.\n'''
+for file in ['docs/literature-update-protocol.md','docs/publication-release-contract.md']:
+    p=Path(file); text=p.read_text()
+    if '## Immediate confirmed scope removals — user amendment' not in text: p.write_text(text+section); changed.append(file)
+p=Path('audit/literature-scope-corrections.json'); obj=json.loads(p.read_text())
+obj['policy']='Explicit, evidenced scope exclusions override historical includes. Confirmed removals may execute immediately under the user-authorized deletion-only correction gate; new literature admissions remain at 08:00/18:00. Do not treat a queued exclusion as already removed.'
+p.write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n'); changed.append(str(p))
+print('\n'.join(changed))

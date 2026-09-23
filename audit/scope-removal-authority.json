@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "context": "Organic Synthesis Gallery confirmed scope-correction amendment",
+  "userInstruction": "继续排查，确定不属于范围内的可以直接移除，不必非等到18：00",
+  "allowImmediateConfirmedRemoval": true,
+  "allowOffSlotAdmissions": false,
+  "admissionSlots": ["08:00 Asia/Shanghai", "18:00 Asia/Shanghai"],
+  "constraints": [
+    "Only final evidence-backed exclusions may be removed.",
+    "Pending or unread candidates are not final exclusions.",
+    "A deletion-only correction must not add papers, change retained article fields, or bypass Pages authorization.",
+    "Record atomic production diff and actual online verification separately.",
+    "Preserve historical review evidence and unresolved backlog."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "mode": "confirmed-scope-removal",
+  "requestId": "user-immediate-scope-removal-20260923-four-confirmed",
+  "reason": "User explicitly permits immediate removal of confirmed out-of-scope articles without waiting for 18:00.",
+  "authorityFile": "audit/scope-removal-authority.json",
+  "removeDois": [
+    "10.1021/jacs.6c13517",
+    "10.1021/jacs.6c10701",
+    "10.1038/s41467-026-77963-6",
+    "10.1002/anie.7784614"
+  ],
+  "addDois": [],
+  "retainPendingAndUnconfirmedBoundaryPapers": true
+}

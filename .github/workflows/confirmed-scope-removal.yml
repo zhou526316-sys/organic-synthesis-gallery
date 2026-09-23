@@ -1,0 +1,95 @@
+name: Apply confirmed scope removals
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/confirmed-scope-removal.yml'
+      - 'audit/automation-triggers/scope-removal-request.json'
+permissions:
+  contents: write
+concurrency:
+  group: confirmed-scope-removal
+  cancel-in-progress: false
+jobs:
+  correction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install narrowly scoped correction authorization
+        run: python3 scripts/install-immediate-scope-correction.py
+      - name: Test deletion-only and existing release invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/lib/immediate-scope-correction.mjs
+          node --check scripts/apply-immediate-scope-correction.mjs
+          node scripts/test-immediate-scope-correction.mjs | tee "$RUNNER_TEMP/scope-removal-tests.json"
+          node scripts/test-pages-literature-authorization.mjs
+          node scripts/test-literature-completeness-capability.mjs
+          node scripts/test-scope-title-corrections.mjs
+          node scripts/test-per-doi-release.mjs
+          node scripts/test-deferred-publication-quality.mjs
+          node scripts/test-formal-review-conversion.mjs
+          node scripts/validate-pages-literature-authorization.mjs > "$RUNNER_TEMP/prior-pages-authorization.json"
+      - name: Persist gate and policy without modifying workflow files
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(scripts/validate-pages-literature-authorization.mjs scripts/validate-production-literature-release-slot.mjs scripts/validate-literature-quality-gate.mjs scripts/lib/immediate-scope-correction.mjs cloudflare/scripts/audit-literature.mjs docs/literature-update-protocol.md docs/publication-release-contract.md audit/literature-scope-corrections.json)
+          git diff --exit-code -- public shared/literature-policy.js .github/workflows audit/publication-release-state.json audit/literature-update-state.json
+          git add "${files[@]}"
+          if ! git diff --cached --quiet; then
+            git diff --cached --binary > "$RUNNER_TEMP/correction-code.patch"
+            base=$(git rev-parse HEAD)
+            git fetch origin main
+            if [ "$(git rev-parse origin/main)" != "$base" ]; then
+              git diff --exit-code "$base" origin/main -- "${files[@]}" scripts/apply-immediate-scope-correction.mjs audit/scope-removal-authority.json audit/automation-triggers/scope-removal-request.json public audit/publication-release-state.json audit/literature-update-state.json
+              git reset --hard origin/main
+              git apply --index "$RUNNER_TEMP/correction-code.patch"
+            fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix(release): authorize evidenced deletion-only corrections without off-slot admissions'
+            git push origin HEAD:main
+          fi
+          git rev-parse HEAD > "$RUNNER_TEMP/correction-code-commit.txt"
+      - name: Prepare and commit atomic confirmed removals
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          local=$(git rev-parse HEAD)
+          if [ "$(git rev-parse origin/main)" != "$local" ]; then
+            git diff --exit-code "$local" origin/main -- scripts cloudflare/scripts/audit-literature.mjs public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json shared/literature-policy.js audit/literature-scope-corrections.json audit/publication-release-state.json audit/literature-update-state.json audit/scope-removal-authority.json audit/automation-triggers/scope-removal-request.json
+            git reset --hard origin/main
+          fi
+          node scripts/apply-immediate-scope-correction.mjs | tee "$RUNNER_TEMP/scope-removal-result.json"
+          node -e 'const {execFileSync}=require("child_process");const r=require("./audit/scope-removal-execution-result.json");execFileSync("git",["add","--",...r.files],{stdio:"inherit"})'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(scope): immediately remove four confirmed out-of-scope articles'
+          node scripts/validate-pages-literature-authorization.mjs | tee "$RUNNER_TEMP/correction-pages-authorization.json"
+          node scripts/validate-production-literature-release-slot.mjs > "$RUNNER_TEMP/correction-baseline-authorization.json"
+          git push origin HEAD:main
+          git rev-parse HEAD | tee "$RUNNER_TEMP/scope-removal-commit.txt"
+      - name: Preserve execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: confirmed-scope-removal-evidence
+          path: |
+            ${{ runner.temp }}/scope-removal-tests.json
+            ${{ runner.temp }}/prior-pages-authorization.json
+            ${{ runner.temp }}/correction-code-commit.txt
+            ${{ runner.temp }}/scope-removal-result.json
+            ${{ runner.temp }}/correction-pages-authorization.json
+            ${{ runner.temp }}/correction-baseline-authorization.json
+            ${{ runner.temp }}/scope-removal-commit.txt
+          if-no-files-found: warn
+          retention-days: 14
