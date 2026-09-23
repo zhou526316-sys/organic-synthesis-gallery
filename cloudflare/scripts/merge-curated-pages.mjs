@@ -117,3 +117,7 @@ await mergeReviewedToc();
 // Exact asset allowlist only; original quarantine and first recovery stay unchanged.
 const {mergeSealedMediaBatch2}=await import('./merge-sealed-media-batch2.mjs');
 await mergeSealedMediaBatch2();
+
+// Reviewed current-generation body files only; keep Worker promotion and quarantine unchanged.
+const {mergeReviewedBody}=await import('./merge-reviewed-body.mjs');
+await mergeReviewedBody();
