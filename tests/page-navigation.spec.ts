@@ -161,29 +161,29 @@ test('gallery growth reveals navigation without window resize or unrelated modul
     for (const child of Array.from(app.children)) {
       if (child !== gallery) (child as HTMLElement).style.display = 'none';
     }
-    document.body.style.minHeight = '0';
-    document.documentElement.style.minHeight = '0';
-    app.style.minHeight = '0';
-    app.style.height = 'auto';
-    gallery.style.setProperty('display', 'none', 'important');
-    gallery.style.setProperty('height', '0', 'important');
-    gallery.style.setProperty('overflow', 'hidden', 'important');
+    document.body.style.cssText = 'min-height:0!important;height:auto!important;overflow:visible!important';
+    document.documentElement.style.cssText = 'min-height:0!important;height:auto!important;overflow:visible!important';
+    app.style.cssText = 'display:block!important;position:static!important;min-height:0!important;height:auto!important;overflow:visible!important;contain:none!important';
+    gallery.replaceChildren();
+    gallery.style.cssText = 'display:block!important;position:static!important;min-height:0!important;height:10px!important;overflow:hidden!important;contain:none!important';
   });
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeLessThan(80);
   await expect(nav).toBeHidden();
 
-  // No resize/scroll/custom event is dispatched here. The observed content box
-  // itself grows, which must be enough to refresh page-extent visibility.
+  // No resize/scroll/custom event is dispatched here. Only the already-observed
+  // content box grows; its resize must refresh the page-extent decision.
   await page.evaluate(() => {
     const gallery = document.querySelector<HTMLElement>('#gallery')!;
-    gallery.style.setProperty('display', 'block', 'important');
     gallery.style.setProperty('height', '2500px', 'important');
   });
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeGreaterThan(1000);
   await expect(nav).toBeVisible({ timeout: 1500 });
 
   await page.evaluate(() => {
     const gallery = document.querySelector<HTMLElement>('#gallery')!;
     gallery.style.setProperty('height', '10px', 'important');
   });
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeLessThan(80);
   await expect(nav).toBeHidden({ timeout: 1500 });
   expect(evidence.errors).toEqual([]);
   expect(evidence.marks).toEqual([]);
