@@ -1,54 +1,64 @@
 name: Reviewed body publication workbench
 on:
   push:
-    branches: [fix/body-stage-display-20260923]
-    paths: ['.github/workflows/reviewed-body-workbench.yml','scripts/materialize-reviewed-body-batch1.py','scripts/test-reviewed-body.mjs','cloudflare/scripts/merge-reviewed-body.mjs']
+    branches: [media/body-review-pipeline-v2]
+    paths:
+      - '.github/workflows/reviewed-body-workbench.yml'
+      - 'audit/media-recovery/body-review-decisions/**'
+      - 'scripts/materialize-reviewed-body-batch.py'
+      - 'scripts/test-reviewed-body.mjs'
+      - 'scripts/test-stage-storage.mjs'
+      - 'cloudflare/scripts/merge-reviewed-body.mjs'
+      - 'cloudflare/worker/src/stage-storage.js'
 permissions:
   contents: write
   actions: read
 concurrency:
-  group: reviewed-body-workbench
+  group: reviewed-body-workbench-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 7
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix/body-stage-display-20260923
+          ref: media/body-review-pipeline-v2
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Materialize exact approved evidence without touching staged objects
+      - name: Materialize exact semantically approved frozen evidence without touching R2
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/materialize-reviewed-body-batch1.py
-      - name: Prove body identity, no TOC replacement and idempotency
+          BODY_REVIEW_DECISION: audit/media-recovery/body-review-decisions/body-batch2-20260923-1420.json
+        run: python3 scripts/materialize-reviewed-body-batch.py
+      - name: Prove intake marker is evidence only and storage remains fail-closed
+        run: node scripts/test-stage-storage.mjs
+      - name: Prove multi-batch body identity, evidence binding, corpus gating and TOC preservation
         run: |
           node --check cloudflare/scripts/merge-reviewed-body.mjs
           node --check cloudflare/scripts/merge-curated-pages.mjs
           node scripts/test-reviewed-body.mjs
           git diff --check
-      - name: Verify approved images alongside both previous recovery batches
+      - name: Verify approved images alongside both prior TOC recovery batches
         run: |
           printf '{"version":2,"items":{}}' > public/media-index.json
           node cloudflare/scripts/merge-reviewed-toc.mjs
           node cloudflare/scripts/merge-sealed-media-batch2.mjs
           node cloudflare/scripts/merge-reviewed-body.mjs
           node cloudflare/scripts/verify-static-media-integrity.mjs
-          cp public/body-publication-status.json "$RUNNER_TEMP/body-dry-run.json"
-          git diff --exit-code -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json public/toc-mainline.user.js src
-      - name: Commit tested media sources on feature branch only
+          cp public/body-publication-index.json "$RUNNER_TEMP/body-dry-run.json"
+          git diff --exit-code -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json public/toc-mainline.user.js src shared/literature-journals.js
+      - name: Commit tested reviewed bytes and immutable manifest on feature branch only
         run: |
           set -euo pipefail
-          test "$GITHUB_REF" = refs/heads/fix/body-stage-display-20260923
+          test "$GITHUB_REF" = refs/heads/media/body-review-pipeline-v2
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add audit/media-recovery/body-batch1 cloudflare/scripts/merge-curated-pages.mjs
+          git add audit/media-recovery/body-batches/body-batch2-20260923-1420
           if ! git diff --cached --quiet; then
-            git commit -m 'media: preserve reviewed body bytes and integrate existing gated Pages media build'
-            git push origin HEAD:fix/body-stage-display-20260923
+            git commit -m 'media: preserve 18 reviewed body figures for bounded batch two'
+            git push origin HEAD:media/body-review-pipeline-v2
           fi
           git rev-parse HEAD > "$RUNNER_TEMP/body-tested-head.txt"
       - uses: actions/upload-artifact@v4
@@ -59,3 +69,4 @@ jobs:
             ${{ runner.temp }}/body-dry-run.json
             ${{ runner.temp }}/body-tested-head.txt
           retention-days: 7
+          if-no-files-found: warn
