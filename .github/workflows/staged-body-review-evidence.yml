@@ -1,81 +1,130 @@
 name: Read staged body review evidence
 on:
   push:
-    branches: [main]
+    branches: [main, media/body-review-pipeline-v2]
     paths: ['.github/workflows/staged-body-review-evidence.yml','audit/automation-triggers/staged-body-review.json']
 permissions:
   contents: read
+concurrency:
+  group: staged-body-review-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   read:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
-      - name: Read exact staged objects, public manifest and latest diagnostics
+      - name: Read bounded selected staged objects and emit non-approval evidence markers
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           python3 - <<'PY'
-          import concurrent.futures,datetime,hashlib,json,os,pathlib,re,urllib.parse,urllib.request,zipfile
+          import concurrent.futures,datetime,hashlib,json,os,pathlib,re,urllib.parse,urllib.request
           out=pathlib.Path(os.environ['RUNNER_TEMP'])/'body-review';(out/'images').mkdir(parents=True)
+          trigger=json.loads(pathlib.Path('audit/automation-triggers/staged-body-review.json').read_text())
+          def doi(v):
+              s=str(v or '').strip().lower();s=re.sub(r'^https?://(?:dx\.)?doi\.org/','',s);s=re.sub(r'^doi:\s*','',s);return s
+          selected=[]
+          for value in trigger.get('selectedDois',[]):
+              d=doi(value)
+              if d and re.fullmatch(r'10\.\d{4,9}/\S+',d) and d not in selected:selected.append(d)
+          assert 1<=len(selected)<=5,'selectedDois must contain 1-5 unique DOI'
+          max_images=int(trigger.get('maxImages',30));assert 1<=max_images<=30
+          cutover=int(trigger.get('cutoverMs',1790082000000));assert cutover==1790082000000
+          corpus=json.loads(pathlib.Path('public/toc-demand-live.json').read_text())
+          bydoi={doi(r.get('doi')):r for r in corpus.get('articles',[]) if doi(r.get('doi'))}
+          missing=[d for d in selected if d not in bydoi];assert not missing,'selected DOI no longer in current corpus: '+','.join(missing)
           base='https://api.cloudflare.com/client/v4/accounts/'+os.environ['CLOUDFLARE_ACCOUNT_ID']+'/r2/buckets/organic-synthesis-gallery-media/objects/'
-          selected={'10.1021/acs.joc.6c01302','10.1038/s41557-026-02258-8','10.1038/s44160-026-01155-9','10.1021/jacs.6c14159','10.1021/acs.orglett.6c03418'}
           class NoRedirect(urllib.request.HTTPRedirectHandler):
               def redirect_request(self,*a,**k):return None
+          opener=urllib.request.build_opener(NoRedirect())
           def get(key):
               assert key.startswith(('local-captures/article-figures/','local-captures/tampermonkey/')) and '..' not in key and '?' not in key
               req=urllib.request.Request(base+urllib.parse.quote(key,safe='/'),headers={'Authorization':'Bearer '+os.environ['CLOUDFLARE_API_TOKEN']})
-              with urllib.request.build_opener(NoRedirect()).open(req,timeout=20) as res:raw=res.read(8000001)
+              with opener.open(req,timeout=22) as res:raw=res.read(8000001)
               assert len(raw)<=8000000
               return raw
+          def clean_url(value):
+              if not isinstance(value,str):return value
+              try:
+                  u=urllib.parse.urlsplit(value);return urllib.parse.urlunsplit((u.scheme,u.hostname or '',u.path,'','')) if u.scheme in ('http','https') else value
+              except ValueError:return '[url]'
           def clean(v):
               if isinstance(v,dict):return {k:clean(x) for k,x in v.items() if not re.search(r'token|secret|password|cookie|authorization|imageData|html',k,re.I)}
               if isinstance(v,list):return [clean(x) for x in v]
               if not isinstance(v,str):return v
-              def u(m):
-                  a=urllib.parse.urlsplit(m.group());return urllib.parse.urlunsplit((a.scheme,a.hostname or '',a.path,'',''))
-              return re.sub(r'(?i)Bearer\s+\S+|(?:token|secret|password|cookie|authorization|signature)\s*[:=]\s*[^\s;,]+','[redacted]',re.sub(r'https?://[^\s\"\'<>]+',u,v))
+              v=re.sub(r'(?i)Bearer\s+\S+|(?:token|secret|password|cookie|authorization|signature)\s*[:=]\s*[^\s;,]+','[redacted]',v)
+              return re.sub(r'https?://[^\s\"\'<>]+',lambda m:clean_url(m.group()),v)
           def rows(index):
-              a=index['items'];return list(a.values()) if isinstance(a,dict) else a
-          evidence={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'baseSha':os.environ['GITHUB_SHA'],'readOnly':True,'mediaWrites':0,'atomicSnapshot':False,'errors':[],'images':[],'reports':[]}
+              a=index.get('items',{});return list(a.values()) if isinstance(a,dict) else list(a or [])
+          def evidence_payload(r,full):
+              return ['body-capture-evidence-v1',str(r.get('doi') or ''),str(r.get('id') or ''),str(r.get('label') or ''),str(r.get('caption') or ''),str(r.get('articleUrl') or ''),str(r.get('sourceUrl') or ''),str(r.get('pageDoi') or ''),str(r.get('jobId') or ''),str(r.get('captureVersion') or ''),int(r.get('mediaGeneration') or 0),str(r.get('r2Key') or ''),str(r.get('contentHash') or ''),str(full or ''),int(r.get('byteLength') or 0),int(r.get('width') or 0),int(r.get('height') or 0),int(r.get('sortOrder') or 0)]
+          def evidence_fingerprint(r,full):
+              payload=json.dumps(evidence_payload(r,full),ensure_ascii=False,separators=(',',':')).encode();return hashlib.sha256(payload).hexdigest()
+          def public_json(url):
+              req=urllib.request.Request(url+('?body_review='+str(int(datetime.datetime.now().timestamp())) if '?' not in url else '&body_review='+str(int(datetime.datetime.now().timestamp()))),headers={'Cache-Control':'no-cache','User-Agent':'Gallery-body-review-evidence/2'})
+              with urllib.request.urlopen(req,timeout=22) as res:raw=res.read(8000001)
+              assert len(raw)<=8000000 and res.status==200
+              return raw
+          evidence={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'baseSha':os.environ['GITHUB_SHA'],'readOnly':True,'mediaWrites':0,'semanticApproval':False,'captureEvidenceSchema':'body-capture-evidence-v1','selectedDois':selected,'maxImages':max_images,'cutoverMs':cutover,'errors':[],'warnings':[],'images':[],'reports':[]}
+          media_raw=public_json('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json');media=json.loads(media_raw);(out/'published-media.json').write_bytes(media_raw)
           stage_raw=get('local-captures/article-figures/stage-index.json');stage=json.loads(stage_raw);sr=rows(stage)
-          evidence['stageIndexSha256']=hashlib.sha256(stage_raw).hexdigest();evidence['stageRows']=len(sr);evidence['postCutoverRows']=sum(r.get('updatedAt',0)>=1790082000000 for r in sr)
-          (out/'stage-index.json').write_text(json.dumps(clean(stage),ensure_ascii=False))
-          take=sorted([r for r in sr if r.get('doi') in selected and r.get('updatedAt',0)>=1790082000000],key=lambda r:(r['doi'],r.get('sortOrder',0),r.get('id','')))
-          assert 0<len(take)<=60
+          evidence['stageIndexSha256']=hashlib.sha256(stage_raw).hexdigest();evidence['stageRows']=len(sr);evidence['postCutoverRows']=sum(r.get('updatedAt',0)>=cutover for r in sr);evidence['stageUpdatedAt']=stage.get('updatedAt')
+          selected_rows=[r for r in sr if doi(r.get('doi')) in selected and r.get('updatedAt',0)>=cutover]
+          selected_rows.sort(key=lambda r:(selected.index(doi(r.get('doi'))),int(r.get('sortOrder') or 0),str(r.get('id') or '')))
+          if len(selected_rows)>max_images:
+              evidence['warnings'].append({'kind':'selection_truncated','available':len(selected_rows),'maxImages':max_images})
+              selected_rows=selected_rows[:max_images]
+          assert selected_rows,'no post-cutover staged rows for selected current-corpus DOI'
+          (out/'stage-index-selected.json').write_text(json.dumps(clean({'version':stage.get('version'),'updatedAt':stage.get('updatedAt'),'items':selected_rows}),ensure_ascii=False,indent=2))
+          pubitems=media.get('items',{}) if isinstance(media,dict) else {}
           def read_image(pair):
-              n,r=pair;item=clean(r);item['reviewId']='body-%03d'%n
+              n,r=pair;item=clean(r);item['reviewId']='body-%03d'%n;item['currentCorpus']=True;item['corpusArticle']=clean(bydoi[doi(r.get('doi'))])
               try:
-                  assert r.get('captureVersion')=='6.2.20' and r.get('pageDoi')==r['doi'] and re.fullmatch(r'[a-zA-Z0-9-]{16,80}',r.get('jobId',''))
-                  raw=get(r['r2Key']);digest=hashlib.sha256(raw).hexdigest();assert digest.startswith(r['contentHash'])
-                  ext=pathlib.PurePosixPath(r['r2Key']).suffix;assert ext in ('.svg','.png','.jpg','.jpeg','.webp','.gif')
+                  assert doi(r.get('pageDoi'))==doi(r.get('doi'))
+                  assert re.fullmatch(r'[a-zA-Z0-9-]{16,80}',str(r.get('jobId') or ''))
+                  assert int(r.get('mediaGeneration') or 0)==cutover
+                  assert r.get('updatedAt',0)>=cutover
+                  raw=get(r['r2Key']);full=hashlib.sha256(raw).hexdigest();assert full.startswith(str(r.get('contentHash') or ''))
+                  assert len(raw)==int(r.get('byteLength') or len(raw)) and 100<=len(raw)<=4000000
+                  ext=pathlib.PurePosixPath(r['r2Key']).suffix.lower();assert ext in ('.svg','.png','.jpg','.jpeg','.webp','.gif')
                   file='images/'+item['reviewId']+ext;(out/file).write_bytes(raw)
-                  item.update(file=file,sha256=digest,actualBytes=len(raw),hashVerified=True)
-              except Exception as e:item.update(error=type(e).__name__,httpStatus=getattr(e,'code',None))
+                  fingerprint=evidence_fingerprint(r,full)
+                  stored=str(r.get('captureEvidenceFingerprint') or '')
+                  if stored and stored!=fingerprint:raise AssertionError('capture_evidence_fingerprint_mismatch')
+                  figures=((pubitems.get(doi(r.get('doi'))) or {}).get('figures') or {}).get('figures') or []
+                  existing=next((f for f in figures if str(f.get('id') or '').lower()==str(r.get('id') or '').lower()),None)
+                  published_exact=bool(existing and (existing.get('verifiedSha256')==full or str(existing.get('contentHash') or '')==str(r.get('contentHash') or '')))
+                  published_conflict=bool(existing and not published_exact)
+                  item.update(file=file,sha256=full,actualBytes=len(raw),hashVerified=True,evidenceFingerprint=fingerprint,evidenceFingerprintSource='stage' if stored else 'review_reader_derived',captureMarkerIsApproval=False,publishedExact=published_exact,publishedConflict=published_conflict,publishedFigure=clean(existing) if existing else None)
+              except Exception as e:item.update(error=type(e).__name__+':'+str(e)[:160],httpStatus=getattr(e,'code',None))
               return item
-          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:evidence['images']=list(pool.map(read_image,enumerate(take,1)))
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:evidence['images']=list(pool.map(read_image,enumerate(selected_rows,1)))
           ix=json.loads(get('local-captures/tampermonkey/report-index.json'));rr=rows(ix);evidence['reportDois']=len(rr);evidence['automaticDois']=sum(str(r.get('candidateSource','')).startswith('auto_') for r in rr)
-          details=sorted(rr,key=lambda r:r.get('updatedAt',0),reverse=True)[:8]
-          details+=[r for r in rr if r.get('doi') in selected and r not in details]
-          for r in details:
-              a=(r.get('attempts') or [r])[0]
-              try:evidence['reports'].append(clean(json.loads(get(a['reportKey']))))
-              except Exception as e:evidence['errors'].append({'doi':r.get('doi'),'kind':'report','error':type(e).__name__})
-          for name,url in [('public-media-index','https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json'),('capabilities','https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/capture-capabilities')]:
-              try:
-                  with urllib.request.urlopen(url+'?body_review='+str(int(datetime.datetime.now().timestamp())),timeout=20) as res:data=res.read(8000001)
-                  assert len(data)<=8000000
-                  (out/(name+'.json')).write_bytes(data)
-              except Exception as e:evidence['errors'].append({'kind':name,'error':type(e).__name__})
-          with zipfile.ZipFile(out/'publication-source.zip','w',zipfile.ZIP_DEFLATED) as z:
-              names=['public/papers.gz.b64','public/total-synthesis.json','public/manual-supplement.json','public/final-audit-supplement.json','public/curated-supplement.json','public/automation-supplement.json','public/rolling-supplement.json','src/main.ts','src/style.css']
-              names+=['cloudflare/scripts/'+n for n in ['merge-reviewed-toc.mjs','merge-curated-pages.mjs','merge-sealed-media-batch2.mjs','verify-static-media-integrity.mjs','sanitize-static-media.mjs']]
-              for name in names:
-                  if pathlib.Path(name).exists():z.write(name,name)
+          report_rows=[]
+          for d in selected:
+              matches=[r for r in rr if doi(r.get('doi'))==d]
+              if matches:report_rows.append(sorted(matches,key=lambda r:r.get('updatedAt',0),reverse=True)[0])
+              else:evidence['warnings'].append({'doi':d,'kind':'report_index_missing'})
+          for r in report_rows:
+              evidence['reports'].append({'index':clean(r),'details':[]})
+              for attempt in (r.get('attempts') or [r])[:4]:
+                  key=attempt.get('reportKey')
+                  if not key:continue
+                  try:evidence['reports'][-1]['details'].append(clean(json.loads(get(key))))
+                  except Exception as e:evidence['warnings'].append({'doi':r.get('doi'),'kind':'report_read','error':type(e).__name__})
+          try:
+              cap=public_json('https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/capture-capabilities');(out/'capabilities.json').write_bytes(cap)
+          except Exception as e:evidence['warnings'].append({'kind':'capabilities_read','error':type(e).__name__})
+          markers=[]
+          for x in evidence['images']:
+              markers.append({k:x.get(k) for k in ('reviewId','doi','id','label','caption','sha256','contentHash','evidenceFingerprint','evidenceFingerprintSource','captureMarkerIsApproval','publishedExact','publishedConflict','updatedAt','jobId','captureVersion','pageDoi','mediaGeneration','r2Key','sourceUrl','articleUrl')})
+          (out/'candidate-markers.json').write_text(json.dumps({'schema':'body-review-candidate-markers-v1','generatedAt':evidence['readAt'],'semanticApproval':False,'selectedDois':selected,'items':markers},ensure_ascii=False,indent=2))
+          (out/'selection.json').write_text(json.dumps({'trigger':trigger,'currentCorpus':[bydoi[d] for d in selected],'selectedStageRows':len(selected_rows),'notYetApproved':True},ensure_ascii=False,indent=2))
           evidence['readCompletedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat();(out/'evidence.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2))
-          print('BODY_REVIEW_READ '+json.dumps({k:v for k,v in evidence.items() if k not in ('images','reports')},ensure_ascii=False));print('BODY_REVIEW_FILES '+json.dumps({'selected':len(take),'verified':sum(r.get('hashVerified',False) for r in evidence['images'])}))
-          if evidence['errors'] or any('error' in r for r in evidence['images']):raise SystemExit('Read incomplete; do not auto-publish')
+          print('BODY_REVIEW_READ '+json.dumps({k:v for k,v in evidence.items() if k not in ('images','reports')},ensure_ascii=False));print('BODY_REVIEW_FILES '+json.dumps({'selected':len(selected_rows),'verified':sum(r.get('hashVerified',False) for r in evidence['images']),'alreadyPublishedExact':sum(r.get('publishedExact',False) for r in evidence['images']),'conflicts':sum(r.get('publishedConflict',False) for r in evidence['images'])}))
+          if any('error' in r for r in evidence['images']):raise SystemExit('Selected byte/identity evidence incomplete; no semantic approval')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
@@ -83,3 +132,4 @@ jobs:
           name: staged-body-review-evidence
           path: ${{ runner.temp }}/body-review/*
           retention-days: 7
+          if-no-files-found: error
