@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {gzipSync} from 'node:zlib';
 import {buildBodyReviewMarker,BODY_MEDIA_GENERATION} from '../shared/body-media-evidence.js';
 import {validateNewBodyMetadata,validateNewBodyBytes,conflictKeys,createImageDecoder,exactKey,sha256} from '../cloudflare/scripts/new-body-auto-validation.mjs';
-import {mergeNewBodyAuto,fetchStored,assertSnapshotCoherence} from '../cloudflare/scripts/merge-new-body-auto.mjs';
+import {mergeNewBodyAuto,fetchStored,assertSnapshotCoherence,pendingNewRows} from '../cloudflare/scripts/merge-new-body-auto.mjs';
 
 const fixture=process.env.BODY_AUTO_FIXTURE;assert.ok(fixture,'frozen controlled evidence fixture required');
 const evidence=JSON.parse(await readFile(path.join(fixture,'evidence.json'),'utf8'));
@@ -65,6 +65,19 @@ try{
   }
   const decoder={decode:async row=>({width:row.width,height:row.height}),close:async()=>{}};
   const getNew=async r=>bytesByKey.get(exactKey(r)),getOld=async e=>bytesByKey.get(exactKey(e.record));
+
+  const olderBacklog=[];
+  for(const x of synthetic.slice(0,20)){
+    const row={...x.row,updatedAt:BODY_MEDIA_GENERATION+60_000+olderBacklog.length};
+    row.reviewMarker=await buildBodyReviewMarker(row,row.sha256);
+    olderBacklog.push(row);
+  }
+  await test('previously staged current-generation rows remain in the unpublished candidate pool until published',async()=>{
+    const pending=await pendingNewRows({root,inputs:inputs(20,{policyId:policy.policyId,items:[],attempts:{}},olderBacklog),now});
+    assert.equal(pending.rows.length,20);
+    assert.deepEqual(new Set(pending.rows.map(r=>r.doi)),new Set(olderBacklog.map(r=>r.doi)));
+    assert.ok(pending.rows.every(r=>r.updatedAt<now-10*60*1000));
+  });
 
   await reset(mediaFor(19));
   const nineteen=await mergeNewBodyAuto(root,{inputs:inputs(19),now,decoder,getNew,getOld});
