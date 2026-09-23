@@ -49,11 +49,9 @@ jobs:
           grep -F 'https://api.gczhouwld.com/?doi=' "$SHARE_PAGE"
           grep -F 'location.replace' "$SHARE_PAGE"
           test -s dist/share-default.png
-          grep -F "data-share-action=\"wechat-copy\"" dist/assets/card-share-*.js || grep -F "wechat-copy" dist/assets/card-share-*.js
-          if grep -F "data-share-action=\"native\"" dist/assets/card-share-*.js; then
-            echo "navigator.share/native share button must not be exposed for WeChat sharing" >&2
-            exit 1
-          fi
+          grep -F "wechat-copy" dist/assets/card-share-*.js
+          grep -F "navigator.share" dist/assets/card-share-*.js
+          grep -F "System share is unavailable; the card link was copied instead." dist/assets/card-share-*.js
 
       - name: Verify 20-second halo contract
         run: |
@@ -99,6 +97,12 @@ jobs:
               const url = request.url();
               if (url.startsWith('http://127.0.0.1:4173/')) failedSameOrigin.push(url + ' :: ' + (request.failure()?.errorText || 'failed'));
             });
+            await page.addInitScript(() => {
+              Object.defineProperty(navigator, 'share', {
+                configurable: true,
+                value: async () => { window.__osgNativeShareInvoked = true; },
+              });
+            });
             await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
             await page.locator('html[data-card-share-ready="true"]').waitFor({ state: 'attached', timeout: 15000 });
             const firstCard = page.locator('.card[data-doi]:not([data-doi=""])').first();
@@ -114,6 +118,11 @@ jobs:
             if (!richShareUrl || !/^https:\/\/api\.gczhouwld\.com\/share\/[A-Za-z0-9_-]+\.html$/.test(richShareUrl)) {
               throw new Error('share URL is not the custom-domain rich paper card: ' + richShareUrl);
             }
+            await panel.locator('[data-share-action="native"]').click();
+            const nativeShareInvoked = await page.evaluate(() => Boolean(window.__osgNativeShareInvoked));
+            if (!nativeShareInvoked) throw new Error('system share action did not invoke navigator.share');
+            await shareButton.click();
+            await panel.waitFor({ state: 'visible' });
             await panel.locator('[data-share-action="qr"]').click();
             await panel.locator('.card-share-qr-image').waitFor({ state: 'visible', timeout: 10000 });
 

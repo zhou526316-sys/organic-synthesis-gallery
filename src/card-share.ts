@@ -179,9 +179,10 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
       <button type="button" class="card-share-close" data-share-close aria-label="${tr('关闭', 'Close')}">×</button>
     </div>
     <div class="card-share-meta"></div>
-    <div class="card-share-wechat-tip">${tr('微信里建议用“微信分享”：它会复制专用卡片链接；到聊天框直接粘贴发送，让微信读取网页卡片预览。', 'For WeChat, use “WeChat share”: it copies the dedicated rich-card link so WeChat can unfurl it when pasted into a chat.')}</div>
+    <div class="card-share-wechat-tip">${tr('微信用“微信卡片”：复制专用链接后到聊天框粘贴发送；“系统分享”保留给短信、邮件及系统分享面板里的其他应用。', 'Use “WeChat card” for WeChat: copy the dedicated rich link and paste it into a chat. “System share” remains available for Messages, Mail, and other apps in the OS share sheet.')}</div>
     <div class="card-share-actions-grid">
-      <button type="button" data-share-action="wechat-copy">${tr('微信分享', 'WeChat share')}</button>
+      <button type="button" data-share-action="wechat-copy">${tr('微信卡片', 'WeChat card')}</button>
+      <button type="button" data-share-action="native">${tr('系统分享', 'System share')}</button>
       <button type="button" data-share-action="copy-link">${tr('复制卡片链接', 'Copy card link')}</button>
       <button type="button" data-share-action="copy-text">${tr('复制标题 + DOI + 链接', 'Copy title + DOI + link')}</button>
       <button type="button" data-share-action="qr">${tr('生成二维码', 'Generate QR')}</button>
@@ -206,6 +207,29 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
           showToast(tr('微信卡片链接已复制，请到微信聊天框粘贴发送', 'WeChat card link copied. Paste it into a WeChat chat.'));
         } catch {
           showToast(tr('复制失败，请使用“复制卡片链接”。', 'Copy failed. Use “Copy card link”.'));
+        }
+        return;
+      }
+      if (action === 'native') {
+        if (typeof navigator.share === 'function') {
+          try {
+            await navigator.share({
+              title: info.title,
+              text: [info.journal, `DOI: ${info.doi}`].filter(Boolean).join(' · '),
+              url: info.url,
+            });
+            showToast(tr('已交给系统分享', 'Shared through the system share sheet'));
+            closePanel();
+            return;
+          } catch (error) {
+            if (error instanceof DOMException && error.name === 'AbortError') return;
+          }
+        }
+        try {
+          await copyText(info.url);
+          showToast(tr('系统分享当前不可用，已自动复制卡片链接', 'System share is unavailable; the card link was copied instead.'));
+        } catch {
+          showToast(tr('系统分享和复制都失败，请使用二维码。', 'System share and copy failed. Use the QR code instead.'));
         }
         return;
       }
