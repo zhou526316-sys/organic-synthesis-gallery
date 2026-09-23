@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-23T01:00:47.232Z",
+  "generatedAt": "2026-09-23T04:25:52.436Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-calendar",
   "lookbackDays": 3,
@@ -168,27 +168,28 @@
     }
   ],
   "summary": {
-    "galleryDois": 536,
-    "sourceRecords": 487,
-    "rawMissingFromGallery": 405,
-    "previouslyReviewedExcluded": 404,
-    "missingFromGallery": 1,
-    "potentialGaps": 1,
+    "galleryDois": 532,
+    "sourceRecords": 496,
+    "rawMissingFromGallery": 417,
+    "previouslyReviewedExcluded": 407,
+    "missingFromGallery": 10,
+    "potentialGaps": 3,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 2,
     "historicalCoverageLosses": 0,
-    "unresolved": 1,
+    "unresolved": 10,
+    "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
   "closure": {
     "date": "2026-09-22",
     "status": "blocked-source-coverage-anomaly",
-    "sourceRecords": 114,
-    "rawMissingFromGallery": 80,
-    "previouslyReviewedExcluded": 79,
-    "missingFromGallery": 1,
+    "sourceRecords": 118,
+    "rawMissingFromGallery": 87,
+    "previouslyReviewedExcluded": 82,
+    "missingFromGallery": 5,
     "potentialGaps": 1,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
@@ -202,8 +203,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 159,
-        "crossrefCandidateRecords": 158,
+        "unionCandidateRecords": 162,
+        "crossrefCandidateRecords": 161,
         "openAlexCandidateRecords": 134,
         "multiSourceCandidateRecords": 133,
         "closureUnionRecords": 37,
@@ -223,8 +224,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 46,
-        "crossrefCandidateRecords": 46,
+        "unionCandidateRecords": 48,
+        "crossrefCandidateRecords": 48,
         "openAlexCandidateRecords": 36,
         "multiSourceCandidateRecords": 36,
         "closureUnionRecords": 16,
@@ -304,14 +305,14 @@
       }
     },
     "2026-09-22": {
-      "sourceRecords": 114,
-      "crossrefOnly": 46,
+      "sourceRecords": 118,
+      "crossrefOnly": 50,
       "openAlexOnly": 0,
       "multiSource": 68,
-      "coveredByGallery": 34,
-      "rawMissingFromGallery": 80,
-      "previouslyReviewedExcluded": 79,
-      "missingFromGallery": 1,
+      "coveredByGallery": 31,
+      "rawMissingFromGallery": 87,
+      "previouslyReviewedExcluded": 82,
+      "missingFromGallery": 5,
       "potentialGaps": 1,
       "byJournal": {
         "Nature": 14,
@@ -320,7 +321,7 @@
         "Nature Chemistry": 3,
         "Nature Communications": 37,
         "JACS": 19,
-        "Angew": 13,
+        "Angew": 17,
         "ACS Catalysis": 1,
         "Organic Letters": 16,
         "CCS Chemistry": 1,
@@ -363,17 +364,19 @@
       }
     },
     "2026-09-23": {
-      "sourceRecords": 2,
-      "crossrefOnly": 0,
+      "sourceRecords": 7,
+      "crossrefOnly": 5,
       "openAlexOnly": 0,
       "multiSource": 2,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 2,
+      "rawMissingFromGallery": 7,
       "previouslyReviewedExcluded": 2,
-      "missingFromGallery": 0,
-      "potentialGaps": 0,
+      "missingFromGallery": 5,
+      "potentialGaps": 2,
       "byJournal": {
-        "JACS": 2
+        "Nature Communications": 3,
+        "JACS": 2,
+        "Organic Letters": 2
       }
     }
   },
@@ -456,16 +459,16 @@
     "Nature Communications": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 159,
-      "crossrefOnly": 25,
+      "sourceRecords": 162,
+      "crossrefOnly": 28,
       "openAlexOnly": 1,
       "multiSource": 133,
       "lateIndexed": 85,
       "safetyTail": 87,
-      "coveredByGallery": 2,
-      "rawMissingFromGallery": 157,
-      "previouslyReviewedExcluded": 157,
-      "missingFromGallery": 0,
+      "coveredByGallery": 1,
+      "rawMissingFromGallery": 161,
+      "previouslyReviewedExcluded": 158,
+      "missingFromGallery": 3,
       "potentialGaps": 0
     },
     "JACS": {
@@ -477,25 +480,25 @@
       "multiSource": 71,
       "lateIndexed": 41,
       "safetyTail": 41,
-      "coveredByGallery": 20,
-      "rawMissingFromGallery": 57,
-      "previouslyReviewedExcluded": 57,
+      "coveredByGallery": 18,
+      "rawMissingFromGallery": 59,
+      "previouslyReviewedExcluded": 59,
       "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "Angew": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 76,
-      "crossrefOnly": 2,
+      "sourceRecords": 80,
+      "crossrefOnly": 6,
       "openAlexOnly": 0,
       "multiSource": 74,
       "lateIndexed": 31,
       "safetyTail": 31,
       "coveredByGallery": 8,
-      "rawMissingFromGallery": 68,
+      "rawMissingFromGallery": 72,
       "previouslyReviewedExcluded": 68,
-      "missingFromGallery": 0,
+      "missingFromGallery": 4,
       "potentialGaps": 0
     },
     "ACS Catalysis": {
@@ -516,17 +519,17 @@
     "Organic Letters": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 46,
-      "crossrefOnly": 10,
+      "sourceRecords": 48,
+      "crossrefOnly": 12,
       "openAlexOnly": 0,
       "multiSource": 36,
       "lateIndexed": 21,
       "safetyTail": 21,
       "coveredByGallery": 39,
-      "rawMissingFromGallery": 7,
+      "rawMissingFromGallery": 9,
       "previouslyReviewedExcluded": 7,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 2,
+      "potentialGaps": 2
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -729,8 +732,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 159,
-      "crossrefCandidateRecords": 158,
+      "unionCandidateRecords": 162,
+      "crossrefCandidateRecords": 161,
       "openAlexCandidateRecords": 134,
       "multiSourceCandidateRecords": 133,
       "closureUnionRecords": 37,
@@ -769,12 +772,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 76,
-      "crossrefCandidateRecords": 76,
+      "unionCandidateRecords": 80,
+      "crossrefCandidateRecords": 80,
       "openAlexCandidateRecords": 74,
       "multiSourceCandidateRecords": 74,
-      "closureUnionRecords": 13,
-      "closureCrossrefRecords": 13,
+      "closureUnionRecords": 17,
+      "closureCrossrefRecords": 17,
       "closureOpenAlexRecords": 12,
       "closureMultiSourceRecords": 12,
       "coverageWarning": false,
@@ -809,8 +812,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 46,
-      "crossrefCandidateRecords": 46,
+      "unionCandidateRecords": 48,
+      "crossrefCandidateRecords": 48,
       "openAlexCandidateRecords": 36,
       "multiSourceCandidateRecords": 36,
       "closureUnionRecords": 16,
@@ -954,8 +957,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 159,
-      "crossrefCandidateRecords": 158,
+      "unionCandidateRecords": 162,
+      "crossrefCandidateRecords": 161,
       "openAlexCandidateRecords": 134,
       "multiSourceCandidateRecords": 133,
       "closureUnionRecords": 37,
@@ -975,8 +978,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 46,
-      "crossrefCandidateRecords": 46,
+      "unionCandidateRecords": 48,
+      "crossrefCandidateRecords": 48,
       "openAlexCandidateRecords": 36,
       "multiSourceCandidateRecords": 36,
       "closureUnionRecords": 16,
@@ -1251,7 +1254,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 159,
+      "count": 162,
       "note": ""
     },
     {
@@ -1260,7 +1263,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 159,
+      "count": 162,
       "note": ""
     },
     {
@@ -1269,7 +1272,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 158,
+      "count": 161,
       "note": ""
     },
     {
@@ -1348,7 +1351,7 @@
       "issn": "1433-7851",
       "mode": "online",
       "ok": true,
-      "count": 75,
+      "count": 79,
       "note": ""
     },
     {
@@ -1357,7 +1360,7 @@
       "issn": "1433-7851",
       "mode": "published",
       "ok": true,
-      "count": 76,
+      "count": 80,
       "note": ""
     },
     {
@@ -1366,7 +1369,7 @@
       "issn": "1433-7851",
       "mode": "created",
       "ok": true,
-      "count": 89,
+      "count": 93,
       "note": ""
     },
     {
@@ -1375,7 +1378,7 @@
       "issn": "1521-3773",
       "mode": "online",
       "ok": true,
-      "count": 75,
+      "count": 79,
       "note": ""
     },
     {
@@ -1384,7 +1387,7 @@
       "issn": "1521-3773",
       "mode": "published",
       "ok": true,
-      "count": 76,
+      "count": 80,
       "note": ""
     },
     {
@@ -1393,7 +1396,7 @@
       "issn": "1521-3773",
       "mode": "created",
       "ok": true,
-      "count": 89,
+      "count": 93,
       "note": ""
     },
     {
@@ -1445,7 +1448,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 46,
+      "count": 48,
       "note": ""
     },
     {
@@ -1454,7 +1457,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 46,
+      "count": 48,
       "note": ""
     },
     {
@@ -1463,7 +1466,7 @@
       "issn": "1523-7052",
       "mode": "created",
       "ok": true,
-      "count": 46,
+      "count": 48,
       "note": ""
     },
     {
@@ -1472,7 +1475,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 46,
+      "count": 48,
       "note": ""
     },
     {
@@ -1481,7 +1484,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 46,
+      "count": 48,
       "note": ""
     },
     {
@@ -1490,7 +1493,7 @@
       "issn": "1523-7060",
       "mode": "created",
       "ok": true,
-      "count": 46,
+      "count": 48,
       "note": ""
     },
     {
@@ -1692,7 +1695,7 @@
       "issn": "1463-9262",
       "mode": "created",
       "ok": true,
-      "count": 13,
+      "count": 14,
       "note": ""
     },
     {
@@ -1719,7 +1722,7 @@
       "issn": "1463-9270",
       "mode": "created",
       "ok": true,
-      "count": 13,
+      "count": 14,
       "note": ""
     },
     {
@@ -1795,6 +1798,315 @@
   ],
   "missingCandidates": [
     {
+      "doi": "10.1038/s41467-026-77936-9",
+      "journal": "Nature Communications",
+      "title": "Systemic and Mucosal Antibody Responses Against Neisseria gonorrhoeae (Ng) Outer Membrane Vesicle Antigens following Four-Component Meningococcal Serogroup B (4CMenB) Immunization in Healthy Adults: A Randomized Phase II Trial",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Varun K. Phadke",
+        "Soma Sannigrahi",
+        "Erin M. Scherer",
+        "Stacey A. Smith",
+        "Colleen F. Kelley",
+        "Maranda Leary",
+        "Sergio Cruz",
+        "Lori M. Newman",
+        "Christine Orndahl",
+        "E. Ross Colgate",
+        "Nadine Rouphael",
+        "Yih-Ling Tzeng",
+        "David S. Stephens"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77765-w",
+      "journal": "Nature Communications",
+      "title": "The biogeography of giant viruses and interactions with Eukaryotes across European lakes",
+      "abstract": "Abstract Advances in genomics have revealed a diversity of nucleocytoplasmic large DNA viruses (phylum Nucleocytoviricota) that infect eukaryotes, but their ecology beyond the oceans remains poorly understood. We recover 208 Nucleocytoviricota genomes, including 205 putative new species and 33 novel virus-host linkages by sampling 87 lakes spanning 30° of latitude from southern Italy to northern Norway. The relative abundance of Nucleocytoviricota nearly triples, on average, from northern to southern Europe, with functional genes related to autotrophic energy acquisition, stress responses, and cell death predominant at lower latitudes. These shifts are attributable to differences in light and resources, with Nucleocytoviricota hotspots in deep lakes with aromatic organic matter and diverse eukaryote communities. Increasing Nucleocytoviricota abundance and richness are associated with several-fold reductions in gross primary production. Our results highlight that Nucleocytoviricota are ecologically relevant in lakes and that understanding their roles will be essential for predicting aquatic food webs under environmental change.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Olesya V. Kolmakova",
+        "Frederik Schulz",
+        "Yumary M. Vasquez",
+        "Jeremy A. Fonvielle",
+        "Lucas P. P. Braga",
+        "Simon Roux",
+        "Tanja Woyke",
+        "Andrew J. Tanentzap"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77877-3",
+      "journal": "Nature Communications",
+      "title": "The elongation of Mest transcript into MestXL sustains, but does not initiate, the maternal allele bias of its convergent gene Copg2 during neurogenesis",
+      "abstract": "Abstract Precise gene dosage control is critical for cellular identity and development, particularly for imprinted genes, where dosage imbalances are linked to neurodevelopmental disorders. The Mest/Copg2 imprinted locus exemplifies this fine-tuned regulation: while Mest is constitutively paternally expressed, Copg2 shifts from biallelic to maternally-biased expression specifically during neural differentiation, a transition proposed to involve transcriptional interference by the long Mest isoform, MestXL , which extends into Copg2 . However, the mechanisms underlying this switch and whether factors beyond MestXL contribute remain unresolved. Using a stem cell-based brain organoid model integrating multi-omic analyses, 3D chromatin mapping, and functional approaches, we challenge the prevailing model by showing that the maternal bias of Copg2 is not solely driven by MestXL -mediated interference. Instead, our data reveal a temporal, stage-specific two-step mechanism: putative enhancer-driven activation of the maternal allele in neural progenitors, followed by MestXL -dependent repression of the paternal allele in neuron-enriched stages. This uncovers an unexpected complexity in imprinted gene dosage regulation during brain development.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Sophie Perillous",
+        "Anne-Charlotte Fromaget",
+        "Céline Gonthier-Guéret",
+        "Ornella Clerici",
+        "Marion Espenel",
+        "Alice Murigneux",
+        "Sophie Phan",
+        "Lea Feit",
+        "Catherine Vaurs-Barriére",
+        "Floric Slimani",
+        "Céline Lemmers",
+        "Davide Normanno",
+        "Amanda Ha",
+        "Nolan Ashworth",
+        "Aaron B. Bogutz",
+        "Hiromi Kamura",
+        "Nuttamonpat Gumpangseth",
+        "Kenichiro Hata",
+        "Bertille Montibus",
+        "Kazuhiko Nakabayashi",
+        "Louis Lefebvre",
+        "Tristan Bouschet",
+        "Franck Court",
+        "Philippe Arnaud"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03301",
+      "journal": "Organic Letters",
+      "title": "Palladium-Catalyzed Site-Selective C–H Arylation of Arenes: Using Diaryl Disulfides as an Arylation Reagent",
+      "abstract": "Abstract The development of site-selective C–H arylation of simple arenes is an urgent yet very challenging task. In particular, the meta-C–H activation of electron-deficient arenes is one of the most challenging substrates for selective functionalization and lacks efficient synthetic approaches. Herein, we address this long-standing challenge for the first time by using easily available diaryl disulfide as a new masked arylating reagent. Diaryl disulfide displays a broader scope of substrates and enables the promotion of the arylation of both electron-rich and electron-deficient arenes. The site selectivity of multisubstituted arenes can also be predictable from the well-understood electrophilic substitution-type (SEAr) mechanism.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Yunqi Liu",
+        "Jiaqi Shan",
+        "Yifan Xiao",
+        "Xiwen Yang",
+        "Xingzhong Guo"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03574",
+      "journal": "Organic Letters",
+      "title": "Visible Light-Mediated Dearomative Remote Functionalization of Arenes via a Tandem Strain-Release Spirocyclization Relay",
+      "abstract": "Abstract Tandem strain-release addition cyclization reactions in bicyclo[1.1.0]butanes (BCBs) present a versatile platform for rapidly creating molecular complexity. While lactams and indolinones have been accessed using alkenes and arenes as appendages via this strategy, the dearomative functionalization of arenes remains unexplored. This work demonstrates a photocatalyst-free, visible light-mediated blueprint for the remote functionalization of arenes in tandem with a strain-release framework. Nitrosamines are utilized as versatile reagents for installing sulfonamides and oximes, leading to intricately designed 3D spirocyclic structures bearing medicinally relevant functionalities.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Apurba Samanta",
+        "Soumitra Maity"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1002/anie.7471326",
+      "journal": "Angew",
+      "title": "Ammonia‐Gated Guanyl Hydrazone Photoisomerization Enables Sequential Solid‐State Optical Response in Hydrogen‐Bonded Organic Frameworks",
+      "abstract": "ABSTRACT Light‐driven molecular switches enable precise and noninvasive regulation of molecular structure and function, and thus represent fundamental building blocks for stimuli‐responsive photofunctional materials. However, translating molecular‐level photoswitching into sequence‐dependent macroscopic outputs in the solid state remains a formidable challenge. In this study, we report a supramolecular strategy that integrates guanyl hydrazone switches into hydrogen‐bonded organic frameworks (HOFs) to overcome this limitation. A tetrasulfonate‐substituted tetraphenylethylene anion ( TPE 4 − ) is employed as the host scaffold, while guanyl hydrazone ( G2 ) functions as the photoresponsive guest, affording a functional framework through cooperative assembly. This system leverages a reversible crystalline–amorphous phase transformation, triggered by acid–base stimuli, to gate the solid‐state photoisomerization of G2 . Upon activation, the configurational switching of G2 induces a cascade reorganization of the TPE 4 − packing motifs, leading to pronounced and sequence‐dependent modulation of both fluorescence and macroscopic coloration. In addition, the applicability of this system in information encryption has been demonstrated. This work expands the design paradigm of hydrazone‐based photoswitches in the solid state and provides a supramolecular strategy for constructing intelligent optical materials with high information density and enhanced security.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Weixu Feng",
+        "Dong Han",
+        "Jiamiao Yu",
+        "Zihang Tang",
+        "Yan Zhao",
+        "Wei Tian",
+        "Hongxia Yan"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.5198340",
+      "journal": "Angew",
+      "title": "C 60 ‐Mediated d‐π Conjugation Induces Electronic Reconstruction to Boost Charge Storage of Nb 2 C/Nb 2 O 5 Heterostructure Anode",
+      "abstract": "ABSTRACT Regulating orbital electronic structure to enhance the charge‐storage capability of anode materials is critical for developing high‐performance lithium‐ion hybrid capacitors (LIHCs). Herein, we report a novel interfacial engineering strategy that employs fullerene C 60 ‐mediated d‐π conjugation within a Nb 2 C/Nb 2 O 5 heterostructure (denoted as C 60 ‐Nb 2 C/Nb 2 O 5 ) to realize simultaneous electronic reconstruction and structural optimization. The introduced C 60 forms robust d‐π conjugation with the d ‐orbitals of Nb, acting as an electron acceptor to drive directional charge transfer across both the C 60 /Nb 2 C and Nb 2 C/Nb 2 O 5 interfaces. Combined theoretical and experimental analyses confirm that orbital engineering between Nb ( d xy / d yz ) and C 60 ( p ) facilitates electron backflow, improves intrinsic electronic conductivity, substantially lowers the Li + adsorption barrier, triggers an upward shift of the d ‐band center, and accelerates electron‐transfer kinetics. Consequently, the C 60 ‐Nb 2 C/Nb 2 O 5 anode delivers a remarkable reversible capacity of 658.8 mAh g− 1 at 0.1 A g− 1 and excellent rate capability. The assembled C 60 ‐Nb 2 C/Nb 2 O 5 //activated carbon LIHC achieves a high energy density of 199.5 Wh kg− 1 , ranking among the highest values reported for MXene‐based LIHCs. This work elucidates a molecular‐mediated interfacial electronic engineering mechanism for tailoring charge‐storage behavior, providing a rational design strategy for advanced electrochemical energy‐storage systems.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Mingming Gao",
+        "Jundong Shao",
+        "Junke Li",
+        "Junyi Yang",
+        "Ying Huang",
+        "Sheng Yang",
+        "Faxing Wang",
+        "Shunqi Xu",
+        "Tanyuan Wang",
+        "Xing Lu",
+        "Panpan Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.5230240",
+      "journal": "Angew",
+      "title": "Sandwich‐Like Supramolecular Clamp‐Templated Manganese(II) Bromide Scintillators for Multimodal Visualization",
+      "abstract": "ABSTRACT Crown ether‐regulated metal halides feature programmable host‐guest coordination and structurally defined emissive centers, making them promising for multifunctional scintillation applications. However, their strong coordination and supramolecular interactions favor ordered assembly and crystallization, hindering melt‐processing into large‐area, transparent glassy scintillator screens. Here, we develop a “three birds with one stone” strategy using sandwich‐like benzo‐15‐crown‐5‐metal supramolecular clamps to simultaneously regulate [MnBr 4 ] 2− geometry, cation‐associated charge collection, and glass formation. Four Mn(II) bromides, [(B15C5) 2 @K] 2 MnBr 4 (CKMB), [(B15C5) 2 @Rb] 2 MnBr 4 (CRMB), [(B15C5) 2 @Sr]MnBr 4 (CSMB), and [(B15C5) 2 @Ba]MnBr 4 (CBMB), were obtained. The well‐matched K + ‐B15C5 clamp stabilizes a nearly ideal [MnBr 4 ] 2− tetrahedron in CKMB, affording a photoluminescence quantum yield of 82.2%. The cationic framework contributes to the conduction‐band‐edge states and promotes X‐ray charge collection, yielding a relative light yield of 6.74 × 10 4 photons MeV −1 and a detection limit of 28.5 nGy s −1 . Meanwhile, monovalent clamp cations induce steric mismatch and packing frustration, enabling vitrification of CKMB and CRMB. CKMB‐G exhibits T g = 61°C, T g /T m = 0.87, and a retained light yield of 3.20 × 10 4 photons MeV −1 . The complementary crystalline and glassy states enable WLED emission, X‐ray imaging at 32 lp mm −1 , dynamic imaging at 2K resolution and 60 fps, and multimodal anti‐counterfeiting, highlighting supramolecular clamps as active cationic templates for multifunctional Mn(II) scintillators.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Yuan‐Ji Ye",
+        "Hui‐E Lin",
+        "Yue‐Chen Chen",
+        "Tong Xiao",
+        "Shu‐Quan Zhang",
+        "Ming‐Hua You",
+        "Hong‐Ming Chen",
+        "Zai‐Lai Xie",
+        "Mei‐Jin Lin"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1002/anie.4624632",
+      "journal": "Angew",
+      "title": "Ultrafast and High Charge Capability Aluminum‐Ion Storage With Long Term Stability",
+      "abstract": "ABSTRACT Aqueous aluminum‐ion batteries (AAIBs) are promising for large‐scale energy storage due to their low cost, high safety, and environmental friendliness, while Prussian blue analogues (PBAs), with their open frameworks, are attractive cathode materials for future AAIB applications. However, poor stability and long charging times, arising from strong lattice distortion, intense electrostatic interactions, and sluggish ion migration kinetics, remain major obstacles to the practical application of AAIBs. Despite significant efforts to overcome these limitations, their charging rate and cycling performance still fall short of industrial requirements. Here we report an engineered PBAs cathode with ultrafast charge capability and long term stability by nickel‐induced electronic self‐compensation strategy to effectively suppress lattice distortion and accelerate Al 3+ ion diffusion in NiCuHCF. Such cathode delivers an ultrahigh charge capability, achieving a capacity retention of 74.6% after 1600 cycles at 1.0 A g −1 , corresponding capacity loss of only ∼0.016% per cycle, and an unprecedented charge rate of 180 C with a charging time of 20 s, far outperforming all previously reported PBAs cathodes. This research provides an ultrafast charging and long‐term cathode material based on PBAs with facile and low cost large‐scale production to meet industrial requirements for durable AAIBs.",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Xikun Zhang",
+        "Yiwen Liu",
+        "Jiaxi Xu",
+        "Chengcheng Huang",
+        "Zihao Tao",
+        "Changjiang Dou",
+        "Xiang Liu",
+        "Lingchang Wu",
+        "Zhixiao Cai",
+        "Shuqing Wu",
+        "Chaoyi Qiu",
+        "Weibin Yan",
+        "Jiahao Du",
+        "Haoxiang Yu",
+        "Lei Yan",
+        "Liyuan Zhang",
+        "Peng Li",
+        "Xiaoting Lin",
+        "Ying Xie",
+        "Li‐Hua Chen",
+        "Ting‐Feng Yi",
+        "Jie Shu",
+        "Bao‐Lian Su"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1433-7851:online",
+        "crossref:1433-7851:published",
+        "crossref:1433-7851:created",
+        "crossref:1521-3773:online",
+        "crossref:1521-3773:published",
+        "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.31635/ccschem.026.202608262",
       "journal": "CCS Chemistry",
       "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
@@ -1833,6 +2145,61 @@
     }
   ],
   "potentialGaps": [
+    {
+      "doi": "10.1021/acs.orglett.6c03301",
+      "journal": "Organic Letters",
+      "title": "Palladium-Catalyzed Site-Selective C–H Arylation of Arenes: Using Diaryl Disulfides as an Arylation Reagent",
+      "abstract": "Abstract The development of site-selective C–H arylation of simple arenes is an urgent yet very challenging task. In particular, the meta-C–H activation of electron-deficient arenes is one of the most challenging substrates for selective functionalization and lacks efficient synthetic approaches. Herein, we address this long-standing challenge for the first time by using easily available diaryl disulfide as a new masked arylating reagent. Diaryl disulfide displays a broader scope of substrates and enables the promotion of the arylation of both electron-rich and electron-deficient arenes. The site selectivity of multisubstituted arenes can also be predictable from the well-understood electrophilic substitution-type (SEAr) mechanism.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Yunqi Liu",
+        "Jiaqi Shan",
+        "Yifan Xiao",
+        "Xiwen Yang",
+        "Xingzhong Guo"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03574",
+      "journal": "Organic Letters",
+      "title": "Visible Light-Mediated Dearomative Remote Functionalization of Arenes via a Tandem Strain-Release Spirocyclization Relay",
+      "abstract": "Abstract Tandem strain-release addition cyclization reactions in bicyclo[1.1.0]butanes (BCBs) present a versatile platform for rapidly creating molecular complexity. While lactams and indolinones have been accessed using alkenes and arenes as appendages via this strategy, the dearomative functionalization of arenes remains unexplored. This work demonstrates a photocatalyst-free, visible light-mediated blueprint for the remote functionalization of arenes in tandem with a strain-release framework. Nitrosamines are utilized as versatile reagents for installing sulfonamides and oximes, leading to intricately designed 3D spirocyclic structures bearing medicinally relevant functionalities.",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Apurba Samanta",
+        "Soumitra Maity"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
     {
       "doi": "10.31635/ccschem.026.202608262",
       "journal": "CCS Chemistry",
