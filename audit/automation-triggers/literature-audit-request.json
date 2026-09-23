@@ -1,37 +1,33 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-23T18:06:00+08:00",
-  "requestedBy": "fixed-slot-release-20260923-1800-postrelease",
-  "reason": "Post-release verification for the fixed 18:00 per-DOI release. Recompute the canonical machine union against the new 542-card repository snapshot, preserve the two explicit deferred DOI records as unresolved, and verify no unknown missing DOI or source-family regression. This is verification only; do not add production literature or acquire media.",
+  "requestedAt": "2026-09-24T07:09:00+08:00",
+  "requestedBy": "prepublish-main-review-20260924-0800",
+  "reason": "The expected 06:55 independent machine audit did not produce a fresh snapshot for the 2026-09-24 08:00 publication slot by 07:07. The current latest/compact generation is from 2026-09-23 21:55 Asia/Shanghai and covers only 2026-09-21..2026-09-23; request one deduplicated fresh complete handoff for the new 3-day window.",
   "targetBranch": "main",
-  "publicationSlot": "2026-09-23T18:00:00+08:00",
-  "executionMode": "post_release_verification",
-  "inputCommitSha": "fcd51dcaa250b1d13e212a833467a183e82fda34",
-  "inputCompactBlobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
-  "inputLatestBlobSha": "63ec27535507a04d04e99ad92bcbfd672c73e478",
-  "scopeRulesVersion": "scope-2026-09-23-v1",
-  "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
-  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
-  "deduplicationKey": "postrelease|2026-09-23T18:00:00+08:00|020c2bef85415aaeb42c57ce30415e3c4112d97a|542",
+  "publicationSlot": "2026-09-24T08:00:00+08:00",
+  "baselineMainSha": "fbbb21471fa4d8a0e510a9750866ccc4b5a96f77",
   "primaryWindow": {
     "timezone": "Asia/Shanghai",
-    "startDate": "2026-09-21",
-    "endDate": "2026-09-23",
+    "startDate": "2026-09-22",
+    "endDate": "2026-09-24",
     "days": 3
   },
   "safetyTailDays": 7,
   "lateDepositRescueDays": 7,
   "verifiedThrough": "2026-09-20",
-  "expectedProductionCards": 542,
-  "expectedDeferredDois": [
-    "10.1038/s41467-026-78015-9",
-    "10.31635/ccschem.026.202608262"
-  ],
+  "previousAuditGeneratedAt": "2026-09-23T13:55:07.275Z",
+  "previousLatestBlobSha": "137071ab42a6eb9637ff04bf11cb2ac6fddbd46f",
+  "previousCompactHandoffSha": "28d827569288b6216504a84544ff0fcdd220b439",
+  "scopeRulesVersion": "scope-2026-09-23-v1",
+  "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
+  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+  "deduplicationKey": "prepublish|2026-09-24T08:00:00+08:00|fbbb21471fa4d8a0e510a9750866ccc4b5a96f77|137071ab42a6eb9637ff04bf11cb2ac6fddbd46f",
   "validation": [
-    "Run the merged main completeness capability guard and all canonical active journals with activeFrom",
-    "Union all configured ISSNs across Crossref online/published/created and OpenAlex, retaining safety-tail and late-deposit rescue",
-    "Verify repository gallery DOI count is 542 and no unknown missing DOI remains beyond the two explicit deferred records",
-    "Preserve the two explicit deferred DOI records without reclassifying them as excluded or published",
-    "No production data mutation or media acquisition; TOC/body figures remain Tampermonkey/VPN Bridge"
+    "audit/latest.json and audit/unresolved-latest.json share generatedAt and cover the 2026-09-22..2026-09-24 Beijing primary window",
+    "both summary.unresolved values equal the complete compact unresolved array length",
+    "all 16 canonical active journal source-health rows are retained with activeFrom enforced",
+    "Crossref online/published/created multi-ISSN union, OpenAlex, created/deposit rescue, seven-day safety tail and verifiedThrough catch-up remain enabled",
+    "push-triggered literature-audit.yml capability guard and DOI-union audit succeed",
+    "prepublish-only; no production literature mutation; no Pages deployment; no OA or publisher-media acquisition"
   ]
 }
