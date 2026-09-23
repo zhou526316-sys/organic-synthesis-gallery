@@ -1,7 +1,7 @@
 {
-  "requestedAt": "2026-09-23T12:26:00Z",
-  "context": "Fresh read-only evidence after first actual Bridge 2.2.24 report for 10.1021/acs.orglett.6c03186. Identify exact staged figure labels for job ee7ffb13-a65f-4817-a5fb-819baa2ddec9, compare with six discovered labels, and correlate acquisition trace for the missing label. No recapture, promotion, reset, delete, publisher access, literature or UI changes.",
-  "bridgeVersion": "2.2.24",
+  "requestedAt": "2026-09-23T13:31:00Z",
+  "context": "Read-only raw-report inspection for first Bridge 2.2.25 partial capture 10.1021/jacs.6c12613, job 96b5781b-1f6b-4f40-b56a-a105d555a885. Preserve the full sanitized trace and current stage rows so we can determine whether Scheme 3/4 currentSrc was cached as null before sameFigureCurrentSrcFallback, whether GM/canvas actually ran for the fallback URL, and which five of seven labels staged. No recapture, publisher access, promotion, reset, delete, literature or UI changes.",
+  "bridgeVersion": "2.2.25",
   "captureProtocol": "6.2.20",
   "readOnly": true,
   "mediaWrites": 0
