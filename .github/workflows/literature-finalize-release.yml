@@ -38,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           request='audit/automation-triggers/literature-finalize-request.json'
-          for key in prepublishGateRunId releaseWriterRunId postReleaseAuditRunId pagesRunId tocRefreshRunId; do
+          for key in prepublishGateRunId releaseWriterRunId preReleaseAuditRunId postReleaseAuditRunId pagesRunId tocRefreshRunId qualityGateRunId; do
             run_id="$(node -p "require('./${request}')[process.argv[1]]" "$key")"
             test -n "$run_id"
             conclusion="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" --jq '.conclusion')"

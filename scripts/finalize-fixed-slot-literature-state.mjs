@@ -23,6 +23,7 @@ const toc = await readJson('public/toc-demand-live.json');
 assert(marker.mode === 'slot-release' && marker.schemaVersion === 2, 'slot-release marker missing');
 assert(marker.publicationSlot === request.publicationSlot, 'publication slot mismatch');
 assert(marker.productionCards === request.productionCards, 'production card count mismatch');
+assert(Number.isSafeInteger(request.qualityGateRunId) && request.qualityGateRunId > 0, 'quality gate run id missing');
 assert(toc.webpageDoiCount === marker.productionCards, 'TOC demand count differs from release marker');
 assert(latest.generatedAt === compact.generatedAt, 'post-release paired audit generation mismatch');
 assert(compact.summary?.galleryDois === marker.productionCards, 'post-release audit gallery count mismatch');
@@ -64,6 +65,13 @@ state.latestMachineAudit = {
   semanticPending: formal.summary?.pending ?? 0,
   note: 'Fresh post-release audit was recomputed against the deployed/repository production snapshot. Any remaining unresolved DOI set is required to equal the durable formal pending set exactly.'
 };
+state.lastQualityGate = {
+  runId: request.qualityGateRunId,
+  conclusion: 'success',
+  publicationSlot: request.publicationSlot,
+  triggerCommit: request.qualityGateTriggerCommit || null,
+  verifiedAt: beijingIso()
+};
 state.lastPublication = {
   publicationSlot: request.publicationSlot,
   publicationCommit: request.publicationCommit,
@@ -77,6 +85,7 @@ state.lastPublication = {
   releaseWriterRun: request.releaseWriterRunId,
   preReleaseAuditRun: request.preReleaseAuditRunId,
   postReleaseAuditRun: request.postReleaseAuditRunId,
+  qualityGateRun: request.qualityGateRunId,
   pagesRun: request.pagesRunId,
   tocRefreshRun: request.tocRefreshRunId,
   tocDemandCommit: request.tocDemandCommit,
@@ -97,13 +106,14 @@ state.lastWebsiteSync = {
   verification: {
     productionGitHubPages: 'success',
     pagesRun: request.pagesRunId,
+    qualityGateRun: request.qualityGateRunId,
     deploymentTriggerCommit: request.deploymentTriggerCommit,
     newlyAcceptedDoisPresent: marker.publishableDois,
     rejectedDoisAbsent: marker.rejectedDois,
     deferredDoisAbsent: marker.deferredDois,
     totalGalleryCards: marker.productionCards,
     galleryDois: marker.productionCards,
-    note: 'Pages authorization/build/deploy succeeded; post-release DOI-union audit reports the same repository/deployed gallery count and only the explicitly deferred DOI remains unresolved.'
+    note: 'Pages authorization/build/deploy and post-release quality gate succeeded; post-release DOI-union audit reports the same repository/deployed gallery count and only the explicitly deferred DOI remains unresolved.'
   },
   tocVerification: {
     liveQueueCommitSha: request.tocDemandCommit,
@@ -123,6 +133,7 @@ if (state.prepublishStaging?.publicationSlot === request.publicationSlot) {
   state.prepublishStaging.publicationCommit = request.publicationCommit;
   state.prepublishStaging.pagesRun = request.pagesRunId;
   state.prepublishStaging.postReleaseAuditRun = request.postReleaseAuditRunId;
+  state.prepublishStaging.qualityGateRun = request.qualityGateRunId;
 }
 if (state.prepublish?.publicationSlot === request.publicationSlot) {
   state.prepublish.status = deferredDois.length ? 'published_with_pending' : 'published';
@@ -131,6 +142,7 @@ if (state.prepublish?.publicationSlot === request.publicationSlot) {
   state.prepublish.publicationCommit = request.publicationCommit;
   state.prepublish.pagesRun = request.pagesRunId;
   state.prepublish.postReleaseAuditRun = request.postReleaseAuditRunId;
+  state.prepublish.qualityGateRun = request.qualityGateRunId;
   state.prepublish.publicationChecksPassed = true;
 }
 const backlog = Array.isArray(state.pendingReviewBacklog) ? state.pendingReviewBacklog : [];
@@ -165,6 +177,7 @@ const result = {
   publicationSlot: request.publicationSlot,
   publicationCommit: request.publicationCommit,
   pagesRun: request.pagesRunId,
+  qualityGateRun: request.qualityGateRunId,
   postReleaseAuditRun: request.postReleaseAuditRunId,
   postReleaseAuditGeneratedAt: compact.generatedAt,
   productionCards: marker.productionCards,
