@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T15:12:00Z",
-  "reason": "Urgent read-only diagnosis: user reports the five most recent capture attempts all failed. Read the five newest actual local-client automatic reports in chronological order and preserve DOI, controllerRevision, final status/reason, discovered/stored figure counts, TOC status, last progress, and failure-event classification (controller timeout, heartbeat, discovery, TIFF/octet-stream, HTTP 403, transport, low-resolution, upload/staging 5xx, identity guard, auth/challenge). Compare whether they share one systemic failure. No media writes.",
+  "requestedAt": "2026-09-23T15:44:30Z",
+  "reason": "Fresh read-only check immediately after verified Bridge 2.2.27 deployment. Determine whether the local Tampermonkey client has begun emitting controllerRevision 2.2.27 reports; if yes, compare the first actual 2.2.27 jobs against the preceding five consecutive 2.2.26 failures, especially controller_timeout versus publisher final_result precedence. No media writes.",
   "readOnly": true,
   "mediaWrites": 0
 }
