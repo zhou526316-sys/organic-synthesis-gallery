@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "ready_with_pending",
+  "phase": "sync_failed",
   "activeRun": null,
   "lastCompletedFetch": {
     "id": "manual-midday-catchup-20260922",
@@ -117,32 +117,22 @@
     "note": "The dedicated trigger push executed the GitHub runner capability guard, DOI-union audit, artifact upload and paired snapshot persistence successfully. No local Node or workflow_dispatch was used."
   },
   "latestMachineAudit": {
-    "generatedAt": "2026-09-23T09:13:15.174Z",
-    "sourceRecords": 530,
-    "galleryDois": 532,
-    "missingFromGallery": 44,
-    "unresolved": 44,
-    "potentialGaps": 22,
+    "generatedAt": "2026-09-23T10:07:15.330Z",
+    "sourceRecords": 541,
+    "galleryDois": 542,
+    "missingFromGallery": 13,
+    "unresolved": 13,
+    "potentialGaps": 5,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 1,
     "historicalCoverageLosses": 0,
     "closureDate": "2026-09-22",
-    "status": "fresh_for_2026-09-23_1800_reviewed_with_deferrals",
-    "compactHandoffSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
-    "latestBlobSha": "63ec27535507a04d04e99ad92bcbfd672c73e478",
-    "runId": 35841359058,
+    "status": "post_release_unreviewed_increment",
+    "runId": 35846667938,
     "runConclusion": "success",
-    "snapshotCommitSha": "fab9edda8c988db12f23fc9e77d7f1673b05afcc",
-    "semanticReviewed": 44,
-    "semanticFinalized": 42,
-    "semanticPending": 2,
-    "snapshotFreshForSlot": true,
-    "activeJournals": 16,
-    "primaryWindowRecords": 272,
-    "additionalSafetyTailRecords": 258,
-    "note": "Paired latest/compact generation and full 44-DOI partition verified for the 18:00 publication slot."
+    "note": "Post-release DOI-union audit found candidates not present in the frozen pre-slot handoff. They are not silently treated as pending/excluded and are carried to the next fixed slot."
   },
   "publicationPolicy": {
     "updatedAt": "2026-09-22T19:12:00+08:00",
@@ -183,12 +173,12 @@
   },
   "prepublishStaging": {
     "publicationSlot": "2026-09-23T18:00:00+08:00",
-    "status": "ready_with_pending",
-    "phase": "ready_with_pending",
+    "status": "deployed_quality_failed",
+    "phase": "sync_failed",
     "readyToPublish": true,
     "publishableSubsetReady": true,
     "reviewComplete": false,
-    "publicationChecksPassed": true,
+    "publicationChecksPassed": false,
     "freshAuditGeneratedAt": "2026-09-23T09:13:15.174Z",
     "snapshotFreshForSlot": true,
     "compactHandoffSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
@@ -280,20 +270,37 @@
       "productionDataModified": false
     },
     "updatedAt": "2026-09-23T17:31:30+08:00",
-    "productionDataModified": false,
-    "pagesDeploymentRequested": false,
+    "productionDataModified": true,
+    "pagesDeploymentRequested": true,
     "mediaAcquisitionPerformed": false,
-    "note": "Fresh target-slot handoff fully partitioned. Publish only the explicit 10-DOI allowlist; two compact DOIs and two historical card scope rechecks remain individually deferred."
+    "note": "Fresh target-slot handoff fully partitioned. Publish only the explicit 10-DOI allowlist; two compact DOIs and two historical card scope rechecks remain individually deferred.",
+    "publicationCommit": "020c2bef85415aaeb42c57ce30415e3c4112d97a",
+    "pagesRun": 35846639220,
+    "postReleaseAuditRun": 35846667938,
+    "qualityGateRun": 35847270118,
+    "postReleaseCarryForwardDois": [
+      "10.1002/anie.7127460",
+      "10.1038/d41586-026-02563-9",
+      "10.1038/s41557-026-02267-7",
+      "10.1038/s41557-026-02246-y",
+      "10.1038/s41557-026-02247-x",
+      "10.1038/s41557-026-02261-z",
+      "10.1038/s41467-026-77863-9",
+      "10.1038/s41467-026-76451-1",
+      "10.1038/s41467-026-77480-6",
+      "10.1038/s44160-026-01157-7",
+      "10.1021/acs.orglett.6c03520"
+    ]
   },
-  "nextPublicationSlot": "2026-09-23T18:00:00+08:00",
+  "nextPublicationSlot": "2026-09-24T08:00:00+08:00",
   "prepublish": {
     "publicationSlot": "2026-09-23T18:00:00+08:00",
-    "status": "ready_with_pending",
-    "phase": "ready_with_pending",
+    "status": "deployed_quality_failed",
+    "phase": "sync_failed",
     "readyToPublish": true,
     "publishableSubsetReady": true,
     "reviewComplete": false,
-    "publicationChecksPassed": true,
+    "publicationChecksPassed": false,
     "freshAuditGeneratedAt": "2026-09-23T09:13:15.174Z",
     "snapshotFreshForSlot": true,
     "compactHandoffSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
@@ -388,7 +395,25 @@
     "productionDataModified": false,
     "pagesDeploymentRequested": false,
     "mediaAcquisitionPerformed": false,
-    "note": "Fresh target-slot handoff fully partitioned. Publish only the explicit 10-DOI allowlist; two compact DOIs and two historical card scope rechecks remain individually deferred."
+    "note": "Fresh target-slot handoff fully partitioned. Publish only the explicit 10-DOI allowlist; two compact DOIs and two historical card scope rechecks remain individually deferred.",
+    "productionMutation": true,
+    "publicationCommit": "020c2bef85415aaeb42c57ce30415e3c4112d97a",
+    "pagesRun": 35846639220,
+    "postReleaseAuditRun": 35846667938,
+    "qualityGateRun": 35847270118,
+    "remainingDois": [
+      "10.1002/anie.7127460",
+      "10.1038/d41586-026-02563-9",
+      "10.1038/s41557-026-02267-7",
+      "10.1038/s41557-026-02246-y",
+      "10.1038/s41557-026-02247-x",
+      "10.1038/s41557-026-02261-z",
+      "10.1038/s41467-026-77863-9",
+      "10.1038/s41467-026-76451-1",
+      "10.1038/s41467-026-77480-6",
+      "10.1038/s44160-026-01157-7",
+      "10.1021/acs.orglett.6c03520"
+    ]
   },
   "automaticCompactHandoffTest": {
     "result": "success",
@@ -548,7 +573,7 @@
     "mediaAcquisitionPerformed": false,
     "automationDisabled": false
   },
-  "publicationChecksPassed": true,
+  "publicationChecksPassed": false,
   "reviewComplete": false,
   "lastPublication": {
     "publicationSlot": "2026-09-23T08:00:00+08:00",
@@ -656,11 +681,15 @@
     "finalizedAt": "2026-09-23T08:36:32.235+08:00"
   },
   "lastQualityGate": {
-    "runId": 35802454941,
-    "conclusion": "success",
-    "publicationSlot": "2026-09-23T08:00:00+08:00",
-    "triggerCommit": "31377c5616096272a0d7c76030b0a213dadcdd3e",
-    "verifiedAt": "2026-09-23T08:36:32.235+08:00"
+    "runId": 35847270118,
+    "conclusion": "failure",
+    "publicationSlot": "2026-09-23T18:00:00+08:00",
+    "triggerCommit": "2577e51adbc12165182ea5e51c04b702336e3877",
+    "verifiedAt": "2026-09-23T18:14:31.552+08:00",
+    "failures": [
+      "discovery: unreviewed unresolved DOI not covered by deferred backlog",
+      "deferred: partial publication must be recorded as synced_with_pending"
+    ]
   },
   "lastScopeCorrection": {
     "id": "scope-correction-20260923024323204",
@@ -861,5 +890,69 @@
     "unfinishedAffectedHistoricalCoverageLocator": "historicalScopeWorkStillUnfinished",
     "complete": false,
     "note": "Existing-card scope pending is not an unpublished admission deferral or deletion authorization. Unfinished affected-set compatibility accounting remains a global blocker and is not disguised as pending."
+  },
+  "lastPublicationAttempt": {
+    "publicationSlot": "2026-09-23T18:00:00+08:00",
+    "status": "deployed_but_not_quality_finalized",
+    "publicationCommit": "020c2bef85415aaeb42c57ce30415e3c4112d97a",
+    "deploymentTriggerCommit": "fcd51dcaa250b1d13e212a833467a183e82fda34",
+    "pagesRun": 35846639220,
+    "pagesConclusion": "success",
+    "tocRefreshRun": 35846567355,
+    "tocDemandCommit": "789c95ac53fccf95d6eac171ac751f25a6b30098",
+    "postReleaseAuditRun": 35846667938,
+    "postReleaseAuditGeneratedAt": "2026-09-23T10:07:15.330Z",
+    "qualityGateRun": 35847270118,
+    "qualityGateConclusion": "failure",
+    "productionCards": 542,
+    "releasedDois": [
+      "10.1021/jacs.6c16346",
+      "10.1021/jacs.6c17163",
+      "10.1021/jacs.6c12613",
+      "10.1021/jacs.6c16766",
+      "10.1021/acs.joc.6c01866",
+      "10.1021/acs.orglett.6c03733",
+      "10.1021/acs.orglett.6c03301",
+      "10.1021/acs.orglett.6c03166",
+      "10.1021/acs.orglett.6c03732",
+      "10.1021/acs.orglett.6c03574"
+    ],
+    "frozenDeferredDois": [
+      "10.1038/s41467-026-78015-9",
+      "10.31635/ccschem.026.202608262"
+    ],
+    "postReleaseUnresolvedDois": [
+      "10.1002/anie.7127460",
+      "10.1038/d41586-026-02563-9",
+      "10.1038/s41557-026-02267-7",
+      "10.1038/s41557-026-02246-y",
+      "10.1038/s41557-026-02247-x",
+      "10.1038/s41557-026-02261-z",
+      "10.1038/s41467-026-77863-9",
+      "10.1038/s41467-026-76451-1",
+      "10.1038/s41467-026-78015-9",
+      "10.1038/s41467-026-77480-6",
+      "10.1038/s44160-026-01157-7",
+      "10.1021/acs.orglett.6c03520",
+      "10.31635/ccschem.026.202608262"
+    ],
+    "carryForwardUnreviewedDois": [
+      "10.1002/anie.7127460",
+      "10.1038/d41586-026-02563-9",
+      "10.1038/s41557-026-02267-7",
+      "10.1038/s41557-026-02246-y",
+      "10.1038/s41557-026-02247-x",
+      "10.1038/s41557-026-02261-z",
+      "10.1038/s41467-026-77863-9",
+      "10.1038/s41467-026-76451-1",
+      "10.1038/s41467-026-77480-6",
+      "10.1038/s44160-026-01157-7",
+      "10.1021/acs.orglett.6c03520"
+    ],
+    "carryForwardCount": 11,
+    "nextPublicationSlot": "2026-09-24T08:00:00+08:00",
+    "finalizationAllowed": false,
+    "reason": "Fresh post-release discovery surfaced unreviewed DOI(s) beyond the exact frozen deferred set, so the real literature-quality-gate failed. No off-slot admission is authorized; carry the delta to the next fixed slot.",
+    "recordedAt": "2026-09-23T18:14:31.552+08:00"
   }
 }
