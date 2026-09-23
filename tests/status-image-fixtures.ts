@@ -7,13 +7,15 @@ export const gifFile = { name: 'animated-status.gif', mimeType: 'image/gif', buf
 
 export async function isolate(context: BrowserContext): Promise<void> {
   await recordStatusNetwork(context);
-  // No production traffic, including reader events, feedback, accounts or media writes.
+  // Mock every API route, including same-origin /api/media/batch. Vite serves
+  // static files, not a local API. Only local static GET/HEAD may pass through.
   await context.route('**/*', async route => {
     const request = route.request();
     const url = request.url();
-    if (url.startsWith('http://127.0.0.1:4173/') || url.startsWith('blob:') || url.startsWith('data:')) { await route.continue(); return; }
-    // Synthetic cross-origin responses must satisfy browser CORS checks too.
-    // Keep the page-error assertions; do not mistake a fixture error for an app error.
+    if (url.startsWith('blob:') || url.startsWith('data:')) { await route.continue(); return; }
+    const parsed = new URL(url);
+    const api = parsed.pathname === '/api' || parsed.pathname.startsWith('/api/');
+    if (parsed.origin === 'http://127.0.0.1:4173' && !api && ['GET', 'HEAD'].includes(request.method())) { await route.continue(); return; }
     const headers = {
       'access-control-allow-origin': request.headers().origin || 'http://127.0.0.1:4173',
       'access-control-allow-credentials': 'true',
