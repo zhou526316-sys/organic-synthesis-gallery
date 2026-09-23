@@ -190,3 +190,40 @@ test('content-root growth reveals navigation without window resize or unrelated 
   expect(evidence.errors).toEqual([]);
   expect(evidence.marks).toEqual([]);
 });
+
+
+test('late gallery insertion after navigation connection reveals the control without resize events', async ({ page }) => {
+  const evidence = await open(page, 390);
+  const nav = page.locator('gallery-page-navigation');
+
+  await page.evaluate(() => {
+    const app = document.querySelector<HTMLElement>('#app')!;
+    const currentNav = document.querySelector<HTMLElement>('gallery-page-navigation')!;
+    for (const child of Array.from(document.body.children)) {
+      if (child !== app && child !== currentNav) (child as HTMLElement).style.display = 'none';
+    }
+    app.replaceChildren();
+    document.body.style.cssText = 'min-height:0!important;height:auto!important;overflow:visible!important';
+    document.documentElement.style.cssText = 'min-height:0!important;height:auto!important;overflow:visible!important';
+    app.style.cssText = 'display:block!important;position:static!important;min-height:0!important;height:auto!important;overflow:visible!important;contain:none!important';
+    currentNav.remove();
+    document.body.append(currentNav);
+  });
+
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeLessThan(80);
+  await expect(nav).toBeHidden();
+
+  // Simulate main() completing its asynchronous content render only after the
+  // navigation custom element has already connected.
+  await page.evaluate(() => {
+    const gallery = document.createElement('div');
+    gallery.id = 'gallery';
+    gallery.style.cssText = 'display:block!important;position:static!important;height:2500px!important;overflow:hidden!important;contain:none!important';
+    document.querySelector('#app')!.append(gallery);
+  });
+
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeGreaterThan(1000);
+  await expect(nav).toBeVisible({ timeout: 1500 });
+  expect(evidence.errors).toEqual([]);
+  expect(evidence.marks).toEqual([]);
+});
