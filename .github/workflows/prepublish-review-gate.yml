@@ -7,6 +7,10 @@ on:
     paths:
       - '.github/workflows/prepublish-review-gate.yml'
       - 'scripts/validate-prepublish-review.mjs'
+      - 'scripts/test-scope-title-corrections.mjs'
+      - 'scripts/lib/scope-corrections.mjs'
+      - 'shared/chinese-title-overrides.js'
+      - 'audit/literature-scope-corrections.json'
       - 'scripts/test-prepublish-readiness.mjs'
       - 'scripts/check-prepublish-readiness.mjs'
       - 'scripts/test-prepublish-slot-window.mjs'
@@ -55,6 +59,9 @@ jobs:
 
       - name: Test deterministic staging-to-formal conversion
         run: node scripts/test-formal-review-conversion.mjs
+
+      - name: Test explicit scope corrections and bilingual card titles
+        run: node scripts/test-scope-title-corrections.mjs
 
       - name: Locate canonical staging review
         id: locate

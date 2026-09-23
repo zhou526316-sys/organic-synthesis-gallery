@@ -43,6 +43,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$review" "$queue" public/rolling-supplement.json audit/publication-release-state.json audit/release-execution-result.json
+          git add -u -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/literature-supplement.json
           test -n "$(git status --porcelain -- "$review" "$queue" public/rolling-supplement.json audit/publication-release-state.json)"
           git commit -m "release(literature): publish reviewed subset for ${slot}"
           git push origin HEAD:main
