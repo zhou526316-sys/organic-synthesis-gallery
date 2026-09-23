@@ -11,7 +11,7 @@ const fixture=process.env.BODY_AUTO_FIXTURE;assert.ok(fixture,'frozen controlled
 const evidence=JSON.parse(await readFile(path.join(fixture,'evidence.json'),'utf8'));
 const realRows=evidence.images.filter(r=>r.reviewMarker?.revision==='1');assert.equal(realRows.length,9);
 const policy=JSON.parse(await readFile('audit/media-auto-policy.json','utf8'));
-assert.equal(policy.minNewArticles,20);assert.equal(policy.maxNewArticles,25);assert.equal(policy.requireOfficialTocInBuild,true);
+assert.equal(policy.minNewArticles,20);assert.equal(policy.maxNewArticles,25);assert.equal(policy.requireOfficialTocInBuild,true);assert.equal(policy.backlogMaxWaitMinutes,30);
 const now=Date.now();let passed=0;
 async function test(name,fn){await fn();passed++;console.log('NEW_BODY_AUTO_PASS '+name);}
 const realData=new Map();for(const r of realRows)realData.set(exactKey(r),await readFile(path.join(fixture,r.file)));
@@ -75,6 +75,13 @@ try{
   const quietTail=await mergeNewBodyAuto(root,{inputs:inputs(7,{policyId:policy.policyId,items:[],attempts:{}},quietRows),now,decoder,getNew,getOld});
   await test('seven quiet paired articles publish as an adaptive tail after fifteen minutes',()=>{assert.equal(quietTail.status.validatedNewArticles,7);assert.equal(quietTail.status.releaseReady,true);assert.equal(quietTail.status.preferredTargetMet,false);assert.equal(quietTail.status.tailFlushReady,true);assert.equal(quietTail.status.releaseMode,'quiet_tail');assert.equal(quietTail.status.added.length,7);assert.equal(quietTail.snapshot.count,7);});
 
+  const activeBacklogRows=synthetic.slice(0,7).map((x,i)=>({...x.row,updatedAt:i===0?now-31*60000:now-(i+1)*60000}));
+  await reset(mediaFor(7));
+  const agedBacklog=await mergeNewBodyAuto(root,{inputs:inputs(7,{policyId:policy.policyId,items:[],attempts:{}},activeBacklogRows),now,decoder,getNew,getOld});
+  await test('previously staged backlog publishes after thirty minutes even while newer eligible captures keep arriving',()=>{
+    assert.equal(agedBacklog.status.validatedNewArticles,7);assert.equal(agedBacklog.status.releaseReady,true);assert.equal(agedBacklog.status.tailFlushReady,false);assert.equal(agedBacklog.status.agedBacklogReady,true);assert.equal(agedBacklog.status.releaseMode,'aged_backlog');assert.ok(agedBacklog.status.eligibleIdleMinutes<15);assert.ok(agedBacklog.status.oldestEligibleAgeMinutes>=30);assert.equal(agedBacklog.status.added.length,7);assert.equal(agedBacklog.snapshot.count,7);
+  });
+
   await reset(mediaFor(20));
   const twenty=await mergeNewBodyAuto(root,{inputs:inputs(20),now,decoder,getNew,getOld});
   await test('twenty articles publish as the minimum paired batch',()=>{assert.equal(twenty.status.validatedNewArticles,20);assert.equal(twenty.status.publishedNewArticles,20);assert.equal(twenty.status.added.length,20);assert.equal(twenty.snapshot.count,20);assert.equal(twenty.status.releaseReady,true);assert.equal(twenty.status.preferredTargetMet,true);assert.equal(twenty.status.releaseMode,'target_batch');});
@@ -102,4 +109,4 @@ try{
   await test('shorter stale publication snapshot is still rejected',()=>{const stale={...first.snapshot,items:first.snapshot.items.slice(0,-1)};assert.throws(()=>assertSnapshotCoherence(stale,first.media),/snapshots_incoherent/);});
 }finally{await rm(root,{recursive:true,force:true});}
 
-console.log('NEW_BODY_AUTO_TESTS '+JSON.stringify({passed,realStoredFilesDecoded:9,batchMinimumArticles:20,batchMaximumArticles:25,pairedOfficialTocRequired:true,productionWrites:0,publisherRequests:0}));
+console.log('NEW_BODY_AUTO_TESTS '+JSON.stringify({passed,realStoredFilesDecoded:9,batchMinimumArticles:20,batchMaximumArticles:25,tailIdleMinutes:15,backlogMaxWaitMinutes:30,pairedOfficialTocRequired:true,productionWrites:0,publisherRequests:0}));

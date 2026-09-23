@@ -14,6 +14,7 @@ test('policy prefers twenty but permits adaptive quiet tail',()=>{
   assert.equal(policy.maxNewArticles,25);
   assert.equal(policy.tailFlushIdleMinutes,15);
   assert.equal(policy.tailFlushMinArticles,1);
+  assert.equal(policy.backlogMaxWaitMinutes,30);
 });
 
 test('nineteen fresh articles wait',()=>{
@@ -29,6 +30,17 @@ test('nineteen quiet articles flush as tail',()=>{
 test('twenty fresh articles publish immediately',()=>{
   const g=adaptiveBatchGate(rows(20,0),policy,now);
   assert.equal(g.ready,true);assert.equal(g.mode,'target_batch');assert.equal(g.targetReady,true);
+});
+
+test('aged backlog flushes even while a newer eligible capture keeps the queue active',()=>{
+  const mixed=[
+    {doi:'10.1021/jacs.6c91901',updatedAt:now-31*60000},
+    {doi:'10.1021/jacs.6c91902',updatedAt:now-1*60000},
+    {doi:'10.1021/jacs.6c91903',updatedAt:now-2*60000}
+  ];
+  const g=adaptiveBatchGate(mixed,policy,now);
+  assert.equal(g.ready,true);assert.equal(g.mode,'aged_backlog');assert.equal(g.tailReady,false);assert.equal(g.backlogReady,true);
+  assert.ok(g.idleMinutes<policy.tailFlushIdleMinutes);assert.ok(g.backlogAgeMinutes>=policy.backlogMaxWaitMinutes);
 });
 
 test('single quiet final article is not stuck forever',()=>{
@@ -86,4 +98,4 @@ test('static local-capture guard still handles Nature DOI paths',()=>{
   assert.equal(captureBelongsToDoi({articleUrl:'https://www.nature.com/articles/s41586-026-11043-z',sourceUrl:'https://media.springernature.com/full/s41586-026-11043-z/figures/1'},nature),true);
 });
 
-console.log('ADAPTIVE_BATCH_TEST_SUMMARY '+JSON.stringify({passed,target:policy.minNewArticles,max:policy.maxNewArticles,tailIdleMinutes:policy.tailFlushIdleMinutes}));
+console.log('ADAPTIVE_BATCH_TEST_SUMMARY '+JSON.stringify({passed,target:policy.minNewArticles,max:policy.maxNewArticles,tailIdleMinutes:policy.tailFlushIdleMinutes,backlogMaxWaitMinutes:policy.backlogMaxWaitMinutes}));

@@ -26,7 +26,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Read stored metadata and wait for a twenty-article batch
+      - name: Read stored metadata and apply adaptive batch/backlog gates
         id: pending
         run: node cloudflare/scripts/merge-new-body-auto.mjs --poll
   publish:
