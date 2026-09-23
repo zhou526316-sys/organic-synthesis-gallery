@@ -93,10 +93,22 @@ jobs:
           }catch(error){report.result='failed';report.error=String(error.message);throw error;}
           finally{await writeFile(out+'/acceptance.json',JSON.stringify(report,null,2));console.log('NEW_BODY31_LIVE '+JSON.stringify({result:report.result,files:report.files.length,cards:report.cards.length,totalPublicFigures:report.totalPublicFigures,realStoredMarkedRows:report.realStoredMarkedRows,browserRenderingVerified:report.browserRenderingVerified,error:report.error}));}
           JS
+      - name: Verify current explicit packet, exact labels and real cards
+        if: hashFiles('audit/media-recovery/body-live-acceptance.json') != ''
+        run: |
+          node --check scripts/verify-reviewed-body-packet-live.mjs
+          node scripts/verify-reviewed-body-packet-live.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: new-body31-live
           path: ${{ runner.temp }}/new-body31-live/*
+          retention-days: 7
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reviewed-body-packet-live
+          path: ${{ runner.temp }}/body-packet-live/*
           retention-days: 7
           if-no-files-found: warn
