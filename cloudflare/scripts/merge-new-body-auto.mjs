@@ -71,6 +71,10 @@ export function strongOfficialCapture(row){
   const doi=normalizeDoi(row?.doi||'');
   if(!doi||!doi.startsWith('10.1021/')||String(row?.kind||'').toLowerCase()!=='official')return false;
   if(row.captureVersion!=='6.2.20'||normalizeDoi(row.pageDoi||'')!==doi||Number(row.mediaGeneration)!==1790082000000||Number(row.updatedAt||0)<1790082000000)return false;
+  let article,source;
+  try{article=new URL(String(row.articleUrl||''));source=new URL(String(row.sourceUrl||''));}catch{return false;}
+  if(article.protocol!=='https:'||article.hostname!=='pubs.acs.org')return false;
+  if(source.protocol!=='https:'||!['acs.silverchair-cdn.com','pubs.acs.org'].includes(source.hostname))return false;
   for(const value of [row.articleUrl,row.sourceUrl]){
     const ids=embeddedAcsDois(value);
     if(ids.length!==1||ids[0]!==doi)return false;
