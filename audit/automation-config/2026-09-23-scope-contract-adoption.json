@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "context": "User requires finalized scope findings to be incorporated into automatic literature updates",
+  "configurationVerifiedAt": "2026-09-23T10:49:05+08:00",
+  "repository": "zhou526316-sys/organic-synthesis-gallery",
+  "branch": "main",
+  "scopeContract": {
+    "file": "docs/literature-scope-contract.md",
+    "version": "scope-2026-09-23-v1",
+    "commit": "ed670e035fc9b049dc26640f6dc3f96bfd874d5f",
+    "blobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
+    "correctionsFile": "audit/literature-scope-corrections.json",
+    "readFreshOnEveryRun": true,
+    "completeGalleryRecheckClaimed": false
+  },
+  "automationUpdates": [
+    {"id":"6aafcf84ef7481919d285caa33ebe93d","title":"Gallery 发布前主审核","schedule":"07:05 / 17:05 Asia/Shanghai","updatedAt":"2026-09-23T02:47:32.611951Z","updateStatus":"SUCCESS","isEnabled":true},
+    {"id":"6ab1ed8ba52481919ac21fd5a454b1aa","title":"Gallery 发布前补审","schedule":"07:35 / 17:35 Asia/Shanghai","updatedAt":"2026-09-23T02:48:15.228359Z","updateStatus":"SUCCESS","isEnabled":true},
+    {"id":"6ab1edf330608191b89c92864890d997","title":"Gallery 08/18正式发布","schedule":"08:00 / 18:00 Asia/Shanghai","updatedAt":"2026-09-23T02:49:05.144136Z","updateStatus":"SUCCESS","isEnabled":true}
+  ],
+  "newRequirementsAppliedToAllStages": [
+    "Read current scope contract, explicit correction registry and relevant scope-recheck evidence, not just remembered old prompts.",
+    "Evaluate principal contribution and reusable preparative methodology, not organic product existence, keywords, a few extra substrates or protein-variant counts alone.",
+    "Distinguish general polymer methodology and preparative biocatalysis from material-property and protein/pathway engineering objectives; no blanket polymer or enzyme exclusion.",
+    "Preserve article-specific scopeAssessment and existing first-pass/challenge evidence; prohibit title-in-template self-certification.",
+    "Bind scope version/blob and correction registry blob in staging and qualityControl.scopeContract, and preserve them through formal conversion.",
+    "Rules and scope-correction changes trigger re-evaluation of affected historical decisions even when metadata is unchanged.",
+    "Final publication must compare accepted DOI(s) against current effective exclusions and never restore an immediate removal from an old tree.",
+    "Keep incomplete boundary checks separate from final exclusions; actual pending does not block other qualified papers.",
+    "Confirmed removals may use the existing immediate deletion-only authorization transaction; new admissions remain at 08:00/18:00.",
+    "Prepare and persist checked titleZh for every new include; do not depend on reader-side live translation or cache English as Chinese."
+  ],
+  "preservedRequirements": [
+    "Three-calendar-day main window and seven-day machine tail/rescue/catch-up",
+    "Canonical journals and prospective activeFrom",
+    "Multi-ISSN Crossref online/published/created and OpenAlex union; keywords only prioritize",
+    "Complete compact handoff, immutable input references, deduplication and concurrency protection",
+    "Publisher checks distinct from machine source health; blocked counts are unknown",
+    "Per-DOI pending and verifiedThrough conservatism; genuine zero-new requires proof",
+    "Strict conversion and atomic production marker/data/review; actual Pages authorization and online verification",
+    "TOC/body-figure acquisition remains Tampermonkey/VPN Bridge only; no OA automatic extraction"
+  ],
+  "existingUnfinalizedRechecks": [
+    "10.1021/acs.joc.6c01559",
+    "10.1021/acs.orglett.6c03499",
+    "10.1021/acs.orglett.6c03386",
+    "10.1002/anie.9519061"
+  ],
+  "schedulesChanged": false,
+  "newScheduledTasksCreated": false,
+  "notificationSettingsChanged": false,
+  "newSemanticReviewCompletedInThisConfigurationBatch": false,
+  "newValidatorCodeTestsClaimed": false,
+  "nextScheduledRunSuccessClaimed": false,
+  "note": "Automation update responses confirmed all three prompt changes and unchanged enabled schedules. This records configuration adoption, not a successful execution of the next scheduled literature review. Four earlier explicit exclusions were already atomically removed from repository data; production deployment/verification is a separate continuation."
+}
