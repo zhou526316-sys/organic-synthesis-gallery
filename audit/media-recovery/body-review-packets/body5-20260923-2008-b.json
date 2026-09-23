@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260923-2008-b",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T12:08:09Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceRunId": 35854671834,
+  "evidenceArtifactId": 10746927916,
+  "evidenceArchiveSha256": "00042f44eddcfd5c689aa273e2f2f5a9309a2bfc53792c67b2f96fdae55eea57",
+  "approvedCount": 18,
+  "reviewMethod": "Human semantic review of all 18 frozen current-generation body figures using the read-only evidence artifact: exact DOI/page/article/source bindings, original labels/captions, byte SHA256, dimensions/type, duplicate risk and rendered image content were checked. Two PNGs and sixteen SVGs were individually inspected; partial capture reports were treated only as incomplete acquisition evidence and did not authorize unreviewed/missing figures.",
+  "quality": "All approved files are readable and semantically consistent with their owning article; no TOC substitution, recommendation image, cross-DOI content, or same-byte duplicate was observed.",
+  "decisions": [
+    {
+      "doi": "10.1021/acscatal.6c05381",
+      "images": [
+        [
+          "next-006",
+          "figure-1",
+          "Viewed the sequence-mining workflow and clustering/property panels for nucleoside phosphorylases; the enzyme-family analysis, labels and multipanel organization match Figure 1 and the sequence-to-scaffold biocatalysis paper."
+        ],
+        [
+          "next-033",
+          "figure-2",
+          "Viewed the agarose-HPMC microsphere anchoring schematic, microscopy and scaffold characterization panels; these match Figure 2 and the paper's carrier-supported biocatalysis platform."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03612",
+      "images": [
+        [
+          "next-007",
+          "figure-1",
+          "Viewed the overview of sulfides in drug discovery together with routes to deuterated sulfides; the structures and strategy comparison match Figure 1 and the deuteroalkylthiolating-reagent study."
+        ],
+        [
+          "next-034",
+          "figure-2",
+          "Viewed the synthetic-utility transformations enabled by the deuterated sulfur reagents; the product structures and downstream applications match Figure 2 and its caption."
+        ],
+        [
+          "next-035",
+          "scheme-1",
+          "Viewed the two synthetic approaches to deuteroalkylthiolating reagents; precursor structures, deuterium labels and reagent preparation sequence match Scheme 1."
+        ],
+        [
+          "next-036",
+          "scheme-2",
+          "Viewed the reactivity exploration of the synthesized deuterated reagents across representative transformations; structures and outcomes match Scheme 2."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03505",
+      "images": [
+        [
+          "next-008",
+          "figure-1",
+          "Viewed selected biologically active dioxodibenzothiazepine-containing compounds; the scaffold examples match Figure 1 and the target heterocycle family of the article."
+        ],
+        [
+          "next-037",
+          "scheme-1",
+          "Viewed the prior and current strategies for constructing dioxodibenzothiazepines; the route comparison and cascade concept match Scheme 1."
+        ],
+        [
+          "next-038",
+          "scheme-3",
+          "Viewed the mechanistic investigation panel for the arylcarboxylation/cyclization/hydrogenation cascade; control reactions and mechanistic probes match Scheme 3."
+        ],
+        [
+          "next-039",
+          "scheme-4",
+          "Viewed the proposed cascade mechanism leading to the ester-substituted dioxodihydrodibenzothiazepine products; intermediates and sequence match Scheme 4."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03588",
+      "images": [
+        [
+          "next-009",
+          "scheme-1",
+          "Viewed prior ATRA approaches and the current copper-catalyzed primary-alkyl-halide strategy; reaction concepts and substrate class match Scheme 1."
+        ],
+        [
+          "next-040",
+          "scheme-2",
+          "Viewed the ATRA scope across vinyl boronic esters, vinyl sulfones, electron-deficient olefins and vinyl arenes; product panels and categories match Scheme 2."
+        ],
+        [
+          "next-041",
+          "scheme-3",
+          "Viewed substitutions and derivatizations of the ATRA products; product structures and functional-group conversions match Scheme 3 and the paper's synthetic applications."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03822",
+      "images": [
+        [
+          "next-010",
+          "scheme-1",
+          "Viewed representative allenoic products and the reaction context for 4-alkyl Hantzsch esters; the structures and prior/current transformation comparison match Scheme 1."
+        ],
+        [
+          "next-042",
+          "scheme-2",
+          "Viewed the 1,3-enyne scope for photocatalytic alkylation/carboxylation with CO2; allenoic-acid products and yields match Scheme 2."
+        ],
+        [
+          "next-043",
+          "scheme-3",
+          "Viewed the 4-alkyl-1,4-dihydropyridine scope; alkyl-group variation and resulting allenoic acids match Scheme 3."
+        ],
+        [
+          "next-044",
+          "scheme-4",
+          "Viewed the 1 mmol scale reaction and derivatizations of product 3aa; scale-up and downstream transformations match Scheme 4."
+        ],
+        [
+          "next-045",
+          "scheme-6",
+          "Viewed the proposed photocatalytic radical mechanism for 1,4-alkylation/carboxylation of 1,3-enynes with CO2; intermediates and catalytic sequence match Scheme 6."
+        ]
+      ]
+    }
+  ]
+}
