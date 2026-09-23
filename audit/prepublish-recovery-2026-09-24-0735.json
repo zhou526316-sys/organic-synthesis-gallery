@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "prepublish_recovery_checkpoint",
+  "publicationSlot": "2026-09-24T08:00:00+08:00",
+  "recordedAt": "2026-09-24T07:47:00+08:00",
+  "phase": "preparing",
+  "status": "incomplete_review",
+  "publishableSubsetReady": false,
+  "reviewComplete": false,
+  "productionDataModified": false,
+  "pagesDeploymentRequested": false,
+  "mediaAcquisitionPerformed": false,
+  "schedulesChanged": false,
+  "tasksDisabled": false,
+  "replacementTasksCreated": false,
+  "scopeContract": {
+    "scopeRulesVersion": "scope-2026-09-23-v1",
+    "scopeRulesFile": "docs/literature-scope-contract.md",
+    "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
+    "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+    "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813"
+  },
+  "reviewedStaging": {
+    "file": "audit/prepublish-review-2026-09-24-0800.json",
+    "blobSha": "0a0ba2b9b4d41945549e0dcd02dc55de65f18285",
+    "reviewCommitSha": "5c9d5e7717b983c470ad9655dbe53663869c827e",
+    "handoffGeneratedAt": "2026-09-23T23:10:55.807Z",
+    "handoffCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
+    "handoffBlobSha": "6e1cd99a6227b0b1ad25b835af0336f317aecdbb",
+    "reviewed": 123,
+    "accepted": 15,
+    "rejected": 106,
+    "pending": 2,
+    "proposedPublishableDois": [
+      "10.1021/acscatal.6c04954",
+      "10.1021/acscatal.6c05820",
+      "10.31635/ccschem.026.202608315",
+      "10.1021/jacs.6c16323",
+      "10.1021/jacs.6c14601",
+      "10.1021/acs.joc.6c01347",
+      "10.1021/acs.joc.6c01498",
+      "10.1038/s41586-026-11169-0",
+      "10.1038/s41557-026-02247-x",
+      "10.1021/acs.orglett.6c03346",
+      "10.1021/acs.orglett.6c03455",
+      "10.1021/acs.orglett.6c03520",
+      "10.1021/acs.orglett.6c03276",
+      "10.1021/acs.orglett.6c03373",
+      "10.1021/acs.orglett.6c03854"
+    ],
+    "publishableDois": [],
+    "deferredDois": [
+      "10.1038/s41467-026-78015-9",
+      "10.31635/ccschem.026.202608262"
+    ],
+    "historicalScopePendingDois": [
+      "10.1021/acs.orglett.6c03499",
+      "10.1021/acs.orglett.6c03386"
+    ],
+    "semanticDecisionSetComplete": true,
+    "allNewIncludesHaveTitleZhAndScopeAssessment": true,
+    "historicalAffectedScopeCoverageComplete": true
+  },
+  "initialMachineAudit": {
+    "runId": 35932176599,
+    "generatedAt": "2026-09-23T23:10:55.807Z",
+    "snapshotCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
+    "latestBlobSha": "5036d6d04f05765bcc42a78ccb25250a2c2f9c21",
+    "compactBlobSha": "6e1cd99a6227b0b1ad25b835af0336f317aecdbb",
+    "galleryDois": 542,
+    "sourceRecords": 525,
+    "unresolved": 123,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 2,
+    "closureCoverageAnomalies": 8,
+    "historicalCoverageLosses": 0,
+    "snapshotFreshForSlot": true,
+    "discoveryGatePassed": false
+  },
+  "recoveryMachineAudit": {
+    "triggerCommitSha": "b92a45ef727be2677f957ab3b5e44db8f84c8162",
+    "runId": 35934774504,
+    "runConclusion": "success",
+    "capabilityGuardConclusion": "success",
+    "generatedAt": "2026-09-23T23:41:25.964Z",
+    "snapshotCommitSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
+    "latestBlobSha": "4635d42f0dde8724392a2a1af7baffab907588a6",
+    "compactBlobSha": "c988f7e2e2213fc38459b10422cc31a85ba522b6",
+    "galleryDois": 542,
+    "sourceRecords": 525,
+    "unresolved": 123,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 2,
+    "closureCoverageAnomalies": 8,
+    "historicalCoverageLosses": 0,
+    "snapshotFreshForSlot": true,
+    "discoveryGatePassed": false,
+    "sourceCoverageAnomalyJournals": ["Nature", "CCS Chemistry"],
+    "closureCoverageAnomalyJournals": ["Nature", "Nature Chemistry", "Nature Communications", "JACS", "Angew", "Organic Letters", "CCS Chemistry", "JOC"],
+    "verifiedThroughAdvanced": false,
+    "verifiedThrough": "2026-09-20"
+  },
+  "snapshotDelta": {
+    "candidateSetChanged": false,
+    "candidateMetadataOrEvidenceChanged": false,
+    "reviewDecisionRechallengeRequired": false,
+    "comparisonEvidence": "Git compare from the reviewed snapshot generation to the recovery snapshot shows audit/latest.json and audit/unresolved-latest.json each changed only one line; counts, candidate set and evidence are unchanged while generatedAt advanced.",
+    "semanticReuse": "Reuse the 123 completed two-pass decisions and the four historical boundary rechecks; do not fabricate a second review pass for unchanged evidence."
+  },
+  "sourcePolicy": {
+    "primaryWindow": "2026-09-22..2026-09-24 Asia/Shanghai",
+    "auditCatchupStart": "2026-09-21",
+    "machineSafetyTailDays": 7,
+    "lateDepositRescueDays": 7,
+    "crossrefModes": ["online", "published", "created"],
+    "openAlex": true,
+    "multiIssn": true,
+    "activeFromApplied": true,
+    "keywordsOnlyPrioritize": true,
+    "activeJournalCount": 16
+  },
+  "publisherChecks": {
+    "checked": 0,
+    "blocked": 6,
+    "unavailable": 10,
+    "candidateCountsForBlockedOrUnavailable": "unknown/null, never coerced to zero",
+    "separateFromMachineSourceHealth": true
+  },
+  "gateEvidence": {
+    "priorGateRunId": 35933876677,
+    "priorGateJobId": 107426422441,
+    "workflowConclusion": "failure",
+    "baseValidator": "executed and failed on the nonzero discovery sourceCoverageAnomalies metric",
+    "strictValidator": "not executed because the current workflow is fail-fast after the earlier validation failure",
+    "strictReadiness": "executed with --allow-deferred --require-ready and failed closed; snapshot freshness passed but discovery metric remained nonzero",
+    "bothRequestedStrictCommandsExecuted": false,
+    "workflowChangedToBypassFailure": false,
+    "reason": "Do not weaken or reorder the production gate merely to obtain a green result. The recovery machine audit reproduced the same global discovery failure, so publication remains blocked."
+  },
+  "stagingRebind": {
+    "performed": false,
+    "reason": "The recovery snapshot changed generation only and reproduced the same mandatory discovery blocker. Keeping the reviewed staging bound to its evidence snapshot plus the newer unhealthy latest/compact causes downstream readiness to fail closed rather than fabricating a publication-ready generation."
+  },
+  "globalBlockers": [
+    "sourceCoverageAnomalies=2 persists after one deduplicated recovery audit (Nature and CCS Chemistry)",
+    "closureCoverageAnomalies=8 persists; verifiedThrough remains 2026-09-20",
+    "current latest/compact generation is newer than the reviewed staging generation, so publication conversion must fail closed until a healthy generation is reviewed/rebound"
+  ],
+  "publicationDecision": {
+    "releaseStatus": "blocked",
+    "publishableSubsetReady": false,
+    "publishableDois": [],
+    "proposedIncludeCount": 15,
+    "deferredDois": [
+      "10.1038/s41467-026-78015-9",
+      "10.31635/ccschem.026.202608262"
+    ],
+    "zeroNewClaim": false,
+    "offSlotPublicationAuthorized": false
+  },
+  "concurrencyProtection": {
+    "preTriggerMainSha": "8107351f9741948c21a8279e056a0bfae2e4c5c2",
+    "recoverySnapshotCommitSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
+    "preWriteMainSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
+    "protectedLiteratureInputsChangedByConcurrentWriter": false
+  },
+  "note": "This recovery did not publish, delete or edit any production literature. It did not alter Pages, TOC/body-media acquisition, task schedules or automation enablement. The retry was performed once because the prior fresh machine audit failed a mandatory discovery gate; the retry reproduced the failure, so no further restart was attempted."
+}
