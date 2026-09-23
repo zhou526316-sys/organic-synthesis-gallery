@@ -1,0 +1,55 @@
+name: Verify sealed media batch two live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read all restored public files and compare approved digests
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures,datetime,hashlib,json,os,pathlib,time,urllib.request
+          base='https://zhou526316-sys.github.io/organic-synthesis-gallery/'
+          def get(p):
+              with urllib.request.urlopen(urllib.request.Request(base+p,headers={'Cache-Control':'no-cache'}),timeout=20) as r:b=r.read(5000001)
+              assert len(b)<=5000000
+              return b
+          status=json.loads(get('sealed-media-recovery-status.json?audit='+str(time.time_ns())))
+          media=json.loads(get('media-index.json?audit='+str(time.time_ns())))
+          plan=json.loads(pathlib.Path('audit/media-recovery/batch2/manifest.json').read_text())
+          approved={r['doi']:r for r in plan['items']}
+          assert status['recoveryId']==plan['recoveryId'] and status['quarantineUnchanged']
+          rows=[]
+          for doi,item in approved.items():
+              rec=media['items'].get(doi,{})
+              x=rec.get('toc',{}) if item['kind']=='official' else next((f for f in rec.get('figures',{}).get('figures',[]) if f.get('recoveryId')==plan['recoveryId']),{})
+              if x.get('recoveryId')==plan['recoveryId']:rows.append((doi,x,item))
+          def check(args):
+              doi,x,item=args
+              try:
+                  p=x['imageUrl'];assert p.startswith('media-mirror/sealed-') and '..' not in p
+                  b=get(p);digest=hashlib.sha256(b).hexdigest();assert digest==x['verifiedSha256']==item['sha256']
+                  if item['kind']=='figure1':assert x['label']=='Figure 1'
+                  return {'doi':doi,'kind':item['kind'],'ok':True,'bytes':len(b),'sha256':digest}
+              except Exception as e:return {'doi':doi,'ok':False,'error':type(e).__name__}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:results=list(pool.map(check,rows))
+          first=sum(r.get('toc',{}).get('recoveryId')=='toc-batch1-20260922' for r in media['items'].values())
+          assert first>=83 and results and all(r['ok'] for r in results)
+          report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':status,'verifiedFiles':len(results),'failedFiles':0,'retainedBatch1':first,'results':results,'mediaWrites':0,'browserRenderingVerified':False}
+          pathlib.Path(os.environ['RUNNER_TEMP'],'sealed-media-live.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print('SEALED_MEDIA_LIVE '+json.dumps({k:v for k,v in report.items() if k!='results'},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sealed-media-batch2-live
+          path: ${{ runner.temp }}/sealed-media-live.json
+          retention-days: 7
+          if-no-files-found: warn
