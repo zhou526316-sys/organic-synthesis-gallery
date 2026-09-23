@@ -1,0 +1,85 @@
+name: Apply scope and Chinese-title maintenance
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/apply-scope-title-maintenance.py'
+      - '.github/workflows/scope-title-maintenance.yml'
+permissions:
+  contents: write
+concurrency:
+  group: scope-title-maintenance
+  cancel-in-progress: false
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Apply minimal code-only patches
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/apply-scope-title-maintenance.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('.github/workflows/literature-fixed-slot-release.yml')
+          text=p.read_text()
+          anchor='          git add "$review" "$queue" public/rolling-supplement.json audit/publication-release-state.json audit/release-execution-result.json'
+          addition=anchor+'\n          git add -u -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/literature-supplement.json'
+          if addition not in text:
+              assert text.count(anchor)==1, 'Release workflow changed concurrently'
+              p.write_text(text.replace(anchor,addition,1))
+          p=Path('docs/literature-update-protocol.md')
+          text=p.read_text()
+          addition='\n\n## User scope corrections and bilingual title contract — 2026-09-23\n\nRead `audit/literature-scope-corrections.json` before reviewing or publishing, including already visible DOI(s). Explicit exclusions supersede older include decisions; they do not establish a blanket ban on all polymer or biocatalytic methods. The machine handoff includes registered corrections still visible in the Gallery and marks them `scopeCorrection`; these are correction candidates, not newly discovered publisher records. Respect the fixed 08:00/18:00 production-data release slots and report queued removals separately from actual removals.\n\nFor every include, record article-specific primary contribution, preparative transformation and evidence for scope/general synthetic utility. Sequence/material/interfacial performance, membrane activity, AI protein/domain design or pathway engineering is not enough merely because a product is synthesized. Do not reuse a generic challenge paragraph as evidence. Preserve genuine small-molecule biocatalysis and enabling total synthesis. Recheck comparable boundary entries without blanket deletion.\n\nWrite a checked `titleZh` alongside every new accepted English title before release; use chemical terminology faithfully and preserve DOI identity. The release writer requires a usable Chinese title and persists it, using an existing verified translation only where title identity matches. Translation failure is not permission to disguise the English original as Chinese. The browser must render available inline/bundled translations without an API request or storage requirement. Known user-scope exclusions must be removed from all duplicate static datasets at the fixed release, not just the rolling file.\n'
+          if '## User scope corrections and bilingual title contract — 2026-09-23' not in text:
+              p.write_text(text+addition)
+          PY
+          git diff --exit-code -- public shared/literature-policy.js audit/publication-release-state.json
+      - name: Regression and translation coverage
+        run: |
+          set -euo pipefail
+          node --check scripts/apply-fixed-slot-literature-release.mjs
+          node --check cloudflare/scripts/audit-literature.mjs
+          node scripts/test-scope-title-corrections.mjs | tee /tmp/scope-title-tests.json
+          node scripts/test-literature-completeness-capability.mjs
+          node scripts/test-prepublish-readiness.mjs
+          node scripts/test-prepublish-slot-window.mjs
+          node scripts/test-per-doi-release.mjs
+          node scripts/test-deferred-publication-quality.mjs
+          node scripts/test-formal-review-conversion.mjs
+      - name: Build browser frontend
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Persist only reviewed code changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- public shared/literature-policy.js audit/publication-release-state.json
+          git add src/main.ts src/bootstrap.ts cloudflare/scripts/audit-literature.mjs scripts/validate-prepublish-review.mjs scripts/apply-fixed-slot-literature-release.mjs .github/workflows/prepublish-review-gate.yml .github/workflows/literature-fixed-slot-release.yml docs/literature-update-protocol.md
+          if git diff --cached --quiet; then echo 'Already patched'; exit 0; fi
+          base=$(git rev-parse HEAD)
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$base"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(literature): preserve explicit scope exclusions and render bundled Chinese titles'
+          git push origin HEAD:main
+          git rev-parse HEAD | tee /tmp/scope-title-code-commit.txt
+      - name: Preserve maintenance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scope-title-maintenance-evidence
+          path: |
+            /tmp/scope-title-tests.json
+            /tmp/scope-title-code-commit.txt
+          retention-days: 14
+          if-no-files-found: warn
