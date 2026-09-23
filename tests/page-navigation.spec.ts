@@ -147,3 +147,44 @@ test('disconnect/reconnect creates no duplicate controls or handlers and print h
   await expect.poll(async () => (await position(page)).remaining).toBeLessThanOrEqual(4);
   expect(evidence.errors).toEqual([]); expect(evidence.marks).toEqual([]);
 });
+
+
+test('gallery growth reveals navigation without window resize or unrelated module events', async ({ page }) => {
+  const evidence = await open(page, 390);
+  const nav = page.locator('gallery-page-navigation');
+  await page.evaluate(() => {
+    const app = document.querySelector<HTMLElement>('#app')!;
+    const gallery = document.querySelector<HTMLElement>('#gallery')!;
+    for (const child of Array.from(document.body.children)) {
+      if (child !== app && child.tagName !== 'GALLERY-PAGE-NAVIGATION') (child as HTMLElement).style.display = 'none';
+    }
+    for (const child of Array.from(app.children)) {
+      if (child !== gallery) (child as HTMLElement).style.display = 'none';
+    }
+    document.body.style.minHeight = '0';
+    document.documentElement.style.minHeight = '0';
+    app.style.minHeight = '0';
+    app.style.height = 'auto';
+    gallery.style.setProperty('display', 'none', 'important');
+    gallery.style.setProperty('height', '0', 'important');
+    gallery.style.setProperty('overflow', 'hidden', 'important');
+  });
+  await expect(nav).toBeHidden();
+
+  // No resize/scroll/custom event is dispatched here. The observed content box
+  // itself grows, which must be enough to refresh page-extent visibility.
+  await page.evaluate(() => {
+    const gallery = document.querySelector<HTMLElement>('#gallery')!;
+    gallery.style.setProperty('display', 'block', 'important');
+    gallery.style.setProperty('height', '2500px', 'important');
+  });
+  await expect(nav).toBeVisible({ timeout: 1500 });
+
+  await page.evaluate(() => {
+    const gallery = document.querySelector<HTMLElement>('#gallery')!;
+    gallery.style.setProperty('height', '10px', 'important');
+  });
+  await expect(nav).toBeHidden({ timeout: 1500 });
+  expect(evidence.errors).toEqual([]);
+  expect(evidence.marks).toEqual([]);
+});
