@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-23T12:46:38+08:00",
+  "publicationSlot": "2026-09-23T18:00:00+08:00",
+  "reviewFile": "audit/prepublish-review-2026-09-23-1800.json",
+  "reviewCommitSha": "606055825fad08788dfa725d270ef944240493a5",
+  "reviewBlobSha": "febd6cafde31c8ca36ba8e2c94c034658c9f4a49",
+  "workflowFile": ".github/workflows/prepublish-review-gate.yml",
+  "workflowBlobSha": "58e856fa1aabdc5807b49d495a71a90fea849479",
+  "runId": 35819481659,
+  "jobId": 107048059842,
+  "headSha": "606055825fad08788dfa725d270ef944240493a5",
+  "conclusion": "failure",
+  "runFinishedAt": "2026-09-23T04:43:37Z",
+  "artifact": {
+    "id": 10732074618,
+    "name": "prepublish-readiness-evidence",
+    "zipSha256": "5f7a468071f6a9c91911165f63e7b3f1833940f1bdb9db6ddc7253a3ab6076a0",
+    "downloadedAndRead": true,
+    "files": ["prepublish-validation.json", "prepublish-slot-readiness.json", "formal-conversion-preview.json"]
+  },
+  "actualSteps": [
+    {"name":"six invariant test steps","conclusion":"success"},
+    {"command":"node scripts/validate-prepublish-review.mjs audit/prepublish-review-2026-09-23-1800.json --allow-deferred","conclusion":"success","strictRequireReady":false},
+    {"command":"node scripts/convert-prepublish-review.mjs audit/prepublish-review-2026-09-23-1800.json","conclusion":"failure","error":"global_blockers"},
+    {"command":"node scripts/validate-prepublish-review.mjs audit/prepublish-review-2026-09-23-1800.json --allow-deferred --require-ready","conclusion":"skipped","reason":"Existing workflow runs this step only after successful conversion preview; preview failed on the documented global scope blocker."},
+    {"command":"node scripts/check-prepublish-readiness.mjs audit/prepublish-review-2026-09-23-1800.json --allow-deferred --require-ready","conclusion":"failure","executed":true},
+    {"name":"strict release bundle","conclusion":"skipped"},
+    {"name":"preserve evidence artifact","conclusion":"success"}
+  ],
+  "baseValidationOutput": {
+    "ok":true,"validationOk":true,"readyToPublish":false,"releasePolicy":"per-doi","reviewComplete":false,"releaseStatus":"blocked",
+    "publishableDois":["10.1021/acs.orglett.6c03301","10.1021/acs.orglett.6c03574"],
+    "rejectedDois":["10.1038/s41467-026-77936-9","10.1038/s41467-026-77765-w","10.1038/s41467-026-77877-3","10.1002/anie.7471326","10.1002/anie.5198340","10.1002/anie.5230240","10.1002/anie.4624632"],
+    "deferredDois":["10.31635/ccschem.026.202608262"],
+    "validationMode":"staging","readinessBlockers":["global_blockers"],
+    "unresolvedCandidates":10,"decisions":10,"includeCount":2,"excludeCount":7,"pendingCount":1,"activeJournals":16,"failures":[]
+  },
+  "conversionPreviewOutput": {"conversionValid":false,"publicationReady":false,"productionDataModified":false,"error":"global_blockers"},
+  "strictSlotReadinessOutput": {
+    "schemaVersion":2,"mode":"require-ready","releasePolicy":"per-doi",
+    "recordValidationPassed":true,"semanticReady":false,"snapshotFreshForSlot":false,"publicationReady":false,"reviewComplete":false,"releaseStatus":"blocked",
+    "publicationSlot":"2026-09-23T18:00:00+08:00","reviewFile":"audit/prepublish-review-2026-09-23-1800.json","handoffGeneratedAt":"2026-09-23T04:25:52.436Z",
+    "reviewed":10,"includeCount":2,"excludeCount":7,"pendingCount":1,"pendingDois":["10.31635/ccschem.026.202608262"],
+    "publishableDois":[],"rejectedDois":[],"deferredDois":["10.31635/ccschem.026.202608262"],
+    "publisherCoverageFullyVerified":false,
+    "blockers":["reviewed_release_subset_not_ready","snapshot_not_from_target_slot_prerelease_window"],
+    "recordFailures":[],"semanticBlockers":["global_blockers"],"productionDataModified":false
+  },
+  "warningSummary": {
+    "publisherUnavailable":["Nature","Science","Nature Catalysis","Nature Synthesis","Nature Chemistry","Nature Communications","JACS","Angew","ACS Catalysis","Organic Letters"],
+    "publisherBlocked":["Chem","Chemical Science","CCS Chemistry","Science Advances","Green Chemistry","JOC"],
+    "publisherCandidateCounts":"unknown/null, not zero",
+    "documentedAdmissionDeferrals":1
+  },
+  "scopeContract": {
+    "scopeRulesVersion":"scope-2026-09-23-v1","scopeRulesFile":"docs/literature-scope-contract.md","scopeRulesBlobSha":"4ca6a9343ee46c617f08166062940f8919e311de",
+    "scopeCorrectionsFile":"audit/literature-scope-corrections.json","scopeCorrectionsBlobSha":"040902a773f72057dff59de5c66d27f568984813",
+    "handoffCommitSha":"9624b1e815f89a006a04eaba4d776f54804afe81","handoffBlobSha":"4954c911bb843d1c360511c2180f7a68e5923118"
+  },
+  "effectiveState": {"phase":"preparing","status":"incomplete_review","publishableSubsetReady":false,"reviewComplete":false,"publishableDois":[],"proposedIncludes":2,"deferredDois":["10.31635/ccschem.026.202608262"]},
+  "bothRequestedStrictCommandsExecuted": false,
+  "remainingExecutionRequirement": "Both requested strict commands have not completed: the direct strict validator was skipped by the existing workflow after preview failure. Preserve the real blocker; do not delete it or weaken the workflow merely to make the run green.",
+  "globalScopeBlocker": "affected_historical_scope_compatibility_coverage_incomplete",
+  "note": "The base validator's two DOI candidates are not publication authorization because readyToPublish=false. The strict readiness output authorizes no DOI at this checkpoint. This is not a zero-new-literature claim: two reviewed includes and one evidence-scoped deferral exist. Existing-card scope pending is separately persisted and is not confused with unpublished admission deferrals. No production, Pages, media, schedule or workflow mutation was performed by this recovery."
+}
