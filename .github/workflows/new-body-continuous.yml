@@ -1,7 +1,7 @@
 name: Publish validated new body figures
 on:
   schedule:
-    - cron: '7,22,37,52 * * * *'
+    - cron: '*/5 * * * *'
   push:
     branches: [main]
     paths: ['audit/automation-triggers/new-body-continuous.json']
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Read stored metadata and current publication ledger only
+      - name: Read stored metadata and wait for a twenty-article batch
         id: pending
         run: node cloudflare/scripts/merge-new-body-auto.mjs --poll
   publish:
