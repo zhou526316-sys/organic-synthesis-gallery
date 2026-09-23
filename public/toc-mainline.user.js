@@ -2210,7 +2210,7 @@ function embeddedJobDois(value) {
       if(!renewLease())throw new Error('controller_lease_lost');
       if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false) return {doi:job.doi,jobId:job.jobId,status:'aborted',reason:'user_aborted',finishedAt:nowIso()};
 
-      // Always prefer a publisher final result before evaluating controller timeouts.
+      // publisher final results over controller timeouts: always prefer a completed publisher result first.
       // Background-tab/browser suspension can advance Date.now() by many minutes
       // between two controller polls even though the publisher already finished.
       var result=completedPublisherResult(job);
