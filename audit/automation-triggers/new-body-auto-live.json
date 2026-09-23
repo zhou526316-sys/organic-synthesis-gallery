@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T15:01:00Z",
+  "requestedAt": "2026-09-24T02:26:00+08:00",
   "readOnly": true,
   "productionWrites": 0,
-  "reason": "Verify the most recent retained automatic body-image release even when the current Pages build has status.added empty. Expect latest admittedAt batch selection, exact file hashes/evidence, official TOC pairing and real-card image decode checks."
+  "reason": "Read the exact currently deployed automatic body snapshot, media ledger, bytes and card identities once, to diagnose the repeated auto_prior_publication_changed gate without retrying publication or changing media."
 }
