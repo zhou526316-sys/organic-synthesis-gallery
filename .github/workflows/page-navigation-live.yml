@@ -47,7 +47,7 @@ jobs:
         run: |
           mkdir -p navigation-live-results
           git rev-parse HEAD > navigation-live-results/reviewed-commit.txt
-          sha256sum tests/page-navigation.spec.ts src/user-ui/page-navigation.ts > navigation-live-results/source-sha256.txt
+          sha256sum src/bootstrap.ts tests/page-navigation.spec.ts src/user-ui/page-navigation.ts > navigation-live-results/source-sha256.txt
           node --input-type=module <<'NODE'
           import { writeFile } from 'node:fs/promises';
           const site=process.env.LIVE_SITE_URL;
