@@ -1,26 +1,26 @@
 {
-  "generatedAt": "2026-09-23T10:03:44.079Z",
+  "generatedAt": "2026-09-23T15:04:58.930Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 36,
+  "liveLocalCaptures": 61,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
-  "mediaInventoryCount": 542,
+  "mediaInventoryCount": 0,
   "webpageDoiCount": 542,
-  "mediaRecordCount": 139,
-  "visibleGapTotal": 418,
-  "demandTotal": 418,
-  "noVisual": 418,
-  "fallbackOnlyNeedsOfficialUpgrade": 5,
-  "missingOfficialTotal": 423,
+  "mediaRecordCount": 165,
+  "visibleGapTotal": 392,
+  "demandTotal": 392,
+  "noVisual": 392,
+  "fallbackOnlyNeedsOfficialUpgrade": 6,
+  "missingOfficialTotal": 398,
   "figureGapTotal": 542,
   "zeroFigureGapTotal": 542,
   "lowResolutionFigureGapTotal": 0,
   "unknownQualityFigureGapTotal": 0,
   "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 282,
+    "acs": 256,
     "wiley": 43,
     "nature": 90,
     "science": 3,
@@ -30,7 +30,7 @@
     "other": 0
   },
   "upgradeByPublisher": {
-    "acs": 1,
+    "acs": 2,
     "wiley": 0,
     "nature": 4,
     "science": 0,
@@ -40,10 +40,9 @@
     "other": 0
   },
   "byJournal": {
-    "ACS Catalysis": 30,
-    "JACS": 86,
-    "JOC": 1,
-    "Organic Letters": 165,
+    "ACS Catalysis": 29,
+    "JACS": 80,
+    "Organic Letters": 147,
     "Nature": 9,
     "Nature Catalysis": 11,
     "Nature Chemistry": 11,
@@ -61,15 +60,6 @@
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/acscatal.6c05422",
-      "journal": "ACS Catalysis",
-      "title": "DiploPhos: A Hemilabile Bisphosphine for Sterically Hindered Ni-Catalyzed Suzuki–Miyaura Couplings",
-      "date": "2026-09-12",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
     },
     {
       "doi": "10.1021/acscatal.6c02896",
@@ -274,6 +264,15 @@
       "journal": "ACS Catalysis",
       "title": "NHC-Catalyzed Desymmetrization of Bishydroxymethylphosphines to Access P-Stereogenic Compounds",
       "date": "2026-07-15",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acscatal.6c03656",
+      "journal": "ACS Catalysis",
+      "title": "Asymmetric Synthesis of Heterohelicenes via Cobalt-Catalyzed Enantioselective C–H Activation",
+      "date": "2026-07-09",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
