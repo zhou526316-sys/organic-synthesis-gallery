@@ -1,0 +1,66 @@
+name: UI refresh cost regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/user-ui/**'
+      - 'tests/search-refresh-performance.spec.ts'
+      - 'tests/reader-count-loader.test.cjs'
+      - '.github/workflows/ui-refresh-cost-ci.yml'
+permissions:
+  contents: read
+concurrency:
+  group: ui-refresh-cost-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  refresh-cost:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [webkit, chromium]
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned tests
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/refresh-browser.log 2>&1 || { tail -60 /tmp/refresh-browser.log; exit 1; }
+      - name: Check types and deterministic count-read races
+        run: |
+          mkdir -p refresh-cost-results
+          npx tsc --noEmit
+          npx --no-install esbuild src/user-ui/reader-count-loader.ts --bundle --platform=node --format=cjs --outfile=/tmp/gallery-count-loader.cjs
+          set -o pipefail
+          node --test tests/reader-count-loader.test.cjs 2>&1 | tee refresh-cost-results/count-unit.log
+          npm run build
+      - name: Start isolated preview
+        run: |
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/refresh-preview.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/refresh-preview.log
+          exit 1
+      - name: Measure real corpus refresh cost without production writes
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: refresh-cost-results/results.json
+        run: |
+          git rev-parse HEAD > refresh-cost-results/tested-commit.txt
+          sha256sum src/user-ui/shared.ts src/user-ui/search-controller.ts src/user-ui/reader-count-loader.ts > refresh-cost-results/source-sha256.txt
+          set -o pipefail
+          npx --no-install playwright test tests/search-refresh-performance.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=refresh-cost-results/tests 2>&1 | tee refresh-cost-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: refresh-cost-${{ matrix.browser }}
+          path: refresh-cost-results/
+          retention-days: 7
+          if-no-files-found: warn
