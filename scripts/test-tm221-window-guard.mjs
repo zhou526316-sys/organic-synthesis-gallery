@@ -17,24 +17,24 @@ function harness(text=source,opt={}) {
     GM_registerMenuCommand:(n,f)=>menus.set(n,f),
     setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id;},clearTimeout:i=>timers.delete(i),setInterval:()=>++id,clearInterval(){},
     __badge:t=>badges.push(t),
-    __sleep:async ms=>{now+=ms;for(const h of opened)if(h.closeRequested&&!opt.neverClose)h.closed=true;await opt.onSleep?.(ms,ctx);},
+    __sleep:async ms=>{now+=ms;for(const h of opened)if(h.closeRequested&&!opt.neverClose)h.closed=true;const extra=await opt.onSleep?.(ms,ctx);now+=Math.max(0,Number(extra||0));},
     __getJson:async url=>{await opt.onFetch?.(url,ctx,menus,store);return url.includes('capture-capabilities')?{captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging'}:url.includes('toc-demand')?{generatedAt:'2026-09-22T16:30:47.570Z',mediaGeneration:1790082000000}:{items:{}};},
     GM_openInTab:(url,options)=>{
       const job=store.get('osg-toc-v6:active-job');
       const h={url,options,closed:false,closeRequested:false,close(){this.closeRequested=true;}};
       opened.push(h);maxLive=Math.max(maxLive,opened.filter(h=>!h.closed).length);
-      set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored'},figuresStaged:2});
+      if(!opt.deferResult)set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored'},figuresStaged:2});
       opt.onOpen?.(job,ctx,store);
       return opt.promiseHandle?Promise.resolve(h):h;
     },
-    __jobs:Array.from({length:20},(_,i)=>({doi:'10.1021/jacs.6c'+String(10000+i),publisher:'acs'})),
+    __jobs:Array.from({length:Number(opt.jobCount||20)},(_,i)=>({doi:'10.1021/jacs.6c'+String(10000+i),publisher:'acs'})),
   };
   ctx=vm.createContext(c);
   const cut=text.lastIndexOf('  installMenu();');assert.ok(cut>0);
   vm.runInContext(text.slice(0,cut)+`
     isGalleryPage=()=>true;writeToken=()=> 'fixture-only';badge=__badge;sleep=__sleep;getJson=__getJson;
     pairedJobs=()=>__jobs;batchSize=()=>20;selectBatchJobs=(jobs,n)=>jobs.slice(0,n);
-    globalThis.T={controllerRun,installMenu,resultKey,attemptKey,leaseKey:LEASE_KEY,activeKey:ACTIVE_JOB_KEY,summaryKey:SUMMARY_KEY,owner:CONTROLLER_ID};
+    globalThis.T={controllerRun,installMenu,resultKey,progressKey,attemptKey,leaseKey:LEASE_KEY,activeKey:ACTIVE_JOB_KEY,summaryKey:SUMMARY_KEY,owner:CONTROLLER_ID};
   })();`,ctx);
   ctx.T.installMenu();
   return {ctx,store,menus,timers,opened,badges,get maxLive(){return maxLive;},run:()=>ctx.T.controllerRun(),summary:()=>store.get(ctx.T.summaryKey)};
@@ -64,6 +64,31 @@ await test('cannot confirm closed tab means no second open',async()=>{
 await test('async tab handle is awaited and closure still enforced',async()=>{
  const h=harness(source,{promiseHandle:true});await h.run();assert.equal(h.summary().success,20);assert.equal(h.maxLive,1);assert.ok(h.opened.every(t=>t.closed));
 });
+await test('background timer jump past controller timeout still consumes completed publisher result first',async()=>{
+ const store=new Map();let injected=false,h;
+ h=harness(source,{store,jobCount:1,deferResult:true,onSleep:async(ms,c)=>{
+   if(!injected&&ms===1000&&h.opened.length){
+     const job=store.get(c.T.activeKey);assert.ok(job);
+     store.set(c.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',status:'success',finishedAt:new Date(1790096000000+1000).toISOString(),toc:{status:'stored'},figuresStaged:2});
+     injected=true;return 9*60*1000;
+   }
+   return 0;
+ }});
+ await h.run();assert.equal(h.summary().success,1);assert.equal(h.summary().failed,0);assert.equal(h.summary().results[0].status,'success');
+});
+await test('finished progress mirror survives delayed result-key visibility',async()=>{
+ const store=new Map();let injected=false,h;
+ h=harness(source,{store,jobCount:1,deferResult:true,onSleep:async(ms,c)=>{
+   if(!injected&&ms===1000&&h.opened.length){
+     const job=store.get(c.T.activeKey);assert.ok(job);
+     const result={doi:job.doi,jobId:job.jobId,version:'6.2.20',status:'partial',reason:'fixture_finished',finishedAt:new Date(1790096000000+1000).toISOString(),toc:{status:'stored'},figuresStaged:1};
+     store.set(c.T.progressKey(job.doi),{jobId:job.jobId,status:'finished',at:result.finishedAt,result});
+     injected=true;return 9*60*1000;
+   }
+   return 0;
+ }});
+ await h.run();assert.equal(h.summary().partial,1);assert.equal(h.summary().failed,0);assert.equal(h.summary().results[0].reason,'fixture_finished');
+});
 await test('old controller cleanup cannot erase new owners lease or active job',async()=>{
  const h=harness(source,{onOpen:(j,c,s)=>{s.set(c.T.leaseKey,{owner:'other',expiresAt:1790999999999});s.set(c.T.activeKey,{controllerId:'other',jobId:'other-job'});}});
  await h.run();assert.equal(h.opened.length,1);assert.equal(h.store.get(h.ctx.T.activeKey).jobId,'other-job');assert.equal(h.store.get(h.ctx.T.leaseKey).owner,'other');
@@ -84,5 +109,5 @@ await test('bound capture nonce and DOI guards remain in source',()=>{
  for(const text of ['assertBoundCaptureJob','capture_job_stale_or_unbound','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch','previous_task_tab_not_closed'])assert.ok(source.includes(text));
 });
 const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-await test('legacy viewport collectors are guarded by packaging',()=>{assert.ok(loader.includes('legacy_runtime_media_disabled'));for(const n of ['function queueDoi','function pump','function scan'])assert.ok(loader.includes(n));assert.ok(loader.includes("const loaderVersion = '2.2.26';"));});
+await test('legacy viewport collectors are guarded by packaging',()=>{assert.ok(loader.includes('legacy_runtime_media_disabled'));for(const n of ['function queueDoi','function pump','function scan'])assert.ok(loader.includes(n));assert.ok(loader.includes("const loaderVersion = '2.2.27';"));});
 console.log('TM221_WINDOW_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,environment:'VM mocked GM APIs; not a live Tampermonkey extension'}));
