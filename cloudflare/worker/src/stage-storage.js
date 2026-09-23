@@ -2,9 +2,25 @@
 // No publisher requests, historical promotion, D1 writes, or object deletion.
 export const STAGE_STORAGE_REVISION = '2026-09-23.1';
 export const STAGE_INDEX_KEY = 'local-captures/article-figures/stage-index.json';
+export const CAPTURE_EVIDENCE_SCHEMA = 'body-capture-evidence-v1';
 const CUTOVER = 1790082000000;
 const MAX_ATTEMPTS = 4;
 const digest = async bytes => [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(x => x.toString(16).padStart(2, '0')).join('');
+
+export function captureEvidencePayload(entry, fullHash) {
+  return [
+    CAPTURE_EVIDENCE_SCHEMA,
+    String(entry?.doi || ''), String(entry?.id || ''), String(entry?.label || ''), String(entry?.caption || ''),
+    String(entry?.articleUrl || ''), String(entry?.sourceUrl || ''), String(entry?.pageDoi || ''), String(entry?.jobId || ''),
+    String(entry?.captureVersion || ''), Number(entry?.mediaGeneration || 0), String(entry?.r2Key || ''),
+    String(entry?.contentHash || ''), String(fullHash || ''), Number(entry?.byteLength || 0), Number(entry?.width || 0),
+    Number(entry?.height || 0), Number(entry?.sortOrder || 0),
+  ];
+}
+
+export async function captureEvidenceFingerprint(entry, fullHash) {
+  return digest(new TextEncoder().encode(JSON.stringify(captureEvidencePayload(entry, fullHash))));
+}
 
 export function storageCause(error) {
   const message = String(error?.message || error || '');
@@ -22,6 +38,7 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
   const sleep = options.sleep || (ms => new Promise(resolve => setTimeout(resolve, ms)));
   const now = options.now || Date.now;
   const requestId = crypto.randomUUID();
+  const captureEvidenceFingerprintValue = await captureEvidenceFingerprint(entry, fullHash);
   const bucket = env.MEDIA;
   let operation = 'index_read', objectStored = false, retryCount = 0;
   const retryEvents = [];
@@ -68,6 +85,8 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
     width: Number(record.width || 0), height: Number(record.height || 0), contentHash: record.contentHash,
     imageUrl: new URL(request.url).origin + '/media/' + record.r2Key.split('/').map(encodeURIComponent).join('/'),
     updatedAt: record.updatedAt, stageStorageRevision: STAGE_STORAGE_REVISION,
+    captureEvidenceSchema: CAPTURE_EVIDENCE_SCHEMA,
+    captureEvidenceFingerprint: record.captureEvidenceFingerprint || null,
     requestId, storageRetryCount: retryCount, ...extra
   }});
   const retained = async previous => {
@@ -100,7 +119,7 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
         const current = await readIndex();
         const prior = await retained(current.index.items[identity]);
         if (prior) return prior;
-        const record = {...entry, updatedAt: now(), stageStorageRevision: STAGE_STORAGE_REVISION};
+        const record = {...entry, captureEvidenceFingerprint: captureEvidenceFingerprintValue, captureEvidenceSchema: CAPTURE_EVIDENCE_SCHEMA, updatedAt: now(), stageStorageRevision: STAGE_STORAGE_REVISION};
         current.index.items[identity] = record;
         current.index.version = 1; current.index.updatedAt = record.updatedAt;
         operation = 'index_write';
