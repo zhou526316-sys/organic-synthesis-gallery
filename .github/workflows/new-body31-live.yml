@@ -1,0 +1,102 @@
+name: Verify approved new body31 live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/new-body31-live.json']
+permissions:
+  contents: read
+concurrency:
+  group: new-body31-live
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install read-only browser
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Verify actual deployed images and all six card strips
+        run: |
+          node --input-type=module - <<'JS'
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          import {readFile,writeFile,mkdir} from 'node:fs/promises';
+          import {chromium} from 'playwright';
+          import {canonicalBodyEvidence,buildBodyReviewMarker} from './shared/body-media-evidence.js';
+          const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+          const worker='https://organic-synthesis-gallery.zhou526316.workers.dev';
+          const out=process.env.RUNNER_TEMP+'/new-body31-live';await mkdir(out,{recursive:true});
+          const sha=b=>createHash('sha256').update(b).digest('hex');
+          const report={checkedAt:new Date().toISOString(),readOnly:true,productionWrites:0,files:[],cards:[],realMarkerSamples:[],browserRenderingVerified:false};
+          async function get(p){const u=new URL(p,base);assert.ok([new URL(base).origin,worker].includes(u.origin));const r=await fetch(u,{headers:{'cache-control':'no-cache'},redirect:'error',signal:AbortSignal.timeout(20000)});assert.equal(r.status,200,u.pathname);return Buffer.from(await r.arrayBuffer());}
+          try{
+            const a=JSON.parse(await readFile('audit/media-recovery/body-batches/body-new31-a-20260923.json'));
+            const b=JSON.parse(await readFile('audit/media-recovery/body-batches/body-new31-b-20260923.json'));
+            const approved=[...a.items,...b.items];assert.equal(approved.length,31);
+            const media=JSON.parse(await get('media-index.json?verify='+Date.now()));
+            const ledger=JSON.parse(await get('body-publication-ledger.json?verify='+Date.now()));
+            const status=JSON.parse(await get('body-batches-status.json?verify='+Date.now()));
+            assert.ok(Array.isArray(ledger.items));
+            for(const item of approved){
+              const figure=media.items[item.doi]?.figures?.figures?.find(f=>f.id===item.id);assert.ok(figure,item.doi+' '+item.id);
+              assert.match(figure.imageUrl,/^media-mirror\/[a-zA-Z0-9._-]+$/);
+              const bytes=await get(figure.imageUrl);assert.equal(sha(bytes),item.sha256);assert.equal(figure.verifiedSha256,item.sha256);
+              const key=item.doi+'|'+item.id+'|'+item.sha256,entry=ledger.items.find(r=>r.assetKey===key);assert.ok(entry);assert.equal(entry.state,'published');assert.equal(entry.evidenceSha256,sha(canonicalBodyEvidence(item,item.sha256)));
+              report.files.push({doi:item.doi,id:item.id,ok:true,bytes:bytes.length,sha256:item.sha256,evidenceSha256:entry.evidenceSha256});
+            }
+            report.totalPublicFigures=Object.values(media.items).reduce((n,r)=>n+(r.figures?.figures||[]).length,0);
+            report.reviewedLedgerCount=ledger.count;report.batchStatus=status;
+            report.retainedTocBatch1=Object.values(media.items).filter(r=>r.toc?.recoveryId==='toc-batch1-20260922').length;
+            report.retainedTocBatch2=Object.values(media.items).filter(r=>r.toc?.recoveryId==='sealed-media-batch2-20260923'&&!/fallback/i.test(r.toc.reason||'')).length;
+            assert.equal(report.retainedTocBatch1,83);assert.equal(report.retainedTocBatch2,18);
+            try{
+              const cap=JSON.parse(await get(worker+'/api/media/capture-capabilities'));report.captureCapabilities=cap;
+              const st=JSON.parse(await get(worker+'/api/article-figures/staged'));report.stageRows=st.count;
+              const marked=(st.items||[]).filter(r=>r.reviewMarker?.revision==='1');report.realStoredMarkedRows=marked.length;
+              for(const row of marked.slice(0,2)){
+                const expected=await buildBodyReviewMarker(row,row.sha256);assert.equal(expected.evidenceSha256,row.reviewMarker.evidenceSha256);
+                const u=new URL(row.imageUrl);assert.equal(u.origin,worker);assert.ok(u.pathname.startsWith('/media/local-captures/article-figures/images/'));
+                const bytes=await get(u.href);assert.equal(sha(bytes),row.sha256);
+                report.realMarkerSamples.push({doi:row.doi,id:row.id,state:row.reviewMarker.state,reasons:row.reviewMarker.reasons,byteIntegrityVerified:true});
+              }
+            }catch(error){report.markerReadError=String(error.message).slice(0,300);}
+            const browser=await chromium.launch();
+            try{
+              const ctx=await browser.newContext({viewport:{width:1360,height:1000}});
+              await ctx.route('**/*',route=>!['GET','HEAD','OPTIONS'].includes(route.request().method())?route.fulfill({status:503,body:'read-only acceptance blocks production writes'}):route.continue());
+              const page=await ctx.newPage();await page.goto(base,{waitUntil:'domcontentloaded'});await page.locator('#search').waitFor({timeout:30000});
+              const dois=[...new Set(approved.map(r=>r.doi))];assert.equal(dois.length,6);
+              for(const [i,doi] of dois.entries()){
+                await page.locator('#search').fill(doi);await page.locator('#search').press('Escape');
+                const s='.figure-strip-slot[data-figure-doi="'+doi+'"]',strip=page.locator(s);await strip.waitFor({timeout:20000});await strip.scrollIntoViewIfNeeded();
+                const wanted=approved.filter(r=>r.doi===doi).length;
+                await page.waitForFunction(({s,n})=>document.querySelectorAll(s+' .figure-thumb img').length>=n,{s,n:wanted},{timeout:20000});
+                await strip.locator('.figure-thumb img').evaluateAll(images=>images.forEach(x=>{x.loading='eager';}));
+                await page.waitForFunction(s=>[...document.querySelectorAll(s+' .figure-thumb img')].every(x=>x.complete&&x.naturalWidth>0),s,{timeout:25000});
+                const images=await strip.locator('.figure-thumb img').evaluateAll(xs=>xs.map(x=>({label:x.alt,src:x.currentSrc||x.src,width:x.naturalWidth,height:x.naturalHeight})));
+                assert.ok(await strip.isVisible());await strip.locator('xpath=ancestor::article[1]').screenshot({path:out+'/card-'+i+'.png'});
+                report.cards.push({doi,figures:images.length,expectedNew:wanted,visible:true,allDecoded:true,images});
+              }
+              report.browserRenderingVerified=true;
+            }finally{await browser.close();}
+            report.result='passed';report.completedAt=new Date().toISOString();
+          }catch(error){report.result='failed';report.error=String(error.message);throw error;}
+          finally{await writeFile(out+'/acceptance.json',JSON.stringify(report,null,2));console.log('NEW_BODY31_LIVE '+JSON.stringify({result:report.result,files:report.files.length,cards:report.cards.length,totalPublicFigures:report.totalPublicFigures,realStoredMarkedRows:report.realStoredMarkedRows,browserRenderingVerified:report.browserRenderingVerified,error:report.error}));}
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: new-body31-live
+          path: ${{ runner.temp }}/new-body31-live/*
+          retention-days: 7
+          if-no-files-found: warn
