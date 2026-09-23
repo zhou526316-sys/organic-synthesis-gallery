@@ -1,0 +1,61 @@
+name: Media pinch gesture regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/media-enhancements.ts'
+      - 'src/media-enhancements.css'
+      - 'src/user-ui/media-gestures.ts'
+      - 'tests/media-pinch.spec.ts'
+      - '.github/workflows/media-pinch-ci.yml'
+permissions:
+  contents: read
+concurrency:
+  group: media-pinch-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  gestures:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [webkit, chromium]
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TEST_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned browser and compile candidate
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/pinch-browser.log 2>&1 || { tail -60 /tmp/pinch-browser.log; exit 1; }
+          npx tsc --noEmit
+          npm run build
+      - name: Start isolated preview
+        run: |
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/pinch-preview.log 2>&1 &
+          for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
+          cat /tmp/pinch-preview.log
+          exit 1
+      - name: Verify gesture geometry, cancellation and untouched sources
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: pinch-results/results.json
+        run: |
+          mkdir -p pinch-results
+          git rev-parse HEAD > pinch-results/tested-commit.txt
+          sha256sum src/media-enhancements.ts src/user-ui/media-gestures.ts tests/media-pinch.spec.ts > pinch-results/source-sha256.txt
+          set -o pipefail
+          npx --no-install playwright test tests/media-pinch.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=pinch-results/tests 2>&1 | tee pinch-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: media-pinch-${{ matrix.browser }}
+          path: pinch-results/
+          retention-days: 7
+          if-no-files-found: warn
