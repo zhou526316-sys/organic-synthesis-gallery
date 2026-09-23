@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260923-1940-a",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T11:39:40Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10746927916,
+  "evidenceArchiveSha256": "00042f44eddcfd5c689aa273e2f2f5a9309a2bfc53792c67b2f96fdae55eea57",
+  "evidenceRunId": 35854671834,
+  "approvedCount": 17,
+  "reviewMethod": "All 17 selected current-generation stored SVG files were independently rehashed against the frozen 19:28 Beijing read-only evidence snapshot. Task/page/article/source DOI, original figure identity, caption, content-addressed R2 key, dimensions/type and full SHA256 were checked. Every SVG was rendered and individually viewed on contact sheets against the owning paper title and caption. Existing deployed media and official TOCs were checked to avoid same-ID replacement or TOC/body-role confusion. No publisher recrawl, R2 write, direct import/repair or marker-only approval was used.",
+  "quality": "All 17 files are preserved SVG captures. The files decoded/rendered successfully in the review environment. Figure 1 entries remain article figures and are not treated as TOCs. No cross-DOI, recommendation-content or duplicate-file conflict was observed in this bounded subset.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.joc.6c01559",
+      "images": [
+        ["next-001", "scheme-1", "Viewed the proposed mechanism for formation of the isoindole-derived pyrimido[6,1,2-cd]pyrrolizine fluorophore; structures and step sequence match Scheme 1 and the paper topic."],
+        ["next-021", "scheme-2", "Viewed the one-pot pseudo-five-component reaction furnishing the PP fluorophore; reagents, product family and scheme layout match Scheme 2."],
+        ["next-022", "scheme-3", "Viewed the control four-component conversion of the isolated intermediate to the fluorophore product; matches the mechanistic control presented as Scheme 3."],
+        ["next-023", "scheme-4", "Viewed the substrate-scope panel for the multicomponent PP fluorophore synthesis; product structures and scope organization match Scheme 4."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02993",
+      "images": [
+        ["next-002", "figure-1", "Viewed the DFT energy profile used to rationalize the nickel-catalyzed cascade cyclization/cross-coupling to dibenzazepinones; matches Figure 1 and the article topic."],
+        ["next-024", "scheme-1", "Viewed the dibenzazepine context and cascade alkene diarylation/cyclization strategy developed in the work; matches Scheme 1."],
+        ["next-025", "scheme-2", "Viewed the arylboronic-acid and aryl-bromide scope for the nickel cascade coupling; product structures and yields match Scheme 2."],
+        ["next-026", "scheme-3", "Viewed the hydroarylation/divergent downstream functionalization of the dibenzazepinone core; matches Scheme 3 and the paper's synthetic applications."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03279",
+      "images": [
+        ["next-003", "figure-1", "Viewed the comparison of routes to radioiodinated compounds and the visible-light decarboxylative radioiodination concept used in this work; matches Figure 1."],
+        ["next-027", "scheme-1", "Viewed the substrate-scope panel for photoinduced decarboxylative radioiodination; labeled products and radioiodination outcomes match Scheme 1."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03335",
+      "images": [
+        ["next-004", "figure-1", "Viewed representative benzimidazole-fused isoquinoline and spiro-succinimide motifs motivating the Rh(III) spiroannulation; matches Figure 1."],
+        ["next-028", "scheme-1", "Viewed prior transition-metal spiroannulation precedents and the Rh(III)-catalyzed [4+2] spiroannulation developed in this work; matches Scheme 1."],
+        ["next-029", "scheme-2", "Viewed the proposed Rh(III) catalytic pathway for the [4+2] spiroannulation, including C-H activation and annulation steps; matches Scheme 2."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03740",
+      "images": [
+        ["next-005", "scheme-1", "Viewed the background transformations of o-nitrobenzaldimines and the reductant-free visible-light Davis–Beirut-type reaction introduced in the paper; matches Scheme 1."],
+        ["next-030", "scheme-2", "Viewed the o-nitrobenzaldimine substrate scope under the visible-light conditions; product structures and yields match Scheme 2."],
+        ["next-031", "scheme-3", "Viewed the haloalkane coupling/substrate scope for the visible-light Davis–Beirut-type process; matches Scheme 3."],
+        ["next-032", "scheme-6", "Viewed the plausible radical mechanism proposed for the reductant-free visible-light reaction; intermediates and light-driven sequence match Scheme 6."]
+      ]
+    }
+  ]
+}
