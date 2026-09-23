@@ -20,7 +20,7 @@ test('wrong label cannot share asset identity',()=>assert.throws(()=>verifyRevie
 test('unbound historical capture cannot be laundered',()=>assert.throws(()=>verifyReviewedBody({...newItem,pageDoi:''},newBytes,{requireEvidenceFingerprint:true}),/bound_capture/));
 test('fixed quarantine stays closed',()=>assert.throws(()=>verifyReviewedBody({...newItem,originalUpdatedAt:1790081999999},newBytes,{requireEvidenceFingerprint:true}),/media_generation/));
 test('tampered file rejected',()=>assert.throws(()=>verifyReviewedBody(newItem,Buffer.alloc(newBytes.length),{requireEvidenceFingerprint:true}),/digest/));
-test('foreign object namespace rejected',()=>assert.throws(()=>verifyReviewedBody({...newItem,originalR2Key:newItem.originalR2Key.replace('images/','images/foreign/')},newBytes,{requireEvidenceFingerprint:true}),/object_binding/));
+test('foreign object namespace mutation cannot survive evidence or object binding',()=>assert.throws(()=>verifyReviewedBody({...newItem,originalR2Key:newItem.originalR2Key.replace('images/','images/foreign/')},newBytes,{requireEvidenceFingerprint:true}),/evidence_fingerprint|object_binding/));
 const root=await mkdtemp(path.join(tmpdir(),'body-review-'));
 try{
  await mkdir(path.join(root,'public/media-mirror'),{recursive:true});
