@@ -17,44 +17,70 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Build pinned candidate and install browser
+      - name: Build candidate and install pinned browser and pixel decoder
         run: |
           npm install --no-audit --no-fund
-          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0 pngjs@7.0.0
           npx --no-install playwright install --with-deps webkit >/tmp/gif-paint-install.log 2>&1 || { tail -60 /tmp/gif-paint-install.log; exit 1; }
           npm run build
-      - name: Compare popup rendering surfaces without changing release source
+      - name: Create coordinate-controlled screenshot probes, no product changes
         run: |
           mkdir -p gif-paint
           cat > tests/pr147-paint-isolation.spec.ts <<'TS'
           import { test, expect } from '@playwright/test';
-          import { open, gifFile, originalHash } from './status-image-fixtures';
-          import { expectAnimatedImage } from './animated-image-evidence';
-          test.use({trace:'off',serviceWorkers:'block'});
-          for(const mode of ['baseline','fixed-drawer','top-layer-drawer']) test(mode,async({page},info)=>{
-            const actions=await open(page,390);
-            await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
-            await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
-            const image=actions.locator('[data-action="set-status:to-read"] .status-image');
-            await expect(image).toHaveAttribute('data-image-source','original');
-            const hash=await originalHash(image);
-            const before=await actions.locator('.drawer').boundingBox();
-            if(mode!=='baseline')await actions.locator('.drawer').evaluate((node,mode)=>{
-              const el=node as HTMLElement;const rect=el.getBoundingClientRect();
-              el.style.position='fixed';el.style.left=rect.x+'px';el.style.top=rect.y+'px';el.style.margin='0';el.style.zIndex='10020';
-              if(mode==='top-layer-drawer'){el.setAttribute('popover','manual');el.showPopover();}
-            },mode);
-            const after=await actions.locator('.drawer').boundingBox();
-            await info.attach('condition.json',{body:JSON.stringify({mode,hash,before,after},null,2),contentType:'application/json'});
-            await expectAnimatedImage(image,info);
-            expect(await originalHash(image)).toBe(hash);
+          import { createHash } from 'node:crypto';
+          import { PNG } from 'pngjs';
+          import { open, gifFile, GIF, originalHash } from './status-image-fixtures';
+          test.use({trace:'off',serviceWorkers:'block',viewport:{width:390,height:900},deviceScaleFactor:1});
+          for(const kind of ['plain-offset','gallery','static-offset']) for(const capture of ['clip','viewport']) test(`${kind} ${capture}`,async({page},info)=>{
+            let image;
+            if(kind==='gallery') {
+              const actions=await open(page,390);
+              await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
+              await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
+              image=actions.locator('[data-action="set-status:to-read"] .status-image');
+              await expect(image).toHaveAttribute('data-image-source','original');
+              console.log('ORIGINAL',await originalHash(image));
+            } else {
+              await page.setContent('<img id="test" style="position:absolute;left:79px;top:485px;width:72px;height:36px" alt="Screenshot coordinate control">');
+              image=page.locator('#test');
+              await image.evaluate((node,args)=>{
+                if(args.kind==='static-offset') {
+                  const c=document.createElement('canvas');c.width=120;c.height=60;
+                  const ctx=c.getContext('2d')!;ctx.fillStyle='#f00';ctx.fillRect(0,0,120,60);
+                  (node as HTMLImageElement).src=c.toDataURL();
+                } else (node as HTMLImageElement).src='data:image/gif;base64,'+args.base64;
+              },{kind,base64:GIF.toString('base64')});
+              await expect.poll(()=>image.evaluate(node=>(node as HTMLImageElement).naturalWidth)).toBe(120);
+            }
+            await image.scrollIntoViewIfNeeded();
+            const frames=new Set<string>();const samples:any[]=[];const unique=new Map<string,Buffer>();
+            let failure:unknown;
+            try {
+              await expect.poll(async()=>{
+                const box=(await image.boundingBox())!;
+                const shot=await page.screenshot({...(capture==='clip'?{clip:box}:{}),animations:'allow',scale:'css'});
+                const source=PNG.sync.read(shot);
+                const x=capture==='clip'?0:Math.round(box.x),y=capture==='clip'?0:Math.round(box.y);
+                const w=Math.round(box.width),h=Math.round(box.height);
+                const cut=new PNG({width:w,height:h});
+                PNG.bitblt(source,cut,x,y,w,h,0,0);
+                const hash=createHash('sha256').update(cut.data).digest('hex');
+                frames.add(hash);unique.set(hash,PNG.sync.write(cut));samples.push({at:Date.now(),box,hash,pixel:Array.from(cut.data.subarray(0,4))});
+                return frames.size;
+              },{timeout:6000,intervals:[150,230,310]}).toBeGreaterThan(1);
+            }catch(error){failure=error;}
+            await info.attach('samples.json',{body:JSON.stringify({kind,capture,samples}),contentType:'application/json'});
+            let index=0;for(const bytes of unique.values())await info.attach(`frame-${index++}.png`,{body:bytes,contentType:'image/png'});
+            if(kind==='static-offset') expect(Boolean(failure)).toBe(true);
+            else if(failure)throw failure;
           });
           TS
           git diff --exit-code -- src/ public/ shared/
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-paint-preview.log 2>&1 &
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           exit 1
-      - name: Keep original six-second frame and byte checks in every condition
+      - name: Compare six-second frame checks and static negative controls
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: gif-paint/results.json
         run: |
