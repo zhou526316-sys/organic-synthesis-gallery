@@ -1,0 +1,60 @@
+name: Verify Bridge 2.2.24 live
+on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
+  push:
+    branches: [main]
+    paths: ['audit/automation-triggers/tm224-live.json']
+permissions:
+  contents: read
+concurrency:
+  group: tm224-live
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.event_name == 'push' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Verify fixed installer and standalone mainline from deployed Pages
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          let report={checkedAt:new Date().toISOString(),productionWrites:0,publisherRequests:0,ok:false};
+          for(let n=0;n<12;n++){
+            try{
+              const [a,b]=await Promise.all([
+                fetch(base+'gallery-vpn-bridge.user.js?tm224='+Date.now(),{headers:{'cache-control':'no-cache'}}),
+                fetch(base+'toc-mainline.user.js?tm224='+Date.now(),{headers:{'cache-control':'no-cache'}})
+              ]);
+              if(!a.ok||!b.ok)throw new Error('HTTP '+a.status+'/'+b.status);
+              const installer=await a.text(),mainline=await b.text();
+              const checks={
+                installerVersion:/^\/\/ @version\s+2\.2\.24$/m.test(installer),
+                controller:installer.includes("var CONTROLLER_REVISION = '2.2.24';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.24';"),
+                protocol:installer.includes("var VERSION = '6.2.20';")&&mainline.includes("var VERSION = '6.2.20';"),
+                fallback:installer.includes('sameFigureCurrentSrcFallback')&&mainline.includes('sameFigureCurrentSrcFallback'),
+                tiff:installer.includes("return 'image/tiff'")&&mainline.includes("return 'image/tiff'"),
+                ordering:installer.includes('missing official TOC comes first; then JACS')&&mainline.includes('missing official TOC comes first; then JACS'),
+                guards:['capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch'].every(x=>installer.includes(x)&&mainline.includes(x)),
+                noEval:!(/\beval\s*\(/.test(installer))
+              };
+              if(Object.values(checks).every(Boolean)){report={...report,ok:true,checks,installerBytes:installer.length,mainlineBytes:mainline.length,completedAt:new Date().toISOString()};break;}
+              report={...report,checks,lastAttempt:n+1};
+            }catch(e){report.lastError=String(e.message);report.lastAttempt=n+1;}
+            await sleep(5000);
+          }
+          require('fs').writeFileSync(process.env.RUNNER_TEMP+'/tm224-live.json',JSON.stringify(report,null,2));
+          console.log('TM224_LIVE '+JSON.stringify(report));
+          if(!report.ok)process.exit(1);
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm224-live
+          path: ${{ runner.temp }}/tm224-live.json
+          retention-days: 14
+          if-no-files-found: warn
