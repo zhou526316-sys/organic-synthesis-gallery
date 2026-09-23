@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: d15afca8aead58a5422f7054fde9487d0f637ce1
+          ref: 778740547bd1ecb7d0fc0175744e0727329b4ce9
           persist-credentials: false
       - uses: actions/setup-node@v5
         with:
@@ -42,7 +42,7 @@ jobs:
           const context=await browser.newContext({viewport:{width:390,height:900},serviceWorkers:'block'});
           const page=await context.newPage();
           const started=Date.now();
-          const evidence={site,reviewedCommit:'d15afca8aead58a5422f7054fde9487d0f637ce1',productionWritesAllowed:false,
+          const evidence={site,reviewedCommit:'778740547bd1ecb7d0fc0175744e0727329b4ce9',productionWritesAllowed:false,
             console:[],pageErrors:[],requests:[],responses:[],checks:[]};
           page.on('console',m=>evidence.console.push({at:Date.now()-started,type:m.type(),text:m.text()}));
           page.on('pageerror',e=>evidence.pageErrors.push({at:Date.now()-started,message:e.message,stack:e.stack||''}));
@@ -63,7 +63,7 @@ jobs:
           });
           const response=await page.goto(site,{waitUntil:'domcontentloaded',timeout:45000});
           evidence.entryStatus=response?.status()||0;
-          for(const ms of [0,1000,3000,5000,10000,20000]){
+          for(const ms of [0,500,1000,2500,5000,10000,20000]){
             const elapsed=Date.now()-started;
             if(ms>elapsed) await page.waitForTimeout(ms-elapsed);
             evidence.checks.push(await page.evaluate(at=>({
@@ -74,6 +74,17 @@ jobs:
               cards:document.querySelectorAll('#gallery > .card').length,
               lang:document.documentElement.lang,
               ready:document.readyState,
+              navHidden:document.querySelector('gallery-page-navigation')?.hasAttribute('hidden') ?? null,
+              navDisplay:document.querySelector('gallery-page-navigation') ? getComputedStyle(document.querySelector('gallery-page-navigation')).display : null,
+              navVisibility:document.querySelector('gallery-page-navigation') ? getComputedStyle(document.querySelector('gallery-page-navigation')).visibility : null,
+              bodyScrollHeight:document.body.scrollHeight,
+              htmlScrollHeight:document.documentElement.scrollHeight,
+              clientHeight:document.documentElement.clientHeight,
+              scrollY:window.scrollY,
+              viewport:window.visualViewport?{width:visualViewport.width,height:visualViewport.height,scale:visualViewport.scale,offsetTop:visualViewport.offsetTop}:null,
+              galleryRect:document.querySelector('#gallery')?.getBoundingClientRect().toJSON?.() || null,
+              appRect:document.querySelector('#app')?.getBoundingClientRect().toJSON?.() || null,
+              openDialogs:document.querySelectorAll('dialog[open],[data-gallery-user-cropper],.media-viewer,.image-lightbox').length,
               scripts:Array.from(document.querySelectorAll('script[src]')).map(node=>node.src),
             }),Date.now()-started));
           }
