@@ -1,8 +1,15 @@
 {
-  "requestedAt": "2026-09-23T13:43:40Z",
-  "context": "Inspect the full unpublished current-generation staged body backlog after the 15-minute quiet-tail threshold. Previously staged eligible records must remain candidates alongside newly captured records. Release any ready paired official-TOC/body tail under the existing adaptive policy. No publisher recrawl and no literature-data changes.",
+  "requestedAt": "2026-09-23T13:48:00Z",
+  "context": "Immediately consume the full current-generation unpublished eligible staged body backlog after merging the anti-starvation policy. Include previously staged records alongside new captures. Release at 20-25 articles, after a 15-minute quiet tail, or when the oldest eligible unpublished record has waited at least 30 minutes. Preserve official-TOC pairing, DOI/source identity and all existing validation gates. No publisher recrawl and no literature-data changes.",
   "mediaOnly": true,
   "readOnlyInspect": false,
   "productionLiteratureWrites": false,
-  "publisherRequests": 0
+  "publisherRequests": 0,
+  "expectedPolicy": {
+    "targetArticles": 20,
+    "maxArticles": 25,
+    "quietTailMinutes": 15,
+    "backlogMaxWaitMinutes": 30,
+    "officialTocRequiredInSameBuild": true
+  }
 }
