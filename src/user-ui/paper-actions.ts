@@ -281,6 +281,8 @@ export class GalleryPaperActions extends HTMLElement {
       .status-style-editor .image-options{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       .image-options label{display:flex;align-items:center;gap:4px}.image-options button{border:0;background:transparent;color:#3159bd;padding:4px}
       .image-help{grid-column:1/-1;line-height:1.5;overflow-wrap:anywhere}
+      .image-options .crop-image-entry{background:#eef3ff;border:1px solid #8aa5ef;border-radius:8px;min-height:38px;padding:6px 10px;font-weight:700}
+      .status-original-action[data-image-source='crop']{object-fit:contain!important}
       ${SUMMARY_PANEL_STYLES}
       ${STATUS_PRESENTATION_CSS}
     </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('全文摘要', 'Full-text summary')}</button></div><div class='bar'>
@@ -306,11 +308,12 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private statusVisual(status: NonNullable<ReturnType<typeof store.status>>, className: string): string {
-    if (status.style.imageOriginal && status.style.imageData) {
+    // A retained source does not turn a static crop into original display.
+    if (status.style.imageOriginal && status.style.imageData && !status.style.imageCrop) {
       return `<span class='${className} status-original' title='${escapeHtml(statusLabel(status, this.language))}'>${statusImageTag(status.style, 'status-image', statusLabel(status, this.language))}</span>`;
     }
     const image = status.style.imageData
-      ? `<img class='status-image' src='${escapeHtml(status.style.imageData)}' alt=''>`
+      ? statusImageTag(status.style, 'status-image', statusLabel(status, this.language))
       : '';
     return `<span class='${className} shape-${status.style.shape}' style='background:${rgbCss(status.style.rgb)}'>${image}<span>${escapeHtml(statusLabel(status, this.language))}</span></span>`;
   }
@@ -361,8 +364,8 @@ export class GalleryPaperActions extends HTMLElement {
           <label>${this.tr('颜色', 'Color')}<input type='color' data-status-color='${escapeHtml(status.id)}' value='${rgbToHex(status.style.rgb)}'></label>
           <label>${this.tr('形状', 'Shape')}<select data-status-shape='${escapeHtml(status.id)}'>${SHAPES.map(shape => `<option value='${shape}' ${status.style.shape === shape ? 'selected' : ''}>${shape}</option>`).join('')}</select></label>
           <label>${this.tr('图片', 'Image')}<input type='file' accept='image/png,image/jpeg,image/webp,image/gif' ${this.imageBusy ? 'disabled' : ''} data-status-image='${escapeHtml(status.id)}'></label>
-          <div class='image-options'><label><input type='checkbox' data-status-crop='${escapeHtml(status.id)}'>${this.tr('静态裁切（可选）', 'Static crop (optional)')}</label>${status.style.imageData ? `<button type='button' data-action='view-status-image:${escapeHtml(status.id)}'>${this.tr('查看图片', 'View image')}</button>` : ''}</div>
-          <div class='help image-help'>${this.tr('PNG / JPG / WebP / GIF，最大 30 MB。默认保留原图和动画，仅存在当前浏览器；账号同步预览图。静态裁切最大 20 MB。', 'PNG / JPG / WebP / GIF, up to 30 MB. Originals and animation stay in this browser; accounts sync a preview. Static crop: up to 20 MB.')}</div>
+          <div class='image-options'><label><input type='checkbox' data-status-crop='${escapeHtml(status.id)}'>${this.tr('上传后裁切（可选）', 'Crop after upload (optional)')}</label>${status.style.imageData ? `<button type='button' class='crop-image-entry' ${this.imageBusy ? 'disabled' : ''} data-action='crop-status-image:${escapeHtml(status.id)}'>${this.tr(status.style.imageCrop ? '重新裁切 / 抠图' : '裁切图片 / 抠图', status.style.imageCrop ? 'Edit crop / cutout' : 'Crop image / cutout')}</button><button type='button' data-action='view-status-image:${escapeHtml(status.id)}'>${this.tr('查看图片', 'View image')}</button>${status.style.imageCrop ? `<button type='button' ${this.imageBusy ? 'disabled' : ''} data-action='restore-status-image:${escapeHtml(status.id)}'>${this.tr('恢复原图', 'Restore original')}</button><button type='button' data-action='view-status-original:${escapeHtml(status.id)}'>${this.tr('查看原图', 'View original')}</button>` : ''}` : ''}</div>
+          <div class='help image-help'>${this.tr('PNG / JPG / WebP / GIF，最大 30 MB。已上传整图可直接点“裁切图片”。支持选区、圆形和手动抠图；GIF 裁切为静态图，原图保留，可恢复。账号同步裁切结果与预览，原文件仅存本浏览器。', 'Up to 30 MB. Crop uploaded images directly: rectangle, circle and manual cutout. GIF crops are static and reversible. Accounts sync the crop and preview; original files remain browser-local.')}</div>
           ${status.style.imageData ? `<button class='remove-image' type='button' data-action='clear-status-image:${escapeHtml(status.id)}'>${this.tr('移除图片', 'Remove image')}</button>` : ''}
         </div>`;
         return `<div class='status-row'><div class='status-main'>
@@ -424,7 +427,7 @@ export class GalleryPaperActions extends HTMLElement {
       this.imageMessage = this.tr('正在保存图片…', 'Saving image…');
       this.render();
       try {
-        if (crop) { await store.setImage(status.style, file); this.imageMessage = ''; }
+        if (crop) { const saved = await store.cropStatusImage(status.style, file); this.imageMessage = saved ? this.tr('裁切已保存；显示选区结果，原图可恢复。', 'Crop saved; selected area displayed, original can be restored.') : this.tr('已取消，原设置未改变。', 'Cancelled; previous settings kept.'); }
         else {
           const saved = await store.setOriginalStatusImage(status.style, file);
           this.imageMessage = saved ? this.tr('原图已保存在当前浏览器；刷新后仍可显示。', 'Original saved in this browser and available after reload.') : this.tr('已取消，保留更新后的设置。', 'Cancelled; newer settings kept.');
@@ -435,6 +438,23 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private async action(action: string): Promise<void> {
+    const imageEdit = /^(crop-status-image|restore-status-image|view-status-original):(.+)$/.exec(action);
+    if (imageEdit) {
+      const status = store.status(imageEdit[2]);
+      if (!status?.style.imageData) return;
+      if (imageEdit[1] === 'view-status-original') {
+        await viewStatusImage({ ...status.style, imageData: status.style.imageCrop?.sourcePreview || status.style.imageData, imageCrop: undefined }); return;
+      }
+      if (this.imageBusy) return;
+      this.imageBusy = true; this.imageMessage = this.tr('正在准备图片…', 'Preparing image…'); this.render();
+      try {
+        const saved = imageEdit[1] === 'crop-status-image' ? await store.cropStatusImage(status.style) : store.restoreStatusImage(status.style);
+        this.imageMessage = saved ? this.tr('图片设置已保存。', 'Image settings saved.') : this.tr('已取消或已有更新，保留当前设置。', 'Cancelled or superseded; current settings kept.');
+      } catch (error) { this.imageMessage = statusImageError(error); }
+      finally { this.imageBusy = false; this.render(); }
+      return;
+    }
+
     if (action === 'favorite') {
       if (this.panel === 'favorite') this.closePanel();
       else this.openPanel('favorite');

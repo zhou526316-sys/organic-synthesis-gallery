@@ -19,7 +19,7 @@ function signatureType(bytes: Uint8Array): string {
   return '';
 }
 
-export async function prepareStatusImage(file: File): Promise<Required<StatusImageStyle>> {
+export async function prepareStatusImage(file: File): Promise<Required<Pick<StatusImageStyle, 'imageData' | 'imageOriginal'>>> {
   if (!file.size) throw new Error('image_decode_failed');
   if (file.size > MAX_STATUS_IMAGE_BYTES) throw new Error('image_too_large');
   const type = signatureType(new Uint8Array(await file.slice(0, 12).arrayBuffer()));
