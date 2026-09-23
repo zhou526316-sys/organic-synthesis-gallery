@@ -23,7 +23,7 @@ jobs:
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/gif-paint-install.log 2>&1 || { tail -60 /tmp/gif-paint-install.log; exit 1; }
           npm run build
-      - name: Bisect rendering styles only inside disposable test contexts
+      - name: Partition exact stylesheet rules in fresh disposable contexts
         run: |
           mkdir -p gif-paint
           cat > tests/pr147-paint-isolation.spec.ts <<'TS'
@@ -31,21 +31,21 @@ jobs:
           import { open, gifFile, originalHash } from './status-image-fixtures';
           import { expectAnimatedImage } from './animated-image-evidence';
           test.use({trace:'off',serviceWorkers:'block'});
-          for(const mode of ['baseline','overflow-visible','overflow-scroll','intrinsic-size','without-shadow-css','root-copy']) test(mode,async({page},info)=>{
+          for(const [start,end] of [[0,0],[0,1],[0,.5],[.5,1],[0,.25],[.25,.5],[.5,.75],[.75,1]]) test(`omit rules ${start}-${end}`,async({page},info)=>{
             const actions=await open(page,390);
             await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
             await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
-            let image=actions.locator('[data-action="set-status:to-read"] .status-image');
+            const image=actions.locator('[data-action="set-status:to-read"] .status-image');
             await expect(image).toHaveAttribute('data-image-source','original');
             const hash=await originalHash(image);
-            if(mode.startsWith('overflow-'))await actions.locator('.drawer').evaluate((node,value)=>(node as HTMLElement).style.overflow=value,mode.slice(9));
-            if(mode==='intrinsic-size')await image.evaluate(node=>(node as HTMLElement).style.cssText='width:120px;height:60px;object-fit:fill');
-            if(mode==='without-shadow-css')await actions.evaluate(host=>{host.shadowRoot!.querySelectorAll('style').forEach(s=>s.remove());});
-            if(mode==='root-copy'){
-              await image.evaluate(node=>{const box=node.getBoundingClientRect();const root=node.getRootNode() as ShadowRoot;const copy=node.cloneNode(true) as HTMLImageElement;copy.id='root-gif-copy';copy.style.cssText=`position:fixed;left:${box.x}px;top:${box.y}px;width:${box.width}px;height:${box.height}px;z-index:999999;pointer-events:auto`;root.appendChild(copy);});
-              image=actions.locator('#root-gif-copy');
-            }
-            await info.attach('mode.json',{body:JSON.stringify({mode,hash}),contentType:'application/json'});
+            const rules=await actions.evaluate((host,bounds)=>{
+              const sheets=Array.from(host.shadowRoot!.querySelectorAll('style')).map(el=>el.sheet!).filter(Boolean);
+              const all=sheets.flatMap(sheet=>Array.from(sheet.cssRules).map(rule=>rule.cssText));
+              let offset=0;
+              for(const sheet of sheets){const len=sheet.cssRules.length;for(let i=len-1;i>=0;i--){const index=offset+i;if(index>=Math.floor(all.length*bounds[0])&&index<Math.floor(all.length*bounds[1]))sheet.deleteRule(i);}offset+=len;}
+              return {all,removed:all.slice(Math.floor(all.length*bounds[0]),Math.floor(all.length*bounds[1]))};
+            },[start,end]);
+            await info.attach('rules.json',{body:JSON.stringify({start,end,hash,...rules},null,2),contentType:'application/json'});
             await expectAnimatedImage(image,info);
             expect(await originalHash(image)).toBe(hash);
           });
@@ -54,7 +54,7 @@ jobs:
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-paint-preview.log 2>&1 &
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           exit 1
-      - name: Retain frame and byte checks with tracing disabled
+      - name: Keep real pixel, byte and six-second acceptance criteria
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: gif-paint/results.json
         run: |
