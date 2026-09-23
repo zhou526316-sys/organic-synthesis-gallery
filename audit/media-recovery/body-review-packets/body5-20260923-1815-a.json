@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260923-1815-a",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T10:15:00Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10741696337,
+  "evidenceArchiveSha256": "00f91132e0070d38211300cf89b5afedddb7e712c6346b1d3be56008de6f7929",
+  "evidenceRunId": 35841830824,
+  "approvedCount": 18,
+  "reviewMethod": "All 18 selected current-generation stored files were independently rehashed and matched to the frozen 17:15 evidence snapshot; task/page/article/source DOI, figure identity, original labels/captions and content-addressed object metadata were checked. SVG/PNG files were rendered/decoded and individually viewed on five contact sheets against the current paper titles and captions. No publisher recrawl, new literature/scope decision, TOC reassignment, old sealed-media release or automatic marker-only approval was used.",
+  "quality": "15 SVG and 3 PNG files are preserved as captured. PNG files are 520 px wide captures and are not represented as publisher-maximum resolution. Existing correct TOCs and body images must not be replaced by different files without a separate replacement review.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.orglett.6c03473",
+      "images": [
+        [
+          "next-001",
+          "figure-1",
+          "Viewed carbazole C1-amination motivation, prior C1 functionalization strategies and this Pd/NBE amination concept; matches Figure 1 and the article topic."
+        ],
+        [
+          "next-002",
+          "figure-2",
+          "Viewed the Pd/NBE C1-amination catalytic cycle with norbornene insertion, C-H activation, oxidative addition and reductive elimination; matches Figure 2."
+        ],
+        [
+          "next-003",
+          "scheme-1",
+          "Viewed the asymmetric/unsymmetric carbazole and amine substrate scope for Pd/NBE C1-amination, including failed examples; matches Scheme 1."
+        ],
+        [
+          "next-004",
+          "scheme-2",
+          "Viewed preparative-scale C1-amination examples under the reported standard conditions; matches Scheme 2 scale-up reactions."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03511",
+      "images": [
+        [
+          "next-005",
+          "scheme-2",
+          "Viewed installation of the 9-phenyl-9-fluorenyl protecting group across amino ester hydrochlorides with the stated yields; matches Scheme 2 and the SN1/protecting-group paper."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c10810",
+      "images": [
+        [
+          "next-006",
+          "figure-2",
+          "Viewed tridentate anionic ligand rationale, nickel redox/CV data and cross-electrophile coupling rate-matching experiments; matches Figure 2."
+        ],
+        [
+          "next-007",
+          "figure-4",
+          "Viewed the alkyl-bromide multivariate linear regression, descriptors and KIE analysis used to rationalize reactivity; matches Figure 4."
+        ],
+        [
+          "next-008",
+          "figure-9",
+          "Viewed threshold/classification plots for poor-performing aryl, heteroaryl and alkyl halides with representative substrates; matches Figure 9."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03340",
+      "images": [
+        [
+          "next-009",
+          "figure-1",
+          "Viewed tetrahydropyrano-indole motifs in bioactive molecules; matches Figure 1 introductory structures."
+        ],
+        [
+          "next-010",
+          "scheme-1",
+          "Viewed transition-metal diyne annulation precedents and the Cu-catalyzed formal [5+1] annulation developed in this work; matches Scheme 1."
+        ],
+        [
+          "next-011",
+          "scheme-2",
+          "Viewed diyne substrate scope for the copper-catalyzed annulation with 1H-indole-2-ethanol; matches Scheme 2."
+        ],
+        [
+          "next-012",
+          "scheme-3",
+          "Viewed indole-2-ethanol substrate scope with the model diyne and tetrahydropyrano-indole products; matches Scheme 3."
+        ],
+        [
+          "next-013",
+          "scheme-4",
+          "Viewed preparative-scale synthesis and downstream product transformations; matches Scheme 4."
+        ],
+        [
+          "next-014",
+          "scheme-5",
+          "Viewed the proposed Cu-mediated vinyl-cation annulation/protodemetalation pathway; matches Scheme 5 mechanism."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03636",
+      "images": [
+        [
+          "next-015",
+          "scheme-1",
+          "Viewed arylboronic-acid scope for nickel-catalyzed carbonylative formation of 1,6-diketones; matches Scheme 1."
+        ],
+        [
+          "next-016",
+          "scheme-2",
+          "Viewed cycloalkylsilyl-peroxide scope and resulting 1,6-diketones under CO; matches Scheme 2."
+        ],
+        [
+          "next-017",
+          "scheme-3",
+          "Viewed radical-scavenger control, scale-up and reduction of the diketone product; matches Scheme 3."
+        ],
+        [
+          "next-018",
+          "scheme-4",
+          "Viewed the proposed nickel cycle with silyl-peroxide O-radical formation, beta-scission, CO insertion and coupling; matches Scheme 4 mechanism."
+        ]
+      ]
+    }
+  ]
+}
