@@ -1,11 +1,12 @@
 import { installGalleryPerformanceRuntime } from './performance-runtime';
+import { validChineseTitle } from '../shared/chinese-title-overrides.js';
 
 const ZH_CACHE_KEY = 'organic-gallery-zh-title-cache-v2';
 const restoreLegacyMediaListeners = installGalleryPerformanceRuntime();
 
 async function preloadChineseTitleCache(): Promise<void> {
   try {
-    const response = await fetch(new URL('./title-translations-zh.json', document.baseURI), { cache: 'force-cache' });
+    const response = await fetch(new URL('./title-translations-zh.json', document.baseURI), { cache: 'no-cache' });
     if (!response.ok) return;
     const payload = await response.json() as { translations?: Array<{ title?: unknown; zh?: unknown }> };
     const cached = JSON.parse(localStorage.getItem(ZH_CACHE_KEY) || '{}') as Record<string, unknown>;
@@ -13,7 +14,7 @@ async function preloadChineseTitleCache(): Promise<void> {
       if (typeof item.title !== 'string' || typeof item.zh !== 'string') continue;
       const title = item.title.trim();
       const zh = item.zh.trim();
-      if (title && zh) cached[title] = zh;
+      if (title && validChineseTitle(zh)) cached[title] = zh;
     }
     localStorage.setItem(ZH_CACHE_KEY, JSON.stringify(cached));
   } catch {

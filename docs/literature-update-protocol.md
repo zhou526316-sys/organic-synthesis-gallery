@@ -133,3 +133,12 @@ Inspect the actual run. If the triggering task ends after the push, later tasks 
 Morning and evening follow identical staged rules: independent machine audit approximately 06:55/16:55, assistant main review 07:05/17:05, recovery 07:35/17:35, production release 08:00/18:00 only. Do not self-disable, reschedule, or create replacement tasks while executing a scheduled run. Media remains Tampermonkey/VPN Bridge only.
 
 Before final user-visible reporting, synchronize the full response under audit/gpt-responses as required by PROJECT_RULES.md. Report actual published and deferred counts, source limitations, commits/runs, deployment/online verification, TOC demand and separate publication/closure status.
+
+
+## User scope corrections and bilingual title contract — 2026-09-23
+
+Read `audit/literature-scope-corrections.json` before reviewing or publishing, including already visible DOI(s). Explicit exclusions supersede older include decisions; they do not establish a blanket ban on all polymer or biocatalytic methods. The machine handoff includes registered corrections still visible in the Gallery and marks them `scopeCorrection`; these are correction candidates, not newly discovered publisher records. Respect the fixed 08:00/18:00 production-data release slots and report queued removals separately from actual removals.
+
+For every include, record article-specific primary contribution, preparative transformation and evidence for scope/general synthetic utility. Sequence/material/interfacial performance, membrane activity, AI protein/domain design or pathway engineering is not enough merely because a product is synthesized. Do not reuse a generic challenge paragraph as evidence. Preserve genuine small-molecule biocatalysis and enabling total synthesis. Recheck comparable boundary entries without blanket deletion.
+
+Write a checked `titleZh` alongside every new accepted English title before release; use chemical terminology faithfully and preserve DOI identity. The release writer requires a usable Chinese title and persists it, using an existing verified translation only where title identity matches. Translation failure is not permission to disguise the English original as Chinese. The browser must render available inline/bundled translations without an API request or storage requirement. Known user-scope exclusions must be removed from all duplicate static datasets at the fixed release, not just the rolling file.

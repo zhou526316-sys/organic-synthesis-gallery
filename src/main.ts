@@ -1,4 +1,5 @@
 import { api } from './platform-api';
+import { chineseTitle, validChineseTitle } from '../shared/chinese-title-overrides.js';
 import './styles.css';
 import { mountUserShell } from './user-shell';
 import { earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
@@ -8,6 +9,7 @@ import { store } from './user-ui/shared';
 interface Paper {
   journal: string;
   title: string | null;
+  titleZh?: string;
   doi: string | null;
   date: string;
   url: string | null;
@@ -369,6 +371,7 @@ function mergePapers(base: Paper[], additions: Paper[]): Paper[] {
     const existing = (doi ? byDoi.get(doi) : undefined) || (title ? byTitle.get(title) : undefined);
     if (existing) {
       if (!existing.title && paper.title) existing.title = paper.title;
+      if (validChineseTitle(paper.titleZh)) existing.titleZh = paper.titleZh;
       if (!existing.doi && paper.doi) existing.doi = paper.doi;
       if (!existing.url && paper.url) existing.url = paper.url;
       if (paper.synthesisType) existing.synthesisType = paper.synthesisType;
@@ -395,7 +398,7 @@ function prettyDate(value: string): string {
 
 function visibleTitle(paper: Paper): string {
   if (!paper.title) return t('titlePending');
-  if (language === 'zh') return zhTitleCache.get(paper.title) || paper.title;
+  if (language === 'zh') return chineseTitle(paper, zhTitleCache) || paper.title;
   return paper.title;
 }
 
@@ -424,7 +427,7 @@ function filteredPapers(): Paper[] {
       if (!needle) return true;
       return [
         paper.title || '',
-        paper.title ? zhTitleCache.get(paper.title) || '' : '',
+        chineseTitle(paper, zhTitleCache),
         paperDoi(paper) || '',
         paper.journal,
         paper.authors.join(' '),
@@ -904,13 +907,13 @@ async function resolveTitles(): Promise<void> {
 }
 
 async function loadTranslations(): Promise<void> {
-  const missing = [...new Set(papers.map(paper => paper.title).filter((title): title is string => Boolean(title)))].filter(title => !zhTitleCache.has(title));
+  const missing = [...new Set(papers.filter(paper => !chineseTitle(paper, zhTitleCache)).map(paper => paper.title).filter((title): title is string => Boolean(title)))];
   for (let offset = 0; offset < missing.length; offset += 100) {
     try {
       const response = await api.post('/api/title-translations/zh', { titles: missing.slice(offset, offset + 100) });
       const payload = response.data as { translations?: Array<{ title?: unknown; zh?: unknown }> };
       for (const item of payload.translations || []) {
-        if (typeof item.title === 'string' && typeof item.zh === 'string' && item.zh.trim()) zhTitleCache.set(item.title, item.zh.trim());
+        if (typeof item.title === 'string' && validChineseTitle(item.zh)) zhTitleCache.set(item.title, String(item.zh).trim());
       }
     } catch {
       // English titles remain valid fallback.

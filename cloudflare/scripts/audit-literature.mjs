@@ -4,6 +4,8 @@ import path from 'node:path';
 import { isExcludedDoi } from '../../shared/literature-policy.js';
 import { TARGET_JOURNALS, effectiveJournalStart } from '../../shared/literature-journals.js';
 
+import { loadScopeCorrections, withScopeCorrections } from '../../scripts/lib/scope-corrections.mjs';
+
 const TIME_ZONE = 'Asia/Shanghai';
 
 function dateInTimeZone(date = new Date(), timeZone = TIME_ZONE) {
@@ -385,7 +387,7 @@ function compactCandidate(c) {
     dateUnverified: !c.date,
     lateIndexed: Boolean(c.date && c.date < effectiveStart && createdDiscovered),
     safetyTail: Boolean(c.date && c.date < effectiveStart && c.date >= (journal ? rescueStartForJournal(journal) : RESCUE_START)),
-    reviewPriority: retainForReview(c) ? 'high' : 'normal',
+    reviewPriority: c.scopeCorrection || retainForReview(c) ? 'high' : 'normal',
     abstract: (c.abstract || '').slice(0, 1800),
   };
 }
@@ -427,6 +429,10 @@ const rawMissing = universe.filter(c => !galleryDois.has(c.doi));
 const reviewableMissing = rawMissing.filter(c => !isExcludedDoi(c.doi));
 const reviewedExcluded = reviewableMissing.filter(c => reviewedExclusions.has(c.doi));
 const missing = reviewableMissing.filter(c => !reviewedExclusions.has(c.doi));
+// Existing wrong cards are not discovered by a missing-DOI-only audit.
+// Add explicit correction candidates without inflating source-family counts.
+const scopeCorrections = await loadScopeCorrections();
+missing.splice(0, missing.length, ...withScopeCorrections(missing, scopeCorrections, galleryDois));
 const missingCandidates = missing
   .sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.journal.localeCompare(b.journal) || String(a.title).localeCompare(String(b.title)))
   .map(compactCandidate);
@@ -582,6 +588,7 @@ const report = {
     closureCoverageAnomalies: closureCoverageAnomalies.length,
     historicalCoverageLosses: historicalCoverageLosses.length,
     unresolved: missing.length,
+    scopeCorrectionsPending: missing.filter(candidate => candidate.scopeCorrection).length,
     excludedByPolicy: excludedUniverse.length,
   },
   closure: {
@@ -625,6 +632,7 @@ const unresolvedReviewCandidates = missingCandidates.map(candidate => ({
   lateIndexed: candidate.lateIndexed,
   safetyTail: candidate.safetyTail,
   reviewPriority: candidate.reviewPriority,
+  ...(candidate.scopeCorrection ? { scopeCorrection: candidate.scopeCorrection } : {}),
 }));
 
 const compactSourceHealth = Object.fromEntries(Object.entries(sourceFamilyHealth).map(([journal, health]) => [journal, {

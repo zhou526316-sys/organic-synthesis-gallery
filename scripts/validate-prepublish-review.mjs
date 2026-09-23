@@ -2,6 +2,8 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 
+import { loadScopeCorrections, scopeDecisionFailures } from './lib/scope-corrections.mjs';
+
 const ROOT = process.cwd();
 const args = process.argv.slice(2);
 const reviewFile = args.find(arg => !arg.startsWith('--')) || process.env.PREPUBLISH_FILE;
@@ -42,6 +44,7 @@ const expectedByDoi = new Map(unresolved.map(item => [normalizeDoi(item?.doi), i
 check(!expectedByDoi.has('') && expectedByDoi.size === unresolved.length, 'handoff: empty or duplicate candidate DOI');
 const decisions = Array.isArray(review?.decisions) ? review.decisions : [];
 check(Array.isArray(review?.decisions), 'semantic: decisions array missing');
+failures.push(...scopeDecisionFailures(decisions, await loadScopeCorrections(ROOT)));
 const decisionDois = decisions.map(item => normalizeDoi(item?.doi)).filter(Boolean);
 check(decisions.length === unresolved.length, 'semantic: decision count differs from complete handoff');
 check(new Set(decisionDois).size === decisions.length, 'semantic: duplicate or empty DOI decision');

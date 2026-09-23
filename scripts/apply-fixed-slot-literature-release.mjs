@@ -1,6 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
-import { gunzipSync } from 'node:zlib';
+import { gunzipSync, gzipSync } from 'node:zlib';
+import { chineseTitle, validChineseTitle } from '../shared/chinese-title-overrides.js';
+import { loadScopeCorrections } from './lib/scope-corrections.mjs';
 import path from 'node:path';
 import { isExcludedDoi } from '../shared/literature-policy.js';
 
@@ -66,6 +68,18 @@ assert(bundle.markerFields?.stagingReviewBlobSha === stagingBlob, 'strict bundle
 assert(bundle.markerFields?.handoffBlobSha === handoffBlob, 'strict bundle handoff SHA mismatch');
 assert(bundle.markerFields?.auditBlobSha === auditBlob, 'strict bundle audit SHA mismatch');
 
+const scopeCorrections = await loadScopeCorrections(ROOT);
+const beforeProductionDois = await loadProductionDois();
+for (const correction of scopeCorrections) {
+  const doi = normalizeDoi(correction.doi);
+  assert(!(bundle.markerFields.publishableDois || []).includes(doi), `explicitly excluded DOI cannot be restored: ${doi}`);
+  if (beforeProductionDois.has(doi)) assert((bundle.markerFields.rejectedDois || []).includes(doi), `live scope correction missing from reviewed release: ${doi}`);
+}
+// Validate titles before writing any formal or production artifact.
+for (const row of bundle.formalReview.accepted || []) {
+  assert(validChineseTitle(chineseTitle(row)), `missing reviewed Chinese title for accepted DOI: ${row.doi}`);
+}
+
 const formalPath = bundle.markerFields.reviewFile;
 const queuePath = bundle.markerFields.pendingQueueFile;
 await writeFile(path.resolve(ROOT, formalPath), pretty(bundle.formalReview));
@@ -87,7 +101,8 @@ for (const row of bundle.formalReview.accepted || []) {
     new: true, authors: Array.isArray(row.authors) ? row.authors : [], addedDate: slot.slice(0, 10),
   };
   const old = byDoi.get(doi);
-  if (old?.titleZh) card.titleZh = old.titleZh;
+  card.titleZh = chineseTitle({ ...row, titleZh: row.titleZh || old?.titleZh });
+  assert(validChineseTitle(card.titleZh), `missing reviewed Chinese title for accepted DOI: ${doi}`);
   if (row.totalSynthesis === true) { card.totalSynthesis = true; card.cardLabel = row.cardLabel || 'Total Synthesis'; }
   byDoi.set(doi, card);
 }
@@ -100,6 +115,19 @@ const rollingOut = {
   policyFilteredAt: slot.slice(0, 10),
 };
 await writeFile(path.resolve(ROOT, rollingPath), pretty(rollingOut));
+
+// Remove rejected/deferred entries from every duplicate static input, not only rolling.
+for (const file of OPTIONAL_SUPPLEMENTS.filter(file => file !== rollingPath)) {
+  let payload;
+  try { payload = await readJson(file); } catch (error) { if (error.code === 'ENOENT') continue; throw error; }
+  if (!Array.isArray(payload.papers)) continue;
+  const filtered = payload.papers.filter(row => !forbidden.has(normalizeDoi(row.doi || row.url)));
+  if (filtered.length !== payload.papers.length) await writeFile(path.resolve(ROOT, file), pretty({ ...payload, papers: filtered }));
+}
+const baselinePath = path.resolve(ROOT, 'public/papers.gz.b64');
+const baselineRows = JSON.parse(gunzipSync(Buffer.from((await readFile(baselinePath, 'utf8')).trim(), 'base64')).toString('utf8'));
+const baselineKept = baselineRows.filter(row => !forbidden.has(normalizeDoi(row.doi || row.url)));
+if (baselineKept.length !== baselineRows.length) await writeFile(baselinePath, gzipSync(Buffer.from(JSON.stringify(baselineKept))).toString('base64') + '\n');
 
 const productionDois = await loadProductionDois();
 for (const doi of bundle.markerFields.publishableDois || []) assert(productionDois.has(normalizeDoi(doi)), `publishable DOI absent after production write: ${doi}`);
