@@ -1,0 +1,58 @@
+{
+  "recordedAt": "2026-09-23T11:55:51+08:00",
+  "userInstruction": "光效粗细说的是卡片的光效，按钮不需要",
+  "status": "candidate_corrected_not_merged_or_deployed",
+  "pr": 147,
+  "head": "5bf098d7cfb70bee03feca8ae953fddb33ea613e",
+  "correctedScope": {
+    "surface": "Entire literature card (#gallery > .card), not buttons or state chips.",
+    "controls": ["卡片光效 / Card glow", "卡片光效粗细 / Card glow thickness"],
+    "choices": ["Off", "Soft", "Breathing", "Orbit", "Rainbow"],
+    "width": "1–6px, using the existing per-status preference",
+    "buttons": "Decorative glow removed. Existing color, uploaded image and visible status-caption code retained.",
+    "cardOverlay": "Inset, border-box, pointer-events:none; no card/button dimensions intentionally changed.",
+    "off": "Disables the card effect and supersedes the old unconditional card border animation."
+  },
+  "firstCorrectedCandidate": {
+    "head": "54f61a2b06524d16320a349a7e0f351a6e0bc42a",
+    "widthRun": 35815577994,
+    "webkitArtifact": 10731502155,
+    "webkitArtifactSha256": "35723f6e13afaa658f615de9c8d0db59fdab8382ffd20efe3592fc9c5dd08618",
+    "webkitPassed": 8,
+    "webkitFailed": 3,
+    "failureDetails": [
+      "Two added target tests used a text selector that matched both the control title and its help text. Fixed by selecting the title's first-child span; assertions retained.",
+      "Rainbow shadow rule lost to the base card rule's specificity. Product selector repaired in3855cf559113d84bc6ef02bc08fba9b6b6f5d06b; the expected multicolor shadow checks retained."
+    ],
+    "passedCases": "Both real-drag card thickness cases, keyboard, save rollback, bounded preferences, cancelled/closed preview restoration, original GIF-byte/caption preservation and feedback-launcher restoration.",
+    "originalRun": 35815578054,
+    "originalArtifact": 10731686666,
+    "originalArtifactSha256": "73f54b4ea26b500d7e6c37b64f4246d5e5d6ddda2910df46b8be771d34266173",
+    "originalPassed": 15,
+    "originalFailed": 2,
+    "originalFailures": "390px and1280px original-GIF frame-change checks saw a single screenshot hash within6s. This is retained failure evidence, not proof that GIF fails for every user. No animation assertion removed or timeout relaxed."
+  },
+  "latestVerification": {
+    "head": "5bf098d7cfb70bee03feca8ae953fddb33ea613e",
+    "cardWidthRun": 35816110874,
+    "originalRun": 35816110880,
+    "presentationRun": 35816110873,
+    "performanceRun": 35816110941,
+    "qualityRun": 35816110897,
+    "observedStatus": "in_progress",
+    "migrationRun": 35816110887,
+    "migrationConclusion": "success",
+    "dataRun": 35816110883,
+    "dataConclusion": "success",
+    "allChecksComplete": false,
+    "liveVerificationPerformed": false
+  },
+  "scope": {
+    "feedback32Closed": false,
+    "literatureDataChanged": false,
+    "captureBridgeChanged": false,
+    "productionReaderEventsWritten": false,
+    "backendCountingChanged": false,
+    "intelligentCroppingImplemented": false
+  }
+}
