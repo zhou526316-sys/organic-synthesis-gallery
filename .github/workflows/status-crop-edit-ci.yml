@@ -1,0 +1,61 @@
+name: Status crop and cutout regression
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/user-ui/**'
+      - 'tests/status-crop-edit.spec.ts'
+      - 'tests/crop-pixels.test.cjs'
+      - '.github/workflows/status-crop-edit-ci.yml'
+permissions:
+  contents: read
+concurrency:
+  group: status-crop-edit-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  crop:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [webkit, chromium]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned browser, typecheck and build
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/crop-browser.log 2>&1 || { tail -60 /tmp/crop-browser.log; exit 1; }
+          mkdir -p crop-results
+          npx tsc --noEmit
+          npm run build
+          npx --no-install esbuild src/user-ui/image-cropper.ts --bundle --platform=node --format=cjs --outfile=/tmp/gallery-crop.cjs
+          node --test tests/crop-pixels.test.cjs > crop-results/pixels-unit.log
+          git archive --format=zip HEAD src shared tests package.json > crop-results/reviewed-source.zip
+      - name: Start isolated preview
+        run: |
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/crop-preview.log 2>&1 &
+          for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
+          cat /tmp/crop-preview.log
+          exit 1
+      - name: Verify actual crop pixels, alpha, reload, original restore and save failures
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: crop-results/results.json
+        run: |
+          git rev-parse HEAD > crop-results/tested-commit.txt
+          sha256sum src/user-ui/image-cropper.ts src/user-ui/shared.ts tests/status-crop-edit.spec.ts > crop-results/source-sha256.txt
+          set -o pipefail
+          npx --no-install playwright test tests/status-crop-edit.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=crop-results/tests 2>&1 | tee crop-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: status-crop-${{ matrix.browser }}
+          path: crop-results/
+          retention-days: 7
+          if-no-files-found: warn
