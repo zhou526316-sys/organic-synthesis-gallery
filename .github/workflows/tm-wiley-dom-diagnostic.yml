@@ -1,0 +1,51 @@
+name: Wiley zero-figure DOM diagnostic regression
+
+on:
+  push:
+    branches: [diag/tm228-wiley-zero-figure-dom]
+    paths:
+      - '.github/workflows/tm-wiley-dom-diagnostic.yml'
+      - 'public/toc-mainline.user.js'
+      - 'scripts/test-tm-wiley-dom-diagnostic.mjs'
+      - 'scripts/test-tm-paired-capture.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate diagnostic-only source contract
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.27';" public/toc-mainline.user.js
+          grep -F 'wileyZeroFigureDomDiagnostic' public/toc-mainline.user.js
+          grep -F "job.publisher === 'wiley' && result.figures.discovered === 0" public/toc-mainline.user.js
+      - name: Run controlled Chromium diagnostic regression
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node scripts/test-tm-wiley-dom-diagnostic.mjs
+          node scripts/test-tm-paired-capture.mjs
+      - name: Assert no capture policy/version migration
+        run: |
+          set -euo pipefail
+          grep -F "var VERSION = '6.2.20';" public/toc-mainline.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.27';" public/toc-mainline.user.js
+          git diff main...HEAD -- public/toc-mainline.user.js scripts/test-tm-wiley-dom-diagnostic.mjs .github/workflows/tm-wiley-dom-diagnostic.yml > "$RUNNER_TEMP/wiley-diag.diff" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wiley-zero-figure-diagnostic-tested
+          path: |
+            ${{ runner.temp }}/wiley-diag.diff
+          retention-days: 7
+          if-no-files-found: warn
