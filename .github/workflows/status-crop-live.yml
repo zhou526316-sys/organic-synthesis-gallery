@@ -1,0 +1,72 @@
+name: Verify deployed crop editing and reversible cutouts
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/status-crop-live.yml']
+permissions:
+  contents: read
+concurrency:
+  group: status-crop-live
+  cancel-in-progress: false
+jobs:
+  live:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [webkit, chromium]
+        entry: [github, worker]
+        include:
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      LIVE_SITE_URL: ${{ matrix.site }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 583c084322d456a01f32b884f3cab7e9638e7a66
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install the reviewed pinned browser, without rebuilding the public site
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/crop-live-browser.log 2>&1 || { tail -60 /tmp/crop-live-browser.log; exit 1; }
+      - name: Record real entry response and reviewed acceptance source
+        run: |
+          mkdir -p crop-live-results
+          git rev-parse HEAD > crop-live-results/reviewed-commit.txt
+          sha256sum tests/status-crop-edit.spec.ts src/user-ui/image-cropper.ts src/user-ui/status-image-edit.ts src/user-ui/status-image-assets.ts > crop-live-results/source-sha256.txt
+          node --input-type=module <<'NODE'
+          import {writeFile} from 'node:fs/promises';
+          const site=process.env.LIVE_SITE_URL;
+          const evidence={site,checkedAt:new Date().toISOString(),reviewedCommit:'583c084322d456a01f32b884f3cab7e9638e7a66',productionWritesAllowed:false,apiMocked:true,physicalDeviceTest:false,fallbackPagesChecked:false};
+          try {
+            const response=await fetch(site,{headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(15000)});
+            evidence.status=response.status;evidence.url=response.url;
+            const html=await response.text();
+            evidence.scripts=[...html.matchAll(/src=["']([^"']+\.js)["']/g)].map(match=>new URL(match[1],site).href);
+            evidence.available=response.ok;
+          } catch(error) { evidence.available=false;evidence.error=String(error); }
+          await writeFile('crop-live-results/entry.json',JSON.stringify(evidence,null,2));
+          console.log(JSON.stringify(evidence));
+          if(!evidence.available)process.exitCode=1;
+          NODE
+      - name: Execute unchanged ten crop UI cases on the deployed entry
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: crop-live-results/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/status-crop-edit.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=crop-live-results/tests 2>&1 | tee crop-live-results/tests.log
+          git diff --exit-code -- src/ tests/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: crop-live-${{ matrix.entry }}-${{ matrix.browser }}
+          path: crop-live-results/
+          retention-days: 7
+          if-no-files-found: error
