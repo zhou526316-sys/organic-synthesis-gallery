@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T17:16:00+08:00",
-  "task": "Continue body publication and evidence-driven Bridge update after PR162",
+  "requestedAt": "2026-09-23T20:29:00+08:00",
+  "task": "Continue bounded semantic review and publication of stored body figures only",
   "mode": "read-only-evidence",
-  "notes": "User requested continued body publication and a new capture-script update. Reuse the existing bounded reader and current 20-article config. Previous read preceded deployment of body20; refresh once to avoid selecting its now-live files. Read current full stage/report indices and exact stored bytes; no publisher requests, R2 changes, promotion, literature changes, or schedule changes. Script changes require separately tested PR and must retain DOI, tab/lease, generation and receipt guards."
+  "notes": "Refresh exactly once because the latest confirmed stage/report snapshot advanced after the prior 19:28 Beijing review artifact. Read the full current stage/report indices, deployed media index/ledger and exact stored bytes through the existing bounded reader. Keep the current 20-article read config and scope hold. No publisher requests, R2/D1 writes, direct import/repair, promotion, literature/card/title/scope changes, user-script changes, or schedule changes. Reuse unchanged published DOI+figure+SHA256+evidence conclusions and preserve parallel work."
 }
