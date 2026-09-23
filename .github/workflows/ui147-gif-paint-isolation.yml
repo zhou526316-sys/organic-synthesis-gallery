@@ -8,7 +8,7 @@ permissions:
 jobs:
   isolate:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,7 +23,7 @@ jobs:
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/gif-paint-install.log 2>&1 || { tail -60 /tmp/gif-paint-install.log; exit 1; }
           npm run build
-      - name: Create isolated source and parent-box probes without touching release code
+      - name: Compare popup rendering surfaces without changing release source
         run: |
           mkdir -p gif-paint
           cat > tests/pr147-paint-isolation.spec.ts <<'TS'
@@ -31,23 +31,21 @@ jobs:
           import { open, gifFile, originalHash } from './status-image-fixtures';
           import { expectAnimatedImage } from './animated-image-evidence';
           test.use({trace:'off',serviceWorkers:'block'});
-          for(const mode of ['baseline','overlay-contents','overlay-height','fresh-url','document-load','body-copy']) test(mode,async({page},info)=>{
+          for(const mode of ['baseline','fixed-drawer','top-layer-drawer']) test(mode,async({page},info)=>{
             const actions=await open(page,390);
             await actions.locator('input[data-status-image="to-read"]').setInputFiles(gifFile);
             await expect(actions.locator('[data-status-image-message]')).toContainText(/原图已保存|Original saved/);
-            let image=actions.locator('[data-action="set-status:to-read"] .status-image');
+            const image=actions.locator('[data-action="set-status:to-read"] .status-image');
             await expect(image).toHaveAttribute('data-image-source','original');
             const hash=await originalHash(image);
-            const before=await page.evaluate(()=>({at:performance.now(),state:document.readyState,load:performance.getEntriesByType('navigation').map(n=>(n as PerformanceNavigationTiming).loadEventEnd)}));
-            if(mode==='overlay-contents')await actions.evaluate(node=>{const root=node.shadowRoot!;(root.querySelector('.overlay') as HTMLElement).style.display='contents';(root.querySelector('.drawer') as HTMLElement).style.zIndex='10020';});
-            if(mode==='overlay-height')await actions.locator('.overlay').evaluate(node=>(node as HTMLElement).style.height='100vh');
-            if(mode==='fresh-url')await image.evaluate(async node=>{const old=(node as HTMLImageElement).src;const blob=await(await fetch(old)).blob();(node as HTMLImageElement).src=URL.createObjectURL(blob);await(node as HTMLImageElement).decode();});
-            if(mode==='document-load')await page.waitForLoadState('load');
-            if(mode==='body-copy') {
-              await image.evaluate(node=>{const img=node.cloneNode(true) as HTMLImageElement;img.id='body-gif-probe';img.style.cssText='position:fixed;left:8px;top:8px;width:72px;height:36px;z-index:999999';document.body.appendChild(img);});
-              image=page.locator('#body-gif-probe');
-            }
-            await info.attach('condition.json',{body:JSON.stringify({mode,hash,before,after:await page.evaluate(()=>({at:performance.now(),state:document.readyState}))},null,2),contentType:'application/json'});
+            const before=await actions.locator('.drawer').boundingBox();
+            if(mode!=='baseline')await actions.locator('.drawer').evaluate((node,mode)=>{
+              const el=node as HTMLElement;const rect=el.getBoundingClientRect();
+              el.style.position='fixed';el.style.left=rect.x+'px';el.style.top=rect.y+'px';el.style.margin='0';el.style.zIndex='10020';
+              if(mode==='top-layer-drawer'){el.setAttribute('popover','manual');el.showPopover();}
+            },mode);
+            const after=await actions.locator('.drawer').boundingBox();
+            await info.attach('condition.json',{body:JSON.stringify({mode,hash,before,after},null,2),contentType:'application/json'});
             await expectAnimatedImage(image,info);
             expect(await originalHash(image)).toBe(hash);
           });
@@ -56,7 +54,7 @@ jobs:
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/gif-paint-preview.log 2>&1 &
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           exit 1
-      - name: Compare conditions with unchanged six-second frame checks
+      - name: Keep original six-second frame and byte checks in every condition
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: gif-paint/results.json
         run: |
