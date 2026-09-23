@@ -6,6 +6,9 @@ on:
     paths:
       - 'PAGES_REFRESH'
       - '.github/workflows/github-pages.yml'
+      - 'audit/media-recovery/body-releases.json'
+      - 'audit/media-recovery/body-batch*/**'
+      - 'cloudflare/scripts/merge-reviewed-body*.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
