@@ -7,10 +7,13 @@ import { markReader, readerCounts } from '../src/user-ui.js';
 // remote D1, a deployed /mark endpoint or any real visitor identity.
 test('local D1 binding enforces the reader-ledger transaction', async t => {
   const mf = new Miniflare({
-    modules: true,
-    script: 'export default { fetch() { return new Response("isolated reader test"); } };',
-    compatibilityDate: '2025-09-01',
-    d1Databases: { DB: '11111111-1111-4111-8111-111111111111' },
+    workers: [{
+      name: 'reader-counter-isolated-test',
+      modules: true,
+      script: 'export default { fetch() { return new Response("isolated reader test"); } };',
+      compatibilityDate: '2025-09-01',
+      d1Databases: { DB: '11111111-1111-4111-8111-111111111111' },
+    }],
   });
   t.after(() => mf.dispose());
   const db = await mf.getD1Database('DB');
