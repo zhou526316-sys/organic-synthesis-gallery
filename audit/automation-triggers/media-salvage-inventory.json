@@ -1,0 +1,7 @@
+{
+  "requestedAt": "2026-09-24T02:21:00+08:00",
+  "task": "Read the existing media inventory only to diagnose the repeated auto_prior_publication_changed gate",
+  "readOnly": true,
+  "scope": "current R2 local capture index, staged body index and existing D1 media rows",
+  "notes": "No restoration, promotion, deletion, publisher fetch, R2/D1 write, literature/card/title/scope change, userscript change, or deployment. Preserve generation 1790082000000. The immediate objective is to identify any current local Figure 1 identity that collides with an immutable previously auto-published body record."
+}
