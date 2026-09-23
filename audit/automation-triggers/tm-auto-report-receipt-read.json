@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T13:02:00Z",
-  "reason": "Final read-only client-version check after Bridge 2.2.25 live acceptance passed. Determine whether any actual local extension report now carries controllerRevision 2.2.25.",
+  "requestedAt": "2026-09-23T13:06:00Z",
+  "reason": "Continue Bridge 2.2.25 real-client validation. Read latest automatic Tampermonkey report receipts and determine whether controllerRevision 2.2.25 has appeared; compare ACS shell/discovery and TIFF/currentSrc outcomes only. Read-only.",
   "readOnly": true,
   "mediaWrites": 0
 }
