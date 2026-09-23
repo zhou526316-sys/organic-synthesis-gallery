@@ -1,13 +1,8 @@
 {
-  "requestedAt": "2026-09-23T13:32:00Z",
-  "context": "Continue publishing both newly captured and previously staged current-generation body figures. Inspect the full unpublished eligible stage backlog, including age of oldest and newest eligible records, and release under the current adaptive policy when ready. No publisher recrawl and no literature-data changes.",
+  "requestedAt": "2026-09-23T13:43:40Z",
+  "context": "Inspect the full unpublished current-generation staged body backlog after the 15-minute quiet-tail threshold. Previously staged eligible records must remain candidates alongside newly captured records. Release any ready paired official-TOC/body tail under the existing adaptive policy. No publisher recrawl and no literature-data changes.",
   "mediaOnly": true,
   "readOnlyInspect": false,
   "productionLiteratureWrites": false,
-  "expectedPolicy": {
-    "targetArticles": 20,
-    "maxArticles": 25,
-    "quietTailMinutes": 15,
-    "officialTocRequiredInSameBuild": true
-  }
+  "publisherRequests": 0
 }
