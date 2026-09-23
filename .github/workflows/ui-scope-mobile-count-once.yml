@@ -1,0 +1,52 @@
+name: Scope mobile corpus integrity to actual Gallery once
+on:
+  push:
+    branches: [fix/ui-refresh-cost-20260923-1115]
+    paths: [.github/workflows/ui-scope-mobile-count-once.yml]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Apply only reviewed test selector and identity checks
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          p=Path('tests/mobile-interaction.spec.ts')
+          assert subprocess.check_output(['git','hash-object',str(p)],text=True).strip()=='8940a9042e667e6ed88671ad0df83769a75ab1d0'
+          whole=p.read_text();end=whole.index("test.describe('desktop feedback regressions'")
+          text,tail=whole[:end],whole[end:]
+          old="  const initialCards = await page.locator('.card').count();"
+          assert text.count(old)==1
+          text=text.replace(old,"""  // Count actual literature cards, not the twelve offscreen .card elements
+            // in #bridge-gap-staging (observed in diagnostic35814493770).
+            // Keep strict count equality and strengthen unchanged-node identity.
+            const initialCards = await page.locator('#gallery > .card').count();
+            await page.locator('#gallery').evaluate(gallery => {
+              (window as Window & { __initialGalleryNodes?: Element[] }).__initialGalleryNodes = Array.from(gallery.querySelectorAll(':scope > .card'));
+            });""")
+          old="  expect(await page.locator('.card').count()).toBe(initialCards);"
+          assert text.count(old)==1
+          text=text.replace(old,"""  expect(await page.locator('#gallery > .card').count()).toBe(initialCards);
+            expect(await page.locator('#gallery').evaluate(gallery => {
+              const original = (window as Window & { __initialGalleryNodes?: Element[] }).__initialGalleryNodes || [];
+              const current = Array.from(gallery.querySelectorAll(':scope > .card'));
+              return original.length === current.length && original.every((node, index) => node === current[index]);
+            })).toBe(true);""")
+          p.write_text(text+tail)
+          PY
+          git diff --check
+          git diff --exit-code -- src/ public/ shared/
+          git diff -- tests/mobile-interaction.spec.ts
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tests/mobile-interaction.spec.ts
+          git rm .github/workflows/ui-scope-mobile-count-once.yml .github/workflows/ui-refresh-card-diagnostic.yml
+          git commit -m 'test(ui): exclude offscreen Bridge staging from actual corpus count and retain node identity'
+          git push origin HEAD:fix/ui-refresh-cost-20260923-1115
