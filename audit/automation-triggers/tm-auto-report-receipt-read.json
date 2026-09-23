@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T15:44:30Z",
-  "reason": "Fresh read-only check immediately after verified Bridge 2.2.27 deployment. Determine whether the local Tampermonkey client has begun emitting controllerRevision 2.2.27 reports; if yes, compare the first actual 2.2.27 jobs against the preceding five consecutive 2.2.26 failures, especially controller_timeout versus publisher final_result precedence. No media writes.",
+  "requestedAt": "2026-09-23T15:47:00Z",
+  "reason": "Fresh read-only check after Bridge 2.2.27 verified deployment. Determine whether the local Tampermonkey client now emits controllerRevision 2.2.27 reports; compare any first 2.2.27 final_result against the preceding five consecutive 2.2.26 failures, especially controller_timeout versus completed publisher final_result precedence. No media writes.",
   "readOnly": true,
   "mediaWrites": 0
 }
