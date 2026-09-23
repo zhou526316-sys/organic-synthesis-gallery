@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body3-20260924-0510",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T21:06:30Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10769101601,
+  "evidenceArchiveSha256": "d2225a7cef8bb4f8ed363460502716f419e9c9a7ddcce5a94987126f146503c2",
+  "evidenceRunId": 35901029985,
+  "evidenceBaseSha": "84055e52fae8f4e8491543c6ee66dcdc79d0686b",
+  "stageIndexSha256": "c1085c100e7628b4eedda0e15dc812cbc9fe77f6b3f5d10a5d6398f8b4f6fe7a",
+  "approvedCount": 3,
+  "reviewMethod": "Each selected stored file was independently re-hashed from the frozen GitHub evidence archive and visually inspected against its owning caption and paper theme. Task/page/article/source DOI binding, figure identity, capture protocol 6.2.20, fixed media generation, transparent publisher source path, image role, clarity, duplicate/same-ID publication risk and current-corpus continuity were checked. SVG files were checked for self-contained references and absence of active script/foreignObject content; the PNG signature and dimensions were verified. Capture success and review markers were treated only as provenance evidence. No publisher recrawl, R2 write, server-side direct import/repair, literature-data change or userscript change was performed.",
+  "decisions": [
+    {
+      "doi": "10.1021/acscatal.6c04996",
+      "images": [
+        ["next-010", "scheme-1", "Viewed the pharmaceutical motivation, prior asymmetric difluoromethyl-stereocenter strategies and the nickel-catalyzed asymmetric reductive cross-coupling concept; the chemistry, labels and article-specific design match Scheme 1. The exact 1,688,077-byte SVG re-hashes to bc0eb1d6b74e28318772bc3bbb1cd61cb46f79ab56c90143602cd0583aa47003 and is self-contained."]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c05422",
+      "images": [
+        ["next-011", "figure-2", "Viewed the tetra-ortho-substituted Suzuki-Miyaura model reaction, HTE mono-/bisphosphine yield comparison and DiploPhos development panel; this matches Figure 2 and its independent caption. The exact 104,763-byte PNG re-hashes to eca02545934303579ae86c5704d8fe65717d7f0e32e67e8b08f8e4ff83fe90ce. The latest article-level capture report is partial (2/5 figures), so only this individually verified Figure 2 is approved; uncaptured or unreviewed figures are not inferred approved." ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03543",
+      "images": [
+        ["next-012", "scheme-1", "Viewed the conventional 2-deoxyglycoside approaches, C4 stereochemical/conformational control model and the paper's conformationally locked direct 2-deoxyglycosylation concept; the content matches Scheme 1 and the owning caption. The exact 1,069,757-byte SVG re-hashes to 3822099b1e601c3ef0e04f866454f55c3dfe95d40aaaa712e354141afccb0889 and is self-contained." ]
+      ]
+    }
+  ]
+}
