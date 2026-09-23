@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "mode": "post-release-quality-failure",
+  "requestedAt": "2026-09-23T18:12:00+08:00",
+  "publicationSlot": "2026-09-23T18:00:00+08:00",
+  "nextPublicationSlot": "2026-09-24T08:00:00+08:00",
+  "publicationCommit": "020c2bef85415aaeb42c57ce30415e3c4112d97a",
+  "deploymentTriggerCommit": "fcd51dcaa250b1d13e212a833467a183e82fda34",
+  "pagesRunId": 35846639220,
+  "tocRefreshRunId": 35846567355,
+  "tocDemandCommit": "789c95ac53fccf95d6eac171ac751f25a6b30098",
+  "postReleaseAuditRunId": 35846667938,
+  "postReleaseAuditGeneratedAt": "2026-09-23T10:07:15.330Z",
+  "qualityGateRunId": 35847270118,
+  "qualityGateTriggerCommit": "2577e51adbc12165182ea5e51c04b702336e3877",
+  "qualityGateConclusion": "failure",
+  "qualityGateFailures": [
+    "discovery: unreviewed unresolved DOI not covered by deferred backlog",
+    "deferred: partial publication must be recorded as synced_with_pending"
+  ],
+  "productionCards": 542,
+  "carryForwardUnreviewedDois": [
+    "10.1002/anie.7127460",
+    "10.1038/d41586-026-02563-9",
+    "10.1038/s41557-026-02267-7",
+    "10.1038/s41557-026-02246-y",
+    "10.1038/s41557-026-02247-x",
+    "10.1038/s41557-026-02261-z",
+    "10.1038/s41467-026-77863-9",
+    "10.1038/s41467-026-76451-1",
+    "10.1038/s41467-026-77480-6",
+    "10.1038/s44160-026-01157-7",
+    "10.1021/acs.orglett.6c03520"
+  ],
+  "note": "Pages and the 542-card snapshot deployed successfully, but the fresh post-release audit surfaced 11 candidates absent from the frozen pre-slot handoff. The real quality gate failed closed. Record sync_failed without reclassifying those 11 as pending/excluded and without any off-slot production admission."
+}
