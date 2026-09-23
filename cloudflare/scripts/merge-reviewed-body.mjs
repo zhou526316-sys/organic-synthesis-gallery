@@ -1,4 +1,5 @@
 import {createHash} from 'node:crypto';
+import {buildBodyReviewMarker} from '../worker/src/body-review-marker.js';
 import {readFile,writeFile,mkdir,copyFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -54,15 +55,21 @@ async function usableExisting(root,figure){
   return /<svg[\s>]/i.test(s)||b[0]===137&&b[1]===80||b[0]===255&&b[1]===216||b.toString('ascii',0,4)==='RIFF'||b.toString('ascii',0,3)==='GIF';
  }catch{return false;}
 }
-export async function mergeReviewedBody(root=process.cwd()){
- const plan=JSON.parse(await readFile(path.join(root,'audit/media-recovery/body-batch1/manifest.json'),'utf8'));
- demand(plan.publicationId===ID&&plan.cutoverMs===CUTOVER&&plan.approvedCount===32&&plan.items.length===32,'invalid_body_review_plan');
+export async function mergeReviewedBody(root=process.cwd(), release=null){
+ const ID=release?.publicationId || 'reviewed-body-batch1-20260923';
+ const count=release?.approvedCount || 32;
+ const manifestPath=release?.manifestPath || 'audit/media-recovery/body-batch1/manifest.json';
+ const statusFile=release?.statusFile || 'body-publication-status.json';
+ demand(/^reviewed-body-batch[0-9]+-[0-9]{8}$/.test(ID)&&Number.isInteger(count)&&count>0&&count<=100,'invalid_body_release');
+ demand(/^audit\/media-recovery\/body-batch[0-9]+\/manifest\.json$/.test(manifestPath)&&/^body-publication(?:-[a-z0-9-]+)?-status\.json$/.test(statusFile),'invalid_body_release_path');
+ const plan=JSON.parse(await readFile(path.join(root,manifestPath),'utf8'));
+ demand(plan.publicationId===ID&&plan.cutoverMs===CUTOVER&&plan.approvedCount===count&&plan.items.length===count,'invalid_body_review_plan');
  const papers=await readPapers(root),mediaPath=path.join(root,'public/media-index.json'),media=JSON.parse(await readFile(mediaPath,'utf8'));media.items||={};
  const tocBefore=JSON.stringify(Object.fromEntries(Object.entries(media.items).map(([d,r])=>[d,r.toc])));
  const seen=new Set(),hashOwners=new Map(),sources=new Map(),prepared=[];
  for(const item of plan.items){
   const key=item.doi+'|'+item.id;demand(!seen.has(key),'duplicate_body_identity');seen.add(key);
-  demand(/^audit\/media-recovery\/body-batch1\/assets\/[a-f0-9]{64}\.(svg|png|webp)$/.test(item.assetPath),'invalid_body_asset_path');
+  demand(/^audit\/media-recovery\/body-batch[0-9]+\/assets\/[a-f0-9]{64}\.(svg|png|webp)$/.test(item.assetPath),'invalid_body_asset_path');
   const bytes=await readFile(path.join(root,item.assetPath));const ext=verifyReviewedBody(item,bytes);
   demand(!hashOwners.has(item.sha256)||hashOwners.get(item.sha256)===item.doi,'cross_doi_duplicate_body');hashOwners.set(item.sha256,item.doi);
   demand(!sources.has(item.sourceUrl)||sources.get(item.sourceUrl)===key,'shared_source_under_other_label');sources.set(item.sourceUrl,key);
@@ -80,7 +87,8 @@ export async function mergeReviewedBody(root=process.cwd()){
   }
   const imageUrl=`media-mirror/body-reviewed-${item.sha256}.${ext}`;
   await copyFile(path.join(root,item.assetPath),path.join(root,'public',imageUrl));
-  const figure={id:item.id,label:item.label,caption:item.caption,doi,articleUrl:item.articleUrl,sourceUrl:item.sourceUrl,imageUrl,
+  const reviewMarker=await buildBodyReviewMarker(item,item.sha256);
+  const figure={reviewEvidenceKey:reviewMarker.evidenceKey,id:item.id,label:item.label,caption:item.caption,doi,articleUrl:item.articleUrl,sourceUrl:item.sourceUrl,imageUrl,
    order:item.order,width:item.width,height:item.height,contentType:item.contentType,contentHash:item.contentHash,verifiedSha256:item.sha256,
    publicationId:ID,originalUpdatedAt:item.originalUpdatedAt,quality:item.quality,role:'article_figure',source:'reviewed-bound-staged-capture'};
   const figures=[...before.filter(f=>f!==old),figure].sort((a,b)=>Number(a.order||0)-Number(b.order||0)||String(a.id).localeCompare(String(b.id),'en',{numeric:true}));
@@ -97,7 +105,7 @@ export async function mergeReviewedBody(root=process.cwd()){
  result.totalFigureEntries=Object.values(media.items).reduce((n,r)=>n+(r.figures?.figures?.length||0),0);
  result.retainedBatch1=Object.values(media.items).filter(r=>r.toc?.recoveryId==='toc-batch1-20260922').length;
  result.retainedBatch2Official=Object.values(media.items).filter(r=>r.toc?.recoveryId==='sealed-media-batch2-20260923'&&!/fallback/i.test(r.toc?.reason||'')).length;
- media.generatedAt=Date.now();await writeFile(mediaPath,JSON.stringify(media));await writeFile(path.join(root,'public/body-publication-status.json'),JSON.stringify(result));
+ media.generatedAt=Date.now();await writeFile(mediaPath,JSON.stringify(media));await writeFile(path.join(root,'public',statusFile),JSON.stringify(result));
  console.log('REVIEWED_BODY_PUBLICATION '+JSON.stringify(result));return result;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await mergeReviewedBody();

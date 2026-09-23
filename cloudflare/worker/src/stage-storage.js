@@ -1,3 +1,4 @@
+import { buildBodyReviewMarker } from './body-review-marker.js';
 // Storage only: caller must validate capture/task/page/source identity before entering.
 // No publisher requests, historical promotion, D1 writes, or object deletion.
 export const STAGE_STORAGE_REVISION = '2026-09-23.1';
@@ -68,7 +69,7 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
     width: Number(record.width || 0), height: Number(record.height || 0), contentHash: record.contentHash,
     imageUrl: new URL(request.url).origin + '/media/' + record.r2Key.split('/').map(encodeURIComponent).join('/'),
     updatedAt: record.updatedAt, stageStorageRevision: STAGE_STORAGE_REVISION,
-    requestId, storageRetryCount: retryCount, ...extra
+    requestId, storageRetryCount: retryCount, fullSha256: record.fullSha256 || null, review: record.review || null, ...extra
   }});
   const retained = async previous => {
     if (!previous || !trustedPrevious(previous) || previous.updatedAt < CUTOVER || !previous.r2Key || !/^[a-f0-9]{32}$/.test(previous.contentHash || '')) return null;
@@ -100,7 +101,7 @@ export async function storeVerifiedStage(request, env, entry, bytes, fullHash, t
         const current = await readIndex();
         const prior = await retained(current.index.items[identity]);
         if (prior) return prior;
-        const record = {...entry, updatedAt: now(), stageStorageRevision: STAGE_STORAGE_REVISION};
+        const record = {...entry, updatedAt: now(), stageStorageRevision: STAGE_STORAGE_REVISION, fullSha256: fullHash, review: await buildBodyReviewMarker(entry, fullHash)};
         current.index.items[identity] = record;
         current.index.version = 1; current.index.updatedAt = record.updatedAt;
         operation = 'index_write';

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "scope": "Explicit reviewed incremental body batches; unlisted staging is never published.",
+  "releases": [
+    {
+      "publicationId": "reviewed-body-batch2-20260923",
+      "manifestPath": "audit/media-recovery/body-batch2/manifest.json",
+      "manifestSha256": "a755e1a0fae88cc7ecdf331c3d3f0fec4c0265c1f414b259f9a070d8b9e9a531",
+      "approvedCount": 31,
+      "statusFile": "body-publication-batch2-status.json"
+    }
+  ]
+}

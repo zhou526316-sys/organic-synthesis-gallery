@@ -121,3 +121,6 @@ await mergeSealedMediaBatch2();
 // Reviewed current-generation body files only; keep Worker promotion and quarantine unchanged.
 const {mergeReviewedBody}=await import('./merge-reviewed-body.mjs');
 await mergeReviewedBody();
+// Incremental explicitly approved batches; this never reads unreviewed stage objects.
+const {mergeReviewedBodyReleases}=await import('./merge-reviewed-body-releases.mjs');
+await mergeReviewedBodyReleases();
