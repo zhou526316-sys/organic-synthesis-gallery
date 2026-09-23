@@ -1,0 +1,108 @@
+{
+  "recordedAt": "2026-09-23T11:03:00+08:00",
+  "context": "UI/feedback continuation after user requested 继续; feedback32 adjustable glow thickness",
+  "status": "deployed_partial_live_acceptance",
+  "implementation": {
+    "pr": 145,
+    "branch": "feat/ui-glow-width-20260923-b32",
+    "testedHead": "2ca1673c5491471a98427dacfd9e127cfd3023c2",
+    "mergeSha": "fe972c58975052c5270206f933c93ca7980f29a0",
+    "mergedAt": "2026-09-23T02:52:15Z",
+    "features": [
+      "Per-status native1–6px slider, integer steps, default1px, visible value and Reset.",
+      "Input previews only the current action/chip/choice in place; it neither replaces the dragged node nor persists prematurely. Change saves and broadcasts. Restore keyboard focus and editor scroll after the resulting render.",
+      "Failed storage rolls back the value and appearance with a visible error. Cancelled/closed previews do not leak into saved preferences. Old/malformed values are bounded before CSS generation.",
+      "All active glows use width-dependent border/blur/orbit/rainbow spread; Off stays Off. Pseudo-element box sizing keeps button geometry stable. Existing caption z-order, reduced motion and original/GIF bytes remain.",
+      "Collapsed floating Feedback launcher yields while a paper editor is open, then returns at its unchanged saved position. An already-open Feedback panel remains available."
+    ],
+    "releaseFiles": ["src/user-ui/status-glow-width.ts", "src/user-ui/status-presentation.ts", "src/user-ui/shared.ts", "src/user-ui/feedback-widget.ts", "tests/status-glow-width.spec.ts", ".github/workflows/status-glow-width-ci.yml", "audit/ui-feedback/2026-09-23-ui32-overlap-reproduction.json"],
+    "temporaryMutationWorkflowsRemoved": true,
+    "feedback32Closed": false
+  },
+  "initialFailure": {
+    "head": "8d8afd38921efce9a6e14e3586c630af1cb05eac",
+    "runId": 35811077805,
+    "webkit": {"passed": 7, "failed": 1, "artifactId": 10729392958, "sha256": "5607655f9170d54bf1aad19dd596baac7065b2ac9c83df727e3ebd59454c9d9f"},
+    "chromium": {"passed": 8, "failed": 0, "artifactId": 10729258532, "sha256": "51fd2bef0dc1a756e3186146fff47f6f156f3f8a57bddfc9dfde0cb3a80aa23e"},
+    "cause": "390px real-drag trace: floating Feedback tab overlapped slider start at mouseDown79,788; its host had z-index10060. The pre-pointer screencast14957.633ms was visually inspected. This is an actual UI overlap, not a reason to relax timeouts or force clicks.",
+    "repair": "Production launcher visibility rule; original drag tests unchanged. Added ninth regression for exact position restoration and normal opening.",
+    "retainedInfrastructureFailure": "First branch-only overlap patch workflow35811523211 had YAML indentation failure before execution. Corrected workflow applied checksum-guarded source changes and removed itself. Neither mutation workflow remains in release diff."
+  },
+  "finalHeadCI": {
+    "glowWidth": {
+      "runId": 35811692831,
+      "webkit": {"passed": 9, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10730320670, "sha256": "915ffeb2981930dc235902b2c0d6d1d175e7bc0304bbcf98ae0a865823e75845"},
+      "chromium": {"passed": 9, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729299349, "sha256": "646865d9c7c1e17362eb928f38253e5bdd0f23a13a46ec6e52ad4b066504373b"}
+    },
+    "presentation": {"runId": 35811692789, "conclusion": "success"},
+    "originalImages": {"runId": 35811692854, "conclusion": "success"},
+    "siteQualityGate": {"runId": 35811692887, "conclusion": "success"},
+    "migration": {"runId": 35811692783, "conclusion": "success"},
+    "data": {"runId": 35811692821, "conclusion": "success"}
+  },
+  "deployment": {
+    "githubPages": {"runId": 35812077749, "conclusion": "success"},
+    "worker": {"runId": 35812085091, "conclusion": "success"},
+    "workerSync": {"runId": 35812077720, "conclusion": "success"},
+    "cloudflarePagesFallback": {"runId": 35812077625, "conclusion": "failure", "failureStepInspectedThisTurn": false, "browserRevalidated": false}
+  },
+  "liveAcceptance": {
+    "runId": 35812123766,
+    "workflowCommit": "4892c5e9add5e10486827574b0bfa814f8527c96",
+    "reviewedProductCommit": "fe972c58975052c5270206f933c93ca7980f29a0",
+    "browser": "Playwright1.55 WebKit",
+    "actualMainAsset": "assets/main-BhS3gOqW.js",
+    "actualBootstrapAsset": "assets/index-C5PBQtDL.js",
+    "productCodeOrAssertionsOverridden": false,
+    "adaptation": "Only test navigation and safe network transport changed. Real deployed page/scripts/static files fetched; all API and network writes mocked in disposable anonymous contexts. Tests log actual loaded scripts and range-control counts.",
+    "productionWritesAllowed": false,
+    "worker": {"jobId": 107025771843, "passed": 9, "failed": 0, "skipped": 0, "flaky": 0, "artifactId": 10729319558, "sha256": "409ca2a2304e29e3e30de4ddf0c1716763be85b61f6684a0368dbbe34c58c770", "durationMs": 139866.28},
+    "githubPages": {
+      "jobId": 107025772073,
+      "passed": 5, "failed": 4, "skipped": 0, "flaky": 0,
+      "artifactId": 10730007191,
+      "sha256": "7d6aeaf8025dedbf9f4a8d24d27e20e8139c11681f4eda5fc30fc176e8c64561",
+      "durationMs": 257629.207,
+      "failureKind": "unchanged30-second whole-test timeout",
+      "failedCases": ["390px complete drag/refresh/reset sequence", "1280px complete drag/refresh/reset sequence", "All-effects and reduced-motion sequence", "Repeated malformed/legacy preference reloads"],
+      "traceFindings": "Both drag cases passed actual drag, commit, reload6px and reset1px checks before the whole-test timeout interrupted later checks. Five other complete cases passed: keyboard focus, storage rollback, cancelled preview,320px GIF hash/caption and feedback launcher restoration. This is partial acceptance, not9/9.",
+      "repeatedQueryObservation": "Traces include substantial repeated reader-count route fulfillment. In the two drag traces318 route calls were recorded; malformed preference trace598. These counts include other intercepted/background routes and are not all unique reader events, real readers or a proved root cause of every timeout."
+    },
+    "unchangedRerunForGreen": false,
+    "timeoutsIncreased": false,
+    "forceClicksUsed": false,
+    "allActiveEntriesAccepted": false,
+    "feedback32Closed": false
+  },
+  "performanceHandoff": {
+    "inspectedSource": "src/user-ui/search-controller.ts at fe972c58975052c5270206f933c93ca7980f29a0, blob1e1f82a31c12b7a37a8ff2ef774333d7794183fe",
+    "facts": "storeChanged always invokes refresh. refresh decorates all cards, rebuilds search candidates/filters and unconditionally invokes store.loadCounts. decorate calls store.registerMeta; existing registerMeta writes the full local state even for unchanged metadata. The live traces supply repeated-query evidence.",
+    "nextBoundedTask": "Measure and reduce unnecessary full-card scanning, repeated metadata serialization and duplicate count reads while preserving prompt post-click count refresh. Add request-count/storage-write regressions and repeat the unchanged live thickness suite. Do not simply enlarge the timeout or synthesize business reader totals.",
+    "limits": "This batch did not change this refresh/counting path and does not establish that it is the complete cause of the observed timeout or the user's low readership numbers."
+  },
+  "feedbackQueue": {
+    "initialRunId": 35810649922,
+    "freshExportRunId": 35812224066,
+    "artifactId": 10730011847,
+    "sha256": "9c78c18def73a4c8275b6fd91a309b8cf86ea6723f245ff264b946e9b3b5d395",
+    "generatedAt": "2026-09-23T02:54:32.082Z",
+    "d1Available": true,
+    "r2Available": true,
+    "openIds": [8,20,21,22,23,24,25,28,31,32],
+    "statusWritesThisTurn": [],
+    "alreadyReviewed29And30Preserved": true,
+    "feedback31": "Smart/person/circular cropping remains open; prior caption fix was not repeated.",
+    "feedback28": "Broader original-image live acceptance remains open."
+  },
+  "scope": {
+    "literatureDataChanged": false,
+    "publicationSlotsOrGatesChanged": false,
+    "captureTampermonkeyBridgeSourceChanged": false,
+    "backendCountingChanged": false,
+    "realReaderEventsWritten": false,
+    "businessReaderCountIssueResolved": false,
+    "originalStorageBoundary": "Current browser and origin; existing account sync carries only static previews."
+  },
+  "evidenceInspection": "Downloaded and SHA256-checked initial/finalCI and both live artifacts; parsed all statistics, failure logs and four GitHub traces; visually inspected the initial collision and actual Worker mobile screenshot. Full failure evidence remains retained.",
+  "conversationArtifacts": ["glow-width-live-mobile.png", "glow-width-live-desktop.png", "glow-width-release-evidence.zip"]
+}
