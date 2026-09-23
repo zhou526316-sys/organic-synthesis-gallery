@@ -1,3 +1,4 @@
+import { shouldScanDisplay } from './user-ui/display-mutation-scope';
 import { store } from './user-ui/shared';
 
 interface TranslationItem {
@@ -270,7 +271,9 @@ function scheduleScan(delay = 0): void {
   }, delay);
 }
 
-const observer = new MutationObserver(() => scheduleScan(20));
+const observer = new MutationObserver(records => {
+  if (shouldScanDisplay(records)) scheduleScan(20);
+});
 observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['lang'] });
 
 document.addEventListener('click', () => scheduleScan(0), true);

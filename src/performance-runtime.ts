@@ -1,3 +1,4 @@
+import { shouldScanDisplay } from './user-ui/display-mutation-scope';
 interface StaticToc {
   available?: boolean;
   imageUrl?: string;
@@ -301,7 +302,9 @@ export function installGalleryPerformanceRuntime(): () => void {
   installPerformanceCss();
   void loadManifest(true);
   const restoreAddEventListener = suppressLegacyScrollMediaHandlers();
-  const observer = new MutationObserver(scheduleScan);
+  const observer = new MutationObserver(records => {
+    if (shouldScanDisplay(records)) scheduleScan();
+  });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
   const refreshMedia = (): void => {
