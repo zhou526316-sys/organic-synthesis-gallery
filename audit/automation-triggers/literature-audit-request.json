@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-23T17:08:00+08:00",
-  "requestedBy": "prepublish-primary-20260923-1800-scope-v1",
-  "reason": "The required 16:55-18:00 Asia/Shanghai paired snapshot is absent. Current latest/compact generatedAt is 2026-09-23T04:25:52.436Z (12:25:52+08) and the existing 18:00 staging explicitly marks snapshotFreshForSlot=false. No queued or in-progress literature-audit run was found and no 16:55 schedule run exists. Request one fresh audit against current main; do not cancel or restart any healthy run.",
+  "requestedAt": "2026-09-23T18:06:00+08:00",
+  "requestedBy": "fixed-slot-release-20260923-1800-postrelease",
+  "reason": "Post-release verification for the fixed 18:00 per-DOI release. Recompute the canonical machine union against the new 542-card repository snapshot, preserve the two explicit deferred DOI records as unresolved, and verify no unknown missing DOI or source-family regression. This is verification only; do not add production literature or acquire media.",
   "targetBranch": "main",
   "publicationSlot": "2026-09-23T18:00:00+08:00",
-  "executionMode": "scheduled_prepublish_fresh_snapshot",
-  "inputCommitSha": "87047528f0c17e7308c1d2730bf76c6a72ab467f",
-  "inputCompactBlobSha": "4954c911bb843d1c360511c2180f7a68e5923118",
-  "inputLatestBlobSha": "357783bfe5a69b034034cb6785ab4ac0655095e5",
+  "executionMode": "post_release_verification",
+  "inputCommitSha": "fcd51dcaa250b1d13e212a833467a183e82fda34",
+  "inputCompactBlobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+  "inputLatestBlobSha": "63ec27535507a04d04e99ad92bcbfd672c73e478",
   "scopeRulesVersion": "scope-2026-09-23-v1",
   "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
   "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
-  "deduplicationKey": "2026-09-23T18:00:00+08:00|4954c911bb843d1c360511c2180f7a68e5923118|040902a773f72057dff59de5c66d27f568984813",
+  "deduplicationKey": "postrelease|2026-09-23T18:00:00+08:00|020c2bef85415aaeb42c57ce30415e3c4112d97a|542",
   "primaryWindow": {
     "timezone": "Asia/Shanghai",
     "startDate": "2026-09-21",
@@ -22,15 +22,16 @@
   "safetyTailDays": 7,
   "lateDepositRescueDays": 7,
   "verifiedThrough": "2026-09-20",
-  "expectedProductionCards": 532,
+  "expectedProductionCards": 542,
   "expectedDeferredDois": [
+    "10.1038/s41467-026-78015-9",
     "10.31635/ccschem.026.202608262"
   ],
   "validation": [
     "Run the merged main completeness capability guard and all canonical active journals with activeFrom",
     "Union all configured ISSNs across Crossref online/published/created and OpenAlex, retaining safety-tail and late-deposit rescue",
-    "Paired latest and compact generatedAt match and both summary.unresolved equal complete unresolved array length",
-    "Bind handoff to scope-2026-09-23-v1 and the current scope-corrections blob",
-    "No production data, Pages request or media acquisition; TOC/body figures remain Tampermonkey/VPN Bridge"
+    "Verify repository gallery DOI count is 542 and no unknown missing DOI remains beyond the two explicit deferred records",
+    "Preserve the two explicit deferred DOI records without reclassifying them as excluded or published",
+    "No production data mutation or media acquisition; TOC/body figures remain Tampermonkey/VPN Bridge"
   ]
 }
