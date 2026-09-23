@@ -31,7 +31,15 @@ async function open(page: Page, width = 390): Promise<{ viewport: Locator; image
     for (let i = 1; i <= 2; i++) {
       const button = document.createElement('button'); button.className = 'figure-thumb';
       const image = new Image(); image.alt = `Gesture test image ${i}`; image.width = 120;
-      image.src = 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="1200" height="800" fill="white"/><path d="M600 0V800M0 400H1200" stroke="black" stroke-width="4"/><text x="350" y="330" font-size="42">Gesture test image ${i}</text></svg>`);
+      // Fixed raster dimensions avoid conflating SVG intrinsic-size reporting
+      // with the gesture geometry under test. No product CSS/method is patched.
+      const canvas = document.createElement('canvas'); canvas.width = 1200; canvas.height = 800;
+      const ctx = canvas.getContext('2d')!;
+      ctx.fillStyle = 'white'; ctx.fillRect(0, 0, 1200, 800);
+      ctx.strokeStyle = 'black'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(600, 0); ctx.lineTo(600, 800); ctx.moveTo(0, 400); ctx.lineTo(1200, 400); ctx.stroke();
+      ctx.fillStyle = 'black'; ctx.font = '42px sans-serif'; ctx.fillText(`Gesture test image ${i}`, 350, 330);
+      image.src = canvas.toDataURL('image/png');
       button.append(image); card.append(button);
     }
     document.body.prepend(card);
