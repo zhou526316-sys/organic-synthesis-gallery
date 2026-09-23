@@ -6,6 +6,7 @@ test.use({ serviceWorkers: 'block' });
 const MODES = ['none', 'soft', 'pulse', 'orbit', 'rainbow'];
 const choice = (actions: Locator): Locator => actions.locator('[data-status-glow-choice="to-read"]');
 const action = (actions: Locator): Locator => actions.locator('button[data-action="status"]');
+const glowCard = (actions: Locator): Locator => actions.locator('..');
 async function selectStatus(actions: Locator): Promise<void> { await actions.locator('[data-action="set-status:to-read"]').click(); }
 async function animation(button: Locator): Promise<string> { return button.evaluate(node => getComputedStyle(node, '::after').animationName); }
 function record(page: Page): { errors: string[]; marks: string[] } {
@@ -29,9 +30,10 @@ for (const width of [390, 1280]) {
     for (const mode of MODES) {
       await action(actions).click();
       await choice(actions).selectOption(mode);
-      await expect(action(actions)).toHaveAttribute('data-status-glow', mode);
-      expect(await animation(action(actions))).toBe(['none', 'soft'].includes(mode) ? 'none' : `status-glow-${mode}`);
-      await expect(actions.locator('.chips > .chip.status')).toHaveAttribute('data-status-glow', mode);
+      await expect(glowCard(actions)).toHaveAttribute('data-status-glow', mode);
+      expect(await animation(glowCard(actions))).toBe(['none', 'soft'].includes(mode) ? 'none' : `status-glow-${mode}`);
+      await expect(actions.locator('[data-status-glow],[data-card-glow]')).toHaveCount(0);
+      expect(await action(actions).evaluate(node => getComputedStyle(node, '::after').content)).toBe('none');
       expect((await state(page)).statuses.find((item: any) => item.id === 'to-read').style.glow).toBe(mode);
       await actions.locator('[data-action="close"]').click();
       expect(await action(actions).getAttribute('class')).toBe(originalClass);
@@ -39,18 +41,18 @@ for (const width of [390, 1280]) {
       expect(box.width).toBe(originalBox.width); expect(box.height).toBe(originalBox.height);
     }
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await expect(action(actions)).toHaveAttribute('data-status-glow', 'rainbow');
+    await expect(glowCard(actions)).toHaveAttribute('data-status-glow', 'rainbow');
     await action(actions).click();
     await choice(actions).selectOption('pulse');
-    const initialOpacity = await action(actions).evaluate(node => getComputedStyle(node, '::after').opacity);
-    await expect.poll(() => action(actions).evaluate(node => getComputedStyle(node, '::after').opacity), { intervals: [150, 220, 310] }).not.toBe(initialOpacity);
+    const initialOpacity = await glowCard(actions).evaluate(node => getComputedStyle(node, '::after').opacity);
+    await expect.poll(() => glowCard(actions).evaluate(node => getComputedStyle(node, '::after').opacity), { intervals: [150, 220, 310] }).not.toBe(initialOpacity);
     await actions.locator('input[data-status-color="to-read"]').evaluate(node => {
       (node as HTMLInputElement).value = '#123456'; node.dispatchEvent(new Event('change', { bubbles: true }));
     });
-    await expect.poll(() => action(actions).evaluate(node => getComputedStyle(node).getPropertyValue('--status-glow-rgb').trim())).toBe('18,52,86');
+    await expect.poll(() => glowCard(actions).evaluate(node => getComputedStyle(node).getPropertyValue('--status-glow-rgb').trim())).toBe('18,52,86');
     await page.screenshot({ path: info.outputPath(`status-glow-controls-${width}.png`) });
     await choice(actions).selectOption('none');
-    expect(await animation(action(actions))).toBe('none');
+    expect(await animation(glowCard(actions))).toBe('none');
     expect((await state(page)).statuses.map((item: any) => [item.id, item.countsAsRead])).toEqual(definitions);
     await expect(actions.locator('.bar > button.action')).toHaveCount(4);
     expect(evidence.errors).toEqual([]); expect(evidence.marks).toEqual([]);
@@ -97,12 +99,12 @@ for (const width of [390, 1280]) {
     expect(await originalHash(action(actions).locator('img'))).toBe(createHash('sha256').update(GIF).digest('hex'));
     await expect(action(actions).locator('.status-action-label')).toBeVisible();
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await expect(action(actions)).toHaveAttribute('data-status-glow', 'orbit');
+    await expect(glowCard(actions)).toHaveAttribute('data-status-glow', 'orbit');
     await expect(action(actions).locator('.status-action-label')).toBeVisible();
     await action(actions).click();
     await actions.locator('[data-action="clear-status-image:to-read"]').click();
     await expect(action(actions).locator('img')).toHaveCount(0);
-    await expect(action(actions)).toHaveAttribute('data-status-glow', 'orbit');
+    await expect(glowCard(actions)).toHaveAttribute('data-status-glow', 'orbit');
     await expect(action(actions)).toHaveAttribute('aria-label', /将读|To read/);
     expect(evidence.errors).toEqual([]); expect(evidence.marks).toEqual([]);
   });
@@ -114,8 +116,8 @@ test('reduced motion keeps chosen glow static and leaves four buttons intact', a
   await page.emulateMedia({ reducedMotion: 'reduce' });
   for (const mode of ['pulse', 'orbit', 'rainbow']) {
     await action(actions).click(); await choice(actions).selectOption(mode);
-    await expect(action(actions)).toHaveAttribute('data-status-glow', mode);
-    expect(await animation(action(actions))).toBe('none');
+    await expect(glowCard(actions)).toHaveAttribute('data-status-glow', mode);
+    expect(await animation(glowCard(actions))).toBe('none');
     await actions.locator('[data-action="close"]').click();
   }
   await expect(actions.locator('.bar > button.action')).toHaveCount(4);
@@ -144,6 +146,6 @@ test('unknown saved glow values render as off rather than arbitrary CSS', async 
     const data = JSON.parse(localStorage.getItem(key)!); data.statuses[0].style.glow = 'invalid-css-value'; localStorage.setItem(key, JSON.stringify(data));
   }, KEY);
   await page.reload({ waitUntil: 'domcontentloaded' });
-  await expect(action(actions)).toHaveAttribute('data-status-glow', 'none');
+  await expect(glowCard(actions)).toHaveAttribute('data-status-glow', 'none');
   await action(actions).click(); await expect(choice(actions)).toHaveValue('none');
 });

@@ -6,6 +6,8 @@ on:
       - 'src/user-ui/**'
       - 'src/user-shell.ts'
       - 'tests/status-*.ts'
+      - 'tests/animated-image-evidence.ts'
+      - 'tests/prepare-animation-screenshots.cjs'
       - '.github/workflows/status-original-images-ci.yml'
   workflow_dispatch:
 permissions:
@@ -29,6 +31,12 @@ jobs:
           npm install --no-audit --no-fund
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit
+      - name: Preserve natural animation during capture and record the exact driver change
+        run: |
+          mkdir -p status-image-test-results
+          node tests/prepare-animation-screenshots.cjs status-image-test-results/screenshot-driver.json
+          git diff --exit-code -- src/ public/ shared/ tests/
+          sha256sum tests/status-original-images.spec.ts tests/animated-image-evidence.ts > status-image-test-results/acceptance-sha256.txt
       - name: Type-check and build
         run: |
           npx tsc --noEmit
@@ -45,7 +53,7 @@ jobs:
       - name: Verify originals, previews, viewer, routing and cancellation
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: status-image-test-results/results.json
-        run: npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts tests/status-api-routing.spec.ts tests/status-fetch-lifecycle.spec.ts tests/status-preview-readiness.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=status-image-test-results
+        run: npx --no-install playwright test tests/status-original-images.spec.ts tests/status-image-errors.spec.ts tests/status-api-routing.spec.ts tests/status-fetch-lifecycle.spec.ts tests/status-preview-readiness.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=status-image-test-results/tests
       - uses: actions/upload-artifact@v4
         if: always()
         with:

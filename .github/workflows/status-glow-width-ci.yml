@@ -1,10 +1,11 @@
-name: Status glow width regression
+name: Card glow width regression
 on:
   pull_request:
     branches: [main]
     paths:
       - 'src/user-ui/**'
       - 'tests/status-*.ts'
+      - 'tests/card-glow-target.spec.ts'
       - '.github/workflows/status-glow-width-ci.yml'
 permissions:
   contents: read
@@ -44,15 +45,15 @@ jobs:
           done
           cat /tmp/width-preview.log
           exit 1
-      - name: Verify real drag, keyboard, rollback, cancellation and original image preservation
+      - name: Verify full-card target, drag, keyboard, rollback and original image preservation
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: glow-width-results/results.json
         run: |
           mkdir -p glow-width-results
           git rev-parse HEAD > glow-width-results/tested-commit.txt
-          sha256sum src/user-ui/status-glow-width.ts src/user-ui/status-presentation.ts src/user-ui/shared.ts tests/status-glow-width.spec.ts > glow-width-results/source-sha256.txt
+          sha256sum src/user-ui/card-glow.ts src/user-ui/status-glow-width.ts src/user-ui/status-presentation.ts src/user-ui/shared.ts tests/status-glow-width.spec.ts tests/card-glow-target.spec.ts > glow-width-results/source-sha256.txt
           set -o pipefail
-          npx --no-install playwright test tests/status-glow-width.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=glow-width-results/tests 2>&1 | tee glow-width-results/tests.log
+          npx --no-install playwright test tests/status-glow-width.spec.ts tests/card-glow-target.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=glow-width-results/tests 2>&1 | tee glow-width-results/tests.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:

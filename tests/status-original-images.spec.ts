@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { createHash } from 'node:crypto';
 import { KEY, GIF, gifFile, isolate, open, originalHash, state } from './status-image-fixtures';
+import { expectAnimatedImage } from './animated-image-evidence';
 
 for (const width of [390, 1280]) {
   test(`original GIF is animated, byte-exact and persistent at ${width}px`, async ({ page, browser }, info) => {
@@ -16,11 +17,7 @@ for (const width of [390, 1280]) {
     await expect(image).toHaveAttribute('data-image-source', 'original');
     expect(await originalHash(image)).toBe(createHash('sha256').update(GIF).digest('hex'));
     expect(await image.evaluate(node => ({ w: (node as HTMLImageElement).naturalWidth, h: (node as HTMLImageElement).naturalHeight }))).toEqual({ w: 120, h: 60 });
-    const frames = new Set<string>();
-    await expect.poll(async () => {
-      frames.add(createHash('sha256').update(await image.screenshot()).digest('hex'));
-      return frames.size;
-    }, { timeout: 6000, intervals: [150, 230, 310] }).toBeGreaterThan(1);
+    await expectAnimatedImage(image, info);
     await choice.click();
     const action = actions.locator('button[data-action="status"]');
     await expect(action.locator('img')).toHaveAttribute('data-image-source', 'original');
@@ -42,7 +39,6 @@ for (const width of [390, 1280]) {
     await actions.locator('button[data-action="view-status-image:to-read"]').click();
     const viewer = page.locator('dialog[data-status-image-viewer]');
     await expect(viewer).toBeVisible();
-    // The viewer now opens with a preview; it must still upgrade to exact bytes.
     await expect(viewer.locator('img')).toHaveAttribute('data-image-source', 'original');
     const bounds = await viewer.boundingBox();
     expect(bounds!.width).toBeLessThan(width);
@@ -72,3 +68,21 @@ for (const width of [390, 1280]) {
     expect(errors).toEqual([]);
   });
 }
+
+test('animation evidence rejects an unchanged static preview', async ({ page }, info) => {
+  // Negative control: a nonmoving PNG must not satisfy the exact GIF checker.
+  // This context contains no Gallery, external scripts or production requests.
+  await page.setContent('<img id="still" style="width:72px;height:36px" alt="Static negative control">');
+  await page.locator('#still').evaluate(node => {
+    const canvas = document.createElement('canvas'); canvas.width = 120; canvas.height = 60;
+    const ctx = canvas.getContext('2d')!; ctx.fillStyle = '#ff0000'; ctx.fillRect(0, 0, 120, 60);
+    (node as HTMLImageElement).src = canvas.toDataURL('image/png');
+  });
+  let rejected = false;
+  try { await expectAnimatedImage(page.locator('#still'), info); }
+  catch (error) {
+    rejected = true;
+    expect(String(error)).toContain('toBeGreaterThan');
+  }
+  expect(rejected).toBe(true);
+});

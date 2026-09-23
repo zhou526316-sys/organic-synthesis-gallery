@@ -35,7 +35,13 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   await page.locator('.card').first().waitFor({ state: 'visible', timeout: 30000 });
   await page.locator('gallery-paper-actions').first().waitFor({ state: 'visible', timeout: 30000 });
 
-  const initialCards = await page.locator('.card').count();
+  // Count actual literature cards, not the twelve offscreen .card elements
+  // in #bridge-gap-staging (observed in diagnostic35814493770).
+  // Keep strict count equality and strengthen unchanged-node identity.
+  const initialCards = await page.locator('#gallery > .card').count();
+  await page.locator('#gallery').evaluate(gallery => {
+    (window as Window & { __initialGalleryNodes?: Element[] }).__initialGalleryNodes = Array.from(gallery.querySelectorAll(':scope > .card'));
+  });
   expect(initialCards).toBeGreaterThan(400);
 
   const mobileCardLayout = await page.locator('#gallery').evaluate(gallery => {
@@ -173,7 +179,12 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
     await expectUnlocked();
   }
 
-  expect(await page.locator('.card').count()).toBe(initialCards);
+  expect(await page.locator('#gallery > .card').count()).toBe(initialCards);
+  expect(await page.locator('#gallery').evaluate(gallery => {
+    const original = (window as Window & { __initialGalleryNodes?: Element[] }).__initialGalleryNodes || [];
+    const current = Array.from(gallery.querySelectorAll(':scope > .card'));
+    return original.length === current.length && original.every((node, index) => node === current[index]);
+  })).toBe(true);
   const removedCards = await page.evaluate(() =>
     (window as Window & { __removedGalleryCards?: number }).__removedGalleryCards || 0
   );
