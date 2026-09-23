@@ -6,6 +6,9 @@ on:
       - '.github/workflows/new-body-batch20-workbench.yml'
       - 'audit/media-auto-policy.json'
       - 'cloudflare/scripts/merge-new-body-auto.mjs'
+      - 'cloudflare/scripts/merge-local-captures.mjs'
+      - 'scripts/test-media-batch20-paired.mjs'
+      - 'docs/body-media-publication.md'
       - 'scripts/test-new-body-auto.mjs'
       - 'scripts/verify-new-body-auto-live.mjs'
       - '.github/workflows/new-body-continuous.yml'
@@ -62,7 +65,9 @@ jobs:
           npx playwright install --with-deps chromium
           node --check cloudflare/scripts/merge-new-body-auto.mjs
           node --check scripts/test-new-body-auto.mjs
+          node --check scripts/test-media-batch20-paired.mjs
           node --check scripts/verify-new-body-auto-live.mjs
+          node scripts/test-media-batch20-paired.mjs
           node scripts/test-new-body-auto.mjs 2>&1 | tee "$RUNNER_TEMP/batch20-tests.log"
           grep -F 'NEW_BODY_AUTO_TESTS ' "$RUNNER_TEMP/batch20-tests.log"
           node scripts/test-body-review-markers.mjs
