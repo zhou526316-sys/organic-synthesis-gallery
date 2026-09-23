@@ -73,11 +73,13 @@ test('keyboard controls, live language labels and reduced motion', async ({ page
   const nav = page.locator('gallery-page-navigation');
   const bottom = nav.getByRole('button', { name: 'Go to bottom' });
   await expect(bottom).toHaveAttribute('title', 'Go to bottom');
-  await bottom.focus(); await page.keyboard.press('Enter');
+  // Press the key on the native shadow-DOM button itself so WebKit cannot
+  // lose focus between a separate focus command and the keyboard event.
+  await bottom.press('Enter');
   await expect.poll(async () => (await position(page)).remaining).toBeLessThanOrEqual(4);
   expect(await page.evaluate(() => (window as any).__navScrolls[0].behavior)).toBe('instant');
   const top = nav.getByRole('button', { name: 'Back to top' });
-  await top.focus(); await page.keyboard.press('Space');
+  await top.press('Space');
   await expect.poll(async () => (await position(page)).y).toBeLessThanOrEqual(3);
   await page.evaluate(() => { document.documentElement.lang = 'zh'; });
   await expect(nav.getByRole('button', { name: '回到顶部' })).toBeVisible();
