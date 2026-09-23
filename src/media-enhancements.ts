@@ -101,7 +101,7 @@ function likelyImageHref(host: HTMLElement): string | undefined {
 function preferredSource(host: HTMLElement, image: HTMLImageElement): string {
   return absoluteUrl(host.dataset.masterSrc)
     || absoluteUrl(image.dataset.masterSrc)
-    || bestSrcsetUrlUrl(image)
+    || bestSrcsetUrl(image)
     || likelyImageHref(host)
     || image.currentSrc
     || image.src;
