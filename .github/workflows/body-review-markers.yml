@@ -4,14 +4,19 @@ on:
     branches: [fix/body-review-markers-20260923]
     paths:
       - '.github/workflows/body-review-markers.yml'
+      - '.github/workflows/materialize-approved-body-assets.yml'
       - 'shared/body-media-evidence.js'
       - 'scripts/apply-body-review-markers.py'
+      - 'scripts/materialize-approved-body-assets.py'
       - 'scripts/test-body-review-markers.mjs'
       - 'cloudflare/scripts/merge-approved-body-batches.mjs'
   pull_request:
     branches: [main]
     paths:
+      - '.github/workflows/body-review-markers.yml'
+      - '.github/workflows/materialize-approved-body-assets.yml'
       - 'shared/body-media-evidence.js'
+      - 'scripts/materialize-approved-body-assets.py'
       - 'cloudflare/scripts/merge-approved-body-batches.mjs'
       - 'audit/media-recovery/body-batches/**'
 permissions:
@@ -31,6 +36,7 @@ jobs:
       - name: Apply additive server markers and approved-batch hook only
         run: |
           python3 scripts/apply-body-review-markers.py
+          python3 -m py_compile scripts/materialize-approved-body-assets.py
           node --check shared/body-media-evidence.js
           node --check cloudflare/worker/src/stage-storage.js
           node --check cloudflare/worker/src/index.js
