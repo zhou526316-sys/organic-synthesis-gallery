@@ -1,0 +1,68 @@
+name: Record fixed-slot literature release failure state
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'audit/automation-triggers/literature-release-failure-request.json'
+      - '.github/workflows/literature-release-failure-state.yml'
+      - 'scripts/record-fixed-slot-release-failure.mjs'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: fixed-slot-literature-failure-state
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify referenced run outcomes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          req='audit/automation-triggers/literature-release-failure-request.json'
+          for key in pagesRunId tocRefreshRunId postReleaseAuditRunId; do
+            run_id="$(node -p "require('./${req}')[process.argv[1]]" "$key")"
+            conclusion="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" --jq '.conclusion')"
+            echo "$key=$run_id conclusion=$conclusion"
+            test "$conclusion" = success
+          done
+          quality="$(node -p "require('./${req}').qualityGateRunId")"
+          quality_conclusion="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${quality}" --jq '.conclusion')"
+          echo "qualityGateRunId=$quality conclusion=$quality_conclusion"
+          test "$quality_conclusion" = failure
+      - name: Record fail-closed release state
+        run: node scripts/record-fixed-slot-release-failure.mjs audit/automation-triggers/literature-release-failure-request.json
+      - name: Commit failure state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit/literature-update-state.json audit/release-finalization-result.json
+          test -n "$(git status --porcelain -- audit/literature-update-state.json audit/release-finalization-result.json)"
+          git commit -m 'audit: record 18:00 literature release quality failure'
+          git push origin HEAD:main
+      - name: Preserve failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fixed-slot-literature-release-failure
+          path: audit/release-finalization-result.json
+          if-no-files-found: warn
+          retention-days: 14
