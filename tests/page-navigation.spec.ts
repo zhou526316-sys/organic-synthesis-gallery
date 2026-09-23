@@ -79,6 +79,10 @@ test('keyboard controls, live language labels and reduced motion', async ({ page
   await expect.poll(async () => (await position(page)).remaining).toBeLessThanOrEqual(4);
   expect(await page.evaluate(() => (window as any).__navScrolls[0].behavior)).toBe('instant');
   const top = nav.getByRole('button', { name: 'Back to top' });
+  // The instant scroll position can settle before the next rAF refreshes the
+  // endpoint button state. A real user cannot activate a disabled button, so
+  // wait for the control to become actionable before exercising Space.
+  await expect(top).toBeEnabled();
   await top.press('Space');
   await expect.poll(async () => (await position(page)).y).toBeLessThanOrEqual(3);
   await page.evaluate(() => { document.documentElement.lang = 'zh'; });
