@@ -19,6 +19,7 @@
       var prev = GM_getValue(LIVE_VIEW_KEY, null);
       var same = prev && prev.jobId === job.jobId && prev.doi === job.doi;
       detail = detail || {};
+      var sameImage = same && prev.label === String(detail.label || job._liveLabel || '');
       var row = {
         jobId: job.jobId, doi: normalizeDoi(job.doi), controllerRevision: CONTROLLER_REVISION,
         captureProtocol: VERSION, phase: String(phase || 'working').slice(0, 40),
@@ -32,8 +33,8 @@
         stagedReceipts: Math.max(0, Number(result.figuresStaged || 0)),
         reused: (figures.items || []).filter(function (x) { return x.status === 'already_staged'; }).length,
         failed: Math.max(0, Number(figures.failed || 0)),
-        quality: String(detail.quality || (same && prev.quality) || '').slice(0, 30),
-        width: Math.max(0, Number(detail.width || 0)), height: Math.max(0, Number(detail.height || 0)),
+        quality: String(detail.quality || (sameImage && prev.quality) || '').slice(0, 30),
+        width: Math.max(0, Number(detail.width || (sameImage && prev.width) || 0)), height: Math.max(0, Number(detail.height || (sameImage && prev.height) || 0)),
         lastError: detail.error ? captureLiveError(detail.error) : String(same && prev.lastError || ''),
         resultStatus: String(result.status || ''),
         // This release retains the deployed verified-staging protocol.
