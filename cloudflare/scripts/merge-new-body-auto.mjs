@@ -17,6 +17,20 @@ export async function fetchStored(url,maxBytes=20000000,missing=false){
   try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;requireBody(size<=maxBytes,'auto_read_size_limit');parts.push(Buffer.from(value));}}finally{reader.releaseLock();}
   return Buffer.concat(parts);
 }
+export function assertSnapshotCoherence(previous,live){
+  const prior=new Map();
+  for(const entry of previous.items){
+    const key=entry.record.doi+'|'+entry.record.id;
+    requireBody(!prior.has(key),'auto_previous_duplicate_identity');prior.set(key,entry);
+  }
+  const published=[];
+  for(const [doi,item] of Object.entries(live.items||{}))for(const figure of item.figures?.figures||[])if(figure.publicationId===POLICY_ID)published.push({doi,figure});
+  requireBody(prior.size===published.length,'auto_public_snapshots_incoherent_count');
+  for(const {doi,figure} of published){
+    const entry=prior.get(doi+'|'+figure.id);
+    requireBody(entry&&entry.record.sha256===figure.verifiedSha256&&entry.imageUrl===figure.imageUrl&&entry.evidenceSha256===figure.evidenceSha256&&entry.record.label===figure.label,'auto_public_snapshots_incoherent_identity');
+  }
+}
 async function configuration(root){
   const policy=JSON.parse(await readFile(path.join(root,'audit/media-auto-policy.json'),'utf8'));
   requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&policy.maxNewImages<=30&&policy.maxNewArticles<=5&&policy.maxFiguresPerCard<=10,'auto_invalid_configuration');
@@ -30,6 +44,7 @@ export async function readLiveInputs(){
   requireBody(previous.policyId===POLICY_ID&&Array.isArray(previous.items)&&previous.items.length<=2000&&(!priorBytes||previous.count===previous.items.length),'auto_previous_snapshot_invalid');
   requireBody(new Set(previous.items.map(x=>x.record.doi+'|'+x.record.id)).size===previous.items.length,'auto_previous_duplicate_identity');
   if(!priorBytes)requireBody(!Object.values(live.items||{}).some(x=>x.figures?.figures?.some(f=>f.publicationId===POLICY_ID)),'auto_previous_snapshot_missing');
+  assertSnapshotCoherence(previous,live);
   let stage=null,stageError=null;
   try{stage=JSON.parse(await fetchStored(WORKER+'/api/article-figures/staged'));requireBody(Array.isArray(stage.items)&&stage.count===stage.items.length&&stage.count<=2000,'auto_stage_truncated_or_invalid');}
   catch(e){stageError=String(e.message);stage=null;}
@@ -38,6 +53,7 @@ export async function readLiveInputs(){
 function alreadyIn(media,row){return (media.items?.[row.doi]?.figures?.figures||[]).some(f=>f.id===row.id);}
 function heldAttempts(previous,row,now){const a=previous.attempts?.[exactKey(row)];return a?.evidenceSha256===evidenceKey(row)&&(!a.retryAfter||a.retryAfter>now);}
 export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()}){
+  assertSnapshotCoherence(inputs.previous,inputs.live);
   const cfg=await configuration(root),{policy,holds,papers}=cfg;
   if(!policy.enabled||!inputs.stage)return {...cfg,rows:[]};
   const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record)));
@@ -60,7 +76,6 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   const attempts={...(inputs.previous.attempts||{})},prepared=[],retained=[],held=[],added=[],newDois=new Set();
   const conflicts=conflictKeys((inputs.stage?.items||[]).filter(x=>x.mediaGeneration===policy.mediaGeneration&&x.updatedAt>=policy.mediaGeneration));
   try{
-    // An unreadable prior published auto file stops deployment rather than silently removing it.
     for(const old of inputs.previous.items){
       const row=old.record;if(!papers.has(row.doi))continue;
       if(alreadyIn(media,row))continue;
@@ -91,7 +106,6 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
       }
     }
   }finally{await decoder.close();}
-  // No output is modified until every previously displayed auto file has been revalidated.
   await mkdir(path.join(root,'public/media-mirror'),{recursive:true});
   const entries=[];
   for(const {row,bytes,ext,admittedAt} of prepared){
