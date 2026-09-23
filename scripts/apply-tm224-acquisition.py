@@ -7,10 +7,10 @@ def once(s,a,b):
 def save(p,s): Path(p).write_text(s)
 
 p='public/toc-mainline.user.js'; s=Path(p).read_text()
-if "var CONTROLLER_REVISION = '2.2.25';" in s:
+if any("var CONTROLLER_REVISION = '"+v+"';" in s for v in ('2.2.25','2.2.26')):
     assert "sameFigureCurrentSrcFallback" in s
     assert "if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + doi;" in s
-    print('TM224_ALREADY_APPLIED_IN_225: retained TIFF/currentSrc fallback and canonical ACS route')
+    print('TM224_ALREADY_APPLIED_IN_CURRENT: retained TIFF/currentSrc fallback and canonical ACS route')
     raise SystemExit(0)
 s=once(s,"var CONTROLLER_REVISION = '2.2.23';","var CONTROLLER_REVISION = '2.2.24';")
 s=once(s,"publication: '已保存至 R2 暂存；未自动发布到文献卡片'",

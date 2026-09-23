@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import {chromium} from 'playwright';
 
 const source=await fs.readFile('public/toc-mainline.user.js','utf8');
-const names=['sniffContentType','articleFigureResolution','visualScope','collectArticleFigureCandidates','acquireBestVisual','pairedJobs','articleUrl'];
+const names=['sniffContentType','articleFigureResolution','visualScope','collectArticleFigureCandidates','acquireBestVisual','pairedJobs','articleUrl','pairedDiscoveryReady'];
 const exposed=source.replace('  installMenu();','  globalThis.__tm224={'+names.join(',')+'}; return;\n  installMenu();');
 const doi='10.1021/acs.orglett.6c03512',foreign='10.1021/jacs.6c00000';
 const jobId='12345678-1234-1234-1234-123456789012';
@@ -97,6 +97,20 @@ try{
  test('ACS TOC and body jobs both enter through the canonical DOI route',routes.acsFigure==='https://pubs.acs.org/doi/10.1021/acs.orglett.6c03487'&&routes.acsToc===routes.acsFigure);
  test('ACS body jobs no longer force the legacy doi/full shell route',!routes.acsFigure.includes('/doi/full/'));
  test('non-ACS full-text routes remain unchanged',routes.wileyFigure==='https://onlinelibrary.wiley.com/doi/full/10.1002/anie.202600001'&&routes.scienceFigure==='https://www.science.org/doi/full/10.1126/science.abc1234');
- test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.25';"));
+
+ const discovery=await page.evaluate(()=>({
+   tocOnlyEarly:__tm224.pairedDiscoveryReady({mediaNeed:'toc+figures'},3,1,0,6000,6000),
+   tocOnlyTimedOut:__tm224.pairedDiscoveryReady({mediaNeed:'toc+figures'},3,1,0,18000,18000),
+   bodyTooEarly:__tm224.pairedDiscoveryReady({mediaNeed:'toc+figures'},3,1,3,7000,5000),
+   bodyStillChanging:__tm224.pairedDiscoveryReady({mediaNeed:'toc+figures'},3,1,3,9000,3000),
+   bodyStable:__tm224.pairedDiscoveryReady({mediaNeed:'toc+figures'},3,1,3,9000,4000),
+   tocJobLegacy:__tm224.pairedDiscoveryReady({mediaNeed:'toc'},3,1,0,3000,3000)
+ }));
+ test('body discovery is not terminated merely because TOC appeared early',discovery.tocOnlyEarly===false);
+ test('body discovery with no figures may close only after the bounded 18s observation window',discovery.tocOnlyTimedOut===true);
+ test('body discovery retains an 8s minimum observation even after figures appear',discovery.bodyTooEarly===false);
+ test('body discovery waits four quiet seconds after the latest figure-set change',discovery.bodyStillChanging===false&&discovery.bodyStable===true);
+ test('TOC-only discovery keeps the legacy early-stable behavior',discovery.tocJobLegacy===true);
+ test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.26';"));
 }finally{await browser.close();}
 console.log('TM224_ACQUISITION_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherFixtureOnly:true,captureProtocol:'6.2.20'}));
