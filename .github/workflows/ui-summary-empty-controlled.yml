@@ -76,7 +76,11 @@ jobs:
                   // paper-id attribute uses the already registered metadata.
                   const fixture = document.createElement('article');
                   fixture.className = 'card'; fixture.dataset.emptySummaryFixture = 'true';
-                  fixture.style.cssText = 'position:relative;margin:24px;padding:20px;max-width:600px';
+                  // This standalone INPUT container is outside the app's normal
+                  // stacking context. Give it a visible interaction layer so #app
+                  // does not intercept its overflowing controls. No component
+                  // styles/methods are patched and clicks are never forced.
+                  fixture.style.cssText = 'position:relative;margin:24px;padding:20px;max-width:600px;z-index:20000;overflow:visible;contain:none;content-visibility:visible';
                   const title = document.createElement('h2'); title.textContent = '无 TOC 布局测试 / Empty-TOC layout fixture';
                   fixture.append(title, element.cloneNode(false));
                   document.body.prepend(fixture);
