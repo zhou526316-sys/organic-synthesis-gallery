@@ -34,6 +34,12 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Build
         run: npm run build
+      - name: Verify 20-second halo contract
+        run: |
+          grep -F "const SHARED_CARD_HIGHLIGHT_MS = 20_000;" src/card-share.ts
+          grep -F "window.setTimeout(clearSharedHighlight, remaining)" src/card-share.ts
+          grep -F "animation: gallery-shared-card-halo 1.8s ease-in-out infinite;" src/card-share.css
+
       - name: Install Playwright
         run: |
           npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
@@ -92,6 +98,14 @@ jobs:
             const targetedDoi = await targeted.getAttribute('data-doi');
             if ((targetedDoi || '').toLowerCase() !== doi.toLowerCase()) {
               throw new Error('deep-link target DOI mismatch: ' + targetedDoi + ' vs ' + doi);
+            }
+            const haloAnimation = await targeted.evaluate(element => getComputedStyle(element).animationName);
+            if (!haloAnimation.includes('gallery-shared-card-halo')) {
+              throw new Error('shared card does not have the continuous halo animation: ' + haloAnimation);
+            }
+            await page.waitForTimeout(2200);
+            if (!(await targeted.evaluate(element => element.classList.contains('shared-card-target')))) {
+              throw new Error('shared-card halo disappeared too early');
             }
             const firstVisibleDoi = await page.locator('.card[data-doi]:not([data-doi=""])').first().getAttribute('data-doi');
             if ((firstVisibleDoi || '').toLowerCase() !== doi.toLowerCase()) {

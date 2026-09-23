@@ -26,13 +26,33 @@
   opacity: .42;
 }
 .card.shared-card-target {
-  border-color: #6d8ee8;
-  box-shadow: 0 0 0 3px rgba(49, 89, 189, .15), 0 18px 42px rgba(49, 89, 189, .12);
-  animation: gallery-shared-card-pulse 1.3s ease-in-out 2;
+  position: relative;
+  z-index: 2;
+  border-color: #5f82df;
+  animation: gallery-shared-card-halo 1.8s ease-in-out infinite;
 }
-@keyframes gallery-shared-card-pulse {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+@keyframes gallery-shared-card-halo {
+  0%, 100% {
+    box-shadow:
+      0 0 0 2px rgba(49, 89, 189, .20),
+      0 0 16px rgba(49, 89, 189, .20),
+      0 18px 42px rgba(49, 89, 189, .12);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(49, 89, 189, .10),
+      0 0 34px rgba(49, 89, 189, .38),
+      0 20px 50px rgba(49, 89, 189, .18);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card.shared-card-target {
+    animation: none;
+    box-shadow:
+      0 0 0 4px rgba(49, 89, 189, .16),
+      0 0 24px rgba(49, 89, 189, .28),
+      0 18px 42px rgba(49, 89, 189, .12);
+  }
 }
 .card-share-panel {
   position: fixed;

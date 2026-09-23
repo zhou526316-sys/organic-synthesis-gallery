@@ -11,8 +11,12 @@ interface ShareInfo {
 let activePanel: HTMLElement | null = null;
 let activeAnchor: HTMLElement | null = null;
 let panelPositionFrame: number | null = null;
+const SHARED_CARD_HIGHLIGHT_MS = 20_000;
+
 let deepLinkFocused = false;
 let focusTimer: number | null = null;
+let highlightUntil = 0;
+let highlightExpiryTimer: number | null = null;
 
 function normalizeDoi(value: string | null | undefined): string | null {
   if (!value) return null;
@@ -237,25 +241,53 @@ function deepLinkDoi(): string | null {
   catch { return null; }
 }
 
+function clearSharedHighlight(): void {
+  document.querySelectorAll<HTMLElement>('.card.shared-card-target')
+    .forEach(card => card.classList.remove('shared-card-target'));
+  highlightUntil = 0;
+  if (highlightExpiryTimer !== null) window.clearTimeout(highlightExpiryTimer);
+  highlightExpiryTimer = null;
+}
+
+function scheduleSharedHighlightExpiry(): void {
+  if (!highlightUntil) return;
+  const remaining = Math.max(0, highlightUntil - Date.now());
+  if (highlightExpiryTimer !== null) window.clearTimeout(highlightExpiryTimer);
+  highlightExpiryTimer = window.setTimeout(clearSharedHighlight, remaining);
+}
+
 function focusDeepLinkCard(): void {
-  if (deepLinkFocused) return;
   const doi = deepLinkDoi();
   if (!doi) {
     deepLinkFocused = true;
+    clearSharedHighlight();
     return;
   }
+
   const card = [...document.querySelectorAll<HTMLElement>('.card[data-doi]')]
     .find(item => item.dataset.doi?.toLowerCase() === doi.toLowerCase());
   if (!card) return;
-  deepLinkFocused = true;
-  card.classList.add('shared-card-target');
-  const title = card.querySelector<HTMLElement>('.title')?.textContent?.trim();
-  if (title) document.title = `${title} | Organic Synthesis Gallery`;
-  requestAnimationFrame(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+
+  const firstFocus = !deepLinkFocused;
+  if (firstFocus) {
+    deepLinkFocused = true;
+    highlightUntil = Date.now() + SHARED_CARD_HIGHLIGHT_MS;
+    const title = card.querySelector<HTMLElement>('.title')?.textContent?.trim();
+    if (title) document.title = `${title} | Organic Synthesis Gallery`;
+    requestAnimationFrame(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+  }
+
+  if (highlightUntil > Date.now()) {
+    card.classList.add('shared-card-target');
+    scheduleSharedHighlightExpiry();
+  } else {
+    clearSharedHighlight();
+  }
 }
 
 function scheduleDeepLinkFocus(): void {
-  if (deepLinkFocused || focusTimer !== null) return;
+  if (focusTimer !== null) return;
+  if (deepLinkFocused && highlightUntil <= Date.now()) return;
   focusTimer = window.setTimeout(() => {
     focusTimer = null;
     focusDeepLinkCard();
