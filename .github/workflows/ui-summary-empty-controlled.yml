@@ -1,0 +1,129 @@
+name: Verify controlled empty-TOC summaries on active entries
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui-summary-empty-controlled.yml']
+permissions:
+  contents: read
+jobs:
+  empty-summary:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      LIVE_SITE_URL: ${{ matrix.site }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned test browser
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/empty-toc-browser.log 2>&1 || { tail -60 /tmp/empty-toc-browser.log; exit 1; }
+      - name: Test real component with controlled absent-TOC inputs and no production writes
+        run: |
+          mkdir -p empty-summary-results
+          node --input-type=module <<'NODE'
+          import { webkit, expect } from '@playwright/test';
+          import { writeFile } from 'node:fs/promises';
+          const site = process.env.LIVE_SITE_URL;
+          const browser = await webkit.launch();
+          const results = [];
+          try {
+            for (const width of [390, 1280]) for (const available of [false, true]) {
+              const result = { site, width, available, status: 'running', pageErrors: [], blockedWrites: 0, summaryCalls: 0 };
+              results.push(result);
+              const context = await browser.newContext({ viewport: { width, height: 900 }, serviceWorkers: 'block' });
+              const page = await context.newPage();
+              page.on('pageerror', error => result.pageErrors.push(error.message));
+              await context.route('**/*', async route => {
+                const request = route.request();
+                const path = new URL(request.url()).pathname;
+                const headers = { 'access-control-allow-origin': request.headers().origin || new URL(site).origin, 'access-control-allow-credentials': 'true', 'access-control-allow-methods': 'GET, HEAD, OPTIONS, POST, PUT, PATCH, DELETE', 'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization', 'vary': 'Origin' };
+                if (request.method() === 'OPTIONS') { await route.fulfill({ status: 204, headers }); return; }
+                if (path.endsWith('/api/user-ui/article-summary')) {
+                  result.summaryCalls++;
+                  await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify({ available, fulltextAvailable: available, source: available ? 'fulltext' : undefined, reason: available ? undefined : 'fulltext_missing', cached: true, zh: '无 TOC 布局测试示例。\n'.repeat(50), en: 'No-TOC layout fixture only.\n'.repeat(50) }) });
+                  return;
+                }
+                const api = path === '/api' || path.startsWith('/api/');
+                if (['GET','HEAD'].includes(request.method()) && !api) { await route.continue(); return; }
+                if (!['GET','HEAD'].includes(request.method())) result.blockedWrites++;
+                const body = path.endsWith('/reader-counts') ? { counts: {} } : path.endsWith('/integrations') ? { auth: {}, payments: {} } : { items: [] };
+                await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify(body) });
+              });
+              try {
+                const response = await page.goto(site, { waitUntil: 'domcontentloaded', timeout: 45000 });
+                if (!response?.ok()) throw new Error(`Entry HTTP ${response?.status()}`);
+                const original = page.locator('gallery-paper-actions').first();
+                await expect(original).toBeVisible({ timeout: 45000 });
+                result.scripts = await page.locator('script[src]').evaluateAll(nodes => nodes.map(node => node.src));
+                result.paperId = await original.getAttribute('data-paper-id');
+                await original.evaluate(element => {
+                  // Preserve every real literature card and image. Create an actual
+                  // registered custom element outside the mutable #app/#gallery.
+                  // Its card has no DOI/link/media lookup inputs; only its copied
+                  // paper-id attribute uses the already registered metadata.
+                  const fixture = document.createElement('article');
+                  fixture.className = 'card'; fixture.dataset.emptySummaryFixture = 'true';
+                  fixture.style.cssText = 'position:relative;margin:24px;padding:20px;max-width:600px';
+                  const title = document.createElement('h2'); title.textContent = '无 TOC 布局测试 / Empty-TOC layout fixture';
+                  fixture.append(title, element.cloneNode(false));
+                  document.body.prepend(fixture);
+                });
+                const card = page.locator('[data-empty-summary-fixture]');
+                const actions = card.locator('gallery-paper-actions');
+                await expect(card.locator('.toc-image, .toc-link img, .toc-slot img')).toHaveCount(0);
+                await actions.locator('[data-action="summary"]').click();
+                const drawer = actions.locator('.summary-drawer');
+                await expect(drawer).toBeVisible();
+                if (available) await expect(drawer.locator('.summary-text')).toContainText('无 TOC 布局测试');
+                else {
+                  await expect(drawer.locator('.summary-state')).toContainText(/全文尚未同步|Full text has not been synced/);
+                  await expect(drawer.locator('.summary-text')).toHaveCount(0);
+                }
+                await expect(drawer.locator('.summary-toc')).toHaveCount(0);
+                result.bounds = await drawer.boundingBox();
+                result.textWidth = (await drawer.locator('.summary-main').boundingBox()).width;
+                expect(result.textWidth).toBeGreaterThan(width === 1280 ? 900 : 280);
+                expect(result.bounds.x).toBeGreaterThanOrEqual(10);
+                expect(result.bounds.x + result.bounds.width).toBeLessThanOrEqual(width - 10);
+                expect(result.bounds.height).toBeLessThan(900 * .9);
+                expect(await page.evaluate(() => document.fullscreenElement === null)).toBe(true);
+                if (available) {
+                  await drawer.locator('[data-action="summary-lang:en"]').click();
+                  await expect(drawer.locator('.summary-text')).toContainText('No-TOC layout fixture only.');
+                }
+                expect(result.summaryCalls).toBe(1);
+                await page.screenshot({ path: `empty-summary-results/empty-${width}-${available}.png` });
+                await drawer.locator('[data-action="close"]').click();
+                await expect(drawer).toHaveCount(0);
+                expect(result.pageErrors).toEqual([]);
+                result.status = 'passed';
+              } catch (error) { result.status = 'failed'; result.error = String(error?.stack || error); }
+              finally {
+                await context.close();
+                await writeFile('empty-summary-results/results.json', JSON.stringify({ generatedAt: new Date().toISOString(), productionWritesAllowed: false, productMethodsOverridden: false, sourceScope: 'deployed component; controlled absent-TOC card; mocked summary/backend', fallbackPagesChecked: false, results }, null, 2));
+                console.log(JSON.stringify(result));
+              }
+            }
+          } finally { await browser.close(); }
+          if (results.length !== 4 || results.some(item => item.status !== 'passed')) process.exitCode = 1;
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: empty-summary-${{ matrix.entry }}
+          path: empty-summary-results/
+          retention-days: 7
+          if-no-files-found: warn
