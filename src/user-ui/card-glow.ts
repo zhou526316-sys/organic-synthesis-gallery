@@ -13,7 +13,7 @@ export function applyCardGlow(card: HTMLElement, style?: StyleDef, statusId = ''
     stylesheet.textContent = CARD_GLOW_CSS;
     document.head.appendChild(stylesheet);
   }
-  const mode = statusId && STATUS_GLOWS.includes(style?.glow as never) ? style!.glow! : 'none';
+  const mode = statusId && style?.glow && STATUS_GLOWS.includes(style.glow) ? style.glow : 'none';
   card.dataset.cardGlow = mode;
   // Retain the preference/width naming; only a card receives these attributes.
   card.dataset.statusGlow = mode;

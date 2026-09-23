@@ -1,6 +1,7 @@
-import { STATUS_GLOWS, store, statusLabel, type Language, type StatusGlow, type StyleDef } from './shared';
+import { STATUS_GLOWS, store, statusLabel, type Language, type StatusGlow } from './shared';
 
-import { applyGlowWidth, bindGlowWidth, STATUS_GLOW_WIDTH_CSS } from './status-glow-width';
+import { bindGlowWidth, STATUS_GLOW_WIDTH_CSS } from './status-glow-width';
+import { applyCardGlow } from './card-glow';
 
 const LABELS: Record<StatusGlow, [string, string]> = {
   none: ['关闭', 'Off'], soft: ['柔光', 'Soft'], pulse: ['呼吸', 'Breathing'],
@@ -10,14 +11,6 @@ const tones = new Map<string, Promise<'dark' | 'light'>>();
 
 export function safeStatusGlow(value: unknown): StatusGlow {
   return STATUS_GLOWS.includes(value as StatusGlow) ? value as StatusGlow : 'none';
-}
-
-function applyGlow(node: HTMLElement, style?: StyleDef, statusId = ''): void {
-  node.dataset.statusGlowId = statusId;
-  applyGlowWidth(node, style?.glowWidth);
-  node.dataset.statusGlow = safeStatusGlow(style?.glow);
-  const rgb = (style?.rgb || [93, 109, 219]).map(value => Number.isFinite(value) ? Math.max(0, Math.min(255, Math.round(value))) : 0);
-  node.style.setProperty('--status-glow-rgb', rgb.join(','));
 }
 
 function captionTone(source: string): Promise<'dark' | 'light'> {
@@ -62,9 +55,10 @@ function captionTone(source: string): Promise<'dark' | 'light'> {
  * listeners or reader events are installed by the presentation controls. */
 export function bindStatusPresentation(root: ShadowRoot, language: Language, paperId: string): void {
   const selected = store.status(store.paper(paperId).statusId || '');
+  const card = (root.host as HTMLElement).closest<HTMLElement>('#gallery > .card');
+  if (card) applyCardGlow(card, selected?.style, selected?.id || '');
   const action = root.querySelector<HTMLButtonElement>('button[data-action="status"]');
   if (action) {
-    applyGlow(action, selected?.style, selected?.id || '');
     if (selected?.style.imageData && action.querySelector('.status-action-label')) {
       const source = selected.style.imageData;
       action.dataset.captionTone = 'light';
@@ -74,15 +68,12 @@ export function bindStatusPresentation(root: ShadowRoot, language: Language, pap
       });
     }
   }
-  root.querySelectorAll<HTMLElement>('.chips > .chip.status').forEach(node => applyGlow(node, selected?.style, selected?.id || ''));
   root.querySelectorAll<HTMLElement>('[data-status-editor]').forEach(editor => {
     const id = editor.dataset.statusEditor || '';
     const status = store.status(id);
     if (!status) return;
-    const choice = Array.from(root.querySelectorAll<HTMLElement>('button[data-action]')).find(node => node.dataset.action === `set-status:${id}`)?.querySelector<HTMLElement>('.status-choice-label');
-    if (choice) applyGlow(choice, status.style, id);
     const label = document.createElement('label'); label.className = 'status-glow-control';
-    const name = document.createElement('span'); name.textContent = language === 'zh' ? '环绕光效' : 'Surrounding glow';
+    const name = document.createElement('span'); name.textContent = language === 'zh' ? '卡片光效' : 'Card glow';
     const select = document.createElement('select'); select.dataset.statusGlowChoice = id;
     select.setAttribute('aria-label', `${name.textContent} · ${statusLabel(status, language)}`);
     for (const value of STATUS_GLOWS) {
@@ -92,7 +83,7 @@ export function bindStatusPresentation(root: ShadowRoot, language: Language, pap
     select.value = safeStatusGlow(status.style.glow);
     const message = document.createElement('span'); message.dataset.statusGlowMessage = id;
     message.setAttribute('role', 'status'); message.className = 'status-glow-help';
-    message.textContent = language === 'zh' ? '仅改变外观，不改变阅读状态；减少动态效果时停止装饰动画。' : 'Appearance only; reduced motion stops decorative animation.';
+    message.textContent = language === 'zh' ? '应用于该阅读状态的整张文献卡片；按钮不发光。减少动态效果时停止动画。' : 'Applies to the full literature card for this status, not its buttons. Reduced motion stops animation.';
     select.addEventListener('change', () => {
       const before = safeStatusGlow(store.status(id)?.style.glow);
       if (!store.setStatusGlow(id, safeStatusGlow(select.value))) {
@@ -106,18 +97,7 @@ export function bindStatusPresentation(root: ShadowRoot, language: Language, pap
 }
 
 export const STATUS_PRESENTATION_CSS = `
-[data-status-glow]{position:relative}
-[data-status-glow]:not([data-status-glow="none"])::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;border:1px solid rgba(var(--status-glow-rgb),.8);box-shadow:inset 0 0 7px 1px rgba(var(--status-glow-rgb),.6),0 0 5px rgba(var(--status-glow-rgb),.4)}
-[data-status-glow="rainbow"]::after{border-color:#a78bfa;box-shadow:inset 2px 0 5px #38bdf8,inset -2px 0 5px #e879f9,inset 0 2px 5px #facc15,inset 0 -2px 5px #34d399}
-@keyframes status-glow-pulse{0%,100%{opacity:.45}50%{opacity:1}}
-@keyframes status-glow-orbit{0%,100%{box-shadow:inset 3px 0 7px rgba(var(--status-glow-rgb),.95)}25%{box-shadow:inset 0 3px 7px rgba(var(--status-glow-rgb),.95)}50%{box-shadow:inset -3px 0 7px rgba(var(--status-glow-rgb),.95)}75%{box-shadow:inset 0 -3px 7px rgba(var(--status-glow-rgb),.95)}}
-@keyframes status-glow-rainbow{0%,100%{border-color:#38bdf8;filter:hue-rotate(0deg)}50%{border-color:#e879f9;filter:hue-rotate(180deg)}}
-@media(prefers-reduced-motion:no-preference){
-[data-status-glow="pulse"]::after{animation:status-glow-pulse 2.8s ease-in-out infinite}
-[data-status-glow="orbit"]::after{animation:status-glow-orbit 3.6s linear infinite}
-[data-status-glow="rainbow"]::after{animation:status-glow-rainbow 5s linear infinite}
-}
-@media(forced-colors:active){[data-status-glow]::after{display:none!important}.action.status-artwork .status-action-label{color:ButtonText!important;background:ButtonFace!important}}
+@media(forced-colors:active){.action.status-artwork .status-action-label{color:ButtonText!important;background:ButtonFace!important}}
 .status-style-editor .status-glow-control{grid-column:1/-1;display:grid;grid-template-columns:1fr;gap:5px;font-size:11px}
 .status-glow-control select{min-height:34px;padding:5px 8px;border:1px solid #d7deea;border-radius:8px;background:#fff;font-size:12px}
 .status-glow-help{font-size:10px;line-height:1.55;color:#667085}

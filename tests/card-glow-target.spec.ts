@@ -9,10 +9,12 @@ for (const width of [390, 1280]) {
     const actions = await open(page, width);
     const card = actions.locator('..');
     const statusButton = actions.locator('[data-action="status"]');
+    await actions.locator('[data-action="set-status:to-read"]').click();
+    await statusButton.click();
     const before = (await card.boundingBox())!;
     const originalButton = (await statusButton.boundingBox())!;
-    await expect(actions.locator('.status-glow-control > span')).toHaveText(/卡片光效|Card glow/);
-    await expect(actions.locator('.status-glow-width-control > label')).toHaveText(/卡片光效粗细|Card glow thickness/);
+    await expect(actions.locator('[data-status-editor="to-read"] .status-glow-control > span')).toHaveText(/卡片光效|Card glow/);
+    await expect(actions.locator('[data-status-editor="to-read"] .status-glow-width-control > label')).toHaveText(/卡片光效粗细|Card glow thickness/);
     await actions.locator('[data-status-glow-choice="to-read"]').selectOption('orbit');
     const slider = actions.locator('[data-status-glow-width="to-read"]');
     await slider.evaluate(node => {

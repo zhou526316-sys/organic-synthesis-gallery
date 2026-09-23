@@ -20,7 +20,7 @@ export function applyGlowWidth(node: HTMLElement, value: unknown): void {
   node.style.setProperty('--status-glow-rainbow-size', `${width + 1}px`);
 }
 
-/** Preview touches only this disposable card render. It never mutates stored
+/** Preview touches only the current matching literature card. It never mutates stored
  * preferences or broadcasts changes on input; normal change commits once. */
 export function bindGlowWidth(editor: HTMLElement, root: ShadowRoot, id: string, language: Language): void {
   const status = store.status(id);
@@ -31,15 +31,15 @@ export function bindGlowWidth(editor: HTMLElement, root: ShadowRoot, id: string,
   const input = document.createElement('input');
   input.type = 'range'; input.min = String(MIN_GLOW_WIDTH); input.max = String(MAX_GLOW_WIDTH); input.step = '1';
   input.id = `status-glow-width-${id}`; input.dataset.statusGlowWidth = id;
-  input.setAttribute('aria-label', `${tr('光效粗细', 'Glow thickness')} · ${statusLabel(status, language)}`);
-  label.htmlFor = input.id; label.textContent = tr('光效粗细', 'Glow thickness');
+  input.setAttribute('aria-label', `${tr('卡片光效粗细', 'Card glow thickness')} · ${statusLabel(status, language)}`);
+  label.htmlFor = input.id; label.textContent = tr('卡片光效粗细', 'Card glow thickness');
   const value = document.createElement('output'); value.dataset.glowWidthValue = id;
   value.setAttribute('for', input.id);
   const reset = document.createElement('button'); reset.type = 'button'; reset.dataset.glowWidthReset = id;
   reset.textContent = tr('恢复默认', 'Reset');
   const message = document.createElement('span'); message.className = 'status-glow-width-help';
   message.dataset.glowWidthMessage = id; message.setAttribute('role', 'status');
-  const hint = tr('1–6px；拖动预览，松开保存。光效关闭时只保存粗细。', '1–6px; drag to preview, release to save. Off stays off.');
+  const hint = tr('1–6px 卡片外沿；拖动预览，松开保存。按钮不发光，关闭时不显示光效。', '1–6px card edge; drag to preview, release to save. Buttons do not glow. Off stays off.');
   message.textContent = hint;
   const row = document.createElement('div'); row.className = 'status-glow-width-row';
   row.append(input, value, reset); group.append(label, row, message); editor.append(group);
@@ -47,9 +47,8 @@ export function bindGlowWidth(editor: HTMLElement, root: ShadowRoot, id: string,
   const setPreview = (width: number): void => {
     input.value = String(width); value.value = `${width} px`;
     input.setAttribute('aria-valuetext', `${width} ${tr('像素', 'pixels')}`);
-    root.querySelectorAll<HTMLElement>('[data-status-glow-id]').forEach(node => {
-      if (node.dataset.statusGlowId === id) applyGlowWidth(node, width);
-    });
+    const card = (root.host as HTMLElement).closest<HTMLElement>('#gallery > .card');
+    if (card?.dataset.statusGlowId === id) applyGlowWidth(card, width);
   };
   const storedWidth = (): number => safeGlowWidth(store.status(id)?.style.glowWidth);
   const commit = (width: number, focused: 'range' | 'reset'): void => {
@@ -92,12 +91,4 @@ export const STATUS_GLOW_WIDTH_CSS = `
 .status-glow-width-row button{flex:0 0 auto;min-height:36px;padding:4px 8px;border:1px solid #d7deea;border-radius:8px;background:#fff;color:#3159bd;font-size:11px;cursor:pointer}
 .status-glow-width-row :focus-visible{outline:2px solid #3159bd;outline-offset:2px}
 .status-glow-width-help{font-size:10px;line-height:1.55;color:#667085;overflow-wrap:anywhere}
-[data-status-glow]:not([data-status-glow="none"])::after{box-sizing:border-box;border-width:var(--status-glow-width,1px);box-shadow:inset 0 0 var(--status-glow-blur,7px) var(--status-glow-width,1px) rgba(var(--status-glow-rgb),.6),0 0 var(--status-glow-outer-blur,5px) rgba(var(--status-glow-rgb),.4)}
-[data-status-glow][data-status-glow="rainbow"]::after{box-shadow:inset var(--status-glow-rainbow-size,2px) 0 var(--status-glow-outer-blur,5px) #38bdf8,inset calc(-1 * var(--status-glow-rainbow-size,2px)) 0 var(--status-glow-outer-blur,5px) #e879f9,inset 0 var(--status-glow-rainbow-size,2px) var(--status-glow-outer-blur,5px) #facc15,inset 0 calc(-1 * var(--status-glow-rainbow-size,2px)) var(--status-glow-outer-blur,5px) #34d399}
-@keyframes status-glow-orbit{
-0%,100%{box-shadow:inset var(--status-glow-orbit-size,3px) 0 var(--status-glow-blur,7px) rgba(var(--status-glow-rgb),.95)}
-25%{box-shadow:inset 0 var(--status-glow-orbit-size,3px) var(--status-glow-blur,7px) rgba(var(--status-glow-rgb),.95)}
-50%{box-shadow:inset calc(-1 * var(--status-glow-orbit-size,3px)) 0 var(--status-glow-blur,7px) rgba(var(--status-glow-rgb),.95)}
-75%{box-shadow:inset 0 calc(-1 * var(--status-glow-orbit-size,3px)) var(--status-glow-blur,7px) rgba(var(--status-glow-rgb),.95)}
-}
 `;
