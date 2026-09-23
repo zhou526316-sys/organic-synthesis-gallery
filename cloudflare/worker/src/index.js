@@ -1,3 +1,4 @@
+import { STAGE_STORAGE_REVISION } from './stage-storage.js';
 import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteStagedArticleFigures, purgeCrossDoiLocalMedia } from './local-captures.js';
 import {
   bridgeQueue,
@@ -111,7 +112,7 @@ async function readJson(request) {
 }
 
 function resultResponse(result, headers = {}) {
-  return json(result.body, { status: result.status || 200, headers });
+  return json(result.body, { status: result.status || 200, headers: { ...(result.headers || {}), ...headers } });
 }
 
 function browserCorsOriginAllowed(origin) {
@@ -154,6 +155,7 @@ function browserCorsHeaders(request) {
     'access-control-allow-methods': 'GET, POST, OPTIONS',
     'access-control-allow-headers': 'content-type, authorization',
     'access-control-max-age': '86400',
+    'access-control-expose-headers': 'retry-after, cf-ray, content-type',
     'vary': 'Origin',
   };
 }
@@ -352,7 +354,7 @@ async function handleApi(request, env) {
     return resultResponse(await getArticleFigures(request, env), cors);
   }
   if(request.method==='GET' && url.pathname==='/api/media/capture-capabilities') {
-    return json({captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:false}, {headers:cors});
+    return json({captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION}, {headers:cors});
   }
   if (request.method === 'GET' && url.pathname === '/api/article-figures/staged') {
     return resultResponse(await getStagedArticleFigures(request, env), cors);

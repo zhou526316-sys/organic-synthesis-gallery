@@ -1,7 +1,7 @@
 from pathlib import Path
 import hashlib
 p=Path('public/toc-mainline.user.js');s=p.read_text()
-if "var CONTROLLER_REVISION = '2.2.22';" in s:
+if any("var CONTROLLER_REVISION = '"+v+"';" in s for v in ('2.2.22','2.2.23')):
     assert all(x in s for x in ['requestControllerStart','previous_task_tab_not_closed','clearOwnedJob','await acquireLease()','assertBoundCaptureJob'])
     print('TM222_RETAINS_WINDOW_GUARDS: run behavioral regression unchanged')
     raise SystemExit(0)
