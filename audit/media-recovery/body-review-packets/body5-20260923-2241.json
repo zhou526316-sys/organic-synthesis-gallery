@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260923-2241",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T14:41:21Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10756177326,
+  "evidenceArchiveSha256": "bf8b05b091bdd633fb0fee5252b0a2411e522bc0e8132926e07a37b593632e70",
+  "evidenceRunId": 35874927926,
+  "approvedCount": 20,
+  "reviewMethod": "All 20 selected stored files across five current-corpus articles were independently rehashed against the frozen artifact, byte-length checked, parsed/decoded and visually reviewed against the owning paper title plus the original isolated figure caption. Task/page/article/source DOI bindings, captureVersion 6.2.20, job IDs, current media generation, content-addressed R2 keys, current live media index, existing same-ID figures, and full stage-index duplicate/source reuse were checked. The 16 SVG files were XML-parsed and rendered on white for inspection without changing original bytes; four Nature WebP files were decoded directly. The capture reports were used as provenance evidence, including partial reports only for figures whose own stored bytes and independent captions were positively verified; report success/partial status was not treated as semantic approval. No publisher recrawl, R2 write, server-side import/repair, scope change, or literature-data change was performed.",
+  "quality": "16 SVG body figures are legible vector or mixed-vector captures with no external image references; four Nature Synthesis WebP figures are 685 px wide and decode cleanly. Existing official TOCs remain separate and are not replaced. ACS Catalysis 10.1021/acscatal.6c04593 already has a correct live Figure 1; this packet adds only the eight distinct unpublished Scheme 1–8 records and does not overwrite Figure 1.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.orglett.6c03339",
+      "images": [
+        ["next-001", "scheme-1", "Viewed the Rh(III)-catalyzed C–H activation/[3+2] cycloaddition overview to pyrrolo[1,2-a]imidazoles; structures, catalyst and reaction concept match the paper and Scheme 1 caption."],
+        ["next-016", "scheme-2", "Viewed D2O labeling, control/competition experiments and gram-scale conversion under the reported Rh conditions; matches the separate mechanistic studies and gram-scale Scheme 2 caption."],
+        ["next-017", "scheme-3", "Viewed the proposed Rh catalytic cascade with coordination, C–H activation, alkene insertion, cyclization/ring opening and product formation; matches Scheme 3 mechanism."]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c04593",
+      "images": [
+        ["next-002", "scheme-1", "Viewed Mn(I)-catalyzed tryptophan C–H glycosylation products and conditions; glycopeptide/glycoside structures match the paper title and Scheme 1 caption."],
+        ["next-018", "scheme-2", "Viewed monosaccharide-diversity glycosylation examples containing the modified tryptophan motif; matches the separate Scheme 2 substrate caption."],
+        ["next-019", "scheme-3", "Viewed site- and chemoselective glycosylation of linear modified tryptophan-containing peptides with multiple peptide examples; matches Scheme 3."],
+        ["next-020", "scheme-4", "Viewed glycosylation of indole derivatives with linear and branched products; matches the Scheme 4 caption and is distinct from peptide scope."],
+        ["next-021", "scheme-5", "Viewed C–H alkenylation of NBD- and dansyl-labeled tryptophans, including fluorophore-bearing products and spectrum inset; matches Scheme 5."],
+        ["next-022", "scheme-6", "Viewed glycopeptide hydrogenation, cyclomanganated complex preparation/X-ray structure and stoichiometric C–H activation; matches Scheme 6 panels A–C."],
+        ["next-023", "scheme-7", "Viewed the proposed Mn(I) catalytic cycle with coordination, C–H activation, migratory insertion and proton demetalation; matches Scheme 7."],
+        ["next-024", "scheme-8", "Viewed C–H alkenylation/glycosylation examples performed in water with the same modified tryptophan platform; matches Scheme 8."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03147",
+      "images": [
+        ["next-003", "figure-1", "Viewed the radical heterocyclization background, α-iodonium diazo radical precursor concept and the paper's photoredox approach; matches Figure 1 and is not a TOC assignment."],
+        ["next-025", "scheme-1", "Viewed alkenoic-acid and sulfonamide substrate scope under white-LED photoredox conditions with the expected heterocyclic products; matches Scheme 1."],
+        ["next-026", "scheme-2", "Viewed α-iodonium diazo compound scope with varied diazo substituents and heterocyclized products; matches Scheme 2."],
+        ["next-027", "scheme-3", "Viewed gram-scale reaction, product transformations and an enantioselective study; matches the Scheme 3 synthetic-utility caption."]
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01158-6",
+      "images": [
+        ["next-004", "figure-1", "Viewed the directed C(sp2)–H alkylation background and low-temperature Ni/sulfonylhydrazide radical cross-coupling design; matches Nature Synthesis Figure 1."],
+        ["next-028", "figure-2", "Viewed optimization tables/observations and the broad aryl/alkyl substrate scope for the Ni-catalysed C–H alkylation; matches Figure 2."],
+        ["next-029", "figure-3", "Viewed preparative applications and downstream transformations of the C–H alkylation products, including medicinally relevant targets; matches Figure 3."],
+        ["next-030", "figure-4", "Viewed the proposed Ni reaction mechanism with complementary computational structures and mechanistic experiments; matches Figure 4."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03356",
+      "images": [
+        ["next-005", "scheme-2", "Viewed the γ-selective Pd-catalyzed deuteration substrate scope in D2O with multiple aliphatic amines and deuterium-incorporation values; matches Scheme 2. Only this independently frozen selected image is approved in this packet; other staged figures remain unapproved for a later batch."]
+      ]
+    }
+  ]
+}
