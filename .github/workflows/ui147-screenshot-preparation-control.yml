@@ -1,0 +1,63 @@
+name: Compare non-invasive versus default WebKit screenshot preparation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ui147-screenshot-preparation-control.yml']
+permissions:
+  contents: read
+jobs:
+  compare:
+    strategy:
+      fail-fast: false
+      matrix:
+        preparation: [default, no-style-sync]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 03f0d46178dd702077c97004e9f8d3dcb015ce00
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install exact pinned test version and build unchanged product
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
+          npx --no-install playwright install --with-deps webkit >/tmp/screenshot-control-install.log 2>&1 || { tail -60 /tmp/screenshot-control-install.log; exit 1; }
+          npm run build
+      - name: Isolate only the testing library's synthetic stylesheet mutation
+        env:
+          PREPARATION: ${{ matrix.preparation }}
+        run: |
+          mkdir -p screenshot-preparation-results
+          python - <<'PY'
+          from pathlib import Path
+          import os,hashlib,json,difflib
+          p=Path('node_modules/playwright-core/lib/server/screenshotter.js')
+          old=p.read_text();new=old
+          needle='const syncAnimations = this._page.delegate.shouldToggleStyleSheetToSyncAnimations();'
+          assert old.count(needle)==1, 'Review installed screenshot implementation before probing'
+          if os.environ['PREPARATION']=='no-style-sync':
+              new=old.replace(needle,'const syncAnimations = false; // Isolated diagnostic: no synthetic body stylesheet mutation')
+              p.write_text(new)
+          Path('screenshot-preparation-results/library-only.diff').write_text(''.join(difflib.unified_diff(old.splitlines(True),new.splitlines(True))))
+          Path('screenshot-preparation-results/condition.json').write_text(json.dumps({'preparation':os.environ['PREPARATION'],'libraryShaBefore':hashlib.sha256(old.encode()).hexdigest(),'libraryShaAfter':hashlib.sha256(new.encode()).hexdigest(),'productChanged':False,'assertionsChanged':False},indent=2))
+          PY
+          git diff --exit-code -- src/ public/ shared/ tests/
+          nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/screenshot-control-preview.log 2>&1 &
+          for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
+          exit 1
+      - name: Execute exact original/GIF lifecycle and static negative control
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: screenshot-preparation-results/results.json
+        run: |
+          set -o pipefail
+          npx --no-install playwright test tests/status-original-images.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=screenshot-preparation-results/tests 2>&1 | tee screenshot-preparation-results/tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshot-preparation-${{ matrix.preparation }}
+          path: screenshot-preparation-results/
+          retention-days: 7
