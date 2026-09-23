@@ -180,4 +180,9 @@ p=Path('docs/body-media-publication.md');s=p.read_text()
 s=s.replace('Each batch is at most five papers and thirty images.','Manual review envelopes remain at most five papers and thirty images. The NEW-current-capture automatic publication consumer is separately gated to at least 20 and at most 25 distinct articles per deployment, up to 150 new body images, and requires an official TOC for every automatically published article. A qualifying official TOC may already be public or may be a verified current local capture that is merged earlier in the SAME Pages build. If fewer than 20 article groups are ready, the consumer waits and publishes none of the new body rows.',1)
 s += "\n## Paired TOC + body batching (2026-09-23)\n\nFor current server-marked ACS captures, the lightweight consumer checks every five minutes but starts a heavy Pages publication only when at least 20 distinct current-corpus articles are ready. A batch contains 20–25 articles. Every article must have a true official TOC (never Figure 1 fallback) either already deployed or present as a strongly DOI-bound current local capture. The Pages build merges local official TOCs before body publication, so a newly captured TOC and its validated body figures can appear in the same deployment. If byte validation leaves fewer than 20 articles with publishable body figures, all NEW rows from that attempted batch are withheld; prior published media is carried forward. Failure diagnostics continue through the Tampermonkey report outbox independently of this batching cadence.\n"
 p.write_text(s)
+
+# Keep the existing real-byte auto-publication regression in a deliberately small test mode only.
+p=Path('scripts/test-new-body-auto.mjs');s=p.read_text()
+s=s.replace("const opts={inputs,now,decoder,getNew:", "const opts={inputs,now,testMode:true,decoder,getNew:", 1)
+p.write_text(s)
 print('BATCH20_PAIRED_PATCH_APPLIED')
