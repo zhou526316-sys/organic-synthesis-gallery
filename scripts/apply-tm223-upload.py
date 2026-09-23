@@ -17,7 +17,7 @@ if 'BEGIN OSG_UPLOAD_EVIDENCE_V1' not in s:
  f=once(f,'      }, token);',"      }, token, 'r2_upload');")
  s=s[:a]+f+s[b:]
  save(p,s)
-else:assert "var CONTROLLER_REVISION = '2.2.23';" in s
+else:assert any("var CONTROLLER_REVISION = '"+v+"';" in s for v in ('2.2.23','2.2.24','2.2.25'))
 
 p='cloudflare/worker/src/local-captures.js';s=Path(p).read_text()
 if "from './stage-storage.js'" not in s:
