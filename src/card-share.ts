@@ -33,12 +33,15 @@ function tr(zh: string, en: string): string {
   return document.documentElement.lang.toLowerCase().startsWith('zh') ? zh : en;
 }
 
+function shareSlug(doi: string): string {
+  const bytes = new TextEncoder().encode(doi.toLowerCase());
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
 function shareUrl(doi: string): string {
-  const url = new URL(window.location.href);
-  url.search = '';
-  url.hash = '';
-  url.searchParams.set('doi', doi);
-  return url.toString();
+  return new URL(`share/${shareSlug(doi)}.html`, document.baseURI).toString();
 }
 
 function infoFromButton(button: HTMLElement): ShareInfo | null {
@@ -162,6 +165,7 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
   closePanel();
   const panel = document.createElement('section');
   panel.className = 'card-share-panel';
+  panel.dataset.shareUrl = info.url;
   panel.setAttribute('role', 'dialog');
   panel.setAttribute('aria-label', tr('分享文献', 'Share paper'));
   panel.innerHTML = `
