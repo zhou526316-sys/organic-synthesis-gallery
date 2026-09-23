@@ -59,9 +59,9 @@ try{
   function localOfficial(row){return {doi:row.doi,kind:'official',captureVersion:'6.2.20',pageDoi:row.doi,mediaGeneration:BODY_MEDIA_GENERATION,updatedAt:row.updatedAt,
     articleUrl:row.articleUrl,sourceUrl:row.sourceUrl};}
   async function reset(media){await writeFile(mediaPath,JSON.stringify(media));await writeFile(ledgerPath,JSON.stringify({schemaVersion:1,count:0,items:[]}));}
-  function inputs(count,previous={policyId:policy.policyId,items:[],attempts:{}}){
-    const items=synthetic.slice(0,count).map(x=>x.row);
-    return {previous,live:liveFor(count),stage:{count,items},stageError:null,localCaptures:{count,items:items.map(localOfficial)},localCaptureError:null};
+  function inputs(count,previous={policyId:policy.policyId,items:[],attempts:{}},overrideItems=null){
+    const items=overrideItems||synthetic.slice(0,count).map(x=>x.row);
+    return {previous,live:liveFor(count),stage:{count:items.length,items},stageError:null,localCaptures:{count:items.length,items:items.map(localOfficial)},localCaptureError:null};
   }
   const decoder={decode:async row=>({width:row.width,height:row.height}),close:async()=>{}};
   const getNew=async r=>bytesByKey.get(exactKey(r)),getOld=async e=>bytesByKey.get(exactKey(e.record));
@@ -69,6 +69,11 @@ try{
   await reset(mediaFor(19));
   const nineteen=await mergeNewBodyAuto(root,{inputs:inputs(19),now,decoder,getNew,getOld});
   await test('nineteen validated articles never publish even under direct build invocation',()=>{assert.equal(nineteen.status.validatedNewArticles,19);assert.equal(nineteen.status.releaseReady,false);assert.equal(nineteen.status.preferredTargetMet,false);assert.equal(nineteen.status.releaseMode,'waiting');assert.equal(nineteen.status.added.length,0);assert.equal(nineteen.snapshot.count,0);assert.equal(nineteen.status.waitingForMore,true);});
+
+  const quietRows=synthetic.slice(0,7).map(x=>({...x.row,updatedAt:now-16*60000}));
+  await reset(mediaFor(7));
+  const quietTail=await mergeNewBodyAuto(root,{inputs:inputs(7,{policyId:policy.policyId,items:[],attempts:{}},quietRows),now,decoder,getNew,getOld});
+  await test('seven quiet paired articles publish as an adaptive tail after fifteen minutes',()=>{assert.equal(quietTail.status.validatedNewArticles,7);assert.equal(quietTail.status.releaseReady,true);assert.equal(quietTail.status.preferredTargetMet,false);assert.equal(quietTail.status.tailFlushReady,true);assert.equal(quietTail.status.releaseMode,'quiet_tail');assert.equal(quietTail.status.added.length,7);assert.equal(quietTail.snapshot.count,7);});
 
   await reset(mediaFor(20));
   const twenty=await mergeNewBodyAuto(root,{inputs:inputs(20),now,decoder,getNew,getOld});
