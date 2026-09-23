@@ -1,0 +1,60 @@
+name: Align user-center crop controls once
+on:
+  push:
+    branches: [feat/ui-image-crop-edit-20260923]
+    paths: [.github/workflows/ui-crop-center-once.yml]
+permissions:
+  contents: write
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Apply exact crop-only UI changes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          def replace(t,a,b):
+              assert t.count(a)==1, 'Nonunique source anchor: '+a[:100]
+              return t.replace(a,b)
+          p=Path('src/user-ui/image-cropper.ts');t=p.read_text()
+          t=replace(t,"  dialog.setAttribute('aria-label', tr('裁切图片', 'Crop image'));", "  dialog.setAttribute('role', 'dialog');\n  dialog.setAttribute('aria-modal', 'true');\n  dialog.setAttribute('aria-label', tr('裁切图片', 'Crop image'));")
+          t=replace(t,"tr('裁切图片 / 抠图', 'Crop image / cutout')", "tr('裁切图片 / Crop image', 'Crop image / cutout')")
+          p.write_text(t)
+          p=Path('src/user-ui/library-shell.ts')
+          assert subprocess.check_output(['git','hash-object',str(p)],text=True).strip()=='eabdccf9d15132807f7226c5b6f522ff8425cfe9'
+          t=p.read_text()
+          t=replace(t,"shape-${style.shape}${style.imageOriginal ? ' status-original-preview' : ''}", "shape-${style.imageCrop?.recipe.mode === 'circle' ? 'circle' : style.shape}${style.imageOriginal ? ' status-original-preview' : ''}")
+          old="<button class='link' type='button' data-action='view-image:${prefix}'>查看图片 / View image</button>"
+          new="""<button class='secondary' type='button' data-action='crop-image:${prefix}'>裁切 / 抠图 / Crop</button><button class='link' type='button' data-action='view-image:${prefix}'>查看图片 / View image</button>${style.imageCrop ? `<button class='link' type='button' data-action='restore-image:${prefix}'>恢复原图 / Restore</button>` : ''}"""
+          t=replace(t,old,new)
+          t=replace(t,"  private imageMessage = '';", "  private imageMessage = '';\n  private cropBusy = false;")
+          t=replace(t,'原图 / GIF 最大 30 MB，默认不裁切。原图和动画仅保存在当前浏览器，账号同步预览图；静态裁切最大 20 MB。','原图 / GIF 最大 30 MB，默认不裁切。已有图片可点“裁切 / 抠图”重新编辑；圆形和手动抠图可恢复原图。GIF 裁切为静态图片，原图保存在本浏览器。')
+          t=replace(t,'Original / GIF up to 30 MB, no cropping by default. Originals and animation stay in this browser; accounts sync a preview. Static crop up to 20 MB.','Up to 30 MB. Use Crop to edit existing images; circles and manual cutouts are reversible. GIF crops are static; originals remain in this browser.')
+          handler='''    if (action.startsWith('crop-image:') || action.startsWith('restore-image:')) {
+                const crop = action.startsWith('crop-image:');
+                const target = this.styleTarget(action.slice(crop ? 11 : 14));
+                if (this.cropBusy || !target?.imageData) return;
+                this.cropBusy = true;
+                try {
+                  const saved = crop ? await store.cropStatusImage(target) : store.restoreStatusImage(target);
+                  this.imageMessage = saved ? this.tr('图片设置已保存。', 'Image settings saved.') : this.tr('已取消或已有更新，保留当前设置。', 'Cancelled or superseded; current settings kept.');
+                } catch (error) { this.imageMessage = statusImageError(error); }
+                finally { this.cropBusy = false; this.render(); }
+                return;
+              }
+          '''
+          t=replace(t,'  private async action(action: string): Promise<void> {','  private async action(action: string): Promise<void> {\n'+handler)
+          p.write_text(t)
+          PY
+          git diff --check
+          git diff --stat
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/user-ui/image-cropper.ts src/user-ui/library-shell.ts
+          git commit -m 'fix(ui): preserve accessible crop dialog and expose user-center recrop and restore'
+          git push origin HEAD:feat/ui-image-crop-edit-20260923
