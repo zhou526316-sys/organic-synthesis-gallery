@@ -45,7 +45,7 @@ jobs:
           const policy=JSON.parse(fs.readFileSync('audit/media-auto-policy.json','utf8'));
           assert.equal(policy.minNewArticles,20);assert.equal(policy.maxNewArticles,25);assert.equal(policy.tailFlushIdleMinutes,15);assert.equal(policy.backlogMaxWaitMinutes,30);
           const tm=fs.readFileSync('public/toc-mainline.user.js','utf8');
-          assert.ok(tm.includes('BEGIN OSG_AUTO_REPORT_V1')&&tm.includes('enqueueCaptureReport')&&tm.includes("var CONTROLLER_REVISION = '2.2.24';"));
+          assert.ok(tm.includes('BEGIN OSG_AUTO_REPORT_V1')&&tm.includes('enqueueCaptureReport')&&tm.includes("var CONTROLLER_REVISION = '2.2.25';"));
           console.log('ADAPTIVE_WORKFLOW_ORDER_OK');
           JS
           git diff --check
