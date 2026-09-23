@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-23T12:23:00Z",
-  "reason": "Fresh read-only receipt check after Bridge 2.2.24 rollout: determine whether any actual local extension report now carries controllerRevision 2.2.24 before considering another client revision.",
+  "requestedAt": "2026-09-23T12:55:00Z",
+  "reason": "Fresh read-only receipt check after Bridge 2.2.25 canonical ACS route merged. Determine whether actual local extension reports have switched to controllerRevision 2.2.25 and compare ACS shell/discovery behavior without changing media.",
   "readOnly": true,
   "mediaWrites": 0
 }
