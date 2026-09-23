@@ -1,0 +1,64 @@
+{
+  "recordedAt": "2026-09-23T17:22:30+08:00",
+  "context": "User explicitly approved continuing navigation33 and reader-count repair after feedback approval gate.",
+  "readerCount": {
+    "pr": 163,
+    "approvedByUser": true,
+    "merged": true,
+    "mergeSha": "19ca396cd5b72d8a843d200a17ca0d8fd0e45659",
+    "preMerge": {
+      "atomicRun": 35841592886,
+      "sqlite": {"passed": 11, "failed": 0},
+      "localD1": {"passed": 6, "failed": 0},
+      "migrationRun": 35841592838,
+      "qualityRun": 35841592972,
+      "allRequiredChecksPassed": true
+    },
+    "fix": "The unique DOI+hashed-IP event insert, per-DOI authoritative recount/upsert, and returned count are executed in one D1 batch transaction. A duplicate genuine open reconciles a stale/missing materialized row from the v3 event ledger without adding a reader. Dedupe semantics remain one IP per DOI.",
+    "deployment": {
+      "workerReleaseRun": 35842249869,
+      "conclusion": "success"
+    },
+    "postDeploy": {
+      "run": 35842399078,
+      "productionWrites": false,
+      "markRequests": 0,
+      "apiOriginsMatched": true,
+      "uniquePaperReads": 130,
+      "summedReaderCounts": 130,
+      "uniqueIps": 18,
+      "papersWithReaders": 106,
+      "countersConsistent": true,
+      "sitePv": 138,
+      "siteUv": 40,
+      "visitorsWithPaperOpen": 14,
+      "visitorsWithoutPaperOpen": 26
+    },
+    "interpretation": "The latent split-write undercount defect is fixed, but the current production aggregate did not show a ledger/materialized mismatch before or after deployment. Because 130 distinct DOI×IP opens are spread across 106 papers, at least 82 of those papers must currently have exactly one counted reader. Therefore the observation that many cards show 1 is largely compatible with the chosen per-DOI IP-dedup rule and is not fully explained by the fixed defect.",
+    "noHistoricalRepair": true,
+    "feedbackStatusChanged": false
+  },
+  "navigation": {
+    "pr": 150,
+    "approvedByUser": true,
+    "merged": false,
+    "currentHead": "001940a3efca53f83dee4195792454a16fd06e0d",
+    "knownDefects": [
+      "At 320px the existing left-side navigation overlaps the actual left-side feedback tab.",
+      "Chromium desktop can reach the bottom and then expose a stale bottom-button state after lazy layout settling."
+    ],
+    "proposedCorrection": "Move navigation to the right and reconcile an explicit long jump for a bounded 1.5 seconds, cancelling on user input or viewport resize.",
+    "sourceWriteStatus": "blocked_by_platform_safety_check",
+    "alternateBypassUsed": false,
+    "oldDefectiveHeadMerged": false,
+    "feedbackStatusChanged": false
+  },
+  "scope": {
+    "literatureDataChanged": false,
+    "publicationOrAcquisitionChanged": false,
+    "captureTampermonkeyBridgeChanged": false,
+    "syntheticProductionReaderMarks": 0,
+    "alreadyDeployedCropGlowPinchChanged": false
+  },
+  "conversationArtifact": "reader-count-release-evidence.zip"
+}
