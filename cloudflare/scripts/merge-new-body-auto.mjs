@@ -1,14 +1,14 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {readPapers} from './merge-reviewed-toc.mjs';
+import {readPapers,normalizeDoi} from './merge-reviewed-toc.mjs';
 import {POLICY_ID,sha256,requireBody,exactKey,evidenceKey,validateNewBodyMetadata,validateNewBodyBytes,conflictKeys,createImageDecoder} from './new-body-auto-validation.mjs';
 export const SITE='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
 export const WORKER='https://organic-synthesis-gallery.zhou526316.workers.dev';
 const SNAPSHOT='auto-body-publication.json';
 export async function fetchStored(url,maxBytes=20000000,missing=false){
   const u=new URL(url,SITE),site=new URL(SITE);
-  const permitted=u.origin===site.origin&&(u.pathname===site.pathname+SNAPSHOT||u.pathname===site.pathname+'media-index.json'||new RegExp('^'+site.pathname+'media-mirror/body-auto-[a-f0-9]{64}\\.(svg|png|webp)$').test(u.pathname))||u.origin===WORKER&&(u.pathname==='/api/article-figures/staged'||/^\/media\/local-captures\/article-figures\/images\/[a-f0-9]{24}\/(figure|scheme|chart)-\d{1,3}-[a-f0-9]{16}\.(svg|png|webp)$/.test(u.pathname));
+  const permitted=u.origin===site.origin&&(u.pathname===site.pathname+SNAPSHOT||u.pathname===site.pathname+'media-index.json'||new RegExp('^'+site.pathname+'media-mirror/body-auto-[a-f0-9]{64}\\.(svg|png|webp)$').test(u.pathname))||u.origin===WORKER&&(u.pathname==='/api/article-figures/staged'||u.pathname==='/api/media/local-capture-index'||/^\/media\/local-captures\/article-figures\/images\/[a-f0-9]{24}\/(figure|scheme|chart)-\d{1,3}-[a-f0-9]{16}\.(svg|png|webp)$/.test(u.pathname));
   requireBody(permitted&&!u.username&&!u.password,'auto_fetch_not_stored_asset');
   const response=await fetch(u,{headers:{'cache-control':'no-cache'},redirect:'error',credentials:'omit',signal:AbortSignal.timeout(20000)});
   if(missing&&response.status===404)return null;
@@ -45,29 +45,56 @@ export async function readLiveInputs(){
   requireBody(new Set(previous.items.map(x=>x.record.doi+'|'+x.record.id)).size===previous.items.length,'auto_previous_duplicate_identity');
   if(!priorBytes)requireBody(!Object.values(live.items||{}).some(x=>x.figures?.figures?.some(f=>f.publicationId===POLICY_ID)),'auto_previous_snapshot_missing');
   assertSnapshotCoherence(previous,live);
-  let stage=null,stageError=null;
+  let stage=null,stageError=null,localCaptures=null,localCaptureError=null;
   try{stage=JSON.parse(await fetchStored(WORKER+'/api/article-figures/staged'));requireBody(Array.isArray(stage.items)&&stage.count===stage.items.length&&stage.count<=2000,'auto_stage_truncated_or_invalid');}
   catch(e){stageError=String(e.message);stage=null;}
-  return {previous,live,stage,stageError};
+  try{localCaptures=JSON.parse(await fetchStored(WORKER+'/api/media/local-capture-index'));requireBody(Array.isArray(localCaptures.items)&&localCaptures.count===localCaptures.items.length&&localCaptures.count<=2000,'auto_local_capture_index_invalid');}
+  catch(e){localCaptureError=String(e.message);localCaptures=null;}
+  return {previous,live,stage,stageError,localCaptures,localCaptureError};
 }
 function alreadyIn(media,row){return (media.items?.[row.doi]?.figures?.figures||[]).some(f=>f.id===row.id);}
 function heldAttempts(previous,row,now){const a=previous.attempts?.[exactKey(row)];return a?.evidenceSha256===evidenceKey(row)&&(!a.retryAfter||a.retryAfter>now);}
-function officialToc(record){
+export function officialToc(record){
   const toc=record?.toc;
   return Boolean(toc?.available&&toc?.imageUrl&&!/fallback/i.test(String(toc.reason||''))&&!String(toc.reason||'').startsWith('figure_fallback:'));
+}
+function embeddedAcsDois(value){
+  let text=String(value||'').split(/[?#]/,1)[0];
+  for(let i=0;i<3;i+=1){try{const next=decodeURIComponent(text);if(next===text)break;text=next;}catch{break;}}
+  const found=new Set();
+  for(const match of text.matchAll(/10\.1021[\/_]([a-z0-9._()-]+)/ig)){
+    const doi=normalizeDoi('10.1021/'+match[1]);if(doi)found.add(doi);
+  }
+  return [...found];
+}
+export function strongOfficialCapture(row){
+  const doi=normalizeDoi(row?.doi||'');
+  if(!doi||!doi.startsWith('10.1021/')||String(row?.kind||'').toLowerCase()!=='official')return false;
+  if(row.captureVersion!=='6.2.20'||normalizeDoi(row.pageDoi||'')!==doi||Number(row.mediaGeneration)!==1790082000000||Number(row.updatedAt||0)<1790082000000)return false;
+  for(const value of [row.articleUrl,row.sourceUrl]){
+    const ids=embeddedAcsDois(value);
+    if(ids.length!==1||ids[0]!==doi)return false;
+  }
+  return true;
+}
+export function tocReadyDois(inputs){
+  const ready=new Set();
+  for(const [doi,record] of Object.entries(inputs?.live?.items||{}))if(officialToc(record))ready.add(normalizeDoi(doi)||doi);
+  for(const row of inputs?.localCaptures?.items||[])if(strongOfficialCapture(row))ready.add(normalizeDoi(row.doi));
+  return ready;
 }
 export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()}){
   assertSnapshotCoherence(inputs.previous,inputs.live);
   const cfg=await configuration(root),{policy,holds,papers}=cfg;
   if(!policy.enabled||!inputs.stage)return {...cfg,rows:[]};
-  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record)));
+  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=tocReadyDois(inputs);
   const rows=[];
   for(const row of inputs.stage.items){
-    if(oldKeys.has(exactKey(row))||!papers.has(row.doi)||holds.has(row.doi)||alreadyIn(inputs.live,row)||heldAttempts(inputs.previous,row,now))continue;
+    if(oldKeys.has(exactKey(row))||!papers.has(row.doi)||holds.has(row.doi)||alreadyIn(inputs.live,row)||heldAttempts(inputs.previous,row,now)||!tocReady.has(row.doi))continue;
     try{await validateNewBodyMetadata(row,policy,now);rows.push(row);}catch{}
   }
   rows.sort((a,b)=>String(papers.get(b.doi)?.date||'').localeCompare(String(papers.get(a.doi)?.date||''))||Number(!a.doi.startsWith('10.1021/jacs.'))-Number(!b.doi.startsWith('10.1021/jacs.'))||b.updatedAt-a.updatedAt);
-  return {...cfg,rows};
+  return {...cfg,rows,tocReady};
 }
 export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   const now=options.now||Date.now(),inputs=options.inputs||await readLiveInputs();
@@ -156,7 +183,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   if(process.argv.includes('--poll')){
     const inputs=await readLiveInputs(),{rows,policy}=await pendingNewRows({inputs});
     const articleCount=new Set(rows.map(row=>row.doi)).size,ready=articleCount>=policy.minNewArticles;
-    console.log('NEW_BODY_AUTO_PENDING '+JSON.stringify({count:rows.length,articles:articleCount,minimumBatchArticles:policy.minNewArticles,ready,stageError:inputs.stageError}));
+    console.log('NEW_BODY_AUTO_PENDING '+JSON.stringify({count:rows.length,articles:articleCount,minimumBatchArticles:policy.minNewArticles,ready,stageError:inputs.stageError,localCaptureError:inputs.localCaptureError}));
     if(process.env.GITHUB_OUTPUT)await writeFile(process.env.GITHUB_OUTPUT,'changed='+(ready?'true':'false')+'\narticles='+articleCount+'\n',{flag:'a'});
   }else await mergeNewBodyAuto();
 }
