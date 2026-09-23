@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260923-2035-c",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T12:35:00Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceRunId": 35861078869,
+  "evidenceArtifactId": 10749898276,
+  "evidenceArchiveSha256": "f0fe37d3c25e10820153c96f124620dc7b676801a2eff3ae85762e49818db934",
+  "approvedCount": 14,
+  "reviewMethod": "Human semantic review of all 14 selected stored body figures from the fresh read-only evidence snapshot. Exact current-corpus DOI, task/page/article/source binding, original figure identity and caption, actual stored bytes and full SHA256, dimensions/type, duplicate and role risk, capture-report provenance, and rendered image content were checked. Five marked current-generation JACS files and nine older current-generation ACS files without the newer server marker were assessed from their DOI-bound Silverchair source paths, exact stored bytes and immutable capture-report chain; absence of the marker was not treated as approval. No publisher recrawl, R2/D1 mutation, direct import/repair, TOC reassignment, literature change or marker-only approval was used.",
+  "quality": "All 14 approved files decoded/rendered and matched their owning paper and captions. Figure 1 entries remain body figures and are not treated as TOCs. Existing official TOCs are preserved. The 520 px PNG captures are accepted as readable stored evidence and are not represented as publisher-maximum resolution. No cross-DOI, recommendation-content, shared-byte, or same-ID replacement conflict was observed in this bounded subset.",
+  "decisions": [
+    {
+      "doi": "10.1021/jacs.6c16766",
+      "images": [
+        ["next-001", "figure-1", "Viewed the Tyr-based peptide diversification overview and the tyrosinase Tyr–aniline coupling design for editing, conjugation, macrocyclization and phage-display selection; content matches Figure 1 and the paper topic."],
+        ["next-021", "figure-2", "Viewed the model tyrosinase coupling experiment with peptide/aniline structures, HPLC traces, reaction-mixture photographs and kinetic/optimization data; matches Figure 2 and its caption."],
+        ["next-022", "figure-3", "Viewed the Tyr–aniline coupling scope across peptide substrates and aniline partners with product structures and yields; matches Figure 3 and the reported coupling scope."],
+        ["next-023", "figure-4", "Viewed peptide macrocyclization and peptide–peptide conjugation examples enabled by bifunctional Tyr–aniline coupling; product architectures and yields match Figure 4."],
+        ["next-024", "figure-5", "Viewed the YX8Y phage-library construction/cyclization workflow, biopanning enrichment and selected peptide data; matches Figure 5 and the phage-display selection portion of the paper."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03072",
+      "images": [
+        ["next-002", "scheme-1", "Viewed the literature syntheses of substituted cinnamaldehydes and the aldolase/decarboxylase biocatalytic route introduced in this work; structures and route comparison match Scheme 1 and the paper title."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03151",
+      "images": [
+        ["next-003", "figure-1", "Viewed the nondirected oxidation substrate examples with product distributions/yields and the palladium/H2O2 reaction context; matches Figure 1 and the C(sp3)–H oxygenation study."],
+        ["next-025", "scheme-1", "Viewed prior H2O2 activation/oxidation strategies alongside the palladium-catalyzed aliphatic C–H hydroxylation concept; matches Scheme 1 and its caption."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03247",
+      "images": [
+        ["next-004", "figure-1", "Viewed bioactive 6-alkynylindole examples, prior C6-selective indole functionalization and the Pd/NBE C6-alkynylation strategy; matches Figure 1."],
+        ["next-026", "figure-2", "Viewed the indole/EBX substrate-scope matrix for direct C6 alkynylation with product structures and yields; matches Figure 2 and its substrate-scope caption."],
+        ["next-027", "figure-3", "Viewed the downstream synthetic applications and derivatizations of the C6-alkynylated indole products; matches Figure 3 and the paper's synthetic-utility section."],
+        ["next-028", "figure-4", "Viewed mechanistic-control experiments and associated plots for the Pd/NBE cooperative alkynylation; matches Figure 4 and its mechanistic-investigation caption."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03255",
+      "images": [
+        ["next-005", "figure-1", "Viewed the biological role of NAD(P)+ derivatives and comparison of conventional, enzymatic and biomimetic base-exchange synthesis; matches Figure 1 and the late-stage stereodivergent synthesis concept."],
+        ["next-029", "figure-3", "Viewed the Fe(III)-promoted base-exchange substrate scope showing NAD+/NADP+ derivatives with varied nucleophiles and product outcomes; matches Figure 3 and its scope caption."]
+      ]
+    }
+  ]
+}
