@@ -1,0 +1,66 @@
+name: Integrate reviewed glow width hooks once
+on:
+  push:
+    branches: [feat/ui-glow-width-20260923-b32]
+    paths: ['.github/workflows/ui32-integrate-once.yml']
+permissions:
+  contents: write
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Apply checksum-guarded changes without touching production data
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          def load(path, sha):
+              p = Path(path)
+              assert subprocess.check_output(['git','hash-object',str(p)],text=True).strip() == sha, 'Source changed; re-review '+path
+              return p, p.read_text()
+          def one(text, old, new):
+              assert text.count(old) == 1, 'Integration point is not unique: '+old
+              return text.replace(old, new)
+          p, text = load('src/user-ui/shared.ts','49e56375a03bf9e87ff883b495493186a7d26d43')
+          text = one(text,'glow?: StatusGlow; }','glow?: StatusGlow; glowWidth?: number; }')
+          method = '''  setStatusGlowWidth(id: string, width: number): boolean {
+              const target = this.status(id)?.style;
+              if (!target || !Number.isInteger(width) || width < 1 || width > 6) return false;
+              const previous = target.glowWidth;
+              target.glowWidth = width;
+              try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state)); }
+              catch {
+                if (previous === undefined) delete target.glowWidth; else target.glowWidth = previous;
+                return false;
+              }
+              this.dispatchEvent(new CustomEvent('change', { detail: { scope: 'global' } }));
+              return true;
+            }
+          '''
+          text = one(text,'  setStatus(id: string, statusId: string): void {',method+'  setStatus(id: string, statusId: string): void {')
+          p.write_text(text)
+          p, text = load('src/user-ui/status-presentation.ts','c5d79b07b9165e2db6c5bd538c58cbe80b2d1863')
+          text = one(text,"const LABELS:","import { applyGlowWidth, bindGlowWidth, STATUS_GLOW_WIDTH_CSS } from './status-glow-width';\n\nconst LABELS:")
+          text = one(text,'function applyGlow(node: HTMLElement, style?: StyleDef): void {','function applyGlow(node: HTMLElement, style?: StyleDef, statusId = \'\'): void {\n  node.dataset.statusGlowId = statusId;\n  applyGlowWidth(node, style?.glowWidth);')
+          text = one(text,'applyGlow(action, selected?.style);',"applyGlow(action, selected?.style, selected?.id || '');")
+          text = one(text,'applyGlow(node, selected?.style)',"applyGlow(node, selected?.style, selected?.id || '')")
+          text = one(text,'applyGlow(choice, status.style);','applyGlow(choice, status.style, id);')
+          text = one(text,'label.append(name, select, message); editor.append(label);','label.append(name, select, message); editor.append(label);\n    bindGlowWidth(editor, root, id, language);')
+          assert text.endswith('`;\n')
+          text = text[:-3] + '${STATUS_GLOW_WIDTH_CSS}\n`;\n'
+          p.write_text(text)
+          p = Path('src/user-ui/status-glow-width.ts'); text = p.read_text()
+          text = one(text,'[data-status-glow="rainbow"]::after','[data-status-glow][data-status-glow="rainbow"]::after')
+          p.write_text(text)
+          PY
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/user-ui/shared.ts src/user-ui/status-presentation.ts src/user-ui/status-glow-width.ts
+          git rm .github/workflows/ui32-integrate-once.yml
+          git commit -m 'feat(ui): connect safe per-status thickness and shared preference persistence'
+          git push origin HEAD:feat/ui-glow-width-20260923-b32
