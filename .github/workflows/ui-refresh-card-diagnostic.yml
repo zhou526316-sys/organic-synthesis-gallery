@@ -23,21 +23,23 @@ jobs:
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
           npx --no-install playwright install --with-deps webkit >/tmp/card-diagnostic-install.log 2>&1 || { tail -60 /tmp/card-diagnostic-install.log; exit 1; }
           npm run build
-      - name: Add observational evidence without changing tests or app behavior
+      - name: Add observations to the first test only without changing assertions
         run: |
           mkdir -p card-diagnostic-results
           python - <<'PY'
           from pathlib import Path
-          p=Path('tests/mobile-interaction.spec.ts');text=p.read_text()
+          p=Path('tests/mobile-interaction.spec.ts');whole=p.read_text()
+          end=whole.index("test.describe('desktop feedback regressions'")
+          text,tail=whole[:end],whole[end:]
           needle="  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });"
-          at=text.index(needle)
+          assert text.count(needle)==1
           evidence='''  const responseLog: unknown[] = [];
             page.on('response', response => {
               const path = new URL(response.url()).pathname;
               if (/\\.json$|literature|supplement/.test(path)) responseLog.push({ at: Date.now(), status: response.status(), url: response.url() });
             });
           '''
-          text=text[:at]+evidence+text[at:]
+          text=text.replace(needle,evidence+needle)
           needle="  const initialCards = await page.locator('.card').count();"
           assert text.count(needle)==1
           text=text.replace(needle,'''  const beforeCards = await page.locator('.card').evaluateAll(nodes => nodes.map(node => ({
@@ -57,14 +59,14 @@ jobs:
             await test.info().attach('corpus-diagnostic.json', {body:JSON.stringify(evidence,null,2),contentType:'application/json'});
             await page.screenshot({path:test.info().outputPath('before-card-count-assertion.png')});
           '''+needle)
-          p.write_text(text)
+          p.write_text(text+tail)
           PY
           git diff -- tests/mobile-interaction.spec.ts > card-diagnostic-results/observation-only.diff
           git diff --exit-code -- src/ public/ shared/
           nohup npm run preview -- --host 127.0.0.1 --port 4173 >/tmp/card-diagnostic-preview.log 2>&1 &
           for i in {1..40}; do if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi; sleep 1; done
           exit 1
-      - name: Repeat the single unchanged interaction contract with identity evidence
+      - name: Execute unchanged interaction contract with identity evidence
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: card-diagnostic-results/results.json
         run: |
