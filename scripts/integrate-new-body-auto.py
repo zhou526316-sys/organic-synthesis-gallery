@@ -1,4 +1,4 @@
-"""Add a media-only polling preflight and validated build step; retain release gates."""
+"""Add media-only preflight and validated build steps while retaining authorization."""
 from pathlib import Path
 p=Path('.github/workflows/github-pages.yml');s=p.read_text()
 def replace_once(old,new):
@@ -29,9 +29,11 @@ replace_once('jobs:\n  literature_authorization:\n    runs-on: ubuntu-latest', '
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: node cloudflare/scripts/merge-new-body-auto.mjs --preflight
   literature_authorization:
+    runs-on: ubuntu-latest
     needs: new_body_preflight
-    if: ${{ !cancelled() && (github.event_name != 'schedule' || (needs.new_body_preflight.result == 'success' && needs.new_body_preflight.outputs.changed == 'true')) }}
-    runs-on: ubuntu-latest''')
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || (needs.new_body_preflight.result == 'success' && needs.new_body_preflight.outputs.changed == 'true')) }}''')
+replace_once('  build:\n    needs: literature_authorization\n    runs-on:',"  build:\n    needs: literature_authorization\n    if: ${{ !cancelled() && needs.literature_authorization.result == 'success' }}\n    runs-on:")
+replace_once('    needs: [literature_authorization, build]\n    steps:',"    needs: [literature_authorization, build]\n    if: ${{ !cancelled() && needs.literature_authorization.result == 'success' && needs.build.result == 'success' }}\n    steps:")
 replace_once('      - name: Sanitize invalid static media','''      - name: Validate and merge only eligible new ACS body images
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -48,30 +50,30 @@ replace_once('      - name: Sanitize invalid static media','''      - name: Vali
             public/new-body-auto-ledger.json
           retention-days: 14
       - name: Sanitize invalid static media''')
-assert "node scripts/validate-pages-literature-authorization.mjs" in s
-assert "needs: [literature_authorization, build]" in s and "MEDIA_REBUILD_LOCKDOWN: '1'" in s
+assert 'literature_authorization:\n    runs-on: ubuntu-latest' in s
+assert 'node scripts/validate-pages-literature-authorization.mjs' in s
+assert 'needs: [literature_authorization, build]' in s and "MEDIA_REBUILD_LOCKDOWN: '1'" in s
 p.write_text(s)
-# Compare stable inventory identities, not build timestamps, so unchanged failures do not rebuild every poll.
 p=Path('cloudflare/scripts/merge-new-body-auto.mjs');t=p.read_text()
 t=t.replace('published:live.generatedAt','published:Object.entries(live.items||{}).flatMap(([d,x])=>(x.figures?.figures||[]).map(f=>[d,f.id,f.verifiedSha256||f.contentHash||f.imageUrl])).sort()')
-t=t.replace('await checkNewBodyIdentity(row,policy,corpus,held);requireBody(old.imageUrl', 'await checkNewBodyIdentity(row,{...policy,enabled:true},corpus,held);requireBody(old.imageUrl')
+t=t.replace('await checkNewBodyIdentity(row,policy,corpus,held);requireBody(old.imageUrl','await checkNewBodyIdentity(row,{...policy,enabled:true},corpus,held);requireBody(old.imageUrl')
+t=t.replace(r'reports\/[a-f0-9]{28}',r'reports\/[a-f0-9]{32}')
 p.write_text(t)
-p=Path('docs/body-media-publication.md');t=p.read_text()
-header='## New ACS body-image automatic path — user-authorized 2026-09-23'
+p=Path('docs/body-media-publication.md');t=p.read_text();header='## New ACS body-image automatic path — user-authorized 2026-09-23'
 if header not in t:
- t+='''\n\n'''+header+'''
+ t+='\n\n'+header+'''
 
-This amendment separates NEW captured body media from historical recovery. The existing explicit human-review contract above remains unchanged for old sealed files, opaque publisher sources, same-ID replacements and all non-enabled publisher profiles. New-image machine decisions are NOT written as human `review.decision=approved`, and storage markers keep `semanticReview=not_reviewed`.
+This amendment separates NEW captured body media from historical recovery. The existing explicit human-review contract remains unchanged for old sealed files, opaque publisher sources, same-ID replacements and non-enabled publisher profiles. New machine decisions are NOT written as human `review.decision=approved`; storage markers retain `semanticReview=not_reviewed`.
 
-The gated GitHub Pages build may now publish NEW ACS files under `shared/new-body-auto-policy.json` after independent checks: current corpus and scope holds; actual server marker and recomputed canonical evidence; exact page/source/task DOI; article-scoped ACS CDN filename; a same-job report tying isolated body-caption discovery to the exact upload start and completed R2 object; actual SHA256; safe SVG or PNG decoding; no cross-DOI hash/source conflicts; and a second stage-index consistency check. Missing reports, unmarked historical captures, ambiguous roles and corrupt files are held individually, never automatically relabelled as approved.
+The gated Pages build may publish new ACS files under `shared/new-body-auto-policy.json` after current-corpus and scope checks; server marker and recomputed canonical evidence; exact page/source/task DOI; article-scoped CDN filename; same-job report binding isolated body-caption discovery to exact upload start and completed R2 object; actual SHA256 and safe decoding; cross-DOI conflict checks; and final stage-index consistency verification. Missing evidence is held per image, not converted into approval.
 
-Every image carries `source=machine-validated-new-capture` and a separate machine-validation receipt. The new public `new-body-auto-ledger.json` and `new-body-auto-status.json` are distinct from the existing HUMAN-approved publication ledger. A machine check establishes consistency, provenance and decodability, not an independent visual/semantic judgment or maximum image resolution. Existing human-reviewed files and every TOC remain unchanged. Same-ID replacement and more than ten shown body figures per card stay outside this first profile.
+Separate `new-body-auto-ledger.json` and `new-body-auto-status.json` identify machine-validated copies. The existing human-reviewed ledger is unchanged. Machine validation establishes consistency, provenance and decodability, not independent visual/semantic judgment or maximum resolution. Existing TOCs and same-ID published images are preserved; more than ten figures per card remain outside this initial profile.
 
-The Pages workflow checks at minutes 7/22/37/52. A schedule preflight reads only inventories and skips builds when no eligible input changes. A new build is limited to five articles/thirty files; previous exact machine-validated public copies are retained and rehashed. All existing literature_authorization checks still execute before any build/deploy; neither literature data nor 08:00/18:00 release times change. Actual GitHub scheduling can be delayed; this is not a guaranteed fifteen-minute delivery SLA.
+The media-only schedule checks at minutes 7/22/37/52. No-change preflight skips builds. Each build processes at most five articles/thirty new files and carries forward exact previously validated copies. All literature_authorization tests and checks remain mandatory; no corpus input or 08:00/18:00 literature release time changes. The schedule is not a guaranteed fifteen-minute delivery SLA.
 
-All acquisition still belongs to Tampermonkey/VPN Bridge. This path only reads already-stored R2 objects and immutable reports, never publisher pages. It never deletes or updates staging, performs direct import, clears quarantine, or modifies capture timestamps. Failed builds retain the previously deployed site. A deployment must be followed by public byte/ledger and bounded browser acceptance, separately reported from the storage marker.
+Acquisition remains Tampermonkey/VPN Bridge only: this feature reads stored R2 objects/reports, never publisher pages. It does not write/delete staging, import/repair media directly, reopen quarantine or rewrite capture timestamps. Failed builds retain the prior deployed site. Live byte/ledger and bounded browser verification are separate from a successful storage receipt.
 
-Bridge 2.2.23 remains compatible. Its staged receipt describes the upload transaction and is not rewritten when a later static publication occurs. The publication ledger—not a stored `published=false` flag—answers whether a specific copy is now live. No new client installer is required for this server/build feature.
+Bridge 2.2.23 remains compatible and requires no reinstall. A historical staged receipt describes that upload transaction, while the later publication ledger identifies what is now live. This is an application publishing schedule, not a permanently running assistant code-repair service.
 '''
  p.write_text(t)
-print('Integrated media-only new-body path; literature gates retained; no data or storage writes.')
+print('Integrated media-only automatic path; original authorization assertions remain unchanged.')
