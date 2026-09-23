@@ -1,0 +1,52 @@
+name: Read media route error identity
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/media-route-read-probe.yml','audit/automation-triggers/media-route-read-probe.json']
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Read public route responses only, without authorization or image uploads
+        run: |
+          python3 - <<'PY'
+          import concurrent.futures,datetime,hashlib,json,os,pathlib,re,urllib.error,urllib.request
+          urls=[
+            'https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/capture-capabilities',
+            'https://organic-synthesis-gallery.zhou526316.workers.dev/api/health',
+            'https://organic-synthesis-gallery.zhou526316.workers.dev/api/article-figures/stage',
+            'https://organic-synthesis-gallery-public.pages.dev/api/media/capture-capabilities',
+            'https://zhou526316-sys.github.io/organic-synthesis-gallery/body-publication-status.json'
+          ]
+          def one(url):
+              out={'url':url,'startedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'method':'GET'}
+              req=urllib.request.Request(url,headers={'Origin':'https://zhou526316-sys.github.io','Cache-Control':'no-cache','User-Agent':'Gallery-read-only-media-route-audit/1'})
+              try:
+                  try:r=urllib.request.urlopen(req,timeout=15)
+                  except urllib.error.HTTPError as e:r=e
+                  with r:
+                      b=r.read(120001);out.update(status=r.code,contentType=r.headers.get('content-type'),cfRay=r.headers.get('cf-ray'),server=r.headers.get('server'),responseBytes=len(b),sha256=hashlib.sha256(b).hexdigest())
+                  text=b.decode('utf8','replace')
+                  try:
+                      d=json.loads(text)
+                      out['jsonFields']={k:d[k] for k in ('error','code','requestId','stageStorageRevision','captureVersion','publishedAutomatically','mode','publicationId','status') if k in d and isinstance(d[k],(str,bool,int,float,type(None)))}
+                  except (ValueError,TypeError):
+                      title=re.search(r'<title[^>]*>(.*?)</title>',text,re.I|re.S)
+                      out['pageTitle']=re.sub(r'<[^>]*>','',title[1]).strip()[:240] if title else ''
+                      out['edgeErrorCodes']=list(dict.fromkeys(re.findall(r'(?:Error(?:\s+code)?|error-code)[^0-9]{0,80}(1[0-9]{3})',text,re.I)))[:6]
+                      out['knownErrorMarkers']=[s for s in ['Worker exceeded resource limits','Worker threw exception','Service Unavailable','Bad gateway','Too many requests','Cloudflare'] if s.lower() in text.lower()]
+              except Exception as e:out.update(errorType=type(e).__name__)
+              out['finishedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat();return out
+          with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(one,urls))
+          report={'readAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'readOnly':True,'mediaWrites':0,'location':'GitHub Actions runner, not user VPN','results':results,'past503RootCauseProven':False}
+          pathlib.Path(os.environ['RUNNER_TEMP'],'media-route-probe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print('MEDIA_ROUTE_READ_PROBE '+json.dumps(report,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: media-route-read-probe
+          path: ${{ runner.temp }}/media-route-probe.json
+          retention-days: 7
