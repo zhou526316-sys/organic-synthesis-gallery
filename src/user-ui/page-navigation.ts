@@ -53,11 +53,19 @@ class GalleryPageNavigation extends HTMLElement {
     window.visualViewport?.addEventListener('resize', this.onResize, { passive: true });
     for (const type of INTERRUPT_EVENTS) window.addEventListener(type, this.stopJump, { capture: true, passive: true });
     this.sizes = new ResizeObserver(this.schedule);
-    this.sizes.observe(document.body);
-    this.sizes.observe(document.documentElement);
+    // body/html border boxes do not reliably change when only their scrollHeight
+    // grows (notably WebKit on the static GitHub Pages build). Observe the actual
+    // content containers too so late card layout cannot leave the nav hidden.
+    for (const node of [document.body, document.documentElement, document.querySelector('#app'), document.querySelector('#gallery')]) {
+      if (node instanceof Element) this.sizes.observe(node);
+    }
     this.language = new MutationObserver(this.schedule);
     this.language.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
     this.update();
+    // A custom element can connect before the browser has completed the first
+    // layout pass. Re-read on the next frame even when no ResizeObserver record
+    // is generated for the initial scrollHeight growth.
+    this.schedule();
   }
 
   disconnectedCallback(): void {

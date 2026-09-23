@@ -79,6 +79,10 @@ test('keyboard controls, live language labels and reduced motion', async ({ page
   await expect.poll(async () => (await position(page)).remaining).toBeLessThanOrEqual(4);
   expect(await page.evaluate(() => (window as any).__navScrolls[0].behavior)).toBe('instant');
   const top = nav.getByRole('button', { name: 'Back to top' });
+  // The instant scroll position can settle before the next rAF refreshes the
+  // endpoint button state. A real user cannot activate a disabled button, so
+  // wait for the control to become actionable before exercising Space.
+  await expect(top).toBeEnabled();
   await top.press('Space');
   await expect.poll(async () => (await position(page)).y).toBeLessThanOrEqual(3);
   await page.evaluate(() => { document.documentElement.lang = 'zh'; });
@@ -146,4 +150,43 @@ test('disconnect/reconnect creates no duplicate controls or handlers and print h
   await nav.locator('[data-page-jump="bottom"]').click();
   await expect.poll(async () => (await position(page)).remaining).toBeLessThanOrEqual(4);
   expect(evidence.errors).toEqual([]); expect(evidence.marks).toEqual([]);
+});
+
+
+test('content-root growth reveals navigation without window resize or unrelated module events', async ({ page }) => {
+  const evidence = await open(page, 390);
+  const nav = page.locator('gallery-page-navigation');
+  await page.evaluate(() => {
+    const app = document.querySelector<HTMLElement>('#app')!;
+    const gallery = document.querySelector<HTMLElement>('#gallery')!;
+    for (const child of Array.from(document.body.children)) {
+      if (child !== app && child.tagName !== 'GALLERY-PAGE-NAVIGATION') (child as HTMLElement).style.display = 'none';
+    }
+    for (const child of Array.from(app.children)) {
+      if (child !== gallery) (child as HTMLElement).style.display = 'none';
+    }
+    document.body.style.cssText = 'min-height:0!important;height:auto!important;overflow:visible!important';
+    document.documentElement.style.cssText = 'min-height:0!important;height:auto!important;overflow:visible!important';
+    gallery.replaceChildren();
+    gallery.style.cssText = 'display:block!important;position:static!important;min-height:0!important;height:10px!important;overflow:hidden!important;contain:none!important';
+    app.style.cssText = 'display:block!important;position:static!important;min-height:0!important;height:10px!important;overflow:hidden!important;contain:none!important';
+  });
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeLessThan(80);
+  await expect(nav).toBeHidden();
+
+  // No resize/scroll/custom event is dispatched here. The observed #app box
+  // itself grows, mirroring late card layout increasing the application height.
+  await page.evaluate(() => {
+    document.querySelector<HTMLElement>('#app')!.style.setProperty('height', '2500px', 'important');
+  });
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeGreaterThan(1000);
+  await expect(nav).toBeVisible({ timeout: 1500 });
+
+  await page.evaluate(() => {
+    document.querySelector<HTMLElement>('#app')!.style.setProperty('height', '10px', 'important');
+  });
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - document.documentElement.clientHeight)).toBeLessThan(80);
+  await expect(nav).toBeHidden({ timeout: 1500 });
+  expect(evidence.errors).toEqual([]);
+  expect(evidence.marks).toEqual([]);
 });
