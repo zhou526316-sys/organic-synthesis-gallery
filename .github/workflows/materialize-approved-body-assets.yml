@@ -1,12 +1,13 @@
 name: Materialize approved body assets
 on:
   push:
-    branches:
-      - 'media/body-batch-*'
+    branches: ['media/body-batch-*']
     paths:
       - 'audit/media-recovery/body-batches/*.json'
+      - 'audit/media-recovery/body-review-packets/*.json'
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: materialize-approved-body-assets-${{ github.ref }}
   cancel-in-progress: false
@@ -22,63 +23,78 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - name: Resolve newly committed approved manifests
-        id: manifests
+      - name: Resolve explicit new review manifests or one frozen review packet
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           before='${{ github.event.before }}'
           after='${{ github.sha }}'
           if [[ "$before" =~ ^0+$ ]]; then before="${after}^"; fi
+          mapfile -t packets < <(git diff --diff-filter=A --name-only "$before" "$after" -- 'audit/media-recovery/body-review-packets/*.json')
           mapfile -t files < <(git diff --diff-filter=AM --name-only "$before" "$after" -- 'audit/media-recovery/body-batches/*.json')
-          test "${#files[@]}" -gt 0
-          test "${#files[@]}" -le 5
-          printf '%s\n' "${files[@]}" > "$RUNNER_TEMP/body-manifests.txt"
-          printf 'count=%s\n' "${#files[@]}" >> "$GITHUB_OUTPUT"
-      - name: Validate explicit review fingerprints before storage read
-        shell: bash
+          if [ "${#packets[@]}" -gt 0 ]; then
+            test "${#packets[@]}" -eq 1
+            test "${#files[@]}" -eq 0
+            python3 scripts/prepare-reviewed-body-packet.py "${packets[0]}" | tee "$RUNNER_TEMP/body-packet-tests.log"
+          else
+            test "${#files[@]}" -gt 0
+            test "${#files[@]}" -le 5
+            printf '%s\n' "${files[@]}" > "$RUNNER_TEMP/body-manifests.txt"
+          fi
+      - name: Validate exact review fingerprints before any storage read
         run: |
-          set -euo pipefail
           node --input-type=module <<'NODE'
           import {readFile} from 'node:fs/promises';
           import {evidenceDigest} from './cloudflare/scripts/merge-approved-body-batches.mjs';
           const paths=(await readFile(process.env.RUNNER_TEMP+'/body-manifests.txt','utf8')).trim().split(/\n+/).filter(Boolean);
+          if(paths.length<1||paths.length>5)throw new Error('invalid_manifest_count');
           for(const path of paths){
             const batch=JSON.parse(await readFile(path,'utf8'));
-            if(batch.schemaVersion!==1||batch.mediaGeneration!==1790082000000||batch.approvedCount!==batch.items?.length||batch.items.length<1||batch.items.length>30||new Set(batch.items.map(x=>x.doi)).size>5) throw new Error('invalid_approved_batch:'+path);
+            if(batch.schemaVersion!==1||batch.mediaGeneration!==1790082000000||batch.approvedCount!==batch.items?.length||batch.items.length<1||batch.items.length>30||new Set(batch.items.map(x=>x.doi)).size>5)throw new Error('invalid_approved_batch:'+path);
             for(const item of batch.items){
-              if(item.approved!==true||item.review?.decision!=='approved'||item.review?.evidenceSha256!==evidenceDigest(item)) throw new Error('invalid_review_fingerprint:'+item.doi+'|'+item.id);
+              if(item.approved!==true||item.review?.decision!=='approved'||item.review?.evidenceSha256!==evidenceDigest(item))throw new Error('invalid_review_fingerprint:'+item.doi+'|'+item.id);
             }
           }
           NODE
-      - name: Fetch only exact approved staged objects from R2
+      - name: Reuse exact frozen files or fetch only explicitly approved R2 bytes
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        shell: bash
         run: |
           set -euo pipefail
           mapfile -t files < "$RUNNER_TEMP/body-manifests.txt"
           python3 scripts/materialize-approved-body-assets.py "${files[@]}"
-      - name: Verify exact assets through the existing publication builder
-        shell: bash
+      - name: Verify exact assets through unchanged publication builder and existing regressions
         run: |
           set -euo pipefail
+          node scripts/test-body-review-markers.mjs
+          node scripts/test-reviewed-body.mjs
+          node cloudflare/scripts/merge-reviewed-toc.mjs
+          node cloudflare/scripts/merge-sealed-media-batch2.mjs
+          node cloudflare/scripts/merge-reviewed-body.mjs
           node cloudflare/scripts/merge-approved-body-batches.mjs
           node cloudflare/scripts/verify-static-media-integrity.mjs
+          cp public/body-batches-status.json "$RUNNER_TEMP/body-materialization-status.json"
           git diff --exit-code -- public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/rolling-supplement.json public/toc-mainline.user.js src
-      - name: Commit immutable approved asset copies only
-        shell: bash
+      - name: Commit immutable approved assets and generated manifests only
         run: |
           set -euo pipefail
-          git reset --hard HEAD -- public || true
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add audit/media-recovery/body-batches/assets
-          if git diff --cached --quiet; then
-            echo 'No new asset bytes to commit.'
-            exit 0
-          fi
-          git diff --cached --name-only | grep -Ev '^audit/media-recovery/body-batches/assets/[a-f0-9]{64}\.(svg|png|webp)$' && exit 1 || true
-          git commit -m 'media: materialize approved body assets'
+          git add audit/media-recovery/body-batches
+          if git diff --cached --quiet; then exit 0; fi
+          if git diff --cached --name-only | grep -Ev '^audit/media-recovery/body-batches/([a-z0-9-]+\.json|assets/[a-f0-9]{64}\.(svg|png|webp))$'; then exit 1; fi
+          git commit -m 'media: preserve individually reviewed frozen body assets and canonical approvals'
           git push origin HEAD:"${GITHUB_REF_NAME}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: approved-body-materialization
+          path: |
+            ${{ runner.temp }}/body-packet-tests.log
+            ${{ runner.temp }}/body-materialization-status.json
+            ${{ runner.temp }}/body-manifests.txt
+          retention-days: 7
+          if-no-files-found: warn
