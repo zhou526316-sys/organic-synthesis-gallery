@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "prepublish_recovery_checkpoint",
+  "publicationSlot": "2026-09-23T18:00:00+08:00",
+  "observedAt": "2026-09-23T17:32:05+08:00",
+  "baselineMainSha": "b60bd580f0321c681a0cd144ef09415e55a29a7e",
+  "result": "ready_with_pending",
+  "phase": "ready_with_pending",
+  "status": "ready_with_pending",
+  "publishableSubsetReady": true,
+  "reviewComplete": false,
+  "productionDataModified": false,
+  "pagesDeploymentRequested": false,
+  "mediaAcquisitionPerformed": false,
+  "scheduleChanged": false,
+  "replacementTaskCreated": false,
+  "machineAudit": {
+    "reused": true,
+    "retriggered": false,
+    "runId": 35841359058,
+    "conclusion": "success",
+    "triggerCommitSha": "1ba2f62cab2427fba4dcccd03f9ca69fd53a3784",
+    "snapshotCommitSha": "fab9edda8c988db12f23fc9e77d7f1673b05afcc",
+    "generatedAt": "2026-09-23T09:13:15.174Z",
+    "snapshotFreshForSlot": true,
+    "latestBlobSha": "63ec27535507a04d04e99ad92bcbfd672c73e478",
+    "compactBlobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+    "latestCompactGenerationMatch": true,
+    "latestSummaryUnresolved": 44,
+    "compactSummaryUnresolved": 44,
+    "compactArrayLength": 44,
+    "activeJournals": 16,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 1,
+    "historicalCoverageLosses": 0,
+    "closureAnomalyJournals": ["Angew"],
+    "verifiedThrough": "2026-09-20",
+    "primaryWindow": {"start":"2026-09-21","end":"2026-09-23","days":3},
+    "safetyTailDays": 7,
+    "lateDepositRescueStart": "2026-09-17",
+    "crossrefModes": ["online","published","created"],
+    "openAlexUnion": true,
+    "activeFromApplied": true,
+    "keywordsOnlyPrioritize": true,
+    "healthyAuditCancelledOrRestarted": false
+  },
+  "scopeContract": {
+    "scopeRulesVersion": "scope-2026-09-23-v1",
+    "scopeRulesFile": "docs/literature-scope-contract.md",
+    "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
+    "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+    "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+    "handoffCommitSha": "fab9edda8c988db12f23fc9e77d7f1673b05afcc",
+    "handoffBlobSha": "4f6a8643700fc9854fb261ebfdede5a512f9a635",
+    "affectedHistoricalCoverageComplete": true
+  },
+  "staging": {
+    "file": "audit/prepublish-review-2026-09-23-1800.json",
+    "commitSha": "2a80aa2c7f5d83964d229d916c0b98715fe76cac",
+    "blobSha": "e8d4f88a7a27d29225da3ace6f55318833ded5f9",
+    "reviewed": 44,
+    "accepted": 10,
+    "rejected": 32,
+    "pending": 2,
+    "allHandoffCandidatesReviewed": true,
+    "secondPassCompleted": true,
+    "globalBlockers": [],
+    "publicationBlockers": [],
+    "titleZhPreparedForAllNewIncludes": true,
+    "publisherSourceCheckCounts": {"checked":0,"blocked":6,"unavailable":10},
+    "publisherCountsAreUnknownWhenBlockedOrUnavailable": true
+  },
+  "publishableDois": [
+    "10.1021/jacs.6c16346",
+    "10.1021/jacs.6c17163",
+    "10.1021/jacs.6c12613",
+    "10.1021/jacs.6c16766",
+    "10.1021/acs.joc.6c01866",
+    "10.1021/acs.orglett.6c03733",
+    "10.1021/acs.orglett.6c03301",
+    "10.1021/acs.orglett.6c03166",
+    "10.1021/acs.orglett.6c03732",
+    "10.1021/acs.orglett.6c03574"
+  ],
+  "deferredDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "historicalScopeRechecks": {
+    "resolvedRetain": [
+      "10.1021/acs.joc.6c01559",
+      "10.1002/anie.9519061"
+    ],
+    "pendingRetain": [
+      "10.1021/acs.orglett.6c03499",
+      "10.1021/acs.orglett.6c03386"
+    ],
+    "pendingCardsDeleted": false
+  },
+  "confirmedScopeCorrections": {
+    "registryBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+    "alreadyRemovedAndLiveVerified": [
+      "10.1021/jacs.6c13517",
+      "10.1021/jacs.6c10701",
+      "10.1038/s41467-026-77963-6",
+      "10.1002/anie.7784614"
+    ],
+    "newRemovalThisRecovery": 0,
+    "currentProductionDoiBaseline": 532
+  },
+  "gate": {
+    "runId": 35843296908,
+    "jobId": 107123288033,
+    "conclusion": "success",
+    "validateRequireReady": "success",
+    "checkReadinessRequireReady": "success",
+    "strictReleaseBundle": "success",
+    "publicationReady": true,
+    "releaseStatus": "ready_with_pending",
+    "reviewComplete": false,
+    "blockers": [],
+    "artifactId": 10742620884,
+    "artifactZipSha256": "d7659a912c475af79dabf74146692efac25464b8e298b3ad610b3c1282166485"
+  },
+  "recoveryEvidenceRetries": [
+    {
+      "doi": "10.1038/s41467-026-78015-9",
+      "source": "Nature Communications current article/search text",
+      "result": "Still insufficient to establish transferable macrocycle/guest or architecture scope. Keep compact DOI pending."
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03499",
+      "source": "ACS Figshare/ASAP search text",
+      "result": "No new trapping-partner/product-scope evidence beyond the existing abstract. Keep existing card pending."
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "source": "ACS search/repository evidence",
+      "result": "No new evidence establishing a general building-block route or completed total synthesis. Keep existing card pending and do not change its production date."
+    }
+  ],
+  "concurrency": {
+    "gateHeadSha": "2a80aa2c7f5d83964d229d916c0b98715fe76cac",
+    "stateCommitSha": "f213b92f46d9c5fe4fcbeb332707b8d24cf40d10",
+    "preWriteMainSha": "b60bd580f0321c681a0cd144ef09415e55a29a7e",
+    "changesSinceState": ["audit/gpt-responses/2026-09-23/173200-prepublish-primary-1800-ready-with-pending.md"],
+    "protectedLiteratureInputsChangedSinceGate": false,
+    "workflowRunsInProgressAtCheck": 0,
+    "workflowRunsQueuedAtCheck": 0
+  },
+  "note": "Recovery reused the valid fresh 17:13 machine audit and already successful 17:30 per-DOI gate. No late evidence changed a final semantic decision, so staging/state were not rewritten or re-gated unnecessarily. The 18:00 release task alone may publish the exact 10-DOI allowlist if the bound inputs remain unchanged; two compact DOI deferrals and two existing-card scope questions remain durable pending work."
+}
