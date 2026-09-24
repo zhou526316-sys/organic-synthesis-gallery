@@ -94,6 +94,29 @@ function publisherUrlAllowed(publisher, value) {
     return false;
   }
 }
+function publisherArticleUrlBindsDoi(publisher, value, doi) {
+  try {
+    const url = new URL(String(value || ''));
+    let path = '';
+    try { path = decodeURIComponent(url.pathname).toLowerCase(); } catch { path = url.pathname.toLowerCase(); }
+    const normalized = doi.toLowerCase();
+    const suffix = normalized.split('/').slice(1).join('/');
+    if (publisher === 'acs' || publisher === 'wiley' || publisher === 'science') {
+      return path.includes(normalized);
+    }
+    if (publisher === 'nature' || publisher === 'rsc' || publisher === 'ccs') {
+      return Boolean(suffix && path.includes(suffix));
+    }
+    // Elsevier/Cell full-text routes can be PII-based. Exact DOM pageDoi plus
+    // publisher-owned HTTPS origin remains the binding until its adapter adds
+    // a stronger canonical DOI signal.
+    if (publisher === 'elsevier') return true;
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 
 function revisionAtLeast(value, minimum = MIN_CONTROLLER_REVISION) {
   const match = /^([0-9]+)\.([0-9]+)\.([0-9]+)$/.exec(String(value || '').trim());
@@ -187,6 +210,9 @@ function validateProvenance(payload, doi) {
   const sourceUrl = String(payload?.sourceUrl || articleUrl);
   if (!publisherUrlAllowed(publisher, articleUrl) || !publisherUrlAllowed(publisher, sourceUrl)) {
     return { error: 'publisher_source_mismatch' };
+  }
+  if (!publisherArticleUrlBindsDoi(publisher, articleUrl, doi)) {
+    return { error: 'article_url_doi_mismatch' };
   }
   if (String(payload?.captureVersion || '') !== CAPTURE_VERSION) return { error: 'capture_version_mismatch' };
   if (!revisionAtLeast(payload?.controllerRevision)) return { error: 'controller_revision_too_old' };
