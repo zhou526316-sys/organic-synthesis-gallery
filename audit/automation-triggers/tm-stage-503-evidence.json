@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-24T06:46:00Z",
-  "context": "Read-only diagnosis after real Bridge 2.2.27 reports arrived. Preserve full sanitized traces for the newest eight reports, especially 10.31635/ccschem.026.202608315 and 10.1021/acs.orglett.6c03168 with bound_publisher_heartbeat_missing, plus 10.1038/s41586-026-11169-0 and 10.1021/acs.joc.6c01347 with figures=0/0. Determine whether failures are startup redirect/binding, publisher script non-execution, auth/challenge, DOM discovery, or transport/acquisition. No recapture, promotion, reset, delete, publisher access, literature or UI changes.",
+  "requestedAt": "2026-09-24T06:45:00Z",
+  "context": "Read-only Bridge 2.2.27 residual-failure diagnosis after controller_timeout disappeared from the latest 12 reports. Preserve full sanitized traces for the newest eight reports, especially 10.31635/ccschem.026.202608315 bound_publisher_heartbeat_missing, 10.1021/acs.joc.6c01347 paired 0/0, 10.1038/s41586-026-11169-0 paired 0/0, and 10.1021/acs.orglett.6c03168 heartbeat missing if retained. Determine last page state, DOI match, publisher heartbeat state, discovery counts, auth/challenge/shell evidence and whether a publisher final_result existed before controller_error. No recapture, promotion, reset, delete, publisher access, literature or UI changes.",
   "bridgeVersion": "2.2.27",
   "captureProtocol": "6.2.20",
   "readOnly": true,
