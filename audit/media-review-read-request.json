@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "context": "Media-only continuation. Read existing current-generation R2 evidence only. The read may freeze the full currently eligible remainder so already-reviewed rows can be skipped locally; semantic approval/publication remains capped at 5 articles and 30 new body images in this task round. This trigger is not approval and does not modify literature data.",
+  "context": "Media-only continuation. Read existing current-generation R2 evidence only. Semantic approval/publication remains capped at 5 articles and 30 new body images in this task round. This trigger is evidence acquisition only and does not approve media or modify literature data.",
   "maxArticles": 20,
-  "maxImages": 44,
+  "maxImages": 100,
   "maxImagesPerArticle": 10,
   "readOnly": true,
   "excludeDois": ["10.1021/jacs.6c13641"],
   "excludeReason": "Existing unresolved scope review; current literature-update-state pendingScopeReviewBacklog is additionally excluded by the reader.",
-  "requestedAt": "2026-09-24T07:28:00+08:00",
-  "requestContext": "Freeze the complete 44-row currently eligible unpublished set from the unchanged stage snapshot. The prior 30-row artifact is fully semantically reviewed; this larger read is solely to obtain immutable bytes for its 14 remaining rows without publisher recrawl or storage mutation."
+  "requestedAt": "2026-09-24T20:24:00+08:00",
+  "requestContext": "Refresh current-corpus, current-online-index and current-generation R2 evidence after reviewed body batches PR215 and PR216 reached production. Obtain immutable bytes for the next eligible small semantic-review batch without publisher recrawl or storage mutation."
 }
