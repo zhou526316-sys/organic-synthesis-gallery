@@ -13,10 +13,10 @@ const worker=fs.readFileSync('cloudflare/worker/src/local-captures.js','utf8');
 assert.ok(worker.includes("payload?.captureVersion !== '6.2.20'"));
 assert.ok(worker.includes('embedded.every(value => value === target)'));
 const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-assert.ok(loader.includes("const loaderVersion = '2.2.27';")&&loader.includes('// @grant        GM_listValues'));
+assert.ok(loader.includes("const loaderVersion = '2.2.28';")&&loader.includes('// @grant        GM_listValues'));
 if(mode!=='source'){
  const bridge=fs.readFileSync(root+'/gallery-vpn-bridge.user.js','utf8');
- assert.ok(bridge.includes('// @version      2.2.27')&&bridge.includes("var VERSION = '6.2.20';"));
+ assert.ok(bridge.includes('// @version      2.2.28')&&bridge.includes("var VERSION = '6.2.20';"));
  assert.ok(bridge.includes('organicGalleryCloudflareBridgeWriteToken'));
  assert.ok(!/\beval\s*\(/.test(bridge));
  const q=JSON.parse(fs.readFileSync(root+'/toc-demand-live.json','utf8'));
@@ -24,7 +24,7 @@ if(mode!=='source'){
  assert.ok(Array.isArray(q.articles)&&q.articles.length===q.webpageDoiCount&&q.articles.length>400);
  assert.equal(new Set(q.articles.map(a=>a.doi)).size,q.articles.length);
  assert.ok(Date.parse(q.generatedAt)>=1790082000000);
- console.log('TM220_RELEASE_ARTIFACT '+JSON.stringify({bridgeVersion:'2.2.27',captureVersion:'6.2.20',completeQueue:q.articles.length,queueGeneratedAt:q.generatedAt,mode:'verified-staging'}));
+ console.log('TM220_RELEASE_ARTIFACT '+JSON.stringify({bridgeVersion:'2.2.28',captureVersion:'6.2.20',completeQueue:q.articles.length,queueGeneratedAt:q.generatedAt,mode:'verified-staging'}));
 }else console.log('TM220_SOURCE_CONTRACT_OK');
 
-assert.ok(src.includes("var CONTROLLER_REVISION = '2.2.27';")&&src.includes('previous_task_tab_not_closed')&&src.includes('requestControllerStart'),'Window guard regression');
+assert.ok(src.includes("var CONTROLLER_REVISION = '2.2.28';")&&src.includes('previous_task_tab_not_closed')&&src.includes('requestControllerStart'),'Window guard regression');

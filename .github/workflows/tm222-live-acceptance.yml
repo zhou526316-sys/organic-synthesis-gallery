@@ -25,9 +25,9 @@ jobs:
           import {writeFile} from 'node:fs/promises';
           const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
           const worker='https://organic-synthesis-gallery.zhou526316.workers.dev';
-          async function get(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'tm227='+Date.now(),{headers:{origin:'https://zhou526316-sys.github.io','cache-control':'no-cache'},signal:AbortSignal.timeout(20000)});assert.equal(r.status,200,url);return r.text();}
+          async function get(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'tm228='+Date.now(),{headers:{origin:'https://zhou526316-sys.github.io','cache-control':'no-cache'},signal:AbortSignal.timeout(20000)});assert.equal(r.status,200,url);return r.text();}
           const script=await get(base+'gallery-vpn-bridge.user.js');
-          assert.match(script,/^\/\/ @version\s+2\.2\.27\s*$/m);
+          assert.match(script,/^\/\/ @version\s+2\.2\.28\s*$/m);
           for(const s of ['BEGIN OSG_UPLOAD_EVIDENCE_V1','postAcquiredImage','same_acquired_image','response_without_worker_error_code','BEGIN OSG_LIVE_PROGRESS_V1','BEGIN OSG_AUTO_REPORT_V1','enqueueCaptureReport','startAutomaticCaptureReports','diagnostic_receipt_invalid','extension_connection_denied','@connect      media.springernature.com','captureLiveUpdate','captureLiveSnapshot','mountCaptureLivePanel','查看实时抓取进度','setInterval(render, 1000)',"var VERSION = '6.2.20';",'assertBoundCaptureJob','previous_task_tab_not_closed','requestControllerStart','pending_verified_promotion','completedPublisherResult','publisher final results over controller timeouts'])assert.ok(script.includes(s),s);
           let cap;
           for(let i=0;i<6;i++){cap=JSON.parse(await get(worker+'/api/media/capture-capabilities'));if(cap.stageStorageRevision==='2026-09-23.1')break;await new Promise(r=>setTimeout(r,10000));}
@@ -37,10 +37,10 @@ jobs:
           const retained=records.filter(r=>r.toc?.recoveryId==='toc-batch1-20260922').length;
           const retained2=records.filter(r=>r.toc?.recoveryId==='sealed-media-batch2-20260923'||r.figures?.figures?.some(f=>f.recoveryId==='sealed-media-batch2-20260923')).length;
           assert.ok(retained>=83&&retained2>=20);
-          const report={checkedAt:new Date().toISOString(),installer:base+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.27',captureProtocol:'6.2.20',scriptBytes:Buffer.byteLength(script),scriptSha256:createHash('sha256').update(script).digest('hex'),retainedReviewedToc:retained,retainedSecondRecovery:retained2,workerCapabilities:cap,publishedPaperMediaRecords:records.length,publishedFigureEntries:records.reduce((n,r)=>n+(r.figures?.figures?.length||0),0),panelPollSeconds:1,diagnosticSendIntervalSeconds:10,diagnosticDelivery:'persistent local outbox and server receipt',pollSource:'local Tampermonkey storage',writes:0,liveUserExtensionVerified:false};
+          const report={checkedAt:new Date().toISOString(),installer:base+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.28',captureProtocol:'6.2.20',scriptBytes:Buffer.byteLength(script),scriptSha256:createHash('sha256').update(script).digest('hex'),retainedReviewedToc:retained,retainedSecondRecovery:retained2,workerCapabilities:cap,publishedPaperMediaRecords:records.length,publishedFigureEntries:records.reduce((n,r)=>n+(r.figures?.figures?.length||0),0),panelPollSeconds:1,diagnosticSendIntervalSeconds:10,diagnosticDelivery:'persistent local outbox and server receipt',pollSource:'local Tampermonkey storage',writes:0,liveUserExtensionVerified:false};
           try{const st=JSON.parse(await get(worker+'/api/article-figures/staged'));report.stageIndex={count:st.count,updatedAt:st.updatedAt,invalidFiltered:st.invalidFiltered};}catch(error){report.stageIndexReadError=String(error.message);}
           await writeFile(process.env.RUNNER_TEMP+'/tm224-live-progress-acceptance.json',JSON.stringify(report,null,2));
-          await writeFile(process.env.RUNNER_TEMP+'/gallery-vpn-bridge-2.2.27.user.js',script);
+          await writeFile(process.env.RUNNER_TEMP+'/gallery-vpn-bridge-2.2.28.user.js',script);
           console.log('TM224_PROGRESS_LIVE_ACCEPTED '+JSON.stringify(report));
           JS
       - uses: actions/upload-artifact@v4
@@ -49,6 +49,6 @@ jobs:
           name: tm224-live-progress-acceptance
           path: |
             ${{ runner.temp }}/tm224-live-progress-acceptance.json
-            ${{ runner.temp }}/gallery-vpn-bridge-2.2.27.user.js
+            ${{ runner.temp }}/gallery-vpn-bridge-2.2.28.user.js
           retention-days: 7
           if-no-files-found: warn
