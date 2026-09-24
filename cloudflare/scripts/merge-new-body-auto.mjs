@@ -87,11 +87,20 @@ export function strongOfficialCapture(row){
   if(row.captureVersion!=='6.2.20'||normalizeDoi(row.pageDoi||'')!==doi||Number(row.mediaGeneration)!==1790082000000||Number(row.updatedAt||0)<1790082000000)return false;
   let page,source;try{page=new URL(String(row.articleUrl||''));source=new URL(String(row.sourceUrl||''));}catch{return false;}
   if(page.protocol!=='https:'||source.protocol!=='https:'||!officialPublisherHosts(doi,page.hostname,source.hostname))return false;
-  for(const value of [row.articleUrl,row.sourceUrl]){
+  const articleIds=sourceDois(row.articleUrl);
+  if(articleIds.length!==1||articleIds[0]!==doi)return false;
+  const sourceIds=sourceDois(row.sourceUrl);
+  if(sourceIds.length===1&&sourceIds[0]===doi)return true;
+  if(sourceIds.length)return false;
+  if(doi.startsWith('10.1038/')&&hostIs(source.hostname,'springernature.com')){
+    const slug=doi.slice('10.1038/'.length).replace(/[.*+?^$()|[\]\\]/g,'\\  for(const value of [row.articleUrl,row.sourceUrl]){
     const ids=sourceDois(value);
     if(ids.length!==1||ids[0]!==doi)return false;
   }
-  return true;
+  return true;');
+    return new RegExp('(?:^|[/_-])'+slug+'(?:[/_.-]|$)','i').test(decodeURIComponent(source.pathname));
+  }
+  return false;
 }
 export function completedPacketMap(inputs){
   const map=new Map();
