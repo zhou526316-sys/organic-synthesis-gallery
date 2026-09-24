@@ -42,7 +42,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.28';
+  var CONTROLLER_REVISION = '2.2.29';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
@@ -2261,6 +2261,14 @@ function embeddedJobDois(value) {
     return tab.closed===true;
   }
 
+  function hardControllerStopReason(reason) {
+    return /^(?:controller_lease_lost|another_task_still_active|capture_server_upgrade_pending)$/.test(String(reason || ''));
+  }
+
+  function recoverablePaperSkipReason(reason) {
+    return /^(?:task_tab_handle_unavailable|previous_task_tab_not_closed|bound_publisher_heartbeat_missing|controller_timeout)$/.test(String(reason || ''));
+  }
+
   function requestControllerStart() {
     if(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__) {badge('当前批次正在运行，不重复派发','#374151');return;}
     var lease=GM_getValue(LEASE_KEY,null);
@@ -2298,7 +2306,7 @@ function embeddedJobDois(value) {
         return true;
       }
       var available=jobs.filter(eligible),batch=selectBatchJobs(available,batchSize());
-      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,tocStored:0,figuresStaged:0,published:0,results:[]};
+      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,tabCloseWarnings:0,tocStored:0,figuresStaged:0,published:0,results:[]};
       GM_setValue(SUMMARY_KEY,summary);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
@@ -2309,35 +2317,40 @@ function embeddedJobDois(value) {
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
         badge('TOC＋正文图 '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
-        var tab=null,result=null,closed=true;
+        var tab=null,result=null,closed=true,tabCloseWarning='';
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
           tab=await Promise.resolve(GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
           if(!tab || typeof tab.close!=='function')throw new Error('task_tab_handle_unavailable');
           result=await waitForResult(job,tab);
         } catch(error) {
-          if(/controller_lease_lost|task_tab_handle_unavailable/.test(String(error.message)))stopReason=String(error.message);
-          else result={doi:job.doi,jobId:job.jobId,version:VERSION,status:'failed',reason:String(error.message),finishedAt:nowIso()};
+          var controllerError=String(error && error.message || error);
+          if(hardControllerStopReason(controllerError)) stopReason=controllerError;
+          else result={doi:job.doi,jobId:job.jobId,version:VERSION,status:'failed',reason:controllerError,finishedAt:nowIso()};
         } finally {
-          // Invalidate this job before closing; never delete another controller's job.
+          // Invalidate this job before closing. If close confirmation fails, the stale tab is no longer
+          // bound to any active job and must not pause the queue.
           clearOwnedJob(job);
           if(tab)closed=await closeTaskTab(tab);
-          if(!closed)stopReason=stopReason||'previous_task_tab_not_closed';
+          if(!closed){tabCloseWarning='previous_task_tab_not_closed';summary.tabCloseWarnings+=1;}
         }
         if((result && !result.toc && result.status==='failed') || stopReason) {
           var observed=currentPublisherHeartbeat();
           var observedUrl=observed&&observed.jobId===job.jobId?observed.href:'';
-          enqueueCaptureReport(job,[{at:nowIso(),stage:'controller',event:'stopped',status:'failed',message:stopReason||(result&&result.reason)||'unknown_controller_failure',url:observedUrl}], 'controller_error',stopReason||(result&&result.reason),true,observedUrl);
+          var controllerReason=stopReason||(result&&result.reason)||tabCloseWarning||'unknown_controller_failure';
+          enqueueCaptureReport(job,[{at:nowIso(),stage:'controller',event:stopReason?'stopped':'paper_skipped',status:'failed',message:controllerReason,url:observedUrl}], 'controller_error',controllerReason,true,observedUrl);
         }
         if(result && !stopReason) {
           result.version=VERSION;
           result.retryCount=Number(priorAttempt&&priorAttempt.reason!=='controller_lease_lost'&&priorAttempt.retryCount||0)+1;
+          if(recoverablePaperSkipReason(result.reason)){result.skipped=true;summary.skipped+=1;}
+          if(tabCloseWarning)result.tabCloseWarning=tabCloseWarning;
           summary.results.push(result);summary[result.status]=(summary[result.status]||0)+1;
           summary.tocStored+=result.toc&&result.toc.status==='stored'?1:0;
           summary.figuresStaged+=Number(result.figuresStaged||0);
           GM_setValue(attemptKey(job.doi,generation,'figures'),result);
         }
-        if(result && result.reason==='bound_publisher_heartbeat_missing')stopReason=result.reason;
+        if(tabCloseWarning)try{console.warn('[OSG TOC] task tab close not confirmed; job invalidated and queue continues',job.doi);}catch(_){}
         if(stopReason){summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);break;}
         GM_setValue(SUMMARY_KEY,summary);
         if(result && result.status==='aborted')break;
@@ -2345,7 +2358,7 @@ function embeddedJobDois(value) {
       }
       summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
       if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
-      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；完整抓取 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'（暂存不等于发布）','#374151');
+      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（任务页关闭警告 '+summary.tabCloseWarnings+'；暂存不等于发布）','#374151');
       if(!stopReason&&jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
@@ -2359,7 +2372,7 @@ function embeddedJobDois(value) {
       }
     } finally {
       clearInterval(renew);
-      if(/controller_lease_lost|task_tab_handle_unavailable|previous_task_tab_not_closed|another_task_still_active|bound_publisher_heartbeat_missing|capture_server_upgrade_pending/.test(stopReason)){CONTROLLER_STOP_REASON=stopReason;if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}}
+      if(hardControllerStopReason(stopReason)){CONTROLLER_STOP_REASON=stopReason;if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}}
       globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=false;
       var lease=GM_getValue(LEASE_KEY,null);
       if(lease&&lease.owner===CONTROLLER_ID)GM_deleteValue(LEASE_KEY);
