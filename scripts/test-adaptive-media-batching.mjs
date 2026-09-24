@@ -15,11 +15,12 @@ test('policy now releases completed single-article packets immediately',()=>{
 });
 test('one eligible completed article is deployment-ready',()=>{const g=adaptiveBatchGate(rows(1),policy,now);assert.equal(g.ready,true);assert.equal(g.mode,'target_batch');assert.equal(g.articleCount,1);});
 test('zero articles never triggers a deploy',()=>{const g=adaptiveBatchGate([],policy,now);assert.equal(g.ready,false);assert.equal(g.articleCount,0);});
-test('completed packet index rejects unfinished and count-mismatched reports',()=>{
-  const ok={doi,jobId:'packet-job-12345678',captureVersion:'6.2.20',final:true,status:'success',figuresDiscovered:2,figuresStored:2,figureLabels:['Figure 1','Figure 2']};
+test('completed packet index requires a completed body-bearing media phase',()=>{
+  const ok={doi,jobId:'packet-job-12345678',captureVersion:'6.2.20',mediaNeed:'figures',final:true,status:'success',figuresDiscovered:2,figuresStored:2,figureLabels:['Figure 1','Figure 2']};
   const bad={...ok,doi:'10.1021/jacs.6c91235',figuresStored:1};
   const unfinished={...ok,doi:'10.1021/jacs.6c91236',final:false};
-  const map=completedPacketMap({reports:{items:[ok,bad,unfinished]}});assert.ok(map.has(doi));assert.ok(!map.has(bad.doi));assert.ok(!map.has(unfinished.doi));
+  const tocOnly={...ok,doi:'10.1021/jacs.6c91237',mediaNeed:'toc',figuresDiscovered:0,figuresStored:0,figureLabels:[]};
+  const map=completedPacketMap({reports:{items:[ok,bad,unfinished,tocOnly]}});assert.ok(map.has(doi));assert.ok(!map.has(bad.doi));assert.ok(!map.has(unfinished.doi));assert.ok(!map.has(tocOnly.doi));
 });
 
 const goodOfficial={doi,kind:'official',captureVersion:'6.2.20',pageDoi:doi,mediaGeneration:1790082000000,updatedAt:now,
