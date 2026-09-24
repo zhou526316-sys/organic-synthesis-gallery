@@ -102,6 +102,13 @@ const wrongHost = await importArticleFulltext(env, evidencePayload({
 assert.equal(wrongHost.status, 400);
 assert.equal(wrongHost.body.error, 'publisher_source_mismatch');
 
+const wrongArticle = await importArticleFulltext(env, evidencePayload({
+  articleUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c99999',
+  sourceUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c99999',
+}));
+assert.equal(wrongArticle.status, 400);
+assert.equal(wrongArticle.body.error, 'article_url_doi_mismatch');
+
 const oldController = await importArticleFulltext(env, evidencePayload({ controllerRevision: '2.2.31' }));
 assert.equal(oldController.status, 400);
 assert.equal(oldController.body.error, 'controller_revision_too_old');
