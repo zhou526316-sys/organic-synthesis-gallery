@@ -34,13 +34,25 @@ assert(Number.isSafeInteger(compact.summary?.sourceCoverageAnomalies) && compact
 assert(Number.isSafeInteger(compact.summary?.historicalCoverageLosses) && compact.summary.historicalCoverageLosses === 0, 'historical coverage loss after release');
 const unresolvedDois = (compact.unresolved || []).map(x => norm(x.doi));
 const deferredDois = (marker.deferredDois || []).map(norm);
-assert(sameSet(unresolvedDois, deferredDois), 'post-release unresolved DOI set differs from deferred set');
+const carryoverRows = Array.isArray(state.nextSlotPublicationBacklog) ? state.nextSlotPublicationBacklog : [];
+const carryoverDois = carryoverRows.map(x => norm(x.doi));
+const expectedUnresolvedDois = [...deferredDois, ...carryoverDois];
+assert(new Set(expectedUnresolvedDois).size === expectedUnresolvedDois.length,
+  'post-release pending/carryover DOI sets overlap or contain duplicates');
+assert(sameSet(unresolvedDois, expectedUnresolvedDois),
+  'post-release unresolved DOI set differs from exact pending plus reviewed next-slot carryover set');
+for (const row of carryoverRows) {
+  const doi = norm(row.doi);
+  assert(row.decision === 'include' && row.status === 'ready_for_next_slot', `invalid next-slot carryover status: ${doi}`);
+  assert(/^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(String(row.nextPublicationSlot || ''))
+    && Date.parse(row.nextPublicationSlot) > Date.parse(marker.publicationSlot), `invalid next-slot carryover time: ${doi}`);
+}
 assert(formal.summary?.accepted === marker.publishableDois.length, 'formal accepted count mismatch');
 assert(formal.summary?.pending === marker.deferredDois.length, 'formal pending count mismatch');
 
-state.phase = deferredDois.length ? 'synced_with_pending' : 'synced';
+state.phase = deferredDois.length ? 'synced_with_pending' : (carryoverDois.length ? 'synced_with_carryover' : 'synced');
 state.publicationChecksPassed = true;
-state.reviewComplete = deferredDois.length === 0;
+state.reviewComplete = deferredDois.length === 0 && carryoverDois.length === 0;
 state.nextPublicationSlot = request.nextPublicationSlot;
 state.latestMachineAudit = {
   generatedAt: compact.generatedAt,
@@ -57,7 +69,9 @@ state.latestMachineAudit = {
   closureDate: compact.closureDate || null,
   status: deferredDois.length
     ? (compact.summary?.sourceCoverageAnomalies > 0 ? 'post_release_verified_with_pending_and_coverage_warning' : 'post_release_verified_with_pending')
-    : (compact.summary?.sourceCoverageAnomalies > 0 ? 'post_release_verified_with_coverage_warning' : 'post_release_verified'),
+    : carryoverDois.length
+      ? (compact.summary?.sourceCoverageAnomalies > 0 ? 'post_release_verified_with_carryover_and_coverage_warning' : 'post_release_verified_with_carryover')
+      : (compact.summary?.sourceCoverageAnomalies > 0 ? 'post_release_verified_with_coverage_warning' : 'post_release_verified'),
   compactHandoffSha: request.postReleaseCompactBlobSha,
   latestBlobSha: request.postReleaseAuditBlobSha,
   runId: request.postReleaseAuditRunId,
@@ -65,7 +79,8 @@ state.latestMachineAudit = {
   semanticReviewed: formal.summary?.reviewed ?? null,
   semanticFinalized: (formal.summary?.accepted || 0) + (formal.summary?.rejected || 0),
   semanticPending: formal.summary?.pending ?? 0,
-  note: 'Fresh post-release audit was recomputed against the deployed/repository production snapshot. Any remaining unresolved DOI set is required to equal the durable formal pending set exactly. Healthy sourceCoverageAnomalies may remain as closure warnings and do not invalidate an otherwise verified fixed-slot publication.'
+  nextSlotPublicationCarryover: carryoverDois.length,
+  note: 'Fresh post-release audit was recomputed against the deployed/repository production snapshot. Any remaining unresolved DOI set must equal the union of durable formal pending DOI(s) and separately reviewed next-slot include carryovers. Healthy sourceCoverageAnomalies may remain as closure warnings and do not invalidate an otherwise verified fixed-slot publication.'
 };
 state.lastQualityGate = {
   runId: request.qualityGateRunId,
@@ -94,6 +109,7 @@ state.lastPublication = {
   productionCards: marker.productionCards,
   publishedDois: marker.publishableDois,
   deferredDois: marker.deferredDois,
+  nextSlotPublicationDois: carryoverDois,
   rejectedDois: marker.rejectedDois,
   publicationChecksPassed: true,
   reviewComplete: deferredDois.length === 0,
@@ -115,7 +131,8 @@ state.lastWebsiteSync = {
     deferredDoisAbsent: marker.deferredDois,
     totalGalleryCards: marker.productionCards,
     galleryDois: marker.productionCards,
-    note: 'Pages authorization/build/deploy and post-release quality gate succeeded; post-release DOI-union audit reports the same repository/deployed gallery count and only the explicitly deferred DOI remains unresolved.'
+    nextSlotPublicationDois: carryoverDois,
+    note: 'Pages authorization/build/deploy and post-release quality gate succeeded; post-release DOI-union audit reports the same repository/deployed gallery count. Remaining unresolved DOI(s), if any, are exactly durable evidence-pending records plus reviewed next-slot include carryovers.'
   },
   tocVerification: {
     liveQueueCommitSha: request.tocDemandCommit,
@@ -185,6 +202,7 @@ const result = {
   productionCards: marker.productionCards,
   published: marker.publishableDois.length,
   deferred: marker.deferredDois.length,
+  nextSlotCarryover: carryoverDois.length,
   tocDemandCommit: request.tocDemandCommit,
   visibleGapTotal: toc.visibleGapTotal,
   missingOfficialTotal: toc.missingOfficialTotal,
