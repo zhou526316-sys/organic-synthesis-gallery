@@ -36,15 +36,8 @@ function tr(zh: string, en: string): string {
   return document.documentElement.lang.toLowerCase().startsWith('zh') ? zh : en;
 }
 
-function shareSlug(doi: string): string {
-  const bytes = new TextEncoder().encode(doi.toLowerCase());
-  let binary = '';
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
-}
-
 const RICH_SHARE_ORIGIN = 'https://api.gczhouwld.com';
-const CANONICAL_GALLERY_ORIGIN = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
+const CANONICAL_GALLERY_ORIGIN = 'https://gallery.gczhouwld.com';
 const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_BUILD_ID__
   ? __GALLERY_BUILD_ID__
   : 'runtime';
@@ -54,7 +47,7 @@ function galleryDeepLink(doi: string): string {
 }
 
 function shareUrl(doi: string): string {
-  return `${RICH_SHARE_ORIGIN}/share/${shareSlug(doi)}.html?sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
+  return galleryDeepLink(doi);
 }
 
 type WeChatSdk = {
@@ -74,7 +67,9 @@ function isWeChatBrowser(): boolean {
 }
 
 function isWeChatJsSdkHost(): boolean {
-  return window.location.protocol === 'https:' && window.location.hostname.toLowerCase() === 'api.gczhouwld.com';
+  if (window.location.protocol !== 'https:') return false;
+  return new Set(['gallery.gczhouwld.com', 'api.gczhouwld.com'])
+    .has(window.location.hostname.toLowerCase());
 }
 
 function currentWeChatSignedUrl(): string {
@@ -162,7 +157,7 @@ async function shareImageUrl(info: ShareInfo): Promise<string> {
       if (image) return new URL(image, info.url).toString();
     }
   } catch {}
-  return `${RICH_SHARE_ORIGIN}/share-default.png`;
+  return `${CANONICAL_GALLERY_ORIGIN}/share-default.png`;
 }
 
 async function configureWeChatShare(info: ShareInfo): Promise<void> {
@@ -191,7 +186,7 @@ function infoFromButton(button: HTMLElement): ShareInfo | null {
     journal: card.dataset.journal || '',
     date: card.dataset.date || '',
     url: shareUrl(doi),
-    imageUrl: card.querySelector<HTMLImageElement>('.toc-image')?.src || `${RICH_SHARE_ORIGIN}/share-default.png`,
+    imageUrl: card.querySelector<HTMLImageElement>('.toc-image')?.src || `${CANONICAL_GALLERY_ORIGIN}/share-default.png`,
   };
 }
 

@@ -124,6 +124,7 @@ function browserCorsOriginAllowed(origin) {
     'https://organic-synthesis-gallery.zhou526316.workers.dev',
     'https://organic-synthesis-gallery-public.pages.dev',
     'https://api.gczhouwld.com',
+    'https://gallery.gczhouwld.com',
     'https://pubs.acs.org',
     'https://onlinelibrary.wiley.com',
     'https://pubs.rsc.org',
