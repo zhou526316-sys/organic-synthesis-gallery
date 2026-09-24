@@ -1,18 +1,16 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-24T18:10:00+08:00",
-  "requestedBy": "fixed-release-postverify-20260924-1800",
-  "reason": "Post-release verification for the immutable 2026-09-24 18:00 slot release. Atomic production release b513e1a2767e999edbf10a9ebe6124850b9e916a has been built and deployed through Pages run 35985367446. Generate exactly one fresh machine audit against current main/deployed Gallery to verify the 566-card DOI set, discovery health, and whether every remaining unresolved DOI is exactly covered by the formal pending/deferred record. Do not mutate production literature, do not publish late arrivals, and do not acquire publisher media.",
+  "requestedAt": "2026-09-25T07:09:20+08:00",
+  "requestedBy": "prepublish-primary-20260925-0800",
+  "reason": "Fresh prepublish discovery handoff for the immutable 2026-09-25 08:00 slot. The newest persisted compact was generated at 2026-09-24T13:53:22.134Z and is too old for this slot; no same-slot literature-audit run is active. Recompute the Asia/Shanghai 2026-09-23 through 2026-09-25 three-day window, seven-day machine safety tail, created/deposit rescue and verifiedThrough catch-up against current main and the deployed 566-card baseline. Carry forward the eight post-release unreviewed DOI records and durable pending queues without inventing decisions. Do not mutate production literature, publish cards, deploy Pages, or acquire publisher media.",
   "targetBranch": "main",
-  "publicationSlot": "2026-09-24T18:00:00+08:00",
-  "baselineMainSha": "74b1e68042f481971012dcbd852f922608d45c91",
-  "releaseCommit": "b513e1a2767e999edbf10a9ebe6124850b9e916a",
-  "pagesRunId": 35985367446,
+  "publicationSlot": "2026-09-25T08:00:00+08:00",
+  "baselineMainSha": "ce7ab9805397d0097fc34f675182e933c161ebc1",
   "expectedProductionCards": 566,
   "primaryWindow": {
     "timezone": "Asia/Shanghai",
-    "startDate": "2026-09-22",
-    "endDate": "2026-09-24",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-25",
     "days": 3
   },
   "safetyTailDays": 7,
@@ -22,14 +20,14 @@
   "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
   "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
   "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
-  "deduplicationKey": "post-release|2026-09-24T18:00:00+08:00|b513e1a2767e999edbf10a9ebe6124850b9e916a|566",
+  "deduplicationKey": "prepublish-primary|2026-09-25T08:00:00+08:00|ce7ab9805397d0097fc34f675182e933c161ebc1|scope-2026-09-24-v1",
   "validation": [
-    "audit/latest.json and audit/unresolved-latest.json must share generatedAt and endDate 2026-09-24",
+    "audit/latest.json and audit/unresolved-latest.json must share generatedAt and cover the 2026-09-23 through 2026-09-25 Asia/Shanghai primary window",
     "both summary.unresolved values must equal the complete compact unresolved array length",
-    "all canonical active journals and activeFrom rules remain covered",
+    "all 16 canonical active journals and activeFrom rules must be covered",
+    "Crossref online/published/created multi-ISSN, OpenAlex, created/deposit rescue, seven-day tail and verifiedThrough catch-up must remain enabled",
     "criticalSourceFailures, sourceFamilyGaps, sourceCoverageAnomalies, closureCoverageAnomalies and historicalCoverageLosses must be explicit",
-    "galleryDois/deployed verification must reflect the already released 566-card snapshot",
-    "any unresolved DOI not exactly covered by current formal pending/deferred evidence is an unknown post-release gap and must fail publication closure",
-    "post-release verification only: no production literature mutation, no late admission, no Pages trigger, no OA or publisher-media acquisition"
+    "compact unresolved must preserve durable pending and post-release carry-forward DOI work until individually decided",
+    "prepublish discovery only: no production literature mutation, no Pages trigger, no OA or publisher-media acquisition"
   ]
 }
