@@ -9,6 +9,7 @@ interface ShareInfo {
   date: string;
   url: string;
   imageUrl?: string;
+  imageElement?: HTMLImageElement | null;
 }
 
 let activePanel: HTMLElement | null = null;
@@ -20,6 +21,11 @@ let deepLinkFocused = false;
 let focusTimer: number | null = null;
 let highlightUntil = 0;
 let highlightExpiryTimer: number | null = null;
+
+const qrModulePromise = import('qrcode');
+const posterCache = new Map<string, Promise<Blob>>();
+const POSTER_WIDTH = 1080;
+const POSTER_HEIGHT = 1440;
 
 function normalizeDoi(value: string | null | undefined): string | null {
   if (!value) return null;
@@ -36,13 +42,6 @@ function tr(zh: string, en: string): string {
   return document.documentElement.lang.toLowerCase().startsWith('zh') ? zh : en;
 }
 
-function shareSlug(doi: string): string {
-  const bytes = new TextEncoder().encode(doi.toLowerCase());
-  let binary = '';
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
-}
-
 const RICH_SHARE_ORIGIN = 'https://api.gczhouwld.com';
 const CANONICAL_GALLERY_ORIGIN = 'https://gallery.gczhouwld.com';
 const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_BUILD_ID__
@@ -50,13 +49,7 @@ const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_B
   : 'runtime';
 
 function shareUrl(doi: string): string {
-  return `${CANONICAL_GALLERY_ORIGIN}/share/${shareSlug(doi)}.html?sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
-}
-
-function sharePrepareUrl(url: string): string {
-  const prepared = new URL(url);
-  prepared.searchParams.set('prepare', '1');
-  return prepared.toString();
+  return `${CANONICAL_GALLERY_ORIGIN}/?doi=${encodeURIComponent(doi)}&sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
 }
 
 type WeChatSdk = {
@@ -195,7 +188,10 @@ function infoFromButton(button: HTMLElement): ShareInfo | null {
     journal: card.dataset.journal || '',
     date: card.dataset.date || '',
     url: shareUrl(doi),
-    imageUrl: card.querySelector<HTMLImageElement>('.toc-image')?.src || `${CANONICAL_GALLERY_ORIGIN}/share-default.png`,
+    imageElement: card.querySelector<HTMLImageElement>('.toc-image'),
+    imageUrl: card.querySelector<HTMLImageElement>('.toc-image')?.currentSrc
+      || card.querySelector<HTMLImageElement>('.toc-image')?.src
+      || `${CANONICAL_GALLERY_ORIGIN}/share-default.png`,
   };
 }
 
@@ -217,18 +213,6 @@ async function copyText(text: string): Promise<void> {
   const ok = document.execCommand('copy');
   area.remove();
   if (!ok) throw new Error('copy failed');
-}
-
-function shareText(info: ShareInfo): string {
-  const meta = [info.journal, info.date].filter(Boolean).join(' | ');
-  return [
-    info.title,
-    meta,
-    `DOI: ${info.doi}`,
-    '',
-    tr('在 Organic Synthesis Gallery 查看 TOC、摘要和正文图：', 'View TOC, summary and article figures in Organic Synthesis Gallery:'),
-    info.url,
-  ].filter(Boolean).join('\n');
 }
 
 function showToast(message: string, duration = 1800): void {
