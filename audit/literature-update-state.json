@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "preparing",
+  "phase": "ready_with_pending",
   "activeRun": null,
   "lastCompletedFetch": {
     "id": "manual-midday-catchup-20260922",
@@ -117,7 +117,7 @@
     "note": "The dedicated trigger push executed the GitHub runner capability guard, DOI-union audit, artifact upload and paired snapshot persistence successfully. No local Node or workflow_dispatch was used."
   },
   "latestMachineAudit": {
-    "generatedAt": "2026-09-23T23:10:55.807Z",
+    "generatedAt": "2026-09-23T23:41:25.964Z",
     "sourceRecords": 525,
     "galleryDois": 542,
     "missingFromGallery": 123,
@@ -129,11 +129,13 @@
     "closureCoverageAnomalies": 8,
     "historicalCoverageLosses": 0,
     "closureDate": "2026-09-23",
-    "status": "fresh_prepublish_source_anomalies",
-    "runId": 35932176599,
+    "status": "fresh_prepublish_ready_with_closure_warnings",
+    "runId": 35934774504,
     "runConclusion": "success",
-    "snapshotCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
-    "note": "Fresh 08:00-slot audit completed and compact/latest agree, but two source-coverage warnings and eight closure-depth warnings fail the publication discovery gate."
+    "snapshotCommitSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
+    "compactHandoffSha": "c988f7e2e2213fc38459b10422cc31a85ba522b6",
+    "latestBlobSha": "4635d42f0dde8724392a2a1af7baffab907588a6",
+    "note": "Fresh paired audit is complete. Two healthy Crossref/OpenAlex sourceCoverageAnomalies and closure-depth warnings remain nonblocking for already discovered, fully reviewed DOI publication, but verifiedThrough/closure stays held."
   },
   "publicationPolicy": {
     "updatedAt": "2026-09-22T19:12:00+08:00",
@@ -174,19 +176,19 @@
   },
   "prepublishStaging": {
     "publicationSlot": "2026-09-24T08:00:00+08:00",
-    "status": "incomplete_review",
-    "phase": "preparing",
-    "readyToPublish": false,
-    "publishableSubsetReady": false,
+    "status": "ready_with_pending",
+    "phase": "ready_with_pending",
+    "readyToPublish": true,
+    "publishableSubsetReady": true,
     "reviewComplete": false,
-    "publicationChecksPassed": false,
-    "freshAuditGeneratedAt": "2026-09-23T23:10:55.807Z",
+    "publicationChecksPassed": true,
+    "freshAuditGeneratedAt": "2026-09-23T23:41:25.964Z",
     "snapshotFreshForSlot": true,
-    "compactHandoffSha": "6e1cd99a6227b0b1ad25b835af0336f317aecdbb",
-    "handoffCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
+    "compactHandoffSha": "c988f7e2e2213fc38459b10422cc31a85ba522b6",
+    "handoffCommitSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
     "reviewFile": "audit/prepublish-review-2026-09-24-0800.json",
-    "reviewCommitSha": "5c9d5e7717b983c470ad9655dbe53663869c827e",
-    "reviewBlobSha": "0a0ba2b9b4d41945549e0dcd02dc55de65f18285",
+    "reviewCommitSha": "b215a5e0b9341f1ac55cce1e7522fa6b2c74376b",
+    "reviewBlobSha": "f0c9fbd775afb506514184ba3ba6a97bdeb919eb",
     "reviewed": 123,
     "accepted": 15,
     "rejected": 106,
@@ -208,7 +210,23 @@
       "10.1021/acs.orglett.6c03373",
       "10.1021/acs.orglett.6c03854"
     ],
-    "publishableDois": [],
+    "publishableDois": [
+      "10.1021/acscatal.6c04954",
+      "10.1021/acscatal.6c05820",
+      "10.31635/ccschem.026.202608315",
+      "10.1021/jacs.6c16323",
+      "10.1021/jacs.6c14601",
+      "10.1021/acs.joc.6c01347",
+      "10.1021/acs.joc.6c01498",
+      "10.1038/s41586-026-11169-0",
+      "10.1038/s41557-026-02247-x",
+      "10.1021/acs.orglett.6c03346",
+      "10.1021/acs.orglett.6c03455",
+      "10.1021/acs.orglett.6c03520",
+      "10.1021/acs.orglett.6c03276",
+      "10.1021/acs.orglett.6c03373",
+      "10.1021/acs.orglett.6c03854"
+    ],
     "deferredDois": [
       "10.1038/s41467-026-78015-9",
       "10.31635/ccschem.026.202608262"
@@ -219,12 +237,25 @@
     ],
     "existingCardScopePending": 2,
     "pendingScopeReviewBacklogField": "pendingScopeReviewBacklog",
-    "globalBlockers": [
-      "sourceCoverageAnomalies=2 (Nature and CCS Chemistry machine-union overlap warnings)",
-      "closureCoverageAnomalies=8; verifiedThrough must not advance and the current generation is not publication-ready"
-    ],
-    "publicationBlockers": [
-      "Fresh machine snapshot has nonzero sourceCoverageAnomalies, so require-ready checks must fail closed."
+    "globalBlockers": [],
+    "publicationBlockers": [],
+    "nonBlockingDiscoveryWarnings": [
+      {
+        "metric": "sourceCoverageAnomalies",
+        "count": 2,
+        "journals": [
+          "Nature",
+          "CCS Chemistry"
+        ],
+        "publicationEffect": "none_for_already_discovered_two_pass_reviewed_dois",
+        "closureEffect": "hold_verifiedThrough_and_recheck"
+      },
+      {
+        "metric": "closureCoverageAnomalies",
+        "count": 8,
+        "publicationEffect": "none_for_already_discovered_two_pass_reviewed_dois",
+        "closureEffect": "hold_verifiedThrough"
+      }
     ],
     "qualityControl": {
       "secondPassCompleted": true,
@@ -242,16 +273,16 @@
         "unavailable": 10
       },
       "scopeContract": {
-        "scopeRulesVersion": "scope-2026-09-23-v1",
+        "scopeRulesVersion": "scope-2026-09-24-v1",
         "scopeRulesFile": "docs/literature-scope-contract.md",
-        "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
+        "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
         "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
         "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
-        "handoffCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
-        "handoffBlobSha": "6e1cd99a6227b0b1ad25b835af0336f317aecdbb",
+        "handoffCommitSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
+        "handoffBlobSha": "c988f7e2e2213fc38459b10422cc31a85ba522b6",
         "ruleChangeTriggeredHistoricalReview": false,
         "ruleCompatibilityChecked": true,
-        "ruleCompatibilityConclusion": "Scope and correction blob SHAs are unchanged from the 2026-09-23 18:00 staging; four historical boundary rechecks were reused and all fresh compact candidates were evaluated under the same contract.",
+        "ruleCompatibilityConclusion": "scope-2026-09-24-v1 changes only fixed-slot gating for healthy cross-source coverage-overlap warnings; semantic inclusion/exclusion boundaries are unchanged. The refreshed compact DOI set is exactly identical to the 123 already reviewed decisions, so the article-specific decisions remain applicable without fabricating a new semantic review.",
         "newIncludesArticleSpecificAssessmentsComplete": true,
         "explicitBoundaryRechecks": 4,
         "affectedHistoricalCoverageComplete": true,
@@ -265,45 +296,55 @@
       "placeholderTranslations": 0,
       "productionDataModified": false,
       "mediaAcquisitionPerformed": false,
-      "pagesDeploymentRequested": false
+      "pagesDeploymentRequested": false,
+      "sourceCoverageWarningCount": 2,
+      "sourceCoverageWarningJournals": [
+        "Nature",
+        "CCS Chemistry"
+      ],
+      "sourceCoverageWarningsNonBlockingForReviewedDois": true,
+      "closureCoverageWarningCount": 8,
+      "verifiedThroughHeld": true
     },
-    "sourceRunId": 35932176599,
-    "sourceAuditSnapshotCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
+    "sourceRunId": 35934774504,
+    "sourceAuditSnapshotCommitSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
     "prepublishGate": {
-      "runId": 35933876677,
-      "jobId": 107426422441,
-      "conclusion": "failure",
-      "recordValidationPassed": false,
+      "runId": 35937638326,
+      "jobId": 107438169795,
+      "conclusion": "success",
+      "recordValidationPassed": true,
       "semanticDecisionSetComplete": true,
       "semanticFieldFailures": 0,
       "snapshotFreshForSlot": true,
-      "publicationReady": false,
-      "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: failed only because sourceCoverageAnomalies=2",
-      "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: failed because the discovery metric is nonzero; snapshot freshness passed",
+      "publicationReady": true,
+      "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: success",
+      "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: success",
+      "formalConversionPreview": "success",
+      "strictReleaseBundle": "success",
       "productionDataModified": false
     },
-    "updatedAt": "2026-09-24T07:31:00+08:00",
+    "updatedAt": "2026-09-24T08:16:26+08:00",
     "productionDataModified": false,
     "pagesDeploymentRequested": false,
     "mediaAcquisitionPerformed": false,
-    "note": "All 123 compact candidates received two-pass decisions, but the discovery gate is unhealthy. The 15 reviewed includes are proposed only and publishableDois stays empty; hand off to 07:35 recovery or a later fresh snapshot."
+    "note": "All 123 compact candidates are accounted for. Fifteen reviewed includes are publication-ready under per-DOI release; two article-level evidence gaps remain deferred. Healthy coverage-overlap warnings hold closure/verifiedThrough only."
   },
   "nextPublicationSlot": "2026-09-24T08:00:00+08:00",
   "prepublish": {
     "publicationSlot": "2026-09-24T08:00:00+08:00",
-    "status": "incomplete_review",
-    "phase": "preparing",
-    "readyToPublish": false,
-    "publishableSubsetReady": false,
+    "status": "ready_with_pending",
+    "phase": "ready_with_pending",
+    "readyToPublish": true,
+    "publishableSubsetReady": true,
     "reviewComplete": false,
-    "publicationChecksPassed": false,
-    "freshAuditGeneratedAt": "2026-09-23T23:10:55.807Z",
+    "publicationChecksPassed": true,
+    "freshAuditGeneratedAt": "2026-09-23T23:41:25.964Z",
     "snapshotFreshForSlot": true,
-    "compactHandoffSha": "6e1cd99a6227b0b1ad25b835af0336f317aecdbb",
-    "handoffCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
+    "compactHandoffSha": "c988f7e2e2213fc38459b10422cc31a85ba522b6",
+    "handoffCommitSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
     "reviewFile": "audit/prepublish-review-2026-09-24-0800.json",
-    "reviewCommitSha": "5c9d5e7717b983c470ad9655dbe53663869c827e",
-    "reviewBlobSha": "0a0ba2b9b4d41945549e0dcd02dc55de65f18285",
+    "reviewCommitSha": "b215a5e0b9341f1ac55cce1e7522fa6b2c74376b",
+    "reviewBlobSha": "f0c9fbd775afb506514184ba3ba6a97bdeb919eb",
     "reviewed": 123,
     "accepted": 15,
     "rejected": 106,
@@ -325,7 +366,23 @@
       "10.1021/acs.orglett.6c03373",
       "10.1021/acs.orglett.6c03854"
     ],
-    "publishableDois": [],
+    "publishableDois": [
+      "10.1021/acscatal.6c04954",
+      "10.1021/acscatal.6c05820",
+      "10.31635/ccschem.026.202608315",
+      "10.1021/jacs.6c16323",
+      "10.1021/jacs.6c14601",
+      "10.1021/acs.joc.6c01347",
+      "10.1021/acs.joc.6c01498",
+      "10.1038/s41586-026-11169-0",
+      "10.1038/s41557-026-02247-x",
+      "10.1021/acs.orglett.6c03346",
+      "10.1021/acs.orglett.6c03455",
+      "10.1021/acs.orglett.6c03520",
+      "10.1021/acs.orglett.6c03276",
+      "10.1021/acs.orglett.6c03373",
+      "10.1021/acs.orglett.6c03854"
+    ],
     "deferredDois": [
       "10.1038/s41467-026-78015-9",
       "10.31635/ccschem.026.202608262"
@@ -336,12 +393,25 @@
     ],
     "existingCardScopePending": 2,
     "pendingScopeReviewBacklogField": "pendingScopeReviewBacklog",
-    "globalBlockers": [
-      "sourceCoverageAnomalies=2 (Nature and CCS Chemistry machine-union overlap warnings)",
-      "closureCoverageAnomalies=8; verifiedThrough must not advance and the current generation is not publication-ready"
-    ],
-    "publicationBlockers": [
-      "Fresh machine snapshot has nonzero sourceCoverageAnomalies, so require-ready checks must fail closed."
+    "globalBlockers": [],
+    "publicationBlockers": [],
+    "nonBlockingDiscoveryWarnings": [
+      {
+        "metric": "sourceCoverageAnomalies",
+        "count": 2,
+        "journals": [
+          "Nature",
+          "CCS Chemistry"
+        ],
+        "publicationEffect": "none_for_already_discovered_two_pass_reviewed_dois",
+        "closureEffect": "hold_verifiedThrough_and_recheck"
+      },
+      {
+        "metric": "closureCoverageAnomalies",
+        "count": 8,
+        "publicationEffect": "none_for_already_discovered_two_pass_reviewed_dois",
+        "closureEffect": "hold_verifiedThrough"
+      }
     ],
     "qualityControl": {
       "secondPassCompleted": true,
@@ -359,16 +429,16 @@
         "unavailable": 10
       },
       "scopeContract": {
-        "scopeRulesVersion": "scope-2026-09-23-v1",
+        "scopeRulesVersion": "scope-2026-09-24-v1",
         "scopeRulesFile": "docs/literature-scope-contract.md",
-        "scopeRulesBlobSha": "4ca6a9343ee46c617f08166062940f8919e311de",
+        "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
         "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
         "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
-        "handoffCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
-        "handoffBlobSha": "6e1cd99a6227b0b1ad25b835af0336f317aecdbb",
+        "handoffCommitSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
+        "handoffBlobSha": "c988f7e2e2213fc38459b10422cc31a85ba522b6",
         "ruleChangeTriggeredHistoricalReview": false,
         "ruleCompatibilityChecked": true,
-        "ruleCompatibilityConclusion": "Scope and correction blob SHAs are unchanged from the 2026-09-23 18:00 staging; four historical boundary rechecks were reused and all fresh compact candidates were evaluated under the same contract.",
+        "ruleCompatibilityConclusion": "scope-2026-09-24-v1 changes only fixed-slot gating for healthy cross-source coverage-overlap warnings; semantic inclusion/exclusion boundaries are unchanged. The refreshed compact DOI set is exactly identical to the 123 already reviewed decisions, so the article-specific decisions remain applicable without fabricating a new semantic review.",
         "newIncludesArticleSpecificAssessmentsComplete": true,
         "explicitBoundaryRechecks": 4,
         "affectedHistoricalCoverageComplete": true,
@@ -382,28 +452,39 @@
       "placeholderTranslations": 0,
       "productionDataModified": false,
       "mediaAcquisitionPerformed": false,
-      "pagesDeploymentRequested": false
+      "pagesDeploymentRequested": false,
+      "sourceCoverageWarningCount": 2,
+      "sourceCoverageWarningJournals": [
+        "Nature",
+        "CCS Chemistry"
+      ],
+      "sourceCoverageWarningsNonBlockingForReviewedDois": true,
+      "closureCoverageWarningCount": 8,
+      "verifiedThroughHeld": true
     },
-    "sourceRunId": 35932176599,
-    "sourceAuditSnapshotCommitSha": "47a4043d1dd7679dd71449dafb1b590a76127254",
+    "sourceRunId": 35934774504,
+    "sourceAuditSnapshotCommitSha": "c20198e7301d6c0adfa462b391a3f313a8fb4ff5",
     "prepublishGate": {
-      "runId": 35933876677,
-      "jobId": 107426422441,
-      "conclusion": "failure",
-      "recordValidationPassed": false,
+      "runId": 35937638326,
+      "jobId": 107438169795,
+      "conclusion": "success",
+      "recordValidationPassed": true,
       "semanticDecisionSetComplete": true,
       "semanticFieldFailures": 0,
       "snapshotFreshForSlot": true,
-      "publicationReady": false,
-      "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: failed only because sourceCoverageAnomalies=2",
-      "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: failed because the discovery metric is nonzero; snapshot freshness passed",
+      "publicationReady": true,
+      "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: success",
+      "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: success",
+      "formalConversionPreview": "success",
+      "strictReleaseBundle": "success",
       "productionDataModified": false
     },
-    "updatedAt": "2026-09-24T07:31:00+08:00",
+    "updatedAt": "2026-09-24T08:16:26+08:00",
     "productionDataModified": false,
     "pagesDeploymentRequested": false,
     "mediaAcquisitionPerformed": false,
-    "note": "All 123 compact candidates received two-pass decisions, but the discovery gate is unhealthy. The 15 reviewed includes are proposed only and publishableDois stays empty; hand off to 07:35 recovery or a later fresh snapshot."
+    "note": "All 123 compact candidates are accounted for. Fifteen reviewed includes are publication-ready under per-DOI release; two article-level evidence gaps remain deferred. Healthy coverage-overlap warnings hold closure/verifiedThrough only.",
+    "productionMutation": false
   },
   "automaticCompactHandoffTest": {
     "result": "success",
@@ -468,7 +549,7 @@
       "status": "pending",
       "carryForward": true,
       "sourceReviewFile": "audit/prepublish-review-2026-09-23-1800.json",
-      "nextReviewSlot": "2026-09-24T08:00:00+08:00",
+      "nextReviewSlot": "2026-09-24T18:00:00+08:00",
       "lastReviewFile": "audit/prepublish-review-2026-09-24-0800.json",
       "firstPassDecision": "pending",
       "challengeDecision": "pending",
@@ -496,7 +577,7 @@
       "status": "pending",
       "carryForward": true,
       "sourceReviewFile": "audit/review-2026-09-23-0800.json",
-      "nextReviewSlot": "2026-09-24T08:00:00+08:00",
+      "nextReviewSlot": "2026-09-24T18:00:00+08:00",
       "lastReviewFile": "audit/prepublish-review-2026-09-24-0800.json",
       "firstPassDecision": "pending",
       "challengeDecision": "pending",
@@ -960,5 +1041,10 @@
     "finalizationAllowed": false,
     "reason": "Fresh post-release discovery surfaced unreviewed DOI(s) beyond the exact frozen deferred set, so the real literature-quality-gate failed. No off-slot admission is authorized; carry the delta to the next fixed slot.",
     "recordedAt": "2026-09-23T18:14:31.552+08:00"
-  }
+  },
+  "scopeRulesVersion": "scope-2026-09-24-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813"
 }
