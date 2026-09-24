@@ -4,6 +4,7 @@
 // @version      6.2.20
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
+// @match        https://gallery.gczhouwld.com/*
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
 // @match        https://organic-synthesis-gallery-public.pages.dev/*
 // @match        https://pubs.acs.org/*
@@ -31,18 +32,21 @@
 // @connect      *
 // @connect      acs.silverchair-cdn.com
 // @connect      media.springernature.com
-// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
-// @downloadURL  https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
+// @updateURL    https://gallery.gczhouwld.com/toc-mainline.user.js
+// @downloadURL  https://gallery.gczhouwld.com/toc-mainline.user.js
 // ==/UserScript==
 
 (function () {
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.28';
+  var CONTROLLER_REVISION = '2.2.29';
   var CONTROLLER_STOP_REASON = '';
-  var GALLERY_HOST = 'zhou526316-sys.github.io';
-  var GALLERY_PATH = '/organic-synthesis-gallery/';
+  var GALLERY_HOST = 'gallery.gczhouwld.com';
+  var GALLERY_PATH = '/';
+  var LEGACY_GALLERY_HOST = 'zhou526316-sys.github.io';
+  var LEGACY_GALLERY_PATH = '/organic-synthesis-gallery/';
+  var PAGES_GALLERY_HOST = 'organic-synthesis-gallery-public.pages.dev';
   var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
   var WORKER = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
@@ -2100,8 +2104,11 @@ function embeddedJobDois(value) {
   }
 
   function isGalleryPage() {
-    return (location.hostname === GALLERY_HOST && location.pathname.indexOf(GALLERY_PATH) === 0)
-      || location.hostname === 'organic-synthesis-gallery-public.pages.dev';
+    var host = String(location.hostname || '').toLowerCase();
+    var path = String(location.pathname || '/');
+    if (host === GALLERY_HOST) return true;
+    if (host === PAGES_GALLERY_HOST) return true;
+    return host === LEGACY_GALLERY_HOST && path.indexOf(LEGACY_GALLERY_PATH) === 0;
   }
 
   function badge(text, color) {
