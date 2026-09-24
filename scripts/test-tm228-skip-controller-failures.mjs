@@ -76,9 +76,18 @@ test('user abort remains an explicit stop request',()=>{
   assert.ok(source.includes("GM_setValue(ENABLED_KEY,false)"));
 });
 
-test('Bridge version advances without capture protocol migration',()=>{
-  assert.ok(source.includes("var VERSION = '6.2.20';"));
-  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.28';"));
+test('custom Gallery domain is a first-class controller origin',()=>{
+  assert.ok(source.includes('// @match        https://gallery.gczhouwld.com/*'));
+  assert.ok(source.includes("var GALLERY_ORIGIN = 'https://gallery.gczhouwld.com';"));
+  assert.ok(source.includes("var GALLERY_HOST = 'gallery.gczhouwld.com';"));
+  assert.ok(source.includes("var QUEUE_URL = GALLERY_ORIGIN + '/toc-demand-live.json';"));
+  assert.ok(source.includes("var MEDIA_INDEX_URL = GALLERY_ORIGIN + '/media-index.json';"));
+  assert.ok(source.includes('location.hostname === LEGACY_GALLERY_HOST'));
 });
 
-console.log('TM228_SKIP_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.28'}));
+test('Bridge version advances without capture protocol migration',()=>{
+  assert.ok(source.includes("var VERSION = '6.2.20';"));
+  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.29';"));
+});
+
+console.log('TM228_SKIP_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.29'}));
