@@ -36,6 +36,13 @@ function tr(zh: string, en: string): string {
   return document.documentElement.lang.toLowerCase().startsWith('zh') ? zh : en;
 }
 
+function shareSlug(doi: string): string {
+  const bytes = new TextEncoder().encode(doi.toLowerCase());
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
 const RICH_SHARE_ORIGIN = 'https://api.gczhouwld.com';
 const CANONICAL_GALLERY_ORIGIN = 'https://gallery.gczhouwld.com';
 const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_BUILD_ID__
@@ -47,7 +54,7 @@ function galleryDeepLink(doi: string): string {
 }
 
 function shareUrl(doi: string): string {
-  return galleryDeepLink(doi);
+  return `${CANONICAL_GALLERY_ORIGIN}/share/${shareSlug(doi)}.html?sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
 }
 
 type WeChatSdk = {
@@ -297,11 +304,11 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
   closePanel();
   const weChatContext = isWeChatBrowser() && isWeChatJsSdkHost();
   const weChatTip = weChatContext
-    ? tr('微信图文卡片必须通过微信右上角“…”→“分享给朋友”发送；不要把链接复制粘贴到聊天框，粘贴只会显示普通链接。', 'WeChat rich cards must be sent from the top-right WeChat menu → Share with friends. Pasting the URL into chat only sends a plain link.')
-    : tr('要生成微信图文卡片，请先在微信内打开这篇文献，再用右上角“…”→“分享给朋友”。复制粘贴链接到聊天框不会生成卡片。', 'To create a WeChat rich card, open this paper inside WeChat and use the top-right menu → Share with friends. Pasting the URL into chat does not create a card.');
+    ? tr('已为这篇文献准备标题、期刊、DOI 和 TOC 图的富卡片。右上角“…”→“分享给朋友”最稳定；复制富卡链接也会使用同一张静态预览页。', 'A rich card with title, journal, DOI and TOC image is ready. The top-right WeChat menu → Share with friends is the most reliable path; copied rich links use the same static preview page.')
+    : tr('复制的是带独立标题、描述和 TOC 图片元数据的富卡链接；支持链接预览的平台会直接展示这些信息。在微信内打开后用右上角“…”分享最稳定。', 'The copied URL is a rich-preview page with per-paper title, description and TOC image metadata. Platforms that support link previews can show them directly; in WeChat, opening it and sharing from the top-right menu is most reliable.');
   const weChatActionLabel = weChatContext
-    ? tr('准备微信卡片', 'Prepare WeChat card')
-    : tr('复制微信内打开链接', 'Copy link to open in WeChat');
+    ? tr('准备微信图文卡片', 'Prepare WeChat rich card')
+    : tr('复制富卡链接', 'Copy rich-preview link');
   const panel = document.createElement('section');
   panel.className = 'card-share-panel';
   panel.dataset.shareUrl = info.url;
@@ -320,7 +327,7 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
     <div class="card-share-actions-grid">
       <button type="button" data-share-action="wechat-copy">${weChatActionLabel}</button>
       <button type="button" data-share-action="native">${tr('系统分享', 'System share')}</button>
-      <button type="button" data-share-action="copy-link">${tr('复制卡片链接', 'Copy card link')}</button>
+      <button type="button" data-share-action="copy-link">${tr('复制富卡链接', 'Copy rich-preview link')}</button>
       <button type="button" data-share-action="copy-text">${tr('复制标题 + DOI + 链接', 'Copy title + DOI + link')}</button>
       <button type="button" data-share-action="qr">${tr('生成二维码', 'Generate QR')}</button>
     </div>
@@ -388,7 +395,7 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
       if (action === 'copy-link') {
         try {
           await copyText(info.url);
-          showToast(tr('已复制本篇链接', 'Paper link copied'));
+          showToast(tr('已复制富卡链接', 'Rich-preview link copied'));
         } catch {
           showToast(tr('复制失败，请手动复制。', 'Copy failed. Please copy manually.'));
         }
