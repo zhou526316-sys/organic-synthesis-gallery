@@ -1581,17 +1581,21 @@
       "closureEffect": "hold_verifiedThrough"
     }
   ],
-  "updatedAt": "2026-09-24T17:16:30+08:00",
+  "updatedAt": "2026-09-24T17:20:00+08:00",
   "prepublishGate": {
-    "runId": 35980296062,
-    "conclusion": "semantic_and_readiness_passed_conversion_timestamp_invalid_rerun_pending",
+    "runId": 35980458261,
+    "jobId": 107570829262,
+    "conclusion": "success",
     "recordValidationPassed": true,
     "semanticDecisionSetComplete": true,
     "semanticFieldFailures": 0,
     "snapshotFreshForSlot": true,
     "publicationReady": true,
-    "directStrictValidator": "passed on GitHub Actions run 35980296062 with --allow-deferred; require-ready rerun pending after timestamp correction",
-    "strictReadinessCommand": "passed on GitHub Actions run 35980296062 with --allow-deferred --require-ready",
+    "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: success",
+    "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: success",
+    "formalConversionPreview": "success",
+    "strictReleaseBundle": "success",
+    "conversionValid": true,
     "productionDataModified": false
   }
 }
