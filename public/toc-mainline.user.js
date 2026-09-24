@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
-// @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
+// @namespace    https://gallery.gczhouwld.com/
 // @version      6.2.20
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
+// @match        https://gallery.gczhouwld.com/*
 // @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*
 // @match        https://organic-synthesis-gallery-public.pages.dev/*
 // @match        https://pubs.acs.org/*
@@ -31,19 +32,24 @@
 // @connect      *
 // @connect      acs.silverchair-cdn.com
 // @connect      media.springernature.com
-// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
-// @downloadURL  https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-mainline.user.js
+// @updateURL    https://gallery.gczhouwld.com/toc-mainline.user.js
+// @downloadURL  https://gallery.gczhouwld.com/toc-mainline.user.js
 // ==/UserScript==
 
 (function () {
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.28';
+  var CONTROLLER_REVISION = '2.2.29';
   var CONTROLLER_STOP_REASON = '';
-  var GALLERY_HOST = 'zhou526316-sys.github.io';
-  var GALLERY_PATH = '/organic-synthesis-gallery/';
-  var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
+  var GALLERY_ORIGIN = 'https://gallery.gczhouwld.com';
+  var GALLERY_HOST = 'gallery.gczhouwld.com';
+  var GALLERY_PATH = '/';
+  var LEGACY_GALLERY_HOST = 'zhou526316-sys.github.io';
+  var LEGACY_GALLERY_PATH = '/organic-synthesis-gallery/';
+  var CLOUDFLARE_GALLERY_HOST = 'organic-synthesis-gallery-public.pages.dev';
+  var QUEUE_URL = GALLERY_ORIGIN + '/toc-demand-live.json';
+  var MEDIA_INDEX_URL = GALLERY_ORIGIN + '/media-index.json';
   var WORKER = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
   var FIGURE_IMPORT_ENDPOINT = WORKER + '/api/article-figures/import';
@@ -2100,8 +2106,9 @@ function embeddedJobDois(value) {
   }
 
   function isGalleryPage() {
-    return (location.hostname === GALLERY_HOST && location.pathname.indexOf(GALLERY_PATH) === 0)
-      || location.hostname === 'organic-synthesis-gallery-public.pages.dev';
+    if (location.hostname === GALLERY_HOST && location.pathname.indexOf(GALLERY_PATH) === 0) return true;
+    if (location.hostname === LEGACY_GALLERY_HOST && location.pathname.indexOf(LEGACY_GALLERY_PATH) === 0) return true;
+    return location.hostname === CLOUDFLARE_GALLERY_HOST;
   }
 
   function badge(text, color) {
@@ -2272,7 +2279,7 @@ function embeddedJobDois(value) {
     GM_setValue(ENABLED_KEY,true);
     if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
     if(isGalleryPage()) controllerRun();
-    else window.open('https://'+GALLERY_HOST+GALLERY_PATH,'_blank');
+    else window.open(GALLERY_ORIGIN + '/','_blank');
   }
 
   async function controllerRun() {
@@ -2288,7 +2295,7 @@ function embeddedJobDois(value) {
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
-      var media=await getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json?ts='+Date.now());
+      var media=await getJson(MEDIA_INDEX_URL+'?ts='+Date.now());
       var jobs=pairedJobs(queue,media);
       var generation=VERSION+':paired:'+String(queue.mediaGeneration);
       function eligible(job) {
