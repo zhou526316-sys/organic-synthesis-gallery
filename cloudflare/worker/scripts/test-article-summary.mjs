@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
-import { getArticleSummary, importArticleFulltext } from '../src/article-summary.js';
+import {
+  ARTICLE_EVIDENCE_SCHEMA_VERSION,
+  ARTICLE_REVIEWED_SUMMARY_SCHEMA_VERSION,
+  getArticleSummary,
+  importArticleFulltext,
+} from '../src/article-summary.js';
 
 class MemoryObject {
   constructor(value, options = {}) {
@@ -12,35 +17,72 @@ class MemoryObject {
 
 class MemoryR2 {
   constructor() { this.map = new Map(); }
-  async put(key, value, options = {}) {
-    this.map.set(key, new MemoryObject(value, options));
-  }
-  async get(key) {
-    return this.map.get(key) || null;
-  }
-  async delete(key) {
-    this.map.delete(key);
-  }
+  async put(key, value, options = {}) { this.map.set(key, new MemoryObject(value, options)); }
+  async get(key) { return this.map.get(key) || null; }
+  async delete(key) { this.map.delete(key); }
+}
+
+async function sha256Hex(value) {
+  const bytes = new TextEncoder().encode(String(value || ''));
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function storageKeys(doi) {
+  const id = (await sha256Hex(doi)).slice(0, 32);
+  return {
+    evidence: `private/article-evidence-v2/${id}.json`,
+    legacy: `private/article-fulltext/${id}.txt`,
+    summary: `private/article-summary/${id}.json`,
+  };
 }
 
 const MEDIA = new MemoryR2();
 let aiCalls = 0;
-const AI = {
-  async run(model, input) {
-    aiCalls += 1;
-    assert.equal(model, '@cf/google/gemma-4-26b-a4b-it');
-    assert.ok(Array.isArray(input.messages));
-    assert.match(input.messages.at(-1)?.content || '', /SYNCED FULL TEXT/);
-    return {
-      response: JSON.stringify({
-        zh: '该研究建立了一种基于同步全文生成的中文摘要，概括反应设计、条件、机理、底物范围与局限。',
-        en: 'This full-text-backed summary covers the reaction design, conditions, mechanism, substrate scope, limitations, and significance.',
-      }),
-    };
-  },
-};
+const AI = { async run() { aiCalls += 1; throw new Error('GET must never invoke AI'); } };
 const env = { MEDIA, AI };
 const doi = '10.1021/jacs.6c08636';
+
+const sectionText = [
+  'This catalytic study reports a selective organic transformation under defined reaction conditions.',
+  'Optimization evaluates catalyst loading, reagent equivalents, solvent, temperature, and reaction time.',
+  'The substrate scope includes electronically and sterically diverse partners with reported yields and selectivities.',
+  'Mechanistic experiments include control reactions and radical-probe observations, while the authors separately propose a catalytic cycle.',
+  'The conclusion describes synthetic utility and explicitly notes limitations for selected substrate classes.',
+].join(' ').repeat(5);
+
+function evidencePayload(extra = {}) {
+  return {
+    schemaVersion: ARTICLE_EVIDENCE_SCHEMA_VERSION,
+    doi,
+    pageDoi: doi,
+    title: 'Fixture catalytic reaction',
+    journal: 'JACS',
+    publisher: 'acs',
+    articleUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08636',
+    sourceUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08636',
+    captureVersion: '6.2.20',
+    controllerRevision: '2.2.32',
+    jobId: '12345678-1234-1234-1234-123456789012',
+    queueGeneratedAt: '2026-09-24T15:49:28.181Z',
+    capturedAt: '2026-09-24T16:00:00Z',
+    fulltextStatus: 'complete',
+    textProcessingPolicy: 'unknown',
+    sections: [
+      { type: 'abstract', heading: 'Abstract', order: 0, text: sectionText },
+      { type: 'results_and_discussion', heading: 'Results and Discussion', order: 1, text: sectionText },
+      { type: 'mechanistic_studies', heading: 'Mechanistic Studies', order: 2, text: sectionText },
+      { type: 'references', heading: 'References', order: 3, text: 'This excluded section must not enter the evidence packet.'.repeat(20) },
+    ],
+    captions: [
+      { label: 'Scheme 1', type: 'scheme', text: 'Scheme 1. Standard reaction and representative product formation under optimized conditions.' },
+    ],
+    tables: [
+      { label: 'Table 1', title: 'Optimization', text: 'Entries compare catalyst loading, solvent, temperature, conversion, yield, and selectivity.' },
+    ],
+    ...extra,
+  };
+}
 
 const missing = await getArticleSummary(env, doi);
 assert.equal(missing.status, 200);
@@ -49,65 +91,113 @@ assert.equal(missing.body.fulltextAvailable, false);
 assert.equal(missing.body.reason, 'fulltext_missing');
 assert.equal(aiCalls, 0);
 
-const text = [
-  'Title and abstract. This article describes a new catalytic organic transformation with mechanistic experiments.',
-  'Introduction. The work addresses a synthetic limitation in selective bond construction.',
-  'Results and discussion. The optimized conditions use a catalyst, reagent, solvent, and controlled temperature.',
-  'Mechanistic studies support a radical pathway and explain the observed chemoselectivity.',
-  'Substrate scope includes electron-rich and electron-poor partners and identifies limitations.',
-  'Conclusion. The method broadens access to synthetically useful products.',
-].join('\n\n').repeat(12);
+const wrongDoi = await importArticleFulltext(env, evidencePayload({ pageDoi: '10.1021/jacs.6c99999' }));
+assert.equal(wrongDoi.status, 400);
+assert.equal(wrongDoi.body.error, 'page_doi_mismatch');
 
-const imported = await importArticleFulltext(env, {
-  doi,
-  text,
-  sourceUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08636',
-  capturedAt: '2026-09-22T08:00:00Z',
-});
+const wrongHost = await importArticleFulltext(env, evidencePayload({
+  articleUrl: 'https://example.org/doi/10.1021/jacs.6c08636',
+  sourceUrl: 'https://example.org/doi/10.1021/jacs.6c08636',
+}));
+assert.equal(wrongHost.status, 400);
+assert.equal(wrongHost.body.error, 'publisher_source_mismatch');
+
+const oldController = await importArticleFulltext(env, evidencePayload({ controllerRevision: '2.2.31' }));
+assert.equal(oldController.status, 400);
+assert.equal(oldController.body.error, 'controller_revision_too_old');
+
+const partial = await importArticleFulltext(env, evidencePayload({ fulltextStatus: 'partial' }));
+assert.equal(partial.status, 400);
+assert.equal(partial.body.error, 'fulltext_not_complete');
+
+const challenge = await importArticleFulltext(env, evidencePayload({
+  sections: [
+    { type: 'abstract', heading: 'Abstract', order: 0, text: ('Verify you are human. Access denied. ' + sectionText).repeat(8) },
+    { type: 'results', heading: 'Results', order: 1, text: sectionText },
+  ],
+}));
+assert.equal(challenge.status, 400);
+assert.equal(challenge.body.error, 'challenge_or_auth_page_detected');
+
+const imported = await importArticleFulltext(env, evidencePayload());
 assert.equal(imported.status, 200);
 assert.equal(imported.body.stored, true);
-assert.ok(imported.body.chars > 1000);
+assert.equal(imported.body.state, 'evidence_ready');
+assert.equal(imported.body.schemaVersion, ARTICLE_EVIDENCE_SCHEMA_VERSION);
+assert.ok(imported.body.chars > 2000);
+assert.equal(imported.body.sections, 3);
+assert.match(imported.body.sourceHash, /^[a-f0-9]{64}$/);
+assert.match(imported.body.evidencePacketHash, /^[a-f0-9]{64}$/);
 
-const generated = await getArticleSummary(env, doi);
-assert.equal(generated.status, 200);
-assert.equal(generated.body.available, true);
-assert.equal(generated.body.fulltextAvailable, true);
-assert.equal(generated.body.source, 'fulltext');
-assert.equal(generated.body.cached, false);
-assert.match(generated.body.zh, /中文摘要/);
-assert.match(generated.body.en, /full-text-backed/);
-assert.equal(aiCalls, 1);
+const pending = await getArticleSummary(env, doi);
+assert.equal(pending.status, 200);
+assert.equal(pending.body.available, false);
+assert.equal(pending.body.fulltextAvailable, true);
+assert.equal(pending.body.evidenceAvailable, true);
+assert.equal(pending.body.state, 'evidence_ready');
+assert.equal(pending.body.reason, 'summary_pending');
+assert.equal(aiCalls, 0);
 
-const cached = await getArticleSummary(env, doi);
-assert.equal(cached.status, 200);
-assert.equal(cached.body.available, true);
-assert.equal(cached.body.cached, true);
-assert.equal(cached.body.zh, generated.body.zh);
-assert.equal(cached.body.en, generated.body.en);
-assert.equal(aiCalls, 1);
+const keys = await storageKeys(doi);
+await MEDIA.put(keys.summary, JSON.stringify({
+  schemaVersion: ARTICLE_REVIEWED_SUMMARY_SCHEMA_VERSION,
+  status: 'approved',
+  doi,
+  sourceHash: imported.body.sourceHash,
+  evidencePacketHash: imported.body.evidencePacketHash,
+  zh: '该摘要已经过证据链审核，不由公开 GET 请求现场生成。',
+  en: 'This summary was approved against the evidence packet and is never generated by the public GET request.',
+  model: 'test-model',
+  modelSnapshot: 'test-snapshot',
+  promptVersion: 'summary-draft-v1',
+  auditVersion: 'summary-audit-v1',
+  generatedAt: 1790265600000,
+  reviewedAt: 1790265660000,
+}));
 
-const noAi = await getArticleSummary({ MEDIA }, doi);
-assert.equal(noAi.status, 200);
-assert.equal(noAi.body.available, true);
-assert.equal(noAi.body.cached, true);
+const approved = await getArticleSummary(env, doi);
+assert.equal(approved.status, 200);
+assert.equal(approved.body.available, true);
+assert.equal(approved.body.state, 'published');
+assert.equal(approved.body.source, 'reviewed_evidence_v2');
+assert.match(approved.body.zh, /证据链审核/);
+assert.match(approved.body.en, /approved against the evidence packet/);
+assert.equal(aiCalls, 0);
 
-const secondDoi = '10.1000/fulltext-no-ai';
-const importedSecond = await importArticleFulltext({ MEDIA }, {
-  doi: secondDoi,
-  text,
-  sourceUrl: 'https://example.org/article',
+const changed = evidencePayload({
+  sections: evidencePayload().sections.map((row, index) => index === 1
+    ? { ...row, text: row.text + ' Newly synchronized correction changes the source hash.' }
+    : row),
+  capturedAt: '2026-09-24T17:00:00Z',
 });
-assert.equal(importedSecond.status, 200);
-const unavailableAi = await getArticleSummary({ MEDIA }, secondDoi);
-assert.equal(unavailableAi.status, 200);
-assert.equal(unavailableAi.body.available, false);
-assert.equal(unavailableAi.body.fulltextAvailable, true);
-assert.equal(unavailableAi.body.reason, 'ai_unavailable');
+const reimported = await importArticleFulltext(env, changed);
+assert.equal(reimported.status, 200);
+assert.notEqual(reimported.body.sourceHash, imported.body.sourceHash);
+
+const stale = await getArticleSummary(env, doi);
+assert.equal(stale.status, 200);
+assert.equal(stale.body.available, false);
+assert.equal(stale.body.state, 'superseded');
+assert.equal(stale.body.reason, 'summary_stale');
+assert.equal(aiCalls, 0);
+
+const legacyDoi = '10.1021/jacs.6c08637';
+const legacyKeys = await storageKeys(legacyDoi);
+await MEDIA.put(legacyKeys.legacy, 'Legacy full text '.repeat(200));
+const legacy = await getArticleSummary(env, legacyDoi);
+assert.equal(legacy.status, 200);
+assert.equal(legacy.body.available, false);
+assert.equal(legacy.body.fulltextAvailable, true);
+assert.equal(legacy.body.evidenceAvailable, false);
+assert.equal(legacy.body.state, 'legacy_fulltext');
+assert.equal(legacy.body.reason, 'evidence_v2_required');
 
 console.log(JSON.stringify({
-  missingFulltextExplicit: true,
-  bilingualSummaryGenerated: true,
-  summaryCached: true,
-  aiUnavailableExplicit: true,
+  getIsReadOnly: true,
   aiCalls,
+  provenanceGuards: ['page_doi', 'publisher_host', 'capture_version', 'controller_revision', 'job_id', 'complete_status'],
+  evidenceSchema: ARTICLE_EVIDENCE_SCHEMA_VERSION,
+  reviewedSummarySchema: ARTICLE_REVIEWED_SUMMARY_SCHEMA_VERSION,
+  sourceHashInvalidatesSummary: true,
+  legacySummaryNotAutoApproved: true,
 }));
