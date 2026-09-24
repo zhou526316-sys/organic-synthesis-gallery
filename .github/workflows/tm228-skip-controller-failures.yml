@@ -1,8 +1,8 @@
-name: Bridge 2.2.28 skip per-DOI controller failures
+name: Bridge 2.2.29 custom-domain controller regression
 
 on:
   push:
-    branches: [fix/tm228-skip-per-doi-controller-failures]
+    branches: [fix/tm229-gallery-custom-domain]
   pull_request:
     branches: [main]
     paths:
@@ -51,26 +51,29 @@ jobs:
           grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm228-acquisition.log"
           node scripts/test-tm-paired-capture.mjs
           node scripts/test-tm222-live-progress.mjs
-      - name: Build exact Bridge 2.2.28 installer
+      - name: Build exact Bridge 2.2.29 installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
-          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
         run: |
           set -euo pipefail
           node cloudflare/scripts/build-cloudflare-bridge.mjs
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.28' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.29' public/gallery-vpn-bridge.user.js
+          grep -F '// @match        https://gallery.gczhouwld.com/*' public/gallery-vpn-bridge.user.js
+          grep -F '// @updateURL    https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js' public/gallery-vpn-bridge.user.js
           grep -F "var VERSION = '6.2.20';" public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.28';" public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.29';" public/gallery-vpn-bridge.user.js
           grep -F 'controllerFailureDisposition' public/gallery-vpn-bridge.user.js
           grep -F "badge('已跳过 '" public/gallery-vpn-bridge.user.js
           grep -F "controller_lease_lost|another_task_still_active|capture_server_upgrade_pending" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tm228-skip-controller-tested
+          name: tm229-custom-domain-tested
           path: |
             public/gallery-vpn-bridge.user.js
             public/toc-mainline.user.js
