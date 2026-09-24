@@ -49,10 +49,6 @@ const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_B
   ? __GALLERY_BUILD_ID__
   : 'runtime';
 
-function galleryDeepLink(doi: string): string {
-  return `${CANONICAL_GALLERY_ORIGIN}/?doi=${encodeURIComponent(doi)}&sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
-}
-
 function shareUrl(doi: string): string {
   return `${CANONICAL_GALLERY_ORIGIN}/share/${shareSlug(doi)}.html?sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
 }
