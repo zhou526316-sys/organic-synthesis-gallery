@@ -92,11 +92,13 @@ try{
    acsFigure:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'figures'}),
    acsToc:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'toc'}),
    wileyFigure:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'figures'}),
-   scienceFigure:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'figures'})
+   scienceFigure:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'figures'}),
+   ccsFigure:__tm224.articleUrl({doi:'10.31635/ccschem.026.202608315',publisher:'ccs',mediaNeed:'figures'})
  }));
  test('ACS TOC and body jobs both enter through the canonical DOI route',routes.acsFigure==='https://pubs.acs.org/doi/10.1021/acs.orglett.6c03487'&&routes.acsToc===routes.acsFigure);
  test('ACS body jobs no longer force the legacy doi/full shell route',!routes.acsFigure.includes('/doi/full/'));
  test('non-ACS full-text routes remain unchanged',routes.wileyFigure==='https://onlinelibrary.wiley.com/doi/full/10.1002/anie.202600001'&&routes.scienceFigure==='https://www.science.org/doi/full/10.1126/science.abc1234');
+ test('CCS Chemistry remains DOI-resolved while official target hosts are userscript-covered',routes.ccsFigure==='https://doi.org/10.31635/ccschem.026.202608315'&&source.includes('// @match        https://pubs.chemsoc.org.cn/*')&&source.includes('// @match        https://www.chinesechemsoc.org/*'));
 
  const discovery=await page.evaluate(()=>({
    tocOnlyEarly:__tm224.pairedDiscoveryReady({mediaNeed:'toc+figures'},3,1,0,6000,6000),
@@ -111,6 +113,6 @@ try{
  test('body discovery retains an 8s minimum observation even after figures appear',discovery.bodyTooEarly===false);
  test('body discovery waits four quiet seconds after the latest figure-set change',discovery.bodyStillChanging===false&&discovery.bodyStable===true);
  test('TOC-only discovery keeps the legacy early-stable behavior',discovery.tocJobLegacy===true);
- test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.27';"));
+ test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.28';"));
 }finally{await browser.close();}
 console.log('TM224_ACQUISITION_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherFixtureOnly:true,captureProtocol:'6.2.20'}));
