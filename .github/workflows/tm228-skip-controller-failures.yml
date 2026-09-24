@@ -2,16 +2,16 @@ name: Bridge 2.2.29 skip per-DOI controller failures
 
 on:
   push:
-    branches: [fix/tm229-skip-per-doi-controller-failures]
+    branches: [fix/tm228-skip-per-doi-controller-failures]
   pull_request:
     branches: [main]
     paths:
-      - '.github/workflows/tm229-skip-controller-failures.yml'
+      - '.github/workflows/tm228-skip-controller-failures.yml'
       - '.github/workflows/tm224-live-acceptance.yml'
       - '.github/workflows/tm222-live-acceptance.yml'
       - 'public/toc-mainline.user.js'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
-      - 'scripts/test-tm229-skip-controller-failures.mjs'
+      - 'scripts/test-tm228-skip-controller-failures.mjs'
       - 'scripts/test-tm227-result-precedence.mjs'
       - 'scripts/test-tm224-acquisition.mjs'
       - 'scripts/test-tm-paired-capture.mjs'
@@ -33,7 +33,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check public/toc-mainline.user.js
-          node scripts/test-tm229-skip-controller-failures.mjs
+          node scripts/test-tm228-skip-controller-failures.mjs
           node scripts/test-tm227-result-precedence.mjs
           python3 scripts/apply-tm222-live-progress.py
           python3 scripts/apply-tm223-upload.py
