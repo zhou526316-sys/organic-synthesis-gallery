@@ -34,11 +34,33 @@ check(Number.isSafeInteger(handoff?.summary?.unresolved) && handoff.summary.unre
   'handoff: compact unresolved count differs from candidate array');
 check(Number.isSafeInteger(latest?.summary?.unresolved) && latest.summary.unresolved === unresolved.length,
   'handoff: latest diagnostic unresolved count differs from compact candidate array');
-for (const key of ['criticalSourceFailures','sourceFamilyGaps','sourceCoverageAnomalies','historicalCoverageLosses']) {
+for (const key of ['criticalSourceFailures','sourceFamilyGaps','historicalCoverageLosses']) {
   check(Number.isSafeInteger(handoff?.discoveryGate?.[key]) && handoff.discoveryGate[key] === 0,
     `discovery: ${key} must be an explicit integer zero, not missing or unhealthy`);
   check(Number.isSafeInteger(latest?.summary?.[key]) && latest.summary[key] === handoff?.discoveryGate?.[key],
     `discovery: diagnostic/compact ${key} mismatch`);
+}
+const sourceCoverageAnomalyCount = handoff?.discoveryGate?.sourceCoverageAnomalies;
+const coverageWarningRows = (handoff?.activeJournals || []).filter(row => row?.sourceHealth?.coverageWarning === true);
+check(Number.isSafeInteger(sourceCoverageAnomalyCount) && sourceCoverageAnomalyCount >= 0,
+  'discovery: sourceCoverageAnomalies must be an explicit nonnegative integer');
+check(Number.isSafeInteger(handoff?.summary?.sourceCoverageAnomalies)
+  && handoff.summary.sourceCoverageAnomalies === sourceCoverageAnomalyCount,
+  'discovery: compact sourceCoverageAnomalies mismatch');
+check(Number.isSafeInteger(latest?.summary?.sourceCoverageAnomalies)
+  && latest.summary.sourceCoverageAnomalies === sourceCoverageAnomalyCount,
+  'discovery: diagnostic/compact sourceCoverageAnomalies mismatch');
+check(new Set(coverageWarningRows.map(row => String(row?.name || ''))).size === coverageWarningRows.length
+  && coverageWarningRows.length === sourceCoverageAnomalyCount,
+  'discovery: sourceCoverageAnomalies journal mapping mismatch');
+if (allowDeferred) {
+  check(coverageWarningRows.every(row => row?.sourceHealth?.crossrefHealthy === true && row?.sourceHealth?.openAlexHealthy === true),
+    'discovery: sourceCoverageAnomalies cannot be publication-nonblocking when a source family is unhealthy');
+  if (sourceCoverageAnomalyCount > 0) warnings.push(
+    `Source coverage anomaly warning for ${sourceCoverageAnomalyCount} journal(s); reviewed DOI allowlist remains releasable, but closure/verifiedThrough must stay held.`);
+} else {
+  check(sourceCoverageAnomalyCount === 0,
+    'discovery: sourceCoverageAnomalies must be zero for full-review closure mode');
 }
 const expectedByDoi = new Map(unresolved.map(item => [normalizeDoi(item?.doi), item]));
 check(!expectedByDoi.has('') && expectedByDoi.size === unresolved.length, 'handoff: empty or duplicate candidate DOI');
@@ -166,7 +188,9 @@ const result = {
   reviewFile, publicationSlot: review?.publicationSlot || null, handoffGeneratedAt: handoff?.generatedAt || null,
   unresolvedCandidates: unresolved.length, decisions: decisions.length, includeCount, excludeCount, pendingCount,
   activeJournals: activeNames.length, failures, warnings,
-  note: 'Only publishableDois may be added. Deferred papers remain pending in durable review/state backlog. Fixed-slot freshness, deployment checks and honest closure reporting remain mandatory.',
+  sourceCoverageAnomalies: sourceCoverageAnomalyCount,
+  sourceCoverageWarningJournals: coverageWarningRows.map(row => String(row?.name || '')).filter(Boolean),
+  note: 'Only publishableDois may be added. Deferred papers remain pending in durable review/state backlog. Healthy cross-source coverage warnings do not clear the reviewed allowlist, but they hold closure/verifiedThrough. Fixed-slot freshness, deployment checks and honest closure reporting remain mandatory.',
 };
 console.log(JSON.stringify(result, null, 2));
 if (!result.ok) process.exit(1);
