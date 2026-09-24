@@ -329,7 +329,7 @@
     "mediaAcquisitionPerformed": false,
     "note": "All 123 compact candidates are accounted for. Fifteen reviewed includes are publication-ready under per-DOI release; two article-level evidence gaps remain deferred. Healthy coverage-overlap warnings hold closure/verifiedThrough only."
   },
-  "nextPublicationSlot": "2026-09-24T08:00:00+08:00",
+  "nextPublicationSlot": "2026-09-24T18:00:00+08:00",
   "prepublish": {
     "publicationSlot": "2026-09-24T08:00:00+08:00",
     "status": "ready_with_pending",
@@ -1046,5 +1046,50 @@
   "scopeRulesFile": "docs/literature-scope-contract.md",
   "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
   "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
-  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813"
+  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+  "nextSlotPublicationBacklog": [
+    {
+      "doi": "10.1021/acs.orglett.6c03851",
+      "journal": "Organic Letters",
+      "title": "Total Synthesis of the Zwitterionic Trisaccharide Repeating Unit of Staphylococcus aureus CP8",
+      "titleZh": "金黄色葡萄球菌 CP8 两性离子三糖重复单元的全合成",
+      "originalDate": "2026-09-23",
+      "discoveredAt": "2026-09-24T00:41:18.948Z",
+      "firstReviewedAt": "2026-09-24T08:46:00+08:00",
+      "lastReviewedAt": "2026-09-24T08:46:00+08:00",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "status": "ready_for_next_slot",
+      "sourceReviewFile": "audit/review-2026-09-24-postrelease-late-2.json",
+      "sourceReviewCommit": "a5fab9ae8dc722aa0c9c1914371c6785de29ceac",
+      "sourceAuditGeneratedAt": "2026-09-24T00:41:18.948Z",
+      "nextPublicationSlot": "2026-09-24T18:00:00+08:00",
+      "evidenceBasis": "当前 post-release compact 的 DOI 匹配摘要明确写明首次完成金黄色葡萄球菌 CP8 两性离子三糖重复单元全合成（2.8% 总收率），并给出噁唑烷酮保护 L-fucosamine 的 α-选择性糖基化、与叠氮基正交以及直接 β-mannosylation 等关键路线证据。",
+      "challengeReason": "该论文虽是面向细菌荚膜糖重复单元的目标导向路线而非广谱方法学，但范围契约明确收录完成的全合成/目标合成路线；摘要确认完整重复单元目标已完成，因此应纳入，但不得在 08:00 槽关闭后越时上线。",
+      "reason": "已完成明确三糖重复单元目标的首次全合成；因发布后才被机器索引到，审核通过后锁定下一固定 18:00 槽。",
+      "nextAction": "At the 2026-09-24 18:00 fixed slot, revalidate it against the fresh compact/scope contract and publish only if no new conflicting evidence or scope correction appears.",
+      "carryForward": true,
+      "publicationBlockedUntilSlot": true
+    }
+  ],
+  "postReleaseLateReview": {
+    "publicationSlot": "2026-09-24T08:00:00+08:00",
+    "reviewFile": "audit/review-2026-09-24-postrelease-late-2.json",
+    "reviewCommitSha": "a5fab9ae8dc722aa0c9c1914371c6785de29ceac",
+    "sourceAuditGeneratedAt": "2026-09-24T00:41:18.948Z",
+    "reviewed": 2,
+    "acceptedForNextSlot": 1,
+    "rejected": 1,
+    "pending": 0,
+    "acceptedDois": [
+      "10.1021/acs.orglett.6c03851"
+    ],
+    "rejectedDois": [
+      "10.1038/s41467-026-77885-3"
+    ],
+    "nextPublicationSlot": "2026-09-24T18:00:00+08:00",
+    "productionMutation": false,
+    "note": "Post-release late-indexed candidates were reviewed immediately. The accepted DOI is a reviewed next-slot carryover, not evidence-pending, and was not added off-slot."
+  }
 }
