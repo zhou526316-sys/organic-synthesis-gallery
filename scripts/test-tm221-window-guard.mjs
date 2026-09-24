@@ -58,8 +58,9 @@ await test('lease lost after first open stops entire batch and closes only its p
  const h=harness(source,{onOpen:(j,c,s)=>s.delete(c.T.leaseKey)});await h.run();await h.run();
  assert.equal(h.opened.length,1);assert.ok(h.opened[0].closed);assert.equal(h.summary().failed,0);assert.equal(h.timers.size,0);
 });
-await test('cannot confirm closed tab means no second open',async()=>{
- const h=harness(source,{neverClose:true});await h.run();await h.run();assert.equal(h.opened.length,1);assert.equal(h.summary().stopReason,'previous_task_tab_not_closed');assert.equal(h.timers.size,0);
+await test('cannot confirm closed tab skips the lifecycle fault and continues later DOI',async()=>{
+ const h=harness(source,{neverClose:true});await h.run();await h.run();
+ assert.equal(h.opened.length,20);assert.equal(h.summary().success,20);assert.equal(h.summary().lifecycleWarnings,20);assert.equal(h.summary().skipped,0);assert.ok(!h.summary().stopReason);assert.equal(h.timers.size,0);
 });
 await test('async tab handle is awaited and closure still enforced',async()=>{
  const h=harness(source,{promiseHandle:true});await h.run();assert.equal(h.summary().success,20);assert.equal(h.maxLive,1);assert.ok(h.opened.every(t=>t.closed));
