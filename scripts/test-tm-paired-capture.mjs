@@ -59,13 +59,15 @@ try{
  test('SVG active content rejected',!quality.malicious.usable);
  test('low-resolution raster threshold not loosened',!quality.raster.usable);
  const plan=await page.evaluate(({doi,foreign})=>{
-  const q={mediaGeneration:1790082000000,webpageDoiCount:2,articles:[{doi,date:'2026-09-22'},{doi:foreign,date:'2026-09-21'}]};
+  const q={mediaGeneration:1790082000000,latestAddedDate:'2026-09-24',webpageDoiCount:2,articles:[
+    {doi,date:'2026-09-22',addedDate:'2026-09-22'},
+    {doi:foreign,date:'2026-09-21',addedDate:'2026-09-21'}]};
   const out=__captureTest.pairedJobs(q,{items:{[doi]:{toc:{available:true,imageUrl:'restored.svg',reason:'reviewed_official_toc_recovery'}}}});
   let rejectsOld=false;try{__captureTest.pairedJobs({webpageDoiCount:512,visibleGaps:[]},{items:{}});}catch(_){rejectsOld=true;}
   return {out,rejectsOld};
  },{doi,foreign});
- test('one job per DOI requests paired capture',plan.out.length===2&&plan.out.every(j=>j.mediaNeed==='toc+figures'));
- test('restored TOC not needlessly overwritten while body still requested',plan.out.find(j=>j.doi===doi).captureToc===false&&plan.out.find(j=>j.doi===foreign).captureToc===true);
+ test('historical official-TOC DOI becomes figures-only',plan.out.find(j=>j.doi===doi).mediaNeed==='figures'&&plan.out.find(j=>j.doi===doi).captureToc===false);
+ test('historical missing-TOC DOI becomes TOC-only without Figure 1 fallback',plan.out.find(j=>j.doi===foreign).mediaNeed==='toc'&&plan.out.find(j=>j.doi===foreign).captureToc===true&&plan.out.find(j=>j.doi===foreign).allowFigureOne===false);
  test('old incomplete queue is rejected rather than falsely called complete',plan.rejectsOld);
  // Real Chromium DOM + data-image decoding + HTTP storage receipts, with no external writes.
  const result=await page.evaluate(async()=>__captureTest.runPublisherJob(__gm['osg-toc-v6:active-job']));
