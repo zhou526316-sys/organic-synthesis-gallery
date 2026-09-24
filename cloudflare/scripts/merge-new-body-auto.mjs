@@ -120,20 +120,47 @@ export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()})
   assertSnapshotCoherence(inputs.previous,inputs.live);
   const cfg=await configuration(root),{policy,holds,papers}=cfg;
   if(!policy.enabled||!inputs.stage)return {...cfg,rows:[]};
-  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=tocReadyDois(inputs);
-  const rows=[];
+  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=tocReadyDois(inputs),packets=completedPacketMap(inputs);
+  const cutoff=Date.parse(policy.backfillCapturedBefore),stabilityMs=policy.backfillStabilityMinutes*60000;
+  const stageByDoi=new Map();
   for(const row of inputs.stage.items){
-    if(oldKeys.has(exactKey(row))||!papers.has(row.doi)||holds.has(row.doi)||alreadyIn(inputs.live,row)||heldAttempts(inputs.previous,row,now)||!tocReady.has(row.doi))continue;
-    try{await validateNewBodyMetadata(row,policy,now);rows.push(row);}catch{}
+    const doi=normalizeDoi(row?.doi||'');if(!doi)continue;
+    if(!stageByDoi.has(doi))stageByDoi.set(doi,[]);
+    stageByDoi.get(doi).push(row);
   }
-  rows.sort((a,b)=>{
-    const agedA=Number(now)-Number(a.updatedAt||0)>=policy.backlogMaxWaitMinutes*60000;
-    const agedB=Number(now)-Number(b.updatedAt||0)>=policy.backlogMaxWaitMinutes*60000;
-    if(agedA!==agedB)return agedA?-1:1;
-    if(agedA&&agedB)return Number(a.updatedAt||0)-Number(b.updatedAt||0)||Number(!a.doi.startsWith('10.1021/jacs.'))-Number(!b.doi.startsWith('10.1021/jacs.'));
-    return String(papers.get(b.doi)?.date||'').localeCompare(String(papers.get(a.doi)?.date||''))||Number(!a.doi.startsWith('10.1021/jacs.'))-Number(!b.doi.startsWith('10.1021/jacs.'))||b.updatedAt-a.updatedAt;
-  });
-  return {...cfg,rows,tocReady};
+  const packetCoverage=new Map();
+  for(const [doi,packet] of packets){
+    const available=new Set([...(stageByDoi.get(doi)||[]).map(x=>String(x.label||'')),...(inputs.live.items?.[doi]?.figures?.figures||[]).map(x=>String(x.label||''))]);
+    const labels=Array.isArray(packet.figureLabels)?packet.figureLabels.filter(Boolean):[];
+    packetCoverage.set(doi,labels.every(label=>available.has(String(label))));
+  }
+  const rows=[];
+  for(const raw of inputs.stage.items){
+    const row={...raw},doi=normalizeDoi(row.doi);
+    if(!doi||oldKeys.has(exactKey(row))||!papers.has(doi)||holds.has(doi)||alreadyIn(inputs.live,row)||heldAttempts(inputs.previous,row,now)||!tocReady.has(doi))continue;
+    const historical=Number(row.updatedAt||0)<=cutoff&&Number(now)-Number(row.updatedAt||0)>=stabilityMs;
+    const packet=packets.get(doi);
+    const packetReady=Boolean(packet&&packetCoverage.get(doi));
+    if(!historical&&!packetReady)continue;
+    if(!historical&&Array.isArray(packet.figureLabels)&&packet.figureLabels.length&&!packet.figureLabels.includes(String(row.label||'')))continue;
+    try{
+      await validateNewBodyMetadata(row,policy,now);
+      row._packetMode=historical?'historical_backfill':'completed_job';
+      row._packetJobId=packet?.jobId||'';
+      rows.push(row);
+    }catch{}
+  }
+  const priority=journal=>{
+    const j=String(journal||'').trim();
+    if(j==='Nature')return 0;if(j==='Science')return 1;if(/^Nature\s+/i.test(j))return 2;if(/^Science\s+/i.test(j))return 3;
+    if(j==='JACS')return 4;if(j==='Angew')return 5;if(j==='Chem')return 6;return 7;
+  };
+  rows.sort((a,b)=>priority(papers.get(a.doi)?.journal)-priority(papers.get(b.doi)?.journal)
+    ||String(papers.get(b.doi)?.date||'').localeCompare(String(papers.get(a.doi)?.date||''))
+    ||Number(a.updatedAt||0)-Number(b.updatedAt||0)
+    ||String(a.doi).localeCompare(String(b.doi))
+    ||Number(a.sortOrder||0)-Number(b.sortOrder||0));
+  return {...cfg,rows,tocReady,packets};
 }
 export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   const now=options.now||Date.now(),inputs=options.inputs||await readLiveInputs();
