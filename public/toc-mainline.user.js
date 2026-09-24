@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.31';
+  var CONTROLLER_REVISION = '2.2.32';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -55,6 +55,8 @@
   var CAPTURE_INDEX_URL = WORKER + '/api/media/local-capture-index';
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
   var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
+  var EVIDENCE_ENDPOINT = WORKER + '/api/article-summary/fulltext/import';
+  var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
   var P = 'osg-toc-v6:';
   var TOKEN_KEY = P + 'write-token';
   var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';
