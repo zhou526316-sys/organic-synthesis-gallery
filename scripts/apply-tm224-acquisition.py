@@ -7,7 +7,7 @@ def once(s,a,b):
 def save(p,s): Path(p).write_text(s)
 
 p='public/toc-mainline.user.js'; s=Path(p).read_text()
-if any("var CONTROLLER_REVISION = '"+v+"';" in s for v in ('2.2.25','2.2.26','2.2.27','2.2.28','2.2.29','2.2.30','2.2.31')):
+if any("var CONTROLLER_REVISION = '"+v+"';" in s for v in ('2.2.25','2.2.26','2.2.27','2.2.28','2.2.29','2.2.30','2.2.31','2.2.32')):
     assert "sameFigureCurrentSrcFallback" in s
     assert "if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + doi;" in s
     print('TM224_ALREADY_APPLIED_IN_CURRENT: retained TIFF/currentSrc fallback and canonical ACS route')
