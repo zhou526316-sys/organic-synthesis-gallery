@@ -48,10 +48,13 @@ jobs:
           grep -F 'property="og:type" content="article"' "$SHARE_PAGE"
           grep -F 'property="og:image"' "$SHARE_PAGE"
           grep -F 'meta itemprop="image"' "$SHARE_PAGE"
-          grep -F 'https://api.gczhouwld.com/share/' "$SHARE_PAGE"
+          grep -F 'https://gallery.gczhouwld.com/share/' "$SHARE_PAGE"
+          grep -F 'https://gallery.gczhouwld.com/share-media/' "$SHARE_PAGE"
           grep -F 'https://gallery.gczhouwld.com/?doi=' "$SHARE_PAGE"
-          ! grep -F 'location.replace' "$SHARE_PAGE"
-          grep -F '本介绍页不会自动跳走' "$SHARE_PAGE"
+          ! grep -F 'https://api.gczhouwld.com/share/' "$SHARE_PAGE"
+          ! grep -F 'https://api.gczhouwld.com/share-media/' "$SHARE_PAGE"
+          grep -F 'window.location.replace' "$SHARE_PAGE"
+          grep -F '正在进入有机合成文献库并定位这篇文献' "$SHARE_PAGE"
           test -s dist/share-default.png
           grep -F "wechat-copy" dist/assets/card-share-*.js
           grep -F "navigator.share" dist/assets/card-share-*.js
@@ -62,7 +65,7 @@ jobs:
           grep -F "sharev=" dist/assets/card-share-*.js
           grep -F "galleryDeepLink" src/card-share.ts
           grep -F "&sharev=" scripts/build-share-pages.mjs
-          grep -F "Pasting the URL into chat only sends a plain link." dist/assets/card-share-*.js
+          grep -F "Platforms that support link previews can show them directly" dist/assets/card-share-*.js
 
       - name: Verify canonical Gallery routing
         run: |
@@ -136,8 +139,8 @@ jobs:
             const panel = page.locator('.card-share-panel');
             await panel.waitFor({ state: 'visible' });
             const richShareUrl = await panel.getAttribute('data-share-url');
-            if (!richShareUrl || !/^https:\/\/gallery\.gczhouwld\.com\/\?doi=10\.[^&]+&sharev=[A-Za-z0-9_-]+$/.test(richShareUrl)) {
-              throw new Error('share URL is not the direct custom-domain paper link: ' + richShareUrl);
+            if (!richShareUrl || !/^https:\/\/gallery\.gczhouwld\.com\/share\/[A-Za-z0-9_-]+\.html\?sharev=[A-Za-z0-9_-]+$/.test(richShareUrl)) {
+              throw new Error('share URL is not the same-domain rich preview page: ' + richShareUrl);
             }
             await panel.locator('[data-share-action="native"]').click();
             const nativeShareInvoked = await page.evaluate(() => Boolean(window.__osgNativeShareInvoked));
