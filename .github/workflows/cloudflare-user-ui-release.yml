@@ -20,8 +20,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: cloudflare-user-ui-release
-  cancel-in-progress: true
+  group: cloudflare-worker-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -139,6 +139,14 @@ jobs:
         working-directory: cloudflare/worker
         run: npx wrangler d1 execute "$D1_NAME" --remote --file ../schema.sql --config wrangler.user-ui.toml
 
+      - name: Dry-run Worker bundle
+        working-directory: cloudflare/worker
+        run: npx wrangler deploy --dry-run --config wrangler.user-ui.toml --outdir .wrangler-user-ui-dry-run
+
+      - name: Deploy Worker without media migration
+        working-directory: cloudflare/worker
+        run: npx wrangler deploy --config wrangler.user-ui.toml
+
       - name: Sync configured login and payment secrets
         working-directory: cloudflare/worker
         shell: bash
@@ -160,15 +168,6 @@ jobs:
             npx wrangler secret bulk /tmp/user-integrations-secrets.json --config wrangler.user-ui.toml >/dev/null
           fi
           rm -f /tmp/user-integrations-secrets.json
-
-      - name: Dry-run Worker bundle
-        working-directory: cloudflare/worker
-        run: npx wrangler deploy --dry-run --config wrangler.user-ui.toml --outdir .wrangler-user-ui-dry-run
-
-      - name: Deploy Worker without media migration
-        working-directory: cloudflare/worker
-        run: npx wrangler deploy --config wrangler.user-ui.toml
-
       - name: Seed native registration verification challenge
         working-directory: cloudflare/worker
         shell: bash
