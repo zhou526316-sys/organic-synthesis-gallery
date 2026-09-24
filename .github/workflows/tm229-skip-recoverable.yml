@@ -1,0 +1,92 @@
+name: Bridge 2.2.29 skip recoverable paper failures
+
+on:
+  push:
+    branches: [fix/tm229-skip-recoverable-failures]
+    paths:
+      - '.github/workflows/tm229-skip-recoverable.yml'
+      - '.github/workflows/tm224-live-acceptance.yml'
+      - '.github/workflows/tm222-live-acceptance.yml'
+      - 'public/toc-mainline.user.js'
+      - 'cloudflare/scripts/build-bridge-loader.mjs'
+      - 'scripts/validate-tm220-artifacts.mjs'
+      - 'scripts/test-tm221-window-guard.mjs'
+      - 'scripts/test-tm224-acquisition.mjs'
+      - 'scripts/test-tm227-result-precedence.mjs'
+      - 'scripts/test-tm-paired-capture.mjs'
+      - 'scripts/test-tm222-live-progress.mjs'
+      - 'scripts/apply-tm222-live-progress.py'
+      - 'scripts/apply-tm223-upload.py'
+      - 'scripts/apply-tm224-acquisition.py'
+      - 'scripts/patch-tm221-window-guard.py'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify skip-vs-hard-stop controller contract
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node scripts/test-tm221-window-guard.mjs | tee "$RUNNER_TEMP/tm229-window.log"
+          grep -F 'missing task-tab handle skips one paper and continues the batch' "$RUNNER_TEMP/tm229-window.log"
+          grep -F 'missing publisher heartbeat skips one paper instead of pausing the queue' "$RUNNER_TEMP/tm229-window.log"
+          grep -F 'unconfirmed tab close is invalidated and queue continues' "$RUNNER_TEMP/tm229-window.log"
+          grep -F 'lease lost after first open stops entire batch and closes only its page' "$RUNNER_TEMP/tm229-window.log"
+          node scripts/test-tm227-result-precedence.mjs
+      - name: Retain patch, upload and identity safety
+        run: |
+          set -euo pipefail
+          python3 scripts/apply-tm222-live-progress.py
+          python3 scripts/apply-tm223-upload.py
+          python3 scripts/apply-tm224-acquisition.py
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-media-identity-v220.mjs
+          node scripts/test-tm-stage-first.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
+      - name: Retain Chromium acquisition and paired capture
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node scripts/test-tm224-acquisition.mjs | tee "$RUNNER_TEMP/tm229-acquisition.log"
+          grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm229-acquisition.log"
+          node scripts/test-tm-paired-capture.mjs
+          node scripts/test-tm222-live-progress.mjs
+      - name: Build exact Bridge 2.2.29 installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.29' public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.29';" public/gallery-vpn-bridge.user.js
+          grep -F 'hardControllerStopReason' public/gallery-vpn-bridge.user.js
+          grep -F 'recoverablePaperSkipReason' public/gallery-vpn-bridge.user.js
+          grep -F "event:stopReason?'stopped':'paper_skipped'" public/gallery-vpn-bridge.user.js
+          grep -F 'task tab close not confirmed; job invalidated and queue continues' public/gallery-vpn-bridge.user.js
+          grep -F '// @match        https://pubs.chemsoc.org.cn/*' public/gallery-vpn-bridge.user.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm229-skip-recoverable-tested
+          path: |
+            public/gallery-vpn-bridge.user.js
+            public/toc-mainline.user.js
+            ${{ runner.temp }}/tm229-window.log
+            ${{ runner.temp }}/tm229-acquisition.log
+          retention-days: 7
+          if-no-files-found: warn
