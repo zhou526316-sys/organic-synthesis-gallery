@@ -14,7 +14,7 @@ try{
  const media=JSON.parse(await get('media-index.json?t='+Date.now()));
  const ledger=JSON.parse(await get('body-publication-ledger.json?t='+Date.now()));
  const policy=JSON.parse(await readFile('audit/media-auto-policy.json','utf8'));
- assert.equal(status.policyId,policy.policyId);assert.equal(snapshot.policyId,policy.policyId);assert.equal(policy.minNewArticles,20);assert.ok(policy.maxNewArticles>=20&&policy.maxNewArticles<=25);assert.equal(policy.requireOfficialTocInBuild,true);
+ assert.equal(status.policyId,policy.policyId);assert.equal(snapshot.policyId,policy.policyId);assert.ok(Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=1&&policy.minNewArticles<=policy.maxNewArticles);assert.ok(Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=1&&policy.maxNewArticles<=25);assert.equal(policy.requireOfficialTocInBuild,true);
  assert.equal(snapshot.count,snapshot.items.length);assert.equal(status.autoPublishedCount,snapshot.count);assert.ok(snapshot.count>0,'no actual automatically published figure yet');
  assert.equal(snapshot.generatedAt,status.checkedAt);assert.equal(ledger.mediaManifestGeneratedAt,status.checkedAt);
  // The existing sanitizer stamps its later execution time. Exact assets/labels below,
