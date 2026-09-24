@@ -65,7 +65,7 @@ try{
   return {out,rejectsOld};
  },{doi,foreign});
  test('one job per DOI requests paired capture',plan.out.length===2&&plan.out.every(j=>j.mediaNeed==='toc+figures'));
- test('restored TOC not needlessly overwritten while body still requested',plan.out[0].captureToc===false&&plan.out[1].captureToc===true);
+ test('restored TOC not needlessly overwritten while body still requested',plan.out.find(j=>j.doi===doi).captureToc===false&&plan.out.find(j=>j.doi===foreign).captureToc===true);
  test('old incomplete queue is rejected rather than falsely called complete',plan.rejectsOld);
  // Real Chromium DOM + data-image decoding + HTTP storage receipts, with no external writes.
  const result=await page.evaluate(async()=>__captureTest.runPublisherJob(__gm['osg-toc-v6:active-job']));
