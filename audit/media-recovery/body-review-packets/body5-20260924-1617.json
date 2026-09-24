@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-1617",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T08:16:36.761609Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10794591083,
+  "evidenceArchiveSha256": "1ecedf73164595b8fff783f8f67802d4d92c3ff5f74558bbd3a2f537579d5729",
+  "evidenceRunId": 35966705081,
+  "approvedCount": 17,
+  "reviewMethod": "All 17 selected stored files across the next five priority-eligible current-corpus papers were independently rehashed against the immutable read-only GitHub evidence artifact and checked for exact task/page/article/source DOI identity, original Figure/Scheme identity and independent caption, captureVersion 6.2.20, job identity, fixed media generation 1790082000000, content-addressed R2 key, actual byte length/type/dimensions, duplicate source/hash ownership, frozen public same-ID state and TOC separation. All 15 SVG files were parsed, rendered and checked for script, foreignObject, event-handler, javascript/external href and external CSS URL content; the two PNG files were decoded and dimension-checked. Every image was visually reviewed against its owning caption and article theme for body-image role, unrelated/recommendation contamination, duplicate risk and legibility. Capture success and partial/transport/format checkpoints were treated only as provenance evidence. No publisher request, R2/D1 write, direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "The 17 files are exact stored bytes with matching full SHA256, sizes and dimensions. Selected full hashes and source URLs have no cross-DOI ownership collision in the frozen stage inventory. Partial article reports are handled per-image: ACS Catalysis 10.1021/acscatal.6c04954 remains 3/4, JACS 10.1021/jacs.6c15694 remains 3/5, Organic Letters 10.1021/acs.orglett.6c03353 remains 1/4, and 10.1021/acs.orglett.6c03382 remains 5/7, so only the exact reviewed stored files are approved and missing images are not inferred. 10.1021/acs.orglett.6c03595 has a final 5/5 capture. Figure 1 files are body-only and are not TOC substitutions. Existing official TOCs for JACS/Organic Letters are distinct source/hash objects and remain untouched; the frozen evidence snapshot had no body same-ID collisions for this batch.",
+  "decisions": [
+    {
+      "doi": "10.1021/acscatal.6c04954",
+      "images": [
+        ["next-011", "scheme-1", "Viewed the central, planar, axial and helical chirality context, prior azahelicene approaches, and this work's Rh/chiral-acid C–H activation concept; content matches Scheme 1 and the paper's enantioselective azahelicene synthesis design."],
+        ["next-055", "scheme-2", "Viewed the isotope-labeling, kinetic and control experiments used to probe the Rh-catalyzed asymmetric C–H functionalization; content matches Scheme 2 mechanistic studies."],
+        ["next-056", "scheme-3", "Viewed the proposed Rh/chiral catalytic cycle and intermediates leading to the azahelicene product; content matches Scheme 3."]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c15694",
+      "images": [
+        ["next-012", "figure-1", "Viewed the challenge and precedent for asymmetric coupling of an unbiased carbon radical together with BOX-type ligand history and the perfluoroaryl semicorrin strategy; content matches Figure 1."],
+        ["next-057", "figure-2", "Viewed the asymmetric-coupling optimization, ligand screening and discovery of the perfluoroaryl semicorrin ligand family, including design-of-experiments data; content matches Figure 2."],
+        ["next-058", "figure-5", "Viewed the transition-state and noncovalent-interaction analysis used to explain enhanced enantiodifferentiation, including H···F interactions; content matches Figure 5."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03353",
+      "images": [
+        ["next-013", "scheme-4", "Viewed radical-trapping, EPR, light on/off and reaction-sensitivity mechanistic experiments for the fluoroalkoxylation; content matches Scheme 4 and the paper's radical mechanism."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03382",
+      "images": [
+        ["next-014", "scheme-1", "Viewed the prior and current annulation concepts comparing mono- and double-carbene insertion of indazoles with diazo partners; content matches Scheme 1."],
+        ["next-059", "scheme-2", "Viewed the substrate scope leading to the mono-insertion fused N-heterocycle products; content matches Scheme 2."],
+        ["next-060", "scheme-3", "Viewed the substrate scope leading to the double-insertion/polycyclic aromatic products; content matches Scheme 3."],
+        ["next-061", "scheme-4", "Viewed the proposed Rh-catalyzed pathway for formation of product 3a; content matches Scheme 4."],
+        ["next-062", "scheme-5", "Viewed the proposed Rh-catalyzed sequence for formation of product 4a after double carbene insertion; content matches Scheme 5."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03595",
+      "images": [
+        ["next-015", "figure-1", "Viewed representative anti-inflammatory α-arylacetic-acid drug structures establishing the target scaffold context; content matches Figure 1."],
+        ["next-063", "figure-2", "Viewed the DFT oxidative-addition transition states and noncovalent-interaction analysis supporting the copper-catalyzed selectivity rationale; content matches Figure 2."],
+        ["next-064", "scheme-1", "Viewed prior transition-metal cross-coupling routes to α-arylacetic-acid derivatives and this work's copper/malonate strategy; content matches Scheme 1."],
+        ["next-065", "scheme-2", "Viewed the CuCl/L4-catalyzed aryl-chloride and malonate substrate scope with yields; content matches Scheme 2."],
+        ["next-066", "scheme-3", "Viewed the CuCl/L4-catalyzed aryl-bromide and malonate substrate scope with yields; content matches Scheme 3."]
+      ]
+    }
+  ]
+}
