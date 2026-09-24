@@ -195,27 +195,40 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
       const bytes=await getOld(old);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
       prepared.push({row,bytes,ext,admittedAt:old.admittedAt,isNew:false,alreadyPublished:Boolean(existing),existingImageUrl:existing?.imageUrl||null});retained.push({doi:row.doi,id:row.id});
     }
-    for(const row of rows){
-      if(added.length>=policy.maxNewImages)break;
-      if(!candidateDoiSet.has(row.doi)||alreadyIn(media,row))continue;
-      if(policy.requireOfficialTocInBuild&&!officialToc(media.items[row.doi])){
-        if(!tocWaitingDois.has(row.doi))held.push({doi:row.doi,id:null,reason:'waiting_for_official_toc_in_same_build'});
-        tocWaitingDois.add(row.doi);continue;
+    for(const doi of candidateDois){
+      const packetRows=rows.filter(row=>row.doi===doi&&!alreadyIn(media,row));
+      if(!packetRows.length)continue;
+      if(policy.requireOfficialTocInBuild&&!officialToc(media.items[doi])){
+        held.push({doi,id:null,reason:'waiting_for_official_toc_in_same_build'});tocWaitingDois.add(doi);continue;
       }
-      const key=exactKey(row),fingerprint=evidenceKey(row),identity=row.doi+'|'+row.id;
-      try{
-        requireBody(!conflicts.has(identity),'auto_cross_identity_conflict');
-        const count=(media.items[row.doi]?.figures?.figures?.length||0)+prepared.filter(p=>p.row.doi===row.doi).length;
-        requireBody(count<policy.maxFiguresPerCard,'auto_card_display_limit');
-        const {ext}=await validateNewBodyMetadata(row,policy,now);
-        const bytes=await getNew(row);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
-        prepared.push({row,bytes,ext,admittedAt:now,isNew:true});newDois.add(row.doi);added.push({doi:row.doi,id:row.id,sha256:row.sha256});delete attempts[key];
-      }catch(e){
-        const reason=String(e.message).slice(0,180),n=(attempts[key]?.attempts||0)+1;
-        const transient=/auto_read_http_5|fetch failed|timeout|aborted/i.test(reason);
-        attempts[key]={doi:row.doi,id:row.id,evidenceSha256:fingerprint,reason,attempts:n,checkedAt:now,retryAfter:transient?now+(n<3?900000:3600000):null};
-        held.push({doi:row.doi,id:row.id,reason});
+      const baseCount=(media.items[doi]?.figures?.figures?.length||0);
+      if(baseCount+packetRows.length>policy.maxFiguresPerCard){
+        held.push({doi,id:null,reason:'auto_card_display_limit'});continue;
       }
+      const packetPrepared=[],packetAdded=[];
+      let packetFailure=null;
+      for(const row of packetRows){
+        if(added.length+packetAdded.length>=policy.maxNewImages){packetFailure='auto_packet_image_limit';break;}
+        const key=exactKey(row),fingerprint=evidenceKey(row),identity=row.doi+'|'+row.id;
+        try{
+          requireBody(!conflicts.has(identity),'auto_cross_identity_conflict');
+          const {ext}=await validateNewBodyMetadata(row,policy,now);
+          const bytes=await getNew(row);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
+          packetPrepared.push({row,bytes,ext,admittedAt:now,isNew:true});
+          packetAdded.push({doi:row.doi,id:row.id,sha256:row.sha256});
+        }catch(e){
+          const reason=String(e.message).slice(0,180),n=(attempts[key]?.attempts||0)+1;
+          const transient=/auto_read_http_5|fetch failed|timeout|aborted/i.test(reason);
+          attempts[key]={doi:row.doi,id:row.id,evidenceSha256:fingerprint,reason,attempts:n,checkedAt:now,retryAfter:transient?now+(n<3?900000:3600000):null};
+          packetFailure=reason;break;
+        }
+      }
+      if(packetFailure){
+        held.push({doi,id:null,reason:'packet_held:'+packetFailure});continue;
+      }
+      for(const item of packetPrepared){prepared.push(item);delete attempts[exactKey(item.row)];}
+      for(const item of packetAdded)added.push(item);
+      newDois.add(doi);
     }
   }finally{await decoder.close();}
   const validatedRows=prepared.filter(item=>item.isNew).map(item=>item.row);
