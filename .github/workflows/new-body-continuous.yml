@@ -18,7 +18,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   inspect:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.head_branch == 'main'
+    # Never let a failed/cancelled Pages run spawn another media publication that can
+    # cancel the literature deployment through the shared github-pages concurrency group.
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     timeout-minutes: 3
     outputs:
