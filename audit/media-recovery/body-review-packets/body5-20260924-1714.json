@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-1714",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T09:14:17Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10799289278,
+  "evidenceArchiveSha256": "a1931f8275c8ecc89c2e950515f4213b5dffe40f73d670b9a1699da253b156af",
+  "evidenceRunId": 35979551527,
+  "approvedCount": 15,
+  "reviewMethod": "All 15 selected stored files across the next five priority-eligible current-corpus papers were independently rehashed against the fresh immutable read-only GitHub evidence artifact and checked for exact task/page/article/source DOI identity, original Figure/Scheme identity and independent caption, captureVersion/job identity, fixed media generation 1790082000000, content-addressed R2 key, actual byte length/type/dimensions, duplicate source/hash ownership, frozen public same-ID state and TOC separation. The eleven SVG files were parsed, rendered and checked for script, foreignObject, event-handler, javascript/external href and external CSS URL content; the four PNG files were decoded and dimension-checked. Every image was visually reviewed against its owning caption and article theme for body-image role, unrelated/recommendation contamination, duplicate risk and legibility. The five already-reviewed but still-unmerged PR #208 DOI encountered between the fresh JACS and later candidates were reused as prior decisions and skipped rather than reviewed again. Capture success, partial, transport and format checkpoints were treated only as provenance evidence, not semantic approval. No publisher request, R2/D1 write, direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "All 15 selected files are exact stored bytes with matching full SHA256, sizes and dimensions and no cross-DOI hash/source ownership collision in the frozen stage inventory. Public media-index evidence contained a distinct official TOC and no same-ID body figure for each selected DOI. JACS 10.1021/jacs.6c14601 remains article-level partial 1/6, JACS 10.1021/jacs.6c16323 remains partial 1/6, and JOC 10.1021/acs.joc.6c01347 remains partial 2/8, so only the exact reviewed stored files are approved and missing images are not inferred. Organic Letters 10.1021/acs.orglett.6c03373 has a final 5/5 capture and ACS Catalysis 10.1021/acscatal.6c05820 has a final 6/6 capture. Historical transport/format checkpoints are retained only as provenance and are not interpreted as VPN, R2, quota or publisher failures. Figure 1 files are body-only and are not TOC substitutions; existing official TOCs remain untouched.",
+  "decisions": [
+    {
+      "doi": "10.1021/jacs.6c14601",
+      "images": [
+        [
+          "next-001",
+          "figure-1",
+          "Viewed the central-sulfur medicinal motifs, sulfurdiimide electronic variation, prior sulfinylamine radical trapping and the new sulfurdiimide photocatalytic sulfinamidine concept; content matches Figure 1 and the paper theme."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c16323",
+      "images": [
+        [
+          "next-002",
+          "figure-4",
+          "Viewed the broad amino-acid-to-vicinal-diamine substrate scope under the reported photocatalytic decarboxylative aminomethylation conditions, including protecting-group and isotope variants; content matches Figure 4."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01347",
+      "images": [
+        [
+          "next-008",
+          "scheme-4",
+          "Viewed the Lewis-acid-promoted N-tosyl-carbamate transformations giving the 9aa–9da and 9ab–9ana product series with conditions and yields; content matches Scheme 4."
+        ],
+        [
+          "next-038",
+          "scheme-7",
+          "Viewed the downstream preparation of indenes 10 and 13a from the carbocation-chemistry products with the reported reagents and yields; content matches Scheme 7."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03373",
+      "images": [
+        [
+          "next-009",
+          "scheme-1",
+          "Viewed the prior 2,3-rearrangement/cyclization context and this work's solvent-controlled sulfur-ylide cyclopropanation design leading to spirochromeno pyrrole-cyclopropanes; content matches Scheme 1."
+        ],
+        [
+          "next-039",
+          "scheme-2",
+          "Viewed the O-propargylic oxime substrate scope with spirocyclopropane products, yields and diastereochemical outcomes; content matches Scheme 2."
+        ],
+        [
+          "next-040",
+          "scheme-3",
+          "Viewed the sulfur-ylide substrate scope with the corresponding spirochromeno pyrrole-cyclopropane products and yields; content matches Scheme 3."
+        ],
+        [
+          "next-041",
+          "scheme-4",
+          "Viewed the control and mechanistic experiments, including alternative conditions/intermediates and structural evidence, used to probe the cascade; content matches Scheme 4."
+        ],
+        [
+          "next-042",
+          "scheme-5",
+          "Viewed gram-scale preparation of 3aa and its downstream transformations, including derivatization and asymmetric preparation; content matches Scheme 5."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c05820",
+      "images": [
+        [
+          "next-010",
+          "figure-1",
+          "Viewed the comparison of conventional phosphine annulation, prior AgF-assisted P(III)/P(V) catalysis and this work's phosphine/AgF ethynylative addition of allenoates to enones; content matches Figure 1."
+        ],
+        [
+          "next-043",
+          "scheme-1",
+          "Viewed the PPh3/AgF cooperative-catalysis reaction scope across allenoate/enone partners with isolated yields; content matches Scheme 1."
+        ],
+        [
+          "next-044",
+          "scheme-2",
+          "Viewed the asymmetric-catalysis substrate scope with chiral phosphine conditions, products, yields and enantioselectivities; content matches Scheme 2."
+        ],
+        [
+          "next-045",
+          "scheme-3",
+          "Viewed the synthetic elaboration of product 3a through multiple downstream transformations with reported yields and stereochemical retention; content matches Scheme 3."
+        ],
+        [
+          "next-046",
+          "scheme-4",
+          "Viewed deuterium-labeling, catalyst/condition controls and kinetic comparison experiments used to probe the cooperative catalytic process; content matches Scheme 4."
+        ],
+        [
+          "next-047",
+          "scheme-5",
+          "Viewed the proposed phosphine/AgF catalytic pathway with zwitterionic/phosphorane and silver-associated intermediates leading to ethynylative addition; content matches Scheme 5."
+        ]
+      ]
+    }
+  ]
+}
