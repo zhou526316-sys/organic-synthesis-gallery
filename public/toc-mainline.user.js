@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.29';
+  var CONTROLLER_REVISION = '2.2.30';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -664,7 +664,40 @@ function embeddedJobDois(value) {
     });
   }
 
-  function selectBatchJobs(allJobs, limit) {
+  function journalPriority(job) {
+    var journal = String(job && job.journal || '').trim();
+    if (journal === 'Nature') return 0;
+    if (journal === 'Science') return 1;
+    if (/^Nature\s+/i.test(journal)) return 2;
+    if (/^Science\s+/i.test(journal)) return 3;
+    if (journal === 'JACS') return 4;
+    if (journal === 'Angew') return 5;
+    if (journal === 'Chem') return 6;
+    return 7;
+  }
+
+  function captureQueueTier(job, latestAddedDate) {
+    if (latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate)) return 0;
+    if (job && job.captureToc === true) return 1;
+    if (job && (job.captureToc === false || String(job.state || '') === 'figure_gap' || String(job.mediaNeed || '') === 'figures')) return 2;
+    return 1;
+  }
+
+  function compareCaptureJobs(a, b, latestAddedDate) {
+    var tierDelta = captureQueueTier(a, latestAddedDate) - captureQueueTier(b, latestAddedDate);
+    if (tierDelta) return tierDelta;
+    var journalDelta = journalPriority(a) - journalPriority(b);
+    if (journalDelta) return journalDelta;
+    var dateDelta = String(b.date || '').localeCompare(String(a.date || ''));
+    if (dateDelta) return dateDelta;
+    if (captureQueueTier(a, latestAddedDate) === 2 && String(a.state || '') === 'figure_gap' && String(b.state || '') === 'figure_gap') {
+      var figureDelta = Math.max(0, Number(a.figureCount || 0)) - Math.max(0, Number(b.figureCount || 0));
+      if (figureDelta) return figureDelta;
+    }
+    return String(a.doi || '').localeCompare(String(b.doi || ''));
+  }
+
+  function selectBatchJobs(allJobs, limit, latestAddedDate) {
     var normalized = [];
     allJobs.forEach(function (raw) {
       var job = Object.assign({}, raw);
@@ -673,42 +706,10 @@ function embeddedJobDois(value) {
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
       normalized.push(job);
     });
-    var dates = Array.from(new Set(normalized.map(function (job) {
-      return String(job.date || '');
-    }))).sort(function (a, b) {
-      return String(b).localeCompare(String(a));
+    normalized.sort(function (a, b) {
+      return compareCaptureJobs(a, b, latestAddedDate);
     });
-    var out = [];
-    for (var di = 0; di < dates.length && out.length < limit; di += 1) {
-      var date = dates[di];
-      var buckets = new Map();
-      normalized.filter(function (job) {
-        return String(job.date || '') === date;
-      }).forEach(function (job) {
-        if (!buckets.has(job.publisher)) buckets.set(job.publisher, []);
-        buckets.get(job.publisher).push(job);
-      });
-      buckets.forEach(function (rows) {
-        rows.sort(function (a, b) {
-          if (String(a.state || '') === 'figure_gap' && String(b.state || '') === 'figure_gap') {
-            var figureDelta = Math.max(0, Number(a.figureCount || 0)) - Math.max(0, Number(b.figureCount || 0));
-            if (figureDelta) return figureDelta;
-          }
-          return String(a.doi).localeCompare(String(b.doi));
-        });
-      });
-      var publishers = Array.from(buckets.keys()).sort();
-      var index = 0;
-      while (out.length < limit && publishers.length) {
-        if (index >= publishers.length) index = 0;
-        var publisher = publishers[index];
-        var rows = buckets.get(publisher) || [];
-        if (rows.length) out.push(rows.shift());
-        if (!rows.length) publishers.splice(index, 1);
-        else index += 1;
-      }
-    }
-    return out;
+    return normalized.slice(0, Math.max(0, Number(limit || 0)));
   }
 
   function stagedFigureJobs() {
@@ -2306,8 +2307,9 @@ function embeddedJobDois(value) {
         if (prior && !overnightRetryEligible(prior,Date.now())) return false;
         return true;
       }
-      var available=jobs.filter(eligible),batch=selectBatchJobs(available,batchSize());
-      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,published:0,results:[]};
+      var latestAddedDate=String(queue.latestAddedDate||'');
+      var available=jobs.filter(eligible),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
+      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,published:0,results:[]};
       GM_setValue(SUMMARY_KEY,summary);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
@@ -2702,15 +2704,12 @@ function embeddedJobDois(value) {
       var official=Boolean(toc.available && toc.imageUrl && !/fallback/i.test(toc.reason||''));
       return Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),mediaNeed:'toc+figures',state:official?'figure_gap':'no_visual',captureToc:!official,allowFigureOne:!official,_queueIndex:index});
     });
-    // Newest first. Within the same date, missing official TOC comes first; then JACS.
-    // Stable original registry order remains the final tie-breaker.
+    // Scheduler tiers: latest Gallery additions first, then historical missing official TOCs,
+    // then historical body-figure backlog. Journal priority applies inside every tier.
+    var latestAddedDate = String(queue.latestAddedDate || '');
     jobs.sort(function(a,b) {
-      var date=String(b.date||'').localeCompare(String(a.date||''));
-      if (date) return date;
-      if (a.captureToc!==b.captureToc) return a.captureToc ? -1 : 1;
-      var aj=/^10\.1021\/jacs\./.test(a.doi), bj=/^10\.1021\/jacs\./.test(b.doi);
-      if (aj!==bj) return aj ? -1 : 1;
-      return a._queueIndex-b._queueIndex;
+      var delta = compareCaptureJobs(a,b,latestAddedDate);
+      return delta || a._queueIndex-b._queueIndex;
     });
     return jobs.map(function(job){delete job._queueIndex;return job;});
   }
