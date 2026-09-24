@@ -18,6 +18,9 @@
 // @match        https://*.cell.com/*
 // @match        https://www.ccspublishing.org.cn/*
 // @match        https://*.ccspublishing.org.cn/*
+// @match        https://pubs.chemsoc.org.cn/*
+// @match        https://www.chinesechemsoc.org/*
+// @match        https://*.chinesechemsoc.org/*
 // @match        https://doi.org/*
 // @run-at       document-idle
 // @noframes
@@ -39,7 +42,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.27';
+  var CONTROLLER_REVISION = '2.2.28';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'zhou526316-sys.github.io';
   var GALLERY_PATH = '/organic-synthesis-gallery/';
@@ -466,6 +469,9 @@ function embeddedJobDois(value) {
       var rsc = /^([a-z])(\d)([a-z]{2})/i.exec(suffix);
       if (rsc) return 'https://pubs.rsc.org/en/content/articlelanding/' + String(2020 + Number(rsc[2])) + '/' + rsc[3].toLowerCase() + '/' + suffix.toLowerCase();
     }
+    // CCS Chemistry currently resolves through DOI to Chinese Chemical Society publishing hosts.
+    // Keep the resolver entry point, while the userscript metadata explicitly covers those official target domains.
+    if (publisher === 'ccs') return 'https://doi.org/' + doi;
     return 'https://doi.org/' + doi;
   }
 
