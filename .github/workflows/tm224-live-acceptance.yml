@@ -34,7 +34,7 @@ jobs:
               if(!a.ok||!b.ok)throw new Error('HTTP '+a.status+'/'+b.status);
               const installer=await a.text(),mainline=await b.text();
               const checks={
-                installerVersion:/^\/\/ @version\s+2\.2\.27$/m.test(installer),
+                installerVersion:/^\/\/ @version\s+2\.2\.28$/m.test(installer),
                 controller:installer.includes("var CONTROLLER_REVISION = '2.2.28';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.28';"),
                 protocol:installer.includes("var VERSION = '6.2.20';")&&mainline.includes("var VERSION = '6.2.20';"),
                 fallback:installer.includes('sameFigureCurrentSrcFallback')&&mainline.includes('sameFigureCurrentSrcFallback'),
