@@ -24,8 +24,9 @@ async function make(i,{doi='10.1021/jacs.6c8'+String(i).padStart(4,'0'),id='figu
  row.reviewMarker=await buildBodyReviewMarker(row,full);assert.equal(row.reviewMarker.state,'pending_review');return {row,raw};
 }
 const a=await make(1),b1=await make(2,{doi:'10.1021/jacs.6c80002',id:'figure-1',label:'Figure 1'}),b2=await make(22,{doi:'10.1021/jacs.6c80002',id:'figure-2',label:'Figure 2'});
-const report=(row,labels=[row.label],extra={})=>({doi:row.doi,jobId:row.jobId,captureVersion:'6.2.20',controllerRevision:'2.2.31',final:true,status:'success',figuresDiscovered:labels.length,figuresStored:labels.length,figureLabels:labels,...extra});
+const report=(row,labels=[row.label],extra={})=>({doi:row.doi,jobId:row.jobId,captureVersion:'6.2.20',controllerRevision:'2.2.31',mediaNeed:'toc+figures',final:true,status:'success',figuresDiscovered:labels.length,figuresStored:labels.length,figureLabels:labels,...extra});
 test('completed packet map accepts only closed successful packets',completedPacketMap({reports:{items:[report(a.row),report(b1.row,[b1.row.label],{final:false})]}}).has(a.row.doi)&&!completedPacketMap({reports:{items:[report(b1.row,[b1.row.label],{final:false})]}}).has(b1.row.doi));
+test('TOC-only final report never authorizes body publication',!completedPacketMap({reports:{items:[report(a.row,[],{mediaNeed:'toc',figuresDiscovered:0,figuresStored:0,figureLabels:[]})]}}).has(a.row.doi));
 
 const root=await mkdtemp(path.join(tmpdir(),'tm230-packet-'));
 try{
