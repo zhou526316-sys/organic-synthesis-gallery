@@ -2,6 +2,7 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {readPapers,normalizeDoi} from './merge-reviewed-toc.mjs';
+import {sourceDois} from '../../shared/body-media-evidence.js';
 import {POLICY_ID,sha256,requireBody,exactKey,evidenceKey,validateNewBodyMetadata,validateNewBodyBytes,conflictKeys,createImageDecoder} from './new-body-auto-validation.mjs';
 export const SITE='https://gallery.gczhouwld.com/';
 export const WORKER='https://organic-synthesis-gallery.zhou526316.workers.dev';
@@ -45,12 +46,14 @@ export async function readLiveInputs(){
   requireBody(new Set(previous.items.map(x=>x.record.doi+'|'+x.record.id)).size===previous.items.length,'auto_previous_duplicate_identity');
   if(!priorBytes)requireBody(!Object.values(live.items||{}).some(x=>x.figures?.figures?.some(f=>f.publicationId===POLICY_ID)),'auto_previous_snapshot_missing');
   assertSnapshotCoherence(previous,live);
-  let stage=null,stageError=null,localCaptures=null,localCaptureError=null;
+  let stage=null,stageError=null,localCaptures=null,localCaptureError=null,reports=null,reportError=null;
   try{stage=JSON.parse(await fetchStored(WORKER+'/api/article-figures/staged'));requireBody(Array.isArray(stage.items)&&stage.count===stage.items.length&&stage.count<=2000,'auto_stage_truncated_or_invalid');}
   catch(e){stageError=String(e.message);stage=null;}
   try{localCaptures=JSON.parse(await fetchStored(WORKER+'/api/media/local-capture-index'));requireBody(Array.isArray(localCaptures.items)&&localCaptures.count===localCaptures.items.length&&localCaptures.count<=2000,'auto_local_capture_index_invalid');}
   catch(e){localCaptureError=String(e.message);localCaptures=null;}
-  return {previous,live,stage,stageError,localCaptures,localCaptureError};
+  try{reports=JSON.parse(await fetchStored(WORKER+'/api/media/tampermonkey-reports?limit=200'));requireBody(Array.isArray(reports.items)&&reports.items.length<=200,'auto_report_index_invalid');}
+  catch(e){reportError=String(e.message);reports=null;}
+  return {previous,live,stage,stageError,localCaptures,localCaptureError,reports,reportError};
 }
 function alreadyIn(media,row){return (media.items?.[row.doi]?.figures?.figures||[]).some(f=>f.id===row.id);}
 function heldAttempts(previous,row,now){const a=previous.attempts?.[exactKey(row)];return a?.evidenceSha256===evidenceKey(row)&&(!a.retryAfter||a.retryAfter>now);}
@@ -69,17 +72,24 @@ function embeddedAcsDois(value){
 }
 export function strongOfficialCapture(row){
   const doi=normalizeDoi(row?.doi||'');
-  if(!doi||!doi.startsWith('10.1021/')||String(row?.kind||'').toLowerCase()!=='official')return false;
+  if(!doi||String(row?.kind||'').toLowerCase()!=='official')return false;
   if(row.captureVersion!=='6.2.20'||normalizeDoi(row.pageDoi||'')!==doi||Number(row.mediaGeneration)!==1790082000000||Number(row.updatedAt||0)<1790082000000)return false;
-  let article,source;
-  try{article=new URL(String(row.articleUrl||''));source=new URL(String(row.sourceUrl||''));}catch{return false;}
-  if(article.protocol!=='https:'||article.hostname!=='pubs.acs.org')return false;
-  if(source.protocol!=='https:'||!['acs.silverchair-cdn.com','pubs.acs.org'].includes(source.hostname))return false;
   for(const value of [row.articleUrl,row.sourceUrl]){
-    const ids=embeddedAcsDois(value);
+    const ids=sourceDois(value);
     if(ids.length!==1||ids[0]!==doi)return false;
   }
   return true;
+}
+export function completedPacketMap(inputs){
+  const map=new Map();
+  for(const row of inputs?.reports?.items||[]){
+    const doi=normalizeDoi(row?.doi||'');
+    const jobId=String(row?.jobId||'');
+    if(!doi||!row.final||row.status!=='success'||row.captureVersion!=='6.2.20'||!/^[a-z0-9-]{16,80}$/i.test(jobId))continue;
+    if(Number(row.figuresStored||0)!==Number(row.figuresDiscovered||0))continue;
+    map.set(doi,row);
+  }
+  return map;
 }
 export function tocReadyDois(inputs){
   const ready=new Set();
