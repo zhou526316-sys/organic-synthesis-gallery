@@ -62,7 +62,7 @@ run('normal_formal_rows_need_no_internal_decision_field', () => {
 });
 run('mismatched_challenge_is_blocked', () => {
   const bad = structuredClone(formal); bad.accepted[0].challengeDecision = 'exclude';
-  assert.ok(validateFormalPartition(staging, bad, marker, queue).some(x => x.startsWith('formal_evidence_or_challenge_invalid:')));
+  assert.ok(validateFormalPartition(staging, bad, marker, queue).some(x => x.startsWith('formal_challenge_invalid:')));
 });
 run('formal_counts_and_required_reason_are_enforced', () => {
   const bad = structuredClone(formal); bad.summary.accepted = 2; delete bad.accepted[0].reason;
