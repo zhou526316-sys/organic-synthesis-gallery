@@ -45,11 +45,13 @@ jobs:
         run: |
           test -n "$(find dist/share -name '*.html' -print -quit)"
           SHARE_PAGE="$(find dist/share -name '*.html' -print -quit)"
+          RICH_PAGE="dist/share/MTAuMTAyMS9qYWNzLjZjMTUzOTM.html"
+          test -s "$RICH_PAGE"
           grep -F 'property="og:type" content="article"' "$SHARE_PAGE"
           grep -F 'property="og:image"' "$SHARE_PAGE"
           grep -F 'meta itemprop="image"' "$SHARE_PAGE"
           grep -F 'https://gallery.gczhouwld.com/share/' "$SHARE_PAGE"
-          grep -F 'https://gallery.gczhouwld.com/share-media/' "$SHARE_PAGE"
+          grep -F 'https://gallery.gczhouwld.com/share-media/' "$RICH_PAGE"
           grep -F 'https://gallery.gczhouwld.com/?doi=' "$SHARE_PAGE"
           ! grep -F 'https://api.gczhouwld.com/share/' "$SHARE_PAGE"
           ! grep -F 'https://api.gczhouwld.com/share-media/' "$SHARE_PAGE"
@@ -63,7 +65,7 @@ jobs:
           grep -F "updateAppMessageShareData" dist/assets/card-share-*.js
           grep -F "/api/wechat/js-sdk-signature" dist/assets/card-share-*.js
           grep -F "sharev=" dist/assets/card-share-*.js
-          grep -F "galleryDeepLink" src/card-share.ts
+          grep -F "function shareSlug" src/card-share.ts
           grep -F "&sharev=" scripts/build-share-pages.mjs
           grep -F "Platforms that support link previews can show them directly" dist/assets/card-share-*.js
 
