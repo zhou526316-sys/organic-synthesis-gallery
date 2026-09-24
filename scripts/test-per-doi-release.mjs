@@ -92,6 +92,15 @@ try {
   result = await run(data); assert.equal(result.exit, 1);
   passed.push('global_source_failure_still_blocks');
 
+  data = fixture();
+  data.handoff.discoveryGate.sourceCoverageAnomalies = data.handoff.summary.sourceCoverageAnomalies = data.latest.summary.sourceCoverageAnomalies = 1;
+  const warnedJournal = data.handoff.activeJournals.find(row => row.name === 'JACS');
+  warnedJournal.sourceHealth = { coverageWarning: true, crossrefHealthy: true, openAlexHealthy: true };
+  result = await run(data); assert.equal(result.exit, 0);
+  assert.equal(result.body.publicationReady, true); assert.equal(result.body.publishableDois.length, 9);
+  assert.equal(result.body.sourceCoverageAnomalies, 1);
+  passed.push('healthy_cross_source_coverage_warning_does_not_block_reviewed_dois');
+
   data = fixture(); data.latest.generatedAt = '2026-09-22T23:36:00Z';
   result = await run(data); assert.equal(result.exit, 1);
   passed.push('snapshot_generation_mismatch_still_blocks');
