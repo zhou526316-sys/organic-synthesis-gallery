@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-1153",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T03:52:54Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10789591366,
+  "evidenceArchiveSha256": "80603e8ecfb3b23e1f230ba9aa539b55490bf117afdc4eec711d46571032ba33",
+  "evidenceRunId": 35952911184,
+  "approvedCount": 22,
+  "reviewMethod": "All 22 selected stored files across five current-corpus articles were independently rehashed against the fresh read-only GitHub evidence artifact, checked for exact task/page/article/source DOI binding, original Figure/Scheme identity and independent caption, captureVersion 6.2.20, job identity, fixed media generation 1790082000000, content-addressed R2 key, actual byte length/type/dimensions, duplicate source/hash ownership and current public media-index/ledger state. SVG files were parsed/rendered and checked for active/external content; PNG and WebP files were signature/decoding checked. Every image was visually reviewed against its caption and paper theme for role, unrelated/recommendation contamination, duplicate risk and legibility. Capture success/partial markers were treated only as provenance evidence. No publisher request, R2/D1 write, server-side direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "The 22 files are exact stored bytes: 15 self-contained SVGs, two decoded PNGs and three decoded Nature WebPs plus two additional SVGs in the JOC set, all within the configured size bounds and with unique selected content/source ownership. None of the five DOI appears in the deployed body-publication ledger and no same-ID public body figure exists, so this packet is additive rather than a replacement. Existing official TOCs for the three Organic Letters papers are distinct and preserved. The JOC and Nature Chemistry records currently have no deployed TOC in the frozen public media index; the approved records remain body figures only and do not masquerade as TOC. JOC 10.1021/acs.joc.6c01498 has a final partial report of 7/8 body images, so only the seven exact stored files reviewed here are approved and the missing image is not inferred approved.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.joc.6c01498",
+      "images": [
+        ["next-001", "figure-1", "Viewed representative biologically and materials-relevant furo/benzofuro-fused quinolines; structures and role match Figure 1 and the paper context."],
+        ["next-018", "figure-2", "Viewed UV-vis/emission spectra and white/365 nm solution photographs for 2a, 2q, 2r and 2s; content matches Figure 2 photophysical characterization."],
+        ["next-019", "scheme-1", "Viewed the selected prior synthetic routes and the work's access strategy to benzofuro[2,3-b]quinolines; content matches Scheme 1."],
+        ["next-020", "scheme-2", "Viewed synthetic examples for indolo-, benzothieno- and benzofuro-fused quinolines; products and reaction layouts match Scheme 2."],
+        ["next-021", "scheme-3", "Viewed the gram-scale preparation of product 2a with reported conditions and isolated outcome; content matches Scheme 3."],
+        ["next-022", "scheme-4", "Viewed control experiments and mechanistic evidence with the reported substrates and conditions; content matches Scheme 4."],
+        ["next-023", "scheme-5", "Viewed the proposed Ag(I)-promoted cascade cyclization mechanism and intermediates leading to the fused quinoline; content matches Scheme 5."]
+      ]
+    },
+    {
+      "doi": "10.1038/s41557-026-02247-x",
+      "images": [
+        ["next-002", "figure-1", "Viewed the N-alkyl aziridine ring-opening concept, bioactive product examples and boryl-radical fragmentation strategy; content matches Figure 1."],
+        ["next-024", "figure-2", "Viewed the boryl-radical beta-scission/copper arylation cycle plus conformational/barrier analysis; content matches Figure 2 and its mechanistic caption."],
+        ["next-025", "figure-3", "Viewed the dual photocatalysis/nickel ring-opening arylation cycle and broad aryl-bromide product scope; content matches Figure 3."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03536",
+      "images": [
+        ["next-003", "scheme-1", "Viewed natural-product context, prior 9,10-dihydrophenanthrene strategies and the proposed tandem Heck-type arylation/[4+2] electrocyclization concept; matches Scheme 1."],
+        ["next-026", "scheme-2", "Viewed the aryl-iodide and cinnamate substrate scopes with the reported products/yields under visible-light conditions; content matches Scheme 2."],
+        ["next-027", "scheme-3", "Viewed scale-up, derivatization, on/off and UV-vis experiments, radical-trapping evidence and the plausible tandem mechanism; content matches Scheme 3."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03628",
+      "images": [
+        ["next-004", "figure-1", "Viewed catalytic enantioselective strategies for axially chiral alkylidenecyclobutanes and the CPA allylboration design; content matches Figure 1."],
+        ["next-028", "figure-2", "Viewed the broad stereodefined alkenylcyclobutyl/homoallenyl boronate allylboration scope with ee/dr data and structures; content matches Figure 2."],
+        ["next-029", "figure-3", "Viewed downstream transformations of the enantioenriched allylboration product under four derivatization conditions; content matches Figure 3."],
+        ["next-030", "figure-4", "Viewed the proposed CPA-controlled transition-state models rationalizing favored/unfavored pathways and stereochemical outcome; content matches Figure 4."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03650",
+      "images": [
+        ["next-005", "scheme-1", "Viewed prior photocatalytic CO2 difunctionalization context and this work's phosphonocarboxylation of 1,3-enynes; content matches Scheme 1."],
+        ["next-031", "scheme-2", "Viewed the 1,3-enyne scope leading to tetrasubstituted phosphorus-containing allenic acids with yields and substituent variation; content matches Scheme 2."],
+        ["next-032", "scheme-3", "Viewed the secondary phosphine-oxide scope and corresponding phosphonocarboxylation products; content matches Scheme 3."],
+        ["next-033", "scheme-4", "Viewed scale-up and three downstream derivatizations of the allenic acid product; content matches Scheme 4 synthetic utility."],
+        ["next-034", "scheme-5", "Viewed radical inhibition, isotope/control experiments and the proposed photoredox phosphonocarboxylation mechanism; content matches Scheme 5."]
+      ]
+    }
+  ]
+}
