@@ -17,44 +17,53 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
       - name: Read deployed script and complete queue with matching Worker
         run: |
-          python3 - <<'PY'
-          import datetime,hashlib,json,os,pathlib,re,time,urllib.request
-          site='https://gallery.gczhouwld.com/'
-          worker='https://organic-synthesis-gallery.zhou526316.workers.dev'
-          def get(url):
-              req=urllib.request.Request(url,headers={'Cache-Control':'no-cache'})
-              with urllib.request.urlopen(req,timeout=10) as r:
-                  assert r.status==200
-                  data=r.read(2500001)
-              assert len(data)<=2500000
-              return data
-          for attempt in range(12):
-              try:
-                  suffix='?releaseCheck='+str(int(time.time()))
-                  raw=get(site+'gallery-vpn-bridge.user.js'+suffix);script=raw.decode()
-                  assert re.search(r'@version\s+2\.2\.30(?:\s|$)',script), 'userscript not 2.2.30'
-                  for marker in ["var VERSION = '6.2.20';",'overnightRetryEligible','checkpointKey','pairedJobs','capture_server_upgrade_pending','GM_listValues','assertBoundCaptureJob','pending_verified_promotion']:
-                      assert marker in script, 'script contract '+marker
-                  q=json.loads(get(site+'toc-demand-live.json'+suffix))
-                  assert q['mediaGeneration']==1790082000000 and q['pairedCaptureRegistry'] is True
-                  assert len(q['articles'])==q['webpageDoiCount'] and len(q['articles'])>400
-                  assert len({r['doi'] for r in q['articles']})==len(q['articles'])
-                  caps=json.loads(get(worker+'/api/media/capture-capabilities'+suffix))
-                  assert caps['captureVersion']=='6.2.20' and caps['mode']=='verified-staging' and caps['bodyFigures'] is True
-                  assert caps['publishedAutomatically'] is False
-                  media=json.loads(get(site+'media-index.json'+suffix))
-                  recovered=sum(r.get('toc',{}).get('recoveryId')=='toc-batch1-20260922' for r in media['items'].values())
-                  assert recovered>=83, 'reviewed TOCs unexpectedly lost'
-                  report={'verifiedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'installationUrl':site+'gallery-vpn-bridge.user.js','bridgeVersion':'2.2.30','captureVersion':'6.2.20','scriptBytes':len(raw),'scriptSha256':hashlib.sha256(raw).hexdigest(),'queueArticles':len(q['articles']),'queueGeneratedAt':q['generatedAt'],'retainedReviewedTocs':recovered,'workerCapabilities':caps,'publicReadOnly':True,'realPublisherSessionVerified':False}
-                  pathlib.Path(os.environ['RUNNER_TEMP'],'tm220-live.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
-                  print('TM220_LIVE_VERIFIED '+json.dumps(report,ensure_ascii=False));break
-              except Exception as e:
-                  print('TM220_DEPLOYMENT_PENDING',attempt,type(e).__name__,str(e)[:120],flush=True)
-                  if attempt==11:raise
-                  time.sleep(10)
-          PY
+          node --input-type=module - <<'NODE'
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          import {writeFile} from 'node:fs/promises';
+          const site='https://gallery.gczhouwld.com/';
+          const worker='https://organic-synthesis-gallery.zhou526316.workers.dev';
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          async function get(url){
+            const response=await fetch(url,{headers:{'cache-control':'no-cache','user-agent':'Mozilla/5.0 GitHub-Actions OSG-live-verifier'},signal:AbortSignal.timeout(10000)});
+            assert.equal(response.status,200,'HTTP '+response.status+' '+url);
+            const raw=Buffer.from(await response.arrayBuffer());
+            assert.ok(raw.length<=2500000,'response too large');
+            return raw;
+          }
+          let finalError=null;
+          for(let attempt=0;attempt<12;attempt++){
+            try{
+              const suffix='?releaseCheck='+Date.now();
+              const raw=await get(site+'gallery-vpn-bridge.user.js'+suffix),script=raw.toString('utf8');
+              assert.match(script,/@version\s+2\.2\.30(?:\s|$)/,'userscript not 2.2.30');
+              for(const marker of ["var VERSION = '6.2.20';",'overnightRetryEligible','checkpointKey','pairedJobs','capture_server_upgrade_pending','GM_listValues','assertBoundCaptureJob','pending_verified_promotion'])assert.ok(script.includes(marker),'script contract '+marker);
+              const q=JSON.parse((await get(site+'toc-demand-live.json'+suffix)).toString('utf8'));
+              assert.equal(q.mediaGeneration,1790082000000);assert.equal(q.pairedCaptureRegistry,true);
+              assert.equal(q.articles.length,q.webpageDoiCount);assert.ok(q.articles.length>400);assert.equal(new Set(q.articles.map(r=>r.doi)).size,q.articles.length);
+              assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(String(q.latestAddedDate||'')),'latestAddedDate missing');
+              assert.equal(q.articles.filter(r=>r.addedDate===q.latestAddedDate).length,q.latestAddedCount);
+              const caps=JSON.parse((await get(worker+'/api/media/capture-capabilities'+suffix)).toString('utf8'));
+              assert.equal(caps.captureVersion,'6.2.20');assert.equal(caps.mode,'verified-staging');assert.equal(caps.bodyFigures,true);assert.equal(caps.publishedAutomatically,false);
+              const media=JSON.parse((await get(site+'media-index.json'+suffix)).toString('utf8'));
+              const recovered=Object.values(media.items||{}).filter(r=>r.toc?.recoveryId==='toc-batch1-20260922').length;
+              assert.ok(recovered>=83,'reviewed TOCs unexpectedly lost');
+              const report={verifiedAt:new Date().toISOString(),installationUrl:site+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.30',captureVersion:'6.2.20',scriptBytes:raw.length,scriptSha256:createHash('sha256').update(raw).digest('hex'),queueArticles:q.articles.length,queueGeneratedAt:q.generatedAt,latestAddedDate:q.latestAddedDate,latestAddedCount:q.latestAddedCount,retainedReviewedTocs:recovered,workerCapabilities:caps,publicReadOnly:true,realPublisherSessionVerified:false};
+              await writeFile(process.env.RUNNER_TEMP+'/tm220-live.json',JSON.stringify(report,null,2));
+              console.log('TM220_LIVE_VERIFIED '+JSON.stringify(report));finalError=null;break;
+            }catch(error){
+              finalError=error;
+              console.log('TM220_DEPLOYMENT_PENDING',attempt,error?.name||'Error',String(error?.message||error).slice(0,160));
+              if(attempt<11)await sleep(10000);
+            }
+          }
+          if(finalError)throw finalError;
+          NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
