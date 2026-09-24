@@ -41,7 +41,7 @@ jobs:
             try{
               const suffix='?releaseCheck='+Date.now();
               const raw=await get(site+'gallery-vpn-bridge.user.js'+suffix),script=raw.toString('utf8');
-              assert.match(script,/@version\s+2\.2\.30(?:\s|$)/,'userscript not 2.2.31');
+              assert.match(script,/@version\s+2\.2\.31(?:\s|$)/,'userscript not 2.2.31');
               for(const marker of ["var VERSION = '6.2.20';",'overnightRetryEligible','checkpointKey','pairedJobs','capture_server_upgrade_pending','GM_listValues','assertBoundCaptureJob','pending_verified_promotion'])assert.ok(script.includes(marker),'script contract '+marker);
               const q=JSON.parse((await get(site+'toc-demand-live.json'+suffix)).toString('utf8'));
               assert.equal(q.mediaGeneration,1790082000000);assert.equal(q.pairedCaptureRegistry,true);
