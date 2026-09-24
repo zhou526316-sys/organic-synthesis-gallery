@@ -7,7 +7,7 @@ let passed=0;
 const clone=x=>x==null?x:structuredClone(x);
 function harness(text=source,opt={}) {
   const store=opt.store||new Map(),menus=new Map(),timers=new Map(),opened=[],badges=[];
-  let now=1790096000000,id=0,maxLive=0,ctx;
+  let now=1790096000000,id=0,maxLive=0,openCalls=0,ctx;
   class Clock extends Date {constructor(...v){super(...(v.length?v:[now]));}static now(){return now;}}
   const set=(k,v)=>store.set(k,clone(v));
   const c={Date:Clock,URL,Set,Map,Promise,crypto:{randomUUID},console,Math,Number,String,Array,Object,RegExp,
@@ -21,10 +21,12 @@ function harness(text=source,opt={}) {
     __getJson:async url=>{await opt.onFetch?.(url,ctx,menus,store);return url.includes('capture-capabilities')?{captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging'}:url.includes('toc-demand')?{generatedAt:'2026-09-22T16:30:47.570Z',mediaGeneration:1790082000000}:{items:{}};},
     GM_openInTab:(url,options)=>{
       const job=store.get('osg-toc-v6:active-job');
+      const call=openCalls++;
+      if(opt.noHandleAt===call)return null;
       const h={url,options,closed:false,closeRequested:false,close(){this.closeRequested=true;}};
       opened.push(h);maxLive=Math.max(maxLive,opened.filter(h=>!h.closed).length);
-      set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored'},figuresStaged:2});
-      opt.onOpen?.(job,ctx,store);
+      if(opt.noResultAt!==call)set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored'},figuresStaged:2});
+      opt.onOpen?.(job,ctx,store,call);
       return opt.promiseHandle?Promise.resolve(h):h;
     },
     __jobs:Array.from({length:20},(_,i)=>({doi:'10.1021/jacs.6c'+String(10000+i),publisher:'acs'})),
@@ -58,11 +60,23 @@ await test('lease lost after first open stops entire batch and closes only its p
  const h=harness(source,{onOpen:(j,c,s)=>s.delete(c.T.leaseKey)});await h.run();await h.run();
  assert.equal(h.opened.length,1);assert.ok(h.opened[0].closed);assert.equal(h.summary().failed,0);assert.equal(h.timers.size,0);
 });
-await test('cannot confirm closed tab means no second open',async()=>{
- const h=harness(source,{neverClose:true});await h.run();await h.run();assert.equal(h.opened.length,1);assert.equal(h.summary().stopReason,'previous_task_tab_not_closed');assert.equal(h.timers.size,0);
+await test('unconfirmed tab close is invalidated and queue continues',async()=>{
+ const h=harness(source,{neverClose:true});await h.run();
+ assert.equal(h.opened.length,20);assert.equal(h.summary().success,20);assert.equal(h.summary().failed,0);
+ assert.equal(h.summary().tabCloseWarnings,20);assert.equal(h.summary().stopReason,'');assert.equal(h.store.get(h.ctx.T.activeKey),undefined);
 });
 await test('async tab handle is awaited and closure still enforced',async()=>{
  const h=harness(source,{promiseHandle:true});await h.run();assert.equal(h.summary().success,20);assert.equal(h.maxLive,1);assert.ok(h.opened.every(t=>t.closed));
+});
+await test('missing task-tab handle skips one paper and continues the batch',async()=>{
+ const h=harness(source,{noHandleAt:0});await h.run();
+ assert.equal(h.summary().success,19);assert.equal(h.summary().failed,1);assert.equal(h.summary().skipped,1);
+ assert.equal(h.summary().results[0].reason,'task_tab_handle_unavailable');assert.equal(h.summary().stopReason,'');assert.equal(h.opened.length,19);
+});
+await test('missing publisher heartbeat skips one paper instead of pausing the queue',async()=>{
+ const h=harness(source,{noResultAt:0});await h.run();
+ assert.equal(h.summary().success,19);assert.equal(h.summary().failed,1);assert.equal(h.summary().skipped,1);
+ assert.equal(h.summary().results[0].reason,'bound_publisher_heartbeat_missing');assert.equal(h.summary().stopReason,'');assert.equal(h.opened.length,20);
 });
 await test('old controller cleanup cannot erase new owners lease or active job',async()=>{
  const h=harness(source,{onOpen:(j,c,s)=>{s.set(c.T.leaseKey,{owner:'other',expiresAt:1790999999999});s.set(c.T.activeKey,{controllerId:'other',jobId:'other-job'});}});
@@ -81,8 +95,8 @@ await test('prior lease-loss results do not impose article failure cooldown',asy
  const h=harness();const key=h.ctx.T.attemptKey('10.1021/jacs.6c10000','6.2.20:paired:1790082000000','figures');h.store.set(key,{version:'6.2.20',reason:'controller_lease_lost',status:'failed',retryCount:3,finishedAt:new Date(1790096000000).toISOString()});await h.run();assert.equal(h.summary().success,20);assert.equal(h.store.get(key).retryCount,1);
 });
 await test('bound capture nonce and DOI guards remain in source',()=>{
- for(const text of ['assertBoundCaptureJob','capture_job_stale_or_unbound','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch','previous_task_tab_not_closed'])assert.ok(source.includes(text));
+ for(const text of ['assertBoundCaptureJob','capture_job_stale_or_unbound','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch','previous_task_tab_not_closed','hardControllerStopReason','recoverablePaperSkipReason'])assert.ok(source.includes(text));
 });
 const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-await test('legacy viewport collectors are guarded by packaging',()=>{assert.ok(loader.includes('legacy_runtime_media_disabled'));for(const n of ['function queueDoi','function pump','function scan'])assert.ok(loader.includes(n));assert.ok(loader.includes("const loaderVersion = '2.2.28';"));});
+await test('legacy viewport collectors are guarded by packaging',()=>{assert.ok(loader.includes('legacy_runtime_media_disabled'));for(const n of ['function queueDoi','function pump','function scan'])assert.ok(loader.includes(n));assert.ok(loader.includes("const loaderVersion = '2.2.29';"));});
 console.log('TM221_WINDOW_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,environment:'VM mocked GM APIs; not a live Tampermonkey extension'}));
