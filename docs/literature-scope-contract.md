@@ -1,6 +1,6 @@
 # Organic Synthesis Gallery 收录范围与审核证据契约
 
-版本：scope-2026-09-23-v1。适用于主审核、补审、正式发布及人工范围纠错。此文件汇总已经确认的范围边界，不代表全站排查已经完成。若旧任务提示词、模板或历史 review 的概括与本契约冲突，采用本契约及用户随后明确作出的 DOI 级决定；不得擅自扩张为未经确认的整类禁收。
+版本：scope-2026-09-24-v1。适用于主审核、补审、正式发布及人工范围纠错。此文件汇总已经确认的范围边界，不代表全站排查已经完成。若旧任务提示词、模板或历史 review 的概括与本契约冲突，采用本契约及用户随后明确作出的 DOI 级决定；不得擅自扩张为未经确认的整类禁收。
 
 ## 权威输入与版本绑定
 
@@ -40,7 +40,7 @@
 
 禁止把标题嵌入“已展示范围、放大或应用”的固定句子，再把“考虑过材料/机理后确认纳入”复制为所有文章的 challengeReason。第二遍须独立挑战第一遍的具体范围判断。缺乏直接证据的字段写未知及所需证据，不能编造。高相关 exclude 也要检查是否遗漏通用合成或全合成贡献。
 
-pending 只用于确实检查过但证据不足/两遍有实质分歧的 DOI，保留 evidenceNeeded、attemptedEvidencePages、nextAction、原发表日期和来源 review。没有检查的候选属于 unfinished，不得伪装成 pending。已登记的单篇 pending 不阻挡其余通过审核的文献；候选集合不完整、关键来源异常或未完成全局检查仍阻挡发布。发布成功与语义全闭合分别记录。
+pending 只用于确实检查过但证据不足/两遍有实质分歧的 DOI，保留 evidenceNeeded、attemptedEvidencePages、nextAction、原发表日期和来源 review。没有检查的候选属于 unfinished，不得伪装成 pending。已登记的单篇 pending 不阻挡其余通过审核的文献；候选集合截断、criticalSourceFailures、sourceFamilyGaps、historicalCoverageLosses、无法解释的生成代错误或未完成全局检查仍阻挡发布。若 Crossref/OpenAlex 两个来源家族均健康且异常仅表现为可明确计数的 sourceCoverageAnomalies（跨源重叠/覆盖深度警告），该警告不得阻挡已经发现并完成证据双遍审核的 DOI 在固定槽发布；它继续阻止对应日期 closure/verifiedThrough 前推，并必须保留到后续审计复查。closureCoverageAnomalies 同样属于闭环深度信号，不单独清空 publishableDois。发布成功与语义全闭合分别记录。
 
 ## 已定案纠错与未定案排查必须分开
 
