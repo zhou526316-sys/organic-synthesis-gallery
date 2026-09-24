@@ -1,4 +1,4 @@
-name: Bridge 2.2.31 TOC-first paired-media regression
+name: Bridge 2.2.31 phase-separated media regression
 
 on:
   push:
@@ -50,7 +50,7 @@ jobs:
           node scripts/test-tm224-acquisition.mjs | tee "$RUNNER_TEMP/tm230-acquisition.log"
           grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm230-acquisition.log"
           node scripts/test-tm-paired-capture.mjs
-      - name: Build exact Bridge 2.2.31 custom-domain installer
+      - name: Build exact Bridge 2.2.31 phase-separated custom-domain installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -67,6 +67,9 @@ jobs:
           grep -F 'requireCompletedCapturePacket' audit/media-auto-policy.json
           grep -F 'latestAddedDate' cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F 'completedPacketMap' cloudflare/scripts/merge-new-body-auto.mjs
+          grep -F "mediaNeed=isLatest?'toc+figures':official?'figures':'toc'" public/toc-mainline.user.js
+          grep -F "figures=not_requested" public/toc-mainline.user.js
+          grep -F "mediaNeed.includes('figures')" cloudflare/scripts/merge-new-body-auto.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
