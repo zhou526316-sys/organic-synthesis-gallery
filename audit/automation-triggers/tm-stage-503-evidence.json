@@ -1,7 +1,7 @@
 {
-  "requestedAt": "2026-09-23T15:17:00Z",
-  "context": "Read-only diagnosis of the five newest failed Tampermonkey jobs. Preserve full sanitized raw traces for the latest eight reports so controller_error entries retain controller last_progress. Determine whether recent controller_timeout jobs were last seen in discovering, downloading, comparing, uploading/staging, auth/challenge, or finished states, and compare against each publisher job captureDeadline. No recapture, promotion, reset, delete, publisher access, literature or UI changes.",
-  "bridgeVersion": "2.2.26",
+  "requestedAt": "2026-09-24T06:46:00Z",
+  "context": "Read-only diagnosis after real Bridge 2.2.27 reports arrived. Preserve full sanitized traces for the newest eight reports, especially 10.31635/ccschem.026.202608315 and 10.1021/acs.orglett.6c03168 with bound_publisher_heartbeat_missing, plus 10.1038/s41586-026-11169-0 and 10.1021/acs.joc.6c01347 with figures=0/0. Determine whether failures are startup redirect/binding, publisher script non-execution, auth/challenge, DOM discovery, or transport/acquisition. No recapture, promotion, reset, delete, publisher access, literature or UI changes.",
+  "bridgeVersion": "2.2.27",
   "captureProtocol": "6.2.20",
   "readOnly": true,
   "mediaWrites": 0
