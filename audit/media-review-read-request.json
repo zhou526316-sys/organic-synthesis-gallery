@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "context": "Media-only continuation. Read existing current-generation R2 evidence only. The read may freeze the full currently eligible remainder so already-reviewed rows can be skipped locally; semantic approval/publication remains capped at 5 articles and 30 new body images in this task round. This trigger is not approval and does not modify literature data.",
+  "context": "Media-only continuation. Read existing current-generation R2 evidence only. This read freezes the currently eligible unpublished set for bounded semantic review; approval/publication remains capped at 5 articles and 30 new body images in this task round. This trigger is not approval and does not modify literature data.",
   "maxArticles": 20,
-  "maxImages": 44,
+  "maxImages": 150,
   "maxImagesPerArticle": 10,
   "readOnly": true,
   "excludeDois": ["10.1021/jacs.6c13641"],
-  "excludeReason": "Existing unresolved scope review; current literature-update-state pendingScopeReviewBacklog is additionally excluded by the reader.",
-  "requestedAt": "2026-09-24T07:28:00+08:00",
-  "requestContext": "Freeze the complete 44-row currently eligible unpublished set from the unchanged stage snapshot. The prior 30-row artifact is fully semantically reviewed; this larger read is solely to obtain immutable bytes for its 14 remaining rows without publisher recrawl or storage mutation."
+  "excludeReason": "Previously identified unresolved scope review; current literature-update-state pendingScopeReviewBacklog is additionally excluded by the reader.",
+  "requestedAt": "2026-09-24T08:47:00+08:00",
+  "requestContext": "Refresh immutable evidence after the prior 44-row snapshot was fully allocated into reviewed media batches. Detect only newly staged/currently unpublished current-generation rows; no publisher recrawl, R2/D1 write, direct import/repair, or production deployment."
 }
