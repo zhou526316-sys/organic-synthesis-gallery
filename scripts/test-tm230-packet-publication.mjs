@@ -59,6 +59,12 @@ try{
  const backfill=await mergeNewBodyAuto(root,{inputs:inputs([historical],[]),now,decoder,getNew:async()=>a.raw,getOld});
  test('stable pre-cutover staged body figure backfills automatically',backfill.status.added.length===1);
 
+ const histA={...b1.row,updatedAt:Date.parse(policy.backfillCapturedBefore)-20*60000};histA.reviewMarker=await buildBodyReviewMarker(histA,histA.sha256);
+ const histB={...b2.row,updatedAt:Date.parse(policy.backfillCapturedBefore)-20*60000,caption:'Visual Abstract invalid historical member'};histB.reviewMarker=await buildBodyReviewMarker(histB,histB.sha256);
+ await reset([histA.doi]);
+ const heldHistorical=await mergeNewBodyAuto(root,{inputs:inputs([histA,histB],[]),now,decoder,getNew:async row=>bytes.get(exactKey(row)),getOld});
+ test('one invalid historical member holds the entire DOI backfill packet',heldHistorical.status.added.length===0&&heldHistorical.media.items[histA.doi].figures.figures.length===0&&heldHistorical.status.held.some(x=>x.doi===histA.doi&&String(x.reason).startsWith('historical_packet_validation:')));
+
  const recent={...a.row,updatedAt:Date.parse(policy.backfillCapturedBefore)+60000};recent.reviewMarker=await buildBodyReviewMarker(recent,recent.sha256);
  await reset([recent.doi]);
  const blocked=await mergeNewBodyAuto(root,{inputs:inputs([recent],[]),now,decoder,getNew:async()=>a.raw,getOld});
