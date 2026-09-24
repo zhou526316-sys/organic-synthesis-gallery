@@ -2,9 +2,9 @@ name: Bridge 2.2.29 publisher-result precedence regression
 
 on:
   push:
-    branches: [fix/tm229-result-precedence]
+    branches: [fix/tm227-result-precedence]
     paths:
-      - '.github/workflows/tm229-result-precedence.yml'
+      - '.github/workflows/tm227-result-precedence.yml'
       - '.github/workflows/tm224-live-acceptance.yml'
       - '.github/workflows/tm222-live-acceptance.yml'
       - 'public/toc-mainline.user.js'
@@ -16,7 +16,7 @@ on:
       - 'scripts/apply-tm223-upload.py'
       - 'scripts/apply-tm224-acquisition.py'
       - 'scripts/test-tm224-acquisition.mjs'
-      - 'scripts/test-tm229-result-precedence.mjs'
+      - 'scripts/test-tm227-result-precedence.mjs'
 
 permissions:
   contents: read
@@ -35,7 +35,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check public/toc-mainline.user.js
-          node scripts/test-tm229-result-precedence.mjs | tee "$RUNNER_TEMP/tm229-result-precedence.log"
+          node scripts/test-tm227-result-precedence.mjs | tee "$RUNNER_TEMP/tm229-result-precedence.log"
           grep -F 'TM227_RESULT_PRECEDENCE_TEST_SUMMARY ' "$RUNNER_TEMP/tm229-result-precedence.log"
 
       - name: Retain upload, identity, window and diagnostic safety contracts
