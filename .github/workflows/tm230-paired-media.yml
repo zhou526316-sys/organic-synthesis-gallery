@@ -1,0 +1,78 @@
+name: Bridge 2.2.30 TOC-first paired-media regression
+
+on:
+  push:
+    branches: [fix/tm230-toc-first-scheduler]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'public/toc-mainline.user.js'
+      - 'cloudflare/scripts/build-live-toc-demand-queue.mjs'
+      - 'cloudflare/scripts/build-bridge-loader.mjs'
+      - 'cloudflare/scripts/new-body-auto-validation.mjs'
+      - 'cloudflare/scripts/merge-new-body-auto.mjs'
+      - 'cloudflare/scripts/merge-reviewed-body.mjs'
+      - 'cloudflare/worker/src/local-captures.js'
+      - 'audit/media-auto-policy.json'
+      - 'scripts/test-tm224-acquisition.mjs'
+      - 'scripts/test-tm230-packet-publication.mjs'
+      - 'scripts/validate-tm220-artifacts.mjs'
+      - '.github/workflows/tm230-paired-media.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Syntax and packet publication regressions
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/scripts/build-live-toc-demand-queue.mjs
+          node --check cloudflare/scripts/new-body-auto-validation.mjs
+          node --check cloudflare/scripts/merge-new-body-auto.mjs
+          node --check cloudflare/worker/src/local-captures.js
+          node scripts/test-tm230-packet-publication.mjs
+          node scripts/test-tm228-skip-controller-failures.mjs
+          node scripts/test-tm227-result-precedence.mjs
+      - name: Chromium acquisition and scheduler ordering
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node scripts/test-tm224-acquisition.mjs | tee "$RUNNER_TEMP/tm230-acquisition.log"
+          grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm230-acquisition.log"
+          node scripts/test-tm-paired-capture.mjs
+      - name: Build exact Bridge 2.2.30 custom-domain installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.30' public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.30';" public/gallery-vpn-bridge.user.js
+          grep -F "var GALLERY_HOST = 'gallery.gczhouwld.com';" public/gallery-vpn-bridge.user.js
+          grep -F 'requireCompletedCapturePacket' audit/media-auto-policy.json
+          grep -F 'latestAddedDate' cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F 'completedPacketMap' cloudflare/scripts/merge-new-body-auto.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm230-paired-media-tested
+          path: |
+            public/gallery-vpn-bridge.user.js
+            public/toc-mainline.user.js
+          retention-days: 7
+          if-no-files-found: warn
