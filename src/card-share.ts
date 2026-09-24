@@ -9,6 +9,7 @@ interface ShareInfo {
   date: string;
   url: string;
   imageUrl?: string;
+  imageElement?: HTMLImageElement | null;
 }
 
 let activePanel: HTMLElement | null = null;
@@ -20,6 +21,11 @@ let deepLinkFocused = false;
 let focusTimer: number | null = null;
 let highlightUntil = 0;
 let highlightExpiryTimer: number | null = null;
+
+const qrModulePromise = import('qrcode');
+const posterCache = new Map<string, Promise<Blob>>();
+const POSTER_WIDTH = 1080;
+const POSTER_HEIGHT = 1440;
 
 function normalizeDoi(value: string | null | undefined): string | null {
   if (!value) return null;
@@ -36,13 +42,6 @@ function tr(zh: string, en: string): string {
   return document.documentElement.lang.toLowerCase().startsWith('zh') ? zh : en;
 }
 
-function shareSlug(doi: string): string {
-  const bytes = new TextEncoder().encode(doi.toLowerCase());
-  let binary = '';
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
-}
-
 const RICH_SHARE_ORIGIN = 'https://api.gczhouwld.com';
 const CANONICAL_GALLERY_ORIGIN = 'https://gallery.gczhouwld.com';
 const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_BUILD_ID__
@@ -50,13 +49,7 @@ const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_B
   : 'runtime';
 
 function shareUrl(doi: string): string {
-  return `${CANONICAL_GALLERY_ORIGIN}/share/${shareSlug(doi)}.html?sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
-}
-
-function sharePrepareUrl(url: string): string {
-  const prepared = new URL(url);
-  prepared.searchParams.set('prepare', '1');
-  return prepared.toString();
+  return `${CANONICAL_GALLERY_ORIGIN}/?doi=${encodeURIComponent(doi)}&sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
 }
 
 type WeChatSdk = {
@@ -195,7 +188,10 @@ function infoFromButton(button: HTMLElement): ShareInfo | null {
     journal: card.dataset.journal || '',
     date: card.dataset.date || '',
     url: shareUrl(doi),
-    imageUrl: card.querySelector<HTMLImageElement>('.toc-image')?.src || `${CANONICAL_GALLERY_ORIGIN}/share-default.png`,
+    imageElement: card.querySelector<HTMLImageElement>('.toc-image'),
+    imageUrl: card.querySelector<HTMLImageElement>('.toc-image')?.currentSrc
+      || card.querySelector<HTMLImageElement>('.toc-image')?.src
+      || `${CANONICAL_GALLERY_ORIGIN}/share-default.png`,
   };
 }
 
@@ -219,18 +215,6 @@ async function copyText(text: string): Promise<void> {
   if (!ok) throw new Error('copy failed');
 }
 
-function shareText(info: ShareInfo): string {
-  const meta = [info.journal, info.date].filter(Boolean).join(' | ');
-  return [
-    info.title,
-    meta,
-    `DOI: ${info.doi}`,
-    '',
-    tr('在 Organic Synthesis Gallery 查看 TOC、摘要和正文图：', 'View TOC, summary and article figures in Organic Synthesis Gallery:'),
-    info.url,
-  ].filter(Boolean).join('\n');
-}
-
 function showToast(message: string, duration = 1800): void {
   document.querySelector('.card-share-toast')?.remove();
   const toast = document.createElement('div');
@@ -245,6 +229,8 @@ function showToast(message: string, duration = 1800): void {
 }
 
 function closePanel(): void {
+  const posterObjectUrl = activePanel?.dataset.posterObjectUrl;
+  if (posterObjectUrl) URL.revokeObjectURL(posterObjectUrl);
   activePanel?.remove();
   activePanel = null;
   activeAnchor = null;
@@ -280,37 +266,296 @@ function positionPanel(panel: HTMLElement, anchor: HTMLElement): void {
   panel.style.top = `${Math.round(top)}px`;
 }
 
-async function loadQr(panel: HTMLElement, info: ShareInfo): Promise<void> {
-  const holder = panel.querySelector<HTMLElement>('[data-share-qr]');
-  const button = panel.querySelector<HTMLButtonElement>('[data-share-action="qr"]');
-  if (!holder || !button) return;
-  button.disabled = true;
-  holder.hidden = false;
-  holder.innerHTML = `<div class="card-share-qr-loading">${tr('正在生成二维码…', 'Generating QR code…')}</div>`;
+function roundRectPath(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+): void {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + width, y, x + width, y + height, r);
+  ctx.arcTo(x + width, y + height, x, y + height, r);
+  ctx.arcTo(x, y + height, x, y, r);
+  ctx.arcTo(x, y, x + width, y, r);
+  ctx.closePath();
+}
+
+function wrapCanvasText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+  maxLines: number,
+): string[] {
+  const source = text.trim();
+  if (!source) return [];
+  const useWords = /\s/.test(source);
+  const tokens = useWords ? source.split(/\s+/).map((word, index) => index ? ` ${word}` : word) : Array.from(source);
+  const lines: string[] = [];
+  let line = '';
+  let consumed = 0;
+
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    const candidate = line + token;
+    if (!line || ctx.measureText(candidate).width <= maxWidth) {
+      line = candidate;
+      consumed = index + 1;
+      continue;
+    }
+    lines.push(line.trim());
+    line = token.trimStart();
+    if (lines.length === maxLines) break;
+    consumed = index;
+  }
+  if (lines.length < maxLines && line) {
+    lines.push(line.trim());
+    consumed = tokens.length;
+  }
+  if (consumed < tokens.length && lines.length) {
+    let last = lines[lines.length - 1];
+    while (last && ctx.measureText(last + '…').width > maxWidth) last = last.slice(0, -1);
+    lines[lines.length - 1] = last.replace(/[\s,.;:，。；：]+$/, '') + '…';
+  }
+  return lines.slice(0, maxLines);
+}
+
+function drawContainedImage(
+  ctx: CanvasRenderingContext2D,
+  image: HTMLImageElement,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+): void {
+  const iw = image.naturalWidth || image.width;
+  const ih = image.naturalHeight || image.height;
+  if (!iw || !ih) return;
+  const scale = Math.min(width / iw, height / ih);
+  const dw = iw * scale;
+  const dh = ih * scale;
+  ctx.drawImage(image, x + (width - dw) / 2, y + (height - dh) / 2, dw, dh);
+}
+
+async function loadImageFromUrl(url: string): Promise<HTMLImageElement | null> {
   try {
-    const qrModule = await import('qrcode');
-    const dataUrl = await qrModule.default.toDataURL(sharePrepareUrl(info.url), {
-      width: 320,
-      margin: 2,
+    const response = await fetch(url, { cache: 'force-cache' });
+    if (!response.ok) return null;
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    try {
+      return await new Promise<HTMLImageElement | null>(resolve => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => resolve(null);
+        image.src = objectUrl;
+      });
+    } finally {
+      URL.revokeObjectURL(objectUrl);
+    }
+  } catch {
+    return null;
+  }
+}
+
+async function posterTocImage(info: ShareInfo): Promise<HTMLImageElement | null> {
+  const existing = info.imageElement;
+  if (existing?.complete && existing.naturalWidth > 0) {
+    try {
+      const current = new URL(existing.currentSrc || existing.src, window.location.href);
+      if (current.origin === window.location.origin) return existing;
+    } catch {}
+  }
+  const candidates = [
+    info.imageUrl,
+    new URL('/share-default.png', window.location.origin).toString(),
+  ].filter((value, index, values): value is string => Boolean(value) && values.indexOf(value) === index);
+  for (const candidate of candidates) {
+    const image = await loadImageFromUrl(candidate);
+    if (image) return image;
+  }
+  return null;
+}
+
+async function posterBlob(info: ShareInfo): Promise<Blob> {
+  const key = [info.doi.toLowerCase(), info.imageUrl || ''].join('|');
+  const cached = posterCache.get(key);
+  if (cached) return cached;
+
+  const pending = (async () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = POSTER_WIDTH;
+    canvas.height = POSTER_HEIGHT;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('poster_canvas_unavailable');
+
+    ctx.fillStyle = '#eef2f8';
+    ctx.fillRect(0, 0, POSTER_WIDTH, POSTER_HEIGHT);
+
+    roundRectPath(ctx, 42, 42, 996, 1356, 36);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+
+    const left = 86;
+    const contentWidth = 908;
+    ctx.fillStyle = '#3159bd';
+    ctx.font = '800 25px system-ui, -apple-system, "Segoe UI", sans-serif';
+    ctx.fillText('ORGANIC SYNTHESIS GALLERY', left, 105);
+
+    ctx.fillStyle = '#172033';
+    ctx.font = '750 48px system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif';
+    const titleLines = wrapCanvasText(ctx, info.title, contentWidth, 4);
+    let y = 174;
+    for (const line of titleLines) {
+      ctx.fillText(line, left, y);
+      y += 60;
+    }
+
+    const meta = [info.journal, info.date, `DOI: ${info.doi}`].filter(Boolean).join(' · ');
+    ctx.fillStyle = '#687386';
+    ctx.font = '500 26px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+    const metaLines = wrapCanvasText(ctx, meta, contentWidth, 2);
+    y += 4;
+    for (const line of metaLines) {
+      ctx.fillText(line, left, y);
+      y += 36;
+    }
+
+    const tocTop = Math.max(380, y + 26);
+    const footerTop = 1072;
+    const tocHeight = Math.max(430, footerTop - tocTop - 44);
+    roundRectPath(ctx, left, tocTop, contentWidth, tocHeight, 26);
+    ctx.fillStyle = '#f7f9fc';
+    ctx.fill();
+    ctx.strokeStyle = '#dfe5ef';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    const [tocImage, qrModule] = await Promise.all([posterTocImage(info), qrModulePromise]);
+    if (tocImage) {
+      drawContainedImage(ctx, tocImage, left + 30, tocTop + 30, contentWidth - 60, tocHeight - 60);
+    } else {
+      ctx.fillStyle = '#98a2b3';
+      ctx.font = '600 30px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(tr('TOC 图片暂未获取', 'TOC image not available yet'), POSTER_WIDTH / 2, tocTop + tocHeight / 2);
+      ctx.textAlign = 'left';
+    }
+
+    const qrDataUrl = await qrModule.default.toDataURL(info.url, {
+      width: 260,
+      margin: 1,
       errorCorrectionLevel: 'M',
     });
-    holder.innerHTML = `<img class="card-share-qr-image" src="${dataUrl}" alt="${tr('微信图文分享二维码', 'WeChat rich-share QR code')}"><div class="card-share-qr-hint">${tr('用微信扫码后页面会停留并自动准备标题 + TOC 图；随后点右上角“…”→“分享给朋友”。', 'Scan in WeChat. The page will stay open and prepare the title + TOC image; then use the top-right menu → Share with friends.')}</div>`;
-  } catch {
-    holder.innerHTML = `<div class="card-share-qr-error">${tr('二维码生成失败，请使用复制链接。', 'QR generation failed. Use Copy link instead.')}</div>`;
-  } finally {
-    button.disabled = false;
+    const qrImage = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error('poster_qr_load_failed'));
+      image.src = qrDataUrl;
+    });
+
+    const qrSize = 250;
+    const qrX = POSTER_WIDTH - left - qrSize;
+    const qrY = 1110;
+    roundRectPath(ctx, qrX - 14, qrY - 14, qrSize + 28, qrSize + 28, 22);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.strokeStyle = '#d7deea';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
+
+    roundRectPath(ctx, left, 1115, 232, 56, 20);
+    ctx.fillStyle = '#fff1e8';
+    ctx.fill();
+    ctx.fillStyle = '#c75220';
+    ctx.font = '800 28px system-ui, "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.fillText('↗  扫码跳转', left + 18, 1152);
+
+    ctx.fillStyle = '#172033';
+    ctx.font = '750 36px system-ui, "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.fillText(tr('扫码跳转并定位该文献', 'Scan to open this paper'), left, 1228);
+
+    ctx.fillStyle = '#667085';
+    ctx.font = '500 25px system-ui, "PingFang SC", "Microsoft YaHei", sans-serif';
+    const hintLines = wrapCanvasText(
+      ctx,
+      tr('进入 Organic Synthesis Gallery，自动定位并高亮对应卡片。', 'Open Organic Synthesis Gallery and highlight the matching paper.'),
+      610,
+      2,
+    );
+    let hintY = 1272;
+    for (const line of hintLines) {
+      ctx.fillText(line, left, hintY);
+      hintY += 34;
+    }
+
+    ctx.fillStyle = '#98a2b3';
+    ctx.font = '600 21px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+    ctx.fillText('gallery.gczhouwld.com', left, 1362);
+
+    return await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('poster_png_export_failed')), 'image/png');
+    });
+  })();
+
+  posterCache.set(key, pending);
+  if (posterCache.size > 12) posterCache.delete(posterCache.keys().next().value as string);
+  pending.catch(() => posterCache.delete(key));
+  return pending;
+}
+
+async function loadPosterPreview(panel: HTMLElement, info: ShareInfo): Promise<Blob> {
+  const holder = panel.querySelector<HTMLElement>('[data-share-poster]');
+  const copyButton = panel.querySelector<HTMLButtonElement>('[data-share-action="copy-poster"]');
+  if (!holder || !copyButton) throw new Error('poster_ui_missing');
+  try {
+    const blob = await posterBlob(info);
+    if (!panel.isConnected) return blob;
+    const oldUrl = panel.dataset.posterObjectUrl;
+    if (oldUrl) URL.revokeObjectURL(oldUrl);
+    const objectUrl = URL.createObjectURL(blob);
+    panel.dataset.posterObjectUrl = objectUrl;
+    panel.dataset.posterReady = 'true';
+    holder.innerHTML = `<img class="card-share-poster-image" src="${objectUrl}" alt="${tr('文献分享图片', 'Paper share image')}"><div class="card-share-poster-hint">${tr('默认分享图片：标题 + TOC + 二维码。扫码后直接定位并高亮该文献。', 'Default share image: title + TOC + QR code. Scanning opens and highlights this paper.')}</div>`;
+    copyButton.disabled = false;
+    return blob;
+  } catch (error) {
+    if (panel.isConnected) {
+      holder.innerHTML = `<div class="card-share-poster-error">${tr('分享图片生成失败，请重试。', 'Share image generation failed. Please try again.')}</div>`;
+    }
+    throw error;
   }
+}
+
+function downloadPoster(blob: Blob, info: ShareInfo): void {
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = objectUrl;
+  link.download = `OSG-${info.doi.replace(/[^a-z0-9._-]+/gi, '_')}.png`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+}
+
+async function copyPoster(blob: Blob, info: ShareInfo): Promise<'copied' | 'downloaded'> {
+  const ClipboardItemCtor = (window as Window & { ClipboardItem?: typeof ClipboardItem }).ClipboardItem;
+  if (navigator.clipboard?.write && ClipboardItemCtor) {
+    try {
+      await navigator.clipboard.write([new ClipboardItemCtor({ 'image/png': blob })]);
+      return 'copied';
+    } catch {}
+  }
+  downloadPoster(blob, info);
+  return 'downloaded';
 }
 
 function openPanel(anchor: HTMLElement, info: ShareInfo): void {
   closePanel();
-  const weChatContext = isWeChatBrowser() && isWeChatJsSdkHost();
-  const weChatTip = weChatContext
-    ? tr('当前页面可直接配置微信图文卡片：标题 + 期刊/DOI + TOC 图。准备完成后只需点右上角“…”→“分享给朋友”。', 'This page can configure a WeChat rich card with title, journal/DOI and TOC image. Once ready, just use the top-right menu → Share with friends.')
-    : tr('电脑端最省事的方式：点“微信扫码分享图文卡片”，用微信扫一次；扫码页不会自动跳走，卡片准备好后只需右上角分享。', 'Easiest desktop flow: choose “Scan with WeChat to share rich card” and scan once. The scanned page will stay open; after the card is prepared, just share from the top-right menu.');
-  const weChatActionLabel = weChatContext
-    ? tr('准备微信图文卡片', 'Prepare WeChat rich card')
-    : tr('微信扫码分享图文卡片', 'Scan with WeChat to share rich card');
   const panel = document.createElement('section');
   panel.className = 'card-share-panel';
   panel.dataset.shareUrl = info.url;
@@ -325,18 +570,24 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
       <button type="button" class="card-share-close" data-share-close aria-label="${tr('关闭', 'Close')}">×</button>
     </div>
     <div class="card-share-meta"></div>
-    <div class="card-share-wechat-tip">${weChatTip}</div>
-    <div class="card-share-actions-grid">
-      <button type="button" data-share-action="wechat-copy">${weChatActionLabel}</button>
-      <button type="button" data-share-action="native">${tr('系统分享', 'System share')}</button>
-      <button type="button" data-share-action="copy-link">${tr('复制富卡链接', 'Copy rich-preview link')}</button>
-      <button type="button" data-share-action="copy-text">${tr('复制标题 + DOI + 链接', 'Copy title + DOI + link')}</button>
-      <button type="button" data-share-action="qr">${tr('微信扫码分享', 'WeChat QR share')}</button>
+    <div class="card-share-poster" data-share-poster>
+      <div class="card-share-poster-loading">${tr('正在快速生成分享图片…', 'Generating share image…')}</div>
     </div>
-    <div class="card-share-qr" data-share-qr hidden></div>
+    <div class="card-share-actions-grid">
+      <button type="button" class="card-share-primary-action" data-share-action="copy-poster" disabled>${tr('复制分享图片', 'Copy share image')}</button>
+      <button type="button" data-share-action="copy-title-doi">${tr('复制标题 + DOI', 'Copy title + DOI')}</button>
+      <button type="button" data-share-action="copy-link">${tr('复制链接', 'Copy link')}</button>
+    </div>
   `;
   panel.querySelector<HTMLElement>('.card-share-title')!.textContent = info.title;
   panel.querySelector<HTMLElement>('.card-share-meta')!.textContent = [info.journal, info.date, info.doi].filter(Boolean).join(' · ');
+
+  document.body.appendChild(panel);
+  activePanel = panel;
+  activeAnchor = anchor;
+  const posterPromise = loadPosterPreview(panel, info);
+  posterPromise.catch(error => console.warn('SHARE_POSTER_GENERATION_FAILED', error));
+
   panel.addEventListener('click', event => {
     const target = event.target instanceof Element ? event.target : null;
     if (!target) return;
@@ -347,74 +598,38 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
     const action = target.closest<HTMLElement>('[data-share-action]')?.dataset.shareAction;
     if (!action) return;
     void (async () => {
-      if (action === 'wechat-copy') {
-        if (isWeChatBrowser() && isWeChatJsSdkHost()) {
-          try {
-            await configureWeChatShare(info);
-            showToast(tr('微信卡片已准备好：请点右上角“…”→“分享给朋友”。不要复制粘贴链接。', 'WeChat card is ready: use the top-right menu → Share with friends. Do not paste the URL into chat.'), 3600);
-          } catch (error) {
-            console.warn('WECHAT_SHARE_CONFIG_FAILED', error);
-            try {
-              await copyText(info.url);
-              showToast(tr('微信接口暂未就绪，已复制微信内打开链接；直接粘贴到聊天框只会显示普通链接。', 'WeChat API is not ready. A link to open inside WeChat was copied; pasting it into chat only sends a plain link.'), 3600);
-            } catch {
-              showToast(tr('微信分享配置失败，请使用二维码。', 'WeChat share setup failed. Use the QR code.'));
-            }
-          }
-        } else {
-          await loadQr(panel, info);
-          showToast(tr('请用微信扫描二维码；扫码页会停留并自动准备标题 + TOC 图文卡片。', 'Scan the QR code with WeChat; the scanned page will stay open and prepare the title + TOC rich card.'), 4200);
+      if (action === 'copy-poster') {
+        try {
+          const blob = await posterPromise;
+          const result = await copyPoster(blob, info);
+          showToast(result === 'copied'
+            ? tr('分享图片已复制，可直接粘贴到微信。', 'Share image copied. You can paste it into WeChat.')
+            : tr('浏览器不支持复制图片，已改为保存 PNG。', 'Image clipboard is unavailable; the PNG was saved instead.'), 3200);
+        } catch {
+          showToast(tr('复制分享图片失败，请重试。', 'Could not copy the share image. Please try again.'));
         }
         return;
       }
-      if (action === 'native') {
-        if (typeof navigator.share === 'function') {
-          try {
-            await navigator.share({
-              title: info.title,
-              text: [info.journal, `DOI: ${info.doi}`].filter(Boolean).join(' · '),
-              url: info.url,
-            });
-            showToast(tr('已交给系统分享', 'Shared through the system share sheet'));
-            closePanel();
-            return;
-          } catch (error) {
-            if (error instanceof DOMException && error.name === 'AbortError') return;
-          }
-        }
+      if (action === 'copy-title-doi') {
         try {
-          await copyText(info.url);
-          showToast(tr('系统分享当前不可用，已自动复制卡片链接', 'System share is unavailable; the card link was copied instead.'));
+          await copyText([info.title, `DOI: ${info.doi}`].join('\n'));
+          showToast(tr('标题和 DOI 已复制', 'Title and DOI copied'));
         } catch {
-          showToast(tr('系统分享和复制都失败，请使用二维码。', 'System share and copy failed. Use the QR code instead.'));
+          showToast(tr('复制失败，请手动复制。', 'Copy failed. Please copy manually.'));
         }
         return;
       }
       if (action === 'copy-link') {
         try {
           await copyText(info.url);
-          showToast(tr('已复制富卡链接', 'Rich-preview link copied'));
+          showToast(tr('文献链接已复制', 'Paper link copied'));
         } catch {
           showToast(tr('复制失败，请手动复制。', 'Copy failed. Please copy manually.'));
         }
-        return;
       }
-      if (action === 'copy-text') {
-        try {
-          await copyText(shareText(info));
-          showToast(tr('已复制分享文字', 'Share text copied'));
-        } catch {
-          showToast(tr('复制失败，请手动复制。', 'Copy failed. Please copy manually.'));
-        }
-        return;
-      }
-      if (action === 'qr') await loadQr(panel, info);
     })();
   });
 
-  document.body.appendChild(panel);
-  activePanel = panel;
-  activeAnchor = anchor;
   requestAnimationFrame(() => positionPanel(panel, anchor));
   document.addEventListener('keydown', onKeydown);
 }
