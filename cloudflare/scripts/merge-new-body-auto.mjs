@@ -93,12 +93,9 @@ export function strongOfficialCapture(row){
   if(sourceIds.length===1&&sourceIds[0]===doi)return true;
   if(sourceIds.length)return false;
   if(doi.startsWith('10.1038/')&&hostIs(source.hostname,'springernature.com')){
-    const slug=doi.slice('10.1038/'.length).replace(/[.*+?^$()|[\]\\]/g,'\\  for(const value of [row.articleUrl,row.sourceUrl]){
-    const ids=sourceDois(value);
-    if(ids.length!==1||ids[0]!==doi)return false;
-  }
-  return true;');
-    return new RegExp('(?:^|[/_-])'+slug+'(?:[/_.-]|$)','i').test(decodeURIComponent(source.pathname));
+    const slug=doi.slice('10.1038/'.length).toLowerCase();
+    let pathname='';try{pathname=decodeURIComponent(source.pathname).toLowerCase();}catch{pathname=source.pathname.toLowerCase();}
+    return pathname.split(/[\/_.]/).includes(slug);
   }
   return false;
 }
