@@ -1,4 +1,4 @@
-const ALLOWED_SHARE_HOSTS = new Set(['api.gczhouwld.com']);
+const ALLOWED_SHARE_HOSTS = new Set(['gallery.gczhouwld.com', 'api.gczhouwld.com']);
 const CACHE_ORIGIN = 'https://api.gczhouwld.com';
 const EXPIRY_SAFETY_SECONDS = 300;
 
@@ -177,7 +177,7 @@ export async function getWeChatJsSdkSignature(request, env) {
   if (!configured(env)) return result(503, { error: 'wechat_js_sdk_not_configured' });
   const requestUrl = new URL(request.url);
   const signedUrl = canonicalSignedUrl(requestUrl.searchParams.get('url'));
-  if (!signedUrl) return result(400, { error: 'invalid_wechat_signature_url', allowedHost: 'api.gczhouwld.com' });
+  if (!signedUrl) return result(400, { error: 'invalid_wechat_signature_url', allowedHosts: [...ALLOWED_SHARE_HOSTS] });
   try {
     const ticket = await jsapiTicket(env);
     const nonceStr = randomNonce();
