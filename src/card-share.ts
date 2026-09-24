@@ -53,6 +53,12 @@ function shareUrl(doi: string): string {
   return `${CANONICAL_GALLERY_ORIGIN}/share/${shareSlug(doi)}.html?sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
 }
 
+function sharePrepareUrl(url: string): string {
+  const prepared = new URL(url);
+  prepared.searchParams.set('prepare', '1');
+  return prepared.toString();
+}
+
 type WeChatSdk = {
   config: (config: Record<string, unknown>) => void;
   ready: (callback: () => void) => void;
@@ -283,12 +289,12 @@ async function loadQr(panel: HTMLElement, info: ShareInfo): Promise<void> {
   holder.innerHTML = `<div class="card-share-qr-loading">${tr('正在生成二维码…', 'Generating QR code…')}</div>`;
   try {
     const qrModule = await import('qrcode');
-    const dataUrl = await qrModule.default.toDataURL(info.url, {
+    const dataUrl = await qrModule.default.toDataURL(sharePrepareUrl(info.url), {
       width: 320,
       margin: 2,
       errorCorrectionLevel: 'M',
     });
-    holder.innerHTML = `<img class="card-share-qr-image" src="${dataUrl}" alt="${tr('文献分享二维码', 'Paper share QR code')}"><div class="card-share-qr-hint">${tr('微信中可长按识别，或截图后分享。', 'Long-press to scan in WeChat, or share a screenshot.')}</div>`;
+    holder.innerHTML = `<img class="card-share-qr-image" src="${dataUrl}" alt="${tr('微信图文分享二维码', 'WeChat rich-share QR code')}"><div class="card-share-qr-hint">${tr('用微信扫码后页面会停留并自动准备标题 + TOC 图；随后点右上角“…”→“分享给朋友”。', 'Scan in WeChat. The page will stay open and prepare the title + TOC image; then use the top-right menu → Share with friends.')}</div>`;
   } catch {
     holder.innerHTML = `<div class="card-share-qr-error">${tr('二维码生成失败，请使用复制链接。', 'QR generation failed. Use Copy link instead.')}</div>`;
   } finally {
@@ -300,11 +306,11 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
   closePanel();
   const weChatContext = isWeChatBrowser() && isWeChatJsSdkHost();
   const weChatTip = weChatContext
-    ? tr('已为这篇文献准备标题、期刊、DOI 和 TOC 图的富卡片。右上角“…”→“分享给朋友”最稳定；复制富卡链接也会使用同一张静态预览页。', 'A rich card with title, journal, DOI and TOC image is ready. The top-right WeChat menu → Share with friends is the most reliable path; copied rich links use the same static preview page.')
-    : tr('复制的是带独立标题、描述和 TOC 图片元数据的富卡链接；支持链接预览的平台会直接展示这些信息。在微信内打开后用右上角“…”分享最稳定。', 'The copied URL is a rich-preview page with per-paper title, description and TOC image metadata. Platforms that support link previews can show them directly; in WeChat, opening it and sharing from the top-right menu is most reliable.');
+    ? tr('当前页面可直接配置微信图文卡片：标题 + 期刊/DOI + TOC 图。准备完成后只需点右上角“…”→“分享给朋友”。', 'This page can configure a WeChat rich card with title, journal/DOI and TOC image. Once ready, just use the top-right menu → Share with friends.')
+    : tr('电脑端最省事的方式：点“微信扫码分享图文卡片”，用微信扫一次；扫码页不会自动跳走，卡片准备好后只需右上角分享。', 'Easiest desktop flow: choose “Scan with WeChat to share rich card” and scan once. The scanned page will stay open; after the card is prepared, just share from the top-right menu.');
   const weChatActionLabel = weChatContext
     ? tr('准备微信图文卡片', 'Prepare WeChat rich card')
-    : tr('复制富卡链接', 'Copy rich-preview link');
+    : tr('微信扫码分享图文卡片', 'Scan with WeChat to share rich card');
   const panel = document.createElement('section');
   panel.className = 'card-share-panel';
   panel.dataset.shareUrl = info.url;
@@ -325,7 +331,7 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
       <button type="button" data-share-action="native">${tr('系统分享', 'System share')}</button>
       <button type="button" data-share-action="copy-link">${tr('复制富卡链接', 'Copy rich-preview link')}</button>
       <button type="button" data-share-action="copy-text">${tr('复制标题 + DOI + 链接', 'Copy title + DOI + link')}</button>
-      <button type="button" data-share-action="qr">${tr('生成二维码', 'Generate QR')}</button>
+      <button type="button" data-share-action="qr">${tr('微信扫码分享', 'WeChat QR share')}</button>
     </div>
     <div class="card-share-qr" data-share-qr hidden></div>
   `;
@@ -356,12 +362,8 @@ function openPanel(anchor: HTMLElement, info: ShareInfo): void {
             }
           }
         } else {
-          try {
-            await copyText(info.url);
-            showToast(tr('已复制微信内打开链接。请在微信里打开后用右上角“…”→“分享给朋友”；直接粘贴到聊天框只会显示普通链接。', 'Link copied. Open it inside WeChat, then use the top-right menu → Share with friends; pasting it into chat only sends a plain link.'), 4200);
-          } catch {
-            showToast(tr('复制失败，请使用“复制卡片链接”。', 'Copy failed. Use “Copy card link”.'));
-          }
+          await loadQr(panel, info);
+          showToast(tr('请用微信扫描二维码；扫码页会停留并自动准备标题 + TOC 图文卡片。', 'Scan the QR code with WeChat; the scanned page will stay open and prepare the title + TOC rich card.'), 4200);
         }
         return;
       }
