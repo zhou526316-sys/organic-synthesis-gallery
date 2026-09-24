@@ -142,6 +142,7 @@
       batchToc: Math.max(0, Number(summary.tocStored || 0)),
       batchStaged: Math.max(0, Number(summary.figuresStaged || 0)),
       batchFailed: Math.max(0, Number(summary.failed || 0)),
+      batchSkipped: Math.max(0, Number(summary.skipped || 0)),
       lastResult: (summary.results || []).length ? summary.results[summary.results.length - 1] : null,
       // Summary is committed after each paper. The active row is displayed separately, never added twice.
       publication: '已保存至 R2 暂存；符合站点增量发布规则的新 ACS 正文图会后续发布，当前是否上线以网页与发布账本为准'
@@ -169,7 +170,7 @@
       figures: r ? '已保存 ' + r.stored + '／' + (r.discoveryDone ? r.discovered : '识别中') + ' · 失败 ' + r.failed : '等待本篇数据',
       receipts: r ? '本次暂存回执 ' + r.stagedReceipts + ' · 断点复用 ' + r.reused : '—',
       quality: r ? (quality[r.quality] || '尚未测量') + (r.width && r.height ? ' · ' + r.width + '×' + r.height : '') : '—',
-      batch: '已结束 ' + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + Math.max(0,Number((GM_getValue(SUMMARY_KEY,{})||{}).skipped||0)),
+      batch: '已结束 ' + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
       last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + s.ageSeconds + ' 秒前' : '尚无进度记录',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
       error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()
