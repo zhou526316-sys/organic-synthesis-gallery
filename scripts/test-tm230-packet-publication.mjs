@@ -59,6 +59,18 @@ try{
  const backfill=await mergeNewBodyAuto(root,{inputs:inputs([historical],[]),now,decoder,getNew:async()=>a.raw,getOld});
  test('stable pre-cutover staged body figure backfills automatically',backfill.status.added.length===1);
 
+ const legacy={...a.row,updatedAt:Date.parse(policy.backfillCapturedBefore)-25*60000};
+ delete legacy.sha256;delete legacy.reviewMarker;
+ await reset([legacy.doi]);
+ const legacyBackfill=await mergeNewBodyAuto(root,{inputs:inputs([legacy],[]),now,decoder,getNew:async()=>a.raw,getOld});
+ test('legacy staged row is rehydrated from stored bytes and backfilled without publisher requests',
+   legacyBackfill.status.added.length===1&&legacyBackfill.media.items[legacy.doi].figures.figures[0].verifiedSha256===a.row.sha256);
+
+ await reset([legacy.doi]);
+ const legacyCorrupt=await mergeNewBodyAuto(root,{inputs:inputs([legacy],[]),now,decoder,getNew:async()=>Buffer.alloc(a.raw.length),getOld});
+ test('legacy content-hash mismatch holds the whole historical packet',
+   legacyCorrupt.status.added.length===0&&legacyCorrupt.media.items[legacy.doi].figures.figures.length===0&&legacyCorrupt.status.held.some(x=>x.doi===legacy.doi));
+
  const histA={...b1.row,updatedAt:Date.parse(policy.backfillCapturedBefore)-20*60000};histA.reviewMarker=await buildBodyReviewMarker(histA,histA.sha256);
  const histB={...b2.row,updatedAt:Date.parse(policy.backfillCapturedBefore)-20*60000,caption:'Visual Abstract invalid historical member'};histB.reviewMarker=await buildBodyReviewMarker(histB,histB.sha256);
  await reset([histA.doi]);
