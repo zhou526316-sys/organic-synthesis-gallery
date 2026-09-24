@@ -172,11 +172,16 @@ jobs:
         run: echo "Springer Nature fallback disabled during media rebuild."
       - name: Merge assistant-audited literature and bilingual titles
         run: node cloudflare/scripts/merge-curated-pages.mjs
-      - name: Independently validate and publish newly marked body captures
+      - name: Independently validate newly marked body captures without blocking literature deployment
+        id: auto_body_validation
+        continue-on-error: true
         run: |
           npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
           npx playwright install --with-deps chromium
           node cloudflare/scripts/merge-new-body-auto.mjs
+      - name: Report deferred automatic body-media validation
+        if: steps.auto_body_validation.outcome == 'failure'
+        run: echo "::warning::Automatic body-media validation failed and was deferred to the Tampermonkey/VPN Bridge media line; literature cards and Pages deployment continue."
       - name: Preserve automatic media validation evidence
         if: always()
         uses: actions/upload-artifact@v4
