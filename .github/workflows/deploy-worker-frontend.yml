@@ -189,7 +189,7 @@ jobs:
           SITE_URL: https://api.gczhouwld.com
         run: |
           node - <<'NODE'
-          const target = process.env.SITE_URL + '/?doi=10.1021/jacs.6c15393';
+          const target = 'https://gallery.gczhouwld.com/?doi=10.1021/jacs.6c15393';
           const url = new URL('/api/wechat/js-sdk-signature', process.env.SITE_URL);
           url.searchParams.set('url', target);
           const response = await fetch(url, { headers: { 'cache-control': 'no-cache' } });
@@ -228,7 +228,7 @@ jobs:
         run: |
           node - <<'NODE'
           const base = process.env.WORKER_URL;
-          const origin = 'https://zhou526316-sys.github.io';
+          const origin = 'https://gallery.gczhouwld.com';
 
           async function call(path, init = {}) {
             const headers = new Headers(init.headers || {});

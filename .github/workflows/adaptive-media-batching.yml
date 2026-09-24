@@ -50,7 +50,7 @@ jobs:
           const pages=fs.readFileSync('.github/workflows/github-pages.yml','utf8');
           assert.ok(pages.includes("deployment_ref:")&&pages.includes("inputs.deployment_ref != '' && inputs.deployment_ref || github.sha"));
           const toc=pages.indexOf('Merge D1-free local VPN captures');
-          const body=pages.indexOf('Independently validate and publish newly marked body captures');
+          const body=pages.indexOf('Independently validate newly marked body captures');
           assert.ok(toc>0&&body>toc,'same-build local TOC merge must precede body publication');
           const policy=JSON.parse(fs.readFileSync('audit/media-auto-policy.json','utf8'));
           assert.equal(policy.minNewArticles,20);assert.equal(policy.maxNewArticles,25);assert.equal(policy.tailFlushIdleMinutes,15);assert.equal(policy.backlogMaxWaitMinutes,30);

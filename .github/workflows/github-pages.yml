@@ -38,6 +38,9 @@ on:
       - 'scripts/validate-tm220-artifacts.mjs'
       - 'scripts/build-share-pages.mjs'
       - 'public/share-default.png'
+      - 'public/CNAME'
+      - 'public/MP_verify_UBgOE7Geixav7CCb.txt'
+      - 'public/d2513cd00f6e2ee49cd1e0c0d6611628.txt'
       - 'audit/publication-release-state.json'
       - 'public/rolling-supplement.json'
       - 'public/toc-demand-live.json'
@@ -119,13 +122,13 @@ jobs:
       - name: Generate GitHub Pages VPN Bridge
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
-          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
           BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
         run: node cloudflare/scripts/build-cloudflare-bridge.mjs
       - name: Package self-contained VPN Bridge runtime
         env:
-          TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
-          BRIDGE_UPDATE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
           BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
           BRIDGE_RUNTIME_OUTPUT: public/gallery-vpn-bridge-runtime.js
         run: node cloudflare/scripts/build-bridge-loader.mjs
@@ -202,14 +205,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for name in index.html papers.gz.b64 total-synthesis.json manual-supplement.json final-audit-supplement.json media-index.json literature-supplement.json title-translations-zh.json paper-title-resolutions.json gallery-vpn-bridge.user.js gallery-vpn-bridge-runtime.js toc-rescue.js toc-mainline.user.js; do test -f "dist/$name"; done
+          for name in index.html CNAME MP_verify_UBgOE7Geixav7CCb.txt d2513cd00f6e2ee49cd1e0c0d6611628.txt papers.gz.b64 total-synthesis.json manual-supplement.json final-audit-supplement.json media-index.json literature-supplement.json title-translations-zh.json paper-title-resolutions.json gallery-vpn-bridge.user.js gallery-vpn-bridge-runtime.js toc-rescue.js toc-mainline.user.js; do test -f "dist/$name"; done
           test -d dist/media-mirror
           node scripts/validate-tm220-artifacts.mjs dist
           grep -F "gallery-literature-doi-registry" src/main.ts
           grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
           grep -F "TAMPERMONKEY_CORS_WRITE_PATHS" cloudflare/worker/src/index.js
-          grep -F "// @updateURL    https://zhou526316-sys.github.io/organic-synthesis-gallery/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
+          grep -F "// @updateURL    https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://pubs.acs.org/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://onlinelibrary.wiley.com/*" dist/gallery-vpn-bridge.user.js
           grep -F "// @match        https://pubs.rsc.org/*" dist/gallery-vpn-bridge.user.js

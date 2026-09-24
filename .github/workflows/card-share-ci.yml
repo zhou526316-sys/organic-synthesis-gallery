@@ -10,6 +10,7 @@ on:
       - 'package.json'
       - 'scripts/build-share-pages.mjs'
       - 'public/share-default.png'
+      - 'public/CNAME'
       - '.github/workflows/card-share-ci.yml'
   push:
     branches: [main]
@@ -21,6 +22,7 @@ on:
       - 'package.json'
       - 'scripts/build-share-pages.mjs'
       - 'public/share-default.png'
+      - 'public/CNAME'
       - '.github/workflows/card-share-ci.yml'
 
 permissions:
@@ -47,7 +49,7 @@ jobs:
           grep -F 'property="og:image"' "$SHARE_PAGE"
           grep -F 'meta itemprop="image"' "$SHARE_PAGE"
           grep -F 'https://api.gczhouwld.com/share/' "$SHARE_PAGE"
-          grep -F 'https://zhou526316-sys.github.io/organic-synthesis-gallery/?doi=' "$SHARE_PAGE"
+          grep -F 'https://gallery.gczhouwld.com/?doi=' "$SHARE_PAGE"
           ! grep -F 'location.replace' "$SHARE_PAGE"
           grep -F '本介绍页不会自动跳走' "$SHARE_PAGE"
           test -s dist/share-default.png
@@ -64,12 +66,13 @@ jobs:
 
       - name: Verify canonical Gallery routing
         run: |
-          grep -F "const CANONICAL_GALLERY = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/'" index.html
+          grep -F "const CANONICAL_GALLERY = 'https://gallery.gczhouwld.com/'" index.html
           grep -F "host === 'organic-synthesis-gallery-public.pages.dev'" index.html
-          ! grep -F "LEGACY_GITHUB_PAGES_HOST" index.html
+          grep -F "host === 'zhou526316-sys.github.io'" index.html
           ! grep -F "new URL('https://api.gczhouwld.com/')" index.html
-          grep -F "const CANONICAL_GALLERY_ORIGIN = 'https://zhou526316-sys.github.io/organic-synthesis-gallery'" src/card-share.ts
-          grep -F "const CANONICAL_GALLERY_BASE = 'https://zhou526316-sys.github.io/organic-synthesis-gallery'" scripts/build-share-pages.mjs
+          grep -F "const CANONICAL_GALLERY_ORIGIN = 'https://gallery.gczhouwld.com'" src/card-share.ts
+          grep -F "const CANONICAL_GALLERY_BASE = 'https://gallery.gczhouwld.com'" scripts/build-share-pages.mjs
+          grep -Fx "gallery.gczhouwld.com" public/CNAME
 
       - name: Verify 20-second halo contract
         run: |
@@ -133,8 +136,8 @@ jobs:
             const panel = page.locator('.card-share-panel');
             await panel.waitFor({ state: 'visible' });
             const richShareUrl = await panel.getAttribute('data-share-url');
-            if (!richShareUrl || !/^https:\/\/api\.gczhouwld\.com\/share\/[A-Za-z0-9_-]+\.html\?sharev=[A-Za-z0-9_-]+$/.test(richShareUrl)) {
-              throw new Error('share URL is not the custom-domain rich paper card: ' + richShareUrl);
+            if (!richShareUrl || !/^https:\/\/gallery\.gczhouwld\.com\/\?doi=10\.[^&]+&sharev=[A-Za-z0-9_-]+$/.test(richShareUrl)) {
+              throw new Error('share URL is not the direct custom-domain paper link: ' + richShareUrl);
             }
             await panel.locator('[data-share-action="native"]').click();
             const nativeShareInvoked = await page.evaluate(() => Boolean(window.__osgNativeShareInvoked));
