@@ -3,9 +3,10 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {chromium} from 'playwright';
 import {sha256,exactKey,evidenceKey,validateNewBodyMetadata,validateNewBodyBytes} from '../cloudflare/scripts/new-body-auto-validation.mjs';
 import {selectLiveVerificationBatch} from './select-new-body-live-dois.mjs';
-const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+const base='https://gallery.gczhouwld.com/';
+const baseUrl=new URL(base);
 const out=process.env.RUNNER_TEMP+'/new-body-auto-live';await mkdir(out,{recursive:true});
-async function get(p){const u=new URL(p,base);assert.equal(u.origin,new URL(base).origin);assert.ok(u.pathname.startsWith('/organic-synthesis-gallery/'));const r=await fetch(u,{redirect:'error',headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(25000)});assert.equal(r.status,200,u.pathname);return Buffer.from(await r.arrayBuffer());}
+async function get(p){const u=new URL(p,base);assert.equal(u.origin,baseUrl.origin);assert.ok(u.pathname.startsWith(baseUrl.pathname));const r=await fetch(u,{redirect:'error',headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(25000)});assert.equal(r.status,200,u.pathname);return Buffer.from(await r.arrayBuffer());}
 const result={checkedAt:new Date().toISOString(),readOnly:true,productionWrites:0,files:[],cards:[],pairedToc:[],browserRenderingVerified:false,individualSemanticReview:false};
 try{
  const status=JSON.parse(await get('auto-body-status.json?t='+Date.now()));
