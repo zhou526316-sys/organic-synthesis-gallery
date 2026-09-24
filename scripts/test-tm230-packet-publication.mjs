@@ -32,7 +32,7 @@ try{
  await mkdir(path.join(root,'audit'),{recursive:true});await mkdir(path.join(root,'public'),{recursive:true});
  await writeFile(path.join(root,'audit/media-auto-policy.json'),JSON.stringify(policy));
  await writeFile(path.join(root,'audit/literature-update-state.json'),JSON.stringify({pendingScopeReviewBacklog:[]}));
- const papers=[a.row,b1.row].map((r,i)=>({doi:r.doi,journal:i?'Nature':'JACS',title:'Packet '+i,date:'2026-09-24'}));
+ const papers=[...([a.row,b1.row].map((r,i)=>({doi:r.doi,journal:i?'Nature':'JACS',title:'Packet '+i,date:'2026-09-24'}))),...Array.from({length:110},(_,i)=>({doi:'10.1021/fixture.'+i,journal:'JACS',title:'Filler '+i,date:'2026-09-01'}))];
  await writeFile(path.join(root,'public/papers.gz.b64'),gzipSync(Buffer.from(JSON.stringify(papers))).toString('base64'));
  for(const n of ['total-synthesis','manual-supplement','final-audit-supplement','curated-supplement','automation-supplement','rolling-supplement'])await writeFile(path.join(root,'public',n+'.json'),'{"papers":[]}');
  const mediaPath=path.join(root,'public/media-index.json'),ledgerPath=path.join(root,'public/body-publication-ledger.json');
