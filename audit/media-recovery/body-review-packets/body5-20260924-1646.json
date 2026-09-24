@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-1646",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T08:46:04Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10794591083,
+  "evidenceArchiveSha256": "1ecedf73164595b8fff783f8f67802d4d92c3ff5f74558bbd3a2f537579d5729",
+  "evidenceRunId": 35966705081,
+  "approvedCount": 18,
+  "reviewMethod": "All 18 selected stored SVG files across the next five priority-eligible current-corpus papers were independently rehashed against the immutable read-only GitHub evidence artifact and checked for exact task/page/article/source DOI identity, original Figure/Scheme identity and independent caption, captureVersion/job identity, fixed media generation 1790082000000, content-addressed R2 key, actual byte length/type/dimensions, duplicate source/hash ownership, frozen public same-ID state and TOC separation. Every SVG was parsed, rendered and checked for script, foreignObject, event-handler, javascript/external href and external CSS URL content. Every image was visually reviewed against its owning caption and article theme for body-image role, unrelated/recommendation contamination, duplicate risk and legibility. Capture success, partial, transport and format checkpoints were treated only as provenance evidence, not semantic approval. No publisher request, R2/D1 write, direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "All 18 selected files are exact stored SVG bytes with matching full SHA256, sizes and dimensions, rendered successfully, and contained no active or external content. Selected full hashes and source URLs have no cross-DOI ownership collision in the frozen evidence inventory. The frozen public media state contains distinct official TOCs and no same-ID body collision for all five papers. Partial article reports are handled per-image: JACS 10.1021/jacs.6c08653 remains 8/9, JACS 10.1021/jacs.6c13515 remains 1/5, and Organic Letters 10.1021/acs.orglett.6c03266 remains 2/3, so only exact reviewed stored files are approved and missing images are not inferred. Organic Letters 10.1021/acs.orglett.6c03215 is 4/4 and 10.1021/acs.orglett.6c03411 is 3/3. Historical progress transport/format checkpoints are retained only as provenance and are not interpreted as VPN, R2, quota or publisher failures. Figure files are body-only and are not TOC substitutions; existing official TOCs remain untouched.",
+  "decisions": [
+    {
+      "doi": "10.1021/jacs.6c08653",
+      "images": [
+        ["next-016", "figure-1", "Viewed the oligonucleotide backbone SAR concept, representative phosphoramidite structures and backbone modifications; content matches Figure 1 and the paper's backbone-modified dinucleotide platform context."],
+        ["next-067", "figure-2", "Viewed the bench-stable H-phosphonate route and variable-R backbone-blockmer platform; content matches Figure 2."],
+        ["next-068", "figure-3", "Viewed conventional versus this-work nucleobase protecting groups and the acidic amide N-H design; content matches Figure 3."],
+        ["next-069", "scheme-1", "Viewed the H-phosphonate diester dinucleotide blockmer synthesis sequence, reagents and yields; content matches Scheme 1."],
+        ["next-070", "scheme-2", "Viewed the Michaelis-Becker backbone-modification scope and conjugation modifications; content matches Scheme 2."],
+        ["next-071", "scheme-3", "Viewed the halogenating-agent evaluation for H-phosphonate activation with reported yields; content matches Scheme 3."],
+        ["next-072", "scheme-4", "Viewed the Atherton-Todd backbone-modification substrate scope; content matches Scheme 4."],
+        ["next-073", "scheme-5", "Viewed the greater-than-1.2 mmol scale-up syntheses of backbone-modified dinucleotide blockmers; content matches Scheme 5."]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c13515",
+      "images": [
+        ["next-017", "scheme-3", "Viewed the Rh-catalyzed asymmetric sila-(3+2) annulation alkynylsilane scope with silacycle products, yields and enantioselectivities; content matches Scheme 3."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03215",
+      "images": [
+        ["next-018", "scheme-1", "Viewed the therapeutic organoselenium context, prior three-membered selenonium chemistry and the five-membered selenonium ring-expansion design; content matches Scheme 1."],
+        ["next-074", "scheme-2", "Viewed catalyst, solvent, temperature and control optimization for the ring-expansion reaction; content matches Scheme 2."],
+        ["next-075", "scheme-3", "Viewed the DFT activation/free-energy profile and chair-like ring-opening orbital analysis; content matches Scheme 3."],
+        ["next-076", "scheme-4", "Viewed the diene and benzothiaselenazole-1-oxide scope, late-stage functionalization, gram-scale reaction and derivatization; content matches Scheme 4."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03266",
+      "images": [
+        ["next-019", "scheme-1", "Viewed established nitrene-precursor aziridination precedents and this visible-light sulfilimine triplet-nitrene design; content matches Scheme 1."],
+        ["next-077", "scheme-2", "Viewed the unactivated and activated alkene plus sulfilimine substrate scope, including complex substrates; content matches Scheme 2."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03411",
+      "images": [
+        ["next-020", "scheme-1", "Viewed beta-aminoboronate applications, prior synthesis strategies and this nickel-catalyzed asymmetric hydroalkylation concept; content matches Scheme 1."],
+        ["next-078", "scheme-2", "Viewed the nickel-catalyzed enantioselective hydroalkylation substrate scope and chiral oxazoline conversions with yields and ee values; content matches Scheme 2."],
+        ["next-079", "scheme-3", "Viewed radical-trapping and deuterium-labeling mechanistic experiments together with product derivatizations; content matches Scheme 3."]
+      ]
+    }
+  ]
+}
