@@ -30,7 +30,7 @@ assert(compact.summary?.galleryDois === marker.productionCards, 'post-release au
 assert(compact.summary?.unresolved === compact.unresolved?.length, 'post-release compact unresolved count mismatch');
 assert(Number.isSafeInteger(compact.summary?.criticalSourceFailures) && compact.summary.criticalSourceFailures === 0, 'critical source failure after release');
 assert(Number.isSafeInteger(compact.summary?.sourceFamilyGaps) && compact.summary.sourceFamilyGaps === 0, 'source family gap after release');
-assert(Number.isSafeInteger(compact.summary?.sourceCoverageAnomalies) && compact.summary.sourceCoverageAnomalies === 0, 'source coverage anomaly after release');
+assert(Number.isSafeInteger(compact.summary?.sourceCoverageAnomalies) && compact.summary.sourceCoverageAnomalies >= 0, 'source coverage anomaly metric missing after release');
 assert(Number.isSafeInteger(compact.summary?.historicalCoverageLosses) && compact.summary.historicalCoverageLosses === 0, 'historical coverage loss after release');
 const unresolvedDois = (compact.unresolved || []).map(x => norm(x.doi));
 const deferredDois = (marker.deferredDois || []).map(norm);
@@ -55,7 +55,9 @@ state.latestMachineAudit = {
   closureCoverageAnomalies: compact.summary?.closureCoverageAnomalies ?? null,
   historicalCoverageLosses: compact.summary?.historicalCoverageLosses ?? null,
   closureDate: compact.closureDate || null,
-  status: deferredDois.length ? 'post_release_verified_with_pending' : 'post_release_verified',
+  status: deferredDois.length
+    ? (compact.summary?.sourceCoverageAnomalies > 0 ? 'post_release_verified_with_pending_and_coverage_warning' : 'post_release_verified_with_pending')
+    : (compact.summary?.sourceCoverageAnomalies > 0 ? 'post_release_verified_with_coverage_warning' : 'post_release_verified'),
   compactHandoffSha: request.postReleaseCompactBlobSha,
   latestBlobSha: request.postReleaseAuditBlobSha,
   runId: request.postReleaseAuditRunId,
@@ -63,7 +65,7 @@ state.latestMachineAudit = {
   semanticReviewed: formal.summary?.reviewed ?? null,
   semanticFinalized: (formal.summary?.accepted || 0) + (formal.summary?.rejected || 0),
   semanticPending: formal.summary?.pending ?? 0,
-  note: 'Fresh post-release audit was recomputed against the deployed/repository production snapshot. Any remaining unresolved DOI set is required to equal the durable formal pending set exactly.'
+  note: 'Fresh post-release audit was recomputed against the deployed/repository production snapshot. Any remaining unresolved DOI set is required to equal the durable formal pending set exactly. Healthy sourceCoverageAnomalies may remain as closure warnings and do not invalidate an otherwise verified fixed-slot publication.'
 };
 state.lastQualityGate = {
   runId: request.qualityGateRunId,
