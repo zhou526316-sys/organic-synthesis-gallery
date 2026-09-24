@@ -40,10 +40,25 @@ async function evaluate() {
     && latest.summary?.unresolved === candidates.length, 'paired_snapshot_candidate_count_mismatch');
   block(Boolean(handoff.generatedAt) && handoff.generatedAt === latest.generatedAt
     && review.handoffGeneratedAt === handoff.generatedAt, 'paired_snapshot_generation_mismatch');
-  for (const key of ['criticalSourceFailures', 'sourceFamilyGaps', 'sourceCoverageAnomalies', 'historicalCoverageLosses']) {
+  for (const key of ['criticalSourceFailures', 'sourceFamilyGaps', 'historicalCoverageLosses']) {
     block(count(handoff.discoveryGate?.[key]) && handoff.discoveryGate[key] === 0
       && handoff.summary?.[key] === 0 && latest.summary?.[key] === 0,
     `discovery_metric_missing_nonzero_or_inconsistent:${key}`);
+  }
+  const sourceCoverageAnomalyCount = handoff.discoveryGate?.sourceCoverageAnomalies;
+  const coverageWarningRows = (handoff.activeJournals || []).filter(row => row?.sourceHealth?.coverageWarning === true);
+  block(count(sourceCoverageAnomalyCount)
+    && handoff.summary?.sourceCoverageAnomalies === sourceCoverageAnomalyCount
+    && latest.summary?.sourceCoverageAnomalies === sourceCoverageAnomalyCount,
+  'discovery_metric_missing_or_inconsistent:sourceCoverageAnomalies');
+  block(new Set(coverageWarningRows.map(row => String(row?.name || ''))).size === coverageWarningRows.length
+    && coverageWarningRows.length === sourceCoverageAnomalyCount,
+  'source_coverage_anomaly_journal_mapping_mismatch');
+  if (allowDeferred) {
+    block(coverageWarningRows.every(row => row?.sourceHealth?.crossrefHealthy === true && row?.sourceHealth?.openAlexHealthy === true),
+      'source_coverage_anomaly_with_unhealthy_source_family');
+  } else {
+    block(sourceCoverageAnomalyCount === 0, 'discovery_metric_nonzero:sourceCoverageAnomalies');
   }
   const pendingDois = decisions.filter(row => row.decision === 'pending').map(row => norm(row.doi));
   const includeDois = decisions.filter(row => row.decision === 'include').map(row => norm(row.doi));
@@ -94,8 +109,10 @@ async function evaluate() {
     publishableDois: semanticReady ? includeDois : [], rejectedDois: semanticReady ? excludeDois : [], deferredDois: pendingDois,
     publisherCoverageFullyVerified, blockers, recordFailures: record.failures || [],
     semanticBlockers: record.readinessBlockers || [], warnings: record.warnings || [],
+    sourceCoverageAnomalies: sourceCoverageAnomalyCount,
+    sourceCoverageWarningJournals: coverageWarningRows.map(row => String(row?.name || '')).filter(Boolean),
     productionDataModified: false,
-    note: 'Publish only publishableDois at the fixed slot. Persist deferredDois with evidence/retry details, keep them out of production, and do not advance closure across pending dates. This preflight performs no deployment.',
+    note: 'Publish only publishableDois at the fixed slot. Persist deferredDois with evidence/retry details, keep them out of production, and do not advance closure across pending dates or healthy cross-source coverage warnings. This preflight performs no deployment.',
   };
 }
 try {
