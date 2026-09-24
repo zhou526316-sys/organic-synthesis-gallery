@@ -3,11 +3,11 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
 
-const SITE_BASE = (process.env.SHARE_SITE_ORIGIN || 'https://api.gczhouwld.com').replace(/\/+$/, '');
+const SITE_BASE = (process.env.SHARE_SITE_ORIGIN || 'https://gallery.gczhouwld.com').replace(/\/+$/, '');
 const CANONICAL_GALLERY_BASE = 'https://gallery.gczhouwld.com';
 const GALLERY_BASE = (process.env.SHARE_GALLERY_ORIGIN || CANONICAL_GALLERY_BASE).replace(/\/+$/, '');
 const SHARE_BUILD_ID = String(process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA || Date.now().toString(36)).slice(0, 12);
-const PUBLISHED_PAGES_BASE = (process.env.SHARE_PUBLISHED_PAGES_ORIGIN || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/+$/, '');
+const PUBLISHED_PAGES_BASE = (process.env.SHARE_PUBLISHED_PAGES_ORIGIN || CANONICAL_GALLERY_BASE).replace(/\/+$/, '');
 const PUBLIC = path.resolve('public');
 const OUT = path.join(PUBLIC, 'share');
 const COVER_OUT = path.join(PUBLIC, 'share-media');
@@ -189,7 +189,8 @@ function html(meta, selected) {
 <meta property="og:url" content="${esc(share)}"><meta property="og:image" content="${esc(image)}"><meta property="og:image:secure_url" content="${esc(image)}">${imageDims}
 <meta property="og:image:alt" content="${esc(title)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(image)}">
 <link rel="image_src" href="${esc(image)}"><link rel="canonical" href="${esc(share)}"><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f5f7fb;color:#172033;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.paper{width:min(560px,100%);overflow:hidden;border:1px solid #dfe5ef;border-radius:20px;background:#fff;box-shadow:0 18px 48px rgba(23,32,51,.12)}.cover{display:grid;place-items:center;min-height:260px;padding:18px;background:#f8fafc}.cover img{display:block;width:100%;max-height:360px;object-fit:contain}.body{padding:18px}.site{color:#3159bd;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}h1{margin:8px 0 10px;font-size:20px;line-height:1.42}.meta{color:#667085;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.open{display:inline-flex;margin-top:15px;padding:10px 14px;border-radius:10px;background:#3159bd;color:#fff;text-decoration:none;font-size:13px;font-weight:800}.hint{margin-top:10px;color:#98a2b3;font-size:10px}</style></head><body>
-<article class="paper"><div class="cover"><img src="${esc(image)}" alt="${esc(title)}"></div><div class="body"><div class="site">Organic Synthesis Gallery</div><h1>${esc(title)}</h1><div class="meta">${esc(secondary)}</div><a class="open" href="${esc(target)}">进入有机合成文献库并定位这篇文献 →</a><div class="hint">本介绍页不会自动跳走；确认文献信息后再进入文献库，目标卡片会保持 20 秒光环高亮。</div></div></article>
+<article class="paper"><div class="cover"><img src="${esc(image)}" alt="${esc(title)}"></div><div class="body"><div class="site">Organic Synthesis Gallery</div><h1>${esc(title)}</h1><div class="meta">${esc(secondary)}</div><a class="open" href="${esc(target)}">立即进入文献库 →</a><div class="hint">正在进入有机合成文献库并定位这篇文献；目标卡片会保持 20 秒高亮。</div></div></article>
+<script>window.setTimeout(function(){window.location.replace(${targetJson});},850);</script>
 </body></html>`;
 }
 
