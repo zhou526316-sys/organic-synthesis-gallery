@@ -8,6 +8,17 @@ export function exactKey(row){return `${row.doi}|${row.id}|${row.sha256}`;}
 export function evidenceKey(row){return sha256(canonicalBodyEvidence(row,row.sha256));}
 export function publicationItem(row){return {...row,role:'article_figure',originalUpdatedAt:row.updatedAt,originalR2Key:row.r2Key,order:row.sortOrder};}
 function url(value){const u=new URL(value);requireBody(u.protocol==='https:'&&!u.username&&!u.password&&!u.hash&&!u.search,'auto_url_must_be_plain_https');return u;}
+function hostIs(host,suffix){return host===suffix||host.endsWith('.'+suffix);}
+function publisherHostsAllowed(doi,pageHost,sourceHost){
+  if(doi.startsWith('10.1021/'))return pageHost==='pubs.acs.org'&&['acs.silverchair-cdn.com','pubs.acs.org'].includes(sourceHost);
+  if(doi.startsWith('10.1002/'))return hostIs(pageHost,'onlinelibrary.wiley.com')&&(hostIs(sourceHost,'wiley.com')||hostIs(sourceHost,'wiley.com.cn'));
+  if(doi.startsWith('10.1038/'))return hostIs(pageHost,'nature.com')&&(hostIs(sourceHost,'nature.com')||hostIs(sourceHost,'springernature.com'));
+  if(doi.startsWith('10.1126/'))return hostIs(pageHost,'science.org')&&hostIs(sourceHost,'science.org');
+  if(doi.startsWith('10.1039/'))return hostIs(pageHost,'rsc.org')&&hostIs(sourceHost,'rsc.org');
+  if(doi.startsWith('10.1016/'))return (hostIs(pageHost,'sciencedirect.com')||hostIs(pageHost,'cell.com'))&&(hostIs(sourceHost,'sciencedirect.com')||hostIs(sourceHost,'cell.com')||hostIs(sourceHost,'els-cdn.com'));
+  if(doi.startsWith('10.31635/'))return hostIs(pageHost,'ccspublishing.org.cn')&&hostIs(sourceHost,'ccspublishing.org.cn');
+  return false;
+}
 export async function validateNewBodyMetadata(row,policy,now=Date.now()){
   requireBody(policy.policyId===POLICY_ID&&policy.mediaGeneration===BODY_MEDIA_GENERATION,'auto_policy_version');
   requireBody(row?.mediaGeneration===BODY_MEDIA_GENERATION&&row.captureVersion==='6.2.20','auto_not_current_generation');
@@ -19,6 +30,7 @@ export async function validateNewBodyMetadata(row,policy,now=Date.now()){
   requireBody(Array.isArray(row.reviewMarker.reasons)&&row.reviewMarker.reasons.length===0&&row.reviewMarker.published===false,'auto_marker_state');
   const page=url(row.articleUrl),source=url(row.sourceUrl);
   const doi=String(row.doi||'').toLowerCase();
+  requireBody(publisherHostsAllowed(doi,page.hostname,source.hostname),'auto_publisher_host_not_enabled');
   if(doi.startsWith('10.1021/')){
     const article=doi.match(/^10\.1021\/(jacs|acscatal|acs\.orglett|acs\.joc)\.([0-9]c[0-9]{5})$/);
     requireBody(article,'auto_acs_article_identity');
