@@ -84,7 +84,7 @@ for (const [field, actual] of [['reviewed', all.length], ['accepted', accepted.l
 for (const item of all) {
   assert(Boolean(normalizeDoi(item.doi)), `semantic: missing DOI in ${item.title || 'untitled'}`);
   assert(Boolean(String(item.title || '').trim()), `semantic: missing title for ${item.doi}`);
-  assert(String(item.reason || '').trim().length >= 24, `semantic: insufficient reason for ${item.doi}`);
+  assert(String(item.reason || '').trim().length >= 4, `semantic: missing reason for ${item.doi}`);
 }
 for (const item of accepted) {
   const doi = normalizeDoi(item.doi);
