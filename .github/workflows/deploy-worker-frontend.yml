@@ -15,8 +15,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: worker-frontend-assets
-  cancel-in-progress: true
+  group: cloudflare-worker-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -113,6 +113,14 @@ jobs:
           database_id = "$D1_ID"
           EOF
 
+      - name: Dry-run frontend Worker bundle
+        working-directory: cloudflare/worker
+        run: npx wrangler deploy --dry-run --config wrangler.frontend.toml --outdir .wrangler-frontend-dry-run
+
+      - name: Deploy frontend assets
+        working-directory: cloudflare/worker
+        run: npx wrangler deploy --config wrangler.frontend.toml
+
       - name: Sync configured runtime secrets
         working-directory: cloudflare/worker
         shell: bash
@@ -132,15 +140,6 @@ jobs:
           NODE
           npx wrangler secret bulk /tmp/runtime-secrets.json --config wrangler.frontend.toml >/dev/null
           rm -f /tmp/runtime-secrets.json
-
-      - name: Dry-run frontend Worker bundle
-        working-directory: cloudflare/worker
-        run: npx wrangler deploy --dry-run --config wrangler.frontend.toml --outdir .wrangler-frontend-dry-run
-
-      - name: Deploy frontend assets
-        working-directory: cloudflare/worker
-        run: npx wrangler deploy --config wrangler.frontend.toml
-
       - name: Verify WeChat MP domain file
         shell: bash
         run: |
