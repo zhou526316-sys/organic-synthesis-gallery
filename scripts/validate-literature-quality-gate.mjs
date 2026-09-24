@@ -125,9 +125,15 @@ if (reviewTime >= DOUBLE_PASS_EFFECTIVE_AT) {
     assert(String(item.challengeDecision || '').toLowerCase() === item._decision, `semantic: first/final decision not confirmed by challenge pass for ${item.doi}`);
   }
 }
-for (const key of ['criticalSourceFailures','sourceFamilyGaps','sourceCoverageAnomalies','historicalCoverageLosses']) {
+for (const key of ['criticalSourceFailures','sourceFamilyGaps','historicalCoverageLosses']) {
   assert(Number.isSafeInteger(audit.summary?.[key]) && audit.summary[key] === 0, `discovery: ${key} missing or nonzero`);
 }
+const sourceCoverageAnomalyCount = audit.summary?.sourceCoverageAnomalies;
+assert(Number.isSafeInteger(sourceCoverageAnomalyCount) && sourceCoverageAnomalyCount >= 0,
+  'discovery: sourceCoverageAnomalies missing or invalid');
+if (!perDoi) assert(sourceCoverageAnomalyCount === 0, 'discovery: sourceCoverageAnomalies block full-review closure');
+else if (sourceCoverageAnomalyCount > 0) warnings.push(
+  `discovery: ${sourceCoverageAnomalyCount} healthy cross-source coverage warning(s) retained; publication may pass but closure/verifiedThrough must remain held`);
 const pendingDois = new Set(pending.map(row => normalizeDoi(row.doi)));
 if (perDoi) {
   // The exception is an exact, persisted DOI set, never a numerical tolerance for unknown omissions.
