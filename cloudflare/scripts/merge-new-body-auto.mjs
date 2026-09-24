@@ -70,10 +70,23 @@ function embeddedAcsDois(value){
   }
   return [...found];
 }
+function hostIs(host,suffix){return host===suffix||host.endsWith('.'+suffix);}
+function officialPublisherHosts(doi,pageHost,sourceHost){
+  if(doi.startsWith('10.1021/'))return pageHost==='pubs.acs.org'&&['acs.silverchair-cdn.com','pubs.acs.org'].includes(sourceHost);
+  if(doi.startsWith('10.1002/'))return hostIs(pageHost,'onlinelibrary.wiley.com')&&(hostIs(sourceHost,'wiley.com')||hostIs(sourceHost,'wiley.com.cn'));
+  if(doi.startsWith('10.1038/'))return hostIs(pageHost,'nature.com')&&(hostIs(sourceHost,'nature.com')||hostIs(sourceHost,'springernature.com'));
+  if(doi.startsWith('10.1126/'))return hostIs(pageHost,'science.org')&&hostIs(sourceHost,'science.org');
+  if(doi.startsWith('10.1039/'))return hostIs(pageHost,'rsc.org')&&hostIs(sourceHost,'rsc.org');
+  if(doi.startsWith('10.1016/'))return (hostIs(pageHost,'sciencedirect.com')||hostIs(pageHost,'cell.com'))&&(hostIs(sourceHost,'sciencedirect.com')||hostIs(sourceHost,'cell.com')||hostIs(sourceHost,'els-cdn.com'));
+  if(doi.startsWith('10.31635/'))return hostIs(pageHost,'ccspublishing.org.cn')&&hostIs(sourceHost,'ccspublishing.org.cn');
+  return false;
+}
 export function strongOfficialCapture(row){
   const doi=normalizeDoi(row?.doi||'');
   if(!doi||String(row?.kind||'').toLowerCase()!=='official')return false;
   if(row.captureVersion!=='6.2.20'||normalizeDoi(row.pageDoi||'')!==doi||Number(row.mediaGeneration)!==1790082000000||Number(row.updatedAt||0)<1790082000000)return false;
+  let page,source;try{page=new URL(String(row.articleUrl||''));source=new URL(String(row.sourceUrl||''));}catch{return false;}
+  if(page.protocol!=='https:'||source.protocol!=='https:'||!officialPublisherHosts(doi,page.hostname,source.hostname))return false;
   for(const value of [row.articleUrl,row.sourceUrl]){
     const ids=sourceDois(value);
     if(ids.length!==1||ids[0]!==doi)return false;
