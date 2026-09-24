@@ -1,11 +1,12 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const SITE_ORIGIN = (process.env.TARGET_SITE_ORIGIN || 'https://zhou526316-sys.github.io/organic-synthesis-gallery').replace(/\/$/, '');
+const CANONICAL_SITE_ORIGIN = 'https://gallery.gczhouwld.com';
+const SITE_ORIGIN = (process.env.TARGET_SITE_ORIGIN || CANONICAL_SITE_ORIGIN).replace(/\/$/, '');
 const GITHUB_SITE_ORIGIN = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
 const CLOUDFLARE_SITE_ORIGIN = 'https://organic-synthesis-gallery-public.pages.dev';
-const UPDATE_ORIGIN = (process.env.BRIDGE_UPDATE_ORIGIN || GITHUB_SITE_ORIGIN).replace(/\/$/, '');
-const PUBLIC_SITE_ORIGINS = [...new Set([SITE_ORIGIN, CLOUDFLARE_SITE_ORIGIN, GITHUB_SITE_ORIGIN])];
+const UPDATE_ORIGIN = (process.env.BRIDGE_UPDATE_ORIGIN || CANONICAL_SITE_ORIGIN).replace(/\/$/, '');
+const PUBLIC_SITE_ORIGINS = [...new Set([SITE_ORIGIN, CANONICAL_SITE_ORIGIN, CLOUDFLARE_SITE_ORIGIN, GITHUB_SITE_ORIGIN])];
 const BRIDGE_OUTPUT = path.resolve(process.env.BRIDGE_OUTPUT || 'public/gallery-vpn-bridge.user.js');
 const RUNTIME_OUTPUT = path.resolve(process.env.BRIDGE_RUNTIME_OUTPUT || 'public/gallery-vpn-bridge-runtime.js');
 const TOC_MAINLINE_INPUT = path.resolve(process.env.TOC_MAINLINE_INPUT || 'public/toc-mainline.user.js');
@@ -83,7 +84,7 @@ const matchLines = [...new Set([
 ])].join('\n');
 const galleryHosts = [...new Set(PUBLIC_SITE_ORIGINS.map(origin => new URL(origin).hostname))];
 const galleryHostExpression = galleryHosts.map(host => `location.hostname === '${host}'`).join(' || ');
-const loaderVersion = '2.2.28';
+const loaderVersion = '2.2.29';
 
 const loader = `// ==UserScript==
 // @name         Organic Synthesis Gallery VPN Literature Bridge
