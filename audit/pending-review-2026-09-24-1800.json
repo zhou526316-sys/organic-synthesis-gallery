@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "publicationSlot": "2026-09-24T18:00:00+08:00",
+  "generatedAt": "2026-09-24T10:05:16.596Z",
+  "handoffGeneratedAt": "2026-09-24T09:10:17.928Z",
+  "sourceReviewFile": "audit/review-2026-09-24-1800.json",
+  "items": [
+    {
+      "doi": "10.1038/s41467-026-78015-9",
+      "journal": "Nature Communications",
+      "title": "Solid–vapor synthesis of dynamic crystalline one-dimensional supramolecular polymers from amorphous macrocycles",
+      "abstract": "",
+      "date": "2026-09-23",
+      "type": "journal-article",
+      "authors": [
+        "Qian Yang",
+        "Zhen Sun",
+        "Linnan Zhang",
+        "Jingwei Huang",
+        "Wang Xie",
+        "Leyong Wang",
+        "Kecheng Jie"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "The publisher listing confirms a new solid–vapor host–guest synthesis of a dynamic crystalline supramolecular polymer, but the accessible evidence does not show monomer/host–guest breadth or whether the method is transferable beyond one material system.",
+      "evidenceBasis": "本轮fresh compact（2026-09-24T09:10:17.928Z）仍无摘要。此前同日Nature Communications listing只确认以固–气主客体过程把无定形宏环转为动态晶态一维超分子聚合物；尚未取得单体/客体广度或可迁移架构控制证据。",
+      "challengeReason": "It cannot be excluded merely as a material because polymer assembly is the principal synthetic act, and true polymer/architecture-control methods may qualify. It also cannot be included from one publisher teaser without preparative breadth. Both passes therefore defer this DOI only.",
+      "evidenceNeeded": "Full publisher abstract or body/SI showing macrocycle/guest variation, reproducible solid–vapor assembly scope, and whether the synthesis controls a transferable chain/architecture feature rather than one target material.",
+      "attemptedEvidencePages": [
+        "https://www.nature.com/articles/s41467-026-78015-9",
+        "https://www.nature.com/ncomms/research-articles?type=article",
+        "https://www.nature.com/subjects/physical-sciences/ncomms"
+      ],
+      "nextAction": "Use the existing browser/VPN evidence path to read the article abstract or relevant preparation section; do not infer generality from the listing teaser.",
+      "originalDate": "2026-09-23",
+      "firstRecordedAt": "2026-09-23T17:13:15+08:00",
+      "sourceReviewFile": "audit/review-2026-09-24-1800.json",
+      "nextReviewSlot": "2026-09-25T08:00:00+08:00"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "journal": "CCS Chemistry",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Liang-Min Xiong",
+        "Cong Ma",
+        "Jian-Feng Guo",
+        "Yi-Fan Chen",
+        "Zi-Meng Li",
+        "Hai-Qi Li",
+        "Hao Xu",
+        "Tian-Sheng Mei"
+      ],
+      "topics": [
+        "CO2 Reduction Techniques and Catalysts",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "Carbon dioxide utilization in catalysis",
+        "Ammonia Synthesis and Nitrogen Reduction"
+      ],
+      "sources": [
+        "crossref:2096-5745:online",
+        "crossref:2096-5745:published",
+        "crossref:2096-5745:created",
+        "openalex:S4210239486"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "Paired electrolysis may represent genuine organic electrosynthesis, but the obtained evidence still does not resolve the preparative contribution.",
+      "evidenceBasis": "本轮fresh compact（2026-09-24T09:10:17.928Z）仍无摘要。此前出版社文章页、摘要页和目录页尝试受阻，仅能确认题名所示CO₂还原与醇氧化耦合；仍未取得醇底物、氧化产物、范围及分离/制备证据。",
+      "challengeReason": "Energy-related indexing is not enough to exclude a possibly genuine paired organic electrosynthesis, while the title and snippet are not enough to include it. The DOI remains individually deferred.",
+      "evidenceNeeded": "Obtain the publisher abstract or relevant text/SI describing the alcohol substrates and oxidation products, the transferable preparative transformation, and scope or isolated-product/route evidence; distinguish this from an electrode/energy-performance-only study.",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/toc/ccschem/0/0"
+      ],
+      "nextAction": "Obtain textual publisher abstract or preparative sections showing alcohol substrates, products, scope and isolated/preparative evidence through the existing browser/VPN review path.",
+      "originalDate": "2026-09-22",
+      "firstRecordedAt": "2026-09-22T21:48:19+08:00",
+      "sourceReviewFile": "audit/review-2026-09-24-1800.json",
+      "nextReviewSlot": "2026-09-25T08:00:00+08:00"
+    }
+  ],
+  "note": "Per-release deferrals only. Merge with the existing durable backlog; do not replace or drop older pending records."
+}
