@@ -111,6 +111,6 @@ try{
  test('body discovery retains an 8s minimum observation even after figures appear',discovery.bodyTooEarly===false);
  test('body discovery waits four quiet seconds after the latest figure-set change',discovery.bodyStillChanging===false&&discovery.bodyStable===true);
  test('TOC-only discovery keeps the legacy early-stable behavior',discovery.tocJobLegacy===true);
- test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.28';"));
+ test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.29';"));
 }finally{await browser.close();}
 console.log('TM224_ACQUISITION_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherFixtureOnly:true,captureProtocol:'6.2.20'}));
