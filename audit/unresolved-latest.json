@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-24T00:41:18.948Z",
+  "generatedAt": "2026-09-24T00:48:09.578Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-21",
@@ -10,15 +10,15 @@
     "galleryDois": 557,
     "sourceRecords": 527,
     "rawMissingFromGallery": 433,
-    "previouslyReviewedExcluded": 429,
-    "missingFromGallery": 4,
+    "previouslyReviewedExcluded": 430,
+    "missingFromGallery": 3,
     "potentialGaps": 3,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 2,
     "closureCoverageAnomalies": 8,
     "historicalCoverageLosses": 0,
-    "unresolved": 4,
+    "unresolved": 3,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -352,40 +352,6 @@
     }
   ],
   "unresolved": [
-    {
-      "doi": "10.1038/s41467-026-77885-3",
-      "journal": "Nature Communications",
-      "title": "Navigational strategy dictates hippocampal representation of space in an everyday memory task",
-      "abstract": "Abstract Hippocampal activity provides a representation of the world around us, as well as our position within that world. However, it is not known if and to what extent the chosen navigational reference frame can influence hippocampal representations during memory-based tasks, including those focused on future activity. Here, we develop and employ two naturalistic, carefully controlled variants of the everyday memory task to model the use of egocentric and allocentric coordinates in the same arena. By recording hippocampal neural activity through miniature microscopes in male rats performing each of the two tasks, we uncover differences in the representation of space, and in the features of memory-based action planning. By also deploying optogenetic inactivation during navigational decision making, we find that hippocampal representations observed during the planning phase are necessary for solving the allocentric, but not the egocentric version of the task. Overall, our findings reveal a functional link between non-local hippocampal representations and allocentric navigation.",
-      "date": "2026-09-24",
-      "type": "journal-article",
-      "authors": [
-        "Francesco Gobbo",
-        "Rufus Mitchell-Heggs",
-        "Adrian J. Duszkiewicz",
-        "Elena Faillace",
-        "Dorothy Tse",
-        "Nuria Garcia-Font",
-        "Omer Hazon",
-        "Kathrine Clarke",
-        "Patrick A. Spooner",
-        "Adana Keshishian",
-        "Mark Schnitzer",
-        "Simon R. Schultz",
-        "Richard G. M. Morris"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
     {
       "doi": "10.1038/s41467-026-78015-9",
       "journal": "Nature Communications",
