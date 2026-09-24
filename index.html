@@ -6,9 +6,13 @@
     <title>Organic Synthesis Literature Gallery</title>
     <script>
       (() => {
-        const CANONICAL_GALLERY = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+        const CANONICAL_GALLERY = 'https://gallery.gczhouwld.com/';
         const host = window.location.hostname.toLowerCase();
-        if (host === 'organic-synthesis-gallery-public.pages.dev') {
+        const path = window.location.pathname;
+        const legacyGitHubProject =
+          host === 'zhou526316-sys.github.io' &&
+          (path === '/organic-synthesis-gallery' || path.startsWith('/organic-synthesis-gallery/'));
+        if (host === 'organic-synthesis-gallery-public.pages.dev' || legacyGitHubProject) {
           const current = new URL(window.location.href);
           const destination = new URL(CANONICAL_GALLERY);
           destination.search = current.search;
