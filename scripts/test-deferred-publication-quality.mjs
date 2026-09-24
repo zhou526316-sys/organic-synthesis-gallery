@@ -74,6 +74,11 @@ try {
   assert.deepEqual(result.body.deferredDois, [pd]);
   passed.push('published_subset_with_exact_durable_pending_backlog_passes');
 
+  data = fixture(); data.audit.summary.sourceCoverageAnomalies = 1;
+  result = await run(data); assert.equal(result.exit, 0, JSON.stringify(result.body));
+  assert.equal(result.body.publicationChecksPassed, true);
+  passed.push('healthy_source_coverage_warning_does_not_fail_post_release_quality');
+
   data = fixture(); data.papers.push(data.review.pending[0]);
   result = await run(data); assert.equal(result.exit, 1);
   assert.ok(result.body.failures.some(row => row.includes('deferred DOI leaked')));
