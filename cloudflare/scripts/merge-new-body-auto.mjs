@@ -3,7 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {readPapers,normalizeDoi} from './merge-reviewed-toc.mjs';
 import {sourceDois} from '../../shared/body-media-evidence.js';
-import {POLICY_ID,sha256,requireBody,exactKey,evidenceKey,validateNewBodyMetadata,validateNewBodyBytes,conflictKeys,createImageDecoder} from './new-body-auto-validation.mjs';
+import {POLICY_ID,sha256,requireBody,exactKey,evidenceKey,validateNewBodyMetadata,rehydrateLegacyStageRow,validateNewBodyBytes,conflictKeys,createImageDecoder} from './new-body-auto-validation.mjs';
 export const SITE='https://gallery.gczhouwld.com/';
 export const WORKER='https://organic-synthesis-gallery.zhou526316.workers.dev';
 const SNAPSHOT='auto-body-publication.json';
@@ -163,9 +163,11 @@ export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()})
     if(!historical&&!packetReady)continue;
     if(!historical&&Array.isArray(packet.figureLabels)&&packet.figureLabels.length&&!packet.figureLabels.includes(String(row.label||'')))continue;
     try{
-      await validateNewBodyMetadata(row,policy,now);
+      const legacyRevalidate=historical&&(!row.sha256||!row.reviewMarker);
+      if(!legacyRevalidate)await validateNewBodyMetadata(row,policy,now);
       row._packetMode=historical?'historical_backfill':'completed_job';
       row._packetJobId=packet?.jobId||'';
+      row._legacyRevalidate=legacyRevalidate;
       rows.push(row);
     }catch(e){
       if(historical){
@@ -234,17 +236,21 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
       let packetFailure=null;
       for(const row of packetRows){
         if(added.length+packetAdded.length>=policy.maxNewImages){packetFailure='auto_packet_image_limit';break;}
-        const key=exactKey(row),fingerprint=evidenceKey(row),identity=row.doi+'|'+row.id;
+        const identity=row.doi+'|'+row.id;
+        let evidenceRow=row,attemptKey=exactKey(row),fingerprint=evidenceKey(row);
         try{
           requireBody(!conflicts.has(identity),'auto_cross_identity_conflict');
-          const {ext}=await validateNewBodyMetadata(row,policy,now);
-          const bytes=await getNew(row);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
-          packetPrepared.push({row,bytes,ext,admittedAt:now,isNew:true});
-          packetAdded.push({doi:row.doi,id:row.id,sha256:row.sha256});
+          const bytes=await getNew(row);
+          if(row._legacyRevalidate)evidenceRow=await rehydrateLegacyStageRow(row,bytes);
+          attemptKey=exactKey(evidenceRow);fingerprint=evidenceKey(evidenceRow);
+          const {ext}=await validateNewBodyMetadata(evidenceRow,policy,now);
+          validateNewBodyBytes(evidenceRow,bytes);await decoder.decode(evidenceRow,bytes);
+          packetPrepared.push({row:evidenceRow,bytes,ext,admittedAt:now,isNew:true});
+          packetAdded.push({doi:evidenceRow.doi,id:evidenceRow.id,sha256:evidenceRow.sha256});
         }catch(e){
-          const reason=String(e.message).slice(0,180),n=(attempts[key]?.attempts||0)+1;
+          const reason=String(e.message).slice(0,180),n=(attempts[attemptKey]?.attempts||0)+1;
           const transient=/auto_read_http_5|fetch failed|timeout|aborted/i.test(reason);
-          attempts[key]={doi:row.doi,id:row.id,evidenceSha256:fingerprint,reason,attempts:n,checkedAt:now,retryAfter:transient?now+(n<3?900000:3600000):null};
+          attempts[attemptKey]={doi:row.doi,id:row.id,evidenceSha256:fingerprint,reason,attempts:n,checkedAt:now,retryAfter:transient?now+(n<3?900000:3600000):null};
           packetFailure=reason;break;
         }
       }
