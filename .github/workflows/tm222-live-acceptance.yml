@@ -27,7 +27,7 @@ jobs:
           const worker='https://organic-synthesis-gallery.zhou526316.workers.dev';
           async function get(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'tm229='+Date.now(),{headers:{origin:'https://gallery.gczhouwld.com','cache-control':'no-cache'},signal:AbortSignal.timeout(20000)});assert.equal(r.status,200,url);return r.text();}
           const script=await get(base+'gallery-vpn-bridge.user.js');
-          assert.match(script,/^\/\/ @version\s+2\.2\.30\s*$/m);
+          assert.match(script,/^\/\/ @version\s+2\.2\.31\s*$/m);
           for(const s of ['BEGIN OSG_UPLOAD_EVIDENCE_V1','postAcquiredImage','same_acquired_image','response_without_worker_error_code','BEGIN OSG_LIVE_PROGRESS_V1','BEGIN OSG_AUTO_REPORT_V1','enqueueCaptureReport','startAutomaticCaptureReports','diagnostic_receipt_invalid','extension_connection_denied','@connect      media.springernature.com','captureLiveUpdate','captureLiveSnapshot','mountCaptureLivePanel','查看实时抓取进度','setInterval(render, 1000)',"var VERSION = '6.2.20';",'assertBoundCaptureJob','previous_task_tab_not_closed','requestControllerStart','pending_verified_promotion','completedPublisherResult','publisher final results over controller timeouts'])assert.ok(script.includes(s),s);
           let cap;
           for(let i=0;i<6;i++){cap=JSON.parse(await get(worker+'/api/media/capture-capabilities'));if(cap.stageStorageRevision==='2026-09-23.1')break;await new Promise(r=>setTimeout(r,10000));}
