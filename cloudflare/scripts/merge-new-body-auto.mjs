@@ -104,7 +104,9 @@ export function completedPacketMap(inputs){
   for(const row of inputs?.reports?.items||[]){
     const doi=normalizeDoi(row?.doi||'');
     const jobId=String(row?.jobId||'');
+    const mediaNeed=String(row?.mediaNeed||'');
     if(!doi||!row.final||row.status!=='success'||row.captureVersion!=='6.2.20'||!/^[a-z0-9-]{16,80}$/i.test(jobId))continue;
+    if(!mediaNeed.includes('figures'))continue;
     if(Number(row.figuresStored||0)!==Number(row.figuresDiscovered||0))continue;
     map.set(doi,row);
   }

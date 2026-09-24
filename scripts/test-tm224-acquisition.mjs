@@ -86,7 +86,7 @@ try{
      '10.1021/acs.joc.6c00002':{toc:{available:true,imageUrl:'toc.svg'}},
      '10.1021/acs.orglett.6c00005':{toc:{available:true,imageUrl:'toc.svg'}}
    }};
-   return __tm224.pairedJobs(q,media).map(x=>({doi:x.doi,journal:x.journal,captureToc:x.captureToc}));
+   return __tm224.pairedJobs(q,media).map(x=>({doi:x.doi,journal:x.journal,captureToc:x.captureToc,mediaNeed:x.mediaNeed,allowFigureOne:x.allowFigureOne}));
  });
  test('latest Gallery additions outrank historical TOC gaps, with journal priority inside the tier',JSON.stringify(ordering.slice(0,2).map(x=>x.doi))===JSON.stringify([
    '10.1021/jacs.6c00001','10.1021/acs.joc.6c00002']));
@@ -94,16 +94,29 @@ try{
    'Nature','Science','Nature Chemistry','Science Advances','JACS','Angew','Chem']));
  test('historical body-only backlog waits until historical TOC gaps are exhausted',ordering[9].doi==='10.1021/acs.orglett.6c00005'&&ordering[9].captureToc===false);
  test('today-added article with existing TOC still stays in the daily full-capture priority tier',ordering[1].doi==='10.1021/acs.joc.6c00002'&&ordering[1].captureToc===false);
+ test('latest additions remain paired TOC plus body jobs',ordering.slice(0,2).every(x=>x.mediaNeed==='toc+figures'));
+ test('historical missing official TOCs are TOC-only and never use Figure 1 fallback',ordering.slice(2,9).every(x=>x.captureToc===true&&x.mediaNeed==='toc'&&x.allowFigureOne===false));
+ test('historical official-TOC article becomes figures-only',ordering[9].mediaNeed==='figures'&&ordering[9].captureToc===false&&ordering[9].allowFigureOne===false);
 
  const routes=await page.evaluate(()=>({
    acsFigure:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'figures'}),
    acsToc:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'toc'}),
    wileyFigure:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'figures'}),
-   scienceFigure:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'figures'})
+   wileyPaired:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'toc+figures'}),
+   wileyToc:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'toc'}),
+   scienceFigure:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'figures'}),
+   sciencePaired:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'toc+figures'}),
+   scienceToc:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'toc'})
  }));
  test('ACS TOC and body jobs both enter through the canonical DOI route',routes.acsFigure==='https://pubs.acs.org/doi/10.1021/acs.orglett.6c03487'&&routes.acsToc===routes.acsFigure);
  test('ACS body jobs no longer force the legacy doi/full shell route',!routes.acsFigure.includes('/doi/full/'));
- test('non-ACS full-text routes remain unchanged',routes.wileyFigure==='https://onlinelibrary.wiley.com/doi/full/10.1002/anie.202600001'&&routes.scienceFigure==='https://www.science.org/doi/full/10.1126/science.abc1234');
+ test('paired and body jobs use full-text routes while historical TOC-only uses landing routes',
+   routes.wileyFigure==='https://onlinelibrary.wiley.com/doi/full/10.1002/anie.202600001'&&
+   routes.wileyPaired===routes.wileyFigure&&
+   routes.wileyToc==='https://onlinelibrary.wiley.com/doi/10.1002/anie.202600001'&&
+   routes.scienceFigure==='https://www.science.org/doi/full/10.1126/science.abc1234'&&
+   routes.sciencePaired===routes.scienceFigure&&
+   routes.scienceToc==='https://www.science.org/doi/10.1126/science.abc1234');
 
  const discovery=await page.evaluate(()=>({
    tocOnlyEarly:__tm224.pairedDiscoveryReady({mediaNeed:'toc+figures'},3,1,0,6000,6000),
@@ -118,6 +131,6 @@ try{
  test('body discovery retains an 8s minimum observation even after figures appear',discovery.bodyTooEarly===false);
  test('body discovery waits four quiet seconds after the latest figure-set change',discovery.bodyStillChanging===false&&discovery.bodyStable===true);
  test('TOC-only discovery keeps the legacy early-stable behavior',discovery.tocJobLegacy===true);
- test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.30';"));
+ test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.31';"));
 }finally{await browser.close();}
 console.log('TM224_ACQUISITION_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherFixtureOnly:true,captureProtocol:'6.2.20'}));

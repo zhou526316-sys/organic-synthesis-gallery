@@ -14,7 +14,7 @@ check('standalone metadata matches custom domain and updates from it',()=>{
 
 check('controller revision advances without protocol migration',()=>{
   assert.ok(source.includes("var VERSION = '6.2.20';"));
-  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.30';"));
+  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.31';"));
 });
 
 const names=['GALLERY_HOST','GALLERY_PATH','LEGACY_GALLERY_HOST','LEGACY_GALLERY_PATH','PAGES_GALLERY_HOST'];
@@ -65,4 +65,4 @@ check('2.2.28 skip-and-continue behavior is retained',()=>{
   assert.ok(source.includes("controller_lease_lost|another_task_still_active|capture_server_upgrade_pending"));
 });
 
-console.log('TM229_DOMAIN_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.30',primaryGallery:'https://gallery.gczhouwld.com/'}));
+console.log('TM229_DOMAIN_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.31',primaryGallery:'https://gallery.gczhouwld.com/'}));
