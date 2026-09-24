@@ -1,4 +1,4 @@
-name: Tampermonkey 2.2.30 final HTTP check
+name: Tampermonkey 2.2.31 final HTTP check
 on:
   push:
     branches: [main]
@@ -41,7 +41,7 @@ jobs:
           assert.equal(caps.captureVersion,'6.2.20');assert.equal(caps.mode,'verified-staging');assert.equal(caps.bodyFigures,true);assert.equal(caps.publishedAutomatically,false);
           const media=JSON.parse(await get(site+'media-index.json'+suffix));
           const retained=Object.values(media.items).filter(x=>x.toc?.recoveryId==='toc-batch1-20260922').length;assert.ok(retained>=83);
-          const report={verifiedAt:new Date().toISOString(),installationUrl:site+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.30',captureVersion:'6.2.20',scriptBytes:Buffer.byteLength(script),scriptSha256:createHash('sha256').update(script).digest('hex'),queueArticles:queue.articles.length,queueGeneratedAt:queue.generatedAt,retainedReviewedTocs:retained,workerCapabilities:caps,publicReadOnly:true,publisherAuthenticationVerified:false};
+          const report={verifiedAt:new Date().toISOString(),installationUrl:site+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.31',captureVersion:'6.2.20',scriptBytes:Buffer.byteLength(script),scriptSha256:createHash('sha256').update(script).digest('hex'),queueArticles:queue.articles.length,queueGeneratedAt:queue.generatedAt,retainedReviewedTocs:retained,workerCapabilities:caps,publicReadOnly:true,publisherAuthenticationVerified:false};
           console.log('TM220_LIVE_VERIFIED',JSON.stringify(report));
           await writeFile(process.env.RUNNER_TEMP+'/tm220-live.json',JSON.stringify(report,null,2));
           NODE
