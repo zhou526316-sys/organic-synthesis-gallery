@@ -46,14 +46,24 @@ async function latestReview() {
   if (!rows[0]) throw new Error('No review file found');
   return rows[0];
 }
-const [audit, state, repositoryDois, deployedDois, reviewRow] = await Promise.all([
+async function publicationReview() {
+  try {
+    const marker = await readJson('audit/publication-release-state.json');
+    const file = String(marker?.reviewFile || '').replace(/^audit\//, '');
+    if (marker?.mode === 'slot-release' && /^review-.*\.json$/i.test(file)) {
+      return { file, payload: await readJson(path.join('audit', file)), time: Date.parse(marker.generatedAt || '') || 0 };
+    }
+  } catch {}
+  return latestReview();
+}
+const [audit, state, repositoryDois, deployedDois, reviewRow, releaseMarker] = await Promise.all([
   readJson('audit/latest.json'), readJson('audit/literature-update-state.json'),
-  loadRepositoryDois(), loadDeployedDois(), latestReview(),
+  loadRepositoryDois(), loadDeployedDois(), publicationReview(),
+  readJson('audit/publication-release-state.json').catch(() => null),
 ]);
 let appliedRemovalDois = new Set();
 try {
-  const marker = await readJson('audit/publication-release-state.json');
-  if (marker.mode === 'scope-correction') {
+  if (releaseMarker?.mode === 'scope-correction') {
     const { authorizeScopeCorrection } = await import('./lib/immediate-scope-correction.mjs');
     const proof = await authorizeScopeCorrection(ROOT);
     if (!proof.ok) throw new Error('Invalid scope correction: ' + proof.failures.join('; '));
@@ -141,12 +151,33 @@ if (perDoi) {
   const backlogDois = new Set(backlog.map(row => normalizeDoi(row.doi)));
   assert(backlogDois.size === backlog.length && backlogDois.size === pendingDois.size
     && [...pendingDois].every(doi => backlogDois.has(doi)), 'deferred: state backlog does not equal formal pending decisions');
+  const carryover = Array.isArray(state.nextSlotPublicationBacklog) ? state.nextSlotPublicationBacklog : [];
+  const carryoverDois = new Set(carryover.map(row => normalizeDoi(row.doi)));
+  assert(carryoverDois.size === carryover.length, 'carryover: duplicate or empty DOI in next-slot backlog');
+  const markerSlot = String(releaseMarker?.publicationSlot || review.publicationSlot || '');
+  for (const row of carryover) {
+    const doi = normalizeDoi(row.doi);
+    assert(row.decision === 'include' && row.status === 'ready_for_next_slot',
+      `carryover: reviewed include status missing for ${doi}`);
+    assert(String(row.evidenceBasis || '').trim().length >= 40 && String(row.challengeReason || '').trim().length >= 30
+      && row.firstPassDecision === 'include' && row.challengeDecision === 'include',
+      `carryover: two-pass include evidence missing for ${doi}`);
+    assert(/^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(String(row.nextPublicationSlot || ''))
+      && (!markerSlot || Date.parse(row.nextPublicationSlot) > Date.parse(markerSlot)),
+      `carryover: invalid next publication slot for ${doi}`);
+    assert(!repositoryDois.has(doi) && !deployedDois.has(doi),
+      `carryover: off-slot DOI leaked into production: ${doi}`);
+    assert(Boolean(row.sourceReviewFile), `carryover: source review missing for ${doi}`);
+  }
   const missing = Array.isArray(audit.missingCandidates) ? audit.missingCandidates : [];
   const missingDois = missing.map(row => normalizeDoi(row.doi));
   assert(Number.isSafeInteger(audit.summary?.unresolved) && audit.summary.unresolved === missing.length
     && audit.summary?.missingFromGallery === missing.length && new Set(missingDois).size === missing.length,
   'discovery: unresolved diagnostics are incomplete or inconsistent');
-  assert(missingDois.every(doi => pendingDois.has(doi) && backlogDois.has(doi)), 'discovery: unreviewed unresolved DOI not covered by deferred backlog');
+  assert(missingDois.every(doi => (pendingDois.has(doi) && backlogDois.has(doi)) || carryoverDois.has(doi)),
+    'discovery: unresolved DOI is neither formal pending nor reviewed next-slot carryover');
+  assert([...carryoverDois].every(doi => missingDois.includes(doi)),
+    'carryover: next-slot backlog contains DOI no longer unresolved');
   for (const item of pending) {
     const doi = normalizeDoi(item.doi);
     const entry = backlog.find(row => normalizeDoi(row.doi) === doi);
@@ -191,7 +222,7 @@ const result = {
   repositoryDois: repositoryDois.size, deployedDois: deployedDois.size,
   discovery: Object.fromEntries(['criticalSourceFailures','sourceFamilyGaps','sourceCoverageAnomalies','closureCoverageAnomalies','historicalCoverageLosses','unresolved'].map(key => [key, audit.summary?.[key] ?? null])),
   semantic: { reviewed: all.length, accepted: accepted.length, rejected: rejected.length, pending: pending.length },
-  deferredDois: [...pendingDois], failures, warnings,
+  deferredDois: [...pendingDois], nextSlotPublicationDois: (state.nextSlotPublicationBacklog || []).map(row => normalizeDoi(row.doi)), failures, warnings,
 };
 console.log(JSON.stringify(result, null, 2));
 if (failures.length) process.exit(1);
