@@ -114,7 +114,11 @@ rejected('staging_allowlist_cannot_hide_pending', f => { f.staging.pendingDois =
 rejected('final_challenge_disagreement_rejected', f => { f.staging.decisions[0].challengeDecision = 'exclude'; }, /final_decision_not_confirmed/);
 rejected('missing_first_pass_not_invented', f => { delete f.staging.decisions[0].firstPassDecision; }, /two_pass_outcomes_missing/);
 rejected('missing_evidence_not_invented', f => { delete f.staging.decisions[0].evidenceBasis; }, /reason_missing/);
-rejected('short_supplied_reason_is_not_silently_replaced', f => { f.staging.decisions[0].reason = 'short'; }, /reason_missing_or_too_short/);
+test('short_supplied_reason_is_preserved_when_detailed_evidence_is_present', () => {
+  const f = fixture(); f.staging.decisions[0].reason = 'short';
+  const out = convertPrepublishReview(f.staging, f.handoff, options);
+  assert.equal(out.formalReview.accepted[0].reason, 'short');
+});
 rejected('pending_requires_specific_missing_evidence', f => { delete f.staging.decisions[2].evidenceNeeded; }, /pending_evidence_needed_missing/);
 rejected('pending_requires_attempted_sources', f => { delete f.staging.decisions[2].attemptedEvidencePages; }, /pending_attempted_sources_missing/);
 rejected('date_changes_require_reconciliation', f => { f.staging.decisions[0].date = '2026-09-21'; }, /date_changed_without_reconciliation/);
