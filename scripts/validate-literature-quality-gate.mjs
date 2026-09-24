@@ -194,7 +194,8 @@ if (perDoi) {
       `closure: verifiedThrough advanced across a pending DOI: ${doi}`);
   }
   if (pending.length) {
-    assert(state.phase === 'synced_with_pending', 'deferred: partial publication must be recorded as synced_with_pending');
+    assert(['ready_with_pending', 'synced_with_pending'].includes(state.phase),
+      'deferred: partial publication state must be ready_with_pending before finalization or synced_with_pending after it');
     warnings.push(`Publication subset verified; ${pending.length} DOI(s) remain pending. This is not full semantic closure.`);
   }
 } else {
@@ -207,11 +208,14 @@ if ((audit.summary?.closureCoverageAnomalies ?? 0) > 0) {
   assert(!verified || !closureDate || verified < closureDate, 'closure: verifiedThrough advanced despite closureCoverageAnomalies');
 }
 if (pending.length > 0) assert(state.phase !== 'synced', 'semantic: pending decisions exist while phase=synced');
-const expectedGallery = state.lastWebsiteSync?.verification?.galleryDois ?? state.lastWebsiteSync?.verification?.totalGalleryCards;
-if (['synced', 'synced_with_pending'].includes(state.phase)) {
-  assert(Number.isSafeInteger(expectedGallery), 'publication: state expected card count missing');
-  assert(deployedDois.size === expectedGallery, `publication: deployed DOI count ${deployedDois.size} != state expected ${expectedGallery}`);
-  if (perDoi) assert(repositoryDois.size === deployedDois.size && [...repositoryDois].every(doi => deployedDois.has(doi)),
+const expectedGallery = releaseMarker?.mode === 'slot-release'
+  ? releaseMarker.productionCards
+  : (state.lastWebsiteSync?.verification?.galleryDois ?? state.lastWebsiteSync?.verification?.totalGalleryCards);
+if (releaseMarker?.mode === 'slot-release' || ['synced', 'synced_with_pending', 'synced_with_carryover'].includes(state.phase)) {
+  assert(Number.isSafeInteger(expectedGallery), 'publication: expected card count missing');
+  assert(deployedDois.size === expectedGallery,
+    `publication: deployed DOI count ${deployedDois.size} != expected ${expectedGallery}`);
+  assert(repositoryDois.size === deployedDois.size && [...repositoryDois].every(doi => deployedDois.has(doi)),
     'publication: repository and deployed DOI sets differ');
 }
 const result = {
