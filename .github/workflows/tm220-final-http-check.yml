@@ -32,7 +32,7 @@ jobs:
           }
           const suffix='?finalCheck='+Date.now();
           const script=await get(site+'gallery-vpn-bridge.user.js'+suffix);
-          assert.match(script,/@version\s+2\.2\.30(?:\s|$)/);
+          assert.match(script,/@version\s+2\.2\.31(?:\s|$)/);
           for(const marker of ["var VERSION = '6.2.20';",'pairedJobs','overnightRetryEligible','checkpointKey','assertBoundCaptureJob','GM_listValues','pending_verified_promotion'])assert.ok(script.includes(marker),marker);
           const queue=JSON.parse(await get(site+'toc-demand-live.json'+suffix));
           assert.equal(queue.mediaGeneration,1790082000000);assert.equal(queue.pairedCaptureRegistry,true);
