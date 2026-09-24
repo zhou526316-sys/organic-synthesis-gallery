@@ -136,6 +136,37 @@ assert.equal(imported.body.sections, 3);
 assert.match(imported.body.sourceHash, /^[a-f0-9]{64}$/);
 assert.match(imported.body.evidencePacketHash, /^[a-f0-9]{64}$/);
 
+const importedKeys = await storageKeys(doi);
+const storedEvidence = JSON.parse(await (await MEDIA.get(importedKeys.evidence)).text());
+assert.ok(storedEvidence.sections.every(row => /^[a-f0-9]{64}$/.test(row.hash)));
+assert.ok(storedEvidence.captions.every(row => /^[a-f0-9]{64}$/.test(row.hash)));
+assert.ok(storedEvidence.tables.every(row => /^[a-f0-9]{64}$/.test(row.hash)));
+assert.ok(!JSON.stringify(storedEvidence).includes('This excluded section must not enter the evidence packet.'));
+
+const bigDoi = '10.1021/jacs.6c08638';
+const hugeText = 'Large evidence body with chemistry facts and conditions. '.repeat(20000);
+const oversized = await importArticleFulltext(env, evidencePayload({
+  doi: bigDoi,
+  pageDoi: bigDoi,
+  articleUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08638',
+  sourceUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08638',
+  sections: [
+    { type: 'abstract', heading: 'Abstract', order: 0, text: hugeText },
+    { type: 'results', heading: 'Results', order: 1, text: hugeText },
+    { type: 'scope', heading: 'Substrate Scope', order: 2, text: hugeText },
+    { type: 'mechanism', heading: 'Mechanistic Studies', order: 3, text: hugeText },
+  ],
+  captions: [{ label: 'Scheme 1', type: 'scheme', text: hugeText }],
+  tables: [{ label: 'Table 1', title: 'Optimization', text: hugeText }],
+}));
+assert.equal(oversized.status, 200);
+assert.ok(oversized.body.chars <= 750000);
+const bigKeys = await storageKeys(bigDoi);
+const bigEvidence = JSON.parse(await (await MEDIA.get(bigKeys.evidence)).text());
+assert.ok(bigEvidence.sections.reduce((n,row) => n + row.text.length, 0) <= 620000);
+assert.ok(bigEvidence.captions.reduce((n,row) => n + row.text.length, 0) <= 70000);
+assert.ok(bigEvidence.tables.reduce((n,row) => n + row.text.length, 0) <= 60000);
+
 const pending = await getArticleSummary(env, doi);
 assert.equal(pending.status, 200);
 assert.equal(pending.body.available, false);
@@ -145,7 +176,7 @@ assert.equal(pending.body.state, 'evidence_ready');
 assert.equal(pending.body.reason, 'summary_pending');
 assert.equal(aiCalls, 0);
 
-const keys = await storageKeys(doi);
+const keys = importedKeys;
 await MEDIA.put(keys.summary, JSON.stringify({
   schemaVersion: ARTICLE_REVIEWED_SUMMARY_SCHEMA_VERSION,
   status: 'approved',
