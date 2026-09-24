@@ -2315,7 +2315,7 @@ function embeddedJobDois(value) {
     if(checkpoint.toc&&checkpoint.toc.status==='stored'&&Date.now()-checkpoint.updatedAt<6*60*60*1000)job.captureToc=false;
     job.publisher=job.publisher||publisherForDoi(job.doi);
     job.captureDeadline=Date.now()+6*60*1000;
-    var result={status:'failed',reason:'',toc:{status:job.captureToc===false?'already_available':'pending'},figures:{status:'pending',discovered:0,stored:0,failed:0,items:[]},figuresImported:0,figuresStaged:0,published:false};
+    var result={status:'failed',reason:'',toc:{status:job.captureToc===false?'already_available':'pending'},figures:{status:'pending',discovered:0,stored:0,failed:0,items:[]},fulltext:{status:evidenceCaptureEligible(job)?'pending':'not_requested'},figuresImported:0,figuresStaged:0,published:false};
     job._liveResult=result;
     autoReportJob=job;
     captureLiveUpdate(job,'discovering');
@@ -2384,6 +2384,9 @@ function embeddedJobDois(value) {
         result.status=tocOk && result.figures.status==='staged'?'success':tocOk||result.figures.stored?'partial':'failed';
         result.reason='paired_capture;toc='+result.toc.status+';figures='+result.figures.stored+'/'+result.figures.discovered+';published=0';
       }
+      // Evidence capture is deliberately downstream of media. Its failure never
+      // changes TOC/body success, and TOC-only historical jobs never enter it.
+      result.fulltext=await tryCaptureArticleEvidence(job,trace,token);
     } catch(error) {
       result.status=String(error.message)==='user_aborted'?'aborted':(result.figures.stored||result.toc.status==='stored'?'partial':'failed');
       result.reason=String(error.message);
