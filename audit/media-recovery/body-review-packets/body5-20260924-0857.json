@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-0857",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T00:57:00Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10785035374,
+  "evidenceArchiveSha256": "50111715ccf2bec19296e27fac2403a557ab45f8f2308626b7cd4999acebd9ba",
+  "evidenceRunId": 35940167412,
+  "evidenceBaseSha": "d5c974135e9a5cafb98b81f70c8fd72d7e9f8543",
+  "approvedCount": 14,
+  "reviewMethod": "Fourteen newly selected body figures across five current-corpus papers were independently reviewed from immutable read-only GitHub evidence artifact 10785035374. Each approval was checked against DOI-bound task/page/article provenance, original figure/scheme identity and independent caption, direct ACS/Silverchair source path, capture protocol 6.2.20, fixed media generation 1790082000000, exact frozen bytes and full SHA256, image role, paper theme, visual clarity, duplicate/same-ID risk, and evidence fingerprint. SVG files were rendered on a white background and inspected as complete chemistry figures; each SVG is self-contained with no script, foreignObject, javascript URL, external href, or event-handler content. PNG files decoded cleanly at the stored dimensions. Figure 1 items are explicitly approved as article body figures and are not TOC substitutes. Partial article-level capture reports for JACS 10.1021/jacs.6c12613, 10.1021/jacs.6c16346, and 10.1021/jacs.6c15393 are treated only as provenance/history: approval is limited to the exact individually verified stored files and does not imply missing article figures are approved. Earlier transport/format checkpoints are not interpreted as VPN/R2/quota causes. No publisher recrawl, R2/D1 write, server-side direct import/repair, literature-data change, userscript change, or production deployment is authorized by this packet.",
+  "decisions": [
+    {
+      "doi": "10.1021/jacs.6c12613",
+      "images": [
+        ["next-001", "figure-1", "Viewed the complete structural-comparison figure: bond lengths, bond angles, 13C NMR data, and isocyanide IR-frequency comparison for isocyanoalkynes versus related congeners. It matches Figure 1 and its caption and is a body figure, not TOC. Exact 261,173-byte SVG SHA256 a5e6bcc9a7ead12bf99324b9b1c90c4fb310ded0ae13484ce3bd6b8e2260187b; self-contained and visually distinct."],
+        ["next-021", "scheme-1", "Viewed the literature-context and this-work overview comparing isocyanoalkane/arene/alkene chemistry with the new versatile mmol-scale isocyanoalkyne synthesis. It matches Scheme 1 and its caption. Exact 452,595-byte SVG SHA256 0ea5b0a42ba73f7899950908e4eb7a377729c60fdabcbde2ba3a53c4fbbd6dd4; self-contained and distinct."],
+        ["next-022", "scheme-2", "Viewed the complete isocyanoalkyne substrate-synthesis scope under t-BuOK/THF conditions, including aryl, heteroaryl, alkyl, and constrained examples with yields. It matches Scheme 2 'Synthesis of Diverse Isocyanoalkynes'. Exact 285,571-byte SVG SHA256 e71cce4ce624e36b83097ba19a163f054133b9acf5d6d56bc0e7c61fa187fea9; self-contained and distinct."],
+        ["next-023", "scheme-3", "Viewed the acid-promoted isocyanoalkyne cascade chemistry with nitrogen and sulfur nucleophiles, products, yields, intermediates, and crystallographic inset. It matches Scheme 3. Exact 172,463-byte PNG SHA256 e670083df7240bab24c04554f07f523ddac0f0fae34693f49fee65103144505f and decodes cleanly at 520x790."],
+        ["next-024", "scheme-4", "Viewed the base-promoted isocyanoalkyne cascades with oxygen and phosphorus nucleophiles, proposed intermediates, isolated/NMR yields, and structural inset. It matches Scheme 4. Exact 319,835-byte SVG SHA256 93a8ddc181e414d43cbca975c6cd4d0a0cb29f047be40f93d0a8368b5a90c0ce; self-contained and distinct."]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c16346",
+      "images": [
+        ["next-002", "figure-1", "Viewed the complete article-concept figure covering prior direct beta-functionalization strategies, challenging cyclopentanones, prior ERED work, and the enzyme-enabled site-selective beta-alkylation design. It matches Figure 1 and is a body figure, not TOC. Exact 134,452-byte PNG SHA256 e60987bac9e125fa51bfe413fe333bfcf7e24b4a715f07d80ff654029aaffc0e and decodes at 520x690."],
+        ["next-025", "scheme-1", "Viewed the cyclopentanone substrate-scope panel with enzyme conditions, substituted products, yields, and diastereomeric ratios. It matches Scheme 1 'Substrate Scope of Cyclopentanones'. Exact 112,601-byte PNG SHA256 b4546d644b1399ad93e2b33e4f0794f23a66ca40975ccf9da0b609f9295df8ad and decodes at 520x646."],
+        ["next-026", "scheme-4", "Viewed the mechanistic study panel containing desaturation/Giese sequences, radical trapping, site-divergent enzyme experiments, and the proposed beta-alkylation mechanism. It matches Scheme 4 and its multipart caption. Exact 133,917-byte PNG SHA256 70c7411829235860629a413fc303b24d95b97c5c3c7871648fb264cd8057aec2 and decodes at 520x688."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03733",
+      "images": [
+        ["next-003", "scheme-1", "Viewed the full reaction-concept scheme: representative bioactive tetrahydropyridobenzimidazoles, prior annulation/cycloaddition strategies, and this work's dual C(sp2)-H/C(sp3)-H cycloaddition construction. It matches Scheme 1. Exact 664,674-byte SVG SHA256 a5ec0c5078506f497b83590af4c4786de2971a976412dec8799fbcbff3fcf29e; self-contained and distinct."],
+        ["next-027", "scheme-2", "Viewed the synthetic-utility and mechanistic-experiments scheme with deuterium labeling, parallel KIE experiments, and the proposed nickel/aluminum catalytic cycle. It matches Scheme 2. Exact 472,198-byte SVG SHA256 e15358d95507448b6295eb2a3e56f2c87fac2972e2d63274061921459b7d0a1d; self-contained and distinct."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03394",
+      "images": [
+        ["next-004", "scheme-4", "Viewed the complete proposed photoredox mechanism showing Na2-Eosin Y redox cycling, DIPEA-derived radical steps, trichloromethyl-derived intermediates, nitrosyl species, cycloaddition, and HRMS-supported intermediate. It matches Scheme 4 'Possible Mechanism'. Exact 387,389-byte SVG SHA256 9735ef26295b4bdefddc58887602c9200b82388678703142adda373fdc58aa81; self-contained and distinct."]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c15393",
+      "images": [
+        ["next-006", "figure-1", "Viewed the polyether-ionophore overview containing structures of monensin, salinomycin and lasalocid plus the retrosynthetic analysis of nonthmicin/ecteinamycin and e-DCC disconnections. It matches Figure 1 and is a body figure, not TOC. Exact 631,573-byte SVG SHA256 36463515f23c36067118c02a1b7210c1f7a05162888e2053298759e553d3e595; self-contained and distinct."],
+        ["next-032", "scheme-1", "Viewed the complete preparation of fragment 3 with two electrochemical decarboxylative alkenylations, gram-scale annotations, enzyme-catalyzed anti-Baldwin cyclization, X-ray assignment, and subsequent transformations. It matches Scheme 1. Exact 849,809-byte SVG SHA256 c834e03ca005a02446259fea83732893e91b206382c0c91c60ba0432b2b07bb2; self-contained and distinct."],
+        ["next-033", "scheme-2", "Viewed the complete construction of fragments 4-6, final assembly of ecteinamycin and nonthmicin, scale-up/structural evidence, and anti-C. difficile activity comparison. It matches Scheme 2. Exact 1,275,597-byte SVG SHA256 099955d9d233e552d0eca529833e167f850802a18ea3b4b738d11a05fd6ebfab; self-contained and distinct."]
+      ]
+    }
+  ]
+}
