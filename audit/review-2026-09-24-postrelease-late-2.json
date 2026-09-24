@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-24T08:46:00+08:00",
+  "timeZone": "Asia/Shanghai",
+  "type": "postrelease-late-candidate-review",
+  "discoveryGeneratedAt": "2026-09-24T00:41:18.948Z",
+  "handoffFile": "audit/unresolved-latest.json",
+  "handoffBlobSha": "57d55a5a163b0d70d3f3f1aa346c28c2e30af033",
+  "scopeRulesVersion": "scope-2026-09-24-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+  "sourcePublicationSlot": "2026-09-24T08:00:00+08:00",
+  "nextPublicationSlot": "2026-09-24T18:00:00+08:00",
+  "summary": {
+    "reviewed": 2,
+    "accepted": 1,
+    "rejected": 1,
+    "pending": 0
+  },
+  "accepted": [
+    {
+      "doi": "10.1021/acs.orglett.6c03851",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Total Synthesis of the Zwitterionic Trisaccharide Repeating Unit of Staphylococcus aureus CP8",
+      "titleZh": "金黄色葡萄球菌 CP8 两性离子三糖重复单元的全合成",
+      "authors": [
+        "Rathika Dikshit",
+        "Diksha Rai",
+        "Suvarn S. Kulkarni"
+      ],
+      "decision": "include",
+      "classification": "total_synthesis_target",
+      "reviewPriority": "high",
+      "reason": "论文完成金黄色葡萄球菌 CP8 两性离子三糖重复单元这一明确目标的首次全合成，并解决三个 1,2-cis 糖苷键及正交含氮官能团的立体选择性组装问题，符合 Gallery 对完成目标合成路线的收录范围。",
+      "evidenceBasis": "当前 post-release compact 的 DOI 匹配摘要明确写明 first total synthesis of the zwitterionic trisaccharide repeating unit of Staphylococcus aureus CP8（总收率 2.8%），并具体说明以噁唑烷酮保护的 L-fucosamine 实现 α-选择性糖基化、与叠氮基保持正交，以及通过直接 β-mannosylation 完成三糖组装。",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "challengeReason": "最强反对理由是该工作面向细菌荚膜糖重复单元且路线具有目标特异性，并非广谱反应方法学；但当前范围契约明确收录完成的全合成/目标合成路线。这里合成的是完整的三糖重复单元目标，而非未完成的单一片段，因此不能因其生物医学背景或路线专属性而排除；同时不把它夸大为通用糖基化方法。",
+      "scopeAssessment": {
+        "primaryContribution": "首次完成金黄色葡萄球菌 CP8 两性离子三糖重复单元的全合成，并给出解决其立体化学和正交保护难点的路线。",
+        "preparativeTransformation": "由受保护的单糖糖基供体/受体逐步组装为含三个 1,2-cis 糖苷键、一个胺和两个乙酰胺官能团的目标三糖重复单元；关键步骤包括 α-选择性 L-fucosamine 糖基化和直接 β-甘露糖基化。",
+        "generalityEvidence": "现有摘要支持的是一个完成的目标合成路线及可迁移的立体/保护策略，不支持宣称广泛底物范围；本次按完成目标合成路线收录，而非按一般反应方法学收录。",
+        "sourceEvidence": "audit/unresolved-latest.json (2026-09-24T00:41:18.948Z) 中 DOI 匹配 Crossref 摘要明确给出首次全合成、2.8% 总收率、三个 1,2-cis 糖苷键难点、噁唑烷酮保护 L-fucosamine、α-选择性糖基化及直接 β-mannosylation。",
+        "boundaryChallenge": "生物医学相关目标和目标导向路线本身不构成排除；范围边界要求的是主要贡献是否为完成的合成路线。现有摘要足以确认完整重复单元目标已完成，但不足以把它宣传为广谱糖基化平台。"
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03851"
+      ],
+      "evidenceSource": "fresh_compact_crossref_abstract",
+      "publicationDisposition": "hold_for_next_fixed_slot",
+      "nextPublicationSlot": "2026-09-24T18:00:00+08:00"
+    }
+  ],
+  "rejected": [
+    {
+      "doi": "10.1038/s41467-026-77885-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "Navigational strategy dictates hippocampal representation of space in an everyday memory task",
+      "authors": [
+        "Francesco Gobbo",
+        "Rufus Mitchell-Heggs",
+        "Adrian J. Duszkiewicz",
+        "Elena Faillace",
+        "Dorothy Tse",
+        "Nuria Garcia-Font",
+        "Omer Hazon",
+        "Kathrine Clarke",
+        "Patrick A. Spooner",
+        "Adana Keshishian",
+        "Mark Schnitzer",
+        "Simon R. Schultz",
+        "Richard G. M. Morris"
+      ],
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "reason": "主要贡献是大鼠海马空间表征、导航参考框架与记忆规划的神经科学机制研究，不包含一般有机制备方法或合成路线。",
+      "evidenceBasis": "当前 post-release compact 的完整摘要描述在雄性大鼠日常记忆任务中使用微型显微镜记录海马神经活动，并通过光遗传失活比较 allocentric 与 egocentric 导航；研究对象、实验设计和结论均为神经回路/空间记忆机制。",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "尽管实验可能涉及化学试剂、荧光标记或生物样品处理，但这些均是神经科学测量手段；摘要没有任何底物到有机产物的制备转化、反应范围或目标合成路线，因此不存在被遗漏的一般合成贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77885-3"
+      ],
+      "evidenceSource": "fresh_compact_crossref_abstract"
+    }
+  ],
+  "pending": [],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0,
+    "allCandidatesReviewed": true,
+    "offSlotProductionWrites": 0,
+    "note": "Both post-release late-indexed DOI received separate first-pass and challenge decisions. The accepted Organic Letters paper is held for 18:00 and is not classified as pending."
+  }
+}
