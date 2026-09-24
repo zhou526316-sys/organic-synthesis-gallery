@@ -74,6 +74,15 @@ test('supplied_reason_and_unknown_publisher_counts_are_not_overwritten', () => {
   assert.equal(out.formalReview.accepted[0].reason, f.staging.decisions[0].reason);
   assert.equal(out.formalReview.sourceChecks[0].candidateCount, null);
 });
+test('obvious_normal_priority_exclude_can_use_concise_reason_without_detailed_evidence', () => {
+  const f = fixture();
+  f.staging.decisions[1].reason = 'Out of scope';
+  f.staging.decisions[1].evidenceBasis = '';
+  f.staging.decisions[1].challengeReason = '';
+  const out = convertPrepublishReview(f.staging, f.handoff, options);
+  assert.equal(out.formalReview.rejected[0].reason, 'Out of scope');
+  assert.deepEqual(validateFormalPartition(f.staging, out.formalReview, out.markerFields, out.pendingQueue), []);
+});
 test('doi_normalization_does_not_drop_a_partition', () => {
   const f = fixture(); f.staging.decisions[0].doi = 'https://doi.org/10.99999/CONVERTER-INCLUDE';
   assert.equal(convertPrepublishReview(f.staging, f.handoff, options).formalReview.accepted[0].doi, '10.99999/converter-include');
