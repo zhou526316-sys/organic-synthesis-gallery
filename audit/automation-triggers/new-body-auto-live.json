@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-24T22:44:00+08:00",
+  "requestedAt": "2026-09-24T22:55:00+08:00",
   "readOnly": true,
   "productionWrites": 0,
-  "reason": "Run one fresh read-only automatic body live verification after PR #225 moved the verifier from the isolated legacy github.io origin to the current gallery.gczhouwld.com production origin. Verify exact deployed snapshot, media ledger, image bytes, labels, URLs, official TOCs and rendered cards without changing publication or media."
+  "reason": "Run one fresh read-only automatic body live verification after PR #226 aligned the verifier with the current bounded publication policy. Verify exact deployed snapshot, media ledger, image bytes, labels, URLs, official TOCs and rendered cards without changing publication or media."
 }
