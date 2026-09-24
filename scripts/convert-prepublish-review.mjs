@@ -79,7 +79,12 @@ export function convertPrepublishReview(staging, handoff, { generatedAt, sourceS
     row.reason = text(original.reason) || text(original.evidenceBasis);
     requireValue(row.reason.length >= 24, `reason_missing_or_too_short:${doi}`);
     if (!text(original.reason)) row.reasonDerivedFrom = 'evidenceBasis';
-    requireValue(text(row.evidenceBasis).length >= 40 && text(row.challengeReason).length >= 30, `evidence_or_challenge_missing:${doi}`);
+    const requiresDetailedEvidence = row.decision === 'include' || row.decision === 'pending'
+      || (row.decision === 'exclude' && row.reviewPriority === 'high');
+    if (requiresDetailedEvidence) {
+      requireValue(text(row.evidenceBasis).length >= 40 && text(row.challengeReason).length >= 30,
+        `evidence_or_challenge_missing:${doi}`);
+    }
     requireValue(['include', 'exclude', 'pending'].includes(row.firstPassDecision)
       && ['include', 'exclude', 'pending'].includes(row.challengeDecision), `two_pass_outcomes_missing:${doi}`);
     if (row.decision === 'pending') {
