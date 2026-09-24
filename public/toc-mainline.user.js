@@ -1240,7 +1240,7 @@ function embeddedJobDois(value) {
         var key = context.label + '|' + url;
         if (seen.has(key) || reject(context.caption, url) || !candidateBelongsToJob(url, job)) return;
         seen.add(key);
-        rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:context.label,text:context.caption,source:'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
+        rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:context.label,text:context.caption,source:sourceName||'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
       });
     });
     rows.sort(function (a,b) { return String(a.label).localeCompare(String(b.label),undefined,{numeric:true}) || b.score-a.score; });
@@ -1348,7 +1348,8 @@ function embeddedJobDois(value) {
     return urls;
   }
 
-  async function iframeCandidates(job, trace) {
+  async function iframeCandidates(job, trace, mode) {
+    mode = mode || 'toc';
     var urls = iframeSourceUrls(job);
     if (!urls.length) return [];
     var best = [];
@@ -1404,7 +1405,11 @@ function embeddedJobDois(value) {
                   }
                 });
               }
-              var discovered = collectCandidates(job, trace, doc, current, 'iframe_dom', true);
+              var discovered = mode === 'paired'
+                ? collectCandidates(job, trace, doc, current, 'iframe_dom', true).concat(collectArticleFigureCandidates(job, trace, doc, current, 'iframe_body'))
+                : mode === 'figures'
+                  ? collectArticleFigureCandidates(job, trace, doc, current, 'iframe_body')
+                  : collectCandidates(job, trace, doc, current, 'iframe_dom', true);
               if (discovered.length) {
                 var merged = new Map();
                 bestRows.concat(discovered).forEach(function (row) {
@@ -1416,7 +1421,7 @@ function embeddedJobDois(value) {
                   return b.score - a.score;
                 });
               }
-              if (bestRows.some(function (row) { return row.kind === 'official'; })) return finish(bestRows);
+              if (mode !== 'figures' && bestRows.some(function (row) { return row.kind === 'official'; }) && (mode !== 'paired' || bestRows.some(function (row) { return row.kind === 'article_figure'; }))) return finish(bestRows);
               var elapsed = Date.now() - started;
               if (!scrolled && elapsed > 3000 && win) {
                 scrolled = true;
@@ -1459,7 +1464,7 @@ function embeddedJobDois(value) {
             url: url,
             message: 'candidates=' + String(rows.length)
           });
-          if (rows.some(function (row) { return row.kind === 'official'; })) return rows;
+          if (mode !== 'figures' && rows.some(function (row) { return row.kind === 'official'; }) && (mode !== 'paired' || rows.some(function (row) { return row.kind === 'article_figure'; }))) return rows;
         } else {
           pushTrace(trace, { stage: 'iframe_dom_scan', event: 'complete', status: 'none', url: url });
         }
@@ -1633,7 +1638,24 @@ function embeddedJobDois(value) {
     throw new Error('page_wait_timeout');
   }
 
-  async function pageFetchCandidate(candidate, trace) {
+  function captureRemainingMs(job) {
+    if (!job || !Number(job.captureDeadline)) return Infinity;
+    return Number(job.captureDeadline) - Date.now();
+  }
+
+  function captureRequestTimeout(job, preferredMs) {
+    var remaining=captureRemainingMs(job);
+    if (!Number.isFinite(remaining)) return Number(preferredMs||12000);
+    if (remaining <= 1500) return 0;
+    return Math.max(1000,Math.min(Number(preferredMs||12000),remaining-1000));
+  }
+
+  function captureDeadlineNear(job,reserveMs) {
+    var remaining=captureRemainingMs(job);
+    return Number.isFinite(remaining) && remaining <= Number(reserveMs||1500);
+  }
+
+  async function pageFetchCandidate(job, candidate, trace) {
     var requestUrl = candidateRequestUrl(candidate);
     pushTrace(trace, {
       stage: 'page_fetch',
@@ -1645,12 +1667,17 @@ function embeddedJobDois(value) {
       candidateScore: candidate.score
     });
     var requestStarted=Date.now();
+    var requestTimeout=captureRequestTimeout(job,12000);
+    if(!requestTimeout){
+      pushTrace(trace,{stage:'capture_deadline',event:'candidate_skipped',status:'deadline',url:requestUrl,message:'page_fetch_not_started;remainingMs='+Math.max(0,captureRemainingMs(job))});
+      return null;
+    }
     try {
       var response = await fetch(requestUrl, {
         method: 'GET',
         credentials: 'include',
         cache: 'force-cache',
-        signal: AbortSignal.timeout(12000),
+        signal: AbortSignal.timeout(requestTimeout),
         redirect: 'follow',
         referrer: location.href
       });
@@ -1689,7 +1716,7 @@ function embeddedJobDois(value) {
     }
   }
 
-  async function gmFetchCandidate(candidate, trace) {
+  async function gmFetchCandidate(job, candidate, trace) {
     var requestUrl = candidateRequestUrl(candidate);
     pushTrace(trace, {
       stage: 'gm_fetch',
@@ -1701,12 +1728,17 @@ function embeddedJobDois(value) {
       candidateScore: candidate.score
     });
     var requestStarted=Date.now();
+    var requestTimeout=captureRequestTimeout(job,12000);
+    if(!requestTimeout){
+      pushTrace(trace,{stage:'capture_deadline',event:'candidate_skipped',status:'deadline',url:requestUrl,message:'gm_fetch_not_started;remainingMs='+Math.max(0,captureRemainingMs(job))});
+      return null;
+    }
     try {
       var response = await gmRequest({
         method: 'GET',
         url: requestUrl,
         responseType: 'arraybuffer',
-        timeout: 12000,
+        timeout: requestTimeout,
         headers: {
           Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
           Referer: location.href
@@ -1823,15 +1855,15 @@ function embeddedJobDois(value) {
     });
   }
 
-  async function acquireImage(candidate, trace) {
-    var image = await pageFetchCandidate(candidate, trace);
+  async function acquireImage(job, candidate, trace) {
+    var image = await pageFetchCandidate(job, candidate, trace);
     if (image && image.contentType === 'image/tiff') {
       pushTrace(trace,{stage:'candidate_format',event:'unsupported_tiff',status:'unsupported',url:image.sourceUrl||candidate.url,contentType:'image/tiff',byteLength:image.byteLength,message:'browser/Worker protocol does not accept TIFF; try another variant from the same labelled figure'});
       image = null;
       // Do not download the identical TIFF again through GM; move directly to a page-rendered fallback.
       image = await canvasCandidate(candidate, trace);
     } else if (!image) {
-      image = await gmFetchCandidate(candidate, trace);
+      image = await gmFetchCandidate(job, candidate, trace);
       if (image && image.contentType === 'image/tiff') {
         pushTrace(trace,{stage:'candidate_format',event:'unsupported_tiff',status:'unsupported',url:image.sourceUrl||candidate.url,contentType:'image/tiff',byteLength:image.byteLength,message:'browser/Worker protocol does not accept TIFF; try another variant from the same labelled figure'});
         image = null;
@@ -2300,13 +2332,13 @@ function embeddedJobDois(value) {
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
         if(GM_getValue(ACTIVE_JOB_KEY,null)) {stopReason='another_task_still_active';break;}
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,generation,'figures'),null);
-        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
+        var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1,forceForeground:Boolean(priorAttempt&&priorAttempt.reason==='controller_timeout')});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
         badge('TOC＋正文图 '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result=null,closed=true;
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
-          tab=await Promise.resolve(GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
+          tab=await Promise.resolve(GM_openInTab(articleUrl(Object.assign({},job,{mediaNeed:'figures'}))+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley'||job.forceForeground===true,insert:true,setParent:true}));
           if(!tab || typeof tab.close!=='function')throw new Error('task_tab_handle_unavailable');
           result=await waitForResult(job,tab);
         } catch(error) {
@@ -2321,7 +2353,11 @@ function embeddedJobDois(value) {
         if((result && !result.toc && result.status==='failed') || stopReason) {
           var observed=currentPublisherHeartbeat();
           var observedUrl=observed&&observed.jobId===job.jobId?observed.href:'';
-          enqueueCaptureReport(job,[{at:nowIso(),stage:'controller',event:'stopped',status:'failed',message:stopReason||(result&&result.reason)||'unknown_controller_failure',url:observedUrl}], 'controller_error',stopReason||(result&&result.reason),true,observedUrl);
+          var lastProgress=GM_getValue(progressKey(job.doi),null);
+          var controllerTrace=[{at:nowIso(),stage:'controller',event:'stopped',status:'failed',message:stopReason||(result&&result.reason)||'unknown_controller_failure',url:observedUrl}];
+          if(lastProgress&&lastProgress.status)controllerTrace.push({at:String(lastProgress.at||nowIso()),stage:'controller',event:'last_progress',status:String(lastProgress.status),url:String(lastProgress.url||observedUrl||''),message:'last publisher-page progress visible to Gallery controller'});
+          if(observed&&observed.jobId===job.jobId)controllerTrace.push({at:String(observed.atIso||nowIso()),stage:'controller',event:'last_heartbeat',status:String(observed.state||'heartbeat'),url:String(observed.href||''),message:'last bound publisher heartbeat'});
+          enqueueCaptureReport(job,controllerTrace,'controller_error',stopReason||(result&&result.reason),true,observedUrl);
         }
         if(result && !stopReason) {
           result.version=VERSION;
@@ -2332,17 +2368,20 @@ function embeddedJobDois(value) {
           GM_setValue(attemptKey(job.doi,generation,'figures'),result);
         }
         if(result && result.reason==='bound_publisher_heartbeat_missing')stopReason=result.reason;
+        if(result && result.reason==='controller_timeout')stopReason='controller_timeout_transient_pause';
         if(stopReason){summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);break;}
         GM_setValue(SUMMARY_KEY,summary);
         if(result && result.status==='aborted')break;
         await sleep(3500);
       }
       summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
-      if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
+      if(stopReason==='controller_timeout_transient_pause')badge('控制器超时，当前批次已暂停；2 分钟后从其余可处理文献继续','#92400e');
+      else if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
       else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；完整抓取 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'（暂存不等于发布）','#374151');
-      if(!stopReason&&jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      if((!stopReason||stopReason==='controller_timeout_transient_pause')&&jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
-        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
+        var resumeDelay=stopReason==='controller_timeout_transient_pause'?120000:NEXT_BATCH_DELAY_MS;
+        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},resumeDelay);
       }
     } catch(error) {
       stopReason=String(error.message);
@@ -2540,6 +2579,7 @@ function embeddedJobDois(value) {
   async function sameFigureCurrentSrcFallback(job, candidates, trace, cache, role) {
     if (role !== 'figure' || job.publisher !== 'acs') return null;
     for (var i = 0; i < candidates.length; i += 1) {
+      if (captureDeadlineNear(job,1500)) break;
       var candidate = candidates[i], element = candidate && candidate.element;
       if (!(element instanceof HTMLImageElement) || !element.complete || element.naturalWidth < 1) continue;
       var scope = visualScope(element);
@@ -2551,7 +2591,7 @@ function embeddedJobDois(value) {
       assertBoundCaptureJob(job,current);
       var fallback = Object.assign({},candidate,{url:current,source:'same_figure_current_src',element:element});
       var image = cache.get(current);
-      if (image === undefined) { image = await acquireImage(fallback,trace); cache.set(current,image); }
+      if (image === undefined) { image = await acquireImage(job,fallback,trace); cache.set(current,image); }
       if (!image) continue;
       var quality = measuredQuality(image,role);
       pushTrace(trace,{stage:'same_figure_fallback',event:'measured',status:quality.quality,url:image.sourceUrl||current,
@@ -2565,14 +2605,17 @@ function embeddedJobDois(value) {
   async function acquireBestVisual(job, candidates, trace, cache, role) {
     var best=null;
     for (var i=0;i<Math.min(candidates.length,4);i+=1) {
-      if (Date.now()>job.captureDeadline) break;
+      if (captureDeadlineNear(job,1500)) {
+        pushTrace(trace,{stage:'capture_deadline',event:'candidate_loop_stop',status:'deadline',message:'role='+role+';remainingMs='+Math.max(0,captureRemainingMs(job))});
+        break;
+      }
       if (isAbortRequested()) throw new Error('user_aborted');
       var candidate=candidates[i];
       assertBoundCaptureJob(job,candidate.url);
       captureLiveUpdate(job,'downloading',{label:role==='toc'?'TOC':candidate.label});
       try {
         var image=cache.get(candidate.url);
-        if (image===undefined) { image=await acquireImage(candidate,trace); cache.set(candidate.url,image); }
+        if (image===undefined) { image=await acquireImage(job,candidate,trace); cache.set(candidate.url,image); }
         if (!image) continue;
         // Preserve the URL that actually supplied the bytes, including canvas and redirects.
         var actual=image.sourceUrl||candidate.url;
@@ -2604,7 +2647,15 @@ function embeddedJobDois(value) {
 
   async function waitForPairedVisuals(job,trace) {
     var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started;
-    var toc=[],figures=[];
+    var toc=[],figures=[],pairedIframeAttempted=false,pairedIframeToc=[],pairedIframeFigures=[];
+    function mergeVisualRows(primary,extra) {
+      var seen=new Set(),out=[];
+      (primary||[]).concat(extra||[]).forEach(function(row){
+        var key=String(row&&row.kind||'')+'|'+String(row&&row.label||'')+'|'+String(row&&row.url||'');
+        if(!row||!row.url||seen.has(key))return;seen.add(key);out.push(row);
+      });
+      return out;
+    }
     while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
       if (isAbortRequested()) throw new Error('user_aborted');
       assertBoundCaptureJob(job);
@@ -2614,8 +2665,19 @@ function embeddedJobDois(value) {
         GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:state.auth?'auth_wait':'challenge_wait',at:nowIso()});
         await sleep(2000); continue;
       }
-      toc=collectCandidates(job,trace,document,location.href,'paired_dom',true);
-      figures=collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom');
+      var liveToc=collectCandidates(job,trace,document,location.href,'paired_dom',true);
+      var liveFigures=collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom');
+      var elapsedNow=Date.now()-started;
+      if(job.publisher==='wiley'&&!pairedIframeAttempted&&elapsedNow>7000&&(!liveToc.length||!liveFigures.length)){
+        pairedIframeAttempted=true;
+        var pairedIframeRows=await iframeCandidates(job,trace,'paired');
+        pairedIframeToc=pairedIframeRows.filter(function(row){return row.kind!=='article_figure';});
+        pairedIframeFigures=pairedIframeRows.filter(function(row){return row.kind==='article_figure';});
+        pushTrace(trace,{stage:'paired_iframe_fallback',event:'complete',status:pairedIframeRows.length?'found':'none',
+          message:'toc='+pairedIframeToc.length+';figures='+new Set(pairedIframeFigures.map(function(row){return row.label;})).size});
+      }
+      toc=mergeVisualRows(liveToc,pairedIframeToc);
+      figures=mergeVisualRows(liveFigures,pairedIframeFigures);
       var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
       if (figureSignature!==lastFigureSignature) {lastFigureSignature=figureSignature;figureChangedAt=Date.now();}
       var signature=toc.map(function(x){return x.url;}).join('|')+'::'+figureSignature;
@@ -2650,6 +2712,7 @@ function embeddedJobDois(value) {
     if (!prior) return true;
     if (prior.status==='success') return false;
     var elapsed=now-Date.parse(prior.finishedAt||0);
+    if (prior.reason==='controller_timeout') return elapsed>=10*60*1000;
     var count=Number(prior.retryCount||1);
     if (count>=3 && elapsed<12*60*60*1000) return false;
     if (prior.figures && prior.figures.status==='staged' && (prior.toc||{}).status!=='failed') return elapsed>=6*60*60*1000;
