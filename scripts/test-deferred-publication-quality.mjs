@@ -79,6 +79,22 @@ try {
   assert.equal(result.body.publicationChecksPassed, true);
   passed.push('healthy_source_coverage_warning_does_not_fail_post_release_quality');
 
+  data = fixture();
+  const carry = {
+    doi: '10.5555/next-slot-reviewed-include', journal: 'Organic Letters', originalDate: '2026-09-22',
+    title: 'Synthetic late-indexed reviewed include', decision: 'include', status: 'ready_for_next_slot',
+    firstPassDecision: 'include', challengeDecision: 'include',
+    evidenceBasis: 'Synthetic late-index evidence establishes a completed preparative route and is intentionally held for the next fixed slot.',
+    challengeReason: 'The synthetic challenge confirms inclusion while the fixed-slot rule independently forbids off-slot publication.',
+    sourceReviewFile: 'audit/review-synthetic-late.json', nextPublicationSlot: '2026-09-23T18:00:00+08:00'
+  };
+  data.state.nextSlotPublicationBacklog = [carry];
+  data.audit.missingCandidates = [{ doi: pd }, { doi: carry.doi }];
+  data.audit.summary.unresolved = data.audit.summary.missingFromGallery = 2;
+  result = await run(data); assert.equal(result.exit, 0, JSON.stringify(result.body));
+  assert.deepEqual(result.body.nextSlotPublicationDois, [carry.doi]);
+  passed.push('reviewed_late_include_is_exact_next_slot_carryover_not_pending');
+
   data = fixture(); data.papers.push(data.review.pending[0]);
   result = await run(data); assert.equal(result.exit, 1);
   assert.ok(result.body.failures.some(row => row.includes('deferred DOI leaked')));
