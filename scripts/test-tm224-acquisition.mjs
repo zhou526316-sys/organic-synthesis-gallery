@@ -71,32 +71,52 @@ try{
  test('existing raster quality floor is not loosened',formats.low.usable===false&&formats.usable.usable===true);
 
  const ordering=await page.evaluate(()=>{
-   const q={mediaGeneration:1790082000000,webpageDoiCount:5,articles:[
-     {doi:'10.1021/acs.joc.6c00001',date:'2026-09-22'},
-     {doi:'10.1021/jacs.6c00002',date:'2026-09-22'},
-     {doi:'10.1021/jacs.6c00003',date:'2026-09-22'},
-     {doi:'10.1021/acs.orglett.6c00004',date:'2026-09-22'},
-     {doi:'10.1021/jacs.6c00005',date:'2026-09-21'}]};
+   const q={mediaGeneration:1790082000000,latestAddedDate:'2026-09-24',webpageDoiCount:10,articles:[
+     {doi:'10.1021/jacs.6c00001',journal:'JACS',date:'2026-09-23',addedDate:'2026-09-24'},
+     {doi:'10.1021/acs.joc.6c00002',journal:'JOC',date:'2026-09-24',addedDate:'2026-09-24'},
+     {doi:'10.1038/s41586-026-10001-1',journal:'Nature',date:'2026-09-20',addedDate:'2026-09-20'},
+     {doi:'10.1126/science.abc0001',journal:'Science',date:'2026-09-21',addedDate:'2026-09-21'},
+     {doi:'10.1038/s41557-026-02001-1',journal:'Nature Chemistry',date:'2026-09-22',addedDate:'2026-09-22'},
+     {doi:'10.1126/sciadv.abc0002',journal:'Science Advances',date:'2026-09-22',addedDate:'2026-09-22'},
+     {doi:'10.1021/jacs.6c00003',journal:'JACS',date:'2026-09-22',addedDate:'2026-09-22'},
+     {doi:'10.1002/anie.202600003',journal:'Angew',date:'2026-09-23',addedDate:'2026-09-23'},
+     {doi:'10.1016/j.chempr.2026.00004',journal:'Chem',date:'2026-09-23',addedDate:'2026-09-23'},
+     {doi:'10.1021/acs.orglett.6c00005',journal:'Organic Letters',date:'2026-09-24',addedDate:'2026-09-23'}]};
    const media={items:{
-     '10.1021/acs.joc.6c00001':{toc:{available:true,imageUrl:'toc.svg'}},
-     '10.1021/jacs.6c00003':{toc:{available:true,imageUrl:'toc.svg'}},
-     '10.1021/acs.orglett.6c00004':{toc:{available:false}}
+     '10.1021/acs.joc.6c00002':{toc:{available:true,imageUrl:'toc.svg'}},
+     '10.1021/acs.orglett.6c00005':{toc:{available:true,imageUrl:'toc.svg'}}
    }};
-   return __tm224.pairedJobs(q,media).map(x=>({doi:x.doi,captureToc:x.captureToc}));
+   return __tm224.pairedJobs(q,media).map(x=>({doi:x.doi,journal:x.journal,captureToc:x.captureToc,mediaNeed:x.mediaNeed,allowFigureOne:x.allowFigureOne}));
  });
- test('queue sorts date first then missing TOC then JACS',JSON.stringify(ordering.map(x=>x.doi))===JSON.stringify([
-   '10.1021/jacs.6c00002','10.1021/acs.orglett.6c00004','10.1021/jacs.6c00003','10.1021/acs.joc.6c00001','10.1021/jacs.6c00005']));
- test('existing TOC remains body-only despite reordered queue',ordering.find(x=>x.doi==='10.1021/acs.joc.6c00001').captureToc===false);
+ test('latest Gallery additions outrank historical TOC gaps, with journal priority inside the tier',JSON.stringify(ordering.slice(0,2).map(x=>x.doi))===JSON.stringify([
+   '10.1021/jacs.6c00001','10.1021/acs.joc.6c00002']));
+ test('historical missing-TOC tier follows Nature, Science, Nature children, Science children, JACS, Angew, Chem, others',JSON.stringify(ordering.slice(2,9).map(x=>x.journal))===JSON.stringify([
+   'Nature','Science','Nature Chemistry','Science Advances','JACS','Angew','Chem']));
+ test('historical body-only backlog waits until historical TOC gaps are exhausted',ordering[9].doi==='10.1021/acs.orglett.6c00005'&&ordering[9].captureToc===false);
+ test('today-added article with existing TOC still stays in the daily full-capture priority tier',ordering[1].doi==='10.1021/acs.joc.6c00002'&&ordering[1].captureToc===false);
+ test('latest additions remain paired TOC plus body jobs',ordering.slice(0,2).every(x=>x.mediaNeed==='toc+figures'));
+ test('historical missing official TOCs are TOC-only and never use Figure 1 fallback',ordering.slice(2,9).every(x=>x.captureToc===true&&x.mediaNeed==='toc'&&x.allowFigureOne===false));
+ test('historical official-TOC article becomes figures-only',ordering[9].mediaNeed==='figures'&&ordering[9].captureToc===false&&ordering[9].allowFigureOne===false);
 
  const routes=await page.evaluate(()=>({
    acsFigure:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'figures'}),
    acsToc:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'toc'}),
    wileyFigure:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'figures'}),
-   scienceFigure:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'figures'})
+   wileyPaired:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'toc+figures'}),
+   wileyToc:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'toc'}),
+   scienceFigure:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'figures'}),
+   sciencePaired:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'toc+figures'}),
+   scienceToc:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'toc'})
  }));
  test('ACS TOC and body jobs both enter through the canonical DOI route',routes.acsFigure==='https://pubs.acs.org/doi/10.1021/acs.orglett.6c03487'&&routes.acsToc===routes.acsFigure);
  test('ACS body jobs no longer force the legacy doi/full shell route',!routes.acsFigure.includes('/doi/full/'));
- test('non-ACS full-text routes remain unchanged',routes.wileyFigure==='https://onlinelibrary.wiley.com/doi/full/10.1002/anie.202600001'&&routes.scienceFigure==='https://www.science.org/doi/full/10.1126/science.abc1234');
+ test('paired and body jobs use full-text routes while historical TOC-only uses landing routes',
+   routes.wileyFigure==='https://onlinelibrary.wiley.com/doi/full/10.1002/anie.202600001'&&
+   routes.wileyPaired===routes.wileyFigure&&
+   routes.wileyToc==='https://onlinelibrary.wiley.com/doi/10.1002/anie.202600001'&&
+   routes.scienceFigure==='https://www.science.org/doi/full/10.1126/science.abc1234'&&
+   routes.sciencePaired===routes.scienceFigure&&
+   routes.scienceToc==='https://www.science.org/doi/10.1126/science.abc1234');
 
  const discovery=await page.evaluate(()=>({
    tocOnlyEarly:__tm224.pairedDiscoveryReady({mediaNeed:'toc+figures'},3,1,0,6000,6000),
@@ -111,6 +131,6 @@ try{
  test('body discovery retains an 8s minimum observation even after figures appear',discovery.bodyTooEarly===false);
  test('body discovery waits four quiet seconds after the latest figure-set change',discovery.bodyStillChanging===false&&discovery.bodyStable===true);
  test('TOC-only discovery keeps the legacy early-stable behavior',discovery.tocJobLegacy===true);
- test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.27';"));
+ test('controller revision is upgraded without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.31';"));
 }finally{await browser.close();}
 console.log('TM224_ACQUISITION_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherFixtureOnly:true,captureProtocol:'6.2.20'}));

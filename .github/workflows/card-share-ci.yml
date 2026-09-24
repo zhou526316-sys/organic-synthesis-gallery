@@ -10,6 +10,7 @@ on:
       - 'package.json'
       - 'scripts/build-share-pages.mjs'
       - 'public/share-default.png'
+      - 'public/CNAME'
       - '.github/workflows/card-share-ci.yml'
   push:
     branches: [main]
@@ -21,6 +22,7 @@ on:
       - 'package.json'
       - 'scripts/build-share-pages.mjs'
       - 'public/share-default.png'
+      - 'public/CNAME'
       - '.github/workflows/card-share-ci.yml'
 
 permissions:
@@ -43,33 +45,44 @@ jobs:
         run: |
           test -n "$(find dist/share -name '*.html' -print -quit)"
           SHARE_PAGE="$(find dist/share -name '*.html' -print -quit)"
+          RICH_PAGE="dist/share/MTAuMTAyMS9qYWNzLjZjMTUzOTM.html"
+          test -s "$RICH_PAGE"
           grep -F 'property="og:type" content="article"' "$SHARE_PAGE"
           grep -F 'property="og:image"' "$SHARE_PAGE"
           grep -F 'meta itemprop="image"' "$SHARE_PAGE"
-          grep -F 'https://api.gczhouwld.com/share/' "$SHARE_PAGE"
-          grep -F 'https://zhou526316-sys.github.io/organic-synthesis-gallery/?doi=' "$SHARE_PAGE"
-          ! grep -F 'location.replace' "$SHARE_PAGE"
-          grep -F '本介绍页不会自动跳走' "$SHARE_PAGE"
+          grep -F 'https://gallery.gczhouwld.com/share/' "$SHARE_PAGE"
+          grep -F 'https://gallery.gczhouwld.com/share-media/' "$RICH_PAGE"
+          grep -F 'https://gallery.gczhouwld.com/?doi=' "$SHARE_PAGE"
+          ! grep -F 'https://api.gczhouwld.com/share/' "$SHARE_PAGE"
+          ! grep -F 'https://api.gczhouwld.com/share-media/' "$SHARE_PAGE"
+          grep -F 'window.location.replace' "$SHARE_PAGE"
+          grep -F "params.get('prepare')==='1'" "$SHARE_PAGE"
+          grep -F 'jweixin-1.6.0.js' "$SHARE_PAGE"
+          grep -F 'updateAppMessageShareData' "$SHARE_PAGE"
+          grep -F '图文卡片已准备好' "$SHARE_PAGE"
+          grep -F '正在进入有机合成文献库并定位这篇文献' "$SHARE_PAGE"
           test -s dist/share-default.png
-          grep -F "wechat-copy" dist/assets/card-share-*.js
-          grep -F "navigator.share" dist/assets/card-share-*.js
-          grep -F "System share is unavailable; the card link was copied instead." dist/assets/card-share-*.js
-          grep -F "jweixin-1.6.0.js" dist/assets/card-share-*.js
-          grep -F "updateAppMessageShareData" dist/assets/card-share-*.js
-          grep -F "/api/wechat/js-sdk-signature" dist/assets/card-share-*.js
+          grep -F 'data-share-action="copy-poster"' src/card-share.ts
+          grep -F 'data-share-action="copy-title-doi"' src/card-share.ts
+          grep -F 'data-share-action="copy-link"' src/card-share.ts
+          ! grep -F 'data-share-action="wechat-copy"' src/card-share.ts
+          ! grep -F 'data-share-action="native"' src/card-share.ts
+          ! grep -F 'data-share-action="qr"' src/card-share.ts
+          grep -F "const qrModulePromise = import('qrcode')" src/card-share.ts
+          grep -F "扫码跳转并定位该文献" src/card-share.ts
+          grep -F "SHARE_POSTER_GENERATION_FAILED" src/card-share.ts
+          grep -F "navigator.clipboard.write" src/card-share.ts
           grep -F "sharev=" dist/assets/card-share-*.js
-          grep -F "galleryDeepLink" src/card-share.ts
-          grep -F "&sharev=" scripts/build-share-pages.mjs
-          grep -F "Pasting the URL into chat only sends a plain link." dist/assets/card-share-*.js
 
       - name: Verify canonical Gallery routing
         run: |
-          grep -F "const CANONICAL_GALLERY = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/'" index.html
+          grep -F "const CANONICAL_GALLERY = 'https://gallery.gczhouwld.com/'" index.html
           grep -F "host === 'organic-synthesis-gallery-public.pages.dev'" index.html
-          ! grep -F "LEGACY_GITHUB_PAGES_HOST" index.html
+          grep -F "host === 'zhou526316-sys.github.io'" index.html
           ! grep -F "new URL('https://api.gczhouwld.com/')" index.html
-          grep -F "const CANONICAL_GALLERY_ORIGIN = 'https://zhou526316-sys.github.io/organic-synthesis-gallery'" src/card-share.ts
-          grep -F "const CANONICAL_GALLERY_BASE = 'https://zhou526316-sys.github.io/organic-synthesis-gallery'" scripts/build-share-pages.mjs
+          grep -F "const CANONICAL_GALLERY_ORIGIN = 'https://gallery.gczhouwld.com'" src/card-share.ts
+          grep -F "const CANONICAL_GALLERY_BASE = 'https://gallery.gczhouwld.com'" scripts/build-share-pages.mjs
+          grep -Fx "gallery.gczhouwld.com" public/CNAME
 
       - name: Verify 20-second halo contract
         run: |
@@ -132,17 +145,24 @@ jobs:
             await shareButton.click();
             const panel = page.locator('.card-share-panel');
             await panel.waitFor({ state: 'visible' });
-            const richShareUrl = await panel.getAttribute('data-share-url');
-            if (!richShareUrl || !/^https:\/\/api\.gczhouwld\.com\/share\/[A-Za-z0-9_-]+\.html\?sharev=[A-Za-z0-9_-]+$/.test(richShareUrl)) {
-              throw new Error('share URL is not the custom-domain rich paper card: ' + richShareUrl);
+            const shareUrl = await panel.getAttribute('data-share-url');
+            if (!shareUrl || !/^https:\/\/gallery\.gczhouwld\.com\/\?doi=10\.[^&]+&sharev=[A-Za-z0-9_-]+$/.test(shareUrl)) {
+              throw new Error('share URL is not the direct paper deep link: ' + shareUrl);
             }
-            await panel.locator('[data-share-action="native"]').click();
-            const nativeShareInvoked = await page.evaluate(() => Boolean(window.__osgNativeShareInvoked));
-            if (!nativeShareInvoked) throw new Error('system share action did not invoke navigator.share');
-            await shareButton.click();
-            await panel.waitFor({ state: 'visible' });
-            await panel.locator('[data-share-action="qr"]').click();
-            await panel.locator('.card-share-qr-image').waitFor({ state: 'visible', timeout: 10000 });
+            const actionCount = await panel.locator('[data-share-action]').count();
+            if (actionCount !== 3) throw new Error('share panel must expose exactly three actions, got ' + actionCount);
+            await panel.locator('.card-share-poster-image').waitFor({ state: 'visible', timeout: 10000 });
+            const posterReady = await panel.getAttribute('data-poster-ready');
+            if (posterReady !== 'true') throw new Error('default share poster did not become ready');
+            const posterSize = await panel.locator('.card-share-poster-image').evaluate(image => ({
+              width: image.naturalWidth,
+              height: image.naturalHeight,
+            }));
+            if (posterSize.width < 500 || posterSize.height < 700) {
+              throw new Error('generated poster is unexpectedly small: ' + JSON.stringify(posterSize));
+            }
+            await panel.locator('[data-share-action="copy-title-doi"]').waitFor({ state: 'visible' });
+            await panel.locator('[data-share-action="copy-link"]').waitFor({ state: 'visible' });
 
             await page.goto('http://127.0.0.1:4173/?doi=' + encodeURIComponent(doi), { waitUntil: 'domcontentloaded' });
             const targeted = page.locator('.card.shared-card-target');

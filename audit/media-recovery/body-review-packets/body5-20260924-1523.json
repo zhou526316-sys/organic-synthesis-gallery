@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-1523",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T07:23:40.057313Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10794591083,
+  "evidenceArchiveSha256": "1ecedf73164595b8fff783f8f67802d4d92c3ff5f74558bbd3a2f537579d5729",
+  "evidenceRunId": 35966705081,
+  "approvedCount": 22,
+  "reviewMethod": "All 22 selected stored files across the next five newest eligible current-corpus Organic Letters articles were independently rehashed against the immutable read-only GitHub evidence artifact and checked for exact task/page/article/source DOI identity, original Figure/Scheme identity and independent caption, captureVersion 6.2.20, job identity, fixed media generation 1790082000000, content-addressed R2 key, actual byte length/type/dimensions, duplicate source/hash ownership, frozen public same-ID state and TOC separation. All 22 SVG files were parsed, rendered and checked for script, foreignObject, event-handler, javascript/external href and external CSS URL content. Every image was visually reviewed against its owning caption and article theme for body-image role, unrelated/recommendation contamination, duplicate risk and legibility. Capture success and earlier transport/format checkpoints were treated only as provenance evidence. No publisher request, R2/D1 write, direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "The 22 files are exact stored SVG bytes, all within configured size bounds, with unique selected full SHA256 and source identities and no cross-DOI content/source ownership collision in the frozen stage index. The frozen public media-index contains no same-ID body figures for these five DOI; the frozen publication ledger contains none of these DOI. The report chain records final paired_capture success of 5/5, 4/4, 4/4, 5/5 and 4/4 respectively, while earlier transport/format checkpoints are retained without attributing cause. Figure 1 files are body-only and are not TOC substitutions; any separately captured/stored TOC is left untouched.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.orglett.6c03276",
+      "images": [
+        ["next-006", "scheme-1", "Viewed the prior/current palladium dearomative Heck concepts together with representative natural-product motifs; the reaction design matches Scheme 1 and the paper’s tandem dearomatization context."],
+        ["next-038", "scheme-2", "Viewed the N-propiolyl indole substrate scope with aryl bromide partners, yields and selectivity; content matches Scheme 2."],
+        ["next-039", "scheme-3", "Viewed the corresponding N-propiolyl pyrrole substrate scope and product examples; content matches Scheme 3."],
+        ["next-040", "scheme-4", "Viewed downstream synthetic transformations of the dearomatized products; content matches Scheme 4."],
+        ["next-041", "scheme-5", "Viewed the proposed Pd oxidative-addition, alkyne insertion/isomerization and dearomative cyclization pathway; content matches Scheme 5 and the article mechanism."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03346",
+      "images": [
+        ["next-007", "figure-1", "Viewed roridin E and representative type-D trichothecene natural products; the structures match Figure 1 and the total-synthesis target context."],
+        ["next-042", "scheme-1", "Viewed the retrosynthetic disconnections of roridin E into the macrocyclic and trichothecene fragments; content matches Scheme 1."],
+        ["next-043", "scheme-2", "Viewed the catalytic asymmetric construction of phosphonoacetate intermediates 6 and 19, including scale and stereochemical information; content matches Scheme 2."],
+        ["next-044", "scheme-3", "Viewed the final fragment assembly, olefination and macrocyclization sequence leading to roridin E; content matches Scheme 3."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03455",
+      "images": [
+        ["next-008", "figure-1", "Viewed the background of electrophilic-halogenation-mediated alkyne difunctionalization/oxidation and the authors’ oxidative annulation design; content matches Figure 1."],
+        ["next-045", "figure-2", "Viewed the alkynoate coupling-partner scope giving oxazole products with isolated yields; content matches Figure 2."],
+        ["next-046", "figure-3", "Viewed the nitrile coupling-partner scope and downstream synthetic applications; content matches Figure 3."],
+        ["next-047", "figure-4", "Viewed mechanistic control studies and the plausible iodocarbenoid-mediated annulation pathway; content matches Figure 4."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03520",
+      "images": [
+        ["next-009", "scheme-1", "Viewed the overview of C–C triple-bond cleavage strategies for nitrile synthesis and this work’s Au(I)/tert-butyl nitrite design; content matches Scheme 1."],
+        ["next-048", "scheme-2", "Viewed the o-alkynyl aniline substrate scope furnishing 2-aminobenzonitriles with reported yields; content matches Scheme 2."],
+        ["next-049", "scheme-3", "Viewed the control experiments used to probe the alkyne-cleavage process; content matches Scheme 3."],
+        ["next-050", "scheme-4", "Viewed the proposed Au(I)/nitrite reaction mechanism for selective C≡C cleavage and nitrile formation; content matches Scheme 4."],
+        ["next-051", "scheme-5", "Viewed gram-scale preparation and conversion of the aminobenzonitrile product into quinazoline derivatives; content matches Scheme 5."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03854",
+      "images": [
+        ["next-010", "figure-1", "Viewed representative Cephalotaxus alkaloids including the dimeric cephalancetine C target; content matches Figure 1 and the total-synthesis context."],
+        ["next-052", "figure-2", "Viewed the proposed biosynthetic dimerization pathway and the unexpected conjugated cyclic enamine intermediate; content matches Figure 2."],
+        ["next-053", "scheme-1", "Viewed the retrosynthetic analysis of (−)-cephalancetine C into the planned monomeric building blocks; content matches Scheme 1."],
+        ["next-054", "scheme-2", "Viewed the completed synthetic sequence and late-stage union leading to (−)-cephalancetine C; content matches Scheme 2."]
+      ]
+    }
+  ]
+}

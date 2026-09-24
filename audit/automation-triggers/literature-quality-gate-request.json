@@ -1,21 +1,16 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-24T08:44:00+08:00",
-  "publicationSlot": "2026-09-24T08:00:00+08:00",
-  "releaseCommit": "d0d440e99aa9c46e3f63a6f7465edff11cd1702b",
-  "baselineMain": "7658b49581d7421b4c4116cffed215026f09df78",
-  "postReleaseAuditRunId": 35939450119,
-  "postReleaseAuditGeneratedAt": "2026-09-24T00:41:18.948Z",
-  "expectedProductionCards": 557,
+  "requestedAt": "2026-09-24T18:28:00+08:00",
+  "publicationSlot": "2026-09-24T18:00:00+08:00",
+  "releaseCommit": "b513e1a2767e999edbf10a9ebe6124850b9e916a",
+  "baselineMain": "303ddf765ea02a90a0e97276903135300f111b3d",
+  "postReleaseAuditRunId": 35985602540,
+  "postReleaseAuditGeneratedAt": "2026-09-24T10:12:00.806Z",
+  "expectedProductionCards": 566,
   "expectedDeferredDois": [
     "10.1038/s41467-026-78015-9",
     "10.31635/ccschem.026.202608262"
   ],
-  "observedUnresolvedDois": [
-    "10.1038/s41467-026-77885-3",
-    "10.1038/s41467-026-78015-9",
-    "10.1021/acs.orglett.6c03851",
-    "10.31635/ccschem.026.202608262"
-  ],
-  "purpose": "Run the real post-release literature quality gate for the already deployed 2026-09-24 08:00 release. Fail closed because any unresolved DOI beyond the exact two frozen deferred records is an unreviewed post-release increment; also report discovery source-coverage failures and repository/deployed/state consistency. This request changes no production literature data and does not admit late arrivals."
+  "observedUnresolvedCount": 10,
+  "purpose": "Run the real post-release literature quality gate for the already deployed 2026-09-24 18:00 release. Fail closed if unresolved DOI(s) exceed the exact frozen deferred set; post-release late arrivals must not be silently admitted, excluded, or relabeled pending. This request changes no protected production literature data and performs no off-slot admission."
 }

@@ -3,11 +3,11 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
 import path from 'node:path';
 
-const SITE_BASE = (process.env.SHARE_SITE_ORIGIN || 'https://api.gczhouwld.com').replace(/\/+$/, '');
-const CANONICAL_GALLERY_BASE = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
+const SITE_BASE = (process.env.SHARE_SITE_ORIGIN || 'https://gallery.gczhouwld.com').replace(/\/+$/, '');
+const CANONICAL_GALLERY_BASE = 'https://gallery.gczhouwld.com';
 const GALLERY_BASE = (process.env.SHARE_GALLERY_ORIGIN || CANONICAL_GALLERY_BASE).replace(/\/+$/, '');
 const SHARE_BUILD_ID = String(process.env.GITHUB_SHA || process.env.CF_PAGES_COMMIT_SHA || Date.now().toString(36)).slice(0, 12);
-const PUBLISHED_PAGES_BASE = CANONICAL_GALLERY_BASE;
+const PUBLISHED_PAGES_BASE = (process.env.SHARE_PUBLISHED_PAGES_ORIGIN || CANONICAL_GALLERY_BASE).replace(/\/+$/, '');
 const PUBLIC = path.resolve('public');
 const OUT = path.join(PUBLIC, 'share');
 const COVER_OUT = path.join(PUBLIC, 'share-media');
@@ -175,6 +175,11 @@ function html(meta, selected) {
   const secondary = [meta.journal, meta.date, `DOI: ${doi}`].filter(Boolean).join(' · ');
   const description = `${secondary}${secondary ? ' — ' : ''}点击进入 Organic Synthesis Gallery，直接定位并高亮这篇文献卡片。`;
   const targetJson = JSON.stringify(target).replace(/</g, '\\u003c');
+  const shareJson = JSON.stringify(share).replace(/</g, '\\u003c');
+  const titleJson = JSON.stringify(title).replace(/</g, '\\u003c');
+  const descriptionJson = JSON.stringify(secondary).replace(/</g, '\\u003c');
+  const imageJson = JSON.stringify(image).replace(/</g, '\\u003c');
+  const timelineTitleJson = JSON.stringify([title, meta.journal].filter(Boolean).join(' · ')).replace(/</g, '\\u003c');
   const width = Number(selected?.toc?.primary?.width || selected?.toc?.width || 0);
   const height = Number(selected?.toc?.primary?.height || selected?.toc?.height || 0);
   const imageDims = width > 0 && height > 0
@@ -189,7 +194,64 @@ function html(meta, selected) {
 <meta property="og:url" content="${esc(share)}"><meta property="og:image" content="${esc(image)}"><meta property="og:image:secure_url" content="${esc(image)}">${imageDims}
 <meta property="og:image:alt" content="${esc(title)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(image)}">
 <link rel="image_src" href="${esc(image)}"><link rel="canonical" href="${esc(share)}"><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f5f7fb;color:#172033;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.paper{width:min(560px,100%);overflow:hidden;border:1px solid #dfe5ef;border-radius:20px;background:#fff;box-shadow:0 18px 48px rgba(23,32,51,.12)}.cover{display:grid;place-items:center;min-height:260px;padding:18px;background:#f8fafc}.cover img{display:block;width:100%;max-height:360px;object-fit:contain}.body{padding:18px}.site{color:#3159bd;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}h1{margin:8px 0 10px;font-size:20px;line-height:1.42}.meta{color:#667085;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.open{display:inline-flex;margin-top:15px;padding:10px 14px;border-radius:10px;background:#3159bd;color:#fff;text-decoration:none;font-size:13px;font-weight:800}.hint{margin-top:10px;color:#98a2b3;font-size:10px}</style></head><body>
-<article class="paper"><div class="cover"><img src="${esc(image)}" alt="${esc(title)}"></div><div class="body"><div class="site">Organic Synthesis Gallery</div><h1>${esc(title)}</h1><div class="meta">${esc(secondary)}</div><a class="open" href="${esc(target)}">进入有机合成文献库并定位这篇文献 →</a><div class="hint">本介绍页不会自动跳走；确认文献信息后再进入文献库，目标卡片会保持 20 秒光环高亮。</div></div></article>
+<article class="paper"><div class="cover"><img src="${esc(image)}" alt="${esc(title)}"></div><div class="body"><div class="site">Organic Synthesis Gallery</div><h1>${esc(title)}</h1><div class="meta">${esc(secondary)}</div><a class="open" href="${esc(target)}">立即进入文献库 →</a><div class="hint" data-share-status>正在进入有机合成文献库并定位这篇文献；目标卡片会保持 20 秒高亮。</div></div></article>
+<script>
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var prepare=params.get('prepare')==='1';
+  var target=${targetJson};
+  var shareLink=${shareJson};
+  var title=${titleJson};
+  var desc=${descriptionJson};
+  var image=${imageJson};
+  var timelineTitle=${timelineTitleJson};
+  var status=document.querySelector('[data-share-status]');
+  if(!prepare){
+    window.setTimeout(function(){window.location.replace(target);},320);
+    return;
+  }
+  if(status) status.textContent='微信图文卡片准备中：标题 + 期刊/DOI + TOC 图。准备好后请点右上角“…”→“分享给朋友”。';
+  if(!/MicroMessenger/i.test(navigator.userAgent)){
+    if(status) status.textContent='这是微信分享准备页。请在微信中打开后，点右上角“…”→“分享给朋友”。';
+    return;
+  }
+  var sdk=document.createElement('script');
+  sdk.src='https://res.wx.qq.com/open/js/jweixin-1.6.0.js';
+  sdk.async=true;
+  sdk.onload=async function(){
+    try{
+      var signedUrl=window.location.href.split('#')[0];
+      var endpoint='https://api.gczhouwld.com/api/wechat/js-sdk-signature?url='+encodeURIComponent(signedUrl);
+      var response=await fetch(endpoint,{headers:{accept:'application/json'},cache:'no-store'});
+      var body=await response.json();
+      if(!response.ok||body.ok!==true) throw new Error(body.error||'wechat_signature_failed');
+      wx.config({
+        debug:false,
+        appId:body.appId,
+        timestamp:body.timestamp,
+        nonceStr:body.nonceStr,
+        signature:body.signature,
+        jsApiList:body.jsApiList||['updateAppMessageShareData','updateTimelineShareData']
+      });
+      wx.ready(function(){
+        var friend={title:title,desc:desc,link:shareLink,imgUrl:image};
+        if(typeof wx.updateAppMessageShareData==='function') wx.updateAppMessageShareData(friend);
+        if(typeof wx.updateTimelineShareData==='function') wx.updateTimelineShareData({title:timelineTitle,link:shareLink,imgUrl:image});
+        if(status) status.textContent='图文卡片已准备好。现在只需点右上角“…”→“分享给朋友”。';
+      });
+      wx.error(function(){
+        if(status) status.textContent='微信分享接口暂未就绪；请稍后重试或返回 Gallery 重新扫码。';
+      });
+    }catch(error){
+      if(status) status.textContent='微信分享接口暂未就绪；请稍后重试或返回 Gallery 重新扫码。';
+    }
+  };
+  sdk.onerror=function(){
+    if(status) status.textContent='微信分享组件加载失败；请检查网络后重试。';
+  };
+  document.head.appendChild(sdk);
+})();
+</script>
 </body></html>`;
 }
 

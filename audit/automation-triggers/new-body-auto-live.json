@@ -1,6 +1,6 @@
 {
-  "requestedAt": "2026-09-24T02:26:00+08:00",
+  "requestedAt": "2026-09-24T22:55:00+08:00",
   "readOnly": true,
   "productionWrites": 0,
-  "reason": "Read the exact currently deployed automatic body snapshot, media ledger, bytes and card identities once, to diagnose the repeated auto_prior_publication_changed gate without retrying publication or changing media."
+  "reason": "Run one fresh read-only automatic body live verification after PR #226 aligned the verifier with the current bounded publication policy. Verify exact deployed snapshot, media ledger, image bytes, labels, URLs, official TOCs and rendered cards without changing publication or media."
 }

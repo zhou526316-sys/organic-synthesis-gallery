@@ -1,4 +1,4 @@
-name: Bridge 2.2.27 publisher-result precedence regression
+name: Bridge 2.2.29 publisher-result precedence regression
 
 on:
   push:
@@ -35,8 +35,8 @@ jobs:
         run: |
           set -euo pipefail
           node --check public/toc-mainline.user.js
-          node scripts/test-tm227-result-precedence.mjs | tee "$RUNNER_TEMP/tm227-result-precedence.log"
-          grep -F 'TM227_RESULT_PRECEDENCE_TEST_SUMMARY ' "$RUNNER_TEMP/tm227-result-precedence.log"
+          node scripts/test-tm227-result-precedence.mjs | tee "$RUNNER_TEMP/tm229-result-precedence.log"
+          grep -F 'TM227_RESULT_PRECEDENCE_TEST_SUMMARY ' "$RUNNER_TEMP/tm229-result-precedence.log"
 
       - name: Retain upload, identity, window and diagnostic safety contracts
         run: |
@@ -56,12 +56,12 @@ jobs:
           set -euo pipefail
           npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
           npx playwright install --with-deps chromium
-          node scripts/test-tm224-acquisition.mjs | tee "$RUNNER_TEMP/tm227-acquisition.log"
-          grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm227-acquisition.log"
+          node scripts/test-tm224-acquisition.mjs | tee "$RUNNER_TEMP/tm229-acquisition.log"
+          grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm229-acquisition.log"
           node scripts/test-tm-paired-capture.mjs
           node scripts/test-tm222-live-progress.mjs
 
-      - name: Build exact Bridge 2.2.27 installer
+      - name: Build exact Bridge 2.2.29 installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://zhou526316-sys.github.io/organic-synthesis-gallery
@@ -71,9 +71,9 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.27' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.29' public/gallery-vpn-bridge.user.js
           grep -F "var VERSION = '6.2.20';" public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.27';" public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.29';" public/gallery-vpn-bridge.user.js
           grep -F 'completedPublisherResult' public/gallery-vpn-bridge.user.js
           grep -F 'publisher final results over controller timeouts' public/gallery-vpn-bridge.user.js
           grep -F 'sameFigureCurrentSrcFallback' public/gallery-vpn-bridge.user.js
@@ -82,11 +82,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tm227-result-precedence-tested
+          name: tm229-result-precedence-tested
           path: |
             public/gallery-vpn-bridge.user.js
             public/toc-mainline.user.js
-            ${{ runner.temp }}/tm227-result-precedence.log
-            ${{ runner.temp }}/tm227-acquisition.log
+            ${{ runner.temp }}/tm229-result-precedence.log
+            ${{ runner.temp }}/tm229-acquisition.log
           retention-days: 7
           if-no-files-found: warn

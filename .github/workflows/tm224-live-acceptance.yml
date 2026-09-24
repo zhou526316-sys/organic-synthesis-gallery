@@ -1,4 +1,4 @@
-name: Verify Bridge 2.2.27 live
+name: Verify Bridge 2.2.31 live
 on:
   workflow_run:
     workflows: ['Deploy GitHub Pages frontend']
@@ -22,24 +22,25 @@ jobs:
           set -euo pipefail
           node --input-type=module - <<'NODE'
           import {writeFile} from 'node:fs/promises';
-          const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+          const base='https://gallery.gczhouwld.com/';
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           let report={checkedAt:new Date().toISOString(),productionWrites:0,publisherRequests:0,ok:false};
           for(let n=0;n<12;n++){
             try{
               const [a,b]=await Promise.all([
-                fetch(base+'gallery-vpn-bridge.user.js?tm227='+Date.now(),{headers:{'cache-control':'no-cache'}}),
-                fetch(base+'toc-mainline.user.js?tm227='+Date.now(),{headers:{'cache-control':'no-cache'}})
+                fetch(base+'gallery-vpn-bridge.user.js?tm229='+Date.now(),{headers:{'cache-control':'no-cache'}}),
+                fetch(base+'toc-mainline.user.js?tm229='+Date.now(),{headers:{'cache-control':'no-cache'}})
               ]);
               if(!a.ok||!b.ok)throw new Error('HTTP '+a.status+'/'+b.status);
               const installer=await a.text(),mainline=await b.text();
               const checks={
-                installerVersion:/^\/\/ @version\s+2\.2\.27$/m.test(installer),
-                controller:installer.includes("var CONTROLLER_REVISION = '2.2.27';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.27';"),
+                installerVersion:/^\/\/ @version\s+2\.2\.31$/m.test(installer),
+                controller:installer.includes("var CONTROLLER_REVISION = '2.2.31';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.31';"),
                 protocol:installer.includes("var VERSION = '6.2.20';")&&mainline.includes("var VERSION = '6.2.20';"),
                 fallback:installer.includes('sameFigureCurrentSrcFallback')&&mainline.includes('sameFigureCurrentSrcFallback'),
                 tiff:installer.includes("return 'image/tiff'")&&mainline.includes("return 'image/tiff'"),
-                ordering:installer.includes('missing official TOC comes first; then JACS')&&mainline.includes('missing official TOC comes first; then JACS'),
+                ordering:['Scheduler tiers: latest Gallery additions first','function journalPriority','function captureQueueTier','latestAddedDate'].every(x=>installer.includes(x)&&mainline.includes(x)),
+                phasedCapture:["mediaNeed=isLatest?'toc+figures':official?'figures':'toc'","allowFigureOne:isLatest&&!official","figures=not_requested","mediaNeed:String(job.mediaNeed||'')"].every(x=>installer.includes(x)&&mainline.includes(x)),
                 resultPrecedence:installer.includes('completedPublisherResult')&&mainline.includes('completedPublisherResult')&&installer.includes('publisher final results over controller timeouts')&&mainline.includes('publisher final results over controller timeouts'),
                 guards:['capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch'].every(x=>installer.includes(x)&&mainline.includes(x)),
                 noEval:!(/\beval\s*\(/.test(installer))

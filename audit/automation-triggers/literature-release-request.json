@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "requestId": "20260924-0800-fixed-slot-release",
-  "requestedAt": "2026-09-24T08:17:04+08:00",
-  "publicationSlot": "2026-09-24T08:00:00+08:00",
-  "stagingReviewFile": "audit/prepublish-review-2026-09-24-0800.json",
-  "stagingReviewBlobSha": "f0c9fbd775afb506514184ba3ba6a97bdeb919eb",
-  "handoffBlobSha": "c988f7e2e2213fc38459b10422cc31a85ba522b6",
-  "auditBlobSha": "4635d42f0dde8724392a2a1af7baffab907588a6",
-  "prepublishGateRunId": 35937638326,
-  "expectedPublishableCount": 15,
+  "requestId": "20260924-1800-fixed-slot-release",
+  "requestedAt": "2026-09-24T18:00:05+08:00",
+  "publicationSlot": "2026-09-24T18:00:00+08:00",
+  "stagingReviewFile": "audit/prepublish-review-2026-09-24-1800.json",
+  "stagingReviewBlobSha": "341ce72e85285dfb50be5a253458e5744c83d112",
+  "handoffBlobSha": "8ba092dab22861b27d77e5bb1757de4a269d0579",
+  "auditBlobSha": "5b397f604f545792e7a9a99c7eed76612644ef83",
+  "prepublishGateRunId": 35980675436,
+  "expectedPublishableCount": 9,
   "expectedDeferredCount": 2,
-  "note": "Authorized only within the still-running 2026-09-24 08:00 fixed-slot release task after strict per-DOI gate run 35937638326 completed successfully. Runner must fail closed on stale SHA, slot expiry, incomplete strict bundle, concurrent authoritative movement, scope-correction restoration risk, or production partition mismatch. This does not authorize any off-slot admission after this task ends."
+  "note": "Authorized only within the current 2026-09-24 18:00 fixed-slot release task after strict per-DOI gate run 35980675436 completed successfully. Runner must fail closed on stale SHA, slot expiry, incomplete strict bundle, concurrent authoritative movement, scope-correction restoration risk, or production partition mismatch. This does not authorize off-slot admissions after this task ends."
 }

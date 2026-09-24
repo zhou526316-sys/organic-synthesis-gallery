@@ -27,15 +27,37 @@ assert(compact.summary?.galleryDois === marker.productionCards, 'post-release ga
 assert(compact.summary?.unresolved === compact.unresolved?.length, 'compact unresolved count mismatch');
 assert(Number.isSafeInteger(compact.summary?.criticalSourceFailures) && compact.summary.criticalSourceFailures === 0, 'critical source failure');
 assert(Number.isSafeInteger(compact.summary?.sourceFamilyGaps) && compact.summary.sourceFamilyGaps === 0, 'source family gap');
-assert(Number.isSafeInteger(compact.summary?.sourceCoverageAnomalies) && compact.summary.sourceCoverageAnomalies === 0, 'source coverage anomaly');
 assert(Number.isSafeInteger(compact.summary?.historicalCoverageLosses) && compact.summary.historicalCoverageLosses === 0, 'historical coverage loss');
+assert(Number.isSafeInteger(compact.summary?.sourceCoverageAnomalies), 'source coverage anomaly count missing');
+assert(Number.isSafeInteger(compact.summary?.closureCoverageAnomalies), 'closure coverage anomaly count missing');
+if (Number.isSafeInteger(request.observedSourceCoverageAnomalies)) {
+  assert(compact.summary.sourceCoverageAnomalies === request.observedSourceCoverageAnomalies, 'source coverage anomaly count mismatch');
+}
+if (Number.isSafeInteger(request.observedClosureCoverageAnomalies)) {
+  assert(compact.summary.closureCoverageAnomalies === request.observedClosureCoverageAnomalies, 'closure coverage anomaly count mismatch');
+}
+if (Number.isSafeInteger(request.expectedPostReleaseUnresolved)) {
+  assert(compact.summary.unresolved === request.expectedPostReleaseUnresolved, 'post-release unresolved count mismatch');
+}
 
 const unresolved = (compact.unresolved || []).map(row => norm(row.doi));
 const deferred = (marker.deferredDois || []).map(norm);
 const carryForward = unresolved.filter(doi => !deferred.includes(doi));
-assert(sameSet(carryForward, request.carryForwardUnreviewedDois.map(norm)), 'carry-forward DOI set mismatch');
-assert(carryForward.length > 0, 'failure recorder requires a real post-release increment');
+if (Array.isArray(request.carryForwardUnreviewedDois) && request.carryForwardUnreviewedDois.length) {
+  assert(sameSet(carryForward, request.carryForwardUnreviewedDois.map(norm)), 'carry-forward DOI set mismatch');
+}
+if (Number.isSafeInteger(request.expectedCarryForwardCount)) {
+  assert(carryForward.length === request.expectedCarryForwardCount, 'carry-forward DOI count mismatch');
+}
+assert(carryForward.length > 0 || compact.summary.sourceCoverageAnomalies > 0, 'failure recorder requires a real post-release incompleteness condition');
 assert(request.qualityGateConclusion === 'failure', 'quality gate failure evidence missing');
+
+const published = new Set((marker.publishableDois || []).map(norm));
+const stripPublishedCarryover = values => Array.isArray(values) ? values.filter(doi => !published.has(norm(doi))) : values;
+if (Array.isArray(state.nextSlotPublicationDois)) state.nextSlotPublicationDois = stripPublishedCarryover(state.nextSlotPublicationDois);
+if (Array.isArray(state.lastWebsiteSync?.verification?.nextSlotPublicationDois)) {
+  state.lastWebsiteSync.verification.nextSlotPublicationDois = stripPublishedCarryover(state.lastWebsiteSync.verification.nextSlotPublicationDois);
+}
 
 state.phase = 'sync_failed';
 state.publicationChecksPassed = false;
@@ -54,10 +76,10 @@ state.latestMachineAudit = {
   closureCoverageAnomalies: compact.summary?.closureCoverageAnomalies ?? null,
   historicalCoverageLosses: compact.summary?.historicalCoverageLosses ?? null,
   closureDate: compact.closureDate || null,
-  status: 'post_release_unreviewed_increment',
+  status: 'post_release_incomplete_quality_closure',
   runId: request.postReleaseAuditRunId,
   runConclusion: 'success',
-  note: 'Post-release DOI-union audit found candidates not present in the frozen pre-slot handoff. They are not silently treated as pending/excluded and are carried to the next fixed slot.'
+  note: 'Post-release DOI-union audit found unresolved work beyond the exact frozen deferred set and/or source coverage anomalies. No new DOI is silently treated as pending/excluded and no off-slot admission is authorized.'
 };
 state.lastQualityGate = {
   runId: request.qualityGateRunId,
@@ -86,9 +108,11 @@ state.lastPublicationAttempt = {
   postReleaseUnresolvedDois: unresolved,
   carryForwardUnreviewedDois: carryForward,
   carryForwardCount: carryForward.length,
+  sourceCoverageAnomalies: compact.summary?.sourceCoverageAnomalies ?? null,
+  closureCoverageAnomalies: compact.summary?.closureCoverageAnomalies ?? null,
   nextPublicationSlot: request.nextPublicationSlot,
   finalizationAllowed: false,
-  reason: 'Fresh post-release discovery surfaced unreviewed DOI(s) beyond the exact frozen deferred set, so the real literature-quality-gate failed. No off-slot admission is authorized; carry the delta to the next fixed slot.',
+  reason: 'The real post-release literature-quality-gate failed. Production/deployed DOI sets match, but post-release unresolved work exceeds the exact frozen deferred set and source coverage anomalies remain. No off-slot admission is authorized; unresolved work carries to the next fixed slot.',
   recordedAt: nowBeijing(),
 };
 if (state.prepublishStaging?.publicationSlot === request.publicationSlot) {
@@ -129,10 +153,13 @@ const result = {
   postReleaseAuditGeneratedAt: compact.generatedAt,
   productionCards: marker.productionCards,
   frozenPublished: marker.publishableDois.length,
+  frozenRejected: marker.rejectedDois?.length ?? null,
   frozenDeferred: marker.deferredDois.length,
   postReleaseUnresolved: unresolved.length,
   carryForwardUnreviewed: carryForward.length,
   carryForwardUnreviewedDois: carryForward,
+  sourceCoverageAnomalies: compact.summary?.sourceCoverageAnomalies ?? null,
+  closureCoverageAnomalies: compact.summary?.closureCoverageAnomalies ?? null,
   tocWebpageDoiCount: toc.webpageDoiCount ?? null,
   nextPublicationSlot: request.nextPublicationSlot,
 };

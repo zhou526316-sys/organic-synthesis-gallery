@@ -1,0 +1,1601 @@
+{
+  "schemaVersion": 3,
+  "reviewType": "prepublish_primary",
+  "publicationSlot": "2026-09-24T18:00:00+08:00",
+  "createdAt": "2026-09-24T17:16:30+08:00",
+  "evidenceAsOf": "2026-09-24T17:16:30+08:00",
+  "executionMode": "github_runner_machine_handoff_plus_article_specific_two_pass_review",
+  "phase": "ready_with_pending",
+  "status": "ready_with_pending",
+  "readyToPublish": true,
+  "publishableSubsetReady": true,
+  "reviewComplete": false,
+  "releasePolicy": {
+    "mode": "per-doi"
+  },
+  "handoffGeneratedAt": "2026-09-24T09:10:17.928Z",
+  "freshAuditGeneratedAt": "2026-09-24T09:10:17.928Z",
+  "snapshotFreshForSlot": true,
+  "requiredSnapshotWindow": {
+    "start": "2026-09-24T16:55:00+08:00",
+    "end": "2026-09-24T18:00:00+08:00"
+  },
+  "handoffCommitSha": "4069131ff4fb4d8e24e3dd0b0360e1654ef4fe71",
+  "handoffFile": "audit/unresolved-latest.json",
+  "handoffBlobSha": "8ba092dab22861b27d77e5bb1757de4a269d0579",
+  "compactHandoffSha": "8ba092dab22861b27d77e5bb1757de4a269d0579",
+  "latestBlobSha": "5b397f604f545792e7a9a99c7eed76612644ef83",
+  "scopeRulesVersion": "scope-2026-09-24-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+  "sourceAudit": {
+    "runId": 35979373318,
+    "conclusion": "success",
+    "capabilityGuardConclusion": "success",
+    "triggerCommitSha": "92c00db4c31f588d42195bc8068c722d581b49c8",
+    "snapshotCommitSha": "4069131ff4fb4d8e24e3dd0b0360e1654ef4fe71",
+    "generatedAt": "2026-09-24T09:10:17.928Z",
+    "galleryDois": 557,
+    "sourceRecords": 565,
+    "unresolved": 41,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 2,
+    "closureCoverageAnomalies": 8,
+    "historicalCoverageLosses": 0,
+    "sameGenerationAndCountsVerified": true,
+    "activeJournals": 16,
+    "canonicalRegistryBlobSha": "57050105998284ccbf87b1a5fe513b256b648949",
+    "healthyRunsCancelledOrRestarted": 0
+  },
+  "windowAccounting": {
+    "timeZone": "Asia/Shanghai",
+    "primaryStart": "2026-09-22",
+    "primaryEnd": "2026-09-24",
+    "auditStart": "2026-09-21",
+    "machineSafetyTailDays": 7,
+    "lateDepositRescueDays": 7,
+    "verifiedThrough": "2026-09-20",
+    "verifiedThroughAdvanced": false,
+    "catchupStartDate": "2026-09-21",
+    "multiIssnCrossrefModes": [
+      "online",
+      "published",
+      "created"
+    ],
+    "openAlexUnion": true,
+    "activeFromApplied": true,
+    "keywordsUsedOnlyForPriority": true,
+    "completeCompactRead": true
+  },
+  "reviewed": 41,
+  "acceptedCount": 9,
+  "rejectedCount": 30,
+  "pendingCount": 2,
+  "summary": {
+    "reviewed": 41,
+    "accepted": 9,
+    "rejected": 30,
+    "pending": 2
+  },
+  "acceptedDois": [
+    "10.1021/jacs.6c16625",
+    "10.1021/acs.joc.6c01939",
+    "10.1021/acs.joc.6c01846",
+    "10.1021/acs.orglett.6c03443",
+    "10.1021/acs.orglett.6c02955",
+    "10.1002/anie.3415969",
+    "10.1002/anie.5648702",
+    "10.1002/anie.9855820",
+    "10.1021/acs.orglett.6c03851"
+  ],
+  "proposedPublishableDois": [
+    "10.1021/jacs.6c16625",
+    "10.1021/acs.joc.6c01939",
+    "10.1021/acs.joc.6c01846",
+    "10.1021/acs.orglett.6c03443",
+    "10.1021/acs.orglett.6c02955",
+    "10.1002/anie.3415969",
+    "10.1002/anie.5648702",
+    "10.1002/anie.9855820",
+    "10.1021/acs.orglett.6c03851"
+  ],
+  "publishableDois": [
+    "10.1021/jacs.6c16625",
+    "10.1021/acs.joc.6c01939",
+    "10.1021/acs.joc.6c01846",
+    "10.1021/acs.orglett.6c03443",
+    "10.1021/acs.orglett.6c02955",
+    "10.1002/anie.3415969",
+    "10.1002/anie.5648702",
+    "10.1002/anie.9855820",
+    "10.1021/acs.orglett.6c03851"
+  ],
+  "rejectedDois": [
+    "10.1002/anie.8661735",
+    "10.1002/anie.5859599",
+    "10.1002/anie.8543657",
+    "10.1002/anie.5038244",
+    "10.1002/anie.8746400",
+    "10.1002/anie.4693701",
+    "10.1002/anie.2509086",
+    "10.1021/jacs.6c15426",
+    "10.1021/jacs.6c07910",
+    "10.1021/jacs.6c05442",
+    "10.1021/jacs.6c13095",
+    "10.1021/jacs.6c08553",
+    "10.1021/jacs.6c02958",
+    "10.1021/jacs.6c12567",
+    "10.1021/jacs.6c15502",
+    "10.1038/s41467-026-77143-6",
+    "10.1038/s41467-026-76844-2",
+    "10.1038/s41467-026-77926-x",
+    "10.1038/s41467-026-77873-7",
+    "10.1038/s41467-026-78036-4",
+    "10.1038/s41467-026-78085-9",
+    "10.1021/acs.orglett.6c03727",
+    "10.1002/anie.8106106",
+    "10.1002/anie.1044891",
+    "10.1002/anie.8360226",
+    "10.1002/anie.9950898",
+    "10.1002/anie.4528541",
+    "10.1002/anie.8344174",
+    "10.1002/anie.3712910",
+    "10.1002/anie.6056264"
+  ],
+  "pendingDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "deferredDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "remainingDois": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "remainingUnresolved": [
+    "10.1038/s41467-026-78015-9",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "decisions": [
+    {
+      "doi": "10.1002/anie.8661735",
+      "journal": "Angew",
+      "date": "2026-09-24",
+      "title": "Divergent Chiral Self‐Sorting of Covalent Organic Pillars Switched by Subtle Conformational Preferences",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "论文主要研究两种二胺连接体如何切换共价有机柱的同手性/异手性自分类，核心是超分子组装的构象偏好与手性排序。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Chiral self‐sorting enables molecular systems to translate stereochemical information from small building blocks into highly organized architectures across length scales, echoing the hierarchical expression of chirality in biological systems. However, predicting whether a system will favor homochiral or heterochiral organization, let alone rationally controlling the sorting outcome, remains challenging. Here we show that the chiral self‐sorting of covalent organic pillars (COPs) can be selectively switched through minimal structural variation in the linker units. Two diamine linkers, 2,6‐bis(aminomethyl)pyridine and m ‐xylylenediamine, were used to connect pairs of stereolabile penta‐aldehyde tiara[5]arene macrocycles through dynamic covalent [2+5] imine condensation. Despite their close resemblance, these linkers lead to divergent outcomes. Whereas 2,6‐bis(aminomethyl)pyridine ",
+      "challengeReason": "动态亚胺缩合确实生成离散共价结构，但仅比较两个连接体及特定宏环，未给出一般有机产物制备范围；不能把洁净自组装自动等同于通用合成方法。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8661735"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.5859599",
+      "journal": "Angew",
+      "date": "2026-09-24",
+      "title": "Dual‐Site Interaction Tailoring Dynamic Reconstruction of Pt‐Ni Dual‐Site Catalysts for Advanced Zn‐Urea‐Air Batteries",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是Pt–Ni双单原子位点在锌-尿素-空气电池中的动态重构、氧反应/尿素氧化性能与寿命。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Dynamic reconstruction of single‐atom sites generates high‐activity species but typically leads to irreversible aggregation and degradation during prolonged operation, presenting a fundamental dilemma for durable electrocatalysis. Here, we propose and demonstrate a strategy to master this reconstruction by constructing synergistic dual single‐atom sites, where one stable site guides the evolution of a neighboring reconstruction‐prone site. Using an underpotential electrodeposition method, a Pt‐Ni dual single‐atom (DSA) catalyst with locally coupled PtO 4 and NiO 6 sites was fabricated. In situ characterizations and theoretical calculations reveal that the Pt‐Ni interaction guides a self‐optimizing reconstruction for enhanced activity. During oxygen evolution and urea oxidation reactions (OER/UOR), Ni sites are dynamically transformed into ultrafine and stabilized NiOOH clusters ",
+      "challengeReason": "虽然制造了双位点催化剂并发生尿素氧化，但输出是电池能效和耐久性，未建立一般有机底物到分离产物的制备方法。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5859599"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.8543657",
+      "journal": "Angew",
+      "date": "2026-09-24",
+      "title": "Influence of Substitution on the Interplay of Photochemical Switching and Phase Transitions in Azobenzene‐Based Molecular Materials",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究取代偶氮苯的光异构化、相变和储能结构—性能关系，目标是分子材料能量存储优化。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Understanding and translating molecular‐scale switching of azobenzenes into a macroscopic, functional response in the solid state remains a challenge. Herein, the photochemical and thermal properties of different substituted p ‐Ohexyl‐azobenzenes were systematically investigated to establish structure‐property relationships to optimize the performance of azobenzene (AB) based materials for energy storage applications. The influence of various alkyl substituents in different positions on the AB was screened to address the effect of increasing bulkiness on the multidimensional parameters required for efficient energy storage. For example, substituents in the meta ‐ and para ‐positions increased the isomerization enthalpy (∆ H iso. ) due to attractive intermolecular interactions; 2,6‐F‐ and 2,6‐Me‐substitution induces an increased half‐life, however, it also a reduced isomerization",
+      "challengeReason": "合成并比较多种取代偶氮苯是真实工作，但系列结构主要服务于热/光性能筛选，摘要未建立新的通用成键或砌块制备路线。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8543657"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.5038244",
+      "journal": "Angew",
+      "date": "2026-09-24",
+      "title": "Photoswitchable Ambiphilicity: Light‐Gated Frustrated Lewis Pair Reactivity and Z‐Type Interaction",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "论文以光开关调节分子内P/B路易斯对的酸碱性、CO₂结合释放和金属—硼Z型相互作用为核心。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Ambiphilic molecules, species containing both Lewis acidic and basic sites, enable a broad range of phenomena in chemistry, from frustrated Lewis pairs (FLPs) to supported Z‐type interactions. However, the balance between their Lewis acidic and basic functions is normally fixed by molecular synthesis. Combining these features with photoswitchable architectures offers untapped potential for reversible substrate binding and control of transition metal properties. Here, we demonstrate that the incorporation of a photoswitchable Lewis acid into intramolecular phosphorus/boron Lewis pairs allows for stimuli‐responsive modulation of ambiphilicity. In the context of FLP‐type reactivity, both thermodynamic and kinetic control over substrate activation is achieved, culminating in the light‐gated binding and release of CO 2 . Implementing these ambiphiles as ligands in transition metal ch",
+      "challengeReason": "光控CO₂结合具有化学反应性，但当前证据仅支持可逆底物结合和电子结构调控，不是跨底物的有机产物制备法。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5038244"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.8746400",
+      "journal": "Angew",
+      "date": "2026-09-24",
+      "title": "Product‐Triggered Adaptive Evolution From a Pd 4 L 2 to a Pd 6 L 3 Conjoined Cage via Catalytic Dehydration of p ‑Quinone Methide Precursors",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是Pd₄L₂笼受客体/产物诱导转变为Pd₆L₃连接笼的适应性超分子行为。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Supramolecular chemistry aims to emulate the dynamic structural adaptations and induced‐fit conformational changes of enzymes that are fundamental to their biological function. In this work, we synthesized an adaptive Pd 4 L 2 coordination cage using the newly developed pyridinium‐based ligand L with cis ‐capped Pd (II) salt. Upon guest encapsulation, conformational adjustment provides direct structural evidence for the adaptive nature of cage 1 by X‐ray crystallographic study. Within the hydrophobic pocket of the capsule, 4‐(1‐hydroxy‐1‐phenylethyl) phenol ( S1 ), a known para ‐quinone methide ( p ‐QM) precursor, undergoes spontaneous dehydration to the alkene product P1 in water. Kinetic studies and control experiments reveal that the cage 1 plays a vital role in significantly accelerating the dehydration process, affording the alkene product with markedly enhanced efficiency ",
+      "challengeReason": "笼内确实加速一个对醌甲基前体脱水生成烯烃，但只有单一模型底物且产物用于驱动笼转化，缺少一般制备范围。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8746400"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.4693701",
+      "journal": "Angew",
+      "date": "2026-09-24",
+      "title": "Pushpita Ghosh",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名仅为人名且无摘要，属于作者简介、封面或非研究文章元数据，未提供可审核的有机制备贡献。",
+      "evidenceBasis": "fresh compact 仅提供题名、期刊、类型和日期而没有摘要；未把来源访问受限误写为论文不存在实验。题名记录为“Pushpita Ghosh”。",
+      "challengeReason": "不能仅凭期刊与条目类型推断有合成内容；现有权威机器记录没有化学题名、摘要或转化证据，因此排除元数据项。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.4693701"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1002/anie.2509086",
+      "journal": "Angew",
+      "date": "2026-09-24",
+      "title": "Working Mechanism of Chlorine‐Containing Electrolyte in Conversion‐Type Cathode Materials for Rechargeable Magnesium‐Ion Batteries",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究氯化物电解液中镁离子电池转化型正极的载流物种、反应路径与容量表现。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Rechargeable magnesium‐ion batteries (RMBs) have garnered significant attention due to their high theoretical capacity, low cost, and outstanding safety. However, the detailed working mechanism of RMBs cathode, especially conversion‐type cathode, in chloride‐containing electrolytes remains poorly understood. Convincing experimental evidence is still lacking to clearly elucidate the reaction pathway. Herein, electrochemical quartz crystal microbalance (EQCM) was employed to track the dynamic mass changes of cathode during the cycling. Combined with comprehensive spectroscopic characterizations and electrochemical analyses, main active species reacting with transition metal chalcogenide cathode materials was unambiguously identified as [MgCl] + , instead of Mg 2+ . Through systematic screening, the optimal electrolyte formulation was identified, and the CoS cathode delivers an exc",
+      "challengeReason": "电化学反应和材料筛选均真实存在，但核心是电池机理与正极性能，没有一般有机底物和分离产物范围。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.2509086"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c15426",
+      "journal": "JACS",
+      "date": "2026-09-24",
+      "title": "“Spike-Accessed” Polymer-Based Interphase-Engineered Surface-to-Bulk Lattice Stabilization for Ni-Rich Positive Electrodes",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "核心是环硅氧烷原位聚合形成正极电解质界面膜，以稳定富镍正极表面和体相晶格并延长循环寿命。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract The practical deployment of high-voltage Ni-rich layered oxide positive electrodes is severely hindered by interfacial instability and structural degradation during deep delithiation. Here, inspired by the functional principle of surface-exposed reactive motifs in biological spike proteins, we develop a spike-accessed polysiloxane-based interphase that dynamically modulates positive electrode interfacial chemistry and stabilizes lattice integrity. This polymeric interphase is formed in situ through LiOH-initiated ring-opening polymerization of a new class of cyclic siloxane additives, which generates nucleophilic oxygen donor motifs─termed “spikes”─that preferentially coordinate with highly reactive surface Ni4+ species. Such coordination provides dynamic redox buffering, effectively suppressing parasitic interfacial reactions. Comprehensive spectroscopic and structural analyses",
+      "challengeReason": "原位开环聚合是真实合成步骤，但聚合物仅作为电池界面膜制样手段，论文主要评价电极稳定性和循环性能，缺少可迁移聚合方法学。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c15426"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c07910",
+      "journal": "JACS",
+      "date": "2026-09-24",
+      "title": "Asymmetric Hydration and Protonation Switching of Dual Aspartates Drive Flagellar Rotation",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "该文通过冷冻电镜、pKa计算和分子动力学解释细菌鞭毛马达中天冬氨酸质子化切换与旋转。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract The bacterial flagellar motor is an intricate nanomachine that transforms chemical energy from ion gradients into mechanical rotation, enabling bacterial movement. While stator unit architectures are conserved across species, the molecular link connecting ion translocation to rotational force generation remains elusive. In this study, we refined the cryo-EM structures of MotAB from Campylobacter jejuni (CjMotAB) and integrated a suite of approaches─including single-structure based pKa predictors and free energy perturbation (FEP) calculations, as well as standard and constant-pH molecular dynamics (CpHMD) simulations of various structural models representing the plugged, unplugged, and plug-removed states with different protonation states of D22─to dissect its rotational mechanism. Based on pKa calculations, the D22 residues in chains F and G of MotB were identified as proton ca",
+      "challengeReason": "涉及生物分子构象和质子转移，但没有制备性有机转化或合成路线，属于生物物理机理研究。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c07910"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c16625",
+      "journal": "JACS",
+      "date": "2026-09-24",
+      "title": "Double Boron-Deleting Annulation: Modular Access to Chiral Nonalternant B,N-Helicenes with Enhanced Chiroptical Properties",
+      "titleZh": "双硼删除环化：模块化构建具有增强手性光学性质的手性非交替B,N-螺烯",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该研究建立双硼删除环化这一模块化成键策略，从四重硼化前体构建多种非交替B,N-嵌入螺烯骨架，核心贡献是可迁移的稠合杂环合成方法。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Direct ring manipulation of planar polycyclic conjugated hydrocarbons into three-dimensional chiral frameworks remains largely underexplored. Herein, we report an unprecedented modular synthesis of nonalternant B,N-embedded helical molecular carbons (HMCs) (BN-HMCs, 12 examples) featuring diaza-pentagon-heptagon pairs via double boron-deleting annulation (dBDA). The quadruple-borylated precursors containing two B2N3-moieties were modularly constructed by C–N cross-coupling and subsequent borylation. The final dBDA process realized structural evolution of boron-centered cove edges into inner helical rims and elicited a dramatic elevation in racemization barriers as corroborated by theoretical calculations and chiral resolution. Double helicenes 2a–2c and 4b derived from twisted precursors with S-shaped orientation of B2N3-units, whereas monohelicenes 4a, 4c–4g, and 5 were generat",
+      "challengeReason": "最可能的超范围理由是论文同时强调发光与圆偏振发光性能；但这些是产物表征与应用，主要新增能力仍是双硼删除环化构建一系列手性稠合骨架。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c16625"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "该研究建立双硼删除环化这一模块化成键策略，从四重硼化前体构建多种非交替B,N-嵌入螺烯骨架，核心贡献是可迁移的稠合杂环合成方法。",
+        "preparativeTransformation": "经C–N交叉偶联和硼化制得含两个B₂N₃单元的前体，再通过双硼删除环化把含硼湾区边缘重组为螺旋内缘，形成非交替B,N-螺烯。",
+        "generalityEvidence": "摘要明确给出12个BN-HMC实例，并区分S形与C形前体分别生成双螺烯和单螺烯，体现前体构型与产物骨架之间可推广的模块化关系。",
+        "sourceEvidence": "fresh compact 标题与摘要事实：Abstract Direct ring manipulation of planar polycyclic conjugated hydrocarbons into three-dimensional chiral frameworks remains largely underexplored. Herein, we report an unprecedented modular synthesis of nonalternant B,N-embedded helical molecular carbons (HMCs) (BN-HMCs, 12 examples) featuring diaza-pentagon-heptagon pairs via double boron-deleting annulation (dBDA). The quadruple-borylated precursors containing two B2N3-moieties were modularly constructed by C–N cross-coupling and subsequent borylation. The final dBDA process realized structural evolution of boron-centered cove edges into inner helical rims and elicited a dramatic elevation in racemization barriers as corroborated by theoretical calculations and chiral resolution. Double helicenes 2a–2c and 4b derived from twisted precursors with S-shaped orientation of B2N3-units, whereas monohelicenes 4a, 4c–4g, and 5 were generat",
+        "boundaryChallenge": "最可能的超范围理由是论文同时强调发光与圆偏振发光性能；但这些是产物表征与应用，主要新增能力仍是双硼删除环化构建一系列手性稠合骨架。"
+      }
+    },
+    {
+      "doi": "10.1021/jacs.6c05442",
+      "journal": "JACS",
+      "date": "2026-09-24",
+      "title": "Electrohydrodynamic-Mediated Molecular Coordination for Stabilizing α-Phase Perovskite Solar Cells",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究四甲基硫脲调控电喷雾液滴、钙钛矿成核和晶格稳定以提升太阳能电池效率。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Formamidinium-rich perovskite solar cells (PSCs) have achieved remarkable efficiencies, yet their phase purity is often compromised by the competitive nucleation of the nonperovskite δ-phase during rapid processing. Herein, we demonstrate an electrohydrodynamic (EHD)-mediated chemical strategy to bypass this kinetic trap using a multifunctional molecular, tetramethylthiourea (TeMTU). By precision tuning of the surface tension-Coulombic repulsion balance, TeMTU orchestrates the EHD-driven microdroplet evolution, effectively locking the in-flight precursor into a critically supersaturated state that fundamentally suppresses δ-phase nucleation. Beyond macroscopic fluid dynamics, molecular-level investigations reveal that TeMTU forms robust coordination complexes with the lead halide framework. This chemical intervention significantly elevates the activation energy barrier for the α",
+      "challengeReason": "存在配位化学与薄膜制备，但产出是钙钛矿器件和相稳定性，不是一般有机合成方法。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c05442"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c13095",
+      "journal": "JACS",
+      "date": "2026-09-24",
+      "title": "How the Energy Gaps between Partners Rule ns-Scale Sensitization and Back-Energy Transfer in Lanthanide(III) Complexes?",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以瞬态吸收研究镧系配合物的敏化与反向能量转移动力学，核心是光物理机理。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Molecular lanthanide complexes are widely utilized in optoelectronics and bioimaging due to their unique luminescence properties, which inherently rely on the light-harvesting antenna effect. While the ultrafast energy transfer (ET) dynamics of highly emissive ions like Eu3+ have been extensively investigated, mechanisms governed by uncommon, slower kinetic regimes remain largely unresolved. Here, we apply nanosecond transient absorption spectroscopy (ns-TAS) to investigate these ET processes within an isostructural series of lanthanide(III) complexes, with a primary focus on unraveling the singular sensitization kinetics of Yb3+. We provide direct kinetic evidence for Yb3+ sensitization, demonstrating a slow (∼40 ns) triplet-to-metal energy transfer. To contextualize this unusual kinetic regime, we contrast it with the corresponding Tb3+ complex. In the latter, the well-establi",
+      "challengeReason": "合成异结构配合物系列并不自动构成制备方法学；摘要未提出可推广有机成键路线或目标合成。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c13095"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c08553",
+      "journal": "JACS",
+      "date": "2026-09-24",
+      "title": "Ligand-Mediated Control of Zn x Se y Intermediates for Defect-Free ZnSe Heteroepitaxy on Quantum Dots",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "通过油酸调控ZnₓSeᵧ中间体以减少量子点ZnSe壳层空位，核心是纳米晶异质外延和发光性能。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract ZnSe is a cornerstone shell material for enhancing the efficiency and stability of quantum dots (QDs). However, the chemical mechanisms governing detrimental zinc vacancy (VZn) formation remain unclear, limiting the predictive synthesis of high-quality heterostructures. Herein, we demonstrate that rational manipulation of ZnxSey intermediates via free oleic acid (OA) effectively suppresses both VZn and morphological inhomogeneity in CdSe/ZnSe core/shell QDs. Under OA-deficient conditions, sluggish precursor conversion yields a broad distribution of ZnxSey intermediates, including Zn-deficient heavy clusters like Zn2Se3(TOP), that lead to VZn incorporation. Conversely, excess OA shifts the intermediate landscape toward Zn-rich light species and suppresses the shift of intermediates into oxidized forms. This intermediate-level control enables the growth of VZn-free, morphologicall",
+      "challengeReason": "前驱体转化受到化学控制，但目标是缺陷自由量子点壳层，不是一般有机分子制备法。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c08553"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c02958",
+      "journal": "JACS",
+      "date": "2026-09-24",
+      "title": "Redox-Switchable Tristable 1,3,2,4,5-Triboradiazoles",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "报告单一1,3,2,4,5-三硼二唑的多重可逆氧化态、芳香性和氧化态依赖反应性，主要是主族基础化学。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Achieving multiple reversible redox states with distinct electronic structures and properties within a compact main-group molecular framework remains challenging. Here we report a 1,3,2,4,5-triboradiazole (2), an all-inorganic BN-heterocycle isoelectronic with Cp–, that undergoes clean and fully reversible 0/+1/+2 redox interconversion, enabling the isolation and structural characterization of three discrete redox states based on a single B3N2 ring. Stepwise oxidation progressively alters the aromatic character from weakly aromatic to nonaromatic and weakly antiaromatic states, accompanied by redox-dependent optical responses. The redox state dictates fundamentally different reaction pathways at the B–B unit, enabling π-bond functionalization in the neutral state but σ-bond insertion chemistry in the dication. These findings establish triboradiazoles as a compact BN platform tha",
+      "challengeReason": "存在π键官能团化与σ键插入反应，但摘要只证明一个B₃N₂平台的性质，未建立跨底物或可推广制备方法。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c02958"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c12567",
+      "journal": "JACS",
+      "date": "2026-09-24",
+      "title": "Selectivity in Tip-Induced Skeletal Editing via Heteroatom Substitution",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "在扫描探针尖端对单分子七元含硫杂环进行硫删除，核心是表面单分子操纵和反应选择性。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Skeletal editing enables precise structural modifications of molecules at late stages of a synthetic sequence. We recently demonstrated skeletal editing on a single-molecule scale. Voltage pulses applied by the tip of a scanning probe microscope to an oxygen-containing seven-membered heterocycle led to both oxygen deletion and ring-contraction rearrangement reactions. An open question is whether selective skeletal editing of a heterocyclic core can be achieved by the choice of heteroatom. Here we show that tip-induced reactions of an analogous sulfur-containing seven-membered ring mainly result in sulfur deletion. Our results demonstrate that the combination of tip-induced chemistry and heteroatom selection in the molecular design is a powerful strategy for single-molecule skeletal editing, potentially enabling diverse structural transformations of heterocyclic frameworks.",
+      "challengeReason": "骨架编辑概念高度相关，但显微镜尖端单分子事件没有形成可分离产物或一般制备范围，因此不能作为常规有机合成方法纳入。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c12567"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/jacs.6c15502",
+      "journal": "JACS",
+      "date": "2026-09-24",
+      "title": "Switchable Altermagnetism in a Layered van der Waals Metal–Organic Framework Driven by Spin-Crossover",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "通过计算预测层状金属有机框架的自旋交叉可切换交变磁性，面向自旋电子器件。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Dynamical control of altermagnetism is a key requirement for translating its unique spin-dependent functionalities into practical spintronic devices, yet effective switching mechanisms remain largely unexplored. Here, we open an unprecedented, versatile, and programmable route based on spin-crossover to switch altermagnetism on demand in molecular materials. Using density functional theory calculations, we demonstrate an altermagnetic ground state in the layered van der Waals metal–organic frameworks MnX2(tdz)2 (X = Cl, Br; tdz = thiadiazole), stabilized by anisotropic interlayer exchange interactions, which gives rise to a characteristic d-wave momentum-space spin splitting and an associated spin-splitter transport response. Our findings reveal that under hydrostatic pressure, a high-spin-to-low-spin transition reconfigures the Mn d-orbital occupation, thus modifying the magnet",
+      "challengeReason": "MOF组成与电子结构属于材料设计，且证据为密度泛函计算，没有有机产物制备转化。",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c15502"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01939",
+      "journal": "JOC",
+      "date": "2026-09-24",
+      "title": "HFIP-Assisted Electrochemical Annulation of Enaminones with Phenols for the Selective Synthesis of 7-Aryloxy and 5-Hydroxy Benzofurans",
+      "titleZh": "HFIP辅助的烯胺酮与酚电化学环化：选择性合成7-芳氧基和5-羟基苯并呋喃",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该文发展烯胺酮与不同酚类的电化学环化，并通过底物类型与条件切换选择性获得两类取代苯并呋喃，属于一般有机电合成方法。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract The electrochemical annulation reactions between enaminones and phenol derivatives have been achieved for the selective synthesis of 7-aryloxy benzofurans and 5-hydroxy benzofurans. With an electron-donating group (EDG), such as alkoxy or amino-functionalized phenols as reaction partners, the 7-aryloxy benzofurans have been furnished via benzofuran annulation and aryl C–H aryloxylation. On the other hand, using hydroquinone as a reaction partner under slightly modified conditions allows the selective synthesis of 5-hydroxy benzofurans. Importantly, the cyclic voltammetry (CV) experiments confirm that hexafluoroisopropanol (HFIP) plays a crucial role in the titled reaction by lowering the oxidation potential of phenol substrates.",
+      "challengeReason": "电化学与HFIP机理研究可能掩盖范围判断，但论文的主要输出是可选择制备两类苯并呋喃的合成反应，不是纯电极性能或仅机理研究。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01939"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "该文发展烯胺酮与不同酚类的电化学环化，并通过底物类型与条件切换选择性获得两类取代苯并呋喃，属于一般有机电合成方法。",
+        "preparativeTransformation": "烯胺酮与烷氧基或氨基取代酚经苯并呋喃环化及芳基C–H芳氧化生成7-芳氧基苯并呋喃；与氢醌在调整条件下生成5-羟基苯并呋喃。",
+        "generalityEvidence": "摘要明确区分供电子取代酚与氢醌两条选择性路径，并说明反应伙伴类别、产物类型及HFIP降低氧化电位的作用，而非单一目标分子的制备。",
+        "sourceEvidence": "fresh compact 标题与摘要事实：Abstract The electrochemical annulation reactions between enaminones and phenol derivatives have been achieved for the selective synthesis of 7-aryloxy benzofurans and 5-hydroxy benzofurans. With an electron-donating group (EDG), such as alkoxy or amino-functionalized phenols as reaction partners, the 7-aryloxy benzofurans have been furnished via benzofuran annulation and aryl C–H aryloxylation. On the other hand, using hydroquinone as a reaction partner under slightly modified conditions allows the selective synthesis of 5-hydroxy benzofurans. Importantly, the cyclic voltammetry (CV) experiments confirm that hexafluoroisopropanol (HFIP) plays a crucial role in the titled reaction by lowering the oxidation potential of phenol substrates.",
+        "boundaryChallenge": "电化学与HFIP机理研究可能掩盖范围判断，但论文的主要输出是可选择制备两类苯并呋喃的合成反应，不是纯电极性能或仅机理研究。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01846",
+      "journal": "JOC",
+      "date": "2026-09-24",
+      "title": "Visible-Light-Induced Stereoselective Radical 1,3-Iodosulfonylation of Methylenecyclopropanes",
+      "titleZh": "可见光诱导亚甲基环丙烷立体选择性自由基1,3-碘磺酰化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该文建立可见光促进的应变释放自由基1,3-碘磺酰化，把亚甲基环丙烷转化为含烷基碘的烯基砜，是明确的新型双官能团化合成方法。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract We report herein a visible-light-promoted strain-release-enabled regio- and stereoselective radical 1,3-iodosulfonylation protocol for the synthesis of alkyl iodide-containing alkenyl sulfone compounds. The use of unactivated methylenecyclopropanes (MCPs) as radical acceptors was crucial for the present cascade radical difunctionalization process via a formal C–C bond cleavage under ambient temperature and transition-metal-free reaction conditions.",
+      "challengeReason": "摘要未给出具体例数与收率，不能夸大底物广度；但其明确提出可复现的底物类别、键断裂模式和目标产物类型，已超过单一机理观察。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01846"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "该文建立可见光促进的应变释放自由基1,3-碘磺酰化，把亚甲基环丙烷转化为含烷基碘的烯基砜，是明确的新型双官能团化合成方法。",
+        "preparativeTransformation": "亚甲基环丙烷作为自由基受体，经形式C–C键断裂和级联自由基过程同时引入碘与磺酰基，生成含烷基碘的烯基砜。",
+        "generalityEvidence": "摘要将方法描述为区域及立体选择性协议，适用于未活化亚甲基环丙烷，并在室温、无过渡金属条件下完成目标转化。",
+        "sourceEvidence": "fresh compact 标题与摘要事实：Abstract We report herein a visible-light-promoted strain-release-enabled regio- and stereoselective radical 1,3-iodosulfonylation protocol for the synthesis of alkyl iodide-containing alkenyl sulfone compounds. The use of unactivated methylenecyclopropanes (MCPs) as radical acceptors was crucial for the present cascade radical difunctionalization process via a formal C–C bond cleavage under ambient temperature and transition-metal-free reaction conditions.",
+        "boundaryChallenge": "摘要未给出具体例数与收率，不能夸大底物广度；但其明确提出可复现的底物类别、键断裂模式和目标产物类型，已超过单一机理观察。"
+      }
+    },
+    {
+      "doi": "10.1038/s41467-026-77143-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "Barrier island geomorphic complexity drives storm and post-storm response",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究障壁岛地貌复杂性对风暴及风暴后沉积物响应的影响，属于地球科学。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Barrier islands are at the forefront of climate-driven changes, with their resiliency threatened by rapid fluctuations in the physical drivers that shape them. Quantifying magnitudes and directions of storm-driven sediment fluxes and rates and modes of sediment recovery is essential for predicting barrier island trajectories. Yet scarce shoreface observations have limited such efforts. Here, shoreface-inclusive measurements of barrier sediment fluxes over five years following an extreme storm reveal distinct sediment redistribution patterns that vary with island geomorphology. Overwash fluxes were low compared with seaward fluxes, inlet-related landward transport, and previously modeled estimates. Without these observations, models may overestimate island elevation-building capacity that is key to sea-level adaptability. Post-storm recovery was incomplete despite human intervent",
+      "challengeReason": "沉积物输运研究不含有机合成或制备方法，题名与摘要均无范围反证。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77143-6"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-76844-2",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "Jamming-controlled stochasticity in metal-insulator switching",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究二氧化钒神经形态器件金属—绝缘体转换中的纳米畴堵塞与随机性。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Understanding and controlling phase transitions is fundamental to physics and central to many technological revolutions. There is currently strong interest in materials with coupled structural and electronic phase transitions, where controlling the transition plasticity naturally yields built-in memory, key for emulating neurons and synapses in neuromorphic technologies. Here, operando coherent Bragg X-ray diffraction is used to study the evolution of the nano-domain distribution at the micron-scale in neuromorphic devices made from the archetypal Mott insulator vanadium dioxide. Electrical switching leads to nano-domain reconfiguration over thousands of seconds and a jamming transition. Repetitive above-threshold currents plastically drive the system into a jammed/glassy state where switching is deterministic. Sub-threshold currents erase the short-term memory defined by the na",
+      "challengeReason": "器件相变和X射线表征不产生一般有机合成方法，属于凝聚态与材料物理。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-76844-2"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77926-x",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "Reoviridae-derived short trimerization domain for stabilizing homo-trimerization of vaccine immunogens and therapeutic proteins",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "题名指向用于稳定疫苗免疫原和治疗蛋白三聚化的病毒来源结构域，属于蛋白工程。",
+      "evidenceBasis": "fresh compact 仅提供题名、期刊、类型和日期而没有摘要；未把来源访问受限误写为论文不存在实验。题名记录为“Reoviridae-derived short trimerization domain for stabilizing homo-trimerization of vaccine immunogens and therapeutic proteins”。",
+      "challengeReason": "即使构建了蛋白三聚体，也没有明确的小分子底物—产物制备转化；不能以结构域数量或稳定性当作有机合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77926-x"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-77873-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "Spatiotemporal delivery of immune-synapse-stabilizing NK cells for postoperative tumor therapy",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究免疫突触稳定NK细胞的时空递送用于术后肿瘤治疗，主要贡献为生物医学治疗。",
+      "evidenceBasis": "fresh compact 仅提供题名、期刊、类型和日期而没有摘要；未把来源访问受限误写为论文不存在实验。题名记录为“Spatiotemporal delivery of immune-synapse-stabilizing NK cells for postoperative tumor therapy”。",
+      "challengeReason": "递送体系可能包含材料制备，但题名与可得记录未显示一般有机反应或可推广制备路线。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77873-7"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-78036-4",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "Stepwise pairing and fast transition regulated by recombination drive meiotic chromosome interactions",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究减数分裂染色体相互作用、逐步配对和重组调控，属于细胞与遗传机制。",
+      "evidenceBasis": "fresh compact 仅提供题名、期刊、类型和日期而没有摘要；未把来源访问受限误写为论文不存在实验。题名记录为“Stepwise pairing and fast transition regulated by recombination drive meiotic chromosome interactions”。",
+      "challengeReason": "生物过程中的重组不是有机制备转化，现有记录没有合成方法学证据。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78036-4"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1038/s41467-026-78085-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-24",
+      "title": "Surface-displayed cholesterol enhances penetration and anti-tumor activity of a platinum nanodrug by targeting NPC1L1-expressing cancer associated fibroblasts",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究表面胆固醇修饰铂纳米药物靶向成纤维细胞并增强肿瘤渗透，主要为纳米药物与抗肿瘤功能。",
+      "evidenceBasis": "fresh compact 仅提供题名、期刊、类型和日期而没有摘要；未把来源访问受限误写为论文不存在实验。题名记录为“Surface-displayed cholesterol enhances penetration and anti-tumor activity of a platinum nanodrug by targeting NPC1L1-expressing cancer associated fibroblasts”。",
+      "challengeReason": "纳米药物制备和表面修饰真实存在，但主要证据是靶向与治疗效果，未建立一般有机合成方法。",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78085-9"
+      ],
+      "evidenceSource": "fresh_compact_title_metadata_only"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03443",
+      "journal": "Organic Letters",
+      "date": "2026-09-24",
+      "title": "Artificial Enzyme Design with an Abiological Salicylaldehyde Site Enables Biocatalytic Activation of Glycine Esters",
+      "titleZh": "具有非生物水杨醛位点的人工酶设计实现甘氨酸酯生物催化活化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该研究把非生物水杨醛催化位点共价嵌入脱辅基肌红蛋白，催化甘氨酸酯形成亲核体并进行C–C键构建的α-官能团化，属于新型小分子生物催化转化。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Here we describe the construction of an artificial enzyme bearing a biomimetic PLP-like catalytic center within an apo-myoglobin scaffold through covalent incorporation of an abiological salicylaldehyde moiety. By mimicking the substrate activation strategy employed by PLP-dependent enzymes, the engineered catalyst promotes the formation of reactive glycine ester nucleophiles and enables direct α-functionalization in C–C bond-forming reactions. This work establishes a biocatalytic platform for the synthesis of amino acid derivatives and illustrates how the integration of non-natural catalytic motifs into protein can unlock new-to-nature reactivity beyond the natural enzyme.",
+      "challengeReason": "最接近的超范围风险是论文含人工蛋白设计；但其证据核心不是变体数量或表达优化，而是明确的甘氨酸酯到底物衍生物的催化成键转化，因此符合工程酶转化边界。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03443"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "该研究把非生物水杨醛催化位点共价嵌入脱辅基肌红蛋白，催化甘氨酸酯形成亲核体并进行C–C键构建的α-官能团化，属于新型小分子生物催化转化。",
+        "preparativeTransformation": "人工酶中的类PLP水杨醛中心活化甘氨酸酯形成反应性亲核体，随后与碳亲电伙伴发生C–C键形成，制备氨基酸衍生物。",
+        "generalityEvidence": "摘要明确称该催化平台支持C–C成键反应中的直接α-官能团化，并把它概括为合成氨基酸衍生物的新到自然反应平台，而非只报告蛋白表达或稳定性。",
+        "sourceEvidence": "fresh compact 标题与摘要事实：Abstract Here we describe the construction of an artificial enzyme bearing a biomimetic PLP-like catalytic center within an apo-myoglobin scaffold through covalent incorporation of an abiological salicylaldehyde moiety. By mimicking the substrate activation strategy employed by PLP-dependent enzymes, the engineered catalyst promotes the formation of reactive glycine ester nucleophiles and enables direct α-functionalization in C–C bond-forming reactions. This work establishes a biocatalytic platform for the synthesis of amino acid derivatives and illustrates how the integration of non-natural catalytic motifs into protein can unlock new-to-nature reactivity beyond the natural enzyme.",
+        "boundaryChallenge": "最接近的超范围风险是论文含人工蛋白设计；但其证据核心不是变体数量或表达优化，而是明确的甘氨酸酯到底物衍生物的催化成键转化，因此符合工程酶转化边界。"
+      }
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03727",
+      "journal": "Organic Letters",
+      "date": "2026-09-24",
+      "title": "Multistate Alkoxyamine-Based Securinega Alkaloid/Azobenzene Hybrid Photoswitch with Time-Dependent Controllability",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "设计并合成Securinega生物碱/偶氮苯杂化多态光开关，重点是时间依赖光控逻辑。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Molecular photoswitches offer unparalleled spatiotemporal control over material properties, yet conventional binary systems are largely restricted to “on/off” logic. To meet the needs of higher-density data architectures and complex logic operations, we describe the design and synthesis of a novel multistate photoswitch by integrating a biomimetically operating phyllantidine framework with a dimethylaminoazobenzene moiety. This hybrid system transcends the binary paradigm by leveraging time-dependent controllability between the two photoswitching systems.",
+      "challengeReason": "单一杂化分子的合成虽属有机制备，但摘要未提出通用反应或路线；功能分子制样本身不足以纳入。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03727"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02955",
+      "journal": "Organic Letters",
+      "date": "2026-09-24",
+      "title": "Rh-Catalyzed [3 + 2] Cascade Annulation of Aromatic Acids with Oxabicyclic Alkenes: Direct Access to Planar Benzo[ a ]fluorenones",
+      "titleZh": "Rh催化芳香酸与氧杂双环烯烃[3+2]级联环化：直接构建平面苯并[a]芴酮",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该文发展铑催化芳香酸与7-氧杂苯并降冰片二烯的[3+2]级联环化，一步构建苯并[a]芴酮骨架，属于通用稠环合成方法。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract A rhodium-catalyzed [3 + 2] annulation of aromatic acids and 7-oxabenzonorbornadienes has been developed, enabling a facile one-step synthesis of planar π-conjugated polycyclic benzo[a]fluorenone featuring an ordered herringbone packing motif with slipped stacking in moderate to excellent yields. The reaction proceeds under simple conditions via a carboxyl-directed naphthylation, which comprises direct addition of the C–H bond to the alkenes with subsequent dehydration, followed by an intramolecular Friedel–Crafts reaction. This protocol features simple reaction conditions and a broad substrate.",
+      "challengeReason": "产物的π共轭堆积与材料属性可能构成干扰，但论文的主要贡献是跨底物的级联环化制备法，材料表征不是唯一或主要产出。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c02955"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "该文发展铑催化芳香酸与7-氧杂苯并降冰片二烯的[3+2]级联环化，一步构建苯并[a]芴酮骨架，属于通用稠环合成方法。",
+        "preparativeTransformation": "羧基导向芳基C–H键向氧杂双环烯烃加成并脱水，随后发生分子内Friedel–Crafts反应，形成平面多环苯并[a]芴酮。",
+        "generalityEvidence": "摘要明确报告中等至优良收率、简便条件和广泛底物范围，且给出连续的羧基导向萘基化—脱水—Friedel–Crafts成环路径。",
+        "sourceEvidence": "fresh compact 标题与摘要事实：Abstract A rhodium-catalyzed [3 + 2] annulation of aromatic acids and 7-oxabenzonorbornadienes has been developed, enabling a facile one-step synthesis of planar π-conjugated polycyclic benzo[a]fluorenone featuring an ordered herringbone packing motif with slipped stacking in moderate to excellent yields. The reaction proceeds under simple conditions via a carboxyl-directed naphthylation, which comprises direct addition of the C–H bond to the alkenes with subsequent dehydration, followed by an intramolecular Friedel–Crafts reaction. This protocol features simple reaction conditions and a broad substrate.",
+        "boundaryChallenge": "产物的π共轭堆积与材料属性可能构成干扰，但论文的主要贡献是跨底物的级联环化制备法，材料表征不是唯一或主要产出。"
+      }
+    },
+    {
+      "doi": "10.1002/anie.8106106",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Catalysis by a Metastable Photoswitchable Cage",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "构建可见光驱动的亚稳态混配体钯笼并研究其可逆组装及光开关催化状态，主要贡献是超分子动力学。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT The introduction of ortho ‐methyl substituents on aryl‐substituted ortho ‐tetrafluoroazobenzene photoswitches breaks the π‐conjugation and improves photoswitching selectivity and increases the thermal half‐life of the metastable isomer. Using this approach, a visible‐light‐responsive ligand was assembled with a non‐switchable ligand and palladium(II) ions into a mixture of molecular cages. When irradiated with 530 nm light, the system converges to form a single product, a metastable, mixed‐ligand molecular cage. This cage can be reversibly disassembled using 424 nm light, an example of integrative self‐sorting controlled by light. The metastable assembly can catalyze both Michael addition and nitroaldol reactions. Importantly, visible light accesses a metastable catalytic state inaccessible under thermodynamic control. We demonstrate that the active assembled species can be swit",
+      "challengeReason": "该笼能催化Michael加成和Henry反应，构成反向挑战；但摘要未给出任一反应的底物范围或制备证据，两项模型反应主要用于显示开关功能，尚不足以成为一般合成方法。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8106106"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.1044891",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Electrified Acetylene Removal From Ethylene Streams Enabled by Facet‐Engineered Cu–TiO 2 Interfaces",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "通过晶面工程Cu–TiO₂界面电催化去除乙烯流中的痕量乙炔，主要目标是工业气体纯化。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Removal of trace acetylene from ethylene is essential for polymer‐grade olefin production, yet current thermocatalytic purification requires elevated temperatures and hydrogen input. Here we report an electrified route for acetylene removal from ethylene streams using facet‐engineered Cu–TiO 2 interfaces. By tuning the exposed facets of anatase TiO 2 , we regulate the interfacial electronic interaction with supported Cu nanoclusters and thereby the balance among acetylene hydrogenation, hydrogen evolution, and carbon–carbon coupling. Among the catalysts examined, Cu–TiO 2 {001} provides the most effective interfacial environment for selective acetylene‐to‐ethylene conversion, delivering an ethylene Faradaic efficiency (FE) of 95.4% under acetylene‐rich feed. Under purification‐relevant acetylene‐lean conditions, a 25 cm 2 flow electrode suppresses residual acetylene to below 5 p",
+      "challengeReason": "乙炔选择性加氢为真实化学转化，但研究指标是残余ppm、法拉第效率和界面机理，而非有机产物制备范围。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.1044891"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.3415969",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Electro‐Organic Synthesis at a Stable Oil/Water/Solid Three‐Phase Interface Reactor",
+      "titleZh": "稳定油/水/固三相界面反应器中的电有机合成",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该文建立多孔膜电极三相界面反应器，并在还原、氧化及氧化还原耦合等多类电有机反应中验证高浓度制备，具有跨转化的通用合成价值。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Electro‐organic synthesis offers a green and efficient method to produce high‐value organic chemicals under mild conditions, but it suffers from poor water solubility of organic reactant(s) and tedious separation processes for organic product(s) in the conventional electrochemical reaction systems. Herein, we report a porous membrane electrode (PME) reactor design that allows electro‐organic synthesis with concentrated or neat organic reactant(s), achieving product concentrations above 6 M in representative reactions with simplified separation. The PME reactor is demonstrated across several representative electro‐organic transformations, including reduction, oxidation, and oxidation–reduction coupled reactions. The PME reactor can be run at a low operating voltage (∼2 V) with excellent long‐term stability (for more than 400 h) and has achieved the synthesis of pharmaceutical int",
+      "challengeReason": "最可能的超范围理由是核心创新含反应器工程；但其跨反应类型、药物中间体放大和实际制备证据充分，满足一般有机制备方法而非仅能源或器件性能。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.3415969"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "该文建立多孔膜电极三相界面反应器，并在还原、氧化及氧化还原耦合等多类电有机反应中验证高浓度制备，具有跨转化的通用合成价值。",
+        "preparativeTransformation": "多孔膜电极在稳定油/水/固三相界面中处理浓缩或纯有机反应物，完成代表性还原、氧化及成对氧化还原反应并简化产物分离。",
+        "generalityEvidence": "摘要给出多种代表性电有机转化、产物浓度超过6 M、运行超过400小时，并完成500克级药物中间体合成，证明并非单一电极性能展示。",
+        "sourceEvidence": "fresh compact 标题与摘要事实：ABSTRACT Electro‐organic synthesis offers a green and efficient method to produce high‐value organic chemicals under mild conditions, but it suffers from poor water solubility of organic reactant(s) and tedious separation processes for organic product(s) in the conventional electrochemical reaction systems. Herein, we report a porous membrane electrode (PME) reactor design that allows electro‐organic synthesis with concentrated or neat organic reactant(s), achieving product concentrations above 6 M in representative reactions with simplified separation. The PME reactor is demonstrated across several representative electro‐organic transformations, including reduction, oxidation, and oxidation–reduction coupled reactions. The PME reactor can be run at a low operating voltage (∼2 V) with excellent long‐term stability (for more than 400 h) and has achieved the synthesis of pharmaceutical int",
+        "boundaryChallenge": "最可能的超范围理由是核心创新含反应器工程；但其跨反应类型、药物中间体放大和实际制备证据充分，满足一般有机制备方法而非仅能源或器件性能。"
+      }
+    },
+    {
+      "doi": "10.1002/anie.8360226",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Extending El Sayed's Rule by 1 (n,π*)– 3 (n,π*) Rotation via Intramolecular Secondary Interaction Enables Room‐Temperature Circularly Polarized Phosphorescence in Solution",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究硫代邻苯二甲酰亚胺的系间窜越与溶液圆偏振室温磷光，核心是激发态光物理。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT The development of purely organic chiral room temperature (RT) phosphorescent emitters is in the limelight. However, the key parameters governing the polarized luminescence are difficult to predict and rationalize since the phosphorescence emission is rarely obtained in solution, despite the introduction of heavy atoms (Br, I) or carbonyl groups, and engineering of total angular momentum, for example, singlet/triplet states corresponding to n‐π*/π‐π* transitions (or vice‐versa), as prescribed by El‐Sayed's rule. Here, we show that intramolecular secondary interactions can induce an efficient ISC between formally identical 1 (n,π*) and 3 (n,π*) states in chiral thionated phthalimide derivatives. This unprecedented type of inter‐system crossing (ISC) extends the usual thinking of the El‐Sayed principle and enables the realization of circularly polarized (CP) RT phosphorescence (RT",
+      "challengeReason": "合成衍生物系列只为建立发光结构—性质关系，摘要没有新通用成键或路线贡献。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8360226"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.9950898",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Fast‐Charging All‐Solid‐State Lithium Selenium–Tellurium Batteries Enabled by Se–Te Alloy Cathode",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究Se–Te合金正极实现全固态锂电池快充、容量与循环寿命，属于能源材料。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT All‐solid‐state batteries (ASSBs) are considered as a promising pathway toward high energy density and improved safety. However, achieving fast charging capability in energy‐dense ASSBs remains a major challenge, primarily due to sluggish ion transport within solids and poor interfacial compatibility between electrodes and solid electrolytes. These limitations result in inadequate rate capability, low reversible capacity, and shortened cycle life. Here, we report a predominantly amorphous selenium (Se)–tellurium (Te) alloy (a‐Se 0.8 Te 0.2 ) cathode that enables fast‐charging all‐solid‐state lithium Se–Te batteries (ASSLSTBs). Unlike conventional crystalline or single‐chalcogen cathodes, this amorphous alloy exhibits synergistic redox activity, triggering a synergistic redox reaction with the argyrodite Li 5.4 PS 4.4 Cl 1.6 electrolyte during mechanical milling. The reaction gen",
+      "challengeReason": "合金形成及界面反应真实存在，但主要贡献是电池性能与离子输运，不是一般有机制备方法。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.9950898"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.4528541",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Fluoroalcohol‐Mediated Solvation for Self‐Assembled Molecules Anchoring Optimization Toward High‐Performance Organic Solar Cells and Flexible Module",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "以三氟乙醇溶剂调控自组装分子在ITO上的锚定并提高有机太阳能电池和柔性组件效率。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT The uniform chemisorption of phosphonic acid‐based self‐assembled molecules (SAMs) onto the indium tin oxide (ITO) substrate is fundamentally hindered by the thermodynamic limitations of interfacial heterocondensation reactions, limiting the photovoltaic performance and stability of organic solar cells (OSCs). Herein, we develop a facile solvation regulation strategy to address this issue by utilizing the solvation effect of 2,2,2‐trifluoroethanol (TFE) solvent. It is found that TFE can form a robust intermolecular hydrogen bond (O─H···O═P) with the SAM 2PACz, thereby polarizing the phosphoryl moiety (P═O) bond, enhancing the electrophilicity of the phosphorus atom, and substantially elevating the thermodynamic driving force for the interfacial anchoring reaction. Consequently, the assistance of TFE for 2PACz leads to a more uniform and stronger anchoring 2PACz layer onto the IT",
+      "challengeReason": "界面缩合和多种SAM体系的普适性是反向证据，但其评价对象仍是器件界面与光伏性能，未建立可分离有机产物合成。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.4528541"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.8344174",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Hierarchical Accessibility and Framework‐Al Organization in Ultra‐High‐Silica ZSM‐5 Enable Efficient Cracking of Polyolefin Waste to Light Olefins",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "通过层级孔道与骨架铝分布优化ZSM-5催化聚烯烃废塑料裂解为轻烯烃，核心是催化材料与过程选择性。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Selective conversion of waste polyolefins to light olefins offers a promising route for waste‐plastic valorization but is often limited by the trade‐off between cracking activity and secondary reactions over acidic zeolites. Here we report a tetrapropylammonium hydroxide‐directed synthesis strategy assisted by cetyltrimethylammonium bromide (CTAB) and tert‐butanol (TBA) to construct an ultra‐high‐silica hierarchical ZSM‐5 with a highly isolated framework‐Al distribution within a low‐acidity environment. Under hydrogen‐free conditions at 450°C, the optimized catalyst CTAB 2.5 /TBA 5 ‐ZSM‐5 achieves a gas yield of 95.3 wt%, a C 2– C 4 olefin selectivity of 88.2% in the gas phase, and a light‐olefin yield of 84.0 wt%, while maintaining a light‐olefin yield of ∼77 wt% over 20 consecutive cycles without regeneration. The catalyst also maintains high gas yields and light‐olefin select",
+      "challengeReason": "聚烯烃化学转化及多种废料适用性真实存在，但产物是气体混合物且贡献集中于沸石结构—性能和工艺收率，不是一般有机制备路线。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8344174"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.3712910",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Insights into the Degradation Mechanism of Aqueous LiMn 2 O 4 –Cathode Interfaces by Computational Vibrational Spectroscopy",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "用机器学习势和振动光谱模拟解释水系LiMn₂O₄正极界面降解，属于计算电池机理。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT (LMO) is a versatile and earth‐abundant Li intercalation compound of high interest for sustainable energy storage and conversion. Yet, its broader adoption as a cathode in Li‐ion batteries or as a water‐splitting electrocatalyst is hindered by severe degradation reactions at the solid–electrolyte interface. This instability is rooted in its mixed‐valence / electronic structure, which is governed by the Li content. Still, the atomistic link between the lithiation state and interfacial degradation remains elusive. Here, we investigate aqueous LMO interfaces across varying lithiation states by atomistic simulations using an ab initio‐quality machine learning potential. We demonstrate that the local Li content determines surface Mn oxidation states and reveal their decisive role in interfacial acid–base chemistry. By analyzing the vibrational features of interfacial species, we iden",
+      "challengeReason": "研究识别了表面酸碱与溶解机制，但没有有机底物—产物制备或实验合成范围。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.3712910"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.5648702",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Metal–Organic Framework‐Confined Iron Pincer Complex for Highly Efficient and Selective Borylation of Methane and Ethane",
+      "titleZh": "金属-有机框架限域铁钳形配合物高效选择性催化甲烷和乙烷硼化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该研究构建MOF限域铁钳形二氢化物催化剂，实现甲烷和乙烷的选择性单硼化并给出可回收性与产物收率，属于明确的烷烃官能团化方法。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT We report the design and development of a heterogeneous NNP‐pincer ligand, 6‐((diisopropylphosphaneyl)amino)‐(2,2′‐bipyridine), which is integrated within a porous zirconium metal–organic framework (mNNP‐UiO‐67) to synthesize highly active earth‐abundant metal catalysts for alkane functionalization. The mNNP‐UiO‐67 MOF‐supported mononuclear iron(II)‐dihydride (mNNP‐UiO‐FeH 2 ) exhibits high efficiency in catalyzing selective monoborylation of methane and ethane. mNNP‐UiO‐FeH 2 ‐catalyzed borylation of methane using pinacolborane (HBpin) produces CH 3 Bpin in 76% yield, while significantly suppressing the formation of thermodynamically favored over‐borylated products. The catalyst remains active over six recycling cycles, achieving a cumulative turnover number (TON) of 10,793, a methane utilization efficiency of 5.5%, and a space‐time productivity of 13.5 gL −1 h −1 . The catalys",
+      "challengeReason": "MOF设计和多相催化剂稳定性占重要篇幅，可能被视为材料论文；但文章实际建立两种轻烷烃到可分离有机硼产物的催化转化，并提供收率、选择性和循环证据，不能仅因MOF载体排除。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5648702"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "该研究构建MOF限域铁钳形二氢化物催化剂，实现甲烷和乙烷的选择性单硼化并给出可回收性与产物收率，属于明确的烷烃官能团化方法。",
+        "preparativeTransformation": "MOF限域的NNP-Fe(II)H₂位点以HBpin选择性活化甲烷或乙烷C–H键，分别生成CH₃Bpin和C₂H₅Bpin，并抑制过度硼化。",
+        "generalityEvidence": "摘要报告甲烷硼化76%收率、六次循环与累计TON 10793，以及乙烷生成C₂H₅Bpin 36%收率和100%选择性，且与快速分解的均相对照比较。",
+        "sourceEvidence": "fresh compact 标题与摘要事实：ABSTRACT We report the design and development of a heterogeneous NNP‐pincer ligand, 6‐((diisopropylphosphaneyl)amino)‐(2,2′‐bipyridine), which is integrated within a porous zirconium metal–organic framework (mNNP‐UiO‐67) to synthesize highly active earth‐abundant metal catalysts for alkane functionalization. The mNNP‐UiO‐67 MOF‐supported mononuclear iron(II)‐dihydride (mNNP‐UiO‐FeH 2 ) exhibits high efficiency in catalyzing selective monoborylation of methane and ethane. mNNP‐UiO‐FeH 2 ‐catalyzed borylation of methane using pinacolborane (HBpin) produces CH 3 Bpin in 76% yield, while significantly suppressing the formation of thermodynamically favored over‐borylated products. The catalyst remains active over six recycling cycles, achieving a cumulative turnover number (TON) of 10,793, a methane utilization efficiency of 5.5%, and a space‐time productivity of 13.5 gL −1 h −1 . The catalys",
+        "boundaryChallenge": "MOF设计和多相催化剂稳定性占重要篇幅，可能被视为材料论文；但文章实际建立两种轻烷烃到可分离有机硼产物的催化转化，并提供收率、选择性和循环证据，不能仅因MOF载体排除。"
+      }
+    },
+    {
+      "doi": "10.1002/anie.6056264",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Surface Potential Well‐Gated Piezocarrier Escape for Reversible Oxygen Redox in Lithium–Oxygen Chemistry",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "研究Co₃O₄@MXene界面压电载流子逃逸促进锂氧电池可逆氧化还原，核心是电池与界面物理。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT Piezocatalysis offers a promising way to harness intrinsic mechanical energy for accelerating sluggish oxygen redox reactions in lithium–oxygen batteries. However, its efficiency depends not just on piezoelectric polarization strength, but critically on whether stress‐induced charge carriers can escape surface potential traps at terminations and reach interfacial reactive states. Here, we introduce a surface‐trap‐gated carrier escape mechanism via a chemically bridged Co 3 O 4 @Ti 3 C 2 T x MXene (Co 3 O 4 @TMX) interface. Co─O─Ti coupling induces local secondary symmetry breaking in Ti 3 C 2 T x ‐MXene and reshapes the electrostatic potential at termination sites, converting deep‐trapped states into low‐barrier interfacial escape pathways. During battery operation, periodic Li 2 O 2 evolution generates intrinsic mechanical stress, continuously activating the piezoelectric respo",
+      "challengeReason": "氧化还原反应存在但服务于Li₂O₂充放电性能，没有一般有机分子制备方法。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.6056264"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract"
+    },
+    {
+      "doi": "10.1002/anie.9855820",
+      "journal": "Angew",
+      "date": "2026-09-23",
+      "title": "Visible‐Light‐Induced Deuteration of Benzylic C( sp 3 )─H Bonds in D 2 O via Heterolytic Dissociation Mode",
+      "titleZh": "D₂O中经异裂模式实现苄位C(sp³)–H键的可见光诱导氘代",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该文发展Pd/C₃N₄可见光催化的苄位C(sp³)–H氘代，以D₂O为氘源并覆盖多类烷基芳烃，属于具有充分范围和放大证据的同位素标记方法。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：ABSTRACT CD 3 ‐containing molecules are promising as new drug candidates in the pharmaceutical industry. However, conventional synthetic routes via hydrogen isotope exchange (HIE) usually require expensive isotopic sources (D 2 , DMSO‐ d 6 , acetone‐ d 6 ), metal complex catalysts, or hazardous operations (e.g., ≥120 °C and 10 bar H 2 ). Here, we report a visible‐light‐induced deuteration strategy for benzylic C( sp 3 )–H bonds using a Pd/C 3 N 4 photocatalyst in D 2 O under 410 nm irradiation and 1 bar Ar at room temperature. The protocol enabled the late‐stage benzylic deuteration of 54 alkyl(hetero)arenes (containing diverse electron‐withdrawing or electron‐donating groups) with excellent deuteration incorporation up to 99%, including highly functionalized natural products and pharmaceuticals. The successful gram‐scale synthesis of a CD 3 ‐containing drug (2.17 g, 10 mmol) also demons",
+      "challengeReason": "催化剂是多相光催化材料且论文含机理研究，但大规模底物范围和克级药物制备表明主要贡献是可推广有机氘代，不是材料性能或纯机理。",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.9855820"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "scopeAssessment": {
+        "primaryContribution": "该文发展Pd/C₃N₄可见光催化的苄位C(sp³)–H氘代，以D₂O为氘源并覆盖多类烷基芳烃，属于具有充分范围和放大证据的同位素标记方法。",
+        "preparativeTransformation": "在410 nm光照、1 bar氩气和室温下，Pd/C₃N₄界面异裂D₂O形成Pd–D与N–D活性物种，对烷基（杂）芳烃苄位C–H键实施氢同位素交换。",
+        "generalityEvidence": "摘要明确覆盖54种含不同给/吸电子基的烷基（杂）芳烃，包括天然产物和药物；最高氘掺入99%，并完成2.17克、10 mmol含CD₃药物制备。",
+        "sourceEvidence": "fresh compact 标题与摘要事实：ABSTRACT CD 3 ‐containing molecules are promising as new drug candidates in the pharmaceutical industry. However, conventional synthetic routes via hydrogen isotope exchange (HIE) usually require expensive isotopic sources (D 2 , DMSO‐ d 6 , acetone‐ d 6 ), metal complex catalysts, or hazardous operations (e.g., ≥120 °C and 10 bar H 2 ). Here, we report a visible‐light‐induced deuteration strategy for benzylic C( sp 3 )–H bonds using a Pd/C 3 N 4 photocatalyst in D 2 O under 410 nm irradiation and 1 bar Ar at room temperature. The protocol enabled the late‐stage benzylic deuteration of 54 alkyl(hetero)arenes (containing diverse electron‐withdrawing or electron‐donating groups) with excellent deuteration incorporation up to 99%, including highly functionalized natural products and pharmaceuticals. The successful gram‐scale synthesis of a CD 3 ‐containing drug (2.17 g, 10 mmol) also demons",
+        "boundaryChallenge": "催化剂是多相光催化材料且论文含机理研究，但大规模底物范围和克级药物制备表明主要贡献是可推广有机氘代，不是材料性能或纯机理。"
+      }
+    },
+    {
+      "doi": "10.1038/s41467-026-78015-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-23",
+      "title": "Solid–vapor synthesis of dynamic crystalline one-dimensional supramolecular polymers from amorphous macrocycles",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "The publisher listing confirms a new solid–vapor host–guest synthesis of a dynamic crystalline supramolecular polymer, but the accessible evidence does not show monomer/host–guest breadth or whether the method is transferable beyond one material system.",
+      "evidenceBasis": "本轮fresh compact（2026-09-24T09:10:17.928Z）仍无摘要。此前同日Nature Communications listing只确认以固–气主客体过程把无定形宏环转为动态晶态一维超分子聚合物；尚未取得单体/客体广度或可迁移架构控制证据。",
+      "challengeReason": "It cannot be excluded merely as a material because polymer assembly is the principal synthetic act, and true polymer/architecture-control methods may qualify. It also cannot be included from one publisher teaser without preparative breadth. Both passes therefore defer this DOI only.",
+      "evidenceNeeded": "Full publisher abstract or body/SI showing macrocycle/guest variation, reproducible solid–vapor assembly scope, and whether the synthesis controls a transferable chain/architecture feature rather than one target material.",
+      "attemptedEvidencePages": [
+        "https://www.nature.com/articles/s41467-026-78015-9",
+        "https://www.nature.com/ncomms/research-articles?type=article",
+        "https://www.nature.com/subjects/physical-sciences/ncomms"
+      ],
+      "nextAction": "Use the existing browser/VPN evidence path to read the article abstract or relevant preparation section; do not infer generality from the listing teaser.",
+      "originalDate": "2026-09-23",
+      "firstRecordedAt": "2026-09-23T17:13:15+08:00",
+      "sourceReviewFile": "audit/prepublish-review-2026-09-23-1800.json"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03851",
+      "journal": "Organic Letters",
+      "date": "2026-09-23",
+      "title": "Total Synthesis of the Zwitterionic Trisaccharide Repeating Unit of Staphylococcus aureus CP8",
+      "titleZh": "金黄色葡萄球菌CP8两性离子三糖重复单元的全合成",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "该文完成金黄色葡萄球菌CP8两性离子三糖重复单元的首次全合成，并解决三个1,2-顺式糖苷键及正交含氮官能团的组装难题。",
+      "evidenceBasis": "fresh compact 标题与摘要事实：Abstract Zwitterionic polysaccharides are unique carbohydrates capable of eliciting T-cell-dependent responses without protein conjugation. Herein, we report the first total synthesis of the zwitterionic trisaccharide repeating unit of Staphylococcus aureus CP8 in 2.8% yield. The target features three challenging 1,2-cis glycosidic linkages and orthogonal nitrogen functionalities, one amine and two acetamido groups. These challenges were addressed using oxazolidinone-protected l-fucosamine, which enabled α-selective glycosylation while providing orthogonality with the azido group, facilitating trisaccharide assembly through direct β-mannosylation.",
+      "challengeReason": "该靶标是多糖重复单元而非完整生物聚合物，不能夸大为天然高聚物全合成；但论文完成了题名所界定三糖靶标的首次全合成，属于明确的路线型有机合成成果。",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03851"
+      ],
+      "evidenceSource": "fresh_compact_title_and_abstract",
+      "totalSynthesis": true,
+      "cardLabel": "Total Synthesis",
+      "scopeAssessment": {
+        "primaryContribution": "该文完成金黄色葡萄球菌CP8两性离子三糖重复单元的首次全合成，并解决三个1,2-顺式糖苷键及正交含氮官能团的组装难题。",
+        "preparativeTransformation": "以噁唑烷酮保护的L-岩藻糖胺实现α-选择性糖基化，并结合直接β-甘露糖基化，组装含一个胺和两个乙酰氨基的三糖重复单元。",
+        "generalityEvidence": "摘要给出完整目标、总收率2.8%、三处1,2-顺式糖苷键和正交氮官能团的具体路线难点与解决方案，构成复杂寡糖靶标的完整合成路线。",
+        "sourceEvidence": "fresh compact 标题与摘要事实：Abstract Zwitterionic polysaccharides are unique carbohydrates capable of eliciting T-cell-dependent responses without protein conjugation. Herein, we report the first total synthesis of the zwitterionic trisaccharide repeating unit of Staphylococcus aureus CP8 in 2.8% yield. The target features three challenging 1,2-cis glycosidic linkages and orthogonal nitrogen functionalities, one amine and two acetamido groups. These challenges were addressed using oxazolidinone-protected l-fucosamine, which enabled α-selective glycosylation while providing orthogonality with the azido group, facilitating trisaccharide assembly through direct β-mannosylation.",
+        "boundaryChallenge": "该靶标是多糖重复单元而非完整生物聚合物，不能夸大为天然高聚物全合成；但论文完成了题名所界定三糖靶标的首次全合成，属于明确的路线型有机合成成果。"
+      }
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "journal": "CCS Chemistry",
+      "date": "2026-09-22",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "Paired electrolysis may represent genuine organic electrosynthesis, but the obtained evidence still does not resolve the preparative contribution.",
+      "evidenceBasis": "本轮fresh compact（2026-09-24T09:10:17.928Z）仍无摘要。此前出版社文章页、摘要页和目录页尝试受阻，仅能确认题名所示CO₂还原与醇氧化耦合；仍未取得醇底物、氧化产物、范围及分离/制备证据。",
+      "challengeReason": "Energy-related indexing is not enough to exclude a possibly genuine paired organic electrosynthesis, while the title and snippet are not enough to include it. The DOI remains individually deferred.",
+      "evidenceNeeded": "Obtain the publisher abstract or relevant text/SI describing the alcohol substrates and oxidation products, the transferable preparative transformation, and scope or isolated-product/route evidence; distinguish this from an electrode/energy-performance-only study.",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/toc/ccschem/0/0"
+      ],
+      "nextAction": "Obtain textual publisher abstract or preparative sections showing alcohol substrates, products, scope and isolated/preparative evidence through the existing browser/VPN review path.",
+      "originalDate": "2026-09-22",
+      "firstRecordedAt": "2026-09-22T21:48:19+08:00",
+      "sourceReviewFile": "audit/review-2026-09-23-0800.json"
+    }
+  ],
+  "historicalScopeRechecks": [
+    {
+      "doi": "10.1021/acs.joc.6c01559",
+      "journal": "JOC",
+      "originalDate": "2026-09-22",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "cardAction": "retain",
+      "evidenceBasis": "A newly indexed full abstract text describes a diversity-oriented one-pot multicomponent library, mild metal-free conditions and broad scope across primary/secondary amines and primary benzamides. The ACS JOC latest listing independently confirms the article and title.",
+      "challengeReason": "Photophysics and antifungal imaging are substantial downstream studies, but the article also establishes a broad multicomponent preparation across distinct reaction-partner classes; fluorescence therefore does not erase the preparative method.",
+      "evidencePages": [
+        "https://pubs.acs.org/joceah/latest-articles",
+        "https://pubs.acs.org/doi/10.1021/acs.joc.6c01559"
+      ],
+      "resolvedAt": "2026-09-23T17:24:00+08:00",
+      "reusedUnderScopeRulesVersion": "scope-2026-09-24-v1",
+      "compatibilityNote": "2026-09-24-v1未改变该条目的语义边界；复用来源review的文章特定证据，未把未定案排查当作排除。"
+    },
+    {
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "originalDate": "2026-09-21",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "cardAction": "retain",
+      "evidenceBasis": "The live Wiley article states an in-situ ATMS pre-activation strategy for a pyridylamido Hf catalyst and homogeneous polymerization of several sterically demanding α-olefins including 44DMP, 3MB and VCH.",
+      "challengeReason": "High melting temperature is an application/property outcome, but the article's explicit new catalyst-activation strategy unlocks polymerization across multiple difficult monomers. This is genuine polymer synthesis methodology under the contract, not merely property optimization.",
+      "evidencePages": [
+        "https://onlinelibrary.wiley.com/doi/10.1002/anie.9519061"
+      ],
+      "resolvedAt": "2026-09-23T17:24:00+08:00",
+      "reusedUnderScopeRulesVersion": "scope-2026-09-24-v1",
+      "compatibilityNote": "2026-09-24-v1未改变该条目的语义边界；复用来源review的文章特定证据，未把未定案排查当作排除。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03499",
+      "journal": "Organic Letters",
+      "originalDate": "2026-09-22",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "pending",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "pending",
+      "cardAction": "retain_while_pending",
+      "evidenceBasis": "The ACS repository abstract now confirms protonation-controlled amino-BCB ring opening, a >50 kJ mol−1 barrier shift, >10^3-fold kinetic window and rapid [4+2] trapping, but gives no trapping-partner/product breadth.",
+      "challengeReason": "The work may be a useful reagent-activation method, yet the available abstract is dominated by kinetics and reactive-intermediate control. Without product/preparative scope, a final mechanism-only exclusion or method inclusion would both overclaim.",
+      "evidenceNeeded": "Trapping-partner scope, isolated cycloadducts/yields and whether stable ammonium precursors are applied as a general preparation platform.",
+      "attemptedEvidencePages": [
+        "https://acs.figshare.com/articles/journal_contribution/Protonation-Gated_Strain-Release_Generation_of_Amino_o_quinodimethanes/33965903",
+        "https://pubs.acs.org/orlef7/latest-articles"
+      ],
+      "nextAction": "Read the reaction/scope table through the existing browser/VPN path; retain the current card until resolved.",
+      "reusedUnderScopeRulesVersion": "scope-2026-09-24-v1",
+      "compatibilityNote": "2026-09-24-v1未改变该条目的语义边界；复用来源review的文章特定证据，未把未定案排查当作排除。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "originalDate": null,
+      "originalDateStatus": "not_recovered; production date must not be overwritten",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "cardAction": "retain_while_pending",
+      "evidenceBasis": "The publisher title and ACS repository excerpt establish an expedient synthesis of a fully functionalized Chasmanine AF-ring fragment, but not a completed total synthesis or a broadly reusable building-block route.",
+      "challengeReason": "A single fragment cannot be labeled total synthesis, yet a fragment route may independently qualify if it introduces a transferable building-block strategy. The available evidence does not decide that question.",
+      "evidenceNeeded": "Full abstract/route evidence, synthetic generality beyond the single target fragment, and the preserved original date from authoritative production data.",
+      "attemptedEvidencePages": [
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03386",
+        "https://acs.figshare.com/articles/journal_contribution/Synthesis_of_a_Fully_Functionalized_Chasmanine_AF-Ring_Fragment/33962722"
+      ],
+      "nextAction": "Read the route/abstract through the existing browser/VPN path; keep the card unchanged and do not label it total synthesis.",
+      "reusedUnderScopeRulesVersion": "scope-2026-09-24-v1",
+      "compatibilityNote": "2026-09-24-v1未改变该条目的语义边界；复用来源review的文章特定证据，未把未定案排查当作排除。"
+    }
+  ],
+  "historicalPendingDois": [
+    "10.1021/acs.orglett.6c03499",
+    "10.1021/acs.orglett.6c03386"
+  ],
+  "sourceChecks": [
+    {
+      "journal": "Nature",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/nature/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Science",
+      "status": "unavailable",
+      "sourceType": "publisher_first_release",
+      "sourcePage": "https://www.science.org/toc/science/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Nature Catalysis",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/natcatal/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Nature Synthesis",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/natsynth/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Nature Chemistry",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/nchem/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Nature Communications",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/ncomms/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562",
+      "observedArticles": [
+        {
+          "doi": "10.1038/s41467-026-78015-9",
+          "title": "Solid–vapor synthesis of dynamic crystalline one-dimensional supramolecular polymers from amorphous macrocycles",
+          "observation": "publisher listing and teaser readable"
+        }
+      ]
+    },
+    {
+      "journal": "JACS",
+      "status": "unavailable",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/jacsat/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Angew",
+      "status": "unavailable",
+      "sourceType": "publisher_early_view",
+      "sourcePage": "https://onlinelibrary.wiley.com/toc/15213773/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "ACS Catalysis",
+      "status": "unavailable",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/accacs/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Organic Letters",
+      "status": "unavailable",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/orlef7/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Chem",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.cell.com/chem/newarticles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Chemical Science",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/sc",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "CCS Chemistry",
+      "status": "blocked",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://www.chinesechemsoc.org/toc/ccschem/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Science Advances",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.science.org/toc/sciadv/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "Green Chemistry",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/gc",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    },
+    {
+      "journal": "JOC",
+      "status": "blocked",
+      "sourceType": "publisher_asap",
+      "sourcePage": "https://pubs.acs.org/joceah/latest-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "本轮17:00预发布复查中，出版社实时列表仍未返回可审计的完整候选清单；不把机器源健康冒充出版社实查，candidateCount与syntheticTitleCount保持unknown。机器Crossref/OpenAlex健康另见machineSourceHealth。",
+      "checkedAt": "2026-09-24T17:16:30+08:00",
+      "carriedFromReview": "audit/review-2026-09-24-0800.json@7a391ba6c471b4a961002c4244e3643a35c96562"
+    }
+  ],
+  "machineSourceHealth": [
+    {
+      "name": "Nature",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 84,
+        "crossrefCandidateRecords": 84,
+        "openAlexCandidateRecords": 32,
+        "multiSourceCandidateRecords": 32,
+        "closureUnionRecords": 52,
+        "closureCrossrefRecords": 52,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": true,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Science",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Catalysis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 3,
+        "crossrefCandidateRecords": 3,
+        "openAlexCandidateRecords": 2,
+        "multiSourceCandidateRecords": 2,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Synthesis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 3,
+        "crossrefCandidateRecords": 3,
+        "openAlexCandidateRecords": 2,
+        "multiSourceCandidateRecords": 2,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Nature Chemistry",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 9,
+        "crossrefCandidateRecords": 9,
+        "openAlexCandidateRecords": 5,
+        "multiSourceCandidateRecords": 5,
+        "closureUnionRecords": 4,
+        "closureCrossrefRecords": 4,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Nature Communications",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 160,
+        "crossrefCandidateRecords": 160,
+        "openAlexCandidateRecords": 115,
+        "multiSourceCandidateRecords": 115,
+        "closureUnionRecords": 36,
+        "closureCrossrefRecords": 36,
+        "closureOpenAlexRecords": 3,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "JACS",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 84,
+        "crossrefCandidateRecords": 84,
+        "openAlexCandidateRecords": 60,
+        "multiSourceCandidateRecords": 60,
+        "closureUnionRecords": 19,
+        "closureCrossrefRecords": 19,
+        "closureOpenAlexRecords": 4,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Angew",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 118,
+        "crossrefCandidateRecords": 118,
+        "openAlexCandidateRecords": 80,
+        "multiSourceCandidateRecords": 80,
+        "closureUnionRecords": 21,
+        "closureCrossrefRecords": 21,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "ACS Catalysis",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 25,
+        "crossrefCandidateRecords": 25,
+        "openAlexCandidateRecords": 23,
+        "multiSourceCandidateRecords": 23,
+        "closureUnionRecords": 2,
+        "closureCrossrefRecords": 2,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Organic Letters",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 57,
+        "crossrefCandidateRecords": 57,
+        "openAlexCandidateRecords": 44,
+        "multiSourceCandidateRecords": 44,
+        "closureUnionRecords": 16,
+        "closureCrossrefRecords": 16,
+        "closureOpenAlexRecords": 6,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Chem",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Chemical Science",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "CCS Chemistry",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 8,
+        "crossrefCandidateRecords": 8,
+        "openAlexCandidateRecords": 3,
+        "multiSourceCandidateRecords": 3,
+        "closureUnionRecords": 5,
+        "closureCrossrefRecords": 5,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": true,
+        "closureCoverageWarning": true
+      }
+    },
+    {
+      "name": "Science Advances",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "Green Chemistry",
+      "activeFrom": "2026-09-19",
+      "effectiveStart": "2026-09-21",
+      "sourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      }
+    },
+    {
+      "name": "JOC",
+      "activeFrom": "2026-09-22",
+      "effectiveStart": "2026-09-22",
+      "sourceHealth": {
+        "activeFrom": "2026-09-22",
+        "effectiveStart": "2026-09-22",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 14,
+        "crossrefCandidateRecords": 14,
+        "openAlexCandidateRecords": 8,
+        "multiSourceCandidateRecords": 8,
+        "closureUnionRecords": 4,
+        "closureCrossrefRecords": 4,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    }
+  ],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "twoPassScope": "all 41 compact candidates plus four carried historical boundary rechecks",
+    "unresolvedDisagreements": 0,
+    "allHandoffCandidatesReviewed": true,
+    "allHandoffCandidatesFinalized": false,
+    "unfinishedHandoffDois": [],
+    "openEvidenceGaps": 2,
+    "sourceCheckRows": 16,
+    "publisherCoverageFullyVerified": false,
+    "publisherSourceCheckCounts": {
+      "checked": 0,
+      "blocked": 6,
+      "unavailable": 10
+    },
+    "scopeContract": {
+      "scopeRulesVersion": "scope-2026-09-24-v1",
+      "scopeRulesFile": "docs/literature-scope-contract.md",
+      "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+      "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+      "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+      "handoffCommitSha": "4069131ff4fb4d8e24e3dd0b0360e1654ef4fe71",
+      "handoffBlobSha": "8ba092dab22861b27d77e5bb1757de4a269d0579",
+      "ruleChangeTriggeredHistoricalReview": false,
+      "ruleCompatibilityChecked": true,
+      "ruleCompatibilityConclusion": "scope-2026-09-24-v1与08:00正式review采用相同语义边界；本轮对全部新compact候选重新逐篇双遍审核，并复核四项历史边界记录。两项历史pending未因重复出现或规则版本相同而删除。",
+      "newIncludesArticleSpecificAssessmentsComplete": true,
+      "explicitBoundaryRechecks": 4,
+      "affectedHistoricalCoverageComplete": true,
+      "resolvedHistoricalRetain": 2,
+      "historicalPendingAssigned": 2,
+      "confirmedCorrectionRecordsReused": 4,
+      "allGalleryPapersRechecked": false,
+      "inheritance": "Formal conversion must retain this object."
+    },
+    "titleZhPreparedForAllNewIncludes": true,
+    "placeholderTranslations": 0,
+    "productionDataModified": false,
+    "mediaAcquisitionPerformed": false,
+    "pagesDeploymentRequested": false,
+    "sourceCoverageWarningCount": 2,
+    "sourceCoverageWarningJournals": [
+      "Nature",
+      "CCS Chemistry"
+    ],
+    "sourceCoverageWarningsNonBlockingForReviewedDois": true,
+    "closureCoverageWarningCount": 8,
+    "verifiedThroughHeld": true
+  },
+  "globalBlockers": [],
+  "publicationBlockers": [],
+  "closure": {
+    "closureDate": "2026-09-23",
+    "verifiedThrough": "2026-09-20",
+    "verifiedThroughAdvanced": false,
+    "reason": "两项sourceCoverageAnomalies与八项closureCoverageAnomalies继续阻止closure/verifiedThrough前推；按照scope-2026-09-24-v1，它们不清空已发现且完成双遍审核的publishableDois。"
+  },
+  "productionDataModified": false,
+  "pagesDeploymentRequested": false,
+  "mediaAcquisitionPerformed": false,
+  "notes": [
+    "本轮仅写staging/state和审计回报；未新增生产卡片、未触发Pages、未获取OA媒体。",
+    "41个compact候选全部完成逐篇双遍判断；9个include、30个exclude、2个pending。",
+    "两项pending逐项保留历史日期、来源review、已尝试页面与下一步，不阻挡9个合格include。",
+    "四项历史边界条目按同一scope contract复用文章特定证据：两项retain/include、两项retain while pending。"
+  ],
+  "nonBlockingDiscoveryWarnings": [
+    {
+      "metric": "sourceCoverageAnomalies",
+      "count": 2,
+      "journals": [
+        "Nature",
+        "CCS Chemistry"
+      ],
+      "publicationEffect": "none_for_already_discovered_two_pass_reviewed_dois",
+      "closureEffect": "hold_verifiedThrough_and_recheck"
+    },
+    {
+      "metric": "closureCoverageAnomalies",
+      "count": 8,
+      "publicationEffect": "none_for_already_discovered_two_pass_reviewed_dois",
+      "closureEffect": "hold_verifiedThrough"
+    }
+  ],
+  "updatedAt": "2026-09-24T17:20:00+08:00",
+  "prepublishGate": {
+    "runId": 35980458261,
+    "jobId": 107570829262,
+    "conclusion": "success",
+    "recordValidationPassed": true,
+    "semanticDecisionSetComplete": true,
+    "semanticFieldFailures": 0,
+    "snapshotFreshForSlot": true,
+    "publicationReady": true,
+    "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: success",
+    "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: success",
+    "formalConversionPreview": "success",
+    "strictReleaseBundle": "success",
+    "conversionValid": true,
+    "productionDataModified": false
+  }
+}

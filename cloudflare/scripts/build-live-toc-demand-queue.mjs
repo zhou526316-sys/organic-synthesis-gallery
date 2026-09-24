@@ -107,10 +107,25 @@ async function loadPapers() {
   for (const raw of all) {
     const doi = normalizeDoi(raw?.doi || raw?.url || '');
     if (!doi || isExcludedDoi(doi)) continue;
-    const paper = { doi, journal: canonicalJournal(raw?.journal || ''), title: typeof raw?.title === 'string' ? raw.title : '', date: typeof raw?.date === 'string' ? raw.date : '' };
+    const paper = {
+      doi,
+      journal: canonicalJournal(raw?.journal || ''),
+      title: typeof raw?.title === 'string' ? raw.title : '',
+      date: typeof raw?.date === 'string' ? raw.date : '',
+      addedDate: typeof raw?.addedDate === 'string' ? raw.addedDate : '',
+    };
     const prev = merged.get(doi);
     if (!prev) merged.set(doi, paper);
-    else merged.set(doi, { doi, journal: prev.journal || paper.journal, title: prev.title || paper.title, date: prev.date || paper.date });
+    else {
+      const knownAddedDates = [prev.addedDate, paper.addedDate].filter(Boolean).sort();
+      merged.set(doi, {
+        doi,
+        journal: prev.journal || paper.journal,
+        title: prev.title || paper.title,
+        date: prev.date || paper.date,
+        addedDate: knownAddedDates[0] || '',
+      });
+    }
   }
   return merged;
 }
@@ -203,6 +218,9 @@ async function main() {
     loadDisplayGapOverrides(),
   ]);
   const inventory = await fetchMediaInventory([...papers.keys()]);
+  const addedDates = [...papers.values()].map(paper => String(paper.addedDate || '')).filter(Boolean).sort();
+  const latestAddedDate = addedDates.length ? addedDates[addedDates.length - 1] : '';
+  const latestAddedCount = latestAddedDate ? [...papers.values()].filter(paper => paper.addedDate === latestAddedDate).length : 0;
   const allMissingOfficial = [];
   const displayGaps = [];
   const officialUpgrade = [];
@@ -229,6 +247,7 @@ async function main() {
       journal: paper.journal,
       title: paper.title,
       date: paper.date,
+      addedDate: paper.addedDate || '',
       publisher: publisherFor(doi),
       state: anyVisual ? 'fallback_only' : 'no_visual',
       existingReason,
@@ -258,6 +277,7 @@ async function main() {
       journal: paper.journal,
       title: paper.title,
       date: paper.date,
+      addedDate: paper.addedDate || '',
       publisher: publisherFor(doi),
       figureCount,
       highQualityFigureCount,
@@ -312,6 +332,8 @@ async function main() {
     mediaInventoryUrl: MEDIA_INVENTORY_URL,
     mediaInventoryCount: inventory.size,
     webpageDoiCount: papers.size,
+    latestAddedDate,
+    latestAddedCount,
     mediaRecordCount: Object.keys(media).length,
     visibleGapTotal: displayGaps.length,
     demandTotal: displayGaps.length,
@@ -336,6 +358,8 @@ async function main() {
     articles: [...papers.values()].map(paper => ({...paper, publisher: publisherFor(paper.doi)})),
     generatedAt: summary.generatedAt,
     webpageDoiCount: summary.webpageDoiCount,
+    latestAddedDate: summary.latestAddedDate,
+    latestAddedCount: summary.latestAddedCount,
     visibleGapTotal: displayGaps.length,
     missingOfficialTotal: allMissingOfficial.length,
     officialUpgradeTotal: officialUpgrade.length,
