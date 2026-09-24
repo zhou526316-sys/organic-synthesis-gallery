@@ -1,4 +1,4 @@
-name: Verify Tampermonkey 2.2.29 live
+name: Verify Tampermonkey 2.2.30 live
 on:
   workflow_run:
     workflows: ['Deploy GitHub Pages frontend', 'Deploy Worker frontend assets']
@@ -34,7 +34,7 @@ jobs:
               try:
                   suffix='?releaseCheck='+str(int(time.time()))
                   raw=get(site+'gallery-vpn-bridge.user.js'+suffix);script=raw.decode()
-                  assert re.search(r'@version\s+2\.2\.29(?:\s|$)',script), 'userscript not 2.2.29'
+                  assert re.search(r'@version\s+2\.2\.30(?:\s|$)',script), 'userscript not 2.2.30'
                   for marker in ["var VERSION = '6.2.20';",'overnightRetryEligible','checkpointKey','pairedJobs','capture_server_upgrade_pending','GM_listValues','assertBoundCaptureJob','pending_verified_promotion']:
                       assert marker in script, 'script contract '+marker
                   q=json.loads(get(site+'toc-demand-live.json'+suffix))
@@ -47,7 +47,7 @@ jobs:
                   media=json.loads(get(site+'media-index.json'+suffix))
                   recovered=sum(r.get('toc',{}).get('recoveryId')=='toc-batch1-20260922' for r in media['items'].values())
                   assert recovered>=83, 'reviewed TOCs unexpectedly lost'
-                  report={'verifiedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'installationUrl':site+'gallery-vpn-bridge.user.js','bridgeVersion':'2.2.29','captureVersion':'6.2.20','scriptBytes':len(raw),'scriptSha256':hashlib.sha256(raw).hexdigest(),'queueArticles':len(q['articles']),'queueGeneratedAt':q['generatedAt'],'retainedReviewedTocs':recovered,'workerCapabilities':caps,'publicReadOnly':True,'realPublisherSessionVerified':False}
+                  report={'verifiedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'installationUrl':site+'gallery-vpn-bridge.user.js','bridgeVersion':'2.2.30','captureVersion':'6.2.20','scriptBytes':len(raw),'scriptSha256':hashlib.sha256(raw).hexdigest(),'queueArticles':len(q['articles']),'queueGeneratedAt':q['generatedAt'],'retainedReviewedTocs':recovered,'workerCapabilities':caps,'publicReadOnly':True,'realPublisherSessionVerified':False}
                   pathlib.Path(os.environ['RUNNER_TEMP'],'tm220-live.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
                   print('TM220_LIVE_VERIFIED '+json.dumps(report,ensure_ascii=False));break
               except Exception as e:
