@@ -2,13 +2,14 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {readPapers,normalizeDoi} from './merge-reviewed-toc.mjs';
-import {POLICY_ID,sha256,requireBody,exactKey,evidenceKey,validateNewBodyMetadata,validateNewBodyBytes,conflictKeys,createImageDecoder} from './new-body-auto-validation.mjs';
-export const SITE='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+import {sourceDois} from '../../shared/body-media-evidence.js';
+import {POLICY_ID,sha256,requireBody,exactKey,evidenceKey,validateNewBodyMetadata,rehydrateLegacyStageRow,validateNewBodyBytes,conflictKeys,createImageDecoder} from './new-body-auto-validation.mjs';
+export const SITE='https://gallery.gczhouwld.com/';
 export const WORKER='https://organic-synthesis-gallery.zhou526316.workers.dev';
 const SNAPSHOT='auto-body-publication.json';
 export async function fetchStored(url,maxBytes=20000000,missing=false){
   const u=new URL(url,SITE),site=new URL(SITE);
-  const permitted=u.origin===site.origin&&(u.pathname===site.pathname+SNAPSHOT||u.pathname===site.pathname+'media-index.json'||new RegExp('^'+site.pathname+'media-mirror/body-auto-[a-f0-9]{64}\\.(svg|png|webp)$').test(u.pathname))||u.origin===WORKER&&(u.pathname==='/api/article-figures/staged'||u.pathname==='/api/media/local-capture-index'||/^\/media\/local-captures\/article-figures\/images\/[a-f0-9]{24}\/(figure|scheme|chart)-\d{1,3}-[a-f0-9]{16}\.(svg|png|webp)$/.test(u.pathname));
+  const permitted=u.origin===site.origin&&(u.pathname===site.pathname+SNAPSHOT||u.pathname===site.pathname+'media-index.json'||new RegExp('^'+site.pathname+'media-mirror/body-auto-[a-f0-9]{64}\\.(svg|png|webp|jpg)$').test(u.pathname))||u.origin===WORKER&&(u.pathname==='/api/article-figures/staged'||u.pathname==='/api/media/local-capture-index'||u.pathname==='/api/media/tampermonkey-reports'||/^\/media\/local-captures\/article-figures\/images\/[a-f0-9]{24}\/(figure|scheme|chart)-\d{1,3}-[a-f0-9]{16}\.(svg|png|webp|jpg)$/.test(u.pathname));
   requireBody(permitted&&!u.username&&!u.password,'auto_fetch_not_stored_asset');
   const response=await fetch(u,{headers:{'cache-control':'no-cache'},redirect:'error',credentials:'omit',signal:AbortSignal.timeout(20000)});
   if(missing&&response.status===404)return null;
@@ -33,7 +34,7 @@ export function assertSnapshotCoherence(previous,live){
 }
 async function configuration(root){
   const policy=JSON.parse(await readFile(path.join(root,'audit/media-auto-policy.json'),'utf8'));
-  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=20&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard<=10&&policy.requireOfficialTocInBuild===true&&Number.isInteger(policy.tailFlushIdleMinutes)&&policy.tailFlushIdleMinutes>=5&&policy.tailFlushIdleMinutes<=120&&Number.isInteger(policy.tailFlushMinArticles)&&policy.tailFlushMinArticles>=1&&policy.tailFlushMinArticles<policy.minNewArticles&&Number.isInteger(policy.backlogMaxWaitMinutes)&&policy.backlogMaxWaitMinutes>=policy.tailFlushIdleMinutes&&policy.backlogMaxWaitMinutes<=360,'auto_invalid_configuration');
+  requireBody(policy.schemaVersion===1&&policy.policyId===POLICY_ID&&Number.isInteger(policy.minNewArticles)&&policy.minNewArticles>=1&&Number.isInteger(policy.maxNewArticles)&&policy.maxNewArticles>=policy.minNewArticles&&policy.maxNewArticles<=25&&Number.isInteger(policy.maxNewImages)&&policy.maxNewImages>=policy.maxNewArticles&&policy.maxNewImages<=250&&policy.maxFiguresPerCard<=10&&policy.requireOfficialTocInBuild===true&&policy.requireCompletedCapturePacket===true&&Number.isInteger(policy.backfillStabilityMinutes)&&policy.backfillStabilityMinutes>=5&&policy.backfillStabilityMinutes<=120&&Number.isFinite(Date.parse(policy.backfillCapturedBefore)),'auto_invalid_configuration');
   const state=JSON.parse(await readFile(path.join(root,'audit/literature-update-state.json'),'utf8'));
   const holds=new Set([...(policy.heldDois||[]),...(state.pendingScopeReviewBacklog||[])].map(x=>x.doi));
   return {policy,holds,papers:await readPapers(root)};
@@ -45,12 +46,14 @@ export async function readLiveInputs(){
   requireBody(new Set(previous.items.map(x=>x.record.doi+'|'+x.record.id)).size===previous.items.length,'auto_previous_duplicate_identity');
   if(!priorBytes)requireBody(!Object.values(live.items||{}).some(x=>x.figures?.figures?.some(f=>f.publicationId===POLICY_ID)),'auto_previous_snapshot_missing');
   assertSnapshotCoherence(previous,live);
-  let stage=null,stageError=null,localCaptures=null,localCaptureError=null;
+  let stage=null,stageError=null,localCaptures=null,localCaptureError=null,reports=null,reportError=null;
   try{stage=JSON.parse(await fetchStored(WORKER+'/api/article-figures/staged'));requireBody(Array.isArray(stage.items)&&stage.count===stage.items.length&&stage.count<=2000,'auto_stage_truncated_or_invalid');}
   catch(e){stageError=String(e.message);stage=null;}
   try{localCaptures=JSON.parse(await fetchStored(WORKER+'/api/media/local-capture-index'));requireBody(Array.isArray(localCaptures.items)&&localCaptures.count===localCaptures.items.length&&localCaptures.count<=2000,'auto_local_capture_index_invalid');}
   catch(e){localCaptureError=String(e.message);localCaptures=null;}
-  return {previous,live,stage,stageError,localCaptures,localCaptureError};
+  try{reports=JSON.parse(await fetchStored(WORKER+'/api/media/tampermonkey-reports?limit=200'));requireBody(Array.isArray(reports.items)&&reports.items.length<=200,'auto_report_index_invalid');}
+  catch(e){reportError=String(e.message);reports=null;}
+  return {previous,live,stage,stageError,localCaptures,localCaptureError,reports,reportError};
 }
 function alreadyIn(media,row){return (media.items?.[row.doi]?.figures?.figures||[]).some(f=>f.id===row.id);}
 function heldAttempts(previous,row,now){const a=previous.attempts?.[exactKey(row)];return a?.evidenceSha256===evidenceKey(row)&&(!a.retryAfter||a.retryAfter>now);}
@@ -67,19 +70,45 @@ function embeddedAcsDois(value){
   }
   return [...found];
 }
+function hostIs(host,suffix){return host===suffix||host.endsWith('.'+suffix);}
+function officialPublisherHosts(doi,pageHost,sourceHost){
+  if(doi.startsWith('10.1021/'))return pageHost==='pubs.acs.org'&&['acs.silverchair-cdn.com','pubs.acs.org'].includes(sourceHost);
+  if(doi.startsWith('10.1002/'))return hostIs(pageHost,'onlinelibrary.wiley.com')&&(hostIs(sourceHost,'wiley.com')||hostIs(sourceHost,'wiley.com.cn'));
+  if(doi.startsWith('10.1038/'))return hostIs(pageHost,'nature.com')&&(hostIs(sourceHost,'nature.com')||hostIs(sourceHost,'springernature.com'));
+  if(doi.startsWith('10.1126/'))return hostIs(pageHost,'science.org')&&hostIs(sourceHost,'science.org');
+  if(doi.startsWith('10.1039/'))return hostIs(pageHost,'rsc.org')&&hostIs(sourceHost,'rsc.org');
+  if(doi.startsWith('10.1016/'))return (hostIs(pageHost,'sciencedirect.com')||hostIs(pageHost,'cell.com'))&&(hostIs(sourceHost,'sciencedirect.com')||hostIs(sourceHost,'cell.com')||hostIs(sourceHost,'els-cdn.com'));
+  if(doi.startsWith('10.31635/'))return hostIs(pageHost,'ccspublishing.org.cn')&&hostIs(sourceHost,'ccspublishing.org.cn');
+  return false;
+}
 export function strongOfficialCapture(row){
   const doi=normalizeDoi(row?.doi||'');
-  if(!doi||!doi.startsWith('10.1021/')||String(row?.kind||'').toLowerCase()!=='official')return false;
+  if(!doi||String(row?.kind||'').toLowerCase()!=='official')return false;
   if(row.captureVersion!=='6.2.20'||normalizeDoi(row.pageDoi||'')!==doi||Number(row.mediaGeneration)!==1790082000000||Number(row.updatedAt||0)<1790082000000)return false;
-  let article,source;
-  try{article=new URL(String(row.articleUrl||''));source=new URL(String(row.sourceUrl||''));}catch{return false;}
-  if(article.protocol!=='https:'||article.hostname!=='pubs.acs.org')return false;
-  if(source.protocol!=='https:'||!['acs.silverchair-cdn.com','pubs.acs.org'].includes(source.hostname))return false;
-  for(const value of [row.articleUrl,row.sourceUrl]){
-    const ids=embeddedAcsDois(value);
-    if(ids.length!==1||ids[0]!==doi)return false;
+  let page,source;try{page=new URL(String(row.articleUrl||''));source=new URL(String(row.sourceUrl||''));}catch{return false;}
+  if(page.protocol!=='https:'||source.protocol!=='https:'||!officialPublisherHosts(doi,page.hostname,source.hostname))return false;
+  const articleIds=sourceDois(row.articleUrl);
+  if(articleIds.length!==1||articleIds[0]!==doi)return false;
+  const sourceIds=sourceDois(row.sourceUrl);
+  if(sourceIds.length===1&&sourceIds[0]===doi)return true;
+  if(sourceIds.length)return false;
+  if(doi.startsWith('10.1038/')&&hostIs(source.hostname,'springernature.com')){
+    const slug=doi.slice('10.1038/'.length).toLowerCase();
+    let pathname='';try{pathname=decodeURIComponent(source.pathname).toLowerCase();}catch{pathname=source.pathname.toLowerCase();}
+    return pathname.split(/[\/_.]/).includes(slug);
   }
-  return true;
+  return false;
+}
+export function completedPacketMap(inputs){
+  const map=new Map();
+  for(const row of inputs?.reports?.items||[]){
+    const doi=normalizeDoi(row?.doi||'');
+    const jobId=String(row?.jobId||'');
+    if(!doi||!row.final||row.status!=='success'||row.captureVersion!=='6.2.20'||!/^[a-z0-9-]{16,80}$/i.test(jobId))continue;
+    if(Number(row.figuresStored||0)!==Number(row.figuresDiscovered||0))continue;
+    map.set(doi,row);
+  }
+  return map;
 }
 export function tocReadyDois(inputs){
   const ready=new Set();
@@ -110,31 +139,66 @@ export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()})
   assertSnapshotCoherence(inputs.previous,inputs.live);
   const cfg=await configuration(root),{policy,holds,papers}=cfg;
   if(!policy.enabled||!inputs.stage)return {...cfg,rows:[]};
-  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=tocReadyDois(inputs);
-  const rows=[];
+  const oldKeys=new Set(inputs.previous.items.map(x=>exactKey(x.record))),tocReady=tocReadyDois(inputs),packets=completedPacketMap(inputs);
+  const cutoff=Date.parse(policy.backfillCapturedBefore),stabilityMs=policy.backfillStabilityMinutes*60000;
+  const stageByDoi=new Map();
   for(const row of inputs.stage.items){
-    if(oldKeys.has(exactKey(row))||!papers.has(row.doi)||holds.has(row.doi)||alreadyIn(inputs.live,row)||heldAttempts(inputs.previous,row,now)||!tocReady.has(row.doi))continue;
-    try{await validateNewBodyMetadata(row,policy,now);rows.push(row);}catch{}
+    const doi=normalizeDoi(row?.doi||'');if(!doi)continue;
+    if(!stageByDoi.has(doi))stageByDoi.set(doi,[]);
+    stageByDoi.get(doi).push(row);
   }
-  rows.sort((a,b)=>{
-    const agedA=Number(now)-Number(a.updatedAt||0)>=policy.backlogMaxWaitMinutes*60000;
-    const agedB=Number(now)-Number(b.updatedAt||0)>=policy.backlogMaxWaitMinutes*60000;
-    if(agedA!==agedB)return agedA?-1:1;
-    if(agedA&&agedB)return Number(a.updatedAt||0)-Number(b.updatedAt||0)||Number(!a.doi.startsWith('10.1021/jacs.'))-Number(!b.doi.startsWith('10.1021/jacs.'));
-    return String(papers.get(b.doi)?.date||'').localeCompare(String(papers.get(a.doi)?.date||''))||Number(!a.doi.startsWith('10.1021/jacs.'))-Number(!b.doi.startsWith('10.1021/jacs.'))||b.updatedAt-a.updatedAt;
-  });
-  return {...cfg,rows,tocReady};
+  const packetCoverage=new Map();
+  for(const [doi,packet] of packets){
+    const available=new Set([...(stageByDoi.get(doi)||[]).map(x=>String(x.label||'')),...(inputs.live.items?.[doi]?.figures?.figures||[]).map(x=>String(x.label||''))]);
+    const labels=Array.isArray(packet.figureLabels)?packet.figureLabels.filter(Boolean):[];
+    packetCoverage.set(doi,labels.every(label=>available.has(String(label))));
+  }
+  const rows=[],historicalInvalidDois=new Set(),validationHolds=[];
+  for(const raw of inputs.stage.items){
+    const row={...raw},doi=normalizeDoi(row.doi);
+    if(!doi||oldKeys.has(exactKey(row))||!papers.has(doi)||holds.has(doi)||alreadyIn(inputs.live,row)||heldAttempts(inputs.previous,row,now)||!tocReady.has(doi))continue;
+    const historical=Number(row.updatedAt||0)<=cutoff&&Number(now)-Number(row.updatedAt||0)>=stabilityMs;
+    const packet=packets.get(doi);
+    const packetReady=Boolean(packet&&packetCoverage.get(doi));
+    if(!historical&&!packetReady)continue;
+    if(!historical&&Array.isArray(packet.figureLabels)&&packet.figureLabels.length&&!packet.figureLabels.includes(String(row.label||'')))continue;
+    try{
+      const legacyRevalidate=historical&&(!row.sha256||!row.reviewMarker);
+      if(!legacyRevalidate)await validateNewBodyMetadata(row,policy,now);
+      row._packetMode=historical?'historical_backfill':'completed_job';
+      row._packetJobId=packet?.jobId||'';
+      row._legacyRevalidate=legacyRevalidate;
+      rows.push(row);
+    }catch(e){
+      if(historical){
+        historicalInvalidDois.add(doi);
+        validationHolds.push({doi,id:String(row.id||''),reason:'historical_packet_validation:'+String(e.message).slice(0,140)});
+      }
+    }
+  }
+  const atomicRows=rows.filter(row=>row._packetMode!=='historical_backfill'||!historicalInvalidDois.has(row.doi));
+  const priority=journal=>{
+    const j=String(journal||'').trim();
+    if(j==='Nature')return 0;if(j==='Science')return 1;if(/^Nature\s+/i.test(j))return 2;if(/^Science\s+/i.test(j))return 3;
+    if(j==='JACS')return 4;if(j==='Angew')return 5;if(j==='Chem')return 6;return 7;
+  };
+  atomicRows.sort((a,b)=>priority(papers.get(a.doi)?.journal)-priority(papers.get(b.doi)?.journal)
+    ||String(papers.get(b.doi)?.date||'').localeCompare(String(papers.get(a.doi)?.date||''))
+    ||Number(a.updatedAt||0)-Number(b.updatedAt||0)
+    ||String(a.doi).localeCompare(String(b.doi))
+    ||Number(a.sortOrder||0)-Number(b.sortOrder||0));
+  return {...cfg,rows:atomicRows,tocReady,packets,validationHolds};
 }
 export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   const now=options.now||Date.now(),inputs=options.inputs||await readLiveInputs();
-  const {policy,holds,papers,rows}=await pendingNewRows({root,inputs,now});
+  const {policy,holds,papers,rows,validationHolds=[]}=await pendingNewRows({root,inputs,now});
   const mediaPath=path.join(root,'public/media-index.json'),media=JSON.parse(await readFile(mediaPath,'utf8'));media.items||={};
   const ledgerPath=path.join(root,'public/body-publication-ledger.json'),ledger=JSON.parse(await readFile(ledgerPath,'utf8'));requireBody(Array.isArray(ledger.items),'auto_ledger_contract');
   const beforeToc=JSON.stringify(Object.fromEntries(Object.entries(media.items).map(([d,r])=>[d,r.toc]))),originalDois=Object.keys(media.items);
   const decoder=options.decoder||await createImageDecoder();
   const getNew=options.getNew||((row)=>fetchStored(WORKER+'/media/'+row.r2Key,4000000));
   const getOld=options.getOld||((old)=>fetchStored(old.imageUrl,4000000));
-  const attempts={...(inputs.previous.attempts||{})},retained=[],supersededByReviewed=[],held=[],added=[],newDois=new Set(),tocWaitingDois=new Set();
+  const attempts={...(inputs.previous.attempts||{})},retained=[],supersededByReviewed=[],held=[...validationHolds],added=[],newDois=new Set(),tocWaitingDois=new Set();
   let prepared=[];
   const candidateDois=[];
   for(const row of rows)if(!candidateDois.includes(row.doi)&&candidateDois.length<policy.maxNewArticles)candidateDois.push(row.doi);
@@ -158,27 +222,44 @@ export async function mergeNewBodyAuto(root=process.cwd(),options={}){
       const bytes=await getOld(old);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
       prepared.push({row,bytes,ext,admittedAt:old.admittedAt,isNew:false,alreadyPublished:Boolean(existing),existingImageUrl:existing?.imageUrl||null});retained.push({doi:row.doi,id:row.id});
     }
-    for(const row of rows){
-      if(added.length>=policy.maxNewImages)break;
-      if(!candidateDoiSet.has(row.doi)||alreadyIn(media,row))continue;
-      if(policy.requireOfficialTocInBuild&&!officialToc(media.items[row.doi])){
-        if(!tocWaitingDois.has(row.doi))held.push({doi:row.doi,id:null,reason:'waiting_for_official_toc_in_same_build'});
-        tocWaitingDois.add(row.doi);continue;
+    for(const doi of candidateDois){
+      const packetRows=rows.filter(row=>row.doi===doi&&!alreadyIn(media,row));
+      if(!packetRows.length)continue;
+      if(policy.requireOfficialTocInBuild&&!officialToc(media.items[doi])){
+        held.push({doi,id:null,reason:'waiting_for_official_toc_in_same_build'});tocWaitingDois.add(doi);continue;
       }
-      const key=exactKey(row),fingerprint=evidenceKey(row),identity=row.doi+'|'+row.id;
-      try{
-        requireBody(!conflicts.has(identity),'auto_cross_identity_conflict');
-        const count=(media.items[row.doi]?.figures?.figures?.length||0)+prepared.filter(p=>p.row.doi===row.doi).length;
-        requireBody(count<policy.maxFiguresPerCard,'auto_card_display_limit');
-        const {ext}=await validateNewBodyMetadata(row,policy,now);
-        const bytes=await getNew(row);validateNewBodyBytes(row,bytes);await decoder.decode(row,bytes);
-        prepared.push({row,bytes,ext,admittedAt:now,isNew:true});newDois.add(row.doi);added.push({doi:row.doi,id:row.id,sha256:row.sha256});delete attempts[key];
-      }catch(e){
-        const reason=String(e.message).slice(0,180),n=(attempts[key]?.attempts||0)+1;
-        const transient=/auto_read_http_5|fetch failed|timeout|aborted/i.test(reason);
-        attempts[key]={doi:row.doi,id:row.id,evidenceSha256:fingerprint,reason,attempts:n,checkedAt:now,retryAfter:transient?now+(n<3?900000:3600000):null};
-        held.push({doi:row.doi,id:row.id,reason});
+      const baseCount=(media.items[doi]?.figures?.figures?.length||0);
+      if(baseCount+packetRows.length>policy.maxFiguresPerCard){
+        held.push({doi,id:null,reason:'auto_card_display_limit'});continue;
       }
+      const packetPrepared=[],packetAdded=[];
+      let packetFailure=null;
+      for(const row of packetRows){
+        if(added.length+packetAdded.length>=policy.maxNewImages){packetFailure='auto_packet_image_limit';break;}
+        const identity=row.doi+'|'+row.id;
+        let evidenceRow=row,attemptKey=exactKey(row),fingerprint=evidenceKey(row);
+        try{
+          requireBody(!conflicts.has(identity),'auto_cross_identity_conflict');
+          const bytes=await getNew(row);
+          if(row._legacyRevalidate)evidenceRow=await rehydrateLegacyStageRow(row,bytes);
+          attemptKey=exactKey(evidenceRow);fingerprint=evidenceKey(evidenceRow);
+          const {ext}=await validateNewBodyMetadata(evidenceRow,policy,now);
+          validateNewBodyBytes(evidenceRow,bytes);await decoder.decode(evidenceRow,bytes);
+          packetPrepared.push({row:evidenceRow,bytes,ext,admittedAt:now,isNew:true});
+          packetAdded.push({doi:evidenceRow.doi,id:evidenceRow.id,sha256:evidenceRow.sha256});
+        }catch(e){
+          const reason=String(e.message).slice(0,180),n=(attempts[attemptKey]?.attempts||0)+1;
+          const transient=/auto_read_http_5|fetch failed|timeout|aborted/i.test(reason);
+          attempts[attemptKey]={doi:row.doi,id:row.id,evidenceSha256:fingerprint,reason,attempts:n,checkedAt:now,retryAfter:transient?now+(n<3?900000:3600000):null};
+          packetFailure=reason;break;
+        }
+      }
+      if(packetFailure){
+        held.push({doi,id:null,reason:'packet_held:'+packetFailure});continue;
+      }
+      for(const item of packetPrepared){prepared.push(item);delete attempts[exactKey(item.row)];}
+      for(const item of packetAdded)added.push(item);
+      newDois.add(doi);
     }
   }finally{await decoder.close();}
   const validatedRows=prepared.filter(item=>item.isNew).map(item=>item.row);

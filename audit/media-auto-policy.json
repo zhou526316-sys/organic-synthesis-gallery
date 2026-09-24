@@ -6,7 +6,7 @@
   "requiredCaptureVersion": "6.2.20",
   "requiredMarkerRevision": "1",
   "publishers": [
-    "acs"
+    "all-supported"
   ],
   "maxNewImages": 250,
   "maxNewArticles": 25,
@@ -20,11 +20,14 @@
   ],
   "verificationMode": "automated_source_identity_digest_and_image_decode",
   "individualSemanticReview": false,
-  "notes": "Current-generation ACS body figures, including previously staged eligible backlog, are continuously reconsidered. Prefer 20-25 article releases; if fewer than 20 paired TOC+body articles remain and no eligible capture has updated for 15 minutes, release the quiet tail. Independently, if the oldest eligible unpublished staged record has waited 30 minutes, release the aged backlog even while newer captures continue arriving. A body figure may enter only when the same Pages build already contains an official TOC for that DOI. No historical unquarantine, publisher downloads, TOC fallback substitution, image replacement, or literature additions.",
-  "minNewArticles": 20,
+  "notes": "Publish TOC and body figures in the same Pages deployment. New captures require a completed Tampermonkey final packet plus strict DOI/source/hash/decode validation; historical staged captures at or before the cutover may backfill only after a 15-minute stability window and the same strict validation. Previously staged eligible body figures are continuously drained. No cross-DOI source, partial packet, invalid marker, unsupported/unsafe image, or missing-TOC packet may publish.",
+  "minNewArticles": 1,
   "requireOfficialTocInBuild": true,
-  "reviewBatchTarget": "prefer 20-25 articles; flush quiet tail after 15 minutes or aged eligible backlog after 30 minutes",
-  "tailFlushIdleMinutes": 15,
+  "reviewBatchTarget": "completed single-article packets publish immediately; historical staged backlog drains automatically in bounded batches",
+  "tailFlushIdleMinutes": 5,
   "tailFlushMinArticles": 1,
-  "backlogMaxWaitMinutes": 30
+  "backlogMaxWaitMinutes": 15,
+  "backfillCapturedBefore": "2026-09-24T11:55:42Z",
+  "backfillStabilityMinutes": 15,
+  "requireCompletedCapturePacket": true
 }

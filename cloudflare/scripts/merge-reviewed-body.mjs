@@ -35,6 +35,8 @@ export function verifyBodyFile(item,bytes){
   demand(bytes.readUInt32BE(16)===item.width&&bytes.readUInt32BE(20)===item.height,'body_png_dimensions_mismatch');ext='png';
  }else if(item.contentType==='image/webp'){
   demand(bytes.toString('ascii',0,4)==='RIFF'&&bytes.toString('ascii',8,12)==='WEBP'&&bytes.readUInt32LE(4)+8===bytes.length,'body_not_webp');ext='webp';
+ }else if(item.contentType==='image/jpeg'){
+  demand(bytes.length>=4&&bytes[0]===0xff&&bytes[1]===0xd8&&bytes[bytes.length-2]===0xff&&bytes[bytes.length-1]===0xd9,'body_not_jpeg');ext='jpg';
  }else{
   demand(item.contentType==='image/svg+xml','body_unsupported_type');
   const s=bytes.toString('utf8');
