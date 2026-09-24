@@ -53,7 +53,7 @@ jobs:
                 if (request.method() === 'OPTIONS') { await route.fulfill({ status: 204, headers }); return; }
                 if (path.endsWith('/api/user-ui/article-summary')) {
                   result.summaryCalls++;
-                  await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify({ available, fulltextAvailable: available, source: available ? 'fulltext' : undefined, reason: available ? undefined : 'fulltext_missing', cached: true, zh: '无 TOC 布局测试示例。\n'.repeat(50), en: 'No-TOC layout fixture only.\n'.repeat(50) }) });
+                  await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify({ available, fulltextAvailable: available, evidenceAvailable: available, state: available ? 'published' : 'missing', source: available ? 'reviewed_evidence_v2' : undefined, reason: available ? undefined : 'fulltext_missing', cached: true, zh: '无 TOC 布局测试示例。\n'.repeat(50), en: 'No-TOC layout fixture only.\n'.repeat(50), generatedAt: available ? 1790000000000 : undefined, reviewedAt: available ? 1790000060000 : undefined }) });
                   return;
                 }
                 const api = path === '/api' || path.startsWith('/api/');
@@ -93,7 +93,7 @@ jobs:
                 await expect(drawer).toBeVisible();
                 if (available) await expect(drawer.locator('.summary-text')).toContainText('无 TOC 布局测试');
                 else {
-                  await expect(drawer.locator('.summary-state')).toContainText(/全文尚未同步|Full text has not been synced/);
+                  await expect(drawer.locator('.summary-state')).toContainText(/全文待同步|Full text is waiting to be synchronized/);
                   await expect(drawer.locator('.summary-text')).toHaveCount(0);
                 }
                 await expect(drawer.locator('.summary-toc')).toHaveCount(0);

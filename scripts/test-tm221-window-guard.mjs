@@ -85,5 +85,5 @@ await test('bound capture nonce and DOI guards remain in source',()=>{
  for(const text of ['assertBoundCaptureJob','capture_job_stale_or_unbound','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch','previous_task_tab_not_closed'])assert.ok(source.includes(text));
 });
 const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-await test('legacy viewport collectors are guarded by packaging',()=>{assert.ok(loader.includes('legacy_runtime_media_disabled'));for(const n of ['function queueDoi','function pump','function scan'])assert.ok(loader.includes(n));assert.ok(loader.includes("const loaderVersion = '2.2.31';"));});
+await test('legacy viewport collectors are guarded by packaging',()=>{assert.ok(loader.includes('legacy_runtime_media_disabled'));for(const n of ['function queueDoi','function pump','function scan'])assert.ok(loader.includes(n));assert.ok(loader.includes("const loaderVersion = '2.2.32';"));});
 console.log('TM221_WINDOW_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,environment:'VM mocked GM APIs; not a live Tampermonkey extension'}));

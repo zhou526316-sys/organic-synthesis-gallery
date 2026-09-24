@@ -236,13 +236,21 @@ export class GalleryPaperActions extends HTMLElement {
     const data = this.summaryData;
     let content = '';
     if (this.summaryLoading) {
-      content = `<div class='summary-state'>${this.tr('正在读取全文缓存并生成摘要…', 'Loading synced full text and generating the summary…')}</div>`;
+      content = `<div class='summary-state'>${this.tr('正在读取已审核摘要…', 'Loading the reviewed summary…')}</div>`;
     } else if (this.summaryError) {
       content = `<div class='summary-state error'>${escapeHtml(this.summaryError)}</div>`;
     } else if (!data?.available) {
-      const message = data?.reason === 'ai_unavailable'
-        ? this.tr('全文已同步，但 AI 摘要服务暂时未启用。', 'Full text is synced, but AI summarization is not enabled yet.')
-        : this.tr('全文尚未同步，暂不能生成“全文摘要”。', 'Full text has not been synced yet, so a full-text summary cannot be generated.');
+      const reason = data?.reason || 'fulltext_missing';
+      const messages: Record<string, string> = {
+        fulltext_missing: this.tr('全文待同步；完成可信全文采集后才会进入 GPT 审核。', 'Full text is waiting to be synchronized; GPT review starts only after trusted full-text capture.'),
+        evidence_v2_required: this.tr('已有旧版全文缓存，正在等待按 Evidence v2 重新同步。', 'A legacy full-text cache exists and is waiting for Evidence v2 resynchronization.'),
+        summary_pending: this.tr('全文证据已同步，摘要正在后台生成与审核。', 'Full-text evidence is synchronized; the summary is being generated and reviewed in the background.'),
+        summary_not_reviewed: this.tr('摘要草稿已存在，正在等待 GPT 证据审核。', 'A summary draft exists and is waiting for GPT evidence review.'),
+        summary_stale: this.tr('全文证据已更新，旧摘要已失效，正在等待重新审核。', 'The full-text evidence changed; the old summary was invalidated and is waiting for re-review.'),
+        summary_invalid: this.tr('摘要记录未通过完整性校验，正在等待重新生成。', 'The summary record failed integrity validation and is waiting to be regenerated.'),
+        ai_unavailable: this.tr('全文已同步，但后台摘要服务暂时不可用。', 'Full text is synchronized, but the background summary service is temporarily unavailable.'),
+      };
+      const message = messages[reason] || messages.fulltext_missing;
       content = `<div class='summary-state'>${message}</div>`;
     } else {
       const text = this.summaryLanguage === 'zh' ? data.zh || '' : data.en || '';
@@ -255,7 +263,7 @@ export class GalleryPaperActions extends HTMLElement {
       ${toc ? `<div class='summary-toc'><img src='${escapeHtml(toc)}' alt='TOC / graphical abstract'></div>` : ''}
       <div class='summary-main'>
         ${content}
-        ${data?.generatedAt ? `<div class='summary-meta'>${this.tr('生成于', 'Generated')} ${formatTime(data.generatedAt)} · ${data.cached ? this.tr('缓存', 'cached') : this.tr('新生成', 'new')}</div>` : ''}
+        ${data?.generatedAt ? `<div class='summary-meta'>${this.tr('GPT 审核通过', 'GPT reviewed')} · ${formatTime(data.reviewedAt || data.generatedAt)}${data.model ? ` · ${escapeHtml(data.model)}` : ''}</div>` : ''}
         ${meta?.href ? `<a class='summary-open' data-summary-open href='${escapeHtml(meta.href)}' target='_blank' rel='noopener noreferrer'>${this.tr('打开原文 ↗', 'Open original ↗')}</a>` : ''}
       </div>
     </section>`;

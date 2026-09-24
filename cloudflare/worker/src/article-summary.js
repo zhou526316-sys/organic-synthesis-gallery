@@ -6,6 +6,9 @@ const REVIEWED_SUMMARY_SCHEMA_VERSION = 'reviewed-summary-v2';
 const CAPTURE_VERSION = '6.2.20';
 const MIN_CONTROLLER_REVISION = [2, 2, 32];
 const MAX_EVIDENCE_CHARS = 750_000;
+const MAX_SECTION_TOTAL_CHARS = 620_000;
+const MAX_CAPTION_TOTAL_CHARS = 70_000;
+const MAX_TABLE_TOTAL_CHARS = 60_000;
 const MAX_SECTION_CHARS = 180_000;
 const MAX_SECTIONS = 96;
 const MAX_CAPTIONS = 160;
@@ -190,6 +193,23 @@ function normalizeTables(rows) {
   })).filter(row => row.text.length >= 40);
 }
 
+function budgetEvidenceRows(rows, budget, minimum = 20) {
+  let remaining = budget;
+  const out = [];
+  for (const row of rows) {
+    if (remaining < minimum) break;
+    const text = String(row?.text || '').slice(0, remaining);
+    if (text.length < minimum) continue;
+    out.push({ ...row, text });
+    remaining -= text.length;
+  }
+  return out;
+}
+
+async function hashEvidenceRows(rows) {
+  return Promise.all(rows.map(async row => ({ ...row, hash: await sha256Hex(row.text) })));
+}
+
 function canonicalSourceText(sections, captions, tables) {
   return [
     ...sections.map(row => [row.type, row.heading, row.text].filter(Boolean).join('\n')),
@@ -286,9 +306,9 @@ export async function importArticleFulltext(env, payload) {
   const provenance = validateProvenance(payload, doi);
   if (provenance.error) return { status: 400, body: { error: provenance.error } };
 
-  const sections = normalizeSections(payload?.sections);
-  const captions = normalizeCaptions(payload?.captions);
-  const tables = normalizeTables(payload?.tables);
+  const sections = await hashEvidenceRows(budgetEvidenceRows(normalizeSections(payload?.sections), MAX_SECTION_TOTAL_CHARS, 80));
+  const captions = await hashEvidenceRows(budgetEvidenceRows(normalizeCaptions(payload?.captions), MAX_CAPTION_TOTAL_CHARS, 20));
+  const tables = await hashEvidenceRows(budgetEvidenceRows(normalizeTables(payload?.tables), MAX_TABLE_TOTAL_CHARS, 40));
   const sourceText = canonicalSourceText(sections, captions, tables);
   if (sourceText.length < MIN_COMPLETE_TEXT_CHARS) {
     return { status: 400, body: { error: 'fulltext_too_short', chars: sourceText.length } };

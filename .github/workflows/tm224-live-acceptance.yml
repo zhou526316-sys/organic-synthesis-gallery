@@ -1,4 +1,4 @@
-name: Verify Bridge 2.2.31 live
+name: Verify Bridge 2.2.32 live
 on:
   workflow_run:
     workflows: ['Deploy GitHub Pages frontend']
@@ -34,13 +34,14 @@ jobs:
               if(!a.ok||!b.ok)throw new Error('HTTP '+a.status+'/'+b.status);
               const installer=await a.text(),mainline=await b.text();
               const checks={
-                installerVersion:/^\/\/ @version\s+2\.2\.31$/m.test(installer),
-                controller:installer.includes("var CONTROLLER_REVISION = '2.2.31';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.31';"),
+                installerVersion:/^\/\/ @version\s+2\.2\.32$/m.test(installer),
+                controller:installer.includes("var CONTROLLER_REVISION = '2.2.32';")&&mainline.includes("var CONTROLLER_REVISION = '2.2.32';"),
                 protocol:installer.includes("var VERSION = '6.2.20';")&&mainline.includes("var VERSION = '6.2.20';"),
                 fallback:installer.includes('sameFigureCurrentSrcFallback')&&mainline.includes('sameFigureCurrentSrcFallback'),
                 tiff:installer.includes("return 'image/tiff'")&&mainline.includes("return 'image/tiff'"),
                 ordering:['Scheduler tiers: latest Gallery additions first','function journalPriority','function captureQueueTier','latestAddedDate'].every(x=>installer.includes(x)&&mainline.includes(x)),
                 phasedCapture:["mediaNeed=isLatest?'toc+figures':official?'figures':'toc'","allowFigureOne:isLatest&&!official","figures=not_requested","mediaNeed:String(job.mediaNeed||'')"].every(x=>installer.includes(x)&&mainline.includes(x)),
+                evidenceCapture:["var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';","function evidenceCaptureEligible","function buildArticleEvidencePacket","function tryCaptureArticleEvidence","result.fulltext=await tryCaptureArticleEvidence"].every(x=>installer.includes(x)&&mainline.includes(x)),
                 resultPrecedence:installer.includes('completedPublisherResult')&&mainline.includes('completedPublisherResult')&&installer.includes('publisher final results over controller timeouts')&&mainline.includes('publisher final results over controller timeouts'),
                 guards:['capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch'].every(x=>installer.includes(x)&&mainline.includes(x)),
                 noEval:!(/\beval\s*\(/.test(installer))
