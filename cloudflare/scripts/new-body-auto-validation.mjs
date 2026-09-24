@@ -42,7 +42,11 @@ export async function validateNewBodyMetadata(row,policy,now=Date.now()){
     if(article[1]==='acscatal'){
       const serial=article[2].match(/^([0-9])c([0-9]{5})$/);
       requireBody(serial,'auto_acs_article_identity');
-      numberedPattern=new RegExp('^(?:m_)?cs-202'+serial[1]+'-'+serial[2]+'[a-z0-9]?_[0-9]{4}\\.(?:svg|png|webp|jpe?g)
+      numberedPattern=new RegExp('^(?:m_)?cs-202'+serial[1]+'-'+serial[2]+'[a-z0-9]?_[0-9]{4}\\.(?:svg|png|webp|jpe?g)$','i');
+    }else{
+      numberedPattern=new RegExp('^(?:m_)?'+prefix+article[2]+'_[0-9]{4}\\.(?:svg|png|webp|jpe?g)$','i');
+    }
+    requireBody(numberedPattern.test(basename),'auto_not_numbered_body_asset');
   }
   requireBody(!/graphical\s*abstract|visual\s*abstract|table\s+of\s+contents|toc\s*(?:graphic|image)/i.test(String(row.caption)),'auto_toc_role_conflict');
   requireBody(String(row.caption||'').trim().length>=10,'auto_caption_incomplete');
