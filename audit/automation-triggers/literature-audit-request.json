@@ -1,11 +1,14 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-24T17:07:00+08:00",
-  "requestedBy": "prepublish-primary-20260924-1800",
-  "reason": "No fresh 16:55 machine audit snapshot was present for the immutable 2026-09-24 18:00 publication slot after recheck. Generate exactly one fresh machine discovery audit for the 3-day Asia/Shanghai window plus 7-day safety tail and verifiedThrough catch-up. This is discovery only: do not mutate production literature, do not publish cards, do not trigger Pages, and do not acquire publisher media.",
+  "requestedAt": "2026-09-24T18:10:00+08:00",
+  "requestedBy": "fixed-release-postverify-20260924-1800",
+  "reason": "Post-release verification for the immutable 2026-09-24 18:00 slot release. Atomic production release b513e1a2767e999edbf10a9ebe6124850b9e916a has been built and deployed through Pages run 35985367446. Generate exactly one fresh machine audit against current main/deployed Gallery to verify the 566-card DOI set, discovery health, and whether every remaining unresolved DOI is exactly covered by the formal pending/deferred record. Do not mutate production literature, do not publish late arrivals, and do not acquire publisher media.",
   "targetBranch": "main",
   "publicationSlot": "2026-09-24T18:00:00+08:00",
-  "baselineMainSha": "a5a1d8d52ebfe44faa0476f40b3ecea027c79ff9",
+  "baselineMainSha": "74b1e68042f481971012dcbd852f922608d45c91",
+  "releaseCommit": "b513e1a2767e999edbf10a9ebe6124850b9e916a",
+  "pagesRunId": 35985367446,
+  "expectedProductionCards": 566,
   "primaryWindow": {
     "timezone": "Asia/Shanghai",
     "startDate": "2026-09-22",
@@ -19,13 +22,14 @@
   "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
   "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
   "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
-  "deduplicationKey": "prepublish|2026-09-24T18:00:00+08:00|a5a1d8d52ebfe44faa0476f40b3ecea027c79ff9|scope-2026-09-24-v1",
+  "deduplicationKey": "post-release|2026-09-24T18:00:00+08:00|b513e1a2767e999edbf10a9ebe6124850b9e916a|566",
   "validation": [
-    "audit/latest.json and audit/unresolved-latest.json must share generatedAt within the 17:00 prepublication window",
+    "audit/latest.json and audit/unresolved-latest.json must share generatedAt and endDate 2026-09-24",
     "both summary.unresolved values must equal the complete compact unresolved array length",
-    "activeJournals must cover every active canonical registry entry and respect activeFrom",
-    "Crossref online/published/created, multi-ISSN, OpenAlex, created/deposit rescue and verifiedThrough catch-up remain enabled",
+    "all canonical active journals and activeFrom rules remain covered",
     "criticalSourceFailures, sourceFamilyGaps, sourceCoverageAnomalies, closureCoverageAnomalies and historicalCoverageLosses must be explicit",
-    "machine audit only: no semantic include/exclude decisions, no production literature mutation, no Pages trigger and no media acquisition"
+    "galleryDois/deployed verification must reflect the already released 566-card snapshot",
+    "any unresolved DOI not exactly covered by current formal pending/deferred evidence is an unknown post-release gap and must fail publication closure",
+    "post-release verification only: no production literature mutation, no late admission, no Pages trigger, no OA or publisher-media acquisition"
   ]
 }
