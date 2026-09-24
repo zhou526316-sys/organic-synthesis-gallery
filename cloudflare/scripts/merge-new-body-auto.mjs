@@ -153,7 +153,7 @@ export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()})
     const labels=Array.isArray(packet.figureLabels)?packet.figureLabels.filter(Boolean):[];
     packetCoverage.set(doi,labels.every(label=>available.has(String(label))));
   }
-  const rows=[];
+  const rows=[],historicalInvalidDois=new Set(),validationHolds=[];
   for(const raw of inputs.stage.items){
     const row={...raw},doi=normalizeDoi(row.doi);
     if(!doi||oldKeys.has(exactKey(row))||!papers.has(doi)||holds.has(doi)||alreadyIn(inputs.live,row)||heldAttempts(inputs.previous,row,now)||!tocReady.has(doi))continue;
@@ -167,30 +167,36 @@ export async function pendingNewRows({root=process.cwd(),inputs,now=Date.now()})
       row._packetMode=historical?'historical_backfill':'completed_job';
       row._packetJobId=packet?.jobId||'';
       rows.push(row);
-    }catch{}
+    }catch(e){
+      if(historical){
+        historicalInvalidDois.add(doi);
+        validationHolds.push({doi,id:String(row.id||''),reason:'historical_packet_validation:'+String(e.message).slice(0,140)});
+      }
+    }
   }
+  const atomicRows=rows.filter(row=>row._packetMode!=='historical_backfill'||!historicalInvalidDois.has(row.doi));
   const priority=journal=>{
     const j=String(journal||'').trim();
     if(j==='Nature')return 0;if(j==='Science')return 1;if(/^Nature\s+/i.test(j))return 2;if(/^Science\s+/i.test(j))return 3;
     if(j==='JACS')return 4;if(j==='Angew')return 5;if(j==='Chem')return 6;return 7;
   };
-  rows.sort((a,b)=>priority(papers.get(a.doi)?.journal)-priority(papers.get(b.doi)?.journal)
+  atomicRows.sort((a,b)=>priority(papers.get(a.doi)?.journal)-priority(papers.get(b.doi)?.journal)
     ||String(papers.get(b.doi)?.date||'').localeCompare(String(papers.get(a.doi)?.date||''))
     ||Number(a.updatedAt||0)-Number(b.updatedAt||0)
     ||String(a.doi).localeCompare(String(b.doi))
     ||Number(a.sortOrder||0)-Number(b.sortOrder||0));
-  return {...cfg,rows,tocReady,packets};
+  return {...cfg,rows:atomicRows,tocReady,packets,validationHolds};
 }
 export async function mergeNewBodyAuto(root=process.cwd(),options={}){
   const now=options.now||Date.now(),inputs=options.inputs||await readLiveInputs();
-  const {policy,holds,papers,rows}=await pendingNewRows({root,inputs,now});
+  const {policy,holds,papers,rows,validationHolds=[]}=await pendingNewRows({root,inputs,now});
   const mediaPath=path.join(root,'public/media-index.json'),media=JSON.parse(await readFile(mediaPath,'utf8'));media.items||={};
   const ledgerPath=path.join(root,'public/body-publication-ledger.json'),ledger=JSON.parse(await readFile(ledgerPath,'utf8'));requireBody(Array.isArray(ledger.items),'auto_ledger_contract');
   const beforeToc=JSON.stringify(Object.fromEntries(Object.entries(media.items).map(([d,r])=>[d,r.toc]))),originalDois=Object.keys(media.items);
   const decoder=options.decoder||await createImageDecoder();
   const getNew=options.getNew||((row)=>fetchStored(WORKER+'/media/'+row.r2Key,4000000));
   const getOld=options.getOld||((old)=>fetchStored(old.imageUrl,4000000));
-  const attempts={...(inputs.previous.attempts||{})},retained=[],supersededByReviewed=[],held=[],added=[],newDois=new Set(),tocWaitingDois=new Set();
+  const attempts={...(inputs.previous.attempts||{})},retained=[],supersededByReviewed=[],held=[...validationHolds],added=[],newDois=new Set(),tocWaitingDois=new Set();
   let prepared=[];
   const candidateDois=[];
   for(const row of rows)if(!candidateDois.includes(row.doi)&&candidateDois.length<policy.maxNewArticles)candidateDois.push(row.doi);
