@@ -39,7 +39,7 @@ jobs:
                 protocol:installer.includes("var VERSION = '6.2.20';")&&mainline.includes("var VERSION = '6.2.20';"),
                 fallback:installer.includes('sameFigureCurrentSrcFallback')&&mainline.includes('sameFigureCurrentSrcFallback'),
                 tiff:installer.includes("return 'image/tiff'")&&mainline.includes("return 'image/tiff'"),
-                ordering:installer.includes('missing official TOC comes first; then JACS')&&mainline.includes('missing official TOC comes first; then JACS'),
+                ordering:['Scheduler tiers: latest Gallery additions first','function journalPriority','function captureQueueTier','latestAddedDate'].every(x=>installer.includes(x)&&mainline.includes(x)),
                 resultPrecedence:installer.includes('completedPublisherResult')&&mainline.includes('completedPublisherResult')&&installer.includes('publisher final results over controller timeouts')&&mainline.includes('publisher final results over controller timeouts'),
                 guards:['capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch'].every(x=>installer.includes(x)&&mainline.includes(x)),
                 noEval:!(/\beval\s*\(/.test(installer))
