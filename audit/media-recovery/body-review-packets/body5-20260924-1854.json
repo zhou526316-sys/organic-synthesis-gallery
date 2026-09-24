@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-1854",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T10:54:23Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10799289278,
+  "evidenceArchiveSha256": "a1931f8275c8ecc89c2e950515f4213b5dffe40f73d670b9a1699da253b156af",
+  "evidenceRunId": 35979551527,
+  "approvedCount": 19,
+  "reviewMethod": "All 19 selected stored body images across five current-corpus Organic Letters papers were independently rehashed against the immutable read-only GitHub evidence artifact and checked for exact task/page/article/source DOI identity, original Figure/Scheme identity and independent caption, captureVersion/job identity, fixed media generation 1790082000000, content-addressed R2 key, actual byte length/type/dimensions, duplicate source/hash ownership, frozen deployed same-ID body state and TOC separation. SVG files were parsed/rendered and checked for active/external content; PNG files were decoded and dimension-checked. Every image was visually reviewed against its owning caption and article theme for body-image role, unrelated/recommendation contamination, duplicate risk and legibility. Capture success/partial/controller/transport checkpoints were treated only as provenance evidence, not semantic approval. No publisher request, R2/D1 write, direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "All 19 selected files matched their full SHA256, byte lengths, dimensions, content-hash prefixes and strict content-addressed R2 key formula. No selected full hash, source URL or R2 key had a cross-DOI ownership collision in the frozen evidence inventory. The successful 18:00 GitHub Pages deployment artifact retained distinct official TOCs and contained no deployed body figures or publication-ledger records for these five papers before this review. Partial article reports are handled per-image only; missing figures are not inferred, and controller/transport checkpoints are not assigned to VPN, R2, quota or publisher causes. Figure 1 assets remain body-only and are not TOC substitutions.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.orglett.6c03488",
+      "images": [
+        ["next-011", "scheme-1", "Viewed the electrochemical oxidation synthesis concept and ketone-forming transformation; content matches Scheme 1 and the article theme."],
+        ["next-048", "scheme-2", "Viewed the methylarene substrate scope with oxidation products and yields; content matches Scheme 2."],
+        ["next-049", "scheme-3", "Viewed the broader substrate scope for benzylic electrochemical oxidation to carbonyl products; content matches Scheme 3."],
+        ["next-050", "scheme-4", "Viewed the scale-up synthesis experiment and reported isolated outcome; content matches Scheme 4."],
+        ["next-051", "scheme-7", "Viewed the control experiments, radical-trapping and mechanistic correlation data; content matches Scheme 7."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03512",
+      "images": [
+        ["next-012", "scheme-2", "Viewed the acyl hydrazide substrate scope with varied carboxylic acids and hydrazines; content matches Scheme 2."],
+        ["next-052", "scheme-3", "Viewed the N-carbamimidoylbenzamide synthesis transformation and conditions; content matches Scheme 3."],
+        ["next-053", "scheme-4", "Viewed the 1,2,4-oxadiazole synthesis substrate scope and product yields; content matches Scheme 4."],
+        ["next-054", "scheme-5", "Viewed the control experiments supporting the coupling pathway; content matches Scheme 5."],
+        ["next-055", "scheme-6", "Viewed the proposed reaction mechanism for the dichloromethane-mediated coupling sequence; content matches Scheme 6."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03674",
+      "images": [
+        ["next-013", "figure-5", "Viewed the ammonium axle exchange experiment and time-dependent NMR traces for rotaxane dynamics; content matches Figure 5."],
+        ["next-056", "scheme-1", "Viewed the siliconate-forming synthesis of the pseudo[2]rotaxane/rotaxane framework; content matches Scheme 1."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03541",
+      "images": [
+        ["next-014", "figure-1", "Viewed the state-of-the-art pyridine dearomatization context and aza-bicyclo[2.2.2] natural-product examples; content matches body Figure 1 and is not a TOC image."],
+        ["next-057", "scheme-1", "Viewed derivatizations of the polyfused aza-bicyclo[2.2.2]octane products; content matches Scheme 1."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03186",
+      "images": [
+        ["next-015", "figure-1", "Viewed the polarity-matched C1 annulation concept using fluoroalkyl nitrile imines; content matches body Figure 1 and is not a TOC image."],
+        ["next-058", "scheme-2", "Viewed the formal annulation substrate scope with fluoroalkyl hydrazonoyl halides and azoalkenes; content matches Scheme 2."],
+        ["next-059", "scheme-3", "Viewed the gram-scale reaction and synthetic transformations of representative products; content matches Scheme 3."],
+        ["next-060", "scheme-4", "Viewed the DFT energy profile and computational mechanistic analysis; content matches Scheme 4."],
+        ["next-061", "scheme-5", "Viewed the plausible mechanism for the polarity-matched formal annulation; content matches Scheme 5."]
+      ]
+    }
+  ]
+}
