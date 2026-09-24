@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-2053",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T12:56:00Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10808132140,
+  "evidenceArchiveSha256": "1d02f0347b1fb3e53b7f8b56f2c3756010a5044e47389eac503349b94a1014e6",
+  "evidenceRunId": 36001020325,
+  "approvedCount": 12,
+  "reviewMethod": "All 12 selected stored body images across five current-corpus papers were independently checked against the fresh read-only GitHub evidence artifact. The review verified exact task/page/article/source DOI binding, original Figure/Scheme identity and independent caption, captureVersion/job identity, fixed media generation 1790082000000, content-addressed R2 key, actual bytes/full SHA256, content-hash prefix, byte length/type/dimensions, duplicate source/hash ownership, current deployed same-ID state and separation from official TOC. Seven SVG files were parsed and rendered and checked for active or external content; five PNG files were decoded and dimension-checked. Every image was visually reviewed against its owning caption and paper theme for body-image role, unrelated/recommendation contamination, duplicate risk and legibility. Capture success/partial/controller/transport history was treated only as provenance evidence, not semantic approval. No publisher request, R2/D1 write, direct import/repair, literature/card/title/scope mutation, userscript change or media-generation change was performed.",
+  "quality": "All 12 selected files matched their complete SHA256, byte lengths, dimensions, content-hash prefixes and strict content-addressed R2 identity. No selected full hash or source URL had cross-DOI ownership in the frozen evidence inventory. All five papers retain independent official TOCs; none of the selected images is an official-TOC substitute. The JACS body Figure 1 remains body-only; its previously published Figures 3 and 4 are separate approved records and remain untouched. Article-level capture is partial for 10.1021/acs.joc.6c01939 (2/5), 10.1021/acs.orglett.6c03443 (1/4), and 10.1021/jacs.6c13635 (3/4). The latest article-level report for 10.1021/acs.joc.6c01846 is 0/0, but the three selected current-generation stage records have exact DOI-bound Silverchair sources, verified bytes and internally consistent server evidence markers; this per-image approval does not imply article completeness. 10.1021/acs.orglett.6c03851 is complete 5/5. Missing figures are not inferred approved, and transport/HTTP/controller checkpoints are not assigned to VPN, R2, quota or publisher causes.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.joc.6c01846",
+      "images": [
+        ["next-001", "scheme-1", "Viewed the representative alkenyl-sulfone drug motifs and synthetic approach; the content matches body Scheme 1 and the paper theme."],
+        ["next-021", "scheme-2", "Viewed the scale-up transformation and downstream product derivatizations; the content matches Scheme 2 and its independent caption."],
+        ["next-022", "scheme-3", "Viewed the radical-trapping experiments and proposed radical mechanism; the content matches Scheme 3 and the paper theme."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01939",
+      "images": [
+        ["next-002", "scheme-1", "Viewed the prior-work versus current electrochemical enaminone/phenol annulation design toward indoles and benzofurans; the content matches Scheme 1."],
+        ["next-023", "scheme-4", "Viewed the electrochemical and mechanistic exploration including voltammetric and control information; the content matches Scheme 4."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03443",
+      "images": [
+        ["next-003", "figure-3", "Viewed the artificial-enzyme-catalyzed direct alpha-functionalization reaction and mutant/yield comparison; the content matches Figure 3 and its caption."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03851",
+      "images": [
+        ["next-014", "scheme-1", "Viewed the target zwitterionic trisaccharide and retrosynthetic disconnections; the content matches Scheme 1 and the total-synthesis paper."],
+        ["next-055", "scheme-2", "Viewed the synthesis sequence for the d-fucosamine acceptor 15; the content matches Scheme 2 and its independent caption."],
+        ["next-056", "scheme-3", "Viewed the attempted trisaccharide assembly routes and products; the content matches Scheme 3 and the reported synthetic study."],
+        ["next-057", "scheme-4", "Viewed the revised retrosynthesis and building-block plan; the content matches Scheme 4 and the paper's route redesign."],
+        ["next-058", "scheme-5", "Viewed the final assembly and optimization leading to target molecule 1; the content matches Scheme 5 and the total synthesis."]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c13635",
+      "images": [
+        ["next-016", "figure-1", "Viewed the state-of-the-art and reaction design for direct decarboxylative borylation through Fe-LMCT chemistry; this is body Figure 1, not a TOC image."]
+      ]
+    }
+  ]
+}
