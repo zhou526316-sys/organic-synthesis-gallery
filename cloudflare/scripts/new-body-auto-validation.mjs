@@ -49,6 +49,16 @@ export async function validateNewBodyMetadata(row,policy,now=Date.now()){
   requireBody(row.r2Key===objectPath,'auto_object_identity');
   return {ext,evidenceSha256:expected.evidenceSha256,assetKey:expected.assetKey};
 }
+export async function rehydrateLegacyStageRow(row,bytes){
+  if(row?.sha256&&row?.reviewMarker)return {...row};
+  requireBody(row&&/^[a-f0-9]{32}$/.test(String(row.contentHash||'')),'legacy_content_hash_missing');
+  requireBody(Buffer.isBuffer(bytes)&&bytes.length===Number(row.byteLength||0),'legacy_byte_length_mismatch');
+  const full=sha256(bytes);
+  requireBody(full.startsWith(String(row.contentHash)),'legacy_content_hash_mismatch');
+  const hydrated={...row,sha256:full};
+  hydrated.reviewMarker=await buildBodyReviewMarker(hydrated,full);
+  return hydrated;
+}
 export function validateNewBodyBytes(row,bytes){
   const ext=verifyBodyFile(publicationItem(row),bytes);
   if(ext!=='svg')requireBody(Math.max(row.width,row.height)>=520&&row.width*row.height>=100000,'auto_raster_below_display_quality');
