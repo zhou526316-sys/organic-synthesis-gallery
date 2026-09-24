@@ -52,10 +52,11 @@ export function validateFormalPartition(staging, formal, marker, pendingQueue = 
     if (formal?.summary?.[key] !== rows.length) failures.push(`formal_count_mismatch:${key}`);
     for (const row of rows) {
       if (!String(row.title || '').trim() || String(row.reason || '').trim().length < 24) failures.push(`formal_reason_or_title_missing:${row.doi}`);
-      if (decision !== 'pending') {
-        if (row.challengeDecision !== decision || String(row.evidenceBasis || '').trim().length < 40
-          || String(row.challengeReason || '').trim().length < 30) failures.push(`formal_evidence_or_challenge_invalid:${row.doi}`);
-      }
+      const detailedEvidenceRequired = decision === 'include' || decision === 'pending'
+        || (decision === 'exclude' && row.reviewPriority === 'high');
+      if (decision !== 'pending' && row.challengeDecision !== decision) failures.push(`formal_challenge_invalid:${row.doi}`);
+      if (detailedEvidenceRequired && (String(row.evidenceBasis || '').trim().length < 40
+        || String(row.challengeReason || '').trim().length < 30)) failures.push(`formal_evidence_or_challenge_invalid:${row.doi}`);
     }
   }
   if (formal?.summary?.reviewed !== decisions.length) failures.push('formal_reviewed_count_mismatch');
