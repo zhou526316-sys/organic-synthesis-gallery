@@ -1,4 +1,4 @@
-name: Bridge 2.2.32 phase-separated media regression
+name: Bridge 2.2.32 evidence-aware phase-separated media regression
 
 on:
   push:
@@ -13,9 +13,12 @@ on:
       - 'cloudflare/scripts/merge-new-body-auto.mjs'
       - 'cloudflare/scripts/merge-reviewed-body.mjs'
       - 'cloudflare/worker/src/local-captures.js'
+      - 'cloudflare/worker/src/article-summary.js'
+      - 'cloudflare/worker/scripts/test-tampermonkey-report-history.mjs'
       - 'audit/media-auto-policy.json'
       - 'scripts/test-tm224-acquisition.mjs'
       - 'scripts/test-tm230-packet-publication.mjs'
+      - 'scripts/test-tm232-evidence-capture.mjs'
       - 'scripts/validate-tm220-artifacts.mjs'
       - '.github/workflows/tm230-paired-media.yml'
 
@@ -39,9 +42,11 @@ jobs:
           node --check cloudflare/scripts/new-body-auto-validation.mjs
           node --check cloudflare/scripts/merge-new-body-auto.mjs
           node --check cloudflare/worker/src/local-captures.js
+          node --check cloudflare/worker/src/article-summary.js
           node scripts/test-tm230-packet-publication.mjs
           node scripts/test-tm228-skip-controller-failures.mjs
           node scripts/test-tm227-result-precedence.mjs
+          node cloudflare/worker/scripts/test-tampermonkey-report-history.mjs
       - name: Chromium acquisition and scheduler ordering
         run: |
           set -euo pipefail
@@ -50,7 +55,9 @@ jobs:
           node scripts/test-tm224-acquisition.mjs | tee "$RUNNER_TEMP/tm230-acquisition.log"
           grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm230-acquisition.log"
           node scripts/test-tm-paired-capture.mjs
-      - name: Build exact Bridge 2.2.32 phase-separated custom-domain installer
+          node scripts/test-tm232-evidence-capture.mjs | tee "$RUNNER_TEMP/tm232-evidence.log"
+          grep -F 'TM232_EVIDENCE_TEST_SUMMARY ' "$RUNNER_TEMP/tm232-evidence.log"
+      - name: Build exact Bridge 2.2.32 evidence-aware custom-domain installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -70,10 +77,14 @@ jobs:
           grep -F "mediaNeed=isLatest?'toc+figures':official?'figures':'toc'" public/toc-mainline.user.js
           grep -F "figures=not_requested" public/toc-mainline.user.js
           grep -F "mediaNeed.includes('figures')" cloudflare/scripts/merge-new-body-auto.mjs
+          grep -F "var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';" public/toc-mainline.user.js
+          grep -F "function evidenceCaptureEligible" public/toc-mainline.user.js
+          grep -F "function buildArticleEvidencePacket" public/toc-mainline.user.js
+          grep -F "result.fulltext=await tryCaptureArticleEvidence" public/toc-mainline.user.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tm230-paired-media-tested
+          name: tm232-evidence-media-tested
           path: |
             public/gallery-vpn-bridge.user.js
             public/toc-mainline.user.js
