@@ -8,8 +8,10 @@ const DRAFT_MODEL_DEFAULT = 'gpt-5.6-terra';
 const AUDIT_MODEL_DEFAULT = 'gpt-5.6-sol';
 const DRAFT_PROMPT_VERSION = 'gallery-summary-draft-v2';
 const AUDIT_PROMPT_VERSION = 'gallery-summary-audit-v2';
-const LEASE_MS = 4 * 60 * 1000;
+const LEASE_MS = 12 * 60 * 1000;
 const MAX_ATTEMPTS = 3;
+const EVIDENCE_CHUNK_TARGET_CHARS = 300_000;
+const REVIEW_CHUNK_PREFIX = 'private/article-summary-review-chunks/';
 
 const CLAIM_TYPES = [
   'experimental_fact',
@@ -182,6 +184,33 @@ const AUDIT_SCHEMA = {
   },
 };
 
+const AUDIT_CHECK_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['outcome', 'issues', 'modelInferencePresent', 'unsupportedClaimCount', 'auditNotes'],
+  properties: {
+    outcome: { type: 'string', enum: ['pass', 'needs_manual_review', 'reject'] },
+    issues: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['type', 'severity', 'message', 'evidenceIds'],
+        properties: {
+          type: { type: 'string', enum: ISSUE_TYPES },
+          severity: { type: 'string', enum: ['error', 'warning'] },
+          message: { type: 'string' },
+          evidenceIds: { type: 'array', items: { type: 'string' } },
+        },
+      },
+    },
+    modelInferencePresent: { type: 'boolean' },
+    unsupportedClaimCount: { type: 'integer' },
+    auditNotes: { type: 'string' },
+  },
+};
+
+
 function safeText(value, max = 500) {
   return String(value ?? '').replace(/[\u0000-\u001f]+/g, ' ').trim().slice(0, max);
 }
@@ -332,6 +361,55 @@ async function selectReviewCandidate(env, now = Date.now()) {
   };
 }
 
+async function claimReviewLease(env, candidate, owner, now = Date.now()) {
+  if (!env?.DB) return true;
+  const expiresAt = now + LEASE_MS;
+  await env.DB.prepare(`
+    INSERT INTO article_summary_review_leases (
+      doi, evidence_packet_hash, lease_owner, lease_expires_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(doi) DO UPDATE SET
+      evidence_packet_hash = excluded.evidence_packet_hash,
+      lease_owner = excluded.lease_owner,
+      lease_expires_at = excluded.lease_expires_at,
+      updated_at = excluded.updated_at
+    WHERE article_summary_review_leases.lease_expires_at <= ?
+       OR article_summary_review_leases.evidence_packet_hash != excluded.evidence_packet_hash
+  `).bind(candidate.doi, candidate.evidencePacketHash, owner, expiresAt, now, now).run();
+  const row = await env.DB.prepare(`
+    SELECT evidence_packet_hash, lease_owner, lease_expires_at
+    FROM article_summary_review_leases
+    WHERE doi = ?
+  `).bind(candidate.doi).first();
+  return Boolean(
+    row
+    && row.evidence_packet_hash === candidate.evidencePacketHash
+    && row.lease_owner === owner
+    && Number(row.lease_expires_at || 0) === expiresAt
+  );
+}
+
+async function renewReviewLease(env, job, now = Date.now()) {
+  if (!env?.DB) return true;
+  const expiresAt = now + LEASE_MS;
+  const result = await env.DB.prepare(`
+    UPDATE article_summary_review_leases
+    SET lease_expires_at = ?, updated_at = ?
+    WHERE doi = ? AND evidence_packet_hash = ? AND lease_owner = ?
+  `).bind(expiresAt, now, job.doi, job.evidencePacketHash, job.leaseOwner).run();
+  if (Number(result?.meta?.changes || 0) !== 1) return false;
+  job.leaseExpiresAt = expiresAt;
+  return true;
+}
+
+async function releaseReviewLease(env, job) {
+  if (!env?.DB || !job?.doi || !job?.leaseOwner) return;
+  await env.DB.prepare(`
+    DELETE FROM article_summary_review_leases
+    WHERE doi = ? AND evidence_packet_hash = ? AND lease_owner = ?
+  `).bind(job.doi, job.evidencePacketHash, job.leaseOwner).run();
+}
+
 async function claimCandidate(env, candidate, now = Date.now()) {
   const keys = await keysForDoi(candidate.doi);
   const previous = await readJsonObject(env, keys.job);
@@ -340,6 +418,8 @@ async function claimCandidate(env, candidate, now = Date.now()) {
     if (previous.state === 'retry_wait' && Number(previous.nextRetryAt || 0) > now) return null;
     if (['published', 'needs_manual_review', 'rejected'].includes(previous.state)) return null;
   }
+  const owner = crypto.randomUUID();
+  if (!await claimReviewLease(env, candidate, owner, now)) return null;
   const job = {
     version: JOB_VERSION,
     doi: candidate.doi,
@@ -351,19 +431,27 @@ async function claimCandidate(env, candidate, now = Date.now()) {
     capturedAt: candidate.capturedAt,
     state: 'processing',
     attempts: previous?.evidencePacketHash === candidate.evidencePacketHash ? Number(previous.attempts || 0) + 1 : 1,
-    leaseOwner: crypto.randomUUID(),
+    leaseOwner: owner,
     leaseExpiresAt: now + LEASE_MS,
     nextRetryAt: 0,
     lastError: '',
     createdAt: previous?.evidencePacketHash === candidate.evidencePacketHash ? Number(previous.createdAt || now) : now,
     updatedAt: now,
   };
-  await putJob(env, job);
-  // R2 is strongly read-after-write consistent. Confirm our lease still owns
-  // the object so a manual run racing the cron cannot duplicate model calls.
-  const confirmed = await readJsonObject(env, keys.job);
-  if (!confirmed || confirmed.leaseOwner !== job.leaseOwner || confirmed.evidencePacketHash !== job.evidencePacketHash) return null;
-  return job;
+  try {
+    await putJob(env, job);
+    // R2 remains the durable human-readable job record. D1 is only the atomic
+    // call lease; confirm both layers agree before any model request is made.
+    const confirmed = await readJsonObject(env, keys.job);
+    if (!confirmed || confirmed.leaseOwner !== job.leaseOwner || confirmed.evidencePacketHash !== job.evidencePacketHash) {
+      await releaseReviewLease(env, job);
+      return null;
+    }
+    return job;
+  } catch (error) {
+    await releaseReviewLease(env, job);
+    throw error;
+  }
 }
 
 function evidenceMap(evidence) {
@@ -373,6 +461,187 @@ function evidenceMap(evidence) {
   for (const row of evidence?.tables || []) if (row?.evidenceId) map.set(row.evidenceId, [row.title, row.text].filter(Boolean).join('\n'));
   return map;
 }
+function evidenceRows(evidence) {
+  const rows = [];
+  for (const row of evidence?.sections || []) {
+    if (!row?.sectionId || !row?.text) continue;
+    rows.push({ id: row.sectionId, kind: 'section', type: row.type || 'other', heading: row.heading || '', text: row.text });
+  }
+  for (const row of evidence?.captions || []) {
+    if (!row?.evidenceId || !row?.text) continue;
+    rows.push({ id: row.evidenceId, kind: 'caption', type: row.type || 'figure', heading: row.label || '', text: row.text });
+  }
+  for (const row of evidence?.tables || []) {
+    if (!row?.evidenceId || (!row?.title && !row?.text)) continue;
+    rows.push({ id: row.evidenceId, kind: 'table', type: 'table', heading: [row.label, row.title].filter(Boolean).join(' — '), text: [row.title, row.text].filter(Boolean).join('\n') });
+  }
+  return rows;
+}
+
+function splitEvidenceRow(row, targetChars) {
+  const text = String(row?.text || '');
+  const target = Math.max(20_000, Number(targetChars || EVIDENCE_CHUNK_TARGET_CHARS));
+  if (text.length <= target) return [{ ...row, part: 1, parts: 1 }];
+  const parts = Math.ceil(text.length / target);
+  return Array.from({ length: parts }, (_, index) => ({
+    ...row,
+    text: text.slice(index * target, (index + 1) * target),
+    part: index + 1,
+    parts,
+  }));
+}
+
+function chunkEvidence(evidence, targetChars = EVIDENCE_CHUNK_TARGET_CHARS) {
+  const target = Math.max(20_000, Number(targetChars || EVIDENCE_CHUNK_TARGET_CHARS));
+  const units = evidenceRows(evidence).flatMap(row => splitEvidenceRow(row, target));
+  const chunks = [];
+  let current = [];
+  let chars = 0;
+  for (const unit of units) {
+    const cost = String(unit.text || '').length + String(unit.heading || '').length + 120;
+    if (current.length && chars + cost > target) {
+      chunks.push(current);
+      current = [];
+      chars = 0;
+    }
+    current.push(unit);
+    chars += cost;
+  }
+  if (current.length) chunks.push(current);
+  return chunks;
+}
+
+function uniqueStrings(values) {
+  const out = [];
+  const seen = new Set();
+  for (const raw of values || []) {
+    const value = String(raw || '').trim();
+    if (!value) continue;
+    const key = value.toLowerCase().replace(/\s+/g, ' ');
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(value);
+  }
+  return out;
+}
+
+function mergeEvidenceIds(rows) {
+  return uniqueStrings((rows || []).flatMap(row => Array.isArray(row?.evidenceIds) ? row.evidenceIds : []));
+}
+
+function mergeDrafts(drafts, evidence) {
+  const conditions = [];
+  const conditionKeys = new Set();
+  const claims = [];
+  const claimKeys = new Set();
+  const mechanism = { experimentalEvidence: [], authorProposal: [], modelInference: [] };
+  const mechanismKeys = new Set();
+
+  for (const draft of drafts) {
+    for (const condition of draft?.conditions || []) {
+      const ids = uniqueStrings(condition?.evidenceIds || []).sort();
+      const key = [condition?.name, condition?.value, condition?.role, ids.join(',')].map(value => String(value || '').trim().toLowerCase()).join('|');
+      if (!key || conditionKeys.has(key)) continue;
+      conditionKeys.add(key);
+      conditions.push({ ...condition, evidenceIds: ids });
+    }
+    for (const claim of draft?.claims || []) {
+      const ids = uniqueStrings(claim?.evidenceIds || []).sort();
+      const key = [claim?.claim, claim?.claimType, ids.join(',')].map(value => String(value || '').trim().toLowerCase()).join('|');
+      if (!String(claim?.claim || '').trim() || claimKeys.has(key)) continue;
+      claimKeys.add(key);
+      claims.push({ ...claim, evidenceIds: ids });
+    }
+    for (const group of ['experimentalEvidence', 'authorProposal', 'modelInference']) {
+      for (const row of draft?.mechanism?.[group] || []) {
+        const ids = uniqueStrings(row?.evidenceIds || []).sort();
+        const key = group + '|' + String(row?.statement || '').trim().toLowerCase() + '|' + ids.join(',');
+        if (!String(row?.statement || '').trim() || mechanismKeys.has(key)) continue;
+        mechanismKeys.add(key);
+        mechanism[group].push({ ...row, evidenceIds: ids });
+      }
+    }
+  }
+
+  const scopeRows = drafts.map(draft => draft?.substrateScope || {});
+  return {
+    doi: evidence.doi,
+    evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus,
+    researchObjective: uniqueStrings(drafts.map(draft => draft?.researchObjective)).join('\n'),
+    keyTransformationOrStrategy: uniqueStrings(drafts.map(draft => draft?.keyTransformationOrStrategy)).join('\n'),
+    conditions,
+    substrateScope: {
+      summary: uniqueStrings(scopeRows.map(row => row?.summary)).join('\n'),
+      supportedTrends: uniqueStrings(scopeRows.flatMap(row => row?.supportedTrends || [])),
+      limitations: uniqueStrings(scopeRows.flatMap(row => row?.limitations || [])),
+      evidenceIds: mergeEvidenceIds(scopeRows),
+    },
+    mechanism,
+    noveltyAndSyntheticSignificance: uniqueStrings(drafts.map(draft => draft?.noveltyAndSyntheticSignificance)).join('\n'),
+    limitations: uniqueStrings(drafts.flatMap(draft => draft?.limitations || [])),
+    questionsForManualVerification: uniqueStrings(drafts.flatMap(draft => draft?.questionsForManualVerification || [])),
+    claims,
+    draftZh: uniqueStrings(drafts.map(draft => draft?.draftZh)).join('\n\n'),
+    draftEn: uniqueStrings(drafts.map(draft => draft?.draftEn)).join('\n\n'),
+  };
+}
+
+function evidenceChunkPrompt(evidence, units, index, total) {
+  return JSON.stringify({
+    doi: evidence.doi,
+    title: evidence.title,
+    journal: evidence.journal,
+    publisher: evidence.publisher,
+    evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus,
+    chunkIndex: index,
+    chunkCount: total,
+    evidence: units.map(unit => ({
+      evidenceId: unit.id,
+      kind: unit.kind,
+      type: unit.type,
+      heading: unit.heading,
+      part: unit.parts > 1 ? unit.part : undefined,
+      parts: unit.parts > 1 ? unit.parts : undefined,
+      text: unit.text,
+    })),
+  });
+}
+
+function collectDraftEvidenceIds(draft) {
+  const ids = [];
+  for (const row of draft?.conditions || []) ids.push(...(row?.evidenceIds || []));
+  ids.push(...(draft?.substrateScope?.evidenceIds || []));
+  for (const group of ['experimentalEvidence', 'authorProposal', 'modelInference']) {
+    for (const row of draft?.mechanism?.[group] || []) ids.push(...(row?.evidenceIds || []));
+  }
+  for (const claim of draft?.claims || []) ids.push(...(claim?.evidenceIds || []));
+  return uniqueStrings(ids);
+}
+
+function auditEvidenceChunks(evidence, draft, targetChars = EVIDENCE_CHUNK_TARGET_CHARS) {
+  const allRows = evidenceRows(evidence);
+  const map = new Map(allRows.map(row => [row.id, row]));
+  const cited = collectDraftEvidenceIds(draft).map(id => map.get(id)).filter(Boolean);
+  const totalChars = allRows.reduce((sum, row) => sum + String(row.text || '').length + String(row.heading || '').length + 120, 0);
+  const source = totalChars <= targetChars ? allRows : (cited.length ? cited : allRows);
+  const pseudoEvidence = {
+    sections: source.filter(row => row.kind === 'section').map(row => ({ sectionId: row.id, type: row.type, heading: row.heading, text: row.text })),
+    captions: source.filter(row => row.kind === 'caption').map(row => ({ evidenceId: row.id, type: row.type, label: row.heading, text: row.text })),
+    tables: source.filter(row => row.kind === 'table').map(row => ({ evidenceId: row.id, label: row.heading, title: '', text: row.text })),
+  };
+  return chunkEvidence(pseudoEvidence, targetChars);
+}
+
+function evidenceIndex(evidence) {
+  return evidenceRows(evidence).map(row => ({
+    evidenceId: row.id,
+    kind: row.kind,
+    type: row.type,
+    heading: row.heading,
+    characters: String(row.text || '').length,
+  }));
+}
+
 
 function numberTokens(value) {
   const text = String(value || '');
@@ -461,14 +730,109 @@ function promptEvidence(evidence) {
   });
 }
 
+async function reviewChunkKey(doi, evidencePacketHash, phase, index) {
+  const id = await idForDoi(doi);
+  return `${REVIEW_CHUNK_PREFIX}${id}/${evidencePacketHash}/${phase}-${String(index + 1).padStart(4, '0')}.json`;
+}
+
+async function readCachedChunk(env, key) {
+  const value = await readJsonObject(env, key);
+  return value?.parsed ? value : null;
+}
+
+async function storeChunk(env, key, parsed, response, meta = {}) {
+  const value = {
+    version: 1,
+    parsed,
+    modelSnapshot: response?.model || meta.model || '',
+    responseId: response?.id || '',
+    generatedAt: Date.now(),
+    ...meta,
+  };
+  await env.MEDIA.put(key, JSON.stringify(value), {
+    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'private, no-store' },
+  });
+  return value;
+}
+
+function auditChunkPrompt(evidence, units, draft, deterministicIssues, index, total) {
+  const ids = uniqueStrings(units.map(unit => unit.id));
+  return JSON.stringify({
+    doi: evidence.doi,
+    title: evidence.title,
+    journal: evidence.journal,
+    evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus,
+    chunkIndex: index,
+    chunkCount: total,
+    evidenceIdsInThisChunk: ids,
+    evidence: units.map(unit => ({
+      evidenceId: unit.id,
+      kind: unit.kind,
+      type: unit.type,
+      heading: unit.heading,
+      part: unit.parts > 1 ? unit.part : undefined,
+      parts: unit.parts > 1 ? unit.parts : undefined,
+      text: unit.text,
+    })),
+    mergedDraft: draft,
+    deterministicIssues,
+  });
+}
+
+function validateFinalSummaryAgainstEvidence(auditValue, evidence) {
+  const issues = [];
+  const source = [...evidenceMap(evidence).values()].join('\n').replace(/\s+/g, '').toLowerCase();
+  const finalText = String(auditValue?.finalZh || '') + '\n' + String(auditValue?.finalEn || '');
+  for (const token of numberTokens(finalText)) {
+    if (!source.includes(token)) {
+      issues.push({
+        type: 'numeric_mismatch',
+        severity: 'error',
+        message: `Final bilingual summary contains numeric value not found anywhere in Evidence: ${token}`,
+        evidenceIds: [],
+      });
+    }
+  }
+  const level = evidence?.evidenceLevel || evidence?.fulltextStatus;
+  if (level === 'abstract_only') {
+    if (!/(?:abstract|摘要|基于)/i.test(String(auditValue?.finalZh || ''))
+      || !/abstract/i.test(String(auditValue?.finalEn || ''))) {
+      issues.push({
+        type: 'evidence_level_violation',
+        severity: 'error',
+        message: 'Abstract-only final summary must explicitly disclose Abstract-based coverage in both languages.',
+        evidenceIds: [],
+      });
+    }
+  }
+  return issues;
+}
+
 const DRAFT_INSTRUCTIONS = `You are the first-pass evidence extractor for an organic-synthesis literature review.
-Use only the supplied Article Evidence Packet. Do not use outside knowledge.
+You are receiving one chunk of a larger Article Evidence Packet. Use only this supplied chunk. Do not use outside knowledge and do not infer facts from chunks you have not seen.
 Separate experimental facts, author conclusions, author-proposed mechanisms, and model inference.
 The modelInference array must normally be empty. Never reconstruct missing standard conditions.
 For abstract_only evidence, summarize only what the abstract explicitly supports; do not expand “broad scope” into detailed scope.
-When information is missing, say so in limitations or questionsForManualVerification instead of guessing.
-Capture key transformation/strategy, conditions, scope/selectivity, mechanistic evidence vs author proposal, limitations, and concrete synthetic significance.
-Every key claim must cite evidence IDs (s..., c..., t...). Chinese and English drafts must contain the same scientific facts.`;
+When information is missing from this chunk, leave it absent rather than declaring that the full article lacks it; questionsForManualVerification should be used only when the chunk itself exposes a material unresolved point.
+Capture supported key transformation/strategy, conditions, scope/selectivity, mechanistic evidence vs author proposal, limitations, and concrete synthetic significance.
+Every key factual statement represented in the structured fields must also be represented by a claim citing evidence IDs (s..., c..., t...).
+Chinese and English drafts are intermediate only and must contain the same facts extracted from this chunk.`;
+
+const AUDIT_CHUNK_INSTRUCTIONS = `You are an independent senior organic-chemistry evidence checker.
+You are receiving one chunk containing the full source text for specific evidence IDs cited by a merged draft.
+Audit only draft statements whose evidence IDs intersect evidenceIdsInThisChunk. Do not mark unrelated claims unsupported merely because their evidence is in another chunk.
+Check semantic support, numeric/condition mismatches, scope exaggeration, mechanistic overclaim, and whether author proposals are mislabeled as experimental facts.
+Do not rewrite the public summary in this step. Return pass only when the statements audited in this chunk are evidence-supported.
+Model-only inference is never acceptable for automatic publication.`;
+
+const FINAL_AUDIT_INSTRUCTIONS = `You are the final senior organic-chemistry reviewer and bilingual renderer.
+The full raw Evidence Packet has already been processed by the draft extractor in chunks, and every cited evidence chunk has been independently checked by GPT plus deterministic validators.
+Use only mergedDraft, deterministicIssues, auditChecks, and evidenceIndex. Do not invent or add any scientific fact not already present in mergedDraft.
+If any audit check reports an error, unsupported claim, model inference, or needs_manual_review/reject outcome, do not pass.
+Check the distinction between experimental observations and author-proposed mechanisms.
+For abstract_only evidence, both Chinese and English final summaries must visibly state that they are Abstract-based and must not imply full-paper coverage.
+If and only if the reviewed record is supported, choose pass and render concise, information-dense Chinese and English summaries containing the same scientific facts.
+Preserve explicit numerical conditions exactly; never introduce a new number.`;
 
 const AUDIT_INSTRUCTIONS = `You are an independent senior organic-chemistry reviewer.
 Audit the draft strictly against the supplied evidence and deterministic validation issues.
@@ -569,6 +933,7 @@ async function finalizeJob(env, job, patch) {
     updatedAt: now,
   };
   await putJob(env, next);
+  await releaseReviewLease(env, job);
   return next;
 }
 
@@ -580,33 +945,64 @@ async function processClaimedJob(env, job, options = {}) {
 
   const draftModel = String(env.SUMMARY_DRAFT_MODEL || DRAFT_MODEL_DEFAULT);
   const auditModel = String(env.SUMMARY_AUDIT_MODEL || AUDIT_MODEL_DEFAULT);
-  const draft = await callOpenAiStructured(env, {
-    model: draftModel,
-    reasoningEffort: String(env.SUMMARY_DRAFT_REASONING || 'medium'),
-    instructions: DRAFT_INSTRUCTIONS,
-    input: `ARTICLE EVIDENCE PACKET:\n${promptEvidence(evidence)}`,
-    schema: DRAFT_SCHEMA,
-    name: 'organic_synthesis_summary_draft_v2',
-    timeoutMs: Number(env.SUMMARY_DRAFT_TIMEOUT_MS || 75000),
-    fetchImpl: options.fetchImpl,
-  });
+  const targetRaw = Number(env.SUMMARY_EVIDENCE_CHUNK_CHARS || EVIDENCE_CHUNK_TARGET_CHARS);
+  const targetChars = Number.isFinite(targetRaw) ? Math.max(50_000, targetRaw) : EVIDENCE_CHUNK_TARGET_CHARS;
+  const chunks = chunkEvidence(evidence, targetChars);
+  if (!chunks.length) {
+    return finalizeJob(env, job, { state: 'needs_manual_review', nextRetryAt: 0, lastError: 'evidence_empty' });
+  }
 
-  const deterministicIssues = validateDraftAgainstEvidence(draft.parsed, evidence);
+  const drafts = [];
+  const draftSnapshots = [];
+  for (let index = 0; index < chunks.length; index += 1) {
+    if (!await renewReviewLease(env, job)) {
+      const error = new Error('review_lease_lost');
+      error.retryable = true;
+      throw error;
+    }
+    const cacheKey = await reviewChunkKey(job.doi, job.evidencePacketHash, 'draft', index);
+    let cached = await readCachedChunk(env, cacheKey);
+    if (!cached) {
+      const draft = await callOpenAiStructured(env, {
+        model: draftModel,
+        reasoningEffort: String(env.SUMMARY_DRAFT_REASONING || 'medium'),
+        instructions: DRAFT_INSTRUCTIONS,
+        input: `ARTICLE EVIDENCE CHUNK:\n${evidenceChunkPrompt(evidence, chunks[index], index + 1, chunks.length)}`,
+        schema: DRAFT_SCHEMA,
+        name: 'organic_synthesis_summary_draft_v2',
+        timeoutMs: Number(env.SUMMARY_DRAFT_TIMEOUT_MS || 75000),
+        fetchImpl: options.fetchImpl,
+      });
+      cached = await storeChunk(env, cacheKey, draft.parsed, draft.response, {
+        model: draftModel,
+        phase: 'draft',
+        chunkIndex: index + 1,
+        chunkCount: chunks.length,
+      });
+    }
+    drafts.push(cached.parsed);
+    if (cached.modelSnapshot) draftSnapshots.push(cached.modelSnapshot);
+  }
+
+  const mergedDraft = mergeDrafts(drafts, evidence);
+  const deterministicIssues = validateDraftAgainstEvidence(mergedDraft, evidence);
   if (deterministicIssues.some(issue => ['evidence_mismatch', 'mechanistic_overclaim', 'unsupported_claim'].includes(issue.type))) {
     const keys = await keysForDoi(job.doi);
     const review = {
-      version: 1,
+      version: 2,
       doi: job.doi,
       status: 'needs_manual_review',
       sourceHash: job.sourceHash,
       evidencePacketHash: job.evidencePacketHash,
       evidenceLevel: job.evidenceLevel,
       draftModel,
+      draftModelSnapshots: uniqueStrings(draftSnapshots),
+      draftChunkCount: chunks.length,
       auditModel: '',
       promptVersion: DRAFT_PROMPT_VERSION,
       auditVersion: AUDIT_PROMPT_VERSION,
       deterministicIssues,
-      draft: draft.parsed,
+      draft: mergedDraft,
       createdAt: Date.now(),
     };
     await env.MEDIA.put(keys.review, JSON.stringify(review), {
@@ -616,41 +1012,144 @@ async function processClaimedJob(env, job, options = {}) {
     return finalizeJob(env, job, { state: 'needs_manual_review', nextRetryAt: 0, lastError: 'deterministic_validation_failed' });
   }
 
-  const audit = await callOpenAiStructured(env, {
-    model: auditModel,
-    reasoningEffort: String(env.SUMMARY_AUDIT_REASONING || 'high'),
-    instructions: AUDIT_INSTRUCTIONS,
-    input: `ARTICLE EVIDENCE PACKET:\n${promptEvidence(evidence)}\n\nDRAFT JSON:\n${JSON.stringify(draft.parsed)}\n\nDETERMINISTIC VALIDATION ISSUES:\n${JSON.stringify(deterministicIssues)}`,
-    schema: AUDIT_SCHEMA,
-    name: 'organic_synthesis_summary_audit_v2',
-    timeoutMs: Number(env.SUMMARY_AUDIT_TIMEOUT_MS || 90000),
-    fetchImpl: options.fetchImpl,
-  });
+  const auditChunks = auditEvidenceChunks(evidence, mergedDraft, targetChars);
+  const auditChecks = [];
+  const auditSnapshots = [];
+  let blockingCheck = false;
+  let finalCached = null;
 
-  const auditValue = audit.parsed;
-  const blockingAudit = auditValue.outcome !== 'pass'
+  if (auditChunks.length === 1) {
+    if (!await renewReviewLease(env, job)) {
+      const error = new Error('review_lease_lost');
+      error.retryable = true;
+      throw error;
+    }
+    const finalCacheKey = await reviewChunkKey(job.doi, job.evidencePacketHash, 'final', 0);
+    finalCached = await readCachedChunk(env, finalCacheKey);
+    if (!finalCached) {
+      const directAudit = await callOpenAiStructured(env, {
+        model: auditModel,
+        reasoningEffort: String(env.SUMMARY_AUDIT_REASONING || 'high'),
+        instructions: AUDIT_INSTRUCTIONS,
+        input: `ARTICLE EVIDENCE PACKET:\n${evidenceChunkPrompt(evidence, auditChunks[0], 1, 1)}\n\nDRAFT JSON:\n${JSON.stringify(mergedDraft)}\n\nDETERMINISTIC VALIDATION ISSUES:\n${JSON.stringify(deterministicIssues)}`,
+        schema: AUDIT_SCHEMA,
+        name: 'organic_synthesis_summary_audit_v2',
+        timeoutMs: Number(env.SUMMARY_AUDIT_TIMEOUT_MS || 90000),
+        fetchImpl: options.fetchImpl,
+      });
+      finalCached = await storeChunk(env, finalCacheKey, directAudit.parsed, directAudit.response, {
+        model: auditModel,
+        phase: 'final_audit',
+        chunkIndex: 1,
+        chunkCount: 1,
+      });
+    }
+  } else {
+    for (let index = 0; index < auditChunks.length; index += 1) {
+      if (!await renewReviewLease(env, job)) {
+        const error = new Error('review_lease_lost');
+        error.retryable = true;
+        throw error;
+      }
+      const cacheKey = await reviewChunkKey(job.doi, job.evidencePacketHash, 'audit', index);
+      let cached = await readCachedChunk(env, cacheKey);
+      if (!cached) {
+        const check = await callOpenAiStructured(env, {
+          model: auditModel,
+          reasoningEffort: String(env.SUMMARY_AUDIT_REASONING || 'high'),
+          instructions: AUDIT_CHUNK_INSTRUCTIONS,
+          input: auditChunkPrompt(evidence, auditChunks[index], mergedDraft, deterministicIssues, index + 1, auditChunks.length),
+          schema: AUDIT_CHECK_SCHEMA,
+          name: 'organic_synthesis_summary_audit_check_v2',
+          timeoutMs: Number(env.SUMMARY_AUDIT_TIMEOUT_MS || 90000),
+          fetchImpl: options.fetchImpl,
+        });
+        cached = await storeChunk(env, cacheKey, check.parsed, check.response, {
+          model: auditModel,
+          phase: 'audit_check',
+          chunkIndex: index + 1,
+          chunkCount: auditChunks.length,
+        });
+      }
+      auditChecks.push(cached.parsed);
+      if (cached.modelSnapshot) auditSnapshots.push(cached.modelSnapshot);
+    }
+
+    blockingCheck = auditChecks.some(check =>
+      check?.outcome !== 'pass'
+      || check?.modelInferencePresent === true
+      || Number(check?.unsupportedClaimCount || 0) > 0
+      || (check?.issues || []).some(issue => issue?.severity === 'error')
+    );
+
+    if (!await renewReviewLease(env, job)) {
+      const error = new Error('review_lease_lost');
+      error.retryable = true;
+      throw error;
+    }
+    const finalCacheKey = await reviewChunkKey(job.doi, job.evidencePacketHash, 'final', 0);
+    finalCached = await readCachedChunk(env, finalCacheKey);
+    if (!finalCached) {
+      const finalAudit = await callOpenAiStructured(env, {
+        model: auditModel,
+        reasoningEffort: String(env.SUMMARY_AUDIT_REASONING || 'high'),
+        instructions: FINAL_AUDIT_INSTRUCTIONS,
+        input: JSON.stringify({
+          doi: evidence.doi,
+          title: evidence.title,
+          journal: evidence.journal,
+          evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus,
+          mergedDraft,
+          deterministicIssues,
+          auditChecks,
+          evidenceIndex: evidenceIndex(evidence),
+        }),
+        schema: AUDIT_SCHEMA,
+        name: 'organic_synthesis_summary_audit_v2',
+        timeoutMs: Number(env.SUMMARY_AUDIT_TIMEOUT_MS || 90000),
+        fetchImpl: options.fetchImpl,
+      });
+      finalCached = await storeChunk(env, finalCacheKey, finalAudit.parsed, finalAudit.response, {
+        model: auditModel,
+        phase: 'final_audit',
+        chunkIndex: 1,
+        chunkCount: 1,
+      });
+    }
+  }
+
+  const auditValue = finalCached.parsed;
+  if (finalCached.modelSnapshot) auditSnapshots.push(finalCached.modelSnapshot);
+  const finalDeterministicIssues = validateFinalSummaryAgainstEvidence(auditValue, evidence);
+  const blockingAudit = blockingCheck
+    || auditValue.outcome !== 'pass'
     || auditValue.modelInferencePresent === true
     || Number(auditValue.unsupportedClaimCount || 0) > 0
     || (auditValue.issues || []).some(issue => issue?.severity === 'error')
+    || finalDeterministicIssues.some(issue => issue?.severity === 'error')
     || !String(auditValue.finalZh || '').trim()
     || !String(auditValue.finalEn || '').trim();
 
   const keys = await keysForDoi(job.doi);
   const reviewRecord = {
-    version: 1,
+    version: 2,
     doi: job.doi,
-    status: blockingAudit ? auditValue.outcome : 'approved',
+    status: blockingAudit ? (auditValue.outcome === 'reject' ? 'reject' : 'needs_manual_review') : 'approved',
     sourceHash: job.sourceHash,
     evidencePacketHash: job.evidencePacketHash,
     evidenceLevel: job.evidenceLevel,
     draftModel,
-    draftModelSnapshot: draft.response?.model || draftModel,
+    draftModelSnapshots: uniqueStrings(draftSnapshots),
+    draftChunkCount: chunks.length,
     auditModel,
-    auditModelSnapshot: audit.response?.model || auditModel,
+    auditModelSnapshots: uniqueStrings(auditSnapshots),
+    auditChunkCount: auditChunks.length,
     promptVersion: DRAFT_PROMPT_VERSION,
     auditVersion: AUDIT_PROMPT_VERSION,
     deterministicIssues,
-    draft: draft.parsed,
+    finalDeterministicIssues,
+    draft: mergedDraft,
+    auditChecks,
     audit: auditValue,
     createdAt: Date.now(),
   };
@@ -660,10 +1159,15 @@ async function processClaimedJob(env, job, options = {}) {
   });
 
   if (blockingAudit) {
+    const errorSummary = uniqueStrings([
+      ...(auditValue.issues || []).filter(issue => issue?.severity === 'error').map(issue => issue?.message),
+      ...finalDeterministicIssues.map(issue => issue.message),
+      ...auditChecks.filter(check => check?.outcome !== 'pass').map(check => check?.auditNotes),
+    ]).join('; ');
     return finalizeJob(env, job, {
       state: auditValue.outcome === 'reject' ? 'rejected' : 'needs_manual_review',
       nextRetryAt: 0,
-      lastError: safeText(auditValue.auditNotes || 'audit_not_passed', 300),
+      lastError: safeText(errorSummary || auditValue.auditNotes || 'audit_not_passed', 500),
     });
   }
 
@@ -677,9 +1181,9 @@ async function processClaimedJob(env, job, options = {}) {
     evidenceLevel: job.evidenceLevel,
     source: 'reviewed_evidence_v2',
     model: auditModel,
-    modelSnapshot: audit.response?.model || auditModel,
+    modelSnapshot: finalCached.modelSnapshot || auditModel,
     draftModel,
-    draftModelSnapshot: draft.response?.model || draftModel,
+    draftModelSnapshot: uniqueStrings(draftSnapshots).join(','),
     promptVersion: DRAFT_PROMPT_VERSION,
     auditVersion: AUDIT_PROMPT_VERSION,
     zh: String(auditValue.finalZh || '').trim(),
@@ -705,6 +1209,10 @@ async function processClaimedJob(env, job, options = {}) {
 async function handleJobFailure(env, job, error) {
   const attempts = Number(job.attempts || 1);
   const message = safeText(error?.message || error, 500);
+  if (message === 'review_lease_lost') {
+    await releaseReviewLease(env, job);
+    return { ...job, state: 'processing', lastError: message };
+  }
   const contextFailure = /context|token|too large|maximum/i.test(message) && !error?.retryable;
   if (attempts >= MAX_ATTEMPTS || contextFailure || error?.retryable === false) {
     return finalizeJob(env, job, {
@@ -811,4 +1319,12 @@ export const SUMMARY_DRAFT_SCHEMA = DRAFT_SCHEMA;
 export const SUMMARY_AUDIT_SCHEMA = AUDIT_SCHEMA;
 export const SUMMARY_DRAFT_PROMPT_VERSION = DRAFT_PROMPT_VERSION;
 export const SUMMARY_AUDIT_PROMPT_VERSION = AUDIT_PROMPT_VERSION;
-export { validateDraftAgainstEvidence };
+export {
+  auditEvidenceChunks,
+  chunkEvidence,
+  claimReviewLease,
+  mergeDrafts,
+  releaseReviewLease,
+  validateDraftAgainstEvidence,
+  validateFinalSummaryAgainstEvidence,
+};
