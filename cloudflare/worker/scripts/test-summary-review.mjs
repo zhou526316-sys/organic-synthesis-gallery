@@ -347,6 +347,34 @@ const mismatchReview = JSON.parse(mismatchReviewEntry[1].value);
 assert.equal(mismatchReview.status, 'needs_manual_review');
 assert.ok(mismatchReview.finalDeterministicIssues.some(issue => issue.type === 'numeric_mismatch'));
 
+const preferredMedia = new MemoryR2();
+const preferredEnv = { ...baseEnv, MEDIA: preferredMedia, DB: new MemoryDB(), SUMMARY_REVIEW_DAILY_LIMIT: '96' };
+const preferredOlderDoi = '10.1021/jacs.6c90006';
+const preferredNewerDoi = '10.1021/jacs.6c90007';
+await importArticleFulltext(preferredEnv, payload(preferredOlderDoi, '2026-09-25T05:10:00Z'));
+await importArticleFulltext(preferredEnv, payload(preferredNewerDoi, '2026-09-25T05:20:00Z'));
+let preferredCalls = 0;
+const preferredCycle = await runSummaryReviewCycle(preferredEnv, {
+  preferredDoi: preferredOlderDoi,
+  fetchImpl: async () => {
+    preferredCalls += 1;
+    return preferredCalls === 1
+      ? responseObject('gpt-5.6-terra-2026-test', draftFor(preferredOlderDoi))
+      : responseObject('gpt-5.6-sol-2026-test', auditPass());
+  },
+});
+assert.equal(preferredCycle.status, 'published');
+assert.equal(preferredCycle.doi, preferredOlderDoi);
+assert.equal(preferredCalls, 2);
+let missingPreferredCalls = 0;
+const missingPreferred = await runSummaryReviewCycle(preferredEnv, {
+  preferredDoi: '10.1021/jacs.6c99999',
+  fetchImpl: async () => { missingPreferredCalls += 1; throw new Error('must not review unrelated backlog'); },
+});
+assert.equal(missingPreferred.status, 'idle');
+assert.equal(missingPreferred.reason, 'preferred_candidate_not_eligible');
+assert.equal(missingPreferredCalls, 0);
+
 const concurrentMedia = new MemoryR2();
 const concurrentEnv = { ...baseEnv, MEDIA: concurrentMedia, DB: new MemoryDB() };
 const concurrentDoi = '10.1021/jacs.6c90005';
@@ -384,6 +412,7 @@ console.log(JSON.stringify({
   finalSummaryNumericGuard: true,
   atomicD1Mutex: true,
   abstractOnlySupported: true,
+  preferredDoiImmediateHandoff: true,
   publicGetRemainsReadOnly: true,
   auditStateConsistent: true,
   openaiProvenanceStored: true,
