@@ -34,7 +34,7 @@ import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
-import { getSummaryReviewStatus, runSummaryReviewCycle } from './summary-review.js';
+import { getSummaryReviewRecord, getSummaryReviewStatus, publishReviewedSummary, runSummaryReviewCycle } from './summary-review.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -211,6 +211,7 @@ async function handleApi(request, env) {
       ai: Boolean(env.AI),
       openaiApiKey: Boolean(env.OPENAI_API_KEY),
       summaryReviewEnabled: String(env.SUMMARY_REVIEW_ENABLED || '') === '1',
+      summaryAutoPublishEnabled: String(env.SUMMARY_AUTO_PUBLISH_ENABLED || '') === '1',
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
@@ -240,6 +241,18 @@ async function handleApi(request, env) {
     if (authError) return authError;
     return json(await runSummaryReviewCycle(env), { headers: cors });
   }
+  if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/review') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getSummaryReviewRecord(env, url.searchParams.get('doi')));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/article-summary/publish') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const payload = await readJson(request);
+    return resultResponse(await publishReviewedSummary(env, payload?.doi));
+  }
+
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
     return resultResponse(await getArticleSummary(env, url.searchParams.get('doi')), cors);
