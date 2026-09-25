@@ -344,7 +344,7 @@ async function readJsonObject(env, key) {
   try { return JSON.parse(await object.text()); } catch { return null; }
 }
 
-async function selectReviewCandidate(env, now = Date.now()) {
+async function selectReviewCandidate(env, now = Date.now(), preferredDoi = '') {
   const [evidenceObjects, jobObjects] = await Promise.all([
     listObjects(env, EVIDENCE_PREFIX),
     listObjects(env, JOB_PREFIX),
@@ -397,11 +397,17 @@ async function selectReviewCandidate(env, now = Date.now()) {
     const meta = object?.customMetadata || {};
     return String(meta.state || '') === 'published' && metadataNumber(meta, 'publishedAt') >= now - 24 * 60 * 60 * 1000;
   }).length;
+  const preferred = String(preferredDoi || '').trim().toLowerCase();
+  const selectedCandidate = preferred
+    ? candidates.find(candidate => candidate.doi === preferred) || null
+    : candidates[0] || null;
   return {
-    candidate: candidates[0] || null,
+    candidate: selectedCandidate,
     evidenceCount: evidenceObjects.length,
     jobCount: jobObjects.length,
     eligibleCount: candidates.length,
+    preferredDoi: preferred,
+    preferredEligible: preferred ? Boolean(selectedCandidate) : null,
     recentPublishedCount,
     blockedPolicies,
   };
@@ -860,13 +866,26 @@ export async function runSummaryReviewCycle(env, options = {}) {
     };
   }
 
-  const selection = await selectReviewCandidate(env);
+  const selection = await selectReviewCandidate(env, Date.now(), options.preferredDoi || '');
   const dailyLimitRaw = Number(env.SUMMARY_REVIEW_DAILY_LIMIT || 96);
   const dailyLimit = Number.isFinite(dailyLimitRaw) ? Math.max(1, Math.floor(dailyLimitRaw)) : 96;
-  if (selection.recentPublishedCount >= dailyLimit) {
+  const urgentReserveRaw = Number(env.SUMMARY_REVIEW_URGENT_RESERVE || 48);
+  const urgentReserve = Number.isFinite(urgentReserveRaw) ? Math.max(0, Math.floor(urgentReserveRaw)) : 48;
+  const now = Date.now();
+  const capturedMs = Date.parse(String(selection.candidate?.capturedAt || ''));
+  const freshSlaCandidate = Number.isFinite(capturedMs) &&
+    capturedMs >= now - 60 * 60 * 1000 &&
+    capturedMs <= now + 5 * 60 * 1000;
+  const hardDailyLimit = dailyLimit + urgentReserve;
+  if (selection.recentPublishedCount >= dailyLimit &&
+      (!freshSlaCandidate || selection.recentPublishedCount >= hardDailyLimit)) {
     return {
       status: 'daily_limit',
+      reason: freshSlaCandidate ? 'urgent_reserve_exhausted' : 'base_daily_limit_reached',
       dailyLimit,
+      urgentReserve,
+      hardDailyLimit,
+      freshSlaCandidate,
       recentPublishedCount: selection.recentPublishedCount,
       eligibleCount: selection.eligibleCount,
     };
@@ -874,9 +893,11 @@ export async function runSummaryReviewCycle(env, options = {}) {
   if (!selection.candidate) {
     return {
       status: 'idle',
+      reason: selection.preferredDoi && !selection.preferredEligible ? 'preferred_candidate_not_eligible' : '',
+      preferredDoi: selection.preferredDoi || '',
       evidenceCount: selection.evidenceCount,
       jobCount: selection.jobCount,
-      eligibleCount: 0,
+      eligibleCount: selection.eligibleCount,
       blockedPolicies: selection.blockedPolicies,
     };
   }
@@ -929,6 +950,9 @@ export async function getSummaryReviewStatus(env) {
       draftModel: String(env?.SUMMARY_DRAFT_MODEL || DRAFT_MODEL_DEFAULT),
       auditModel: String(env?.SUMMARY_AUDIT_MODEL || AUDIT_MODEL_DEFAULT),
       dailyLimit: Math.max(1, Math.floor(Number(env?.SUMMARY_REVIEW_DAILY_LIMIT || 96) || 96)),
+      urgentReserve: Math.max(0, Math.floor(Number(env?.SUMMARY_REVIEW_URGENT_RESERVE || 48) || 48)),
+      hardDailyLimit: Math.max(1, Math.floor(Number(env?.SUMMARY_REVIEW_DAILY_LIMIT || 96) || 96)) +
+        Math.max(0, Math.floor(Number(env?.SUMMARY_REVIEW_URGENT_RESERVE || 48) || 48)),
       promptVersion: DRAFT_PROMPT_VERSION,
       auditVersion: AUDIT_PROMPT_VERSION,
       evidenceCount: evidenceObjects.length,

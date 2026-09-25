@@ -101,12 +101,13 @@ jobs:
           SUMMARY_DRAFT_MODEL = "${SUMMARY_DRAFT_MODEL:-gpt-5.6-terra}"
           SUMMARY_AUDIT_MODEL = "${SUMMARY_AUDIT_MODEL:-gpt-5.6-sol}"
           SUMMARY_REVIEW_DAILY_LIMIT = "${SUMMARY_REVIEW_DAILY_LIMIT:-96}"
+          SUMMARY_REVIEW_URGENT_RESERVE = "${SUMMARY_REVIEW_URGENT_RESERVE:-48}"
 
           [ai]
           binding = "AI"
 
           [triggers]
-          crons = ["*/5 * * * *"]
+          crons = ["* * * * *"]
 
           [assets]
           directory = "../../dist"

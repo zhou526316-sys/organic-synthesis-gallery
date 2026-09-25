@@ -61,6 +61,7 @@ try{
         stored:true,state:'evidence_ready',doi,schemaVersion:'article-evidence-v2',
         evidenceLevel:payload.fulltextStatus,chars,sections:(payload.sections||[]).length,
         sourceHash:'a'.repeat(64),evidencePacketHash:'b'.repeat(64),
+        summaryReviewQueued:true,summaryReviewQueueReason:'evidence_import_trigger',
       }),responseHeaders:'content-type: application/json\r\n'}));
     };
     sessionStorage.setItem('osg-toc-v6:tab-job-binding',jobId);
@@ -103,7 +104,7 @@ try{
   const explicitCombinedEligible=await page.evaluate(()=>__tm232.evidenceCaptureEligible({mediaNeed:'toc',captureEvidence:true}));
   test('explicit missing-evidence flag makes a TOC-triggered visit capture text',explicitCombinedEligible);
   test('structured full article is classified complete',extracted.packet.fulltextStatus==='complete'&&extracted.packet.schemaVersion==='article-evidence-v2');
-  test('packet binds DOI and Bridge 2.2.33',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.33');
+  test('packet binds DOI and Bridge 2.2.34',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.34');
   const types=extracted.packet.sections.map(r=>r.type);
   test('semantic sections are retained',['abstract','results','mechanism','conclusion'].every(t=>types.includes(t)));
   const all=JSON.stringify({sections:extracted.packet.sections,captions:extracted.packet.captions,tables:extracted.packet.tables});
@@ -116,6 +117,7 @@ try{
     return {result,posts:window.__evidencePosts.slice()};
   });
   test('complete evidence stores once',stored.result.status==='stored'&&stored.result.evidenceLevel==='complete'&&stored.posts.length===1);
+  test('Evidence receipt exposes immediate summary-review handoff',stored.result.summaryReviewQueued===true&&stored.result.summaryReviewQueueReason==='evidence_import_trigger');
   test('private upload carries provenance and no fixture metrics',!('_metrics' in stored.posts[0])&&stored.posts[0].jobId===jobId&&stored.posts[0].captureVersion==='6.2.20');
 
   const abstractOnly=await page.evaluate(async()=>{
@@ -181,6 +183,14 @@ try{
   test('missing evidence stays in the lowest-priority backfill queue',
     backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10002'&&r.state==='evidence_gap'));
   test('evidence-only backlog is lower priority than historical body figures',backfill.tier===3);
+  const urgentTier=await page.evaluate(()=>__tm232.captureQueueTier({mediaNeed:'evidence',summaryUrgent:true,addedDate:'2026-09-24'},'2026-09-25'));
+  test('fresh-TOC summary Evidence gap outranks the normal media backlog',urgentTier===-1);
+  test('source retains one-hour post-TOC Evidence urgency and bounded retry',
+    source.includes('SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000')&&
+    source.includes('markSummaryEvidenceUrgency(job.doi)')&&
+    source.includes('urgentEvidenceRetryEligible(prior,Date.now())')&&
+    source.includes('hasActiveSummaryEvidenceUrgency()')&&
+    source.includes("var nextDelay=remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000"));
 
   const combinedPlan=await page.evaluate(()=>{
     const q={latestAddedDate:'2026-09-25',webpageDoiCount:2,mediaGeneration:1790082000000,articles:[
@@ -247,8 +257,8 @@ try{
   test('Wiley DOM recovery binds only the explicit GA block and refuses adjacent Scheme 1',
     wileyDom.length===1&&/-gra-0001-m\.jpg/i.test(wileyDom[0].url)&&!wileyDom.some(r=>/-sch-0001/i.test(r.url)));
 
-  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.33';"));
-  test('2.2.33 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
+  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.34';"));
+  test('2.2.34 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
 
-  console.log('TM233_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.33',totalTextBudget:null,abstractOnly:true}));
+  console.log('TM234_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.34',totalTextBudget:null,abstractOnly:true}));
 }finally{await browser.close();}

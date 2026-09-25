@@ -34,10 +34,11 @@ jobs:
           node --check cloudflare/worker/src/index.js
           node --check cloudflare/worker/scripts/test-summary-review.mjs
           grep -F 'OPENAI_API_KEY:' .github/workflows/deploy-worker-frontend.yml
-          grep -F 'crons = ["*/5 * * * *"]' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'crons = ["* * * * *"]' .github/workflows/deploy-worker-frontend.yml
           grep -F 'const runMediaMaintenance = minute === 0 && hour % 6 === 0;' cloudflare/worker/src/index.js
           grep -F "SUMMARY_REVIEW_ENABLED = \"\${SUMMARY_REVIEW_ENABLED:-1}\"" .github/workflows/deploy-worker-frontend.yml
           grep -F "SUMMARY_ALLOW_UNKNOWN_POLICY = \"\${SUMMARY_ALLOW_UNKNOWN_POLICY:-1}\"" .github/workflows/deploy-worker-frontend.yml
+          grep -F "SUMMARY_REVIEW_URGENT_RESERVE = \"\${SUMMARY_REVIEW_URGENT_RESERVE:-48}\"" .github/workflows/deploy-worker-frontend.yml
           grep -F 'CREATE TABLE IF NOT EXISTS summary_review_mutex' cloudflare/schema.sql
           grep -F "gallery-summary-draft-v3" cloudflare/worker/src/summary-review.js
           grep -F "gallery-summary-audit-v3" cloudflare/worker/src/summary-review.js
@@ -45,6 +46,8 @@ jobs:
           grep -F "validateFinalSummaryAgainstEvidence" cloudflare/worker/src/summary-review.js
           grep -F "draftResponse: responseUsage(draft.response)" cloudflare/worker/src/summary-review.js
           grep -F "status: reviewStatus" cloudflare/worker/src/summary-review.js
+          grep -F "preferredDoi: selection.preferredDoi || ''" cloudflare/worker/src/summary-review.js
+          grep -F "SUMMARY_REVIEW_EVIDENCE_IMPORT" cloudflare/worker/src/index.js
       - name: Install Worker dependencies
         working-directory: cloudflare/worker
         run: npm install --no-audit --no-fund

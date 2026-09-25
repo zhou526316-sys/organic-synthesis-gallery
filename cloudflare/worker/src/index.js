@@ -191,7 +191,7 @@ function requireWriteAuthorization(request, env) {
   return null;
 }
 
-async function handleApi(request, env) {
+async function handleApi(request, env, ctx) {
   const url = new URL(request.url);
   const userUiRoute = url.pathname.startsWith('/api/user-ui/');
   const corsRoute = isBrowserReadablePath(url.pathname);
@@ -211,6 +211,7 @@ async function handleApi(request, env) {
       ai: Boolean(env.AI),
       openaiApiKey: Boolean(env.OPENAI_API_KEY),
       summaryReviewEnabled: String(env.SUMMARY_REVIEW_ENABLED || '') === '1',
+      summaryReviewReady: Boolean(env.DB && env.MEDIA && env.OPENAI_API_KEY && String(env.SUMMARY_REVIEW_ENABLED || '') === '1'),
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
@@ -509,7 +510,40 @@ async function handleApi(request, env) {
   if (request.method === 'POST' && url.pathname === '/api/article-summary/fulltext/import') {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
-    return resultResponse(await importArticleFulltext(env, await readJson(request)), cors);
+    const imported = await importArticleFulltext(env, await readJson(request));
+    const reviewReady = Boolean(
+      imported?.status >= 200 &&
+      imported?.status < 300 &&
+      imported?.body?.stored === true &&
+      imported?.body?.doi &&
+      env.DB &&
+      env.MEDIA &&
+      env.OPENAI_API_KEY &&
+      String(env.SUMMARY_REVIEW_ENABLED || '') === '1'
+    );
+    if (imported?.body && imported.body.stored === true) {
+      imported.body.summaryReviewQueued = reviewReady && Boolean(ctx?.waitUntil);
+      imported.body.summaryReviewQueueReason = imported.body.summaryReviewQueued
+        ? 'evidence_import_trigger'
+        : !env.OPENAI_API_KEY
+          ? 'openai_api_key_missing'
+          : String(env.SUMMARY_REVIEW_ENABLED || '') !== '1'
+            ? 'summary_review_disabled'
+            : !env.DB
+              ? 'db_binding_missing'
+              : !ctx?.waitUntil
+                ? 'execution_context_missing'
+                : 'review_not_ready';
+    }
+    if (reviewReady && ctx?.waitUntil) {
+      const doi = imported.body.doi;
+      ctx.waitUntil(
+        runSummaryReviewCycle(env, { preferredDoi: doi })
+          .then(result => console.log('SUMMARY_REVIEW_EVIDENCE_IMPORT', JSON.stringify({ doi, ...result })))
+          .catch(error => console.error('SUMMARY_REVIEW_EVIDENCE_IMPORT_FAILED', doi, error instanceof Error ? error.message : String(error)))
+      );
+    }
+    return resultResponse(imported, cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-capture/import') {
     return resultResponse(await importLocalCapture(request, env, await readJson(request)));
@@ -553,11 +587,11 @@ async function handleApi(request, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     try {
       if (url.pathname.startsWith('/media/')) return serveMediaObject(request, env);
-      if (url.pathname.startsWith('/api/')) return handleApi(request, env);
+      if (url.pathname.startsWith('/api/')) return handleApi(request, env, ctx);
       return json({ error: 'not_found' }, { status: 404 });
     } catch (error) {
       console.error('Worker request failed', {

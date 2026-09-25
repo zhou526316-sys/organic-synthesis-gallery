@@ -247,6 +247,8 @@ assert.equal(status.status, 200);
 assert.equal(status.body.enabled, true);
 assert.equal(status.body.states.published, 1);
 assert.equal(status.body.dailyLimit, 96);
+assert.equal(status.body.urgentReserve, 48);
+assert.equal(status.body.hardDailyLimit, 144);
 assert.equal(status.body.promptVersion, SUMMARY_DRAFT_PROMPT_VERSION);
 assert.equal(status.body.auditVersion, SUMMARY_AUDIT_PROMPT_VERSION);
 
@@ -259,6 +261,45 @@ const limited = await runSummaryReviewCycle({ ...baseEnv, SUMMARY_REVIEW_DAILY_L
 assert.equal(limited.status, 'daily_limit');
 assert.equal(limited.dailyLimit, 1);
 assert.equal(limitedCalls, 0);
+
+const reserveMedia = new MemoryR2();
+const reserveEnv = {
+  ...baseEnv,
+  MEDIA: reserveMedia,
+  DB: new MemoryDB(),
+  SUMMARY_REVIEW_DAILY_LIMIT: '1',
+  SUMMARY_REVIEW_URGENT_RESERVE: '1',
+};
+async function publishReserveFixture(doi) {
+  await importArticleFulltext(reserveEnv, payload(doi, new Date().toISOString()));
+  let calls = 0;
+  const result = await runSummaryReviewCycle(reserveEnv, {
+    preferredDoi: doi,
+    fetchImpl: async () => {
+      calls += 1;
+      return calls === 1
+        ? responseObject('gpt-5.6-terra-2026-test', draftFor(doi))
+        : responseObject('gpt-5.6-sol-2026-test', auditPass());
+    },
+  });
+  return { result, calls };
+}
+const reserveFirst = await publishReserveFixture('10.1021/jacs.6c90010');
+assert.equal(reserveFirst.result.status, 'published');
+assert.equal(reserveFirst.calls, 2);
+const reserveSecond = await publishReserveFixture('10.1021/jacs.6c90011');
+assert.equal(reserveSecond.result.status, 'published');
+assert.equal(reserveSecond.calls, 2);
+await importArticleFulltext(reserveEnv, payload('10.1021/jacs.6c90012', new Date().toISOString()));
+let exhaustedReserveCalls = 0;
+const exhaustedReserve = await runSummaryReviewCycle(reserveEnv, {
+  preferredDoi: '10.1021/jacs.6c90012',
+  fetchImpl: async () => { exhaustedReserveCalls += 1; throw new Error('hard daily limit must prevent API calls'); },
+});
+assert.equal(exhaustedReserve.status, 'daily_limit');
+assert.equal(exhaustedReserve.reason, 'urgent_reserve_exhausted');
+assert.equal(exhaustedReserve.hardDailyLimit, 2);
+assert.equal(exhaustedReserveCalls, 0);
 
 const badDoi = '10.1021/jacs.6c90002';
 await importArticleFulltext(baseEnv, payload(badDoi, '2026-09-25T02:00:00Z'));
@@ -347,6 +388,34 @@ const mismatchReview = JSON.parse(mismatchReviewEntry[1].value);
 assert.equal(mismatchReview.status, 'needs_manual_review');
 assert.ok(mismatchReview.finalDeterministicIssues.some(issue => issue.type === 'numeric_mismatch'));
 
+const preferredMedia = new MemoryR2();
+const preferredEnv = { ...baseEnv, MEDIA: preferredMedia, DB: new MemoryDB(), SUMMARY_REVIEW_DAILY_LIMIT: '96' };
+const preferredOlderDoi = '10.1021/jacs.6c90006';
+const preferredNewerDoi = '10.1021/jacs.6c90007';
+await importArticleFulltext(preferredEnv, payload(preferredOlderDoi, '2026-09-25T05:10:00Z'));
+await importArticleFulltext(preferredEnv, payload(preferredNewerDoi, '2026-09-25T05:20:00Z'));
+let preferredCalls = 0;
+const preferredCycle = await runSummaryReviewCycle(preferredEnv, {
+  preferredDoi: preferredOlderDoi,
+  fetchImpl: async () => {
+    preferredCalls += 1;
+    return preferredCalls === 1
+      ? responseObject('gpt-5.6-terra-2026-test', draftFor(preferredOlderDoi))
+      : responseObject('gpt-5.6-sol-2026-test', auditPass());
+  },
+});
+assert.equal(preferredCycle.status, 'published');
+assert.equal(preferredCycle.doi, preferredOlderDoi);
+assert.equal(preferredCalls, 2);
+let missingPreferredCalls = 0;
+const missingPreferred = await runSummaryReviewCycle(preferredEnv, {
+  preferredDoi: '10.1021/jacs.6c99999',
+  fetchImpl: async () => { missingPreferredCalls += 1; throw new Error('must not review unrelated backlog'); },
+});
+assert.equal(missingPreferred.status, 'idle');
+assert.equal(missingPreferred.reason, 'preferred_candidate_not_eligible');
+assert.equal(missingPreferredCalls, 0);
+
 const concurrentMedia = new MemoryR2();
 const concurrentEnv = { ...baseEnv, MEDIA: concurrentMedia, DB: new MemoryDB() };
 const concurrentDoi = '10.1021/jacs.6c90005';
@@ -384,6 +453,8 @@ console.log(JSON.stringify({
   finalSummaryNumericGuard: true,
   atomicD1Mutex: true,
   abstractOnlySupported: true,
+  preferredDoiImmediateHandoff: true,
+  freshSlaReserveProtected: true,
   publicGetRemainsReadOnly: true,
   auditStateConsistent: true,
   openaiProvenanceStored: true,

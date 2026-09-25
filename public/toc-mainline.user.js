@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.33';
+  var CONTROLLER_REVISION = '2.2.34';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -70,6 +70,8 @@
   var HEARTBEAT_KEY = P + 'publisher-heartbeat';
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+  var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
+  var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
   var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
   var DEFAULT_BATCH_SIZE = 8;
   var NEXT_BATCH_DELAY_MS = 12000;
@@ -500,6 +502,49 @@ function embeddedJobDois(value) {
       ? P + 'failure:figures:' + normalizeDoi(doi)
       : P + 'failure:' + normalizeDoi(doi);
   }
+  function summaryEvidenceUrgencyKey(doi) {
+    return P + 'summary-evidence-urgent:' + normalizeDoi(doi);
+  }
+  function summaryEvidenceUrgency(doi) {
+    var value=GM_getValue(summaryEvidenceUrgencyKey(doi),null);
+    if(!value)return null;
+    if(Number(value.expiresAt||0)<=Date.now()){
+      GM_deleteValue(summaryEvidenceUrgencyKey(doi));
+      return null;
+    }
+    return value;
+  }
+  function markSummaryEvidenceUrgency(doi) {
+    var now=Date.now(), prior=summaryEvidenceUrgency(doi);
+    GM_setValue(summaryEvidenceUrgencyKey(doi),{
+      doi:normalizeDoi(doi),
+      tocCapturedAt:Number(prior&&prior.tocCapturedAt||now),
+      expiresAt:Number(prior&&prior.expiresAt||now+SUMMARY_EVIDENCE_SLA_MS)
+    });
+  }
+  function clearSummaryEvidenceUrgency(doi) {
+    GM_deleteValue(summaryEvidenceUrgencyKey(doi));
+  }
+  function hasActiveSummaryEvidenceUrgency() {
+    try {
+      var prefix=P+'summary-evidence-urgent:';
+      return GM_listValues().some(function(key){
+        key=String(key||'');
+        if(key.indexOf(prefix)!==0)return false;
+        return Boolean(summaryEvidenceUrgency(key.slice(prefix.length)));
+      });
+    } catch (_) {
+      return false;
+    }
+  }
+  function urgentEvidenceRetryEligible(prior, now) {
+    if(!prior)return true;
+    if(prior.status==='success')return false;
+    var elapsed=now-Date.parse(prior.finishedAt||0);
+    var count=Math.max(1,Number(prior.retryCount||1));
+    if(count>=4)return false;
+    return elapsed>=Math.min(20,count*5)*60*1000;
+  }
   function writeToken() {
     var current = String(GM_getValue(TOKEN_KEY, '') || '').trim();
     if (current) return current;
@@ -518,6 +563,7 @@ function embeddedJobDois(value) {
   function isFailureCooling(jobOrDoi) {
     var job = jobOrDoi && typeof jobOrDoi === 'object' ? jobOrDoi : null;
     var doi = normalizeDoi(job ? job.doi : jobOrDoi);
+    if(job && job.summaryUrgent===true)return false;
     var failed = GM_getValue(failureKey(doi, jobKind(job)), null);
     if (!failed || Number(failed.at || 0) <= 0) return false;
     if (String(failed.engineRevision || '') !== FAILURE_ENGINE_REVISION) return false;
@@ -690,6 +736,7 @@ function embeddedJobDois(value) {
   }
 
   function captureQueueTier(job, latestAddedDate) {
+    if (job && job.summaryUrgent === true) return -1;
     if (latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate)) return 0;
     if (job && job.captureToc === true) return 1;
     if (String(job && job.mediaNeed || '') === 'evidence') return 3;
@@ -1947,8 +1994,10 @@ function embeddedJobDois(value) {
         throw new Error('evidence_receipt_invalid');
       }
       var level=String(receipt.evidenceLevel||packet.fulltextStatus||'partial');
-      pushTrace(trace,{stage:'evidence_capture',event:'stored',status:'success',url:location.href,message:'level='+level+';chars='+String(receipt.chars||packet._metrics.chars)+';sections='+String(receipt.sections||packet._metrics.sections)});
-      return {status:'stored',evidenceLevel:level,chars:Number(receipt.chars||packet._metrics.chars),sections:Number(receipt.sections||packet._metrics.sections),sourceHash:String(receipt.sourceHash||''),evidencePacketHash:String(receipt.evidencePacketHash||'')};
+      var summaryReviewQueued=receipt.summaryReviewQueued===true;
+      var summaryReviewQueueReason=String(receipt.summaryReviewQueueReason||'');
+      pushTrace(trace,{stage:'evidence_capture',event:'stored',status:'success',url:location.href,message:'level='+level+';chars='+String(receipt.chars||packet._metrics.chars)+';sections='+String(receipt.sections||packet._metrics.sections)+';summaryQueued='+(summaryReviewQueued?'1':'0')+(summaryReviewQueueReason?';summaryReason='+summaryReviewQueueReason:'')});
+      return {status:'stored',evidenceLevel:level,chars:Number(receipt.chars||packet._metrics.chars),sections:Number(receipt.sections||packet._metrics.sections),sourceHash:String(receipt.sourceHash||''),evidencePacketHash:String(receipt.evidencePacketHash||''),summaryReviewQueued:summaryReviewQueued,summaryReviewQueueReason:summaryReviewQueueReason};
     } catch (error) {
       pushTrace(trace,{stage:'evidence_capture',event:'failed',status:'failed',url:location.href,httpStatus:Number(error&&error.httpStatus||0),message:String(error&&error.message||error).slice(0,240)});
       return {status:'failed',reason:String(error&&error.message||error).slice(0,240)};
@@ -2797,7 +2846,13 @@ function embeddedJobDois(value) {
       function eligibleEvidence(job) {
         var prior=GM_getValue(attemptKey(job.doi,evidenceGeneration,'evidence'),null);
         if(prior && prior.reason==='controller_lease_lost')return true;
-        if(prior && prior.status==='success')return false;
+        if(prior && prior.status==='success'){clearSummaryEvidenceUrgency(job.doi);return false;}
+        if(summaryEvidenceUrgency(job.doi)){
+          job.summaryUrgent=true;
+          var urgentEligible=urgentEvidenceRetryEligible(prior,Date.now());
+          if(!urgentEligible&&prior&&Number(prior.retryCount||1)>=4)clearSummaryEvidenceUrgency(job.doi);
+          return urgentEligible;
+        }
         if(prior && !overnightRetryEligible(prior,Date.now()))return false;
         return true;
       }
@@ -2876,6 +2931,11 @@ function embeddedJobDois(value) {
           summary.figuresStaged+=Number(result.figuresStaged||0);
           summary.evidenceStored+=result.fulltext&&result.fulltext.status==='stored'?1:0;
           GM_setValue(attemptKey(job.doi,attemptGeneration,attemptKind),result);
+          if(result.fulltext&&result.fulltext.status==='stored'){
+            clearSummaryEvidenceUrgency(job.doi);
+          }else if(result.toc&&result.toc.status==='stored'){
+            markSummaryEvidenceUrgency(job.doi);
+          }
           if(!evidenceOnly&&result.fulltext&&result.fulltext.status==='stored'){
             GM_setValue(attemptKey(job.doi,evidenceGeneration,'evidence'),{doi:job.doi,status:'success',version:VERSION,controllerRevision:CONTROLLER_REVISION,finishedAt:result.finishedAt||nowIso(),reason:'opportunistic_evidence_stored',retryCount:1});
           }
@@ -2893,9 +2953,12 @@ function embeddedJobDois(value) {
       summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
       if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
       else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；文字证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
-      if(!stopReason&&availableJobs().length>0&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      var remainingAvailable=!stopReason?availableJobs():[];
+      var urgentEvidencePending=!stopReason&&hasActiveSummaryEvidenceUrgency();
+      if(!stopReason&&(remainingAvailable.length>0||urgentEvidencePending)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
-        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
+        var nextDelay=remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000;
+        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},nextDelay);
       }
     } catch(error) {
       stopReason=String(error.message);
@@ -3291,6 +3354,7 @@ function embeddedJobDois(value) {
         captureFigures:false,
         captureEvidence:true,
         allowFigureOne:false,
+        summaryUrgent:Boolean(summaryEvidenceUrgency(doi)),
         _queueIndex:index
       });
     }).filter(Boolean);

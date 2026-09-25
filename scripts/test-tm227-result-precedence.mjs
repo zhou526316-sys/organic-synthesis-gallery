@@ -82,7 +82,7 @@ await test('heartbeat loss rechecks publisher final before declaring startup fai
 
 await test('controller revision changes without capture-protocol migration',()=>{
   assert.ok(source.includes("var VERSION = '6.2.20';"));
-  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.33';"));
+  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.34';"));
 });
 
 console.log('TM227_RESULT_PRECEDENCE_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherRequests:0}));
