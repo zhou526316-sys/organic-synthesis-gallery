@@ -49,7 +49,7 @@ async function storageKeys(doi) {
 const MEDIA = new MemoryR2();
 let aiCalls = 0;
 const AI = { async run() { aiCalls += 1; throw new Error('GET must never invoke AI'); } };
-const env = { MEDIA, AI };
+const env = { MEDIA, AI, SCHEDULED_SUMMARY_HANDOFF_ENABLED: '0' };
 const doi = '10.1021/jacs.6c08636';
 
 const sectionText = [
@@ -193,7 +193,7 @@ assert.equal(abstractPending.body.available, false);
 assert.equal(abstractPending.body.fulltextAvailable, false);
 assert.equal(abstractPending.body.evidenceAvailable, true);
 assert.equal(abstractPending.body.evidenceLevel, 'abstract_only');
-assert.equal(abstractPending.body.reason, 'summary_pending');
+assert.equal(abstractPending.body.reason, 'scheduled_summary_pending');
 
 const manyRowsDoi = '10.1021/jacs.6c08639';
 const manyRows = Array.from({ length: 120 }, (_, index) => ({
@@ -220,7 +220,7 @@ assert.equal(pending.body.available, false);
 assert.equal(pending.body.fulltextAvailable, true);
 assert.equal(pending.body.evidenceAvailable, true);
 assert.equal(pending.body.state, 'evidence_ready');
-assert.equal(pending.body.reason, 'summary_pending');
+assert.equal(pending.body.reason, 'scheduled_summary_pending');
 assert.equal(aiCalls, 0);
 
 const keys = await storageKeys(doi);

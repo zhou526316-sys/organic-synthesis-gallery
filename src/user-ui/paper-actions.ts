@@ -256,8 +256,10 @@ export class GalleryPaperActions extends HTMLElement {
         message = this.tr('文章文字证据已更新，旧摘要已自动失效，摘要正在重新生成。', 'The article evidence changed, so the previous summary was invalidated and is being regenerated.');
       } else if (data?.reason === 'summary_invalid') {
         message = this.tr('摘要记录未通过完整性校验，正在重新生成。', 'The summary record failed integrity validation and is being regenerated.');
+      } else if (data?.reason === 'scheduled_summary_pending') {
+        message = this.tr(`已同步${coverage}，将进入北京时间每日 12:00 的摘要发布批次。`, `${coverage} is synced and will enter the daily 12:00 (Asia/Shanghai) summary release.`);
       } else if (data?.reason === 'summary_not_reviewed' || data?.reason === 'summary_pending') {
-        message = this.tr(`已同步${coverage}，摘要正在处理中。`, `${coverage} is synced and the summary is being prepared.`);
+        message = this.tr(`已同步${coverage}，摘要等待下一次发布批次。`, `${coverage} is synced and waiting for the next summary release.`);
       } else {
         message = this.tr('已同步文章证据，摘要正在处理中。', 'Article evidence is synced and the summary is being prepared.');
       }

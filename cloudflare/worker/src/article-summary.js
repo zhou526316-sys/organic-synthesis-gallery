@@ -1,3 +1,5 @@
+import { getScheduledSummaryForEvidence, persistScheduledEvidenceHandoff } from './scheduled-summary-handoff.js';
+
 const EVIDENCE_PREFIX = 'private/article-evidence-v2/';
 const LEGACY_FULLTEXT_PREFIX = 'private/article-fulltext/';
 const SUMMARY_PREFIX = 'private/article-summary/';
@@ -346,6 +348,7 @@ export async function importArticleFulltext(env, payload) {
       evidenceLevel: provenance.fulltextStatus,
     },
   });
+  const scheduledHandoff = await persistScheduledEvidenceHandoff(env, evidence);
 
   return {
     status: 200,
@@ -363,6 +366,8 @@ export async function importArticleFulltext(env, payload) {
       capturedAt,
       textProcessingPolicy,
       evidenceLevel: provenance.fulltextStatus,
+      scheduledHandoffReady: Boolean(scheduledHandoff),
+      scheduledPublicationMode: 'daily_1200_asia_shanghai',
     },
   };
 }
@@ -384,6 +389,33 @@ export async function getArticleSummary(env, doiValue) {
         evidenceAvailable: false,
         state: legacy ? 'legacy_fulltext' : 'missing',
         reason: legacy ? 'evidence_v2_required' : 'fulltext_missing',
+      },
+    };
+  }
+
+  const scheduled = await getScheduledSummaryForEvidence(env, doi, evidence);
+  if (scheduled) {
+    return {
+      status: 200,
+      body: {
+        doi,
+        available: true,
+        fulltextAvailable: (evidence.evidenceLevel || evidence.fulltextStatus) === 'complete',
+        evidenceAvailable: true,
+        cached: true,
+        state: 'published',
+        source: 'scheduled_reviewed_evidence_v2',
+        zh: scheduled.zh.trim(),
+        en: scheduled.en.trim(),
+        generatedAt: Number(scheduled.generatedAt || 0),
+        reviewedAt: Number(scheduled.reviewedAt || scheduled.generatedAt || 0),
+        sourceHash: evidence.sourceHash,
+        evidencePacketHash: evidence.evidencePacketHash,
+        evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus || 'unknown',
+        model: '',
+        modelSnapshot: '',
+        promptVersion: String(scheduled.promptVersion || 'gallery-daily-summary-v1'),
+        auditVersion: String(scheduled.auditVersion || 'gallery-daily-summary-audit-v1'),
       },
     };
   }
@@ -422,7 +454,7 @@ export async function getArticleSummary(env, doiValue) {
       ? 'summary_not_reviewed'
       : reviewed.state === 'invalid'
         ? 'summary_invalid'
-        : 'summary_pending';
+        : 'scheduled_summary_pending';
 
   return {
     status: 200,

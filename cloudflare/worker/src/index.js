@@ -34,7 +34,8 @@ import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
-import { getSummaryReviewStatus, runSummaryReviewCycle } from './summary-review.js';
+import { getScheduledEvidenceHandoff } from './scheduled-summary-handoff.js';
+import { getSummaryReviewStatus } from './summary-review.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -96,6 +97,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/local-diagnostics',
   '/api/media/tampermonkey-reports',
   '/api/article-summary/evidence-inventory',
+  '/api/article-summary/scheduled-handoff',
   '/api/wechat/js-sdk-signature',
 ]);
 
@@ -209,9 +211,10 @@ async function handleApi(request, env, ctx) {
       d1: Boolean(env.DB),
       r2: Boolean(env.MEDIA),
       ai: Boolean(env.AI),
-      openaiApiKey: Boolean(env.OPENAI_API_KEY),
-      summaryReviewEnabled: String(env.SUMMARY_REVIEW_ENABLED || '') === '1',
-      summaryReviewReady: Boolean(env.DB && env.MEDIA && env.OPENAI_API_KEY && String(env.SUMMARY_REVIEW_ENABLED || '') === '1'),
+      summaryMode: 'scheduled_chatgpt_daily_no_api',
+      summaryPublicationTime: '12:00 Asia/Shanghai',
+      summaryReviewEnabled: false,
+      summaryReviewReady: Boolean(env.DB && env.MEDIA && env.ASSETS),
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
@@ -231,6 +234,11 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await getArticleEvidenceInventory(env), cors);
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/article-summary/scheduled-handoff') {
+    const limit = Math.max(1, Math.min(60, Number(url.searchParams.get('limit') || 40)));
+    return resultResponse(await getScheduledEvidenceHandoff(env, limit), cors);
+  }
+
   if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/review-status') {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
@@ -239,7 +247,11 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'POST' && url.pathname === '/api/admin/article-summary/review-run') {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
-    return json(await runSummaryReviewCycle(env), { headers: cors });
+    return json({
+      error: 'realtime_summary_review_retired',
+      mode: 'scheduled_chatgpt_daily_no_api',
+      publicationTime: '12:00 Asia/Shanghai',
+    }, { status: 410, headers: cors });
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
@@ -511,37 +523,9 @@ async function handleApi(request, env, ctx) {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
     const imported = await importArticleFulltext(env, await readJson(request));
-    const reviewReady = Boolean(
-      imported?.status >= 200 &&
-      imported?.status < 300 &&
-      imported?.body?.stored === true &&
-      imported?.body?.doi &&
-      env.DB &&
-      env.MEDIA &&
-      env.OPENAI_API_KEY &&
-      String(env.SUMMARY_REVIEW_ENABLED || '') === '1'
-    );
     if (imported?.body && imported.body.stored === true) {
-      imported.body.summaryReviewQueued = reviewReady && Boolean(ctx?.waitUntil);
-      imported.body.summaryReviewQueueReason = imported.body.summaryReviewQueued
-        ? 'evidence_import_trigger'
-        : !env.OPENAI_API_KEY
-          ? 'openai_api_key_missing'
-          : String(env.SUMMARY_REVIEW_ENABLED || '') !== '1'
-            ? 'summary_review_disabled'
-            : !env.DB
-              ? 'db_binding_missing'
-              : !ctx?.waitUntil
-                ? 'execution_context_missing'
-                : 'review_not_ready';
-    }
-    if (reviewReady && ctx?.waitUntil) {
-      const doi = imported.body.doi;
-      ctx.waitUntil(
-        runSummaryReviewCycle(env, { preferredDoi: doi })
-          .then(result => console.log('SUMMARY_REVIEW_EVIDENCE_IMPORT', JSON.stringify({ doi, ...result })))
-          .catch(error => console.error('SUMMARY_REVIEW_EVIDENCE_IMPORT_FAILED', doi, error instanceof Error ? error.message : String(error)))
-      );
+      imported.body.summaryReviewQueued = false;
+      imported.body.summaryReviewQueueReason = 'scheduled_daily_1200_asia_shanghai';
     }
     return resultResponse(imported, cors);
   }
@@ -630,12 +614,10 @@ export default {
       } else {
         console.log('MEDIA_MAINTENANCE_CRON_SKIPPED', JSON.stringify({ reason: 'six_hour_cadence' }));
       }
-      try {
-        const review = await runSummaryReviewCycle(env);
-        console.log('SUMMARY_REVIEW_CRON', JSON.stringify(review));
-      } catch (error) {
-        console.error('SUMMARY_REVIEW_CRON_FAILED', error instanceof Error ? error.message : String(error));
-      }
+      console.log('SUMMARY_REVIEW_CRON_SKIPPED', JSON.stringify({
+        reason: 'scheduled_chatgpt_daily_no_api',
+        publicationTime: '12:00 Asia/Shanghai',
+      }));
     })());
     console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_SKIPPED', 'verified_staging_release;retain_original_objects');
   },
