@@ -2629,9 +2629,14 @@ function embeddedJobDois(value) {
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var media=await getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json?ts='+Date.now());
-      var jobs=pairedJobs(queue,media);
+      var evidenceInventory=null;
+      try { evidenceInventory=await getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken()); }
+      catch(error){ try{console.warn('[OSG TOC] evidence inventory unavailable; evidence-only backlog paused',String(error&&error.message||error));}catch(_){} }
+      var mediaJobs=pairedJobs(queue,media);
+      var evidenceJobs=evidenceInventory?evidenceBackfillJobs(queue,media,evidenceInventory):[];
       var generation=VERSION+':paired:'+String(queue.mediaGeneration);
-      function eligible(job) {
+      var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION;
+      function eligibleMedia(job) {
         var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
         // A scheduler failure is not a failed publisher/article capture.
         if(prior && prior.reason==='controller_lease_lost')return true;
@@ -2639,19 +2644,35 @@ function embeddedJobDois(value) {
         if (prior && !overnightRetryEligible(prior,Date.now())) return false;
         return true;
       }
+      function eligibleEvidence(job) {
+        var prior=GM_getValue(attemptKey(job.doi,evidenceGeneration,'evidence'),null);
+        if(prior && prior.reason==='controller_lease_lost')return true;
+        if(prior && prior.status==='success')return false;
+        if(prior && !overnightRetryEligible(prior,Date.now()))return false;
+        return true;
+      }
       var latestAddedDate=String(queue.latestAddedDate||'');
-      var available=jobs.filter(eligible),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
-      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,published:0,results:[]};
+      function availableJobs() {
+        var mediaAvailable=mediaJobs.filter(eligibleMedia);
+        var mediaDois=new Set(mediaAvailable.filter(function(job){return String(job.mediaNeed||'').indexOf('figures')>=0;}).map(function(job){return job.doi;}));
+        var evidenceAvailable=evidenceJobs.filter(eligibleEvidence).filter(function(job){return !mediaDois.has(job.doi);});
+        return mediaAvailable.concat(evidenceAvailable);
+      }
+      var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
+      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
       GM_setValue(SUMMARY_KEY,summary);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
         // Fail before opening any page, and never dispatch after loss of ownership.
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
         if(GM_getValue(ACTIVE_JOB_KEY,null)) {stopReason='another_task_still_active';break;}
-        var priorAttempt=GM_getValue(attemptKey(batch[i].doi,generation,'figures'),null);
+        var evidenceOnly=String(batch[i].mediaNeed||'')==='evidence';
+        var attemptGeneration=evidenceOnly?evidenceGeneration:generation;
+        var attemptKind=evidenceOnly?'evidence':'figures';
+        var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
-        badge('TOC＋正文图 '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
+        badge((evidenceOnly?'全文证据':'TOC＋正文图')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result=null,closed=true,skipReason='';
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
@@ -2685,7 +2706,11 @@ function embeddedJobDois(value) {
           summary.results.push(result);summary[result.status]=(summary[result.status]||0)+1;
           summary.tocStored+=result.toc&&result.toc.status==='stored'?1:0;
           summary.figuresStaged+=Number(result.figuresStaged||0);
-          GM_setValue(attemptKey(job.doi,generation,'figures'),result);
+          summary.evidenceStored+=result.fulltext&&result.fulltext.status==='stored'?1:0;
+          GM_setValue(attemptKey(job.doi,attemptGeneration,attemptKind),result);
+          if(!evidenceOnly&&result.fulltext&&result.fulltext.status==='stored'){
+            GM_setValue(attemptKey(job.doi,evidenceGeneration,'evidence'),{doi:job.doi,status:'success',version:VERSION,controllerRevision:CONTROLLER_REVISION,finishedAt:result.finishedAt||nowIso(),reason:'opportunistic_evidence_stored',retryCount:1});
+          }
         }
         if(skipReason) {
           if(result && result.status!=='failed' && skipReason==='previous_task_tab_not_closed')summary.lifecycleWarnings+=1;
@@ -2699,8 +2724,8 @@ function embeddedJobDois(value) {
       }
       summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
       if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
-      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；完整抓取 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（暂存不等于发布）','#374151');
-      if(!stopReason&&jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；全文证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
+      if(!stopReason&&availableJobs().length>0&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
       }
