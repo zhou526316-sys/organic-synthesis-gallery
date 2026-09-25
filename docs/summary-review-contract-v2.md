@@ -1,6 +1,9 @@
 # Organic Synthesis Gallery — GPT Literature Review Contract v2
 
-Status: normative contract for future GPT draft/audit generation.
+Status: **deprecated for production execution**. Retained as the historical API-review contract.
+
+Current production behavior is defined by `docs/scheduled-summary-contract.md`: daily 12:00 Asia/Shanghai review, encrypted Evidence handoff, and no Gallery model API dependency.
+
 Public summary generation MUST NOT run from the public GET route.
 
 ## 1. Evidence first
