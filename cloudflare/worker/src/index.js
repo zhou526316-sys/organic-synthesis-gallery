@@ -34,7 +34,7 @@ import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
-import { backfillScheduledEvidenceHandoffs, getScheduledEvidenceHandoff } from './scheduled-summary-handoff.js';
+import { backfillScheduledEvidenceHandoffs, getScheduledEvidenceHandoff, getScheduledEvidenceHandoffPart } from './scheduled-summary-handoff.js';
 import { getSummaryReviewStatus } from './summary-review.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
@@ -235,8 +235,15 @@ async function handleApi(request, env, ctx) {
   }
 
   if (request.method === 'GET' && url.pathname === '/api/article-summary/scheduled-handoff') {
+    const doi = url.searchParams.get('doi') || '';
+    if (doi) {
+      const part = Math.max(0, Number(url.searchParams.get('part') || 0));
+      const partSize = Math.max(1024, Math.min(8000, Number(url.searchParams.get('partSize') || 6000)));
+      return resultResponse(await getScheduledEvidenceHandoffPart(env, doi, part, partSize), cors);
+    }
     const limit = Math.max(1, Math.min(60, Number(url.searchParams.get('limit') || 40)));
-    return resultResponse(await getScheduledEvidenceHandoff(env, limit), cors);
+    const manifestOnly = url.searchParams.get('manifest') === '1';
+    return resultResponse(await getScheduledEvidenceHandoff(env, limit, { manifestOnly }), cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/review-status') {
