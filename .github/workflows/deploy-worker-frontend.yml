@@ -10,6 +10,8 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
+      - 'cloudflare/migrations/**'
+      - 'cloudflare/schema.sql'
 
 permissions:
   contents: read
@@ -33,6 +35,7 @@ jobs:
       WECHAT_MP_APP_SECRET: ${{ secrets.WECHAT_MP_APP_SECRET }}
       WECHAT_TICKET_RELAY_URL: ${{ secrets.WECHAT_TICKET_RELAY_URL }}
       WECHAT_TICKET_RELAY_KEY: ${{ secrets.WECHAT_TICKET_RELAY_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
       - name: Checkout main
@@ -73,6 +76,13 @@ jobs:
           npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null
           echo "d1_id=$D1_ID" >> "$GITHUB_OUTPUT"
 
+      - name: Apply reviewed-summary queue migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file ../migrations/2026-09-25-article-summary-jobs.sql
+
       - name: Generate frontend deployment configuration
         working-directory: cloudflare/worker
         shell: bash
@@ -95,7 +105,7 @@ jobs:
           binding = "AI"
 
           [triggers]
-          crons = ["0 */6 * * *"]
+          crons = ["0 */6 * * *", "*/10 * * * *"]
 
           [assets]
           directory = "../../dist"
@@ -133,7 +143,9 @@ jobs:
           if (process.env.EMAIL_FROM) values.EMAIL_FROM = process.env.EMAIL_FROM;
           if (process.env.WECHAT_MP_APP_SECRET) values.WECHAT_MP_APP_SECRET = process.env.WECHAT_MP_APP_SECRET;
           if (process.env.WECHAT_TICKET_RELAY_KEY) values.WECHAT_TICKET_RELAY_KEY = process.env.WECHAT_TICKET_RELAY_KEY;
+          if (process.env.OPENAI_API_KEY) values.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
           if (!process.env.WECHAT_MP_APP_SECRET) console.warn('WECHAT_MP_APP_SECRET is not configured; WeChat JS-SDK signing will remain disabled until the repository secret is added.');
+          if (!process.env.OPENAI_API_KEY) console.warn('OPENAI_API_KEY is not configured; Evidence capture and queueing stay active, but GPT draft/audit processing remains paused.');
           if (!Object.keys(values).length) throw new Error('Runtime secrets are missing');
           fs.writeFileSync('/tmp/runtime-secrets.json', JSON.stringify(values));
           console.log(`Prepared ${Object.keys(values).length} email secrets.`);
