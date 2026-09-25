@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS article_summary_jobs (
   next_retry_at INTEGER NOT NULL DEFAULT 0,
   lease_owner TEXT,
   lease_expires_at INTEGER NOT NULL DEFAULT 0,
+  draft_cursor INTEGER NOT NULL DEFAULT 0,
+  draft_chunk_count INTEGER NOT NULL DEFAULT 0,
   draft_model TEXT,
   audit_model TEXT,
   prompt_version TEXT,
