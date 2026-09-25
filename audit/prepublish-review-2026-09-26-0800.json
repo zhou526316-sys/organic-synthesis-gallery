@@ -3117,5 +3117,29 @@
     "Science Advances sourceCoverageAnomaly remains a closure warning with both source families healthy.",
     "Seven closureCoverageAnomalies hold verifiedThrough at 2026-09-20."
   ],
-  "updatedAt": "2026-09-26T07:56:00+08:00"
+  "updatedAt": "2026-09-26T07:58:00+08:00",
+  "prepublishGate": {
+    "runId": 36202903361,
+    "jobId": 108293142425,
+    "conclusion": "success",
+    "headCommitSha": "63581ab77409ee671ab6be209db78879a7893c9d",
+    "validatedStagingBlobSha": "c1598baa73aae308d859d8365e931cf1dd70d376",
+    "recordValidationPassed": true,
+    "semanticDecisionSetComplete": true,
+    "semanticFieldFailures": 0,
+    "snapshotFreshForSlot": true,
+    "publicationReady": true,
+    "releaseStatus": "ready_with_pending",
+    "reviewComplete": false,
+    "reviewed": 130,
+    "publishableDois": 16,
+    "rejectedDois": 112,
+    "deferredDois": 2,
+    "conversionValid": true,
+    "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: success",
+    "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: success",
+    "formalConversionPreview": "success",
+    "strictReleaseBundle": "success",
+    "productionDataModified": false
+  }
 }
