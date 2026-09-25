@@ -33,6 +33,19 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      - name: Enforce model-neutral public copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RniE 'gpt' src index.html public/site-stats.html --include='*.ts' --include='*.tsx' --include='*.js' --include='*.html'; then
+            echo 'Public-facing source must not contain model names.'
+            exit 1
+          fi
+          if grep -RniE 'gpt' dist/index.html dist/assets --include='*.js' --include='*.html'; then
+            echo 'Built public frontend must not contain model names.'
+            exit 1
+          fi
+
       - name: Verify production artifact
         shell: bash
         run: |
