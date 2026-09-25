@@ -42,6 +42,8 @@ jobs:
           grep -F "gallery-summary-audit-v3" cloudflare/worker/src/summary-review.js
           ! grep -F "draftZh" cloudflare/worker/src/summary-review.js
           grep -F "validateFinalSummaryAgainstEvidence" cloudflare/worker/src/summary-review.js
+          grep -F "draftResponse: responseUsage(draft.response)" cloudflare/worker/src/summary-review.js
+          grep -F "status: reviewStatus" cloudflare/worker/src/summary-review.js
       - name: Install Worker dependencies
         working-directory: cloudflare/worker
         run: npm install --no-audit --no-fund
