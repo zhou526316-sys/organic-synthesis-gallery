@@ -38,6 +38,7 @@ jobs:
       SUMMARY_ALLOW_UNKNOWN_POLICY: ${{ vars.SUMMARY_ALLOW_UNKNOWN_POLICY }}
       SUMMARY_DRAFT_MODEL: ${{ vars.SUMMARY_DRAFT_MODEL }}
       SUMMARY_AUDIT_MODEL: ${{ vars.SUMMARY_AUDIT_MODEL }}
+      SUMMARY_REVIEW_DAILY_LIMIT: ${{ vars.SUMMARY_REVIEW_DAILY_LIMIT }}
 
     steps:
       - name: Checkout main
@@ -99,6 +100,7 @@ jobs:
           SUMMARY_ALLOW_UNKNOWN_POLICY = "${SUMMARY_ALLOW_UNKNOWN_POLICY:-0}"
           SUMMARY_DRAFT_MODEL = "${SUMMARY_DRAFT_MODEL:-gpt-5.6-terra}"
           SUMMARY_AUDIT_MODEL = "${SUMMARY_AUDIT_MODEL:-gpt-5.6-sol}"
+          SUMMARY_REVIEW_DAILY_LIMIT = "${SUMMARY_REVIEW_DAILY_LIMIT:-96}"
 
           [ai]
           binding = "AI"
