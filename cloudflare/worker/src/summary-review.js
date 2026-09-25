@@ -184,6 +184,33 @@ const AUDIT_SCHEMA = {
   },
 };
 
+const AUDIT_CHECK_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['outcome', 'issues', 'modelInferencePresent', 'unsupportedClaimCount', 'auditNotes'],
+  properties: {
+    outcome: { type: 'string', enum: ['pass', 'needs_manual_review', 'reject'] },
+    issues: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['type', 'severity', 'message', 'evidenceIds'],
+        properties: {
+          type: { type: 'string', enum: ISSUE_TYPES },
+          severity: { type: 'string', enum: ['error', 'warning'] },
+          message: { type: 'string' },
+          evidenceIds: { type: 'array', items: { type: 'string' } },
+        },
+      },
+    },
+    modelInferencePresent: { type: 'boolean' },
+    unsupportedClaimCount: { type: 'integer' },
+    auditNotes: { type: 'string' },
+  },
+};
+
+
 function safeText(value, max = 500) {
   return String(value ?? '').replace(/[\u0000-\u001f]+/g, ' ').trim().slice(0, max);
 }
@@ -701,14 +728,109 @@ function promptEvidence(evidence) {
   });
 }
 
+async function reviewChunkKey(doi, evidencePacketHash, phase, index) {
+  const id = await idForDoi(doi);
+  return `${REVIEW_CHUNK_PREFIX}${id}/${evidencePacketHash}/${phase}-${String(index + 1).padStart(4, '0')}.json`;
+}
+
+async function readCachedChunk(env, key) {
+  const value = await readJsonObject(env, key);
+  return value?.parsed ? value : null;
+}
+
+async function storeChunk(env, key, parsed, response, meta = {}) {
+  const value = {
+    version: 1,
+    parsed,
+    modelSnapshot: response?.model || meta.model || '',
+    responseId: response?.id || '',
+    generatedAt: Date.now(),
+    ...meta,
+  };
+  await env.MEDIA.put(key, JSON.stringify(value), {
+    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'private, no-store' },
+  });
+  return value;
+}
+
+function auditChunkPrompt(evidence, units, draft, deterministicIssues, index, total) {
+  const ids = uniqueStrings(units.map(unit => unit.id));
+  return JSON.stringify({
+    doi: evidence.doi,
+    title: evidence.title,
+    journal: evidence.journal,
+    evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus,
+    chunkIndex: index,
+    chunkCount: total,
+    evidenceIdsInThisChunk: ids,
+    evidence: units.map(unit => ({
+      evidenceId: unit.id,
+      kind: unit.kind,
+      type: unit.type,
+      heading: unit.heading,
+      part: unit.parts > 1 ? unit.part : undefined,
+      parts: unit.parts > 1 ? unit.parts : undefined,
+      text: unit.text,
+    })),
+    mergedDraft: draft,
+    deterministicIssues,
+  });
+}
+
+function validateFinalSummaryAgainstEvidence(auditValue, evidence) {
+  const issues = [];
+  const source = [...evidenceMap(evidence).values()].join('\n').replace(/\s+/g, '').toLowerCase();
+  const finalText = String(auditValue?.finalZh || '') + '\n' + String(auditValue?.finalEn || '');
+  for (const token of numberTokens(finalText)) {
+    if (!source.includes(token)) {
+      issues.push({
+        type: 'numeric_mismatch',
+        severity: 'error',
+        message: `Final bilingual summary contains numeric value not found anywhere in Evidence: ${token}`,
+        evidenceIds: [],
+      });
+    }
+  }
+  const level = evidence?.evidenceLevel || evidence?.fulltextStatus;
+  if (level === 'abstract_only') {
+    if (!/(?:abstract|摘要|基于)/i.test(String(auditValue?.finalZh || ''))
+      || !/abstract/i.test(String(auditValue?.finalEn || ''))) {
+      issues.push({
+        type: 'evidence_level_violation',
+        severity: 'error',
+        message: 'Abstract-only final summary must explicitly disclose Abstract-based coverage in both languages.',
+        evidenceIds: [],
+      });
+    }
+  }
+  return issues;
+}
+
 const DRAFT_INSTRUCTIONS = `You are the first-pass evidence extractor for an organic-synthesis literature review.
-Use only the supplied Article Evidence Packet. Do not use outside knowledge.
+You are receiving one chunk of a larger Article Evidence Packet. Use only this supplied chunk. Do not use outside knowledge and do not infer facts from chunks you have not seen.
 Separate experimental facts, author conclusions, author-proposed mechanisms, and model inference.
 The modelInference array must normally be empty. Never reconstruct missing standard conditions.
 For abstract_only evidence, summarize only what the abstract explicitly supports; do not expand “broad scope” into detailed scope.
-When information is missing, say so in limitations or questionsForManualVerification instead of guessing.
-Capture key transformation/strategy, conditions, scope/selectivity, mechanistic evidence vs author proposal, limitations, and concrete synthetic significance.
-Every key claim must cite evidence IDs (s..., c..., t...). Chinese and English drafts must contain the same scientific facts.`;
+When information is missing from this chunk, leave it absent rather than declaring that the full article lacks it; questionsForManualVerification should be used only when the chunk itself exposes a material unresolved point.
+Capture supported key transformation/strategy, conditions, scope/selectivity, mechanistic evidence vs author proposal, limitations, and concrete synthetic significance.
+Every key factual statement represented in the structured fields must also be represented by a claim citing evidence IDs (s..., c..., t...).
+Chinese and English drafts are intermediate only and must contain the same facts extracted from this chunk.`;
+
+const AUDIT_CHUNK_INSTRUCTIONS = `You are an independent senior organic-chemistry evidence checker.
+You are receiving one chunk containing the full source text for specific evidence IDs cited by a merged draft.
+Audit only draft statements whose evidence IDs intersect evidenceIdsInThisChunk. Do not mark unrelated claims unsupported merely because their evidence is in another chunk.
+Check semantic support, numeric/condition mismatches, scope exaggeration, mechanistic overclaim, and whether author proposals are mislabeled as experimental facts.
+Do not rewrite the public summary in this step. Return pass only when the statements audited in this chunk are evidence-supported.
+Model-only inference is never acceptable for automatic publication.`;
+
+const FINAL_AUDIT_INSTRUCTIONS = `You are the final senior organic-chemistry reviewer and bilingual renderer.
+The full raw Evidence Packet has already been processed by the draft extractor in chunks, and every cited evidence chunk has been independently checked by GPT plus deterministic validators.
+Use only mergedDraft, deterministicIssues, auditChecks, and evidenceIndex. Do not invent or add any scientific fact not already present in mergedDraft.
+If any audit check reports an error, unsupported claim, model inference, or needs_manual_review/reject outcome, do not pass.
+Check the distinction between experimental observations and author-proposed mechanisms.
+For abstract_only evidence, both Chinese and English final summaries must visibly state that they are Abstract-based and must not imply full-paper coverage.
+If and only if the reviewed record is supported, choose pass and render concise, information-dense Chinese and English summaries containing the same scientific facts.
+Preserve explicit numerical conditions exactly; never introduce a new number.`;
 
 const AUDIT_INSTRUCTIONS = `You are an independent senior organic-chemistry reviewer.
 Audit the draft strictly against the supplied evidence and deterministic validation issues.
