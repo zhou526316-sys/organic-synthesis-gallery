@@ -128,7 +128,8 @@ try{
     document.querySelector('#article').innerHTML='<h1>Long fixture</h1><section><h2>Results and Discussion</h2><p>'+longText+'</p></section><section><h2>Conclusion</h2><p>Conclusion text.</p></section>';
     const job=window.__gm['osg-toc-v6:active-job'];
     const packet=__tm232.buildArticleEvidencePacket(job,[]);
-    return {expected:longText.length,actual:packet.sections.find(r=>r.type==='results')?.text.length||0};
+    const normalized=longText.replace(/\r\n?/g,'\n').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+    return {expected:normalized.length,actual:packet.sections.find(r=>r.type==='results')?.text.length||0};
   });
   test('long article text is not cut by an application total-text budget',noLimit.actual===noLimit.expected);
 
