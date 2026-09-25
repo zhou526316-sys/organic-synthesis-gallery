@@ -6,8 +6,8 @@ const REVIEWED_SUMMARY_SCHEMA_VERSION = 'reviewed-summary-v2';
 const JOB_VERSION = 1;
 const DRAFT_MODEL_DEFAULT = 'gpt-5.6-terra';
 const AUDIT_MODEL_DEFAULT = 'gpt-5.6-sol';
-const DRAFT_PROMPT_VERSION = 'gallery-summary-draft-v2';
-const AUDIT_PROMPT_VERSION = 'gallery-summary-audit-v2';
+const DRAFT_PROMPT_VERSION = 'gallery-summary-draft-v3';
+const AUDIT_PROMPT_VERSION = 'gallery-summary-audit-v3';
 const LEASE_MS = 4 * 60 * 1000;
 const MAX_ATTEMPTS = 3;
 
