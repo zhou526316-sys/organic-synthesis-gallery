@@ -110,6 +110,7 @@ export async function encryptScheduledEvidence(evidence) {
 
 export async function persistScheduledEvidenceHandoff(env, evidence) {
   if (!env?.MEDIA) return null;
+  if (String(env?.SCHEDULED_SUMMARY_HANDOFF_ENABLED ?? '1') !== '1') return null;
   if (String(evidence?.textProcessingPolicy || '') === 'no_external_ai') return null;
   const envelope = await encryptScheduledEvidence(evidence);
   const id = await idForDoi(envelope.doi);
