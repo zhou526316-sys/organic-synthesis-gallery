@@ -1,14 +1,11 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-25T08:12:12.852+08:00",
-  "requestedBy": "fixed-release-postverify-20260925-0800",
-  "reason": "Post-release verification for the immutable 2026-09-25 08:00 slot release. Atomic production release 648064f332f8f000b7143ef87f1bbc6495afe59c has been deployed through Pages run 36076180518. Generate one fresh machine audit against current main/deployed Gallery to verify the 585-card DOI set, discovery health, and that every remaining unresolved DOI is exactly covered by formal pending/deferred evidence. Do not mutate production literature, publish late arrivals, trigger Pages, or acquire publisher media.",
+  "requestedAt": "2026-09-25T17:04:00+08:00",
+  "requestedBy": "prepublish-primary-20260925-1800",
+  "reason": "No fresh 16:55 machine snapshot exists for the fixed 2026-09-25 18:00 publication slot and no healthy same-slot literature audit is running. Generate one paired latest/compact snapshot for complete semantic review. Do not mutate production literature, publish cards, trigger Pages, acquire publisher media, or cancel/restart a healthy audit.",
   "targetBranch": "main",
-  "publicationSlot": "2026-09-25T08:00:00+08:00",
-  "baselineMainSha": "77d66c78956f3ead58ccac3ebb236a4df2486515",
-  "releaseCommit": "648064f332f8f000b7143ef87f1bbc6495afe59c",
-  "pagesRunId": 36076180518,
-  "expectedProductionCards": 585,
+  "publicationSlot": "2026-09-25T18:00:00+08:00",
+  "baselineMainSha": "0ed4b7aced282d5e346044c4bbdc55eb6c075571",
   "primaryWindow": {
     "timezone": "Asia/Shanghai",
     "startDate": "2026-09-23",
@@ -17,19 +14,19 @@
   },
   "safetyTailDays": 7,
   "lateDepositRescueDays": 7,
+  "verifiedThrough": "2026-09-20",
   "scopeRulesVersion": "scope-2026-09-24-v1",
   "scopeRulesFile": "docs/literature-scope-contract.md",
   "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
   "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
   "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
-  "deduplicationKey": "post-release|2026-09-25T08:00:00+08:00|648064f332f8f000b7143ef87f1bbc6495afe59c|585",
+  "deduplicationKey": "prepublish-primary|2026-09-25T18:00:00+08:00|0ed4b7aced282d5e346044c4bbdc55eb6c075571|e57e9394e4cbc08476cd9d3a64c6e409466bb019|2e1b24bd6b504c70aefcf6b766b6d52fd166897e",
   "validation": [
     "paired latest/compact must share generatedAt and endDate 2026-09-25",
-    "summary.unresolved must equal complete compact unresolved array length",
-    "all canonical active journals and activeFrom rules remain covered",
+    "both summary.unresolved values must equal the complete compact unresolved array length",
+    "all 16 canonical active journals and activeFrom rules must be covered",
+    "Crossref online/published/created, OpenAlex, created/deposit rescue, seven-day tail and verifiedThrough catch-up remain enabled",
     "criticalSourceFailures, sourceFamilyGaps, sourceCoverageAnomalies, closureCoverageAnomalies and historicalCoverageLosses must be explicit",
-    "galleryDois/deployed verification must reflect the released 585-card snapshot",
-    "any unresolved DOI not exactly covered by current formal pending/deferred evidence is an unknown post-release gap and must fail publication closure",
-    "post-release verification only: no production literature mutation, late admission, Pages trigger, OA or publisher-media acquisition"
+    "prepublish discovery only: no production literature mutation, admission, Pages trigger, OA extraction or publisher-media acquisition"
   ]
 }
