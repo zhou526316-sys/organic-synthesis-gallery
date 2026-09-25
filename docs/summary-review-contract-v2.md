@@ -216,7 +216,7 @@ A D1 `summary_review_mutex` row provides the atomic DOI/evidence-hash lease. R2 
 
 After the Sol audit produces bilingual prose, a second deterministic numeric check rejects any yield/selectivity/temperature/time/loading/equivalent/light/electrochemical value that does not occur anywhere in the current Evidence Packet.
 
-The default rolling 24-hour publication limit is 96 reviewed summaries (`SUMMARY_REVIEW_DAILY_LIMIT`). This is a cost/runaway guard, not a scientific-content limit, and may be raised through repository configuration. The runner confirms its R2 lease after writing it so a cron invocation and an explicit manual review run cannot both proceed with the same job.
+The default rolling 24-hour backlog publication limit is 96 reviewed summaries (`SUMMARY_REVIEW_DAILY_LIMIT`). A separate fresh-Evidence reserve defaults to 48 (`SUMMARY_REVIEW_URGENT_RESERVE`): Evidence captured within the current one-hour SLA window may use that reserve after the backlog limit is reached, so historical backfill cannot consume all capacity needed by newly captured TOCs. The combined hard limit remains a cost/runaway guard. The runner confirms its R2 lease after writing it so a cron invocation and an explicit manual review run cannot both proceed with the same job.
 
 Private R2 objects:
 
