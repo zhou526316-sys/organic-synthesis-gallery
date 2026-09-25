@@ -42,6 +42,11 @@ const succeeded = await importTampermonkeyReport(req('/api/media/tampermonkey-re
   publisher: 'acs',
   status: 'success',
   reason: 'captured_rendered_canvas',
+  mediaNeed: 'evidence',
+  fulltextStatus: 'stored',
+  evidenceLevel: 'abstract_only',
+  evidenceChars: 842,
+  evidenceSections: 1,
   assetType: 'toc_graphic',
   candidateKind: 'official',
   candidateSource: 'live_dom',
@@ -68,6 +73,11 @@ assert.equal(failures.body.items[0].reason, 'image_http_403');
 const history = await getTampermonkeyReports(req('/api/media/tampermonkey-reports?doi=' + encodeURIComponent(doi) + '&history=1'), env);
 assert.equal(history.status, 200);
 assert.equal(history.body.latest.status, 'success');
+assert.equal(history.body.latest.mediaNeed, 'evidence');
+assert.equal(history.body.latest.fulltextStatus, 'stored');
+assert.equal(history.body.latest.evidenceLevel, 'abstract_only');
+assert.equal(history.body.latest.evidenceChars, 842);
+assert.equal(history.body.latest.evidenceSections, 1);
 assert.equal(history.body.failureCount, 1);
 assert.equal(history.body.successCount, 1);
 assert.equal(history.body.attempts.length, 2);
