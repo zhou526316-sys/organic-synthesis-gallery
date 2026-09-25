@@ -145,17 +145,26 @@ try{
       {doi:'10.1021/jacs.6c10001',journal:'JACS',addedDate:'2026-09-24'},
       {doi:'10.1021/jacs.6c10002',journal:'JACS',addedDate:'2026-09-24'},
       {doi:'10.1021/jacs.6c10003',journal:'JACS',addedDate:'2026-09-25'},
+      {doi:'10.1021/jacs.6c10004',journal:'JACS',addedDate:'2026-09-24'},
     ]};
     const media={items:{
       '10.1021/jacs.6c10001':{toc:{available:true,imageUrl:'official.svg',reason:'official'}},
       '10.1021/jacs.6c10002':{toc:{available:true,imageUrl:'official.svg',reason:'official'}},
       '10.1021/jacs.6c10003':{toc:{available:true,imageUrl:'official.svg',reason:'official'}},
+      '10.1021/jacs.6c10004':{toc:{available:true,imageUrl:'official.svg',reason:'official'}},
     }};
-    const inv={items:[{doi:'10.1021/jacs.6c10001',available:true,evidenceLevel:'abstract_only'}]};
+    const inv={items:[
+      {doi:'10.1021/jacs.6c10001',available:true,evidenceLevel:'abstract_only'},
+      {doi:'10.1021/jacs.6c10004',available:true,evidenceLevel:'complete'},
+    ]};
     const rows=__tm232.evidenceBackfillJobs(q,media,inv);
-    return {dois:rows.map(r=>r.doi),tier:__tm232.captureQueueTier(rows[0],'2026-09-25')};
+    return {rows:rows.map(r=>({doi:r.doi,state:r.state,level:r.existingEvidenceLevel})),tier:__tm232.captureQueueTier(rows[0],'2026-09-25')};
   });
-  test('any stored evidence level prevents repeated historical backfill',JSON.stringify(backfill.dois.sort())===JSON.stringify(['10.1021/jacs.6c10002','10.1021/jacs.6c10003'].sort()));
+  test('abstract-only evidence remains upgradeable while complete evidence leaves the backlog',
+    backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10001'&&r.state==='evidence_upgrade'&&r.level==='abstract_only') &&
+    !backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10004'));
+  test('missing evidence stays in the lowest-priority backfill queue',
+    backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10002'&&r.state==='evidence_gap'));
   test('evidence-only backlog is lower priority than historical body figures',backfill.tier===3);
 
   const isolatedFailure=await page.evaluate(async()=>{
