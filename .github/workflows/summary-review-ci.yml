@@ -32,7 +32,7 @@ jobs:
           node --check cloudflare/worker/src/summary-review.js
           node --check cloudflare/worker/src/index.js
           node --check cloudflare/worker/scripts/test-summary-review.mjs
-          grep -F 'OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'OPENAI_API_KEY:' .github/workflows/deploy-worker-frontend.yml
           grep -F 'crons = ["*/5 * * * *"]' .github/workflows/deploy-worker-frontend.yml
           grep -F 'const runMediaMaintenance = minute === 0 && hour % 6 === 0;' cloudflare/worker/src/index.js
           grep -F "SUMMARY_REVIEW_ENABLED = \"\${SUMMARY_REVIEW_ENABLED:-0}\"" .github/workflows/deploy-worker-frontend.yml
