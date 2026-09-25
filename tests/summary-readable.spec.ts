@@ -137,11 +137,11 @@ test('missing full text still reports unavailable rather than fabricating a summ
 });
 
 
-test('abstract-only evidence waits for GPT review without pretending full-text coverage', async ({ page }) => {
+test('abstract-only evidence shows neutral processing state without pretending full-text coverage', async ({ page }) => {
   const { actions, calls } = await prepare(page, 1280, 900, false, false, 'abstract_only', 'summary_pending');
   const drawer = actions.locator('.summary-drawer');
   await expect(drawer.locator('.summary-state')).toContainText(/Abstract/);
-  await expect(drawer.locator('.summary-state')).toContainText(/等待 GPT 审核|awaiting GPT review/);
+  await expect(drawer.locator('.summary-state')).toContainText(/摘要正在处理中|summary is being prepared/);
   await expect(drawer.locator('.summary-text')).toHaveCount(0);
   expect(calls()).toBe(1);
 });
