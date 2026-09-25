@@ -1286,4 +1286,12 @@ export const SUMMARY_DRAFT_SCHEMA = DRAFT_SCHEMA;
 export const SUMMARY_AUDIT_SCHEMA = AUDIT_SCHEMA;
 export const SUMMARY_DRAFT_PROMPT_VERSION = DRAFT_PROMPT_VERSION;
 export const SUMMARY_AUDIT_PROMPT_VERSION = AUDIT_PROMPT_VERSION;
-export { validateDraftAgainstEvidence };
+export {
+  auditEvidenceChunks,
+  chunkEvidence,
+  claimReviewLease,
+  mergeDrafts,
+  releaseReviewLease,
+  validateDraftAgainstEvidence,
+  validateFinalSummaryAgainstEvidence,
+};
