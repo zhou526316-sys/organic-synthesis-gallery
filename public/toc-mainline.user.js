@@ -2569,6 +2569,9 @@ function embeddedJobDois(value) {
       // downgrades successful TOC/body capture, but a visit with missing evidence must
       // attempt it before the tab closes.
       result.fulltext=await tryCaptureArticleEvidence(job,trace,token,wantsEvidence?5000:0);
+      result.reason='combined_capture;toc='+result.toc.status
+        +';figures='+(wantsFigures?(result.figures.stored+'/'+result.figures.discovered):'not_requested')
+        +';evidence='+(wantsEvidence?String(result.fulltext.status||'failed'):'not_requested')+';published=0';
     } catch(error) {
       result.status=String(error.message)==='user_aborted'?'aborted':(result.figures.stored||result.toc.status==='stored'?'partial':'failed');
       result.reason=String(error.message);
@@ -2782,7 +2785,12 @@ function embeddedJobDois(value) {
         var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
         // A scheduler failure is not a failed publisher/article capture.
         if(prior && prior.reason==='controller_lease_lost')return true;
-        if (prior && prior.version===VERSION && prior.status==='success') return false;
+        if (prior && prior.version===VERSION && prior.status==='success') {
+          // 2.2.32 could record a TOC-only visit as media success. Reopen only those
+          // legacy successes that never requested figures; genuine paired successes stay done.
+          if (job.captureFigures===true && prior.figures && prior.figures.status==='not_requested') return true;
+          return false;
+        }
         if (prior && !overnightRetryEligible(prior,Date.now())) return false;
         return true;
       }
@@ -3270,7 +3278,9 @@ function embeddedJobDois(value) {
       var record=(media&&media.items||{})[doi]||{},toc=record.toc||{};
       var official=Boolean(toc.available&&toc.imageUrl&&!/fallback/i.test(toc.reason||''));
       var isLatest=Boolean(latestAddedDate&&String(raw.addedDate||'')===latestAddedDate);
-      if(!isLatest&&!official)return null;
+      // Missing evidence is a real backlog independent of TOC state. If a media visit
+      // for this DOI is already scheduled it will be merged into that visit; otherwise
+      // it remains a lower-priority evidence-only job.
       return Object.assign({},raw,{
         doi:doi,
         publisher:publisherForDoi(doi),
