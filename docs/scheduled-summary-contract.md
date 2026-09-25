@@ -16,17 +16,26 @@ Article Evidence Packet v2 remains private in R2.
 
 For the scheduled review task, each eligible Evidence Packet is copied into a hybrid-encrypted handoff envelope:
 
+- Evidence JSON is gzip-compressed before encryption;
 - content cipher: AES-256-GCM;
 - key wrapping: RSA-OAEP with SHA-256;
-- public-key identifier: `b5c0b7eaddec13fa`;
+- public-key identifier: `9c55e2d2ed734de9`;
 - plaintext Article Evidence Packet is never returned by the public handoff route;
 - `textProcessingPolicy=no_external_ai` is excluded from the handoff.
 
 The public handoff route is:
 
-`GET /api/article-summary/scheduled-handoff?limit=N`
+`GET /api/article-summary/scheduled-handoff?manifest=1&limit=N`
 
-It may expose DOI, hashes, coverage level, timestamps, algorithm metadata and ciphertext. It must never expose captured publisher text in plaintext.
+The manifest exposes only DOI, hashes, coverage, timestamps and encrypted-payload sizing metadata. It does not return ciphertext.
+
+A scheduled reviewer then retrieves one bounded ciphertext slice at a time with:
+
+`GET /api/article-summary/scheduled-handoff?doi=<DOI>&part=<N>&partSize=6000`
+
+Each slice response may expose the wrapped AES key, IV, algorithm metadata and one ciphertext fragment. Reassembling all fragments is required before decryption. No route may expose captured publisher text in plaintext.
+
+If a stored envelope was produced by an older key or transport format, the Worker must regenerate it from the private current Evidence Packet before serving it. Deployment backfill applies the same rotation rule.
 
 ## 3. Daily review task
 

@@ -46,8 +46,11 @@ jobs:
           grep -F "'/api/admin/article-summary/handoff-backfill'" cloudflare/worker/src/index.js
           grep -F "Backfill encrypted daily-summary handoff" .github/workflows/deploy-worker-frontend.yml
           grep -F "scheduled_daily_1200_asia_shanghai" cloudflare/worker/src/index.js
-          grep -F "RSA-OAEP-256+A256GCM" cloudflare/worker/src/scheduled-summary-handoff.js
+          grep -F "RSA-OAEP-256+A256GCM+GZIP" cloudflare/worker/src/scheduled-summary-handoff.js
           grep -F "SCHEDULED_SUMMARY_ASSET" cloudflare/worker/src/scheduled-summary-handoff.js
+          grep -F "getScheduledEvidenceHandoffPart" cloudflare/worker/src/index.js
+          grep -F "manifestOnly" cloudflare/worker/src/index.js
+          grep -F "9c55e2d2ed734de9" cloudflare/worker/src/scheduled-summary-handoff.js
           grep -F "'public/scheduled-article-summaries.json'" .github/workflows/deploy-worker-frontend.yml
       - name: Install Worker dependencies
         working-directory: cloudflare/worker
