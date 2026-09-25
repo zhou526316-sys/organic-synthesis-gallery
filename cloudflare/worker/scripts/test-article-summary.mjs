@@ -190,9 +190,29 @@ assert.equal(noLimitStored.sections[1].text.length, hugeText.trim().length);
 
 const abstractPending = await getArticleSummary(env, abstractDoi);
 assert.equal(abstractPending.body.available, false);
+assert.equal(abstractPending.body.fulltextAvailable, false);
 assert.equal(abstractPending.body.evidenceAvailable, true);
 assert.equal(abstractPending.body.evidenceLevel, 'abstract_only');
 assert.equal(abstractPending.body.reason, 'summary_pending');
+
+const manyRowsDoi = '10.1021/jacs.6c08639';
+const manyRows = Array.from({ length: 120 }, (_, index) => ({
+  type: index === 0 ? 'abstract' : index % 3 === 0 ? 'mechanism' : 'results',
+  heading: 'Section ' + index,
+  order: index,
+  text: ('Evidence row ' + index + ' with chemistry detail. ').repeat(4),
+}));
+const manyRowsResult = await importArticleFulltext(env, evidencePayload({
+  doi: manyRowsDoi,
+  pageDoi: manyRowsDoi,
+  articleUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08639',
+  sourceUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08639',
+  sections: manyRows,
+  captions: [],
+  tables: [],
+}));
+assert.equal(manyRowsResult.status, 200);
+assert.equal(manyRowsResult.body.sections, 120);
 
 const pending = await getArticleSummary(env, doi);
 assert.equal(pending.status, 200);
