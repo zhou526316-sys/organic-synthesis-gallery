@@ -31,7 +31,7 @@ try{
  });
  await page.goto(base+'/doi/full/'+doi+'#osg-job='+jobId);
  await page.evaluate(({doi,jobId})=>{
-  const storage={'osg-toc-v6:active-job':{doi,jobId,captureVersion:'6.2.20',publisher:'acs',mediaNeed:'toc+figures',captureToc:true,startedAt:new Date().toISOString()},'osg-toc-v6:write-token':'fixture-only-no-production-token'};
+  const storage={'osg-toc-v6:active-job':{doi,jobId,captureVersion:'6.2.20',publisher:'acs',mediaNeed:'toc+figures',captureToc:true,captureFigures:true,captureEvidence:false,startedAt:new Date().toISOString()},'osg-toc-v6:write-token':'fixture-only-no-production-token'};
   window.__gm=storage;window.GM_getValue=(k,d)=>k in storage?storage[k]:d;window.GM_setValue=(k,v)=>{storage[k]=v;};window.GM_deleteValue=k=>{delete storage[k];};
   window.GM_listValues=()=>Object.keys(storage);window.GM_registerMenuCommand=()=>{};
   window.GM_xmlhttpRequest=opts=>{
@@ -66,8 +66,8 @@ try{
   let rejectsOld=false;try{__captureTest.pairedJobs({webpageDoiCount:512,visibleGaps:[]},{items:{}});}catch(_){rejectsOld=true;}
   return {out,rejectsOld};
  },{doi,foreign});
- test('historical official-TOC DOI becomes figures-only',plan.out.find(j=>j.doi===doi).mediaNeed==='figures'&&plan.out.find(j=>j.doi===doi).captureToc===false);
- test('historical missing-TOC DOI becomes TOC-only without Figure 1 fallback',plan.out.find(j=>j.doi===foreign).mediaNeed==='toc'&&plan.out.find(j=>j.doi===foreign).captureToc===true&&plan.out.find(j=>j.doi===foreign).allowFigureOne===false);
+ test('historical official-TOC DOI schedules body figures without re-fetching TOC',plan.out.find(j=>j.doi===doi).mediaNeed==='figures'&&plan.out.find(j=>j.doi===doi).captureToc===false&&plan.out.find(j=>j.doi===doi).captureFigures===true);
+ test('historical missing-TOC DOI captures TOC and body figures in one visit without Figure 1 fallback',plan.out.find(j=>j.doi===foreign).mediaNeed==='toc'&&plan.out.find(j=>j.doi===foreign).captureToc===true&&plan.out.find(j=>j.doi===foreign).captureFigures===true&&plan.out.find(j=>j.doi===foreign).allowFigureOne===false);
  test('old incomplete queue is rejected rather than falsely called complete',plan.rejectsOld);
  // Real Chromium DOM + data-image decoding + HTTP storage receipts, with no external writes.
  const result=await page.evaluate(async()=>__captureTest.runPublisherJob(__gm['osg-toc-v6:active-job']));

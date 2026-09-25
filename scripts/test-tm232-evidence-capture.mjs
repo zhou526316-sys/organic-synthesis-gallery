@@ -13,7 +13,11 @@ const names = [
   'buildArticleEvidencePacket',
   'tryCaptureArticleEvidence',
   'evidenceBackfillJobs',
+  'pairedJobs',
   'captureQueueTier',
+  'wileyGaHeadingText',
+  'wileyGaUrlSignal',
+  'wileyGraphicalAbstractCandidates',
 ];
 const exposed = source.replace(
   '  installMenu();',
@@ -95,9 +99,11 @@ try{
       evidence:__tm232.evidenceCaptureEligible({mediaNeed:'evidence'}),
     }};
   });
-  test('TOC-only stays ineligible while figure/paired/evidence jobs can capture text',!extracted.eligible.toc&&extracted.eligible.figures&&extracted.eligible.paired&&extracted.eligible.evidence);
+  test('legacy raw TOC trigger alone does not force evidence',!extracted.eligible.toc&&extracted.eligible.figures&&extracted.eligible.paired&&extracted.eligible.evidence);
+  const explicitCombinedEligible=await page.evaluate(()=>__tm232.evidenceCaptureEligible({mediaNeed:'toc',captureEvidence:true}));
+  test('explicit missing-evidence flag makes a TOC-triggered visit capture text',explicitCombinedEligible);
   test('structured full article is classified complete',extracted.packet.fulltextStatus==='complete'&&extracted.packet.schemaVersion==='article-evidence-v2');
-  test('packet binds DOI and Bridge 2.2.32',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.32');
+  test('packet binds DOI and Bridge 2.2.33',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.33');
   const types=extracted.packet.sections.map(r=>r.type);
   test('semantic sections are retained',['abstract','results','mechanism','conclusion'].every(t=>types.includes(t)));
   const all=JSON.stringify({sections:extracted.packet.sections,captions:extracted.packet.captions,tables:extracted.packet.tables});
@@ -139,7 +145,15 @@ try{
     const result=await __tm232.tryCaptureArticleEvidence({...active,mediaNeed:'toc'},[],'fixture-write-token',0);
     return {result,before,after:window.__evidencePosts.length};
   });
-  test('historical TOC-only path performs zero evidence writes',tocOnly.result.status==='not_requested'&&tocOnly.before===tocOnly.after);
+  test('a visit with captureEvidence=false performs zero evidence writes',tocOnly.result.status==='not_requested'&&tocOnly.before===tocOnly.after);
+  const combinedTocEvidence=await page.evaluate(async()=>{
+    const before=window.__evidencePosts.length;
+    window.__evidenceTransport='success';
+    const active=window.__gm['osg-toc-v6:active-job'];
+    const result=await __tm232.tryCaptureArticleEvidence({...active,mediaNeed:'toc',captureEvidence:true},[],'fixture-write-token',0);
+    return {result,before,after:window.__evidencePosts.length};
+  });
+  test('TOC-triggered visit with missing evidence stores evidence before closing',combinedTocEvidence.result.status==='stored'&&combinedTocEvidence.after===combinedTocEvidence.before+1);
 
   const backfill=await page.evaluate(()=>{
     const q={latestAddedDate:'2026-09-25',articles:[
@@ -168,6 +182,31 @@ try{
     backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10002'&&r.state==='evidence_gap'));
   test('evidence-only backlog is lower priority than historical body figures',backfill.tier===3);
 
+  const combinedPlan=await page.evaluate(()=>{
+    const q={latestAddedDate:'2026-09-25',webpageDoiCount:2,mediaGeneration:1790082000000,articles:[
+      {doi:'10.1002/anie.5617321',journal:'Angew',addedDate:'2026-09-24'},
+      {doi:'10.1021/jacs.6c10009',journal:'JACS',addedDate:'2026-09-25'},
+    ]};
+    const media={items:{
+      '10.1002/anie.5617321':{toc:{available:false},figures:{available:false,figures:[]}},
+      '10.1021/jacs.6c10009':{toc:{available:true,imageUrl:'official.svg',reason:'official'},figures:{available:false,figures:[]}},
+    }};
+    const jobs=__tm232.pairedJobs(q,media);
+    const wiley=jobs.find(r=>r.doi==='10.1002/anie.5617321');
+    const inv={items:[]};
+    const evidence=__tm232.evidenceBackfillJobs(q,media,inv);
+    return {
+      wiley:{mediaNeed:wiley.mediaNeed,captureToc:wiley.captureToc,captureFigures:wiley.captureFigures,captureEvidence:wiley.captureEvidence},
+      evidenceDois:evidence.map(r=>r.doi)
+    };
+  });
+  test('historical missing-TOC media trigger also requests body discovery in the same visit',
+    combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===true);
+  test('missing evidence remains eligible even before an official TOC exists',
+    combinedPlan.evidenceDois.includes('10.1002/anie.5617321'));
+  test('scheduler code merges evidence need into an existing media DOI instead of opening twice',
+    source.includes('var merged=new Map();')&&source.includes('merged.get(doi).captureEvidence=true'));
+
   const isolatedFailure=await page.evaluate(async()=>{
     window.__evidenceTransport='fail';
     const active=window.__gm['osg-toc-v6:active-job'];
@@ -175,8 +214,41 @@ try{
   });
   test('evidence transport failure is contained',isolatedFailure.status==='failed'&&/fixture_network_failure/.test(isolatedFailure.reason));
 
-  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.32';"));
-  test('2.2.32 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
+  const wileySelector=await page.evaluate(()=>({
+    headingGa:__tm232.wileyGaHeadingText('Graphical Abstract'),
+    headingVisual:__tm232.wileyGaHeadingText('Visual Abstract'),
+    headingFigure:__tm232.wileyGaHeadingText('Figure 1'),
+    gaUrl:__tm232.wileyGaUrlSignal('https://onlinelibrary.wiley.com/cms/asset/a/anie202612345-gra-0001-m.jpg'),
+    schemeUrl:__tm232.wileyGaUrlSignal('https://onlinelibrary.wiley.com/cms/asset/a/anie202612345-sch-0001-m.jpg')
+  }));
+  test('Wiley GA recovery accepts explicit GA headings but not numbered figures',
+    wileySelector.headingGa&&wileySelector.headingVisual&&!wileySelector.headingFigure);
+  test('Wiley GA recovery recognizes -gra- asset URLs but not Scheme URLs',
+    wileySelector.gaUrl&&!wileySelector.schemeUrl);
 
-  console.log('TM232_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.32',totalTextBudget:null,abstractOnly:true}));
+  const wileyDom=await page.evaluate(()=>{
+    document.body.innerHTML=`
+      <main>
+        <article>
+          <section id="ga-section">
+            <h2>Graphical Abstract</h2>
+            <picture><img alt="Graphical Abstract" data-src="https://onlinelibrary.wiley.com/cms/asset/abc/anie202612345-gra-0001-m.jpg"></picture>
+          </section>
+          <section id="scheme-section">
+            <h2>Scheme 1</h2>
+            <figure><img alt="Scheme 1" data-src="https://onlinelibrary.wiley.com/cms/asset/abc/anie202612345-sch-0001-m.jpg"><figcaption>Scheme 1. Synthetic route.</figcaption></figure>
+          </section>
+        </article>
+      </main>`;
+    const job={doi:'10.1002/anie.5617321',publisher:'wiley'};
+    const rows=__tm232.wileyGraphicalAbstractCandidates(job,document,'https://onlinelibrary.wiley.com/doi/10.1002/anie.5617321');
+    return rows.map(r=>({url:r.url,source:r.source,kind:r.kind}));
+  });
+  test('Wiley DOM recovery binds only the explicit GA block and refuses adjacent Scheme 1',
+    wileyDom.length===1&&/-gra-0001-m\.jpg/i.test(wileyDom[0].url)&&!wileyDom.some(r=>/-sch-0001/i.test(r.url)));
+
+  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.33';"));
+  test('2.2.33 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
+
+  console.log('TM233_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.33',totalTextBudget:null,abstractOnly:true}));
 }finally{await browser.close();}

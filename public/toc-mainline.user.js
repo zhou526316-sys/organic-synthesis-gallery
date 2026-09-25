@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.32';
+  var CONTROLLER_REVISION = '2.2.33';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -467,7 +467,10 @@ function embeddedJobDois(value) {
     var doi = normalizeDoi(job && job.doi);
     var publisher = String(job && job.publisher || publisherForDoi(doi));
     var suffix = doi.split('/')[1] || '';
-    var figureJob = String(job && job.mediaNeed || '').indexOf('figures') >= 0 || String(job && job.mediaNeed || '') === 'evidence' || String(job && job.state || '') === 'figure_gap';
+    var figureJob = Boolean(job && (job.captureFigures === true || job.captureEvidence === true))
+      || String(job && job.mediaNeed || '').indexOf('figures') >= 0
+      || String(job && job.mediaNeed || '') === 'evidence'
+      || String(job && job.state || '') === 'figure_gap';
     if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + doi;
     if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
@@ -520,6 +523,8 @@ function embeddedJobDois(value) {
     if (String(failed.engineRevision || '') !== FAILURE_ENGINE_REVISION) return false;
     var reason = String(failed.reason || '');
     var publisher = String(job && job.publisher || publisherForDoi(doi));
+    // 2.2.33 fixes Wiley GA discovery. Do not preserve a stale pre-fix no-TOC cooldown.
+    if (publisher === 'wiley' && jobKind(job) === 'toc' && /(?:no_toc|toc.*not_found|not_found)/i.test(reason)) return false;
     var cooldown = publisher === 'nature'
       && jobKind(job) === 'toc'
       && /^no_toc_candidate_/.test(reason)
@@ -1297,6 +1302,121 @@ function embeddedJobDois(value) {
     return [];
   }
 
+  function wileyGaHeadingText(value) {
+    var text = String(value || '').replace(/\s+/g, ' ').trim();
+    return /^(?:graphical|visual)\s+abstract(?:\s*[:\-–—].*)?$/i.test(text)
+      || /^table\s+of\s+contents(?:\s+(?:graphic|image))?(?:\s*[:\-–—].*)?$/i.test(text);
+  }
+
+  function wileyGaUrlSignal(value) {
+    return /-gra-\d+(?:[-_.]|$)|graphical[-_\s]*abstract|visual[-_\s]*abstract|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(String(value || ''));
+  }
+
+  function wileyAssetHostAllowed(value) {
+    try {
+      var host = new URL(String(value || ''), location.href).hostname.toLowerCase();
+      return host === 'wiley.com' || host.endsWith('.wiley.com')
+        || host === 'wiley.com.cn' || host.endsWith('.wiley.com.cn');
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function wileyGraphicalAbstractCandidates(job, root, baseUrl) {
+    if (String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))) !== 'wiley') return [];
+    var scope = root || document;
+    var base = baseUrl || location.href;
+    var rows = [], seen = new Map();
+
+    function excluded(node) {
+      return Boolean(node && node.closest && node.closest(
+        'aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[id*="related" i],[class*="reference" i],[class*="citation" i],[class*="advert" i]'
+      ));
+    }
+
+    function add(url, node, source, score, text) {
+      url = normalizeUrl(url, base);
+      if (!url || !wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job) || reject(text, url)) return;
+      var row = {
+        url: url,
+        kind: 'official',
+        assetType: 'graphical_abstract',
+        score: score,
+        text: String(text || 'Graphical Abstract').slice(0, 1000),
+        source: source,
+        element: node && node.tagName && node.tagName.toLowerCase() === 'img' ? node : null
+      };
+      var old = seen.get(mediaUrlIdentity(url, base));
+      if (!old || row.score > old.score) seen.set(mediaUrlIdentity(url, base), row);
+    }
+
+    function urlsFor(node) {
+      return Array.from(new Set(
+        articleFigureImageUrls(node, base).concat(imageUrls(node, base))
+      )).filter(Boolean);
+    }
+
+    function scanExactContainer(container, headingText) {
+      if (!container || excluded(container) || !container.querySelectorAll) return;
+      var nodes = Array.from(container.querySelectorAll('img,source,object[type^="image"]')).filter(function(node) {
+        return !excluded(node);
+      });
+      var strong = [];
+      var all = [];
+      nodes.forEach(function(node) {
+        urlsFor(node).forEach(function(url) {
+          if (!/\.(?:svg|png|jpe?g|webp|gif)(?:[?#]|$)/i.test(url)) return;
+          if (!wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job)) return;
+          all.push({url:url,node:node});
+          if (wileyGaUrlSignal(url)) strong.push({url:url,node:node});
+        });
+      });
+      if (strong.length) {
+        strong.forEach(function(item, index) {
+          add(item.url, item.node, 'wiley_ga_labeled_section_url', 940 - index, headingText);
+        });
+        return;
+      }
+      var byIdentity = new Map();
+      all.forEach(function(item) {
+        var key = mediaUrlIdentity(item.url, base);
+        if (key && !byIdentity.has(key)) byIdentity.set(key, item);
+      });
+      if (byIdentity.size === 1) {
+        var only = Array.from(byIdentity.values())[0];
+        add(only.url, only.node, 'wiley_ga_labeled_section_single_image', 900, headingText);
+      }
+    }
+
+    if (scope.querySelectorAll) {
+      scope.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"],.article-section__title,.section__title').forEach(function(heading) {
+        var headingText = String(heading.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!wileyGaHeadingText(headingText) || excluded(heading)) return;
+        var container = heading.closest('section,[class*="article-section"],[class*="graphical"],[class*="abstract"]') || heading.parentElement;
+        scanExactContainer(container, headingText);
+        var sibling = heading.nextElementSibling;
+        for (var i = 0; sibling && i < 2; i += 1, sibling = sibling.nextElementSibling) {
+          if (/^H[1-6]$/.test(String(sibling.tagName || ''))) break;
+          scanExactContainer(sibling, headingText);
+        }
+      });
+
+      var articleScope = scope.querySelector('article,[role="main"],main') || scope;
+      if (articleScope && articleScope.querySelectorAll) {
+        articleScope.querySelectorAll('img,source,object[type^="image"]').forEach(function(node) {
+          if (excluded(node)) return;
+          urlsFor(node).forEach(function(url, index) {
+            if (!wileyGaUrlSignal(url)) return;
+            add(url, node, 'wiley_ga_strong_asset_url', 820 - index, 'Graphical Abstract');
+          });
+        });
+      }
+    }
+
+    rows = Array.from(seen.values()).sort(function(a, b) { return b.score - a.score; });
+    return rows;
+  }
+
   function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
     var scope = root || document, rows = [], seen = new Set();
     function add(row) { if (!seen.has(row.url) && candidateBelongsToJob(row.url,job) && !reject(row.text,row.url)) { seen.add(row.url); rows.push(row); } }
@@ -1313,6 +1433,9 @@ function embeddedJobDois(value) {
       var url=normalizeUrl(meta.getAttribute('content'),baseUrl||location.href);
       if (url) add({url:url,kind:'official',assetType:'graphical_abstract',score:700,text:meta.getAttribute('name'),source:'article_head_metadata',element:null});
     });
+    if (String(job && job.publisher || '') === 'wiley') {
+      wileyGraphicalAbstractCandidates(job, scope, baseUrl || location.href).forEach(add);
+    }
     // No whole-page semantic windows: adjacent Scheme images must not inherit a TOC heading.
     rows.sort(function(a,b){return b.score-a.score;});
     if (!quiet) pushTrace(trace,{stage:'candidate_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'strict_scope_candidates='+rows.length});
@@ -1529,6 +1652,7 @@ function embeddedJobDois(value) {
 
 
   function evidenceCaptureEligible(job) {
+    if (job && typeof job.captureEvidence === 'boolean') return job.captureEvidence;
     var need = String(job && job.mediaNeed || '');
     return need.indexOf('figures') >= 0 || need === 'evidence';
   }
@@ -2358,14 +2482,17 @@ function embeddedJobDois(value) {
     if(checkpoint.toc&&checkpoint.toc.status==='stored'&&Date.now()-checkpoint.updatedAt<6*60*60*1000)job.captureToc=false;
     job.publisher=job.publisher||publisherForDoi(job.doi);
     job.captureDeadline=Date.now()+6*60*1000;
-    var result={status:'failed',reason:'',toc:{status:job.captureToc===false?'already_available':'pending'},figures:{status:'pending',discovered:0,stored:0,failed:0,items:[]},fulltext:{status:evidenceCaptureEligible(job)?'pending':'not_requested'},figuresImported:0,figuresStaged:0,published:false};
+    var wantsToc=job.captureToc===true;
+    var wantsFigures=job && typeof job.captureFigures==='boolean' ? job.captureFigures : String(job.mediaNeed||'').indexOf('figures')>=0;
+    var wantsEvidence=evidenceCaptureEligible(job);
+    var result={status:'failed',reason:'',toc:{status:wantsToc?'pending':'already_available'},figures:{status:wantsFigures?'pending':'not_requested',discovered:0,stored:0,failed:0,items:[]},fulltext:{status:wantsEvidence?'pending':'not_requested'},figuresImported:0,figuresStaged:0,published:false};
     job._liveResult=result;
     autoReportJob=job;
     captureLiveUpdate(job,'discovering');
     pushTrace(trace,{stage:'job',event:'start',status:'running',url:location.href,message:'v'+VERSION+';paired_capture=1;need='+String(job.mediaNeed)});
     try {
       if (!token) throw new Error('write_token_missing');
-      if(String(job.mediaNeed||'')==='evidence'){
+      if(!wantsToc && !wantsFigures && wantsEvidence){
         result.toc={status:'not_requested'};
         result.figures.status='not_requested';
         result.fulltext=await tryCaptureArticleEvidence(job,trace,token,8000);
@@ -2379,7 +2506,7 @@ function embeddedJobDois(value) {
       job._liveDiscoveryDone=true;
       result.figures.discovered=new Set(discovered.figures.map(function(c){return c.label;})).size;
       captureLiveUpdate(job,'discovering');
-      if (job.captureToc!==false) {
+      if (wantsToc) {
         try {
           var officials=discovered.toc.filter(function(c){return c.kind==='official';});
           var candidates=officials.length?officials:discovered.toc;
@@ -2396,7 +2523,6 @@ function embeddedJobDois(value) {
           captureLiveUpdate(job,'image_failed',{label:'TOC',error:error.message});
         }
       }
-      var wantsFigures=String(job.mediaNeed||'').indexOf('figures')>=0;
       var groups=new Map();
       if(wantsFigures)discovered.figures.forEach(function(c){if(!groups.has(c.label))groups.set(c.label,[]);groups.get(c.label).push(c);});
       result.figures.discovered=groups.size;
@@ -2429,17 +2555,23 @@ function embeddedJobDois(value) {
       }
       if (result.figures.stored+result.figures.failed<labels.length) result.figures.limitReached=true;
       result.figures.status=!wantsFigures?'not_requested':!labels.length?'not_found':result.figures.failed||result.figures.limitReached?'partial':'staged';
-      var tocOk=result.toc.status==='stored'||result.toc.status==='already_available';
+      var tocOk=!wantsToc||result.toc.status==='stored'||result.toc.status==='already_available';
+      var figuresOk=!wantsFigures||result.figures.status==='staged';
       if(!wantsFigures){
         result.status=tocOk?'success':'failed';
-        result.reason='toc_capture;toc='+result.toc.status+';figures=not_requested;published=0';
       }else{
-        result.status=tocOk && result.figures.status==='staged'?'success':tocOk||result.figures.stored?'partial':'failed';
-        result.reason='paired_capture;toc='+result.toc.status+';figures='+result.figures.stored+'/'+result.figures.discovered+';published=0';
+        result.status=tocOk&&figuresOk?'success':tocOk||result.figures.stored?'partial':'failed';
       }
-      // Evidence capture is deliberately downstream of media. Its failure never
-      // changes TOC/body success, and TOC-only historical jobs never enter it.
-      result.fulltext=await tryCaptureArticleEvidence(job,trace,token,0);
+      result.reason='combined_capture;toc='+result.toc.status
+        +';figures='+(wantsFigures?(result.figures.stored+'/'+result.figures.discovered):'not_requested')
+        +';evidence='+(wantsEvidence?'pending':'not_requested')+';published=0';
+      // Evidence capture is downstream of media and opportunistic. Its failure never
+      // downgrades successful TOC/body capture, but a visit with missing evidence must
+      // attempt it before the tab closes.
+      result.fulltext=await tryCaptureArticleEvidence(job,trace,token,wantsEvidence?5000:0);
+      result.reason='combined_capture;toc='+result.toc.status
+        +';figures='+(wantsFigures?(result.figures.stored+'/'+result.figures.discovered):'not_requested')
+        +';evidence='+(wantsEvidence?String(result.fulltext.status||'failed'):'not_requested')+';published=0';
     } catch(error) {
       result.status=String(error.message)==='user_aborted'?'aborted':(result.figures.stored||result.toc.status==='stored'?'partial':'failed');
       result.reason=String(error.message);
@@ -2653,7 +2785,12 @@ function embeddedJobDois(value) {
         var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
         // A scheduler failure is not a failed publisher/article capture.
         if(prior && prior.reason==='controller_lease_lost')return true;
-        if (prior && prior.version===VERSION && prior.status==='success') return false;
+        if (prior && prior.version===VERSION && prior.status==='success') {
+          // 2.2.32 could record a TOC-only visit as media success. Reopen only those
+          // legacy successes that never requested figures; genuine paired successes stay done.
+          if (job.captureFigures===true && (!prior.figures || prior.figures.status==='not_requested')) return true;
+          return false;
+        }
         if (prior && !overnightRetryEligible(prior,Date.now())) return false;
         return true;
       }
@@ -2667,9 +2804,23 @@ function embeddedJobDois(value) {
       var latestAddedDate=String(queue.latestAddedDate||'');
       function availableJobs() {
         var mediaAvailable=mediaJobs.filter(eligibleMedia);
-        var mediaDois=new Set(mediaAvailable.filter(function(job){return String(job.mediaNeed||'').indexOf('figures')>=0;}).map(function(job){return job.doi;}));
-        var evidenceAvailable=evidenceJobs.filter(eligibleEvidence).filter(function(job){return !mediaDois.has(job.doi);});
-        return mediaAvailable.concat(evidenceAvailable);
+        var evidenceAvailable=evidenceJobs.filter(eligibleEvidence);
+        var evidenceMissing=new Set(evidenceAvailable.map(function(job){return normalizeDoi(job.doi);}));
+        var merged=new Map();
+        mediaAvailable.forEach(function(raw){
+          var job=Object.assign({},raw);
+          job.captureEvidence=evidenceMissing.has(normalizeDoi(job.doi));
+          merged.set(normalizeDoi(job.doi),job);
+        });
+        evidenceAvailable.forEach(function(raw){
+          var doi=normalizeDoi(raw.doi);
+          if(merged.has(doi)){
+            merged.get(doi).captureEvidence=true;
+            return;
+          }
+          merged.set(doi,Object.assign({},raw,{captureToc:false,captureFigures:false,captureEvidence:true}));
+        });
+        return Array.from(merged.values());
       }
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
       summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
@@ -2679,13 +2830,17 @@ function embeddedJobDois(value) {
         // Fail before opening any page, and never dispatch after loss of ownership.
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
         if(GM_getValue(ACTIVE_JOB_KEY,null)) {stopReason='another_task_still_active';break;}
-        var evidenceOnly=String(batch[i].mediaNeed||'')==='evidence';
+        var evidenceOnly=batch[i].captureToc!==true && batch[i].captureFigures!==true && batch[i].captureEvidence===true;
         var attemptGeneration=evidenceOnly?evidenceGeneration:generation;
         var attemptKind=evidenceOnly?'evidence':'figures';
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
-        badge((evidenceOnly?'文字证据':'TOC＋正文图')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
+        var taskParts=[];
+        if(job.captureToc===true)taskParts.push('TOC');
+        if(job.captureFigures===true)taskParts.push('正文图');
+        if(job.captureEvidence===true)taskParts.push('文字证据');
+        badge((taskParts.join('＋')||'媒体检查')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result=null,closed=true,skipReason='';
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
@@ -2992,7 +3147,9 @@ function embeddedJobDois(value) {
 
   function pairedDiscoveryReady(job, stable, tocCount, figureCount, elapsedMs, figureQuietMs) {
     if (stable < 2) return false;
-    var wantsFigures = String(job && job.mediaNeed || '').indexOf('figures') >= 0;
+    var wantsFigures = job && typeof job.captureFigures === 'boolean'
+      ? job.captureFigures
+      : String(job && job.mediaNeed || '').indexOf('figures') >= 0;
     if (!wantsFigures) return Boolean(tocCount || elapsedMs >= 18000);
     // A TOC can appear several seconds before ACS lazy body figures. Do not let it
     // terminate a body job before the full-page scroll has had time to settle.
@@ -3012,8 +3169,10 @@ function embeddedJobDois(value) {
         GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:state.auth?'auth_wait':'challenge_wait',at:nowIso()});
         await sleep(2000); continue;
       }
-      var wantsToc = job.captureToc !== false;
-      var wantsFigures = String(job.mediaNeed || '').indexOf('figures') >= 0;
+      var wantsToc = job.captureToc === true;
+      var wantsFigures = job && typeof job.captureFigures === 'boolean'
+        ? job.captureFigures
+        : String(job.mediaNeed || '').indexOf('figures') >= 0;
       toc=wantsToc?collectCandidates(job,trace,document,location.href,'paired_dom',true):[];
       figures=wantsFigures?collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom'):[];
       var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
@@ -3077,7 +3236,19 @@ function embeddedJobDois(value) {
       var latestAddedDate=String(queue.latestAddedDate||'');
       var isLatest=Boolean(latestAddedDate && String(raw.addedDate||'')===latestAddedDate);
       var mediaNeed=isLatest?'toc+figures':official?'figures':'toc';
-      return Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),mediaNeed:mediaNeed,state:official?'figure_gap':'no_visual',captureToc:!official,allowFigureOne:isLatest&&!official,_queueIndex:index});
+      // mediaNeed is only the scheduler trigger. Once the article is open, fill every
+      // still-relevant media layer in the same bound visit instead of reopening it.
+      return Object.assign({},raw,{
+        doi:doi,
+        publisher:publisherForDoi(doi),
+        mediaNeed:mediaNeed,
+        state:official?'figure_gap':'no_visual',
+        captureToc:!official,
+        captureFigures:true,
+        captureEvidence:false,
+        allowFigureOne:isLatest&&!official,
+        _queueIndex:index
+      });
     });
     // Scheduler tiers: latest Gallery additions first, then historical missing official TOCs,
     // then historical body-figure backlog. Journal priority applies inside every tier.
@@ -3107,7 +3278,9 @@ function embeddedJobDois(value) {
       var record=(media&&media.items||{})[doi]||{},toc=record.toc||{};
       var official=Boolean(toc.available&&toc.imageUrl&&!/fallback/i.test(toc.reason||''));
       var isLatest=Boolean(latestAddedDate&&String(raw.addedDate||'')===latestAddedDate);
-      if(!isLatest&&!official)return null;
+      // Missing evidence is a real backlog independent of TOC state. If a media visit
+      // for this DOI is already scheduled it will be merged into that visit; otherwise
+      // it remains a lower-priority evidence-only job.
       return Object.assign({},raw,{
         doi:doi,
         publisher:publisherForDoi(doi),
@@ -3115,6 +3288,8 @@ function embeddedJobDois(value) {
         state:'evidence_gap',
         existingEvidenceLevel:'missing',
         captureToc:false,
+        captureFigures:false,
+        captureEvidence:true,
         allowFigureOne:false,
         _queueIndex:index
       });
