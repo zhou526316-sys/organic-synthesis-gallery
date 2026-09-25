@@ -1,0 +1,480 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body18-backlog-20260925-1345",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-25T05:42:00Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10848701012,
+  "evidenceArchiveSha256": "bc365f23c4ae268d8a309020b4a85bd88cecdd42a27e31be866eb74f35fa617f",
+  "evidenceRunId": 36098987588,
+  "approvedCount": 75,
+  "reviewMethod": "All 81 frozen body-image candidates across 20 selected current-corpus papers were inspected from the immutable read-only evidence artifact. Exact task/page/source DOI binding, Figure/Scheme identity, caption ownership, capture/job metadata, media generation, stored SHA256/content-hash/byte metadata, source ownership and visual paper-role consistency were reviewed. Seventy-five SVG/PNG/WebP images across 18 papers were individually approved. Six Science JPEG images across two papers were visually coherent but are intentionally held because the current immutable human-review materialization pipeline accepts only SVG/PNG/WebP; they are not rejected and remain staged for a separate format-compatibility update. No publisher request, staging deletion, R2/D1 mutation, literature-data mutation, userscript change or direct promotion was performed by this review decision.",
+  "quality": "The 75 approved images are exact frozen bytes from the successful evidence run and were visually checked for matching chemistry, caption, figure number and article theme. No approved item showed TOC substitution, recommendation/related-content contamination or cross-paper identity mismatch. The two Science papers are excluded only because their six exact frozen assets are JPEG, which the current approved-body immutable asset pipeline does not yet admit; no conversion is performed. Approval does not imply complete article figure coverage and does not authorize any unreviewed staged image.",
+  "decisions": [
+    {
+      "doi": "10.1021/jacs.6c14714",
+      "images": [
+        [
+          "next-001",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1021/jacs.6c14714; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-021",
+          "figure-6",
+          "Visually reviewed frozen figure 6 for 10.1021/jacs.6c14714; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-022",
+          "figure-7",
+          "Visually reviewed frozen figure 7 for 10.1021/jacs.6c14714; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-023",
+          "figure-9",
+          "Visually reviewed frozen figure 9 for 10.1021/jacs.6c14714; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c12634",
+      "images": [
+        [
+          "next-002",
+          "figure-1",
+          "Visually reviewed frozen figure 1 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-024",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-025",
+          "figure-4",
+          "Visually reviewed frozen figure 4 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-026",
+          "figure-5",
+          "Visually reviewed frozen figure 5 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-027",
+          "scheme-1",
+          "Visually reviewed frozen scheme 1 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-028",
+          "scheme-2",
+          "Visually reviewed frozen scheme 2 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-029",
+          "scheme-3",
+          "Visually reviewed frozen scheme 3 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-030",
+          "scheme-4",
+          "Visually reviewed frozen scheme 4 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-031",
+          "scheme-5",
+          "Visually reviewed frozen scheme 5 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-032",
+          "scheme-6",
+          "Visually reviewed frozen scheme 6 for 10.1021/jacs.6c12634; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/jacs.6c11517",
+      "images": [
+        [
+          "next-003",
+          "figure-1",
+          "Visually reviewed frozen figure 1 for 10.1021/jacs.6c11517; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-033",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1021/jacs.6c11517; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-034",
+          "figure-5",
+          "Visually reviewed frozen figure 5 for 10.1021/jacs.6c11517; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-035",
+          "figure-6",
+          "Visually reviewed frozen figure 6 for 10.1021/jacs.6c11517; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02955",
+      "images": [
+        [
+          "next-004",
+          "scheme-1",
+          "Visually reviewed frozen scheme 1 for 10.1021/acs.orglett.6c02955; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-036",
+          "scheme-3",
+          "Visually reviewed frozen scheme 3 for 10.1021/acs.orglett.6c02955; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01161-x",
+      "images": [
+        [
+          "next-007",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1038/s44160-026-01161-x; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-041",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1038/s44160-026-01161-x; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-042",
+          "figure-4",
+          "Visually reviewed frozen figure 4 for 10.1038/s44160-026-01161-x; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-043",
+          "figure-5",
+          "Visually reviewed frozen figure 5 for 10.1038/s44160-026-01161-x; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-044",
+          "figure-6",
+          "Visually reviewed frozen figure 6 for 10.1038/s44160-026-01161-x; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-045",
+          "figure-7",
+          "Visually reviewed frozen figure 7 for 10.1038/s44160-026-01161-x; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01206",
+      "images": [
+        [
+          "next-008",
+          "scheme-2",
+          "Visually reviewed frozen scheme 2 for 10.1021/acs.joc.6c01206; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-046",
+          "scheme-3",
+          "Visually reviewed frozen scheme 3 for 10.1021/acs.joc.6c01206; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-047",
+          "scheme-4",
+          "Visually reviewed frozen scheme 4 for 10.1021/acs.joc.6c01206; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-048",
+          "scheme-5",
+          "Visually reviewed frozen scheme 5 for 10.1021/acs.joc.6c01206; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01739",
+      "images": [
+        [
+          "next-009",
+          "figure-1",
+          "Visually reviewed frozen figure 1 for 10.1021/acs.joc.6c01739; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-049",
+          "scheme-1",
+          "Visually reviewed frozen scheme 1 for 10.1021/acs.joc.6c01739; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-050",
+          "scheme-2",
+          "Visually reviewed frozen scheme 2 for 10.1021/acs.joc.6c01739; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-051",
+          "scheme-3",
+          "Visually reviewed frozen scheme 3 for 10.1021/acs.joc.6c01739; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03627",
+      "images": [
+        [
+          "next-010",
+          "scheme-1",
+          "Visually reviewed frozen scheme 1 for 10.1021/acs.orglett.6c03627; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-052",
+          "scheme-2",
+          "Visually reviewed frozen scheme 2 for 10.1021/acs.orglett.6c03627; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-053",
+          "scheme-4",
+          "Visually reviewed frozen scheme 4 for 10.1021/acs.orglett.6c03627; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-054",
+          "scheme-5",
+          "Visually reviewed frozen scheme 5 for 10.1021/acs.orglett.6c03627; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03678",
+      "images": [
+        [
+          "next-011",
+          "scheme-1",
+          "Visually reviewed frozen scheme 1 for 10.1021/acs.orglett.6c03678; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-055",
+          "scheme-2",
+          "Visually reviewed frozen scheme 2 for 10.1021/acs.orglett.6c03678; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-056",
+          "scheme-3",
+          "Visually reviewed frozen scheme 3 for 10.1021/acs.orglett.6c03678; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-057",
+          "scheme-4",
+          "Visually reviewed frozen scheme 4 for 10.1021/acs.orglett.6c03678; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-058",
+          "scheme-5",
+          "Visually reviewed frozen scheme 5 for 10.1021/acs.orglett.6c03678; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-059",
+          "scheme-6",
+          "Visually reviewed frozen scheme 6 for 10.1021/acs.orglett.6c03678; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01564",
+      "images": [
+        [
+          "next-012",
+          "scheme-1",
+          "Visually reviewed frozen scheme 1 for 10.1021/acs.joc.6c01564; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-060",
+          "scheme-2",
+          "Visually reviewed frozen scheme 2 for 10.1021/acs.joc.6c01564; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-061",
+          "scheme-3",
+          "Visually reviewed frozen scheme 3 for 10.1021/acs.joc.6c01564; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1038/s41557-026-02247-x",
+      "images": [
+        [
+          "next-013",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1038/s41557-026-02247-x; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-062",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1038/s41557-026-02247-x; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01600-0",
+      "images": [
+        [
+          "next-014",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1038/s41929-026-01600-0; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-063",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1038/s41929-026-01600-0; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-064",
+          "figure-4",
+          "Visually reviewed frozen figure 4 for 10.1038/s41929-026-01600-0; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01147-9",
+      "images": [
+        [
+          "next-015",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1038/s44160-026-01147-9; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-065",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1038/s44160-026-01147-9; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-066",
+          "figure-4",
+          "Visually reviewed frozen figure 4 for 10.1038/s44160-026-01147-9; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-067",
+          "figure-5",
+          "Visually reviewed frozen figure 5 for 10.1038/s44160-026-01147-9; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-068",
+          "figure-6",
+          "Visually reviewed frozen figure 6 for 10.1038/s44160-026-01147-9; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-069",
+          "figure-7",
+          "Visually reviewed frozen figure 7 for 10.1038/s44160-026-01147-9; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77437-9",
+      "images": [
+        [
+          "next-016",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1038/s41467-026-77437-9; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-070",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1038/s41467-026-77437-9; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-071",
+          "figure-4",
+          "Visually reviewed frozen figure 4 for 10.1038/s41467-026-77437-9; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1038/s41467-026-77403-5",
+      "images": [
+        [
+          "next-017",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1038/s41467-026-77403-5; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-072",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1038/s41467-026-77403-5; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-073",
+          "figure-4",
+          "Visually reviewed frozen figure 4 for 10.1038/s41467-026-77403-5; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-074",
+          "figure-5",
+          "Visually reviewed frozen figure 5 for 10.1038/s41467-026-77403-5; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-075",
+          "figure-6",
+          "Visually reviewed frozen figure 6 for 10.1038/s41467-026-77403-5; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01602-y",
+      "images": [
+        [
+          "next-018",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1038/s41929-026-01602-y; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-076",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1038/s41929-026-01602-y; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-077",
+          "figure-4",
+          "Visually reviewed frozen figure 4 for 10.1038/s41929-026-01602-y; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-078",
+          "figure-5",
+          "Visually reviewed frozen figure 5 for 10.1038/s41929-026-01602-y; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1038/s44160-026-01149-7",
+      "images": [
+        [
+          "next-019",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1038/s44160-026-01149-7; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-079",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1038/s44160-026-01149-7; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-080",
+          "figure-4",
+          "Visually reviewed frozen figure 4 for 10.1038/s44160-026-01149-7; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    },
+    {
+      "doi": "10.1038/s41557-026-02242-2",
+      "images": [
+        [
+          "next-020",
+          "figure-2",
+          "Visually reviewed frozen figure 2 for 10.1038/s41557-026-02242-2; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ],
+        [
+          "next-081",
+          "figure-3",
+          "Visually reviewed frozen figure 3 for 10.1038/s41557-026-02242-2; the rendered chemistry, owning caption and figure identity match the article context, with no TOC, related-content or cross-paper contamination observed."
+        ]
+      ]
+    }
+  ]
+}
