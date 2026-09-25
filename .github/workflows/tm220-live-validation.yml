@@ -49,7 +49,7 @@ jobs:
               assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(String(q.latestAddedDate||'')),'latestAddedDate missing');
               assert.equal(q.articles.filter(r=>r.addedDate===q.latestAddedDate).length,q.latestAddedCount);
               const caps=JSON.parse((await get(worker+'/api/media/capture-capabilities'+suffix)).toString('utf8'));
-              assert.equal(caps.captureVersion,'6.2.20');assert.equal(caps.mode,'verified-staging');assert.equal(caps.bodyFigures,true);assert.equal(caps.publishedAutomatically,false);
+              assert.equal(caps.captureVersion,'6.2.20');assert.equal(caps.evidenceSchemaVersion,'article-evidence-v2');assert.equal(caps.evidenceCaptureMinControllerRevision,'2.2.32');assert.equal(caps.mode,'verified-staging');assert.equal(caps.bodyFigures,true);assert.equal(caps.publishedAutomatically,false);
               const media=JSON.parse((await get(site+'media-index.json'+suffix)).toString('utf8'));
               const recovered=Object.values(media.items||{}).filter(r=>r.toc?.recoveryId==='toc-batch1-20260922').length;
               assert.ok(recovered>=83,'reviewed TOCs unexpectedly lost');
