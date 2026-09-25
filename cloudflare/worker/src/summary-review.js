@@ -619,9 +619,11 @@ function collectDraftEvidenceIds(draft) {
 }
 
 function auditEvidenceChunks(evidence, draft, targetChars = EVIDENCE_CHUNK_TARGET_CHARS) {
-  const map = new Map(evidenceRows(evidence).map(row => [row.id, row]));
+  const allRows = evidenceRows(evidence);
+  const map = new Map(allRows.map(row => [row.id, row]));
   const cited = collectDraftEvidenceIds(draft).map(id => map.get(id)).filter(Boolean);
-  const source = cited.length ? cited : evidenceRows(evidence);
+  const totalChars = allRows.reduce((sum, row) => sum + String(row.text || '').length + String(row.heading || '').length + 120, 0);
+  const source = totalChars <= targetChars ? allRows : (cited.length ? cited : allRows);
   const pseudoEvidence = {
     sections: source.filter(row => row.kind === 'section').map(row => ({ sectionId: row.id, type: row.type, heading: row.heading, text: row.text })),
     captions: source.filter(row => row.kind === 'caption').map(row => ({ evidenceId: row.id, type: row.type, label: row.heading, text: row.text })),
@@ -1013,76 +1015,107 @@ async function processClaimedJob(env, job, options = {}) {
   const auditChunks = auditEvidenceChunks(evidence, mergedDraft, targetChars);
   const auditChecks = [];
   const auditSnapshots = [];
-  for (let index = 0; index < auditChunks.length; index += 1) {
+  let blockingCheck = false;
+  let finalCached = null;
+
+  if (auditChunks.length === 1) {
     if (!await renewReviewLease(env, job)) {
       const error = new Error('review_lease_lost');
       error.retryable = true;
       throw error;
     }
-    const cacheKey = await reviewChunkKey(job.doi, job.evidencePacketHash, 'audit', index);
-    let cached = await readCachedChunk(env, cacheKey);
-    if (!cached) {
-      const check = await callOpenAiStructured(env, {
+    const finalCacheKey = await reviewChunkKey(job.doi, job.evidencePacketHash, 'final', 0);
+    finalCached = await readCachedChunk(env, finalCacheKey);
+    if (!finalCached) {
+      const directAudit = await callOpenAiStructured(env, {
         model: auditModel,
         reasoningEffort: String(env.SUMMARY_AUDIT_REASONING || 'high'),
-        instructions: AUDIT_CHUNK_INSTRUCTIONS,
-        input: auditChunkPrompt(evidence, auditChunks[index], mergedDraft, deterministicIssues, index + 1, auditChunks.length),
-        schema: AUDIT_CHECK_SCHEMA,
-        name: 'organic_synthesis_summary_audit_check_v2',
+        instructions: AUDIT_INSTRUCTIONS,
+        input: `ARTICLE EVIDENCE PACKET:\n${evidenceChunkPrompt(evidence, auditChunks[0], 1, 1)}\n\nDRAFT JSON:\n${JSON.stringify(mergedDraft)}\n\nDETERMINISTIC VALIDATION ISSUES:\n${JSON.stringify(deterministicIssues)}`,
+        schema: AUDIT_SCHEMA,
+        name: 'organic_synthesis_summary_audit_v2',
         timeoutMs: Number(env.SUMMARY_AUDIT_TIMEOUT_MS || 90000),
         fetchImpl: options.fetchImpl,
       });
-      cached = await storeChunk(env, cacheKey, check.parsed, check.response, {
+      finalCached = await storeChunk(env, finalCacheKey, directAudit.parsed, directAudit.response, {
         model: auditModel,
-        phase: 'audit_check',
-        chunkIndex: index + 1,
-        chunkCount: auditChunks.length,
+        phase: 'final_audit',
+        chunkIndex: 1,
+        chunkCount: 1,
       });
     }
-    auditChecks.push(cached.parsed);
-    if (cached.modelSnapshot) auditSnapshots.push(cached.modelSnapshot);
-  }
+  } else {
+    for (let index = 0; index < auditChunks.length; index += 1) {
+      if (!await renewReviewLease(env, job)) {
+        const error = new Error('review_lease_lost');
+        error.retryable = true;
+        throw error;
+      }
+      const cacheKey = await reviewChunkKey(job.doi, job.evidencePacketHash, 'audit', index);
+      let cached = await readCachedChunk(env, cacheKey);
+      if (!cached) {
+        const check = await callOpenAiStructured(env, {
+          model: auditModel,
+          reasoningEffort: String(env.SUMMARY_AUDIT_REASONING || 'high'),
+          instructions: AUDIT_CHUNK_INSTRUCTIONS,
+          input: auditChunkPrompt(evidence, auditChunks[index], mergedDraft, deterministicIssues, index + 1, auditChunks.length),
+          schema: AUDIT_CHECK_SCHEMA,
+          name: 'organic_synthesis_summary_audit_check_v2',
+          timeoutMs: Number(env.SUMMARY_AUDIT_TIMEOUT_MS || 90000),
+          fetchImpl: options.fetchImpl,
+        });
+        cached = await storeChunk(env, cacheKey, check.parsed, check.response, {
+          model: auditModel,
+          phase: 'audit_check',
+          chunkIndex: index + 1,
+          chunkCount: auditChunks.length,
+        });
+      }
+      auditChecks.push(cached.parsed);
+      if (cached.modelSnapshot) auditSnapshots.push(cached.modelSnapshot);
+    }
 
-  const blockingCheck = auditChecks.some(check =>
-    check?.outcome !== 'pass'
-    || check?.modelInferencePresent === true
-    || Number(check?.unsupportedClaimCount || 0) > 0
-    || (check?.issues || []).some(issue => issue?.severity === 'error')
-  );
+    blockingCheck = auditChecks.some(check =>
+      check?.outcome !== 'pass'
+      || check?.modelInferencePresent === true
+      || Number(check?.unsupportedClaimCount || 0) > 0
+      || (check?.issues || []).some(issue => issue?.severity === 'error')
+    );
 
-  if (!await renewReviewLease(env, job)) {
-    const error = new Error('review_lease_lost');
-    error.retryable = true;
-    throw error;
-  }
-  const finalCacheKey = await reviewChunkKey(job.doi, job.evidencePacketHash, 'final', 0);
-  let finalCached = await readCachedChunk(env, finalCacheKey);
-  if (!finalCached) {
-    const finalAudit = await callOpenAiStructured(env, {
-      model: auditModel,
-      reasoningEffort: String(env.SUMMARY_AUDIT_REASONING || 'high'),
-      instructions: FINAL_AUDIT_INSTRUCTIONS,
-      input: JSON.stringify({
-        doi: evidence.doi,
-        title: evidence.title,
-        journal: evidence.journal,
-        evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus,
-        mergedDraft,
-        deterministicIssues,
-        auditChecks,
-        evidenceIndex: evidenceIndex(evidence),
-      }),
-      schema: AUDIT_SCHEMA,
-      name: 'organic_synthesis_summary_audit_v2',
-      timeoutMs: Number(env.SUMMARY_AUDIT_TIMEOUT_MS || 90000),
-      fetchImpl: options.fetchImpl,
-    });
-    finalCached = await storeChunk(env, finalCacheKey, finalAudit.parsed, finalAudit.response, {
-      model: auditModel,
-      phase: 'final_audit',
-      chunkIndex: 1,
-      chunkCount: 1,
-    });
+    if (!await renewReviewLease(env, job)) {
+      const error = new Error('review_lease_lost');
+      error.retryable = true;
+      throw error;
+    }
+    const finalCacheKey = await reviewChunkKey(job.doi, job.evidencePacketHash, 'final', 0);
+    finalCached = await readCachedChunk(env, finalCacheKey);
+    if (!finalCached) {
+      const finalAudit = await callOpenAiStructured(env, {
+        model: auditModel,
+        reasoningEffort: String(env.SUMMARY_AUDIT_REASONING || 'high'),
+        instructions: FINAL_AUDIT_INSTRUCTIONS,
+        input: JSON.stringify({
+          doi: evidence.doi,
+          title: evidence.title,
+          journal: evidence.journal,
+          evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus,
+          mergedDraft,
+          deterministicIssues,
+          auditChecks,
+          evidenceIndex: evidenceIndex(evidence),
+        }),
+        schema: AUDIT_SCHEMA,
+        name: 'organic_synthesis_summary_audit_v2',
+        timeoutMs: Number(env.SUMMARY_AUDIT_TIMEOUT_MS || 90000),
+        fetchImpl: options.fetchImpl,
+      });
+      finalCached = await storeChunk(env, finalCacheKey, finalAudit.parsed, finalAudit.response, {
+        model: auditModel,
+        phase: 'final_audit',
+        chunkIndex: 1,
+        chunkCount: 1,
+      });
+    }
   }
 
   const auditValue = finalCached.parsed;
