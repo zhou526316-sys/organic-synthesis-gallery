@@ -8,8 +8,10 @@ const DRAFT_MODEL_DEFAULT = 'gpt-5.6-terra';
 const AUDIT_MODEL_DEFAULT = 'gpt-5.6-sol';
 const DRAFT_PROMPT_VERSION = 'gallery-summary-draft-v2';
 const AUDIT_PROMPT_VERSION = 'gallery-summary-audit-v2';
-const LEASE_MS = 4 * 60 * 1000;
+const LEASE_MS = 12 * 60 * 1000;
 const MAX_ATTEMPTS = 3;
+const EVIDENCE_CHUNK_TARGET_CHARS = 300_000;
+const REVIEW_CHUNK_PREFIX = 'private/article-summary-review-chunks/';
 
 const CLAIM_TYPES = [
   'experimental_fact',
@@ -373,6 +375,185 @@ function evidenceMap(evidence) {
   for (const row of evidence?.tables || []) if (row?.evidenceId) map.set(row.evidenceId, [row.title, row.text].filter(Boolean).join('\n'));
   return map;
 }
+function evidenceRows(evidence) {
+  const rows = [];
+  for (const row of evidence?.sections || []) {
+    if (!row?.sectionId || !row?.text) continue;
+    rows.push({ id: row.sectionId, kind: 'section', type: row.type || 'other', heading: row.heading || '', text: row.text });
+  }
+  for (const row of evidence?.captions || []) {
+    if (!row?.evidenceId || !row?.text) continue;
+    rows.push({ id: row.evidenceId, kind: 'caption', type: row.type || 'figure', heading: row.label || '', text: row.text });
+  }
+  for (const row of evidence?.tables || []) {
+    if (!row?.evidenceId || (!row?.title && !row?.text)) continue;
+    rows.push({ id: row.evidenceId, kind: 'table', type: 'table', heading: [row.label, row.title].filter(Boolean).join(' — '), text: [row.title, row.text].filter(Boolean).join('\n') });
+  }
+  return rows;
+}
+
+function splitEvidenceRow(row, targetChars) {
+  const text = String(row?.text || '');
+  const target = Math.max(20_000, Number(targetChars || EVIDENCE_CHUNK_TARGET_CHARS));
+  if (text.length <= target) return [{ ...row, part: 1, parts: 1 }];
+  const parts = Math.ceil(text.length / target);
+  return Array.from({ length: parts }, (_, index) => ({
+    ...row,
+    text: text.slice(index * target, (index + 1) * target),
+    part: index + 1,
+    parts,
+  }));
+}
+
+function chunkEvidence(evidence, targetChars = EVIDENCE_CHUNK_TARGET_CHARS) {
+  const target = Math.max(20_000, Number(targetChars || EVIDENCE_CHUNK_TARGET_CHARS));
+  const units = evidenceRows(evidence).flatMap(row => splitEvidenceRow(row, target));
+  const chunks = [];
+  let current = [];
+  let chars = 0;
+  for (const unit of units) {
+    const cost = String(unit.text || '').length + String(unit.heading || '').length + 120;
+    if (current.length && chars + cost > target) {
+      chunks.push(current);
+      current = [];
+      chars = 0;
+    }
+    current.push(unit);
+    chars += cost;
+  }
+  if (current.length) chunks.push(current);
+  return chunks;
+}
+
+function uniqueStrings(values) {
+  const out = [];
+  const seen = new Set();
+  for (const raw of values || []) {
+    const value = String(raw || '').trim();
+    if (!value) continue;
+    const key = value.toLowerCase().replace(/\s+/g, ' ');
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(value);
+  }
+  return out;
+}
+
+function mergeEvidenceIds(rows) {
+  return uniqueStrings((rows || []).flatMap(row => Array.isArray(row?.evidenceIds) ? row.evidenceIds : []));
+}
+
+function mergeDrafts(drafts, evidence) {
+  const conditions = [];
+  const conditionKeys = new Set();
+  const claims = [];
+  const claimKeys = new Set();
+  const mechanism = { experimentalEvidence: [], authorProposal: [], modelInference: [] };
+  const mechanismKeys = new Set();
+
+  for (const draft of drafts) {
+    for (const condition of draft?.conditions || []) {
+      const ids = uniqueStrings(condition?.evidenceIds || []).sort();
+      const key = [condition?.name, condition?.value, condition?.role, ids.join(',')].map(value => String(value || '').trim().toLowerCase()).join('|');
+      if (!key || conditionKeys.has(key)) continue;
+      conditionKeys.add(key);
+      conditions.push({ ...condition, evidenceIds: ids });
+    }
+    for (const claim of draft?.claims || []) {
+      const ids = uniqueStrings(claim?.evidenceIds || []).sort();
+      const key = [claim?.claim, claim?.claimType, ids.join(',')].map(value => String(value || '').trim().toLowerCase()).join('|');
+      if (!String(claim?.claim || '').trim() || claimKeys.has(key)) continue;
+      claimKeys.add(key);
+      claims.push({ ...claim, evidenceIds: ids });
+    }
+    for (const group of ['experimentalEvidence', 'authorProposal', 'modelInference']) {
+      for (const row of draft?.mechanism?.[group] || []) {
+        const ids = uniqueStrings(row?.evidenceIds || []).sort();
+        const key = group + '|' + String(row?.statement || '').trim().toLowerCase() + '|' + ids.join(',');
+        if (!String(row?.statement || '').trim() || mechanismKeys.has(key)) continue;
+        mechanismKeys.add(key);
+        mechanism[group].push({ ...row, evidenceIds: ids });
+      }
+    }
+  }
+
+  const scopeRows = drafts.map(draft => draft?.substrateScope || {});
+  return {
+    doi: evidence.doi,
+    evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus,
+    researchObjective: uniqueStrings(drafts.map(draft => draft?.researchObjective)).join('\n'),
+    keyTransformationOrStrategy: uniqueStrings(drafts.map(draft => draft?.keyTransformationOrStrategy)).join('\n'),
+    conditions,
+    substrateScope: {
+      summary: uniqueStrings(scopeRows.map(row => row?.summary)).join('\n'),
+      supportedTrends: uniqueStrings(scopeRows.flatMap(row => row?.supportedTrends || [])),
+      limitations: uniqueStrings(scopeRows.flatMap(row => row?.limitations || [])),
+      evidenceIds: mergeEvidenceIds(scopeRows),
+    },
+    mechanism,
+    noveltyAndSyntheticSignificance: uniqueStrings(drafts.map(draft => draft?.noveltyAndSyntheticSignificance)).join('\n'),
+    limitations: uniqueStrings(drafts.flatMap(draft => draft?.limitations || [])),
+    questionsForManualVerification: uniqueStrings(drafts.flatMap(draft => draft?.questionsForManualVerification || [])),
+    claims,
+    draftZh: uniqueStrings(drafts.map(draft => draft?.draftZh)).join('\n\n'),
+    draftEn: uniqueStrings(drafts.map(draft => draft?.draftEn)).join('\n\n'),
+  };
+}
+
+function evidenceChunkPrompt(evidence, units, index, total) {
+  return JSON.stringify({
+    doi: evidence.doi,
+    title: evidence.title,
+    journal: evidence.journal,
+    publisher: evidence.publisher,
+    evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus,
+    chunkIndex: index,
+    chunkCount: total,
+    evidence: units.map(unit => ({
+      evidenceId: unit.id,
+      kind: unit.kind,
+      type: unit.type,
+      heading: unit.heading,
+      part: unit.parts > 1 ? unit.part : undefined,
+      parts: unit.parts > 1 ? unit.parts : undefined,
+      text: unit.text,
+    })),
+  });
+}
+
+function collectDraftEvidenceIds(draft) {
+  const ids = [];
+  for (const row of draft?.conditions || []) ids.push(...(row?.evidenceIds || []));
+  ids.push(...(draft?.substrateScope?.evidenceIds || []));
+  for (const group of ['experimentalEvidence', 'authorProposal', 'modelInference']) {
+    for (const row of draft?.mechanism?.[group] || []) ids.push(...(row?.evidenceIds || []));
+  }
+  for (const claim of draft?.claims || []) ids.push(...(claim?.evidenceIds || []));
+  return uniqueStrings(ids);
+}
+
+function auditEvidenceChunks(evidence, draft, targetChars = EVIDENCE_CHUNK_TARGET_CHARS) {
+  const map = new Map(evidenceRows(evidence).map(row => [row.id, row]));
+  const cited = collectDraftEvidenceIds(draft).map(id => map.get(id)).filter(Boolean);
+  const source = cited.length ? cited : evidenceRows(evidence);
+  const pseudoEvidence = {
+    sections: source.filter(row => row.kind === 'section').map(row => ({ sectionId: row.id, type: row.type, heading: row.heading, text: row.text })),
+    captions: source.filter(row => row.kind === 'caption').map(row => ({ evidenceId: row.id, type: row.type, label: row.heading, text: row.text })),
+    tables: source.filter(row => row.kind === 'table').map(row => ({ evidenceId: row.id, label: row.heading, title: '', text: row.text })),
+  };
+  return chunkEvidence(pseudoEvidence, targetChars);
+}
+
+function evidenceIndex(evidence) {
+  return evidenceRows(evidence).map(row => ({
+    evidenceId: row.id,
+    kind: row.kind,
+    type: row.type,
+    heading: row.heading,
+    characters: String(row.text || '').length,
+  }));
+}
+
 
 function numberTokens(value) {
   const text = String(value || '');
