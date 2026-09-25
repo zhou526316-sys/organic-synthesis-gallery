@@ -1,29 +1,29 @@
 {
-  "generatedAt": "2026-09-25T10:08:09.460Z",
+  "generatedAt": "2026-09-25T15:19:45.159Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 343,
+  "liveLocalCaptures": 408,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
   "mediaInventoryCount": 595,
   "webpageDoiCount": 595,
   "latestAddedDate": "2026-09-25",
   "latestAddedCount": 29,
-  "mediaRecordCount": 437,
-  "visibleGapTotal": 165,
-  "demandTotal": 165,
-  "noVisual": 165,
+  "mediaRecordCount": 460,
+  "visibleGapTotal": 100,
+  "demandTotal": 100,
+  "noVisual": 100,
   "fallbackOnlyNeedsOfficialUpgrade": 85,
-  "missingOfficialTotal": 250,
+  "missingOfficialTotal": 185,
   "figureGapTotal": 595,
   "zeroFigureGapTotal": 595,
   "lowResolutionFigureGapTotal": 0,
   "unknownQualityFigureGapTotal": 0,
   "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 130,
-    "wiley": 16,
+    "acs": 67,
+    "wiley": 14,
     "nature": 16,
     "science": 2,
     "rsc": 0,
@@ -42,28 +42,17 @@
     "other": 0
   },
   "byJournal": {
-    "ACS Catalysis": 18,
-    "JACS": 5,
-    "JOC": 1,
-    "Organic Letters": 106,
+    "ACS Catalysis": 8,
+    "JACS": 4,
+    "Organic Letters": 55,
     "CCS Chemistry": 1,
     "Nature": 2,
     "Nature Chemistry": 1,
     "Nature Communications": 13,
     "Science": 2,
-    "Angew": 16
+    "Angew": 14
   },
   "sample": [
-    {
-      "doi": "10.1021/acscatal.6c06303",
-      "journal": "ACS Catalysis",
-      "title": "Intramolecular (3 + 2) Cycloaddition of Olefins to Aromatic Aldehydes Mediated by Visible Light and a Lewis Acid Catalyst",
-      "date": "2026-09-24",
-      "addedDate": "2026-09-25",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
     {
       "doi": "10.1021/acscatal.6c05293",
       "journal": "ACS Catalysis",
@@ -73,76 +62,6 @@
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/acscatal.6c04974",
-      "journal": "ACS Catalysis",
-      "title": "Photochemical Cobalt-Catalyzed Selective Olefin Hydrogenation and One-Bond Transposition",
-      "date": "2026-08-14",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c04800",
-      "journal": "ACS Catalysis",
-      "title": "Metallaphotocatalytic Assembly of Unsymmetrical 1,4-Diketones via Dual Acyl Units: Divergent Initiation of Carboxylic Acids and Aldehydes",
-      "date": "2026-08-13",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c05701",
-      "journal": "ACS Catalysis",
-      "title": "Lewis-acid-catalyzed cross-coupling of electronically different bicyclo[1.1.0]butanes",
-      "date": "2026-08-13",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c05079",
-      "journal": "ACS Catalysis",
-      "title": "Highly Enantioselective Synthesis of Boron-Stereogenic Scaffolds via Bioinspired Bisphosphonium Salt-Catalyzed SNAr Reaction",
-      "date": "2026-08-07",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c04479",
-      "journal": "ACS Catalysis",
-      "title": "Catalytic Enantioselective Allenylation of Zincke Imine",
-      "date": "2026-07-27",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c03885",
-      "journal": "ACS Catalysis",
-      "title": "Photothermal C–N cross-coupling",
-      "date": "2026-07-25",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c04193",
-      "journal": "ACS Catalysis",
-      "title": "Enantioselective C(sp3)–H Sulfilimination via Dual Photoredox/Copper Catalysis",
-      "date": "2026-07-22",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
     },
     {
       "doi": "10.1021/acscatal.6c03556",
@@ -159,26 +78,6 @@
       "journal": "ACS Catalysis",
       "title": "Cellulose-Stabilized BiOBr Enables Light-Mediated Radical-Polar Crossover of Unactivated Alkenes to Achieve Cyclopropanes",
       "date": "2026-07-20",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c03214",
-      "journal": "ACS Catalysis",
-      "title": "Chiral iron-porphyrin-catalyzed asymmetric cyclopropanation with α-methyl-α-diazoesters",
-      "date": "2026-07-16",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acscatal.6c03795",
-      "journal": "ACS Catalysis",
-      "title": "NHC-Catalyzed Desymmetrization of Bishydroxymethylphosphines to Access P-Stereogenic Compounds",
-      "date": "2026-07-15",
       "addedDate": "",
       "publisher": "acs",
       "state": "no_visual",
@@ -235,16 +134,6 @@
       "existingReason": ""
     },
     {
-      "doi": "10.1021/jacs.6c15890",
-      "journal": "JACS",
-      "title": "Multiplicative Stereocontrol in the Light-Driven Deracemization of Benzylic Nitriles",
-      "date": "2026-09-25",
-      "addedDate": "2026-09-25",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
       "doi": "10.1021/jacs.6c09678",
       "journal": "JACS",
       "title": "Spiroketal Synthesis Via Uncatalyzed Inverse Electron-Demand Hetero-Diels-Alder Reactions at Ambient Temperature",
@@ -285,21 +174,131 @@
       "existingReason": ""
     },
     {
-      "doi": "10.1021/acs.joc.6c01742",
-      "journal": "JOC",
-      "title": "Visible-Light-Induced Phosphonium Salt Catalysis for Site-Selective Aromatic C–H Halogenation and Chalcogenation",
-      "date": "2026-09-25",
-      "addedDate": "2026-09-25",
+      "doi": "10.1021/acs.orglett.6c03612",
+      "journal": "Organic Letters",
+      "title": "Development of Deuteroalkylthiolating Reagents for Synthesis of Deuterated Sulfides",
+      "date": "2026-09-20",
+      "addedDate": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": "user_observed_no_image"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03072",
+      "journal": "Organic Letters",
+      "title": "Biocatalytic Synthesis of Substituted Cinnamaldehydes",
+      "date": "2026-09-19",
+      "addedDate": "2026-09-20",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": "user_observed_no_image"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03173",
+      "journal": "Organic Letters",
+      "title": "Formal Total Synthesis of (±)-Isoalantolactone",
+      "date": "2026-08-19",
+      "addedDate": "",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
     },
     {
-      "doi": "10.1021/acs.orglett.6c03171",
+      "doi": "10.1021/acs.orglett.6c02820",
       "journal": "Organic Letters",
-      "title": "A Bench-Stable Platform [TBA][PS2Cl2] Enables Sequential Assembly of Unsymmetric Tri- and Tetrathiophosphates",
-      "date": "2026-09-25",
-      "addedDate": "2026-09-25",
+      "title": "Ring-Retentive SN2′-Type Alkylation of gem-Dichlorocyclobutenones Enabled by Alkene-to-Radical Relay",
+      "date": "2026-07-21",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02283",
+      "journal": "Organic Letters",
+      "title": "",
+      "date": "2026-07-20",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02670",
+      "journal": "Organic Letters",
+      "title": "Total Synthesis of the Proposed Structure of Threoglucin A",
+      "date": "2026-07-16",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c01984",
+      "journal": "Organic Letters",
+      "title": "NHC-Catalyzed Asymmetric Photoinduced [4 + 2] Cycloaddition: Access to Chiral Spiro[oxindole-3,4′-pyrano[2,3-c]pyrazoles]",
+      "date": "2026-07-13",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02551",
+      "journal": "Organic Letters",
+      "title": "",
+      "date": "2026-07-13",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02434",
+      "journal": "Organic Letters",
+      "title": "Stereoselective C-Aryl and C-Vinyl Glycosylation via Iron-Catalyzed Reductive Coupling",
+      "date": "2026-07-11",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02527",
+      "journal": "Organic Letters",
+      "title": "Palladium-Catalyzed Unsymmetrical bis-Allylation of Active Methylene Compounds Using Vinyl Sulfoxonium Ylides and Allyl Esters",
+      "date": "2026-07-11",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02568",
+      "journal": "Organic Letters",
+      "title": "",
+      "date": "2026-07-11",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c01982",
+      "journal": "Organic Letters",
+      "title": "Enantioselective Construction of Inherently Chiral Saddle-Shaped Azepines via Palladium-Catalyzed Intramolecular C–H Arylation",
+      "date": "2026-07-10",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02300",
+      "journal": "Organic Letters",
+      "title": "Halogen-Bonding Complexes of Iodonium Ylides for Halogen Atom Transfer: C–H Alkylation of Heterocycles",
+      "date": "2026-07-10",
+      "addedDate": "",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
