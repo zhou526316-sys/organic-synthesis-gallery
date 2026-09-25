@@ -5,10 +5,6 @@ const EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
 const REVIEWED_SUMMARY_SCHEMA_VERSION = 'reviewed-summary-v2';
 const CAPTURE_VERSION = '6.2.20';
 const MIN_CONTROLLER_REVISION = [2, 2, 32];
-const MAX_SECTIONS = 96;
-const MAX_CAPTIONS = 160;
-const MAX_TABLES = 48;
-
 const SECTION_TYPES = new Set([
   'abstract',
   'introduction',
@@ -142,7 +138,7 @@ function normalizeSectionType(value) {
 }
 
 function normalizeSections(rows) {
-  const source = Array.isArray(rows) ? rows.slice(0, MAX_SECTIONS) : [];
+  const source = Array.isArray(rows) ? rows : [];
   const normalized = [];
   for (const row of source) {
     const heading = safeSingleLine(row?.heading, 500);
@@ -167,7 +163,7 @@ function normalizeSections(rows) {
 }
 
 function normalizeCaptions(rows) {
-  const source = Array.isArray(rows) ? rows.slice(0, MAX_CAPTIONS) : [];
+  const source = Array.isArray(rows) ? rows : [];
   return source.map((row, index) => ({
     evidenceId: 'c' + String(index + 1).padStart(3, '0'),
     label: safeSingleLine(row?.label, 120),
@@ -177,7 +173,7 @@ function normalizeCaptions(rows) {
 }
 
 function normalizeTables(rows) {
-  const source = Array.isArray(rows) ? rows.slice(0, MAX_TABLES) : [];
+  const source = Array.isArray(rows) ? rows : [];
   return source.map((row, index) => ({
     evidenceId: 't' + String(index + 1).padStart(3, '0'),
     label: safeSingleLine(row?.label, 120),
@@ -400,7 +396,7 @@ export async function getArticleSummary(env, doiValue) {
       body: {
         doi,
         available: true,
-        fulltextAvailable: true,
+        fulltextAvailable: (evidence.evidenceLevel || evidence.fulltextStatus) === 'complete',
         evidenceAvailable: true,
         cached: true,
         state: 'published',
@@ -433,7 +429,7 @@ export async function getArticleSummary(env, doiValue) {
     body: {
       doi,
       available: false,
-      fulltextAvailable: true,
+      fulltextAvailable: (evidence.evidenceLevel || evidence.fulltextStatus) === 'complete',
       evidenceAvailable: true,
       state: reviewed.state === 'stale' ? 'superseded' : 'evidence_ready',
       reason,
