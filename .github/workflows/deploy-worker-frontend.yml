@@ -10,6 +10,7 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
+      - 'public/scheduled-article-summaries.json'
 
 permissions:
   contents: read
@@ -33,12 +34,6 @@ jobs:
       WECHAT_MP_APP_SECRET: ${{ secrets.WECHAT_MP_APP_SECRET }}
       WECHAT_TICKET_RELAY_URL: ${{ secrets.WECHAT_TICKET_RELAY_URL }}
       WECHAT_TICKET_RELAY_KEY: ${{ secrets.WECHAT_TICKET_RELAY_KEY }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      SUMMARY_REVIEW_ENABLED: ${{ vars.SUMMARY_REVIEW_ENABLED }}
-      SUMMARY_ALLOW_UNKNOWN_POLICY: ${{ vars.SUMMARY_ALLOW_UNKNOWN_POLICY }}
-      SUMMARY_DRAFT_MODEL: ${{ vars.SUMMARY_DRAFT_MODEL }}
-      SUMMARY_AUDIT_MODEL: ${{ vars.SUMMARY_AUDIT_MODEL }}
-      SUMMARY_REVIEW_DAILY_LIMIT: ${{ vars.SUMMARY_REVIEW_DAILY_LIMIT }}
 
     steps:
       - name: Checkout main
@@ -111,18 +106,15 @@ jobs:
           MIGRATION_STAGE = "staging"
           WECHAT_MP_APP_ID = "$WECHAT_MP_APP_ID"
           WECHAT_TICKET_RELAY_URL = "$WECHAT_TICKET_RELAY_URL"
-          SUMMARY_REVIEW_ENABLED = "${SUMMARY_REVIEW_ENABLED:-1}"
-          SUMMARY_ALLOW_UNKNOWN_POLICY = "${SUMMARY_ALLOW_UNKNOWN_POLICY:-1}"
-          SUMMARY_DRAFT_MODEL = "${SUMMARY_DRAFT_MODEL:-gpt-5.6-terra}"
-          SUMMARY_AUDIT_MODEL = "${SUMMARY_AUDIT_MODEL:-gpt-5.6-sol}"
-          SUMMARY_REVIEW_DAILY_LIMIT = "${SUMMARY_REVIEW_DAILY_LIMIT:-96}"
-          SUMMARY_REVIEW_URGENT_RESERVE = "${SUMMARY_REVIEW_URGENT_RESERVE:-48}"
+          SUMMARY_REVIEW_ENABLED = "0"
+          SUMMARY_MODE = "scheduled_chatgpt_daily_no_api"
+          SUMMARY_PUBLICATION_TIME = "12:00 Asia/Shanghai"
 
           [ai]
           binding = "AI"
 
           [triggers]
-          crons = ["* * * * *"]
+          crons = ["0 */6 * * *"]
 
           [assets]
           directory = "../../dist"
@@ -160,9 +152,7 @@ jobs:
           if (process.env.EMAIL_FROM) values.EMAIL_FROM = process.env.EMAIL_FROM;
           if (process.env.WECHAT_MP_APP_SECRET) values.WECHAT_MP_APP_SECRET = process.env.WECHAT_MP_APP_SECRET;
           if (process.env.WECHAT_TICKET_RELAY_KEY) values.WECHAT_TICKET_RELAY_KEY = process.env.WECHAT_TICKET_RELAY_KEY;
-          if (process.env.OPENAI_API_KEY) values.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
           if (!process.env.WECHAT_MP_APP_SECRET) console.warn('WECHAT_MP_APP_SECRET is not configured; WeChat JS-SDK signing will remain disabled until the repository secret is added.');
-          if (!process.env.OPENAI_API_KEY) console.warn('OPENAI_API_KEY is not configured; GPT summary review remains disabled.');
           if (!Object.keys(values).length) throw new Error('Runtime secrets are missing');
           fs.writeFileSync('/tmp/runtime-secrets.json', JSON.stringify(values));
           console.log(`Prepared ${Object.keys(values).length} runtime secrets.`);
