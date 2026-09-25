@@ -78,6 +78,7 @@ jobs:
 
       - name: Package self-updating fallback Bridge runtime
         env:
+          TARGET_API_BASE: https://organic-synthesis-gallery.zhou526316.workers.dev
           TARGET_SITE_ORIGIN: https://organic-synthesis-gallery-public.pages.dev
           BRIDGE_UPDATE_ORIGIN: https://organic-synthesis-gallery-public.pages.dev
           BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
