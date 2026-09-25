@@ -56,7 +56,7 @@ jobs:
           grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm230-acquisition.log"
           node scripts/test-tm-paired-capture.mjs
           node scripts/test-tm232-evidence-capture.mjs | tee "$RUNNER_TEMP/tm232-evidence.log"
-          grep -F 'TM233_EVIDENCE_TEST_SUMMARY ' "$RUNNER_TEMP/tm232-evidence.log"
+          grep -F 'TM234_EVIDENCE_TEST_SUMMARY ' "$RUNNER_TEMP/tm232-evidence.log"
       - name: Build exact Bridge 2.2.34 single-visit custom-domain installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
