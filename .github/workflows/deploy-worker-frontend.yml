@@ -76,13 +76,6 @@ jobs:
           npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null
           echo "d1_id=$D1_ID" >> "$GITHUB_OUTPUT"
 
-      - name: Apply reviewed-summary queue migration
-        working-directory: cloudflare/worker
-        shell: bash
-        run: |
-          set -euo pipefail
-          npx wrangler d1 execute "$D1_NAME" --remote --file ../migrations/2026-09-25-article-summary-jobs.sql
-
       - name: Generate frontend deployment configuration
         working-directory: cloudflare/worker
         shell: bash
@@ -126,6 +119,13 @@ jobs:
       - name: Dry-run frontend Worker bundle
         working-directory: cloudflare/worker
         run: npx wrangler deploy --dry-run --config wrangler.frontend.toml --outdir .wrangler-frontend-dry-run
+
+      - name: Apply reviewed-summary queue migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file ../migrations/2026-09-25-article-summary-jobs.sql
 
       - name: Deploy frontend assets
         working-directory: cloudflare/worker
