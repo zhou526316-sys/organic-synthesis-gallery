@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "publicationSlot": "2026-09-25T08:00:00+08:00",
+  "generatedAt": "2026-09-25T00:05:28.072Z",
+  "handoffGeneratedAt": "2026-09-24T23:09:56.305Z",
+  "sourceReviewFile": "audit/review-2026-09-25-0800.json",
+  "items": [
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "journal": "CCS Chemistry",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Liang-Min Xiong",
+        "Cong Ma",
+        "Jian-Feng Guo",
+        "Yi-Fan Chen",
+        "Zi-Meng Li",
+        "Hai-Qi Li",
+        "Hao Xu",
+        "Tian-Sheng Mei"
+      ],
+      "topics": [
+        "CO2 Reduction Techniques and Catalysts",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "Carbon dioxide utilization in catalysis",
+        "Ammonia Synthesis and Nitrogen Reduction"
+      ],
+      "sources": [
+        "crossref:2096-5745:online",
+        "crossref:2096-5745:published",
+        "crossref:2096-5745:created",
+        "openalex:S4210239486"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "当前只有题名和机器元数据，无法判断该配对电解是一般醇氧化/有机制备方法，还是以CO₂还原与能源性能为主的单一体系。",
+      "evidenceBasis": "fresh compact无摘要；题名仅确认CO₂电还原与醇氧化耦合，无法取得醇底物、氧化产物、范围或分离证据。",
+      "challengeReason": "不能因CO₂电催化主题直接排除，因为配对阳极醇氧化可能构成一般电有机合成；也不能在缺少产物与范围证据时纳入。两遍均仅暂缓本DOI。",
+      "evidenceNeeded": "出版社摘要或正文/SI中醇底物、氧化产物、底物范围、分离收率及主要贡献。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.ccspublishing.org.cn/article/doi/10.31635/ccschem.026.202608262"
+      ],
+      "nextAction": "通过现有Tampermonkey/VPN Bridge读取出版社摘要或反应范围；不要从题名推断一般性。",
+      "originalDate": "2026-09-22",
+      "firstRecordedAt": "2026-09-23T07:13:15+08:00",
+      "sourceReviewFile": "audit/review-2026-09-25-0800.json",
+      "nextReviewSlot": "2026-09-25T18:00:00+08:00"
+    }
+  ],
+  "note": "Per-release deferrals only. Merge with the existing durable backlog; do not replace or drop older pending records."
+}
