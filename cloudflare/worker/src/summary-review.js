@@ -177,7 +177,7 @@ const AUDIT_SCHEMA = {
     finalZh: { type: 'string' },
     finalEn: { type: 'string' },
     modelInferencePresent: { type: 'boolean' },
-    unsupportedClaimCount: { type: 'integer', minimum: 0 },
+    unsupportedClaimCount: { type: 'integer' },
     auditNotes: { type: 'string' },
   },
 };
@@ -713,14 +713,9 @@ async function handleJobFailure(env, job, error) {
 export async function runSummaryReviewCycle(env, options = {}) {
   if (!env?.MEDIA) return { status: 'disabled', reason: 'media_binding_missing' };
   if (!reviewEnabled(env)) {
-    const selection = await selectReviewCandidate(env);
     return {
       status: 'disabled',
       reason: !String(env?.OPENAI_API_KEY || '').trim() ? 'openai_api_key_missing' : 'summary_review_disabled',
-      evidenceCount: selection.evidenceCount,
-      jobCount: selection.jobCount,
-      eligibleCount: selection.eligibleCount,
-      blockedPolicies: selection.blockedPolicies,
     };
   }
 
