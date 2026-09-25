@@ -13,7 +13,8 @@
     "test:tampermonkey-reports": "node scripts/test-tampermonkey-report-history.mjs",
     "test:reader-counts": "node scripts/test-reader-counts.mjs",
     "test:article-summary": "node scripts/test-article-summary.mjs",
-    "test:summary-review": "node scripts/test-summary-review.mjs"
+    "test:summary-review": "node scripts/test-summary-review.mjs",
+    "test:scheduled-summary-handoff": "node scripts/test-scheduled-summary-handoff.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.37.1"
