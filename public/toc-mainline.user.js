@@ -3100,8 +3100,10 @@ function embeddedJobDois(value) {
       var doi=normalizeDoi(raw&&raw.doi);
       if(!doi)return null;
       var prior=existing.get(doi)||null;
-      var priorLevel=String(prior&&prior.evidenceLevel||'');
-      if(priorLevel==='complete')return null;
+      // Any valid stored evidence level is sufficient for the normal backlog.
+      // Abstract-only/partial records may be upgraded later by a separate,
+      // low-frequency upgrade policy, but must not be reopened every batch.
+      if(prior)return null;
       var record=(media&&media.items||{})[doi]||{},toc=record.toc||{};
       var official=Boolean(toc.available&&toc.imageUrl&&!/fallback/i.test(toc.reason||''));
       var isLatest=Boolean(latestAddedDate&&String(raw.addedDate||'')===latestAddedDate);
@@ -3110,8 +3112,8 @@ function embeddedJobDois(value) {
         doi:doi,
         publisher:publisherForDoi(doi),
         mediaNeed:'evidence',
-        state:prior?'evidence_upgrade':'evidence_gap',
-        existingEvidenceLevel:priorLevel||'missing',
+        state:'evidence_gap',
+        existingEvidenceLevel:'missing',
         captureToc:false,
         allowFigureOne:false,
         _queueIndex:index
