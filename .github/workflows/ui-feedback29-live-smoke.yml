@@ -16,19 +16,25 @@ jobs:
         include:
           - entry: github
             site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+            browser: chromium
+          - entry: github
+            site: https://zhou526316-sys.github.io/organic-synthesis-gallery/
+            browser: webkit
           - entry: worker
             site: https://organic-synthesis-gallery.zhou526316.workers.dev/
-          - entry: pages
-            site: https://organic-synthesis-gallery-public.pages.dev/
+            browser: chromium
+          - entry: worker
+            site: https://organic-synthesis-gallery.zhou526316.workers.dev/
+            browser: webkit
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
       LIVE_SITE_URL: ${{ matrix.site }}
-      REVIEWED_SHA: b00b03aa03d3dccb7a46ac6bd54d51392029de34
+      REVIEWED_SHA: e14f98449d5159e71c540e583ec188bdb5159998
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: b00b03aa03d3dccb7a46ac6bd54d51392029de34
+          ref: e14f98449d5159e71c540e583ec188bdb5159998
           persist-credentials: false
       - uses: actions/setup-node@v5
         with:
@@ -56,7 +62,7 @@ jobs:
         run: |
           npm install --no-audit --no-fund
           npm install --no-save --no-package-lock --no-audit --no-fund @playwright/test@1.55.0
-          npx --no-install playwright install --with-deps webkit >/tmp/live-summary-browser.log 2>&1 || { tail -80 /tmp/live-summary-browser.log; exit 1; }
+          npx --no-install playwright install --with-deps ${{ matrix.browser }} >/tmp/live-summary-browser.log 2>&1 || { tail -80 /tmp/live-summary-browser.log; exit 1; }
       - name: Adapt navigation and declared layout inputs only
         run: |
           sha256sum tests/summary-readable.spec.ts src/user-ui/summary-panel-layout.ts src/user-ui/paper-actions.ts > live-summary-results/reviewed-source-sha256.txt
@@ -123,12 +129,12 @@ jobs:
           PLAYWRIGHT_JSON_OUTPUT_FILE: live-summary-results/results.json
         run: |
           set -o pipefail
-          npx --no-install playwright test tests/summary-readable.spec.ts --browser=webkit --workers=1 --reporter=line,json --output=live-summary-results/tests 2>&1 | tee live-summary-results/tests.log
+          npx --no-install playwright test tests/summary-readable.spec.ts --browser=${{ matrix.browser }} --workers=1 --reporter=line,json --output=live-summary-results/tests 2>&1 | tee live-summary-results/tests.log
       - name: Retain evidence including unavailable entries
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: live-summary-${{ matrix.entry }}
+          name: live-summary-${{ matrix.entry }}-${{ matrix.browser }}
           path: live-summary-results/
           retention-days: 7
           if-no-files-found: error
