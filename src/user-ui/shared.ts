@@ -23,8 +23,8 @@ export interface ArticleSummaryResult {
   fulltextAvailable: boolean;
   evidenceAvailable?: boolean;
   evidenceLevel?: 'abstract_only' | 'partial' | 'complete' | 'unknown';
-  state?: 'missing' | 'legacy_fulltext' | 'evidence_ready' | 'superseded' | 'published';
-  reason?: 'fulltext_missing' | 'evidence_v2_required' | 'summary_pending' | 'summary_not_reviewed' | 'summary_stale' | 'summary_invalid';
+  state?: 'missing' | 'legacy_fulltext' | 'evidence_ready' | 'queued' | 'reviewing' | 'needs_manual_review' | 'blocked' | 'superseded' | 'published';
+  reason?: 'fulltext_missing' | 'evidence_v2_required' | 'summary_pending' | 'summary_queued' | 'summary_reviewing' | 'summary_needs_manual_review' | 'summary_blocked' | 'summary_not_reviewed' | 'summary_stale' | 'summary_invalid';
   source?: 'reviewed_evidence_v2';
   cached?: boolean;
   zh?: string;
