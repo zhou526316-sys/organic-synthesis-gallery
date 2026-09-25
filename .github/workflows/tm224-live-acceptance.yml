@@ -41,7 +41,7 @@ jobs:
                 tiff:installer.includes("return 'image/tiff'")&&mainline.includes("return 'image/tiff'"),
                 ordering:['Scheduler tiers: latest Gallery additions first','function journalPriority','function captureQueueTier','latestAddedDate'].every(x=>installer.includes(x)&&mainline.includes(x)),
                 phasedCapture:["mediaNeed=isLatest?'toc+figures':official?'figures':'toc'","allowFigureOne:isLatest&&!official","figures=not_requested","mediaNeed:String(job.mediaNeed||'')"].every(x=>installer.includes(x)&&mainline.includes(x)),
-                evidenceV2:['EVIDENCE_ENDPOINT','EVIDENCE_INVENTORY_ENDPOINT','article-evidence-v2','evidenceBackfillJobs',"fulltextStatus==='abstract_only'"].every(x=>installer.includes(x)&&mainline.includes(x)),
+                evidenceCapture:["var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';","function evidenceCaptureEligible","function buildArticleEvidencePacket","function tryCaptureArticleEvidence","result.fulltext=await tryCaptureArticleEvidence","EVIDENCE_INVENTORY_ENDPOINT","mediaNeed:'evidence'","fulltextStatus='abstract_only'"].every(x=>installer.includes(x)&&mainline.includes(x)),
                 resultPrecedence:installer.includes('completedPublisherResult')&&mainline.includes('completedPublisherResult')&&installer.includes('publisher final results over controller timeouts')&&mainline.includes('publisher final results over controller timeouts'),
                 guards:['capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch'].every(x=>installer.includes(x)&&mainline.includes(x)),
                 noEval:!(/\beval\s*\(/.test(installer))
