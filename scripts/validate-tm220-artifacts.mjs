@@ -28,3 +28,8 @@ if(mode!=='source'){
 }else console.log('TM220_SOURCE_CONTRACT_OK');
 
 assert.ok(src.includes("var CONTROLLER_REVISION = '2.2.33';")&&src.includes('previous_task_tab_not_closed')&&src.includes('requestControllerStart'),'Window guard regression');
+assert.ok(src.includes('function wileyGraphicalAbstractCandidates'),'Missing Wiley GA recovery helper');
+assert.ok(src.includes("source: 'wiley_gra_asset'")&&src.includes("source: 'wiley_ga_heading_bound'"),'Missing strong Wiley GA discovery paths');
+assert.ok(src.includes('if (context && context.label) return; // Never reinterpret a numbered Figure/Scheme as the Graphical Abstract.'),'Wiley GA must not reinterpret numbered body figures');
+assert.ok(src.includes("FAILURE_ENGINE_REVISION = VERSION + ':' + CONTROLLER_REVISION + ':20260925-wiley-ga'"),'2.2.33 must invalidate stale Wiley failure cooldowns');
+
