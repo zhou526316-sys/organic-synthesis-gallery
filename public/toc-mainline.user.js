@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.31';
+  var CONTROLLER_REVISION = '2.2.32';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -55,6 +55,9 @@
   var CAPTURE_INDEX_URL = WORKER + '/api/media/local-capture-index';
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
   var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
+  var EVIDENCE_ENDPOINT = WORKER + '/api/article-summary/fulltext/import';
+  var EVIDENCE_INVENTORY_ENDPOINT = WORKER + '/api/article-summary/evidence-inventory';
+  var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
   var P = 'osg-toc-v6:';
   var TOKEN_KEY = P + 'write-token';
   var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';
@@ -277,7 +280,7 @@
       var context={at:nowIso(),seq:0,stage:'diagnostic_context',event:final?'final_result':'failure_checkpoint',status:'info',url:page,message:JSON.stringify(metadata)};
       var finalResult=job._liveResult||{};
       var figureItems=(finalResult.figures&&Array.isArray(finalResult.figures.items)?finalResult.figures.items:[]).filter(function(item){return item&&/^(?:staged|already_staged)$/.test(String(item.status||''));});
-      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),trace:[context].concat(events)};
+      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),evidenceLevel:String(finalResult.fulltext&&finalResult.fulltext.evidenceLevel||''),trace:[context].concat(events)};
       GM_setValue(key,{revision:revision,payload:payload,createdAt:prior?prior.createdAt:Date.now(),tries:Number(prior&&prior.tries||0),nextAt:Number(prior&&prior.nextAt||0)});
       if(final)GM_deleteValue(AUTO_REPORT_PREFIX+job.jobId+':checkpoint');
       return true;
@@ -464,7 +467,7 @@ function embeddedJobDois(value) {
     var doi = normalizeDoi(job && job.doi);
     var publisher = String(job && job.publisher || publisherForDoi(doi));
     var suffix = doi.split('/')[1] || '';
-    var figureJob = String(job && job.mediaNeed || '').indexOf('figures') >= 0 || String(job && job.state || '') === 'figure_gap';
+    var figureJob = String(job && job.mediaNeed || '').indexOf('figures') >= 0 || String(job && job.mediaNeed || '') === 'evidence' || String(job && job.state || '') === 'figure_gap';
     if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + doi;
     if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
@@ -480,10 +483,13 @@ function embeddedJobDois(value) {
   function progressKey(doi) { return P + 'progress:' + normalizeDoi(doi); }
   function traceKey(doi) { return P + 'trace:' + normalizeDoi(doi); }
   function jobKind(job) {
-    return String(job && job.mediaNeed || '') === 'figures' || String(job && job.state || '') === 'figure_gap' ? 'figures' : 'toc';
+    var need=String(job && job.mediaNeed || '');
+    if(need==='evidence')return 'evidence';
+    return need === 'figures' || String(job && job.state || '') === 'figure_gap' ? 'figures' : 'toc';
   }
   function attemptKey(doi, generatedAt, kind) {
     var base = P + 'attempt:' + normalizeDoi(doi) + ':' + String(generatedAt || '');
+    if(String(kind||'toc')==='evidence')return base+':evidence';
     return String(kind || 'toc') === 'figures' ? base + ':figures' : base;
   }
   function failureKey(doi, kind) {
@@ -681,8 +687,9 @@ function embeddedJobDois(value) {
   function captureQueueTier(job, latestAddedDate) {
     if (latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate)) return 0;
     if (job && job.captureToc === true) return 1;
+    if (String(job && job.mediaNeed || '') === 'evidence') return 3;
     if (job && (job.captureToc === false || String(job.state || '') === 'figure_gap' || String(job.mediaNeed || '') === 'figures')) return 2;
-    return 1;
+    return 4;
   }
 
   function compareCaptureJobs(a, b, latestAddedDate) {
@@ -805,6 +812,19 @@ function embeddedJobDois(value) {
     }
     return JSON.parse(String(response.responseText || '{}'));
   }
+  async function getPrivateJson(url, token) {
+    var response = await gmRequest({
+      method:'GET',
+      url:url,
+      timeout:30000,
+      headers:{'cache-control':'no-cache',pragma:'no-cache',authorization:'Bearer '+String(token||'')}
+    });
+    if (Number(response.status||0)<200 || Number(response.status||0)>=300) {
+      throw new Error('private_http_'+String(response.status||0));
+    }
+    return JSON.parse(String(response.responseText||'{}'));
+  }
+
 
   async function readLiveCaptureKinds() {
     try {
@@ -1507,6 +1527,310 @@ function embeddedJobDois(value) {
     return { challenge: challenge, auth: auth, shell: shell, doiMatch: doiMatch, textLength: text.length };
   }
 
+
+  function evidenceCaptureEligible(job) {
+    var need = String(job && job.mediaNeed || '');
+    return need.indexOf('figures') >= 0 || need === 'evidence';
+  }
+
+  function evidenceNormalizeText(value) {
+    return String(value || '')
+      .replace(/\r\n?/g, '\n')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
+
+  function evidenceExcludedHeading(value) {
+    return /^(?:references?|bibliography|acknowledg(?:e)?ments?|author information|associated content|supplementary information|supporting information|funding|conflicts? of interest|data availability)\b/i.test(evidenceNormalizeText(value, 500));
+  }
+
+  function evidenceNodeExcluded(node) {
+    if (!node || node.nodeType !== 1) return false;
+    if (node.closest && node.closest('nav,aside,footer,form,[role="navigation"],[aria-hidden="true"]')) return true;
+    var signature = String((node.id || '') + ' ' + (node.className || '')).toLowerCase();
+    return /\b(?:references?|bibliography|related|recommended|author-info|author_information|metrics|citation|social|share|advert|cookie)\b/.test(signature);
+  }
+
+  function evidenceCleanContainer(container) {
+    if (!container || !container.querySelectorAll) return container;
+    container.querySelectorAll('script,style,noscript,nav,aside,footer,form,[role="navigation"],[aria-hidden="true"]').forEach(function(node){node.remove();});
+    container.querySelectorAll('[id],[class]').forEach(function(node){
+      if (evidenceNodeExcluded(node)) node.remove();
+    });
+    return container;
+  }
+
+  function evidenceNodeText(node, max) {
+    if (!node) return '';
+    var clone = node.cloneNode(true);
+    evidenceCleanContainer(clone);
+    return evidenceNormalizeText(clone.textContent || '', max || 180000);
+  }
+
+  function evidenceSectionType(heading) {
+    var text = evidenceNormalizeText(heading, 300).toLowerCase();
+    if (/\babstract\b/.test(text)) return 'abstract';
+    if (/\bintroduction\b|\bbackground\b/.test(text)) return 'introduction';
+    if (/\boptim(?:i[sz]ation|ized conditions?)\b|\bscreening\b/.test(text)) return 'optimization';
+    if (/\bsubstrate scope\b|\breaction scope\b|\bscope and limitations?\b/.test(text)) return 'scope';
+    if (/\bmechanis(?:m|tic)\b|\bcontrol experiments?\b|\bmechanistic studies\b/.test(text)) return 'mechanism';
+    if (/\bconclusions?\b|\bsummary and outlook\b/.test(text)) return 'conclusion';
+    if (/\bexperimental\b|\bmethods?\b|\bgeneral procedure\b/.test(text)) return 'experimental';
+    if (/\bresults?\b|\bdiscussion\b/.test(text)) return 'results';
+    return 'other';
+  }
+
+  function evidenceArticleRoot() {
+    var selectors = [
+      '.article__body',
+      '.article-body',
+      '.article_content',
+      '.article__content',
+      '.article-content',
+      '.bodymatter',
+      '.c-article-body',
+      '#articleBody',
+      '#pnlArticleContent',
+      '.Body',
+      '#body',
+      'article',
+      'main article',
+      '[role="main"]',
+      'main'
+    ];
+    var seen = new Set(), best = null, bestScore = 0;
+    selectors.forEach(function(selector){
+      document.querySelectorAll(selector).forEach(function(node){
+        if (seen.has(node) || evidenceNodeExcluded(node)) return;
+        seen.add(node);
+        var length = evidenceNodeText(node, 240000).length;
+        var signature = String((node.id || '') + ' ' + (node.className || '')).toLowerCase();
+        var bonus = node.tagName === 'ARTICLE' ? 50000 : /article.?body|c-article-body|pnlarticlecontent/.test(signature) ? 40000 : 0;
+        var score = length + bonus;
+        if (length >= 1000 && score > bestScore) { best = node; bestScore = score; }
+      });
+    });
+    return best;
+  }
+
+  function evidenceRangeText(root, heading, nextHeading) {
+    try {
+      var range = document.createRange();
+      range.setStartAfter(heading);
+      if (nextHeading) range.setEndBefore(nextHeading);
+      else if (root && root.lastChild) range.setEndAfter(root.lastChild);
+      else return '';
+      var holder = document.createElement('div');
+      holder.appendChild(range.cloneContents());
+      evidenceCleanContainer(holder);
+      return evidenceNormalizeText(holder.textContent || '', 180000);
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function evidenceAbstractSection(root) {
+    var scope=root&&root.querySelectorAll?root:document;
+    var nodes = Array.from(scope.querySelectorAll('#abstract,.abstract,.article__abstract,[class*="abstract"]'));
+    var best = null, bestText = '';
+    nodes.forEach(function(node){
+      if (evidenceNodeExcluded(node)) return;
+      var signature = evidenceNormalizeText((node.id || '') + ' ' + (node.className || '')).toLowerCase();
+      if (/graphical|visual/.test(signature)) return;
+      var text = evidenceNodeText(node).replace(/^abstract\s*/i, '').trim();
+      if (text.length > bestText.length) { best = node; bestText = text; }
+    });
+    if(best&&bestText.length>=40)return {type:'abstract',heading:'Abstract',text:bestText,order:0};
+    var meta=document.querySelector('meta[name="citation_abstract"],meta[name="dc.description"],meta[property="og:description"],meta[name="description"]');
+    var metaText=evidenceNormalizeText(meta&&meta.getAttribute('content')||'').replace(/^abstract\s*/i,'').trim();
+    return metaText.length>=40?{type:'abstract',heading:'Abstract',text:metaText,order:0}:null;
+  }
+
+  function evidenceFallbackBodySections(root, seenText) {
+    var paragraphs = Array.from(root.querySelectorAll('p')).filter(function(node){
+      if (evidenceNodeExcluded(node) || node.closest('figure,table')) return false;
+      var parentSection = node.closest('section');
+      var heading = parentSection && parentSection.querySelector('h2,h3,h4');
+      return !(heading && evidenceExcludedHeading(heading.textContent || ''));
+    });
+    var chunks = [], current = '';
+    paragraphs.forEach(function(node){
+      var text = evidenceNodeText(node, 12000);
+      if (text.length < 50) return;
+      if (current && current.length + text.length > 12000) { chunks.push(current); current = ''; }
+      current += (current ? '\n\n' : '') + text;
+    });
+    if (current) chunks.push(current);
+    return chunks.slice(0, 6).filter(function(text){
+      var key = text.slice(0, 500);
+      if (text.length < 300 || seenText.has(key)) return false;
+      seenText.add(key);
+      return true;
+    }).map(function(text,index){return {type:'other',heading:'Article body '+String(index+1),text:text,order:900+index};});
+  }
+
+  function collectArticleEvidenceSections(root) {
+    var sections = [], seenText = new Set();
+    var abstract = evidenceAbstractSection(root);
+    if (abstract) { sections.push(abstract); seenText.add(abstract.text.slice(0,500)); }
+
+    var headings = Array.from(root.querySelectorAll('h2,h3,h4')).filter(function(node){
+      return !evidenceNodeExcluded(node) && !node.closest('figure,table,nav,aside,footer');
+    });
+    headings.forEach(function(heading,index){
+      var title = evidenceNormalizeText(heading.textContent || '', 500);
+      if (!title || evidenceExcludedHeading(title)) return;
+      var text = evidenceRangeText(root, heading, headings[index+1] || null);
+      var key = text.slice(0, 500);
+      if (text.length < 100 || seenText.has(key)) return;
+      seenText.add(key);
+      sections.push({type:evidenceSectionType(title),heading:title,text:text,order:100+index});
+    });
+
+    if (sections.length < 2) {
+      evidenceFallbackBodySections(root, seenText).forEach(function(row){sections.push(row);});
+    }
+    sections.sort(function(a,b){return Number(a.order||0)-Number(b.order||0);});
+    return sections;
+  }
+
+  function collectArticleEvidenceCaptions(root) {
+    var nodes = Array.from(new Set(Array.from(root.querySelectorAll('figure figcaption,figure [class*="caption"],.figure [class*="caption"]'))));
+    var seen = new Set(), rows = [];
+    nodes.forEach(function(node){
+      if (evidenceNodeExcluded(node)) return;
+      var text = evidenceNodeText(node, 12000);
+      if (text.length < 20 || seen.has(text)) return;
+      seen.add(text);
+      var match = text.match(/^(Scheme|Figure|Fig\.?|Equation|Graphical Abstract|Visual Abstract)\s*[A-Za-z0-9().-]*/i);
+      var label = match ? match[0] : '';
+      var type = /^scheme/i.test(label) ? 'scheme' : /abstract/i.test(label) ? 'graphical_abstract' : /^equation/i.test(label) ? 'equation' : 'figure';
+      rows.push({label:label,type:type,text:text});
+    });
+    return rows;
+  }
+
+  function collectArticleEvidenceTables(root) {
+    var rows = [];
+    Array.from(root.querySelectorAll('table')).forEach(function(table,index){
+      if (evidenceNodeExcluded(table)) return;
+      var text = evidenceNodeText(table, 30000);
+      if (text.length < 40) return;
+      var caption = table.querySelector('caption');
+      rows.push({label:'Table '+String(index+1),title:evidenceNormalizeText(caption && caption.textContent || '',500),text:text});
+    });
+    return rows;
+  }
+
+  function evidenceArticleUrl() {
+    try {
+      var url = new URL(location.href);
+      url.hash = '';
+      return url.toString();
+    } catch (_) {
+      return String(location.href || '').split('#')[0];
+    }
+  }
+
+  function buildArticleEvidencePacket(job, trace) {
+    var pageDoi = assertBoundCaptureJob(job);
+    var state = pageState(job, trace || []);
+    if (state.challenge || state.auth || !state.doiMatch) {
+      return {fulltextStatus:'invalid',reason:state.challenge?'challenge_page':state.auth?'auth_page':'page_doi_unverified'};
+    }
+    var root = evidenceArticleRoot();
+    var sections = root ? collectArticleEvidenceSections(root) : [];
+    var globalAbstract=evidenceAbstractSection(document);
+    if(globalAbstract && !sections.some(function(row){return row.type==='abstract';}))sections.unshift(globalAbstract);
+    var captions = root ? collectArticleEvidenceCaptions(root) : [];
+    var tables = root ? collectArticleEvidenceTables(root) : [];
+    if(!sections.length && !captions.length && !tables.length) {
+      return {fulltextStatus:'empty',reason:state.shell?'publisher_shell':root?'evidence_empty':'article_root_not_found',chars:0,sections:0,captions:0,tables:0};
+    }
+    var chars = sections.reduce(function(total,row){return total+String(row.text||'').length;},0)
+      + captions.reduce(function(total,row){return total+String(row.text||'').length;},0)
+      + tables.reduce(function(total,row){return total+String(row.text||'').length;},0);
+    var nonAbstract=sections.filter(function(row){return row.type!=='abstract';});
+    var substantive=sections.filter(function(row){return ['results','scope','mechanism','conclusion','experimental','optimization'].indexOf(row.type)>=0;});
+    var fulltextStatus='partial';
+    if(sections.length===1 && sections[0].type==='abstract' && !captions.length && !tables.length)fulltextStatus='abstract_only';
+    else if(!nonAbstract.length && sections.some(function(row){return row.type==='abstract';}))fulltextStatus='abstract_only';
+    else {
+      var types=new Set(substantive.map(function(row){return row.type;}));
+      var hasCore=types.has('results')||types.has('scope')||types.has('experimental');
+      var hasClose=types.has('conclusion')||types.has('mechanism')||types.has('optimization');
+      fulltextStatus=hasCore&&hasClose?'complete':'partial';
+    }
+    var articleUrl = evidenceArticleUrl();
+    return {
+      schemaVersion:EVIDENCE_SCHEMA_VERSION,
+      doi:pageDoi,
+      pageDoi:pageDoi,
+      title:evidenceNormalizeText(job.title || (document.querySelector('h1')||{}).textContent || document.title || ''),
+      journal:evidenceNormalizeText(job.journal || ''),
+      publisher:job.publisher || publisherForDoi(pageDoi),
+      articleUrl:articleUrl,
+      sourceUrl:articleUrl,
+      captureVersion:VERSION,
+      controllerRevision:CONTROLLER_REVISION,
+      jobId:job.jobId,
+      queueGeneratedAt:job.queueGeneratedAt || '',
+      capturedAt:nowIso(),
+      fulltextStatus:fulltextStatus,
+      textProcessingPolicy:'unknown',
+      sections:sections,
+      captions:captions,
+      tables:tables,
+      _metrics:{chars:chars,sections:sections.length,captions:captions.length,tables:tables.length}
+    };
+  }
+
+  async function postArticleEvidence(payload, token, timeoutMs) {
+    var outbound = Object.assign({},payload);
+    delete outbound._metrics;
+    var response = await gmRequest({
+      method:'POST',
+      url:EVIDENCE_ENDPOINT,
+      timeout:Math.max(1000,Math.min(15000,Number(timeoutMs||4000))),
+      headers:{'content-type':'application/json',authorization:'Bearer '+token},
+      data:JSON.stringify(outbound)
+    });
+    var raw = String(response.responseText || ''), body = {};
+    try { body = JSON.parse(raw || '{}'); } catch (_) {}
+    var status = Number(response.status || 0);
+    if (status < 200 || status >= 300) throw uploadResponseError(status,body,raw,function(h){return headerValue(response.responseHeaders,h);},'gm_evidence');
+    return body;
+  }
+
+  async function tryCaptureArticleEvidence(job, trace, token, waitMs) {
+    if (!evidenceCaptureEligible(job)) return {status:'not_requested'};
+    try {
+      var deadline=Date.now()+Math.max(0,Math.min(10000,Number(waitMs||0)));
+      var packet=buildArticleEvidencePacket(job,trace);
+      while((packet.fulltextStatus==='empty') && Date.now()<deadline) {
+        await sleep(800);
+        packet=buildArticleEvidencePacket(job,trace);
+      }
+      if (packet.fulltextStatus === 'invalid' || packet.fulltextStatus === 'empty') {
+        pushTrace(trace,{stage:'evidence_capture',event:'skip',status:packet.fulltextStatus,url:location.href,message:String(packet.reason||'evidence_unavailable')});
+        return {status:packet.fulltextStatus==='invalid'?'invalid':'empty',reason:String(packet.reason||'evidence_unavailable'),chars:Number(packet.chars||0),sections:Number(packet.sections||0)};
+      }
+      captureLiveUpdate(job,'uploading',{label:packet.fulltextStatus==='abstract_only'?'Abstract':'全文证据'});
+      var uploadTimeout=String(job.mediaNeed||'')==='evidence'?10000:4000;
+      var receipt = await postArticleEvidence(packet,token,uploadTimeout);
+      if (!receipt || receipt.stored !== true || receipt.doi !== normalizeDoi(job.doi) || receipt.schemaVersion !== EVIDENCE_SCHEMA_VERSION) {
+        throw new Error('evidence_receipt_invalid');
+      }
+      var level=String(receipt.evidenceLevel||packet.fulltextStatus||'partial');
+      pushTrace(trace,{stage:'evidence_capture',event:'stored',status:'success',url:location.href,message:'level='+level+';chars='+String(receipt.chars||packet._metrics.chars)+';sections='+String(receipt.sections||packet._metrics.sections)});
+      return {status:'stored',evidenceLevel:level,chars:Number(receipt.chars||packet._metrics.chars),sections:Number(receipt.sections||packet._metrics.sections),sourceHash:String(receipt.sourceHash||''),evidencePacketHash:String(receipt.evidencePacketHash||'')};
+    } catch (error) {
+      pushTrace(trace,{stage:'evidence_capture',event:'failed',status:'failed',url:location.href,httpStatus:Number(error&&error.httpStatus||0),message:String(error&&error.message||error).slice(0,240)});
+      return {status:'failed',reason:String(error&&error.message||error).slice(0,240)};
+    }
+  }
+
   function mergeFallbackCandidates(existing, rows) {
     var map = new Map();
     (existing || []).concat(rows || []).forEach(function (row) {
@@ -2034,13 +2358,23 @@ function embeddedJobDois(value) {
     if(checkpoint.toc&&checkpoint.toc.status==='stored'&&Date.now()-checkpoint.updatedAt<6*60*60*1000)job.captureToc=false;
     job.publisher=job.publisher||publisherForDoi(job.doi);
     job.captureDeadline=Date.now()+6*60*1000;
-    var result={status:'failed',reason:'',toc:{status:job.captureToc===false?'already_available':'pending'},figures:{status:'pending',discovered:0,stored:0,failed:0,items:[]},figuresImported:0,figuresStaged:0,published:false};
+    var result={status:'failed',reason:'',toc:{status:job.captureToc===false?'already_available':'pending'},figures:{status:'pending',discovered:0,stored:0,failed:0,items:[]},fulltext:{status:evidenceCaptureEligible(job)?'pending':'not_requested'},figuresImported:0,figuresStaged:0,published:false};
     job._liveResult=result;
     autoReportJob=job;
     captureLiveUpdate(job,'discovering');
     pushTrace(trace,{stage:'job',event:'start',status:'running',url:location.href,message:'v'+VERSION+';paired_capture=1;need='+String(job.mediaNeed)});
     try {
       if (!token) throw new Error('write_token_missing');
+      if(String(job.mediaNeed||'')==='evidence'){
+        result.toc={status:'not_requested'};
+        result.figures.status='not_requested';
+        result.fulltext=await tryCaptureArticleEvidence(job,trace,token,8000);
+        result.status=result.fulltext.status==='stored'?'success':/^(?:empty|invalid)$/.test(String(result.fulltext.status||''))?'partial':'failed';
+        result.reason='evidence_capture;fulltext='+String(result.fulltext.status||'failed')+';published=0';
+        pushTrace(trace,{stage:'evidence_result',event:'complete',status:result.status,message:result.reason});
+        captureLiveUpdate(job,'finished',{error:result.status==='failed'?result.reason:''});
+        return finishPairedJob(job,result,trace,token);
+      }
       var discovered=await waitForPairedVisuals(job,trace);
       job._liveDiscoveryDone=true;
       result.figures.discovered=new Set(discovered.figures.map(function(c){return c.label;})).size;
@@ -2103,6 +2437,9 @@ function embeddedJobDois(value) {
         result.status=tocOk && result.figures.status==='staged'?'success':tocOk||result.figures.stored?'partial':'failed';
         result.reason='paired_capture;toc='+result.toc.status+';figures='+result.figures.stored+'/'+result.figures.discovered+';published=0';
       }
+      // Evidence capture is deliberately downstream of media. Its failure never
+      // changes TOC/body success, and TOC-only historical jobs never enter it.
+      result.fulltext=await tryCaptureArticleEvidence(job,trace,token,0);
     } catch(error) {
       result.status=String(error.message)==='user_aborted'?'aborted':(result.figures.stored||result.toc.status==='stored'?'partial':'failed');
       result.reason=String(error.message);
@@ -2302,12 +2639,17 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.32')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var media=await getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json?ts='+Date.now());
-      var jobs=pairedJobs(queue,media);
+      var evidenceInventory=null;
+      try { evidenceInventory=await getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken()); }
+      catch(error){ try{console.warn('[OSG TOC] evidence inventory unavailable; evidence-only backlog paused',String(error&&error.message||error));}catch(_){} }
+      var mediaJobs=pairedJobs(queue,media);
+      var evidenceJobs=evidenceInventory?evidenceBackfillJobs(queue,media,evidenceInventory):[];
       var generation=VERSION+':paired:'+String(queue.mediaGeneration);
-      function eligible(job) {
+      var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION+':'+String(queue.latestAddedDate||queue.generatedAt||'');
+      function eligibleMedia(job) {
         var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
         // A scheduler failure is not a failed publisher/article capture.
         if(prior && prior.reason==='controller_lease_lost')return true;
@@ -2315,19 +2657,35 @@ function embeddedJobDois(value) {
         if (prior && !overnightRetryEligible(prior,Date.now())) return false;
         return true;
       }
+      function eligibleEvidence(job) {
+        var prior=GM_getValue(attemptKey(job.doi,evidenceGeneration,'evidence'),null);
+        if(prior && prior.reason==='controller_lease_lost')return true;
+        if(prior && prior.status==='success')return false;
+        if(prior && !overnightRetryEligible(prior,Date.now()))return false;
+        return true;
+      }
       var latestAddedDate=String(queue.latestAddedDate||'');
-      var available=jobs.filter(eligible),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
-      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:jobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,published:0,results:[]};
+      function availableJobs() {
+        var mediaAvailable=mediaJobs.filter(eligibleMedia);
+        var mediaDois=new Set(mediaAvailable.filter(function(job){return String(job.mediaNeed||'').indexOf('figures')>=0;}).map(function(job){return job.doi;}));
+        var evidenceAvailable=evidenceJobs.filter(eligibleEvidence).filter(function(job){return !mediaDois.has(job.doi);});
+        return mediaAvailable.concat(evidenceAvailable);
+      }
+      var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
+      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
       GM_setValue(SUMMARY_KEY,summary);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
         // Fail before opening any page, and never dispatch after loss of ownership.
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
         if(GM_getValue(ACTIVE_JOB_KEY,null)) {stopReason='another_task_still_active';break;}
-        var priorAttempt=GM_getValue(attemptKey(batch[i].doi,generation,'figures'),null);
+        var evidenceOnly=String(batch[i].mediaNeed||'')==='evidence';
+        var attemptGeneration=evidenceOnly?evidenceGeneration:generation;
+        var attemptKind=evidenceOnly?'evidence':'figures';
+        var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
-        badge('TOC＋正文图 '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
+        badge((evidenceOnly?'文字证据':'TOC＋正文图')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result=null,closed=true,skipReason='';
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
@@ -2361,7 +2719,11 @@ function embeddedJobDois(value) {
           summary.results.push(result);summary[result.status]=(summary[result.status]||0)+1;
           summary.tocStored+=result.toc&&result.toc.status==='stored'?1:0;
           summary.figuresStaged+=Number(result.figuresStaged||0);
-          GM_setValue(attemptKey(job.doi,generation,'figures'),result);
+          summary.evidenceStored+=result.fulltext&&result.fulltext.status==='stored'?1:0;
+          GM_setValue(attemptKey(job.doi,attemptGeneration,attemptKind),result);
+          if(!evidenceOnly&&result.fulltext&&result.fulltext.status==='stored'){
+            GM_setValue(attemptKey(job.doi,evidenceGeneration,'evidence'),{doi:job.doi,status:'success',version:VERSION,controllerRevision:CONTROLLER_REVISION,finishedAt:result.finishedAt||nowIso(),reason:'opportunistic_evidence_stored',retryCount:1});
+          }
         }
         if(skipReason) {
           if(result && result.status!=='failed' && skipReason==='previous_task_tab_not_closed')summary.lifecycleWarnings+=1;
@@ -2375,8 +2737,8 @@ function embeddedJobDois(value) {
       }
       summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
       if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
-      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；完整抓取 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（暂存不等于发布）','#374151');
-      if(!stopReason&&jobs.some(eligible)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；文字证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
+      if(!stopReason&&availableJobs().length>0&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
       }
@@ -2725,6 +3087,38 @@ function embeddedJobDois(value) {
       return delta || a._queueIndex-b._queueIndex;
     });
     return jobs.map(function(job){delete job._queueIndex;return job;});
+  }
+
+  function evidenceBackfillJobs(queue,media,evidenceInventory) {
+    var existing=new Map();
+    (evidenceInventory&&Array.isArray(evidenceInventory.items)?evidenceInventory.items:[]).forEach(function(row){
+      var doi=normalizeDoi(row&&row.doi);
+      if(doi&&row&&row.available!==false)existing.set(doi,row);
+    });
+    var latestAddedDate=String(queue&&queue.latestAddedDate||'');
+    return (queue&&Array.isArray(queue.articles)?queue.articles:[]).map(function(raw,index){
+      var doi=normalizeDoi(raw&&raw.doi);
+      if(!doi)return null;
+      var prior=existing.get(doi)||null;
+      // Any valid stored evidence level is sufficient for the normal backlog.
+      // Abstract-only/partial records may be upgraded later by a separate,
+      // low-frequency upgrade policy, but must not be reopened every batch.
+      if(prior)return null;
+      var record=(media&&media.items||{})[doi]||{},toc=record.toc||{};
+      var official=Boolean(toc.available&&toc.imageUrl&&!/fallback/i.test(toc.reason||''));
+      var isLatest=Boolean(latestAddedDate&&String(raw.addedDate||'')===latestAddedDate);
+      if(!isLatest&&!official)return null;
+      return Object.assign({},raw,{
+        doi:doi,
+        publisher:publisherForDoi(doi),
+        mediaNeed:'evidence',
+        state:'evidence_gap',
+        existingEvidenceLevel:'missing',
+        captureToc:false,
+        allowFigureOne:false,
+        _queueIndex:index
+      });
+    }).filter(Boolean);
   }
 
   installMenu();

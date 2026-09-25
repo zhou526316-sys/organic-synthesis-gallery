@@ -5,13 +5,6 @@ const EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
 const REVIEWED_SUMMARY_SCHEMA_VERSION = 'reviewed-summary-v2';
 const CAPTURE_VERSION = '6.2.20';
 const MIN_CONTROLLER_REVISION = [2, 2, 32];
-const MAX_EVIDENCE_CHARS = 750_000;
-const MAX_SECTION_CHARS = 180_000;
-const MAX_SECTIONS = 96;
-const MAX_CAPTIONS = 160;
-const MAX_TABLES = 48;
-const MIN_COMPLETE_TEXT_CHARS = 2_000;
-
 const SECTION_TYPES = new Set([
   'abstract',
   'introduction',
@@ -48,13 +41,12 @@ async function sha256Hex(value) {
   return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
-function normalizeText(value, max = MAX_SECTION_CHARS) {
+function normalizeText(value) {
   return String(value || '')
     .replace(/\r\n?/g, '\n')
     .replace(/[ \t]+/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
-    .trim()
-    .slice(0, max);
+    .trim();
 }
 
 function safeSingleLine(value, max = 400) {
@@ -146,13 +138,13 @@ function normalizeSectionType(value) {
 }
 
 function normalizeSections(rows) {
-  const source = Array.isArray(rows) ? rows.slice(0, MAX_SECTIONS) : [];
+  const source = Array.isArray(rows) ? rows : [];
   const normalized = [];
   for (const row of source) {
     const heading = safeSingleLine(row?.heading, 500);
     if (heading && EXCLUDED_HEADING.test(heading)) continue;
     const text = normalizeText(row?.text);
-    if (text.length < 80) continue;
+    if (text.length < 20) continue;
     normalized.push({
       type: normalizeSectionType(row?.type),
       heading,
@@ -171,23 +163,27 @@ function normalizeSections(rows) {
 }
 
 function normalizeCaptions(rows) {
-  const source = Array.isArray(rows) ? rows.slice(0, MAX_CAPTIONS) : [];
+  const source = Array.isArray(rows) ? rows : [];
   return source.map((row, index) => ({
     evidenceId: 'c' + String(index + 1).padStart(3, '0'),
     label: safeSingleLine(row?.label, 120),
     type: safeSingleLine(row?.type, 80).toLowerCase() || 'figure',
-    text: normalizeText(row?.text, 12_000),
-  })).filter(row => row.text.length >= 20);
+    text: normalizeText(row?.text),
+  })).filter(row => row.text.length >= 10);
 }
 
 function normalizeTables(rows) {
-  const source = Array.isArray(rows) ? rows.slice(0, MAX_TABLES) : [];
+  const source = Array.isArray(rows) ? rows : [];
   return source.map((row, index) => ({
     evidenceId: 't' + String(index + 1).padStart(3, '0'),
     label: safeSingleLine(row?.label, 120),
     title: safeSingleLine(row?.title, 500),
-    text: normalizeText(row?.text, 30_000),
-  })).filter(row => row.text.length >= 40);
+    text: normalizeText(row?.text),
+  })).filter(row => row.text.length >= 10);
+}
+
+async function hashEvidenceRows(rows) {
+  return Promise.all(rows.map(async row => ({ ...row, hash: await sha256Hex(row.text) })));
 }
 
 function canonicalSourceText(sections, captions, tables) {
@@ -195,7 +191,7 @@ function canonicalSourceText(sections, captions, tables) {
     ...sections.map(row => [row.type, row.heading, row.text].filter(Boolean).join('\n')),
     ...captions.map(row => [row.label, row.text].filter(Boolean).join('\n')),
     ...tables.map(row => [row.label, row.title, row.text].filter(Boolean).join('\n')),
-  ].join('\n\n').slice(0, MAX_EVIDENCE_CHARS);
+  ].join('\n\n');
 }
 
 function validateProvenance(payload, doi) {
@@ -218,8 +214,9 @@ function validateProvenance(payload, doi) {
   if (!revisionAtLeast(payload?.controllerRevision)) return { error: 'controller_revision_too_old' };
   const jobId = safeSingleLine(payload?.jobId, 120);
   if (!/^[a-z0-9-]{16,120}$/i.test(jobId)) return { error: 'invalid_job_id' };
-  if (String(payload?.fulltextStatus || '') !== 'complete') return { error: 'fulltext_not_complete' };
-  return { publisher, pageDoi, articleUrl, sourceUrl, jobId };
+  const fulltextStatus = String(payload?.fulltextStatus || '');
+  if (!['complete','partial','abstract_only'].includes(fulltextStatus)) return { error: 'invalid_evidence_status' };
+  return { publisher, pageDoi, articleUrl, sourceUrl, jobId, fulltextStatus };
 }
 
 async function keysForDoi(doi) {
@@ -286,16 +283,12 @@ export async function importArticleFulltext(env, payload) {
   const provenance = validateProvenance(payload, doi);
   if (provenance.error) return { status: 400, body: { error: provenance.error } };
 
-  const sections = normalizeSections(payload?.sections);
-  const captions = normalizeCaptions(payload?.captions);
-  const tables = normalizeTables(payload?.tables);
+  const sections = await hashEvidenceRows(normalizeSections(payload?.sections));
+  const captions = await hashEvidenceRows(normalizeCaptions(payload?.captions));
+  const tables = await hashEvidenceRows(normalizeTables(payload?.tables));
   const sourceText = canonicalSourceText(sections, captions, tables);
-  if (sourceText.length < MIN_COMPLETE_TEXT_CHARS) {
-    return { status: 400, body: { error: 'fulltext_too_short', chars: sourceText.length } };
-  }
-  if (sections.length < 2) return { status: 400, body: { error: 'insufficient_sections' } };
-  if (!sections.some(row => ['abstract', 'results', 'scope', 'mechanism', 'conclusion', 'experimental', 'optimization'].includes(row.type))) {
-    return { status: 400, body: { error: 'evidence_sections_missing' } };
+  if (!sections.length && !captions.length && !tables.length) {
+    return { status: 400, body: { error: 'evidence_empty' } };
   }
   if (CHALLENGE_TEXT.test(sourceText.slice(0, 12_000))) {
     return { status: 400, body: { error: 'challenge_or_auth_page_detected' } };
@@ -320,7 +313,8 @@ export async function importArticleFulltext(env, payload) {
     jobId: provenance.jobId,
     queueGeneratedAt: safeSingleLine(payload?.queueGeneratedAt, 80),
     capturedAt,
-    fulltextStatus: 'complete',
+    fulltextStatus: provenance.fulltextStatus,
+    evidenceLevel: provenance.fulltextStatus,
     textProcessingPolicy,
     sourceHash,
     sections,
@@ -349,6 +343,7 @@ export async function importArticleFulltext(env, payload) {
       publisher: provenance.publisher,
       capturedAt,
       textProcessingPolicy,
+      evidenceLevel: provenance.fulltextStatus,
     },
   });
 
@@ -367,6 +362,7 @@ export async function importArticleFulltext(env, payload) {
       evidencePacketHash,
       capturedAt,
       textProcessingPolicy,
+      evidenceLevel: provenance.fulltextStatus,
     },
   };
 }
@@ -400,7 +396,7 @@ export async function getArticleSummary(env, doiValue) {
       body: {
         doi,
         available: true,
-        fulltextAvailable: true,
+        fulltextAvailable: (evidence.evidenceLevel || evidence.fulltextStatus) === 'complete',
         evidenceAvailable: true,
         cached: true,
         state: 'published',
@@ -411,6 +407,7 @@ export async function getArticleSummary(env, doiValue) {
         reviewedAt: summary.reviewedAt || summary.generatedAt,
         sourceHash: evidence.sourceHash,
         evidencePacketHash: evidence.evidencePacketHash,
+        evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus || 'unknown',
         model: summary.model || '',
         modelSnapshot: summary.modelSnapshot || '',
         promptVersion: summary.promptVersion || '',
@@ -432,13 +429,56 @@ export async function getArticleSummary(env, doiValue) {
     body: {
       doi,
       available: false,
-      fulltextAvailable: true,
+      fulltextAvailable: (evidence.evidenceLevel || evidence.fulltextStatus) === 'complete',
       evidenceAvailable: true,
       state: reviewed.state === 'stale' ? 'superseded' : 'evidence_ready',
       reason,
       sourceHash: evidence.sourceHash,
       evidencePacketHash: evidence.evidencePacketHash,
       capturedAt: evidence.capturedAt,
+      evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus || 'unknown',
+    },
+  };
+}
+
+export async function getArticleEvidenceInventory(env) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'summary_storage_unavailable' } };
+  const items = [];
+  let cursor;
+  for (let pageNo = 0; pageNo < 10; pageNo += 1) {
+    const page = await env.MEDIA.list({
+      prefix: EVIDENCE_PREFIX,
+      limit: 1000,
+      ...(cursor ? { cursor } : {}),
+      include: ['customMetadata'],
+    });
+    for (const object of page?.objects || []) {
+      const meta = object?.customMetadata || {};
+      const doi = normalizeDoi(meta.doi);
+      if (!doi) continue;
+      items.push({
+        doi,
+        available: true,
+        schemaVersion: safeSingleLine(meta.schemaVersion || '', 80),
+        sourceHash: safeSingleLine(meta.sourceHash || '', 80),
+        evidencePacketHash: safeSingleLine(meta.evidencePacketHash || '', 80),
+        publisher: safeSingleLine(meta.publisher || '', 40),
+        capturedAt: safeSingleLine(meta.capturedAt || '', 80),
+        textProcessingPolicy: safeSingleLine(meta.textProcessingPolicy || 'unknown', 80),
+        evidenceLevel: safeSingleLine(meta.evidenceLevel || 'unknown', 40),
+      });
+    }
+    if (!page?.truncated || !page?.cursor) break;
+    cursor = page.cursor;
+  }
+  items.sort((a, b) => a.doi.localeCompare(b.doi));
+  return {
+    status: 200,
+    body: {
+      version: 1,
+      schemaVersion: EVIDENCE_SCHEMA_VERSION,
+      count: items.length,
+      items,
     },
   };
 }

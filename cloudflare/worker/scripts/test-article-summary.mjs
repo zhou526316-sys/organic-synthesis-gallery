@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {
   ARTICLE_EVIDENCE_SCHEMA_VERSION,
   ARTICLE_REVIEWED_SUMMARY_SCHEMA_VERSION,
+  getArticleEvidenceInventory,
   getArticleSummary,
   importArticleFulltext,
 } from '../src/article-summary.js';
@@ -11,6 +12,7 @@ class MemoryObject {
     this.value = typeof value === 'string' ? value : new TextDecoder().decode(value);
     this.customMetadata = options.customMetadata || {};
     this.httpMetadata = options.httpMetadata || {};
+    this.size = new TextEncoder().encode(this.value).length;
   }
   async text() { return this.value; }
 }
@@ -20,6 +22,13 @@ class MemoryR2 {
   async put(key, value, options = {}) { this.map.set(key, new MemoryObject(value, options)); }
   async get(key) { return this.map.get(key) || null; }
   async delete(key) { this.map.delete(key); }
+  async list({ prefix = '', limit = 1000 } = {}) {
+    const objects = [...this.map.entries()]
+      .filter(([key]) => key.startsWith(prefix))
+      .slice(0, limit)
+      .map(([key, object]) => ({ key, size: object.size, customMetadata: object.customMetadata }));
+    return { objects, truncated: false };
+  }
 }
 
 async function sha256Hex(value) {
@@ -114,8 +123,12 @@ assert.equal(oldController.status, 400);
 assert.equal(oldController.body.error, 'controller_revision_too_old');
 
 const partial = await importArticleFulltext(env, evidencePayload({ fulltextStatus: 'partial' }));
-assert.equal(partial.status, 400);
-assert.equal(partial.body.error, 'fulltext_not_complete');
+assert.equal(partial.status, 200);
+assert.equal(partial.body.evidenceLevel, 'partial');
+
+const invalidLevel = await importArticleFulltext(env, evidencePayload({ fulltextStatus: 'invalid' }));
+assert.equal(invalidLevel.status, 400);
+assert.equal(invalidLevel.body.error, 'invalid_evidence_status');
 
 const challenge = await importArticleFulltext(env, evidencePayload({
   sections: [
@@ -131,10 +144,75 @@ assert.equal(imported.status, 200);
 assert.equal(imported.body.stored, true);
 assert.equal(imported.body.state, 'evidence_ready');
 assert.equal(imported.body.schemaVersion, ARTICLE_EVIDENCE_SCHEMA_VERSION);
-assert.ok(imported.body.chars > 2000);
+assert.equal(imported.body.evidenceLevel, 'complete');
+assert.ok(imported.body.chars > 0);
 assert.equal(imported.body.sections, 3);
 assert.match(imported.body.sourceHash, /^[a-f0-9]{64}$/);
 assert.match(imported.body.evidencePacketHash, /^[a-f0-9]{64}$/);
+const abstractDoi = '10.1021/jacs.6c08637';
+const shortAbstract = 'Short abstract: catalytic C–C bond formation proceeds selectively under mild conditions.';
+const abstractOnly = await importArticleFulltext(env, evidencePayload({
+  doi: abstractDoi,
+  pageDoi: abstractDoi,
+  articleUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08637',
+  sourceUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08637',
+  fulltextStatus: 'abstract_only',
+  sections: [{ type: 'abstract', heading: 'Abstract', order: 0, text: shortAbstract }],
+  captions: [],
+  tables: [],
+}));
+assert.equal(abstractOnly.status, 200);
+assert.equal(abstractOnly.body.evidenceLevel, 'abstract_only');
+assert.equal(abstractOnly.body.sections, 1);
+const abstractKeys = await storageKeys(abstractDoi);
+const abstractStored = JSON.parse(await (await MEDIA.get(abstractKeys.evidence)).text());
+assert.equal(abstractStored.sections[0].text, shortAbstract);
+
+const noLimitDoi = '10.1021/jacs.6c08638';
+const hugeText = 'Large evidence body with chemistry facts, conditions, scope, and mechanistic detail. '.repeat(30000);
+const noLimit = await importArticleFulltext(env, evidencePayload({
+  doi: noLimitDoi,
+  pageDoi: noLimitDoi,
+  articleUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08638',
+  sourceUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08638',
+  sections: [
+    { type: 'abstract', heading: 'Abstract', order: 0, text: hugeText },
+    { type: 'results', heading: 'Results', order: 1, text: hugeText },
+  ],
+  captions: [],
+  tables: [],
+}));
+assert.equal(noLimit.status, 200);
+const noLimitKeys = await storageKeys(noLimitDoi);
+const noLimitStored = JSON.parse(await (await MEDIA.get(noLimitKeys.evidence)).text());
+assert.equal(noLimitStored.sections[0].text.length, hugeText.trim().length);
+assert.equal(noLimitStored.sections[1].text.length, hugeText.trim().length);
+
+const abstractPending = await getArticleSummary(env, abstractDoi);
+assert.equal(abstractPending.body.available, false);
+assert.equal(abstractPending.body.fulltextAvailable, false);
+assert.equal(abstractPending.body.evidenceAvailable, true);
+assert.equal(abstractPending.body.evidenceLevel, 'abstract_only');
+assert.equal(abstractPending.body.reason, 'summary_pending');
+
+const manyRowsDoi = '10.1021/jacs.6c08639';
+const manyRows = Array.from({ length: 120 }, (_, index) => ({
+  type: index === 0 ? 'abstract' : index % 3 === 0 ? 'mechanism' : 'results',
+  heading: 'Section ' + index,
+  order: index,
+  text: ('Evidence row ' + index + ' with chemistry detail. ').repeat(4),
+}));
+const manyRowsResult = await importArticleFulltext(env, evidencePayload({
+  doi: manyRowsDoi,
+  pageDoi: manyRowsDoi,
+  articleUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08639',
+  sourceUrl: 'https://pubs.acs.org/doi/10.1021/jacs.6c08639',
+  sections: manyRows,
+  captions: [],
+  tables: [],
+}));
+assert.equal(manyRowsResult.status, 200);
+assert.equal(manyRowsResult.body.sections, 120);
 
 const pending = await getArticleSummary(env, doi);
 assert.equal(pending.status, 200);
@@ -167,6 +245,7 @@ assert.equal(approved.status, 200);
 assert.equal(approved.body.available, true);
 assert.equal(approved.body.state, 'published');
 assert.equal(approved.body.source, 'reviewed_evidence_v2');
+assert.equal(approved.body.evidenceLevel, 'complete');
 assert.match(approved.body.zh, /证据链审核/);
 assert.match(approved.body.en, /approved against the evidence packet/);
 assert.equal(aiCalls, 0);
@@ -188,7 +267,12 @@ assert.equal(stale.body.state, 'superseded');
 assert.equal(stale.body.reason, 'summary_stale');
 assert.equal(aiCalls, 0);
 
-const legacyDoi = '10.1021/jacs.6c08637';
+const inventory = await getArticleEvidenceInventory(env);
+assert.equal(inventory.status, 200);
+assert.ok(inventory.body.count >= 3);
+assert.equal(inventory.body.items.find(row => row.doi === abstractDoi)?.evidenceLevel, 'abstract_only');
+
+const legacyDoi = '10.1021/jacs.6c08640';
 const legacyKeys = await storageKeys(legacyDoi);
 await MEDIA.put(legacyKeys.legacy, 'Legacy full text '.repeat(200));
 const legacy = await getArticleSummary(env, legacyDoi);
@@ -202,7 +286,11 @@ assert.equal(legacy.body.reason, 'evidence_v2_required');
 console.log(JSON.stringify({
   getIsReadOnly: true,
   aiCalls,
-  provenanceGuards: ['page_doi', 'publisher_host', 'capture_version', 'controller_revision', 'job_id', 'complete_status'],
+  provenanceGuards: ['page_doi', 'publisher_host', 'article_url_doi', 'capture_version', 'controller_revision', 'job_id'],
+  evidenceLevels: ['complete', 'partial', 'abstract_only'],
+  totalTextBudget: null,
+  shortAbstractPreserved: true,
+  privateInventory: true,
   evidenceSchema: ARTICLE_EVIDENCE_SCHEMA_VERSION,
   reviewedSummarySchema: ARTICLE_REVIEWED_SUMMARY_SCHEMA_VERSION,
   sourceHashInvalidatesSummary: true,

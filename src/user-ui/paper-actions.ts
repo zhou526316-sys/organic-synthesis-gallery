@@ -215,7 +215,7 @@ export class GalleryPaperActions extends HTMLElement {
     if (!doi) {
       this.summaryData = null;
       this.summaryLoading = false;
-      this.summaryError = this.tr('该文献 DOI 尚未核验，暂不能生成全文摘要。', 'This paper has no verified DOI yet.');
+      this.summaryError = this.tr('该文献 DOI 尚未核验，暂不能读取 AI 摘要。', 'This paper has no verified DOI yet, so the AI summary cannot be read.');
       this.render();
       return;
     }
@@ -236,13 +236,31 @@ export class GalleryPaperActions extends HTMLElement {
     const data = this.summaryData;
     let content = '';
     if (this.summaryLoading) {
-      content = `<div class='summary-state'>${this.tr('正在读取全文缓存并生成摘要…', 'Loading synced full text and generating the summary…')}</div>`;
+      content = `<div class='summary-state'>${this.tr('正在读取证据覆盖与 GPT 审核状态…', 'Loading evidence coverage and GPT review status…')}</div>`;
     } else if (this.summaryError) {
       content = `<div class='summary-state error'>${escapeHtml(this.summaryError)}</div>`;
     } else if (!data?.available) {
-      const message = data?.reason === 'ai_unavailable'
-        ? this.tr('全文已同步，但 AI 摘要服务暂时未启用。', 'Full text is synced, but AI summarization is not enabled yet.')
-        : this.tr('全文尚未同步，暂不能生成“全文摘要”。', 'Full text has not been synced yet, so a full-text summary cannot be generated.');
+      const coverage = data?.evidenceLevel === 'abstract_only'
+        ? this.tr('Abstract', 'Abstract')
+        : data?.evidenceLevel === 'partial'
+          ? this.tr('部分正文', 'partial article text')
+          : data?.evidenceLevel === 'complete'
+            ? this.tr('完整正文', 'complete article text')
+            : this.tr('文本证据', 'text evidence');
+      let message = '';
+      if (data?.reason === 'fulltext_missing') {
+        message = this.tr('尚未同步到可用的文章文字证据。', 'No usable article text evidence has been synced yet.');
+      } else if (data?.reason === 'evidence_v2_required') {
+        message = this.tr('已有旧版全文缓存，等待升级为可审核的证据包。', 'A legacy full-text cache exists and is waiting to be upgraded to an auditable evidence packet.');
+      } else if (data?.reason === 'summary_stale') {
+        message = this.tr('文章文字证据已更新，旧摘要已自动失效，等待 GPT 重新审核。', 'The article evidence changed, so the previous summary was invalidated and is awaiting GPT re-review.');
+      } else if (data?.reason === 'summary_invalid') {
+        message = this.tr('摘要记录未通过完整性校验，等待重新审核。', 'The summary record failed integrity validation and is awaiting review.');
+      } else if (data?.reason === 'summary_not_reviewed' || data?.reason === 'summary_pending') {
+        message = this.tr(`已同步${coverage}，等待 GPT 审核；当前不会现场生成摘要。`, `${coverage} is synced and awaiting GPT review; no summary is generated on demand.`);
+      } else {
+        message = this.tr('已同步文章证据，等待 GPT 审核。', 'Article evidence is synced and awaiting GPT review.');
+      }
       content = `<div class='summary-state'>${message}</div>`;
     } else {
       const text = this.summaryLanguage === 'zh' ? data.zh || '' : data.en || '';
@@ -255,7 +273,7 @@ export class GalleryPaperActions extends HTMLElement {
       ${toc ? `<div class='summary-toc'><img src='${escapeHtml(toc)}' alt='TOC / graphical abstract'></div>` : ''}
       <div class='summary-main'>
         ${content}
-        ${data?.generatedAt ? `<div class='summary-meta'>${this.tr('生成于', 'Generated')} ${formatTime(data.generatedAt)} · ${data.cached ? this.tr('缓存', 'cached') : this.tr('新生成', 'new')}</div>` : ''}
+        ${data?.generatedAt ? `<div class='summary-meta'>${this.tr('GPT 审核通过', 'GPT reviewed')} · ${data.evidenceLevel === 'abstract_only' ? this.tr('基于 Abstract', 'Abstract-based') : data.evidenceLevel === 'partial' ? this.tr('基于部分正文', 'based on partial article text') : data.evidenceLevel === 'complete' ? this.tr('基于完整正文', 'based on complete article text') : this.tr('基于已同步证据', 'based on synced evidence')} · ${this.tr('生成于', 'Generated')} ${formatTime(data.generatedAt)}</div>` : ''}
         ${meta?.href ? `<a class='summary-open' data-summary-open href='${escapeHtml(meta.href)}' target='_blank' rel='noopener noreferrer'>${this.tr('打开原文 ↗', 'Open original ↗')}</a>` : ''}
       </div>
     </section>`;
@@ -285,7 +303,7 @@ export class GalleryPaperActions extends HTMLElement {
       .status-original-action[data-image-source='crop']{object-fit:contain!important}
       ${SUMMARY_PANEL_STYLES}
       ${STATUS_PRESENTATION_CSS}
-    </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('全文摘要', 'Full-text summary')}</button></div><div class='bar'>
+    </style>${this.chips(paper, status)}<div class='summary-entry'><button type='button' class='summary-trigger' data-action='summary'>✦ ${this.tr('AI 摘要', 'AI summary')}</button></div><div class='bar'>
       ${button(s.favorite, paper.favorite ? this.tr('已收藏', 'Saved') : this.tr('收藏', 'Save'), 'favorite', paper.favorite ? '★' : '☆', paper.favorite)}
       ${button(status ? { ...s.status, rgb: status.style.rgb } : s.status, status ? statusLabel(status, this.language) : this.tr('阅读状态', 'Status'), 'status', '◈', Boolean(status), status?.style.imageData ? status.style : undefined)}
       ${button(s.note, this.tr('私人备注', 'Private note'), 'note', '✎', Boolean(paper.note))}
@@ -354,7 +372,7 @@ export class GalleryPaperActions extends HTMLElement {
   }
 
   private drawer(paper: PaperUserState): string {
-    const meta = store.metadata(this.paperId); const title = this.panel === 'favorite' ? this.tr('收藏与收藏夹', 'Saved papers and folders') : this.panel === 'summary' ? this.tr('AI 全文摘要', 'AI full-text summary') : this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
+    const meta = store.metadata(this.paperId); const title = this.panel === 'favorite' ? this.tr('收藏与收藏夹', 'Saved papers and folders') : this.panel === 'summary' ? this.tr('AI 文献摘要', 'AI paper summary') : this.panel === 'status' ? this.tr('阅读状态', 'Reading status') : this.panel === 'note' ? this.tr('私人备注', 'Private note') : this.tr('文献管理', 'Paper tools');
     let body = '';
     if (this.panel === 'summary') {
       body = this.summaryMarkup();

@@ -5,7 +5,7 @@ test.use({ serviceWorkers: 'block' });
 const ZH = '摘要布局测试：研究目标、反应条件、底物范围及局限。';
 const EN = 'Summary layout fixture: objective, conditions, scope and limitations.';
 
-async function prepare(page: Page, width: number, height: number, available = true, toc = true): Promise<{ actions: Locator; calls: () => number }> {
+async function prepare(page: Page, width: number, height: number, available = true, toc = true, evidenceLevel: 'abstract_only' | 'partial' | 'complete' = 'complete', reason?: 'fulltext_missing' | 'summary_pending'): Promise<{ actions: Locator; calls: () => number }> {
   let calls = 0;
   // All background API requests are isolated by open(); this route replaces only
   // the summary response. No real summary generation, article clicks or reader writes.
@@ -17,8 +17,13 @@ async function prepare(page: Page, width: number, height: number, available = tr
       contentType: 'application/json',
       body: JSON.stringify({
         doi: new URL(route.request().url()).searchParams.get('doi'), available,
-        fulltextAvailable: available, reason: available ? undefined : 'fulltext_missing', source: available ? 'fulltext' : undefined,
-        cached: true, zh: Array(32).fill(ZH).join('\n\n'), en: Array(32).fill(EN).join('\n\n'), generatedAt: 1790000000000,
+        fulltextAvailable: evidenceLevel === 'complete' && (available || reason === 'summary_pending'),
+        evidenceAvailable: available || reason === 'summary_pending',
+        evidenceLevel,
+        state: available ? 'published' : reason === 'summary_pending' ? 'evidence_ready' : 'missing',
+        reason: available ? undefined : (reason || 'fulltext_missing'),
+        source: available ? 'reviewed_evidence_v2' : undefined,
+        cached: true, zh: Array(32).fill(ZH).join('\n\n'), en: Array(32).fill(EN).join('\n\n'), generatedAt: 1790000000000, reviewedAt: 1790000001000,
       }),
     });
   });
@@ -121,9 +126,26 @@ test('an open summary refits on resize; management popovers stay near their own 
 test('missing full text still reports unavailable rather than fabricating a summary', async ({ page }) => {
   const { actions, calls } = await prepare(page, 1280, 900, false, false);
   const drawer = actions.locator('.summary-drawer');
-  await expect(drawer.locator('.summary-state')).toContainText(/全文尚未同步|Full text has not been synced/);
+  await expect(drawer.locator('.summary-state')).toContainText(/尚未同步到可用|No usable article text evidence/);
   await expect(drawer.locator('.summary-text')).toHaveCount(0);
   await bounded(drawer, 1280, 900);
   expect(calls()).toBe(1);
   expect((await drawer.locator('.summary-main').boundingBox())!.width).toBeGreaterThan(900);
+});
+
+
+test('abstract-only evidence waits for GPT review without pretending full-text coverage', async ({ page }) => {
+  const { actions, calls } = await prepare(page, 1280, 900, false, false, 'abstract_only', 'summary_pending');
+  const drawer = actions.locator('.summary-drawer');
+  await expect(drawer.locator('.summary-state')).toContainText(/Abstract/);
+  await expect(drawer.locator('.summary-state')).toContainText(/等待 GPT 审核|awaiting GPT review/);
+  await expect(drawer.locator('.summary-text')).toHaveCount(0);
+  expect(calls()).toBe(1);
+});
+
+test('approved abstract-only summary discloses its evidence coverage', async ({ page }) => {
+  const { actions } = await prepare(page, 1280, 900, true, false, 'abstract_only');
+  const drawer = actions.locator('.summary-drawer');
+  await expect(drawer.locator('.summary-text')).toContainText(ZH);
+  await expect(drawer.locator('.summary-meta')).toContainText(/基于 Abstract|Abstract-based/);
 });

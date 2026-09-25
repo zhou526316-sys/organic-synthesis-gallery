@@ -43,7 +43,7 @@ test('heartbeat missing and timeout are classified as skip before stop evaluatio
 });
 
 test('failed skipped DOI is persisted into attempt history before continuation',()=>{
-  const save=source.indexOf("GM_setValue(attemptKey(job.doi,generation,'figures'),result);");
+  const save=source.indexOf("GM_setValue(attemptKey(job.doi,attemptGeneration,attemptKind),result);");
   const skip=source.indexOf("if(skipReason) {",save);
   const stop=source.indexOf("if(stopReason){summary.stopReason=stopReason",skip);
   assert.ok(save>0&&skip>save&&stop>skip);
@@ -78,7 +78,7 @@ test('user abort remains an explicit stop request',()=>{
 
 test('Bridge version advances without capture protocol migration',()=>{
   assert.ok(source.includes("var VERSION = '6.2.20';"));
-  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.31';"));
+  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.32';"));
 });
 
-console.log('TM228_SKIP_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.31'}));
+console.log('TM228_SKIP_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.32'}));
