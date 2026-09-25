@@ -186,3 +186,33 @@ The public renderer must display the evidence coverage label:
 - Never treat a proposed catalytic cycle as proven mechanism without supporting evidence.
 - Never claim the article was fully read when evidenceLevel is `abstract_only` or `partial`.
 - Never expose the raw private publisher text through the public Gallery API.
+
+
+## 9. Backend execution contract
+
+The production review runner is disabled unless both conditions are true:
+
+- `OPENAI_API_KEY` is configured as a backend secret.
+- `SUMMARY_REVIEW_ENABLED=1`.
+
+Default models:
+
+- Draft / evidence extraction: `gpt-5.6-terra`
+- Independent audit: `gpt-5.6-sol`
+
+Both calls use the OpenAI Responses API with `store:false` and strict JSON Schema Structured Outputs.
+
+The application does not impose a total-character limit on the stored Article Evidence Packet. The GPT runner also does not silently truncate evidence to fit a request. If an evidence packet cannot be processed within model/API limits, the job moves to `needs_manual_review`; it must not publish a summary based on an arbitrary prefix, suffix, or sampled subset.
+
+Evidence with `textProcessingPolicy=no_external_ai` is never sent to OpenAI. Evidence with `textProcessingPolicy=unknown` is blocked unless `SUMMARY_ALLOW_UNKNOWN_POLICY=1` is explicitly configured.
+
+The cron handles at most one review job per five-minute invocation. A failed review job cannot block TOC, body-image, Evidence capture, or public Gallery reads.
+
+Private R2 objects:
+
+- `private/article-evidence-v2/*` — captured source evidence.
+- `private/article-summary-jobs/*` — durable review state.
+- `private/article-summary-review/*` — draft + audit evidence.
+- `private/article-summary/*` — approved public-summary derivative cache.
+
+Only an approved `reviewed-summary-v2` object whose `sourceHash` and `evidencePacketHash` still match the current Evidence Packet may be returned by the public summary API.
