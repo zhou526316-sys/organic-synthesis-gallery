@@ -19,8 +19,9 @@ s = replace_once(s, 'const record = {...entry, updatedAt: now(), stageStorageRev
     'const record = {...entry, sha256: fullHash, reviewMarker: await buildBodyReviewMarker(entry, fullHash), updatedAt: now(), stageStorageRevision: STAGE_STORAGE_REVISION};')
 p.write_text(s)
 p = Path('cloudflare/worker/src/index.js'); s = p.read_text()
-s = replace_once(s, 'publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION}',
-    "publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION,bodyReviewMarkerRevision:'1'}")
+if "bodyReviewMarkerRevision:'1'" not in s:
+    s = replace_once(s, 'publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION}',
+        "publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION,bodyReviewMarkerRevision:'1'}")
 p.write_text(s)
 p = Path('cloudflare/scripts/merge-curated-pages.mjs'); s = p.read_text()
 if 'await mergeApprovedBodyBatches();' not in s:
