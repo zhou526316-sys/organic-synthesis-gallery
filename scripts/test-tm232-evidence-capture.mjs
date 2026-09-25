@@ -13,6 +13,7 @@ const names = [
   'buildArticleEvidencePacket',
   'tryCaptureArticleEvidence',
   'evidenceBackfillJobs',
+  'pairedJobs',
   'captureQueueTier',
 ];
 const exposed = source.replace(
@@ -95,7 +96,9 @@ try{
       evidence:__tm232.evidenceCaptureEligible({mediaNeed:'evidence'}),
     }};
   });
-  test('TOC-only stays ineligible while figure/paired/evidence jobs can capture text',!extracted.eligible.toc&&extracted.eligible.figures&&extracted.eligible.paired&&extracted.eligible.evidence);
+  test('legacy raw TOC trigger alone does not force evidence',!extracted.eligible.toc&&extracted.eligible.figures&&extracted.eligible.paired&&extracted.eligible.evidence);
+  const explicitCombinedEligible=await page.evaluate(()=>__tm232.evidenceCaptureEligible({mediaNeed:'toc',captureEvidence:true}));
+  test('explicit missing-evidence flag makes a TOC-triggered visit capture text',explicitCombinedEligible);
   test('structured full article is classified complete',extracted.packet.fulltextStatus==='complete'&&extracted.packet.schemaVersion==='article-evidence-v2');
   test('packet binds DOI and Bridge 2.2.33',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.33');
   const types=extracted.packet.sections.map(r=>r.type);
@@ -139,7 +142,15 @@ try{
     const result=await __tm232.tryCaptureArticleEvidence({...active,mediaNeed:'toc'},[],'fixture-write-token',0);
     return {result,before,after:window.__evidencePosts.length};
   });
-  test('historical TOC-only path performs zero evidence writes',tocOnly.result.status==='not_requested'&&tocOnly.before===tocOnly.after);
+  test('a visit with captureEvidence=false performs zero evidence writes',tocOnly.result.status==='not_requested'&&tocOnly.before===tocOnly.after);
+  const combinedTocEvidence=await page.evaluate(async()=>{
+    const before=window.__evidencePosts.length;
+    window.__evidenceTransport='success';
+    const active=window.__gm['osg-toc-v6:active-job'];
+    const result=await __tm232.tryCaptureArticleEvidence({...active,mediaNeed:'toc',captureEvidence:true},[],'fixture-write-token',0);
+    return {result,before,after:window.__evidencePosts.length};
+  });
+  test('TOC-triggered visit with missing evidence stores evidence before closing',combinedTocEvidence.result.status==='stored'&&combinedTocEvidence.after===combinedTocEvidence.before+1);
 
   const backfill=await page.evaluate(()=>{
     const q={latestAddedDate:'2026-09-25',articles:[
@@ -167,6 +178,31 @@ try{
   test('missing evidence stays in the lowest-priority backfill queue',
     backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10002'&&r.state==='evidence_gap'));
   test('evidence-only backlog is lower priority than historical body figures',backfill.tier===3);
+
+  const combinedPlan=await page.evaluate(()=>{
+    const q={latestAddedDate:'2026-09-25',webpageDoiCount:2,mediaGeneration:1790082000000,articles:[
+      {doi:'10.1002/anie.5617321',journal:'Angew',addedDate:'2026-09-24'},
+      {doi:'10.1021/jacs.6c10009',journal:'JACS',addedDate:'2026-09-25'},
+    ]};
+    const media={items:{
+      '10.1002/anie.5617321':{toc:{available:false},figures:{available:false,figures:[]}},
+      '10.1021/jacs.6c10009':{toc:{available:true,imageUrl:'official.svg',reason:'official'},figures:{available:false,figures:[]}},
+    }};
+    const jobs=__tm232.pairedJobs(q,media);
+    const wiley=jobs.find(r=>r.doi==='10.1002/anie.5617321');
+    const inv={items:[]};
+    const evidence=__tm232.evidenceBackfillJobs(q,media,inv);
+    return {
+      wiley:{mediaNeed:wiley.mediaNeed,captureToc:wiley.captureToc,captureFigures:wiley.captureFigures,captureEvidence:wiley.captureEvidence},
+      evidenceDois:evidence.map(r=>r.doi)
+    };
+  });
+  test('historical missing-TOC media trigger also requests body discovery in the same visit',
+    combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===true);
+  test('missing evidence remains eligible even before an official TOC exists',
+    combinedPlan.evidenceDois.includes('10.1002/anie.5617321'));
+  test('scheduler code merges evidence need into an existing media DOI instead of opening twice',
+    source.includes('var merged=new Map();')&&source.includes('merged.get(doi).captureEvidence=true'));
 
   const isolatedFailure=await page.evaluate(async()=>{
     window.__evidenceTransport='fail';
