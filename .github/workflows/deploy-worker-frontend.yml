@@ -170,7 +170,7 @@ jobs:
           const token = process.env.BRIDGE_WRITE_TOKEN;
           if (!token) throw new Error('BRIDGE_WRITE_TOKEN is required for summary handoff backfill');
           let totalCreated = 0;
-          for (let batch = 0; batch < 80; batch += 1) {
+          for (let batch = 0; batch < 160; batch += 1) {
             const response = await fetch(base + '/api/admin/article-summary/handoff-backfill?limit=4', {
               method: 'POST',
               headers: { authorization: `Bearer ${token}`, 'cache-control': 'no-cache' },
