@@ -34,6 +34,7 @@ import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
+import { getSummaryReviewStatus, runSummaryReviewCycle } from './summary-review.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -208,6 +209,8 @@ async function handleApi(request, env) {
       d1: Boolean(env.DB),
       r2: Boolean(env.MEDIA),
       ai: Boolean(env.AI),
+      openaiApiKey: Boolean(env.OPENAI_API_KEY),
+      summaryReviewEnabled: String(env.SUMMARY_REVIEW_ENABLED || '') === '1',
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
@@ -225,6 +228,17 @@ async function handleApi(request, env) {
     if (!env.BRIDGE_WRITE_TOKEN) return json({ error: 'write_token_not_configured' }, { status: 503, headers: cors });
     if (!writeAuthorized(request, env)) return json({ error: 'unauthorized' }, { status: 401, headers: cors });
     return resultResponse(await getArticleEvidenceInventory(env), cors);
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/review-status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getSummaryReviewStatus(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/article-summary/review-run') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return json(await runSummaryReviewCycle(env), { headers: cors });
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
@@ -576,6 +590,12 @@ export default {
         console.log('MEDIA_JOB_CRON_SKIPPED', JSON.stringify({ mode, reason: 'media_rebuild_lockdown' }));
       } catch (error) {
         console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
+      }
+      try {
+        const review = await runSummaryReviewCycle(env);
+        console.log('SUMMARY_REVIEW_CRON', JSON.stringify(review));
+      } catch (error) {
+        console.error('SUMMARY_REVIEW_CRON_FAILED', error instanceof Error ? error.message : String(error));
       }
     })());
     console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_SKIPPED', 'verified_staging_release;retain_original_objects');
