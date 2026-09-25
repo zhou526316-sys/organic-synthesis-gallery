@@ -6,11 +6,14 @@ const REVIEWED_SUMMARY_SCHEMA_VERSION = 'reviewed-summary-v2';
 const CAPTURE_VERSION = '6.2.20';
 const MIN_CONTROLLER_REVISION = [2, 2, 32];
 const MAX_EVIDENCE_CHARS = 750_000;
+const MAX_SECTION_TOTAL_CHARS = 620_000;
+const MAX_CAPTION_TOTAL_CHARS = 70_000;
+const MAX_TABLE_TOTAL_CHARS = 60_000;
 const MAX_SECTION_CHARS = 180_000;
 const MAX_SECTIONS = 96;
 const MAX_CAPTIONS = 160;
 const MAX_TABLES = 48;
-const MIN_COMPLETE_TEXT_CHARS = 2_000;
+const MIN_COMPLETE_TEXT_CHARS = 3_000;
 
 const SECTION_TYPES = new Set([
   'abstract',
@@ -190,6 +193,23 @@ function normalizeTables(rows) {
   })).filter(row => row.text.length >= 40);
 }
 
+function budgetEvidenceRows(rows, budget, minimum = 20) {
+  let remaining = budget;
+  const out = [];
+  for (const row of rows) {
+    if (remaining < minimum) break;
+    const text = String(row?.text || '').slice(0, remaining);
+    if (text.length < minimum) continue;
+    out.push({ ...row, text });
+    remaining -= text.length;
+  }
+  return out;
+}
+
+async function hashEvidenceRows(rows) {
+  return Promise.all(rows.map(async row => ({ ...row, hash: await sha256Hex(row.text) })));
+}
+
 function canonicalSourceText(sections, captions, tables) {
   return [
     ...sections.map(row => [row.type, row.heading, row.text].filter(Boolean).join('\n')),
@@ -286,15 +306,15 @@ export async function importArticleFulltext(env, payload) {
   const provenance = validateProvenance(payload, doi);
   if (provenance.error) return { status: 400, body: { error: provenance.error } };
 
-  const sections = normalizeSections(payload?.sections);
-  const captions = normalizeCaptions(payload?.captions);
-  const tables = normalizeTables(payload?.tables);
+  const sections = await hashEvidenceRows(budgetEvidenceRows(normalizeSections(payload?.sections), MAX_SECTION_TOTAL_CHARS, 80));
+  const captions = await hashEvidenceRows(budgetEvidenceRows(normalizeCaptions(payload?.captions), MAX_CAPTION_TOTAL_CHARS, 20));
+  const tables = await hashEvidenceRows(budgetEvidenceRows(normalizeTables(payload?.tables), MAX_TABLE_TOTAL_CHARS, 40));
   const sourceText = canonicalSourceText(sections, captions, tables);
   if (sourceText.length < MIN_COMPLETE_TEXT_CHARS) {
     return { status: 400, body: { error: 'fulltext_too_short', chars: sourceText.length } };
   }
   if (sections.length < 2) return { status: 400, body: { error: 'insufficient_sections' } };
-  if (!sections.some(row => ['abstract', 'results', 'scope', 'mechanism', 'conclusion', 'experimental', 'optimization'].includes(row.type))) {
+  if (!sections.some(row => ['results', 'scope', 'mechanism', 'conclusion', 'experimental', 'optimization'].includes(row.type))) {
     return { status: 400, body: { error: 'evidence_sections_missing' } };
   }
   if (CHALLENGE_TEXT.test(sourceText.slice(0, 12_000))) {
@@ -439,6 +459,47 @@ export async function getArticleSummary(env, doiValue) {
       sourceHash: evidence.sourceHash,
       evidencePacketHash: evidence.evidencePacketHash,
       capturedAt: evidence.capturedAt,
+    },
+  };
+}
+
+export async function getArticleEvidenceInventory(env) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'summary_storage_unavailable' } };
+  const items = [];
+  let cursor;
+  for (let pageNo = 0; pageNo < 10; pageNo += 1) {
+    const page = await env.MEDIA.list({
+      prefix: EVIDENCE_PREFIX,
+      limit: 1000,
+      ...(cursor ? { cursor } : {}),
+      include: ['customMetadata'],
+    });
+    for (const object of page?.objects || []) {
+      const meta = object?.customMetadata || {};
+      const doi = normalizeDoi(meta.doi);
+      if (!doi) continue;
+      items.push({
+        doi,
+        available: true,
+        schemaVersion: safeSingleLine(meta.schemaVersion || '', 80),
+        sourceHash: safeSingleLine(meta.sourceHash || '', 80),
+        evidencePacketHash: safeSingleLine(meta.evidencePacketHash || '', 80),
+        publisher: safeSingleLine(meta.publisher || '', 40),
+        capturedAt: safeSingleLine(meta.capturedAt || '', 80),
+        textProcessingPolicy: safeSingleLine(meta.textProcessingPolicy || 'unknown', 80),
+      });
+    }
+    if (!page?.truncated || !page?.cursor) break;
+    cursor = page.cursor;
+  }
+  items.sort((a, b) => a.doi.localeCompare(b.doi));
+  return {
+    status: 200,
+    body: {
+      version: 1,
+      schemaVersion: EVIDENCE_SCHEMA_VERSION,
+      count: items.length,
+      items,
     },
   };
 }
