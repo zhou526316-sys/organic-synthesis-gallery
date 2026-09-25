@@ -2788,7 +2788,7 @@ function embeddedJobDois(value) {
         if (prior && prior.version===VERSION && prior.status==='success') {
           // 2.2.32 could record a TOC-only visit as media success. Reopen only those
           // legacy successes that never requested figures; genuine paired successes stay done.
-          if (job.captureFigures===true && prior.figures && prior.figures.status==='not_requested') return true;
+          if (job.captureFigures===true && (!prior.figures || prior.figures.status==='not_requested')) return true;
           return false;
         }
         if (prior && !overnightRetryEligible(prior,Date.now())) return false;
