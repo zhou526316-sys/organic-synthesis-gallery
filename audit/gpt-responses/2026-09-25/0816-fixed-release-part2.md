@@ -1,0 +1,3 @@
+TOC demand 已在 run 36076094833 刷新，commit 为 d5052df4c16fd5044866bc3b696f507de0259f6f；当前 webpageDoiCount=585、visibleGapTotal=335、missingOfficialTotal=417、officialUpgradeTotal=82、figureGapTotal=585。这些媒体缺口继续只交给 Tampermonkey/VPN Bridge，没有启用 OA PDF/HTML 自动提图。
+
+正式网页部署由 commit 77d66c78956f3ead58ccac3ebb236a4df2486515 触发，Pages run 36076180518 的 literature_authorization、build 和 deploy 三个阶段全部成功，实际完成于北京时间 08:11:50。发布后 fresh audit run 36076468554 成功，得到 galleryDois=585、unresolved=1；唯一 unresolved 精确等于上述 formal deferred DOI，没有出现新的未知漏审增量。机器审计仍记录 sourceCoverageAnomalies=1、closureCoverageAnomalies=7，因此 verifiedThrough 保持在 2026-09-20，这些只限制 closure 前进，不否定已经核验的本槽发布。
