@@ -33,7 +33,7 @@ import { runLeaseRepairBatch, runRepairBatch } from './repair.js';
 import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
-import { getArticleSummary, importArticleFulltext } from './article-summary.js';
+import { getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -94,6 +94,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/capture-capabilities',
   '/api/media/local-diagnostics',
   '/api/media/tampermonkey-reports',
+  '/api/article-summary/evidence-inventory',
   '/api/wechat/js-sdk-signature',
 ]);
 
@@ -218,6 +219,12 @@ async function handleApi(request, env) {
 
   if (request.method === 'GET' && url.pathname === '/api/wechat/js-sdk-signature') {
     return resultResponse(await getWeChatJsSdkSignature(request, env), cors);
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/article-summary/evidence-inventory') {
+    if (!env.BRIDGE_WRITE_TOKEN) return json({ error: 'write_token_not_configured' }, { status: 503, headers: cors });
+    if (!writeAuthorized(request, env)) return json({ error: 'unauthorized' }, { status: 401, headers: cors });
+    return resultResponse(await getArticleEvidenceInventory(env), cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
