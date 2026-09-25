@@ -525,6 +525,18 @@ function embeddedJobDois(value) {
   function clearSummaryEvidenceUrgency(doi) {
     GM_deleteValue(summaryEvidenceUrgencyKey(doi));
   }
+  function hasActiveSummaryEvidenceUrgency() {
+    try {
+      var prefix=P+'summary-evidence-urgent:';
+      return GM_listValues().some(function(key){
+        key=String(key||'');
+        if(key.indexOf(prefix)!==0)return false;
+        return Boolean(summaryEvidenceUrgency(key.slice(prefix.length)));
+      });
+    } catch (_) {
+      return false;
+    }
+  }
   function urgentEvidenceRetryEligible(prior, now) {
     if(!prior)return true;
     if(prior.status==='success')return false;
@@ -2837,7 +2849,9 @@ function embeddedJobDois(value) {
         if(prior && prior.status==='success'){clearSummaryEvidenceUrgency(job.doi);return false;}
         if(summaryEvidenceUrgency(job.doi)){
           job.summaryUrgent=true;
-          return urgentEvidenceRetryEligible(prior,Date.now());
+          var urgentEligible=urgentEvidenceRetryEligible(prior,Date.now());
+          if(!urgentEligible&&prior&&Number(prior.retryCount||1)>=4)clearSummaryEvidenceUrgency(job.doi);
+          return urgentEligible;
         }
         if(prior && !overnightRetryEligible(prior,Date.now()))return false;
         return true;
@@ -2939,9 +2953,12 @@ function embeddedJobDois(value) {
       summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
       if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
       else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；文字证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
-      if(!stopReason&&availableJobs().length>0&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      var remainingAvailable=!stopReason?availableJobs():[];
+      var urgentEvidencePending=!stopReason&&hasActiveSummaryEvidenceUrgency();
+      if(!stopReason&&(remainingAvailable.length>0||urgentEvidencePending)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
-        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
+        var nextDelay=remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000;
+        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},nextDelay);
       }
     } catch(error) {
       stopReason=String(error.message);
