@@ -127,6 +127,7 @@ jobs:
         run: node cloudflare/scripts/build-cloudflare-bridge.mjs
       - name: Package self-contained VPN Bridge runtime
         env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
           BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
           BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
