@@ -114,6 +114,18 @@ CREATE INDEX IF NOT EXISTS idx_media_jobs_lease
 CREATE INDEX IF NOT EXISTS idx_media_jobs_publisher_state
   ON media_jobs(publisher, state, updated_at DESC);
 
+-- Atomic mutex for GPT summary review. R2 remains durable review state/storage;
+-- this D1 row only prevents cron/manual races from issuing duplicate model calls.
+CREATE TABLE IF NOT EXISTS summary_review_mutex (
+  doi TEXT PRIMARY KEY,
+  evidence_packet_hash TEXT NOT NULL,
+  lease_owner TEXT,
+  lease_expires_at INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_summary_review_mutex_lease
+  ON summary_review_mutex(lease_expires_at, lease_owner);
+
 -- Cloud repair state. This replaces media-repair/state.json.
 CREATE TABLE IF NOT EXISTS media_repair_state (
   doi TEXT PRIMARY KEY,
