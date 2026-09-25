@@ -70,6 +70,8 @@
   var HEARTBEAT_KEY = P + 'publisher-heartbeat';
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+  var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
+  var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
   var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
   var DEFAULT_BATCH_SIZE = 8;
   var NEXT_BATCH_DELAY_MS = 12000;
@@ -500,6 +502,37 @@ function embeddedJobDois(value) {
       ? P + 'failure:figures:' + normalizeDoi(doi)
       : P + 'failure:' + normalizeDoi(doi);
   }
+  function summaryEvidenceUrgencyKey(doi) {
+    return P + 'summary-evidence-urgent:' + normalizeDoi(doi);
+  }
+  function summaryEvidenceUrgency(doi) {
+    var value=GM_getValue(summaryEvidenceUrgencyKey(doi),null);
+    if(!value)return null;
+    if(Number(value.expiresAt||0)<=Date.now()){
+      GM_deleteValue(summaryEvidenceUrgencyKey(doi));
+      return null;
+    }
+    return value;
+  }
+  function markSummaryEvidenceUrgency(doi) {
+    var now=Date.now(), prior=summaryEvidenceUrgency(doi);
+    GM_setValue(summaryEvidenceUrgencyKey(doi),{
+      doi:normalizeDoi(doi),
+      tocCapturedAt:Number(prior&&prior.tocCapturedAt||now),
+      expiresAt:Number(prior&&prior.expiresAt||now+SUMMARY_EVIDENCE_SLA_MS)
+    });
+  }
+  function clearSummaryEvidenceUrgency(doi) {
+    GM_deleteValue(summaryEvidenceUrgencyKey(doi));
+  }
+  function urgentEvidenceRetryEligible(prior, now) {
+    if(!prior)return true;
+    if(prior.status==='success')return false;
+    var elapsed=now-Date.parse(prior.finishedAt||0);
+    var count=Math.max(1,Number(prior.retryCount||1));
+    if(count>=4)return false;
+    return elapsed>=Math.min(20,count*5)*60*1000;
+  }
   function writeToken() {
     var current = String(GM_getValue(TOKEN_KEY, '') || '').trim();
     if (current) return current;
@@ -518,6 +551,7 @@ function embeddedJobDois(value) {
   function isFailureCooling(jobOrDoi) {
     var job = jobOrDoi && typeof jobOrDoi === 'object' ? jobOrDoi : null;
     var doi = normalizeDoi(job ? job.doi : jobOrDoi);
+    if(job && job.summaryUrgent===true)return false;
     var failed = GM_getValue(failureKey(doi, jobKind(job)), null);
     if (!failed || Number(failed.at || 0) <= 0) return false;
     if (String(failed.engineRevision || '') !== FAILURE_ENGINE_REVISION) return false;
@@ -690,6 +724,7 @@ function embeddedJobDois(value) {
   }
 
   function captureQueueTier(job, latestAddedDate) {
+    if (job && job.summaryUrgent === true) return -1;
     if (latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate)) return 0;
     if (job && job.captureToc === true) return 1;
     if (String(job && job.mediaNeed || '') === 'evidence') return 3;
@@ -2799,7 +2834,11 @@ function embeddedJobDois(value) {
       function eligibleEvidence(job) {
         var prior=GM_getValue(attemptKey(job.doi,evidenceGeneration,'evidence'),null);
         if(prior && prior.reason==='controller_lease_lost')return true;
-        if(prior && prior.status==='success')return false;
+        if(prior && prior.status==='success'){clearSummaryEvidenceUrgency(job.doi);return false;}
+        if(summaryEvidenceUrgency(job.doi)){
+          job.summaryUrgent=true;
+          return urgentEvidenceRetryEligible(prior,Date.now());
+        }
         if(prior && !overnightRetryEligible(prior,Date.now()))return false;
         return true;
       }
@@ -2878,6 +2917,11 @@ function embeddedJobDois(value) {
           summary.figuresStaged+=Number(result.figuresStaged||0);
           summary.evidenceStored+=result.fulltext&&result.fulltext.status==='stored'?1:0;
           GM_setValue(attemptKey(job.doi,attemptGeneration,attemptKind),result);
+          if(result.fulltext&&result.fulltext.status==='stored'){
+            clearSummaryEvidenceUrgency(job.doi);
+          }else if(result.toc&&result.toc.status==='stored'){
+            markSummaryEvidenceUrgency(job.doi);
+          }
           if(!evidenceOnly&&result.fulltext&&result.fulltext.status==='stored'){
             GM_setValue(attemptKey(job.doi,evidenceGeneration,'evidence'),{doi:job.doi,status:'success',version:VERSION,controllerRevision:CONTROLLER_REVISION,finishedAt:result.finishedAt||nowIso(),reason:'opportunistic_evidence_stored',retryCount:1});
           }
@@ -3293,6 +3337,7 @@ function embeddedJobDois(value) {
         captureFigures:false,
         captureEvidence:true,
         allowFigureOne:false,
+        summaryUrgent:Boolean(summaryEvidenceUrgency(doi)),
         _queueIndex:index
       });
     }).filter(Boolean);
