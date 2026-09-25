@@ -1475,5 +1475,24 @@
       "closureEffect": "hold_verifiedThrough"
     }
   ],
-  "updatedAt": "2026-09-25T17:13:00+08:00"
+  "updatedAt": "2026-09-25T17:14:00+08:00",
+  "prepublishGate": {
+    "runId": 36117178422,
+    "jobId": 108013908282,
+    "conclusion": "success",
+    "runNumber": 46,
+    "headCommitSha": "47140da206b0edf2b9252c9577f438e9efce5041",
+    "validatedStagingBlobSha": "b03006dac75813da662c03864902abbb26609e6b",
+    "recordValidationPassed": true,
+    "semanticDecisionSetComplete": true,
+    "semanticFieldFailures": 0,
+    "snapshotFreshForSlot": true,
+    "publicationReady": true,
+    "conversionValid": true,
+    "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: success",
+    "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: success",
+    "formalConversionPreview": "success",
+    "strictReleaseBundle": "success",
+    "productionDataModified": false
+  }
 }
