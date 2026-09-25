@@ -467,7 +467,10 @@ function embeddedJobDois(value) {
     var doi = normalizeDoi(job && job.doi);
     var publisher = String(job && job.publisher || publisherForDoi(doi));
     var suffix = doi.split('/')[1] || '';
-    var figureJob = String(job && job.mediaNeed || '').indexOf('figures') >= 0 || String(job && job.mediaNeed || '') === 'evidence' || String(job && job.state || '') === 'figure_gap';
+    var figureJob = Boolean(job && (job.captureFigures === true || job.captureEvidence === true))
+      || String(job && job.mediaNeed || '').indexOf('figures') >= 0
+      || String(job && job.mediaNeed || '') === 'evidence'
+      || String(job && job.state || '') === 'figure_gap';
     if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + doi;
     if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
@@ -1649,6 +1652,7 @@ function embeddedJobDois(value) {
 
 
   function evidenceCaptureEligible(job) {
+    if (job && typeof job.captureEvidence === 'boolean') return job.captureEvidence;
     var need = String(job && job.mediaNeed || '');
     return need.indexOf('figures') >= 0 || need === 'evidence';
   }
@@ -2478,14 +2482,17 @@ function embeddedJobDois(value) {
     if(checkpoint.toc&&checkpoint.toc.status==='stored'&&Date.now()-checkpoint.updatedAt<6*60*60*1000)job.captureToc=false;
     job.publisher=job.publisher||publisherForDoi(job.doi);
     job.captureDeadline=Date.now()+6*60*1000;
-    var result={status:'failed',reason:'',toc:{status:job.captureToc===false?'already_available':'pending'},figures:{status:'pending',discovered:0,stored:0,failed:0,items:[]},fulltext:{status:evidenceCaptureEligible(job)?'pending':'not_requested'},figuresImported:0,figuresStaged:0,published:false};
+    var wantsToc=job.captureToc===true;
+    var wantsFigures=job && typeof job.captureFigures==='boolean' ? job.captureFigures : String(job.mediaNeed||'').indexOf('figures')>=0;
+    var wantsEvidence=evidenceCaptureEligible(job);
+    var result={status:'failed',reason:'',toc:{status:wantsToc?'pending':'already_available'},figures:{status:wantsFigures?'pending':'not_requested',discovered:0,stored:0,failed:0,items:[]},fulltext:{status:wantsEvidence?'pending':'not_requested'},figuresImported:0,figuresStaged:0,published:false};
     job._liveResult=result;
     autoReportJob=job;
     captureLiveUpdate(job,'discovering');
     pushTrace(trace,{stage:'job',event:'start',status:'running',url:location.href,message:'v'+VERSION+';paired_capture=1;need='+String(job.mediaNeed)});
     try {
       if (!token) throw new Error('write_token_missing');
-      if(String(job.mediaNeed||'')==='evidence'){
+      if(!wantsToc && !wantsFigures && wantsEvidence){
         result.toc={status:'not_requested'};
         result.figures.status='not_requested';
         result.fulltext=await tryCaptureArticleEvidence(job,trace,token,8000);
@@ -2499,7 +2506,7 @@ function embeddedJobDois(value) {
       job._liveDiscoveryDone=true;
       result.figures.discovered=new Set(discovered.figures.map(function(c){return c.label;})).size;
       captureLiveUpdate(job,'discovering');
-      if (job.captureToc!==false) {
+      if (wantsToc) {
         try {
           var officials=discovered.toc.filter(function(c){return c.kind==='official';});
           var candidates=officials.length?officials:discovered.toc;
@@ -2516,7 +2523,6 @@ function embeddedJobDois(value) {
           captureLiveUpdate(job,'image_failed',{label:'TOC',error:error.message});
         }
       }
-      var wantsFigures=String(job.mediaNeed||'').indexOf('figures')>=0;
       var groups=new Map();
       if(wantsFigures)discovered.figures.forEach(function(c){if(!groups.has(c.label))groups.set(c.label,[]);groups.get(c.label).push(c);});
       result.figures.discovered=groups.size;
@@ -2549,17 +2555,20 @@ function embeddedJobDois(value) {
       }
       if (result.figures.stored+result.figures.failed<labels.length) result.figures.limitReached=true;
       result.figures.status=!wantsFigures?'not_requested':!labels.length?'not_found':result.figures.failed||result.figures.limitReached?'partial':'staged';
-      var tocOk=result.toc.status==='stored'||result.toc.status==='already_available';
+      var tocOk=!wantsToc||result.toc.status==='stored'||result.toc.status==='already_available';
+      var figuresOk=!wantsFigures||result.figures.status==='staged';
       if(!wantsFigures){
         result.status=tocOk?'success':'failed';
-        result.reason='toc_capture;toc='+result.toc.status+';figures=not_requested;published=0';
       }else{
-        result.status=tocOk && result.figures.status==='staged'?'success':tocOk||result.figures.stored?'partial':'failed';
-        result.reason='paired_capture;toc='+result.toc.status+';figures='+result.figures.stored+'/'+result.figures.discovered+';published=0';
+        result.status=tocOk&&figuresOk?'success':tocOk||result.figures.stored?'partial':'failed';
       }
-      // Evidence capture is deliberately downstream of media. Its failure never
-      // changes TOC/body success, and TOC-only historical jobs never enter it.
-      result.fulltext=await tryCaptureArticleEvidence(job,trace,token,0);
+      result.reason='combined_capture;toc='+result.toc.status
+        +';figures='+(wantsFigures?(result.figures.stored+'/'+result.figures.discovered):'not_requested')
+        +';evidence='+(wantsEvidence?'pending':'not_requested')+';published=0';
+      // Evidence capture is downstream of media and opportunistic. Its failure never
+      // downgrades successful TOC/body capture, but a visit with missing evidence must
+      // attempt it before the tab closes.
+      result.fulltext=await tryCaptureArticleEvidence(job,trace,token,wantsEvidence?5000:0);
     } catch(error) {
       result.status=String(error.message)==='user_aborted'?'aborted':(result.figures.stored||result.toc.status==='stored'?'partial':'failed');
       result.reason=String(error.message);
@@ -2787,9 +2796,23 @@ function embeddedJobDois(value) {
       var latestAddedDate=String(queue.latestAddedDate||'');
       function availableJobs() {
         var mediaAvailable=mediaJobs.filter(eligibleMedia);
-        var mediaDois=new Set(mediaAvailable.filter(function(job){return String(job.mediaNeed||'').indexOf('figures')>=0;}).map(function(job){return job.doi;}));
-        var evidenceAvailable=evidenceJobs.filter(eligibleEvidence).filter(function(job){return !mediaDois.has(job.doi);});
-        return mediaAvailable.concat(evidenceAvailable);
+        var evidenceAvailable=evidenceJobs.filter(eligibleEvidence);
+        var evidenceMissing=new Set(evidenceAvailable.map(function(job){return normalizeDoi(job.doi);}));
+        var merged=new Map();
+        mediaAvailable.forEach(function(raw){
+          var job=Object.assign({},raw);
+          job.captureEvidence=evidenceMissing.has(normalizeDoi(job.doi));
+          merged.set(normalizeDoi(job.doi),job);
+        });
+        evidenceAvailable.forEach(function(raw){
+          var doi=normalizeDoi(raw.doi);
+          if(merged.has(doi)){
+            merged.get(doi).captureEvidence=true;
+            return;
+          }
+          merged.set(doi,Object.assign({},raw,{captureToc:false,captureFigures:false,captureEvidence:true}));
+        });
+        return Array.from(merged.values());
       }
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
       summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
@@ -2799,13 +2822,17 @@ function embeddedJobDois(value) {
         // Fail before opening any page, and never dispatch after loss of ownership.
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
         if(GM_getValue(ACTIVE_JOB_KEY,null)) {stopReason='another_task_still_active';break;}
-        var evidenceOnly=String(batch[i].mediaNeed||'')==='evidence';
+        var evidenceOnly=batch[i].captureToc!==true && batch[i].captureFigures!==true && batch[i].captureEvidence===true;
         var attemptGeneration=evidenceOnly?evidenceGeneration:generation;
         var attemptKind=evidenceOnly?'evidence':'figures';
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
-        badge((evidenceOnly?'文字证据':'TOC＋正文图')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
+        var taskParts=[];
+        if(job.captureToc===true)taskParts.push('TOC');
+        if(job.captureFigures===true)taskParts.push('正文图');
+        if(job.captureEvidence===true)taskParts.push('文字证据');
+        badge((taskParts.join('＋')||'媒体检查')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result=null,closed=true,skipReason='';
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
@@ -3112,7 +3139,9 @@ function embeddedJobDois(value) {
 
   function pairedDiscoveryReady(job, stable, tocCount, figureCount, elapsedMs, figureQuietMs) {
     if (stable < 2) return false;
-    var wantsFigures = String(job && job.mediaNeed || '').indexOf('figures') >= 0;
+    var wantsFigures = job && typeof job.captureFigures === 'boolean'
+      ? job.captureFigures
+      : String(job && job.mediaNeed || '').indexOf('figures') >= 0;
     if (!wantsFigures) return Boolean(tocCount || elapsedMs >= 18000);
     // A TOC can appear several seconds before ACS lazy body figures. Do not let it
     // terminate a body job before the full-page scroll has had time to settle.
@@ -3132,8 +3161,10 @@ function embeddedJobDois(value) {
         GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:state.auth?'auth_wait':'challenge_wait',at:nowIso()});
         await sleep(2000); continue;
       }
-      var wantsToc = job.captureToc !== false;
-      var wantsFigures = String(job.mediaNeed || '').indexOf('figures') >= 0;
+      var wantsToc = job.captureToc === true;
+      var wantsFigures = job && typeof job.captureFigures === 'boolean'
+        ? job.captureFigures
+        : String(job.mediaNeed || '').indexOf('figures') >= 0;
       toc=wantsToc?collectCandidates(job,trace,document,location.href,'paired_dom',true):[];
       figures=wantsFigures?collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom'):[];
       var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
@@ -3197,7 +3228,19 @@ function embeddedJobDois(value) {
       var latestAddedDate=String(queue.latestAddedDate||'');
       var isLatest=Boolean(latestAddedDate && String(raw.addedDate||'')===latestAddedDate);
       var mediaNeed=isLatest?'toc+figures':official?'figures':'toc';
-      return Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),mediaNeed:mediaNeed,state:official?'figure_gap':'no_visual',captureToc:!official,allowFigureOne:isLatest&&!official,_queueIndex:index});
+      // mediaNeed is only the scheduler trigger. Once the article is open, fill every
+      // still-relevant media layer in the same bound visit instead of reopening it.
+      return Object.assign({},raw,{
+        doi:doi,
+        publisher:publisherForDoi(doi),
+        mediaNeed:mediaNeed,
+        state:official?'figure_gap':'no_visual',
+        captureToc:!official,
+        captureFigures:true,
+        captureEvidence:false,
+        allowFigureOne:isLatest&&!official,
+        _queueIndex:index
+      });
     });
     // Scheduler tiers: latest Gallery additions first, then historical missing official TOCs,
     // then historical body-figure backlog. Journal priority applies inside every tier.
@@ -3235,6 +3278,8 @@ function embeddedJobDois(value) {
         state:'evidence_gap',
         existingEvidenceLevel:'missing',
         captureToc:false,
+        captureFigures:false,
+        captureEvidence:true,
         allowFigureOne:false,
         _queueIndex:index
       });
