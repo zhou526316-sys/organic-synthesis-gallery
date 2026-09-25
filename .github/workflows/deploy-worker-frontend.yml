@@ -106,7 +106,7 @@ jobs:
           binding = "AI"
 
           [triggers]
-          crons = ["*/5 * * * *"]
+          crons = ["* * * * *"]
 
           [assets]
           directory = "../../dist"
