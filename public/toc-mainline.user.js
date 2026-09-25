@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.32';
+  var CONTROLLER_REVISION = '2.2.33';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -520,6 +520,8 @@ function embeddedJobDois(value) {
     if (String(failed.engineRevision || '') !== FAILURE_ENGINE_REVISION) return false;
     var reason = String(failed.reason || '');
     var publisher = String(job && job.publisher || publisherForDoi(doi));
+    // 2.2.33 fixes Wiley GA discovery. Do not preserve a stale pre-fix no-TOC cooldown.
+    if (publisher === 'wiley' && jobKind(job) === 'toc' && /(?:no_toc|toc.*not_found|not_found)/i.test(reason)) return false;
     var cooldown = publisher === 'nature'
       && jobKind(job) === 'toc'
       && /^no_toc_candidate_/.test(reason)
@@ -1297,6 +1299,121 @@ function embeddedJobDois(value) {
     return [];
   }
 
+  function wileyGaHeadingText(value) {
+    var text = String(value || '').replace(/\s+/g, ' ').trim();
+    return /^(?:graphical|visual)\s+abstract(?:\s*[:\-–—].*)?$/i.test(text)
+      || /^table\s+of\s+contents(?:\s+(?:graphic|image))?(?:\s*[:\-–—].*)?$/i.test(text);
+  }
+
+  function wileyGaUrlSignal(value) {
+    return /-gra-\d+(?:[-_.]|$)|graphical[-_\s]*abstract|visual[-_\s]*abstract|(?:^|[\/_-])(?:ga|fx)0*1(?:[-_.]|$)/i.test(String(value || ''));
+  }
+
+  function wileyAssetHostAllowed(value) {
+    try {
+      var host = new URL(String(value || ''), location.href).hostname.toLowerCase();
+      return host === 'wiley.com' || host.endsWith('.wiley.com')
+        || host === 'wiley.com.cn' || host.endsWith('.wiley.com.cn');
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function wileyGraphicalAbstractCandidates(job, root, baseUrl) {
+    if (String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))) !== 'wiley') return [];
+    var scope = root || document;
+    var base = baseUrl || location.href;
+    var rows = [], seen = new Map();
+
+    function excluded(node) {
+      return Boolean(node && node.closest && node.closest(
+        'aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[id*="related" i],[class*="reference" i],[class*="citation" i],[class*="advert" i]'
+      ));
+    }
+
+    function add(url, node, source, score, text) {
+      url = normalizeUrl(url, base);
+      if (!url || !wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job) || reject(text, url)) return;
+      var row = {
+        url: url,
+        kind: 'official',
+        assetType: 'graphical_abstract',
+        score: score,
+        text: String(text || 'Graphical Abstract').slice(0, 1000),
+        source: source,
+        element: node && node.tagName && node.tagName.toLowerCase() === 'img' ? node : null
+      };
+      var old = seen.get(mediaUrlIdentity(url, base));
+      if (!old || row.score > old.score) seen.set(mediaUrlIdentity(url, base), row);
+    }
+
+    function urlsFor(node) {
+      return Array.from(new Set(
+        articleFigureImageUrls(node, base).concat(imageUrls(node, base))
+      )).filter(Boolean);
+    }
+
+    function scanExactContainer(container, headingText) {
+      if (!container || excluded(container) || !container.querySelectorAll) return;
+      var nodes = Array.from(container.querySelectorAll('img,source,object[type^="image"]')).filter(function(node) {
+        return !excluded(node);
+      });
+      var strong = [];
+      var all = [];
+      nodes.forEach(function(node) {
+        urlsFor(node).forEach(function(url) {
+          if (!/\.(?:svg|png|jpe?g|webp|gif)(?:[?#]|$)/i.test(url)) return;
+          if (!wileyAssetHostAllowed(url) || !candidateBelongsToJob(url, job)) return;
+          all.push({url:url,node:node});
+          if (wileyGaUrlSignal(url)) strong.push({url:url,node:node});
+        });
+      });
+      if (strong.length) {
+        strong.forEach(function(item, index) {
+          add(item.url, item.node, 'wiley_ga_labeled_section_url', 940 - index, headingText);
+        });
+        return;
+      }
+      var byIdentity = new Map();
+      all.forEach(function(item) {
+        var key = mediaUrlIdentity(item.url, base);
+        if (key && !byIdentity.has(key)) byIdentity.set(key, item);
+      });
+      if (byIdentity.size === 1) {
+        var only = Array.from(byIdentity.values())[0];
+        add(only.url, only.node, 'wiley_ga_labeled_section_single_image', 900, headingText);
+      }
+    }
+
+    if (scope.querySelectorAll) {
+      scope.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"],.article-section__title,.section__title').forEach(function(heading) {
+        var headingText = String(heading.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!wileyGaHeadingText(headingText) || excluded(heading)) return;
+        var container = heading.closest('section,[class*="article-section"],[class*="graphical"],[class*="abstract"]') || heading.parentElement;
+        scanExactContainer(container, headingText);
+        var sibling = heading.nextElementSibling;
+        for (var i = 0; sibling && i < 2; i += 1, sibling = sibling.nextElementSibling) {
+          if (/^H[1-6]$/.test(String(sibling.tagName || ''))) break;
+          scanExactContainer(sibling, headingText);
+        }
+      });
+
+      var articleScope = scope.querySelector('article,[role="main"],main') || scope;
+      if (articleScope && articleScope.querySelectorAll) {
+        articleScope.querySelectorAll('img,source,object[type^="image"]').forEach(function(node) {
+          if (excluded(node)) return;
+          urlsFor(node).forEach(function(url, index) {
+            if (!wileyGaUrlSignal(url)) return;
+            add(url, node, 'wiley_ga_strong_asset_url', 820 - index, 'Graphical Abstract');
+          });
+        });
+      }
+    }
+
+    rows = Array.from(seen.values()).sort(function(a, b) { return b.score - a.score; });
+    return rows;
+  }
+
   function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
     var scope = root || document, rows = [], seen = new Set();
     function add(row) { if (!seen.has(row.url) && candidateBelongsToJob(row.url,job) && !reject(row.text,row.url)) { seen.add(row.url); rows.push(row); } }
@@ -1313,6 +1430,9 @@ function embeddedJobDois(value) {
       var url=normalizeUrl(meta.getAttribute('content'),baseUrl||location.href);
       if (url) add({url:url,kind:'official',assetType:'graphical_abstract',score:700,text:meta.getAttribute('name'),source:'article_head_metadata',element:null});
     });
+    if (String(job && job.publisher || '') === 'wiley') {
+      wileyGraphicalAbstractCandidates(job, scope, baseUrl || location.href).forEach(add);
+    }
     // No whole-page semantic windows: adjacent Scheme images must not inherit a TOC heading.
     rows.sort(function(a,b){return b.score-a.score;});
     if (!quiet) pushTrace(trace,{stage:'candidate_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'strict_scope_candidates='+rows.length});
