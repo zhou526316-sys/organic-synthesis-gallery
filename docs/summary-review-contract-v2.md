@@ -112,7 +112,7 @@ The model may produce a full-paper summary, but must still separate evidence, au
 
 ## 5. Draft schema
 
-The first model pass produces structured facts, not public prose.
+The first model pass produces structured facts only, not Chinese/English public summary prose. Public bilingual prose is generated only by the independent audit pass after deterministic validation.
 
 Required top-level fields:
 
@@ -129,6 +129,8 @@ Required top-level fields:
 - `limitations`
 - `questionsForManualVerification`
 - `claims[]`
+
+The research objective, key transformation/strategy, novelty/significance, explicit limitations, conditions, scope, mechanism items, and each `claims[]` item must carry Evidence IDs. Evidence gaps may carry an empty Evidence-ID list only when explicitly typed as missing evidence rather than as a factual claim.
 
 Each `claims[]` item contains:
 
@@ -207,6 +209,10 @@ The application does not impose a total-character limit on the stored Article Ev
 Evidence with `textProcessingPolicy=no_external_ai` is never sent to OpenAI. Evidence with `textProcessingPolicy=unknown` is blocked unless `SUMMARY_ALLOW_UNKNOWN_POLICY=1` is explicitly configured.
 
 The cron handles at most one review job per five-minute invocation. A failed review job cannot block TOC, body-image, Evidence capture, or public Gallery reads.
+
+A D1 `summary_review_mutex` row provides the atomic DOI/evidence-hash lease. R2 stores durable job/review artifacts, but R2 write-then-read is not treated as an atomic mutex. A cron invocation and an authenticated manual review run therefore cannot both issue model calls for the same DOI/evidence packet.
+
+After the Sol audit produces bilingual prose, a second deterministic numeric check rejects any yield/selectivity/temperature/time/loading/equivalent/light/electrochemical value that does not occur anywhere in the current Evidence Packet.
 
 The default rolling 24-hour publication limit is 96 reviewed summaries (`SUMMARY_REVIEW_DAILY_LIMIT`). This is a cost/runaway guard, not a scientific-content limit, and may be raised through repository configuration. The runner confirms its R2 lease after writing it so a cron invocation and an explicit manual review run cannot both proceed with the same job.
 

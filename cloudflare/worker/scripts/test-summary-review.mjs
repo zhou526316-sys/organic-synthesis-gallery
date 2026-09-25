@@ -34,10 +34,41 @@ class MemoryR2 {
     return { objects, truncated: false };
   }
 }
+class MemoryStatement {
+  constructor(db, sql) { this.db = db; this.sql = sql; this.args = []; }
+  bind(...args) { this.args = args; return this; }
+  async run() {
+    if (/CREATE TABLE IF NOT EXISTS summary_review_mutex/i.test(this.sql)) return { meta: { changes: 0 } };
+    if (/INSERT INTO summary_review_mutex/i.test(this.sql)) {
+      const [doi, hash, owner, expires, updatedAt, now] = this.args;
+      const previous = this.db.locks.get(doi);
+      if (!previous || previous.evidencePacketHash !== hash || Number(previous.leaseExpiresAt || 0) <= Number(now || 0)) {
+        this.db.locks.set(doi, { evidencePacketHash: hash, leaseOwner: owner, leaseExpiresAt: expires, updatedAt });
+        return { meta: { changes: 1 } };
+      }
+      return { meta: { changes: 0 } };
+    }
+    if (/UPDATE summary_review_mutex/i.test(this.sql)) {
+      const [updatedAt, doi, owner] = this.args;
+      const previous = this.db.locks.get(doi);
+      if (previous && previous.leaseOwner === owner) {
+        this.db.locks.set(doi, { ...previous, leaseOwner: null, leaseExpiresAt: 0, updatedAt });
+        return { meta: { changes: 1 } };
+      }
+      return { meta: { changes: 0 } };
+    }
+    throw new Error('Unexpected SQL in summary-review test: ' + this.sql);
+  }
+}
+class MemoryDB {
+  constructor() { this.locks = new Map(); }
+  prepare(sql) { return new MemoryStatement(this, sql); }
+}
 
 const MEDIA = new MemoryR2();
 const baseEnv = {
   MEDIA,
+  DB: new MemoryDB(),
   SUMMARY_REVIEW_ENABLED: '1',
   SUMMARY_ALLOW_UNKNOWN_POLICY: '1',
   OPENAI_API_KEY: 'test-only-key',
@@ -90,8 +121,8 @@ function draftFor(doi, evidenceLevel = 'complete', badEvidence = false) {
   return {
     doi,
     evidenceLevel,
-    researchObjective: 'Develop a selective catalytic C-C bond-forming reaction.',
-    keyTransformationOrStrategy: 'Catalytic coupling to form a C-C bond.',
+    researchObjective: { summary: 'Develop a selective catalytic C-C bond-forming reaction.', evidenceIds: ['s001','s002'] },
+    keyTransformationOrStrategy: { summary: 'Catalytic coupling to form a C-C bond.', evidenceIds: ['s001','s002'] },
     conditions: [
       { name: 'Catalyst loading', value: '2 mol%', role: 'catalyst loading', evidenceIds: [badEvidence ? 't999' : 't001'] },
       { name: 'Temperature', value: '-20 °C', role: 'reaction temperature', evidenceIds: ['t001'] },
@@ -112,8 +143,8 @@ function draftFor(doi, evidenceLevel = 'complete', badEvidence = false) {
       ],
       modelInference: [],
     },
-    noveltyAndSyntheticSignificance: 'The method addresses a selective bond-construction problem and provides synthetically useful products.',
-    limitations: ['The captured conclusion notes limitations for selected substrate classes.'],
+    noveltyAndSyntheticSignificance: { summary: 'The method addresses a selective bond-construction problem and provides synthetically useful products.', evidenceIds: ['s004'] },
+    limitations: [{ statement: 'The captured conclusion notes limitations for selected substrate classes.', kind: 'reported_limitation', evidenceIds: ['s004'] }],
     questionsForManualVerification: [],
     claims: [
       {
@@ -131,8 +162,6 @@ function draftFor(doi, evidenceLevel = 'complete', badEvidence = false) {
         notes: 'Proposal is kept distinct from mechanistic evidence.',
       },
     ],
-    draftZh: '该研究建立了一种选择性催化 C–C 成键反应；优化条件包含 2 mol% 催化剂、−20 °C 和 12 h，并报告 82% 收率和 95% ee。机理部分区分控制实验与作者提出的催化循环。',
-    draftEn: 'The study establishes a selective catalytic C-C bond-forming reaction. The captured optimization reports 2 mol% catalyst, -20 °C, 12 h, 82% yield, and 95% ee. Mechanistic evidence is kept distinct from the authors proposed catalytic cycle.',
   };
 }
 
@@ -250,9 +279,13 @@ const fetchAbstract = async (_url, init) => {
   assert.match(body.input, /abstract_only/);
   if (abstractCalls === 1) {
     const draft = draftFor(abstractDoi, 'abstract_only');
+    draft.researchObjective = { summary: 'The abstract reports a catalytic coupling with useful selectivity.', evidenceIds: ['s001'] };
+    draft.keyTransformationOrStrategy = { summary: 'Catalytic coupling is reported in the abstract.', evidenceIds: ['s001'] };
     draft.conditions = [];
     draft.substrateScope = { summary: 'The abstract states useful selectivity but does not provide detailed scope evidence.', supportedTrends: [], limitations: [], evidenceIds: ['s001'] };
     draft.mechanism = { experimentalEvidence: [], authorProposal: [], modelInference: [] };
+    draft.noveltyAndSyntheticSignificance = { summary: 'The abstract presents the coupling as synthetically useful.', evidenceIds: ['s001'] };
+    draft.limitations = [{ statement: 'Detailed optimization, scope examples, and mechanistic controls are absent from the captured Abstract.', kind: 'evidence_gap', evidenceIds: [] }];
     draft.claims = [{
       claim: 'The abstract reports a catalytic coupling with useful selectivity.',
       claimType: 'author_conclusion',
@@ -260,8 +293,6 @@ const fetchAbstract = async (_url, init) => {
       confidence: 'high',
       notes: 'Abstract-only evidence.',
     }];
-    draft.draftZh = '基于 Abstract：文中报告一种具有有用选择性的催化偶联；当前证据未提供详细优化、底物实例或机理控制实验。';
-    draft.draftEn = 'Abstract-based: the article reports a catalytic coupling with useful selectivity; the captured evidence does not provide detailed optimization, scope examples, or mechanistic controls.';
     return responseObject('gpt-5.6-terra-2026-test', draft);
   }
   const audit = auditPass();
@@ -277,8 +308,48 @@ assert.equal(abstractSummary.body.evidenceLevel, 'abstract_only');
 assert.equal(abstractSummary.body.fulltextAvailable, false);
 assert.match(abstractSummary.body.zh, /基于 Abstract/);
 
+
+const finalMismatchMedia = new MemoryR2();
+const finalMismatchEnv = { ...baseEnv, MEDIA: finalMismatchMedia, DB: new MemoryDB() };
+const finalMismatchDoi = '10.1021/jacs.6c90004';
+await importArticleFulltext(finalMismatchEnv, payload(finalMismatchDoi, '2026-09-25T04:00:00Z'));
+let finalMismatchCalls = 0;
+const finalMismatchCycle = await runSummaryReviewCycle(finalMismatchEnv, {
+  fetchImpl: async (_url, init) => {
+    finalMismatchCalls += 1;
+    if (finalMismatchCalls === 1) return responseObject('gpt-5.6-terra-2026-test', draftFor(finalMismatchDoi));
+    const audit = auditPass();
+    audit.finalZh += ' 该反应给出 99% ee。';
+    audit.finalEn += ' The reaction gives 99% ee.';
+    return responseObject('gpt-5.6-sol-2026-test', audit);
+  },
+});
+assert.equal(finalMismatchCycle.status, 'needs_manual_review');
+assert.equal(finalMismatchCalls, 2);
+assert.equal((await getArticleSummary(finalMismatchEnv, finalMismatchDoi)).body.available, false);
+
+const concurrentMedia = new MemoryR2();
+const concurrentEnv = { ...baseEnv, MEDIA: concurrentMedia, DB: new MemoryDB() };
+const concurrentDoi = '10.1021/jacs.6c90005';
+await importArticleFulltext(concurrentEnv, payload(concurrentDoi, '2026-09-25T05:00:00Z'));
+let concurrentCalls = 0;
+const concurrentFetch = async () => {
+  concurrentCalls += 1;
+  await new Promise(resolve => setTimeout(resolve, 20));
+  return concurrentCalls === 1
+    ? responseObject('gpt-5.6-terra-2026-test', draftFor(concurrentDoi))
+    : responseObject('gpt-5.6-sol-2026-test', auditPass());
+};
+const concurrentResults = await Promise.all([
+  runSummaryReviewCycle(concurrentEnv, { fetchImpl: concurrentFetch }),
+  runSummaryReviewCycle(concurrentEnv, { fetchImpl: concurrentFetch }),
+]);
+assert.equal(concurrentCalls, 2);
+assert.equal(concurrentResults.filter(row => row.status === 'published').length, 1);
+assert.equal(concurrentResults.filter(row => row.status === 'idle').length, 1);
+
 let disabledCalls = 0;
-const disabled = await runSummaryReviewCycle({ MEDIA, SUMMARY_REVIEW_ENABLED: '1' }, {
+const disabled = await runSummaryReviewCycle({ MEDIA, DB: new MemoryDB(), SUMMARY_REVIEW_ENABLED: '1' }, {
   fetchImpl: async () => { disabledCalls += 1; throw new Error('must not call'); },
 });
 assert.equal(disabled.status, 'disabled');
@@ -291,6 +362,8 @@ console.log(JSON.stringify({
   structuredOutputs: true,
   terraDraftSolAudit: true,
   deterministicEvidenceGuard: true,
+  finalSummaryNumericGuard: true,
+  atomicD1Mutex: true,
   abstractOnlySupported: true,
   publicGetRemainsReadOnly: true,
   draftPromptVersion: SUMMARY_DRAFT_PROMPT_VERSION,
