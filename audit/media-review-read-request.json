@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "context": "Media-only continuation. Read existing current-generation R2 evidence only. Semantic approval/publication remains capped at 5 articles and 30 new body images in this task round. This trigger is evidence acquisition only and does not approve media or modify literature data.",
+  "context": "Backlog drain pilot. Read current-generation staged body-image evidence only. This trigger is evidence acquisition only and does not approve media or modify production literature data.",
   "maxArticles": 20,
-  "maxImages": 100,
+  "maxImages": 150,
   "maxImagesPerArticle": 10,
   "readOnly": true,
   "excludeDois": ["10.1021/jacs.6c13641"],
   "excludeReason": "Existing unresolved scope review; current literature-update-state pendingScopeReviewBacklog is additionally excluded by the reader.",
-  "requestedAt": "2026-09-24T20:24:00+08:00",
-  "requestContext": "Refresh current-corpus, current-online-index and current-generation R2 evidence after reviewed body batches PR215 and PR216 reached production. Obtain immutable bytes for the next eligible small semantic-review batch without publisher recrawl or storage mutation."
+  "requestedAt": "2026-09-25T12:58:00+08:00",
+  "requestContext": "Pilot the continuous staged-body backlog drain against the live 1105-item pending_review pool. Freeze the next 20 eligible articles with immutable bytes, captions, DOI bindings and diagnostics for semantic review; no production publication in this trigger."
 }
