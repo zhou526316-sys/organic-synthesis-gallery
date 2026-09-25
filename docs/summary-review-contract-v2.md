@@ -208,7 +208,9 @@ The application does not impose a total-character limit on the stored Article Ev
 
 Evidence with `textProcessingPolicy=no_external_ai` is never sent to OpenAI. Evidence with `textProcessingPolicy=unknown` is blocked unless `SUMMARY_ALLOW_UNKNOWN_POLICY=1` is explicitly configured.
 
-The cron handles at most one review job per five-minute invocation. A failed review job cannot block TOC, body-image, Evidence capture, or public Gallery reads.
+A successful Article Evidence Packet v2 import schedules a DOI-targeted review immediately through the Worker execution context, while the browser capture returns without waiting for model output. The cron runs every minute as a fallback and handles at most one backlog review job per invocation. Fresh Evidence candidates are ordered by `capturedAt`, so historical review backlog does not take priority over newly captured papers. A failed review job cannot block TOC, body-image, Evidence capture, or public Gallery reads.
+
+Operational target: when a paper's TOC visit also stores usable Evidence, external-AI processing is enabled, the API key is configured, and both deterministic checks plus the independent audit pass, the approved bilingual summary should enter the public summary cache within 60 minutes of that Evidence capture. `needs_manual_review`, `reject`, blocked processing policies, missing credentials, and upstream model/API outages are fail-closed exceptions and must never be auto-published merely to satisfy the latency target.
 
 A D1 `summary_review_mutex` row provides the atomic DOI/evidence-hash lease. R2 stores durable job/review artifacts, but R2 write-then-read is not treated as an atomic mutex. A cron invocation and an authenticated manual review run therefore cannot both issue model calls for the same DOI/evidence packet.
 
