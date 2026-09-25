@@ -1692,14 +1692,14 @@ function embeddedJobDois(value) {
       evidenceFallbackBodySections(root, seenText).forEach(function(row){sections.push(row);});
     }
     sections.sort(function(a,b){return Number(a.order||0)-Number(b.order||0);});
-    return sections.slice(0, 96);
+    return sections;
   }
 
   function collectArticleEvidenceCaptions(root) {
     var nodes = Array.from(new Set(Array.from(root.querySelectorAll('figure figcaption,figure [class*="caption"],.figure [class*="caption"]'))));
     var seen = new Set(), rows = [];
     nodes.forEach(function(node){
-      if (rows.length >= 160 || evidenceNodeExcluded(node)) return;
+      if (evidenceNodeExcluded(node)) return;
       var text = evidenceNodeText(node, 12000);
       if (text.length < 20 || seen.has(text)) return;
       seen.add(text);
@@ -1714,7 +1714,7 @@ function embeddedJobDois(value) {
   function collectArticleEvidenceTables(root) {
     var rows = [];
     Array.from(root.querySelectorAll('table')).forEach(function(table,index){
-      if (rows.length >= 48 || evidenceNodeExcluded(table)) return;
+      if (evidenceNodeExcluded(table)) return;
       var text = evidenceNodeText(table, 30000);
       if (text.length < 40) return;
       var caption = table.querySelector('caption');
