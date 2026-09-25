@@ -1,15 +1,15 @@
 {
-  "requestedAt": "2026-09-23T14:22:00Z",
-  "context": "Immediate production check because no scheduled new-body-continuous run appeared after 13:55Z. Re-evaluate the full current-generation unpublished eligible staged body backlog under the live anti-starvation policy; continue draining previously staged records alongside new captures. No publisher recrawl and no literature-data changes.",
+  "requestedAt": "2026-09-25T05:38:00Z",
+  "context": "Drain the current-generation staged body backlog using the already-deployed automatic provenance/hash/decode publication policy. Re-evaluate the full unpublished eligible stage inventory after the 2.2.32 capture wave; publish only packets that satisfy the existing official-TOC, DOI/source binding, exact-byte, safe-image and decode gates. No publisher recrawl and no literature-data changes.",
   "mediaOnly": true,
   "readOnlyInspect": false,
   "productionLiteratureWrites": false,
   "publisherRequests": 0,
   "expectedPolicy": {
-    "targetArticles": 20,
+    "minNewArticles": 1,
     "maxArticles": 25,
-    "quietTailMinutes": 15,
-    "backlogMaxWaitMinutes": 30,
+    "tailFlushIdleMinutes": 5,
+    "backlogMaxWaitMinutes": 15,
     "officialTocRequiredInSameBuild": true
   }
 }
