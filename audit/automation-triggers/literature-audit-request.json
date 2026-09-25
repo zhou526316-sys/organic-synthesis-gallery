@@ -1,32 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-25T17:04:00+08:00",
-  "requestedBy": "prepublish-primary-20260925-1800",
-  "reason": "No fresh 16:55 machine snapshot exists for the fixed 2026-09-25 18:00 publication slot and no healthy same-slot literature audit is running. Generate one paired latest/compact snapshot for complete semantic review. Do not mutate production literature, publish cards, trigger Pages, acquire publisher media, or cancel/restart a healthy audit.",
-  "targetBranch": "main",
+  "requestedAt": "2026-09-25T18:03:14+08:00",
+  "requestedBy": "fixed-slot-release-postcheck-20260925-1800",
   "publicationSlot": "2026-09-25T18:00:00+08:00",
-  "baselineMainSha": "0ed4b7aced282d5e346044c4bbdc55eb6c075571",
-  "primaryWindow": {
-    "timezone": "Asia/Shanghai",
-    "startDate": "2026-09-23",
-    "endDate": "2026-09-25",
-    "days": 3
-  },
-  "safetyTailDays": 7,
-  "lateDepositRescueDays": 7,
-  "verifiedThrough": "2026-09-20",
-  "scopeRulesVersion": "scope-2026-09-24-v1",
-  "scopeRulesFile": "docs/literature-scope-contract.md",
-  "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
-  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
-  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
-  "deduplicationKey": "prepublish-primary|2026-09-25T18:00:00+08:00|0ed4b7aced282d5e346044c4bbdc55eb6c075571|e57e9394e4cbc08476cd9d3a64c6e409466bb019|2e1b24bd6b504c70aefcf6b766b6d52fd166897e",
-  "validation": [
-    "paired latest/compact must share generatedAt and endDate 2026-09-25",
-    "both summary.unresolved values must equal the complete compact unresolved array length",
-    "all 16 canonical active journals and activeFrom rules must be covered",
-    "Crossref online/published/created, OpenAlex, created/deposit rescue, seven-day tail and verifiedThrough catch-up remain enabled",
-    "criticalSourceFailures, sourceFamilyGaps, sourceCoverageAnomalies, closureCoverageAnomalies and historicalCoverageLosses must be explicit",
-    "prepublish discovery only: no production literature mutation, admission, Pages trigger, OA extraction or publisher-media acquisition"
-  ]
+  "baselineMainSha": "a79d8c15c421d456190989370bb39e633b78cbab",
+  "reason": "Post-release completeness check after the fixed 18:00 publication."
 }
