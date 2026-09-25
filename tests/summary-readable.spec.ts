@@ -164,7 +164,7 @@ test('desktop summary gains reading space while mobile keeps the previous compac
   expect(desktopBox.width).toBeLessThanOrEqual(1441);
   expect(desktopBox.height).toBeGreaterThan(850);
   expect(desktopBox.height).toBeLessThanOrEqual(892);
-  const columns = await drawer.locator('.summary-layout').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').map(Number));
+  const columns = await drawer.locator('.summary-layout').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').map(value => parseFloat(value)));
   expect(columns[1]).toBeGreaterThan(columns[0] * 2);
   await drawer.locator('[data-action="close"]').click();
 
