@@ -97,7 +97,7 @@ try{
   });
   test('TOC-only stays ineligible while figure/paired/evidence jobs can capture text',!extracted.eligible.toc&&extracted.eligible.figures&&extracted.eligible.paired&&extracted.eligible.evidence);
   test('structured full article is classified complete',extracted.packet.fulltextStatus==='complete'&&extracted.packet.schemaVersion==='article-evidence-v2');
-  test('packet binds DOI and Bridge 2.2.32',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.32');
+  test('packet binds DOI and Bridge 2.2.33',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.33');
   const types=extracted.packet.sections.map(r=>r.type);
   test('semantic sections are retained',['abstract','results','mechanism','conclusion'].every(t=>types.includes(t)));
   const all=JSON.stringify({sections:extracted.packet.sections,captions:extracted.packet.captions,tables:extracted.packet.tables});
@@ -175,8 +175,8 @@ try{
   });
   test('evidence transport failure is contained',isolatedFailure.status==='failed'&&/fixture_network_failure/.test(isolatedFailure.reason));
 
-  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.32';"));
-  test('2.2.32 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
+  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.33';"));
+  test('2.2.33 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
 
-  console.log('TM232_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.32',totalTextBudget:null,abstractOnly:true}));
+  console.log('TM232_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.33',totalTextBudget:null,abstractOnly:true}));
 }finally{await browser.close();}
