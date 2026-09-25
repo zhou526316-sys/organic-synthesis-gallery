@@ -10,7 +10,7 @@ MIGRATION_STAGE = "staging"
 binding = "AI"
 
 [triggers]
-crons = ["*/5 * * * *"]
+crons = ["0 */6 * * *", "*/10 * * * *"]
 
 # Resource bindings are intentionally not committed until the corresponding
 # Cloudflare resources exist. Add them after creation, for example:
