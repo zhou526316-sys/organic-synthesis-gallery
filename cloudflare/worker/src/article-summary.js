@@ -483,5 +483,17 @@ export async function getArticleEvidenceInventory(env) {
   };
 }
 
+export async function readArticleEvidencePacket(env, doiValue) {
+  const doi = normalizeDoi(doiValue);
+  if (!doi) return null;
+  return readEvidence(env, doi);
+}
+
+export async function articleSummaryStorageKeys(doiValue) {
+  const doi = normalizeDoi(doiValue);
+  if (!doi) return null;
+  return keysForDoi(doi);
+}
+
 export const ARTICLE_EVIDENCE_SCHEMA_VERSION = EVIDENCE_SCHEMA_VERSION;
 export const ARTICLE_REVIEWED_SUMMARY_SCHEMA_VERSION = REVIEWED_SUMMARY_SCHEMA_VERSION;
