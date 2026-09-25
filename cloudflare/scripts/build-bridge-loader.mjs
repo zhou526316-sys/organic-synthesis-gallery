@@ -5,6 +5,7 @@ const SITE_ORIGIN = (process.env.TARGET_SITE_ORIGIN || 'https://zhou526316-sys.g
 const GITHUB_SITE_ORIGIN = 'https://zhou526316-sys.github.io/organic-synthesis-gallery';
 const CLOUDFLARE_SITE_ORIGIN = 'https://organic-synthesis-gallery-public.pages.dev';
 const UPDATE_ORIGIN = (process.env.BRIDGE_UPDATE_ORIGIN || GITHUB_SITE_ORIGIN).replace(/\/$/, '');
+const EXPECTED_API_BASE = (process.env.TARGET_API_BASE || CLOUDFLARE_SITE_ORIGIN).replace(/\/$/, '');
 const PUBLIC_SITE_ORIGINS = [...new Set([SITE_ORIGIN, CLOUDFLARE_SITE_ORIGIN, GITHUB_SITE_ORIGIN])];
 const BRIDGE_OUTPUT = path.resolve(process.env.BRIDGE_OUTPUT || 'public/gallery-vpn-bridge.user.js');
 const RUNTIME_OUTPUT = path.resolve(process.env.BRIDGE_RUNTIME_OUTPUT || 'public/gallery-vpn-bridge-runtime.js');
@@ -60,8 +61,8 @@ for (const signature of ['  function queueDoi(doi, priority = false) {', '  func
 await writeFile(RUNTIME_OUTPUT, runtime, 'utf8');
 
 const runtimeBody = runtime.replace(/^\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==\s*/, '').trim();
-if (!runtimeBody.includes("const VERSION = '1.2.0';") || !runtimeBody.includes("const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';")) {
-  throw new Error('Packaged Runtime validation failed.');
+if (!runtimeBody.includes("const VERSION = '1.2.0';") || !runtimeBody.includes(`const API_BASE = '${EXPECTED_API_BASE}';`)) {
+  throw new Error(`Packaged Runtime validation failed for TARGET_API_BASE=${EXPECTED_API_BASE}.`);
 }
 if (/\beval\s*\(/.test(runtimeBody)) throw new Error('Runtime unexpectedly contains eval().');
 
