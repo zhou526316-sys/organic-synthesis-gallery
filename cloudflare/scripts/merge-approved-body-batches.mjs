@@ -12,7 +12,7 @@ export function verifyApprovedBodyItem(item,bytes) {
   const ext=verifyReviewedBody(item,bytes);
   demand(item.review?.decision==='approved' && Number.isFinite(Date.parse(item.review?.reviewedAt)) && String(item.review?.note||'').trim().length>=20,'explicit_body_review_required');
   demand(item.review.evidenceSha256===evidenceDigest(item),'body_evidence_changed_since_review');
-  demand(/^audit\/media-recovery\/body-batches\/assets\/[a-f0-9]{64}\.(svg|png|webp)$/.test(item.assetPath),'approved_body_path_invalid');
+  demand(/^audit\/media-recovery\/body-batches\/assets\/[a-f0-9]{64}\.(svg|png|webp|jpg|jpeg)$/.test(item.assetPath),'approved_body_path_invalid');
   return ext;
 }
 async function existingFile(root,figure) {
@@ -39,7 +39,7 @@ export async function mergeApprovedBodyBatches(root=process.cwd()) {
     demand(new Set(batch.items.map(i=>i.doi)).size<=5,'body_batch_article_limit');
     batches.push(batch.batchId);
     for(const item of batch.items) {
-      demand(typeof item.assetPath==='string'&&/^audit\/media-recovery\/body-batches\/assets\/[a-f0-9]{64}\.(svg|png|webp)$/.test(item.assetPath),'approved_body_path_invalid');
+      demand(typeof item.assetPath==='string'&&/^audit\/media-recovery\/body-batches\/assets\/[a-f0-9]{64}\.(svg|png|webp|jpg|jpeg)$/.test(item.assetPath),'approved_body_path_invalid');
       const bytes=await readFile(path.join(root,item.assetPath)), ext=verifyApprovedBodyItem(item,bytes);
       const key=item.doi+'|'+item.id, prior=identityHashes.get(key);
       demand(!prior||prior===item.sha256,'conflicting_body_approvals_require_resolution');identityHashes.set(key,item.sha256);
