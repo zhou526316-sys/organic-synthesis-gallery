@@ -1,4 +1,4 @@
-name: Bridge 2.2.32 Evidence v2 capture regression
+name: Bridge Evidence v2 capture regression
 
 on:
   pull_request:
@@ -48,7 +48,7 @@ jobs:
           node scripts/test-tm232-evidence-capture.mjs | tee "$RUNNER_TEMP/tm232-evidence.log"
           grep -F 'TM232_EVIDENCE_TEST_SUMMARY ' "$RUNNER_TEMP/tm232-evidence.log"
 
-      - name: Build exact Bridge 2.2.32 installer
+      - name: Build exact Bridge 2.2.33 installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -59,8 +59,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.32' public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.32';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.33' public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.33';" public/gallery-vpn-bridge.user.js
           grep -F "var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';" public/gallery-vpn-bridge.user.js
           grep -F 'EVIDENCE_INVENTORY_ENDPOINT' public/gallery-vpn-bridge.user.js
           grep -F 'evidenceBackfillJobs' public/gallery-vpn-bridge.user.js
