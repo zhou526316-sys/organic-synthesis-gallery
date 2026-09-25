@@ -47,14 +47,28 @@ const DRAFT_SCHEMA = {
     'limitations',
     'questionsForManualVerification',
     'claims',
-    'draftZh',
-    'draftEn',
   ],
   properties: {
     doi: { type: 'string' },
     evidenceLevel: { type: 'string', enum: ['abstract_only', 'partial', 'complete'] },
-    researchObjective: { type: 'string' },
-    keyTransformationOrStrategy: { type: 'string' },
+    researchObjective: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['summary', 'evidenceIds'],
+      properties: {
+        summary: { type: 'string' },
+        evidenceIds: { type: 'array', items: { type: 'string' } },
+      },
+    },
+    keyTransformationOrStrategy: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['summary', 'evidenceIds'],
+      properties: {
+        summary: { type: 'string' },
+        evidenceIds: { type: 'array', items: { type: 'string' } },
+      },
+    },
     conditions: {
       type: 'array',
       items: {
@@ -123,8 +137,28 @@ const DRAFT_SCHEMA = {
         },
       },
     },
-    noveltyAndSyntheticSignificance: { type: 'string' },
-    limitations: { type: 'array', items: { type: 'string' } },
+    noveltyAndSyntheticSignificance: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['summary', 'evidenceIds'],
+      properties: {
+        summary: { type: 'string' },
+        evidenceIds: { type: 'array', items: { type: 'string' } },
+      },
+    },
+    limitations: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['statement', 'kind', 'evidenceIds'],
+        properties: {
+          statement: { type: 'string' },
+          kind: { type: 'string', enum: ['reported_limitation', 'evidence_gap'] },
+          evidenceIds: { type: 'array', items: { type: 'string' } },
+        },
+      },
+    },
     questionsForManualVerification: { type: 'array', items: { type: 'string' } },
     claims: {
       type: 'array',
@@ -141,8 +175,6 @@ const DRAFT_SCHEMA = {
         },
       },
     },
-    draftZh: { type: 'string' },
-    draftEn: { type: 'string' },
   },
 };
 
@@ -235,6 +267,49 @@ async function listObjects(env, prefix) {
     cursor = page.cursor;
   }
   return items;
+}
+
+let mutexSchemaReady = false;
+async function ensureSummaryReviewMutexTable(env) {
+  if (!env?.DB) throw new Error('summary_review_db_missing');
+  if (mutexSchemaReady) return;
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS summary_review_mutex (
+    doi TEXT PRIMARY KEY,
+    evidence_packet_hash TEXT NOT NULL,
+    lease_owner TEXT,
+    lease_expires_at INTEGER NOT NULL DEFAULT 0,
+    updated_at INTEGER NOT NULL
+  )`).run();
+  mutexSchemaReady = true;
+}
+
+async function acquireSummaryReviewMutex(env, candidate, owner, now = Date.now()) {
+  await ensureSummaryReviewMutexTable(env);
+  const expires = now + LEASE_MS;
+  const result = await env.DB.prepare(`
+    INSERT INTO summary_review_mutex
+      (doi, evidence_packet_hash, lease_owner, lease_expires_at, updated_at)
+    VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(doi) DO UPDATE SET
+      evidence_packet_hash = excluded.evidence_packet_hash,
+      lease_owner = excluded.lease_owner,
+      lease_expires_at = excluded.lease_expires_at,
+      updated_at = excluded.updated_at
+    WHERE summary_review_mutex.evidence_packet_hash <> excluded.evidence_packet_hash
+       OR summary_review_mutex.lease_expires_at <= ?
+  `).bind(candidate.doi, candidate.evidencePacketHash, owner, expires, now, now).run();
+  return Number(result?.meta?.changes || 0) > 0 ? { owner, expires } : null;
+}
+
+async function releaseSummaryReviewMutex(env, doi, owner) {
+  if (!env?.DB || !doi || !owner) return;
+  try {
+    await env.DB.prepare(`
+      UPDATE summary_review_mutex
+      SET lease_owner = NULL, lease_expires_at = 0, updated_at = ?
+      WHERE doi = ? AND lease_owner = ?
+    `).bind(Date.now(), doi, owner).run();
+  } catch {}
 }
 
 function metadataNumber(meta, key) {
@@ -340,6 +415,9 @@ async function claimCandidate(env, candidate, now = Date.now()) {
     if (previous.state === 'retry_wait' && Number(previous.nextRetryAt || 0) > now) return null;
     if (['published', 'needs_manual_review', 'rejected'].includes(previous.state)) return null;
   }
+  const leaseOwner = crypto.randomUUID();
+  const mutex = await acquireSummaryReviewMutex(env, candidate, leaseOwner, now);
+  if (!mutex) return null;
   const job = {
     version: JOB_VERSION,
     doi: candidate.doi,
@@ -351,19 +429,20 @@ async function claimCandidate(env, candidate, now = Date.now()) {
     capturedAt: candidate.capturedAt,
     state: 'processing',
     attempts: previous?.evidencePacketHash === candidate.evidencePacketHash ? Number(previous.attempts || 0) + 1 : 1,
-    leaseOwner: crypto.randomUUID(),
-    leaseExpiresAt: now + LEASE_MS,
+    leaseOwner,
+    leaseExpiresAt: mutex.expires,
     nextRetryAt: 0,
     lastError: '',
     createdAt: previous?.evidencePacketHash === candidate.evidencePacketHash ? Number(previous.createdAt || now) : now,
     updatedAt: now,
   };
-  await putJob(env, job);
-  // R2 is strongly read-after-write consistent. Confirm our lease still owns
-  // the object so a manual run racing the cron cannot duplicate model calls.
-  const confirmed = await readJsonObject(env, keys.job);
-  if (!confirmed || confirmed.leaseOwner !== job.leaseOwner || confirmed.evidencePacketHash !== job.evidencePacketHash) return null;
-  return job;
+  try {
+    await putJob(env, job);
+    return job;
+  } catch (error) {
+    await releaseSummaryReviewMutex(env, candidate.doi, leaseOwner);
+    throw error;
+  }
 }
 
 function evidenceMap(evidence) {
@@ -418,6 +497,17 @@ function validateDraftAgainstEvidence(draft, evidence) {
     issues.push({ type: 'evidence_level_violation', message: 'Draft evidence level does not match stored evidence', evidenceIds: [] });
   }
 
+  for (const field of ['researchObjective', 'keyTransformationOrStrategy', 'noveltyAndSyntheticSignificance']) {
+    const value = draft?.[field] || {};
+    checkIds(value?.evidenceIds, field);
+    checkNumbers(value?.summary, value?.evidenceIds, field);
+  }
+  for (const [index, limitation] of (draft?.limitations || []).entries()) {
+    const allowEmpty = limitation?.kind === 'evidence_gap';
+    checkIds(limitation?.evidenceIds, `limitations[${index}]`, allowEmpty);
+    checkNumbers(limitation?.statement, limitation?.evidenceIds, `limitations[${index}]`);
+  }
+
   for (const [index, condition] of (draft?.conditions || []).entries()) {
     checkIds(condition?.evidenceIds, `conditions[${index}]`);
     checkNumbers([condition?.name, condition?.value, condition?.role].join(' '), condition?.evidenceIds, `conditions[${index}]`);
@@ -468,7 +558,8 @@ The modelInference array must normally be empty. Never reconstruct missing stand
 For abstract_only evidence, summarize only what the abstract explicitly supports; do not expand “broad scope” into detailed scope.
 When information is missing, say so in limitations or questionsForManualVerification instead of guessing.
 Capture key transformation/strategy, conditions, scope/selectivity, mechanistic evidence vs author proposal, limitations, and concrete synthetic significance.
-Every key claim must cite evidence IDs (s..., c..., t...). Chinese and English drafts must contain the same scientific facts.`;
+Every key scientific field and every claim must cite evidence IDs (s..., c..., t...).
+Return structured scientific facts only. Do not write public-facing Chinese or English summary prose in the draft pass.`;
 
 const AUDIT_INSTRUCTIONS = `You are an independent senior organic-chemistry reviewer.
 Audit the draft strictly against the supplied evidence and deterministic validation issues.
@@ -555,6 +646,22 @@ async function callOpenAiStructured(env, {
   return { parsed, response: body };
 }
 
+function validateFinalSummaryAgainstEvidence(auditValue, evidence) {
+  const issues = [];
+  const map = evidenceMap(evidence);
+  const source = [...map.values()].join('\n').replace(/\s+/g, '').toLowerCase();
+  const tokens = numberTokens([auditValue?.finalZh, auditValue?.finalEn].filter(Boolean).join('\n'));
+  const missing = tokens.filter(token => !source.includes(token));
+  if (missing.length) {
+    issues.push({
+      type: 'numeric_mismatch',
+      message: `Final bilingual summary contains numeric values not found in Evidence Packet: ${missing.join(', ')}`,
+      evidenceIds: [],
+    });
+  }
+  return issues;
+}
+
 function retryDelay(attempts) {
   return Math.min(6 * 60 * 60 * 1000, 15 * 60 * 1000 * Math.pow(2, Math.max(0, attempts - 1)));
 }
@@ -569,6 +676,7 @@ async function finalizeJob(env, job, patch) {
     updatedAt: now,
   };
   await putJob(env, next);
+  await releaseSummaryReviewMutex(env, job.doi, job.leaseOwner);
   return next;
 }
 
@@ -628,10 +736,12 @@ async function processClaimedJob(env, job, options = {}) {
   });
 
   const auditValue = audit.parsed;
+  const finalDeterministicIssues = validateFinalSummaryAgainstEvidence(auditValue, evidence);
   const blockingAudit = auditValue.outcome !== 'pass'
     || auditValue.modelInferencePresent === true
     || Number(auditValue.unsupportedClaimCount || 0) > 0
     || (auditValue.issues || []).some(issue => issue?.severity === 'error')
+    || finalDeterministicIssues.length > 0
     || !String(auditValue.finalZh || '').trim()
     || !String(auditValue.finalEn || '').trim();
 
@@ -650,6 +760,7 @@ async function processClaimedJob(env, job, options = {}) {
     promptVersion: DRAFT_PROMPT_VERSION,
     auditVersion: AUDIT_PROMPT_VERSION,
     deterministicIssues,
+    finalDeterministicIssues,
     draft: draft.parsed,
     audit: auditValue,
     createdAt: Date.now(),
@@ -722,6 +833,7 @@ async function handleJobFailure(env, job, error) {
 
 export async function runSummaryReviewCycle(env, options = {}) {
   if (!env?.MEDIA) return { status: 'disabled', reason: 'media_binding_missing' };
+  if (!env?.DB) return { status: 'disabled', reason: 'db_binding_missing' };
   if (!reviewEnabled(env)) {
     return {
       status: 'disabled',
@@ -791,7 +903,8 @@ export async function getSummaryReviewStatus(env) {
   return {
     status: 200,
     body: {
-      enabled: reviewEnabled(env),
+      enabled: reviewEnabled(env) && Boolean(env?.DB),
+      atomicMutex: Boolean(env?.DB),
       apiKeyConfigured: Boolean(String(env?.OPENAI_API_KEY || '').trim()),
       allowUnknownPolicy: String(env?.SUMMARY_ALLOW_UNKNOWN_POLICY || '') === '1',
       draftModel: String(env?.SUMMARY_DRAFT_MODEL || DRAFT_MODEL_DEFAULT),
@@ -811,4 +924,4 @@ export const SUMMARY_DRAFT_SCHEMA = DRAFT_SCHEMA;
 export const SUMMARY_AUDIT_SCHEMA = AUDIT_SCHEMA;
 export const SUMMARY_DRAFT_PROMPT_VERSION = DRAFT_PROMPT_VERSION;
 export const SUMMARY_AUDIT_PROMPT_VERSION = AUDIT_PROMPT_VERSION;
-export { validateDraftAgainstEvidence };
+export { validateDraftAgainstEvidence, validateFinalSummaryAgainstEvidence };
