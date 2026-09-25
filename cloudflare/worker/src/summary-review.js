@@ -334,6 +334,55 @@ async function selectReviewCandidate(env, now = Date.now()) {
   };
 }
 
+async function claimReviewLease(env, candidate, owner, now = Date.now()) {
+  if (!env?.DB) return true;
+  const expiresAt = now + LEASE_MS;
+  await env.DB.prepare(`
+    INSERT INTO article_summary_review_leases (
+      doi, evidence_packet_hash, lease_owner, lease_expires_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(doi) DO UPDATE SET
+      evidence_packet_hash = excluded.evidence_packet_hash,
+      lease_owner = excluded.lease_owner,
+      lease_expires_at = excluded.lease_expires_at,
+      updated_at = excluded.updated_at
+    WHERE article_summary_review_leases.lease_expires_at <= ?
+       OR article_summary_review_leases.evidence_packet_hash != excluded.evidence_packet_hash
+  `).bind(candidate.doi, candidate.evidencePacketHash, owner, expiresAt, now, now).run();
+  const row = await env.DB.prepare(`
+    SELECT evidence_packet_hash, lease_owner, lease_expires_at
+    FROM article_summary_review_leases
+    WHERE doi = ?
+  `).bind(candidate.doi).first();
+  return Boolean(
+    row
+    && row.evidence_packet_hash === candidate.evidencePacketHash
+    && row.lease_owner === owner
+    && Number(row.lease_expires_at || 0) === expiresAt
+  );
+}
+
+async function renewReviewLease(env, job, now = Date.now()) {
+  if (!env?.DB) return true;
+  const expiresAt = now + LEASE_MS;
+  const result = await env.DB.prepare(`
+    UPDATE article_summary_review_leases
+    SET lease_expires_at = ?, updated_at = ?
+    WHERE doi = ? AND evidence_packet_hash = ? AND lease_owner = ?
+  `).bind(expiresAt, now, job.doi, job.evidencePacketHash, job.leaseOwner).run();
+  if (Number(result?.meta?.changes || 0) !== 1) return false;
+  job.leaseExpiresAt = expiresAt;
+  return true;
+}
+
+async function releaseReviewLease(env, job) {
+  if (!env?.DB || !job?.doi || !job?.leaseOwner) return;
+  await env.DB.prepare(`
+    DELETE FROM article_summary_review_leases
+    WHERE doi = ? AND evidence_packet_hash = ? AND lease_owner = ?
+  `).bind(job.doi, job.evidencePacketHash, job.leaseOwner).run();
+}
+
 async function claimCandidate(env, candidate, now = Date.now()) {
   const keys = await keysForDoi(candidate.doi);
   const previous = await readJsonObject(env, keys.job);
@@ -342,6 +391,8 @@ async function claimCandidate(env, candidate, now = Date.now()) {
     if (previous.state === 'retry_wait' && Number(previous.nextRetryAt || 0) > now) return null;
     if (['published', 'needs_manual_review', 'rejected'].includes(previous.state)) return null;
   }
+  const owner = crypto.randomUUID();
+  if (!await claimReviewLease(env, candidate, owner, now)) return null;
   const job = {
     version: JOB_VERSION,
     doi: candidate.doi,
@@ -353,19 +404,27 @@ async function claimCandidate(env, candidate, now = Date.now()) {
     capturedAt: candidate.capturedAt,
     state: 'processing',
     attempts: previous?.evidencePacketHash === candidate.evidencePacketHash ? Number(previous.attempts || 0) + 1 : 1,
-    leaseOwner: crypto.randomUUID(),
+    leaseOwner: owner,
     leaseExpiresAt: now + LEASE_MS,
     nextRetryAt: 0,
     lastError: '',
     createdAt: previous?.evidencePacketHash === candidate.evidencePacketHash ? Number(previous.createdAt || now) : now,
     updatedAt: now,
   };
-  await putJob(env, job);
-  // R2 is strongly read-after-write consistent. Confirm our lease still owns
-  // the object so a manual run racing the cron cannot duplicate model calls.
-  const confirmed = await readJsonObject(env, keys.job);
-  if (!confirmed || confirmed.leaseOwner !== job.leaseOwner || confirmed.evidencePacketHash !== job.evidencePacketHash) return null;
-  return job;
+  try {
+    await putJob(env, job);
+    // R2 remains the durable human-readable job record. D1 is only the atomic
+    // call lease; confirm both layers agree before any model request is made.
+    const confirmed = await readJsonObject(env, keys.job);
+    if (!confirmed || confirmed.leaseOwner !== job.leaseOwner || confirmed.evidencePacketHash !== job.evidencePacketHash) {
+      await releaseReviewLease(env, job);
+      return null;
+    }
+    return job;
+  } catch (error) {
+    await releaseReviewLease(env, job);
+    throw error;
+  }
 }
 
 function evidenceMap(evidence) {
@@ -750,6 +809,7 @@ async function finalizeJob(env, job, patch) {
     updatedAt: now,
   };
   await putJob(env, next);
+  await releaseReviewLease(env, job);
   return next;
 }
 
