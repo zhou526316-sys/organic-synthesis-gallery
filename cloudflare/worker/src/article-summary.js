@@ -5,15 +5,9 @@ const EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
 const REVIEWED_SUMMARY_SCHEMA_VERSION = 'reviewed-summary-v2';
 const CAPTURE_VERSION = '6.2.20';
 const MIN_CONTROLLER_REVISION = [2, 2, 32];
-const MAX_EVIDENCE_CHARS = 750_000;
-const MAX_SECTION_TOTAL_CHARS = 620_000;
-const MAX_CAPTION_TOTAL_CHARS = 70_000;
-const MAX_TABLE_TOTAL_CHARS = 60_000;
-const MAX_SECTION_CHARS = 180_000;
 const MAX_SECTIONS = 96;
 const MAX_CAPTIONS = 160;
 const MAX_TABLES = 48;
-const MIN_COMPLETE_TEXT_CHARS = 3_000;
 
 const SECTION_TYPES = new Set([
   'abstract',
@@ -51,13 +45,12 @@ async function sha256Hex(value) {
   return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
-function normalizeText(value, max = MAX_SECTION_CHARS) {
+function normalizeText(value) {
   return String(value || '')
     .replace(/\r\n?/g, '\n')
     .replace(/[ \t]+/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
-    .trim()
-    .slice(0, max);
+    .trim();
 }
 
 function safeSingleLine(value, max = 400) {
@@ -179,7 +172,7 @@ function normalizeCaptions(rows) {
     evidenceId: 'c' + String(index + 1).padStart(3, '0'),
     label: safeSingleLine(row?.label, 120),
     type: safeSingleLine(row?.type, 80).toLowerCase() || 'figure',
-    text: normalizeText(row?.text, 12_000),
+    text: normalizeText(row?.text),
   })).filter(row => row.text.length >= 20);
 }
 
@@ -189,21 +182,8 @@ function normalizeTables(rows) {
     evidenceId: 't' + String(index + 1).padStart(3, '0'),
     label: safeSingleLine(row?.label, 120),
     title: safeSingleLine(row?.title, 500),
-    text: normalizeText(row?.text, 30_000),
+    text: normalizeText(row?.text),
   })).filter(row => row.text.length >= 40);
-}
-
-function budgetEvidenceRows(rows, budget, minimum = 20) {
-  let remaining = budget;
-  const out = [];
-  for (const row of rows) {
-    if (remaining < minimum) break;
-    const text = String(row?.text || '').slice(0, remaining);
-    if (text.length < minimum) continue;
-    out.push({ ...row, text });
-    remaining -= text.length;
-  }
-  return out;
 }
 
 async function hashEvidenceRows(rows) {
@@ -215,7 +195,7 @@ function canonicalSourceText(sections, captions, tables) {
     ...sections.map(row => [row.type, row.heading, row.text].filter(Boolean).join('\n')),
     ...captions.map(row => [row.label, row.text].filter(Boolean).join('\n')),
     ...tables.map(row => [row.label, row.title, row.text].filter(Boolean).join('\n')),
-  ].join('\n\n').slice(0, MAX_EVIDENCE_CHARS);
+  ].join('\n\n');
 }
 
 function validateProvenance(payload, doi) {
@@ -238,8 +218,9 @@ function validateProvenance(payload, doi) {
   if (!revisionAtLeast(payload?.controllerRevision)) return { error: 'controller_revision_too_old' };
   const jobId = safeSingleLine(payload?.jobId, 120);
   if (!/^[a-z0-9-]{16,120}$/i.test(jobId)) return { error: 'invalid_job_id' };
-  if (String(payload?.fulltextStatus || '') !== 'complete') return { error: 'fulltext_not_complete' };
-  return { publisher, pageDoi, articleUrl, sourceUrl, jobId };
+  const fulltextStatus = String(payload?.fulltextStatus || '');
+  if (!['complete','partial','abstract_only'].includes(fulltextStatus)) return { error: 'invalid_evidence_status' };
+  return { publisher, pageDoi, articleUrl, sourceUrl, jobId, fulltextStatus };
 }
 
 async function keysForDoi(doi) {
@@ -306,16 +287,12 @@ export async function importArticleFulltext(env, payload) {
   const provenance = validateProvenance(payload, doi);
   if (provenance.error) return { status: 400, body: { error: provenance.error } };
 
-  const sections = await hashEvidenceRows(budgetEvidenceRows(normalizeSections(payload?.sections), MAX_SECTION_TOTAL_CHARS, 80));
-  const captions = await hashEvidenceRows(budgetEvidenceRows(normalizeCaptions(payload?.captions), MAX_CAPTION_TOTAL_CHARS, 20));
-  const tables = await hashEvidenceRows(budgetEvidenceRows(normalizeTables(payload?.tables), MAX_TABLE_TOTAL_CHARS, 40));
+  const sections = await hashEvidenceRows(normalizeSections(payload?.sections));
+  const captions = await hashEvidenceRows(normalizeCaptions(payload?.captions));
+  const tables = await hashEvidenceRows(normalizeTables(payload?.tables));
   const sourceText = canonicalSourceText(sections, captions, tables);
-  if (sourceText.length < MIN_COMPLETE_TEXT_CHARS) {
-    return { status: 400, body: { error: 'fulltext_too_short', chars: sourceText.length } };
-  }
-  if (sections.length < 2) return { status: 400, body: { error: 'insufficient_sections' } };
-  if (!sections.some(row => ['results', 'scope', 'mechanism', 'conclusion', 'experimental', 'optimization'].includes(row.type))) {
-    return { status: 400, body: { error: 'evidence_sections_missing' } };
+  if (!sections.length && !captions.length && !tables.length) {
+    return { status: 400, body: { error: 'evidence_empty' } };
   }
   if (CHALLENGE_TEXT.test(sourceText.slice(0, 12_000))) {
     return { status: 400, body: { error: 'challenge_or_auth_page_detected' } };
@@ -340,7 +317,8 @@ export async function importArticleFulltext(env, payload) {
     jobId: provenance.jobId,
     queueGeneratedAt: safeSingleLine(payload?.queueGeneratedAt, 80),
     capturedAt,
-    fulltextStatus: 'complete',
+    fulltextStatus: provenance.fulltextStatus,
+    evidenceLevel: provenance.fulltextStatus,
     textProcessingPolicy,
     sourceHash,
     sections,
@@ -369,6 +347,7 @@ export async function importArticleFulltext(env, payload) {
       publisher: provenance.publisher,
       capturedAt,
       textProcessingPolicy,
+      evidenceLevel: provenance.fulltextStatus,
     },
   });
 
@@ -431,6 +410,7 @@ export async function getArticleSummary(env, doiValue) {
         reviewedAt: summary.reviewedAt || summary.generatedAt,
         sourceHash: evidence.sourceHash,
         evidencePacketHash: evidence.evidencePacketHash,
+        evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus || 'unknown',
         model: summary.model || '',
         modelSnapshot: summary.modelSnapshot || '',
         promptVersion: summary.promptVersion || '',
@@ -459,6 +439,7 @@ export async function getArticleSummary(env, doiValue) {
       sourceHash: evidence.sourceHash,
       evidencePacketHash: evidence.evidencePacketHash,
       capturedAt: evidence.capturedAt,
+      evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus || 'unknown',
     },
   };
 }
@@ -487,6 +468,7 @@ export async function getArticleEvidenceInventory(env) {
         publisher: safeSingleLine(meta.publisher || '', 40),
         capturedAt: safeSingleLine(meta.capturedAt || '', 80),
         textProcessingPolicy: safeSingleLine(meta.textProcessingPolicy || 'unknown', 80),
+        evidenceLevel: safeSingleLine(meta.evidenceLevel || 'unknown', 40),
       });
     }
     if (!page?.truncated || !page?.cursor) break;
