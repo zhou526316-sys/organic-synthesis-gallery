@@ -17,6 +17,7 @@ const names = [
   'captureQueueTier',
   'wileyGaHeadingText',
   'wileyGaUrlSignal',
+  'wileyGraphicalAbstractCandidates',
 ];
 const exposed = source.replace(
   '  installMenu();',
@@ -225,7 +226,28 @@ try{
   test('Wiley GA recovery recognizes -gra- asset URLs but not Scheme URLs',
     wileySelector.gaUrl&&!wileySelector.schemeUrl);
 
-    test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.33';"));
+  const wileyDom=await page.evaluate(()=>{
+    document.body.innerHTML=`
+      <main>
+        <article>
+          <section id="ga-section">
+            <h2>Graphical Abstract</h2>
+            <picture><img alt="Graphical Abstract" data-src="https://onlinelibrary.wiley.com/cms/asset/abc/anie202612345-gra-0001-m.jpg"></picture>
+          </section>
+          <section id="scheme-section">
+            <h2>Scheme 1</h2>
+            <figure><img alt="Scheme 1" data-src="https://onlinelibrary.wiley.com/cms/asset/abc/anie202612345-sch-0001-m.jpg"><figcaption>Scheme 1. Synthetic route.</figcaption></figure>
+          </section>
+        </article>
+      </main>`;
+    const job={doi:'10.1002/anie.5617321',publisher:'wiley'};
+    const rows=__tm232.wileyGraphicalAbstractCandidates(job,document,'https://onlinelibrary.wiley.com/doi/10.1002/anie.5617321');
+    return rows.map(r=>({url:r.url,source:r.source,kind:r.kind}));
+  });
+  test('Wiley DOM recovery binds only the explicit GA block and refuses adjacent Scheme 1',
+    wileyDom.length===1&&/-gra-0001-m\.jpg/i.test(wileyDom[0].url)&&!wileyDom.some(r=>/-sch-0001/i.test(r.url)));
+
+  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.33';"));
   test('2.2.33 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
 
   console.log('TM233_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.33',totalTextBudget:null,abstractOnly:true}));
