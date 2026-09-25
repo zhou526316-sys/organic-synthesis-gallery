@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.33';
+  var CONTROLLER_REVISION = '2.2.34';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -1947,8 +1947,10 @@ function embeddedJobDois(value) {
         throw new Error('evidence_receipt_invalid');
       }
       var level=String(receipt.evidenceLevel||packet.fulltextStatus||'partial');
-      pushTrace(trace,{stage:'evidence_capture',event:'stored',status:'success',url:location.href,message:'level='+level+';chars='+String(receipt.chars||packet._metrics.chars)+';sections='+String(receipt.sections||packet._metrics.sections)});
-      return {status:'stored',evidenceLevel:level,chars:Number(receipt.chars||packet._metrics.chars),sections:Number(receipt.sections||packet._metrics.sections),sourceHash:String(receipt.sourceHash||''),evidencePacketHash:String(receipt.evidencePacketHash||'')};
+      var summaryReviewQueued=receipt.summaryReviewQueued===true;
+      var summaryReviewQueueReason=String(receipt.summaryReviewQueueReason||'');
+      pushTrace(trace,{stage:'evidence_capture',event:'stored',status:'success',url:location.href,message:'level='+level+';chars='+String(receipt.chars||packet._metrics.chars)+';sections='+String(receipt.sections||packet._metrics.sections)+';summaryQueued='+(summaryReviewQueued?'1':'0')+(summaryReviewQueueReason?';summaryReason='+summaryReviewQueueReason:'')});
+      return {status:'stored',evidenceLevel:level,chars:Number(receipt.chars||packet._metrics.chars),sections:Number(receipt.sections||packet._metrics.sections),sourceHash:String(receipt.sourceHash||''),evidencePacketHash:String(receipt.evidencePacketHash||''),summaryReviewQueued:summaryReviewQueued,summaryReviewQueueReason:summaryReviewQueueReason};
     } catch (error) {
       pushTrace(trace,{stage:'evidence_capture',event:'failed',status:'failed',url:location.href,httpStatus:Number(error&&error.httpStatus||0),message:String(error&&error.message||error).slice(0,240)});
       return {status:'failed',reason:String(error&&error.message||error).slice(0,240)};
