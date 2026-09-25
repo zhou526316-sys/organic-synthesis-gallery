@@ -1,0 +1,137 @@
+{
+  "recordedAt": "2026-09-25T09:58:00+08:00",
+  "context": "User approved only the second half of newest R2 feedback: enlarge desktop full-text summary window.",
+  "scope": {
+    "approved": "desktop full-text summary window larger",
+    "explicitlyUnchanged": "generate summary while grabbing TOC",
+    "feedbackStatusChanged": false,
+    "combinedR2FeedbackRemainsOpen": true
+  },
+  "product": {
+    "pr": 235,
+    "testedHead": "41abd9d936e5eeb457a486884ec9c34512aa6fa9",
+    "mergeSha": "e14f98449d5159e71c540e583ec188bdb5159998",
+    "changes": {
+      "desktopMaxWidthPx": 1440,
+      "desktopMaxHeightRatio": 0.89,
+      "desktopMaxHeightPx": 1000,
+      "desktopGrid": "30% TOC / 70% text",
+      "mobileMaxHeightRatio": 0.86,
+      "mobileMaxHeightPx": 900,
+      "mobileChanged": false
+    }
+  },
+  "premerge": {
+    "summaryRun": 36083384595,
+    "summaryArtifact": 10843400449,
+    "summaryArtifactSha256": "92fda5aa3a8054a249396e59ef45b4de27f9388d011cf53eb0a637e246e94ba2",
+    "geometry": {
+      "1600x1000": {
+        "width": 1440,
+        "height": 890
+      },
+      "1280x900": {
+        "width": 1248,
+        "height": 801
+      },
+      "390x900": {
+        "width": 366,
+        "height": 774
+      },
+      "320x568": {
+        "width": 296,
+        "height": 488.46875
+      },
+      "900x420": {
+        "width": 868,
+        "height": 373.796875
+      }
+    },
+    "allCurrentHeadWorkflowsPassed": true,
+    "gateRuns": {
+      "summary": 36083384595,
+      "siteQuality": 36083384606,
+      "originals": 36083384616,
+      "cardGlow": 36083384621,
+      "crop": 36083384657,
+      "statusPresentation": 36083384599,
+      "refreshCost": 36083384596,
+      "migration": 36083384678,
+      "dataValidation": 36083384604,
+      "bridgeCapture": 36083384667
+    },
+    "retainedEarlierFailures": [
+      "Previous interaction assertion still capped desktop summary at 1080px; updated to approved >1200px bounded geometry.",
+      "One earlier 390px GIF run reported an unrelated /api/media/batch CORS pageerror; next exact head passed the full original-image regression without product changes."
+    ]
+  },
+  "deployments": {
+    "githubPagesRun": 36083767613,
+    "githubPagesConclusion": "success",
+    "workerSyncRun": 36083767614,
+    "workerSyncConclusion": "success"
+  },
+  "live": {
+    "run": 36084017822,
+    "reviewedProductCommit": "e14f98449d5159e71c540e583ec188bdb5159998",
+    "productionWritesAllowed": false,
+    "summaryBackendMocked": true,
+    "results": [
+      {
+        "entry": "github",
+        "browser": "chromium",
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "artifact": 10843506072,
+        "sha256": "4af78829ad83b55eb0505e533a135b5649647173acc3c20b29d463107bd5580a"
+      },
+      {
+        "entry": "github",
+        "browser": "webkit",
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "artifact": 10842513128,
+        "sha256": "150df58c2ce9730c8cccc67b4c89fb1e3d841402ac1631a8e9f26c3f14255d47"
+      },
+      {
+        "entry": "worker",
+        "browser": "chromium",
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "artifact": 10842709191,
+        "sha256": "255bc98f6aadbe9334869307366fcb7b0ac9c869f0e7a3cc3d45494b6688975e"
+      },
+      {
+        "entry": "worker",
+        "browser": "webkit",
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "artifact": 10843521002,
+        "sha256": "0b72cfc900317ebf210f9bf6d412e8e051fc56132af86890ad9bc17f24dfd1fa"
+      }
+    ]
+  },
+  "artifacts": {
+    "desktop1600": "desktop-summary-live-1600.png",
+    "desktop1280": "desktop-summary-live-1280.png",
+    "mobileControl": "desktop-summary-mobile-control.png",
+    "evidenceZip": "desktop-summary-release-evidence.zip",
+    "evidenceZipSha256": "545a173c23af3f0cafea23a9bab6d51f0f9f71fda6a8b3ebf3d9d3708aeaf9c0"
+  },
+  "boundaries": {
+    "summaryGenerationChanged": false,
+    "tocAcquisitionChanged": false,
+    "literatureOrPublicationChanged": false,
+    "readerCountingChanged": false,
+    "captureBridgeChanged": false,
+    "cropPinchGlowChanged": false
+  }
+}
