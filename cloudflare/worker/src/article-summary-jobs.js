@@ -538,6 +538,15 @@ function d1Store(env) {
       await env.DB.prepare(`UPDATE article_summary_jobs SET ${keys.map(key => key + ' = ?').join(', ')}, updated_at = ? WHERE doi = ?`)
         .bind(...values, Date.now(), doi).run();
     },
+    async get(doi) {
+      return await env.DB.prepare(`
+        SELECT doi, source_hash, evidence_packet_hash, evidence_level, state, priority,
+               attempts, next_retry_at, lease_owner, lease_expires_at, draft_cursor,
+               draft_chunk_count, draft_model, audit_model, prompt_version, audit_version,
+               last_error, created_at, updated_at, published_at
+        FROM article_summary_jobs WHERE doi = ?
+      `).bind(doi).first();
+    },
     async status(limit = 100) {
       const result = await env.DB.prepare(`
         SELECT doi, source_hash, evidence_packet_hash, evidence_level, state, priority,
@@ -823,6 +832,19 @@ export async function processArticleSummaryJobs(env, { limit = 2 } = {}) {
     }
   }
   return { processed: results.length, results };
+}
+
+export async function getArticleSummaryJobForDoi(env, doiValue) {
+  const doi = normalizeDoi(doiValue);
+  if (!doi || (!env?.DB && !env?.SUMMARY_JOB_STORE)) return null;
+  try {
+    const store = summaryStore(env);
+    if (typeof store.get === 'function') return await store.get(doi);
+    const rows = await store.status(500);
+    return rows.find(row => row.doi === doi) || null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getArticleSummaryJobStatus(env, limit = 100) {
