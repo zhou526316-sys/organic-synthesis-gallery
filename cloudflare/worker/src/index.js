@@ -34,6 +34,7 @@ import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
+import { enqueueArticleSummaryJob, getArticleSummaryJobStatus, processArticleSummaryJobs, seedSummaryJobsFromEvidence } from './article-summary-jobs.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -190,7 +191,7 @@ function requireWriteAuthorization(request, env) {
   return null;
 }
 
-async function handleApi(request, env) {
+async function handleApi(request, env, ctx) {
   const url = new URL(request.url);
   const userUiRoute = url.pathname.startsWith('/api/user-ui/');
   const corsRoute = isBrowserReadablePath(url.pathname);
@@ -208,6 +209,7 @@ async function handleApi(request, env) {
       d1: Boolean(env.DB),
       r2: Boolean(env.MEDIA),
       ai: Boolean(env.AI),
+      openai: Boolean(env.OPENAI_API_KEY),
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
@@ -225,6 +227,19 @@ async function handleApi(request, env) {
     if (!env.BRIDGE_WRITE_TOKEN) return json({ error: 'write_token_not_configured' }, { status: 503, headers: cors });
     if (!writeAuthorized(request, env)) return json({ error: 'unauthorized' }, { status: 401, headers: cors });
     return resultResponse(await getArticleEvidenceInventory(env), cors);
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/article-summary/jobs/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(500, Number(url.searchParams.get('limit') || 100)));
+    return resultResponse(await getArticleSummaryJobStatus(env, limit), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/article-summary/jobs/run') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const payload = await readJson(request);
+    return resultResponse({ status: 200, body: await processArticleSummaryJobs(env, { limit: Math.max(1, Math.min(5, Number(payload?.limit || 1))) }) }, cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
@@ -495,7 +510,19 @@ async function handleApi(request, env) {
   if (request.method === 'POST' && url.pathname === '/api/article-summary/fulltext/import') {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
-    return resultResponse(await importArticleFulltext(env, await readJson(request)), cors);
+    const payload = await readJson(request);
+    const imported = await importArticleFulltext(env, payload);
+    if (imported.status === 200 && imported.body?.stored) {
+      const queue = await enqueueArticleSummaryJob(env, {
+        doi: imported.body.doi,
+        sourceHash: imported.body.sourceHash,
+        evidencePacketHash: imported.body.evidencePacketHash,
+        evidenceLevel: imported.body.evidenceLevel,
+      });
+      imported.body.summaryQueue = queue.queued ? 'queued' : 'deferred';
+      if (!queue.queued) imported.body.summaryQueueReason = queue.reason || '';
+    }
+    return resultResponse(imported, cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-capture/import') {
     return resultResponse(await importLocalCapture(request, env, await readJson(request)));
@@ -539,11 +566,11 @@ async function handleApi(request, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     try {
       if (url.pathname.startsWith('/media/')) return serveMediaObject(request, env);
-      if (url.pathname.startsWith('/api/')) return handleApi(request, env);
+      if (url.pathname.startsWith('/api/')) return handleApi(request, env, ctx);
       return json({ error: 'not_found' }, { status: 404 });
     } catch (error) {
       console.error('Worker request failed', {
@@ -557,27 +584,47 @@ export default {
 
   async scheduled(controller, env, ctx) {
     const minute = new Date(controller.scheduledTime || Date.now()).getUTCMinutes();
-    const mode = minute === 0 ? 'upgrade' : 'coverage';
-    const limit = mode === 'upgrade' ? 1 : 2;
+    const cron = String(controller.cron || '');
+    const mediaMaintenance = cron ? cron === '0 */6 * * *' : minute === 0;
+
     ctx.waitUntil((async () => {
       try {
-        const [databaseSweep, localSweep] = await Promise.all([
-          purgeCrossDoiMedia(env, { dryRun: false }),
-          purgeCrossDoiLocalMedia(env, { dryRun: false }),
-        ]);
-        const purged = Number(databaseSweep.body?.summary?.affectedDois || 0) +
-          Number(localSweep.body?.summary?.affectedDois || 0);
-        if (purged > 0) {
-          console.warn('CROSS_DOI_MEDIA_PURGED', JSON.stringify({
-            database: databaseSweep.body?.summary || {},
-            local: localSweep.body?.summary || {},
-          }));
-        }
-        console.log('MEDIA_JOB_CRON_SKIPPED', JSON.stringify({ mode, reason: 'media_rebuild_lockdown' }));
+        const seeded = await seedSummaryJobsFromEvidence(env);
+        const reviewed = await processArticleSummaryJobs(env, { limit: 2 });
+        console.log('ARTICLE_SUMMARY_CRON', JSON.stringify({
+          cron,
+          seeded: seeded.seeded || 0,
+          evidenceInventory: seeded.inventory || 0,
+          processed: reviewed.processed || 0,
+          reason: reviewed.reason || '',
+          results: reviewed.results || [],
+        }));
       } catch (error) {
-        console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
+        console.error('ARTICLE_SUMMARY_CRON_FAILED', error instanceof Error ? error.message : String(error));
       }
     })());
-    console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_SKIPPED', 'verified_staging_release;retain_original_objects');
-  },
+
+    if (mediaMaintenance) {
+      ctx.waitUntil((async () => {
+        try {
+          const [databaseSweep, localSweep] = await Promise.all([
+            purgeCrossDoiMedia(env, { dryRun: false }),
+            purgeCrossDoiLocalMedia(env, { dryRun: false }),
+          ]);
+          const purged = Number(databaseSweep.body?.summary?.affectedDois || 0) +
+            Number(localSweep.body?.summary?.affectedDois || 0);
+          if (purged > 0) {
+            console.warn('CROSS_DOI_MEDIA_PURGED', JSON.stringify({
+              database: databaseSweep.body?.summary || {},
+              local: localSweep.body?.summary || {},
+            }));
+          }
+          console.log('MEDIA_JOB_CRON_SKIPPED', JSON.stringify({ reason: 'media_rebuild_lockdown' }));
+        } catch (error) {
+          console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
+        }
+      })());
+      console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_SKIPPED', 'verified_staging_release;retain_original_objects');
+    }
+  }
 };
