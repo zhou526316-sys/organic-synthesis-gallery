@@ -192,10 +192,7 @@ The public renderer must display the evidence coverage label:
 
 ## 9. Backend execution contract
 
-The production review runner is disabled unless both conditions are true:
-
-- `OPENAI_API_KEY` is configured as a backend secret.
-- `SUMMARY_REVIEW_ENABLED=1`.
+The production review runner calls OpenAI only when `OPENAI_API_KEY` is configured as a backend secret and `SUMMARY_REVIEW_ENABLED=1`. In this project deployment, review is enabled by default, but the missing API key still makes the runner inert.
 
 Default models:
 
@@ -206,7 +203,7 @@ Both calls use the OpenAI Responses API with `store:false` and strict JSON Schem
 
 The application does not impose a total-character limit on the stored Article Evidence Packet. The GPT runner also does not silently truncate evidence to fit a request. If an evidence packet cannot be processed within model/API limits, the job moves to `needs_manual_review`; it must not publish a summary based on an arbitrary prefix, suffix, or sampled subset.
 
-Evidence with `textProcessingPolicy=no_external_ai` is never sent to OpenAI. Evidence with `textProcessingPolicy=unknown` is blocked unless `SUMMARY_ALLOW_UNKNOWN_POLICY=1` is explicitly configured.
+Evidence with `textProcessingPolicy=no_external_ai` is never sent to OpenAI. Because the site operator explicitly requested GPT review for captured article text, this deployment defaults `SUMMARY_ALLOW_UNKNOWN_POLICY=1`; it can still be set back to `0` without code changes.
 
 The cron handles at most one review job per five-minute invocation. A failed review job cannot block TOC, body-image, Evidence capture, or public Gallery reads.
 
@@ -214,7 +211,7 @@ A D1 `summary_review_mutex` row provides the atomic DOI/evidence-hash lease. R2 
 
 After the Sol audit produces bilingual prose, a second deterministic numeric check rejects any yield/selectivity/temperature/time/loading/equivalent/light/electrochemical value that does not occur anywhere in the current Evidence Packet.
 
-The default rolling 24-hour publication limit is 96 reviewed summaries (`SUMMARY_REVIEW_DAILY_LIMIT`). This is a cost/runaway guard, not a scientific-content limit, and may be raised through repository configuration. The runner confirms its R2 lease after writing it so a cron invocation and an explicit manual review run cannot both proceed with the same job.
+The initial rolling 24-hour review limit is 24 articles (`SUMMARY_REVIEW_DAILY_LIMIT`). This is a pilot cost/runaway guard, not a scientific-content limit, and may be raised after the calibration set is accepted. The runner confirms its R2 lease after writing it so a cron invocation and an explicit manual review run cannot both proceed with the same job.
 
 Private R2 objects:
 
@@ -224,3 +221,17 @@ Private R2 objects:
 - `private/article-summary/*` — approved public-summary derivative cache.
 
 Only an approved `reviewed-summary-v2` object whose `sourceHash` and `evidencePacketHash` still match the current Evidence Packet may be returned by the public summary API.
+
+### Shadow-review calibration
+
+The initial deployment defaults `SUMMARY_AUTO_PUBLISH_ENABLED=0`.
+
+A model-audit `pass` therefore becomes `approved_shadow`: the private review record contains Terra facts plus Sol audit/final bilingual prose, but the public Gallery summary API still reports the paper as awaiting review. Shadow approvals count toward the daily review limit so disabling publication cannot create unlimited model spend.
+
+Authenticated admin endpoints:
+
+- `GET /api/admin/article-summary/review?doi=...` — inspect the structured Draft/Audit record without exposing raw publisher evidence.
+- `POST /api/admin/article-summary/publish` with a DOI — re-check current source/evidence hashes and publish one approved shadow summary.
+- `POST /api/admin/article-summary/review-run` — run one review cycle manually.
+
+After a representative calibration set is accepted, `SUMMARY_AUTO_PUBLISH_ENABLED=1` may be enabled; the same validation path then publishes audit-pass records automatically.

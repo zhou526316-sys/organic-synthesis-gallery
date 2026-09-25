@@ -36,7 +36,12 @@ jobs:
           grep -F 'OPENAI_API_KEY:' .github/workflows/deploy-worker-frontend.yml
           grep -F 'crons = ["*/5 * * * *"]' .github/workflows/deploy-worker-frontend.yml
           grep -F 'const runMediaMaintenance = minute === 0 && hour % 6 === 0;' cloudflare/worker/src/index.js
-          grep -F "SUMMARY_REVIEW_ENABLED = \"\${SUMMARY_REVIEW_ENABLED:-0}\"" .github/workflows/deploy-worker-frontend.yml
+          grep -F "SUMMARY_REVIEW_ENABLED = \"\${SUMMARY_REVIEW_ENABLED:-1}\"" .github/workflows/deploy-worker-frontend.yml
+          grep -F "SUMMARY_ALLOW_UNKNOWN_POLICY = \"\${SUMMARY_ALLOW_UNKNOWN_POLICY:-1}\"" .github/workflows/deploy-worker-frontend.yml
+          grep -F "SUMMARY_AUTO_PUBLISH_ENABLED = \"\${SUMMARY_AUTO_PUBLISH_ENABLED:-0}\"" .github/workflows/deploy-worker-frontend.yml
+          grep -F "SUMMARY_REVIEW_DAILY_LIMIT = \"\${SUMMARY_REVIEW_DAILY_LIMIT:-24}\"" .github/workflows/deploy-worker-frontend.yml
+          grep -F "approved_shadow" cloudflare/worker/src/summary-review.js
+          grep -F "/api/admin/article-summary/publish" cloudflare/worker/src/index.js
           grep -F 'CREATE TABLE IF NOT EXISTS summary_review_mutex' cloudflare/schema.sql
           grep -F "gallery-summary-draft-v3" cloudflare/worker/src/summary-review.js
           grep -F "gallery-summary-audit-v3" cloudflare/worker/src/summary-review.js

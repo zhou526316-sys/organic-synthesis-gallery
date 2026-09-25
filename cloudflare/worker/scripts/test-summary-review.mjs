@@ -5,7 +5,9 @@ import {
   importArticleFulltext,
 } from '../src/article-summary.js';
 import {
+  getSummaryReviewRecord,
   getSummaryReviewStatus,
+  publishReviewedSummary,
   runSummaryReviewCycle,
   SUMMARY_AUDIT_PROMPT_VERSION,
   SUMMARY_DRAFT_PROMPT_VERSION,
@@ -74,6 +76,7 @@ const baseEnv = {
   OPENAI_API_KEY: 'test-only-key',
   SUMMARY_DRAFT_MODEL: 'gpt-5.6-terra',
   SUMMARY_AUDIT_MODEL: 'gpt-5.6-sol',
+  SUMMARY_AUTO_PUBLISH_ENABLED: '1',
 };
 
 const sectionText = [
@@ -231,8 +234,9 @@ assert.match(publicSummary.body.en, /95% ee/);
 const status = await getSummaryReviewStatus(baseEnv);
 assert.equal(status.status, 200);
 assert.equal(status.body.enabled, true);
+assert.equal(status.body.autoPublishEnabled, true);
 assert.equal(status.body.states.published, 1);
-assert.equal(status.body.dailyLimit, 96);
+assert.equal(status.body.dailyLimit, 24);
 assert.equal(status.body.promptVersion, SUMMARY_DRAFT_PROMPT_VERSION);
 assert.equal(status.body.auditVersion, SUMMARY_AUDIT_PROMPT_VERSION);
 
@@ -309,6 +313,39 @@ assert.equal(abstractSummary.body.fulltextAvailable, false);
 assert.match(abstractSummary.body.zh, /基于 Abstract/);
 
 
+const shadowMedia = new MemoryR2();
+const shadowEnv = {
+  ...baseEnv,
+  MEDIA: shadowMedia,
+  DB: new MemoryDB(),
+  SUMMARY_AUTO_PUBLISH_ENABLED: '0',
+};
+const shadowDoi = '10.1021/jacs.6c90006';
+await importArticleFulltext(shadowEnv, payload(shadowDoi, '2026-09-25T03:30:00Z'));
+let shadowCalls = 0;
+const shadowCycle = await runSummaryReviewCycle(shadowEnv, {
+  fetchImpl: async () => {
+    shadowCalls += 1;
+    return shadowCalls === 1
+      ? responseObject('gpt-5.6-terra-2026-test', draftFor(shadowDoi))
+      : responseObject('gpt-5.6-sol-2026-test', auditPass());
+  },
+});
+assert.equal(shadowCycle.status, 'approved_shadow');
+assert.equal(shadowCalls, 2);
+const shadowPublicBefore = await getArticleSummary(shadowEnv, shadowDoi);
+assert.equal(shadowPublicBefore.body.available, false);
+const shadowReview = await getSummaryReviewRecord(shadowEnv, shadowDoi);
+assert.equal(shadowReview.status, 200);
+assert.equal(shadowReview.body.status, 'approved_shadow');
+assert.match(shadowReview.body.audit.finalZh, /82%/);
+const promoted = await publishReviewedSummary(shadowEnv, shadowDoi);
+assert.equal(promoted.status, 200);
+assert.equal(promoted.body.published, true);
+const shadowPublicAfter = await getArticleSummary(shadowEnv, shadowDoi);
+assert.equal(shadowPublicAfter.body.available, true);
+assert.match(shadowPublicAfter.body.zh, /82%/);
+
 const finalMismatchMedia = new MemoryR2();
 const finalMismatchEnv = { ...baseEnv, MEDIA: finalMismatchMedia, DB: new MemoryDB() };
 const finalMismatchDoi = '10.1021/jacs.6c90004';
@@ -364,6 +401,8 @@ console.log(JSON.stringify({
   deterministicEvidenceGuard: true,
   finalSummaryNumericGuard: true,
   atomicD1Mutex: true,
+  shadowReviewBeforePromotion: true,
+  explicitAdminPromotion: true,
   abstractOnlySupported: true,
   publicGetRemainsReadOnly: true,
   draftPromptVersion: SUMMARY_DRAFT_PROMPT_VERSION,
