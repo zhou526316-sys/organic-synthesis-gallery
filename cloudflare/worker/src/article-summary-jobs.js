@@ -514,7 +514,7 @@ function d1Store(env) {
       const now = Date.now();
       const row = await env.DB.prepare(`
         SELECT * FROM article_summary_jobs
-        WHERE state IN ('queued','draft_ready')
+        WHERE state IN ('queued','draft_ready','audit_running')
           AND next_retry_at <= ?
           AND (lease_owner IS NULL OR lease_expires_at <= ?)
         ORDER BY priority DESC, updated_at DESC
@@ -814,7 +814,7 @@ export async function processArticleSummaryJobs(env, { limit = 2 } = {}) {
         results.push({ doi: row.doi, state: 'queued', reason: 'evidence_changed_before_processing' });
         continue;
       }
-      const result = row.state === 'draft_ready'
+      const result = row.state === 'draft_ready' || row.state === 'audit_running'
         ? await processAuditStage(env, store, row, evidence)
         : await processDraftStage(env, store, row, evidence);
       results.push(result);
