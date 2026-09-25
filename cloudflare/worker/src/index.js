@@ -570,26 +570,31 @@ export default {
   },
 
   async scheduled(controller, env, ctx) {
-    const minute = new Date(controller.scheduledTime || Date.now()).getUTCMinutes();
-    const mode = minute === 0 ? 'upgrade' : 'coverage';
-    const limit = mode === 'upgrade' ? 1 : 2;
+    const scheduledAt = new Date(controller.scheduledTime || Date.now());
+    const hour = scheduledAt.getUTCHours();
+    const minute = scheduledAt.getUTCMinutes();
+    const runMediaMaintenance = minute === 0 && hour % 6 === 0;
     ctx.waitUntil((async () => {
-      try {
-        const [databaseSweep, localSweep] = await Promise.all([
-          purgeCrossDoiMedia(env, { dryRun: false }),
-          purgeCrossDoiLocalMedia(env, { dryRun: false }),
-        ]);
-        const purged = Number(databaseSweep.body?.summary?.affectedDois || 0) +
-          Number(localSweep.body?.summary?.affectedDois || 0);
-        if (purged > 0) {
-          console.warn('CROSS_DOI_MEDIA_PURGED', JSON.stringify({
-            database: databaseSweep.body?.summary || {},
-            local: localSweep.body?.summary || {},
-          }));
+      if (runMediaMaintenance) {
+        try {
+          const [databaseSweep, localSweep] = await Promise.all([
+            purgeCrossDoiMedia(env, { dryRun: false }),
+            purgeCrossDoiLocalMedia(env, { dryRun: false }),
+          ]);
+          const purged = Number(databaseSweep.body?.summary?.affectedDois || 0) +
+            Number(localSweep.body?.summary?.affectedDois || 0);
+          if (purged > 0) {
+            console.warn('CROSS_DOI_MEDIA_PURGED', JSON.stringify({
+              database: databaseSweep.body?.summary || {},
+              local: localSweep.body?.summary || {},
+            }));
+          }
+          console.log('MEDIA_MAINTENANCE_CRON', JSON.stringify({ purged }));
+        } catch (error) {
+          console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
         }
-        console.log('MEDIA_JOB_CRON_SKIPPED', JSON.stringify({ mode, reason: 'media_rebuild_lockdown' }));
-      } catch (error) {
-        console.error('MEDIA_JOB_CRON_FAILED', error instanceof Error ? error.message : String(error));
+      } else {
+        console.log('MEDIA_MAINTENANCE_CRON_SKIPPED', JSON.stringify({ reason: 'six_hour_cadence' }));
       }
       try {
         const review = await runSummaryReviewCycle(env);
