@@ -251,6 +251,17 @@ function policyAllowsExternalAi(env, policy) {
 function reviewEnabled(env) {
   return String(env?.SUMMARY_REVIEW_ENABLED || '') === '1' && Boolean(String(env?.OPENAI_API_KEY || '').trim());
 }
+function autoPublishEnabled(env) {
+  return String(env?.SUMMARY_AUTO_PUBLISH_ENABLED || '') === '1';
+}
+
+function normalizeReviewDoi(value) {
+  const raw = String(value || '').trim().toLowerCase()
+    .replace(/^https?:\/\/(?:dx\.)?doi\.org\//, '')
+    .replace(/^doi:\s*/i, '');
+  return /^10\.\d{4,9}\/\S+$/.test(raw) ? raw.replace(/[).,;]+$/, '') : '';
+}
+
 
 async function listObjects(env, prefix) {
   const items = [];
@@ -332,6 +343,7 @@ async function putJob(env, job) {
       nextRetryAt: String(job.nextRetryAt || 0),
       leaseExpiresAt: String(job.leaseExpiresAt || 0),
       updatedAt: String(job.updatedAt || Date.now()),
+      reviewedAt: String(job.reviewedAt || 0),
       publishedAt: String(job.publishedAt || 0),
     },
   });
@@ -371,7 +383,7 @@ async function selectReviewCandidate(env, now = Date.now()) {
     const existing = jobsByDoi.get(doi);
     if (existing && String(existing.meta.evidencePacketHash || '') === hash) {
       const state = String(existing.meta.state || '');
-      if (['published', 'needs_manual_review', 'rejected'].includes(state)) continue;
+      if (['published', 'approved_shadow', 'needs_manual_review', 'rejected'].includes(state)) continue;
       if (state === 'processing' && metadataNumber(existing.meta, 'leaseExpiresAt') > now) continue;
       if (state === 'retry_wait' && metadataNumber(existing.meta, 'nextRetryAt') > now) continue;
     }
@@ -393,16 +405,22 @@ async function selectReviewCandidate(env, now = Date.now()) {
     if (levelDelta) return levelDelta;
     return a.doi.localeCompare(b.doi);
   });
-  const recentPublishedCount = jobObjects.filter(object => {
+  const recentReviewedCount = jobObjects.filter(object => {
     const meta = object?.customMetadata || {};
-    return String(meta.state || '') === 'published' && metadataNumber(meta, 'publishedAt') >= now - 24 * 60 * 60 * 1000;
+    const state = String(meta.state || '');
+    const completedAt = state === 'published'
+      ? metadataNumber(meta, 'publishedAt')
+      : state === 'approved_shadow'
+        ? metadataNumber(meta, 'reviewedAt') || metadataNumber(meta, 'updatedAt')
+        : 0;
+    return completedAt >= now - 24 * 60 * 60 * 1000;
   }).length;
   return {
     candidate: candidates[0] || null,
     evidenceCount: evidenceObjects.length,
     jobCount: jobObjects.length,
     eligibleCount: candidates.length,
-    recentPublishedCount,
+    recentReviewedCount,
     blockedPolicies,
   };
 }
@@ -413,7 +431,7 @@ async function claimCandidate(env, candidate, now = Date.now()) {
   if (previous && previous.evidencePacketHash === candidate.evidencePacketHash) {
     if (previous.state === 'processing' && Number(previous.leaseExpiresAt || 0) > now) return null;
     if (previous.state === 'retry_wait' && Number(previous.nextRetryAt || 0) > now) return null;
-    if (['published', 'needs_manual_review', 'rejected'].includes(previous.state)) return null;
+    if (['published', 'approved_shadow', 'needs_manual_review', 'rejected'].includes(previous.state)) return null;
   }
   const leaseOwner = crypto.randomUUID();
   const mutex = await acquireSummaryReviewMutex(env, candidate, leaseOwner, now);
@@ -680,137 +698,26 @@ async function finalizeJob(env, job, patch) {
   return next;
 }
 
-async function processClaimedJob(env, job, options = {}) {
-  const evidence = await readJsonObject(env, job.evidenceKey);
-  if (!evidence || evidence.evidencePacketHash !== job.evidencePacketHash || evidence.sourceHash !== job.sourceHash) {
-    return finalizeJob(env, job, { state: 'retry_wait', nextRetryAt: Date.now() + 5 * 60 * 1000, lastError: 'evidence_changed_or_missing' });
-  }
-
-  const draftModel = String(env.SUMMARY_DRAFT_MODEL || DRAFT_MODEL_DEFAULT);
-  const auditModel = String(env.SUMMARY_AUDIT_MODEL || AUDIT_MODEL_DEFAULT);
-  const draft = await callOpenAiStructured(env, {
-    model: draftModel,
-    reasoningEffort: String(env.SUMMARY_DRAFT_REASONING || 'medium'),
-    instructions: DRAFT_INSTRUCTIONS,
-    input: `ARTICLE EVIDENCE PACKET:\n${promptEvidence(evidence)}`,
-    schema: DRAFT_SCHEMA,
-    name: 'organic_synthesis_summary_draft_v2',
-    timeoutMs: Number(env.SUMMARY_DRAFT_TIMEOUT_MS || 75000),
-    fetchImpl: options.fetchImpl,
-  });
-
-  const deterministicIssues = validateDraftAgainstEvidence(draft.parsed, evidence);
-  if (deterministicIssues.some(issue => ['evidence_mismatch', 'mechanistic_overclaim', 'unsupported_claim'].includes(issue.type))) {
-    const keys = await keysForDoi(job.doi);
-    const review = {
-      version: 1,
-      doi: job.doi,
-      status: 'needs_manual_review',
-      sourceHash: job.sourceHash,
-      evidencePacketHash: job.evidencePacketHash,
-      evidenceLevel: job.evidenceLevel,
-      draftModel,
-      auditModel: '',
-      promptVersion: DRAFT_PROMPT_VERSION,
-      auditVersion: AUDIT_PROMPT_VERSION,
-      deterministicIssues,
-      draft: draft.parsed,
-      createdAt: Date.now(),
-    };
-    await env.MEDIA.put(keys.review, JSON.stringify(review), {
-      httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'private, no-store' },
-      customMetadata: { doi: job.doi, status: review.status, evidencePacketHash: job.evidencePacketHash },
-    });
-    return finalizeJob(env, job, { state: 'needs_manual_review', nextRetryAt: 0, lastError: 'deterministic_validation_failed' });
-  }
-
-  const audit = await callOpenAiStructured(env, {
-    model: auditModel,
-    reasoningEffort: String(env.SUMMARY_AUDIT_REASONING || 'high'),
-    instructions: AUDIT_INSTRUCTIONS,
-    input: `ARTICLE EVIDENCE PACKET:\n${promptEvidence(evidence)}\n\nDRAFT JSON:\n${JSON.stringify(draft.parsed)}\n\nDETERMINISTIC VALIDATION ISSUES:\n${JSON.stringify(deterministicIssues)}`,
-    schema: AUDIT_SCHEMA,
-    name: 'organic_synthesis_summary_audit_v2',
-    timeoutMs: Number(env.SUMMARY_AUDIT_TIMEOUT_MS || 90000),
-    fetchImpl: options.fetchImpl,
-  });
-
-  const auditValue = audit.parsed;
-  const finalDeterministicIssues = validateFinalSummaryAgainstEvidence(auditValue, evidence);
-  const blockingAudit = auditValue.outcome !== 'pass'
-    || auditValue.modelInferencePresent === true
-    || Number(auditValue.unsupportedClaimCount || 0) > 0
-    || (auditValue.issues || []).some(issue => issue?.severity === 'error')
-    || finalDeterministicIssues.length > 0
-    || !String(auditValue.finalZh || '').trim()
-    || !String(auditValue.finalEn || '').trim();
-
+async function writeApprovedSummary(env, job, reviewRecord) {
+  const auditValue = reviewRecord?.audit || {};
   const keys = await keysForDoi(job.doi);
-  const reviewRecord = {
-    version: 1,
-    doi: job.doi,
-    status: blockingAudit ? auditValue.outcome : 'approved',
-    sourceHash: job.sourceHash,
-    evidencePacketHash: job.evidencePacketHash,
-    evidenceLevel: job.evidenceLevel,
-    draftModel,
-    draftModelSnapshot: draft.response?.model || draftModel,
-    auditModel,
-    auditModelSnapshot: audit.response?.model || auditModel,
-    promptVersion: DRAFT_PROMPT_VERSION,
-    auditVersion: AUDIT_PROMPT_VERSION,
-    deterministicIssues,
-    finalDeterministicIssues,
-    draft: draft.parsed,
-    audit: auditValue,
-    createdAt: Date.now(),
-  };
-  await env.MEDIA.put(keys.review, JSON.stringify(reviewRecord), {
-    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'private, no-store' },
-    customMetadata: { doi: job.doi, status: reviewRecord.status, evidencePacketHash: job.evidencePacketHash },
-  });
-
-  if (blockingAudit) {
+  if (!autoPublishEnabled(env)) {
     return finalizeJob(env, job, {
-      state: auditValue.outcome === 'reject' ? 'rejected' : 'needs_manual_review',
+      state: 'approved_shadow',
       nextRetryAt: 0,
-      lastError: safeText(auditValue.auditNotes || 'audit_not_passed', 300),
+      lastError: '',
+      reviewedAt: reviewRecord.reviewedAt,
     });
   }
 
-  const generatedAt = Date.now();
-  const summary = {
-    schemaVersion: REVIEWED_SUMMARY_SCHEMA_VERSION,
-    status: 'approved',
-    doi: job.doi,
-    sourceHash: job.sourceHash,
-    evidencePacketHash: job.evidencePacketHash,
-    evidenceLevel: job.evidenceLevel,
-    source: 'reviewed_evidence_v2',
-    model: auditModel,
-    modelSnapshot: audit.response?.model || auditModel,
-    draftModel,
-    draftModelSnapshot: draft.response?.model || draftModel,
-    promptVersion: DRAFT_PROMPT_VERSION,
-    auditVersion: AUDIT_PROMPT_VERSION,
-    zh: String(auditValue.finalZh || '').trim(),
-    en: String(auditValue.finalEn || '').trim(),
-    generatedAt,
-    reviewedAt: generatedAt,
-  };
-  await env.MEDIA.put(keys.summary, JSON.stringify(summary), {
-    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'private, no-store' },
-    customMetadata: {
-      doi: job.doi,
-      status: 'approved',
-      sourceHash: job.sourceHash,
-      evidencePacketHash: job.evidencePacketHash,
-      evidenceLevel: job.evidenceLevel,
-      model: auditModel,
-      generatedAt: String(generatedAt),
-    },
+  const generatedAt = await writeApprovedSummary(env, job, reviewRecord);
+  return finalizeJob(env, job, {
+    state: 'published',
+    nextRetryAt: 0,
+    lastError: '',
+    reviewedAt: reviewRecord.reviewedAt,
+    publishedAt: generatedAt,
   });
-  return finalizeJob(env, job, { state: 'published', nextRetryAt: 0, lastError: '', publishedAt: generatedAt });
 }
 
 async function handleJobFailure(env, job, error) {
@@ -842,13 +749,13 @@ export async function runSummaryReviewCycle(env, options = {}) {
   }
 
   const selection = await selectReviewCandidate(env);
-  const dailyLimitRaw = Number(env.SUMMARY_REVIEW_DAILY_LIMIT || 96);
-  const dailyLimit = Number.isFinite(dailyLimitRaw) ? Math.max(1, Math.floor(dailyLimitRaw)) : 96;
-  if (selection.recentPublishedCount >= dailyLimit) {
+  const dailyLimitRaw = Number(env.SUMMARY_REVIEW_DAILY_LIMIT || 24);
+  const dailyLimit = Number.isFinite(dailyLimitRaw) ? Math.max(1, Math.floor(dailyLimitRaw)) : 24;
+  if (selection.recentReviewedCount >= dailyLimit) {
     return {
       status: 'daily_limit',
       dailyLimit,
-      recentPublishedCount: selection.recentPublishedCount,
+      recentReviewedCount: selection.recentReviewedCount,
       eligibleCount: selection.eligibleCount,
     };
   }
@@ -907,9 +814,10 @@ export async function getSummaryReviewStatus(env) {
       atomicMutex: Boolean(env?.DB),
       apiKeyConfigured: Boolean(String(env?.OPENAI_API_KEY || '').trim()),
       allowUnknownPolicy: String(env?.SUMMARY_ALLOW_UNKNOWN_POLICY || '') === '1',
+      autoPublishEnabled: autoPublishEnabled(env),
       draftModel: String(env?.SUMMARY_DRAFT_MODEL || DRAFT_MODEL_DEFAULT),
       auditModel: String(env?.SUMMARY_AUDIT_MODEL || AUDIT_MODEL_DEFAULT),
-      dailyLimit: Math.max(1, Math.floor(Number(env?.SUMMARY_REVIEW_DAILY_LIMIT || 96) || 96)),
+      dailyLimit: Math.max(1, Math.floor(Number(env?.SUMMARY_REVIEW_DAILY_LIMIT || 24) || 24)),
       promptVersion: DRAFT_PROMPT_VERSION,
       auditVersion: AUDIT_PROMPT_VERSION,
       evidenceCount: evidenceObjects.length,
@@ -918,6 +826,79 @@ export async function getSummaryReviewStatus(env) {
       policies,
     },
   };
+}
+
+export async function getSummaryReviewRecord(env, doiValue) {
+  const doi = normalizeReviewDoi(doiValue);
+  if (!doi) return { status: 400, body: { error: 'invalid_doi' } };
+  if (!env?.MEDIA) return { status: 503, body: { error: 'summary_storage_unavailable' } };
+  const keys = await keysForDoi(doi);
+  const review = await readJsonObject(env, keys.review);
+  if (!review) return { status: 404, body: { error: 'review_not_found', doi } };
+  return {
+    status: 200,
+    body: {
+      doi,
+      status: review.status,
+      sourceHash: review.sourceHash,
+      evidencePacketHash: review.evidencePacketHash,
+      evidenceLevel: review.evidenceLevel,
+      draftModel: review.draftModel,
+      draftModelSnapshot: review.draftModelSnapshot || '',
+      auditModel: review.auditModel,
+      auditModelSnapshot: review.auditModelSnapshot || '',
+      promptVersion: review.promptVersion,
+      auditVersion: review.auditVersion,
+      deterministicIssues: review.deterministicIssues || [],
+      finalDeterministicIssues: review.finalDeterministicIssues || [],
+      draft: review.draft,
+      audit: review.audit,
+      reviewedAt: review.reviewedAt || review.createdAt || 0,
+      publishedAt: review.publishedAt || 0,
+    },
+  };
+}
+
+export async function publishReviewedSummary(env, doiValue) {
+  const doi = normalizeReviewDoi(doiValue);
+  if (!doi) return { status: 400, body: { error: 'invalid_doi' } };
+  if (!env?.MEDIA) return { status: 503, body: { error: 'summary_storage_unavailable' } };
+  const keys = await keysForDoi(doi);
+  const [evidence, review, job] = await Promise.all([
+    readJsonObject(env, keys.evidence),
+    readJsonObject(env, keys.review),
+    readJsonObject(env, keys.job),
+  ]);
+  if (!evidence || !review || !job) return { status: 404, body: { error: 'review_artifacts_missing', doi } };
+  if (!['approved_shadow', 'approved'].includes(String(review.status || ''))) {
+    return { status: 409, body: { error: 'review_not_approved', doi, reviewStatus: review.status || '' } };
+  }
+  if (review.sourceHash !== evidence.sourceHash || review.evidencePacketHash !== evidence.evidencePacketHash
+      || job.sourceHash !== evidence.sourceHash || job.evidencePacketHash !== evidence.evidencePacketHash) {
+    return { status: 409, body: { error: 'review_evidence_stale', doi } };
+  }
+  const audit = review.audit || {};
+  const blocking = audit.outcome !== 'pass'
+    || audit.modelInferencePresent === true
+    || Number(audit.unsupportedClaimCount || 0) > 0
+    || (audit.issues || []).some(issue => issue?.severity === 'error')
+    || (review.finalDeterministicIssues || []).length > 0
+    || !String(audit.finalZh || '').trim()
+    || !String(audit.finalEn || '').trim();
+  if (blocking) return { status: 409, body: { error: 'review_no_longer_publishable', doi } };
+
+  const generatedAt = await writeApprovedSummary(env, job, review);
+  await putJob(env, {
+    ...job,
+    state: 'published',
+    reviewedAt: review.reviewedAt || review.createdAt || generatedAt,
+    publishedAt: generatedAt,
+    lastError: '',
+    leaseOwner: '',
+    leaseExpiresAt: 0,
+    updatedAt: generatedAt,
+  });
+  return { status: 200, body: { published: true, doi, generatedAt, evidenceLevel: job.evidenceLevel } };
 }
 
 export const SUMMARY_DRAFT_SCHEMA = DRAFT_SCHEMA;
