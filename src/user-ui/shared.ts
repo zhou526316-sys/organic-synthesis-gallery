@@ -21,12 +21,22 @@ export interface ArticleSummaryResult {
   doi: string;
   available: boolean;
   fulltextAvailable: boolean;
-  reason?: 'fulltext_missing' | 'ai_unavailable';
-  source?: 'fulltext';
+  evidenceAvailable?: boolean;
+  evidenceLevel?: 'abstract_only' | 'partial' | 'complete' | 'unknown';
+  state?: 'missing' | 'legacy_fulltext' | 'evidence_ready' | 'superseded' | 'published';
+  reason?: 'fulltext_missing' | 'evidence_v2_required' | 'summary_pending' | 'summary_not_reviewed' | 'summary_stale' | 'summary_invalid';
+  source?: 'reviewed_evidence_v2';
   cached?: boolean;
   zh?: string;
   en?: string;
   generatedAt?: number;
+  reviewedAt?: number;
+  sourceHash?: string;
+  evidencePacketHash?: string;
+  model?: string;
+  modelSnapshot?: string;
+  promptVersion?: string;
+  auditVersion?: string;
 }
 export interface PaperUserState { favorite: boolean; collections: string[]; statusId?: string; note: string; noteUpdatedAt?: number; quickTerms: string[]; tags: string[]; lastOpenedAt?: number; updatedAt?: number; }
 export interface UserUiState {
