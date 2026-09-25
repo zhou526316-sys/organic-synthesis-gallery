@@ -15,6 +15,10 @@ Evidence coverage is explicit:
 
 Coverage is not a quality score. It limits what may be claimed.
 
+Evidence storage follows a capture-what-is-present rule. There is no application-level total text/character budget that truncates an otherwise valid article evidence packet. Publisher/platform transport limits remain operational constraints, not semantic sampling rules.
+
+Once any valid evidence level (`abstract_only`, `partial`, or `complete`) has been stored for a DOI, that DOI leaves the normal high-frequency evidence backlog. A later evidence-upgrade policy may revisit it separately, but the main TOC/body/evidence loop must not repeatedly reopen abstract-only or partial articles.
+
 If a later capture changes `sourceHash` or `evidencePacketHash`, the prior summary is superseded and must be re-reviewed.
 
 ## 2. Required scientific content
