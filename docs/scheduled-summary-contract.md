@@ -6,6 +6,8 @@ Status: normative production contract.
 
 Reviewed literature summaries are generated and published once per day at **12:00 Asia/Shanghai**.
 
+This 12:00 update is a **derived-summary publication only**. It must not add, remove, reclassify, or otherwise modify production literature cards, the authoritative literature datasets, TOC demand, or the 08:00 / 18:00 literature release state. The fixed literature-card slots remain unchanged.
+
 The production Worker does not call a language-model API. Tampermonkey and the Worker only capture, normalize, hash, encrypt, store, and serve evidence/status data.
 
 ## 2. Private evidence handoff
