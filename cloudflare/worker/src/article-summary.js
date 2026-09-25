@@ -441,6 +441,76 @@ export async function getArticleSummary(env, doiValue) {
   };
 }
 
+export async function getArticleEvidenceForReview(env, doiValue) {
+  const doi = normalizeDoi(doiValue);
+  if (!doi) return null;
+  return readEvidence(env, doi);
+}
+
+export async function storeReviewedArticleSummary(env, payload = {}) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'summary_storage_unavailable' } };
+  const doi = normalizeDoi(payload.doi);
+  if (!doi) return { status: 400, body: { error: 'invalid_doi' } };
+  const evidence = await readEvidence(env, doi);
+  if (!evidence) return { status: 409, body: { error: 'evidence_missing' } };
+  if (
+    String(payload.sourceHash || '') !== String(evidence.sourceHash || '') ||
+    String(payload.evidencePacketHash || '') !== String(evidence.evidencePacketHash || '')
+  ) {
+    return { status: 409, body: { error: 'evidence_changed' } };
+  }
+  const zh = String(payload.zh || '').trim();
+  const en = String(payload.en || '').trim();
+  if (!zh || !en) return { status: 400, body: { error: 'bilingual_summary_required' } };
+  const now = Date.now();
+  const keys = await keysForDoi(doi);
+  const stored = {
+    schemaVersion: REVIEWED_SUMMARY_SCHEMA_VERSION,
+    status: 'approved',
+    doi,
+    sourceHash: evidence.sourceHash,
+    evidencePacketHash: evidence.evidencePacketHash,
+    evidenceLevel: evidence.evidenceLevel || evidence.fulltextStatus || 'unknown',
+    source: 'reviewed_evidence_v2',
+    zh,
+    en,
+    draftModel: safeSingleLine(payload.draftModel || '', 120),
+    auditModel: safeSingleLine(payload.auditModel || '', 120),
+    model: safeSingleLine(payload.auditModel || payload.draftModel || '', 120),
+    modelSnapshot: safeSingleLine(payload.modelSnapshot || '', 160),
+    promptVersion: safeSingleLine(payload.promptVersion || '', 120),
+    schemaVersionDraft: safeSingleLine(payload.schemaVersionDraft || '', 120),
+    auditVersion: safeSingleLine(payload.auditVersion || '', 120),
+    auditOutcome: safeSingleLine(payload.auditOutcome || 'pass', 40),
+    generatedAt: Number(payload.generatedAt || now),
+    reviewedAt: Number(payload.reviewedAt || now),
+  };
+  await env.MEDIA.put(keys.summary, JSON.stringify(stored), {
+    httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'private, no-store' },
+    customMetadata: {
+      doi,
+      sourceHash: evidence.sourceHash,
+      evidencePacketHash: evidence.evidencePacketHash,
+      evidenceLevel: stored.evidenceLevel,
+      status: 'approved',
+      auditModel: stored.auditModel,
+      reviewedAt: String(stored.reviewedAt),
+    },
+  });
+  return {
+    status: 200,
+    body: {
+      stored: true,
+      doi,
+      status: 'approved',
+      sourceHash: evidence.sourceHash,
+      evidencePacketHash: evidence.evidencePacketHash,
+      evidenceLevel: stored.evidenceLevel,
+      reviewedAt: stored.reviewedAt,
+    },
+  };
+}
+
 export async function getArticleEvidenceInventory(env) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'summary_storage_unavailable' } };
   const items = [];
