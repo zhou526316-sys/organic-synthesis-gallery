@@ -280,7 +280,7 @@
       var context={at:nowIso(),seq:0,stage:'diagnostic_context',event:final?'final_result':'failure_checkpoint',status:'info',url:page,message:JSON.stringify(metadata)};
       var finalResult=job._liveResult||{};
       var figureItems=(finalResult.figures&&Array.isArray(finalResult.figures.items)?finalResult.figures.items:[]).filter(function(item){return item&&/^(?:staged|already_staged)$/.test(String(item.status||''));});
-      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),trace:[context].concat(events)};
+      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),evidenceLevel:String(finalResult.fulltext&&finalResult.fulltext.evidenceLevel||''),trace:[context].concat(events)};
       GM_setValue(key,{revision:revision,payload:payload,createdAt:prior?prior.createdAt:Date.now(),tries:Number(prior&&prior.tries||0),nextAt:Number(prior&&prior.nextAt||0)});
       if(final)GM_deleteValue(AUTO_REPORT_PREFIX+job.jobId+':checkpoint');
       return true;
@@ -1533,14 +1533,12 @@ function embeddedJobDois(value) {
     return need.indexOf('figures') >= 0 || need === 'evidence';
   }
 
-  function evidenceNormalizeText(value, max) {
-    var limit = Number(max || 180000);
+  function evidenceNormalizeText(value) {
     return String(value || '')
       .replace(/\r\n?/g, '\n')
       .replace(/[ \t]+/g, ' ')
       .replace(/\n{3,}/g, '\n\n')
-      .trim()
-      .slice(0, limit);
+      .trim();
   }
 
   function evidenceExcludedHeading(value) {
@@ -1633,16 +1631,20 @@ function embeddedJobDois(value) {
   }
 
   function evidenceAbstractSection(root) {
-    var nodes = Array.from(root.querySelectorAll('#abstract,.abstract,.article__abstract,[class*="abstract"]'));
+    var scope=root&&root.querySelectorAll?root:document;
+    var nodes = Array.from(scope.querySelectorAll('#abstract,.abstract,.article__abstract,[class*="abstract"]'));
     var best = null, bestText = '';
     nodes.forEach(function(node){
       if (evidenceNodeExcluded(node)) return;
-      var signature = evidenceNormalizeText((node.id || '') + ' ' + (node.className || ''), 300).toLowerCase();
+      var signature = evidenceNormalizeText((node.id || '') + ' ' + (node.className || '')).toLowerCase();
       if (/graphical|visual/.test(signature)) return;
-      var text = evidenceNodeText(node, 60000).replace(/^abstract\s*/i, '').trim();
+      var text = evidenceNodeText(node).replace(/^abstract\s*/i, '').trim();
       if (text.length > bestText.length) { best = node; bestText = text; }
     });
-    return best && bestText.length >= 120 ? {type:'abstract',heading:'Abstract',text:bestText,order:0} : null;
+    if(best&&bestText.length>=40)return {type:'abstract',heading:'Abstract',text:bestText,order:0};
+    var meta=document.querySelector('meta[name="citation_abstract"],meta[name="dc.description"],meta[property="og:description"],meta[name="description"]');
+    var metaText=evidenceNormalizeText(meta&&meta.getAttribute('content')||'').replace(/^abstract\s*/i,'').trim();
+    return metaText.length>=40?{type:'abstract',heading:'Abstract',text:metaText,order:0}:null;
   }
 
   function evidenceFallbackBodySections(root, seenText) {
@@ -1735,27 +1737,38 @@ function embeddedJobDois(value) {
     var pageDoi = assertBoundCaptureJob(job);
     var state = pageState(job, trace || []);
     if (state.challenge || state.auth || state.shell || !state.doiMatch) {
-      return {fulltextStatus:'partial',reason:state.challenge?'challenge_page':state.auth?'auth_page':state.shell?'publisher_shell':'page_doi_unverified'};
+      return {fulltextStatus:'invalid',reason:state.challenge?'challenge_page':state.auth?'auth_page':state.shell?'publisher_shell':'page_doi_unverified'};
     }
     var root = evidenceArticleRoot();
-    if (!root) return {fulltextStatus:'partial',reason:'article_root_not_found'};
-    var sections = collectArticleEvidenceSections(root);
-    var captions = collectArticleEvidenceCaptions(root);
-    var tables = collectArticleEvidenceTables(root);
+    var sections = root ? collectArticleEvidenceSections(root) : [];
+    var globalAbstract=evidenceAbstractSection(document);
+    if(globalAbstract && !sections.some(function(row){return row.type==='abstract';}))sections.unshift(globalAbstract);
+    var captions = root ? collectArticleEvidenceCaptions(root) : [];
+    var tables = root ? collectArticleEvidenceTables(root) : [];
+    if(!sections.length && !captions.length && !tables.length) {
+      return {fulltextStatus:'empty',reason:root?'evidence_empty':'article_root_not_found',chars:0,sections:0,captions:0,tables:0};
+    }
     var chars = sections.reduce(function(total,row){return total+String(row.text||'').length;},0)
       + captions.reduce(function(total,row){return total+String(row.text||'').length;},0)
       + tables.reduce(function(total,row){return total+String(row.text||'').length;},0);
-    var informative = sections.some(function(row){return ['results','scope','mechanism','conclusion','experimental','optimization'].indexOf(row.type)>=0;});
-    if (chars < 3000 || sections.length < 2 || !informative) {
-      return {fulltextStatus:'partial',reason:'evidence_incomplete',chars:chars,sections:sections.length,captions:captions.length,tables:tables.length};
+    var nonAbstract=sections.filter(function(row){return row.type!=='abstract';});
+    var substantive=sections.filter(function(row){return ['results','scope','mechanism','conclusion','experimental','optimization'].indexOf(row.type)>=0;});
+    var fulltextStatus='partial';
+    if(sections.length===1 && sections[0].type==='abstract' && !captions.length && !tables.length)fulltextStatus='abstract_only';
+    else if(!nonAbstract.length && sections.some(function(row){return row.type==='abstract';}))fulltextStatus='abstract_only';
+    else {
+      var types=new Set(substantive.map(function(row){return row.type;}));
+      var hasCore=types.has('results')||types.has('scope')||types.has('experimental');
+      var hasClose=types.has('conclusion')||types.has('mechanism')||types.has('optimization');
+      fulltextStatus=hasCore&&hasClose?'complete':'partial';
     }
     var articleUrl = evidenceArticleUrl();
     return {
       schemaVersion:EVIDENCE_SCHEMA_VERSION,
       doi:pageDoi,
       pageDoi:pageDoi,
-      title:evidenceNormalizeText(job.title || (document.querySelector('h1')||{}).textContent || document.title || '',1000),
-      journal:evidenceNormalizeText(job.journal || '',200),
+      title:evidenceNormalizeText(job.title || (document.querySelector('h1')||{}).textContent || document.title || ''),
+      journal:evidenceNormalizeText(job.journal || ''),
       publisher:job.publisher || publisherForDoi(pageDoi),
       articleUrl:articleUrl,
       sourceUrl:articleUrl,
@@ -1764,7 +1777,7 @@ function embeddedJobDois(value) {
       jobId:job.jobId,
       queueGeneratedAt:job.queueGeneratedAt || '',
       capturedAt:nowIso(),
-      fulltextStatus:'complete',
+      fulltextStatus:fulltextStatus,
       textProcessingPolicy:'unknown',
       sections:sections,
       captions:captions,
@@ -1795,23 +1808,23 @@ function embeddedJobDois(value) {
     try {
       var deadline=Date.now()+Math.max(0,Math.min(10000,Number(waitMs||0)));
       var packet=buildArticleEvidencePacket(job,trace);
-      while(packet.fulltextStatus!=='complete' && Date.now()<deadline &&
-        /^(?:article_root_not_found|evidence_incomplete)$/.test(String(packet.reason||''))) {
+      while((packet.fulltextStatus==='empty') && Date.now()<deadline) {
         await sleep(800);
         packet=buildArticleEvidencePacket(job,trace);
       }
-      if (packet.fulltextStatus !== 'complete') {
-        pushTrace(trace,{stage:'evidence_capture',event:'skip',status:'partial',url:location.href,message:String(packet.reason||'evidence_incomplete')+';chars='+String(packet.chars||0)+';sections='+String(packet.sections||0)});
-        return {status:'partial',reason:String(packet.reason||'evidence_incomplete'),chars:Number(packet.chars||0),sections:Number(packet.sections||0)};
+      if (packet.fulltextStatus === 'invalid' || packet.fulltextStatus === 'empty') {
+        pushTrace(trace,{stage:'evidence_capture',event:'skip',status:packet.fulltextStatus,url:location.href,message:String(packet.reason||'evidence_unavailable')});
+        return {status:packet.fulltextStatus==='invalid'?'invalid':'empty',reason:String(packet.reason||'evidence_unavailable'),chars:Number(packet.chars||0),sections:Number(packet.sections||0)};
       }
-      captureLiveUpdate(job,'uploading',{label:'全文证据'});
+      captureLiveUpdate(job,'uploading',{label:packet.fulltextStatus==='abstract_only'?'Abstract':'全文证据'});
       var uploadTimeout=String(job.mediaNeed||'')==='evidence'?10000:4000;
       var receipt = await postArticleEvidence(packet,token,uploadTimeout);
       if (!receipt || receipt.stored !== true || receipt.doi !== normalizeDoi(job.doi) || receipt.schemaVersion !== EVIDENCE_SCHEMA_VERSION) {
         throw new Error('evidence_receipt_invalid');
       }
-      pushTrace(trace,{stage:'evidence_capture',event:'stored',status:'success',url:location.href,message:'chars='+String(receipt.chars||packet._metrics.chars)+';sections='+String(receipt.sections||packet._metrics.sections)});
-      return {status:'stored',chars:Number(receipt.chars||packet._metrics.chars),sections:Number(receipt.sections||packet._metrics.sections),sourceHash:String(receipt.sourceHash||''),evidencePacketHash:String(receipt.evidencePacketHash||'')};
+      var level=String(receipt.evidenceLevel||packet.fulltextStatus||'partial');
+      pushTrace(trace,{stage:'evidence_capture',event:'stored',status:'success',url:location.href,message:'level='+level+';chars='+String(receipt.chars||packet._metrics.chars)+';sections='+String(receipt.sections||packet._metrics.sections)});
+      return {status:'stored',evidenceLevel:level,chars:Number(receipt.chars||packet._metrics.chars),sections:Number(receipt.sections||packet._metrics.sections),sourceHash:String(receipt.sourceHash||''),evidencePacketHash:String(receipt.evidencePacketHash||'')};
     } catch (error) {
       pushTrace(trace,{stage:'evidence_capture',event:'failed',status:'failed',url:location.href,httpStatus:Number(error&&error.httpStatus||0),message:String(error&&error.message||error).slice(0,240)});
       return {status:'failed',reason:String(error&&error.message||error).slice(0,240)};
@@ -2356,7 +2369,7 @@ function embeddedJobDois(value) {
         result.toc={status:'not_requested'};
         result.figures.status='not_requested';
         result.fulltext=await tryCaptureArticleEvidence(job,trace,token,8000);
-        result.status=result.fulltext.status==='stored'?'success':result.fulltext.status==='partial'?'partial':'failed';
+        result.status=result.fulltext.status==='stored'?'success':/^(?:empty|invalid)$/.test(String(result.fulltext.status||''))?'partial':'failed';
         result.reason='evidence_capture;fulltext='+String(result.fulltext.status||'failed')+';published=0';
         pushTrace(trace,{stage:'evidence_result',event:'complete',status:result.status,message:result.reason});
         captureLiveUpdate(job,'finished',{error:result.status==='failed'?result.reason:''});
