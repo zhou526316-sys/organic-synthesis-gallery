@@ -182,6 +182,12 @@ function responseObject(model, value) {
     id: 'resp_test',
     object: 'response',
     model,
+    usage: {
+      input_tokens: 1234,
+      output_tokens: 321,
+      total_tokens: 1555,
+      output_tokens_details: { reasoning_tokens: 111 },
+    },
     output: [{
       type: 'message',
       role: 'assistant',
@@ -217,6 +223,14 @@ assert.equal(requests[1].text.format.type, 'json_schema');
 assert.equal(requests[1].text.format.strict, true);
 assert.match(requests[0].input, /ARTICLE EVIDENCE PACKET/);
 assert.match(requests[1].input, /DETERMINISTIC VALIDATION ISSUES/);
+const firstReviewEntry = [...MEDIA.map.entries()].find(([key]) => key.startsWith('private/article-summary-review/'));
+assert.ok(firstReviewEntry);
+const firstReview = JSON.parse(firstReviewEntry[1].value);
+assert.equal(firstReview.status, 'approved');
+assert.equal(firstReview.draftResponse.responseId, 'resp_test');
+assert.equal(firstReview.auditResponse.responseId, 'resp_test');
+assert.equal(firstReview.draftResponse.inputTokens, 1234);
+assert.equal(firstReview.auditResponse.reasoningTokens, 111);
 
 const publicSummary = await getArticleSummary(baseEnv, doi);
 assert.equal(publicSummary.status, 200);
@@ -327,6 +341,11 @@ const finalMismatchCycle = await runSummaryReviewCycle(finalMismatchEnv, {
 assert.equal(finalMismatchCycle.status, 'needs_manual_review');
 assert.equal(finalMismatchCalls, 2);
 assert.equal((await getArticleSummary(finalMismatchEnv, finalMismatchDoi)).body.available, false);
+const mismatchReviewEntry = [...finalMismatchMedia.map.entries()].find(([key]) => key.startsWith('private/article-summary-review/'));
+assert.ok(mismatchReviewEntry);
+const mismatchReview = JSON.parse(mismatchReviewEntry[1].value);
+assert.equal(mismatchReview.status, 'needs_manual_review');
+assert.ok(mismatchReview.finalDeterministicIssues.some(issue => issue.type === 'numeric_mismatch'));
 
 const concurrentMedia = new MemoryR2();
 const concurrentEnv = { ...baseEnv, MEDIA: concurrentMedia, DB: new MemoryDB() };
@@ -366,6 +385,8 @@ console.log(JSON.stringify({
   atomicD1Mutex: true,
   abstractOnlySupported: true,
   publicGetRemainsReadOnly: true,
+  auditStateConsistent: true,
+  openaiProvenanceStored: true,
   draftPromptVersion: SUMMARY_DRAFT_PROMPT_VERSION,
   auditPromptVersion: SUMMARY_AUDIT_PROMPT_VERSION,
 }));
