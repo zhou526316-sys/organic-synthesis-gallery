@@ -580,6 +580,17 @@ function outputText(response) {
   }
   return '';
 }
+function responseUsage(response) {
+  const usage = response?.usage || {};
+  return {
+    responseId: safeText(response?.id || '', 160),
+    inputTokens: Number(usage?.input_tokens || 0),
+    outputTokens: Number(usage?.output_tokens || 0),
+    totalTokens: Number(usage?.total_tokens || 0),
+    reasoningTokens: Number(usage?.output_tokens_details?.reasoning_tokens || 0),
+  };
+}
+
 
 async function callOpenAiStructured(env, {
   model,
@@ -746,10 +757,15 @@ async function processClaimedJob(env, job, options = {}) {
     || !String(auditValue.finalEn || '').trim();
 
   const keys = await keysForDoi(job.doi);
+  const reviewStatus = !blockingAudit
+    ? 'approved'
+    : auditValue.outcome === 'reject'
+      ? 'rejected'
+      : 'needs_manual_review';
   const reviewRecord = {
     version: 1,
     doi: job.doi,
-    status: blockingAudit ? auditValue.outcome : 'approved',
+    status: reviewStatus,
     sourceHash: job.sourceHash,
     evidencePacketHash: job.evidencePacketHash,
     evidenceLevel: job.evidenceLevel,
@@ -757,6 +773,8 @@ async function processClaimedJob(env, job, options = {}) {
     draftModelSnapshot: draft.response?.model || draftModel,
     auditModel,
     auditModelSnapshot: audit.response?.model || auditModel,
+    draftResponse: responseUsage(draft.response),
+    auditResponse: responseUsage(audit.response),
     promptVersion: DRAFT_PROMPT_VERSION,
     auditVersion: AUDIT_PROMPT_VERSION,
     deterministicIssues,
@@ -791,6 +809,7 @@ async function processClaimedJob(env, job, options = {}) {
     modelSnapshot: audit.response?.model || auditModel,
     draftModel,
     draftModelSnapshot: draft.response?.model || draftModel,
+    reviewResponseId: safeText(audit.response?.id || '', 160),
     promptVersion: DRAFT_PROMPT_VERSION,
     auditVersion: AUDIT_PROMPT_VERSION,
     zh: String(auditValue.finalZh || '').trim(),
