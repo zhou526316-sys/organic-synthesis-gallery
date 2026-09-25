@@ -1,4 +1,4 @@
-name: Bridge 2.2.32 evidence-aware phase-separated media regression
+name: Bridge 2.2.33 evidence-aware phase-separated media regression
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
           node scripts/test-tm-paired-capture.mjs
           node scripts/test-tm232-evidence-capture.mjs | tee "$RUNNER_TEMP/tm232-evidence.log"
           grep -F 'TM232_EVIDENCE_TEST_SUMMARY ' "$RUNNER_TEMP/tm232-evidence.log"
-      - name: Build exact Bridge 2.2.32 evidence-aware custom-domain installer
+      - name: Build exact Bridge 2.2.33 evidence-aware custom-domain installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -68,8 +68,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.32' public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.32';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.33' public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.33';" public/gallery-vpn-bridge.user.js
           grep -F "var GALLERY_HOST = 'gallery.gczhouwld.com';" public/gallery-vpn-bridge.user.js
           grep -F 'requireCompletedCapturePacket' audit/media-auto-policy.json
           grep -F 'latestAddedDate' cloudflare/scripts/build-live-toc-demand-queue.mjs
