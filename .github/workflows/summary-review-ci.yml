@@ -1,0 +1,49 @@
+name: GPT reviewed summary backend regression
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/worker/src/article-summary.js'
+      - 'cloudflare/worker/src/summary-review.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/scripts/test-article-summary.mjs'
+      - 'cloudflare/worker/scripts/test-summary-review.mjs'
+      - 'cloudflare/worker/package.json'
+      - 'docs/summary-review-contract-v2.md'
+      - '.github/workflows/deploy-worker-frontend.yml'
+      - '.github/workflows/summary-review-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  summary-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Syntax and deployment contract checks
+        run: |
+          node --check cloudflare/worker/src/article-summary.js
+          node --check cloudflare/worker/src/summary-review.js
+          node --check cloudflare/worker/src/index.js
+          node --check cloudflare/worker/scripts/test-summary-review.mjs
+          grep -F 'OPENAI_API_KEY:' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'crons = ["*/5 * * * *"]' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'const runMediaMaintenance = minute === 0 && hour % 6 === 0;' cloudflare/worker/src/index.js
+          grep -F "SUMMARY_REVIEW_ENABLED = \"\${SUMMARY_REVIEW_ENABLED:-0}\"" .github/workflows/deploy-worker-frontend.yml
+      - name: Install Worker dependencies
+        working-directory: cloudflare/worker
+        run: npm install --no-audit --no-fund
+      - name: Run Evidence and GPT review regressions
+        working-directory: cloudflare/worker
+        run: |
+          npm run test:article-summary
+          npm run test:summary-review
+      - name: Wrangler dry-run
+        working-directory: cloudflare/worker
+        run: npm run check
