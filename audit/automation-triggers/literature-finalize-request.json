@@ -1,33 +1,27 @@
 {
   "schemaVersion": 3,
-  "requestedAt": "2026-09-24T08:52:00+08:00",
-  "publicationSlot": "2026-09-24T08:00:00+08:00",
-  "nextPublicationSlot": "2026-09-24T18:00:00+08:00",
-  "publicationCommit": "d0d440e99aa9c46e3f63a6f7465edff11cd1702b",
-  "deploymentTriggerCommit": "69fd95dcff25bc39e54f34737a345dc1ab97dfb0",
-  "tocDemandCommit": "45b686c2a63fa874da7c67599c19d672c413eb89",
-  "productionCards": 557,
-  "prepublishGateRunId": 35937638326,
-  "releaseWriterRunId": 35937725508,
-  "preReleaseAuditRunId": 35934774504,
-  "postReleaseAuditRunId": 35939977775,
-  "pagesRunId": 35938957728,
-  "tocRefreshRunId": 35937898048,
-  "qualityGateRunId": 35940227109,
-  "qualityGateTriggerCommit": "42ae0a1fb7e9771884f6f16ac34a5e03bcf38e3f",
-  "postReleaseAuditBlobSha": "bdfbe92f93189c4877b75c8dff9be9d4232eb0f8",
-  "postReleaseCompactBlobSha": "6d5bf9d91050cfa51d454341727be42710861cd0",
-  "publishedAt": "2026-09-24T08:39:29+08:00",
+  "requestedAt": "2026-09-25T08:15:07.077+08:00",
+  "publicationSlot": "2026-09-25T08:00:00+08:00",
+  "nextPublicationSlot": "2026-09-25T18:00:00+08:00",
+  "publicationCommit": "648064f332f8f000b7143ef87f1bbc6495afe59c",
+  "deploymentTriggerCommit": "77d66c78956f3ead58ccac3ebb236a4df2486515",
+  "tocDemandCommit": "d5052df4c16fd5044866bc3b696f507de0259f6f",
+  "productionCards": 585,
+  "prepublishGateRunId": 36072173805,
+  "releaseWriterRunId": 36075887801,
+  "preReleaseAuditRunId": 36071287450,
+  "postReleaseAuditRunId": 36076468554,
+  "pagesRunId": 36076180518,
+  "tocRefreshRunId": 36076094833,
+  "qualityGateRunId": 36076595322,
+  "qualityGateTriggerCommit": "b29469e2e9342fdbee54b53c3b03f803e49dd8e5",
+  "postReleaseAuditBlobSha": "a750cafdb0a0d1a0dbe042a3363b49c667cca0bd",
+  "postReleaseCompactBlobSha": "35bd647c8ca490da9c3bfa1bdaeb27097df9a774",
+  "publishedAt": "2026-09-25T08:11:50+08:00",
   "expectedDeferredDois": [
-    "10.1038/s41467-026-78015-9",
     "10.31635/ccschem.026.202608262"
   ],
-  "expectedNextSlotPublicationDois": [
-    "10.1021/acs.orglett.6c03851"
-  ],
-  "postReleaseRejectedDois": [
-    "10.1038/s41467-026-77885-3"
-  ],
-  "postReleaseLateReviewFile": "audit/review-2026-09-24-postrelease-late-2.json",
-  "note": "Finalize the verified 2026-09-24 08:00 per-DOI release. The fresh post-release unresolved set is exactly two evidence-pending DOI plus one fully reviewed include held for the 18:00 fixed slot. Healthy sourceCoverageAnomalies remain closure-only warnings; verifiedThrough must not advance."
+  "expectedNextSlotPublicationDois": [],
+  "postReleaseRejectedDois": [],
+  "note": "Finalize the verified 2026-09-25 08:00 per-DOI release. The fresh post-release unresolved set is exactly the one formal evidence-pending DOI. The Science sourceCoverageAnomaly and closureCoverageAnomalies remain closure-only warnings; verifiedThrough must not advance."
 }
