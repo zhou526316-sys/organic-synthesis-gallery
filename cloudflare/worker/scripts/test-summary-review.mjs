@@ -189,7 +189,7 @@ assert.equal(requests[0].text.format.type, 'json_schema');
 assert.equal(requests[0].text.format.strict, true);
 assert.equal(requests[1].text.format.type, 'json_schema');
 assert.equal(requests[1].text.format.strict, true);
-assert.match(requests[0].input, /ARTICLE EVIDENCE PACKET/);
+assert.match(requests[0].input, /ARTICLE EVIDENCE CHUNK/);
 assert.match(requests[1].input, /DETERMINISTIC VALIDATION ISSUES/);
 
 const publicSummary = await getArticleSummary(baseEnv, doi);
