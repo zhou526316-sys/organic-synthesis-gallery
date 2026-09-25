@@ -188,7 +188,9 @@ try{
   test('source retains one-hour post-TOC Evidence urgency and bounded retry',
     source.includes('SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000')&&
     source.includes('markSummaryEvidenceUrgency(job.doi)')&&
-    source.includes('urgentEvidenceRetryEligible(prior,Date.now())'));
+    source.includes('urgentEvidenceRetryEligible(prior,Date.now())')&&
+    source.includes('hasActiveSummaryEvidenceUrgency()')&&
+    source.includes("var nextDelay=remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000"));
 
   const combinedPlan=await page.evaluate(()=>{
     const q={latestAddedDate:'2026-09-25',webpageDoiCount:2,mediaGeneration:1790082000000,articles:[
