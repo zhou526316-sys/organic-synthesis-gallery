@@ -34,7 +34,7 @@ import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
-import { enqueueArticleSummaryJob, getArticleSummaryJobStatus, processArticleSummaryJobs, seedSummaryJobsFromEvidence } from './article-summary-jobs.js';
+import { enqueueArticleSummaryJob, getArticleSummaryJobForDoi, getArticleSummaryJobStatus, processArticleSummaryJobs, seedSummaryJobsFromEvidence } from './article-summary-jobs.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -243,7 +243,28 @@ async function handleApi(request, env, ctx) {
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
-    return resultResponse(await getArticleSummary(env, url.searchParams.get('doi')), cors);
+    const doi = url.searchParams.get('doi');
+    const result = await getArticleSummary(env, doi);
+    if (result.status === 200 && result.body?.available === false && result.body?.evidenceAvailable) {
+      const job = await getArticleSummaryJobForDoi(env, doi);
+      if (job) {
+        result.body.queueState = job.state;
+        if (job.state === 'queued') {
+          result.body.state = 'queued';
+          result.body.reason = 'summary_queued';
+        } else if (job.state === 'draft_ready' || job.state === 'audit_running') {
+          result.body.state = 'reviewing';
+          result.body.reason = 'summary_reviewing';
+        } else if (job.state === 'needs_manual_review') {
+          result.body.state = 'needs_manual_review';
+          result.body.reason = 'summary_needs_manual_review';
+        } else if (job.state === 'blocked') {
+          result.body.state = 'blocked';
+          result.body.reason = 'summary_blocked';
+        }
+      }
+    }
+    return resultResponse(result, cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts') {
     return resultResponse(await readerCounts(env, await readJson(request)), cors);
