@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "requestId": "20260924-1800-fixed-slot-release",
-  "requestedAt": "2026-09-24T18:00:05+08:00",
-  "publicationSlot": "2026-09-24T18:00:00+08:00",
-  "stagingReviewFile": "audit/prepublish-review-2026-09-24-1800.json",
-  "stagingReviewBlobSha": "341ce72e85285dfb50be5a253458e5744c83d112",
-  "handoffBlobSha": "8ba092dab22861b27d77e5bb1757de4a269d0579",
-  "auditBlobSha": "5b397f604f545792e7a9a99c7eed76612644ef83",
-  "prepublishGateRunId": 35980675436,
-  "expectedPublishableCount": 9,
-  "expectedDeferredCount": 2,
-  "note": "Authorized only within the current 2026-09-24 18:00 fixed-slot release task after strict per-DOI gate run 35980675436 completed successfully. Runner must fail closed on stale SHA, slot expiry, incomplete strict bundle, concurrent authoritative movement, scope-correction restoration risk, or production partition mismatch. This does not authorize off-slot admissions after this task ends."
+  "requestId": "20260925-0800-fixed-slot-release",
+  "requestedAt": "2026-09-25T08:01:12+08:00",
+  "publicationSlot": "2026-09-25T08:00:00+08:00",
+  "stagingReviewFile": "audit/prepublish-review-2026-09-25-0800.json",
+  "stagingReviewBlobSha": "c6d09b8a019c86ca1a76f03259c1eca6062c44e2",
+  "handoffBlobSha": "d83eae4f6c981f4aba2aaa893c4cf23d0796de59",
+  "auditBlobSha": "6abd667d6079bfc3dc480ee82a9acab56c5ca6c5",
+  "prepublishGateRunId": 36072173805,
+  "expectedPublishableCount": 19,
+  "expectedDeferredCount": 1,
+  "note": "Fixed-slot request for the current reviewed snapshot. Existing workflow must enforce stale-input, slot, strict-bundle, concurrency, scope-correction and production-partition checks."
 }
