@@ -15,6 +15,8 @@ const names = [
   'evidenceBackfillJobs',
   'pairedJobs',
   'captureQueueTier',
+  'wileyGaHeadingText',
+  'wileyGaUrlSignal',
 ];
 const exposed = source.replace(
   '  installMenu();',
@@ -211,7 +213,19 @@ try{
   });
   test('evidence transport failure is contained',isolatedFailure.status==='failed'&&/fixture_network_failure/.test(isolatedFailure.reason));
 
-  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.33';"));
+  const wileySelector=await page.evaluate(()=>({
+    headingGa:__tm232.wileyGaHeadingText('Graphical Abstract'),
+    headingVisual:__tm232.wileyGaHeadingText('Visual Abstract'),
+    headingFigure:__tm232.wileyGaHeadingText('Figure 1'),
+    gaUrl:__tm232.wileyGaUrlSignal('https://onlinelibrary.wiley.com/cms/asset/a/anie202612345-gra-0001-m.jpg'),
+    schemeUrl:__tm232.wileyGaUrlSignal('https://onlinelibrary.wiley.com/cms/asset/a/anie202612345-sch-0001-m.jpg')
+  }));
+  test('Wiley GA recovery accepts explicit GA headings but not numbered figures',
+    wileySelector.headingGa&&wileySelector.headingVisual&&!wileySelector.headingFigure);
+  test('Wiley GA recovery recognizes -gra- asset URLs but not Scheme URLs',
+    wileySelector.gaUrl&&!wileySelector.schemeUrl);
+
+    test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.33';"));
   test('2.2.33 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
 
   console.log('TM233_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.33',totalTextBudget:null,abstractOnly:true}));
