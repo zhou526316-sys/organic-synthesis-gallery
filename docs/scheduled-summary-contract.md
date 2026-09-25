@@ -18,7 +18,7 @@ For the scheduled review task, each eligible Evidence Packet is copied into a hy
 
 - content cipher: AES-256-GCM;
 - key wrapping: RSA-OAEP with SHA-256;
-- public-key identifier: `b5c0b7eaddec13fa`;
+- public-key identifier: `9c55e2d2ed734de9`;
 - plaintext Article Evidence Packet is never returned by the public handoff route;
 - `textProcessingPolicy=no_external_ai` is excluded from the handoff.
 
