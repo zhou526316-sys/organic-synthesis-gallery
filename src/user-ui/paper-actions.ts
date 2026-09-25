@@ -236,7 +236,7 @@ export class GalleryPaperActions extends HTMLElement {
     const data = this.summaryData;
     let content = '';
     if (this.summaryLoading) {
-      content = `<div class='summary-state'>${this.tr('正在读取证据覆盖与 GPT 审核状态…', 'Loading evidence coverage and GPT review status…')}</div>`;
+      content = `<div class='summary-state'>${this.tr('正在读取摘要状态…', 'Loading summary status…')}</div>`;
     } else if (this.summaryError) {
       content = `<div class='summary-state error'>${escapeHtml(this.summaryError)}</div>`;
     } else if (!data?.available) {
@@ -253,13 +253,13 @@ export class GalleryPaperActions extends HTMLElement {
       } else if (data?.reason === 'evidence_v2_required') {
         message = this.tr('已有旧版全文缓存，等待升级为可审核的证据包。', 'A legacy full-text cache exists and is waiting to be upgraded to an auditable evidence packet.');
       } else if (data?.reason === 'summary_stale') {
-        message = this.tr('文章文字证据已更新，旧摘要已自动失效，等待 GPT 重新审核。', 'The article evidence changed, so the previous summary was invalidated and is awaiting GPT re-review.');
+        message = this.tr('文章文字证据已更新，旧摘要已自动失效，摘要正在重新生成。', 'The article evidence changed, so the previous summary was invalidated and is being regenerated.');
       } else if (data?.reason === 'summary_invalid') {
-        message = this.tr('摘要记录未通过完整性校验，等待重新审核。', 'The summary record failed integrity validation and is awaiting review.');
+        message = this.tr('摘要记录未通过完整性校验，正在重新生成。', 'The summary record failed integrity validation and is being regenerated.');
       } else if (data?.reason === 'summary_not_reviewed' || data?.reason === 'summary_pending') {
-        message = this.tr(`已同步${coverage}，等待 GPT 审核；当前不会现场生成摘要。`, `${coverage} is synced and awaiting GPT review; no summary is generated on demand.`);
+        message = this.tr(`已同步${coverage}，摘要正在处理中。`, `${coverage} is synced and the summary is being prepared.`);
       } else {
-        message = this.tr('已同步文章证据，等待 GPT 审核。', 'Article evidence is synced and awaiting GPT review.');
+        message = this.tr('已同步文章证据，摘要正在处理中。', 'Article evidence is synced and the summary is being prepared.');
       }
       content = `<div class='summary-state'>${message}</div>`;
     } else {
@@ -273,7 +273,7 @@ export class GalleryPaperActions extends HTMLElement {
       ${toc ? `<div class='summary-toc'><img src='${escapeHtml(toc)}' alt='TOC / graphical abstract'></div>` : ''}
       <div class='summary-main'>
         ${content}
-        ${data?.generatedAt ? `<div class='summary-meta'>${this.tr('GPT 审核通过', 'GPT reviewed')} · ${data.evidenceLevel === 'abstract_only' ? this.tr('基于 Abstract', 'Abstract-based') : data.evidenceLevel === 'partial' ? this.tr('基于部分正文', 'based on partial article text') : data.evidenceLevel === 'complete' ? this.tr('基于完整正文', 'based on complete article text') : this.tr('基于已同步证据', 'based on synced evidence')} · ${this.tr('生成于', 'Generated')} ${formatTime(data.generatedAt)}</div>` : ''}
+        ${data?.generatedAt ? `<div class='summary-meta'>${this.tr('摘要已生成', 'Summary ready')} · ${data.evidenceLevel === 'abstract_only' ? this.tr('基于 Abstract', 'Abstract-based') : data.evidenceLevel === 'partial' ? this.tr('基于部分正文', 'based on partial article text') : data.evidenceLevel === 'complete' ? this.tr('基于完整正文', 'based on complete article text') : this.tr('基于已同步证据', 'based on synced evidence')} · ${this.tr('生成于', 'Generated')} ${formatTime(data.generatedAt)}</div>` : ''}
         ${meta?.href ? `<a class='summary-open' data-summary-open href='${escapeHtml(meta.href)}' target='_blank' rel='noopener noreferrer'>${this.tr('打开原文 ↗', 'Open original ↗')}</a>` : ''}
       </div>
     </section>`;
