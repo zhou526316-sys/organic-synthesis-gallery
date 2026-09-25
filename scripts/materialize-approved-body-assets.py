@@ -15,8 +15,8 @@ import urllib.parse
 import urllib.request
 
 GENERATION = 1790082000000
-ASSET_RE = re.compile(r"^audit/media-recovery/body-batches/assets/([a-f0-9]{64})\.(svg|png|webp)$")
-R2_RE = re.compile(r"^local-captures/article-figures/images/[a-f0-9]{24}/(?:figure|scheme|chart)-\d+-([a-f0-9]{16})\.(svg|png|webp)$")
+ASSET_RE = re.compile(r"^audit/media-recovery/body-batches/assets/([a-f0-9]{64})\.(svg|png|webp|jpg|jpeg)$")
+R2_RE = re.compile(r"^local-captures/article-figures/images/[a-f0-9]{24}/(?:figure|scheme|chart)-\d+-([a-f0-9]{16})\.(svg|png|webp|jpg|jpeg)$")
 MANIFEST_RE = re.compile(r"^audit/media-recovery/body-batches/[a-z0-9][a-z0-9-]*\.json$")
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
