@@ -10,6 +10,8 @@ on:
       - 'cloudflare/worker/scripts/test-article-summary.mjs'
       - 'cloudflare/worker/scripts/test-summary-review.mjs'
       - 'cloudflare/worker/package.json'
+      - 'cloudflare/schema.sql'
+      - 'cloudflare/migrations/2026-09-25-summary-review-lease.sql'
       - 'docs/summary-review-contract-v2.md'
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/summary-review-ci.yml'
@@ -35,7 +37,13 @@ jobs:
           grep -F 'OPENAI_API_KEY:' .github/workflows/deploy-worker-frontend.yml
           grep -F 'crons = ["*/5 * * * *"]' .github/workflows/deploy-worker-frontend.yml
           grep -F 'const runMediaMaintenance = minute === 0 && hour % 6 === 0;' cloudflare/worker/src/index.js
-          grep -F "SUMMARY_REVIEW_ENABLED = \"\${SUMMARY_REVIEW_ENABLED:-0}\"" .github/workflows/deploy-worker-frontend.yml
+          grep -F "SUMMARY_REVIEW_ENABLED = \"\${SUMMARY_REVIEW_ENABLED:-1}\"" .github/workflows/deploy-worker-frontend.yml
+          grep -F "SUMMARY_ALLOW_UNKNOWN_POLICY = \"\${SUMMARY_ALLOW_UNKNOWN_POLICY:-1}\"" .github/workflows/deploy-worker-frontend.yml
+          grep -F 'CREATE TABLE IF NOT EXISTS article_summary_review_leases' cloudflare/migrations/2026-09-25-summary-review-lease.sql
+          grep -F 'function chunkEvidence' cloudflare/worker/src/summary-review.js
+          grep -F 'organic_synthesis_summary_audit_check_v2' cloudflare/worker/src/summary-review.js
+          grep -F 'validateFinalSummaryAgainstEvidence' cloudflare/worker/src/summary-review.js
+          grep -F 'claimReviewLease' cloudflare/worker/src/summary-review.js
       - name: Install Worker dependencies
         working-directory: cloudflare/worker
         run: npm install --no-audit --no-fund
