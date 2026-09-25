@@ -1,4 +1,4 @@
-name: Bridge 2.2.33 evidence-aware phase-separated media regression
+name: Bridge 2.2.33 single-visit missing-data regression
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
           node scripts/test-tm-paired-capture.mjs
           node scripts/test-tm232-evidence-capture.mjs | tee "$RUNNER_TEMP/tm232-evidence.log"
           grep -F 'TM233_EVIDENCE_TEST_SUMMARY ' "$RUNNER_TEMP/tm232-evidence.log"
-      - name: Build exact Bridge 2.2.33 evidence-aware custom-domain installer
+      - name: Build exact Bridge 2.2.33 single-visit custom-domain installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -75,7 +75,7 @@ jobs:
           grep -F 'latestAddedDate' cloudflare/scripts/build-live-toc-demand-queue.mjs
           grep -F 'completedPacketMap' cloudflare/scripts/merge-new-body-auto.mjs
           grep -F "mediaNeed=isLatest?'toc+figures':official?'figures':'toc'" public/toc-mainline.user.js
-          grep -F "figures=not_requested" public/toc-mainline.user.js
+          grep -F "captureFigures:true" public/toc-mainline.user.js
           grep -F "mediaNeed.includes('figures')" cloudflare/scripts/merge-new-body-auto.mjs
           grep -F "var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';" public/toc-mainline.user.js
           grep -F "function evidenceCaptureEligible" public/toc-mainline.user.js
