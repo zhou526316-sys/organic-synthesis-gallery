@@ -5,7 +5,10 @@ import {
   importArticleFulltext,
 } from '../src/article-summary.js';
 import {
+  chunkEvidence,
+  claimReviewLease,
   getSummaryReviewStatus,
+  releaseReviewLease,
   runSummaryReviewCycle,
   SUMMARY_AUDIT_PROMPT_VERSION,
   SUMMARY_DRAFT_PROMPT_VERSION,
@@ -277,6 +280,167 @@ assert.equal(abstractSummary.body.evidenceLevel, 'abstract_only');
 assert.equal(abstractSummary.body.fulltextAvailable, false);
 assert.match(abstractSummary.body.zh, /基于 Abstract/);
 
+
+const numericDoi = '10.1021/jacs.6c90004';
+await importArticleFulltext(baseEnv, payload(numericDoi, '2026-09-25T04:00:00Z'));
+let numericCalls = 0;
+const fetchNumeric = async (_url, init) => {
+  numericCalls += 1;
+  const body = JSON.parse(init.body);
+  if (body.text.format.name === 'organic_synthesis_summary_draft_v2') {
+    return responseObject('gpt-5.6-terra-2026-test', draftFor(numericDoi));
+  }
+  const audit = auditPass();
+  audit.finalZh = '该反应报告 97% 收率。';
+  audit.finalEn = 'The reaction reports 97% yield.';
+  return responseObject('gpt-5.6-sol-2026-test', audit);
+};
+const numericCycle = await runSummaryReviewCycle(baseEnv, { fetchImpl: fetchNumeric });
+assert.equal(numericCycle.status, 'needs_manual_review');
+assert.equal(numericCycle.doi, numericDoi);
+assert.equal(numericCalls, 2);
+const numericPublic = await getArticleSummary(baseEnv, numericDoi);
+assert.equal(numericPublic.body.available, false);
+
+const longDoi = '10.1021/jacs.6c90005';
+const longText = ('Long-form chemistry evidence records conditions, scope observations, limitations, and mechanistic discussion without numeric values. ').repeat(3200);
+await importArticleFulltext(baseEnv, payload(longDoi, '2026-09-25T05:00:00Z', {
+  sections: [
+    { type: 'abstract', heading: 'Abstract', order: 0, text: longText },
+    { type: 'results', heading: 'Results A', order: 1, text: longText },
+    { type: 'results', heading: 'Results B', order: 2, text: longText },
+    { type: 'mechanism', heading: 'Mechanistic Studies', order: 3, text: longText },
+    { type: 'conclusion', heading: 'Conclusion', order: 4, text: longText },
+  ],
+  captions: [],
+  tables: [],
+}));
+const evidenceEntry = [...MEDIA.map.entries()]
+  .map(([key, object]) => ({ key, object }))
+  .find(({ object }) => object.customMetadata?.doi === longDoi && object.customMetadata?.schemaVersion === 'article-evidence-v2');
+assert.ok(evidenceEntry);
+const longEvidence = JSON.parse(await evidenceEntry.object.text());
+const longChunks = chunkEvidence(longEvidence, 300000);
+assert.ok(longChunks.length > 1);
+const reconstructedChars = longChunks.flat().reduce((sum, row) => sum + String(row.text || '').length, 0);
+const sourceChars = [...longEvidence.sections, ...longEvidence.captions, ...longEvidence.tables]
+  .reduce((sum, row) => sum + String(row.text || '').length, 0);
+assert.equal(reconstructedChars, sourceChars);
+
+let longDraftCalls = 0;
+let longAuditChecks = 0;
+let longFinalCalls = 0;
+const seenDraftEvidenceIds = new Set();
+const fetchLong = async (_url, init) => {
+  const body = JSON.parse(init.body);
+  const name = body.text.format.name;
+  if (name === 'organic_synthesis_summary_draft_v2') {
+    longDraftCalls += 1;
+    const chunk = JSON.parse(String(body.input).replace(/^ARTICLE EVIDENCE CHUNK:\n/, ''));
+    const first = chunk.evidence[0];
+    for (const row of chunk.evidence) seenDraftEvidenceIds.add(row.evidenceId);
+    const draft = draftFor(longDoi);
+    draft.conditions = [];
+    draft.substrateScope = {
+      summary: 'The supplied evidence chunk reports scope discussion.',
+      supportedTrends: [],
+      limitations: [],
+      evidenceIds: [first.evidenceId],
+    };
+    draft.mechanism = { experimentalEvidence: [], authorProposal: [], modelInference: [] };
+    draft.claims = [{
+      claim: 'The supplied evidence chunk reports chemistry discussion.',
+      claimType: 'experimental_fact',
+      evidenceIds: [first.evidenceId],
+      confidence: 'high',
+      notes: '',
+    }];
+    draft.draftZh = '该证据块包含化学讨论。';
+    draft.draftEn = 'This evidence chunk contains chemistry discussion.';
+    return responseObject('gpt-5.6-terra-2026-test', draft);
+  }
+  if (name === 'organic_synthesis_summary_audit_check_v2') {
+    longAuditChecks += 1;
+    return responseObject('gpt-5.6-sol-2026-test', {
+      outcome: 'pass',
+      issues: [],
+      modelInferencePresent: false,
+      unsupportedClaimCount: 0,
+      auditNotes: 'Chunk claims are supported.',
+    });
+  }
+  if (name === 'organic_synthesis_summary_audit_v2') {
+    longFinalCalls += 1;
+    const audit = auditPass();
+    audit.finalZh = '该研究基于已审核的完整正文证据建立催化成键方法，并报告底物范围、局限及机理讨论。';
+    audit.finalEn = 'Based on the reviewed complete article evidence, the study establishes a catalytic bond-forming method and reports scope, limitations, and mechanistic discussion.';
+    return responseObject('gpt-5.6-sol-2026-test', audit);
+  }
+  throw new Error('unexpected long-review schema: ' + name);
+};
+const longCycle = await runSummaryReviewCycle(baseEnv, { fetchImpl: fetchLong });
+assert.equal(longCycle.status, 'published');
+assert.ok(longDraftCalls > 1);
+assert.ok(longAuditChecks > 1);
+assert.equal(longFinalCalls, 1);
+assert.deepEqual([...seenDraftEvidenceIds].sort(), longEvidence.sections.map(row => row.sectionId).sort());
+const longPublic = await getArticleSummary(baseEnv, longDoi);
+assert.equal(longPublic.body.available, true);
+
+class LeaseDb {
+  constructor() { this.rows = new Map(); }
+  prepare(sql) {
+    const db = this;
+    return {
+      values: [],
+      bind(...values) { this.values = values; return this; },
+      async run() {
+        const values = this.values;
+        if (sql.includes('INSERT INTO article_summary_review_leases')) {
+          const [doiValue, hash, owner, expiresAt, updatedAt, now] = values;
+          const prior = db.rows.get(doiValue);
+          if (!prior || prior.lease_expires_at <= now || prior.evidence_packet_hash !== hash) {
+            db.rows.set(doiValue, { evidence_packet_hash: hash, lease_owner: owner, lease_expires_at: expiresAt, updated_at: updatedAt });
+            return { meta: { changes: 1 } };
+          }
+          return { meta: { changes: 0 } };
+        }
+        if (sql.includes('UPDATE article_summary_review_leases')) {
+          const [expiresAt, updatedAt, doiValue, hash, owner] = values;
+          const row = db.rows.get(doiValue);
+          if (row && row.evidence_packet_hash === hash && row.lease_owner === owner) {
+            Object.assign(row, { lease_expires_at: expiresAt, updated_at: updatedAt });
+            return { meta: { changes: 1 } };
+          }
+          return { meta: { changes: 0 } };
+        }
+        if (sql.includes('DELETE FROM article_summary_review_leases')) {
+          const [doiValue, hash, owner] = values;
+          const row = db.rows.get(doiValue);
+          if (row && row.evidence_packet_hash === hash && row.lease_owner === owner) {
+            db.rows.delete(doiValue);
+            return { meta: { changes: 1 } };
+          }
+          return { meta: { changes: 0 } };
+        }
+        throw new Error('unexpected lease run SQL');
+      },
+      async first() {
+        if (!sql.includes('FROM article_summary_review_leases')) throw new Error('unexpected lease select SQL');
+        const [doiValue] = this.values;
+        return db.rows.get(doiValue) || null;
+      },
+    };
+  }
+}
+const leaseDb = new LeaseDb();
+const leaseCandidate = { doi: '10.1021/jacs.6c99999', evidencePacketHash: 'hash-a' };
+assert.equal(await claimReviewLease({ DB: leaseDb }, leaseCandidate, 'owner-a', 1000), true);
+assert.equal(await claimReviewLease({ DB: leaseDb }, leaseCandidate, 'owner-b', 1000), false);
+assert.equal(await claimReviewLease({ DB: leaseDb }, leaseCandidate, 'owner-b', 1000 + 12 * 60 * 1000 + 1), true);
+await releaseReviewLease({ DB: leaseDb }, { ...leaseCandidate, leaseOwner: 'owner-b' });
+assert.equal(leaseDb.rows.has(leaseCandidate.doi), false);
+
 let disabledCalls = 0;
 const disabled = await runSummaryReviewCycle({ MEDIA, SUMMARY_REVIEW_ENABLED: '1' }, {
   fetchImpl: async () => { disabledCalls += 1; throw new Error('must not call'); },
@@ -293,6 +457,9 @@ console.log(JSON.stringify({
   deterministicEvidenceGuard: true,
   abstractOnlySupported: true,
   publicGetRemainsReadOnly: true,
+  finalBilingualNumericGuard: true,
+  longEvidenceChunkedWithoutLoss: true,
+  atomicD1Lease: true,
   draftPromptVersion: SUMMARY_DRAFT_PROMPT_VERSION,
   auditPromptVersion: SUMMARY_AUDIT_PROMPT_VERSION,
 }));
