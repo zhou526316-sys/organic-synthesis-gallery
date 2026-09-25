@@ -190,10 +190,12 @@ The public renderer must display the evidence coverage label:
 
 ## 9. Backend execution contract
 
-The production review runner is disabled unless both conditions are true:
+The production review runner requires both conditions:
 
 - `OPENAI_API_KEY` is configured as a backend secret.
 - `SUMMARY_REVIEW_ENABLED=1`.
+
+This Gallery deployment defaults `SUMMARY_REVIEW_ENABLED` to `1`, but without the backend API key no model request is made.
 
 Default models:
 
@@ -202,11 +204,11 @@ Default models:
 
 Both calls use the OpenAI Responses API with `store:false` and strict JSON Schema Structured Outputs.
 
-The application does not impose a total-character limit on the stored Article Evidence Packet. The GPT runner also does not silently truncate evidence to fit a request. If an evidence packet cannot be processed within model/API limits, the job moves to `needs_manual_review`; it must not publish a summary based on an arbitrary prefix, suffix, or sampled subset.
+The application does not impose a total-character limit on the stored Article Evidence Packet. The GPT runner never silently truncates evidence to fit one request: Terra processes every Evidence row through deterministic chunks, the chunk drafts are merged, and Sol independently checks every cited Evidence chunk before final bilingual rendering. Chunking is only a per-request transport boundary; the aggregate review must cover all captured Evidence. If a hard platform/transport failure still prevents completion after chunking, the job moves to `needs_manual_review`; it must never publish a summary based on an arbitrary prefix, suffix, or sampled subset.
 
-Evidence with `textProcessingPolicy=no_external_ai` is never sent to OpenAI. Evidence with `textProcessingPolicy=unknown` is blocked unless `SUMMARY_ALLOW_UNKNOWN_POLICY=1` is explicitly configured.
+Evidence with `textProcessingPolicy=no_external_ai` is never sent to OpenAI. Evidence with `textProcessingPolicy=unknown` follows the deployment switch `SUMMARY_ALLOW_UNKNOWN_POLICY`. For this Gallery deployment the default is enabled because the project owner explicitly requested GPT review of captured article text; it can still be overridden to `0`. `no_external_ai` always remains blocked.
 
-The cron handles at most one review job per five-minute invocation. A failed review job cannot block TOC, body-image, Evidence capture, or public Gallery reads.
+The cron handles at most one review job per five-minute invocation. A D1 atomic lease prevents the cron and an explicit manual review run from invoking models concurrently for the same DOI/evidence generation; R2 remains the durable review record. A failed review job cannot block TOC, body-image, Evidence capture, or public Gallery reads.
 
 The default rolling 24-hour publication limit is 96 reviewed summaries (`SUMMARY_REVIEW_DAILY_LIMIT`). This is a cost/runaway guard, not a scientific-content limit, and may be raised through repository configuration. The runner confirms its R2 lease after writing it so a cron invocation and an explicit manual review run cannot both proceed with the same job.
 
