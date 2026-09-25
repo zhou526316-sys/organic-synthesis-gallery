@@ -256,6 +256,14 @@ export class GalleryPaperActions extends HTMLElement {
         message = this.tr('文章文字证据已更新，旧摘要已自动失效，等待 GPT 重新审核。', 'The article evidence changed, so the previous summary was invalidated and is awaiting GPT re-review.');
       } else if (data?.reason === 'summary_invalid') {
         message = this.tr('摘要记录未通过完整性校验，等待重新审核。', 'The summary record failed integrity validation and is awaiting review.');
+      } else if (data?.reason === 'summary_queued') {
+        message = this.tr(`已同步${coverage}，已进入 GPT 后台审核队列。`, `${coverage} is synced and queued for GPT background review.`);
+      } else if (data?.reason === 'summary_reviewing') {
+        message = this.tr(`已同步${coverage}，GPT 正在进行证据抽取/独立审核。`, `${coverage} is synced; GPT evidence extraction or independent review is in progress.`);
+      } else if (data?.reason === 'summary_needs_manual_review') {
+        message = this.tr(`已同步${coverage}，GPT 审核发现需要人工确认的问题，暂不发布摘要。`, `${coverage} is synced; GPT review found issues requiring manual verification, so the summary is not published yet.`);
+      } else if (data?.reason === 'summary_blocked') {
+        message = this.tr(`已同步${coverage}，后台审核暂时被阻断，等待修复后重试。`, `${coverage} is synced, but background review is currently blocked and will require a retry after the issue is resolved.`);
       } else if (data?.reason === 'summary_not_reviewed' || data?.reason === 'summary_pending') {
         message = this.tr(`已同步${coverage}，等待 GPT 审核；当前不会现场生成摘要。`, `${coverage} is synced and awaiting GPT review; no summary is generated on demand.`);
       } else {
