@@ -344,7 +344,7 @@ async function readJsonObject(env, key) {
   try { return JSON.parse(await object.text()); } catch { return null; }
 }
 
-async function selectReviewCandidate(env, now = Date.now()) {
+async function selectReviewCandidate(env, now = Date.now(), preferredDoi = '') {
   const [evidenceObjects, jobObjects] = await Promise.all([
     listObjects(env, EVIDENCE_PREFIX),
     listObjects(env, JOB_PREFIX),
@@ -397,11 +397,17 @@ async function selectReviewCandidate(env, now = Date.now()) {
     const meta = object?.customMetadata || {};
     return String(meta.state || '') === 'published' && metadataNumber(meta, 'publishedAt') >= now - 24 * 60 * 60 * 1000;
   }).length;
+  const preferred = String(preferredDoi || '').trim().toLowerCase();
+  const selectedCandidate = preferred
+    ? candidates.find(candidate => candidate.doi === preferred) || null
+    : candidates[0] || null;
   return {
-    candidate: candidates[0] || null,
+    candidate: selectedCandidate,
     evidenceCount: evidenceObjects.length,
     jobCount: jobObjects.length,
     eligibleCount: candidates.length,
+    preferredDoi: preferred,
+    preferredEligible: preferred ? Boolean(selectedCandidate) : null,
     recentPublishedCount,
     blockedPolicies,
   };
@@ -860,7 +866,7 @@ export async function runSummaryReviewCycle(env, options = {}) {
     };
   }
 
-  const selection = await selectReviewCandidate(env);
+  const selection = await selectReviewCandidate(env, Date.now(), options.preferredDoi || '');
   const dailyLimitRaw = Number(env.SUMMARY_REVIEW_DAILY_LIMIT || 96);
   const dailyLimit = Number.isFinite(dailyLimitRaw) ? Math.max(1, Math.floor(dailyLimitRaw)) : 96;
   if (selection.recentPublishedCount >= dailyLimit) {
@@ -874,9 +880,11 @@ export async function runSummaryReviewCycle(env, options = {}) {
   if (!selection.candidate) {
     return {
       status: 'idle',
+      reason: selection.preferredDoi && !selection.preferredEligible ? 'preferred_candidate_not_eligible' : '',
+      preferredDoi: selection.preferredDoi || '',
       evidenceCount: selection.evidenceCount,
       jobCount: selection.jobCount,
-      eligibleCount: 0,
+      eligibleCount: selection.eligibleCount,
       blockedPolicies: selection.blockedPolicies,
     };
   }
