@@ -416,6 +416,10 @@ export function validateReviewedAudit(evidence, audit) {
   if ((audit?.correctedFacts?.mechanism?.modelInference || []).length) issues.push('model_inference_present');
 
   const map = evidenceMap(evidence);
+  const allEvidenceText = normalizedForNumberSearch([...map.values()].map(row => row.text).join('\n'));
+  for (const token of extractNumberTokens(String(audit?.zh || '') + '\n' + String(audit?.en || ''))) {
+    if (!allEvidenceText.includes(token)) issues.push('summary_numeric_evidence_missing:' + token);
+  }
   for (const claim of audit?.correctedFacts?.claims || []) {
     if (claim.claimType === 'model_inference') issues.push('claim_model_inference');
     const ids = dedupeStrings(claim.evidenceIds || []);
