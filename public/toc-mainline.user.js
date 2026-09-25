@@ -2648,7 +2648,7 @@ function embeddedJobDois(value) {
       var mediaJobs=pairedJobs(queue,media);
       var evidenceJobs=evidenceInventory?evidenceBackfillJobs(queue,media,evidenceInventory):[];
       var generation=VERSION+':paired:'+String(queue.mediaGeneration);
-      var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION;
+      var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION+':'+String(queue.latestAddedDate||queue.generatedAt||'');
       function eligibleMedia(job) {
         var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
         // A scheduler failure is not a failed publisher/article capture.
@@ -2685,7 +2685,7 @@ function embeddedJobDois(value) {
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
-        badge((evidenceOnly?'全文证据':'TOC＋正文图')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
+        badge((evidenceOnly?'文字证据':'TOC＋正文图')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
         var tab=null,result=null,closed=true,skipReason='';
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
@@ -2737,7 +2737,7 @@ function embeddedJobDois(value) {
       }
       summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
       if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
-      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；全文证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
+      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；文字证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
       if(!stopReason&&availableJobs().length>0&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},NEXT_BATCH_DELAY_MS);
@@ -3090,16 +3090,32 @@ function embeddedJobDois(value) {
   }
 
   function evidenceBackfillJobs(queue,media,evidenceInventory) {
-    var have=new Set((evidenceInventory&&Array.isArray(evidenceInventory.items)?evidenceInventory.items:[]).filter(function(row){return row&&row.available!==false;}).map(function(row){return normalizeDoi(row.doi);}).filter(Boolean));
+    var existing=new Map();
+    (evidenceInventory&&Array.isArray(evidenceInventory.items)?evidenceInventory.items:[]).forEach(function(row){
+      var doi=normalizeDoi(row&&row.doi);
+      if(doi&&row&&row.available!==false)existing.set(doi,row);
+    });
     var latestAddedDate=String(queue&&queue.latestAddedDate||'');
     return (queue&&Array.isArray(queue.articles)?queue.articles:[]).map(function(raw,index){
       var doi=normalizeDoi(raw&&raw.doi);
-      if(!doi||have.has(doi))return null;
+      if(!doi)return null;
+      var prior=existing.get(doi)||null;
+      var priorLevel=String(prior&&prior.evidenceLevel||'');
+      if(priorLevel==='complete')return null;
       var record=(media&&media.items||{})[doi]||{},toc=record.toc||{};
       var official=Boolean(toc.available&&toc.imageUrl&&!/fallback/i.test(toc.reason||''));
       var isLatest=Boolean(latestAddedDate&&String(raw.addedDate||'')===latestAddedDate);
       if(!isLatest&&!official)return null;
-      return Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),mediaNeed:'evidence',state:'evidence_gap',captureToc:false,allowFigureOne:false,_queueIndex:index});
+      return Object.assign({},raw,{
+        doi:doi,
+        publisher:publisherForDoi(doi),
+        mediaNeed:'evidence',
+        state:prior?'evidence_upgrade':'evidence_gap',
+        existingEvidenceLevel:priorLevel||'missing',
+        captureToc:false,
+        allowFigureOne:false,
+        _queueIndex:index
+      });
     }).filter(Boolean);
   }
 
