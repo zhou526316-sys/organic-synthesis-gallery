@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "prepublish_recovery_checkpoint",
+  "publicationSlot": "2026-09-25T18:00:00+08:00",
+  "checkedAt": "2026-09-25T17:35:30+08:00",
+  "mainBaselineSha": "8fd9d0f235e92ce33861362e7da07dcf009ec883",
+  "result": "ready_with_pending",
+  "reusedFreshMachineAudit": true,
+  "machineAudit": {
+    "runId": 36116440444,
+    "generatedAt": "2026-09-25T09:06:42.635Z",
+    "latestBlobSha": "e8d159d4a3448ed09c747a97be7071a7798e47d9",
+    "compactBlobSha": "7e416311a41166fab6441e01ca86a80f362b16bd",
+    "activeJournals": 16,
+    "unresolved": 37,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 1,
+    "closureCoverageAnomalies": 7,
+    "historicalCoverageLosses": 0
+  },
+  "semanticReview": {
+    "reviewed": 37,
+    "accepted": 10,
+    "rejected": 26,
+    "pending": 1,
+    "newDoiDeltaSincePrimary": 0,
+    "materialEvidenceChangesSincePrimary": 0,
+    "publishableDois": [
+      "10.1021/jacs.6c15890",
+      "10.1021/acs.joc.6c01742",
+      "10.1021/acs.orglett.6c03171",
+      "10.1021/acs.orglett.6c03850",
+      "10.1021/acs.orglett.6c03528",
+      "10.1021/acs.orglett.6c03794",
+      "10.1021/acscatal.6c06303",
+      "10.1002/anie.2810612",
+      "10.1002/anie.7009966",
+      "10.1002/anie.4976267"
+    ],
+    "deferredDois": ["10.31635/ccschem.026.202608262"]
+  },
+  "scopeContract": {
+    "scopeRulesVersion": "scope-2026-09-24-v1",
+    "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+    "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+    "handoffCommitSha": "8acf5b79e92fcbd1d41951b235e32902031a8ea1",
+    "handoffBlobSha": "7e416311a41166fab6441e01ca86a80f362b16bd"
+  },
+  "historicalScope": {
+    "retained": ["10.1021/acs.joc.6c01559", "10.1002/anie.9519061"],
+    "retainWhilePending": ["10.1021/acs.orglett.6c03499", "10.1021/acs.orglett.6c03386"],
+    "newConfirmedExclusions": 0,
+    "newActualRemovals": 0
+  },
+  "prepublishGate": {
+    "runId": 36117322293,
+    "jobId": 108014366570,
+    "conclusion": "success",
+    "validatedStagingBlobSha": "6b28fd72a4e66d2b99cb9609a024e42b6f9d3acf",
+    "validateAllowDeferredRequireReady": "success",
+    "checkReadinessAllowDeferredRequireReady": "success",
+    "publicationReady": true,
+    "releaseStatus": "ready_with_pending"
+  },
+  "concurrency": {
+    "inProgressMainActions": 0,
+    "queuedMainActions": 0,
+    "protectedInputsUnchanged": true
+  },
+  "productionAction": {
+    "productionLiteratureModified": false,
+    "pagesRequested": false,
+    "mediaModified": false
+  },
+  "scheduleAction": {
+    "schedulesChanged": false,
+    "tasksDisabled": false,
+    "replacementTasksCreated": false
+  }
+}
