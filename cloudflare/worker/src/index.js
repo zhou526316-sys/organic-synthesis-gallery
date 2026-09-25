@@ -33,7 +33,7 @@ import { runLeaseRepairBatch, runRepairBatch } from './repair.js';
 import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
-import { getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
+import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -372,7 +372,7 @@ async function handleApi(request, env) {
     return resultResponse(await getArticleFigures(request, env), cors);
   }
   if(request.method==='GET' && url.pathname==='/api/media/capture-capabilities') {
-    return json({captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION,bodyReviewMarkerRevision:'1'}, {headers:cors});
+    return json({captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION,bodyReviewMarkerRevision:'1',evidenceSchemaVersion:ARTICLE_EVIDENCE_SCHEMA_VERSION,evidenceCaptureMinControllerRevision:'2.2.32'}, {headers:cors});
   }
   if (request.method === 'GET' && url.pathname === '/api/article-figures/staged') {
     return resultResponse(await getStagedArticleFigures(request, env), cors);
