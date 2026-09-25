@@ -247,6 +247,8 @@ assert.equal(status.status, 200);
 assert.equal(status.body.enabled, true);
 assert.equal(status.body.states.published, 1);
 assert.equal(status.body.dailyLimit, 96);
+assert.equal(status.body.urgentReserve, 48);
+assert.equal(status.body.hardDailyLimit, 144);
 assert.equal(status.body.promptVersion, SUMMARY_DRAFT_PROMPT_VERSION);
 assert.equal(status.body.auditVersion, SUMMARY_AUDIT_PROMPT_VERSION);
 
@@ -259,6 +261,45 @@ const limited = await runSummaryReviewCycle({ ...baseEnv, SUMMARY_REVIEW_DAILY_L
 assert.equal(limited.status, 'daily_limit');
 assert.equal(limited.dailyLimit, 1);
 assert.equal(limitedCalls, 0);
+
+const reserveMedia = new MemoryR2();
+const reserveEnv = {
+  ...baseEnv,
+  MEDIA: reserveMedia,
+  DB: new MemoryDB(),
+  SUMMARY_REVIEW_DAILY_LIMIT: '1',
+  SUMMARY_REVIEW_URGENT_RESERVE: '1',
+};
+async function publishReserveFixture(doi) {
+  await importArticleFulltext(reserveEnv, payload(doi, new Date().toISOString()));
+  let calls = 0;
+  const result = await runSummaryReviewCycle(reserveEnv, {
+    preferredDoi: doi,
+    fetchImpl: async () => {
+      calls += 1;
+      return calls === 1
+        ? responseObject('gpt-5.6-terra-2026-test', draftFor(doi))
+        : responseObject('gpt-5.6-sol-2026-test', auditPass());
+    },
+  });
+  return { result, calls };
+}
+const reserveFirst = await publishReserveFixture('10.1021/jacs.6c90010');
+assert.equal(reserveFirst.result.status, 'published');
+assert.equal(reserveFirst.calls, 2);
+const reserveSecond = await publishReserveFixture('10.1021/jacs.6c90011');
+assert.equal(reserveSecond.result.status, 'published');
+assert.equal(reserveSecond.calls, 2);
+await importArticleFulltext(reserveEnv, payload('10.1021/jacs.6c90012', new Date().toISOString()));
+let exhaustedReserveCalls = 0;
+const exhaustedReserve = await runSummaryReviewCycle(reserveEnv, {
+  preferredDoi: '10.1021/jacs.6c90012',
+  fetchImpl: async () => { exhaustedReserveCalls += 1; throw new Error('hard daily limit must prevent API calls'); },
+});
+assert.equal(exhaustedReserve.status, 'daily_limit');
+assert.equal(exhaustedReserve.reason, 'urgent_reserve_exhausted');
+assert.equal(exhaustedReserve.hardDailyLimit, 2);
+assert.equal(exhaustedReserveCalls, 0);
 
 const badDoi = '10.1021/jacs.6c90002';
 await importArticleFulltext(baseEnv, payload(badDoi, '2026-09-25T02:00:00Z'));
@@ -413,6 +454,7 @@ console.log(JSON.stringify({
   atomicD1Mutex: true,
   abstractOnlySupported: true,
   preferredDoiImmediateHandoff: true,
+  freshSlaReserveProtected: true,
   publicGetRemainsReadOnly: true,
   auditStateConsistent: true,
   openaiProvenanceStored: true,
