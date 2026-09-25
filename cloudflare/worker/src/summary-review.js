@@ -257,6 +257,7 @@ async function putJob(env, job) {
       nextRetryAt: String(job.nextRetryAt || 0),
       leaseExpiresAt: String(job.leaseExpiresAt || 0),
       updatedAt: String(job.updatedAt || Date.now()),
+      publishedAt: String(job.publishedAt || 0),
     },
   });
   return keys.job;
@@ -317,11 +318,16 @@ async function selectReviewCandidate(env, now = Date.now()) {
     if (levelDelta) return levelDelta;
     return a.doi.localeCompare(b.doi);
   });
+  const recentPublishedCount = jobObjects.filter(object => {
+    const meta = object?.customMetadata || {};
+    return String(meta.state || '') === 'published' && metadataNumber(meta, 'publishedAt') >= now - 24 * 60 * 60 * 1000;
+  }).length;
   return {
     candidate: candidates[0] || null,
     evidenceCount: evidenceObjects.length,
     jobCount: jobObjects.length,
     eligibleCount: candidates.length,
+    recentPublishedCount,
     blockedPolicies,
   };
 }
@@ -353,6 +359,10 @@ async function claimCandidate(env, candidate, now = Date.now()) {
     updatedAt: now,
   };
   await putJob(env, job);
+  // R2 is strongly read-after-write consistent. Confirm our lease still owns
+  // the object so a manual run racing the cron cannot duplicate model calls.
+  const confirmed = await readJsonObject(env, keys.job);
+  if (!confirmed || confirmed.leaseOwner !== job.leaseOwner || confirmed.evidencePacketHash !== job.evidencePacketHash) return null;
   return job;
 }
 
@@ -720,6 +730,16 @@ export async function runSummaryReviewCycle(env, options = {}) {
   }
 
   const selection = await selectReviewCandidate(env);
+  const dailyLimitRaw = Number(env.SUMMARY_REVIEW_DAILY_LIMIT || 96);
+  const dailyLimit = Number.isFinite(dailyLimitRaw) ? Math.max(1, Math.floor(dailyLimitRaw)) : 96;
+  if (selection.recentPublishedCount >= dailyLimit) {
+    return {
+      status: 'daily_limit',
+      dailyLimit,
+      recentPublishedCount: selection.recentPublishedCount,
+      eligibleCount: selection.eligibleCount,
+    };
+  }
   if (!selection.candidate) {
     return {
       status: 'idle',
@@ -776,6 +796,7 @@ export async function getSummaryReviewStatus(env) {
       allowUnknownPolicy: String(env?.SUMMARY_ALLOW_UNKNOWN_POLICY || '') === '1',
       draftModel: String(env?.SUMMARY_DRAFT_MODEL || DRAFT_MODEL_DEFAULT),
       auditModel: String(env?.SUMMARY_AUDIT_MODEL || AUDIT_MODEL_DEFAULT),
+      dailyLimit: Math.max(1, Math.floor(Number(env?.SUMMARY_REVIEW_DAILY_LIMIT || 96) || 96)),
       promptVersion: DRAFT_PROMPT_VERSION,
       auditVersion: AUDIT_PROMPT_VERSION,
       evidenceCount: evidenceObjects.length,
