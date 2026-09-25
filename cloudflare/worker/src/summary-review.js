@@ -869,10 +869,23 @@ export async function runSummaryReviewCycle(env, options = {}) {
   const selection = await selectReviewCandidate(env, Date.now(), options.preferredDoi || '');
   const dailyLimitRaw = Number(env.SUMMARY_REVIEW_DAILY_LIMIT || 96);
   const dailyLimit = Number.isFinite(dailyLimitRaw) ? Math.max(1, Math.floor(dailyLimitRaw)) : 96;
-  if (selection.recentPublishedCount >= dailyLimit) {
+  const urgentReserveRaw = Number(env.SUMMARY_REVIEW_URGENT_RESERVE || 48);
+  const urgentReserve = Number.isFinite(urgentReserveRaw) ? Math.max(0, Math.floor(urgentReserveRaw)) : 48;
+  const now = Date.now();
+  const capturedMs = Date.parse(String(selection.candidate?.capturedAt || ''));
+  const freshSlaCandidate = Number.isFinite(capturedMs) &&
+    capturedMs >= now - 60 * 60 * 1000 &&
+    capturedMs <= now + 5 * 60 * 1000;
+  const hardDailyLimit = dailyLimit + urgentReserve;
+  if (selection.recentPublishedCount >= dailyLimit &&
+      (!freshSlaCandidate || selection.recentPublishedCount >= hardDailyLimit)) {
     return {
       status: 'daily_limit',
+      reason: freshSlaCandidate ? 'urgent_reserve_exhausted' : 'base_daily_limit_reached',
       dailyLimit,
+      urgentReserve,
+      hardDailyLimit,
+      freshSlaCandidate,
       recentPublishedCount: selection.recentPublishedCount,
       eligibleCount: selection.eligibleCount,
     };
@@ -937,6 +950,9 @@ export async function getSummaryReviewStatus(env) {
       draftModel: String(env?.SUMMARY_DRAFT_MODEL || DRAFT_MODEL_DEFAULT),
       auditModel: String(env?.SUMMARY_AUDIT_MODEL || AUDIT_MODEL_DEFAULT),
       dailyLimit: Math.max(1, Math.floor(Number(env?.SUMMARY_REVIEW_DAILY_LIMIT || 96) || 96)),
+      urgentReserve: Math.max(0, Math.floor(Number(env?.SUMMARY_REVIEW_URGENT_RESERVE || 48) || 48)),
+      hardDailyLimit: Math.max(1, Math.floor(Number(env?.SUMMARY_REVIEW_DAILY_LIMIT || 96) || 96)) +
+        Math.max(0, Math.floor(Number(env?.SUMMARY_REVIEW_URGENT_RESERVE || 48) || 48)),
       promptVersion: DRAFT_PROMPT_VERSION,
       auditVersion: AUDIT_PROMPT_VERSION,
       evidenceCount: evidenceObjects.length,
