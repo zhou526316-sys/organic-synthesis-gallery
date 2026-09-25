@@ -514,3 +514,16 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_email_change_challenges_user
   ON email_change_challenges(user_id);
 CREATE INDEX IF NOT EXISTS idx_email_change_challenges_expiry
   ON email_change_challenges(expires_at);
+
+
+-- Atomic lease for GPT summary review. Durable review state remains in private
+-- R2; D1 only prevents concurrent cron/manual model calls for the same evidence generation.
+CREATE TABLE IF NOT EXISTS article_summary_review_leases (
+  doi TEXT PRIMARY KEY,
+  evidence_packet_hash TEXT NOT NULL,
+  lease_owner TEXT NOT NULL,
+  lease_expires_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_article_summary_review_leases_expiry
+  ON article_summary_review_leases(lease_expires_at, updated_at);
