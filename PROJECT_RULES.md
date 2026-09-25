@@ -30,3 +30,12 @@ Effective from the user's 2026-09-23 instruction: **“吐槽不要直接修，�
 4. An unqualified “继续” continues verification and reporting, not permission to start unapproved feedback repairs. Clearly approved work may proceed only within its approved scope.
 5. Pending feedback-driven changes are held for the user's decision; being implemented in a branch or passing CI is not approval. At adoption, navigation PR #150 and reader-counter PR #163 remain unmerged and must not be advanced or published without explicit user approval. Do not revert already deployed features merely because this process changed.
 6. Keep scope separate: this feedback approval gate does not itself disable, reschedule or alter independently authorized literature publication or media-acquisition workflows. Follow their existing contracts and permissions.
+## Public-facing model-name neutrality
+
+Effective from the user's 2026-09-25 instruction: public-facing Gallery text must not expose the name “GPT” (case-insensitive), including summary loading/pending/completed states, feedback confirmations, buttons, help text, errors, empty states, and other user-visible copy.
+
+1. Use model-neutral product wording such as “摘要正在处理中 / summary is being prepared” and “摘要已生成 / Summary ready”.
+2. Do not show “等待 GPT 审核”, “GPT reviewed”, model snapshots, or similar model/review implementation details in the public UI.
+3. Internal implementation may retain actual model identifiers, API configuration, provenance, audit records, tests about backend contracts, and private operational logs where technically required; these must not be surfaced as public UI copy.
+4. Future UI changes must preserve this rule across both Chinese and English copy.
+
