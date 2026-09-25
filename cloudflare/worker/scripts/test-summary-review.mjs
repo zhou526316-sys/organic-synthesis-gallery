@@ -203,8 +203,19 @@ const status = await getSummaryReviewStatus(baseEnv);
 assert.equal(status.status, 200);
 assert.equal(status.body.enabled, true);
 assert.equal(status.body.states.published, 1);
+assert.equal(status.body.dailyLimit, 96);
 assert.equal(status.body.promptVersion, SUMMARY_DRAFT_PROMPT_VERSION);
 assert.equal(status.body.auditVersion, SUMMARY_AUDIT_PROMPT_VERSION);
+
+const limitedDoi = '10.1021/jacs.6c90009';
+await importArticleFulltext(baseEnv, payload(limitedDoi, '2026-09-25T01:30:00Z'));
+let limitedCalls = 0;
+const limited = await runSummaryReviewCycle({ ...baseEnv, SUMMARY_REVIEW_DAILY_LIMIT: '1' }, {
+  fetchImpl: async () => { limitedCalls += 1; throw new Error('daily limit must prevent API calls'); },
+});
+assert.equal(limited.status, 'daily_limit');
+assert.equal(limited.dailyLimit, 1);
+assert.equal(limitedCalls, 0);
 
 const badDoi = '10.1021/jacs.6c90002';
 await importArticleFulltext(baseEnv, payload(badDoi, '2026-09-25T02:00:00Z'));
