@@ -1,14 +1,14 @@
 // Summary-only presentation. The four management popovers keep their existing
 // button-adjacent layout; no data fetching, reading events or capture logic here.
 export const SUMMARY_PANEL_STYLES = `
-  .drawer.summary-drawer{width:min(1080px,calc(100vw - 32px));max-height:min(86dvh,900px);padding:20px;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable}
+  .drawer.summary-drawer{width:min(1440px,calc(100vw - 32px));max-height:min(89dvh,1000px);padding:20px;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable}
   .summary-drawer .head{top:-20px;align-items:center;padding:12px 0 14px}
   .summary-drawer .head h3{font-size:20px;line-height:1.4}
   .summary-drawer .close{width:40px;height:40px;flex:0 0 40px;font-size:18px}
-  .summary-drawer .summary-layout{grid-template-columns:minmax(220px,34%) minmax(0,1fr);gap:24px}
+  .summary-drawer .summary-layout{grid-template-columns:minmax(240px,30%) minmax(0,1fr);gap:28px}
   .summary-drawer .summary-main:only-child{grid-column:1/-1}
   .summary-drawer .summary-toc{min-height:220px;padding:14px}
-  .summary-drawer .summary-toc img{max-height:400px}
+  .summary-drawer .summary-toc img{max-height:460px}
   .summary-drawer .summary-text{font-size:15px;line-height:1.85;overflow-wrap:anywhere}
   .summary-drawer .summary-state{font-size:14px;line-height:1.8}
   .summary-drawer .summary-tabs{gap:8px;margin-bottom:14px}
@@ -16,7 +16,7 @@ export const SUMMARY_PANEL_STYLES = `
   .summary-drawer .summary-meta{font-size:11px;line-height:1.6}
   .summary-drawer .summary-open{min-height:40px;align-items:center;font-size:13px}
   @media(max-width:680px){
-    .drawer.summary-drawer{width:calc(100vw - 24px);padding:16px;border-radius:16px}
+    .drawer.summary-drawer{width:calc(100vw - 24px);max-height:min(86dvh,900px);padding:16px;border-radius:16px}
     .summary-drawer .head{top:-16px;padding:8px 0 12px}
     .summary-drawer .head h3{font-size:18px}
     .summary-drawer .summary-layout{grid-template-columns:minmax(0,1fr);gap:16px}
@@ -35,8 +35,11 @@ function fitPanel(drawer: HTMLElement, anchor: HTMLElement): void {
   const originY = viewport?.offsetTop || 0;
   const margin = width <= 680 ? 12 : 16;
   const gap = 6;
-  drawer.style.width = `${Math.max(0, Math.min(1080, width - margin * 2))}px`;
-  drawer.style.maxHeight = `${Math.max(0, Math.min(900, height * 0.86, height - margin * 2))}px`;
+  const maxWidth = width <= 680 ? width - margin * 2 : Math.min(1440, width - margin * 2);
+  drawer.style.width = `${Math.max(0, maxWidth)}px`;
+  const heightRatio = width <= 680 ? 0.86 : 0.89;
+  const heightCap = width <= 680 ? 900 : 1000;
+  drawer.style.maxHeight = `${Math.max(0, Math.min(heightCap, height * heightRatio, height - margin * 2))}px`;
 
   const bounds = drawer.getBoundingClientRect();
   const trigger = anchor.getBoundingClientRect();
