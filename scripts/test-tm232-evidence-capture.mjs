@@ -183,8 +183,8 @@ try{
   test('missing evidence stays in the lowest-priority backfill queue',
     backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10002'&&r.state==='evidence_gap'));
   test('evidence-only backlog is lower priority than historical body figures',backfill.tier===3);
-  test('fresh-TOC summary Evidence gap outranks the normal media backlog',
-    __tm232.captureQueueTier({mediaNeed:'evidence',summaryUrgent:true,addedDate:'2026-09-24'},'2026-09-25')===-1);
+  const urgentTier=await page.evaluate(()=>__tm232.captureQueueTier({mediaNeed:'evidence',summaryUrgent:true,addedDate:'2026-09-24'},'2026-09-25'));
+  test('fresh-TOC summary Evidence gap outranks the normal media backlog',urgentTier===-1);
   test('source retains one-hour post-TOC Evidence urgency and bounded retry',
     source.includes('SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000')&&
     source.includes('markSummaryEvidenceUrgency(job.doi)')&&
