@@ -626,9 +626,9 @@ test('full-text summary opens as a non-fullscreen TOC-backed bilingual panel', a
   const box = await drawer.boundingBox();
   expect(box).not.toBeNull();
   if (box) {
-    // Feedback 29 explicitly enlarges the previous 740px summary panel.
-    expect(box.width).toBeGreaterThan(1000);
-    expect(box.width).toBeLessThanOrEqual(1080);
+    // The approved desktop-only expansion now uses most of a 1280px viewport
+    // while retaining visible margins and a nonfullscreen height.
+    expect(box.width).toBeGreaterThan(1200);
     expect(box.width).toBeLessThan(1280 - 24);
     expect(box.height).toBeLessThan(900 * 0.9);
   }

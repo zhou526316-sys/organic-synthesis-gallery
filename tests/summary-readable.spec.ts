@@ -67,7 +67,7 @@ async function bounded(drawer: Locator, width: number, height: number): Promise<
   }).toPass({ timeout: 5000 });
 }
 
-for (const { width, height } of [{ width: 1280, height: 900 }, { width: 390, height: 900 }, { width: 320, height: 568 }, { width: 900, height: 420 }]) {
+for (const { width, height } of [{ width: 1600, height: 1000 }, { width: 1280, height: 900 }, { width: 390, height: 900 }, { width: 320, height: 568 }, { width: 900, height: 420 }]) {
   test(`larger summary remains readable and nonfullscreen at ${width}x${height}`, async ({ page }, info) => {
     const errors: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -76,8 +76,11 @@ for (const { width, height } of [{ width: 1280, height: 900 }, { width: 390, hei
     await expect(drawer.locator('.summary-text')).toContainText(ZH);
     await bounded(drawer, width, height);
     const box = (await drawer.boundingBox())!;
-    if (width >= 1200) expect(box.width).toBeGreaterThan(1000);
-    expect(box.height).toBeGreaterThan(height * 0.75);
+    if (width >= 1500) expect(box.width).toBeGreaterThan(1350);
+    else if (width >= 1200) expect(box.width).toBeGreaterThan(1200);
+    expect(box.height).toBeGreaterThan(height * (width <= 680 ? 0.75 : 0.84));
+    if (width <= 680) expect(box.height).toBeLessThanOrEqual(height * 0.86 + 2);
+    else expect(box.height).toBeLessThanOrEqual(Math.min(1000, height * 0.89) + 2);
     const fontSize = await drawer.locator('.summary-text').evaluate(element => parseFloat(getComputedStyle(element).fontSize));
     expect(fontSize).toBeGreaterThanOrEqual(width <= 680 ? 14 : 15);
     await expect(drawer.locator('.summary-toc img')).toBeVisible();
@@ -148,4 +151,27 @@ test('approved abstract-only summary discloses its evidence coverage', async ({ 
   const drawer = actions.locator('.summary-drawer');
   await expect(drawer.locator('.summary-text')).toContainText(ZH);
   await expect(drawer.locator('.summary-meta')).toContainText(/基于 Abstract|Abstract-based/);
+});
+
+
+test('desktop summary gains reading space while mobile keeps the previous compact cap', async ({ page }) => {
+  const desktop = await prepare(page, 1600, 1000);
+  const drawer = desktop.actions.locator('.summary-drawer');
+  await expect(drawer.locator('.summary-text')).toContainText(ZH);
+  await bounded(drawer, 1600, 1000);
+  const desktopBox = (await drawer.boundingBox())!;
+  expect(desktopBox.width).toBeGreaterThan(1350);
+  expect(desktopBox.width).toBeLessThanOrEqual(1441);
+  expect(desktopBox.height).toBeGreaterThan(850);
+  expect(desktopBox.height).toBeLessThanOrEqual(892);
+  const columns = await drawer.locator('.summary-layout').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').map(value => parseFloat(value)));
+  expect(columns[1]).toBeGreaterThan(columns[0] * 2);
+  await drawer.locator('[data-action="close"]').click();
+
+  const mobile = await prepare(page, 390, 900);
+  const mobileDrawer = mobile.actions.locator('.summary-drawer');
+  await bounded(mobileDrawer, 390, 900);
+  const mobileBox = (await mobileDrawer.boundingBox())!;
+  expect(Math.abs(mobileBox.width - 366)).toBeLessThanOrEqual(1);
+  expect(mobileBox.height).toBeLessThanOrEqual(776);
 });
