@@ -1,16 +1,15 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-24T18:28:00+08:00",
-  "publicationSlot": "2026-09-24T18:00:00+08:00",
-  "releaseCommit": "b513e1a2767e999edbf10a9ebe6124850b9e916a",
-  "baselineMain": "303ddf765ea02a90a0e97276903135300f111b3d",
-  "postReleaseAuditRunId": 35985602540,
-  "postReleaseAuditGeneratedAt": "2026-09-24T10:12:00.806Z",
-  "expectedProductionCards": 566,
+  "requestedAt": "2026-09-25T08:13:54.237+08:00",
+  "publicationSlot": "2026-09-25T08:00:00+08:00",
+  "releaseCommit": "648064f332f8f000b7143ef87f1bbc6495afe59c",
+  "baselineMain": "3d358cf4bff13e4e10164ec99d9509509b0f5cd7",
+  "postReleaseAuditRunId": 36076468554,
+  "postReleaseAuditGeneratedAt": "2026-09-25T00:13:22.458Z",
+  "expectedProductionCards": 585,
   "expectedDeferredDois": [
-    "10.1038/s41467-026-78015-9",
     "10.31635/ccschem.026.202608262"
   ],
-  "observedUnresolvedCount": 10,
-  "purpose": "Run the real post-release literature quality gate for the already deployed 2026-09-24 18:00 release. Fail closed if unresolved DOI(s) exceed the exact frozen deferred set; post-release late arrivals must not be silently admitted, excluded, or relabeled pending. This request changes no protected production literature data and performs no off-slot admission."
+  "observedUnresolvedCount": 1,
+  "purpose": "Run the real post-release literature quality gate for the deployed 2026-09-25 08:00 release. Require repository/deployed DOI equality and require the sole unresolved DOI to match the exact frozen deferred set. This request changes no protected production literature data and performs no off-slot admission."
 }
