@@ -1736,8 +1736,8 @@ function embeddedJobDois(value) {
   function buildArticleEvidencePacket(job, trace) {
     var pageDoi = assertBoundCaptureJob(job);
     var state = pageState(job, trace || []);
-    if (state.challenge || state.auth || state.shell || !state.doiMatch) {
-      return {fulltextStatus:'invalid',reason:state.challenge?'challenge_page':state.auth?'auth_page':state.shell?'publisher_shell':'page_doi_unverified'};
+    if (state.challenge || state.auth || !state.doiMatch) {
+      return {fulltextStatus:'invalid',reason:state.challenge?'challenge_page':state.auth?'auth_page':'page_doi_unverified'};
     }
     var root = evidenceArticleRoot();
     var sections = root ? collectArticleEvidenceSections(root) : [];
@@ -1746,7 +1746,7 @@ function embeddedJobDois(value) {
     var captions = root ? collectArticleEvidenceCaptions(root) : [];
     var tables = root ? collectArticleEvidenceTables(root) : [];
     if(!sections.length && !captions.length && !tables.length) {
-      return {fulltextStatus:'empty',reason:root?'evidence_empty':'article_root_not_found',chars:0,sections:0,captions:0,tables:0};
+      return {fulltextStatus:'empty',reason:state.shell?'publisher_shell':root?'evidence_empty':'article_root_not_found',chars:0,sections:0,captions:0,tables:0};
     }
     var chars = sections.reduce(function(total,row){return total+String(row.text||'').length;},0)
       + captions.reduce(function(total,row){return total+String(row.text||'').length;},0)
