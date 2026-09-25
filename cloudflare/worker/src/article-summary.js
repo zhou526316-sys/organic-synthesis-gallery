@@ -148,7 +148,7 @@ function normalizeSections(rows) {
     const heading = safeSingleLine(row?.heading, 500);
     if (heading && EXCLUDED_HEADING.test(heading)) continue;
     const text = normalizeText(row?.text);
-    if (text.length < 80) continue;
+    if (text.length < 20) continue;
     normalized.push({
       type: normalizeSectionType(row?.type),
       heading,
@@ -173,7 +173,7 @@ function normalizeCaptions(rows) {
     label: safeSingleLine(row?.label, 120),
     type: safeSingleLine(row?.type, 80).toLowerCase() || 'figure',
     text: normalizeText(row?.text),
-  })).filter(row => row.text.length >= 20);
+  })).filter(row => row.text.length >= 10);
 }
 
 function normalizeTables(rows) {
@@ -183,7 +183,7 @@ function normalizeTables(rows) {
     label: safeSingleLine(row?.label, 120),
     title: safeSingleLine(row?.title, 500),
     text: normalizeText(row?.text),
-  })).filter(row => row.text.length >= 40);
+  })).filter(row => row.text.length >= 10);
 }
 
 async function hashEvidenceRows(rows) {
@@ -366,6 +366,7 @@ export async function importArticleFulltext(env, payload) {
       evidencePacketHash,
       capturedAt,
       textProcessingPolicy,
+      evidenceLevel: provenance.fulltextStatus,
     },
   };
 }
