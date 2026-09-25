@@ -174,6 +174,90 @@ async function currentLegacySummaryMatches(env, doi, evidencePacketHash, sourceH
   );
 }
 
+export async function backfillScheduledEvidenceHandoffs(env, limitValue = 4) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'handoff_storage_unavailable' } };
+  const limit = Math.max(1, Math.min(12, Number(limitValue || 4)));
+  const asset = await readScheduledSummaryAsset(env);
+  const evidenceObjects = [];
+  let cursor;
+  for (let pageNo = 0; pageNo < 10; pageNo += 1) {
+    const page = await env.MEDIA.list({
+      prefix: 'private/article-evidence-v2/',
+      limit: 1000,
+      ...(cursor ? { cursor } : {}),
+      include: ['customMetadata'],
+    });
+    evidenceObjects.push(...(page?.objects || []));
+    if (!page?.truncated || !page?.cursor) break;
+    cursor = page.cursor;
+  }
+  evidenceObjects.sort((a, b) =>
+    String(b?.customMetadata?.capturedAt || '').localeCompare(String(a?.customMetadata?.capturedAt || ''))
+  );
+
+  let created = 0;
+  let scanned = 0;
+  let skippedCurrent = 0;
+  let skippedPolicy = 0;
+  for (const object of evidenceObjects) {
+    if (created >= limit) break;
+    scanned += 1;
+    const meta = object?.customMetadata || {};
+    const doi = normalizeDoi(meta.doi);
+    const evidencePacketHash = String(meta.evidencePacketHash || '');
+    const sourceHash = String(meta.sourceHash || '');
+    if (!doi || !evidencePacketHash || !sourceHash) continue;
+    if (String(meta.textProcessingPolicy || '') === 'no_external_ai') {
+      skippedPolicy += 1;
+      continue;
+    }
+
+    const scheduled = asset.items?.[doi];
+    if (scheduled &&
+        scheduled.status === 'approved' &&
+        scheduled.evidencePacketHash === evidencePacketHash &&
+        scheduled.sourceHash === sourceHash) {
+      skippedCurrent += 1;
+      continue;
+    }
+    if (await currentLegacySummaryMatches(env, doi, evidencePacketHash, sourceHash)) {
+      skippedCurrent += 1;
+      continue;
+    }
+
+    const id = await idForDoi(doi);
+    const handoffKey = HANDOFF_PREFIX + id + '.json';
+    const existing = await readJsonObject(env, handoffKey);
+    if (existing &&
+        existing.keyId === HANDOFF_KEY_ID &&
+        existing.evidencePacketHash === evidencePacketHash &&
+        existing.sourceHash === sourceHash) {
+      skippedCurrent += 1;
+      continue;
+    }
+
+    const evidence = await readJsonObject(env, object.key);
+    if (!evidence || evidence.evidencePacketHash !== evidencePacketHash || evidence.sourceHash !== sourceHash) continue;
+    const envelope = await persistScheduledEvidenceHandoff(env, evidence);
+    if (envelope) created += 1;
+  }
+
+  return {
+    status: 200,
+    body: {
+      ok: true,
+      created,
+      scanned,
+      limit,
+      skippedCurrent,
+      skippedPolicy,
+      evidenceCount: evidenceObjects.length,
+      hasMore: created >= limit,
+      keyId: HANDOFF_KEY_ID,
+    },
+  };
+}
+
 export async function getScheduledEvidenceHandoff(env, limitValue = 40) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'handoff_storage_unavailable' } };
   const limit = Math.max(1, Math.min(60, Number(limitValue || 40)));

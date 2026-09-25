@@ -43,6 +43,8 @@ jobs:
           grep -F 'SUMMARY_MODE = "scheduled_chatgpt_daily_no_api"' .github/workflows/deploy-worker-frontend.yml
           grep -F 'crons = ["0 */6 * * *"]' .github/workflows/deploy-worker-frontend.yml
           grep -F "'/api/article-summary/scheduled-handoff'" cloudflare/worker/src/index.js
+          grep -F "'/api/admin/article-summary/handoff-backfill'" cloudflare/worker/src/index.js
+          grep -F "Backfill encrypted daily-summary handoff" .github/workflows/deploy-worker-frontend.yml
           grep -F "scheduled_daily_1200_asia_shanghai" cloudflare/worker/src/index.js
           grep -F "RSA-OAEP-256+A256GCM" cloudflare/worker/src/scheduled-summary-handoff.js
           grep -F "SCHEDULED_SUMMARY_ASSET" cloudflare/worker/src/scheduled-summary-handoff.js

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {
+  backfillScheduledEvidenceHandoffs,
   getScheduledEvidenceHandoff,
   getScheduledSummaryForEvidence,
   persistScheduledEvidenceHandoff,
@@ -136,6 +137,36 @@ assert.equal(stale, null);
 const excluded = await getScheduledEvidenceHandoff({ MEDIA, ASSETS: approvedAssets }, 40);
 assert.equal(excluded.body.count, 0);
 
+async function sha256Hex(value) {
+  const bytes = new TextEncoder().encode(String(value || ''));
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
+const legacyEvidence = {
+  ...evidence,
+  doi: '10.1021/jacs.6c77779',
+  sourceHash: 'e'.repeat(64),
+  evidencePacketHash: 'f'.repeat(64),
+  capturedAt: '2026-09-24T03:00:00Z',
+};
+const legacyId = (await sha256Hex(legacyEvidence.doi)).slice(0, 32);
+await MEDIA.put('private/article-evidence-v2/' + legacyId + '.json', JSON.stringify(legacyEvidence), {
+  customMetadata: {
+    doi: legacyEvidence.doi,
+    evidencePacketHash: legacyEvidence.evidencePacketHash,
+    sourceHash: legacyEvidence.sourceHash,
+    evidenceLevel: legacyEvidence.evidenceLevel,
+    capturedAt: legacyEvidence.capturedAt,
+    textProcessingPolicy: legacyEvidence.textProcessingPolicy,
+  },
+});
+const backfill = await backfillScheduledEvidenceHandoffs({ MEDIA, ASSETS: approvedAssets }, 4);
+assert.equal(backfill.status, 200);
+assert.equal(backfill.body.created, 1);
+const postBackfill = await getScheduledEvidenceHandoff({ MEDIA, ASSETS: approvedAssets }, 40);
+assert.ok(postBackfill.body.items.some(item => item.doi === legacyEvidence.doi));
+assert.ok(!JSON.stringify(postBackfill.body).includes('PRIVATE_PUBLISHER_TEXT_MARKER'));
+
 console.log(JSON.stringify({
   encryptedHandoff: true,
   plaintextNotExposed: true,
@@ -143,4 +174,5 @@ console.log(JSON.stringify({
   staticSummaryHashBound: true,
   noExternalAiBlocked: true,
   publicationMode: 'daily_1200_asia_shanghai',
+  legacyEvidenceBackfill: true,
 }));

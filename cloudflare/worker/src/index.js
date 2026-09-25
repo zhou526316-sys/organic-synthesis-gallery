@@ -34,7 +34,7 @@ import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
-import { getScheduledEvidenceHandoff } from './scheduled-summary-handoff.js';
+import { backfillScheduledEvidenceHandoffs, getScheduledEvidenceHandoff } from './scheduled-summary-handoff.js';
 import { getSummaryReviewStatus } from './summary-review.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
@@ -252,6 +252,13 @@ async function handleApi(request, env, ctx) {
       mode: 'scheduled_chatgpt_daily_no_api',
       publicationTime: '12:00 Asia/Shanghai',
     }, { status: 410, headers: cors });
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/admin/article-summary/handoff-backfill') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(12, Number(url.searchParams.get('limit') || 4)));
+    return resultResponse(await backfillScheduledEvidenceHandoffs(env, limit), cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
@@ -618,6 +625,12 @@ export default {
         reason: 'scheduled_chatgpt_daily_no_api',
         publicationTime: '12:00 Asia/Shanghai',
       }));
+      try {
+        const handoff = await backfillScheduledEvidenceHandoffs(env, 4);
+        console.log('SUMMARY_HANDOFF_BACKFILL_CRON', JSON.stringify(handoff.body || {}));
+      } catch (error) {
+        console.error('SUMMARY_HANDOFF_BACKFILL_CRON_FAILED', error instanceof Error ? error.message : String(error));
+      }
     })());
     console.log('ARTICLE_FIGURE_STAGE_PROMOTION_CRON_SKIPPED', 'verified_staging_release;retain_original_objects');
   },

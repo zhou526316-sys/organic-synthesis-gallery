@@ -159,6 +159,33 @@ jobs:
           NODE
           npx wrangler secret bulk /tmp/runtime-secrets.json --config wrangler.frontend.toml >/dev/null
           rm -f /tmp/runtime-secrets.json
+
+      - name: Backfill encrypted daily-summary handoff
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node - <<'NODE'
+          const base = process.env.WORKER_URL;
+          const token = process.env.BRIDGE_WRITE_TOKEN;
+          if (!token) throw new Error('BRIDGE_WRITE_TOKEN is required for summary handoff backfill');
+          let totalCreated = 0;
+          for (let batch = 0; batch < 80; batch += 1) {
+            const response = await fetch(base + '/api/admin/article-summary/handoff-backfill?limit=4', {
+              method: 'POST',
+              headers: { authorization: `Bearer ${token}`, 'cache-control': 'no-cache' },
+            });
+            const body = await response.json().catch(() => ({}));
+            if (!response.ok || body?.ok !== true) {
+              throw new Error('summary handoff backfill failed: ' + JSON.stringify({ status: response.status, body }));
+            }
+            totalCreated += Number(body.created || 0);
+            console.log(JSON.stringify({ batch: batch + 1, ...body, totalCreated }));
+            if (Number(body.created || 0) === 0) break;
+          }
+          console.log(JSON.stringify({ summaryHandoffBackfillComplete: true, totalCreated }));
+          NODE
+
       - name: Verify WeChat MP domain file
         shell: bash
         run: |
