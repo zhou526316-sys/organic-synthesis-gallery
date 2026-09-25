@@ -43,7 +43,7 @@ test('heartbeat missing and timeout are classified as skip before stop evaluatio
 });
 
 test('failed skipped DOI is persisted into attempt history before continuation',()=>{
-  const save=source.indexOf("GM_setValue(attemptKey(job.doi,generation,'figures'),result);");
+  const save=source.indexOf("GM_setValue(attemptKey(job.doi,attemptGeneration,attemptKind),result);");
   const skip=source.indexOf("if(skipReason) {",save);
   const stop=source.indexOf("if(stopReason){summary.stopReason=stopReason",skip);
   assert.ok(save>0&&skip>save&&stop>skip);
