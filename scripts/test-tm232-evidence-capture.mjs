@@ -160,8 +160,8 @@ try{
     const rows=__tm232.evidenceBackfillJobs(q,media,inv);
     return {rows:rows.map(r=>({doi:r.doi,state:r.state,level:r.existingEvidenceLevel})),tier:__tm232.captureQueueTier(rows[0],'2026-09-25')};
   });
-  test('abstract-only evidence remains upgradeable while complete evidence leaves the backlog',
-    backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10001'&&r.state==='evidence_upgrade'&&r.level==='abstract_only') &&
+  test('any stored evidence level leaves the normal backlog without repeated reopening',
+    !backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10001') &&
     !backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10004'));
   test('missing evidence stays in the lowest-priority backfill queue',
     backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10002'&&r.state==='evidence_gap'));
