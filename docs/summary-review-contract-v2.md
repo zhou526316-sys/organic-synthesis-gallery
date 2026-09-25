@@ -208,6 +208,8 @@ Evidence with `textProcessingPolicy=no_external_ai` is never sent to OpenAI. Evi
 
 The cron handles at most one review job per five-minute invocation. A failed review job cannot block TOC, body-image, Evidence capture, or public Gallery reads.
 
+The default rolling 24-hour publication limit is 96 reviewed summaries (`SUMMARY_REVIEW_DAILY_LIMIT`). This is a cost/runaway guard, not a scientific-content limit, and may be raised through repository configuration. The runner confirms its R2 lease after writing it so a cron invocation and an explicit manual review run cannot both proceed with the same job.
+
 Private R2 objects:
 
 - `private/article-evidence-v2/*` — captured source evidence.
