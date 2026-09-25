@@ -76,6 +76,10 @@ class MemorySummaryJobStore {
     if (!row) throw new Error('job_missing');
     Object.assign(row, patch, { updated_at: Date.now() });
   }
+  async get(doi) {
+    const row = this.rows.get(doi);
+    return row ? structuredClone(row) : null;
+  }
   async status(limit = 100) {
     return [...this.rows.values()].slice(0, limit).map(row => structuredClone(row));
   }
@@ -275,6 +279,16 @@ const invalidCheck = validateReviewedAudit(evidence, invalidAudit);
 assert.equal(invalidCheck.ok, false);
 assert.ok(invalidCheck.issues.some(value => value.includes('numeric_evidence_missing')));
 
+const summaryNumberAudit = {
+  ...invalidAudit,
+  correctedFacts: factFixture('s001'),
+  zh: '该反应给出 97% 产率。',
+  en: 'The reaction gives 97% yield.',
+};
+const summaryNumberCheck = validateReviewedAudit(evidence, summaryNumberAudit);
+assert.equal(summaryNumberCheck.ok, false);
+assert.ok(summaryNumberCheck.issues.some(value => value.includes('summary_numeric_evidence_missing')));
+
 const inferenceAudit = {
   ...invalidAudit,
   correctedFacts: {
@@ -303,6 +317,7 @@ console.log(JSON.stringify({
   storeFalse: true,
   structuredOutputsStrict: true,
   deterministicNumericGuard: true,
+  bilingualNumericGuard: true,
   modelInferenceGuard: true,
   crashRecovery: true,
   requests: requests.length,
