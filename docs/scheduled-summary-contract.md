@@ -54,6 +54,18 @@ The task should process all pending items that can be completed reliably in the 
 
 Backlog ordering is explicitly newest-first: rank by Evidence `capturedAt` descending. A newer item that is fully reviewable must not wait for older pending items. The reviewer may publish a rigorously reviewed newest subset immediately while older items remain pending; FIFO clearing of historical backlog is not required.
 
+### Bulk catch-up execution
+
+A user-triggered catch-up is a **single bulk review operation**, not one DOI per run.
+
+- Before decrypting work, skip DOI records that already have an approved scheduled summary whose `sourceHash` and `evidencePacketHash` still match current Evidence.
+- Process remaining Evidence newest-first in micro-batches of **8–12 DOI**. A batch may contain `complete`, `partial`, and `abstract_only` items; each item keeps its own evidence restrictions.
+- Do not deploy after every DOI. Complete two-pass review for the micro-batch, merge all approved records from that batch into `public/scheduled-article-summaries.json` atomically, then deploy once for the batch.
+- One failed or deferred DOI must not stop the rest of its batch.
+- After a successful batch deployment, continue immediately with the next newest micro-batch while execution budget remains. Re-read the current summary file and live manifest before each subsequent batch so concurrent changes are respected.
+- The intended user experience is one trigger for the whole backlog. Internal batching exists only to bound context, tool calls, and failure blast radius; it must not require a separate user command for each article.
+- Do not reduce evidence or bilingual-audit standards to increase throughput.
+
 ## 4. Evidence restrictions
 
 Coverage levels remain:
