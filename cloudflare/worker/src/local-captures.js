@@ -1,6 +1,7 @@
 import { storeVerifiedStage } from './stage-storage.js';
 import { normalizeDoi } from './media.js';
 import { importFigure, importToc } from './media-write.js';
+import { importPrimaryVisual } from './primary-visual.js';
 
 const INDEX_KEY = 'local-captures/index.json';
 const IMAGE_PREFIX = 'local-captures/images/';
@@ -708,8 +709,9 @@ export async function importLocalCapture(request, env, payload) {
   });
 
   let productionToc = null;
+  let productionFallback = null;
+  const imageData = 'data:' + image.contentType + ';base64,' + bytesToBase64(image.bytes);
   if (kind === 'official') {
-    const imageData = 'data:' + image.contentType + ';base64,' + bytesToBase64(image.bytes);
     const promoted = await importToc(request, env, {
       doi,
       articleUrl: payload.articleUrl,
@@ -734,6 +736,38 @@ export async function importLocalCapture(request, env, payload) {
       };
     }
     productionToc = promoted.body;
+  } else if (/^10\.(?:1038|1126)\//.test(doi) && image.contentType !== 'image/svg+xml') {
+    const promoted = await importPrimaryVisual(request, env, {
+      doi,
+      kind: 'figure1',
+      imageData,
+      source: 'tampermonkey_nature_science_figure1_rescue',
+      sourceUrl: payload.sourceUrl,
+      articleUrl: payload.articleUrl,
+      caption: payload.caption || 'Figure 1 fallback',
+      confidence: 95,
+      width: Number(payload?.width || 0) || undefined,
+      height: Number(payload?.height || 0) || undefined,
+      retrievedAt: now,
+    });
+    if (Number(promoted?.status || 500) < 200 || Number(promoted?.status || 500) >= 300 ||
+        !(promoted?.body?.imported === true || promoted?.body?.importState === 'known_good_preserved')) {
+      return {
+        status: 503,
+        body: {
+          stored: true,
+          localStored: true,
+          productionFallbackStored: false,
+          doi,
+          kind,
+          contentHash: hash.slice(0, 32),
+          error: 'figure1_primary_visual_promotion_failed',
+          promotionStatus: Number(promoted?.status || 0),
+          updatedAt: now,
+        },
+      };
+    }
+    productionFallback = promoted.body;
   }
 
   return {
@@ -742,17 +776,134 @@ export async function importLocalCapture(request, env, payload) {
       stored: true,
       localStored: true,
       productionTocStored: kind === 'official' ? true : false,
+      productionFallbackStored: kind === 'figure1' && /^10\.(?:1038|1126)\//.test(doi) ? Boolean(productionFallback) : false,
       doi,
       kind,
       contentHash: hash.slice(0, 32),
-      imageUrl: kind === 'official' ? String(productionToc?.imageUrl || '') : publicMediaUrl(request, key),
+      imageUrl: kind === 'official'
+        ? String(productionToc?.imageUrl || '')
+        : productionFallback
+          ? publicMediaUrl(request, productionFallback?.r2Key || key)
+          : publicMediaUrl(request, key),
       productionToc: kind === 'official' ? {
         available: true,
         imageUrl: String(productionToc?.imageUrl || ''),
         reason: String(productionToc?.reason || ''),
         cacheState: String(productionToc?.cacheState || ''),
       } : undefined,
+      productionFallback: productionFallback || undefined,
       updatedAt: now,
+    },
+  };
+}
+
+export async function promoteStagedNatureSciencePrimaryVisuals(request, env, options = {}) {
+  if (!env?.MEDIA || !env?.DB) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
+  const limit = Math.max(1, Math.min(30, Number(options?.limit || 20)));
+  const offset = Math.max(0, Math.floor(Number(options?.offset || 0)));
+  const scanLimit = Math.max(1, Math.min(40, Math.floor(Number(options?.scanLimit || 24))));
+  const index = await readArticleFigureStageIndex(env);
+  const bestByDoi = new Map();
+
+  for (const item of Object.values(index.items || {})) {
+    const doi = normalizeDoi(item?.doi);
+    if (!doi || !/^10\.(?:1038|1126)\//.test(doi) ||
+        Number(item?.updatedAt || 0) < MEDIA_REBUILD_EPOCH ||
+        !captureBelongsToDoi(item, doi) || !item?.r2Key) continue;
+    const figureOne = String(item?.label || '').trim() === 'Figure 1'
+      || String(item?.id || '').toLowerCase() === 'figure-1'
+      || /^(?:fig(?:ure)?\.?\s*0*1)(?:\b|[:.)-])/i.test(String(item?.label || ''));
+    if (!figureOne) continue;
+    const prior = bestByDoi.get(doi);
+    const area = Math.max(0, Number(item?.width || 0)) * Math.max(0, Number(item?.height || 0));
+    const priorArea = prior ? Math.max(0, Number(prior.width || 0)) * Math.max(0, Number(prior.height || 0)) : -1;
+    if (!prior || area > priorArea || (area === priorArea && Number(item?.updatedAt || 0) > Number(prior?.updatedAt || 0))) {
+      bestByDoi.set(doi, item);
+    }
+  }
+
+  const candidates = [...bestByDoi.values()].sort((a, b) => {
+    const aDoi = normalizeDoi(a?.doi) || '';
+    const bDoi = normalizeDoi(b?.doi) || '';
+    const familyDelta = (aDoi.startsWith('10.1038/') ? 0 : 1) - (bDoi.startsWith('10.1038/') ? 0 : 1);
+    return familyDelta || Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0);
+  });
+
+  let promoted = 0;
+  let alreadyCurrent = 0;
+  let failed = 0;
+  let scanned = 0;
+  const failures = [];
+  const slice = candidates.slice(offset, offset + scanLimit);
+
+  for (const item of slice) {
+    if (promoted >= limit) break;
+    scanned += 1;
+    const doi = normalizeDoi(item.doi);
+    try {
+      const [officialToc, existingPrimary] = await Promise.all([
+        env.DB.prepare(
+          'SELECT available, r2_key FROM toc_assets WHERE doi = ? LIMIT 1'
+        ).bind(doi).first(),
+        env.DB.prepare(
+          'SELECT kind, r2_key, confidence FROM primary_visual_assets WHERE doi = ? LIMIT 1'
+        ).bind(doi).first(),
+      ]);
+      if ((officialToc && Number(officialToc.available) === 1 && officialToc.r2_key) ||
+          (existingPrimary && ['official_visual','figure1'].includes(String(existingPrimary.kind || '')) && existingPrimary.r2_key)) {
+        alreadyCurrent += 1;
+        continue;
+      }
+
+      const object = await env.MEDIA.get(item.r2Key);
+      if (!object) throw new Error('staged_figure1_r2_object_missing');
+      const bytes = new Uint8Array(await object.arrayBuffer());
+      if (bytes.byteLength < 128 || bytes.byteLength > MAX_IMAGE_BYTES) throw new Error('staged_figure1_image_size_invalid');
+      const contentType = String(item.contentType || object.httpMetadata?.contentType || 'image/jpeg').toLowerCase().replace('image/jpg','image/jpeg');
+      if (!/^image\/(?:png|jpeg|gif|webp)$/.test(contentType)) throw new Error('staged_figure1_primary_visual_requires_raster');
+      const result = await importPrimaryVisual(request, env, {
+        doi,
+        kind: 'figure1',
+        imageData: 'data:' + contentType + ';base64,' + bytesToBase64(bytes),
+        source: 'tampermonkey_staged_figure1_rescue',
+        sourceUrl: item.sourceUrl,
+        articleUrl: item.articleUrl,
+        caption: item.caption || item.label || 'Figure 1 fallback',
+        confidence: 95,
+        width: Number(item.width || 0) || undefined,
+        height: Number(item.height || 0) || undefined,
+        retrievedAt: Number(item.updatedAt || Date.now()),
+      });
+      if (Number(result?.status || 500) < 200 || Number(result?.status || 500) >= 300 ||
+          !(result?.body?.imported === true || result?.body?.importState === 'known_good_preserved')) {
+        throw new Error('staged_figure1_primary_visual_import_failed_' + String(result?.status || 0));
+      }
+      promoted += 1;
+    } catch (error) {
+      failed += 1;
+      failures.push({ doi, error: safeText(error instanceof Error ? error.message : error, 200) });
+    }
+  }
+
+  const nextOffset = Math.min(candidates.length, offset + scanned);
+  return {
+    status: 200,
+    body: {
+      ok: true,
+      promoted,
+      alreadyCurrent,
+      failed,
+      scanned,
+      candidates: candidates.length,
+      limit,
+      offset,
+      scanLimit,
+      nextOffset,
+      hasMore: nextOffset < candidates.length,
+      source: 'staged_figure1_only',
+      stagingPreserved: true,
+      failures: failures.slice(0, 20),
+      updatedAt: Date.now(),
     },
   };
 }
