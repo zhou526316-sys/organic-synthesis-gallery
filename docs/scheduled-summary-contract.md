@@ -19,7 +19,7 @@ For the scheduled review task, each eligible Evidence Packet is copied into a hy
 - Evidence JSON is gzip-compressed before encryption;
 - content cipher: AES-256-GCM;
 - key wrapping: RSA-OAEP with SHA-256;
-- public-key identifier: `9c55e2d2ed734de9`;
+- public-key identifier: `db16696f49e74d95`;
 - plaintext Article Evidence Packet is never returned by the public handoff route;
 - `textProcessingPolicy=no_external_ai` is excluded from the handoff.
 
@@ -36,6 +36,8 @@ A scheduled reviewer then retrieves one bounded ciphertext slice at a time with:
 Each slice response may expose the wrapped AES key, IV, algorithm metadata and one ciphertext fragment. Reassembling all fragments is required before decryption. No route may expose captured publisher text in plaintext.
 
 If a stored envelope was produced by an older key or transport format, the Worker must regenerate it from the private current Evidence Packet before serving it. Deployment backfill applies the same rotation rule.
+
+A handoff-key rotation is operationally complete only after all three are true: the Worker public key/keyId is deployed, the 12:00 scheduled task holds the matching private key and transport contract, and the live manifest reports the same keyId/algorithm. Until then the daily reviewer must fail closed rather than fall back to a retired key or transport.
 
 ## 3. Daily review task
 
