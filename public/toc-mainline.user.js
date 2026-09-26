@@ -2468,6 +2468,7 @@ function embeddedJobDois(value) {
         source: 'tampermonkey-toc-mainline'
       }, token, 'r2_upload');
       if (!result || result.stored !== true || normalizeDoi(result.doi) !== normalizeDoi(job.doi) || result.kind !== candidate.kind) throw new Error('toc_capture_receipt_invalid');
+      if (candidate.kind === 'official' && result.productionTocStored !== true) throw new Error('toc_production_promotion_missing');
       assertBoundCaptureJob(job, candidate.url);
       pushTrace(trace, {
         stage: 'r2_upload',
@@ -2562,7 +2563,7 @@ function embeddedJobDois(value) {
     assertBoundCaptureJob(job);
     var token=writeToken(),trace=[],cache=new Map();
     var checkpoint=readCheckpoint(job.doi);checkpoint.figures=checkpoint.figures||{};
-    if(checkpoint.toc&&checkpoint.toc.status==='stored'&&Date.now()-checkpoint.updatedAt<6*60*60*1000)job.captureToc=false;
+    if(checkpoint.toc&&checkpoint.toc.status==='stored'&&checkpoint.toc.productionTocStored===true&&Date.now()-checkpoint.updatedAt<6*60*60*1000)job.captureToc=false;
     job.publisher=job.publisher||publisherForDoi(job.doi);
     job.captureDeadline=Date.now()+6*60*1000;
     var wantsToc=job.captureToc===true;
@@ -2596,7 +2597,7 @@ function embeddedJobDois(value) {
           var best=await acquireBestVisual(job,candidates,trace,cache,'toc');
           if (best) {
             var receipt=await uploadCapture(job,best.candidate,best.image,trace,token);
-            result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl};
+            result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl,productionTocStored:best.candidate.kind==='official'?receipt.productionTocStored===true:false};
             checkpoint.toc=result.toc;saveCheckpoint(job.doi,checkpoint);
             captureLiveUpdate(job,'saved',{label:best.candidate.kind==='figure1'?'Figure 1 替代图':'TOC'});
           } else result.toc={status:'not_found',reason:'no_usable_official_or_figure1'};
