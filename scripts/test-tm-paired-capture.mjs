@@ -24,7 +24,7 @@ try{
   if(req.method()==='POST'){
    const p=req.postDataJSON();posts.push({url:u.pathname,payload:p});
    if(u.pathname.includes('tampermonkey-report'))return route.fulfill({json:{stored:true},headers:{'access-control-allow-origin':'*'}});
-   return route.fulfill({json:{stored:true,staged:u.pathname.endsWith('/stage'),doi:p.doi,id:p.id,kind:p.kind,width:p.width,height:p.height,contentHash:'test-hash',imageUrl:'https://example.test/object.svg'},headers:{'access-control-allow-origin':'*'}});
+   return route.fulfill({json:{stored:true,staged:u.pathname.endsWith('/stage'),productionTocStored:p.kind==='official'?true:false,doi:p.doi,id:p.id,kind:p.kind,width:p.width,height:p.height,contentHash:'test-hash',imageUrl:'https://example.test/object.svg'},headers:{'access-control-allow-origin':'*'}});
   }
   if(/\.svg$/.test(u.pathname))return route.fulfill({body:svg,contentType:'image/svg+xml',headers:{'access-control-allow-origin':'*'}});
   return route.fulfill({body:'<html><head><meta name="citation_doi" content="'+doi+'"></head><body><article><h1>Article</h1></article></body></html>',contentType:'text/html'});
