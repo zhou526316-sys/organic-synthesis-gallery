@@ -1,16 +1,15 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-26T08:17:00+08:00",
-  "publicationSlot": "2026-09-26T08:00:00+08:00",
-  "releaseCommit": "fb6b25fcfa725900e7c4f4eadbc5b7313ec86118",
-  "baselineMain": "558aad5974e35e948f1e317592fc6b197102800e",
-  "postReleaseAuditRunId": 36203631181,
-  "postReleaseAuditGeneratedAt": "2026-09-26T00:09:23.441Z",
-  "expectedProductionCards": 611,
+  "requestedAt": "2026-09-26T18:16:00+08:00",
+  "publicationSlot": "2026-09-26T18:00:00+08:00",
+  "releaseCommit": "4643393d627834a976302d58f28175de6d718904",
+  "baselineMain": "54f7bba481f2348ac190d2c1476f229a7612e1d1",
+  "postReleaseAuditRunId": 36235052071,
+  "postReleaseAuditGeneratedAt": "2026-09-26T10:12:25.177Z",
+  "expectedProductionCards": 614,
   "expectedDeferredDois": [
-    "10.1038/s41467-026-78191-8",
     "10.31635/ccschem.026.202608262"
   ],
   "observedUnresolvedCount": 2,
-  "purpose": "Run the real post-release quality gate for the deployed 2026-09-26 08:00 release. Require repository/deployed DOI equality and require the post-release unresolved set to equal the two frozen evidence-pending DOI records."
+  "purpose": "Run the real post-release quality gate for the deployed 2026-09-26 18:00 release. Require repository/deployed DOI equality and fail closed on any unresolved DOI not covered by the frozen deferred set."
 }
