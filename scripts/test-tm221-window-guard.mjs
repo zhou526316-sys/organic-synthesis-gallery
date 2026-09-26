@@ -27,7 +27,7 @@ function harness(text=source,opt={}) {
       opt.onOpen?.(job,ctx,store);
       return opt.promiseHandle?Promise.resolve(h):h;
     },
-    __jobs:Array.from({length:20},(_,i)=>({doi:'10.1021/jacs.6c'+String(10000+i),publisher:'acs'})),
+    __jobs:Array.from({length:20},(_,i)=>({doi:'10.1021/jacs.6c'+String(10000+i),publisher:'acs',mediaNeed:'toc+figures',state:'no_visual',captureToc:true,captureFigures:true,captureEvidence:false})),
   };
   ctx=vm.createContext(c);
   const cut=text.lastIndexOf('  installMenu();');assert.ok(cut>0);
