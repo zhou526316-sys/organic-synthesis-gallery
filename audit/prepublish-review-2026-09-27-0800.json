@@ -1735,7 +1735,7 @@
   "qualityControl": {
     "secondPassCompleted": true,
     "twoPassScope": "all 56 fresh compact candidates plus four carried historical boundary rechecks",
-    "unresolvedDisagreements": 1,
+    "unresolvedDisagreements": 0,
     "allHandoffCandidatesReviewed": true,
     "allHandoffCandidatesFinalized": false,
     "unfinishedHandoffDois": [],
@@ -1776,7 +1776,8 @@
     "sourceCoverageWarningJournals": [],
     "sourceCoverageWarningsNonBlockingForReviewedDois": true,
     "closureCoverageWarningCount": 5,
-    "verifiedThroughHeld": true
+    "verifiedThroughHeld": true,
+    "unresolvedDisagreementsInterpretation": "逐篇两遍冲突已通过pending隔离为文章级证据缺口；不存在未隔离、会阻断其余publishableDois的全局分歧。"
   },
   "globalBlockers": [],
   "publicationBlockers": [],
@@ -1803,5 +1804,5 @@
       "closureEffect": "hold_verifiedThrough"
     }
   ],
-  "updatedAt": "2026-09-27T07:16:00+08:00"
+  "updatedAt": "2026-09-27T07:24:00+08:00"
 }
