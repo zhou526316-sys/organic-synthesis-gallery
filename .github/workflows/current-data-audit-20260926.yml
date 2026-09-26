@@ -1,0 +1,213 @@
+name: Read-only current Gallery data audit
+
+on:
+  push:
+    branches:
+      - audit/current-data-status-20260926-1327
+    paths:
+      - '.github/workflows/current-data-audit-20260926.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Audit production data coverage without writes
+        env:
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node - <<'NODE'
+          const SITE = 'https://gallery.gczhouwld.com';
+          const API = 'https://api.gczhouwld.com';
+          const token = process.env.BRIDGE_WRITE_TOKEN;
+          if (!token) throw new Error('BRIDGE_WRITE_TOKEN missing');
+
+          const registryRes = await fetch(SITE + '/toc-demand-live.json?audit=' + Date.now(), {
+            headers: { 'cache-control': 'no-cache' },
+          });
+          if (!registryRes.ok) throw new Error('registry HTTP ' + registryRes.status);
+          const registry = await registryRes.json();
+          const articles = Array.isArray(registry.articles) ? registry.articles : [];
+          const byDoi = new Map();
+          for (const row of articles) {
+            const doi = String(row?.doi || '').trim().toLowerCase();
+            if (doi && !byDoi.has(doi)) byDoi.set(doi, row);
+          }
+          const dois = [...byDoi.keys()];
+          if (dois.length !== Number(registry.webpageDoiCount || dois.length)) {
+            throw new Error('registry count mismatch ' + JSON.stringify({dois:dois.length,webpageDoiCount:registry.webpageDoiCount}));
+          }
+
+          const mediaRes = await fetch(API + '/api/media/inventory', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', 'cache-control': 'no-cache' },
+            body: JSON.stringify({ dois, readOnly: true }),
+          });
+          if (!mediaRes.ok) throw new Error('media inventory HTTP ' + mediaRes.status);
+          const media = await mediaRes.json();
+
+          const evidenceRes = await fetch(API + '/api/article-summary/evidence-inventory', {
+            headers: { authorization: 'Bearer ' + token, 'cache-control': 'no-cache' },
+          });
+          if (!evidenceRes.ok) throw new Error('evidence inventory HTTP ' + evidenceRes.status);
+          const evidence = await evidenceRes.json();
+
+          const scheduledRes = await fetch(SITE + '/scheduled-article-summaries.json?audit=' + Date.now(), {
+            headers: { 'cache-control': 'no-cache' },
+          });
+          const scheduled = scheduledRes.ok ? await scheduledRes.json() : { items: {} };
+
+          const evidenceMap = new Map(
+            (Array.isArray(evidence.items) ? evidence.items : [])
+              .map(row => [String(row?.doi || '').toLowerCase(), row])
+              .filter(([doi]) => byDoi.has(doi))
+          );
+
+          const summaryRows = new Array(dois.length);
+          let cursor = 0;
+          async function worker() {
+            while (true) {
+              const i = cursor++;
+              if (i >= dois.length) return;
+              const doi = dois[i];
+              let data = null;
+              let lastError = '';
+              for (let attempt = 0; attempt < 3; attempt += 1) {
+                try {
+                  const response = await fetch(API + '/api/user-ui/article-summary?doi=' + encodeURIComponent(doi), {
+                    headers: { 'cache-control': 'no-cache' },
+                    signal: AbortSignal.timeout(15000),
+                  });
+                  if (!response.ok) throw new Error('HTTP ' + response.status);
+                  data = await response.json();
+                  break;
+                } catch (error) {
+                  lastError = String(error?.message || error);
+                  if (attempt < 2) await new Promise(r => setTimeout(r, 250 * (attempt + 1)));
+                }
+              }
+              summaryRows[i] = data || { doi, available: false, evidenceAvailable: false, reason: 'audit_fetch_failed', auditError: lastError };
+            }
+          }
+          await Promise.all(Array.from({length: 20}, () => worker()));
+
+          const inc = (obj, key) => { const k = String(key || 'unknown'); obj[k] = (obj[k] || 0) + 1; };
+
+          const mediaItems = Array.isArray(media.items) ? media.items : [];
+          const mediaByDoi = new Map(mediaItems.map(row => [String(row.doi || '').toLowerCase(), row]));
+          const mediaBreakdown = {
+            total: dois.length,
+            complete: 0,
+            tocOnly_missingBodyFigures: 0,
+            bodyFiguresOnly_missingToc: 0,
+            missingBothTocAndBodyFigures: 0,
+            tocMissing: 0,
+            bodyFiguresMissing: 0,
+            usableBodyFiguresMissing: 0,
+            withToc: 0,
+            withAnyBodyFigures: 0,
+            withUsableBodyFigures: 0,
+            suspiciousToc: 0,
+            totalBodyFigureObjects: 0,
+          };
+          for (const doi of dois) {
+            const row = mediaByDoi.get(doi) || {};
+            if (row.status === 'complete') mediaBreakdown.complete++;
+            else if (row.status === 'large_only') mediaBreakdown.tocOnly_missingBodyFigures++;
+            else if (row.status === 'figures_only') mediaBreakdown.bodyFiguresOnly_missingToc++;
+            else mediaBreakdown.missingBothTocAndBodyFigures++;
+            if (row.tocMissing !== false) mediaBreakdown.tocMissing++;
+            else mediaBreakdown.withToc++;
+            const figCount = Number(row.figureCount || 0);
+            const usable = Number(row.usableFigureCount || 0);
+            mediaBreakdown.totalBodyFigureObjects += figCount;
+            if (figCount > 0) mediaBreakdown.withAnyBodyFigures++;
+            else mediaBreakdown.bodyFiguresMissing++;
+            if (usable > 0) mediaBreakdown.withUsableBodyFigures++;
+            else mediaBreakdown.usableBodyFiguresMissing++;
+            if (row.suspiciousToc === true) mediaBreakdown.suspiciousToc++;
+          }
+
+          const evidenceLevelCounts = {};
+          const evidencePolicyCounts = {};
+          for (const [doi, row] of evidenceMap) {
+            inc(evidenceLevelCounts, row.evidenceLevel || 'unknown');
+            inc(evidencePolicyCounts, row.textProcessingPolicy || 'unknown');
+          }
+
+          const summaryBreakdown = {
+            total: dois.length,
+            publishedSummary: 0,
+            missingSummary: 0,
+            evidenceAvailable: 0,
+            evidenceMissing: 0,
+            evidenceButSummaryPending: 0,
+            fulltextAvailable: 0,
+            reasons: {},
+            states: {},
+            evidenceLevelsFromPublicStatus: {},
+            auditFetchFailed: 0,
+          };
+          for (const row of summaryRows) {
+            if (row?.available === true) summaryBreakdown.publishedSummary++;
+            else summaryBreakdown.missingSummary++;
+            if (row?.evidenceAvailable === true) summaryBreakdown.evidenceAvailable++;
+            else summaryBreakdown.evidenceMissing++;
+            if (row?.evidenceAvailable === true && row?.available !== true) summaryBreakdown.evidenceButSummaryPending++;
+            if (row?.fulltextAvailable === true) summaryBreakdown.fulltextAvailable++;
+            inc(summaryBreakdown.reasons, row?.reason || (row?.available ? 'available' : 'unknown'));
+            inc(summaryBreakdown.states, row?.state || 'unknown');
+            if (row?.evidenceLevel) inc(summaryBreakdown.evidenceLevelsFromPublicStatus, row.evidenceLevel);
+            if (row?.reason === 'audit_fetch_failed') summaryBreakdown.auditFetchFailed++;
+          }
+
+          const journal = {};
+          for (const doi of dois) {
+            const meta = byDoi.get(doi) || {};
+            const name = String(meta.journal || 'unknown');
+            journal[name] ||= {
+              total:0,tocMissing:0,bodyFiguresMissing:0,evidenceMissing:0,summaryMissing:0
+            };
+            const j = journal[name];
+            j.total++;
+            const m = mediaByDoi.get(doi) || {};
+            if (m.tocMissing !== false) j.tocMissing++;
+            if (Number(m.figureCount || 0) === 0) j.bodyFiguresMissing++;
+            const sr = summaryRows[dois.indexOf(doi)] || {};
+            if (sr.evidenceAvailable !== true) j.evidenceMissing++;
+            if (sr.available !== true) j.summaryMissing++;
+          }
+
+          const evidenceCrossCheck = {
+            inventoryTotalAllStored: Number(evidence.count || 0),
+            currentRegistryEvidenceCount: evidenceMap.size,
+            currentRegistryMissingEvidence: dois.length - evidenceMap.size,
+            levelCounts: evidenceLevelCounts,
+            policyCounts: evidencePolicyCounts,
+          };
+
+          const result = {
+            auditedAt: new Date().toISOString(),
+            registryGeneratedAt: registry.generatedAt || null,
+            latestAddedDate: registry.latestAddedDate || null,
+            totalArticles: dois.length,
+            mediaSummaryFromApi: media.summary,
+            mediaBreakdown,
+            evidenceCrossCheck,
+            summaryBreakdown,
+            scheduledStaticSummaryCount: Object.keys(scheduled?.items || {}).filter(doi => byDoi.has(String(doi).toLowerCase())).length,
+            journal,
+          };
+
+          console.log('CURRENT_GALLERY_DATA_AUDIT ' + JSON.stringify(result));
+          NODE
