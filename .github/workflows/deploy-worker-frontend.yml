@@ -165,6 +165,8 @@ jobs:
           rm -f /tmp/runtime-secrets.json
 
       - name: Promote verified official TOCs into production
+        id: promote_official_tocs
+        continue-on-error: true
         env:
           WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
