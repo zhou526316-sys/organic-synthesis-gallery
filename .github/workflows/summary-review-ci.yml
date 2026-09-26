@@ -50,7 +50,7 @@ jobs:
           grep -F "SCHEDULED_SUMMARY_ASSET" cloudflare/worker/src/scheduled-summary-handoff.js
           grep -F "getScheduledEvidenceHandoffPart" cloudflare/worker/src/index.js
           grep -F "manifestOnly" cloudflare/worker/src/index.js
-          grep -F "db16696f49e74d95" cloudflare/worker/src/scheduled-summary-handoff.js
+          grep -F "9c55e2d2ed734de9" cloudflare/worker/src/scheduled-summary-handoff.js
           grep -F "'public/scheduled-article-summaries.json'" .github/workflows/deploy-worker-frontend.yml
       - name: Install Worker dependencies
         working-directory: cloudflare/worker
