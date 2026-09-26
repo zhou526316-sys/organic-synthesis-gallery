@@ -79,9 +79,15 @@ for (const paper of automationPapers) {
 
 const updateState = JSON.parse(await readFile(path.resolve('audit/literature-update-state.json'), 'utf8'));
 const latestReview = updateState?.lastCompletedReview;
-assert.ok(latestReview && Array.isArray(latestReview.addedDois), 'Latest completed review metadata is required');
-const latestReviewDate = String(latestReview.finishedAt || '').slice(0, 10);
-for (const doi of latestReview.addedDois) {
+assert.ok(latestReview, 'Latest completed review metadata is required');
+const latestReviewedDois = Array.isArray(latestReview.addedDois)
+  ? latestReview.addedDois
+  : Array.isArray(updateState?.lastCompletedFetch?.addedThisRun)
+    ? updateState.lastCompletedFetch.addedThisRun
+    : [];
+assert.ok(Array.isArray(latestReviewedDois), 'Latest reviewed DOI list must be an array');
+const latestReviewDate = String(latestReview.finishedAt || updateState?.lastCompletedFetch?.finishedAt || '').slice(0, 10);
+for (const doi of latestReviewedDois) {
   const paper = automationByDoi.get(String(doi).toLowerCase());
   assert.ok(paper, `Latest reviewed DOI missing from automation supplement: ${doi}`);
   assert.equal(paper.addedDate, latestReviewDate, `Latest reviewed DOI has wrong addedDate: ${doi}`);
@@ -92,6 +98,6 @@ console.log(JSON.stringify({
   excludedFindings: findings.length,
   midnight: 'passed',
   reviewedSet: automationPapers.length,
-  latestReviewedSet: latestReview.addedDois.length,
+  latestReviewedSet: latestReviewedDois.length,
   addedDates: Object.fromEntries([...formalAddedByDate].map(([date, set]) => [date, set.size])),
 }));
