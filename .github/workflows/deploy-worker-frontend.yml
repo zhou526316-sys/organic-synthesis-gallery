@@ -140,6 +140,7 @@ jobs:
         run: npx wrangler deploy --dry-run --config wrangler.frontend.toml --outdir .wrangler-frontend-dry-run
 
       - name: Deploy frontend assets
+        id: deploy_worker
         working-directory: cloudflare/worker
         run: npx wrangler deploy --config wrangler.frontend.toml
 
@@ -192,6 +193,7 @@ jobs:
           NODE
 
       - name: Backfill encrypted daily-summary handoff
+        if: ${{ always() && steps.deploy_worker.outcome == 'success' }}
         env:
           WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
