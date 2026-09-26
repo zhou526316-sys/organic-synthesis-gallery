@@ -23,7 +23,7 @@ function harness(text=source,opt={}) {
       const job=store.get('osg-toc-v6:active-job');
       const h={url,options,closed:false,closeRequested:false,close(){this.closeRequested=true;}};
       opened.push(h);maxLive=Math.max(maxLive,opened.filter(h=>!h.closed).length);
-      set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored'},fulltext:{status:'stored',evidenceLevel:'complete'},figuresStaged:2});
+      set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',controllerRevision:'2.2.35',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored',productionTocStored:true},figures:{status:'staged',discovered:2,stored:2,failed:0,items:[]},fulltext:{status:'stored',evidenceLevel:'complete'},figuresStaged:2});
       opt.onOpen?.(job,ctx,store);
       return opt.promiseHandle?Promise.resolve(h):h;
     },
