@@ -1,0 +1,1807 @@
+{
+  "schemaVersion": 3,
+  "reviewType": "prepublish_primary",
+  "publicationSlot": "2026-09-27T08:00:00+08:00",
+  "createdAt": "2026-09-27T07:12:00+08:00",
+  "evidenceAsOf": "2026-09-27T07:12:00+08:00",
+  "executionMode": "highest_quality_available_reasoning",
+  "phase": "ready_with_pending",
+  "status": "ready_with_pending",
+  "readyToPublish": true,
+  "publishableSubsetReady": true,
+  "reviewComplete": false,
+  "releasePolicy": {
+    "mode": "per-doi"
+  },
+  "handoffGeneratedAt": "2026-09-26T23:08:30.269Z",
+  "freshAuditGeneratedAt": "2026-09-26T23:08:30.269Z",
+  "snapshotFreshForSlot": true,
+  "requiredSnapshotWindow": {
+    "start": "2026-09-27T06:55:00+08:00",
+    "end": "2026-09-27T08:00:00+08:00"
+  },
+  "handoffCommitSha": "8c99b5892d322fa5b80fd59b2b95a86fc00cf0a3",
+  "handoffFile": "audit/unresolved-latest.json",
+  "handoffBlobSha": "1d0904023af9b188ea1e797e4b8702712dff2cce",
+  "compactHandoffSha": "1d0904023af9b188ea1e797e4b8702712dff2cce",
+  "latestBlobSha": "3646378e80d769cb3979734db44b31f135da2fec",
+  "scopeRulesVersion": "scope-2026-09-24-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+  "sourceAudit": {
+    "runId": 36278434211,
+    "conclusion": "success",
+    "capabilityGuardConclusion": "success",
+    "triggerCommitSha": "6f91f4e34bb09fde309df6da365a079d907d5b68",
+    "snapshotCommitSha": "8c99b5892d322fa5b80fd59b2b95a86fc00cf0a3",
+    "generatedAt": "2026-09-26T23:08:30.269Z",
+    "galleryDois": 614,
+    "sourceRecords": 821,
+    "rawMissingFromGallery": 691,
+    "previouslyReviewedExcluded": 635,
+    "missingFromGallery": 56,
+    "potentialGaps": 29,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 5,
+    "historicalCoverageLosses": 0,
+    "unresolved": 56,
+    "scopeCorrectionsPending": 0,
+    "excludedByPolicy": 0,
+    "sameGenerationAndCountsVerified": true,
+    "activeJournals": 16,
+    "canonicalRegistryBlobSha": "57050105998284ccbf87b1a5fe513b256b648949",
+    "healthyRunsCancelledOrRestarted": 0
+  },
+  "windowAccounting": {
+    "timeZone": "Asia/Shanghai",
+    "primaryStart": "2026-09-25",
+    "primaryEnd": "2026-09-27",
+    "auditStart": "2026-09-21",
+    "machineSafetyTailDays": 7,
+    "machineSafetyTailStart": "2026-09-21",
+    "lateDepositRescueDays": 7,
+    "lateDepositRescueStart": "2026-09-21",
+    "verifiedThrough": "2026-09-20",
+    "verifiedThroughAdvanced": false,
+    "catchupStartDate": "2026-09-21",
+    "multiIssnCrossrefModes": [
+      "online",
+      "published",
+      "created"
+    ],
+    "openAlexUnion": true,
+    "activeFromApplied": true,
+    "keywordsUsedOnlyForPriority": true,
+    "completeCompactRead": true
+  },
+  "reviewed": 56,
+  "acceptedCount": 10,
+  "rejectedCount": 44,
+  "pendingCount": 2,
+  "summary": {
+    "reviewed": 56,
+    "accepted": 10,
+    "rejected": 44,
+    "pending": 2,
+    "remainingUnresolved": 2
+  },
+  "acceptedDois": [
+    "10.1021/acscatal.6c05861",
+    "10.1021/acscatal.6c06459",
+    "10.1002/anie.6481438",
+    "10.1002/anie.3147869",
+    "10.1002/anie.5647747",
+    "10.1002/anie.1148889",
+    "10.1002/anie.8809022",
+    "10.1021/jacs.6c12299",
+    "10.1021/acs.joc.6c01604",
+    "10.1021/acs.orglett.6c03365"
+  ],
+  "proposedPublishableDois": [
+    "10.1021/acscatal.6c05861",
+    "10.1021/acscatal.6c06459",
+    "10.1002/anie.6481438",
+    "10.1002/anie.3147869",
+    "10.1002/anie.5647747",
+    "10.1002/anie.1148889",
+    "10.1002/anie.8809022",
+    "10.1021/jacs.6c12299",
+    "10.1021/acs.joc.6c01604",
+    "10.1021/acs.orglett.6c03365"
+  ],
+  "publishableDois": [
+    "10.1021/acscatal.6c05861",
+    "10.1021/acscatal.6c06459",
+    "10.1002/anie.6481438",
+    "10.1002/anie.3147869",
+    "10.1002/anie.5647747",
+    "10.1002/anie.1148889",
+    "10.1002/anie.8809022",
+    "10.1021/jacs.6c12299",
+    "10.1021/acs.joc.6c01604",
+    "10.1021/acs.orglett.6c03365"
+  ],
+  "rejectedDois": [
+    "10.1021/acscatal.6c03312",
+    "10.1021/acscatal.6c03235",
+    "10.1021/acscatal.6c04688",
+    "10.1021/acscatal.6c04063",
+    "10.1021/acscatal.6c06421",
+    "10.1021/acscatal.6c05142",
+    "10.1002/anie.7114810",
+    "10.1002/anie.7173496",
+    "10.1002/anie.3462462",
+    "10.1002/anie.7208628",
+    "10.1002/anie.5300884",
+    "10.1002/anie.5159694",
+    "10.1002/anie.4231597",
+    "10.1002/anie.8734241",
+    "10.1002/anie.9699968",
+    "10.1002/anie.9641173",
+    "10.1002/anie.8236222",
+    "10.1002/anie.5287849",
+    "10.1002/anie.3353986",
+    "10.1002/anie.8257644",
+    "10.1002/anie.9423554",
+    "10.1021/jacs.6c11762",
+    "10.1021/jacs.6c09757",
+    "10.1021/jacs.6c13500",
+    "10.1021/jacs.6c11008",
+    "10.1021/jacs.6c11949",
+    "10.1021/jacs.6c14786",
+    "10.1021/jacs.6c07837",
+    "10.1038/s41467-026-78010-0",
+    "10.1038/s41467-026-78079-7",
+    "10.1038/s41467-026-77948-5",
+    "10.1038/s41467-026-78077-9",
+    "10.1038/s41467-026-77967-2",
+    "10.1038/s41467-026-78069-9",
+    "10.1038/s41467-026-78082-y",
+    "10.1038/s41467-026-77197-6",
+    "10.1038/s41467-026-77869-3",
+    "10.1038/s41467-026-77487-z",
+    "10.1038/s41467-026-77997-w",
+    "10.1038/s41467-026-78058-y",
+    "10.1038/s41467-026-77471-7",
+    "10.1038/s41467-026-78074-y",
+    "10.1038/s41467-026-77924-z",
+    "10.1038/s41467-026-78014-w"
+  ],
+  "pendingDois": [
+    "10.1002/anie.8666577",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "deferredDois": [
+    "10.1002/anie.8666577",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "remainingDois": [
+    "10.1002/anie.8666577",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "remainingUnresolved": [
+    "10.1002/anie.8666577",
+    "10.31635/ccschem.026.202608262"
+  ],
+  "decisions": [
+    {
+      "doi": "10.1021/acscatal.6c03312",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-26",
+      "title": "Advanced Metal-Phthalocyanine-Based Catalysts with Enhanced Oxygen Reduction Reaction Activity for High-Performance Anion-Exchange Membrane Fuel Cells",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c03312"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是铁四氮杂酞菁阴极材料在AEM燃料电池中的ORR功率密度和耐久性，而非一般有机制备。",
+      "evidenceBasis": "摘要比较AZ-FT-30/AZ-FO-30电化学表面积、峰值功率密度、35小时器件稳定性及Fe–O吸附，评价对象是电极/器件。",
+      "challengeReason": "确有酞菁分子设计与合成，但没有一般有机底物到产物范围；按材料/能源性能主导边界排除。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05861",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-26",
+      "title": "Cu/TEMPO-Catalyzed Direct C2-Quaternization of Pyridines with Aldehydes via Sequential N–N Bond Formation and Cleavage",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c05861"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "Cu/TEMPO催化吡啶与醛直接C2季碳化反应",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "Cu/TEMPO催化吡啶与醛经历N–N键形成、形式[3+2]环加成及N–N键断裂，区域选择性构建C2全碳季碳中心。",
+      "evidenceBasis": "fresh compact的Crossref摘要明确给出吡啶和醛两类起始物、C2季碳产物、宽底物范围、良好官能团耐受、β-手性醛组装手性骨架以及生物活性分子的后期修饰。",
+      "challengeReason": "论文包含电荷密度控制路径的机理研究，但该部分解释的是已报告宽范围和后期修饰的制备方法；主要贡献不是单一催化剂性能或纯机理。",
+      "scopeAssessment": {
+        "primaryContribution": "建立无需预官能团化吡啶的直接C2季碳化方法。",
+        "preparativeTransformation": "吡啶经MSH形成N-氨基吡啶鎓，与醛形式[3+2]环加成后由Cu/TEMPO断裂N–N键，得到C2季碳化吡啶。",
+        "generalityEvidence": "摘要明确报告宽底物范围、良好官能团耐受、β-手性醛应用及生物活性分子后期修饰。",
+        "sourceEvidence": "fresh compact中的Crossref摘要直接陈述起始物、三阶段键变化、产物类型和范围证据。",
+        "boundaryChallenge": "最可能的超范围疑虑是论文含大量机理计算；但宽底物范围和后期修饰表明可迁移制备能力为主要贡献。"
+      }
+    },
+    {
+      "doi": "10.1021/acscatal.6c03235",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-26",
+      "title": "Elucidation of the Hydrogen Evolution Reaction on a Photochemical Molecular Device",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c03235"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "论文以Ru光中心/Pt活性中心分子器件的析氢全机理为核心，不提供一般有机制备方法。",
+      "evidenceBasis": "摘要全程讨论光诱导电子转移、质子活化、自旋态及牺牲供体作用，并以人工光合作用器件设计为目标。",
+      "challengeReason": "分子器件本身含有机配体不等于有机合成；没有底物范围或分离有机产物。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04688",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-26",
+      "title": "Localized Surface Plasmon Resonance-Induced Interfacial Dynamic Charge Circulation in Plasmonic Ohmic Heterojunctions for Optimizing Hydrogen Evolution Kinetics",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c04688"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "主要贡献是V2C MXene/ZnS等离激元欧姆异质结的界面电荷循环与析氢动力学。",
+      "evidenceBasis": "摘要用XPS、KPFM、EPR、飞秒瞬态吸收和DFT解释载流子寿命及HER性能，未给出一般有机制备转化。",
+      "challengeReason": "异质结被“设计并合成”只是材料制备，缺乏可推广有机底物—产物方法。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c06459",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-26",
+      "title": "Machine Learning-Guided Discovery of Robust Conditions for Photochemical Nickel-Catalyzed Cysteine Arylation",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c06459"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "机器学习指导的光化学镍催化半胱氨酸芳基化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "建立光化学镍催化半胱氨酸残基芳基化的可放大方法，用芳基噻蒽鎓盐在复杂肽等底物上实现位点与化学选择性偶联。",
+      "evidenceBasis": "fresh compact的Crossref摘要说明以芳基噻蒽鎓盐和可重复使用氮化碳光催化剂为体系，方法覆盖多样肽、糖及（杂）芳基偶联伙伴，并可放大至克级。",
+      "challengeReason": "机器学习是条件发现手段而非唯一贡献；最终得到的是跨肽、糖和芳基伙伴、具克级放大的真实C–S位点芳基化制备方法，因此不属于仅算法优化。",
+      "scopeAssessment": {
+        "primaryContribution": "用机器学习辅助发现稳健的光化学镍催化半胱氨酸后期芳基化条件。",
+        "preparativeTransformation": "肽或其他含半胱氨酸/硫醇底物与（杂）芳基噻蒽鎓盐偶联形成C–S芳基化产物。",
+        "generalityEvidence": "摘要明确列出多样肽、糖和（杂）芳基噻蒽鎓伙伴，报告高位点/化学选择性及克级放大。",
+        "sourceEvidence": "fresh compact中的Crossref摘要给出催化体系、底物类别、选择性、范围与放大事实。",
+        "boundaryChallenge": "最可能的边界疑虑是文章以机器学习优化为显著卖点；但文章交付了跨多类底物并可放大的具体制备转化。"
+      }
+    },
+    {
+      "doi": "10.1021/acscatal.6c04063",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-26",
+      "title": "Oxygen Management in Ruthenium–Cerium Anode Facilitates Water Adsorption and Bubble Desorption for Oxygen Evolution at High Current Densities",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c04063"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "RuOx–CeOx阳极研究水吸附、氧空位和气泡脱附以提升高电流OER/电解槽性能。",
+      "evidenceBasis": "摘要报告气泡接触面积、过电位及PEM电解槽1 A·cm⁻²性能，反应是水氧化。",
+      "challengeReason": "即使有催化材料工程创新，也不产生一般有机合成产物。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c06421",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-26",
+      "title": "Tightly Coupled FeNi Alloy/NiO Interface Derived from an LDH Precursor Promotes Deep Hydrodeoxygenation of p -Cresol",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c06421"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "FeNi/NiO界面催化研究集中于p-甲酚单一模型底物的加氢脱氧性能和催化剂循环。",
+      "evidenceBasis": "摘要只给出p-甲酚→甲基环己烷体系、界面/酸位表征及10次循环，未报告跨底物的制备范围。",
+      "challengeReason": "该转化具有生物质升级价值，但单底物催化材料设计不足以证明一般有机制备方法。"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05142",
+      "journal": "ACS Catalysis",
+      "date": "2026-09-26",
+      "title": "What Drives the Selectivity of 5-(Hydroxymethyl)furfural Electroreduction over Copper in Mildly Basic Medium?",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c05142"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "文章主要阐明HMF在铜泡沫上的电还原选择性与BHMF/BHH/低聚竞争机理。",
+      "evidenceBasis": "摘要围绕pH 9.2、电位、铜表面积和GC-DFT，只有HMF这一底物并以选择性变化为结论。",
+      "challengeReason": "BHMF是有用单体且实际生成，但缺少不同底物/产物范围，属于单体系电极机理研究。"
+    },
+    {
+      "doi": "10.1002/anie.7114810",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "A Dual‐Driven Hydrogel Actuator With Programmable Driving Force Enabled by a Shape‐Memory Scaffold and Ion‐Regulated Internal Force Reservoir",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.7114810"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "形状记忆聚合物/水凝胶执行器以可编程驱动力和NIR形变为主要贡献。",
+      "evidenceBasis": "摘要评价应变、应力、恢复时间、抓取与多步运动，聚合网络是功能材料制样。",
+      "challengeReason": "存在聚合与交联步骤，但没有新聚合反应或一般有机制备范围。"
+    },
+    {
+      "doi": "10.1002/anie.7173496",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "A Self‐Propelled DNA‐Based Nanorobot for Hypoxic Tumor Therapy",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.7173496"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "DNA纳米机器人用于缺氧肿瘤治疗，属于纯生物医学纳米平台。",
+      "evidenceBasis": "摘要讨论tFNA、Pt纳米粒子、亚甲蓝递送、组织穿透和肿瘤消退。",
+      "challengeReason": "多组分组装并非一般有机合成方法，疗效是主要结果。"
+    },
+    {
+      "doi": "10.1002/anie.6481438",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Asymmetric Double‐Bond Isomerization of Alkenes With Photoredox/Chromium Combined Catalysis",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.6481438"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "光氧化还原/铬协同催化烯烃不对称双键异构化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "光氧化还原/铬协同催化将内烯烃反热力学地异构化为对映富集末端烯烃，并用于(+)-licochalcone E的不对称全合成。",
+      "evidenceBasis": "fresh compact的Crossref摘要明确给出内烯烃到手性末端烯烃的转化、良好官能团兼容性及在(+)-licochalcone E简洁不对称全合成中的应用。",
+      "challengeReason": "论文讨论SET/PT、HAT和烯丙基铬中间体机理，但机理服务于一个具有官能团兼容性并完成天然产物全合成应用的制备方法。",
+      "scopeAssessment": {
+        "primaryContribution": "建立反热力学的不对称烯烃双键迁移方法。",
+        "preparativeTransformation": "内烯烃经自由基/烯丙基铬过程转化为对映富集末端烯烃。",
+        "generalityEvidence": "摘要报告良好官能团兼容性，并将方法用于(+)-licochalcone E的简洁不对称全合成。",
+        "sourceEvidence": "fresh compact中的Crossref摘要提供转化、催化模式、官能团兼容性和全合成应用。",
+        "boundaryChallenge": "最可能疑虑是异构化与机理占比高；完成目标全合成且方法面向内烯烃类别，足以证明制备价值。"
+      }
+    },
+    {
+      "doi": "10.1002/anie.3147869",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Aza‐Büchner–Curtius–Schlotterbeck Reaction Enables Selective Construction of Quaternary Carbon Centers",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.3147869"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "Aza-Büchner–Curtius–Schlotterbeck反应选择性构建季碳中心",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "新型无催化ABCS反应使光生供体–供体重氮化合物插入芳基醛亚胺C–C键，一步构建两个C(sp²)–C(sp³)键和季碳中心。",
+      "evidenceBasis": "fresh compact的Crossref摘要说明温和条件、高C–C相对C–H插入选择性、良好收率、后续水解为增碳醛及连续流产生重氮中间体以提高安全性和放大性。",
+      "challengeReason": "连续流和DFT是安全与机理支撑，不取代核心的全新C–C插入制备反应；产物还可水解并继续衍生。",
+      "scopeAssessment": {
+        "primaryContribution": "提出Aza-Büchner–Curtius–Schlotterbeck型C–C插入反应。",
+        "preparativeTransformation": "光生供体–供体重氮化合物插入芳基醛亚胺，生成含新季碳中心的增碳亚胺，再可水解为醛。",
+        "generalityEvidence": "摘要报告温和条件、高化学选择性、良好收率、连续流安全产生中间体及多种下游转化。",
+        "sourceEvidence": "fresh compact中的Crossref摘要直接给出键形成、产物、收率概况、流动化和衍生事实。",
+        "boundaryChallenge": "最可能疑虑是摘要未量化底物数；但新反应模式、良好收率和多步衍生共同构成实质制备方法证据。"
+      }
+    },
+    {
+      "doi": "10.1002/anie.3462462",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Borane‐Catalyzed Water Dehydrogenation at Dioxaphospholes and ‐Phospholanes",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.3462462"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "水在二氧磷杂环上氧化加成并放氢的研究以氢能反应与机理为核心。",
+      "evidenceBasis": "摘要讨论水/空气水分、硼烷催化放氢和中间体机理，没有一般有机产物制备范围。",
+      "challengeReason": "虽形成膦酸酯，但主要目标是水制氢且无可推广有机合成范围。"
+    },
+    {
+      "doi": "10.1002/anie.8666577",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Cobalt‐Catalyzed [2σ+2π] Cycloaddition via Site‐Selective Capture of Bicyclobutane Diradical",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8666577",
+        "https://onlinelibrary.wiley.com/doi/abs/10.1002/anie.8666577"
+      ],
+      "evidenceSource": "fresh_compact_crossref_abstract_and_live_wiley_publisher_abstract",
+      "decision": "pending",
+      "firstPassDecision": "include",
+      "challengeDecision": "pending",
+      "reason": "Co(II)催化BCB与吲哚[2σ+2π]环加成显然是潜在有机合成方法，但fresh compact与Wiley官方摘要均未陈述底物多样性、产物范围或分离收率，不能据题名和单一反应概述确认一般性。",
+      "evidenceBasis": "Wiley官方摘要确认热活化BCB、Co(II)选择性捕获及与吲哚形成头对头稠合bicyclo[2.1.1]hexane；同时列出大量机理表征和四种Co配合物，却未提供底物/产物范围事实。",
+      "challengeReason": "第一遍认为新型催化环加成属于方法学；第二遍发现可取得的两份摘要只证明反应存在和催化机理，未证明充分一般性。依契约，两遍冲突保留pending而非推定范围。",
+      "evidenceNeeded": "正文或SI中的BCB与吲哚底物范围、分离产物及收率，确认方法不是单一模型反应。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1002/anie.8666577",
+        "https://onlinelibrary.wiley.com/doi/abs/10.1002/anie.8666577",
+        "https://onlinelibrary.wiley.com/doi/suppl/10.1002/anie.8666577/supinfo/anie74980-sup-0001-SuppMat.pdf"
+      ],
+      "nextAction": "通过现有Tampermonkey/VPN Bridge读取Wiley正文或SI底物范围；不从摘要中的“strategy”推断一般性。",
+      "sourceReviewFile": "audit/prepublish-review-2026-09-27-0800.json",
+      "firstRecordedAt": "2026-09-27T07:12:00+08:00"
+    },
+    {
+      "doi": "10.1002/anie.7208628",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Fluorine‐Driven Interfacial Reconfiguration for pH‐Universal CO 2 Electrolysis at High Current Densities via Enhanced CO 2 Enrichment and Proton Feeding",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.7208628"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "氟修饰铋电极实现高电流、宽pH CO₂电解，主要评价法拉第效率与器件运行。",
+      "evidenceBasis": "摘要给出1800 mA cm⁻²、MEA电压、120小时稳定性和界面水网络机理。",
+      "challengeReason": "生成甲酸盐不自动构成一般有机制备，电极/能效为主要贡献。"
+    },
+    {
+      "doi": "10.1002/anie.5300884",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Functionalization and Metal Ion Encapsulation Within a Triaxial Supramolecular Weave",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5300884"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "三轴超分子织物的预组装功能化与金属离子封装属于超分子材料功能研究。",
+      "evidenceBasis": "摘要仅比较乙酰、特戊酰和噻吩修饰对织构及客体结合的影响。",
+      "challengeReason": "存在有机前体修饰，但没有一般反应模式或充分底物—产物范围。"
+    },
+    {
+      "doi": "10.1002/anie.5159694",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Hofmeister‐Regulated Amide‐Protonated Hydrogel Enables Organo‐Interhalogen Conversion‐Type Quasi‐Solid‐State Zn Batteries With Practical Iodine Loadings",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5159694"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "质子化聚丙烯酰胺水凝胶用于锌碘电池的离子调控与循环性能。",
+      "evidenceBasis": "摘要报告碘负载、循环次数、面容量和Ah软包电池，聚合物是电解质材料。",
+      "challengeReason": "凝胶制备不是论文的有机合成方法贡献。"
+    },
+    {
+      "doi": "10.1002/anie.4231597",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Imaging and Calibration of Receptor‐Specific Cellular Forces Using Biotinylated Ligands",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.4231597"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "模块化荧光力学涂层服务于细胞受体力成像与校准。",
+      "evidenceBasis": "摘要描述PLL/PEG/DNA传感器组装及HeLa、血小板、T细胞成像。",
+      "challengeReason": "一锅点击组装是平台制备步骤，主要贡献为生物力学测量而非通用小分子合成。"
+    },
+    {
+      "doi": "10.1002/anie.5647747",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Inter‐Cage Na + Enabling Single‐Atom Co for In Situ Delivery of Bio‐Based Vinyl Backbone to Access 3,4‐Unsubstituted Quinolines",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5647747"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "笼间钠离子调控单原子钴催化生物质三组分合成3,4-无取代喹啉",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "单原子Co@NaY-M催化乳酸、醛和苯胺单步三组分级联，制备3,4-无取代喹啉。",
+      "evidenceBasis": "fresh compact的Crossref摘要明确报告80个实例、最高98%收率、不同官能团兼容、11.24 g放大及多种临床药物直接合成。",
+      "challengeReason": "催化剂界面和生命周期评价占篇幅较大，但80例、克级以上放大和药物合成证明主要成果包含充分一般性的有机制备方法，不能因使用多相单原子催化剂排除。",
+      "scopeAssessment": {
+        "primaryContribution": "把生物质乳酸直接作为乙烯骨架来源，建立三组分喹啉合成。",
+        "preparativeTransformation": "乳酸脱氢产生乙烯中间体，与醛和苯胺经环化–芳构化及脱羧形成3,4-无取代喹啉。",
+        "generalityEvidence": "摘要报告80例、最高98%收率、广泛官能团兼容、11.24 g放大及临床药物直接合成。",
+        "sourceEvidence": "fresh compact中的Crossref摘要提供催化剂、三类起始物、级联步骤、范围、收率和放大数字。",
+        "boundaryChallenge": "最可能疑虑是材料催化剂设计为重要贡献；但制备范围远超单一示范，满足多相催化真实有机方法的例外。"
+      }
+    },
+    {
+      "doi": "10.1002/anie.8734241",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Interfacial Dipole Engineering of Single‐Atom Co–N–C and Ru Nanoparticles for Enhanced Hydrogenation of Levulinic Acid to γ ‐Valerolactone",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8734241"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Ru纳米颗粒/单原子Co–N–C界面偶极设计主导左旋糖酸向γ-戊内酯的催化性能。",
+      "evidenceBasis": "摘要确实承认另有5种生物质化合物可转为相应内酯，也报告10次循环；主体仍是界面电子转移、H₂解离势垒及单一标杆转化性能。",
+      "challengeReason": "存在额外底物反例，不能声称毫无范围；但五个扩展示例不足以把材料界面优化提升为一般有机方法主贡献。"
+    },
+    {
+      "doi": "10.1002/anie.1148889",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Molecularly Engineered Metal–Organic Framework With Synergistically Boosting Piezoelectric Polarization and Exciton Directional Separation Enables Efficient Piezo‐Photocatalytic Atom Transfer Radical Polymerization",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.1148889"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "MOF压电-光催化原子转移自由基聚合",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "将压电-光协同催化引入铜介导ATRP，在蓝光与超声下实现受控聚合并制得超高分子量聚合物。",
+      "evidenceBasis": "fresh compact的Crossref摘要报告90%单体转化率、Đ 1.11、七种极性溶剂适用及Mn约1100 kg·mol⁻¹、Đ 1.30的超高分子量聚合物。",
+      "challengeReason": "MOF极化与激子分离表征很多，但核心不是仅有材料性能：文章提出新的压电-光ATRP催化模式并以单体转化、分散度和超高分子量产物验证真实聚合合成。",
+      "scopeAssessment": {
+        "primaryContribution": "把超声压电与光催化耦合为新的ATRP驱动模式。",
+        "preparativeTransformation": "在B-Zr-C MOF与铜介导体系中，使乙烯基单体受控自由基聚合为窄分散聚合物。",
+        "generalityEvidence": "摘要给出90%转化率、Đ 1.11、七种极性溶剂和超高分子量聚合物数据。",
+        "sourceEvidence": "fresh compact中的Crossref摘要直接提供聚合模式、条件与聚合物分子量/分散度结果。",
+        "boundaryChallenge": "最可能疑虑是催化材料工程突出；但论文交付新的受控聚合催化方式，属于契约明确允许的真实聚合方法学。"
+      }
+    },
+    {
+      "doi": "10.1002/anie.9699968",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Optical Control of the Glucocorticoid Receptor Activity With a Photoswitchable Agonist",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.9699968"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "单一光开关泼尼松龙衍生激动剂研究GR活性与基因调控，主要是光药理学。",
+      "evidenceBasis": "摘要只报告AzoCort1在明暗状态下的效力及NF-κB/AP-1信号效应，未给出合成方法范围。",
+      "challengeReason": "制得新分子不足以自动纳入；缺少一般制备反应。"
+    },
+    {
+      "doi": "10.1002/anie.9641173",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "PCN‐700: A Model Platform for Crystallographic Probing of Coordination Behavior in Metal–Organic Frameworks",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.9641173"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "PCN-700作为MOF配位行为晶体学探针平台，属于材料/配位综述式平台研究。",
+      "evidenceBasis": "摘要聚焦框架安装位点、柔性及配位结构探测，不提供一般有机底物转化。",
+      "challengeReason": "后修饰步骤不能替代一般有机制备证据。"
+    },
+    {
+      "doi": "10.1002/anie.8236222",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Photoelectrochemical Fiber Cytometry With 60 nm Tip Size for Measuring Serotonin Dynamics at Edges of Cleft and Varicosities",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8236222"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "60 nm光电化学纤维细胞计量用于测量血清素动态，属于分析/传感研究。",
+      "evidenceBasis": "摘要以探针尺寸、时空测量和突触区域神经递质分析为核心。",
+      "challengeReason": "器件制备不构成一般有机合成。"
+    },
+    {
+      "doi": "10.1002/anie.5287849",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Rare‐Earth Multivariate Metal–Organic Frameworks: Cationic Radius Biased Compositional Control and Property Tuning",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.5287849"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "稀土多变量MOF研究阳离子半径偏置的组成控制与性质调节。",
+      "evidenceBasis": "摘要围绕框架组成、金属分布和材料性质，没有有机底物—产物范围。",
+      "challengeReason": "MOF合成属于材料构筑，缺乏有机制备方法。"
+    },
+    {
+      "doi": "10.1002/anie.3353986",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Redshifting TADF Emission With a Bora‐Triptycene Lewis Acid",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.3353986"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "硼三蝶烯Lewis酸用于TADF发射红移，主要贡献是光物理调控。",
+      "evidenceBasis": "摘要关注发射能、激发态与Lewis酸结合，没有一般制备反应范围。",
+      "challengeReason": "合成发光体系不自动成为有机方法学。"
+    },
+    {
+      "doi": "10.1002/anie.8257644",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Synthesis of Ladder and Flexible Polysulfonimides Directly From Anionic Monomers: Investigating Structure–Property Convergence in Succinonitrile–Polymer Electrolyte Blends",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8257644"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "论文合成FAS-PIM与柔性聚磺酰亚胺作聚合物电解质对照，主要问题是孔隙对离子输运及材料性能的影响。",
+      "evidenceBasis": "摘要只说明两类相近组成聚合物及加入丁二腈后导电率、模量和再加工性收敛，没有给出单体适用范围或可迁移聚合/链控制方法。",
+      "challengeReason": "直接由阴离子单体制得首个磺酰亚胺PIM是真实合成增量，但现有摘要把合成作为结构–性能比较的制样基础；按主要贡献边界排除，不扩张为聚合论文整类禁收。"
+    },
+    {
+      "doi": "10.1002/anie.9423554",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Tailored sp 2 ‐C─F Bonding for Reversible Oxygen‐Peroxide Electrocatalysis",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.9423554"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "含sp²-C–F键石墨烯用于氧/过氧化物电催化及锌空气电池。",
+      "evidenceBasis": "摘要报告ORR/POR、OOH*结合、功率和耐久性，核心是电催化材料性能。",
+      "challengeReason": "氟化材料制备不等于一般有机合成。"
+    },
+    {
+      "doi": "10.1002/anie.8809022",
+      "journal": "Angew",
+      "date": "2026-09-26",
+      "title": "Z ‐Retentive Enantioselective Rh‐Catalyzed Hydroarylation of E,Z ‐Dienes",
+      "evidencePages": [
+        "https://doi.org/10.1002/anie.8809022"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "Z式保持的Rh催化E,Z-二烯对映选择性氢芳基化",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "Rh催化电子缺陷E,Z-二烯发生Z式保持的对映选择性氢芳基化，获得手性β-芳基-Z-γ,δ-不饱和羰基化合物。",
+      "evidenceBasis": "fresh compact的Crossref摘要报告95% ee且不发生Z→E异构化，产物可经立体专一烯烃官能团化转为含多个相邻立体中心的多官能团产物，dr≥90:10。",
+      "challengeReason": "论文含动力学、选择性模型和DFT，但这些解释的是具有明确对映选择性和后续立体专一转化的制备方法，而非纯机理。",
+      "scopeAssessment": {
+        "primaryContribution": "解决E,Z-二烯中E烯烃选择性加成同时保留Z烯烃的问题。",
+        "preparativeTransformation": "电子缺陷E,Z-二烯经Rh催化氢芳基化形成β-芳基-Z-γ,δ-不饱和羰基化合物。",
+        "generalityEvidence": "摘要给出95% ee、Z式保持和后续构建多个相邻立体中心的≥90:10 dr衍生。",
+        "sourceEvidence": "fresh compact中的Crossref摘要提供转化、选择性和产物衍生证据。",
+        "boundaryChallenge": "最可能疑虑是机理研究比例高；但高对映选择性、保留烯烃和立体专一衍生形成可迁移制备能力。"
+      }
+    },
+    {
+      "doi": "10.1021/jacs.6c12299",
+      "journal": "JACS",
+      "date": "2026-09-26",
+      "title": "A Two-Step Synthesis of Covalent Genetically Encoded Libraries of Peptide-Derived Macrocycles Enables the Use of Electrophiles with Diverse Reactivity",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c12299"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "两步合成含多样反应性亲电基团的共价遗传编码肽大环库",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "采用Knorr-吡唑化学后翻译修饰，在酸性条件下构建带亲电战头的遗传编码肽大环库，避免亲核侧链非选择性反应。",
+      "evidenceBasis": "fresh compact的Crossref摘要对比碱性cPTM产生区域异构体混合物，说明酸性Knorr-吡唑修饰可安装不同反应性的亲电基团，并实际生成炔基大环cGEL用于筛选PKM2共价配体。",
+      "challengeReason": "生物筛选是应用场景，但主要方法增量是控制亲电基团沉默/激活的两步大环库合成；不是只报告某个生物活性分子。",
+      "scopeAssessment": {
+        "primaryContribution": "建立兼容多样亲电战头的两步共价遗传编码大环肽库合成。",
+        "preparativeTransformation": "mRNA/噬菌体展示肽先大环化，再以酸性Knorr-吡唑cPTM安装亲电基团。",
+        "generalityEvidence": "摘要比较不同亲电性导致的区域异构化风险，并展示炔基大环库构建及PKM2配体筛选。",
+        "sourceEvidence": "fresh compact中的Crossref摘要提供反应条件逻辑、化学修饰方式和实际库构建事实。",
+        "boundaryChallenge": "最可能疑虑是工作面向蛋白配体发现；但核心是具有可迁移化学选择性的库合成工艺，而非单一生物医学测定。"
+      }
+    },
+    {
+      "doi": "10.1021/jacs.6c11762",
+      "journal": "JACS",
+      "date": "2026-09-26",
+      "title": "Covalency-Driven Framework Contraction Weakens the Coupling Between Charge and Phonon Transport in Tunnel-Type TlCu5Se3",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c11762"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "TlCu5Se3热电框架收缩与载流子/声子输运耦合属于无机材料研究。",
+      "evidenceBasis": "摘要比较晶胞体积、迁移率、功率因子和晶格热导率。",
+      "challengeReason": "没有一般有机转化。"
+    },
+    {
+      "doi": "10.1021/jacs.6c09757",
+      "journal": "JACS",
+      "date": "2026-09-26",
+      "title": "Direct Light Storage with Controlled Dark Release in a Bipyridine-Based Covalent Triazine Framework",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c09757"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "联吡啶共价三嗪框架用于直接光储能和暗释放，属于功能材料/能源研究。",
+      "evidenceBasis": "摘要评价光充电电位、电子存储和太阳能电池/H₂O₂释放。",
+      "challengeReason": "CTF合成只是材料制备，没有一般有机方法范围。"
+    },
+    {
+      "doi": "10.1021/jacs.6c13500",
+      "journal": "JACS",
+      "date": "2026-09-26",
+      "title": "Discovery and Mechanistic Investigation of a Bacteria-Derived Sesquiterpene Ether Synthase AceS Catalyzing Syn -Protoetherification",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c13500"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "AceS研究FPP到单一acorenol ether的酶催化环化及syn-原醚化机理。",
+      "evidenceBasis": "摘要围绕结构鉴定、同位素扫描、氢迁移、DFT和定点突变；只明确一个底物FPP和一个主产物。",
+      "challengeReason": "这是真实酶催化转化，故不能因生物来源自动排除；但缺乏底物范围或实际合成路线，主要贡献仍是酶发现与机理。"
+    },
+    {
+      "doi": "10.1021/jacs.6c11008",
+      "journal": "JACS",
+      "date": "2026-09-26",
+      "title": "Heme-Mediated Charge Transport Modulation: Coupling Biological Recognition to Solid-State Protein Electronics",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c11008"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "肌红蛋白/脱辅基肌红蛋白纳米间隙结研究血红素介导电荷输运。",
+      "evidenceBasis": "摘要报告O₂配位、电导变化和QM/MM电子结构，目标是蛋白电子学。",
+      "challengeReason": "无有机合成方法。"
+    },
+    {
+      "doi": "10.1021/jacs.6c11949",
+      "journal": "JACS",
+      "date": "2026-09-26",
+      "title": "Linking Oxygen Evolution Selectivity to Water Oxidation Reaction Order on Hematite Photoanodes by Operando Photoelectrochemical Mass Spectrometry",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c11949"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "赤铁矿光阳极水氧化反应级数与析氧选择性的operando机理研究。",
+      "evidenceBasis": "摘要比较表面空穴密度、一阶/三阶动力学和O₂法拉第效率。",
+      "challengeReason": "水氧化机理不提供有机制备产物。"
+    },
+    {
+      "doi": "10.1021/jacs.6c14786",
+      "journal": "JACS",
+      "date": "2026-09-26",
+      "title": "Nonmonotonic Charging, Overscreening, and Ion Competition in the Electric Double Layer of Platinum Quantified by X-ray Spectroscopy",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c14786"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "铂电双层离子积累的X射线定量与过屏蔽研究属于界面电化学。",
+      "evidenceBasis": "摘要分析十种电解质、表面自由电荷和离子竞争。",
+      "challengeReason": "没有有机底物转化。"
+    },
+    {
+      "doi": "10.1021/jacs.6c07837",
+      "journal": "JACS",
+      "date": "2026-09-26",
+      "title": "Single-Atom Ce Enables Interfacial Pathway Regulation of Fe2 Atomic Pairs in Alkaline Oxygen Reduction",
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c07837"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Ce/Fe₂原子位催化剂优化碱性ORR和锌空气电池稳定性。",
+      "evidenceBasis": "摘要报告半波电位、过氧化物收率、5万秒耐久和1100小时电池循环。",
+      "challengeReason": "催化材料性能主导且无有机制备范围。"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01604",
+      "journal": "JOC",
+      "date": "2026-09-26",
+      "title": "Concise Total Syntheses of (±)-Hirsuteine, (±)-Hirsutine, (±)-Corynantheine, and (±)-Dihydrocorynantheine",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.joc.6c01604"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "(±)-Hirsuteine、(±)-Hirsutine、(±)-Corynantheine和(±)-Dihydrocorynantheine的简洁全合成",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "从易得吲哚前体出发，无保护基完成四种Corynanthe生物碱的简洁全合成。",
+      "evidenceBasis": "fresh compact的Crossref摘要明确列出四个完成目标；关键级联Hosomi–Sakurai/Pictet–Spengler反应一次构建C、D环和三个立体中心，并由Lewis酸调控分流至trans–trans或cis–trans四环骨架。",
+      "challengeReason": "摘要未给出每一步收率，但明确完成四个天然产物并说明关键成环与立体分流，已满足全合成收录，不是单一片段。",
+      "scopeAssessment": {
+        "primaryContribution": "完成四种Corynanthe生物碱的无保护基全合成。",
+        "preparativeTransformation": "关键Hosomi–Sakurai/Pictet–Spengler级联同时构建两个环和三个立体中心。",
+        "generalityEvidence": "同一路线通过Lewis酸调控进入两类主要四环立体系列，并完成四个命名目标。",
+        "sourceEvidence": "fresh compact中的Crossref摘要直接陈述四个完成的全合成目标、起始物和关键级联。",
+        "boundaryChallenge": "最可能疑虑是摘要简短；但它明确是四个完整全合成而非AF环等片段，完成度证据充分。"
+      }
+    },
+    {
+      "doi": "10.1038/s41467-026-78010-0",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Age-dependent alterations in human striatum identify a PPP1R15B-miR-196a node as a modifier of Huntington’s disease",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78010-0"
+      ],
+      "evidenceSource": "fresh_compact_title_and_publisher_search_attempt",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "人纹状体衰老与Huntington病修饰节点研究属于神经生物医学。",
+      "evidenceBasis": "fresh compact无摘要；Nature检索摘要片段显示研究人纹状体翻译相关基因及PPP1R15B/miR-196a调控。",
+      "challengeReason": "标题与出版社片段均无有机制备贡献。"
+    },
+    {
+      "doi": "10.1038/s41467-026-78079-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Alteromonas macleodii breaches the diatom frustule triggering protoplast emergence and programmed necrosis-like death in Thalassiosira rotula",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78079-7"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Alteromonas破坏硅藻壳并诱发程序性坏死样死亡，属于海洋微生物生态。",
+      "evidenceBasis": "摘要报告细菌—硅藻互作、双转录组和碳循环影响。",
+      "challengeReason": "无合成转化。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77948-5",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Cortex-wide laminar dynamics diverge during learning",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77948-5"
+      ],
+      "evidenceSource": "fresh_compact_title_and_publisher_search_attempt",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "全皮层层状动力学在学习过程中的变化属于神经科学。",
+      "evidenceBasis": "fresh compact无摘要；Nature检索片段说明研究雄鼠触须学习时的皮层层特异活动。",
+      "challengeReason": "无化学制备贡献。"
+    },
+    {
+      "doi": "10.1038/s41467-026-78077-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Early insights into predicted efficacy of Ebola monoclonal antibodies for the 2026 Bundibugyo virus disease outbreak",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78077-9"
+      ],
+      "evidenceSource": "fresh_compact_title_and_publisher_search_attempt",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "2026年Bundibugyo埃博拉疫情中单抗预测效力属于传染病/免疫研究。",
+      "evidenceBasis": "fresh compact无摘要；Nature检索片段明确讨论疫情与现有埃博拉单抗效力。",
+      "challengeReason": "抗体疗效预测不属于有机合成。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77967-2",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Efficient transport kinetics of indirect excitons in van der Waals heterostructure",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77967-2"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "范德华异质结构中间接激子输运动力学属于凝聚态/材料物理。",
+      "evidenceBasis": "摘要研究激子迁移率、无序、温度和可能超流性。",
+      "challengeReason": "无有机合成方法。"
+    },
+    {
+      "doi": "10.1038/s41467-026-78069-9",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Enhancing cycling stability by promoting high-voltage structural reversibility in high-nickel positive electrode materials",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78069-9"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "高镍正极纳米棒的高压结构可逆性和电池循环稳定性属于能源材料。",
+      "evidenceBasis": "摘要比较LiNiO₂纳米棒/微晶、4.95 V循环和H2–H3相恢复。",
+      "challengeReason": "材料合成与性能不构成一般有机制备。"
+    },
+    {
+      "doi": "10.1038/s41467-026-78082-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Evidence of an acetone carboxylation pathway in photoheterotrophic bacteria from the Arctic Ocean",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78082-y"
+      ],
+      "evidenceSource": "fresh_compact_title_and_publisher_search_attempt",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "北冰洋光异养细菌中的丙酮羧化通路属于环境微生物代谢研究。",
+      "evidenceBasis": "fresh compact未取得摘要；标题直接指向细菌代谢通路证据而非制备方法，出版社正文访问受阻。",
+      "challengeReason": "若有分离酶并展示一般底物范围才可能另评；当前没有此证据。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77197-6",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Global spatiotemporal dynamics of mortality from carbapenem-resistant Gram-negative infections over the past three decades",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77197-6"
+      ],
+      "evidenceSource": "fresh_compact_title_and_publisher_search_attempt",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "碳青霉烯耐药革兰阴性感染死亡的全球时空动态属于流行病学。",
+      "evidenceBasis": "fresh compact无摘要；Nature检索片段说明研究长期病原体特异死亡与疫情期变化。",
+      "challengeReason": "无合成贡献。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77869-3",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Integrative structural modelling reveals the human Mic60-Mic19 subcomplex as a diffusion barrier in mitochondria",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77869-3"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "Mic60–Mic19线粒体亚复合物的整合结构模型属于结构生物学。",
+      "evidenceBasis": "摘要使用晶体结构、分子动力学和交联验证其扩散屏障功能。",
+      "challengeReason": "蛋白结构模型不是有机合成。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77487-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Microglia regulate nucleus accumbens synaptic development and circuit function underlying threat avoidance behaviors in mice",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77487-z"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "小胶质细胞调控伏隔核突触发育和威胁回避属于神经发育研究。",
+      "evidenceBasis": "摘要使用缺失小胶质细胞的小鼠、蛋白组和电生理/行为测定。",
+      "challengeReason": "无制备方法。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77997-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Multifunctional Aerogel Fiber Radiative Cooling Fabric for Outdoor Personal Thermal Management",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77997-w"
+      ],
+      "evidenceSource": "fresh_compact_title_and_publisher_search_attempt",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "细菌纤维素气凝胶纤维织物用于户外辐射降温与热管理，属于功能材料。",
+      "evidenceBasis": "fresh compact无摘要；Nature检索片段说明连续制备径向梯度多孔细菌纤维素气凝胶纤维织物。",
+      "challengeReason": "虽有连续制造方法，但目标与产物是辐射降温织物，不是一般有机合成。"
+    },
+    {
+      "doi": "10.1038/s41467-026-78058-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "PARP10 condensation inhibits viral replication via targeting NAD+ homeostasis",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78058-y"
+      ],
+      "evidenceSource": "fresh_compact_title_and_publisher_search_attempt",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "PARP10凝聚调控NAD⁺稳态并抑制病毒复制，属于细胞/病毒生物学。",
+      "evidenceBasis": "fresh compact未取得摘要且出版社访问被登录重定向阻断；题名明确研究蛋白凝聚与病毒复制。",
+      "challengeReason": "无有机底物—产物制备证据。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77471-7",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Puzzling isotonic odd-even staggering of charge-radii in deformed rare earth nuclei",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77471-7"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "变形稀土核素电荷半径奇偶交错属于核物理。",
+      "evidenceBasis": "摘要报告Lu–Yb电荷半径、高电荷离子光谱和核密度泛函理论。",
+      "challengeReason": "与有机合成无关。"
+    },
+    {
+      "doi": "10.1038/s41467-026-78074-y",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "Revisiting evidence for an attentional tunneling effect caused by scarcity",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78074-y"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "稀缺导致注意隧穿效应的再分析属于行为科学。",
+      "evidenceBasis": "摘要重分析游戏实验并质疑原心理学解释。",
+      "challengeReason": "无化学制备。"
+    },
+    {
+      "doi": "10.1038/s41467-026-77924-z",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "SpaCEy links spatial tissue patterns to clinical outcomes using explainable graph neural networks",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-77924-z"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "SpaCEy用图神经网络将空间组织模式与临床结局关联，属于计算生物医学。",
+      "evidenceBasis": "摘要描述空间蛋白组、患者生存预测和可解释GNN。",
+      "challengeReason": "无有机合成。"
+    },
+    {
+      "doi": "10.1038/s41467-026-78014-w",
+      "journal": "Nature Communications",
+      "date": "2026-09-26",
+      "title": "The effects of intracrystalline chain diffusion on the non-linear mechanics of semicrystalline polymers",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78014-w"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "半结晶聚合物的晶内链扩散与非线性力学属于聚合物物性研究。",
+      "evidenceBasis": "摘要比较PEO/PCL压缩、应变率、温度和网络松弛，未提出新聚合反应。",
+      "challengeReason": "聚合物样品存在不等于聚合方法学；没有单体、催化或链结构合成控制。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03365",
+      "journal": "Organic Letters",
+      "date": "2026-09-26",
+      "title": "Electrochemical Synthesis of Spirodienones with Sequential Ring Expansion to Fused 6–7–6 Tricycles",
+      "evidencePages": [
+        "https://doi.org/10.1021/acs.orglett.6c03365"
+      ],
+      "evidenceSource": "fresh_compact_title_and_crossref_abstract",
+      "titleZh": "电化学合成螺二烯酮并连续扩环构建稠合6–7–6三环",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "reason": "开发系链芳烃分子内电氧化螺环化制备螺二烯酮，并以连续扩环转化为稠合6–7–6三环。",
+      "evidenceBasis": "fresh compact的Crossref摘要明确报告无金属、无化学氧化剂条件，宽底物谱、最高85%收率、5 mmol放大及后续扩环协议。",
+      "challengeReason": "机理只占辅助地位；宽底物谱、分离收率上限、放大和第二步骨架重排共同证明一般制备方法，而非单一电化学示范。",
+      "scopeAssessment": {
+        "primaryContribution": "建立电氧化螺环化—扩环串联骨架构建方法。",
+        "preparativeTransformation": "系链芳烃先经茴香醚选择性氧化和6-exo-trig螺环化生成螺二烯酮，再扩环为稠合6–7–6三环。",
+        "generalityEvidence": "摘要报告宽底物范围、最高85%收率、5 mmol放大及连续扩环应用。",
+        "sourceEvidence": "fresh compact中的Crossref摘要提供反应条件、底物范围、收率、放大和产物转化事实。",
+        "boundaryChallenge": "最可能疑虑是包含机理推断；但可放大宽范围制备和连续骨架转换是明确主贡献。"
+      }
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "journal": "CCS Chemistry",
+      "date": "2026-09-22",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/pdf/10.31635/ccschem.026.202608262"
+      ],
+      "evidenceSource": "fresh_compact_title_openalex_topics_and_repeated_publisher_attempts",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "题名只确认CO₂电还原与醇氧化耦合；仍无法判定主要贡献是能源电催化还是具有充分醇底物/产物范围的一般电有机合成。",
+      "evidenceBasis": "fresh compact摘要继续为空；出版社DOI与PDF页面未取得，仍缺醇底物、氧化产物、范围、分离收率与主要贡献事实。该证据缺口自2026-09-22保留，未因超出窗口删除。",
+      "challengeReason": "不能因能源主题直接排除，因为配对阳极醇氧化可能包含可推广有机制备；也不能凭题名中的alcohol oxidation纳入。两遍均确认需出版社摘要、正文或SI。",
+      "evidenceNeeded": "出版社摘要或正文/SI中醇底物类别、氧化产物、底物范围、分离收率，以及主要评价是否为合成产物还是CO₂还原/能效。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/pdf/10.31635/ccschem.026.202608262"
+      ],
+      "nextAction": "通过现有Tampermonkey/VPN Bridge读取出版社摘要、反应范围或SI；保持原日期和历史来源。",
+      "sourceReviewFile": "audit/review-2026-09-26-0800.json",
+      "firstRecordedAt": "2026-09-22T21:48:19+08:00"
+    }
+  ],
+  "historicalScopeRechecks": [
+    {
+      "doi": "10.1021/acs.joc.6c01559",
+      "journal": "JOC",
+      "originalDate": "2026-09-22",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "cardAction": "retain",
+      "evidenceBasis": "A newly indexed full abstract text describes a diversity-oriented one-pot multicomponent library, mild metal-free conditions and broad scope across primary/secondary amines and primary benzamides. The ACS JOC latest listing independently confirms the article and title.",
+      "challengeReason": "Photophysics and antifungal imaging are substantial downstream studies, but the article also establishes a broad multicomponent preparation across distinct reaction-partner classes; fluorescence therefore does not erase the preparative method.",
+      "evidencePages": [
+        "https://pubs.acs.org/joceah/latest-articles",
+        "https://pubs.acs.org/doi/10.1021/acs.joc.6c01559"
+      ],
+      "resolvedAt": "2026-09-23T17:24:00+08:00",
+      "reusedUnderScopeRulesVersion": "scope-2026-09-24-v1",
+      "compatibilityNote": "scope contract与corrections blob同上一槽；本轮重新读取相关scope-rechecks并核对旧证据与现行主要贡献/一般性标准相容，未把未定案排查当作排除。"
+    },
+    {
+      "doi": "10.1002/anie.9519061",
+      "journal": "Angew",
+      "originalDate": "2026-09-21",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "cardAction": "retain",
+      "evidenceBasis": "The live Wiley article states an in-situ ATMS pre-activation strategy for a pyridylamido Hf catalyst and homogeneous polymerization of several sterically demanding α-olefins including 44DMP, 3MB and VCH.",
+      "challengeReason": "High melting temperature is an application/property outcome, but the article's explicit new catalyst-activation strategy unlocks polymerization across multiple difficult monomers. This is genuine polymer synthesis methodology under the contract, not merely property optimization.",
+      "evidencePages": [
+        "https://onlinelibrary.wiley.com/doi/10.1002/anie.9519061"
+      ],
+      "resolvedAt": "2026-09-23T17:24:00+08:00",
+      "reusedUnderScopeRulesVersion": "scope-2026-09-24-v1",
+      "compatibilityNote": "scope contract与corrections blob同上一槽；本轮重新读取相关scope-rechecks并核对旧证据与现行主要贡献/一般性标准相容，未把未定案排查当作排除。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03499",
+      "journal": "Organic Letters",
+      "originalDate": "2026-09-22",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "pending",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "pending",
+      "cardAction": "retain_while_pending",
+      "evidenceBasis": "The ACS repository abstract now confirms protonation-controlled amino-BCB ring opening, a >50 kJ mol−1 barrier shift, >10^3-fold kinetic window and rapid [4+2] trapping, but gives no trapping-partner/product breadth.",
+      "challengeReason": "The work may be a useful reagent-activation method, yet the available abstract is dominated by kinetics and reactive-intermediate control. Without product/preparative scope, a final mechanism-only exclusion or method inclusion would both overclaim.",
+      "evidenceNeeded": "Trapping-partner scope, isolated cycloadducts/yields and whether stable ammonium precursors are applied as a general preparation platform.",
+      "attemptedEvidencePages": [
+        "https://acs.figshare.com/articles/journal_contribution/Protonation-Gated_Strain-Release_Generation_of_Amino_o_quinodimethanes/33965903",
+        "https://pubs.acs.org/orlef7/latest-articles"
+      ],
+      "nextAction": "Read the reaction/scope table through the existing browser/VPN path; retain the current card until resolved.",
+      "reusedUnderScopeRulesVersion": "scope-2026-09-24-v1",
+      "compatibilityNote": "scope contract与corrections blob同上一槽；本轮重新读取相关scope-rechecks并核对旧证据与现行主要贡献/一般性标准相容，未把未定案排查当作排除。"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03386",
+      "journal": "Organic Letters",
+      "originalDate": null,
+      "originalDateStatus": "not_recovered; production date must not be overwritten",
+      "sourceReviewFile": "audit/scope-rechecks/2026-09-23-morning-24.json",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "cardAction": "retain_while_pending",
+      "evidenceBasis": "The publisher title and ACS repository excerpt establish an expedient synthesis of a fully functionalized Chasmanine AF-ring fragment, but not a completed total synthesis or a broadly reusable building-block route.",
+      "challengeReason": "A single fragment cannot be labeled total synthesis, yet a fragment route may independently qualify if it introduces a transferable building-block strategy. The available evidence does not decide that question.",
+      "evidenceNeeded": "Full abstract/route evidence, synthetic generality beyond the single target fragment, and the preserved original date from authoritative production data.",
+      "attemptedEvidencePages": [
+        "https://pubs.acs.org/doi/10.1021/acs.orglett.6c03386",
+        "https://acs.figshare.com/articles/journal_contribution/Synthesis_of_a_Fully_Functionalized_Chasmanine_AF-Ring_Fragment/33962722"
+      ],
+      "nextAction": "Read the route/abstract through the existing browser/VPN path; keep the card unchanged and do not label it total synthesis.",
+      "reusedUnderScopeRulesVersion": "scope-2026-09-24-v1",
+      "compatibilityNote": "scope contract与corrections blob同上一槽；本轮重新读取相关scope-rechecks并核对旧证据与现行主要贡献/一般性标准相容，未把未定案排查当作排除。"
+    }
+  ],
+  "sourceChecks": [
+    {
+      "journal": "Nature",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/nature/articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 93,
+        "crossrefCandidateRecords": 93,
+        "openAlexCandidateRecords": 93,
+        "multiSourceCandidateRecords": 93,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Science",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.science.org/toc/science/current",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 44,
+        "crossrefCandidateRecords": 44,
+        "openAlexCandidateRecords": 44,
+        "multiSourceCandidateRecords": 44,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Nature Catalysis",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/natcatal/research-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 4,
+        "crossrefCandidateRecords": 4,
+        "openAlexCandidateRecords": 4,
+        "multiSourceCandidateRecords": 4,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Nature Synthesis",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/natsynth/research-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 4,
+        "crossrefCandidateRecords": 4,
+        "openAlexCandidateRecords": 4,
+        "multiSourceCandidateRecords": 4,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Nature Chemistry",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/nchem/research-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 11,
+        "crossrefCandidateRecords": 11,
+        "openAlexCandidateRecords": 11,
+        "multiSourceCandidateRecords": 11,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Nature Communications",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.nature.com/ncomms/research-articles",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 209,
+        "crossrefCandidateRecords": 209,
+        "openAlexCandidateRecords": 191,
+        "multiSourceCandidateRecords": 191,
+        "closureUnionRecords": 20,
+        "closureCrossrefRecords": 20,
+        "closureOpenAlexRecords": 2,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "JACS",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.acs.org/toc/jacsat/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 101,
+        "crossrefCandidateRecords": 101,
+        "openAlexCandidateRecords": 91,
+        "multiSourceCandidateRecords": 91,
+        "closureUnionRecords": 10,
+        "closureCrossrefRecords": 10,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Angew",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://onlinelibrary.wiley.com/toc/15213773/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 130,
+        "crossrefCandidateRecords": 130,
+        "openAlexCandidateRecords": 108,
+        "multiSourceCandidateRecords": 108,
+        "closureUnionRecords": 21,
+        "closureCrossrefRecords": 21,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "已实时读取Wiley单篇10.1002/anie.8666577官方摘要；完整出版社列表计数仍未知。"
+    },
+    {
+      "journal": "ACS Catalysis",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.acs.org/toc/accacs/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 31,
+        "crossrefCandidateRecords": 31,
+        "openAlexCandidateRecords": 22,
+        "multiSourceCandidateRecords": 22,
+        "closureUnionRecords": 9,
+        "closureCrossrefRecords": 9,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Organic Letters",
+      "status": "unavailable",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.acs.org/toc/orlef7/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-07-01",
+      "machineSourceHealth": {
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 67,
+        "crossrefCandidateRecords": 67,
+        "openAlexCandidateRecords": 64,
+        "multiSourceCandidateRecords": 64,
+        "closureUnionRecords": 4,
+        "closureCrossrefRecords": 4,
+        "closureOpenAlexRecords": 1,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      },
+      "publisherCheckStatus": "unavailable",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Chem",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.cell.com/chem/current",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-09-19",
+      "machineSourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "blocked",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Chemical Science",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/sc",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-09-19",
+      "machineSourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "blocked",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "CCS Chemistry",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.chinesechemsoc.org/toc/ccschem/0/ja",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-09-19",
+      "machineSourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 9,
+        "crossrefCandidateRecords": 9,
+        "openAlexCandidateRecords": 6,
+        "multiSourceCandidateRecords": 6,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "blocked",
+      "publisherCandidateCount": null,
+      "notes": "历史pending DOI的出版社摘要/PDF仍未取得；未知不当作零或排除。"
+    },
+    {
+      "journal": "Science Advances",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://www.science.org/toc/sciadv/current",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-09-19",
+      "machineSourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 91,
+        "crossrefCandidateRecords": 91,
+        "openAlexCandidateRecords": 91,
+        "multiSourceCandidateRecords": 91,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "blocked",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "Green Chemistry",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.rsc.org/en/journals/journalissues/gc",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-09-19",
+      "machineSourceHealth": {
+        "activeFrom": "2026-09-19",
+        "effectiveStart": "2026-09-21",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 0,
+        "crossrefCandidateRecords": 0,
+        "openAlexCandidateRecords": 0,
+        "multiSourceCandidateRecords": 0,
+        "closureUnionRecords": 0,
+        "closureCrossrefRecords": 0,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "blocked",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    },
+    {
+      "journal": "JOC",
+      "status": "blocked",
+      "sourceType": "publisher_latest_listing",
+      "sourcePage": "https://pubs.acs.org/toc/joceah/0/0",
+      "candidateCount": null,
+      "syntheticTitleCount": null,
+      "reason": "出版社完整实时列表未形成可审计候选清单；不把Crossref/OpenAlex机器健康或单篇文章页核验冒充出版社列表实查，计数保持unknown。",
+      "checkedAt": "2026-09-27T07:12:00+08:00",
+      "activeFrom": "2026-09-22",
+      "machineSourceHealth": {
+        "activeFrom": "2026-09-22",
+        "effectiveStart": "2026-09-22",
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "unionCandidateRecords": 27,
+        "crossrefCandidateRecords": 27,
+        "openAlexCandidateRecords": 26,
+        "multiSourceCandidateRecords": 26,
+        "closureUnionRecords": 1,
+        "closureCrossrefRecords": 1,
+        "closureOpenAlexRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
+      },
+      "publisherCheckStatus": "blocked",
+      "publisherCandidateCount": null,
+      "notes": "机器来源健康与出版社完整列表实查分开记录；本轮未取得可审计的完整出版社候选计数。"
+    }
+  ],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "twoPassScope": "all 56 fresh compact candidates plus four carried historical boundary rechecks",
+    "unresolvedDisagreements": 1,
+    "allHandoffCandidatesReviewed": true,
+    "allHandoffCandidatesFinalized": false,
+    "unfinishedHandoffDois": [],
+    "openEvidenceGaps": 2,
+    "sourceCheckRows": 16,
+    "publisherCoverageFullyVerified": false,
+    "publisherSourceCheckCounts": {
+      "checked": 0,
+      "blocked": 6,
+      "unavailable": 10
+    },
+    "scopeContract": {
+      "scopeRulesVersion": "scope-2026-09-24-v1",
+      "scopeRulesFile": "docs/literature-scope-contract.md",
+      "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+      "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+      "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+      "handoffCommitSha": "8c99b5892d322fa5b80fd59b2b95a86fc00cf0a3",
+      "handoffBlobSha": "1d0904023af9b188ea1e797e4b8702712dff2cce",
+      "ruleChangeTriggeredHistoricalReview": false,
+      "ruleCompatibilityChecked": true,
+      "ruleCompatibilityConclusion": "scope contract与corrections blob未变化；已重新读取相关scope-rechecks并逐项核对历史retain/pending与当前规则兼容。56个fresh候选全部重审；未定案排查不当作排除。",
+      "newIncludesArticleSpecificAssessmentsComplete": true,
+      "explicitBoundaryRechecks": 4,
+      "affectedHistoricalCoverageComplete": true,
+      "resolvedHistoricalRetain": 2,
+      "historicalPendingAssigned": 2,
+      "confirmedCorrectionRecordsReused": 4,
+      "allGalleryPapersRechecked": false,
+      "inheritance": "Formal conversion must retain this object."
+    },
+    "titleZhPreparedForAllNewIncludes": true,
+    "placeholderTranslations": 0,
+    "productionDataModified": false,
+    "mediaAcquisitionPerformed": false,
+    "pagesDeploymentRequested": false,
+    "sourceCoverageWarningCount": 0,
+    "sourceCoverageWarningJournals": [],
+    "sourceCoverageWarningsNonBlockingForReviewedDois": true,
+    "closureCoverageWarningCount": 5,
+    "verifiedThroughHeld": true
+  },
+  "globalBlockers": [],
+  "publicationBlockers": [],
+  "closure": {
+    "date": "2026-09-26",
+    "status": "blocked-closure-coverage-anomaly",
+    "verifiedThrough": "2026-09-20",
+    "advanced": false,
+    "note": "Five closure-depth warnings hold verifiedThrough but do not block already discovered and two-pass-reviewed DOI publication."
+  },
+  "productionDataModified": false,
+  "pagesDeploymentRequested": false,
+  "mediaAcquisitionPerformed": false,
+  "notes": [
+    "No production literature card, media file or deployment was modified or requested.",
+    "Ten DOI are publishable; two article-level evidence gaps remain deferred without blocking the reviewed includes.",
+    "The prior slot's post-release carry-forward DOI 10.1038/s41467-026-77948-5 is explicitly covered here and excluded as neuroscience, so it is not silently lost."
+  ],
+  "nonBlockingDiscoveryWarnings": [
+    {
+      "metric": "closureCoverageAnomalies",
+      "count": 5,
+      "publicationEffect": "none_for_already_discovered_two_pass_reviewed_dois",
+      "closureEffect": "hold_verifiedThrough"
+    }
+  ],
+  "updatedAt": "2026-09-27T07:12:00+08:00"
+}
