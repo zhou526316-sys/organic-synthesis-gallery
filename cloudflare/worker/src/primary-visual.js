@@ -95,7 +95,8 @@ export async function importPrimaryVisual(request, env, payload) {
     ).bind(doi).all(),
   ]);
   const oldVariants = oldVariantsResult?.results || [];
-  if (!primaryVisualShouldReplace(existing, { kind, confidence })) {
+  const replaceSameKind = payload?.replaceSameKind === true && existing?.kind === kind;
+  if (!replaceSameKind && !primaryVisualShouldReplace(existing, { kind, confidence })) {
     return {
       status: 200,
       body: {
