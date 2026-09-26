@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "requestId": "20260925-1800-fixed-slot-release",
-  "requestedAt": "2026-09-25T18:00:46+08:00",
-  "publicationSlot": "2026-09-25T18:00:00+08:00",
-  "stagingReviewFile": "audit/prepublish-review-2026-09-25-1800.json",
-  "stagingReviewBlobSha": "6b28fd72a4e66d2b99cb9609a024e42b6f9d3acf",
-  "handoffBlobSha": "7e416311a41166fab6441e01ca86a80f362b16bd",
-  "auditBlobSha": "e8d159d4a3448ed09c747a97be7071a7798e47d9",
-  "prepublishGateRunId": 36117322293,
-  "expectedPublishableCount": 10,
-  "expectedDeferredCount": 1,
-  "note": "Fixed-slot request for the current reviewed snapshot. Existing workflow must enforce stale-input, slot, strict-bundle, concurrency, scope-correction and production-partition checks."
+  "requestId": "20260926-0800-fixed-slot-release",
+  "requestedAt": "2026-09-26T08:02:00+08:00",
+  "publicationSlot": "2026-09-26T08:00:00+08:00",
+  "stagingReviewFile": "audit/prepublish-review-2026-09-26-0800.json",
+  "stagingReviewBlobSha": "44bf6ae47a7e247ecccc00106e76a03198663376",
+  "handoffBlobSha": "60dffe9017a476965152f999c17b2dcc788216d7",
+  "auditBlobSha": "43585328db50f77ce2773d266c8740de4561d7cf",
+  "prepublishGateRunId": 36203069633,
+  "expectedPublishableCount": 16,
+  "expectedDeferredCount": 2,
+  "note": "Fixed-slot request for the current reviewed 2026-09-26 08:00 snapshot."
 }
