@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-26T17:35:39+08:00",
+  "publicationSlot": "2026-09-26T18:00:00+08:00",
+  "result": "ready_with_pending",
+  "mainBaselineSha": "1f851d6e8e2a3966368507e364f4258be94a4348",
+  "freshAudit": {
+    "runId": 36231935580,
+    "generatedAt": "2026-09-26T09:10:27.774Z",
+    "latestBlobSha": "a120ddf07733a3bc1374e892ee3084b580b166f8",
+    "compactBlobSha": "95e10d6614baa2d10e71e027e00e96c406ca456e",
+    "unresolved": 10,
+    "activeJournals": 16
+  },
+  "staging": {
+    "blobSha": "d8173a87689f4ad151036ca07d1b0d4993c80ed2",
+    "reviewed": 10,
+    "accepted": 3,
+    "rejected": 6,
+    "pending": 1,
+    "publishableDois": [
+      "10.1021/acs.orglett.6c03701",
+      "10.1021/acs.orglett.6c03497",
+      "10.1021/acs.orglett.6c03647"
+    ],
+    "deferredDois": [
+      "10.31635/ccschem.026.202608262"
+    ],
+    "globalBlockers": [],
+    "publicationBlockers": []
+  },
+  "strictGate": {
+    "runId": 36232331547,
+    "jobId": 108377689054,
+    "conclusion": "success",
+    "validatedStagingBlobSha": "d8173a87689f4ad151036ca07d1b0d4993c80ed2",
+    "validateRequireReady": "success",
+    "checkReadinessRequireReady": "success",
+    "publicationReady": true,
+    "releaseStatus": "ready_with_pending",
+    "rerunThisRecovery": false
+  },
+  "scope": {
+    "version": "scope-2026-09-24-v1",
+    "rulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+    "correctionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+    "existingScopePending": [
+      "10.1021/acs.orglett.6c03499",
+      "10.1021/acs.orglett.6c03386"
+    ],
+    "confirmedRemovalsReused": 4,
+    "newRemovals": 0
+  },
+  "sourceWarnings": {
+    "sourceCoverageAnomalies": 1,
+    "closureCoverageAnomalies": 7,
+    "verifiedThrough": "2026-09-20",
+    "publisherChecks": {
+      "checked": 0,
+      "blocked": 6,
+      "unavailable": 10
+    }
+  },
+  "concurrency": {
+    "inProgressMainActions": 0,
+    "queuedMainActions": 0,
+    "protectedInputsChangedSinceGate": false
+  },
+  "productionDataModified": false,
+  "pagesRequested": false,
+  "mediaAcquisitionPerformed": false,
+  "schedulesChanged": false
+}
