@@ -50,7 +50,7 @@ At 12:00 Asia/Shanghai the scheduled ChatGPT task:
 5. performs a second evidence audit before publication;
 6. updates `public/scheduled-article-summaries.json` atomically on `main`.
 
-The task should process the entire currently available pending Evidence set in one run. Ordering is newest-first by Evidence `capturedAt`, but ordering controls review priority only; it must not split the publication into multiple deploy batches. Every DOI that passes review in that run is merged into the same atomic publication commit. Items that fail evidence, decryption, or bilingual-audit checks remain pending without blocking the rest.
+The task should process the entire currently available pending Evidence set in one run. Ordering is newest-first by Evidence `capturedAt`, but ordering controls review priority only; it must not split the publication into multiple deploy batches. Every DOI with any usable captured Evidence must receive a summary in that run. Evidence coverage controls summary depth, not publication eligibility. Only transport/integrity failures such as decryption/authentication failure, malformed payloads, or explicit `no_external_ai` policy may block publication.
 
 ### Bulk catch-up execution
 
@@ -61,7 +61,8 @@ A user-triggered catch-up is a **single full-backlog review and a single deploym
 - Do **not** divide the work into 8–12 DOI micro-batches and do **not** deploy intermediate subsets.
 - Perform the required two-pass review independently for each DOI, accumulate all approved summary records, then merge the complete approved set into `public/scheduled-article-summaries.json` atomically.
 - Create one summary-data commit for the whole catch-up and trigger one production Worker deployment for that commit.
-- One failed or deferred DOI must not stop any other DOI; failures remain pending and are listed in the run audit.
+- Missing full-text coverage is not a failure condition. `complete` publishes a full Evidence-bounded summary; `partial` publishes only what was captured and states that coverage is partial; `abstract_only` publishes an explicitly Abstract-based summary. Only transport/integrity/policy failures remain pending.
+- One transport/integrity/policy failure must not stop any other DOI; failures remain pending and are listed in the run audit.
 - Re-read the latest summary file SHA immediately before the single atomic write so concurrent changes are preserved.
 - The intended user experience is one trigger for the whole backlog and one production deployment, not repeated per-article or per-batch commands.
 - Do not reduce evidence, numerical-verification, mechanism-attribution, or bilingual-audit standards to increase throughput.
@@ -74,7 +75,7 @@ Coverage levels remain:
 - `partial`: use captured article text but disclose missing coverage;
 - `complete`: full-paper summary may be produced, still subject to evidence checks.
 
-Never fabricate missing conditions, yields, selectivities, scope, substrate failures, or mechanistic evidence.
+Never fabricate missing conditions, yields, selectivities, scope, substrate failures, or mechanistic evidence. Missing details are simply omitted; omission does not block publication.
 
 Mechanistic content must distinguish:
 
@@ -125,16 +126,14 @@ The Worker displays a scheduled summary only when both `sourceHash` and `evidenc
 
 ## 7. Fail-closed rules
 
-Do not publish a summary when:
+Do not publish a summary only when:
 
 - the encrypted packet cannot be decrypted or authenticated;
 - the current Evidence hashes differ from the handoff;
-- a major factual or numerical claim cannot be supported by captured Evidence;
 - the article is marked `no_external_ai`;
-- the bilingual versions materially disagree;
-- the output is incomplete or malformed.
+- the output is malformed or the bilingual versions materially disagree in a way that cannot be corrected from captured Evidence.
 
-A failed item remains pending; failure of one DOI must not block the rest of the daily batch.
+Lack of full text, missing numerical details, or incomplete section coverage is not a publication blocker. Instead, publish a narrower Evidence-bounded summary that states the applicable coverage level. A failed item remains pending only for transport/integrity/policy/output-validity reasons; failure of one DOI must not block the rest.
 
 ## 8. Frontend behavior
 
