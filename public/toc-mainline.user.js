@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.34';
+  var CONTROLLER_REVISION = '2.2.35';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -53,6 +53,7 @@
   var FIGURE_IMPORT_ENDPOINT = WORKER + '/api/article-figures/import';
   var FIGURE_STAGE_ENDPOINT = WORKER + '/api/article-figures/stage';
   var CAPTURE_INDEX_URL = WORKER + '/api/media/local-capture-index';
+  var MEDIA_INVENTORY_ENDPOINT = WORKER + '/api/media/inventory';
   var REPORT_ENDPOINT = WORKER + '/api/media/tampermonkey-report/import';
   var DIAGNOSTICS_ENDPOINT = WORKER + '/api/media/local-diagnostics/import';
   var EVIDENCE_ENDPOINT = WORKER + '/api/article-summary/fulltext/import';
@@ -877,6 +878,39 @@ function embeddedJobDois(value) {
     return JSON.parse(String(response.responseText||'{}'));
   }
 
+  async function postJson(url, payload) {
+    var response = await gmRequest({
+      method:'POST',
+      url:url,
+      timeout:45000,
+      headers:{'content-type':'application/json','cache-control':'no-cache',pragma:'no-cache'},
+      data:JSON.stringify(payload||{})
+    });
+    if (Number(response.status||0)<200 || Number(response.status||0)>=300) {
+      throw new Error('inventory_http_'+String(response.status||0));
+    }
+    return JSON.parse(String(response.responseText||'{}'));
+  }
+
+  function productionMediaSnapshot(inventory) {
+    var items={};
+    (inventory&&Array.isArray(inventory.items)?inventory.items:[]).forEach(function(row){
+      var doi=normalizeDoi(row&&row.doi);
+      if(!doi)return;
+      items[doi]={
+        doi:doi,
+        toc:{
+          available:Boolean(row.tocStored),
+          imageUrl:row.tocStored?'production_toc_present':'',
+          reason:String(row.tocReason||'')
+        },
+        figures:{available:Number(row.figureCount||0)>0,figures:[]},
+        inventory:row
+      };
+    });
+    return {version:3,generatedAt:Number(inventory&&inventory.generatedAt||Date.now()),source:'worker_production_inventory',items:items};
+  }
+
 
   async function readLiveCaptureKinds() {
     try {
@@ -1686,7 +1720,7 @@ function embeddedJobDois(value) {
     var doi = normalizeDoi(job.doi);
     var suffix = doi.split('/').pop() || doi;
     var doiMatch = citation.indexOf(doi) >= 0 || canonical.indexOf(doi) >= 0 || href.toLowerCase().indexOf(suffix.toLowerCase()) >= 0;
-    var shell = job.publisher === 'acs' && doiMatch && !challenge && !auth && text.length > 0 && text.length < 500;
+    var shell = (job.publisher === 'acs' || job.publisher === 'wiley') && doiMatch && !challenge && !auth && text.length > 0 && text.length < 500;
     pushTrace(trace, {
       stage: 'page',
       event: 'state',
@@ -2820,9 +2854,10 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.32')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.35')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
-      var media=await getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json?ts='+Date.now());
+      var productionInventory=await postJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
+      var media=productionMediaSnapshot(productionInventory);
       var evidenceInventory=null;
       try { evidenceInventory=await getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken()); }
       catch(error){ try{console.warn('[OSG TOC] evidence inventory unavailable; evidence-only backlog paused',String(error&&error.message||error));}catch(_){} }
@@ -2834,6 +2869,11 @@ function embeddedJobDois(value) {
         var prior=GM_getValue(attemptKey(job.doi,generation,'figures'),null);
         // A scheduler failure is not a failed publisher/article capture.
         if(prior && prior.reason==='controller_lease_lost')return true;
+        // 2.2.35 switched the authority from the stale static media-index to current
+        // production D1. A Wiley DOI that production still says is missing must get
+        // one immediate post-upgrade retry even if an older controller logged stored/
+        // already_available/not_found and would otherwise be held by overnight retry.
+        if(job.publisher==='wiley'&&job.captureToc===true&&prior&&String(prior.controllerRevision||'')!==CONTROLLER_REVISION)return true;
         if (prior && prior.version===VERSION && prior.status==='success') {
           // 2.2.32 could record a TOC-only visit as media success. Reopen only those
           // legacy successes that never requested figures; genuine paired successes stay done.
@@ -3221,7 +3261,7 @@ function embeddedJobDois(value) {
   }
 
   async function waitForPairedVisuals(job,trace) {
-    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started;
+    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false;
     var toc=[],figures=[];
     while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
       if (isAbortRequested()) throw new Error('user_aborted');
@@ -3238,6 +3278,14 @@ function embeddedJobDois(value) {
         : String(job.mediaNeed || '').indexOf('figures') >= 0;
       toc=wantsToc?collectCandidates(job,trace,document,location.href,'paired_dom',true):[];
       figures=wantsFigures?collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom'):[];
+      var now=Date.now(),elapsed=now-started;
+      if (wantsToc && !toc.length && !iframeAttempted && elapsed>7000 &&
+          (job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='science')) {
+        iframeAttempted=true;
+        var iframeRows=await iframeCandidates(job,trace);
+        toc=iframeRows.filter(function(row){return row&&row.kind==='official';});
+        if(toc.length) pushTrace(trace,{stage:'paired_toc_fallback',event:'iframe_recovery',status:'found',message:'official='+String(toc.length)});
+      }
       var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
       if (figureSignature!==lastFigureSignature) {lastFigureSignature=figureSignature;figureChangedAt=Date.now();}
       var signature=toc.map(function(x){return x.url;}).join('|')+'::'+figureSignature;
@@ -3247,7 +3295,7 @@ function embeddedJobDois(value) {
         try {window.scrollTo(0,Math.floor(h*step/4));}catch(_){}
         step+=1;stable=0;
       } else {
-        var now=Date.now(),elapsed=now-started,figureQuiet=now-figureChangedAt;
+        var figureQuiet=now-figureChangedAt;
         if (pairedDiscoveryReady(job,stable,toc.length,figures.length,elapsed,figureQuiet)) break;
       }
       await sleep(800);
@@ -3256,7 +3304,7 @@ function embeddedJobDois(value) {
   }
 
   async function finishPairedJob(job,result,trace,token) {
-    result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.finishedAt=nowIso();
+    result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.controllerRevision=CONTROLLER_REVISION;result.finishedAt=nowIso();
     GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,status:result.status,trace:trace,finishedAt:result.finishedAt});
     enqueueCaptureReport(job,trace,result.status,result.reason,true);
     // Durable local report is queued BEFORE the controller can close this publisher tab.
