@@ -1,0 +1,109 @@
+name: Verify feedback image paste live
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ui-feedback35-live-smoke.yml'
+      - 'audit/ui-feedback35-live-trigger.txt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-feedback35-live-smoke
+  cancel-in-progress: false
+
+jobs:
+  paste-live:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      LIVE_SITE_URL: https://gallery.gczhouwld.com/
+      BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned Playwright
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund playwright@1.55.0
+          npx --no-install playwright install --with-deps "$BROWSER"
+      - name: Verify deployed feedback paste without production feedback writes
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { chromium, webkit } from 'playwright';
+          const browserType = process.env.BROWSER === 'webkit' ? webkit : chromium;
+          const browser = await browserType.launch();
+          const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+          let feedbackWrites = 0;
+          await context.route('**/*', async route => {
+            const request = route.request();
+            const url = new URL(request.url());
+            if (!url.pathname.startsWith('/api/')) {
+              await route.continue();
+              return;
+            }
+            if (url.pathname === '/api/user-ui/site-feedback' && request.method() === 'POST') feedbackWrites += 1;
+            const origin = request.headers().origin || new URL(process.env.LIVE_SITE_URL).origin;
+            const headers = {
+              'access-control-allow-origin': origin,
+              'access-control-allow-credentials': 'true',
+              'access-control-allow-methods': 'GET, HEAD, OPTIONS, POST',
+              'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization',
+            };
+            if (request.method() === 'OPTIONS') {
+              await route.fulfill({ status: 204, headers });
+              return;
+            }
+            if (url.pathname.endsWith('/reader-counts')) {
+              await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+              return;
+            }
+            if (url.pathname.endsWith('/integrations')) {
+              await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }) });
+              return;
+            }
+            await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify({ ok: true }) });
+          });
+          const page = await context.newPage();
+          await page.goto(process.env.LIVE_SITE_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
+          const widget = page.locator('site-feedback-widget');
+          const tab = widget.locator('.site-feedback-tab');
+          await tab.waitFor({ state: 'visible', timeout: 30000 });
+          await tab.click();
+          const panel = widget.locator('.site-feedback-panel');
+          await panel.waitFor({ state: 'visible', timeout: 10000 });
+          const hint = await widget.locator('.site-feedback-image-hint').textContent();
+          if (!hint || !/Ctrl\+V|⌘V/.test(hint)) throw new Error('Paste hint is missing from deployed feedback panel');
+          const textarea = widget.locator('[data-feedback-message]');
+          await textarea.evaluate((node) => {
+            const base64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+            const bytes = Uint8Array.from(atob(base64), char => char.charCodeAt(0));
+            const file = new File([bytes], 'live-paste.png', { type: 'image/png' });
+            const transfer = new DataTransfer();
+            transfer.items.add(file);
+            const event = new Event('paste', { bubbles: true, cancelable: true });
+            Object.defineProperty(event, 'clipboardData', { value: transfer });
+            node.dispatchEvent(event);
+          });
+          const preview = widget.locator('.site-feedback-image-preview');
+          await preview.waitFor({ state: 'visible', timeout: 10000 });
+          const src = await preview.locator('img').getAttribute('src');
+          if (!src?.startsWith('data:image/webp;base64,')) throw new Error('Pasted image preview was not compressed to WebP');
+          const meta = await preview.locator('.site-feedback-image-meta').textContent();
+          if (!meta?.includes('live-paste.png')) throw new Error('Pasted image filename is not shown');
+          await widget.locator('[data-feedback-image-remove]').click();
+          if (await widget.locator('.site-feedback-image-preview').count()) throw new Error('Pasted image did not clear');
+          if (feedbackWrites !== 0) throw new Error('Live smoke unexpectedly submitted production feedback');
+          console.log(JSON.stringify({ ok: true, browser: process.env.BROWSER, hint, feedbackWrites, liveUrl: page.url() }));
+          await browser.close();
+          NODE
