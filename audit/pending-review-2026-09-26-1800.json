@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "publicationSlot": "2026-09-26T18:00:00+08:00",
+  "generatedAt": "2026-09-26T10:05:06.574Z",
+  "handoffGeneratedAt": "2026-09-26T09:10:27.774Z",
+  "sourceReviewFile": "audit/review-2026-09-26-1800.json",
+  "items": [
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "journal": "CCS Chemistry",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Liang-Min Xiong",
+        "Cong Ma",
+        "Jian-Feng Guo",
+        "Yi-Fan Chen",
+        "Zi-Meng Li",
+        "Hai-Qi Li",
+        "Hao Xu",
+        "Tian-Sheng Mei"
+      ],
+      "topics": [
+        "CO2 Reduction Techniques and Catalysts",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "Carbon dioxide utilization in catalysis",
+        "Ammonia Synthesis and Nitrogen Reduction"
+      ],
+      "sources": [
+        "crossref:2096-5745:online",
+        "crossref:2096-5745:published",
+        "crossref:2096-5745:created",
+        "openalex:S4210239486"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/pdf/10.31635/ccschem.026.202608262"
+      ],
+      "evidenceSource": "fresh_compact_title_openalex_topics_and_repeated_publisher_attempts",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "题名只确认CO₂电还原与醇氧化耦合；当前仍无法判定其主要贡献是能源导向电催化体系，还是具有充分醇底物/产物范围的一般电有机合成。",
+      "evidenceBasis": "fresh compact摘要仍为空，OpenAlex主题偏向CO₂还原、能源与催化；本轮检索只取得题名级二手条目，出版社DOI与PDF页面仍不可访问，未获得醇底物、氧化产物、范围、分离收率或主要贡献事实。",
+      "challengeReason": "不能因能源主题直接排除，因为配对阳极醇氧化可能包含可推广有机制备；也不能仅凭题名中的alcohol oxidation纳入。两遍均确认必须等待出版社摘要/正文或SI。",
+      "evidenceNeeded": "出版社摘要或正文/SI中醇底物类别、氧化产物、底物范围、分离收率，以及论文主要评价是否为合成产物还是CO₂还原/能效。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/pdf/10.31635/ccschem.026.202608262"
+      ],
+      "nextAction": "通过现有Tampermonkey/VPN Bridge读取出版社摘要、反应范围或SI；保持原日期和历史来源，不由题名推断最终结论。",
+      "sourceReviewFile": "audit/review-2026-09-26-1800.json",
+      "firstRecordedAt": "2026-09-22T21:48:19+08:00",
+      "nextReviewSlot": "2026-09-27T08:00:00+08:00"
+    }
+  ],
+  "note": "Per-release deferrals only. Merge with the existing durable backlog; do not replace or drop older pending records."
+}
