@@ -210,6 +210,7 @@ assert.equal(coverage.status, 200);
 assert.equal(coverage.body.evidenceCount, 1);
 assert.deepEqual(coverage.body.evidenceByLevel, { complete: 1, partial: 0, abstract_only: 0, unknown: 0 });
 assert.equal(coverage.body.scheduledStaticCount, 1);
+assert.equal(coverage.body.matchingPublishedCount, 1);
 assert.equal(coverage.body.pendingHandoffCount, 0);
 assert.equal(coverage.body.pendingHandoffMayHaveMore, false);
 
