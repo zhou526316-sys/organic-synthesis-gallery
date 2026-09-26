@@ -1494,6 +1494,32 @@ function embeddedJobDois(value) {
       }
     }
 
+    // Wiley sometimes keeps the GA only in article-scoped embedded JSON rather than
+    // a rendered <img>. Scan only script payloads that also contain the active DOI
+    // (or its suffix), and still require an explicit -gra- / graphical-abstract URL
+    // on an official Wiley host. This avoids inheriting GA images from related cards.
+    var activeDoi = normalizeDoi(job && job.doi);
+    var activeSuffix = activeDoi ? activeDoi.split('/').pop() : '';
+    if (scope.querySelectorAll && activeDoi) {
+      scope.querySelectorAll('script').forEach(function(script) {
+        var raw = String(script.textContent || '');
+        if (!raw || raw.length > 2000000) return;
+        var decoded = raw.replace(/\\u002f/gi,'/').replace(/\\\//g,'/');
+        var lower = decoded.toLowerCase();
+        if (lower.indexOf(activeDoi) < 0 && (!activeSuffix || lower.indexOf(activeSuffix) < 0)) return;
+        var pattern = /(?:https?:\/\/(?:[^"'<>\\s]+\.)?wiley\.com)?\/cms\/asset\/[^"'<>\\s]+/gi;
+        var match;
+        while ((match = pattern.exec(decoded))) {
+          var candidateUrl = normalizeUrl(match[0], base);
+          if (!candidateUrl || !wileyGaUrlSignal(candidateUrl) || !wileyAssetHostAllowed(candidateUrl)) continue;
+          var context = decoded.slice(Math.max(0, match.index - 2200), Math.min(decoded.length, pattern.lastIndex + 2200));
+          var contextLower = context.toLowerCase();
+          if (contextLower.indexOf(activeDoi) < 0 && (!activeSuffix || contextLower.indexOf(activeSuffix) < 0)) continue;
+          add(candidateUrl, null, 'wiley_ga_embedded_article_data', 880, 'Graphical Abstract');
+        }
+      });
+    }
+
     rows = Array.from(seen.values()).sort(function(a, b) { return b.score - a.score; });
     return rows;
   }
