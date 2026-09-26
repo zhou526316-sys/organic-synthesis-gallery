@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.35';
+  var CONTROLLER_REVISION = '2.2.36';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -73,7 +73,7 @@
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
-  var FAILURE_ENGINE_REVISION = VERSION + ':20260920-diagnostic-history';
+  var FAILURE_ENGINE_REVISION = VERSION + ':20260926-nature-science-rescue';
   var DEFAULT_BATCH_SIZE = 8;
   var NEXT_BATCH_DELAY_MS = 12000;
   var nextBatchTimer = null;
@@ -736,12 +736,21 @@ function embeddedJobDois(value) {
     return 7;
   }
 
+  function isNatureScienceFamilyJob(job) {
+    var journal = String(job && job.journal || '').trim();
+    return journal === 'Nature' || journal === 'Science'
+      || /^Nature\s+/i.test(journal) || /^Science\s+/i.test(journal);
+  }
+
   function captureQueueTier(job, latestAddedDate) {
+    // A newly published Gallery batch always preempts historical cleanup and summary work.
+    if (latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate)) return -2;
     if (job && job.summaryUrgent === true) return -1;
-    if (latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate)) return 0;
+    // Between publication waves, clear Nature/Science-family visual gaps first.
+    if (job && job.captureToc === true && isNatureScienceFamilyJob(job)) return 0;
     if (job && job.captureToc === true) return 1;
-    if (String(job && job.mediaNeed || '') === 'evidence') return 3;
     if (job && (job.captureToc === false || String(job.state || '') === 'figure_gap' || String(job.mediaNeed || '') === 'figures')) return 2;
+    if (String(job && job.mediaNeed || '') === 'evidence') return 3;
     return 4;
   }
 
@@ -2504,11 +2513,14 @@ function embeddedJobDois(value) {
         articleUrl: location.href,
         sourceUrl: candidate.url,
         caption: candidate.text || '',
+        width: Number(image.width || 0) || undefined,
+        height: Number(image.height || 0) || undefined,
         capturedAt: nowIso(),
         source: 'tampermonkey-toc-mainline'
       }, token, 'r2_upload');
       if (!result || result.stored !== true || normalizeDoi(result.doi) !== normalizeDoi(job.doi) || result.kind !== candidate.kind) throw new Error('toc_capture_receipt_invalid');
       if (candidate.kind === 'official' && result.productionTocStored !== true) throw new Error('toc_production_promotion_missing');
+      if (candidate.kind === 'figure1' && isNatureScienceFamilyJob(job) && result.productionFallbackStored !== true) throw new Error('figure1_production_fallback_missing');
       assertBoundCaptureJob(job, candidate.url);
       pushTrace(trace, {
         stage: 'r2_upload',
@@ -2637,7 +2649,7 @@ function embeddedJobDois(value) {
           var best=await acquireBestVisual(job,candidates,trace,cache,'toc');
           if (best) {
             var receipt=await uploadCapture(job,best.candidate,best.image,trace,token);
-            result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl,productionTocStored:best.candidate.kind==='official'?receipt.productionTocStored===true:false};
+            result.toc={status:'stored',kind:best.candidate.kind,quality:best.quality.quality,imageUrl:receipt.imageUrl,productionTocStored:best.candidate.kind==='official'?receipt.productionTocStored===true:false,productionFallbackStored:best.candidate.kind==='figure1'?receipt.productionFallbackStored===true:false};
             checkpoint.toc=result.toc;saveCheckpoint(job.doi,checkpoint);
             captureLiveUpdate(job,'saved',{label:best.candidate.kind==='figure1'?'Figure 1 替代图':'TOC'});
           } else result.toc={status:'not_found',reason:'no_usable_official_or_figure1'};
@@ -2895,7 +2907,7 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.35')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.36')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
@@ -2915,6 +2927,10 @@ function embeddedJobDois(value) {
         // one immediate post-upgrade retry even if an older controller logged stored/
         // already_available/not_found and would otherwise be held by overnight retry.
         if(job.publisher==='wiley'&&job.captureToc===true&&prior&&String(prior.controllerRevision||'')!==CONTROLLER_REVISION)return true;
+        // 2.2.36 changes Nature/Science-family visual semantics: reopen one time so a
+        // verified Figure 1 can become an explicit production fallback when no official
+        // TOC/graphical abstract exists.
+        if(isNatureScienceFamilyJob(job)&&job.captureToc===true&&prior&&String(prior.controllerRevision||'')!==CONTROLLER_REVISION)return true;
         if (prior && prior.version===VERSION && prior.status==='success') {
           // 2.2.32 could record a TOC-only visit as media success. Reopen only those
           // legacy successes that never requested figures; genuine paired successes stay done.
@@ -3384,26 +3400,33 @@ function embeddedJobDois(value) {
       if (!doi||seen.has(doi)) throw new Error('paired_queue_invalid_or_duplicate_doi');seen.add(doi);
       var record=(media.items||{})[doi]||{};
       var toc=record.toc||{};
-      var official=Boolean(toc.available && toc.imageUrl && !/fallback/i.test(toc.reason||''));
+      var hasVisual=Boolean(toc.available && toc.imageUrl);
+      var official=Boolean(hasVisual && !/fallback/i.test(toc.reason||''));
+      var natureScienceFamily=isNatureScienceFamilyJob(raw);
+      var acceptedFallback=Boolean(hasVisual && /fallback/i.test(toc.reason||'') && natureScienceFamily);
+      var visualSatisfied=official||acceptedFallback;
       var latestAddedDate=String(queue.latestAddedDate||'');
       var isLatest=Boolean(latestAddedDate && String(raw.addedDate||'')===latestAddedDate);
-      var mediaNeed=isLatest?'toc+figures':official?'figures':'toc';
+      var mediaNeed=isLatest?(visualSatisfied?'figures':'toc+figures'):visualSatisfied?'figures':'toc';
       // mediaNeed is only the scheduler trigger. Once the article is open, fill every
       // still-relevant media layer in the same bound visit instead of reopening it.
+      // A Nature/Science Figure 1 remains a fallback, never an official TOC, but it
+      // satisfies the card-visual gap until a higher-rank official visual appears.
       return Object.assign({},raw,{
         doi:doi,
         publisher:publisherForDoi(doi),
         mediaNeed:mediaNeed,
-        state:official?'figure_gap':'no_visual',
-        captureToc:!official,
+        state:visualSatisfied?'figure_gap':'no_visual',
+        captureToc:!visualSatisfied,
         captureFigures:true,
         captureEvidence:false,
-        allowFigureOne:isLatest&&!official,
+        allowFigureOne:!official&&(isLatest||natureScienceFamily),
         _queueIndex:index
       });
     });
-    // Scheduler tiers: latest Gallery additions first, then historical missing official TOCs,
-    // then historical body-figure backlog. Journal priority applies inside every tier.
+    // Scheduler tiers: latest Gallery additions first; while no new additions are waiting,
+    // Nature/Science-family visual gaps are cleared before other historical TOCs, then body
+    // figures and evidence. Journal priority applies inside every tier.
     var latestAddedDate = String(queue.latestAddedDate || '');
     jobs.sort(function(a,b) {
       var delta = compareCaptureJobs(a,b,latestAddedDate);
