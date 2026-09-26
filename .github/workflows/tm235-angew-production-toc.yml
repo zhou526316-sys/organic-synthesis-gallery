@@ -1,0 +1,84 @@
+name: Bridge 2.2.35 Angew production TOC regression
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'public/toc-mainline.user.js'
+      - 'cloudflare/scripts/build-bridge-loader.mjs'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/src/local-captures.js'
+      - 'cloudflare/worker/src/media-write.js'
+      - '.github/workflows/deploy-worker-frontend.yml'
+      - 'scripts/test-tm235-angew-production-toc.mjs'
+      - 'scripts/validate-tm220-artifacts.mjs'
+      - '.github/workflows/tm235-angew-production-toc.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Syntax and production TOC contracts
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --check cloudflare/worker/src/local-captures.js
+          node --check cloudflare/worker/src/index.js
+          node --check scripts/test-tm235-angew-production-toc.mjs
+          ! grep -F "getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json" public/toc-mainline.user.js
+          grep -F "MEDIA_INVENTORY_ENDPOINT" public/toc-mainline.user.js
+          grep -F "productionTocStored" public/toc-mainline.user.js
+          grep -F "mediaControllerRevision:'2.2.35'" cloudflare/worker/src/index.js
+          grep -F "officialTocAutoPromotion:true" cloudflare/worker/src/index.js
+          grep -F "promoteOfficialLocalTocs" cloudflare/worker/src/local-captures.js
+          grep -F "Promote verified official TOCs into production" .github/workflows/deploy-worker-frontend.yml
+
+      - name: Chromium Angew and production-state regression
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+          node scripts/test-tm235-angew-production-toc.mjs | tee "$RUNNER_TEMP/tm235-angew.log"
+          grep -F 'TM235_ANGEW_TEST_SUMMARY ' "$RUNNER_TEMP/tm235-angew.log"
+
+      - name: Worker dry-run
+        working-directory: cloudflare/worker
+        run: |
+          npm install --no-audit --no-fund
+          npm run check
+
+      - name: Build exact Bridge 2.2.35 installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.35' public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.35';" public/gallery-vpn-bridge.user.js
+          grep -F "productionTocStored" public/gallery-vpn-bridge.user.js
+          grep -F "wiley_ga_embedded_article_data" public/gallery-vpn-bridge.user.js
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm235-angew-production-toc-tested
+          path: |
+            public/gallery-vpn-bridge.user.js
+            public/toc-mainline.user.js
+            ${{ runner.temp }}/tm235-angew.log
+          retention-days: 7
+          if-no-files-found: warn
