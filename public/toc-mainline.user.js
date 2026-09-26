@@ -1507,16 +1507,30 @@ function embeddedJobDois(value) {
         var decoded = raw.replace(/\\u002f/gi,'/').replace(/\\\//g,'/');
         var lower = decoded.toLowerCase();
         if (lower.indexOf(activeDoi) < 0 && (!activeSuffix || lower.indexOf(activeSuffix) < 0)) return;
-        var pattern = /(?:https?:\/\/(?:[^"'<>\\s]+\.)?wiley\.com)?\/cms\/asset\/[^"'<>\\s]+/gi;
-        var match;
-        while ((match = pattern.exec(decoded))) {
-          var candidateUrl = normalizeUrl(match[0], base);
-          if (!candidateUrl || !wileyGaUrlSignal(candidateUrl) || !wileyAssetHostAllowed(candidateUrl)) continue;
-          var context = decoded.slice(Math.max(0, match.index - 2200), Math.min(decoded.length, pattern.lastIndex + 2200));
-          var contextLower = context.toLowerCase();
-          if (contextLower.indexOf(activeDoi) < 0 && (!activeSuffix || contextLower.indexOf(activeSuffix) < 0)) continue;
-          add(candidateUrl, null, 'wiley_ga_embedded_article_data', 880, 'Graphical Abstract');
+        var matches = [];
+        var absolutePattern = /https?:\/\/[^"'<>\\s]+/gi;
+        var absolute;
+        while ((absolute = absolutePattern.exec(decoded))) {
+          var absoluteUrl = normalizeUrl(absolute[0], base);
+          if (!absoluteUrl || !wileyAssetHostAllowed(absoluteUrl)) continue;
+          try { if (new URL(absoluteUrl).pathname.indexOf('/cms/asset/') < 0) continue; } catch (_) { continue; }
+          matches.push({raw:absolute[0],url:absoluteUrl,index:absolute.index,end:absolutePattern.lastIndex});
         }
+        var relativePattern = /(?:^|[^A-Za-z0-9._~:\/-])(\/cms\/asset\/[^"'<>\\s]+)/gi;
+        var relative;
+        while ((relative = relativePattern.exec(decoded))) {
+          var relativeUrl = normalizeUrl(relative[1], base);
+          if (!relativeUrl || !wileyAssetHostAllowed(relativeUrl)) continue;
+          matches.push({raw:relative[1],url:relativeUrl,index:relative.index,end:relativePattern.lastIndex});
+        }
+        matches.forEach(function(match) {
+          var candidateUrl = match.url;
+          if (!wileyGaUrlSignal(candidateUrl)) return;
+          var context = decoded.slice(Math.max(0, match.index - 2200), Math.min(decoded.length, match.end + 2200));
+          var contextLower = context.toLowerCase();
+          if (contextLower.indexOf(activeDoi) < 0 && (!activeSuffix || contextLower.indexOf(activeSuffix) < 0)) return;
+          add(candidateUrl, null, 'wiley_ga_embedded_article_data', 880, 'Graphical Abstract');
+        });
       });
     }
 
