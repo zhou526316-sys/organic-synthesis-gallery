@@ -439,7 +439,7 @@
       ],
       "evidenceSource": "fresh_compact_crossref_abstract_and_live_wiley_publisher_abstract",
       "decision": "pending",
-      "firstPassDecision": "include",
+      "firstPassDecision": "pending",
       "challengeDecision": "pending",
       "reason": "Co(II)催化BCB与吲哚[2σ+2π]环加成显然是潜在有机合成方法，但fresh compact与Wiley官方摘要均未陈述底物多样性、产物范围或分离收率，不能据题名和单一反应概述确认一般性。",
       "evidenceBasis": "Wiley官方摘要确认热活化BCB、Co(II)选择性捕获及与吲哚形成头对头稠合bicyclo[2.1.1]hexane；同时列出大量机理表征和四种Co配合物，却未提供底物/产物范围事实。",
@@ -452,7 +452,8 @@
       ],
       "nextAction": "通过现有Tampermonkey/VPN Bridge读取Wiley正文或SI底物范围；不从摘要中的“strategy”推断一般性。",
       "sourceReviewFile": "audit/prepublish-review-2026-09-27-0800.json",
-      "firstRecordedAt": "2026-09-27T07:12:00+08:00"
+      "firstRecordedAt": "2026-09-27T07:12:00+08:00",
+      "firstPassRationale": "首遍已识别为真实环加成，但官方摘要未给出底物/产物范围或分离收率；按边界证据门槛首遍即暂缓，而非仅凭反应名称纳入。"
     },
     {
       "doi": "10.1002/anie.7208628",
@@ -1777,7 +1778,7 @@
     "sourceCoverageWarningsNonBlockingForReviewedDois": true,
     "closureCoverageWarningCount": 5,
     "verifiedThroughHeld": true,
-    "unresolvedDisagreementsInterpretation": "逐篇两遍冲突已通过pending隔离为文章级证据缺口；不存在未隔离、会阻断其余publishableDois的全局分歧。"
+    "unresolvedDisagreementsInterpretation": "两篇pending在首遍与challenge均为pending；不存在跨两遍未解决的决策冲突，剩余问题均为明确记录的文章级证据缺口。"
   },
   "globalBlockers": [],
   "publicationBlockers": [],
@@ -1804,5 +1805,5 @@
       "closureEffect": "hold_verifiedThrough"
     }
   ],
-  "updatedAt": "2026-09-27T07:24:00+08:00"
+  "updatedAt": "2026-09-27T07:27:00+08:00"
 }
