@@ -3,6 +3,7 @@ import {
   backfillScheduledEvidenceHandoffs,
   getScheduledEvidenceHandoff,
   getScheduledEvidenceHandoffPart,
+  getScheduledSummaryCoverageStatus,
   getScheduledSummaryForEvidence,
   persistScheduledEvidenceHandoff,
   readScheduledSummaryAsset,
@@ -203,6 +204,14 @@ assert.equal(stale, null);
 
 const excluded = await getScheduledEvidenceHandoff({ MEDIA, ASSETS: approvedAssets }, 40, { manifestOnly: true });
 assert.equal(excluded.body.count, 0);
+
+const coverage = await getScheduledSummaryCoverageStatus({ MEDIA, ASSETS: approvedAssets });
+assert.equal(coverage.status, 200);
+assert.equal(coverage.body.evidenceCount, 1);
+assert.deepEqual(coverage.body.evidenceByLevel, { complete: 1, partial: 0, abstract_only: 0, unknown: 0 });
+assert.equal(coverage.body.scheduledStaticCount, 1);
+assert.equal(coverage.body.pendingHandoffCount, 0);
+assert.equal(coverage.body.pendingHandoffMayHaveMore, false);
 
 // A legacy/foreign-key envelope is automatically rotated from private Evidence.
 const rotateEvidence = {
