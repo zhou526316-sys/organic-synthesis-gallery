@@ -1,17 +1,33 @@
 {
-  "generatedAt": "2026-09-23T18:57:00+08:00",
+  "generatedAt": "2026-09-26T14:49:00+08:00",
   "updates": [
-    { "id": 33, "status": "reviewed" }
+    {
+      "id": 35,
+      "status": "reviewed"
+    }
   ],
-  "expectedOpenIds": [8, 20, 21, 22, 23, 24, 25, 28, 31, 32, 34],
+  "expectedOpenIds": [
+    "r2:bd1346e7-aab7-40af-9ec5-0b031e750f0f",
+    34,
+    32,
+    31,
+    28,
+    25,
+    24,
+    23,
+    22,
+    21,
+    20,
+    8
+  ],
   "reviewBasis": {
-    "userApproval": "User explicitly approved continuing navigation33 after the feedback approval gate.",
-    "originalFeedback": "建议加个回到顶部/底部的按钮",
-    "implementation": "PR150 merged d15afca8aead58a5422f7054fde9487d0f637ce1; eager-load follow-up PR166 merged 778740547bd1ecb7d0fc0175744e0727329b4ce9.",
-    "preMerge": "Navigation behavior run35847997946 passed6/6 Chromium and6/6 WebKit. Follow-up run35850499048 passed7/7 Chromium and7/7 WebKit including navigation visible within2.5s while optional user chunks were deliberately delayed5s. Site quality35850499036, migration35850499025 and data35850499099 passed.",
-    "deployment": "Worker sync35851005619 and GitHub Pages35851005572 succeeded.",
-    "liveAcceptance": "Run35851322926 passed6/6 on GitHub Chromium, GitHub WebKit, Worker Chromium and Worker WebKit. API writes were mocked; no reader marks.",
-    "diagnosisRetained": "Initial live run35848845588 exposed GitHub WebKit late registration. Read-only run35849271899 found no network/page errors; sequential optional module loading delayed navigation. PR166 moved navigation before optional modules rather than relaxing the5s live assertion.",
-    "scope": "Only navigation33 is reviewed. Reader-count feedback remains open because current one-IP-per-DOI semantics explain many one-reader cards;31/32/34/28 and all other feedback remain open."
+    "userApproval": "User asked to continue resolving the newly arrived feedback after the 2026-09-26 export; #35 was the only new item.",
+    "originalFeedback": "建议吐槽界面可以直接粘贴图片而非去上传图片",
+    "verification": "2026-09-26 export run 36223779767 showed #35 as the only newly arrived open item. Existing feedback UI had file upload but no clipboard image paste listener.",
+    "implementation": "PR #258 merged as 4c9c2da095ee1b52d8d01fcb699f5027e86af5db. Existing upload remains; image-only clipboard paste reuses the same 20 MB validation, compression, preview, removal and private attachment submission path. Text-only paste is not intercepted.",
+    "preMerge": "All eight PR workflows passed, including Site quality gate with frontend build/typecheck, Worker dry-run, production API smoke and Playwright interaction regression.",
+    "deployment": "Worker frontend deployment 36224253897 succeeded. A cancelled GitHub Pages run initially left the custom domain on stale static assets; Pages refresh run 36224579184 then completed successfully.",
+    "liveAcceptance": "Feedback paste live run 36224390759 attempt 2 passed on Chromium and WebKit against https://gallery.gczhouwld.com/. The test pasted an image, verified WebP preview and removal, and made zero production feedback writes.",
+    "scope": "Close only feedback #35. All pre-existing unresolved feedback remains open/paused exactly as before."
   }
 }
