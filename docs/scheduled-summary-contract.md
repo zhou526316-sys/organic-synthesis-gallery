@@ -52,6 +52,8 @@ At 12:00 Asia/Shanghai the scheduled ChatGPT task:
 
 The task should process all pending items that can be completed reliably in the run. If the backlog is unusually large, newest Evidence takes priority and remaining items stay pending for the next run.
 
+Backlog ordering is explicitly newest-first: rank by Evidence `capturedAt` descending. A newer item that is fully reviewable must not wait for older pending items. The reviewer may publish a rigorously reviewed newest subset immediately while older items remain pending; FIFO clearing of historical backlog is not required.
+
 ## 4. Evidence restrictions
 
 Coverage levels remain:
