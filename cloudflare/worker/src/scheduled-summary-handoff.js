@@ -219,6 +219,7 @@ export async function getScheduledSummaryCoverageStatus(env) {
 
   let evidenceCount = 0;
   const evidenceByLevel = { complete: 0, partial: 0, abstract_only: 0, unknown: 0 };
+  const evidenceSignatures = new Map();
   let cursor;
   for (let pageNo = 0; pageNo < 10; pageNo += 1) {
     const page = await env.MEDIA.list({
@@ -231,6 +232,10 @@ export async function getScheduledSummaryCoverageStatus(env) {
       const meta = object?.customMetadata || {};
       if (!normalizeDoi(meta.doi)) continue;
       evidenceCount += 1;
+      evidenceSignatures.set(doi, {
+        sourceHash: String(meta.sourceHash || ''),
+        evidencePacketHash: String(meta.evidencePacketHash || ''),
+      });
       const level = String(meta.evidenceLevel || 'unknown');
       if (Object.prototype.hasOwnProperty.call(evidenceByLevel, level)) evidenceByLevel[level] += 1;
       else evidenceByLevel.unknown += 1;
@@ -240,13 +245,25 @@ export async function getScheduledSummaryCoverageStatus(env) {
   }
 
   const asset = await readScheduledSummaryAsset(env);
-  const scheduledStaticCount = Object.values(asset.items || {}).filter(row =>
+  const scheduledRows = Object.entries(asset.items || {}).filter(([, row]) =>
     row &&
     row.schemaVersion === SCHEDULED_SUMMARY_SCHEMA_VERSION &&
     row.status === 'approved' &&
     typeof row.zh === 'string' && row.zh.trim() &&
     typeof row.en === 'string' && row.en.trim()
-  ).length;
+  );
+  const scheduledStaticCount = scheduledRows.length;
+  const matchingPublishedCount = scheduledRows.filter(([doiValue, row]) => {
+    const doi = normalizeDoi(doiValue || row?.doi);
+    const evidence = evidenceSignatures.get(doi);
+    return Boolean(
+      evidence &&
+      evidence.sourceHash &&
+      evidence.evidencePacketHash &&
+      row.sourceHash === evidence.sourceHash &&
+      row.evidencePacketHash === evidence.evidencePacketHash
+    );
+  }).length;
   const pending = await getScheduledEvidenceHandoff(env, 60, { manifestOnly: true });
   if (pending.status !== 200) return pending;
 
@@ -261,6 +278,7 @@ export async function getScheduledSummaryCoverageStatus(env) {
       evidenceCount,
       evidenceByLevel,
       scheduledStaticCount,
+      matchingPublishedCount,
       pendingHandoffCount: pendingCount,
       pendingHandoffLimit: pendingLimit,
       pendingHandoffMayHaveMore: pendingCount >= pendingLimit,
