@@ -1508,7 +1508,7 @@ function embeddedJobDois(value) {
         var lower = decoded.toLowerCase();
         if (lower.indexOf(activeDoi) < 0 && (!activeSuffix || lower.indexOf(activeSuffix) < 0)) return;
         var matches = [];
-        var absolutePattern = /https?:\/\/[^"'<>\\s]+/gi;
+        var absolutePattern = /https?:\/\/[^"'<>\s]+/gi;
         var absolute;
         while ((absolute = absolutePattern.exec(decoded))) {
           var absoluteUrl = normalizeUrl(absolute[0], base);
@@ -1516,7 +1516,7 @@ function embeddedJobDois(value) {
           try { if (new URL(absoluteUrl).pathname.indexOf('/cms/asset/') < 0) continue; } catch (_) { continue; }
           matches.push({raw:absolute[0],url:absoluteUrl,index:absolute.index,end:absolutePattern.lastIndex});
         }
-        var relativePattern = /(?:^|[^A-Za-z0-9._~:\/-])(\/cms\/asset\/[^"'<>\\s]+)/gi;
+        var relativePattern = /(?:^|[^A-Za-z0-9._~:\/-])(\/cms\/asset\/[^"'<>\s]+)/gi;
         var relative;
         while ((relative = relativePattern.exec(decoded))) {
           var relativeUrl = normalizeUrl(relative[1], base);
