@@ -1,6 +1,6 @@
 import { storeVerifiedStage } from './stage-storage.js';
 import { normalizeDoi } from './media.js';
-import { importFigure } from './media-write.js';
+import { importFigure, importToc } from './media-write.js';
 
 const INDEX_KEY = 'local-captures/index.json';
 const IMAGE_PREFIX = 'local-captures/images/';
@@ -707,14 +707,51 @@ export async function importLocalCapture(request, env, payload) {
     httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
   });
 
+  let productionToc = null;
+  if (kind === 'official') {
+    const imageData = 'data:' + image.contentType + ';base64,' + bytesToBase64(image.bytes);
+    const promoted = await importToc(request, env, {
+      doi,
+      articleUrl: payload.articleUrl,
+      sourceUrl: payload.sourceUrl,
+      imageData,
+      replace: true,
+    });
+    if (Number(promoted?.status || 500) < 200 || Number(promoted?.status || 500) >= 300 || promoted?.body?.available !== true) {
+      return {
+        status: 503,
+        body: {
+          stored: true,
+          localStored: true,
+          productionTocStored: false,
+          doi,
+          kind,
+          contentHash: hash.slice(0, 32),
+          error: 'official_toc_production_promotion_failed',
+          promotionStatus: Number(promoted?.status || 0),
+          updatedAt: now,
+        },
+      };
+    }
+    productionToc = promoted.body;
+  }
+
   return {
     status: 200,
     body: {
       stored: true,
+      localStored: true,
+      productionTocStored: kind === 'official' ? true : false,
       doi,
       kind,
       contentHash: hash.slice(0, 32),
-      imageUrl: publicMediaUrl(request, key),
+      imageUrl: kind === 'official' ? String(productionToc?.imageUrl || '') : publicMediaUrl(request, key),
+      productionToc: kind === 'official' ? {
+        available: true,
+        imageUrl: String(productionToc?.imageUrl || ''),
+        reason: String(productionToc?.reason || ''),
+        cacheState: String(productionToc?.cacheState || ''),
+      } : undefined,
       updatedAt: now,
     },
   };
