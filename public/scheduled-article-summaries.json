@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": 1790400000000,
+  "generatedAt": 1790401775639,
   "publicationMode": "daily_1200_asia_shanghai",
   "schemaVersion": "scheduled-reviewed-summary-v1",
   "items": {
@@ -57,6 +57,62 @@
       "en": "The study establishes a Cp2TiCl2-catalyzed direct methylidenation of alkyl ketones using CH2Br2 as the methylene source, Zn as the reductant, TMSCl as an oxygen-atom scavenger, and KBF4 to enhance catalytic efficiency. Representative conditions use ketone (1.0 mmol), CH2Br2 (3.5 equiv), Cp2TiCl2 (20 mol%), TMSCl (3.0 equiv), KBF4 (0.4 equiv), and Zn (4.0 equiv) in THF (0.2 M) at 50 °C for 1 h, with CH2Br2 added over 5 min. The scope covers diverse aliphatic ketones and tolerates halides, free phenols, trifluoromethyl and alkoxy groups, tertiary alkyl chloride, cyclopropyl, and cyclobutanone motifs; several natural-product- or drug-related ketones are also converted. Aryl–alkyl ketones and α,β-unsaturated ketones perform poorly, while amines and N–H-containing nitrogen heterocycles often interfere in the robustness screen. Mechanistically, cyclic voltammetry supports alkali-metal-salt-promoted Ti–Cl dissociation and easier TiIV/III reduction; NMR detects BrCH2ZnBr, and order-of-addition controls support the authors’ proposal that bromomethylzinc transmetalates to Ti before Zn reduction generates the reactive Ti=CH2 species, although this sequence remains a mechanistic proposal rather than a directly observed catalytic intermediate sequence. The reaction was demonstrated on a 20 mmol scale; to manage the exotherm, scale-up used 40 °C for 4 h with CH2Br2 added over 30 min, giving representative products in 62–70% yield.",
       "generatedAt": 1790400000000,
       "reviewedAt": 1790400000000,
+      "promptVersion": "gallery-daily-summary-v1",
+      "auditVersion": "gallery-daily-summary-audit-v1"
+    },
+    "10.1021/acscatal.6c04049": {
+      "schemaVersion": "scheduled-reviewed-summary-v1",
+      "doi": "10.1021/acscatal.6c04049",
+      "status": "approved",
+      "sourceHash": "1dcc9478852508b272a86fa34825da302621ba90393cebb2a64ea083de7d13df",
+      "evidencePacketHash": "385111a865bed354eb3ae255968dcac86e65ca35e5c39729e06b28ef17aaca38",
+      "evidenceLevel": "complete",
+      "zh": "该研究报道 Pd(0) 催化的芳基炔与降冰片烯衍生物的配体控制发散环加成：P(p-tol)3/AcOH 条件偏向 (3+2) 生成茚烷型骨架，而二齿配体 CyDPEphos 可切换到 (2+2) 生成环丁烯。代表性 (3+2) 条件为 Pd(OAc)2 10 mol%、P(p-tol)3 30 mol%、Et3N 3 当量、AcOH 1 当量，在甲苯中 80 °C 反应 18 h；(2+2) 使用 CyDPEphos 15 mol%、120 °C 反应 18 h，标准条件不另加 AcOH。底物范围覆盖多类二芳基、杂芳基及烷基(芳基)炔和多种张力双环烯烃；普通无张力烯烃基本不反应，是主要局限。(3+2) 反应可克级放大，所得桥环产物还可经 retro-Diels–Alder、二羟化/氧化裂解等后续转化实现骨架扩展。对照、氘标记和 KIE 实验支持两条路径均由 Pd(0)/AcOH 对炔烃氢钯化形成共同 vinyl–Pd 中间体起始，并支持 (3+2) 中芳基 C–H 裂解参与周转限制步骤；作者据此提出配体控制后续 C(aryl)–H 与 C(vinyl)–H 活化及还原消除分流。DFT 对共同氢钯化和两条分流路径的相对势垒给出了与实验选择性一致的解释。",
+      "en": "The study reports a Pd(0)-catalyzed, ligand-controlled divergent cycloaddition of arylalkynes with norbornene derivatives: P(p-tol)3/AcOH favors the (3+2) pathway to indane-type products, whereas the bidentate ligand CyDPEphos switches the reaction to (2+2) cyclobutenes. Representative (3+2) conditions are Pd(OAc)2 (10 mol%), P(p-tol)3 (30 mol%), Et3N (3 equiv), and AcOH (1 equiv) in toluene at 80 °C for 18 h; the standard (2+2) reaction uses CyDPEphos (15 mol%) at 120 °C for 18 h without added AcOH. The scope includes diverse diaryl, heteroaryl, and alkyl(aryl) alkynes together with several strained bicyclic alkenes; ordinary unstrained alkenes are essentially unreactive and represent a principal limitation. The (3+2) reaction was demonstrated on gram scale, and the bridged products were further diversified by retro-Diels–Alder and dihydroxylation/oxidative-cleavage sequences. Control, deuterium-labeling, and KIE experiments support initiation of both pathways by Pd(0)/AcOH hydropalladation to a common vinyl–Pd intermediate and support involvement of aryl C–H cleavage in the turnover-limiting step of the (3+2) pathway. The authors therefore propose ligand-controlled divergence between downstream C(aryl)–H and C(vinyl)–H activation/reductive-elimination manifolds. DFT calculations rationalize the common hydropalladation step and the relative barriers of the two divergent pathways in a manner consistent with the observed selectivity.",
+      "generatedAt": 1790401775639,
+      "reviewedAt": 1790401775639,
+      "promptVersion": "gallery-daily-summary-v1",
+      "auditVersion": "gallery-daily-summary-audit-v1"
+    },
+    "10.1021/acs.orglett.6c03690": {
+      "schemaVersion": "scheduled-reviewed-summary-v1",
+      "doi": "10.1021/acs.orglett.6c03690",
+      "status": "approved",
+      "sourceHash": "2e4bc9cb8458c481616925e983f206706f444d5210b15ede53dbaf620c61fbd1",
+      "evidencePacketHash": "84dba9518c2c881fded5b9bd16eea2685b03026bd9a23c7dc82fa0b2c7274eea",
+      "evidenceLevel": "abstract_only",
+      "zh": "基于 Abstract：该研究报道 cobaloxime 催化的苯乙烯 Wacker 型氧化，以空气作为唯一再氧化剂、Et3SiH 作为廉价温和的氢化物供体，在热驱动条件下实现专一的 Markovnikov 选择性。摘要称该方法适用于较广范围的官能化苯乙烯，并可用于复杂药物和天然产物的后期修饰，且已进行克级验证。当前仅有 Abstract 级证据，因此不补写具体催化剂结构、反应温度、收率或机理细节。",
+      "en": "Abstract-based: this study reports a cobaloxime-catalyzed Wacker-type oxidation of styrenes using ambient air as the sole reoxidant and Et3SiH as a cheap, mild hydride donor. Under thermally driven conditions, the method gives exclusive Markovnikov selectivity. The abstract states that a broad range of functionalized styrenes is accommodated, that the reaction can be used for late-stage modification of complex pharmaceuticals and natural products, and that gram-scale synthesis was demonstrated. Because only abstract-level evidence is available, specific catalyst structures, temperatures, yields, and mechanistic details are not reconstructed.",
+      "generatedAt": 1790401775639,
+      "reviewedAt": 1790401775639,
+      "promptVersion": "gallery-daily-summary-v1",
+      "auditVersion": "gallery-daily-summary-audit-v1"
+    },
+    "10.1021/acs.orglett.6c03675": {
+      "schemaVersion": "scheduled-reviewed-summary-v1",
+      "doi": "10.1021/acs.orglett.6c03675",
+      "status": "approved",
+      "sourceHash": "128b6eef520304850dbc99cdd25f593d66bc03581f856992bae71cdb5763e059",
+      "evidencePacketHash": "9274829f54399a8480dd33b720a9d8d50bf97c05c43749b0d87fe9323877cbbd",
+      "evidenceLevel": "partial",
+      "zh": "证据覆盖：partial；正文捕获不完整，未捕获内容不作补写。该研究以 CuCl/Cy-DPEPhos 催化 chloromethyl butenylsilane 与 B2pin2 的 endo 选择性硼化环化，再经 NaBO3 氧化和 DMP 氧化获得 4-silacyclohexanone。代表性环化条件为 CuCl 6 mol%、Cy-DPEPhos 12 mol%、B2pin2 1.5 当量、KOtBu 1.5 当量，在 THF 中 40 °C、氮气下反应 24 h；模型底物经连续氧化后得到 6a，分离收率 60%。捕获的范围覆盖多种芳基、杂芳基以及烷基/烷氧基硅取代物，但 secondary alkoxy 底物和带额外烯基的底物效率明显下降。该方法可克级放大，并通过 ketalization、allylation、Wittig olefination 和 Baeyer–Villiger oxidation 展示产物多样化。DFT 提出硅中心的 Thorpe–Ingold 型构象效应与配体共同有利于六元 endo 环化，计算势垒与实验区域选择性相符；这是计算支持的机理解释，而非直接观察到的中间体证据。",
+      "en": "Evidence coverage is partial; the captured full text is incomplete, so uncaptured material is not reconstructed. The study uses CuCl/Cy-DPEPhos to catalyze endo-selective borylative cyclization of chloromethyl butenylsilanes with B2pin2, followed by NaBO3 oxidation and DMP oxidation to give 4-silacyclohexanones. Representative cyclization conditions are CuCl (6 mol%), Cy-DPEPhos (12 mol%), B2pin2 (1.5 equiv), and KOtBu (1.5 equiv) in THF at 40 °C under nitrogen for 24 h; the model substrate gives 6a in 60% isolated yield after the sequential oxidation. The captured scope includes multiple aryl, heteroaryl, and alkyl/alkoxy silicon substituents, whereas secondary-alkoxy substrates and substrates containing additional alkenes show substantially lower efficiency. The method is amenable to gram-scale synthesis, and the products were diversified by ketalization, allylation, Wittig olefination, and Baeyer–Villiger oxidation. DFT proposes that a Thorpe–Ingold-type conformational effect of silicon, together with the ligand, favors six-membered endo cyclization, with calculated barriers consistent with the observed regioselectivity; this is a computation-supported mechanistic rationale rather than direct observation of catalytic intermediates.",
+      "generatedAt": 1790401775639,
+      "reviewedAt": 1790401775639,
+      "promptVersion": "gallery-daily-summary-v1",
+      "auditVersion": "gallery-daily-summary-audit-v1"
+    },
+    "10.1021/acs.orglett.6c03198": {
+      "schemaVersion": "scheduled-reviewed-summary-v1",
+      "doi": "10.1021/acs.orglett.6c03198",
+      "status": "approved",
+      "sourceHash": "b4b2220b25e130a50c31ee9e9ebf404a6722e27ddf869e8633a5d190fbdac2f7",
+      "evidencePacketHash": "6207e226ffbe160ef321556ecf6641e9b6f49324069bb5b081ee14b3b6456a78",
+      "evidenceLevel": "abstract_only",
+      "zh": "基于 Abstract：该研究开发了铁催化的 glycine derivatives α-C(sp3)–H 与 (hetero)arylamines 直接 arylamination，用于直接构建非天然碱性氨基酸。摘要称该方法条件温和、官能团兼容性良好，并具有原子经济性。初步机理研究提示反应涉及自由基过程，imine 是关键中间体；同时，铁盐与 (hetero)arylamines 形成 Fe complex 对反应推进至关重要。当前仅有 Abstract 级证据，因此不补写具体反应条件、底物收率或更细的机理序列。",
+      "en": "Abstract-based: this study develops an iron-catalyzed direct α-C(sp3)–H arylamination of glycine derivatives with (hetero)arylamines as a route to unnatural basic amino acids. The abstract describes mild conditions, good functional-group compatibility, and atom economy. Preliminary mechanistic studies suggest involvement of radical processes and identify an imine as a key intermediate; formation of an Fe complex between iron salts and the (hetero)arylamines is also described as crucial for reaction progress. Because only abstract-level evidence is available, specific reaction conditions, substrate yields, and a more detailed mechanistic sequence are not reconstructed.",
+      "generatedAt": 1790401775639,
+      "reviewedAt": 1790401775639,
       "promptVersion": "gallery-daily-summary-v1",
       "auditVersion": "gallery-daily-summary-audit-v1"
     }
