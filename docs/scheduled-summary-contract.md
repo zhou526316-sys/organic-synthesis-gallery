@@ -50,21 +50,21 @@ At 12:00 Asia/Shanghai the scheduled ChatGPT task:
 5. performs a second evidence audit before publication;
 6. updates `public/scheduled-article-summaries.json` atomically on `main`.
 
-The task should process all pending items that can be completed reliably in the run. If the backlog is unusually large, newest Evidence takes priority and remaining items stay pending for the next run.
-
-Backlog ordering is explicitly newest-first: rank by Evidence `capturedAt` descending. A newer item that is fully reviewable must not wait for older pending items. The reviewer may publish a rigorously reviewed newest subset immediately while older items remain pending; FIFO clearing of historical backlog is not required.
+The task should process the entire currently available pending Evidence set in one run. Ordering is newest-first by Evidence `capturedAt`, but ordering controls review priority only; it must not split the publication into multiple deploy batches. Every DOI that passes review in that run is merged into the same atomic publication commit. Items that fail evidence, decryption, or bilingual-audit checks remain pending without blocking the rest.
 
 ### Bulk catch-up execution
 
-A user-triggered catch-up is a **single bulk review operation**, not one DOI per run.
+A user-triggered catch-up is a **single full-backlog review and a single deployment operation**.
 
 - Before decrypting work, skip DOI records that already have an approved scheduled summary whose `sourceHash` and `evidencePacketHash` still match current Evidence.
-- Process remaining Evidence newest-first in micro-batches of **8–12 DOI**. A batch may contain `complete`, `partial`, and `abstract_only` items; each item keeps its own evidence restrictions.
-- Do not deploy after every DOI. Complete two-pass review for the micro-batch, merge all approved records from that batch into `public/scheduled-article-summaries.json` atomically, then deploy once for the batch.
-- One failed or deferred DOI must not stop the rest of its batch.
-- After a successful batch deployment, continue immediately with the next newest micro-batch while execution budget remains. Re-read the current summary file and live manifest before each subsequent batch so concurrent changes are respected.
-- The intended user experience is one trigger for the whole backlog. Internal batching exists only to bound context, tool calls, and failure blast radius; it must not require a separate user command for each article.
-- Do not reduce evidence or bilingual-audit standards to increase throughput.
+- Retrieve and review every remaining eligible Evidence item exposed by the current handoff, newest-first. If the handoff limit is reached, continue retrieving further unseen eligible DOI until the current backlog has been covered.
+- Do **not** divide the work into 8–12 DOI micro-batches and do **not** deploy intermediate subsets.
+- Perform the required two-pass review independently for each DOI, accumulate all approved summary records, then merge the complete approved set into `public/scheduled-article-summaries.json` atomically.
+- Create one summary-data commit for the whole catch-up and trigger one production Worker deployment for that commit.
+- One failed or deferred DOI must not stop any other DOI; failures remain pending and are listed in the run audit.
+- Re-read the latest summary file SHA immediately before the single atomic write so concurrent changes are preserved.
+- The intended user experience is one trigger for the whole backlog and one production deployment, not repeated per-article or per-batch commands.
+- Do not reduce evidence, numerical-verification, mechanism-attribution, or bilingual-audit standards to increase throughput.
 
 ## 4. Evidence restrictions
 
