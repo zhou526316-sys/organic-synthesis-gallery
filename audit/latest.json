@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-26T00:59:48.297Z",
+  "generatedAt": "2026-09-26T09:10:27.774Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -169,17 +169,17 @@
   ],
   "summary": {
     "galleryDois": 611,
-    "sourceRecords": 762,
-    "rawMissingFromGallery": 634,
+    "sourceRecords": 770,
+    "rawMissingFromGallery": 642,
     "previouslyReviewedExcluded": 632,
-    "missingFromGallery": 2,
-    "potentialGaps": 2,
+    "missingFromGallery": 10,
+    "potentialGaps": 6,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 1,
     "closureCoverageAnomalies": 7,
     "historicalCoverageLosses": 0,
-    "unresolved": 2,
+    "unresolved": 10,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -224,8 +224,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 192,
-        "crossrefCandidateRecords": 192,
+        "unionCandidateRecords": 194,
+        "crossrefCandidateRecords": 194,
         "openAlexCandidateRecords": 159,
         "multiSourceCandidateRecords": 159,
         "closureUnionRecords": 39,
@@ -245,8 +245,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 92,
-        "crossrefCandidateRecords": 92,
+        "unionCandidateRecords": 94,
+        "crossrefCandidateRecords": 94,
         "openAlexCandidateRecords": 75,
         "multiSourceCandidateRecords": 75,
         "closureUnionRecords": 19,
@@ -266,8 +266,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 22,
-        "crossrefCandidateRecords": 22,
+        "unionCandidateRecords": 23,
+        "crossrefCandidateRecords": 23,
         "openAlexCandidateRecords": 17,
         "multiSourceCandidateRecords": 17,
         "closureUnionRecords": 5,
@@ -287,8 +287,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 64,
-        "crossrefCandidateRecords": 64,
+        "unionCandidateRecords": 67,
+        "crossrefCandidateRecords": 67,
         "openAlexCandidateRecords": 54,
         "multiSourceCandidateRecords": 54,
         "closureUnionRecords": 12,
@@ -480,17 +480,20 @@
       }
     },
     "2026-09-26": {
-      "sourceRecords": 2,
-      "crossrefOnly": 2,
+      "sourceRecords": 10,
+      "crossrefOnly": 10,
       "openAlexOnly": 0,
       "multiSource": 0,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 2,
+      "rawMissingFromGallery": 10,
       "previouslyReviewedExcluded": 2,
-      "missingFromGallery": 0,
-      "potentialGaps": 0,
+      "missingFromGallery": 8,
+      "potentialGaps": 4,
       "byJournal": {
-        "Nature Communications": 2
+        "Nature Communications": 4,
+        "JACS": 2,
+        "ACS Catalysis": 1,
+        "Organic Letters": 3
       }
     }
   },
@@ -573,31 +576,31 @@
     "Nature Communications": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 192,
-      "crossrefOnly": 33,
+      "sourceRecords": 194,
+      "crossrefOnly": 35,
       "openAlexOnly": 0,
       "multiSource": 159,
       "lateIndexed": 1,
       "safetyTail": 1,
       "coveredByGallery": 3,
-      "rawMissingFromGallery": 189,
+      "rawMissingFromGallery": 191,
       "previouslyReviewedExcluded": 188,
-      "missingFromGallery": 1,
+      "missingFromGallery": 3,
       "potentialGaps": 1
     },
     "JACS": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 92,
-      "crossrefOnly": 17,
+      "sourceRecords": 94,
+      "crossrefOnly": 19,
       "openAlexOnly": 0,
       "multiSource": 75,
       "lateIndexed": 1,
       "safetyTail": 1,
       "coveredByGallery": 23,
-      "rawMissingFromGallery": 69,
+      "rawMissingFromGallery": 71,
       "previouslyReviewedExcluded": 69,
-      "missingFromGallery": 0,
+      "missingFromGallery": 2,
       "potentialGaps": 0
     },
     "Angew": {
@@ -618,32 +621,32 @@
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 22,
-      "crossrefOnly": 5,
+      "sourceRecords": 23,
+      "crossrefOnly": 6,
       "openAlexOnly": 0,
       "multiSource": 17,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 7,
-      "rawMissingFromGallery": 15,
+      "rawMissingFromGallery": 16,
       "previouslyReviewedExcluded": 15,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 1,
+      "potentialGaps": 1
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 64,
-      "crossrefOnly": 10,
+      "sourceRecords": 67,
+      "crossrefOnly": 13,
       "openAlexOnly": 0,
       "multiSource": 54,
       "lateIndexed": 1,
       "safetyTail": 1,
       "coveredByGallery": 55,
-      "rawMissingFromGallery": 9,
+      "rawMissingFromGallery": 12,
       "previouslyReviewedExcluded": 9,
-      "missingFromGallery": 0,
-      "potentialGaps": 0
+      "missingFromGallery": 3,
+      "potentialGaps": 3
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -846,8 +849,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 192,
-      "crossrefCandidateRecords": 192,
+      "unionCandidateRecords": 194,
+      "crossrefCandidateRecords": 194,
       "openAlexCandidateRecords": 159,
       "multiSourceCandidateRecords": 159,
       "closureUnionRecords": 39,
@@ -866,8 +869,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 92,
-      "crossrefCandidateRecords": 92,
+      "unionCandidateRecords": 94,
+      "crossrefCandidateRecords": 94,
       "openAlexCandidateRecords": 75,
       "multiSourceCandidateRecords": 75,
       "closureUnionRecords": 19,
@@ -906,8 +909,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 22,
-      "crossrefCandidateRecords": 22,
+      "unionCandidateRecords": 23,
+      "crossrefCandidateRecords": 23,
       "openAlexCandidateRecords": 17,
       "multiSourceCandidateRecords": 17,
       "closureUnionRecords": 5,
@@ -926,8 +929,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 64,
-      "crossrefCandidateRecords": 64,
+      "unionCandidateRecords": 67,
+      "crossrefCandidateRecords": 67,
       "openAlexCandidateRecords": 54,
       "multiSourceCandidateRecords": 54,
       "closureUnionRecords": 12,
@@ -1114,8 +1117,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 192,
-      "crossrefCandidateRecords": 192,
+      "unionCandidateRecords": 194,
+      "crossrefCandidateRecords": 194,
       "openAlexCandidateRecords": 159,
       "multiSourceCandidateRecords": 159,
       "closureUnionRecords": 39,
@@ -1135,8 +1138,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 92,
-      "crossrefCandidateRecords": 92,
+      "unionCandidateRecords": 94,
+      "crossrefCandidateRecords": 94,
       "openAlexCandidateRecords": 75,
       "multiSourceCandidateRecords": 75,
       "closureUnionRecords": 19,
@@ -1156,8 +1159,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 22,
-      "crossrefCandidateRecords": 22,
+      "unionCandidateRecords": 23,
+      "crossrefCandidateRecords": 23,
       "openAlexCandidateRecords": 17,
       "multiSourceCandidateRecords": 17,
       "closureUnionRecords": 5,
@@ -1177,8 +1180,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 64,
-      "crossrefCandidateRecords": 64,
+      "unionCandidateRecords": 67,
+      "crossrefCandidateRecords": 67,
       "openAlexCandidateRecords": 54,
       "multiSourceCandidateRecords": 54,
       "closureUnionRecords": 12,
@@ -1495,7 +1498,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 192,
+      "count": 194,
       "note": ""
     },
     {
@@ -1504,7 +1507,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 192,
+      "count": 194,
       "note": ""
     },
     {
@@ -1513,7 +1516,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 192,
+      "count": 194,
       "note": ""
     },
     {
@@ -1530,7 +1533,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 92,
+      "count": 94,
       "note": ""
     },
     {
@@ -1539,7 +1542,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 92,
+      "count": 94,
       "note": ""
     },
     {
@@ -1548,7 +1551,7 @@
       "issn": "0002-7863",
       "mode": "created",
       "ok": true,
-      "count": 93,
+      "count": 95,
       "note": ""
     },
     {
@@ -1557,7 +1560,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 92,
+      "count": 94,
       "note": ""
     },
     {
@@ -1566,7 +1569,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 92,
+      "count": 94,
       "note": ""
     },
     {
@@ -1575,7 +1578,7 @@
       "issn": "1520-5126",
       "mode": "created",
       "ok": true,
-      "count": 93,
+      "count": 95,
       "note": ""
     },
     {
@@ -1654,7 +1657,7 @@
       "issn": "2155-5435",
       "mode": "online",
       "ok": true,
-      "count": 24,
+      "count": 25,
       "note": ""
     },
     {
@@ -1663,7 +1666,7 @@
       "issn": "2155-5435",
       "mode": "published",
       "ok": true,
-      "count": 24,
+      "count": 25,
       "note": ""
     },
     {
@@ -1672,7 +1675,7 @@
       "issn": "2155-5435",
       "mode": "created",
       "ok": true,
-      "count": 36,
+      "count": 37,
       "note": ""
     },
     {
@@ -1689,7 +1692,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 64,
+      "count": 67,
       "note": ""
     },
     {
@@ -1698,7 +1701,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 64,
+      "count": 67,
       "note": ""
     },
     {
@@ -1707,7 +1710,7 @@
       "issn": "1523-7052",
       "mode": "created",
       "ok": true,
-      "count": 64,
+      "count": 67,
       "note": ""
     },
     {
@@ -1716,7 +1719,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 64,
+      "count": 67,
       "note": ""
     },
     {
@@ -1725,7 +1728,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 64,
+      "count": 67,
       "note": ""
     },
     {
@@ -1734,7 +1737,7 @@
       "issn": "1523-7060",
       "mode": "created",
       "ok": true,
-      "count": 64,
+      "count": 67,
       "note": ""
     },
     {
@@ -2039,6 +2042,258 @@
   ],
   "missingCandidates": [
     {
+      "doi": "10.1021/acscatal.6c05113",
+      "journal": "ACS Catalysis",
+      "title": "Bench-Stable Rh/Chiraphos Catalyzed Asymmetric Hydrogenation Reaction of Citral and Its Mechanistic Studies",
+      "abstract": "Abstract Although the Rh/chiraphos-catalyzed asymmetric hydrogenation of citral is a main industrial route to produce important chiral fragrance monomer l-menthol, this process still suffers from facile deactivation, strong substrate configuration dependence, and sub-optimal enantioselectivity, which mainly attributes to the poor understanding of its mechanism. In this work, we report the synthesis of an air-stable rhodium catalyst, [Rh(chiraphos)2]Cl, which enables over 10 recycling cycles in the asymmetric hydrogenation of citral without significant loss of activity or enantioselectivity (total turnover numbers, TONs, up to 10,000), demonstrating markedly improved stability and practical applicability. Combining experimental investigations with density functional theory (DFT) calculations, we systematically elucidate the mechanism of this asymmetric hydrogenation. The results show that the enantioselectivity and stereodependence are determined by the precise recognition of the citral head groups (CHO vs H) by the chiral cavity of the catalyst. Additionally, the chemoselectivity arises from the differences in deformation energies between the rhodium catalyst and citral caused by steric hindrance while maintaining maximum orbital overlap during the double-bond addition step. These findings offer a practical reference for the rational design of highly efficient and stereoconvergent catalytic systems for citral hydrogenation.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Xin-Xin Wang",
+        "Su-Shuang Wen",
+        "Yuan-Hao Liu",
+        "Xiao-Tao Liu",
+        "Ming-Yao Huang",
+        "Shou-Fei Zhu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c11457",
+      "journal": "JACS",
+      "title": "Chemical-Delithiation-Induced Surface Reconstruction in Layered Oxide Cathodes for High-Performance All-Solid-State Batteries",
+      "abstract": "Abstract Developing all-solid-state batteries (ASSBs) based on high-capacity cathodes (e.g., Ni-rich and Li-rich layered oxides) offers a promising route toward next-generation batteries with high energy density and safety. However, under high voltage, the cathode/solid electrolyte (SE) interface suffers from severe chemical degradation due to enhanced cathode–catholyte interactions. Here, we propose a chemical-delithiation-induced surface reconstruction strategy for Li-rich layered oxide cathodes, as a proof of concept, to effectively eliminate cathode-catholyte interfacial chemical degradation in ASSBs. We found that chemical-delithiation treatment by NO2BF4 induces a surface reconstruction of Li-rich layered oxide, forming a cation-disordered subsurface layer, which can then incorporate fluorine alike disordered rock-salt cathodes. Such surface reconstruction passivates the oxidative surface of Li-rich cathode in which oxygen redox is prevalent at high potential, thus eliminating the interfacial chemical degradation during cycling. As a result, the treated Li-rich layered cathode achieved a reversible capacity of ∼300.3 mA h g–1 that is comparable to liquid cells and a capacity retention of 82.3% over 1500 cycles at 1 C. By extending this strategy to Ni-rich layered oxides, we further demonstrate its universality in interfacial chemical design for high-energy-density ASSBs.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Yijun Song",
+        "Jie Liu",
+        "Tianwei Cui",
+        "Shiqi Wang",
+        "Min Zhang",
+        "Yue Zhou",
+        "Jintao Liu",
+        "Mingxue Tang",
+        "Biao Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c11688",
+      "journal": "JACS",
+      "title": "Steric and Guest-Controlled Strain Redistribution Modulates Spin Crossover and Optical Readout in BODIPY-Functionalized Hofmann-Type Frameworks",
+      "abstract": "Abstract Modulating spin crossover (SCO) in Fe(II) frameworks requires control over both the ligand field and the way spin-state strain is redistributed through the lattice. Herein, we report a BODIPY-functionalized Hofmann-type framework platform in which steric design and guest-imposed mechanical constraints tune SCO through lattice compliance. 1 and 2, constructed from methyl- and phenyl-substituted pyridyl-BODIPY ligands, retain closely related [Ag(CN)2]−-based connectivity. The moderate increase in ligand steric demand from 1 to 2 perturbs linker geometry, interlayer coupling, and packing environment, producing two-step SCO in 1 and a frustrated four-step transition in 2. In contrast, the anthracenyl-substituted ligand in 3 induces formation of a distinct framework containing [Ag2(CN)3]− linkers. Its higher-temperature one-step SCO therefore reflects the combined effects of ligand identity, altered cyanometallate connectivity, and framework packing rather than anthracenyl steric alone. Guest inclusion within porous 1 provides an alternative strategy: differences in guest rigidity, loading, and host–guest contact density reshape the host deformation pathway and tune the SCO profile without changing the Fe–Ag framework connectivity. The incorporation of the BODIPY chromophore induces diverse, nonmonotonic emission evolution across 1, 2, desolvated 3, and guest-loaded derivatives of 1, suggesting the unique ability of the BODIPY chromophore to probe both spin transitions and local microenvironments. These results identify steric bulk, framework connectivity, and guest-imposed constraints as coupled chemical variables for controlling strain accommodation and SCO in Hofmann-type frameworks featuring optical readouts.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Xin-Li Shi",
+        "Jie-Sheng Hu",
+        "Hong-Tai Chen",
+        "Zi-Shuo Yao",
+        "Meng Yu",
+        "Jun Tao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78046-2",
+      "journal": "Nature Communications",
+      "title": "Branched-type nanocluster-junction fluorofluidic-gels for interface-adaptive thermal conduction and mechanical resistance",
+      "abstract": "",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Weiming Tang",
+        "Hangsheng Zhou",
+        "Hanyu Wang",
+        "Xingyue Zhu",
+        "Lei Jiang",
+        "Ziguang Zhao",
+        "Shutao Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77978-z",
+      "journal": "Nature Communications",
+      "title": "Reprogramming energy system for growth and bioproduction from CO₂ and methanol in Escherichia coli",
+      "abstract": "",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Kaifang Liu",
+        "Cong Gao",
+        "Guangjie Liang",
+        "Guipeng Hu",
+        "Wei Song",
+        "Wanqing Wei",
+        "Xiaomin Li",
+        "Jia Liu",
+        "Haiqin Chen",
+        "Jens Nielsen",
+        "Liming Liu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03701",
+      "journal": "Organic Letters",
+      "title": "Accessing Aerial Transformation of Arylmethanamines into Amides Using a Redox-Active Aryl-Substituted BIAN-Based Catalyst",
+      "abstract": "Abstract The direct α-oxygenation of arylmethanamines to amides is a cornerstone transformation in organic synthesis; however, traditional methods suffer from harsh conditions, reactive reagents, and expensive transition metal catalysts. This study introduces a novel approach using a redox-active aryl-substituted bis(imino)acenaphthene (Ar-BIAN)-based organic radical anion as a catalyst that mimics transition metal catalysis in the aerial oxidation of arylmethanamines into their corresponding amides for the first time. This protocol showcases a wide substrate scope along with tolerance of common organic functional groups. Through various experiments and theoretical calculations, a plausible mechanism has been proposed, involving dehydrogenation of amine to nitrile and its subsequent hydrolysis to amide.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Agnishwar Mangal",
+        "Nilaj Bandopadhyay",
+        "Krishnendu Paramanik",
+        "Dipak Halder",
+        "Sourabh Pal",
+        "Nayana Mukherjee",
+        "Sabyasachi Chakrabortty",
+        "Bhaskar Biswas",
+        "Jasimuddin Ahmed",
+        "Hari Sankar Das"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03497",
+      "journal": "Organic Letters",
+      "title": "Polar and e-Radical Strain-Release Strategies for Accessing Functionalized 2-Oxabicyclo[2.1.1]hexan-3-ones from Bicyclo[1.1.0]butanes",
+      "abstract": "Abstract 2-Oxabicyclo[2.1.1]hexanes (OBHs) have emerged as valuable saturated aromatic replacements, whereas their lactone analogues, 2-oxabicyclo[2.1.1]hexan-3-ones (OBHOs) remain underexplored, because of limited synthetic access. Herein, we report complementary polar and electrochemical strain-release strategies for the modular synthesis of 1,4-difunctionalized OBHOs from bicyclo[1.1.0]butane carboxylic acids. The two activation modes provide complementary perspectives toward the chemical space expansion of this underexplored scaffold.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Samuele Usai",
+        "Giulia Monda",
+        "Elena Graziano",
+        "Andrea Brunetti",
+        "Leonardo Degennaro",
+        "Luisa Pisano",
+        "Marco Bandini",
+        "Marco Colella",
+        "Giulio Bertuzzi",
+        "Renzo Luisi"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03647",
+      "journal": "Organic Letters",
+      "title": "Regioselective 1,2-Hydroamination of Conjugated Enynes for Accessing Propargylamines via Dual Photoredox/Cobalt Catalysis",
+      "abstract": "Abstract The photoredox-catalyzed selective addition of N–H bonds across unactivated 1,3-enynes represents a promising and sustainable transformation, enabling efficient access to high-value-added propargylamines. Current state-of-the-art advancements via photoredox catalysis rely on the α-amino radicals as reactive intermediates, leading to several deficiencies in key aspects such as selectivity and substrate compatibility. Herein, in contrast to the conventional reaction pathway, we first depict a novel photoredox/cobalt-catalyzed regioselective synthesis of propargylamines via propargyl radical-mediated reductive radical-polar crossover followed by a nucleophilic amination of propargyl–cobalt species. Our findings will spark new ideas for developing general strategies to achieve diverse propargyl derivatives from unactivated 1,3-enynes and various nucleophiles.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Zulin Xiao",
+        "Hongjiang Li",
+        "Qing Li",
+        "Zihui Li",
+        "Hongsheng Liu",
+        "Tao Huang",
+        "Junru Wang",
+        "Meng Peng",
+        "Xueping Zong",
+        "Fusheng Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1038/s41467-026-78191-8",
       "journal": "Nature Communications",
       "title": "ATHENA: a dynamic metabolic hub balancing carbon economy and energy supply in microbial synthesis",
@@ -2107,6 +2362,135 @@
     }
   ],
   "potentialGaps": [
+    {
+      "doi": "10.1021/acscatal.6c05113",
+      "journal": "ACS Catalysis",
+      "title": "Bench-Stable Rh/Chiraphos Catalyzed Asymmetric Hydrogenation Reaction of Citral and Its Mechanistic Studies",
+      "abstract": "Abstract Although the Rh/chiraphos-catalyzed asymmetric hydrogenation of citral is a main industrial route to produce important chiral fragrance monomer l-menthol, this process still suffers from facile deactivation, strong substrate configuration dependence, and sub-optimal enantioselectivity, which mainly attributes to the poor understanding of its mechanism. In this work, we report the synthesis of an air-stable rhodium catalyst, [Rh(chiraphos)2]Cl, which enables over 10 recycling cycles in the asymmetric hydrogenation of citral without significant loss of activity or enantioselectivity (total turnover numbers, TONs, up to 10,000), demonstrating markedly improved stability and practical applicability. Combining experimental investigations with density functional theory (DFT) calculations, we systematically elucidate the mechanism of this asymmetric hydrogenation. The results show that the enantioselectivity and stereodependence are determined by the precise recognition of the citral head groups (CHO vs H) by the chiral cavity of the catalyst. Additionally, the chemoselectivity arises from the differences in deformation energies between the rhodium catalyst and citral caused by steric hindrance while maintaining maximum orbital overlap during the double-bond addition step. These findings offer a practical reference for the rational design of highly efficient and stereoconvergent catalytic systems for citral hydrogenation.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Xin-Xin Wang",
+        "Su-Shuang Wen",
+        "Yuan-Hao Liu",
+        "Xiao-Tao Liu",
+        "Ming-Yao Huang",
+        "Shou-Fei Zhu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03701",
+      "journal": "Organic Letters",
+      "title": "Accessing Aerial Transformation of Arylmethanamines into Amides Using a Redox-Active Aryl-Substituted BIAN-Based Catalyst",
+      "abstract": "Abstract The direct α-oxygenation of arylmethanamines to amides is a cornerstone transformation in organic synthesis; however, traditional methods suffer from harsh conditions, reactive reagents, and expensive transition metal catalysts. This study introduces a novel approach using a redox-active aryl-substituted bis(imino)acenaphthene (Ar-BIAN)-based organic radical anion as a catalyst that mimics transition metal catalysis in the aerial oxidation of arylmethanamines into their corresponding amides for the first time. This protocol showcases a wide substrate scope along with tolerance of common organic functional groups. Through various experiments and theoretical calculations, a plausible mechanism has been proposed, involving dehydrogenation of amine to nitrile and its subsequent hydrolysis to amide.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Agnishwar Mangal",
+        "Nilaj Bandopadhyay",
+        "Krishnendu Paramanik",
+        "Dipak Halder",
+        "Sourabh Pal",
+        "Nayana Mukherjee",
+        "Sabyasachi Chakrabortty",
+        "Bhaskar Biswas",
+        "Jasimuddin Ahmed",
+        "Hari Sankar Das"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03497",
+      "journal": "Organic Letters",
+      "title": "Polar and e-Radical Strain-Release Strategies for Accessing Functionalized 2-Oxabicyclo[2.1.1]hexan-3-ones from Bicyclo[1.1.0]butanes",
+      "abstract": "Abstract 2-Oxabicyclo[2.1.1]hexanes (OBHs) have emerged as valuable saturated aromatic replacements, whereas their lactone analogues, 2-oxabicyclo[2.1.1]hexan-3-ones (OBHOs) remain underexplored, because of limited synthetic access. Herein, we report complementary polar and electrochemical strain-release strategies for the modular synthesis of 1,4-difunctionalized OBHOs from bicyclo[1.1.0]butane carboxylic acids. The two activation modes provide complementary perspectives toward the chemical space expansion of this underexplored scaffold.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Samuele Usai",
+        "Giulia Monda",
+        "Elena Graziano",
+        "Andrea Brunetti",
+        "Leonardo Degennaro",
+        "Luisa Pisano",
+        "Marco Bandini",
+        "Marco Colella",
+        "Giulio Bertuzzi",
+        "Renzo Luisi"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03647",
+      "journal": "Organic Letters",
+      "title": "Regioselective 1,2-Hydroamination of Conjugated Enynes for Accessing Propargylamines via Dual Photoredox/Cobalt Catalysis",
+      "abstract": "Abstract The photoredox-catalyzed selective addition of N–H bonds across unactivated 1,3-enynes represents a promising and sustainable transformation, enabling efficient access to high-value-added propargylamines. Current state-of-the-art advancements via photoredox catalysis rely on the α-amino radicals as reactive intermediates, leading to several deficiencies in key aspects such as selectivity and substrate compatibility. Herein, in contrast to the conventional reaction pathway, we first depict a novel photoredox/cobalt-catalyzed regioselective synthesis of propargylamines via propargyl radical-mediated reductive radical-polar crossover followed by a nucleophilic amination of propargyl–cobalt species. Our findings will spark new ideas for developing general strategies to achieve diverse propargyl derivatives from unactivated 1,3-enynes and various nucleophiles.",
+      "date": "2026-09-26",
+      "type": "journal-article",
+      "authors": [
+        "Zulin Xiao",
+        "Hongjiang Li",
+        "Qing Li",
+        "Zihui Li",
+        "Hongsheng Liu",
+        "Tao Huang",
+        "Junru Wang",
+        "Meng Peng",
+        "Xueping Zong",
+        "Fusheng Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
     {
       "doi": "10.1038/s41467-026-78191-8",
       "journal": "Nature Communications",
