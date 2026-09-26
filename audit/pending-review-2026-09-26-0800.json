@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "publicationSlot": "2026-09-26T08:00:00+08:00",
+  "generatedAt": "2026-09-26T00:05:13.390Z",
+  "handoffGeneratedAt": "2026-09-25T23:46:24.807Z",
+  "sourceReviewFile": "audit/review-2026-09-26-0800.json",
+  "items": [
+    {
+      "doi": "10.1038/s41467-026-78191-8",
+      "journal": "Nature Communications",
+      "title": "ATHENA: a dynamic metabolic hub balancing carbon economy and energy supply in microbial synthesis",
+      "abstract": "",
+      "date": "2026-09-25",
+      "type": "journal-article",
+      "authors": [
+        "Likun Guo",
+        "Xinjun Feng",
+        "Xingyu Zhang",
+        "Chao Xu",
+        "Wei Liu",
+        "Yujia Bi",
+        "Qingsheng Qi",
+        "Mo Xian",
+        "Guang Zhao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "evidencePages": [
+        "https://doi.org/10.1038/s41467-026-78191-8",
+        "https://www.nature.com/articles/s41467-026-78191-8"
+      ],
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1038/s41467-026-78191-8",
+        "https://www.nature.com/articles/s41467-026-78191-8"
+      ],
+      "evidenceSource": "fresh_compact_plus_publisher_attempt",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "证据不足，暂缓该DOI而不阻挡其余已完成审核的include。",
+      "evidenceBasis": "fresh compact仅提供题名“ATHENA: a dynamic metabolic hub balancing carbon economy and energy supply in microbial synthesis”，摘要为空；Nature官方文章页本轮尝试返回DisabledError，未取得底物到产物、产物范围或制备路线事实。",
+      "challengeReason": "题名可能指微生物合成代谢工程，也可能包含可推广的底物到产物生物催化；在缺少摘要/正文时，直接按通路工程排除或按合成方法纳入都会越过证据。",
+      "evidenceNeeded": "出版社摘要或正文中ATHENA的具体功能、目标产物、底物到产物转化、产物/底物范围以及是否以通路调控或实际制备为主要贡献。",
+      "nextAction": "通过可访问的Nature页面或Tampermonkey/VPN Bridge补取摘要/正文，区分代谢调控平台与实际一般性生物合成方法。",
+      "originalDate": "2026-09-25",
+      "sourceReviewFile": "audit/review-2026-09-26-0800.json",
+      "nextReviewSlot": "2026-09-26T18:00:00+08:00"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608262",
+      "journal": "CCS Chemistry",
+      "title": "Electrocatalytic Carbon Dioxide Reduction Coupled with Alcohol Oxidation",
+      "abstract": "",
+      "date": "2026-09-22",
+      "type": "journal-article",
+      "authors": [
+        "Liang-Min Xiong",
+        "Cong Ma",
+        "Jian-Feng Guo",
+        "Yi-Fan Chen",
+        "Zi-Meng Li",
+        "Hai-Qi Li",
+        "Hao Xu",
+        "Tian-Sheng Mei"
+      ],
+      "topics": [
+        "CO2 Reduction Techniques and Catalysts",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "Carbon dioxide utilization in catalysis",
+        "Ammonia Synthesis and Nitrogen Reduction"
+      ],
+      "sources": [
+        "crossref:2096-5745:online",
+        "crossref:2096-5745:published",
+        "crossref:2096-5745:created",
+        "openalex:S4210239486"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/pdf/10.31635/ccschem.026.202608262"
+      ],
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608262",
+        "https://www.chinesechemsoc.org/doi/pdf/10.31635/ccschem.026.202608262"
+      ],
+      "evidenceSource": "fresh_compact_plus_publisher_attempt",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "证据不足，暂缓该DOI而不阻挡其余已完成审核的include。",
+      "evidenceBasis": "fresh compact仍无摘要；题名仅确认CO₂电还原与醇氧化耦合。本轮再次尝试DOI和出版社页面，仍未取得醇底物、氧化产物、范围、分离收率或主要贡献证据。",
+      "challengeReason": "不能因CO₂电催化主题直接排除，因为配对阳极醇氧化可能构成一般电有机合成；也不能在缺少产物与范围证据时纳入。两遍均暂缓本DOI。",
+      "evidenceNeeded": "出版社摘要或正文/SI中醇底物、氧化产物、底物范围、分离收率及主要贡献。",
+      "nextAction": "通过现有Tampermonkey/VPN Bridge读取出版社摘要或反应范围；不要从题名推断一般性。",
+      "originalDate": "2026-09-22",
+      "sourceReviewFile": "audit/review-2026-09-26-0800.json",
+      "nextReviewSlot": "2026-09-26T18:00:00+08:00"
+    }
+  ],
+  "note": "Per-release deferrals only. Merge with the existing durable backlog; do not replace or drop older pending records."
+}
