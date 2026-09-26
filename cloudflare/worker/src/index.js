@@ -1,5 +1,5 @@
 import { STAGE_STORAGE_REVISION } from './stage-storage.js';
-import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteOfficialLocalTocs, promoteStagedArticleFigures, purgeCrossDoiLocalMedia } from './local-captures.js';
+import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteOfficialLocalTocs, promoteStagedArticleFigures, promoteStagedNatureSciencePrimaryVisuals, purgeCrossDoiLocalMedia } from './local-captures.js';
 import {
   bridgeQueue,
   getArticleFigures,
@@ -423,7 +423,7 @@ async function handleApi(request, env, ctx) {
       publishedAutomatically:false,
       officialTocAutoPromotion:true,
       productionTocAuthority:'d1',
-      mediaControllerRevision:'2.2.35',
+      mediaControllerRevision:'2.2.36',
       stageStorageRevision:STAGE_STORAGE_REVISION,
       bodyReviewMarkerRevision:'1',
       evidenceSchemaVersion:ARTICLE_EVIDENCE_SCHEMA_VERSION,
@@ -483,6 +483,7 @@ async function handleApi(request, env, ctx) {
       '/api/media/primary/import',
       '/api/media/local-capture/import',
       '/api/admin/media/promote-local-tocs',
+      '/api/admin/media/promote-staged-nature-science-primary',
       '/api/media/local-diagnostics/import',
       '/api/media/tampermonkey-report/import',
       '/api/media/jobs/claim',
@@ -567,6 +568,12 @@ async function handleApi(request, env, ctx) {
     const offset = Math.max(0, Math.floor(Number(url.searchParams.get('offset') || 0)));
     const scanLimit = Math.max(1, Math.min(40, Math.floor(Number(url.searchParams.get('scan') || 24))));
     return resultResponse(await promoteOfficialLocalTocs(request, env, { limit, offset, scanLimit }));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/media/promote-staged-nature-science-primary') {
+    const limit = Math.max(1, Math.min(30, Number(url.searchParams.get('limit') || 20)));
+    const offset = Math.max(0, Math.floor(Number(url.searchParams.get('offset') || 0)));
+    const scanLimit = Math.max(1, Math.min(40, Math.floor(Number(url.searchParams.get('scan') || 24))));
+    return resultResponse(await promoteStagedNatureSciencePrimaryVisuals(request, env, { limit, offset, scanLimit }));
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-diagnostics/import') {
     return resultResponse(await importLocalDiagnostics(request, env, await readJson(request)));
