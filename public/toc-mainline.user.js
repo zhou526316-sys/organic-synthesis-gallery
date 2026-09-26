@@ -743,11 +743,12 @@ function embeddedJobDois(value) {
   }
 
   function captureQueueTier(job, latestAddedDate) {
-    // A newly published Gallery batch always preempts historical cleanup and summary work.
-    if (latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate)) return -2;
+    // A newly published Gallery batch always preempts historical cleanup.
+    if (latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate)) return -3;
+    // Between publication waves, clear Nature/Science-family visual gaps before
+    // summary/evidence backfill or other historical media work.
+    if (job && job.captureToc === true && isNatureScienceFamilyJob(job)) return -2;
     if (job && job.summaryUrgent === true) return -1;
-    // Between publication waves, clear Nature/Science-family visual gaps first.
-    if (job && job.captureToc === true && isNatureScienceFamilyJob(job)) return 0;
     if (job && job.captureToc === true) return 1;
     if (job && (job.captureToc === false || String(job.state || '') === 'figure_gap' || String(job.mediaNeed || '') === 'figures')) return 2;
     if (String(job && job.mediaNeed || '') === 'evidence') return 3;
