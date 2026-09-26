@@ -9,12 +9,33 @@ on:
       - 'cloudflare/**'
       - 'src/**'
       - '.github/workflows/cloudflare-migration-ci.yml'
+      - '.github/workflows/cloudflare-user-ui-release.yml'
+      - '.github/workflows/deploy-worker-frontend.yml'
+      - 'WORKER_FRONTEND_REFRESH'
   workflow_dispatch:
 
 permissions:
   contents: read
 
+
 jobs:
+  worker-deploy-ownership:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Enforce one push-time Worker deployment owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'group: cloudflare-worker-production' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'group: cloudflare-worker-user-schema-maintenance' .github/workflows/cloudflare-user-ui-release.yml
+          grep -F "'WORKER_FRONTEND_REFRESH'" .github/workflows/deploy-worker-frontend.yml
+          ! grep -F "npx wrangler deploy --config wrangler.user-ui.toml" .github/workflows/cloudflare-user-ui-release.yml
+          ! grep -F "cloudflare/worker/src/index.js" .github/workflows/cloudflare-user-ui-release.yml
+          ! grep -F "cloudflare/worker/src/media.js" .github/workflows/cloudflare-user-ui-release.yml
+          ! grep -F "cloudflare/worker/src/media-write.js" .github/workflows/cloudflare-user-ui-release.yml
+
   frontend-typecheck:
     runs-on: ubuntu-latest
     steps:
