@@ -746,6 +746,7 @@ export async function importLocalCapture(request, env, payload) {
       articleUrl: payload.articleUrl,
       caption: payload.caption || 'Figure 1 fallback',
       confidence: 95,
+      replaceSameKind: true,
       width: Number(payload?.width || 0) || undefined,
       height: Number(payload?.height || 0) || undefined,
       retrievedAt: now,
@@ -843,16 +844,41 @@ export async function promoteStagedNatureSciencePrimaryVisuals(request, env, opt
     try {
       const [officialToc, existingPrimary] = await Promise.all([
         env.DB.prepare(
-          'SELECT available, r2_key FROM toc_assets WHERE doi = ? LIMIT 1'
+          'SELECT available, r2_key, article_url, updated_at FROM toc_assets WHERE doi = ? LIMIT 1'
         ).bind(doi).first(),
         env.DB.prepare(
-          'SELECT kind, r2_key, confidence FROM primary_visual_assets WHERE doi = ? LIMIT 1'
+          'SELECT kind, r2_key, source_url, article_url, confidence, retrieved_at, updated_at FROM primary_visual_assets WHERE doi = ? LIMIT 1'
         ).bind(doi).first(),
       ]);
-      if ((officialToc && Number(officialToc.available) === 1 && officialToc.r2_key) ||
-          (existingPrimary && ['official_visual','figure1'].includes(String(existingPrimary.kind || '')) && existingPrimary.r2_key)) {
+
+      const officialMetadataCurrent = Boolean(
+        officialToc && Number(officialToc.available) === 1 && officialToc.r2_key &&
+        Number(officialToc.updated_at || 0) >= MEDIA_REBUILD_EPOCH &&
+        captureBelongsToDoi({ articleUrl: officialToc.article_url }, doi)
+      );
+      const primaryMetadataCurrent = Boolean(
+        existingPrimary && ['official_visual','figure1'].includes(String(existingPrimary.kind || '')) &&
+        existingPrimary.r2_key &&
+        Number(existingPrimary.updated_at || existingPrimary.retrieved_at || 0) >= MEDIA_REBUILD_EPOCH &&
+        captureBelongsToDoi({ articleUrl: existingPrimary.article_url, sourceUrl: existingPrimary.source_url }, doi)
+      );
+      const [officialObject, primaryObject] = await Promise.all([
+        officialMetadataCurrent ? env.MEDIA.head(officialToc.r2_key).catch(() => null) : Promise.resolve(null),
+        primaryMetadataCurrent ? env.MEDIA.head(existingPrimary.r2_key).catch(() => null) : Promise.resolve(null),
+      ]);
+      if (officialObject || primaryObject) {
         alreadyCurrent += 1;
         continue;
+      }
+
+      // Stale pre-recovery or missing-object primary rows must not block a clean
+      // Figure 1 fallback. loadMediaRows already quarantines them by epoch; remove
+      // only the unusable primary metadata before rebuilding from preserved staging.
+      if (existingPrimary?.r2_key) {
+        await env.DB.batch([
+          env.DB.prepare('DELETE FROM primary_visual_variants WHERE doi = ?').bind(doi),
+          env.DB.prepare('DELETE FROM primary_visual_assets WHERE doi = ?').bind(doi),
+        ]);
       }
 
       const object = await env.MEDIA.get(item.r2Key);
@@ -870,6 +896,7 @@ export async function promoteStagedNatureSciencePrimaryVisuals(request, env, opt
         articleUrl: item.articleUrl,
         caption: item.caption || item.label || 'Figure 1 fallback',
         confidence: 95,
+        replaceSameKind: true,
         width: Number(item.width || 0) || undefined,
         height: Number(item.height || 0) || undefined,
         retrievedAt: Number(item.updatedAt || Date.now()),
