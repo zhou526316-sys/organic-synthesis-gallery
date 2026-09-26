@@ -817,9 +817,9 @@ export async function promoteOfficialLocalTocs(request, env, limitValue = 20) {
   }
 
   return {
-    status: failed && promoted === 0 ? 503 : 200,
+    status: 200,
     body: {
-      ok: !(failed && promoted === 0),
+      ok: true,
       promoted,
       alreadyCurrent,
       failed,
