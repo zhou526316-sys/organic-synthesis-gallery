@@ -303,6 +303,33 @@ export async function backfillScheduledEvidenceHandoffs(env, limitValue = 4) {
     String(b?.customMetadata?.capturedAt || '').localeCompare(String(a?.customMetadata?.capturedAt || ''))
   );
 
+  // Build an in-memory index from R2 object metadata so a normal deployment does
+  // not issue one or more R2 GETs for every already-current evidence packet.
+  // This keeps the historical/rotation backfill below Worker subrequest limits.
+  const currentHandoffKeys = new Set();
+  let handoffCursor;
+  for (let pageNo = 0; pageNo < 10; pageNo += 1) {
+    const page = await env.MEDIA.list({
+      prefix: HANDOFF_PREFIX,
+      limit: 1000,
+      ...(handoffCursor ? { cursor: handoffCursor } : {}),
+      include: ['customMetadata'],
+    });
+    for (const handoffObject of page?.objects || []) {
+      const meta = handoffObject?.customMetadata || {};
+      const doi = normalizeDoi(meta.doi);
+      const evidencePacketHash = String(meta.evidencePacketHash || '');
+      const sourceHash = String(meta.sourceHash || '');
+      if (!doi || !evidencePacketHash || !sourceHash) continue;
+      if (String(meta.keyId || '') !== HANDOFF_KEY_ID ||
+          String(meta.algorithm || '') !== HANDOFF_ALGORITHM ||
+          String(meta.compression || '') !== 'gzip') continue;
+      currentHandoffKeys.add(doi + '|' + evidencePacketHash + '|' + sourceHash);
+    }
+    if (!page?.truncated || !page?.cursor) break;
+    handoffCursor = page.cursor;
+  }
+
   let created = 0;
   let scanned = 0;
   let skippedCurrent = 0;
@@ -325,6 +352,11 @@ export async function backfillScheduledEvidenceHandoffs(env, limitValue = 4) {
         scheduled.status === 'approved' &&
         scheduled.evidencePacketHash === evidencePacketHash &&
         scheduled.sourceHash === sourceHash) {
+      skippedCurrent += 1;
+      continue;
+    }
+    const handoffSignature = doi + '|' + evidencePacketHash + '|' + sourceHash;
+    if (currentHandoffKeys.has(handoffSignature)) {
       skippedCurrent += 1;
       continue;
     }
