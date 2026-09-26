@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": 1790399291266,
+  "generatedAt": 1790400000000,
   "publicationMode": "daily_1200_asia_shanghai",
   "schemaVersion": "scheduled-reviewed-summary-v1",
   "items": {
@@ -43,6 +43,20 @@
       "en": "The study combines deaminative coupling and alkene isomerization in one operation, using allylamine as a masked alkenyl electrophile to form E-configured β-methyl vinylarenes. Reagent-loading experiments indicate that a bond-forming component also participates in the subsequent isomerization stage. Deuterium-labeling and crossover experiments support predominantly substrate-local hydrogen transfer with intermolecular transfer as a minor pathway, and computations are consistent with the proposed hydrogen-transfer cycle. The authors therefore propose two interconnected catalytic cycles: formation of a terminal alkene followed by hydrogen-transfer isomerization to the E-internal alkene. The scope covers multiple aryl and heteroaryl partners, while several substitution patterns reveal efficiency or selectivity limits; the method was also demonstrated on a larger preparative scale. The strategy merges otherwise stepwise coupling/isomerization chemistry into one operation.",
       "generatedAt": 1790399291266,
       "reviewedAt": 1790399291266,
+      "promptVersion": "gallery-daily-summary-v1",
+      "auditVersion": "gallery-daily-summary-audit-v1"
+    },
+    "10.1021/acscatal.6c06010": {
+      "schemaVersion": "scheduled-reviewed-summary-v1",
+      "doi": "10.1021/acscatal.6c06010",
+      "status": "approved",
+      "sourceHash": "881b6662818de61cd0b82e9a2ed28d07911939e3d75fcd14fbbe04012a50470e",
+      "evidencePacketHash": "3f69cea9e93a7fca0b4710719990048cf18357ced238e1345a7d3fba9da09a30",
+      "evidenceLevel": "complete",
+      "zh": "该研究建立了 Cp2TiCl2 催化的烷基酮直接亚甲基化，以 CH2Br2 为亚甲基来源、Zn 为还原剂、TMSCl 为氧原子清除剂，并以 KBF4 提升催化效率。代表性条件为酮 1.0 mmol、CH2Br2 3.5 当量、Cp2TiCl2 20 mol%、TMSCl 3.0 当量、KBF4 0.4 当量、Zn 4.0 当量，在 THF（0.2 M）中 50 °C 反应 1 h，CH2Br2 于 5 min 内滴加。底物范围涵盖多类脂肪族酮，并兼容卤素、游离酚、三氟甲基、烷氧基、三级烷基氯、环丙基和环丁酮等结构；多种天然产物或药物相关酮也可转化。芳基-烷基酮和 α,β-不饱和酮表现较差，胺及含 N–H 的含氮杂环在稳健性筛选中常干扰反应。机理方面，循环伏安结果支持碱金属盐促进 Ti–Cl 解离并使 TiIV/III 还原更易发生；NMR 观察到 BrCH2ZnBr，而加料顺序对照实验支持作者提出的“溴甲基锌向 Ti 转金属化，随后经 Zn 还原形成活性 Ti=CH2”路径，但该序列仍属于作者的机理假说。该方法可在 20 mmol 规模放大；为控制放热，放大时采用 40 °C、4 h 并将 CH2Br2 延长至 30 min 滴加，得到的代表性产物收率为 62–70%。",
+      "en": "The study establishes a Cp2TiCl2-catalyzed direct methylidenation of alkyl ketones using CH2Br2 as the methylene source, Zn as the reductant, TMSCl as an oxygen-atom scavenger, and KBF4 to enhance catalytic efficiency. Representative conditions use ketone (1.0 mmol), CH2Br2 (3.5 equiv), Cp2TiCl2 (20 mol%), TMSCl (3.0 equiv), KBF4 (0.4 equiv), and Zn (4.0 equiv) in THF (0.2 M) at 50 °C for 1 h, with CH2Br2 added over 5 min. The scope covers diverse aliphatic ketones and tolerates halides, free phenols, trifluoromethyl and alkoxy groups, tertiary alkyl chloride, cyclopropyl, and cyclobutanone motifs; several natural-product- or drug-related ketones are also converted. Aryl–alkyl ketones and α,β-unsaturated ketones perform poorly, while amines and N–H-containing nitrogen heterocycles often interfere in the robustness screen. Mechanistically, cyclic voltammetry supports alkali-metal-salt-promoted Ti–Cl dissociation and easier TiIV/III reduction; NMR detects BrCH2ZnBr, and order-of-addition controls support the authors’ proposal that bromomethylzinc transmetalates to Ti before Zn reduction generates the reactive Ti=CH2 species, although this sequence remains a mechanistic proposal rather than a directly observed catalytic intermediate sequence. The reaction was demonstrated on a 20 mmol scale; to manage the exotherm, scale-up used 40 °C for 4 h with CH2Br2 added over 30 min, giving representative products in 62–70% yield.",
+      "generatedAt": 1790400000000,
+      "reviewedAt": 1790400000000,
       "promptVersion": "gallery-daily-summary-v1",
       "auditVersion": "gallery-daily-summary-audit-v1"
     }
