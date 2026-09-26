@@ -1,5 +1,5 @@
 import { STAGE_STORAGE_REVISION } from './stage-storage.js';
-import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteStagedArticleFigures, purgeCrossDoiLocalMedia } from './local-captures.js';
+import { getLocalCaptureIndex, getLocalDiagnostics, getStagedArticleFigures, getTampermonkeyReports, importLocalCapture, importLocalDiagnostics, importStagedArticleFigure, importTampermonkeyReport, promoteOfficialLocalTocs, promoteStagedArticleFigures, purgeCrossDoiLocalMedia } from './local-captures.js';
 import {
   bridgeQueue,
   getArticleFigures,
@@ -413,7 +413,22 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await getArticleFigures(request, env), cors);
   }
   if(request.method==='GET' && url.pathname==='/api/media/capture-capabilities') {
-    return json({captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',pairedCapture:true,bodyFigures:true,maxFiguresPerVisit:20,publishedAutomatically:false,stageStorageRevision:STAGE_STORAGE_REVISION,bodyReviewMarkerRevision:'1',evidenceSchemaVersion:ARTICLE_EVIDENCE_SCHEMA_VERSION,evidenceCaptureMinControllerRevision:'2.2.32'}, {headers:cors});
+    return json({
+      captureVersion:'6.2.20',
+      mediaGeneration:1790082000000,
+      mode:'verified-staging',
+      pairedCapture:true,
+      bodyFigures:true,
+      maxFiguresPerVisit:20,
+      publishedAutomatically:false,
+      officialTocAutoPromotion:true,
+      productionTocAuthority:'d1',
+      mediaControllerRevision:'2.2.35',
+      stageStorageRevision:STAGE_STORAGE_REVISION,
+      bodyReviewMarkerRevision:'1',
+      evidenceSchemaVersion:ARTICLE_EVIDENCE_SCHEMA_VERSION,
+      evidenceCaptureMinControllerRevision:'2.2.35'
+    }, {headers:cors});
   }
   if (request.method === 'GET' && url.pathname === '/api/article-figures/staged') {
     return resultResponse(await getStagedArticleFigures(request, env), cors);
@@ -467,6 +482,7 @@ async function handleApi(request, env, ctx) {
       '/api/media/repair-batch',
       '/api/media/primary/import',
       '/api/media/local-capture/import',
+      '/api/admin/media/promote-local-tocs',
       '/api/media/local-diagnostics/import',
       '/api/media/tampermonkey-report/import',
       '/api/media/jobs/claim',
@@ -545,6 +561,10 @@ async function handleApi(request, env, ctx) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-capture/import') {
     return resultResponse(await importLocalCapture(request, env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/media/promote-local-tocs') {
+    const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') || 20)));
+    return resultResponse(await promoteOfficialLocalTocs(request, env, limit));
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-diagnostics/import') {
     return resultResponse(await importLocalDiagnostics(request, env, await readJson(request)));

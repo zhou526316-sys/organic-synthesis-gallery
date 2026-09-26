@@ -1,4 +1,4 @@
-name: Bridge 2.2.34 custom-domain controller regression
+name: Bridge 2.2.35 custom-domain controller regression
 
 on:
   push:
@@ -55,7 +55,7 @@ jobs:
           grep -F 'TM224_ACQUISITION_TEST_SUMMARY ' "$RUNNER_TEMP/tm229-acquisition.log"
           node scripts/test-tm-paired-capture.mjs
           node scripts/test-tm222-live-progress.mjs
-      - name: Build exact Bridge 2.2.34 custom-domain installer
+      - name: Build exact Bridge 2.2.35 custom-domain installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -66,11 +66,11 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.34' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.35' public/gallery-vpn-bridge.user.js
           grep -F '// @match        https://gallery.gczhouwld.com/*' public/gallery-vpn-bridge.user.js
           grep -F '// @updateURL    https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js' public/gallery-vpn-bridge.user.js
           grep -F '// @downloadURL  https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js' public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.34';" public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.35';" public/gallery-vpn-bridge.user.js
           grep -F "var GALLERY_HOST = 'gallery.gczhouwld.com';" public/gallery-vpn-bridge.user.js
           grep -F "badge('已跳过 '" public/gallery-vpn-bridge.user.js
       - uses: actions/upload-artifact@v4

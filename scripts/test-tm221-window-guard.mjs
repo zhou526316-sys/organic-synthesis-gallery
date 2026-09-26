@@ -18,21 +18,22 @@ function harness(text=source,opt={}) {
     setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id;},clearTimeout:i=>timers.delete(i),setInterval:()=>++id,clearInterval(){},
     __badge:t=>badges.push(t),
     __sleep:async ms=>{now+=ms;for(const h of opened)if(h.closeRequested&&!opt.neverClose)h.closed=true;await opt.onSleep?.(ms,ctx);},
-    __getJson:async url=>{await opt.onFetch?.(url,ctx,menus,store);return url.includes('capture-capabilities')?{captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',evidenceSchemaVersion:'article-evidence-v2',evidenceCaptureMinControllerRevision:'2.2.32'}:url.includes('toc-demand')?{generatedAt:'2026-09-22T16:30:47.570Z',mediaGeneration:1790082000000}:{items:{}};},
+    __getJson:async url=>{await opt.onFetch?.(url,ctx,menus,store);return url.includes('capture-capabilities')?{captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',evidenceSchemaVersion:'article-evidence-v2',evidenceCaptureMinControllerRevision:'2.2.35',mediaControllerRevision:'2.2.35'}:url.includes('toc-demand')?{generatedAt:'2026-09-22T16:30:47.570Z',latestAddedDate:'2026-09-22',mediaGeneration:1790082000000,webpageDoiCount:c.__jobs.length,articles:c.__jobs}:{items:{}};},
     GM_openInTab:(url,options)=>{
       const job=store.get('osg-toc-v6:active-job');
       const h={url,options,closed:false,closeRequested:false,close(){this.closeRequested=true;}};
       opened.push(h);maxLive=Math.max(maxLive,opened.filter(h=>!h.closed).length);
-      set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored'},fulltext:{status:'stored',evidenceLevel:'complete'},figuresStaged:2});
+      set(ctx.T.resultKey(job.doi),{doi:job.doi,jobId:job.jobId,version:'6.2.20',controllerRevision:'2.2.35',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored',productionTocStored:true},figures:{status:'staged',discovered:2,stored:2,failed:0,items:[]},fulltext:{status:'stored',evidenceLevel:'complete'},figuresStaged:2});
       opt.onOpen?.(job,ctx,store);
       return opt.promiseHandle?Promise.resolve(h):h;
     },
-    __jobs:Array.from({length:20},(_,i)=>({doi:'10.1021/jacs.6c'+String(10000+i),publisher:'acs'})),
+    __jobs:Array.from({length:20},(_,i)=>({doi:'10.1021/jacs.6c'+String(10000+i),publisher:'acs',mediaNeed:'toc+figures',state:'no_visual',captureToc:true,captureFigures:true,captureEvidence:false})),
   };
   ctx=vm.createContext(c);
   const cut=text.lastIndexOf('  installMenu();');assert.ok(cut>0);
   vm.runInContext(text.slice(0,cut)+`
     isGalleryPage=()=>true;writeToken=()=> 'fixture-only';badge=__badge;sleep=__sleep;getJson=__getJson;
+    postReadJson=async()=>({generatedAt:Date.now(),items:__jobs.map(j=>({doi:j.doi,tocStored:false,tocReason:'cache_miss',figureCount:0}))});
     pairedJobs=()=>__jobs;getPrivateJson=async()=>({items:[]});batchSize=()=>20;selectBatchJobs=(jobs,n)=>jobs.slice(0,n);
     globalThis.T={controllerRun,installMenu,resultKey,attemptKey,leaseKey:LEASE_KEY,activeKey:ACTIVE_JOB_KEY,summaryKey:SUMMARY_KEY,owner:CONTROLLER_ID};
   })();`,ctx);
@@ -85,5 +86,5 @@ await test('bound capture nonce and DOI guards remain in source',()=>{
  for(const text of ['assertBoundCaptureJob','capture_job_stale_or_unbound','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch','previous_task_tab_not_closed'])assert.ok(source.includes(text));
 });
 const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-await test('legacy viewport collectors are guarded by packaging',()=>{assert.ok(loader.includes('legacy_runtime_media_disabled'));for(const n of ['function queueDoi','function pump','function scan'])assert.ok(loader.includes(n));assert.ok(loader.includes("const loaderVersion = '2.2.34';"));});
+await test('legacy viewport collectors are guarded by packaging',()=>{assert.ok(loader.includes('legacy_runtime_media_disabled'));for(const n of ['function queueDoi','function pump','function scan'])assert.ok(loader.includes(n));assert.ok(loader.includes("const loaderVersion = '2.2.35';"));});
 console.log('TM221_WINDOW_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,environment:'VM mocked GM APIs; not a live Tampermonkey extension'}));

@@ -1,6 +1,6 @@
 import { storeVerifiedStage } from './stage-storage.js';
 import { normalizeDoi } from './media.js';
-import { importFigure } from './media-write.js';
+import { importFigure, importToc } from './media-write.js';
 
 const INDEX_KEY = 'local-captures/index.json';
 const IMAGE_PREFIX = 'local-captures/images/';
@@ -707,15 +707,128 @@ export async function importLocalCapture(request, env, payload) {
     httpMetadata: { contentType: 'application/json; charset=utf-8', cacheControl: 'no-store' },
   });
 
+  let productionToc = null;
+  if (kind === 'official') {
+    const imageData = 'data:' + image.contentType + ';base64,' + bytesToBase64(image.bytes);
+    const promoted = await importToc(request, env, {
+      doi,
+      articleUrl: payload.articleUrl,
+      sourceUrl: payload.sourceUrl,
+      imageData,
+      replace: true,
+    });
+    if (Number(promoted?.status || 500) < 200 || Number(promoted?.status || 500) >= 300 || promoted?.body?.available !== true) {
+      return {
+        status: 503,
+        body: {
+          stored: true,
+          localStored: true,
+          productionTocStored: false,
+          doi,
+          kind,
+          contentHash: hash.slice(0, 32),
+          error: 'official_toc_production_promotion_failed',
+          promotionStatus: Number(promoted?.status || 0),
+          updatedAt: now,
+        },
+      };
+    }
+    productionToc = promoted.body;
+  }
+
   return {
     status: 200,
     body: {
       stored: true,
+      localStored: true,
+      productionTocStored: kind === 'official' ? true : false,
       doi,
       kind,
       contentHash: hash.slice(0, 32),
-      imageUrl: publicMediaUrl(request, key),
+      imageUrl: kind === 'official' ? String(productionToc?.imageUrl || '') : publicMediaUrl(request, key),
+      productionToc: kind === 'official' ? {
+        available: true,
+        imageUrl: String(productionToc?.imageUrl || ''),
+        reason: String(productionToc?.reason || ''),
+        cacheState: String(productionToc?.cacheState || ''),
+      } : undefined,
       updatedAt: now,
+    },
+  };
+}
+
+export async function promoteOfficialLocalTocs(request, env, limitValue = 20) {
+  if (!env?.MEDIA || !env?.DB) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
+  const limit = Math.max(1, Math.min(50, Number(limitValue || 20)));
+  const index = await readIndex(env);
+  const candidates = Object.values(index.items || {})
+    .filter(item => {
+      const doi = normalizeDoi(item?.doi);
+      return Boolean(
+        doi &&
+        String(item?.kind || '') === 'official' &&
+        Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH &&
+        captureBelongsToDoi(item, doi) &&
+        item?.r2Key
+      );
+    })
+    .sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
+
+  let promoted = 0;
+  let alreadyCurrent = 0;
+  let failed = 0;
+  let scanned = 0;
+  const failures = [];
+
+  for (const item of candidates) {
+    if (promoted >= limit) break;
+    scanned += 1;
+    const doi = normalizeDoi(item.doi);
+    const current = await env.DB.prepare(
+      'SELECT available, r2_key, updated_at FROM toc_assets WHERE doi = ? LIMIT 1'
+    ).bind(doi).first();
+    if (current && Number(current.available) === 1 && current.r2_key && Number(current.updated_at || 0) >= MEDIA_REBUILD_EPOCH) {
+      alreadyCurrent += 1;
+      continue;
+    }
+
+    try {
+      const object = await env.MEDIA.get(item.r2Key);
+      if (!object) throw new Error('local_toc_r2_object_missing');
+      const bytes = new Uint8Array(await object.arrayBuffer());
+      if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) throw new Error('local_toc_image_size_invalid');
+      const contentType = item.contentType || object.httpMetadata?.contentType || 'image/jpeg';
+      const imageData = 'data:' + contentType + ';base64,' + bytesToBase64(bytes);
+      const result = await importToc(request, env, {
+        doi,
+        articleUrl: item.articleUrl,
+        sourceUrl: item.sourceUrl,
+        imageData,
+        replace: true,
+      });
+      if (Number(result?.status || 500) < 200 || Number(result?.status || 500) >= 300 || result?.body?.available !== true) {
+        throw new Error('local_toc_production_import_failed_' + String(result?.status || 0));
+      }
+      promoted += 1;
+    } catch (error) {
+      failed += 1;
+      failures.push({ doi, error: safeText(error instanceof Error ? error.message : error, 200) });
+    }
+  }
+
+  return {
+    status: 200,
+    body: {
+      ok: true,
+      promoted,
+      alreadyCurrent,
+      failed,
+      scanned,
+      candidates: candidates.length,
+      limit,
+      hasMore: candidates.length > (promoted + alreadyCurrent),
+      failures: failures.slice(0, 20),
+      updatedAt: Date.now(),
     },
   };
 }
