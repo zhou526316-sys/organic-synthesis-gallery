@@ -27,6 +27,7 @@ const copy = {
     chooseImage: '上传图片',
     removeImage: '移除图片',
     imageReady: '图片已准备好，会随吐槽一起提交。',
+    pasteImageHint: '也可以直接 Ctrl+V / ⌘V 粘贴截图或图片。',
     imageLoading: '正在压缩图片…',
     imageFailed: '图片无法读取，请使用 JPG、PNG 或 WebP。',
     imageTooLarge: '图片过大，请选择 20 MB 以内的图片。',
@@ -60,6 +61,7 @@ const copy = {
     chooseImage: 'Upload image',
     removeImage: 'Remove image',
     imageReady: 'Image is ready and will be submitted with the feedback.',
+    pasteImageHint: 'You can also paste a screenshot or image directly with Ctrl+V / ⌘V.',
     imageLoading: 'Compressing image…',
     imageFailed: 'Could not read this image. Use JPG, PNG, or WebP.',
     imageTooLarge: 'Please choose an image smaller than 20 MB.',
@@ -162,6 +164,7 @@ function installStyles(): void {
     .site-feedback-textarea{min-height:122px;resize:vertical;padding:10px 11px;line-height:1.5}
     .site-feedback-select:focus,.site-feedback-textarea:focus{outline:2px solid rgba(49,89,189,.18);border-color:#6f89d5}
     .site-feedback-image-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .site-feedback-image-hint{margin-top:6px;color:#667085;font-size:11px;line-height:1.45}
     .site-feedback-image-pick,.site-feedback-image-remove{display:inline-flex;align-items:center;justify-content:center;border:1px solid #cfd7e6;border-radius:9px;background:#fff;color:#344054;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}
     .site-feedback-image-pick input{display:none}
     .site-feedback-image-preview{display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px;border:1px solid #e1e6ef;border-radius:10px;background:#f8fafc}
@@ -248,6 +251,7 @@ class SiteFeedbackWidget extends HTMLElement {
           <div class="site-feedback-image-row">
             <label class="site-feedback-image-pick">${this.imageBusy ? t.imageLoading : t.chooseImage}<input data-feedback-image type="file" accept="image/png,image/jpeg,image/webp,image/*" ${this.imageBusy ? 'disabled' : ''}></label>
           </div>
+          <div class="site-feedback-image-hint">${t.pasteImageHint}</div>
           ${this.attachmentData ? `<div class="site-feedback-image-preview"><img src="${this.attachmentData}" alt=""><div class="site-feedback-image-meta">${t.imageReady}<br>${this.attachmentName}</div><button class="site-feedback-image-remove" data-feedback-image-remove type="button">${t.removeImage}</button></div>` : ''}
           <p class="site-feedback-privacy">${t.privacy}</p>
           <button class="site-feedback-submit" data-feedback-submit type="button" ${this.busy ? 'disabled' : ''}>${this.busy ? t.sending : t.submit}</button>
@@ -284,6 +288,7 @@ class SiteFeedbackWidget extends HTMLElement {
       this.render();
     });
     this.querySelector<HTMLButtonElement>('[data-feedback-submit]')?.addEventListener('click', () => void this.submit());
+    this.querySelector<HTMLElement>('.site-feedback-panel')?.addEventListener('paste', event => this.pasteImage(event as ClipboardEvent));
     this.querySelector<HTMLInputElement>('[data-feedback-image]')?.addEventListener('change', event => void this.selectImage(event));
     this.querySelector<HTMLButtonElement>('[data-feedback-image-remove]')?.addEventListener('click', () => {
       this.attachmentData = '';
@@ -420,14 +425,26 @@ class SiteFeedbackWidget extends HTMLElement {
     if (this.position) savePosition(this.position);
   }
 
-  private async selectImage(event: Event): Promise<void> {
-    const input = event.currentTarget as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
+  private pastedImageName(file: File): string {
+    if (file.name?.trim()) return file.name.trim().slice(0, 120);
+    const extension = file.type === 'image/png' ? 'png'
+      : file.type === 'image/jpeg' ? 'jpg'
+        : file.type === 'image/webp' ? 'webp'
+          : file.type === 'image/gif' ? 'gif'
+            : 'image';
+    return `pasted-image.${extension}`;
+  }
+
+  private async attachImage(file: File, name = this.pastedImageName(file)): Promise<void> {
+    if (this.imageBusy) return;
     const t = copy[language()];
+    if (!file.type.startsWith('image/')) {
+      this.status = t.imageFailed;
+      this.rerenderPreservingDraft();
+      return;
+    }
     if (file.size > 20_000_000) {
       this.status = t.imageTooLarge;
-      input.value = '';
       this.rerenderPreservingDraft();
       return;
     }
@@ -438,7 +455,7 @@ class SiteFeedbackWidget extends HTMLElement {
       const data = await prepareFeedbackImage(file);
       if (!data) throw new Error('image_too_large_after_compression');
       this.attachmentData = data;
-      this.attachmentName = file.name.slice(0, 120);
+      this.attachmentName = (name || this.pastedImageName(file)).slice(0, 120);
       this.status = t.imageReady;
     } catch {
       this.attachmentData = '';
@@ -448,6 +465,25 @@ class SiteFeedbackWidget extends HTMLElement {
       this.imageBusy = false;
       this.rerenderPreservingDraft();
     }
+  }
+
+  private pasteImage(event: ClipboardEvent): void {
+    if (this.imageBusy) return;
+    const clipboard = event.clipboardData;
+    if (!clipboard) return;
+    const item = Array.from(clipboard.items || []).find(candidate => candidate.kind === 'file' && candidate.type.startsWith('image/'));
+    const file = item?.getAsFile() || Array.from(clipboard.files || []).find(candidate => candidate.type.startsWith('image/'));
+    if (!file) return;
+    event.preventDefault();
+    void this.attachImage(file, this.pastedImageName(file));
+  }
+
+  private async selectImage(event: Event): Promise<void> {
+    const input = event.currentTarget as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    await this.attachImage(file, file.name);
+    input.value = '';
   }
 
   private async submit(): Promise<void> {
