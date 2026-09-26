@@ -1,0 +1,72 @@
+name: Audit registered user count
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/user-count-audit.yml'
+      - 'audit/user-count-trigger.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      D1_NAME: organic-synthesis-gallery
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install Worker dependencies
+        working-directory: cloudflare/worker
+        run: npm install --no-audit --no-fund
+      - name: Read aggregate user counts from production D1
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npx wrangler d1 execute "$D1_NAME" --remote --command "
+            SELECT
+              COUNT(*) AS total_registered_users,
+              SUM(CASE WHEN EXISTS (
+                SELECT 1 FROM auth_identities ai
+                WHERE ai.user_id = users.id AND ai.provider = 'local'
+              ) THEN 1 ELSE 0 END) AS local_accounts,
+              SUM(CASE WHEN EXISTS (
+                SELECT 1 FROM auth_identities ai
+                WHERE ai.user_id = users.id AND ai.provider <> 'local'
+              ) THEN 1 ELSE 0 END) AS external_accounts,
+              SUM(CASE WHEN EXISTS (
+                SELECT 1 FROM user_email_verifications v
+                WHERE v.user_id = users.id
+              ) THEN 1 ELSE 0 END) AS email_verified_users
+            FROM users;
+          " --json | tee /tmp/user-count.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const raw = JSON.parse(fs.readFileSync('/tmp/user-count.json','utf8'));
+          const rows = Array.isArray(raw)
+            ? raw.flatMap(item => Array.isArray(item?.results) ? item.results : [])
+            : Array.isArray(raw?.results) ? raw.results : [];
+          const row = rows[0];
+          if (!row || !Number.isFinite(Number(row.total_registered_users))) {
+            throw new Error('Unable to parse aggregate user count from D1 output');
+          }
+          const safe = {
+            totalRegisteredUsers: Number(row.total_registered_users || 0),
+            localAccounts: Number(row.local_accounts || 0),
+            externalAccounts: Number(row.external_accounts || 0),
+            emailVerifiedUsers: Number(row.email_verified_users || 0),
+          };
+          console.log('REGISTERED_USER_COUNT ' + JSON.stringify(safe));
+          NODE
