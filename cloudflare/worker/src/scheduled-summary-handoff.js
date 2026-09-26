@@ -214,6 +214,60 @@ export async function readScheduledSummaryAsset(env) {
   }
 }
 
+export async function getScheduledSummaryCoverageStatus(env) {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'summary_storage_unavailable' } };
+
+  let evidenceCount = 0;
+  const evidenceByLevel = { complete: 0, partial: 0, abstract_only: 0, unknown: 0 };
+  let cursor;
+  for (let pageNo = 0; pageNo < 10; pageNo += 1) {
+    const page = await env.MEDIA.list({
+      prefix: EVIDENCE_PREFIX,
+      limit: 1000,
+      ...(cursor ? { cursor } : {}),
+      include: ['customMetadata'],
+    });
+    for (const object of page?.objects || []) {
+      const meta = object?.customMetadata || {};
+      if (!normalizeDoi(meta.doi)) continue;
+      evidenceCount += 1;
+      const level = String(meta.evidenceLevel || 'unknown');
+      if (Object.prototype.hasOwnProperty.call(evidenceByLevel, level)) evidenceByLevel[level] += 1;
+      else evidenceByLevel.unknown += 1;
+    }
+    if (!page?.truncated || !page?.cursor) break;
+    cursor = page.cursor;
+  }
+
+  const asset = await readScheduledSummaryAsset(env);
+  const scheduledStaticCount = Object.values(asset.items || {}).filter(row =>
+    row &&
+    row.schemaVersion === SCHEDULED_SUMMARY_SCHEMA_VERSION &&
+    row.status === 'approved' &&
+    typeof row.zh === 'string' && row.zh.trim() &&
+    typeof row.en === 'string' && row.en.trim()
+  ).length;
+  const pending = await getScheduledEvidenceHandoff(env, 60, { manifestOnly: true });
+  if (pending.status !== 200) return pending;
+
+  const pendingCount = Number(pending.body?.count || 0);
+  const pendingLimit = Number(pending.body?.limit || 60);
+  return {
+    status: 200,
+    body: {
+      version: 1,
+      publicationMode: 'daily_1200_asia_shanghai',
+      generatedAt: new Date().toISOString(),
+      evidenceCount,
+      evidenceByLevel,
+      scheduledStaticCount,
+      pendingHandoffCount: pendingCount,
+      pendingHandoffLimit: pendingLimit,
+      pendingHandoffMayHaveMore: pendingCount >= pendingLimit,
+    },
+  };
+}
+
 export async function getScheduledSummaryForEvidence(env, doiValue, evidence) {
   const doi = normalizeDoi(doiValue);
   if (!doi || !evidence) return null;
