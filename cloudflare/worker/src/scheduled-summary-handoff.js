@@ -230,7 +230,8 @@ export async function getScheduledSummaryCoverageStatus(env) {
     });
     for (const object of page?.objects || []) {
       const meta = object?.customMetadata || {};
-      if (!normalizeDoi(meta.doi)) continue;
+      const doi = normalizeDoi(meta.doi);
+      if (!doi) continue;
       evidenceCount += 1;
       evidenceSignatures.set(doi, {
         sourceHash: String(meta.sourceHash || ''),
