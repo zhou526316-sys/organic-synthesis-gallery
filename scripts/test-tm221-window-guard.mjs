@@ -18,7 +18,7 @@ function harness(text=source,opt={}) {
     setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id;},clearTimeout:i=>timers.delete(i),setInterval:()=>++id,clearInterval(){},
     __badge:t=>badges.push(t),
     __sleep:async ms=>{now+=ms;for(const h of opened)if(h.closeRequested&&!opt.neverClose)h.closed=true;await opt.onSleep?.(ms,ctx);},
-    __getJson:async url=>{await opt.onFetch?.(url,ctx,menus,store);return url.includes('capture-capabilities')?{captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',evidenceSchemaVersion:'article-evidence-v2',evidenceCaptureMinControllerRevision:'2.2.35',mediaControllerRevision:'2.2.35'}:url.includes('toc-demand')?{generatedAt:'2026-09-22T16:30:47.570Z',mediaGeneration:1790082000000}:{items:{}};},
+    __getJson:async url=>{await opt.onFetch?.(url,ctx,menus,store);return url.includes('capture-capabilities')?{captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',evidenceSchemaVersion:'article-evidence-v2',evidenceCaptureMinControllerRevision:'2.2.35',mediaControllerRevision:'2.2.35'}:url.includes('toc-demand')?{generatedAt:'2026-09-22T16:30:47.570Z',latestAddedDate:'2026-09-22',mediaGeneration:1790082000000,webpageDoiCount:c.__jobs.length,articles:c.__jobs}:{items:{}};},
     GM_openInTab:(url,options)=>{
       const job=store.get('osg-toc-v6:active-job');
       const h={url,options,closed:false,closeRequested:false,close(){this.closeRequested=true;}};
