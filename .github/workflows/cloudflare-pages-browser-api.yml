@@ -186,10 +186,10 @@ jobs:
             "$PAGES_URL/api/user-ui/integrations" > /tmp/pages-integrations.json
           curl --fail --silent --show-error --retry 8 --retry-delay 2 "$PAGES_URL/gallery-vpn-bridge.user.js?t=$GITHUB_SHA" > /tmp/bridge.user.js
           curl --fail --silent --show-error --retry 8 --retry-delay 2 "$PAGES_URL/gallery-vpn-bridge-runtime.js?t=$GITHUB_SHA" > /tmp/bridge.runtime.js
-          grep -F "// @version      2.0.1" /tmp/bridge.user.js
+          grep -F "// @version      2.2.35" /tmp/bridge.user.js
           grep -F "// @match        https://organic-synthesis-gallery-public.pages.dev/*" /tmp/bridge.user.js
           grep -F "// @match        https://zhou526316-sys.github.io/organic-synthesis-gallery/*" /tmp/bridge.user.js
-          grep -F "const VERSION = '1.1.1';" /tmp/bridge.runtime.js
+          grep -F "const VERSION = '1.2.0';" /tmp/bridge.runtime.js
           grep -F "const API_BASE = 'https://organic-synthesis-gallery-public.pages.dev';" /tmp/bridge.runtime.js
           grep -F "abstract\\s*image" /tmp/bridge.runtime.js
           node - <<'NODE'
