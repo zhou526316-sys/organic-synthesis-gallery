@@ -759,7 +759,24 @@ test('search highlights results, picker closes outside, feedback drags and submi
   }
 
   await feedback.locator('[data-feedback-category]').selectOption('search');
-  await feedback.locator('[data-feedback-message]').fill('搜索框输入时不应该闪烁或清空。');
+  const feedbackMessage = feedback.locator('[data-feedback-message]');
+  await feedbackMessage.fill('搜索框输入时不应该闪烁或清空。');
+  const pastedPng = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+  await feedbackMessage.evaluate((node, base64) => {
+    const bytes = Uint8Array.from(atob(String(base64)), char => char.charCodeAt(0));
+    const file = new File([bytes], 'feedback-paste.png', { type: 'image/png' });
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    const paste = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(paste, 'clipboardData', { value: transfer });
+    node.dispatchEvent(paste);
+  }, pastedPng);
+  await expect(feedback.locator('.site-feedback-image-preview')).toBeVisible();
+  await expect(feedback.locator('.site-feedback-image-preview img')).toHaveAttribute('src', /^data:image\/webp;base64,/);
+  await expect(feedback.locator('.site-feedback-image-meta')).toContainText('feedback-paste.png');
+  await feedback.locator('[data-feedback-image-remove]').click();
+  await expect(feedback.locator('.site-feedback-image-preview')).toHaveCount(0);
+
   const feedbackImage = feedback.locator('input[data-feedback-image]');
   await feedbackImage.setInputFiles({
     name: 'feedback.png',
