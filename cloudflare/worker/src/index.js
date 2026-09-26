@@ -563,8 +563,10 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await importLocalCapture(request, env, await readJson(request)));
   }
   if (request.method === 'POST' && url.pathname === '/api/admin/media/promote-local-tocs') {
-    const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') || 20)));
-    return resultResponse(await promoteOfficialLocalTocs(request, env, limit));
+    const limit = Math.max(1, Math.min(30, Number(url.searchParams.get('limit') || 12)));
+    const offset = Math.max(0, Math.floor(Number(url.searchParams.get('offset') || 0)));
+    const scanLimit = Math.max(1, Math.min(40, Math.floor(Number(url.searchParams.get('scan') || 24))));
+    return resultResponse(await promoteOfficialLocalTocs(request, env, { limit, offset, scanLimit }));
   }
   if (request.method === 'POST' && url.pathname === '/api/media/local-diagnostics/import') {
     return resultResponse(await importLocalDiagnostics(request, env, await readJson(request)));

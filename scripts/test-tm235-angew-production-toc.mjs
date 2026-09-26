@@ -5,6 +5,7 @@ import { chromium } from 'playwright';
 const source = await fs.readFile('public/toc-mainline.user.js','utf8');
 const localCaptures = await fs.readFile('cloudflare/worker/src/local-captures.js','utf8');
 const workerIndex = await fs.readFile('cloudflare/worker/src/index.js','utf8');
+const mediaWrite = await fs.readFile('cloudflare/worker/src/media-write.js','utf8');
 const deploy = await fs.readFile('.github/workflows/deploy-worker-frontend.yml','utf8');
 let passed = 0;
 function test(name, condition) {
@@ -54,6 +55,22 @@ test('Worker exposes idempotent official TOC backlog promotion',
   localCaptures.includes("export async function promoteOfficialLocalTocs") &&
   workerIndex.includes("'/api/admin/media/promote-local-tocs'") &&
   deploy.includes("Promote verified official TOCs into production"));
+
+test('TOC backlog promotion is bounded, paginated, and Angew-first',
+  localCaptures.includes("const offset = Math.max(0") &&
+  localCaptures.includes("const scanLimit = Math.max(1, Math.min(40") &&
+  localCaptures.includes("const aAngew = /^10\\.1002\\/anie\\./") &&
+  localCaptures.includes("nextOffset") &&
+  workerIndex.includes("url.searchParams.get('offset')") &&
+  workerIndex.includes("url.searchParams.get('scan')") &&
+  deploy.includes("url.searchParams.set('offset', String(offset))") &&
+  deploy.includes("officialTocPromotionPaused"));
+
+test('production TOC import accepts sanitized SVG but still rejects active SVG content',
+  mediaWrite.includes("image\\/(?:png|jpe?g|gif|webp|svg\\+xml)") &&
+  mediaWrite.includes("contentType === 'image/svg+xml'") &&
+  mediaWrite.includes("<(?:script|foreignObject|iframe|object|embed|animate\\w*|set)") &&
+  mediaWrite.includes("if (contentType === 'image/svg+xml') return 'svg';"));
 
 test('deployment packages exact 2.2.35 installer',
   deploy.includes("// @version      2.2.35") &&

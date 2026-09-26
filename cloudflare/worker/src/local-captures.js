@@ -757,9 +757,11 @@ export async function importLocalCapture(request, env, payload) {
   };
 }
 
-export async function promoteOfficialLocalTocs(request, env, limitValue = 20) {
+export async function promoteOfficialLocalTocs(request, env, options = {}) {
   if (!env?.MEDIA || !env?.DB) return { status: 503, body: { error: 'Cloudflare media bindings are not configured.' } };
-  const limit = Math.max(1, Math.min(50, Number(limitValue || 20)));
+  const limit = Math.max(1, Math.min(30, Number(options?.limit || 12)));
+  const offset = Math.max(0, Math.floor(Number(options?.offset || 0)));
+  const scanLimit = Math.max(1, Math.min(40, Math.floor(Number(options?.scanLimit || 24))));
   const index = await readIndex(env);
   const candidates = Object.values(index.items || {})
     .filter(item => {
@@ -772,15 +774,23 @@ export async function promoteOfficialLocalTocs(request, env, limitValue = 20) {
         item?.r2Key
       );
     })
-    .sort((a, b) => Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0));
+    .sort((a, b) => {
+      const aDoi = normalizeDoi(a?.doi) || '';
+      const bDoi = normalizeDoi(b?.doi) || '';
+      const aAngew = /^10\.1002\/anie\./.test(aDoi);
+      const bAngew = /^10\.1002\/anie\./.test(bDoi);
+      if (aAngew !== bAngew) return aAngew ? -1 : 1;
+      return Number(b?.updatedAt || 0) - Number(a?.updatedAt || 0);
+    });
 
   let promoted = 0;
   let alreadyCurrent = 0;
   let failed = 0;
   let scanned = 0;
   const failures = [];
+  const slice = candidates.slice(offset, offset + scanLimit);
 
-  for (const item of candidates) {
+  for (const item of slice) {
     if (promoted >= limit) break;
     scanned += 1;
     const doi = normalizeDoi(item.doi);
@@ -807,7 +817,8 @@ export async function promoteOfficialLocalTocs(request, env, limitValue = 20) {
         replace: true,
       });
       if (Number(result?.status || 500) < 200 || Number(result?.status || 500) >= 300 || result?.body?.available !== true) {
-        throw new Error('local_toc_production_import_failed_' + String(result?.status || 0));
+        const detail = safeText(result?.body?.code || result?.body?.error || '', 120);
+        throw new Error('local_toc_production_import_failed_' + String(result?.status || 0) + (detail ? ':' + detail : ''));
       }
       promoted += 1;
     } catch (error) {
@@ -816,6 +827,8 @@ export async function promoteOfficialLocalTocs(request, env, limitValue = 20) {
     }
   }
 
+  const nextOffset = Math.min(candidates.length, offset + scanned);
+  const hasMore = nextOffset < candidates.length;
   return {
     status: 200,
     body: {
@@ -826,7 +839,11 @@ export async function promoteOfficialLocalTocs(request, env, limitValue = 20) {
       scanned,
       candidates: candidates.length,
       limit,
-      hasMore: candidates.length > (promoted + alreadyCurrent),
+      offset,
+      scanLimit,
+      nextOffset,
+      hasMore,
+      priority: 'angew_first_then_newest',
       failures: failures.slice(0, 20),
       updatedAt: Date.now(),
     },

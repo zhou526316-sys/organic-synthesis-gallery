@@ -129,12 +129,21 @@ function bytesFromBase64(base64) {
 
 function parseImageData(value) {
   if (typeof value !== 'string') return null;
-  const match = /^data:(image\/(?:png|jpe?g|gif|webp));base64,([A-Za-z0-9+/=\r\n]+)$/i.exec(value);
+  const match = /^data:(image\/(?:png|jpe?g|gif|webp|svg\+xml));base64,([A-Za-z0-9+/=\r\n]+)$/i.exec(value);
   if (!match) return null;
   const contentType = match[1].toLowerCase().replace('image/jpg', 'image/jpeg');
   const base64 = match[2].replace(/\s+/g, '');
   const bytes = bytesFromBase64(base64);
   if (bytes.byteLength < 100 || bytes.byteLength > MAX_IMAGE_BYTES) return null;
+  if (contentType === 'image/svg+xml') {
+    const xml = new TextDecoder().decode(bytes);
+    if (!/<svg[\s>]/i.test(xml) ||
+        /<!DOCTYPE|<!ENTITY|<(?:script|foreignObject|iframe|object|embed|animate\w*|set)\b|\son[a-z]+\s*=|@import/i.test(xml)) return null;
+    for (const href of xml.matchAll(/(?:xlink:)?href\s*=\s*(["'])(.*?)\1/gi)) {
+      if (!href[2].startsWith('#') && !/^data:image\/(?:png|jpeg|gif|webp);base64,/i.test(href[2])) return null;
+    }
+    if (/url\(\s*["']?\s*(?:https?:|\/\/|data:)|&#(?:x[0-9a-f]+|\d+);/i.test(xml)) return null;
+  }
   return { contentType, bytes };
 }
 
@@ -188,6 +197,7 @@ function imageDimensions(bytes, contentType) {
 }
 
 function extensionForContentType(contentType) {
+  if (contentType === 'image/svg+xml') return 'svg';
   if (contentType === 'image/png') return 'png';
   if (contentType === 'image/webp') return 'webp';
   if (contentType === 'image/gif') return 'gif';
