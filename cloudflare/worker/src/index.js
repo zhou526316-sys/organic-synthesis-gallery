@@ -34,7 +34,7 @@ import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
-import { backfillScheduledEvidenceHandoffs, getScheduledEvidenceHandoff, getScheduledEvidenceHandoffPart } from './scheduled-summary-handoff.js';
+import { backfillScheduledEvidenceHandoffs, getScheduledEvidenceHandoff, getScheduledEvidenceHandoffPart, getScheduledSummaryCoverageStatus } from './scheduled-summary-handoff.js';
 import { getSummaryReviewStatus } from './summary-review.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
@@ -97,6 +97,7 @@ const BROWSER_READ_PATHS = new Set([
   '/api/media/local-diagnostics',
   '/api/media/tampermonkey-reports',
   '/api/article-summary/evidence-inventory',
+  '/api/article-summary/status',
   '/api/article-summary/scheduled-handoff',
   '/api/wechat/js-sdk-signature',
 ]);
@@ -226,6 +227,10 @@ async function handleApi(request, env, ctx) {
 
   if (request.method === 'GET' && url.pathname === '/api/wechat/js-sdk-signature') {
     return resultResponse(await getWeChatJsSdkSignature(request, env), cors);
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/article-summary/status') {
+    return resultResponse(await getScheduledSummaryCoverageStatus(env), cors);
   }
 
   if (request.method === 'GET' && url.pathname === '/api/article-summary/evidence-inventory') {

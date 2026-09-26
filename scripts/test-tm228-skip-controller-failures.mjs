@@ -78,7 +78,7 @@ test('user abort remains an explicit stop request',()=>{
 
 test('Bridge version advances without capture protocol migration',()=>{
   assert.ok(source.includes("var VERSION = '6.2.20';"));
-  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.35';"));
+  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.36';"));
 });
 
-console.log('TM228_SKIP_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.35'}));
+console.log('TM228_SKIP_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.36'}));
