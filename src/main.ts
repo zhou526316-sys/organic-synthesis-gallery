@@ -610,6 +610,7 @@ function mount(): void {
     if (summary) summary.textContent = filterSummary();
     const clear = document.querySelector<HTMLButtonElement>('#clearCustomFilters');
     if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
+    document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
     renderCards();
   }));
   document.querySelectorAll<HTMLButtonElement>('[data-journal-exclude]').forEach(button => button.addEventListener('click', () => {
@@ -638,6 +639,7 @@ function mount(): void {
     if (summary) summary.textContent = filterSummary();
     const clear = document.querySelector<HTMLButtonElement>('#clearCustomFilters');
     if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
+    document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.classList.toggle('active', selectedJournals.size === 0 && excludedJournals.size === 0);
     renderCards();
   }));
   document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
