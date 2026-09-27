@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-26T14:49:00+08:00",
+  "generatedAt": "2026-09-27T14:28:00+08:00",
   "updates": [
     {
-      "id": 35,
+      "id": 36,
       "status": "reviewed"
     }
   ],
@@ -21,13 +21,15 @@
     8
   ],
   "reviewBasis": {
-    "userApproval": "User asked to continue resolving the newly arrived feedback after the 2026-09-26 export; #35 was the only new item.",
-    "originalFeedback": "建议吐槽界面可以直接粘贴图片而非去上传图片",
-    "verification": "2026-09-26 export run 36223779767 showed #35 as the only newly arrived open item. Existing feedback UI had file upload but no clipboard image paste listener.",
-    "implementation": "PR #258 merged as 4c9c2da095ee1b52d8d01fcb699f5027e86af5db. Existing upload remains; image-only clipboard paste reuses the same 20 MB validation, compression, preview, removal and private attachment submission path. Text-only paste is not intercepted.",
-    "preMerge": "All eight PR workflows passed, including Site quality gate with frontend build/typecheck, Worker dry-run, production API smoke and Playwright interaction regression.",
-    "deployment": "Worker frontend deployment 36224253897 succeeded. A cancelled GitHub Pages run initially left the custom domain on stale static assets; Pages refresh run 36224579184 then completed successfully.",
-    "liveAcceptance": "Feedback paste live run 36224390759 attempt 2 passed on Chromium and WebKit against https://gallery.gczhouwld.com/. The test pasted an image, verified WebP preview and removal, and made zero production feedback writes.",
-    "scope": "Close only feedback #35. All pre-existing unresolved feedback remains open/paused exactly as before."
+    "userApproval": "User asked to resolve newly arrived feedback; #36 was the only new item in the 2026-09-27 14:08 export.",
+    "originalFeedback": "建议加个不看某期刊按钮",
+    "verification": "Export run 36299233993 showed #36 as the only new item; post-implementation export run 36300142142 showed no additional arrivals.",
+    "implementation": "PR #260 merged as adde4d4ef5a2f5e69410935b7d9013901b4c9a37. The journal picker now has a reversible Hide/不看 control per journal, persisted in organic-gallery-filter-preferences-v1. Hidden journals stay available for Restore/恢复 and are not removed from literature data.",
+    "behavior": "Hiding a journal removes it from normal browsing/search results, clears conflicting positive selection for that journal, persists across reload, and can be restored. All journals / Clear journal-date filters reset exclusions too. Direct DOI share links remain reachable.",
+    "preMerge": "Cloudflare migration CI 36299452488, Validate Gallery authors and site data 36299452493, Card sharing CI 36299452509, and Site quality gate 36299452495 all passed. Playwright interaction regression covered hide -> reload persists -> restore.",
+    "deployment": "Worker frontend deployment 36299692686 succeeded; GitHub Pages frontend deployment 36299687242 succeeded. Both production bundles expose data-journal-exclude, excludedJournals persistence, and the bilingual Hide/Restore copy.",
+    "liveAcceptance": "Live workflow 36300032672 passed in Chromium and WebKit after correcting the smoke harness to exclude normal pageview/read-only POST traffic from unsafe-write accounting. The functional path had already completed successfully in the first attempt; final attempt confirmed hide, reload persistence and restore on https://gallery.gczhouwld.com/.",
+    "fallbackNote": "Cloudflare Pages fallback run 36299687250 failed only on the pre-existing Cloudflare Pages API token authentication error code 10000; this is independent of #36 and does not affect the primary custom-domain or Worker deployments.",
+    "scope": "Close only feedback #36. The previous 12 unresolved items remain open/paused."
   }
 }
