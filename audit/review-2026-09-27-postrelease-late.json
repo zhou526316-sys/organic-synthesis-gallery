@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-27T08:13:00+08:00",
+  "timeZone": "Asia/Shanghai",
+  "type": "postrelease-late-candidate-review",
+  "discoveryGeneratedAt": "2026-09-27T00:09:19.475Z",
+  "handoffFile": "audit/unresolved-latest.json",
+  "handoffBlobSha": "b07bd149651d323ada995ad55e9e2f797a2fd28c",
+  "scopeRulesVersion": "scope-2026-09-24-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+  "sourcePublicationSlot": "2026-09-27T08:00:00+08:00",
+  "nextPublicationSlot": "2026-09-27T18:00:00+08:00",
+  "summary": {"reviewed": 1, "accepted": 0, "rejected": 1, "pending": 0},
+  "accepted": [],
+  "rejected": [{
+    "doi": "10.1021/acscatal.6c05295",
+    "journal": "ACS Catalysis",
+    "date": "2026-09-26",
+    "title": "Non-innocent Bromide Redirects Sulfur Oxygenation through O–O Bond Cleavage in a Nonheme Fe(III)–Superoxo System",
+    "decision": "exclude",
+    "reviewPriority": "high",
+    "reason": "The article's central contribution is mechanistic analysis of a biomimetic iron model system, not a general preparative organic synthesis method.",
+    "evidenceBasis": "The fresh Crossref abstract describes a computational study of a defined biomimetic model transformation and focuses on pathway ordering and intermediate assignment. It does not report a transferable substrate scope, isolated product series, preparative yields, or a target synthesis route.",
+    "firstPassDecision": "exclude",
+    "challengeDecision": "exclude",
+    "challengeReason": "A real chemical transformation is present, so the boundary was challenged. However, the available article-specific abstract supports a mechanistic model-system study rather than a general preparative method; the transformation alone is insufficient under the current scope contract.",
+    "evidencePages": ["https://doi.org/10.1021/acscatal.6c05295"],
+    "evidenceSource": "postrelease_fresh_compact_crossref_abstract"
+  }],
+  "pending": [],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0,
+    "allCandidatesReviewed": true,
+    "offSlotProductionWrites": 0
+  }
+}
