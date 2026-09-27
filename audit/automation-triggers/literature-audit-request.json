@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-27T17:05:00+08:00",
-  "requestedBy": "prepublish-primary-20260927-1800",
+  "requestedAt": "2026-09-27T18:10:30+08:00",
+  "requestedBy": "post-release-20260927-1800",
   "publicationSlot": "2026-09-27T18:00:00+08:00",
-  "baselineMainSha": "7e293c56819bf14b1a0ffe71179325d710c44574",
-  "reason": "16:55 independent machine audit snapshot was absent and no same-slot run was queued or active. Generate a fresh 18:00 prepublish snapshot using the canonical 3-day window, 7-day safety tail, multi-ISSN Crossref online/published/created, OpenAlex and verifiedThrough catch-up; do not modify production literature data."
+  "baselineMainSha": "a00f32e313d643a03227efe14883b1e4f2ae85ed",
+  "reason": "Generate a fresh post-release completeness snapshot for the 18:00 literature release using the canonical discovery coverage; do not modify production literature data."
 }
