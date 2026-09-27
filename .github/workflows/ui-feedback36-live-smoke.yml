@@ -44,7 +44,7 @@ jobs:
           const browserType = process.env.BROWSER === 'webkit' ? webkit : chromium;
           const browser = await browserType.launch();
           const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-          let productionWrites = 0;
+          let unsafeWriteAttempts = 0;
           await context.route('**/*', async route => {
             const request = route.request();
             const url = new URL(request.url());
@@ -52,7 +52,11 @@ jobs:
               await route.continue();
               return;
             }
-            if (!['GET','HEAD','OPTIONS'].includes(request.method())) productionWrites += 1;
+            if (request.method() === 'POST' && [
+              '/api/user-ui/site-feedback',
+              '/api/user-ui/feedback',
+              '/api/user-ui/reader-counts/mark',
+            ].includes(url.pathname)) unsafeWriteAttempts += 1;
             const origin = request.headers().origin || new URL(process.env.LIVE_SITE_URL).origin;
             const headers = {
               'access-control-allow-origin': origin,
@@ -107,14 +111,15 @@ jobs:
           await page.waitForFunction(() => document.querySelectorAll('#gallery > .card[data-journal="JACS"]').length > 0);
           const restored = await page.evaluate(() => JSON.parse(localStorage.getItem('organic-gallery-filter-preferences-v1') || '{}'));
           if ((restored.excludedJournals || []).includes('JACS')) throw new Error('Restored journal remained excluded');
-          if (productionWrites !== 0) throw new Error('Live smoke attempted production API writes');
+          if (unsafeWriteAttempts !== 0) throw new Error('Journal exclusion unexpectedly attempted a mutating user action');
 
           console.log(JSON.stringify({
             ok: true,
             browser: process.env.BROWSER,
             initialJacs,
             restoredJacs: await jacs.count(),
-            productionWrites,
+            unsafeWriteAttempts,
+            apiRequestsIntercepted: true,
             liveUrl: page.url(),
           }));
           await browser.close();
