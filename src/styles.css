@@ -245,17 +245,57 @@ select {
   text-align: left;
   cursor: pointer;
 }
+.journal-option-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px;
+  border-radius: 8px;
+}
 .journal-clear:hover,
 .journal-option:hover,
 .journal-clear.active {
   background: #f2f5fb;
   color: #3159bd;
 }
+.journal-option-row.excluded {
+  background: #fff8f7;
+}
+.journal-option-row.excluded .journal-option {
+  color: #98a2b3;
+}
+.journal-option-row.excluded .journal-option span {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
 .journal-option input {
   width: 16px;
   height: 16px;
   margin: 0;
   flex: 0 0 auto;
+}
+.journal-exclude {
+  min-width: 46px;
+  margin-right: 4px;
+  padding: 5px 7px;
+  border: 1px solid #d7deea;
+  border-radius: 8px;
+  background: #fff;
+  color: #667085;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+.journal-exclude:hover {
+  border-color: #e4a39a;
+  background: #fff4f2;
+  color: #b42318;
+}
+.journal-exclude.active {
+  border-color: #f0b7af;
+  background: #fff1ef;
+  color: #b42318;
 }
 .check {
   min-height: 44px;
