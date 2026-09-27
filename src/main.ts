@@ -92,6 +92,9 @@ const copy = {
     search: '搜索标题、DOI、期刊或日期…',
     allJournals: '全部期刊',
     journalsSelected: '个期刊已选',
+    journalsHidden: '个期刊已隐藏',
+    hideJournal: '不看',
+    restoreJournal: '恢复',
     newest: '最新优先',
     oldest: '最早优先',
     mostRead: '阅读人数最多',
@@ -126,6 +129,9 @@ const copy = {
     search: 'Search title, DOI, journal or date…',
     allJournals: 'All journals',
     journalsSelected: 'journals selected',
+    journalsHidden: 'journals hidden',
+    hideJournal: 'Hide',
+    restoreJournal: 'Restore',
     newest: 'Newest first',
     oldest: 'Oldest first',
     mostRead: 'Most readers',
@@ -169,6 +175,7 @@ let query = '';
 let sort: 'newest' | 'oldest' | 'readers' = 'newest';
 let onlyNew = false;
 const selectedJournals = new Set<string>();
+const excludedJournals = new Set<string>();
 let dateFrom = '';
 let dateTo = '';
 const zhTitleCache = new Map<string, string>();
@@ -211,6 +218,7 @@ function hydrateFilterPreferences(): void {
   try {
     const saved = JSON.parse(localStorage.getItem(FILTER_PREFS_KEY) || 'null') as {
       journals?: unknown;
+      excludedJournals?: unknown;
       dateFrom?: unknown;
       dateTo?: unknown;
     } | null;
@@ -220,6 +228,12 @@ function hydrateFilterPreferences(): void {
         if (typeof journal === 'string' && journal.trim()) selectedJournals.add(journal.trim());
       }
     }
+    if (Array.isArray(saved.excludedJournals)) {
+      for (const journal of saved.excludedJournals) {
+        if (typeof journal === 'string' && journal.trim()) excludedJournals.add(journal.trim());
+      }
+    }
+    for (const journal of excludedJournals) selectedJournals.delete(journal);
     if (validFilterDate(saved.dateFrom)) dateFrom = saved.dateFrom;
     if (validFilterDate(saved.dateTo)) dateTo = saved.dateTo;
     if (dateFrom && dateTo && dateFrom > dateTo) dateTo = dateFrom;
@@ -232,6 +246,7 @@ function persistFilterPreferences(): void {
   try {
     localStorage.setItem(FILTER_PREFS_KEY, JSON.stringify({
       journals: [...selectedJournals].sort(),
+      excludedJournals: [...excludedJournals].sort(),
       dateFrom,
       dateTo,
     }));
@@ -429,6 +444,7 @@ function scheduleNewnessBoundary(): void {
 function filteredPapers(): Paper[] {
   const needle = query.trim().toLowerCase();
   const filtered = papers
+    .filter(paper => !excludedJournals.has(paper.journal))
     .filter(paper => selectedJournals.size === 0 || selectedJournals.has(paper.journal))
     .filter(paper => !dateFrom || paper.date >= dateFrom)
     .filter(paper => !dateTo || paper.date <= dateTo)
@@ -522,7 +538,12 @@ function renderCards(): void {
 }
 
 function filterSummary(): string {
-  return selectedJournals.size === 0 ? t('allJournals') : `${selectedJournals.size} ${t('journalsSelected')}`;
+  const selected = selectedJournals.size;
+  const hidden = excludedJournals.size;
+  if (selected && hidden) return `${selected} ${t('journalsSelected')} · ${hidden} ${t('journalsHidden')}`;
+  if (selected) return `${selected} ${t('journalsSelected')}`;
+  if (hidden) return `${hidden} ${t('journalsHidden')}`;
+  return t('allJournals');
 }
 
 function mount(): void {
@@ -534,7 +555,7 @@ function mount(): void {
   const earliest = dates[0] || '';
   const latest = dates[dates.length - 1] || '';
   document.title = t('title');
-  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='stats'><div class='stat'><strong>${papers.length}</strong><span>${escapeHtml(t('total'))}</span></div><div class='stat'><strong>${journals.length}</strong><span>${escapeHtml(t('journals'))}</span></div><div class='stat'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => `<label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}><span>${escapeHtml(journal)}</span></label>`).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'${earliest ? ` min='${escapeHtml(earliest)}'` : ''}${(dateTo || latest) ? ` max='${escapeHtml(dateTo || latest)}'` : ''}></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'${(dateFrom || earliest) ? ` min='${escapeHtml(dateFrom || earliest)}'` : ''}${latest ? ` max='${escapeHtml(latest)}'` : ''}></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div><section id='gallery' class='gallery' aria-live='polite'></section><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
+  app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='stats'><div class='stat'><strong>${papers.length}</strong><span>${escapeHtml(t('total'))}</span></div><div class='stat'><strong>${journals.length}</strong><span>${escapeHtml(t('journals'))}</span></div><div class='stat'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'${earliest ? ` min='${escapeHtml(earliest)}'` : ''}${(dateTo || latest) ? ` max='${escapeHtml(dateTo || latest)}'` : ''}></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'${(dateFrom || earliest) ? ` min='${escapeHtml(dateFrom || earliest)}'` : ''}${latest ? ` max='${escapeHtml(latest)}'` : ''}></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div><section id='gallery' class='gallery' aria-live='polite'></section><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
   mountUserShell(app, language);
 
   document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.addEventListener('click', () => {
@@ -577,6 +598,7 @@ function mount(): void {
   });
   document.querySelector<HTMLButtonElement>('[data-journal-clear]')?.addEventListener('click', () => {
     selectedJournals.clear();
+    excludedJournals.clear();
     persistFilterPreferences();
     mount();
   });
@@ -586,6 +608,36 @@ function mount(): void {
     persistFilterPreferences();
     const summary = document.querySelector<HTMLElement>('#journalSummary');
     if (summary) summary.textContent = filterSummary();
+    const clear = document.querySelector<HTMLButtonElement>('#clearCustomFilters');
+    if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
+    renderCards();
+  }));
+  document.querySelectorAll<HTMLButtonElement>('[data-journal-exclude]').forEach(button => button.addEventListener('click', () => {
+    const journal = button.dataset.journalExclude?.trim();
+    if (!journal) return;
+    const hidden = excludedJournals.has(journal);
+    if (hidden) excludedJournals.delete(journal);
+    else {
+      excludedJournals.add(journal);
+      selectedJournals.delete(journal);
+    }
+    persistFilterPreferences();
+    const row = button.closest<HTMLElement>('.journal-option-row');
+    const input = row?.querySelector<HTMLInputElement>('[data-journal-option]');
+    const nowHidden = excludedJournals.has(journal);
+    row?.classList.toggle('excluded', nowHidden);
+    if (input) {
+      input.checked = selectedJournals.has(journal);
+      input.disabled = nowHidden;
+    }
+    button.classList.toggle('active', nowHidden);
+    button.setAttribute('aria-pressed', nowHidden ? 'true' : 'false');
+    button.setAttribute('aria-label', `${nowHidden ? t('restoreJournal') : t('hideJournal')} ${journal}`);
+    button.textContent = nowHidden ? t('restoreJournal') : t('hideJournal');
+    const summary = document.querySelector<HTMLElement>('#journalSummary');
+    if (summary) summary.textContent = filterSummary();
+    const clear = document.querySelector<HTMLButtonElement>('#clearCustomFilters');
+    if (clear) clear.disabled = selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo;
     renderCards();
   }));
   document.querySelector<HTMLInputElement>('#dateFrom')?.addEventListener('change', event => {
@@ -602,6 +654,7 @@ function mount(): void {
   });
   document.querySelector<HTMLButtonElement>('#clearCustomFilters')?.addEventListener('click', () => {
     selectedJournals.clear();
+    excludedJournals.clear();
     dateFrom = '';
     dateTo = '';
     persistFilterPreferences();
