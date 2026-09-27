@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-27T08:08:00+08:00",
-  "requestedBy": "fixed-release-20260927-0800-postrelease",
-  "publicationSlot": "2026-09-27T08:00:00+08:00",
-  "baselineMainSha": "b51c509c7ce12b2e1737ec95bab2f428bc39101f",
-  "reason": "Post-release freshness audit for the deployed fixed-slot production generation. Detect any unresolved DOI arriving after the frozen 07:08 handoff; do not admit new literature after the 08:00 slot."
+  "requestedAt": "2026-09-27T17:05:00+08:00",
+  "requestedBy": "prepublish-primary-20260927-1800",
+  "publicationSlot": "2026-09-27T18:00:00+08:00",
+  "baselineMainSha": "7e293c56819bf14b1a0ffe71179325d710c44574",
+  "reason": "16:55 independent machine audit snapshot was absent and no same-slot run was queued or active. Generate a fresh 18:00 prepublish snapshot using the canonical 3-day window, 7-day safety tail, multi-ISSN Crossref online/published/created, OpenAlex and verifiedThrough catch-up; do not modify production literature data."
 }
