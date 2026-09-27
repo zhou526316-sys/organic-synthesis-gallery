@@ -1110,6 +1110,55 @@ test('journal and date filters persist across reload and clear cleanly', async (
 });
 
 
+test('journal exclusion hides a journal, persists, and can be restored', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const cards = page.locator('#gallery > .card');
+  await cards.first().waitFor({ state: 'visible', timeout: 30000 });
+  const initialCards = await cards.count();
+  const initialJacs = await cards.filter({ has: page.locator('[data-journal]') }).count().catch(() => 0);
+  const jacsCards = page.locator('#gallery > .card[data-journal="JACS"]');
+  expect(await jacsCards.count()).toBeGreaterThan(0);
+
+  const picker = page.locator('.journal-picker');
+  await picker.locator('summary').click();
+  const hideJacs = picker.locator('button[data-journal-exclude="JACS"]');
+  await expect(hideJacs).toHaveText(/不看|Hide/);
+  await hideJacs.click();
+
+  await expect.poll(async () => jacsCards.count()).toBe(0);
+  await expect(page.locator('#journalSummary')).toContainText(/1 个期刊已隐藏|1 journals hidden/);
+  await expect(picker.locator('input[data-journal-option][value="JACS"]')).toBeDisabled();
+  await expect(hideJacs).toHaveText(/恢复|Restore/);
+  expect(await cards.count()).toBeLessThan(initialCards);
+  expect(initialJacs).toBeGreaterThanOrEqual(0);
+
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('organic-gallery-filter-preferences-v1') || '{}'));
+  expect(saved.excludedJournals).toContain('JACS');
+
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await cards.first().waitFor({ state: 'visible', timeout: 30000 });
+  await expect.poll(async () => jacsCards.count()).toBe(0);
+  await expect(page.locator('#journalSummary')).toContainText(/1 个期刊已隐藏|1 journals hidden/);
+
+  const reloadedPicker = page.locator('.journal-picker');
+  await reloadedPicker.locator('summary').click();
+  const restoreJacs = reloadedPicker.locator('button[data-journal-exclude="JACS"]');
+  await expect(restoreJacs).toHaveText(/恢复|Restore/);
+  await restoreJacs.click();
+
+  await expect.poll(async () => jacsCards.count()).toBeGreaterThan(0);
+  await expect(page.locator('#journalSummary')).toHaveText(/全部期刊|All journals/);
+  await expect(reloadedPicker.locator('input[data-journal-option][value="JACS"]')).toBeEnabled();
+  const restored = await page.evaluate(() => JSON.parse(localStorage.getItem('organic-gallery-filter-preferences-v1') || '{}'));
+  expect(restored.excludedJournals || []).not.toContain('JACS');
+});
+
+
 for (const width of [390, 1280]) {
   test(`feedback 26/27: favorite folders and status colors persist at ${width}px`, async ({ page }, testInfo) => {
     test.setTimeout(90_000);
