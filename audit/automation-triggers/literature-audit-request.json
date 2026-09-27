@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-27T07:05:00+08:00",
-  "requestedBy": "prepublish-primary-20260927-0800",
+  "requestedAt": "2026-09-27T08:08:00+08:00",
+  "requestedBy": "fixed-release-20260927-0800-postrelease",
   "publicationSlot": "2026-09-27T08:00:00+08:00",
-  "baselineMainSha": "00db3b50ea5ec9ba879192ad03ea182cfbfaeaf8",
-  "reason": "The 06:55 independent audit did not produce a fresh 2026-09-27 08:00-slot snapshot and no same-slot literature-audit run is active. Refresh paired latest/compact from current main for the prepublish primary review."
+  "baselineMainSha": "b51c509c7ce12b2e1737ec95bab2f428bc39101f",
+  "reason": "Post-release freshness audit for the deployed fixed-slot production generation. Detect any unresolved DOI arriving after the frozen 07:08 handoff; do not admit new literature after the 08:00 slot."
 }
