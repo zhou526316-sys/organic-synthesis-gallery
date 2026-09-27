@@ -1120,7 +1120,6 @@ test('journal exclusion hides a journal, persists, and can be restored', async (
   const cards = page.locator('#gallery > .card');
   await cards.first().waitFor({ state: 'visible', timeout: 30000 });
   const initialCards = await cards.count();
-  const initialJacs = await cards.filter({ has: page.locator('[data-journal]') }).count().catch(() => 0);
   const jacsCards = page.locator('#gallery > .card[data-journal="JACS"]');
   expect(await jacsCards.count()).toBeGreaterThan(0);
 
@@ -1135,7 +1134,6 @@ test('journal exclusion hides a journal, persists, and can be restored', async (
   await expect(picker.locator('input[data-journal-option][value="JACS"]')).toBeDisabled();
   await expect(hideJacs).toHaveText(/恢复|Restore/);
   expect(await cards.count()).toBeLessThan(initialCards);
-  expect(initialJacs).toBeGreaterThanOrEqual(0);
 
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('organic-gallery-filter-preferences-v1') || '{}'));
   expect(saved.excludedJournals).toContain('JACS');
