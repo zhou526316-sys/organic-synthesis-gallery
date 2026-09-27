@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-27T00:09:19.475Z",
+  "generatedAt": "2026-09-27T00:15:59.058Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-21",
@@ -10,15 +10,15 @@
     "galleryDois": 624,
     "sourceRecords": 822,
     "rawMissingFromGallery": 682,
-    "previouslyReviewedExcluded": 679,
-    "missingFromGallery": 3,
-    "potentialGaps": 3,
+    "previouslyReviewedExcluded": 680,
+    "missingFromGallery": 2,
+    "potentialGaps": 2,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 5,
     "historicalCoverageLosses": 0,
-    "unresolved": 3,
+    "unresolved": 2,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -353,29 +353,6 @@
   ],
   "unresolved": [
     {
-      "doi": "10.1021/acscatal.6c05295",
-      "journal": "ACS Catalysis",
-      "title": "Non-innocent Bromide Redirects Sulfur Oxygenation through O–O Bond Cleavage in a Nonheme Fe(III)–Superoxo System",
-      "abstract": "Abstract Thiol dioxygenase chemistry requires nonheme iron centers to activate triplet O2 while controlling a sequence of short-lived Fe/O2 intermediates, O–O bond cleavage or reorganization, and selective oxygen-atom delivery to sulfur. However, the identity and ordering of these intermediates remain difficult to define, and proposed mechanisms differ in whether sulfur oxygenation precedes, accompanies, or follows O–O bond cleavage. Here, we employ density functional theory (DFT) to interrogate the conversion of a metastable side-on Fe(III)–superoxo intermediate to an FeII–sulfinate product in a sulfur-ligated biomimetic system. The calculations show that the expected oxygenation pathways are kinetically disfavored, as direct sulfur oxygenation from the side-on Fe(III)–superoxo species requires a barrier of 22.4 kcal mol–1 and side-on-to-end-on isomerization does not provide an efficient cysteine dioxygenase (CDO)-like oxygen-transfer pathway. Instead, the reaction proceeds through a bromide-assisted O–O cleavage mechanism, in which outer-sphere Br– promotes O–O bond cleavage to generate an FeIV=O(OBr) intermediate as the competent oxygenating species. Subsequent coordination reorganization and second-sphere hydrogen bonding enable sequential oxygen transfer to sulfur, ultimately forming the FeII–sulfinate product. Reaction-coordinate, bonding, and topological analyses show th",
-      "date": "2026-09-26",
-      "type": "journal-article",
-      "authors": [
-        "Dongru Sun",
-        "Jolene P. Reid"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1002/anie.8666577",
       "journal": "Angew",
       "title": "Cobalt‐Catalyzed [2σ+2π] Cycloaddition via Site‐Selective Capture of Bicyclobutane Diradical",
@@ -447,7 +424,6 @@
     }
   ],
   "potentialGapDois": [
-    "10.1021/acscatal.6c05295",
     "10.1002/anie.8666577",
     "10.31635/ccschem.026.202608262"
   ]
