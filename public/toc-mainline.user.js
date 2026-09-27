@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.37';
+  var CONTROLLER_REVISION = '2.2.38';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -73,7 +73,7 @@
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
-  var FAILURE_ENGINE_REVISION = VERSION + ':20260927-recent-failure-clusters';
+  var FAILURE_ENGINE_REVISION = VERSION + ':20260928-toc-first-and-auth-state';
   var DEFAULT_BATCH_SIZE = 8;
   var NEXT_BATCH_DELAY_MS = 12000;
   var nextBatchTimer = null;
@@ -743,14 +743,20 @@ function embeddedJobDois(value) {
   }
 
   function captureQueueTier(job, latestAddedDate) {
-    // A newly published Gallery batch always preempts historical cleanup.
-    if (latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate)) return -3;
-    // Between publication waves, clear Nature/Science-family visual gaps before
-    // summary/evidence backfill or other historical media work.
-    if (job && job.captureToc === true && isNatureScienceFamilyJob(job)) return -2;
+    var isLatest = Boolean(latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate));
+    // TOC coverage is the hard first pass. "Latest" only boosts a job inside the
+    // missing-TOC class; it must never let a figure/evidence job jump ahead of a
+    // paper that still has no card visual.
+    if (job && job.captureToc === true) {
+      if (isLatest) return -4;
+      if (isNatureScienceFamilyJob(job)) return -3;
+      return -2;
+    }
     if (job && job.summaryUrgent === true) return -1;
-    if (job && job.captureToc === true) return 1;
-    if (job && (job.captureToc === false || String(job.state || '') === 'figure_gap' || String(job.mediaNeed || '') === 'figures')) return 2;
+    // Only after all missing-TOC work is exhausted may today's already-covered
+    // papers move ahead for body figures/evidence.
+    if (isLatest) return 0;
+    if (job && (String(job.state || '') === 'figure_gap' || String(job.mediaNeed || '') === 'figures')) return 2;
     if (String(job && job.mediaNeed || '') === 'evidence') return 3;
     return 4;
   }
@@ -1783,14 +1789,20 @@ function embeddedJobDois(value) {
     var text = String(document.body && document.body.innerText || '').slice(0, 120000);
     var title = String(document.title || '');
     var href = location.href;
-    var challenge = /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic|checking your browser/i.test(title + '\n' + text);
-    var auth = /(?:login|signin|sign-in|shibboleth|saml|openathens|wayf|\/idp\/)/i.test(href)
-      || /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login/i.test(title + '\n' + text);
     var citation = String((document.querySelector('meta[name="citation_doi"]') || {}).content || '').toLowerCase();
     var canonical = String((document.querySelector('link[rel="canonical"]') || {}).href || '').toLowerCase();
     var doi = normalizeDoi(job.doi);
     var suffix = doi.split('/').pop() || doi;
     var doiMatch = citation.indexOf(doi) >= 0 || canonical.indexOf(doi) >= 0 || href.toLowerCase().indexOf(suffix.toLowerCase()) >= 0;
+    var meaningfulArticle = doiMatch && text.length >= 900;
+    // Publisher article pages often retain "sign in via your institution" and even
+    // stale verification strings in navigation/hidden DOM after access is already
+    // granted. Do not keep a verified, DOI-bound article in auth/challenge_wait.
+    var challengeSignal = /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic|checking your browser/i.test(title + '\n' + text);
+    var authUrl = /(?:login|signin|sign-in|shibboleth|saml|openathens|wayf|\/idp\/)/i.test(href);
+    var authText = /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login/i.test(title + '\n' + text);
+    var challenge = challengeSignal && !meaningfulArticle;
+    var auth = authUrl || (authText && !meaningfulArticle);
     var shell = (job.publisher === 'acs' || job.publisher === 'wiley') && doiMatch && !challenge && !auth && text.length > 0 && text.length < 500;
     pushTrace(trace, {
       stage: 'page',
@@ -2936,7 +2948,7 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.37')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.38')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
