@@ -423,7 +423,7 @@ async function handleApi(request, env, ctx) {
       publishedAutomatically:false,
       officialTocAutoPromotion:true,
       productionTocAuthority:'d1',
-      mediaControllerRevision:'2.2.36',
+      mediaControllerRevision:'2.2.37',
       stageStorageRevision:STAGE_STORAGE_REVISION,
       bodyReviewMarkerRevision:'1',
       evidenceSchemaVersion:ARTICLE_EVIDENCE_SCHEMA_VERSION,
