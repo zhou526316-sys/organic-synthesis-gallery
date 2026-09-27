@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-27T08:17:00+08:00",
-  "publicationSlot": "2026-09-27T08:00:00+08:00",
-  "releaseCommit": "bcc4e5f31bfd2a738da9d387ef24b17c2ad40eb7",
-  "baselineMain": "455f983c03496bb2bb76550eee383c949be3a680",
-  "postReleaseAuditRunId": 36281869812,
-  "postReleaseAuditGeneratedAt": "2026-09-27T00:15:59.058Z",
-  "expectedProductionCards": 624,
+  "requestedAt": "2026-09-27T18:12:30+08:00",
+  "publicationSlot": "2026-09-27T18:00:00+08:00",
+  "releaseCommit": "69bdb1f78d99fe4465b13aeb1fac178e79f5ee85",
+  "baselineMain": "5317d9bc473369c29f7e29af621d5014b15e72b9",
+  "postReleaseAuditRunId": 36311679157,
+  "postReleaseAuditGeneratedAt": "2026-09-27T10:11:07.707Z",
+  "expectedProductionCards": 627,
   "expectedDeferredDois": [
     "10.1002/anie.8666577",
     "10.31635/ccschem.026.202608262"
   ],
   "observedUnresolvedCount": 2,
-  "purpose": "Run the real post-release quality gate for the deployed 2026-09-27 08:00 release after the late-indexed ACS Catalysis DOI received a persisted two-pass exclude review and the fresh audit reduced unresolved to the exact two formal deferred DOI."
+  "purpose": "Post-release quality validation for the 18:00 slot."
 }
