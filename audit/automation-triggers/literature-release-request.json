@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "requestId": "20260927-0800-fixed-slot-release",
-  "requestedAt": "2026-09-27T08:01:01+08:00",
-  "publicationSlot": "2026-09-27T08:00:00+08:00",
-  "stagingReviewFile": "audit/prepublish-review-2026-09-27-0800.json",
-  "stagingReviewBlobSha": "843e5b1480282a6659950e39c3371100aa8e9c7d",
-  "handoffBlobSha": "1d0904023af9b188ea1e797e4b8702712dff2cce",
-  "auditBlobSha": "3646378e80d769cb3979734db44b31f135da2fec",
-  "prepublishGateRunId": 36279271815,
-  "expectedPublishableCount": 10,
+  "requestId": "20260927-1800-fixed-slot-release",
+  "requestedAt": "2026-09-27T18:04:00+08:00",
+  "publicationSlot": "2026-09-27T18:00:00+08:00",
+  "stagingReviewFile": "audit/prepublish-review-2026-09-27-1800.json",
+  "stagingReviewBlobSha": "5caf547d579fb80ce9cff6b3ade6a815ff3650a9",
+  "handoffBlobSha": "9882c6234c34605790d4d954852d7ab640e39171",
+  "auditBlobSha": "e7c07d36c0cbfa29170a74fc65677a6908d4648d",
+  "prepublishGateRunId": 36308773719,
+  "expectedPublishableCount": 3,
   "expectedDeferredCount": 2,
-  "note": "Fixed-slot request for the current reviewed 2026-09-27 08:00 snapshot; consume only the strict release-preflight bundle bound to these frozen inputs."
+  "note": "Fixed-slot request for the current reviewed 2026-09-27 18:00 snapshot; consume only the strict release-preflight bundle bound to these frozen inputs."
 }
