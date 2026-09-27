@@ -3367,8 +3367,13 @@ function embeddedJobDois(value) {
       var state=pageState(job,trace);
       if (state.auth || state.challenge) {
         captureLiveUpdate(job,state.auth?'auth_wait':'challenge_wait');
-        GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:state.auth?'auth_wait':'challenge_wait',at:nowIso()});
+        GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:state.auth?'auth_wait':'challenge_wait',at:nowIso(),url:location.href});
         await sleep(2000); continue;
+      }
+      var gateProgress = GM_getValue(progressKey(job.doi),null);
+      if (gateProgress && /^(?:auth_wait|challenge_wait)$/.test(String(gateProgress.status||''))) {
+        GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:'publisher_verified',at:nowIso(),url:location.href,version:VERSION,host:location.hostname});
+        captureLiveUpdate(job,'discovering');
       }
       var wantsToc = job.captureToc === true;
       var wantsFigures = job && typeof job.captureFigures === 'boolean'
