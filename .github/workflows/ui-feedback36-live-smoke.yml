@@ -1,0 +1,121 @@
+name: Verify journal exclusion live
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ui-feedback36-live-smoke.yml'
+      - 'audit/ui-feedback36-live-trigger.txt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-feedback36-live-smoke
+  cancel-in-progress: false
+
+jobs:
+  exclude-live:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      LIVE_SITE_URL: https://gallery.gczhouwld.com/
+      BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install pinned Playwright
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --no-package-lock --no-audit --no-fund playwright@1.55.0
+          npx --no-install playwright install --with-deps "$BROWSER"
+      - name: Verify hide, persistence and restore without production writes
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { chromium, webkit } from 'playwright';
+          const browserType = process.env.BROWSER === 'webkit' ? webkit : chromium;
+          const browser = await browserType.launch();
+          const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+          let productionWrites = 0;
+          await context.route('**/*', async route => {
+            const request = route.request();
+            const url = new URL(request.url());
+            if (!url.pathname.startsWith('/api/')) {
+              await route.continue();
+              return;
+            }
+            if (!['GET','HEAD','OPTIONS'].includes(request.method())) productionWrites += 1;
+            const origin = request.headers().origin || new URL(process.env.LIVE_SITE_URL).origin;
+            const headers = {
+              'access-control-allow-origin': origin,
+              'access-control-allow-credentials': 'true',
+              'access-control-allow-methods': 'GET, HEAD, OPTIONS, POST',
+              'access-control-allow-headers': request.headers()['access-control-request-headers'] || 'content-type, authorization',
+            };
+            if (request.method() === 'OPTIONS') {
+              await route.fulfill({ status: 204, headers });
+              return;
+            }
+            if (url.pathname.endsWith('/reader-counts')) {
+              await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+              return;
+            }
+            if (url.pathname.endsWith('/integrations')) {
+              await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }) });
+              return;
+            }
+            await route.fulfill({ status: 200, headers, contentType: 'application/json', body: JSON.stringify({ ok: true, counts: {} }) });
+          });
+
+          const page = await context.newPage();
+          await page.goto(process.env.LIVE_SITE_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
+          const cards = page.locator('#gallery > .card');
+          await cards.first().waitFor({ state: 'visible', timeout: 30000 });
+          const jacs = page.locator('#gallery > .card[data-journal="JACS"]');
+          const initialJacs = await jacs.count();
+          if (initialJacs < 1) throw new Error('Live Gallery has no JACS cards for exclusion test');
+
+          const picker = page.locator('.journal-picker');
+          await picker.locator('summary').click();
+          const hide = picker.locator('button[data-journal-exclude="JACS"]');
+          await hide.waitFor({ state: 'visible', timeout: 10000 });
+          if (!/不看|Hide/.test(await hide.textContent() || '')) throw new Error('Hide button copy is missing');
+          await hide.click();
+          await page.waitForFunction(() => document.querySelectorAll('#gallery > .card[data-journal="JACS"]').length === 0);
+          const summary = await page.locator('#journalSummary').textContent();
+          if (!/1 个期刊已隐藏|1 journals hidden/.test(summary || '')) throw new Error('Hidden journal summary is missing');
+          const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('organic-gallery-filter-preferences-v1') || '{}'));
+          if (!Array.isArray(saved.excludedJournals) || !saved.excludedJournals.includes('JACS')) throw new Error('Excluded journal preference did not persist');
+
+          await page.reload({ waitUntil: 'domcontentloaded' });
+          await cards.first().waitFor({ state: 'visible', timeout: 30000 });
+          if (await jacs.count()) throw new Error('Excluded JACS cards returned after reload');
+
+          const pickerAfter = page.locator('.journal-picker');
+          await pickerAfter.locator('summary').click();
+          const restore = pickerAfter.locator('button[data-journal-exclude="JACS"]');
+          if (!/恢复|Restore/.test(await restore.textContent() || '')) throw new Error('Restore button copy is missing');
+          await restore.click();
+          await page.waitForFunction(() => document.querySelectorAll('#gallery > .card[data-journal="JACS"]').length > 0);
+          const restored = await page.evaluate(() => JSON.parse(localStorage.getItem('organic-gallery-filter-preferences-v1') || '{}'));
+          if ((restored.excludedJournals || []).includes('JACS')) throw new Error('Restored journal remained excluded');
+          if (productionWrites !== 0) throw new Error('Live smoke attempted production API writes');
+
+          console.log(JSON.stringify({
+            ok: true,
+            browser: process.env.BROWSER,
+            initialJacs,
+            restoredJacs: await jacs.count(),
+            productionWrites,
+            liveUrl: page.url(),
+          }));
+          await browser.close();
+          NODE
