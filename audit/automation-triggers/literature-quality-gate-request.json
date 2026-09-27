@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-27T18:12:30+08:00",
+  "requestedAt": "2026-09-27T21:12:00+08:00",
   "publicationSlot": "2026-09-27T18:00:00+08:00",
   "releaseCommit": "69bdb1f78d99fe4465b13aeb1fac178e79f5ee85",
   "baselineMain": "5317d9bc473369c29f7e29af621d5014b15e72b9",
@@ -12,5 +12,7 @@
     "10.31635/ccschem.026.202608262"
   ],
   "observedUnresolvedCount": 2,
-  "purpose": "Post-release quality validation for the 18:00 slot."
+  "purpose": "Post-deployment quality validation for the already-authorized 2026-09-27 18:00 slot after Pages retry; no new literature admission.",
+  "pagesRunId": 36321283468,
+  "deploymentRetryCommit": "2f070a30e4c7410a9852c569a66f1481f8793ac4"
 }
