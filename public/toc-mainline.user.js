@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.36';
+  var CONTROLLER_REVISION = '2.2.37';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -73,7 +73,7 @@
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
-  var FAILURE_ENGINE_REVISION = VERSION + ':20260926-nature-science-rescue';
+  var FAILURE_ENGINE_REVISION = VERSION + ':20260927-recent-failure-clusters';
   var DEFAULT_BATCH_SIZE = 8;
   var NEXT_BATCH_DELAY_MS = 12000;
   var nextBatchTimer = null;
@@ -474,7 +474,7 @@ function embeddedJobDois(value) {
       || String(job && job.mediaNeed || '').indexOf('figures') >= 0
       || String(job && job.mediaNeed || '') === 'evidence'
       || String(job && job.state || '') === 'figure_gap';
-    if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + doi;
+    if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
     if (publisher === 'science') return 'https://www.science.org/doi/' + (figureJob ? 'full/' : '') + doi;
@@ -1548,6 +1548,24 @@ function embeddedJobDois(value) {
     return rows;
   }
 
+  function natureDeterministicFigureOneCandidates(job) {
+    if (String(job && job.publisher || '') !== 'nature' || job.allowFigureOne === false) return [];
+    var doi = normalizeDoi(job && job.doi);
+    var m = /^10\.1038\/s(\d+)-(\d{3})-(\d+)-[a-z0-9]+$/i.exec(doi);
+    if (!m) return [];
+    var journalId = m[1], year = 2000 + Number(m[2]), articleId = String(Number(m[3]));
+    if (!journalId || !year || !articleId) return [];
+    var stem = 'springer-static/image/art%3A10.1038%2F' + encodeURIComponent(doi.split('/')[1])
+      + '/MediaObjects/' + journalId + '_' + year + '_' + articleId + '_Fig1_HTML.png';
+    return [
+      'https://media.springernature.com/lw685/' + stem,
+      'https://media.springernature.com/full/' + stem,
+      'https://media.springernature.com/m685/' + stem
+    ].map(function(url,index){
+      return {url:url,kind:'figure1',assetType:'figure1_fallback',score:145-index,text:'Figure 1',source:'nature_deterministic_figure1',element:null};
+    });
+  }
+
   function collectCandidates(job, trace, root, baseUrl, sourceName, quiet) {
     var scope = root || document, rows = [], seen = new Set();
     function add(row) { if (!seen.has(row.url) && candidateBelongsToJob(row.url,job) && !reject(row.text,row.url)) { seen.add(row.url); rows.push(row); } }
@@ -1566,6 +1584,9 @@ function embeddedJobDois(value) {
     });
     if (String(job && job.publisher || '') === 'wiley') {
       wileyGraphicalAbstractCandidates(job, scope, baseUrl || location.href).forEach(add);
+    }
+    if (String(job && job.publisher || '') === 'nature') {
+      natureDeterministicFigureOneCandidates(job).forEach(add);
     }
     // No whole-page semantic windows: adjacent Scheme images must not inherit a TOC heading.
     rows.sort(function(a,b){return b.score-a.score;});
@@ -1978,7 +1999,13 @@ function embeddedJobDois(value) {
     return rows;
   }
 
-  function evidenceArticleUrl() {
+  function evidenceArticleUrl(job) {
+    // Evidence identity must use a DOI-bearing canonical URL. ACS Silverchair
+    // article routes can be fully loaded while omitting the DOI from location.href.
+    return articleUrl(job);
+  }
+
+  function evidenceSourceUrl() {
     try {
       var url = new URL(location.href);
       url.hash = '';
@@ -2017,7 +2044,8 @@ function embeddedJobDois(value) {
       var hasClose=types.has('conclusion')||types.has('mechanism')||types.has('optimization');
       fulltextStatus=hasCore&&hasClose?'complete':'partial';
     }
-    var articleUrl = evidenceArticleUrl();
+    var articleUrl = evidenceArticleUrl(job);
+    var sourceUrl = evidenceSourceUrl();
     return {
       schemaVersion:EVIDENCE_SCHEMA_VERSION,
       doi:pageDoi,
@@ -2026,7 +2054,7 @@ function embeddedJobDois(value) {
       journal:evidenceNormalizeText(job.journal || ''),
       publisher:job.publisher || publisherForDoi(pageDoi),
       articleUrl:articleUrl,
-      sourceUrl:articleUrl,
+      sourceUrl:sourceUrl,
       captureVersion:VERSION,
       controllerRevision:CONTROLLER_REVISION,
       jobId:job.jobId,
@@ -2908,7 +2936,7 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.36')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.37')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
