@@ -2,11 +2,11 @@ name: Fixed-slot literature release writer
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - 'automation/release-*'
     paths:
       - 'audit/automation-triggers/literature-release-request.json'
-      - '.github/workflows/literature-fixed-slot-release.yml'
-      - 'scripts/apply-fixed-slot-literature-release.mjs'
 
 permissions:
   contents: write
