@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body5-20260924-0451",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-23T20:51:23Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10769101601,
+  "evidenceArchiveSha256": "d2225a7cef8bb4f8ed363460502716f419e9c9a7ddcce5a94987126f146503c2",
+  "evidenceRunId": 35901029985,
+  "evidenceBaseSha": "84055e52fae8f4e8491543c6ee66dcdc79d0686b",
+  "stageIndexSha256": "c1085c100e7628b4eedda0e15dc812cbc9fe77f6b3f5d10a5d6398f8b4f6fe7a",
+  "approvedCount": 11,
+  "reviewMethod": "Each selected stored file was independently byte-hash checked against the frozen GitHub evidence archive and visually inspected with its owning caption and paper theme. Task/page/article/source DOI binding, figure identity, capture protocol 6.2.20, fixed media generation, source role, image clarity and same-ID publication risk were checked. Capture success and review markers were treated as provenance evidence only, not semantic approval. No publisher recrawl, R2 write, direct import/repair, literature-data change or userscript change was performed.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.orglett.6c03258",
+      "images": [
+        ["next-005", "scheme-1", "Viewed the prior-art context and the cyclic diarylchloronium salt strategy for cofixation of NH3 and CO2; the chemistry and labels match Scheme 1 and the paper theme."],
+        ["next-025", "scheme-2", "Viewed the cyclic diarylchloronium salt substrate scope with structures and yields; this is the paper's Scheme 2 scope panel and is legible."],
+        ["next-026", "scheme-3", "Viewed the unstrained cyclic amine bifunctionalization substrate scope and product series; the content matches Scheme 3 and its owning caption."],
+        ["next-027", "scheme-4", "Viewed the late-stage derivatization and synthetic application examples; the transformations match Scheme 4 and the article's synthetic-utility section."],
+        ["next-028", "scheme-5", "Viewed the mechanistic experiments and proposed pathway for the NH3/CO2 cofixation reaction; the panel matches Scheme 5 and is distinct from TOC media."]
+      ]
+    },
+    {
+      "doi": "10.1038/s41929-026-01600-0",
+      "images": [
+        ["next-006", "figure-2", "Viewed the anti-Markovnikov hydroalkylation substrate-scope figure; products, yields and iron photocatalysis context match Figure 2 and the Nature Catalysis paper."],
+        ["next-029", "figure-3", "Viewed the synthetic-utility and downstream transformation figure; the chemistry matches Figure 3, the owning caption and the paper's alkene hydroalkylation theme."],
+        ["next-030", "figure-4", "Viewed the mechanistic-control and mechanistic-analysis figure; the experiments and annotations match Figure 4 and are clearly readable in the stored WebP."]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c05029",
+      "images": [
+        ["next-007", "figure-2", "Viewed the computational distortion-interaction and IGM analysis for the ferrocenyl halide kinetic resolution; content matches Figure 2 and its caption despite other article figures remaining uncaptured."]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c05787",
+      "images": [
+        ["next-008", "scheme-1", "Viewed the prior strategies, ligand-control hypothesis and current zinc-catalysis concept for selective alcohol transformations; the overview matches Scheme 1 and its caption."]
+      ]
+    },
+    {
+      "doi": "10.1021/acscatal.6c05293",
+      "images": [
+        ["next-009", "figure-1", "Viewed the biologically relevant tetrahydroquinoline examples, prior oxidation strategies and current aerobic C3-hydroxylation design; this is explicitly body Figure 1, not a TOC image."]
+      ]
+    }
+  ]
+}
