@@ -1,29 +1,29 @@
 {
-  "generatedAt": "2026-09-28T00:19:13.517Z",
+  "generatedAt": "2026-09-28T05:32:31.516Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 572,
+  "liveLocalCaptures": 578,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
   "mediaInventoryCount": 633,
   "webpageDoiCount": 633,
   "latestAddedDate": "2026-09-28",
   "latestAddedCount": 6,
-  "mediaRecordCount": 603,
-  "visibleGapTotal": 35,
-  "demandTotal": 35,
-  "noVisual": 35,
+  "mediaRecordCount": 609,
+  "visibleGapTotal": 29,
+  "demandTotal": 29,
+  "noVisual": 29,
   "fallbackOnlyNeedsOfficialUpgrade": 101,
-  "missingOfficialTotal": 136,
+  "missingOfficialTotal": 130,
   "figureGapTotal": 633,
   "zeroFigureGapTotal": 633,
   "lowResolutionFigureGapTotal": 0,
   "unknownQualityFigureGapTotal": 0,
   "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 28,
-    "wiley": 2,
+    "acs": 24,
+    "wiley": 0,
     "nature": 4,
     "science": 0,
     "rsc": 0,
@@ -42,26 +42,14 @@
     "other": 0
   },
   "byJournal": {
-    "ACS Catalysis": 5,
+    "ACS Catalysis": 4,
     "JACS": 1,
-    "JOC": 1,
-    "Organic Letters": 21,
+    "Organic Letters": 19,
     "CCS Chemistry": 1,
     "Nature": 2,
-    "Nature Communications": 2,
-    "Angew": 2
+    "Nature Communications": 2
   },
   "sample": [
-    {
-      "doi": "10.1021/acscatal.6c05705",
-      "journal": "ACS Catalysis",
-      "title": "(ProPhos)Ni-Catalyzed Suzuki–Miyaura Coupling of (Hetero)aryl Pseudohalides under Homogeneous Conditions",
-      "date": "2026-09-27",
-      "addedDate": "2026-09-28",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
     {
       "doi": "10.1021/acscatal.6c02931",
       "journal": "ACS Catalysis",
@@ -111,36 +99,6 @@
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01551",
-      "journal": "JOC",
-      "title": "Modifications of Phenols with β-Lactam via Ring–Opening Reaction",
-      "date": "2026-09-27",
-      "addedDate": "2026-09-28",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03620",
-      "journal": "Organic Letters",
-      "title": "Catalytic Stereoselective Intermolecular Fluoroacylation of Unactivated Alkynes via C–F Bond Reconstruction",
-      "date": "2026-09-27",
-      "addedDate": "2026-09-28",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03784",
-      "journal": "Organic Letters",
-      "title": "Enantioselective N -Allylation of Sulfoximines by Cooperative Catalysis of Iridium Catalyst and Borinic Acid Catalyst",
-      "date": "2026-09-27",
-      "addedDate": "2026-09-28",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
     },
     {
       "doi": "10.1021/acs.orglett.6c03612",
@@ -301,6 +259,46 @@
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": "user_observed_no_image"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02431",
+      "journal": "Organic Letters",
+      "title": "Chiral Hydroxamic Ester-Enabled Asymmetric Catellani Reaction for the Synthesis of P-Stereogenic Phosphepine Oxides",
+      "date": "2026-07-01",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02459",
+      "journal": "Organic Letters",
+      "title": "",
+      "date": "2026-07-01",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c02752",
+      "journal": "Organic Letters",
+      "title": "",
+      "date": "2026-07-01",
+      "addedDate": "",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608315",
+      "journal": "CCS Chemistry",
+      "title": "Enantiodivergent Total Syntheses of Minfiensine Enantiomers Enable Comparative Anticancer Profiling in Breast Cancer Cell Models",
+      "date": "2026-09-23",
+      "addedDate": "2026-09-24",
+      "publisher": "ccs",
+      "state": "no_visual",
+      "existingReason": ""
     }
   ]
 }
