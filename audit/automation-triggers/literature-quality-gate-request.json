@@ -1,18 +1,19 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-27T21:12:00+08:00",
-  "publicationSlot": "2026-09-27T18:00:00+08:00",
-  "releaseCommit": "69bdb1f78d99fe4465b13aeb1fac178e79f5ee85",
-  "baselineMain": "5317d9bc473369c29f7e29af621d5014b15e72b9",
-  "postReleaseAuditRunId": 36311679157,
-  "postReleaseAuditGeneratedAt": "2026-09-27T10:11:07.707Z",
-  "expectedProductionCards": 627,
+  "requestedAt": "2026-09-28T08:26:00+08:00",
+  "publicationSlot": "2026-09-28T08:00:00+08:00",
+  "releaseCommit": "c4e2a4c713b9c51d078cde3fbf32ae6629ae748c",
+  "baselineMain": "07f241e37b9519a06a8c1de02b7b67d60bc639e7",
+  "postReleaseAuditRunId": 36361078748,
+  "postReleaseAuditGeneratedAt": "2026-09-28T00:09:15.196Z",
+  "expectedProductionCards": 633,
   "expectedDeferredDois": [
+    "10.31635/ccschem.026.202608472",
     "10.1002/anie.8666577",
     "10.31635/ccschem.026.202608262"
   ],
-  "observedUnresolvedCount": 2,
-  "purpose": "Post-deployment quality validation for the already-authorized 2026-09-27 18:00 slot after Pages retry; no new literature admission.",
-  "pagesRunId": 36321283468,
-  "deploymentRetryCommit": "2f070a30e4c7410a9852c569a66f1481f8793ac4"
+  "observedUnresolvedCount": 3,
+  "purpose": "Post-deployment quality validation for the authorized 2026-09-28 08:00 per-DOI slot after TOC refresh and successful Pages deployment; no new literature admission.",
+  "pagesRunId": 36361857173,
+  "deploymentRetryCommit": "07f241e37b9519a06a8c1de02b7b67d60bc639e7"
 }
