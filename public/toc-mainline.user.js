@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.38';
+  var CONTROLLER_REVISION = '2.2.39';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -73,7 +73,7 @@
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
-  var FAILURE_ENGINE_REVISION = VERSION + ':20260928-toc-first-and-auth-state';
+  var FAILURE_ENGINE_REVISION = VERSION + ':20260928-stale-active-job-recovery';
   var DEFAULT_BATCH_SIZE = 8;
   var NEXT_BATCH_DELAY_MS = 12000;
   var nextBatchTimer = null;
@@ -2867,10 +2867,54 @@ function embeddedJobDois(value) {
     return result&&result.jobId===job.jobId&&result.version===VERSION&&result.finishedAt?result:null;
   }
 
+  function reconcileActiveJobBeforeDispatch() {
+    var active = GM_getValue(ACTIVE_JOB_KEY,null);
+    if (!active) return {busy:false,cleared:false,reason:'none'};
+    var doi = normalizeDoi(active.doi);
+    if (!doi || !active.jobId) {
+      GM_deleteValue(ACTIVE_JOB_KEY);
+      return {busy:false,cleared:true,reason:'invalid_active_job'};
+    }
+
+    var completed = completedPublisherResult(active);
+    if (completed) {
+      GM_deleteValue(ACTIVE_JOB_KEY);
+      var completedProgress = GM_getValue(progressKey(doi),null);
+      if (!completedProgress || !completedProgress.jobId || completedProgress.jobId===active.jobId) GM_deleteValue(progressKey(doi));
+      var completedHb = currentPublisherHeartbeat();
+      if (completedHb && completedHb.jobId===active.jobId) GM_deleteValue(HEARTBEAT_KEY);
+      return {busy:false,cleared:true,reason:'completed_active_job'};
+    }
+
+    var now = Date.now();
+    var hb = currentPublisherHeartbeat();
+    var hbFresh = Boolean(hb && hb.jobId===active.jobId && now-Number(hb.at||0) < 60000);
+    var progress = GM_getValue(progressKey(doi),null);
+    var progressAt = progress && progress.jobId===active.jobId ? Date.parse(progress.at||'') : NaN;
+    var progressFresh = Number.isFinite(progressAt) && now-progressAt < 60000;
+    var startedAt = Date.parse(active.startedAt||'');
+    var ageMs = Number.isFinite(startedAt) ? now-startedAt : Infinity;
+
+    if (hbFresh || progressFresh) {
+      return {busy:true,cleared:false,reason:'active_job_fresh',doi:doi,ageMs:ageMs};
+    }
+
+    // Normal publisher work is bounded by an 8-minute controller timeout. Give
+    // another two minutes of safety margin before treating a job as orphaned.
+    if (ageMs >= 10*60*1000) {
+      GM_deleteValue(ACTIVE_JOB_KEY);
+      if (!progress || !progress.jobId || progress.jobId===active.jobId) GM_deleteValue(progressKey(doi));
+      if (hb && hb.jobId===active.jobId) GM_deleteValue(HEARTBEAT_KEY);
+      return {busy:false,cleared:true,reason:'stale_active_job',doi:doi,ageMs:ageMs};
+    }
+
+    return {busy:true,cleared:false,reason:'active_job_grace',doi:doi,ageMs:ageMs};
+  }
+
   function controllerFailureDisposition(reason) {
     reason=String(reason||'');
-    if(/^(?:controller_lease_lost|another_task_still_active|capture_server_upgrade_pending)$/.test(reason))return 'stop';
-    if(/^(?:task_tab_handle_unavailable|previous_task_tab_not_closed|bound_publisher_heartbeat_missing|controller_timeout)$/.test(reason))return 'skip';
+    if(/^(?:controller_lease_lost|capture_server_upgrade_pending)$/.test(reason))return 'stop';
+    if(/^(?:another_task_still_active|task_tab_handle_unavailable|previous_task_tab_not_closed|bound_publisher_heartbeat_missing|controller_timeout)$/.test(reason))return 'skip';
     return 'record';
   }
 
@@ -2948,7 +2992,7 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.38')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.39')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
@@ -3022,7 +3066,15 @@ function embeddedJobDois(value) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
         // Fail before opening any page, and never dispatch after loss of ownership.
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
-        if(GM_getValue(ACTIVE_JOB_KEY,null)) {stopReason='another_task_still_active';break;}
+        var activeState = reconcileActiveJobBeforeDispatch();
+        if(activeState.cleared) {
+          badge('已自动清理旧任务：'+String(activeState.doi||'')+'；继续抓取','#374151');
+        }
+        if(activeState.busy) {
+          stopReason='active_task_wait';
+          badge('已有任务仍在处理：'+String(activeState.doi||'')+'；15 秒后自动复查','#374151');
+          break;
+        }
         var evidenceOnly=batch[i].captureToc!==true && batch[i].captureFigures!==true && batch[i].captureEvidence===true;
         var attemptGeneration=evidenceOnly?evidenceGeneration:generation;
         var attemptKind=evidenceOnly?'evidence':'figures';
@@ -3089,11 +3141,19 @@ function embeddedJobDois(value) {
         await sleep(3500);
       }
       summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
-      if(stopReason)badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
-      else badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；文字证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
+      if(stopReason==='active_task_wait') {
+        badge('已有任务仍在处理；15 秒后自动复查，不会永久停止','#374151');
+      } else if(stopReason) {
+        badge('已停止开页：'+stopReason+'；请检查日志后再继续','#991b1b');
+      } else {
+        badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；文字证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
+      }
       var remainingAvailable=!stopReason?availableJobs():[];
       var urgentEvidencePending=!stopReason&&hasActiveSummaryEvidenceUrgency();
-      if(!stopReason&&(remainingAvailable.length>0||urgentEvidencePending)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      if(stopReason==='active_task_wait' && !isAbortRequested() && GM_getValue(ENABLED_KEY,true)!==false) {
+        if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
+        nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},15000);
+      } else if(!stopReason&&(remainingAvailable.length>0||urgentEvidencePending)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
         var nextDelay=remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000;
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},nextDelay);
@@ -3107,7 +3167,7 @@ function embeddedJobDois(value) {
       }
     } finally {
       clearInterval(renew);
-      if(/controller_lease_lost|another_task_still_active|capture_server_upgrade_pending/.test(stopReason)){CONTROLLER_STOP_REASON=stopReason;if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}}
+      if(/controller_lease_lost|capture_server_upgrade_pending/.test(stopReason)){CONTROLLER_STOP_REASON=stopReason;if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}}
       globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=false;
       var lease=GM_getValue(LEASE_KEY,null);
       if(lease&&lease.owner===CONTROLLER_ID)GM_deleteValue(LEASE_KEY);
