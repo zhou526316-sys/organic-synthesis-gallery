@@ -12,6 +12,14 @@ The user's explicit instruction is that one evidence-gap paper must not block in
 
 An unchanged, already authorized literature snapshot may accompany UI or media updates at other times. A new literature snapshot must satisfy fixed-slot authorization. Existing media acquisition, rendering, and fallback lockdown are unchanged. The authorization gate does not scrape publishers or mutate media.
 
+## Fixed-slot release trigger bridge
+
+The ChatGPT/GitHub connector is not required to advance the protected `main` ref directly in order to request a fixed-slot release. If a direct `main` ref update is blocked by the connector safety layer, create or update a branch named `automation/release-YYYYMMDD-HHMM` from the current `main`, and change only `audit/automation-triggers/literature-release-request.json` with the already-approved slot-bound request. The existing `.github/workflows/literature-fixed-slot-release.yml` listens to both `main` and `automation/release-*` for that trigger file.
+
+The branch path is an authorized runner bridge, not an alternative publication schedule and not permission to publish late. The runner must still execute `scripts/apply-fixed-slot-literature-release.mjs`; its 0–20 minute fixed-slot guard, frozen-SHA checks, prepublish validators, deterministic formal conversion, scope-correction anti-revival checks, titleZh validation, protected-blob marker construction and non-force push to `main` remain mandatory. A branch request outside the fixed-slot window must fail before any production mutation. If `main` advanced after the branch was created, the runner's push to `main` must fail rather than force or overwrite; rebuild the release plan from the new `main` at the next valid slot.
+
+Do not merge a stale release branch manually after the slot has passed. Missed includes remain unshipped and must be reconsidered from the next slot's fresh audit/staging snapshot.
+
 ## Atomic marker v2 for the next literature release
 
 Read the current `audit/publication-release-state.json` before writing. Do not update its bootstrap hashes merely to make checks pass. For the first and subsequent new literature release, construct all changed production data, the formal review, the pending queue when applicable, and the new marker in ONE Git tree/commit. Contents API one-file commits are not sufficient for this transaction. Use GitHub Git data `create_blob -> create_tree(base_tree_sha) -> create_commit(parent_sha) -> update_ref(force=false)`, or an authorized GitHub runner doing the equivalent atomic commit. Re-read main and all target SHAs immediately before the write. On a concurrent authoritative-file conflict, do not force-push or overwrite.
