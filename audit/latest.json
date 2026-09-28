@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-28T17:05:25.035Z",
+  "generatedAt": "2026-09-28T23:04:39.977Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -169,28 +169,28 @@
   ],
   "summary": {
     "galleryDois": 633,
-    "sourceRecords": 708,
-    "rawMissingFromGallery": 607,
+    "sourceRecords": 728,
+    "rawMissingFromGallery": 627,
     "previouslyReviewedExcluded": 515,
-    "missingFromGallery": 92,
-    "potentialGaps": 41,
+    "missingFromGallery": 112,
+    "potentialGaps": 48,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 7,
     "historicalCoverageLosses": 0,
-    "unresolved": 92,
+    "unresolved": 112,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
   "closure": {
     "date": "2026-09-28",
     "status": "blocked-source-coverage-anomaly",
-    "sourceRecords": 89,
-    "rawMissingFromGallery": 89,
+    "sourceRecords": 109,
+    "rawMissingFromGallery": 109,
     "previouslyReviewedExcluded": 0,
-    "missingFromGallery": 89,
-    "potentialGaps": 39,
+    "missingFromGallery": 109,
+    "potentialGaps": 46,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
       {
@@ -203,12 +203,12 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 75,
-        "crossrefCandidateRecords": 75,
+        "unionCandidateRecords": 76,
+        "crossrefCandidateRecords": 76,
         "openAlexCandidateRecords": 69,
         "multiSourceCandidateRecords": 69,
-        "closureUnionRecords": 5,
-        "closureCrossrefRecords": 5,
+        "closureUnionRecords": 6,
+        "closureCrossrefRecords": 6,
         "closureOpenAlexRecords": 0,
         "closureMultiSourceRecords": 0,
         "coverageWarning": false,
@@ -224,12 +224,12 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 174,
-        "crossrefCandidateRecords": 174,
+        "unionCandidateRecords": 181,
+        "crossrefCandidateRecords": 181,
         "openAlexCandidateRecords": 142,
         "multiSourceCandidateRecords": 142,
-        "closureUnionRecords": 37,
-        "closureCrossrefRecords": 37,
+        "closureUnionRecords": 44,
+        "closureCrossrefRecords": 44,
         "closureOpenAlexRecords": 5,
         "closureMultiSourceRecords": 5,
         "coverageWarning": false,
@@ -245,12 +245,12 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 82,
-        "crossrefCandidateRecords": 82,
+        "unionCandidateRecords": 87,
+        "crossrefCandidateRecords": 87,
         "openAlexCandidateRecords": 67,
         "multiSourceCandidateRecords": 67,
-        "closureUnionRecords": 13,
-        "closureCrossrefRecords": 13,
+        "closureUnionRecords": 18,
+        "closureCrossrefRecords": 18,
         "closureOpenAlexRecords": 0,
         "closureMultiSourceRecords": 0,
         "coverageWarning": false,
@@ -287,12 +287,12 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 27,
-        "crossrefCandidateRecords": 27,
+        "unionCandidateRecords": 29,
+        "crossrefCandidateRecords": 29,
         "openAlexCandidateRecords": 21,
         "multiSourceCandidateRecords": 21,
-        "closureUnionRecords": 6,
-        "closureCrossrefRecords": 6,
+        "closureUnionRecords": 8,
+        "closureCrossrefRecords": 8,
         "closureOpenAlexRecords": 0,
         "closureMultiSourceRecords": 0,
         "coverageWarning": false,
@@ -308,12 +308,12 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 54,
-        "crossrefCandidateRecords": 54,
+        "unionCandidateRecords": 59,
+        "crossrefCandidateRecords": 59,
         "openAlexCandidateRecords": 44,
         "multiSourceCandidateRecords": 44,
-        "closureUnionRecords": 10,
-        "closureCrossrefRecords": 10,
+        "closureUnionRecords": 15,
+        "closureCrossrefRecords": 15,
         "closureOpenAlexRecords": 0,
         "closureMultiSourceRecords": 0,
         "coverageWarning": false,
@@ -418,24 +418,24 @@
       }
     },
     "2026-09-28": {
-      "sourceRecords": 89,
-      "crossrefOnly": 84,
+      "sourceRecords": 109,
+      "crossrefOnly": 104,
       "openAlexOnly": 0,
       "multiSource": 5,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 89,
+      "rawMissingFromGallery": 109,
       "previouslyReviewedExcluded": 0,
-      "missingFromGallery": 89,
-      "potentialGaps": 39,
+      "missingFromGallery": 109,
+      "potentialGaps": 46,
       "byJournal": {
-        "Nature": 5,
+        "Nature": 6,
         "Nature Synthesis": 3,
         "Nature Chemistry": 1,
-        "Nature Communications": 37,
-        "JACS": 13,
+        "Nature Communications": 44,
+        "JACS": 18,
         "Angew": 8,
-        "ACS Catalysis": 6,
-        "Organic Letters": 10,
+        "ACS Catalysis": 8,
+        "Organic Letters": 15,
         "JOC": 6
       }
     },
@@ -497,16 +497,16 @@
     "Nature": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 75,
-      "crossrefOnly": 6,
+      "sourceRecords": 76,
+      "crossrefOnly": 7,
       "openAlexOnly": 0,
       "multiSource": 69,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 1,
-      "rawMissingFromGallery": 74,
+      "rawMissingFromGallery": 75,
       "previouslyReviewedExcluded": 69,
-      "missingFromGallery": 5,
+      "missingFromGallery": 6,
       "potentialGaps": 0
     },
     "Science": {
@@ -572,32 +572,32 @@
     "Nature Communications": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 174,
-      "crossrefOnly": 32,
+      "sourceRecords": 181,
+      "crossrefOnly": 39,
       "openAlexOnly": 0,
       "multiSource": 142,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 2,
-      "rawMissingFromGallery": 172,
+      "rawMissingFromGallery": 179,
       "previouslyReviewedExcluded": 135,
-      "missingFromGallery": 37,
+      "missingFromGallery": 44,
       "potentialGaps": 8
     },
     "JACS": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 82,
-      "crossrefOnly": 15,
+      "sourceRecords": 87,
+      "crossrefOnly": 20,
       "openAlexOnly": 0,
       "multiSource": 67,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 14,
-      "rawMissingFromGallery": 68,
+      "rawMissingFromGallery": 73,
       "previouslyReviewedExcluded": 55,
-      "missingFromGallery": 13,
-      "potentialGaps": 8
+      "missingFromGallery": 18,
+      "potentialGaps": 9
     },
     "Angew": {
       "activeFrom": "2026-07-01",
@@ -617,32 +617,32 @@
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 27,
-      "crossrefOnly": 6,
+      "sourceRecords": 29,
+      "crossrefOnly": 8,
       "openAlexOnly": 0,
       "multiSource": 21,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 9,
-      "rawMissingFromGallery": 18,
+      "rawMissingFromGallery": 20,
       "previouslyReviewedExcluded": 12,
-      "missingFromGallery": 6,
-      "potentialGaps": 6
+      "missingFromGallery": 8,
+      "potentialGaps": 7
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 54,
-      "crossrefOnly": 10,
+      "sourceRecords": 59,
+      "crossrefOnly": 15,
       "openAlexOnly": 0,
       "multiSource": 44,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 36,
-      "rawMissingFromGallery": 18,
+      "rawMissingFromGallery": 23,
       "previouslyReviewedExcluded": 8,
-      "missingFromGallery": 10,
-      "potentialGaps": 10
+      "missingFromGallery": 15,
+      "potentialGaps": 15
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -745,12 +745,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 75,
-      "crossrefCandidateRecords": 75,
+      "unionCandidateRecords": 76,
+      "crossrefCandidateRecords": 76,
       "openAlexCandidateRecords": 69,
       "multiSourceCandidateRecords": 69,
-      "closureUnionRecords": 5,
-      "closureCrossrefRecords": 5,
+      "closureUnionRecords": 6,
+      "closureCrossrefRecords": 6,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -845,12 +845,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 174,
-      "crossrefCandidateRecords": 174,
+      "unionCandidateRecords": 181,
+      "crossrefCandidateRecords": 181,
       "openAlexCandidateRecords": 142,
       "multiSourceCandidateRecords": 142,
-      "closureUnionRecords": 37,
-      "closureCrossrefRecords": 37,
+      "closureUnionRecords": 44,
+      "closureCrossrefRecords": 44,
       "closureOpenAlexRecords": 5,
       "closureMultiSourceRecords": 5,
       "coverageWarning": false,
@@ -865,12 +865,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 82,
-      "crossrefCandidateRecords": 82,
+      "unionCandidateRecords": 87,
+      "crossrefCandidateRecords": 87,
       "openAlexCandidateRecords": 67,
       "multiSourceCandidateRecords": 67,
-      "closureUnionRecords": 13,
-      "closureCrossrefRecords": 13,
+      "closureUnionRecords": 18,
+      "closureCrossrefRecords": 18,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -905,12 +905,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 27,
-      "crossrefCandidateRecords": 27,
+      "unionCandidateRecords": 29,
+      "crossrefCandidateRecords": 29,
       "openAlexCandidateRecords": 21,
       "multiSourceCandidateRecords": 21,
-      "closureUnionRecords": 6,
-      "closureCrossrefRecords": 6,
+      "closureUnionRecords": 8,
+      "closureCrossrefRecords": 8,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -925,12 +925,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 54,
-      "crossrefCandidateRecords": 54,
+      "unionCandidateRecords": 59,
+      "crossrefCandidateRecords": 59,
       "openAlexCandidateRecords": 44,
       "multiSourceCandidateRecords": 44,
-      "closureUnionRecords": 10,
-      "closureCrossrefRecords": 10,
+      "closureUnionRecords": 15,
+      "closureCrossrefRecords": 15,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -1070,12 +1070,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 75,
-      "crossrefCandidateRecords": 75,
+      "unionCandidateRecords": 76,
+      "crossrefCandidateRecords": 76,
       "openAlexCandidateRecords": 69,
       "multiSourceCandidateRecords": 69,
-      "closureUnionRecords": 5,
-      "closureCrossrefRecords": 5,
+      "closureUnionRecords": 6,
+      "closureCrossrefRecords": 6,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -1091,12 +1091,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 174,
-      "crossrefCandidateRecords": 174,
+      "unionCandidateRecords": 181,
+      "crossrefCandidateRecords": 181,
       "openAlexCandidateRecords": 142,
       "multiSourceCandidateRecords": 142,
-      "closureUnionRecords": 37,
-      "closureCrossrefRecords": 37,
+      "closureUnionRecords": 44,
+      "closureCrossrefRecords": 44,
       "closureOpenAlexRecords": 5,
       "closureMultiSourceRecords": 5,
       "coverageWarning": false,
@@ -1112,12 +1112,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 82,
-      "crossrefCandidateRecords": 82,
+      "unionCandidateRecords": 87,
+      "crossrefCandidateRecords": 87,
       "openAlexCandidateRecords": 67,
       "multiSourceCandidateRecords": 67,
-      "closureUnionRecords": 13,
-      "closureCrossrefRecords": 13,
+      "closureUnionRecords": 18,
+      "closureCrossrefRecords": 18,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -1154,12 +1154,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 27,
-      "crossrefCandidateRecords": 27,
+      "unionCandidateRecords": 29,
+      "crossrefCandidateRecords": 29,
       "openAlexCandidateRecords": 21,
       "multiSourceCandidateRecords": 21,
-      "closureUnionRecords": 6,
-      "closureCrossrefRecords": 6,
+      "closureUnionRecords": 8,
+      "closureCrossrefRecords": 8,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -1175,12 +1175,12 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 54,
-      "crossrefCandidateRecords": 54,
+      "unionCandidateRecords": 59,
+      "crossrefCandidateRecords": 59,
       "openAlexCandidateRecords": 44,
       "multiSourceCandidateRecords": 44,
-      "closureUnionRecords": 10,
-      "closureCrossrefRecords": 10,
+      "closureUnionRecords": 15,
+      "closureCrossrefRecords": 15,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": false,
@@ -1216,7 +1216,7 @@
       "issn": "0028-0836",
       "mode": "online",
       "ok": true,
-      "count": 74,
+      "count": 75,
       "note": ""
     },
     {
@@ -1225,7 +1225,7 @@
       "issn": "0028-0836",
       "mode": "published",
       "ok": true,
-      "count": 74,
+      "count": 75,
       "note": ""
     },
     {
@@ -1234,7 +1234,7 @@
       "issn": "0028-0836",
       "mode": "created",
       "ok": true,
-      "count": 75,
+      "count": 76,
       "note": ""
     },
     {
@@ -1243,7 +1243,7 @@
       "issn": "1476-4687",
       "mode": "online",
       "ok": true,
-      "count": 74,
+      "count": 75,
       "note": ""
     },
     {
@@ -1252,7 +1252,7 @@
       "issn": "1476-4687",
       "mode": "published",
       "ok": true,
-      "count": 74,
+      "count": 75,
       "note": ""
     },
     {
@@ -1261,7 +1261,7 @@
       "issn": "1476-4687",
       "mode": "created",
       "ok": true,
-      "count": 75,
+      "count": 76,
       "note": ""
     },
     {
@@ -1472,7 +1472,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 174,
+      "count": 181,
       "note": ""
     },
     {
@@ -1481,7 +1481,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 174,
+      "count": 181,
       "note": ""
     },
     {
@@ -1490,7 +1490,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 174,
+      "count": 181,
       "note": ""
     },
     {
@@ -1507,7 +1507,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 82,
+      "count": 87,
       "note": ""
     },
     {
@@ -1516,7 +1516,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 82,
+      "count": 87,
       "note": ""
     },
     {
@@ -1525,7 +1525,7 @@
       "issn": "0002-7863",
       "mode": "created",
       "ok": true,
-      "count": 80,
+      "count": 86,
       "note": ""
     },
     {
@@ -1534,7 +1534,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 82,
+      "count": 87,
       "note": ""
     },
     {
@@ -1543,7 +1543,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 81,
+      "count": 87,
       "note": ""
     },
     {
@@ -1552,7 +1552,7 @@
       "issn": "1520-5126",
       "mode": "created",
       "ok": true,
-      "count": 80,
+      "count": 86,
       "note": ""
     },
     {
@@ -1631,7 +1631,7 @@
       "issn": "2155-5435",
       "mode": "online",
       "ok": true,
-      "count": 27,
+      "count": 29,
       "note": ""
     },
     {
@@ -1640,7 +1640,7 @@
       "issn": "2155-5435",
       "mode": "published",
       "ok": true,
-      "count": 27,
+      "count": 29,
       "note": ""
     },
     {
@@ -1649,7 +1649,7 @@
       "issn": "2155-5435",
       "mode": "created",
       "ok": true,
-      "count": 37,
+      "count": 39,
       "note": ""
     },
     {
@@ -1666,7 +1666,7 @@
       "issn": "1523-7052",
       "mode": "online",
       "ok": true,
-      "count": 54,
+      "count": 59,
       "note": ""
     },
     {
@@ -1675,7 +1675,7 @@
       "issn": "1523-7052",
       "mode": "published",
       "ok": true,
-      "count": 54,
+      "count": 59,
       "note": ""
     },
     {
@@ -1684,7 +1684,7 @@
       "issn": "1523-7052",
       "mode": "created",
       "ok": true,
-      "count": 54,
+      "count": 59,
       "note": ""
     },
     {
@@ -1693,7 +1693,7 @@
       "issn": "1523-7060",
       "mode": "online",
       "ok": true,
-      "count": 54,
+      "count": 59,
       "note": ""
     },
     {
@@ -1702,7 +1702,7 @@
       "issn": "1523-7060",
       "mode": "published",
       "ok": true,
-      "count": 54,
+      "count": 59,
       "note": ""
     },
     {
@@ -1711,7 +1711,7 @@
       "issn": "1523-7060",
       "mode": "created",
       "ok": true,
-      "count": 54,
+      "count": 59,
       "note": ""
     },
     {
@@ -2041,6 +2041,30 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1021/acscatal.6c04894",
+      "journal": "ACS Catalysis",
+      "title": "Enabling Data-Efficient Machine Learning through Multi-Target Training Set Design via Greedy Neighborhood Coverage",
+      "abstract": "Abstract Machine learning is increasingly used to guide asymmetric catalysis, but each enantioselectivity measurement remains experimentally expensive. Prior work established that predictive accuracy in these datasets is dominated by reactions that are structurally similar to the target, motivating neighborhood-restricted models, such as radius-based random forests (RaRF). However, realistic screening campaigns require predictions for many related targets simultaneously (e.g., 20–50 reactions in a scope), and selecting training data independently for each target can be redundant because target neighborhoods overlap. Here, we frame multi-target training set design as a neighborhood multi-coverage problem, where the goal is to select a compact shared set of experiments such that each target retains at least one neighbor within a given similarity radius in reaction fingerprint space. We introduce MT-RaRF, a greedy neighborhood-coverage algorithm that prioritizes candidate experiments that satisfy the remaining local-neighbor needs of underserved targets while exploiting overlap among neighborhoods. Across several previously curated asymmetric catalysis datasets, MT-RaRF can use only a fraction of the experiments required by independent RaRF while maintaining comparable mean absolute errors. Systematic comparisons across similarity radii, training budgets, and target-set distributions establish practical guidelines for prospective use: MT-RaRF is most effective when locality is enforced, experimental budgets are limited, and target panels contain overlapping neighborhoods. MT-RaRF therefore makes locality-driven models practical and affordable for multi-target screening in asymmetric catalysis.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Jakob A. Meckes",
+        "Jiang Yi He",
+        "Jolene P. Reid"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acscatal.6c05031",
       "journal": "ACS Catalysis",
       "title": "Engineering Electron/Hole Traps via Atomically Dispersed Bi Sites for Photocatalytic Glycerol Oxidation to Glyceric Acid",
@@ -2071,6 +2095,38 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05520",
+      "journal": "ACS Catalysis",
+      "title": "Engineering Highly Active Single-Phosphine-Coordinated Ru Catalysts for Heterogeneous N -Alkylation without Base-Additive",
+      "abstract": "Abstract N-Alkylation of amine with alcohol is an attractive route for synthesizing high-value amines. However, existing homogeneous and heterogeneous catalytic systems still suffer from limitations such as insufficient metal utilization, requirement for alkaline additives, poor recyclability, and limited intrinsic activity. Herein, we propose an alcohol-driven coordination tailoring strategy, in which the alcohol governs the transformation of pristine Ru1-3P sites into highly active Ru1-1P with a well-defined [RuH2Cl2(Ph-CHO)(PPh3)] configuration. In base-additive-free N-alkylation, the Ru1-1P/POPs catalyst delivers a TOF of 323 h–1 and an apparent activation energy of 70.1 kJ·mol–1, far outperforming the Ru1-3P/POPs (145 h–1, 103.3 kJ·mol–1) and surpassing most reported catalysts. Comprehensive characterization confirms that Ru remains atomically dispersed even after 10 cycles. Mechanistic studies reveal that different from traditional base-dependent pathways, this catalytic cycle follows a dihydride transfer mechanism. The unique Ru1-1P configuration significantly reduces the barrier of the rate-determining β-hydride elimination. This work provides a facile strategy for regulating single-atom coordination environments and deepens the understanding of structure-performance relationships at the molecular level.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Sue Zhang",
+        "Xingju Li",
+        "Guifa Long",
+        "Lei Ma",
+        "Chunhui Zhang",
+        "Qiliang Guo",
+        "Ziyang Zhu",
+        "Miao Jiang",
+        "Cunyao Li",
+        "Li Yan",
+        "Yunjie Ding"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
     },
     {
       "doi": "10.1021/acscatal.6c04010",
@@ -2422,6 +2478,37 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1021/jacs.6c11585",
+      "journal": "JACS",
+      "title": "Competitive Coordination Decouples Charge Transport from Viscous Relaxation in Water-in-Salt Electrolytes",
+      "abstract": "Abstract Water-in-salt electrolytes provide wide electrochemical stability but suffer from high viscosity and strong ion correlations. Here, we examine how zwitterionic additives alter transport in concentrated LiTFSI electrolytes. Conductivity, viscosity, Raman spectroscopy, and atomistic molecular dynamics simulations show that zwitterion additives lower the absolute conductivity but shift the electrolytes from subionic to superionic Walden behavior. This decoupling arises from competing coordination effects: zwitterionic anionic groups coordinate Li+ and reduce its mobility, while also weakening Li+–TFSI– association, promoting TFSI––ZI+ contacts, and redistributing water away from TFSI–. Consequently, conductivity and viscosity become governed by increasingly distinct molecular responses. Our results demonstrate that competitive coordination provides a route to tune solvation structure, ion correlations, transference behavior, and viscosity-coupled transport in concentrated electrolytes.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Meron Y. Tadesse",
+        "Tarkan Ayata",
+        "Akash K Meel",
+        "Santosh Mogurampelly",
+        "Graham Leverick",
+        "Matthew J. Panzer",
+        "Venkat Ganesan"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1021/jacs.6c13682",
       "journal": "JACS",
       "title": "Competitive Interfacial Etching and Growth for Multicolor-Tunable Circularly Polarized Luminescent Quantum Dots",
@@ -2720,6 +2807,39 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1021/jacs.6c11086",
+      "journal": "JACS",
+      "title": "High-Level Deuteration in Mammalian Cells for NMR Studies of Membrane Proteins",
+      "abstract": "Abstract Membrane proteins and their complexes play essential roles in various biological processes and are, therefore, major targets in drug development. Although atomic-resolution structures of many membrane proteins are available, probing their function-associated dynamics remains essential to understand their molecular mechanisms. In this study, we developed an isotope-labeling method using mammalian cells for high-sensitivity NMR studies of membrane proteins and their complexes. Using Expi293F cells, we established a strategy to achieve high-level ( gt;70%) deuteration and 13C-methyl selective labeling. An application to a human GPCR, β2-adrenergic receptor (β2AR), resulted in marked line narrowing and a three- to four-fold increase in the S/N ratio. We also found that the inverse agonist-bound β2AR adopted three distinct conformations, one of which has not been clearly identified without the extensive deuteration. Furthermore, the strategy enables the NMR detection of the human membrane protein complex CD19-CD81, an essential co-receptor in B-cell activation, validating their stable interaction. The strategy developed here substantially expands the utility of NMR for various biological and pharmacological studies that require mammalian cell systems.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Taiga Yamamoto",
+        "Yutaka Kofuku",
+        "Yutaro Ogaeri",
+        "Qingci Zhao",
+        "Noritaka Nishida",
+        "Takumi Ueda",
+        "Yuki Toyama",
+        "Ichio Shimada",
+        "Koh Takeuchi"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1021/jacs.6c14162",
       "journal": "JACS",
       "title": "Microlightning: Avalanche-Driven Blue Emission and Reactive-Species Formation in Charged Microdroplets",
@@ -2736,7 +2856,10 @@
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
-        "crossref:1520-5126:online"
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2784,6 +2907,34 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1021/jacs.6c02850",
+      "journal": "JACS",
+      "title": "Multi-Step Oxygen Redox Mechanism in the Polyanionic Lithium-Rich Cathode Li2FeSiO4",
+      "abstract": "Abstract Lithium-rich cathode materials offer significantly higher energy densities than conventional cathode materials, due to their ability to store charge beyond the formal transition-metal redox limit, via so-called “oxygen redox”. In lithium-rich oxides, oxygen redox is accompanied by molecular O2 formation and transition-metal migration, associated with irreversible structural change and poor cycling stability. Lithium-rich silicates provide an alternative lithium-rich chemistry, and have been proposed to be resilient to O2 formation at the top of charge, due to their covalently bonded [SiO4]4− framework. We report a computational study of the top-of-charge behavior of the prototypical silicate cathode Li2FeSiO4. Using density functional theory, we predict that fully delithiated FeSiO4 is thermodynamically unstable with respect to oxidation of oxide ions to form molecular O2 within the bulk material. Ab initio molecular dynamics shows this decomposition occurs spontaneously, via a multistep mechanism involving FeIV migration and disproportionation to FeIII and FeV, and subsequent FeV reduction alongside molecular O2 formation. Our findings demonstrate that polyanionic frameworks do not inherently prevent O2 formation in lithium-rich cathodes, and illustrate how different previously proposed oxygen redox mechanisms can function as steps within a compound process.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Patrick J. Taylor",
+        "Kit McColl",
+        "M. Saiful Islam",
+        "Benjamin J. Morgan"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1021/jacs.6c14563",
       "journal": "JACS",
       "title": "Nonequilibrium Formation of Pyridine (C5H5N) in Interstellar Ice Analogs: Implications for Biorelevant Nitrogen Heterocycles in Ryugu and Bennu",
@@ -2812,6 +2963,36 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1021/jacs.6c15436",
+      "journal": "JACS",
+      "title": "Probing the Role of the Intermediate State in Cyanine Dyes through Classical and Entangled Two-Photon Absorption Spectra",
+      "abstract": "Abstract The one-photon, classical two-photon, and entangled two-photon absorption (1PA, TPA, and ETPA) excitation wavelength-dependent spectra in a series of structurally related cyanine dyes are obtained to probe the role of the intermediate state on their nonlinear and quantum optical properties. The cyanine dye systems are 3,3′-diethyloxacarbocyanine iodide (DOCI) with an oxygen substituent, 1,1′-diethyl-3,3,3′,3′-tetramethylindocarbocyanine iodide (DiIC2) with a dimethyl substituent, and 3,3′-diethylthiacarbocyanine iodide (DTCI) with a sulfur substituent. Combined experimental measurements and electronic structure calculations reveal an unexpected reordering of absorption spectral trends across the series. For DOCI, the absorption spectral ordering follows TPA, ETPA, 1PA, whereas for DiIC2 and DTCI, the ordering shifts to ETPA, TPA, 1PA. The calculations indicate that the classical TPA process is driven primarily by the two-photon transition strength of the excited state. The ETPA process is more strongly influenced by the two-photon excited state with a longer radiative lifetime. The role of the intermediate state is uniquely revealed by the excitation of the entangled photons. The heteroatom substituent-dependence reveals the influence of greater multiconfigurational character and smaller charge transfer for the excited states of DOCI compared to the other two molecules, with the longer-lived state associated with single configurations and greater charge transfer. These results establish ETPA as a sensitive probe of electronic structure, and we demonstrate how intentional organic molecular design can systematically tune quantum and nonlinear optical responses.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Sara D. Jovanovski",
+        "Julio C. V. Chagas",
+        "Tse-Min Chiang",
+        "Sean Goodson",
+        "George C. Schatz",
+        "Theodore Goodson III"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1021/jacs.6c16630",
       "journal": "JACS",
       "title": "Reimagining the Wolff-Kishner Reduction: Light-Driven Carbonyl Deoxygenation without Strong Base",
@@ -2823,6 +3004,37 @@
         "Supeng Wu",
         "Eric Palomo",
         "Robert R. Knowles"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c10893",
+      "journal": "JACS",
+      "title": "Resolving Structural Ambiguity through Total Synthesis: Evolution of a Synthetic Strategy for Secalosides A and B",
+      "abstract": "Abstract Herein, we report a full account of the evolution of a strategy that ultimately enabled the first total synthesis and definitive structural elucidation of secalosides A and B. The unambiguous structural assignment required the complex total syntheses of two proposed diastereomeric structures. Initial efforts were based on the use of our in-house methodologies to access the indane core of secalosides. These featured an asymmetric carbonyl-ene reaction, an intramolecular Heck cyclization, and N-heterocyclic carbene (NHC) chemistry. However, these routes suffer from inefficient redox manipulations, poor selectivity, and undesired reactivity, hindering the preparation of the embedded indane core. The key to our revised route was a successful late-stage ring-contraction strategy that allowed for the concomitant formation of the highly strained ten-membered bis-lactone and the cyclopentane bearing the configurationally correct stereotriad. This transformation was achieved by tactical exploitation of macrocyclic character, which induced divergent reactivity from its acyclic variant, enabling an unusual transannular oxidative enolate coupling. This strategy led to successful syntheses of both proposed structures and allowed for spectral data comparison with those of the natural secalosides, thereby resolving the long-standing ambiguity regarding the true structures of secalosides A and B.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Yunchan Nam",
+        "Anthony T. Tam",
+        "Diego N. Rojas",
+        "Troy E. Reynolds",
+        "Jonathan A. Brekan",
+        "Sneha Sil",
+        "Karl A. Scheidt"
       ],
       "topics": [],
       "sources": [
@@ -3092,6 +3304,31 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/d41586-026-02277-y",
+      "journal": "Nature",
+      "title": "Paid to peer review: firms are paying researchers to assess manuscripts for journals",
+      "abstract": "",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Miryam Naddaf"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/d41586-026-02959-7",
       "journal": "Nature",
       "title": "Stephen Hawking biography explores an ‘exceptionally clear, uncluttered mind’",
@@ -3240,6 +3477,47 @@
         "Sulman J. Rahmat",
         "Junyou Wang",
         "John R. Wible"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-74531-w",
+      "journal": "Nature Communications",
+      "title": "Adaptive personalization for wearable non-invasive continuous glucose sensors",
+      "abstract": "",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Chuanjie Yao",
+        "Lukang Gao",
+        "Xinze Wang",
+        "Haolin Wang",
+        "Shuang Huang",
+        "Guanbin Li",
+        "Xiongqi Han",
+        "Hanqi Yang",
+        "Zhengjie Liu",
+        "Shanshan Liang",
+        "Peng Yun",
+        "Yunuo Wang",
+        "Yeyun Cai",
+        "Peikai Zhang",
+        "Yuanqing Wu",
+        "Mingqiang Li",
+        "Ji Wang",
+        "Hui-jiuan Chen",
+        "Xinshuo Huang",
+        "Xi Xie"
       ],
       "topics": [],
       "sources": [
@@ -4136,6 +4414,38 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/s41467-026-78028-4",
+      "journal": "Nature Communications",
+      "title": "Orthosteric and allosteric inhibition of the brain V-ATPase outside the alternating-access cycle",
+      "abstract": "",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Eleftherios Kosmidis",
+        "Maria Fokaeos",
+        "Christopher G. Shuttle",
+        "Michael Isselstein",
+        "Alessandra Narducci",
+        "Aleksander Cvjetkovic",
+        "Peter J. Johnson",
+        "Jesper L. Pedersen",
+        "Reinhard Jahn",
+        "Julia Preobraschenski",
+        "Dimitrios Stamou"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/s41467-026-78099-3",
       "journal": "Nature Communications",
       "title": "Phase-dependent Al leaching and crystal structure stability of CoAl2O4 in alkaline media",
@@ -4342,6 +4652,77 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/s41467-026-77818-0",
+      "journal": "Nature Communications",
+      "title": "Spatial control of karyopherin binding avidity within NPC mimics revealed by designer FG-nucleoporins",
+      "abstract": "Abstract Nucleocytoplasmic transport occurs via nuclear pore complexes (NPCs), ~40-60 nm wide pores lined with intrinsically disordered proteins that are rich in Phe-Gly motifs (FG-Nups) that form a selective barrier. Molecules larger than ~50 kDa are increasingly blocked for transport unless they are bound to a nuclear transport receptor such as the karyopherin (Kap) family of proteins. How the amino acid sequence of FG-Nups contributes to this selectivity is not fully understood. Here, we present de novo designed artificial FG-Nups with a systematically varied FG-repeat spacing and charge-to-hydrophobicity ratio (C/H). Starting from a reference sequence termed NupY (with the average properties of yeast GLFG-Nups), we design, synthesize, and experimentally test a library of NupY variants using quartz crystal microbalance with dissipation monitoring and phase separation assays. We find that the spacing between FG-motifs governs Kap95 absorption into the FG-Nup phase, while increasing C/H results in higher avidity for Kap95 due to an increased accessibility of FG-motifs. Molecular dynamics simulations of transport through NupY-coated pores show a reduced barrier function for noncohesive variants and the highest transport selectivity for designs close to native GLFG-Nups. We postulate that a balance between steric hindrance and enthalpic gain from multivalent Kap-FG-Nup interactions drives the spatial and temporal partitioning of Kaps in the NPC.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Hendrik W. de Vries",
+        "Anders Barth",
+        "Alessio Fragasso",
+        "Tegan A. Otto",
+        "Ashmiani van den Berg",
+        "Eli O. van der Sluis",
+        "Erik van der Giessen",
+        "Liesbeth M. Veenhoff",
+        "Cees Dekker",
+        "Patrick R. Onck"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78184-7",
+      "journal": "Nature Communications",
+      "title": "Stress-adaptive conductive network and ion-segregated polymeric-inorganic interphases enable durable room-temperature silicon-based solid-state batteries",
+      "abstract": "",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Chuyang Li",
+        "Zhefei Sun",
+        "Bin Wang",
+        "Wenwei Ding",
+        "Changhui Ke",
+        "Chaofei Lan",
+        "Qingqing Zhou",
+        "Yadong Wang",
+        "Shuijian He",
+        "Huixin Chen",
+        "Mengmeng Fan",
+        "Lili Liu",
+        "Lu Gan",
+        "Yutong Wang",
+        "Shijie Feng",
+        "Hui Yang",
+        "Songyan Chen",
+        "Qiaobao Zhang",
+        "Xiang Han"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/s41467-026-78122-7",
       "journal": "Nature Communications",
       "title": "Structural basis of stepwise G protein activation by the viral chemokine receptor US28",
@@ -4404,6 +4785,60 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1038/s41467-026-78095-7",
+      "journal": "Nature Communications",
+      "title": "Tall adhesions overcome cell surface steric interference and rescue antibody-dependent phagocytosis in macrophages",
+      "abstract": "Abstract Macrophages phagocytose IgG-opsonized target cells by forming phagocytic synapses upon binding of IgG to Fcγ receptors (FcγR) expressed on the macrophage surface. However, binding requires accessibility of both IgG and FcγR within densely packed glycocalyces that decorate the macrophage and target cell surfaces. Here, we use cell-like target particles to show that non-binding ‘bystander’ proteins not directly involved in phagocytic signaling can sterically interfere with FcγR engagement, ultimately inhibiting synapse formation and phagocytosis. Furthermore, we demonstrate that adding a tall binding protein to the target particle overcomes bystander-mediated inhibition and substantially recovers phagocytosis in a process we call kinetic enhancement. We confirm that tall binders are sufficient to drive short binder engagement in vitro and introduce theory and simulations to explain the nonmonotonic dependence of phagocytosis on tall binder surface density. These findings show that kinetic enhancement is a general and tunable feature of interface formation, providing a strategy for re-engineering transition states to promote short receptor engagement at cell-cell contacts.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Aymeric Chorlay",
+        "Aaron M. Joffe",
+        "Jared Huzar",
+        "Jaffar Hasnain",
+        "Caitlin E. Cornell",
+        "Phillip L. Geissler",
+        "Daniel A. Fletcher"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78173-w",
+      "journal": "Nature Communications",
+      "title": "The plasma protease inhibitor ITIH4 forms oligomeric complexes and senses broader proteolytic activity",
+      "abstract": "",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Martin Høgholm Jørgensen",
+        "Annette Gudmann Hansen",
+        "Ana Casañal",
+        "Steffen Thiel",
+        "Gregers Rom Andersen"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/s41467-026-77816-2",
       "journal": "Nature Communications",
       "title": "Tuning intracellular immunity by Nodamura virus B2 protein enhances self-amplifying RNA activity",
@@ -4420,6 +4855,43 @@
         "John S. Tregoning",
         "Andres Merits",
         "Pierre V. Maillard"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77689-5",
+      "journal": "Nature Communications",
+      "title": "Ultra-high THz-field-confinement at LaAlO3 twin walls",
+      "abstract": "Abstract The control and steering of light at nanometre length scales is crucial for the development of both fundamental science and nanophotonic technologies. Recent advancements have been achieved by exploiting various crystalline anisotropies, allowing for subdiffractional and diffraction-less canalisation of energy. These studies in particular benefit from surface structuring as well as from stacking and twisting of 2D materials, whereas corresponding capabilities of anisotropic bulk crystals are rather unexplored. In this work, we show that ferroelastic twin walls – crystallographically perfect 2D-sheets that separate regions of differently oriented domains – in the distorted perovskite LaAlO 3 provide a natural platform for broadband lateral confinement of light at the nanoscale. Without fabrication processes, the electromagnetic fields localised at such walls exhibit lateral optical sizes up to $$260$$ 260 times smaller than the free-space wavelength. Depending on the adjacent domain orientation and frequency, the twin wall pattern preferentially concentrates or repels the electromagnetic energy, constituting a natural building block towards broadband MIR and THz nanophotonics for polaritonic circuitry.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "J. Wetzel",
+        "J. Taboada-Gutiérrez",
+        "M. Roeper",
+        "F. G. Kaps",
+        "G. L. Esposito",
+        "D. Marchese",
+        "R. Buschbeck",
+        "P. Lenz",
+        "J. M. Klopf",
+        "H. A. Bechtel",
+        "S. N. Gilbert Corder",
+        "J. Teyssier",
+        "S. C. Kehr",
+        "L. M. Eng",
+        "A. B. Kuzmenko",
+        "S. D. Seddon"
       ],
       "topics": [],
       "sources": [
@@ -4550,6 +5022,34 @@
         "crossref:2731-0582:online",
         "crossref:2731-0582:published",
         "crossref:2731-0582:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03825",
+      "journal": "Organic Letters",
+      "title": "Biomimetic Fe(Pytacn)-Catalyzed Intramolecular C(sp3)–H Amination: Access to Heteroarene-Functionalized Sultams",
+      "abstract": "Abstract A new Fe(Pytacn)-catalyzed intramolecular aliphatic C(sp3)–H amination system is reported for the first time via metal-nitrene-mediated C–H insertion. This protocol operates under mild room-temperature conditions, affording 20 structurally diverse sultams in up to 90% yield with up to gt;20:1 dr, including synthetically challenging substrates bearing heteroatoms or bulky substituents. Mechanistic studies demonstrate a radical pathway, with both Pytacn ligand and acac counterion being critical; the kinetic isotopic effect indicates C–H insertion is rate-determining. The products can be easily modified with various building blocks via simple chemical transformations.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Xu Liu",
+        "Ming-Hao Zhao",
+        "Yuchen Yang",
+        "Lijia Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -4750,6 +5250,70 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1021/acs.orglett.6c03327",
+      "journal": "Organic Letters",
+      "title": "Linker-Dependent Conformational Switching in Side-Chain-Type Ferrocene-Functionalized Nanohoops",
+      "abstract": "Abstract We report the synthesis of two ferrocene-tethered side-chain nanohoops, Fc[8]CPP-L and Fc[8]CPP-M, via a streamlined shotgun macrocyclization protocol. Systematic variation of the tether length uncovers an interesting structure–property relationship: Fc[8]CPP-L exhibits coexisting intra- and intermolecular ferrocene inclusion, whereas Fc[8]CPP-M displays exclusively intermolecular host–guest arrangements. Remarkably, DFT calculations reveal a low rotational barrier (∼23 kcal mol–1) for the tethered phenyl ring, enabling facile 360° inward rotation of the ferrocene moiety under mild conditions. Electrochemical analyses confirm retained reversible redox activity, with frontier orbitals spatially partitioned between the ferrocene (HOMO) and the CPP backbone (LUMO), facilitating efficient photoinduced electron transfer. This work establishes side-chain engineering as a powerful strategy to program cavity conformation, crystalline polymorphism, and dynamic behavior in organometallic nanohoops, laying the foundation for multi-stimuli-responsive supramolecular materials.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Yuanping Li",
+        "Yanting Shi",
+        "Yuanyuan Wen",
+        "Chenglong Ru",
+        "Lingyun Zhu",
+        "Yongyuan Ren",
+        "Jianfeng Yan",
+        "Yuhang Liang",
+        "Yuanming Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03909",
+      "journal": "Organic Letters",
+      "title": "Photocatalytic C–H Trifluoromethylation of (Hetero)arenes with Halon-1301",
+      "abstract": "Abstract Bromotrifluoromethane (CF3Br, Halon-1301) is a potent greenhouse gas and ozone-depleting substance. Here, we report the use of CF3Br as a trifluoromethyl source for the photocatalytic C–H trifluoromethylation of (hetero)arenes. The reaction proceeds at ambient temperature and pressure without an external oxidant, affords products in yields of up to 89%, and accommodates bioactive molecules, including nucleosides, providing a route for the value-added utilization of Halon-1301.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Kehan Zhou",
+        "Junrui Wang",
+        "Tao Wu",
+        "Aiyong He",
+        "Zhi-bin Huang",
+        "Jiaxing Xu",
+        "Yingsheng Zhao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03493",
       "journal": "Organic Letters",
       "title": "Photoredox Regioselective Thioesterification/Disulfuration of Alkenes",
@@ -4764,6 +5328,42 @@
         "Chaofeng Zhang",
         "Jun Tian",
         "Wen-Chao Gao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03148",
+      "journal": "Organic Letters",
+      "title": "Selective Denitrificative Fluorination and Desulfurative Fluorination Controlled by AgF/AgF2",
+      "abstract": "Abstract The development of novel N-fluoroalkylated phosphoramidates will enrich the toolbox of organophosphorus chemistry. Here, we report the synthesis of [19F]/[18F] phosphoramidofluoridates and N-CF3 phosphoramidates via two controllable fluorinations of phenyl phosphorylcarbamodithioate (substrate S): S underwent selective P–N bond cleavage to access phosphoramidofluoridates by silver(I) fluoride and successive desulfurative fluorination to access N-CF3 phosphoramidates by silver(II) fluoride. Moreover, the desulfurative fluorination strategy can be extended to the preparation of N-CF2H, N-C2F5, and N-CF2OPh phosphoramidates.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Yali Long",
+        "Xingjin He",
+        "Linbei Deng",
+        "Yongxing Lai",
+        "Chang Sun",
+        "Hui Nie",
+        "Jiasheng Qian",
+        "Wencheng Zhong",
+        "Zhihao Zha",
+        "Xiangsong Zhang",
+        "Min Tao",
+        "Jianbo Liu"
       ],
       "topics": [],
       "sources": [
@@ -4822,6 +5422,36 @@
         "Kapil Tahlan",
         "Graham J. Bodwell",
         "Huck K. Grover"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03328",
+      "journal": "Organic Letters",
+      "title": "Transfer Hydrogenation of Nitrones to Hydroxylamine Derivatives with PhSiH3",
+      "abstract": "Abstract Herein, we report a practical metal- and additive-free method for transfer hydrogenation of nitrones, employing a readily available PhSiH3 as the hydrogen donor. The findings demonstrated the effective conversion of a wide range of ketone- and aldehyde-derived nitrones into their corresponding hydroxylamine derivatives in good to excellent yields under mild conditions. The reaction is readily scalable and demonstrates broad functional group tolerance, accommodating bromo, chloro, fluoro, trifluoromethyl, thioether, thiophene, and furan substituents. Hence, the proposed operationally simple protocol provides a practical and sustainable strategy, facilitating the synthesis of structurally diverse hydroxylamine derivatives.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Wanzhen Guo",
+        "Xin Liu",
+        "Xing Lu",
+        "Zhiqiang Ren",
+        "Yuqi Zhang",
+        "Bo Han"
       ],
       "topics": [],
       "sources": [
@@ -4997,6 +5627,30 @@
         "Meng Sun",
         "Xiaoling Xu",
         "Xianjie Fang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acscatal.6c04894",
+      "journal": "ACS Catalysis",
+      "title": "Enabling Data-Efficient Machine Learning through Multi-Target Training Set Design via Greedy Neighborhood Coverage",
+      "abstract": "Abstract Machine learning is increasingly used to guide asymmetric catalysis, but each enantioselectivity measurement remains experimentally expensive. Prior work established that predictive accuracy in these datasets is dominated by reactions that are structurally similar to the target, motivating neighborhood-restricted models, such as radius-based random forests (RaRF). However, realistic screening campaigns require predictions for many related targets simultaneously (e.g., 20–50 reactions in a scope), and selecting training data independently for each target can be redundant because target neighborhoods overlap. Here, we frame multi-target training set design as a neighborhood multi-coverage problem, where the goal is to select a compact shared set of experiments such that each target retains at least one neighbor within a given similarity radius in reaction fingerprint space. We introduce MT-RaRF, a greedy neighborhood-coverage algorithm that prioritizes candidate experiments that satisfy the remaining local-neighbor needs of underserved targets while exploiting overlap among neighborhoods. Across several previously curated asymmetric catalysis datasets, MT-RaRF can use only a fraction of the experiments required by independent RaRF while maintaining comparable mean absolute errors. Systematic comparisons across similarity radii, training budgets, and target-set distributions establish practical guidelines for prospective use: MT-RaRF is most effective when locality is enforced, experimental budgets are limited, and target panels contain overlapping neighborhoods. MT-RaRF therefore makes locality-driven models practical and affordable for multi-target screening in asymmetric catalysis.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Jakob A. Meckes",
+        "Jiang Yi He",
+        "Jolene P. Reid"
       ],
       "topics": [],
       "sources": [
@@ -5309,7 +5963,10 @@
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
-        "crossref:1520-5126:online"
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5396,6 +6053,37 @@
         "Supeng Wu",
         "Eric Palomo",
         "Robert R. Knowles"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c10893",
+      "journal": "JACS",
+      "title": "Resolving Structural Ambiguity through Total Synthesis: Evolution of a Synthetic Strategy for Secalosides A and B",
+      "abstract": "Abstract Herein, we report a full account of the evolution of a strategy that ultimately enabled the first total synthesis and definitive structural elucidation of secalosides A and B. The unambiguous structural assignment required the complex total syntheses of two proposed diastereomeric structures. Initial efforts were based on the use of our in-house methodologies to access the indane core of secalosides. These featured an asymmetric carbonyl-ene reaction, an intramolecular Heck cyclization, and N-heterocyclic carbene (NHC) chemistry. However, these routes suffer from inefficient redox manipulations, poor selectivity, and undesired reactivity, hindering the preparation of the embedded indane core. The key to our revised route was a successful late-stage ring-contraction strategy that allowed for the concomitant formation of the highly strained ten-membered bis-lactone and the cyclopentane bearing the configurationally correct stereotriad. This transformation was achieved by tactical exploitation of macrocyclic character, which induced divergent reactivity from its acyclic variant, enabling an unusual transannular oxidative enolate coupling. This strategy led to successful syntheses of both proposed structures and allowed for spectral data comparison with those of the natural secalosides, thereby resolving the long-standing ambiguity regarding the true structures of secalosides A and B.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Yunchan Nam",
+        "Anthony T. Tam",
+        "Diego N. Rojas",
+        "Troy E. Reynolds",
+        "Jonathan A. Brekan",
+        "Sneha Sil",
+        "Karl A. Scheidt"
       ],
       "topics": [],
       "sources": [
@@ -5866,6 +6554,34 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1021/acs.orglett.6c03825",
+      "journal": "Organic Letters",
+      "title": "Biomimetic Fe(Pytacn)-Catalyzed Intramolecular C(sp3)–H Amination: Access to Heteroarene-Functionalized Sultams",
+      "abstract": "Abstract A new Fe(Pytacn)-catalyzed intramolecular aliphatic C(sp3)–H amination system is reported for the first time via metal-nitrene-mediated C–H insertion. This protocol operates under mild room-temperature conditions, affording 20 structurally diverse sultams in up to 90% yield with up to gt;20:1 dr, including synthetically challenging substrates bearing heteroatoms or bulky substituents. Mechanistic studies demonstrate a radical pathway, with both Pytacn ligand and acac counterion being critical; the kinetic isotopic effect indicates C–H insertion is rate-determining. The products can be easily modified with various building blocks via simple chemical transformations.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Xu Liu",
+        "Ming-Hao Zhao",
+        "Yuchen Yang",
+        "Lijia Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03679",
       "journal": "Organic Letters",
       "title": "Cascade Annulation of o -Alkynylbenzaldehydes with Acrylamides: Access to Benzo[e]isoindolinone Scaffolds",
@@ -6058,6 +6774,70 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1021/acs.orglett.6c03327",
+      "journal": "Organic Letters",
+      "title": "Linker-Dependent Conformational Switching in Side-Chain-Type Ferrocene-Functionalized Nanohoops",
+      "abstract": "Abstract We report the synthesis of two ferrocene-tethered side-chain nanohoops, Fc[8]CPP-L and Fc[8]CPP-M, via a streamlined shotgun macrocyclization protocol. Systematic variation of the tether length uncovers an interesting structure–property relationship: Fc[8]CPP-L exhibits coexisting intra- and intermolecular ferrocene inclusion, whereas Fc[8]CPP-M displays exclusively intermolecular host–guest arrangements. Remarkably, DFT calculations reveal a low rotational barrier (∼23 kcal mol–1) for the tethered phenyl ring, enabling facile 360° inward rotation of the ferrocene moiety under mild conditions. Electrochemical analyses confirm retained reversible redox activity, with frontier orbitals spatially partitioned between the ferrocene (HOMO) and the CPP backbone (LUMO), facilitating efficient photoinduced electron transfer. This work establishes side-chain engineering as a powerful strategy to program cavity conformation, crystalline polymorphism, and dynamic behavior in organometallic nanohoops, laying the foundation for multi-stimuli-responsive supramolecular materials.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Yuanping Li",
+        "Yanting Shi",
+        "Yuanyuan Wen",
+        "Chenglong Ru",
+        "Lingyun Zhu",
+        "Yongyuan Ren",
+        "Jianfeng Yan",
+        "Yuhang Liang",
+        "Yuanming Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03909",
+      "journal": "Organic Letters",
+      "title": "Photocatalytic C–H Trifluoromethylation of (Hetero)arenes with Halon-1301",
+      "abstract": "Abstract Bromotrifluoromethane (CF3Br, Halon-1301) is a potent greenhouse gas and ozone-depleting substance. Here, we report the use of CF3Br as a trifluoromethyl source for the photocatalytic C–H trifluoromethylation of (hetero)arenes. The reaction proceeds at ambient temperature and pressure without an external oxidant, affords products in yields of up to 89%, and accommodates bioactive molecules, including nucleosides, providing a route for the value-added utilization of Halon-1301.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Kehan Zhou",
+        "Junrui Wang",
+        "Tao Wu",
+        "Aiyong He",
+        "Zhi-bin Huang",
+        "Jiaxing Xu",
+        "Yingsheng Zhao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03493",
       "journal": "Organic Letters",
       "title": "Photoredox Regioselective Thioesterification/Disulfuration of Alkenes",
@@ -6072,6 +6852,42 @@
         "Chaofeng Zhang",
         "Jun Tian",
         "Wen-Chao Gao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03148",
+      "journal": "Organic Letters",
+      "title": "Selective Denitrificative Fluorination and Desulfurative Fluorination Controlled by AgF/AgF2",
+      "abstract": "Abstract The development of novel N-fluoroalkylated phosphoramidates will enrich the toolbox of organophosphorus chemistry. Here, we report the synthesis of [19F]/[18F] phosphoramidofluoridates and N-CF3 phosphoramidates via two controllable fluorinations of phenyl phosphorylcarbamodithioate (substrate S): S underwent selective P–N bond cleavage to access phosphoramidofluoridates by silver(I) fluoride and successive desulfurative fluorination to access N-CF3 phosphoramidates by silver(II) fluoride. Moreover, the desulfurative fluorination strategy can be extended to the preparation of N-CF2H, N-C2F5, and N-CF2OPh phosphoramidates.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Yali Long",
+        "Xingjin He",
+        "Linbei Deng",
+        "Yongxing Lai",
+        "Chang Sun",
+        "Hui Nie",
+        "Jiasheng Qian",
+        "Wencheng Zhong",
+        "Zhihao Zha",
+        "Xiangsong Zhang",
+        "Min Tao",
+        "Jianbo Liu"
       ],
       "topics": [],
       "sources": [
@@ -6130,6 +6946,36 @@
         "Kapil Tahlan",
         "Graham J. Bodwell",
         "Huck K. Grover"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03328",
+      "journal": "Organic Letters",
+      "title": "Transfer Hydrogenation of Nitrones to Hydroxylamine Derivatives with PhSiH3",
+      "abstract": "Abstract Herein, we report a practical metal- and additive-free method for transfer hydrogenation of nitrones, employing a readily available PhSiH3 as the hydrogen donor. The findings demonstrated the effective conversion of a wide range of ketone- and aldehyde-derived nitrones into their corresponding hydroxylamine derivatives in good to excellent yields under mild conditions. The reaction is readily scalable and demonstrates broad functional group tolerance, accommodating bromo, chloro, fluoro, trifluoromethyl, thioether, thiophene, and furan substituents. Hence, the proposed operationally simple protocol provides a practical and sustainable strategy, facilitating the synthesis of structurally diverse hydroxylamine derivatives.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Wanzhen Guo",
+        "Xin Liu",
+        "Xing Lu",
+        "Zhiqiang Ren",
+        "Yuqi Zhang",
+        "Bo Han"
       ],
       "topics": [],
       "sources": [
