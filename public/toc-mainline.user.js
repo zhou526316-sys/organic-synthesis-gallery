@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.39';
+  var CONTROLLER_REVISION = '2.2.40';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -69,11 +69,13 @@
   var BATCH_SIZE_KEY = P + 'batch-size';
   var ABORT_KEY = P + 'abort-request';
   var HEARTBEAT_KEY = P + 'publisher-heartbeat';
+  var PUBLISHER_ACCESS_COOLDOWN_PREFIX = P + 'publisher-access-cooldown:';
+  var PUBLISHER_ACCESS_COOLDOWN_MS = 10 * 60 * 1000;
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
-  var FAILURE_ENGINE_REVISION = VERSION + ':20260928-stale-active-job-recovery';
+  var FAILURE_ENGINE_REVISION = VERSION + ':20260928-publisher-access-gate';
   var DEFAULT_BATCH_SIZE = 8;
   var NEXT_BATCH_DELAY_MS = 12000;
   var nextBatchTimer = null;
@@ -546,6 +548,36 @@ function embeddedJobDois(value) {
     if(count>=4)return false;
     return elapsed>=Math.min(20,count*5)*60*1000;
   }
+  function publisherAccessCooldownKey(publisher) {
+    return PUBLISHER_ACCESS_COOLDOWN_PREFIX + String(publisher || '').toLowerCase();
+  }
+
+  function markPublisherAccessCooldown(job, reason) {
+    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
+    if (!publisher) return null;
+    var row = {
+      publisher: publisher,
+      doi: normalizeDoi(job && job.doi),
+      reason: String(reason || 'publisher_access_gate').slice(0,80),
+      at: Date.now(),
+      until: Date.now() + PUBLISHER_ACCESS_COOLDOWN_MS
+    };
+    GM_setValue(publisherAccessCooldownKey(publisher), row);
+    return row;
+  }
+
+  function publisherAccessCooling(job) {
+    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
+    if (!publisher) return false;
+    var key = publisherAccessCooldownKey(publisher);
+    var row = GM_getValue(key, null);
+    if (!row || Number(row.until || 0) <= Date.now()) {
+      if (row) GM_deleteValue(key);
+      return false;
+    }
+    return true;
+  }
+
   function writeToken() {
     var current = String(GM_getValue(TOKEN_KEY, '') || '').trim();
     if (current) return current;
@@ -782,6 +814,7 @@ function embeddedJobDois(value) {
       job.doi = normalizeDoi(job.doi);
       if (!job.doi || isFailureCooling(job)) return;
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
+      if (publisherAccessCooling(job)) return;
       normalized.push(job);
     });
     normalized.sort(function (a, b) {
@@ -1795,23 +1828,28 @@ function embeddedJobDois(value) {
     var suffix = doi.split('/').pop() || doi;
     var doiMatch = citation.indexOf(doi) >= 0 || canonical.indexOf(doi) >= 0 || href.toLowerCase().indexOf(suffix.toLowerCase()) >= 0;
     var meaningfulArticle = doiMatch && text.length >= 900;
-    // Publisher article pages often retain "sign in via your institution" and even
-    // stale verification strings in navigation/hidden DOM after access is already
-    // granted. Do not keep a verified, DOI-bound article in auth/challenge_wait.
-    var challengeSignal = /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic|checking your browser/i.test(title + '\n' + text);
+    var gateText = title + '\n' + text.slice(0, 16000);
+    // Science/AAAS may expose some article text behind an explicit "Check access"
+    // overlay. That gate must win over text length; otherwise the page looks loaded
+    // and the controller repeatedly scans a document that cannot expose its media.
+    var accessGate = /\b(?:check|checking|verify|verifying)\s+(?:your\s+)?access\b|\baccess\s+(?:check|verification)\b|please\s+(?:wait|stand by).{0,80}(?:access|verification)/i.test(gateText);
+    // Publisher article pages often retain generic sign-in strings in navigation or
+    // hidden DOM after access is already granted. Only explicit access gates remain
+    // authoritative when a DOI-bound article body is otherwise meaningful.
+    var challengeSignal = accessGate || /captcha|verify you are human|security check|access denied|challenge-platform|just a moment|unusual traffic|checking your browser/i.test(gateText);
     var authUrl = /(?:login|signin|sign-in|shibboleth|saml|openathens|wayf|\/idp\/)/i.test(href);
-    var authText = /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login/i.test(title + '\n' + text);
-    var challenge = challengeSignal && !meaningfulArticle;
+    var authText = /select (?:your )?institution|sign in via (?:your )?institution|log in via (?:your )?institution|access through (?:your )?institution|institutional login/i.test(gateText);
+    var challenge = accessGate || (challengeSignal && !meaningfulArticle);
     var auth = authUrl || (authText && !meaningfulArticle);
     var shell = (job.publisher === 'acs' || job.publisher === 'wiley') && doiMatch && !challenge && !auth && text.length > 0 && text.length < 500;
     pushTrace(trace, {
       stage: 'page',
       event: 'state',
-      status: challenge ? 'challenge' : auth ? 'auth' : shell ? 'shell' : 'loaded',
+      status: challenge ? (accessGate ? 'access_gate' : 'challenge') : auth ? 'auth' : shell ? 'shell' : 'loaded',
       url: href,
-      message: 'doiMatch=' + String(doiMatch) + ';textLength=' + String(text.length)
+      message: 'doiMatch=' + String(doiMatch) + ';textLength=' + String(text.length) + ';accessGate=' + String(accessGate)
     });
-    return { challenge: challenge, auth: auth, shell: shell, doiMatch: doiMatch, textLength: text.length };
+    return { challenge: challenge, accessGate: accessGate, auth: auth, shell: shell, doiMatch: doiMatch, textLength: text.length };
   }
 
 
@@ -2992,7 +3030,7 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.39')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.40')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
@@ -3066,6 +3104,11 @@ function embeddedJobDois(value) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
         // Fail before opening any page, and never dispatch after loss of ownership.
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
+        if (publisherAccessCooling(batch[i])) {
+          summary.skipped+=1;
+          badge('出版社访问验证冷却，已跳过 '+batch[i].doi+'；继续其他来源','#92400e');
+          continue;
+        }
         var activeState = reconcileActiveJobBeforeDispatch();
         if(activeState.cleared) {
           badge('已自动清理旧任务：'+String(activeState.doi||'')+'；继续抓取','#374151');
@@ -3419,17 +3462,26 @@ function embeddedJobDois(value) {
   }
 
   async function waitForPairedVisuals(job,trace) {
-    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false;
+    var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0;
     var toc=[],figures=[];
     while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
       if (isAbortRequested()) throw new Error('user_aborted');
       assertBoundCaptureJob(job);
       var state=pageState(job,trace);
       if (state.auth || state.challenge) {
-        captureLiveUpdate(job,state.auth?'auth_wait':'challenge_wait');
-        GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:state.auth?'auth_wait':'challenge_wait',at:nowIso(),url:location.href});
-        await sleep(2000); continue;
+        if (!accessGateStarted) accessGateStarted=Date.now();
+        var waitState=state.auth?'auth_wait':'challenge_wait';
+        captureLiveUpdate(job,waitState);
+        GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:waitState,at:nowIso(),url:location.href,version:VERSION,host:location.hostname});
+        if (state.accessGate && Date.now()-accessGateStarted >= 12000) {
+          var cooldown=markPublisherAccessCooldown(job,'publisher_access_gate');
+          pushTrace(trace,{stage:'publisher_access',event:'cooldown',status:'skipped',url:location.href,
+            message:'publisher='+String(job.publisher||'')+';cooldownMs='+String(PUBLISHER_ACCESS_COOLDOWN_MS)+';until='+String(cooldown&&cooldown.until||0)});
+          throw new Error('publisher_access_gate');
+        }
+        await sleep(1500); continue;
       }
+      accessGateStarted=0;
       var gateProgress = GM_getValue(progressKey(job.doi),null);
       if (gateProgress && /^(?:auth_wait|challenge_wait)$/.test(String(gateProgress.status||''))) {
         GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:'publisher_verified',at:nowIso(),url:location.href,version:VERSION,host:location.hostname});
