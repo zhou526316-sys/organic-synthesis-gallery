@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-28T08:09:00+08:00",
-  "requestedBy": "fixed-slot-release-20260928-0800-postrelease",
-  "publicationSlot": "2026-09-28T08:00:00+08:00",
-  "baselineMainSha": "c4e2a4c713b9c51d078cde3fbf32ae6629ae748c",
-  "reason": "Run a fresh post-release literature completeness audit for the 2026-09-28 08:00 slot."
+  "requestedAt": "2026-09-28T17:07:11+08:00",
+  "requestedBy": "prepublish-primary-20260928-1800",
+  "publicationSlot": "2026-09-28T18:00:00+08:00",
+  "baselineMainSha": "f60de0dbd3627bd58c10ef56c4941dd0e45b5d75",
+  "reason": "Fresh 16:55 snapshot was absent for the 2026-09-28 18:00 prepublication review; start one deduplicated audit via the approved push-trigger bridge."
 }
