@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "ready_with_pending",
+  "phase": "synced_with_pending",
   "activeRun": null,
   "lastCompletedFetch": {
     "id": "manual-midday-catchup-20260922",
@@ -40,42 +40,66 @@
     "note": "Consolidated the polymer-method scope correction and subsequent late-indexed candidates. Current audit reports galleryDois=503, missingFromGallery=0, unresolved=0."
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-09-27T21:11:36+08:00",
-    "dataCommitSha": "69bdb1f78d99fe4465b13aeb1fac178e79f5ee85",
+    "finishedAt": "2026-09-28T08:26:25+08:00",
+    "dataCommitSha": "c4e2a4c713b9c51d078cde3fbf32ae6629ae748c",
     "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
     "deployment": "success-live-verified",
     "verification": {
       "productionGitHubPages": "success",
-      "pagesRun": 36321283468,
-      "qualityGateRun": 36321565249,
-      "deploymentTriggerCommit": "2f070a30e4c7410a9852c569a66f1481f8793ac4",
+      "releaseCommit": "c4e2a4c713b9c51d078cde3fbf32ae6629ae748c",
+      "releaseWriterRun": 36360902852,
+      "postReleaseAuditRun": 36361078748,
+      "postReleaseAuditGeneratedAt": "2026-09-28T00:09:15.196Z",
+      "pagesRun": 36361857173,
+      "pagesRunStartedAt": "2026-09-28T08:20:22+08:00",
+      "pagesRunCompletedAt": "2026-09-28T08:25:39+08:00",
+      "qualityGateRun": 36362216287,
+      "qualityGateCompletedAt": "2026-09-28T08:26:25+08:00",
+      "deploymentTriggerCommit": "07f241e37b9519a06a8c1de02b7b67d60bc639e7",
       "newlyAcceptedDoisPresent": [
-        "10.1002/anie.3256942",
-        "10.1002/anie.5772245",
-        "10.1002/anie.7450551"
+        "10.1021/acscatal.6c05705",
+        "10.1002/anie.5879363",
+        "10.1002/anie.7110885",
+        "10.1021/acs.joc.6c01551",
+        "10.1021/acs.orglett.6c03620",
+        "10.1021/acs.orglett.6c03784"
       ],
       "rejectedDoisAbsent": [
-        "10.1002/anie.6128076",
-        "10.1002/anie.6529709",
-        "10.1002/anie.7902673"
+        "10.1002/anie.2540246",
+        "10.1002/anie.3499350",
+        "10.1002/anie.5640364",
+        "10.1002/anie.2967863",
+        "10.1002/anie.8380078",
+        "10.1002/anie.8484914",
+        "10.1002/anie.2076718",
+        "10.1002/anie.3329596",
+        "10.1021/jacs.6c17449",
+        "10.1021/jacs.6c08350"
       ],
       "deferredDoisAbsent": [
+        "10.31635/ccschem.026.202608472",
         "10.1002/anie.8666577",
         "10.31635/ccschem.026.202608262"
       ],
-      "totalGalleryCards": 627,
-      "galleryDois": 627,
+      "totalGalleryCards": 633,
+      "galleryDois": 633,
       "nextSlotPublicationDois": [],
-      "note": "Pages authorization/build/deploy and post-release quality gate succeeded; post-release DOI-union audit reports the same repository/deployed gallery count. Remaining unresolved DOI(s), if any, are exactly durable evidence-pending records plus reviewed next-slot include carryovers."
+      "publicationChecksPassed": true,
+      "reviewComplete": false,
+      "note": "GitHub Pages literature_authorization/build/deploy succeeded. The post-release quality gate fetched deployed production data, verified exact repository/deployed DOI-set equality at 633, confirmed all six accepted DOIs present, all ten rejected DOIs absent, all three deferred DOIs absent, and found no unexplained unresolved DOI."
     },
     "tocVerification": {
-      "liveQueueCommitSha": "a00f32e313d643a03227efe14883b1e4f2ae85ed",
-      "tocRefreshRun": 36311518022,
-      "visibleGapTotal": 67,
-      "missingOfficialTotal": 167,
-      "officialUpgradeTotal": 100,
-      "figureGapTotal": 627,
-      "note": "TOC/Graphical Abstract/Figure1/body figures remain delegated to Tampermonkey/VPN Bridge; media gaps do not block literature cards."
+      "liveQueueCommitSha": "f6f0c28b02d6f70fc38b095a7e2408d7a2008a9d",
+      "tocRefreshRun": 36361771949,
+      "generatedAt": "2026-09-28T00:19:13.517Z",
+      "webpageDoiCount": 633,
+      "latestAddedDate": "2026-09-28",
+      "latestAddedCount": 6,
+      "visibleGapTotal": 35,
+      "missingOfficialTotal": 136,
+      "officialUpgradeTotal": 101,
+      "figureGapTotal": 633,
+      "note": "TOC demand was rebuilt after the release from the current 633-card production set. The six newly admitted DOI records are present in the demand registry. Media gaps remain delegated to Tampermonkey/VPN Bridge and do not block reviewed literature cards."
     }
   },
   "verifiedThrough": "2026-09-20",
@@ -125,28 +149,28 @@
     "note": "The dedicated trigger push executed the GitHub runner capability guard, DOI-union audit, artifact upload and paired snapshot persistence successfully. No local Node or workflow_dispatch was used."
   },
   "latestMachineAudit": {
-    "generatedAt": "2026-09-27T23:09:03.432Z",
+    "generatedAt": "2026-09-28T00:09:15.196Z",
     "sourceRecords": 741,
-    "galleryDois": 627,
-    "missingFromGallery": 19,
-    "unresolved": 19,
-    "potentialGaps": 13,
+    "galleryDois": 633,
+    "missingFromGallery": 3,
+    "unresolved": 3,
+    "potentialGaps": 2,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 1,
     "historicalCoverageLosses": 0,
     "closureDate": "2026-09-27",
-    "status": "prepublish_reviewed_with_pending",
-    "compactHandoffSha": "e2b853594c3802caac971f51e2a3b018b464242b",
-    "latestBlobSha": "41e616c8448af7ec23df538a9d357fb7d81dda9d",
-    "runId": 36357688327,
+    "status": "synced_with_pending",
+    "compactHandoffSha": "15a8c003e6959a6624973fa1f7682866a4c4e6a2",
+    "latestBlobSha": "2f060da40358b5193727a24918c481e6fe383fa1",
+    "runId": 36361078748,
     "runConclusion": "success",
     "semanticReviewed": 19,
     "semanticFinalized": 16,
     "semanticPending": 3,
     "nextSlotPublicationCarryover": 0,
-    "note": "Fresh prepublish audit is paired and complete. The 19 DOI handoff is fully two-pass reviewed; exactly three documented article-level evidence gaps remain pending."
+    "note": "Post-release DOI-union audit succeeded after the 08:00 per-DOI release. Repository/deployed production is 633 cards; the only unresolved DOIs are the three durable evidence-pending records. Closure remains held by one closureCoverageAnomaly."
   },
   "publicationPolicy": {
     "updatedAt": "2026-09-22T19:12:00+08:00",
@@ -323,7 +347,7 @@
     "productionMutation": false,
     "note": "All 19 fresh compact candidates are accounted for by article-specific two-pass review. Six includes are ready under the per-DOI allowlist; three article-level evidence gaps remain deferred. No production literature data, media, or deployment was changed."
   },
-  "nextPublicationSlot": "2026-09-28T08:00:00+08:00",
+  "nextPublicationSlot": "2026-09-28T18:00:00+08:00",
   "prepublish": {
     "publicationSlot": "2026-09-28T08:00:00+08:00",
     "status": "ready_with_pending",
@@ -609,49 +633,64 @@
   "publicationChecksPassed": true,
   "reviewComplete": false,
   "lastPublication": {
-    "publicationSlot": "2026-09-27T18:00:00+08:00",
-    "publicationCommit": "69bdb1f78d99fe4465b13aeb1fac178e79f5ee85",
-    "deploymentTriggerCommit": "2f070a30e4c7410a9852c569a66f1481f8793ac4",
-    "reviewFile": "audit/review-2026-09-27-1800.json",
-    "reviewBlobSha": "aa381fc6cbd458b3d9d115d3f11313f9fbe4fa95",
-    "stagingReviewFile": "audit/prepublish-review-2026-09-27-1800.json",
-    "stagingReviewBlobSha": "5caf547d579fb80ce9cff6b3ade6a815ff3650a9",
-    "handoffGeneratedAt": "2026-09-27T09:06:41.436Z",
-    "prepublishGateRun": 36308773719,
-    "releaseWriterRun": 36311448870,
-    "preReleaseAuditRun": 36308284450,
-    "postReleaseAuditRun": 36311679157,
-    "qualityGateRun": 36321565249,
-    "pagesRun": 36321283468,
-    "tocRefreshRun": 36311518022,
-    "tocDemandCommit": "a00f32e313d643a03227efe14883b1e4f2ae85ed",
-    "productionCards": 627,
+    "publicationSlot": "2026-09-28T08:00:00+08:00",
+    "publicationCommit": "c4e2a4c713b9c51d078cde3fbf32ae6629ae748c",
+    "deploymentTriggerCommit": "07f241e37b9519a06a8c1de02b7b67d60bc639e7",
+    "reviewFile": "audit/review-2026-09-28-0800.json",
+    "reviewBlobSha": "ebe0f7d541d28cd0bb371e57a98def23abd06b78",
+    "stagingReviewFile": "audit/prepublish-review-2026-09-28-0800.json",
+    "stagingReviewBlobSha": "9f663cc8ea68e2eef20b2d801e1e6d60347fe963",
+    "handoffGeneratedAt": "2026-09-27T23:09:03.432Z",
+    "prepublishGateRun": 36358067683,
+    "releaseWriterRun": 36360902852,
+    "preReleaseAuditRun": 36357688327,
+    "postReleaseAuditRun": 36361078748,
+    "qualityGateRun": 36362216287,
+    "pagesRun": 36361857173,
+    "tocRefreshRun": 36361771949,
+    "tocDemandCommit": "f6f0c28b02d6f70fc38b095a7e2408d7a2008a9d",
+    "productionCards": 633,
     "publishedDois": [
-      "10.1002/anie.3256942",
-      "10.1002/anie.5772245",
-      "10.1002/anie.7450551"
+      "10.1021/acscatal.6c05705",
+      "10.1002/anie.5879363",
+      "10.1002/anie.7110885",
+      "10.1021/acs.joc.6c01551",
+      "10.1021/acs.orglett.6c03620",
+      "10.1021/acs.orglett.6c03784"
     ],
     "deferredDois": [
+      "10.31635/ccschem.026.202608472",
       "10.1002/anie.8666577",
       "10.31635/ccschem.026.202608262"
     ],
     "nextSlotPublicationDois": [],
     "rejectedDois": [
-      "10.1002/anie.6128076",
-      "10.1002/anie.6529709",
-      "10.1002/anie.7902673"
+      "10.1002/anie.2540246",
+      "10.1002/anie.3499350",
+      "10.1002/anie.5640364",
+      "10.1002/anie.2967863",
+      "10.1002/anie.8380078",
+      "10.1002/anie.8484914",
+      "10.1002/anie.2076718",
+      "10.1002/anie.3329596",
+      "10.1021/jacs.6c17449",
+      "10.1021/jacs.6c08350"
     ],
     "publicationChecksPassed": true,
     "reviewComplete": false,
-    "publishedAt": "2026-09-27T21:11:36+08:00",
-    "finalizedAt": "2026-09-27T21:13:10.439+08:00"
+    "publishedAt": "2026-09-28T08:25:39+08:00",
+    "finalizedAt": "2026-09-28T08:26:25+08:00",
+    "scopeRulesVersion": "scope-2026-09-24-v1",
+    "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+    "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+    "markerBlobSha": "b7a17e58d1e00f0b2c0b52d1a2132527d4474aa5"
   },
   "lastQualityGate": {
-    "runId": 36321565249,
+    "runId": 36362216287,
     "conclusion": "success",
-    "publicationSlot": "2026-09-27T18:00:00+08:00",
-    "triggerCommit": "3fe9dbdb126cd2c6019511e8234d74a8ac59ed92",
-    "verifiedAt": "2026-09-27T21:13:10.439+08:00"
+    "publicationSlot": "2026-09-28T08:00:00+08:00",
+    "triggerCommit": "0762e0b9c928a1c6eab52add592065338dc3778b",
+    "verifiedAt": "2026-09-28T08:26:25+08:00"
   },
   "lastScopeCorrection": {
     "id": "scope-correction-20260923024323204",
@@ -922,5 +961,26 @@
     "nextPublicationSlot": "2026-09-24T18:00:00+08:00",
     "productionMutation": false,
     "note": "Post-release late-indexed candidates were reviewed immediately. The accepted DOI is a reviewed next-slot carryover, not evidence-pending, and was not added off-slot."
+  },
+  "postReleaseFinalization": {
+    "publicationSlot": "2026-09-28T08:00:00+08:00",
+    "status": "synced_with_pending",
+    "publicationChecksPassed": true,
+    "reviewComplete": false,
+    "finalizedAt": "2026-09-28T08:26:25+08:00",
+    "releaseCommit": "c4e2a4c713b9c51d078cde3fbf32ae6629ae748c",
+    "markerBlobSha": "b7a17e58d1e00f0b2c0b52d1a2132527d4474aa5",
+    "postReleaseAuditRun": 36361078748,
+    "pagesRun": 36361857173,
+    "qualityGateRun": 36362216287,
+    "productionCards": 633,
+    "pendingDois": [
+      "10.31635/ccschem.026.202608472",
+      "10.1002/anie.8666577",
+      "10.31635/ccschem.026.202608262"
+    ],
+    "verifiedThroughHeldAt": "2026-09-20",
+    "closureCoverageAnomalies": 1,
+    "note": "No off-slot admission or deletion-only correction was performed. The next publication slot remains the normal 18:00 Beijing slot."
   }
 }
