@@ -621,7 +621,7 @@
     {
       "doi": "10.1002/anie.v65.40",
       "journal": "Angew",
-      "title": "",
+      "title": "Angewandte Chemie International Edition, Volume 65, Issue 40",
       "abstract": "",
       "date": "2026-09-28",
       "type": "journal-issue",
@@ -645,9 +645,9 @@
       "decision": "exclude",
       "firstPassDecision": "exclude",
       "challengeDecision": "exclude",
-      "reason": "该记录是期刊卷期级元数据，缺少文章题名和可审核研究内容，不是可发布研究论文。",
-      "evidenceBasis": "fresh compact仅提供题名“”及文献类型/来源元数据，未取得摘要或正文中的一般制备证据。",
-      "challengeReason": "反向核对了题名/摘要中可能的化学转化线索；现有证据仍以该记录是期刊卷期级元数据，缺少文章题名和可审核研究内容，不是可发布研究论文为主，不能仅因出现“synthesis”“catalyst”或有机分子而纳入。"
+      "reason": "该DOI是Angewandte Chemie International Edition第65卷第40期的卷期级元数据，不是单篇原始研究论文。",
+      "evidenceBasis": "fresh compact记录的DOI为10.1002/anie.v65.40，原始题名为空且DOI模式对应Volume 65, Issue 40；不存在可逐篇审核的研究摘要或有机合成贡献。",
+      "challengeReason": "卷期中可能包含相关论文，但卷期聚合记录本身不能作为一篇合成研究发布；具体文章必须以各自DOI进入候选。"
     },
     {
       "doi": "10.1002/anie.5759530",
@@ -6009,10 +6009,11 @@
     "Twenty-seven DOI are publishable from the complete current handoff; two current candidates are deferred with article-specific evidence gaps.",
     "The out-of-window CCS pending DOI 10.31635/ccschem.026.202608262 remains in durable state backlog and was not falsely inserted into the current compact decision set.",
     "Thirty-one compatible decisions were reused only after matching current metadata and unchanged scope/corrections blobs; 81 new candidates received fresh two-pass decisions.",
-    "Nature official pages confirmed 10.1038/s41557-026-02249-9 as a Review Article and 10.1038/s44160-026-01174-6 as a Research Highlight."
+    "Nature official pages confirmed 10.1038/s41557-026-02249-9 as a Review Article and 10.1038/s44160-026-01174-6 as a Research Highlight.",
+    "The blank-title issue-level DOI 10.1002/anie.v65.40 was labeled descriptively from its DOI metadata and excluded as issue metadata; no article title was invented."
   ],
   "nonBlockingDiscoveryWarnings": [
     "closureCoverageAnomalies=7; verifiedThrough held at 2026-09-20."
   ],
-  "updatedAt": "2026-09-29T07:13:39+08:00"
+  "updatedAt": "2026-09-29T07:14:54+08:00"
 }
