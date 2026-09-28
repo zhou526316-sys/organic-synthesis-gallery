@@ -10,5 +10,5 @@
   "prepublishGateRunId": 36402648142,
   "expectedPublishableCount": 11,
   "expectedDeferredCount": 2,
-  "note": "Fixed-slot request for the current reviewed 2026-09-28 18:00 snapshot; consume only the strict release-preflight bundle bound to these frozen inputs."
+  "note": "Fixed-slot request for the current reviewed 2026-09-28 18:00 snapshot; consume only the strict release-preflight bundle bound to these frozen inputs. Branch-bridge smoke: intentionally retriggered outside the slot to verify fail-closed time guard; no production write is authorized."
 }
