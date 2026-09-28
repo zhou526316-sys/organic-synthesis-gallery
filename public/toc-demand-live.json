@@ -5068,13 +5068,13 @@
       "publisher": "acs"
     }
   ],
-  "generatedAt": "2026-09-28T05:32:31.516Z",
+  "generatedAt": "2026-09-28T18:11:28.641Z",
   "webpageDoiCount": 633,
   "latestAddedDate": "2026-09-28",
   "latestAddedCount": 6,
-  "visibleGapTotal": 29,
+  "visibleGapTotal": 27,
   "missingOfficialTotal": 130,
-  "officialUpgradeTotal": 101,
+  "officialUpgradeTotal": 103,
   "figureGapTotal": 633,
   "zeroFigureGapTotal": 633,
   "lowResolutionFigureGapTotal": 0,
@@ -5345,26 +5345,6 @@
       "journal": "Nature",
       "title": "Ketone homologation via palladium-catalysed decarboxylative rearrangement",
       "date": "2026-09-03",
-      "addedDate": "",
-      "publisher": "nature",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1038/s41467-026-77981-4",
-      "journal": "Nature Communications",
-      "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
-      "date": "2026-09-21",
-      "addedDate": "2026-09-22",
-      "publisher": "nature",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1038/s41467-026-77715-6",
-      "journal": "Nature Communications",
-      "title": "Iterative and data-driven ortholog mining enables reliable discovery of stereoselective ketoreductases",
-      "date": "2026-09-15",
       "addedDate": "",
       "publisher": "nature",
       "state": "no_visual",
@@ -5723,6 +5703,16 @@
       "existingReason": "live_r2_figure1_fallback"
     },
     {
+      "doi": "10.1038/s41467-026-77981-4",
+      "journal": "Nature Communications",
+      "title": "Tandem cyclohexen-3-yne and 1,2,3-cyclohexatriene reactions",
+      "date": "2026-09-21",
+      "addedDate": "2026-09-22",
+      "publisher": "nature",
+      "state": "fallback_only",
+      "existingReason": "live_r2_figure1_fallback"
+    },
+    {
       "doi": "10.1038/s41467-026-76235-7",
       "journal": "Nature Communications",
       "title": "Practical synthesis of 3-Oxa/Aza-bicyclo[3.1.1]heptanes from 3-Oxa/Aza[3.1.1]propellanes",
@@ -5730,7 +5720,17 @@
       "addedDate": "2026-09-18",
       "publisher": "nature",
       "state": "fallback_only",
-      "existingReason": "reviewed_figure1_fallback"
+      "existingReason": "live_r2_figure1_fallback"
+    },
+    {
+      "doi": "10.1038/s41467-026-77715-6",
+      "journal": "Nature Communications",
+      "title": "Iterative and data-driven ortholog mining enables reliable discovery of stereoselective ketoreductases",
+      "date": "2026-09-15",
+      "addedDate": "",
+      "publisher": "nature",
+      "state": "fallback_only",
+      "existingReason": "live_r2_figure1_fallback"
     },
     {
       "doi": "10.1038/s41467-026-77774-9",
@@ -16508,8 +16508,8 @@
       "date": "2026-09-21",
       "addedDate": "2026-09-22",
       "publisher": "nature",
-      "state": "no_visual",
-      "existingReason": ""
+      "state": "fallback_only",
+      "existingReason": "live_r2_figure1_fallback"
     },
     {
       "doi": "10.1038/s41467-026-76235-7",
@@ -16519,7 +16519,7 @@
       "addedDate": "2026-09-18",
       "publisher": "nature",
       "state": "fallback_only",
-      "existingReason": "reviewed_figure1_fallback"
+      "existingReason": "live_r2_figure1_fallback"
     },
     {
       "doi": "10.1038/s41467-026-77715-6",
@@ -16528,8 +16528,8 @@
       "date": "2026-09-15",
       "addedDate": "",
       "publisher": "nature",
-      "state": "no_visual",
-      "existingReason": ""
+      "state": "fallback_only",
+      "existingReason": "live_r2_figure1_fallback"
     },
     {
       "doi": "10.1038/s41467-026-77774-9",
