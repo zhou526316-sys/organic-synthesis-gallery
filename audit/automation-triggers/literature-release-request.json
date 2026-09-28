@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "requestId": "20260927-1800-fixed-slot-release",
-  "requestedAt": "2026-09-27T18:04:00+08:00",
-  "publicationSlot": "2026-09-27T18:00:00+08:00",
-  "stagingReviewFile": "audit/prepublish-review-2026-09-27-1800.json",
-  "stagingReviewBlobSha": "5caf547d579fb80ce9cff6b3ade6a815ff3650a9",
-  "handoffBlobSha": "9882c6234c34605790d4d954852d7ab640e39171",
-  "auditBlobSha": "e7c07d36c0cbfa29170a74fc65677a6908d4648d",
-  "prepublishGateRunId": 36308773719,
-  "expectedPublishableCount": 3,
-  "expectedDeferredCount": 2,
-  "note": "Fixed-slot request for the current reviewed 2026-09-27 18:00 snapshot; consume only the strict release-preflight bundle bound to these frozen inputs."
+  "requestId": "20260928-0800-fixed-slot-release",
+  "requestedAt": "2026-09-28T08:02:00+08:00",
+  "publicationSlot": "2026-09-28T08:00:00+08:00",
+  "stagingReviewFile": "audit/prepublish-review-2026-09-28-0800.json",
+  "stagingReviewBlobSha": "9f663cc8ea68e2eef20b2d801e1e6d60347fe963",
+  "handoffBlobSha": "e2b853594c3802caac971f51e2a3b018b464242b",
+  "auditBlobSha": "41e616c8448af7ec23df538a9d357fb7d81dda9d",
+  "prepublishGateRunId": 36358067683,
+  "expectedPublishableCount": 6,
+  "expectedDeferredCount": 3,
+  "note": "Fixed-slot request for the current reviewed 2026-09-28 08:00 snapshot; consume only the strict release-preflight bundle bound to these frozen inputs."
 }
