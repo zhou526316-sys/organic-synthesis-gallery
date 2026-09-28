@@ -40,7 +40,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.40';
+  var CONTROLLER_REVISION = '2.2.41';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -70,12 +70,14 @@
   var ABORT_KEY = P + 'abort-request';
   var HEARTBEAT_KEY = P + 'publisher-heartbeat';
   var PUBLISHER_ACCESS_COOLDOWN_PREFIX = P + 'publisher-access-cooldown:';
-  var PUBLISHER_ACCESS_COOLDOWN_MS = 10 * 60 * 1000;
+  var PUBLISHER_ACCESS_COOLDOWN_MS = 30 * 60 * 1000;
+  var PUBLISHER_LAST_DISPATCH_PREFIX = P + 'publisher-last-dispatch:';
+  var SCIENCE_MIN_DISPATCH_GAP_MS = 90 * 1000;
   var FAILURE_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var NATURE_NO_TOC_COOLDOWN_MS = 6 * 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000;
   var SUMMARY_EVIDENCE_RETRY_BASE_MS = 5 * 60 * 1000;
-  var FAILURE_ENGINE_REVISION = VERSION + ':20260928-publisher-access-gate';
+  var FAILURE_ENGINE_REVISION = VERSION + ':20260928-science-access-prevention';
   var DEFAULT_BATCH_SIZE = 8;
   var NEXT_BATCH_DELAY_MS = 12000;
   var nextBatchTimer = null;
@@ -479,7 +481,12 @@ function embeddedJobDois(value) {
     if (publisher === 'acs') return 'https://pubs.acs.org/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'wiley') return 'https://onlinelibrary.wiley.com/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'nature') return 'https://www.nature.com/articles/' + suffix;
-    if (publisher === 'science') return 'https://www.science.org/doi/' + (figureJob ? 'full/' : '') + doi;
+    if (publisher === 'science') {
+      // Missing-TOC work must stay on the public article landing route. The paired
+      // scheduler may opportunistically want figures too, but forcing /doi/full/
+      // for a TOC gap needlessly hits AAAS access control.
+      return 'https://www.science.org/doi/' + (job && job.captureToc === true ? '' : (figureJob ? 'full/' : '')) + doi;
+    }
     if (publisher === 'rsc') {
       var rsc = /^([a-z])(\d)([a-z]{2})/i.exec(suffix);
       if (rsc) return 'https://pubs.rsc.org/en/content/articlelanding/' + String(2020 + Number(rsc[2])) + '/' + rsc[3].toLowerCase() + '/' + suffix.toLowerCase();
@@ -576,6 +583,23 @@ function embeddedJobDois(value) {
       return false;
     }
     return true;
+  }
+
+  function publisherDispatchKey(publisher) {
+    return PUBLISHER_LAST_DISPATCH_PREFIX + String(publisher || '').toLowerCase();
+  }
+
+  function markPublisherDispatch(job) {
+    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
+    if (!publisher) return;
+    GM_setValue(publisherDispatchKey(publisher), { at: Date.now(), doi: normalizeDoi(job && job.doi) });
+  }
+
+  function publisherPacingCooling(job) {
+    var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
+    if (publisher !== 'science') return false;
+    var last = GM_getValue(publisherDispatchKey(publisher), null);
+    return Boolean(last && Number(last.at || 0) > 0 && Date.now() - Number(last.at) < SCIENCE_MIN_DISPATCH_GAP_MS);
   }
 
   function writeToken() {
@@ -814,7 +838,7 @@ function embeddedJobDois(value) {
       job.doi = normalizeDoi(job.doi);
       if (!job.doi || isFailureCooling(job)) return;
       job.publisher = String(job.publisher || publisherForDoi(job.doi));
-      if (publisherAccessCooling(job)) return;
+      if (publisherAccessCooling(job) || publisherPacingCooling(job)) return;
       normalized.push(job);
     });
     normalized.sort(function (a, b) {
@@ -1684,8 +1708,8 @@ function embeddedJobDois(value) {
       add(location.origin + '/doi/full/' + doi);
       add(location.origin + '/doi/abs/' + doi);
     } else if (publisher === 'science' && location.hostname.endsWith('science.org')) {
-      add(location.origin + '/doi/full/' + doi);
-      add(location.origin + '/doi/' + doi);
+      // Deliberately no hidden Science iframe fallbacks. They duplicate document
+      // requests and have not recovered TOCs in current diagnostics.
     }
     return urls;
   }
@@ -2251,7 +2275,7 @@ function embeddedJobDois(value) {
       }
 
       var iframeThreshold = state.shell && job.publisher === 'acs' ? 2500 : 7000;
-      if (!iframeAttempted && elapsed > iframeThreshold && (job.publisher === 'acs' || job.publisher === 'wiley' || job.publisher === 'science')) {
+      if (!iframeAttempted && elapsed > iframeThreshold && (job.publisher === 'acs' || job.publisher === 'wiley')) {
         iframeAttempted = true;
         if (isAbortRequested()) throw new Error('user_aborted');
         var iframeRows = await iframeCandidates(job, trace);
@@ -3030,7 +3054,7 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.40')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.41')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
@@ -3124,6 +3148,7 @@ function embeddedJobDois(value) {
         var priorAttempt=GM_getValue(attemptKey(batch[i].doi,attemptGeneration,attemptKind),null);
         var job=Object.assign({},batch[i],{jobId:crypto.randomUUID(),controllerId:CONTROLLER_ID,captureVersion:VERSION,startedAt:nowIso(),queueGeneratedAt:queue.generatedAt,retryCount:Number(priorAttempt&&priorAttempt.retryCount||0)+1});
         GM_deleteValue(resultKey(job.doi));GM_deleteValue(progressKey(job.doi));GM_deleteValue(HEARTBEAT_KEY);GM_setValue(ACTIVE_JOB_KEY,job);
+        markPublisherDispatch(job);
         var taskParts=[];
         if(job.captureToc===true)taskParts.push('TOC');
         if(job.captureFigures===true)taskParts.push('正文图');
@@ -3495,7 +3520,7 @@ function embeddedJobDois(value) {
       figures=wantsFigures?collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom'):[];
       var now=Date.now(),elapsed=now-started;
       if (wantsToc && !toc.length && !iframeAttempted && elapsed>7000 &&
-          (job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='science')) {
+          (job.publisher==='acs'||job.publisher==='wiley')) {
         iframeAttempted=true;
         var iframeRows=await iframeCandidates(job,trace);
         toc=iframeRows.filter(function(row){return row&&row.kind==='official';});
