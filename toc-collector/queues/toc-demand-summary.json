@@ -1,30 +1,30 @@
 {
-  "generatedAt": "2026-09-29T03:53:56.162Z",
+  "generatedAt": "2026-09-29T05:50:40.414Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 581,
+  "liveLocalCaptures": 589,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
   "mediaInventoryCount": 660,
   "webpageDoiCount": 660,
   "latestAddedDate": "2026-09-29",
   "latestAddedCount": 27,
   "mediaRecordCount": 611,
-  "visibleGapTotal": 54,
-  "demandTotal": 54,
-  "noVisual": 54,
-  "fallbackOnlyNeedsOfficialUpgrade": 103,
-  "missingOfficialTotal": 157,
+  "visibleGapTotal": 46,
+  "demandTotal": 46,
+  "noVisual": 46,
+  "fallbackOnlyNeedsOfficialUpgrade": 104,
+  "missingOfficialTotal": 150,
   "figureGapTotal": 660,
   "zeroFigureGapTotal": 660,
   "lowResolutionFigureGapTotal": 0,
   "unknownQualityFigureGapTotal": 0,
   "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 49,
-    "wiley": 1,
-    "nature": 3,
+    "acs": 43,
+    "wiley": 0,
+    "nature": 2,
     "science": 0,
     "rsc": 0,
     "elsevier": 0,
@@ -34,7 +34,7 @@
   "upgradeByPublisher": {
     "acs": 0,
     "wiley": 0,
-    "nature": 97,
+    "nature": 98,
     "science": 6,
     "rsc": 0,
     "elsevier": 0,
@@ -43,13 +43,11 @@
   },
   "byJournal": {
     "ACS Catalysis": 5,
-    "JACS": 6,
-    "JOC": 5,
+    "JACS": 2,
+    "JOC": 3,
     "Organic Letters": 33,
     "CCS Chemistry": 1,
-    "Nature": 2,
-    "Nature Communications": 1,
-    "Angew": 1
+    "Nature": 2
   },
   "sample": [
     {
@@ -103,49 +101,9 @@
       "existingReason": ""
     },
     {
-      "doi": "10.1021/jacs.6c10628",
-      "journal": "JACS",
-      "title": "Gold-Catalyzed Upcycling of Aromatic Thermoplastics",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/jacs.6c10893",
-      "journal": "JACS",
-      "title": "Resolving Structural Ambiguity through Total Synthesis: Evolution of a Synthetic Strategy for Secalosides A and B",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
       "doi": "10.1021/jacs.6c12163",
       "journal": "JACS",
       "title": "Counteranion-Controlled Iodocyclizations Enabled by Iodine Nitrate: A Modular Route to Functionalized Triphenylenes and All-Benzenoid Graphene Quantum Dots",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/jacs.6c15246",
-      "journal": "JACS",
-      "title": "Convergent Total Synthesis of (−)-Methyl Gummiferolate Enabled by Pattern Recognition and Radical Cyclization",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/jacs.6c16630",
-      "journal": "JACS",
-      "title": "Reimagining the Wolff-Kishner Reduction: Light-Driven Carbonyl Deoxygenation without Strong Base",
       "date": "2026-09-28",
       "addedDate": "2026-09-29",
       "publisher": "acs",
@@ -161,26 +119,6 @@
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01488",
-      "journal": "JOC",
-      "title": "Deoxyfluorination of Aliphatic Alcohols by PyFluor/DBU: Mechanism, Reactivity, and Substrate Selectivity",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.joc.6c01536",
-      "journal": "JOC",
-      "title": "Synthesis of 2-Methylquinazolinones Through Skeleton Editing Strategy Using Calcium Carbide as an Inorganic C2 Source",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
     },
     {
       "doi": "10.1021/acs.joc.6c01670",
@@ -301,6 +239,66 @@
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03825",
+      "journal": "Organic Letters",
+      "title": "Biomimetic Fe(Pytacn)-Catalyzed Intramolecular C(sp3)–H Amination: Access to Heteroarene-Functionalized Sultams",
+      "date": "2026-09-28",
+      "addedDate": "2026-09-29",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03876",
+      "journal": "Organic Letters",
+      "title": "Copper-Catalyzed Cascade C–H Activation of 10-(Pyridin-2-yl)-10 H -Phenothiazines: Access to Organic Difluoroboron Luminescent Materials",
+      "date": "2026-09-28",
+      "addedDate": "2026-09-29",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03898",
+      "journal": "Organic Letters",
+      "title": "Dehydrogenative Aromatization of Pyrrolidines through Photoredox/Cobaloxime Catalysis",
+      "date": "2026-09-28",
+      "addedDate": "2026-09-29",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03909",
+      "journal": "Organic Letters",
+      "title": "Photocatalytic C–H Trifluoromethylation of (Hetero)arenes with Halon-1301",
+      "date": "2026-09-28",
+      "addedDate": "2026-09-29",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03954",
+      "journal": "Organic Letters",
+      "title": "Thianthrenium Salt-Mediated Site-Selective Coupling of Arenes with Enynones",
+      "date": "2026-09-28",
+      "addedDate": "2026-09-29",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03612",
+      "journal": "Organic Letters",
+      "title": "Development of Deuteroalkylthiolating Reagents for Synthesis of Deuterated Sulfides",
+      "date": "2026-09-20",
+      "addedDate": "2026-09-21",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": "user_observed_no_image"
     }
   ]
 }
