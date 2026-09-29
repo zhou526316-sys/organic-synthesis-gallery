@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "purpose": "Single-source coordination state for literature fetching, TOC collection, capability selection, and website synchronization. All ChatGPT windows/tasks should inspect this file before starting literature retrieval.",
   "timezone": "Asia/Shanghai",
-  "phase": "ready_with_pending",
+  "phase": "sync_failed",
   "activeRun": null,
   "lastCompletedFetch": {
     "id": "manual-midday-catchup-20260922",
@@ -1090,5 +1090,15 @@
     "closureCoverageAnomalies": 1,
     "note": "No off-slot admission or deletion-only correction was performed. The next publication slot remains the normal 18:00 Beijing slot."
   },
-  "updatedAt": "2026-09-29T17:45:00+08:00"
+  "updatedAt": "2026-09-29T17:45:00+08:00",
+  "lastDeploymentAttempt": {
+    "schemaVersion": 1,
+    "ok": false,
+    "runId": 36593009810,
+    "runAttempt": 1,
+    "status": "failure",
+    "markerBlobSha": "bfe2890c4b46fece8c861b6f74c651caa374bf21",
+    "finishedAt": "2026-09-29T15:48:47Z",
+    "message": "Deployment did not complete with verified live literature. Last successful website sync is preserved."
+  }
 }
