@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-29T08:31:00+08:00",
+  "timeZone": "Asia/Shanghai",
+  "type": "postrelease-late-candidate-review",
+  "discoveryGeneratedAt": "2026-09-29T00:29:02.958Z",
+  "handoffFile": "audit/unresolved-latest.json",
+  "handoffBlobSha": "b72f6f05efbf056b8727d906ffe843d2ff4ab0ca",
+  "scopeRulesVersion": "scope-2026-09-24-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "f3102cd8a21d5b9dcd31a4f8d7d1a19e3c4e89e8",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "040902a773f72057dff59de5c66d27f568984813",
+  "sourcePublicationSlot": "2026-09-29T08:00:00+08:00",
+  "nextPublicationSlot": "2026-09-29T18:00:00+08:00",
+  "summary": {
+    "reviewed": 1,
+    "accepted": 0,
+    "rejected": 1,
+    "pending": 0
+  },
+  "accepted": [],
+  "rejected": [
+    {
+      "doi": "10.1021/jacs.6c16288",
+      "journal": "JACS",
+      "date": "2026-09-28",
+      "title": "Rigid-Flexible Coupling Pore Engineering in Covalent Organic Frameworks Enables the Selective Identification of Nucleotide Analogues",
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "reason": "The article's principal contribution is COF pore/material engineering for selective ATP sensing, not a general organic preparative transformation or synthetic route.",
+      "evidenceBasis": "The fresh Crossref abstract describes a light-emitting hydrazone COF integrating Fe single-atom sites and alkoxy chains. The reported advance is adaptive ATP recognition over AMP/ADP and fluorescence turn-on through host–guest interactions; the abstract does not establish a transferable substrate-to-product organic synthesis method or target-synthesis route.",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "Counterchallenge: the study necessarily synthesizes COF materials and varies alkoxy-chain structure, but those operations serve sensing-material design. Under the current scope contract, structural variation used to optimize recognition/fluorescence is not sufficient evidence of a general organic preparative method.",
+      "scopeAssessment": {
+        "primaryContribution": "Rigid-flexible pore engineering of a fluorescent covalent organic framework for selective ATP recognition among nucleotide analogues.",
+        "preparativeTransformation": "Construction/modification of a hydrazone COF with Fe single-atom sites and alkoxy-chain variants; no general small-molecule substrate-to-product preparative transformation is established by the available abstract.",
+        "generalityEvidence": "Alkoxy-chain-length variation supports structure–function tuning of the sensing material, not generality of an organic synthesis method.",
+        "sourceEvidence": "Fresh DOI-matched Crossref abstract in audit/unresolved-latest.json; ACS JACS latest-articles listing confirms current article metadata.",
+        "boundaryChallenge": "Covalent-bond formation and multiple material variants are real synthetic operations, but the article's stated objective and evidence are dominated by pore engineering, nucleotide sensing, host–guest interactions and fluorescence response rather than transferable organic synthesis methodology."
+      },
+      "evidencePages": [
+        "https://doi.org/10.1021/jacs.6c16288",
+        "https://pubs.acs.org/jacsat/latest-articles"
+      ],
+      "evidenceSource": "postrelease_fresh_compact_crossref_abstract_plus_acs_latest_listing"
+    }
+  ],
+  "pending": [],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0,
+    "allCandidatesReviewed": true,
+    "offSlotProductionWrites": 0
+  }
+}
