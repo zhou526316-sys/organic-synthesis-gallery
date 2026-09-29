@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "publicationSlot": "2026-09-29T18:00:00+08:00",
+  "generatedAt": "2026-09-29T10:02:17.805Z",
+  "handoffGeneratedAt": "2026-09-29T09:14:53.762Z",
+  "sourceReviewFile": "audit/review-2026-09-29-1800.json",
+  "items": [
+    {
+      "doi": "10.1021/acscatal.6c05520",
+      "journal": "ACS Catalysis",
+      "title": "Engineering Highly Active Single-Phosphine-Coordinated Ru Catalysts for Heterogeneous N -Alkylation without Base-Additive",
+      "abstract": "Abstract N-Alkylation of amine with alcohol is an attractive route for synthesizing high-value amines. However, existing homogeneous and heterogeneous catalytic systems still suffer from limitations such as insufficient metal utilization, requirement for alkaline additives, poor recyclability, and limited intrinsic activity. Herein, we propose an alcohol-driven coordination tailoring strategy, in which the alcohol governs the transformation of pristine Ru1-3P sites into highly active Ru1-1P with a well-defined [RuH2Cl2(Ph-CHO)(PPh3)] configuration. In base-additive-free N-alkylation, the Ru1-1P/POPs catalyst delivers a TOF of 323 h–1 and an apparent activation energy of 70.1 kJ·mol–1, far outperforming the Ru1-3P/POPs (145 h–1, 103.3 kJ·mol–1) and surpassing most reported catalysts. Comprehensive characterization confirms that Ru remains atomically dispersed even after 10 cycles. Mechanistic studies reveal that different from traditional base-dependent pathways, this catalytic cycle follows a dihydride transfer mechanism. The unique Ru1-1P configuration significantly reduces the barrier of the rate-determining β-hydride elimination. This work provides a facile strategy for regulating single-atom coordination environments and deepens the understanding of structure-performance relationships at the molecular level.",
+      "date": "2026-09-28",
+      "type": "journal-article",
+      "authors": [
+        "Sue Zhang",
+        "Xingju Li",
+        "Guifa Long",
+        "Lei Ma",
+        "Chunhui Zhang",
+        "Qiliang Guo",
+        "Ziyang Zhu",
+        "Miao Jiang",
+        "Cunyao Li",
+        "Li Yan",
+        "Yunjie Ding"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal",
+      "evidencePages": [
+        "https://pubs.acs.org/doi/10.1021/acscatal.6c05520",
+        "https://doi.org/10.1021/acscatal.6c05520"
+      ],
+      "evidenceSource": "fresh compact plus refreshed official-page search",
+      "titleZh": "酒精驱动构筑单膦配位Ru单原子催化剂实现无碱N-烷基化",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "摘要证实存在胺与醇的无碱N-烷基化，但主要篇幅为单原子Ru配位结构、TOF和结构–性能关系，未给出胺/醇底物范围或分离产物证据，暂不能确认其主要贡献达到一般制备方法门槛。",
+      "evidenceBasis": "Crossref/OpenAlex摘要给出Ru1-1P/POPs、TOF 323 h−1、10次循环和二氢化物机理，但没有列出任何底物类别、产物范围或分离收率。",
+      "challengeReason": "不能因其为异相单原子催化就自动排除，也不能仅凭N-alkylation题名纳入；缺失的底物/产物一般性证据会实质改变范围结论。",
+      "evidenceNeeded": "出版社正文或SI中的胺与醇底物表、分离产物和收率，以及主要贡献相对催化剂结构性能研究的权重。",
+      "attemptedEvidencePages": [
+        "https://pubs.acs.org/doi/10.1021/acscatal.6c05520",
+        "https://doi.org/10.1021/acscatal.6c05520"
+      ],
+      "nextAction": "通过现有Tampermonkey/VPN Bridge读取ACS正文或SI反应范围；若跨多类胺/醇并有分离产物则纳入，否则按催化剂结构–性能研究排除。",
+      "sourceReviewFile": "audit/review-2026-09-29-1800.json",
+      "nextReviewSlot": "2026-09-30T08:00:00+08:00"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608472",
+      "journal": "CCS Chemistry",
+      "title": "From Non-Aqueous to Aqueous: Water-Engaged In Situ Electrochemical Reconstruction of Carbazoles",
+      "abstract": "",
+      "date": "2026-09-27",
+      "type": "journal-article",
+      "authors": [
+        "Jiayao Li",
+        "Wenjing Huang",
+        "Liya Ma",
+        "Zhejun Li"
+      ],
+      "topics": [
+        "Electrochemical Analysis and Applications",
+        "Electrochemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Environmental remediation with nanomaterials",
+        "CO2 Reduction Techniques and Catalysts"
+      ],
+      "sources": [
+        "crossref:2096-5745:online",
+        "crossref:2096-5745:published",
+        "crossref:2096-5745:created",
+        "openalex:S4210239486"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608472",
+        "https://pubs.chemsoc.org.cn/doi/10.31635/ccschem.026.202608472",
+        "https://www.chinesechemsoc.org/"
+      ],
+      "evidenceSource": "fresh compact plus refreshed official-page search",
+      "titleZh": "水参与的咔唑原位电化学重构：从非水体系到水体系",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "题名显示水参与的咔唑原位电化学重构，可能是骨架编辑方法，但仍无摘要、反应式、底物范围或分离收率。",
+      "evidenceBasis": "fresh compact仅提供题名、作者、Crossref/OpenAlex元数据；本轮未取得CCS Chemistry正文或摘要。",
+      "challengeReason": "不能因“electrochemical reconstruction”直接纳入，也不能因电化学主题直接排除；证据门槛仍未满足。",
+      "evidenceNeeded": "出版社摘要或正文/SI中的咔唑起始物、重构产物、具体键变化、底物范围和分离收率。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608472",
+        "https://pubs.chemsoc.org.cn/doi/10.31635/ccschem.026.202608472",
+        "https://www.chinesechemsoc.org/"
+      ],
+      "nextAction": "通过现有Tampermonkey/VPN Bridge读取CCS正文或SI，确认是否为一般性咔唑骨架重构方法。",
+      "sourceReviewFile": "audit/review-2026-09-29-1800.json",
+      "nextReviewSlot": "2026-09-30T08:00:00+08:00"
+    }
+  ],
+  "note": "Per-release deferrals only. Merge with the existing durable backlog; do not replace or drop older pending records."
+}
