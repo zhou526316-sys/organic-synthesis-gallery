@@ -10,8 +10,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: fixed-slot-literature-release
@@ -133,8 +131,6 @@ jobs:
           toc_commit="$(git rev-parse HEAD)"
           echo "toc_commit=$toc_commit" >> "$GITHUB_OUTPUT"
 
-  deploy_pages:
-    needs: refresh_toc
-    uses: ./.github/workflows/github-pages.yml
-    with:
-      deployment_ref: ${{ needs.refresh_toc.outputs.toc_commit }}
+  # The existing Pages workflow receives workflow_run.completed on default main.
+  # Never call Pages here: a reusable workflow retains the request branch's
+  # github.ref and is rejected by the main-only github-pages environment.

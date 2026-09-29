@@ -1,12 +1,13 @@
 name: Finalize fixed-slot literature release state
 
 on:
+  workflow_run:
+    workflows: ['Deploy GitHub Pages frontend']
+    types: [completed]
   push:
     branches: [main]
     paths:
       - 'audit/automation-triggers/literature-finalize-request.json'
-      - '.github/workflows/literature-finalize-release.yml'
-      - 'scripts/finalize-fixed-slot-literature-state.mjs'
 
 permissions:
   contents: write
@@ -17,7 +18,75 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  record_delivery:
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout current main, never upstream branch code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Resolve actual deployment receipt
+        id: receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$CONCLUSION" != success ]; then
+            echo 'mode=record-failure' >> "$GITHUB_OUTPUT"
+          else
+            count="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts?name=pages-delivery-verification" --jq '[.artifacts[] | select(.expired == false)] | length')"
+            if [ "$count" = 1 ]; then
+              echo 'mode=record' >> "$GITHUB_OUTPUT"
+            else
+              echo 'No single verified delivery receipt: do not claim website synchronization.'
+              echo 'mode=skip' >> "$GITHUB_OUTPUT"
+            fi
+          fi
+      - name: Download successful run's immutable live-verification receipt
+        if: steps.receipt.outputs.mode == 'record'
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-delivery-verification
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/pages-delivery-receipt
+      - name: Merge deployment result without overwriting concurrent review state
+        if: steps.receipt.outputs.mode != 'skip'
+        env:
+          DELIVERY_MODE: ${{ steps.receipt.outputs.mode }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            node scripts/pages-release-delivery.mjs "$DELIVERY_MODE" "$RUNNER_TEMP/pages-delivery-receipt/pages-delivery-verification.json"
+            git add audit/literature-update-state.json
+            for target in audit/deployment-delivery-latest.json audit/deployment-deliveries; do
+              if [ -e "$target" ]; then git add "$target"; fi
+            done
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'audit: record verified Pages delivery outcome without discovery restart'
+            if git push origin HEAD:main; then exit 0; fi
+            echo 'Concurrent main update: re-read and re-merge only the deployment receipt.'
+          done
+          echo 'State update conflict after bounded merge attempts.' >&2
+          exit 1
+
   finalize:
+    if: github.event_name != 'workflow_run'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -25,12 +94,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Set up Node
         uses: actions/setup-node@v5
         with:
           node-version: '22'
-
       - name: Verify referenced GitHub Actions runs
         shell: bash
         env:
@@ -45,10 +112,8 @@ jobs:
             echo "$key=$run_id conclusion=$conclusion"
             test "$conclusion" = success
           done
-
       - name: Finalize coordination state from deployed release evidence
         run: node scripts/finalize-fixed-slot-literature-state.mjs audit/automation-triggers/literature-finalize-request.json
-
       - name: Commit final release state
         shell: bash
         run: |
@@ -59,7 +124,6 @@ jobs:
           test -n "$(git status --porcelain -- audit/literature-update-state.json audit/release-finalization-result.json)"
           git commit -m "audit: finalize fixed-slot literature release state"
           git push origin HEAD:main
-
       - name: Preserve finalization result
         if: always()
         uses: actions/upload-artifact@v4

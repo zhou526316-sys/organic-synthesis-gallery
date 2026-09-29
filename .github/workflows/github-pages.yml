@@ -8,11 +8,16 @@ on:
         type: string
         default: ''
   workflow_dispatch:
+  workflow_run:
+    workflows: ['Fixed-slot literature release writer']
+    types: [completed]
   push:
     branches: [main]
     paths:
       - 'PAGES_REFRESH'
       - '.github/workflows/github-pages.yml'
+      - 'scripts/pages-release-delivery.mjs'
+      - 'scripts/test-pages-release-delivery.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
@@ -64,23 +69,34 @@ permissions:
   id-token: write
 concurrency:
   group: github-pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   literature_authorization:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    outputs:
+      deployment_ref: ${{ steps.resolve.outputs.deployment_ref }}
+      should_deploy: ${{ steps.resolve.outputs.should_deploy }}
     steps:
-      - name: Checkout exact deployment commit and release history
+      - name: Checkout main or explicitly pinned authorized snapshot
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.deployment_ref != '' && inputs.deployment_ref || github.sha }}
+          ref: ${{ inputs.deployment_ref != '' && inputs.deployment_ref || 'main' }}
           fetch-depth: 0
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Test release delivery regression cases
+        run: node --test scripts/test-pages-release-delivery.mjs
+      - name: Resolve trusted main deployment snapshot
+        id: resolve
+        run: node scripts/pages-release-delivery.mjs resolve
       - name: Test literature deployment authorization
+        if: steps.resolve.outputs.should_deploy == 'true'
         run: node scripts/test-pages-literature-authorization.mjs
       - name: Enforce fixed literature publication slot
+        if: steps.resolve.outputs.should_deploy == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -95,12 +111,14 @@ jobs:
           retention-days: 14
   build:
     needs: literature_authorization
+    if: needs.literature_authorization.outputs.should_deploy == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main
+      - name: Checkout authorized deployment snapshot
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.deployment_ref != '' && inputs.deployment_ref || github.sha }}
+          ref: ${{ needs.literature_authorization.outputs.deployment_ref }}
+          fetch-depth: 0
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -242,6 +260,15 @@ jobs:
           if (!zh.get('Scalable Total Syntheses of Nonthmicin and Ecteinamycin Reveal a Dual Antibacterial and Antitoxin Profile against Clostridioides difficile')) throw new Error('second-batch Chinese title missing');
           console.log(JSON.stringify({manifestItems:items.length,figures,curatedSupplement:true,mandatoryCurated:true,repositoryBaseline:true,bridgeLoader:true,bridgeRuntime:true}));
           NODE
+      - name: Bind built literature to exact authorized repository set
+        run: node scripts/pages-release-delivery.mjs build dist
+      - name: Preserve exact delivery manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-delivery-manifest
+          path: dist/release-delivery.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -253,9 +280,35 @@ jobs:
     runs-on: ubuntu-latest
     needs: [literature_authorization, build]
     steps:
+      - name: Checkout exact built source for final concurrency guard
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.literature_authorization.outputs.deployment_ref }}
+          fetch-depth: 0
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download trusted build manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-delivery-manifest
+          path: ${{ runner.temp }}/pages-delivery
+      - name: Prevent deployment of superseded production literature
+        run: node scripts/pages-release-delivery.mjs guard
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify deployed literature on canonical and Pages origins
+        run: node scripts/pages-release-delivery.mjs verify "$RUNNER_TEMP/pages-delivery/release-delivery.json" "$RUNNER_TEMP/pages-delivery-verification.json"
+      - name: Preserve real online delivery result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-delivery-verification
+          path: ${{ runner.temp }}/pages-delivery-verification.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Verify deployed search filtering CSS
         env:
           SITE_URL: ${{ steps.deployment.outputs.page_url }}
