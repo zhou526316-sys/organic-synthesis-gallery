@@ -82,10 +82,18 @@ run('different_snapshot_or_slot_is_blocked', () => {
 });
 const workflow = await readFile(new URL('../.github/workflows/github-pages.yml', import.meta.url), 'utf8');
 run('pages_build_and_deploy_depend_on_real_gate', () => {
-  assert.match(workflow, /literature_authorization:\s*\n\s+runs-on:/);
-  assert.match(workflow, /build:\s*\n\s+needs: literature_authorization/);
-  assert.match(workflow, /needs: \[literature_authorization, build\]/);
-  assert.match(workflow, /fetch-depth: 0/);
+  const job = name => {
+    const block = workflow.match(new RegExp(`^  ${name}:\\s*\\n([\\s\\S]*?)(?=^  [A-Za-z_][A-Za-z0-9_-]*:|$(?![\\s\\S]))`, 'm'));
+    assert.ok(block, `required job missing: ${name}`);
+    return block[1];
+  };
+  const authorization = job('literature_authorization');
+  assert.match(authorization, /^    runs-on:\s*ubuntu-latest\s*$/m);
+  assert.match(authorization, /node scripts\/validate-pages-literature-authorization\.mjs/);
+  assert.match(authorization, /fetch-depth: 0/);
+  assert.ok(!authorization.includes('continue-on-error: true'));
+  assert.match(job('build'), /^    needs: literature_authorization\s*$/m);
+  assert.match(job('deploy'), /^    needs: \[literature_authorization, build\]\s*$/m);
   assert.ok(!workflow.includes('if: ${{ false }}'));
   assert.ok(!workflow.includes('Recovery deployment scope'));
 });
