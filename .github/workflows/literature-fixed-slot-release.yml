@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: fixed-slot-literature-release
@@ -19,6 +21,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     timeout-minutes: 12
+    outputs:
+      release_commit: ${{ steps.commit_release.outputs.release_commit }}
     steps:
       - name: Checkout exact request commit
         uses: actions/checkout@v4
@@ -34,6 +38,7 @@ jobs:
         run: node scripts/apply-fixed-slot-literature-release.mjs audit/automation-triggers/literature-release-request.json
 
       - name: Commit atomic literature release
+        id: commit_release
         shell: bash
         run: |
           set -euo pipefail
@@ -51,7 +56,8 @@ jobs:
           test -n "$(git status --porcelain -- "$review" "$queue" public/rolling-supplement.json audit/publication-release-state.json)"
           git commit -m "release(literature): publish reviewed subset for ${slot}"
           git push origin HEAD:main
-          echo "release_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          release_commit="$(git rev-parse HEAD)"
+          echo "release_commit=$release_commit" >> "$GITHUB_OUTPUT"
 
       - name: Preserve release writer result
         if: always()
@@ -61,3 +67,74 @@ jobs:
           path: audit/release-execution-result.json
           if-no-files-found: warn
           retention-days: 14
+
+  refresh_toc:
+    needs: release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      toc_commit: ${{ steps.commit_toc.outputs.toc_commit }}
+    steps:
+      - name: Checkout released main snapshot
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Verify release is present on current main
+        shell: bash
+        env:
+          RELEASE_COMMIT: ${{ needs.release.outputs.release_commit }}
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git merge-base --is-ancestor "$RELEASE_COMMIT" origin/main
+          git reset --hard origin/main
+          request_slot="$(node -p "require('./audit/automation-triggers/literature-release-request.json').publicationSlot")"
+          marker_slot="$(node -p "require('./audit/publication-release-state.json').publicationSlot")"
+          test "$request_slot" = "$marker_slot"
+          node scripts/validate-production-literature-release-slot.mjs
+
+      - name: Guard dynamic literature inputs
+        shell: bash
+        run: |
+          grep -F "automation-supplement.json" cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F "rolling-supplement.json" cloudflare/scripts/build-live-toc-demand-queue.mjs
+
+      - name: Build current TOC demand queues
+        run: node cloudflare/scripts/build-live-toc-demand-queue.mjs
+
+      - name: Verify TOC demand matches production marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="$(node -p "require('./audit/publication-release-state.json').productionCards")"
+          actual="$(node -p "require('./public/toc-demand-live.json').webpageDoiCount")"
+          echo "expected=$expected actual=$actual"
+          test "$actual" = "$expected"
+
+      - name: Commit refreshed TOC demand
+        id: commit_toc
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain -- toc-collector/queues public/toc-demand-live.json)" ]; then
+            git add toc-collector/queues public/toc-demand-live.json
+            git commit -m "Refresh live TOC demand queues after fixed-slot release"
+            git push origin HEAD:main
+          fi
+          toc_commit="$(git rev-parse HEAD)"
+          echo "toc_commit=$toc_commit" >> "$GITHUB_OUTPUT"
+
+  deploy_pages:
+    needs: refresh_toc
+    uses: ./.github/workflows/github-pages.yml
+    with:
+      deployment_ref: ${{ needs.refresh_toc.outputs.toc_commit }}
