@@ -20,6 +20,16 @@ The branch path is an authorized runner bridge, not an alternative publication s
 
 Do not merge a stale release branch manually after the slot has passed. Missed includes remain unshipped and must be reconsidered from the next slot's fresh audit/staging snapshot.
 
+## Deterministic downstream deployment chain
+
+A successful atomic literature release must not rely on a GitHub Actions `GITHUB_TOKEN` push to recursively trigger another push workflow. GitHub commonly suppresses that recursive trigger path. The fixed-slot writer therefore owns the production handoff explicitly:
+
+1. The `release` job creates and pushes the atomic literature release to `main`, and exposes the exact `release_commit`.
+2. The `refresh_toc` job checks that the release commit is an ancestor of current `main`, revalidates the fixed-slot marker, rebuilds `public/toc-demand-live.json` and all TOC queues from current production data, verifies `webpageDoiCount === productionCards`, and pushes that derived queue commit to `main` without force.
+3. The `deploy_pages` job calls `.github/workflows/github-pages.yml` directly through `workflow_call`, passing the exact TOC-refresh commit as `deployment_ref`. This preserves `literature_authorization` as a mandatory pre-build/pre-deploy gate while avoiding recursive-push assumptions.
+
+If the release writer succeeds but either TOC refresh or Pages deployment fails, the release is not reported as fully synchronized. Do not compensate by adding another literature batch off-slot. Retry only the already-authorized derived TOC/Pages synchronization, or leave the state fail-closed for the next operator/run. This chain does not alter the 08:00/18:00 admission schedule and does not authorize late admissions.
+
 ## Atomic marker v2 for the next literature release
 
 Read the current `audit/publication-release-state.json` before writing. Do not update its bootstrap hashes merely to make checks pass. For the first and subsequent new literature release, construct all changed production data, the formal review, the pending queue when applicable, and the new marker in ONE Git tree/commit. Contents API one-file commits are not sufficient for this transaction. Use GitHub Git data `create_blob -> create_tree(base_tree_sha) -> create_commit(parent_sha) -> update_ref(force=false)`, or an authorized GitHub runner doing the equivalent atomic commit. Re-read main and all target SHAs immediately before the write. On a concurrent authoritative-file conflict, do not force-push or overwrite.
