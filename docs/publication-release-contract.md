@@ -60,7 +60,7 @@ Use `scripts/convert-prepublish-review.mjs` as described in `docs/formal-review-
 
 No new scheduled task or new fetch cycle is added by this change. The existing 07:05/17:05, 07:35/17:35 and 08:00/18:00 stages remain. Fixed-slot commit-time handling retains the existing slot validator for this batch; its 20-minute technical bound is NOT approval for another task to perform arbitrary late publication. The release task must also enforce logical slot, frozen review cutoff, and actual deployment-time reporting. Timing-policy consolidation is not silently solved by this document.
 
-Authorization and formal conversion do not yet prove final generated artifact DOI equality, post-deployment DOI/search equality, or automatic `synced` state. Those must be verified separately against the same release version before declaring publication success. The older validator's annotated-row challenge fix is already in main and covered by its existing deferred-publication regression tests; downstream sequencing, audit deduplication and notification settings remain separate work.
+Authorization and formal conversion do not yet prove final generated artifact DOI equality, post-deployment DOI/search equality, or automatic `synced` state. Those must be verified separately against the same release version before declaring publication success. The older validator's annotated-row challenge fix is already in main and covered by its existing deferred-publication regression tests. Release → TOC refresh → Pages deployment sequencing is now explicit in the fixed-slot writer; post-deployment semantic handling of late-indexed candidates, audit deduplication and notification settings remain separate work.
 
 
 ## Immediate confirmed scope removals — user amendment, 2026-09-23
