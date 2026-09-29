@@ -55,6 +55,11 @@ export function trustedReleaseEvent(event, repository) {
   assert(/^[a-f0-9]{40}$/.test(run.head_sha), 'invalid_upstream_sha');
   return run;
 }
+export function isDirectReleaseHandoff(eventName, workflowName) {
+  // Reusable Pages calls retain the caller's workflow_run payload and workflow name.
+  // Only this workflow's own completion-event trigger has a release-writer payload.
+  return eventName === 'workflow_run' && workflowName === 'Deploy GitHub Pages frontend';
+}
 function output(name, value) {
   if (process.env.GITHUB_OUTPUT) writeFileSync(process.env.GITHUB_OUTPUT, `${name}=${value}\n`, { flag: 'a' });
 }
@@ -77,7 +82,7 @@ function guard() {
 async function resolve() {
   assert(process.env.GITHUB_REF === 'refs/heads/main', 'deployment_must_execute_in_main_context');
   guard();
-  if (process.env.GITHUB_EVENT_NAME === 'workflow_run') {
+  if (isDirectReleaseHandoff(process.env.GITHUB_EVENT_NAME, process.env.GITHUB_WORKFLOW)) {
     const run = trustedReleaseEvent(json(process.env.GITHUB_EVENT_PATH), process.env.GITHUB_REPOSITORY);
     git('merge-base', '--is-ancestor', run.head_sha, 'HEAD');
     const request = JSON.parse(git('show', `${run.head_sha}:audit/automation-triggers/literature-release-request.json`));

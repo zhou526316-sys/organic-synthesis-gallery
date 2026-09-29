@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { gzipSync } from 'node:zlib';
 import { readFileSync } from 'node:fs';
-import { collectPapers, sameSet, normalizeDoi, assertPartition, trustedReleaseEvent, compareProtected, mergeDeliveryState } from './pages-release-delivery.mjs';
+import { collectPapers, sameSet, normalizeDoi, assertPartition, trustedReleaseEvent, isDirectReleaseHandoff, compareProtected, mergeDeliveryState } from './pages-release-delivery.mjs';
 const a = '10.1021/jacs.test1', b = '10.1021/jacs.test2', c = '10.1021/jacs.test3';
 const marker = { mode: 'slot-release', publicationSlot: '2026-09-29T18:00:00+08:00', productionCards: 1, publishableDois: [a], rejectedDois: [b], deferredDois: [c] };
 const evidence = { ok: true, chineseTitlesVerified: true, publicationSlot: marker.publicationSlot, productionCards: 1,
@@ -52,4 +52,11 @@ test('Pages delivery uses event handoff, no added timers, exact snapshot, live v
   assert.ok(workflow.includes('pages-release-delivery.mjs guard'));
   assert.ok(workflow.includes('pages-release-delivery.mjs verify'));
   assert.ok(workflow.includes('cancel-in-progress: false'));
+});
+
+test('main media reuse retains caller event without misclassifying it as a writer handoff', () => {
+  assert.equal(isDirectReleaseHandoff('workflow_run', 'Deploy GitHub Pages frontend'), true);
+  assert.equal(isDirectReleaseHandoff('workflow_run', 'Publish validated new body figures'), false);
+  assert.equal(isDirectReleaseHandoff('push', 'Deploy GitHub Pages frontend'), false);
+  assert.equal(isDirectReleaseHandoff('schedule', 'Publish validated new body figures'), false);
 });
