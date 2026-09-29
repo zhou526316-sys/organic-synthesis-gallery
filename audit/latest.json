@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-09-29T00:29:02.958Z",
+  "generatedAt": "2026-09-29T02:22:37.889Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -169,17 +169,17 @@
   ],
   "summary": {
     "galleryDois": 660,
-    "sourceRecords": 729,
-    "rawMissingFromGallery": 601,
+    "sourceRecords": 730,
+    "rawMissingFromGallery": 602,
     "previouslyReviewedExcluded": 598,
-    "missingFromGallery": 3,
-    "potentialGaps": 0,
+    "missingFromGallery": 4,
+    "potentialGaps": 1,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
     "closureCoverageAnomalies": 7,
     "historicalCoverageLosses": 0,
-    "unresolved": 3,
+    "unresolved": 4,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -245,8 +245,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 88,
-        "crossrefCandidateRecords": 88,
+        "unionCandidateRecords": 89,
+        "crossrefCandidateRecords": 89,
         "openAlexCandidateRecords": 67,
         "multiSourceCandidateRecords": 67,
         "closureUnionRecords": 19,
@@ -491,6 +491,20 @@
         "CCS Chemistry": 1,
         "JOC": 1
       }
+    },
+    "2026-09-29": {
+      "sourceRecords": 1,
+      "crossrefOnly": 1,
+      "openAlexOnly": 0,
+      "multiSource": 0,
+      "coveredByGallery": 0,
+      "rawMissingFromGallery": 1,
+      "previouslyReviewedExcluded": 0,
+      "missingFromGallery": 1,
+      "potentialGaps": 1,
+      "byJournal": {
+        "JACS": 1
+      }
     }
   },
   "byJournal": {
@@ -587,17 +601,17 @@
     "JACS": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 88,
-      "crossrefOnly": 21,
+      "sourceRecords": 89,
+      "crossrefOnly": 22,
       "openAlexOnly": 0,
       "multiSource": 67,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 19,
-      "rawMissingFromGallery": 69,
+      "rawMissingFromGallery": 70,
       "previouslyReviewedExcluded": 68,
-      "missingFromGallery": 1,
-      "potentialGaps": 0
+      "missingFromGallery": 2,
+      "potentialGaps": 1
     },
     "Angew": {
       "activeFrom": "2026-07-01",
@@ -865,8 +879,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 88,
-      "crossrefCandidateRecords": 88,
+      "unionCandidateRecords": 89,
+      "crossrefCandidateRecords": 89,
       "openAlexCandidateRecords": 67,
       "multiSourceCandidateRecords": 67,
       "closureUnionRecords": 19,
@@ -1112,8 +1126,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 88,
-      "crossrefCandidateRecords": 88,
+      "unionCandidateRecords": 89,
+      "crossrefCandidateRecords": 89,
       "openAlexCandidateRecords": 67,
       "multiSourceCandidateRecords": 67,
       "closureUnionRecords": 19,
@@ -1507,7 +1521,7 @@
       "issn": "0002-7863",
       "mode": "online",
       "ok": true,
-      "count": 88,
+      "count": 89,
       "note": ""
     },
     {
@@ -1516,7 +1530,7 @@
       "issn": "0002-7863",
       "mode": "published",
       "ok": true,
-      "count": 88,
+      "count": 89,
       "note": ""
     },
     {
@@ -1525,7 +1539,7 @@
       "issn": "0002-7863",
       "mode": "created",
       "ok": true,
-      "count": 87,
+      "count": 88,
       "note": ""
     },
     {
@@ -1534,7 +1548,7 @@
       "issn": "1520-5126",
       "mode": "online",
       "ok": true,
-      "count": 88,
+      "count": 89,
       "note": ""
     },
     {
@@ -1543,7 +1557,7 @@
       "issn": "1520-5126",
       "mode": "published",
       "ok": true,
-      "count": 88,
+      "count": 89,
       "note": ""
     },
     {
@@ -1552,7 +1566,7 @@
       "issn": "1520-5126",
       "mode": "created",
       "ok": true,
-      "count": 87,
+      "count": 88,
       "note": ""
     },
     {
@@ -1913,7 +1927,7 @@
       "issn": "1463-9262",
       "mode": "created",
       "ok": true,
-      "count": 9,
+      "count": 10,
       "note": ""
     },
     {
@@ -1940,7 +1954,7 @@
       "issn": "1463-9270",
       "mode": "created",
       "ok": true,
-      "count": 9,
+      "count": 10,
       "note": ""
     },
     {
@@ -2015,6 +2029,40 @@
     }
   ],
   "missingCandidates": [
+    {
+      "doi": "10.1021/jacs.6c17599",
+      "journal": "JACS",
+      "title": "De Novo Discovery of Cysteine-Targeted Reversible Covalent Cyclic Peptides with Prolonged Residence Time via Phage Display",
+      "abstract": "Abstract Reversible covalent targeting of cysteine residues offers a powerful strategy for generating potent and tunable ligands, but designing electrophiles with balanced reactivity, stability, and reversible binding remains challenging. Here, we systematically optimized reversible α,β-unsaturated nitrile electrophiles and incorporated the selected warhead with prolonged residence time into phage-displayed peptides to construct a library of reversible covalent cyclic peptides. Screening this library against Keap1 enabled the de novo identification of ligands with nanomolar affinities, demonstrating a 5–100-fold improvement in binding potency relative to the corresponding noncovalent cyclic peptides. The most potent ligand, cyclic peptide 32, exhibits a Ki of 3.7 nM, retains binding under thiol-rich conditions, and can capture Keap1 from a complex cellular environment. Mechanistic analysis reveals that peptide-mediated targeting in cyclic peptide 32 positions the reversible covalent warhead to react rapidly with Keap1 Cys434 while maintaining prolonged residence, allowing covalent bond formation to keep pace with the transient binding dynamics of the peptide–protein interaction. Overall, this work establishes a general strategy for integrating tunable reversible covalent chemistry into genetically encoded peptide libraries, enabling de novo discovery of high-affinity ligands.",
+      "date": "2026-09-29",
+      "type": "journal-article",
+      "authors": [
+        "Yuqian Zhang",
+        "Mengzhu Qi",
+        "Xiankai Liu",
+        "Yukun Zhou",
+        "Yanmei Wang",
+        "Xing Xiao",
+        "Yapei Wu",
+        "Wei Gao",
+        "Yang Liu",
+        "Yiwu Zheng"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
     {
       "doi": "10.1021/acscatal.6c05520",
       "journal": "ACS Catalysis",
@@ -2116,5 +2164,40 @@
       "reviewPriority": "normal"
     }
   ],
-  "potentialGaps": []
+  "potentialGaps": [
+    {
+      "doi": "10.1021/jacs.6c17599",
+      "journal": "JACS",
+      "title": "De Novo Discovery of Cysteine-Targeted Reversible Covalent Cyclic Peptides with Prolonged Residence Time via Phage Display",
+      "abstract": "Abstract Reversible covalent targeting of cysteine residues offers a powerful strategy for generating potent and tunable ligands, but designing electrophiles with balanced reactivity, stability, and reversible binding remains challenging. Here, we systematically optimized reversible α,β-unsaturated nitrile electrophiles and incorporated the selected warhead with prolonged residence time into phage-displayed peptides to construct a library of reversible covalent cyclic peptides. Screening this library against Keap1 enabled the de novo identification of ligands with nanomolar affinities, demonstrating a 5–100-fold improvement in binding potency relative to the corresponding noncovalent cyclic peptides. The most potent ligand, cyclic peptide 32, exhibits a Ki of 3.7 nM, retains binding under thiol-rich conditions, and can capture Keap1 from a complex cellular environment. Mechanistic analysis reveals that peptide-mediated targeting in cyclic peptide 32 positions the reversible covalent warhead to react rapidly with Keap1 Cys434 while maintaining prolonged residence, allowing covalent bond formation to keep pace with the transient binding dynamics of the peptide–protein interaction. Overall, this work establishes a general strategy for integrating tunable reversible covalent chemistry into genetically encoded peptide libraries, enabling de novo discovery of high-affinity ligands.",
+      "date": "2026-09-29",
+      "type": "journal-article",
+      "authors": [
+        "Yuqian Zhang",
+        "Mengzhu Qi",
+        "Xiankai Liu",
+        "Yukun Zhou",
+        "Yanmei Wang",
+        "Xing Xiao",
+        "Yapei Wu",
+        "Wei Gao",
+        "Yang Liu",
+        "Yiwu Zheng"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    }
+  ]
 }
