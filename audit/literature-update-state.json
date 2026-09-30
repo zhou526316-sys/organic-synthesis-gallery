@@ -334,7 +334,7 @@
     "readyToPublish": true,
     "publishableSubsetReady": true,
     "reviewComplete": false,
-    "publicationChecksPassed": false,
+    "publicationChecksPassed": true,
     "freshAuditGeneratedAt": "2026-09-30T09:15:29.510Z",
     "snapshotFreshForSlot": true,
     "compactHandoffSha": "5f22aef980f7cf13895d87f63787f2ee22c8daac",
@@ -471,12 +471,32 @@
     },
     "sourceRunId": 36694769736,
     "sourceAuditSnapshotCommitSha": "368839f361fcf2b15d912718f1e5fc260ae12e8f",
-    "updatedAt": "2026-09-30T17:27:53+08:00",
+    "updatedAt": "2026-09-30T17:33:27+08:00",
     "productionDataModified": false,
     "pagesDeploymentRequested": false,
     "mediaAcquisitionPerformed": false,
     "productionMutation": false,
-    "note": "All 45 fresh compact candidates are accounted for by article-specific or compatibility-checked two-pass review. Sixteen includes are staged; two current candidates and one durable out-of-window CCS item remain pending. No production literature data, media, or deployment was changed."
+    "note": "All 45 fresh compact candidates are accounted for by article-specific or compatibility-checked two-pass review. Sixteen includes are staged; two current candidates and one durable out-of-window CCS item remain pending. No production literature data, media, or deployment was changed.",
+    "prepublishGate": {
+      "runId": 36696723599,
+      "jobId": 109826335510,
+      "conclusion": "success",
+      "headCommitSha": "577f122910453542f66d3d92db2facd9f0a3bf82",
+      "validatedStagingBlobSha": "7b0acf9f2aceaa3e741f5f2a88db4ae4a0ff8bc8",
+      "recordValidationPassed": true,
+      "semanticDecisionSetComplete": true,
+      "semanticFieldFailures": 0,
+      "snapshotFreshForSlot": true,
+      "publicationReady": true,
+      "releaseStatus": "ready_with_pending",
+      "reviewComplete": false,
+      "conversionValid": true,
+      "directStrictValidator": "validate-prepublish-review.mjs --allow-deferred --require-ready: success",
+      "strictReadinessCommand": "check-prepublish-readiness.mjs --allow-deferred --require-ready: success",
+      "formalConversionPreview": "success",
+      "strictReleaseBundle": "success",
+      "productionDataModified": false
+    }
   },
   "nextPublicationSlot": "2026-09-30T18:00:00+08:00",
   "prepublish": {
@@ -783,7 +803,7 @@
   "lastPrepublishPrimary": {
     "publicationSlot": "2026-09-30T18:00:00+08:00",
     "status": "ready_with_pending",
-    "finishedAt": "2026-09-30T17:27:53+08:00",
+    "finishedAt": "2026-09-30T17:33:27+08:00",
     "reviewFile": "audit/prepublish-review-2026-09-30-1800.json",
     "reviewCommitSha": "577f122910453542f66d3d92db2facd9f0a3bf82",
     "reviewBlobSha": "7b0acf9f2aceaa3e741f5f2a88db4ae4a0ff8bc8",
@@ -793,9 +813,10 @@
     "accepted": 16,
     "rejected": 27,
     "pending": 2,
-    "productionMutation": false
+    "productionMutation": false,
+    "prepublishGateRunId": 36696723599
   },
-  "publicationChecksPassed": false,
+  "publicationChecksPassed": true,
   "reviewComplete": false,
   "lastPublication": {
     "publicationSlot": "2026-09-30T08:00:00+08:00",
@@ -1205,7 +1226,7 @@
     "closureCoverageAnomalies": 1,
     "note": "No off-slot admission or deletion-only correction was performed. The next publication slot remains the normal 18:00 Beijing slot."
   },
-  "updatedAt": "2026-09-30T17:27:53+08:00",
+  "updatedAt": "2026-09-30T17:33:27+08:00",
   "lastDeploymentAttempt": {
     "schemaVersion": 1,
     "ok": true,
