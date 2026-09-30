@@ -934,13 +934,21 @@ function embeddedJobDois(value) {
     var timer = setTimeout(function () { abort.abort(); }, timeoutMs);
     try {
       var method = String(options && options.method || 'GET').toUpperCase();
+      var headers = Object.assign({}, options && options.headers || {});
+      // cache-control/pragma are not needed for native fetch (cache:'no-store'
+      // already covers that) and would force a CORS preflight header that the
+      // Worker intentionally does not allow.
+      Object.keys(headers).forEach(function (key) {
+        var lower = String(key).toLowerCase();
+        if (lower === 'cache-control' || lower === 'pragma') delete headers[key];
+      });
       var init = {
         method: method,
         mode: 'cors',
         credentials: 'omit',
         cache: 'no-store',
         signal: abort.signal,
-        headers: Object.assign({}, options && options.headers || {})
+        headers: headers
       };
       if (method !== 'GET' && method !== 'HEAD' && options && options.data != null) init.body = options.data;
       var response = await fetch(String(options.url), init);
