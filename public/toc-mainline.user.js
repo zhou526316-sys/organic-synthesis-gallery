@@ -1060,14 +1060,30 @@ function embeddedJobDois(value) {
     (inventory&&Array.isArray(inventory.items)?inventory.items:[]).forEach(function(row){
       var doi=normalizeDoi(row&&row.doi);
       if(!doi)return;
+      var primaryKind=String(row&&row.primaryKind||'').toLowerCase();
+      var largeSource=String(row&&row.largeSource||'').toLowerCase();
+      var officialPrimary=primaryKind==='official_visual';
+      // Worker /api/toc serves a verified Nature/Science Figure 1 as the card
+      // fallback even when there is no toc_assets row. Mirror that authority here
+      // so the scheduler does not reopen an already-covered historical paper forever.
+      var figureOneFallback=primaryKind==='figure1'
+        || (Boolean(row&&row.figureOneStored) && largeSource==='figure1');
+      var visualAvailable=Boolean(row&&row.tocStored)||officialPrimary||figureOneFallback;
+      var visualReason=figureOneFallback
+        ? 'figure1_fallback'
+        : officialPrimary
+          ? 'primary_official_visual'
+          : String(row&&row.tocReason||'');
       items[doi]={
         doi:doi,
         toc:{
-          available:Boolean(row.tocStored),
-          imageUrl:row.tocStored?'production_toc_present':'',
-          reason:String(row.tocReason||'')
+          available:visualAvailable,
+          imageUrl:visualAvailable?'production_visual_present':'',
+          reason:visualReason
         },
-        figures:{available:Number(row.figureCount||0)>0,figures:[]},
+        figures:{available:Number(row&&row.figureCount||0)>0,figures:[]},
+        primaryKind:primaryKind,
+        largeSource:largeSource,
         inventory:row
       };
     });
