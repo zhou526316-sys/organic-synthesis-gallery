@@ -47,8 +47,11 @@
   var LEGACY_GALLERY_HOST = 'zhou526316-sys.github.io';
   var LEGACY_GALLERY_PATH = '/organic-synthesis-gallery/';
   var PAGES_GALLERY_HOST = 'organic-synthesis-gallery-public.pages.dev';
-  var QUEUE_URL = 'https://zhou526316-sys.github.io/organic-synthesis-gallery/toc-demand-live.json';
-  var WORKER = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+  // Prefer the canonical custom domains. Some Chrome/Tampermonkey profiles can
+  // fail GM_xmlhttpRequest against workers.dev even while the Gallery and the
+  // same Worker are reachable through the custom domains.
+  var QUEUE_URL = 'https://gallery.gczhouwld.com/toc-demand-live.json';
+  var WORKER = 'https://api.gczhouwld.com';
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
   var FIGURE_IMPORT_ENDPOINT = WORKER + '/api/article-figures/import';
   var FIGURE_STAGE_ENDPOINT = WORKER + '/api/article-figures/stage';
@@ -915,14 +918,93 @@ function embeddedJobDois(value) {
     return row;
   }
 
+  function controllerTransportUrl(value) {
+    try {
+      var host = new URL(String(value || ''), location.href).hostname.toLowerCase();
+      return host === 'api.gczhouwld.com'
+        || host === 'organic-synthesis-gallery.zhou526316.workers.dev'
+        || host === 'gallery.gczhouwld.com'
+        || host === 'zhou526316-sys.github.io';
+    } catch (_) { return false; }
+  }
+
+  async function nativeControllerRequest(options) {
+    var abort = new AbortController();
+    var timeoutMs = Math.max(1000, Number(options && options.timeout || 45000));
+    var timer = setTimeout(function () { abort.abort(); }, timeoutMs);
+    try {
+      var method = String(options && options.method || 'GET').toUpperCase();
+      var init = {
+        method: method,
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-store',
+        signal: abort.signal,
+        headers: Object.assign({}, options && options.headers || {})
+      };
+      if (method !== 'GET' && method !== 'HEAD' && options && options.data != null) init.body = options.data;
+      var response = await fetch(String(options.url), init);
+      var responseText = await response.text();
+      var responseHeaders = '';
+      try {
+        response.headers.forEach(function (value, key) { responseHeaders += key + ': ' + value + '\r\n'; });
+      } catch (_) {}
+      return {
+        status: response.status,
+        statusText: response.statusText,
+        responseText: responseText,
+        response: responseText,
+        responseHeaders: responseHeaders,
+        finalUrl: response.url || String(options.url)
+      };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   function gmRequest(options) {
     return new Promise(function (resolve, reject) {
-      GM_xmlhttpRequest(Object.assign({}, options, {
-        onload: function (response) { resolve(response); },
-        onerror: function (error) { reject(new Error('gm_request_error:' + String(error && (error.error || error.statusText || error.status) || 'unknown'))); },
-        ontimeout: function () { reject(new Error('gm_request_timeout')); },
-        onabort: function () { reject(new Error('gm_request_aborted')); }
-      }));
+      var settled = false;
+      function rejectOnce(error) {
+        if (settled) return;
+        settled = true;
+        reject(error);
+      }
+      function resolveOnce(value) {
+        if (settled) return;
+        settled = true;
+        resolve(value);
+      }
+      function fallbackOrReject(gmError) {
+        if (settled) return;
+        var canFallback = controllerTransportUrl(options && options.url)
+          && !(options && options.responseType && options.responseType !== 'text');
+        if (!canFallback) {
+          rejectOnce(gmError);
+          return;
+        }
+        // Controller/API traffic may use normal fetch when the extension transport
+        // is unavailable. Publisher image acquisition remains GM-only.
+        nativeControllerRequest(options).then(resolveOnce).catch(function (fetchError) {
+          rejectOnce(new Error(
+            'gm_then_fetch_failed:' +
+            String(gmError && gmError.message || gmError || 'gm_unknown') +
+            ';fetch:' + String(fetchError && fetchError.message || fetchError || 'unknown')
+          ));
+        });
+      }
+      try {
+        GM_xmlhttpRequest(Object.assign({}, options, {
+          onload: resolveOnce,
+          onerror: function (error) {
+            fallbackOrReject(new Error('gm_request_error:' + String(error && (error.error || error.statusText || error.status) || 'unknown')));
+          },
+          ontimeout: function () { fallbackOrReject(new Error('gm_request_timeout')); },
+          onabort: function () { rejectOnce(new Error('gm_request_aborted')); }
+        }));
+      } catch (error) {
+        fallbackOrReject(new Error('gm_request_exception:' + String(error && error.message || error || 'unknown')));
+      }
     });
   }
 
