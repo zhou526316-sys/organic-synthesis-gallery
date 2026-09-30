@@ -1,0 +1,33 @@
+# Organic Synthesis Gallery — 长期数据生命周期架构日审（2026-09-30）
+
+本轮先按要求完成“当前 main 对齐 → 上一版日审对齐 → 当日复审”。本轮分析基线是 `7776f4139e2d4735a057e0a2d855ce9e587a6455`；相对上一版日审记录提交 `fc3adfd6be894dc037dda7318f11e7ab692af37e`，main 已前进 45 个 commit。当前仓库 API size 为 105691 KB。上一版的主原则仍成立：三个月热区不物理搬 DOI；Canonical 只有一份；Hot/Archive 是视图而不是两套数据库；文献、摘要、媒体分别形成独立代际；Asset Catalog 与 Active Work Index 分离；历史大媒体进入 R2；前端最终需要窗口化。
+
+今天最重要的变化是，昨天最棘手的部署授权问题已经被实质修复。当前 Pages workflow 改成由 Fixed-slot release writer 完成后的 workflow_run 从 main 触发，先解析可信 main snapshot，再对 exact snapshot 构建、部署前做 superseded-generation guard，部署后核对 canonical 域名和 Pages 域名真实文件字节。今天 18:00 的发布已完整走通：正式 release marker 为 710 张卡片，本槽 16 include、27 exclude、2 deferred；Pages run 36699786963 成功，audit/deployment-delivery-latest.json 在 18:05:37 记录两个线上入口均验证为 710 张。
+
+因此不应该另起炉灶再造一套部署 ledger。仓库已经开始形成正确的 append-only 证据层——audit/deployment-deliveries/<run>.json。下一步应把它和固定槽 formal review / release marker 统一成正式 Release Event Ledger；publication-release-state.json、literature-update-state.json、deployment-delivery-latest.json 等 mutable latest 文件都降为可重建的兼容视图。legacy release-finalization-result.json 仍停在 9 月 27 日的 627 张，而真正当前线上已经验证到 710；与此同时，18:09 的 post-release machine audit 又发现 8 个新的 unresolved candidates，verifiedThrough 仍是 2026-09-20。这说明已验证公开代际、下一轮语义审核输入和发现闭合深度本来就不应该由一个 status 表达。
+
+今天新增的关键架构洞见是：生命周期时钟不能绑定发布槽。三个月是数据生命周期规则，不应等到下一次 08:00/18:00 发布才生效。更稳的做法是 Canonical 每条记录永久保存 firstOnlineDate，并在构建时预计算 hotThrough；Hot 身份是北京时间当前日期与 hotThrough 的纯函数。Active Work Index 同样用 hotThrough 判断普通抓取资格，只有 semantic-pending、scope-correction、late historical discovery、explicit repair 等例外可以越过年龄限制。今天是 2026-09-30，滚动三个月边界是 2026-06-30。现有数据最早是 2026-07-01，所以目前 710 篇仍全部属于 Hot；首批 7 月 1 日记录会在 2026-10-02 进入 Archive。
+
+这个边界现在已经非常现实。当前 7 月 1 日共有 10 篇正式记录，其中 6 篇仍在 no-visual 队列，7 篇仍缺官方 TOC，1 篇已有 fallback 但待官方升级。因此 pre-archive drain 必须明确为 best effort，绝不能是归档前置条件。到 10 月 2 日，这 10 篇无论媒体是否补齐都必须按规则退出 Hot。建议为首次跨界生成一个只读 Archive Retirement Snapshot，记录当时的 asset completeness、最后抓取状态和未完成原因；它是审计凭证，不是第二份文献数据。
+
+Canonical 还缺一个以前没有被充分强调的组件：DOI Locator。月度 content-addressed shard 仍是最合适的长期 Canonical 结构，但分享链接、收藏、阅读状态、?doi= 深链、历史纠错和晚入库记录都需要按 DOI 直接定位。因此建议派生 doi -> { shardId, recordRevision } 的轻量 Locator。Hot 首页仍只读覆盖最近三个月的最多四个月 shard；Archive 浏览按月读 shard；普通搜索读 segmented Search Index；分享深链、用户中心和精确 DOI 查询直接走 Locator。晚发现的旧论文写入真实 firstOnlineDate 所属 shard，同时进入 recent-additions overlay，但绝不能因为 addedDate 很新重新进入 Hot。content-hash shard + generation manifest 也可避免浏览器把新 HTML、旧 paper JSON 和新搜索索引拼成半新半旧页面。
+
+Asset Catalog 的优先级继续高于 Archive UI。当前 710 个 Gallery DOI 中已有 612 个 live local captures、637 个 media records，真正 no-visual 是 74，另外 105 篇只有 fallback、需要升级官方图；但 Worker 的 figureGapTotal 和 zeroFigureGapTotal 仍然都是 710。Local Capture、Pages 静态媒体、D1 Worker inventory 仍然不是同一事实源。在这种状态下直接启用 Archive freeze 会产生错误维护决策。Unified Asset Catalog 必须先统一回答“这个 DOI 已有什么”，Active Acquisition Index 再回答“还缺什么”。toc-demand-live.json 当前仍把全部 710 篇放进 articles，长期队列应随 Active Work Set 增长，而不是随 All-Time Catalog 增长。Worker media_jobs 目前仍没有 firstOnlineDate、hotThrough、reactivateUntil，因此三个月 eligibility 还没有进入服务器端调度模型。Tampermonkey 当前 main 仍是 userscript 6.2.20 / Controller 2.2.39；本机 checkpoint、attempt、failure、trace、progress 等状态也应执行三个月 GC。
+
+Summary / Evidence 的 10,000-object correctness 风险仍未消失。scheduled-article-summaries.json 仍有 163 条，约 208 KB；scheduled-summary-handoff.js 对 Evidence 与 Handoff prefix 仍然各自最多 LIST 10 页 × 1000 objects。超过约 10,000 objects 后，“扫描全部 backlog”会逻辑不完整。因此 Active Evidence Index 仍应作为正式架构要求。R2 保存 immutable Evidence/Handoff bytes；索引只保存 DOI、evidencePacketHash、capturedAt、summaryState、lifecycleClass。日常摘要任务只查 active/pending，不再 LIST 全历史 R2。摘要公开资产也不应永远维持一个单大 JSON，Archive 启用后应逐步按 firstOnlineDate 分成月度 content-addressed summary shards。
+
+Pages 构建风险现在更可量化。当前 18:00 Pages run 从启动到完成约 4 分 38 秒，仍低于 10 分钟平台超时，但已经值得独立跟踪。merge-worker-media.mjs 仍先合并所有 literature sources 得到 ALL Gallery DOI，再批量调用 /api/media/batch 并下载所有可用媒体。只要这里不改，即使前端已经做 Hot/Archive，构建成本仍会随全历史增长。长期 Pages 应只承载 frontend、Canonical manifest/shards、Search/Locator，以及 Hot 必要 thumbnail/preview；Archive master/body figures/Evidence/review binary 留 R2。建议先做 shadow metric，把每次 Pages 构建的 hotMediaBytes、archiveMediaBytes、mediaMergeSeconds 分开统计，再关闭 Archive media 的日常镜像。
+
+前端、用户状态与 Analytics 结论没有被推翻。前端仍然是 filteredPapers -> list.map() -> join() -> gallery.innerHTML；content-visibility 只降低绘制成本，不降低 DOM 数量。TOC 仍会给全部 slot 创建 eager image 并赋 src，只是前 24 个高优先级；正文图才真正用 IntersectionObserver。长期真实 Card DOM 仍建议约 60–100，首屏 eager TOC 约 12–24，其余接近视口才设置 src。user_library_state 仍是一个用户一个最多约 1.5 MB 的 state JSON，长期仍应拆成 per-DOI user_paper_state；用户中心展示历史收藏时通过 DOI Locator 定位 Canonical shard。Analytics 仍对 site_pageviews_v1 做 COUNT、COUNT DISTINCT 和 EXISTS 全历史扫描，因此 materialized site_global_stats / site_daily_stats / site_visitors 仍是必要改造。
+
+Git 审计策略今天也需要升级。和上一版基线相比，repo API size 从约 105226 KB 增到 105691 KB，增加约 465 KB；这 45 个 commit 的变更列表里没有新增媒体审核二进制路径，说明停止往 Git 持续塞新媒体 binary 仍然有效。现在不应急于 history rewrite。但下一阶段 Git 增长源会转向高频、较大的 mutable JSON：audit/latest.json、unresolved-latest.json、prepublish review、formal review 等。长期应从“只防 binary”升级为“两级审计存储”：main 保留当前 coordination、近期完整 review 和轻量索引；更老的不可变完整证据按月打包到 R2/GitHub Release/专门 audit archive，并在 main 留 hash 和定位索引。这个治理涉及现有审计契约，仍然只能先设计。
+
+当前推荐最终结构是：Canonical Literature Catalog 使用 monthly content-addressed shards，并包含 DOI、firstOnlineDate、addedDate、hotThrough、recordRevision；Hot/Archive 由日期纯函数派生，DOI 永远不物理搬家。Canonical 同时派生 DOI Locator、Segmented Search Index 和 Recent Additions Overlay。Release/Delivery 使用 append-only Event Ledger，现有 deployment-deliveries 作为基础统一 PREPARED、COMMITTED、DEPLOYED、VERIFIED、FAILED、CARRYOVER；latestVerified 是公开事实唯一基线。Unified Asset Catalog 统一 TOC / primary / figures / Evidence / summary 的 DOI、hash、provenance；Active Work Index 只保存当前 Hot 和明确例外的工作项。Git/Pages 负责 metadata、manifest、Locator、Search、Hot 必要静态资产和轻量 audit；R2 负责 Archive media、Evidence、handoff、review binary；D1 负责 Active indexes、per-DOI user state、reader counters 和 materialized analytics。
+
+性能预算继续收紧：Hot metadata gzip 目标 <2 MB；单 Archive shard 约 1–2 MB；单 Search segment <5 MB gzip；真实 Card DOM 约 60–100；首屏 eager TOC 约 12–24；普通 Pages build 目标 <5 分钟、>7 分钟告警；普通 Pages build 不读取 Archive body/master；日常 Evidence discovery 禁止全 R2 prefix scan；Git audit 新增媒体 binary 预算继续为 0；动态请求禁止无界扫描增长型 raw event 表；媒体健康至少按 fresh / aged / preArchive / upgrade / archiveRepair 分 cohort。
+
+今天最关键的一句话是：三个月不应该是一个“搬家任务”，而应该是一条由 hotThrough 驱动的持续生命周期函数；Verified Release Ledger 决定公开事实，DOI Locator 决定历史记录如何被快速找到，Active Work Index 决定哪些记录仍值得消耗抓取资源。
+
+当前最值得优先验证的顺序也因此调整为：先把现有 deployment-delivery receipts 正式化为 Shadow Release Ledger，并做 10 月 2 日首批 July-1 Retirement dry-run；随后建立 Shadow Canonical + DOI Locator；再统一 Asset Catalog 与 Active Acquisition/Evidence Index；之后才切 Hot/Archive 前端、summary/search 分片和 Pages Hot-only media；user state / Analytics 拆分保持后续但不应等到配额触顶才做。
+
+本轮没有修改生产文献、生产架构、媒体队列、摘要内容或部署逻辑，只进行了仓库对齐、上一版回忆对齐和架构复审。
