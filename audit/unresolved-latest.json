@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-30T10:09:52.667Z",
+  "generatedAt": "2026-09-30T15:25:20.548Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-21",
@@ -8,17 +8,17 @@
   "closureDate": "2026-09-29",
   "summary": {
     "galleryDois": 710,
-    "sourceRecords": 757,
-    "rawMissingFromGallery": 605,
+    "sourceRecords": 786,
+    "rawMissingFromGallery": 634,
     "previouslyReviewedExcluded": 597,
-    "missingFromGallery": 8,
-    "potentialGaps": 2,
+    "missingFromGallery": 37,
+    "potentialGaps": 9,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 6,
+    "closureCoverageAnomalies": 0,
     "historicalCoverageLosses": 0,
-    "unresolved": 8,
+    "unresolved": 37,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -26,7 +26,7 @@
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 0,
-    "closureCoverageAnomalies": 6,
+    "closureCoverageAnomalies": 0,
     "historicalCoverageLosses": 0
   },
   "activeJournals": [
@@ -39,15 +39,15 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 42,
-        "crossrefCandidateRecords": 42,
-        "openAlexCandidateRecords": 23,
-        "multiSourceCandidateRecords": 23,
+        "unionCandidateRecords": 52,
+        "crossrefCandidateRecords": 52,
+        "openAlexCandidateRecords": 37,
+        "multiSourceCandidateRecords": 37,
         "closureUnionRecords": 14,
         "closureCrossrefRecords": 14,
-        "closureOpenAlexRecords": 1,
+        "closureOpenAlexRecords": 14,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -101,11 +101,11 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 7,
         "crossrefCandidateRecords": 7,
-        "openAlexCandidateRecords": 5,
-        "multiSourceCandidateRecords": 5,
+        "openAlexCandidateRecords": 7,
+        "multiSourceCandidateRecords": 7,
         "closureUnionRecords": 2,
         "closureCrossrefRecords": 2,
-        "closureOpenAlexRecords": 0,
+        "closureOpenAlexRecords": 2,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
@@ -121,11 +121,11 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 7,
         "crossrefCandidateRecords": 7,
-        "openAlexCandidateRecords": 5,
-        "multiSourceCandidateRecords": 5,
+        "openAlexCandidateRecords": 7,
+        "multiSourceCandidateRecords": 7,
         "closureUnionRecords": 2,
         "closureCrossrefRecords": 2,
-        "closureOpenAlexRecords": 0,
+        "closureOpenAlexRecords": 2,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
@@ -139,15 +139,15 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 183,
-        "crossrefCandidateRecords": 183,
-        "openAlexCandidateRecords": 150,
-        "multiSourceCandidateRecords": 150,
+        "unionCandidateRecords": 188,
+        "crossrefCandidateRecords": 188,
+        "openAlexCandidateRecords": 170,
+        "multiSourceCandidateRecords": 170,
         "closureUnionRecords": 27,
         "closureCrossrefRecords": 27,
-        "closureOpenAlexRecords": 9,
+        "closureOpenAlexRecords": 27,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -159,15 +159,15 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 108,
-        "crossrefCandidateRecords": 108,
-        "openAlexCandidateRecords": 78,
-        "multiSourceCandidateRecords": 78,
+        "unionCandidateRecords": 112,
+        "crossrefCandidateRecords": 112,
+        "openAlexCandidateRecords": 103,
+        "multiSourceCandidateRecords": 103,
         "closureUnionRecords": 33,
         "closureCrossrefRecords": 33,
-        "closureOpenAlexRecords": 9,
+        "closureOpenAlexRecords": 33,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -181,13 +181,13 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 144,
         "crossrefCandidateRecords": 144,
-        "openAlexCandidateRecords": 93,
-        "multiSourceCandidateRecords": 93,
+        "openAlexCandidateRecords": 119,
+        "multiSourceCandidateRecords": 119,
         "closureUnionRecords": 27,
         "closureCrossrefRecords": 27,
-        "closureOpenAlexRecords": 3,
+        "closureOpenAlexRecords": 15,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -199,15 +199,15 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 35,
-        "crossrefCandidateRecords": 35,
-        "openAlexCandidateRecords": 28,
-        "multiSourceCandidateRecords": 28,
+        "unionCandidateRecords": 37,
+        "crossrefCandidateRecords": 37,
+        "openAlexCandidateRecords": 32,
+        "multiSourceCandidateRecords": 32,
         "closureUnionRecords": 6,
         "closureCrossrefRecords": 6,
-        "closureOpenAlexRecords": 0,
+        "closureOpenAlexRecords": 4,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -219,15 +219,15 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 58,
-        "crossrefCandidateRecords": 58,
-        "openAlexCandidateRecords": 46,
-        "multiSourceCandidateRecords": 46,
+        "unionCandidateRecords": 61,
+        "crossrefCandidateRecords": 61,
+        "openAlexCandidateRecords": 58,
+        "multiSourceCandidateRecords": 58,
         "closureUnionRecords": 11,
         "closureCrossrefRecords": 11,
-        "closureOpenAlexRecords": 3,
+        "closureOpenAlexRecords": 11,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -339,19 +339,603 @@
         "effectiveStart": "2026-09-22",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 33,
-        "crossrefCandidateRecords": 33,
-        "openAlexCandidateRecords": 26,
-        "multiSourceCandidateRecords": 26,
+        "unionCandidateRecords": 38,
+        "crossrefCandidateRecords": 38,
+        "openAlexCandidateRecords": 31,
+        "multiSourceCandidateRecords": 31,
         "closureUnionRecords": 8,
         "closureCrossrefRecords": 8,
-        "closureOpenAlexRecords": 4,
+        "closureOpenAlexRecords": 8,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
     }
   ],
   "unresolved": [
+    {
+      "doi": "10.1021/acscatal.6c03159",
+      "journal": "ACS Catalysis",
+      "title": "Pendant Phosphonium Outperforms Ammonium by Strengthening Local Electric Fields in a Ruthenium Hydrogenation Catalyst",
+      "abstract": "Abstract Pendant ammonium cations are known to enhance catalytic activity through the generation of local electric fields; however, there is little understanding of how the magnitude of these effects can be controlled through the cation identity. In this study, we investigate the impact of pendant pnictonium identity (ammonium versus phosphonium) incorporated into the ligand backbone of [Ru(triphos)(CH3CN)3]n+ complexes for CO2 hydrogenation to MeOH. Kinetic analysis by operando 1H NMR spectroscopy demonstrates that the phosphonium-based complex achieves significantly higher turnover frequency and selectivity for production of MeOH compared to its lighter ammonium analogue and the neutral bridgehead control complex. Mechanistic experiments reveal that MeOH is formed through an on-cycle pathway in which the substrate remains bound to the catalyst; however, once partially reduced intermediates dissociate, they accumulate as off-cycle by-products that are not further converted to MeOH. Computational studies demonstrated that phosphonium substitution lowers the free-energy barrier for rate-limiting hydride transfer to the bound formate ligand. Natural bond orbital (NBO) analysis and electrostatic potential calculations indicate that phosphonium exhibits a higher localization of charge than the ammonium analog, resulting in an increased electrostatic stabilization of negative charge",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Manuel Quiroz",
+        "Elise M.-J. Banz Chung",
+        "Jack T. Fuller",
+        "Trinity Riggins",
+        "Katherine M. Marczenko",
+        "John C. Linehan",
+        "Bojana Ginovska",
+        "Marcel Schlaf",
+        "Eric S. Wiedner"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acscatal.6c05462",
+      "journal": "ACS Catalysis",
+      "title": "PtPd Nanosheets Dominated with (111) Facets Achieving Thermodynamic–Kinetic Synergistic Enhancement of Oxygen Reduction Reaction",
+      "abstract": "Abstract The oxygen reduction reaction (ORR) in fuel cells suffers from an inherent thermodynamic bottleneck. Current research is mostly confined to independent optimization of either its thermodynamic or kinetic properties, failing to break through the catalytic performance limit imposed by classical models. Herein, PtPd alloy nanosheets dominated by the (111) facets, with a thickness of about 1–2 nm, were synthesized under high-pressure conditions using CO as the direct reduction gas. First-principles calculations demonstrate that PtPd alloy nanosheets thermodynamically optimize ORR by lowering the surface O adsorption energy, thereby positively shifting the onset potential to 1.02 V vs RHE. Furthermore, the distinct d-orbital electronic structure of Pd interacting with Pt enables enhanced electron filling into the antibonding orbitals of the OOH intermediate. This electronic modulation reduces the apparent activation energy by approximately 20 kJ mol–1, kinetically accelerating the ORR process. This catalyst simultaneously increases the thermodynamic limiting potential and reduces the kinetic activation energy, ultimately leading to a mass activity of up to 1.275 A mg–1 at 0.95 VRHE, achieving 53.3 times the activity of commercial Pt/C.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Lili Zhang",
+        "Shengwei Yu",
+        "Hao Jiang",
+        "Meng Zhang",
+        "Zikun Li",
+        "Xin Luo",
+        "Zihao Liu",
+        "Zhiwei Hu",
+        "Xiaojie Jia",
+        "Haibo Jiang",
+        "Jianhua Shen",
+        "Chunzhong Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c06838",
+      "journal": "JACS",
+      "title": "Direct Evidence of a La–Te Bond and Bonding Regime Differences for Ln–C and Ln–Te in [K(18-Crown 6)(Cp″2LnTe3)] (Ln = La, Ce, and Nd)",
+      "abstract": "Abstract Using nonclassical divalent lanthanide precursors as multielectron reducing agents, complexes [K(18-crown-6)(Cp″2LnTe3)] with Ln = La, Ce, and Nd; Cp″ = 1,3-bis(trimethylsilyl)cyclopentadienyl were synthesized and investigated to elucidate the mechanism of lanthanide-tellurium bonding and the role of 4f-element electron density in stabilizing small chalcogenide chains. Density functional theory (DFT) reveals that the frontier molecular orbitals of these complexes are predominantly localized on the [Te3]2– fragment, while the trivalent lanthanide ions stabilize the tellurium chain through weak but measurable metal–ligand interactions. To experimentally resolve these interactions, we focus on complementary ligand- and metal-centered X-ray spectroscopic approaches. Ln L3-edge high-resolution XANES (HR-XANES) and valence-band resonant inelastic X-ray scattering (VB-RIXS) demonstrate that the Ln-Te/C interaction has substantial Ln 5d orbital contributions, particularly for the Ln-Te bond, and remain largely constant across the three complexes. DFT-based bond analysis provides a mechanistic interpretation of these trends. The Ln–C interaction exhibits increasing electron density at the bond critical point and a higher delocalization index (QTAIM analysis) from the lighter to the heavier lanthanides, reflecting enhanced Ln 4f participation within an energy-driven covalency re",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Cedric Y. Reitz",
+        "David Frick",
+        "Elena Pross",
+        "Emily M. Reynolds",
+        "Constantin Wansorra",
+        "Sven M. Schenk",
+        "Jacob A. Branson",
+        "Hanna Kaufmann-Heimeshoff",
+        "Mary Blankenship",
+        "Julius Wolf",
+        "Dirk Hauschild",
+        "Jörg Göttlicher",
+        "Ralph Steininger",
+        "Stefan Mangold",
+        "Ruwini S. K. Ekanayake",
+        "Bianca Schacherl",
+        "Lothar Weinhardt",
+        "Clemens Heske",
+        "Cristian Celis-Barros",
+        "Harry Ramanantoanina",
+        "Peter W. Roesky",
+        "Tonya Vitova"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jav148i038_2135954",
+      "journal": "JACS",
+      "title": "Issue Editorial Masthead",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jav148i038_2135953",
+      "journal": "JACS",
+      "title": "Issue Publication Information",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c11560",
+      "journal": "JACS",
+      "title": "Valley Zeeman Splitting-Enhanced Spin-Forbidden Dark Exciton Formation in Magnetically V-Doped WSe2 Monolayer and WSe2/MoSe2 Heterostructure",
+      "abstract": "Abstract Spin-forbidden dark excitons are promising for optoelectronic devices due to the significantly extended lifetimes. Although their formation mechanism in monolayer MoS2 has been theoretically revealed, time-reversal symmetry intrinsically protects valley degeneracy, imposing a fundamental limit on the formation efficiency. However, effective strategies to overcome this limitation remain unclear. Here, the photoexcitation and relaxation dynamics in the WSe2 monolayer and WSe2/MoSe2 heterostructure are investigated through nonadiabatic molecular dynamics combined with light–matter interaction and the GW plus real-time Bethe–Salpeter equation. We discover that although many-body interactions, including electron–phonon coupling, electron–hole Coulomb and exchange interactions, and spin–orbit interaction, synergistically drive spin-forbidden dark exciton formation, inherent valley degeneracy restricts the formation efficiency to ∼50%. To overcome this limitation, magnetic vanadium doping is introduced to induce an internal magnetic exchange field that breaks time-reversal symmetry, causing a massive valley Zeeman splitting ( gt;100 meV). This effectively suppresses the competing exciton relaxation channels, enhancing the spin-forbidden dark exciton generation efficiency to 98% in the WSe2 monolayer and 85% in the WSe2/MoSe2 heterostructure. This intrinsic magnetic doping str",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Zuoyin Liu",
+        "Yanming Lin",
+        "Zhenyi Jiang",
+        "Aijun Du"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01517",
+      "journal": "JOC",
+      "title": "A Room-Temperature Synthesis of 3-Methylidene-2,3-dihydro-4-quinolones from o -Aniliopropargy Alcohols and Aldehydes",
+      "abstract": "Abstract Through a room-temperature reaction between o-anilinopropargyl alcohols and aldehydes, various 3-methylidene-2,3-dihydro-4-quinolones were synthesized with 3 mol % TfOH as a catalyst. This transformation likely proceeds via acetalization of the aldehyde with CH(OCH3)3, acetal-intercepted Meyer–Schuster rearrangement, 1,3-migration, intramolecular conjugated addition, and departure of the methoxy group. Acetalization reagent CH(OCH3)3 should play multiple roles. The reaction uses 3 mol % catalyst loading, accommodates diverse substituents, and gives high yield, making it a practical alternative for the synthesis of 3-methylidene-2,3-dihydro-4-quinolones.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Min Zhou",
+        "Haojie Pang",
+        "Qinming Yi Miao",
+        "Dan Wang",
+        "Sha Huang",
+        "Qingdan Pan",
+        "Kexin Zhang",
+        "Chao Liu",
+        "Yan Yin"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00924",
+      "journal": "JOC",
+      "title": "Alkoxy Substitution Controls Columnar Organization in Quinoxaline Cyclotetrabenzoin Macrocycles",
+      "abstract": "Abstract Shape-persistent quinoxaline macrocycles were synthesized from cyclotetrabenzil through condensations with substituted phenylenediamines. Variation of peripheral alkoxy substituents systematically modulates supramolecular organization in the solid state. Selected tetraalkoxy macrocycles form ordered soft crystal columnar hexagonal phases, whereas octaalkoxy derivatives exhibit more diverse phase behavior. Notably, a branched 3,7-dimethyloctyl derivative displays a columnar oblique liquid-crystalline phase. Single-crystal structures reveal layered packing governed primarily by weak [C–H···O], [C–H···N], and [C–H···π] interactions. These results demonstrate that macrocycle size and side-chain architecture influence columnar packing and phase behavior in quinoxaline macrocycles, with the branched octaalkoxy derivative uniquely exhibiting a liquid-crystalline mesophase.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Ashikur Rahman Rabbi",
+        "Sandipan Ghorai",
+        "Asmita Shah",
+        "Suraj Kumar Pathak",
+        "Torsten Hegmann",
+        "Ognjen Š Miljanić"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01805",
+      "journal": "JOC",
+      "title": "Benzofuran Synthesis from N -Aryloxysulfonamides and 2-Bromoallyl Sulfones via Sequential Treatment with Base and Acid",
+      "abstract": "Abstract Sequential treatment of N-aryloxysulfonamides and 2-bromoallyl sulfones with cesium carbonate and p-toluenesulfonic acid led to the formation of 2-(arylsulfonylmethyl)benzofurans. An initial formal nucleophilic vinylic substitution sets the stage for a room-temperature [3,3]-sigmatropic rearrangement of the O-aryl-N-vinyl hydroxylamine intermediate. An allenoate ester also reacted analogously to afford the corresponding benzofuran-esters.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Neethu K. Kunjunny",
+        "K. K. Athma Manu",
+        "M. P. Muhammad Sibil",
+        "Rajeev S. Menon"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00979",
+      "journal": "JOC",
+      "title": "Dual-State Fluorescence with Efficiency Close to Unity from D-π-A-Type Triarylborane-Based Naphthalenes",
+      "abstract": "Abstract Fluorophores exhibiting bright fluorescence in both dilute solution and the solid state, termed dual-state emission (DSE), are more attractive for practical applications than those that fluoresce in a single state. Herein, we disclose two DSE-active naphthalene derivatives, BNPh-Nap and BNOPh-Nap, featuring a simple D-π-A structure with an electron-accepting dimesitylboryl (BMes2) and electron-donating diphenylamino (NPh2) or N,N’-di(4-methoxyphenyl)amino (NOMePh2) substituents at the 2,6-positions of the naphthalene core unit. Despite the very flat structure of the naphthalene core unit, the steric hindrance of the BMes2 and diarylamino groups can effectively suppress intermolecular π-π interactions in the solid state. As a result, BNPh-Nap exhibits strong fluorescence not only in solution (ΦF = 0.97 in cyclohexane) but also in the solid state, including powder (ΦF = 0.67) and neat film (ΦF = 0.51). From BNPh-Nap to BNOPh-Nap, although the fluorescence efficiency decreases slightly in solution (ΦF = 0.71 in cyclohexane), the enhanced electron-donating ability of the amino group greatly boosts the solid-state fluorescence, yielding near-unity ΦF values in both powder (ΦF = 0.91) and film (ΦF = 0.99). These results demonstrate that simple modification of a conventional planar π-core with BMes2 and diarylamino groups enables high-performance DSE without complex twisted a",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Min Wang",
+        "Meng-Qi Wu",
+        "Yi Fang",
+        "Cui-Hua Zhao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01838",
+      "journal": "JOC",
+      "title": "The Convergent Synthetic Efforts toward Knightol and a Simplified Analog",
+      "abstract": "Abstract We report our efforts toward the convergent total synthesis of the cembranoid diterpene (−)-knightol, a marine natural product reported to exhibit antibiofilm activity against Staphylococcus aureus, and a rationally designed aryl analog, mknightol. Our strategy was guided by a two-phase approach involving construction of the macrocyclic framework, followed by selective epoxidation and further diversification. Both targets were designed to arise from common western fragment building blocks and an eastern fragment accessible on a gram scale. A scalable cross-electrophile coupling provided efficient access to an advanced intermediate en route to the cyclophane and enabled evaluation of key late-stage transformations.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Learnmore Jeremia",
+        "Elise L. Bezold",
+        "Kate Bright",
+        "William M. Wuest"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/d41586-026-02777-x",
+      "journal": "Nature",
+      "title": "2D semiconductor aims to turbocharge development of high-performance electronics",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Taoyu Zou",
+        "Yong-Young Noh"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02778-w",
+      "journal": "Nature",
+      "title": "Harmful tau spreads like self-propagating prion proteins",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Kayleigh Mason-Chalmers",
+        "Jose A. Rodriguez"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-03015-0",
+      "journal": "Nature",
+      "title": "How to spend $25 billion on science: OpenAI’s staggeringly rich research charity gets under way",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Ewen Callaway"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02201-4",
+      "journal": "Nature",
+      "title": "I turn up late to meetings to dodge small talk. Am I wrong?",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Rachael Pells"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02958-8",
+      "journal": "Nature",
+      "title": "Is exposomics the key to making personalized medicine a reality?",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Virginia Gewin"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02783-z",
+      "journal": "Nature",
+      "title": "Pipework problems when cancer spreads to an area bordering the brain",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Jang Hyun Park",
+        "Jonathan Kipnis"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02894-7",
+      "journal": "Nature",
+      "title": "Restoring hearing in people with a rare form of deafness",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Laurie Udesky"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02782-0",
+      "journal": "Nature",
+      "title": "Sugar amplifies antibiotic disruption of gut microbes",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Mengxi Du",
+        "Andrew T. Chan"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02863-0",
+      "journal": "Nature",
+      "title": "The buck stops with me",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Mercer Eddy"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-02963-x",
+      "journal": "Nature",
+      "title": "Tuberculosis treatment has advanced — now we need to stop drug resistance dragging us backwards",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Ana Cehovin"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
     {
       "doi": "10.1038/s41467-026-78073-z",
       "journal": "Nature Communications",
@@ -445,6 +1029,36 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1038/s41467-026-78141-4",
+      "journal": "Nature Communications",
+      "title": "High-energy low-repetition broadband ultrafast lasers empowered by hollow-core fiber",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Laiyang Dang",
+        "Xin Zhang",
+        "Yinghui Zhuang",
+        "Wenhao Zhu",
+        "Shuyuan Zhu",
+        "Yihuan Shi",
+        "Feng Li",
+        "Pu Wang",
+        "Dongmei Huang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/s41467-026-77933-y",
       "journal": "Nature Communications",
       "title": "Largest eigenvalue statistics of wavefront shaping in complex scattering media",
@@ -454,6 +1068,78 @@
       "authors": [
         "Grégory Schehr",
         "Hasan Yılmaz"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77810-8",
+      "journal": "Nature Communications",
+      "title": "Ligand engineering enables an alkaline iron-chromium redox flow battery",
+      "abstract": "Abstract Iron-chromium redox flow batteries are promising for long-duration energy storage owing to their safety, low cost, and environmental compatibility, but are limited by sluggish chromium(II/III) kinetics and parasitic hydrogen evolution in chromium-based negolytes. Here we re-engineer iron-chromium redox chemistry through chelation-driven molecular design using the strong-field ligand 2,2-Bis(hydroxymethyl)−2,2’,2”-nitrilotriethanol. The ligand reshapes the electronic configurations of iron and chromium centres and tunes their redox potentials, enabling an alkaline iron-chromium redox flow battery with rapid kinetics and suppressed hydrogen evolution. It stabilizes an octahedral hexacoordinate chromium chelate and unlocks an unconventional chromium(III/IV) couple at +0.34 V versus the standard hydrogen electrode, circumventing the Jahn-Teller effects associated with chromium(II/III). Paired with an iron-chelate negolyte based on the same ligand, the cell operates at 1.15 V within the aqueous stability window and remains stable over 500 cycles, achieving 99.0% coulombic efficiency and 75.8% energy efficiency at 100 mA cm −2 (80% of state-of-charge). Together with a projected raw-material cost of $17.02 kWh −1 and theoretical capacity of 68.07 Ah L −1 based on posolyte volume, this work establishes a scalable, cost-effective strategy for grid-scale energy storage.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Wendong Yang",
+        "Pei Liu",
+        "Linfeng Wang",
+        "Hua Jiang",
+        "Shuangbin Zhang",
+        "Bin Luo",
+        "Xue Long",
+        "Yilin Zeng",
+        "Xuan Cai",
+        "Yifan Zhang",
+        "Zuoxuan Gan",
+        "Huaiyu Ke",
+        "Jinhua Guo",
+        "Jiangjiang Duan"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77970-7",
+      "journal": "Nature Communications",
+      "title": "Metabolization of human milk oligosaccharides by Streptococcus pneumoniae",
+      "abstract": "Abstract It is unclear whether human milk oligosaccharides (HMOs) can be used as a nutrient source by Streptococcus pneumoniae . Here, we investigate whether and how S. pneumoniae metabolizes HMOs and whether these compounds inhibit pneumococcal adherence. We find that S. pneumoniae can metabolize several HMOs, except for 2’-fucosyllactose (2’FL). The process is regulated by the carbon catabolite repression system. Transcriptome analyses showed reduced expression of the lac operon I ( lacABCD ) in bacteria grown with two tested HMOs when compared to lactose (Lac). Genes for the Leloir pathway and exoglycosidases were upregulated. A genome-wide CRISPR interference screen showed that the lac operons I and II ( lacEFG-2 ) are essential for metabolizing HMOs. Lac and non-metabolizable 2’FL were found to inhibit pneumococcal adherence to host cells in vitro. Importantly, 2’FL showed a stronger inhibitory effect compared to Lac in vivo. Further research is warranted to investigate whether the non-metabolizable 2’FL can be used to inhibit pneumococcal adherence.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Katharina Bacher",
+        "Ustina Martysiuk",
+        "Greicy K. Bonifacio-Pereira",
+        "Johann Mignolet",
+        "Vincent de Bakker",
+        "Melika Ghazaghi",
+        "Lukas Troxler",
+        "Tabea N. Bommer",
+        "Ilche Gjuroski",
+        "Julien Furrer",
+        "Loretta Müller",
+        "Judit Burgaya",
+        "Nadja Mostacci",
+        "Daniel R. Neill",
+        "Jan-Willem Veening",
+        "Markus Hilty"
       ],
       "topics": [],
       "sources": [
@@ -543,6 +1229,192 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/s41467-026-77925-y",
+      "journal": "Nature Communications",
+      "title": "SARS-CoV-2-specific monoclonal antibody AER002 in Long COVID: an exploratory randomized phase 2a mechanistic trial",
+      "abstract": "Abstract Persistence of SARS-CoV-2 has been proposed as a biological driver of Long COVID, a disabling chronic illness with no proven treatments. We conducted an exploratory, placebo-controlled, double-blind, 2:1 randomized mechanistic trial (NCT05877508) of the SARS-CoV-2-specific monoclonal antibody AER002 in 36 participants who met the World Health Organization case definition of Long COVID. After baseline characterization, participants received a single infusion and were followed for 360 days. The primary endpoint was the PROMIS-29 Physical Health Summary Score (PHSS) at 90 days; secondary and exploratory endpoints included patient-reported and objective measures of physical and neurocognitive function as well as blood-, imaging-, and tissue-based biomarkers. While AER002 was safe and well tolerated, no significant differences in physical health, quality of life, objective measures of physical function or cognition, or blood-based biomarkers were demonstrated between the treatment and control arms. In a post-hoc analysis, participants with a lower baseline SARS-CoV-2 antibody level and higher drug exposure were more likely to perceive treatment benefit based on the Patient Global Impression of Change scale ( p 0.05 for anti-S, S1, and RBD). Although AER002 was not efficacious in this proof-of-concept study, our findings could inform future trials using monoclonal antibodies",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Michael J. Peluso",
+        "Dylan Ryder",
+        "Thomas Dalhuisen",
+        "Danny Hoi Tsun Chu",
+        "Meghann C. Williams",
+        "Antonio E. Rodriguez",
+        "Brian H. LaFranchi",
+        "Joanna Vinden",
+        "Emily A. Fehrman",
+        "Beatrice Huang",
+        "Rebecca Hoh",
+        "Kofi A. Asare",
+        "Kathleen Bellon Pizarro",
+        "Mohammad Sofiqur Rahman",
+        "Emilio de Narvaez",
+        "Mark M. Painter",
+        "E. John Wherry",
+        "Zoe N. Swank",
+        "Louise L. Hansen",
+        "David R. Walt",
+        "Yoshinori Fukazawa",
+        "Anisha Sekar",
+        "Steven E. Bellan",
+        "Holly Tieu",
+        "Josephat Asiago",
+        "Prakash Bhuyan",
+        "Rajeev Venkayya",
+        "Robert R. Flavell",
+        "Henry VanBrocklin",
+        "J. Daniel Kelly",
+        "Priscilla Y. Hsue",
+        "Matthew S. Durstenfeld",
+        "Peter W. Hunt",
+        "Leonard Calabrese",
+        "Ma Somsouk",
+        "Jeffrey N. Martin",
+        "David V. Glidden",
+        "Amelia N. Deitchman",
+        "Timothy J. Henrich",
+        "Steven G. Deeks"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77974-3",
+      "journal": "Nature Communications",
+      "title": "Sphingolipids associate with the chlamydial nucleoid and mark developmental transitions in Chlamydia trachomatis",
+      "abstract": "Abstract Chlamydia trachomatis is an obligate intracellular bacterial pathogen and a leading cause of sexually transmitted infections worldwide. During its biphasic developmental cycle, infectious, non-replicative elementary bodies alternate with replicative reticulate bodies within a membrane-bound intracellular niche known as the inclusion. C. trachomatis relies heavily on host-derived metabolites, including sphingolipids, which are essential for inclusion integrity, bacterial growth and production of infectious progeny. Here, using expansion microscopy, we uncover an unexpected localization of sphingolipid derivatives within the highly condensed DNA nucleoids of elementary bodies. These sphingolipids are released from nucleoids prior to DNA decondensation during the elementary-to-reticulate body transition, the earliest phenotypic event in the complex developmental cycle of these bacteria. Thereafter, nucleoids undergo a characteristic DNA decondensation process that we visualized by expansion microscopy. By combining super-resolution imaging with a FRET-based metabolic tracking approach and lipidomics, we identified sphingomyelin derived from the sphingolipid analogues as the sphingolipid species predominantly associated with the condensing nucleoids of elementary bodies. Notably, reticulate bodies arrested in their developmental stage fail to accumulate sphingomyelin, sugg",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Marcel Rühling",
+        "Fabienne Wagner",
+        "Till Epprecht",
+        "Paul F. Köhling",
+        "Fabian Schumacher",
+        "Stefan Sachs",
+        "Louise Kersting",
+        "Julian Fink",
+        "Lina Girndt",
+        "Burkhard Kleuser",
+        "Markus Sauer",
+        "Jürgen Seibel",
+        "Gregor L. Weiss",
+        "Thomas Rudel"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03698",
+      "journal": "Organic Letters",
+      "title": "Covalent Dimerization of an Aza-5–7–7 Saddle Unlocks Fullerene Recognition toward Both C60 and C70 with Preference for C70",
+      "abstract": "Abstract Nonplanar curved π-conjugated molecules are promising building blocks for supramolecular fullerene hosts, yet negatively curved saddle-based dimeric receptors remain largely underexplored. Herein, we report the synthesis and full characterization of a covalently linked aza-5–7–7 saddle dimer (1). Single-crystal X-ray diffraction verifies its S-shaped conformation with two independent concave cavities. Notably, the monomeric saddle precursor (2) shows no detectable fullerene binding, whereas covalent dimerization unlocks efficient host–guest interactions. NMR and UV–vis titrations reveal that 1 binds C70 preferentially over C60, and cocrystallization further validates its ability to encapsulate these fullerenes.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Yujie Ren",
+        "Fengyi Zhao",
+        "Gang Zhang",
+        "Weifan Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03702",
+      "journal": "Organic Letters",
+      "title": "Divergent Synthesis of Heterocycles through Cascade Rearrangements of Dienyne-Amides and Dialkyl Bromomalonates",
+      "abstract": "Abstract Divergent synthesis provides efficient access to structurally diverse molecules from common precursors. Herein, we report a catalyst- and temperature-controlled cascade rearrangement of dienyne-amides with dialkyl bromomalonates, enabling selective access to three distinct N,O-heterocyclic scaffolds. Gold catalysis at room temperature promotes the cycloisomerization/cyclopropanation/1-aza-Cope rearrangement cascade to furnish furan-fused dihydroazepines, whereas heating triggers a formal [1,3]-rearrangement to afford spirocyclic heterocycles with high diastereoselectivity. Alternatively, silver catalysis redirects the reaction through oxotriene formation and vinyl cyclopropane rearrangement, providing a distinct class of spirocycles. This protocol features a broad substrate scope, high selectivity, and scalability, highlighting the utility of controlled skeletal rearrangements for divergent heterocycle synthesis.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Mengwei You",
+        "Yongli Li",
+        "Sisi Huang",
+        "Jiahong Wu",
+        "Lei Shen",
+        "Hui Mao",
+        "Liejin Zhou",
+        "Tianli Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03826",
+      "journal": "Organic Letters",
+      "title": "Visible-Light-Promoted Radical Spirocyclization of 1,7-Enynes and α-Bromocarbonyl Compounds to Access Spirooxindole Derivatives",
+      "abstract": "Abstract A novel visible-light-induced radical cascade spirocyclization of 1,7-enynes with diverse α-bromocarbonyl compounds is developed for the efficient construction of functionalized spirooxindole derivatives. This protocol features mild reaction conditions and simple operation, enabling the one-step assembly of complex spirocyclic skeletons with high diastereoselectivity. Scale-up synthesis and diversified product derivatizations further demonstrate the synthetic utility of this methodology. A series of control experiments confirm a radical-involved reaction pathway involving key 1,5-hydride shift and radical rearrangement processes.",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Mengshuang Guo",
+        "Yijia Zhang",
+        "Ruyi Fu",
+        "Xiaolong Wu",
+        "Xinyang Wang",
+        "Zhen Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acscatal.6c05520",
       "journal": "ACS Catalysis",
       "title": "Engineering Highly Active Single-Phosphine-Coordinated Ru Catalysts for Heterogeneous N -Alkylation without Base-Additive",
@@ -617,7 +1489,14 @@
     }
   ],
   "potentialGapDois": [
+    "10.1021/acscatal.6c05462",
+    "10.1021/acs.joc.6c01517",
+    "10.1021/acs.joc.6c01805",
+    "10.1021/acs.joc.6c01838",
     "10.1038/s41467-026-78203-7",
+    "10.1021/acs.orglett.6c03698",
+    "10.1021/acs.orglett.6c03702",
+    "10.1021/acs.orglett.6c03826",
     "10.1021/acscatal.6c05520"
   ]
 }
