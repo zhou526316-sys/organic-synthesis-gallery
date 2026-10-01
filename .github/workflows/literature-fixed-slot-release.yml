@@ -7,9 +7,14 @@ on:
       - 'automation/release-*'
     paths:
       - 'audit/automation-triggers/literature-release-request.json'
+  workflow_run:
+    workflows: ['Validate prepublish literature review']
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: fixed-slot-literature-release
@@ -17,14 +22,22 @@ concurrency:
 
 jobs:
   release:
+    if: >-
+      github.event_name == 'push' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 85
     outputs:
       release_commit: ${{ steps.commit_release.outputs.release_commit }}
+      did_release: ${{ steps.prepare.outputs.prepared }}
     steps:
-      - name: Checkout exact request commit
+      - name: Checkout trusted main code
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Set up Node
@@ -32,20 +45,36 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Prepare fixed-slot release from strict per-DOI bundle
-        run: node scripts/apply-fixed-slot-literature-release.mjs audit/automation-triggers/literature-release-request.json
+      - name: Test fixed-slot handoff and fail-closed timing
+        run: node --test scripts/test-fixed-slot-release-handoff.mjs
+
+      - name: Download exact successful prepublish evidence
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@v4
+        with:
+          name: prepublish-readiness-evidence
+          path: ${{ runner.temp }}/approved-prepublish
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Arm reviewed subset and prepare only at the fixed slot
+        id: prepare
+        run: node scripts/fixed-slot-release-handoff.mjs prepare
 
       - name: Commit atomic literature release
+        if: steps.prepare.outputs.prepared == 'true'
         id: commit_release
         shell: bash
         run: |
           set -euo pipefail
+          node scripts/fixed-slot-release-handoff.mjs commit-guard
           slot="$(node -p "require('./audit/automation-triggers/literature-release-request.json').publicationSlot")"
           review="$(node -p "require('./audit/release-execution-result.json').formalReviewFile")"
           queue="$(node -p "require('./audit/release-execution-result.json').pendingQueueFile")"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$review" "$queue" public/rolling-supplement.json audit/publication-release-state.json audit/release-execution-result.json
+          git add "$review" "$queue" public/rolling-supplement.json audit/publication-release-state.json audit/release-execution-result.json audit/automation-triggers/literature-release-request.json
           for file in public/papers.gz.b64 public/total-synthesis.json public/manual-supplement.json public/final-audit-supplement.json public/curated-supplement.json public/automation-supplement.json public/literature-supplement.json; do
             if git ls-files --error-unmatch "$file" >/dev/null 2>&1; then
               git add -u -- "$file"
@@ -57,17 +86,21 @@ jobs:
           release_commit="$(git rev-parse HEAD)"
           echo "release_commit=$release_commit" >> "$GITHUB_OUTPUT"
 
-      - name: Preserve release writer result
+      - name: Preserve release writer result and handoff status
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fixed-slot-literature-release-result
-          path: audit/release-execution-result.json
+          path: |
+            audit/release-execution-result.json
+            ${{ runner.temp }}/release-handoff-status.json
+            ${{ runner.temp }}/fixed-slot-plan.json
           if-no-files-found: warn
           retention-days: 14
 
   refresh_toc:
     needs: release
+    if: needs.release.outputs.did_release == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -131,6 +164,5 @@ jobs:
           toc_commit="$(git rev-parse HEAD)"
           echo "toc_commit=$toc_commit" >> "$GITHUB_OUTPUT"
 
-  # The existing Pages workflow receives workflow_run.completed on default main.
-  # Never call Pages here: a reusable workflow retains the request branch's
-  # github.ref and is rejected by the main-only github-pages environment.
+  # Existing Pages workflow receives writer completion in trusted main context.
+  # No new schedule or reusable Pages call with a release-branch identity.

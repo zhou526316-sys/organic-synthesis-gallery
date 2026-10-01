@@ -49,11 +49,24 @@ export function trustedReleaseEvent(event, repository) {
   const run = event?.workflow_run;
   assert(run?.name === 'Fixed-slot literature release writer', 'untrusted_upstream_name');
   assert(run?.path === '.github/workflows/literature-fixed-slot-release.yml', 'untrusted_upstream_path');
-  assert(run?.conclusion === 'success' && run?.event === 'push', 'upstream_not_successful_push');
+  assert(run?.conclusion === 'success' && ['push', 'workflow_run'].includes(run?.event), 'upstream_not_successful_writer');
   assert(run?.head_repository?.full_name === repository, 'upstream_repository_mismatch');
-  assert(run.head_branch === 'main' || /^automation\/release-[A-Za-z0-9-]+$/.test(run.head_branch), 'untrusted_upstream_branch');
+  assert(run.head_branch === 'main' || (run.event === 'push' && /^automation\/release-[A-Za-z0-9-]+$/.test(run.head_branch)), 'untrusted_upstream_branch');
   assert(/^[a-f0-9]{40}$/.test(run.head_sha), 'invalid_upstream_sha');
   return run;
+}
+export function writerResultTargetsMarker(run, result, marker) {
+  // An expired/idempotent writer is successful without creating a release.
+  // Its completion must never masquerade as delivery of the previous marker.
+  if (result?.writerRunId !== run.id) return false;
+  assert(result.ok === true && result.publicationSlot === marker.publicationSlot
+    && result.productionCards === marker.productionCards, 'writer_result_marker_mismatch');
+  for (const key of ['stagingReviewBlobSha', 'handoffBlobSha', 'auditBlobSha']) {
+    assert(result[key] === marker[key], `writer_result_evidence_mismatch:${key}`);
+  }
+  assert(result.formalReviewBlobSha === marker.reviewBlobSha, 'writer_result_review_mismatch');
+  assert(/^[a-f0-9]{40}$/.test(result.approvedSourceCommit), 'writer_result_source_missing');
+  return true;
 }
 export function isDirectReleaseHandoff(eventName, workflowName) {
   // Reusable Pages calls retain the caller's workflow_run payload and workflow name.
@@ -85,11 +98,22 @@ async function resolve() {
   if (isDirectReleaseHandoff(process.env.GITHUB_EVENT_NAME, process.env.GITHUB_WORKFLOW)) {
     const run = trustedReleaseEvent(json(process.env.GITHUB_EVENT_PATH), process.env.GITHUB_REPOSITORY);
     git('merge-base', '--is-ancestor', run.head_sha, 'HEAD');
-    const request = JSON.parse(git('show', `${run.head_sha}:audit/automation-triggers/literature-release-request.json`));
-    if (request.publicationSlot !== currentMarker().publicationSlot) {
-      output('should_deploy', 'false');
-      console.log(pretty({ ok: true, skipped: 'upstream_release_superseded', upstreamRun: run.id }));
-      return;
+    if (run.event === 'workflow_run') {
+      const resultFile = 'audit/release-execution-result.json';
+      const result = JSON.parse(git('show', `HEAD:${resultFile}`));
+      if (!writerResultTargetsMarker(run, result, currentMarker())) {
+        output('should_deploy', 'false');
+        console.log(pretty({ ok: true, skipped: 'upstream_did_not_publish_current_marker', upstreamRun: run.id }));
+        return;
+      }
+      assert(git('log', '-1', '--format=%H', '--', resultFile) === git('log', '-1', '--format=%H', '--', MARKER), 'writer_result_not_atomic_with_marker');
+    } else {
+      const request = JSON.parse(git('show', `${run.head_sha}:audit/automation-triggers/literature-release-request.json`));
+      if (request.publicationSlot !== currentMarker().publicationSlot) {
+        output('should_deploy', 'false');
+        console.log(pretty({ ok: true, skipped: 'upstream_release_superseded', upstreamRun: run.id }));
+        return;
+      }
     }
   }
   output('deployment_ref', git('rev-parse', 'HEAD'));

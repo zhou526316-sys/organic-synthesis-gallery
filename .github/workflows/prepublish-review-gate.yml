@@ -6,6 +6,12 @@ on:
       - main
     paths:
       - '.github/workflows/prepublish-review-gate.yml'
+      - '.github/workflows/literature-fixed-slot-release.yml'
+      - 'scripts/fixed-slot-release-handoff.mjs'
+      - 'scripts/test-fixed-slot-release-handoff.mjs'
+      - 'scripts/pages-release-delivery.mjs'
+      - 'scripts/test-pages-release-delivery.mjs'
+      - 'docs/publication-release-contract.md'
       - 'scripts/validate-prepublish-review.mjs'
       - 'scripts/test-scope-title-corrections.mjs'
       - 'scripts/lib/scope-corrections.mjs'
@@ -29,7 +35,7 @@ permissions:
 
 concurrency:
   group: prepublish-literature-review
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   validate:
@@ -44,6 +50,9 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: '22'
+
+      - name: Test automatic fixed-slot handoff and deployment provenance
+        run: node --test scripts/test-fixed-slot-release-handoff.mjs scripts/test-pages-release-delivery.mjs
 
       - name: Test staging versus full-review closure invariants
         run: node scripts/test-prepublish-readiness.mjs
