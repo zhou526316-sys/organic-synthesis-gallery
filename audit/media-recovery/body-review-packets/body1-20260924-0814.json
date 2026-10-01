@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body1-20260924-0814",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T00:14:18Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10781649022,
+  "evidenceArchiveSha256": "73f5281cbf04a6443168a03b154881ebe37894b01b7c7070903e188e3ed930c9",
+  "evidenceRunId": 35933700007,
+  "evidenceBaseSha": "7fff22f3c31236ecd650aa80366cc53a887ec08f",
+  "approvedCount": 2,
+  "reviewMethod": "The two previously deferred stored SVG files for the currently selected Organic Letters paper were independently re-hashed from the frozen GitHub evidence archive and visually inspected against their owning captions and paper theme. Task/page/article DOI binding, original scheme identity, capture protocol 6.2.20, fixed media generation, direct ACS Silverchair source paths, role, clarity, duplicate/same-ID risk, and exact byte lengths were checked. Both SVGs are self-contained and contain no script, foreignObject, javascript URL, external http href, or event-handler content. The final report chain identifies the same DOI and records a successful 3/3 figure capture after earlier transport attempts; only the exact frozen direct-CDN bytes are approved. Capture success and storage review markers were treated as provenance evidence rather than semantic approval. Scheme 1 was already reviewed in an earlier batch and is not duplicated here. No publisher recrawl, R2 write, server-side direct import/repair, literature-data change, userscript change, or production deployment is authorized by this packet.",
+  "decisions": [
+    {
+      "doi": "10.1021/acs.orglett.6c03543",
+      "images": [
+        [
+          "next-043",
+          "scheme-2",
+          "Viewed the complete glycosylation scope panel: Bi(OTf)3-catalyzed direct 2-deoxyrhamnosylation with general alcohols, sugar/amino-acid/heterocycle-derived acceptors, and late-stage bioactive natural-product/drug-scaffold examples. The reaction header, product structures, yields and selectivity data match Scheme 2 and the caption 'Scope of Bi(OTf)3-Catalyzed Direct 2-Deoxyrhamnosylation and Late-Stage Glycosylation'. Exact 1,120,914-byte self-contained SVG re-hashes to 54c9e1ce24ce43c597c10755d417bf7b06dc059ccef3fc6f302cc35f5c184808; it is distinct from the previously reviewed Scheme 1 and is a body scheme, not a TOC image."
+        ],
+        [
+          "next-044",
+          "scheme-3",
+          "Viewed the mechanistic rationale diagram linking conformationally locked 3,4-O-disiloxane glycal, competing conformers/oxocarbenium-ion states, Bi(OTf)3/alcohol activation and direct 1,2-addition to the alpha-2-deoxyglycoside. The conformational labels and mechanistic arrows match Scheme 3 and the caption 'Mechanistic Rationale for 2-Deoxyglycosylation of Conformational-Locked C-4 Equatorial Glycals'. Exact 415,170-byte self-contained SVG re-hashes to e9c419fca2650c3745851b8eb4ff6e546c245d8f5aaaa2ac46cd35bf8a58b359; it is visually and bytewise distinct from Schemes 1 and 2 and is a body scheme, not a TOC image."
+        ]
+      ]
+    }
+  ]
+}
