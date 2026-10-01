@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "packetId": "body4-20260924-1047",
+  "decision": "individually_reviewed",
+  "reviewedAt": "2026-09-24T02:47:00Z",
+  "mediaGeneration": 1790082000000,
+  "evidenceArtifactId": 10785035374,
+  "evidenceArchiveSha256": "50111715ccf2bec19296e27fac2403a557ab45f8f2308626b7cd4999acebd9ba",
+  "evidenceRunId": 35940167412,
+  "evidenceBaseSha": "d5c974135e9a5cafb98b81f70c8fd72d7e9f8543",
+  "approvedCount": 16,
+  "reviewMethod": "Sixteen previously unreviewed stored body figures across four current-corpus papers were independently reviewed from immutable read-only GitHub evidence artifact 10785035374, continuing publication-date priority after the already-reviewed 2026-09-12 JACS/Organic Letters items. Each file was checked against DOI-bound page/article/source provenance, original figure/scheme label and independent caption, exact frozen bytes/full SHA256 and evidence fingerprint, media generation 1790082000000, article theme, image role, duplicate/recommended-image and TOC-substitution risk, format, and clarity. All fifteen SVG files were rendered and checked to contain no script, foreignObject, event-handler, or external href; the one PNG decoded cleanly at its stored dimensions. Figure 1 items are body figures, not TOC replacements, and the existing official TOCs are separately preserved. JACS 10.1021/jacs.6c12740 has a partial article-level capture history; approval is restricted to the six exact DOI-bound stored files listed here and does not infer approval of any missing figure or a cause for prior transport/server failures. No publisher recrawl, R2/D1 write, direct import/repair, literature-data change, userscript change, quarantine-generation change, or production deployment is authorized by this packet.",
+  "decisions": [
+    {
+      "doi": "10.1021/jacs.6c12740",
+      "images": [
+        ["next-017", "figure-1", "Rendered and inspected body Figure 1: the prior art, peptide-drug context, N-terminal glycine late-stage modification strategy, and this work's Cu-catalyzed C(sp3)-H amination concept all match the owning caption and article theme. The official TOC is separately stored, so this Figure 1 is not a TOC substitute. Exact SVG SHA256 db5b3d3c9a4104f5cc8bf295f86882d71c19d070986f53c1a43f0115fb759bc9."],
+        ["next-059", "figure-2", "Rendered and inspected Figure 2: the peptide substrate-scope matrix, product structures, yields and diastereomeric information match the independent peptide-scope caption and the late-stage glycine C-H amination article. Exact SVG SHA256 97b51ca030eb62393202b710eaa12888e030e093b2483fbd8fdb47861f5fc3f1."],
+        ["next-060", "figure-3", "Rendered and inspected Figure 3: the secondary-alkylamine substrate scope and product series match the independent alkylamine-scope caption and are visually distinct from the peptide scope. Exact SVG SHA256 dcaf5ce330a828c6425fed504faffb1d0919dd592b914306428c53795a87b3ca."],
+        ["next-061", "figure-4", "Rendered and inspected Figure 4: drug-relevant alkylamine/PDC examples and product structures match the owning caption and the paper's medicinal late-stage functionalization theme. Exact SVG SHA256 0b3e6cac08ee4b7e557b6ac8e09187e3fb43188f9f8ca4a5094a00a0459587cb."],
+        ["next-062", "figure-6", "Rendered and inspected Figure 6: radical-generation evidence, Cu(III) recognition, C(sp3)-H activation controls, and the DFT energy profile match the mechanistic-studies caption. Exact SVG SHA256 93f2d0a9d05b2e7515d4e06c9d55e8c6b3406c14cad157bdcbc817362d117972."],
+        ["next-063", "figure-7", "Rendered and inspected Figure 7: PK/property modulation and cancer-cell proliferation panels match the biological-evaluation caption and are clearly distinct from the synthetic/mechanistic figures. Exact SVG SHA256 c8a7f9bafac70256a424fb3055aefc99e5b6bac873070ecac6c6658728b9b433."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03300",
+      "images": [
+        ["next-018", "figure-1", "Rendered and inspected body Figure 1: prior transition-metal three-component C(sp3)-H activation limitations and the proposed rhodium/formaldehyde-formaldimine strategy match the owning caption and article topic. It is a body figure and not the separately preserved official TOC. Exact SVG SHA256 7f99cc9b823eedaa3e18538a3fa2b954bda0514b29d0bb5a493c1a9ef705f7d2."],
+        ["next-064", "figure-2", "Rendered and inspected Figure 2: the 2 mmol scale experiment and representative downstream transformations of 3aa match the independent caption and are chemically consistent with the three-component C(sp3)-H activation product. Exact SVG SHA256 5680674cdca6df511acdf1a497b8a0fe8068b7051e6303ac94e402f7509033e8."],
+        ["next-065", "figure-3", "Rendered and inspected Figure 3: the rhodium catalytic-cycle proposal and formaldehyde/formaldimine bond-forming sequence match the proposed-mechanism caption and article chemistry. Exact SVG SHA256 a470fcd0e69fbf8a246de9ee83d373e46cb4077ab39246cffa488d79495919c2."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03347",
+      "images": [
+        ["next-019", "scheme-1", "Rendered and inspected Scheme 1: representative vicinal haloamine motifs, established strategies, and the I(I)/I(III)-catalyzed aminohalogenation concept match the owning strategies caption and paper theme. Exact SVG SHA256 c3fcc037e22696728536fc5b8f4827e580c8813c7f270a3ea67517159ad4c9e4."],
+        ["next-066", "scheme-2", "Decoded and inspected the complete Scheme 2 substrate-scope raster: alkene examples, amino/halogen products and scope layout match the independent Substrate Scope caption and aminohalogenation article. Exact PNG SHA256 f9f03b7828a7cbe56df93552ec1a8ee310c005eef8f384c6fb3af1a35b60be7b; decodes cleanly at 520x602."],
+        ["next-067", "scheme-3", "Rendered and inspected Scheme 3: the I(I)/I(III) catalytic-cycle proposal for alkene aminohalogenation matches the Proposed Mechanism caption and is distinct from the scope artwork. Exact SVG SHA256 8c85d707e53388bf7b32feefb1f2cbbe1b0d72ac98f6803143460f697027cd4a."]
+      ]
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03508",
+      "images": [
+        ["next-020", "scheme-1", "Rendered and inspected Scheme 1: representative 4H-pyrans, conventional synthesis routes, and the visible-light/water oxygen-source concept match the overview caption and article theme. Exact SVG SHA256 c014dc35d299297df0b482ea63cda9d2281845a4ba8c535bba10e7769e5b63b2."],
+        ["next-068", "scheme-2", "Rendered and inspected Scheme 2: the broad 5-alkynyl-ketone and sulfonyl-chloride substrate scope, products and yields match the owning substrate-scope caption. Exact SVG SHA256 5755e022956e3c8b97e3fde194db57156bb5e1acaa76917602cb46ce8185a162."],
+        ["next-069", "scheme-3", "Rendered and inspected Scheme 3: the gram-scale reaction and downstream synthetic transformations match the independent caption and are chemically consistent with the reported 4H-pyran products. Exact SVG SHA256 358175207c4848c36dbb7e1b4ec2273905b2380e8e221138fcdcddc4d14c3429."],
+        ["next-070", "scheme-4", "Rendered and inspected Scheme 4: mechanistic controls, radical-trapping/labeling evidence and the proposed visible-light pathway match the Mechanistic Studies caption and article topic. Exact SVG SHA256 3180a790e5602c48de8f6e71e9f415cc1874544ddd155ecbd3bdad5fa067c8c2."]
+      ]
+    }
+  ]
+}
