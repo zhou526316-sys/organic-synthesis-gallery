@@ -1,34 +1,34 @@
 {
-  "generatedAt": "2026-09-30T16:26:07.765Z",
+  "generatedAt": "2026-10-01T00:01:53.027Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 647,
+  "liveLocalCaptures": 648,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
-  "mediaInventoryCount": 710,
-  "webpageDoiCount": 710,
-  "latestAddedDate": "2026-09-30",
-  "latestAddedCount": 34,
+  "mediaInventoryCount": 726,
+  "webpageDoiCount": 726,
+  "latestAddedDate": "2026-10-01",
+  "latestAddedCount": 16,
   "mediaRecordCount": 663,
-  "visibleGapTotal": 42,
-  "demandTotal": 42,
-  "noVisual": 42,
+  "visibleGapTotal": 57,
+  "demandTotal": 57,
+  "noVisual": 57,
   "fallbackOnlyNeedsOfficialUpgrade": 105,
-  "missingOfficialTotal": 147,
-  "figureGapTotal": 710,
-  "zeroFigureGapTotal": 710,
+  "missingOfficialTotal": 162,
+  "figureGapTotal": 726,
+  "zeroFigureGapTotal": 726,
   "lowResolutionFigureGapTotal": 0,
   "unknownQualityFigureGapTotal": 0,
   "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 39,
+    "acs": 47,
     "wiley": 0,
-    "nature": 2,
+    "nature": 3,
     "science": 0,
     "rsc": 0,
     "elsevier": 0,
-    "ccs": 1,
+    "ccs": 7,
     "other": 0
   },
   "upgradeByPublisher": {
@@ -42,13 +42,24 @@
     "other": 0
   },
   "byJournal": {
-    "ACS Catalysis": 5,
+    "ACS Catalysis": 6,
     "JACS": 1,
-    "Organic Letters": 33,
-    "CCS Chemistry": 1,
-    "Nature": 2
+    "JOC": 6,
+    "Organic Letters": 34,
+    "CCS Chemistry": 7,
+    "Nature": 3
   },
   "sample": [
+    {
+      "doi": "10.1021/acscatal.6c06078",
+      "journal": "ACS Catalysis",
+      "title": "Nickel-Catalyzed C(sp3)–H Arylation for the trans -Selective Synthesis of Sterically Congested Cyclopropanes and Other Cycloalkanes",
+      "date": "2026-09-30",
+      "addedDate": "2026-10-01",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
     {
       "doi": "10.1021/acscatal.6c06622",
       "journal": "ACS Catalysis",
@@ -110,11 +121,61 @@
       "existingReason": ""
     },
     {
-      "doi": "10.1021/acs.orglett.6c03250",
-      "journal": "Organic Letters",
-      "title": "Deboronative Asymmetric Suzuki–Miyaura Cross-Coupling of Alkylboronic Esters Enabled by Dual Photoredox and Nickel Catalysis",
+      "doi": "10.1021/acs.joc.6c01127",
+      "journal": "JOC",
+      "title": "Palladium-Catalyzed Fast Decaging of Propargyloxycarbonyl (Proc)-Caged Guanidines",
       "date": "2026-09-30",
-      "addedDate": "2026-09-30",
+      "addedDate": "2026-10-01",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01447",
+      "journal": "JOC",
+      "title": "Electrochemical One-Pot Diverse C(sp3)–X Bond (Including C–H, C–C, C–N, and C–O) Transformations and C(sp2)–H Acyloxylation of Alkylarenes",
+      "date": "2026-09-30",
+      "addedDate": "2026-10-01",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01517",
+      "journal": "JOC",
+      "title": "A Room-Temperature Synthesis of 3-Methylidene-2,3-dihydro-4-quinolones from o -Aniliopropargy Alcohols and Aldehydes",
+      "date": "2026-09-30",
+      "addedDate": "2026-10-01",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01791",
+      "journal": "JOC",
+      "title": "Modular Strategy for the Collective Total Synthesis of Pandanus amaryllifolius Alkaloids: Pandanusines A and B and Pandamarine",
+      "date": "2026-09-30",
+      "addedDate": "2026-10-01",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01805",
+      "journal": "JOC",
+      "title": "Benzofuran Synthesis from N -Aryloxysulfonamides and 2-Bromoallyl Sulfones via Sequential Treatment with Base and Acid",
+      "date": "2026-09-30",
+      "addedDate": "2026-10-01",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01824",
+      "journal": "JOC",
+      "title": "Transition-Metal-Free Regioselective Construction of Cyano- and Phosphonyl Tetrazole Derivatives",
+      "date": "2026-09-30",
+      "addedDate": "2026-10-01",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
@@ -130,11 +191,31 @@
       "existingReason": ""
     },
     {
+      "doi": "10.1021/acs.orglett.6c03702",
+      "journal": "Organic Letters",
+      "title": "Divergent Synthesis of Heterocycles through Cascade Rearrangements of Dienyne-Amides and Dialkyl Bromomalonates",
+      "date": "2026-09-30",
+      "addedDate": "2026-10-01",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03717",
       "journal": "Organic Letters",
       "title": "Nickel-Catalyzed Reductive Alkylation of Aldimines with Unactivated Alkyl Iodides",
       "date": "2026-09-30",
       "addedDate": "2026-09-30",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03826",
+      "journal": "Organic Letters",
+      "title": "Visible-Light-Promoted Radical Spirocyclization of 1,7-Enynes and α-Bromocarbonyl Compounds to Access Spirooxindole Derivatives",
+      "date": "2026-09-30",
+      "addedDate": "2026-10-01",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
@@ -215,86 +296,6 @@
       "title": "Copper-Catalyzed Cascade C–H Activation of 10-(Pyridin-2-yl)-10 H -Phenothiazines: Access to Organic Difluoroboron Luminescent Materials",
       "date": "2026-09-28",
       "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03898",
-      "journal": "Organic Letters",
-      "title": "Dehydrogenative Aromatization of Pyrrolidines through Photoredox/Cobaloxime Catalysis",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03909",
-      "journal": "Organic Letters",
-      "title": "Photocatalytic C–H Trifluoromethylation of (Hetero)arenes with Halon-1301",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03954",
-      "journal": "Organic Letters",
-      "title": "Thianthrenium Salt-Mediated Site-Selective Coupling of Arenes with Enynones",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03612",
-      "journal": "Organic Letters",
-      "title": "Development of Deuteroalkylthiolating Reagents for Synthesis of Deuterated Sulfides",
-      "date": "2026-09-20",
-      "addedDate": "2026-09-21",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03173",
-      "journal": "Organic Letters",
-      "title": "Formal Total Synthesis of (±)-Isoalantolactone",
-      "date": "2026-08-19",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02820",
-      "journal": "Organic Letters",
-      "title": "Ring-Retentive SN2′-Type Alkylation of gem-Dichlorocyclobutenones Enabled by Alkene-to-Radical Relay",
-      "date": "2026-07-21",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c01984",
-      "journal": "Organic Letters",
-      "title": "NHC-Catalyzed Asymmetric Photoinduced [4 + 2] Cycloaddition: Access to Chiral Spiro[oxindole-3,4′-pyrano[2,3-c]pyrazoles]",
-      "date": "2026-07-13",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02434",
-      "journal": "Organic Letters",
-      "title": "Stereoselective C-Aryl and C-Vinyl Glycosylation via Iron-Catalyzed Reductive Coupling",
-      "date": "2026-07-11",
-      "addedDate": "",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
