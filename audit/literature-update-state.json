@@ -40,13 +40,13 @@
     "note": "Consolidated the polymer-method scope correction and subsequent late-indexed candidates. Current audit reports galleryDois=503, missingFromGallery=0, unresolved=0."
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-10-01T00:07:49.778Z",
+    "finishedAt": "2026-10-01T04:37:37.091Z",
     "dataCommitSha": "30788bf2a889d82d049e256ad58939c10596e877",
     "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
     "deployment": "success-live-verified",
     "verification": {
-      "pagesRun": 36794098350,
-      "deploymentSourceCommit": "9ca9243273812013c4c0fbe1808af91e320df61a",
+      "pagesRun": 36815625976,
+      "deploymentSourceCommit": "b544519456d6747138bdc3b4a3783f136083388d",
       "publicationSlot": "2026-10-01T08:00:00+08:00",
       "markerBlobSha": "13bb6adbe5d0b08c8c2442d40ea5edd1ccd7b5fb",
       "totalGalleryCards": 726,
@@ -195,7 +195,7 @@
       "sites": [
         {
           "site": "https://gallery.gczhouwld.com/",
-          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36794098350-1790813269227",
+          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36815625976-1790829456716",
           "filesVerified": [
             "papers.gz.b64",
             "total-synthesis.json",
@@ -212,7 +212,7 @@
         },
         {
           "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36794098350-1790813269571",
+          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36815625976-1790829457013",
           "filesVerified": [
             "papers.gz.b64",
             "total-synthesis.json",
@@ -232,7 +232,7 @@
     },
     "tocVerification": {
       "webpageDoiCount": 726,
-      "verifiedAt": "2026-10-01T00:07:49.778Z",
+      "verifiedAt": "2026-10-01T04:37:37.091Z",
       "note": "Queue membership count verified; this job does not obtain or publish media."
     }
   },
@@ -562,8 +562,8 @@
       "strictReleaseBundle": "success",
       "productionDataModified": false
     },
-    "pagesRun": 36794098350,
-    "deploymentVerifiedAt": "2026-10-01T00:07:49.778Z"
+    "pagesRun": 36815625976,
+    "deploymentVerifiedAt": "2026-10-01T04:37:37.091Z"
   },
   "nextPublicationSlot": "2026-10-01T08:00:00+08:00",
   "prepublish": {
@@ -1142,9 +1142,9 @@
       "10.1021/acscatal.6c05520",
       "10.31635/ccschem.026.202608472"
     ],
-    "pagesRun": 36794098350,
-    "deploymentSourceCommit": "9ca9243273812013c4c0fbe1808af91e320df61a",
-    "deploymentVerifiedAt": "2026-10-01T00:07:49.778Z"
+    "pagesRun": 36815625976,
+    "deploymentSourceCommit": "b544519456d6747138bdc3b4a3783f136083388d",
+    "deploymentVerifiedAt": "2026-10-01T04:37:37.091Z"
   },
   "lastQualityGate": {
     "runId": 36550892094,
@@ -1462,9 +1462,9 @@
   "lastDeploymentAttempt": {
     "schemaVersion": 1,
     "ok": true,
-    "runId": 36794098350,
+    "runId": 36815625976,
     "runAttempt": 1,
-    "sourceCommit": "9ca9243273812013c4c0fbe1808af91e320df61a",
+    "sourceCommit": "b544519456d6747138bdc3b4a3783f136083388d",
     "markerCommit": "30788bf2a889d82d049e256ad58939c10596e877",
     "markerBlobSha": "13bb6adbe5d0b08c8c2442d40ea5edd1ccd7b5fb",
     "publicationSlot": "2026-10-01T08:00:00+08:00",
@@ -1613,7 +1613,7 @@
     "sites": [
       {
         "site": "https://gallery.gczhouwld.com/",
-        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36794098350-1790813269227",
+        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36815625976-1790829456716",
         "filesVerified": [
           "papers.gz.b64",
           "total-synthesis.json",
@@ -1630,7 +1630,7 @@
       },
       {
         "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36794098350-1790813269571",
+        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36815625976-1790829457013",
         "filesVerified": [
           "papers.gz.b64",
           "total-synthesis.json",
@@ -1646,7 +1646,7 @@
         "attempts": 1
       }
     ],
-    "verifiedAt": "2026-10-01T00:07:49.778Z",
+    "verifiedAt": "2026-10-01T04:37:37.091Z",
     "status": "success-live-verified"
   }
 }
