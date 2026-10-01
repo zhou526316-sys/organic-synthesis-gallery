@@ -1,0 +1,86 @@
+name: Tampermonkey controller recovery regression
+on:
+  push:
+    branches: [fix/tm-controller-recovery-20261001, main]
+    paths: ['public/toc-mainline.user.js', 'scripts/apply-tm-controller-recovery.py', 'tests/tm-controller-recovery*.mjs', '.github/workflows/tm-controller-recovery.yml']
+  pull_request:
+    branches: [main]
+    paths: ['public/toc-mainline.user.js', 'tests/tm-controller-recovery*.mjs', '.github/workflows/tm-controller-recovery.yml']
+permissions:
+  contents: read
+concurrency:
+  group: tm-controller-recovery-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Materialize reviewed patch on isolated repair branch only
+        if: github.ref == 'refs/heads/fix/tm-controller-recovery-20261001'
+        run: |
+          if ! grep -q "var CONTROLLER_LIFECYCLE_REVISION" public/toc-mainline.user.js; then
+            cp public/toc-mainline.user.js "$RUNNER_TEMP/controller-baseline.js"
+          fi
+          python scripts/apply-tm-controller-recovery.py
+          git diff --check
+      - name: Run exact controller and acquisition tests
+        run: |
+          set -euo pipefail
+          if test -f "$RUNNER_TEMP/controller-baseline.js"; then export BASELINE="$RUNNER_TEMP/controller-baseline.js"; fi
+          {
+            node --check public/toc-mainline.user.js
+            node tests/tm-controller-recovery.test.mjs
+            node tests/tm-newest-retry.test.mjs
+            node scripts/test-tm223-upload.mjs
+            node scripts/test-tm220-release.mjs
+            node scripts/test-tm222-auto-report.mjs
+          } | tee "$RUNNER_TEMP/controller-tests.txt"
+      - name: Install isolated browser test dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Check pause/resume controls and two-page exclusion in Chromium
+        run: node tests/tm-controller-recovery-browser.mjs
+      - name: Build and validate compatible self-contained installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          node --check public/gallery-vpn-bridge.user.js
+          mkdir -p "$RUNNER_TEMP/controller-output"
+          cp public/gallery-vpn-bridge.user.js public/toc-mainline.user.js "$RUNNER_TEMP/controller-output/"
+          sha256sum "$RUNNER_TEMP/controller-output/"*.js | tee "$RUNNER_TEMP/controller-output/sha256.txt"
+      - name: Commit tested source only to the existing repair branch
+        if: github.ref == 'refs/heads/fix/tm-controller-recovery-20261001'
+        run: |
+          test "$GITHUB_REF" = refs/heads/fix/tm-controller-recovery-20261001
+          git add public/toc-mainline.user.js
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix: release paused idle controller leases and resume safely'
+            git push origin HEAD:fix/tm-controller-recovery-20261001
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-controller-recovery-tested
+          path: |
+            ${{ runner.temp }}/controller-output
+            ${{ runner.temp }}/controller-tests.txt
+            ${{ runner.temp }}/tm-controller-browser-report.json
+            ${{ runner.temp }}/tm-controller-browser-trace.zip
+            ${{ runner.temp }}/tm-controller-waiting.png
+            ${{ runner.temp }}/tm-controller-resumed.png
+          retention-days: 14
