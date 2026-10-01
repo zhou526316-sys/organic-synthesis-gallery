@@ -1,0 +1,84 @@
+name: Tampermonkey immediate restart regression
+on:
+  push:
+    branches: [fix/tm-immediate-from-head-20261001, main]
+    paths: ['public/toc-mainline.user.js', 'cloudflare/scripts/build-bridge-loader.mjs', 'scripts/apply-tm-immediate-restart.py', 'scripts/tm-immediate-restart-runtime.inc.js', 'tests/tm-immediate-restart*.mjs', '.github/workflows/tm-immediate-restart.yml']
+  pull_request:
+    branches: [main]
+    paths: ['public/toc-mainline.user.js', 'cloudflare/scripts/build-bridge-loader.mjs', 'tests/tm-immediate-restart*.mjs', '.github/workflows/tm-immediate-restart.yml']
+permissions:
+  contents: read
+concurrency:
+  group: tm-immediate-restart-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Materialize scoped source on repair branch only
+        if: github.ref == 'refs/heads/fix/tm-immediate-from-head-20261001'
+        run: |
+          python scripts/apply-tm-immediate-restart.py
+          git diff --check
+      - name: Test immediate restart and preserved acquisition safeguards
+        run: |
+          set -euo pipefail
+          {
+            node --check public/toc-mainline.user.js
+            node tests/tm-immediate-restart.test.mjs
+            node tests/tm-newest-retry.test.mjs
+            node scripts/test-tm223-upload.mjs
+            node scripts/test-tm220-release.mjs
+            node scripts/test-tm222-auto-report.mjs
+            node tests/tm-controller-recovery.test.mjs
+          } | tee "$RUNNER_TEMP/immediate-tests.txt"
+      - name: Install isolated Chromium fixture dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Verify real primary button and two-page session takeover
+        run: node tests/tm-immediate-restart-browser.mjs
+      - name: Build compatible self-contained installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @grant        GM_addValueChangeListener' public/gallery-vpn-bridge.user.js
+          grep -F '立即从头抓' public/gallery-vpn-bridge.user.js
+          mkdir -p "$RUNNER_TEMP/immediate-output"
+          cp public/gallery-vpn-bridge.user.js public/toc-mainline.user.js "$RUNNER_TEMP/immediate-output/"
+          sha256sum "$RUNNER_TEMP/immediate-output/"*.js | tee "$RUNNER_TEMP/immediate-output/sha256.txt"
+      - name: Commit tested source to repair branch only
+        if: github.ref == 'refs/heads/fix/tm-immediate-from-head-20261001'
+        run: |
+          test "$GITHUB_REF" = refs/heads/fix/tm-immediate-from-head-20261001
+          git add public/toc-mainline.user.js cloudflare/scripts/build-bridge-loader.mjs scripts/test-tm222-auto-report.mjs
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'feat: immediate from-head capture restart with stale-run fencing'
+            git push origin HEAD:fix/tm-immediate-from-head-20261001
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-immediate-restart-tested
+          path: |
+            ${{ runner.temp }}/immediate-output
+            ${{ runner.temp }}/immediate-tests.txt
+            ${{ runner.temp }}/tm-immediate-browser-report.json
+            ${{ runner.temp }}/tm-immediate-browser-trace.zip
+            ${{ runner.temp }}/tm-immediate-active.png
+          retention-days: 14

@@ -98,6 +98,7 @@ ${matchLines}
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_deleteValue
+// @grant        GM_addValueChangeListener
 // @grant        GM_listValues
 // @grant        GM_registerMenuCommand
 // @grant        GM_openInTab
