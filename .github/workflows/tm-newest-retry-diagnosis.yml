@@ -1,0 +1,65 @@
+name: Tampermonkey newest/retry diagnosis
+on:
+  push:
+    branches: [fix/tm-newest-retry-20261001]
+    paths:
+      - .github/workflows/tm-newest-retry-diagnosis.yml
+      - scripts/repair-tm-newest-retry.py
+      - tests/tm-newest-retry.test.mjs
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Read current failure evidence (no production writes)
+        run: node scripts/read-tm-current-failures.mjs
+      - name: Read live control endpoints and queue summary
+        shell: bash
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          const report={readAt:new Date().toISOString(),readOnly:true,endpoints:{}};
+          const endpoints={queue:'https://gallery.gczhouwld.com/toc-demand-live.json',capabilities:'https://api.gczhouwld.com/api/media/capture-capabilities',reports:'https://api.gczhouwld.com/api/media/tampermonkey-reports',evidence:'https://api.gczhouwld.com/api/article-summary/evidence-inventory',installer:'https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js'};
+          await Promise.all(Object.entries(endpoints).map(async([key,url])=>{
+            try{
+              const res=await fetch(url,{headers:{origin:'https://gallery.gczhouwld.com'},signal:AbortSignal.timeout(20000)});
+              const text=await res.text();
+              const entry={status:res.status};
+              if(key==='installer')entry.header=text.slice(0,3500);
+              else if(res.ok){
+                const data=JSON.parse(text);
+                if(key==='queue'){
+                  entry.summary=Object.fromEntries(Object.entries(data).filter(([k,v])=>!Array.isArray(v)&&!(v&&typeof v==='object')));
+                  entry.latestArticles=(data.articles||[]).filter(x=>x.addedDate===data.latestAddedDate).map(x=>({doi:x.doi,date:x.date,addedDate:x.addedDate,journal:x.journal}));
+                }else if(key==='capabilities')entry.data=data;
+                else {
+                  entry.keys=Object.keys(data);
+                  entry.scalar=Object.fromEntries(Object.entries(data).filter(([k,v])=>!Array.isArray(v)&&!(v&&typeof v==='object')));
+                  entry.rows=(data.items||data.reports||[]).slice(0,30).map(x=>({doi:x.doi,status:x.status,reason:x.reason,version:x.version,controllerRevision:x.controllerRevision,finishedAt:x.finishedAt,at:x.at,updatedAt:x.updatedAt}));
+                }
+              }
+              report.endpoints[key]=entry;
+            }catch(e){report.endpoints[key]={error:String(e.message).slice(0,180)}}
+          }));
+          await writeFile(process.env.RUNNER_TEMP+'/tm-live-control.json',JSON.stringify(report,null,2));
+          console.log(JSON.stringify(report));
+          JS
+      - name: Package exact non-secret source snapshot
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm-source"
+          git archive HEAD public/toc-mainline.user.js public/toc-demand-live.json public/support scripts shared tests .github cloudflare/worker/src cloudflare/worker/scripts cloudflare/worker/package.json package.json AGENTS.md PROJECT_RULES.md docs | tar -x -C "$RUNNER_TEMP/tm-source"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tm-newest-retry-diagnosis
+          path: |
+            ${{ runner.temp }}/tm-source
+            ${{ runner.temp }}/tm222-current-failure-evidence.json
+            ${{ runner.temp }}/tm-live-control.json
+          retention-days: 7
