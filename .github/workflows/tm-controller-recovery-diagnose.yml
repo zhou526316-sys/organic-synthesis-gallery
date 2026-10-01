@@ -1,0 +1,45 @@
+name: Tampermonkey controller recovery diagnosis
+on:
+  push:
+    branches: [fix/tm-controller-recovery-20261001]
+    paths: ['.github/workflows/tm-controller-recovery-diagnose.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Read sanitized current failure evidence
+        run: node scripts/read-tm-current-failures.mjs
+      - name: Read non-secret controller lifecycle evidence
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          const report={readAt:new Date().toISOString(),readOnly:true};
+          try{
+            const r=await fetch('https://api.gczhouwld.com/api/media/local-diagnostics',{headers:{origin:'https://gallery.gczhouwld.com','cache-control':'no-cache'},signal:AbortSignal.timeout(20000)});
+            report.status=r.status;
+            if(r.ok){
+              const x=await r.json();const s=x.summary||{};
+              report.uploadedAt=x.uploadedAt;report.activeJob=x.activeJob;report.progress=x.progress;
+              const h=x.publisherHeartbeat||{};report.heartbeat={doi:h.doi,jobId:h.jobId,host:h.host,state:h.state,at:h.at,atIso:h.atIso};
+              report.summary={controllerRevision:s.controllerRevision,lifecycleRevision:s.lifecycleRevision,total:s.total,startedAt:s.startedAt,finishedAt:s.finishedAt,failed:s.failed,skipped:s.skipped,tocStored:s.tocStored,figuresStaged:s.figuresStaged,stopReason:s.stopReason};
+              report.controllerState=x.controllerState||null;
+            }
+          }catch(e){report.error=String(e.message).slice(0,160)}
+          console.log('CONTROLLER_LIFECYCLE_READ',JSON.stringify(report));
+          await writeFile(process.env.RUNNER_TEMP+'/controller-lifecycle.json',JSON.stringify(report,null,2));
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-controller-recovery-diagnosis
+          path: |
+            ${{ runner.temp }}/tm222-current-failure-evidence.json
+            ${{ runner.temp }}/controller-lifecycle.json
+          retention-days: 7
