@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-09-30T23:10:05.996Z",
-  "requestedBy": "prepublish-primary-20261001-0800",
-  "publicationSlot": "2026-10-01T08:00:00+08:00",
-  "baselineMainSha": "36a705b268296a6ac85f65b2e42220d1928cf37f",
-  "reason": "06:55 independent audit did not produce a fresh snapshot for the 2026-10-01 08:00 publication slot. Run the canonical 3-day Asia/Shanghai discovery window plus 7-day safety tail, multi-ISSN Crossref online/published/created, OpenAlex, created/deposit rescue and verifiedThrough catch-up. Preserve durable pending history; this request does not authorize production literature writes."
+  "requestedAt": "2026-10-01T09:11:30.000Z",
+  "requestedBy": "prepublish-primary-20261001-1800",
+  "publicationSlot": "2026-10-01T18:00:00+08:00",
+  "baselineMainSha": "dca16965abc833a7e637ff8aa7b9de7fa2fc6ebd",
+  "reason": "16:55 independent audit did not produce a fresh snapshot for the 2026-10-01 18:00 publication slot and no same-slot literature-audit run is active. Run the canonical 3-day Asia/Shanghai discovery window plus 7-day safety tail, multi-ISSN Crossref online/published/created, OpenAlex, created/deposit rescue and verifiedThrough catch-up. Preserve durable pending history; this request does not authorize production literature writes."
 }
