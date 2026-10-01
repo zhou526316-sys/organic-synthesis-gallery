@@ -1,0 +1,87 @@
+name: Tampermonkey newest/retry diagnosis
+on:
+  push:
+    branches: [fix/tm-newest-retry-20261001]
+    paths:
+      - .github/workflows/tm-newest-retry-diagnosis.yml
+      - scripts/repair-tm-newest-retry.py
+      - tests/tm-newest-retry.test.mjs
+permissions:
+  contents: write
+concurrency:
+  group: tm-newest-retry-branch-repair
+  cancel-in-progress: false
+jobs:
+  inspect:
+    if: github.ref == 'refs/heads/fix/tm-newest-retry-20261001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/tm-newest-retry-20261001
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply exact capture-only patch
+        run: |
+          python scripts/repair-tm-newest-retry.py
+          node --check public/toc-mainline.user.js
+          git diff --check
+      - name: Test scheduling, transport, ownership, reports and private evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            node tests/tm-newest-retry.test.mjs
+            node scripts/test-tm223-upload.mjs
+            node scripts/test-tm220-release.mjs
+            node scripts/test-tm222-auto-report.mjs
+            node cloudflare/worker/scripts/test-article-summary.mjs
+            node cloudflare/worker/scripts/test-tampermonkey-report-history.mjs
+          } | tee "$RUNNER_TEMP/tm-hotfix-tests.txt"
+      - name: Build exact compatible installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.39' public/gallery-vpn-bridge.user.js
+          grep -F '// @match        https://www.chinesechemsoc.org/*' public/gallery-vpn-bridge.user.js
+          grep -F "var CAPTURE_HOTFIX_REVISION = '20261001-newest-retry-v1';" public/gallery-vpn-bridge.user.js
+          mkdir -p "$RUNNER_TEMP/tm-installer"
+          cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/tm-installer/"
+          sha256sum public/gallery-vpn-bridge.user.js | tee "$RUNNER_TEMP/tm-installer/sha256.txt"
+      - name: Commit tested source to repair branch only
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/fix/tm-newest-retry-20261001
+          git add public/toc-mainline.user.js cloudflare/worker/src/index.js cloudflare/worker/src/article-summary.js
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix: prioritize newest articles and recover CCS and transport failures'
+            git push origin HEAD:fix/tm-newest-retry-20261001
+          fi
+          git show --stat --oneline HEAD
+      - name: Read current failure evidence without production writes
+        run: node scripts/read-tm-current-failures.mjs
+      - name: Package tested source snapshot
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm-source"
+          git archive HEAD public/toc-mainline.user.js public/toc-demand-live.json public/support scripts shared tests .github cloudflare/scripts cloudflare/worker/src cloudflare/worker/scripts cloudflare/worker/package.json package.json AGENTS.md PROJECT_RULES.md docs | tar -x -C "$RUNNER_TEMP/tm-source"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-newest-retry-tested
+          include-hidden-files: true
+          path: |
+            ${{ runner.temp }}/tm-source
+            ${{ runner.temp }}/tm-installer
+            ${{ runner.temp }}/tm-hotfix-tests.txt
+            ${{ runner.temp }}/tm222-current-failure-evidence.json
+          retention-days: 7

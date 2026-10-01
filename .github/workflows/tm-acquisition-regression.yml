@@ -1,0 +1,27 @@
+name: Tampermonkey acquisition regression
+on:
+  pull_request:
+    branches: [main]
+    paths: ['public/toc-mainline.user.js', 'cloudflare/worker/src/index.js', 'cloudflare/worker/src/article-summary.js', 'tests/tm-newest-retry.test.mjs', '.github/workflows/tm-acquisition-regression.yml']
+  push:
+    branches: [main]
+    paths: ['public/toc-mainline.user.js', 'cloudflare/worker/src/index.js', 'cloudflare/worker/src/article-summary.js', 'tests/tm-newest-retry.test.mjs', '.github/workflows/tm-acquisition-regression.yml']
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test acquisition without production writes
+        run: |
+          node --check public/toc-mainline.user.js
+          node tests/tm-newest-retry.test.mjs
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
+          node cloudflare/worker/scripts/test-article-summary.mjs

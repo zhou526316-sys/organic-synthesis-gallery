@@ -82,7 +82,7 @@ function publisherUrlAllowed(publisher, value) {
     if (publisher === 'science') return hostMatches(host, 'science.org');
     if (publisher === 'rsc') return hostMatches(host, 'pubs.rsc.org');
     if (publisher === 'elsevier') return hostMatches(host, 'sciencedirect.com') || hostMatches(host, 'cell.com');
-    if (publisher === 'ccs') return hostMatches(host, 'ccspublishing.org.cn');
+    if (publisher === 'ccs') return hostMatches(host, 'ccspublishing.org.cn') || host === 'www.chinesechemsoc.org' || host === 'chinesechemsoc.org';
     return false;
   } catch {
     return false;

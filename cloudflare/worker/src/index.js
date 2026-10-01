@@ -137,6 +137,8 @@ function browserCorsOriginAllowed(origin) {
     'https://www.sciencedirect.com',
     'https://www.cell.com',
     'https://www.ccspublishing.org.cn',
+    'https://www.chinesechemsoc.org',
+    'https://chinesechemsoc.org',
     'https://doi.org',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
