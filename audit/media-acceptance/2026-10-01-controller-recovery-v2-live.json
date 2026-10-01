@@ -1,0 +1,55 @@
+{
+  "context": "Tampermonkey paused/no-task/controller_timeout recovery",
+  "sourceSha": "b71208e5f2f2225c3ce97bef65c985aca61b7888",
+  "pullRequest": 262,
+  "verificationRun": 36818629871,
+  "verificationArtifact": 11142213979,
+  "verifiedAt": "2026-10-01T05:16:08.833Z",
+  "verifiedAtBeijing": "2026-10-01T13:16:08.833+08:00",
+  "passed": true,
+  "readOnly": true,
+  "publisherRequests": 0,
+  "mediaWrites": 0,
+  "deployments": [
+    {"name": "Deploy Worker frontend assets", "id": 36818599043, "status": "completed", "conclusion": "success", "headSha": "b71208e5f2f2225c3ce97bef65c985aca61b7888"},
+    {"name": "Deploy GitHub Pages frontend", "id": 36818599017, "status": "completed", "conclusion": "success", "headSha": "b71208e5f2f2225c3ce97bef65c985aca61b7888"}
+  ],
+  "installer": {
+    "canonicalUrl": "https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js",
+    "canonicalStatus": 200,
+    "workerUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/gallery-vpn-bridge.user.js",
+    "workerStatus": 200,
+    "bothMatchTestedSha256": "0c15211f50aeeae0c1ba92c8a0fb910b4d95b42e3d51df0878b9255f95aa96e1",
+    "bytes": 246259,
+    "version": "2.2.39",
+    "lifecycleRevision": "20261001-controller-recovery-v2",
+    "panelMarker": "控制恢复修复2",
+    "localFile": "gallery-vpn-bridge-controller-recovery-v2.user.js",
+    "localFileHashVerified": true
+  },
+  "capabilities": {"status": 200, "captureVersion": "6.2.20", "mediaControllerRevision": "2.2.39", "mediaGeneration": 1790082000000, "mode": "verified-staging"},
+  "regression": {
+    "branchRun": 36818123900,
+    "pullRequestRun": 36818441056,
+    "testedArtifact": 11141742956,
+    "controllerCasesPassed": 23,
+    "acquisitionCasesPassed": 30,
+    "uploadCasesPassed": 12,
+    "receiptReleaseCasesPassed": 11,
+    "automaticReportCasesPassed": 16,
+    "chromiumTwoPageFixturePassed": true,
+    "chromiumMockedExtensionStorage": true,
+    "chromiumConsoleErrors": 0,
+    "chromiumPageErrors": 0,
+    "chromiumFailedRequests": 0,
+    "globalLegacyCiAllGreen": false
+  },
+  "authenticatedDesktopVerified": false,
+  "allPriorFailedArticlesRecovered": false,
+  "installation": "Remain paused, close all old Gallery control tabs in the browser's windows and old script-created task tabs; overwrite the existing same-name Bridge without uninstalling or clearing storage; open one new Gallery page, verify 控制恢复修复2 and press Continue once. Older already-running page contexts are not replaced by reinstalling the bundled script. The new resume-wait state retains the user request and resumes after safe cleanup, without stealing an active foreign lease.",
+  "notes": [
+    "No credential, stored capture receipt, media generation, literature source or publication authorization reset.",
+    "The current screenshot's nine failures are not relabeled as the older six CCS failures from a stale manual-diagnostics snapshot.",
+    "Successful production script delivery and simulated two-page behavior are not a claim that the user's installed browser has already adopted the fix or that all publisher captures now succeed."
+  ]
+}
