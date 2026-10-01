@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-01T23:06:30.000Z",
-  "requestedBy": "prepublish-primary-20261002-0800",
+  "requestedAt": "2026-10-01T23:12:00.000Z",
+  "requestedBy": "prepublish-primary-20261002-0800-recovery",
   "publicationSlot": "2026-10-02T08:00:00+08:00",
-  "baselineMainSha": "a80bd67254dd2e7d3bc2eff677cc361d96ca7e07",
-  "reason": "06:55 independent audit did not produce a fresh snapshot for the 2026-10-02 08:00 publication slot and no same-slot literature-audit run is active. Run the canonical Asia/Shanghai three-day discovery window plus seven-day safety tail, multi-ISSN Crossref online/published/created, OpenAlex, created/deposit rescue and verifiedThrough catch-up. Preserve durable pending history; this request does not authorize production literature writes."
+  "baselineMainSha": "e112e79a211cb731b03f1a21d5d1ccf88a163c5f",
+  "reason": "Recovery refresh after run 36939143618 completed with an all-journal OpenAlex family outage (16 critical source failures and 16 source-family gaps). Re-run the canonical audit once to distinguish transient source failure from a persistent outage. Preserve the same slot and do not write production literature."
 }
