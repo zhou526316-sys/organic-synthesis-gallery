@@ -40,13 +40,13 @@
     "note": "Consolidated the polymer-method scope correction and subsequent late-indexed candidates. Current audit reports galleryDois=503, missingFromGallery=0, unresolved=0."
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-10-01T05:57:56.413Z",
+    "finishedAt": "2026-10-01T15:24:25.357Z",
     "dataCommitSha": "30788bf2a889d82d049e256ad58939c10596e877",
     "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
     "deployment": "success-live-verified",
     "verification": {
-      "pagesRun": 36821868394,
-      "deploymentSourceCommit": "c7ced019c0beb408fe38b3fe5d1813c04c2dcae3",
+      "pagesRun": 36882918339,
+      "deploymentSourceCommit": "400e299cc95dc0366e4f7fd65570aa12ef185f4a",
       "publicationSlot": "2026-10-01T08:00:00+08:00",
       "markerBlobSha": "13bb6adbe5d0b08c8c2442d40ea5edd1ccd7b5fb",
       "totalGalleryCards": 726,
@@ -195,7 +195,7 @@
       "sites": [
         {
           "site": "https://gallery.gczhouwld.com/",
-          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36821868394-1790834275940",
+          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36882918339-1790868264693",
           "filesVerified": [
             "papers.gz.b64",
             "total-synthesis.json",
@@ -212,7 +212,7 @@
         },
         {
           "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36821868394-1790834276282",
+          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36882918339-1790868265038",
           "filesVerified": [
             "papers.gz.b64",
             "total-synthesis.json",
@@ -232,7 +232,7 @@
     },
     "tocVerification": {
       "webpageDoiCount": 726,
-      "verifiedAt": "2026-10-01T05:57:56.413Z",
+      "verifiedAt": "2026-10-01T15:24:25.357Z",
       "note": "Queue membership count verified; this job does not obtain or publish media."
     }
   },
@@ -1062,9 +1062,9 @@
       "10.1021/acscatal.6c05520",
       "10.31635/ccschem.026.202608472"
     ],
-    "pagesRun": 36821868394,
-    "deploymentSourceCommit": "c7ced019c0beb408fe38b3fe5d1813c04c2dcae3",
-    "deploymentVerifiedAt": "2026-10-01T05:57:56.413Z"
+    "pagesRun": 36882918339,
+    "deploymentSourceCommit": "400e299cc95dc0366e4f7fd65570aa12ef185f4a",
+    "deploymentVerifiedAt": "2026-10-01T15:24:25.357Z"
   },
   "lastQualityGate": {
     "runId": 36550892094,
@@ -1382,9 +1382,9 @@
   "lastDeploymentAttempt": {
     "schemaVersion": 1,
     "ok": true,
-    "runId": 36821868394,
+    "runId": 36882918339,
     "runAttempt": 1,
-    "sourceCommit": "c7ced019c0beb408fe38b3fe5d1813c04c2dcae3",
+    "sourceCommit": "400e299cc95dc0366e4f7fd65570aa12ef185f4a",
     "markerCommit": "30788bf2a889d82d049e256ad58939c10596e877",
     "markerBlobSha": "13bb6adbe5d0b08c8c2442d40ea5edd1ccd7b5fb",
     "publicationSlot": "2026-10-01T08:00:00+08:00",
@@ -1533,7 +1533,7 @@
     "sites": [
       {
         "site": "https://gallery.gczhouwld.com/",
-        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36821868394-1790834275940",
+        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36882918339-1790868264693",
         "filesVerified": [
           "papers.gz.b64",
           "total-synthesis.json",
@@ -1550,7 +1550,7 @@
       },
       {
         "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36821868394-1790834276282",
+        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36882918339-1790868265038",
         "filesVerified": [
           "papers.gz.b64",
           "total-synthesis.json",
@@ -1566,7 +1566,7 @@
         "attempts": 1
       }
     ],
-    "verifiedAt": "2026-10-01T05:57:56.413Z",
+    "verifiedAt": "2026-10-01T15:24:25.357Z",
     "status": "success-live-verified"
   },
   "lastPrepublishReview": {
