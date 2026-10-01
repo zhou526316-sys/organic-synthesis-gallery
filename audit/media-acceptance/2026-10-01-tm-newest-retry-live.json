@@ -1,0 +1,41 @@
+{
+  "context": "Tampermonkey newest-added priority and repeated capture failure repair",
+  "verifiedAt": "2026-10-01T04:37:44.387Z",
+  "verifiedAtBeijing": "2026-10-01T12:37:44.387+08:00",
+  "sourceCommit": "b544519456d6747138bdc3b4a3783f136083388d",
+  "pullRequest": 261,
+  "verificationWorkflowRun": 36815758765,
+  "verificationArtifact": 11141267732,
+  "passed": true,
+  "readOnlyVerification": true,
+  "publisherRequestsDuringVerification": 0,
+  "mediaWritesDuringVerification": 0,
+  "primaryDeployments": [
+    {"name": "Deploy Worker frontend assets", "runId": 36815625958, "status": "completed", "conclusion": "success", "headSha": "b544519456d6747138bdc3b4a3783f136083388d"},
+    {"name": "Deploy GitHub Pages frontend", "runId": 36815625976, "status": "completed", "conclusion": "success", "headSha": "b544519456d6747138bdc3b4a3783f136083388d"}
+  ],
+  "installer": {
+    "canonicalUrl": "https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js",
+    "canonicalStatus": 200,
+    "workerUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/gallery-vpn-bridge.user.js",
+    "workerStatus": 200,
+    "bothMatchTestedSha256": "1dfdbf3d6e3540b0dca1f01beb34b6fdda8b06a8301bd6c2e7bc8e9ba47f5721",
+    "version": "2.2.39",
+    "hotfixRevision": "20261001-newest-retry-v1",
+    "ccsMatchPresent": true,
+    "localDeliveredFile": "gallery-vpn-bridge.user.js",
+    "localDeliveredBytes": 240714,
+    "localDeliveredSha256Matches": true
+  },
+  "capabilities": {"httpStatus": 200, "captureVersion": "6.2.20", "mediaControllerRevision": "2.2.39", "mediaGeneration": 1790082000000, "mode": "verified-staging", "evidenceSchemaVersion": "article-evidence-v2", "allowOrigin": "https://www.chinesechemsoc.org"},
+  "ccsUploadPreflight": {"method": "OPTIONS", "path": "/api/article-figures/stage", "httpStatus": 204, "allowOrigin": "https://www.chinesechemsoc.org"},
+  "queue": {"httpStatus": 200, "generatedAt": "2026-10-01T00:01:53.027Z", "latestAddedDate": "2026-10-01", "latestAddedCount": 16, "webpageDoiCount": 726, "registryLength": 726},
+  "errors": [],
+  "authenticatedUserBrowserVerified": false,
+  "requiredUserAction": "Replace the installed self-contained same-name Bridge with the verified 2.2.39 hotfix, preserving storage; refresh Gallery and continue the capture mainline. A server deployment alone cannot modify already-installed embedded userscript source.",
+  "remainingLimitations": [
+    "No fresh post-hotfix authenticated publisher receipt from the user's desktop was obtained; do not claim all six CCS failures or all ACS variants recovered.",
+    "The secondary Cloudflare Pages browser API mirror run 36815625962 failed. The verified primary routes are the canonical GitHub Pages site and api.gczhouwld.com Worker; this is not an all-deployments-green claim.",
+    "Several historical CI jobs retain 2.2.35 fixtures/assertions or pre-existing expectations and remain failing; do not claim global CI success. Current acquisition regressions, relevant upload/identity/receipt tests, installer validation and primary deployment acceptance passed."
+  ]
+}
