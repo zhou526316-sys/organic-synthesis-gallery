@@ -1,0 +1,61 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import {randomUUID} from 'node:crypto';
+const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
+let passed=0;const P='osg-toc-v6:';const clone=x=>x==null?x:structuredClone(x);
+function harness(text=source,opt={}){
+ const store=opt.store||new Map(),timers=new Map(),menus=new Map(),badges=[],opened=[];
+ const clock=opt.clock||{now:1790827200000};let id=0,ctx,starts=0,sleeps=0;
+ class Clock extends Date{constructor(...x){super(...(x.length?x:[clock.now]));}static now(){return clock.now;}}
+ const jobs=[0,1,2].map(i=>({doi:'10.1021/jacs.6c'+(10000+i),publisher:'acs',journal:'JACS',addedDate:'2026-10-01',captureToc:true,captureFigures:true}));
+ const put=(k,v)=>store.set(k,clone(v));
+ const c={Date:Clock,URL,Map,Set,console,crypto:{randomUUID},location:{hostname:'gallery.gczhouwld.com',pathname:'/',href:'https://gallery.gczhouwld.com/',hash:''},
+ window:{alert(){},open(){},prompt(){return null;}},GM_getValue:(k,d)=>store.has(k)?clone(store.get(k)):d,GM_setValue:put,GM_deleteValue:k=>store.delete(k),GM_listValues:()=>[...store.keys()],GM_registerMenuCommand:(k,v)=>menus.set(k,v),
+ setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id;},clearTimeout:k=>timers.delete(k),setInterval:(f,ms)=>{timers.set(++id,{f,ms,interval:true});return id;},clearInterval:k=>timers.delete(k),
+ __sleep:async ms=>{sleeps++;clock.now+=opt.delaySleep?opt.delaySleep(ms):ms;await opt.onSleep?.(ms,ctx,store);},__badge:t=>badges.push(t),__start:()=>starts++,
+ __getJson:async url=>{await opt.onFetch?.(url,ctx,store);return url.includes('capture-capabilities')?{captureVersion:'6.2.20',mediaControllerRevision:'2.2.39',mediaGeneration:1790082000000,mode:'verified-staging',evidenceSchemaVersion:'article-evidence-v2',evidenceCaptureMinControllerRevision:'2.2.35'}:{generatedAt:'2026-10-01T04:00:00Z',latestAddedDate:'2026-10-01',webpageDoiCount:jobs.length,articles:jobs,mediaGeneration:1790082000000};},__jobs:jobs,
+ GM_openInTab:(url)=>{const j=store.get(P+'active-job');const tab={url,closed:false,close(){this.closed=!opt.neverClose;}};opened.push(tab);if(!opt.noResult)put(P+'result:'+j.doi,{doi:j.doi,jobId:j.jobId,version:'6.2.20',controllerRevision:'2.2.39',status:'success',finishedAt:new Clock().toISOString(),toc:{status:'stored'},figures:{status:'staged',stored:1,items:[]},figuresStaged:1});opt.onOpen?.(j,ctx,store,tab);return tab;}
+ };
+ ctx=vm.createContext(c);const cut=text.lastIndexOf('  installMenu();');assert.ok(cut>0);
+ const maybe=n=>`typeof ${n}==='function'?${n}:null`;
+ vm.runInContext(text.slice(0,cut)+`
+ isGalleryPage=()=>true;badge=__badge;sleep=__sleep;writeToken=()=> 'fixture';getJson=__getJson;getPrivateJson=async()=>({items:[]});postReadJson=async()=>({items:__jobs.map(j=>({doi:j.doi,tocStored:false,figureCount:0}))});pairedJobs=()=>__jobs;batchSize=()=>3;selectBatchJobs=(j,n)=>j.slice(0,n);enqueueCaptureReport=()=>true;
+ globalThis.T={renewLease,acquireLease,requestControllerStart,waitForResult,closeTaskTab,clearOwnedJob,controllerRun,completedPublisherResult,resultKey,progressKey,attemptKey,installMenu,owner:CONTROLLER_ID,
+ pause:${maybe('requestControllerPause')},poll:${maybe('pollControllerResume')},snapshot:${maybe('controllerLifecycleSnapshot')},persist:${maybe('persistControllerSummary')},reconcile:reconcileActiveJobBeforeDispatch,
+ mockRun:()=>{controllerRun=__start;},captureLiveSnapshot,captureLiveText};
+ })();`,ctx);
+ ctx.T.installMenu();
+ return {T:ctx.T,ctx,store,timers,menus,badges,opened,clock,put,get starts(){return starts},get sleeps(){return sleeps},lease(){put(P+'controller-lease',{owner:ctx.T.owner,expiresAt:clock.now+90000});},paused(){put(P+'enabled',false);put(P+'abort-request',{at:clock.now,reason:'user_aborted'});},next:async()=>{const next=[...timers].find(([,x])=>!x.interval);if(next){timers.delete(next[0]);clock.now+=next[1].ms;await next[1].f();}},job(){return{doi:jobs[0].doi,jobId:'job-'+randomUUID(),version:'6.2.20',captureVersion:'6.2.20',controllerId:ctx.T.owner,startedAt:new Clock().toISOString()}}};
+}
+async function test(n,f){await f();passed++;console.log('TM_CONTROLLER_PASS '+n);}
+if(process.env.BASELINE){
+ const text=fs.readFileSync(process.env.BASELINE,'utf8');
+ const a=harness(text);a.lease();a.paused();for(let i=0;i<12;i++){a.clock.now+=15000;assert.equal(a.T.renewLease(),true);}assert.ok(a.store.get(P+'controller-lease').expiresAt>a.clock.now);console.log('BASELINE_REPRODUCED paused owner renews for 3 minutes with no active job');
+ const b=harness(text,{delaySleep:()=>60000});assert.equal(await b.T.closeTaskTab({closed:false,close(){}}),false);assert.equal(b.sleeps,30);console.log('BASELINE_REPRODUCED thirty delayed closure polls consume thirty minutes');
+ const c=harness(text);c.lease();c.paused();const j=c.job();c.put(c.T.resultKey(j.doi),{...j,version:'6.2.20',status:'success',finishedAt:new Date(c.clock.now).toISOString()});assert.equal((await c.T.waitForResult(j,{})).status,'aborted');console.log('BASELINE_REPRODUCED pause wins over already-completed publisher result');
+}
+await test('paused owner with no active task releases lease immediately',()=>{const h=harness();h.lease();h.T.pause();assert.equal(h.store.has(P+'controller-lease'),false);});
+await test('remote pause stops renewal of an idle owner',()=>{const h=harness();h.lease();h.paused();assert.equal(h.T.renewLease(),false);assert.equal(h.store.has(P+'controller-lease'),false);});
+await test('live bound task retains lease during graceful pause',()=>{const h=harness();h.lease();const j=h.job();h.put(P+'active-job',j);h.T.pause();assert.equal(h.T.renewLease(),true);assert.deepEqual(h.store.get(P+'active-job'),j);});
+await test('pause never removes foreign lease',()=>{const h=harness();h.put(P+'controller-lease',{owner:'foreign',expiresAt:h.clock.now+90000});h.T.pause();assert.equal(h.store.get(P+'controller-lease').owner,'foreign');});
+await test('expired owner cannot revive its lease',()=>{const h=harness();h.lease();h.clock.now+=91000;assert.equal(h.T.renewLease(),false);});
+await test('resume queued under live foreign paused lease without stealing',()=>{const h=harness();h.paused();h.put(P+'controller-lease',{owner:'foreign',expiresAt:h.clock.now+90000});h.T.mockRun();h.T.requestControllerStart();assert.equal(h.starts,0);assert.equal(h.store.get(P+'enabled'),false);assert.equal(h.T.snapshot().resumePending,true);assert.equal(h.store.get(P+'controller-lease').owner,'foreign');});
+await test('queued resume runs exactly once after owner releases',async()=>{const h=harness();h.paused();h.put(P+'controller-lease',{owner:'foreign',expiresAt:h.clock.now+90000});h.T.mockRun();h.T.requestControllerStart();h.store.delete(P+'controller-lease');await h.next();h.T.poll();assert.equal(h.starts,1);assert.equal(h.store.get(P+'enabled'),true);assert.equal(h.store.has(P+'abort-request'),false);});
+await test('manual pause cancels earlier queued resume',async()=>{const h=harness();h.paused();h.put(P+'controller-lease',{owner:'foreign',expiresAt:h.clock.now+90000});h.T.mockRun();h.T.requestControllerStart();h.T.pause();h.store.delete(P+'controller-lease');await h.next();h.T.poll();assert.equal(h.starts,0);assert.equal(h.store.get(P+'enabled'),false);});
+await test('resume on same busy paused page waits rather than reenabling old loop',async()=>{const h=harness();h.lease();h.paused();h.ctx.__OSG_PAIRED_CONTROLLER_BUSY__=true;h.T.mockRun();h.T.requestControllerStart();assert.equal(h.starts,0);h.ctx.__OSG_PAIRED_CONTROLLER_BUSY__=false;await h.next();assert.equal(h.starts,1);});
+await test('two paused control pages elect just the last explicit resume request',()=>{const store=new Map(),clock={now:1790827200000};const a=harness(source,{store,clock}),b=harness(source,{store,clock});a.paused();a.put(P+'controller-lease',{owner:'old',expiresAt:clock.now+90000});a.T.mockRun();b.T.mockRun();a.T.requestControllerStart();b.T.requestControllerStart();store.delete(P+'controller-lease');a.T.poll();b.T.poll();assert.equal(a.starts+b.starts,1);assert.equal(b.starts,1);});
+await test('resume does not clear a fresh previous publisher task',()=>{const h=harness();h.paused();const j=h.job();j.controllerId='old';h.put(P+'active-job',j);h.T.mockRun();h.T.requestControllerStart();assert.equal(h.starts,0);assert.equal(h.store.get(P+'active-job').jobId,j.jobId);});
+await test('stored successful result beats manual pause',async()=>{const h=harness();h.lease();const j=h.job();h.put(P+'active-job',j);h.put(h.T.resultKey(j.doi),{...j,status:'success',finishedAt:new Date(h.clock.now).toISOString()});h.paused();assert.equal((await h.T.waitForResult(j,{})).status,'success');});
+await test('stored successful result beats expired lease after wake-up',async()=>{const h=harness();h.lease();const j=h.job();h.put(h.T.resultKey(j.doi),{...j,status:'success',finishedAt:new Date(h.clock.now).toISOString()});h.clock.now+=20*60000;assert.equal((await h.T.waitForResult(j,{})).status,'success');});
+await test('other job result is never accepted',()=>{const h=harness();const j=h.job();h.put(h.T.resultKey(j.doi),{...j,jobId:'wrong',status:'success',finishedAt:'2026-10-01'});assert.equal(h.T.completedPublisherResult(j),null);});
+await test('closed publisher tab produces specific failure without eight-minute wait',async()=>{const h=harness();h.lease();const j=h.job();const r=await h.T.waitForResult(j,{closed:true});assert.equal(r.reason,'publisher_task_tab_closed');assert.equal(h.sleeps,1);});
+await test('one delayed closure poll exits by wall time, not thirty iterations',async()=>{const h=harness(source,{delaySleep:()=>60000});assert.equal(await h.T.closeTaskTab({closed:false,close(){}}),false);assert.equal(h.sleeps,1);});
+await test('normal closure still succeeds',async()=>{const h=harness();const t={closed:false,close(){this.closed=true}};assert.equal(await h.T.closeTaskTab(t),true);});
+await test('manual pause during asynchronous queue read opens no publisher and releases lock',async()=>{const h=harness(source,{onFetch:(url,c)=>{if(url.includes('toc-demand'))c.T.pause();}});await h.T.controllerRun();assert.equal(h.opened.length,0);assert.equal(h.store.has(P+'controller-lease'),false);assert.equal(h.store.get(P+'enabled'),false);});
+await test('normal three-paper batch retains all success receipts',async()=>{const h=harness();await h.T.controllerRun();const s=h.store.get(P+'last-run-summary');assert.equal(s.success,3);assert.equal(s.failed,0);assert.equal(s.figuresStaged,3);assert.ok(h.opened.every(t=>t.closed));});
+await test('late old summary cannot overwrite newer controller summary',()=>{const h=harness();h.put(P+'last-run-summary',{controllerRunId:'new',tocStored:53});assert.equal(h.T.persist({controllerRunId:'old',tocStored:0},false),false);assert.equal(h.store.get(P+'last-run-summary').tocStored,53);});
+await test('pause and resume preserve credential, checkpoint and pending report keys',()=>{const h=harness();const keys=['organicGalleryCloudflareBridgeWriteToken',P+'verified-capture:6.2.20:1790082000000:10.1021/test',P+'auto-report-outbox-v1:test'];keys.forEach(k=>h.put(k,{retained:true}));h.T.mockRun();h.T.pause();h.T.requestControllerStart();keys.forEach(k=>assert.deepEqual(h.store.get(k),{retained:true}));});
+await test('paused resume has an explicit waiting state in the panel',()=>{const h=harness();h.paused();h.put(P+'controller-lease',{owner:'foreign',expiresAt:h.clock.now+90000});h.T.requestControllerStart();const s=h.T.captureLiveSnapshot(h.clock.now);assert.equal(s.state,'resume_wait');assert.match(h.T.captureLiveText(s).state,/自动恢复/);});
+await test('controller protocol, source binding, no duplicate media engine retained',()=>{for(const t of ["var CONTROLLER_REVISION = '2.2.39'","var VERSION = '6.2.20'",'capture_job_stale_or_unbound','media_source_doi_mismatch','capture_tab_job_mismatch',"if (isLatest) return -4;"])assert.ok(source.includes(t),t);});
+console.log(JSON.stringify({passed,productionWrites:0,authenticatedDesktop:false,revision:'20261001-controller-recovery-v2'}));
