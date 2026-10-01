@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-01T09:15:00.038Z",
+  "generatedAt": "2026-10-01T15:46:48.378Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-21",
@@ -8,25 +8,25 @@
   "closureDate": "2026-09-30",
   "summary": {
     "galleryDois": 726,
-    "sourceRecords": 781,
-    "rawMissingFromGallery": 640,
+    "sourceRecords": 804,
+    "rawMissingFromGallery": 663,
     "previouslyReviewedExcluded": 580,
-    "missingFromGallery": 60,
-    "potentialGaps": 28,
+    "missingFromGallery": 83,
+    "potentialGaps": 44,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
-    "sourceCoverageAnomalies": 2,
-    "closureCoverageAnomalies": 7,
+    "sourceCoverageAnomalies": 1,
+    "closureCoverageAnomalies": 0,
     "historicalCoverageLosses": 0,
-    "unresolved": 60,
+    "unresolved": 83,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
   "discoveryGate": {
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
-    "sourceCoverageAnomalies": 2,
-    "closureCoverageAnomalies": 7,
+    "sourceCoverageAnomalies": 1,
+    "closureCoverageAnomalies": 0,
     "historicalCoverageLosses": 0
   },
   "activeJournals": [
@@ -39,15 +39,15 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 79,
-        "crossrefCandidateRecords": 79,
-        "openAlexCandidateRecords": 30,
-        "multiSourceCandidateRecords": 30,
-        "closureUnionRecords": 44,
-        "closureCrossrefRecords": 44,
-        "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
-        "closureCoverageWarning": true
+        "unionCandidateRecords": 83,
+        "crossrefCandidateRecords": 83,
+        "openAlexCandidateRecords": 73,
+        "multiSourceCandidateRecords": 73,
+        "closureUnionRecords": 45,
+        "closureCrossrefRecords": 45,
+        "closureOpenAlexRecords": 43,
+        "coverageWarning": false,
+        "closureCoverageWarning": false
       }
     },
     {
@@ -99,8 +99,8 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 5,
-        "crossrefCandidateRecords": 5,
+        "unionCandidateRecords": 9,
+        "crossrefCandidateRecords": 9,
         "openAlexCandidateRecords": 5,
         "multiSourceCandidateRecords": 5,
         "closureUnionRecords": 0,
@@ -121,11 +121,11 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 8,
         "crossrefCandidateRecords": 8,
-        "openAlexCandidateRecords": 6,
-        "multiSourceCandidateRecords": 6,
+        "openAlexCandidateRecords": 8,
+        "multiSourceCandidateRecords": 8,
         "closureUnionRecords": 2,
         "closureCrossrefRecords": 2,
-        "closureOpenAlexRecords": 0,
+        "closureOpenAlexRecords": 2,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
@@ -139,15 +139,15 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 163,
-        "crossrefCandidateRecords": 163,
-        "openAlexCandidateRecords": 130,
-        "multiSourceCandidateRecords": 130,
+        "unionCandidateRecords": 166,
+        "crossrefCandidateRecords": 166,
+        "openAlexCandidateRecords": 155,
+        "multiSourceCandidateRecords": 155,
         "closureUnionRecords": 27,
         "closureCrossrefRecords": 27,
-        "closureOpenAlexRecords": 2,
+        "closureOpenAlexRecords": 27,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -159,15 +159,15 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 104,
-        "crossrefCandidateRecords": 104,
-        "openAlexCandidateRecords": 84,
-        "multiSourceCandidateRecords": 84,
+        "unionCandidateRecords": 113,
+        "crossrefCandidateRecords": 113,
+        "openAlexCandidateRecords": 103,
+        "multiSourceCandidateRecords": 103,
         "closureUnionRecords": 16,
         "closureCrossrefRecords": 16,
-        "closureOpenAlexRecords": 1,
+        "closureOpenAlexRecords": 16,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -181,13 +181,13 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 155,
         "crossrefCandidateRecords": 155,
-        "openAlexCandidateRecords": 93,
-        "multiSourceCandidateRecords": 93,
+        "openAlexCandidateRecords": 134,
+        "multiSourceCandidateRecords": 134,
         "closureUnionRecords": 34,
         "closureCrossrefRecords": 34,
-        "closureOpenAlexRecords": 0,
+        "closureOpenAlexRecords": 33,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -201,13 +201,13 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 41,
         "crossrefCandidateRecords": 41,
-        "openAlexCandidateRecords": 29,
-        "multiSourceCandidateRecords": 29,
+        "openAlexCandidateRecords": 38,
+        "multiSourceCandidateRecords": 38,
         "closureUnionRecords": 8,
         "closureCrossrefRecords": 8,
-        "closureOpenAlexRecords": 0,
+        "closureOpenAlexRecords": 6,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -219,15 +219,15 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 55,
-        "crossrefCandidateRecords": 55,
-        "openAlexCandidateRecords": 48,
-        "multiSourceCandidateRecords": 48,
+        "unionCandidateRecords": 57,
+        "crossrefCandidateRecords": 57,
+        "openAlexCandidateRecords": 54,
+        "multiSourceCandidateRecords": 54,
         "closureUnionRecords": 9,
         "closureCrossrefRecords": 9,
-        "closureOpenAlexRecords": 4,
+        "closureOpenAlexRecords": 9,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     },
     {
@@ -339,15 +339,15 @@
         "effectiveStart": "2026-09-22",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 38,
-        "crossrefCandidateRecords": 38,
-        "openAlexCandidateRecords": 26,
-        "multiSourceCandidateRecords": 26,
+        "unionCandidateRecords": 39,
+        "crossrefCandidateRecords": 39,
+        "openAlexCandidateRecords": 38,
+        "multiSourceCandidateRecords": 38,
         "closureUnionRecords": 12,
         "closureCrossrefRecords": 12,
-        "closureOpenAlexRecords": 1,
+        "closureOpenAlexRecords": 12,
         "coverageWarning": false,
-        "closureCoverageWarning": true
+        "closureCoverageWarning": false
       }
     }
   ],
@@ -556,20 +556,17 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1021/jacs.6c11726",
+      "doi": "10.1021/jacs.6c10764",
       "journal": "JACS",
-      "title": "De Novo Design of Hydrogen-Bonding Networks for Deterministic Bio-Nano Recognition",
-      "abstract": "Abstract Achieving deterministic control over molecular recognition at high-curvature bio-nano interfaces remains a fundamental challenge. For two decades, DNA-mediated single-wall carbon nanotube (SWCNT) sorting has relied on empirical screening, leaving the underlying recognition code largely undeciphered. Here, we report a de novo design framework that rationally programs DNA sequences via a generalized hydrogen-bonding network (HBN) model. Navigating the vast sequence space via an automated HBN-driven compiler, we experimentally evaluated a library of 150 designed sequences. This strategy achieved an extraordinary 91.3% success rate in mediating chirality-specific sorting, facilitating the high-purity isolation of 21 distinct (n, m) SWCNT species. Notably, this framework enabled the capture of three rare quasi-metallic nanotubes─(8,2), (9,3), and (10,1)─which were previously inaccessible via conventional screening. Mechanistically, the helical periodicity (N) serves as a universal tuning knob to coordinately modulate nanotube diameter and interfacial DNA pitch. This structural programmability enables the “bespoke” engineering of DNA-SWCNT sensors with tailored molecular discrimination and electrochemical resilience. This work transitions the field from labor-intensive, trial-and-error sequence screening to a deterministic, rational design paradigm.",
+      "title": "Cross-Species Profiling of Itaconate-Mediated Modifications by a Universal Probe",
+      "abstract": "Abstract The immunometabolite itaconate can covalently modify proteins through cysteine itaconation and lysine itaconylation. Current bioorthogonal itaconate probes show biased specificity for profiling cysteine itaconation in macrophages versus bacteria and are not compatible with profiling lysine itaconylation at all. Here, we report isoC3A, a universal probe designed for the comprehensive chemoproteomic profiling of these two types of itaconate-mediated modifications in both eukaryotic and prokaryotic cells. In situ profiling of Salmonella-infected macrophages by isoC3A captures the dynamic changes of itaconate-mediated modifications in the proteomes of host cells and bacteria simultaneously. It also revealed that itaconate targets critical cysteine residues on the aconitate hydratase, enhances its dehydration activity to boost the cis-aconitate level, and drives a positive feedback loop to sustain itaconate biosynthesis. Together, these findings establish isoC3A as a universal probe for exploring the covalent targets of itaconate and suggest a metabolic amplification mechanism in innate immunity.",
       "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
-        "Li Zhu",
-        "Yinong Li",
-        "Yannan Feng",
-        "Junran Luo",
-        "Jian Li",
-        "Shishan Tian",
-        "Zhiwei Lin"
+        "Bin Ma",
+        "Dongyang Liu",
+        "Weidi Xiao",
+        "Chu Wang"
       ],
       "topics": [],
       "sources": [
@@ -587,17 +584,63 @@
       "reviewPriority": "normal"
     },
     {
-      "doi": "10.1021/jacs.6c11777",
+      "doi": "10.1021/jacs.6c11726",
       "journal": "JACS",
-      "title": "Directed Evolution of a Protein Catenane Reveals How Noncanonical Topology Modulates Sequence–Property Relationships",
-      "abstract": "Abstract Single-domain protein catenanes, in which two mechanically interlocked polypeptide rings fold into a compact structure, provide a tractable system for probing how chemical topology reshapes protein fitness. Using single-domain catenated dihydrofolate reductase (cat-DHFR) as a model, we combined homologue expansion, directed evolution, and topology reversion to compare matched linear and catenated isoforms. Catenation proved broadly compatible with DHFR homologues, yet soluble yield and catalytic activity remained strongly sequence dependent. Directed evolution substantially improved the catalytic activity of cat-DHFR through enhanced substrate binding and turnover, while largely preserving or increasing thermal stability. Strikingly, reverting evolved catenanes to their linear counterparts transferred these functional gains: all reverted linear isoforms exhibited higher catalytic activity and thermal stability than wild-type DHFR. Across matched topological pairs, catenation generally increased thermal stability, whereas catalytic activity depended more strongly on sequence background and topology. These results demonstrate that chemical topology can modulate the phenotypic effects of sequence variation, while permitting substantial transferability of beneficial mutations across topological contexts. Protein catenanes may therefore serve not only as alternative topolog",
+      "title": "De Novo Design of Hydrogen-Bonding Networks for Deterministic Bio-Nano Recognition",
+      "abstract": "Abstract Achieving deterministic control over molecular recognition at high-curvature bio-nano interfaces remains a fundamental challenge. For two decades, DNA-mediated single-wall carbon nanotube (SWCNT) sorting has relied on empirical screening, leaving the underlying recognition code largely undeciphered. Here, we report a de novo design framework that rationally programs DNA sequences via a generalized hydrogen-bonding network (HBN) model. Navigating the vast sequence space via an automated HBN-driven compiler, we experimentally evaluated a library of 150 designed sequences. This strategy achieved an extraordinary 91.3% success rate in mediating chirality-specific sorting, facilitating the high-purity isolation of 21 distinct (n, m) SWCNT species. Notably, this framework enabled the capture of three rare quasi-metallic nanotubes─(8,2), (9,3), and (10,1)─which were previously inaccessible via conventional screening. Mechanistically, the helical periodicity (N) serves as a universal tuning knob to coordinately modulate nanotube diameter and interfacial DNA pitch. This structural programmability enables the “bespoke” engineering of DNA-SWCNT sensors with tailored molecular discrimination and electrochemical resilience. This work transitions the field from labor-intensive, trial-and-error sequence screening to a deterministic, rational design paradigm.",
       "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
-        "Jing Fang",
-        "Zhaorong Chen",
-        "Yajie Liu",
-        "Wen-Bin Zhang"
+        "Li Zhu",
+        "Yinong Li",
+        "Yannan Feng",
+        "Junran Luo",
+        "Jian Li",
+        "Shishan Tian",
+        "Zhiwei Lin"
+      ],
+      "topics": [
+        "Nanopore and Nanochannel Transport Studies",
+        "Biomedical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Advanced biosensing and bioanalysis techniques",
+        "Carbon Nanotubes in Composites"
+      ],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c12873",
+      "journal": "JACS",
+      "title": "Decoupling Electronic Coupling and Site-Energy Asymmetry in a Scaffold-Free π-Assembly",
+      "abstract": "Abstract In conventional π-stacked systems, electronic coupling (J) and site-energy asymmetry (Δε) are governed by the same structural coordinate. Co-facial packing maximizes J but enforces Δε ≈ 0, yielding symmetry-equivalent local-excitation-charge-transfer (LE-CT) manifolds near the charge-resonance/excimer limit, whereas chemically differentiated donor–acceptor systems impose Δε ≫ J and favor localized CT states. The intermediate regime, with finite static Δε while preserving strong coupling, thus remains difficult to access. Nature achieves this in photosynthetic special pairs by separating the structural origins of J (cofactor stacking) and Δε (protein electrostatics). Inspired by this principle, we construct a scaffold-free hierarchical π-assembly of four C3-symmetric perylene diimide triads, which comprises strongly coupled dimeric cores and monomer-like peripheral units. Directional C–H···O═C hydrogen bonding renders the core chromophores electronically inequivalent, producing static ΔεLE (∼12 meV) within a pair whose excitonic coupling, determined experimentally from a Spano vibronic analysis, is 93 meV. Electronic-structure calculations predict that this asymmetry is embedded in the lowest excited-state manifold at the Franck–Condon geometry, where the modest ground-state asymmetry yields a much larger ΔεCT (∼210 meV) splitting of opposing CT configurations. Femtosec",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Yifei Wei",
+        "Jingjing Guo",
+        "Yuchuan Xu",
+        "Wei Zhang",
+        "Xin-Yu Tong",
+        "Pavlo O. Dral",
+        "WanZhen Liang",
+        "Yun-Bao Jiang",
+        "Dongho Kim",
+        "Jianbin Lin",
+        "Hui-Jun Zhang"
       ],
       "topics": [],
       "sources": [
@@ -613,6 +656,187 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c12127",
+      "journal": "JACS",
+      "title": "Designing Cooperative Molecular Glues for FKBP12-MAPRE1 with Enhanced-Sampling Molecular Dynamics Simulations",
+      "abstract": "Abstract Molecular glues (MGs) offer a unique modality for inducing protein–protein interactions (PPIs), yet their rational design is often hindered by the limitations of static structural data. Here, we present a computational pipeline for the design of cooperative MGs for the FKBP12-MAPRE1 system using replica exchange with solute scaling (REST2) for enhanced sampling in molecular dynamics (MD) simulations. By sampling the conformational ensembles of binary and ternary complexes, we identified a “stabilized configurational space” that facilitates ternary-complex formation through a combination of conformational selection and induced-fit mechanisms. Based on the simulations, we developed a model that correlates PPI induction information from the simulations with the experimental cooperativity. This model was subsequently used to select and rank a small library of compounds prospectively, of which five were selected for synthesis and testing. Three of the five new compounds exhibited apparent cooperativity equal to or greater than that of the best previously known variants. This study demonstrates that targeting shared configurations within dynamic ensembles is a viable strategy for the rational optimization of cooperative molecular glues.",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Shu-Yu Chen",
+        "Riccardo Solazzo",
+        "Marianne Fouché",
+        "Hans-Jörg Roth",
+        "Birger Dittrich",
+        "Sereina Riniker"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c09506",
+      "journal": "JACS",
+      "title": "Diisonitrile Chalkophore Structure and Function in Mycobacterial Copper Acquisition",
+      "abstract": "Abstract Tuberculosis, the disease caused by Mycobacterium tuberculosis infection, is a leading cause of death worldwide. While first-line treatments are effective for many patients, multidrug-resistant tuberculosis poses a continued threat to global public health, and new approaches are needed to provide effective chemotherapy against drug-resistant disease. Diisonitrile lipopeptide chalkophores are a novel class of natural products that play critical roles in copper homeostasis and virulence in M. tuberculosis by supplying copper to the heme:Cu oxidase of the respiratory chain. However, the molecular mechanisms by which the bacteria use diisonitriles to mediate copper homeostasis are poorly understood. Herein, we investigate structure–activity relationships of synthetic diisonitriles to identify structural features required for biological function in mycobacterial copper acquisition. We have developed a modular synthetic approach that allows efficient construction of diisonitrile natural products and diverse analogues. We confirmed that a short-chain analogue of the natural products binds tightly to Cu(I) and Cu(II), but not Zn(II), and estimated its Cu(I) binding affinity. We then used these analogues to probe the impacts of diisonitrile acyl chain length, amino acid backbone, and C-terminal motif on the rescue of M. tuberculosis and Mycobacterium marinum growth in copper-re",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Pooja B. Pandya",
+        "Chad E. Hatch",
+        "John A. Buglino",
+        "Yaprak Ozakman",
+        "Kate Ryan",
+        "Ruofei Faye Li",
+        "Farhan A. Chowdhury",
+        "Michael S. Glickman",
+        "Derek S. Tan"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c11777",
+      "journal": "JACS",
+      "title": "Directed Evolution of a Protein Catenane Reveals How Noncanonical Topology Modulates Sequence–Property Relationships",
+      "abstract": "Abstract Single-domain protein catenanes, in which two mechanically interlocked polypeptide rings fold into a compact structure, provide a tractable system for probing how chemical topology reshapes protein fitness. Using single-domain catenated dihydrofolate reductase (cat-DHFR) as a model, we combined homologue expansion, directed evolution, and topology reversion to compare matched linear and catenated isoforms. Catenation proved broadly compatible with DHFR homologues, yet soluble yield and catalytic activity remained strongly sequence dependent. Directed evolution substantially improved the catalytic activity of cat-DHFR through enhanced substrate binding and turnover, while largely preserving or increasing thermal stability. Strikingly, reverting evolved catenanes to their linear counterparts transferred these functional gains: all reverted linear isoforms exhibited higher catalytic activity and thermal stability than wild-type DHFR. Across matched topological pairs, catenation generally increased thermal stability, whereas catalytic activity depended more strongly on sequence background and topology. These results demonstrate that chemical topology can modulate the phenotypic effects of sequence variation, while permitting substantial transferability of beneficial mutations across topological contexts. Protein catenanes may therefore serve not only as alternative topolog",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Jing Fang",
+        "Zhaorong Chen",
+        "Yajie Liu",
+        "Wen-Bin Zhang"
+      ],
+      "topics": [
+        "Biochemical and Structural Characterization",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Protein Structure and Dynamics",
+        "Supramolecular Self-Assembly in Materials"
+      ],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c12618",
+      "journal": "JACS",
+      "title": "Dual-Modulation Strategy in RuO x Improves Activity and Durability in Acidic Oxygen Evolution",
+      "abstract": "Abstract Durable oxygen evolution catalysts are needed for proton-exchange-membrane water electrolyzers (PEMWEs) for hydrogen production. Ruthenium-based oxides offer high activity in acids but suffer from instability under oxidative conditions. Here, we study a dual-modulation approach intended to improve activity and durability together: we couple two functionally distinct dopants, one redox-active dopant that buffers metal overoxidation and one lattice-stabilizing dopant that suppresses structural degradation. This strategy, studied using operando spectroscopy, isotope labeling, and density functional theory, provides a cooperative suppression of Ru overoxidation and lattice breakdown. Implemented in a Ru–Mn–Ti oxide system, the optimized composition, Ru0.7Mn0.1Ti0.2Ox, reaches 143 mV overpotential at 10 mA cm–2 and enables a proton exchange membrane water electrolyzer device to operate for 800 h at 1 A cm–2 and 1.66 V with a degradation rate of 0.2 mV h–1. The approach may be useful for designing other multimetal oxide catalysts. We note that 800 h is short compared to the lifetimes that commercial electrolyzers require, so this work is one contribution along a longer community path rather than a demonstration of commercial durability.",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Jun-Ye Zhang",
+        "Hsiang-Chun Yu",
+        "Yiqing Chen",
+        "Mengjie Liu",
+        "Jaerim Kim",
+        "Yongxiang Liang",
+        "Bosi Peng",
+        "Zeyan Liu",
+        "Zedong Zhang",
+        "Yong Wang",
+        "Jiashun Liang",
+        "Gang Wu",
+        "Chun-Kuo Peng",
+        "Yoon Jun Son",
+        "Yan-Gu Lin",
+        "Ke Xie",
+        "Edward H. Sargent"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c15980",
+      "journal": "JACS",
+      "title": "Enantioconvergent Deoxygenative Amination via Xanthate Esters by a Decarboxylative Relay",
+      "abstract": "Abstract The direct conversion of alcohols to amines through deoxygenative radical pathways can provide a versatile strategy for constructing C(sp3)–N bonds from simple and abundant precursors, yet catalytic enantioconvergent variants remain undeveloped. We report herein a previously unexplored enantioconvergent deoxygenative amination that proceeds by radical activation of alcohol-derived xanthates via a decarboxylative radical relay process. This transformation is enabled by the merger of acridine photocatalysis, which mediates radical generation, and chiral cobalt(salen) catalysis, which mediates asymmetric radical–polar crossover, producing α-chiral benzylic amines under mild conditions. The method provides efficient access to medicinally relevant amine scaffolds with high enantioselectivity. Mechanistic studies revealed a radical gating manifold in which the cobalt catalyst selectively mediates the C–N coupling with the benzylic radical in preference to a competing decarboxylative amination pathway. Computational investigations further elucidated the structural and electronic factors governing xanthate activation, C–O bond homolysis, and the enantioselective radical gating by the cobalt catalyst. Together, these findings establish a mechanistically distinct platform for asymmetric deoxygenative C–N bond formation and highlight the broader potential of cobalt-catalyzed radi",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Jing Wan",
+        "Jacob A. Sanchez",
+        "Taotao Lu",
+        "Ramon Trevino",
+        "Zhanpeng Xue",
+        "Junkai Wan",
+        "Babu Raj Dhungana",
+        "Yao Sun",
+        "Chao Huang",
+        "Bethanie M. Avila",
+        "Min He",
+        "Kai L. Shoemaker",
+        "Toby T. Skaria",
+        "Ramy Elerian",
+        "Maosheng Cheng",
+        "Oleg V. Larionov",
+        "Shengfei Jin"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1021/jacs.6c11755",
@@ -630,14 +854,22 @@
         "Ethan J. Crumlin",
         "Jin Qian"
       ],
-      "topics": [],
+      "topics": [
+        "CO2 Reduction Techniques and Catalysts",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "Electrocatalysts for Energy Conversion",
+        "Ammonia Synthesis and Nitrogen Reduction"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -663,6 +895,50 @@
         "Haiming Zhu",
         "Xiaogang Peng"
       ],
+      "topics": [
+        "Quantum Dots Synthesis And Properties",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Semiconductor Quantum Structures and Devices",
+        "Silicon Nanostructures and Photoluminescence"
+      ],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c16429",
+      "journal": "JACS",
+      "title": "Site-Selective Electronic Structure and Dynamical Softness in the Metallic Antiferromagnet Mn3CuN",
+      "abstract": "Abstract Electronic structure, local bonding, and magnetic order are intimately coupled in correlated antiperovskites, making it challenging to distinguish the contributions of individual crystallographic sites to their collective properties. Here, we combine element-specific X-ray spectroscopy, temperature-dependent X-ray absorption spectroscopy, X-ray magnetic circular dichroism, electrical transport measurements, and first-principles calculations to investigate the site-selective electronic structure of epitaxial metallic antiferromagnetic Mn3CuN thin films. We reveal an anomalous charge distribution characterized by effective low-valent Mn and subvalent Cu states stabilized by covalent Mn–N–Cu interactions. While the Mn sublattice forms a robust noncollinear antiferromagnetic framework below ∼120 K, the electronically distinct Cu sites remain magnetically inactive yet exhibit pronounced temperature-dependent local structural evolution. Despite the onset of magnetic ordering, Mn3CuN retains metallic transport with a near-zero temperature coefficient of resistivity (NZ-TCR), indicating minimal coupling between magnetic ordering and charge transport. These findings demonstrate that site-selective electronic structure enables chemically differentiated lattice dynamics while preserving a robust magnetic framework, establishing Mn3CuN antiperovskite in which electronic, structura",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Aryan Keshri",
+        "Sourav Chowdhury",
+        "Naveen Goyal",
+        "Anju Ahlawat",
+        "Pushpendra Gupta",
+        "Garima Kaura",
+        "Ram Janay Choudhury",
+        "Moritz Hoesch",
+        "N. Ravishankar",
+        "Manuel Bibes",
+        "A. C. Garcia-Castro",
+        "Sujit Das"
+      ],
       "topics": [],
       "sources": [
         "crossref:0002-7863:online",
@@ -676,7 +952,68 @@
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "high"
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c12112",
+      "journal": "JACS",
+      "title": "Tunable Quantum Magnetism in Frustrated Yb-Based van der Waals Materials",
+      "abstract": "Abstract The border between magnetic order and a quantum disordered ground state is notoriously difficult to reach by design. Here we show that systematic anion substitution in a family of rare-earth van der Waals (vdW) magnets, YbChX (Ch = S, Se; X = Br, I), provides a direct chemical handle on this boundary. By replacing chalcogenide and halide ligands on the FeOCl-type lattice, we systematically tune the crystal electric field hierarchy, the degree of XY anisotropy, and the strength of quantum fluctuations in the ground-state Kramers doublet, affecting the exchange interactions without changing the distorted triangular lattice topology. The result is a series of Jeff = 1/2 magnets with large frustration factors (f = 9–76), extended short-range correlation regimes, and suppressed long-range order, placing the entire family in close proximity to magnetic quantum criticality. Far-infrared magnetospectroscopy, diffuse reflectance, and photoluminescence reveal that the same ligand substitution that reshapes the magnetic landscape simultaneously tunes f–f optical transitions, opening a route to access potential spin–photon coupling through chemical modifications. These results establish anion substitution as a powerful design principle for chemically navigating frustrated quantum magnets toward exotic ground states in the vdW family.",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Jiayi Li",
+        "Arun Ramanathan",
+        "Thom J. Snoeren",
+        "Willa Mihalyi-Koch",
+        "Jamie Cleron",
+        "Anna Champ",
+        "Hemamala I. Karunadasa",
+        "Mykhaylo Ozerov",
+        "Daniel R. Gamelin",
+        "Allen Scheie",
+        "Xavier Roy"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c13637",
+      "journal": "JACS",
+      "title": "Uniform High-Level Block Copolymer Architectures via Hybrid Self-Seeding",
+      "abstract": "Abstract The construction of hierarchical architectures with precisely controlled dimensions and morphologies remains a key challenge in block copolymer self-assembly. Here we introduce hybrid self-seeding, a streamlined strategy that employs either the coassembly of a crystallizable homopolymer with two block copolymers or the direct self-seeding of mixed one-dimensional (1D) and two-dimensional (2D) seed fragments. By orchestrating sequential nucleation events where the homopolymer nucleates first, followed by block copolymers with decreasing propensity for 1D growth, we achieve precise morphological control in a single process. This method yields uniform scarf-like micelles (up to 34 μm), yucca flaccida-like architectures, and long ribbon-like morphologies. Electron diffraction confirms homoepitaxial growth across morphological domains, linking the structural memory effect to crystal lattice continuity. Our approach establishes a generalizable platform for higher-level soft matter.",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Shaofei Song",
+        "Mitchell A. Winnik"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
     },
     {
       "doi": "10.1021/acs.joc.6c01172",
@@ -697,6 +1034,46 @@
         "Taimin Wang",
         "Peijun Liu"
       ],
+      "topics": [
+        "Synthesis of heterocyclic compounds",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalytic C–H Functionalization Methods",
+        "Catalytic Alkyne Reactions"
+      ],
+      "sources": [
+        "crossref:0022-3263:online",
+        "crossref:0022-3263:published",
+        "crossref:0022-3263:created",
+        "crossref:1520-6904:online",
+        "crossref:1520-6904:published",
+        "crossref:1520-6904:created",
+        "openalex:S205050996"
+      ],
+      "activeFrom": "2026-09-22",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01558",
+      "journal": "JOC",
+      "title": "Discovery and Total Synthesis of Seco -acorane Sesquiterpenoids from Chloranthus holostegius : Determination of Absolute Configuration and Spontaneous Acetalization",
+      "abstract": "Abstract Shimianoids A–C, rare nor-acorane sesquiterpenoid (1) and aromatic seco-acoranes (2/3) featuring an aldehyde group, along with their spontaneous acetalization products with methanol-d4 (2a/3a), were isolated and elucidated from Chloranthus holostegius var. shimianensis. The undetermined absolute configurations of the flexible side chain and intriguing spontaneous acetalization of compounds 2/3 prompted our total synthesis study. Ultimately, compounds 2/3 and their acetalization products with methanol-d4 (2a/3a) and CH3OH (2b/3b) were synthesized via a redox-relay Heck reaction of 4-tolylboronic acid with (±)-sulcatol, followed by oxidation and acetalization. The absolute configurations of C7/10 at the flexible side chain were determined by Mosher’s and ECD methods of the synthetic intermediate, and the spontaneous reversible acetalization was confirmed. Finally, a library of 26 aromatic seco-acorane sesquiterpenoids was constructed for bioactivity screening.",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Shihao Cheng",
+        "Jie Wen",
+        "Houli Jiang",
+        "Yuhang Zhou",
+        "Yi Zhu",
+        "Danyang Zhang",
+        "Lingyi Kong",
+        "Jun Luo"
+      ],
       "topics": [],
       "sources": [
         "crossref:0022-3263:online",
@@ -711,6 +1088,56 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/d41586-026-03118-8",
+      "journal": "Nature",
+      "title": "Battle of the Anthropocene: allegations re-ignite row over proposed geologic epoch",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "James Dinneen"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-03101-3",
+      "journal": "Nature",
+      "title": "Gaze into the cosmos and through the eyes of a bee — September’s best science images",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Davide Castelvecchi"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
     },
     {
       "doi": "10.1038/d41586-026-03042-x",
@@ -806,6 +1233,29 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/s41467-026-77773-w",
+      "journal": "Nature Communications",
+      "title": "Cross-border electricity tariffs undermine power system efficiency, decarbonization and reliability in North America",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Siyuan Wang",
+        "Fengqi You"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/s41467-026-78166-9",
       "journal": "Nature Communications",
       "title": "Genome mining of the tumor microbiome reveals biosynthetic diversity and potential pathology-modulating metabolites",
@@ -828,6 +1278,36 @@
         "Xuefeng Peng",
         "Hexin Chen",
         "Jie Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78080-0",
+      "journal": "Nature Communications",
+      "title": "Head-to-tail assembled borphyrins for solid-state lithium extraction",
+      "abstract": "Abstract Lithium is a critical mineral for advancing greener technologies. Extraction of lithium ions (Li⁺) from sea salt, minerals, and waste is important, but has been hindered by the lack of extraction methods that offer both high selectivity and strong lithium affinity. Here, we report a dioxaborole-linked, head-to-tail assembled macrocycle – termed borphyrin – featuring a rigid cavity with a 16-crown-4-like configuration. This molecule exhibits strong affinity for lithium and high selectivity over competing cations under dry solid-liquid extraction conditions, owing to its narrow binding cavity and planar macrocyclic core. Borphyrin enabled the extraction of lithium from crystalline solids of ether-insoluble salts, as well as selective extraction of Li⁺ from dried mixed-salt matrices containing alkali, alkaline earth and transition-metal salts. These results establish borphyrin as a potential molecular platform for selective lithium recognition and solid-liquid lithium extraction.",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Ehsan Hamzehpoor",
+        "Seiya Ota",
+        "Suprio Chowdhury",
+        "Zongzhe Li",
+        "Ashley Yeung",
+        "Rhianna A. Parcon",
+        "Raksha Kandel",
+        "Brian O. Patrick",
+        "Mark J. MacLachlan"
       ],
       "topics": [],
       "sources": [
@@ -950,6 +1430,191 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/s41467-026-78267-5",
+      "journal": "Nature Communications",
+      "title": "Wide-bandgap perovskite with homogeneous crystallization and suppressed halogen segregation for efficient perovskite-organic tandem solar cells",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Xinhong Zhu",
+        "Yuwei Duan",
+        "Zhuang Xie",
+        "Qiuyan Cao",
+        "Dexin Zhang",
+        "Hongxiang Li",
+        "Qunping Fan",
+        "Kai Wang",
+        "Shengzhong Liu",
+        "Qiang Peng"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s44160-026-01152-y",
+      "journal": "Nature Synthesis",
+      "title": "Descriptor-informed multi-component doping enables high-performance Co-free Ni-rich cathodes",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Siqi Guan",
+        "Tong Yu",
+        "Pei Tang",
+        "Huize Wu",
+        "Qian Wei",
+        "Nan Piao",
+        "Lixiang Li",
+        "Jianqiu Zhu",
+        "Linjuan Zhang",
+        "Baigang An",
+        "Yutao Niu",
+        "Guangjian Hu",
+        "Zhenhua Sun",
+        "Chunyang Wang",
+        "Hui-Ming Cheng",
+        "Feng Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2731-0582:online",
+        "crossref:2731-0582:published",
+        "crossref:2731-0582:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s44160-026-01164-8",
+      "journal": "Nature Synthesis",
+      "title": "Ice-mediated interfacial membrane synthesis of cargo-independent microcapsules",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Hongzhong Du",
+        "Jiahui Wu",
+        "Kai Yang",
+        "Chuanbiao Zhang",
+        "Dan Wang",
+        "Xiaoting Chen",
+        "Siyuan Wang",
+        "Yuchen Wu",
+        "Shuo Jin",
+        "Xiaofei Chen",
+        "Zhiyuan He"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2731-0582:online",
+        "crossref:2731-0582:published",
+        "crossref:2731-0582:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/s44160-026-01148-8",
+      "journal": "Nature Synthesis",
+      "title": "Programming membranes with ice",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Moon Jeong Park"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2731-0582:online",
+        "crossref:2731-0582:published",
+        "crossref:2731-0582:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s44160-026-01168-4",
+      "journal": "Nature Synthesis",
+      "title": "Propionic acid synthesis via room-temperature coupling of ethane and CO",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Jiajie Hou",
+        "Wenxuan Liu",
+        "Kuan-hua Wang",
+        "Minghan Li",
+        "Shao-chun Wen",
+        "Mu-jeng Cheng",
+        "Bingjun Xu",
+        "Qi Lu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2731-0582:online",
+        "crossref:2731-0582:published",
+        "crossref:2731-0582:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03558",
+      "journal": "Organic Letters",
+      "title": "Atroposelective Desymmetrizing Iodination via Chiral Phosphoric Acid Catalysis: Synthesis of Axially Chiral Biaryl Phosphine Oxides",
+      "abstract": "Abstract Herein, we report a CPA-catalyzed atroposelective iodination of prochiral phosphine oxides bearing no hydrogen-bond-donor substituents, affording a range of 3′-iodinated axially chiral biaryl phosphine oxides in excellent yields and enantioselectivities. The reaction proceeds through synergistic noncovalent interactions among the iodinating reagent, the catalyst, and the substrate, eliminating the need for substrate pre-functionalization or external additives. The method accommodates both di-tert-butyl and dicyclohexyl phosphine oxide substrates, as well as diverse substitution patterns on both aromatic rings.",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Yan Chang",
+        "Yushen Gao",
+        "Xinghua Wang",
+        "An-An Zhang",
+        "Mingliang Zhang",
+        "Gaowei Li",
+        "Bing-Bing Song",
+        "Yuan-Yuan Gao",
+        "Qiuling Song",
+        "Lantao Liu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
       "doi": "10.1021/acs.orglett.6c03789",
       "journal": "Organic Letters",
       "title": "Design of Small Circularly Polarized Luminescence-Active Planar-Chiral Azaboroles",
@@ -966,6 +1631,43 @@
         "Jhon Sebastian Oviedo Ortiz",
         "Jeanne Crassous",
         "Martin Kotora"
+      ],
+      "topics": [
+        "Synthesis and Properties of Aromatic Compounds",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Organoboron and organosilicon chemistry",
+        "Supramolecular Self-Assembly in Materials"
+      ],
+      "sources": [
+        "crossref:1523-7052:online",
+        "crossref:1523-7052:published",
+        "crossref:1523-7052:created",
+        "crossref:1523-7060:online",
+        "crossref:1523-7060:published",
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03956",
+      "journal": "Organic Letters",
+      "title": "Dithiane-Enabled Divergent Ring Rearrangements for the Construction of Sulfur-Containing Semisaturated Fused Pyridines and Pyrroles",
+      "abstract": "Abstract Sulfur-containing semisaturated N-heterocycles represent valuable three-dimensional drug-relevant scaffolds, yet general divergent synthetic approaches remain scarce. Herein, we report a metal-free cis-selective [3 + 2] cycloaddition between alkynyl 1,3-dithianes and 2H-azirines to construct strain-encoded bicyclic aziridine intermediates. The 1,3-dithiane unit functions as a sulfur shuttle that enables two reagent-controlled rearrangement pathways: Brønsted-acid-mediated ring expansion through 1,2-sulfur migration affords sulfur-functionalized semisaturated fused pyridines, whereas oxidative Lewis-acid-promoted ring contraction furnishes sulfur-functionalized semisaturated fused pyrroles.",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Xiaomeng Gong",
+        "Guohong Tang",
+        "Yingying Xue",
+        "Rui-Peng Li",
+        "Shouchu Tang"
       ],
       "topics": [],
       "sources": [
@@ -1123,14 +1825,22 @@
         "Jianwu Lan",
         "Jiaojiao Shang"
       ],
-      "topics": [],
+      "topics": [
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Magnetism in coordination complexes",
+        "Metalloenzymes and iron-sulfur proteins"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1152,14 +1862,22 @@
         "Jasper L. Tyler",
         "Varinder K. Aggarwal"
       ],
-      "topics": [],
+      "topics": [
+        "Sulfur-Based Synthesis Techniques",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Radical Photochemical Reactions",
+        "Organoboron and organosilicon chemistry"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1186,14 +1904,22 @@
         "Yan Zhao",
         "Wei Tian"
       ],
-      "topics": [],
+      "topics": [
+        "Covalent Organic Framework Applications",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Porphyrin and Phthalocyanine Chemistry",
+        "Advanced battery technologies research"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1216,14 +1942,22 @@
         "Degao Wang",
         "Fei Li"
       ],
-      "topics": [],
+      "topics": [
+        "Advanced Photocatalysis Techniques",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "Copper-based nanomaterials and applications",
+        "TiO2 Photocatalysis and Solar Cells"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1241,14 +1975,22 @@
       "authors": [
         "Dennis A. Kutateladze"
       ],
-      "topics": [],
+      "topics": [
+        "Catalytic C–H Functionalization Methods",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalytic Cross-Coupling Reactions",
+        "Asymmetric Hydrogenation and Catalysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1276,20 +2018,28 @@
         "Ben Zhong Tang",
         "Zhen Li"
       ],
-      "topics": [],
+      "topics": [
+        "Luminescence and Fluorescent Materials",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Organic Light-Emitting Diodes Research",
+        "Metal-Organic Frameworks: Synthesis and Applications"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.7344670",
@@ -1306,20 +2056,28 @@
         "Wei‐Guang Wang",
         "Yudai Matsuda"
       ],
-      "topics": [],
+      "topics": [
+        "Microbial Natural Products and Biosynthesis",
+        "Pharmacology",
+        "Medicine",
+        "Health Sciences",
+        "Synthetic Organic Chemistry Methods",
+        "Plant biochemistry and biosynthesis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.8881851",
@@ -1338,14 +2096,22 @@
         "Xiao‐Dong Luo",
         "Min Ye"
       ],
-      "topics": [],
+      "topics": [
+        "Plant Gene Expression Analysis",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Sunflower and Safflower Cultivation",
+        "Traditional Chinese Medicine Analysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1369,14 +2135,22 @@
         "Beate Paulus",
         "Roland R. Netz"
       ],
-      "topics": [],
+      "topics": [
+        "Spectroscopy and Quantum Chemical Studies",
+        "Atomic and Molecular Physics, and Optics",
+        "Physics and Astronomy",
+        "Physical Sciences",
+        "Advanced Chemical Physics Studies",
+        "Chemical and Physical Studies"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1401,20 +2175,28 @@
         "Jie‐Yu Wang",
         "Jian Pei"
       ],
-      "topics": [],
+      "topics": [
+        "Magnetism in coordination complexes",
+        "Electronic, Optical and Magnetic Materials",
+        "Materials Science",
+        "Physical Sciences",
+        "Synthesis and Properties of Aromatic Compounds",
+        "Supramolecular Chemistry and Complexes"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.5794634",
@@ -1433,14 +2215,22 @@
         "Frank Würthner",
         "Jake L. Greenfield"
       ],
-      "topics": [],
+      "topics": [
+        "Photochromic and Fluorescence Chemistry",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Supramolecular Self-Assembly in Materials",
+        "Supramolecular Chemistry and Complexes"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1462,14 +2252,22 @@
         "Bastien Michelet",
         "Sébastien Thibaudeau"
       ],
-      "topics": [],
+      "topics": [
+        "Fluorine in Organic Chemistry",
+        "Pharmaceutical Science",
+        "Pharmacology, Toxicology and Pharmaceutics",
+        "Life Sciences",
+        "Synthesis and Characterization of Pyrroles",
+        "Inorganic Fluorides and Related Compounds"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1496,14 +2294,22 @@
         "Wei‐Hong Zhu",
         "Zhiqian Guo"
       ],
-      "topics": [],
+      "topics": [
+        "Supramolecular Self-Assembly in Materials",
+        "Biomaterials",
+        "Materials Science",
+        "Physical Sciences",
+        "Polydiacetylene-based materials and applications",
+        "Alzheimer's disease research and treatments"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1529,20 +2335,28 @@
         "Jian Weng",
         "Jun Xu"
       ],
-      "topics": [],
+      "topics": [
+        "2D Materials and Applications",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Solar-Powered Water Purification Methods",
+        "Layered Double Hydroxides Synthesis and Applications"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.7232174",
@@ -1561,20 +2375,28 @@
         "Zhi‐Qiang Wang",
         "Yaxuan Jing"
       ],
-      "topics": [],
+      "topics": [
+        "Covalent Organic Framework Applications",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Organoboron and organosilicon chemistry",
+        "Advanced Polymer Synthesis and Characterization"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.4933664",
@@ -1602,14 +2424,22 @@
         "Oscar Castillo",
         "Pedro Castaño"
       ],
-      "topics": [],
+      "topics": [
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalysts for Methane Reforming",
+        "Enhanced Oil Recovery Techniques"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1638,14 +2468,22 @@
         "Shujiang Ding",
         "Guorui Yang"
       ],
-      "topics": [],
+      "topics": [
+        "Advanced Battery Materials and Technologies",
+        "Electrical and Electronic Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Advancements in Battery Materials",
+        "Extraction and Separation Processes"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1670,20 +2508,28 @@
         "Kelong Zhu",
         "Wei Wang"
       ],
-      "topics": [],
+      "topics": [
+        "Synthesis and Properties of Aromatic Compounds",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Supramolecular Chemistry and Complexes",
+        "Luminescence and Fluorescent Materials"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.9487218",
@@ -1703,14 +2549,22 @@
         "Minh T. N. Le",
         "Guillermo C. Bazan"
       ],
-      "topics": [],
+      "topics": [
+        "Lipid Membrane Structure and Behavior",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Extracellular vesicles in disease",
+        "Polydiacetylene-based materials and applications"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1730,14 +2584,22 @@
         "Bo Xiao",
         "Jianrong Steve Zhou"
       ],
-      "topics": [],
+      "topics": [
+        "Asymmetric Hydrogenation and Catalysis",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Asymmetric Synthesis and Catalysis",
+        "Coordination Chemistry and Organometallics"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1762,14 +2624,22 @@
         "Lina Zhu",
         "Deming Kong"
       ],
-      "topics": [],
+      "topics": [
+        "Covalent Organic Framework Applications",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Carbon dioxide utilization in catalysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1795,14 +2665,22 @@
         "Zhi‐Xiang She",
         "Yang Mu"
       ],
-      "topics": [],
+      "topics": [
+        "bioluminescence and chemiluminescence research",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Biosensors and Analytical Detection",
+        "Microbial Fuel Cells and Bioremediation"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1823,14 +2701,22 @@
         "Chao‐Jun Li",
         "Huiying Zeng"
       ],
-      "topics": [],
+      "topics": [
+        "Radical Photochemical Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalytic C–H Functionalization Methods",
+        "Sulfur-Based Synthesis Techniques"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1862,20 +2748,28 @@
         "Andrzej Gładysiak",
         "Kyriakos C. Stylianou"
       ],
-      "topics": [],
+      "topics": [
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Carbon Dioxide Capture Technologies",
+        "Carbon dioxide utilization in catalysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.4614735",
@@ -1895,20 +2789,28 @@
         "Qiaomei Sun",
         "Zhaoxiang Zhong"
       ],
-      "topics": [],
+      "topics": [
+        "Adsorption and biosorption for pollutant removal",
+        "Water Science and Technology",
+        "Environmental Science",
+        "Physical Sciences",
+        "Layered Double Hydroxides Synthesis and Applications",
+        "Geochemistry and Elemental Analysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.8453410",
@@ -1938,14 +2840,22 @@
         "Michael G. Tanner",
         "Marc Vendrell"
       ],
-      "topics": [],
+      "topics": [
+        "Photodynamic Therapy Research Studies",
+        "Pulmonary and Respiratory Medicine",
+        "Medicine",
+        "Health Sciences",
+        "Nanoplatforms for cancer theranostics",
+        "Cancer Research and Treatments"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -1973,14 +2883,22 @@
         "Xiaojun Wang",
         "Jia Zhu"
       ],
-      "topics": [],
+      "topics": [
+        "Extraction and Separation Processes",
+        "Mechanical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Advanced Battery Materials and Technologies",
+        "Membrane-based Ion Separation Techniques"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2004,14 +2922,22 @@
         "Yang Li",
         "Jing Li"
       ],
-      "topics": [],
+      "topics": [
+        "Synthesis and Catalytic Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Click Chemistry and Applications",
+        "Catalytic C–H Functionalization Methods"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2036,14 +2962,22 @@
         "Guangzheng Wei",
         "Xudong Qu"
       ],
-      "topics": [],
+      "topics": [
+        "Enzyme Catalysis and Immobilization",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Microbial Natural Products and Biosynthesis",
+        "Plant Gene Expression Analysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2064,14 +2998,22 @@
         "Michal T. Boniecki",
         "Antonio Ruzzini"
       ],
-      "topics": [],
+      "topics": [
+        "Antimicrobial Peptides and Activities",
+        "Microbiology",
+        "Immunology and Microbiology",
+        "Life Sciences",
+        "Antimicrobial Resistance in Staphylococcus",
+        "Bacterial Infections and Vaccines"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2096,14 +3038,47 @@
         "Jun Lin",
         "Chunxia Li"
       ],
-      "topics": [],
+      "topics": [
+        "Cancer, Hypoxia, and Metabolism",
+        "Cancer Research",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Cancer Research and Treatments",
+        "Nanoplatforms for cancer theranostics"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/d41586-026-03138-4",
+      "journal": "Nature",
+      "title": "Daily briefing: How to save corals from the El Niño",
+      "abstract": "",
+      "date": "2026-09-30",
+      "type": "journal-article",
+      "authors": [
+        "Flora Graham"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2157,14 +3132,22 @@
         "Fanghua Ji",
         "Guangbin Jiang"
       ],
-      "topics": [],
+      "topics": [
+        "Radical Photochemical Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Oxidative Organic Chemistry Reactions",
+        "Catalytic C–H Functionalization Methods"
+      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
         "crossref:1523-7052:created",
         "crossref:1523-7060:online",
         "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2189,20 +3172,53 @@
         "Hong-Min Liu",
         "Ying Xu"
       ],
-      "topics": [],
+      "topics": [
+        "Catalytic Alkyne Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Synthetic Organic Chemistry Methods",
+        "Synthesis of Indole Derivatives"
+      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
         "crossref:1523-7052:created",
         "crossref:1523-7060:online",
         "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1038/d41586-026-03122-y",
+      "journal": "Nature",
+      "title": "Daily briefing: Vaping has ‘alarming’ risks for children",
+      "abstract": "",
+      "date": "2026-09-29",
+      "type": "journal-article",
+      "authors": [
+        "Flora Graham"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0028-0836:online",
+        "crossref:0028-0836:published",
+        "crossref:0028-0836:created",
+        "crossref:1476-4687:online",
+        "crossref:1476-4687:published",
+        "crossref:1476-4687:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
     },
     {
       "doi": "10.1021/acscatal.6c05520",
@@ -2283,10 +3299,18 @@
     "10.31635/ccschem.026.202608090",
     "10.31635/ccschem.026.202607590",
     "10.31635/ccschem.026.202607612",
+    "10.1021/jacs.6c12127",
+    "10.1021/jacs.6c09506",
+    "10.1021/jacs.6c15980",
     "10.1021/jacs.6c11755",
     "10.1021/jacs.6c13849",
     "10.1021/acs.joc.6c01172",
+    "10.1021/acs.joc.6c01558",
+    "10.1038/s44160-026-01164-8",
+    "10.1038/s44160-026-01168-4",
+    "10.1021/acs.orglett.6c03558",
     "10.1021/acs.orglett.6c03789",
+    "10.1021/acs.orglett.6c03956",
     "10.1021/acs.orglett.6c03894",
     "10.1021/acscatal.6c07088",
     "10.1021/acscatal.6c06347",
@@ -2295,12 +3319,20 @@
     "10.1002/anie.1701592",
     "10.1002/anie.4897216",
     "10.1002/anie.7673910",
+    "10.1002/anie.6013056",
+    "10.1002/anie.7344670",
     "10.1002/anie.8881851",
+    "10.1002/anie.3435388",
     "10.1002/anie.8050538",
+    "10.1002/anie.1894063",
+    "10.1002/anie.7232174",
     "10.1002/anie.4933664",
+    "10.1002/anie.5185321",
     "10.1002/anie.9277033",
     "10.1002/anie.4613575",
     "10.1002/anie.4827662",
+    "10.1002/anie.9809119",
+    "10.1002/anie.4614735",
     "10.1002/anie.8453410",
     "10.1002/anie.7400940",
     "10.1002/anie.9826344",
