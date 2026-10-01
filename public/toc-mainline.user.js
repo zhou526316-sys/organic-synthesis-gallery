@@ -17,6 +17,8 @@
 // @match        https://*.sciencedirect.com/*
 // @match        https://www.cell.com/*
 // @match        https://*.cell.com/*
+// @match        https://www.chinesechemsoc.org/*
+// @match        https://chinesechemsoc.org/*
 // @match        https://www.ccspublishing.org.cn/*
 // @match        https://*.ccspublishing.org.cn/*
 // @match        https://doi.org/*
@@ -41,6 +43,7 @@
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
   var CONTROLLER_REVISION = '2.2.39';
+  var CAPTURE_HOTFIX_REVISION = '20261001-newest-retry-v1';
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -490,6 +493,7 @@ function embeddedJobDois(value) {
       // for a TOC gap needlessly hits AAAS access control.
       return 'https://www.science.org/doi/' + (job && job.captureToc === true ? '' : (figureJob ? 'full/' : '')) + doi;
     }
+    if (publisher === 'ccs') return 'https://www.chinesechemsoc.org/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'rsc') {
       var rsc = /^([a-z])(\d)([a-z]{2})/i.exec(suffix);
       if (rsc) return 'https://pubs.rsc.org/en/content/articlelanding/' + String(2020 + Number(rsc[2])) + '/' + rsc[3].toLowerCase() + '/' + suffix.toLowerCase();
@@ -803,21 +807,25 @@ function embeddedJobDois(value) {
 
   function captureQueueTier(job, latestAddedDate) {
     var isLatest = Boolean(latestAddedDate && String(job && job.addedDate || '') === String(latestAddedDate));
-    // TOC coverage is the hard first pass. "Latest" only boosts a job inside the
-    // missing-TOC class; it must never let a figure/evidence job jump ahead of a
-    // paper that still has no card visual.
+    // The latest Gallery additions are an article cohort, not only a TOC class.
+    // Their missing figures/evidence must not be displaced by historical TOCs.
+    if (isLatest) return -4;
     if (job && job.captureToc === true) {
-      if (isLatest) return -4;
       if (isNatureScienceFamilyJob(job)) return -3;
       return -2;
     }
     if (job && job.summaryUrgent === true) return -1;
-    // Only after all missing-TOC work is exhausted may today's already-covered
-    // papers move ahead for body figures/evidence.
-    if (isLatest) return 0;
     if (job && (String(job.state || '') === 'figure_gap' || String(job.mediaNeed || '') === 'figures')) return 2;
     if (String(job && job.mediaNeed || '') === 'evidence') return 3;
     return 4;
+  }
+
+  function queueRegistryChanged(a,b) {
+    if (String(a.latestAddedDate||'')!==String(b.latestAddedDate||'')) return true;
+    function identity(q) {
+      return (q.articles||[]).map(function(x){return normalizeDoi(x.doi)+'|'+String(x.addedDate||'')+'|'+String(x.date||'')+'|'+String(x.journal||'');}).sort().join('\n');
+    }
+    return identity(a)!==identity(b);
   }
 
   function compareCaptureJobs(a, b, latestAddedDate) {
@@ -985,6 +993,7 @@ function embeddedJobDois(value) {
       }
       function fallbackOrReject(gmError) {
         if (settled) return;
+        if (/Request was blocked by the user|Refused to connect.*blocked/i.test(String(gmError && gmError.message || ''))) { rejectOnce(gmError); return; }
         var canFallback = controllerTransportUrl(options && options.url)
           && !(options && options.responseType && options.responseType !== 'text');
         if (!canFallback) {
@@ -994,11 +1003,13 @@ function embeddedJobDois(value) {
         // Controller/API traffic may use normal fetch when the extension transport
         // is unavailable. Publisher image acquisition remains GM-only.
         nativeControllerRequest(options).then(resolveOnce).catch(function (fetchError) {
-          rejectOnce(new Error(
+          var failure = new Error(
             'gm_then_fetch_failed:' +
             String(gmError && gmError.message || gmError || 'gm_unknown') +
             ';fetch:' + String(fetchError && fetchError.message || fetchError || 'unknown')
-          ));
+          );
+          failure.controllerFallbackTried=true;
+          rejectOnce(failure);
         });
       }
       try {
@@ -1188,6 +1199,7 @@ function embeddedJobDois(value) {
       response = await gmRequest({method:'POST',url:url,timeout:45000,
         headers:{'content-type':'application/json',authorization:'Bearer '+token},data:JSON.stringify(payload)});
     } catch (gmError) {
+      if (gmError && gmError.controllerFallbackTried) throw gmError;
       // Do not route around an explicit extension permission denial.
       if (/Request was blocked by the user|Refused to connect.*blocked/i.test(String(gmError && gmError.message || ''))) throw gmError;
       try { return await fetchPostJson(url, payload, token); }
@@ -1204,8 +1216,23 @@ function embeddedJobDois(value) {
     var raw = String(response.responseText || ''); var body = {};
     try { body = JSON.parse(raw || '{}'); } catch (_) {}
     var status = Number(response.status || 0);
+    if (shouldNativeRetryUpload(response,url)) {
+      // Same endpoint, same bytes and idempotent receipt validation. Only retry a
+      // gateway markup error; never bypass 401/403/429, JSON errors or Retry-After.
+      return await fetchPostJson(url,payload,token);
+    }
     if (status < 200 || status >= 300) throw uploadResponseError(status, body, raw, function (h) { return headerValue(response.responseHeaders, h); }, 'gm_request');
     return body;
+  }
+
+  function shouldNativeRetryUpload(response,url) {
+    var status=Number(response && response.status || 0);
+    var raw=String(response && response.responseText || '').trim();
+    var target; try { target=new URL(url); } catch (_) { return false; }
+    var owned=target.protocol==='https:' && ['api.gczhouwld.com','organic-synthesis-gallery.zhou526316.workers.dev'].indexOf(target.hostname)>=0;
+    return owned && [502,503,504].indexOf(status)>=0
+      && /^(?:<!doctype\s+html|<html|<head|<body)/i.test(raw)
+      && !headerValue(response.responseHeaders,'retry-after');
   }
 
   function retryableImageUpload(error) {
@@ -2292,7 +2319,7 @@ function embeddedJobDois(value) {
       return {status:'stored',evidenceLevel:level,chars:Number(receipt.chars||packet._metrics.chars),sections:Number(receipt.sections||packet._metrics.sections),sourceHash:String(receipt.sourceHash||''),evidencePacketHash:String(receipt.evidencePacketHash||''),summaryReviewQueued:summaryReviewQueued,summaryReviewQueueReason:summaryReviewQueueReason};
     } catch (error) {
       pushTrace(trace,{stage:'evidence_capture',event:'failed',status:'failed',url:location.href,httpStatus:Number(error&&error.httpStatus||0),message:String(error&&error.message||error).slice(0,240)});
-      return {status:'failed',reason:String(error&&error.message||error).slice(0,240)};
+      return {status:'failed',reason:String(error&&error.message||error).slice(0,240),retryAfterMs:Number(error&&error.retryAfterMs||0)};
     }
   }
 
@@ -2620,7 +2647,16 @@ function embeddedJobDois(value) {
     });
   }
 
+  function isAcsImageViewerUrl(value) {
+    try { var u=new URL(value,location.href); return u.hostname==='pubs.acs.org' && /^\/view-large\/figure\//i.test(u.pathname); }
+    catch (_) { return false; }
+  }
+
   async function acquireImage(candidate, trace) {
+    if (isAcsImageViewerUrl(candidate && candidate.url)) {
+      pushTrace(trace,{stage:'image_route',event:'skip_html_viewer',status:'skipped',url:candidate.url,message:'ACS viewer is not image bytes; retain same-figure DOM/CDN candidates'});
+      return null;
+    }
     var image = await pageFetchCandidate(candidate, trace);
     if (image && image.contentType === 'image/tiff') {
       pushTrace(trace,{stage:'candidate_format',event:'unsupported_tiff',status:'unsupported',url:image.sourceUrl||candidate.url,contentType:'image/tiff',byteLength:image.byteLength,message:'browser/Worker protocol does not accept TIFF; try another variant from the same labelled figure'});
@@ -2865,6 +2901,7 @@ function embeddedJobDois(value) {
         } catch(error) {
           if (/doi_mismatch|stale|unbound|user_aborted/.test(String(error.message))) throw error;
           result.toc={status:'failed',reason:String(error.message)};
+          result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number(error.retryAfterMs||0));
           captureLiveUpdate(job,'image_failed',{label:'TOC',error:error.message});
         }
       }
@@ -2894,6 +2931,7 @@ function embeddedJobDois(value) {
         } catch(error) {
           if (/doi_mismatch|stale|unbound|user_aborted/.test(String(error.message))) throw error;
           result.figures.failed+=1;
+          result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number(error.retryAfterMs||0));
           result.figures.items.push({label:label,status:'failed',reason:String(error.message)});
           captureLiveUpdate(job,'image_failed',{label:label,error:error.message});
         }
@@ -3162,6 +3200,7 @@ function embeddedJobDois(value) {
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.39')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
+      var queueCheckedAt=Date.now();
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
       var evidenceInventory=null;
@@ -3234,6 +3273,23 @@ function embeddedJobDois(value) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
         // Fail before opening any page, and never dispatch after loss of ownership.
         if(!renewLease()) {stopReason='controller_lease_lost';break;}
+        if (i>0 && Date.now()-queueCheckedAt>=60000) {
+          try {
+            var refreshedQueue=await getJson(QUEUE_URL+'?ts='+Date.now());
+            queueCheckedAt=Date.now();
+            if (!Array.isArray(refreshedQueue.articles) || refreshedQueue.articles.length!==Number(refreshedQueue.webpageDoiCount)
+                || Number(refreshedQueue.mediaGeneration)!==1790082000000) throw new Error('invalid_queue_refresh');
+            if (queueRegistryChanged(queue,refreshedQueue)) {
+              summary.refreshPending=true;
+              badge('检测到文献队列更新；当前篇已保存，重新按最新上架排序','#374151');
+              break;
+            }
+          } catch(queueError) {
+            summary.refreshPending=true;
+            summary.queueRefreshError=String(queueError.message||queueError).slice(0,120);
+            break; // Do not open possibly removed DOI from an unverifiable old registry.
+          }
+        }
         if (publisherAccessCooling(batch[i])) {
           summary.skipped+=1;
           badge('出版社访问验证冷却，已跳过 '+batch[i].doi+'；继续其他来源','#92400e');
@@ -3289,6 +3345,7 @@ function embeddedJobDois(value) {
         }
         if(result && !stopReason) {
           result.version=VERSION;
+          result.retryPolicyRevision=CAPTURE_HOTFIX_REVISION;
           result.retryCount=Number(priorAttempt&&priorAttempt.reason!=='controller_lease_lost'&&priorAttempt.retryCount||0)+1;
           summary.results.push(result);summary[result.status]=(summary[result.status]||0)+1;
           summary.tocStored+=result.toc&&result.toc.status==='stored'?1:0;
@@ -3327,9 +3384,9 @@ function embeddedJobDois(value) {
       if(stopReason==='active_task_wait' && !isAbortRequested() && GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},15000);
-      } else if(!stopReason&&(remainingAvailable.length>0||urgentEvidencePending)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      } else if(!stopReason&&(summary.refreshPending||remainingAvailable.length>0||urgentEvidencePending)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
-        var nextDelay=remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000;
+        var nextDelay=summary.queueRefreshError?60*1000:summary.refreshPending?1500:remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000;
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},nextDelay);
       }
     } catch(error) {
@@ -3650,6 +3707,7 @@ function embeddedJobDois(value) {
   }
 
   async function finishPairedJob(job,result,trace,token) {
+    result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number((result.fulltext||{}).retryAfterMs||0));
     result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.controllerRevision=CONTROLLER_REVISION;result.finishedAt=nowIso();
     GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,status:result.status,trace:trace,finishedAt:result.finishedAt});
     enqueueCaptureReport(job,trace,result.status,result.reason,true);
@@ -3666,7 +3724,21 @@ function embeddedJobDois(value) {
     if (!prior) return true;
     if (prior.status==='success') return false;
     var elapsed=now-Date.parse(prior.finishedAt||0);
-    var count=Number(prior.retryCount||1);
+    var count=Math.max(1,Number(prior.retryCount||1));
+    var detail=[prior.reason,(prior.toc||{}).reason,(prior.fulltext||{}).reason]
+      .concat(((prior.figures||{}).items||[]).filter(function(x){return x.status==='failed';}).map(function(x){return x.reason;})).join(';');
+    if (/doi_mismatch|receipt_invalid|stale_or_unbound/i.test(detail)) {
+      return elapsed>=Math.max(6*60*60*1000,Number(prior.retryAfterMs||0));
+    }
+    if (/permission|blocked by the user|Refused to connect|(?:http_|status[=:])(401|403|429)|auth_|challenge_|publisher_access_gate/i.test(detail)) {
+      return elapsed>=Math.max(30*60*1000,Number(prior.retryAfterMs||0));
+    }
+    // One retry of CCS's old missing-injection failure after this exact host fix.
+    if (String(prior.doi||'').indexOf('10.31635/')===0 && prior.reason==='bound_publisher_heartbeat_missing'
+        && prior.retryPolicyRevision!==CAPTURE_HOTFIX_REVISION) return true;
+    if (/gm_request|gm_then_fetch|Failed to fetch|NetworkError|timeout|heartbeat_missing|upload_http_50[234]|queue_http_50[234]|signal is aborted/i.test(detail)) {
+      return elapsed>=Math.max([5,15,30,60][Math.min(count-1,3)]*60*1000,Number(prior.retryAfterMs||0));
+    }
     if (count>=3 && elapsed<12*60*60*1000) return false;
     if (prior.figures && prior.figures.status==='staged' && (prior.toc||{}).status!=='failed') return elapsed>=6*60*60*1000;
     return elapsed>=Math.min(count*30,180)*60*1000;
@@ -3769,7 +3841,7 @@ function embeddedJobDois(value) {
     setTimeout(controllerRun, 1500);
     setInterval(function () {
       if (!GM_getValue(ACTIVE_JOB_KEY, null)) controllerRun();
-    }, 30 * 60 * 1000);
+    }, 60 * 1000);
   } else {
     publisherBoot();
   }
