@@ -44,6 +44,8 @@
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
   var CONTROLLER_REVISION = '2.2.39';
   var CAPTURE_HOTFIX_REVISION = '20261001-newest-retry-v1';
+  var CONTROLLER_LIFECYCLE_REVISION = '20261001-controller-recovery-v2';
+  var controllerResumeTimer = null;
   var CONTROLLER_STOP_REASON = '';
   var GALLERY_HOST = 'gallery.gczhouwld.com';
   var GALLERY_PATH = '/';
@@ -71,6 +73,7 @@
   var ENABLED_KEY = P + 'enabled';
   var ACTIVE_JOB_KEY = P + 'active-job';
   var LEASE_KEY = P + 'controller-lease';
+  var RESUME_REQUEST_KEY = P + 'controller-resume-request-v2';
   var SUMMARY_KEY = P + 'last-run-summary';
   var BATCH_SIZE_KEY = P + 'batch-size';
   var ABORT_KEY = P + 'abort-request';
@@ -114,7 +117,7 @@
       var sameImage = same && prev.label === String(detail.label || job._liveLabel || '');
       var row = {
         jobId: job.jobId, doi: normalizeDoi(job.doi), controllerRevision: CONTROLLER_REVISION,
-        captureProtocol: VERSION, phase: String(phase || 'working').slice(0, 40),
+        lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'', captureProtocol: VERSION, phase: String(phase || 'working').slice(0, 40),
         at: Date.now(), startedAt: job.startedAt,
         label: String(detail.label || job._liveLabel || '').slice(0, 40),
         tocStatus: String((result.toc || {}).status || 'pending'),
@@ -148,6 +151,7 @@
     var state = CONTROLLER_STOP_REASON || summary.stopReason || '';
     if (active) state = paused ? 'pausing' : row ? row.phase : 'awaiting_publisher';
     else if (paused) state = 'paused';
+    if(paused&&typeof controllerLifecycleSnapshot==='function'&&controllerLifecycleSnapshot().resumePending)state='resume_wait';
     else if (!state) state = summary.finishedAt ? 'between_batches' : 'idle';
     // Startup/auth progress is a separate local source; do not fabricate fresh activity.
     if (active && !paused && progress && /^(auth_wait|challenge_wait)$/.test(progress.status) &&
@@ -171,7 +175,7 @@
 
   function captureLiveText(s) {
     var phaseNames = {
-      idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
+      resume_wait:'等待旧任务收尾后自动恢复', idle:'等待启动', paused:'已暂停', pausing:'正在停止当前任务', between_batches:'本批结束／等待下一批或重试',
       awaiting_publisher:'已开任务页，等待出版社脚本', discovering:'识别 TOC 和正文图',
       auth_wait:'等待出版社登录', challenge_wait:'等待出版社验证', downloading:'获取图片候选',
       comparing:'比较清晰度／矢量结构', uploading:'上传并等待存储回执', saved:'已收到存储回执',
@@ -209,7 +213,7 @@
     var details = document.createElement('details');
     details.open = GM_getValue(LIVE_PANEL_KEY, true) !== false;
     var heading = document.createElement('summary');
-    heading.textContent = '抓取实时进度 · ' + CONTROLLER_REVISION;
+    heading.textContent = '抓取实时进度 · ' + CONTROLLER_REVISION + ' · 控制恢复修复2';
     details.appendChild(heading);
     var main = document.createElement('main');
     var dl = document.createElement('dl');
@@ -289,7 +293,7 @@
       var seen=new Set();var events=important.concat(recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
       var page=autoReportUrl(actualPageUrl===undefined?location.href:actualPageUrl);
       var last=important.length?important[important.length-1]:recent[recent.length-1]||{};
-      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,controllerRevision:CONTROLLER_REVISION,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
+      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,controllerRevision:CONTROLLER_REVISION,lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
       var context={at:nowIso(),seq:0,stage:'diagnostic_context',event:final?'final_result':'failure_checkpoint',status:'info',url:page,message:JSON.stringify(metadata)};
       var finalResult=job._liveResult||{};
       var figureItems=(finalResult.figures&&Array.isArray(finalResult.figures.items)?finalResult.figures.items:[]).filter(function(item){return item&&/^(?:staged|already_staged)$/.test(String(item.status||''));});
@@ -712,6 +716,7 @@ function embeddedJobDois(value) {
       uploadedReason: 'user_menu',
       total: traces.length,
       summary: GM_getValue(SUMMARY_KEY, {}),
+      controllerState:controllerLifecycleSnapshot(),
       activeJob: activeDoi ? {
         doi: activeDoi,
         publisher: String(activeJob.publisher || publisherForDoi(activeDoi)),
@@ -2985,21 +2990,66 @@ function embeddedJobDois(value) {
     node.style.background = color || '#111827';
   }
 
+  function controllerPaused() {
+    return GM_getValue(ENABLED_KEY,true)===false || isAbortRequested();
+  }
+
+  function releaseIdlePausedLease() {
+    var lease=GM_getValue(LEASE_KEY,null),active=GM_getValue(ACTIVE_JOB_KEY,null);
+    if (!controllerPaused() || !lease || lease.owner!==CONTROLLER_ID) return false;
+    // Retain ownership while a bound publisher is being stopped. Never erase
+    // another controller's lease or revoke its in-flight capture here.
+    if (active && active.controllerId===CONTROLLER_ID) return false;
+    GM_deleteValue(LEASE_KEY);
+    return true;
+  }
+
+  function controllerLifecycleSnapshot() {
+    var lease=GM_getValue(LEASE_KEY,null),active=GM_getValue(ACTIVE_JOB_KEY,null);
+    var request=GM_getValue(RESUME_REQUEST_KEY,null);
+    return {revision:CONTROLLER_LIFECYCLE_REVISION,paused:controllerPaused(),
+      localBusy:Boolean(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__),
+      ownerIsThisPage:Boolean(lease&&lease.owner===CONTROLLER_ID),
+      leaseSeconds:Math.max(0,Math.ceil((Number(lease&&lease.expiresAt||0)-Date.now())/1000)),
+      renewedAt:Number(lease&&lease.renewedAt||0),activeDoi:normalizeDoi(active&&active.doi),
+      resumePending:Boolean(request&&request.requester===CONTROLLER_ID)};
+  }
+
+  function requestControllerPause() {
+    GM_deleteValue(RESUME_REQUEST_KEY);
+    if(controllerResumeTimer!==null){clearTimeout(controllerResumeTimer);controllerResumeTimer=null;}
+    GM_setValue(ABORT_KEY,{at:Date.now(),reason:'user_aborted'});
+    GM_setValue(ENABLED_KEY,false);
+    if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
+    releaseIdlePausedLease();
+  }
+
   async function acquireLease() {
-    var now = Date.now();
-    var lease = GM_getValue(LEASE_KEY, null);
-    if (lease && Number(lease.expiresAt || 0) > now && lease.owner !== CONTROLLER_ID) return false;
-    GM_setValue(LEASE_KEY, { owner: CONTROLLER_ID, expiresAt: now + 90000 });
-    await sleep(250); // Let competing control pages settle before any dispatch.
-    var confirmed = GM_getValue(LEASE_KEY, null);
-    return Boolean(confirmed && confirmed.owner === CONTROLLER_ID);
+    var now=Date.now(),lease=GM_getValue(LEASE_KEY,null);
+    if (controllerPaused()) return false;
+    if (lease&&Number(lease.expiresAt||0)>now&&lease.owner!==CONTROLLER_ID) return false;
+    GM_setValue(LEASE_KEY,{owner:CONTROLLER_ID,expiresAt:now+90000,renewedAt:now});
+    await sleep(250);
+    if(controllerPaused()){releaseIdlePausedLease();return false;}
+    var confirmed=GM_getValue(LEASE_KEY,null);
+    return Boolean(confirmed&&confirmed.owner===CONTROLLER_ID&&Number(confirmed.expiresAt)>Date.now());
   }
 
   function renewLease() {
-    var lease = GM_getValue(LEASE_KEY, null);
-    if (!lease || lease.owner !== CONTROLLER_ID) return false;
-    GM_setValue(LEASE_KEY, { owner: CONTROLLER_ID, expiresAt: Date.now() + 90000 });
+    if(releaseIdlePausedLease())return false;
+    var lease=GM_getValue(LEASE_KEY,null),now=Date.now();
+    // An expired owner must reacquire; waking from suspension cannot resurrect it.
+    if(!lease||lease.owner!==CONTROLLER_ID||Number(lease.expiresAt||0)<=now)return false;
+    GM_setValue(LEASE_KEY,{owner:CONTROLLER_ID,expiresAt:now+90000,renewedAt:now});
     return true;
+  }
+
+  function persistControllerSummary(summary,initial) {
+    if(!summary)return false;
+    var current=GM_getValue(SUMMARY_KEY,null),lease=GM_getValue(LEASE_KEY,null);
+    if(initial){if(!lease||lease.owner!==CONTROLLER_ID||controllerPaused())return false;}
+    else if(current&&current.controllerRunId!==summary.controllerRunId)return false;
+    GM_setValue(SUMMARY_KEY,summary);return true;
   }
 
   async function uploadControllerReport(job, reason, progress, reportStatus) {
@@ -3120,15 +3170,17 @@ function embeddedJobDois(value) {
   function controllerFailureDisposition(reason) {
     reason=String(reason||'');
     if(/^(?:controller_lease_lost|capture_server_upgrade_pending)$/.test(reason))return 'stop';
-    if(/^(?:another_task_still_active|task_tab_handle_unavailable|previous_task_tab_not_closed|bound_publisher_heartbeat_missing|controller_timeout)$/.test(reason))return 'skip';
+    if(/^(?:another_task_still_active|task_tab_handle_unavailable|previous_task_tab_not_closed|bound_publisher_heartbeat_missing|controller_timeout|publisher_task_tab_closed)$/.test(reason))return 'skip';
     return 'record';
   }
 
   async function waitForResult(job,tab) {
     var started=Date.now(), timeoutMs=8*60*1000;
     while(true) {
-      if(!renewLease())throw new Error('controller_lease_lost');
+      var completed=completedPublisherResult(job);
+      if(completed)return completed;
       if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false) return {doi:job.doi,jobId:job.jobId,status:'aborted',reason:'user_aborted',finishedAt:nowIso()};
+      if(!renewLease())throw new Error('controller_lease_lost');
 
       // publisher final results over controller timeouts: always prefer a completed publisher result first.
       // Background-tab/browser suspension can advance Date.now() by many minutes
@@ -3139,7 +3191,8 @@ function embeddedJobDois(value) {
       var elapsed=Date.now()-started;
       if(elapsed>=timeoutMs) {
         // One short grace window covers a final result racing with controller wake-up.
-        for(var grace=0;grace<4;grace+=1) {
+        var graceDeadline=Date.now()+1000;
+        for(var grace=0;grace<4&&Date.now()<graceDeadline;grace+=1) {
           await sleep(250);
           result=completedPublisherResult(job);
           if(result) return result;
@@ -3147,6 +3200,11 @@ function embeddedJobDois(value) {
         return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'controller_timeout',finishedAt:nowIso()};
       }
 
+      if(tab&&tab.closed===true){
+        await sleep(250);
+        result=completedPublisherResult(job);if(result)return result;
+        return {doi:job.doi,jobId:job.jobId,status:'failed',reason:'publisher_task_tab_closed',finishedAt:nowIso()};
+      }
       var hb=currentPublisherHeartbeat();
       if(elapsed>60000 && (!hb||hb.jobId!==job.jobId)) {
         // The publisher may have finished between heartbeat sampling and this branch.
@@ -3168,23 +3226,58 @@ function embeddedJobDois(value) {
   async function closeTaskTab(tab) {
     if(!tab || typeof tab.close!=='function') return false;
     try { tab.close(); } catch(_) { return false; }
-    for(var i=0;i<30;i+=1) {
+    var closeDeadline=Date.now()+3000;
+    for(var i=0;i<30&&Date.now()<closeDeadline;i+=1) {
       if(tab.closed===true) return true;
       await sleep(100);
     }
     return tab.closed===true;
   }
 
-  function requestControllerStart() {
-    if(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__) {badge('当前批次正在运行，不重复派发','#374151');return;}
-    var lease=GM_getValue(LEASE_KEY,null);
-    if(lease && lease.owner!==CONTROLLER_ID && Number(lease.expiresAt)>Date.now()) {badge('另一个 Gallery 控制页正在运行，请勿重复启动','#92400e');return;}
+  function completeControllerResume() {
     CONTROLLER_STOP_REASON='';
-    GM_deleteValue(ABORT_KEY);
-    GM_setValue(ENABLED_KEY,true);
+    GM_deleteValue(ABORT_KEY);GM_setValue(ENABLED_KEY,true);
     if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
-    if(isGalleryPage()) controllerRun();
+    if(isGalleryPage())controllerRun();
     else window.open('https://'+GALLERY_HOST+GALLERY_PATH,'_blank');
+  }
+
+  function pollControllerResume() {
+    if(controllerResumeTimer!==null){clearTimeout(controllerResumeTimer);controllerResumeTimer=null;}
+    var request=GM_getValue(RESUME_REQUEST_KEY,null);
+    if(!request||request.requester!==CONTROLLER_ID)return;
+    // A later manual Pause deletes the request. A run resumed elsewhere is not stolen.
+    if(!controllerPaused()){GM_deleteValue(RESUME_REQUEST_KEY);return;}
+    releaseIdlePausedLease();
+    var lease=GM_getValue(LEASE_KEY,null),active=GM_getValue(ACTIVE_JOB_KEY,null);
+    var leased=Boolean(lease&&Number(lease.expiresAt)>Date.now());
+    var busy=Boolean(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__);
+    if(!leased&&!busy&&active){
+      reconcileActiveJobBeforeDispatch();active=GM_getValue(ACTIVE_JOB_KEY,null);
+    }
+    if(leased||busy||active){
+      var seconds=leased?Math.max(0,Math.ceil((lease.expiresAt-Date.now())/1000)):0;
+      badge('已收到继续请求；等待旧控制器/任务收尾'+(seconds?'（锁剩余 '+seconds+' 秒）':'')+'，随后自动恢复','#92400e');
+      controllerResumeTimer=setTimeout(pollControllerResume,1000);return;
+    }
+    if((GM_getValue(RESUME_REQUEST_KEY,{})||{}).requestId!==request.requestId)return;
+    GM_deleteValue(RESUME_REQUEST_KEY);completeControllerResume();
+  }
+
+  function requestControllerStart() {
+    var lease=GM_getValue(LEASE_KEY,null),active=GM_getValue(ACTIVE_JOB_KEY,null);
+    var busy=Boolean(globalThis.__OSG_PAIRED_CONTROLLER_BUSY__);
+    var other=Boolean(lease&&lease.owner!==CONTROLLER_ID&&Number(lease.expiresAt)>Date.now());
+    if(controllerPaused()&&(busy||other||active)){
+      // Queue the user's intention instead of clearing a live lease or enabling
+      // the old loop prematurely. Only one requesting control page may resume.
+      if(!isGalleryPage()){window.open('https://'+GALLERY_HOST+GALLERY_PATH,'_blank');return;}
+      GM_setValue(RESUME_REQUEST_KEY,{requester:CONTROLLER_ID,requestId:CONTROLLER_ID+':'+Date.now(),at:Date.now()});
+      pollControllerResume();return;
+    }
+    if(busy){badge('当前批次正在运行，不重复派发','#374151');return;}
+    if(other){badge('另一控制页正在运行'+(active&&active.doi?'：'+active.doi:'，正在准备或收尾')+'；未重复派发','#92400e');return;}
+    completeControllerResume();
   }
 
   async function controllerRun() {
@@ -3195,7 +3288,7 @@ function embeddedJobDois(value) {
     globalThis.__OSG_PAIRED_CONTROLLER_BUSY__=true;
     var renew=null,summary=null,stopReason='';
     try {
-      if(!await acquireLease()) {badge('另一个 Gallery 控制页正在运行','#6b7280');return;}
+      if(!await acquireLease()) {badge(controllerPaused()?'媒体抓取已暂停':'另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.39')throw new Error('capture_server_upgrade_pending');
@@ -3266,9 +3359,11 @@ function embeddedJobDois(value) {
         });
         return Array.from(merged.values());
       }
+      if(controllerPaused())return;
+      if(!renewLease())throw new Error('controller_lease_lost');
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
-      summary={version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
-      GM_setValue(SUMMARY_KEY,summary);
+      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
+      persistControllerSummary(summary,true);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
         // Fail before opening any page, and never dispatch after loss of ownership.
@@ -3332,6 +3427,7 @@ function embeddedJobDois(value) {
         } finally {
           // Invalidate this job before closing. A lingering old tab is harmless because all later writes are bound to the active jobId/DOI.
           clearOwnedJob(job);
+          releaseIdlePausedLease();
           if(tab)closed=await closeTaskTab(tab);
           if(!closed)skipReason=skipReason||'previous_task_tab_not_closed';
         }
@@ -3366,12 +3462,12 @@ function embeddedJobDois(value) {
           else summary.skipped+=1;
           badge('已跳过 '+job.doi+'：'+skipReason+'；继续下一篇','#92400e');
         }
-        if(stopReason){summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);break;}
-        GM_setValue(SUMMARY_KEY,summary);
+        if(stopReason){summary.stopReason=stopReason;persistControllerSummary(summary,false);break;}
+        persistControllerSummary(summary,false);
         if(result && result.status==='aborted')break;
         await sleep(3500);
       }
-      summary.finishedAt=nowIso();summary.stopReason=stopReason;GM_setValue(SUMMARY_KEY,summary);
+      summary.finishedAt=nowIso();summary.stopReason=stopReason;persistControllerSummary(summary,false);
       if(stopReason==='active_task_wait') {
         badge('已有任务仍在处理；15 秒后自动复查，不会永久停止','#374151');
       } else if(stopReason) {
@@ -3391,7 +3487,8 @@ function embeddedJobDois(value) {
       }
     } catch(error) {
       stopReason=String(error.message);
-      if(!renewLease() || /capture_server_upgrade_pending/.test(stopReason))badge('媒体主线已停止：'+stopReason,'#991b1b');
+      if(controllerPaused()){stopReason='user_paused';badge('媒体抓取已暂停','#6b7280');}
+      else if(!renewLease() || /capture_server_upgrade_pending/.test(stopReason))badge('媒体主线已停止：'+stopReason,'#991b1b');
       else {
         badge('媒体主线暂缓：'+stopReason+'；60 秒后检查重连','#991b1b');
         if(!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {clearTimeout(nextBatchTimer);nextBatchTimer=setTimeout(controllerRun,60000);}
@@ -3464,9 +3561,7 @@ function embeddedJobDois(value) {
     });
     GM_registerMenuCommand('立即运行媒体抓取队列', requestControllerStart);
     GM_registerMenuCommand('中止当前媒体抓取批次', function () {
-      GM_setValue(ABORT_KEY, { at: Date.now(), reason: 'user_aborted' });
-      GM_setValue(ENABLED_KEY,false);
-      if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
+      requestControllerPause();
       window.alert('已请求中止当前媒体抓取批次。正在运行的出版社标签页会由控制器关闭；人工中止不会计入失败或失败冷却。');
     });
     GM_registerMenuCommand('继续媒体抓取主线', requestControllerStart);
@@ -3486,8 +3581,8 @@ function embeddedJobDois(value) {
     });
     GM_registerMenuCommand('暂停/继续 TOC 自动运行', function () {
       var enabled = GM_getValue(ENABLED_KEY, true) !== false;
-      GM_setValue(ENABLED_KEY, !enabled);
-      window.alert(enabled ? '媒体抓取主线已暂停。' : '媒体抓取主线已继续。');
+      if(enabled){requestControllerPause();window.alert('媒体抓取主线已暂停。');}
+      else requestControllerStart();
     });
     GM_registerMenuCommand('查看最近运行摘要', function () {
       var summary = GM_getValue(SUMMARY_KEY, {});
@@ -3503,9 +3598,7 @@ function embeddedJobDois(value) {
       window.alert('已清除当前脚本版本的失败冷却。返回 Gallery 后可立即重新运行媒体抓取队列。');
     });
     GM_registerMenuCommand('清除卡住任务/租约', function () {
-      GM_setValue(ABORT_KEY,{at:Date.now(),reason:'user_aborted'});
-      GM_setValue(ENABLED_KEY,false);
-      if(nextBatchTimer!==null){clearTimeout(nextBatchTimer);nextBatchTimer=null;}
+      requestControllerPause();
       var lease=GM_getValue(LEASE_KEY,null);
       if(lease && Number(lease.expiresAt)>Date.now()) {
         window.alert('已请求暂停。当前控制器退出后再清理；不会抢占运行中的任务锁。');return;
