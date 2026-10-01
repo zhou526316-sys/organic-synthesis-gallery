@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-01T23:08:55.163Z",
+  "generatedAt": "2026-10-01T23:10:23.589Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-21",
@@ -12,10 +12,10 @@
     "rawMissingFromGallery": 596,
     "previouslyReviewedExcluded": 397,
     "missingFromGallery": 199,
-    "potentialGaps": 54,
-    "criticalSourceFailures": 16,
-    "sourceFamilyGaps": 16,
-    "sourceCoverageAnomalies": 11,
+    "potentialGaps": 67,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 2,
     "closureCoverageAnomalies": 8,
     "historicalCoverageLosses": 0,
     "unresolved": 199,
@@ -23,9 +23,9 @@
     "excludedByPolicy": 0
   },
   "discoveryGate": {
-    "criticalSourceFailures": 16,
-    "sourceFamilyGaps": 16,
-    "sourceCoverageAnomalies": 11,
+    "criticalSourceFailures": 0,
+    "sourceFamilyGaps": 0,
+    "sourceCoverageAnomalies": 2,
     "closureCoverageAnomalies": 8,
     "historicalCoverageLosses": 0
   },
@@ -38,15 +38,15 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 73,
         "crossrefCandidateRecords": 73,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 64,
+        "multiSourceCandidateRecords": 64,
         "closureUnionRecords": 4,
         "closureCrossrefRecords": 4,
         "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "coverageWarning": false,
         "closureCoverageWarning": true
       }
     },
@@ -58,7 +58,7 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 46,
         "crossrefCandidateRecords": 46,
         "openAlexCandidateRecords": 0,
@@ -78,11 +78,11 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 1,
         "crossrefCandidateRecords": 1,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 1,
+        "multiSourceCandidateRecords": 1,
         "closureUnionRecords": 0,
         "closureCrossrefRecords": 0,
         "closureOpenAlexRecords": 0,
@@ -98,15 +98,15 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 9,
         "crossrefCandidateRecords": 9,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 5,
+        "multiSourceCandidateRecords": 5,
         "closureUnionRecords": 4,
         "closureCrossrefRecords": 4,
         "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "coverageWarning": false,
         "closureCoverageWarning": true
       }
     },
@@ -118,11 +118,11 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 5,
         "crossrefCandidateRecords": 5,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 5,
+        "multiSourceCandidateRecords": 5,
         "closureUnionRecords": 0,
         "closureCrossrefRecords": 0,
         "closureOpenAlexRecords": 0,
@@ -138,15 +138,15 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 142,
         "crossrefCandidateRecords": 142,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 116,
+        "multiSourceCandidateRecords": 116,
         "closureUnionRecords": 24,
         "closureCrossrefRecords": 24,
         "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "coverageWarning": false,
         "closureCoverageWarning": true
       }
     },
@@ -158,15 +158,15 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 100,
         "crossrefCandidateRecords": 100,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 84,
+        "multiSourceCandidateRecords": 84,
         "closureUnionRecords": 20,
         "closureCrossrefRecords": 20,
-        "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "closureOpenAlexRecords": 4,
+        "coverageWarning": false,
         "closureCoverageWarning": true
       }
     },
@@ -178,15 +178,15 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 141,
         "crossrefCandidateRecords": 141,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 131,
+        "multiSourceCandidateRecords": 131,
         "closureUnionRecords": 5,
         "closureCrossrefRecords": 5,
         "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "coverageWarning": false,
         "closureCoverageWarning": true
       }
     },
@@ -198,15 +198,15 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 36,
         "crossrefCandidateRecords": 36,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 33,
+        "multiSourceCandidateRecords": 33,
         "closureUnionRecords": 1,
         "closureCrossrefRecords": 1,
         "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "coverageWarning": false,
         "closureCoverageWarning": false
       }
     },
@@ -218,15 +218,15 @@
         "activeFrom": "2026-07-01",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 46,
         "crossrefCandidateRecords": 46,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 42,
+        "multiSourceCandidateRecords": 42,
         "closureUnionRecords": 5,
         "closureCrossrefRecords": 5,
-        "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "closureOpenAlexRecords": 1,
+        "coverageWarning": false,
         "closureCoverageWarning": true
       }
     },
@@ -238,7 +238,7 @@
         "activeFrom": "2026-09-19",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 1,
         "crossrefCandidateRecords": 1,
         "openAlexCandidateRecords": 0,
@@ -258,7 +258,7 @@
         "activeFrom": "2026-09-19",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 0,
         "crossrefCandidateRecords": 0,
         "openAlexCandidateRecords": 0,
@@ -278,14 +278,14 @@
         "activeFrom": "2026-09-19",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 38,
         "crossrefCandidateRecords": 38,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 3,
+        "multiSourceCandidateRecords": 3,
         "closureUnionRecords": 37,
         "closureCrossrefRecords": 37,
-        "closureOpenAlexRecords": 0,
+        "closureOpenAlexRecords": 2,
         "coverageWarning": true,
         "closureCoverageWarning": true
       }
@@ -298,15 +298,15 @@
         "activeFrom": "2026-09-19",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 42,
         "crossrefCandidateRecords": 42,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 42,
+        "multiSourceCandidateRecords": 42,
         "closureUnionRecords": 0,
         "closureCrossrefRecords": 0,
         "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "coverageWarning": false,
         "closureCoverageWarning": false
       }
     },
@@ -318,7 +318,7 @@
         "activeFrom": "2026-09-19",
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 0,
         "crossrefCandidateRecords": 0,
         "openAlexCandidateRecords": 0,
@@ -338,15 +338,15 @@
         "activeFrom": "2026-09-22",
         "effectiveStart": "2026-09-22",
         "crossrefHealthy": true,
-        "openAlexHealthy": false,
+        "openAlexHealthy": true,
         "unionCandidateRecords": 31,
         "crossrefCandidateRecords": 31,
-        "openAlexCandidateRecords": 0,
-        "multiSourceCandidateRecords": 0,
+        "openAlexCandidateRecords": 29,
+        "multiSourceCandidateRecords": 29,
         "closureUnionRecords": 3,
         "closureCrossrefRecords": 3,
-        "closureOpenAlexRecords": 0,
-        "coverageWarning": true,
+        "closureOpenAlexRecords": 1,
+        "coverageWarning": false,
         "closureCoverageWarning": false
       }
     }
@@ -377,16 +377,24 @@
         "Atsushi Shinohara",
         "Yoshitaka Kasamatsu"
       ],
-      "topics": [],
+      "topics": [
+        "Radioactive element chemistry and processing",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Chemical Synthesis and Characterization",
+        "Lanthanide and Transition Metal Complexes"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1126/sciadv.aec7970",
@@ -406,10 +414,18 @@
         "Conor L. Evans",
         "Iván Coto Hernández"
       ],
-      "topics": [],
+      "topics": [
+        "Advanced Fluorescence Microscopy Techniques",
+        "Biophysics",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Advanced Image Processing Techniques",
+        "Digital Holography and Microscopy"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -429,10 +445,18 @@
         "Sydney R. Hirsch",
         "Daniel DiMaio"
       ],
-      "topics": [],
+      "topics": [
+        "Cervical Cancer and HPV Research",
+        "Epidemiology",
+        "Medicine",
+        "Health Sciences",
+        "Reproductive tract infections research",
+        "vaccines and immunoinformatics approaches"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -459,10 +483,18 @@
         "Geyu Lu",
         "Ben Zhong Tang"
       ],
-      "topics": [],
+      "topics": [
+        "Nanoplatforms for cancer theranostics",
+        "Biomedical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Luminescence Properties of Advanced Materials",
+        "Luminescence and Fluorescent Materials"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -499,10 +531,18 @@
         "Naama Kanarek",
         "Taru Muranen"
       ],
-      "topics": [],
+      "topics": [
+        "Cancer-related Molecular Pathways",
+        "Oncology",
+        "Medicine",
+        "Health Sciences",
+        "Advanced Breast Cancer Therapies",
+        "Histone Deacetylase Inhibitors Research"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -528,10 +568,18 @@
         "Ling Fang",
         "Marcus Christl"
       ],
-      "topics": [],
+      "topics": [
+        "Geology and Paleoclimatology Research",
+        "Atmospheric Science",
+        "Earth and Planetary Sciences",
+        "Physical Sciences",
+        "Cryospheric studies and observations",
+        "Paleontology and Stratigraphy of Fossils"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -550,10 +598,18 @@
         "Jacob Stuivenvolt-Allen",
         "Alexey V. Fedorov"
       ],
-      "topics": [],
+      "topics": [
+        "Climate variability and models",
+        "Global and Planetary Change",
+        "Environmental Science",
+        "Physical Sciences",
+        "Tropical and Extratropical Cyclones Research",
+        "Oceanographic and Atmospheric Processes"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -583,10 +639,18 @@
         "Guanghui Hou",
         "Liang Cheng"
       ],
-      "topics": [],
+      "topics": [
+        "interferon and immune responses",
+        "Immunology",
+        "Immunology and Microbiology",
+        "Life Sciences",
+        "Nanoplatforms for cancer theranostics",
+        "Immune cells in cancer"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -613,10 +677,18 @@
         "Xiaohu You",
         "Dixian Zhao"
       ],
-      "topics": [],
+      "topics": [
+        "Molecular Communication and Nanonetworks",
+        "Biomedical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Metamaterials and Metasurfaces Applications",
+        "Terahertz technology and applications"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -635,10 +707,18 @@
         "Abraham J. Wyner",
         "Ryan S. Brill"
       ],
-      "topics": [],
+      "topics": [
+        "Climate change impacts on agriculture",
+        "Ecology, Evolution, Behavior and Systematics",
+        "Agricultural and Biological Sciences",
+        "Life Sciences",
+        "Climate variability and models",
+        "Climate Change Policy and Economics"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -662,16 +742,24 @@
         "Xiang Xiao",
         "Huahua Jian"
       ],
-      "topics": [],
+      "topics": [
+        "Bacteriophages and microbial interactions",
+        "Ecology",
+        "Environmental Science",
+        "Physical Sciences",
+        "RNA and protein synthesis mechanisms",
+        "vaccines and immunoinformatics approaches"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1126/sciadv.aeh3416",
@@ -690,10 +778,18 @@
         "Linyong Zhu",
         "Fu Wang"
       ],
-      "topics": [],
+      "topics": [
+        "Lipid metabolism and biosynthesis",
+        "Biochemistry",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Advanced Fluorescence Microscopy Techniques",
+        "Protein Degradation and Inhibitors"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -720,10 +816,18 @@
         "Keying Guo",
         "Sahika Inal"
       ],
-      "topics": [],
+      "topics": [
+        "Parkinson's Disease Mechanisms and Treatments",
+        "Neurology",
+        "Medicine",
+        "Health Sciences",
+        "Genetic Neurodegenerative Diseases",
+        "Extracellular vesicles in disease"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -753,10 +857,18 @@
         "Chaoling Wei",
         "Junyan Zhu"
       ],
-      "topics": [],
+      "topics": [
+        "Plant Gene Expression Analysis",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Plant biochemistry and biosynthesis",
+        "Plant-Microbe Interactions and Immunity"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -777,10 +889,18 @@
         "Zhou Fang",
         "Mustafa Khammash"
       ],
-      "topics": [],
+      "topics": [
+        "Gene Regulatory Network Analysis",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Machine Learning in Materials Science",
+        "Slime Mold and Myxomycetes Research"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -809,10 +929,18 @@
         "Shuhua Li",
         "Weiping Ding"
       ],
-      "topics": [],
+      "topics": [
+        "Organometallic Complex Synthesis and Catalysis",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalysis for Biomass Conversion",
+        "Catalysis and Hydrodesulfurization Studies"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -841,16 +969,24 @@
         "Omid Ghaffari Nik",
         "Christopher W. Jones"
       ],
-      "topics": [],
+      "topics": [
+        "Carbon Dioxide Capture Technologies",
+        "Mechanical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Carbon dioxide utilization in catalysis",
+        "Covalent Organic Framework Applications"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1126/sciadv.aef7462",
@@ -864,10 +1000,18 @@
         "Timothy M. Merlis",
         "Yi Huang"
       ],
-      "topics": [],
+      "topics": [
+        "Climate variability and models",
+        "Global and Planetary Change",
+        "Environmental Science",
+        "Physical Sciences",
+        "Atmospheric aerosols and clouds",
+        "Atmospheric Ozone and Climate"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -902,10 +1046,18 @@
         "Meihua Chen",
         "Xinyu Xue"
       ],
-      "topics": [],
+      "topics": [
+        "Ultrasound and Hyperthermia Applications",
+        "Biomedical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Photoacoustic and Ultrasonic Imaging",
+        "Nanoplatforms for cancer theranostics"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -975,10 +1127,18 @@
         "Fabien L. Condamine",
         "Thomas L. P. Couvreur"
       ],
-      "topics": [],
+      "topics": [
+        "Plant Diversity and Evolution",
+        "Ecology, Evolution, Behavior and Systematics",
+        "Agricultural and Biological Sciences",
+        "Life Sciences",
+        "Fern and Epiphyte Biology",
+        "Botany and Geology in Latin America and Caribbean"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1010,10 +1170,18 @@
         "Thomas J. Fryer",
         "Timothy P. Jenkins"
       ],
-      "topics": [],
+      "topics": [
+        "Venomous Animal Envenomation and Studies",
+        "Genetics",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Monoclonal and Polyclonal Antibodies Research",
+        "Biochemical and Structural Characterization"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1035,10 +1203,18 @@
         "Xiubao Sui",
         "Lixiang Chen"
       ],
-      "topics": [],
+      "topics": [
+        "Quantum Information and Cryptography",
+        "Artificial Intelligence",
+        "Computer Science",
+        "Physical Sciences",
+        "Quantum Mechanics and Applications",
+        "Quantum optics and atomic interactions"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1067,10 +1243,18 @@
         "Jinzhong Lin",
         "Dong Yan"
       ],
-      "topics": [],
+      "topics": [
+        "RNA modifications and cancer",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "RNA and protein synthesis mechanisms",
+        "Genomics and Chromatin Dynamics"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1101,10 +1285,18 @@
         "Dong Wu",
         "Jincheng Ni"
       ],
-      "topics": [],
+      "topics": [
+        "Orbital Angular Momentum in Optics",
+        "Atomic and Molecular Physics, and Optics",
+        "Physics and Astronomy",
+        "Physical Sciences",
+        "Metamaterials and Metasurfaces Applications",
+        "Plasmonic and Surface Plasmon Research"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1129,10 +1321,18 @@
         "Naoto Nagaosa",
         "Stuart S. P. Parkin"
       ],
-      "topics": [],
+      "topics": [
+        "Topological Materials and Phenomena",
+        "Atomic and Molecular Physics, and Optics",
+        "Physics and Astronomy",
+        "Physical Sciences",
+        "2D Materials and Applications",
+        "Iron-based superconductors research"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1168,10 +1368,18 @@
         "Ruixuan Gao",
         "Wonhwa Cho"
       ],
-      "topics": [],
+      "topics": [
+        "PI3K/AKT/mTOR signaling in cancer",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Cellular transport and secretion",
+        "Cancer-related Molecular Pathways"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1191,10 +1399,18 @@
         "Anne-Sophie Kieslinger",
         "Michael A. Skeide"
       ],
-      "topics": [],
+      "topics": [
+        "Functional Brain Connectivity Studies",
+        "Cognitive Neuroscience",
+        "Neuroscience",
+        "Life Sciences",
+        "Visual perception and processing mechanisms",
+        "Face Recognition and Perception"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1216,10 +1432,17 @@
         "Matthias von Herrath",
         "Jay S. Skyler"
       ],
-      "topics": [],
+      "topics": [
+        "Academic integrity and plagiarism",
+        "Safety Research",
+        "Social Sciences",
+        "Meta-analysis and systematic reviews",
+        "Pharmaceutical industry and healthcare"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1255,10 +1478,18 @@
         "Brian Keith Kennedy",
         "Jan Gruber"
       ],
-      "topics": [],
+      "topics": [
+        "Genetics, Aging, and Longevity in Model Organisms",
+        "Aging",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "RNA Research and Splicing",
+        "Sirtuins and Resveratrol in Medicine"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1288,10 +1519,18 @@
         "Xin Ma",
         "Qiguang He"
       ],
-      "topics": [],
+      "topics": [
+        "Advanced Materials and Mechanics",
+        "Mechanical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Advanced Sensor and Energy Harvesting Materials",
+        "Dielectric materials and actuators"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1317,10 +1556,18 @@
         "Maria F. Czyzyk-Krzeska",
         "Krushna C. Patra"
       ],
-      "topics": [],
+      "topics": [
+        "Mitochondrial Function and Pathology",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Cancer, Hypoxia, and Metabolism",
+        "Pancreatic and Hepatic Oncology Research"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1365,16 +1612,24 @@
         "François Feillet",
         "Ariane Boudier"
       ],
-      "topics": [],
+      "topics": [
+        "Trace Elements in Health",
+        "Nutrition and Dietetics",
+        "Nursing",
+        "Health Sciences",
+        "Nanocluster Synthesis and Applications",
+        "Alzheimer's disease research and treatments"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1126/sciadv.aec0903",
@@ -1395,10 +1650,18 @@
         "Pieter C. Roos",
         "Johan van de Koppel"
       ],
-      "topics": [],
+      "topics": [
+        "Ecosystem dynamics and resilience",
+        "Global and Planetary Change",
+        "Environmental Science",
+        "Physical Sciences",
+        "Biocrusts and Microbial Ecology",
+        "Earth Systems and Cosmic Evolution"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1431,10 +1694,18 @@
         "Kiyean Nam",
         "Tae-Kyung Kim"
       ],
-      "topics": [],
+      "topics": [
+        "HER2/EGFR in Cancer Research",
+        "Oncology",
+        "Medicine",
+        "Health Sciences",
+        "Cancer therapeutics and mechanisms",
+        "PARP inhibition in cancer therapy"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1459,10 +1730,18 @@
         "Hongxiang Wu",
         "Xuechen Li"
       ],
-      "topics": [],
+      "topics": [
+        "Chemical Synthesis and Analysis",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Click Chemistry and Applications",
+        "Advanced Synthetic Organic Chemistry"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1531,10 +1810,18 @@
         "Adolfo M. García",
         "Agustin Ibanez"
       ],
-      "topics": [],
+      "topics": [
+        "Dementia and Cognitive Impairment Research",
+        "Psychiatry and Mental health",
+        "Medicine",
+        "Health Sciences",
+        "Neurobiology of Language and Bilingualism",
+        "Voice and Speech Disorders"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1563,10 +1850,18 @@
         "Nicole Dubilier",
         "Harald R. Gruber-Vodicka"
       ],
-      "topics": [],
+      "topics": [
+        "Marine Biology and Ecology Research",
+        "Oceanography",
+        "Earth and Planetary Sciences",
+        "Physical Sciences",
+        "Microbial Community Ecology and Physiology",
+        "Insect symbiosis and bacterial influences"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1585,10 +1880,18 @@
         "Jung-Sub Lim",
         "Graham Feingold"
       ],
-      "topics": [],
+      "topics": [
+        "Arctic and Antarctic ice dynamics",
+        "Atmospheric Science",
+        "Earth and Planetary Sciences",
+        "Physical Sciences",
+        "Climate variability and models",
+        "Atmospheric aerosols and clouds"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1619,10 +1922,18 @@
         "Thomas P. Sakmar",
         "Per Svenningsson"
       ],
-      "topics": [],
+      "topics": [
+        "Receptor Mechanisms and Signaling",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "S100 Proteins and Annexins",
+        "Neuropeptides and Animal Physiology"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1649,10 +1960,18 @@
         "Paul J. Brindley",
         "Christoph G. Grevelding"
       ],
-      "topics": [],
+      "topics": [
+        "Parasites and Host Interactions",
+        "Parasitology",
+        "Immunology and Microbiology",
+        "Life Sciences",
+        "Genetics, Aging, and Longevity in Model Organisms",
+        "CRISPR and Genetic Engineering"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1679,10 +1998,18 @@
         "Xiaotu Ma",
         "Douglas R. Green"
       ],
-      "topics": [],
+      "topics": [
+        "Inflammasome and immune disorders",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Cell death mechanisms and regulation",
+        "Autophagy in Disease and Therapy"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -1701,10 +2028,18 @@
         "Jorge Charry",
         "Alexandre Tkatchenko"
       ],
-      "topics": [],
+      "topics": [
+        "Muon and positron interactions and applications",
+        "Mechanics of Materials",
+        "Engineering",
+        "Physical Sciences",
+        "Atomic and Molecular Physics",
+        "Fullerene Chemistry and Applications"
+      ],
       "sources": [
         "crossref:2375-2548:published",
-        "crossref:2375-2548:created"
+        "crossref:2375-2548:created",
+        "openalex:S2737427234"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -2150,14 +2485,22 @@
         "Shishan Tian",
         "Zhiwei Lin"
       ],
-      "topics": [],
+      "topics": [
+        "Nanopore and Nanochannel Transport Studies",
+        "Biomedical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Advanced biosensing and bioanalysis techniques",
+        "Carbon Nanotubes in Composites"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2276,14 +2619,22 @@
         "Yajie Liu",
         "Wen-Bin Zhang"
       ],
-      "topics": [],
+      "topics": [
+        "Biochemical and Structural Characterization",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Protein Structure and Dynamics",
+        "Supramolecular Self-Assembly in Materials"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2389,14 +2740,22 @@
         "Ethan J. Crumlin",
         "Jin Qian"
       ],
-      "topics": [],
+      "topics": [
+        "CO2 Reduction Techniques and Catalysts",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "Electrocatalysts for Energy Conversion",
+        "Ammonia Synthesis and Nitrogen Reduction"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2459,14 +2818,22 @@
         "Haiming Zhu",
         "Xiaogang Peng"
       ],
-      "topics": [],
+      "topics": [
+        "Quantum Dots Synthesis And Properties",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Semiconductor Quantum Structures and Devices",
+        "Silicon Nanostructures and Photoluminescence"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -2719,14 +3086,22 @@
         "Taimin Wang",
         "Peijun Liu"
       ],
-      "topics": [],
+      "topics": [
+        "Synthesis of heterocyclic compounds",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalytic C–H Functionalization Methods",
+        "Catalytic Alkyne Reactions"
+      ],
       "sources": [
         "crossref:0022-3263:online",
         "crossref:0022-3263:published",
         "crossref:0022-3263:created",
         "crossref:1520-6904:online",
         "crossref:1520-6904:published",
-        "crossref:1520-6904:created"
+        "crossref:1520-6904:created",
+        "openalex:S205050996"
       ],
       "activeFrom": "2026-09-22",
       "dateUnverified": false,
@@ -3877,14 +4252,22 @@
         "Jeanne Crassous",
         "Martin Kotora"
       ],
-      "topics": [],
+      "topics": [
+        "Synthesis and Properties of Aromatic Compounds",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Organoboron and organosilicon chemistry",
+        "Supramolecular Self-Assembly in Materials"
+      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
         "crossref:1523-7052:created",
         "crossref:1523-7060:online",
         "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5356,14 +5739,22 @@
         "Jianwu Lan",
         "Jiaojiao Shang"
       ],
-      "topics": [],
+      "topics": [
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Magnetism in coordination complexes",
+        "Metalloenzymes and iron-sulfur proteins"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5385,14 +5776,22 @@
         "Jasper L. Tyler",
         "Varinder K. Aggarwal"
       ],
-      "topics": [],
+      "topics": [
+        "Sulfur-Based Synthesis Techniques",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Radical Photochemical Reactions",
+        "Organoboron and organosilicon chemistry"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5419,14 +5818,22 @@
         "Yan Zhao",
         "Wei Tian"
       ],
-      "topics": [],
+      "topics": [
+        "Covalent Organic Framework Applications",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Porphyrin and Phthalocyanine Chemistry",
+        "Advanced battery technologies research"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5449,14 +5856,22 @@
         "Degao Wang",
         "Fei Li"
       ],
-      "topics": [],
+      "topics": [
+        "Advanced Photocatalysis Techniques",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "Copper-based nanomaterials and applications",
+        "TiO2 Photocatalysis and Solar Cells"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5474,14 +5889,22 @@
       "authors": [
         "Dennis A. Kutateladze"
       ],
-      "topics": [],
+      "topics": [
+        "Catalytic C–H Functionalization Methods",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalytic Cross-Coupling Reactions",
+        "Asymmetric Hydrogenation and Catalysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5509,20 +5932,28 @@
         "Ben Zhong Tang",
         "Zhen Li"
       ],
-      "topics": [],
+      "topics": [
+        "Luminescence and Fluorescent Materials",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Organic Light-Emitting Diodes Research",
+        "Metal-Organic Frameworks: Synthesis and Applications"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.7344670",
@@ -5539,20 +5970,28 @@
         "Wei‐Guang Wang",
         "Yudai Matsuda"
       ],
-      "topics": [],
+      "topics": [
+        "Microbial Natural Products and Biosynthesis",
+        "Pharmacology",
+        "Medicine",
+        "Health Sciences",
+        "Synthetic Organic Chemistry Methods",
+        "Plant biochemistry and biosynthesis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.8881851",
@@ -5571,14 +6010,22 @@
         "Xiao‐Dong Luo",
         "Min Ye"
       ],
-      "topics": [],
+      "topics": [
+        "Plant Gene Expression Analysis",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Sunflower and Safflower Cultivation",
+        "Traditional Chinese Medicine Analysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5602,14 +6049,22 @@
         "Beate Paulus",
         "Roland R. Netz"
       ],
-      "topics": [],
+      "topics": [
+        "Spectroscopy and Quantum Chemical Studies",
+        "Atomic and Molecular Physics, and Optics",
+        "Physics and Astronomy",
+        "Physical Sciences",
+        "Advanced Chemical Physics Studies",
+        "Chemical and Physical Studies"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5634,20 +6089,28 @@
         "Jie‐Yu Wang",
         "Jian Pei"
       ],
-      "topics": [],
+      "topics": [
+        "Magnetism in coordination complexes",
+        "Electronic, Optical and Magnetic Materials",
+        "Materials Science",
+        "Physical Sciences",
+        "Synthesis and Properties of Aromatic Compounds",
+        "Supramolecular Chemistry and Complexes"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.5794634",
@@ -5666,14 +6129,22 @@
         "Frank Würthner",
         "Jake L. Greenfield"
       ],
-      "topics": [],
+      "topics": [
+        "Photochromic and Fluorescence Chemistry",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Supramolecular Self-Assembly in Materials",
+        "Supramolecular Chemistry and Complexes"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5695,14 +6166,22 @@
         "Bastien Michelet",
         "Sébastien Thibaudeau"
       ],
-      "topics": [],
+      "topics": [
+        "Fluorine in Organic Chemistry",
+        "Pharmaceutical Science",
+        "Pharmacology, Toxicology and Pharmaceutics",
+        "Life Sciences",
+        "Synthesis and Characterization of Pyrroles",
+        "Inorganic Fluorides and Related Compounds"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5729,14 +6208,22 @@
         "Wei‐Hong Zhu",
         "Zhiqian Guo"
       ],
-      "topics": [],
+      "topics": [
+        "Supramolecular Self-Assembly in Materials",
+        "Biomaterials",
+        "Materials Science",
+        "Physical Sciences",
+        "Polydiacetylene-based materials and applications",
+        "Alzheimer's disease research and treatments"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5762,20 +6249,28 @@
         "Jian Weng",
         "Jun Xu"
       ],
-      "topics": [],
+      "topics": [
+        "2D Materials and Applications",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Solar-Powered Water Purification Methods",
+        "Layered Double Hydroxides Synthesis and Applications"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.7232174",
@@ -5794,20 +6289,28 @@
         "Zhi‐Qiang Wang",
         "Yaxuan Jing"
       ],
-      "topics": [],
+      "topics": [
+        "Covalent Organic Framework Applications",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Organoboron and organosilicon chemistry",
+        "Advanced Polymer Synthesis and Characterization"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.4933664",
@@ -5835,14 +6338,22 @@
         "Oscar Castillo",
         "Pedro Castaño"
       ],
-      "topics": [],
+      "topics": [
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalysts for Methane Reforming",
+        "Enhanced Oil Recovery Techniques"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5871,14 +6382,22 @@
         "Shujiang Ding",
         "Guorui Yang"
       ],
-      "topics": [],
+      "topics": [
+        "Advanced Battery Materials and Technologies",
+        "Electrical and Electronic Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Advancements in Battery Materials",
+        "Extraction and Separation Processes"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5903,20 +6422,28 @@
         "Kelong Zhu",
         "Wei Wang"
       ],
-      "topics": [],
+      "topics": [
+        "Synthesis and Properties of Aromatic Compounds",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Supramolecular Chemistry and Complexes",
+        "Luminescence and Fluorescent Materials"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.9487218",
@@ -5936,14 +6463,22 @@
         "Minh T. N. Le",
         "Guillermo C. Bazan"
       ],
-      "topics": [],
+      "topics": [
+        "Lipid Membrane Structure and Behavior",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Extracellular vesicles in disease",
+        "Polydiacetylene-based materials and applications"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5963,14 +6498,22 @@
         "Bo Xiao",
         "Jianrong Steve Zhou"
       ],
-      "topics": [],
+      "topics": [
+        "Asymmetric Hydrogenation and Catalysis",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Asymmetric Synthesis and Catalysis",
+        "Coordination Chemistry and Organometallics"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -5995,14 +6538,22 @@
         "Lina Zhu",
         "Deming Kong"
       ],
-      "topics": [],
+      "topics": [
+        "Covalent Organic Framework Applications",
+        "Materials Chemistry",
+        "Materials Science",
+        "Physical Sciences",
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Carbon dioxide utilization in catalysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6028,14 +6579,22 @@
         "Zhi‐Xiang She",
         "Yang Mu"
       ],
-      "topics": [],
+      "topics": [
+        "bioluminescence and chemiluminescence research",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Biosensors and Analytical Detection",
+        "Microbial Fuel Cells and Bioremediation"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6056,14 +6615,22 @@
         "Chao‐Jun Li",
         "Huiying Zeng"
       ],
-      "topics": [],
+      "topics": [
+        "Radical Photochemical Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Catalytic C–H Functionalization Methods",
+        "Sulfur-Based Synthesis Techniques"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6095,20 +6662,28 @@
         "Andrzej Gładysiak",
         "Kyriakos C. Stylianou"
       ],
-      "topics": [],
+      "topics": [
+        "Metal-Organic Frameworks: Synthesis and Applications",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Carbon Dioxide Capture Technologies",
+        "Carbon dioxide utilization in catalysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.4614735",
@@ -6128,20 +6703,28 @@
         "Qiaomei Sun",
         "Zhaoxiang Zhong"
       ],
-      "topics": [],
+      "topics": [
+        "Adsorption and biosorption for pollutant removal",
+        "Water Science and Technology",
+        "Environmental Science",
+        "Physical Sciences",
+        "Layered Double Hydroxides Synthesis and Applications",
+        "Geochemistry and Elemental Analysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1002/anie.8453410",
@@ -6171,14 +6754,22 @@
         "Michael G. Tanner",
         "Marc Vendrell"
       ],
-      "topics": [],
+      "topics": [
+        "Photodynamic Therapy Research Studies",
+        "Pulmonary and Respiratory Medicine",
+        "Medicine",
+        "Health Sciences",
+        "Nanoplatforms for cancer theranostics",
+        "Cancer Research and Treatments"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6206,14 +6797,22 @@
         "Xiaojun Wang",
         "Jia Zhu"
       ],
-      "topics": [],
+      "topics": [
+        "Extraction and Separation Processes",
+        "Mechanical Engineering",
+        "Engineering",
+        "Physical Sciences",
+        "Advanced Battery Materials and Technologies",
+        "Membrane-based Ion Separation Techniques"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6237,14 +6836,22 @@
         "Yang Li",
         "Jing Li"
       ],
-      "topics": [],
+      "topics": [
+        "Synthesis and Catalytic Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Click Chemistry and Applications",
+        "Catalytic C–H Functionalization Methods"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6269,14 +6876,22 @@
         "Guangzheng Wei",
         "Xudong Qu"
       ],
-      "topics": [],
+      "topics": [
+        "Enzyme Catalysis and Immobilization",
+        "Molecular Biology",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Microbial Natural Products and Biosynthesis",
+        "Plant Gene Expression Analysis"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6297,14 +6912,22 @@
         "Michal T. Boniecki",
         "Antonio Ruzzini"
       ],
-      "topics": [],
+      "topics": [
+        "Antimicrobial Peptides and Activities",
+        "Microbiology",
+        "Immunology and Microbiology",
+        "Life Sciences",
+        "Antimicrobial Resistance in Staphylococcus",
+        "Bacterial Infections and Vaccines"
+      ],
       "sources": [
         "crossref:1433-7851:online",
         "crossref:1433-7851:published",
         "crossref:1433-7851:created",
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
+        "crossref:1521-3773:created",
+        "openalex:S67393510"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6329,14 +6952,22 @@
         "Jun Lin",
         "Chunxia Li"
       ],
-      "topics": [],
+      "topics": [
+        "Cancer, Hypoxia, and Metabolism",
+        "Cancer Research",
+        "Biochemistry, Genetics and Molecular Biology",
+        "Life Sciences",
+        "Cancer Research and Treatments",
+        "Nanoplatforms for cancer theranostics"
+      ],
       "sources": [
         "crossref:0002-7863:online",
         "crossref:0002-7863:published",
         "crossref:0002-7863:created",
         "crossref:1520-5126:online",
         "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
+        "crossref:1520-5126:created",
+        "openalex:S111155417"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6415,14 +7046,22 @@
         "Fanghua Ji",
         "Guangbin Jiang"
       ],
-      "topics": [],
+      "topics": [
+        "Radical Photochemical Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Oxidative Organic Chemistry Reactions",
+        "Catalytic C–H Functionalization Methods"
+      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
         "crossref:1523-7052:created",
         "crossref:1523-7060:online",
         "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6447,14 +7086,22 @@
         "Hong-Min Liu",
         "Ying Xu"
       ],
-      "topics": [],
+      "topics": [
+        "Catalytic Alkyne Reactions",
+        "Organic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Synthetic Organic Chemistry Methods",
+        "Synthesis of Indole Derivatives"
+      ],
       "sources": [
         "crossref:1523-7052:online",
         "crossref:1523-7052:published",
         "crossref:1523-7052:created",
         "crossref:1523-7060:online",
         "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
+        "crossref:1523-7060:created",
+        "openalex:S201989124"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -6507,17 +7154,25 @@
         "Li Yan",
         "Yunjie Ding"
       ],
-      "topics": [],
+      "topics": [
+        "Asymmetric Hydrogenation and Catalysis",
+        "Inorganic Chemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Organometallic Complex Synthesis and Catalysis",
+        "Electrocatalysts for Energy Conversion"
+      ],
       "sources": [
         "crossref:2155-5435:online",
         "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
+        "crossref:2155-5435:created",
+        "openalex:S37391459"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
       "lateIndexed": false,
       "safetyTail": false,
-      "reviewPriority": "normal"
+      "reviewPriority": "high"
     },
     {
       "doi": "10.31635/ccschem.026.202608472",
@@ -6532,11 +7187,19 @@
         "Liya Ma",
         "Zhejun Li"
       ],
-      "topics": [],
+      "topics": [
+        "Electrochemical Analysis and Applications",
+        "Electrochemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Environmental remediation with nanomaterials",
+        "CO2 Reduction Techniques and Catalysts"
+      ],
       "sources": [
         "crossref:2096-5745:online",
         "crossref:2096-5745:published",
-        "crossref:2096-5745:created"
+        "crossref:2096-5745:created",
+        "openalex:S4210239486"
       ],
       "activeFrom": "2026-09-19",
       "dateUnverified": false,
@@ -6546,9 +7209,13 @@
     }
   ],
   "potentialGapDois": [
+    "10.1126/sciadv.aeh4903",
+    "10.1126/sciadv.aec5299",
     "10.1126/sciadv.aeh8819",
     "10.1126/sciadv.aej1532",
+    "10.1126/sciadv.aeg5572",
     "10.1126/sciadv.aeg0399",
+    "10.1126/sciadv.aeg6972",
     "10.1126/sciadv.aej5227",
     "10.1002/anie.6159381",
     "10.1002/anie.3193418",
@@ -6589,16 +7256,25 @@
     "10.1002/anie.1701592",
     "10.1002/anie.4897216",
     "10.1002/anie.7673910",
+    "10.1002/anie.6013056",
+    "10.1002/anie.7344670",
     "10.1002/anie.8881851",
+    "10.1002/anie.3435388",
     "10.1002/anie.8050538",
+    "10.1002/anie.1894063",
+    "10.1002/anie.7232174",
     "10.1002/anie.4933664",
+    "10.1002/anie.5185321",
     "10.1002/anie.9277033",
     "10.1002/anie.4613575",
     "10.1002/anie.4827662",
+    "10.1002/anie.9809119",
+    "10.1002/anie.4614735",
     "10.1002/anie.8453410",
     "10.1002/anie.7400940",
     "10.1002/anie.9826344",
     "10.1021/acs.orglett.6c03424",
-    "10.1021/acs.orglett.6c03671"
+    "10.1021/acs.orglett.6c03671",
+    "10.1021/acscatal.6c05520"
   ]
 }
