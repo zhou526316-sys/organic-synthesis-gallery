@@ -1,0 +1,89 @@
+name: Verify missing-only capture v4 live
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/tm-missing-only-live.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Verify exact primary deployment and live acquisition metadata without writes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
+          const sha='46983540207755d0cb62f8223abdac95493e4ab1';
+          const expected='c82545901ad5b00c8b86412623f30f2de6584514e8ee3a8cf84c72fcb4274714';
+          const report={readOnly:true,mediaWrites:0,publisherRequests:0,sourceSha:sha,expectedInstallerSha256:expected,deployments:[],probes:[],errors:[],authenticatedUserDesktopVerified:false};
+          const wanted=['Deploy Worker frontend assets','Deploy GitHub Pages frontend'];
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          async function deployments(){
+            const r=await fetch('https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/runs?head_sha='+sha+'&event=push&per_page=50',{headers:{authorization:'Bearer '+process.env.GH_TOKEN,accept:'application/vnd.github+json'},signal:AbortSignal.timeout(15000)});
+            if(!r.ok)throw Error('runs_http_'+r.status);
+            const x=await r.json();return (x.workflow_runs||[]).filter(v=>wanted.includes(v.name)).map(v=>({name:v.name,id:v.id,status:v.status,conclusion:v.conclusion,headSha:v.head_sha}));
+          }
+          async function probe(key,url,init={}){
+            const row={key,url};
+            try{
+              const suffix=(url.includes('?')?'&':'?')+'acceptance='+Date.now();
+              const r=await fetch(url+suffix,{...init,headers:{origin:'https://gallery.gczhouwld.com','cache-control':'no-cache',...(init.headers||{})},signal:AbortSignal.timeout(30000)});
+              row.status=r.status;row.allowOrigin=r.headers.get('access-control-allow-origin');
+              const text=await r.text();
+              if(key.endsWith('installer')){row.sha256=createHash('sha256').update(text).digest('hex');row.bytes=Buffer.byteLength(text);row.matchesTested=row.sha256===expected;row.marker=text.includes("var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';");row.panelMarker=text.includes('缺项补抓4');row.button=text.includes('立即开始任务（只补缺项）');row.version=(text.match(/@version\s+(\S+)/)||[])[1];}
+              else if(r.ok){const x=JSON.parse(text);
+                if(key==='stage_inventory')row.data={schemaVersion:x.schemaVersion,mediaGeneration:x.mediaGeneration,complete:x.complete,count:x.count,actualItems:(x.items||[]).length,figureReceipts:(x.items||[]).reduce((n,v)=>n+Object.keys(v.figures||{}).length,0),sample:(x.items||[]).filter(v=>v.doi==='10.1021/jacs.6c12163').map(v=>({doi:v.doi,expectedFigureCount:v.expectedFigureCount,storedFigureLabels:Object.keys(v.figures||{})}))};
+                else if(key==='production_inventory')row.data={items:(x.items||[]).map(v=>({doi:v.doi,figureCount:v.figureCount,tocStored:v.tocStored,capturedFiguresPresent:Array.isArray(v.capturedFigures),capturedFigureCount:(v.capturedFigures||[]).length}))};
+                else if(key==='queue')row.data={generatedAt:x.generatedAt,webpageDoiCount:x.webpageDoiCount,registryLength:(x.articles||[]).length,latestAddedDate:x.latestAddedDate,latestAddedCount:x.latestAddedCount};
+                else if(key==='capabilities')row.data={captureVersion:x.captureVersion,mediaControllerRevision:x.mediaControllerRevision,mediaGeneration:x.mediaGeneration,mode:x.mode};
+              }
+            }catch(e){row.error=String(e.message).slice(0,180)}
+            return row;
+          }
+          try{
+            for(let i=0;i<36;i++){
+              report.deployments=await deployments();
+              if(report.deployments.length===2&&report.deployments.every(x=>x.status==='completed'))break;
+              await sleep(15000);
+            }
+            for(let i=0;i<3;i++){
+              report.probes=await Promise.all([
+                probe('canonical_installer','https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js'),
+                probe('worker_installer','https://organic-synthesis-gallery.zhou526316.workers.dev/gallery-vpn-bridge.user.js'),
+                probe('stage_inventory','https://api.gczhouwld.com/api/article-figures/staged?inventory=1'),
+                probe('production_inventory','https://api.gczhouwld.com/api/media/inventory',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({dois:['10.1021/jacs.6c12163'],readOnly:true})}),
+                probe('capabilities','https://api.gczhouwld.com/api/media/capture-capabilities'),
+                probe('queue','https://gallery.gczhouwld.com/toc-demand-live.json'),
+                probe('private_evidence_without_auth','https://api.gczhouwld.com/api/article-summary/evidence-inventory')
+              ]);
+              if(report.probes.filter(x=>x.key.endsWith('installer')).every(x=>x.status===200&&x.matchesTested)&&report.probes.find(x=>x.key==='stage_inventory')?.data?.complete===true)break;
+              if(i<2)await sleep(15000);
+            }
+            // Refresh status AFTER served-byte probes so the evidence is not a pre-deploy sample.
+            report.deployments=await deployments();
+            const p=Object.fromEntries(report.probes.map(x=>[x.key,x]));
+            report.passed=report.deployments.length===2&&report.deployments.every(x=>x.conclusion==='success')
+              &&['canonical_installer','worker_installer'].every(k=>p[k].status===200&&p[k].matchesTested&&p[k].marker&&p[k].panelMarker&&p[k].button&&p[k].version==='2.2.39')
+              &&p.stage_inventory.status===200&&p.stage_inventory.data?.schemaVersion==='capture-inventory-v1'&&p.stage_inventory.data?.complete===true&&p.stage_inventory.data?.count===p.stage_inventory.data?.actualItems&&p.stage_inventory.data?.mediaGeneration===1790082000000
+              &&p.production_inventory.status===200&&p.production_inventory.data?.items?.length===1&&p.production_inventory.data.items[0].capturedFiguresPresent
+              &&p.capabilities.data?.captureVersion==='6.2.20'&&p.capabilities.data?.mediaControllerRevision==='2.2.39'&&p.capabilities.data?.mediaGeneration===1790082000000
+              &&p.private_evidence_without_auth.status===401;
+          }catch(e){report.errors.push(String(e.message).slice(0,180));report.passed=false;}
+          report.verifiedAt=new Date().toISOString();
+          await writeFile(process.env.RUNNER_TEMP+'/tm-missing-only-live.json',JSON.stringify(report,null,2));
+          console.log('MISSING_ONLY_LIVE',JSON.stringify(report));
+          if(!report.passed)process.exitCode=1;
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-missing-only-live
+          path: ${{ runner.temp }}/tm-missing-only-live.json
+          retention-days: 14
