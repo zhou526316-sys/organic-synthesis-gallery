@@ -3,7 +3,7 @@
   "reviewType": "prepublish_primary_review",
   "publicationSlot": "2026-10-02T18:00:00+08:00",
   "createdAt": "2026-10-02T17:32:00+08:00",
-  "evidenceAsOf": "2026-10-02T17:32:00+08:00",
+  "evidenceAsOf": "2026-10-02T17:38:00+08:00",
   "executionMode": "github-runner-handoff-plus-article-specific-semantic-review",
   "phase": "ready_with_pending",
   "status": "ready_with_pending",
@@ -593,13 +593,13 @@
       "titleZh": null,
       "reason": "主要贡献是Ru修饰MoS2边缘位点提高电解水析氢活性与稳定性。",
       "evidenceBasis": "fresh compact的文章特定证据：ABSTRACT In hydrogen production, electrocatalysts featuring edge sites as active centers, modulation of its edge site coordination environment could greatly improve the reaction kinetics by effectively reducing the energy barrier. Here, we report a novel catal",
-      "challengeReason": "水解离和析氢是能源电催化性能，不是目标有机产物制备。",
+      "challengeReason": "即便边缘配位具有材料设计普适性，摘要的唯一反应终点仍是水析氢，没有有机底物到目标产物的制备范围，因此反向挑战后仍排除。",
       "scopeAssessment": {
         "primaryContribution": "主要贡献是Ru修饰MoS2边缘位点提高电解水析氢活性与稳定性。",
         "preparativeTransformation": "未取得符合范围合同的可迁移有机底物到分离产物制备转化。",
         "generalityEvidence": "现有摘要/元数据的主要事实不足以证明一般制备范围。",
         "sourceEvidence": "fresh compact的文章特定证据：ABSTRACT In hydrogen production, electrocatalysts featuring edge sites as active centers, modulation of its edge site coordination environment could greatly improve the reaction kinetics by effectively reducing the energy barrier. Here, we report a novel catal",
-        "boundaryChallenge": "水解离和析氢是能源电催化性能，不是目标有机产物制备。"
+        "boundaryChallenge": "即便边缘配位具有材料设计普适性，摘要的唯一反应终点仍是水析氢，没有有机底物到目标产物的制备范围，因此反向挑战后仍排除。"
       }
     },
     {
@@ -641,13 +641,13 @@
       "titleZh": null,
       "reason": "主要贡献是锌电池电解液氢键网络、溶剂化与800圈镀/剥锌稳定性。",
       "evidenceBasis": "fresh compact的文章特定证据：ABSTRACT The instability of aqueous Zn batteries originates not only from the intrinsic reactivity of water, but also from the continuous hydrogen‐bonded network that enables cooperative interfacial degradation. In conventional aqueous electrolytes, this perco",
-      "challengeReason": "4-羟基-2-丁酮作为电解液调节剂不等于建立有机合成方法。",
+      "challengeReason": "即便4-羟基-2-丁酮与水、Zn²⁺存在明确分子相互作用，证据只用于电池界面与循环稳定性，不能转化为一般有机合成方法。",
       "scopeAssessment": {
         "primaryContribution": "主要贡献是锌电池电解液氢键网络、溶剂化与800圈镀/剥锌稳定性。",
         "preparativeTransformation": "未取得符合范围合同的可迁移有机底物到分离产物制备转化。",
         "generalityEvidence": "现有摘要/元数据的主要事实不足以证明一般制备范围。",
         "sourceEvidence": "fresh compact的文章特定证据：ABSTRACT The instability of aqueous Zn batteries originates not only from the intrinsic reactivity of water, but also from the continuous hydrogen‐bonded network that enables cooperative interfacial degradation. In conventional aqueous electrolytes, this perco",
-        "boundaryChallenge": "4-羟基-2-丁酮作为电解液调节剂不等于建立有机合成方法。"
+        "boundaryChallenge": "即便4-羟基-2-丁酮与水、Zn²⁺存在明确分子相互作用，证据只用于电池界面与循环稳定性，不能转化为一般有机合成方法。"
       }
     },
     {
@@ -740,13 +740,13 @@
       "titleZh": null,
       "reason": "该文明确为COF无溶剂合成的minireview，综述机械化学、离子热等既有路线。",
       "evidenceBasis": "fresh compact的文章特定证据：ABSTRACT Covalent organic frameworks (COFs) represent a powerful class of ordered porous materials, yet conventional solvothermal synthetic routes often hinder their practical implementation. Solvent‐free strategies have emerged as attractive alternatives, not",
-      "challengeReason": "即使主题属于聚合/框架合成，综述类型按范围契约排除。",
+      "challengeReason": "即便综述覆盖机械化学、离子热、熔融和气相辅助等真实COF合成路线，其文献类型仍是minireview而非原创研究，契约明确排除。",
       "scopeAssessment": {
         "primaryContribution": "该文明确为COF无溶剂合成的minireview，综述机械化学、离子热等既有路线。",
         "preparativeTransformation": "未取得符合范围合同的可迁移有机底物到分离产物制备转化。",
         "generalityEvidence": "现有摘要/元数据的主要事实不足以证明一般制备范围。",
         "sourceEvidence": "fresh compact的文章特定证据：ABSTRACT Covalent organic frameworks (COFs) represent a powerful class of ordered porous materials, yet conventional solvothermal synthetic routes often hinder their practical implementation. Solvent‐free strategies have emerged as attractive alternatives, not",
-        "boundaryChallenge": "即使主题属于聚合/框架合成，综述类型按范围契约排除。"
+        "boundaryChallenge": "即便综述覆盖机械化学、离子热、熔融和气相辅助等真实COF合成路线，其文献类型仍是minireview而非原创研究，契约明确排除。"
       }
     },
     {
@@ -998,13 +998,13 @@
       "titleZh": null,
       "reason": "主要贡献是手性金纳米晶的单向磁阻现象及其表面势机制。",
       "evidenceBasis": "fresh compact的文章特定证据：Abstract Magnetoresistance (MR), a cornerstone for quantum materials and quantum devices, is usually symmetric (sometimes antisymmetric) under magnetic field reversal. Here, we report a chirality-induced one-way magnetoresistance (ChiMR) in gold nanocrystals, ",
-      "challengeReason": "纳米晶制备支撑量子输运性能，未形成一般有机合成方法。",
+      "challengeReason": "即便手性纳米晶制备可能涉及化学合成，摘要的原创终点是磁输运对称性及器件功能，没有可迁移的有机底物—产物方法。",
       "scopeAssessment": {
         "primaryContribution": "主要贡献是手性金纳米晶的单向磁阻现象及其表面势机制。",
         "preparativeTransformation": "未取得符合范围合同的可迁移有机底物到分离产物制备转化。",
         "generalityEvidence": "现有摘要/元数据的主要事实不足以证明一般制备范围。",
         "sourceEvidence": "fresh compact的文章特定证据：Abstract Magnetoresistance (MR), a cornerstone for quantum materials and quantum devices, is usually symmetric (sometimes antisymmetric) under magnetic field reversal. Here, we report a chirality-induced one-way magnetoresistance (ChiMR) in gold nanocrystals, ",
-        "boundaryChallenge": "纳米晶制备支撑量子输运性能，未形成一般有机合成方法。"
+        "boundaryChallenge": "即便手性纳米晶制备可能涉及化学合成，摘要的原创终点是磁输运对称性及器件功能，没有可迁移的有机底物—产物方法。"
       }
     },
     {
@@ -3384,5 +3384,5 @@
   "nonBlockingDiscoveryWarnings": [
     "Science与CCS Chemistry存在健康来源族之间的覆盖差异；closure仍被持有，但不阻断已逐篇审核白名单。"
   ],
-  "updatedAt": "2026-10-02T17:32:00+08:00"
+  "updatedAt": "2026-10-02T17:38:00+08:00"
 }
