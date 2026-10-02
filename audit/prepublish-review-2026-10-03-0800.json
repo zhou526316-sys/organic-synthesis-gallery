@@ -231,7 +231,14 @@
     "10.31635/ccschem.026.202607659",
     "10.31635/ccschem.026.202608472"
   ],
-  "remainingUnresolved": 6,
+  "remainingUnresolved": [
+    "10.1021/acscatal.6c06578",
+    "10.31635/ccschem.026.202608090",
+    "10.31635/ccschem.026.202607590",
+    "10.31635/ccschem.026.202607612",
+    "10.31635/ccschem.026.202607659",
+    "10.31635/ccschem.026.202608472"
+  ],
   "durablePendingBacklogDois": [
     "10.1021/acscatal.6c06578",
     "10.31635/ccschem.026.202608090",
@@ -1371,13 +1378,13 @@
       "titleZh": null,
       "reason": "主要贡献是筛选p300/CBP作为GNAQ驱动葡萄膜黑色素瘤脆弱点。",
       "evidenceBasis": "fresh compact完整摘要实际显示：Abstract Uveal melanoma is the most common intraocular cancer in adults, driven by activating mutations in GNAQ or GNA11 , which encode the G proteins Gαq and Gα11. Currently, therapeutic options for uveal melanoma, particularly metastatic uveal melanoma, remain limited. Through an isogenic CRISPR screening approach, we identify EP300 , which encodes the protein lysine acetyltransferase p300, as a top synthetic lethal vulnerability in the context of GNAQ mutation. Notably, CREBBP , which encodes the closely related… 主要贡献是筛选p300/CBP作为GNAQ驱动葡萄膜黑色素瘤脆弱点。",
-      "challengeReason": "合成致死筛选属于肿瘤生物学，不是有机合成。",
+      "challengeReason": "该研究使用化合物或抑制剂进行脆弱性筛选的可能性不能单独支持纳入；现有摘要的核心仍是肿瘤靶点验证和治疗敏感性，不是新分子制备路线。",
       "scopeAssessment": {
         "primaryContribution": "主要贡献是筛选p300/CBP作为GNAQ驱动葡萄膜黑色素瘤脆弱点。",
         "preparativeTransformation": "现有证据未建立符合范围合同的一般有机底物到可制备产物的方法；若存在真实材料/生化操作，已在sourceEvidence和挑战中承认。",
         "generalityEvidence": "现有摘要或元数据未提供足以改变主要贡献判断的一般制备范围。",
         "sourceEvidence": "fresh compact完整摘要实际显示：Abstract Uveal melanoma is the most common intraocular cancer in adults, driven by activating mutations in GNAQ or GNA11 , which encode the G proteins Gαq and Gα11. Currently, therapeutic options for uveal melanoma, particularly metastatic uveal melanoma, remain limited. Through an isogenic CRISPR screening approach, we identify EP300 , which encodes the protein lysine acetyltransferase p300, as a top synthetic lethal vulnerability in the context of GNAQ mutation. Notably, CREBBP , which encodes the closely related…",
-        "boundaryChallenge": "合成致死筛选属于肿瘤生物学，不是有机合成。"
+        "boundaryChallenge": "该研究使用化合物或抑制剂进行脆弱性筛选的可能性不能单独支持纳入；现有摘要的核心仍是肿瘤靶点验证和治疗敏感性，不是新分子制备路线。"
       }
     },
     {
@@ -1543,13 +1550,13 @@
       "titleZh": null,
       "reason": "Organic Letters卷期出版信息页，不是原创研究。",
       "evidenceBasis": "fresh compact仅取得题名、期刊、日期和Crossref/OpenAlex元数据，abstract为空；没有把来源不可得解释为不存在化学证据。 Organic Letters卷期出版信息页，不是原创研究。",
-      "challengeReason": "出版信息不承载合成贡献。",
+      "challengeReason": "即使出版信息页位于Organic Letters并包含化学论文目录，它本身仍没有实验、底物和产物，排除不会遗漏该卷期中的原创合成论文。",
       "scopeAssessment": {
         "primaryContribution": "Organic Letters卷期出版信息页，不是原创研究。",
         "preparativeTransformation": "现有证据未建立符合范围合同的一般有机底物到可制备产物的方法；若存在真实材料/生化操作，已在sourceEvidence和挑战中承认。",
         "generalityEvidence": "现有摘要或元数据未提供足以改变主要贡献判断的一般制备范围。",
         "sourceEvidence": "fresh compact仅取得题名、期刊、日期和Crossref/OpenAlex元数据，abstract为空；没有把来源不可得解释为不存在化学证据。",
-        "boundaryChallenge": "出版信息不承载合成贡献。"
+        "boundaryChallenge": "即使出版信息页位于Organic Letters并包含化学论文目录，它本身仍没有实验、底物和产物，排除不会遗漏该卷期中的原创合成论文。"
       }
     },
     {
@@ -1981,13 +1988,13 @@
       "titleZh": null,
       "reason": "主要贡献是资源受限场景的细菌病原体及耐药性BADLOCK分子诊断。",
       "evidenceBasis": "fresh compact完整摘要实际显示：Antimicrobial resistance is a major global health threat, with disproportionate impact in regions with limited diagnostic infrastructure. To address this challenge, we developed BADLOCK (Bacterial and AMR Detection by SHERLOCK), a rapid, low-cost molecular diagnostic platform for direct detection of bacterial pathogens and resistance genes from clinical samples. BADLOCK operates as a one-pot CRISPR-Cas13a reaction capable of detecting nine bacterial species and four major resistance genes directly from positive blo… 主要贡献是资源受限场景的细菌病原体及耐药性BADLOCK分子诊断。",
-      "challengeReason": "诊断平台不包含有机合成路线。",
+      "challengeReason": "诊断平台可能使用寡核苷酸、探针或样品处理化学，但这些是检测流程组件；文章主要贡献不是新有机分子或可迁移制备转化。",
       "scopeAssessment": {
         "primaryContribution": "主要贡献是资源受限场景的细菌病原体及耐药性BADLOCK分子诊断。",
         "preparativeTransformation": "现有证据未建立符合范围合同的一般有机底物到可制备产物的方法；若存在真实材料/生化操作，已在sourceEvidence和挑战中承认。",
         "generalityEvidence": "现有摘要或元数据未提供足以改变主要贡献判断的一般制备范围。",
         "sourceEvidence": "fresh compact完整摘要实际显示：Antimicrobial resistance is a major global health threat, with disproportionate impact in regions with limited diagnostic infrastructure. To address this challenge, we developed BADLOCK (Bacterial and AMR Detection by SHERLOCK), a rapid, low-cost molecular diagnostic platform for direct detection of bacterial pathogens and resistance genes from clinical samples. BADLOCK operates as a one-pot CRISPR-Cas13a reaction capable of detecting nine bacterial species and four major resistance genes directly from positive blo…",
-        "boundaryChallenge": "诊断平台不包含有机合成路线。"
+        "boundaryChallenge": "诊断平台可能使用寡核苷酸、探针或样品处理化学，但这些是检测流程组件；文章主要贡献不是新有机分子或可迁移制备转化。"
       }
     },
     {
@@ -2887,13 +2894,13 @@
       "titleZh": null,
       "reason": "主要贡献是巨噬细胞支持的代谢适应驱动肿瘤营养压力下存活。",
       "evidenceBasis": "fresh compact完整摘要实际显示：Triple-negative breast cancer (TNBC) develops in hypoxic, nutrient-limited tumors enriched with macrophages and cell death. We show that metabolically distinct TNBCs differentially exploit macrophage-derived nutrients, influencing tumor growth and therapeutic response. Prolonged hypoxia reprogrammed mouse and human macrophages, enabling them to release metabolites that rescued the growth of select TNBC cell lines during glutamine deprivation or glutamine metabolism inhibition. Hypoxic macrophages reduced glutamine … 主要贡献是巨噬细胞支持的代谢适应驱动肿瘤营养压力下存活。",
-      "challengeReason": "肿瘤代谢机制不属于有机合成。",
+      "challengeReason": "代谢通量和巨噬细胞来源营养涉及大量小分子变化，但这些是生物机制读出，不是作者提出的一般有机合成方法或目标路线。",
       "scopeAssessment": {
         "primaryContribution": "主要贡献是巨噬细胞支持的代谢适应驱动肿瘤营养压力下存活。",
         "preparativeTransformation": "现有证据未建立符合范围合同的一般有机底物到可制备产物的方法；若存在真实材料/生化操作，已在sourceEvidence和挑战中承认。",
         "generalityEvidence": "现有摘要或元数据未提供足以改变主要贡献判断的一般制备范围。",
         "sourceEvidence": "fresh compact完整摘要实际显示：Triple-negative breast cancer (TNBC) develops in hypoxic, nutrient-limited tumors enriched with macrophages and cell death. We show that metabolically distinct TNBCs differentially exploit macrophage-derived nutrients, influencing tumor growth and therapeutic response. Prolonged hypoxia reprogrammed mouse and human macrophages, enabling them to release metabolites that rescued the growth of select TNBC cell lines during glutamine deprivation or glutamine metabolism inhibition. Hypoxic macrophages reduced glutamine …",
-        "boundaryChallenge": "肿瘤代谢机制不属于有机合成。"
+        "boundaryChallenge": "代谢通量和巨噬细胞来源营养涉及大量小分子变化，但这些是生物机制读出，不是作者提出的一般有机合成方法或目标路线。"
       }
     },
     {
@@ -3331,13 +3338,13 @@
       "titleZh": null,
       "reason": "主要贡献是糖原磷酸化酶S-亚硝基化调控核糖原分解及其在代谢性肝病中的损伤。",
       "evidenceBasis": "fresh compact完整摘要实际显示：Nuclear glycogen storage has been known for nearly 100 years. However, its role in diseases remains unclear. Here, we found nuclear glycogen storage in livers of mice and humans with argininosuccinic aciduria (ASA), an inborn error of metabolism. Nuclear glycogenolysis sustains histone acetylation and liver homeostasis. We show that hepatic nuclear glycogenolysis is regulated by nitric oxide (NO)–dependent control of the nuclear abundance of liver glycogen phosphorylase (PYGL), an enzyme involved in glycogen breakd… 主要贡献是糖原磷酸化酶S-亚硝基化调控核糖原分解及其在代谢性肝病中的损伤。",
-      "challengeReason": "生化调控机制不构成制备路线。",
+      "challengeReason": "S-亚硝基化本身是共价化学事件，但本文研究其生理调控和疾病缺陷，没有把该修饰发展为通用、分离产物的制备方法。",
       "scopeAssessment": {
         "primaryContribution": "主要贡献是糖原磷酸化酶S-亚硝基化调控核糖原分解及其在代谢性肝病中的损伤。",
         "preparativeTransformation": "现有证据未建立符合范围合同的一般有机底物到可制备产物的方法；若存在真实材料/生化操作，已在sourceEvidence和挑战中承认。",
         "generalityEvidence": "现有摘要或元数据未提供足以改变主要贡献判断的一般制备范围。",
         "sourceEvidence": "fresh compact完整摘要实际显示：Nuclear glycogen storage has been known for nearly 100 years. However, its role in diseases remains unclear. Here, we found nuclear glycogen storage in livers of mice and humans with argininosuccinic aciduria (ASA), an inborn error of metabolism. Nuclear glycogenolysis sustains histone acetylation and liver homeostasis. We show that hepatic nuclear glycogenolysis is regulated by nitric oxide (NO)–dependent control of the nuclear abundance of liver glycogen phosphorylase (PYGL), an enzyme involved in glycogen breakd…",
-        "boundaryChallenge": "生化调控机制不构成制备路线。"
+        "boundaryChallenge": "S-亚硝基化本身是共价化学事件，但本文研究其生理调控和疾病缺陷，没有把该修饰发展为通用、分离产物的制备方法。"
       }
     },
     {
@@ -3615,13 +3622,13 @@
       "titleZh": null,
       "reason": "主要贡献是人肾脏等位基因特异表达图谱。",
       "evidenceBasis": "fresh compact完整摘要实际显示：Allele-specific expression (ASE), the preferential expression of one gene copy, is a key mechanism of genomic regulation. However, its role in human kidney disease remains poorly understood. In this study, we generated a high-quality, genome-wide ASE map using paired whole-genome sequencing and RNA sequencing from microdissected glomerular and tubulointerstitial compartments of patients with proteinuric kidney disease. We showed that the majority of common ASE events were deterministic and sequence-mediated. We als… 主要贡献是人肾脏等位基因特异表达图谱。",
-      "challengeReason": "基因组图谱研究没有制备转化。",
+      "challengeReason": "等位基因特异表达可能依赖高通量测序试剂，但试剂使用不能替代原创有机合成贡献；文章的研究对象和结论均为人肾基因调控。",
       "scopeAssessment": {
         "primaryContribution": "主要贡献是人肾脏等位基因特异表达图谱。",
         "preparativeTransformation": "现有证据未建立符合范围合同的一般有机底物到可制备产物的方法；若存在真实材料/生化操作，已在sourceEvidence和挑战中承认。",
         "generalityEvidence": "现有摘要或元数据未提供足以改变主要贡献判断的一般制备范围。",
         "sourceEvidence": "fresh compact完整摘要实际显示：Allele-specific expression (ASE), the preferential expression of one gene copy, is a key mechanism of genomic regulation. However, its role in human kidney disease remains poorly understood. In this study, we generated a high-quality, genome-wide ASE map using paired whole-genome sequencing and RNA sequencing from microdissected glomerular and tubulointerstitial compartments of patients with proteinuric kidney disease. We showed that the majority of common ASE events were deterministic and sequence-mediated. We als…",
-        "boundaryChallenge": "基因组图谱研究没有制备转化。"
+        "boundaryChallenge": "等位基因特异表达可能依赖高通量测序试剂，但试剂使用不能替代原创有机合成贡献；文章的研究对象和结论均为人肾基因调控。"
       }
     },
     {
@@ -3769,13 +3776,13 @@
       "titleZh": null,
       "reason": "主要贡献是I-F3 CRISPR相关转座酶识别并配对转座子末端的机制。",
       "evidenceBasis": "fresh compact完整摘要实际显示：To develop gene therapy tools based on CRISPR-associated transposons (CASTs), it is essential to define how transposon ends are recognized and paired during transposition. Transposon 7 (Tn7)–like transposons typically contain asymmetric left- and right-end sequences that flank and define DNA cargo. However, how the transposase recognizes these different sequences and assembles them into a catalytically competent state for cut-and-paste transposition remains unknown. Here, we present the cryo–electron microscopy str… 主要贡献是I-F3 CRISPR相关转座酶识别并配对转座子末端的机制。",
-      "challengeReason": "基因编辑机制不属于有机合成。",
+      "challengeReason": "转座过程涉及DNA切接等化学变化，但本文目标是解析转座酶识别与配对机制，并非建立可推广的有机分子制备路线。",
       "scopeAssessment": {
         "primaryContribution": "主要贡献是I-F3 CRISPR相关转座酶识别并配对转座子末端的机制。",
         "preparativeTransformation": "现有证据未建立符合范围合同的一般有机底物到可制备产物的方法；若存在真实材料/生化操作，已在sourceEvidence和挑战中承认。",
         "generalityEvidence": "现有摘要或元数据未提供足以改变主要贡献判断的一般制备范围。",
         "sourceEvidence": "fresh compact完整摘要实际显示：To develop gene therapy tools based on CRISPR-associated transposons (CASTs), it is essential to define how transposon ends are recognized and paired during transposition. Transposon 7 (Tn7)–like transposons typically contain asymmetric left- and right-end sequences that flank and define DNA cargo. However, how the transposase recognizes these different sequences and assembles them into a catalytically competent state for cut-and-paste transposition remains unknown. Here, we present the cryo–electron microscopy str…",
-        "boundaryChallenge": "基因编辑机制不属于有机合成。"
+        "boundaryChallenge": "转座过程涉及DNA切接等化学变化，但本文目标是解析转座酶识别与配对机制，并非建立可推广的有机分子制备路线。"
       }
     },
     {
