@@ -40,13 +40,13 @@
     "note": "Consolidated the polymer-method scope correction and subsequent late-indexed candidates. Current audit reports galleryDois=503, missingFromGallery=0, unresolved=0."
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-10-02T10:05:27.443Z",
+    "finishedAt": "2026-10-02T15:49:46.418Z",
     "dataCommitSha": "88dedaacd757ba18da7bf52b764469591d7ada38",
     "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
     "deployment": "success-live-verified",
     "verification": {
-      "pagesRun": 36993033714,
-      "deploymentSourceCommit": "104199eb263520aa22ce78caeb64f844f24fd0d8",
+      "pagesRun": 37029061054,
+      "deploymentSourceCommit": "46983540207755d0cb62f8223abdac95493e4ab1",
       "publicationSlot": "2026-10-02T18:00:00+08:00",
       "markerBlobSha": "f9376475cba78f801c447dd17bdb54fc0c815352",
       "totalGalleryCards": 765,
@@ -104,7 +104,7 @@
       "sites": [
         {
           "site": "https://gallery.gczhouwld.com/",
-          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36993033714-1790935526701",
+          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=37029061054-1790956185812",
           "filesVerified": [
             "papers.gz.b64",
             "total-synthesis.json",
@@ -121,7 +121,7 @@
         },
         {
           "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36993033714-1790935527108",
+          "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=37029061054-1790956186281",
           "filesVerified": [
             "papers.gz.b64",
             "total-synthesis.json",
@@ -141,7 +141,7 @@
     },
     "tocVerification": {
       "webpageDoiCount": 765,
-      "verifiedAt": "2026-10-02T10:05:27.443Z",
+      "verifiedAt": "2026-10-02T15:49:46.418Z",
       "note": "Queue membership count verified; this job does not obtain or publish media."
     }
   },
@@ -499,8 +499,8 @@
     "mediaAcquisitionPerformed": false,
     "productionMutation": false,
     "note": "All 42 fresh compact candidates are accounted for by article-specific or compatibility-checked two-pass review. Eleven includes are ready under the per-DOI allowlist; five current candidates and one durable out-of-window CCS item remain pending. Three existing-card scope rechecks remain retained while pending. No production literature data, media, or deployment was changed.",
-    "pagesRun": 36993033714,
-    "deploymentVerifiedAt": "2026-10-02T10:05:27.443Z"
+    "pagesRun": 37029061054,
+    "deploymentVerifiedAt": "2026-10-02T15:49:46.418Z"
   },
   "nextPublicationSlot": "2026-10-02T18:00:00+08:00",
   "prepublish": {
@@ -962,9 +962,9 @@
       "10.31635/ccschem.026.202607659",
       "10.31635/ccschem.026.202608472"
     ],
-    "pagesRun": 36993033714,
-    "deploymentSourceCommit": "104199eb263520aa22ce78caeb64f844f24fd0d8",
-    "deploymentVerifiedAt": "2026-10-02T10:05:27.443Z"
+    "pagesRun": 37029061054,
+    "deploymentSourceCommit": "46983540207755d0cb62f8223abdac95493e4ab1",
+    "deploymentVerifiedAt": "2026-10-02T15:49:46.418Z"
   },
   "lastQualityGate": {
     "runId": 36989175902,
@@ -1312,9 +1312,9 @@
   "lastDeploymentAttempt": {
     "schemaVersion": 1,
     "ok": true,
-    "runId": 36993033714,
+    "runId": 37029061054,
     "runAttempt": 1,
-    "sourceCommit": "104199eb263520aa22ce78caeb64f844f24fd0d8",
+    "sourceCommit": "46983540207755d0cb62f8223abdac95493e4ab1",
     "markerCommit": "88dedaacd757ba18da7bf52b764469591d7ada38",
     "markerBlobSha": "f9376475cba78f801c447dd17bdb54fc0c815352",
     "publicationSlot": "2026-10-02T18:00:00+08:00",
@@ -1372,7 +1372,7 @@
     "sites": [
       {
         "site": "https://gallery.gczhouwld.com/",
-        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36993033714-1790935526701",
+        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=37029061054-1790956185812",
         "filesVerified": [
           "papers.gz.b64",
           "total-synthesis.json",
@@ -1389,7 +1389,7 @@
       },
       {
         "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36993033714-1790935527108",
+        "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=37029061054-1790956186281",
         "filesVerified": [
           "papers.gz.b64",
           "total-synthesis.json",
@@ -1405,7 +1405,7 @@
         "attempts": 1
       }
     ],
-    "verifiedAt": "2026-10-02T10:05:27.443Z",
+    "verifiedAt": "2026-10-02T15:49:46.418Z",
     "status": "success-live-verified"
   },
   "lastPrepublishReview": {
