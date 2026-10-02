@@ -8,8 +8,9 @@ permissions:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 6
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
@@ -17,49 +18,69 @@ jobs:
         run: |
           npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright@1.55.1
           npx playwright install --with-deps chromium
-      - name: Observe all five figure strips and search transitions
+      - name: Observe user-reported article media and exact rendered images
         run: |
           node --input-type=module - <<'JS'
           import {chromium} from 'playwright';
-          import {mkdir,writeFile} from 'node:fs/promises';
-          const base='https://zhou526316-sys.github.io/organic-synthesis-gallery/';
+          import {mkdir,writeFile,readFile,copyFile} from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
+          import {execFileSync} from 'node:child_process';
+          const base='https://gallery.gczhouwld.com/';
           const out=process.env.RUNNER_TEMP+'/body-card-diagnostic';await mkdir(out,{recursive:true});
-          const status=await (await fetch(base+'body-publication-status.json?diagnostic='+Date.now())).json();
-          const result={readAt:new Date().toISOString(),productionWrites:0,cards:[],errors:[],requests:[],scripts:[]};
+          let request={dois:['10.31635/ccschem.026.202507094']};
+          try{const supplied=JSON.parse(await readFile('audit/automation-triggers/body-card-read-diagnostic.json','utf8'));if(Array.isArray(supplied.dois))request=supplied;}catch{}
+          const dois=[...new Set(request.dois.map(x=>String(x).trim().toLowerCase()))];
+          if(!dois.length||dois.length>5||dois.some(x=>!/^10\.\d{4,9}\/\S+$/.test(x)))throw Error('Expected 1-5 explicit DOI targets');
+          const result={readAt:new Date().toISOString(),sourceCommit:process.env.GITHUB_SHA,productionWrites:0,cards:[],errors:[],reads:[],scripts:[]};
+          const sha=b=>createHash('sha256').update(b).digest('hex');
+          const saved=[];
+          async function get(url){const r=await fetch(url,{headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(25000)});if(!r.ok)throw Error('HTTP '+r.status+' '+url);return r;}
+          const allowed=new Set(['gallery.gczhouwld.com','zhou526316-sys.github.io','organic-synthesis-gallery.zhou526316.workers.dev','organic-synthesis-gallery-public.pages.dev','api.gczhouwld.com']);
+          async function saveImage(url,label){try{const u=new URL(url,base);if(!allowed.has(u.hostname))return {url,notDownloaded:'not an existing Gallery media origin'};const r=await get(u.href);const type=r.headers.get('content-type')||'';if(!type.startsWith('image/'))return {url,error:'not_image',type};const bytes=Buffer.from(await r.arrayBuffer());if(bytes.length>20000000)throw Error('image too large');const ext=/png/i.test(type)?'png':/webp/i.test(type)?'webp':/svg/i.test(type)?'svg':'jpg';const file=label+'.'+ext;await writeFile(out+'/'+file,bytes);const entry={url,file,type,bytes:bytes.length,sha256:sha(bytes)};saved.push(entry);return entry;}catch(error){return {url,error:String(error.message)}}}
+          for(const name of ['media-index.json','release-delivery.json','toc-demand-live.json']){
+            try{const r=await get(base+name+'?media-diagnostic='+Date.now());const data=await r.json();
+              if(name==='release-delivery.json')result.reads.push({name,productionCards:data.productionCards,sourceCommit:data.sourceCommit,markerBlobSha:data.markerBlobSha,targets:dois.map(doi=>({doi,present:data.dois?.includes(doi)}))});
+              else if(name==='media-index.json'){
+                const selected=Object.fromEntries(dois.map(doi=>[doi,data.items?.[doi]||null]));result.media=selected;
+                result.reads.push({name,generatedAt:data.generatedAt,itemCount:Object.keys(data.items||{}).length});
+                for(const [i,doi]of dois.entries()){const item=selected[doi];if(item?.toc?.imageUrl)await saveImage(item.toc.imageUrl,'toc-'+i);for(const[j,f]of (item?.figures?.figures||[]).slice(0,8).entries()){if(f.imageUrl)await saveImage(f.imageUrl,'body-'+i+'-'+j);}}
+              }else{
+                const matches=[];function walk(v){if(!v||typeof v!=='object')return;if(dois.includes(String(v.doi||'').toLowerCase()))matches.push(v);else for(const item of Object.values(v))walk(item);}walk(data);result.queue={generatedAt:data.generatedAt,webpageDoiCount:data.webpageDoiCount,matches};
+              }
+            }catch(error){result.reads.push({name,error:error.message});}
+          }
+          try{const data=await(await get('https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index')).json();const matches=[];function walk(v){if(!v||typeof v!=='object')return;if(dois.includes(String(v.doi||'').toLowerCase())){const{token,authorization,apiKey,...safe}=v;matches.push(safe);}else for(const [k,x]of Object.entries(v)){if(dois.includes(k))matches.push({doi:k,value:x});else walk(x);}}walk(data);result.localCaptures=matches;}catch(error){result.localCaptureError=error.message;}
           const browser=await chromium.launch();
           try{
-            const ctx=await browser.newContext({viewport:{width:1360,height:1000}});
+            const ctx=await browser.newContext({viewport:{width:1360,height:1100}});
             await ctx.route('**/*',r=>!['GET','HEAD','OPTIONS'].includes(r.request().method())?r.fulfill({status:503,body:'read-only diagnostic blocks production writes'}):r.continue());
-            const page=await ctx.newPage();
-            page.on('pageerror',e=>result.errors.push(String(e.message).slice(0,500)));
-            page.on('requestfailed',r=>result.requests.push({kind:'failed',url:r.url().split('?')[0],error:r.failure()?.errorText}));
-            page.on('response',async r=>{if(r.url().includes('media-index.json')){try{const m=await r.json();result.requests.push({kind:'media-index',status:r.status(),url:r.url(),selected:status.perDoi.map(p=>({doi:p.doi,n:m.items?.[p.doi]?.figures?.figures?.length}))});}catch{}}});
-            await page.goto(base,{waitUntil:'domcontentloaded'});await page.locator('#search').waitFor();
-            for(const [i,p] of status.perDoi.entries()){
-              const selector='.figure-strip-slot[data-figure-doi="'+p.doi+'"]';
-              const entry={doi:p.doi,expected:p.figures};
-              try{
-                await page.locator('#search').fill(p.doi);await page.locator('#search').press('Escape');
-                await page.locator(selector).waitFor({timeout:12000});await page.locator(selector).scrollIntoViewIfNeeded();
-                await page.waitForTimeout(6000);
-                entry.state=await page.locator(selector).evaluate(el=>({state:el.dataset.state,count:el.querySelectorAll('.figure-thumb img').length,html:el.outerHTML.slice(0,18000),images:[...el.querySelectorAll('img')].map(x=>({alt:x.alt,src:x.currentSrc||x.src,w:x.naturalWidth,h:x.naturalHeight,complete:x.complete})),rect:{top:el.getBoundingClientRect().top,bottom:el.getBoundingClientRect().bottom}}));
-                entry.search=await page.locator('#search').inputValue();
+            const page=await ctx.newPage();page.on('pageerror',e=>result.errors.push(String(e.message).slice(0,500)));
+            await page.goto(base,{waitUntil:'domcontentloaded'});await page.locator('#search').waitFor({timeout:30000});
+            for(const[i,doi]of dois.entries()){
+              const entry={doi};try{
+                await page.locator('#search').fill(doi);await page.locator('#search').press('Escape');await page.waitForTimeout(6500);
+                entry.state=await page.evaluate(doi=>{
+                  const strip=document.querySelector('[data-figure-doi="'+CSS.escape(doi)+'"]');
+                  const links=[...document.querySelectorAll('a[href]')].filter(a=>{try{return decodeURIComponent(a.href).toLowerCase().includes(doi)}catch{return false}});
+                  const card=strip?.closest('.card')||links.map(a=>a.closest('.card')).find(Boolean);
+                  return {url:location.href,search:document.querySelector('#search')?.value,found:!!card,title:card?.querySelector('h2,h3,.title')?.textContent,text:card?.textContent?.slice(0,12000),html:card?.outerHTML?.slice(0,90000),images:card?[...card.querySelectorAll('img')].map(x=>({alt:x.alt,src:x.currentSrc||x.src,w:x.naturalWidth,h:x.naturalHeight,complete:x.complete,outer:x.outerHTML.slice(0,4000)})):[],visibleCards:[...document.querySelectorAll('.card:not([hidden])')].length};
+                },doi);
                 await page.screenshot({path:out+'/page-'+i+'.png'});
-                if(entry.state.count!==p.figures){
-                  await page.reload({waitUntil:'domcontentloaded'});await page.locator('#search').waitFor();await page.locator('#search').fill(p.doi);await page.locator('#search').press('Escape');
-                  await page.locator(selector).waitFor({timeout:12000});await page.locator(selector).scrollIntoViewIfNeeded();await page.waitForTimeout(6000);
-                  entry.afterReload=await page.locator(selector).evaluate(el=>({state:el.dataset.state,count:el.querySelectorAll('.figure-thumb img').length,html:el.outerHTML.slice(0,18000)}));
-                }
-              }catch(e){entry.error=String(e.message).slice(0,1000);}
-              result.cards.push(entry);
+                for(const[j,img]of(entry.state.images||[]).slice(0,12).entries())if(img.src&&!img.src.startsWith('data:'))await saveImage(img.src,'rendered-'+i+'-'+j);
+              }catch(error){entry.error=String(error.message).slice(0,1000);}result.cards.push(entry);
             }
             result.scripts=await page.locator('script[src]').evaluateAll(es=>es.map(e=>e.src));
-          }finally{await browser.close();await writeFile(out+'/diagnostic.json',JSON.stringify(result,null,2));console.log('BODY_CARD_DIAGNOSTIC '+JSON.stringify({cards:result.cards.map(x=>({doi:x.doi,expected:x.expected,state:x.state?.state,count:x.state?.count,reloaded:x.afterReload?.count,error:x.error})),errors:result.errors}));}
+          }finally{await browser.close();result.savedImages=saved;await writeFile(out+'/diagnostic.json',JSON.stringify(result,null,2));console.log('BODY_CARD_DIAGNOSTIC '+JSON.stringify({cards:result.cards.map(x=>({doi:x.doi,found:x.state?.found,images:x.state?.images,error:x.error})),media:result.media,errors:result.errors}));}
+          const sourcePaths=['src/main.ts','shared/literature-policy.js','cloudflare/scripts/sanitize-static-media.mjs','cloudflare/scripts/verify-static-media-integrity.mjs','cloudflare/scripts/merge-curated-pages.mjs','cloudflare/scripts/merge-local-captures.mjs','cloudflare/scripts/build-pages-mirror.mjs','cloudflare/scripts/build-live-toc-demand-queue.mjs','public/toc-mainline.user.js','public/toc-display-gap-overrides.json','scripts/lib/scope-corrections.mjs'];
+          const tracked=execFileSync('git',['ls-files'],{encoding:'utf8'}).split('\n');
+          result.relatedPaths=tracked.filter(x=>/quarant|blocklist|suppress|identity|denylist|scope.*remov|media.*correction/i.test(x)).slice(0,100);
+          for(const file of sourcePaths){try{await mkdir(out+'/source/'+file.split('/').slice(0,-1).join('/'),{recursive:true});await copyFile(file,out+'/source/'+file);}catch{}}
+          await writeFile(out+'/diagnostic.json',JSON.stringify(result,null,2));
           JS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: body-card-read-diagnostic
-          path: ${{ runner.temp }}/body-card-diagnostic/*
+          path: ${{ runner.temp }}/body-card-diagnostic/**
           retention-days: 7
           if-no-files-found: warn
