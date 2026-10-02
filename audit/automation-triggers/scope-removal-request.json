@@ -1,15 +1,14 @@
 {
   "schemaVersion": 1,
   "mode": "confirmed-scope-removal",
-  "requestId": "user-immediate-scope-removal-20260923-four-confirmed",
-  "reason": "User explicitly permits immediate removal of confirmed out-of-scope articles without waiting for 18:00.",
+  "requestId": "user-immediate-scope-removal-20261002-s44160-01164-8",
+  "reason": "The user explicitly excludes 10.1038/s44160-026-01164-8. Its publisher abstract was re-read: membrane/capsule fabrication and function are primary. Apply the existing authorized deletion-only transaction now; do not wait for 18:00 and do not admit any paper.",
   "authorityFile": "audit/scope-removal-authority.json",
-  "removeDois": [
-    "10.1021/jacs.6c13517",
-    "10.1021/jacs.6c10701",
-    "10.1038/s41467-026-77963-6",
-    "10.1002/anie.7784614"
-  ],
+  "removeDois": ["10.1038/s44160-026-01164-8"],
   "addDois": [],
-  "retainPendingAndUnconfirmedBoundaryPapers": true
+  "retainPendingAndUnconfirmedBoundaryPapers": true,
+  "evidenceRegistryCommit": "13c48fe633db75707fdf79ff1a99e2ef487add7c",
+  "evidenceRegistryBlobSha": "4df5fb1fb5c25804846c70eee555e9ae798c5d99",
+  "separateMediaCorrectionDoi": "10.31635/ccschem.026.202507094",
+  "separateMediaCorrectionMustNotRemoveArticle": true
 }
