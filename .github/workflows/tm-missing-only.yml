@@ -1,0 +1,103 @@
+name: Tampermonkey missing-only regression
+on:
+  push:
+    branches: [fix/tm-missing-only-20261002, main]
+    paths: ['public/toc-mainline.user.js', 'cloudflare/worker/src/local-captures.js', 'cloudflare/worker/src/media.js', 'scripts/*missing-only*', 'scripts/tm-stage-inventory.inc.js', 'tests/tm-missing-only*', '.github/workflows/tm-missing-only.yml']
+  pull_request:
+    branches: [main]
+    paths: ['public/toc-mainline.user.js', 'cloudflare/worker/src/local-captures.js', 'cloudflare/worker/src/media.js', 'tests/tm-missing-only*', '.github/workflows/tm-missing-only.yml']
+permissions:
+  contents: read
+concurrency:
+  group: tm-missing-only-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Materialize exact patch on repair branch only
+        if: github.ref == 'refs/heads/fix/tm-missing-only-20261002'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/apply-tm-missing-only.py');s=p.read_text()
+          a=s.index('      queue:');b=s.index(chr(10)+'rep(',a);v=s[a:b];slash=chr(92)
+          for n in (2,1):
+              v=v.replace("'"+(slash+'n')*n+"'", "'"+(slash+slash+'n')*n+"'")
+          s=s[:a]+v+s[b:]
+          s=s.replace('manual=s[a:b]'+chr(10),'manual=s[a:b].rstrip()+chr(10)'+chr(10))
+          p.write_text(s)
+          PY
+          python scripts/apply-tm-missing-only.py
+          git diff --check
+      - name: Test missing-only queue and preserved source/receipt/session safeguards
+        run: |
+          set -euo pipefail
+          {
+            node --check public/toc-mainline.user.js
+            node --check cloudflare/worker/src/local-captures.js
+            node --check cloudflare/worker/src/media.js
+            node tests/tm-missing-only.test.mjs
+            node tests/tm-immediate-restart.test.mjs
+            node tests/tm-controller-recovery.test.mjs
+            node tests/tm-newest-retry.test.mjs
+            node scripts/test-tm223-upload.mjs
+            node scripts/test-tm220-release.mjs
+            node scripts/test-tm222-auto-report.mjs
+            node cloudflare/worker/scripts/test-article-summary.mjs
+          } | tee "$RUNNER_TEMP/tm-missing-tests.txt"
+      - name: Install isolated browser dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Test real primary panel and two-page takeover in Chromium
+        run: node tests/tm-missing-only-browser.mjs
+      - name: Build exact compatible installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          node --check public/gallery-vpn-bridge.user.js
+          grep -F '缺项补抓4' public/gallery-vpn-bridge.user.js
+          mkdir -p "$RUNNER_TEMP/tm-missing-output"
+          cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/tm-missing-output/"
+          sha256sum public/gallery-vpn-bridge.user.js > "$RUNNER_TEMP/tm-missing-output/sha256.txt"
+      - name: Commit tested source to repair branch only
+        if: github.ref == 'refs/heads/fix/tm-missing-only-20261002'
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/fix/tm-missing-only-20261002
+          git add public/toc-mainline.user.js scripts/tm-immediate-restart-runtime.inc.js scripts/apply-tm-missing-only.py cloudflare/worker/src/local-captures.js cloudflare/worker/src/media.js tests/tm-immediate-restart.test.mjs tests/tm-immediate-restart-browser.mjs
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix: immediate missing-only acquisition, per-layer progress and receipt reuse'
+            git push origin HEAD:fix/tm-missing-only-20261002
+          fi
+      - name: Save readable exact tested source
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm-missing-source"
+          tar cf - public/toc-mainline.user.js scripts/tm-immediate-restart-runtime.inc.js scripts/tm-missing-only-runtime.inc.js scripts/tm-stage-inventory.inc.js scripts/apply-tm-missing-only.py cloudflare/worker/src/local-captures.js cloudflare/worker/src/media.js tests/tm-missing-only.test.mjs tests/tm-missing-only-browser.mjs tests/tm-immediate-restart.test.mjs tests/tm-immediate-restart-browser.mjs | tar xf - -C "$RUNNER_TEMP/tm-missing-source"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-missing-only-tested
+          path: |
+            ${{ runner.temp }}/tm-missing-output
+            ${{ runner.temp }}/tm-missing-source
+            ${{ runner.temp }}/tm-missing-tests.txt
+            ${{ runner.temp }}/tm-missing-browser-report.json
+            ${{ runner.temp }}/tm-missing-browser-trace.zip
+            ${{ runner.temp }}/tm-missing-toc.png
+            ${{ runner.temp }}/tm-missing-text.png
+          retention-days: 14

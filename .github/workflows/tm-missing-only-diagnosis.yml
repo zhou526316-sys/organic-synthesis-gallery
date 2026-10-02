@@ -1,0 +1,46 @@
+name: Tampermonkey missing-only diagnosis
+on:
+  push:
+    branches: [fix/tm-missing-only-20261002]
+    paths: ['.github/workflows/tm-missing-only-diagnosis.yml']
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Read recent reports and selected full histories without production writes
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFile,mkdir} from 'node:fs/promises';
+          const dir=process.env.RUNNER_TEMP+'/tm-current';await mkdir(dir,{recursive:true});
+          const base='https://api.gczhouwld.com';
+          function clean(x){if(Array.isArray(x))return x.map(clean);if(x&&typeof x==='object')return Object.fromEntries(Object.entries(x).filter(([k])=>!/(?:token|secret|password|cookie|authorization|imageData|abstract|sections|fulltext|paragraphs)/i.test(k)).map(([k,v])=>[k,clean(v)]));if(typeof x==='string')return x.replace(/Bearer\s+\S+/gi,'[redacted]').replace(/https?:\/\/[^\s"'<>]+/gi,s=>{try{const u=new URL(s);u.username='';u.password='';u.search='';u.hash='';return u.href;}catch{return '[url]'}});return x;}
+          async function get(path){const url=path.startsWith('https://')?path:base+path;const r=await fetch(url,{headers:{origin:'https://gallery.gczhouwld.com','cache-control':'no-cache'},signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('http_'+r.status);return r.json();}
+          const out={readAt:new Date().toISOString(),readOnly:true,errors:[]};
+          for(const [key,path] of Object.entries({reports:'/api/media/tampermonkey-reports?limit=60',failed:'/api/media/tampermonkey-reports?status=failed&limit=40',local:'/api/media/local-diagnostics',captures:'/api/media/local-capture-index',evidence:'/api/article-summary/evidence-inventory',capabilities:'/api/media/capture-capabilities',queue:'https://gallery.gczhouwld.com/toc-demand-live.json'})){
+            try{const data=await get(path);await writeFile(dir+'/'+key+'.json',JSON.stringify(clean(data),null,2));out[key]={keys:Object.keys(data),count:(data.items||data.reports||data.articles||[]).length,generatedAt:data.generatedAt,uploadedAt:data.uploadedAt};
+              if(key==='failed')out.failureDois=[...new Set((data.items||data.reports||[]).map(x=>x.doi).filter(Boolean))].slice(0,6);
+              if(key==='queue')out.queue={generatedAt:data.generatedAt,webpageDoiCount:data.webpageDoiCount,latestAddedDate:data.latestAddedDate,latestAddedCount:data.latestAddedCount};
+            }catch(e){out.errors.push({key,error:e.message});}
+          }
+          for(const doi of out.failureDois||[])try{const data=await get('/api/media/tampermonkey-reports?doi='+encodeURIComponent(doi)+'&history=1&limit=12');await writeFile(dir+'/history-'+encodeURIComponent(doi)+'.json',JSON.stringify(clean(data),null,2));}catch(e){out.errors.push({doi,error:e.message})}
+          await writeFile(dir+'/overview.json',JSON.stringify(out,null,2));console.log(JSON.stringify(out));
+          JS
+      - name: Archive exact source snapshot
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm-source"
+          git archive HEAD public/toc-mainline.user.js public/toc-demand-live.json scripts shared tests cloudflare .github docs AGENTS.md PROJECT_RULES.md package.json | tar -x -C "$RUNNER_TEMP/tm-source"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-missing-only-diagnosis
+          include-hidden-files: true
+          path: |
+            ${{ runner.temp }}/tm-current
+            ${{ runner.temp }}/tm-source
+          retention-days: 7
