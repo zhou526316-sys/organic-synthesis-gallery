@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "gallery-summary-candidate-transport-v1",
+  "candidateId": "2026-10-02-new-after-20260920",
+  "encoding": "base64",
+  "compression": "xz",
+  "decodedPayloadSha256": "d68c1eee561f35a7449c832dfe1a6d93dfa8c91bc186280cb45e1e047c13e9cb",
+  "compressedSha256": "dbc18df6fe4a72a77fe7efa41ff7b545a4d734b23b992a827ba1bdebb0c67f1b",
+  "expectedCount": 156,
+  "expectedNew": 140,
+  "expectedRefreshed": 16,
+  "expectedBaselineGlobalCount": 163,
+  "expectedGlobalCount": 303,
+  "sourceArtifactId": 11209865756,
+  "sourceArtifactSha256": "91cbd198489fa5d027c448f1f6e80da278353f6e3f727048316e46492463eacb",
+  "cutoffDate": "2026-09-20",
+  "parts": [
+    {"file":"part-01.b64","characters":14000,"sha256":"1c3dd80588c0d7bade6e22d7998f1eeec16cd5b2f436b253444db787244a7ecd"},
+    {"file":"part-02.b64","characters":14000,"sha256":"1007cfb101929815e247a462762d3cb48d300bb254bdd062249dc8e5a76b3cfa"},
+    {"file":"part-03.b64","characters":14000,"sha256":"b87c42ff48a926096f7a9e8bdfce77f4b459f13d296e3b2670c8c15200548296"},
+    {"file":"part-04.b64","characters":14000,"sha256":"cb444c27376b3453265b60e3c3736fb04eb96623ca63d37d6d3176a55b3d2047"},
+    {"file":"part-05.b64","characters":14000,"sha256":"4747e41f21d604f4ee069471a750a74c569d0a70dbf7e7ef6be2415476de3d8d"},
+    {"file":"part-06.b64","characters":14000,"sha256":"3fe1ec36f0d74b36231a4aba5c5057c37669e1c743ccba2ff8f69c427e62485a"},
+    {"file":"part-07.b64","characters":14000,"sha256":"f8be35bfa58f6b7bd2eba586191e910f382894a103d0039c53334915e1b6a678"},
+    {"file":"part-08.b64","characters":14000,"sha256":"951d65e54e7142a729b41860d6b225cf2d347ec3624343e6219c4e22d1c32fe6"},
+    {"file":"part-09.b64","characters":14000,"sha256":"75c006152c9ea6e014dde4a3ddbe6001978d0d9d2fdd3d1f9b5b05f1b0648ce0"},
+    {"file":"part-10.b64","characters":14000,"sha256":"198cfab8f2c001a4a1295a1a1a862d52efc7f7acbf3b05456eea32fdd6b47c42"},
+    {"file":"part-11.b64","characters":6572,"sha256":"44e1a20bfbde53ff57d95c38370033ef9079dd9453b66bfd7a9cb63ba7f5b775"}
+  ]
+}
