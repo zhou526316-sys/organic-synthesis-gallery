@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "runId": 36966791981,
+  "runAttempt": 1,
+  "sourceCommit": "42e3044a7e1222abe5ff72a031130d105449e3c1",
+  "markerCommit": "284af5392fa418e5edde6a9a940b3038eb9bc6d3",
+  "markerBlobSha": "72f076bad2efc074270a88f3dee193cfdd81b559",
+  "publicationSlot": null,
+  "productionCards": 754,
+  "datasetSha256": "0dd1605cb024b5b63a1f129cdf7250c090e81e71747e9ade8056a4ca20097beb",
+  "publishableDois": [],
+  "rejectedDois": [],
+  "deferredDois": [
+    "10.31635/ccschem.026.202608090",
+    "10.31635/ccschem.026.202607590",
+    "10.31635/ccschem.026.202607612",
+    "10.31635/ccschem.026.202607659",
+    "10.31635/ccschem.026.202608472"
+  ],
+  "chineseTitlesVerified": true,
+  "sites": [
+    {
+      "site": "https://gallery.gczhouwld.com/",
+      "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36966791981-1790917373841",
+      "filesVerified": [
+        "papers.gz.b64",
+        "total-synthesis.json",
+        "manual-supplement.json",
+        "final-audit-supplement.json",
+        "curated-supplement.json",
+        "automation-supplement.json",
+        "rolling-supplement.json",
+        "literature-supplement.json",
+        "title-translations-zh.json",
+        "index.html"
+      ],
+      "attempts": 1
+    },
+    {
+      "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
+      "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36966791981-1790917374399",
+      "filesVerified": [
+        "papers.gz.b64",
+        "total-synthesis.json",
+        "manual-supplement.json",
+        "final-audit-supplement.json",
+        "curated-supplement.json",
+        "automation-supplement.json",
+        "rolling-supplement.json",
+        "literature-supplement.json",
+        "title-translations-zh.json",
+        "index.html"
+      ],
+      "attempts": 1
+    }
+  ],
+  "verifiedAt": "2026-10-02T05:03:14.566Z",
+  "mode": "scope-correction",
+  "removedDois": [
+    "10.1038/s44160-026-01164-8"
+  ]
+}
