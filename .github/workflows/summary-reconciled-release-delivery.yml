@@ -1,0 +1,136 @@
+name: Deliver reconciled summary release
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/summary-reconciled-release-delivery.yml', 'audit/summary-delivery-trigger.txt']
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: scoped-summary-publication
+  cancel-in-progress: false
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Reuse completed summary commit or execute the already reviewed atomic publisher
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,json,subprocess,textwrap
+          audit=pathlib.Path('audit/summary-releases/summary-new-20261002-sep20-reconciled.json')
+          if audit.exists():
+              a=json.loads(audit.read_text());store=json.loads(pathlib.Path('public/scheduled-article-summaries.json').read_text())
+              assert a.get('reviewedCount')==162 and all(d in store['items'] for d in a['allReviewedDois']), 'Existing release incomplete'
+              print('Reusing the existing reconciled summary-data commit; no duplicate data write.')
+          else:
+              text=pathlib.Path('.github/workflows/summary-publish-reconciled-candidate.yml').read_text()
+              anchor="          python3 - <<'PY'\n";start=text.index(anchor)+len(anchor);end=text.index('\n          PY\n',start)
+              script=textwrap.dedent(text[start:end])
+              subprocess.run(['python3','-c',script],check=True)
+          PY
+          git rev-parse HEAD > "$RUNNER_TEMP/summary-release-ref.txt"
+      - name: Deploy existing Worker workflow and require actual success
+        shell: bash
+        run: |
+          set -euo pipefail
+          ref=$(git rev-parse HEAD)
+          started=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          gh workflow run deploy-worker-frontend.yml --ref main
+          run_id=''
+          for attempt in $(seq 1 18); do
+            run_id=$(gh run list --workflow deploy-worker-frontend.yml --branch main --event workflow_dispatch --limit 12 --json databaseId,headSha,createdAt | jq -r --arg ref "$ref" --arg started "$started" '[.[]|select(.headSha==$ref and .createdAt >= $started)]|sort_by(.createdAt)|last|.databaseId // empty')
+            if [ -n "$run_id" ]; then break; fi
+            sleep 5
+          done
+          test -n "$run_id" || { echo 'Could not resolve the dispatched Worker deployment'; exit 1; }
+          echo "$run_id" > "$RUNNER_TEMP/summary-worker-run.txt"
+          gh run watch "$run_id" --exit-status --interval 10
+      - name: Deploy existing Pages workflow without bypassing literature authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          ref=$(git rev-parse HEAD)
+          started=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          gh workflow run github-pages.yml --ref main
+          run_id=''
+          for attempt in $(seq 1 18); do
+            run_id=$(gh run list --workflow github-pages.yml --branch main --event workflow_dispatch --limit 12 --json databaseId,headSha,createdAt | jq -r --arg ref "$ref" --arg started "$started" '[.[]|select(.headSha==$ref and .createdAt >= $started)]|sort_by(.createdAt)|last|.databaseId // empty')
+            if [ -n "$run_id" ]; then break; fi
+            sleep 5
+          done
+          test -n "$run_id" || { echo 'Could not resolve the dispatched Pages deployment'; exit 1; }
+          echo "$run_id" > "$RUNNER_TEMP/summary-pages-run.txt"
+          gh run watch "$run_id" --exit-status --interval 10
+      - name: Verify deployed static stores and all reviewed DOI summary APIs
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import collections,concurrent.futures,datetime,json,os,pathlib,time,urllib.request,urllib.parse
+          root=pathlib.Path('.');tmp=pathlib.Path(os.environ['RUNNER_TEMP'])
+          release=json.loads((root/'audit/summary-releases/summary-new-20261002-sep20-reconciled.json').read_text())
+          store=json.loads((root/'public/scheduled-article-summaries.json').read_text())
+          report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'summaryDataCommit':(tmp/'summary-release-ref.txt').read_text().strip(),'workerRun':(tmp/'summary-worker-run.txt').read_text().strip(),'pagesRun':(tmp/'summary-pages-run.txt').read_text().strip(),'cutoffDate':'2026-09-20','readOnlyVerification':True,'newCount':release['newCount'],'refreshedCount':release['refreshedCount'],'globalSummaryRecords':len(store['items']),'reviewedDois':release['allReviewedDois'],'precutoffPreserved':release['precutoffPreserved']}
+          def get(url):
+              with urllib.request.urlopen(urllib.request.Request(url,headers={'cache-control':'no-cache','user-agent':'Gallery-summary-postdeployment-verification'},method='GET'),timeout=20) as r:return json.load(r)
+          suffix='?verify='+str(int(time.time()))
+          report['staticChecks']={}
+          for name,origin in [('primary','https://gallery.gczhouwld.com'),('worker','https://organic-synthesis-gallery.zhou526316.workers.dev')]:
+              try:
+                  body=get(origin+'/scheduled-article-summaries.json'+suffix)
+                  report['staticChecks'][name]={'ok':body==store,'count':len(body.get('items',{})),'generatedAt':body.get('generatedAt')}
+              except Exception as e:report['staticChecks'][name]={'ok':False,'error':type(e).__name__}
+          def probe(doi):
+              try:
+                  body=get('https://api.gczhouwld.com/api/user-ui/article-summary?doi='+urllib.parse.quote(doi,safe=''))
+                  expected=store['items'][doi];s=body.get('summary') if isinstance(body.get('summary'),dict) else body
+                  source=body.get('source') or s.get('source')
+                  text_ok=bool(s.get('zh')) and bool(s.get('en'))
+                  source_hash=body.get('sourceHash') or s.get('sourceHash');packet_hash=body.get('evidencePacketHash') or s.get('evidencePacketHash')
+                  ok=body.get('available') is True and body.get('state')=='published' and source=='scheduled_reviewed_evidence_v2' and text_ok and source_hash==expected['sourceHash'] and packet_hash==expected['evidencePacketHash']
+                  return {'doi':doi,'ok':ok,'available':body.get('available'),'state':body.get('state'),'source':source,'bilingual':text_ok,'sourceHashMatches':source_hash==expected['sourceHash'],'packetHashMatches':packet_hash==expected['evidencePacketHash'],'reason':body.get('reason') or body.get('error')}
+              except Exception as e:return {'doi':doi,'ok':False,'error':type(e).__name__}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:report['apiChecks']=list(pool.map(probe,release['allReviewedDois']))
+          report['apiVerifiedCount']=sum(r['ok'] for r in report['apiChecks']);report['apiFailedCount']=len(report['apiChecks'])-report['apiVerifiedCount']
+          report['allVerified']=all(v['ok'] for v in report['staticChecks'].values()) and report['apiFailedCount']==0
+          try:
+              registry=get('https://gallery.gczhouwld.com/toc-demand-live.json'+suffix)
+              active={a['doi'].lower():a for a in registry['articles'] if a.get('doi')};current={d for d,a in active.items() if a.get('date','')>='2026-09-20'}
+              report['activeDois']=len(active);report['inScopeDois']=len(current);report['inScopeSummaryRecords']=len(current&set(store['items']));report['inScopeWithoutSummaryRecords']=len(current-set(store['items']))
+          except Exception as e:report['registryError']=type(e).__name__
+          (tmp/'summary-delivery-verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          path=root/'audit/summary-releases/summary-new-20261002-sep20-delivery.json';path.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+          print('SUMMARY_DELIVERY '+json.dumps({k:v for k,v in report.items() if k not in ('apiChecks','reviewedDois')},ensure_ascii=False))
+          if not report['allVerified']: raise SystemExit('Live verification incomplete; do not report all summaries as online.')
+          PY
+      - name: Preserve successful live acceptance in Git without changing summary data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audit/summary-releases/summary-new-20261002-sep20-delivery.json
+          git commit -m 'Audit: verify delivered Sep 20 onward summary catch-up'
+          git push origin HEAD:main
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: current-summary-delivery-results
+          path: |
+            ${{ runner.temp }}/reconciled-summary-result.json
+            ${{ runner.temp }}/summary-delivery-verification.json
+            ${{ runner.temp }}/summary-release-ref.txt
+            ${{ runner.temp }}/summary-worker-run.txt
+            ${{ runner.temp }}/summary-pages-run.txt
+          retention-days: 7
+          if-no-files-found: warn
