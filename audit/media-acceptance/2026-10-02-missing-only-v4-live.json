@@ -1,0 +1,73 @@
+{
+  "context": "User-requested missing-only immediate capture, per-layer progress and current-log optimization",
+  "sourceSha": "46983540207755d0cb62f8223abdac95493e4ab1",
+  "pullRequest": 264,
+  "verificationRun": 37029127875,
+  "verificationArtifact": 11237470206,
+  "verifiedAt": "2026-10-02T15:50:02.413Z",
+  "verifiedAtBeijing": "2026-10-02T23:50:02.413+08:00",
+  "passed": true,
+  "readOnlyVerification": true,
+  "mediaWritesDuringVerification": 0,
+  "publisherRequestsDuringVerification": 0,
+  "primaryDeployments": [
+    {"name": "Deploy Worker frontend assets", "id": 37029060993, "status": "completed", "conclusion": "success", "headSha": "46983540207755d0cb62f8223abdac95493e4ab1"},
+    {"name": "Deploy GitHub Pages frontend", "id": 37029061054, "status": "completed", "conclusion": "success", "headSha": "46983540207755d0cb62f8223abdac95493e4ab1"}
+  ],
+  "installer": {
+    "canonicalUrl": "https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js",
+    "canonicalStatus": 200,
+    "workerUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/gallery-vpn-bridge.user.js",
+    "workerStatus": 200,
+    "bothMatchTestedSha256": "c82545901ad5b00c8b86412623f30f2de6584514e8ee3a8cf84c72fcb4274714",
+    "bytes": 272772,
+    "version": "2.2.39",
+    "missingCaptureRevision": "20261002-missing-only-v4",
+    "panelMarker": "缺项补抓4",
+    "primaryButton": "立即开始任务（只补缺项）",
+    "localFile": "gallery-vpn-bridge-missing-only-v4.user.js",
+    "localFileHashVerified": true
+  },
+  "stageInventory": {
+    "url": "https://api.gczhouwld.com/api/article-figures/staged?inventory=1",
+    "status": 200,
+    "allowOrigin": "https://gallery.gczhouwld.com",
+    "schemaVersion": "capture-inventory-v1",
+    "mediaGeneration": 1790082000000,
+    "complete": true,
+    "count": 529,
+    "actualItems": 529,
+    "qualifiedFigureReceipts": 2284,
+    "countMeaning": "Per-DOI metadata entries including observed figure expectations; not a count of all papers with complete body images and not a missing-paper count.",
+    "sample": {
+      "doi": "10.1021/jacs.6c12163",
+      "expectedFigureCount": 30,
+      "storedFigureLabels": ["Figure 1", "Figure 2", "Figure 3", "Figure 4", "Figure 5", "Figure 6", "Figure 7", "Figure 8", "Figure 10", "Figure 11", "Figure 12", "Figure 13", "Figure 14", "Figure 15", "Scheme 1", "Scheme 2", "Scheme 3", "Scheme 4", "Scheme 5"],
+      "storedFigureCount": 19
+    }
+  },
+  "productionInventoryProbe": {"status": 200, "doi": "10.1021/jacs.6c12163", "figureCount": 0, "tocStored": true, "capturedFiguresPresent": true, "capturedFigureCount": 0},
+  "capabilities": {"status": 200, "captureVersion": "6.2.20", "mediaControllerRevision": "2.2.39", "mediaGeneration": 1790082000000, "mode": "verified-staging"},
+  "queue": {"status": 200, "generatedAt": "2026-10-02T10:00:19.765Z", "webpageDoiCount": 765, "registryLength": 765, "latestAddedDate": "2026-10-02", "latestAddedCount": 39},
+  "privateEvidenceWithoutAuth": {"status": 401, "expectedPrivateReadProtection": true, "liveTextInventoryCountKnown": false},
+  "tests": {
+    "testedRun": 37027958273,
+    "testedArtifact": 11235632792,
+    "latestMissingOnlyPrRun": 37028659652,
+    "latestImmediateRestartPrRun": 37028659749,
+    "latestControllerRecoveryPrRun": 37028660110,
+    "latestAcquisitionPrRun": 37028660408,
+    "relevantUnitCasesPassed": 139,
+    "privateEvidenceProvenanceTestsPassed": true,
+    "chromiumMockedGMAndPublisherFlowChecks": 9,
+    "chromiumConsoleErrors": 0,
+    "chromiumPageErrors": 0,
+    "chromiumFailedRequests": 0,
+    "globalLegacyCiAllGreen": false
+  },
+  "authenticatedUserDesktopVerified": false,
+  "historicalFailedPapersNowRecaptured": false,
+  "behavior": "Each immediate click replaces the old session immediately and reads metadata to build only known missing TOC/body/text tasks from newest site-addedDate to older batches, then journal priority. It does not wait for old controller locks or reset saved media/tokens. Completed/staged capture receipts are reused; unknown inventory is visibly separate from missing. Existing partial/abstract evidence is labelled truthfully rather than called complete fulltext. The explicit pass does not fall back to the obsolete all-corpus scheduler after completion.",
+  "installation": "Overwrite the existing same-name Bridge without uninstalling or clearing storage; refresh Gallery once, confirm 缺项补抓4, then use 立即开始任务（只补缺项）. Version remains2.2.39 for protocol compatibility. Actual missing count includes private text inventory and local receipts read by the installed browser; no exact total is invented here.",
+  "errors": []
+}
