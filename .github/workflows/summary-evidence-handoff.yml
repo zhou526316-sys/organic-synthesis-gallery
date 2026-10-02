@@ -1,0 +1,102 @@
+name: Prepare current literature summary handoff
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/summary-evidence-handoff.yml'
+      - 'audit/summary-handoff-request.json'
+permissions:
+  contents: read
+concurrency:
+  group: summary-evidence-handoff
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Read current registry and encrypted evidence without publisher access
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json,os,pathlib,urllib.request,urllib.parse,urllib.error,time,datetime,concurrent.futures,collections,hashlib,re
+          out=pathlib.Path('summary-handoff');out.mkdir(exist_ok=True)
+          api='https://api.gczhouwld.com'
+          def get(path,auth=False):
+              url=path if path.startswith('https://') else api+path
+              headers={'accept':'application/json','cache-control':'no-cache','user-agent':'Gallery-summary-handoff'}
+              if auth:headers['authorization']='Bearer '+os.environ['BRIDGE_WRITE_TOKEN']
+              for attempt in range(2):
+                  try:
+                      with urllib.request.urlopen(urllib.request.Request(url,headers=headers,method='GET'),timeout=25) as r:return json.load(r)
+                  except urllib.error.HTTPError as e:
+                      if e.code in (400,401,403,404,416):raise RuntimeError('http_'+str(e.code)) from None
+                      if attempt:raise RuntimeError('http_'+str(e.code)) from None
+                  except Exception as e:
+                      if attempt:raise RuntimeError(type(e).__name__) from None
+                  time.sleep(1)
+          def save(name,value): (out/name).write_text(json.dumps(value,ensure_ascii=False,indent=2),encoding='utf-8')
+          policy=json.loads(pathlib.Path('audit/summary-publication-policy.json').read_text())
+          cutoff=policy['minimumArticleDate']
+          health=get('/api/_healthcheck')
+          assert health.get('summaryMode')=='scheduled_chatgpt_daily_no_api' and health.get('summaryReviewReady') is True and health.get('summaryReviewEnabled') is False,'summary_runtime_not_ready'
+          registry=get('https://gallery.gczhouwld.com/toc-demand-live.json')
+          repo_summary=json.loads(pathlib.Path('public/scheduled-article-summaries.json').read_text())
+          inventory=get('/api/article-summary/evidence-inventory',True)
+          evidence={v['doi'].lower():v for v in inventory['items']}
+          articles={v['doi'].lower():v for v in registry['articles'] if v.get('doi')}
+          current={d:a for d,a in articles.items() if re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(a.get('date',''))) and a['date']>=cutoff}
+          unknown=[d for d,a in articles.items() if not re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(a.get('date','')))]
+          ready=[]; reused=[]; missing=[]
+          for d,a in current.items():
+              ev=evidence.get(d)
+              if not ev:missing.append(d);continue
+              old=repo_summary.get('items',{}).get(d,{})
+              if old.get('status')=='approved' and all(old.get(k)==ev.get(k) for k in ('sourceHash','evidencePacketHash')) and old.get('zh') and old.get('en'):reused.append(d)
+              else:ready.append(d)
+          ready.sort(key=lambda d:(current[d].get('date',''),current[d].get('addedDate',''),str(evidence[d].get('capturedAt',''))),reverse=True)
+          report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'repositoryCommit':os.environ['GITHUB_SHA'],'policy':policy,'counts':{'active':len(articles),'inScope':len(current),'existingCurrent':len(reused),'capturedPending':len(ready),'missingEvidence':len(missing),'ignoredOlder':len(articles)-len(current)-len(unknown),'unknownDate':len(unknown)},'inScopeArticles':list(current.values()),'readyDois':ready,'reusedDois':reused,'missingEvidenceDois':missing,'unknownDateDois':unknown,'results':[]}
+          save('plan.json',report);save('summary-baseline.json',repo_summary);save('registry.json',registry);save('inventory.json',inventory)
+          print('SUMMARY_CUTOFF_PLAN '+json.dumps(report['counts']),flush=True)
+          def collect(d):
+              result={'doi':d,'articleDate':current[d]['date'],'evidenceLevel':evidence[d].get('evidenceLevel')}
+              try:
+                  base='/api/article-summary/scheduled-handoff?doi='+urllib.parse.quote(d,safe='')+'&partSize=6000&part='
+                  first=get(base+'0')
+                  assert first.get('doi')==d and first.get('keyId')=='9c55e2d2ed734de9' and first.get('algorithm')=='RSA-OAEP-256+A256GCM+GZIP' and first.get('compression')=='gzip','invalid_envelope'
+                  assert all(first.get(k)==evidence[d].get(k) for k in ('sourceHash','evidencePacketHash')),'evidence_changed'
+                  count=first.get('partCount');assert isinstance(count,int) and 0<count<=160,'invalid_part_count'
+                  parts=[first]
+                  for n in range(1,count):
+                      part=get(base+str(n))
+                      assert all(part.get(k)==first.get(k) for k in ('doi','sourceHash','evidencePacketHash','keyId','algorithm','compression','partCount','encryptedKey','iv')),'mixed_envelope_parts'
+                      assert part.get('part')==n,'wrong_part_number'
+                      parts.append(part)
+                  envelope={k:v for k,v in first.items() if k not in ('part','partCount','partSize','ciphertextPart')}
+                  envelope['ciphertext']=''.join(p['ciphertextPart'] for p in parts)
+                  filename=hashlib.sha256(d.encode()).hexdigest()[:32]+'.json'
+                  save(filename,envelope)
+                  result.update({'ok':True,'file':filename,'partCount':count,'sourceHash':first['sourceHash'],'evidencePacketHash':first['evidencePacketHash']})
+              except Exception as e:result.update({'ok':False,'error':str(e)[:160]})
+              print('SUMMARY_HANDOFF_RESULT '+json.dumps({k:v for k,v in result.items() if k not in ('sourceHash','evidencePacketHash')}),flush=True)
+              return result
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:report['results']=list(pool.map(collect,ready))
+          report['finishedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          report['counts']['encryptedHandoffsCollected']=sum(v.get('ok') is True for v in report['results'])
+          report['counts']['handoffFailures']=sum(v.get('ok') is not True for v in report['results'])
+          save('plan.json',report)
+          print('SUMMARY_CUTOFF_COLLECTED '+json.dumps(report['counts']),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: current-summary-encrypted-handoff
+          path: summary-handoff/
+          retention-days: 2
+          if-no-files-found: error
