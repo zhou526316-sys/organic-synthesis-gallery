@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-01T23:12:00.000Z",
-  "requestedBy": "prepublish-primary-20261002-0800-recovery",
-  "publicationSlot": "2026-10-02T08:00:00+08:00",
-  "baselineMainSha": "e112e79a211cb731b03f1a21d5d1ccf88a163c5f",
-  "reason": "Recovery refresh after run 36939143618 completed with an all-journal OpenAlex family outage (16 critical source failures and 16 source-family gaps). Re-run the canonical audit once to distinguish transient source failure from a persistent outage. Preserve the same slot and do not write production literature."
+  "requestedAt": "2026-10-02T09:10:00.000Z",
+  "requestedBy": "prepublish-primary-20261002-1800",
+  "publicationSlot": "2026-10-02T18:00:00+08:00",
+  "baselineMainSha": "cb0657ead16696fefc05c9046edc009955b0814b",
+  "reason": "No valid 16:55 Asia/Shanghai audit run is present for the 18:00 publication slot. The latest snapshot was generated at 2026-10-02T01:50:48.987Z, predates the slot audit, still reports four critical source failures, and contains the pre-correction gallery count. Run the canonical audit once for this slot; preserve the valid run lock and do not write production literature."
 }
