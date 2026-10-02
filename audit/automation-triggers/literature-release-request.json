@@ -1,13 +1,15 @@
 {
   "schemaVersion": 1,
-  "requestId": "20261001-0800-fixed-slot-release",
-  "requestedAt": "2026-10-01T08:00:26+08:00",
-  "publicationSlot": "2026-10-01T08:00:00+08:00",
-  "stagingReviewFile": "audit/prepublish-review-2026-10-01-0800.json",
-  "stagingReviewBlobSha": "daded449b134a563938196611eb4b131b69ff043",
-  "handoffBlobSha": "e4de31c37ec174346a9903ebe861681fd35057f9",
-  "auditBlobSha": "c399d7ca2bacf4a3c615e8e4ea1c185081daa1a4",
-  "prepublishGateRunId": 36790586201,
-  "expectedPublishableCount": 16,
-  "expectedDeferredCount": 6
+  "requestId": "gate-36940554911-fixed-slot-release",
+  "publicationSlot": "2026-10-02T08:00:00+08:00",
+  "stagingReviewFile": "audit/prepublish-review-2026-10-02-0800.json",
+  "stagingReviewBlobSha": "40954ccf100f83357080fa43d5820cd3a5831d54",
+  "handoffBlobSha": "0b8a79dd87f8e814b2d18f87aa62e5667efde2b0",
+  "auditBlobSha": "8b800a68c5f1cb3d078351c1b7cd353b66168d28",
+  "prepublishGateRunId": 36940554911,
+  "expectedPublishableCount": 29,
+  "expectedDeferredCount": 5,
+  "requestedAt": "2026-10-02T00:00:00.255Z",
+  "approvedSourceCommit": "f5b554097070bb6b116bceea037110d51f95eced",
+  "writerRunId": 36940580074
 }
