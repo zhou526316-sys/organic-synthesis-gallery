@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-02T09:10:00.000Z",
-  "requestedBy": "prepublish-primary-20261002-1800",
+  "requestedAt": "2026-10-02T10:07:30.911Z",
+  "requestedBy": "fixed-release-postdeploy-20261002-1800",
   "publicationSlot": "2026-10-02T18:00:00+08:00",
-  "baselineMainSha": "cb0657ead16696fefc05c9046edc009955b0814b",
-  "reason": "No valid 16:55 Asia/Shanghai audit run is present for the 18:00 publication slot. The latest snapshot was generated at 2026-10-02T01:50:48.987Z, predates the slot audit, still reports four critical source failures, and contains the pre-correction gallery count. Run the canonical audit once for this slot; preserve the valid run lock and do not write production literature."
+  "baselineMainSha": "f03d56fc7f2777e4b7d787f4d61db17480be4980",
+  "reason": "Post-release DOI-union audit for the successfully deployed 2026-10-02 18:00 fixed-slot release. Production and TOC demand are already 765 cards and Pages live verification passed; run the canonical audit once against the deployed snapshot to detect only genuine post-release unresolved/closure issues. Do not admit, remove, or reclassify production literature in this audit."
 }
