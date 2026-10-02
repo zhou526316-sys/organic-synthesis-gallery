@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "context": "User requests more cautious capture and publication judgment after two DOI-specific corrections",
+  "recordedAt": "2026-10-02T13:06:06+08:00",
+  "doi": "10.31635/ccschem.026.202507094",
+  "userReport": "这个的图不对",
+  "status": "verified_role_and_inventory_defect; publisher_ownership_unresolved; repair_awaiting_explicit_approval",
+  "literatureDecision": "unchanged; retain existing article",
+  "productionMediaModifiedInThisFollowup": false,
+  "publisherImagesDownloadedOrRehostedInThisFollowup": false,
+  "evidence": {
+    "githubDiagnosticRun": 36966595869,
+    "diagnosticArtifactId": 11210495514,
+    "diagnosticArtifactSha256": "c59f742e364329d89de4ccd7bd8a902a32172505e53e24030356bc74c0cad8d8",
+    "diagnosticSourceCommit": "ecb90e59a11ee2c0f22be6948be4c0dc6f91a28b",
+    "observedAt": "2026-10-02T04:55:13.546Z",
+    "renderedTitle": "Divergent Functionalization of Unactivated Alkenes Enabled by the Remote C(sp 3 )–H Bond of N -Fluorocarboxamides",
+    "mediaKind": "figure1",
+    "tocReason": "figure1_fallback",
+    "caption": "Figure 1 | The EPR experiment.",
+    "visualInspection": "The downloaded existing Gallery image was visually inspected. It contains three EPR-like spectra labelled 0 min, 20 min and 120 min, not a reaction overview or an explicitly designated graphical abstract.",
+    "width": 3486,
+    "height": 885,
+    "byteLength": 160781,
+    "imageSha256": "07c36845c9729f7e6b5c5326369a0653ecc819a2a7c7c37125185c7db401af46",
+    "storedContentHash": "07c36845c9729f7e6b5c5326369a0653",
+    "jobId": "92905120-10d1-4f15-aea3-9297b2b02fc6",
+    "capturedAt": "2026-10-01T14:56:40.832Z",
+    "captureVersionAsStored": "6.2.20",
+    "pageDoiAsStored": "10.31635/ccschem.026.202507094",
+    "articleUrlAsStored": "https://www.chinesechemsoc.org/doi/full/10.31635/ccschem.026.202507094#osg-job=92905120-10d1-4f15-aea3-9297b2b02fc6",
+    "publisherSourceUrlAsStored": "https://www.chinesechemsoc.org/cms/asset/dc796273-7ad6-4fcc-8e04-917949bc9033/f1.jpg",
+    "r2Key": "local-captures/images/67ac1bd03a18503742953c95-figure1-07c36845c9729f7e.jpg",
+    "staticMirror": "media-mirror/local-6ec6f9eb9cc241c614cce1849fbe.jpg",
+    "renderedMainImageOrigin": "organic-synthesis-gallery.zhou526316.workers.dev",
+    "renderedBodyImageOrigin": "gallery.gczhouwld.com",
+    "sameBytesInBothRenderedLocations": true,
+    "inventoryAsObserved": {
+      "status": "complete",
+      "largeSource": "figure1",
+      "figureCount": 1,
+      "tocStored": true,
+      "tocMissing": false
+    },
+    "queueAsObserved": {
+      "officialUpgradeState": "fallback_only",
+      "existingReason": "live_r2_figure1_fallback",
+      "figureGapCount": 0,
+      "figureGapNeed": "figures"
+    },
+    "diagnosticCaveat": "The browser diagnostic found the requested card and recorded its exact images. Its search field was empty after Escape and it enumerated all visible cards. Do not treat visibleCards=767 as a normalized production DOI total or claim a one-result search verification."
+  },
+  "confirmedRootCause": {
+    "file": "cloudflare/scripts/sanitize-static-media.mjs",
+    "fileBlobSha": "65eb166b318017021259ecac4c7726d45bbae315",
+    "readAtCommit": "ac7f7f0a5c89a983d0c2f027bde86b54a68569e6",
+    "function": "updateInventory",
+    "actualLogic": "tocAvailable = Boolean(record.toc.available && record.toc.imageUrl); tocStored=tocAvailable; tocMissing=!tocAvailable; tocAvailable with any figure produces status=complete, without excluding figure1_fallback",
+    "conflictingUpstreamLogic": "merge-local-captures.mjs trueToc explicitly excludes figure1_fallback, but the later sanitizer recalculates inventory using mere image availability.",
+    "isolatedReproduction": {
+      "executedAt": "2026-10-02T05:06:06.152127+00:00",
+      "runtime": "Node v22.16.0 in local isolated temporary directory",
+      "scriptModified": false,
+      "sourceBlobVerifiedAgainstGitHub": true,
+      "networkRequests": 0,
+      "productionWrites": 0,
+      "input": {"reason":"figure1_fallback","status":"figures_only","tocStored":false,"tocMissing":true,"figureCount":1},
+      "output": {"reason":"figure1_fallback","status":"complete","tocStored":true,"tocMissing":false,"figureCount":1},
+      "exitCode": 0,
+      "stdout": "STATIC_MEDIA_SANITIZE {\"records\":1,\"prunedFigures\":0,\"invalidTocs\":0,\"promotedFallbacks\":0}",
+      "conclusion": "A successful file-integrity pass reproducibly changes a known nonofficial fallback into a misleading official-TOC completeness inventory. This verifies the inventory bug, not publisher ownership of the image."
+    }
+  },
+  "unknowns": [
+    "Independent publisher DOM proof that this asset belongs to this DOI and whether Figure 1 is genuinely the EPR figure.",
+    "The correct officially designated TOC/graphical-abstract asset, if one exists.",
+    "The publisher's full Figure/Scheme/Chart inventory; one obtained image is not proof all article images were obtained.",
+    "Whether every consumer treats inventory.complete as official completeness; the live demand queue already retained fallback_only in the observed snapshot.",
+    "The exact initial reason no official TOC candidate was obtained; no claim that CSS selectors or page changes caused it without publisher DOM evidence."
+  ],
+  "attemptedPublisherEvidence": [
+    {"url":"https://doi.org/10.31635/ccschem.026.202507094","result":"web open internal error; no article content obtained"},
+    {"url":"https://www.chinesechemsoc.org/doi/full/10.31635/ccschem.026.202507094","result":"web open internal error; no article DOM obtained"},
+    {"url":"https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202507094","result":"web open internal error; no article DOM obtained"},
+    {"tool":"TinyFish browser","result":"not started: wallet_out_of_funds; not retried; reported to user; not counted as publisher verification"}
+  ],
+  "proposedRepairRequiringApproval": {
+    "approvalGranted": false,
+    "approvalRule": "PROJECT_RULES.md: an unqualified continue does not authorize feedback repair code or production media mutation. The user's request for more cautious judgment has been applied to the scope contract, not used to infer blanket media-repair approval.",
+    "retainArticle": true,
+    "quarantineScope": "Only this DOI and this image digest in the primary-visual/TOC role; preserve raw evidence and do not blanket-delete every image or change literary admission.",
+    "bodyFigureDisposition": "Do not assert the EPR figure is from another article. Keep its raw capture for evidence; decide body-gallery retention only after publisher identity/caption verification or explicit user instruction.",
+    "recaptureOwner": "Tampermonkey/VPN Bridge only",
+    "recaptureEvidence": "Verify page DOI/title, job/tab ownership, official graphical-abstract role, exact DOM container and final asset URL. Enumerate Figure/Scheme/Chart separately. Do not fabricate a TOC from a random overview or relabel Scheme 1/Figure 1 as official.",
+    "inventoryFix": "One shared official-TOC predicate across merge/sanitize/publish/readiness consumers. Keep displayable fallback independent from officialTocPresent; do not equate any image or any body figure with full completeness.",
+    "regressionsRequired": [
+      "Known figure1 fallback remains officialTocPresent=false and does not become complete after sanitization.",
+      "Correct official TOC remains official and is not erased by a lower-confidence fallback.",
+      "Missing TOC does not block an otherwise correctly admitted paper.",
+      "Bad primary-visual digest cannot re-enter from Worker, static mirror or stale browser capture state.",
+      "Figure/Scheme enumeration unknown is not zero and not complete.",
+      "No other DOI's accepted literature or known-good media changes."
+    ],
+    "onlineAcceptance": "Check actual main image and body strip bytes/roles on canonical site, not just media-index labels; preserve confirmed deletion of the separate Nature Synthesis DOI and the exact retained literature set."
+  },
+  "noGlobalSweepClaim": true
+}
