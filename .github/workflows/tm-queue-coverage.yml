@@ -2,10 +2,10 @@ name: Capture queue coverage regression
 on:
   push:
     branches: [fix/tm-queue-coverage-20261003, main]
-    paths: [public/toc-mainline.user.js, scripts/apply-tm-queue-coverage.py, scripts/tm-queue-coverage.inc.js, tests/tm-queue-coverage.test.mjs, tests/tm-queue-coverage-browser.mjs, .github/workflows/tm-queue-coverage.yml]
+    paths: [public/toc-mainline.user.js, scripts/apply-tm-queue-coverage.py, scripts/tm-queue-coverage.inc.js, scripts/finalize-tm-queue-priority.mjs, tests/tm-queue-coverage.test.mjs, tests/tm-queue-coverage-browser.mjs, .github/workflows/tm-queue-coverage.yml]
   pull_request:
     branches: [main]
-    paths: [public/toc-mainline.user.js, tests/tm-queue-coverage.test.mjs, tests/tm-queue-coverage-browser.mjs, .github/workflows/tm-queue-coverage.yml]
+    paths: [public/toc-mainline.user.js, scripts/finalize-tm-queue-priority.mjs, tests/tm-queue-coverage.test.mjs, tests/tm-queue-coverage-browser.mjs, .github/workflows/tm-queue-coverage.yml]
 permissions:
   contents: read
 concurrency:
@@ -25,12 +25,14 @@ jobs:
         if: github.ref == 'refs/heads/fix/tm-queue-coverage-20261003'
         run: |
           python scripts/apply-tm-queue-coverage.py
+          node scripts/finalize-tm-queue-priority.mjs --apply
           git diff --check
       - name: Test full queue, metadata recovery and retained source safeguards
         run: |
           set -euo pipefail
           {
             node --check public/toc-mainline.user.js
+            node scripts/finalize-tm-queue-priority.mjs
             node tests/tm-queue-coverage.test.mjs
             node tests/tm-missing-only.test.mjs
             node tests/tm-immediate-restart.test.mjs
@@ -67,7 +69,7 @@ jobs:
         run: |
           test "$GITHUB_REF" = refs/heads/fix/tm-queue-coverage-20261003
           git restore -- .github/workflows/tm-missing-only.yml .github/workflows/tm-immediate-restart.yml
-          git add public/toc-mainline.user.js scripts/tm-immediate-restart-runtime.inc.js tests/tm-immediate-restart.test.mjs tests/tm-missing-only.test.mjs tests/tm-missing-only-browser.mjs
+          git add public/toc-mainline.user.js scripts/tm-immediate-restart-runtime.inc.js scripts/tm-queue-coverage.inc.js tests/tm-immediate-restart.test.mjs tests/tm-missing-only.test.mjs tests/tm-missing-only-browser.mjs
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
