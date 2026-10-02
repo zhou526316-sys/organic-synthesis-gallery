@@ -1348,26 +1348,17 @@
     "verifiedAt": "2026-10-02T07:24:30+08:00"
   },
   "lastScopeCorrection": {
-    "id": "scope-correction-20260923024323204",
+    "id": "scope-correction-20261002045728304",
     "mode": "deletion-only",
-    "status": "verified",
-    "correctedAt": "2026-09-23T02:43:23.204Z",
+    "status": "awaiting_deployment",
+    "correctedAt": "2026-10-02T04:57:28.304Z",
     "removedDois": [
-      "10.1021/jacs.6c13517",
-      "10.1021/jacs.6c10701",
-      "10.1038/s41467-026-77963-6",
-      "10.1002/anie.7784614"
+      "10.1038/s44160-026-01164-8"
     ],
-    "beforeCards": 536,
-    "afterCards": 532,
-    "reviewFile": "audit/scope-rechecks/scope-correction-20260923024323204.json",
-    "reviewBlobSha": "e3555195e903ba5ecbbada6338c49db0b53072f3",
-    "deploymentVerifiedAt": "2026-09-23T02:59:21.237Z",
-    "verificationFile": "audit/scope-rechecks/scope-correction-20260923024323204-live-verified.json",
-    "verificationRun": "35812427881",
-    "repositoryDois": 532,
-    "deployedDois": 532,
-    "exactDoiSetMatch": true
+    "beforeCards": 755,
+    "afterCards": 754,
+    "reviewFile": "audit/scope-rechecks/scope-correction-20261002045728304.json",
+    "reviewBlobSha": "d05dda553ff6e5ad8f877092dd9ca155417d6d4d"
   },
   "lastAdmissionWebsiteSync": {
     "finishedAt": "2026-09-23T08:15:41+08:00",
