@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "requestId": "summary-new-20261002-sep20",
+  "requestedAt": "2026-10-02T05:59:00Z",
+  "candidateDirectory": "audit/summary-release-candidates/2026-10-02-new",
+  "candidateId": "2026-10-02-new-after-20260920",
+  "expectedPayloadSha256": "d68c1eee561f35a7449c832dfe1a6d93dfa8c91bc186280cb45e1e047c13e9cb",
+  "cutoffDate": "2026-09-20",
+  "expectedReviewedCount": 156,
+  "userAuthorization": "9.20之前的摘要就不管了，专心把新的摘要都上线了。",
+  "operation": "merge complete reviewed derived-summary delta only; preserve all unrelated current records and all pre-cutoff summaries",
+  "productionWritesAllowed": ["public/scheduled-article-summaries.json", "audit/summary-releases/summary-new-20261002-sep20.json"],
+  "reviewCompleted": true,
+  "publishOnlyAfterFreshEvidenceHashAndDateValidation": true
+}
