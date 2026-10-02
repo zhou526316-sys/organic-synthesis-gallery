@@ -361,6 +361,7 @@ function inventoryItem(doi, toc, figures, primary, duplicateHashes) {
     tocMissing: !trueToc,
     tocReason: toc?.reason || (tocStored ? 'cached' : 'cache_miss'),
     figureCount,
+    capturedFigures: figures.filter(f=>['high','usable'].includes(figureQuality(f))).map(f=>({label:f.label,sourceUrl:f.source_url,contentHash:f.content_hash,width:Number(f.width||0),height:Number(f.height||0),quality:figureQuality(f)})),
     ...qualityCounts,
     figureOneStored: Boolean(one),
     fallbackLabel: fallback?.label,

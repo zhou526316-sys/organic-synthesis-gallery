@@ -8,6 +8,7 @@ const cut=source.lastIndexOf('  installManualRestartListener();');assert.ok(cut>
 const script=source.slice(0,cut)+`
  isGalleryPage=()=>true;writeToken=()=> 'fixture';enqueueCaptureReport=()=>true;
  getJson=async url=>url.includes('capabilities')?{captureVersion:VERSION,mediaGeneration:1790082000000,mode:'verified-staging',mediaControllerRevision:CONTROLLER_REVISION,evidenceSchemaVersion:EVIDENCE_SCHEMA_VERSION}:{latestAddedDate:'2026-10-01',generatedAt:'2026-10-01T05:00:00Z',webpageDoiCount:2,mediaGeneration:1790082000000,articles:[{doi:'10.1038/s41586-026-old',journal:'Nature',addedDate:'2026-09-30'},{doi:'10.1021/jacs.6c90002',journal:'JACS',addedDate:'2026-10-01'}]};
+ readMissingCaptureInventory=async(q)=>({media:{items:q.articles.map(a=>({doi:a.doi,figureCount:0,tocStored:false,capturedFigures:[]}))},tocs:{items:[],count:0},figures:{complete:true,items:[]},evidence:{items:[],count:0},errors:[]});
  globalThis.T={forceStartFromHead,finishPairedJob,owner:CONTROLLER_ID,requestControllerPause};
  installManualRestartListener();installMenu();mountCaptureLivePanel();})();`;
 const server=http.createServer((req,res)=>{res.writeHead(200,{'content-type':'text/html; charset=utf-8'});res.end('<!doctype html><html lang="zh"><meta charset="utf-8"><title>Immediate restart fixture</title><body><h1>立即开始任务 · 从头抓</h1></body></html>');});
