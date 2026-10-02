@@ -62,11 +62,12 @@ jobs:
           mkdir -p "$RUNNER_TEMP/queue-coverage-output"
           cp public/gallery-vpn-bridge.user.js public/toc-mainline.user.js "$RUNNER_TEMP/queue-coverage-output/"
           sha256sum "$RUNNER_TEMP/queue-coverage-output/"*.js | tee "$RUNNER_TEMP/queue-coverage-output/sha256.txt"
-      - name: Commit tested runtime and updated fixtures only to this repair branch
+      - name: Commit tested runtime and fixtures only, excluding workflow files
         if: github.ref == 'refs/heads/fix/tm-queue-coverage-20261003'
         run: |
           test "$GITHUB_REF" = refs/heads/fix/tm-queue-coverage-20261003
-          git add public/toc-mainline.user.js scripts/tm-immediate-restart-runtime.inc.js tests/tm-immediate-restart.test.mjs tests/tm-missing-only.test.mjs tests/tm-missing-only-browser.mjs .github/workflows/tm-missing-only.yml .github/workflows/tm-immediate-restart.yml
+          git restore -- .github/workflows/tm-missing-only.yml .github/workflows/tm-immediate-restart.yml
+          git add public/toc-mainline.user.js scripts/tm-immediate-restart-runtime.inc.js tests/tm-immediate-restart.test.mjs tests/tm-missing-only.test.mjs tests/tm-missing-only-browser.mjs
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
