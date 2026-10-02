@@ -1,0 +1,174 @@
+name: Publish reconciled current summary set
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/summary-publish-reconciled-candidate.yml'
+      - 'audit/summary-reconciled-publish-trigger.txt'
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: scoped-summary-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Verify reviewed transport, reconcile fresh evidence, and make one non-force commit
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64,collections,datetime,hashlib,io,json,lzma,os,pathlib,re,subprocess,time,urllib.request,urllib.error,zipfile
+          report={'startedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'published':False,'productionDataCommitted':False}
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'reconciled-summary-result.json'
+          def require(condition,message):
+              if not condition: raise RuntimeError(message)
+          def git(*args): return subprocess.check_output(['git',*args],text=True).strip()
+          def read(path): return json.loads(pathlib.Path(path).read_text(encoding='utf-8'))
+          def get(url,token=None,binary=False):
+              headers={'accept':'application/json','cache-control':'no-cache','user-agent':'Gallery-summary-reconciliation'}
+              if token: headers['authorization']='Bearer '+token
+              for attempt in range(3):
+                  try:
+                      with urllib.request.urlopen(urllib.request.Request(url,headers=headers,method='GET'),timeout=30) as r:
+                          return r.read() if binary else json.load(r)
+                  except urllib.error.HTTPError as e:
+                      if e.code in (400,401,403,404) or attempt==2: raise RuntimeError('read_http_'+str(e.code)) from None
+                  except Exception as e:
+                      if attempt==2: raise RuntimeError('read_'+type(e).__name__) from None
+                  time.sleep(1+attempt)
+          try:
+              parent=git('rev-parse','HEAD');report['parentCommit']=parent
+              require(not git('status','--porcelain'),'checkout_not_clean')
+              request=read('audit/summary-publication-request.json')
+              policy=read('audit/summary-publication-policy.json')
+              directory='audit/summary-release-candidates/2026-10-02-new'
+              manifest=read(directory+'/manifest.json');reconcile=read(directory+'/reconciliation.json')
+              require(request.get('reviewCompleted') is True,'review_not_completed')
+              require(reconcile.get('schemaVersion')=='gallery-reviewed-summary-reconciliation-v1','invalid_reconciliation_schema')
+              require(request['candidateId']==manifest['candidateId']==reconcile['candidateId'],'wrong_candidate')
+              require(policy['minimumArticleDate']==request['cutoffDate']==manifest['cutoffDate']==reconcile['cutoffDate'],'scope_changed')
+              require(policy['articleDateField']=='date','wrong_date_field')
+              cutoff=reconcile['cutoffDate'];report['cutoffDate']=cutoff
+              parts=[]
+              for i,part in enumerate(manifest['parts'],1):
+                  require(part['file']=='part-'+str(i).zfill(2)+'.b64','wrong_part_order')
+                  text=pathlib.Path(directory,part['file']).read_text(encoding='ascii').strip()
+                  require(len(text)==part['characters'] and hashlib.sha256(text.encode()).hexdigest()==part['sha256'],'part_integrity:'+part['file'])
+                  parts.append(text)
+              compressed=base64.b64decode(''.join(parts),validate=True)
+              require(hashlib.sha256(compressed).hexdigest()==manifest['compressedSha256'],'compressed_integrity')
+              decoded=lzma.decompress(compressed,memlimit=128*1024*1024)
+              require(len(decoded)<8*1024*1024,'oversized_payload')
+              require(hashlib.sha256(decoded).hexdigest()==manifest['decodedPayloadSha256']==request['expectedPayloadSha256'],'payload_integrity')
+              delta=json.loads(decoded)
+              require(delta['schemaVersion']=='gallery-reviewed-summary-delta-v1' and delta['dateField']=='date' and delta['cutoffDate']==cutoff,'delta_scope')
+              require(len(delta['items'])==manifest['expectedCount']==request['expectedReviewedCount'],'initial_candidate_count')
+              require(set(delta['items'])==set(delta['expectedDois']) and len(set(delta['expectedDois']))==len(delta['expectedDois']),'initial_doi_set')
+              archive=get('https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/actions/artifacts/'+str(reconcile['sourceArtifactId'])+'/zip',os.environ['GH_TOKEN'],True)
+              require(hashlib.sha256(archive).hexdigest()==reconcile['sourceArtifactSha256'],'fresh_handoff_archive_integrity')
+              z=zipfile.ZipFile(io.BytesIO(archive));frozen_inventory=None;frozen_registry=None
+              for name in z.namelist():
+                  if not name.endswith('.json') or '/encrypted/' in name: continue
+                  if 'inventory' not in name.lower() and 'registry' not in name.lower(): continue
+                  body=json.loads(z.read(name))
+                  if isinstance(body,dict) and isinstance(body.get('items'),list) and 'inventory' in name.lower(): frozen_inventory=body
+                  if isinstance(body,dict) and isinstance(body.get('articles'),list): frozen_registry=body
+              require(frozen_inventory is not None and frozen_registry is not None,'missing_frozen_inventory_or_registry')
+              frozen={str(v.get('doi','')).lower():v for v in frozen_inventory['items'] if v.get('doi')}
+              frozen_active={str(v.get('doi','')).lower():v for v in frozen_registry['articles'] if v.get('doi')}
+              items=dict(delta['items']);notes=dict(delta['reviewNotes']);excluded=[]
+              for row in reconcile['excludedDois']:
+                  doi=row['doi'];require(doi in items,'unknown_exclusion')
+                  require(doi not in frozen_active or frozen_active[doi].get('date','')<cutoff,'exclusion_still_in_frozen_scope')
+                  items.pop(doi);notes.pop(doi,None);excluded.append(row)
+              now=int(time.time()*1000)
+              for row in reconcile['sourceReconciliations']:
+                  doi=row['doi'];require(doi in items and row.get('reuseReviewedBilingualText') is True and row.get('evidenceAudit'),'invalid_explicit_source_reconciliation')
+                  ev=frozen[doi];require(items[doi]['evidenceLevel']==ev['evidenceLevel'],'changed_evidence_level_requires_new_summary')
+                  items[doi]=dict(items[doi],sourceHash=ev['sourceHash'],evidencePacketHash=ev['evidencePacketHash'],reviewedAt=now)
+                  notes[doi]=dict(notes[doi],evidenceAudit=notes[doi]['evidenceAudit']+' '+row['evidenceAudit'])
+              for doi,row in reconcile['additionalSummaries'].items():
+                  require(doi not in items and doi in frozen and doi in frozen_active,'additional_identity')
+                  ev=frozen[doi];require(ev['evidenceLevel']==row['evidenceLevel'],'additional_coverage')
+                  items[doi]={'schemaVersion':'scheduled-reviewed-summary-v1','doi':doi,'status':'approved','sourceHash':ev['sourceHash'],'evidencePacketHash':ev['evidencePacketHash'],'evidenceLevel':ev['evidenceLevel'],'zh':row['zh'],'en':row['en'],'generatedAt':now,'reviewedAt':now,'promptVersion':'gallery-daily-summary-v1','auditVersion':'gallery-daily-summary-audit-v1'}
+                  notes[doi]={'articleDate':frozen_active[doi]['date'],'sectionsConsulted':row['sectionsConsulted'],'evidenceAudit':row['evidenceAudit']}
+              require(len(items)==reconcile['expectedPublishedDeltaCount'],'reconciled_candidate_count')
+              for doi,item in items.items():
+                  require(doi==doi.lower() and item['doi']==doi and item['status']=='approved' and item['schemaVersion']=='scheduled-reviewed-summary-v1','record_identity')
+                  require(item['evidenceLevel'] in ('complete','partial','abstract_only'),'invalid_coverage')
+                  for field in ('sourceHash','evidencePacketHash'): require(bool(re.fullmatch('[a-f0-9]{64}',str(item[field]))),'invalid_hash')
+                  for field in ('zh','en'):
+                      text=item[field];require(isinstance(text,str) and len(text.strip())>=40,'missing_bilingual_text')
+                      require(not re.search(r'gpt|openai|BEGIN PRIVATE KEY|ciphertextPart|encryptedKey',text,re.I),'public_copy_violation:'+doi)
+                  if item['evidenceLevel']=='abstract_only': require('基于 Abstract' in item['zh'] and 'Abstract-based' in item['en'],'abstract_disclosure:'+doi)
+                  if item['evidenceLevel']=='partial': require('部分正文' in item['zh'] and 'partial text' in item['en'],'partial_disclosure:'+doi)
+                  require(notes[doi].get('evidenceAudit') and notes[doi].get('sectionsConsulted'),'missing_review_note:'+doi)
+              api='https://api.gczhouwld.com';health=get(api+'/api/_healthcheck')
+              require(health.get('summaryMode')=='scheduled_chatgpt_daily_no_api' and health.get('summaryReviewReady') is True and health.get('summaryReviewEnabled') is False,'runtime_not_ready')
+              inventory=get(api+'/api/article-summary/evidence-inventory',os.environ['BRIDGE_WRITE_TOKEN'])
+              registry=get('https://gallery.gczhouwld.com/toc-demand-live.json?summary-reconcile='+str(now))
+              require(isinstance(inventory.get('items'),list) and inventory.get('count')==len(inventory['items']),'incomplete_inventory')
+              current={v['doi'].lower():v for v in inventory['items']};active={v['doi'].lower():v for v in registry['articles'] if v.get('doi')}
+              require(len(active)==registry['webpageDoiCount'],'incomplete_registry')
+              drift=[];rebound=[]
+              for doi,item in items.items():
+                  a=active.get(doi,{});ev=current.get(doi,{})
+                  reasons=[]
+                  if not re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(a.get('date',''))) or a.get('date','')<cutoff: reasons.append('not_active_in_scope')
+                  if ev.get('textProcessingPolicy')=='no_external_ai': reasons.append('processing_policy')
+                  if not ev.get('available'): reasons.append('evidence_unavailable')
+                  if ev.get('sourceHash')!=item['sourceHash'] or ev.get('evidenceLevel')!=item['evidenceLevel']: reasons.append('scientific_evidence_changed')
+                  if reasons: drift.append({'doi':doi,'reasons':reasons});continue
+                  if ev['evidencePacketHash']!=item['evidencePacketHash']:
+                      require(reconcile['metadataOnlyReuse'].get('requireSameScientificSourceHash') is True,'metadata_reuse_not_authorized')
+                      rebound.append({'doi':doi,'sourceHash':item['sourceHash'],'previousPacketHash':item['evidencePacketHash'],'currentPacketHash':ev['evidencePacketHash']})
+                      items[doi]=dict(item,evidencePacketHash=ev['evidencePacketHash'],reviewedAt=now)
+                      notes[doi]=dict(notes[doi],packetRebinding='Scientific sourceHash and evidenceLevel identical; only packet metadata changed. Bound to current packetHash after active-date and processing-policy checks.')
+              report['drift']=drift;require(not drift,'current_scientific_evidence_drift')
+              target=pathlib.Path('public/scheduled-article-summaries.json');baseline=read(target);before=baseline['items']
+              new=[d for d in items if d not in before];updated=[d for d in items if d in before and before[d]!=items[d]]
+              merged=dict(before);merged.update(items)
+              require(all(merged[d]==v for d,v in before.items() if d not in items),'unrelated_summary_change')
+              older={d:v for d,v in before.items() if active.get(d,{}).get('date','')<cutoff}
+              require(all(merged[d]==v for d,v in older.items()),'precutoff_summary_change')
+              in_scope={d for d,a in active.items() if a.get('date','')>=cutoff}
+              lacking=in_scope-set(merged)
+              report.update({'candidateId':reconcile['candidateId'],'candidateSha256':manifest['decodedPayloadSha256'],'reconciliationSha256':hashlib.sha256(pathlib.Path(directory,'reconciliation.json').read_bytes()).hexdigest(),'sourceArtifactId':reconcile['sourceArtifactId'],'sourceArtifactSha256':reconcile['sourceArtifactSha256'],'reviewedCount':len(items),'beforeCount':len(before),'newCount':len(new),'refreshedCount':len(updated),'afterCount':len(merged),'precutoffPreserved':len(older),'currentActive':len(active),'currentInScope':len(in_scope),'inScopeWithSummaryRecords':len(in_scope&set(merged)),'inScopeWithoutSummaryRecords':len(lacking),'inScopeCapturedWithoutSummaryRecords':len({d for d in lacking if current.get(d,{}).get('available')}),'excluded':excluded,'packetRebindings':rebound,'evidenceLevels':dict(collections.Counter(v['evidenceLevel'] for v in items.values())),'newDois':new,'refreshedDois':updated,'allReviewedDois':list(items),'reviewNotes':notes,'freshValidationAt':datetime.datetime.now(datetime.timezone.utc).isoformat()})
+              if not new and not updated: report.update({'stage':'already_committed','summaryDataCommit':git('log','-1','--format=%H','--',str(target))})
+              else:
+                  require(not git('status','--porcelain'),'unexpected_worktree_change')
+                  require(git('ls-remote','origin','refs/heads/main').split()[0]==parent,'concurrent_main_change_before_write')
+                  updated_store=dict(baseline,version=1,schemaVersion='scheduled-reviewed-summary-v1',publicationMode='daily_1200_asia_shanghai',generatedAt=now,items=merged)
+                  audit=pathlib.Path('audit/summary-releases/summary-new-20261002-sep20-reconciled.json');audit.parent.mkdir(parents=True,exist_ok=True)
+                  audit.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+                  target.write_text(json.dumps(updated_store,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+                  paths=set(git('diff','--name-only').splitlines())|set(git('ls-files','--others','--exclude-standard').splitlines())
+                  require(paths<={str(target),str(audit)},'unexpected_file_write')
+                  git('diff','--check');git('config','user.name','github-actions[bot]');git('config','user.email','41898282+github-actions[bot]@users.noreply.github.com')
+                  git('add',str(target),str(audit));git('commit','-m',f'Summary: publish Sep 20 onward catch-up ({len(new)} new, {len(updated)} refreshed)')
+                  report['summaryDataCommit']=git('rev-parse','HEAD');git('push','origin','HEAD:refs/heads/main')
+                  report.update({'stage':'committed_waiting_deploy','productionDataCommitted':True})
+              report['finishedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+              print('SUMMARY_COMMIT '+json.dumps({k:v for k,v in report.items() if k not in ('reviewNotes','newDois','refreshedDois','allReviewedDois','packetRebindings')},ensure_ascii=False))
+          except Exception as e:
+              report['error']=str(e)[:600];print('SUMMARY_BLOCKED '+json.dumps({k:v for k,v in report.items() if k not in ('reviewNotes','newDois','refreshedDois','allReviewedDois','packetRebindings')},ensure_ascii=False));raise
+          finally: out.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reconciled-summary-publication-result
+          path: ${{ runner.temp }}/reconciled-summary-result.json
+          retention-days: 7
+          if-no-files-found: error
