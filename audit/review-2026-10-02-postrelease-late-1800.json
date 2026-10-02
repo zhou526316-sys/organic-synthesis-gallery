@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-02T10:15:21.847Z",
+  "timeZone": "Asia/Shanghai",
+  "type": "postrelease-late-candidate-review",
+  "discoveryGeneratedAt": "2026-10-02T10:08:29.870Z",
+  "handoffFile": "audit/unresolved-latest.json",
+  "handoffBlobSha": "9eead30b97497d38702fe54258cdcaf94001711b",
+  "scopeRulesVersion": "scope-2026-10-02-v1",
+  "scopeRulesFile": "docs/literature-scope-contract.md",
+  "scopeRulesBlobSha": "d7e163da1167917d2d6e9b9ba4d070b46e6253e5",
+  "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
+  "scopeCorrectionsBlobSha": "4df5fb1fb5c25804846c70eee555e9ae798c5d99",
+  "sourcePublicationSlot": "2026-10-02T18:00:00+08:00",
+  "nextPublicationSlot": "2026-10-03T08:00:00+08:00",
+  "summary": {
+    "reviewed": 5,
+    "accepted": 0,
+    "rejected": 4,
+    "pending": 1
+  },
+  "accepted": [],
+  "rejected": [
+    {
+      "doi": "10.1021/jacs.6c16569",
+      "journal": "JACS",
+      "date": "2026-10-02",
+      "title": "Multi-Field CEST NMR Reconstructs a Protein Folding Landscape",
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "reason": "蛋白质折叠和构象交换的多磁场CEST NMR方法研究，不是有机制备。",
+      "evidenceBasis": "fresh compact完整摘要研究Im7蛋白折叠中间态、未折叠态群体和微观交换速率，没有有机底物到产物的制备转化、范围或目标合成路线。",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "JACS期刊和化学位移分析不改变其核心为蛋白动力学测量；没有可迁移的有机制备贡献。",
+      "evidenceSource": "postrelease_fresh_compact_crossref_abstract"
+    },
+    {
+      "doi": "10.1038/s41557-026-02260-0",
+      "journal": "Nature Chemistry",
+      "date": "2026-10-02",
+      "title": "A crystalline uranium Fischer-type carbyne",
+      "decision": "exclude",
+      "reviewPriority": "high",
+      "reason": "单一铀Fischer型卡拜配合物的合成、结构和键合研究，主要贡献是f元素键合，不是一般有机合成方法。",
+      "evidenceBasis": "fresh compact完整摘要给出配合物合成、单晶XRD、DFT和Hirshfeld精修以解析铀-碳三键；没有底物系列、制备范围或有机目标路线。",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "确有真实合成，故反向挑战；但单一新型有机金属配合物为键合发现服务，不满足一般制备贡献边界。",
+      "evidenceSource": "postrelease_fresh_compact_crossref_abstract"
+    },
+    {
+      "doi": "10.1038/s41467-026-77957-4",
+      "journal": "Nature Communications",
+      "date": "2026-10-02",
+      "title": "Cannabinoid modulation of central amygdala population dynamics during threat investigation",
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "reason": "大麻素调节中央杏仁核神经元群体与威胁行为的神经科学研究，不是有机合成。",
+      "evidenceBasis": "同题预印本摘要及正式论文当日机构报道均聚焦小鼠中央杏仁核SOM神经元、威胁行为、GABA输入和脑内成像，没有有机底物-产物制备。",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "大麻素是有机分子但在本文中是神经药理干预工具，不能据此视为合成方法。",
+      "evidenceSource": "matching_preprint_abstract_plus_current_formal_publication_report"
+    },
+    {
+      "doi": "10.1038/s41467-026-77903-4",
+      "journal": "Nature Communications",
+      "date": "2026-10-02",
+      "title": "Tonicity drives collecting duct maturation in the mammalian kidney",
+      "decision": "exclude",
+      "reviewPriority": "normal",
+      "reason": "肾集合管成熟及类器官疾病模型的发育生物学研究，不是有机制备。",
+      "evidenceBasis": "Nature Communications正式文章摘要和正文明确研究高张力/NFAT5驱动集合管形态、转录和功能成熟，并建立人集合管类器官成熟及疾病模型；没有一般有机制备转化。",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "challengeReason": "培养基和代谢测定属于生物实验条件，不构成有机分子制备方法。",
+      "evidenceSource": "publisher_abstract_and_body"
+    }
+  ],
+  "pending": [
+    {
+      "doi": "10.1038/s44160-026-01162-w",
+      "journal": "Nature Synthesis",
+      "date": "2026-10-02",
+      "title": "Photoelectrochemical C(sp3)–C(sp3) cross-coupling using native functional groups",
+      "decision": "pending",
+      "reviewPriority": "high",
+      "reason": "题名高度指向有机方法，但当前没有取得摘要、正文或SI文本，不能仅凭题名纳入。",
+      "evidenceBasis": "fresh compact只有题名/Crossref元数据且abstract为空；公开Zenodo记录确认同题NATSYNTH-26030952A Source Data存在，但记录页没有反应底物、产物、条件或范围。按DOI/题名检索仍未取得可核对文章文本。",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "challengeReason": "最强纳入理由是题名明确为光电化学C(sp3)-C(sp3)交叉偶联；但范围契约禁止标题替代制备证据，因此保持pending。",
+      "evidenceNeeded": "需Nature Synthesis摘要、正文或SI确认native functional groups、偶联双方、成键模式、底物/产物范围和分离结果。",
+      "attemptedEvidencePages": [
+        "publisher DOI page",
+        "Nature article page",
+        "Zenodo source-data record"
+      ],
+      "nextAction": "通过出版社可访问文本或既有Tampermonkey/VPN Bridge全文交接补齐证据；下一固定槽重新审核，不得槽后新增。",
+      "originalDate": "2026-10-02",
+      "sourceReviewFile": "audit/review-2026-10-02-postrelease-late-1800.json",
+      "nextReviewSlot": "2026-10-03T08:00:00+08:00",
+      "evidenceSource": "postrelease_metadata_plus_source_data_record_article_text_unavailable"
+    }
+  ],
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0,
+    "allCandidatesReviewed": true,
+    "offSlotProductionWrites": 0,
+    "note": "五个18:08新候选均已两遍审核；4篇证据支持排除，Nature Synthesis一篇因文章文本证据不足保持pending。"
+  }
+}
