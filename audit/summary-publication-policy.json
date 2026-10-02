@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "effectiveDate": "2026-10-02",
+  "userInstruction": "9.20之前的摘要就不管了，专心把新的摘要都上线了。",
+  "minimumArticleDate": "2026-09-20",
+  "minimumDateInclusive": true,
+  "articleDateField": "date",
+  "articleDateMeaning": "canonical literature first-online publication date, not text capture time",
+  "beforeCutoff": "preserve existing published summaries; do not backfill or regenerate",
+  "missingArticleDate": "report separately; never infer from capture date",
+  "scope": "currently active canonical literature DOIs only",
+  "priority": ["article date descending", "addedDate descending", "capturedAt descending"],
+  "publicationCadence": "12:00 Asia/Shanghai",
+  "modelApiRequired": false,
+  "evidenceDepthControlsEligibility": false,
+  "allowedEvidenceLevels": ["complete", "partial", "abstract_only"],
+  "evidenceRule": "Summarize only verified captured text; label partial/Abstract-only coverage; never fabricate missing scientific claims.",
+  "validExistingSummaries": "reuse when sourceHash and evidencePacketHash match current captured evidence",
+  "catchUpPublication": "one merged summary-data update and one deployment after reviewing the entire eligible current set; no old-backlog-first batches",
+  "protected": ["literature cards", "authoritative literature datasets", "TOC demand", "08:00/18:00 literature release state", "Tampermonkey capture logic", "paused feedback"]
+}
