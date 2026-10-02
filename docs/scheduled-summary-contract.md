@@ -1,153 +1,79 @@
 # Organic Synthesis Gallery — Daily Scheduled Summary Contract
 
-Status: normative production contract.
+Status: normative production contract. Updated 2026-10-02 by the user's instruction: “9.20之前的摘要就不管了，专心把新的摘要都上线了。”
 
-## 1. Publication cadence
+## 0. Current publication scope — overrides historical all-backlog instructions
 
-Reviewed literature summaries are generated and published once per day at **12:00 Asia/Shanghai**.
+Read `audit/summary-publication-policy.json` on current main before every run. Process only currently active canonical literature DOIs whose first-online article `date` is **2026-09-20 or later, inclusive**. Use the canonical article date, not Evidence capturedAt, as the cutoff. Missing dates must be reported separately, never guessed from capture timestamps.
 
-This 12:00 update is a **derived-summary publication only**. It must not add, remove, reclassify, or otherwise modify production literature cards, the authoritative literature datasets, TOC demand, or the 08:00 / 18:00 literature release state. The fixed literature-card slots remain unchanged.
+Preserve already-published summaries for articles before the cutoff, but do not backfill, regenerate or spend the new-summary review budget on those older articles. The words “entire backlog”, “every Evidence item” and “all pending” below mean the entire **in-scope** set, not pre-cutoff literature.
 
-The production Worker does not call a language-model API. Tampermonkey and the Worker only capture, normalize, hash, encrypt, store, and serve evidence/status data.
+Within that set, process newest article dates first, then addedDate and capturedAt descending. A matching approved existing summary is reused. Complete, partial and abstract_only captures are all eligible; coverage controls depth, not publication eligibility. Do not wait for complete full text when usable captured text already exists. Never turn a title-only placeholder into a completed summary.
 
-## 2. Private evidence handoff
+## 1. Publication cadence and authority boundary
 
-Article Evidence Packet v2 remains private in R2.
+Publish derived literature summaries once per day at **12:00 Asia/Shanghai**. An explicit user-triggered catch-up may run immediately. Reuse the existing daily publication task; do not create competing scheduled publishers.
 
-For the scheduled review task, each eligible Evidence Packet is copied into a hybrid-encrypted handoff envelope:
+This is a derived-summary operation only. Do not add, remove, reclassify or edit literature cards, authoritative literature datasets, TOC demand, 08:00/18:00 release state, Tampermonkey collection logic, reader data, or paused feedback.
 
-- Evidence JSON is gzip-compressed before encryption;
-- content cipher: AES-256-GCM;
-- key wrapping: RSA-OAEP with SHA-256;
-- public-key identifier: `9c55e2d2ed734de9`;
-- plaintext Article Evidence Packet is never returned by the public handoff route;
-- `textProcessingPolicy=no_external_ai` is excluded from the handoff.
+The production Worker does not call a language-model API. Tampermonkey and the Worker capture, normalize, hash, encrypt, store and serve evidence/status data. No Gallery model API key is required.
 
-The public handoff route is:
+## 2. Private evidence and complete scoped handoff
 
-`GET /api/article-summary/scheduled-handoff?manifest=1&limit=N`
+Article Evidence Packet v2 stays private in R2. Eligible packets use gzip followed by AES-256-GCM, with the content key wrapped using RSA-OAEP SHA-256. Required keyId: `9c55e2d2ed734de9`; required algorithm: `RSA-OAEP-256+A256GCM+GZIP`. `textProcessingPolicy=no_external_ai` is excluded. Plaintext captured publisher text must never be returned by a public handoff route, committed to Git or included in public logs.
 
-The manifest exposes only DOI, hashes, coverage, timestamps and encrypted-payload sizing metadata. It does not return ciphertext.
+The reviewer holds the matching private key only in its private task context. Never write that key to GitHub, workflow arguments, artifacts, replies or logs. Key rotation is complete only when the deployed public key/keyId, the private review key and the live handoff metadata match. Do not fall back to retired keys or transports.
 
-A scheduled reviewer then retrieves one bounded ciphertext slice at a time with:
+The public metadata route is `GET /api/article-summary/scheduled-handoff?manifest=1&limit=N`; this returns metadata, not ciphertext. It has a bounded limit and can include out-of-scope old papers. Repeatedly fetching the same first page is not complete enumeration. Filter by canonical article dates before decrypting.
 
-`GET /api/article-summary/scheduled-handoff?doi=<DOI>&part=<N>&partSize=6000`
+The reusable `Prepare current literature summary handoff` workflow (`.github/workflows/summary-evidence-handoff.yml`) provides complete scoped enumeration when the metadata route is capped or slow. Refresh `audit/summary-handoff-request.json` on main with the current timestamp and purpose to trigger it; reuse a valid current run instead of restarting it. The workflow reads the current public registry and authenticated Evidence inventory, applies the policy cutoff, skips hash-matching approved summaries, and uses the existing per-DOI encrypted-part route for the remainder. It uploads `current-summary-encrypted-handoff`, containing a plan, public summary/registry snapshots, Evidence metadata and encrypted envelopes only. It contains no private decryption key and no plaintext captured Evidence. Download it with the GitHub connector, verify the artifact digest, and decrypt only in the private local review environment. Review the plan's missingEvidenceDois separately; do not count them as completed summaries.
 
-Each slice response may expose the wrapped AES key, IV, algorithm metadata and one ciphertext fragment. Reassembling all fragments is required before decryption. No route may expose captured publisher text in plaintext.
+Each bounded part uses `GET /api/article-summary/scheduled-handoff?doi=<DOI>&part=<N>&partSize=6000`. Preserve doi, sourceHash, evidencePacketHash, keyId, algorithm, compression, encryptedKey, IV and partCount across all parts. Reassemble every fragment before decryption. GCM AAD is `scheduled-summary-handoff-v1|9c55e2d2ed734de9|<doi>|<evidencePacketHash>`. Verify all decrypted packet identity/hash/coverage fields against current inventory and the envelope. Reject decryption/authentication, malformed or mixed-packet failures per DOI.
 
-If a stored envelope was produced by an older key or transport format, the Worker must regenerate it from the private current Evidence Packet before serving it. Deployment backfill applies the same rotation rule.
+## 3. Review and single catch-up publication
 
-A handoff-key rotation is operationally complete only after all three are true: the Worker public key/keyId is deployed, the 12:00 scheduled task holds the matching private key and transport contract, and the live manifest reports the same keyId/algorithm. Until then the daily reviewer must fail closed rather than fall back to a retired key or transport.
+At 12:00, or on an explicitly authorized catch-up, read current main policy, contract, summary data, live health and in-scope registry. Require the no-API scheduled runtime to be ready. Only the relevant existing scheduled task performs semantic review; the transport runner does not manufacture scientific summaries.
 
-## 3. Daily review task
+Review every eligible in-scope packet, newest-first. A DOI with a usable Abstract or partial text is summarized at that depth. Failed transport, integrity or explicit processing-policy cases remain pending without blocking other valid articles. Reuse existing approved summaries only when both sourceHash and evidencePacketHash still match current Evidence.
 
-At 12:00 Asia/Shanghai the scheduled ChatGPT task:
+Perform two passes per DOI: first assemble the evidence-supported scientific account; then challenge all numbers, conditions, scope, selectivity, mechanism attribution, limitations and bilingual agreement against that article's captured text. Do not claim separate independent reviewers or reviews that did not happen.
 
-1. retrieves pending encrypted handoff items;
-2. decrypts them locally using the private key held only by the scheduled task;
-3. reviews the Evidence Packet without using any OpenAI API key from the Gallery infrastructure;
-4. produces Chinese and English summaries with the same scientific facts;
-5. performs a second evidence audit before publication;
-6. updates `public/scheduled-article-summaries.json` atomically on `main`.
+Accumulate the completed records and perform **one merged summary-data update and one publication operation for the full eligible current catch-up set**. Do not deploy intermediate 8–12-paper micro-batches. Re-read the latest target blob SHA immediately before writing; preserve all unrelated current records and concurrent changes. A normal run should finish the entire in-scope set; honestly report any genuine incomplete work rather than silently dropping DOI.
 
-The task should process the entire currently available pending Evidence set in one run. Ordering is newest-first by Evidence `capturedAt`, but ordering controls review priority only; it must not split the publication into multiple deploy batches. Every DOI with any usable captured Evidence must receive a summary in that run. Evidence coverage controls summary depth, not publication eligibility. Only transport/integrity failures such as decryption/authentication failure, malformed payloads, or explicit `no_external_ai` policy may block publication.
+Only modify `public/scheduled-article-summaries.json` for summary content, together with directly necessary scoped publication/audit records. Use an atomic latest-SHA merge. Do not replace the full store with only the new delta.
 
-### Bulk catch-up execution
+## 4. Evidence constraints and required content
 
-A user-triggered catch-up is a **single full-backlog review and a single deployment operation**.
+`abstract_only`: explicitly state “基于 Abstract / Abstract-based” in both languages; summarize only the captured abstract/frontmatter. Do not reconstruct missing reaction conditions, substrate scope, yields, selectivity or mechanistic experiments from general knowledge.
 
-- Before decrypting work, skip DOI records that already have an approved scheduled summary whose `sourceHash` and `evidencePacketHash` still match current Evidence.
-- Retrieve and review every remaining eligible Evidence item exposed by the current handoff, newest-first. If the handoff limit is reached, continue retrieving further unseen eligible DOI until the current backlog has been covered.
-- Do **not** divide the work into 8–12 DOI micro-batches and do **not** deploy intermediate subsets.
-- Perform the required two-pass review independently for each DOI, accumulate all approved summary records, then merge the complete approved set into `public/scheduled-article-summaries.json` atomically.
-- Create one summary-data commit for the whole catch-up and trigger one production Worker deployment for that commit.
-- Missing full-text coverage is not a failure condition. `complete` publishes a full Evidence-bounded summary; `partial` publishes only what was captured and states that coverage is partial; `abstract_only` publishes an explicitly Abstract-based summary. Only transport/integrity/policy failures remain pending.
-- One transport/integrity/policy failure must not stop any other DOI; failures remain pending and are listed in the run audit.
-- Re-read the latest summary file SHA immediately before the single atomic write so concurrent changes are preserved.
-- The intended user experience is one trigger for the whole backlog and one production deployment, not repeated per-article or per-batch commands.
-- Do not reduce evidence, numerical-verification, mechanism-attribution, or bilingual-audit standards to increase throughput.
+`partial`: disclose incomplete captured coverage and describe only the supported material. `complete`: a full Evidence-bounded account is possible, but all claims still need support.
 
-## 4. Evidence restrictions
+When present in the packet, cover the core transformation and synthetic strategy, key conditions, substrate scope and selectivity, mechanistic experiments, the authors' proposed mechanism, limitations and concrete synthetic significance. Separate experimental observations from author proposals and reviewer inference. Do not publish reviewer-only mechanistic inference as established fact.
 
-Coverage levels remain:
+Never fabricate missing conditions, yields, selectivities, substrate failures or evidence. Omit unsupported details instead of blocking an otherwise useful narrower summary. The Chinese and English versions must contain the same material scientific facts. No fixed length limit is required, but avoid padding and generic unrelated explanations.
 
-- `abstract_only`: only abstract/frontmatter claims may be summarized;
-- `partial`: use captured article text but disclose missing coverage;
-- `complete`: full-paper summary may be produced, still subject to evidence checks.
+## 5. Published data contract
 
-Never fabricate missing conditions, yields, selectivities, scope, substrate failures, or mechanistic evidence. Missing details are simply omitted; omission does not block publication.
+`public/scheduled-article-summaries.json` retains version 1, schemaVersion `scheduled-reviewed-summary-v1`, publicationMode `daily_1200_asia_shanghai`, a current generatedAt timestamp and DOI-keyed items.
 
-Mechanistic content must distinguish:
+Every approved item contains schemaVersion, doi, status=`approved`, sourceHash, evidencePacketHash, evidenceLevel, zh, en, generatedAt, reviewedAt, promptVersion=`gallery-daily-summary-v1`, auditVersion=`gallery-daily-summary-audit-v1`.
 
-- experimental evidence;
-- mechanism proposed by the authors;
-- model inference.
+The Worker serves a scheduled summary only when both hashes match the current Evidence Packet. A later capture change can make an old summary ineligible even if its static record remains present. Check live availability after publication; a record count alone does not establish readability.
 
-Model-only mechanistic inference must not be published as fact.
+## 6. Failure and completion reporting
 
-## 5. Required summary content
+Block individual records for decryption/authentication failure, mixed or mismatching current hashes, explicit no_external_ai, malformed output or material bilingual disagreement that cannot be corrected from the evidence. Incomplete full text or missing individual facts is not itself a publication blocker.
 
-When supported by Evidence, the reviewed summary should cover:
+Report separately: in-scope article count, valid reused summaries, newly published summaries, captured-but-unpublished items, no-captured-text items, and ignored pre-cutoff articles. Count only currently active DOI. Retain the actual failure reasons and no invented completion counts.
 
-- core transformation / synthetic strategy;
-- key reaction conditions;
-- substrate scope and selectivity;
-- mechanistic experiments;
-- author-proposed mechanism;
-- limitations;
-- concrete synthetic significance.
+## 7. Deployment and public display
 
-For `abstract_only` evidence, the summary must visibly state that it is Abstract-based and must not reconstruct missing details from general chemistry knowledge.
+Publish to the existing production Gallery and Worker, preserving their established authorization gates. Confirm the summary-data commit, actual successful deployment and live per-DOI endpoint results for the published set: available=true, state=published, source=`scheduled_reviewed_evidence_v2`, matching sourceHash/evidencePacketHash and nonempty bilingual content. A stale static timestamp, configuration string or successful no-op is not successful publication. If all records cannot be checked, state the exact sample coverage.
 
-## 6. Publication record
+All public text must remain model-name neutral under PROJECT_RULES.md. Do not expose model names, model snapshots, internal review implementation, waiting-for-model wording or private metadata as reader-facing text. Use neutral ready/processing/next-release copy as applicable.
 
-`public/scheduled-article-summaries.json` uses:
+## 8. Retired paths and audit
 
-- `version: 1`;
-- `schemaVersion: scheduled-reviewed-summary-v1`;
-- DOI-keyed `items`.
+Do not restore Evidence-import-triggered model review, minute-level model cron, Gallery model-API-key dependency, or automatic model calls from `/api/admin/article-summary/review-run`. Historical implementation can remain only outside the production execution path.
 
-Each approved item must contain:
-
-- `schemaVersion`;
-- `doi`;
-- `status: approved`;
-- `sourceHash`;
-- `evidencePacketHash`;
-- `evidenceLevel`;
-- `zh`;
-- `en`;
-- `generatedAt`;
-- `reviewedAt`;
-- `promptVersion`;
-- `auditVersion`.
-
-The Worker displays a scheduled summary only when both `sourceHash` and `evidencePacketHash` still match the current Evidence Packet. A later Evidence change automatically makes the old static summary ineligible.
-
-## 7. Fail-closed rules
-
-Do not publish a summary only when:
-
-- the encrypted packet cannot be decrypted or authenticated;
-- the current Evidence hashes differ from the handoff;
-- the article is marked `no_external_ai`;
-- the output is malformed or the bilingual versions materially disagree in a way that cannot be corrected from captured Evidence.
-
-Lack of full text, missing numerical details, or incomplete section coverage is not a publication blocker. Instead, publish a narrower Evidence-bounded summary that states the applicable coverage level. A failed item remains pending only for transport/integrity/policy/output-validity reasons; failure of one DOI must not block the rest.
-
-## 8. Frontend behavior
-
-Before the daily batch is published, the summary panel should state that captured evidence is waiting for the next **12:00 Asia/Shanghai** release.
-
-After publication, the existing bilingual summary panel remains unchanged for readers.
-
-## 9. Retired production behavior
-
-The following production paths are retired:
-
-- Evidence-import-triggered model review;
-- one-minute model-review cron;
-- Gallery `OPENAI_API_KEY` dependency;
-- automatic model calls from `/api/admin/article-summary/review-run`.
-
-Legacy review code may remain in the repository temporarily for migration/history, but it must not be reachable from the production execution path.
+Before the final user-visible reply, synchronize the complete report under `audit/gpt-responses/` with Beijing time, real commit/run references and the exact outcome. Never include keys, encrypted payload fragments, complete captured publisher text or other credentials in that report.
