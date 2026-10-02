@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-02T10:07:30.911Z",
-  "requestedBy": "fixed-release-postdeploy-20261002-1800",
-  "publicationSlot": "2026-10-02T18:00:00+08:00",
-  "baselineMainSha": "f03d56fc7f2777e4b7d787f4d61db17480be4980",
-  "reason": "Post-release DOI-union audit for the successfully deployed 2026-10-02 18:00 fixed-slot release. Production and TOC demand are already 765 cards and Pages live verification passed; run the canonical audit once against the deployed snapshot to detect only genuine post-release unresolved/closure issues. Do not admit, remove, or reclassify production literature in this audit."
+  "requestedAt": "2026-10-02T23:12:00.000Z",
+  "requestedBy": "prepublish-primary-20261003-0800",
+  "publicationSlot": "2026-10-03T08:00:00+08:00",
+  "baselineMainSha": "63d3e5ba59ffa080af4d9e08c29ade0ee79b01b0",
+  "reason": "Fresh prepublish discovery audit required for the 2026-10-03 08:00 fixed slot because the persisted latest/compact generation predates the 06:55 Asia/Shanghai freshness boundary and ends at 2026-10-02. Run the canonical audit once against current main; do not mutate production literature or media."
 }
