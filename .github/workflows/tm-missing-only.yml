@@ -30,7 +30,9 @@ jobs:
           a=s.index('      queue:');b=s.index(chr(10)+'rep(',a);v=s[a:b];slash=chr(92)
           for n in (2,1):
               v=v.replace("'"+(slash+'n')*n+"'", "'"+(slash+slash+'n')*n+"'")
-          p.write_text(s[:a]+v+s[b:])
+          s=s[:a]+v+s[b:]
+          s=s.replace('manual=s[a:b]'+chr(10),'manual=s[a:b].rstrip()+chr(10)'+chr(10))
+          p.write_text(s)
           PY
           python scripts/apply-tm-missing-only.py
           git diff --check
