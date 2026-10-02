@@ -1,0 +1,124 @@
+name: Read-only Gallery summary status
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/gallery-summary-status-audit.yml', 'audit/gallery-summary-status-trigger.txt']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: gallery-summary-status-audit
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Inspect published summaries and queue metadata using GET only
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os,json,time,datetime,urllib.request,urllib.error,concurrent.futures,collections,pathlib
+          root=pathlib.Path('.')
+          output=pathlib.Path('summary-status-report'); output.mkdir(exist_ok=True)
+          report={'checkedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'commit':os.environ.get('GITHUB_SHA'),'readOnly':True,'productionWrites':0}
+          def get(url,token=None):
+              headers={'accept':'application/json','cache-control':'no-cache','user-agent':'Gallery-read-only-status-audit'}
+              if token: headers['authorization']='Bearer '+token
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(url,headers=headers,method='GET'),timeout=18) as r:
+                      return {'http':r.status,'body':json.load(r),'date':r.headers.get('date'),'lastModified':r.headers.get('last-modified')}
+              except urllib.error.HTTPError as e: return {'http':e.code,'error':'http_error'}
+              except Exception as e: return {'error':type(e).__name__+': '+str(e)[:180]}
+          def topmeta(body):
+              if not isinstance(body,dict): return {'type':type(body).__name__}
+              result={k:v for k,v in body.items() if isinstance(v,(str,int,float,bool)) or v is None}
+              for k,v in body.items():
+                  if isinstance(v,list): result[k+'Count']=len(v)
+                  elif isinstance(v,dict):
+                      result[k+'Keys']=list(v)[:25]
+                      if k in ('summary','counts','totals','coverage','sources'): result[k]={a:b for a,b in v.items() if isinstance(b,(str,int,float,bool)) or b is None}
+              return result
+          def summarymeta(j):
+              items=j.get('items',{})
+              return {'generatedAt':j.get('generatedAt'),'publicationMode':j.get('publicationMode'),'count':len(items),'statusCounts':dict(collections.Counter(v.get('status') for v in items.values())),'evidenceLevels':dict(collections.Counter(v.get('evidenceLevel') for v in items.values())),'bilingualNonempty':sum(bool(v.get('zh')) and bool(v.get('en')) for v in items.values()),'items':[{'doi':d,'status':v.get('status'),'evidenceLevel':v.get('evidenceLevel'),'generatedAt':v.get('generatedAt'),'reviewedAt':v.get('reviewedAt')} for d,v in items.items()]}
+          repo=json.loads((root/'public/scheduled-article-summaries.json').read_text())
+          report['repository']=summarymeta(repo)
+          token=os.environ.get('BRIDGE_WRITE_TOKEN')
+          suffix='?status_check='+str(int(time.time()))
+          urls={
+            'liveStatic':'https://gallery.gczhouwld.com/scheduled-article-summaries.json'+suffix,
+            'workerStatic':'https://organic-synthesis-gallery.zhou526316.workers.dev/scheduled-article-summaries.json'+suffix,
+            'liveRegistry':'https://gallery.gczhouwld.com/toc-demand-live.json'+suffix,
+            'evidenceInventory':'https://api.gczhouwld.com/api/article-summary/evidence-inventory',
+            'reviewStatus':'https://api.gczhouwld.com/api/admin/article-summary/review-status',
+            'handoffManifest':'https://api.gczhouwld.com/api/article-summary/scheduled-handoff?manifest=1&limit=60'
+          }
+          def fetchentry(kv):
+              k,u=kv; return k,get(u,token if k in ('evidenceInventory','reviewStatus') else None)
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool: fetched=dict(pool.map(fetchentry,urls.items()))
+          for k,r in fetched.items():
+              body=r.get('body'); report[k]={a:b for a,b in r.items() if a!='body'}
+              if isinstance(body,dict): report[k]['metadata']=topmeta(body)
+              if k in ('liveStatic','workerStatic') and isinstance(body,dict) and 'items' in body:
+                  report[k]['summaries']=summarymeta(body)
+                  report[k]['identicalToRepository']=body==repo
+          registry=fetched['liveRegistry'].get('body',{})
+          articles=registry.get('articles',[]) if isinstance(registry,dict) else []
+          active={str(a.get('doi','')).lower():a for a in articles if a.get('doi')}
+          summarydois={str(d).lower() for d in repo.get('items',{})}
+          report['coverage']={'activeRegistryDois':len(active),'summariesOnActiveDois':len(set(active)&summarydois),'activeDoisWithoutScheduledSummary':len(set(active)-summarydois),'summaryDoisOutsideRegistry':sorted(summarydois-set(active))}
+          latest=sorted(active.values(),key=lambda a:(a.get('addedDate') or '',a.get('date') or '',a.get('doi') or ''),reverse=True)[:10]
+          report['latestRegistryArticles']=[{'doi':a.get('doi'),'journal':a.get('journal'),'date':a.get('date'),'addedDate':a.get('addedDate'),'hasScheduledSummary':str(a.get('doi','')).lower() in summarydois} for a in latest]
+          evidence=fetched['evidenceInventory'].get('body',{})
+          if isinstance(evidence,dict):
+              for key,val in evidence.items():
+                  if isinstance(val,dict) and val and all(isinstance(v,dict) for v in val.values()): rows=[dict(v,doi=v.get('doi',d)) for d,v in val.items()]
+                  elif isinstance(val,list) and all(isinstance(v,dict) for v in val): rows=val
+                  else: continue
+                  safe=[{a:v.get(a) for a in ('doi','state','status','evidenceLevel','capturedAt','sourceHash','evidencePacketHash','summaryState','summaryAvailable') if a in v} for v in rows]
+                  report['evidenceInventory'][key+'Rows']=safe
+                  edois={str(v.get('doi','')).lower() for v in rows if v.get('doi')}
+                  report['evidenceInventory'][key+'Coverage']={'uniqueDois':len(edois),'onActiveRegistry':len(edois&set(active)),'activeWithEvidenceWithoutScheduledSummary':len((edois&set(active))-summarydois)}
+          dois=sorted(summarydois)
+          checkdois=dois[:80]+[str(a.get('doi')) for a in latest if str(a.get('doi','')).lower() not in summarydois]
+          def probe(doi):
+              u='https://api.gczhouwld.com/api/user-ui/article-summary?doi='+urllib.parse.quote(doi,safe='')
+              r=get(u); b=r.get('body',{}); out={'doi':doi,'http':r.get('http'),'error':r.get('error'),'recordedInScheduledFile':doi.lower() in summarydois}
+              if isinstance(b,dict):
+                  out.update({a:b.get(a) for a in ('available','state','reason','error','evidenceLevel','generatedAt','source') if a in b})
+                  out['keys']=list(b)
+                  if isinstance(b.get('summary'),dict):
+                      s=b['summary'];out['summaryKeys']=list(s);out['bilingualNonempty']=bool(s.get('zh')) and bool(s.get('en'));out['summaryGeneratedAt']=s.get('generatedAt')
+                  else:out['bilingualNonempty']=bool(b.get('zh')) and bool(b.get('en'))
+              return out
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool: report['liveApiChecks']=list(pool.map(probe,checkdois))
+          report['apiSummaryCheckScope']={'recordedDoisTotal':len(dois),'recordedDoisChecked':min(80,len(dois)),'allRecordedChecked':len(dois)<=80}
+          workflows=[]
+          for p in sorted((root/'.github/workflows').glob('*summary*')):
+              text=p.read_text();workflows.append({'path':str(p),'scheduleLines':[line.strip() for line in text.splitlines() if 'cron:' in line],'nameLine':next((line for line in text.splitlines() if line.startswith('name:')),'')})
+          report['summaryWorkflows']=workflows
+          report['summaryAuditPaths']=[str(p) for p in root.glob('audit/**/*') if p.is_file() and 'summary' in p.name.lower() and '.git' not in str(p)][:120]
+          gh=os.environ.get('GH_TOKEN'); repo_name=os.environ['GITHUB_REPOSITORY']; report['recentSummaryRuns']={}
+          for w in workflows:
+              name=pathlib.Path(w['path']).name
+              if name=='gallery-summary-status-audit.yml': continue
+              r=get('https://api.github.com/repos/'+repo_name+'/actions/workflows/'+name+'/runs?per_page=3',gh)
+              b=r.get('body',{});report['recentSummaryRuns'][name]={'http':r.get('http'),'runs':[{k:v.get(k) for k in ('id','name','head_sha','status','conclusion','created_at','updated_at','event','html_url')} for v in b.get('workflow_runs',[])]}
+          dest=output/'status.json';dest.write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print('SUMMARY_STATUS_AGGREGATE '+json.dumps({'checkedAt':report['checkedAt'],'repositoryCount':report['repository']['count'],'repositoryGeneratedAt':report['repository']['generatedAt'],'coverage':report['coverage'],'apiStates':dict(collections.Counter(v.get('state') for v in report['liveApiChecks'] if v['recordedInScheduledFile']))},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gallery-summary-status
+          path: summary-status-report/status.json
+          retention-days: 7
+          if-no-files-found: error
