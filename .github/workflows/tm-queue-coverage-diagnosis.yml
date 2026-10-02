@@ -1,0 +1,43 @@
+name: Diagnose capture queue coverage
+on:
+  push:
+    branches: [fix/tm-queue-coverage-20261003]
+    paths: [.github/workflows/tm-queue-coverage-diagnosis.yml]
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Read sanitized capture and inventory metadata
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          const report={readAt:new Date().toISOString(),readOnly:true,mediaWrites:0,publisherRequests:0,probes:{}};
+          const endpoints={local:'https://api.gczhouwld.com/api/media/local-diagnostics',reports:'https://api.gczhouwld.com/api/media/tampermonkey-reports?limit=60',tocs:'https://api.gczhouwld.com/api/media/local-capture-index',figures:'https://api.gczhouwld.com/api/article-figures/staged?inventory=1',evidence:'https://api.gczhouwld.com/api/article-summary/evidence-inventory',queue:'https://gallery.gczhouwld.com/toc-demand-live.json'};
+          await Promise.all(Object.entries(endpoints).map(async([key,url])=>{
+            try{
+              const r=await fetch(url,{headers:{origin:'https://gallery.gczhouwld.com','cache-control':'no-cache'},signal:AbortSignal.timeout(20000)}),x=await r.json();
+              const p={status:r.status,keys:Object.keys(x),count:x.count,truncated:x.truncated,complete:x.complete,generatedAt:x.generatedAt,uploadedAt:x.uploadedAt};
+              if(key==='local'){
+                const s=x.summary||{};p.summary=Object.fromEntries(Object.entries(s).filter(([k,v])=>v===null||['string','number','boolean'].includes(typeof v)));
+                p.inventoryErrors=s.inventoryErrors;p.inventoryUnknownLayers=s.inventoryUnknownLayers;
+                p.results=(s.results||[]).map(v=>({doi:v.doi,status:v.status,reason:v.reason,requestedNeeds:v.requestedNeeds,finishedAt:v.finishedAt}));
+              }else if(key==='reports')p.items=(x.items||[]).map(v=>({doi:v.doi,status:v.status,reason:v.reason,updatedAt:v.updatedAt,mediaNeed:v.mediaNeed,figuresDiscovered:v.figuresDiscovered,figuresStored:v.figuresStored,figureStoredCount:v.figureStoredCount,trace:(v.trace||[]).filter(t=>t.stage==='diagnostic_context').map(t=>({at:t.at,message:t.message}))}));
+              else if(key==='queue'){p.corpus=x.webpageDoiCount;p.articleCount=(x.articles||[]).length;p.latestAddedDate=x.latestAddedDate;p.missingOfficial=x.missingOfficialTotal;}
+              else if(key==='figures'){p.items=(x.items||[]).map(v=>({doi:v.doi,expectedFigureCount:v.expectedFigureCount,saved:Object.keys(v.figures||{}).length}));}
+              else if(key==='tocs'){p.itemsShape=Array.isArray(x.items)?'array':typeof x.items;p.actualCount=Array.isArray(x.items)?x.items.length:Object.keys(x.items||{}).length;p.sample=(Array.isArray(x.items)?x.items:Object.values(x.items||{})).slice(0,2).map(v=>({doi:v.doi,kind:v.kind,mediaGeneration:v.mediaGeneration}));}
+              report.probes[key]=p;
+            }catch(e){report.probes[key]={error:String(e.message).slice(0,180)};}
+          }));
+          await writeFile(process.env.RUNNER_TEMP+'/tm-queue-coverage.json',JSON.stringify(report,null,2));
+          console.log(JSON.stringify({...report,probes:Object.fromEntries(Object.entries(report.probes).map(([k,v])=>[k,{...v,items:v.items?{length:v.items.length,sample:v.items.slice(0,3)}:undefined}]))}));
+          JS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tm-queue-coverage
+          path: ${{ runner.temp }}/tm-queue-coverage.json
+          retention-days: 7
