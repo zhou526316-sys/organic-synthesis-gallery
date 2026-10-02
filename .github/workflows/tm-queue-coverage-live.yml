@@ -1,0 +1,85 @@
+name: Verify full queue capture v6 live
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/tm-queue-coverage-live.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Read primary deployments and verify actual served installer bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
+          const sha='f2a6f3875df5b04f5935f3d8b20d542d238f63b9';
+          const expected='621c82fbe4170d6dd33b5b3f1c2689b600a4d3daf607f7b3fb52bda0cda33425';
+          const report={sourceSha:sha,expectedInstallerSha256:expected,readOnly:true,publisherRequests:0,mediaWrites:0,deployments:[],probes:[],errors:[],authenticatedDesktopVerified:false};
+          const wanted=['Deploy Worker frontend assets','Deploy GitHub Pages frontend'];
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          async function deployments(){
+            const r=await fetch('https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/runs?head_sha='+sha+'&event=push&per_page=50',{headers:{authorization:'Bearer '+process.env.GH_TOKEN,accept:'application/vnd.github+json'},signal:AbortSignal.timeout(15000)});
+            if(!r.ok)throw Error('runs_http_'+r.status);
+            const x=await r.json();return (x.workflow_runs||[]).filter(v=>wanted.includes(v.name)).map(v=>({name:v.name,id:v.id,status:v.status,conclusion:v.conclusion,headSha:v.head_sha}));
+          }
+          async function probe(key,url){
+            const p={key,url};
+            try{
+              const r=await fetch(url+(url.includes('?')?'&':'?')+'queueCoverageAcceptance='+Date.now(),{headers:{origin:'https://gallery.gczhouwld.com','cache-control':'no-cache'},signal:AbortSignal.timeout(30000)});
+              p.status=r.status;const text=await r.text();
+              if(key.endsWith('installer')){
+                p.sha256=createHash('sha256').update(text).digest('hex');p.bytes=Buffer.byteLength(text);p.matchesTested=p.sha256===expected;
+                p.marker=text.includes("var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';");p.panelMarker=text.includes('全队列补缺6');p.button=text.includes('立即开始任务（只补缺项）');p.version=(text.match(/@version\s+(\S+)/)||[])[1];
+              }else if(r.ok){
+                const x=JSON.parse(text);
+                if(key==='capabilities')p.data={captureVersion:x.captureVersion,mediaControllerRevision:x.mediaControllerRevision,mediaGeneration:x.mediaGeneration,mode:x.mode};
+                if(key==='queue')p.data={generatedAt:x.generatedAt,webpageDoiCount:x.webpageDoiCount,registryLength:(x.articles||[]).length,latestAddedDate:x.latestAddedDate};
+                if(key==='stage_inventory')p.data={schemaVersion:x.schemaVersion,mediaGeneration:x.mediaGeneration,count:x.count,actualItems:(x.items||[]).length,complete:x.complete};
+              }
+            }catch(e){p.error=String(e.message).slice(0,180)}
+            return p;
+          }
+          try{
+            for(let i=0;i<32;i++){
+              report.deployments=await deployments();
+              if(report.deployments.length===2&&report.deployments.every(x=>x.status==='completed'))break;
+              await sleep(15000);
+            }
+            for(let i=0;i<3;i++){
+              report.probes=await Promise.all([
+                probe('canonical_installer','https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js'),
+                probe('worker_installer','https://organic-synthesis-gallery.zhou526316.workers.dev/gallery-vpn-bridge.user.js'),
+                probe('capabilities','https://api.gczhouwld.com/api/media/capture-capabilities'),
+                probe('stage_inventory','https://api.gczhouwld.com/api/article-figures/staged?inventory=1'),
+                probe('queue','https://gallery.gczhouwld.com/toc-demand-live.json')
+              ]);
+              if(report.probes.filter(x=>x.key.endsWith('installer')).every(x=>x.matchesTested))break;
+              if(i<2)await sleep(15000);
+            }
+            report.deployments=await deployments();
+            const p=Object.fromEntries(report.probes.map(x=>[x.key,x]));
+            report.passed=report.deployments.length===2&&report.deployments.every(x=>x.conclusion==='success')
+              &&['canonical_installer','worker_installer'].every(k=>p[k].status===200&&p[k].matchesTested&&p[k].marker&&p[k].panelMarker&&p[k].button&&p[k].version==='2.2.39')
+              &&p.capabilities.status===200&&p.capabilities.data?.captureVersion==='6.2.20'&&p.capabilities.data?.mediaControllerRevision==='2.2.39'&&p.capabilities.data?.mediaGeneration===1790082000000
+              &&p.stage_inventory.status===200&&p.stage_inventory.data?.complete===true&&p.stage_inventory.data?.count===p.stage_inventory.data?.actualItems
+              &&p.queue.status===200&&p.queue.data?.webpageDoiCount===p.queue.data?.registryLength;
+          }catch(e){report.errors.push(String(e.message).slice(0,180));report.passed=false;}
+          report.verifiedAt=new Date().toISOString();
+          await writeFile(process.env.RUNNER_TEMP+'/tm-queue-coverage-live.json',JSON.stringify(report,null,2));
+          console.log('QUEUE_COVERAGE_LIVE',JSON.stringify(report));
+          if(!report.passed)process.exitCode=1;
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-queue-coverage-live
+          path: ${{ runner.temp }}/tm-queue-coverage-live.json
+          retention-days: 14
