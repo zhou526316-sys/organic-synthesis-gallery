@@ -1,29 +1,29 @@
 {
-  "generatedAt": "2026-10-02T05:48:46.367Z",
+  "generatedAt": "2026-10-02T10:00:19.765Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 690,
+  "liveLocalCaptures": 693,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
-  "mediaInventoryCount": 754,
-  "webpageDoiCount": 754,
+  "mediaInventoryCount": 765,
+  "webpageDoiCount": 765,
   "latestAddedDate": "2026-10-02",
-  "latestAddedCount": 28,
+  "latestAddedCount": 39,
   "mediaRecordCount": 714,
-  "visibleGapTotal": 44,
-  "demandTotal": 44,
-  "noVisual": 44,
+  "visibleGapTotal": 52,
+  "demandTotal": 52,
+  "noVisual": 52,
   "fallbackOnlyNeedsOfficialUpgrade": 114,
-  "missingOfficialTotal": 158,
-  "figureGapTotal": 754,
-  "zeroFigureGapTotal": 754,
+  "missingOfficialTotal": 166,
+  "figureGapTotal": 765,
+  "zeroFigureGapTotal": 765,
   "lowResolutionFigureGapTotal": 0,
   "unknownQualityFigureGapTotal": 0,
   "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 38,
-    "wiley": 0,
+    "acs": 45,
+    "wiley": 1,
     "nature": 2,
     "science": 1,
     "rsc": 0,
@@ -42,25 +42,17 @@
     "other": 0
   },
   "byJournal": {
-    "ACS Catalysis": 6,
-    "JOC": 1,
-    "Organic Letters": 31,
+    "ACS Catalysis": 5,
+    "JACS": 3,
+    "JOC": 4,
+    "Organic Letters": 33,
     "CCS Chemistry": 2,
     "Chem": 1,
     "Nature": 2,
-    "Science": 1
+    "Science": 1,
+    "Angew": 1
   },
   "sample": [
-    {
-      "doi": "10.1021/acscatal.6c05520",
-      "journal": "ACS Catalysis",
-      "title": "Engineering Highly Active Single-Phosphine-Coordinated Ru Catalysts for Heterogeneous N -Alkylation without Base-Additive",
-      "date": "2026-09-28",
-      "addedDate": "2026-10-02",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
     {
       "doi": "10.1021/acscatal.6c06622",
       "journal": "ACS Catalysis",
@@ -112,6 +104,66 @@
       "existingReason": ""
     },
     {
+      "doi": "10.1021/jacs.6c12059",
+      "journal": "JACS",
+      "title": "Redox-Active Bipyridine–Iron Half-Sandwich Complexes for Catalytic Carbene Transfer",
+      "date": "2026-10-02",
+      "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c13713",
+      "journal": "JACS",
+      "title": "Enantio- and Regioselective Ni-Catalyzed Hydroarylation of Alkenes and Alkynes to Form C–N Axially Chiral Heterobiaryls",
+      "date": "2026-10-02",
+      "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/jacs.6c17350",
+      "journal": "JACS",
+      "title": "Stereoselective Glycosylation of Amides with Glycal Catalyzed by a Solid–Liquid Phase-Transfer and Proton-Transfer Dual-Functional Pyridinium Catalyst",
+      "date": "2026-10-02",
+      "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c00926",
+      "journal": "JOC",
+      "title": "Regio- and Diastereo-Controlled (5 + 2) Cycloaddition of gem -Difluorocyclopropenes and Oxidopyridinium Ions",
+      "date": "2026-10-02",
+      "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01349",
+      "journal": "JOC",
+      "title": "Visible Light-Enabled Oxo-Alkylation of Styrenes with Aliphatic Alcohol Derivatives for the Synthesis of α-Alkyl Ketones",
+      "date": "2026-10-02",
+      "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.joc.6c01732",
+      "journal": "JOC",
+      "title": "Chemoenzymatic Synthesis of ( E,E,Z )-Humulene-Derived Natural Products",
+      "date": "2026-10-02",
+      "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
       "doi": "10.1021/acs.joc.6c01847",
       "journal": "JOC",
       "title": "Visible-Light-Mediated Diastereoselective Hydrophosphorylation of Cyclopropenes",
@@ -122,10 +174,40 @@
       "existingReason": ""
     },
     {
-      "doi": "10.1021/acs.orglett.6c03424",
+      "doi": "10.1021/acs.orglett.6c03422",
       "journal": "Organic Letters",
-      "title": "Electrochemical Divergent Transformation of Flavonoids to Dihydroflavonols and 3-Iodoflavones",
-      "date": "2026-09-30",
+      "title": "Thermally Stable Energetic Salts Featuring Tetrazine-Derived Diammonium Cations and Nitrogen-Rich Energetic Anions",
+      "date": "2026-10-02",
+      "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03708",
+      "journal": "Organic Letters",
+      "title": "Overcoming Reversibility: Borrowing Hydrogen Enables Enantioselective Intermolecular Oxa-Michael Addition to α,β-Unsaturated Aldehydes",
+      "date": "2026-10-02",
+      "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03721",
+      "journal": "Organic Letters",
+      "title": "Catalytic Desymmetrizing Carbonyl–Amine Condensation Reaction to Construct Axially Chiral Diaryl Ethers",
+      "date": "2026-10-02",
+      "addedDate": "2026-10-02",
+      "publisher": "acs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1021/acs.orglett.6c03818",
+      "journal": "Organic Letters",
+      "title": "Total Synthesis of Antrimycins A and D",
+      "date": "2026-10-02",
       "addedDate": "2026-10-02",
       "publisher": "acs",
       "state": "no_visual",
@@ -137,16 +219,6 @@
       "title": "Architecture-Guided Sequential Editing of Distinct Disulfides in Unprotected Peptides",
       "date": "2026-09-30",
       "addedDate": "2026-09-30",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03671",
-      "journal": "Organic Letters",
-      "title": "Silver-Catalyzed Cascade Reactions for the Synthesis of Indopyran Pseudo-Natural Products as Potent Anti-tumor Agents",
-      "date": "2026-09-30",
-      "addedDate": "2026-10-02",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
@@ -227,76 +299,6 @@
       "title": "Photocatalytic C–H Trifluoromethylation of (Hetero)arenes with Halon-1301",
       "date": "2026-09-28",
       "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03954",
-      "journal": "Organic Letters",
-      "title": "Thianthrenium Salt-Mediated Site-Selective Coupling of Arenes with Enynones",
-      "date": "2026-09-28",
-      "addedDate": "2026-09-29",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03612",
-      "journal": "Organic Letters",
-      "title": "Development of Deuteroalkylthiolating Reagents for Synthesis of Deuterated Sulfides",
-      "date": "2026-09-20",
-      "addedDate": "2026-09-21",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": "user_observed_no_image"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03173",
-      "journal": "Organic Letters",
-      "title": "Formal Total Synthesis of (±)-Isoalantolactone",
-      "date": "2026-08-19",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02820",
-      "journal": "Organic Letters",
-      "title": "Ring-Retentive SN2′-Type Alkylation of gem-Dichlorocyclobutenones Enabled by Alkene-to-Radical Relay",
-      "date": "2026-07-21",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c01984",
-      "journal": "Organic Letters",
-      "title": "NHC-Catalyzed Asymmetric Photoinduced [4 + 2] Cycloaddition: Access to Chiral Spiro[oxindole-3,4′-pyrano[2,3-c]pyrazoles]",
-      "date": "2026-07-13",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02434",
-      "journal": "Organic Letters",
-      "title": "Stereoselective C-Aryl and C-Vinyl Glycosylation via Iron-Catalyzed Reductive Coupling",
-      "date": "2026-07-11",
-      "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c02443",
-      "journal": "Organic Letters",
-      "title": "",
-      "date": "2026-07-10",
-      "addedDate": "",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
