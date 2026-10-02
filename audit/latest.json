@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-02T10:08:29.870Z",
+  "generatedAt": "2026-10-02T10:16:15.427Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -171,15 +171,15 @@
     "galleryDois": 765,
     "sourceRecords": 753,
     "rawMissingFromGallery": 599,
-    "previouslyReviewedExcluded": 589,
-    "missingFromGallery": 10,
-    "potentialGaps": 4,
+    "previouslyReviewedExcluded": 593,
+    "missingFromGallery": 6,
+    "potentialGaps": 3,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 2,
     "closureCoverageAnomalies": 8,
     "historicalCoverageLosses": 0,
-    "unresolved": 10,
+    "unresolved": 6,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -464,9 +464,9 @@
       "multiSource": 42,
       "coveredByGallery": 12,
       "rawMissingFromGallery": 72,
-      "previouslyReviewedExcluded": 67,
-      "missingFromGallery": 5,
-      "potentialGaps": 1,
+      "previouslyReviewedExcluded": 71,
+      "missingFromGallery": 1,
+      "potentialGaps": 0,
       "byJournal": {
         "Nature": 1,
         "Nature Synthesis": 1,
@@ -619,9 +619,9 @@
       "safetyTail": 0,
       "coveredByGallery": 0,
       "rawMissingFromGallery": 6,
-      "previouslyReviewedExcluded": 5,
-      "missingFromGallery": 1,
-      "potentialGaps": 1
+      "previouslyReviewedExcluded": 6,
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "Nature Communications": {
       "activeFrom": "2026-07-01",
@@ -634,8 +634,8 @@
       "safetyTail": 0,
       "coveredByGallery": 1,
       "rawMissingFromGallery": 146,
-      "previouslyReviewedExcluded": 144,
-      "missingFromGallery": 2,
+      "previouslyReviewedExcluded": 146,
+      "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "JACS": {
@@ -649,8 +649,8 @@
       "safetyTail": 0,
       "coveredByGallery": 19,
       "rawMissingFromGallery": 94,
-      "previouslyReviewedExcluded": 93,
-      "missingFromGallery": 1,
+      "previouslyReviewedExcluded": 94,
+      "missingFromGallery": 0,
       "potentialGaps": 0
     },
     "Angew": {
@@ -2134,129 +2134,6 @@
   ],
   "missingCandidates": [
     {
-      "doi": "10.1021/jacs.6c16569",
-      "journal": "JACS",
-      "title": "Multi-Field CEST NMR Reconstructs a Protein Folding Landscape",
-      "abstract": "Abstract Protein dynamics are central to their folding and function, yet the sparsely populated conformational states that underpin these processes remain difficult to characterize at atomic resolution. Chemical exchange saturation transfer (CEST) NMR can detect such states and is particularly sensitive to rapid exchange between two minor conformations. This “minor-state exchange”, however, broadens and displaces the minor-state dip in CEST profiles, leading to parameter degeneracy that can preclude quantitative reconstruction of multistate exchange networks. Here, we show that, in the presence of rapid “minor-exchange”, the apparent minor-state chemical shift obtained from two-state fits varies systematically with the static magnetic field, B0. We exploit this field dependence to develop a nonperturbative, multi-field CEST strategy that distinguishes otherwise degenerate exchange models. Applying multi-field 15N-CEST to the model protein Im7 revealed a folding intermediate populated at ∼1% that exchanges with the folded state on a ∼2 ms time scale and with an unfolded state populated at ∼0.4% on a ∼200 μs time scale. Although the unfolded state does not produce a separate CEST dip, its exchange is encoded in the line width and B0-dependent position of the intermediate-state dip. Analysis of the 15N-CEST data provides populations, microscopic exchange rates, and residue-specific 15N chemical shifts for all three states. The resulting Im7 free-energy landscape is sequential, with folding proceeding through the intermediate and no detectable direct exchange between the folded and unfolded states. Multi-field CEST provides a broadly applicable, perturbation-free approach for resolving biomolecular dynamics at equilibrium.",
-      "date": "2026-10-02",
-      "type": "journal-article",
-      "authors": [
-        "Ved Prakash Tiwari",
-        "Laetitia Rožić",
-        "Sebastian Hiller"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:0002-7863:online",
-        "crossref:0002-7863:published",
-        "crossref:0002-7863:created",
-        "crossref:1520-5126:online",
-        "crossref:1520-5126:published",
-        "crossref:1520-5126:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41557-026-02260-0",
-      "journal": "Nature Chemistry",
-      "title": "A crystalline uranium Fischer-type carbyne",
-      "abstract": "Abstract Since their discovery in 1973, transition metal Fischer carbynes have become a foundational class of metal–carbon triple bond in organometallic chemistry. However, even though the uranium Fischer carbyne bonding motif has been a fundamental target in f -element chemistry, its isolation has remained challenging. Here we report the synthesis and characterization of the uranium Fischer-type carbyne complex [N″ 3 U(μ-CNN)UN″ 3 ] (N″ = N(SiMe 3 ) 2 ). Single-crystal X-ray diffraction analysis reveals a uranium–carbyne distance of 2.379(15) Å, and density functional theory calculations combined with experimental quantum crystallography Hirshfeld atom refinement reveal the presence of two-electron C→U σ -donation, weak two-electron C→U π -donations and two orthogonal one-electron U→C π -back-bonds, demonstrating σ 2 π 1 π 1 Fischer-type carbyne bonding overall. This work redefines the range of bonding modes for the diazomethanediide ligand and reveals a uranium–carbon triple-bond interaction that is related, yet distinct from transition metal Fischer carbynes, providing a basis to develop and understand f -element carbyne chemistry.",
-      "date": "2026-10-02",
-      "type": "journal-article",
-      "authors": [
-        "John A. Seed",
-        "Jhen-Kuei Yu",
-        "Florian Meurer",
-        "Adam Brookfield",
-        "Floriana Tuna",
-        "Ashley J. Wooles",
-        "Michael Bodensteiner",
-        "Max M. Hansmann",
-        "Stephen T. Liddle"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1755-4330:online",
-        "crossref:1755-4330:published",
-        "crossref:1755-4330:created",
-        "crossref:1755-4349:online",
-        "crossref:1755-4349:published",
-        "crossref:1755-4349:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1038/s41467-026-77957-4",
-      "journal": "Nature Communications",
-      "title": "Cannabinoid modulation of central amygdala population dynamics during threat investigation",
-      "abstract": "",
-      "date": "2026-10-02",
-      "type": "journal-article",
-      "authors": [
-        "Farhana Yasmin",
-        "Saptarnab Naskar",
-        "Danyal Zaidi",
-        "Isaac Kandil",
-        "Michelle Kwon",
-        "Luis E. Rosas-Vidal",
-        "Sachin Patel"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-77903-4",
-      "journal": "Nature Communications",
-      "title": "Tonicity drives collecting duct maturation in the mammalian kidney",
-      "abstract": "",
-      "date": "2026-10-02",
-      "type": "journal-article",
-      "authors": [
-        "Daisuke Inoue",
-        "Koichiro Miike",
-        "Shunsuke Tanigawa",
-        "Kei-ichiro Yasunaga",
-        "Rae Maeda",
-        "Tomoko Ohmori",
-        "Sayoko Fujimura",
-        "Masashi Mukoyama",
-        "Tomomi Kamba",
-        "Jose Aramburu",
-        "Cristina Lopez-Rodriguez",
-        "Yuki Sugiura",
-        "Yuichiro Izumi",
-        "Ryuichi Nishinakamura"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
       "doi": "10.1038/s44160-026-01162-w",
       "journal": "Nature Synthesis",
       "title": "Photoelectrochemical C(sp3)–C(sp3) cross-coupling using native functional groups",
@@ -2412,39 +2289,6 @@
     }
   ],
   "potentialGaps": [
-    {
-      "doi": "10.1038/s41557-026-02260-0",
-      "journal": "Nature Chemistry",
-      "title": "A crystalline uranium Fischer-type carbyne",
-      "abstract": "Abstract Since their discovery in 1973, transition metal Fischer carbynes have become a foundational class of metal–carbon triple bond in organometallic chemistry. However, even though the uranium Fischer carbyne bonding motif has been a fundamental target in f -element chemistry, its isolation has remained challenging. Here we report the synthesis and characterization of the uranium Fischer-type carbyne complex [N″ 3 U(μ-CNN)UN″ 3 ] (N″ = N(SiMe 3 ) 2 ). Single-crystal X-ray diffraction analysis reveals a uranium–carbyne distance of 2.379(15) Å, and density functional theory calculations combined with experimental quantum crystallography Hirshfeld atom refinement reveal the presence of two-electron C→U σ -donation, weak two-electron C→U π -donations and two orthogonal one-electron U→C π -back-bonds, demonstrating σ 2 π 1 π 1 Fischer-type carbyne bonding overall. This work redefines the range of bonding modes for the diazomethanediide ligand and reveals a uranium–carbon triple-bond interaction that is related, yet distinct from transition metal Fischer carbynes, providing a basis to develop and understand f -element carbyne chemistry.",
-      "date": "2026-10-02",
-      "type": "journal-article",
-      "authors": [
-        "John A. Seed",
-        "Jhen-Kuei Yu",
-        "Florian Meurer",
-        "Adam Brookfield",
-        "Floriana Tuna",
-        "Ashley J. Wooles",
-        "Michael Bodensteiner",
-        "Max M. Hansmann",
-        "Stephen T. Liddle"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1755-4330:online",
-        "crossref:1755-4330:published",
-        "crossref:1755-4330:created",
-        "crossref:1755-4349:online",
-        "crossref:1755-4349:published",
-        "crossref:1755-4349:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
     {
       "doi": "10.31635/ccschem.026.202608090",
       "journal": "CCS Chemistry",
