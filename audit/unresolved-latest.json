@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-03T10:07:43.855Z",
+  "generatedAt": "2026-10-03T13:58:52.185Z",
   "auditVersion": 5,
   "timeZone": "Asia/Shanghai",
   "startDate": "2026-09-21",
@@ -8,17 +8,17 @@
   "closureDate": "2026-10-02",
   "summary": {
     "galleryDois": 780,
-    "sourceRecords": 776,
-    "rawMissingFromGallery": 621,
+    "sourceRecords": 783,
+    "rawMissingFromGallery": 628,
     "previouslyReviewedExcluded": 612,
-    "missingFromGallery": 9,
+    "missingFromGallery": 16,
     "potentialGaps": 5,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 1,
     "closureCoverageAnomalies": 5,
     "historicalCoverageLosses": 0,
-    "unresolved": 9,
+    "unresolved": 16,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -139,8 +139,8 @@
         "effectiveStart": "2026-09-21",
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 145,
-        "crossrefCandidateRecords": 145,
+        "unionCandidateRecords": 152,
+        "crossrefCandidateRecords": 152,
         "openAlexCandidateRecords": 124,
         "multiSourceCandidateRecords": 124,
         "closureUnionRecords": 15,
@@ -201,8 +201,8 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 37,
         "crossrefCandidateRecords": 37,
-        "openAlexCandidateRecords": 26,
-        "multiSourceCandidateRecords": 26,
+        "openAlexCandidateRecords": 27,
+        "multiSourceCandidateRecords": 27,
         "closureUnionRecords": 7,
         "closureCrossrefRecords": 7,
         "closureOpenAlexRecords": 0,
@@ -221,11 +221,11 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 56,
         "crossrefCandidateRecords": 56,
-        "openAlexCandidateRecords": 46,
-        "multiSourceCandidateRecords": 46,
+        "openAlexCandidateRecords": 47,
+        "multiSourceCandidateRecords": 47,
         "closureUnionRecords": 14,
         "closureCrossrefRecords": 14,
-        "closureOpenAlexRecords": 4,
+        "closureOpenAlexRecords": 5,
         "coverageWarning": false,
         "closureCoverageWarning": true
       }
@@ -301,11 +301,11 @@
         "openAlexHealthy": true,
         "unionCandidateRecords": 83,
         "crossrefCandidateRecords": 83,
-        "openAlexCandidateRecords": 42,
-        "multiSourceCandidateRecords": 42,
+        "openAlexCandidateRecords": 43,
+        "multiSourceCandidateRecords": 43,
         "closureUnionRecords": 83,
         "closureCrossrefRecords": 83,
-        "closureOpenAlexRecords": 42,
+        "closureOpenAlexRecords": 43,
         "coverageWarning": false,
         "closureCoverageWarning": false
       }
@@ -353,6 +353,72 @@
   ],
   "unresolved": [
     {
+      "doi": "10.1038/s41467-026-78299-x",
+      "journal": "Nature Communications",
+      "title": "DCAF7 regulates hematopoietic stem cell function and differentiation through polycomb repressive complex 1 modulation",
+      "abstract": "",
+      "date": "2026-10-03",
+      "type": "journal-article",
+      "authors": [
+        "Johanna Melo-Cardenas",
+        "Lavanya Bezavada",
+        "Te Ling",
+        "Trent Hall",
+        "Amber Broadhurst",
+        "Anitria Cotton",
+        "Jeremy Chase Crawford",
+        "Amanda Nourse",
+        "Vishwajeeth Pagala",
+        "Kiran Kodali",
+        "Mollie S. Hutton",
+        "Shondra M. Pruett-Miller",
+        "Qiong Zhang",
+        "Wojciech Rosikiewicz",
+        "Hongjian Jin",
+        "Dirk Loeffler",
+        "John D. Crispino"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78054-2",
+      "journal": "Nature Communications",
+      "title": "Design principle for mitigating moisture-induced degradation in 2D halide perovskites",
+      "abstract": "",
+      "date": "2026-10-03",
+      "type": "journal-article",
+      "authors": [
+        "Isaac Metcalf",
+        "Shanize Forte",
+        "Jianlin Zhou",
+        "Claudine Katan",
+        "Esther H. R. Tsai",
+        "Jacky Even",
+        "Aditya D. Mohite"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/s41467-026-78226-0",
       "journal": "Nature Communications",
       "title": "Enantioselective palladium-catalyzed carbonylation of gem-dibromoalkenes to chiral benzo[7]annulenes",
@@ -365,6 +431,34 @@
         "Yuanhang Zhang",
         "Shuang Luo",
         "Qiang Zhu"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77834-0",
+      "journal": "Nature Communications",
+      "title": "Global climate impact of land-surface change driven by radiative effects",
+      "abstract": "Abstract A robust proportionality between radiative forcing and global-mean temperature has been established for most climate drivers. However, land-surface changes are considered an exception due to their potential to alter surface hydrology, introducing non-radiative effects that may rival those from surface albedo changes. Here, comparing Earth-system-model simulations with large-scale perturbations of surface albedo and water availability, we find that the spatially integrated biophysical climate impact is similarly dominated by radiative processes and scales approximately linearly with the resulting shifts in planetary albedo, implying a ~ 0.4 K surface temperature response per W m −2 change in top-of-atmosphere net short-wave radiation. Thus, while non-radiative effects strongly influence local temperatures, their net contribution to the global-mean signal is negligible. The planetary-albedo response is primarily governed by regional cloud-cover characteristics, resulting in a substantially stronger temperature response to land-surface change in mid- and high-latitude regions than in the tropics and subtropics.",
+      "date": "2026-10-03",
+      "type": "journal-article",
+      "authors": [
+        "Philipp de Vrese",
+        "Victor Brovkin",
+        "Moritz Günther",
+        "Sarah M. Kang",
+        "Thomas Raddatz",
+        "Wim Thiery",
+        "Yi Yao"
       ],
       "topics": [],
       "sources": [
@@ -414,6 +508,66 @@
       "reviewPriority": "high"
     },
     {
+      "doi": "10.1038/s41467-026-78257-7",
+      "journal": "Nature Communications",
+      "title": "Joule-heated regenerable carbon dioxide capture filter for demand-controlled ventilation in indoor applications",
+      "abstract": "",
+      "date": "2026-10-03",
+      "type": "journal-article",
+      "authors": [
+        "Minjae Kim",
+        "Joo Young Shin",
+        "Jungwoo Huh",
+        "Gil Jung",
+        "Seonggon Kim",
+        "Bora Kim",
+        "Jae Won Lee",
+        "Hoon Wee",
+        "Youngdeog Koh",
+        "Sam S. Yoon",
+        "Yong Tae Kang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78165-w",
+      "journal": "Nature Communications",
+      "title": "Self-restoration of reactive centers via contaminant-to-catalyst electron replenishment for sustained Fenton-like activity",
+      "abstract": "",
+      "date": "2026-10-03",
+      "type": "journal-article",
+      "authors": [
+        "Yu-Hang Li",
+        "Anjie Chen",
+        "Xiaoyi Hu",
+        "Mingyi Liu",
+        "Nan Xu",
+        "Alistair G. L. Borthwick",
+        "Haodong Ji"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1038/s41467-026-78194-5",
       "journal": "Nature Communications",
       "title": "Spatiotemporally synchronized pure high-even-order dispersion solitons in multimode fiber lasers",
@@ -442,6 +596,60 @@
       "reviewPriority": "normal"
     },
     {
+      "doi": "10.1038/s41467-026-78235-z",
+      "journal": "Nature Communications",
+      "title": "The structural dynamics and molecular coupling in the slow inactivation of a prokaryotic voltage-gated sodium channel",
+      "abstract": "",
+      "date": "2026-10-03",
+      "type": "journal-article",
+      "authors": [
+        "Katsumasa Irie",
+        "Shuo Han",
+        "Sarah Applewhite",
+        "Yuki K. Maeda",
+        "Joshua Vance",
+        "Shizhen Wang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-77942-x",
+      "journal": "Nature Communications",
+      "title": "Top-down semantic predictions align phonetic neuronal dynamics in human superior temporal gyrus",
+      "abstract": "Abstract Speech processing involves a hierarchy of cognitive layers from low-level phonetic to high-level semantic representations. However, interactions are not only feed-forward; feedback mechanisms are crucial for real-time, accurate speech recognition. Yet how distant levels interface during speech processing remains unclear. Here, we analyzed intracortical recordings from 624 neurons across three human participants implanted with microelectrode arrays in the anterior superior temporal gyrus during an auditory semantic categorization task and natural speech perception. We identified distinct neural subspaces, or manifolds, for lexico-semantic and phonetic features, with a functional separation of the corresponding low-dimensional dynamics. We contrasted a bottom-up cumulative and a top-down semantic hypothesis on phonetic-semantic temporal alignment, and found phonetic alignment to word-level semantic representations, signaling top-down prediction. These effects were consistent across participants at the spiking level, and remained undetected in adjacent ECoG recordings. These findings demonstrate the reorganization of neuronal population dynamics supporting phonetic representations during semantic prediction.",
+      "date": "2026-10-03",
+      "type": "journal-article",
+      "authors": [
+        "Pavo Orepić",
+        "Wilson Truccolo",
+        "Eric Halgren",
+        "Sydney S. Cash",
+        "Anne-Lise Giraud",
+        "Timothée Proix"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
       "doi": "10.1021/acscatal.6c06578",
       "journal": "ACS Catalysis",
       "title": "Redefining the Value Proposition of Photoelectrochemical Systems: Unique Reaction Knobs for Selective Chemical Synthesis",
@@ -453,11 +661,19 @@
         "Lan Wen",
         "Fatwa F. Abdi"
       ],
-      "topics": [],
+      "topics": [
+        "Advanced Photocatalysis Techniques",
+        "Renewable Energy, Sustainability and the Environment",
+        "Energy",
+        "Physical Sciences",
+        "TiO2 Photocatalysis and Solar Cells",
+        "Radical Photochemical Reactions"
+      ],
       "sources": [
         "crossref:2155-5435:online",
         "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
+        "crossref:2155-5435:created",
+        "openalex:S37391459"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
