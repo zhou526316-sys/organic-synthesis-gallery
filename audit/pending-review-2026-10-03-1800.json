@@ -1,0 +1,348 @@
+{
+  "schemaVersion": 1,
+  "publicationSlot": "2026-10-03T18:00:00+08:00",
+  "generatedAt": "2026-10-03T10:00:00.546Z",
+  "handoffGeneratedAt": "2026-10-03T09:06:06.033Z",
+  "sourceReviewFile": "audit/review-2026-10-03-1800.json",
+  "items": [
+    {
+      "doi": "10.1021/acscatal.6c06578",
+      "journal": "ACS Catalysis",
+      "title": "Redefining the Value Proposition of Photoelectrochemical Systems: Unique Reaction Knobs for Selective Chemical Synthesis",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Kaijian Zhu",
+        "Lan Wen",
+        "Fatwa F. Abdi"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2155-5435:online",
+        "crossref:2155-5435:published",
+        "crossref:2155-5435:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "evidencePages": [
+        "https://doi.org/10.1021/acscatal.6c06578"
+      ],
+      "evidenceSource": "fresh compact Crossref/OpenAlex metadata; abstract unavailable",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "titleZh": null,
+      "reason": "题名高度相关于选择性化学合成，但当前仅取得题名/元数据，无法确认文章类型及是否包含原创、可推广制备方法。",
+      "evidenceBasis": "fresh compact对该DOI的abstract为空；ACS索引页只能确认题名和文章历史，直接页面读取受阻，未取得摘要、反应实例或文献类型。",
+      "challengeReason": "题名可能是Perspective/观点性文章，也可能总结原创选择性合成策略；在缺少摘要和文章类型时，直接include或按综述exclude都会过度推断。",
+      "evidenceNeeded": "ACS出版社文章类型、摘要、原创反应实例、底物/产物范围与分离制备证据。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.1021/acscatal.6c06578",
+        "https://pubs.acs.org/doi/10.1021/acscatal.6c06578",
+        "https://pubs.acs.org/accacs/latest-articles"
+      ],
+      "nextAction": "通过既有Tampermonkey/VPN Bridge确认ACS文章类型并读取摘要/正文；若为Perspective/Review则排除，若有原创一般合成范围再评估纳入。",
+      "originalDate": "2026-10-01",
+      "sourceReview": "audit/prepublish-review-2026-10-03-0800.json",
+      "carryForward": true,
+      "decisionReuse": {
+        "sourceReviewFile": "audit/prepublish-review-2026-10-03-0800.json",
+        "sourceReviewBlobSha": "fff0a29ed56637b00184ac00665988379b195834",
+        "metadataUnchanged": true,
+        "applicableScopeRulesVersion": "scope-2026-10-02-v1",
+        "compatibilityRechallengedAt": "2026-10-03T17:11:30+08:00",
+        "conclusion": "scope与corrections blob未变化；再次检查可取得的出版社/索引证据，原evidenceNeeded仍未完整满足，继续pending。"
+      },
+      "sourceReviewFile": "audit/review-2026-10-03-1800.json",
+      "nextReviewSlot": "2026-10-04T08:00:00+08:00"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608090",
+      "journal": "CCS Chemistry",
+      "title": "Electric-Field Catalysis of Iminium Chemistry",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Shen-Yi Guo",
+        "Miguel Paraja",
+        "Stefan Matile"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2096-5745:published"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608090",
+        "https://archive-ouverte.unige.ch/unige:195810",
+        "https://zenodo.org/records/20719768"
+      ],
+      "evidenceSource": "fresh compact Crossref/OpenAlex metadata; abstract unavailable",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "当前仅取得题名/元数据，缺少决定主要贡献与可推广制备范围的摘要或正文证据。",
+      "evidenceBasis": "fresh compact仍无abstract；2026-10-03补审取得新的文章特定证据：University of Geneva Archive ouverte将该DOI明确标为CCS Chemistry的Scientific article（2026-09-04 first online），并提供公开的published version记录；Matile课题组Zenodo原始数据集明确说明数据按Supporting Information组织，文件包含“2 Synthesis.zip”“3 Electric-Field Catalysis.zip”“4 Catalysis in Stirred Solutions.zip”和“5 Constant-Potential Amperometry.zip”。这些证据确认论文包含真实实验性合成/催化工作，但仍未取得具体亚胺/亚胺鎓底物、产物系列、分离收率和足以证明可推广制备范围的正文/SI事实，因此不能解除原范围证据缺口。",
+      "challengeReason": "新证据确认这不是仅有题名的观点性条目，并且确有实验性Synthesis/Electric-Field Catalysis数据，增强其合成相关性；但“存在合成数据文件”仍不能替代一般制备适用性证据。未取得具体底物—产物范围与分离收率前，include和exclude都仍可能过度推断，因此两遍继续pending。",
+      "evidenceNeeded": "需published article/SI确认具体亚胺/亚胺鎓底物与产物、反应/底物范围、分离收率，以及电场催化是否建立可迁移的一般制备方法，而非主要为界面电场/机理效应。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608090",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608090",
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608090",
+        "https://archive-ouverte.unige.ch/unige:195810",
+        "https://zenodo.org/records/20719768"
+      ],
+      "nextAction": "通过既有Tampermonkey/VPN Bridge或可直接读取的published article/SI文本继续核对反应/底物范围和分离产物；不执行OA自动提图，不因已确认Scientific article或存在Synthesis数据文件就提前include。",
+      "originalDate": "2026-10-01",
+      "sourceReview": "audit/prepublish-review-2026-10-01-0800.json",
+      "carryForward": true,
+      "decisionReuse": {
+        "sourceReviewFile": "audit/prepublish-review-2026-10-03-0800.json",
+        "sourceReviewBlobSha": "fff0a29ed56637b00184ac00665988379b195834",
+        "metadataUnchanged": true,
+        "applicableScopeRulesVersion": "scope-2026-10-02-v1",
+        "compatibilityRechallengedAt": "2026-10-03T17:11:30+08:00",
+        "conclusion": "scope与corrections blob未变化；再次检查可取得的出版社/索引证据，原evidenceNeeded仍未完整满足，继续pending。"
+      },
+      "sourceReviewFile": "audit/review-2026-10-03-1800.json",
+      "nextReviewSlot": "2026-10-04T08:00:00+08:00"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607590",
+      "journal": "CCS Chemistry",
+      "title": "Enantioselective Synthesis and Characterization of Strained [8]–[9]Paracyclophanes",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Jia Li",
+        "Ziyang Dong",
+        "Chang Yuan",
+        "Changgui Zhao"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2096-5745:published"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202607590"
+      ],
+      "evidenceSource": "fresh compact Crossref/OpenAlex metadata; abstract unavailable",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "当前仅取得题名/元数据，缺少决定主要贡献与可推广制备范围的摘要或正文证据。",
+      "evidenceBasis": "fresh compact仍无abstract；本轮出版社索引片段新增“highly enantioselective synthesis of [8]- and [9]paracyclophanes via a sequential strategy”，证明存在真实合成，但仍未给出此前evidenceNeeded要求的起始物类别、产物系列、分离收率和方法可迁移性，不能仅凭摘要开头清空pending。",
+      "challengeReason": "题名可能对应真实合成/聚合物转化，不能反向草率排除；同样不能仅凭题名中的Catalysis/Synthesis/Chemistry纳入，故两遍均保留pending。",
+      "evidenceNeeded": "需出版社摘要/正文或SI确认[8]–[9]对环芳烷的起始物、对映选择性构建步骤、底物系列、收率与构型证据，不能仅凭“Synthesis”题名判定一般方法。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202607590",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607590",
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202607590"
+      ],
+      "nextAction": "通过既有Tampermonkey/VPN Bridge读取出版社摘要、正文反应范围或SI；保留原日期和历史来源，不以题名或访问失败裁决。",
+      "originalDate": "2026-10-01",
+      "sourceReview": "audit/prepublish-review-2026-10-01-0800.json",
+      "carryForward": true,
+      "decisionReuse": {
+        "sourceReviewFile": "audit/prepublish-review-2026-10-03-0800.json",
+        "sourceReviewBlobSha": "fff0a29ed56637b00184ac00665988379b195834",
+        "metadataUnchanged": true,
+        "applicableScopeRulesVersion": "scope-2026-10-02-v1",
+        "compatibilityRechallengedAt": "2026-10-03T17:11:30+08:00",
+        "conclusion": "scope与corrections blob未变化；再次检查可取得的出版社/索引证据，原evidenceNeeded仍未完整满足，继续pending。"
+      },
+      "sourceReviewFile": "audit/review-2026-10-03-1800.json",
+      "nextReviewSlot": "2026-10-04T08:00:00+08:00"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607612",
+      "journal": "CCS Chemistry",
+      "title": "Light-Gated Dynamic Covalent Chemistry with Spirothiopyran for Spatiotemporal Control of Bond Formation and Exchange",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Shuailong Zhou",
+        "Hanbo Xu",
+        "Yingjie Liu",
+        "Jun Lin",
+        "Chuang Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2096-5745:published"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202607612"
+      ],
+      "evidenceSource": "fresh compact Crossref/OpenAlex metadata; abstract unavailable",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "当前仅取得题名/元数据，缺少决定主要贡献与可推广制备范围的摘要或正文证据。",
+      "evidenceBasis": "fresh compact仍无abstract；本轮确认CCS官方文章/摘要页存在但访问返回403，未取得光控键形成/交换的底物、产物或可迁移制备范围。",
+      "challengeReason": "题名可能对应真实合成/聚合物转化，不能反向草率排除；同样不能仅凭题名中的Catalysis/Synthesis/Chemistry纳入，故两遍均保留pending。",
+      "evidenceNeeded": "需出版社摘要/正文或SI确认螺硫吡喃参与的成键/交换反应底物范围、可分离产物及是否属于通用动态共价制备而非材料响应现象。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202607612",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607612",
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202607612"
+      ],
+      "nextAction": "通过既有Tampermonkey/VPN Bridge读取出版社摘要、正文反应范围或SI；保留原日期和历史来源，不以题名或访问失败裁决。",
+      "originalDate": "2026-10-01",
+      "sourceReview": "audit/prepublish-review-2026-10-01-0800.json",
+      "carryForward": true,
+      "decisionReuse": {
+        "sourceReviewFile": "audit/prepublish-review-2026-10-03-0800.json",
+        "sourceReviewBlobSha": "fff0a29ed56637b00184ac00665988379b195834",
+        "metadataUnchanged": true,
+        "applicableScopeRulesVersion": "scope-2026-10-02-v1",
+        "compatibilityRechallengedAt": "2026-10-03T17:11:30+08:00",
+        "conclusion": "scope与corrections blob未变化；再次检查可取得的出版社/索引证据，原evidenceNeeded仍未完整满足，继续pending。"
+      },
+      "sourceReviewFile": "audit/review-2026-10-03-1800.json",
+      "nextReviewSlot": "2026-10-04T08:00:00+08:00"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202607659",
+      "journal": "CCS Chemistry",
+      "title": "Upcycling of Epoxy Resins via An Oxidation–Cope Elimination Pathway Using Organic Solvent",
+      "abstract": "",
+      "date": "2026-10-01",
+      "type": "journal-article",
+      "authors": [
+        "Beitao Liu",
+        "Xiaotong Pan",
+        "Cijian Zhang",
+        "Leiming Sun",
+        "Lei Shi",
+        "Francisco Zaera",
+        "Xigao Jian",
+        "Zhihuan Weng"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2096-5745:published"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202607659"
+      ],
+      "evidenceSource": "fresh compact Crossref/OpenAlex metadata; abstract unavailable",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "当前仅取得题名/元数据，缺少决定主要贡献与可推广制备范围的摘要或正文证据。",
+      "evidenceBasis": "fresh compact仍无abstract；本轮出版社索引与预印本检索只说明胺固化环氧树脂可经DMSO溶解和氧化–Cope消除回收，未取得具体产物、分离收率、树脂/底物范围及其是否属于可推广聚合物化学方法。",
+      "challengeReason": "题名可能对应真实合成/聚合物转化，不能反向草率排除；同样不能仅凭题名中的Catalysis/Synthesis/Chemistry纳入，故两遍均保留pending。",
+      "evidenceNeeded": "需出版社摘要/正文或SI确认环氧树脂氧化-Cope消除的实际产物、键断裂/转化范围、分离或物料衡算，以及主要贡献是否为聚合物化学升级转化。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202607659",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607659",
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202607659"
+      ],
+      "nextAction": "通过既有Tampermonkey/VPN Bridge读取出版社摘要、正文反应范围或SI；保留原日期和历史来源，不以题名或访问失败裁决。",
+      "originalDate": "2026-10-01",
+      "sourceReview": "audit/prepublish-review-2026-10-01-0800.json",
+      "carryForward": true,
+      "decisionReuse": {
+        "sourceReviewFile": "audit/prepublish-review-2026-10-03-0800.json",
+        "sourceReviewBlobSha": "fff0a29ed56637b00184ac00665988379b195834",
+        "metadataUnchanged": true,
+        "applicableScopeRulesVersion": "scope-2026-10-02-v1",
+        "compatibilityRechallengedAt": "2026-10-03T17:11:30+08:00",
+        "conclusion": "scope与corrections blob未变化；再次检查可取得的出版社/索引证据，原evidenceNeeded仍未完整满足，继续pending。"
+      },
+      "sourceReviewFile": "audit/review-2026-10-03-1800.json",
+      "nextReviewSlot": "2026-10-04T08:00:00+08:00"
+    },
+    {
+      "doi": "10.31635/ccschem.026.202608472",
+      "journal": "CCS Chemistry",
+      "title": "From Non-Aqueous to Aqueous: Water-Engaged In Situ Electrochemical Reconstruction of Carbazoles",
+      "abstract": "",
+      "date": "2026-09-27",
+      "type": "journal-article",
+      "authors": [
+        "Jiayao Li",
+        "Wenjing Huang",
+        "Liya Ma",
+        "Zhejun Li"
+      ],
+      "topics": [
+        "Electrochemical Analysis and Applications",
+        "Electrochemistry",
+        "Chemistry",
+        "Physical Sciences",
+        "Environmental remediation with nanomaterials",
+        "CO2 Reduction Techniques and Catalysts"
+      ],
+      "sources": [
+        "crossref:2096-5745:online",
+        "crossref:2096-5745:published",
+        "crossref:2096-5745:created",
+        "openalex:S4210239486"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal",
+      "evidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608472"
+      ],
+      "evidenceSource": "fresh compact Crossref/OpenAlex metadata; abstract unavailable",
+      "decision": "pending",
+      "firstPassDecision": "pending",
+      "challengeDecision": "pending",
+      "reason": "当前仅取得题名/元数据，缺少决定主要贡献与可推广制备范围的摘要或正文证据。",
+      "evidenceBasis": "fresh compact仍无abstract；本轮CCS索引片段仅显示文章讨论溶剂依赖氧化还原化学，未取得水参与原位电化学重构的具体咔唑底物、产物、数量和分离证据。",
+      "challengeReason": "题名可能对应真实合成/聚合物转化，不能反向草率排除；同样不能仅凭题名中的Catalysis/Synthesis/Chemistry纳入，故两遍均保留pending。",
+      "evidenceNeeded": "需出版社摘要/正文或SI确认咔唑电化学重构的具体起始物、成键/骨架变化、底物范围、分离收率及水参与是否形成一般制备方法。",
+      "attemptedEvidencePages": [
+        "https://doi.org/10.31635/ccschem.026.202608472",
+        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608472",
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608472"
+      ],
+      "nextAction": "通过既有Tampermonkey/VPN Bridge读取出版社摘要、正文反应范围或SI；保留原日期和历史来源，不以题名或访问失败裁决。",
+      "originalDate": "2026-09-27",
+      "sourceReview": "audit/prepublish-review-2026-10-01-0800.json",
+      "carryForward": true,
+      "decisionReuse": {
+        "sourceReviewFile": "audit/prepublish-review-2026-10-03-0800.json",
+        "sourceReviewBlobSha": "fff0a29ed56637b00184ac00665988379b195834",
+        "metadataUnchanged": true,
+        "applicableScopeRulesVersion": "scope-2026-10-02-v1",
+        "compatibilityRechallengedAt": "2026-10-03T17:11:30+08:00",
+        "conclusion": "scope与corrections blob未变化；再次检查可取得的出版社/索引证据，原evidenceNeeded仍未完整满足，继续pending。"
+      },
+      "sourceReviewFile": "audit/review-2026-10-03-1800.json",
+      "nextReviewSlot": "2026-10-04T08:00:00+08:00"
+    }
+  ],
+  "note": "Per-release deferrals only. Merge with the existing durable backlog; do not replace or drop older pending records."
+}
