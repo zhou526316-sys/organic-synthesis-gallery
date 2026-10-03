@@ -1,4 +1,4 @@
-name: Bridge 2.2.35 Angew production TOC regression
+name: Bridge 2.2.36 Angew production TOC regression
 
 on:
   pull_request:
@@ -37,7 +37,7 @@ jobs:
           ! grep -F "getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json" public/toc-mainline.user.js
           grep -F "MEDIA_INVENTORY_ENDPOINT" public/toc-mainline.user.js
           grep -F "productionTocStored" public/toc-mainline.user.js
-          grep -F "mediaControllerRevision:'2.2.35'" cloudflare/worker/src/index.js
+          grep -F "mediaControllerRevision:'2.2.36'" cloudflare/worker/src/index.js
           grep -F "officialTocAutoPromotion:true" cloudflare/worker/src/index.js
           grep -F "promoteOfficialLocalTocs" cloudflare/worker/src/local-captures.js
           grep -F "Promote verified official TOCs into production" .github/workflows/deploy-worker-frontend.yml
@@ -56,7 +56,7 @@ jobs:
           npm install --no-audit --no-fund
           npm run check
 
-      - name: Build exact Bridge 2.2.35 installer
+      - name: Build exact Bridge 2.2.36 installer
         env:
           TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
           TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
@@ -67,15 +67,15 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.35' public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.35';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.36' public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.36';" public/gallery-vpn-bridge.user.js
           grep -F "productionTocStored" public/gallery-vpn-bridge.user.js
           grep -F "wiley_ga_embedded_article_data" public/gallery-vpn-bridge.user.js
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: tm235-angew-production-toc-tested
+          name: tm236-angew-production-toc-tested
           path: |
             public/gallery-vpn-bridge.user.js
             public/toc-mainline.user.js
