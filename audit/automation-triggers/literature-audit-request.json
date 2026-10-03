@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-03T10:07:01.723Z",
-  "requestedBy": "fixed-release-postdeploy-20261003-1800",
-  "publicationSlot": "2026-10-03T18:00:00+08:00",
-  "baselineMainSha": "2a7161b6facba6745bf6c1535e16fa76f01a0511",
-  "reason": "Post-release DOI-union audit after successful fixed-slot 18:00 delivery of the authorized 780-card snapshot. No new literature admission; verify deployed production union, deferred/pending carryover, source health and closure state before the post-release quality gate."
+  "requestedAt": "2026-10-03T23:07:30.000Z",
+  "requestedBy": "prepublish-primary-20261004-0800",
+  "publicationSlot": "2026-10-04T08:00:00+08:00",
+  "baselineMainSha": "b725f788af409e5a7b3a1dc0239283a0e2d92e31",
+  "reason": "Fresh prepublish DOI-union audit for the 2026-10-04 08:00 Asia/Shanghai slot. Existing latest/compact snapshot predates the 06:55 slot window; run canonical multi-ISSN Crossref online/published/created plus OpenAlex union, created/deposit rescue, safety tail and verifiedThrough catch-up. Do not mutate production literature data."
 }
