@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-02T23:12:00.000Z",
-  "requestedBy": "prepublish-primary-20261003-0800",
+  "requestedAt": "2026-10-03T00:06:00.000Z",
+  "requestedBy": "fixed-release-postrelease-20261003-0800",
   "publicationSlot": "2026-10-03T08:00:00+08:00",
-  "baselineMainSha": "63d3e5ba59ffa080af4d9e08c29ade0ee79b01b0",
-  "reason": "Fresh prepublish discovery audit required for the 2026-10-03 08:00 fixed slot because the persisted latest/compact generation predates the 06:55 Asia/Shanghai freshness boundary and ends at 2026-10-02. Run the canonical audit once against current main; do not mutate production literature or media."
+  "baselineMainSha": "26f927c8e56aeba8fa0e9d82d75ecb72b2243c57",
+  "reason": "Post-release DOI-union audit after verified 2026-10-03 08:00 deployment. Recompute discovery/closure against the 779-card production snapshot and preserve pending/backlog semantics; do not mutate production literature or media."
 }
