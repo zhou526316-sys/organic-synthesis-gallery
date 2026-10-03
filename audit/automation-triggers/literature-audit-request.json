@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-03T09:06:00.000Z",
-  "requestedBy": "prepublish-primary-20261003-1800-retry-1",
+  "requestedAt": "2026-10-03T10:07:01.723Z",
+  "requestedBy": "fixed-release-postdeploy-20261003-1800",
   "publicationSlot": "2026-10-03T18:00:00+08:00",
-  "baselineMainSha": "5ff9c70d3de6ba09fe440ef2dd8193e3e53c613e",
-  "reason": "Retry after the first 18:00 prepublish audit completed with criticalSourceFailures=16 and sourceFamilyGaps=16, indicating a transient all-source-family failure. Preserve production literature/media and regenerate same-generation latest/compact."
+  "baselineMainSha": "2a7161b6facba6745bf6c1535e16fa76f01a0511",
+  "reason": "Post-release DOI-union audit after successful fixed-slot 18:00 delivery of the authorized 780-card snapshot. No new literature admission; verify deployed production union, deferred/pending carryover, source health and closure state before the post-release quality gate."
 }
