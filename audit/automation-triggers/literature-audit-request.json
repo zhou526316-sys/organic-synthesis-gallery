@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-03T00:06:00.000Z",
-  "requestedBy": "fixed-release-postrelease-20261003-0800",
-  "publicationSlot": "2026-10-03T08:00:00+08:00",
-  "baselineMainSha": "26f927c8e56aeba8fa0e9d82d75ecb72b2243c57",
-  "reason": "Post-release DOI-union audit after verified 2026-10-03 08:00 deployment. Recompute discovery/closure against the 779-card production snapshot and preserve pending/backlog semantics; do not mutate production literature or media."
+  "requestedAt": "2026-10-03T09:04:00.000Z",
+  "requestedBy": "prepublish-primary-20261003-1800",
+  "publicationSlot": "2026-10-03T18:00:00+08:00",
+  "baselineMainSha": "101ceb93f1d50e543ce6d173333a246c9f22aa5b",
+  "reason": "Fresh prepublish DOI-union audit required for the 2026-10-03 18:00 Asia/Shanghai slot. Preserve production literature/media; generate same-generation latest and complete compact handoff for semantic review."
 }
