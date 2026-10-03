@@ -3,7 +3,7 @@
   "reviewType": "prepublish-primary",
   "publicationSlot": "2026-10-03T18:00:00+08:00",
   "createdAt": "2026-10-03T17:11:30+08:00",
-  "evidenceAsOf": "2026-10-03T17:11:30+08:00",
+  "evidenceAsOf": "2026-10-03T17:35:00+08:00",
   "executionMode": "github-runner-handoff-plus-article-specific-semantic-review",
   "phase": "prepublish_ready_with_pending",
   "status": "ready_with_pending",
@@ -611,22 +611,26 @@
       "safetyTail": false,
       "reviewPriority": "high",
       "evidencePages": [
-        "https://doi.org/10.31635/ccschem.026.202608090"
+        "https://doi.org/10.31635/ccschem.026.202608090",
+        "https://archive-ouverte.unige.ch/unige:195810",
+        "https://zenodo.org/records/20719768"
       ],
       "evidenceSource": "fresh compact Crossref/OpenAlex metadata; abstract unavailable",
       "decision": "pending",
       "firstPassDecision": "pending",
       "challengeDecision": "pending",
       "reason": "当前仅取得题名/元数据，缺少决定主要贡献与可推广制备范围的摘要或正文证据。",
-      "evidenceBasis": "fresh compact仍无abstract；本轮确认CCS官方全文/摘要页存在但直接访问返回403，检索片段只称外加电场催化亚胺化学，仍未给底物、产物或分离范围。",
-      "challengeReason": "题名可能对应真实合成/聚合物转化，不能反向草率排除；同样不能仅凭题名中的Catalysis/Synthesis/Chemistry纳入，故两遍均保留pending。",
-      "evidenceNeeded": "需出版社摘要/正文或SI确认具体亚胺底物、产物、反应数量、分离收率及电场催化是否提供可推广制备方法，而非主要为界面电场机理。",
+      "evidenceBasis": "fresh compact仍无abstract；2026-10-03补审取得新的文章特定证据：University of Geneva Archive ouverte将该DOI明确标为CCS Chemistry的Scientific article（2026-09-04 first online），并提供公开的published version记录；Matile课题组Zenodo原始数据集明确说明数据按Supporting Information组织，文件包含“2 Synthesis.zip”“3 Electric-Field Catalysis.zip”“4 Catalysis in Stirred Solutions.zip”和“5 Constant-Potential Amperometry.zip”。这些证据确认论文包含真实实验性合成/催化工作，但仍未取得具体亚胺/亚胺鎓底物、产物系列、分离收率和足以证明可推广制备范围的正文/SI事实，因此不能解除原范围证据缺口。",
+      "challengeReason": "新证据确认这不是仅有题名的观点性条目，并且确有实验性Synthesis/Electric-Field Catalysis数据，增强其合成相关性；但“存在合成数据文件”仍不能替代一般制备适用性证据。未取得具体底物—产物范围与分离收率前，include和exclude都仍可能过度推断，因此两遍继续pending。",
+      "evidenceNeeded": "需published article/SI确认具体亚胺/亚胺鎓底物与产物、反应/底物范围、分离收率，以及电场催化是否建立可迁移的一般制备方法，而非主要为界面电场/机理效应。",
       "attemptedEvidencePages": [
         "https://doi.org/10.31635/ccschem.026.202608090",
         "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202608090",
-        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608090"
+        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202608090",
+        "https://archive-ouverte.unige.ch/unige:195810",
+        "https://zenodo.org/records/20719768"
       ],
-      "nextAction": "通过既有Tampermonkey/VPN Bridge读取出版社摘要、正文反应范围或SI；保留原日期和历史来源，不以题名或访问失败裁决。",
+      "nextAction": "通过既有Tampermonkey/VPN Bridge或可直接读取的published article/SI文本继续核对反应/底物范围和分离产物；不执行OA自动提图，不因已确认Scientific article或存在Synthesis数据文件就提前include。",
       "originalDate": "2026-10-01",
       "sourceReview": "audit/prepublish-review-2026-10-01-0800.json",
       "carryForward": true,
@@ -1867,10 +1871,11 @@
     "10.1038/s41467-026-77973-4的living CDSA被反向挑战后仍排除：属于已有聚合物片晶自组装，不是聚合/单体/共价链架构方法。",
     "10.1021/acscatal.6c06578及五项CCS条目继续pending；未用题名或访问受阻代替逐篇裁决。",
     "10.1038/s44160-026-01164-8沿用已部署并线上验证的deletion-only纠错；本轮不会从旧树恢复。",
-    "未写入生产卡片、媒体或Pages部署。"
+    "未写入生产卡片、媒体或Pages部署。",
+    "17:35补审为10.31635/ccschem.026.202608090补入UNIGE published-version记录与Zenodo原始数据证据；新证据确认Scientific article及真实合成/催化实验，但未填补具体底物—产物范围与分离收率缺口，故仍pending且计数/白名单不变。"
   ],
   "nonBlockingDiscoveryWarnings": [
     "CCS Chemistry存在健康来源族之间的覆盖差异；五刊closureCoverageWarning继续持有verifiedThrough，但不阻断已逐篇审核的白名单。"
   ],
-  "updatedAt": "2026-10-03T17:15:00+08:00"
+  "updatedAt": "2026-10-03T17:35:00+08:00"
 }
