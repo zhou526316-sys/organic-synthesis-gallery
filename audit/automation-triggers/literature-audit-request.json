@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-03T09:04:00.000Z",
-  "requestedBy": "prepublish-primary-20261003-1800",
+  "requestedAt": "2026-10-03T09:06:00.000Z",
+  "requestedBy": "prepublish-primary-20261003-1800-retry-1",
   "publicationSlot": "2026-10-03T18:00:00+08:00",
-  "baselineMainSha": "101ceb93f1d50e543ce6d173333a246c9f22aa5b",
-  "reason": "Fresh prepublish DOI-union audit required for the 2026-10-03 18:00 Asia/Shanghai slot. Preserve production literature/media; generate same-generation latest and complete compact handoff for semantic review."
+  "baselineMainSha": "5ff9c70d3de6ba09fe440ef2dd8193e3e53c613e",
+  "reason": "Retry after the first 18:00 prepublish audit completed with criticalSourceFailures=16 and sourceFamilyGaps=16, indicating a transient all-source-family failure. Preserve production literature/media and regenerate same-generation latest/compact."
 }
