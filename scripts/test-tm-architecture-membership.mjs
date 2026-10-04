@@ -93,7 +93,7 @@ test('observer result is attached to existing diagnostic trace without changing 
   assert.ok(source.includes("stage:'architecture_membership'"));
   assert.ok(source.includes("event:'verified_snapshot'"));
   assert.ok(source.includes("architectureState.cutoff"));
-  assert.ok(source.includes("trace:[context].concat(architectureEvent?[architectureEvent]:[]).concat(events)"));
+  assert.ok(source.includes("trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[])"));
 });
 test('self-contained Bridge gets an install-version bump while capture protocol stays fixed',()=>{
   const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
