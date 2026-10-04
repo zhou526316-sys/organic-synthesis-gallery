@@ -19,6 +19,7 @@ const SHARED_CARD_HIGHLIGHT_MS = 20_000;
 
 let deepLinkFocused = false;
 let deepLinkSummaryOpened = false;
+let deepLinkSummaryOpening = false;
 let focusTimer: number | null = null;
 let highlightUntil = 0;
 let highlightExpiryTimer: number | null = null;
@@ -641,16 +642,37 @@ function deepLinkDoi(): string | null {
 }
 
 function deepLinkSummaryRequested(): boolean {
-  try { return new URL(window.location.href).searchParams.get('summary') === '1'; }
-  catch { return false; }
+  try {
+    const url = new URL(window.location.href);
+    return Boolean(normalizeDoi(url.searchParams.get('doi'))) && url.searchParams.get('summary') !== '0';
+  } catch {
+    return false;
+  }
 }
 
+type SummaryActionHost = HTMLElement & {
+  openSummaryFromDeepLink?: () => void;
+};
+
 function openDeepLinkSummary(card: HTMLElement): void {
-  if (!deepLinkSummaryRequested() || deepLinkSummaryOpened) return;
-  const actions = card.querySelector<HTMLElement>('gallery-paper-actions');
+  if (!deepLinkSummaryRequested() || deepLinkSummaryOpened || deepLinkSummaryOpening) return;
+  const actions = card.querySelector<SummaryActionHost>('gallery-paper-actions');
   if (!actions) return;
-  deepLinkSummaryOpened = true;
-  actions.dispatchEvent(new CustomEvent('gallery-open-summary'));
+
+  if (!customElements.get('gallery-paper-actions')) {
+    void customElements.whenDefined('gallery-paper-actions').then(() => scheduleDeepLinkFocus());
+    return;
+  }
+
+  if (typeof actions.openSummaryFromDeepLink !== 'function') return;
+  deepLinkSummaryOpening = true;
+  actions.openSummaryFromDeepLink();
+  requestAnimationFrame(() => {
+    const opened = Boolean(actions.shadowRoot?.querySelector('.drawer.summary-drawer'));
+    deepLinkSummaryOpened = opened;
+    deepLinkSummaryOpening = false;
+    if (!opened) window.setTimeout(scheduleDeepLinkFocus, 80);
+  });
 }
 
 function clearSharedHighlight(): void {
