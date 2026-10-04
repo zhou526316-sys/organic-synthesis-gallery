@@ -44,6 +44,19 @@ jobs:
           node scripts/validate-tm220-artifacts.mjs public
           grep -F '// @version      2.2.42' public/gallery-vpn-bridge.user.js
           grep -F '// @version      6.2.24' public/toc-mainline.user.js
+      - name: Read raw RSC Crossref date semantics
+        run: |
+          node --input-type=module - <<'JS'
+          const journals=[['Chemical Science','2041-6520'],['Green Chemistry','1463-9262']];
+          const date=x=>x?.['date-parts']?.[0]?.join('-')||'';
+          for(const [name,issn] of journals){
+            const q=new URLSearchParams({filter:'from-created-date:2026-09-19,until-created-date:2026-10-04',rows:'12'});
+            const r=await fetch('https://api.crossref.org/journals/'+issn+'/works?'+q,{headers:{accept:'application/json','user-agent':'OrganicSynthesisGalleryRepair/1'}});
+            if(!r.ok)throw Error(name+' Crossref HTTP '+r.status);
+            const data=await r.json();
+            console.log('RSC_RAW_DATE_SAMPLE '+JSON.stringify({journal:name,items:(data.message?.items||[]).map(x=>({doi:x.DOI,title:x.title?.[0]||'',type:x.type||'',created:date(x.created),publishedOnline:date(x['published-online']),publishedPrint:date(x['published-print']),published:date(x.published),issued:date(x.issued),deposited:date(x.deposited)}))}));
+          }
+          JS
       - name: Real activation-date backfill audit
         env:
           AUDIT_START: '2026-09-19'
