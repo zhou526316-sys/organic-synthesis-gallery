@@ -69,6 +69,7 @@ import {
   verifyPasswordRegistration,
   wechatNotify,
 } from './integrations.js';
+import { bootstrapPrivatePdfOwner, openPrivatePdf, privatePdfStatus, servePrivatePdf } from './private-pdf.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
   ...init,
@@ -212,6 +213,12 @@ async function handleApi(request, env, ctx) {
       migration: true,
       d1: Boolean(env.DB),
       r2: Boolean(env.MEDIA),
+      privatePdf: {
+        bucket: Boolean(env.PDF_PRIVATE),
+        readEnabled: String(env.PRIVATE_PDF_READ_ENABLED || '') === '1',
+        captureEnabled: String(env.PRIVATE_PDF_CAPTURE_ENABLED || '') === '1',
+        processingEnabled: String(env.PRIVATE_PDF_PROCESSING_ENABLED || '') === '1',
+      },
       ai: Boolean(env.AI),
       summaryMode: 'scheduled_chatgpt_daily_no_api',
       summaryPublicationTime: '12:00 Asia/Shanghai',
@@ -308,6 +315,18 @@ async function handleApi(request, env, ctx) {
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/integrations') {
     return resultResponse(integrationStatus(env), cors);
+  }
+  if (request.method === 'GET' && url.pathname === '/api/user-ui/private-pdf/status') {
+    return resultResponse(await privatePdfStatus(request, env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/private-pdf/open') {
+    return resultResponse(await openPrivatePdf(request, env), cors);
+  }
+  if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/api/user-ui/private-pdf/file') {
+    return servePrivatePdf(request, env, cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/private-pdf/bootstrap-owner') {
+    return resultResponse(await bootstrapPrivatePdfOwner(request, env, await readJson(request)), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/admin/email/probe') {
     const authError = requireWriteAuthorization(request, env);
