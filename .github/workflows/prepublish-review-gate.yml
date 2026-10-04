@@ -106,7 +106,7 @@ jobs:
           set -euo pipefail
           node scripts/validate-prepublish-review.mjs "${{ steps.locate.outputs.review }}" --allow-deferred --require-ready | tee "$RUNNER_TEMP/prepublish-readiness.json"
 
-      - name: Require fresh snapshot for the target 08 or 18 slot
+      - name: Require fresh snapshot for the target 08:00 slot
         if: always() && steps.locate.outputs.review != ''
         shell: bash
         run: |
