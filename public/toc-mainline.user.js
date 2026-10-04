@@ -3951,14 +3951,16 @@ function embeddedJobDois(value) {
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.39')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var architectureMembership=await observeArchitectureMembership(queue);
+      if(!architectureMembership.ok)throw new Error('architecture_active_set_unverified:'+String(architectureMembership.error||'unknown'));
+      var activeDois=new Set(architectureMembership.activeDois||[]);
       var queueCheckedAt=Date.now();
-      var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
+      var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(function(doi){return doi&&activeDois.has(doi);}),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
       var evidenceInventory=null;
       try { evidenceInventory=await getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken()); }
       catch(error){ try{console.warn('[OSG TOC] evidence inventory unavailable; evidence-only backlog paused',String(error&&error.message||error));}catch(_){} }
-      var mediaJobs=pairedJobs(queue,media);
-      var evidenceJobs=evidenceInventory?evidenceBackfillJobs(queue,media,evidenceInventory):[];
+      var mediaJobs=pairedJobs(queue,media).filter(function(job){return activeDois.has(normalizeDoi(job.doi));});
+      var evidenceJobs=evidenceInventory?evidenceBackfillJobs(queue,media,evidenceInventory).filter(function(job){return activeDois.has(normalizeDoi(job.doi));}):[];
       var generation=VERSION+':paired:'+String(queue.mediaGeneration);
       var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION+':'+String(queue.latestAddedDate||queue.generatedAt||'');
       function eligibleMedia(job) {
@@ -4030,14 +4032,22 @@ function embeddedJobDois(value) {
         if (i>0 && Date.now()-queueCheckedAt>=60000) {
           try {
             var refreshedQueue=await getJson(QUEUE_URL+'?ts='+Date.now());
+            var refreshedMembership=await observeArchitectureMembership(refreshedQueue);
             queueCheckedAt=Date.now();
             if (!Array.isArray(refreshedQueue.articles) || refreshedQueue.articles.length!==Number(refreshedQueue.webpageDoiCount)
                 || Number(refreshedQueue.mediaGeneration)!==1790082000000) throw new Error('invalid_queue_refresh');
-            if (queueRegistryChanged(queue,refreshedQueue)) {
-              summary.refreshPending=true;
-              badge('检测到文献队列更新；当前篇已保存，重新按最新上架排序','#374151');
+            if(!refreshedMembership.ok)throw new Error('architecture_active_set_unverified:'+String(refreshedMembership.error||'unknown'));
+            var refreshedActive=new Set(refreshedMembership.activeDois||[]);
+            var activeChanged=refreshedMembership.catalogId!==architectureMembership.catalogId
+              ||refreshedMembership.asOfDate!==architectureMembership.asOfDate
+              ||refreshedActive.size!==activeDois.size
+              ||Array.from(activeDois).some(function(doi){return !refreshedActive.has(doi);});
+            if (queueRegistryChanged(queue,refreshedQueue)||activeChanged) {
+              summary.refreshPending=true;summary.activeWorkRefreshPending=activeChanged;
+              badge(activeChanged?'检测到三个月热区／目录变化；当前篇已保存，重新按最新资格排队':'检测到文献队列更新；当前篇已保存，重新按最新上架排序','#374151');
               break;
             }
+            architectureMembership=refreshedMembership;activeDois=refreshedActive;
           } catch(queueError) {
             summary.refreshPending=true;
             summary.queueRefreshError=String(queueError.message||queueError).slice(0,120);
