@@ -20,7 +20,7 @@ await page.evaluate(()=>{window.__gm=new Map();window.GM_getValue=(k,d)=>__gm.ha
 const harness=[
 '(function(){',
 "'use strict';",
-"var WORKER='https://api.gczhouwld.com';var P='osg-toc-v6:';var autoReportJob=null;",
+"var VERSION='6.2.20';var CONTROLLER_REVISION='2.2.39';var WORKER='https://api.gczhouwld.com';var P='osg-toc-v6:';var autoReportJob=null;",
 "var gmRequest=async()=>{throw new Error('transport_not_injected')};",
 "function isGalleryPage(){return false}",
 "function normalizeDoi(v){return String(v||'').toLowerCase().replace(/^https?:\\/\\/(?:dx\\.)?doi\\.org\\//,'').replace(/^doi:\\s*/,'').replace(/[?#].*$/,'').replace(/[).,;]+$/,'')}",
