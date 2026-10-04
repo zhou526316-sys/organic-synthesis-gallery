@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-04T12:20:14.860Z",
-  "requestedBy": "rsc-chem-discovery-repair-20261004",
+  "requestedAt": "2026-10-04T12:28:09.197Z",
+  "requestedBy": "rsc-chem-capability-promotion-rescan-20261004",
   "publicationSlot": "2026-10-05T08:00:00+08:00",
-  "baselineMainSha": "40bdf9ad903556c31f82bf574748ad612715c90a",
-  "reason": "Post-repair catch-up audit after verifiedThrough was intentionally reopened to 2026-09-18. Recompute the DOI union from 2026-09-19 under the repaired partial-date/catch-up logic, preserve all 16-journal source health, write paired latest/compact snapshots, and do not mutate production literature data or admit literature."
+  "baselineMainSha": "5e424913862e19153d0d3ee00f960b42c32bc2c8",
+  "reason": "Required post-promotion safety rescan for stable capability fingerprint cf1965ec987e8d226af927b2b81c4a06f4059d354882a2797e93b464510b7377. Keep verifiedThrough at 2026-09-18, recompute the DOI union from the 2026-09-19 activation boundary under repaired partial-date/catch-up semantics, persist paired latest/compact snapshots, and do not mutate production literature or media."
 }
