@@ -100,6 +100,23 @@ jobs:
           npx wrangler r2 bucket info "$PDF_R2_BUCKET" --json >/dev/null
           echo "d1_id=$D1_ID" >> "$GITHUB_OUTPUT"
 
+      - name: Apply isolated private PDF D1 migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-v1.sql >/tmp/private-pdf-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens') ORDER BY name;" --json >/tmp/private-pdf-schema-check.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/private-pdf-schema-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const names=rows.map(x=>x.name).sort();
+          const expected=['private_pdf_access_tokens','private_pdf_documents','user_capabilities'];
+          if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('private PDF schema migration incomplete: '+JSON.stringify(names));
+          console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
+          NODE
+
       - name: Generate frontend deployment configuration
         working-directory: cloudflare/worker
         shell: bash
