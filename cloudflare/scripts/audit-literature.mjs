@@ -498,7 +498,7 @@ const sourceFamilyHealth = Object.fromEntries(JOURNALS.map(j => {
   const minClosureFamily = Math.min(closureCrossrefRecords, closureOpenAlexRecords);
   const rawToUnionCollapse = rawCounts.union > 0 && candidates.length === 0;
   const coverageWarning = rawToUnionCollapse || (candidates.length >= 8 && maxWindowFamily >= 8 && (minWindowFamily === 0 || minWindowFamily / maxWindowFamily < 0.5));
-  const closureCoverageWarning = closureCandidates.length >= 4 && maxClosureFamily >= 4 && (minClosureFamily === 0 || minClosureFamily / maxClosureFamily < 0.5);
+  const closureCoverageWarning = rawToUnionCollapse || (closureCandidates.length >= 4 && maxClosureFamily >= 4 && (minClosureFamily === 0 || minClosureFamily / maxClosureFamily < 0.5));
   return [j.name, {
     activeFrom: j.activeFrom || '',
     effectiveStart: auditStartForJournal(j),
@@ -677,6 +677,12 @@ const unresolvedReviewCandidates = missingCandidates.map(candidate => ({
   sources: candidate.sources,
   activeFrom: candidate.activeFrom,
   dateUnverified: candidate.dateUnverified,
+  onlineDate: candidate.onlineDate || '',
+  publishedDate: candidate.publishedDate || '',
+  createdDate: candidate.createdDate || '',
+  onlineDatePrecision: candidate.onlineDatePrecision || '',
+  publishedDatePrecision: candidate.publishedDatePrecision || '',
+  dateConflict: candidate.dateConflict || '',
   lateIndexed: candidate.lateIndexed,
   safetyTail: candidate.safetyTail,
   reviewPriority: candidate.reviewPriority,
@@ -686,8 +692,13 @@ const unresolvedReviewCandidates = missingCandidates.map(candidate => ({
 const compactSourceHealth = Object.fromEntries(Object.entries(sourceFamilyHealth).map(([journal, health]) => [journal, {
   activeFrom: health.activeFrom,
   effectiveStart: health.effectiveStart,
+  queryStart: health.queryStart,
   crossrefHealthy: health.crossrefHealthy,
   openAlexHealthy: health.openAlexHealthy,
+  rawCrossrefCandidateRecords: health.rawCrossrefCandidateRecords,
+  rawOpenAlexCandidateRecords: health.rawOpenAlexCandidateRecords,
+  rawUnionCandidateRecords: health.rawUnionCandidateRecords,
+  rawToUnionCollapse: health.rawToUnionCollapse,
   unionCandidateRecords: health.unionCandidateRecords,
   crossrefCandidateRecords: health.crossrefCandidateRecords,
   openAlexCandidateRecords: health.openAlexCandidateRecords,
