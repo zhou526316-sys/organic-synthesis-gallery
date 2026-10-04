@@ -15,7 +15,8 @@
     "test:article-summary": "node scripts/test-article-summary.mjs",
     "test:summary-review": "node scripts/test-summary-review.mjs",
     "test:scheduled-summary-handoff": "node scripts/test-scheduled-summary-handoff.mjs",
-    "test:evidence-index": "node scripts/test-evidence-index.mjs"
+    "test:evidence-index": "node scripts/test-evidence-index.mjs",
+    "test:summary-job-index": "node scripts/test-summary-job-index.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.37.1"
