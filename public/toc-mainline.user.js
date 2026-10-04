@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.23
+// @version      6.2.24
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -52,7 +52,7 @@
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
   var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.23';
+  var INSTALL_REVISION = '6.2.24';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -562,6 +562,62 @@ function embeddedJobDois(value) {
       if (rsc) return 'https://pubs.rsc.org/en/content/articlelanding/' + String(2020 + Number(rsc[2])) + '/' + rsc[3].toLowerCase() + '/' + suffix.toLowerCase();
     }
     return 'https://doi.org/' + doi;
+  }
+
+  function publisherArticleHostAllowed(publisher, value) {
+    try {
+      var host = new URL(value, location.href).hostname.toLowerCase();
+      var sub = function (base) { return host === base || host.endsWith('.' + base); };
+      if (publisher === 'elsevier') return sub('sciencedirect.com') || sub('cell.com');
+      if (publisher === 'rsc') return sub('pubs.rsc.org');
+      if (publisher === 'ccs') return sub('chinesechemsoc.org') || sub('ccspublishing.org.cn');
+      if (publisher === 'acs') return sub('pubs.acs.org');
+      if (publisher === 'wiley') return sub('onlinelibrary.wiley.com');
+      if (publisher === 'nature') return sub('nature.com');
+      if (publisher === 'science') return sub('science.org');
+      return false;
+    } catch (_) { return false; }
+  }
+
+  function boundPublisherJobUrl(value, jobId) {
+    var url = new URL(String(value || ''), location.href);
+    url.hash = 'osg-job=' + encodeURIComponent(String(jobId || ''));
+    return url.href;
+  }
+
+  function elsevierResolvedPublisherUrl(response) {
+    var candidates = [];
+    var finalUrl = String(response && (response.finalUrl || response.responseURL) || '');
+    if (finalUrl) candidates.push(finalUrl);
+    try {
+      var resolvedHost = new URL(finalUrl).hostname.toLowerCase();
+      if (resolvedHost === 'linkinghub.elsevier.com') {
+        var pii = finalUrl.match(/\/pii\/([a-z0-9]+)/i);
+        if (pii) candidates.unshift('https://www.sciencedirect.com/science/article/pii/' + pii[1]);
+      }
+    } catch (_) {}
+    var text = String(response && response.responseText || '').replace(/&amp;/gi, '&');
+    var pattern = /https?:\/\/(?:www\.)?(?:sciencedirect\.com|cell\.com)\/[^"'<>\s]+/ig;
+    var match;
+    while ((match = pattern.exec(text)) && candidates.length < 12) candidates.push(match[0]);
+    for (var i = 0; i < candidates.length; i += 1) {
+      if (publisherArticleHostAllowed('elsevier', candidates[i])) return candidates[i];
+    }
+    return '';
+  }
+
+  async function resolvePublisherTaskUrl(job) {
+    var base = articleUrl(job);
+    if (String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))) !== 'elsevier') return base;
+    try {
+      var response = await gmRequest({
+        method: 'GET', url: base, timeout: 30000,
+        headers: { Accept: 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.1' }
+      });
+      var resolved = elsevierResolvedPublisherUrl(response);
+      if (resolved) return resolved;
+    } catch (_) {}
+    return base;
   }
 
   function resultKey(doi) { return P + 'result:' + normalizeDoi(doi); }
@@ -3278,7 +3334,7 @@ function embeddedJobDois(value) {
         assetType: '',
         candidateKind: '',
         candidateSource: 'gallery_controller',
-        articleUrl: String(progress && progress.url || articleUrl(job) || ''),
+        articleUrl: String(progress && progress.url || job.resolvedArticleUrl || articleUrl(job) || ''),
         sourceUrl: '',
         pageTitle: 'Gallery TOC controller',
         queueGeneratedAt: job.queueGeneratedAt || '',
@@ -4006,10 +4062,13 @@ function embeddedJobDois(value) {
         if(job.captureFigures===true)taskParts.push('正文图');
         if(job.captureEvidence===true)taskParts.push('文字证据');
         badge((taskParts.join('＋')||'媒体检查')+' '+(i+1)+'/'+batch.length+'：'+job.doi,'#1f2937');
-        var tab=null,result=null,closed=true,skipReason='';
+        var tab=null,result=null,closed=true,skipReason='',taskUrl=articleUrl(job);
         try {
           if(!renewLease())throw new Error('controller_lease_lost');
-          tab=await Promise.resolve(GM_openInTab(articleUrl(job)+'#osg-job='+encodeURIComponent(job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
+          taskUrl=await resolvePublisherTaskUrl(job);
+          job.resolvedArticleUrl=taskUrl;
+          GM_setValue(ACTIVE_JOB_KEY,job);
+          tab=await Promise.resolve(GM_openInTab(boundPublisherJobUrl(taskUrl,job.jobId),{active:job.publisher==='wiley',insert:true,setParent:true}));
           if(manualRunBlocksAutomatic()){try{if(tab)tab.close();}catch(_){}return;}
           ownedTaskHandle=tab;
           if(!tab || typeof tab.close!=='function')throw new Error('task_tab_handle_unavailable');
