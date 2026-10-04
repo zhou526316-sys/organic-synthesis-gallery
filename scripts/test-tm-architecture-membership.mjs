@@ -58,7 +58,7 @@ function fixture(){
 }
 
 test('installer advances while capture protocol remains compatible',()=>{
-  assert.match(source,/^\/\/ @version\\s+6\\.2\\.23$/m);
+  assert.match(source,/^\/\/ @version\s+6\.2\.23$/m);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
   assert.ok(source.includes("ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-active-v2'"));
@@ -71,12 +71,12 @@ test('C2b filters new work but never truncates canonical queue',()=>{
 test('verified registry yields Hot plus recent historical addition',async()=>{
   const f=fixture(),r=await verify(f.queue,f.delivery,f.releaseText,f.membershipText,f.currentText,f.lifecycleText,f.acquisitionText,'2026-10-04');
   assert.equal(r.ok,true);assert.equal(r.memberCount,3);assert.equal(r.hotCount,1);assert.equal(r.archiveCount,2);
-  assert.equal(r.activeCount,2);assert.deepEqual([...r.activeDois].sort(),[f.a,f.c].sort());assert.deepEqual(r.recentAdditionDois,[f.c]);
+  assert.equal(r.activeCount,2);assert.deepEqual([...r.activeDois].sort(),[f.a,f.c].sort());assert.deepEqual(Array.from(r.recentAdditionDois),[f.c]);
   assert.equal(r.cutoff,'2026-07-04');
 });
 test('crossing Beijing day retires prior cutoff without literature release',async()=>{
   const f=fixture(),r=await verify(f.queue,f.delivery,f.releaseText,f.membershipText,f.currentText,f.lifecycleText,f.acquisitionText,'2026-10-05');
-  assert.equal(r.cutoff,'2026-07-05');assert.equal(r.hotCount,0);assert.deepEqual(r.activeDois,[f.c]);
+  assert.equal(r.cutoff,'2026-07-05');assert.equal(r.hotCount,0);assert.deepEqual(Array.from(r.activeDois),[f.c]);
 });
 for(const [date,expected] of [['2026-10-31','2026-07-31'],['2027-05-31','2027-02-28'],['2028-05-31','2028-02-29'],['2026-01-31','2025-10-31']]){
   test('calendar-month cutoff '+date,()=>assert.equal(cutoff(date),expected));
