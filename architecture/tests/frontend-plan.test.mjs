@@ -12,21 +12,21 @@ function reader({hot=[],get={},search}={}){
 }
 
 test('landing returns Hot only when no deep link is present',async()=>{
-  const r=reader({hot:[rec('10.1/hot')]});
+  const r=reader({hot:[rec('10.1234/hot')]});
   const x=await loadLandingPlan(r,{asOfDate:'2026-10-04'});
-  assert.deepEqual(x.records.map(v=>v.doi),['10.1/hot']);
+  assert.deepEqual(x.records.map(v=>v.doi),['10.1234/hot']);
 });
 test('Archive deep link is injected first without changing Hot count',async()=>{
-  const archive=rec('10.1/archive','archive');
-  const r=reader({hot:[rec('10.1/hot')],get:{'10.1/archive':{status:'published',lifecycle:'archive',record:archive}}});
-  const x=await loadLandingPlan(r,{asOfDate:'2026-10-04',sharedDoi:'https://doi.org/10.1/ARCHIVE'});
-  assert.deepEqual(x.records.map(v=>v.doi),['10.1/archive','10.1/hot']);
+  const archive=rec('10.1234/archive','archive');
+  const r=reader({hot:[rec('10.1234/hot')],get:{'10.1234/archive':{status:'published',lifecycle:'archive',record:archive}}});
+  const x=await loadLandingPlan(r,{asOfDate:'2026-10-04',sharedDoi:'https://doi.org/10.1234/ARCHIVE'});
+  assert.deepEqual(x.records.map(v=>v.doi),['10.1234/archive','10.1234/hot']);
   assert.equal(x.hotCount,1); assert.equal(x.shared.lifecycle,'archive');
 });
 test('withdrawn shared DOI is never rendered from a stale catalog',async()=>{
-  const r=reader({hot:[rec('10.1/hot')],get:{'10.1/archive':{status:'withdrawn',doi:'10.1/archive'}}});
-  const x=await loadLandingPlan(r,{asOfDate:'2026-10-04',sharedDoi:'10.1/archive'});
-  assert.deepEqual(x.records.map(v=>v.doi),['10.1/hot']); assert.equal(x.shared.status,'withdrawn');
+  const r=reader({hot:[rec('10.1234/hot')],get:{'10.1234/archive':{status:'withdrawn',doi:'10.1234/archive'}}});
+  const x=await loadLandingPlan(r,{asOfDate:'2026-10-04',sharedDoi:'10.1234/archive'});
+  assert.deepEqual(x.records.map(v=>v.doi),['10.1234/hot']); assert.equal(x.shared.status,'withdrawn');
 });
 test('verification failure returns no authoritative landing records',async()=>{
   const r={hot:async()=>({status:'verification-unavailable',complete:false,records:[]}),get:async()=>{throw Error('should not call')}};
@@ -34,12 +34,12 @@ test('verification failure returns no authoritative landing records',async()=>{
 });
 test('favorite/status DOI resolution keeps Archive records available',async()=>{
   const r=reader({get:{
-    '10.1/a':{status:'published',lifecycle:'archive',record:rec('10.1/a','archive')},
-    '10.1/b':{status:'published',lifecycle:'hot',record:rec('10.1/b')},
-    '10.1/x':{status:'withdrawn',doi:'10.1/x'},
+    '10.1234/a':{status:'published',lifecycle:'archive',record:rec('10.1234/a','archive')},
+    '10.1234/b':{status:'published',lifecycle:'hot',record:rec('10.1234/b')},
+    '10.1234/x':{status:'withdrawn',doi:'10.1234/x'},
   }});
-  const x=await resolveDoisPlan(r,['10.1/a','10.1/b','10.1/a','10.1/x'],{asOfDate:'2026-10-04'});
-  assert.deepEqual(x.records.map(v=>v.doi),['10.1/a','10.1/b']); assert.deepEqual(x.withdrawn,['10.1/x']);
+  const x=await resolveDoisPlan(r,['10.1234/a','10.1234/b','10.1234/a','10.1234/x'],{asOfDate:'2026-10-04'});
+  assert.deepEqual(x.records.map(v=>v.doi),['10.1234/a','10.1234/b']); assert.deepEqual(x.withdrawn,['10.1234/x']);
 });
 test('global search never calls an incomplete result definitive zero',async()=>{
   const r=reader({search:async()=>({results:[],matched:0,complete:false,failures:[{path:'search/x'}],scanned:1,total:2})});
