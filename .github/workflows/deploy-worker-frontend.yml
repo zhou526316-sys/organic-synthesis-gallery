@@ -13,6 +13,8 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
+      - 'cloudflare/evidence-index-v1.sql'
+      - 'cloudflare/evidence-index-v2.sql'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'public/toc-mainline.user.js'
@@ -120,6 +122,24 @@ jobs:
           const expected=['private_pdf_access_tokens','private_pdf_capture_leases','private_pdf_documents','user_capabilities'];
           if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('private PDF schema migration incomplete: '+JSON.stringify(names));
           console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
+          NODE
+
+      - name: Apply Evidence Index D1 migrations
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../evidence-index-v1.sql >/tmp/evidence-index-v1-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../evidence-index-v2.sql >/tmp/evidence-index-v2-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('article_evidence_index','article_evidence_index_backfill','article_evidence_handoff_backfill') ORDER BY name;" --json >/tmp/evidence-index-schema-check.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/evidence-index-schema-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const names=rows.map(x=>x.name).sort();
+          const expected=['article_evidence_handoff_backfill','article_evidence_index','article_evidence_index_backfill'];
+          if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('Evidence Index migrations incomplete: '+JSON.stringify(names));
+          console.log(JSON.stringify({evidenceIndexSchemaReady:true,tables:names}));
           NODE
 
       - name: Generate frontend deployment configuration
@@ -239,6 +259,14 @@ jobs:
           }
           if(status.readPathActive!==false) throw new Error('Evidence Index read path activated unexpectedly');
 
+          let handoffPages=0;
+          while(status.handoffBackfill?.complete!==true && handoffPages<4){
+            await call('/api/admin/article-summary/evidence-index/handoff-backfill?limit=500',{method:'POST'});
+            handoffPages+=1;
+            status=await call('/api/admin/article-summary/evidence-index/status');
+          }
+          if(status.readPathActive!==false) throw new Error('Evidence Index read path activated unexpectedly after handoff backfill');
+
           const legacy=await call('/api/article-summary/evidence-inventory');
           const sample=await call('/api/admin/article-summary/evidence-index/sample?limit=1000');
           const report={
@@ -246,6 +274,10 @@ jobs:
             readPathActive:status.readPathActive,
             pagesAdvanced:pages,
             backfill:status.backfill,
+            handoffPagesAdvanced:handoffPages,
+            handoffBackfill:status.handoffBackfill,
+            handoffReadyCount:Number(status.handoffReadyCount||0),
+            handoffReconciled:false,
             indexCount:Number(status.evidenceCount||0),
             legacyCount:Number(legacy.count||0),
             sampleCount:Number(sample.count||0),
@@ -271,7 +303,21 @@ jobs:
               report.reconciled=true;
             }
           }
-          console.log('EVIDENCE_INDEX_SHADOW '+JSON.stringify(report));
+          if(status.handoffBackfill?.complete===true){
+            const h=status.handoffBackfill;
+            const accounted=Number(h.matchedRows||0)+Number(h.skippedInvalid||0)+Number(h.skippedStale||0);
+            if(Number(h.scannedObjects||0)!==accounted){
+              throw new Error('Handoff Index accounting mismatch: '+JSON.stringify(h));
+            }
+            if(report.handoffReadyCount<Number(h.matchedRows||0)){
+              throw new Error('Handoff Index ready count is below matched historical rows: '+JSON.stringify(report));
+            }
+            if(Number(h.matchedRows||0)>report.indexCount){
+              throw new Error('Handoff Index matched more rows than current Evidence Index: '+JSON.stringify(report));
+            }
+            report.handoffReconciled=true;
+          }
+                    console.log('EVIDENCE_INDEX_SHADOW '+JSON.stringify(report));
           NODE
 
       - name: Promote verified official TOCs into production
