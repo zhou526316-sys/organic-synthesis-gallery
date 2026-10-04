@@ -26,6 +26,7 @@ const auditPath = value => typeof value === 'string' && /^audit\/[A-Za-z0-9_./-]
 
 export function canReuseReceiptBackedLegacyBaseline(marker, baseline, protectedFailures, markerCommit) {
   return marker?.mode === 'slot-release'
+    && marker?.schemaVersion === 2
     && marker?.publicationSlot === RETIRED_LAST_EVENING_SLOT
     && Array.isArray(protectedFailures) && protectedFailures.length === 0
     && baseline?.ok === true
