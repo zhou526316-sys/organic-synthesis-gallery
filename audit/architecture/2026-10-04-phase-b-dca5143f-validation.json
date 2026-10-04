@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "phase": "B1-membership-and-browser-compatibility",
+  "authorization": "User continued approved new-architecture construction after Phase A.",
+  "dateAsiaShanghai": "2026-10-04",
+  "baselineCommit": "1734f3c5c0654564884c54a8eb4254efe1659151",
+  "implementationCommit": "dca5143fbb4b7a5b6a7351df8b5b59ec47dd0290",
+  "pullRequest": 269,
+  "merged": true,
+  "mergeCommit": "4684f51326a87c1e9731be316846307db4edec2c",
+  "mergedAt": "2026-10-04T03:59:40Z",
+  "changedFiles": 10,
+  "additions": 685,
+  "deletions": 3,
+  "testedMergeCommit": "c084dae8c09461d1e2b79e002ab7c9a3ac2685ea",
+  "testedMainCommit": "83ad4f3b7a3873dfce3a891ebe861590ad2abf63",
+  "mainComparisonBeforeMerge": "identical to tested main snapshot",
+  "architectureValidation": {
+    "runId": 37175354691,
+    "jobId": 111356737875,
+    "conclusion": "success",
+    "tests": 80,
+    "passed": 80,
+    "failed": 0,
+    "skipped": 0,
+    "gregorianDatesChecked": 146097,
+    "liveSourceCommit": "a7068857e473d660f0a5ed963489dde57715e45b",
+    "liveDatasetSha256": "9b1180d9922b42a7c72a50052ce6853ae075d89c45df4b92d416f2fd4e0d713b",
+    "records": 785,
+    "asOfDate": "2026-10-04",
+    "hot": 762,
+    "archive": 23,
+    "invalidDates": 0,
+    "unknownDates": 0,
+    "futureDates": 0,
+    "protectedInputsUnchanged": true,
+    "canonicalRecordsModified": false,
+    "titleCompatibilityOverrides": 12,
+    "titlePresentationSha256": "ae68b52bf1d812819a5f0a05800598e30efe2d68cd22e536eb7cde6d57dbea27",
+    "browserResultLoggedAt": "2026-10-04T03:56:35.350Z",
+    "browsers": [
+      { "engine": "chromium", "ok": true, "comparedRecords": 785, "languages": ["en", "zh"], "fieldDifferences": 0, "hot": 762, "archiveDoiLookups": 23, "globalDoiSearch": true, "withdrawnCachedReadBlocked": true, "pageErrors": 0, "consoleErrors": 0, "failedRequests": 0, "httpErrors": 0, "externalRequestsMocked": 57 },
+      { "engine": "webkit", "ok": true, "comparedRecords": 785, "languages": ["en", "zh"], "fieldDifferences": 0, "hot": 762, "archiveDoiLookups": 23, "globalDoiSearch": true, "withdrawnCachedReadBlocked": true, "pageErrors": 0, "consoleErrors": 0, "failedRequests": 0, "httpErrors": 0, "externalRequestsMocked": 57 }
+    ],
+    "comparedFields": ["doi", "title", "authors", "date", "journal", "badge", "articleHref"],
+    "artifact": {
+      "id": 11292867007,
+      "name": "gallery-architecture-shadow-37175354691",
+      "bytes": 12346690,
+      "sha256": "ef29367d9b49a05fe7cb26ba44426cc0255cd90082fa3e5db4e84b3f79e96629",
+      "retentionDays": 7,
+      "downloadedAndInspected": true
+    }
+  },
+  "existingSiteQuality": {
+    "runId": 37175354699,
+    "frontendBuildAndTypecheck": "success",
+    "workerDryRun": "success",
+    "productionApiSmoke": "success",
+    "playwrightInteractionRegression": "success",
+    "requiredQualityGate": "success"
+  },
+  "firstFailurePreserved": {
+    "runId": 37174803785,
+    "artifactId": 11293225188,
+    "unitTestsPassed": 68,
+    "browserTitleDifferences": 23,
+    "affectedDois": 12,
+    "englishDifferences": 12,
+    "chineseDifferences": 11,
+    "cause": "Legacy browser keeps the first nonempty English title; release collector preserves later source fields.",
+    "resolution": "Added a separate hash/revision-bound display projection derived from frozen source precedence; no hardcoded DOI fixes, no DOM-derived expected values, no canonical mutation, no relaxed zero-difference assertion."
+  },
+  "implemented": [
+    "Current all-time membership fence with monotonic content identity, renewable freshness envelope, sticky withdrawals and asynchronous post-read checks",
+    "Inactive acquisition adapter preserving complete all-time membership, candidate order, layer flags and partial progress; Archive is not removal",
+    "Fenced catalog reader marking outdated global results incomplete and rejecting withdrawn or revised cached records",
+    "Title-only presentation compatibility preserving current rendering without changing canonical facts",
+    "Two-engine browser acceptance and 80 contract tests in the existing read-only architecture workflow"
+  ],
+  "limitations": {
+    "productionActivated": false,
+    "dispatchEnabled": false,
+    "publicMembershipEndpointDeployed": false,
+    "distributedCollectorAdapterWired": false,
+    "productionFrontendSwitched": false,
+    "testEnvironment": "Temporary local preview, unchanged card renderer, frozen real public data and mocked external APIs; not a production UI switch, VPN test or performance benchmark.",
+    "titleResolutionEvidence": "paper-title-resolutions.json was double-read and hashed but is not receipt-bound because the current LIVE_FILES list does not include it.",
+    "revocation": "Validated reader result and cache suppression; production DOM subscriptions and actual publication transport still require wiring. Freshness is bounded by refresh/TTL, not instantaneous for disconnected clients.",
+    "queueValidation": "Adapter contract tested; not yet a full distributed Tampermonkey runtime migration.",
+    "unchanged": "No authoritative literature data, existing frontend, userscript, media, summary content, D1/R2 schema, admission slots or existing deployment flow changed by this PR."
+  },
+  "nextActivationGates": [
+    "Publish and bind an authorized current-membership source while preserving static-read degradation behavior",
+    "Wire queue-coverage full-membership versus active-selection compatibility",
+    "Verify old favorites, status dialogs and user-facing deep links with the actual UI integration",
+    "Enable reversible Hot/Archive reading only after integration and rollback checks"
+  ]
+}
