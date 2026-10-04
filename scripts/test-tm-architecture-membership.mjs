@@ -49,7 +49,7 @@ function fixture(){
 }
 
 test('actual userscript keeps capture protocol while advancing install metadata',()=>{
-  assert.match(source,/^\/\/ @version\s+6\.2\.22$/m);
+  assert.match(source,/^\/\/ @version\s+6\.2\.23$/m);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
@@ -97,7 +97,15 @@ test('observer result is attached to existing diagnostic trace without changing 
 });
 test('self-contained Bridge gets an install-version bump while capture protocol stays fixed',()=>{
   const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-  assert.ok(loader.includes("const loaderVersion = '2.2.40';"));
+  assert.ok(loader.includes("const loaderVersion = '2.2.41';"));
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
+});
+
+test('observer diagnostics distinguish verified, failed and missing states without filtering jobs',()=>{
+  assert.ok(source.includes("ARCHITECTURE_OBSERVER_STATUS_KEY = P + 'architecture-membership-observer-status-v1'"));
+  assert.ok(source.includes("event:observerState.ok===true?'verified':'verification_failed'"));
+  assert.ok(source.includes("rememberArchitectureObserverStatus(false,observerError,null)"));
+  assert.ok(source.includes("INSTALL_VERSION = '6.2.23'"));
+  assert.ok(!source.includes('filterArchitectureJobs('));
 });
