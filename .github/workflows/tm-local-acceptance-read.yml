@@ -73,7 +73,8 @@ jobs:
           if not isinstance(local,dict): raise SystemExit('Uploaded diagnostic unavailable')
           emit('UPLOAD', pick(local,['uploadedAt','version','source','kind','uploadedReason','total']))
           summary = local.get('summary') or {}
-          emit('SUMMARY', pick(summary,['version','queueGeneratedAt','startedAt','finishedAt','queueTotal','batchSize','total','visible','upgrades','figureGaps','success','failed','skipped','aborted','cooldownSkipped']))
+          emit('SUMMARY', pick(summary,['version','controllerRevision','architectureMembershipRevision','queueGeneratedAt','startedAt','finishedAt','queueTotal','batchSize','total','visible','upgrades','figureGaps','success','failed','skipped','aborted','cooldownSkipped']))
+          emit('ARCHITECTURE_SUMMARY', pick(summary.get('architectureMembership'),['ok','revision','serial','publicationSlot','catalogId','membershipSha256','asOfDate','cutoff','memberCount','hotCount','archiveCount','verifiedAt','error']))
           result_keys = ['doi','version','status','reason','finishedAt','kind','assetType','figuresImported','figuresStaged','diagnosticUploaded','articleUrl','sourceUrl','imageUrl']
           for r in (summary.get('results') or [])[:12]: emit('BATCH_RESULT',pick(r,result_keys))
           for name in ['activeJob','progress','publisherHeartbeat']:
@@ -85,7 +86,7 @@ jobs:
           for r in traces[:8]:
               emit('TRACE_HEADER',pick(r,['doi','status','reason','finishedAt']))
               events = r.get('trace') or []
-              selected = [e for e in events if e.get('stage') in ['job','figure_quality','figure_upload','figure_stage','r2_upload','page_doi_guard','page_identity','report_upload']]
+              selected = [e for e in events if e.get('stage') in ['diagnostic_context','architecture_membership','job','figure_quality','figure_upload','figure_stage','r2_upload','page_doi_guard','page_identity','report_upload']]
               for e in (selected[:12] if selected else events[-3:]): emit('TRACE_EVENT',{'doi':r.get('doi'),**pick(e,event_keys)})
           reports = load('reports')
           if reports is not None:
