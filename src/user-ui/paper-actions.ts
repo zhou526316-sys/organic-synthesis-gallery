@@ -104,11 +104,16 @@ export class GalleryPaperActions extends HTMLElement {
     if (doi && Array.isArray(detail?.dois) && !detail.dois.some(value => String(value).toLowerCase() === doi)) return;
     this.render();
   };
+  private readonly externalSummaryRequest = (): void => {
+    if (this.panel === 'summary') return;
+    void this.openSummary();
+  };
 
   static get observedAttributes(): string[] { return ['data-paper-id', 'data-language']; }
   connectedCallback(): void {
     store.addEventListener('change', this.storeChanged);
     store.addEventListener('counts', this.countsChanged);
+    this.addEventListener('gallery-open-summary', this.externalSummaryRequest);
     document.addEventListener('pointerdown', this.outside);
     window.addEventListener('resize', this.reposition);
     window.visualViewport?.addEventListener('resize', this.reposition);
@@ -119,6 +124,7 @@ export class GalleryPaperActions extends HTMLElement {
   disconnectedCallback(): void {
     store.removeEventListener('change', this.storeChanged);
     store.removeEventListener('counts', this.countsChanged);
+    this.removeEventListener('gallery-open-summary', this.externalSummaryRequest);
     document.removeEventListener('pointerdown', this.outside);
     window.removeEventListener('resize', this.reposition);
     window.visualViewport?.removeEventListener('resize', this.reposition);
