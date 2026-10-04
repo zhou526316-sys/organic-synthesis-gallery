@@ -1,0 +1,96 @@
+name: Publisher media source regression
+on:
+  push:
+    branches: [fix/publisher-media-sources-20261004, main]
+    paths: [public/toc-mainline.user.js, scripts/apply-publisher-media-fix.py, scripts/publisher-body-context.inc.js, tests/publisher-media-sources-browser.mjs, .github/workflows/publisher-media-sources.yml]
+  pull_request:
+    branches: [main]
+    paths: [public/toc-mainline.user.js, tests/publisher-media-sources-browser.mjs, .github/workflows/publisher-media-sources.yml]
+permissions:
+  contents: read
+concurrency:
+  group: publisher-media-sources-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Apply scoped source on repair branch only
+        if: github.ref == 'refs/heads/fix/publisher-media-sources-20261004'
+        run: |
+          cp public/toc-mainline.user.js "$RUNNER_TEMP/collector-before.js"
+          sha256sum PROJECT_RULES.md AGENTS.md shared/literature-journals.js audit/media-auto-policy.json .github/workflows/github-pages.yml .github/workflows/new-body-continuous.yml .github/workflows/literature-audit.yml > "$RUNNER_TEMP/publisher-core.sha256"
+          python scripts/apply-publisher-media-fix.py
+          git diff --check
+          sha256sum -c "$RUNNER_TEMP/publisher-core.sha256"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          a=Path(os.environ['RUNNER_TEMP']+'/collector-before.js').read_text();b=Path('public/toc-mainline.user.js').read_text()
+          for start,end in [('  // Explicit user control.','  function completeControllerResume()'),('  function articleFigureResolution(','  function rawTagAttrs('),('  function svgQuality(','  async function sameFigureCurrentSrcFallback(')]:
+            assert a[a.index(start):a.index(end,a.index(start))]==b[b.index(start):b.index(end,b.index(start))],start
+          print('CORE_QUEUE_QUALITY_SVG_FUNCTIONS_IDENTICAL')
+          PY
+      - name: Run unchanged acquisition, restart, queue and receipt regressions
+        run: |
+          set -euo pipefail
+          {
+            node --check public/toc-mainline.user.js
+            node tests/tm-queue-coverage.test.mjs
+            node tests/tm-missing-only.test.mjs
+            node tests/tm-immediate-restart.test.mjs
+            node tests/tm-controller-recovery.test.mjs
+            node tests/tm-newest-retry.test.mjs
+            node scripts/test-tm223-upload.mjs
+            node scripts/test-tm220-release.mjs
+            node scripts/test-tm222-auto-report.mjs
+          } | tee "$RUNNER_TEMP/publisher-source-regressions.txt"
+      - name: Install isolated deterministic browser dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Verify publisher DOM fixtures without publisher network access
+        run: node tests/publisher-media-sources-browser.mjs
+      - name: Build exact compatible script without changing protocol
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          node --check public/gallery-vpn-bridge.user.js
+          grep -F '全队列补缺6 · 图源适配7' public/gallery-vpn-bridge.user.js
+          mkdir -p "$RUNNER_TEMP/publisher-source-output"
+          cp public/toc-mainline.user.js public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/publisher-source-output/"
+          sha256sum "$RUNNER_TEMP/publisher-source-output/"*.js > "$RUNNER_TEMP/publisher-source-output/sha256.txt"
+      - name: Commit tested collector only to its repair branch
+        if: github.ref == 'refs/heads/fix/publisher-media-sources-20261004'
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/fix/publisher-media-sources-20261004
+          sha256sum -c "$RUNNER_TEMP/publisher-core.sha256"
+          git add public/toc-mainline.user.js
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix: use explicit vector candidates and scoped Wiley figure headings'
+            git push origin HEAD:fix/publisher-media-sources-20261004
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: publisher-media-sources-tested
+          path: |
+            ${{ runner.temp }}/publisher-source-output
+            ${{ runner.temp }}/publisher-source-regressions.txt
+            ${{ runner.temp }}/publisher-sources-browser.json
+            ${{ runner.temp }}/publisher-core.sha256
+          retention-days: 14
