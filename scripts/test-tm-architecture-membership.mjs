@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import { createHash, webcrypto } from 'node:crypto';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
+test('whole userscript parses after C2b wiring',()=>assert.doesNotThrow(()=>new vm.Script(source)));
 const begin=source.indexOf('// BEGIN ARCHITECTURE MEMBERSHIP CORE v1');
 const end=source.indexOf('// END ARCHITECTURE MEMBERSHIP CORE v1');
 assert.ok(begin>0&&end>begin,'membership core markers missing');
