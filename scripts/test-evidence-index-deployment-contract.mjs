@@ -50,10 +50,11 @@ test('legacy Evidence inventory still reads R2 directly and does not read D1 ind
   assert.ok(!block.includes('env.DB'));
 });
 
-test('scheduled handoff discovery still uses legacy R2 list path',()=>{
-  assert.ok(handoff.includes('MAX_OBJECT_LIST_PAGES = 10'));
-  const pending=section(handoff,'async function pendingHandoffObjects','async function pendingEvidenceObjects');
+test('scheduled handoff discovery still uses legacy capped R2 list path',()=>{
+  const pending=section(handoff,'async function pendingHandoffObjects','export async function backfillScheduledEvidenceHandoffs');
   assert.ok(pending.includes('env.MEDIA.list'));
+  assert.ok(pending.includes('pageNo < 10'));
+  assert.ok(pending.includes('prefix: HANDOFF_PREFIX'));
   assert.ok(!pending.includes('article_evidence_index'));
 });
 
