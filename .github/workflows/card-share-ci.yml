@@ -72,6 +72,8 @@ jobs:
           grep -F "扫码跳转并定位该文献" src/card-share.ts
           grep -F "SHARE_POSTER_GENERATION_FAILED" src/card-share.ts
           grep -F "navigator.clipboard.write" src/card-share.ts
+          grep -F "summary=1" dist/assets/card-share-*.js
+          grep -F "gallery-open-summary" dist/assets/card-share-*.js
           grep -F "sharev=" dist/assets/card-share-*.js
 
       - name: Verify canonical Gallery routing
@@ -146,8 +148,8 @@ jobs:
             const panel = page.locator('.card-share-panel');
             await panel.waitFor({ state: 'visible' });
             const shareUrl = await panel.getAttribute('data-share-url');
-            if (!shareUrl || !/^https:\/\/gallery\.gczhouwld\.com\/\?doi=10\.[^&]+&sharev=[A-Za-z0-9_-]+$/.test(shareUrl)) {
-              throw new Error('share URL is not the direct paper deep link: ' + shareUrl);
+            if (!shareUrl || !/^https:\/\/gallery\.gczhouwld\.com\/\?doi=10\.[^&]+&summary=1&sharev=[A-Za-z0-9_-]+$/.test(shareUrl)) {
+              throw new Error('share URL does not request the paper summary: ' + shareUrl);
             }
             const actionCount = await panel.locator('[data-share-action]').count();
             if (actionCount !== 3) throw new Error('share panel must expose exactly three actions, got ' + actionCount);
@@ -164,13 +166,14 @@ jobs:
             await panel.locator('[data-share-action="copy-title-doi"]').waitFor({ state: 'visible' });
             await panel.locator('[data-share-action="copy-link"]').waitFor({ state: 'visible' });
 
-            await page.goto('http://127.0.0.1:4173/?doi=' + encodeURIComponent(doi), { waitUntil: 'domcontentloaded' });
+            await page.goto('http://127.0.0.1:4173/?doi=' + encodeURIComponent(doi) + '&summary=1', { waitUntil: 'domcontentloaded' });
             const targeted = page.locator('.card.shared-card-target');
             await targeted.waitFor({ state: 'visible', timeout: 30000 });
             const targetedDoi = await targeted.getAttribute('data-doi');
             if ((targetedDoi || '').toLowerCase() !== doi.toLowerCase()) {
               throw new Error('deep-link target DOI mismatch: ' + targetedDoi + ' vs ' + doi);
             }
+            await targeted.locator('gallery-paper-actions .drawer.summary-drawer').waitFor({ state: 'visible', timeout: 10000 });
             const haloAnimation = await targeted.evaluate(element => getComputedStyle(element).animationName);
             if (!haloAnimation.includes('gallery-shared-card-halo')) {
               throw new Error('shared card does not have the continuous halo animation: ' + haloAnimation);
@@ -185,7 +188,7 @@ jobs:
             }
             if (pageErrors.length) throw new Error('page errors: ' + pageErrors.join(' | '));
             if (failedSameOrigin.length) throw new Error('same-origin request failures: ' + failedSameOrigin.join(' | '));
-            console.log(JSON.stringify({ cardShare: true, qr: true, deepLink: true, doi, externalConsoleErrors: consoleErrors.length }));
+            console.log(JSON.stringify({ cardShare: true, deepLink: true, autoSummary: true, doi, externalConsoleErrors: consoleErrors.length }));
             await browser.close();
           })().catch(error => { console.error(error); process.exit(1); });
           NODE
