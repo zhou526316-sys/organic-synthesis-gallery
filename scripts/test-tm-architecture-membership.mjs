@@ -49,7 +49,7 @@ function fixture(){
 }
 
 test('actual userscript keeps capture protocol while advancing install metadata',()=>{
-  assert.match(source,/^\/\/ @version\s+6\.2\.22$/m);
+  assert.match(source,/^\/\/ @version\s+6\.2\.23$/m);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
@@ -89,15 +89,18 @@ test('legacy v1 delivery cannot authorize new membership observer',async()=>{
   await assert.rejects(verify(f.queue,f.delivery,f.releaseText,f.membershipText,f.currentText,f.lifecycleText),/delivery_v2_required/);
 });
 
-test('observer result is attached to existing diagnostic trace without changing report schema',()=>{
+test('observer result and failure reason are attached to existing diagnostic trace',()=>{
   assert.ok(source.includes("stage:'architecture_membership'"));
   assert.ok(source.includes("event:'verified_snapshot'"));
-  assert.ok(source.includes("architectureState.cutoff"));
-  assert.ok(source.includes("trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[])"));
+  assert.ok(source.includes("observerState.ok===true?'observer_ok':'verification_failed'"));
+  assert.ok(source.includes("architecture-membership-observer-v1"));
+  assert.ok(source.includes("var INSTALL_REVISION = '6.2.23';"));
+  assert.ok(source.includes("installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:''"));
+  assert.ok(source.includes("trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[]).concat(architectureObserverEvent?[architectureObserverEvent]:[])"));
 });
-test('self-contained Bridge gets an install-version bump while capture protocol stays fixed',()=>{
+test('self-contained Bridge gets a diagnostic install-version bump while capture protocol stays fixed',()=>{
   const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-  assert.ok(loader.includes("const loaderVersion = '2.2.40';"));
+  assert.ok(loader.includes("const loaderVersion = '2.2.41';"));
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
