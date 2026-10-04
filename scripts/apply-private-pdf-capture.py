@@ -2,7 +2,7 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[1]
 p=root/'public/toc-mainline.user.js'
 s=p.read_text()
-marker="var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v1';"
+marker="var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v2';"
 if marker in s:
     print('private PDF capture already applied'); raise SystemExit(0)
 runtime=(root/'scripts/tm-private-pdf-capture.inc.js').read_text().rstrip()+"\n\n"
