@@ -34,9 +34,9 @@ import { importPrimaryVisual } from './primary-visual.js';
 import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeManualJob, seedMediaJobs, startMediaJob } from './media-jobs.js';
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
-import { backfillScheduledEvidenceHandoffs, getScheduledEvidenceHandoff, getScheduledEvidenceHandoffPart } from './scheduled-summary-handoff.js';
+import { backfillScheduledEvidenceHandoffs, compareScheduledHandoffIndexShadow, getScheduledEvidenceHandoff, getScheduledEvidenceHandoffPart } from './scheduled-summary-handoff.js';
 import { getSummaryReviewStatus } from './summary-review.js';
-import { backfillEvidenceIndexPage, getEvidenceIndexStatus, listEvidenceIndexRows } from './evidence-index.js';
+import { backfillEvidenceIndexPage, backfillHandoffIndexPage, getEvidenceIndexStatus, listEvidenceIndexRows } from './evidence-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -295,6 +295,18 @@ async function handleApi(request, env, ctx) {
     if (authError) return authError;
     const limit = Math.max(1, Math.min(1000, Number(url.searchParams.get('limit') || 100)));
     return resultResponse(await listEvidenceIndexRows(env, limit));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/article-summary/evidence-index/handoff-backfill') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(1000, Number(url.searchParams.get('limit') || 500)));
+    return resultResponse(await backfillHandoffIndexPage(env, limit));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/evidence-index/compare-scheduled-handoff') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(60, Number(url.searchParams.get('limit') || 40)));
+    return resultResponse(await compareScheduledHandoffIndexShadow(env, limit));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
