@@ -1,0 +1,52 @@
+name: Gallery architecture D1 asset shadow
+
+on:
+  push:
+    branches:
+      - 'feat/gallery-architecture-phase-d1-*'
+    paths:
+      - 'architecture/asset-catalog.mjs'
+      - 'architecture/tests/asset-catalog.test.mjs'
+      - 'architecture/PHASE-D1.md'
+      - 'scripts/build-gallery-asset-shadow.mjs'
+      - '.github/workflows/gallery-architecture-asset-shadow.yml'
+  pull_request:
+    paths:
+      - 'architecture/asset-catalog.mjs'
+      - 'architecture/tests/asset-catalog.test.mjs'
+      - 'architecture/PHASE-D1.md'
+      - 'scripts/build-gallery-asset-shadow.mjs'
+      - '.github/workflows/gallery-architecture-asset-shadow.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gallery-asset-shadow-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Asset and architecture contracts
+        run: node --test architecture/tests/*.test.mjs
+      - name: Build live read-only Unified Asset Catalog shadow
+        run: node scripts/build-gallery-asset-shadow.mjs --out "$RUNNER_TEMP/gallery-asset-shadow"
+      - name: Source tree remains unchanged
+        run: git diff --exit-code
+      - name: Preserve D1 shadow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-unified-asset-shadow-${{ github.run_id }}
+          path: ${{ runner.temp }}/gallery-asset-shadow
+          if-no-files-found: warn
+          retention-days: 7
