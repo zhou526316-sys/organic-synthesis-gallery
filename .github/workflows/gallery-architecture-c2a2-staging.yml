@@ -1,0 +1,48 @@
+name: Gallery architecture C2a.2 diagnostics gate
+on:
+  push:
+    branches:
+      - feat/gallery-architecture-c2a2-observer-diagnostics-20261004
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Observer and existing capture regressions
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --test scripts/test-tm-architecture-membership.mjs
+          node scripts/test-tm222-auto-report.mjs
+          node tests/tm-controller-recovery.test.mjs
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-missing-only.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+      - name: Package self-contained observer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.41' public/gallery-vpn-bridge.user.js
+          grep -F "var INSTALL_VERSION = '6.2.23';" public/gallery-vpn-bridge.user.js
+          grep -F "event:observerState.ok===true?'verified':'verification_failed'" public/gallery-vpn-bridge.user.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gallery-c2a2-observer-diagnostics
+          path: public/gallery-vpn-bridge.user.js
+          if-no-files-found: warn
+          retention-days: 7
