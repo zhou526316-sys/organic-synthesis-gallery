@@ -31,15 +31,19 @@ assert.equal(effectiveJournalStart(jacs, '2026-09-13'), '2026-09-13', 'Existing 
 assert.match(auditSource, /DEFAULT_LOOKBACK_DAYS\s*=\s*3/, 'Default publication rescan must remain three days');
 assert.match(auditSource, /DEFAULT_LATE_DEPOSIT_RESCUE_DAYS\s*=\s*7/, 'Late-deposit rescue must remain at least seven days');
 assert.ok(auditSource.includes('catchupStart'), 'Audit must automatically catch up from verifiedThrough when closure falls behind');
+assert.ok(auditSource.includes('sourceStartForJournal'), 'Source queries must widen to the reported catch-up start when it predates the seven-day tail');
 assert.ok(auditSource.includes('const modeStart = journalRescueStart'), 'All Crossref source modes must retain the seven-day machine safety tail behind the 3-day review window');
 assert.ok(auditSource.includes('from_publication_date:${rescueStartForJournal(journal)}'), 'OpenAlex must retain the seven-day machine safety tail behind the 3-day review window');
 assert.ok(auditSource.includes('safetyTail'), 'Safety-tail records must remain observable without becoming routine re-review work');
 assert.ok(auditSource.includes("['online', 'published', 'created']"), 'Crossref discovery must union online, published and created dates');
+assert.ok(auditSource.includes('crossrefCreatedDate'), 'Crossref created/deposit provenance must retain an explicit created date');
+assert.ok(auditSource.includes('createdRescue'), 'Created/deposit rescue must be evaluated by created date rather than publication date alone');
 assert.ok(auditSource.includes('createdDiscovered'), 'Late-deposit rescue must remain enabled');
 assert.ok(auditSource.includes('lateIndexed'), 'Late-indexed records must remain observable in the audit report');
 assert.ok(auditSource.includes('sourceFamilyHealth'), 'Per-journal source-family health must remain reported');
 assert.ok(auditSource.includes('sourceFamilyGaps'), 'Source-family gaps must remain explicit');
 assert.ok(auditSource.includes('sourceCoverageAnomalies'), 'Crossref/OpenAlex coverage regressions must remain explicit');
+assert.ok(auditSource.includes('createdRetentionWarning'), 'Raw eligible Crossref created records collapsing to zero retained candidates must be a source-coverage anomaly');
 assert.ok(auditSource.includes('closureCoverageAnomalies'), 'Closure-day source coverage regressions must remain explicit');
 assert.ok(auditSource.includes('const byDate = {}'), 'Audit must expose per-day source union counts for historical regression checks');
 assert.ok(auditSource.includes('row.byJournal'), 'Per-day audit counts must retain journal attribution');
@@ -61,6 +65,9 @@ console.log(JSON.stringify({
   lookbackDays: 3,
   lateDepositRescueDays: 7,
   verifiedThroughCatchup: true,
+  catchupWidensSourceQueries: true,
+  crossrefCreatedDatePreserved: true,
+  createdRetentionWarning: true,
   multiSourceSafetyTail: true,
   crossrefModes: ['online', 'published', 'created'],
   openAlex: true,
