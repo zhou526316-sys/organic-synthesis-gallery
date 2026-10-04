@@ -15,6 +15,7 @@ import html
 import json
 import mimetypes
 import tempfile
+import time
 import os
 from pathlib import Path
 import sys
@@ -367,6 +368,12 @@ def build_content(slot: str, papers: list[dict], featured: dict | None = None, u
                 f"{esc(notice)}</p></section>"
             )
 
+    parts.append(
+        "<section style='margin-top:12px;padding-top:12px;border-top:1px solid #eee;'>"
+        "<p style='font-size:11px;color:#888;line-height:1.7;margin:0;'><strong>原创说明：</strong>"
+        "本文由“化之岛”原创策划与整理，AI 辅助生成与校核；文献事实、化学结构和数据以论文原文为准。"
+        "</p></section>"
+    )
     parts.append("</section>")
     return "".join(parts)
 
@@ -950,6 +957,79 @@ def upload_cover(token: str, cover: Path, cache_path: Path) -> str:
     return str(media_id)
 
 
+def submit_publish(token: str, media_id: str):
+    url = (
+        "https://api.weixin.qq.com/cgi-bin/freepublish/submit?"
+        + urllib.parse.urlencode({"access_token": token})
+    )
+    result = json_request(url, method="POST", payload={"media_id": media_id})
+    if result.get("errcode") not in (None, 0):
+        raise RuntimeError(
+            "freepublish/submit failed: "
+            + json.dumps(
+                {"errcode": result.get("errcode"), "errmsg": result.get("errmsg")},
+                ensure_ascii=False,
+            )
+        )
+    publish_id = result.get("publish_id")
+    if publish_id in (None, ""):
+        raise RuntimeError("freepublish/submit returned no publish_id")
+    return str(publish_id)
+
+
+def get_publish_status(token: str, publish_id: str):
+    url = (
+        "https://api.weixin.qq.com/cgi-bin/freepublish/get?"
+        + urllib.parse.urlencode({"access_token": token})
+    )
+    return json_request(url, method="POST", payload={"publish_id": publish_id})
+
+
+def wait_for_publish(token: str, publish_id: str, timeout_seconds: int = 120):
+    deadline = time.time() + timeout_seconds
+    last = None
+    while time.time() < deadline:
+        last = get_publish_status(token, publish_id)
+        if last.get("errcode") not in (None, 0):
+            raise RuntimeError(
+                "freepublish/get failed: "
+                + json.dumps(
+                    {"errcode": last.get("errcode"), "errmsg": last.get("errmsg")},
+                    ensure_ascii=False,
+                )
+            )
+        status = int(last.get("publish_status", -1))
+        if status == 0:
+            detail = last.get("article_detail") if isinstance(last.get("article_detail"), dict) else {}
+            items = detail.get("item") if isinstance(detail, dict) else []
+            article_url = ""
+            if isinstance(items, list) and items:
+                first = items[0] if isinstance(items[0], dict) else {}
+                article_url = str(first.get("article_url") or "")
+            return {
+                "publish_status": status,
+                "article_id": last.get("article_id"),
+                "article_url": article_url,
+            }
+        if status in (2, 3, 4, 5, 6):
+            labels = {
+                2: "original_declaration_failed",
+                3: "publish_failed",
+                4: "platform_review_rejected",
+                5: "deleted_after_publish",
+                6: "banned_after_publish",
+            }
+            raise RuntimeError(
+                f"publish failed: status={status} ({labels.get(status, 'unknown')}) "
+                + json.dumps(last, ensure_ascii=False)
+            )
+        time.sleep(2)
+    raise RuntimeError(
+        "publish status timeout: "
+        + json.dumps(last or {"publish_id": publish_id}, ensure_ascii=False)
+    )
+
+
 def create_draft(token: str, article: dict):
     url = (
         "https://api.weixin.qq.com/cgi-bin/draft/add?"
@@ -1116,12 +1196,18 @@ def main() -> int:
     parser.add_argument("--source-url", default=DEFAULT_SOURCE_URL)
     parser.add_argument("--title-prefix", default="")
     parser.add_argument("--featured-pdf", default="", help="optional local PDF path used instead of downloading the featured paper PDF")
+    parser.add_argument("--publish", action="store_true", help="submit the updated draft for publication and wait for final status")
     args = parser.parse_args()
 
     slot, papers = load_latest_release()
     featured = load_featured(slot[:10])
     title = f"{args.title_prefix}有机合成文献日报｜{slot[:10]} · 每日精选"
     digest = f"今日新增{len(papers)}篇有机合成文献，并精选1篇进行由浅入深的深度解读。" if featured else f"今日新增{len(papers)}篇有机合成文献。"
+    source_url = (
+        f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(slot[:10])}"
+        if featured
+        else args.source_url
+    )
 
     if not args.create:
         print(json.dumps({
@@ -1151,10 +1237,10 @@ def main() -> int:
     article = {
         "article_type": "news",
         "title": title,
-        "author": "有机合成文献库",
+        "author": "化之岛",
         "digest": digest,
         "content": content,
-        "content_source_url": args.source_url,
+        "content_source_url": source_url,
         "thumb_media_id": thumb_media_id,
         "need_open_comment": 0,
         "only_fans_can_comment": 0,
@@ -1205,22 +1291,29 @@ def main() -> int:
         base_url=args.preview_base_url,
     )
 
-    print(
-        json.dumps(
-            {
-                "stage": stage,
-                "errcode": result.get("errcode", 0),
-                "errmsg": result.get("errmsg", "ok"),
-                "media_id": media_id,
-                "paper_count": len(papers),
-                "publicationSlot": slot,
-                "draft_readback": "ok",
-                "preview_path": str(preview_path),
-                "preview_url": preview_url,
-            },
-            ensure_ascii=False,
-        )
-    )
+    output_payload = {
+        "stage": stage,
+        "errcode": result.get("errcode", 0),
+        "errmsg": result.get("errmsg", "ok"),
+        "media_id": media_id,
+        "paper_count": len(papers),
+        "publicationSlot": slot,
+        "draft_readback": "ok",
+        "preview_path": str(preview_path),
+        "preview_url": preview_url,
+        "content_source_url": source_url,
+    }
+
+    if args.publish:
+        publish_id = submit_publish(token, media_id)
+        published = wait_for_publish(token, publish_id)
+        output_payload.update({
+            "stage": "published",
+            "publish_id": publish_id,
+            **published,
+        })
+
+    print(json.dumps(output_payload, ensure_ascii=False))
     return 0
 
 
