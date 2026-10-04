@@ -12,11 +12,19 @@ page.on('console',m=>{if(m.type()==='error')report.consoleErrors.push(m.text())}
 page.on('pageerror',e=>report.pageErrors.push(String(e)));
 await page.setContent('<!doctype html><meta name="citation_pdf_url" content="https://pubs.acs.org/doi/pdf/10.1021/jacs.6c12345"><a id="si" href="https://pubs.acs.org/doi/suppl/10.1021/jacs.6c12345/suppl_file/test.pdf">Supporting Information PDF</a>');
 await page.evaluate(()=>{window.__gm=new Map();window.GM_getValue=(k,d)=>__gm.has(k)?__gm.get(k):d;window.GM_setValue=(k,v)=>__gm.set(k,v);window.GM_deleteValue=k=>__gm.delete(k);window.GM_listValues=()=>[...__gm.keys()];window.GM_registerMenuCommand=()=>{};window.GM_addValueChangeListener=()=>{};});
-const harness=source.slice(0,cut)+"\n  currentCaptureJob=()=>true;\n  assertBoundCaptureJob=job=>normalizeDoi(job.doi);\n  pushTrace=(trace,row)=>{trace.push(row);return row};\n  captureLiveError=v=>String(v||'').slice(0,180);\n  globalThis.T={privatePdfLease,privatePdfBytesValid,discoverExplicitPdfCandidates,maybeCapturePrivatePdf,finishPairedJob,PRIVATE_PDF_LEASE_KEY,PRIVATE_PDF_CAPTURE_REVISION,
-    setGm:function(fn){gmRequest=fn;},
-    setMaybe:function(fn){maybeCapturePrivatePdf=fn;},
-    setFinishDeps:function(){currentCaptureJob=()=>true;traceKey=()=> 'trace';resultKey=()=> 'result';progressKey=()=> 'progress';enqueueCaptureReport=()=>true;nowIso=()=>new Date().toISOString();autoReportJob={};}
-  };\n})();";
+const harness=source.slice(0,cut)+[
+  '',
+  '  currentCaptureJob=()=>true;',
+  '  assertBoundCaptureJob=job=>normalizeDoi(job.doi);',
+  '  pushTrace=(trace,row)=>{trace.push(row);return row};',
+  "  captureLiveError=v=>String(v||'').slice(0,180);",
+  '  globalThis.T={privatePdfLease,privatePdfBytesValid,discoverExplicitPdfCandidates,maybeCapturePrivatePdf,finishPairedJob,PRIVATE_PDF_LEASE_KEY,PRIVATE_PDF_CAPTURE_REVISION,',
+  '    setGm:function(fn){gmRequest=fn;},',
+  '    setMaybe:function(fn){maybeCapturePrivatePdf=fn;},',
+  "    setFinishDeps:function(){currentCaptureJob=()=>true;traceKey=()=> 'trace';resultKey=()=> 'result';progressKey=()=> 'progress';enqueueCaptureReport=()=>true;nowIso=()=>new Date().toISOString();autoReportJob={};}",
+  '  };',
+  '})();'
+].join('\\n');
 await page.addScriptTag({content:harness});
 async function tc(name,fn){await fn();report.passed++;report.cases.push(name);console.log('PRIVATE_PDF_TM_PASS '+name)}
 try{
