@@ -1,10 +1,16 @@
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
-  var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v1';
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v2';
+  var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
   var PRIVATE_PDF_ATTEMPT_PREFIX = P + 'private-pdf-attempt-v1:';
   var PRIVATE_PDF_MAX_BYTES = 60 * 1024 * 1024;
+
+  function privatePdfCaptureEligibleByAddedDate(job) {
+    var addedDate = String(job && job.addedDate || '').trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(addedDate) && addedDate >= PRIVATE_PDF_ADDED_DATE_CUTOFF;
+  }
 
   function privatePdfLease() {
     var lease=GM_getValue(PRIVATE_PDF_LEASE_KEY,null);
@@ -125,8 +131,9 @@
   }
 
   async function maybeCapturePrivatePdf(job,trace) {
+    if(!job||!currentCaptureJob(job)||!privatePdfCaptureEligibleByAddedDate(job))return null;
     var lease=privatePdfLease();
-    if(!lease||!job||!currentCaptureJob(job))return null;
+    if(!lease)return null;
     var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
     if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000)return {status:'already_stored',documentId:prior.documentId||''};
     if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000)return {status:'not_found_cached'};
