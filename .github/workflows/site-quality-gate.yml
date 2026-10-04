@@ -98,6 +98,10 @@ jobs:
       - name: Test summary candidate index shadow parity
         run: npm run test:summary-candidate-index
 
+      - name: Test D2b2 candidate shadow deployment contract
+        working-directory: .
+        run: node scripts/test-summary-candidate-shadow-deployment-contract.mjs
+
       - name: Test scheduled encrypted handoff
         run: npm run test:scheduled-summary-handoff
 
