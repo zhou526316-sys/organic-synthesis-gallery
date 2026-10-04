@@ -289,25 +289,39 @@ def build_content(slot: str, papers: list[dict], featured: dict | None = None, u
         "</p>",
     ]
 
-    for journal, items in grouped.items():
+    if len(papers) > 5:
+        journal_counts = [
+            f"{journal} {len(items)} 篇"
+            for journal, items in grouped.items()
+        ]
         parts.append(
-            "<h2 style='font-size:17px;line-height:1.45;margin:22px 0 8px;"
-            "padding-left:9px;border-left:3px solid #222;'>"
-            f"{esc(journal)} <span style='font-size:11px;font-weight:400;color:#999;'>"
-            f"{len(items)} 篇</span></h2>"
+            "<section style='background:#f7f8fa;border-radius:9px;padding:12px 14px;margin:0 0 18px;'>"
+            "<p style='font-size:13px;color:#555;line-height:1.75;margin:0;'>"
+            + esc(" · ".join(journal_counts))
+            + "</p>"
+            "<p style='font-size:11px;color:#999;line-height:1.6;margin:5px 0 0;'>完整标题与作者请点击文末“阅读原文”查看。</p>"
+            "</section>"
         )
-        for paper in items:
-            authors = ", ".join(paper["authors"])
-            badge = ""
-            if featured and normalize_doi(featured.get("paper", {}).get("doi")) == paper["doi"]:
-                badge = "<span style='display:inline-block;font-size:10px;color:#fff;background:#222;border-radius:9px;padding:1px 6px;margin-right:6px;'>今日精选</span>"
+    else:
+        for journal, items in grouped.items():
             parts.append(
-                "<section style='margin:0 0 14px;padding:0 0 13px;border-bottom:1px solid #eee;'>"
-                f"<div style='font-size:15px;font-weight:700;line-height:1.58;margin-bottom:3px;'>{badge}{esc(paper['titleZh'])}</div>"
-                f"<div style='font-size:12px;color:#666;line-height:1.55;margin-bottom:5px;'>{esc(paper['title'])}</div>"
-                f"<div style='font-size:11px;color:#999;line-height:1.5;'>{esc(authors)}</div>"
-                "</section>"
+                "<h2 style='font-size:17px;line-height:1.45;margin:22px 0 8px;"
+                "padding-left:9px;border-left:3px solid #222;'>"
+                f"{esc(journal)} <span style='font-size:11px;font-weight:400;color:#999;'>"
+                f"{len(items)} 篇</span></h2>"
             )
+            for paper in items:
+                authors = ", ".join(paper["authors"])
+                badge = ""
+                if featured and normalize_doi(featured.get("paper", {}).get("doi")) == paper["doi"]:
+                    badge = "<span style='display:inline-block;font-size:10px;color:#fff;background:#222;border-radius:9px;padding:1px 6px;margin-right:6px;'>今日精选</span>"
+                parts.append(
+                    "<section style='margin:0 0 14px;padding:0 0 13px;border-bottom:1px solid #eee;'>"
+                    f"<div style='font-size:15px;font-weight:700;line-height:1.58;margin-bottom:3px;'>{badge}{esc(paper['titleZh'])}</div>"
+                    f"<div style='font-size:12px;color:#666;line-height:1.55;margin-bottom:5px;'>{esc(paper['title'])}</div>"
+                    f"<div style='font-size:11px;color:#999;line-height:1.5;'>{esc(authors)}</div>"
+                    "</section>"
+                )
 
     if featured:
         figures = {str(x.get("id")): x for x in featured.get("figures", []) if isinstance(x, dict)}
