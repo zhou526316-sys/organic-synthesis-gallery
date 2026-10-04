@@ -96,7 +96,7 @@ jobs:
           const wanted=['Chem','Chemical Science','Green Chemistry'];
           const rows=Object.fromEntries(wanted.map(name=>[name,a.byJournal?.[name]||null]));
           const unresolved=(a.missingCandidates||[]).filter(x=>wanted.includes(x.journal));
-          const compactRows=(compact.candidates||compact.missingCandidates||compact.items||[]).filter(x=>wanted.includes(x.journal));
+          const compactRows=(compact.unresolved||[]).filter(x=>wanted.includes(x.journal));
           console.log('RSC_CHEM_BACKFILL '+JSON.stringify({
             generatedAt:a.generatedAt,startDate:a.startDate,endDate:a.endDate,rows,
             sourceCoverageAnomalies:(a.sourceCoverageAnomalies||[]).filter(x=>wanted.includes(x.journal)),
@@ -110,7 +110,7 @@ jobs:
           const rscCompact=compactRows.filter(x=>x.journal==='Chemical Science'||x.journal==='Green Chemistry');
           if(!rscCompact.length)throw Error('RSC candidates absent from compact review handoff');
           if(!rscCompact.some(x=>x.createdDate&&x.dateUnverified===true))throw Error('RSC compact handoff lost created-date provenance');
-          const health=compact.sourceFamilyHealth||compact.sourceHealth||{};
+          const health=Object.fromEntries((compact.activeJournals||[]).map(x=>[x.name,x.sourceHealth||null]));
           for(const name of ['Chemical Science','Green Chemistry']){
             const h=health[name];
             if(!h)throw Error(name+' compact source health missing');
