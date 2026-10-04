@@ -100,7 +100,7 @@ await test('status exposes metadata but never the private R2 key',async()=>{
 });
 let accessUrl='';
 await test('owner open returns only a short-lived opaque file URL',async()=>{
-  const r=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345',{method:'POST'}),env);
+  const r=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c12345','owner-token',{method:'POST'}),env);
   assert.equal(r.status,200);assert.equal(r.body.available,true);accessUrl=r.body.url;assert.ok(/token=/.test(accessUrl));assert.ok(!accessUrl.includes('fixture.pdf'));
 });
 await test('temporary URL serves inline PDF bytes with no-store',async()=>{
