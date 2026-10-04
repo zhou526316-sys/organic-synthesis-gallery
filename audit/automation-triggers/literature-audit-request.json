@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-04T12:28:09.197Z",
-  "requestedBy": "rsc-chem-capability-promotion-rescan-20261004",
+  "requestedAt": "2026-10-04T23:06:34.000Z",
+  "requestedBy": "prepublish-primary-20261005-0800",
   "publicationSlot": "2026-10-05T08:00:00+08:00",
-  "baselineMainSha": "5e424913862e19153d0d3ee00f960b42c32bc2c8",
-  "reason": "Required post-promotion safety rescan for stable capability fingerprint cf1965ec987e8d226af927b2b81c4a06f4059d354882a2797e93b464510b7377. Keep verifiedThrough at 2026-09-18, recompute the DOI union from the 2026-09-19 activation boundary under repaired partial-date/catch-up semantics, persist paired latest/compact snapshots, and do not mutate production literature or media."
+  "baselineMainSha": "7ac69a58b0453a9ed50887781fc901144a1ac9b8",
+  "reason": "Fresh prepublish audit required because the prior paired snapshot was generated at 2026-10-04T12:56:22.564Z, outside the 65-minute freshness window for the 2026-10-05 08:00 Asia/Shanghai slot. Recompute the full DOI union with the canonical registry (Chemical Science and Green Chemistry activeFrom=2026-10-01; Chem remains 2026-09-19), preserve the three-day review window, seven-day machine safety tail, created/deposit rescue and verifiedThrough catch-up. Persist paired latest/compact snapshots and do not mutate production literature or media."
 }
