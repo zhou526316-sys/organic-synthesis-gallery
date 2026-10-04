@@ -1,0 +1,97 @@
+name: Verify publisher sources v7 live
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/publisher-sources-live-20261004.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Compare core rules and complete queue/quality code with pre-adaptation source
+        run: |
+          git diff --exit-code 2357bb1ff3bc3e23d074a0b52bbf25b6eee54752 HEAD -- PROJECT_RULES.md AGENTS.md shared/literature-journals.js audit/media-auto-policy.json docs/literature-scope-contract.md docs/literature-update-protocol.md .github/workflows/literature-audit.yml .github/workflows/github-pages.yml .github/workflows/new-body-continuous.yml public/papers.gz.b64 public/rolling-supplement.json src
+          python - <<'PY'
+          import subprocess
+          from pathlib import Path
+          a=subprocess.check_output(['git','show','2357bb1ff3bc3e23d074a0b52bbf25b6eee54752:public/toc-mainline.user.js']).decode()
+          b=Path('public/toc-mainline.user.js').read_text()
+          for start,end in [('  // Explicit user control.','  function completeControllerResume()'),('  function articleFigureResolution(','  function rawTagAttrs('),('  function svgQuality(','  async function sameFigureCurrentSrcFallback(')]:
+            assert a[a.index(start):a.index(end,a.index(start))]==b[b.index(start):b.index(end,b.index(start))],start
+          print('CORE_RULES_QUEUE_AND_QUALITY_UNCHANGED')
+          PY
+      - name: Verify actual canonical installer and delivery state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
+          const sha='a7068857e473d660f0a5ed963489dde57715e45b',expected='4c34c6a3e08588523765873ec38c6cb62e6380439d7c729006c74c0a6c1f2c61';
+          const site='https://gallery.gczhouwld.com',api='https://api.gczhouwld.com';
+          const report={sourceSha:sha,expectedInstallerSha256:expected,readOnly:true,mediaWrites:0,publisherRequests:0,authenticatedUserCaptureVerified:false,coreContractComparisonPassed:true,probes:[],errors:[]};
+          const delay=ms=>new Promise(r=>setTimeout(r,ms));
+          async function read(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'v7Acceptance='+Date.now(),{headers:{origin:site,'cache-control':'no-cache'},signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error(url.split('?')[0]+':http_'+r.status);return r;}
+          const json=async url=>(await read(url)).json();
+          async function deployments(){const r=await fetch('https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/runs?head_sha='+sha+'&event=push&per_page=50',{headers:{authorization:'Bearer '+process.env.GH_TOKEN,accept:'application/vnd.github+json'},signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('runs_http_'+r.status);const x=await r.json();return (x.workflow_runs||[]).filter(v=>['Deploy Worker frontend assets','Deploy GitHub Pages frontend'].includes(v.name)).map(v=>({name:v.name,id:v.id,status:v.status,conclusion:v.conclusion}));}
+          try{
+            for(let i=0;i<80;i++){report.deployments=await deployments();if(report.deployments.length===2&&report.deployments.every(v=>v.status==='completed'))break;if(i%8===0)console.log('DEPLOYMENT_WAIT',JSON.stringify(report.deployments));await delay(15000);}
+            for(const url of [site+'/gallery-vpn-bridge.user.js','https://organic-synthesis-gallery.zhou526316.workers.dev/gallery-vpn-bridge.user.js']){
+              const r=await read(url),text=await r.text(),hash=createHash('sha256').update(text).digest('hex');
+              report.probes.push({url,status:r.status,sha256:hash,matchesTested:hash===expected,bytes:Buffer.byteLength(text),version:(text.match(/@version\s+(\S+)/)||[])[1],marker:text.includes("var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';"),panel:text.includes('全队列补缺6 · 图源适配7')});
+            }
+            const [q,m,l,c,h,integration]=await Promise.all([json(site+'/toc-demand-live.json'),json(site+'/media-index.json'),json(site+'/body-publication-ledger.json'),json(api+'/api/media/capture-capabilities'),json(api+'/api/_healthcheck'),json(api+'/api/user-ui/integrations')]);
+            const recent=(q.articles||[]).filter(a=>(a.addedDate||a.date||'')>='2026-10-02'),ds=new Set(recent.map(a=>a.doi));
+            const ledger=Array.isArray(l.items)?l.items:Object.values(l.items||{}),lr=ledger.filter(x=>ds.has(x.doi));
+            report.queue={generatedAt:q.generatedAt,count:q.webpageDoiCount,registryLength:q.articles.length,latestAddedDate:q.latestAddedDate};
+            report.recent={definition:'website addedDate >= 2026-10-02',count:recent.length,officialTocs:recent.filter(a=>{const t=m.items?.[a.doi]?.toc;return t?.available&&t.imageUrl&&!/fallback/.test(t.reason||'')}).length,prunedDois:recent.filter(a=>m.items?.[a.doi]?.toc?.reason==='invalid_static_media_pruned').map(a=>a.doi),bodyLedgerImages:lr.length,bodyLedgerPapers:new Set(lr.map(x=>x.doi)).size};
+            report.health={ok:h.ok,d1:h.d1,r2:h.r2,writeAuth:h.writeAuth,integrationsReadable:!!(integration.auth&&integration.payments),rootStatus:(await read(site+'/')).status};
+            report.capabilities={captureVersion:c.captureVersion,mediaControllerRevision:c.mediaControllerRevision,mediaGeneration:c.mediaGeneration};
+            report.imageSamples=[];
+            for(const doi of ['10.1021/jacs.6c13713','10.1021/acs.orglett.6c03558','10.1021/acs.joc.6c01674']){
+              const t=m.items?.[doi]?.toc;if(t?.imageUrl)report.imageSamples.push({doi,kind:'officialToc',url:new URL(t.imageUrl,site+'/').href});
+            }
+            for(const a of recent){const figures=m.items?.[a.doi]?.figures?.figures||[];const f=figures.find(f=>f.publicationId==='new-body-auto-20260923-v1'&&f.imageUrl);if(f)report.imageSamples.push({doi:a.doi,kind:'body',url:new URL(f.imageUrl,site+'/').href});if(report.imageSamples.filter(x=>x.kind==='body').length===3)break;}
+            for(const sample of report.imageSamples){if(new URL(sample.url).origin!==site)throw Error('unexpected_image_origin');const r=await read(sample.url);const b=Buffer.from(await r.arrayBuffer());sample.status=r.status;sample.bytes=b.length;sample.sha256=createHash('sha256').update(b).digest('hex');}
+            report.passed=report.deployments.length===2&&report.deployments.every(x=>x.conclusion==='success')&&report.probes.every(x=>x.status===200&&x.matchesTested&&x.marker&&x.panel&&x.version==='2.2.39')&&report.queue.count===report.queue.registryLength&&c.captureVersion==='6.2.20'&&c.mediaControllerRevision==='2.2.39'&&c.mediaGeneration===1790082000000&&report.health.ok&&report.health.integrationsReadable&&report.health.rootStatus===200&&report.recent.prunedDois.length===0&&report.imageSamples.filter(x=>x.kind==='officialToc').length===3;
+          }catch(e){report.errors.push(String(e.message).slice(0,300));report.passed=false;}
+          report.verifiedAt=new Date().toISOString();await writeFile(process.env.RUNNER_TEMP+'/publisher-v7-live.json',JSON.stringify(report,null,2));console.log('PUBLISHER_V7_LIVE',JSON.stringify(report));if(!report.passed)process.exitCode=1;
+          JS
+      - name: Install isolated browser for delivered image decoding
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Decode actual delivered TOC and body files without loading site analytics
+        run: |
+          node --input-type=module <<'JS'
+          import {readFile,writeFile} from 'node:fs/promises';
+          import {chromium} from 'playwright';
+          const source=JSON.parse(await readFile(process.env.RUNNER_TEMP+'/publisher-v7-live.json','utf8'));
+          const browser=await chromium.launch({headless:true}),page=await browser.newPage({viewport:{width:1200,height:900}});
+          const report={readOnly:true,publisherRequests:0,consoleErrors:[],pageErrors:[],failedRequests:[],images:[],passed:false};
+          page.on('console',m=>{if(m.type()==='error')report.consoleErrors.push(m.text())});page.on('pageerror',e=>report.pageErrors.push(String(e)));page.on('requestfailed',r=>report.failedRequests.push(r.url()));
+          try{
+            await page.setContent('<!doctype html><meta charset="utf-8"><title>Delivered media acceptance</title><style>body{font:16px sans-serif}main{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}figure{margin:0}img{max-width:100%;height:260px;object-fit:contain}figcaption{overflow-wrap:anywhere}</style><h1>Delivered TOC / body media</h1><main></main>');
+            report.images=await page.evaluate(async samples=>{
+              return Promise.all(samples.map(async s=>{const fig=document.createElement('figure'),img=new Image(),caption=document.createElement('figcaption');caption.textContent=s.kind+' · '+s.doi;fig.append(img,caption);document.querySelector('main').append(fig);img.src=s.url;try{await Promise.race([img.decode(),new Promise((_,r)=>setTimeout(()=>r(Error('decode_timeout')),30000))]);return{...s,decoded:true,width:img.naturalWidth,height:img.naturalHeight};}catch(e){return{...s,decoded:false,error:String(e.message)}}}));
+            },source.imageSamples);
+            report.passed=report.images.length>=3&&report.images.every(x=>x.decoded&&x.width>0&&x.height>0)&&report.consoleErrors.length===0&&report.pageErrors.length===0&&report.failedRequests.length===0;
+            await page.screenshot({path:process.env.RUNNER_TEMP+'/delivered-media-browser.png',fullPage:true});
+          }finally{await browser.close();await writeFile(process.env.RUNNER_TEMP+'/delivered-media-browser.json',JSON.stringify(report,null,2));console.log('DELIVERED_MEDIA_BROWSER',JSON.stringify(report));if(!report.passed)process.exitCode=1;}
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: publisher-v7-live-acceptance
+          path: |
+            ${{ runner.temp }}/publisher-v7-live.json
+            ${{ runner.temp }}/delivered-media-browser.json
+            ${{ runner.temp }}/delivered-media-browser.png
+          retention-days: 14
