@@ -116,7 +116,24 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const membershipText = stable(membershipBody) + '\n';
   const membershipRef = ref(`membership.${sha256(membershipText)}.json`, membershipText);
 
-  const generated = { ...bundle.files, [presentationRef.path]: presentationText, [membershipRef.path]: membershipText };
+  const acquisitionBody = {
+    schema: 'gallery-acquisition-basis-v1',
+    catalogId: bundle.catalog.recordSetHash,
+    doiSetHash: bundle.catalog.doiSetHash,
+    publicationSlot: marker.publicationSlot,
+    count: bundle.records.length,
+    records: bundle.records.map(row => ({
+      doi: row.doi,
+      revision: row.revision,
+      firstOnlineDate: row.firstOnlineDate,
+      datePrecision: row.datePrecision,
+      addedDate: row.addedDate || null,
+    })),
+  };
+  const acquisitionText = stable(acquisitionBody) + '\n';
+  const acquisitionRef = ref(`acquisition-basis.${sha256(acquisitionText)}.json`, acquisitionText);
+
+  const generated = { ...bundle.files, [presentationRef.path]: presentationText, [membershipRef.path]: membershipText, [acquisitionRef.path]: acquisitionText };
   const objects = Object.entries(generated).map(([pathname, content]) => {
     assertSafeRelative(pathname);
     return ref(pathname, content);
@@ -136,6 +153,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     doiSetHash: bundle.catalog.doiSetHash,
     catalogCurrent: ref('current.json', catalogCurrentText),
     membership: membershipRef,
+    acquisitionBasis: acquisitionRef,
     titlePresentation: presentationRef,
     objects,
   };
@@ -159,6 +177,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const releaseRoundtrip = JSON.parse(await readFile(path.join(tmp,'release.json'),'utf8'));
   assert(releaseRoundtrip.schema === SCHEMA && releaseRoundtrip.recordCount === marker.productionCards, 'release_roundtrip_invalid');
   assert(releaseRoundtrip.membership.sha256 === membershipRef.sha256, 'membership_release_mismatch');
+  assert(releaseRoundtrip.acquisitionBasis.sha256 === acquisitionRef.sha256, 'acquisition_release_mismatch');
 
   await rm(output, { recursive:true, force:true });
   await mkdir(path.dirname(output), { recursive:true });
