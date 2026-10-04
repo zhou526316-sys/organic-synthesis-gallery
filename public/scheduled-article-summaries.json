@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": 1791114127160,
+  "generatedAt": 1791114443032,
   "publicationMode": "daily_1200_asia_shanghai",
   "schemaVersion": "scheduled-reviewed-summary-v1",
   "items": {
@@ -5433,6 +5433,20 @@
       "en": "A Rh-catalysed triple-carbonylation cascade assembles structurally defined 4-carbothreofuranoses directly from simple aldehydes and CO in one step. Precise silane stoichiometry and ligand selection synchronize three consecutive CO insertions, terminated by silicon-directed cyclization; the authors propose a chelation-relay mechanism that propagates stereochemistry across three contiguous stereocenters with good diastereocontrol. The reaction accommodates substrates from aromatic and aliphatic aldehydes to steroidal aldehydes. The resulting oxygen-rich scaffolds are rapidly converted into N- and C-glycosides, nitrogen heterocycles, and polyols, bypassing extensive protection–deprotection sequences typical of carbohydrate synthesis.",
       "generatedAt": 1791114127160,
       "reviewedAt": 1791114127160,
+      "promptVersion": "gallery-daily-summary-v1",
+      "auditVersion": "gallery-daily-summary-audit-v1"
+    },
+    "10.31635/ccschem.026.202607659": {
+      "schemaVersion": "scheduled-reviewed-summary-v1",
+      "doi": "10.31635/ccschem.026.202607659",
+      "status": "approved",
+      "sourceHash": "27e0501279b8f7180c807dbb6a0c0756ab09a42f072f8aed22e15d57e2303a3a",
+      "evidencePacketHash": "c041ff0dcb018e6e780f8d358d6a4a4654cad9bea55d575cdf611b875a407d04",
+      "evidenceLevel": "partial",
+      "zh": "证据覆盖不完整（partial）。该研究提出仅以 DMSO 和空气解构胺固化环氧树脂及商业纤维增强复合材料，并通过选择性 C–N 键断裂同时实现纤维回收和树脂基体升级利用。多种胺固化环氧树脂可在约 150–160 °C、20 h 内完全降解；商业 CFRP/GFRP 中回收纤维的结构和单丝力学性能与原始纤维相当。模型化合物的 HRLC-MS、1H NMR 和动力学数据支持作者提出的 oxidation–Cope elimination：叔胺先氧化为 N-oxide，随后 Cope elimination 生成末端烯烃和 hydroxylamine，并未检测到预期由 C–O 断裂产生的 phenol/benzoquinone。可溶降解产物从环氧树脂中回收率 >94 wt%，商业复合材料计入回收纤维后 >99 wt%，并可直接配制为满足木材胶黏强度要求的 adhesive。该方法也展示了 continuous-flow 操作；明确局限是 anhydride-cured E51/MeTHPA 在 160 °C、20 h 后降解度仅 8.9%。",
+      "en": "Evidence coverage is partial. The study uses only DMSO and air to deconstruct amine-cured epoxy resins and commercial fiber-reinforced composites, coupling selective C–N bond cleavage with fiber recovery and resin-matrix upcycling. Several amine-cured epoxy resins are completely degraded within about 20 h at 150–160 °C, while fibers recovered from commercial CFRP/GFRP retain structural integrity and monofilament mechanical properties comparable to pristine fibers. HRLC-MS, 1H NMR, and kinetic studies on a model compound support the authors’ oxidation–Cope-elimination mechanism: tertiary amines are first oxidized to N-oxides, followed by Cope elimination to terminal-alkene and hydroxylamine products, with no phenol or benzoquinone detected as expected products of competing C–O cleavage. Soluble degradation products are recovered in >94 wt% yield from epoxy resins and >99 wt% from commercial composites when recovered fibers are included, and can be formulated as wood adhesives meeting required bond-strength criteria. Continuous-flow operation is also demonstrated. A clear limitation is that anhydride-cured E51/MeTHPA reaches only 8.9% degradation after 20 h at 160 °C.",
+      "generatedAt": 1791114443032,
+      "reviewedAt": 1791114443032,
       "promptVersion": "gallery-daily-summary-v1",
       "auditVersion": "gallery-daily-summary-audit-v1"
     }
