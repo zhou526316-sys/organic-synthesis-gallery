@@ -36,3 +36,7 @@ Automatic runs refresh current membership/eligibility after a minute before open
 No frontend Hot/Archive switch, no D1/R2 schema migration, no user-library migration, no summary schedule change, no new publication timer, no reduction of canonical membership, no deletion of historical checkpoints/assets, and no automatic history cleanup.
 
 C2 still reads the legacy global TOC/staged-figure/evidence inventories where those APIs are global. Moving those discovery scans to an Active Asset/Evidence Index is a later performance phase.
+
+## Validation PR synchronization marker
+
+PR #276 uses this documentation-only follow-up commit to force GitHub pull_request synchronization against the final C2 code. It does not change runtime behavior or any production authority.
