@@ -221,7 +221,9 @@ jobs:
       - name: Verify media-index asset integrity
         run: node cloudflare/scripts/verify-static-media-integrity.mjs
       - name: Build versioned Gallery architecture read model
-        run: node scripts/build-gallery-architecture-public.mjs
+        run: |
+          node scripts/build-gallery-architecture-public.mjs
+          node scripts/test-toc-active-work-transport.mjs public/architecture-v1
       - name: Build static Gallery
         run: npm run build
       - name: Verify self-contained artifact
