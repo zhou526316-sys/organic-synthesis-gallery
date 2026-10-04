@@ -187,7 +187,7 @@
   },
   "verifiedThrough": "2026-09-18",
   "capabilityRegistry": "audit/literature-capability.json",
-  "currentStableCapabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
+  "currentStableCapabilityFingerprint": "cf1965ec987e8d226af927b2b81c4a06f4059d354882a2797e93b464510b7377",
   "lastCompletedReview": {
     "id": "manual-midday-review-20260922",
     "finishedAt": "2026-09-22T14:35:00+08:00",
@@ -1503,7 +1503,7 @@
   },
   "discoveryCoverageRepair": {
     "id": "rsc-chem-crossref-partial-date-20261004",
-    "status": "catchup_required",
+    "status": "catchup_complete_capability_promoted_rescan_required",
     "detectedAt": "2026-10-04T12:20:03.088Z",
     "previousVerifiedThrough": "2026-09-20",
     "repairedVerifiedThrough": "2026-09-18",
@@ -1516,6 +1516,32 @@
     "repairCommit": "b9ee9d4ef0a36d0dd8b1ef716166cac5a94832fa",
     "validationRun": 37201431750,
     "noProductionLiteratureMutation": true,
-    "noScheduleChange": true
+    "noScheduleChange": true,
+    "catchupCompletedAt": "2026-10-04T12:22:59.332Z",
+    "catchupAuditRun": 37201854938,
+    "latestBlobSha": "2cb4691fbe1d9c295703900b517bbcdba9f118f6",
+    "compactBlobSha": "ae827bf4af05c78760c8a95fe2d2991df58611f2",
+    "capabilityPromotionCommit": "625c4eb45f273124a02327fe81de56fbed9a944b",
+    "capabilityFingerprint": "cf1965ec987e8d226af927b2b81c4a06f4059d354882a2797e93b464510b7377",
+    "discoveryCounts": {
+      "Chem": {
+        "sourceRecords": 9,
+        "missingFromGallery": 8,
+        "potentialGaps": 3
+      },
+      "Chemical Science": {
+        "sourceRecords": 78,
+        "missingFromGallery": 78,
+        "potentialGaps": 24
+      },
+      "Green Chemistry": {
+        "sourceRecords": 41,
+        "missingFromGallery": 41,
+        "potentialGaps": 9
+      },
+      "totalUnresolved": 152
+    },
+    "productionCardsStill": 786,
+    "semanticReviewRequired": true
   }
 }
