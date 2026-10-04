@@ -1014,11 +1014,27 @@ def get_draft(token: str, media_id: str):
     return result
 
 
-def preview_slug(media_id: str) -> str:
+def preview_slug(media_id: str, draft: dict | None = None) -> str:
     key = os.environ.get("RELAY_SHARED_KEY", "").encode("utf-8")
     if not key:
         raise RuntimeError("RELAY_SHARED_KEY missing; cannot derive preview slug")
-    digest = hmac.new(key, media_id.encode("utf-8"), hashlib.sha256).hexdigest()
+
+    version_basis = media_id
+    if draft:
+        items = draft.get("news_item") if isinstance(draft, dict) else None
+        item = items[0] if isinstance(items, list) and items else {}
+        version_basis += "\n" + json.dumps(
+            {
+                "title": item.get("title"),
+                "digest": item.get("digest"),
+                "content": item.get("content"),
+                "thumb_url": item.get("thumb_url"),
+                "content_source_url": item.get("content_source_url"),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+    digest = hmac.new(key, version_basis.encode("utf-8"), hashlib.sha256).hexdigest()
     return digest[:24]
 
 
@@ -1059,14 +1075,14 @@ h1{{font-size:22px;line-height:1.45;font-weight:700;margin:0 0 12px}}
 <div class="meta">{html.escape(author)}</div>
 <section class="wx-content">{content}</section>
 {f'<a class="source-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noreferrer">阅读原文</a>' if source_url else ''}
-<!-- Preview source: WeChat draft/get. media hash: {preview_slug(media_id)} -->
+<!-- Preview source: WeChat draft/get. version hash: {preview_slug(media_id, draft)} -->
 </main>
 </body>
 </html>"""
 
 
 def write_draft_preview(draft: dict, *, media_id: str, preview_dir: Path, base_url: str):
-    slug = preview_slug(media_id)
+    slug = preview_slug(media_id, draft)
     preview_dir.mkdir(parents=True, exist_ok=True)
     path = preview_dir / f"{slug}.html"
     path.write_text(render_wechat_draft_preview(draft, media_id=media_id), encoding="utf-8")
