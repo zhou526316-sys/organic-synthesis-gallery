@@ -43,9 +43,12 @@ jobs:
           node scripts/test-per-doi-release.mjs
           node scripts/test-deferred-publication-quality.mjs
           node scripts/test-formal-review-conversion.mjs
+          node scripts/test-pages-literature-authorization.mjs
 
       - name: Validate current production literature marker compatibility
-        run: node scripts/validate-production-literature-release-slot.mjs
+        run: |
+          node scripts/validate-production-literature-release-slot.mjs
+          node scripts/validate-pages-literature-authorization.mjs
 
       - name: Test and build inactive architecture public bundle
         run: |
