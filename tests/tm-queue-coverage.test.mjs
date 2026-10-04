@@ -22,9 +22,13 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  const cut=source.lastIndexOf('  installManualRestartListener();');
  vm.runInContext(source.slice(0,cut)+`
  isGalleryPage=()=>true;writeToken=()=> 'fixture';badge=()=>{};sleep=__sleep;getJson=__get;postReadJson=__post;getPrivateJson=__private;enqueueCaptureReport=()=>true;
- globalThis.T={coverageStats,coveragePending,coverageMergePlan,coverageRemaining,metadataJson,metadataTransport:(g,n)=>{gmRequest=g;nativeControllerRequest=n;},buildMissingCaptureJobs,captureNeedText,captureLiveText,captureLiveSnapshot,forceStartFromHead,manualRunBlocksAutomatic,readMissingCaptureInventory,checkpointKey};
+ function fixtureArchitecture(q){return ({ok:true,revision:'fixture-c2b',serial:1,publicationSlot:'2026-10-04T08:00:00+08:00',catalogId:'a'.repeat(64),membershipSha256:'b'.repeat(64),asOfDate:'2026-10-04',cutoff:'2026-07-04',liveAsOfDate:'2026-10-04',liveCutoff:'2026-07-04',memberCount:q.articles.length,hotCount:q.articles.length,archiveCount:0,activeCount:q.articles.length,archiveIdleCount:0,recentAdditionCount:0,dateReviewCount:0,activeDois:q.articles.map(a=>normalizeDoi(a.doi)),hotDois:q.articles.map(a=>normalizeDoi(a.doi)),archiveDois:[],withdrawn:[]});}
+ observeArchitectureMembership=async(q)=>fixtureArchitecture(q);
+ var fixtureInventoryRun={id:'fixture-inventory',summary:{results:[]},inventoryCache:new Map(),activeDois:new Set()};
+ async function fixtureReadMissing(q){fixtureInventoryRun.activeDois=new Set(q.articles.map(a=>normalizeDoi(a.doi)));var prior=manualExecutionCurrent;manualExecutionCurrent=()=>true;try{return await readMissingCaptureInventory(q,fixtureInventoryRun);}finally{manualExecutionCurrent=prior;}}
+ globalThis.T={coverageStats,coveragePending,coverageMergePlan,coverageRemaining,metadataJson,metadataTransport:(g,n)=>{gmRequest=g;nativeControllerRequest=n;},buildMissingCaptureJobs,captureNeedText,captureLiveText,captureLiveSnapshot,forceStartFromHead,manualRunBlocksAutomatic,readMissingCaptureInventory:fixtureReadMissing,checkpointKey,fixtureArchitecture};
  })();`,ctx);
- return {T:ctx.T,ctx,store,opened,calls,timers,plan:(ar=q.articles,i=inventory)=>{const run={id:'test',summary:{results:[]}};return {jobs:Array.from(ctx.T.buildMissingCaptureJobs(queue(ar),run,i)),summary:run.summary};}};
+ return {T:ctx.T,ctx,store,opened,calls,timers,plan:(ar=q.articles,i=inventory)=>{const qq=queue(ar),run={id:'test',summary:{results:[]},activeDois:new Set(qq.articles.map(a=>String(a.doi).toLowerCase()))};return {jobs:Array.from(ctx.T.buildMissingCaptureJobs(qq,run,i)),summary:run.summary};}};
 }
 const summary=()=>({results:[],remainingNeeds:{}});
 const fakeJob=(n,flags={})=>({...article(n),captureFigures:true,captureToc:false,captureEvidence:false,capturedFigures:{},...flags});
