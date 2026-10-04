@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "phase": "C2a.1-observer-delivery-real-browser-gate",
+  "dateAsiaShanghai": "2026-10-04",
+  "mergeCommit": "c0af1fd3fb6c91f18c3a478bbbd582a5ac56152e",
+  "pagesRun": 37184940322,
+  "pagesVerifiedAt": "2026-10-04T07:14:04.934Z",
+  "productionCards": 785,
+  "datasetSha256": "9b1180d9922b42a7c72a50052ce6853ae075d89c45df4b92d416f2fd4e0d713b",
+  "architectureVerified": true,
+  "architectureCatalogId": "669ce6a111c123220f7db47d14433813b658bd029f7ab19e0888006c7788a84d",
+  "lifecycle": {
+    "asOfDate": "2026-10-04",
+    "cutoff": "2026-07-04",
+    "hot": 762,
+    "archive": 23
+  },
+  "delivery": {
+    "bridgeInstallerVersion": "2.2.40",
+    "standaloneUserscriptMetadataVersion": "6.2.22",
+    "captureProtocolVersion": "6.2.20",
+    "controllerRevision": "2.2.39",
+    "twoOriginsVerified": true
+  },
+  "realBrowserEvidence": {
+    "postDeployReportsObserved": true,
+    "latestObservedDoi": "10.1021/jacs.6c13570",
+    "latestObservedAttemptId": "1791098300601-d40a51fc",
+    "postDeployCaptureProtocol": "6.2.20",
+    "postDeployControllerRevision": "2.2.39",
+    "architectureMembershipTracePresent": false,
+    "verifiedSnapshotPresent": false,
+    "currentCatalogIdPresent": false,
+    "gateConclusion": "not_satisfied"
+  },
+  "decision": {
+    "c2bTaskFilteringEnabled": false,
+    "frontendHotArchiveSwitchEnabled": false,
+    "reason": "A real browser has produced reports after C2a.1 deployment, but no architecture_membership/verified_snapshot event has yet been observed. The safety gate requires a real installed-browser snapshot matching the latest verified catalog before Archive task filtering is enabled.",
+    "nextGate": "Observe architecture_membership verified_snapshot from a real installed browser and match its catalogId/memberCount/hotCount/archiveCount/cutoff to the latest verified architecture delivery."
+  },
+  "notes": [
+    "Archive remains canonical membership; no DOI was removed.",
+    "No task eligibility filtering is active yet.",
+    "No production frontend Hot/Archive read switch is active yet.",
+    "C2a.1 delivery is successful; stopping before C2b is an intentional safety boundary, not a deployment failure."
+  ]
+}
