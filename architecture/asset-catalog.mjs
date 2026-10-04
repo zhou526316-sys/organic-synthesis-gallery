@@ -41,6 +41,14 @@ function classifyDisplay(item) {
     : 'official';
   return { presence:'present', kind, contentHash:safeHash(item.toc.contentHash) };
 }
+function staticFigureSnapshot(item) {
+  const figures = Array.isArray(item?.figures?.figures) ? item.figures.figures : [];
+  return {
+    presence:figures.length ? 'present':'absent',
+    count:figures.length,
+    labels:figures.map(row => String(row?.label || '').trim().slice(0,120)).filter(Boolean).slice(0,32),
+  };
+}
 function latestKinds(rows) {
   const out = { official:null, figure1:null };
   for (const row of rows || []) {
@@ -134,17 +142,19 @@ export function buildUnifiedAssetCatalog({
   const rows = [];
   const summary = {
     total:membership.length,
-    officialTocPublished:0, officialTocCaptured:0, displayVisualPresent:0,
-    figurePublishedPresent:0, figureCapturedPresent:0,
+    officialTocWorker:0, officialTocCaptured:0, displayVisualPresent:0,
+    workerFigurePresent:0, staticFigurePresent:0, capturedFigurePresent:0,
     figureComplete:0, figureIncomplete:0, figureCompletenessUnknown:0,
-    capturedTocNotPublished:0, capturedFiguresNotPublished:0,
-    suspiciousPublishedToc:0, reviewedSummaryPresent:0,
+    capturedTocNotWorker:0, capturedFiguresNotWorker:0, capturedFiguresNotStatic:0,
+    staticFiguresWithoutWorker:0, capturedCompleteButStaticIncomplete:0,
+    suspiciousWorkerToc:0, reviewedSummaryPresent:0,
     evidenceReferencedBySummary:0, evidenceUnknown:0,
   };
   const reconciliation = {
-    capturedTocNotPublished:[], capturedFiguresNotPublished:[],
-    displayVisualWithoutPublishedVisual:[], publishedFiguresWithoutCompletenessProof:[],
-    suspiciousPublishedToc:[],
+    capturedTocNotWorker:[], capturedFiguresNotWorker:[], capturedFiguresNotStatic:[],
+    staticVisualWithoutWorkerVisual:[], staticFiguresWithoutWorker:[],
+    workerFiguresWithoutCompletenessProof:[], capturedCompleteButStaticIncomplete:[],
+    suspiciousWorkerToc:[],
   };
 
   for (const doi of membership) {
@@ -152,25 +162,26 @@ export function buildUnifiedAssetCatalog({
     const localKinds = latestKinds(local.get(doi) || []);
     const stage = staged.get(doi);
     const display = classifyDisplay(displayItems[doi]);
+    const staticFigures = staticFigureSnapshot(displayItems[doi]);
     const reviewed = summaries.result.get(doi);
 
-    const officialPublished = Boolean(w.tocStored);
-    const publishedLargeSource = String(w.largeSource || 'none').toLowerCase();
-    const fallbackPublished = !officialPublished && Boolean(
+    const officialWorker = Boolean(w.tocStored);
+    const workerLargeSource = String(w.largeSource || 'none').toLowerCase();
+    const fallbackWorker = !officialWorker && Boolean(
       w.figureOneStored || ['figure1','article_figure','pdf_primary'].includes(String(w.primaryKind || '').toLowerCase())
-      || !['none','toc',''].includes(publishedLargeSource)
+      || !['none','toc',''].includes(workerLargeSource)
     );
     const officialCaptured = Boolean(localKinds.official);
     const fallbackCaptured = Boolean(localKinds.figure1);
-    if (officialPublished) summary.officialTocPublished++;
+    if (officialWorker) summary.officialTocWorker++;
     if (officialCaptured) summary.officialTocCaptured++;
     if (display.presence === 'present') summary.displayVisualPresent++;
-    if (w.suspiciousToc) { summary.suspiciousPublishedToc++; reconciliation.suspiciousPublishedToc.push(doi); }
-    if (!officialPublished && officialCaptured) {
-      summary.capturedTocNotPublished++; reconciliation.capturedTocNotPublished.push(doi);
+    if (w.suspiciousToc) { summary.suspiciousWorkerToc++; reconciliation.suspiciousWorkerToc.push(doi); }
+    if (!officialWorker && officialCaptured) {
+      summary.capturedTocNotWorker++; reconciliation.capturedTocNotWorker.push(doi);
     }
-    if (display.presence === 'present' && !(officialPublished || fallbackPublished)) {
-      reconciliation.displayVisualWithoutPublishedVisual.push(doi);
+    if (display.presence === 'present' && !(officialWorker || fallbackWorker)) {
+      reconciliation.staticVisualWithoutWorkerVisual.push(doi);
     }
 
     const publishedCount = Math.max(0, Number(w.figureCount || 0));
@@ -181,12 +192,24 @@ export function buildUnifiedAssetCatalog({
     const expectedCount = Number.isSafeInteger(expectedRaw) && expectedRaw > 0 ? expectedRaw : null;
     const completeness = expectedCount === null ? 'unknown'
       : capturedCount >= expectedCount ? 'complete' : 'incomplete';
-    if (publishedCount > 0) summary.figurePublishedPresent++;
-    if (capturedCount > 0) summary.figureCapturedPresent++;
+    const staticCount = staticFigures.count;
+    const staticCompleteness = expectedCount === null ? 'unknown' : staticCount >= expectedCount ? 'complete' : 'incomplete';
+    if (publishedCount > 0) summary.workerFigurePresent++;
+    if (staticCount > 0) summary.staticFigurePresent++;
+    if (capturedCount > 0) summary.capturedFigurePresent++;
     if (capturedCount > 0 && publishedCount === 0) {
-      summary.capturedFiguresNotPublished++; reconciliation.capturedFiguresNotPublished.push(doi);
+      summary.capturedFiguresNotWorker++; reconciliation.capturedFiguresNotWorker.push(doi);
     }
-    if (publishedCount > 0 && expectedCount === null) reconciliation.publishedFiguresWithoutCompletenessProof.push(doi);
+    if (capturedCount > 0 && staticCount === 0) {
+      summary.capturedFiguresNotStatic++; reconciliation.capturedFiguresNotStatic.push(doi);
+    }
+    if (staticCount > 0 && publishedCount === 0) {
+      summary.staticFiguresWithoutWorker++; reconciliation.staticFiguresWithoutWorker.push(doi);
+    }
+    if (publishedCount > 0 && expectedCount === null) reconciliation.workerFiguresWithoutCompletenessProof.push(doi);
+    if (completeness === 'complete' && staticCompleteness !== 'complete') {
+      summary.capturedCompleteButStaticIncomplete++; reconciliation.capturedCompleteButStaticIncomplete.push(doi);
+    }
     if (completeness === 'complete') summary.figureComplete++;
     else if (completeness === 'incomplete') summary.figureIncomplete++;
     else summary.figureCompletenessUnknown++;
@@ -200,7 +223,7 @@ export function buildUnifiedAssetCatalog({
     rows.push({
       doi,
       toc:{
-        published:{ official:officialPublished, fallback:fallbackPublished, suspicious:Boolean(w.suspiciousToc),
+        worker:{ official:officialWorker, fallback:fallbackWorker, suspicious:Boolean(w.suspiciousToc),
           reason:String(w.tocReason || ''), largeSource:String(w.largeSource || 'none') },
         captured:{ official:officialCaptured, fallback:fallbackCaptured,
           officialContentHash:safeHash(localKinds.official?.contentHash),
@@ -208,7 +231,8 @@ export function buildUnifiedAssetCatalog({
         display,
       },
       figures:{
-        published:{ presence:publishedCount > 0 ? 'present':'absent', count:publishedCount, sample:publishedFigures },
+        worker:{ presence:publishedCount > 0 ? 'present':'absent', count:publishedCount, sample:publishedFigures },
+        staticDisplay:{ ...staticFigures, completeness:staticCompleteness },
         captured:{ presence:capturedCount > 0 ? 'present':'absent', count:capturedCount, expectedCount,
           completeness, observedAt:Math.max(0, Number(stage?.observedAt || 0)), items:capturedFigures },
       },
