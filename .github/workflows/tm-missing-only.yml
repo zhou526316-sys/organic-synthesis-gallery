@@ -68,7 +68,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node scripts/validate-tm220-artifacts.mjs public
           node --check public/gallery-vpn-bridge.user.js
-          grep -F '缺项补抓4' public/gallery-vpn-bridge.user.js
+          grep -F "immediate.id='osg-immediate-start'" public/gallery-vpn-bridge.user.js
+          grep -F '立即开始任务（只补缺项）' public/gallery-vpn-bridge.user.js
           mkdir -p "$RUNNER_TEMP/tm-missing-output"
           cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/tm-missing-output/"
           sha256sum public/gallery-vpn-bridge.user.js > "$RUNNER_TEMP/tm-missing-output/sha256.txt"
