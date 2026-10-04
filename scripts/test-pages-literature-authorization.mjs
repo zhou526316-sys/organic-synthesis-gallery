@@ -24,6 +24,7 @@ run('missing_sha_never_means_unchanged', () => {
 run('exact_receipt_backed_retired_evening_baseline_can_be_reused_for_unchanged_ui_deploy', () => {
   const markerCommit = 'a'.repeat(40);
   const legacyMarker = {
+    schemaVersion: 2,
     mode: 'slot-release',
     publicationSlot: '2026-10-04T18:00:00+08:00',
     productionCards: 786,
@@ -43,6 +44,7 @@ run('exact_receipt_backed_retired_evening_baseline_can_be_reused_for_unchanged_u
     { ...baseline, publicationSlot: '2026-10-05T18:00:00+08:00' }, [], markerCommit,
   ), false);
   assert.equal(canReuseReceiptBackedLegacyBaseline(legacyMarker, { ...baseline, legacyMarkerAuthorized: false }, [], markerCommit), false);
+  assert.equal(canReuseReceiptBackedLegacyBaseline({ ...legacyMarker, schemaVersion: 1 }, baseline, [], markerCommit), false);
   assert.equal(canReuseReceiptBackedLegacyBaseline(legacyMarker, baseline, [], 'b'.repeat(40)), false);
 });
 
