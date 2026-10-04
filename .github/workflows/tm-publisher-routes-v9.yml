@@ -1,0 +1,90 @@
+name: Tampermonkey current publisher routes v9
+
+on:
+  push:
+    branches: [fix/tm-publisher-routes-20261004, main]
+    paths:
+      - 'public/toc-mainline.user.js'
+      - 'scripts/tm-rsc-elsevier-routing.inc.js'
+      - 'scripts/tm-ccs-toc-index.inc.js'
+      - 'scripts/tm-private-pdf-capture.inc.js'
+      - 'tests/tm-publisher-routes-browser.mjs'
+      - 'tests/pdf-cutoff-ccs-toc-browser.mjs'
+      - 'tests/private-pdf-capture-browser.mjs'
+      - 'docs/private-pdf-editorial-pipeline.md'
+      - '.github/workflows/private-pdf-capture-v2.yml'
+      - '.github/workflows/tm-publisher-routes-v9.yml'
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+
+      - name: Protect literature discovery and release rules
+        run: |
+          BASE="$(git merge-base HEAD origin/main)"
+          git diff --exit-code "$BASE" HEAD -- \
+            cloudflare/scripts/audit-literature.mjs shared/literature-journals.js \
+            docs/literature-scope-contract.md docs/literature-update-protocol.md \
+            public/papers.gz.b64 public/rolling-supplement.json \
+            .github/workflows/literature-audit.yml .github/workflows/literature-fixed-slot-release.yml \
+            .github/workflows/prepublish-review-gate.yml audit/media-auto-policy.json
+
+      - name: Run current media controller regressions
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-missing-only.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node tests/tm-controller-recovery.test.mjs
+          node tests/tm-newest-retry.test.mjs
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
+
+      - name: Install isolated Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+
+      - name: Verify Chem RSC CCS routes and Oct1 PDF scope
+        run: |
+          node tests/tm-publisher-routes-browser.mjs
+          node tests/pdf-cutoff-ccs-toc-browser.mjs
+          node tests/private-pdf-capture-browser.mjs
+
+      - name: Build exact compatible installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F "PUBLISHER_MEDIA_REVISION = '20261004-publisher-routes-v9'" public/gallery-vpn-bridge.user.js
+          grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
+          grep -F "elsevier_exact_doi_search_result_not_found" public/gallery-vpn-bridge.user.js
+          grep -F "ccs_toc_index_key_image" public/gallery-vpn-bridge.user.js
+          grep -F "rscArticleRoute(job, figureJob)" public/gallery-vpn-bridge.user.js
+          mkdir -p "$RUNNER_TEMP/tm-publisher-routes"
+          cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/tm-publisher-routes/"
+          sha256sum public/gallery-vpn-bridge.user.js > "$RUNNER_TEMP/tm-publisher-routes/sha256.txt"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-publisher-routes-v9-tested
+          path: ${{ runner.temp }}/tm-publisher-routes
+          retention-days: 14
