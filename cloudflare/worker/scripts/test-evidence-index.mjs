@@ -157,7 +157,7 @@ test('cursor backfill progresses across arbitrary pages without a ten-page loop 
   const second=await backfillEvidenceIndexPage(env,2);
   assert.equal(second.body.complete,false);
   assert.equal(second.body.scannedObjects,4);
-  assert.equal(second.body.skippedInvalid,1);
+  assert.equal(second.body.skippedInvalid,0);
 
   const third=await backfillEvidenceIndexPage(env,2);
   assert.equal(third.body.complete,true);
