@@ -35,8 +35,9 @@ import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeM
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
 import { backfillScheduledEvidenceHandoffs, getScheduledEvidenceHandoff, getScheduledEvidenceHandoffPart } from './scheduled-summary-handoff.js';
-import { getSummaryReviewStatus } from './summary-review.js';
+import { getLegacySummaryCandidateSnapshot, getSummaryReviewStatus } from './summary-review.js';
 import { backfillEvidenceIndexPage, getEvidenceIndexStatus, listEvidenceIndexRows } from './evidence-index.js';
+import { backfillSummaryJobIndexPage, compareSummaryCandidateSnapshots, getIndexedSummaryCandidateSnapshot, getSummaryJobIndexStatus } from './summary-job-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -295,6 +296,38 @@ async function handleApi(request, env, ctx) {
     if (authError) return authError;
     const limit = Math.max(1, Math.min(1000, Number(url.searchParams.get('limit') || 100)));
     return resultResponse(await listEvidenceIndexRows(env, limit));
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/job-index/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getSummaryJobIndexStatus(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/article-summary/job-index/backfill') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(1000, Number(url.searchParams.get('limit') || 500)));
+    return resultResponse(await backfillSummaryJobIndexPage(env, limit));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/candidate-shadow-compare') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const preferredDoi = url.searchParams.get('doi') || '';
+    const now = Date.now();
+    const legacy = await getLegacySummaryCandidateSnapshot(env, now, preferredDoi);
+    if (legacy.status !== 200) return resultResponse(legacy);
+    const indexed = await getIndexedSummaryCandidateSnapshot(env, now, preferredDoi);
+    if (indexed.status !== 200) return resultResponse(indexed);
+    const comparison = compareSummaryCandidateSnapshots(legacy.body, indexed.body);
+    return resultResponse({ status: 200, body: {
+      version: 1,
+      readPathActive: false,
+      comparedAt: now,
+      preferredDoi: String(preferredDoi || '').trim().toLowerCase(),
+      comparison,
+      legacy: legacy.body,
+      indexed: indexed.body,
+    } });
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
