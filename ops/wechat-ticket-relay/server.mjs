@@ -1,12 +1,17 @@
 import http from 'node:http';
+import { spawn } from 'node:child_process';
 
 const PORT = Number(process.env.PORT || 8788);
 const APP_ID = String(process.env.WECHAT_MP_APP_ID || '').trim();
 const APP_SECRET = String(process.env.WECHAT_MP_APP_SECRET || '').trim();
 const RELAY_SHARED_KEY = String(process.env.RELAY_SHARED_KEY || '').trim();
+const PUBLISHER_REPO = String(process.env.PUBLISHER_REPO || '/repo').trim();
+const PUBLISHER_PREVIEW_DIR = String(process.env.PUBLISHER_PREVIEW_DIR || '/preview').trim();
+const PUBLISHER_PREVIEW_BASE_URL = String(process.env.PUBLISHER_PREVIEW_BASE_URL || 'https://relay.gczhouwld.com/wechat-preview').trim();
 
 let accessTokenCache = null;
 let ticketCache = null;
+let publisherRunning = false;
 
 function json(res, status, body) {
   res.writeHead(status, {
@@ -74,6 +79,129 @@ async function jsapiTicket() {
   return { ticket: ticketCache.value, expiresIn: ttl };
 }
 
+
+function readJsonBody(req, maxBytes = 16384) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let size = 0;
+    req.on('data', (chunk) => {
+      size += chunk.length;
+      if (size > maxBytes) {
+        reject(new Error('request_body_too_large'));
+        req.destroy();
+        return;
+      }
+      chunks.push(chunk);
+    });
+    req.on('end', () => {
+      if (!chunks.length) {
+        resolve({});
+        return;
+      }
+      try {
+        resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')));
+      } catch {
+        reject(new Error('invalid_json'));
+      }
+    });
+    req.on('error', reject);
+  });
+}
+
+function runProcess(command, args, options = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, {
+      cwd: options.cwd || undefined,
+      env: options.env || process.env,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let stdout = '';
+    let stderr = '';
+    const cap = 2 * 1024 * 1024;
+    child.stdout.on('data', (chunk) => {
+      if (stdout.length < cap) stdout += chunk.toString('utf8');
+    });
+    child.stderr.on('data', (chunk) => {
+      if (stderr.length < cap) stderr += chunk.toString('utf8');
+    });
+    const timer = setTimeout(() => {
+      child.kill('SIGKILL');
+    }, Number(options.timeoutMs || 240000));
+    child.on('error', (error) => {
+      clearTimeout(timer);
+      reject(error);
+    });
+    child.on('close', (code, signal) => {
+      clearTimeout(timer);
+      if (code !== 0) {
+        const error = new Error('publisher_process_failed');
+        error.details = { command, args, code, signal, stdout, stderr };
+        reject(error);
+        return;
+      }
+      resolve({ stdout, stderr });
+    });
+  });
+}
+
+function lastJsonLine(text) {
+  const lines = String(text || '').split(/\r?\n/).map((x) => x.trim()).filter(Boolean);
+  for (let i = lines.length - 1; i >= 0; i -= 1) {
+    try {
+      return JSON.parse(lines[i]);
+    } catch {
+      // Keep scanning.
+    }
+  }
+  return null;
+}
+
+async function runPublisher() {
+  if (publisherRunning) {
+    const error = new Error('publisher_busy');
+    error.status = 409;
+    throw error;
+  }
+  publisherRunning = true;
+  try {
+    await runProcess('git', ['pull', '--ff-only', 'origin', 'main'], {
+      cwd: PUBLISHER_REPO,
+      timeoutMs: 120000,
+    });
+    const script = `${PUBLISHER_REPO}/ops/wechat-publisher/create-draft.py`;
+    const result = await runProcess(
+      'python3',
+      [
+        script,
+        '--create',
+        '--preview-dir',
+        PUBLISHER_PREVIEW_DIR,
+        '--preview-base-url',
+        PUBLISHER_PREVIEW_BASE_URL,
+      ],
+      {
+        cwd: PUBLISHER_REPO,
+        env: {
+          ...process.env,
+          WECHAT_MP_APP_ID: APP_ID,
+          WECHAT_MP_APP_SECRET: APP_SECRET,
+          RELAY_SHARED_KEY,
+        },
+        timeoutMs: 300000,
+      },
+    );
+    const payload = lastJsonLine(result.stdout);
+    if (!payload) {
+      const error = new Error('publisher_missing_json_result');
+      error.details = { stdout: result.stdout, stderr: result.stderr };
+      throw error;
+    }
+    return payload;
+  } finally {
+    publisherRunning = false;
+  }
+}
+
 if (!APP_ID || !APP_SECRET || !RELAY_SHARED_KEY) {
   console.error('Missing WECHAT_MP_APP_ID, WECHAT_MP_APP_SECRET, or RELAY_SHARED_KEY');
   process.exit(1);
@@ -84,6 +212,38 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'GET' && url.pathname === '/health') {
     json(res, 200, { ok: true, service: 'osg-wechat-ticket-relay' });
+    return;
+  }
+
+  if (url.pathname === '/wechat/publisher/run') {
+    if (req.method !== 'POST') {
+      json(res, 405, { error: 'method_not_allowed' });
+      return;
+    }
+    if (!authorized(req)) {
+      json(res, 401, { error: 'unauthorized' });
+      return;
+    }
+    try {
+      const body = await readJsonBody(req);
+      if (body?.action && body.action !== 'sync_daily_draft') {
+        json(res, 400, { error: 'unsupported_action' });
+        return;
+      }
+      const result = await runPublisher();
+      json(res, 200, { ok: true, result });
+    } catch (error) {
+      const status = Number(error?.status || 502);
+      console.error('WECHAT_PUBLISHER_FAILED', {
+        message: error instanceof Error ? error.message : String(error),
+        details: error?.details || undefined,
+      });
+      json(res, status, {
+        error: 'wechat_publisher_error',
+        reason: error instanceof Error ? error.message : String(error),
+        details: error?.details || undefined,
+      });
+    }
     return;
   }
 
