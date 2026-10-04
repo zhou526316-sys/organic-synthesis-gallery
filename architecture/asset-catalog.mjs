@@ -155,9 +155,10 @@ export function buildUnifiedAssetCatalog({
     const reviewed = summaries.result.get(doi);
 
     const officialPublished = Boolean(w.tocStored);
+    const publishedLargeSource = String(w.largeSource || 'none').toLowerCase();
     const fallbackPublished = !officialPublished && Boolean(
       w.figureOneStored || ['figure1','article_figure','pdf_primary'].includes(String(w.primaryKind || '').toLowerCase())
-      || String(w.largeSource || '').toLowerCase() === 'figure1'
+      || !['none','toc',''].includes(publishedLargeSource)
     );
     const officialCaptured = Boolean(localKinds.official);
     const fallbackCaptured = Boolean(localKinds.figure1);
@@ -248,7 +249,7 @@ export function buildUnifiedAssetCatalog({
       summaries:summaries.foreign,
     },
   };
-  catalog.catalogHash = assetDigest({ ...catalog, catalogHash:undefined });
+  catalog.catalogHash = assetDigest(catalog);
   return catalog;
 }
 
