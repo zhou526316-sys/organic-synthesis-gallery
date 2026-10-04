@@ -15,6 +15,7 @@ export const PROTECTED_FILES = Object.freeze([
 ]);
 const markerPath = 'audit/publication-release-state.json';
 const shaPattern = /^[a-f0-9]{40}$/;
+const RETIRED_LAST_EVENING_SLOT = '2026-10-04T18:00:00+08:00';
 const normalize = value => String(value || '').trim().toLowerCase()
   .replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '').replace(/[?#].*$/, '');
 const sameSet = (a, b) => a.length === b.length && new Set(a).size === a.length
@@ -22,6 +23,19 @@ const sameSet = (a, b) => a.length === b.length && new Set(a).size === a.length
 const list = value => Array.isArray(value) ? value : [];
 const auditPath = value => typeof value === 'string' && /^audit\/[A-Za-z0-9_./-]+\.json$/.test(value)
   && !value.split('/').includes('..');
+
+export function canReuseReceiptBackedLegacyBaseline(marker, baseline, protectedFailures, markerCommit) {
+  return marker?.mode === 'slot-release'
+    && marker?.publicationSlot === RETIRED_LAST_EVENING_SLOT
+    && Array.isArray(protectedFailures) && protectedFailures.length === 0
+    && baseline?.ok === true
+    && baseline?.receiptBackedBaseline === true
+    && baseline?.legacyMarkerAuthorized === true
+    && baseline?.publicationSlot === marker.publicationSlot
+    && Number(baseline?.productionCards) === Number(marker?.productionCards)
+    && shaPattern.test(String(baseline?.markerCommitSha || ''))
+    && baseline.markerCommitSha === markerCommit;
+}
 
 export function validateProtectedInputs(marker, actual) {
   const failures = [];
@@ -74,7 +88,7 @@ export function validateFormalPartition(staging, formal, marker, pendingQueue = 
     if (!sameSet(rows.map(row => normalize(row.doi)), expected.pending)) failures.push('pending_queue_doi_set_mismatch');
     for (const row of rows) {
       if (String(row.reason || '').trim().length < 24 || String(row.evidenceNeeded || '').trim().length < 24
-        || !/^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(String(row.nextReviewSlot || ''))
+        || !/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(String(row.nextReviewSlot || ''))
         || !(Date.parse(row.nextReviewSlot) > Date.parse(marker.publicationSlot))) failures.push(`pending_retry_evidence_missing:${row.doi}`);
     }
   }
@@ -90,7 +104,8 @@ export async function authorize(root = process.cwd()) {
   for (const file of PROTECTED_FILES) {
     try { actual[file] = git(['hash-object', '--', file]); } catch { actual[file] = null; }
   }
-  failures.push(...validateProtectedInputs(marker, actual));
+  const protectedInputFailures = validateProtectedInputs(marker, actual);
+  failures.push(...protectedInputFailures);
   if (git(['rev-parse', '--is-shallow-repository']) !== 'false') failures.push('full_release_history_required');
   const base = spawnSync(process.execPath, [fileURLToPath(new URL('./validate-production-literature-release-slot.mjs', import.meta.url))], {
     cwd: root, encoding: 'utf8', timeout: 30000, maxBuffer: 4 * 1024 * 1024,
@@ -99,8 +114,22 @@ export async function authorize(root = process.cwd()) {
   try { baseline = JSON.parse(base.stdout || '{}'); } catch { failures.push('invalid_baseline_gate_output'); }
   if (base.status !== 0 || baseline.ok !== true) failures.push(...(baseline.failures || ['baseline_release_gate_failed']));
   const markerCommit = git(['log', '-1', '--format=%H', '--', markerPath]);
+  const legacyBaselineReused = canReuseReceiptBackedLegacyBaseline(
+    marker, baseline, protectedInputFailures, markerCommit,
+  );
   let frozenValidation = null;
   let formal = null;
+  if (!failures.length && legacyBaselineReused) {
+    return {
+      schemaVersion: 1, ok: true, gate: 'pages-literature-authorization',
+      deploymentCommit: git(['rev-parse', 'HEAD']), markerCommit, mode: marker.mode,
+      publicationSlot: marker.publicationSlot || null, productionCards: marker.productionCards,
+      protectedFiles: PROTECTED_FILES.length, protectedInputsMatch: true,
+      baselineAuthorization: baseline, frozenValidation: null, reviewComplete: null,
+      legacyBaselineReused: true, failures: [], productionDataModified: false,
+      note: 'The exact receipt-backed final evening baseline predates the single-daily-slot cutover. With protected literature bytes unchanged, UI/media/frontend deployment may reuse that frozen baseline; no future 18:00 publication is authorized.',
+    };
+  }
   if (!failures.length && marker.mode === 'slot-release') {
     if (marker.schemaVersion !== 2) failures.push('release_marker_schema_v2_required');
     const changed = git(['diff-tree', '--no-commit-id', '--name-only', '-r', markerCommit]).split('\n');
@@ -144,7 +173,7 @@ export async function authorize(root = process.cwd()) {
     deploymentCommit: git(['rev-parse', 'HEAD']), markerCommit, mode: marker.mode,
     publicationSlot: marker.publicationSlot || null, productionCards: marker.productionCards,
     protectedFiles: PROTECTED_FILES.length, protectedInputsMatch: validateProtectedInputs(marker, actual).length === 0,
-    baselineAuthorization: baseline, frozenValidation,
+    baselineAuthorization: baseline, frozenValidation, legacyBaselineReused,
     reviewComplete: formal ? formal.pending.length === 0 : null,
     failures, productionDataModified: false,
     note: 'An unchanged authorized literature snapshot permits UI/media deployment. A new snapshot requires a fixed-slot atomic marker, formal decision partition, and immutable prepublish evidence. Publication authorization is not post-deploy verification.',
