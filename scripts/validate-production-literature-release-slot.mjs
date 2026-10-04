@@ -9,6 +9,7 @@ const MARKER = path.resolve(ROOT, 'audit/publication-release-state.json');
 const BOOTSTRAP_ID = 'fixed-slots-cutover-2026-09-22';
 const BOOTSTRAP_MARKER_COMMIT = '3c9bcd16ab34a24fcbe0efda5a7e1d5905ca71fa';
 const SLOT_GRACE_MINUTES = 20;
+const SINGLE_DAILY_SLOT_CUTOVER_COMMIT = '0a88cd948049081479d33040b93ea20a80d83ca9';
 
 const marker = JSON.parse(await readFile(MARKER, 'utf8'));
 if (marker.mode === 'scope-correction') {
@@ -43,6 +44,9 @@ for (const file of files) {
 }
 
 const mode = String(marker?.mode || '');
+let markerCommitSha = null;
+let legacyMarkerAuthorized = false;
+let receiptBackedBaseline = false;
 if (mode === 'bootstrap') {
   check(marker?.bootstrapId === BOOTSTRAP_ID,
     'release-slot: invalid bootstrap marker');
@@ -61,20 +65,63 @@ if (mode === 'bootstrap') {
   }
 } else if (mode === 'slot-release') {
   const slot = String(marker?.publicationSlot || '');
-  check(/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(slot),
-    `release-slot: invalid publicationSlot ${slot || '-'}`);
+  const currentMorningSlot = /^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(slot);
+  const legacyEveningSlot = /^\d{4}-\d{2}-\d{2}T18:00:00\+08:00$/.test(slot);
   check(Boolean(marker?.reviewFile), 'release-slot: reviewFile missing');
   check(Boolean(marker?.handoffGeneratedAt), 'release-slot: handoffGeneratedAt missing');
   check(Number.isInteger(marker?.productionCards) && marker.productionCards >= 0,
     'release-slot: productionCards missing/invalid');
 
   try {
-    const { stdout } = await execFileAsync(
-      'git',
-      ['log', '-1', '--format=%cI', '--', 'audit/publication-release-state.json'],
-      { cwd: ROOT },
-    );
-    const markerCommitAt = new Date(stdout.trim());
+    let committedAt = '';
+    const currentMarkerBlobSha = await blobSha('audit/publication-release-state.json');
+
+    try {
+      const delivery = JSON.parse(await readFile(path.resolve(ROOT, 'audit/deployment-delivery-latest.json'), 'utf8'));
+      const receiptMatches = delivery?.ok === true
+        && Number(delivery?.schemaVersion || 0) >= 2
+        && delivery.markerBlobSha === currentMarkerBlobSha
+        && delivery.publicationSlot === slot
+        && Number(delivery.productionCards) === Number(marker.productionCards)
+        && /^[a-f0-9]{40}$/.test(String(delivery.markerCommit || ''));
+      if (receiptMatches) {
+        markerCommitSha = String(delivery.markerCommit);
+        const shown = await execFileAsync('git', ['show', '-s', '--format=%cI', markerCommitSha], { cwd: ROOT });
+        committedAt = shown.stdout.trim();
+        receiptBackedBaseline = true;
+      }
+    } catch {
+      receiptBackedBaseline = false;
+    }
+
+    if (!markerCommitSha) {
+      const { stdout } = await execFileAsync(
+        'git',
+        ['log', '--first-parent', '-1', '--format=%H%n%cI', '--', 'audit/publication-release-state.json'],
+        { cwd: ROOT },
+      );
+      const [commitSha = '', commitTime = ''] = stdout.trim().split(/\r?\n/);
+      markerCommitSha = commitSha.trim() || null;
+      committedAt = commitTime.trim();
+    }
+
+    if (legacyEveningSlot && receiptBackedBaseline && markerCommitSha) {
+      try {
+        await execFileAsync(
+          'git',
+          ['merge-base', '--is-ancestor', markerCommitSha, SINGLE_DAILY_SLOT_CUTOVER_COMMIT],
+          { cwd: ROOT },
+        );
+        legacyMarkerAuthorized = true;
+      } catch {
+        legacyMarkerAuthorized = false;
+      }
+    }
+
+    check(currentMorningSlot || legacyMarkerAuthorized,
+      `release-slot: invalid publicationSlot ${slot || '-'}`);
+
+    const markerCommitAt = new Date(committedAt);
     const slotAt = new Date(slot);
     const deltaMinutes = (markerCommitAt.getTime() - slotAt.getTime()) / 60000;
     check(Number.isFinite(deltaMinutes), 'release-slot: cannot compute marker commit time');
@@ -96,6 +143,10 @@ const result = {
   productionCards: marker?.productionCards ?? null,
   protectedFiles: files.length,
   slotGraceMinutes: SLOT_GRACE_MINUTES,
+  singleDailySlotCutoverCommit: SINGLE_DAILY_SLOT_CUTOVER_COMMIT,
+  markerCommitSha,
+  receiptBackedBaseline,
+  legacyMarkerAuthorized,
   failures,
 };
 
