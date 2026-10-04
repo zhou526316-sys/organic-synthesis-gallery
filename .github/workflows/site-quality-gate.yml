@@ -34,6 +34,7 @@ jobs:
         run: |
           node --test scripts/test-gallery-architecture-public.mjs scripts/test-toc-active-work-membership.mjs
           node scripts/build-gallery-architecture-public.mjs
+          node scripts/test-toc-active-work-transport.mjs public/architecture-v1
 
       - name: Build frontend
         run: npm run build
