@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "phase": "C2b-staging-three-month-acquisition-selection",
+  "dateAsiaShanghai": "2026-10-04",
+  "productionActivated": false,
+  "stagingBranch": "feat/gallery-architecture-c2b-final-20261004",
+  "stagingHead": "727018397227f96e875a419685e58258574c8bd2",
+  "validation": {
+    "runId": 37186320653,
+    "conclusion": "success",
+    "contractsJob": 111388890138,
+    "browserJob": 111388890281,
+    "architectureTests": {
+      "passed": 80,
+      "failed": 0
+    },
+    "c2bMembershipTests": {
+      "passed": 22,
+      "failed": 0
+    },
+    "productionSnapshot": {
+      "records": 785,
+      "hot": 762,
+      "archive": 23,
+      "recentHistoricalAdditions": 0,
+      "active": 762,
+      "cutoff": "2026-07-04",
+      "catalogId": "669ce6a111c123220f7db47d14433813b658bd029f7ab19e0888006c7788a84d",
+      "acquisitionTamperRejected": true
+    },
+    "package": {
+      "bridgeInstallerVersion": "2.2.41",
+      "standaloneUserscriptMetadataVersion": "6.2.23",
+      "captureProtocolVersion": "6.2.20",
+      "controllerRevision": "2.2.39",
+      "completeQueue": 785
+    },
+    "browser": {
+      "queueCoverage": {
+        "passed": true,
+        "visited": 61,
+        "fullyResolved": 60,
+        "unresolved": 1,
+        "productionWrites": 0,
+        "publisherRequests": 0
+      },
+      "missingOnly": {
+        "passed": true,
+        "fixtureCorpus": 765,
+        "expectedMissing": 3,
+        "productionWrites": 0,
+        "publisherRequests": 0
+      },
+      "immediateRestart": {
+        "passed": true,
+        "productionWrites": 0,
+        "publisherNetworkRequests": 0
+      },
+      "consoleErrors": 0,
+      "pageErrors": 0,
+      "failedRequests": 0
+    },
+    "artifacts": [
+      {
+        "id": 11296329526,
+        "name": "gallery-c2b-contract-evidence",
+        "bytes": 84235,
+        "sha256": "e5076911a5d1d798e52c7e80e24aa0d3e18b61cccb100767fce02c4af42c5aa9",
+        "expiresAt": "2026-10-11T07:37:12Z"
+      },
+      {
+        "id": 11297182814,
+        "name": "gallery-c2b-browser-evidence",
+        "bytes": 833711,
+        "sha256": "8941bfb50517cc0cd4a1bff9f3a7b1c8b4084a146542a42b033bea8c4d247e3b",
+        "expiresAt": "2026-10-11T07:37:55Z"
+      }
+    ]
+  },
+  "productionGate": {
+    "source": "audit/architecture/2026-10-04-c2a1-real-browser-gate.json",
+    "conclusion": "not_satisfied",
+    "reason": "Real installed-browser reports exist after C2a.1 deployment, but no architecture_membership/verified_snapshot matching the current verified catalog has yet been observed.",
+    "c2bTaskFilteringEnabled": false,
+    "frontendHotArchiveSwitchEnabled": false
+  },
+  "stagedBehavior": [
+    "Complete all-time queue remains authoritative membership.",
+    "New TOC/body/evidence selection is limited to verified Hot DOI plus seven-Beijing-date late historical additions.",
+    "Archive coverage becomes retired rather than removed; checkpoints/assets are preserved.",
+    "Trusted current date is derived from HTTPS response Date and recomputed independently of the 08:00/18:00 literature release slots.",
+    "Any hash/count/revision/membership/date verification failure blocks new dispatch without deleting data."
+  ],
+  "decision": "Do not merge C2b task filtering into main until the C2a.1 real installed-browser verified_snapshot gate is satisfied. Staging construction is complete and validated."
+}
