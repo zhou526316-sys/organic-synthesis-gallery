@@ -540,8 +540,8 @@ def prepare_thumb_cover(cover: Path) -> Path:
         except (UnidentifiedImageError, OSError, ValueError):
             pass
 
-    # Fail-safe integration cover. This is intentionally generated locally so a
-    # stale/corrupt placeholder file cannot block testing draft/add.
+    # Fail-safe neutral cover. Production featured drafts normally use the first
+    # original paper figure as the cover source; this is only a last-resort fallback.
     image = Image.new("RGB", (900, 383), "white")
     draw = ImageDraw.Draw(image)
     draw.rounded_rectangle((34, 34, 866, 349), radius=26, outline="#222222", width=3)
@@ -556,7 +556,7 @@ def prepare_thumb_cover(cover: Path) -> Path:
         title_font = ImageFont.load_default()
         sub_font = ImageFont.load_default()
     draw.text((74, 125), "Organic Synthesis Gallery", fill="#111111", font=title_font)
-    draw.text((76, 205), "WeChat draft integration test", fill="#555555", font=sub_font)
+    draw.text((76, 205), "Daily Literature", fill="#555555", font=sub_font)
     return save_under_limit(image)
 
 
@@ -787,7 +787,14 @@ def main() -> int:
     token = get_access_token()
     uploaded_urls = upload_featured_images(token, featured)
     content = build_content(slot, papers, featured, uploaded_urls)
-    thumb_media_id = upload_cover(token, Path(args.cover), DEFAULT_CACHE)
+    cover_path = Path(args.cover)
+    if featured and featured.get("figures"):
+        first_figure = featured["figures"][0]
+        first_source = str(first_figure.get("source_url") or "").strip()
+        first_id = str(first_figure.get("id") or "cover").strip()
+        if first_source:
+            cover_path = download_body_image(first_source, f"{first_id}-cover")
+    thumb_media_id = upload_cover(token, cover_path, DEFAULT_CACHE)
     article = {
         "article_type": "news",
         "title": title,
