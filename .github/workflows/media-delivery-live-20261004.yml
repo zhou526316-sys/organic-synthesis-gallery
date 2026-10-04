@@ -1,0 +1,78 @@
+name: Verify media delivery repair live
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/media-delivery-live-20261004.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Verify protected contracts remain identical
+        run: |
+          git diff --exit-code c8464f8acf9bfaf6265cdfabdc0fcbf1509dcf72 HEAD -- PROJECT_RULES.md AGENTS.md shared/literature-journals.js audit/media-auto-policy.json docs/literature-scope-contract.md docs/literature-update-protocol.md .github/workflows/literature-audit.yml .github/workflows/github-pages.yml .github/workflows/new-body-continuous.yml public/toc-mainline.user.js public/papers.gz.b64 public/rolling-supplement.json src
+      - name: Read Worker and Pages deployment state and actual publication result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          import {writeFile} from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
+          import {readPublicationPages} from './cloudflare/scripts/read-publication-pages.mjs';
+          import {fetchStored,readLiveInputs,pendingNewRows} from './cloudflare/scripts/merge-new-body-auto.mjs';
+          const sha='2357bb1ff3bc3e23d074a0b52bbf25b6eee54752',site='https://gallery.gczhouwld.com',base='https://api.gczhouwld.com';
+          const report={sourceSha:sha,readOnly:true,publisherRequests:0,mediaWrites:0,authenticatedUserBrowserVerified:false,deployments:[],errors:[]};
+          const pause=ms=>new Promise(r=>setTimeout(r,ms));
+          async function runs(){
+            const r=await fetch('https://api.github.com/repos/zhou526316-sys/organic-synthesis-gallery/actions/runs?head_sha='+sha+'&event=push&per_page=60',{headers:{authorization:'Bearer '+process.env.GH_TOKEN,accept:'application/vnd.github+json'},signal:AbortSignal.timeout(20000)});
+            if(!r.ok)throw Error('runs_http_'+r.status);const x=await r.json();return (x.workflow_runs||[]).filter(v=>['Deploy Worker frontend assets','Deploy GitHub Pages frontend'].includes(v.name)).map(v=>({name:v.name,id:v.id,status:v.status,conclusion:v.conclusion}));
+          }
+          async function read(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'acceptance='+Date.now(),{headers:{origin:site,'cache-control':'no-cache'},signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error(url.split('?')[0]+':http_'+r.status);return r;}
+          const json=async url=>(await read(url)).json();
+          try{
+            for(let n=0;n<76;n++){
+              report.deployments=await runs();
+              if(report.deployments.length===2&&report.deployments.every(d=>d.status==='completed'))break;
+              if(n%8===0)console.log('MEDIA_DEPLOYMENT_WAIT',JSON.stringify(report.deployments));
+              await pause(15000);
+            }
+            const [queue,media,toc,ledger,installer]=await Promise.all([json(site+'/toc-demand-live.json'),json(site+'/media-index.json'),json(base+'/api/media/local-capture-index'),json(site+'/body-publication-ledger.json'),read(site+'/gallery-vpn-bridge.user.js').then(r=>r.text())]);
+            const recent=(queue.articles||[]).filter(a=>(a.addedDate||a.date||'')>='2026-10-02');const ds=new Set(recent.map(a=>a.doi));
+            const official=x=>!!(x?.toc?.available&&x.toc.imageUrl&&!/fallback/.test(x.toc.reason||''));
+            report.queue={generatedAt:queue.generatedAt,count:queue.webpageDoiCount,registryLength:queue.articles.length,latestAddedDate:queue.latestAddedDate,recentCount:recent.length};
+            report.installer={sha256:createHash('sha256').update(installer).digest('hex'),unchanged:installer.includes("QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6'")&&createHash('sha256').update(installer).digest('hex')==='621c82fbe4170d6dd33b5b3f1c2689b600a4d3daf607f7b3fb52bda0cda33425'};
+            report.media={generatedAt:media.generatedAt,recentOfficial:recent.filter(a=>official(media.items?.[a.doi])).length,recentPruned:recent.filter(a=>media.items?.[a.doi]?.toc?.reason==='invalid_static_media_pruned').map(a=>a.doi)};
+            report.toc={count:toc.count,recentCaptured:(toc.items||[]).filter(x=>ds.has(x.doi)&&x.kind==='official'&&Number(x.mediaGeneration)===1790082000000).length};
+            const bodyItems=Array.isArray(ledger.items)?ledger.items:Object.values(ledger.items||{});
+            report.ledger={generatedAt:ledger.generatedAt,count:ledger.count,recentEntries:bodyItems.filter(x=>ds.has(x.doi)).length,recentDois:[...new Set(bodyItems.filter(x=>ds.has(x.doi)).map(x=>x.doi))]};
+            const inputs=await readLiveInputs();
+            report.inputs={stageError:inputs.stageError,reportError:inputs.reportError,localCaptureError:inputs.localCaptureError,stageCount:inputs.stage?.count,stageLength:inputs.stage?.items.length,completedPackets:inputs.reports?.count,completedPacketLength:inputs.reports?.items.length};
+            const pending=await pendingNewRows({inputs});report.pending={rows:pending.rows.length,articles:new Set(pending.rows.map(r=>r.doi)).size};
+            const samples=['10.1021/jacs.6c13713','10.1021/acs.orglett.6c03558','10.1021/acs.joc.6c01674'];
+            report.svgSamples=[];
+            for(const doi of samples){const t=media.items?.[doi]?.toc;const row={doi,available:t?.available,reason:t?.reason,path:t?.imageUrl};
+              if(t?.imageUrl){const u=new URL(t.imageUrl,site+'/');if(u.origin!==site)throw Error('unexpected_sample_origin');const r=await read(u.href);const bytes=Buffer.from(await r.arrayBuffer());row.status=r.status;row.contentType=r.headers.get('content-type');row.bytes=bytes.length;row.svg=/<svg\b/i.test(bytes.subarray(0,1024).toString());row.sha256=createHash('sha256').update(bytes).digest('hex');}
+              report.svgSamples.push(row);
+            }
+            report.health=await json(base+'/api/_healthcheck');
+            const integrity=await json(base+'/api/user-ui/integrations');report.integrationsReadable=!!(integrity.auth&&integrity.payments);
+            report.staticRootStatus=(await read(site+'/')).status;
+            report.passed=report.deployments.length===2&&report.deployments.every(d=>d.conclusion==='success')&&report.installer.unchanged&&!inputs.stageError&&!inputs.reportError&&!inputs.localCaptureError&&inputs.stage.count===inputs.stage.items.length&&report.svgSamples.every(x=>x.status===200&&x.svg&&/\.svg$/.test(x.path))&&report.health.ok&&report.integrationsReadable&&report.queue.count===report.queue.registryLength;
+          }catch(e){report.errors.push(String(e.message).slice(0,300));report.passed=false;}
+          report.verifiedAt=new Date().toISOString();
+          await writeFile(process.env.RUNNER_TEMP+'/media-delivery-live.json',JSON.stringify(report,null,2));console.log('MEDIA_DELIVERY_LIVE',JSON.stringify(report));if(!report.passed)process.exitCode=1;
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: media-delivery-live
+          path: ${{ runner.temp }}/media-delivery-live.json
+          retention-days: 14
