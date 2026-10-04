@@ -509,6 +509,23 @@ select {
   transform: translateY(-2px);
   border-color: #9fb7f7;
 }
+.card.edition-highlight {
+  border: 2px solid #7ea1e8;
+  box-shadow: 0 10px 28px rgba(49, 89, 189, 0.12);
+}
+.card.edition-featured {
+  border: 2px solid #d7a446;
+  background: linear-gradient(180deg, #fffdf7 0%, #ffffff 42%);
+  box-shadow: 0 12px 32px rgba(177, 119, 26, 0.16);
+}
+.tag.edition {
+  background: #edf3ff;
+  color: #3159bd;
+}
+.tag.edition-featured {
+  background: #fff0cf;
+  color: #8b5a08;
+}
 .meta {
   display: flex;
   flex-wrap: wrap;
