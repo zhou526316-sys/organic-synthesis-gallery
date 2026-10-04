@@ -22,9 +22,13 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  const cut=source.lastIndexOf('  installManualRestartListener();');
  vm.runInContext(source.slice(0,cut)+`
  isGalleryPage=()=>true;writeToken=()=> 'fixture';badge=()=>{};sleep=__sleep;getJson=__get;postReadJson=__post;getPrivateJson=__private;enqueueCaptureReport=()=>true;
- globalThis.T={coverageStats,coveragePending,coverageMergePlan,coverageRemaining,metadataJson,metadataTransport:(g,n)=>{gmRequest=g;nativeControllerRequest=n;},buildMissingCaptureJobs,captureNeedText,captureLiveText,captureLiveSnapshot,forceStartFromHead,manualRunBlocksAutomatic,readMissingCaptureInventory,checkpointKey};
+ function fixtureMembership(q){var dois=q.articles.map(a=>normalizeDoi(a.doi));return {ok:true,revision:'fixture-active-v2',publicationSlot:'2026-10-02T08:00:00+08:00',catalogId:'a'.repeat(64),asOfDate:'2026-10-02',cutoff:'2026-07-02',memberCount:dois.length,activeCount:dois.length,hotCount:dois.length,archiveCount:0,recentAdditionCount:0,activeDois:dois,archiveDois:[],memberDois:dois,withdrawn:[]};}
+ observeArchitectureMembership=async(q)=>fixtureMembership(q);
+ var fixtureInventoryRun={id:'fixture-inventory',summary:{results:[]},inventoryCache:new Map(),activeDois:null};
+ async function fixtureReadMissing(q){fixtureInventoryRun.activeDois=new Set(fixtureMembership(q).activeDois);var prior=manualExecutionCurrent;manualExecutionCurrent=()=>true;try{return await readMissingCaptureInventory(q,fixtureInventoryRun);}finally{manualExecutionCurrent=prior;}}
+ globalThis.T={coverageStats,coveragePending,coverageMergePlan,coverageRemaining,metadataJson,metadataTransport:(g,n)=>{gmRequest=g;nativeControllerRequest=n;},buildMissingCaptureJobs,captureNeedText,captureLiveText,captureLiveSnapshot,forceStartFromHead,manualRunBlocksAutomatic,readMissingCaptureInventory:fixtureReadMissing,checkpointKey,fixtureMembership};
  })();`,ctx);
- return {T:ctx.T,ctx,store,opened,calls,timers,plan:(ar=q.articles,i=inventory)=>{const run={id:'test',summary:{results:[]}};return {jobs:Array.from(ctx.T.buildMissingCaptureJobs(queue(ar),run,i)),summary:run.summary};}};
+ return {T:ctx.T,ctx,store,opened,calls,timers,plan:(ar=q.articles,i=inventory)=>{const qq=queue(ar),m=ctx.T.fixtureMembership(qq),run={id:'test',summary:{results:[]},activeDois:new Set(m.activeDois)};return {jobs:Array.from(ctx.T.buildMissingCaptureJobs(qq,run,i)),summary:run.summary};}};
 }
 const summary=()=>({results:[],remainingNeeds:{}});
 const fakeJob=(n,flags={})=>({...article(n),captureFigures:true,captureToc:false,captureEvidence:false,capturedFigures:{},...flags});
