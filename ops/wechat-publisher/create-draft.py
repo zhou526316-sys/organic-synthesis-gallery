@@ -31,6 +31,7 @@ DEFAULT_STATE = Path("/var/lib/osg-wechat-publisher/draft-state.json")
 DEFAULT_PREVIEW_DIR = Path("/var/www/osg-wechat-preview")
 DEFAULT_PREVIEW_BASE_URL = "https://relay.gczhouwld.com/wechat-preview"
 DEFAULT_BODY_IMAGE_CACHE = Path("/var/lib/osg-wechat-publisher/body-images.json")
+DEFAULT_PDF_CACHE_DIR = Path("/var/lib/osg-wechat-publisher/source-pdfs")
 FEATURED_DIR = ROOT / "public" / "wechat-featured"
 DEFAULT_SOURCE_URL = "https://gallery.gczhouwld.com/"
 
@@ -468,6 +469,168 @@ def download_body_image(source_url: str, fig_id: str) -> Path:
     return png_target
 
 
+def ensure_pdf_source(featured: dict, override_path: str = "") -> Path:
+    if override_path:
+        path = Path(override_path).expanduser().resolve()
+        if not path.exists():
+            raise RuntimeError(f"featured PDF not found: {path}")
+        if not path.read_bytes()[:5] == b"%PDF-":
+            raise RuntimeError(f"featured source is not a PDF: {path}")
+        return path
+
+    pdf_url = str(featured.get("pdf_url") or "").strip()
+    if not pdf_url:
+        raise RuntimeError("featured article has pdf_render figures but no pdf_url")
+
+    DEFAULT_PDF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    date = str(featured.get("date") or "featured").strip() or "featured"
+    target = DEFAULT_PDF_CACHE_DIR / f"{date}.pdf"
+    if target.exists():
+        try:
+            if target.read_bytes()[:5] == b"%PDF-":
+                return target
+        except OSError:
+            pass
+
+    req = urllib.request.Request(
+        pdf_url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (compatible; OrganicSynthesisGallery/1.0)",
+            "Accept": "application/pdf,*/*;q=0.8",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=90) as response:
+            payload = response.read()
+            content_type = str(response.headers.get("Content-Type") or "").lower()
+    except Exception as exc:
+        raise RuntimeError(f"failed to download featured PDF: {exc}") from exc
+
+    if not payload.startswith(b"%PDF-"):
+        raise RuntimeError(
+            "featured PDF URL did not return a PDF "
+            f"(content_type={content_type or 'unknown'}, bytes={len(payload)}). "
+            "Re-run with --featured-pdf /path/to/the/uploaded-paper.pdf"
+        )
+    target.write_bytes(payload)
+    return target
+
+
+def render_figure_from_pdf(pdf_path: Path, fig: dict) -> Path:
+    spec = fig.get("pdf_render")
+    if not isinstance(spec, dict):
+        raise RuntimeError(f"figure {fig.get('id')} has no pdf_render specification")
+
+    try:
+        import fitz
+    except ImportError as exc:
+        raise RuntimeError(
+            "PDF figure rendering requires PyMuPDF. Install once with: "
+            "sudo apt-get update && sudo apt-get install -y python3-fitz"
+        ) from exc
+
+    fig_id = str(fig.get("id") or "figure")
+    page_index = int(spec.get("page_index"))
+    clip_values = spec.get("clip")
+    zoom = float(spec.get("zoom") or 4.0)
+    if not isinstance(clip_values, list) or len(clip_values) != 4:
+        raise RuntimeError(f"invalid pdf_render clip for {fig_id}")
+
+    doc = fitz.open(str(pdf_path))
+    try:
+        if page_index < 0 or page_index >= doc.page_count:
+            raise RuntimeError(
+                f"pdf_render page out of range for {fig_id}: "
+                f"{page_index} / {doc.page_count}"
+            )
+        page = doc[page_index]
+        clip = fitz.Rect(*[float(x) for x in clip_values])
+        pix = page.get_pixmap(
+            matrix=fitz.Matrix(zoom, zoom),
+            clip=clip,
+            alpha=False,
+        )
+        target = Path(tempfile.gettempdir()) / f"osg-wechat-{fig_id}-pdf.png"
+        pix.save(str(target))
+        return target
+    finally:
+        doc.close()
+
+
+def prepare_featured_local_images(featured: dict | None, override_pdf: str = "") -> dict[str, Path]:
+    if not featured:
+        return {}
+    figures = [x for x in featured.get("figures", []) if isinstance(x, dict)]
+    needs_pdf = any(isinstance(x.get("pdf_render"), dict) for x in figures)
+    pdf_path = ensure_pdf_source(featured, override_pdf) if needs_pdf else None
+
+    prepared: dict[str, Path] = {}
+    for fig in figures:
+        fig_id = str(fig.get("id") or "").strip()
+        if not fig_id:
+            continue
+        if isinstance(fig.get("pdf_render"), dict):
+            prepared[fig_id] = render_figure_from_pdf(pdf_path, fig)
+            continue
+        source_url = str(fig.get("source_url") or "").strip()
+        if not source_url:
+            continue
+        prepared[fig_id] = download_body_image(source_url, fig_id)
+    return prepared
+
+
+def upload_local_body_image(token: str, local: Path, fig_id: str, cache_path: Path) -> str:
+    payload = local.read_bytes()
+    digest = hashlib.sha256(payload).hexdigest()
+    cache = load_json_cache(cache_path)
+    cache_key = f"sha256:{digest}"
+    cached = cache.get(cache_key)
+    if isinstance(cached, dict) and cached.get("url"):
+        return str(cached["url"])
+
+    boundary, body = multipart_file("media", local)
+    url = (
+        "https://api.weixin.qq.com/cgi-bin/media/uploadimg?"
+        + urllib.parse.urlencode({"access_token": token})
+    )
+    req = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+            "Accept": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as response:
+            result = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        result = json.loads(exc.read().decode("utf-8", errors="replace"))
+
+    image_url = result.get("url")
+    if not image_url:
+        raise RuntimeError(
+            "body image upload failed: "
+            + json.dumps(
+                {
+                    "figure": fig_id,
+                    "errcode": result.get("errcode"),
+                    "errmsg": result.get("errmsg"),
+                },
+                ensure_ascii=False,
+            )
+        )
+    cache[cache_key] = {
+        "url": image_url,
+        "figure": fig_id,
+        "source": "pdf_render",
+        "bytes": len(payload),
+    }
+    save_json_cache(cache_path, cache)
+    return str(image_url)
+
+
 def upload_body_image(token: str, source_url: str, fig_id: str, cache_path: Path) -> str:
     cache = load_json_cache(cache_path)
     key = hashlib.sha256(source_url.encode("utf-8")).hexdigest()
@@ -515,24 +678,17 @@ def upload_body_image(token: str, source_url: str, fig_id: str, cache_path: Path
     return str(image_url)
 
 
-def upload_featured_images(token: str, featured: dict | None) -> dict[str, str]:
-    if not featured:
-        return {}
+def upload_featured_images(token: str, featured: dict | None, override_pdf: str = ""):
+    local_images = prepare_featured_local_images(featured, override_pdf)
     uploaded: dict[str, str] = {}
-    for fig in featured.get("figures", []):
-        if not isinstance(fig, dict):
-            continue
-        fig_id = str(fig.get("id") or "").strip()
-        source_url = str(fig.get("source_url") or "").strip()
-        if not fig_id or not source_url:
-            continue
-        uploaded[fig_id] = upload_body_image(
+    for fig_id, local in local_images.items():
+        uploaded[fig_id] = upload_local_body_image(
             token,
-            source_url,
+            local,
             fig_id,
             DEFAULT_BODY_IMAGE_CACHE,
         )
-    return uploaded
+    return uploaded, local_images
 
 
 def prepare_thumb_cover(cover: Path) -> Path:
@@ -812,6 +968,7 @@ def main() -> int:
     parser.add_argument("--cover", default=str(DEFAULT_COVER))
     parser.add_argument("--source-url", default=DEFAULT_SOURCE_URL)
     parser.add_argument("--title-prefix", default="")
+    parser.add_argument("--featured-pdf", default="", help="optional local PDF path used instead of downloading the featured paper PDF")
     args = parser.parse_args()
 
     slot, papers = load_latest_release()
@@ -833,15 +990,11 @@ def main() -> int:
 
     load_env(Path(args.env_file))
     token = get_access_token()
-    uploaded_urls = upload_featured_images(token, featured)
+    uploaded_urls, local_images = upload_featured_images(token, featured, args.featured_pdf)
     content = build_content(slot, papers, featured, uploaded_urls)
     cover_path = Path(args.cover)
-    if featured and featured.get("figures"):
-        first_figure = featured["figures"][0]
-        first_source = str(first_figure.get("source_url") or "").strip()
-        first_id = str(first_figure.get("id") or "cover").strip()
-        if first_source:
-            cover_path = download_body_image(first_source, f"{first_id}-cover")
+    if local_images.get("fig1"):
+        cover_path = local_images["fig1"]
     thumb_media_id = upload_cover(token, cover_path, DEFAULT_CACHE)
     article = {
         "article_type": "news",
