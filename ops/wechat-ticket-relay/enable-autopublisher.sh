@@ -46,8 +46,7 @@ docker run -d \
   -v /var/lib/osg-wechat-publisher:/var/lib/osg-wechat-publisher \
   "${IMAGE}" >/dev/null
 
-for _ in {1..30}; do
-  if curl --fail --silent "http://127.0.0.1:${RELAY_PORT}/health" >/dev/null; then
+docker exec osg-wechat-ticket-relay git config --global --add safe.directory /repo\n\nfor _ in {1..30}; do\n  if curl --fail --silent "http://127.0.0.1:${RELAY_PORT}/health" >/dev/null; then
     break
   fi
   sleep 1
