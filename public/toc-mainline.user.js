@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.21
+// @version      6.2.22
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -51,7 +51,7 @@
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
   var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
-  var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
+  var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-active-v2';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -1105,7 +1105,43 @@ function embeddedJobDois(value) {
     var left=new Set(a),right=new Set(b);
     return left.size===a.length&&right.size===b.length&&a.every(function(x){return right.has(x);});
   }
-  async function verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText) {
+  function architectureParseDate(value) {
+    if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return null;
+    var p=value.split('-').map(Number),year=p[0],month=p[1],day=p[2];
+    var leap=year%4===0&&(year%100!==0||year%400===0);
+    var days=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+    return year>=1&&month>=1&&month<=12&&day>=1&&day<=days[month-1]?{year:year,month:month,day:day}:null;
+  }
+  function architectureFormatDate(year,month,day) {
+    return String(year).padStart(4,'0')+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+  }
+  function architectureCutoff(asOfDate) {
+    var p=architectureParseDate(asOfDate);
+    if(!p)throw new Error('architecture_invalid_as_of_date');
+    var index=p.year*12+p.month-1-3,year=Math.floor(index/12),month=index%12+1,day=p.day;
+    if(year<1)throw new Error('architecture_unsupported_date');
+    while(!architectureParseDate(architectureFormatDate(year,month,day)))day--;
+    return architectureFormatDate(year,month,day);
+  }
+  function architectureShiftDays(value,offset) {
+    var p=architectureParseDate(value);
+    if(!p||!Number.isSafeInteger(offset))throw new Error('architecture_invalid_day_shift');
+    var d=new Date(0);d.setUTCFullYear(p.year,p.month-1,p.day);d.setUTCHours(12,0,0,0);d.setUTCDate(d.getUTCDate()+offset);
+    return d.toISOString().slice(0,10);
+  }
+  function architectureBeijingDate(epochMs) {
+    if(!Number.isFinite(epochMs))throw new Error('architecture_trusted_time_required');
+    return new Date(epochMs+8*3600000).toISOString().slice(0,10);
+  }
+  function architectureAcquisitionReason(row,asOfDate) {
+    if(!row||row.datePrecision!=='day'||!architectureParseDate(row.firstOnlineDate))return 'date_review_required';
+    if(row.firstOnlineDate>asOfDate)return 'future';
+    if(row.firstOnlineDate>=architectureCutoff(asOfDate))return 'hot';
+    var recent=architectureShiftDays(asOfDate,-6);
+    if(architectureParseDate(row.addedDate)&&row.addedDate>=recent&&row.addedDate<=asOfDate)return 'archive_recent_addition';
+    return 'archive_idle';
+  }
+  async function verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText,acquisitionText,trustedEpochMs) {
     if(!queue||!Array.isArray(queue.articles)||queue.articles.length!==Number(queue.webpageDoiCount))throw new Error('architecture_queue_registry_incomplete');
     if(!delivery||Number(delivery.schemaVersion)<2||!delivery.files||!delivery.architectureObjects
       ||typeof delivery.architectureCatalogId!=='string')throw new Error('architecture_delivery_v2_required');
@@ -1116,16 +1152,22 @@ function embeddedJobDois(value) {
       ||release.sourceCommit!==delivery.sourceCommit||release.publicationSlot!==delivery.publicationSlot
       ||release.datasetSha256!==delivery.datasetSha256||release.catalogId!==delivery.architectureCatalogId
       ||release.recordCount!==Number(delivery.productionCards))throw new Error('architecture_release_identity_mismatch');
-    if(!architectureRefValid(release.membership)||!architectureRefValid(release.catalogCurrent))throw new Error('architecture_release_reference_invalid');
+    if(!architectureRefValid(release.membership)||!architectureRefValid(release.catalogCurrent)
+      ||!architectureRefValid(release.acquisitionBasis))throw new Error('architecture_release_reference_invalid');
     if(await architectureSha256(membershipText)!==release.membership.sha256
       ||new TextEncoder().encode(membershipText).byteLength!==Number(release.membership.bytes))throw new Error('architecture_membership_hash_mismatch');
     if(await architectureSha256(currentText)!==release.catalogCurrent.sha256
       ||new TextEncoder().encode(currentText).byteLength!==Number(release.catalogCurrent.bytes))throw new Error('architecture_current_hash_mismatch');
-    var membership=JSON.parse(membershipText),current=JSON.parse(currentText);
+    if(await architectureSha256(acquisitionText)!==release.acquisitionBasis.sha256
+      ||new TextEncoder().encode(acquisitionText).byteLength!==Number(release.acquisitionBasis.bytes))throw new Error('architecture_acquisition_hash_mismatch');
+    var membership=JSON.parse(membershipText),current=JSON.parse(currentText),acquisition=JSON.parse(acquisitionText);
     if(membership.schema!=='gallery-published-membership-v1'||membership.scope!=='all-time'||membership.complete!==true
       ||membership.catalogId!==release.catalogId||membership.doiSetHash!==release.doiSetHash
       ||membership.publicationSlot!==release.publicationSlot||membership.sourceCommit!==release.sourceCommit
       ||Number(membership.count)!==release.recordCount||!membership.members||Array.isArray(membership.members))throw new Error('architecture_membership_identity_mismatch');
+    if(acquisition.schema!=='gallery-acquisition-basis-v1'||acquisition.catalogId!==release.catalogId
+      ||acquisition.doiSetHash!==release.doiSetHash||acquisition.publicationSlot!==release.publicationSlot
+      ||Number(acquisition.count)!==release.recordCount||!Array.isArray(acquisition.records))throw new Error('architecture_acquisition_identity_mismatch');
     if(current.schema!=='gallery-shadow-catalog-v1'||current.mode!=='shadow'||current.productionActivation!==false
       ||!architectureRefValid(current.lifecycle))throw new Error('architecture_current_identity_mismatch');
     if(await architectureSha256(lifecycleText)!==current.lifecycle.sha256
@@ -1144,19 +1186,36 @@ function embeddedJobDois(value) {
       rows.forEach(function(doi){partitionDois.push(normalizeDoi(doi));});
     });
     if(partitionDois.some(function(x){return !x;})||!architectureSetEqual(memberDois,partitionDois))throw new Error('architecture_lifecycle_partition_mismatch');
+    var acquisitionDois=[],seen=new Set(),active=[],liveHot=[],recent=[],archiveIdle=[],dateReview=[];
+    var liveAsOfDate=architectureBeijingDate(Number(trustedEpochMs)),liveCutoff=architectureCutoff(liveAsOfDate);
+    if(lifecycle.asOfDate>liveAsOfDate)throw new Error('architecture_lifecycle_from_future');
+    acquisition.records.forEach(function(row){
+      var doi=normalizeDoi(row&&row.doi);
+      if(!doi||seen.has(doi)||membership.members[doi]!==row.revision)throw new Error('architecture_acquisition_member_mismatch');
+      seen.add(doi);acquisitionDois.push(doi);
+      var reason=architectureAcquisitionReason(row,liveAsOfDate);
+      if(reason==='hot'){active.push(doi);liveHot.push(doi);}
+      else if(reason==='archive_recent_addition'){active.push(doi);recent.push(doi);}
+      else if(reason==='archive_idle')archiveIdle.push(doi);
+      else dateReview.push(doi);
+    });
+    if(!architectureSetEqual(memberDois,acquisitionDois))throw new Error('architecture_acquisition_set_mismatch');
     var hot=new Set((lifecycle.partitions.hot||[]).map(normalizeDoi));
     var archive=new Set((lifecycle.partitions.archive||[]).map(normalizeDoi));
+    if(lifecycle.asOfDate===liveAsOfDate&&!architectureSetEqual(Array.from(hot),liveHot))throw new Error('architecture_live_hot_snapshot_mismatch');
     return {
       ok:true,revision:ARCHITECTURE_MEMBERSHIP_REVISION,serial:Number(membership.serial||0),
       publicationSlot:membership.publicationSlot,catalogId:membership.catalogId,membershipSha256:release.membership.sha256,
-      asOfDate:lifecycle.asOfDate,cutoff:lifecycle.cutoff||'',memberCount:memberDois.length,
+      asOfDate:lifecycle.asOfDate,cutoff:lifecycle.cutoff||'',liveAsOfDate:liveAsOfDate,liveCutoff:liveCutoff,memberCount:memberDois.length,
       hotCount:hot.size,archiveCount:archive.size,hotDois:Array.from(hot),archiveDois:Array.from(archive),
+      activeCount:active.length,archiveIdleCount:archiveIdle.length,recentAdditionCount:recent.length,dateReviewCount:dateReview.length,
+      activeDois:active,recentAdditionDois:recent,archiveIdleDois:archiveIdle,dateReviewDois:dateReview,
       withdrawn:Array.isArray(membership.withdrawn)?membership.withdrawn.map(normalizeDoi).filter(Boolean):[]
     };
   }
   // END ARCHITECTURE MEMBERSHIP CORE v1
 
-  async function architectureGetText(url,prefix) {
+  async function architectureGetDocument(url,prefix) {
     var response=await gmRequest({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache'}});
     if(shouldNativeRetryUpload(response,url))response=await nativeControllerRequest({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache'}});
     var status=Number(response.status||0);
@@ -1164,11 +1223,32 @@ function embeddedJobDois(value) {
     var finalUrl=String(response.finalUrl||url),host='';
     try{host=new URL(finalUrl,location.href).hostname.toLowerCase();}catch(_){}
     if(host!==GALLERY_HOST&&host!==LEGACY_GALLERY_HOST)throw new Error(prefix+'_unexpected_origin');
-    return String(response.responseText||'');
+    var serverDate=Date.parse(headerValue(response.responseHeaders,'date')||'');
+    return {text:String(response.responseText||''),serverDate:Number.isFinite(serverDate)?serverDate:null};
+  }
+  async function architectureGetText(url,prefix) {
+    return (await architectureGetDocument(url,prefix)).text;
   }
   function architectureObjectUrl(pathname) {
     if(typeof pathname!=='string'||!/^[A-Za-z0-9_./-]+$/.test(pathname)||pathname.indexOf('..')>=0)throw new Error('architecture_object_path_invalid');
     return 'https://'+GALLERY_HOST+'/architecture-v1/'+pathname;
+  }
+  function architectureMembershipSummary(result) {
+    return result&&result.ok?{
+      ok:true,revision:result.revision,serial:result.serial,publicationSlot:result.publicationSlot,catalogId:result.catalogId,
+      liveAsOfDate:result.liveAsOfDate,liveCutoff:result.liveCutoff,memberCount:result.memberCount,
+      hotCount:result.hotCount,archiveCount:result.archiveCount,activeCount:result.activeCount,
+      archiveIdleCount:result.archiveIdleCount,recentAdditionCount:result.recentAdditionCount,dateReviewCount:result.dateReviewCount
+    }:{ok:false,revision:ARCHITECTURE_MEMBERSHIP_REVISION,error:String(result&&result.error||'architecture_membership_unverified').slice(0,180)};
+  }
+  function architectureActiveSet(result) {
+    if(!result||result.ok!==true||!Array.isArray(result.activeDois))throw new Error('architecture_active_work_unverified');
+    return new Set(result.activeDois.map(normalizeDoi).filter(Boolean));
+  }
+  function architectureActiveSetChanged(a,b) {
+    if(!a||!b||a.ok!==true||b.ok!==true)return true;
+    if(a.catalogId!==b.catalogId||a.liveAsOfDate!==b.liveAsOfDate||Number(a.activeCount)!==Number(b.activeCount))return true;
+    return !architectureSetEqual(a.activeDois||[],b.activeDois||[]);
   }
   function rememberArchitectureMembership(result) {
     var prior=GM_getValue(ARCHITECTURE_MEMBERSHIP_STATE_KEY,null);
@@ -1182,28 +1262,35 @@ function embeddedJobDois(value) {
     GM_setValue(ARCHITECTURE_MEMBERSHIP_STATE_KEY,{
       revision:ARCHITECTURE_MEMBERSHIP_REVISION,serial:Number(result.serial||0),publicationSlot:result.publicationSlot||'',
       catalogId:result.catalogId||'',membershipSha256:result.membershipSha256||'',asOfDate:result.asOfDate||'',
-      memberCount:Number(result.memberCount||0),hotCount:Number(result.hotCount||0),archiveCount:Number(result.archiveCount||0),
-      withdrawn:Array.from(sticky).sort(),verifiedAt:Date.now()
+      liveAsOfDate:result.liveAsOfDate||'',liveCutoff:result.liveCutoff||'',memberCount:Number(result.memberCount||0),
+      hotCount:Number(result.hotCount||0),archiveCount:Number(result.archiveCount||0),activeCount:Number(result.activeCount||0),
+      archiveIdleCount:Number(result.archiveIdleCount||0),recentAdditionCount:Number(result.recentAdditionCount||0),
+      dateReviewCount:Number(result.dateReviewCount||0),withdrawn:Array.from(sticky).sort(),verifiedAt:Date.now()
     });
   }
   async function observeArchitectureMembership(queue) {
     try {
-      var delivery=await getJson(ARCHITECTURE_DELIVERY_URL+'?architecture-membership='+Date.now());
+      var deliveryDocument=await architectureGetDocument(ARCHITECTURE_DELIVERY_URL+'?architecture-membership='+Date.now(),'architecture_delivery');
+      if(!Number.isFinite(deliveryDocument.serverDate))throw new Error('architecture_server_date_missing');
+      var delivery=JSON.parse(deliveryDocument.text);
       var releaseText=await architectureGetText(ARCHITECTURE_RELEASE_URL+'?architecture-membership='+Date.now(),'architecture_release');
       var release=JSON.parse(releaseText);
-      if(!architectureRefValid(release.membership)||!architectureRefValid(release.catalogCurrent))throw new Error('architecture_release_reference_invalid');
+      if(!architectureRefValid(release.membership)||!architectureRefValid(release.catalogCurrent)
+        ||!architectureRefValid(release.acquisitionBasis))throw new Error('architecture_release_reference_invalid');
       var membershipText=await architectureGetText(architectureObjectUrl(release.membership.path)+'?architecture-membership='+Date.now(),'architecture_membership');
+      var acquisitionText=await architectureGetText(architectureObjectUrl(release.acquisitionBasis.path)+'?architecture-membership='+Date.now(),'architecture_acquisition');
       var currentText=await architectureGetText(architectureObjectUrl(release.catalogCurrent.path)+'?architecture-membership='+Date.now(),'architecture_current');
       var current=JSON.parse(currentText);
       if(!architectureRefValid(current.lifecycle))throw new Error('architecture_lifecycle_reference_invalid');
       var lifecycleText=await architectureGetText(architectureObjectUrl(current.lifecycle.path)+'?architecture-membership='+Date.now(),'architecture_lifecycle');
-      var result=await verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText);
+      var result=await verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText,acquisitionText,deliveryDocument.serverDate);
       rememberArchitectureMembership(result);
       return result;
     } catch(error) {
       return {ok:false,revision:ARCHITECTURE_MEMBERSHIP_REVISION,error:String(error&&error.message||error).slice(0,180)};
     }
   }
+
   async function getPrivateJson(url,token) {
     return metadataJson({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache',authorization:'Bearer '+String(token||'')}},'private');
   }
