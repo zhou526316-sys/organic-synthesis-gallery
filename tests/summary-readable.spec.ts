@@ -58,7 +58,7 @@ async function bounded(drawer: Locator, width: number, height: number): Promise<
   await expect(async () => {
     const box = (await drawer.boundingBox())!;
     expect(box.width).toBeLessThan(width - 18);
-    expect(box.height).toBeLessThan(height * 0.9);
+    expect(box.height).toBeLessThan(height * (width <= 680 ? 0.9 : 0.95));
     expect(box.x).toBeGreaterThanOrEqual(10);
     expect(box.y).toBeGreaterThanOrEqual(10);
     expect(box.x + box.width).toBeLessThanOrEqual(width - 10);
@@ -76,11 +76,11 @@ for (const { width, height } of [{ width: 1600, height: 1000 }, { width: 1280, h
     await expect(drawer.locator('.summary-text')).toContainText(ZH);
     await bounded(drawer, width, height);
     const box = (await drawer.boundingBox())!;
-    if (width >= 1500) expect(box.width).toBeGreaterThan(1350);
+    if (width >= 1500) expect(box.width).toBeGreaterThan(1280);
     else if (width >= 1200) expect(box.width).toBeGreaterThan(1200);
     expect(box.height).toBeGreaterThan(height * (width <= 680 ? 0.75 : 0.84));
     if (width <= 680) expect(box.height).toBeLessThanOrEqual(height * 0.86 + 2);
-    else expect(box.height).toBeLessThanOrEqual(Math.min(1000, height * 0.89) + 2);
+    else expect(box.height).toBeLessThanOrEqual(Math.min(1120, height * 0.94) + 2);
     const fontSize = await drawer.locator('.summary-text').evaluate(element => parseFloat(getComputedStyle(element).fontSize));
     expect(fontSize).toBeGreaterThanOrEqual(width <= 680 ? 14 : 15);
     await expect(drawer.locator('.summary-toc img')).toBeVisible();
@@ -154,18 +154,21 @@ test('approved abstract-only summary discloses its evidence coverage', async ({ 
 });
 
 
-test('desktop summary gains reading space while mobile keeps the previous compact cap', async ({ page }) => {
+test('desktop summary is taller with TOC above text while mobile keeps the previous compact cap', async ({ page }) => {
   const desktop = await prepare(page, 1600, 1000);
   const drawer = desktop.actions.locator('.summary-drawer');
   await expect(drawer.locator('.summary-text')).toContainText(ZH);
   await bounded(drawer, 1600, 1000);
   const desktopBox = (await drawer.boundingBox())!;
-  expect(desktopBox.width).toBeGreaterThan(1350);
-  expect(desktopBox.width).toBeLessThanOrEqual(1441);
-  expect(desktopBox.height).toBeGreaterThan(850);
-  expect(desktopBox.height).toBeLessThanOrEqual(892);
-  const columns = await drawer.locator('.summary-layout').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').map(value => parseFloat(value)));
-  expect(columns[1]).toBeGreaterThan(columns[0] * 2);
+  expect(desktopBox.width).toBeGreaterThan(1280);
+  expect(desktopBox.width).toBeLessThanOrEqual(1321);
+  expect(desktopBox.height).toBeGreaterThan(900);
+  expect(desktopBox.height).toBeLessThanOrEqual(942);
+  const columns = await drawer.locator('.summary-layout').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').filter(Boolean));
+  expect(columns).toHaveLength(1);
+  const tocBox = (await drawer.locator('.summary-toc').boundingBox())!;
+  const mainBox = (await drawer.locator('.summary-main').boundingBox())!;
+  expect(tocBox.y + tocBox.height).toBeLessThanOrEqual(mainBox.y);
   await drawer.locator('[data-action="close"]').click();
 
   const mobile = await prepare(page, 390, 900);

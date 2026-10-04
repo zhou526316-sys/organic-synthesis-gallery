@@ -626,12 +626,15 @@ test('full-text summary opens as a non-fullscreen TOC-backed bilingual panel', a
   const box = await drawer.boundingBox();
   expect(box).not.toBeNull();
   if (box) {
-    // The approved desktop-only expansion now uses most of a 1280px viewport
-    // while retaining visible margins and a nonfullscreen height.
+    // Desktop summary remains large but nonfullscreen, with extra vertical reading space.
     expect(box.width).toBeGreaterThan(1200);
     expect(box.width).toBeLessThan(1280 - 24);
-    expect(box.height).toBeLessThan(900 * 0.9);
+    expect(box.height).toBeGreaterThan(900 * 0.88);
+    expect(box.height).toBeLessThan(900 * 0.95);
   }
+  const tocBox = (await drawer.locator('.summary-toc').boundingBox())!;
+  const mainBox = (await drawer.locator('.summary-main').boundingBox())!;
+  expect(tocBox.y + tocBox.height).toBeLessThanOrEqual(mainBox.y);
 
   await drawer.locator('button[data-action="summary-lang:en"]').click();
   await expect(drawer.locator('.summary-text')).toContainText('English full-text summary');
