@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'cloudflare/schema.sql'
+      - '.github/workflows/cloudflare-user-ui-release.yml'
   workflow_dispatch:
 
 permissions:
@@ -79,11 +80,7 @@ jobs:
           test -n "$D1_ID" || { echo 'D1 database is missing'; exit 1; }
           echo "database_id=$D1_ID" >> "$GITHUB_OUTPUT"
 
-      - name: Verify R2 bucket exists
-        working-directory: cloudflare/worker
-        run: npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null
-
-      - name: Generate non-destructive Worker configuration
+      - name: Generate D1-only maintenance configuration
         working-directory: cloudflare/worker
         shell: bash
         env:
@@ -92,34 +89,16 @@ jobs:
           set -euo pipefail
           cat > wrangler.user-ui.toml <<EOF
           name = "organic-synthesis-gallery"
-          main = "src/index.js"
           compatibility_date = "2026-09-16"
-          workers_dev = true
-
-          [vars]
-          MIGRATION_STAGE = "staging"
-
-          [ai]
-          binding = "AI"
-
-          [triggers]
-          crons = ["0 */6 * * *"]
-
-          [assets]
-          directory = "../../dist"
-          binding = "ASSETS"
-          not_found_handling = "single-page-application"
-          run_worker_first = ["/api/*", "/media/*"]
-
-          [[r2_buckets]]
-          binding = "MEDIA"
-          bucket_name = "$R2_BUCKET"
 
           [[d1_databases]]
           binding = "DB"
           database_name = "$D1_NAME"
           database_id = "$D1_ID"
           EOF
+          # This file is intentionally not deployable: no main/assets/vars/R2.
+          # Production Worker deployment belongs only to deploy-worker-frontend.yml.
+          ! grep -Eq '^(main|\[assets\]|\[vars\]|\[ai\]|\[triggers\]|\[\[r2_buckets\]\])' wrangler.user-ui.toml
 
       - name: Apply idempotent user schema
         working-directory: cloudflare/worker
@@ -143,7 +122,9 @@ jobs:
           console.log(`Prepared ${Object.keys(values).length} configured integration secrets.`);
           NODE
           if [ "$(node -p "Object.keys(require('/tmp/user-integrations-secrets.json')).length")" -gt 0 ]; then
-            npx wrangler secret bulk /tmp/user-integrations-secrets.json --config wrangler.user-ui.toml >/dev/null
+            # Update secrets by Worker name only. Do not attach the D1-only
+            # maintenance config to a secret version, or it can replace live bindings.
+            npx wrangler secret bulk /tmp/user-integrations-secrets.json --name organic-synthesis-gallery >/dev/null
           fi
           rm -f /tmp/user-integrations-secrets.json
       - name: Seed native registration verification challenge
@@ -260,6 +241,12 @@ jobs:
           const counts = JSON.parse(fs.readFileSync('/tmp/counts.json', 'utf8'));
           const integrations = JSON.parse(fs.readFileSync('/tmp/integrations.json', 'utf8'));
           if (!health.ok || !health.d1 || !health.r2 || !health.writeAuth) throw new Error(`Healthcheck failed: ${JSON.stringify(health)}`);
+          if (!health.privatePdf?.bucket || health.privatePdf?.readEnabled !== true) {
+            throw new Error(`Canonical private PDF bindings were overwritten: ${JSON.stringify(health.privatePdf)}`);
+          }
+          if (health.wechatTicketRelay !== true) {
+            throw new Error(`Canonical Worker vars were overwritten: ${JSON.stringify({wechatTicketRelay:health.wechatTicketRelay})}`);
+          }
           if (!counts || typeof counts.counts !== 'object') throw new Error(`Reader count route failed: ${JSON.stringify(counts)}`);
           if (!integrations?.auth || !integrations?.payments) throw new Error(`Integration route failed: ${JSON.stringify(integrations)}`);
           console.log(JSON.stringify({ health: true, userUiRoutes: true, integrations, mediaMigration: false }));

@@ -1,5 +1,8 @@
 name: Deploy Worker frontend assets
 
+# Canonical production Worker deployment authority. Maintenance workflows may
+# mutate D1 or named secrets but must not deploy a partial Worker configuration.
+
 on:
   workflow_dispatch:
   push:
@@ -481,6 +484,38 @@ jobs:
             feedbackSubmissionRoute: true,
             protectedFeedbackExport: true,
           }));
+          NODE
+
+      - name: Verify canonical Worker bindings survived deployment and secret sync
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+        run: |
+          node - <<'NODE'
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+          let last = null;
+          for (let attempt = 0; attempt < 12; attempt += 1) {
+            const response = await fetch(process.env.WORKER_URL + '/api/_healthcheck?authority=' + Date.now(), {
+              headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+            });
+            const body = await response.json().catch(() => ({}));
+            last = { status: response.status, body };
+            if (response.ok &&
+                body?.ok === true &&
+                body?.privatePdf?.bucket === true &&
+                body?.privatePdf?.readEnabled === true &&
+                typeof body?.privatePdf?.captureEnabled === 'boolean' &&
+                typeof body?.privatePdf?.processingEnabled === 'boolean' &&
+                body?.wechatTicketRelay === true) {
+              console.log(JSON.stringify({
+                canonicalWorkerBindings: true,
+                privatePdf: body.privatePdf,
+                wechatTicketRelay: body.wechatTicketRelay,
+              }));
+              process.exit(0);
+            }
+            await sleep(3000);
+          }
+          throw new Error('Canonical Worker binding verification failed: ' + JSON.stringify(last));
           NODE
 
       - name: Verify deployed search filtering CSS
