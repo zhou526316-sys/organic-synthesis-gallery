@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-27T14:28:00+08:00",
+  "generatedAt": "2026-10-04T17:16:00+08:00",
   "updates": [
     {
-      "id": 36,
+      "id": 37,
       "status": "reviewed"
     }
   ],
@@ -21,15 +21,11 @@
     8
   ],
   "reviewBasis": {
-    "userApproval": "User asked to resolve newly arrived feedback; #36 was the only new item in the 2026-09-27 14:08 export.",
-    "originalFeedback": "建议加个不看某期刊按钮",
-    "verification": "Export run 36299233993 showed #36 as the only new item; post-implementation export run 36300142142 showed no additional arrivals.",
-    "implementation": "PR #260 merged as adde4d4ef5a2f5e69410935b7d9013901b4c9a37. The journal picker now has a reversible Hide/不看 control per journal, persisted in organic-gallery-filter-preferences-v1. Hidden journals stay available for Restore/恢复 and are not removed from literature data.",
-    "behavior": "Hiding a journal removes it from normal browsing/search results, clears conflicting positive selection for that journal, persists across reload, and can be restored. All journals / Clear journal-date filters reset exclusions too. Direct DOI share links remain reachable.",
-    "preMerge": "Cloudflare migration CI 36299452488, Validate Gallery authors and site data 36299452493, Card sharing CI 36299452509, and Site quality gate 36299452495 all passed. Playwright interaction regression covered hide -> reload persists -> restore.",
-    "deployment": "Worker frontend deployment 36299692686 succeeded; GitHub Pages frontend deployment 36299687242 succeeded. Both production bundles expose data-journal-exclude, excludedJournals persistence, and the bilingual Hide/Restore copy.",
-    "liveAcceptance": "Live workflow 36300032672 passed in Chromium and WebKit after correcting the smoke harness to exclude normal pageview/read-only POST traffic from unsafe-write accounting. The functional path had already completed successfully in the first attempt; final attempt confirmed hide, reload persistence and restore on https://gallery.gczhouwld.com/.",
-    "fallbackNote": "Cloudflare Pages fallback run 36299687250 failed only on the pre-existing Cloudflare Pages API token authentication error code 10000; this is independent of #36 and does not affect the primary custom-domain or Worker deployments.",
-    "scope": "Close only feedback #36. The previous 12 unresolved items remain open/paused."
+    "userApproval": "User explicitly asked to fix the newly arrived feedback #37.",
+    "originalFeedback": "Desktop literature-summary panel should be taller, with the image above and the text below.",
+    "implementation": "PR #289 merged as c2c3cc9c5f9d68096ad13803a532930a06ef1812. Desktop summary panel uses a taller bounded viewport, single-column vertical layout, TOC/graphical abstract above the summary text, and preserved bilingual tabs. Mobile keeps the prior compact cap.",
+    "tests": "Readable summary layout regression 37190994743 passed. Site quality gate 37190994684 passed, including frontend build/typecheck, production API smoke, Worker dry-run, and Playwright interaction regression. The unrelated Bridge Evidence v2 regression remained red because its old test asserts Bridge 2.2.35 and was not modified.",
+    "deployment": "Sync frontend to Worker 37191248388 succeeded. Deploy GitHub Pages frontend 37191248410 succeeded, including canonical/Pages online verification. Cloudflare Pages fallback 37191248326 failed on the pre-existing Cloudflare API token authentication error code 10000; it is independent of this UI change.",
+    "scope": "Close only #37. Keep the previous 12 unresolved feedback items open/paused."
   }
 }
