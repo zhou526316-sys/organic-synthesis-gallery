@@ -1,3 +1,4 @@
+import { compareCandidateSelections, selectSummaryCandidateFromIndex, shadowIndexSummaryJob } from './summary-candidate-index.js';
 const EVIDENCE_PREFIX = 'private/article-evidence-v2/';
 const JOB_PREFIX = 'private/article-summary-jobs/';
 const REVIEW_PREFIX = 'private/article-summary-review/';
@@ -335,6 +336,7 @@ async function putJob(env, job) {
       publishedAt: String(job.publishedAt || 0),
     },
   });
+  await shadowIndexSummaryJob(env, job, keys.job);
   return keys.job;
 }
 
@@ -922,6 +924,58 @@ export async function runSummaryReviewCycle(env, options = {}) {
       lastError: finalJob.lastError || '',
     };
   }
+}
+
+export async function compareSummaryReviewCandidateShadow(env, options = {}) {
+  if (!env?.MEDIA || !env?.DB) {
+    return { status: 503, body: { error: 'summary_candidate_shadow_storage_unavailable' } };
+  }
+  const now = Number.isFinite(Number(options.now)) ? Number(options.now) : Date.now();
+  const preferredDoi = String(options.preferredDoi || '').trim().toLowerCase();
+  const legacyBefore = await selectReviewCandidate(env, now, preferredDoi);
+  const indexed = await selectSummaryCandidateFromIndex(env, now, preferredDoi);
+  if (indexed.status !== 200) return indexed;
+  const legacyAfter = await selectReviewCandidate(env, now, preferredDoi);
+  const legacyStability = compareCandidateSelections(legacyBefore, legacyAfter);
+  const saturated = [legacyBefore.evidenceCount, legacyBefore.jobCount, legacyAfter.evidenceCount, legacyAfter.jobCount]
+    .some(value => Number(value || 0) >= 10000);
+  if (!legacyStability.same || saturated) {
+    return {
+      status: 200,
+      body: {
+        version: 1,
+        mode: 'shadow_comparison',
+        readPathActive: false,
+        comparable: false,
+        sourceStable: legacyStability.same,
+        legacyPotentiallySaturated: saturated,
+        same: false,
+        reason: saturated ? 'legacy_reader_at_or_above_10000_object_ceiling' : 'legacy_source_changed_during_comparison',
+        now,
+        preferredDoi,
+        legacyBefore: legacyStability.legacy,
+        legacyAfter: legacyStability.indexed,
+        indexed: compareCandidateSelections(legacyBefore, indexed.body.selection).indexed,
+      },
+    };
+  }
+  const comparison = compareCandidateSelections(legacyBefore, indexed.body.selection);
+  return {
+    status: 200,
+    body: {
+      version: 1,
+      mode: 'shadow_comparison',
+      readPathActive: false,
+      comparable: true,
+      sourceStable: true,
+      legacyPotentiallySaturated: false,
+      same: comparison.same,
+      now,
+      preferredDoi,
+      legacy: comparison.legacy,
+      indexed: comparison.indexed,
+    },
+  };
 }
 
 export async function getSummaryReviewStatus(env) {
