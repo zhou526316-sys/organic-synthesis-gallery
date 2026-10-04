@@ -1,0 +1,13 @@
+本轮 2026-10-04 18:00 固定槽发布前补审已完成。最终状态为 `ready_with_pending`：publishableSubsetReady=true、readyToPublish=true、reviewComplete=false。固定审核/发布槽没有停用、改期或新增替代任务；没有绕过固定槽提前手工修改生产文献。
+
+fresh machine audit run 37191409007 成功：latest/compact generatedAt 同为 2026-10-04T09:13:23.683Z，unresolved=8 且完整 compact 长度=8；galleryDois=785、sourceRecords=778、missingFromGallery=8，criticalSourceFailures=0、sourceFamilyGaps=0、historicalCoverageLosses=0。16 本 active journals 与 activeFrom 全覆盖，3 天主窗口、7 天尾扫、多 ISSN Crossref、OpenAlex、late-deposit rescue 和 verifiedThrough catch-up 均保持。CCS Chemistry 有 1 项 source warning，Nature Communications/JACS/Angew 有 closure warning，因此 verifiedThrough 仍为 2026-09-20；publisher sourceChecks 为 checked=0 / blocked=11 / unavailable=5。urlMachine audit 37191409007https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37191409007
+
+关键改判是 `10.31635/ccschem.026.202607659` 从 pending 转 include。补审取得与最终 CCS Chemistry 论文明确匹配的作者记录和同一工作的公开前体证据，足以确认其核心是环氧树脂/商业复合材料的化学解构与升级回收方法，而非单纯材料性能评价；材料性能、胶黏剂和生命周期指标没有被当作纳入依据。更新后 staging blob=`381be455bf6ef46f50ce757dc995dc6cf8bd44f3`，最终分区为 **1 include / 3 exclude / 4 current pending**，唯一 publishable DOI 为 607659。
+
+current pending 为 10.1021/acscatal.6c06578、10.31635/ccschem.026.202608090、10.31635/ccschem.026.202607590、10.31635/ccschem.026.202607612；另保留 608472、608262 两项越窗 durable pending。Existing-card scope pending 仍为 10.1021/acs.orglett.6c03499、10.1021/acs.orglett.6c03386、10.1021/acscatal.6c05520；本轮新增 confirmed removal=0、新增实际下线=0。
+
+Strict gate run 37194793960 成功，publicationReady=true、releaseStatus=ready_with_pending，strict conversion 也通过；白名单仅 607659。urlStrict gate 37194793960https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37194793960 固定槽 writer run 37194813726 随后完成正式转换，release commit=`60b46660abdf50e3b8b424bc1395f8c632fb2d58`；formal review summary=8 reviewed / 1 accepted / 3 rejected / 4 pending，生产卡片 **785→786**。TOC demand refresh 仅更新 Tampermonkey/VPN Bridge 媒体需求，没有执行 OA 自动提图。urlFixed-slot release 37194813726https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37194813726
+
+线上交付已闭环。Pages run 37194851345 的 authorization、build、deploy 和在线核验全部成功；北京时间 18:22:33，literature-update-state 已记录 deployment=success-live-verified、publicationSlot=2026-10-04T18:00:00+08:00、totalGalleryCards=786、galleryDois=786，607659 在线存在，rejected 与 current deferred 均在线缺席。urlPages live verification 37194851345https://github.com/zhou526316-sys/organic-synthesis-gallery/actions/runs/37194851345
+
+Scope 仍为 scope-2026-10-02-v1。capability registry 仍有旧 15-journal 元数据漂移，而真实 registry/guard 已为 16 刊；本轮没有因此漏刊或 generation error。结论：本轮不是最终零新增，607659 已正式上线，其余证据不足 DOI 继续隔离；当前生产文献为 **786 篇**。
