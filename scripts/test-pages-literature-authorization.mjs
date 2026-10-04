@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { PROTECTED_FILES, validateProtectedInputs, validateFormalPartition } from './validate-pages-literature-authorization.mjs';
+import { PROTECTED_FILES, validateProtectedInputs, validateFormalPartition, canReuseReceiptBackedLegacyBaseline } from './validate-pages-literature-authorization.mjs';
 
 // Isolated data fixtures only. No production writes, Git commits, or network calls.
 const cases = [];
@@ -19,6 +19,31 @@ run('omitting_protected_file_is_not_a_bypass', () => {
 run('missing_sha_never_means_unchanged', () => {
   const bad = { ...blobs, [PROTECTED_FILES[0]]: null };
   assert.ok(validateProtectedInputs({ protectedBlobs: bad }, bad).some(x => x.startsWith('missing_or_invalid_protected_sha:')));
+});
+
+run('exact_receipt_backed_retired_evening_baseline_can_be_reused_for_unchanged_ui_deploy', () => {
+  const markerCommit = 'a'.repeat(40);
+  const legacyMarker = {
+    mode: 'slot-release',
+    publicationSlot: '2026-10-04T18:00:00+08:00',
+    productionCards: 786,
+  };
+  const baseline = {
+    ok: true,
+    receiptBackedBaseline: true,
+    legacyMarkerAuthorized: true,
+    publicationSlot: legacyMarker.publicationSlot,
+    productionCards: legacyMarker.productionCards,
+    markerCommitSha: markerCommit,
+  };
+  assert.equal(canReuseReceiptBackedLegacyBaseline(legacyMarker, baseline, [], markerCommit), true);
+  assert.equal(canReuseReceiptBackedLegacyBaseline(legacyMarker, baseline, ['unauthorized_literature_change:x'], markerCommit), false);
+  assert.equal(canReuseReceiptBackedLegacyBaseline(
+    { ...legacyMarker, publicationSlot: '2026-10-05T18:00:00+08:00' },
+    { ...baseline, publicationSlot: '2026-10-05T18:00:00+08:00' }, [], markerCommit,
+  ), false);
+  assert.equal(canReuseReceiptBackedLegacyBaseline(legacyMarker, { ...baseline, legacyMarkerAuthorized: false }, [], markerCommit), false);
+  assert.equal(canReuseReceiptBackedLegacyBaseline(legacyMarker, baseline, [], 'b'.repeat(40)), false);
 });
 
 const slot = '2026-09-23T08:00:00+08:00';
@@ -42,7 +67,7 @@ const marker = { publicationSlot: slot, handoffGeneratedAt: generation, releaseP
   publishableDois: [included.doi], rejectedDois: [excluded.doi], deferredDois: [pending.doi],
 };
 const queue = { items: [{ doi: pending.doi, reason: 'No complete article evidence yet, retain pending rather than excluding.',
-  evidenceNeeded: 'Abstract or full-text proof of products and general preparative substrate scope.', nextReviewSlot: '2026-09-23T18:00:00+08:00' }] };
+  evidenceNeeded: 'Abstract or full-text proof of products and general preparative substrate scope.', nextReviewSlot: '2026-09-24T08:00:00+08:00' }] };
 run('one_pending_does_not_block_verified_release_subset', () => assert.deepEqual(validateFormalPartition(staging, formal, marker, queue), []));
 run('pending_cannot_enter_publication_allowlist', () => {
   assert.ok(validateFormalPartition(staging, formal, { ...marker, publishableDois: [included.doi, pending.doi] }, queue).includes('release_allowlist_mismatch:publishableDois'));
@@ -55,6 +80,9 @@ run('deferred_evidence_and_retry_cannot_be_dropped', () => {
   assert.ok(validateFormalPartition(staging, formal, marker, null).includes('pending_queue_doi_set_mismatch'));
   const bad = structuredClone(queue); delete bad.items[0].nextReviewSlot;
   assert.ok(validateFormalPartition(staging, formal, marker, bad).some(x => x.startsWith('pending_retry_evidence_missing:')));
+  const retiredEveningRetry = structuredClone(queue);
+  retiredEveningRetry.items[0].nextReviewSlot = '2026-09-24T18:00:00+08:00';
+  assert.ok(validateFormalPartition(staging, formal, marker, retiredEveningRetry).some(x => x.startsWith('pending_retry_evidence_missing:')));
 });
 run('normal_formal_rows_need_no_internal_decision_field', () => {
   assert.equal(included._decision, undefined);
