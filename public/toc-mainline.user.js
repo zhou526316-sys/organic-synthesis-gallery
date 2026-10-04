@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.21
+// @version      6.2.22
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -51,7 +51,7 @@
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
   var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
-  var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
+  var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v2-stable';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -79,7 +79,7 @@
   var EVIDENCE_INVENTORY_ENDPOINT = WORKER + '/api/article-summary/evidence-inventory';
   var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
   var P = 'osg-toc-v6:';
-  var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
+  var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v2-stable';
   var TOKEN_KEY = P + 'write-token';
   var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';
   var ENABLED_KEY = P + 'enabled';
@@ -1124,7 +1124,7 @@ function embeddedJobDois(value) {
     var membership=JSON.parse(membershipText),current=JSON.parse(currentText);
     if(membership.schema!=='gallery-published-membership-v1'||membership.scope!=='all-time'||membership.complete!==true
       ||membership.catalogId!==release.catalogId||membership.doiSetHash!==release.doiSetHash
-      ||membership.publicationSlot!==release.publicationSlot||membership.sourceCommit!==release.sourceCommit
+      ||membership.publicationSlot!==release.publicationSlot||membership.markerBlobSha!==release.markerBlobSha
       ||Number(membership.count)!==release.recordCount||!membership.members||Array.isArray(membership.members))throw new Error('architecture_membership_identity_mismatch');
     if(current.schema!=='gallery-shadow-catalog-v1'||current.mode!=='shadow'||current.productionActivation!==false
       ||!architectureRefValid(current.lifecycle))throw new Error('architecture_current_identity_mismatch');
