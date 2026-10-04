@@ -67,7 +67,8 @@ const db=new FakeDB(), bucket=new FakeBucket();
 db.sessions.set(await sha256('owner-token'),{token_hash:await sha256('owner-token'),user_id:'owner',expires_at:now+86400000});
 db.sessions.set(await sha256('other-token'),{token_hash:await sha256('other-token'),user_id:'other',expires_at:now+86400000});
 db.verified.add('owner');db.verified.add('other');
-const env={DB:db,PDF_PRIVATE:bucket,PRIVATE_PDF_READ_ENABLED:'1',PRIVATE_PDF_CAPTURE_ENABLED:'0',PRIVATE_PDF_PROCESSING_ENABLED:'0'};
+const fixtureClaim='fixture-owner-claim-not-production';
+const env={DB:db,PDF_PRIVATE:bucket,PRIVATE_PDF_READ_ENABLED:'1',PRIVATE_PDF_CAPTURE_ENABLED:'0',PRIVATE_PDF_PROCESSING_ENABLED:'0',PRIVATE_PDF_OWNER_BOOTSTRAP_HASH:await sha256(fixtureClaim)};
 let passed=0;async function test(name,fn){await fn();passed++;console.log('PRIVATE_PDF_PASS '+name);}
 
 await test('anonymous status is fail-open to publisher behavior',async()=>{
@@ -79,11 +80,11 @@ await test('wrong owner claim code cannot grant',async()=>{
   assert.equal(r.status,403);assert.equal(db.capabilities.size,0);
 });
 await test('one-time high entropy claim grants four server capabilities',async()=>{
-  const r=await bootstrapPrivatePdfOwner(await authRequest('/api/user-ui/private-pdf/bootstrap-owner'),env,{claimCode:'_dJ5eFhzF-0xcS8xIok9Ove1CJY_7jJXGu8_utz1RxU'});
+  const r=await bootstrapPrivatePdfOwner(await authRequest('/api/user-ui/private-pdf/bootstrap-owner'),env,{claimCode:fixtureClaim});
   assert.equal(r.status,200);assert.deepEqual(r.body.capabilities,['private_pdf_capture','private_pdf_owner','private_pdf_process','private_pdf_read']);
 });
 await test('owner bootstrap cannot be stolen by a second verified account',async()=>{
-  const r=await bootstrapPrivatePdfOwner(await authRequest('/api/user-ui/private-pdf/bootstrap-owner','other-token'),env,{claimCode:'_dJ5eFhzF-0xcS8xIok9Ove1CJY_7jJXGu8_utz1RxU'});
+  const r=await bootstrapPrivatePdfOwner(await authRequest('/api/user-ui/private-pdf/bootstrap-owner','other-token'),env,{claimCode:fixtureClaim});
   assert.equal(r.status,409);assert.equal(db.capabilities.has('other|private_pdf_read'),false);
 });
 await test('owner without stored PDF still falls back normally',async()=>{
