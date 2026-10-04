@@ -1,0 +1,106 @@
+name: Gallery architecture C2b staging gate
+
+on:
+  push:
+    branches:
+      - feat/gallery-architecture-c2b-final-20261004
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gallery-c2b-staging-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: C2b contracts and package
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Syntax and architecture contracts
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --test architecture/tests/*.test.mjs
+          node --test scripts/test-gallery-architecture-public.mjs scripts/test-tm-architecture-membership.mjs
+      - name: Existing queue/controller regressions
+        run: |
+          set -euo pipefail
+          node tests/tm-controller-recovery.test.mjs
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-missing-only.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node tests/tm-newest-retry.test.mjs
+      - name: Build public architecture and verify real data
+        run: |
+          set -euo pipefail
+          node scripts/build-gallery-architecture-public.mjs
+          node scripts/test-tm-architecture-real-data.mjs public/architecture-v1
+      - name: Package exact Bridge
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.41' public/gallery-vpn-bridge.user.js
+          grep -F "var VERSION = '6.2.20';" public/gallery-vpn-bridge.user.js
+          grep -F '20261004-membership-active-v2' public/gallery-vpn-bridge.user.js
+      - name: Verify source tree is not rewritten by validation
+        run: |
+          git diff --exit-code -- ':!public/gallery-vpn-bridge.user.js' ':!public/gallery-vpn-bridge-runtime.js'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gallery-c2b-contract-evidence
+          path: |
+            public/architecture-v1/release.json
+            public/gallery-vpn-bridge.user.js
+          if-no-files-found: warn
+          retention-days: 7
+
+  browser:
+    name: C2b Chromium queue behavior
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install isolated Chromium
+        run: |
+          npm install --no-save --package-lock=false --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Run acquisition browser fixtures
+        run: |
+          set -euo pipefail
+          node tests/tm-queue-coverage-browser.mjs
+          node tests/tm-missing-only-browser.mjs
+          node tests/tm-immediate-restart-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gallery-c2b-browser-evidence
+          path: |
+            ${{ runner.temp }}/tm-queue-coverage-browser.json
+            ${{ runner.temp }}/tm-queue-coverage-trace.zip
+            ${{ runner.temp }}/tm-missing-browser-report.json
+            ${{ runner.temp }}/tm-missing-browser-trace.zip
+            ${{ runner.temp }}/tm-immediate-browser-report.json
+            ${{ runner.temp }}/tm-immediate-browser-trace.zip
+          if-no-files-found: warn
+          retention-days: 7
