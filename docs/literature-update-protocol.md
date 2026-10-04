@@ -1,5 +1,9 @@
 # Literature Update / Sync Protocol
 
+## Schedule amendment — single daily release, 2026-10-04
+
+The user's current production schedule is **one literature release per day at 08:00 Asia/Shanghai only**. The former 18:00 release slot is retired. Operationally, the active chain is 06:55 machine audit → 07:05 main semantic review → 07:35 recovery review → 08:00 production release. Any older references in this document, historical audits, prompts, tests, filenames, or comments to 16:55 / 17:05 / 17:35 / 18:00 describe historical behavior and must not be treated as an active evening admission slot. Deferred items roll to the **next day's 08:00** slot. Immediate confirmed deletion-only scope corrections remain allowed under their existing contract.
+
 This repository uses `audit/literature-update-state.json` as the single coordination source for literature retrieval, TOC collection, capability selection, and website synchronization. The capability registry is `audit/literature-capability.json`.
 
 ## Publication policy amendment — per-DOI release, 2026-09-22
