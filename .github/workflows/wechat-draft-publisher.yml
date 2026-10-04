@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'audit/automation-triggers/wechat-publisher-request.json'
+      - 'audit/automation-triggers/wechat-retrospective-request.json'
 
 permissions:
   contents: write
@@ -66,6 +67,9 @@ jobs:
               "generatedAt": datetime.now(timezone.utc).isoformat().replace("+00:00","Z"),
               "status": "ok",
               "stage": result.get("stage"),
+              "mode": result.get("mode") or "daily",
+              "slug": result.get("slug"),
+              "title": result.get("title"),
               "publicationSlot": result.get("publicationSlot"),
               "media_id": result.get("media_id"),
               "paper_count": result.get("paper_count"),
@@ -77,7 +81,12 @@ jobs:
               "article_url": result.get("article_url"),
               "content_source_url": result.get("content_source_url"),
           }
-          Path("audit/wechat-publisher/latest.json").write_text(
+          target = (
+              Path("audit/wechat-publisher/retrospective-latest.json")
+              if receipt["mode"] == "retrospective"
+              else Path("audit/wechat-publisher/latest.json")
+          )
+          target.write_text(
               json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
               encoding="utf-8",
           )
@@ -89,7 +98,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add audit/wechat-publisher/latest.json
+          git add audit/wechat-publisher/latest.json audit/wechat-publisher/retrospective-latest.json 2>/dev/null || true
           if git diff --cached --quiet; then
             exit 0
           fi
