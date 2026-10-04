@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { gunzipSync } from 'node:zlib';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { DATA_FILES, collectPapers, assertPartition, sameSet } from './pages-release-delivery.mjs';
 import { buildCatalog, verifyCatalog, stable, digest } from '../architecture/catalog.mjs';
 import { buildLegacyTitlePresentation } from '../architecture/title-presentation.mjs';
@@ -51,7 +52,16 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
 
   const texts = Object.fromEntries(await Promise.all(SOURCE_FILES.map(async name => {
     const file = path.join(PUBLIC, name);
-    return [name, await readFile(file, 'utf8')];
+    try { return [name, await readFile(file, 'utf8')]; }
+    catch (error) {
+      // literature-supplement.json is a generated Pages compatibility artifact.
+      // PR/site-quality builds may not have generated it yet; production Pages
+      // does so before this builder runs.
+      if (name === 'literature-supplement.json' && error?.code === 'ENOENT') {
+        return [name, JSON.stringify({ papers: [] })];
+      }
+      throw error;
+    }
   })));
   const source = collectPapers(Object.fromEntries(DATA_FILES.map(name => [name, texts[name]])), isExcludedDoi);
   const built = collectPapers(texts, isExcludedDoi);
@@ -166,7 +176,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   return { release, report };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try { await buildPublicArchitecture(); }
   catch (error) { console.error(error instanceof Error ? error.message : String(error)); process.exitCode=1; }
 }
