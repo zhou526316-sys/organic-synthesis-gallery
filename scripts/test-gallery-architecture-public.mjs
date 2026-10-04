@@ -27,3 +27,11 @@ test('public builder does not activate production or dispatch', () => {
   assert.ok(!source.includes('src/main.ts'));
   assert.ok(!source.includes('toc-mainline.user.js'));
 });
+
+test('public architecture emits a hash-bound acquisition basis', () => {
+  const source = readFileSync('scripts/build-gallery-architecture-public.mjs','utf8');
+  assert.ok(source.includes("schema: 'gallery-acquisition-basis-v1'"));
+  assert.ok(source.includes('acquisitionBasis: acquisitionRef'));
+  const delivery = readFileSync('scripts/pages-release-delivery.mjs','utf8');
+  assert.ok(delivery.includes('release.acquisitionBasis'));
+});
