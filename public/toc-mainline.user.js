@@ -4608,8 +4608,11 @@ function embeddedJobDois(value) {
       var privatePdfResult=await maybeCapturePrivatePdf(job,trace);
       if(privatePdfResult)result.privatePdf=privatePdfResult;
     } catch (privatePdfError) {
-      result.privatePdf={status:'failed',reason:captureLiveError(privatePdfError&&privatePdfError.message||privatePdfError)};
-      pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:result.privatePdf.reason});
+      var privatePdfReason=String(privatePdfError&&privatePdfError.message||privatePdfError||'private_pdf_failed')
+        .replace(/https?:\/\/\S+/gi,'[url]')
+        .replace(/[A-Za-z0-9+/_=-]{40,}/g,'[redacted]').slice(0,180);
+      result.privatePdf={status:'failed',reason:privatePdfReason};
+      pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
     }
     if(job.missingOnly&&result.figures&&result.figures.discovered>0){var cp=readCheckpoint(job.doi);cp.figureCoverage={expected:Math.max(Number(cp.figureCoverage&&cp.figureCoverage.expected||0),Number(result.figures.discovered)),observedAt:Date.now()};saveCheckpoint(job.doi,cp,job);}
     result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number((result.fulltext||{}).retryAfterMs||0));
