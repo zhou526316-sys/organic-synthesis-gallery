@@ -50,7 +50,7 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
-  var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
+  var PUBLISHER_MEDIA_REVISION = '20261004-publisher-routes-v9';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var INSTALL_REVISION = '6.2.23';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
@@ -539,6 +539,146 @@ function embeddedJobDois(value) {
     return 'other';
   }
 
+  // Publisher routing v9: keep DOI identity strict while avoiding known
+  // redirect gaps on Elsevier and using the RSC page that matches the task.
+  function rscRouteInfo(job) {
+    var doi = normalizeDoi(job && job.doi);
+    var suffix = doi.split('/')[1] || '';
+    var match = /^([a-z])(\d)([a-z]{2})/i.exec(suffix);
+    if (!match) return null;
+    return {
+      doi: doi,
+      suffix: suffix.toLowerCase(),
+      year: String(2020 + Number(match[2])),
+      journalCode: match[3].toLowerCase()
+    };
+  }
+
+  function rscArticleRoute(job, full) {
+    var info = rscRouteInfo(job);
+    if (!info) return '';
+    return 'https://pubs.rsc.org/en/content/' + (full ? 'articlehtml' : 'articlelanding')
+      + '/' + info.year + '/' + info.journalCode + '/' + info.suffix;
+  }
+
+  function elsevierSearchRoute(job) {
+    var doi = normalizeDoi(job && job.doi);
+    return doi ? 'https://www.sciencedirect.com/search?qs=' + encodeURIComponent(doi) : '';
+  }
+
+  function bindPublisherTabJobOnly(job) {
+    var match = String(location.hash || '').match(/(?:^#|&)osg-job=([a-z0-9-]{16,80})(?:&|$)/i);
+    var binding = '';
+    try {
+      if (match) sessionStorage.setItem(P + 'tab-job-binding', match[1]);
+      binding = sessionStorage.getItem(P + 'tab-job-binding') || '';
+    } catch (_) {}
+    if (!job || !job.jobId || !currentCaptureJob(job) || binding !== job.jobId) {
+      throw new Error('capture_tab_job_mismatch');
+    }
+    return binding;
+  }
+
+  function isElsevierSearchRoute(job) {
+    if (!job || String(job.publisher || publisherForDoi(normalizeDoi(job.doi))) !== 'elsevier') return false;
+    if (!/(?:^|\.)sciencedirect\.com$/i.test(String(location.hostname || ''))) return false;
+    if (!/^\/search(?:\/|$)/i.test(String(location.pathname || ''))) return false;
+    try {
+      return normalizeDoi(new URL(location.href).searchParams.get('qs') || '') === normalizeDoi(job.doi);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function elsevierPiiArticleLinks(doc, baseUrl) {
+    var rows = [], seen = new Set();
+    Array.from((doc || document).querySelectorAll('a[href]')).forEach(function (anchor) {
+      var href = normalizeUrl(anchor.getAttribute('href') || '', baseUrl || location.href);
+      if (!href || seen.has(href)) return;
+      try {
+        var url = new URL(href);
+        if (!/(?:^|\.)sciencedirect\.com$/i.test(url.hostname)) return;
+        if (!/^\/science\/article\/pii\/[a-z0-9]+/i.test(url.pathname)) return;
+      } catch (_) { return; }
+      seen.add(href);
+      rows.push({ anchor: anchor, url: href });
+    });
+    return rows;
+  }
+
+  function elsevierSearchTargetFromDocument(job, doc, baseUrl) {
+    var doi = normalizeDoi(job && job.doi);
+    if (!doi || !doc) return '';
+    var rows = elsevierPiiArticleLinks(doc, baseUrl);
+    if (!rows.length) return '';
+
+    // Strong path: the result card itself contains the exact DOI and exactly
+    // one ScienceDirect article target.
+    for (var i = 0; i < rows.length; i += 1) {
+      var node = rows[i].anchor;
+      for (var depth = 0; node && depth < 7; depth += 1, node = node.parentElement) {
+        var text = String(node.textContent || '').replace(/\s+/g, ' ').toLowerCase();
+        if (text.indexOf(doi) < 0) continue;
+        var local = elsevierPiiArticleLinks(node, baseUrl);
+        if (local.length === 1) return local[0].url;
+        if (local.length > 1) break;
+      }
+    }
+
+    // Exact-query fallback: the controller itself created a search for one DOI.
+    // Accept only one unique PII target; ambiguity remains a hard failure.
+    try {
+      var current = new URL(baseUrl || location.href);
+      var exactQuery = normalizeDoi(current.searchParams.get('qs') || '');
+      if (exactQuery === doi && rows.length === 1) return rows[0].url;
+    } catch (_) {}
+    return '';
+  }
+
+  async function resolveElsevierSearchRoute(job) {
+    if (!isElsevierSearchRoute(job)) return false;
+    bindPublisherTabJobOnly(job);
+    writePublisherHeartbeat(job, 'elsevier_search_started');
+    GM_setValue(progressKey(job.doi), {
+      status: 'elsevier_route_lookup',
+      at: nowIso(),
+      url: location.href,
+      version: VERSION,
+      host: location.hostname
+    });
+
+    var started = Date.now(), target = '';
+    while (Date.now() - started < 15000) {
+      if (!currentCaptureJob(job)) throw new Error('capture_job_stale_or_unbound');
+      target = elsevierSearchTargetFromDocument(job, document, location.href);
+      if (target) break;
+      if (Date.now() - started > 3500) {
+        try { window.scrollTo(0, Math.min(document.documentElement.scrollHeight || 0, 1800)); } catch (_) {}
+      }
+      await sleep(500);
+    }
+    if (!target) {
+      var reason = 'elsevier_exact_doi_search_result_not_found';
+      var finishedAt = nowIso();
+      var result = { doi:job.doi, jobId:job.jobId, version:VERSION, controllerRevision:CONTROLLER_REVISION,
+        status:'failed', reason:reason, finishedAt:finishedAt };
+      GM_setValue(traceKey(job.doi), {doi:job.doi,jobId:job.jobId,status:'failed',trace:[{
+        at:finishedAt,stage:'elsevier_route',event:'search_result_missing',status:'failed',url:location.href,message:reason
+      }],finishedAt:finishedAt});
+      enqueueCaptureReport(job,[{at:finishedAt,stage:'elsevier_route',event:'search_result_missing',status:'failed',url:location.href,message:reason}],
+        'failed',reason,true,location.href);
+      GM_setValue(resultKey(job.doi),result);
+      GM_deleteValue(progressKey(job.doi));
+      writePublisherHeartbeat(job, 'elsevier_search_failed');
+      return true;
+    }
+
+    writePublisherHeartbeat(job, 'elsevier_article_route_found');
+    var next = target + (target.indexOf('#') >= 0 ? '&' : '#') + 'osg-job=' + encodeURIComponent(job.jobId);
+    location.replace(next);
+    return true;
+  }
+
   function articleUrl(job) {
     var doi = normalizeDoi(job && job.doi);
     var publisher = String(job && job.publisher || publisherForDoi(doi));
@@ -558,9 +698,10 @@ function embeddedJobDois(value) {
     }
     if (publisher === 'ccs') return 'https://www.chinesechemsoc.org/doi/' + (figureJob ? 'full/' : '') + doi;
     if (publisher === 'rsc') {
-      var rsc = /^([a-z])(\d)([a-z]{2})/i.exec(suffix);
-      if (rsc) return 'https://pubs.rsc.org/en/content/articlelanding/' + String(2020 + Number(rsc[2])) + '/' + rsc[3].toLowerCase() + '/' + suffix.toLowerCase();
+      var rscRoute = rscArticleRoute(job, figureJob);
+      if (rscRoute) return rscRoute;
     }
+    if (publisher === 'elsevier') return elsevierSearchRoute(job);
     return 'https://doi.org/' + doi;
   }
 
@@ -1921,6 +2062,96 @@ function embeddedJobDois(value) {
     return rows;
   }
 
+  // CCS Chemistry publishes the official "key image" on its TOC/Ahead-of-Print
+  // listing. The article page can expose Figure 1 without exposing that official
+  // key image, so Figure 1 must never be promoted to official CCS TOC.
+  function ccsTocIndexUrls(job, doc, baseUrl) {
+    if (String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))) !== 'ccs') return [];
+    var origin;
+    try { origin = new URL(baseUrl || location.href).origin; } catch (_) { origin = 'https://www.chinesechemsoc.org'; }
+    var urls = [origin + '/toc/ccschem/0/0', origin + '/toc/ccschem/0/ja'];
+    try {
+      var scope = doc || document;
+      var volume = String((scope.querySelector('meta[name="citation_volume"]') || {}).content || '').trim();
+      var issue = String((scope.querySelector('meta[name="citation_issue"]') || {}).content || '').trim();
+      if (/^\d+$/.test(volume) && /^\d+$/.test(issue)) urls.push(origin + '/toc/ccschem/' + volume + '/' + issue);
+    } catch (_) {}
+    return Array.from(new Set(urls));
+  }
+
+  function ccsDoiFromTextOrHref(value) {
+    var text = String(value || '').toLowerCase();
+    var match = text.match(/10\.31635\/ccschem\.[a-z0-9.]+/i);
+    return match ? normalizeDoi(match[0]) : '';
+  }
+
+  function ccsCardForDoiAnchor(anchor, doi) {
+    var node = anchor && anchor.parentElement;
+    for (var depth = 0; node && depth < 8; depth += 1, node = node.parentElement) {
+      var images = node.querySelectorAll ? node.querySelectorAll('img,picture,source,object[type^="image"]') : [];
+      if (!images.length) continue;
+      var found = new Set();
+      Array.from(node.querySelectorAll('a[href]')).forEach(function (link) {
+        var value = ccsDoiFromTextOrHref((link.getAttribute('href') || '') + ' ' + (link.textContent || ''));
+        if (value) found.add(value);
+      });
+      if (found.size === 1 && found.has(doi)) return node;
+      if (found.size > 1) return null;
+    }
+    return null;
+  }
+
+  function ccsKeyImageSignal(node, card) {
+    var values = [];
+    var current = node;
+    for (var depth = 0; current && depth < 4; depth += 1, current = current.parentElement) {
+      if (current.getAttribute) {
+        ['alt','title','aria-label','class','id'].forEach(function (name) {
+          var value = current.getAttribute(name);
+          if (value) values.push(value);
+        });
+      }
+      if (current !== node) {
+        var text = String(current.textContent || '').replace(/\s+/g, ' ').trim();
+        if (text) values.push(text.slice(0, 320));
+      }
+      if (current === card) break;
+    }
+    return /\bkey\s*image\b|\btable\s+of\s+contents\s*(?:graphic|image)\b|\btoc\s*(?:graphic|image)\b|\bgraphical\s+abstract\b|\bvisual\s+abstract\b/i.test(values.join(' '));
+  }
+
+  function ccsTocIndexCandidatesFromDocument(job, doc, baseUrl) {
+    if (!doc || String(job && job.publisher || '') !== 'ccs') return [];
+    var doi = normalizeDoi(job && job.doi);
+    if (!doi) return [];
+    var anchors = Array.from(doc.querySelectorAll('a[href]')).filter(function (anchor) {
+      var bound = ccsDoiFromTextOrHref((anchor.getAttribute('href') || '') + ' ' + (anchor.textContent || ''));
+      return bound === doi;
+    });
+    var rows = [], seen = new Set();
+    anchors.forEach(function (anchor) {
+      var card = ccsCardForDoiAnchor(anchor, doi);
+      if (!card) return;
+      Array.from(card.querySelectorAll('img')).forEach(function (image) {
+        if (!ccsKeyImageSignal(image, card)) return;
+        articleFigureImageUrls(image, baseUrl || location.href).forEach(function (url, rank) {
+          if (!url || seen.has(url) || reject('CCS Chemistry key image', url)) return;
+          seen.add(url);
+          rows.push({
+            url: url,
+            kind: 'official',
+            assetType: 'toc_graphic',
+            score: 980 - rank,
+            text: 'CCS Chemistry key image',
+            source: 'ccs_toc_index_key_image',
+            element: null
+          });
+        });
+      });
+    });
+    return rows.sort(function (a,b) { return b.score - a.score; });
+  }
+
   function natureDeterministicFigureOneCandidates(job) {
     if (String(job && job.publisher || '') !== 'nature' || job.allowFigureOne === false) return [];
     var doi = normalizeDoi(job && job.doi);
@@ -2017,6 +2248,11 @@ function embeddedJobDois(value) {
       add(location.origin + '/doi/' + doi);
       add(location.origin + '/doi/full/' + doi);
       add(location.origin + '/doi/abs/' + doi);
+    } else if (publisher === 'rsc' && location.hostname.endsWith('pubs.rsc.org')) {
+      add(rscArticleRoute(job, false));
+      add(rscArticleRoute(job, true));
+    } else if (publisher === 'ccs' && /(?:^|\.)chinesechemsoc\.org$/.test(location.hostname)) {
+      ccsTocIndexUrls(job, document, location.href).forEach(add);
     } else if (publisher === 'science' && location.hostname.endsWith('science.org')) {
       // Deliberately no hidden Science iframe fallbacks. They duplicate document
       // requests and have not recovered TOCs in current diagnostics.
@@ -2080,7 +2316,13 @@ function embeddedJobDois(value) {
                   }
                 });
               }
-              var discovered = collectCandidates(job, trace, doc, current, 'iframe_dom', true);
+              var discovered = job.publisher === 'ccs'
+                ? ccsTocIndexCandidatesFromDocument(job, doc, current)
+                : collectCandidates(job, trace, doc, current, 'iframe_dom', true);
+              if (job.publisher === 'ccs') {
+                pushTrace(trace,{stage:'ccs_toc_index',event:'scan',status:discovered.length?'found':'none',url:current,
+                  message:'doi='+normalizeDoi(job.doi)+';key_images='+String(discovered.length)});
+              }
               if (discovered.length) {
                 var merged = new Map();
                 bestRows.concat(discovered).forEach(function (row) {
@@ -4108,6 +4350,18 @@ function embeddedJobDois(value) {
     if (!job || !normalizeDoi(job.doi)) {
       return;
     }
+    if (String(job.publisher || publisherForDoi(normalizeDoi(job.doi))) === 'elsevier' && isElsevierSearchRoute(job)) {
+      try {
+        if (await resolveElsevierSearchRoute(job)) return;
+      } catch (routeError) {
+        var routeReason = String(routeError && routeError.message || routeError || 'elsevier_route_failed');
+        var routeFinished = nowIso();
+        GM_setValue(resultKey(job.doi), {doi:job.doi,jobId:job.jobId,version:VERSION,controllerRevision:CONTROLLER_REVISION,status:'failed',reason:routeReason,finishedAt:routeFinished});
+        enqueueCaptureReport(job,[{at:routeFinished,stage:'elsevier_route',event:'failed',status:'failed',url:location.href,message:routeReason}],
+          'failed',routeReason,true,location.href);
+        return;
+      }
+    }
     try {
       await bindPublisherCaptureJob(job);
     } catch (error) {
@@ -4422,7 +4676,7 @@ function embeddedJobDois(value) {
         await sleep(800);continue;
       }
       if (wantsToc && !toc.length && !iframeAttempted && elapsed>7000 &&
-          (job.publisher==='acs'||job.publisher==='wiley')) {
+          (job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='rsc'||job.publisher==='ccs')) {
         iframeAttempted=true;
         var iframeRows=await iframeCandidates(job,trace);
         toc=iframeRows.filter(function(row){return row&&row.kind==='official';});
@@ -4447,11 +4701,17 @@ function embeddedJobDois(value) {
 
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
-  var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v1';
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v2';
+  var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
   var PRIVATE_PDF_ATTEMPT_PREFIX = P + 'private-pdf-attempt-v1:';
   var PRIVATE_PDF_MAX_BYTES = 60 * 1024 * 1024;
+
+  function privatePdfCaptureEligibleByAddedDate(job) {
+    var addedDate = String(job && job.addedDate || '').trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(addedDate) && addedDate >= PRIVATE_PDF_ADDED_DATE_CUTOFF;
+  }
 
   function privatePdfLease() {
     var lease=GM_getValue(PRIVATE_PDF_LEASE_KEY,null);
@@ -4572,8 +4832,9 @@ function embeddedJobDois(value) {
   }
 
   async function maybeCapturePrivatePdf(job,trace) {
+    if(!job||!currentCaptureJob(job)||!privatePdfCaptureEligibleByAddedDate(job))return null;
     var lease=privatePdfLease();
-    if(!lease||!job||!currentCaptureJob(job))return null;
+    if(!lease)return null;
     var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
     if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000)return {status:'already_stored',documentId:prior.documentId||''};
     if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000)return {status:'not_found_cached'};
