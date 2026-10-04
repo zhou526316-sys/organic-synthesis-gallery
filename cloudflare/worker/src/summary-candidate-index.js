@@ -17,6 +17,11 @@ function hash64(value) {
   const text = String(value || '').trim().toLowerCase();
   return /^[a-f0-9]{64}$/.test(text) ? text : '';
 }
+async function sha256Hex(value) {
+  const bytes = new TextEncoder().encode(String(value || ''));
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
 function integer(value) {
   const n = Number(value || 0);
   return Number.isFinite(n) ? Math.trunc(n) : 0;
@@ -202,7 +207,7 @@ export async function backfillSummaryJobIndexPage(env, limitValue=500) {
     scannedObjects:scannedTotal,indexedRows:indexedTotal,skippedInvalid:skippedTotal}};
 }
 
-export function selectCandidateFromIndexedRows({evidenceRows=[],jobRows=[],now=Date.now(),preferredDoi='',allowUnknownPolicy=false}={}) {
+export async function selectCandidateFromIndexedRows({evidenceRows=[],jobRows=[],now=Date.now(),preferredDoi='',allowUnknownPolicy=false}={}) {
   const env={SUMMARY_ALLOW_UNKNOWN_POLICY:allowUnknownPolicy?'1':'0'};
   const jobsByDoi=new Map();
   for(const row of jobRows){
@@ -234,11 +239,12 @@ export function selectCandidateFromIndexedRows({evidenceRows=[],jobRows=[],now=D
     return a.doi.localeCompare(b.doi);
   });
   const recentPublishedCount=jobRows.filter(row=>String(row?.state||'')==='published'&&integer(row?.published_at)>=now-86400000).length;
+  const candidateSetHash=await sha256Hex(JSON.stringify(candidates));
   const preferred=normalizeDoi(preferredDoi)||'';
   const selectedCandidate=preferred?candidates.find(candidate=>candidate.doi===preferred)||null:candidates[0]||null;
   return {
     candidate:selectedCandidate,evidenceCount:evidenceRows.length,jobCount:jobRows.length,eligibleCount:candidates.length,
-    preferredDoi:preferred,preferredEligible:preferred?Boolean(selectedCandidate):null,recentPublishedCount,blockedPolicies,
+    preferredDoi:preferred,preferredEligible:preferred?Boolean(selectedCandidate):null,recentPublishedCount,candidateSetHash,blockedPolicies,
   };
 }
 
@@ -260,7 +266,7 @@ export async function selectSummaryCandidateFromIndex(env, now=Date.now(), prefe
       text_processing_policy,captured_at,next_retry_at,lease_expires_at,published_at,updated_at
       FROM summary_review_job_index`).all(),
   ]);
-  const selection=selectCandidateFromIndexedRows({
+  const selection=await selectCandidateFromIndexedRows({
     evidenceRows:evidenceResult?.results||[],jobRows:jobResult?.results||[],now,preferredDoi,
     allowUnknownPolicy:String(env?.SUMMARY_ALLOW_UNKNOWN_POLICY||'')==='1',
   });
@@ -281,13 +287,13 @@ export function compareCandidateSelections(legacy,indexed) {
     candidate:candidateIdentity(legacy?.candidate),evidenceCount:Number(legacy?.evidenceCount||0),
     jobCount:Number(legacy?.jobCount||0),eligibleCount:Number(legacy?.eligibleCount||0),
     preferredDoi:String(legacy?.preferredDoi||''),preferredEligible:legacy?.preferredEligible??null,
-    recentPublishedCount:Number(legacy?.recentPublishedCount||0),blockedPolicies:legacy?.blockedPolicies||{},
+    recentPublishedCount:Number(legacy?.recentPublishedCount||0),candidateSetHash:String(legacy?.candidateSetHash||''),blockedPolicies:legacy?.blockedPolicies||{},
   };
   const right={
     candidate:candidateIdentity(indexed?.candidate),evidenceCount:Number(indexed?.evidenceCount||0),
     jobCount:Number(indexed?.jobCount||0),eligibleCount:Number(indexed?.eligibleCount||0),
     preferredDoi:String(indexed?.preferredDoi||''),preferredEligible:indexed?.preferredEligible??null,
-    recentPublishedCount:Number(indexed?.recentPublishedCount||0),blockedPolicies:indexed?.blockedPolicies||{},
+    recentPublishedCount:Number(indexed?.recentPublishedCount||0),candidateSetHash:String(indexed?.candidateSetHash||''),blockedPolicies:indexed?.blockedPolicies||{},
   };
   const same=JSON.stringify(left)===JSON.stringify(right);
   return {same,legacy:left,indexed:right};
