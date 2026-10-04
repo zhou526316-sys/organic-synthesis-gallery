@@ -29,6 +29,8 @@ DEFAULT_ENV = Path("/etc/osg-wechat-relay/env")
 DEFAULT_COVER = ROOT / "public" / "share-default.png"
 DEFAULT_CACHE = Path("/var/lib/osg-wechat-publisher/cover-media.json")
 DEFAULT_STATE = Path("/var/lib/osg-wechat-publisher/draft-state.json")
+DEFAULT_PUBLISH_STATE = Path("/var/lib/osg-wechat-publisher/publish-state.json")
+PUBLISH_TRIGGER = ROOT / "audit" / "automation-triggers" / "wechat-publish-request.json"
 DEFAULT_PREVIEW_DIR = Path("/var/www/osg-wechat-preview")
 DEFAULT_PREVIEW_BASE_URL = "https://relay.gczhouwld.com/wechat-preview"
 DEFAULT_BODY_IMAGE_CACHE = Path("/var/lib/osg-wechat-publisher/body-images.json")
@@ -1185,6 +1187,30 @@ def save_state(path: Path, payload: dict):
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def pending_publish_request(publication_date: str):
+    if not PUBLISH_TRIGGER.exists():
+        return None
+    try:
+        request = json.loads(PUBLISH_TRIGGER.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(request, dict):
+        return None
+    if str(request.get("action") or "") != "publish_daily_draft":
+        return None
+    request_id = str(request.get("requestId") or "").strip()
+    if not request_id:
+        return None
+    requested_date = str(request.get("publicationDate") or publication_date).strip()
+    if requested_date != publication_date:
+        return None
+
+    state = load_state(DEFAULT_PUBLISH_STATE)
+    if str(state.get("lastRequestId") or "") == request_id:
+        return None
+    return request
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--create", action="store_true", help="create or update the WeChat draft, then read it back and build the preview")
@@ -1304,7 +1330,9 @@ def main() -> int:
         "content_source_url": source_url,
     }
 
-    if args.publish:
+    publish_request = pending_publish_request(slot[:10])
+    should_publish = bool(args.publish or publish_request)
+    if should_publish:
         publish_id = submit_publish(token, media_id)
         published = wait_for_publish(token, publish_id)
         output_payload.update({
@@ -1312,6 +1340,16 @@ def main() -> int:
             "publish_id": publish_id,
             **published,
         })
+        if publish_request:
+            save_state(
+                DEFAULT_PUBLISH_STATE,
+                {
+                    "lastRequestId": str(publish_request.get("requestId") or ""),
+                    "publicationDate": slot[:10],
+                    "publish_id": publish_id,
+                    **published,
+                },
+            )
 
     print(json.dumps(output_payload, ensure_ascii=False))
     return 0
