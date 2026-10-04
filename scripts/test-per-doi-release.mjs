@@ -118,8 +118,9 @@ try {
 
   data = fixture(); data.review.publicationSlot = '2026-09-23T18:00:00+08:00';
   data.review.handoffGeneratedAt = data.handoff.generatedAt = data.latest.generatedAt = '2026-09-23T09:35:00.000Z';
-  result = await run(data); assert.equal(result.exit, 0);
-  passed.push('evening_has_identical_per_doi_rules');
+  result = await run(data); assert.equal(result.exit, 1);
+  assert.ok(result.body.blockers.includes('invalid_publication_slot'));
+  passed.push('legacy_evening_slot_is_rejected');
 
   data = fixture();
   data.review.decisions = [data.review.decisions[25]]; data.handoff.unresolved = [data.handoff.unresolved[25]];
