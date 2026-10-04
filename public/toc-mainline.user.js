@@ -50,6 +50,7 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
+  var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -231,7 +232,7 @@
     var details = document.createElement('details');
     details.open = GM_getValue(LIVE_PANEL_KEY, true) !== false;
     var heading = document.createElement('summary');
-    heading.textContent = '抓取实时进度 · ' + CONTROLLER_REVISION + ' · 全队列补缺6';
+    heading.textContent = '抓取实时进度 · ' + CONTROLLER_REVISION + ' · 全队列补缺6 · 图源适配7';
     details.appendChild(heading);
     var main = document.createElement('main');
     var immediate = document.createElement('button');
@@ -317,7 +318,7 @@
       var seen=new Set();var events=important.concat(recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
       var page=autoReportUrl(actualPageUrl===undefined?location.href:actualPageUrl);
       var last=important.length?important[important.length-1]:recent[recent.length-1]||{};
-      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,controllerRevision:CONTROLLER_REVISION,queueCoverageRevision:typeof QUEUE_COVERAGE_REVISION==='string'?QUEUE_COVERAGE_REVISION:'',missingRevision:typeof MISSING_CAPTURE_REVISION==='string'?MISSING_CAPTURE_REVISION:'',requestedNeeds:typeof captureNeedText==='function'?captureNeedText(job):'',lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
+      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,controllerRevision:CONTROLLER_REVISION,publisherMediaRevision:typeof PUBLISHER_MEDIA_REVISION==='string'?PUBLISHER_MEDIA_REVISION:'',queueCoverageRevision:typeof QUEUE_COVERAGE_REVISION==='string'?QUEUE_COVERAGE_REVISION:'',missingRevision:typeof MISSING_CAPTURE_REVISION==='string'?MISSING_CAPTURE_REVISION:'',requestedNeeds:typeof captureNeedText==='function'?captureNeedText(job):'',lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
       var context={at:nowIso(),seq:0,stage:'diagnostic_context',event:final?'final_result':'failure_checkpoint',status:'info',url:page,message:JSON.stringify(metadata)};
       var finalResult=job._liveResult||{};
       var figureItems=(finalResult.figures&&Array.isArray(finalResult.figures.items)?finalResult.figures.items:[]).filter(function(item){return item&&/^(?:staged|already_staged)$/.test(String(item.status||''));});
@@ -1574,6 +1575,7 @@ function embeddedJobDois(value) {
     var scope = root || document, rows = [], seen = new Set();
     scope.querySelectorAll('img,object[type^="image"]').forEach(function (node) {
       var context = visualScope(node);
+      if(job.publisher==='wiley')context=wileyBodyFigureContext(node,context);
       if (!context || !context.label || context.official) return;
       visualUrls(node, context.block, baseUrl || location.href).forEach(function (url, rank) {
         var key = context.label + '|' + url;
@@ -1584,6 +1586,7 @@ function embeddedJobDois(value) {
     });
     rows.sort(function (a,b) { return String(a.label).localeCompare(String(b.label),undefined,{numeric:true}) || b.score-a.score; });
     pushTrace(trace,{stage:'figure_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'isolated_labels='+new Set(rows.map(function(r){return r.label;})).size+';variants='+rows.length});
+    if(job.publisher==='wiley'&&!rows.length)pushTrace(trace,{stage:'figure_discovery',event:'wiley_dom_shape',status:'none',message:'images='+scope.querySelectorAll('img,object[type^="image"]').length+';figureBlocks='+scope.querySelectorAll('figure,[role="figure"],.article-section__figure').length+';numberedHeadings='+Array.from(scope.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]')).filter(function(n){return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(String(n.textContent||'').trim());}).length});
     return rows;
   }
 
@@ -4049,6 +4052,43 @@ function embeddedJobDois(value) {
     });
   }
 
+  // Only a visibly numbered heading within this figure may recover a missing
+  // caption label. No filename-number guessing and no shared-article captions.
+  function wileyBodyFigureContext(node, original) {
+    if (!node || !node.closest || original && (original.label || original.official)) return original;
+    if (node.closest('aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[id*="related" i],[class*="reference" i]')) return null;
+    var block=original&&original.block || node.closest('figure,[role="figure"],.article-section__figure');
+    if(!block || !block.contains(node))return null;
+    var captions=Array.from(block.querySelectorAll('figcaption,.caption,[class*="caption"],.figure-title,.figure__title,[role="heading"],h1,h2,h3,h4,h5,h6'));
+    [node,block].forEach(function(el){
+      ['aria-labelledby','aria-describedby'].forEach(function(attr){
+        String(el.getAttribute(attr)||'').split(/\s+/).filter(Boolean).forEach(function(id){
+          var target=el.ownerDocument.getElementById(id);
+          if(target&&block.contains(target)&&captions.indexOf(target)<0)captions.push(target);
+        });
+      });
+    });
+    var texts=captions.map(function(c){return String(c.textContent||'').replace(/\s+/g,' ').trim();}).filter(Boolean);
+    var own=[node.getAttribute('alt'),node.getAttribute('title'),node.getAttribute('aria-label')].filter(Boolean).join(' ');
+    var numbered=texts.concat(own).filter(function(t){return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(t);});
+    var labels=Array.from(new Set(numbered.map(function(t){return articleFigureLabel(t,0);})));
+    if(labels.length!==1)return null;
+    var descendants=Array.from(block.querySelectorAll('figure,[role="figure"],.article-section__figure'));
+    if(descendants.some(function(other){return other!==block&&!other.contains(node);}))return null;
+    return {block:block,label:labels[0],caption:(numbered[0]+' '+texts.filter(function(t){return t!==numbered[0];}).join(' ')).slice(0,600),official:false};
+  }
+
+  function orderedFigureCandidates(job,candidates,role) {
+    if(job.publisher!=='acs'||role!=='figure')return candidates.slice(0,4);
+    // These are all links already supplied by the same isolated figure DOM.
+    // Prefer real vector files before HTML viewers and preview raster variants.
+    var unique=[],seen=new Set();
+    candidates.forEach(function(c){if(c&&c.url&&!seen.has(c.url)){seen.add(c.url);unique.push(c);}});
+    return unique.map(function(c,i){return {c:c,i:i,vector:/\.svg(?:[?#]|$)/i.test(c.url)&&!isAcsImageViewerUrl(c.url)};})
+      .sort(function(a,b){return Number(b.vector)-Number(a.vector)||a.i-b.i;})
+      .slice(0,6).map(function(x){return x.c;});
+  }
+
   function visualScope(node) {
     if (!node || !node.closest) return null;
     if (node.closest('aside,nav,header,footer,[class*="recommend" i],[class*="related" i],[id*="related" i],[class*="reference" i]')) return null;
@@ -4117,13 +4157,15 @@ function embeddedJobDois(value) {
 
   async function sameFigureCurrentSrcFallback(job, candidates, trace, cache, role) {
     if (role !== 'figure' || job.publisher !== 'acs') return null;
+    var seenFallback=new Set();
     for (var i = 0; i < candidates.length; i += 1) {
       var candidate = candidates[i], element = candidate && candidate.element;
       if (!(element instanceof HTMLImageElement) || !element.complete || element.naturalWidth < 1) continue;
       var scope = visualScope(element);
       if (!scope || scope.official || scope.label !== candidate.label) continue;
       var current = normalizeUrl(element.currentSrc || element.src, location.href);
-      if (!current) continue;
+      if (!current || seenFallback.has(candidate.label+'|'+current)) continue;
+      seenFallback.add(candidate.label+'|'+current);
       var ids = embeddedJobDois(current);
       if (!ids.length || ids.some(function (doi) { return doi !== normalizeDoi(job.doi); })) continue;
       assertBoundCaptureJob(job,current);
@@ -4142,7 +4184,8 @@ function embeddedJobDois(value) {
 
   async function acquireBestVisual(job, candidates, trace, cache, role) {
     var best=null;
-    for (var i=0;i<Math.min(candidates.length,4);i+=1) {
+    candidates=orderedFigureCandidates(job,candidates,role);
+    for (var i=0;i<candidates.length;i+=1) {
       if (Date.now()>job.captureDeadline) break;
       if (isAbortRequested()) throw new Error('user_aborted');
       var candidate=candidates[i];
