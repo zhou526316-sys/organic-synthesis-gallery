@@ -2,13 +2,13 @@
   "schemaVersion": 2,
   "selectionPolicy": "latest-compatible-stable",
   "purpose": "Capability registry for literature discovery, completeness auditing, TOC retrieval, and website synchronization. The primary literature task must select the newest stable compatible capability on main before each fetch run.",
-  "currentKnownStableFingerprint": "cf1965ec987e8d226af927b2b81c4a06f4059d354882a2797e93b464510b7377",
+  "currentKnownStableFingerprint": "9a0975386a8e957fca38af6e373d08f6f830431b6abecf634ce54dcf868e19d6",
   "fingerprintMethod": "sha256 UTF-8 of six newline-joined \"<label>=<blobSha>\" lines in this exact order: literatureAudit, literatureWorkflow, journalRegistry, completenessGuard, tocCollector, publisherFallback; no trailing newline",
   "currentKnownStable": {
     "literatureAudit": {
       "path": "cloudflare/scripts/audit-literature.mjs",
       "blobSha": "c04a13cd6422b2c0b7522b5d5a329ed230e2b2a6",
-      "validation": "GitHub Actions run 37201854938 succeeded on main after the RSC/Chem repair. The audit queried from 2026-09-19 catch-up, preserved partial Crossref publication dates as unknown instead of fabricating January/day 1, surfaced Chem 9, Chemical Science 78, and Green Chemistry 41 source records, reported criticalSourceFailures=0 and sourceFamilyGaps=0, and retained sourceCoverageAnomalies instead of silently collapsing raw records.",
+      "validation": "GitHub Actions run 37203791005 succeeded on main with the repaired discovery implementation and updated canonical activation dates. The audit retained Chem from 2026-09-19 while querying Chemical Science and Green Chemistry from 2026-10-01, producing sourceRecords Chem=9, Chemical Science=12, Green Chemistry=8 with criticalSourceFailures=0 and sourceFamilyGaps=0.",
       "comparisonToPriorStable": "Supersedes the older stable discovery implementation that could report verifiedThrough catch-up without widening actual source queries and could coerce partial Crossref dates such as [2026] to 2026-01-01. The repaired implementation makes catch-up real at the query layer, preserves created/deposit provenance, retains date precision, and makes raw-to-union collapse observable.",
       "semanticImpact": "Higher discovery recall and safer date semantics. New DOI candidates are exposed to semantic review only; this promotion does not admit literature, change scope decisions, or advance verifiedThrough."
     },
@@ -20,14 +20,14 @@
     },
     "journalRegistry": {
       "path": "shared/literature-journals.js",
-      "blobSha": "57050105998284ccbf87b1a5fe513b256b648949",
-      "validation": "16 canonical target journals are centralized. Chem, Chemical Science, CCS Chemistry, Science Advances, and Green Chemistry use activeFrom=2026-09-19; JOC uses activeFrom=2026-09-22; earlier journals retain 2026-07-01.",
-      "semanticImpact": "The repair does not change target journals or activation dates; it makes the configured RSC/Chem coverage actually observable."
+      "blobSha": "07de2cf052f55e91b3b1bb2554235ad2697d1838",
+      "validation": "16 canonical target journals remain centralized. Chem, CCS Chemistry, and Science Advances use activeFrom=2026-09-19; JOC uses activeFrom=2026-09-22; Chemical Science and Green Chemistry now use activeFrom=2026-10-01 by explicit user instruction; earlier journals retain 2026-07-01.",
+      "semanticImpact": "Narrows only Chemical Science and Green Chemistry prospective discovery to 2026-10-01 onward. Chem and all other journal activation dates are unchanged. No production literature or publication schedule is changed by this registry update."
     },
     "completenessGuard": {
       "path": "scripts/test-literature-completeness-capability.mjs",
-      "blobSha": "3eb0f3edb0a9d7dde15f958bd144790c7d5b315e",
-      "validation": "Passed in repair validation run 37201431750 and main audit runs 37201754206/37201854938. It now guards real catch-up query widening, independent created-date provenance, raw-to-union collapse detection, and rejection of fabricated dates from partial Crossref fields.",
+      "blobSha": "731acecbb77cfcf9b4ee31f1256a5115a4fa4440",
+      "validation": "Passed in main audit run 37203791005 after the explicit 2026-10-01 activation change. It guards real catch-up query widening, independent created-date provenance, raw-to-union collapse detection, rejection of fabricated partial dates, and the current per-journal activation dates.",
       "semanticImpact": "CI fails if catch-up becomes report-only again, if partial dates are coerced to fake calendar dates, or if nonzero raw source candidates silently collapse to zero."
     },
     "tocCollector": {
@@ -86,27 +86,35 @@
     "neverTreatHttpSuccessAsSufficientCoverage": true
   },
   "lastPromotion": {
-    "id": "rsc-chem-crossref-partial-date-20261004",
-    "promotedAt": "2026-10-04T12:27:21.159Z",
-    "mergeCommit": "b9ee9d4ef0a36d0dd8b1ef716166cac5a94832fa",
-    "repairValidationRun": 37201431750,
-    "mainAuditRun": 37201854938,
-    "mainPagesRun": 37201620658,
+    "id": "rsc-activefrom-20261001",
+    "promotedAt": "2026-10-04T12:56:22.564Z",
+    "registryCommit": "84eecf26e5cc928e99c54a91d31a70beae43642b",
+    "guardCommit": "ad8845b5de6343e7bb6efaf8b4cb6412499061a7",
+    "mainAuditRun": 37203791005,
     "findings": {
       "Chem": {
+        "activeFrom": "2026-09-19",
         "sourceRecords": 9,
         "missingFromGallery": 8
       },
       "Chemical Science": {
-        "sourceRecords": 78,
-        "missingFromGallery": 78
+        "activeFrom": "2026-10-01",
+        "sourceRecords": 12,
+        "missingFromGallery": 12
       },
       "Green Chemistry": {
-        "sourceRecords": 41,
-        "missingFromGallery": 41
+        "activeFrom": "2026-10-01",
+        "sourceRecords": 8,
+        "missingFromGallery": 8
       }
     },
+    "previousBacklogRemovedFromEffectiveUniverse": {
+      "Chemical Science": 66,
+      "Green Chemistry": 33,
+      "total": 99
+    },
     "productionLiteratureChangedByPromotion": false,
-    "scheduleChanged": false
+    "scheduleChanged": false,
+    "userPolicy": "Chemical Science / Green Chemistry只保留10.1之后的"
   }
 }
