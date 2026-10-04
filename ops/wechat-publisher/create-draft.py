@@ -687,7 +687,6 @@ def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
     author = str(item.get("author") or "")
     digest = str(item.get("digest") or "")
     content = str(item.get("content") or "")
-    thumb_url = str(item.get("thumb_url") or "")
     source_url = str(item.get("content_source_url") or "")
 
     # IMPORTANT: body HTML below is the exact content returned by WeChat draft/get.
@@ -706,13 +705,10 @@ body{{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC
 .reader{{max-width:677px;margin:0 auto;padding:24px 20px 48px}}
 h1{{font-size:22px;line-height:1.45;font-weight:700;margin:0 0 12px}}
 .meta{{font-size:14px;color:#888;line-height:1.6;margin-bottom:22px}}
-.digest{{font-size:14px;color:#666;line-height:1.75;margin:0 0 18px}}
-.cover{{width:100%;height:auto;display:block;margin:0 0 20px}}
 .wx-content{{font-size:16px;line-height:1.75;word-break:break-word;overflow-wrap:anywhere}}
 .wx-content img{{max-width:100%!important;height:auto!important}}
 .wx-content *{{max-width:100%}}
 .source-link{{display:block;margin-top:28px;padding-top:16px;border-top:1px solid #eee;color:#576b95;text-decoration:none;font-size:15px}}
-.provenance{{margin:28px 0 0;padding:10px 12px;border-radius:8px;background:#f7f7f7;color:#999;font-size:11px;line-height:1.65}}
 @media(max-width:520px){{.reader{{padding:20px 17px 42px}}h1{{font-size:22px}}}}
 </style>
 </head>
@@ -720,11 +716,9 @@ h1{{font-size:22px;line-height:1.45;font-weight:700;margin:0 0 12px}}
 <main class="reader">
 <h1>{html.escape(title)}</h1>
 <div class="meta">{html.escape(author)}</div>
-{f'<img class="cover" src="{html.escape(thumb_url, quote=True)}" alt="封面">' if thumb_url else ''}
-{f'<p class="digest">{html.escape(digest)}</p>' if digest else ''}
 <section class="wx-content">{content}</section>
 {f'<a class="source-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noreferrer">阅读原文</a>' if source_url else ''}
-<div class="provenance">本预览由微信草稿 API <code>draft/get</code> 返回内容生成；正文不是单独维护的网页版本。Draft media id hash: {preview_slug(media_id)}</div>
+<!-- Preview source: WeChat draft/get. media hash: {preview_slug(media_id)} -->
 </main>
 </body>
 </html>"""
