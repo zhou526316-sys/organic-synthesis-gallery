@@ -83,9 +83,9 @@ async function evaluate() {
       && pendingDois.every(doi => !record.publishableDois.includes(doi)), 'release_allowlist_mismatch');
   }
 
-  // Morning and evening use the same 65-minute snapshot window, with no backdating.
+  // The sole 08:00 release uses a 65-minute snapshot window, with no backdating.
   const slot = String(review.publicationSlot || '');
-  const slotValid = /^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(slot) && Number.isFinite(Date.parse(slot));
+  const slotValid = /^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(slot) && Number.isFinite(Date.parse(slot));
   const generated = Date.parse(handoff.generatedAt || '');
   const slotTime = Date.parse(slot);
   const snapshotFreshForSlot = slotValid && Number.isFinite(generated)
