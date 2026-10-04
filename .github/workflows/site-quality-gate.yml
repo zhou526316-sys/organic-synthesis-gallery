@@ -32,7 +32,7 @@ jobs:
 
       - name: Test and build inactive architecture public bundle
         run: |
-          node --test scripts/test-gallery-architecture-public.mjs
+          node --test scripts/test-gallery-architecture-public.mjs scripts/test-toc-active-work-membership.mjs
           node scripts/build-gallery-architecture-public.mjs
 
       - name: Build frontend
