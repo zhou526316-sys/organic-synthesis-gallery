@@ -75,6 +75,18 @@ export async function ensureEvidenceIndexSchema(env) {
       updated_at INTEGER NOT NULL,
       last_error TEXT NOT NULL DEFAULT ''
     )`,
+    `CREATE TABLE IF NOT EXISTS article_evidence_handoff_backfill (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      cursor TEXT,
+      complete INTEGER NOT NULL DEFAULT 0 CHECK (complete IN (0,1)),
+      scanned_objects INTEGER NOT NULL DEFAULT 0,
+      indexed_rows INTEGER NOT NULL DEFAULT 0,
+      skipped_invalid INTEGER NOT NULL DEFAULT 0,
+      stale_rows INTEGER NOT NULL DEFAULT 0,
+      started_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      last_error TEXT NOT NULL DEFAULT ''
+    )`,
   ];
   for (const sql of statements) await env.DB.prepare(sql).run();
   schemaReadyBindings.add(env.DB);
@@ -170,29 +182,16 @@ export async function shadowIndexHandoff(env, envelope) {
     const evidencePacketHash = hash64(envelope?.evidencePacketHash);
     const sourceHash = hash64(envelope?.sourceHash);
     if (!doi || !evidencePacketHash || !sourceHash) throw new Error('evidence_index_handoff_invalid');
-    const evidenceKey = await evidenceKeyForDoi(doi);
     const handoffKey = await handoffKeyForDoi(doi);
     const now = Date.now();
     const result = await env.DB.prepare(`
-      INSERT INTO article_evidence_index (
-        doi,evidence_r2_key,evidence_packet_hash,source_hash,schema_version,publisher,
-        evidence_level,text_processing_policy,captured_at,handoff_r2_key,handoff_ready,
-        handoff_key_id,handoff_algorithm,handoff_compression,indexed_at,updated_at
-      ) VALUES (?,?,?,?,?,'',?,'unknown',?,?,1,?,?,?, ?,?)
-      ON CONFLICT(doi) DO UPDATE SET
-        handoff_r2_key=excluded.handoff_r2_key,
-        handoff_ready=1,
-        handoff_key_id=excluded.handoff_key_id,
-        handoff_algorithm=excluded.handoff_algorithm,
-        handoff_compression=excluded.handoff_compression,
-        updated_at=excluded.updated_at
-      WHERE article_evidence_index.evidence_packet_hash=excluded.evidence_packet_hash
-        AND article_evidence_index.source_hash=excluded.source_hash
+      UPDATE article_evidence_index
+      SET handoff_r2_key=?, handoff_ready=1, handoff_key_id=?, handoff_algorithm=?,
+          handoff_compression=?, updated_at=?
+      WHERE doi=? AND evidence_packet_hash=? AND source_hash=?
     `).bind(
-      doi,evidenceKey,evidencePacketHash,sourceHash,'article-evidence-v2',
-      safe(envelope?.evidenceLevel || 'unknown',40),safe(envelope?.capturedAt,80),
       handoffKey,safe(envelope?.keyId,80),safe(envelope?.algorithm,120),
-      safe(envelope?.compression,40),now,now,
+      safe(envelope?.compression,40),now,doi,evidencePacketHash,sourceHash,
     ).run();
     const changed = Number(result?.meta?.changes || 0) > 0;
     return { enabled:true, indexed:changed, stale:!changed, doi };
@@ -285,6 +284,114 @@ export async function backfillEvidenceIndexPage(env, limitValue = 500) {
     scannedObjects:scannedTotal,indexedRows:indexedTotal,skippedInvalid:skippedTotal } };
 }
 
+function handoffRowFromObject(object) {
+  const meta = object?.customMetadata || {};
+  const doi = normalizeDoi(meta.doi);
+  const evidencePacketHash = hash64(meta.evidencePacketHash);
+  const sourceHash = hash64(meta.sourceHash);
+  if (!doi || !evidencePacketHash || !sourceHash || !String(object?.key || '').startsWith(HANDOFF_PREFIX)) return null;
+  return {
+    doi,
+    evidencePacketHash,
+    sourceHash,
+    evidenceLevel:safe(meta.evidenceLevel || 'unknown',40),
+    capturedAt:safe(meta.capturedAt,80),
+    keyId:safe(meta.keyId,80),
+    algorithm:safe(meta.algorithm,120),
+    compression:safe(meta.compression,40),
+  };
+}
+
+export async function backfillHandoffIndexPage(env, limitValue = 500) {
+  if (!evidenceIndexShadowEnabled(env)) {
+    return { status:409, body:{ error:'evidence_index_shadow_disabled', enabled:false } };
+  }
+  if (!env?.DB || !env?.MEDIA) {
+    return { status:503, body:{ error:'evidence_index_storage_unavailable' } };
+  }
+  await ensureEvidenceIndexSchema(env);
+  const limit = Math.max(1, Math.min(1000, Number(limitValue || 500)));
+  const now = Date.now();
+  const state = await env.DB.prepare(
+    'SELECT cursor,complete,scanned_objects,indexed_rows,skipped_invalid,stale_rows,started_at,updated_at,last_error FROM article_evidence_handoff_backfill WHERE id=1'
+  ).first();
+  if (Number(state?.complete || 0) === 1) {
+    return { status:200, body:{ ok:true,enabled:true,complete:true,cursor:null,
+      scannedObjects:Number(state.scanned_objects||0),indexedRows:Number(state.indexed_rows||0),
+      skippedInvalid:Number(state.skipped_invalid||0),staleRows:Number(state.stale_rows||0) } };
+  }
+  const cursor=safe(state?.cursor,1000);
+  let page;
+  try {
+    page=await env.MEDIA.list({
+      prefix:HANDOFF_PREFIX,limit,
+      ...(cursor?{cursor}:{}),
+      include:['customMetadata'],
+    });
+  } catch(error) {
+    const message=safe(error?.message||error,180);
+    if(state) await env.DB.prepare(
+      'UPDATE article_evidence_handoff_backfill SET last_error=?,updated_at=? WHERE id=1'
+    ).bind(message,now).run();
+    return { status:502, body:{ error:'evidence_handoff_backfill_list_failed',detail:message } };
+  }
+
+  const objects=Array.isArray(page?.objects)?page.objects:[];
+  let indexed=0,skipped=0,stale=0;
+  for(const object of objects) {
+    const row=handoffRowFromObject(object);
+    if(!row){skipped+=1;continue;}
+    const result=await shadowIndexHandoff(env,row);
+    if(result.indexed) indexed+=1;
+    else if(result.stale) stale+=1;
+    else skipped+=1;
+  }
+  const truncated=Boolean(page?.truncated);
+  const nextCursor=truncated?safe(page?.cursor,1000):'';
+  if(truncated&&!nextCursor) throw new Error('evidence_handoff_backfill_cursor_missing');
+  const scannedTotal=Number(state?.scanned_objects||0)+objects.length;
+  const indexedTotal=Number(state?.indexed_rows||0)+indexed;
+  const skippedTotal=Number(state?.skipped_invalid||0)+skipped;
+  const staleTotal=Number(state?.stale_rows||0)+stale;
+  const startedAt=Number(state?.started_at||0)||now;
+  await env.DB.prepare(`
+    INSERT INTO article_evidence_handoff_backfill
+      (id,cursor,complete,scanned_objects,indexed_rows,skipped_invalid,stale_rows,started_at,updated_at,last_error)
+    VALUES (1,?,?,?,?,?,?,?,?, '')
+    ON CONFLICT(id) DO UPDATE SET
+      cursor=excluded.cursor,complete=excluded.complete,scanned_objects=excluded.scanned_objects,
+      indexed_rows=excluded.indexed_rows,skipped_invalid=excluded.skipped_invalid,
+      stale_rows=excluded.stale_rows,started_at=article_evidence_handoff_backfill.started_at,
+      updated_at=excluded.updated_at,last_error=''
+  `).bind(nextCursor||null,truncated?0:1,scannedTotal,indexedTotal,skippedTotal,staleTotal,startedAt,now).run();
+  return { status:200, body:{ ok:true,enabled:true,complete:!truncated,cursor:nextCursor||null,
+    pageObjects:objects.length,pageIndexed:indexed,pageSkippedInvalid:skipped,pageStale:stale,
+    scannedObjects:scannedTotal,indexedRows:indexedTotal,skippedInvalid:skippedTotal,staleRows:staleTotal } };
+}
+
+export async function listIndexedHandoffRows(env, limitValue = 240) {
+  if (!evidenceIndexShadowEnabled(env)) return { status:409, body:{ error:'evidence_index_shadow_disabled' } };
+  if (!env?.DB) return { status:503, body:{ error:'evidence_index_db_missing' } };
+  await ensureEvidenceIndexSchema(env);
+  const state=await env.DB.prepare(
+    'SELECT complete FROM article_evidence_handoff_backfill WHERE id=1'
+  ).first();
+  if(Number(state?.complete||0)!==1){
+    return { status:409, body:{ error:'evidence_handoff_backfill_incomplete',readPathActive:false } };
+  }
+  const limit=Math.max(1,Math.min(1000,Number(limitValue||240)));
+  const result=await env.DB.prepare(`
+    SELECT doi,evidence_packet_hash,source_hash,evidence_level,captured_at,
+      handoff_r2_key,handoff_key_id,handoff_algorithm,handoff_compression
+    FROM article_evidence_index
+    WHERE handoff_ready=1 AND handoff_r2_key IS NOT NULL
+    ORDER BY captured_at DESC, doi ASC
+    LIMIT ?
+  `).bind(limit).all();
+  return { status:200, body:{ version:1,schemaVersion:EVIDENCE_INDEX_SCHEMA_VERSION,readPathActive:false,
+    count:Array.isArray(result?.results)?result.results.length:0,items:result?.results||[] } };
+}
+
 export async function getEvidenceIndexStatus(env) {
   if (!evidenceIndexShadowEnabled(env)) {
     return { status:200, body:{ version:1,schemaVersion:EVIDENCE_INDEX_SCHEMA_VERSION,enabled:false,readPathActive:false } };
@@ -301,6 +408,9 @@ export async function getEvidenceIndexStatus(env) {
   const state = await env.DB.prepare(
     'SELECT cursor,complete,scanned_objects,indexed_rows,skipped_invalid,started_at,updated_at,last_error FROM article_evidence_index_backfill WHERE id=1'
   ).first();
+  const handoffState = await env.DB.prepare(
+    'SELECT cursor,complete,scanned_objects,indexed_rows,skipped_invalid,stale_rows,started_at,updated_at,last_error FROM article_evidence_handoff_backfill WHERE id=1'
+  ).first();
   return { status:200, body:{
     version:1,schemaVersion:EVIDENCE_INDEX_SCHEMA_VERSION,enabled:true,readPathActive:false,
     evidenceCount:Number(counts?.evidence_count||0),
@@ -313,6 +423,13 @@ export async function getEvidenceIndexStatus(env) {
       skippedInvalid:Number(state.skipped_invalid||0),startedAt:Number(state.started_at||0),
       updatedAt:Number(state.updated_at||0),lastError:safe(state.last_error,180),
     } : { complete:false,cursor:null,scannedObjects:0,indexedRows:0,skippedInvalid:0,startedAt:0,updatedAt:0,lastError:'' },
+    handoffBackfill: handoffState ? {
+      complete:Number(handoffState.complete||0)===1,cursor:safe(handoffState.cursor,1000)||null,
+      scannedObjects:Number(handoffState.scanned_objects||0),indexedRows:Number(handoffState.indexed_rows||0),
+      skippedInvalid:Number(handoffState.skipped_invalid||0),staleRows:Number(handoffState.stale_rows||0),
+      startedAt:Number(handoffState.started_at||0),updatedAt:Number(handoffState.updated_at||0),
+      lastError:safe(handoffState.last_error,180),
+    } : { complete:false,cursor:null,scannedObjects:0,indexedRows:0,skippedInvalid:0,staleRows:0,startedAt:0,updatedAt:0,lastError:'' },
   } };
 }
 
