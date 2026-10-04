@@ -1,0 +1,31 @@
+{
+  "sourceSha": "2357bb1ff3bc3e23d074a0b52bbf25b6eee54752",
+  "pullRequest": 266,
+  "verificationRun": 37173635589,
+  "verificationArtifact": 11291978833,
+  "verifiedAt": "2026-10-04T03:21:51.718Z",
+  "verifiedAtBeijing": "2026-10-04T11:21:51.718+08:00",
+  "passed": true,
+  "readOnlyVerification": true,
+  "publisherRequestsDuringVerification": 0,
+  "mediaWritesDuringVerification": 0,
+  "deployments": [
+    {"name":"Deploy Worker frontend assets","runId":37173592160,"conclusion":"success"},
+    {"name":"Deploy GitHub Pages frontend","runId":37173592133,"conclusion":"success"}
+  ],
+  "scope": "Stored SVG extension repair, complete snapshot-bound publication input, retained valid completed packets and honest input-error status. Publication policies, existing schedules, literature data, frontend source and installed collector were unchanged by PR266.",
+  "queue": {"count":785,"registryLength":785,"latestAddedDate":"2026-10-04","recentCount":59,"recentDefinition":"website addedDate >= 2026-10-02"},
+  "installer": {"sha256":"621c82fbe4170d6dd33b5b3f1c2689b600a4d3daf607f7b3fb52bda0cda33425","unchangedAtVerification":true,"panel":"全队列补缺6"},
+  "recentToc": {"capturedOfficial":48,"staticOfficialBefore":21,"staticOfficialAfter":48,"previousPrunedCount":19,"prunedDoisAfter":[],"note":"27 more official TOCs visible: includes19 previously pruned SVGs and8 later captures. No claim of59/59 captured."},
+  "bodyLedger": {"countBefore":709,"countAfter":825,"recentEntriesBefore":0,"recentEntriesAfter":73,"recentPapersAfter":17,"note":"Actual published ledger entries, not all153 previously staged images and not an assertion that every recent article meets full-packet gates."},
+  "publicationInputs": {"stageError":null,"reportError":null,"localCaptureError":null,"stageCount":2376,"stageLength":2376,"completedPackets":155,"completedPacketLength":155},
+  "pendingAtVerification": {"rows":25,"articles":4,"note":"Normal existing automatic publisher remains responsible for eligible remaining packets; no additional schedule was created."},
+  "svgSamples": [
+    {"doi":"10.1021/jacs.6c13713","path":"media-mirror/worker-1a9a7944e66df292555649be2139.svg","status":200,"contentType":"image/svg+xml","bytes":459685,"sha256":"c26611244a5eaa93d9cea55636cb3ff30fdbe0cbdf6ce0310636b226c19bb24d"},
+    {"doi":"10.1021/acs.orglett.6c03558","path":"media-mirror/worker-57c465ca0012b47b01fbec52bced.svg","status":200,"contentType":"image/svg+xml","bytes":334502,"sha256":"be1d135ff6321aeb5b804eb78c0ce314731334985839223d2dda957e8b653b1f"},
+    {"doi":"10.1021/acs.joc.6c01674","path":"media-mirror/worker-1382c5d4fc16064cb3851994d585.svg","status":200,"contentType":"image/svg+xml","bytes":564562,"sha256":"f5e677d5ddde3636665e675a33450b1af70e4ea4828393965c1c0f02906c5f76"}
+  ],
+  "siteAcceptance": {"rootHttpStatus":200,"healthOk":true,"d1":true,"r2":true,"writeAuth":true,"integrationsReadable":true,"requiredQualityGateRun":37173331001,"requiredQualityGatePassed":true,"webkitMobileInteractionPassed":true,"frontendBuildAndTypecheckPassed":true,"workerDryRunPassed":true,"productionApiSmokePassed":true,"protectedContractHashChecksPassed":true,"globalHistoricalCiAllGreen":false},
+  "authenticatedUserCaptureRecoveryVerified": false,
+  "remainingAcquisitionWork": "ACS explicit source selection and Wiley scoped figure-heading recognition are being handled separately. No claim that publisher403s or all14 Angew captures have recovered. No quality threshold or publisher-access guard was weakened."
+}
