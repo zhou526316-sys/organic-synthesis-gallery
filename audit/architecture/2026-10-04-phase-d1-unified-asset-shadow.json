@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "phase": "D1-unified-asset-catalog-shadow",
+  "dateAsiaShanghai": "2026-10-04",
+  "mergeCommit": "5c4dd09cd887c8d7101335dbe42b2512949266fb",
+  "pullRequest": 286,
+  "productionActivation": false,
+  "dispatchEnabled": false,
+  "validation": {
+    "d1Run": 37189593623,
+    "d1Conclusion": "success",
+    "architectureContracts": {
+      "passed": 102,
+      "failed": 0
+    },
+    "siteQualityRun": 37189593724,
+    "siteQualityConclusion": "success",
+    "architectureShadowRun": 37189593659,
+    "architectureShadowConclusion": "success",
+    "privatePdfRegressionRun": 37189593640,
+    "privatePdfRegressionConclusion": "success",
+    "artifact": {
+      "id": 11298239437,
+      "name": "gallery-unified-asset-shadow-37189593623",
+      "sha256": "b4123322440d1162c60ca4009f7cd1eaba2dfc997f92438ff438682e2938fb5e",
+      "retentionDays": 7
+    }
+  },
+  "generation": {
+    "publicationSlot": "2026-10-04T08:00:00+08:00",
+    "productionCards": 785,
+    "datasetSha256": "9b1180d9922b42a7c72a50052ce6853ae075d89c45df4b92d416f2fd4e0d713b",
+    "architectureCatalogId": "669ce6a111c123220f7db47d14433813b658bd029f7ab19e0888006c7788a84d",
+    "doiSetHash": "ceb20c0af96f60e1b061c834159b4763fd1ca7e74c9019be9b63146e5fe302d6",
+    "crossSourceAtomic": false
+  },
+  "assetSummary": {
+    "officialTocWorker": 610,
+    "officialTocCaptured": 610,
+    "displayVisualPresent": 755,
+    "workerFigurePresent": 0,
+    "staticFigurePresent": 324,
+    "capturedFigurePresent": 581,
+    "figureComplete": 238,
+    "figureIncomplete": 117,
+    "figureCompletenessUnknown": 430,
+    "capturedTocNotWorker": 0,
+    "capturedFiguresNotWorker": 581,
+    "capturedFiguresNotStatic": 273,
+    "staticFiguresWithoutWorker": 324,
+    "capturedCompleteButStaticIncomplete": 149,
+    "suspiciousWorkerToc": 0,
+    "reviewedSummaryPresent": 272,
+    "evidenceReferencedBySummary": 272,
+    "evidenceUnknown": 513
+  },
+  "reconciliationCounts": {
+    "capturedTocNotWorker": 0,
+    "capturedFiguresNotWorker": 581,
+    "capturedFiguresNotStatic": 273,
+    "staticVisualWithoutWorkerVisual": 30,
+    "staticFiguresWithoutWorker": 324,
+    "workerFiguresWithoutCompletenessProof": 0,
+    "capturedCompleteButStaticIncomplete": 149,
+    "suspiciousWorkerToc": 0
+  },
+  "foreignInventoryDois": {
+    "count": 4,
+    "examples": [
+      "10.1021/jacs.6c10701",
+      "10.1021/jacs.6c13517",
+      "10.1038/s41467-026-77963-6",
+      "10.1038/s44160-026-01164-8"
+    ],
+    "handling": "quarantined outside canonical 785 membership; not treated as active assets or deletion evidence"
+  },
+  "interpretation": [
+    "Worker/D1 and static Pages are distinct publication surfaces; neither is allowed to overwrite the other in the catalog.",
+    "Staged/R2 capture is distinct from publication. 581 DOI have captured figures while Worker/D1 reports zero published figure DOI.",
+    "324 DOI expose body figures in the static Pages media index; 273 captured DOI still have no static body figures.",
+    "Completeness is only complete/incomplete when expectedFigureCount is known. 430 DOI remain unknown rather than being mislabeled missing.",
+    "238 DOI have proven-complete captured figure packets; for 149 of them the static Pages figure count is still below the proven expected count.",
+    "Evidence availability is not inferred from R2 prefix absence. Only 272 reviewed summaries expose evidencePacketHash references; other DOI remain evidence unknown."
+  ],
+  "safety": {
+    "productionFrontendChanged": false,
+    "tampermonkeyChanged": false,
+    "workerRouteChanged": false,
+    "d1SchemaChanged": false,
+    "r2Writes": false,
+    "mediaJobsChanged": false,
+    "summarySchedulerChanged": false,
+    "publicationScheduleChanged": false
+  },
+  "nextGate": "Build a read-only D2 asset publication/reconciliation plan from D1 facts plus existing atomic packet receipts. Do not publish captured body figures until packet/job/provenance rules are proven."
+}
