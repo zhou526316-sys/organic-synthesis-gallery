@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-04T00:07:24.353Z",
+  "generatedAt": "2026-10-04T02:12:08.261Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -169,17 +169,17 @@
   ],
   "summary": {
     "galleryDois": 785,
-    "sourceRecords": 775,
-    "rawMissingFromGallery": 624,
+    "sourceRecords": 778,
+    "rawMissingFromGallery": 627,
     "previouslyReviewedExcluded": 619,
-    "missingFromGallery": 5,
+    "missingFromGallery": 8,
     "potentialGaps": 4,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 1,
     "closureCoverageAnomalies": 3,
     "historicalCoverageLosses": 0,
-    "unresolved": 5,
+    "unresolved": 8,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -203,8 +203,8 @@
         "openAlexFailures": 0,
         "crossrefHealthy": true,
         "openAlexHealthy": true,
-        "unionCandidateRecords": 156,
-        "crossrefCandidateRecords": 156,
+        "unionCandidateRecords": 159,
+        "crossrefCandidateRecords": 159,
         "openAlexCandidateRecords": 138,
         "multiSourceCandidateRecords": 138,
         "closureUnionRecords": 19,
@@ -422,6 +422,20 @@
         "CCS Chemistry": 3
       }
     },
+    "2026-10-04": {
+      "sourceRecords": 3,
+      "crossrefOnly": 3,
+      "openAlexOnly": 0,
+      "multiSource": 0,
+      "coveredByGallery": 0,
+      "rawMissingFromGallery": 3,
+      "previouslyReviewedExcluded": 0,
+      "missingFromGallery": 3,
+      "potentialGaps": 0,
+      "byJournal": {
+        "Nature Communications": 3
+      }
+    },
     "2026-09-27": {
       "sourceRecords": 1,
       "crossrefOnly": 1,
@@ -516,16 +530,16 @@
     "Nature Communications": {
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-21",
-      "sourceRecords": 156,
-      "crossrefOnly": 18,
+      "sourceRecords": 159,
+      "crossrefOnly": 21,
       "openAlexOnly": 0,
       "multiSource": 138,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 3,
-      "rawMissingFromGallery": 153,
+      "rawMissingFromGallery": 156,
       "previouslyReviewedExcluded": 153,
-      "missingFromGallery": 0,
+      "missingFromGallery": 3,
       "potentialGaps": 0
     },
     "JACS": {
@@ -789,8 +803,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 156,
-      "crossrefCandidateRecords": 156,
+      "unionCandidateRecords": 159,
+      "crossrefCandidateRecords": 159,
       "openAlexCandidateRecords": 138,
       "multiSourceCandidateRecords": 138,
       "closureUnionRecords": 19,
@@ -1036,8 +1050,8 @@
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "unionCandidateRecords": 156,
-      "crossrefCandidateRecords": 156,
+      "unionCandidateRecords": 159,
+      "crossrefCandidateRecords": 159,
       "openAlexCandidateRecords": 138,
       "multiSourceCandidateRecords": 138,
       "closureUnionRecords": 19,
@@ -1354,7 +1368,7 @@
       "issn": "2041-1723",
       "mode": "online",
       "ok": true,
-      "count": 156,
+      "count": 159,
       "note": ""
     },
     {
@@ -1363,7 +1377,7 @@
       "issn": "2041-1723",
       "mode": "published",
       "ok": true,
-      "count": 156,
+      "count": 159,
       "note": ""
     },
     {
@@ -1372,7 +1386,7 @@
       "issn": "2041-1723",
       "mode": "created",
       "ok": true,
-      "count": 156,
+      "count": 159,
       "note": ""
     },
     {
@@ -1897,6 +1911,122 @@
     }
   ],
   "missingCandidates": [
+    {
+      "doi": "10.1038/s41467-026-78130-7",
+      "journal": "Nature Communications",
+      "title": "A CCL21 gene-modified dendritic cell vaccine combined with pembrolizumab in advanced non-small cell lung cancer: a phase I trial",
+      "abstract": "Abstract Immune checkpoint inhibitors (ICIs) have transformed treatment for non-small cell lung cancer (NSCLC), but resistance to these therapies is common. We report here results from a phase I trial combining intratumoral injection of a CCL21-expressing dendritic cell (CCL21-DC) vaccine with pembrolizumab in patients with advanced non-small cell lung cancer (ClinicalTrials.gov identifier: NCT03546361). The primary objectives were to determine the maximum administered dose (MAD) in the dose escalation phase and the objective response rate (ORR) in the dose expansion. Eleven patients were enrolled in the dose escalation cohort, and 12 patients were treated in the dose expansion cohort at the MAD of 3 ×10 7 cells/injection. The trial did not meet its primary endpoint for ORR as no objective responses were observed, though 36.8% of patients achieved a best response of stable disease. The combination therapy was well tolerated. Post-hoc analyses of longitudinal biopsies revealed that the therapy increased tumor infiltration by CD4+ T cells and novel T cell clones. Disease stability was associated with increased T cell receptor diversity and greater expansion of novel clones following therapy. However, many novel clones failed to persist over time, and immunosuppressive myeloid signaling signatures were identified across time points. Our findings overall demonstrated that CCL21-DC vaccination combined with pembrolizumab can promote T cell infiltration, but this did not translate into meaningful clinical efficacy, potentially due to limited tumor specificity of the T cell response and an inability to fully reprogram the tumor microenvironment.",
+      "date": "2026-10-04",
+      "type": "journal-article",
+      "authors": [
+        "Michael S. Oh",
+        "Aaron E. Lisberg",
+        "Camelia Dumitras",
+        "Linh M. Tran",
+        "Ramin Salehi-Rad",
+        "Kostyantyn Krysan",
+        "Raymond J. Lim",
+        "Maryam Shabihkhani",
+        "Tahmineh Romero",
+        "Shuo Li",
+        "Weihua Zeng",
+        "Zhe Jing",
+        "Rui Li",
+        "Bitta P. Kahangi",
+        "Olga Tsvetkova",
+        "Robert D. Suh",
+        "Fereidoun Abtin",
+        "Scott J. Genshaft",
+        "Scott S. Oh",
+        "Gregory A. Fishbein",
+        "Daniel R. Greenwald",
+        "Kanwarpal S. Kahlon",
+        "Sidharth R. Anand",
+        "Shahryar Ashouri",
+        "Jonathan W. Goldman",
+        "Jay M. Lee",
+        "Xianghong J. Zhou",
+        "David A. Elashoff",
+        "Edward B. Garon",
+        "Bin Liu",
+        "Steven M. Dubinett"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78452-6",
+      "journal": "Nature Communications",
+      "title": "A family of small proteins links c-di-GMP riboswitch signaling with sporulation in Clostridioides difficile",
+      "abstract": "Abstract Cyclic diguanosine monophosphate (c-di-GMP) is a second messenger that coordinates lifestyle transitions, virulence, and developmental processes in bacteria. In Clostridioides difficile , elevated c-di-GMP levels inhibit sporulation, but the underlying mechanism remained unclear. Here, we identified a conserved family of small, membrane-associated proteins encoded by c-di-GMP riboswitch-regulated genes. Transcriptomic analyses revealed that c-di-GMP represses these genes, and reporter assays demonstrated riboswitch-dependent transcriptional regulation via premature termination mechanism. Overexpression of a single gene, CD1980.2 , was sufficient to trigger the transcriptional activation of sporulation genes, including sigma factors and their regulons, and to increase spore formation. Conversely, sporulation efficiency decreased proportionally with the number of deleted small-protein genes, and the strain lacking all seven genes displayed a severe sporulation defect, underscoring their cumulative and functionally redundant roles. Elevating c-di-GMP levels in the deletion mutant did not further reduce sporulation, supporting a model in which c-di-GMP inhibits spore formation by repressing the expression of this small-protein family. Thus, our work establishes these small proteins, encoded by c-di-GMP riboswitch-regulated genes, as important regulators of spore formation in C. difficile , a process essential for pathogen persistence and transmission.",
+      "date": "2026-10-04",
+      "type": "journal-article",
+      "authors": [
+        "Adriana Badilla Lobo",
+        "Anne-Judith Waligora-Dupriet",
+        "Louise Penven",
+        "Roland Seifert",
+        "César Rodríguez",
+        "Frédéric Barbut",
+        "Olga Soutourina",
+        "Johann Peltier"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1038/s41467-026-78126-3",
+      "journal": "Nature Communications",
+      "title": "Multivalent antiviral conjugates enhance activity against Influenza via cross-linking viruses",
+      "abstract": "Abstract Long-acting drug–Fc conjugate (CD388) has emerged as a new class of antivirals against influenza A and B, yet the mechanisms governing how Fc conjugation reshapes small-molecule function remain undefined. Here we establish a programmable multivalent antiviral conjugates (AVCs) platform by click chemistry that enables flexible combination of valencies and conjugated drugs, allowing systematic interrogation of valency-dependent antiviral mechanisms. Using zanamivir as a model, mono-, di-, and trivalent zanamivir are conjugated with Fc, with trivalent zanamivir-Fc conjugates (AVC-Z3) exhibiting higher activity than lower-valent AVCs. AVC-Z3 induces inter-virion aggregation, thereby coupling blockade of viral entry with restriction of viral release. This cross-linking–mediated dual-stage inhibition represents a mechanistic shift from neuraminidase suppression to physical viral immobilization. Furthermore, trivalent peramivir-Fc conjugate (AVC-P3) is synthesised and exhibits stronger antiviral activity than AVC-Z3 in vitro, with much longer half-life in vivo than AVC-Z3, and CD388 with YTE mutation. The in vivo antivirus efficacy of AVC-P3 surpasses other AVCs, baloxavir, and CD388 in H1N1-, H3N2-, H5N1-, and influenza B-infection mice models. Together, our findings define ligand valency as a determinant of antiviral mechanism.",
+      "date": "2026-10-04",
+      "type": "journal-article",
+      "authors": [
+        "Xun Feng",
+        "Lunzhi Yuan",
+        "Lei Zhao",
+        "Lianqi Liu",
+        "Fei Xie",
+        "Ming Zhou",
+        "Gong Cheng",
+        "Yi Guan",
+        "Ningshao Xia",
+        "Tong Cheng",
+        "Wu Zhong",
+        "Dian Xiao",
+        "Xinbo Zhou",
+        "Song Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-1723:online",
+        "crossref:2041-1723:published",
+        "crossref:2041-1723:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
     {
       "doi": "10.1021/acscatal.6c06578",
       "journal": "ACS Catalysis",
