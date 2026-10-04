@@ -21,6 +21,7 @@ function harness(text=source,opt={}){
  const maybe=n=>`typeof ${n}==='function'?${n}:null`;
  vm.runInContext(text.slice(0,cut)+`
  isGalleryPage=()=>true;badge=__badge;sleep=__sleep;writeToken=()=> 'fixture';getJson=__getJson;getPrivateJson=async()=>({items:[]});postReadJson=async()=>({items:__jobs.map(j=>({doi:j.doi,tocStored:false,figureCount:0}))});pairedJobs=()=>__jobs;batchSize=()=>3;selectBatchJobs=(j,n)=>j.slice(0,n);enqueueCaptureReport=()=>true;
+ loadActiveWorkMembership=async(q)=>({revision:'fixture-active-v1',publicationSlot:'2026-10-01T08:00:00+08:00',catalogId:'a'.repeat(64),asOfDate:'2026-10-01',cutoff:'2026-07-01',activeDois:new Set(q.articles.map(a=>normalizeDoi(a.doi))),reasons:{},allTimeCount:q.articles.length,activeCount:q.articles.length,archiveIdleCount:0});
  globalThis.T={renewLease,acquireLease,requestControllerStart,waitForResult,closeTaskTab,clearOwnedJob,controllerRun,completedPublisherResult,resultKey,progressKey,attemptKey,installMenu,owner:CONTROLLER_ID,
  pause:${maybe('requestControllerPause')},poll:${maybe('pollControllerResume')},snapshot:${maybe('controllerLifecycleSnapshot')},persist:${maybe('persistControllerSummary')},reconcile:reconcileActiveJobBeforeDispatch,
  mockRun:()=>{controllerRun=__start;},captureLiveSnapshot,captureLiveText};
