@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { PROTECTED_FILES, validateProtectedInputs, validateFormalPartition } from './validate-pages-literature-authorization.mjs';
+import { PROTECTED_FILES, validateProtectedInputs, validateFormalPartition, requiresFrozenReadinessRevalidation } from './validate-pages-literature-authorization.mjs';
 
 // Isolated data fixtures only. No production writes, Git commits, or network calls.
 const cases = [];
@@ -8,6 +8,17 @@ const run = (name, fn) => { fn(); cases.push(name); };
 const hash = '1'.repeat(40);
 const blobs = Object.fromEntries(PROTECTED_FILES.map(file => [file, hash]));
 run('unchanged_literature_permits_ui_media_deployment', () => assert.deepEqual(validateProtectedInputs({ protectedBlobs: blobs }, blobs), []));
+run('receipt_backed_legacy_baseline_is_not_rejudged_by_new_slot_policy', () => {
+  assert.equal(requiresFrozenReadinessRevalidation({
+    ok: true, receiptBackedBaseline: true, legacyMarkerAuthorized: true,
+  }), false);
+  assert.equal(requiresFrozenReadinessRevalidation({
+    ok: true, receiptBackedBaseline: true, legacyMarkerAuthorized: false,
+  }), true);
+  assert.equal(requiresFrozenReadinessRevalidation({
+    ok: true, receiptBackedBaseline: false, legacyMarkerAuthorized: true,
+  }), true);
+});
 run('changed_literature_without_marker_is_blocked', () => {
   const actual = { ...blobs, [PROTECTED_FILES[0]]: '2'.repeat(40) };
   assert.ok(validateProtectedInputs({ protectedBlobs: blobs }, actual).some(x => x.startsWith('unauthorized_literature_change:')));
