@@ -24,11 +24,11 @@ async function contextWith(capabilities,openResult={available:true,url:base+'/pr
  await context.addInitScript(()=>localStorage.setItem('organic-gallery-session-v1','fixture-session'));
  await context.route('https://api.gczhouwld.com/**',async route=>{
   const url=new URL(route.request().url());
-  if(url.pathname==='/api/user-ui/auth/session')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({authenticated:true,user:{id:'fixture',email:'owner@example.invalid',capabilities}})});
-  if(url.pathname==='/api/user-ui/private-pdf/open')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(openResult)});
-  if(url.pathname==='/api/user-ui/integrations')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({auth:{local:true,google:false,wechat:false,qq:false,email:false},payments:{wechat:false,alipay:false}})});
-  if(url.pathname.includes('reader-counts'))return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({counts:{}})});
-  return route.fulfill({status:404,contentType:'application/json',body:'{}'});
+  if(url.pathname==='/api/user-ui/auth/session')return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({authenticated:true,user:{id:'fixture',email:'owner@example.invalid',capabilities}})});
+  if(url.pathname==='/api/user-ui/private-pdf/open')return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify(openResult)});
+  if(url.pathname==='/api/user-ui/integrations')return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({auth:{local:true,google:false,wechat:false,qq:false,email:false},payments:{wechat:false,alipay:false}})});
+  if(url.pathname.includes('reader-counts'))return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({counts:{}})});
+  return route.fulfill({status:404,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:'{}'});
  });
  return context;
 }
@@ -54,7 +54,7 @@ try{
  });
  await test('owner setup page shows current account and claims only after explicit confirmation',async()=>{
   const context=await browser.newContext();await context.addInitScript(()=>localStorage.setItem('organic-gallery-session-v1','fixture-session'));let claim=0;
-  await context.route('https://api.gczhouwld.com/**',async route=>{const u=new URL(route.request().url());if(u.pathname==='/api/user-ui/auth/session')return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({authenticated:true,user:{id:'u1',email:'owner@example.invalid',capabilities:[]}})});if(u.pathname==='/api/user-ui/private-pdf/bootstrap-owner'){claim++;return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({claimed:true,capabilities:['private_pdf_owner','private_pdf_read']})});}return route.fulfill({status:404,body:'{}'});});
+  await context.route('https://api.gczhouwld.com/**',async route=>{const u=new URL(route.request().url());if(u.pathname==='/api/user-ui/auth/session')return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({authenticated:true,user:{id:'u1',email:'owner@example.invalid',capabilities:[]}})});if(u.pathname==='/api/user-ui/private-pdf/bootstrap-owner'){claim++;return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({claimed:true,capabilities:['private_pdf_owner','private_pdf_read']})});}return route.fulfill({status:404,headers:{'access-control-allow-origin':'*'},body:'{}'});});
   const page=await context.newPage();await page.goto(base+'/private-pdf-owner-setup.html#code=fixture-secret');await page.locator('#claim:not([disabled])').waitFor();assert.equal(await page.locator('#account').textContent(),'owner@example.invalid');assert.equal(claim,0);await page.locator('#claim').click();await page.locator('#status.ok').waitFor();assert.equal(claim,1);await context.close();
  });
 }finally{await browser.close();server.close();}
