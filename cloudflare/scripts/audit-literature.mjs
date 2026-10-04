@@ -75,8 +75,19 @@ const normalizeDoi = value => {
 
 const dateFromParts = value => {
   const p = value?.['date-parts']?.[0];
+  // A year-only or year-month Crossref field is not a calendar publication
+  // date. Never fabricate January 1 or day 1: keep it unknown and let the
+  // bounded source query / created-deposit evidence carry the candidate.
+  if (!Array.isArray(p) || !p[0] || !p[1] || !p[2]) return '';
+  return `${String(p[0]).padStart(4, '0')}-${String(p[1]).padStart(2, '0')}-${String(p[2]).padStart(2, '0')}`;
+};
+
+const datePrecision = value => {
+  const p = value?.['date-parts']?.[0];
   if (!Array.isArray(p) || !p[0]) return '';
-  return `${String(p[0]).padStart(4, '0')}-${String(p[1] || 1).padStart(2, '0')}-${String(p[2] || 1).padStart(2, '0')}`;
+  if (p[1] && p[2]) return 'day';
+  if (p[1]) return 'month';
+  return 'year';
 };
 
 const clean = value => typeof value === 'string'
@@ -302,6 +313,9 @@ async function fetchCrossref(journal) {
               onlineDate: online,
               publishedDate: published,
               createdDate: created,
+              onlineDatePrecision: datePrecision(item['published-online']),
+              publishedDatePrecision: datePrecision(item.published),
+              createdDatePrecision: datePrecision(item.created),
               type: item.type || '',
               authors: (item.author || []).map(author => [author?.given, author?.family].filter(Boolean).join(' ')).filter(Boolean),
               topics: [],
@@ -434,7 +448,7 @@ const universe = [...merged.values()].filter(c => {
   const createdDiscovered = (c.sources || []).some(source => source.endsWith(':created'));
   const sourceDiscovered = (c.sources || []).length > 0;
   const createdInQuery = Boolean(createdDiscovered && c.createdDate && c.createdDate >= (journal ? sourceQueryStartForJournal(journal) : START) && c.createdDate <= END);
-  if (!c.date) return createdDiscovered && (!c.createdDate || createdInQuery);
+  if (!c.date) return sourceDiscovered;
   if (c.date < activeFrom) return false;
   if (c.date > END) return createdInQuery;
   return c.date >= effectiveStart || (sourceDiscovered && c.date >= rescueStart) || createdInQuery;
