@@ -8,7 +8,8 @@ import { fileURLToPath } from 'node:url';
 export const MARKER = 'audit/publication-release-state.json';
 export const DATA_FILES = Object.freeze(['papers.gz.b64', 'total-synthesis.json', 'manual-supplement.json',
   'final-audit-supplement.json', 'curated-supplement.json', 'automation-supplement.json', 'rolling-supplement.json']);
-export const LIVE_FILES = Object.freeze([...DATA_FILES, 'literature-supplement.json', 'title-translations-zh.json', 'index.html']);
+export const ARCHITECTURE_RELEASE = 'architecture-v1/release.json';
+export const LIVE_FILES = Object.freeze([...DATA_FILES, 'literature-supplement.json', 'title-translations-zh.json', 'index.html', ARCHITECTURE_RELEASE]);
 export const SITES = Object.freeze(['https://gallery.gczhouwld.com/', 'https://zhou526316-sys.github.io/organic-synthesis-gallery/']);
 const sha = value => createHash('sha256').update(value).digest('hex');
 const pretty = value => JSON.stringify(value, null, 2) + '\n';
@@ -44,6 +45,34 @@ export function assertPartition(marker, dois) {
   for (const doi of [...(marker.rejectedDois || []), ...(marker.deferredDois || [])]) {
     assert(!dois.includes(normalizeDoi(doi)), `nonpublishable_present:${doi}`);
   }
+}
+export function architectureObjects(directory, marker, sourceCommit, datasetSha256) {
+  const releasePath = path.join(directory, ARCHITECTURE_RELEASE);
+  const release = JSON.parse(readFileSync(releasePath, 'utf8'));
+  assert(release?.schema === 'gallery-architecture-public-v1' && release.productionActivation === false, 'invalid_architecture_release');
+  assert(release.publicationSlot === marker.publicationSlot, 'architecture_slot_mismatch');
+  assert(release.sourceCommit === sourceCommit, 'architecture_source_commit_mismatch');
+  assert(release.markerBlobSha === git('rev-parse', `HEAD:${MARKER}`), 'architecture_marker_mismatch');
+  assert(release.recordCount === marker.productionCards && release.datasetSha256 === datasetSha256, 'architecture_dataset_mismatch');
+  assert(typeof release.catalogId === 'string' && /^[a-f0-9]{64}$/.test(release.catalogId), 'architecture_catalog_id_invalid');
+  assert(Array.isArray(release.objects) && release.objects.length > 0, 'architecture_objects_missing');
+  const objectDigests = {};
+  const seen = new Set();
+  for (const row of release.objects) {
+    assert(row && typeof row.path === 'string' && /^[A-Za-z0-9_./-]+$/.test(row.path)
+      && !row.path.startsWith('/') && !row.path.split('/').includes('..'), 'architecture_object_path_invalid');
+    assert(!seen.has(row.path), 'architecture_object_duplicate'); seen.add(row.path);
+    assert(/^[a-f0-9]{64}$/.test(row.sha256) && Number.isSafeInteger(row.bytes) && row.bytes >= 0, 'architecture_object_descriptor_invalid');
+    const relative = `architecture-v1/${row.path}`;
+    const bytes = readFileSync(path.join(directory, relative));
+    assert(bytes.length === row.bytes && sha(bytes) === row.sha256, `architecture_object_mismatch:${row.path}`);
+    objectDigests[relative] = row.sha256;
+  }
+  for (const required of [release.catalogCurrent, release.membership, release.titlePresentation]) {
+    assert(required && seen.has(required.path) && objectDigests[`architecture-v1/${required.path}`] === required.sha256,
+      'architecture_required_reference_missing');
+  }
+  return { release, objectDigests };
 }
 export function trustedReleaseEvent(event, repository) {
   const run = event?.workflow_run;
@@ -137,13 +166,17 @@ async function build(directory) {
     assert(built.get(doi)?.titleZh === expected, `built_chinese_title_changed:${doi}`);
     titles[doi] = expected;
   }
+  const sourceCommit = git('rev-parse', 'HEAD');
+  const datasetSha256 = sha(pretty(dois));
+  const architecture = architectureObjects(directory, marker, sourceCommit, datasetSha256);
   const result = {
-    schemaVersion: 1, sourceCommit: git('rev-parse', 'HEAD'), markerCommit: git('log', '-1', '--format=%H', '--', MARKER),
+    schemaVersion: 1, sourceCommit, markerCommit: git('log', '-1', '--format=%H', '--', MARKER),
     markerBlobSha: git('rev-parse', `HEAD:${MARKER}`), publicationSlot: marker.publicationSlot || null,
-    productionCards: dois.length, datasetSha256: sha(pretty(dois)), dois,
+    productionCards: dois.length, datasetSha256, dois,
     publishableDois: marker.publishableDois || [], rejectedDois: marker.rejectedDois || [], deferredDois: marker.deferredDois || [],
     protectedBlobs: marker.protectedBlobs, titleZh: titles,
     files: Object.fromEntries(LIVE_FILES.map(file => [file, sha(readFileSync(path.join(directory, file)))])),
+    architectureObjects: architecture.objectDigests, architectureCatalogId: architecture.release.catalogId,
   };
   writeFileSync(path.join(directory, 'release-delivery.json'), pretty(result));
   console.log(pretty({ ok: true, sourceCommit: result.sourceCommit, productionCards: dois.length, datasetSha256: result.datasetSha256 }));
@@ -158,6 +191,11 @@ export function validateManifest(manifest, marker, markerBlob) {
   assert(sha(pretty([...manifest.dois].sort())) === manifest.datasetSha256, 'manifest_dataset_digest_mismatch');
   assert(sameSet(Object.keys(manifest.files || {}), [...LIVE_FILES]), 'manifest_file_set_mismatch');
   for (const digest of Object.values(manifest.files)) assert(/^[a-f0-9]{64}$/.test(digest), 'invalid_file_digest');
+  assert(manifest.files?.[ARCHITECTURE_RELEASE] && manifest.architectureCatalogId && /^[a-f0-9]{64}$/.test(manifest.architectureCatalogId), 'architecture_manifest_missing');
+  assert(manifest.architectureObjects && Object.keys(manifest.architectureObjects).length > 0, 'architecture_manifest_objects_missing');
+  for (const [file, digest] of Object.entries(manifest.architectureObjects)) {
+    assert(file.startsWith('architecture-v1/') && /^[a-f0-9]{64}$/.test(digest), 'invalid_architecture_manifest_object');
+  }
 }
 async function get(url) {
   const target = new URL(url);
@@ -174,7 +212,7 @@ async function verify(manifestFile, resultFile) {
     sourceCommit: manifest.sourceCommit, markerCommit: manifest.markerCommit, markerBlobSha: manifest.markerBlobSha,
     publicationSlot: manifest.publicationSlot, productionCards: manifest.productionCards, datasetSha256: manifest.datasetSha256,
     publishableDois: manifest.publishableDois, rejectedDois: manifest.rejectedDois, deferredDois: manifest.deferredDois,
-    chineseTitlesVerified: false, sites: [] };
+    chineseTitlesVerified: false, architectureVerified: false, architectureCatalogId: manifest.architectureCatalogId, sites: [] };
   try {
     for (const site of SITES) {
       let last;
@@ -188,7 +226,12 @@ async function verify(manifestFile, resultFile) {
             assert(sha(response.bytes) === digest, `live_file_digest_mismatch:${file}`);
             return file;
           }));
-          evidence.sites.push({ site, effectiveUrl: live.effectiveUrl, filesVerified: checks, attempts: attempt });
+          const architectureChecks = await Promise.all(Object.entries(manifest.architectureObjects || {}).map(async ([file, digest]) => {
+            const response = await get(new URL(file, site));
+            assert(sha(response.bytes) === digest, `live_architecture_digest_mismatch:${file}`);
+            return file;
+          }));
+          evidence.sites.push({ site, effectiveUrl: live.effectiveUrl, filesVerified: checks, architectureFilesVerified: architectureChecks, attempts: attempt });
           success = true;
           break;
         } catch (error) { last = error; if (attempt < 6) await new Promise(done => setTimeout(done, 5000)); }
@@ -197,6 +240,7 @@ async function verify(manifestFile, resultFile) {
     }
     evidence.ok = true;
     evidence.chineseTitlesVerified = true;
+    evidence.architectureVerified = true;
     evidence.verifiedAt = new Date().toISOString();
     writeFileSync(resultFile, pretty(evidence));
     console.log(pretty(evidence));
@@ -209,7 +253,7 @@ async function verify(manifestFile, resultFile) {
 }
 export function mergeDeliveryState(state, evidence, current) {
   const next = structuredClone(state);
-  assert(evidence.ok === true && evidence.chineseTitlesVerified === true, 'delivery_not_verified');
+  assert(evidence.ok === true && evidence.chineseTitlesVerified === true && evidence.architectureVerified === true, 'delivery_not_verified');
   assert(evidence.publicationSlot === current.publicationSlot && evidence.productionCards === current.productionCards, 'receipt_is_not_current_release');
   for (const name of ['publishableDois', 'rejectedDois', 'deferredDois']) {
     assert(sameSet(evidence[name], current[name] || []), `receipt_partition_mismatch:${name}`);
