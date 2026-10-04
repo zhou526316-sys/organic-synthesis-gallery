@@ -67,6 +67,8 @@ JOURNAL_ORDER = {
 
 def load_env(path: Path) -> None:
     if not path.exists():
+        if os.environ.get("WECHAT_MP_APP_ID") and os.environ.get("WECHAT_MP_APP_SECRET"):
+            return
         raise RuntimeError(f"env file not found: {path}")
     for raw in path.read_text(encoding="utf-8").splitlines():
         line = raw.strip()
@@ -710,6 +712,112 @@ def upload_featured_images(token: str, featured: dict | None, override_pdf: str 
     return uploaded, local_images
 
 
+def prepare_featured_cover(featured: dict | None, override_pdf: str = "") -> Path | None:
+    if not featured:
+        return None
+    cover = featured.get("cover")
+    if not isinstance(cover, dict):
+        return None
+    spec = cover.get("pdf_render")
+    if not isinstance(spec, dict):
+        return None
+
+    pdf_path = ensure_pdf_source(featured, override_pdf)
+    rendered = render_figure_from_pdf(
+        pdf_path,
+        {"id": "cover", "pdf_render": spec},
+    )
+
+    try:
+        from PIL import Image
+    except ImportError as exc:
+        raise RuntimeError(
+            "cover composition requires Pillow; install with: "
+            "sudo apt-get update && sudo apt-get install -y python3-pil"
+        ) from exc
+
+    canvas_spec = cover.get("canvas") if isinstance(cover.get("canvas"), dict) else {}
+    width = int(canvas_spec.get("width") or 1880)
+    height = int(canvas_spec.get("height") or 800)
+    background_name = str(canvas_spec.get("background") or "white")
+
+    with Image.open(rendered) as source:
+        source.load()
+        source = source.convert("RGB")
+        scale = min(width / source.width, height / source.height)
+        resized = source.resize(
+            (max(1, int(source.width * scale)), max(1, int(source.height * scale))),
+            Image.Resampling.LANCZOS,
+        )
+        canvas = Image.new("RGB", (width, height), background_name)
+        x = (width - resized.width) // 2
+        y = (height - resized.height) // 2
+        canvas.paste(resized, (x, y))
+
+    target = Path(tempfile.gettempdir()) / "osg-wechat-cover-235.jpg"
+    canvas.save(
+        target,
+        format="JPEG",
+        quality=94,
+        optimize=True,
+        progressive=True,
+        dpi=(300, 300),
+    )
+    return target
+
+
+def upload_permanent_image(token: str, image_path: Path, cache_path: Path) -> str:
+    payload = image_path.read_bytes()
+    digest = hashlib.sha256(payload).hexdigest()
+    cache = load_json_cache(cache_path)
+    if (
+        cache.get("sha256") == digest
+        and cache.get("media_id")
+        and cache.get("upload_type") == "image"
+    ):
+        return str(cache["media_id"])
+
+    boundary, body = multipart_file("media", image_path)
+    query = urllib.parse.urlencode({"access_token": token, "type": "image"})
+    url = "https://api.weixin.qq.com/cgi-bin/material/add_material?" + query
+    req = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+            "Accept": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as response:
+            result = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        result = json.loads(exc.read().decode("utf-8", errors="replace"))
+
+    media_id = result.get("media_id")
+    if not media_id:
+        raise RuntimeError(
+            "cover image upload failed: "
+            + json.dumps(
+                {"errcode": result.get("errcode"), "errmsg": result.get("errmsg")},
+                ensure_ascii=False,
+            )
+        )
+
+    save_json_cache(
+        cache_path,
+        {
+            "sha256": digest,
+            "media_id": media_id,
+            "cover": str(image_path),
+            "upload_type": "image",
+            "bytes": len(payload),
+        },
+    )
+    return str(media_id)
+
+
 def prepare_thumb_cover(cover: Path) -> Path:
     """Return a WeChat-compatible JPG thumbnail (<64 KiB).
 
@@ -1015,10 +1123,15 @@ def main() -> int:
     token = get_access_token()
     uploaded_urls, local_images = upload_featured_images(token, featured, args.featured_pdf)
     content = build_content(slot, papers, featured, uploaded_urls)
-    cover_path = Path(args.cover)
-    if local_images.get("fig1"):
-        cover_path = local_images["fig1"]
-    thumb_media_id = upload_cover(token, cover_path, DEFAULT_CACHE)
+
+    highres_cover = prepare_featured_cover(featured, args.featured_pdf)
+    if highres_cover is not None:
+        thumb_media_id = upload_permanent_image(token, highres_cover, DEFAULT_CACHE)
+    else:
+        cover_path = Path(args.cover)
+        if local_images.get("fig1"):
+            cover_path = local_images["fig1"]
+        thumb_media_id = upload_cover(token, cover_path, DEFAULT_CACHE)
     article = {
         "article_type": "news",
         "title": title,
@@ -1030,6 +1143,12 @@ def main() -> int:
         "need_open_comment": 0,
         "only_fans_can_comment": 0,
     }
+    if featured and isinstance(featured.get("cover"), dict):
+        cover = featured["cover"]
+        if cover.get("crop_235_1"):
+            article["pic_crop_235_1"] = str(cover["crop_235_1"])
+        if cover.get("crop_1_1"):
+            article["pic_crop_1_1"] = str(cover["crop_1_1"])
     state = load_state(DEFAULT_STATE)
     requested_media_id = str(args.media_id or "").strip()
     same_day_state = (
