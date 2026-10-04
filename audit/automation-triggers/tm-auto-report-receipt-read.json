@@ -1,6 +1,9 @@
 {
-  "requestedAt": "2026-09-24T07:17:00Z",
-  "reason": "Fresh read-only check after Bridge 2.2.28 deployment. Determine whether the local Tampermonkey client now emits controllerRevision 2.2.28 reports and whether per-DOI controller failures are reported as skipped/continued rather than stopping the capture mainline. No media writes.",
+  "requestedAt": "2026-10-04T12:30:00Z",
+  "reason": "Read-only verification after RSC/Chem discovery and Elsevier task-binding repair. Check whether 10.1016/j.chempr.2026.103282 has a newer Tampermonkey attempt using installer 6.2.24 / packaged Bridge 2.2.42 and whether bound_publisher_heartbeat_missing is cleared. Do not capture, promote, delete, or publish media.",
+  "targetDoi": "10.1016/j.chempr.2026.103282",
+  "expectedInstallRevision": "6.2.24",
+  "expectedBridgeVersion": "2.2.42",
   "readOnly": true,
   "mediaWrites": 0
 }
