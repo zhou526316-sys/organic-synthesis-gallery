@@ -83,9 +83,13 @@ The selector refuses to run unless both:
 ## Shadow comparison
 
 Authenticated admin-only comparison runs:
-1. the current legacy R2 selector;
+1. the current legacy R2 selector (`legacy-before`);
 2. the new D1 selector;
-3. an exact normalized comparison.
+3. the current legacy R2 selector again (`legacy-after`);
+4. an exact normalized comparison only if legacy-before and legacy-after are identical.
+
+If the R2 source changes during comparison, the run is `comparable:false`; it is never counted as a D1 mismatch.
+If either legacy Evidence/job count reaches 10,000, the comparison is also `comparable:false` because the legacy reader may have hit its fixed scan ceiling.
 
 It compares:
 - selected candidate identity and hashes;
