@@ -44,8 +44,8 @@ async function loadProductionDois() {
 const request = await readJson(REQUEST);
 const slot = String(request.publicationSlot || '');
 const stagingFile = String(request.stagingReviewFile || '');
-assert(/^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(slot), 'invalid publicationSlot');
-assert(/^audit\/prepublish-review-\d{4}-\d{2}-\d{2}-(?:0800|1800)\.json$/.test(stagingFile), 'invalid stagingReviewFile');
+assert(/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(slot), 'invalid publicationSlot');
+assert(/^audit\/prepublish-review-\d{4}-\d{2}-\d{2}-0800\.json$/.test(stagingFile), 'invalid stagingReviewFile');
 const deltaMinutes = (Date.now() - Date.parse(slot)) / 60000;
 assert(deltaMinutes >= 0 && deltaMinutes <= 20, `release request outside fixed-slot execution window: ${deltaMinutes.toFixed(2)} min`);
 assert(beijingDate() === slot.slice(0, 10), 'release request Beijing date mismatch');

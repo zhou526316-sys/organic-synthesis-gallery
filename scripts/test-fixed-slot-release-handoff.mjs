@@ -38,7 +38,7 @@ test('exact slot admits guarded execution', () => assert.equal(slotState(slot, a
 test('expired slot is not replayed', () => assert.equal(slotState(slot, at + 20 * 60_000 + 1), 'expired_slot'));
 test('next-day invocation cannot backfill yesterday', () => assert.equal(slotState(slot, at + 24 * 3600_000), 'expired_slot'));
 test('same slot is idempotent', () => assert.equal(slotState(slot, at, slot), 'already_published_or_superseded'));
-test('newer marker is never overwritten', () => assert.equal(slotState(slot, at, '2026-10-02T18:00:00+08:00'), 'already_published_or_superseded'));
+test('newer marker is never overwritten', () => assert.equal(slotState(slot, at, '2026-10-03T08:00:00+08:00'), 'already_published_or_superseded'));
 test('arbitrary slot time rejected', () => assert.throws(() => slotState('2026-10-02T09:00:00+08:00', at)));
 test('early future gate cannot arm outside 65 minutes', () => assert.throws(() => slotState(slot, at - 66 * 60_000)));
 test('strict reviewed subset allows evidence-scoped pending', () => assert.equal(validateEvidence(...fixture()).deferredDois.length, 1));

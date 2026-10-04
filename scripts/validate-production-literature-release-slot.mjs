@@ -61,7 +61,7 @@ if (mode === 'bootstrap') {
   }
 } else if (mode === 'slot-release') {
   const slot = String(marker?.publicationSlot || '');
-  check(/^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(slot),
+  check(/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(slot),
     `release-slot: invalid publicationSlot ${slot || '-'}`);
   check(Boolean(marker?.reviewFile), 'release-slot: reviewFile missing');
   check(Boolean(marker?.handoffGeneratedAt), 'release-slot: handoffGeneratedAt missing');

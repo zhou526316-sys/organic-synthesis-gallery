@@ -97,28 +97,23 @@ h1 {
   color: #667085;
   max-width: 900px;
 }
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 22px;
-}
-.stat {
-  background: #fff;
+.hero-latest {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 8px 11px;
   border: 1px solid #dfe5ef;
-  border-radius: 14px;
-  padding: 13px 15px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.82);
 }
-.stat strong {
-  display: block;
-  font-size: 24px;
+.hero-latest strong {
+  font-size: 15px;
   line-height: 1;
 }
-.stat span {
-  display: block;
-  margin-top: 5px;
+.hero-latest span {
   color: #7a8494;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .toolbar {
@@ -1004,9 +999,6 @@ gallery-paper-actions {
   .hero-top {
     align-items: flex-start;
     flex-wrap: wrap;
-  }
-  .stats {
-    grid-template-columns: 1fr;
   }
   .toolbar {
     grid-template-columns: 1fr;

@@ -162,7 +162,7 @@ if (perDoi) {
     assert(String(row.evidenceBasis || '').trim().length >= 40 && String(row.challengeReason || '').trim().length >= 30
       && row.firstPassDecision === 'include' && row.challengeDecision === 'include',
       `carryover: two-pass include evidence missing for ${doi}`);
-    assert(/^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(String(row.nextPublicationSlot || ''))
+    assert(/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(String(row.nextPublicationSlot || ''))
       && (!markerSlot || Date.parse(row.nextPublicationSlot) > Date.parse(markerSlot)),
       `carryover: invalid next publication slot for ${doi}`);
     assert(!repositoryDois.has(doi) && !deployedDois.has(doi),

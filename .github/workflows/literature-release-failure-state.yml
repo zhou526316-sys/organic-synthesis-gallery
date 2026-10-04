@@ -56,7 +56,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add audit/literature-update-state.json audit/release-finalization-result.json
           test -n "$(git status --porcelain -- audit/literature-update-state.json audit/release-finalization-result.json)"
-          git commit -m 'audit: record 18:00 literature release quality failure'
+          git commit -m 'audit: record 08:00 literature release quality failure'
           git push origin HEAD:main
       - name: Preserve failure evidence
         if: always()
