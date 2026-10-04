@@ -20,6 +20,20 @@ sudo git pull --ff-only
 sudo python3 ops/wechat-publisher/create-draft.py
 ```
 
+## Cover requirement
+
+The draft cover is uploaded as a permanent WeChat `thumb` material. The helper
+converts the repository PNG placeholder to a JPG below 64 KiB using Pillow.
+Install the Ubuntu package once if needed:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y python3-pil
+```
+
+Article-body figures are a different path and will use `media/uploadimg` rather
+than the cover thumbnail endpoint.
+
 ## Create the test draft
 
 Only after the preview reports the expected publication slot and DOI list:
