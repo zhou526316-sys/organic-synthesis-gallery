@@ -38,6 +38,9 @@ jobs:
           node --test scripts/test-gallery-architecture-public.mjs
           node scripts/build-gallery-architecture-public.mjs
 
+      - name: Test D2a2 handoff-index deployment contract
+        run: node scripts/test-evidence-handoff-index-deployment-contract.mjs
+
       - name: Build frontend
         run: npm run build
 

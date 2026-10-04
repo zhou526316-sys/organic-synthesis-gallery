@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
 import {
   backfillEvidenceIndexPage,
+  backfillHandoffIndexPage,
   getEvidenceIndexStatus,
   listEvidenceIndexRows,
   shadowIndexEvidence,
@@ -89,6 +90,19 @@ function objectFor(doi,n){
     capturedAt:'2026-10-04T08:'+String(n).padStart(2,'0')+':00Z',
     textProcessingPolicy:'private_cache_allowed',
     evidenceLevel:'complete',
+  });
+}
+function handoffObjectFor(doi,n,packet='a',source='b',extra={}){
+  return new MemoryObject('private/article-summary-handoff-v1/'+String(n).padStart(4,'0')+'.json',{
+    doi,
+    evidencePacketHash:packet.repeat(64),
+    sourceHash:source.repeat(64),
+    evidenceLevel:'complete',
+    capturedAt:'2026-10-04T09:'+String(n).padStart(2,'0')+':00Z',
+    keyId:'key-v1',
+    algorithm:'RSA-OAEP-256+A256GCM+GZIP',
+    compression:'gzip',
+    ...extra,
   });
 }
 
@@ -203,6 +217,88 @@ test('admin sample is bounded and never contains Evidence plaintext',async t=>{
   assert.ok(!serialized.includes('sections'));
   assert.ok(!serialized.includes('fulltext'));
   assert.ok(!serialized.includes('articleUrl'));
+});
+
+test('historical handoff backfill only binds current Evidence identities and persists cursor state',async t=>{
+  const db=new SqliteD1(); t.after(()=>db.close());
+  const h1='10.1234/h1',h2='10.1234/h2',h3='10.1234/h3',orphan='10.1234/orphan';
+  const objects=[
+    handoffObjectFor(h1,1,'a','b'),
+    handoffObjectFor(h2,2,'9','8'),
+    handoffObjectFor(orphan,3,'a','b'),
+    handoffObjectFor('10.1234/bad',4,'a','b',{keyId:''}),
+    handoffObjectFor(h3,5,'e','f'),
+  ];
+  const env={DB:db,MEDIA:new MemoryR2(objects),EVIDENCE_INDEX_SHADOW_ENABLED:'1'};
+  await shadowIndexEvidence(env,evidenceRow(h1,'a','b'));
+  await shadowIndexEvidence(env,evidenceRow(h2,'c','d'));
+  await shadowIndexEvidence(env,evidenceRow(h3,'e','f'));
+
+  const first=await backfillHandoffIndexPage(env,2);
+  assert.equal(first.status,200);
+  assert.equal(first.body.complete,false);
+  assert.equal(first.body.scannedObjects,2);
+  assert.equal(first.body.matchedRows,1);
+  assert.equal(first.body.skippedStale,1);
+  assert.equal(first.body.skippedInvalid,0);
+
+  const second=await backfillHandoffIndexPage(env,2);
+  assert.equal(second.body.complete,false);
+  assert.equal(second.body.scannedObjects,4);
+  assert.equal(second.body.matchedRows,1);
+  assert.equal(second.body.skippedStale,2);
+  assert.equal(second.body.skippedInvalid,1);
+
+  const third=await backfillHandoffIndexPage(env,2);
+  assert.equal(third.body.complete,true);
+  assert.equal(third.body.cursor,null);
+  assert.equal(third.body.scannedObjects,5);
+  assert.equal(third.body.matchedRows,2);
+  assert.equal(third.body.skippedStale,2);
+  assert.equal(third.body.skippedInvalid,1);
+  assert.equal(third.body.scannedObjects,third.body.matchedRows+third.body.skippedStale+third.body.skippedInvalid);
+
+  const status=await getEvidenceIndexStatus(env);
+  assert.equal(status.body.evidenceCount,3);
+  assert.equal(status.body.handoffReadyCount,2);
+  assert.equal(status.body.handoffBackfill.complete,true);
+  assert.equal(status.body.handoffBackfill.scannedObjects,5);
+  assert.equal(status.body.handoffBackfill.matchedRows,2);
+
+  const rows=(await listEvidenceIndexRows(env,10)).body.items;
+  const byDoi=new Map(rows.map(row=>[row.doi,row]));
+  assert.equal(byDoi.get(h1).handoff_ready,1);
+  assert.equal(byDoi.get(h2).handoff_ready,0);
+  assert.equal(byDoi.get(h3).handoff_ready,1);
+  assert.equal(byDoi.has(orphan),false);
+
+  const fourth=await backfillHandoffIndexPage(env,2);
+  assert.equal(fourth.body.complete,true);
+  assert.equal(fourth.body.scannedObjects,5);
+});
+
+test('historical handoff backfill failure preserves prior cursor progress',async t=>{
+  const db=new SqliteD1(); t.after(()=>db.close());
+  const h1='10.1234/handoff-fail';
+  const media=new MemoryR2([handoffObjectFor(h1,1,'a','b'),handoffObjectFor(h1,2,'a','b')]);
+  const env={DB:db,MEDIA:media,EVIDENCE_INDEX_SHADOW_ENABLED:'1'};
+  await shadowIndexEvidence(env,evidenceRow(h1,'a','b'));
+
+  const first=await backfillHandoffIndexPage(env,1);
+  assert.equal(first.body.complete,false);
+  assert.equal(first.body.scannedObjects,1);
+  const cursor=first.body.cursor;
+
+  env.MEDIA={async list(){throw new Error('injected_handoff_r2_failure');}};
+  const failed=await backfillHandoffIndexPage(env,1);
+  assert.equal(failed.status,502);
+  assert.equal(failed.body.error,'evidence_handoff_backfill_list_failed');
+
+  const status=await getEvidenceIndexStatus(env);
+  assert.equal(status.body.handoffBackfill.complete,false);
+  assert.equal(status.body.handoffBackfill.scannedObjects,1);
+  assert.equal(status.body.handoffBackfill.cursor,cursor);
+  assert.match(status.body.handoffBackfill.lastError,/injected_handoff_r2_failure/);
 });
 
 console.log('EVIDENCE_INDEX_SHADOW_TESTS_READY');
