@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-04T00:06:15.000Z",
-  "requestedBy": "fixed-release-postdeploy-20261004-0800",
-  "publicationSlot": "2026-10-04T08:00:00+08:00",
-  "baselineMainSha": "382c171bea4de11648efa41d3a3f3aefd389aff1",
-  "reason": "Post-deployment DOI-union audit for the successfully delivered 2026-10-04 08:00 Asia/Shanghai slot. Recompute against the live-authorized 785-card production snapshot, preserve machine source-health/coverage warnings separately, and surface any newly indexed unresolved DOI for immediate semantic review. Do not mutate production literature data or admit off-slot literature."
+  "requestedAt": "2026-10-04T09:12:00.000Z",
+  "requestedBy": "prepublish-primary-20261004-1800",
+  "publicationSlot": "2026-10-04T18:00:00+08:00",
+  "baselineMainSha": "a58596ef453aae3ecb86e861149c116c971b99ab",
+  "reason": "Fresh DOI-union audit for the 2026-10-04 18:00 Asia/Shanghai prepublish primary review. Recompute against current main, preserve full active-journal source health and closure warnings, refresh paired latest/compact snapshots, and do not mutate production literature data or admit literature."
 }
