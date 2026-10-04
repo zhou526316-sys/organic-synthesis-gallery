@@ -11,6 +11,7 @@ const script=source.slice(0,cut)+`
  const ar=Array.from({length:61},(_,n)=>({doi:'10.1021/jacs.6c'+String(n).padStart(5,'0'),journal:'JACS',addedDate:'2026-10-02',date:'2026-10-01'}));
  const q={articles:ar,webpageDoiCount:ar.length,latestAddedDate:'2026-10-02',generatedAt:'2026-10-02T16:00:00Z',mediaGeneration:1790082000000};
  getJson=async(u)=>u.includes('capabilities')?{captureVersion:VERSION,mediaGeneration:1790082000000,mode:'verified-staging',mediaControllerRevision:CONTROLLER_REVISION,evidenceSchemaVersion:EVIDENCE_SCHEMA_VERSION}:q;
+ observeArchitectureMembership=async(queue)=>{var dois=queue.articles.map(a=>normalizeDoi(a.doi));return {ok:true,revision:'fixture-active-v2',publicationSlot:'2026-10-02T08:00:00+08:00',catalogId:'a'.repeat(64),asOfDate:'2026-10-02',cutoff:'2026-07-02',memberCount:dois.length,activeCount:dois.length,hotCount:dois.length,archiveCount:0,recentAdditionCount:0,activeDois:dois,archiveDois:[],memberDois:dois,withdrawn:[]};};
  readMissingCaptureInventory=async()=>({media:{items:ar.map(a=>({doi:a.doi,tocStored:true,figureCount:0,capturedFigures:[]}))},tocs:{items:[],count:0},figures:{complete:true,items:ar.map(a=>({doi:a.doi,expectedFigureCount:1,figures:{'Figure 1':{label:'Figure 1',sourceUrl:'https://pubs.acs.org/'+a.doi+'/f1.png',contentHash:'a'.repeat(32),width:1000,height:500,quality:'high'}}}))},evidence:{items:[],count:0},errors:[]});
  globalThis.T={forceStartFromHead,requestControllerPause};
  installManualRestartListener();installMenu();mountCaptureLivePanel();})();`;
