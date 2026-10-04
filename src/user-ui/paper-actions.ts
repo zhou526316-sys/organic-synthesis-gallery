@@ -210,6 +210,11 @@ export class GalleryPaperActions extends HTMLElement {
     return image?.currentSrc || image?.src || '';
   }
 
+  openSummaryFromDeepLink(): void {
+    if (this.panel === 'summary') return;
+    void this.openSummary();
+  }
+
   private async openSummary(): Promise<void> {
     const doi = store.metadata(this.paperId)?.doi;
     this.panel = 'summary';
