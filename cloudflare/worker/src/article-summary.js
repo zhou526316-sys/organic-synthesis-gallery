@@ -1,4 +1,5 @@
 import { getScheduledSummaryForEvidence, persistScheduledEvidenceHandoff } from './scheduled-summary-handoff.js';
+import { shadowIndexEvidence } from './evidence-index.js';
 
 const EVIDENCE_PREFIX = 'private/article-evidence-v2/';
 const LEGACY_FULLTEXT_PREFIX = 'private/article-fulltext/';
@@ -348,6 +349,17 @@ export async function importArticleFulltext(env, payload) {
       evidenceLevel: provenance.fulltextStatus,
     },
   });
+  const evidenceIndexShadow = await shadowIndexEvidence(env, {
+    doi,
+    evidenceR2Key: keys.evidence,
+    evidencePacketHash,
+    sourceHash,
+    schemaVersion: EVIDENCE_SCHEMA_VERSION,
+    publisher: provenance.publisher,
+    capturedAt,
+    textProcessingPolicy,
+    evidenceLevel: provenance.fulltextStatus,
+  });
   const scheduledHandoff = await persistScheduledEvidenceHandoff(env, evidence);
 
   return {
@@ -367,6 +379,7 @@ export async function importArticleFulltext(env, payload) {
       textProcessingPolicy,
       evidenceLevel: provenance.fulltextStatus,
       scheduledHandoffReady: Boolean(scheduledHandoff),
+      evidenceIndexShadow,
       scheduledPublicationMode: 'daily_1200_asia_shanghai',
     },
   };
