@@ -394,24 +394,78 @@ def save_json_cache(path: Path, data: dict):
 
 
 def download_body_image(source_url: str, fig_id: str) -> Path:
-    suffix = ".png"
-    target = Path(tempfile.gettempdir()) / f"osg-wechat-{fig_id}{suffix}"
+    """Download and normalize a publisher figure to a real PNG for WeChat.
+
+    This does not redraw or alter chemical structures. It only decodes the
+    publisher-delivered image and re-encodes the same pixels as a standards-
+    compliant PNG accepted by WeChat's article-body image endpoint.
+    """
+    raw_target = Path(tempfile.gettempdir()) / f"osg-wechat-{fig_id}-raw"
+    png_target = Path(tempfile.gettempdir()) / f"osg-wechat-{fig_id}.png"
+
     req = urllib.request.Request(
         source_url,
         headers={
             "User-Agent": "Mozilla/5.0 (compatible; OrganicSynthesisGallery/1.0)",
-            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            # Force raster image delivery and avoid AVIF/WebP content negotiation.
+            "Accept": "image/png,image/jpeg,image/gif;q=0.8,*/*;q=0.1",
         },
     )
     try:
         with urllib.request.urlopen(req, timeout=45) as response:
             payload = response.read()
+            content_type = str(response.headers.get("Content-Type") or "").lower()
     except Exception as exc:
         raise RuntimeError(f"failed to download featured figure {fig_id}: {exc}") from exc
+
     if not payload:
         raise RuntimeError(f"empty featured figure download: {fig_id}")
-    target.write_bytes(payload)
-    return target
+    if "text/html" in content_type:
+        raise RuntimeError(
+            f"featured figure {fig_id} returned HTML instead of an image"
+        )
+
+    raw_target.write_bytes(payload)
+
+    try:
+        from PIL import Image, UnidentifiedImageError
+    except ImportError as exc:
+        raise RuntimeError(
+            "body image normalization requires Pillow; install with: "
+            "sudo apt-get update && sudo apt-get install -y python3-pil"
+        ) from exc
+
+    try:
+        with Image.open(raw_target) as image:
+            image.load()
+            # Keep original pixel dimensions. Convert palette/alpha safely to RGB
+            # on white because chemistry figures use white backgrounds.
+            if image.mode in ("RGBA", "LA"):
+                background = Image.new("RGBA", image.size, "white")
+                background.alpha_composite(image.convert("RGBA"))
+                normalized = background.convert("RGB")
+            elif image.mode == "P":
+                normalized = image.convert("RGBA")
+                background = Image.new("RGBA", image.size, "white")
+                background.alpha_composite(normalized)
+                normalized = background.convert("RGB")
+            else:
+                normalized = image.convert("RGB")
+
+            normalized.save(
+                png_target,
+                format="PNG",
+                optimize=False,
+                compress_level=4,
+                dpi=(300, 300),
+            )
+    except (UnidentifiedImageError, OSError, ValueError) as exc:
+        raise RuntimeError(
+            f"featured figure {fig_id} is not a decodable raster image: "
+            f"content_type={content_type or 'unknown'}, bytes={len(payload)}"
+        ) from exc
+
+    return png_target
 
 
 def upload_body_image(token: str, source_url: str, fig_id: str, cache_path: Path) -> str:
