@@ -2,6 +2,12 @@
   "requestId": "publish-2026-10-04-daily-featured-v1",
   "requestedAt": "2026-10-04T09:05:00Z",
   "publicationDate": "2026-10-04",
-  "reason": "user explicitly approved direct publication after final copy, original notice, cover, and fixed edition deep-link verification",
-  "action": "publish_daily_draft"
+  "reason": "user explicitly approved direct publication",
+  "action": "publish_blocked_api_unauthorized",
+  "result": {
+    "errcode": 48001,
+    "errmsg": "api unauthorized",
+    "endpoint": "/cgi-bin/freepublish/submit",
+    "attemptedAt": "2026-10-04T09:12:17Z"
+  }
 }
