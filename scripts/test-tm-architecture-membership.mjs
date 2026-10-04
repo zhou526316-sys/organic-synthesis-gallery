@@ -49,7 +49,7 @@ function fixture(){
 }
 
 test('actual userscript keeps capture protocol while advancing install metadata',()=>{
-  assert.match(source,/^\/\/ @version\s+6\.2\.23$/m);
+  assert.match(source,/^\/\/ @version\s+6\.2\.25$/m);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
