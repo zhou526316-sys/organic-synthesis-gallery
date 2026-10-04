@@ -30,6 +30,11 @@ jobs:
       - name: Type-check frontend
         run: npx tsc --noEmit
 
+      - name: Test and build inactive architecture public bundle
+        run: |
+          node --test scripts/test-gallery-architecture-public.mjs
+          node scripts/build-gallery-architecture-public.mjs
+
       - name: Build frontend
         run: npm run build
 
@@ -51,6 +56,8 @@ jobs:
         run: |
           set -euo pipefail
           test -s dist/index.html
+          test -s dist/architecture-v1/release.json
+          test -s dist/architecture-v1/current.json
           test -d dist/assets
           find dist/assets -type f -name '*.js' -size +0c | grep -q .
           grep -R -F "site-feedback-widget" dist/assets >/dev/null
