@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.22
+// @version      6.2.23
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -43,6 +43,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
+  var INSTALL_VERSION = '6.2.23';
   var CONTROLLER_REVISION = '2.2.39';
   var CAPTURE_HOTFIX_REVISION = '20261001-newest-retry-v1';
   var CONTROLLER_LIFECYCLE_REVISION = '20261001-controller-recovery-v2';
@@ -80,6 +81,7 @@
   var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
   var P = 'osg-toc-v6:';
   var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
+  var ARCHITECTURE_OBSERVER_STATUS_KEY = P + 'architecture-membership-observer-status-v1';
   var TOKEN_KEY = P + 'write-token';
   var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';
   var ENABLED_KEY = P + 'enabled';
@@ -335,9 +337,20 @@
             hotCount:Number(architectureState.hotCount||0),archiveCount:Number(architectureState.archiveCount||0),
             verifiedAt:Number(architectureState.verifiedAt||0)})};
       }
+      var observerState=typeof ARCHITECTURE_OBSERVER_STATUS_KEY==='string'?GM_getValue(ARCHITECTURE_OBSERVER_STATUS_KEY,null):null;
+      var observerEvent=null;
+      if(observerState&&observerState.revision===ARCHITECTURE_MEMBERSHIP_REVISION){
+        observerEvent={at:nowIso(),seq:0,stage:'architecture_observer',
+          event:observerState.ok===true?'verified':'verification_failed',status:observerState.ok===true?'info':'low',url:'',
+          message:JSON.stringify({revision:String(observerState.revision||''),installVersion:String(observerState.installVersion||''),
+            ok:observerState.ok===true,error:String(observerState.error||'').slice(0,160),
+            publicationSlot:String(observerState.publicationSlot||''),catalogId:String(observerState.catalogId||''),
+            memberCount:Number(observerState.memberCount||0),hotCount:Number(observerState.hotCount||0),archiveCount:Number(observerState.archiveCount||0),
+            observedAt:Number(observerState.observedAt||0)})};
+      }
       var finalResult=job._liveResult||{};
       var figureItems=(finalResult.figures&&Array.isArray(finalResult.figures.items)?finalResult.figures.items:[]).filter(function(item){return item&&/^(?:staged|already_staged)$/.test(String(item.status||''));});
-      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),evidenceLevel:String(finalResult.fulltext&&finalResult.fulltext.evidenceLevel||''),trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[])};
+      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),evidenceLevel:String(finalResult.fulltext&&finalResult.fulltext.evidenceLevel||''),trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[]).concat(observerEvent?[observerEvent]:[])};
       GM_setValue(key,{revision:revision,payload:payload,createdAt:prior?prior.createdAt:Date.now(),tries:Number(prior&&prior.tries||0),nextAt:Number(prior&&prior.nextAt||0)});
       if(final)GM_deleteValue(AUTO_REPORT_PREFIX+job.jobId+':checkpoint');
       return true;
@@ -1197,6 +1210,17 @@ function embeddedJobDois(value) {
       cutoff:String(result.cutoff||''),withdrawn:Array.from(sticky).sort(),verifiedAt:Date.now()
     });
   }
+  function rememberArchitectureObserverStatus(ok,error,result) {
+    try{
+      GM_setValue(ARCHITECTURE_OBSERVER_STATUS_KEY,{
+        revision:ARCHITECTURE_MEMBERSHIP_REVISION,installVersion:INSTALL_VERSION,ok:ok===true,
+        error:ok===true?'':captureLiveError(error||'').slice(0,160),
+        publicationSlot:String(result&&result.publicationSlot||''),catalogId:String(result&&result.catalogId||''),
+        memberCount:Number(result&&result.memberCount||0),hotCount:Number(result&&result.hotCount||0),archiveCount:Number(result&&result.archiveCount||0),
+        observedAt:Date.now()
+      });
+    }catch(_){}
+  }
   async function observeArchitectureMembership(queue) {
     try {
       var delivery=await getJson(ARCHITECTURE_DELIVERY_URL+'?architecture-membership='+Date.now());
@@ -1210,9 +1234,12 @@ function embeddedJobDois(value) {
       var lifecycleText=await architectureGetText(architectureObjectUrl(current.lifecycle.path)+'?architecture-membership='+Date.now(),'architecture_lifecycle');
       var result=await verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText);
       rememberArchitectureMembership(result);
+      rememberArchitectureObserverStatus(true,'',result);
       return result;
     } catch(error) {
-      return {ok:false,revision:ARCHITECTURE_MEMBERSHIP_REVISION,error:String(error&&error.message||error).slice(0,180)};
+      var observerError=String(error&&error.message||error).slice(0,180);
+      rememberArchitectureObserverStatus(false,observerError,null);
+      return {ok:false,revision:ARCHITECTURE_MEMBERSHIP_REVISION,error:observerError};
     }
   }
   async function getPrivateJson(url,token) {
