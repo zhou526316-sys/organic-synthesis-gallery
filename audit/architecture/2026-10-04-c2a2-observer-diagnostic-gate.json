@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "phase": "C2a.2-observer-diagnostics-live-gate",
+  "dateAsiaShanghai": "2026-10-04",
+  "c2a2MergeCommit": "bb257c7a93a7044a3a35ab1050faf43e52b97288",
+  "validation": {
+    "siteQualityRun": 37187067159,
+    "siteQualityConclusion": "success",
+    "architectureShadowRun": 37187067134,
+    "architectureShadowConclusion": "success",
+    "pagesRun": 37187408386,
+    "pagesConclusion": "success",
+    "pagesVerifiedAt": "2026-10-04T08:05:32.060Z",
+    "productionCards": 785,
+    "datasetSha256": "9b1180d9922b42a7c72a50052ce6853ae075d89c45df4b92d416f2fd4e0d713b",
+    "architectureVerified": true,
+    "architectureCatalogId": "669ce6a111c123220f7db47d14433813b658bd029f7ab19e0888006c7788a84d",
+    "twoOriginsVerified": true,
+    "standaloneUserscriptMetadataVersion": "6.2.23",
+    "bridgeInstallerVersion": "2.2.41",
+    "captureProtocolVersion": "6.2.20",
+    "controllerRevision": "2.2.39"
+  },
+  "realBrowserGate": {
+    "reportEndpoint": "/api/media/tampermonkey-reports",
+    "latestReportObservedAt": "2026-10-04T08:04:32.263Z",
+    "relativeToC2a2DeploymentSeconds": -59.797,
+    "postC2a2ReportObserved": false,
+    "preDeploymentInstallRevisionPresent": false,
+    "preDeploymentArchitectureMembershipRevisionPresent": false,
+    "preDeploymentVerifiedSnapshotPresent": false,
+    "interpretation": "The latest inspected real-browser report predates C2a.2 live verification by about 60 seconds. Absence of observer diagnostics therefore cannot be classified as an observer failure or a successful gate yet."
+  },
+  "decision": {
+    "c2bTaskFilteringEnabled": false,
+    "frontendHotArchiveSwitchEnabled": false,
+    "reason": "C2a.2 is deployed and byte-verified, but no real installed-browser report produced after that deployment has yet been observed.",
+    "nextGate": "Inspect the first report after 2026-10-04T08:05:32.060Z. It must show installRevision 6.2.23 and either observer_ok/verified_snapshot matching the current catalog or a verification_failed reason that must be fixed before C2b."
+  },
+  "stagedC2b": {
+    "branch": "feat/gallery-architecture-c2b-final-20261004",
+    "stagingRun": 37186320653,
+    "stagingConclusion": "success",
+    "note": "Validated C2b code remains unmerged. If activated after C2a.2, rebuild it from current main and use installation versions newer than 6.2.23/2.2.41."
+  }
+}
