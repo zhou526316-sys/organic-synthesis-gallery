@@ -84,7 +84,7 @@ try {
   result = await run(data);
   assert.equal(result.exit, 1);
   assert.ok(result.body.blockers.includes('invalid_publication_slot'));
-  passed.push('only_0800_and_1800_slots');
+  passed.push('only_0800_slot');
 
   data = fixture();
   data.review.decisions[0].decision = data.review.decisions[0].challengeDecision = 'exclude';
