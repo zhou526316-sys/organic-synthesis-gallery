@@ -13,6 +13,8 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
+      - 'cloudflare/evidence-index-v1.sql'
+      - 'scripts/test-evidence-index-deployment-contract.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'public/toc-mainline.user.js'
@@ -122,6 +124,23 @@ jobs:
           console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
           NODE
 
+      - name: Apply Evidence Index shadow D1 migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../evidence-index-v1.sql >/tmp/evidence-index-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('article_evidence_index','article_evidence_index_backfill') ORDER BY name;" --json >/tmp/evidence-index-schema-check.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/evidence-index-schema-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const names=rows.map(x=>x.name).sort();
+          const expected=['article_evidence_index','article_evidence_index_backfill'];
+          if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('Evidence Index schema migration incomplete: '+JSON.stringify(names));
+          console.log(JSON.stringify({evidenceIndexSchemaReady:true,tables:names}));
+          NODE
+
       - name: Generate frontend deployment configuration
         working-directory: cloudflare/worker
         shell: bash
@@ -142,6 +161,7 @@ jobs:
           SUMMARY_REVIEW_ENABLED = "0"
           SUMMARY_MODE = "scheduled_chatgpt_daily_no_api"
           SUMMARY_PUBLICATION_TIME = "12:00 Asia/Shanghai"
+          EVIDENCE_INDEX_SHADOW_ENABLED = "1"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "0"
@@ -200,6 +220,101 @@ jobs:
           NODE
           npx wrangler secret bulk /tmp/runtime-secrets.json --config wrangler.frontend.toml >/dev/null
           rm -f /tmp/runtime-secrets.json
+
+      - name: Backfill and reconcile Evidence Index shadow
+        id: evidence_index_shadow
+        continue-on-error: true
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const base = process.env.WORKER_URL;
+          const token = process.env.BRIDGE_WRITE_TOKEN;
+          if (!token) throw new Error('BRIDGE_WRITE_TOKEN is required for Evidence Index shadow backfill');
+
+          async function call(path, init = {}) {
+            const headers = new Headers(init.headers || {});
+            headers.set('authorization', 'Bearer ' + token);
+            headers.set('cache-control', 'no-cache');
+            const response = await fetch(base + path, { ...init, headers, signal: AbortSignal.timeout(30000) });
+            const text = await response.text();
+            let body = {};
+            try { body = text ? JSON.parse(text) : {}; } catch {}
+            return { status: response.status, ok: response.ok, body };
+          }
+
+          const before = await call('/api/admin/article-summary/evidence-index/status');
+          if (!before.ok || before.body?.enabled !== true || before.body?.readPathActive !== false) {
+            throw new Error('Evidence Index shadow did not become enabled: ' + JSON.stringify(before));
+          }
+
+          let pages = 0;
+          let last = before.body;
+          while (last?.backfill?.complete !== true) {
+            pages += 1;
+            if (pages > 100) {
+              throw new Error('Evidence Index backfill exceeded 100 persisted pages without claiming completion');
+            }
+            const page = await call('/api/admin/article-summary/evidence-index/backfill?limit=1000', { method: 'POST' });
+            if (!page.ok || page.body?.ok !== true || page.body?.enabled !== true) {
+              throw new Error('Evidence Index backfill page failed: ' + JSON.stringify(page));
+            }
+            console.log(JSON.stringify({ evidenceIndexBackfillPage: pages, ...page.body }));
+            const status = await call('/api/admin/article-summary/evidence-index/status');
+            if (!status.ok || status.body?.enabled !== true || status.body?.readPathActive !== false) {
+              throw new Error('Evidence Index status failed during backfill: ' + JSON.stringify(status));
+            }
+            last = status.body;
+          }
+
+          const legacy = await call('/api/article-summary/evidence-inventory');
+          if (!legacy.ok || !Number.isFinite(Number(legacy.body?.count))) {
+            throw new Error('Legacy Evidence inventory unavailable for overlap reconciliation: ' + JSON.stringify(legacy));
+          }
+          const oldCount = Number(legacy.body.count || 0);
+          const indexed = Number(last.evidenceCount || 0);
+          const skipped = Number(last.backfill?.skippedInvalid || 0);
+          const saturated = oldCount >= 10000;
+          const gap = oldCount - indexed;
+          if (!saturated && (gap < 0 || gap > skipped)) {
+            throw new Error('Evidence Index count mismatch: ' + JSON.stringify({ oldCount, indexed, skipped, gap }));
+          }
+          if (last?.backfill?.complete !== true || last?.readPathActive !== false) {
+            throw new Error('Evidence Index shadow backfill not complete or read path unexpectedly active');
+          }
+
+          const report = {
+            schemaVersion: 1,
+            phase: 'D2a1-evidence-index-shadow-live',
+            ok: true,
+            enabled: true,
+            readPathActive: false,
+            backfillComplete: true,
+            backfillPagesThisRun: pages,
+            evidenceCount: indexed,
+            legacyEvidenceCount: oldCount,
+            legacyInventorySaturatedAt10000: saturated,
+            skippedInvalid: skipped,
+            legacyMinusIndexed: gap,
+            handoffReadyCount: Number(last.handoffReadyCount || 0),
+            handoffHistoricalBackfillComplete: false,
+            note: 'Handoff readiness is a dual-write lower bound in D2a.1; no handoff read path is switched.',
+            verifiedAt: new Date().toISOString(),
+          };
+          fs.writeFileSync('/tmp/evidence-index-shadow-report.json', JSON.stringify(report, null, 2) + '\n');
+          console.log(JSON.stringify(report));
+          NODE
+
+      - name: Preserve Evidence Index shadow deployment report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-index-shadow-${{ github.run_id }}
+          path: /tmp/evidence-index-shadow-report.json
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Promote verified official TOCs into production
         id: promote_official_tocs
