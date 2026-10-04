@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.24
+// @version      6.2.25
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -50,9 +50,10 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
-  var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
+  var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v8';
+  var ELSEVIER_BINDING_REVISION = '20261004-elsevier-safe-rebind-v1';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.24';
+  var INSTALL_REVISION = '6.2.25';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -490,6 +491,29 @@ function embeddedJobDois(value) {
       && (!manual || manual.completedAt || job.manualRunId===manual.id));
   }
 
+  function elsevierPii(value) {
+    try {
+      var match=new URL(String(value||''),location.href).pathname.match(/\/pii\/([a-z0-9]+)/i);
+      return match?String(match[1]).toLowerCase():'';
+    } catch (_) { return ''; }
+  }
+
+  function elsevierJobMayRebind(job,binding) {
+    if(binding||!job||!job.jobId||job.captureVersion!==VERSION||!currentCaptureJob(job))return false;
+    if(String(job.publisher||publisherForDoi(normalizeDoi(job.doi)))!=='elsevier')return false;
+    if(!publisherArticleHostAllowed('elsevier',location.href))return false;
+    var dispatch=GM_getValue(publisherDispatchKey('elsevier'),null);
+    if(!dispatch||dispatch.jobId!==job.jobId||normalizeDoi(dispatch.doi)!==normalizeDoi(job.doi)
+        ||Date.now()-Number(dispatch.at||0)>2*60*1000)return false;
+    var page=publisherPageDois(),wanted=normalizeDoi(job.doi);
+    if(page.length!==1||page[0]!==wanted)return false;
+    var resolved=String(job.resolvedArticleUrl||'');
+    if(!resolved||!publisherArticleHostAllowed('elsevier',resolved))return false;
+    var expectedPii=elsevierPii(resolved),actualPii=elsevierPii(location.href);
+    if(expectedPii&&expectedPii!==actualPii)return false;
+    return true;
+  }
+
   function assertBoundCaptureJob(job, sourceUrl) {
     var live = GM_getValue(ACTIVE_JOB_KEY, null);
     if (!currentCaptureJob(job) || !job.jobId || !live || live.jobId !== job.jobId || live.doi !== job.doi || job.captureVersion !== VERSION) {
@@ -512,6 +536,14 @@ function embeddedJobDois(value) {
     try {
       if (match) sessionStorage.setItem(P + 'tab-job-binding', match[1]);
       binding = sessionStorage.getItem(P + 'tab-job-binding') || '';
+      // ScienceDirect can canonicalize the direct PII URL and drop our hash.
+      // Rebind only when the current active job, recent dispatch, exact page DOI,
+      // allowed publisher host and resolved PII all agree. Never claim an
+      // unrelated publisher tab merely because a job exists in shared storage.
+      if (!match && binding!==job.jobId && elsevierJobMayRebind(job,binding)) {
+        sessionStorage.setItem(P + 'tab-job-binding', job.jobId);
+        binding = sessionStorage.getItem(P + 'tab-job-binding') || '';
+      }
     } catch (_) {}
     if (!job.jobId || binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
     for (var i = 0; i < 8; i += 1) {
@@ -718,7 +750,7 @@ function embeddedJobDois(value) {
   function markPublisherDispatch(job) {
     var publisher = String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))).toLowerCase();
     if (!publisher) return;
-    GM_setValue(publisherDispatchKey(publisher), { at: Date.now(), doi: normalizeDoi(job && job.doi) });
+    GM_setValue(publisherDispatchKey(publisher), { at: Date.now(), doi: normalizeDoi(job && job.doi), jobId: String(job && job.jobId || '') });
   }
 
   function publisherPacingCooling(job) {
@@ -4675,7 +4707,8 @@ function embeddedJobDois(value) {
     }
     if(job.missingOnly&&result.figures&&result.figures.discovered>0){var cp=readCheckpoint(job.doi);cp.figureCoverage={expected:Math.max(Number(cp.figureCoverage&&cp.figureCoverage.expected||0),Number(result.figures.discovered)),observedAt:Date.now()};saveCheckpoint(job.doi,cp,job);}
     result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number((result.fulltext||{}).retryAfterMs||0));
-    result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.controllerRevision=CONTROLLER_REVISION;result.finishedAt=nowIso();
+    result.doi=job.doi;result.jobId=job.jobId;result.version=VERSION;result.controllerRevision=CONTROLLER_REVISION;
+    result.elsevierBindingRevision=ELSEVIER_BINDING_REVISION;result.finishedAt=nowIso();
     GM_setValue(traceKey(job.doi),{doi:job.doi,jobId:job.jobId,status:result.status,trace:trace,finishedAt:result.finishedAt});
     enqueueCaptureReport(job,trace,result.status,result.reason,true);
     // Durable local report is queued BEFORE the controller can close this publisher tab.
@@ -4703,6 +4736,9 @@ function embeddedJobDois(value) {
     // One retry of CCS's old missing-injection failure after this exact host fix.
     if (String(prior.doi||'').indexOf('10.31635/')===0 && prior.reason==='bound_publisher_heartbeat_missing'
         && prior.retryPolicyRevision!==CAPTURE_HOTFIX_REVISION) return true;
+    // One immediate retry after the exact Elsevier hash-loss binding repair.
+    if (String(prior.doi||'').indexOf('10.1016/')===0 && prior.reason==='capture_tab_job_mismatch'
+        && prior.elsevierBindingRevision!==ELSEVIER_BINDING_REVISION) return true;
     if (/gm_request|gm_then_fetch|Failed to fetch|NetworkError|timeout|heartbeat_missing|upload_http_50[234]|queue_http_50[234]|signal is aborted|publisher_page_not_ready/i.test(detail)) {
       return elapsed>=Math.max([5,15,30,60][Math.min(count-1,3)]*60*1000,Number(prior.retryAfterMs||0));
     }
