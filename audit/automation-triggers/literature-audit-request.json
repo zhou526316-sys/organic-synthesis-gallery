@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-04T09:12:00.000Z",
-  "requestedBy": "prepublish-primary-20261004-1800",
-  "publicationSlot": "2026-10-04T18:00:00+08:00",
-  "baselineMainSha": "a58596ef453aae3ecb86e861149c116c971b99ab",
-  "reason": "Fresh DOI-union audit for the 2026-10-04 18:00 Asia/Shanghai prepublish primary review. Recompute against current main, preserve full active-journal source health and closure warnings, refresh paired latest/compact snapshots, and do not mutate production literature data or admit literature."
+  "requestedAt": "2026-10-04T12:20:14.860Z",
+  "requestedBy": "rsc-chem-discovery-repair-20261004",
+  "publicationSlot": "2026-10-05T08:00:00+08:00",
+  "baselineMainSha": "40bdf9ad903556c31f82bf574748ad612715c90a",
+  "reason": "Post-repair catch-up audit after verifiedThrough was intentionally reopened to 2026-09-18. Recompute the DOI union from 2026-09-19 under the repaired partial-date/catch-up logic, preserve all 16-journal source health, write paired latest/compact snapshots, and do not mutate production literature data or admit literature."
 }
