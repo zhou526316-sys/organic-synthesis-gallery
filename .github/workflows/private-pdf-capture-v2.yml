@@ -2,7 +2,7 @@ name: Private PDF capture v2 regression
 
 on:
   push:
-    branches: [feature/private-pdf-capture-v2, main]
+    branches: [feature/private-pdf-capture-v2, feature/private-pdf-capture-v2-final, main]
     paths:
       - 'cloudflare/private-pdf-v2.sql'
       - 'cloudflare/schema.sql'
@@ -63,6 +63,7 @@ jobs:
           node tests/tm-newest-retry.test.mjs
           node scripts/test-tm223-upload.mjs
           node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
       - name: Build frontend
         run: |
           npm install --no-audit --no-fund
