@@ -3,8 +3,10 @@ import { test } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
 import {
   backfillEvidenceIndexPage,
+  backfillHandoffIndexPage,
   getEvidenceIndexStatus,
   listEvidenceIndexRows,
+  listIndexedHandoffRows,
   shadowIndexEvidence,
   shadowIndexHandoff,
 } from '../src/evidence-index.js';
@@ -89,6 +91,19 @@ function objectFor(doi,n){
     capturedAt:'2026-10-04T08:'+String(n).padStart(2,'0')+':00Z',
     textProcessingPolicy:'private_cache_allowed',
     evidenceLevel:'complete',
+  });
+}
+function handoffObjectFor(doi,n,packet='a',source='b',extra={}){
+  return new MemoryObject('private/article-summary-handoff-v1/'+String(n).padStart(4,'0')+'.json',{
+    doi,
+    evidencePacketHash:packet.repeat(64),
+    sourceHash:source.repeat(64),
+    evidenceLevel:'complete',
+    capturedAt:'2026-10-04T09:'+String(n).padStart(2,'0')+':00Z',
+    keyId:'key-v1',
+    algorithm:'RSA-OAEP-256+A256GCM+GZIP',
+    compression:'gzip',
+    ...extra,
   });
 }
 
@@ -190,6 +205,50 @@ test('backfill state is unchanged when R2 listing fails',async t=>{
   assert.equal(status.body.evidenceCount,0);
   assert.equal(status.body.backfill.scannedObjects,0);
   assert.equal(status.body.backfill.complete,false);
+});
+
+test('handoff cursor backfill is update-only and fences stale secondary metadata',async t=>{
+  const db=new SqliteD1(); t.after(()=>db.close());
+  const objects=[
+    handoffObjectFor('10.1234/h1',1,'a','b'),
+    handoffObjectFor('10.1234/h2',2,'c','d'),
+    handoffObjectFor('10.1234/h3',3,'x','y'),
+    new MemoryObject('private/article-summary-handoff-v1/bad.json',{doi:'bad',evidencePacketHash:'z',sourceHash:'q'}),
+  ];
+  const env={DB:db,MEDIA:new MemoryR2(objects),EVIDENCE_INDEX_SHADOW_ENABLED:'1'};
+  await shadowIndexEvidence(env,evidenceRow('10.1234/h1','a','b'));
+  await shadowIndexEvidence(env,evidenceRow('10.1234/h2','c','d'));
+  await shadowIndexEvidence(env,evidenceRow('10.1234/h3','e','f'));
+
+  let indexed=await listIndexedHandoffRows(env,100);
+  assert.equal(indexed.status,409);
+  assert.equal(indexed.body.error,'evidence_handoff_backfill_incomplete');
+
+  const first=await backfillHandoffIndexPage(env,2);
+  assert.equal(first.status,200);
+  assert.equal(first.body.complete,false);
+  assert.equal(first.body.scannedObjects,2);
+
+  const second=await backfillHandoffIndexPage(env,2);
+  assert.equal(second.body.complete,true);
+  assert.equal(second.body.scannedObjects,4);
+  assert.equal(second.body.indexedRows,2);
+  assert.equal(second.body.staleRows,1);
+  assert.equal(second.body.skippedInvalid,1);
+
+  indexed=await listIndexedHandoffRows(env,100);
+  assert.equal(indexed.status,200);
+  assert.equal(indexed.body.count,2);
+  assert.deepEqual(indexed.body.items.map(row=>row.doi).sort(),['10.1234/h1','10.1234/h2']);
+
+  const before=await getEvidenceIndexStatus(env);
+  const missing=await shadowIndexHandoff(env,handoff('10.1234/no-evidence','a','b'));
+  assert.equal(missing.indexed,false);
+  assert.equal(missing.stale,true);
+  const after=await getEvidenceIndexStatus(env);
+  assert.equal(after.body.evidenceCount,before.body.evidenceCount);
+  assert.equal(after.body.handoffBackfill.complete,true);
+  assert.equal(after.body.handoffBackfill.staleRows,1);
 });
 
 test('admin sample is bounded and never contains Evidence plaintext',async t=>{
