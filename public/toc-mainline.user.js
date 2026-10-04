@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.22
+// @version      6.2.23
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -52,6 +52,7 @@
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
   var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
+  var INSTALL_REVISION = '6.2.23';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -80,6 +81,7 @@
   var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
   var P = 'osg-toc-v6:';
   var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
+  var ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY = P + 'architecture-membership-observer-v1';
   var TOKEN_KEY = P + 'write-token';
   var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';
   var ENABLED_KEY = P + 'enabled';
@@ -322,7 +324,7 @@
       var seen=new Set();var events=important.concat(recent).filter(function(e){var k=e.at+'|'+e.stage+'|'+e.event+'|'+e.url;if(seen.has(k))return false;seen.add(k);return true;});
       var page=autoReportUrl(actualPageUrl===undefined?location.href:actualPageUrl);
       var last=important.length?important[important.length-1]:recent[recent.length-1]||{};
-      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,controllerRevision:CONTROLLER_REVISION,publisherMediaRevision:typeof PUBLISHER_MEDIA_REVISION==='string'?PUBLISHER_MEDIA_REVISION:'',queueCoverageRevision:typeof QUEUE_COVERAGE_REVISION==='string'?QUEUE_COVERAGE_REVISION:'',missingRevision:typeof MISSING_CAPTURE_REVISION==='string'?MISSING_CAPTURE_REVISION:'',requestedNeeds:typeof captureNeedText==='function'?captureNeedText(job):'',lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
+      var metadata={eventId:job.jobId+(final?':final':':checkpoint')+':'+revision,jobId:job.jobId,installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:'',controllerRevision:CONTROLLER_REVISION,architectureMembershipRevision:typeof ARCHITECTURE_MEMBERSHIP_REVISION==='string'?ARCHITECTURE_MEMBERSHIP_REVISION:'',publisherMediaRevision:typeof PUBLISHER_MEDIA_REVISION==='string'?PUBLISHER_MEDIA_REVISION:'',queueCoverageRevision:typeof QUEUE_COVERAGE_REVISION==='string'?QUEUE_COVERAGE_REVISION:'',missingRevision:typeof MISSING_CAPTURE_REVISION==='string'?MISSING_CAPTURE_REVISION:'',requestedNeeds:typeof captureNeedText==='function'?captureNeedText(job):'',lifecycleRevision:typeof CONTROLLER_LIFECYCLE_REVISION==='string'?CONTROLLER_LIFECYCLE_REVISION:'',controllerState:typeof controllerLifecycleSnapshot==='function'?controllerLifecycleSnapshot():null,captureVersion:VERSION,kind:final?'final_result':'failure_checkpoint',retryCount:Number(job.retryCount||0),pageDois:embeddedJobDois(page),httpStatusKnown:Number(last.httpStatus||0)>0};
       var context={at:nowIso(),seq:0,stage:'diagnostic_context',event:final?'final_result':'failure_checkpoint',status:'info',url:page,message:JSON.stringify(metadata)};
       var architectureState=typeof ARCHITECTURE_MEMBERSHIP_STATE_KEY==='string'?GM_getValue(ARCHITECTURE_MEMBERSHIP_STATE_KEY,null):null;
       var architectureEvent=null;
@@ -335,9 +337,20 @@
             hotCount:Number(architectureState.hotCount||0),archiveCount:Number(architectureState.archiveCount||0),
             verifiedAt:Number(architectureState.verifiedAt||0)})};
       }
+      var observerState=typeof ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY==='string'?GM_getValue(ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY,null):null;
+      var architectureObserverEvent=null;
+      if(observerState&&observerState.revision===ARCHITECTURE_MEMBERSHIP_REVISION){
+        architectureObserverEvent={at:nowIso(),seq:0,stage:'architecture_membership',event:observerState.ok===true?'observer_ok':'verification_failed',
+          status:observerState.ok===true?'info':'failed',url:'',
+          message:JSON.stringify({revision:String(observerState.revision||''),installRevision:String(observerState.installRevision||''),
+            ok:observerState.ok===true,error:captureLiveError(observerState.error||''),attemptedAt:Number(observerState.attemptedAt||0),
+            catalogId:String(observerState.catalogId||''),memberCount:Number(observerState.memberCount||0),
+            hotCount:Number(observerState.hotCount||0),archiveCount:Number(observerState.archiveCount||0),
+            cutoff:String(observerState.cutoff||'')})};
+      }
       var finalResult=job._liveResult||{};
       var figureItems=(finalResult.figures&&Array.isArray(finalResult.figures.items)?finalResult.figures.items:[]).filter(function(item){return item&&/^(?:staged|already_staged)$/.test(String(item.status||''));});
-      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),evidenceLevel:String(finalResult.fulltext&&finalResult.fulltext.evidenceLevel||''),trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[])};
+      var payload={doi:doi,jobId:job.jobId,captureVersion:VERSION,controllerRevision:CONTROLLER_REVISION,mediaNeed:String(job.mediaNeed||''),final:Boolean(final),publisher:job.publisher||publisherForDoi(doi),status:final?String(status||'failed'):'progress',reason:final?autoReportText(reason):'failure_checkpoint:'+autoReportCause(last),candidateSource:final?'auto_final_result':'auto_failure_checkpoint',articleUrl:page,sourceUrl:autoReportUrl(last.url),startedAt:job.startedAt||'',finishedAt:final?nowIso():'',queueGeneratedAt:job.queueGeneratedAt||'',tocStatus:String(finalResult.toc&&finalResult.toc.status||''),figuresDiscovered:Math.max(0,Number(finalResult.figures&&finalResult.figures.discovered||0)),figuresStored:Math.max(0,Number(finalResult.figures&&finalResult.figures.stored||0)),figureLabels:figureItems.map(function(item){return String(item.label||'').slice(0,80);}).filter(Boolean).slice(0,20),fulltextStatus:String(finalResult.fulltext&&finalResult.fulltext.status||''),evidenceChars:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.chars||0)),evidenceSections:Math.max(0,Number(finalResult.fulltext&&finalResult.fulltext.sections||0)),evidenceLevel:String(finalResult.fulltext&&finalResult.fulltext.evidenceLevel||''),trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[]).concat(architectureObserverEvent?[architectureObserverEvent]:[])};
       GM_setValue(key,{revision:revision,payload:payload,createdAt:prior?prior.createdAt:Date.now(),tries:Number(prior&&prior.tries||0),nextAt:Number(prior&&prior.nextAt||0)});
       if(final)GM_deleteValue(AUTO_REPORT_PREFIX+job.jobId+':checkpoint');
       return true;
@@ -1210,9 +1223,15 @@ function embeddedJobDois(value) {
       var lifecycleText=await architectureGetText(architectureObjectUrl(current.lifecycle.path)+'?architecture-membership='+Date.now(),'architecture_lifecycle');
       var result=await verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText);
       rememberArchitectureMembership(result);
+      GM_setValue(ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY,{revision:ARCHITECTURE_MEMBERSHIP_REVISION,installRevision:INSTALL_REVISION,ok:true,
+        attemptedAt:Date.now(),catalogId:String(result.catalogId||''),memberCount:Number(result.memberCount||0),
+        hotCount:Number(result.hotCount||0),archiveCount:Number(result.archiveCount||0),cutoff:String(result.cutoff||''),error:''});
       return result;
     } catch(error) {
-      return {ok:false,revision:ARCHITECTURE_MEMBERSHIP_REVISION,error:String(error&&error.message||error).slice(0,180)};
+      var message=captureLiveError(error&&error.message||error);
+      GM_setValue(ARCHITECTURE_MEMBERSHIP_OBSERVER_KEY,{revision:ARCHITECTURE_MEMBERSHIP_REVISION,installRevision:INSTALL_REVISION,ok:false,
+        attemptedAt:Date.now(),catalogId:'',memberCount:0,hotCount:0,archiveCount:0,cutoff:'',error:message});
+      return {ok:false,revision:ARCHITECTURE_MEMBERSHIP_REVISION,error:message};
     }
   }
   async function getPrivateJson(url,token) {
