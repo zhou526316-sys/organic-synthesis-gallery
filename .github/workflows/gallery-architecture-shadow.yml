@@ -7,7 +7,7 @@ on:
       - 'shared/literature-identity.mjs'
       - '.github/workflows/gallery-architecture-shadow.yml'
   push:
-    branches: ['feat/gallery-architecture-v1-20261004']
+    branches: ['feat/gallery-architecture-*']
     paths:
       - 'architecture/**'
       - 'shared/literature-lifecycle.mjs'
@@ -21,7 +21,7 @@ concurrency:
 jobs:
   shadow:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,7 +41,14 @@ jobs:
       - name: Contract and read-model tests (no external dependencies)
         run: node --test architecture/tests/*.test.mjs
       - name: Verified-generation shadow build (no publish or crawl)
-        run: node architecture/shadow.mjs --verify-live --out "$RUNNER_TEMP/gallery-architecture-shadow"
+        run: node architecture/shadow.mjs --verify-live --save-fixtures --out "$RUNNER_TEMP/gallery-architecture-shadow"
+      - name: Install deterministic browser tooling
+        run: |
+          npm install --no-audit --no-fund --package-lock=false
+          npm install --no-save --package-lock=false --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium webkit
+      - name: New reader and unchanged card-renderer browser acceptance
+        run: node architecture/browser-acceptance.mjs "$RUNNER_TEMP/gallery-architecture-shadow"
       - name: Working tree remains untouched
         run: git diff --exit-code
       - name: Preserve shadow report and immutable read model
