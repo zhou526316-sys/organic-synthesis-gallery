@@ -37,10 +37,11 @@ test('handoff historical backfill remains shadow and bounded per deploy',()=>{
 });
 
 test('handoff backfill runtime only conditionally updates existing Evidence identities',()=>{
+  const helper=section(evidence,'function bindHandoffBackfillStatement','export async function backfillEvidenceIndexPage');
+  assert.ok(helper.includes('UPDATE article_evidence_index'));
+  assert.ok(helper.includes('WHERE doi=? AND evidence_packet_hash=? AND source_hash=?'));
   const block=section(evidence,'export async function backfillHandoffIndexPage','export async function getEvidenceIndexStatus');
-  assert.ok(block.includes('UPDATE article_evidence_index'));
-  assert.ok(block.includes('WHERE doi=? AND evidence_packet_hash=? AND source_hash=?'));
-  assert.ok(!block.includes('INSERT INTO article_evidence_index'));
+  assert.ok(!block.includes('INSERT INTO article_evidence_index ('));
   assert.ok(block.includes('skippedStale'));
   assert.ok(block.includes('skippedInvalid'));
 });
