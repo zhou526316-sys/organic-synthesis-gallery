@@ -18,8 +18,11 @@ new="""  async function finishPairedJob(job,result,trace,token) {
       var privatePdfResult=await maybeCapturePrivatePdf(job,trace);
       if(privatePdfResult)result.privatePdf=privatePdfResult;
     } catch (privatePdfError) {
-      result.privatePdf={status:'failed',reason:captureLiveError(privatePdfError&&privatePdfError.message||privatePdfError)};
-      pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:result.privatePdf.reason});
+      var privatePdfReason=String(privatePdfError&&privatePdfError.message||privatePdfError||'private_pdf_failed')
+        .replace(/https?:\\/\\/\\S+/gi,'[url]')
+        .replace(/[A-Za-z0-9+/_=-]{40,}/g,'[redacted]').slice(0,180);
+      result.privatePdf={status:'failed',reason:privatePdfReason};
+      pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
     }
 """
 if s.count(old)!=1: raise RuntimeError('finishPairedJob body anchor mismatch')
