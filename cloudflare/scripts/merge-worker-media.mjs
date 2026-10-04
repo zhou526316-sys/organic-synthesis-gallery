@@ -85,6 +85,7 @@ async function mapConcurrent(items, concurrency, worker) {
 
 function extensionFor(contentType, url) {
   const type = String(contentType || '').split(';')[0].trim().toLowerCase();
+  if (type === 'image/svg+xml') return 'svg';
   if (type === 'image/png') return 'png';
   if (type === 'image/webp') return 'webp';
   if (type === 'image/gif') return 'gif';
@@ -92,7 +93,7 @@ function extensionFor(contentType, url) {
   if (type === 'image/jpeg' || type === 'image/jpg') return 'jpg';
   try {
     const ext = new URL(url).pathname.match(/\.([a-z0-9]{2,5})$/i)?.[1]?.toLowerCase();
-    if (['png', 'webp', 'gif', 'avif', 'jpg', 'jpeg'].includes(ext || '')) return ext === 'jpeg' ? 'jpg' : ext;
+    if (['svg', 'png', 'webp', 'gif', 'avif', 'jpg', 'jpeg'].includes(ext || '')) return ext === 'jpeg' ? 'jpg' : ext;
   } catch {
     // fall through
   }

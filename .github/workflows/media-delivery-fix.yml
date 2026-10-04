@@ -1,0 +1,80 @@
+name: Media delivery integrity regression
+on:
+  push:
+    branches: [fix/media-delivery-20261004, main]
+    paths: [scripts/apply-media-delivery-fix.py, scripts/test-media-delivery-fix.mjs, cloudflare/worker/src/publication-pagination.js, cloudflare/worker/src/local-captures.js, cloudflare/scripts/read-publication-pages.mjs, cloudflare/scripts/merge-new-body-auto.mjs, cloudflare/scripts/merge-worker-media.mjs, cloudflare/scripts/build-pages-mirror.mjs, .github/workflows/media-delivery-fix.yml]
+  pull_request:
+    branches: [main]
+    paths: [scripts/test-media-delivery-fix.mjs, cloudflare/worker/src/publication-pagination.js, cloudflare/worker/src/local-captures.js, cloudflare/scripts/read-publication-pages.mjs, cloudflare/scripts/merge-new-body-auto.mjs, cloudflare/scripts/merge-worker-media.mjs, cloudflare/scripts/build-pages-mirror.mjs, .github/workflows/media-delivery-fix.yml]
+permissions:
+  contents: read
+concurrency:
+  group: media-delivery-integrity-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Preserve protected contracts before patch
+        run: |
+          sha256sum PROJECT_RULES.md AGENTS.md shared/literature-journals.js audit/media-auto-policy.json docs/literature-scope-contract.md docs/literature-update-protocol.md .github/workflows/literature-audit.yml .github/workflows/github-pages.yml .github/workflows/new-body-continuous.yml public/toc-mainline.user.js > "$RUNNER_TEMP/core-before.sha256"
+      - name: Apply approved narrow changes on repair branch only
+        if: github.ref == 'refs/heads/fix/media-delivery-20261004'
+        run: |
+          python scripts/apply-media-delivery-fix.py
+          git diff --check
+          sha256sum -c "$RUNNER_TEMP/core-before.sha256"
+      - name: Test publication integrity and existing packet/identity behavior
+        run: |
+          set -euo pipefail
+          {
+            node --check cloudflare/worker/src/local-captures.js
+            node --check cloudflare/worker/src/publication-pagination.js
+            node --check cloudflare/scripts/merge-new-body-auto.mjs
+            node scripts/test-media-delivery-fix.mjs
+            node scripts/test-tm230-packet-publication.mjs
+            node scripts/test-tm220-release.mjs
+            node scripts/test-tm223-upload.mjs
+            node cloudflare/worker/scripts/test-tampermonkey-report-history.mjs
+            node cloudflare/worker/scripts/test-article-summary.mjs
+            node tests/tm-queue-coverage.test.mjs
+            node tests/tm-missing-only.test.mjs
+          } | tee "$RUNNER_TEMP/media-delivery-tests.txt"
+      - name: Compile Worker without deploying
+        working-directory: cloudflare/worker
+        run: |
+          npm install --no-package-lock
+          npx wrangler deploy --dry-run --outdir "$RUNNER_TEMP/worker-build"
+      - name: Commit tested runtime files to repair branch only
+        if: github.ref == 'refs/heads/fix/media-delivery-20261004'
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/fix/media-delivery-20261004
+          sha256sum -c "$RUNNER_TEMP/core-before.sha256"
+          git add cloudflare/worker/src/local-captures.js cloudflare/scripts/merge-new-body-auto.mjs cloudflare/scripts/merge-worker-media.mjs cloudflare/scripts/build-pages-mirror.mjs
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix: preserve SVG mirrors and complete publication evidence without policy changes'
+            git push origin HEAD:fix/media-delivery-20261004
+          fi
+      - name: Preserve exact tested source
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/media-delivery-source"
+          cp --parents cloudflare/worker/src/local-captures.js cloudflare/worker/src/publication-pagination.js cloudflare/scripts/read-publication-pages.mjs cloudflare/scripts/merge-new-body-auto.mjs cloudflare/scripts/merge-worker-media.mjs cloudflare/scripts/build-pages-mirror.mjs "$RUNNER_TEMP/media-delivery-source/"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: media-delivery-tested
+          path: |
+            ${{ runner.temp }}/media-delivery-source
+            ${{ runner.temp }}/media-delivery-tests.txt
+            ${{ runner.temp }}/core-before.sha256
+          retention-days: 14

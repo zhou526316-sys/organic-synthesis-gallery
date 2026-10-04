@@ -1,3 +1,4 @@
+import {readPublicationPages} from './read-publication-pages.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -47,11 +48,11 @@ export async function readLiveInputs(){
   if(!priorBytes)requireBody(!Object.values(live.items||{}).some(x=>x.figures?.figures?.some(f=>f.publicationId===POLICY_ID)),'auto_previous_snapshot_missing');
   assertSnapshotCoherence(previous,live);
   let stage=null,stageError=null,localCaptures=null,localCaptureError=null,reports=null,reportError=null;
-  try{stage=JSON.parse(await fetchStored(WORKER+'/api/article-figures/staged'));requireBody(Array.isArray(stage.items)&&stage.count===stage.items.length&&stage.count<=2000,'auto_stage_truncated_or_invalid');}
+  try{stage=await readPublicationPages(WORKER+'/api/article-figures/staged','stage',fetchStored);}
   catch(e){stageError=String(e.message);stage=null;}
   try{localCaptures=JSON.parse(await fetchStored(WORKER+'/api/media/local-capture-index'));requireBody(Array.isArray(localCaptures.items)&&localCaptures.count===localCaptures.items.length&&localCaptures.count<=2000,'auto_local_capture_index_invalid');}
   catch(e){localCaptureError=String(e.message);localCaptures=null;}
-  try{reports=JSON.parse(await fetchStored(WORKER+'/api/media/tampermonkey-reports?limit=200'));requireBody(Array.isArray(reports.items)&&reports.items.length<=200,'auto_report_index_invalid');}
+  try{reports=await readPublicationPages(WORKER+'/api/media/tampermonkey-reports','reports',fetchStored);}
   catch(e){reportError=String(e.message);reports=null;}
   return {previous,live,stage,stageError,localCaptures,localCaptureError,reports,reportError};
 }
@@ -301,7 +302,14 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   if(process.argv.includes('--poll')){
     const inputs=await readLiveInputs(),{rows,policy}=await pendingNewRows({inputs});
     const gate=adaptiveBatchGate(rows,policy,Date.now());
+    const inputError=inputs.stageError||inputs.localCaptureError||inputs.reportError;
+    if(inputError){
+      console.error('NEW_BODY_AUTO_INPUT_ERROR '+JSON.stringify({ready:false,mode:'input_error',count:null,articles:null,stageError:inputs.stageError,localCaptureError:inputs.localCaptureError,reportError:inputs.reportError}));
+      if(process.env.GITHUB_OUTPUT)await writeFile(process.env.GITHUB_OUTPUT,'changed=false\nmode=input_error\n',{flag:'a'});
+      process.exitCode=1;
+    }else{
     console.log('NEW_BODY_AUTO_PENDING '+JSON.stringify({count:rows.length,articles:gate.articleCount,targetArticles:gate.targetArticles,ready:gate.ready,mode:gate.mode,idleMinutes:gate.idleMinutes,oldestEligibleAgeMinutes:gate.backlogAgeMinutes,backlogMaxWaitMinutes:policy.backlogMaxWaitMinutes,tailFlushIdleMinutes:policy.tailFlushIdleMinutes,stageError:inputs.stageError,localCaptureError:inputs.localCaptureError}));
     if(process.env.GITHUB_OUTPUT)await writeFile(process.env.GITHUB_OUTPUT,'changed='+(gate.ready?'true':'false')+'\narticles='+gate.articleCount+'\nmode='+gate.mode+'\n',{flag:'a'});
+    }
   }else await mergeNewBodyAuto();
 }
