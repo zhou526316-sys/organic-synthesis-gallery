@@ -17,7 +17,7 @@ fi
 
 echo "[1/6] Installing runtime packages..."
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io nginx certbot python3-certbot-nginx openssl curl
+DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io nginx certbot python3-certbot-nginx openssl curl git
 systemctl enable --now docker
 systemctl enable --now nginx
 
@@ -42,13 +42,22 @@ chmod 600 /etc/osg-wechat-relay/env
 unset APP_SECRET
 
 echo "[3/6] Building relay container..."
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+install -d -m 755 /var/www/osg-wechat-preview
+install -d -m 700 /var/lib/osg-wechat-publisher
 docker build -t osg-wechat-ticket-relay:latest .
 docker rm -f osg-wechat-ticket-relay >/dev/null 2>&1 || true
 docker run -d \
   --name osg-wechat-ticket-relay \
   --restart unless-stopped \
   --env-file /etc/osg-wechat-relay/env \
+  -e PUBLISHER_REPO=/repo \
+  -e PUBLISHER_PREVIEW_DIR=/preview \
+  -e PUBLISHER_PREVIEW_BASE_URL="https://${DOMAIN}/wechat-preview" \
   -p 127.0.0.1:${RELAY_PORT}:${RELAY_PORT} \
+  -v "${REPO_ROOT}:/repo" \
+  -v /var/www/osg-wechat-preview:/preview \
+  -v /var/lib/osg-wechat-publisher:/var/lib/osg-wechat-publisher \
   osg-wechat-ticket-relay:latest >/dev/null
 
 echo "[4/6] Checking local relay health..."
