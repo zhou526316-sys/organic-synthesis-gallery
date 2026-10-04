@@ -47,7 +47,7 @@ jobs:
       - name: Read raw RSC Crossref date semantics
         run: |
           node --input-type=module - <<'JS'
-          const journals=[['Chemical Science','2041-6520'],['Green Chemistry','1463-9262']];
+          const journals=[['Chem','2451-9294'],['Chemical Science','2041-6520'],['Green Chemistry','1463-9262']];
           const date=x=>x?.['date-parts']?.[0]?.join('-')||'';
           for(const [name,issn] of journals){
             const q=new URLSearchParams({filter:'from-created-date:2026-09-19,until-created-date:2026-10-04',rows:'12'});
@@ -81,8 +81,9 @@ jobs:
             unresolved:(a.missingCandidates||[]).filter(x=>wanted.includes(x.journal)).map(x=>({doi:x.doi,journal:x.journal,date:x.date,createdDate:x.createdDate,title:x.title,reviewPriority:x.reviewPriority}))
           }));
           if(!rows.Chem||!rows['Chemical Science']||!rows['Green Chemistry']) throw Error('missing journal rows');
-          if(rows['Chemical Science'].rawSourceRecords>0 && rows['Chemical Science'].sourceRecords===0 && !(a.sourceCoverageAnomalies||[]).some(x=>x.journal==='Chemical Science')) throw Error('Chemical Science raw-to-union collapse not guarded');
-          if(rows['Green Chemistry'].rawSourceRecords>0 && rows['Green Chemistry'].sourceRecords===0 && !(a.sourceCoverageAnomalies||[]).some(x=>x.journal==='Green Chemistry')) throw Error('Green Chemistry raw-to-union collapse not guarded');
+          if(rows['Chemical Science'].rawSourceRecords>0 && rows['Chemical Science'].sourceRecords===0) throw Error('Chemical Science raw records still disappear after partial-date repair');
+          if(rows['Green Chemistry'].rawSourceRecords>0 && rows['Green Chemistry'].sourceRecords===0) throw Error('Green Chemistry raw records still disappear after partial-date repair');
+          if(rows.Chem.rawSourceRecords>1 && rows.Chem.sourceRecords<=1) throw Error('Chem catch-up still collapses to its single existing card');
           JS
       - uses: actions/upload-artifact@v4
         if: always()
