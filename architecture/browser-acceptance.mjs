@@ -93,15 +93,24 @@ const server=createServer(async(req,res)=>{
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const base=`http://127.0.0.1:${server.address().port}`;
+const archiveTarget=life.partitions.archive[0]||records[0].doi;
 const outcomes=[];
 try {
   for(const [name,type] of [['chromium',chromium],['webkit',webkit]]) {
     const browser=await type.launch({headless:true}),context=await browser.newContext({locale:'en-US',viewport:{width:1280,height:900},serviceWorkers:'block'});
     const page=await context.newPage(),events={errors:[],console:[],failedRequests:[],responses:[],externalRequestsBlocked:[]};
+    const summaryRequests=[];
     await context.route('**/*',async route=>{
       const u=new URL(route.request().url());
       if(u.origin===base)return route.continue();
       events.externalRequestsBlocked.push({host:u.hostname,path:u.pathname});
+      if(u.pathname.includes('/api/user-ui/article-summary')){
+        summaryRequests.push({url:route.request().url(),postData:route.request().postData()||''});
+        return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
+          doi:archiveTarget,available:true,fulltextAvailable:true,source:'fulltext',cached:true,
+          zh:'历史文献中文摘要',en:'Archive paper English summary',generatedAt:Date.now()
+        })});
+      }
       return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(u.pathname.includes('reader-counts')?{counts:{}}:{})});
     });
     page.on('pageerror',e=>events.errors.push(e.message));
@@ -124,9 +133,10 @@ try {
         const {MembershipFence}=await import('/architecture/membership.mjs');
         const {FencedCatalogReader}=await import('/architecture/fenced-reader.mjs');
         const {applyTitlePresentation}=await import('/architecture/title-presentation.mjs');
+        const {loadLandingPlan,resolveDoisPlan,globalSearchPlan}=await import('/architecture/frontend-plan.mjs');
         const fence=new MembershipFence({fetchSnapshot:async()=>{const r=await fetch(base+'/membership.json',{cache:'no-store'});return r.json();}});
         const reader=new FencedCatalogReader(base+'/catalog/',{fence});
-        globalThis.__arch={fence,reader,asOfDate};
+        globalThis.__arch={fence,reader,asOfDate,loadLandingPlan,resolveDoisPlan,globalSearchPlan};
         const c=await reader.reader.open();let all=[];
         for(const ref of c.shards)all.push(...(await reader.reader.read(ref)).records);
         await fence.ready();
@@ -144,13 +154,59 @@ try {
       await writeFile(path.join(out,`${name}-field-parity.json`),JSON.stringify({compared:records.length,languages:['en','zh'],differences},null,2));
       if(differences.length)console.log('GALLERY_DISPLAY_DIFFERENCES '+JSON.stringify(differences.slice(0,30)));
       assert.equal(differences.length,0,`legacy_display_mismatch:${differences.length}`);
-      const hot=await page.evaluate(async()=>{const r=await __arch.reader.hot(__arch.asOfDate);await __archBridge.replace(r.records.map(__arch.project));return{count:r.records.length,complete:r.complete,dom:__archBridge.inspect().length};});
+      const hot=await page.evaluate(async()=>{const r=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate});await __archBridge.replace(r.records.map(__arch.project));return{count:r.records.length,complete:r.complete,dom:__archBridge.inspect().length};});
       assert.deepEqual(hot,{count:life.counts.hot,complete:true,dom:life.counts.hot});
+
+      // A shared Archive DOI is injected ahead of Hot without loading every history shard.
+      const deepLink=await page.evaluate(async doi=>{
+        history.replaceState(null,'','/?doi='+encodeURIComponent(doi));
+        const r=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate,sharedDoi:doi});
+        await __archBridge.replace(r.records.map(__arch.project));
+        return {first:document.querySelector('#gallery > .card')?.getAttribute('data-doi')||'',hotCount:r.hotCount,total:r.records.length,lifecycle:r.shared?.lifecycle,status:r.shared?.status};
+      },archiveTarget);
+      assert.deepEqual(deepLink,{first:archiveTarget,hotCount:life.counts.hot,total:life.counts.hot+1,lifecycle:'archive',status:'published'});
+
+      // User state remains keyed by DOI even when the Archive card is removed/reloaded.
+      const actions=page.locator('gallery-paper-actions').first();
+      await actions.waitFor({state:'visible',timeout:15000});
+      await actions.locator('button[data-action="favorite"]').click();
+      const project=actions.locator('input[data-collection="project"]');
+      await project.waitFor({state:'visible',timeout:10000});
+      await project.check();
+      await actions.locator('button[data-action="close"]').click();
+      await actions.locator('button[data-action="status"]').click();
+      const toRead=actions.locator('button[data-action="set-status:to-read"]');
+      await toRead.waitFor({state:'visible',timeout:10000});
+      await toRead.click();
+
+      // Summary request for an Archive card must carry that Archive DOI.
+      const summaryButton=actions.locator('button[data-action="summary"]');
+      await summaryButton.waitFor({state:'visible',timeout:10000});
+      await summaryButton.click();
+      await actions.locator('.drawer.summary-drawer').waitFor({state:'visible',timeout:10000});
+      assert.ok(summaryRequests.some(request=>request.url.includes(encodeURIComponent(archiveTarget))||request.url.includes(archiveTarget)||request.postData.includes(archiveTarget)),
+        'archive_summary_request_missing_doi');
+      await actions.locator('button[data-action="close"]').click();
+
+      await page.evaluate(async doi=>{
+        const hotPlan=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate});
+        await __archBridge.replace(hotPlan.records.slice(0,1).map(__arch.project));
+        const resolved=await __arch.resolveDoisPlan(__arch.reader,[doi],{asOfDate:__arch.asOfDate});
+        await __archBridge.replace(resolved.records.map(__arch.project));
+      },archiveTarget);
+      const restored=page.locator('gallery-paper-actions').first();
+      await restored.waitFor({state:'visible',timeout:10000});
+      assert.equal(await restored.locator('.chip').filter({hasText:'我的课题'}).isVisible(),true,'archive_favorite_not_restored');
+      assert.equal(await restored.locator('.chip.status').isVisible(),true,'archive_status_not_restored');
+
+      const archiveSearch=await page.evaluate(async doi=>{const r=await __arch.globalSearchPlan(__arch.reader,doi,{asOfDate:__arch.asOfDate});return{definitive:r.definitive,noMatches:r.noMatches,dois:r.results.map(v=>v.doi)};},archiveTarget);
+      assert.equal(archiveSearch.definitive,true);assert.equal(archiveSearch.noMatches,false);assert.ok(archiveSearch.dois.includes(archiveTarget));
+
       for(const doi of life.partitions.archive){
         const r=await page.evaluate(async doi=>{const row=await __arch.reader.get(doi,__arch.asOfDate);if(row.status==='published')await __archBridge.replace([__arch.project(row.record)]);return{status:row.status,lifecycle:row.lifecycle,doi:__archBridge.inspect()[0]?.doi};},doi);
         assert.deepEqual(r,{status:'published',lifecycle:'archive',doi});
       }
-      const target=life.partitions.archive[0]||records[0].doi;
+      const target=archiveTarget;
       const search=await page.evaluate(async doi=>{const r=await __arch.reader.search(doi,{asOfDate:__arch.asOfDate});return{complete:r.complete,dois:r.results.map(v=>v.doi)};},target);
       assert.equal(search.complete,true);assert.ok(search.dois.includes(target));
       const remaining=records.filter(r=>r.doi!==target);
@@ -159,7 +215,8 @@ try {
       assert.equal(revoked.status,'withdrawn');assert.equal(Object.hasOwn(revoked,'record'),false);
       assert.deepEqual(events.errors,[],'uncaught_browser_errors');
       outcomes.push({browser:name,ok:true,fieldParityRecords:records.length,hot:hot.count,archiveDeepLinks:life.partitions.archive.length,
-        globalDoiSearch:true,withdrawnOldCacheBlocked:true,unexpectedPageErrors:0,
+        globalDoiSearch:true,archiveDeepLinkPlan:true,archiveFavoriteRestored:true,archiveStatusRestored:true,
+        archiveSummaryRequest:true,withdrawnOldCacheBlocked:true,unexpectedPageErrors:0,
         titleCompatibilityOverrides:Object.keys(presentation.overrides).length,canonicalRecordsModified:false,
         scope:'temporary preview with unchanged card renderer; remote APIs mocked; real frozen public data; no production UI activation'});
       current=await makeMembership({catalogId:catalog.recordSetHash,serial:3,issuedAt:Date.now()-1000,validUntil:Date.now()+240000,records});
