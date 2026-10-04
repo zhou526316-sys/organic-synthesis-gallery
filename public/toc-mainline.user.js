@@ -3599,7 +3599,8 @@ function embeddedJobDois(value) {
       }
       return null;
     }
-    var dois=queue.articles.map(function(x){return normalizeDoi(x.doi);});
+    if(!run||!(run.activeDois instanceof Set))throw new Error('architecture_active_work_required');
+    var dois=queue.articles.map(function(x){return normalizeDoi(x.doi);}).filter(function(doi){return run.activeDois.has(doi);});
     var chunks=[];for(var i=0;i<dois.length;i+=250)chunks.push(dois.slice(i,i+250));
     async function readMedia(){
       // Bound concurrency and never exceed the Worker's 1200-DOI cap.
@@ -3658,7 +3659,8 @@ function embeddedJobDois(value) {
   }
   function buildMissingCaptureJobs(queue,run,rawInventory) {
     // Reuse complete registry validation, but don't reuse its historical TOC-first tiers.
-    var rows=pairedJobs(queue,{items:{}}), inv=rawInventory||{};
+    if(!run||!(run.activeDois instanceof Set))throw new Error('architecture_active_work_required');
+    var rows=pairedJobs(queue,{items:{}}).filter(function(raw){return run.activeDois.has(normalizeDoi(raw.doi));}), inv=rawInventory||{};
     var inventory={mediaMap:mapCaptureRows(inv.media),tocMap:new Map(),figureMap:mapCaptureRows(inv.figures),evidenceMap:mapCaptureRows(inv.evidence),
       tocsKnown:Boolean(inv.tocs),figuresKnown:Boolean(inv.figures&&inv.figures.complete),evidenceKnown:Boolean(inv.evidence)};
     ((inv.tocs||{}).items||[]).forEach(function(t){var d=normalizeDoi(t.doi);if(!d||Number(t.mediaGeneration)!==1790082000000)return;var a=inventory.tocMap.get(d)||[];a.push(t);inventory.tocMap.set(d,a);});
@@ -3772,9 +3774,9 @@ function embeddedJobDois(value) {
       .sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});
   }
   function coverageStats(run) {
-    var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed';});
-    s.total=rows.filter(function(r){return r.state!=='removed';}).length;
-    s.visitedCount=rows.filter(function(r){return r.attempts>0&&r.state!=='removed';}).length;
+    var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed'&&r.state!=='retired';});
+    s.total=rows.filter(function(r){return r.state!=='removed'&&r.state!=='retired';}).length;
+    s.visitedCount=rows.filter(function(r){return r.attempts>0&&r.state!=='removed'&&r.state!=='retired';}).length;
     s.attemptCount=s.results.length;s.fullyResolved=rows.filter(function(r){return r.state==='resolved';}).length;
     s.unresolvedCount=left.length;s.blockedCount=left.filter(function(r){return r.state==='blocked';}).length;
     s.pendingMissing=left.filter(function(r){return r.state==='pending'||r.state==='active';}).length;
@@ -3796,17 +3798,23 @@ function embeddedJobDois(value) {
       var loaded=await Promise.all([getJson(QUEUE_URL+'?ts='+Date.now()),getJson(WORKER+'/api/media/capture-capabilities')]);
       if(!manualExecutionCurrent(run)||controllerPaused())return;
       var queue=loaded[0],caps=loaded[1];
-      var architectureMembership=await observeArchitectureMembership(queue);
-      s.architectureMembership=architectureMembership;
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.mediaControllerRevision)!==CONTROLLER_REVISION)throw new Error('capture_server_upgrade_pending');
       var checkedAt=0,endRefresh=false,inventoryRecovery=0;
       async function refresh(){
         pairedJobs(queue,{items:{}});
+        var architectureMembership=await observeArchitectureMembership(queue);
+        if(!architectureMembership.ok)throw new Error('architecture_active_work_unverified:'+String(architectureMembership.error||'unknown'));
+        run.architectureMembership=architectureMembership;run.activeDois=architectureActiveSet(architectureMembership);
+        s.architectureMembership=architectureMembershipSummary(architectureMembership);
         var next=await readMissingCaptureInventory(queue,run);
         if(!manualExecutionCurrent(run)||controllerPaused())return false;
         run.inventory=next;coverageMergePlan(run,manualCaptureJobs(queue,run));
         var currentDois=new Set(queue.articles.map(function(a){return normalizeDoi(a.doi);}));
-        run.coverage.forEach(function(r,doi){if(!currentDois.has(doi))r.state='removed';});
+        run.coverage.forEach(function(r,doi){
+          if(!currentDois.has(doi)){r.state='removed';return;}
+          if(!run.activeDois.has(doi)){r.state='retired';return;}
+          if(r.state==='retired'&&coverageHasNeeds(r.job)){r.state='pending';r.retryAt=0;}
+        });
         checkedAt=Date.now();s.queueGeneratedAt=queue.generatedAt;s.latestAddedDate=queue.latestAddedDate;
         coverageStats(run);manualSummary(run);return true;
       }
@@ -3943,14 +3951,16 @@ function embeddedJobDois(value) {
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.39')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var architectureMembership=await observeArchitectureMembership(queue);
+      if(!architectureMembership.ok)throw new Error('architecture_active_work_unverified:'+String(architectureMembership.error||'unknown'));
+      var activeDois=architectureActiveSet(architectureMembership);
       var queueCheckedAt=Date.now();
-      var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
+      var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(function(doi){return doi&&activeDois.has(doi);}),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
       var evidenceInventory=null;
       try { evidenceInventory=await getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken()); }
       catch(error){ try{console.warn('[OSG TOC] evidence inventory unavailable; evidence-only backlog paused',String(error&&error.message||error));}catch(_){} }
-      var mediaJobs=pairedJobs(queue,media);
-      var evidenceJobs=evidenceInventory?evidenceBackfillJobs(queue,media,evidenceInventory):[];
+      var mediaJobs=pairedJobs(queue,media).filter(function(job){return activeDois.has(normalizeDoi(job.doi));});
+      var evidenceJobs=evidenceInventory?evidenceBackfillJobs(queue,media,evidenceInventory).filter(function(job){return activeDois.has(normalizeDoi(job.doi));}):[];
       var generation=VERSION+':paired:'+String(queue.mediaGeneration);
       var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION+':'+String(queue.latestAddedDate||queue.generatedAt||'');
       function eligibleMedia(job) {
@@ -4013,7 +4023,7 @@ function embeddedJobDois(value) {
       if(!renewLease())throw new Error('controller_lease_lost');
       if(manualRunBlocksAutomatic())return;
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
-      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,architectureMembershipRevision:ARCHITECTURE_MEMBERSHIP_REVISION,architectureMembership:architectureMembership,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
+      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,architectureMembershipRevision:ARCHITECTURE_MEMBERSHIP_REVISION,architectureMembership:architectureMembershipSummary(architectureMembership),version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
       persistControllerSummary(summary,true);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
@@ -4022,14 +4032,19 @@ function embeddedJobDois(value) {
         if (i>0 && Date.now()-queueCheckedAt>=60000) {
           try {
             var refreshedQueue=await getJson(QUEUE_URL+'?ts='+Date.now());
+            var refreshedMembership=await observeArchitectureMembership(refreshedQueue);
             queueCheckedAt=Date.now();
             if (!Array.isArray(refreshedQueue.articles) || refreshedQueue.articles.length!==Number(refreshedQueue.webpageDoiCount)
                 || Number(refreshedQueue.mediaGeneration)!==1790082000000) throw new Error('invalid_queue_refresh');
-            if (queueRegistryChanged(queue,refreshedQueue)) {
+            if(!refreshedMembership.ok)throw new Error('architecture_active_work_unverified:'+String(refreshedMembership.error||'unknown'));
+            if (queueRegistryChanged(queue,refreshedQueue)||architectureActiveSetChanged(architectureMembership,refreshedMembership)) {
               summary.refreshPending=true;
-              badge('检测到文献队列更新；当前篇已保存，重新按最新上架排序','#374151');
+              summary.activeWorkRefreshPending=architectureActiveSetChanged(architectureMembership,refreshedMembership);
+              badge(summary.activeWorkRefreshPending?'检测到三个月热区／目录变化；当前篇已保存，重新按最新资格排队':'检测到文献队列更新；当前篇已保存，重新按最新上架排序','#374151');
               break;
             }
+            architectureMembership=refreshedMembership;activeDois=architectureActiveSet(refreshedMembership);
+            summary.architectureMembership=architectureMembershipSummary(refreshedMembership);
           } catch(queueError) {
             summary.refreshPending=true;
             summary.queueRefreshError=String(queueError.message||queueError).slice(0,120);
