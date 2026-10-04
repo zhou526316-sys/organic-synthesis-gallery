@@ -1,9 +1,9 @@
 {
-  "requestId": "chem-elsevier-post-repair-read-20261004",
-  "context": "Read current stored Tampermonkey diagnostics and media indexes after Elsevier task-binding repair. Target DOI 10.1016/j.chempr.2026.103282. Diagnose only; do not capture or mutate media.",
+  "requestId": "chem-elsevier-post-repair-read-20261004-v2",
+  "context": "Read current stored Tampermonkey diagnostics and media indexes after deployed Elsevier task-binding repair. Target DOI 10.1016/j.chempr.2026.103282. Verify whether a post-deployment attempt uses install 6.2.25 / Bridge 2.2.43 and whether capture_tab_job_mismatch or bound_publisher_heartbeat_missing is cleared. Diagnose only; do not capture or mutate media.",
   "targetDoi": "10.1016/j.chempr.2026.103282",
-  "expectedInstallRevision": "6.2.24",
-  "expectedPackagedBridgeVersion": "2.2.42",
+  "expectedInstallRevision": "6.2.25",
+  "expectedPackagedBridgeVersion": "2.2.43",
   "operation": "read-only-existing-diagnostics-and-media-indexes",
   "allowCapture": false,
   "allowMediaWrite": false,
