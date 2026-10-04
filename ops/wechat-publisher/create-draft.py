@@ -414,6 +414,9 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
         f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
     ]
 
+    # Ground the opening explanation in the core reaction image.
+    parts.append(figure_html("fig1", figures, uploaded_urls))
+
     for point in data.get("quick_points", []):
         parts.append(
             "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
@@ -655,8 +658,8 @@ def ensure_pdf_source(featured: dict, override_path: str = "") -> Path:
         )
 
     DEFAULT_PDF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    date = str(featured.get("date") or "featured").strip() or "featured"
-    target = DEFAULT_PDF_CACHE_DIR / f"{date}.pdf"
+    url_hash = hashlib.sha256(pdf_url.encode("utf-8")).hexdigest()[:20]
+    target = DEFAULT_PDF_CACHE_DIR / f"{url_hash}.pdf"
     if target.exists():
         try:
             if target.read_bytes()[:5] == b"%PDF-":
@@ -732,8 +735,6 @@ def prepare_featured_local_images(featured: dict | None, override_pdf: str = "")
     if not featured:
         return {}
     figures = [x for x in featured.get("figures", []) if isinstance(x, dict)]
-    needs_pdf = any(isinstance(x.get("pdf_render"), dict) for x in figures)
-    pdf_path = ensure_pdf_source(featured, override_pdf) if needs_pdf else None
 
     prepared: dict[str, Path] = {}
     for fig in figures:
@@ -741,6 +742,17 @@ def prepare_featured_local_images(featured: dict | None, override_pdf: str = "")
         if not fig_id:
             continue
         if isinstance(fig.get("pdf_render"), dict):
+            source_spec = dict(featured)
+            figure_pdf_url = str(fig.get("pdf_url") or "").strip()
+            figure_pdf_repo = str(fig.get("pdf_repo_path") or "").strip()
+            if figure_pdf_url or figure_pdf_repo:
+                source_spec.pop("pdf_url", None)
+                source_spec.pop("pdf_repo_path", None)
+                if figure_pdf_url:
+                    source_spec["pdf_url"] = figure_pdf_url
+                if figure_pdf_repo:
+                    source_spec["pdf_repo_path"] = figure_pdf_repo
+            pdf_path = ensure_pdf_source(source_spec, override_pdf if not (figure_pdf_url or figure_pdf_repo) else "")
             prepared[fig_id] = render_figure_from_pdf(pdf_path, fig)
             continue
         source_url = str(fig.get("source_url") or "").strip()
