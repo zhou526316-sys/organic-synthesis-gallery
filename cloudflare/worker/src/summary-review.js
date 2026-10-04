@@ -1,3 +1,4 @@
+import { shadowIndexSummaryJob } from './summary-job-index.js';
 const EVIDENCE_PREFIX = 'private/article-evidence-v2/';
 const JOB_PREFIX = 'private/article-summary-jobs/';
 const REVIEW_PREFIX = 'private/article-summary-review/';
@@ -335,6 +336,7 @@ async function putJob(env, job) {
       publishedAt: String(job.publishedAt || 0),
     },
   });
+  await shadowIndexSummaryJob(env, job, keys.job);
   return keys.job;
 }
 
@@ -403,6 +405,7 @@ async function selectReviewCandidate(env, now = Date.now(), preferredDoi = '') {
     : candidates[0] || null;
   return {
     candidate: selectedCandidate,
+    candidateDois: candidates.map(candidate => candidate.doi),
     evidenceCount: evidenceObjects.length,
     jobCount: jobObjects.length,
     eligibleCount: candidates.length,
@@ -922,6 +925,20 @@ export async function runSummaryReviewCycle(env, options = {}) {
       lastError: finalJob.lastError || '',
     };
   }
+}
+
+export async function getLegacySummaryCandidateSnapshot(env, now = Date.now(), preferredDoi = '') {
+  if (!env?.MEDIA) return { status: 503, body: { error: 'summary_storage_unavailable' } };
+  const selection = await selectReviewCandidate(env, now, preferredDoi);
+  return {
+    status: 200,
+    body: {
+      version: 1,
+      source: 'legacy-r2',
+      readPathActive: true,
+      ...selection,
+    },
+  };
 }
 
 export async function getSummaryReviewStatus(env) {
