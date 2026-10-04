@@ -91,7 +91,7 @@ test('unknown completeness is never rewritten as missing',()=>{
   const c=build(),d=c.rows.find(x=>x.doi===dois[2]);
   assert.equal(d.figures.captured.presence,'absent');
   assert.equal(d.figures.captured.completeness,'unknown');
-  assert.ok(c.reconciliation.publishedFiguresWithoutCompletenessProof.includes(dois[2]));
+  assert.ok(c.reconciliation.workerFiguresWithoutCompletenessProof.includes(dois[2]));
 });
 
 test('summary availability exposes only hashes and evidence level, never prose',()=>{
@@ -134,7 +134,7 @@ test('staged inventory must declare complete and internally match its count',()=
 test('catalog hash is deterministic and mutation is detected',()=>{
   const a=build(),b=build();
   assert.equal(a.catalogHash,b.catalogHash);
-  a.rows[0].toc.published.official=!a.rows[0].toc.published.official;
+  a.rows[0].toc.worker.official=!a.rows[0].toc.worker.official;
   assert.throws(()=>verifyUnifiedAssetCatalog(a,dois),/asset_catalog_hash_mismatch/);
 });
 
