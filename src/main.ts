@@ -79,6 +79,14 @@ interface MediaInventoryResponse {
   items: MediaInventoryItem[];
 }
 
+interface WechatEditionManifest {
+  id: string;
+  date: string;
+  title?: string;
+  featuredDoi: string;
+  dois: string[];
+}
+
 type Language = 'zh' | 'en';
 
 const copy = {
@@ -171,6 +179,8 @@ const app = appElement;
 
 let language: Language = initialLanguage();
 let papers: Paper[] = [];
+let activeEdition: WechatEditionManifest | null = null;
+let editionAutoScrolled = false;
 let query = '';
 let sort: 'newest' | 'oldest' | 'readers' = 'newest';
 let onlyNew = false;
@@ -345,6 +355,44 @@ function sharedDoiFromLocation(): string | null {
   }
 }
 
+function editionIdFromLocation(): string | null {
+  try {
+    const value = new URL(window.location.href).searchParams.get('edition')?.trim() || '';
+    return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+async function loadEditionManifest(): Promise<WechatEditionManifest | null> {
+  const editionId = editionIdFromLocation();
+  if (!editionId) return null;
+  try {
+    const response = await fetch(`./wechat-editions/${encodeURIComponent(editionId)}.json`, { cache: 'no-store' });
+    if (!response.ok) return null;
+    const raw = await response.json() as Partial<WechatEditionManifest>;
+    const featuredDoi = normalizeDoi(typeof raw.featuredDoi === 'string' ? raw.featuredDoi : null);
+    const dois = Array.isArray(raw.dois)
+      ? raw.dois.map(value => normalizeDoi(typeof value === 'string' ? value : null)).filter((value): value is string => Boolean(value))
+      : [];
+    if (!featuredDoi || !dois.length) return null;
+    const ordered = [featuredDoi, ...dois.filter(doi => doi.toLowerCase() !== featuredDoi.toLowerCase())];
+    return {
+      id: editionId,
+      date: typeof raw.date === 'string' ? raw.date : editionId,
+      title: typeof raw.title === 'string' ? raw.title : undefined,
+      featuredDoi,
+      dois: [...new Set(ordered.map(doi => doi.toLowerCase()))],
+    };
+  } catch {
+    return null;
+  }
+}
+
+function editionDoiSet(): Set<string> {
+  return new Set((activeEdition?.dois || []).map(doi => doi.toLowerCase()));
+}
+
 function pendingTitle(value: string | null | undefined): boolean {
   if (!value || !value.trim()) return true;
   const normalized = value.trim().toLowerCase().replace(/[：:….]/g, '').replace(/\s+/g, ' ');
@@ -476,6 +524,17 @@ function filteredPapers(): Paper[] {
       return b.date.localeCompare(a.date);
     });
 
+  if (activeEdition?.dois.length) {
+    const ordered = activeEdition.dois.flatMap(doi => {
+      const paper = papers.find(item => paperDoi(item)?.toLowerCase() === doi.toLowerCase());
+      return paper ? [paper] : [];
+    });
+    if (ordered.length) {
+      const selected = new Set(ordered);
+      return [...ordered, ...filtered.filter(paper => !selected.has(paper))];
+    }
+  }
+
   const sharedDoi = sharedDoiFromLocation()?.toLowerCase();
   if (!sharedDoi) return filtered;
   const sharedPaper = papers.find(paper => paperDoi(paper)?.toLowerCase() === sharedDoi);
@@ -528,13 +587,31 @@ function renderCards(): void {
   if (!gallery || !count) return;
   const list = filteredPapers();
   count.textContent = String(list.length);
+  const editionSet = editionDoiSet();
+  const featuredDoi = activeEdition?.featuredDoi.toLowerCase() || '';
   gallery.innerHTML = list.length ? list.map(paper => {
     const doi = paperDoi(paper);
+    const doiKey = doi?.toLowerCase() || '';
+    const isEditionPaper = Boolean(doiKey && editionSet.has(doiKey));
+    const isFeaturedPaper = Boolean(doiKey && featuredDoi && doiKey === featuredDoi);
+    const editionClass = isFeaturedPaper ? ' edition-featured' : isEditionPaper ? ' edition-highlight' : '';
+    const editionBadge = isFeaturedPaper
+      ? `<span class='tag edition-featured'>${language === 'zh' ? '每日精选' : 'Featured'}</span>`
+      : isEditionPaper
+        ? `<span class='tag edition'>${language === 'zh' ? '本期文献' : 'This edition'}</span>`
+        : '';
     const href = doi ? `https://doi.org/${doi}` : (paper.url || '');
-    return `<article class='card' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'><span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
+    return `<article class='card${editionClass}' data-journal='${escapeHtml(paper.journal)}' data-date='${escapeHtml(paper.date)}' data-doi='${escapeHtml(doi || '')}' data-authors='${escapeHtml(paper.authors.join('|'))}'><div class='meta'>${editionBadge}<span class='tag'>${escapeHtml(paper.journal)}</span><span class='tag date'>${escapeHtml(prettyDate(paper.date))}</span>${isNewToday(paper) ? `<span class='tag new'>${escapeHtml(t('new'))}</span>` : ''}${synthesisBadge(paper)}</div><h2 class='title${paper.title ? '' : ' missing'}'>${escapeHtml(visibleTitle(paper))}</h2><div class='authors' title='${escapeHtml(paper.authors.join(', '))}'>${escapeHtml(paper.authors.join(', '))}</div>${tocMarkup(paper)}${figureMarkup(paper)}<div class='cardfoot'><div class='doi'>${escapeHtml(doi || t('doiPending'))}</div><div class='card-actions'><button class='share-card' type='button' data-card-share ${doi ? '' : 'disabled'} aria-label='${escapeHtml(`${t('share')}: ${visibleTitle(paper)}`)}'>${escapeHtml(t('share'))}</button>${href ? `<a class='open' href='${escapeHtml(href)}' target='_blank' rel='noopener noreferrer'>${escapeHtml(t('open'))}</a>` : ''}</div></div></article>`;
   }).join('') : `<div class='empty'>${escapeHtml(t('noResults'))}</div>`;
   restoreMedia();
   scheduleMediaBatch(0);
+  if (activeEdition && !editionAutoScrolled) {
+    editionAutoScrolled = true;
+    requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>('.card.edition-featured, .card.edition-highlight')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
 }
 
 function filterSummary(): string {
@@ -1030,6 +1107,7 @@ async function load(): Promise<void> {
       // Static snapshot remains usable if the API is temporarily unavailable.
     }
     applyResolvedTitles();
+    activeEdition = await loadEditionManifest();
     mount();
     void resolveTitles().then(() => resolveTitles());
     void loadTranslations();
