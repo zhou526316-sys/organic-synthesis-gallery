@@ -626,3 +626,17 @@ CREATE TABLE IF NOT EXISTS article_evidence_index_backfill (
   updated_at INTEGER NOT NULL,
   last_error TEXT NOT NULL DEFAULT ''
 );
+
+
+CREATE TABLE IF NOT EXISTS article_evidence_handoff_backfill (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  cursor TEXT,
+  complete INTEGER NOT NULL DEFAULT 0 CHECK (complete IN (0, 1)),
+  scanned_objects INTEGER NOT NULL DEFAULT 0,
+  indexed_rows INTEGER NOT NULL DEFAULT 0,
+  skipped_invalid INTEGER NOT NULL DEFAULT 0,
+  stale_rows INTEGER NOT NULL DEFAULT 0,
+  started_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  last_error TEXT NOT NULL DEFAULT ''
+);
