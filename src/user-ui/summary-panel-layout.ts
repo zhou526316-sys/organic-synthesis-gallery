@@ -1,7 +1,7 @@
 // Summary-only presentation. The four management popovers keep their existing
 // button-adjacent layout; no data fetching, reading events or capture logic here.
 export const SUMMARY_PANEL_STYLES = `
-  .drawer.summary-drawer{width:min(1320px,calc(100vw - 32px));max-height:min(94dvh,1120px);padding:20px;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable}
+  .drawer.summary-drawer{width:min(1320px,calc(100vw - 32px));height:min(92dvh,1040px);max-height:min(94dvh,1120px);padding:20px;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable}
   .summary-drawer .head{top:-20px;align-items:center;padding:12px 0 14px}
   .summary-drawer .head h3{font-size:20px;line-height:1.4}
   .summary-drawer .close{width:40px;height:40px;flex:0 0 40px;font-size:18px}
@@ -16,7 +16,7 @@ export const SUMMARY_PANEL_STYLES = `
   .summary-drawer .summary-meta{font-size:11px;line-height:1.6}
   .summary-drawer .summary-open{min-height:40px;align-items:center;font-size:13px}
   @media(max-width:680px){
-    .drawer.summary-drawer{width:calc(100vw - 24px);max-height:min(86dvh,900px);padding:16px;border-radius:16px}
+    .drawer.summary-drawer{width:calc(100vw - 24px);height:auto;max-height:min(86dvh,900px);padding:16px;border-radius:16px}
     .summary-drawer .head{top:-16px;padding:8px 0 12px}
     .summary-drawer .head h3{font-size:18px}
     .summary-drawer .summary-layout{grid-template-columns:minmax(0,1fr);gap:16px}
