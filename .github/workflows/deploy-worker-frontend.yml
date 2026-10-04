@@ -14,6 +14,7 @@ on:
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'public/toc-mainline.user.js'
       - 'public/scheduled-article-summaries.json'
+      - 'public/wechat-editions/**'
 
 permissions:
   contents: read
