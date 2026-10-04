@@ -13,6 +13,7 @@ import hashlib
 import html
 import json
 import mimetypes
+import tempfile
 import os
 from pathlib import Path
 import sys
@@ -286,10 +287,69 @@ def multipart_file(field: str, path: Path):
     return boundary, body
 
 
-def upload_cover(token: str, cover: Path, cache_path: Path) -> str:
+def prepare_thumb_cover(cover: Path) -> Path:
+    """Return a WeChat-compatible JPG thumbnail (<64 KiB).
+
+    WeChat's draft cover uses a permanent thumb material.  Keep this conversion
+    separate from article-body images, which use media/uploadimg instead.
+    """
     if not cover.exists():
         raise RuntimeError(f"cover image not found: {cover}")
-    digest = hashlib.sha256(cover.read_bytes()).hexdigest()
+
+    raw = cover.read_bytes()
+    if cover.suffix.lower() in (".jpg", ".jpeg") and len(raw) < 64 * 1024:
+        return cover
+
+    try:
+        from PIL import Image
+    except ImportError as exc:
+        raise RuntimeError(
+            "cover conversion requires Pillow; install with: "
+            "sudo apt-get update && sudo apt-get install -y python3-pil"
+        ) from exc
+
+    target = Path(tempfile.gettempdir()) / "osg-wechat-cover-thumb.jpg"
+    with Image.open(cover) as image:
+        image = image.convert("RGB")
+        image.thumbnail((900, 500), Image.Resampling.LANCZOS)
+
+        qualities = (88, 82, 76, 70, 64, 58, 52, 46, 40)
+        for quality in qualities:
+            image.save(
+                target,
+                format="JPEG",
+                quality=quality,
+                optimize=True,
+                progressive=True,
+            )
+            if target.stat().st_size < 64 * 1024:
+                return target
+
+        # If compression alone is insufficient, progressively reduce dimensions.
+        working = image
+        for scale in (0.85, 0.72, 0.60, 0.50):
+            width = max(320, int(image.width * scale))
+            height = max(180, int(image.height * scale))
+            working = image.resize((width, height), Image.Resampling.LANCZOS)
+            working.save(
+                target,
+                format="JPEG",
+                quality=55,
+                optimize=True,
+                progressive=True,
+            )
+            if target.stat().st_size < 64 * 1024:
+                return target
+
+    raise RuntimeError(
+        f"converted cover is still too large for WeChat thumb: "
+        f"{target.stat().st_size} bytes"
+    )
+
+
+def upload_cover(token: str, cover: Path, cache_path: Path) -> str:
+    thumb = prepare_thumb_cover(cover)
+    digest = hashlib.sha256(thumb.read_bytes()).hexdigest()
 
     cache = {}
     if cache_path.exists():
@@ -300,8 +360,8 @@ def upload_cover(token: str, cover: Path, cache_path: Path) -> str:
     if cache.get("sha256") == digest and cache.get("media_id"):
         return str(cache["media_id"])
 
-    boundary, body = multipart_file("media", cover)
-    query = urllib.parse.urlencode({"access_token": token, "type": "image"})
+    boundary, body = multipart_file("media", thumb)
+    query = urllib.parse.urlencode({"access_token": token, "type": "thumb"})
     url = "https://api.weixin.qq.com/cgi-bin/material/add_material?" + query
     req = urllib.request.Request(
         url,
@@ -331,7 +391,7 @@ def upload_cover(token: str, cover: Path, cache_path: Path) -> str:
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_text(
         json.dumps(
-            {"sha256": digest, "media_id": media_id, "cover": str(cover)},
+            {"sha256": digest, "media_id": media_id, "cover": str(cover), "upload_type": "thumb"},
             ensure_ascii=False,
             indent=2,
         ),
