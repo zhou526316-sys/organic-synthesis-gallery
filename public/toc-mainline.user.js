@@ -3921,14 +3921,21 @@ function embeddedJobDois(value) {
         if (i>0 && Date.now()-queueCheckedAt>=60000) {
           try {
             var refreshedQueue=await getJson(QUEUE_URL+'?ts='+Date.now());
+            var refreshedMembership=await loadActiveWorkMembership(refreshedQueue);
             queueCheckedAt=Date.now();
             if (!Array.isArray(refreshedQueue.articles) || refreshedQueue.articles.length!==Number(refreshedQueue.webpageDoiCount)
                 || Number(refreshedQueue.mediaGeneration)!==1790082000000) throw new Error('invalid_queue_refresh');
-            if (queueRegistryChanged(queue,refreshedQueue)) {
+            var activeChanged=refreshedMembership.catalogId!==activeMembership.catalogId
+              ||refreshedMembership.asOfDate!==activeMembership.asOfDate
+              ||refreshedMembership.activeDois.size!==activeMembership.activeDois.size
+              ||Array.from(activeMembership.activeDois).some(function(doi){return !refreshedMembership.activeDois.has(doi);});
+            if (queueRegistryChanged(queue,refreshedQueue)||activeChanged) {
               summary.refreshPending=true;
-              badge('检测到文献队列更新；当前篇已保存，重新按最新上架排序','#374151');
+              summary.activeWorkRefreshPending=activeChanged;
+              badge(activeChanged?'检测到三个月热区／目录变化；当前篇已保存，重新按最新资格排队':'检测到文献队列更新；当前篇已保存，重新按最新上架排序','#374151');
               break;
             }
+            activeMembership=refreshedMembership;
           } catch(queueError) {
             summary.refreshPending=true;
             summary.queueRefreshError=String(queueError.message||queueError).slice(0,120);
