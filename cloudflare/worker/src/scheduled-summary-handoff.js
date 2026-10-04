@@ -1,3 +1,4 @@
+import { shadowIndexHandoff } from './evidence-index.js';
 const HANDOFF_PREFIX = 'private/article-summary-handoff-v1/';
 const EVIDENCE_PREFIX = 'private/article-evidence-v2/';
 const LEGACY_SUMMARY_PREFIX = 'private/article-summary/';
@@ -167,6 +168,7 @@ export async function persistScheduledEvidenceHandoff(env, evidence) {
       compression: 'gzip',
     },
   });
+  await shadowIndexHandoff(env, envelope);
   return envelope;
 }
 
