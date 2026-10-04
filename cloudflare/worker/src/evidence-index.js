@@ -3,7 +3,7 @@ const HANDOFF_PREFIX = 'private/article-summary-handoff-v1/';
 export const EVIDENCE_INDEX_SCHEMA_VERSION = 'article-evidence-index-v1';
 export const EVIDENCE_INDEX_BACKFILL_ID = 1;
 
-let schemaReady = false;
+const schemaReadyBindings = new WeakSet();
 
 function safe(value, max = 200) {
   return String(value ?? '').replace(/[\u0000-\u001f]+/g, ' ').trim().slice(0, max);
@@ -38,7 +38,7 @@ export function evidenceIndexShadowEnabled(env) {
 
 export async function ensureEvidenceIndexSchema(env) {
   if (!env?.DB) throw new Error('evidence_index_db_missing');
-  if (schemaReady) return;
+  if (schemaReadyBindings.has(env.DB)) return;
   const statements = [
     `CREATE TABLE IF NOT EXISTS article_evidence_index (
       doi TEXT PRIMARY KEY,
@@ -77,7 +77,7 @@ export async function ensureEvidenceIndexSchema(env) {
     )`,
   ];
   for (const sql of statements) await env.DB.prepare(sql).run();
-  schemaReady = true;
+  schemaReadyBindings.add(env.DB);
 }
 
 function normalizeEvidenceRow(row) {
