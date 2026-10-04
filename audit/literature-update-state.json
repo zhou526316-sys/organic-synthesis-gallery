@@ -232,14 +232,14 @@
     "note": "The dedicated trigger push executed the GitHub runner capability guard, DOI-union audit, artifact upload and paired snapshot persistence successfully. No local Node or workflow_dispatch was used."
   },
   "latestMachineAudit": {
-    "generatedAt": "2026-10-04T12:28:59.750Z",
-    "sourceRecords": 1816,
+    "generatedAt": "2026-10-04T12:56:22.564Z",
+    "sourceRecords": 1717,
     "galleryDois": 786,
-    "rawMissingFromGallery": 1506,
+    "rawMissingFromGallery": 1407,
     "previouslyReviewedExcluded": 1354,
-    "missingFromGallery": 152,
-    "unresolved": 152,
-    "potentialGaps": 52,
+    "missingFromGallery": 53,
+    "unresolved": 53,
+    "potentialGaps": 24,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 4,
@@ -247,13 +247,13 @@
     "historicalCoverageLosses": 0,
     "closureDate": "2026-10-03",
     "status": "semantic_review_required",
-    "compactHandoffSha": "aa1307320e02651b7cdaebcaf4c53facefe076a0",
-    "latestBlobSha": "93821f93745b211171cb9c902cf724f326d6942d",
-    "runId": 37202208279,
+    "compactHandoffSha": "ce42400f45b1ce93559cbae7a7eb1c405090c105",
+    "latestBlobSha": "90509b8cd6dab4aa58dee952960ac927b5032502",
+    "runId": 37203791005,
     "runConclusion": "success",
     "publicationSlot": "2026-10-05T08:00:00+08:00",
-    "capabilityFingerprint": "cf1965ec987e8d226af927b2b81c4a06f4059d354882a2797e93b464510b7377",
-    "note": "Post-promotion safety rescan succeeded. Repaired discovery exposes the activation-date backlog for semantic review; no newly surfaced DOI is admitted off-slot and verifiedThrough remains held at 2026-09-18."
+    "capabilityFingerprint": "9a0975386a8e957fca38af6e373d08f6f830431b6abecf634ce54dcf868e19d6",
+    "note": "Explicit user activation policy applied: Chemical Science and Green Chemistry are prospective only from 2026-10-01. September candidates from those two journals are outside the effective universe; Chem remains active from 2026-09-19. No production literature or media mutation was made."
   },
   "publicationPolicy": {
     "updatedAt": "2026-09-22T19:12:00+08:00",
@@ -1311,7 +1311,7 @@
     "closureCoverageAnomalies": 1,
     "note": "No off-slot admission or deletion-only correction was performed. The next publication slot remains the normal 18:00 Beijing slot."
   },
-  "updatedAt": "2026-10-04T17:24:27+08:00",
+  "updatedAt": "2026-10-04T20:58:00+08:00",
   "lastDeploymentAttempt": {
     "schemaVersion": 1,
     "ok": false,
@@ -1385,5 +1385,29 @@
     "bridgeVersion": "2.2.42",
     "tocInstallerVersion": "6.2.24",
     "verifiedThroughHeldAt": "2026-09-18"
+  },
+  "journalActivationPolicy": {
+    "updatedBy": "explicit_user_instruction",
+    "journals": {
+      "Chemical Science": {
+        "activeFrom": "2026-10-01"
+      },
+      "Green Chemistry": {
+        "activeFrom": "2026-10-01"
+      },
+      "Chem": {
+        "activeFrom": "2026-09-19",
+        "unchanged": true
+      }
+    },
+    "effectiveAuditGeneratedAt": "2026-10-04T12:56:22.564Z",
+    "effectiveCounts": {
+      "Chem": 8,
+      "Chemical Science": 12,
+      "Green Chemistry": 8
+    },
+    "preOctoberRscCandidatesRemaining": 0,
+    "productionMutation": false,
+    "scheduleChanged": false
   }
 }
