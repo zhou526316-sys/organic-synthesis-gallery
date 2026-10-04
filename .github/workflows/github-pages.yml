@@ -18,6 +18,11 @@ on:
       - '.github/workflows/github-pages.yml'
       - 'scripts/pages-release-delivery.mjs'
       - 'scripts/test-pages-release-delivery.mjs'
+      - 'scripts/build-gallery-architecture-public.mjs'
+      - 'scripts/test-gallery-architecture-public.mjs'
+      - 'architecture/**'
+      - 'shared/literature-lifecycle.mjs'
+      - 'shared/literature-identity.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'cloudflare/scripts/build-pages-mirror.mjs'
@@ -88,7 +93,7 @@ jobs:
         with:
           node-version: '22'
       - name: Test release delivery regression cases
-        run: node --test scripts/test-pages-release-delivery.mjs
+        run: node --test scripts/test-pages-release-delivery.mjs scripts/test-gallery-architecture-public.mjs
       - name: Resolve trusted main deployment snapshot
         id: resolve
         run: node scripts/pages-release-delivery.mjs resolve
@@ -214,14 +219,20 @@ jobs:
         run: node cloudflare/scripts/sanitize-static-media.mjs
       - name: Verify media-index asset integrity
         run: node cloudflare/scripts/verify-static-media-integrity.mjs
+      - name: Build versioned Gallery architecture read model
+        run: node scripts/build-gallery-architecture-public.mjs
       - name: Build static Gallery
         run: npm run build
       - name: Verify self-contained artifact
         shell: bash
         run: |
           set -euo pipefail
-          for name in index.html CNAME MP_verify_UBgOE7Geixav7CCb.txt d2513cd00f6e2ee49cd1e0c0d6611628.txt papers.gz.b64 total-synthesis.json manual-supplement.json final-audit-supplement.json media-index.json literature-supplement.json title-translations-zh.json paper-title-resolutions.json gallery-vpn-bridge.user.js gallery-vpn-bridge-runtime.js toc-rescue.js toc-mainline.user.js; do test -f "dist/$name"; done
+          for name in index.html CNAME MP_verify_UBgOE7Geixav7CCb.txt d2513cd00f6e2ee49cd1e0c0d6611628.txt architecture-v1/release.json papers.gz.b64 total-synthesis.json manual-supplement.json final-audit-supplement.json media-index.json literature-supplement.json title-translations-zh.json paper-title-resolutions.json gallery-vpn-bridge.user.js gallery-vpn-bridge-runtime.js toc-rescue.js toc-mainline.user.js; do test -f "dist/$name"; done
           test -d dist/media-mirror
+          test -s dist/architecture-v1/current.json
+          test -d dist/architecture-v1/shards
+          test -d dist/architecture-v1/locator
+          test -d dist/architecture-v1/search
           node scripts/validate-tm220-artifacts.mjs dist
           grep -F "gallery-literature-doi-registry" src/main.ts
           grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
