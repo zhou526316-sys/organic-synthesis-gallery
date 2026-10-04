@@ -589,8 +589,13 @@ function embeddedJobDois(value) {
     var candidates = [];
     var finalUrl = String(response && (response.finalUrl || response.responseURL) || '');
     if (finalUrl) candidates.push(finalUrl);
-    var pii = finalUrl.match(/\/pii\/([a-z0-9]+)/i);
-    if (pii) candidates.unshift('https://www.sciencedirect.com/science/article/pii/' + pii[1]);
+    try {
+      var resolvedHost = new URL(finalUrl).hostname.toLowerCase();
+      if (resolvedHost === 'linkinghub.elsevier.com') {
+        var pii = finalUrl.match(/\/pii\/([a-z0-9]+)/i);
+        if (pii) candidates.unshift('https://www.sciencedirect.com/science/article/pii/' + pii[1]);
+      }
+    } catch (_) {}
     var text = String(response && response.responseText || '').replace(/&amp;/gi, '&');
     var pattern = /https?:\/\/(?:www\.)?(?:sciencedirect\.com|cell\.com)\/[^"'<>\s]+/ig;
     var match;
