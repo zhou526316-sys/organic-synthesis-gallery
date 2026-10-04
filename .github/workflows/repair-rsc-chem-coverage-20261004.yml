@@ -1,0 +1,84 @@
+name: Validate RSC/Chem discovery and Elsevier media repair
+on:
+  push:
+    branches: [fix/rsc-chem-discovery-elsevier-20261004]
+permissions:
+  contents: read
+concurrency:
+  group: repair-rsc-chem-discovery-elsevier-20261004
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/rsc-chem-discovery-elsevier-20261004
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Syntax and discovery regression guards
+        run: |
+          set -euo pipefail
+          node --check cloudflare/scripts/audit-literature.mjs
+          node --check public/toc-mainline.user.js
+          node scripts/test-literature-completeness-capability.mjs
+      - name: Tampermonkey ownership and transport regressions
+        run: |
+          set -euo pipefail
+          node tests/tm-newest-retry.test.mjs
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-tm220-release.mjs
+      - name: Build exact Bridge installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.42' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      6.2.24' public/toc-mainline.user.js
+      - name: Real activation-date backfill audit
+        env:
+          AUDIT_START: '2026-09-19'
+          AUDIT_END: '2026-10-04'
+          GALLERY_SITE: https://gallery.gczhouwld.com
+          AUDIT_OUTPUT: audit/repair-rsc-chem-latest.json
+          AUDIT_UNRESOLVED_OUTPUT: audit/repair-rsc-chem-unresolved.json
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/audit-literature.mjs | tee "$RUNNER_TEMP/repair-audit.log"
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const a=JSON.parse(fs.readFileSync('audit/repair-rsc-chem-latest.json','utf8'));
+          const wanted=['Chem','Chemical Science','Green Chemistry'];
+          const rows=Object.fromEntries(wanted.map(name=>[name,a.byJournal?.[name]||null]));
+          console.log('RSC_CHEM_BACKFILL '+JSON.stringify({
+            generatedAt:a.generatedAt,
+            startDate:a.startDate,
+            endDate:a.endDate,
+            rows,
+            sourceCoverageAnomalies:(a.sourceCoverageAnomalies||[]).filter(x=>wanted.includes(x.journal)),
+            unresolved:(a.missingCandidates||[]).filter(x=>wanted.includes(x.journal)).map(x=>({doi:x.doi,journal:x.journal,date:x.date,createdDate:x.createdDate,title:x.title,reviewPriority:x.reviewPriority}))
+          }));
+          if(!rows.Chem||!rows['Chemical Science']||!rows['Green Chemistry']) throw Error('missing journal rows');
+          if(rows['Chemical Science'].rawSourceRecords>0 && rows['Chemical Science'].sourceRecords===0 && !(a.sourceCoverageAnomalies||[]).some(x=>x.journal==='Chemical Science')) throw Error('Chemical Science raw-to-union collapse not guarded');
+          if(rows['Green Chemistry'].rawSourceRecords>0 && rows['Green Chemistry'].sourceRecords===0 && !(a.sourceCoverageAnomalies||[]).some(x=>x.journal==='Green Chemistry')) throw Error('Green Chemistry raw-to-union collapse not guarded');
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rsc-chem-discovery-elsevier-repair-evidence
+          path: |
+            audit/repair-rsc-chem-latest.json
+            audit/repair-rsc-chem-unresolved.json
+            ${{ runner.temp }}/repair-audit.log
+            public/gallery-vpn-bridge.user.js
+          retention-days: 7
+          if-no-files-found: warn
