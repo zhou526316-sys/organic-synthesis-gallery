@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { DATA_FILES, collectPapers, assertPartition, sameSet } from './pages-release-delivery.mjs';
 import { buildCatalog, verifyCatalog, stable, digest } from '../architecture/catalog.mjs';
 import { buildLegacyTitlePresentation } from '../architecture/title-presentation.mjs';
+import { buildPublishedMembership } from '../architecture/published-membership.mjs';
 import { loadScopeCorrections } from './lib/scope-corrections.mjs';
 import { isExcludedDoi } from '../shared/literature-policy.js';
 import { beijingDate } from '../shared/literature-lifecycle.mjs';
@@ -96,23 +97,14 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const presentationText = stable(presentation) + '\n';
   const presentationRef = ref(`title-presentation.${sha256(presentationText)}.json`, presentationText);
 
-  const members = Object.fromEntries(bundle.records.map(row => [row.doi, row.revision]));
-  const serial = Date.parse(marker.publicationSlot);
-  assert(Number.isSafeInteger(serial), 'membership_serial_invalid');
-  const membershipBody = {
-    schema: MEMBERSHIP_SCHEMA,
-    scope: 'all-time',
-    complete: true,
+  const membershipBody = buildPublishedMembership({
     publicationSlot: marker.publicationSlot,
-    sourceCommit,
     markerBlobSha,
     catalogId: bundle.catalog.recordSetHash,
     doiSetHash: bundle.catalog.doiSetHash,
-    serial,
-    count: bundle.records.length,
-    members,
-    withdrawn: [...withdrawn].sort(),
-  };
+    records: bundle.records,
+    withdrawn,
+  });
   const membershipText = stable(membershipBody) + '\n';
   const membershipRef = ref(`membership.${sha256(membershipText)}.json`, membershipText);
 
