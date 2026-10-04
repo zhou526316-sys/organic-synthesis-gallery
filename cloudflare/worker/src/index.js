@@ -313,8 +313,10 @@ async function handleApi(request, env, ctx) {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
     const body = await readJson(request);
+    const requestedNow = Number(body?.now);
     return resultResponse(await compareSummaryReviewCandidateShadow(env, {
       preferredDoi: String(body?.preferredDoi || ''),
+      ...(Number.isFinite(requestedNow) ? { now: requestedNow } : {}),
     }));
   }
 
