@@ -38,6 +38,10 @@ assert.ok(auditSource.includes('safetyTail'), 'Safety-tail records must remain o
 assert.ok(auditSource.includes("['online', 'published', 'created']"), 'Crossref discovery must union online, published and created dates');
 assert.ok(auditSource.includes('createdDiscovered'), 'Late-deposit rescue must remain enabled');
 assert.ok(auditSource.includes('createdDate'), 'Crossref created date must be retained independently of publication date');
+assert.ok(auditSource.includes("if (!Array.isArray(p) || !p[0] || !p[1] || !p[2]) return '';"), 'Partial Crossref dates must stay unknown instead of being coerced to January/day 1');
+assert.ok(auditSource.includes('datePrecision'), 'Audit must retain Crossref date precision for incomplete publisher metadata');
+assert.ok(!auditSource.includes("String(p[1] || 1)"), 'Audit must never fabricate a missing Crossref month');
+assert.ok(!auditSource.includes("String(p[2] || 1)"), 'Audit must never fabricate a missing Crossref day');
 assert.ok(auditSource.includes('createdInQuery'), 'Created/deposit rescue must survive publication-date filtering when within active coverage');
 assert.ok(auditSource.includes('dateConflict'), 'Future issue-date conflicts discovered by current deposits must remain explicit');
 assert.ok(auditSource.includes('lateIndexed'), 'Late-indexed records must remain observable in the audit report');
@@ -75,6 +79,7 @@ console.log(JSON.stringify({
   sourceCoverageRegressionGuard: true,
   rawToUnionCollapseGuard: true,
   catchupQueriesActuallyWiden: true,
+  partialDatesNeverFabricated: true,
   historicalDoiRegressionGuard: true,
   silentKeywordExclusion: false,
 }));
