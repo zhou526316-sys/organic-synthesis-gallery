@@ -44,7 +44,7 @@ const end = browser.indexOf('  function candidateBelongsToJob(', start);
 let live = { doi, jobId: good.jobId, captureVersion: '6.2.20' };
 let binding = good.jobId;
 let meta = [];
-const bctx = vm.createContext({ URL, normalizeDoi, VERSION: '6.2.20', P: 'osg-toc-v6:', ACTIVE_JOB_KEY: 'active', location: { href: page, hash: '#osg-job=' + good.jobId }, GM_getValue: () => live, sessionStorage: { getItem: () => binding, setItem: (_key, value) => { binding = value; } }, document: { querySelectorAll: () => meta }, sleep: async () => {} });
+const bctx = vm.createContext({ URL, normalizeDoi, VERSION: '6.2.20', P: 'osg-toc-v6:', ACTIVE_JOB_KEY: 'active', MANUAL_RUN_KEY: 'manual', location: { href: page, hash: '#osg-job=' + good.jobId }, GM_getValue: key => key === 'active' ? live : null, sessionStorage: { getItem: () => binding, setItem: (_key, value) => { binding = value; } }, document: { querySelectorAll: () => meta }, sleep: async () => {} });
 vm.runInContext(browser.slice(start, end), bctx);
 const guard = vm.runInContext('assertBoundCaptureJob', bctx);
 check('bound publisher tab passes', () => assert.equal(guard({ ...live }, image), doi));
