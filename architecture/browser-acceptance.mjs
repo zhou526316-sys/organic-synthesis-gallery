@@ -7,7 +7,9 @@ import { tmpdir } from 'node:os';
 import { build } from 'vite';
 import { chromium, webkit } from 'playwright';
 import { makeMembership } from './membership.mjs';
-import { stable, digest, buildCatalog } from './catalog.mjs';
+import { stable, digest } from './catalog.mjs';
+import { gunzipSync } from 'node:zlib';
+import { buildLegacyTitlePresentation } from './title-presentation.mjs';
 
 const root=process.cwd(), shadow=path.resolve(process.argv[2] || ''), out=path.join(shadow,'validation/browser');
 await mkdir(out,{recursive:true});
@@ -20,6 +22,21 @@ const life=await json(path.join(shadow,pointer.lifecycle.path));
 const hashes=await json(path.join(shadow,'validation/fixtures.json')), fixtures={};
 for(const [name, row] of Object.entries(hashes)) { fixtures[name]=await readFile(path.join(shadow,'validation/public',name));assert.equal(digest(fixtures[name]),row.sha256); }
 const translations=JSON.parse(fixtures['title-translations-zh.json']), resolutions=JSON.parse(fixtures['paper-title-resolutions.json']);
+// Build the compatibility projection from the same frozen SOURCE files, not the
+// observed DOM or a hardcoded list of previously failed examples.
+const precedence=['papers.gz.b64','total-synthesis.json','manual-supplement.json','final-audit-supplement.json','literature-supplement.json'];
+const titleGroups=precedence.map(name=>{
+  const parsed=JSON.parse(name.endsWith('.b64')?gunzipSync(Buffer.from(fixtures[name].toString().trim(),'base64')).toString():fixtures[name]);
+  return Array.isArray(parsed)?parsed:parsed.papers;
+});
+const presentation=buildLegacyTitlePresentation(records,titleGroups,{catalogId:catalog.recordSetHash,
+  sourceHashes:Object.fromEntries(precedence.map(name=>[name,hashes[name].sha256]))});
+const presentationText=stable(presentation)+'\n', presentationHash=digest(presentationText);
+const presentationRef={path:`validation/title-presentation.${presentationHash}.json`,sha256:presentationHash,bytes:Buffer.byteLength(presentationText)};
+await writeFile(path.join(shadow,presentationRef.path),presentationText);
+console.log('GALLERY_TITLE_COMPATIBILITY '+JSON.stringify({overrides:Object.keys(presentation.overrides).length,
+  canonicalRecordsModified:false,presentationSha256:presentationHash}));
+
 const work=await mkdtemp(path.join(tmpdir(),'gallery-browser-parity-'));
 for(const name of ['src','shared','public','index.html','package.json']) await cp(path.join(root,name),path.join(work,name),{recursive:true});
 await symlink(path.join(root,'node_modules'),path.join(work,'node_modules'),'dir');
@@ -103,17 +120,20 @@ try {
       }
       // Initialize the actual new reader/fence in the browser, then render its records
       // through the unchanged production card renderer and the frozen static title supplements.
-      await page.evaluate(async({base,asOfDate})=>{
+      await page.evaluate(async({base,asOfDate,presentationRef})=>{
         const {MembershipFence}=await import('/architecture/membership.mjs');
         const {FencedCatalogReader}=await import('/architecture/fenced-reader.mjs');
+        const {applyTitlePresentation}=await import('/architecture/title-presentation.mjs');
         const fence=new MembershipFence({fetchSnapshot:async()=>{const r=await fetch(base+'/membership.json',{cache:'no-store'});return r.json();}});
         const reader=new FencedCatalogReader(base+'/catalog/',{fence});
         globalThis.__arch={fence,reader,asOfDate};
         const c=await reader.reader.open();let all=[];
         for(const ref of c.shards)all.push(...(await reader.reader.read(ref)).records);
         await fence.ready();
-        await globalThis.__archBridge.replace(all.map(r=>r.paper));
-      },{base,asOfDate:report.asOfDate});
+        const presentation=await reader.reader.read(presentationRef);
+        globalThis.__arch.project = row=>applyTitlePresentation(row,presentation,c.recordSetHash);
+        await globalThis.__archBridge.replace(all.map(globalThis.__arch.project));
+      },{base,asOfDate:report.asOfDate,presentationRef});
       const differences=[];
       for(const lang of ['en','zh']){
         await page.evaluate(value=>globalThis.__archBridge.language(value),lang);
@@ -122,11 +142,12 @@ try {
         for(let i=0;i<candidate.length;i++)if(stable(candidate[i])!==stable(baseline[lang][i]))differences.push({lang,expected:baseline[lang][i],actual:candidate[i]});
       }
       await writeFile(path.join(out,`${name}-field-parity.json`),JSON.stringify({compared:records.length,languages:['en','zh'],differences},null,2));
+      if(differences.length)console.log('GALLERY_DISPLAY_DIFFERENCES '+JSON.stringify(differences.slice(0,30)));
       assert.equal(differences.length,0,`legacy_display_mismatch:${differences.length}`);
-      const hot=await page.evaluate(async()=>{const r=await __arch.reader.hot(__arch.asOfDate);await __archBridge.replace(r.records.map(v=>v.paper));return{count:r.records.length,complete:r.complete,dom:__archBridge.inspect().length};});
+      const hot=await page.evaluate(async()=>{const r=await __arch.reader.hot(__arch.asOfDate);await __archBridge.replace(r.records.map(__arch.project));return{count:r.records.length,complete:r.complete,dom:__archBridge.inspect().length};});
       assert.deepEqual(hot,{count:life.counts.hot,complete:true,dom:life.counts.hot});
       for(const doi of life.partitions.archive){
-        const r=await page.evaluate(async doi=>{const row=await __arch.reader.get(doi,__arch.asOfDate);if(row.status==='published')await __archBridge.replace([row.record.paper]);return{status:row.status,lifecycle:row.lifecycle,doi:__archBridge.inspect()[0]?.doi};},doi);
+        const r=await page.evaluate(async doi=>{const row=await __arch.reader.get(doi,__arch.asOfDate);if(row.status==='published')await __archBridge.replace([__arch.project(row.record)]);return{status:row.status,lifecycle:row.lifecycle,doi:__archBridge.inspect()[0]?.doi};},doi);
         assert.deepEqual(r,{status:'published',lifecycle:'archive',doi});
       }
       const target=life.partitions.archive[0]||records[0].doi;
@@ -139,6 +160,7 @@ try {
       assert.deepEqual(events.errors,[],'uncaught_browser_errors');
       outcomes.push({browser:name,ok:true,fieldParityRecords:records.length,hot:hot.count,archiveDeepLinks:life.partitions.archive.length,
         globalDoiSearch:true,withdrawnOldCacheBlocked:true,unexpectedPageErrors:0,
+        titleCompatibilityOverrides:Object.keys(presentation.overrides).length,canonicalRecordsModified:false,
         scope:'temporary preview with unchanged card renderer; remote APIs mocked; real frozen public data; no production UI activation'});
       current=await makeMembership({catalogId:catalog.recordSetHash,serial:3,issuedAt:Date.now()-1000,validUntil:Date.now()+240000,records});
     }catch(error){await page.screenshot({path:path.join(out,`${name}-failure.png`),fullPage:false});outcomes.push({browser:name,ok:false,error:error.message});throw error;}

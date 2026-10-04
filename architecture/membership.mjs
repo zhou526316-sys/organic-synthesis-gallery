@@ -49,17 +49,18 @@ export class MembershipFence {
     assert(typeof fetchSnapshot === 'function' && typeof now === 'function', 'membership_transport_required');
     this.fetchSnapshot = fetchSnapshot; this.now = now; this.maxTtlMs = maxTtlMs; this.retryMs = retryMs;
     assert(Number.isSafeInteger(maxTtlMs) && maxTtlMs > 0 && Number.isSafeInteger(retryMs) && retryMs >= 0, 'membership_policy_invalid');
-    this.serial = -1; this.snapshot = null; this.withdrawn = new Set(); this.listeners = new Set();
+    this.serial = -1; this.identityHash = null; this.snapshot = null; this.withdrawn = new Set(); this.listeners = new Set();
     this.inflight = null; this.usable = false; this.retryAt = 0; this.error = null;
     if (initialState) {
       assert(initialState.schema === MEMBERSHIP_SCHEMA && Number.isSafeInteger(initialState.serial) && Array.isArray(initialState.withdrawn), 'invalid_fence_checkpoint');
       assert(initialState.withdrawn.every(doi => normalizeDoi(doi) === doi), 'invalid_fence_checkpoint_doi');
-      this.serial = initialState.serial; this.withdrawn = new Set(initialState.withdrawn);
+      assert(initialState.identityHash === undefined || initialState.identityHash === null || isHash(initialState.identityHash), 'invalid_fence_checkpoint_hash');
+      this.serial = initialState.serial; this.identityHash = initialState.identityHash || null; this.withdrawn = new Set(initialState.withdrawn);
     }
   }
   onChange(listener) { this.listeners.add(listener); return () => this.listeners.delete(listener); }
   emit() { for (const listener of this.listeners) { try { listener(this.checkpoint()); } catch { /* UI listeners cannot weaken the gate. */ } } }
-  checkpoint() { return { schema: MEMBERSHIP_SCHEMA, serial: this.serial, withdrawn: [...this.withdrawn].sort() }; }
+  checkpoint() { return { schema: MEMBERSHIP_SCHEMA, serial: this.serial, identityHash: this.identityHash, withdrawn: [...this.withdrawn].sort() }; }
   fresh() { return Boolean(this.usable && this.snapshot && this.now() >= this.snapshot.issuedAt && this.now() < this.snapshot.validUntil); }
   async accept(snapshot) {
     // Own the bytes before any await so caller mutation cannot change checked content.
@@ -68,11 +69,19 @@ export class MembershipFence {
     assert(isHash(digest) && await membershipDigest(body) === digest, 'membership_digest_mismatch');
     const now = this.now();
     assert(value.issuedAt <= now && value.validUntil > now && value.validUntil - value.issuedAt <= this.maxTtlMs, 'membership_not_fresh');
+    // Content serial and freshness envelope are independent. An unchanged catalog may
+    // renew its TTL without pretending that its member set has changed.
+    const { issuedAt, validUntil, ...identity } = body;
+    const identityHash = await membershipDigest(identity);
     assert(value.serial >= this.serial, 'membership_serial_rollback');
-    if (value.serial === this.serial && this.snapshot) assert(digest === this.snapshot.digest, 'membership_serial_conflict');
+    assert(value.issuedAt <= this.now() && value.validUntil > this.now(), 'membership_expired_during_validation');
+    if (value.serial === this.serial && this.identityHash) {
+      assert(identityHash === this.identityHash, 'membership_serial_conflict');
+      if (this.snapshot) assert(value.issuedAt >= this.snapshot.issuedAt, 'membership_envelope_rollback');
+    }
     // Restoring a confirmed withdrawal needs a separately authorized restoration protocol.
     for (const doi of this.withdrawn) assert(!Object.hasOwn(value.members, doi), 'withdrawn_doi_resurrection');
-    this.serial = value.serial;
+    this.serial = value.serial; this.identityHash = identityHash;
     for (const doi of value.withdrawn) this.withdrawn.add(doi);
     this.snapshot = value; this.usable = true; this.error = null; this.retryAt = 0; this.emit();
     return true;

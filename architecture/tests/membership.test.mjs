@@ -44,8 +44,8 @@ test('older serial cannot restore stale generation',async()=>{
   const s=await setup(); s.setSnapshot(await snap(s.b,{serial:0}));
   assert.equal(await s.fence.refresh(),false); assert.match(s.fence.error,/rollback/);
 });
-test('same serial cannot contain different bytes',async()=>{
-  const s=await setup(); s.setSnapshot(await snap(s.b,{validUntil:now+20000}));
+test('same serial cannot contain different member revisions',async()=>{
+  const s=await setup(), revised=bundle([{...p(1),title:'Changed'},p(2,'2026-07-01')]); s.setSnapshot(await snap(revised));
   assert.equal(await s.fence.refresh(),false); assert.match(s.fence.error,/conflict/);
 });
 test('known withdrawal survives failed refresh and old cache',async()=>{
@@ -151,4 +151,23 @@ test('in-flight valid receipt survives retirement, stale job does not',async()=>
   const s=await setup();
   assert.equal(captureReceiptDisposition({doi:p(2).doi,jobId:'a',currentJobId:'a',fence:s.fence}),'retain-validated-receipt');
   assert.equal(captureReceiptDisposition({doi:p(2).doi,jobId:'a',currentJobId:'b',fence:s.fence}),'reject-stale-job');
+});
+
+test('unchanged membership renews freshness without a new content serial',async()=>{
+  const s=await setup(); s.setTime(now+40000);
+  s.setSnapshot(await snap(s.b,{issuedAt:now+39000,validUntil:now+69000}));
+  assert.equal(await s.fence.refresh(),true); assert.equal(s.fence.status(p(1).doi),'present');
+  assert.equal(s.fence.serial,1);
+});
+test('same-content older freshness envelope is not replayed over renewal',async()=>{
+  const s=await setup(); s.setTime(now+5000);
+  s.setSnapshot(await snap(s.b,{issuedAt:now+4000,validUntil:now+34000})); await s.fence.refresh();
+  s.setSnapshot(await snap(s.b)); assert.equal(await s.fence.refresh(),false);
+  assert.match(s.fence.error,/envelope_rollback/);
+});
+test('checkpoint pins content identity but not a positive lease',async()=>{
+  const s=await setup(), revised=bundle([{...p(1),title:'Changed'},p(2,'2026-07-01')]);
+  const wrong=await snap(revised);
+  const fence=new MembershipFence({now:()=>now,initialState:s.fence.checkpoint(),fetchSnapshot:async()=>wrong});
+  assert.equal(fence.status(p(1).doi),'unknown');assert.equal(await fence.ready(),false);assert.match(fence.error,/serial_conflict/);
 });
