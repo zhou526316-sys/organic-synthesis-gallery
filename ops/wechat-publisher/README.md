@@ -34,3 +34,19 @@ drafts.
 
 A successful run prints `preview_url`. That URL is generated only after
 `draft/get` succeeds.
+
+
+## Featured-paper source PDFs
+
+Featured-paper source PDFs are repository assets. The publisher reads the path
+from `public/wechat-featured/YYYY-MM-DD.json -> pdf_repo_path`.
+
+Current example:
+
+```text
+assets/wechat-featured/2026-10-04/s41467-026-78226-0_reference.pdf
+```
+
+Normal Ubuntu publishing therefore needs only `git pull --ff-only`; no Windows
+download path or `scp` step is part of the standard workflow. The
+`--featured-pdf` option remains an emergency override only.
