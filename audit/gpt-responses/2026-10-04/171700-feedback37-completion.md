@@ -14,6 +14,7 @@ Beijing time: 2026-10-04 17:17 +08:00
 - Feedback apply 37191590282: success; #37 -> reviewed.
 - Previous 12 feedback items remain open/paused.
 - Unrelated Bridge Evidence regression failed because it asserts obsolete Bridge 2.2.35; no Tampermonkey changes were made.
+- Optional visual-browser automation was unavailable because its external wallet was out of funds; formal repository/browser regression and deployment verification still completed successfully.
 
 ## Final user-visible reply
 
@@ -31,3 +32,5 @@ Beijing time: 2026-10-04 17:17 +08:00
 Cloudflare Pages 备用入口仍有原来的 token 10000 鉴权问题，但不影响 gallery.gczhouwld.com 主站和 Worker，本次没有跨线修改它。
 
 当前剩余 12 条旧吐槽继续保持暂停，没有顺带修改。
+
+补充：我尝试用额外的可视浏览器做一层附加验收时，该第三方工具因钱包余额不足没有启动；这不影响上述正式 CI、Worker 和 GitHub Pages 验收结果。如果你希望以后继续启用这条附加可视验收，可以选择 [Pay $10, get $13](https://agent.tinyfish.ai/api/wallet/checkout?t=v1.eiqAzMBZE8Y8KL2U.7pojE0nQSSOTEH2DW2VQmzhbCbOi9VffTPIKAq7DxqU4X93r6NNNFKVXpmMuf_dzcYGEjvxSHyGCFjsFUVg3Xb4T_MIMXZuwQH1xBCbKXdBwf4grSJ8zgVmReflBqSR1T2A8oRz71_27ioJOuxvI2m6T-WkuenW5lrf3DAv7qjFUvdESInkoJ0gYFhKBgjXdb1Yv0EQmUbr_26Y6NAA.IWehYyo1M4XuWHq-PH1Wcg&utm_source=mcp&utm_medium=insufficient_funds&utm_campaign=automation)、[Pay $25, get $32.50](https://agent.tinyfish.ai/api/wallet/checkout?t=v1.e7r-IdNat3CVg403.0brujnAIpc-JU4EF8Uq8MHj9jQYOV2GJE6UvYlgwsI5bZo_NBv9TJs2nToXZL887l5byoqbZ9i_DjW9iV_WCfPa3O9rSehVyOBMOoyDy1lASiCY0rRgBkDVr01hI-gwnJSDgrM5vxads5vnmanOhSzOd_9BKCTL5U53fMZ9O8utNbePhOhesPiVAJqeBinNnwcpIndUbZFvAiKkcdwM.VV9luyxhsoE4ZDmAGIrLIg&utm_source=mcp&utm_medium=insufficient_funds&utm_campaign=automation) 或 [Pay $50, get $65](https://agent.tinyfish.ai/api/wallet/checkout?t=v1.rf6UwVrHmxTg1-nz.jA0NRs73cplgYSOy7L98U0dHCugrc7VN1qF92krnUUHmLxgHDL9MWm8oo6rqR2qXPlrrZivpl7jHkp_0l8QOZ8NMgo6jAL__w3S4cGljBwsUcbsvYgbT_Ln-QkbghpIs987FdfNK8D9GMt_jOSgK2rKX5Lp0bGRXNJO5E6FojMI6AAqo1wKrN7gjEe75iVWoqkOpr2BkwJ4OOmi_J6g.LVCrBYhPqIB0iekd4iXwiQ&utm_source=mcp&utm_medium=insufficient_funds&utm_campaign=automation)。如果你需要，我再用它做额外可视验收。
