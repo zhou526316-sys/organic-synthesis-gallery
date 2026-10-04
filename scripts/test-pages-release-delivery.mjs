@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { collectPapers, sameSet, normalizeDoi, assertPartition, trustedReleaseEvent, isDirectReleaseHandoff, compareProtected, mergeDeliveryState } from './pages-release-delivery.mjs';
 const a = '10.1021/jacs.test1', b = '10.1021/jacs.test2', c = '10.1021/jacs.test3';
 const marker = { mode: 'slot-release', publicationSlot: '2026-09-29T18:00:00+08:00', productionCards: 1, publishableDois: [a], rejectedDois: [b], deferredDois: [c] };
-const evidence = { ok: true, chineseTitlesVerified: true, architectureVerified: true, publicationSlot: marker.publicationSlot, productionCards: 1,
+const evidence = { schemaVersion: 2, ok: true, chineseTitlesVerified: true, architectureVerified: true, publicationSlot: marker.publicationSlot, productionCards: 1,
   publishableDois: [a], rejectedDois: [b], deferredDois: [c], verifiedAt: '2026-09-29T15:40:00Z', markerCommit: 'm', sourceCommit: 's', runId: 1 };
 test('DOI normalization', () => assert.equal(normalizeDoi('https://doi.org/10.1021/JACS.test1?x=1'), a));
 test('exact set comparison rejects equal counts with different DOI', () => assert.equal(sameSet([a], [b]), false));
