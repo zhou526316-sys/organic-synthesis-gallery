@@ -171,6 +171,10 @@ def load_latest_release():
     slot = str(release.get("publicationSlot") or "")
     if not dois or not slot:
         raise RuntimeError("lastPublication is missing publicationSlot or publishedDois")
+    if not slot.endswith("T08:00:00+08:00"):
+        raise RuntimeError(
+            "WeChat daily draft only accepts the 08:00 Asia/Shanghai literature release"
+        )
 
     index: dict[str, dict] = {}
     for name in SUPPLEMENT_FILES:
