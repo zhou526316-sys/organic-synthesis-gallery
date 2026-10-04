@@ -196,7 +196,7 @@ test('real legacy R2 selector and indexed D1 selector compare equal on the same 
   ];
   const env=await indexedEnv(objects);t.after(()=>env.DB.close());
   const result=await compareSummaryReviewCandidateShadow(env,{now});
-  assert.equal(result.status,200);assert.equal(result.body.readPathActive,false);assert.equal(result.body.same,true);
+  assert.equal(result.status,200);assert.equal(result.body.readPathActive,false);assert.equal(result.body.comparable,true);assert.equal(result.body.same,true);
   assert.equal(result.body.legacy.candidate.doi,'10.1234/a');
   assert.deepEqual(result.body.legacy,result.body.indexed);
 });
@@ -222,3 +222,35 @@ test('production review selector remains legacy R2 path in D2b1 foundation',()=>
 });
 
 console.log('SUMMARY_CANDIDATE_INDEX_TESTS_READY');
+
+
+test('source race is reported as incomparable rather than D1 divergence',async t=>{
+  const evidence=evidenceObject('10.1234/race',1,{capturedAt:'2026-10-04T11:00:00Z'});
+  const env=await indexedEnv([evidence]);t.after(()=>env.DB.close());
+  let jobLists=0;
+  env.MEDIA={
+    async list({prefix='',include=[]}={}){
+      if(prefix==='private/article-evidence-v2/') return {objects:[{key:evidence.key,customMetadata:evidence.customMetadata}],truncated:false};
+      if(prefix==='private/article-summary-jobs/'){
+        jobLists++;
+        if(jobLists===1) return {objects:[],truncated:false};
+        return {objects:[{
+          key:'private/article-summary-jobs/race.json',
+          customMetadata:{
+            doi:'10.1234/race',evidencePacketHash:H(1),sourceHash:H(5),state:'published',
+            evidenceLevel:'complete',textProcessingPolicy:'private_cache_allowed',
+            capturedAt:'2026-10-04T11:00:00Z',publishedAt:String(Date.parse('2026-10-04T11:30:00Z')),
+            nextRetryAt:'0',leaseExpiresAt:'0',updatedAt:String(Date.parse('2026-10-04T11:30:00Z'))
+          }
+        }],truncated:false};
+      }
+      return {objects:[],truncated:false};
+    }
+  };
+  const result=await compareSummaryReviewCandidateShadow(env,{now:Date.parse('2026-10-04T12:00:00Z')});
+  assert.equal(result.status,200);
+  assert.equal(result.body.comparable,false);
+  assert.equal(result.body.sourceStable,false);
+  assert.equal(result.body.same,false);
+  assert.equal(result.body.reason,'legacy_source_changed_during_comparison');
+});
