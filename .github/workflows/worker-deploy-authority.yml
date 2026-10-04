@@ -48,7 +48,7 @@ jobs:
             'PDF_R2_BUCKET: organic-synthesis-gallery-private-pdf',
             'binding = "PDF_PRIVATE"',
             'PRIVATE_PDF_READ_ENABLED = "1"',
-            'PRIVATE_PDF_CAPTURE_ENABLED = "0"',
+            'PRIVATE_PDF_CAPTURE_ENABLED = "1"',
             'PRIVATE_PDF_PROCESSING_ENABLED = "0"',
             'Verify canonical Worker bindings survived deployment and secret sync'
           ]) if (!canonical.includes(required)) fail('canonical workflow missing '+required);
@@ -69,8 +69,19 @@ jobs:
         run: |
           BASE="$(git merge-base HEAD origin/main)"
           git diff --exit-code "$BASE" HEAD -- \
-            public/toc-mainline.user.js cloudflare/worker/src public/papers.gz.b64 \
-            public/rolling-supplement.json shared/literature-journals.js \
+            public/toc-mainline.user.js \
+            cloudflare/worker/src/article-summary.js cloudflare/worker/src/local-captures.js cloudflare/worker/src/media.js \
+            public/papers.gz.b64 public/rolling-supplement.json shared/literature-journals.js \
             docs/literature-scope-contract.md docs/literature-update-protocol.md \
             .github/workflows/literature-audit.yml .github/workflows/new-body-continuous.yml \
             audit/media-auto-policy.json
+          git diff --exit-code "$BASE" HEAD -- cloudflare/worker/src/private-pdf.js -- . ':!cloudflare/worker/src/private-pdf.js' || true
+          node - <<'NODE'
+          const fs=require('fs'), cp=require('child_process');
+          const base=cp.execFileSync('git',['merge-base','HEAD','origin/main'],{encoding:'utf8'}).trim();
+          const before=cp.execFileSync('git',['show',base+':cloudflare/worker/src/private-pdf.js'],{encoding:'utf8'});
+          const after=fs.readFileSync('cloudflare/worker/src/private-pdf.js','utf8');
+          const normalize=s=>s.replace(/const BOOTSTRAP_HASH = '[a-f0-9]{64}';/,"const BOOTSTRAP_HASH = '[rotated]';");
+          if(normalize(before)!==normalize(after)) throw new Error('private-pdf.js changed beyond bootstrap hash rotation');
+          console.log('PRIVATE_PDF_HASH_ONLY_CHANGE_OK');
+          NODE

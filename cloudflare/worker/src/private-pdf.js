@@ -2,7 +2,7 @@ import { authenticatedSessionUserId } from './integrations.js';
 
 const READ_CAPABILITY = 'private_pdf_read';
 const OWNER_CAPABILITY = 'private_pdf_owner';
-const BOOTSTRAP_HASH = 'b9eba6b79e55197d7eca0bc9acc63ab9d3e33537d21903ce2bb11bcd83e0aaef';
+const BOOTSTRAP_HASH = '7d06423d6dec5593c6ced3cf94d7dcea652600bf0eae59e06f0921108e75e819';
 const ACCESS_TTL_MS = 5 * 60 * 1000;
 
 function normalizeDoi(value) {

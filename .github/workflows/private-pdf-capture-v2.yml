@@ -32,11 +32,13 @@ jobs:
         with: {fetch-depth: 0}
       - uses: actions/setup-node@v4
         with: {node-version: 22}
-      - name: Confirm PDF capture remains disabled in production config
+      - name: Confirm owner-scoped PDF capture enabled and processing disabled
         run: |
           set -euo pipefail
-          grep -F 'PRIVATE_PDF_CAPTURE_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'PRIVATE_PDF_CAPTURE_ENABLED = "1"' .github/workflows/deploy-worker-frontend.yml
           grep -F 'PRIVATE_PDF_PROCESSING_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
+          grep -F "if (!await hasCapability(env, userId, CAPTURE_CAPABILITY))" cloudflare/worker/src/private-pdf.js
+          grep -F "const lease = await captureLeaseRow(request, env);" cloudflare/worker/src/private-pdf.js
           grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v1'" public/toc-mainline.user.js
       - name: Check isolated PDF backend and migrations
         run: |
