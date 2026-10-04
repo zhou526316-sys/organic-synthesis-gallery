@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Private PDF owner setup</title>
+<style>
+body{font-family:Inter,system-ui,sans-serif;max-width:720px;margin:48px auto;padding:0 20px;color:#1f2937}main{border:1px solid #d0d5dd;border-radius:14px;padding:24px}button{padding:10px 16px;border:0;border-radius:9px;background:#111827;color:white;font-weight:700;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}.muted{color:#667085}.ok{color:#067647}.bad{color:#b42318}code{word-break:break-all}
+</style>
+</head>
+<body>
+<main>
+<h1>私有 PDF owner 绑定</h1>
+<p class="muted">这个页面只做一次账号权限绑定，不会抓取 PDF，也不会修改文献、TOC 或正文图规则。</p>
+<p>当前登录账号：<strong id="account">正在读取…</strong></p>
+<p id="status" class="muted"></p>
+<button id="claim" disabled>确认将当前账号设为私有 PDF owner</button>
+</main>
+<script type="module">
+const SESSION_KEY='organic-gallery-session-v1';
+const API='https://api.gczhouwld.com';
+const account=document.querySelector('#account');
+const status=document.querySelector('#status');
+const button=document.querySelector('#claim');
+const token=localStorage.getItem(SESSION_KEY)||'';
+const code=new URLSearchParams(location.hash.replace(/^#/,'')).get('code')||'';
+async function json(path,init={}){
+  const headers=new Headers(init.headers||{});
+  if(token)headers.set('authorization','Bearer '+token);
+  if(init.body&&!headers.has('content-type'))headers.set('content-type','application/json');
+  const response=await fetch(API+path,{...init,headers,cache:'no-store'});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.error||('HTTP '+response.status));
+  return data;
+}
+(async()=>{
+  if(!token){account.textContent='未登录';status.textContent='请先回到文献库登录目标账号，再重新打开本页。';status.className='bad';return;}
+  try{
+    const session=await json('/api/user-ui/auth/session');
+    if(!session.authenticated||!session.user){account.textContent='未登录';status.textContent='当前登录状态已失效。';status.className='bad';return;}
+    account.textContent=session.user.email||session.user.displayName||session.user.id;
+    if(session.user.capabilities?.includes('private_pdf_owner')){
+      status.textContent='这个账号已经是私有 PDF owner。';status.className='ok';return;
+    }
+    if(!code){status.textContent='缺少一次性绑定码。';status.className='bad';return;}
+    status.textContent='请确认这里显示的是你要绑定的账号，再点击按钮。';
+    button.disabled=false;
+    button.addEventListener('click',async()=>{
+      button.disabled=true;status.textContent='正在绑定…';status.className='muted';
+      try{
+        const result=await json('/api/user-ui/private-pdf/bootstrap-owner',{method:'POST',body:JSON.stringify({claimCode:code})});
+        status.textContent='绑定成功。已获得私有 PDF 读取、捕获和处理权限；后续功能仍按阶段开启。';status.className='ok';
+        history.replaceState(null,'',location.pathname+location.search);
+        window.dispatchEvent(new Event('gallery-auth-session-changed'));
+      }catch(error){status.textContent='绑定失败：'+String(error?.message||error);status.className='bad';button.disabled=false;}
+    },{once:true});
+  }catch(error){account.textContent='读取失败';status.textContent=String(error?.message||error);status.className='bad';}
+})();
+</script>
+</body>
+</html>
