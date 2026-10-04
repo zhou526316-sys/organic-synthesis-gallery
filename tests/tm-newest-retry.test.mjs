@@ -10,7 +10,7 @@ function harness(overrides={}){
   const ctx=vm.createContext({console,URL,Date,Map,Set,AbortController,setTimeout,clearTimeout,setInterval,clearInterval,
     location:{href:'https://gallery.gczhouwld.com/',hostname:'gallery.gczhouwld.com',pathname:'/'},
     GM_getValue:(k,d)=>data.has(k)?data.get(k):d,GM_setValue:(k,v)=>data.set(k,v),GM_deleteValue:k=>data.delete(k),GM_listValues:()=>[...data.keys()],...overrides});
-  const names=['captureQueueTier','compareCaptureJobs','selectBatchJobs','queueRegistryChanged','overnightRetryEligible','articleUrl','resolvePublisherTaskUrl','boundPublisherJobUrl','publisherArticleHostAllowed','isAcsImageViewerUrl','shouldNativeRetryUpload','postJson','gmRequest'];
+  const names=['captureQueueTier','compareCaptureJobs','selectBatchJobs','queueRegistryChanged','overnightRetryEligible','articleUrl','resolvePublisherTaskUrl','boundPublisherJobUrl','publisherArticleHostAllowed','elsevierJobMayRebind','isAcsImageViewerUrl','shouldNativeRetryUpload','postJson','gmRequest'];
   const instrumented=source.replace('  installMenu();','  globalThis.api={'+names.join(',')+'}; return;\n  installMenu();');
   assert.notEqual(instrumented,source);
   vm.runInContext(instrumented,ctx);
@@ -51,6 +51,28 @@ await test('old CCS injection failure gets one immediate fixed-route retry',()=>
 await test('CCS requests direct DOI-bound full article not unbound DOI redirect',()=>assert.equal(api.articleUrl({doi:'10.31635/ccschem.026.202607330',captureFigures:true}),'https://www.chinesechemsoc.org/doi/full/10.31635/ccschem.026.202607330'));
 await test('Elsevier DOI resolver converts linkinghub PII to bound ScienceDirect article URL',async()=>{const h=harness({GM_xmlhttpRequest:o=>queueMicrotask(()=>o.onload({status:403,finalUrl:'https://linkinghub.elsevier.com/retrieve/pii/S2451929426009999',responseText:''}))});const job={doi:'10.1016/j.chempr.2026.103282',publisher:'elsevier'};assert.equal(await h.api.resolvePublisherTaskUrl(job),'https://www.sciencedirect.com/science/article/pii/S2451929426009999');assert.equal(h.api.boundPublisherJobUrl('https://www.sciencedirect.com/science/article/pii/S2451929426009999','job-1234567890123456'),'https://www.sciencedirect.com/science/article/pii/S2451929426009999#osg-job=job-1234567890123456');});
 await test('Elsevier resolver accepts only publisher article hosts and falls back to DOI URL',async()=>{const h=harness({GM_xmlhttpRequest:o=>queueMicrotask(()=>o.onload({status:200,finalUrl:'https://evil.example/retrieve/pii/S2451929426009999',responseText:'https://evil.example/article'}))});const job={doi:'10.1016/j.chempr.2026.103282',publisher:'elsevier'};assert.equal(await h.api.resolvePublisherTaskUrl(job),'https://doi.org/10.1016/j.chempr.2026.103282');assert.equal(h.api.publisherArticleHostAllowed('elsevier','https://www.sciencedirect.com/science/article/pii/X'),true);assert.equal(h.api.publisherArticleHostAllowed('elsevier','https://www.sciencedirect.com.evil.example/X'),false);});
+await test('Elsevier can safely rebind only the exact active DOI and PII after ScienceDirect drops the hash',()=>{
+ const doi='10.1016/j.chempr.2026.103282',jobId='job-1234567890123456';
+ const loc={href:'https://www.sciencedirect.com/science/article/pii/S2451929426003487',hostname:'www.sciencedirect.com',pathname:'/science/article/pii/S2451929426003487',hash:''};
+ const meta={getAttribute:name=>name==='content'?doi:''};
+ const h=harness({location:loc,document:{querySelectorAll:()=>[meta]}});
+ const job={doi,publisher:'elsevier',jobId,captureVersion:'6.2.20',resolvedArticleUrl:'https://www.sciencedirect.com/science/article/pii/S2451929426003487'};
+ h.data.set('osg-toc-v6:active-job',job);
+ h.data.set('osg-toc-v6:publisher-last-dispatch:elsevier',{at:Date.now(),doi,jobId});
+ assert.equal(h.api.elsevierJobMayRebind(job,''),true);
+ assert.equal(h.api.elsevierJobMayRebind(job,'stale-job'),false);
+ assert.equal(h.api.elsevierJobMayRebind({...job,resolvedArticleUrl:'https://www.sciencedirect.com/science/article/pii/DIFFERENT'},''),false);
+ const wrongMeta={getAttribute:name=>name==='content'?'10.1016/j.chempr.2026.wrong':''};
+ const bad=harness({location:loc,document:{querySelectorAll:()=>[wrongMeta]}});
+ bad.data.set('osg-toc-v6:active-job',job);bad.data.set('osg-toc-v6:publisher-last-dispatch:elsevier',{at:Date.now(),doi,jobId});
+ assert.equal(bad.api.elsevierJobMayRebind(job,''),false);
+});
+await test('old Elsevier tab-mismatch gets one immediate retry after safe-rebind repair',()=>{
+ const p={...prior(0,4,'capture_tab_job_mismatch'),doi:'10.1016/j.chempr.2026.103282'};
+ assert.equal(api.overnightRetryEligible(p,now),true);
+ p.elsevierBindingRevision='20261004-elsevier-safe-rebind-v1';
+ assert.equal(api.overnightRetryEligible(p,now),false);
+});
 await test('both CCS website origins inject script',()=>{assert.ok(source.includes('// @match        https://www.chinesechemsoc.org/*'));assert.ok(source.includes('// @match        https://chinesechemsoc.org/*'));});
 await test('ACS HTML viewer is recognized even with svg suffix',()=>assert.equal(api.isAcsImageViewerUrl('https://pubs.acs.org/view-large/figure/123/test.svg'),true));
 await test('real CDN image and foreign sites are not filtered as ACS viewer',()=>{assert.equal(api.isAcsImageViewerUrl('https://acs.silverchair-cdn.com/path/test.svg'),false);assert.equal(api.isAcsImageViewerUrl('https://evil.example/view-large/figure/123/test.svg'),false);});
