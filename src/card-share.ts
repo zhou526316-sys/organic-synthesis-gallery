@@ -18,6 +18,7 @@ let panelPositionFrame: number | null = null;
 const SHARED_CARD_HIGHLIGHT_MS = 20_000;
 
 let deepLinkFocused = false;
+let deepLinkSummaryOpened = false;
 let focusTimer: number | null = null;
 let highlightUntil = 0;
 let highlightExpiryTimer: number | null = null;
@@ -49,7 +50,7 @@ const GALLERY_BUILD_ID = typeof __GALLERY_BUILD_ID__ === 'string' && __GALLERY_B
   : 'runtime';
 
 function shareUrl(doi: string): string {
-  return `${CANONICAL_GALLERY_ORIGIN}/?doi=${encodeURIComponent(doi)}&sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
+  return `${CANONICAL_GALLERY_ORIGIN}/?doi=${encodeURIComponent(doi)}&summary=1&sharev=${encodeURIComponent(GALLERY_BUILD_ID)}`;
 }
 
 type WeChatSdk = {
@@ -639,6 +640,19 @@ function deepLinkDoi(): string | null {
   catch { return null; }
 }
 
+function deepLinkSummaryRequested(): boolean {
+  try { return new URL(window.location.href).searchParams.get('summary') === '1'; }
+  catch { return false; }
+}
+
+function openDeepLinkSummary(card: HTMLElement): void {
+  if (!deepLinkSummaryRequested() || deepLinkSummaryOpened) return;
+  const actions = card.querySelector<HTMLElement>('gallery-paper-actions');
+  if (!actions) return;
+  deepLinkSummaryOpened = true;
+  actions.dispatchEvent(new CustomEvent('gallery-open-summary'));
+}
+
 function clearSharedHighlight(): void {
   document.querySelectorAll<HTMLElement>('.card.shared-card-target')
     .forEach(card => card.classList.remove('shared-card-target'));
@@ -684,6 +698,8 @@ function focusDeepLinkCard(): void {
     }
   }
 
+  openDeepLinkSummary(card);
+
   if (highlightUntil > Date.now()) {
     card.classList.add('shared-card-target');
     scheduleSharedHighlightExpiry();
@@ -694,7 +710,8 @@ function focusDeepLinkCard(): void {
 
 function scheduleDeepLinkFocus(): void {
   if (focusTimer !== null) return;
-  if (deepLinkFocused && highlightUntil <= Date.now()) return;
+  const needsSummary = deepLinkSummaryRequested() && !deepLinkSummaryOpened;
+  if (deepLinkFocused && highlightUntil <= Date.now() && !needsSummary) return;
   focusTimer = window.setTimeout(() => {
     focusTimer = null;
     focusDeepLinkCard();
