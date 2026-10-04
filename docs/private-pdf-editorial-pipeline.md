@@ -1,6 +1,6 @@
 # Private PDF -> Editorial Evidence -> Daily WeChat Selected Article
 
-Status: architecture contract, phase 2 implementation in progress.
+Status: phase 2 capture implementation deployed; owner activation pending. Raw capture may be enabled only for entitled owner sessions; PDF processing/activation remains disabled until phase 3.
 
 ## Non-negotiable separation
 

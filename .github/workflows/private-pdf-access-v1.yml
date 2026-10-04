@@ -74,7 +74,7 @@ jobs:
                   raise SystemExit('collector changed outside isolated private PDF side-channel')
           print('PRIVATE_PDF_COLLECTOR_SCOPE_OK')
           PY
-          grep -F 'PRIVATE_PDF_CAPTURE_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'PRIVATE_PDF_CAPTURE_ENABLED = "1"' .github/workflows/deploy-worker-frontend.yml
           grep -F 'PRIVATE_PDF_PROCESSING_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
       - name: Check Worker syntax and private PDF security contracts
         run: |
