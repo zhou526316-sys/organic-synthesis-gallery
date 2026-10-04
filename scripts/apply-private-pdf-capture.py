@@ -22,7 +22,7 @@ new="""  async function finishPairedJob(job,result,trace,token) {
         .replace(/https?:\\/\\/\\S+/gi,'[url]')
         .replace(/[A-Za-z0-9+/_=-]{40,}/g,'[redacted]').slice(0,180);
       result.privatePdf={status:'failed',reason:privatePdfReason};
-      pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
+      if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
     }
 """
 if s.count(old)!=1: raise RuntimeError('finishPairedJob body anchor mismatch')
