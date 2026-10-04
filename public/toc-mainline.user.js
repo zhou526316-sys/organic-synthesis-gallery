@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.20
+// @version      6.2.21
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -51,6 +51,9 @@
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
   var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
+  var ACQUISITION_POLICY_REVISION = '20261004-three-month-active-work-v1';
+  var ARCHITECTURE_RELEASE_URL = 'https://gallery.gczhouwld.com/architecture-v1/release.json';
+  var DELIVERY_MANIFEST_URL = 'https://gallery.gczhouwld.com/release-delivery.json';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -407,6 +410,43 @@
     s = s.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '').replace(/[?#].*$/, '');
     return /^10\.\d{4,9}\/\S+$/i.test(s) ? s : '';
   }
+
+  // BEGIN OSG_ACTIVE_WORK_MEMBERSHIP_V1
+  function activeWorkParseDate(value) {
+    if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return null;
+    var p=value.split('-').map(Number),year=p[0],month=p[1],day=p[2];
+    var leap=year%4===0&&(year%100!==0||year%400===0);
+    var days=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+    return year>=1&&month>=1&&month<=12&&day>=1&&day<=days[month-1]?{year:year,month:month,day:day}:null;
+  }
+  function activeWorkFormatDate(year,month,day) {
+    return String(year).padStart(4,'0')+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+  }
+  function activeWorkCutoff(asOfDate) {
+    var p=activeWorkParseDate(asOfDate);if(!p)throw new Error('active_work_invalid_as_of_date');
+    var index=p.year*12+p.month-1-3,year=Math.floor(index/12),month=index%12+1,day=p.day;
+    if(year<1)throw new Error('active_work_unsupported_date');
+    while(!activeWorkParseDate(activeWorkFormatDate(year,month,day)))day--;
+    return activeWorkFormatDate(year,month,day);
+  }
+  function activeWorkShiftDays(value,offset) {
+    var p=activeWorkParseDate(value);if(!p||!Number.isSafeInteger(offset))throw new Error('active_work_invalid_day_shift');
+    var d=new Date(0);d.setUTCFullYear(p.year,p.month-1,p.day);d.setUTCHours(12,0,0,0);d.setUTCDate(d.getUTCDate()+offset);
+    return d.toISOString().slice(0,10);
+  }
+  function activeWorkBeijingDate(epochMs) {
+    if(!Number.isFinite(epochMs))throw new Error('active_work_trusted_time_required');
+    return new Date(epochMs+8*3600000).toISOString().slice(0,10);
+  }
+  function activeWorkEligibility(record,asOfDate) {
+    if(!record||record.datePrecision!=='day'||!activeWorkParseDate(record.firstOnlineDate))return 'date_review_required';
+    if(record.firstOnlineDate>asOfDate)return 'future';
+    if(record.firstOnlineDate>=activeWorkCutoff(asOfDate))return 'hot';
+    var recent=activeWorkShiftDays(asOfDate,-6);
+    if(activeWorkParseDate(record.addedDate)&&record.addedDate>=recent&&record.addedDate<=asOfDate)return 'archive_recent_addition';
+    return 'archive_idle';
+  }
+  // END OSG_ACTIVE_WORK_MEMBERSHIP_V1
 
   function embeddedNatureDoi(value) {
     var decoded = String(value || '');
@@ -1084,6 +1124,69 @@ function embeddedJobDois(value) {
   }
   async function postReadJson(url,payload) {
     return metadataJson({method:'POST',url:url,timeout:45000,headers:{'content-type':'application/json','cache-control':'no-cache',pragma:'no-cache'},data:JSON.stringify(payload||{})},'inventory');
+  }
+
+  async function activeWorkSha256(text) {
+    var bytes=new TextEncoder().encode(String(text||''));
+    var digest=await crypto.subtle.digest('SHA-256',bytes);
+    return Array.from(new Uint8Array(digest)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+  }
+  async function activeWorkText(url,prefix) {
+    var response=await gmRequest({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache'}});
+    var status=Number(response.status||0);
+    if(status<200||status>=300)throw new Error(prefix+'_http_'+status);
+    return {text:String(response.responseText||''),headers:String(response.responseHeaders||'')};
+  }
+  function activeWorkObjectUrl(pathname) {
+    if(typeof pathname!=='string'||!/^[A-Za-z0-9_./-]+$/.test(pathname)||pathname.startsWith('/')||pathname.split('/').indexOf('..')>=0)throw new Error('active_work_unsafe_path');
+    return 'https://gallery.gczhouwld.com/architecture-v1/'+pathname;
+  }
+  async function activeWorkVerifiedObject(ref,prefix) {
+    if(!ref||typeof ref.path!=='string'||!/^[a-f0-9]{64}$/.test(String(ref.sha256||''))||!Number.isSafeInteger(ref.bytes)||ref.bytes<0)throw new Error(prefix+'_invalid_ref');
+    var response=await activeWorkText(activeWorkObjectUrl(ref.path),prefix);
+    var bytes=new TextEncoder().encode(response.text);
+    if(bytes.length!==ref.bytes)throw new Error(prefix+'_byte_mismatch');
+    if(await activeWorkSha256(response.text)!==ref.sha256)throw new Error(prefix+'_hash_mismatch');
+    return JSON.parse(response.text);
+  }
+  async function loadActiveWorkMembership(queue) {
+    // Fail closed for NEW dispatch. Existing checkpoints/receipts remain untouched.
+    pairedJobs(queue,{items:{}});
+    var deliveryResponse=await activeWorkText(DELIVERY_MANIFEST_URL+'?active-work='+Date.now(),'active_work_delivery');
+    var serverDate=Date.parse(headerValue(deliveryResponse.headers,'date')||'');
+    if(!Number.isFinite(serverDate))throw new Error('active_work_server_date_missing');
+    var delivery=JSON.parse(deliveryResponse.text);
+    if(Number(delivery.schemaVersion)<2||delivery.ok!==undefined&&delivery.ok!==true)throw new Error('active_work_delivery_v2_required');
+    var releaseDigest=delivery.files&&delivery.files['architecture-v1/release.json'];
+    if(!/^[a-f0-9]{64}$/.test(String(releaseDigest||'')))throw new Error('active_work_release_digest_missing');
+    var releaseResponse=await activeWorkText(ARCHITECTURE_RELEASE_URL+'?active-work='+Date.now(),'active_work_release');
+    if(await activeWorkSha256(releaseResponse.text)!==releaseDigest)throw new Error('active_work_release_hash_mismatch');
+    var release=JSON.parse(releaseResponse.text);
+    if(release.schema!=='gallery-architecture-public-v1'||release.productionActivation!==false)throw new Error('active_work_release_invalid');
+    if(release.catalogId!==delivery.architectureCatalogId||Number(release.recordCount)!==Number(queue.webpageDoiCount))throw new Error('active_work_release_generation_mismatch');
+    var membership=await activeWorkVerifiedObject(release.membership,'active_work_membership');
+    var basis=await activeWorkVerifiedObject(release.acquisitionBasis,'active_work_basis');
+    if(membership.schema!=='gallery-published-membership-v1'||membership.scope!=='all-time'||membership.complete!==true)throw new Error('active_work_membership_invalid');
+    if(basis.schema!=='gallery-acquisition-basis-v1'||basis.catalogId!==release.catalogId||membership.catalogId!==release.catalogId)throw new Error('active_work_basis_generation_mismatch');
+    if(Number(membership.count)!==Number(queue.webpageDoiCount)||Number(basis.count)!==Number(queue.webpageDoiCount))throw new Error('active_work_count_mismatch');
+    var queueDois=queue.articles.map(function(row){return normalizeDoi(row&&row.doi);});
+    if(queueDois.some(function(doi){return !doi;})||new Set(queueDois).size!==queueDois.length)throw new Error('active_work_queue_identity_invalid');
+    var memberDois=Object.keys(membership.members||{});
+    if(memberDois.length!==queueDois.length||memberDois.some(function(doi){return queueDois.indexOf(doi)<0;}))throw new Error('active_work_membership_set_mismatch');
+    var basisRows=Array.isArray(basis.records)?basis.records:[];
+    if(basisRows.length!==queueDois.length)throw new Error('active_work_basis_count_mismatch');
+    var activeDois=new Set(),reasons={},seen=new Set(),asOfDate=activeWorkBeijingDate(serverDate),cutoff=activeWorkCutoff(asOfDate);
+    basisRows.forEach(function(row){
+      var doi=normalizeDoi(row&&row.doi);
+      if(!doi||seen.has(doi)||!Object.prototype.hasOwnProperty.call(membership.members,doi)||membership.members[doi]!==row.revision)throw new Error('active_work_basis_member_mismatch');
+      seen.add(doi);
+      var reason=activeWorkEligibility(row,asOfDate);reasons[doi]=reason;
+      if(reason==='hot'||reason==='archive_recent_addition')activeDois.add(doi);
+    });
+    if(seen.size!==queueDois.length)throw new Error('active_work_basis_set_mismatch');
+    return {revision:ACQUISITION_POLICY_REVISION,publicationSlot:release.publicationSlot,catalogId:release.catalogId,
+      asOfDate:asOfDate,cutoff:cutoff,activeDois:activeDois,reasons:reasons,allTimeCount:queueDois.length,
+      activeCount:activeDois.size,archiveIdleCount:queueDois.length-activeDois.size};
   }
 
   function productionMediaSnapshot(inventory) {
@@ -3387,7 +3490,8 @@ function embeddedJobDois(value) {
       }
       return null;
     }
-    var dois=queue.articles.map(function(x){return normalizeDoi(x.doi);});
+    if(!run||!run.activeMembership||!(run.activeMembership.activeDois instanceof Set))throw new Error('active_work_membership_required');
+    var dois=queue.articles.map(function(x){return normalizeDoi(x.doi);}).filter(function(doi){return run.activeMembership.activeDois.has(doi);});
     var chunks=[];for(var i=0;i<dois.length;i+=250)chunks.push(dois.slice(i,i+250));
     async function readMedia(){
       // Bound concurrency and never exceed the Worker's 1200-DOI cap.
@@ -3446,7 +3550,8 @@ function embeddedJobDois(value) {
   }
   function buildMissingCaptureJobs(queue,run,rawInventory) {
     // Reuse complete registry validation, but don't reuse its historical TOC-first tiers.
-    var rows=pairedJobs(queue,{items:{}}), inv=rawInventory||{};
+    if(!run||!run.activeMembership||!(run.activeMembership.activeDois instanceof Set))throw new Error('active_work_membership_required');
+    var rows=pairedJobs(queue,{items:{}}).filter(function(raw){return run.activeMembership.activeDois.has(normalizeDoi(raw.doi));}), inv=rawInventory||{};
     var inventory={mediaMap:mapCaptureRows(inv.media),tocMap:new Map(),figureMap:mapCaptureRows(inv.figures),evidenceMap:mapCaptureRows(inv.evidence),
       tocsKnown:Boolean(inv.tocs),figuresKnown:Boolean(inv.figures&&inv.figures.complete),evidenceKnown:Boolean(inv.evidence)};
     ((inv.tocs||{}).items||[]).forEach(function(t){var d=normalizeDoi(t.doi);if(!d||Number(t.mediaGeneration)!==1790082000000)return;var a=inventory.tocMap.get(d)||[];a.push(t);inventory.tocMap.set(d,a);});
@@ -3560,9 +3665,9 @@ function embeddedJobDois(value) {
       .sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});
   }
   function coverageStats(run) {
-    var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed';});
-    s.total=rows.filter(function(r){return r.state!=='removed';}).length;
-    s.visitedCount=rows.filter(function(r){return r.attempts>0&&r.state!=='removed';}).length;
+    var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed'&&r.state!=='retired';});
+    s.total=rows.filter(function(r){return r.state!=='removed'&&r.state!=='retired';}).length;
+    s.visitedCount=rows.filter(function(r){return r.attempts>0&&r.state!=='removed'&&r.state!=='retired';}).length;
     s.attemptCount=s.results.length;s.fullyResolved=rows.filter(function(r){return r.state==='resolved';}).length;
     s.unresolvedCount=left.length;s.blockedCount=left.filter(function(r){return r.state==='blocked';}).length;
     s.pendingMissing=left.filter(function(r){return r.state==='pending'||r.state==='active';}).length;
@@ -3588,11 +3693,19 @@ function embeddedJobDois(value) {
       var checkedAt=0,endRefresh=false,inventoryRecovery=0;
       async function refresh(){
         pairedJobs(queue,{items:{}});
+        run.activeMembership=await loadActiveWorkMembership(queue);
         var next=await readMissingCaptureInventory(queue,run);
         if(!manualExecutionCurrent(run)||controllerPaused())return false;
         run.inventory=next;coverageMergePlan(run,manualCaptureJobs(queue,run));
         var currentDois=new Set(queue.articles.map(function(a){return normalizeDoi(a.doi);}));
-        run.coverage.forEach(function(r,doi){if(!currentDois.has(doi))r.state='removed';});
+        run.coverage.forEach(function(r,doi){
+          if(!currentDois.has(doi)){r.state='removed';return;}
+          if(!run.activeMembership.activeDois.has(doi)){r.state='retired';return;}
+          if(r.state==='retired'&&coverageHasNeeds(r.job)){r.state='pending';r.retryAt=0;}
+        });
+        s.activeWorkRevision=run.activeMembership.revision;s.activeWorkAsOf=run.activeMembership.asOfDate;
+        s.activeWorkCutoff=run.activeMembership.cutoff;s.activeWorkCount=run.activeMembership.activeCount;
+        s.archiveIdleCount=run.activeMembership.archiveIdleCount;
         checkedAt=Date.now();s.queueGeneratedAt=queue.generatedAt;s.latestAddedDate=queue.latestAddedDate;
         coverageStats(run);manualSummary(run);return true;
       }
@@ -3728,14 +3841,15 @@ function embeddedJobDois(value) {
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.39')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
+      var activeMembership=await loadActiveWorkMembership(queue);
       var queueCheckedAt=Date.now();
-      var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
+      var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(function(doi){return doi&&activeMembership.activeDois.has(doi);}),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
       var evidenceInventory=null;
       try { evidenceInventory=await getPrivateJson(EVIDENCE_INVENTORY_ENDPOINT+'?ts='+Date.now(),writeToken()); }
       catch(error){ try{console.warn('[OSG TOC] evidence inventory unavailable; evidence-only backlog paused',String(error&&error.message||error));}catch(_){} }
-      var mediaJobs=pairedJobs(queue,media);
-      var evidenceJobs=evidenceInventory?evidenceBackfillJobs(queue,media,evidenceInventory):[];
+      var mediaJobs=pairedJobs(queue,media).filter(function(job){return activeMembership.activeDois.has(normalizeDoi(job.doi));});
+      var evidenceJobs=evidenceInventory?evidenceBackfillJobs(queue,media,evidenceInventory).filter(function(job){return activeMembership.activeDois.has(normalizeDoi(job.doi));}):[];
       var generation=VERSION+':paired:'+String(queue.mediaGeneration);
       var evidenceGeneration=EVIDENCE_SCHEMA_VERSION+':'+CONTROLLER_REVISION+':'+String(queue.latestAddedDate||queue.generatedAt||'');
       function eligibleMedia(job) {
@@ -3798,7 +3912,7 @@ function embeddedJobDois(value) {
       if(!renewLease())throw new Error('controller_lease_lost');
       if(manualRunBlocksAutomatic())return;
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
-      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
+      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,activeWorkRevision:activeMembership.revision,activeWorkAsOf:activeMembership.asOfDate,activeWorkCutoff:activeMembership.cutoff,activeWorkCount:activeMembership.activeCount,archiveIdleCount:activeMembership.archiveIdleCount,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
       persistControllerSummary(summary,true);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
