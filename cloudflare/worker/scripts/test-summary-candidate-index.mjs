@@ -159,7 +159,7 @@ test('indexed selector refuses comparison until both Evidence and job backfills 
   assert.equal(result.body.evidenceBackfillComplete,false);assert.equal(result.body.jobBackfillComplete,false);
 });
 
-test('pure indexed selector reproduces policy, state, lease, retry and ordering semantics',()=>{
+test('pure indexed selector reproduces policy, state, lease, retry and ordering semantics',async()=>{
   const now=Date.parse('2026-10-04T12:00:00Z');
   const evidenceRows=[
     {doi:'10.1234/a',evidence_r2_key:'private/article-evidence-v2/a.json',evidence_packet_hash:H(1),source_hash:H(5),
@@ -175,12 +175,12 @@ test('pure indexed selector reproduces policy, state, lease, retry and ordering 
     {doi:'10.1234/a',job_r2_key:'private/article-summary-jobs/a-old.json',evidence_packet_hash:H(9),state:'published',published_at:now-1000},
     {doi:'10.1234/c',job_r2_key:'private/article-summary-jobs/c.json',evidence_packet_hash:H(3),state:'retry_wait',next_retry_at:now+60000,published_at:0},
   ];
-  const s=selectCandidateFromIndexedRows({evidenceRows,jobRows:jobs,now});
+  const s=await selectCandidateFromIndexedRows({evidenceRows,jobRows:jobs,now});
   assert.equal(s.candidate.doi,'10.1234/a');
   assert.equal(s.candidate.existingJobKey,'private/article-summary-jobs/a-old.json');
   assert.equal(s.eligibleCount,2);assert.equal(s.recentPublishedCount,1);
   assert.deepEqual(s.blockedPolicies,{no_external_ai:1});
-  const preferred=selectCandidateFromIndexedRows({evidenceRows,jobRows:jobs,now,preferredDoi:'10.1234/d'});
+  const preferred=await selectCandidateFromIndexedRows({evidenceRows,jobRows:jobs,now,preferredDoi:'10.1234/d'});
   assert.equal(preferred.candidate.doi,'10.1234/d');assert.equal(preferred.preferredEligible,true);
 });
 
@@ -253,4 +253,18 @@ test('source race is reported as incomparable rather than D1 divergence',async t
   assert.equal(result.body.sourceStable,false);
   assert.equal(result.body.same,false);
   assert.equal(result.body.reason,'legacy_source_changed_during_comparison');
+});
+
+
+test('candidate-set fingerprint catches hidden ordering divergence',()=>{
+  const top={doi:'10.1234/a',evidenceKey:'a',evidencePacketHash:H(1),sourceHash:H(5),evidenceLevel:'complete',
+    textProcessingPolicy:'private_cache_allowed',capturedAt:'2026-10-04T11:00:00Z',existingJobKey:''};
+  const legacy={candidate:top,evidenceCount:2,jobCount:0,eligibleCount:2,preferredDoi:'',preferredEligible:null,
+    recentPublishedCount:0,candidateSetHash:'1'.repeat(64),blockedPolicies:{}};
+  const indexed={...legacy,candidateSetHash:'2'.repeat(64)};
+  const result=compareCandidateSelections(legacy,indexed);
+  assert.equal(result.same,false);
+  assert.equal(result.legacy.candidate.doi,result.indexed.candidate.doi);
+  assert.equal(result.legacy.eligibleCount,result.indexed.eligibleCount);
+  assert.notEqual(result.legacy.candidateSetHash,result.indexed.candidateSetHash);
 });
