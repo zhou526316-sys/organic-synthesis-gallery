@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "phase": "D2a1-live-evidence-index-shadow",
+  "dateAsiaShanghai": "2026-10-04",
+  "mergeCommit": "fc55e81f9275b5a6407230c341e18aae940dba46",
+  "canonicalDeployRun": 37194158368,
+  "canonicalDeployJob": 111412415459,
+  "deploymentConclusion": "success",
+  "evidenceIndex": {
+    "enabled": true,
+    "readPathActive": false,
+    "pagesAdvanced": 3,
+    "backfill": {
+      "complete": true,
+      "cursor": null,
+      "scannedObjects": 560,
+      "indexedRows": 560,
+      "skippedInvalid": 0,
+      "startedAt": 1791108293286,
+      "updatedAt": 1791108294760,
+      "lastError": ""
+    },
+    "indexCount": 560,
+    "legacyR2InventoryCount": 560,
+    "sampleCount": 560,
+    "fullIdentityReconciled": true,
+    "reconciledFields": [
+      "doi",
+      "evidencePacketHash",
+      "sourceHash"
+    ]
+  },
+  "safety": {
+    "r2RemainsByteAuthority": true,
+    "existingEvidenceInventoryReadPathUnchanged": true,
+    "existingSummaryReviewCandidateReadPathUnchanged": true,
+    "existingScheduledHandoffReadPathUnchanged": true,
+    "summaryPublicationScheduleUnchanged": true,
+    "shadowFailureNonBlocking": true
+  },
+  "nextGate": "D2b may build D1-based candidate selection only in shadow/comparison mode. Do not switch reads until summary-job state is indexed/backfilled and candidate outputs match the legacy R2 implementation over a controlled overlap window."
+}
