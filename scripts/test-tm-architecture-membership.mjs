@@ -94,13 +94,13 @@ test('observer result and failure reason are attached to existing diagnostic tra
   assert.ok(source.includes("event:'verified_snapshot'"));
   assert.ok(source.includes("observerState.ok===true?'observer_ok':'verification_failed'"));
   assert.ok(source.includes("architecture-membership-observer-v1"));
-  assert.ok(source.includes("var INSTALL_REVISION = '6.2.23';"));
+  assert.ok(source.includes("var INSTALL_REVISION = '6.2.25';"));
   assert.ok(source.includes("installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:''"));
   assert.ok(source.includes("trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[]).concat(architectureObserverEvent?[architectureObserverEvent]:[])"));
 });
 test('self-contained Bridge gets a diagnostic install-version bump while capture protocol stays fixed',()=>{
   const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-  assert.ok(loader.includes("const loaderVersion = '2.2.41';"));
+  assert.ok(loader.includes("const loaderVersion = '2.2.43';"));
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
