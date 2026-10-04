@@ -16,7 +16,7 @@
   }
 
   function installPrivatePdfLeaseReceiver() {
-    if(!isGalleryPage())return;
+    if(!isGalleryPage()||typeof window==='undefined'||typeof window.addEventListener!=='function')return;
     window.addEventListener('message',function(event){
       try{
         if(event.source!==window||event.origin!==location.origin)return;
