@@ -65,15 +65,15 @@ test('complete membership is preserved and catalog verifies',()=>{
 
 test('published, captured and display TOC remain separate facts',()=>{
   const c=build(),a=c.rows.find(x=>x.doi===dois[0]),b=c.rows.find(x=>x.doi===dois[1]),d=c.rows.find(x=>x.doi===dois[2]);
-  assert.equal(a.toc.published.official,true);assert.equal(a.toc.captured.official,false);assert.equal(a.toc.display.kind,'official');
-  assert.equal(b.toc.published.official,false);assert.equal(b.toc.captured.official,true);
-  assert.equal(d.toc.published.fallback,true);assert.equal(d.toc.display.kind,'figure1');
+  assert.equal(a.toc.worker.official,true);assert.equal(a.toc.captured.official,false);assert.equal(a.toc.display.kind,'official');
+  assert.equal(b.toc.worker.official,false);assert.equal(b.toc.captured.official,true);
+  assert.equal(d.toc.worker.fallback,true);assert.equal(d.toc.display.kind,'figure1');
 });
 
 test('captured official TOC without published official TOC is reconciliation, not missing',()=>{
   const c=build();
-  assert.deepEqual(c.reconciliation.capturedTocNotPublished,[dois[1]]);
-  assert.equal(c.summary.capturedTocNotPublished,1);
+  assert.deepEqual(c.reconciliation.capturedTocNotWorker,[dois[1]]);
+  assert.equal(c.summary.capturedTocNotWorker,1);
 });
 
 test('figure completeness requires expected count from staged evidence',()=>{
@@ -82,7 +82,7 @@ test('figure completeness requires expected count from staged evidence',()=>{
   assert.equal(a.figures.captured.expectedCount,2);
   assert.equal(b.figures.captured.completeness,'incomplete');
   assert.equal(b.figures.captured.expectedCount,3);
-  assert.equal(d.figures.published.presence,'present');
+  assert.equal(d.figures.worker.presence,'present');
   assert.equal(d.figures.captured.completeness,'unknown');
   assert.equal(d.figures.captured.expectedCount,null);
 });
@@ -138,13 +138,32 @@ test('catalog hash is deterministic and mutation is detected',()=>{
   assert.throws(()=>verifyUnifiedAssetCatalog(a,dois),/asset_catalog_hash_mismatch/);
 });
 
-test('static display cannot manufacture published state',()=>{
+test('static display cannot manufacture Worker state',()=>{
   const c=build(),d=c.rows.find(x=>x.doi===dois[2]);
   assert.equal(d.toc.display.presence,'present');
-  assert.equal(d.toc.published.official,false);
+  assert.equal(d.toc.worker.official,false);
 });
 
 test('evidence without reviewed summary remains unknown rather than absent',()=>{
   const c=build();
   for(const doi of [dois[1],dois[2]]) assert.equal(c.rows.find(x=>x.doi===doi).evidence.presence,'unknown');
+});
+
+test('static body figures are a public display fact independent of Worker D1',()=>{
+  const s=display();
+  s.items[dois[1]]={doi:dois[1],toc:{available:false},figures:{available:true,figures:[
+    {label:'Figure 1',imageUrl:'media-mirror/f1.jpg'},{label:'Figure 2',imageUrl:'media-mirror/f2.jpg'}
+  ]}};
+  const c=build({staticMediaIndex:s}),b=c.rows.find(x=>x.doi===dois[1]);
+  assert.equal(b.figures.worker.presence,'absent');
+  assert.equal(b.figures.staticDisplay.presence,'present');
+  assert.equal(b.figures.staticDisplay.count,2);
+  assert.ok(c.reconciliation.staticFiguresWithoutWorker.includes(dois[1]));
+});
+
+test('captured complete but static incomplete is an explicit reconciliation cohort',()=>{
+  const s=display();
+  s.items[dois[0]].figures={available:true,figures:[{label:'Figure 1',imageUrl:'media-mirror/f1.jpg'}]};
+  const c=build({staticMediaIndex:s});
+  assert.ok(c.reconciliation.capturedCompleteButStaticIncomplete.includes(dois[0]));
 });
