@@ -28,3 +28,6 @@ if(mode!=='source'){
 }else console.log('TM220_SOURCE_CONTRACT_OK');
 
 assert.ok(src.includes("var CONTROLLER_REVISION = '2.2.39';")&&src.includes('previous_task_tab_not_closed')&&src.includes('requestControllerStart'),'Window guard regression');
+assert.ok(src.includes("ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-active-v2'"),'C2b membership revision missing');
+assert.ok(src.includes('release.acquisitionBasis')&&src.includes('architecture_active_set_unverified'),'C2b acquisition verification missing');
+assert.ok(src.includes("row.state='retired'")&&src.includes('activeDois.has'),'Archive-retired queue semantics missing');
