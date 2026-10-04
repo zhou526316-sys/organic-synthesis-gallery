@@ -1,0 +1,143 @@
+name: Deploy Tampermonkey assets only to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tampermonkey-pages-assets.yml'
+
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Install build dependencies
+        run: npm install --no-audit --no-fund
+      - name: Download exact currently deployed Pages artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: ${{ runner.temp }}/base-pages
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zhou526316-sys/organic-synthesis-gallery
+          run-id: 37202774088
+      - name: Extract immutable deployed site baseline
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/site"
+          TAR=$(find "$RUNNER_TEMP/base-pages" -maxdepth 2 -type f -name '*.tar' | head -1)
+          test -n "$TAR"
+          tar -xf "$TAR" -C "$RUNNER_TEMP/site"
+          test -s "$RUNNER_TEMP/site/index.html"
+          test -s "$RUNNER_TEMP/site/gallery-vpn-bridge.user.js"
+          node - <<'NODE'
+          const fs=require('fs'),path=require('path'),crypto=require('crypto');
+          const root=process.env.RUNNER_TEMP+'/site';
+          const excluded=new Set(['gallery-vpn-bridge.user.js','gallery-vpn-bridge-runtime.js','toc-mainline.user.js']);
+          const rows=[];
+          function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else if(e.isFile()){const rel=path.relative(root,p).replaceAll('\\','/');if(!excluded.has(rel)){rows.push([rel,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),fs.statSync(p).size]);}}}}
+          walk(root);rows.sort((a,b)=>a[0].localeCompare(b[0]));
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/protected-pages-before.json',JSON.stringify(rows));
+          console.log(JSON.stringify({protectedFiles:rows.length,excluded:[...excluded]}));
+          NODE
+      - name: Build only current Tampermonkey assets
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_OUTPUT: public/gallery-vpn-bridge.user.js
+          BRIDGE_RUNTIME_OUTPUT: public/gallery-vpn-bridge-runtime.js
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F "PUBLISHER_MEDIA_REVISION = '20261004-rsc-elsevier-ccs-v9'" public/gallery-vpn-bridge.user.js
+          grep -F "PUBLISHER_TASK_BINDING_REVISION = '20261004-elsevier-bound-task-v3'" public/gallery-vpn-bridge.user.js
+          grep -F "rsc_graphical_abstract" public/gallery-vpn-bridge.user.js
+          grep -F "ccs_toc_index_key_image" public/gallery-vpn-bridge.user.js
+          grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
+      - name: Overlay only Tampermonkey assets and prove everything else is byte-identical
+        run: |
+          set -euo pipefail
+          cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/site/gallery-vpn-bridge.user.js"
+          cp public/gallery-vpn-bridge-runtime.js "$RUNNER_TEMP/site/gallery-vpn-bridge-runtime.js"
+          cp public/toc-mainline.user.js "$RUNNER_TEMP/site/toc-mainline.user.js"
+          node - <<'NODE'
+          const fs=require('fs'),path=require('path'),crypto=require('crypto');
+          const root=process.env.RUNNER_TEMP+'/site';
+          const excluded=new Set(['gallery-vpn-bridge.user.js','gallery-vpn-bridge-runtime.js','toc-mainline.user.js']);
+          const rows=[];
+          function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else if(e.isFile()){const rel=path.relative(root,p).replaceAll('\\','/');if(!excluded.has(rel)){rows.push([rel,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),fs.statSync(p).size]);}}}}
+          walk(root);rows.sort((a,b)=>a[0].localeCompare(b[0]));
+          const before=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/protected-pages-before.json','utf8'));
+          if(JSON.stringify(before)!==JSON.stringify(rows))throw new Error('non-Tampermonkey Pages asset changed');
+          const scripts=[...excluded].map(rel=>{const b=fs.readFileSync(path.join(root,rel));return{rel,bytes:b.length,sha256:crypto.createHash('sha256').update(b).digest('hex')}});
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/tampermonkey-pages-assets.json',JSON.stringify({protectedFiles:rows.length,scripts},null,2));
+          console.log(JSON.stringify({protectedSiteByteIdentical:true,scripts}));
+          NODE
+      - name: Upload asset-only Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tampermonkey-pages-asset-manifest
+          path: ${{ runner.temp }}/tampermonkey-pages-assets.json
+          retention-days: 14
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy asset-only Pages artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verify canonical Tampermonkey assets and protected literature
+        run: |
+          node - <<'NODE'
+          const sites=['https://gallery.gczhouwld.com','https://zhou526316-sys.github.io/organic-synthesis-gallery'];
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          for(const site of sites){
+            let ok=false,last='';
+            for(let i=0;i<20;i++){
+              const u=site+'/gallery-vpn-bridge.user.js?tm-assets='+Date.now();
+              try{
+                const r=await fetch(u,{headers:{'cache-control':'no-cache'}});
+                const t=await r.text();last='status='+r.status+' bytes='+t.length;
+                ok=r.ok&&t.includes("PUBLISHER_MEDIA_REVISION = '20261004-rsc-elsevier-ccs-v9'")&&t.includes("PUBLISHER_TASK_BINDING_REVISION = '20261004-elsevier-bound-task-v3'")&&t.includes('rsc_graphical_abstract')&&t.includes('ccs_toc_index_key_image')&&t.includes("PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'");
+                if(ok)break;
+              }catch(e){last=String(e)}
+              await sleep(3000);
+            }
+            if(!ok)throw new Error('Tampermonkey asset verification failed for '+site+': '+last);
+            const q=await fetch(site+'/toc-demand-live.json?protected='+Date.now(),{headers:{'cache-control':'no-cache'}});
+            if(!q.ok)throw new Error('protected literature queue missing on '+site);
+            const data=await q.json();
+            if(!Array.isArray(data.articles)||data.articles.length!==data.webpageDoiCount)throw new Error('protected queue integrity failed on '+site);
+            console.log(JSON.stringify({site,tampermonkeyAssets:true,protectedQueueCount:data.webpageDoiCount,queueGeneratedAt:data.generatedAt}));
+          }
+          NODE
