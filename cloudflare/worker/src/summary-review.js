@@ -1,3 +1,4 @@
+import { compareCandidateSelections, selectSummaryCandidateFromIndex, shadowIndexSummaryJob } from './summary-candidate-index.js';
 const EVIDENCE_PREFIX = 'private/article-evidence-v2/';
 const JOB_PREFIX = 'private/article-summary-jobs/';
 const REVIEW_PREFIX = 'private/article-summary-review/';
@@ -335,6 +336,7 @@ async function putJob(env, job) {
       publishedAt: String(job.publishedAt || 0),
     },
   });
+  await shadowIndexSummaryJob(env, job, keys.job);
   return keys.job;
 }
 
@@ -922,6 +924,31 @@ export async function runSummaryReviewCycle(env, options = {}) {
       lastError: finalJob.lastError || '',
     };
   }
+}
+
+export async function compareSummaryReviewCandidateShadow(env, options = {}) {
+  if (!env?.MEDIA || !env?.DB) {
+    return { status: 503, body: { error: 'summary_candidate_shadow_storage_unavailable' } };
+  }
+  const now = Number.isFinite(Number(options.now)) ? Number(options.now) : Date.now();
+  const preferredDoi = String(options.preferredDoi || '').trim().toLowerCase();
+  const indexed = await selectSummaryCandidateFromIndex(env, now, preferredDoi);
+  if (indexed.status !== 200) return indexed;
+  const legacy = await selectReviewCandidate(env, now, preferredDoi);
+  const comparison = compareCandidateSelections(legacy, indexed.body.selection);
+  return {
+    status: 200,
+    body: {
+      version: 1,
+      mode: 'shadow_comparison',
+      readPathActive: false,
+      same: comparison.same,
+      now,
+      preferredDoi,
+      legacy: comparison.legacy,
+      indexed: comparison.indexed,
+    },
+  };
 }
 
 export async function getSummaryReviewStatus(env) {
