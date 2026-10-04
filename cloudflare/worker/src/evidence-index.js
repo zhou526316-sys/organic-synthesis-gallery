@@ -173,7 +173,7 @@ export async function shadowIndexHandoff(env, envelope) {
     const evidenceKey = await evidenceKeyForDoi(doi);
     const handoffKey = await handoffKeyForDoi(doi);
     const now = Date.now();
-    await env.DB.prepare(`
+    const result = await env.DB.prepare(`
       INSERT INTO article_evidence_index (
         doi,evidence_r2_key,evidence_packet_hash,source_hash,schema_version,publisher,
         evidence_level,text_processing_policy,captured_at,handoff_r2_key,handoff_ready,
@@ -194,7 +194,8 @@ export async function shadowIndexHandoff(env, envelope) {
       handoffKey,safe(envelope?.keyId,80),safe(envelope?.algorithm,120),
       safe(envelope?.compression,40),now,now,
     ).run();
-    return { enabled:true, indexed:true, doi };
+    const changed = Number(result?.meta?.changes || 0) > 0;
+    return { enabled:true, indexed:changed, stale:!changed, doi };
   } catch (error) {
     return { enabled:true, indexed:false, error:safe(error?.message || error,180) };
   }
