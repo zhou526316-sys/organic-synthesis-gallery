@@ -2,8 +2,8 @@
 """Create a WeChat Official Account draft from the latest verified Gallery release.
 
 Secrets are read from /etc/osg-wechat-relay/env. The script never prints the
-AppSecret or access_token. By default it only renders a local preview; pass
---create to upload/reuse a permanent cover image and create the draft.
+AppSecret or access_token. A preview URL is generated only after the actual
+WeChat draft has been created/updated and successfully read back via draft/get.
 """
 
 from __future__ import annotations
@@ -30,6 +30,8 @@ DEFAULT_CACHE = Path("/var/lib/osg-wechat-publisher/cover-media.json")
 DEFAULT_STATE = Path("/var/lib/osg-wechat-publisher/draft-state.json")
 DEFAULT_PREVIEW_DIR = Path("/var/www/osg-wechat-preview")
 DEFAULT_PREVIEW_BASE_URL = "https://relay.gczhouwld.com/wechat-preview"
+DEFAULT_BODY_IMAGE_CACHE = Path("/var/lib/osg-wechat-publisher/body-images.json")
+FEATURED_DIR = ROOT / "public" / "wechat-featured"
 DEFAULT_SOURCE_URL = "https://gallery.gczhouwld.com/"
 
 SUPPLEMENT_FILES = (
@@ -234,47 +236,133 @@ def slot_label(slot: str) -> str:
     return f"{date} {time}".strip()
 
 
-def build_content(slot: str, papers: list[dict]) -> str:
+def load_featured(date: str):
+    path = FEATURED_DIR / f"{date}.json"
+    if not path.exists():
+        return None
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise RuntimeError(f"invalid featured article data: {path}")
+    return data
+
+
+def figure_html(fig_id: str, figures: dict[str, dict], uploaded_urls: dict[str, str]) -> str:
+    fig = figures.get(fig_id)
+    if not fig:
+        return ""
+    source = uploaded_urls.get(fig_id) or str(fig.get("source_url") or "")
+    if not source:
+        return ""
+    caption = esc(fig.get("caption") or "")
+    return (
+        "<section style='margin:20px 0 24px;'>"
+        f"<img src='{esc(source)}' style='display:block;width:100%;height:auto;margin:0;'/>"
+        f"<p style='font-size:11px;color:#777;line-height:1.65;margin:7px 2px 0;'>{caption}</p>"
+        "</section>"
+    )
+
+
+def build_content(slot: str, papers: list[dict], featured: dict | None = None, uploaded_urls: dict[str, str] | None = None) -> str:
+    uploaded_urls = uploaded_urls or {}
     grouped: dict[str, list[dict]] = {}
     for paper in papers:
         grouped.setdefault(str(paper["journal"]), []).append(paper)
 
     parts = [
         "<section style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#222;line-height:1.72;'>",
-        "<p style='font-size:15px;margin:0 0 18px;'>"
-        f"本期网站正式新增 <strong>{len(papers)}</strong> 篇文献。"
-        "以下按期刊优先级整理中英文标题与作者。</p>",
+        "<p style='font-size:13px;color:#666;margin:0 0 14px;'>"
+        f"今日新增 <strong>{len(papers)}</strong> 篇文献"
+        "</p>",
     ]
 
-    number = 0
     for journal, items in grouped.items():
         parts.append(
-            "<h2 style='font-size:18px;line-height:1.45;margin:28px 0 14px;"
-            "padding-left:10px;border-left:4px solid #222;'>"
-            f"{esc(journal)} <span style='font-size:12px;font-weight:400;color:#888;'>"
+            "<h2 style='font-size:17px;line-height:1.45;margin:22px 0 8px;"
+            "padding-left:9px;border-left:3px solid #222;'>"
+            f"{esc(journal)} <span style='font-size:11px;font-weight:400;color:#999;'>"
             f"{len(items)} 篇</span></h2>"
         )
         for paper in items:
-            number += 1
             authors = ", ".join(paper["authors"])
+            badge = ""
+            if featured and normalize_doi(featured.get("paper", {}).get("doi")) == paper["doi"]:
+                badge = "<span style='display:inline-block;font-size:10px;color:#fff;background:#222;border-radius:9px;padding:1px 6px;margin-right:6px;'>今日精选</span>"
             parts.append(
-                "<section style='margin:0 0 22px;padding:0 0 20px;border-bottom:1px solid #eee;'>"
-                f"<div style='font-size:12px;color:#999;margin-bottom:5px;'>#{number:02d}</div>"
-                f"<div style='font-size:16px;font-weight:700;line-height:1.6;margin-bottom:5px;'>{esc(paper['titleZh'])}</div>"
-                f"<div style='font-size:13px;color:#555;line-height:1.55;margin-bottom:7px;'>{esc(paper['title'])}</div>"
-                f"<div style='font-size:12px;color:#888;line-height:1.55;'>作者：{esc(authors)}</div>"
+                "<section style='margin:0 0 14px;padding:0 0 13px;border-bottom:1px solid #eee;'>"
+                f"<div style='font-size:15px;font-weight:700;line-height:1.58;margin-bottom:3px;'>{badge}{esc(paper['titleZh'])}</div>"
+                f"<div style='font-size:12px;color:#666;line-height:1.55;margin-bottom:5px;'>{esc(paper['title'])}</div>"
+                f"<div style='font-size:11px;color:#999;line-height:1.5;'>{esc(authors)}</div>"
                 "</section>"
             )
 
-    parts.extend(
-        [
-            "<p style='font-size:13px;color:#777;margin:28px 0 0;'>"
-            "点击文末“阅读原文”进入有机合成文献库查看对应文献。"
-            "</p>",
-            f"<p style='font-size:11px;color:#aaa;margin-top:8px;'>数据批次：{esc(slot_label(slot))}</p>",
-            "</section>",
-        ]
-    )
+    if featured:
+        figures = {str(x.get("id")): x for x in featured.get("figures", []) if isinstance(x, dict)}
+        paper = featured.get("paper") or {}
+        parts.extend([
+            "<p style='height:1px;background:#e8eaec;margin:28px 0;'></p>",
+            "<p style='font-size:11px;letter-spacing:.12em;color:#32675f;font-weight:700;margin:0 0 6px;'>DAILY PICK · 01</p>",
+            f"<h2 style='font-size:21px;line-height:1.5;margin:0 0 10px;'>{esc(featured.get('headline') or '')}</h2>",
+            f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
+        ])
+
+        for point in featured.get("quick_points", []):
+            parts.append(
+                "<section style='background:#f7f8fa;border-radius:8px;padding:10px 12px;margin:8px 0;'>"
+                f"<strong style='font-size:13px;'>{esc(point.get('label') or '')}</strong>"
+                f"<p style='font-size:13px;line-height:1.72;margin:3px 0 0;color:#555;'>{esc(point.get('text') or '')}</p>"
+                "</section>"
+            )
+
+        parts.append(figure_html("fig1", figures, uploaded_urls))
+
+        for section in featured.get("sections", []):
+            parts.append(
+                f"<p style='font-size:11px;letter-spacing:.08em;color:#32675f;font-weight:700;margin:26px 0 5px;'>{esc(section.get('eyebrow') or '')}</p>"
+                f"<h2 style='font-size:19px;line-height:1.55;margin:0 0 10px;'>{esc(section.get('heading') or '')}</h2>"
+            )
+            for paragraph in section.get("paragraphs", []):
+                parts.append(
+                    f"<p style='font-size:15px;line-height:1.88;margin:0 0 12px;text-align:justify;'>{esc(paragraph)}</p>"
+                )
+            for bullet in section.get("bullets", []):
+                parts.append(
+                    f"<p style='font-size:14px;line-height:1.8;margin:0 0 8px;padding-left:12px;border-left:2px solid #dfe3e5;'>{esc(bullet)}</p>"
+                )
+            if section.get("callout"):
+                parts.append(
+                    "<section style='background:#eef7f5;border-left:3px solid #32675f;padding:11px 13px;margin:14px 0;'>"
+                    f"<p style='font-size:14px;line-height:1.8;margin:0;'>{esc(section['callout'])}</p></section>"
+                )
+            if section.get("warning"):
+                parts.append(
+                    "<section style='background:#fff7e7;border:1px solid #f0ddb0;border-radius:8px;padding:11px 13px;margin:14px 0;'>"
+                    f"<p style='font-size:13px;line-height:1.78;margin:0;'>{esc(section['warning'])}</p></section>"
+                )
+            if section.get("review"):
+                parts.append(
+                    "<section style='background:#f4f0ff;border:1px solid #e2daf9;border-radius:8px;padding:11px 13px;margin:14px 0;'>"
+                    f"<p style='font-size:13px;line-height:1.78;margin:0;'>{esc(section['review'])}</p></section>"
+                )
+            for fig_id in section.get("figures", []):
+                parts.append(figure_html(str(fig_id), figures, uploaded_urls))
+
+        takehome = featured.get("takehome", [])
+        if takehome:
+            parts.append("<section style='background:#202426;color:#fff;border-radius:10px;padding:15px 16px;margin:24px 0;'>")
+            parts.append("<h3 style='font-size:16px;line-height:1.5;margin:0 0 8px;color:#fff;'>这篇论文最值得学什么？</h3>")
+            for item in takehome:
+                parts.append(f"<p style='font-size:13px;line-height:1.75;margin:0 0 7px;color:#f4f5f6;'>• {esc(item)}</p>")
+            parts.append("</section>")
+
+        notice = featured.get("ai_notice")
+        if notice:
+            parts.append(
+                "<section style='border-top:1px solid #eee;margin-top:24px;padding-top:14px;'>"
+                "<p style='font-size:11px;color:#888;line-height:1.7;margin:0;'><strong>创作说明：</strong>"
+                f"{esc(notice)}</p></section>"
+            )
+
+    parts.append("</section>")
     return "".join(parts)
 
 
@@ -289,6 +377,108 @@ def multipart_file(field: str, path: Path):
     ).encode("utf-8")
     body = head + content + f"\r\n--{boundary}--\r\n".encode("utf-8")
     return boundary, body
+
+
+def load_json_cache(path: Path):
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def save_json_cache(path: Path, data: dict):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def download_body_image(source_url: str, fig_id: str) -> Path:
+    suffix = ".png"
+    target = Path(tempfile.gettempdir()) / f"osg-wechat-{fig_id}{suffix}"
+    req = urllib.request.Request(
+        source_url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (compatible; OrganicSynthesisGallery/1.0)",
+            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=45) as response:
+            payload = response.read()
+    except Exception as exc:
+        raise RuntimeError(f"failed to download featured figure {fig_id}: {exc}") from exc
+    if not payload:
+        raise RuntimeError(f"empty featured figure download: {fig_id}")
+    target.write_bytes(payload)
+    return target
+
+
+def upload_body_image(token: str, source_url: str, fig_id: str, cache_path: Path) -> str:
+    cache = load_json_cache(cache_path)
+    key = hashlib.sha256(source_url.encode("utf-8")).hexdigest()
+    cached = cache.get(key)
+    if isinstance(cached, dict) and cached.get("url"):
+        return str(cached["url"])
+
+    local = download_body_image(source_url, fig_id)
+    boundary, body = multipart_file("media", local)
+    url = (
+        "https://api.weixin.qq.com/cgi-bin/media/uploadimg?"
+        + urllib.parse.urlencode({"access_token": token})
+    )
+    req = urllib.request.Request(
+        url,
+        data=body,
+        method="POST",
+        headers={
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+            "Accept": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as response:
+            result = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        result = json.loads(exc.read().decode("utf-8", errors="replace"))
+
+    image_url = result.get("url")
+    if not image_url:
+        raise RuntimeError(
+            "body image upload failed: "
+            + json.dumps(
+                {
+                    "figure": fig_id,
+                    "errcode": result.get("errcode"),
+                    "errmsg": result.get("errmsg"),
+                },
+                ensure_ascii=False,
+            )
+        )
+
+    cache[key] = {"url": image_url, "source_url": source_url, "figure": fig_id}
+    save_json_cache(cache_path, cache)
+    return str(image_url)
+
+
+def upload_featured_images(token: str, featured: dict | None) -> dict[str, str]:
+    if not featured:
+        return {}
+    uploaded: dict[str, str] = {}
+    for fig in featured.get("figures", []):
+        if not isinstance(fig, dict):
+            continue
+        fig_id = str(fig.get("id") or "").strip()
+        source_url = str(fig.get("source_url") or "").strip()
+        if not fig_id or not source_url:
+            continue
+        uploaded[fig_id] = upload_body_image(
+            token,
+            source_url,
+            fig_id,
+            DEFAULT_BODY_IMAGE_CACHE,
+        )
+    return uploaded
 
 
 def prepare_thumb_cover(cover: Path) -> Path:
@@ -573,35 +763,30 @@ def main() -> int:
     parser.add_argument("--env-file", default=str(DEFAULT_ENV))
     parser.add_argument("--cover", default=str(DEFAULT_COVER))
     parser.add_argument("--source-url", default=DEFAULT_SOURCE_URL)
-    parser.add_argument("--output", default="/tmp/osg-wechat-draft-preview.html")
-    parser.add_argument("--title-prefix", default="【联调草稿】")
+    parser.add_argument("--title-prefix", default="")
     args = parser.parse_args()
 
     slot, papers = load_latest_release()
-    content = build_content(slot, papers)
-    label = slot_label(slot)
-    title = f"{args.title_prefix}有机合成文献更新｜{label}"
-    digest = f"本期新增{len(papers)}篇有机合成相关文献，按期刊优先级整理中英文标题与作者。"
-
-    output = Path(args.output)
-    output.write_text(content, encoding="utf-8")
-
-    summary = {
-        "stage": "preview",
-        "publicationSlot": slot,
-        "paper_count": len(papers),
-        "journals": list(dict.fromkeys(str(x["journal"]) for x in papers)),
-        "title": title,
-        "preview_file": str(output),
-        "dois": [x["doi"] for x in papers],
-    }
-    print(json.dumps(summary, ensure_ascii=False))
+    featured = load_featured(slot[:10])
+    title = f"{args.title_prefix}有机合成文献日报｜{slot[:10]} · 每日精选"
+    digest = f"今日新增{len(papers)}篇有机合成文献，并精选1篇进行由浅入深的深度解读。" if featured else f"今日新增{len(papers)}篇有机合成文献。"
 
     if not args.create:
+        print(json.dumps({
+            "stage": "plan",
+            "publicationSlot": slot,
+            "paper_count": len(papers),
+            "featured": bool(featured),
+            "title": title,
+            "dois": [x["doi"] for x in papers],
+            "note": "No preview URL is created before the WeChat draft is written.",
+        }, ensure_ascii=False))
         return 0
 
     load_env(Path(args.env_file))
     token = get_access_token()
+    uploaded_urls = upload_featured_images(token, featured)
+    content = build_content(slot, papers, featured, uploaded_urls)
     thumb_media_id = upload_cover(token, Path(args.cover), DEFAULT_CACHE)
     article = {
         "article_type": "news",
