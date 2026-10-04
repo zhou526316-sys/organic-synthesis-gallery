@@ -59,6 +59,11 @@ const JOURNALS = TARGET_JOURNALS;
 const JOURNAL_BY_NAME = new Map(JOURNALS.map(journal => [journal.name, journal]));
 const auditStartForJournal = journal => effectiveJournalStart(journal, START);
 const rescueStartForJournal = journal => effectiveJournalStart(journal, RESCUE_START);
+const sourceQueryStartForJournal = journal => {
+  const auditStart = auditStartForJournal(journal);
+  const rescueStart = rescueStartForJournal(journal);
+  return auditStart < rescueStart ? auditStart : rescueStart;
+};
 
 const normalizeDoi = value => {
   if (typeof value !== 'string') return '';
@@ -246,6 +251,11 @@ function mergeCandidate(map, incoming) {
   if (!current.title && incoming.title) current.title = incoming.title;
   if ((!current.abstract || current.abstract.length < 120) && incoming.abstract) current.abstract = incoming.abstract;
   if (!current.date && incoming.date) current.date = incoming.date;
+  for (const key of ['onlineDate', 'publishedDate', 'createdDate']) {
+    const next = clean(incoming[key]);
+    if (!next) continue;
+    if (!current[key] || (key === 'createdDate' && next > current[key])) current[key] = next;
+  }
   if (!current.type && incoming.type) current.type = incoming.type;
   const incomingAuthors = candidateAuthors(incoming.authors);
   if (incomingAuthors.length > (current.authors || []).length) current.authors = incomingAuthors;
@@ -258,6 +268,7 @@ async function fetchCrossref(journal) {
   const stats = [];
   const journalStart = auditStartForJournal(journal);
   const journalRescueStart = rescueStartForJournal(journal);
+  const journalQueryStart = sourceQueryStartForJournal(journal);
   for (const issn of journal.issns) {
     for (const mode of ['online', 'published', 'created']) {
       const filterField = mode === 'online' ? 'online-pub-date' : mode === 'published' ? 'pub-date' : 'created-date';
@@ -265,7 +276,7 @@ async function fetchCrossref(journal) {
       // three-day START remains the primary semantic-review window; older tail
       // records only matter when they surface a DOI that has not already been
       // accepted, excluded, or marked pending.
-      const modeStart = journalRescueStart;
+      const modeStart = journalQueryStart;
       const dateFilter = `from-${filterField}:${modeStart},until-${filterField}:${END}`;
       let cursor = '*';
       let count = 0;
@@ -280,6 +291,7 @@ async function fetchCrossref(journal) {
           for (const item of items) {
             const online = dateFromParts(item['published-online']);
             const published = dateFromParts(item.published);
+            const created = dateFromParts(item.created);
             const date = online || published || '';
             mergeCandidate(map, {
               doi: item.DOI,
@@ -287,6 +299,9 @@ async function fetchCrossref(journal) {
               title: clean(item.title?.[0]),
               abstract: clean(item.abstract),
               date,
+              onlineDate: online,
+              publishedDate: published,
+              createdDate: created,
               type: item.type || '',
               authors: (item.author || []).map(author => [author?.given, author?.family].filter(Boolean).join(' ')).filter(Boolean),
               topics: [],
@@ -301,7 +316,7 @@ async function fetchCrossref(journal) {
         ok = false;
         note = error.message;
       }
-      stats.push({ source: 'crossref', journal: journal.name, issn, mode, ok, count, note });
+      stats.push({ source: 'crossref', journal: journal.name, issn, mode, queryStart: modeStart, ok, count, note });
     }
   }
   return { candidates: [...map.values()], stats };
@@ -327,7 +342,7 @@ async function fetchOpenAlex(journal) {
     let note = '';
     try {
       for (let page = 0; page < 40; page += 1) {
-        const filter = `primary_location.source.id:${sourceId},from_publication_date:${rescueStartForJournal(journal)},to_publication_date:${END}`;
+        const filter = `primary_location.source.id:${sourceId},from_publication_date:${sourceQueryStartForJournal(journal)},to_publication_date:${END}`;
         const q = new URLSearchParams({ filter, 'per-page': '200', cursor });
         const data = await jsonFetch(`https://api.openalex.org/works?${q}`);
         const items = data?.results || [];
@@ -383,11 +398,14 @@ function compactCandidate(c) {
   const journal = JOURNAL_BY_NAME.get(c.journal);
   const effectiveStart = journal ? auditStartForJournal(journal) : START;
   const createdDiscovered = (c.sources || []).some(source => source.endsWith(':created'));
+  const createdInQuery = Boolean(createdDiscovered && c.createdDate && c.createdDate >= (journal ? sourceQueryStartForJournal(journal) : START) && c.createdDate <= END);
+  const futurePublicationDate = Boolean(c.date && c.date > END && createdInQuery);
   return {
     ...c,
     activeFrom: journal?.activeFrom || '',
-    dateUnverified: !c.date,
-    lateIndexed: Boolean(c.date && c.date < effectiveStart && createdDiscovered),
+    dateUnverified: !c.date || futurePublicationDate,
+    dateConflict: futurePublicationDate ? 'created_in_window_publication_date_in_future' : '',
+    lateIndexed: Boolean(c.date && c.date < effectiveStart && createdInQuery),
     safetyTail: Boolean(c.date && c.date < effectiveStart && c.date >= (journal ? rescueStartForJournal(journal) : RESCUE_START)),
     reviewPriority: c.scopeCorrection || retainForReview(c) ? 'high' : 'normal',
     abstract: (c.abstract || '').slice(0, 1800),
@@ -397,12 +415,15 @@ function compactCandidate(c) {
 const [galleryDois, reviewedExclusions, reviewedHistory] = await Promise.all([loadGalleryDois(), loadReviewExclusions(), loadReviewedHistory()]);
 const merged = new Map();
 const stats = [];
+const rawSourceCandidateCounts = new Map();
 
 for (const journal of JOURNALS) {
   const [crossref, openalex] = await Promise.all([fetchCrossref(journal), fetchOpenAlex(journal)]);
   stats.push(...crossref.stats, ...openalex.stats);
+  const rawUnion = new Set([...crossref.candidates, ...openalex.candidates].map(candidate => normalizeDoi(candidate.doi)).filter(Boolean));
+  rawSourceCandidateCounts.set(journal.name, { crossref: crossref.candidates.length, openalex: openalex.candidates.length, union: rawUnion.size });
   for (const c of [...crossref.candidates, ...openalex.candidates]) mergeCandidate(merged, c);
-  console.log(`AUDIT_SOURCE ${journal.name} crossref=${crossref.candidates.length} openalex=${openalex.candidates.length}`);
+  console.log(`AUDIT_SOURCE ${journal.name} crossref=${crossref.candidates.length} openalex=${openalex.candidates.length} rawUnion=${rawUnion.size}`);
 }
 
 const universe = [...merged.values()].filter(c => {
@@ -412,9 +433,11 @@ const universe = [...merged.values()].filter(c => {
   const rescueStart = journal ? rescueStartForJournal(journal) : RESCUE_START;
   const createdDiscovered = (c.sources || []).some(source => source.endsWith(':created'));
   const sourceDiscovered = (c.sources || []).length > 0;
-  if (!c.date) return createdDiscovered;
-  if (c.date > END || c.date < activeFrom) return false;
-  return c.date >= effectiveStart || (sourceDiscovered && c.date >= rescueStart);
+  const createdInQuery = Boolean(createdDiscovered && c.createdDate && c.createdDate >= (journal ? sourceQueryStartForJournal(journal) : START) && c.createdDate <= END);
+  if (!c.date) return createdDiscovered && (!c.createdDate || createdInQuery);
+  if (c.date < activeFrom) return false;
+  if (c.date > END) return createdInQuery;
+  return c.date >= effectiveStart || (sourceDiscovered && c.date >= rescueStart) || createdInQuery;
 });
 const universeDoiSet = new Set(universe.map(candidate => normalizeDoi(candidate.doi)));
 const historicalCoverageLosses = [...reviewedHistory.values()].filter(item => {
@@ -447,6 +470,7 @@ const sourceFamilyHealth = Object.fromEntries(JOURNALS.map(j => {
   const crossrefRows = rows.filter(s => s.source === 'crossref');
   const openAlexRows = rows.filter(s => s.source === 'openalex' || s.source === 'openalex-source');
   const candidates = universe.filter(candidate => candidate.journal === j.name);
+  const rawCounts = rawSourceCandidateCounts.get(j.name) || { crossref: 0, openalex: 0, union: 0 };
   const closureCandidates = candidates.filter(candidate => candidate.date === CLOSURE_DATE);
   const crossrefCandidateRecords = candidates.filter(candidate => hasSource(candidate, 'crossref:')).length;
   const openAlexCandidateRecords = candidates.filter(candidate => hasSource(candidate, 'openalex:')).length;
@@ -458,7 +482,8 @@ const sourceFamilyHealth = Object.fromEntries(JOURNALS.map(j => {
   const minWindowFamily = Math.min(crossrefCandidateRecords, openAlexCandidateRecords);
   const maxClosureFamily = Math.max(closureCrossrefRecords, closureOpenAlexRecords);
   const minClosureFamily = Math.min(closureCrossrefRecords, closureOpenAlexRecords);
-  const coverageWarning = candidates.length >= 8 && maxWindowFamily >= 8 && (minWindowFamily === 0 || minWindowFamily / maxWindowFamily < 0.5);
+  const rawToUnionCollapse = rawCounts.union > 0 && candidates.length === 0;
+  const coverageWarning = rawToUnionCollapse || (candidates.length >= 8 && maxWindowFamily >= 8 && (minWindowFamily === 0 || minWindowFamily / maxWindowFamily < 0.5));
   const closureCoverageWarning = closureCandidates.length >= 4 && maxClosureFamily >= 4 && (minClosureFamily === 0 || minClosureFamily / maxClosureFamily < 0.5);
   return [j.name, {
     activeFrom: j.activeFrom || '',
@@ -469,6 +494,11 @@ const sourceFamilyHealth = Object.fromEntries(JOURNALS.map(j => {
     openAlexFailures: openAlexRows.filter(s => !s.ok).length,
     crossrefHealthy: crossrefRows.some(s => s.ok),
     openAlexHealthy: openAlexRows.some(s => s.ok),
+    queryStart: sourceQueryStartForJournal(j),
+    rawCrossrefCandidateRecords: rawCounts.crossref,
+    rawOpenAlexCandidateRecords: rawCounts.openalex,
+    rawUnionCandidateRecords: rawCounts.union,
+    rawToUnionCollapse,
     unionCandidateRecords: candidates.length,
     crossrefCandidateRecords,
     openAlexCandidateRecords,
@@ -532,6 +562,8 @@ const byJournal = Object.fromEntries(JOURNALS.map(j => {
   return [j.name, {
     activeFrom: j.activeFrom || '',
     effectiveStart: auditStartForJournal(j),
+    queryStart: sourceQueryStartForJournal(j),
+    rawSourceRecords: rawSourceCandidateCounts.get(j.name)?.union || 0,
     sourceRecords: candidates.length,
     crossrefOnly,
     openAlexOnly,
@@ -575,7 +607,7 @@ const report = {
   startDate: START,
   endDate: END,
   closureDate: CLOSURE_DATE,
-  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail (including Crossref created/deposit rescue and OpenAlex), automatic catch-up from the first unverified date when verifiedThrough falls behind, and closure-day source-coverage regression detection. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
+  policy: 'Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail, and real source-query catch-up from the first unverified date when verifiedThrough falls behind. Crossref created dates are preserved separately from publication dates so late deposits and future issue-date conflicts remain reviewable instead of disappearing. Raw-source to post-filter collapse is a coverage anomaly. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.',
   targetJournals: JOURNALS.map(journal => ({ name: journal.name, issns: journal.issns, activeFrom: journal.activeFrom || '', effectiveStart: auditStartForJournal(journal), lateDepositRescueStart: rescueStartForJournal(journal) })),
   summary: {
     galleryDois: galleryDois.size,
