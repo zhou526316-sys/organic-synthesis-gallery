@@ -9,20 +9,32 @@ function sessionToken(): string {
   try { return localStorage.getItem(SESSION_KEY) || ''; } catch { return ''; }
 }
 
+function publishCapabilityState(): void {
+  window.dispatchEvent(new CustomEvent('gallery-private-pdf-capability', { detail: { read: ownerReadEnabled } }));
+}
+
 async function refreshCapability(): Promise<void> {
   const token = sessionToken();
-  if (!token) { ownerReadEnabled = false; return; }
+  if (!token) {
+    ownerReadEnabled = false;
+    publishCapabilityState();
+    return;
+  }
   try {
     const response = await fetch(API_BASE + '/api/user-ui/auth/session', {
       headers: { authorization: 'Bearer ' + token },
       cache: 'no-store',
     });
-    if (!response.ok) { ownerReadEnabled = false; return; }
-    const data = await response.json() as { authenticated?: boolean; user?: { capabilities?: string[] } | null };
-    ownerReadEnabled = Boolean(data.authenticated && data.user?.capabilities?.includes(READ_CAPABILITY));
+    if (!response.ok) {
+      ownerReadEnabled = false;
+    } else {
+      const data = await response.json() as { authenticated?: boolean; user?: { capabilities?: string[] } | null };
+      ownerReadEnabled = Boolean(data.authenticated && data.user?.capabilities?.includes(READ_CAPABILITY));
+    }
   } catch {
     ownerReadEnabled = false;
   }
+  publishCapabilityState();
 }
 
 function refreshSoon(): void {
