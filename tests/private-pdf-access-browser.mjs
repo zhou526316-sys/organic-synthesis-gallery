@@ -57,5 +57,27 @@ try{
   await context.route('https://api.gczhouwld.com/**',async route=>{const u=new URL(route.request().url());if(u.pathname==='/api/user-ui/auth/session')return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({authenticated:true,user:{id:'u1',email:'owner@example.invalid',capabilities:[]}})});if(u.pathname==='/api/user-ui/private-pdf/bootstrap-owner'){claim++;return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({claimed:true,capabilities:['private_pdf_owner','private_pdf_read']})});}return route.fulfill({status:404,headers:{'access-control-allow-origin':'*'},body:'{}'});});
   const page=await context.newPage();await page.goto(base+'/private-pdf-owner-setup.html#code=fixture-secret');await page.locator('#claim:not([disabled])').waitFor();assert.equal(await page.locator('#account').textContent(),'owner@example.invalid');assert.equal(claim,0);await page.locator('#claim').click();await page.locator('#status.ok').waitFor();assert.equal(claim,1);await context.close();
  });
+ await test('existing owner can authorize PDF capture without healthcheck CORS preflight',async()=>{
+  const context=await browser.newContext();
+  await context.addInitScript(()=>localStorage.setItem('organic-gallery-session-v1','fixture-session'));
+  let healthCalls=0,leaseCalls=0;
+  await context.route('https://api.gczhouwld.com/**',async route=>{
+    const u=new URL(route.request().url());
+    if(u.pathname==='/api/_healthcheck'){healthCalls++;return route.abort('failed');}
+    if(u.pathname==='/api/user-ui/auth/session')return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({authenticated:true,user:{id:'u1',email:'owner@example.invalid',capabilities:['private_pdf_owner','private_pdf_read','private_pdf_capture']}})});
+    if(u.pathname==='/api/user-ui/private-pdf/capture-lease'){leaseCalls++;return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({token:'A'.repeat(48),expiresAt:Date.now()+7*86400000,scope:'private_pdf_capture'})});}
+    return route.fulfill({status:404,headers:{'access-control-allow-origin':'*'},body:'{}'});
+  });
+  const page=await context.newPage();
+  await page.goto(base+'/private-pdf-owner-setup.html');
+  await page.locator('#authorize:not([disabled])').waitFor();
+  assert.equal(healthCalls,0);
+  assert.equal(await page.locator('#capture-status').textContent(),'可单独授权本浏览器的 PDF 捕获模块。');
+  await page.locator('#authorize').click();
+  await page.getByText('授权已发送给 Tampermonkey').waitFor();
+  assert.equal(leaseCalls,1);
+  assert.equal(healthCalls,0);
+  await context.close();
+ });
 }finally{await browser.close();server.close();}
 console.log(JSON.stringify({passed,cases}));
