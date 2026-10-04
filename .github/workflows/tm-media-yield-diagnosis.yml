@@ -1,0 +1,71 @@
+name: Diagnose current TOC and body capture yield
+on:
+  push:
+    branches: [diagnose/tm-media-yield-20261004]
+    paths: [.github/workflows/tm-media-yield-diagnosis.yml]
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Read live sanitized capture reports and current inventory only
+        run: |
+          node --input-type=module <<'JS'
+          import {mkdir,writeFile} from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
+          const out=process.env.RUNNER_TEMP+'/tm-yield';await mkdir(out,{recursive:true});
+          const base='https://api.gczhouwld.com',site='https://gallery.gczhouwld.com';
+          const summary={readStartedAt:new Date().toISOString(),readOnly:true,publisherRequests:0,mediaWrites:0,errors:[]};
+          const results={};
+          function clean(x){
+            if(Array.isArray(x))return x.map(clean);
+            if(x&&typeof x==='object')return Object.fromEntries(Object.entries(x).filter(([k])=>!/(?:token|secret|password|cookie|authorization|imageData|paragraphs|sections|abstractText|fullText|bodyText)/i.test(k)).map(([k,v])=>[k,clean(v)]));
+            if(typeof x==='string')return x.replace(/Bearer\s+\S+/gi,'[redacted]').replace(/https?:\/\/[^\s"'<>]+/gi,s=>{try{const u=new URL(s);u.username='';u.password='';u.search='';u.hash='';return u.href;}catch{return '[url]'}});
+            return x;
+          }
+          async function read(key,url,init={}){
+            try{
+              const r=await fetch(url+(url.includes('?')?'&':'?')+'diagnosis='+Date.now(),{...init,headers:{origin:site,'cache-control':'no-cache',...(init.headers||{})},signal:AbortSignal.timeout(25000)});
+              const text=await r.text();const meta={status:r.status,readAt:new Date().toISOString(),url};
+              if(!r.ok){summary.errors.push({key,...meta});results[key]={http:meta};return;}
+              let data;
+              if(key==='installer'){data={sha256:createHash('sha256').update(text).digest('hex'),version:(text.match(/@version\s+(\S+)/)||[])[1],coverageRevision:(text.match(/var QUEUE_COVERAGE_REVISION\s*=\s*'([^']+)'/)||[])[1],size:Buffer.byteLength(text)};}
+              else data=JSON.parse(text);
+              results[key]={http:meta,data:clean(data)};await writeFile(out+'/'+key+'.json',JSON.stringify(results[key],null,2));
+            }catch(e){summary.errors.push({key,error:String(e.message).slice(0,180)});}
+          }
+          const endpoints={queue:site+'/toc-demand-live.json',reports:base+'/api/media/tampermonkey-reports?limit=200',local:base+'/api/media/local-diagnostics',toc:base+'/api/media/local-capture-index',stage:base+'/api/article-figures/staged?inventory=1',media:site+'/media-index.json',ledger:site+'/body-publication-ledger.json',capabilities:base+'/api/media/capture-capabilities',installer:site+'/gallery-vpn-bridge.user.js'};
+          const tasks=Object.entries(endpoints);
+          for(let i=0;i<tasks.length;i+=3)await Promise.all(tasks.slice(i,i+3).map(([k,u])=>read(k,u)));
+          const queue=results.queue?.data;
+          if(queue){
+            const recent=(queue.articles||[]).filter(a=>(a.addedDate||a.date||'')>='2026-10-02');summary.recentArticles=recent;
+            const latestRows=results.reports?.data?.items||[];
+            const detailDois=[...new Set([...recent.map(a=>a.doi),...latestRows.slice(0,30).map(x=>x.doi)])];
+            for(let i=0;i<detailDois.length;i+=4)await Promise.all(detailDois.slice(i,i+4).map(doi=>read('report-'+encodeURIComponent(doi),base+'/api/media/tampermonkey-reports?doi='+encodeURIComponent(doi))));
+            const historyDois=latestRows.filter(x=>x.status==='partial'||x.status==='failed').slice(0,8).map(x=>x.doi);
+            for(let i=0;i<historyDois.length;i+=3)await Promise.all(historyDois.slice(i,i+3).map(doi=>read('history-'+encodeURIComponent(doi),base+'/api/media/tampermonkey-reports?doi='+encodeURIComponent(doi)+'&history=1&limit=12')));
+            const dois=(queue.articles||[]).map(a=>a.doi);
+            for(let i=0;i<dois.length;i+=250)await read('production-'+i,base+'/api/media/inventory',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({dois:dois.slice(i,i+250),readOnly:true})});
+          }
+          summary.readFinishedAt=new Date().toISOString();summary.files=Object.keys(results);summary.reportsMeta=results.reports?.data?{count:results.reports.data.count,total:results.reports.data.total,updatedAt:results.reports.data.updatedAt}:null;
+          await writeFile(out+'/summary.json',JSON.stringify(summary,null,2));console.log(JSON.stringify({readAt:summary.readFinishedAt,recentArticleCount:summary.recentArticles?.length,files:summary.files.length,reportMetadata:summary.reportsMeta,errors:summary.errors}));
+          JS
+      - name: Save exact source for read-only diagnosis
+        run: |
+          mkdir -p "$RUNNER_TEMP/tm-yield-source"
+          git archive HEAD public/toc-mainline.user.js scripts shared cloudflare/worker/src cloudflare/scripts docs .github/workflows AGENTS.md PROJECT_RULES.md | tar -x -C "$RUNNER_TEMP/tm-yield-source"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tm-media-yield-diagnosis
+          include-hidden-files: true
+          path: |
+            ${{ runner.temp }}/tm-yield
+            ${{ runner.temp }}/tm-yield-source
+          retention-days: 7
