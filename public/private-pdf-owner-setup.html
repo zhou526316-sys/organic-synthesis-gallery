@@ -15,6 +15,8 @@ body{font-family:Inter,system-ui,sans-serif;max-width:720px;margin:48px auto;pad
 <p>当前登录账号：<strong id="account">正在读取…</strong></p>
 <p id="status" class="muted"></p>
 <button id="claim" disabled>确认将当前账号设为私有 PDF owner</button>
+<button id="authorize" disabled hidden>授权本浏览器抓取 PDF（7 天）</button>
+<p id="capture-status" class="muted"></p>
 </main>
 <script type="module">
 const SESSION_KEY='organic-gallery-session-v1';
@@ -22,6 +24,8 @@ const API='https://api.gczhouwld.com';
 const account=document.querySelector('#account');
 const status=document.querySelector('#status');
 const button=document.querySelector('#claim');
+const authorize=document.querySelector('#authorize');
+const captureStatus=document.querySelector('#capture-status');
 const token=localStorage.getItem(SESSION_KEY)||'';
 const code=new URLSearchParams(location.hash.replace(/^#/,'')).get('code')||'';
 async function json(path,init={}){
@@ -39,8 +43,40 @@ async function json(path,init={}){
     const session=await json('/api/user-ui/auth/session');
     if(!session.authenticated||!session.user){account.textContent='未登录';status.textContent='当前登录状态已失效。';status.className='bad';return;}
     account.textContent=session.user.email||session.user.displayName||session.user.id;
-    if(session.user.capabilities?.includes('private_pdf_owner')){
-      status.textContent='这个账号已经是私有 PDF owner。';status.className='ok';return;
+    const capabilities=session.user.capabilities||[];
+    async function offerCaptureAuthorization(){
+      if(!capabilities.includes('private_pdf_capture'))return;
+      authorize.hidden=false;
+      try{
+        const health=await json('/api/_healthcheck');
+        if(!health.privatePdf?.captureEnabled){
+          captureStatus.textContent='PDF 捕获模块尚未开启；现有网页与图片抓取不受影响。';
+          return;
+        }
+        authorize.disabled=false;
+        captureStatus.textContent='可单独授权本浏览器的 PDF 捕获模块。';
+        authorize.addEventListener('click',async()=>{
+          authorize.disabled=true;captureStatus.textContent='正在签发 PDF 捕获授权…';captureStatus.className='muted';
+          try{
+            const lease=await json('/api/user-ui/private-pdf/capture-lease',{method:'POST'});
+            if(!lease.token||!lease.expiresAt)throw new Error('capture_lease_invalid');
+            window.postMessage({type:'osg-private-pdf-capture-lease-v1',token:lease.token,expiresAt:lease.expiresAt,scope:lease.scope},location.origin);
+            captureStatus.textContent='授权已发送给 Tampermonkey。请保持本页打开，直到脚本确认接收。';
+            const ack=event=>{
+              if(event.source!==window||event.origin!==location.origin||event.data?.type!=='osg-private-pdf-capture-lease-ack-v1')return;
+              window.removeEventListener('message',ack);
+              captureStatus.textContent='PDF 捕获授权成功，本浏览器有效至 '+new Date(lease.expiresAt).toLocaleString()+'。';
+              captureStatus.className='ok';
+            };
+            window.addEventListener('message',ack);
+          }catch(error){captureStatus.textContent='授权失败：'+String(error?.message||error);captureStatus.className='bad';authorize.disabled=false;}
+        });
+      }catch(error){captureStatus.textContent='无法读取 PDF 捕获状态：'+String(error?.message||error);captureStatus.className='bad';}
+    }
+    if(capabilities.includes('private_pdf_owner')){
+      status.textContent='这个账号已经是私有 PDF owner。';status.className='ok';
+      await offerCaptureAuthorization();
+      return;
     }
     if(!code){status.textContent='缺少一次性绑定码。';status.className='bad';return;}
     status.textContent='请确认这里显示的是你要绑定的账号，再点击按钮。';
@@ -52,6 +88,8 @@ async function json(path,init={}){
         status.textContent='绑定成功。已获得私有 PDF 读取、捕获和处理权限；后续功能仍按阶段开启。';status.className='ok';
         history.replaceState(null,'',location.pathname+location.search);
         window.dispatchEvent(new Event('gallery-auth-session-changed'));
+        capabilities.splice(0,capabilities.length,...(result.capabilities||[]));
+        await offerCaptureAuthorization();
       }catch(error){status.textContent='绑定失败：'+String(error?.message||error);status.className='bad';button.disabled=false;}
     },{once:true});
   }catch(error){account.textContent='读取失败';status.textContent=String(error?.message||error);status.className='bad';}
