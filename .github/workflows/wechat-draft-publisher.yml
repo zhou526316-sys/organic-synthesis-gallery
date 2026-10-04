@@ -5,11 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'audit/literature-update-state.json'
-      - 'public/wechat-featured/**'
-      - 'assets/wechat-featured/**'
       - 'audit/automation-triggers/wechat-publisher-request.json'
-      - 'audit/automation-triggers/wechat-publish-request.json'
 
 permissions:
   contents: write

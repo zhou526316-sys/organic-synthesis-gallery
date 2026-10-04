@@ -20,7 +20,7 @@ export function gitBlobSha(text) {
 const text = value => typeof value === 'string' ? value.trim() : '';
 const sameSet = (a, b) => Array.isArray(a) && Array.isArray(b) && a.length === b.length
   && new Set(a).size === a.length && new Set(b).size === b.length && a.every(x => b.includes(x));
-const slotPattern = /^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/;
+const slotPattern = /^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/;
 const requireValue = (condition, message) => { if (!condition) throw new Error(message); };
 function validSlot(slot) {
   return slotPattern.test(String(slot || '')) && Number.isFinite(Date.parse(slot))

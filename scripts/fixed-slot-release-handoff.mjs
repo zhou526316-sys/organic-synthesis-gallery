@@ -8,7 +8,7 @@ export const REQUEST = 'audit/automation-triggers/literature-release-request.jso
 export const MARKER = 'audit/publication-release-state.json';
 const RESULT = 'audit/release-execution-result.json';
 const SHA = /^[a-f0-9]{40}$/;
-const SLOT = /^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/;
+const SLOT = /^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/;
 const pretty = value => JSON.stringify(value, null, 2) + '\n';
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 const json = file => JSON.parse(readFileSync(file, 'utf8'));
