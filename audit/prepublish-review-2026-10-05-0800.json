@@ -3,7 +3,7 @@
   "reviewType": "prepublish-primary",
   "publicationSlot": "2026-10-05T08:00:00+08:00",
   "createdAt": "2026-10-05T07:18:00+08:00",
-  "evidenceAsOf": "2026-10-05T07:22:00+08:00",
+  "evidenceAsOf": "2026-10-05T07:25:00+08:00",
   "executionMode": "scheduled_primary_review_github_runner_handoff",
   "phase": "prepublish_ready_with_pending",
   "status": "ready_with_pending",
@@ -79,6 +79,32 @@
     "catchupOrOlderCandidates": 41,
     "primaryWindowAccepted": 6,
     "catchupOrOlderAccepted": 6
+  },
+  "dateReconciliation": {
+    "rows": 28,
+    "policy": "For created/deposit rescue rows whose publisher online date remains unavailable, decision.date uses the exact Crossref createdDate as the conservative discovery/effective date required by formal conversion. The inherited dateUnverified=true, empty onlineDate/publishedDate and original createdDate fields remain intact; this does not claim publisher publication-date verification.",
+    "publisherFirstPublishedSpotChecks": [
+      {
+        "doi": "10.1039/d6sc06874j",
+        "firstPublished": "2026-10-02",
+        "source": "RSC official article history"
+      },
+      {
+        "doi": "10.1039/d6sc03773a",
+        "firstPublished": "2026-10-01",
+        "source": "RSC official article history"
+      },
+      {
+        "doi": "10.1039/d6sc01654e",
+        "firstPublished": "2026-10-01",
+        "source": "RSC official article history"
+      },
+      {
+        "doi": "10.1039/d6sc06330f",
+        "firstPublished": "2026-10-02",
+        "source": "RSC official article history"
+      }
+    ]
   },
   "reviewed": 55,
   "acceptedCount": 12,
@@ -1070,7 +1096,7 @@
       "challengeDecision": "pending",
       "titleZh": null,
       "decision": "pending",
-      "reason": "当前证据不足以裁决主要贡献与一般制备范围。",
+      "reason": "当前仅有光电化学选择性合成的题名与索引，尚缺原创反应实例、文章类型及可推广制备范围，无法裁决主要贡献。",
       "evidenceBasis": "fresh compact在07:07代仍无摘要；ACS ASAP官方索引确认题名、作者和文章历史，但正文页仍返回403，检索结果没有给出文章类型、原创反应实例、底物/产物范围或分离制备信息。",
       "challengeReason": "题名可能属于观点/展望，也可能承载原创光电合成方法；官方索引新增并未回答此前的文章类型与制备范围缺口，故include或exclude都仍会过度推断。",
       "evidenceNeeded": "ACS出版社文章类型、摘要、原创反应实例、底物/产物范围与分离制备证据。",
@@ -1130,7 +1156,7 @@
       "challengeDecision": "pending",
       "titleZh": null,
       "decision": "pending",
-      "reason": "当前证据不足以裁决主要贡献与一般制备范围。",
+      "reason": "现有证据确认外加电场催化亚胺鎓化学，但尚缺底物、产物系列与分离收率，无法判断是一般制备方法还是界面机理研究。",
       "evidenceBasis": "fresh compact仍无摘要；CCS官方当期目录检索片段确认文章并显示其讨论外加电场催化化学反应，UNIGE与Zenodo旧证据确认Scientific article和合成/催化实验包，但仍未取得具体亚胺/亚胺鎓底物、产物系列及分离收率。",
       "challengeReason": "现有证据足以排除纯观点猜测，却不足以判断主要贡献是可迁移的一般制备方法还是电场催化机理平台；此前evidenceNeeded未被本轮索引片段补齐。",
       "evidenceNeeded": "需published article/SI确认具体亚胺/亚胺鎓底物与产物、反应/底物范围、分离收率，以及电场催化是否建立可迁移的一般制备方法，而非主要为界面电场/机理效应。",
@@ -1192,7 +1218,7 @@
       "challengeDecision": "pending",
       "titleZh": null,
       "decision": "pending",
-      "reason": "当前证据不足以裁决主要贡献与一般制备范围。",
+      "reason": "检索片段证明存在宏环化和钯催化C–H烯化步骤，但尚缺完整底物系列、收率与可迁移性，不能仅凭合成题名纳入。",
       "evidenceBasis": "fresh compact仍无摘要；CCS官方摘要/PDF检索片段新增“macrocyclization and palladium-catalyzed C–H olefination”及Suzuki宏环化收率相关文字，证明存在真实合成步骤，但仍未取得起始物类别、产物系列、分离收率与方法可迁移性全貌。",
       "challengeReason": "新增片段增强了include方向，却只给出反应名称和局部收率语境，尚未逐项满足此前要求的底物/产物范围；不能为获得发布白名单而把不完整片段升级为最终制备证据。",
       "evidenceNeeded": "需出版社摘要/正文或SI确认[8]–[9]对环芳烷的起始物、对映选择性构建步骤、底物系列、收率与构型证据，不能仅凭“Synthesis”题名判定一般方法。",
@@ -1254,7 +1280,7 @@
       "challengeDecision": "pending",
       "titleZh": null,
       "decision": "pending",
-      "reason": "当前证据不足以裁决主要贡献与一般制备范围。",
+      "reason": "现有索引只确认光控螺硫吡喃动态共价主题，尚缺成键/交换底物范围和可分离产物，无法区分制备方法与材料响应。",
       "evidenceBasis": "fresh compact仍无摘要；CCS官方文章/摘要页仍返回403，作者单位页面只确认论文与页码，检索结果未给出螺硫吡喃成键/交换的底物、产物、可分离制备范围或主要贡献边界。",
       "challengeReason": "动态共价键形成可能属于真实聚合/合成方法，不能按材料主题草率排除；同样不能凭题名和引文元数据认定通用制备方法，故原证据缺口保持。",
       "evidenceNeeded": "需出版社摘要/正文或SI确认螺硫吡喃参与的成键/交换反应底物范围、可分离产物及是否属于通用动态共价制备而非材料响应现象。",
@@ -1324,7 +1350,7 @@
       "challengeDecision": "pending",
       "titleZh": null,
       "decision": "pending",
-      "reason": "当前证据不足以裁决主要贡献与一般制备范围。",
+      "reason": "fresh compact仍未给出水参与咔唑电化学重构的具体起始物、骨架变化、底物范围和分离收率，无法定案。",
       "evidenceBasis": "fresh compact已再次收录该DOI但仍无充分摘要/正文；本轮可获得的CCS索引未补充水参与咔唑原位电化学重构的具体起始物、产物、范围和分离证据，继续保留原日期和来源review。",
       "challengeReason": "题名可能对应真实合成/聚合物转化，不能反向草率排除；同样不能仅凭题名中的Catalysis/Synthesis/Chemistry纳入，故两遍均保留pending。",
       "evidenceNeeded": "需出版社摘要/正文或SI确认咔唑电化学重构的具体起始物、成键/骨架变化、底物范围、分离收率及水参与是否形成一般制备方法。",
@@ -1398,7 +1424,7 @@
       "challengeDecision": "pending",
       "titleZh": null,
       "decision": "pending",
-      "reason": "当前证据不足以裁决主要贡献与一般制备范围。",
+      "reason": "现有证据只确认CO₂还原耦合醇氧化框架，尚缺醇底物、氧化产物、范围和分离收率，无法区分合成方法与能源电催化。",
       "evidenceBasis": "fresh compact已再次收录该DOI但仍无充分摘要/正文；CCS官方目录与PDF检索片段只确认“阴极CO₂增值耦合阳极高价值有机氧化”，仍未给出醇底物、氧化产物、底物范围、分离收率或主要评价终点，原缺口未补齐。",
       "challengeReason": "配对醇氧化可能构成一般电有机合成，不能因能源主题直接排除；同样不能仅凭题名纳入，故继续pending。",
       "evidenceNeeded": "出版社摘要或正文/SI中醇底物类别、氧化产物、底物范围、分离收率，以及主要评价是否为合成产物还是CO₂还原/能效。",
@@ -1659,7 +1685,7 @@
       "journal": "Chem",
       "title": "Direct O–O coupling on cation-vacancy-activated oxygen-vacancy sites of NiOOH for industrially efficient and durable OER",
       "abstract": "",
-      "date": "",
+      "date": "2026-09-25",
       "type": "journal-article",
       "authors": [
         "Feng Gao",
@@ -1704,7 +1730,7 @@
       "journal": "Chem",
       "title": "El Agente Quntur: A research collaborator agent for quantum chemistry",
       "abstract": "",
-      "date": "",
+      "date": "2026-09-24",
       "type": "journal-article",
       "authors": [
         "Juan B. Pérez-Sánchez",
@@ -1755,7 +1781,7 @@
       "journal": "Chem",
       "title": "Evolution from out-of-plane to in-plane metallo-annulenes: Theoretical investigations of putative planar transition metallo-annulenes",
       "abstract": "",
-      "date": "",
+      "date": "2026-09-24",
       "type": "journal-article",
       "authors": [
         "Shengjie Zhang",
@@ -1798,7 +1824,7 @@
       "journal": "Chem",
       "title": "Opportunities for merging biosynthesis and biocatalysis",
       "abstract": "",
-      "date": "",
+      "date": "2026-09-25",
       "type": "journal-article",
       "authors": [
         "Dongshan Wu",
@@ -1837,7 +1863,7 @@
       "journal": "Chem",
       "title": "Practical and green oxidative amination of olefins",
       "abstract": "",
-      "date": "",
+      "date": "2026-09-30",
       "type": "journal-article",
       "authors": [
         "Shuxin Mao",
@@ -1889,7 +1915,7 @@
       "journal": "Chem",
       "title": "Sustainable air purification via light-charged filters",
       "abstract": "",
-      "date": "",
+      "date": "2026-09-25",
       "type": "journal-article",
       "authors": [
         "Qifei Wang",
@@ -1933,7 +1959,7 @@
       "journal": "Chem",
       "title": "Synthesis and optimization of ionizable lipids for RNA delivery",
       "abstract": "",
-      "date": "",
+      "date": "2026-09-24",
       "type": "journal-article",
       "authors": [
         "Bowen Wu",
@@ -1976,7 +2002,7 @@
       "journal": "Chem",
       "title": "The recycle reality: A process-level perspective on catalytic CO2 hydrogenation to methanol",
       "abstract": "",
-      "date": "",
+      "date": "2026-09-24",
       "type": "journal-article",
       "authors": [
         "Lukas Spiekermann",
@@ -2019,7 +2045,7 @@
       "journal": "Chemical Science",
       "title": "\"Click\" Formation of the Imine Bond in Water",
       "abstract": "The imine bond is a cornerstone of supramolecular chemistry because it combines stability and reversibility with ease of formation and the availability of a large number of precursors. Yet, the...",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Deepak .",
@@ -2069,7 +2095,7 @@
       "journal": "Chemical Science",
       "title": "Boosting the mobility of ions in nanoporous confinement by applying a gate voltage",
       "abstract": "The mobility of ions under confinement in nanoporous host materials is central to many electrochemical energy transformation and storage devices. By using ionic liquids (ILs) as electrolyte and metal-organic frameworks...",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "Peng Qin",
@@ -2111,7 +2137,7 @@
       "journal": "Chemical Science",
       "title": "Force-Modulated and Strain-Dependent Stereoselectivity of Copper-Catalyzed Reductive Coupling",
       "abstract": "Force coupled to the dihedral angle of a macrocyclic biaryl bisphosphine ligand modulates the stereoselectivity of the copper-catalyzed reductive coupling of 2-vinyl pyridine with acetophenone to form 1-phenyl-2-(pyridin-2-yl)propan-1-ol (1) as...",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "Chenghao Duan",
@@ -2154,7 +2180,7 @@
       "journal": "Chemical Science",
       "title": "Glycopolymer-based nanofibers with tunable polyelectrolyte content for modulating cellular interactions and drug delivery",
       "abstract": "The precise control over size, sequence and surface chemistry imparted by living crystallization-driven self-assembly is exploited to design glycopolymer-based nanofibers for drug delivery with tunable cellular uptake and minimal cytotoxicity.",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Hannah Schnicke",
@@ -2197,7 +2223,7 @@
       "journal": "Chemical Science",
       "title": "Graph-Theoretic Microstate Analysis Reveals Altered Dynamics in Common-Cation Mixed Electrolytes",
       "abstract": "Mixed aqueous electrolytes are increasingly valuable in industrial applications, where they often behave very differently from their single-salt counterparts, yet the underlying molecular mechanisms remain elusive. Here, we present a...",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "Yihui Wei",
@@ -2238,7 +2264,7 @@
       "journal": "Chemical Science",
       "title": "Ionic Covalent Organic Frameworks with Precisely Engineered Pyridinic Nitrogen Sites for Light-Driven Gold Recovery",
       "abstract": "Gold is a strategically important and technologically indispensable metal underpinning applications in electronics, catalysis, medicine and energy technologies. However, its naturally accessible abundance is exceedingly limited, necessitating the exploration of...",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "Weiyi Zhang",
@@ -2286,7 +2312,7 @@
       "journal": "Chemical Science",
       "title": "Mechanical macrocyclic effects: stimuli-responsive dual emission by self-inclusion and mutual exclusion",
       "abstract": "A macrocycle divides space into an inside and an outside. This physical boundary allows a guest to reside either within the cavity or outside. When two guests are tethered to...",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Seungyeon Hyun",
@@ -2329,7 +2355,7 @@
       "journal": "Chemical Science",
       "title": "Modular Synthesis of 3,3-Diarylpropylamines via the Photo- and Copper-Catalyzed 1,3-Aminoarylation of Cyclopropanes",
       "abstract": "3-Diarylpropylamines are privileged pharmacophores in drugs such as fendiline and tolterodine, but their synthesis has been limited by the use of stepwise, single-bond-forming routes. We report the first 1,3-aminoarylation of...",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "Carlo Baldassari",
@@ -2377,7 +2403,7 @@
       "journal": "Chemical Science",
       "title": "Simultaneous enhancement of photoluminescence and spinpolarization lifetime in a carbazole-functionalized TTM diradical",
       "abstract": "Luminescent organic radicals with multiple spins are emerging molecular platforms for developing optically addressable molecular qubits, and the TTM-based diradicals are representative systems that are studied most widely. However, the...",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Di Zhang",
@@ -2421,7 +2447,7 @@
       "journal": "Chemical Science",
       "title": "Solvent-Programmable Organocatalyzed Group Transfer Copolymerization (O-GTcP) of Muconate Esters: From Statistical Control to Copolymerization-Induced Self-Assembly",
       "abstract": "Developing sustainable polymer platforms requires simultaneous control over micro- and macromolecular structures, material properties, and end-of-life fate. Herein, we report the one-pot organocatalyzed group transfer copolymerization (O-GTcP) of dioctyl and...",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "José David Estrada Sotomayor",
@@ -2471,7 +2497,7 @@
       "journal": "Chemical Science",
       "title": "Topology and Pore-Surface Engineering of a Zr-MOF for Ethylene Purification and Propylene Recovery from MTO Products",
       "abstract": "Efficient separation of light hydrocarbons from Methanol-to-Olefins (MTO) product streams, typically consisting of ethylene (C2H4), propylene (C3H6), and ethane (C2H6), is pivotal for sustainable olefin production but remains challenged by...",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "Ran Zheng",
@@ -2516,7 +2542,7 @@
       "journal": "Chemical Science",
       "title": "Towards next generation enzyme mimics through local electric field control in organic cage catalysts",
       "abstract": "The addition of charged substituents across an organic cage catalyst creates local oriented electric fields, comparable in strength to enzyme active sites, that reduce an acyl transfer reaction barrier by ∼3 kcal mol −1 , according to DFT/CC modelling.",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Marco Vitek",
@@ -2556,7 +2582,7 @@
       "journal": "Green Chemistry",
       "title": "Defect-Engineered Carbon Cloth Enables Selective Electrochemical Hydrogenation of cis,cis-Muconic Acid under Ambient Conditions",
       "abstract": "The sustainable transformation of biomass-derived molecules into value-added chemicals is essential for a circular chemical economy. Here, we demonstrate a simple, defect-engineered carbon cloth as a metal-free electrode for the...",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Tianlei Li",
@@ -2598,7 +2624,7 @@
       "journal": "Green Chemistry",
       "title": "Development of a Continuous Glycolysis Process for the Recycling of Polyethylene Terephthalate (PET) from Post-Consumer Polycotton Blended Textile Waste",
       "abstract": "Global fiber production for textile applications is growing, with polyethylene terephthalate (PET) fibers being the most prominent ones. However, less than 1 % of post-consumer textile waste is currently recycled...",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Lukas Killinger",
@@ -2650,7 +2676,7 @@
       "journal": "Green Chemistry",
       "title": "Direct Regeneration of Spent LiFePO4 Cathodes: From Degradation Mechanisms to Scalable Solutions",
       "abstract": "With the rapid expansion of the electric vehicle and energy storage markets, the retired volume of lithium iron phosphate (LFP) batteries has increased sharply, underscoring the urgent need for sustainable...",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "Lun Ai",
@@ -2702,7 +2728,7 @@
       "journal": "Green Chemistry",
       "title": "Dynamically crosslinked nanofibrous aerogels enabling hydrothermally stable and recyclable moisture-electric generators for steam energy harvesting",
       "abstract": "Harvesting energy from high-energy-density industrial waste steam represents a frontier for microstructure-engineered moisture-electric generators (MEGs), yet the vulnerability of their hydrophilic backbones to disintegration in hydrothermal environments remains a critical...",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "Renquan Xing",
@@ -2746,7 +2772,7 @@
       "journal": "Green Chemistry",
       "title": "Electrochemical Controlled Divergent Carboxylation and Hydrocarboxylation of α-Oxoalkenone Dithioacetals with Carbon Dioxide",
       "abstract": "The addition carboxylation pathway is favored in the reaction of alkenes with CO2 due to the high nucleophilicity of the C=C bond. In contrast, direct C(sp2)–H carboxylation remains exceptionally challenging...",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Xiuli Zhao",
@@ -2802,7 +2828,7 @@
       "journal": "Green Chemistry",
       "title": "Operando Defect Engineering Restructures Interfacial Water Network for Ampere-Level CO2-to-Formate Electrolysis",
       "abstract": "Electrocatalytic CO2 reduction (eCO2R) to formate promises sustainable carbon utilization, yet bismuth-based catalysts struggle to concurrently deliver industrial current densities and long-term durability. Herein, we report a precise pre-doping strategy...",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Zhengjie Yao",
@@ -2848,7 +2874,7 @@
       "journal": "Green Chemistry",
       "title": "Switchable production of methyl acetate and ethanol from dimethyl oxalate with high selectivity via spatial arrangement of Mo/SiO 2 and CuZnAl",
       "abstract": "A Mo/SiO 2 catalyst enriched with metallic Mo 0 sites enables highly selective DMO hydrogenation to methyl acetate. A dual-catalyst strategy further promotes ethanol synthesis under mild conditions.",
-      "date": "",
+      "date": "2026-10-01",
       "type": "journal-article",
       "authors": [
         "Yu-Hui Wang",
@@ -2891,7 +2917,7 @@
       "journal": "Green Chemistry",
       "title": "Zeolite shape selectivity in the transformation of small sugars towards α-hydroxy esters: selective production of methyl vinyl glycolate with Sn-zeolites",
       "abstract": "Methyl vinyl glycolate (MVG), a highly functionalized C4 α-hydroxy ester, is a promising renewable building block for advanced polyesters. However, its selective production from glycolaldehyde-derived intermediates is hindered by competing...",
-      "date": "",
+      "date": "2026-10-02",
       "type": "journal-article",
       "authors": [
         "Virginia de Blas-Sánchez",
@@ -3723,7 +3749,7 @@
     "sourceCoverageAnomalies=4",
     "closureCoverageAnomalies=1"
   ],
-  "updatedAt": "2026-10-05T07:22:00+08:00",
+  "updatedAt": "2026-10-05T07:25:00+08:00",
   "scopeContract": {
     "scopeRulesVersion": "scope-2026-10-02-v1",
     "scopeRulesFile": "docs/literature-scope-contract.md",
