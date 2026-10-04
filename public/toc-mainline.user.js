@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.24
+// @version      6.2.25
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -51,8 +51,9 @@
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
   var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
+  var PUBLISHER_TASK_BINDING_REVISION = '20261004-elsevier-bound-task-v2';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.24';
+  var INSTALL_REVISION = '6.2.25';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -4099,6 +4100,7 @@ function embeddedJobDois(value) {
         if(result && !stopReason) {
           result.version=VERSION;
           result.retryPolicyRevision=CAPTURE_HOTFIX_REVISION;
+          result.publisherTaskBindingRevision=PUBLISHER_TASK_BINDING_REVISION;
           result.retryCount=Number(priorAttempt&&priorAttempt.reason!=='controller_lease_lost'&&priorAttempt.retryCount||0)+1;
           summary.results.push(result);summary[result.status]=(summary[result.status]||0)+1;
           summary.tocStored+=result.toc&&result.toc.status==='stored'?1:0;
@@ -4700,6 +4702,12 @@ function embeddedJobDois(value) {
     if (/permission|blocked by the user|Refused to connect|(?:http_|status[=:])(401|403|429)|auth_|challenge_|publisher_access_gate/i.test(detail)) {
       return elapsed>=Math.max(30*60*1000,Number(prior.retryAfterMs||0));
     }
+    // One immediate retry after an exact publisher-routing repair. This bypasses
+    // only stale pre-fix controller failures; once the new revision has attempted
+    // the DOI, normal bounded backoff applies again.
+    if (String(prior.doi||'').indexOf('10.1016/')===0
+        && /^(?:bound_publisher_heartbeat_missing|capture_tab_job_mismatch)$/.test(String(prior.reason||''))
+        && prior.publisherTaskBindingRevision!==PUBLISHER_TASK_BINDING_REVISION) return true;
     // One retry of CCS's old missing-injection failure after this exact host fix.
     if (String(prior.doi||'').indexOf('10.31635/')===0 && prior.reason==='bound_publisher_heartbeat_missing'
         && prior.retryPolicyRevision!==CAPTURE_HOTFIX_REVISION) return true;
