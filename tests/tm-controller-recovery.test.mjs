@@ -21,6 +21,7 @@ function harness(text=source,opt={}){
  const maybe=n=>`typeof ${n}==='function'?${n}:null`;
  vm.runInContext(text.slice(0,cut)+`
  isGalleryPage=()=>true;badge=__badge;sleep=__sleep;writeToken=()=> 'fixture';getJson=__getJson;getPrivateJson=async()=>({items:[]});postReadJson=async()=>({items:__jobs.map(j=>({doi:j.doi,tocStored:false,figureCount:0}))});pairedJobs=()=>__jobs;batchSize=()=>3;selectBatchJobs=(j,n)=>j.slice(0,n);enqueueCaptureReport=()=>true;
+ observeArchitectureMembership=async(q)=>({ok:true,revision:'fixture-c2b',serial:1,publicationSlot:'2026-10-04T08:00:00+08:00',catalogId:'a'.repeat(64),membershipSha256:'b'.repeat(64),asOfDate:'2026-10-04',cutoff:'2026-07-04',liveAsOfDate:'2026-10-04',liveCutoff:'2026-07-04',memberCount:q.articles.length,hotCount:q.articles.length,archiveCount:0,activeCount:q.articles.length,archiveIdleCount:0,recentAdditionCount:0,dateReviewCount:0,activeDois:q.articles.map(a=>normalizeDoi(a.doi)),hotDois:q.articles.map(a=>normalizeDoi(a.doi)),archiveDois:[],withdrawn:[]});
  globalThis.T={renewLease,acquireLease,requestControllerStart,waitForResult,closeTaskTab,clearOwnedJob,controllerRun,completedPublisherResult,resultKey,progressKey,attemptKey,installMenu,owner:CONTROLLER_ID,
  pause:${maybe('requestControllerPause')},poll:${maybe('pollControllerResume')},snapshot:${maybe('controllerLifecycleSnapshot')},persist:${maybe('persistControllerSummary')},reconcile:reconcileActiveJobBeforeDispatch,
  mockRun:()=>{controllerRun=__start;},captureLiveSnapshot,captureLiveText};
