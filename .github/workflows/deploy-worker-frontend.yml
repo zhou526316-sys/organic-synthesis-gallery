@@ -142,6 +142,7 @@ jobs:
           SUMMARY_REVIEW_ENABLED = "0"
           SUMMARY_MODE = "scheduled_chatgpt_daily_no_api"
           SUMMARY_PUBLICATION_TIME = "12:00 Asia/Shanghai"
+          EVIDENCE_INDEX_SHADOW_ENABLED = "1"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "0"
@@ -200,6 +201,78 @@ jobs:
           NODE
           npx wrangler secret bulk /tmp/runtime-secrets.json --config wrangler.frontend.toml >/dev/null
           rm -f /tmp/runtime-secrets.json
+
+      - name: Advance and reconcile Evidence Index shadow
+        id: evidence_index_shadow
+        continue-on-error: true
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node - <<'NODE'
+          const base=process.env.WORKER_URL;
+          const token=process.env.BRIDGE_WRITE_TOKEN;
+          if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for Evidence Index shadow');
+          async function call(path,{method='GET'}={}){
+            const response=await fetch(base+path,{
+              method,
+              headers:{authorization:`Bearer ${token}`,'cache-control':'no-cache'},
+              signal:AbortSignal.timeout(30000),
+            });
+            const text=await response.text();
+            let body={};try{body=text?JSON.parse(text):{};}catch{}
+            if(!response.ok) throw new Error(path+' failed: '+response.status+' '+text.slice(0,500));
+            return body;
+          }
+
+          let status=await call('/api/admin/article-summary/evidence-index/status');
+          if(status.enabled!==true||status.readPathActive!==false){
+            throw new Error('Evidence Index shadow state invalid: '+JSON.stringify(status));
+          }
+
+          let pages=0;
+          const pageReports=[];
+          while(status.backfill?.complete!==true && pages<4){
+            const result=await call('/api/admin/article-summary/evidence-index/backfill?limit=500',{method:'POST'});
+            pageReports.push(result);pages+=1;
+            status=await call('/api/admin/article-summary/evidence-index/status');
+          }
+          if(status.readPathActive!==false) throw new Error('Evidence Index read path activated unexpectedly');
+
+          const legacy=await call('/api/article-summary/evidence-inventory');
+          const sample=await call('/api/admin/article-summary/evidence-index/sample?limit=1000');
+          const report={
+            enabled:status.enabled,
+            readPathActive:status.readPathActive,
+            pagesAdvanced:pages,
+            backfill:status.backfill,
+            indexCount:Number(status.evidenceCount||0),
+            legacyCount:Number(legacy.count||0),
+            sampleCount:Number(sample.count||0),
+            reconciled:false,
+          };
+
+          if(status.backfill?.complete===true){
+            if(report.indexCount!==report.legacyCount){
+              throw new Error('Evidence Index count mismatch: '+JSON.stringify(report));
+            }
+            if(report.legacyCount<=1000){
+              const indexed=new Map((sample.items||[]).map(row=>[String(row.doi||'').toLowerCase(),row]));
+              for(const row of legacy.items||[]){
+                const doi=String(row.doi||'').toLowerCase(),hit=indexed.get(doi);
+                if(!hit) throw new Error('Evidence Index DOI missing after complete backfill: '+doi);
+                if(String(hit.evidence_packet_hash||'')!==String(row.evidencePacketHash||'')){
+                  throw new Error('Evidence packet hash mismatch: '+doi);
+                }
+                if(String(hit.source_hash||'')!==String(row.sourceHash||'')){
+                  throw new Error('Evidence source hash mismatch: '+doi);
+                }
+              }
+              report.reconciled=true;
+            }
+          }
+          console.log('EVIDENCE_INDEX_SHADOW '+JSON.stringify(report));
+          NODE
 
       - name: Promote verified official TOCs into production
         id: promote_official_tocs
