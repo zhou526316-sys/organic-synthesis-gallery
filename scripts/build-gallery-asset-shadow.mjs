@@ -59,7 +59,9 @@ if(stateVerification?.datasetSha256!==datasetSha256||Number(stateVerification?.g
   throw new Error('asset_shadow_state_generation_mismatch');
 
 const liveBefore=(await fetchJson(SITE+'/release-delivery.json?asset-shadow='+Date.now())).value;
-if(liveBefore?.ok!==true||Number(liveBefore.productionCards)!==membership.length||liveBefore.datasetSha256!==datasetSha256)
+if(Number(liveBefore?.schemaVersion)<2||Number(liveBefore.productionCards)!==membership.length
+  ||liveBefore.datasetSha256!==datasetSha256||typeof liveBefore.architectureCatalogId!=='string'
+  ||!liveBefore.architectureObjects||typeof liveBefore.architectureObjects!=='object')
   throw new Error('asset_shadow_live_generation_mismatch');
 
 const [worker,local,staged,media,summary] = await Promise.all([
