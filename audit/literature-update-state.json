@@ -185,7 +185,7 @@
       "note": "Queue membership count verified; this job does not obtain or publish media."
     }
   },
-  "verifiedThrough": "2026-09-20",
+  "verifiedThrough": "2026-09-18",
   "capabilityRegistry": "audit/literature-capability.json",
   "currentStableCapabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
   "lastCompletedReview": {
@@ -1500,5 +1500,22 @@
     "pending": 5,
     "qualityGateRunId": 37191889607,
     "updatedAt": "2026-10-04T17:24:27+08:00"
+  },
+  "discoveryCoverageRepair": {
+    "id": "rsc-chem-crossref-partial-date-20261004",
+    "status": "catchup_required",
+    "detectedAt": "2026-10-04T12:20:03.088Z",
+    "previousVerifiedThrough": "2026-09-20",
+    "repairedVerifiedThrough": "2026-09-18",
+    "affectedJournals": [
+      "Chem",
+      "Chemical Science",
+      "Green Chemistry"
+    ],
+    "reason": "Crossref partial publication dates were previously coerced to January/day 1 and verifiedThrough catch-up did not widen source queries. Main repair now preserves partial dates as unknown and keeps created/deposit candidates. Re-open coverage from the 2026-09-19 activation date before advancing closure again.",
+    "repairCommit": "b9ee9d4ef0a36d0dd8b1ef716166cac5a94832fa",
+    "validationRun": 37201431750,
+    "noProductionLiteratureMutation": true,
+    "noScheduleChange": true
   }
 }
