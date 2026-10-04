@@ -45,6 +45,7 @@ test('automatic and manual controllers both require verified membership',()=>{
   assert.ok(source.includes("activeMembership.activeDois.has(doi)"));
   assert.ok(source.includes("r.state='retired'"));
   assert.ok(source.includes("r.state==='retired'&&coverageHasNeeds(r.job)"));
+  assert.ok(source.includes("refreshedMembership.asOfDate!==activeMembership.asOfDate"));
 });
 
 test('full queue remains authoritative membership and only inventory/new jobs are filtered',()=>{
