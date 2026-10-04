@@ -883,9 +883,13 @@ def update_draft(token: str, media_id: str, article: dict):
 def get_draft(token: str, media_id: str):
     url = (
         "https://api.weixin.qq.com/cgi-bin/draft/get?"
-        + urllib.parse.urlencode({"access_token": token, "media_id": media_id})
+        + urllib.parse.urlencode({"access_token": token})
     )
-    result = json_request(url)
+    result = json_request(
+        url,
+        method="POST",
+        payload={"media_id": media_id},
+    )
     if result.get("errcode") not in (None, 0):
         raise RuntimeError(
             "draft/get failed: "
