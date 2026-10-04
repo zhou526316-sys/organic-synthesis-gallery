@@ -8,10 +8,10 @@ D1 is independent of the held C2b acquisition cutover. It does not require the l
 
 Unify the answer to **“what assets do we know this DOI has?”** without conflating four different facts:
 
-1. **published** — current Worker/D1 media inventory;
+1. **Worker/D1** — current dynamic media inventory;
 2. **captured** — R2 local capture and staged article-figure inventory;
 3. **completeness** — only proven when staged capture has an explicit `expectedFigureCount`;
-4. **displayed** — current Pages `media-index.json`, which is a derived display snapshot rather than a new source of truth.
+4. **static display** — current Pages `media-index.json`, a public delivery surface and derived display snapshot.
 
 Reviewed-summary availability is also indexed by DOI using only status/hashes/evidence level. Summary prose and private Evidence bytes are not copied.
 
@@ -25,13 +25,14 @@ The catalog separately records:
 - official/fallback captured;
 - current Pages display visual and its kind.
 
-A captured official TOC that is not published is a reconciliation item, not “missing”.
-A Pages display image cannot manufacture D1 published state.
+A captured official TOC that is absent from Worker/D1 is a reconciliation item, not “missing”.
+A Pages display image is still a real public-display fact, but cannot manufacture Worker/D1 state. The catalog preserves both.
 
 ### Body figures
 
 The catalog separately records:
-- published D1 figure count;
+- Worker/D1 figure count;
+- static Pages figure count/labels;
 - captured staged figure receipts;
 - expected figure count when explicitly observed.
 
@@ -43,7 +44,7 @@ capturedCount < expected    -> incomplete
 capturedCount >= expected   -> complete
 ```
 
-Published figures without an expected count remain `completeness_unknown`. This directly fixes the old ambiguity where “figures exist but total completeness is unproved” could look like a gap.
+Worker or static figures without an expected count remain `completeness_unknown`. A second reconciliation cohort identifies cases where capture is proven complete but static Pages still exposes fewer figures than expected. This directly fixes the old ambiguity where “figures exist but total completeness is unproved” could look like a gap.
 
 ### Evidence and summaries
 
