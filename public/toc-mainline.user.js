@@ -3593,7 +3593,8 @@ function embeddedJobDois(value) {
       }
       return null;
     }
-    var dois=queue.articles.map(function(x){return normalizeDoi(x.doi);});
+    if(!run||!(run.activeDois instanceof Set))throw new Error('architecture_active_set_unverified');
+    var dois=queue.articles.map(function(x){return normalizeDoi(x.doi);}).filter(function(doi){return run.activeDois.has(doi);});
     var chunks=[];for(var i=0;i<dois.length;i+=250)chunks.push(dois.slice(i,i+250));
     async function readMedia(){
       // Bound concurrency and never exceed the Worker's 1200-DOI cap.
@@ -3652,7 +3653,8 @@ function embeddedJobDois(value) {
   }
   function buildMissingCaptureJobs(queue,run,rawInventory) {
     // Reuse complete registry validation, but don't reuse its historical TOC-first tiers.
-    var rows=pairedJobs(queue,{items:{}}), inv=rawInventory||{};
+    if(!run||!(run.activeDois instanceof Set))throw new Error('architecture_active_set_unverified');
+    var rows=pairedJobs(queue,{items:{}}).filter(function(raw){return run.activeDois.has(normalizeDoi(raw.doi));}), inv=rawInventory||{};
     var inventory={mediaMap:mapCaptureRows(inv.media),tocMap:new Map(),figureMap:mapCaptureRows(inv.figures),evidenceMap:mapCaptureRows(inv.evidence),
       tocsKnown:Boolean(inv.tocs),figuresKnown:Boolean(inv.figures&&inv.figures.complete),evidenceKnown:Boolean(inv.evidence)};
     ((inv.tocs||{}).items||[]).forEach(function(t){var d=normalizeDoi(t.doi);if(!d||Number(t.mediaGeneration)!==1790082000000)return;var a=inventory.tocMap.get(d)||[];a.push(t);inventory.tocMap.set(d,a);});
@@ -3766,9 +3768,9 @@ function embeddedJobDois(value) {
       .sort(function(a,b){return captureBatchDate(b.job).localeCompare(captureBatchDate(a.job))||journalPriority(a.job)-journalPriority(b.job)||Number(a.attempts>0)-Number(b.attempts>0)||compareMissingCaptureJobs(a.job,b.job);});
   }
   function coverageStats(run) {
-    var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed';});
-    s.total=rows.filter(function(r){return r.state!=='removed';}).length;
-    s.visitedCount=rows.filter(function(r){return r.attempts>0&&r.state!=='removed';}).length;
+    var s=run.summary,rows=Array.from(run.coverage.values()),left=rows.filter(function(r){return coverageHasNeeds(r.job)&&r.state!=='removed'&&r.state!=='retired';});
+    s.total=rows.filter(function(r){return r.state!=='removed'&&r.state!=='retired';}).length;
+    s.visitedCount=rows.filter(function(r){return r.attempts>0&&r.state!=='removed'&&r.state!=='retired';}).length;
     s.attemptCount=s.results.length;s.fullyResolved=rows.filter(function(r){return r.state==='resolved';}).length;
     s.unresolvedCount=left.length;s.blockedCount=left.filter(function(r){return r.state==='blocked';}).length;
     s.pendingMissing=left.filter(function(r){return r.state==='pending'||r.state==='active';}).length;
@@ -3791,20 +3793,32 @@ function embeddedJobDois(value) {
       if(!manualExecutionCurrent(run)||controllerPaused())return;
       var queue=loaded[0],caps=loaded[1];
       var architectureMembership=await observeArchitectureMembership(queue);
+      if(!architectureMembership.ok)throw new Error('architecture_active_set_unverified:'+String(architectureMembership.error||'unknown'));
+      run.activeDois=new Set(architectureMembership.activeDois||[]);
       s.architectureMembership=architectureMembership;
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.mediaControllerRevision)!==CONTROLLER_REVISION)throw new Error('capture_server_upgrade_pending');
       var checkedAt=0,endRefresh=false,inventoryRecovery=0;
-      async function refresh(){
+      async function refresh(recheckMembership){
         pairedJobs(queue,{items:{}});
+        if(recheckMembership){
+          architectureMembership=await observeArchitectureMembership(queue);
+          if(!architectureMembership.ok)throw new Error('architecture_active_set_unverified:'+String(architectureMembership.error||'unknown'));
+          run.activeDois=new Set(architectureMembership.activeDois||[]);
+          s.architectureMembership=architectureMembership;
+        }
         var next=await readMissingCaptureInventory(queue,run);
         if(!manualExecutionCurrent(run)||controllerPaused())return false;
         run.inventory=next;coverageMergePlan(run,manualCaptureJobs(queue,run));
         var currentDois=new Set(queue.articles.map(function(a){return normalizeDoi(a.doi);}));
-        run.coverage.forEach(function(r,doi){if(!currentDois.has(doi))r.state='removed';});
+        run.coverage.forEach(function(row,doi){
+          if(!currentDois.has(doi)){row.state='removed';return;}
+          if(!run.activeDois.has(doi)){row.state='retired';return;}
+          if(row.state==='retired'&&coverageHasNeeds(row.job)){row.state='pending';row.retryAt=0;}
+        });
         checkedAt=Date.now();s.queueGeneratedAt=queue.generatedAt;s.latestAddedDate=queue.latestAddedDate;
         coverageStats(run);manualSummary(run);return true;
       }
-      if(!await refresh())return;s.phase='running';
+      if(!await refresh(false))return;s.phase='running';
       while(manualExecutionCurrent(run)&&!controllerPaused()){
         if(!renewManualLease(run))throw new Error('manual_run_superseded');
         var candidates=coveragePending(run),row=null;
@@ -3860,7 +3874,7 @@ function embeddedJobDois(value) {
         if(controllerPaused()||result.status==='aborted')break;
         await coverageWait(run,Date.now()+3500);
         if(!manualExecutionCurrent(run)||controllerPaused())break;
-        if(Date.now()-checkedAt>=60000){queue=await getJson(QUEUE_URL+'?ts='+Date.now());if(!await refresh())return;}
+        if(Date.now()-checkedAt>=60000){queue=await getJson(QUEUE_URL+'?ts='+Date.now());if(!await refresh(true))return;}
       }
       if(manualExecutionCurrent(run)){
         coverageStats(run);s.finishedAt=nowIso();s.phase=controllerPaused()?'paused':s.unresolvedCount||s.inventoryUnknown?'blocked_remaining':'all_resolved';manualSummary(run);
