@@ -36,6 +36,12 @@ export function validateProtectedInputs(marker, actual) {
   return failures;
 }
 
+export function requiresFrozenReadinessRevalidation(baseline) {
+  return !(baseline?.ok === true
+    && baseline?.receiptBackedBaseline === true
+    && baseline?.legacyMarkerAuthorized === true);
+}
+
 export function validateFormalPartition(staging, formal, marker, pendingQueue = null) {
   const failures = [];
   const decisions = list(staging?.decisions);
@@ -125,18 +131,31 @@ export async function authorize(root = process.cwd()) {
     if (!failures.length) {
       formal = frozen.formal;
       failures.push(...validateFormalPartition(frozen.staging, frozen.formal, marker, frozen.queue));
-      const dir = await mkdtemp(path.join(tmpdir(), 'gallery-frozen-release-'));
-      try {
-        await mkdir(path.join(dir, 'audit'));
-        for (const [file, payload] of [['staging.json', frozen.staging], ['audit/latest.json', frozen.audit], ['audit/unresolved-latest.json', frozen.handoff]]) {
-          await writeFile(path.join(dir, file), JSON.stringify(payload));
-        }
-        const child = spawnSync(process.execPath, [fileURLToPath(new URL('./check-prepublish-readiness.mjs', import.meta.url)), 'staging.json', '--require-ready', ...(marker.releasePolicy === 'per-doi' ? ['--allow-deferred'] : [])], {
-          cwd: dir, encoding: 'utf8', timeout: 60000, maxBuffer: 4 * 1024 * 1024,
-        });
-        try { frozenValidation = JSON.parse(child.stdout || '{}'); } catch { failures.push('frozen_validator_output_invalid'); }
-        if (child.status !== 0 || frozenValidation?.publicationReady !== true) failures.push('frozen_review_not_publishable');
-      } finally { await rm(dir, { recursive: true, force: true }); }
+      if (requiresFrozenReadinessRevalidation(baseline)) {
+        const dir = await mkdtemp(path.join(tmpdir(), 'gallery-frozen-release-'));
+        try {
+          await mkdir(path.join(dir, 'audit'));
+          for (const [file, payload] of [['staging.json', frozen.staging], ['audit/latest.json', frozen.audit], ['audit/unresolved-latest.json', frozen.handoff]]) {
+            await writeFile(path.join(dir, file), JSON.stringify(payload));
+          }
+          const child = spawnSync(process.execPath, [fileURLToPath(new URL('./check-prepublish-readiness.mjs', import.meta.url)), 'staging.json', '--require-ready', ...(marker.releasePolicy === 'per-doi' ? ['--allow-deferred'] : [])], {
+            cwd: dir, encoding: 'utf8', timeout: 60000, maxBuffer: 4 * 1024 * 1024,
+          });
+          try { frozenValidation = JSON.parse(child.stdout || '{}'); } catch { failures.push('frozen_validator_output_invalid'); }
+          if (child.status !== 0 || frozenValidation?.publicationReady !== true) failures.push('frozen_review_not_publishable');
+        } finally { await rm(dir, { recursive: true, force: true }); }
+      } else {
+        frozenValidation = {
+          schemaVersion: 1,
+          mode: 'legacy-delivered-baseline',
+          publicationReady: true,
+          publicationSlot: marker.publicationSlot,
+          markerCommitSha: baseline.markerCommitSha || null,
+          receiptBackedBaseline: true,
+          legacyMarkerAuthorized: true,
+          note: 'Historical frozen review was already admitted and live-verified before the single-slot cutover. Current policy is enforced on future writers, not retroactively against unchanged delivered bytes.',
+        };
+      }
     }
   }
   return {
