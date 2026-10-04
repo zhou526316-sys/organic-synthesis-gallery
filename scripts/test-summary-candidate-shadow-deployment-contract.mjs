@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 
 const deploy=readFileSync('.github/workflows/deploy-worker-frontend.yml','utf8');
 const review=readFileSync('cloudflare/worker/src/summary-review.js','utf8');
+const candidateIndex=readFileSync('cloudflare/worker/src/summary-candidate-index.js','utf8');
 const wrangler=readFileSync('cloudflare/worker/wrangler.toml','utf8');
 
 function section(source,start,end){
@@ -52,7 +53,8 @@ test('legacy saturation and unstable snapshots cannot be promoted as parity',()=
   assert.ok(compare.includes('legacy_reader_at_or_above_10000_object_ceiling'));
   assert.ok(compare.includes('legacy_source_changed_during_comparison'));
   assert.ok(compare.includes('comparable: false'));
-  assert.ok(compare.includes('candidateSetHash'));
+  assert.ok(candidateIndex.includes('candidateSetHash'));
+  assert.ok(candidateIndex.includes('compareCandidateSelections'));
 });
 
 test('D2b2 does not enable model review or change summary schedule',()=>{
