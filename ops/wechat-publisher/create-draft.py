@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import hmac
 import html
 import json
 import mimetypes
@@ -26,6 +27,9 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_ENV = Path("/etc/osg-wechat-relay/env")
 DEFAULT_COVER = ROOT / "public" / "share-default.png"
 DEFAULT_CACHE = Path("/var/lib/osg-wechat-publisher/cover-media.json")
+DEFAULT_STATE = Path("/var/lib/osg-wechat-publisher/draft-state.json")
+DEFAULT_PREVIEW_DIR = Path("/var/www/osg-wechat-preview")
+DEFAULT_PREVIEW_BASE_URL = "https://relay.gczhouwld.com/wechat-preview"
 DEFAULT_SOURCE_URL = "https://gallery.gczhouwld.com/"
 
 SUPPLEMENT_FILES = (
@@ -438,9 +442,134 @@ def create_draft(token: str, article: dict):
     return result
 
 
+def update_draft(token: str, media_id: str, article: dict):
+    url = (
+        "https://api.weixin.qq.com/cgi-bin/draft/update?"
+        + urllib.parse.urlencode({"access_token": token})
+    )
+    result = json_request(
+        url,
+        method="POST",
+        payload={"media_id": media_id, "index": 0, "articles": article},
+    )
+    if result.get("errcode") not in (None, 0):
+        raise RuntimeError(
+            "draft/update failed: "
+            + json.dumps(
+                {"errcode": result.get("errcode"), "errmsg": result.get("errmsg")},
+                ensure_ascii=False,
+            )
+        )
+    return result
+
+
+def get_draft(token: str, media_id: str):
+    url = (
+        "https://api.weixin.qq.com/cgi-bin/draft/get?"
+        + urllib.parse.urlencode({"access_token": token, "media_id": media_id})
+    )
+    result = json_request(url)
+    if result.get("errcode") not in (None, 0):
+        raise RuntimeError(
+            "draft/get failed: "
+            + json.dumps(
+                {"errcode": result.get("errcode"), "errmsg": result.get("errmsg")},
+                ensure_ascii=False,
+            )
+        )
+    items = result.get("news_item")
+    if not isinstance(items, list) or not items:
+        raise RuntimeError("draft/get returned no news_item")
+    return result
+
+
+def preview_slug(media_id: str) -> str:
+    key = os.environ.get("RELAY_SHARED_KEY", "").encode("utf-8")
+    if not key:
+        raise RuntimeError("RELAY_SHARED_KEY missing; cannot derive preview slug")
+    digest = hmac.new(key, media_id.encode("utf-8"), hashlib.sha256).hexdigest()
+    return digest[:24]
+
+
+def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
+    item = draft["news_item"][0]
+    title = str(item.get("title") or "")
+    author = str(item.get("author") or "")
+    digest = str(item.get("digest") or "")
+    content = str(item.get("content") or "")
+    thumb_url = str(item.get("thumb_url") or "")
+    source_url = str(item.get("content_source_url") or "")
+
+    # IMPORTANT: body HTML below is the exact content returned by WeChat draft/get.
+    # The wrapper only approximates the reader shell around that stored content.
+    return f"""<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>{html.escape(title)}</title>
+<style>
+*{{box-sizing:border-box}}
+html,body{{margin:0;padding:0;background:#fff;color:#222}}
+body{{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Microsoft YaHei",Arial,sans-serif}}
+.reader{{max-width:677px;margin:0 auto;padding:24px 20px 48px}}
+h1{{font-size:22px;line-height:1.45;font-weight:700;margin:0 0 12px}}
+.meta{{font-size:14px;color:#888;line-height:1.6;margin-bottom:22px}}
+.digest{{font-size:14px;color:#666;line-height:1.75;margin:0 0 18px}}
+.cover{{width:100%;height:auto;display:block;margin:0 0 20px}}
+.wx-content{{font-size:16px;line-height:1.75;word-break:break-word;overflow-wrap:anywhere}}
+.wx-content img{{max-width:100%!important;height:auto!important}}
+.wx-content *{{max-width:100%}}
+.source-link{{display:block;margin-top:28px;padding-top:16px;border-top:1px solid #eee;color:#576b95;text-decoration:none;font-size:15px}}
+.provenance{{margin:28px 0 0;padding:10px 12px;border-radius:8px;background:#f7f7f7;color:#999;font-size:11px;line-height:1.65}}
+@media(max-width:520px){{.reader{{padding:20px 17px 42px}}h1{{font-size:22px}}}}
+</style>
+</head>
+<body>
+<main class="reader">
+<h1>{html.escape(title)}</h1>
+<div class="meta">{html.escape(author)}</div>
+{f'<img class="cover" src="{html.escape(thumb_url, quote=True)}" alt="封面">' if thumb_url else ''}
+{f'<p class="digest">{html.escape(digest)}</p>' if digest else ''}
+<section class="wx-content">{content}</section>
+{f'<a class="source-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noreferrer">阅读原文</a>' if source_url else ''}
+<div class="provenance">本预览由微信草稿 API <code>draft/get</code> 返回内容生成；正文不是单独维护的网页版本。Draft media id hash: {preview_slug(media_id)}</div>
+</main>
+</body>
+</html>"""
+
+
+def write_draft_preview(draft: dict, *, media_id: str, preview_dir: Path, base_url: str):
+    slug = preview_slug(media_id)
+    preview_dir.mkdir(parents=True, exist_ok=True)
+    path = preview_dir / f"{slug}.html"
+    path.write_text(render_wechat_draft_preview(draft, media_id=media_id), encoding="utf-8")
+    latest = preview_dir / "latest.html"
+    latest.write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+    return path, f"{base_url.rstrip('/')}/{slug}.html"
+
+
+def load_state(path: Path):
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def save_state(path: Path, payload: dict):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--create", action="store_true", help="actually create the WeChat draft")
+    parser.add_argument("--create", action="store_true", help="create or update the WeChat draft, then read it back and build the preview")
+    parser.add_argument("--media-id", default="", help="adopt/update an existing WeChat draft media_id")
+    parser.add_argument("--preview-dir", default=str(DEFAULT_PREVIEW_DIR))
+    parser.add_argument("--preview-base-url", default=DEFAULT_PREVIEW_BASE_URL)
     parser.add_argument("--env-file", default=str(DEFAULT_ENV))
     parser.add_argument("--cover", default=str(DEFAULT_COVER))
     parser.add_argument("--source-url", default=DEFAULT_SOURCE_URL)
@@ -485,16 +614,58 @@ def main() -> int:
         "need_open_comment": 0,
         "only_fans_can_comment": 0,
     }
-    result = create_draft(token, article)
+    state = load_state(DEFAULT_STATE)
+    requested_media_id = str(args.media_id or "").strip()
+    same_day_state = (
+        isinstance(state, dict)
+        and str(state.get("publicationDate") or "") == slot[:10]
+        and str(state.get("media_id") or "").strip()
+    )
+    media_id = requested_media_id or (str(state.get("media_id")) if same_day_state else "")
+
+    if media_id:
+        result = update_draft(token, media_id, article)
+        stage = "draft_update"
+    else:
+        result = create_draft(token, article)
+        media_id = str(result.get("media_id") or "")
+        stage = "draft_add"
+
+    if not media_id:
+        raise RuntimeError("draft write succeeded but no media_id is available")
+
+    save_state(
+        DEFAULT_STATE,
+        {
+            "publicationDate": slot[:10],
+            "publicationSlot": slot,
+            "media_id": media_id,
+            "title": title,
+        },
+    )
+
+    # Draft is now the source of truth. Read the stored draft back from WeChat,
+    # then build preview from that response only.
+    draft = get_draft(token, media_id)
+    preview_path, preview_url = write_draft_preview(
+        draft,
+        media_id=media_id,
+        preview_dir=Path(args.preview_dir),
+        base_url=args.preview_base_url,
+    )
+
     print(
         json.dumps(
             {
-                "stage": "draft_add",
+                "stage": stage,
                 "errcode": result.get("errcode", 0),
                 "errmsg": result.get("errmsg", "ok"),
-                "media_id": result.get("media_id"),
+                "media_id": media_id,
                 "paper_count": len(papers),
                 "publicationSlot": slot,
+                "draft_readback": "ok",
+                "preview_path": str(preview_path),
+                "preview_url": preview_url,
             },
             ensure_ascii=False,
         )
