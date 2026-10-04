@@ -67,10 +67,16 @@ function installClickRouting(): void {
 
     event.preventDefault();
     const newTab = anchor.target === '_blank';
-    const target = newTab ? window.open('about:blank', '_blank', 'noopener,noreferrer') : window;
+    // Keep a WindowProxy so the asynchronous entitlement lookup can reuse the
+    // user-initiated popup. Setting noopener in window.open may deliberately
+    // return null in some browsers, leaving an orphan about:blank tab.
+    const target = newTab ? window.open('about:blank', '_blank') : window;
     if (!target) {
       window.location.href = fallback;
       return;
+    }
+    if (newTab) {
+      try { target.opener = null; } catch { /* optional hardening */ }
     }
 
     void resolvePrivatePdf(doi, token)
