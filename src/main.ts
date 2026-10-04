@@ -5,6 +5,7 @@ import { mountUserShell } from './user-shell';
 import { earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
 import { store } from './user-ui/shared';
+import { PublishedCatalogClient } from '../architecture/published-reader.mjs';
 
 interface Paper {
   journal: string;
@@ -197,9 +198,22 @@ let bridgeStageTimer: number | null = null;
 let bridgeStageCursor = 0;
 let newnessTimer: number | null = null;
 let journalPickerAbort: AbortController | null = null;
+let architectureClient: PublishedCatalogClient | null = null;
+let architectureLandingPapers: Paper[] = [];
+let architectureMemberDois: string[] | null = null;
+let architectureEarliestDate = '';
+let latestCollectionDate = '';
+let architectureRefreshTimer: number | null = null;
+let architectureRefreshSerial = 0;
 
 store.addEventListener('counts', () => {
   if (sort === 'readers') renderCards();
+});
+
+app.addEventListener('gallery-corpus-query', event => {
+  const detail = event instanceof CustomEvent ? event.detail as { query?: unknown } : undefined;
+  query = typeof detail?.query === 'string' ? detail.query : '';
+  scheduleArchitectureCorpusRefresh();
 });
 
 hydrateFilterPreferences();
@@ -560,12 +574,14 @@ function figureMarkup(paper: Paper): string {
 }
 
 function syncLiteratureDoiRegistry(): void {
-  const dois = [...new Set(
-    papers
-      .map(paperDoi)
-      .filter((doi): doi is string => Boolean(doi))
-      .map(doi => doi.toLowerCase())
-  )].sort();
+  const dois = architectureMemberDois
+    ? [...architectureMemberDois]
+    : [...new Set(
+        papers
+          .map(paperDoi)
+          .filter((doi): doi is string => Boolean(doi))
+          .map(doi => doi.toLowerCase())
+      )].sort();
   let node = document.getElementById('gallery-literature-doi-registry') as HTMLScriptElement | null;
   if (!node) {
     node = document.createElement('script');
@@ -625,8 +641,8 @@ function mount(): void {
   const extraJournals = [...new Set(papers.map(paper => paper.journal).filter(journal => !targetSet.has(journal)))].sort();
   const journals = [...targetJournals, ...extraJournals];
   const dates = papers.map(paper => paper.date).filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
-  const earliest = dates[0] || '';
-  const latest = dates[dates.length - 1] || '';
+  const earliest = architectureClient ? architectureEarliestDate : (dates[0] || '');
+  const latest = latestCollectionDate || dates[dates.length - 1] || '';
   document.title = t('title');
   app.innerHTML = `<main class='shell'><section class='hero'><div class='hero-top'><div class='eyebrow'>${escapeHtml(t('eyebrow'))}</div><div class='lang-switch' role='group'><button class='lang-button${language === 'zh' ? ' active' : ''}' data-lang='zh' type='button'>中文</button><button class='lang-button${language === 'en' ? ' active' : ''}' data-lang='en' type='button'>EN</button></div></div><h1>${escapeHtml(t('title'))}</h1><p class='lede'>${escapeHtml(t('lede'))}</p><div class='hero-latest'><strong>${escapeHtml(latest)}</strong><span>${escapeHtml(t('latest'))}</span></div></section><section class='toolbar'><input id='search' class='search' type='search' value='${escapeHtml(query)}' placeholder='${escapeHtml(t('search'))}'><details class='journal-picker'><summary><span id='journalSummary'>${escapeHtml(filterSummary())}</span><span class='journal-chevron'>⌄</span></summary><div class='journal-menu'><button class='journal-clear${selectedJournals.size === 0 && excludedJournals.size === 0 ? ' active' : ''}' data-journal-clear type='button'>${escapeHtml(t('allJournals'))}</button>${journals.map(journal => { const hidden = excludedJournals.has(journal); return `<div class='journal-option-row${hidden ? ' excluded' : ''}'><label class='journal-option'><input data-journal-option type='checkbox' value='${escapeHtml(journal)}'${selectedJournals.has(journal) ? ' checked' : ''}${hidden ? ' disabled' : ''}><span>${escapeHtml(journal)}</span></label><button class='journal-exclude${hidden ? ' active' : ''}' data-journal-exclude='${escapeHtml(journal)}' type='button' aria-pressed='${hidden ? 'true' : 'false'}' aria-label='${escapeHtml(`${hidden ? t('restoreJournal') : t('hideJournal')} ${journal}`)}'>${escapeHtml(hidden ? t('restoreJournal') : t('hideJournal'))}</button></div>`; }).join('')}</div></details><select id='sort'><option value='newest'${sort === 'newest' ? ' selected' : ''}>${escapeHtml(t('newest'))}</option><option value='oldest'${sort === 'oldest' ? ' selected' : ''}>${escapeHtml(t('oldest'))}</option><option value='readers'${sort === 'readers' ? ' selected' : ''}>${escapeHtml(t('mostRead'))}</option></select><label class='check'><input id='newOnly' type='checkbox'${onlyNew ? ' checked' : ''}>${escapeHtml(t('onlyNew'))}</label></section><section class='range-filter' aria-label='${escapeHtml(t('clearFilters'))}'><label class='date-field'><span>${escapeHtml(t('dateFrom'))}</span><input id='dateFrom' type='date' value='${escapeHtml(dateFrom)}'${earliest ? ` min='${escapeHtml(earliest)}'` : ''}${(dateTo || latest) ? ` max='${escapeHtml(dateTo || latest)}'` : ''}></label><label class='date-field'><span>${escapeHtml(t('dateTo'))}</span><input id='dateTo' type='date' value='${escapeHtml(dateTo)}'${(dateFrom || earliest) ? ` min='${escapeHtml(dateFrom || earliest)}'` : ''}${latest ? ` max='${escapeHtml(latest)}'` : ''}></label><button id='clearCustomFilters' class='clear-custom-filters' type='button'${selectedJournals.size === 0 && excludedJournals.size === 0 && !dateFrom && !dateTo ? ' disabled' : ''}>${escapeHtml(t('clearFilters'))}</button></section><div class='resultline'><div><strong id='resultCount'>0</strong> ${escapeHtml(t('shown'))}</div></div><section id='gallery' class='gallery' aria-live='polite'></section><div class='footer'>Organic Synthesis Literature Gallery · Cloudflare staging</div></main>`;
   mountUserShell(app, language);
@@ -720,12 +736,14 @@ function mount(): void {
     if (dateFrom && dateTo && dateFrom > dateTo) dateTo = dateFrom;
     persistFilterPreferences();
     mount();
+    scheduleArchitectureCorpusRefresh(0);
   });
   document.querySelector<HTMLInputElement>('#dateTo')?.addEventListener('change', event => {
     dateTo = (event.target as HTMLInputElement).value;
     if (dateFrom && dateTo && dateTo < dateFrom) dateFrom = dateTo;
     persistFilterPreferences();
     mount();
+    scheduleArchitectureCorpusRefresh(0);
   });
   document.querySelector<HTMLButtonElement>('#clearCustomFilters')?.addEventListener('click', () => {
     selectedJournals.clear();
@@ -734,6 +752,7 @@ function mount(): void {
     dateTo = '';
     persistFilterPreferences();
     mount();
+    scheduleArchitectureCorpusRefresh(0);
   });
 
   renderCards();
@@ -1090,21 +1109,122 @@ async function loadStaticPapers(): Promise<Paper[]> {
   ];
 }
 
+async function loadLegacyCorpus(): Promise<Paper[]> {
+  let result = mergePapers([], await loadStaticPapers()).filter(paper => !isExcludedDoi(paperDoi(paper)));
+  try {
+    const response = await api.get('/api/literature/supplement');
+    const supplement = response.data as { papers?: Paper[] };
+    result = mergePapers(result, (supplement.papers || []).map(normalizePaper))
+      .filter(paper => !isExcludedDoi(paperDoi(paper)));
+  } catch {
+    // Static snapshot remains usable if the API is temporarily unavailable.
+  }
+  return result;
+}
+
+function normalizeArchitectureRows(value: unknown): Paper[] {
+  if (!Array.isArray(value)) throw new Error('architecture_paper_array_invalid');
+  return value.map(raw => {
+    if (!raw || typeof raw !== 'object') throw new Error('architecture_paper_shape_invalid');
+    const paper = raw as Partial<Paper>;
+    if (typeof paper.journal !== 'string' || typeof paper.date !== 'string' || !Array.isArray(paper.authors)) {
+      throw new Error('architecture_paper_shape_invalid');
+    }
+    const normalized = normalizePaper({
+      journal: paper.journal,
+      title: typeof paper.title === 'string' ? paper.title : null,
+      titleZh: typeof paper.titleZh === 'string' ? paper.titleZh : undefined,
+      doi: typeof paper.doi === 'string' ? paper.doi : null,
+      date: paper.date,
+      url: typeof paper.url === 'string' ? paper.url : null,
+      new: paper.new === true,
+      addedDate: typeof paper.addedDate === 'string' ? paper.addedDate : undefined,
+      authors: paper.authors as string[],
+      synthesisType: paper.synthesisType === 'formal' || paper.synthesisType === 'total' ? paper.synthesisType : undefined,
+    });
+    if (!paperDoi(normalized)) throw new Error('architecture_paper_doi_invalid');
+    return normalized;
+  }).filter(paper => !isExcludedDoi(paperDoi(paper)));
+}
+
+function setArchitectureCorpus(rows: Paper[]): void {
+  papers = mergePapers([], rows).filter(paper => !isExcludedDoi(paperDoi(paper)));
+  applyResolvedTitles();
+}
+
+async function loadArchitectureCorpus(): Promise<boolean> {
+  try {
+    const client = await new PublishedCatalogClient(new URL('./', document.baseURI).toString()).open();
+    const landingRows = normalizeArchitectureRows(await client.landing(sharedDoiFromLocation()));
+    const editionRows = activeEdition?.dois.length
+      ? normalizeArchitectureRows(await client.resolve(activeEdition.dois))
+      : [];
+    architectureClient = client;
+    architectureMemberDois = [...client.memberDois];
+    architectureEarliestDate = client.earliestDate || '';
+    architectureLandingPapers = mergePapers(landingRows, editionRows);
+    const architectureDates = architectureLandingPapers.map(paper => paper.date)
+      .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
+    latestCollectionDate = architectureDates[architectureDates.length - 1] || '';
+    setArchitectureCorpus(architectureLandingPapers);
+    document.documentElement.dataset.catalogRead = 'architecture-v1';
+    return true;
+  } catch (error) {
+    console.warn('architecture-v1 frontend read unavailable; using legacy corpus', error);
+    architectureClient = null;
+    architectureMemberDois = null;
+    architectureEarliestDate = '';
+    architectureLandingPapers = [];
+    latestCollectionDate = '';
+    document.documentElement.dataset.catalogRead = 'legacy';
+    return false;
+  }
+}
+
+async function refreshArchitectureCorpus(serial: number): Promise<void> {
+  const client = architectureClient;
+  if (!client || serial !== architectureRefreshSerial) return;
+  try {
+    let additions: Paper[] = [];
+    const needle = query.trim();
+    if (needle.length >= 2) additions = mergePapers(additions, normalizeArchitectureRows(await client.search(needle)));
+    if (dateFrom || dateTo) {
+      additions = mergePapers(additions, normalizeArchitectureRows(await client.range(dateFrom, dateTo || client.asOfDate)));
+    }
+    if (serial !== architectureRefreshSerial || architectureClient !== client) return;
+    setArchitectureCorpus(mergePapers(architectureLandingPapers, additions));
+    mount();
+  } catch (error) {
+    if (serial !== architectureRefreshSerial || architectureClient !== client) return;
+    console.warn('architecture-v1 on-demand read unavailable; using legacy corpus for this view', error);
+    setArchitectureCorpus(await loadLegacyCorpus());
+    mount();
+  }
+}
+
+function scheduleArchitectureCorpusRefresh(delay = 220): void {
+  if (!architectureClient) return;
+  architectureRefreshSerial += 1;
+  const serial = architectureRefreshSerial;
+  if (architectureRefreshTimer !== null) window.clearTimeout(architectureRefreshTimer);
+  architectureRefreshTimer = window.setTimeout(() => {
+    architectureRefreshTimer = null;
+    void refreshArchitectureCorpus(serial);
+  }, delay);
+}
+
 async function load(): Promise<void> {
   try {
-    const staticPapers = await loadStaticPapers();
-    papers = mergePapers([], staticPapers).filter(paper => !isExcludedDoi(paperDoi(paper)));
-    applyResolvedTitles();
-    try {
-      const response = await api.get('/api/literature/supplement');
-      const supplement = response.data as { papers?: Paper[] };
-      papers = mergePapers(papers, (supplement.papers || []).map(normalizePaper)).filter(paper => !isExcludedDoi(paperDoi(paper)));
-    } catch {
-      // Static snapshot remains usable if the API is temporarily unavailable.
-    }
-    applyResolvedTitles();
     activeEdition = await loadEditionManifest();
+    const architectureLoaded = await loadArchitectureCorpus();
+    if (!architectureLoaded) {
+      setArchitectureCorpus(await loadLegacyCorpus());
+      const legacyDates = papers.map(paper => paper.date)
+        .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
+      latestCollectionDate = legacyDates[legacyDates.length - 1] || '';
+    }
     mount();
+    if (architectureLoaded && (dateFrom || dateTo || query.trim())) scheduleArchitectureCorpusRefresh(0);
     void resolveTitles().then(() => resolveTitles());
     void loadTranslations();
   } catch (error) {

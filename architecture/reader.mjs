@@ -8,11 +8,11 @@ async function hash(bytes) {
 }
 /** Opt-in read-only adapter. Not imported by the production frontend in phase A. */
 export class CatalogReader {
-  constructor(baseUrl, { fetcher = globalThis.fetch, cacheEntries = 12, maxObjectBytes = 4194304 } = {}) {
+  constructor(baseUrl, { fetcher = globalThis.fetch, cacheEntries = 12, maxObjectBytes = 4194304, currentRef = 'current.json' } = {}) {
     this.base = new URL(baseUrl);
     assert(this.base.pathname.endsWith('/'), 'catalog_base_requires_trailing_slash');
     assert(Number.isSafeInteger(cacheEntries) && cacheEntries > 0, 'invalid_cache_limit');
-    this.fetcher = fetcher; this.cacheEntries = cacheEntries; this.maxObjectBytes = maxObjectBytes;
+    this.fetcher = fetcher; this.cacheEntries = cacheEntries; this.maxObjectBytes = maxObjectBytes; this.currentRef = currentRef;
     this.cache = new Map(); this.catalog = null;
   }
   async read(ref, signal) {
@@ -49,7 +49,7 @@ export class CatalogReader {
   }
   async open(signal) {
     if (this.catalog) return this.catalog;
-    const root = await this.read('current.json', signal);
+    const root = await this.read(this.currentRef, signal);
     assert(root.mode === 'shadow' && root.productionActivation === false, 'unsupported_catalog_mode');
     const catalog = await this.read(root.catalog, signal);
     this.catalog = catalog; this.root = root;

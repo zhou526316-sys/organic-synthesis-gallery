@@ -38,7 +38,7 @@ console.log('GALLERY_TITLE_COMPATIBILITY '+JSON.stringify({overrides:Object.keys
   canonicalRecordsModified:false,presentationSha256:presentationHash}));
 
 const work=await mkdtemp(path.join(tmpdir(),'gallery-browser-parity-'));
-for(const name of ['src','shared','public','index.html','package.json']) await cp(path.join(root,name),path.join(work,name),{recursive:true});
+for(const name of ['src','shared','architecture','public','index.html','package.json']) await cp(path.join(root,name),path.join(work,name),{recursive:true});
 await symlink(path.join(root,'node_modules'),path.join(work,'node_modules'),'dir');
 // Only a temporary preview copy is instrumented; no repository source file is changed.
 let main=await readFile(path.join(work,'src/main.ts'),'utf8');

@@ -19,6 +19,7 @@ const SOURCE_FILES = [...DATA_FILES, 'literature-supplement.json'];
 const TITLE_PRECEDENCE = ['papers.gz.b64','total-synthesis.json','manual-supplement.json','final-audit-supplement.json','literature-supplement.json'];
 const SCHEMA = 'gallery-architecture-public-v1';
 const MEMBERSHIP_SCHEMA = 'gallery-published-membership-v1';
+const RETIRED_LAST_EVENING_SLOT = '2026-10-04T18:00:00+08:00';
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 const pretty = value => JSON.stringify(value, null, 2) + '\n';
 const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding:'utf8', maxBuffer:64*1024*1024 }).trim();
@@ -48,7 +49,9 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   assert(!tracked, 'architecture_public_output_must_not_be_tracked');
   const markerText = await readFile(path.resolve(ROOT, MARKER_FILE), 'utf8');
   const marker = JSON.parse(markerText);
-  assert(marker.mode === 'slot-release' && /^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(marker.publicationSlot || ''), 'invalid_release_marker');
+  const publicationSlot = String(marker.publicationSlot || '');
+  assert(marker.mode === 'slot-release' && (/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(publicationSlot)
+    || publicationSlot === RETIRED_LAST_EVENING_SLOT), 'invalid_release_marker');
 
   const texts = Object.fromEntries(await Promise.all(SOURCE_FILES.map(async name => {
     const file = path.join(PUBLIC, name);
@@ -143,6 +146,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const release = {
     schema: SCHEMA,
     productionActivation: false,
+    frontendReadActivation: true,
     publicationSlot: marker.publicationSlot,
     sourceCommit,
     markerBlobSha,
@@ -189,7 +193,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     objectCount:objects.length, totalObjectBytes:objects.reduce((n,row)=>n+row.bytes,0),
     largestObjectBytes:Math.max(0,...objects.map(row=>row.bytes)),
     titleCompatibilityOverrides:Object.keys(presentation.overrides).length,
-    productionActivation:false, dispatchEnabled:false,
+    productionActivation:false, frontendReadActivation:true, dispatchEnabled:false,
   };
   console.log('GALLERY_ARCHITECTURE_PUBLIC ' + JSON.stringify(report));
   return { release, report };

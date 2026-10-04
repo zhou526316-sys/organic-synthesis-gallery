@@ -144,10 +144,10 @@ jobs:
           npm install --no-save --no-package-lock @playwright/test@1.55.0
           npx playwright install --with-deps webkit
 
-      - name: Build Gallery
+      - name: Build legacy interaction fixture
         run: npm run build
 
-      - name: Start preview server
+      - name: Start legacy preview server
         shell: bash
         run: |
           set -euo pipefail
@@ -161,8 +161,34 @@ jobs:
           cat /tmp/gallery-preview.log
           exit 1
 
-      - name: Run interaction regression
+      - name: Run existing interaction regression
         run: npx playwright test tests/mobile-interaction.spec.ts --reporter=line --workers=1
+
+      - name: Build verified architecture read fixture
+        run: |
+          node cloudflare/scripts/merge-curated-pages.mjs
+          node scripts/build-gallery-architecture-public.mjs
+          npm run build
+          node scripts/pages-release-delivery.mjs build dist
+
+      - name: Start architecture preview server
+        shell: bash
+        run: |
+          set -euo pipefail
+          nohup npm run preview -- --host 127.0.0.1 --port 4174 >/tmp/gallery-architecture-preview.log 2>&1 &
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4174/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/gallery-architecture-preview.log
+          exit 1
+
+      - name: Run Hot Archive frontend regression
+        env:
+          ARCHITECTURE_PREVIEW_BASE: http://127.0.0.1:4174
+        run: npx playwright test tests/architecture-frontend.spec.ts --reporter=line --workers=1
 
   api-smoke:
     name: Production API smoke
