@@ -36,6 +36,7 @@ import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
 import { backfillScheduledEvidenceHandoffs, getScheduledEvidenceHandoff, getScheduledEvidenceHandoffPart } from './scheduled-summary-handoff.js';
 import { getSummaryReviewStatus } from './summary-review.js';
+import { backfillEvidenceIndexPage, getEvidenceIndexStatus, listEvidenceIndexRows } from './evidence-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -276,6 +277,24 @@ async function handleApi(request, env, ctx) {
     if (authError) return authError;
     const limit = Math.max(1, Math.min(12, Number(url.searchParams.get('limit') || 4)));
     return resultResponse(await backfillScheduledEvidenceHandoffs(env, limit), cors);
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/evidence-index/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getEvidenceIndexStatus(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/article-summary/evidence-index/backfill') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(1000, Number(url.searchParams.get('limit') || 500)));
+    return resultResponse(await backfillEvidenceIndexPage(env, limit));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/evidence-index/sample') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(1000, Number(url.searchParams.get('limit') || 100)));
+    return resultResponse(await listEvidenceIndexRows(env, limit));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
