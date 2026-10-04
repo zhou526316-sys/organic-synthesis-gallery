@@ -1,8 +1,7 @@
 {
   "requestedAt": "2026-10-04T14:14:00+08:00",
-  "purpose": "User explicitly requested immediate publication of all eligible summaries for literature dated 2026-09-20 or later.",
+  "purpose": "Immediate user-authorized summary publication for active literature dated 2026-09-20 or later. Refresh encrypted handoff before semantic review and deployment.",
   "minimumArticleDate": "2026-09-20",
-  "mode": "immediate_current_catchup",
-  "preserveOlderSummaries": true,
-  "doNotModifyLiterature": true
+  "priority": "newest-first",
+  "userAuthorized": true
 }
