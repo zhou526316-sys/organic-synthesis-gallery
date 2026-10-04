@@ -1,0 +1,52 @@
+{
+  "context": "Owner-scoped private PDF capture rollout for Gallery and future daily WeChat editorial evidence",
+  "ownerBinding": "One-time claim is user-session based; no account email or claim preimage is committed.",
+  "phase1": {
+    "readLayer": "deployed",
+    "privateBucket": true,
+    "ownerOnlyOriginalRouting": true,
+    "ordinaryUserFallback": "publisher page"
+  },
+  "phase2": {
+    "captureCode": "deployed",
+    "captureEnabled": true,
+    "processingEnabled": false,
+    "rawPdfActiveByDefault": false,
+    "captureLeaseTtlDays": 7,
+    "tampermonkeyMarker": "20261004-private-pdf-capture-v1",
+    "tampermonkeyVersion": "2.2.41"
+  },
+  "deploymentAuthority": {
+    "fixed": true,
+    "canonicalWorkerDeploy": ".github/workflows/deploy-worker-frontend.yml",
+    "schemaMaintenanceCanDeployWorker": false,
+    "schemaMaintenanceSecretUpdate": "by Worker name only"
+  },
+  "liveAcceptance": {
+    "verifiedAtBeijing": "2026-10-04T17:00:00+08:00",
+    "healthOk": true,
+    "d1": true,
+    "r2": true,
+    "privatePdf": {
+      "bucket": true,
+      "readEnabled": true,
+      "captureEnabled": true,
+      "processingEnabled": false
+    },
+    "wechatTicketRelay": true,
+    "setupPageLive": true,
+    "canonicalInstallerHasPdfCaptureMarker": true
+  },
+  "tests": {
+    "privatePdfAccessV1": "passed",
+    "privatePdfCaptureV2": "passed",
+    "workerDeploymentAuthority": "passed",
+    "cloudflareMigration": "passed",
+    "siteQualityGate": "passed",
+    "knownLegacyBridge2235AngewRegression": "pre-existing failure; unchanged"
+  },
+  "editorialBoundary": "Raw captures are not readable/active and cannot enter summary, TOC/body publication or daily WeChat selected-article generation until phase-3 identity/version processing produces a verified EditorialEvidenceBundle.",
+  "nextUserAction": "While logged into the intended Gallery account, use the one-time owner setup URL supplied privately in chat, confirm the displayed account, claim owner, then authorize this browser for PDF capture for seven days.",
+  "secretsIncluded": false,
+  "userEmailIncluded": false
+}
