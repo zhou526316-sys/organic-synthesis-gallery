@@ -5,6 +5,7 @@ on:
     branches: [feature/private-pdf-access-v1, main]
     paths:
       - 'cloudflare/schema.sql'
+      - 'cloudflare/private-pdf-v1.sql'
       - 'cloudflare/worker/src/private-pdf.js'
       - 'cloudflare/worker/src/integrations.js'
       - 'cloudflare/worker/src/index.js'
@@ -60,11 +61,15 @@ jobs:
           node --check cloudflare/worker/src/integrations.js
           node --check cloudflare/worker/src/index.js
           node cloudflare/worker/scripts/test-private-pdf.mjs
-      - name: Validate full schema from scratch
+      - name: Validate full schema and isolated migration from scratch
         run: |
           sqlite3 /tmp/private-pdf-schema.db < cloudflare/schema.sql
-          sqlite3 /tmp/private-pdf-schema.db "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens') ORDER BY name;"
           test "$(sqlite3 /tmp/private-pdf-schema.db "SELECT count(*) FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens');")" = "3"
+          sqlite3 /tmp/private-pdf-migration.db < cloudflare/schema.sql
+          sqlite3 /tmp/private-pdf-migration.db "DROP TABLE private_pdf_access_tokens; DROP TABLE private_pdf_documents; DROP TABLE user_capabilities;"
+          sqlite3 /tmp/private-pdf-migration.db < cloudflare/private-pdf-v1.sql
+          test "$(sqlite3 /tmp/private-pdf-migration.db "SELECT count(*) FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens');")" = "3"
+          sqlite3 /tmp/private-pdf-migration.db < cloudflare/private-pdf-v1.sql
       - name: Build and typecheck frontend
         run: |
           npm install --no-audit --no-fund
