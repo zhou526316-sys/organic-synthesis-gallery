@@ -1,16 +1,16 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-04T12:56:22.564Z",
+  "generatedAt": "2026-10-04T23:07:41.670Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
   "lateDepositRescueDays": 7,
-  "baseStartDate": "2026-10-02",
-  "lateDepositRescueStartDate": "2026-09-28",
+  "baseStartDate": "2026-10-03",
+  "lateDepositRescueStartDate": "2026-09-29",
   "catchupStartDate": "2026-09-19",
   "startDate": "2026-09-19",
-  "endDate": "2026-10-04",
-  "closureDate": "2026-10-03",
+  "endDate": "2026-10-05",
+  "closureDate": "2026-10-04",
   "policy": "Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail, and real source-query catch-up from the first unverified date when verifiedThrough falls behind. Crossref created dates are preserved separately from publication dates so late deposits and future issue-date conflicts remain reviewable instead of disappearing. Raw-source to post-filter collapse is a coverage anomaly. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.",
   "targetJournals": [
     {
@@ -21,7 +21,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Science",
@@ -31,7 +31,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Nature Catalysis",
@@ -40,7 +40,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Nature Synthesis",
@@ -49,7 +49,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Nature Chemistry",
@@ -59,7 +59,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Nature Communications",
@@ -68,7 +68,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "JACS",
@@ -78,7 +78,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Angew",
@@ -88,7 +88,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "ACS Catalysis",
@@ -97,7 +97,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Organic Letters",
@@ -107,7 +107,7 @@
       ],
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Chem",
@@ -116,7 +116,7 @@
       ],
       "activeFrom": "2026-09-19",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Chemical Science",
@@ -135,7 +135,7 @@
       ],
       "activeFrom": "2026-09-19",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Science Advances",
@@ -144,7 +144,7 @@
       ],
       "activeFrom": "2026-09-19",
       "effectiveStart": "2026-09-19",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     },
     {
       "name": "Green Chemistry",
@@ -164,37 +164,64 @@
       ],
       "activeFrom": "2026-09-22",
       "effectiveStart": "2026-09-22",
-      "lateDepositRescueStart": "2026-09-28"
+      "lateDepositRescueStart": "2026-09-29"
     }
   ],
   "summary": {
     "galleryDois": 786,
-    "sourceRecords": 1717,
-    "rawMissingFromGallery": 1407,
+    "sourceRecords": 1719,
+    "rawMissingFromGallery": 1409,
     "previouslyReviewedExcluded": 1354,
-    "missingFromGallery": 53,
-    "potentialGaps": 24,
+    "missingFromGallery": 55,
+    "potentialGaps": 25,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 4,
-    "closureCoverageAnomalies": 0,
+    "closureCoverageAnomalies": 1,
     "historicalCoverageLosses": 0,
-    "unresolved": 53,
+    "unresolved": 55,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
   "closure": {
-    "date": "2026-10-03",
-    "status": "assistant-decisions-complete",
-    "sourceRecords": 34,
-    "rawMissingFromGallery": 28,
-    "previouslyReviewedExcluded": 28,
-    "missingFromGallery": 0,
-    "potentialGaps": 0,
+    "date": "2026-10-04",
+    "status": "blocked-source-coverage-anomaly",
+    "sourceRecords": 17,
+    "rawMissingFromGallery": 17,
+    "previouslyReviewedExcluded": 3,
+    "missingFromGallery": 14,
+    "potentialGaps": 7,
     "criticalSourceFailures": 0,
-    "sourceCoverageAnomalies": [],
+    "sourceCoverageAnomalies": [
+      {
+        "journal": "Angew",
+        "activeFrom": "2026-07-01",
+        "effectiveStart": "2026-09-19",
+        "crossrefRequests": 6,
+        "crossrefFailures": 0,
+        "openAlexRequests": 1,
+        "openAlexFailures": 0,
+        "crossrefHealthy": true,
+        "openAlexHealthy": true,
+        "queryStart": "2026-09-19",
+        "rawCrossrefCandidateRecords": 292,
+        "rawOpenAlexCandidateRecords": 274,
+        "rawUnionCandidateRecords": 292,
+        "rawToUnionCollapse": false,
+        "unionCandidateRecords": 292,
+        "crossrefCandidateRecords": 292,
+        "openAlexCandidateRecords": 274,
+        "multiSourceCandidateRecords": 274,
+        "closureUnionRecords": 12,
+        "closureCrossrefRecords": 12,
+        "closureOpenAlexRecords": 0,
+        "closureMultiSourceRecords": 0,
+        "coverageWarning": false,
+        "closureCoverageWarning": true
+      }
+    ],
     "historicalCoverageLosses": [],
-    "verifiedThroughEligible": true,
+    "verifiedThroughEligible": false,
     "note": "Machine audit never advances verifiedThrough by itself. Persisted assistant exclusions are treated as resolved; accepted papers must exist in repository/site data, pending items remain unresolved, publisher sources must be cross-checked where available, critical source failures must be zero, and closure-day Crossref/OpenAlex coverage must not show a severe one-family collapse."
   },
   "byDate": {
@@ -532,17 +559,18 @@
       }
     },
     "2026-10-04": {
-      "sourceRecords": 15,
-      "crossrefOnly": 12,
+      "sourceRecords": 17,
+      "crossrefOnly": 14,
       "openAlexOnly": 0,
       "multiSource": 3,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 15,
+      "rawMissingFromGallery": 17,
       "previouslyReviewedExcluded": 3,
-      "missingFromGallery": 12,
-      "potentialGaps": 6,
+      "missingFromGallery": 14,
+      "potentialGaps": 7,
       "byJournal": {
         "Nature Communications": 3,
+        "JACS": 2,
         "Angew": 12
       }
     },
@@ -743,18 +771,18 @@
       "activeFrom": "2026-07-01",
       "effectiveStart": "2026-09-19",
       "queryStart": "2026-09-19",
-      "rawSourceRecords": 219,
-      "sourceRecords": 219,
-      "crossrefOnly": 3,
+      "rawSourceRecords": 221,
+      "sourceRecords": 221,
+      "crossrefOnly": 5,
       "openAlexOnly": 0,
       "multiSource": 216,
       "lateIndexed": 3,
       "safetyTail": 0,
       "coveredByGallery": 45,
-      "rawMissingFromGallery": 174,
+      "rawMissingFromGallery": 176,
       "previouslyReviewedExcluded": 173,
-      "missingFromGallery": 1,
-      "potentialGaps": 1
+      "missingFromGallery": 3,
+      "potentialGaps": 2
     },
     "Angew": {
       "activeFrom": "2026-07-01",
@@ -1054,10 +1082,10 @@
       "crossrefCandidateRecords": 385,
       "openAlexCandidateRecords": 386,
       "multiSourceCandidateRecords": 384,
-      "closureUnionRecords": 19,
-      "closureCrossrefRecords": 19,
-      "closureOpenAlexRecords": 19,
-      "closureMultiSourceRecords": 19,
+      "closureUnionRecords": 3,
+      "closureCrossrefRecords": 3,
+      "closureOpenAlexRecords": 3,
+      "closureMultiSourceRecords": 3,
       "coverageWarning": false,
       "closureCoverageWarning": false
     },
@@ -1071,18 +1099,18 @@
       "crossrefHealthy": true,
       "openAlexHealthy": true,
       "queryStart": "2026-09-19",
-      "rawCrossrefCandidateRecords": 219,
+      "rawCrossrefCandidateRecords": 221,
       "rawOpenAlexCandidateRecords": 216,
-      "rawUnionCandidateRecords": 219,
+      "rawUnionCandidateRecords": 221,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 219,
-      "crossrefCandidateRecords": 219,
+      "unionCandidateRecords": 221,
+      "crossrefCandidateRecords": 221,
       "openAlexCandidateRecords": 216,
       "multiSourceCandidateRecords": 216,
-      "closureUnionRecords": 4,
-      "closureCrossrefRecords": 4,
-      "closureOpenAlexRecords": 4,
-      "closureMultiSourceRecords": 4,
+      "closureUnionRecords": 2,
+      "closureCrossrefRecords": 2,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
       "coverageWarning": false,
       "closureCoverageWarning": false
     },
@@ -1104,12 +1132,12 @@
       "crossrefCandidateRecords": 292,
       "openAlexCandidateRecords": 274,
       "multiSourceCandidateRecords": 274,
-      "closureUnionRecords": 4,
-      "closureCrossrefRecords": 4,
-      "closureOpenAlexRecords": 3,
-      "closureMultiSourceRecords": 3,
+      "closureUnionRecords": 12,
+      "closureCrossrefRecords": 12,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
       "coverageWarning": false,
-      "closureCoverageWarning": false
+      "closureCoverageWarning": true
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
@@ -1129,10 +1157,10 @@
       "crossrefCandidateRecords": 78,
       "openAlexCandidateRecords": 73,
       "multiSourceCandidateRecords": 73,
-      "closureUnionRecords": 3,
-      "closureCrossrefRecords": 3,
-      "closureOpenAlexRecords": 3,
-      "closureMultiSourceRecords": 3,
+      "closureUnionRecords": 0,
+      "closureCrossrefRecords": 0,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
       "coverageWarning": false,
       "closureCoverageWarning": false
     },
@@ -1154,10 +1182,10 @@
       "crossrefCandidateRecords": 129,
       "openAlexCandidateRecords": 128,
       "multiSourceCandidateRecords": 128,
-      "closureUnionRecords": 1,
-      "closureCrossrefRecords": 1,
-      "closureOpenAlexRecords": 1,
-      "closureMultiSourceRecords": 1,
+      "closureUnionRecords": 0,
+      "closureCrossrefRecords": 0,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
       "coverageWarning": false,
       "closureCoverageWarning": false
     },
@@ -1229,8 +1257,8 @@
       "crossrefCandidateRecords": 51,
       "openAlexCandidateRecords": 10,
       "multiSourceCandidateRecords": 10,
-      "closureUnionRecords": 3,
-      "closureCrossrefRecords": 3,
+      "closureUnionRecords": 0,
+      "closureCrossrefRecords": 0,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": true,
@@ -1385,8 +1413,8 @@
       "crossrefCandidateRecords": 51,
       "openAlexCandidateRecords": 10,
       "multiSourceCandidateRecords": 10,
-      "closureUnionRecords": 3,
-      "closureCrossrefRecords": 3,
+      "closureUnionRecords": 0,
+      "closureCrossrefRecords": 0,
       "closureOpenAlexRecords": 0,
       "closureMultiSourceRecords": 0,
       "coverageWarning": true,
@@ -1419,7 +1447,34 @@
       "closureCoverageWarning": false
     }
   ],
-  "closureCoverageAnomalies": [],
+  "closureCoverageAnomalies": [
+    {
+      "journal": "Angew",
+      "activeFrom": "2026-07-01",
+      "effectiveStart": "2026-09-19",
+      "crossrefRequests": 6,
+      "crossrefFailures": 0,
+      "openAlexRequests": 1,
+      "openAlexFailures": 0,
+      "crossrefHealthy": true,
+      "openAlexHealthy": true,
+      "queryStart": "2026-09-19",
+      "rawCrossrefCandidateRecords": 292,
+      "rawOpenAlexCandidateRecords": 274,
+      "rawUnionCandidateRecords": 292,
+      "rawToUnionCollapse": false,
+      "unionCandidateRecords": 292,
+      "crossrefCandidateRecords": 292,
+      "openAlexCandidateRecords": 274,
+      "multiSourceCandidateRecords": 274,
+      "closureUnionRecords": 12,
+      "closureCrossrefRecords": 12,
+      "closureOpenAlexRecords": 0,
+      "closureMultiSourceRecords": 0,
+      "coverageWarning": false,
+      "closureCoverageWarning": true
+    }
+  ],
   "historicalCoverageLosses": [],
   "sourceStats": [
     {
@@ -1747,7 +1802,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 216,
+      "count": 218,
       "note": ""
     },
     {
@@ -1757,7 +1812,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 216,
+      "count": 218,
       "note": ""
     },
     {
@@ -1767,7 +1822,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 219,
+      "count": 221,
       "note": ""
     },
     {
@@ -1777,7 +1832,7 @@
       "mode": "online",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 216,
+      "count": 218,
       "note": ""
     },
     {
@@ -1787,7 +1842,7 @@
       "mode": "published",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 216,
+      "count": 218,
       "note": ""
     },
     {
@@ -1797,7 +1852,7 @@
       "mode": "created",
       "queryStart": "2026-09-19",
       "ok": true,
-      "count": 219,
+      "count": 221,
       "note": ""
     },
     {
@@ -2745,6 +2800,81 @@
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
         "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1021/jacs.6c14811",
+      "journal": "JACS",
+      "title": "Complex Fragment Coupling via O -Mesyl Hydroxylamines: Direct Conversion of Primary Amines to Electrophilic Aminating Agents",
+      "abstract": "Abstract Nitrogen-containing molecules are ubiquitous in pharmaceuticals, natural products, ligands, and functional materials, sustaining continued interest in efficient C–N bond-forming strategies. Although electrophilic amination has emerged as a powerful complement to classical nucleophilic substitution and cross-coupling methods, the transfer of structurally complex NH-alkyl groups remains limited by the lack of general access to suitably reactive electrophilic aminating reagents. Herein, we report the direct single-step oxidation of primary amines to N-alkyl-O-mesyl hydroxylamines using dimesyl peroxide (MPO). This transformation achieves an umpolung of otherwise nucleophilic amines and provides rapid access to synthetically versatile electrophilic nitrogen building blocks under mild conditions. A broad substrate scope enables the preparation of structurally complex and chiral N-alkyl-O-mesyl hydroxylamines, including derivatives of amino acids, natural products, and pharmaceuticals. These reagents were directly deployed in established electrophilic amination manifolds, including arene C–H amination, olefin aziridination, and aza-Rubottom oxidation, enabling the transfer of structurally complex and chiral amine fragments. Collectively, this work establishes a general strategy for converting readily available primary amines into electrophilic nitrogen fragments for efficient C–N bond formation and N-electrophilic fragment coupling.",
+      "date": "2026-10-04",
+      "onlineDate": "2026-10-04",
+      "publishedDate": "2026-10-04",
+      "createdDate": "2026-10-04",
+      "onlineDatePrecision": "day",
+      "publishedDatePrecision": "day",
+      "createdDatePrecision": "day",
+      "type": "journal-article",
+      "authors": [
+        "Mats Georg",
+        "Young-Do Kwon",
+        "Mathias Boeckle",
+        "Dongdong Yang",
+        "Daniel H. Ess",
+        "László Kürti"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c15261",
+      "journal": "JACS",
+      "title": "Mechanical Flipping of [1]Rotaxanes Toughens Polymer Networks",
+      "abstract": "Abstract Effectively tuning mechanical properties is essential to advance the utility of polymeric materials. Rotaxanes have emerged as promising candidates for this purpose, such as [2]rotaxanes and polyrotaxanes. However, [1]rotaxanes, which are self-interlocked by a single component, remain largely underexplored in this area. Herein, we report the mechanochemical behaviors of two crown ether-based [1]rotaxanes and their impact on bulk mechanical properties when serving as crosslinkers. These two [1]rotaxanes share identical entangled architectures but differ solely in their flipping barriers, which originate from the steric bulkiness of the macrocycle. The DB24C8-based [1]rotaxane requires a substantially higher energy input for flipping, whereas the B24C8-based [1]rotaxane flips freely once the hydrogen bonding is disrupted, as confirmed by solution-phase studies and DFT calculations. When incorporated into polymer networks at a loading as low as 2.0 mol %, the DB24C8-based [1]rotaxane network exhibits a threefold increase in toughness and a twofold enhancement in stretchability compared to the B24C8-based [1]rotaxane network and the corresponding covalent networks. These results demonstrate that properly barriered molecular flipping can effectively dissipate energy and enhance the macroscopic mechanical performance of polymer networks, highlighting the potential of [1]rotaxanes as useful motifs for tuning network mechanics.",
+      "date": "2026-10-04",
+      "onlineDate": "2026-10-04",
+      "publishedDate": "2026-10-04",
+      "createdDate": "2026-10-04",
+      "onlineDatePrecision": "day",
+      "publishedDatePrecision": "day",
+      "createdDatePrecision": "day",
+      "type": "journal-article",
+      "authors": [
+        "Jiaojiao Xie",
+        "Diandian Deng",
+        "Siwen Wang",
+        "Wei Wen",
+        "Lianrui Hu",
+        "Qiuhua Zhao",
+        "Min Zhang"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
@@ -4394,6 +4524,43 @@
         "crossref:1521-3773:online",
         "crossref:1521-3773:published",
         "crossref:1521-3773:created"
+      ],
+      "activeFrom": "2026-07-01",
+      "dateUnverified": false,
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1021/jacs.6c14811",
+      "journal": "JACS",
+      "title": "Complex Fragment Coupling via O -Mesyl Hydroxylamines: Direct Conversion of Primary Amines to Electrophilic Aminating Agents",
+      "abstract": "Abstract Nitrogen-containing molecules are ubiquitous in pharmaceuticals, natural products, ligands, and functional materials, sustaining continued interest in efficient C–N bond-forming strategies. Although electrophilic amination has emerged as a powerful complement to classical nucleophilic substitution and cross-coupling methods, the transfer of structurally complex NH-alkyl groups remains limited by the lack of general access to suitably reactive electrophilic aminating reagents. Herein, we report the direct single-step oxidation of primary amines to N-alkyl-O-mesyl hydroxylamines using dimesyl peroxide (MPO). This transformation achieves an umpolung of otherwise nucleophilic amines and provides rapid access to synthetically versatile electrophilic nitrogen building blocks under mild conditions. A broad substrate scope enables the preparation of structurally complex and chiral N-alkyl-O-mesyl hydroxylamines, including derivatives of amino acids, natural products, and pharmaceuticals. These reagents were directly deployed in established electrophilic amination manifolds, including arene C–H amination, olefin aziridination, and aza-Rubottom oxidation, enabling the transfer of structurally complex and chiral amine fragments. Collectively, this work establishes a general strategy for converting readily available primary amines into electrophilic nitrogen fragments for efficient C–N bond formation and N-electrophilic fragment coupling.",
+      "date": "2026-10-04",
+      "onlineDate": "2026-10-04",
+      "publishedDate": "2026-10-04",
+      "createdDate": "2026-10-04",
+      "onlineDatePrecision": "day",
+      "publishedDatePrecision": "day",
+      "createdDatePrecision": "day",
+      "type": "journal-article",
+      "authors": [
+        "Mats Georg",
+        "Young-Do Kwon",
+        "Mathias Boeckle",
+        "Dongdong Yang",
+        "Daniel H. Ess",
+        "László Kürti"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:0002-7863:online",
+        "crossref:0002-7863:published",
+        "crossref:0002-7863:created",
+        "crossref:1520-5126:online",
+        "crossref:1520-5126:published",
+        "crossref:1520-5126:created"
       ],
       "activeFrom": "2026-07-01",
       "dateUnverified": false,
