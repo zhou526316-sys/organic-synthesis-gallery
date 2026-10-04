@@ -1,0 +1,130 @@
+name: Validate RSC/Chem discovery and Elsevier media repair
+on:
+  push:
+    branches: [fix/rsc-chem-discovery-elsevier-20261004]
+permissions:
+  contents: read
+concurrency:
+  group: repair-rsc-chem-discovery-elsevier-20261004
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/rsc-chem-discovery-elsevier-20261004
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Syntax and discovery regression guards
+        run: |
+          set -euo pipefail
+          node --check cloudflare/scripts/audit-literature.mjs
+          node --check public/toc-mainline.user.js
+          node scripts/test-literature-completeness-capability.mjs
+      - name: Tampermonkey ownership and transport regressions
+        run: |
+          set -euo pipefail
+          node tests/tm-newest-retry.test.mjs
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-tm220-release.mjs
+      - name: Build exact Bridge installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node --check public/gallery-vpn-bridge.user.js
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.42' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      6.2.24' public/toc-mainline.user.js
+      - name: Read raw RSC Crossref date semantics
+        run: |
+          node --input-type=module - <<'JS'
+          const journals=[['Chem','2451-9294'],['Chemical Science','2041-6520'],['Green Chemistry','1463-9262']];
+          const date=x=>x?.['date-parts']?.[0]?.join('-')||'';
+          for(const [name,issn] of journals){
+            const q=new URLSearchParams({filter:'from-created-date:2026-09-19,until-created-date:2026-10-04',rows:'12'});
+            const r=await fetch('https://api.crossref.org/journals/'+issn+'/works?'+q,{headers:{accept:'application/json','user-agent':'OrganicSynthesisGalleryRepair/2'}});
+            if(!r.ok)throw Error(name+' Crossref HTTP '+r.status);
+            const data=await r.json();
+            console.log('RSC_RAW_DATE_SAMPLE '+JSON.stringify({journal:name,items:(data.message?.items||[]).map(x=>({doi:x.DOI,title:x.title?.[0]||'',type:x.type||'',created:date(x.created),publishedOnline:date(x['published-online']),publishedPrint:date(x['published-print']),published:date(x.published),issued:date(x.issued),deposited:date(x.deposited)}))}));
+          }
+          JS
+      - name: Read actual Chem DOI redirect chain
+        run: |
+          node --input-type=module - <<'JS'
+          const start='https://doi.org/10.1016/j.chempr.2026.103282';
+          let url=start,seenPublisher=false;
+          const hops=[];
+          for(let i=0;i<6;i++){
+            const r=await fetch(url,{redirect:'manual',headers:{'user-agent':'OrganicSynthesisGalleryRepair/2','accept':'text/html,*/*'}});
+            const loc=r.headers.get('location')||'';
+            hops.push({url,status:r.status,location:loc});
+            for(const v of [url,loc]){
+              try{
+                const u=new URL(v,url),h=u.hostname.toLowerCase();
+                if(h==='linkinghub.elsevier.com'||h==='www.sciencedirect.com'||h.endsWith('.sciencedirect.com')||h==='www.cell.com'||h.endsWith('.cell.com'))seenPublisher=true;
+              }catch{}
+            }
+            if(!loc||r.status<300||r.status>=400)break;
+            url=new URL(loc,url).href;
+          }
+          console.log('CHEM_REDIRECT_CHAIN '+JSON.stringify(hops));
+          if(!seenPublisher)throw Error('Chem DOI redirect never reached an Elsevier/Cell publisher host');
+          JS
+      - name: Real activation-date backfill audit and compact proof
+        env:
+          AUDIT_START: '2026-09-19'
+          AUDIT_END: '2026-10-04'
+          GALLERY_SITE: https://gallery.gczhouwld.com
+          AUDIT_OUTPUT: audit/repair-rsc-chem-latest.json
+          AUDIT_UNRESOLVED_OUTPUT: audit/repair-rsc-chem-unresolved.json
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/audit-literature.mjs | tee "$RUNNER_TEMP/repair-audit.log"
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const a=JSON.parse(fs.readFileSync('audit/repair-rsc-chem-latest.json','utf8'));
+          const compact=JSON.parse(fs.readFileSync('audit/repair-rsc-chem-unresolved.json','utf8'));
+          const wanted=['Chem','Chemical Science','Green Chemistry'];
+          const rows=Object.fromEntries(wanted.map(name=>[name,a.byJournal?.[name]||null]));
+          const unresolved=(a.missingCandidates||[]).filter(x=>wanted.includes(x.journal));
+          const compactRows=(compact.candidates||compact.missingCandidates||compact.items||[]).filter(x=>wanted.includes(x.journal));
+          console.log('RSC_CHEM_BACKFILL '+JSON.stringify({
+            generatedAt:a.generatedAt,startDate:a.startDate,endDate:a.endDate,rows,
+            sourceCoverageAnomalies:(a.sourceCoverageAnomalies||[]).filter(x=>wanted.includes(x.journal)),
+            unresolved:unresolved.map(x=>({doi:x.doi,journal:x.journal,date:x.date,createdDate:x.createdDate,dateUnverified:x.dateUnverified,dateConflict:x.dateConflict,title:x.title,reviewPriority:x.reviewPriority})),
+            compactCount:compactRows.length
+          }));
+          if(!rows.Chem||!rows['Chemical Science']||!rows['Green Chemistry'])throw Error('missing journal rows');
+          if(rows['Chemical Science'].rawSourceRecords>0&&rows['Chemical Science'].sourceRecords===0)throw Error('Chemical Science raw records still disappear');
+          if(rows['Green Chemistry'].rawSourceRecords>0&&rows['Green Chemistry'].sourceRecords===0)throw Error('Green Chemistry raw records still disappear');
+          if(rows.Chem.rawSourceRecords>1&&rows.Chem.sourceRecords<=1)throw Error('Chem catch-up still collapses to one card');
+          const rscCompact=compactRows.filter(x=>x.journal==='Chemical Science'||x.journal==='Green Chemistry');
+          if(!rscCompact.length)throw Error('RSC candidates absent from compact review handoff');
+          if(!rscCompact.some(x=>x.createdDate&&x.dateUnverified===true))throw Error('RSC compact handoff lost created-date provenance');
+          const health=compact.sourceFamilyHealth||compact.sourceHealth||{};
+          for(const name of ['Chemical Science','Green Chemistry']){
+            const h=health[name];
+            if(!h)throw Error(name+' compact source health missing');
+            if(!('rawUnionCandidateRecords' in h)||!('rawToUnionCollapse' in h))throw Error(name+' compact raw coverage fields missing');
+          }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rsc-chem-discovery-elsevier-repair-evidence
+          path: |
+            audit/repair-rsc-chem-latest.json
+            audit/repair-rsc-chem-unresolved.json
+            ${{ runner.temp }}/repair-audit.log
+            public/gallery-vpn-bridge.user.js
+          retention-days: 7
+          if-no-files-found: warn
