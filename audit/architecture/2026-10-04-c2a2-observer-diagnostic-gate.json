@@ -25,17 +25,24 @@
     "reportEndpoint": "/api/media/tampermonkey-reports",
     "latestReportObservedAt": "2026-10-04T08:04:32.263Z",
     "relativeToC2a2DeploymentSeconds": -59.797,
-    "postC2a2ReportObserved": false,
+    "postC2a2ReportObserved": true,
     "preDeploymentInstallRevisionPresent": false,
     "preDeploymentArchitectureMembershipRevisionPresent": false,
     "preDeploymentVerifiedSnapshotPresent": false,
-    "interpretation": "The latest inspected real-browser report predates C2a.2 live verification by about 60 seconds. Absence of observer diagnostics therefore cannot be classified as an observer failure or a successful gate yet."
+    "interpretation": "A real report now exists after C2a.2 deployment, but it contains none of the C2a.2 install/observer diagnostic fields. The executing browser context is therefore still running pre-C2a.2 userscript code (or an already-loaded old control page). This is not evidence that the C2a.2 observer itself failed.",
+    "firstPostC2a2ReportObservedAt": "2026-10-04T08:07:01.517Z",
+    "firstPostC2a2ReportSecondsAfterDeployment": 89.457,
+    "postC2a2InstallRevisionPresent": false,
+    "postC2a2ArchitectureMembershipRevisionPresent": false,
+    "postC2a2VerifiedSnapshotPresent": false,
+    "postC2a2ObserverOkPresent": false,
+    "postC2a2VerificationFailedPresent": false
   },
   "decision": {
     "c2bTaskFilteringEnabled": false,
     "frontendHotArchiveSwitchEnabled": false,
-    "reason": "C2a.2 is deployed and byte-verified, but no real installed-browser report produced after that deployment has yet been observed.",
-    "nextGate": "Inspect the first report after 2026-10-04T08:05:32.060Z. It must show installRevision 6.2.23 and either observer_ok/verified_snapshot matching the current catalog or a verification_failed reason that must be fixed before C2b."
+    "reason": "C2a.2 is deployed and byte-verified. A post-deploy real report was observed, but the executing browser context still lacks C2a.2 runtime fields. Do not enable C2b until a freshly executed 6.2.23/2.2.41 context reports observer evidence.",
+    "nextGate": "Observe a real report with installRevision=6.2.23 (or the integrated Bridge 2.2.41 context) and architectureMembershipRevision. Then require observer_ok/verified_snapshot matching the current catalog. verification_failed must be fixed before C2b."
   },
   "stagedC2b": {
     "branch": "feat/gallery-architecture-c2b-final-20261004",
