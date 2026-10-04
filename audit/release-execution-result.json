@@ -1,33 +1,36 @@
 {
   "ok": true,
-  "publicationSlot": "2026-10-03T18:00:00+08:00",
-  "reviewed": 15,
-  "accepted": 1,
-  "rejected": 8,
-  "pending": 6,
-  "productionCards": 780,
+  "publicationSlot": "2026-10-04T08:00:00+08:00",
+  "reviewed": 30,
+  "accepted": 5,
+  "rejected": 20,
+  "pending": 5,
+  "productionCards": 785,
   "publishableDois": [
-    "10.1038/s41467-026-77740-5"
+    "10.1002/anie.3010868",
+    "10.31635/ccschem.026.202608392",
+    "10.31635/ccschem.026.202608407",
+    "10.1038/s41467-026-78226-0",
+    "10.1021/acs.orglett.6c03748"
   ],
   "deferredDois": [
     "10.1021/acscatal.6c06578",
     "10.31635/ccschem.026.202608090",
     "10.31635/ccschem.026.202607590",
     "10.31635/ccschem.026.202607612",
-    "10.31635/ccschem.026.202607659",
-    "10.31635/ccschem.026.202608472"
+    "10.31635/ccschem.026.202607659"
   ],
-  "formalReviewFile": "audit/review-2026-10-03-1800.json",
-  "formalReviewBlobSha": "ee4db573f7974565f6f72d8f5ff4cab3be0217d4",
-  "pendingQueueFile": "audit/pending-review-2026-10-03-1800.json",
-  "pendingQueueBlobSha": "6a93b831d8647d99181f7bdd5d0880871ac8efd0",
-  "rollingBlobSha": "b7309a074c6c53bbeecaad3d451222735e348f5d",
-  "stagingReviewBlobSha": "44f13b72bc4452fc263109beb36e4db8f2581270",
-  "handoffBlobSha": "35d506522b24c7d134349e14f6888b7c5d963bb6",
-  "auditBlobSha": "5b726c84b8ee02cb568cbc420e95dca3157aead1",
-  "writerRunId": 37113972024,
+  "formalReviewFile": "audit/review-2026-10-04-0800.json",
+  "formalReviewBlobSha": "2057dfa4d461fc68941a7920ba7eb57fb56652ba",
+  "pendingQueueFile": "audit/pending-review-2026-10-04-0800.json",
+  "pendingQueueBlobSha": "f75af8d32333023facce676da009602f7c83a7c5",
+  "rollingBlobSha": "761e63a91c4cbf9e7e1a333489d732f6289d7615",
+  "stagingReviewBlobSha": "2394f5f56913c6b976449278a8cab6d1e2e6a91e",
+  "handoffBlobSha": "2097fb8d8a5006933255b6e98e051603f6ce9dd0",
+  "auditBlobSha": "cf4417fb903879cf1c781861c4d988d7c70ca201",
+  "writerRunId": 37161416645,
   "writerEvent": "workflow_run",
-  "prepublishGateRunId": 37113953240,
-  "approvedSourceCommit": "db1932fa93732356caadc713b74b85d2c382b9b4",
-  "baseCommit": "db1932fa93732356caadc713b74b85d2c382b9b4"
+  "prepublishGateRunId": 37161402056,
+  "approvedSourceCommit": "7448b5fb5834ab3d4dbc16769606f8acf4531947",
+  "baseCommit": "0e6b7c479351033c8c1f5d26cc18c464a895e81a"
 }
