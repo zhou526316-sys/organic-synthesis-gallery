@@ -169,11 +169,11 @@ function html(meta, selected) {
   const doi = meta.doi;
   const id = slug(doi);
   const share = `${SITE_BASE}/share/${id}.html`;
-  const target = `${GALLERY_BASE}/?doi=${encodeURIComponent(doi)}&sharev=${encodeURIComponent(SHARE_BUILD_ID)}`;
+  const target = `${GALLERY_BASE}/?doi=${encodeURIComponent(doi)}&summary=1&sharev=${encodeURIComponent(SHARE_BUILD_ID)}`;
   const image = selected?.image || DEFAULT_IMAGE;
   const title = meta.titleZh || meta.title || doi;
   const secondary = [meta.journal, meta.date, `DOI: ${doi}`].filter(Boolean).join(' · ');
-  const description = `${secondary}${secondary ? ' — ' : ''}点击进入 Organic Synthesis Gallery，直接定位并高亮这篇文献卡片。`;
+  const description = `${secondary}${secondary ? ' — ' : ''}点击进入 Organic Synthesis Gallery，直接定位文献并打开摘要。`;
   const targetJson = JSON.stringify(target).replace(/</g, '\\u003c');
   const shareJson = JSON.stringify(share).replace(/</g, '\\u003c');
   const titleJson = JSON.stringify(title).replace(/</g, '\\u003c');
@@ -194,7 +194,7 @@ function html(meta, selected) {
 <meta property="og:url" content="${esc(share)}"><meta property="og:image" content="${esc(image)}"><meta property="og:image:secure_url" content="${esc(image)}">${imageDims}
 <meta property="og:image:alt" content="${esc(title)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(image)}">
 <link rel="image_src" href="${esc(image)}"><link rel="canonical" href="${esc(share)}"><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f5f7fb;color:#172033;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.paper{width:min(560px,100%);overflow:hidden;border:1px solid #dfe5ef;border-radius:20px;background:#fff;box-shadow:0 18px 48px rgba(23,32,51,.12)}.cover{display:grid;place-items:center;min-height:260px;padding:18px;background:#f8fafc}.cover img{display:block;width:100%;max-height:360px;object-fit:contain}.body{padding:18px}.site{color:#3159bd;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}h1{margin:8px 0 10px;font-size:20px;line-height:1.42}.meta{color:#667085;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.open{display:inline-flex;margin-top:15px;padding:10px 14px;border-radius:10px;background:#3159bd;color:#fff;text-decoration:none;font-size:13px;font-weight:800}.hint{margin-top:10px;color:#98a2b3;font-size:10px}</style></head><body>
-<article class="paper"><div class="cover"><img src="${esc(image)}" alt="${esc(title)}"></div><div class="body"><div class="site">Organic Synthesis Gallery</div><h1>${esc(title)}</h1><div class="meta">${esc(secondary)}</div><a class="open" href="${esc(target)}">立即进入文献库 →</a><div class="hint" data-share-status>正在进入有机合成文献库并定位这篇文献；目标卡片会保持 20 秒高亮。</div></div></article>
+<article class="paper"><div class="cover"><img src="${esc(image)}" alt="${esc(title)}"></div><div class="body"><div class="site">Organic Synthesis Gallery</div><h1>${esc(title)}</h1><div class="meta">${esc(secondary)}</div><a class="open" href="${esc(target)}">立即进入文献库 →</a><div class="hint" data-share-status>正在进入有机合成文献库并定位这篇文献；摘要会自动打开，目标卡片会保持 20 秒高亮。</div></div></article>
 <script>
 (function(){
   var params=new URLSearchParams(window.location.search);
