@@ -9,6 +9,7 @@ on:
       - 'public/wechat-featured/**'
       - 'assets/wechat-featured/**'
       - 'audit/automation-triggers/wechat-publisher-request.json'
+      - 'audit/automation-triggers/wechat-publish-request.json'
 
 permissions:
   contents: write
@@ -74,6 +75,11 @@ jobs:
               "paper_count": result.get("paper_count"),
               "draft_readback": result.get("draft_readback"),
               "preview_url": result.get("preview_url"),
+              "publish_id": result.get("publish_id"),
+              "publish_status": result.get("publish_status"),
+              "article_id": result.get("article_id"),
+              "article_url": result.get("article_url"),
+              "content_source_url": result.get("content_source_url"),
           }
           Path("audit/wechat-publisher/latest.json").write_text(
               json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
