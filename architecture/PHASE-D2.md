@@ -28,9 +28,11 @@ The entire feature is controlled by:
 
 `EVIDENCE_INDEX_SHADOW_ENABLED=1`
 
-The repository and production configuration do **not** set this variable in D2a. Therefore merging D2a alone produces no new D1 writes and no change to summary/handoff selection.
+D2a merged with this variable unset. D2a.1 enables it **only in the canonical production Worker deployment** after staging was isolated onto distinct Worker/D1/R2 resources.
 
-When disabled:
+D2a.1 changes only shadow metadata writes and backfill. It does not activate any index read path. The admin status contract must continue to report `readPathActive:false`.
+
+When disabled (rollback state):
 - Evidence import behaves exactly as before;
 - scheduled handoff behaves exactly as before;
 - admin status reports `enabled:false`;
@@ -63,6 +65,19 @@ Properties:
 - invalid metadata is counted and skipped rather than silently treated as valid.
 
 The backfill endpoint is authenticated and also requires the shadow feature flag.
+
+### D2a.1 live shadow advancement
+
+After each canonical Worker deploy, the deployment workflow may advance at most four R2 pages (500 Evidence objects per page) using the persisted cursor. This is an operational budget, not a correctness ceiling: unfinished backfill remains resumable on the next canonical deployment.
+
+After advancement the workflow:
+- confirms `enabled:true` and `readPathActive:false`;
+- reads the legacy R2 Evidence inventory;
+- reads up to 1000 D1 index rows;
+- once backfill is complete, requires D1 and legacy counts to agree;
+- when the current count is <=1000, compares DOI, Evidence packet hash and source hash row by row.
+
+This reconciliation step is `continue-on-error` so a shadow defect cannot take down the existing site. A failure blocks D2b activation, not current Evidence capture or summary publication.
 
 ## Admin-only shadow endpoints
 
@@ -99,7 +114,7 @@ Those existing functions still scan R2 exactly as before.
 
 Do not switch Evidence discovery to D1 until all are true:
 
-1. shadow flag is enabled intentionally;
+1. live shadow flag is enabled intentionally through the canonical Worker deploy;
 2. cursor backfill reports complete;
 3. index count/hash identities reconcile with R2 metadata;
 4. newly imported Evidence dual-writes consistently;
