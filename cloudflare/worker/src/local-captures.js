@@ -1,3 +1,4 @@
+import { publicationPage } from './publication-pagination.js';
 import { storeVerifiedStage } from './stage-storage.js';
 import { normalizeDoi } from './media.js';
 import { importFigure, importToc } from './media-write.js';
@@ -212,6 +213,29 @@ async function readTampermonkeyReportIndex(env) {
   }
 }
 
+// A successful body packet survives later TOC-only/failed diagnostics. It is
+// evidence only: existing per-image marker/hash/DOI/TOC/atomic gates still decide.
+function completedFigurePacket(row) {
+  return Boolean(row && normalizeDoi(row.doi) && row.captureVersion==='6.2.20'
+    && row.final===true && row.status==='success' && String(row.mediaNeed||'').includes('figures')
+    && /^[a-z0-9-]{16,80}$/i.test(String(row.jobId||''))
+    && Number(row.updatedAt)>=MEDIA_REBUILD_EPOCH
+    && Number(row.figuresDiscovered)>0 && Number(row.figuresStored)===Number(row.figuresDiscovered)
+    && captureBelongsToDoi(row,normalizeDoi(row.doi)));
+}
+function latestCompletedFigurePacket(item) {
+  return [item?.completedFigurePacket,item,...(item?.attempts||[])]
+    .filter(completedFigurePacket).sort((a,b)=>Number(b.updatedAt)-Number(a.updatedAt))[0]||null;
+}
+function publicationReportRows(index) {
+  return Object.values(index.items||{}).map(latestCompletedFigurePacket).filter(Boolean)
+    .map(p=>({doi:p.doi,jobId:p.jobId,captureVersion:p.captureVersion,controllerRevision:p.controllerRevision,
+      mediaNeed:p.mediaNeed,final:p.final,status:p.status,tocStatus:p.tocStatus,
+      figuresDiscovered:p.figuresDiscovered,figuresStored:p.figuresStored,figureLabels:p.figureLabels||[],
+      articleUrl:p.articleUrl,sourceUrl:p.sourceUrl,updatedAt:p.updatedAt,finishedAt:p.finishedAt}))
+    .sort((a,b)=>a.doi.localeCompare(b.doi));
+}
+
 function reportAttemptSummary(report, reportKey, attemptId) {
   return {
     attemptId,
@@ -388,6 +412,7 @@ export async function importTampermonkeyReport(request, env, payload) {
       ? now
       : Number(previous.lastFailureAt || failureAttempts[0]?.updatedAt || 0),
     attempts: recentAttempts,
+    completedFigurePacket: latestCompletedFigurePacket({...previous,attempts}),
     updatedAt: now,
   };
   index.items[doi].attemptCount = Math.max(
@@ -422,6 +447,8 @@ export async function importTampermonkeyReport(request, env, payload) {
 }
 
 export async function getTampermonkeyReports(request, env) {
+  if(new URL(request.url).searchParams.get('publication')==='1')
+    return publicationPage(request,env,TAMPERMONKEY_REPORT_INDEX_KEY,'reports',publicationReportRows);
   if (!env?.MEDIA) return { status: 503, body: { error: 'R2 binding MEDIA is not configured.' } };
   const url = new URL(request.url);
   const doi = normalizeDoi(url.searchParams.get('doi') || '');
@@ -584,6 +611,10 @@ async function readStrictCaptureIndex(env,key) {
 }
 
 export async function getStagedArticleFigures(request, env) {
+  if(new URL(request.url).searchParams.get('publication')==='1')
+    return publicationPage(request,env,ARTICLE_FIGURE_STAGE_INDEX_KEY,'stage',index=>Object.values(index.items||{})
+      .filter(item=>{const doi=normalizeDoi(item?.doi);return doi&&Number(item.updatedAt)>=MEDIA_REBUILD_EPOCH&&captureBelongsToDoi(item,doi);})
+      .sort((a,b)=>String(a.doi).localeCompare(String(b.doi))||String(a.id).localeCompare(String(b.id))));
   if(new URL(request.url).searchParams.get('inventory')==='1'){
     if(!env?.MEDIA)return {status:503,body:{error:'capture_inventory_unavailable'}};
     try{
