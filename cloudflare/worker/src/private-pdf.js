@@ -54,7 +54,10 @@ export async function bootstrapPrivatePdfOwner(request, env, payload) {
   const userId = await authenticatedSessionUserId(request, env);
   if (!userId) return { status: 401, body: { error: 'not_authenticated' } };
   const code = typeof payload?.claimCode === 'string' ? payload.claimCode.trim() : '';
-  if (!code || await sha256Hex(code) !== BOOTSTRAP_HASH) return { status: 403, body: { error: 'invalid_owner_claim' } };
+  const claimHash = /^[a-f0-9]{64}$/i.test(String(env.PRIVATE_PDF_OWNER_BOOTSTRAP_HASH || ''))
+    ? String(env.PRIVATE_PDF_OWNER_BOOTSTRAP_HASH).toLowerCase()
+    : BOOTSTRAP_HASH;
+  if (!code || await sha256Hex(code) !== claimHash) return { status: 403, body: { error: 'invalid_owner_claim' } };
   const verified = await env.DB.prepare('SELECT 1 AS ok FROM user_email_verifications WHERE user_id = ? LIMIT 1').bind(userId).first();
   if (!verified?.ok) return { status: 403, body: { error: 'verified_email_required' } };
   const existing = await env.DB.prepare('SELECT user_id FROM user_capabilities WHERE capability = ? LIMIT 1').bind(OWNER_CAPABILITY).first();
