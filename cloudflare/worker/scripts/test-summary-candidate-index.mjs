@@ -211,7 +211,7 @@ test('comparison detects a divergent job index instead of hiding it',()=>{
 });
 
 test('production review selector remains legacy R2 path in D2b1 foundation',()=>{
-  const source=readFileSync('../src/summary-review.js','utf8');
+  const source=readFileSync('src/summary-review.js','utf8');
   const start=source.indexOf('export async function runSummaryReviewOnce');
   const end=source.indexOf('export async function getSummaryReviewStatus',start);
   assert.ok(start>0&&end>start);
