@@ -1,6 +1,6 @@
 # Event-driven fixed-slot release handoff
 
-Operational repair, 2026-10-01. This adds no schedule, changes no admission time, and grants no off-slot admissions. The existing 08:00/18:00 ChatGPT task remains enabled; failure of one run is not authority to disable that task.
+Operational repair, 2026-10-01. This adds no schedule, changes no admission time, and grants no off-slot admissions. The sole daily 08:00 ChatGPT release task remains enabled; failure of one run is not authority to disable that task.
 
 ## Problem verified
 
@@ -22,7 +22,7 @@ For an event-driven writer, release-execution-result.json records writerRunId, t
 
 The delivery finalizer already skips successful Pages workflows without a unique live-verification receipt. A receipt establishes delivery only; it does not invent post-release semantic quality closure or advance verifiedThrough.
 
-The fixed 08:00/18:00 assistant task should inspect the same-slot writer first. If that writer is armed, running, or already delivered, reuse and verify it; do not race it with another trigger/ref write or duplicate authority lock. The existing trigger bridge is only a fallback if no valid same-slot writer exists. Review incompleteness still blocks itself or the global batch according to the existing scope contract.
+The daily 08:00 assistant task should inspect the same-slot writer first. If that writer is armed, running, or already delivered, reuse and verify it; do not race it with another trigger/ref write or duplicate authority lock. The existing trigger bridge is only a fallback if no valid same-slot writer exists. Review incompleteness still blocks itself or the global batch according to the existing scope contract.
 
 ## Acceptance
 

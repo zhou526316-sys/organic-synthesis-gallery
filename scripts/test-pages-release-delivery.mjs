@@ -4,7 +4,7 @@ import { gzipSync } from 'node:zlib';
 import { readFileSync } from 'node:fs';
 import { collectPapers, sameSet, normalizeDoi, assertPartition, trustedReleaseEvent, isDirectReleaseHandoff, compareProtected, mergeDeliveryState } from './pages-release-delivery.mjs';
 const a = '10.1021/jacs.test1', b = '10.1021/jacs.test2', c = '10.1021/jacs.test3';
-const marker = { mode: 'slot-release', publicationSlot: '2026-09-29T18:00:00+08:00', productionCards: 1, publishableDois: [a], rejectedDois: [b], deferredDois: [c] };
+const marker = { mode: 'slot-release', publicationSlot: '2026-09-29T08:00:00+08:00', productionCards: 1, publishableDois: [a], rejectedDois: [b], deferredDois: [c] };
 const evidence = { schemaVersion: 2, ok: true, chineseTitlesVerified: true, architectureVerified: true, publicationSlot: marker.publicationSlot, productionCards: 1,
   publishableDois: [a], rejectedDois: [b], deferredDois: [c], verifiedAt: '2026-09-29T15:40:00Z', markerCommit: 'm', sourceCommit: 's', runId: 1 };
 test('DOI normalization', () => assert.equal(normalizeDoi('https://doi.org/10.1021/JACS.test1?x=1'), a));
@@ -21,7 +21,7 @@ test('missing accepted DOI fails even at the same count', () => assert.throws(()
 test('protected input SHA changes block stale deployment', () => assert.throws(() => compareProtected({ a: 'one' }, { a: 'two' }), /superseded/));
 test('protected file set cannot shrink', () => assert.throws(() => compareProtected({ a: 'one' }, {}), /file_set/));
 const event = { workflow_run: { name: 'Fixed-slot literature release writer', path: '.github/workflows/literature-fixed-slot-release.yml',
-  conclusion: 'success', event: 'push', head_branch: 'automation/release-20260929-1800', head_sha: 'a'.repeat(40), head_repository: { full_name: 'owner/repo' } } };
+  conclusion: 'success', event: 'push', head_branch: 'automation/release-20260929-0800', head_sha: 'a'.repeat(40), head_repository: { full_name: 'owner/repo' } } };
 test('completed trusted writer may hand off to main deployment', () => assert.equal(trustedReleaseEvent(event, 'owner/repo').conclusion, 'success'));
 test('fork cannot enter privileged deployment handoff', () => assert.throws(() => trustedReleaseEvent(event, 'other/repo'), /repository_mismatch/));
 test('failed writer cannot admit production', () => assert.throws(() => trustedReleaseEvent({ workflow_run: { ...event.workflow_run, conclusion: 'failure' } }, 'owner/repo'), /not_successful/));

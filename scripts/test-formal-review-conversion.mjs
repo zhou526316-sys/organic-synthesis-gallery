@@ -21,7 +21,7 @@ function fixture() {
     { doi: '10.99999/converter-pending', journal: 'CCS Chemistry', date: '2026-09-22', title: 'Synthetic ambiguous paired electrochemistry article', reviewPriority: 'high', abstract: '' },
   ];
   const active = TARGET_JOURNALS.filter(row => row.activeFrom <= '2026-09-22');
-  const handoff = { generatedAt: '2026-09-22T09:35:00.000Z', endDate: '2026-09-22',
+  const handoff = { generatedAt: '2026-09-21T23:35:00.000Z', endDate: '2026-09-22',
     summary: { unresolved: 3, ...metrics }, discoveryGate: metrics,
     activeJournals: active.map(row => ({ name: row.name })), unresolved: input };
   const decisions = input.map((row, i) => ({ doi: row.doi, title: row.title,
@@ -30,8 +30,8 @@ function fixture() {
   Object.assign(decisions[2], { evidenceNeeded: 'Obtain the missing synthetic product and substrate scope evidence from the fixture publisher.',
     attemptedEvidencePages: ['https://example.invalid/fixture-paper'], nextAction: 'Recheck the missing preparative scope evidence at the next fixed review slot.' });
   const staging = {
-    publicationSlot: '2026-09-22T18:00:00+08:00', handoffGeneratedAt: handoff.generatedAt,
-    updatedAt: '2026-09-22T09:40:00.000Z', status: 'incomplete_review', readyToPublish: false,
+    publicationSlot: '2026-09-22T08:00:00+08:00', handoffGeneratedAt: handoff.generatedAt,
+    updatedAt: '2026-09-21T23:40:00.000Z', status: 'incomplete_review', readyToPublish: false,
     reviewed: 3, acceptedCount: 1, rejectedCount: 1, pendingCount: 1,
     summary: { reviewed: 3, accepted: 1, rejected: 1, pending: 1 }, decisions,
     qualityControl: { secondPassCompleted: true, unresolvedDisagreements: 0,
@@ -100,9 +100,10 @@ test('bundle_blob_hash_matches_git_hash_object_for_exact_utf8_bytes', () => {
   assert.equal(git.status, 0); assert.equal(out.markerFields.reviewBlobSha, git.stdout.trim());
   assert.equal(gitBlobSha(serialize(out.pendingQueue)), out.markerFields.pendingQueueBlobSha);
 });
-test('next_fixed_slot_handles_morning_and_year_rollover', () => {
-  assert.equal(nextPublicationSlot('2026-09-23T08:00:00+08:00'), '2026-09-23T18:00:00+08:00');
-  assert.equal(nextPublicationSlot('2026-12-31T18:00:00+08:00'), '2027-01-01T08:00:00+08:00');
+test('next_daily_slot_handles_day_and_year_rollover', () => {
+  assert.equal(nextPublicationSlot('2026-09-23T08:00:00+08:00'), '2026-09-24T08:00:00+08:00');
+  assert.equal(nextPublicationSlot('2026-12-31T08:00:00+08:00'), '2027-01-01T08:00:00+08:00');
+  assert.throws(() => nextPublicationSlot('2026-09-23T18:00:00+08:00'), /invalid_publication_slot/);
   assert.throws(() => nextPublicationSlot('2026-02-30T08:00:00+08:00'), /invalid_publication_slot/);
 });
 rejected('missing_candidate_is_not_a_deferral', f => f.staging.decisions.pop(), /complete_candidate_partition_required/);
@@ -137,7 +138,7 @@ test('full_finalized_batch_has_empty_deferred_queue', () => {
 });
 
 const root = await mkdtemp(path.join(tmpdir(), 'gallery-conversion-test-'));
-const inputPath = 'audit/prepublish-review-2026-09-22-1800.json';
+const inputPath = 'audit/prepublish-review-2026-09-22-0800.json';
 async function cli(f, strict) {
   await mkdir(path.join(root, 'audit'), { recursive: true });
   const inputs = [[inputPath, f.staging], ['audit/unresolved-latest.json', f.handoff], ['audit/latest.json', f.latest]];

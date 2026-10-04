@@ -28,7 +28,7 @@ A successful atomic literature release must not rely on a GitHub Actions `GITHUB
 2. The `refresh_toc` job checks that the release commit is an ancestor of current `main`, revalidates the fixed-slot marker, rebuilds `public/toc-demand-live.json` and all TOC queues from current production data, verifies `webpageDoiCount === productionCards`, and pushes that derived queue commit to `main` without force.
 3. The `deploy_pages` job calls `.github/workflows/github-pages.yml` directly through `workflow_call`, passing the exact TOC-refresh commit as `deployment_ref`. This preserves `literature_authorization` as a mandatory pre-build/pre-deploy gate while avoiding recursive-push assumptions.
 
-If the release writer succeeds but either TOC refresh or Pages deployment fails, the release is not reported as fully synchronized. Do not compensate by adding another literature batch off-slot. Retry only the already-authorized derived TOC/Pages synchronization, or leave the state fail-closed for the next operator/run. This chain does not alter the 08:00/18:00 admission schedule and does not authorize late admissions.
+If the release writer succeeds but either TOC refresh or Pages deployment fails, the release is not reported as fully synchronized. Do not compensate by adding another literature batch off-slot. Retry only the already-authorized derived TOC/Pages synchronization, or leave the state fail-closed for the next operator/run. This chain does not alter the sole daily 08:00 admission schedule and does not authorize late admissions.
 
 ## Atomic marker v2 for the next literature release
 
@@ -37,7 +37,7 @@ Read the current `audit/publication-release-state.json` before writing. Do not u
 The marker must contain:
 
 - `schemaVersion: 2`, `mode: "slot-release"`, `releasePolicy: "per-doi"` (or `full-review-closure` only for a fully finalized batch).
-- `publicationSlot` in `YYYY-MM-DDT08:00:00+08:00` or `YYYY-MM-DDT18:00:00+08:00`, `productionCards`, `handoffGeneratedAt`.
+- `publicationSlot` in `YYYY-MM-DDT08:00:00+08:00`, `productionCards`, `handoffGeneratedAt`.
 - `protectedBlobs`: exact Git blob SHA mapping for the seven production literature datasets plus `shared/literature-policy.js`, as listed in `PROTECTED_FILES` in the authorization script.
 - `reviewFile` / `reviewBlobSha`: formal `audit/review-*.json` artifact created in the same commit as the marker.
 - `stagingReviewFile` / `stagingReviewBlobSha`: prepublish decisions used by this release.
@@ -58,14 +58,14 @@ Use `scripts/convert-prepublish-review.mjs` as described in `docs/formal-review-
 
 ## Scope and remaining work
 
-No new scheduled task or new fetch cycle is added by this change. The existing 07:05/17:05, 07:35/17:35 and 08:00/18:00 stages remain. Fixed-slot commit-time handling retains the existing slot validator for this batch; its 20-minute technical bound is NOT approval for another task to perform arbitrary late publication. The release task must also enforce logical slot, frozen review cutoff, and actual deployment-time reporting. Timing-policy consolidation is not silently solved by this document.
+No new scheduled task or new fetch cycle is added by this change. The active stages are 07:05 review, 07:35 recovery and the sole 08:00 release. Fixed-slot commit-time handling retains the existing slot validator for this batch; its 20-minute technical bound is NOT approval for another task to perform arbitrary late publication. The release task must also enforce logical slot, frozen review cutoff, and actual deployment-time reporting. Timing-policy consolidation is not silently solved by this document.
 
 Authorization and formal conversion do not yet prove final generated artifact DOI equality, post-deployment DOI/search equality, or automatic `synced` state. Those must be verified separately against the same release version before declaring publication success. The older validator's annotated-row challenge fix is already in main and covered by its existing deferred-publication regression tests. Release → TOC refresh → Pages deployment sequencing is now explicit in the fixed-slot writer; post-deployment semantic handling of late-indexed candidates, audit deduplication and notification settings remain separate work.
 
 
 ## Immediate confirmed scope removals — user amendment, 2026-09-23
 
-The user explicitly authorizes immediate removal of confirmed out-of-scope articles, without waiting for 18:00. This amendment supersedes earlier wording that required deletions to wait for a fixed slot. New admissions remain restricted to 08:00/18:00, and pending or insufficiently reviewed articles must not be disguised as confirmed exclusions.
+The user explicitly authorizes immediate removal of confirmed out-of-scope articles, without waiting for the next 08:00 release. This amendment supersedes earlier wording that required deletions to wait for a fixed slot. New admissions remain restricted to the daily 08:00 release, and pending or insufficiently reviewed articles must not be disguised as confirmed exclusions.
 
 The dedicated `scope-correction` marker (schema 3) allows ONLY removal of explicitly reviewed, registered DOI(s), with no added DOI, no changes to retained records or scope-policy code. It binds the previous authorized marker/parent, the exact correction registry, the two-pass correction review and the user's recorded authorization by Git blob SHA. All affected production data and the marker/review are committed atomically. The Pages gate verifies deletion-only differences and revalidates the previous authorized snapshot; it is never disabled. Historical pending and source-closure dates are preserved.
 

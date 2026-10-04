@@ -12,7 +12,7 @@ The user's latest instruction is: **one pending paper must not block other paper
 
 - The complete fresh compact handoff must be accounted for: every DOI has an evidence-based include/exclude/pending outcome. Missing candidate rows, truncated handoffs, unfinished challenge review, unaccounted evidence gaps, `criticalSourceFailures`, `sourceFamilyGaps`, `historicalCoverageLosses`, stale snapshots, or concurrent authoritative conflicts remain global blockers. A nonzero `sourceCoverageAnomalies` value is not by itself a fixed-slot publication blocker when both configured source families remain healthy and the paired compact/latest generations and candidate counts are complete: already discovered DOI(s) that finished evidence-based two-pass review stay eligible for `publishableDois`. The anomaly remains a closure warning, blocks `verifiedThrough` advancement across the affected date, and must be rechecked in later audits. `closureCoverageAnomalies` likewise constrain closure depth rather than clearing an otherwise valid release allowlist. Do not relabel unread work as pending merely to pass a gate.
 - Include records must each have evidenceBasis and a confirming challenge decision/reason. Only the validator's explicit `publishableDois` allowlist can enter production. Exclude records remain excluded. A narrowly justified pending record retains both passes, attempted evidence URLs, missing-evidence details and a retry action; it stays out of production.
-- At 08:00 / 18:00, release the verified include subset even when documented pending DOI(s) remain. Do not change pending into exclude, delete its audit history, or invent evidence to unblock a release. No arbitrary later off-slot publication is authorized.
+- At the sole daily 08:00 release, publish the verified include subset even when documented pending DOI(s) remain. Do not change pending into exclude, delete its audit history, or invent evidence to unblock a release. No arbitrary later off-slot publication is authorized.
 - Production preflight uses `scripts/validate-prepublish-review.mjs <review> --allow-deferred --require-ready` AND `scripts/check-prepublish-readiness.mjs <review> --allow-deferred --require-ready`. Both actual runner checks must succeed for the current snapshot/code. Default checks without `--allow-deferred` measure full-review closure, not permission to release the verified subset.
 - `ready_with_pending` means a verified subset is ready, not that every paper is finalized. `reviewComplete=false` and the actual pending count must remain visible. Legacy staging `incomplete_review` flags caused solely by documented pending records must not reintroduce an all-or-nothing block; readiness is recomputed from the full decision set. Explicit global blockers and approval/concurrent-conflict states still stop release.
 - Persist all pending objects in the formal review's `pending[]` and `state.pendingReviewBacklog[]`, merging previous unresolved backlog rather than replacing it. Each backlog object preserves DOI, title, journal, original publication date, missing evidence, attempted sources, `sourceReviewFile` and `nextAction`. Read this backlog before every subsequent pre-review/recovery, including when a DOI moves outside the rolling window. Remove it only after a later evidenced final decision. Previously pending is never equivalent to rejected.
@@ -63,24 +63,24 @@ The primary scheduled literature task owns capability selection, candidate disco
 
 The primary task must always use the currently selected latest stable capability rather than a permanently hard-coded historical scraping implementation.
 
-## Fixed production release slots: 08:00 / 18:00 Asia/Shanghai
+## Fixed production release slot: 08:00 Asia/Shanghai
 
-The production Gallery has exactly two literature release slots each day: **08:00 and 18:00 Asia/Shanghai**. Discovery, machine audit, publisher checking, semantic review, and challenge review happen before those slots. They must not cause production literature cards to appear early.
+The production Gallery has exactly one literature release slot each day: **08:00 Asia/Shanghai**. Discovery, machine audit, publisher checking, semantic review, and challenge review happen before that slot. They must not cause production literature cards to appear early.
 
 The release pipeline is staged:
 
-1. Around 06:55 / 16:55, GitHub Actions runs an independent machine discovery safety audit.
-2. At 07:05 / 17:05, the primary assistant pre-review consumes a fresh snapshot, using the explicit push-trigger bridge only when needed, and performs semantic/challenge review.
-3. At 07:35 / 17:35, the pre-release recovery task refreshes machine discovery when needed and reviews the late-arriving DOI delta plus pending evidence. Do not cancel a healthy current audit by repeatedly triggering it.
-4. At 08:00 / 18:00, the production release task alone converts staging into formal `audit/review-*.json`, writes the verified include subset into production literature data, refreshes `public/toc-demand-live.json`, and triggers Pages.
+1. Around 06:55, GitHub Actions runs an independent machine discovery safety audit.
+2. At 07:05, the primary assistant pre-review consumes a fresh snapshot, using the explicit push-trigger bridge only when needed, and performs semantic/challenge review.
+3. At 07:35, the pre-release recovery task refreshes machine discovery when needed and reviews the late-arriving DOI delta plus pending evidence. Do not cancel a healthy current audit by repeatedly triggering it.
+4. At 08:00, the production release task alone converts staging into formal `audit/review-*.json`, writes the verified include subset into production literature data, refreshes `public/toc-demand-live.json`, and triggers Pages.
 
-Pre-release assistant work must persist decisions only to `audit/prepublish-review-YYYY-MM-DD-0800.json` or `audit/prepublish-review-YYYY-MM-DD-1800.json`. These files are deliberately outside the formal `review-*.json` decision namespace and do not alter the authoritative accepted/excluded history.
+Pre-release assistant work must persist decisions only to `audit/prepublish-review-YYYY-MM-DD-0800.json`. These files are deliberately outside the formal `review-*.json` decision namespace and do not alter the authoritative accepted/excluded history.
 
 Global incompleteness at the slot fails closed: keep the previous verified production snapshot, record `publication_missed` / `incomplete_review`, and carry the unfinished work to the next slot. Documented single-paper pending is not global incompleteness: apply the per-DOI amendment above. Do not publish at arbitrary off-slot times merely because review eventually finishes.
 
 Snapshot `generatedAt` must fall in the target slot's preceding 65 minutes and not after the slot; both diagnostic and compact `endDate` must be the target Beijing date. A prior-evening test snapshot is not the next morning's fresh audit. Never backdate a newer audit.
 
-A Pages deployment may take a few minutes after the slot-time release commit. Record the logical production release event and actual deployment completion separately. No other scheduled task may introduce new production literature data between the two release slots.
+A Pages deployment may take a few minutes after the slot-time release commit. Record the logical production release event and actual deployment completion separately. No other scheduled task may introduce new production literature data outside the daily 08:00 release.
 
 TOC/Graphical Abstract availability remains downstream and non-blocking. Every accepted-literature production commit must feed the browser-side TOC demand path. Tampermonkey/VPN Bridge remains the sole publisher-media acquisition mainline for TOC/Graphical Abstract/Figure 1/body figures; OA PDF/HTML extraction is not part of the literature-release pipeline.
 
@@ -135,14 +135,14 @@ Inspect the actual run. If the triggering task ends after the push, later tasks 
 
 ## Scheduled automation
 
-Morning and evening follow identical staged rules: independent machine audit approximately 06:55/16:55, assistant main review 07:05/17:05, recovery 07:35/17:35, production release 08:00/18:00 only. Do not self-disable, reschedule, or create replacement tasks while executing a scheduled run. Media remains Tampermonkey/VPN Bridge only.
+The daily staged rule is: independent machine audit at approximately 06:55, assistant main review at 07:05, recovery at 07:35, and production release at 08:00 only. Do not self-disable, reschedule, or create replacement tasks while executing a scheduled run. Media remains Tampermonkey/VPN Bridge only.
 
 Before final user-visible reporting, synchronize the full response under audit/gpt-responses as required by PROJECT_RULES.md. Report actual published and deferred counts, source limitations, commits/runs, deployment/online verification, TOC demand and separate publication/closure status.
 
 
 ## User scope corrections and bilingual title contract — 2026-09-23
 
-Read `audit/literature-scope-corrections.json` before reviewing or publishing, including already visible DOI(s). Explicit exclusions supersede older include decisions; they do not establish a blanket ban on all polymer or biocatalytic methods. The machine handoff includes registered corrections still visible in the Gallery and marks them `scopeCorrection`; these are correction candidates, not newly discovered publisher records. Respect the fixed 08:00/18:00 production-data release slots and report queued removals separately from actual removals.
+Read `audit/literature-scope-corrections.json` before reviewing or publishing, including already visible DOI(s). Explicit exclusions supersede older include decisions; they do not establish a blanket ban on all polymer or biocatalytic methods. The machine handoff includes registered corrections still visible in the Gallery and marks them `scopeCorrection`; these are correction candidates, not newly discovered publisher records. Respect the sole daily 08:00 production-data release slot and report queued removals separately from actual removals.
 
 For every include, record article-specific primary contribution, preparative transformation and evidence for scope/general synthetic utility. Sequence/material/interfacial performance, membrane activity, AI protein/domain design or pathway engineering is not enough merely because a product is synthesized. Do not reuse a generic challenge paragraph as evidence. Preserve genuine small-molecule biocatalysis and enabling total synthesis. Recheck comparable boundary entries without blanket deletion.
 
@@ -151,7 +151,7 @@ Write a checked `titleZh` alongside every new accepted English title before rele
 
 ## Immediate confirmed scope removals — user amendment, 2026-09-23
 
-The user explicitly authorizes immediate removal of confirmed out-of-scope articles, without waiting for 18:00. This amendment supersedes earlier wording that required deletions to wait for a fixed slot. New admissions remain restricted to 08:00/18:00, and pending or insufficiently reviewed articles must not be disguised as confirmed exclusions.
+The user explicitly authorizes immediate removal of confirmed out-of-scope articles, without waiting for the next 08:00 release. This amendment supersedes earlier wording that required deletions to wait for a fixed slot. New admissions remain restricted to the daily 08:00 release, and pending or insufficiently reviewed articles must not be disguised as confirmed exclusions.
 
 The dedicated `scope-correction` marker (schema 3) allows ONLY removal of explicitly reviewed, registered DOI(s), with no added DOI, no changes to retained records or scope-policy code. It binds the previous authorized marker/parent, the exact correction registry, the two-pass correction review and the user's recorded authorization by Git blob SHA. All affected production data and the marker/review are committed atomically. The Pages gate verifies deletion-only differences and revalidates the previous authorized snapshot; it is never disabled. Historical pending and source-closure dates are preserved.
 

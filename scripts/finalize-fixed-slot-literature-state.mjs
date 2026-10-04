@@ -44,7 +44,7 @@ assert(sameSet(unresolvedDois, expectedUnresolvedDois),
 for (const row of carryoverRows) {
   const doi = norm(row.doi);
   assert(row.decision === 'include' && row.status === 'ready_for_next_slot', `invalid next-slot carryover status: ${doi}`);
-  assert(/^\d{4}-\d{2}-\d{2}T(?:08|18):00:00\+08:00$/.test(String(row.nextPublicationSlot || ''))
+  assert(/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(String(row.nextPublicationSlot || ''))
     && Date.parse(row.nextPublicationSlot) > Date.parse(marker.publicationSlot), `invalid next-slot carryover time: ${doi}`);
 }
 assert(formal.summary?.accepted === marker.publishableDois.length, 'formal accepted count mismatch');

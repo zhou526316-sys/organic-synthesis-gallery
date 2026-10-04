@@ -1,6 +1,6 @@
 # Prepublish record validity and target-slot readiness
 
-Context: Organic Synthesis Gallery; supplement to docs/literature-update-protocol.md. Production literature release slots remain 08:00 and 18:00 Asia/Shanghai. This document does not authorize off-slot publication or change the candidate inclusion policy.
+Context: Organic Synthesis Gallery; supplement to docs/literature-update-protocol.md. The sole production literature release slot is 08:00 Asia/Shanghai each day. This document does not authorize off-slot publication or change the candidate inclusion policy.
 
 ## Three separate outcomes
 
@@ -14,9 +14,9 @@ scripts/check-prepublish-readiness.mjs is a complementary read-only wrapper. It 
 
 ## Snapshot freshness
 
-The accepted audit-generation interval is the target slot minus 65 minutes through the target slot: 06:55–08:00 for morning and 16:55–18:00 for evening. Both diagnostic and compact endDate must equal the target Beijing publication date. Their generatedAt values and the review handoffGeneratedAt must match.
+The accepted audit-generation interval is 06:55–08:00 Asia/Shanghai for the sole daily release. Both diagnostic and compact endDate must equal the target Beijing publication date. Their generatedAt values and the review handoffGeneratedAt must match.
 
-For 2026-09-23 08:00, the primary date window is 2026-09-21 through 2026-09-23, with the existing seven-day machine safety tail and activation-date limits retained. A 2026-09-22 evening audit may supply reusable review evidence, but not replace the morning fresh snapshot. Reconcile all carried-over decisions against that fresh candidate set; review new or materially changed evidence rather than simply changing timestamps.
+For 2026-09-23 08:00, the primary date window is 2026-09-21 through 2026-09-23, with the existing seven-day machine safety tail and activation-date limits retained. Earlier audit evidence may be reused only after reconciliation against the fresh 06:55–08:00 candidate snapshot; review new or materially changed evidence rather than simply changing timestamps.
 
 ## CI evidence
 

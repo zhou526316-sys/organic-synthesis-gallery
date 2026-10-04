@@ -33,6 +33,15 @@ jobs:
       - name: Test Tampermonkey architecture membership observer
         run: node --test scripts/test-tm-architecture-membership.mjs
 
+      - name: Test daily 08:00 literature release contracts
+        run: |
+          node --test scripts/test-fixed-slot-release-handoff.mjs scripts/test-pages-release-delivery.mjs
+          node scripts/test-prepublish-readiness.mjs
+          node scripts/test-prepublish-slot-window.mjs
+          node scripts/test-per-doi-release.mjs
+          node scripts/test-deferred-publication-quality.mjs
+          node scripts/test-formal-review-conversion.mjs
+
       - name: Test and build inactive architecture public bundle
         run: |
           node --test scripts/test-gallery-architecture-public.mjs

@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import { createHash, webcrypto } from 'node:crypto';
 
 const source=fs.readFileSync('public/toc-mainline.user.js','utf8');
+// Installer revisions advance independently; this gate binds metadata consistency, not a stale release number.
 const begin=source.indexOf('// BEGIN ARCHITECTURE MEMBERSHIP CORE v1');
 const end=source.indexOf('// END ARCHITECTURE MEMBERSHIP CORE v1');
 assert.ok(begin>0&&end>begin,'membership core markers missing');
@@ -49,7 +50,10 @@ function fixture(){
 }
 
 test('actual userscript keeps capture protocol while advancing install metadata',()=>{
-  assert.match(source,/^\/\/ @version\s+6\.2\.25$/m);
+  const metadataVersion=source.match(/^\/\/ @version\s+([^\s]+)$/m)?.[1]||'';
+  const installRevision=source.match(/var INSTALL_REVISION = '([^']+)';/)?.[1]||'';
+  assert.match(metadataVersion,/^6\.2\.\d+$/);
+  assert.equal(installRevision,metadataVersion);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
@@ -94,13 +98,16 @@ test('observer result and failure reason are attached to existing diagnostic tra
   assert.ok(source.includes("event:'verified_snapshot'"));
   assert.ok(source.includes("observerState.ok===true?'observer_ok':'verification_failed'"));
   assert.ok(source.includes("architecture-membership-observer-v1"));
-  assert.ok(source.includes("var INSTALL_REVISION = '6.2.25';"));
+  const metadataVersion=source.match(/^\/\/ @version\s+([^\s]+)$/m)?.[1]||'';
+  assert.ok(source.includes(`var INSTALL_REVISION = '${metadataVersion}';`));
   assert.ok(source.includes("installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:''"));
   assert.ok(source.includes("trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[]).concat(architectureObserverEvent?[architectureObserverEvent]:[])"));
 });
 test('self-contained Bridge gets a diagnostic install-version bump while capture protocol stays fixed',()=>{
   const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-  assert.ok(loader.includes("const loaderVersion = '2.2.43';"));
+  const loaderVersion=loader.match(/const loaderVersion = '([^']+)';/)?.[1]||'';
+  assert.match(loaderVersion,/^2\.2\.\d+$/);
+  assert.ok(Number(loaderVersion.split('.')[2]) >= 41);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
