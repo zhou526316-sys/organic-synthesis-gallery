@@ -1,47 +1,36 @@
-# WeChat daily publisher
+# WeChat draft-first preview
 
-Initial production-safe helper for building the Official Account daily literature
-index from the Gallery's latest verified publication receipt.
+This preview workflow treats the WeChat Official Account draft as the only
+source of truth.
 
-## Safety
+Flow:
 
-- Reads `WECHAT_MP_APP_ID` and `WECHAT_MP_APP_SECRET` from
-  `/etc/osg-wechat-relay/env`.
-- Never prints the AppSecret or access token.
-- Default mode only renders a local HTML preview.
-- `--create` uploads/reuses a permanent cover and writes one draft.
-- It does not call `freepublish/submit` and does not call mass-send APIs.
+1. Build article content.
+2. Create or update the actual WeChat draft.
+3. Call `draft/get` and read the stored draft back from WeChat.
+4. Render a preview page from the returned `news_item[0].content`.
+5. Publish that preview under `https://relay.gczhouwld.com/wechat-preview/<token>.html`.
 
-## Preview
+The preview page must never be authored independently from the draft.
 
-```bash
-cd /opt/organic-synthesis-gallery
-sudo git pull --ff-only
-sudo python3 ops/wechat-publisher/create-draft.py
-```
-
-## Cover requirement
-
-The draft cover is uploaded as a permanent WeChat `thumb` material. The helper
-converts the repository PNG placeholder to a JPG below 64 KiB using Pillow.
-Install the Ubuntu package once if needed:
+## One-time Nginx setup
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y python3-pil
+cd "$HOME/organic-synthesis-gallery-publisher"
+git pull --ff-only
+cd ops/wechat-publisher
+sudo bash enable-draft-preview.sh
 ```
 
-Article-body figures are a different path and will use `media/uploadimg` rather
-than the cover thumbnail endpoint.
-
-## Create the test draft
-
-Only after the preview reports the expected publication slot and DOI list:
+## Adopt the current 2026-10-04 test draft once
 
 ```bash
-sudo python3 ops/wechat-publisher/create-draft.py --create
+sudo python3 create-draft.py --create --media-id "<existing media_id>"
 ```
 
-The draft's article-level `content_source_url` currently defaults to the Gallery
-home page. Before production publishing, replace this with the immutable edition
-URL that highlights the release DOI set.
+On subsequent runs for the same Beijing publication date, the script reuses the
+saved draft media_id and calls `draft/update` rather than creating duplicate
+drafts.
+
+A successful run prints `preview_url`. That URL is generated only after
+`draft/get` succeeds.
