@@ -58,7 +58,7 @@ function fixture(){
 }
 
 test('installer advances while capture protocol remains compatible',()=>{
-  assert.match(source,/^\/\/ @version\s+6\.2\.22$/m);
+  assert.match(source,/^\/\/ @version\\s+6\\.2\\.23$/m);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
   assert.ok(source.includes("ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-active-v2'"));
@@ -124,8 +124,8 @@ test('C2A1 diagnostic trace remains attached to existing report schema',()=>{
   assert.ok(source.includes("architectureState.cutoff"));
   assert.ok(source.includes("trace:[context].concat(events).concat(architectureEvent?[architectureEvent]:[])"));
 });
-test('self-contained Bridge stays 2.2.40 while capture protocol stays fixed',()=>{
+test('self-contained Bridge stays 2.2.41 while capture protocol stays fixed',()=>{
   const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-  assert.ok(loader.includes("const loaderVersion = '2.2.40';"));
+  assert.ok(loader.includes("const loaderVersion = '2.2.41';"));
   assert.ok(source.includes("var VERSION = '6.2.20';"));
 });
