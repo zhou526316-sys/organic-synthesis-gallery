@@ -1,0 +1,40 @@
+name: Diagnose stored TOC static pruning
+on:
+  push:
+    branches: [diagnose/tm-media-yield-20261004]
+    paths: [.github/workflows/tm-svg-intake-diagnosis.yml]
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Compare stored TOC image metadata and exact static signature test
+        run: |
+          node --input-type=module <<'JS'
+          import {createHash} from 'node:crypto';
+          const base='https://api.gczhouwld.com';
+          const get=url=>fetch(url,{headers:{'cache-control':'no-cache'},signal:AbortSignal.timeout(20000)});
+          const r=await get(base+'/api/media/local-capture-index');if(!r.ok)throw Error('index_http_'+r.status);
+          const data=await r.json();
+          const requested=['10.1021/jacs.6c13713','10.1021/acs.orglett.6c03558','10.1021/acs.joc.6c01674'];
+          const results=[];
+          for(const doi of requested){
+            const x=(data.items||[]).find(x=>x.doi===doi&&x.kind==='official');
+            if(!x){results.push({doi,error:'record_not_returned'});continue;}
+            const u=new URL(x.imageUrl);if(u.origin!==base||!u.pathname.startsWith('/media/local-captures/images/'))throw Error('unapproved_stored_path');
+            try{
+              const img=await get(u.href);const b=Buffer.from(await img.arrayBuffer());
+              const head=b.subarray(0,1024).toString('utf8').replace(/^\uFEFF/,'').trimStart().toLowerCase();
+              const svgIndex=b.toString('utf8').toLowerCase().indexOf('<svg');
+              const svgSignature=head.startsWith('<?xml')||head.startsWith('<svg')||head.includes('<svg ');
+              results.push({doi,status:img.status,declared:img.headers.get('content-type'),bytes:b.length,sha256:createHash('sha256').update(b).digest('hex'),storedContentType:x.contentType,storedBytes:x.byteLength,storedHash:x.contentHash,svgRootIndex:svgIndex,passesStaticSvgSniff:svgSignature,first200:b.subarray(0,200).toString('utf8')});
+            }catch(e){results.push({doi,error:String(e.message).slice(0,160)});}
+          }
+          const stage=await get(base+'/api/article-figures/staged');
+          let listing={status:stage.status};if(stage.ok){const x=await stage.json();listing={...listing,count:x.count,returnedItems:x.items?.length};}
+          console.log('STORED_TOC_DIAGNOSIS '+JSON.stringify({readAt:new Date().toISOString(),readOnly:true,publisherRequests:0,mediaWrites:0,results,defaultStageListing:listing}));
+          JS
