@@ -1,0 +1,100 @@
+name: Private PDF capture v2 regression
+
+on:
+  push:
+    branches: [feature/private-pdf-capture-v2, feature/private-pdf-capture-v2-final, main]
+    paths:
+      - 'cloudflare/private-pdf-v2.sql'
+      - 'cloudflare/schema.sql'
+      - 'cloudflare/worker/src/private-pdf.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/scripts/test-private-pdf-capture.mjs'
+      - 'public/toc-mainline.user.js'
+      - 'public/private-pdf-owner-setup.html'
+      - 'scripts/tm-private-pdf-capture.inc.js'
+      - 'scripts/apply-private-pdf-capture.py'
+      - 'tests/private-pdf-capture-browser.mjs'
+      - 'docs/private-pdf-editorial-pipeline.md'
+      - '.github/workflows/deploy-worker-frontend.yml'
+      - '.github/workflows/private-pdf-capture-v2.yml'
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Confirm PDF capture remains disabled in production config
+        run: |
+          set -euo pipefail
+          grep -F 'PRIVATE_PDF_CAPTURE_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'PRIVATE_PDF_PROCESSING_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
+          grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v1'" public/toc-mainline.user.js
+      - name: Check isolated PDF backend and migrations
+        run: |
+          set -euo pipefail
+          node --check cloudflare/worker/src/private-pdf.js
+          node --check cloudflare/worker/src/index.js
+          node cloudflare/worker/scripts/test-private-pdf.mjs
+          node cloudflare/worker/scripts/test-private-pdf-capture.mjs
+          sqlite3 /tmp/pdf-v2.db < cloudflare/schema.sql
+          test "$(sqlite3 /tmp/pdf-v2.db "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='private_pdf_capture_leases';")" = '1'
+          sqlite3 /tmp/pdf-v2-iso.db < cloudflare/schema.sql
+          sqlite3 /tmp/pdf-v2-iso.db 'DROP TABLE private_pdf_capture_leases;'
+          sqlite3 /tmp/pdf-v2-iso.db < cloudflare/private-pdf-v2.sql
+          sqlite3 /tmp/pdf-v2-iso.db < cloudflare/private-pdf-v2.sql
+          test "$(sqlite3 /tmp/pdf-v2-iso.db "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='private_pdf_capture_leases';")" = '1'
+      - name: Run existing media queue and receipt regressions
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-missing-only.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node tests/tm-controller-recovery.test.mjs
+          node tests/tm-newest-retry.test.mjs
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
+      - name: Build frontend
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+          test -s dist/private-pdf-owner-setup.html
+      - name: Install Chromium for PDF side-channel fixture
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Verify explicit PDF discovery and media-status isolation
+        run: node tests/private-pdf-capture-browser.mjs
+      - name: Build compatible userscript installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v1'" public/gallery-vpn-bridge.user.js
+      - name: Dry-run Worker bundle
+        working-directory: cloudflare/worker
+        run: |
+          npm install --no-audit --no-fund
+          npx wrangler deploy --dry-run --outdir "$RUNNER_TEMP/private-pdf-v2-worker"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: private-pdf-capture-v2-tested
+          path: |
+            ${{ runner.temp }}/private-pdf-v2-worker
+            ${{ runner.temp }}/private-pdf-capture-browser.json
+          retention-days: 14
