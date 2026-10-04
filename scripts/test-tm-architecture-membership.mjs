@@ -49,7 +49,7 @@ function fixture(){
 }
 
 test('actual userscript keeps capture protocol while advancing install metadata',()=>{
-  assert.match(source,/^\/\/ @version\s+6\.2\.21$/m);
+  assert.match(source,/^\/\/ @version\s+6\.2\.22$/m);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
@@ -87,4 +87,17 @@ test('lifecycle partitions must cover the exact all-time membership',async()=>{
 test('legacy v1 delivery cannot authorize new membership observer',async()=>{
   const f=fixture();f.delivery.schemaVersion=1;
   await assert.rejects(verify(f.queue,f.delivery,f.releaseText,f.membershipText,f.currentText,f.lifecycleText),/delivery_v2_required/);
+});
+
+test('observer result is attached to existing diagnostic trace without changing report schema',()=>{
+  assert.ok(source.includes("stage:'architecture_membership'"));
+  assert.ok(source.includes("event:'verified_snapshot'"));
+  assert.ok(source.includes("architectureState.cutoff"));
+  assert.ok(source.includes("trace:[context].concat(architectureEvent?[architectureEvent]:[]).concat(events)"));
+});
+test('self-contained Bridge gets an install-version bump while capture protocol stays fixed',()=>{
+  const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
+  assert.ok(loader.includes("const loaderVersion = '2.2.40';"));
+  assert.ok(source.includes("var VERSION = '6.2.20';"));
+  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
