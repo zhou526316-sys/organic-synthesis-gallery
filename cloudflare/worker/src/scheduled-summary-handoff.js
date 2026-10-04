@@ -1,4 +1,4 @@
-import { shadowIndexHandoff } from './evidence-index.js';
+import { listIndexedHandoffRows, shadowIndexHandoff } from './evidence-index.js';
 const HANDOFF_PREFIX = 'private/article-summary-handoff-v1/';
 const EVIDENCE_PREFIX = 'private/article-evidence-v2/';
 const LEGACY_SUMMARY_PREFIX = 'private/article-summary/';
@@ -282,6 +282,74 @@ async function pendingHandoffObjects(env, limit) {
     rows.push({ object, meta, envelope });
   }
   return rows;
+}
+
+async function indexedPendingHandoffRows(env, limit) {
+  const indexed = await listIndexedHandoffRows(env, 1000);
+  if (indexed.status !== 200) return { status:indexed.status, body:indexed.body, rows:[] };
+  const asset = await readScheduledSummaryAsset(env);
+  const rows = [];
+  for (const row of indexed.body.items || []) {
+    if (rows.length >= limit) break;
+    const doi = normalizeDoi(row?.doi);
+    const evidencePacketHash = String(row?.evidence_packet_hash || '');
+    const sourceHash = String(row?.source_hash || '');
+    if (!doi || !evidencePacketHash || !sourceHash) continue;
+    if (String(row?.handoff_key_id || '') !== HANDOFF_KEY_ID ||
+        String(row?.handoff_algorithm || '') !== HANDOFF_ALGORITHM ||
+        String(row?.handoff_compression || '') !== 'gzip') continue;
+    const scheduled = asset.items?.[doi];
+    if (scheduled &&
+        scheduled.status === 'approved' &&
+        scheduled.evidencePacketHash === evidencePacketHash &&
+        scheduled.sourceHash === sourceHash) continue;
+    if (await currentLegacySummaryMatches(env, doi, evidencePacketHash, sourceHash)) continue;
+    rows.push({
+      doi,
+      evidencePacketHash,
+      sourceHash,
+      evidenceLevel:String(row?.evidence_level || 'unknown'),
+      capturedAt:String(row?.captured_at || ''),
+      handoffKey:String(row?.handoff_r2_key || ''),
+    });
+  }
+  return { status:200, body:{ ok:true,readPathActive:false }, rows };
+}
+
+function handoffIdentity(row) {
+  return [String(row?.doi || ''),String(row?.evidencePacketHash || ''),String(row?.sourceHash || '')].join('|');
+}
+
+export async function compareScheduledHandoffIndexShadow(env, limitValue = 40) {
+  const limit = Math.max(1, Math.min(60, Number(limitValue || 40)));
+  const legacyRows = await pendingHandoffObjects(env, limit);
+  const indexed = await indexedPendingHandoffRows(env, limit);
+  if (indexed.status !== 200) {
+    return { status:indexed.status, body:{ ...indexed.body, comparator:'scheduled-handoff-index-shadow',readPathActive:false } };
+  }
+  const legacy = legacyRows.map(({ envelope }) => ({
+    doi:normalizeDoi(envelope?.doi),
+    evidencePacketHash:String(envelope?.evidencePacketHash || ''),
+    sourceHash:String(envelope?.sourceHash || ''),
+  }));
+  const current = indexed.rows.map(row => ({
+    doi:row.doi,evidencePacketHash:row.evidencePacketHash,sourceHash:row.sourceHash,
+  }));
+  const legacyKeys=legacy.map(handoffIdentity);
+  const indexKeys=current.map(handoffIdentity);
+  const legacySet=[...new Set(legacyKeys)].sort();
+  const indexSet=[...new Set(indexKeys)].sort();
+  const sameSet=JSON.stringify(legacySet)===JSON.stringify(indexSet);
+  const sameOrder=JSON.stringify(legacyKeys)===JSON.stringify(indexKeys);
+  return {
+    status:200,
+    body:{
+      ok:true,comparator:'scheduled-handoff-index-shadow',readPathActive:false,limit,
+      sameSet,sameOrder,match:sameSet&&sameOrder,
+      legacyCount:legacy.length,indexCount:current.length,
+      legacy,indexed:current,
+    },
+  };
 }
 
 export async function backfillScheduledEvidenceHandoffs(env, limitValue = 4) {
