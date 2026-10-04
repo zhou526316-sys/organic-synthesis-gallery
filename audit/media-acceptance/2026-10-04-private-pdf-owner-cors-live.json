@@ -1,0 +1,35 @@
+{
+  "context": "Owner private PDF authorization page showed Failed to fetch after owner capability was already bound",
+  "rootCause": "public/private-pdf-owner-setup.html preflighted https://api.gczhouwld.com/api/_healthcheck from gallery.gczhouwld.com; the healthcheck route is not a browser-CORS route, so the browser rejected the cross-origin fetch",
+  "fix": "Remove the healthcheck preflight from the owner page. Existing authenticated private_pdf_capture capability enables the button; POST /api/user-ui/private-pdf/capture-lease remains the authoritative capability plus server kill-switch check and already carries browser CORS.",
+  "sourceMerge": "823d2c24c1cfb33542b3fe07f285cb4c3dd7c1e4",
+  "deploymentTrigger": "bd31da6cf6b6a2247775c41395dfbe2f70b7876b",
+  "deploymentRun": 37193486410,
+  "deploymentConclusion": "success",
+  "tests": {
+    "privatePdfAccessV1": "success",
+    "privatePdfCaptureV2": "success",
+    "siteQualityGate": "success",
+    "galleryDataValidation": "success",
+    "chromiumRegression": "owner authorization succeeds even when healthcheck is intentionally unreachable"
+  },
+  "liveHealth": {
+    "ok": true,
+    "privatePdfBucket": true,
+    "readEnabled": true,
+    "captureEnabled": true,
+    "processingEnabled": false,
+    "wechatTicketRelay": true
+  },
+  "scopePreserved": [
+    "owner capability",
+    "private PDF storage",
+    "Tampermonkey media queue",
+    "TOC/body/fulltext acquisition",
+    "literature data and scope",
+    "08:00/18:00 release slots",
+    "existing WeChat editorial flow"
+  ],
+  "nextUserAction": "Open the cache-busted owner setup page while logged in, then click 授权本浏览器抓取 PDF（7 天）. No owner re-binding is needed.",
+  "secretsIncluded": false
+}
