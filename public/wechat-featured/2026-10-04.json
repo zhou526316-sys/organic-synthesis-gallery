@@ -1,0 +1,156 @@
+{
+  "date": "2026-10-04",
+  "headline": "酸把一条 Pd 羰基化“掰”成两条路：这篇工作真正厉害在哪？",
+  "paper": {
+    "doi": "10.1038/s41467-026-78226-0",
+    "journal": "Nature Communications",
+    "title": "Enantioselective palladium-catalyzed carbonylation of gem-dibromoalkenes to chiral benzo[7]annulenes",
+    "authors": "Yu Luo, Xilong Wang, Yuanhang Zhang, Shuang Luo, Qiang Zhu"
+  },
+  "quick_points": [
+    {
+      "label": "做了什么",
+      "text": "用手性 Pd 催化剂区分 gem-dibromoalkene 的两个 C–Br，直接构建 inherent chirality。"
+    },
+    {
+      "label": "最亮眼的点",
+      "text": "同一个底物，只改酸/水/碱环境，就能在单羰基化与双脱溴羰基化之间切换。"
+    },
+    {
+      "label": "为什么值得读",
+      "text": "不只是高 yield / er；机理在审稿中被连续质疑并重算，最终证据链更完整。"
+    }
+  ],
+  "figures": [
+    {
+      "id": "fig1",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-026-78226-0/MediaObjects/41467_2026_78226_Fig1_HTML.png",
+      "caption": "原文 Fig. 1｜先看懂整篇：一个手性 Pd 体系，两条可切换反应路径。"
+    },
+    {
+      "id": "fig2",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-026-78226-0/MediaObjects/41467_2026_78226_Fig2_HTML.png",
+      "caption": "原文 Fig. 2｜单羰基化 scope：保留 vinyl Br，为后续分子编辑留出把手。"
+    },
+    {
+      "id": "fig3",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-026-78226-0/MediaObjects/41467_2026_78226_Fig3_HTML.png",
+      "caption": "原文 Fig. 3｜双脱溴羰基化 scope：同类起始物在另一套环境下走向手性羧酸。"
+    },
+    {
+      "id": "fig4",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-026-78226-0/MediaObjects/41467_2026_78226_Fig4_HTML.png",
+      "caption": "原文 Fig. 4｜NLE、控制实验与氘标记：用于排除替代路线、限制机理空间。"
+    },
+    {
+      "id": "fig5",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-026-78226-0/MediaObjects/41467_2026_78226_Fig5_HTML.png",
+      "caption": "原文 Fig. 5｜两条催化循环。左为 Path 1，右为酸参与后打开的 Path 2。"
+    },
+    {
+      "id": "fig6",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-026-78226-0/MediaObjects/41467_2026_78226_Fig6_HTML.png",
+      "caption": "原文 Fig. 6｜Path 1 的最终 DFT 能量剖面。"
+    },
+    {
+      "id": "fig7",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-026-78226-0/MediaObjects/41467_2026_78226_Fig7_HTML.png",
+      "caption": "原文 Fig. 7｜Path 2 的最终能量剖面，也是审稿后重算的核心结果之一。"
+    },
+    {
+      "id": "fig8",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41467-026-78226-0/MediaObjects/41467_2026_78226_Fig8_HTML.png",
+      "caption": "原文 Fig. 8｜克级反应、后续衍生和手性配体探索。"
+    }
+  ],
+  "sections": [
+    {
+      "eyebrow": "01 · 先看结果",
+      "heading": "不是只做出一个代表性产物，而是两套可用的反应空间",
+      "paragraphs": [
+        "单羰基化路线保留一个 vinyl Br，可继续做后续偶联；酸/水条件下则转向双脱溴羰基化，得到另一类手性烯基羧酸。最佳结果达到 97% yield、98:2 er，但更重要的是两条路线都能扩展到一系列不同骨架和取代模式。"
+      ],
+      "figures": [
+        "fig2",
+        "fig3"
+      ]
+    },
+    {
+      "eyebrow": "02 · 为什么这题难",
+      "heading": "真正的挑战是“三选一”：单脱溴、双脱溴，还是直接重排",
+      "paragraphs": [
+        "gem-Dibromoalkene 天生容易继续反应到双官能团化，也可能走 FBW 重排形成炔烃。作者还要同时完成不对称去对称化：在两个形式上等价的 C–Br 之间只选一个，并把这种选择转化成稳定的 inherent chirality。刚性的 benzo[7]annulene 骨架就是为了让手性 Pd 有机会“看出”两边的差别。"
+      ],
+      "callout": "这不是普通的“做一次 Pd 羰基化”，而是让催化剂同时解决化学选择性、路径选择性和对映选择性。"
+    },
+    {
+      "eyebrow": "03 · 最厉害的设计",
+      "heading": "酸不是简单添加剂，而是在重新排序几条竞争反应的速度",
+      "paragraphs": [
+        "L2 很早就能给出高 er，但产率偏低，说明手性识别先被解决了；Pd 源、碱、核试剂当量和分子筛更多是在提高周转效率。真正的路径分流来自酸/水环境：它改变亲核体有效亲核性、Pd–H 物种形成，以及 CO insertion 与 α-Br elimination 的竞争。"
+      ],
+      "figures": [
+        "fig5"
+      ]
+    },
+    {
+      "eyebrow": "04 · 进入专业层：先看实验",
+      "heading": "作者不是只靠 DFT 讲故事，先用控制实验把明显的替代路线排掉",
+      "bullets": [
+        "c-1 回投：不能继续变成目标 d 型产物，因此不支持“先单羰基化，再脱第二个 Br”的简单串联路线。",
+        "单溴底物：反应性明显下降，说明 gem-dibromide 的结构对 Path 2 很关键。",
+        "氘标记：支持 H/Pd–H 参与，但不能单独证明完整 Pd-carbene 循环。",
+        "HRMS：为相关中间体/副产物提供组成证据，需要和控制实验、计算一起解读。"
+      ],
+      "figures": [
+        "fig4"
+      ]
+    },
+    {
+      "eyebrow": "05 · Path 1：手性从哪一步产生？",
+      "heading": "最终模型把第一次 C–Br 氧化加成视为对映选择性决定步骤",
+      "paragraphs": [
+        "TS-1-Major / Minor 的计算自由能差约 1.5 kcal/mol。distortion–interaction 分析认为主要差异来自 Pd 催化剂片段与底物片段之间的 interaction energy，而不是简单的“哪边位阻小”。后续才进入 CO coordination / insertion、ligand exchange 和 reductive elimination。"
+      ],
+      "figures": [
+        "fig6"
+      ]
+    },
+    {
+      "eyebrow": "06 · Path 2：酸到底做了什么？",
+      "heading": "Pd–H 让 α-Br elimination 变得可达，随后 carbene insertion 决定对映选择性",
+      "paragraphs": [
+        "最终模型中，INT-1 先转为 Pd–H 相关的 INT-1′，随后 α-Br elimination 形成 palladium carbene INT-5；计算能垒约 26.7 kcal/mol。接着 carbene 插入 Pd–H 形成 alkenyl-Pd INT-7，这一步被视为 Path 2 的 stereodetermining step，Major/Minor 过渡态差约 2.1 kcal/mol。"
+      ],
+      "warning": "作者最终仍没有完全排除一部分产物经 alkylidene ketene 路径形成。因此更准确的说法是“多类证据共同支持 Pd–H/carbene 为主的模型”，而不是“完整催化循环已被直接证明”。",
+      "figures": [
+        "fig7"
+      ]
+    },
+    {
+      "eyebrow": "07 · 审稿意见为什么值得看",
+      "heading": "这篇机理不是“一次算完”：Reviewer 2 连续两轮追问总能垒",
+      "paragraphs": [
+        "初稿以原来的参考态计算时，Path 1 总能垒达到 38.1 kcal/mol，Reviewer 2 认为这和 65 °C 的反应条件不相容；他还要求作者不能只用“product-like / reactant-like”解释手性来源。作者随后重新指定活性物种为 PdL(CO)₂、重设能量参考，并补充 distortion–interaction 分析。"
+      ],
+      "review": "最终 Fig. 6 / Fig. 7 不是初稿未经挑战的“漂亮计算图”，而是被审稿人逼着重新审视活性物种、参考态和反应顺序之后得到的修订模型。"
+    },
+    {
+      "eyebrow": "08 · 边界与应用",
+      "heading": "哪些地方做得没那么完美，反而最值得看？",
+      "paragraphs": [
+        "furan-bridged c-27 的 er 明显下降；d-11 虽收率不错但 er 很差，作者后来补算约 27.9 kcal/mol 的构象翻转能垒，用来解释反应温度下的消旋风险。这说明方法对骨架刚性有真实依赖。",
+        "作者完成了克级反应和多种后续转化，证明这些产物确实“可编辑”。但衍生出的手性配体在不对称催化中的表现目前只有低到中等水平，更适合称为 proof-of-concept scaffold，而不是已经成熟的高性能 ligand platform。"
+      ],
+      "figures": [
+        "fig8"
+      ]
+    }
+  ],
+  "takehome": [
+    "方法学强项：把化学选择性、路径分流和对映选择性放进同一个体系解决。",
+    "机理强项：控制实验、同位素、HRMS 与 DFT 相互约束，而且模型经同行评审实质修订。",
+    "需要降温：Path 2 仍是最合理模型而非逐中间体直接证明；手性配体应用目前只是 proof-of-concept。"
+  ],
+  "ai_notice": "本文由 AI 辅助生成，基于论文主文、Supporting Information 与公开同行评审文件交叉核验。机理部分区分实验直接支持、计算支持、作者模型与尚不能排除的替代路径。化学结构图使用论文原图，不使用 AI 重绘。"
+}
