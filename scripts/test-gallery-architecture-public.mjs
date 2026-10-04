@@ -20,15 +20,18 @@ test('delivery verifier declares architecture public manifest support', () => {
   for (const token of ['ARCHITECTURE_RELEASE','architectureObjects','architecture-v1/release.json']) assert.ok(source.includes(token), token);
 });
 
-test('public builder does not activate production or dispatch', () => {
+test('public builder activates frontend reads without activating global production or dispatch', () => {
   const source = readFileSync('scripts/build-gallery-architecture-public.mjs','utf8');
   assert.ok(source.includes('productionActivation: false'));
+  assert.ok(source.includes('frontendReadActivation: true'));
   assert.ok(source.includes('dispatchEnabled:false'));
-  assert.ok(!source.includes('src/main.ts'));
+  assert.match(source, /T08:00:00/);
+  assert.ok(source.includes("RETIRED_LAST_EVENING_SLOT = '2026-10-04T18:00:00+08:00'"));
+  assert.ok(!source.includes('T(?:08|18):00:00'));
   assert.ok(!source.includes('toc-mainline.user.js'));
 });
 
-test('inactive public architecture publishes a hash-bound acquisition basis', () => {
+test('public architecture publishes a hash-bound acquisition basis', () => {
   const builder = readFileSync('scripts/build-gallery-architecture-public.mjs','utf8');
   assert.ok(builder.includes("schema: 'gallery-acquisition-basis-v1'"));
   assert.ok(builder.includes('acquisitionBasis: acquisitionRef'));

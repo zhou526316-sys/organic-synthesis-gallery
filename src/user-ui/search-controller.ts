@@ -43,6 +43,7 @@ export class UserSearchController {
     this.fullQuery = this.searchInput.value;
     this.updateShellQuery();
     if (this.composing || (event instanceof InputEvent && event.isComposing)) return;
+    this.root.dispatchEvent(new CustomEvent('gallery-corpus-query', { detail: { query: this.fullQuery } }));
     this.refreshPreferences(true);
     this.renderSuggestions();
   };
@@ -52,6 +53,7 @@ export class UserSearchController {
     if (!this.searchInput) return;
     this.fullQuery = this.searchInput.value;
     this.updateShellQuery();
+    this.root.dispatchEvent(new CustomEvent('gallery-corpus-query', { detail: { query: this.fullQuery } }));
     this.refreshPreferences(true);
     this.renderSuggestions();
   };
