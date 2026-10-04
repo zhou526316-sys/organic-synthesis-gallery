@@ -162,7 +162,7 @@ try {
         history.replaceState(null,'','/?doi='+encodeURIComponent(doi));
         const r=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate,sharedDoi:doi});
         await __archBridge.replace(r.records.map(__arch.project));
-        return {first:__archBridge.inspect()[0]?.doi,hotCount:r.hotCount,total:r.records.length,lifecycle:r.shared?.lifecycle,status:r.shared?.status};
+        return {first:document.querySelector('#gallery > .card')?.getAttribute('data-doi')||'',hotCount:r.hotCount,total:r.records.length,lifecycle:r.shared?.lifecycle,status:r.shared?.status};
       },archiveTarget);
       assert.deepEqual(deepLink,{first:archiveTarget,hotCount:life.counts.hot,total:life.counts.hot+1,lifecycle:'archive',status:'published'});
 
