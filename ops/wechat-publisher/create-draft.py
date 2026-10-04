@@ -306,15 +306,17 @@ def build_content(slot: str, papers: list[dict], featured: dict | None = None, u
             f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
         ])
 
+        # Let readers see the reaction scheme before any summary boxes.
+        # This makes the "做了什么" explanation visually grounded in Fig. 1.
+        parts.append(figure_html("fig1", figures, uploaded_urls))
+
         for point in featured.get("quick_points", []):
             parts.append(
-                "<section style='background:#f7f8fa;border-radius:8px;padding:10px 12px;margin:8px 0;'>"
-                f"<strong style='font-size:13px;'>{esc(point.get('label') or '')}</strong>"
-                f"<p style='font-size:13px;line-height:1.72;margin:3px 0 0;color:#555;'>{esc(point.get('text') or '')}</p>"
+                "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
+                f"<strong style='font-size:14px;line-height:1.55;'>{esc(point.get('label') or '')}</strong>"
+                f"<p style='font-size:14px;line-height:1.78;margin:4px 0 0;color:#444;text-align:justify;'>{esc(point.get('text') or '')}</p>"
                 "</section>"
             )
-
-        parts.append(figure_html("fig1", figures, uploaded_urls))
 
         for section in featured.get("sections", []):
             parts.append(
