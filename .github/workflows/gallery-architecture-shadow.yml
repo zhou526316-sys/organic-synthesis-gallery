@@ -1,0 +1,54 @@
+name: Gallery architecture shadow validation
+on:
+  pull_request:
+    paths:
+      - 'architecture/**'
+      - 'shared/literature-lifecycle.mjs'
+      - 'shared/literature-identity.mjs'
+      - '.github/workflows/gallery-architecture-shadow.yml'
+  push:
+    branches: ['feat/gallery-architecture-v1-20261004']
+    paths:
+      - 'architecture/**'
+      - 'shared/literature-lifecycle.mjs'
+      - 'shared/literature-identity.mjs'
+      - '.github/workflows/gallery-architecture-shadow.yml'
+permissions:
+  contents: read
+concurrency:
+  group: architecture-shadow-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/audit/
+            /audit/*.json
+            !/audit/prepublish-*.json
+            !/audit/review-*.json
+            !/audit/pending-*.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Contract and read-model tests (no external dependencies)
+        run: node --test architecture/tests/*.test.mjs
+      - name: Verified-generation shadow build (no publish or crawl)
+        run: node architecture/shadow.mjs --verify-live --out "$RUNNER_TEMP/gallery-architecture-shadow"
+      - name: Working tree remains untouched
+        run: git diff --exit-code
+      - name: Preserve shadow report and immutable read model
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-architecture-shadow-${{ github.run_id }}
+          path: ${{ runner.temp }}/gallery-architecture-shadow
+          if-no-files-found: warn
+          retention-days: 7
