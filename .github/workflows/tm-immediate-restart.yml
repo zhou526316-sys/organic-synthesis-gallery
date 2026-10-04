@@ -56,8 +56,8 @@ jobs:
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
           grep -F '// @grant        GM_addValueChangeListener' public/gallery-vpn-bridge.user.js
+          grep -F "immediate.id='osg-immediate-start'" public/gallery-vpn-bridge.user.js
           grep -F '立即开始任务（只补缺项）' public/gallery-vpn-bridge.user.js
-          grep -F '缺项补抓4' public/gallery-vpn-bridge.user.js
           mkdir -p "$RUNNER_TEMP/immediate-output"
           cp public/gallery-vpn-bridge.user.js public/toc-mainline.user.js "$RUNNER_TEMP/immediate-output/"
           sha256sum "$RUNNER_TEMP/immediate-output/"*.js | tee "$RUNNER_TEMP/immediate-output/sha256.txt"
