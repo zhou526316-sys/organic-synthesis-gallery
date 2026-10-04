@@ -478,9 +478,27 @@ def ensure_pdf_source(featured: dict, override_path: str = "") -> Path:
             raise RuntimeError(f"featured source is not a PDF: {path}")
         return path
 
+    repo_path = str(featured.get("pdf_repo_path") or "").strip()
+    if repo_path:
+        path = (ROOT / repo_path).resolve()
+        try:
+            path.relative_to(ROOT.resolve())
+        except ValueError as exc:
+            raise RuntimeError(f"featured pdf_repo_path escapes repository: {repo_path}") from exc
+        if not path.exists():
+            raise RuntimeError(
+                f"featured repository PDF is missing: {repo_path}. "
+                "Run git pull --ff-only before publishing."
+            )
+        if path.read_bytes()[:5] != b"%PDF-":
+            raise RuntimeError(f"featured repository source is not a PDF: {repo_path}")
+        return path
+
     pdf_url = str(featured.get("pdf_url") or "").strip()
     if not pdf_url:
-        raise RuntimeError("featured article has pdf_render figures but no pdf_url")
+        raise RuntimeError(
+            "featured article has pdf_render figures but neither pdf_repo_path nor pdf_url"
+        )
 
     DEFAULT_PDF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     date = str(featured.get("date") or "featured").strip() or "featured"
@@ -509,8 +527,7 @@ def ensure_pdf_source(featured: dict, override_path: str = "") -> Path:
     if not payload.startswith(b"%PDF-"):
         raise RuntimeError(
             "featured PDF URL did not return a PDF "
-            f"(content_type={content_type or 'unknown'}, bytes={len(payload)}). "
-            "Re-run with --featured-pdf /path/to/the/uploaded-paper.pdf"
+            f"(content_type={content_type or 'unknown'}, bytes={len(payload)})"
         )
     target.write_bytes(payload)
     return target
