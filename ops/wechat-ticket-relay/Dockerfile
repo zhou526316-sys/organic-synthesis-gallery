@@ -5,6 +5,7 @@ WORKDIR /app
 RUN apt-get update \
     && apt-get install -y --no-install-recommends python3 python3-pip git ca-certificates \
     && pip3 install --no-cache-dir --break-system-packages Pillow PyMuPDF \
+    && git config --system --add safe.directory /repo \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package.json server.mjs ./
