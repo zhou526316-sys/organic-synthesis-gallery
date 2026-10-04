@@ -3,12 +3,12 @@
   "reviewType": "prepublish-primary",
   "publicationSlot": "2026-10-04T18:00:00+08:00",
   "createdAt": "2026-10-04T17:18:00+08:00",
-  "evidenceAsOf": "2026-10-04T17:18:00+08:00",
+  "evidenceAsOf": "2026-10-04T18:06:08+08:00",
   "executionMode": "scheduled_primary_review_github_runner_handoff",
-  "phase": "incomplete_review",
-  "status": "preparing",
-  "readyToPublish": false,
-  "publishableSubsetReady": false,
+  "phase": "prepublish_ready_with_pending",
+  "status": "ready_with_pending",
+  "readyToPublish": true,
+  "publishableSubsetReady": true,
   "reviewComplete": false,
   "releasePolicy": "per-doi",
   "handoffGeneratedAt": "2026-10-04T09:13:23.683Z",
@@ -78,22 +78,28 @@
     "primaryWindowCandidates": 3,
     "catchupOrOlderCandidates": 5,
     "primaryWindowAccepted": 0,
-    "catchupOrOlderAccepted": 0
+    "catchupOrOlderAccepted": 1
   },
   "reviewed": 8,
-  "acceptedCount": 0,
+  "acceptedCount": 1,
   "rejectedCount": 3,
-  "pendingCount": 5,
+  "pendingCount": 4,
   "summary": {
     "reviewed": 8,
-    "accepted": 0,
+    "accepted": 1,
     "rejected": 3,
-    "pending": 5,
-    "remainingUnresolved": 5
+    "pending": 4,
+    "remainingUnresolved": 4
   },
-  "acceptedDois": [],
-  "proposedPublishableDois": [],
-  "publishableDois": [],
+  "acceptedDois": [
+    "10.31635/ccschem.026.202607659"
+  ],
+  "proposedPublishableDois": [
+    "10.31635/ccschem.026.202607659"
+  ],
+  "publishableDois": [
+    "10.31635/ccschem.026.202607659"
+  ],
   "rejectedDois": [
     "10.1038/s41467-026-78130-7",
     "10.1038/s41467-026-78452-6",
@@ -103,36 +109,31 @@
     "10.1021/acscatal.6c06578",
     "10.31635/ccschem.026.202608090",
     "10.31635/ccschem.026.202607590",
-    "10.31635/ccschem.026.202607612",
-    "10.31635/ccschem.026.202607659"
+    "10.31635/ccschem.026.202607612"
   ],
   "deferredDois": [
     "10.1021/acscatal.6c06578",
     "10.31635/ccschem.026.202608090",
     "10.31635/ccschem.026.202607590",
-    "10.31635/ccschem.026.202607612",
-    "10.31635/ccschem.026.202607659"
+    "10.31635/ccschem.026.202607612"
   ],
   "remainingDois": [
     "10.1021/acscatal.6c06578",
     "10.31635/ccschem.026.202608090",
     "10.31635/ccschem.026.202607590",
-    "10.31635/ccschem.026.202607612",
-    "10.31635/ccschem.026.202607659"
+    "10.31635/ccschem.026.202607612"
   ],
   "remainingUnresolved": [
     "10.1021/acscatal.6c06578",
     "10.31635/ccschem.026.202608090",
     "10.31635/ccschem.026.202607590",
-    "10.31635/ccschem.026.202607612",
-    "10.31635/ccschem.026.202607659"
+    "10.31635/ccschem.026.202607612"
   ],
   "durablePendingBacklogDois": [
     "10.1021/acscatal.6c06578",
     "10.31635/ccschem.026.202608090",
     "10.31635/ccschem.026.202607590",
     "10.31635/ccschem.026.202607612",
-    "10.31635/ccschem.026.202607659",
     "10.31635/ccschem.026.202608472",
     "10.31635/ccschem.026.202608262"
   ],
@@ -543,33 +544,37 @@
       "safetyTail": false,
       "reviewPriority": "normal",
       "evidencePages": [
-        "https://doi.org/10.31635/ccschem.026.202607659"
-      ],
-      "evidenceSource": "fresh compact metadata plus refreshed official-publisher/index evidence",
-      "decision": "pending",
-      "firstPassDecision": "pending",
-      "challengeDecision": "pending",
-      "titleZh": null,
-      "reason": "当前仅取得题名/元数据，缺少决定主要贡献与可推广制备范围的摘要或正文证据。",
-      "evidenceBasis": "fresh compact仍无摘要；CCS官方目录检索片段确认对象为强交联纤维增强环氧复合材料并存在氧化–Cope消除路径，但未取得具体回收产物、分离/物料衡算、树脂范围及其作为可推广聚合物化学方法的证据。",
-      "challengeReason": "化学断键升级转化可能属于聚合物合成方法学，不能仅因回收/材料主题排除；但当前新增片段仍以交联复合材料为对象，未补齐产物和范围问题，故继续pending。",
-      "evidenceNeeded": "需出版社摘要/正文或SI确认环氧树脂氧化-Cope消除的实际产物、键断裂/转化范围、分离或物料衡算，以及主要贡献是否为聚合物化学升级转化。",
-      "attemptedEvidencePages": [
         "https://doi.org/10.31635/ccschem.026.202607659",
-        "https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607659",
-        "https://www.chinesechemsoc.org/doi/abs/10.31635/ccschem.026.202607659"
+        "https://faculty.dlut.edu.cn/WENG/en/lwcg/830276/content/268146.htm",
+        "https://www.researchgate.net/publication/398090914_Breaking_of_C-N_bonds_in_epoxy_resins_via_an_oxidation-Cope_elimination_pathway",
+        "https://doi.org/10.21203/rs.3.rs-7203604/v1"
       ],
-      "nextAction": "通过既有Tampermonkey/VPN Bridge读取出版社摘要、正文反应范围或SI；保留原日期和历史来源，不以题名或访问失败裁决。",
+      "evidenceSource": "fresh compact metadata plus DUT author publication list linking the exact CCS Chemistry article and a matched public precursor preprint/full text",
+      "decision": "include",
+      "firstPassDecision": "include",
+      "challengeDecision": "include",
+      "titleZh": "利用有机溶剂经氧化–Cope消除途径升级回收环氧树脂",
+      "reason": "作者团队公开论文列表将该题名明确列为CCS Chemistry论文；同一作者团队、同一氧化–Cope环氧树脂工作公开前体全文显示，DMSO/空气可选择性断裂胺固化环氧网络中的C–N键，并用于环氧树脂及商业纤维增强复合材料的化学解构与降解产物回收。这一主要贡献属于具有可迁移性的聚合物化学转化/升级回收方法，而不是仅以材料性能为终点的制样研究。",
+      "evidenceBasis": "大连理工大学翁志焕课题组论文列表记录完全一致的最终题名并标记CCS Chemistry Accepted；Francisco Zaera/Xiaotong Pan等作者的公开文献档案同时列出该CCS Chemistry论文与前体预印本“Breaking of C-N bonds in epoxy resins via an oxidation-Cope elimination pathway”。公开前体全文给出DMSO/空气中的N-oxide→Cope消除选择性C–N断裂、模型化合物机理证据、胺固化环氧树脂与商业复合材料适用性，以及可分离降解产物的回收与结构表征。因此此前所缺的实际产物、键变化、材料范围与分离/物料证据已被文章特定的匹配前体证据补齐；不把预印本中的数值机械宣称为最终版新增数据。",
+      "challengeReason": "最强反向理由是论文面向复合材料回收，且包含纤维回收、胶黏剂应用和生命周期评价；这些应用本身不能作为收录依据。但其核心新方法是对交联胺固化环氧网络执行选择性氧化–Cope C–N断裂，公开前体还展示多类环氧树脂/商业复合材料和可回收的化学降解产物，已经超过“材料制样/性能研究”边界，满足聚合物化学转化的一般制备证据。",
       "originalDate": "2026-10-01",
       "sourceReview": "audit/prepublish-review-2026-10-01-1800.json",
-      "carryForward": true,
+      "carryForward": false,
       "decisionReuse": {
         "sourceReviewFile": "audit/prepublish-review-2026-10-04-0800.json",
         "sourceReviewBlobSha": "2394f5f56913c6b976449278a8cab6d1e2e6a91e",
         "metadataUnchanged": true,
+        "evidenceChanged": true,
         "applicableScopeRulesVersion": "scope-2026-10-02-v1",
-        "compatibilityRechallengedAt": "2026-10-04T17:18:00+08:00",
-        "conclusion": "重新读取fresh compact与可获得的官方索引/仓储证据；新增片段仍未完整满足原evidenceNeeded，因此继续pending。"
+        "compatibilityRechallengedAt": "2026-10-04T18:06:08+08:00",
+        "conclusion": "补审取得与最终CCS Chemistry论文明确匹配的作者团队论文列表及同工作公开前体全文；此前关于实际断键、产物、范围和回收证据的缺口已实质补齐，因此由pending转include。"
+      },
+      "scopeAssessment": {
+        "primaryContribution": "建立以DMSO/空气驱动氧化–Cope消除、选择性切断胺固化环氧网络C–N键的化学解构与升级回收方法。",
+        "preparativeTransformation": "交联环氧网络中的叔胺位点先氧化为N-oxide，再发生Cope消除并断裂C–N键，形成含羟胺主链和末端羰基特征的可溶性降解产物，同时释放纤维组分。",
+        "generalityEvidence": "与最终CCS Chemistry题名相匹配的公开前体全文覆盖胺固化环氧树脂及商业纤维增强环氧复合材料，并显示降解产物可通过沉淀、过滤和干燥回收；公开摘要还明确称方法可扩展至含叔胺结构的其他聚合物。这里以化学解构范围和可回收产物为一般性依据，不以胶黏性能或生命周期指标替代。",
+        "sourceEvidence": "DUT作者主页将完全一致的最终题名列为CCS Chemistry论文；ResearchGate作者档案同时列出该最终论文和同主题前体预印本；前体公开全文直接给出氧化–Cope机理、模型化合物、环氧树脂/商业复合材料解构和降解产物回收/表征事实。",
+        "boundaryChallenge": "论文具有明显的材料循环利用场景，但核心新增能力不是膜/器件/性能调控，而是可迁移的交联聚合物选择性化学断键与产物回收方法，因此按scope-2026-10-02-v1纳入。"
       }
     }
   ],
@@ -1427,7 +1432,7 @@
     "allHandoffCandidatesReviewed": true,
     "allHandoffCandidatesFinalized": false,
     "unfinishedHandoffDois": [],
-    "openEvidenceGaps": 5,
+    "openEvidenceGaps": 4,
     "sourceCheckRows": 16,
     "publisherCoverageFullyVerified": false,
     "publisherSourceCheckCounts": {
@@ -1473,21 +1478,10 @@
       "Angew"
     ],
     "verifiedThroughHeld": true,
-    "zeroNewProof": {
-      "secondFreshMachineAuditRunId": 37191409007,
-      "pairedSnapshotGenerationVerified": true,
-      "allEightCandidatesDoubleReviewed": true,
-      "publisherCoverageFullyVerified": false,
-      "finalZeroClaim": false,
-      "interpretation": "三篇已按完整摘要排除，五篇仍为真实证据pending；由于没有publishable include且出版社整刊零新增证明不完整，本槽不得声称最终0或通过发布门。"
-    },
-    "unresolvedDisagreementsInterpretation": "Five compact DOI remain evidence-pending in both passes; there is no unaccounted first-pass/challenge conflict. Two durable noncompact CCS items and three existing-card scope rechecks remain separately preserved."
+    "unresolvedDisagreementsInterpretation": "Four compact DOI remain evidence-pending in both passes; no unaccounted first-pass/challenge conflict exists. Two durable noncompact CCS items and three existing-card scope rechecks remain separately preserved. 10.31635/ccschem.026.202607659 was resolved to include after new matched precursor evidence directly filled its prior preparative-evidence gap."
   },
   "globalBlockers": [],
-  "publicationBlockers": [
-    "pending_without_publishable_includes_is_not_final_zero",
-    "zero_new_requires_complete_publisher_source_proof"
-  ],
+  "publicationBlockers": [],
   "closure": {
     "date": "2026-10-03",
     "status": "blocked-source-coverage-anomaly",
@@ -1570,16 +1564,17 @@
   "pagesDeploymentRequested": false,
   "mediaAcquisitionPerformed": false,
   "notes": [
-    "Fresh 17:13 DOI-union audit completed with paired latest/compact generation and all 16 active journals.",
-    "All 8 compact candidates received two-pass decisions: 0 include, 3 exclude, 5 pending.",
-    "No production card, media record or deployment was modified or requested.",
-    "Because pending remains and no include subset exists, this is not a final zero-new determination; the slot remains preparing.",
-    "完整候选覆盖、paired snapshot和双遍字段验证均通过；当前阻断是发布层无白名单/零新增证明不足，不是全局发现缺失。"
+    "fresh 17:13 compact共8项，全部逐篇include/exclude/pending并完成第二遍挑战。",
+    "补审取得10.31635/ccschem.026.202607659与最终CCS Chemistry论文匹配的作者团队论文列表及公开前体全文，直接补齐此前实际C–N断裂、降解产物、环氧树脂/商业复合材料范围与回收证据；该项由pending转include。",
+    "当前1项进入18:00发布白名单；4项current pending因决定性文章类型或制备范围证据仍缺失而单篇延后，不阻塞该白名单。",
+    "durable pending继续保留10.31635/ccschem.026.202608472与10.31635/ccschem.026.202608262；现有卡片10.1021/acs.orglett.6c03499、10.1021/acs.orglett.6c03386、10.1021/acscatal.6c05520继续retain_while_pending。",
+    "既有5项scope corrections继续有效；本轮没有新增confirmed removal或production deletion。",
+    "本次只更新prepublish staging，不提前手工修改生产卡片、媒体或Pages；正式转换仍须通过当前generation的两条strict gate及固定槽writer。"
   ],
   "nonBlockingDiscoveryWarnings": [
     "CCS Chemistry has a healthy-source coverage-depth warning; Nature Communications, JACS and Angew retain closure-depth warnings. These hold verifiedThrough but are not the cause of the current no-release decision."
   ],
-  "updatedAt": "2026-10-04T17:21:10+08:00",
+  "updatedAt": "2026-10-04T18:06:08+08:00",
   "scopeContract": {
     "scopeRulesVersion": "scope-2026-10-02-v1",
     "scopeRulesFile": "docs/literature-scope-contract.md",
