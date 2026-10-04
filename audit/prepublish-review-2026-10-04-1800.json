@@ -1483,10 +1483,7 @@
     },
     "unresolvedDisagreementsInterpretation": "Five compact DOI remain evidence-pending in both passes; there is no unaccounted first-pass/challenge conflict. Two durable noncompact CCS items and three existing-card scope rechecks remain separately preserved."
   },
-  "globalBlockers": [
-    "pending_without_publishable_includes_is_not_final_zero",
-    "zero_new_requires_complete_publisher_source_proof"
-  ],
+  "globalBlockers": [],
   "publicationBlockers": [
     "pending_without_publishable_includes_is_not_final_zero",
     "zero_new_requires_complete_publisher_source_proof"
@@ -1576,12 +1573,13 @@
     "Fresh 17:13 DOI-union audit completed with paired latest/compact generation and all 16 active journals.",
     "All 8 compact candidates received two-pass decisions: 0 include, 3 exclude, 5 pending.",
     "No production card, media record or deployment was modified or requested.",
-    "Because pending remains and no include subset exists, this is not a final zero-new determination; the slot remains preparing."
+    "Because pending remains and no include subset exists, this is not a final zero-new determination; the slot remains preparing.",
+    "完整候选覆盖、paired snapshot和双遍字段验证均通过；当前阻断是发布层无白名单/零新增证明不足，不是全局发现缺失。"
   ],
   "nonBlockingDiscoveryWarnings": [
     "CCS Chemistry has a healthy-source coverage-depth warning; Nature Communications, JACS and Angew retain closure-depth warnings. These hold verifiedThrough but are not the cause of the current no-release decision."
   ],
-  "updatedAt": "2026-10-04T17:18:00+08:00",
+  "updatedAt": "2026-10-04T17:21:00+08:00",
   "scopeContract": {
     "scopeRulesVersion": "scope-2026-10-02-v1",
     "scopeRulesFile": "docs/literature-scope-contract.md",
