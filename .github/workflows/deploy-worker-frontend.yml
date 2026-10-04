@@ -13,6 +13,8 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
+      - 'cloudflare/summary-candidate-index-v1.sql'
+      - 'scripts/test-summary-candidate-shadow-deployment-contract.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'public/toc-mainline.user.js'
@@ -122,6 +124,23 @@ jobs:
           console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
           NODE
 
+      - name: Apply summary candidate index D1 migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../summary-candidate-index-v1.sql >/tmp/summary-candidate-index-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('summary_review_job_index','summary_review_job_index_backfill') ORDER BY name;" --json >/tmp/summary-candidate-index-schema-check.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/summary-candidate-index-schema-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const names=rows.map(x=>x.name).sort();
+          const expected=['summary_review_job_index','summary_review_job_index_backfill'];
+          if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('summary candidate index migration incomplete: '+JSON.stringify(names));
+          console.log(JSON.stringify({summaryCandidateIndexSchemaReady:true,tables:names}));
+          NODE
+
       - name: Generate frontend deployment configuration
         working-directory: cloudflare/worker
         shell: bash
@@ -143,6 +162,7 @@ jobs:
           SUMMARY_MODE = "scheduled_chatgpt_daily_no_api"
           SUMMARY_PUBLICATION_TIME = "12:00 Asia/Shanghai"
           EVIDENCE_INDEX_SHADOW_ENABLED = "1"
+          SUMMARY_CANDIDATE_INDEX_SHADOW_ENABLED = "1"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "0"
@@ -273,6 +293,114 @@ jobs:
           }
           console.log('EVIDENCE_INDEX_SHADOW '+JSON.stringify(report));
           NODE
+
+      - name: Backfill and compare summary candidate index shadow
+        id: summary_candidate_shadow
+        continue-on-error: true
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const base=process.env.WORKER_URL;
+          const token=process.env.BRIDGE_WRITE_TOKEN;
+          if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for summary candidate shadow');
+
+          async function call(path,{method='GET',body}={}){
+            const headers={authorization:`Bearer ${token}`,'cache-control':'no-cache'};
+            if(body!==undefined) headers['content-type']='application/json';
+            const response=await fetch(base+path,{
+              method,headers,body:body===undefined?undefined:JSON.stringify(body),
+              signal:AbortSignal.timeout(30000),
+            });
+            const text=await response.text();
+            let data={};try{data=text?JSON.parse(text):{};}catch{}
+            if(!response.ok) throw new Error(path+' failed: '+response.status+' '+text.slice(0,700));
+            return data;
+          }
+
+          let status=await call('/api/admin/article-summary/candidate-index/status');
+          if(status.enabled!==true||status.readPathActive!==false){
+            throw new Error('summary candidate index shadow state invalid: '+JSON.stringify(status));
+          }
+
+          let pages=0;
+          while(status.backfill?.complete!==true){
+            pages+=1;
+            if(pages>100) throw new Error('summary candidate job backfill exceeded 100 persisted pages');
+            const page=await call('/api/admin/article-summary/candidate-index/backfill?limit=1000',{method:'POST'});
+            if(page.ok!==true||page.enabled!==true) throw new Error('summary candidate backfill page invalid: '+JSON.stringify(page));
+            console.log(JSON.stringify({summaryCandidateBackfillPage:pages,...page}));
+            status=await call('/api/admin/article-summary/candidate-index/status');
+            if(status.enabled!==true||status.readPathActive!==false) throw new Error('summary candidate index status changed unexpectedly');
+          }
+
+          const legacyStatus=await call('/api/admin/article-summary/review-status');
+          const legacyJobCount=Number(legacyStatus.jobCount||0);
+          const indexedJobCount=Number(status.jobCount||0);
+          const legacySaturated=legacyJobCount>=10000;
+          if(!legacySaturated&&legacyJobCount!==indexedJobCount){
+            throw new Error('summary job index count mismatch: '+JSON.stringify({legacyJobCount,indexedJobCount}));
+          }
+
+          const comparisons=[];
+          for(let attempt=1;attempt<=10&&comparisons.length<3;attempt+=1){
+            const comparison=await call('/api/admin/article-summary/candidate-index/compare',{method:'POST',body:{}});
+            console.log(JSON.stringify({summaryCandidateComparisonAttempt:attempt,...comparison}));
+            if(comparison.comparable===true){
+              if(comparison.same!==true) throw new Error('summary candidate index divergence: '+JSON.stringify(comparison));
+              if(!comparison.legacy?.candidateSetHash||comparison.legacy.candidateSetHash!==comparison.indexed?.candidateSetHash){
+                throw new Error('summary candidate candidateSetHash mismatch: '+JSON.stringify(comparison));
+              }
+              comparisons.push(comparison);
+            }
+            if(comparisons.length<3) await new Promise(resolve=>setTimeout(resolve,750));
+          }
+          if(comparisons.length<3) throw new Error('summary candidate comparison could not obtain three stable snapshots');
+
+          const firstCandidate=comparisons[0].legacy?.candidate?.doi||'';
+          let preferredComparison=null;
+          if(firstCandidate){
+            preferredComparison=await call('/api/admin/article-summary/candidate-index/compare',{
+              method:'POST',body:{preferredDoi:firstCandidate}
+            });
+            if(preferredComparison.comparable!==true||preferredComparison.same!==true
+              ||preferredComparison.legacy?.candidateSetHash!==preferredComparison.indexed?.candidateSetHash){
+              throw new Error('preferred summary candidate comparison mismatch: '+JSON.stringify(preferredComparison));
+            }
+          }
+
+          const report={
+            schemaVersion:1,
+            phase:'D2b2-summary-candidate-shadow-live',
+            ok:true,
+            enabled:true,
+            readPathActive:false,
+            backfillComplete:true,
+            backfillPagesThisRun:pages,
+            indexedJobCount,
+            legacyJobCount,
+            legacyReaderSaturatedAt10000:legacySaturated,
+            stableComparisons:comparisons.length,
+            allSame:comparisons.every(row=>row.same===true),
+            candidateSetHash:comparisons[0].legacy?.candidateSetHash||'',
+            selectedDoi:comparisons[0].legacy?.candidate?.doi||'',
+            preferredComparisonChecked:Boolean(preferredComparison),
+            verifiedAt:new Date().toISOString(),
+          };
+          fs.writeFileSync('/tmp/summary-candidate-shadow-report.json',JSON.stringify(report,null,2)+'\n');
+          console.log('SUMMARY_CANDIDATE_SHADOW '+JSON.stringify(report));
+          NODE
+
+      - name: Preserve summary candidate shadow report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: summary-candidate-shadow-${{ github.run_id }}
+          path: /tmp/summary-candidate-shadow-report.json
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Promote verified official TOCs into production
         id: promote_official_tocs
