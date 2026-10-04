@@ -23,11 +23,15 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  const cut=source.lastIndexOf('  installManualRestartListener();');
  vm.runInContext(source.slice(0,cut)+`
  isGalleryPage=()=>true;writeToken=()=> 'fixture';badge=()=>{};sleep=__sleep;getJson=__get;postReadJson=__post;getPrivateJson=__private;enqueueCaptureReport=()=>true;
+ function fixtureMembership(q){var dois=q.articles.map(a=>normalizeDoi(a.doi));return {ok:true,revision:'fixture-active-v2',publicationSlot:'2026-10-02T08:00:00+08:00',catalogId:'a'.repeat(64),asOfDate:'2026-10-02',cutoff:'2026-07-02',memberCount:dois.length,activeCount:dois.length,hotCount:dois.length,archiveCount:0,recentAdditionCount:0,activeDois:dois,archiveDois:[],memberDois:dois,withdrawn:[]};}
+ observeArchitectureMembership=async(q)=>fixtureMembership(q);
+ var fixtureInventoryRun={id:'fixture-inventory',summary:{results:[]},inventoryCache:new Map(),activeDois:null};
+ async function fixtureReadMissing(q){fixtureInventoryRun.activeDois=new Set(fixtureMembership(q).activeDois);var prior=manualExecutionCurrent;manualExecutionCurrent=()=>true;try{return await readMissingCaptureInventory(q,fixtureInventoryRun);}finally{manualExecutionCurrent=prior;}}
  globalThis.shellFixture=()=>{assertBoundCaptureJob=()=>true;pageState=()=>({shell:true,auth:false,challenge:false});collectCandidates=()=>[];collectArticleFigureCandidates=()=>[];captureLiveUpdate=()=>true;};
  globalThis.bodyFixture=()=>{assertBoundCaptureJob=()=>true;captureLiveUpdate=()=>true;pushTrace=()=>true;waitForPairedVisuals=async()=>({toc:[],figures:__figs});globalThis.__downloads=0;acquireBestVisual=async(j,c)=>{__downloads++;return{candidate:c[0],image:{width:1000,height:500},quality:{quality:'high'}}};uploadArticleFigure=async()=>({contentHash:'a'.repeat(32)});tryCaptureArticleEvidence=async()=>({status:'not_requested'});finishPairedJob=async(j,r)=>r;};
  globalThis.T={buildMissingCaptureJobs,captureNeedText,captureLiveText,captureLiveSnapshot,forceStartFromHead,manualRunBlocksAutomatic,readMissingCaptureInventory,checkpointKey,waitForPairedVisuals,runPublisherJob};
  })();`,ctx);
- return {T:ctx.T,ctx,store,opened,calls,timers,plan:(ar=q.articles,i=inventory)=>{const run={id:'test',summary:{results:[]}};return {jobs:Array.from(ctx.T.buildMissingCaptureJobs(queue(ar),run,i)),summary:run.summary};}};
+ return {T:ctx.T,ctx,store,opened,calls,timers,plan:(ar=q.articles,i=inventory)=>{const qq=queue(ar),m=ctx.T.fixtureMembership(qq),run={id:'test',summary:{results:[]},activeDois:new Set(m.activeDois)};return {jobs:Array.from(ctx.T.buildMissingCaptureJobs(qq,run,i)),summary:run.summary};}};
 }
 const three=[article(1),article(2),article(3)];
 await test('765 complete records do not become a 765-paper queue',()=>{const ar=Array.from({length:765},(_,i)=>article(i));const i=inv(ar);i.media.items[1].tocStored=false;i.figures.items[2].expectedFigureCount=3;i.evidence.items.splice(3,1);i.evidence.count--;const x=h(queue(ar),i).plan();assert.equal(x.jobs.length,3);assert.equal(x.summary.inventoryUnknown,0)});
