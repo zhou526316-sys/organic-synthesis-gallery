@@ -1,0 +1,76 @@
+name: Worker deployment authority regression
+
+on:
+  push:
+    branches: [fix/worker-deploy-authority-20261004, main]
+    paths:
+      - '.github/workflows/cloudflare-user-ui-release.yml'
+      - '.github/workflows/deploy-worker-frontend.yml'
+      - '.github/workflows/worker-deploy-authority.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/cloudflare-user-ui-release.yml'
+      - '.github/workflows/deploy-worker-frontend.yml'
+      - '.github/workflows/worker-deploy-authority.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+
+      - name: Verify maintenance workflow cannot deploy a partial Worker
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const maintenance=fs.readFileSync('.github/workflows/cloudflare-user-ui-release.yml','utf8');
+          const canonical=fs.readFileSync('.github/workflows/deploy-worker-frontend.yml','utf8');
+          const fail=(m)=>{throw new Error(m)};
+
+          if (/npx\s+wrangler\s+deploy\b/.test(maintenance)) fail('user-schema maintenance must not deploy Worker code');
+          if (/wrangler\s+secret\s+bulk[^\n]*--config/.test(maintenance)) fail('secret maintenance must not attach a partial wrangler config');
+          if (!/wrangler\s+secret\s+bulk[^\n]*--name\s+organic-synthesis-gallery/.test(maintenance)) fail('named secret update missing');
+          if (!maintenance.includes('Generate D1-only maintenance configuration')) fail('D1-only config marker missing');
+          if (!maintenance.includes("! grep -Eq '^(main|\\[assets\\]|\\[vars\\]|\\[ai\\]|\\[triggers\\]|\\[\\[r2_buckets\\]\\])' wrangler.user-ui.toml")) fail('maintenance config deployability guard missing');
+
+          const deploys=[...canonical.matchAll(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)];
+          if (deploys.length!==2) fail('canonical workflow must have exactly dry-run and real deploy for frontend config');
+          for (const required of [
+            'Canonical production Worker deployment authority',
+            'PDF_R2_BUCKET: organic-synthesis-gallery-private-pdf',
+            'binding = "PDF_PRIVATE"',
+            'PRIVATE_PDF_READ_ENABLED = "1"',
+            'PRIVATE_PDF_CAPTURE_ENABLED = "0"',
+            'PRIVATE_PDF_PROCESSING_ENABLED = "0"',
+            'Verify canonical Worker bindings survived deployment and secret sync'
+          ]) if (!canonical.includes(required)) fail('canonical workflow missing '+required);
+
+          console.log(JSON.stringify({maintenanceDeploysWorker:false,namedSecretUpdate:true,canonicalConfigChecks:true}));
+          NODE
+
+      - name: Verify installed Wrangler supports name-only secret updates
+        working-directory: cloudflare/worker
+        run: |
+          npm install --no-audit --no-fund
+          npx wrangler secret bulk --help > /tmp/secret-bulk-help.txt
+          grep -q -- '--name' /tmp/secret-bulk-help.txt
+          grep -q -- '--config' /tmp/secret-bulk-help.txt
+          echo 'WRANGLER_NAME_ONLY_SECRET_UPDATE_SUPPORTED'
+
+      - name: Confirm PDF/media/literature rules are outside this change
+        run: |
+          BASE="$(git merge-base HEAD origin/main)"
+          git diff --exit-code "$BASE" HEAD -- \
+            public/toc-mainline.user.js cloudflare/worker/src public/papers.gz.b64 \
+            public/rolling-supplement.json shared/literature-journals.js \
+            docs/literature-scope-contract.md docs/literature-update-protocol.md \
+            .github/workflows/literature-audit.yml .github/workflows/new-body-continuous.yml \
+            audit/media-auto-policy.json
