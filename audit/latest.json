@@ -1,14 +1,14 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-04T12:18:48.104Z",
+  "generatedAt": "2026-10-04T12:21:18.098Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
   "lateDepositRescueDays": 7,
   "baseStartDate": "2026-10-02",
   "lateDepositRescueStartDate": "2026-09-28",
-  "catchupStartDate": "2026-09-21",
-  "startDate": "2026-09-21",
+  "catchupStartDate": "2026-09-19",
+  "startDate": "2026-09-19",
   "endDate": "2026-10-04",
   "closureDate": "2026-10-03",
   "policy": "Prospective per-journal activation dates; multi-ISSN Crossref online/published/created union plus OpenAlex union; default three-calendar-day Beijing primary semantic-review window, seven-calendar-day machine-only multi-source safety tail, and real source-query catch-up from the first unverified date when verifiedThrough falls behind. Crossref created dates are preserved separately from publication dates so late deposits and future issue-date conflicts remain reviewable instead of disappearing. Raw-source to post-filter collapse is a coverage anomaly. Repository and deployed gallery DOI sets are unioned to avoid deployment-race false positives. Every DOI difference remains reviewable: deterministic screening only assigns review priority and never silently excludes a new missing record. Publisher TOC/Early View/ASAP is an additional assistant-side closure check when available.",
@@ -20,7 +20,7 @@
         "1476-4687"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -30,7 +30,7 @@
         "1095-9203"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -39,7 +39,7 @@
         "2520-1158"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -48,7 +48,7 @@
         "2731-0582"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -58,7 +58,7 @@
         "1755-4349"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -67,7 +67,7 @@
         "2041-1723"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -77,7 +77,7 @@
         "1520-5126"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -87,7 +87,7 @@
         "1521-3773"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -96,7 +96,7 @@
         "2155-5435"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -106,7 +106,7 @@
         "1523-7060"
       ],
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -115,7 +115,7 @@
         "2451-9294"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -125,7 +125,7 @@
         "2041-6539"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -134,7 +134,7 @@
         "2096-5745"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -143,7 +143,7 @@
         "2375-2548"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -153,7 +153,7 @@
         "1463-9270"
       ],
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "lateDepositRescueStart": "2026-09-28"
     },
     {
@@ -169,17 +169,17 @@
   ],
   "summary": {
     "galleryDois": 786,
-    "sourceRecords": 1769,
-    "rawMissingFromGallery": 1468,
-    "previouslyReviewedExcluded": 1317,
-    "missingFromGallery": 151,
-    "potentialGaps": 51,
+    "sourceRecords": 1816,
+    "rawMissingFromGallery": 1506,
+    "previouslyReviewedExcluded": 1354,
+    "missingFromGallery": 152,
+    "potentialGaps": 52,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 4,
     "closureCoverageAnomalies": 0,
     "historicalCoverageLosses": 0,
-    "unresolved": 151,
+    "unresolved": 152,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -428,17 +428,20 @@
       }
     },
     "2026-09-18": {
-      "sourceRecords": 1,
-      "crossrefOnly": 1,
+      "sourceRecords": 5,
+      "crossrefOnly": 5,
       "openAlexOnly": 0,
       "multiSource": 0,
-      "coveredByGallery": 0,
-      "rawMissingFromGallery": 1,
-      "previouslyReviewedExcluded": 1,
+      "coveredByGallery": 3,
+      "rawMissingFromGallery": 2,
+      "previouslyReviewedExcluded": 2,
       "missingFromGallery": 0,
       "potentialGaps": 0,
       "byJournal": {
-        "Nature": 1
+        "Nature": 1,
+        "JACS": 2,
+        "ACS Catalysis": 1,
+        "Organic Letters": 1
       }
     },
     "2026-09-17": {
@@ -453,6 +456,41 @@
       "potentialGaps": 0,
       "byJournal": {
         "Nature": 1
+      }
+    },
+    "2026-09-19": {
+      "sourceRecords": 39,
+      "crossrefOnly": 1,
+      "openAlexOnly": 0,
+      "multiSource": 38,
+      "coveredByGallery": 5,
+      "rawMissingFromGallery": 34,
+      "previouslyReviewedExcluded": 34,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
+      "byJournal": {
+        "Nature Communications": 16,
+        "JACS": 5,
+        "Angew": 14,
+        "ACS Catalysis": 1,
+        "Organic Letters": 3
+      }
+    },
+    "2026-09-20": {
+      "sourceRecords": 4,
+      "crossrefOnly": 0,
+      "openAlexOnly": 0,
+      "multiSource": 4,
+      "coveredByGallery": 1,
+      "rawMissingFromGallery": 3,
+      "previouslyReviewedExcluded": 3,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
+      "byJournal": {
+        "Nature Communications": 1,
+        "JACS": 1,
+        "Organic Letters": 1,
+        "CCS Chemistry": 1
       }
     },
     "2026-09-26": {
@@ -596,27 +634,13 @@
       "byJournal": {
         "ACS Catalysis": 1
       }
-    },
-    "2026-09-20": {
-      "sourceRecords": 1,
-      "crossrefOnly": 1,
-      "openAlexOnly": 0,
-      "multiSource": 0,
-      "coveredByGallery": 0,
-      "rawMissingFromGallery": 1,
-      "previouslyReviewedExcluded": 1,
-      "missingFromGallery": 0,
-      "potentialGaps": 0,
-      "byJournal": {
-        "CCS Chemistry": 1
-      }
     }
   },
   "byJournal": {
     "Nature": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
       "rawSourceRecords": 169,
       "sourceRecords": 169,
       "crossrefOnly": 2,
@@ -632,8 +656,8 @@
     },
     "Science": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
       "rawSourceRecords": 89,
       "sourceRecords": 89,
       "crossrefOnly": 0,
@@ -649,8 +673,8 @@
     },
     "Nature Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
       "rawSourceRecords": 5,
       "sourceRecords": 5,
       "crossrefOnly": 0,
@@ -666,8 +690,8 @@
     },
     "Nature Synthesis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
       "rawSourceRecords": 14,
       "sourceRecords": 14,
       "crossrefOnly": 0,
@@ -683,8 +707,8 @@
     },
     "Nature Chemistry": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
       "rawSourceRecords": 17,
       "sourceRecords": 17,
       "crossrefOnly": 0,
@@ -700,84 +724,84 @@
     },
     "Nature Communications": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
-      "rawSourceRecords": 370,
-      "sourceRecords": 370,
-      "crossrefOnly": 0,
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
+      "rawSourceRecords": 387,
+      "sourceRecords": 387,
+      "crossrefOnly": 1,
       "openAlexOnly": 2,
-      "multiSource": 368,
+      "multiSource": 384,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 6,
-      "rawMissingFromGallery": 364,
-      "previouslyReviewedExcluded": 362,
+      "rawMissingFromGallery": 381,
+      "previouslyReviewedExcluded": 379,
       "missingFromGallery": 2,
       "potentialGaps": 0
     },
     "JACS": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
-      "rawSourceRecords": 211,
-      "sourceRecords": 211,
-      "crossrefOnly": 1,
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
+      "rawSourceRecords": 219,
+      "sourceRecords": 219,
+      "crossrefOnly": 3,
       "openAlexOnly": 0,
-      "multiSource": 210,
-      "lateIndexed": 1,
+      "multiSource": 216,
+      "lateIndexed": 3,
       "safetyTail": 0,
-      "coveredByGallery": 43,
-      "rawMissingFromGallery": 168,
-      "previouslyReviewedExcluded": 167,
+      "coveredByGallery": 45,
+      "rawMissingFromGallery": 174,
+      "previouslyReviewedExcluded": 173,
       "missingFromGallery": 1,
       "potentialGaps": 1
     },
     "Angew": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
-      "rawSourceRecords": 278,
-      "sourceRecords": 278,
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
+      "rawSourceRecords": 292,
+      "sourceRecords": 292,
       "crossrefOnly": 18,
       "openAlexOnly": 0,
-      "multiSource": 260,
+      "multiSource": 274,
       "lateIndexed": 0,
       "safetyTail": 0,
-      "coveredByGallery": 49,
-      "rawMissingFromGallery": 229,
-      "previouslyReviewedExcluded": 217,
+      "coveredByGallery": 51,
+      "rawMissingFromGallery": 241,
+      "previouslyReviewedExcluded": 229,
       "missingFromGallery": 12,
       "potentialGaps": 6
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
-      "rawSourceRecords": 84,
-      "sourceRecords": 76,
-      "crossrefOnly": 4,
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
+      "rawSourceRecords": 86,
+      "sourceRecords": 78,
+      "crossrefOnly": 5,
       "openAlexOnly": 0,
-      "multiSource": 72,
-      "lateIndexed": 4,
+      "multiSource": 73,
+      "lateIndexed": 5,
       "safetyTail": 0,
       "coveredByGallery": 18,
-      "rawMissingFromGallery": 58,
-      "previouslyReviewedExcluded": 53,
+      "rawMissingFromGallery": 60,
+      "previouslyReviewedExcluded": 55,
       "missingFromGallery": 5,
       "potentialGaps": 5
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
-      "rawSourceRecords": 124,
-      "sourceRecords": 124,
-      "crossrefOnly": 0,
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
+      "rawSourceRecords": 129,
+      "sourceRecords": 129,
+      "crossrefOnly": 1,
       "openAlexOnly": 0,
-      "multiSource": 124,
-      "lateIndexed": 0,
+      "multiSource": 128,
+      "lateIndexed": 1,
       "safetyTail": 0,
-      "coveredByGallery": 108,
+      "coveredByGallery": 113,
       "rawMissingFromGallery": 16,
       "previouslyReviewedExcluded": 16,
       "missingFromGallery": 0,
@@ -785,8 +809,8 @@
     },
     "Chem": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
       "rawSourceRecords": 9,
       "sourceRecords": 9,
       "crossrefOnly": 8,
@@ -802,31 +826,31 @@
     },
     "Chemical Science": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
-      "rawSourceRecords": 77,
-      "sourceRecords": 77,
-      "crossrefOnly": 77,
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
+      "rawSourceRecords": 78,
+      "sourceRecords": 78,
+      "crossrefOnly": 78,
       "openAlexOnly": 0,
       "multiSource": 0,
       "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 0,
-      "rawMissingFromGallery": 77,
+      "rawMissingFromGallery": 78,
       "previouslyReviewedExcluded": 0,
-      "missingFromGallery": 77,
-      "potentialGaps": 23
+      "missingFromGallery": 78,
+      "potentialGaps": 24
     },
     "CCS Chemistry": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
       "rawSourceRecords": 51,
       "sourceRecords": 51,
-      "crossrefOnly": 42,
+      "crossrefOnly": 41,
       "openAlexOnly": 0,
-      "multiSource": 9,
-      "lateIndexed": 1,
+      "multiSource": 10,
+      "lateIndexed": 0,
       "safetyTail": 0,
       "coveredByGallery": 10,
       "rawMissingFromGallery": 41,
@@ -836,8 +860,8 @@
     },
     "Science Advances": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
       "rawSourceRecords": 174,
       "sourceRecords": 174,
       "crossrefOnly": 1,
@@ -853,8 +877,8 @@
     },
     "Green Chemistry": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
-      "queryStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
+      "queryStart": "2026-09-19",
       "rawSourceRecords": 41,
       "sourceRecords": 41,
       "crossrefOnly": 41,
@@ -889,14 +913,14 @@
   "sourceFamilyHealth": {
     "Nature": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 169,
       "rawOpenAlexCandidateRecords": 167,
       "rawUnionCandidateRecords": 169,
@@ -914,14 +938,14 @@
     },
     "Science": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 89,
       "rawOpenAlexCandidateRecords": 89,
       "rawUnionCandidateRecords": 89,
@@ -939,14 +963,14 @@
     },
     "Nature Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 5,
       "rawOpenAlexCandidateRecords": 5,
       "rawUnionCandidateRecords": 5,
@@ -964,14 +988,14 @@
     },
     "Nature Synthesis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 14,
       "rawOpenAlexCandidateRecords": 14,
       "rawUnionCandidateRecords": 14,
@@ -989,14 +1013,14 @@
     },
     "Nature Chemistry": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 17,
       "rawOpenAlexCandidateRecords": 17,
       "rawUnionCandidateRecords": 17,
@@ -1014,22 +1038,22 @@
     },
     "Nature Communications": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
-      "rawCrossrefCandidateRecords": 368,
-      "rawOpenAlexCandidateRecords": 370,
-      "rawUnionCandidateRecords": 370,
+      "queryStart": "2026-09-19",
+      "rawCrossrefCandidateRecords": 385,
+      "rawOpenAlexCandidateRecords": 386,
+      "rawUnionCandidateRecords": 387,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 370,
-      "crossrefCandidateRecords": 368,
-      "openAlexCandidateRecords": 370,
-      "multiSourceCandidateRecords": 368,
+      "unionCandidateRecords": 387,
+      "crossrefCandidateRecords": 385,
+      "openAlexCandidateRecords": 386,
+      "multiSourceCandidateRecords": 384,
       "closureUnionRecords": 19,
       "closureCrossrefRecords": 19,
       "closureOpenAlexRecords": 19,
@@ -1039,22 +1063,22 @@
     },
     "JACS": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
-      "rawCrossrefCandidateRecords": 211,
-      "rawOpenAlexCandidateRecords": 210,
-      "rawUnionCandidateRecords": 211,
+      "queryStart": "2026-09-19",
+      "rawCrossrefCandidateRecords": 219,
+      "rawOpenAlexCandidateRecords": 216,
+      "rawUnionCandidateRecords": 219,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 211,
-      "crossrefCandidateRecords": 211,
-      "openAlexCandidateRecords": 210,
-      "multiSourceCandidateRecords": 210,
+      "unionCandidateRecords": 219,
+      "crossrefCandidateRecords": 219,
+      "openAlexCandidateRecords": 216,
+      "multiSourceCandidateRecords": 216,
       "closureUnionRecords": 4,
       "closureCrossrefRecords": 4,
       "closureOpenAlexRecords": 4,
@@ -1064,22 +1088,22 @@
     },
     "Angew": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
-      "rawCrossrefCandidateRecords": 278,
-      "rawOpenAlexCandidateRecords": 260,
-      "rawUnionCandidateRecords": 278,
+      "queryStart": "2026-09-19",
+      "rawCrossrefCandidateRecords": 292,
+      "rawOpenAlexCandidateRecords": 274,
+      "rawUnionCandidateRecords": 292,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 278,
-      "crossrefCandidateRecords": 278,
-      "openAlexCandidateRecords": 260,
-      "multiSourceCandidateRecords": 260,
+      "unionCandidateRecords": 292,
+      "crossrefCandidateRecords": 292,
+      "openAlexCandidateRecords": 274,
+      "multiSourceCandidateRecords": 274,
       "closureUnionRecords": 4,
       "closureCrossrefRecords": 4,
       "closureOpenAlexRecords": 3,
@@ -1089,22 +1113,22 @@
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
-      "rawCrossrefCandidateRecords": 84,
-      "rawOpenAlexCandidateRecords": 72,
-      "rawUnionCandidateRecords": 84,
+      "queryStart": "2026-09-19",
+      "rawCrossrefCandidateRecords": 86,
+      "rawOpenAlexCandidateRecords": 73,
+      "rawUnionCandidateRecords": 86,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 76,
-      "crossrefCandidateRecords": 76,
-      "openAlexCandidateRecords": 72,
-      "multiSourceCandidateRecords": 72,
+      "unionCandidateRecords": 78,
+      "crossrefCandidateRecords": 78,
+      "openAlexCandidateRecords": 73,
+      "multiSourceCandidateRecords": 73,
       "closureUnionRecords": 3,
       "closureCrossrefRecords": 3,
       "closureOpenAlexRecords": 3,
@@ -1114,22 +1138,22 @@
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
-      "rawCrossrefCandidateRecords": 124,
-      "rawOpenAlexCandidateRecords": 124,
-      "rawUnionCandidateRecords": 124,
+      "queryStart": "2026-09-19",
+      "rawCrossrefCandidateRecords": 129,
+      "rawOpenAlexCandidateRecords": 128,
+      "rawUnionCandidateRecords": 129,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 124,
-      "crossrefCandidateRecords": 124,
-      "openAlexCandidateRecords": 124,
-      "multiSourceCandidateRecords": 124,
+      "unionCandidateRecords": 129,
+      "crossrefCandidateRecords": 129,
+      "openAlexCandidateRecords": 128,
+      "multiSourceCandidateRecords": 128,
       "closureUnionRecords": 1,
       "closureCrossrefRecords": 1,
       "closureOpenAlexRecords": 1,
@@ -1139,14 +1163,14 @@
     },
     "Chem": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 9,
       "rawOpenAlexCandidateRecords": 1,
       "rawUnionCandidateRecords": 9,
@@ -1164,20 +1188,20 @@
     },
     "Chemical Science": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
-      "rawCrossrefCandidateRecords": 77,
+      "queryStart": "2026-09-19",
+      "rawCrossrefCandidateRecords": 78,
       "rawOpenAlexCandidateRecords": 0,
-      "rawUnionCandidateRecords": 77,
+      "rawUnionCandidateRecords": 78,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 77,
-      "crossrefCandidateRecords": 77,
+      "unionCandidateRecords": 78,
+      "crossrefCandidateRecords": 78,
       "openAlexCandidateRecords": 0,
       "multiSourceCandidateRecords": 0,
       "closureUnionRecords": 0,
@@ -1189,22 +1213,22 @@
     },
     "CCS Chemistry": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 51,
-      "rawOpenAlexCandidateRecords": 9,
+      "rawOpenAlexCandidateRecords": 10,
       "rawUnionCandidateRecords": 51,
       "rawToUnionCollapse": false,
       "unionCandidateRecords": 51,
       "crossrefCandidateRecords": 51,
-      "openAlexCandidateRecords": 9,
-      "multiSourceCandidateRecords": 9,
+      "openAlexCandidateRecords": 10,
+      "multiSourceCandidateRecords": 10,
       "closureUnionRecords": 3,
       "closureCrossrefRecords": 3,
       "closureOpenAlexRecords": 0,
@@ -1214,14 +1238,14 @@
     },
     "Science Advances": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 174,
       "rawOpenAlexCandidateRecords": 173,
       "rawUnionCandidateRecords": 174,
@@ -1239,14 +1263,14 @@
     },
     "Green Chemistry": {
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 41,
       "rawOpenAlexCandidateRecords": 0,
       "rawUnionCandidateRecords": 41,
@@ -1293,14 +1317,14 @@
     {
       "journal": "Chem",
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 9,
       "rawOpenAlexCandidateRecords": 1,
       "rawUnionCandidateRecords": 9,
@@ -1319,20 +1343,20 @@
     {
       "journal": "Chemical Science",
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
-      "rawCrossrefCandidateRecords": 77,
+      "queryStart": "2026-09-19",
+      "rawCrossrefCandidateRecords": 78,
       "rawOpenAlexCandidateRecords": 0,
-      "rawUnionCandidateRecords": 77,
+      "rawUnionCandidateRecords": 78,
       "rawToUnionCollapse": false,
-      "unionCandidateRecords": 77,
-      "crossrefCandidateRecords": 77,
+      "unionCandidateRecords": 78,
+      "crossrefCandidateRecords": 78,
       "openAlexCandidateRecords": 0,
       "multiSourceCandidateRecords": 0,
       "closureUnionRecords": 0,
@@ -1345,22 +1369,22 @@
     {
       "journal": "CCS Chemistry",
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 3,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 51,
-      "rawOpenAlexCandidateRecords": 9,
+      "rawOpenAlexCandidateRecords": 10,
       "rawUnionCandidateRecords": 51,
       "rawToUnionCollapse": false,
       "unionCandidateRecords": 51,
       "crossrefCandidateRecords": 51,
-      "openAlexCandidateRecords": 9,
-      "multiSourceCandidateRecords": 9,
+      "openAlexCandidateRecords": 10,
+      "multiSourceCandidateRecords": 10,
       "closureUnionRecords": 3,
       "closureCrossrefRecords": 3,
       "closureOpenAlexRecords": 0,
@@ -1371,14 +1395,14 @@
     {
       "journal": "Green Chemistry",
       "activeFrom": "2026-09-19",
-      "effectiveStart": "2026-09-21",
+      "effectiveStart": "2026-09-19",
       "crossrefRequests": 6,
       "crossrefFailures": 0,
       "openAlexRequests": 1,
       "openAlexFailures": 0,
       "crossrefHealthy": true,
       "openAlexHealthy": true,
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "rawCrossrefCandidateRecords": 41,
       "rawOpenAlexCandidateRecords": 0,
       "rawUnionCandidateRecords": 41,
@@ -1403,7 +1427,7 @@
       "journal": "Nature",
       "issn": "0028-0836",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 167,
       "note": ""
@@ -1413,7 +1437,7 @@
       "journal": "Nature",
       "issn": "0028-0836",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 167,
       "note": ""
@@ -1423,7 +1447,7 @@
       "journal": "Nature",
       "issn": "0028-0836",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 169,
       "note": ""
@@ -1433,7 +1457,7 @@
       "journal": "Nature",
       "issn": "1476-4687",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 167,
       "note": ""
@@ -1443,7 +1467,7 @@
       "journal": "Nature",
       "issn": "1476-4687",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 167,
       "note": ""
@@ -1453,7 +1477,7 @@
       "journal": "Nature",
       "issn": "1476-4687",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 169,
       "note": ""
@@ -1471,7 +1495,7 @@
       "journal": "Science",
       "issn": "0036-8075",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 4,
       "note": ""
@@ -1481,7 +1505,7 @@
       "journal": "Science",
       "issn": "0036-8075",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 89,
       "note": ""
@@ -1491,7 +1515,7 @@
       "journal": "Science",
       "issn": "0036-8075",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 89,
       "note": ""
@@ -1501,7 +1525,7 @@
       "journal": "Science",
       "issn": "1095-9203",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 4,
       "note": ""
@@ -1511,7 +1535,7 @@
       "journal": "Science",
       "issn": "1095-9203",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 89,
       "note": ""
@@ -1521,7 +1545,7 @@
       "journal": "Science",
       "issn": "1095-9203",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 89,
       "note": ""
@@ -1539,7 +1563,7 @@
       "journal": "Nature Catalysis",
       "issn": "2520-1158",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 5,
       "note": ""
@@ -1549,7 +1573,7 @@
       "journal": "Nature Catalysis",
       "issn": "2520-1158",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 5,
       "note": ""
@@ -1559,7 +1583,7 @@
       "journal": "Nature Catalysis",
       "issn": "2520-1158",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 5,
       "note": ""
@@ -1577,7 +1601,7 @@
       "journal": "Nature Synthesis",
       "issn": "2731-0582",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 14,
       "note": ""
@@ -1587,7 +1611,7 @@
       "journal": "Nature Synthesis",
       "issn": "2731-0582",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 14,
       "note": ""
@@ -1597,7 +1621,7 @@
       "journal": "Nature Synthesis",
       "issn": "2731-0582",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 14,
       "note": ""
@@ -1615,7 +1639,7 @@
       "journal": "Nature Chemistry",
       "issn": "1755-4330",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 17,
       "note": ""
@@ -1625,7 +1649,7 @@
       "journal": "Nature Chemistry",
       "issn": "1755-4330",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 17,
       "note": ""
@@ -1635,7 +1659,7 @@
       "journal": "Nature Chemistry",
       "issn": "1755-4330",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 17,
       "note": ""
@@ -1645,7 +1669,7 @@
       "journal": "Nature Chemistry",
       "issn": "1755-4349",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 17,
       "note": ""
@@ -1655,7 +1679,7 @@
       "journal": "Nature Chemistry",
       "issn": "1755-4349",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 17,
       "note": ""
@@ -1665,7 +1689,7 @@
       "journal": "Nature Chemistry",
       "issn": "1755-4349",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 17,
       "note": ""
@@ -1683,9 +1707,9 @@
       "journal": "Nature Communications",
       "issn": "2041-1723",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 368,
+      "count": 385,
       "note": ""
     },
     {
@@ -1693,9 +1717,9 @@
       "journal": "Nature Communications",
       "issn": "2041-1723",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 368,
+      "count": 385,
       "note": ""
     },
     {
@@ -1703,9 +1727,9 @@
       "journal": "Nature Communications",
       "issn": "2041-1723",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 368,
+      "count": 384,
       "note": ""
     },
     {
@@ -1713,7 +1737,7 @@
       "journal": "Nature Communications",
       "sourceId": "S64187185",
       "ok": true,
-      "count": 370,
+      "count": 386,
       "note": ""
     },
     {
@@ -1721,9 +1745,9 @@
       "journal": "JACS",
       "issn": "0002-7863",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 210,
+      "count": 216,
       "note": ""
     },
     {
@@ -1731,9 +1755,9 @@
       "journal": "JACS",
       "issn": "0002-7863",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 210,
+      "count": 216,
       "note": ""
     },
     {
@@ -1741,9 +1765,9 @@
       "journal": "JACS",
       "issn": "0002-7863",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 211,
+      "count": 219,
       "note": ""
     },
     {
@@ -1751,9 +1775,9 @@
       "journal": "JACS",
       "issn": "1520-5126",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 210,
+      "count": 216,
       "note": ""
     },
     {
@@ -1761,9 +1785,9 @@
       "journal": "JACS",
       "issn": "1520-5126",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 210,
+      "count": 216,
       "note": ""
     },
     {
@@ -1771,9 +1795,9 @@
       "journal": "JACS",
       "issn": "1520-5126",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 211,
+      "count": 219,
       "note": ""
     },
     {
@@ -1781,7 +1805,7 @@
       "journal": "JACS",
       "sourceId": "S111155417",
       "ok": true,
-      "count": 210,
+      "count": 216,
       "note": ""
     },
     {
@@ -1789,9 +1813,9 @@
       "journal": "Angew",
       "issn": "1433-7851",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 276,
+      "count": 290,
       "note": ""
     },
     {
@@ -1799,9 +1823,9 @@
       "journal": "Angew",
       "issn": "1433-7851",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 278,
+      "count": 292,
       "note": ""
     },
     {
@@ -1809,9 +1833,9 @@
       "journal": "Angew",
       "issn": "1433-7851",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 278,
+      "count": 292,
       "note": ""
     },
     {
@@ -1819,9 +1843,9 @@
       "journal": "Angew",
       "issn": "1521-3773",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 276,
+      "count": 290,
       "note": ""
     },
     {
@@ -1829,9 +1853,9 @@
       "journal": "Angew",
       "issn": "1521-3773",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 278,
+      "count": 292,
       "note": ""
     },
     {
@@ -1839,9 +1863,9 @@
       "journal": "Angew",
       "issn": "1521-3773",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 278,
+      "count": 292,
       "note": ""
     },
     {
@@ -1849,7 +1873,7 @@
       "journal": "Angew",
       "sourceId": "S67393510",
       "ok": true,
-      "count": 260,
+      "count": 274,
       "note": ""
     },
     {
@@ -1857,9 +1881,9 @@
       "journal": "ACS Catalysis",
       "issn": "2155-5435",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 74,
+      "count": 75,
       "note": ""
     },
     {
@@ -1867,9 +1891,9 @@
       "journal": "ACS Catalysis",
       "issn": "2155-5435",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 74,
+      "count": 75,
       "note": ""
     },
     {
@@ -1877,9 +1901,9 @@
       "journal": "ACS Catalysis",
       "issn": "2155-5435",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 86,
+      "count": 88,
       "note": ""
     },
     {
@@ -1887,7 +1911,7 @@
       "journal": "ACS Catalysis",
       "sourceId": "S37391459",
       "ok": true,
-      "count": 74,
+      "count": 75,
       "note": ""
     },
     {
@@ -1895,9 +1919,9 @@
       "journal": "Organic Letters",
       "issn": "1523-7052",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 124,
+      "count": 128,
       "note": ""
     },
     {
@@ -1905,9 +1929,9 @@
       "journal": "Organic Letters",
       "issn": "1523-7052",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 124,
+      "count": 128,
       "note": ""
     },
     {
@@ -1915,9 +1939,9 @@
       "journal": "Organic Letters",
       "issn": "1523-7052",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 124,
+      "count": 129,
       "note": ""
     },
     {
@@ -1925,9 +1949,9 @@
       "journal": "Organic Letters",
       "issn": "1523-7060",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 124,
+      "count": 128,
       "note": ""
     },
     {
@@ -1935,9 +1959,9 @@
       "journal": "Organic Letters",
       "issn": "1523-7060",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 124,
+      "count": 128,
       "note": ""
     },
     {
@@ -1945,9 +1969,9 @@
       "journal": "Organic Letters",
       "issn": "1523-7060",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 124,
+      "count": 129,
       "note": ""
     },
     {
@@ -1955,7 +1979,7 @@
       "journal": "Organic Letters",
       "sourceId": "S201989124",
       "ok": true,
-      "count": 124,
+      "count": 128,
       "note": ""
     },
     {
@@ -1963,7 +1987,7 @@
       "journal": "Chem",
       "issn": "2451-9294",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -1973,7 +1997,7 @@
       "journal": "Chem",
       "issn": "2451-9294",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 1,
       "note": ""
@@ -1983,7 +2007,7 @@
       "journal": "Chem",
       "issn": "2451-9294",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 9,
       "note": ""
@@ -2001,7 +2025,7 @@
       "journal": "Chemical Science",
       "issn": "2041-6520",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -2011,7 +2035,7 @@
       "journal": "Chemical Science",
       "issn": "2041-6520",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -2021,9 +2045,9 @@
       "journal": "Chemical Science",
       "issn": "2041-6520",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 77,
+      "count": 78,
       "note": ""
     },
     {
@@ -2031,7 +2055,7 @@
       "journal": "Chemical Science",
       "issn": "2041-6539",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -2041,7 +2065,7 @@
       "journal": "Chemical Science",
       "issn": "2041-6539",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -2051,9 +2075,9 @@
       "journal": "Chemical Science",
       "issn": "2041-6539",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 77,
+      "count": 78,
       "note": ""
     },
     {
@@ -2069,9 +2093,9 @@
       "journal": "CCS Chemistry",
       "issn": "2096-5745",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 13,
+      "count": 14,
       "note": ""
     },
     {
@@ -2079,9 +2103,9 @@
       "journal": "CCS Chemistry",
       "issn": "2096-5745",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
-      "count": 50,
+      "count": 51,
       "note": ""
     },
     {
@@ -2089,7 +2113,7 @@
       "journal": "CCS Chemistry",
       "issn": "2096-5745",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 10,
       "note": ""
@@ -2099,7 +2123,7 @@
       "journal": "CCS Chemistry",
       "sourceId": "S4210239486",
       "ok": true,
-      "count": 9,
+      "count": 10,
       "note": ""
     },
     {
@@ -2107,7 +2131,7 @@
       "journal": "Science Advances",
       "issn": "2375-2548",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -2117,7 +2141,7 @@
       "journal": "Science Advances",
       "issn": "2375-2548",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 174,
       "note": ""
@@ -2127,7 +2151,7 @@
       "journal": "Science Advances",
       "issn": "2375-2548",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 174,
       "note": ""
@@ -2145,7 +2169,7 @@
       "journal": "Green Chemistry",
       "issn": "1463-9262",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -2155,7 +2179,7 @@
       "journal": "Green Chemistry",
       "issn": "1463-9262",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -2165,7 +2189,7 @@
       "journal": "Green Chemistry",
       "issn": "1463-9262",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 41,
       "note": ""
@@ -2175,7 +2199,7 @@
       "journal": "Green Chemistry",
       "issn": "1463-9270",
       "mode": "online",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -2185,7 +2209,7 @@
       "journal": "Green Chemistry",
       "issn": "1463-9270",
       "mode": "published",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 0,
       "note": ""
@@ -2195,7 +2219,7 @@
       "journal": "Green Chemistry",
       "issn": "1463-9270",
       "mode": "created",
-      "queryStart": "2026-09-21",
+      "queryStart": "2026-09-19",
       "ok": true,
       "count": 41,
       "note": ""
@@ -3896,6 +3920,38 @@
       "lateIndexed": false,
       "safetyTail": false,
       "reviewPriority": "normal"
+    },
+    {
+      "doi": "10.1039/d6sc06084f",
+      "journal": "Chemical Science",
+      "title": "Bromonium-catalyzed 1,2-diamination of various conjugated alkenes",
+      "abstract": "A diastereoselective 1,2-diamination applicable to a wide range of α,β-unsaturated carbonyls and π-conjugated alkenes is described. The bromonium catalytic system enables the reaction, affording products with complete anti-selectivity.",
+      "date": "",
+      "onlineDate": "",
+      "publishedDate": "",
+      "createdDate": "2026-09-19",
+      "onlineDatePrecision": "year",
+      "publishedDatePrecision": "year",
+      "createdDatePrecision": "day",
+      "type": "journal-article",
+      "authors": [
+        "Takeshi Sugiyama",
+        "Ryo Nakajima",
+        "Yuuka Kakizaki",
+        "Yuki Yamada",
+        "Satoshi Minakata"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-6520:created",
+        "crossref:2041-6539:created"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": true,
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
     },
     {
       "doi": "10.1039/d6sc04717c",
@@ -8161,6 +8217,38 @@
         "Yang Chen",
         "Jinping Li",
         "Libo Li"
+      ],
+      "topics": [],
+      "sources": [
+        "crossref:2041-6520:created",
+        "crossref:2041-6539:created"
+      ],
+      "activeFrom": "2026-09-19",
+      "dateUnverified": true,
+      "dateConflict": "",
+      "lateIndexed": false,
+      "safetyTail": false,
+      "reviewPriority": "high"
+    },
+    {
+      "doi": "10.1039/d6sc06084f",
+      "journal": "Chemical Science",
+      "title": "Bromonium-catalyzed 1,2-diamination of various conjugated alkenes",
+      "abstract": "A diastereoselective 1,2-diamination applicable to a wide range of α,β-unsaturated carbonyls and π-conjugated alkenes is described. The bromonium catalytic system enables the reaction, affording products with complete anti-selectivity.",
+      "date": "",
+      "onlineDate": "",
+      "publishedDate": "",
+      "createdDate": "2026-09-19",
+      "onlineDatePrecision": "year",
+      "publishedDatePrecision": "year",
+      "createdDatePrecision": "day",
+      "type": "journal-article",
+      "authors": [
+        "Takeshi Sugiyama",
+        "Ryo Nakajima",
+        "Yuuka Kakizaki",
+        "Yuki Yamada",
+        "Satoshi Minakata"
       ],
       "topics": [],
       "sources": [
