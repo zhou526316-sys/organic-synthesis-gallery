@@ -347,6 +347,7 @@ jobs:
           }
 
           const comparisons=[];
+          const comparisonNow=Date.now();
           let comparable=0;
           let unstable=0;
           let divergent=0;
@@ -355,7 +356,7 @@ jobs:
           let preferredDoi='';
 
           for(let attempt=1;attempt<=5;attempt+=1){
-            const result=await call('/api/admin/article-summary/candidate-index/compare',{method:'POST',body:{}});
+            const result=await call('/api/admin/article-summary/candidate-index/compare',{method:'POST',body:{now:comparisonNow}});
             comparisons.push({attempt,result});
             if(result.comparable===true){
               comparable+=1;
@@ -385,7 +386,7 @@ jobs:
           if(preferredDoi){
             for(let attempt=1;attempt<=3;attempt+=1){
               const result=await call('/api/admin/article-summary/candidate-index/compare',{
-                method:'POST',body:{preferredDoi}
+                method:'POST',body:{preferredDoi,now:comparisonNow}
               });
               comparisons.push({preferred:true,attempt,result});
               if(result.comparable===true){
