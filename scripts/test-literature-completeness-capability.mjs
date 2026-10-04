@@ -15,10 +15,15 @@ for (const name of [
   assert.ok(names.includes(name), `Missing target journal: ${name}`);
 }
 
-for (const name of ['Chem', 'Chemical Science', 'CCS Chemistry', 'Science Advances', 'Green Chemistry']) {
+for (const name of ['Chem', 'CCS Chemistry', 'Science Advances']) {
   const journal = TARGET_JOURNALS.find(item => item.name === name);
   assert.equal(journal?.activeFrom, '2026-09-19', `${name} must remain prospective from 2026-09-19`);
   assert.equal(effectiveJournalStart(journal, '2026-09-13'), '2026-09-19', `${name} must not be backfilled before activation`);
+}
+for (const name of ['Chemical Science', 'Green Chemistry']) {
+  const journal = TARGET_JOURNALS.find(item => item.name === name);
+  assert.equal(journal?.activeFrom, '2026-10-01', `${name} must remain prospective from 2026-10-01`);
+  assert.equal(effectiveJournalStart(journal, '2026-09-13'), '2026-10-01', `${name} must not be backfilled before activation`);
 }
 
 const joc = TARGET_JOURNALS.find(item => item.name === 'JOC');
@@ -67,7 +72,7 @@ assert.ok(!auditSource.includes('.filter(retainForReview)'), 'Keyword screening 
 
 console.log(JSON.stringify({
   targetJournals: TARGET_JOURNALS.length,
-  prospectiveFrom: { existingAdditions: '2026-09-19', JOC: '2026-09-22' },
+  prospectiveFrom: { existingAdditions: '2026-09-19', rscAdditions: '2026-10-01', JOC: '2026-09-22' },
   lookbackDays: 3,
   lateDepositRescueDays: 7,
   verifiedThroughCatchup: true,
