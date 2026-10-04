@@ -465,6 +465,15 @@ export async function authCallback(request, env, provider) {
   }
 }
 
+async function userCapabilities(env, userId) {
+  try {
+    const rows = await env.DB.prepare('SELECT capability FROM user_capabilities WHERE user_id = ? ORDER BY capability').bind(userId).all();
+    return [...new Set((rows.results || []).map(row => String(row.capability || '')).filter(Boolean))];
+  } catch {
+    return [];
+  }
+}
+
 async function userSummary(env, userId) {
   const row = await env.DB.prepare(
     `SELECT u.id, u.display_name, u.email, u.avatar_url,
@@ -480,6 +489,7 @@ async function userSummary(env, userId) {
     avatarUrl: row.avatar_url || null,
     localAccount: Boolean(row.local_account),
     emailVerified: Boolean(row.email_verified),
+    capabilities: await userCapabilities(env, userId),
   } : null;
 }
 
@@ -515,6 +525,12 @@ async function sessionRow(request, env) {
     return null;
   }
   return row;
+}
+
+export async function authenticatedSessionUserId(request, env) {
+  if (!env?.DB) return null;
+  const row = await sessionRow(request, env);
+  return row?.user_id || null;
 }
 
 export async function sessionInfo(request, env) {

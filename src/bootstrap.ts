@@ -36,6 +36,8 @@ void preloadChineseTitleCache().finally(async () => {
   await import('./user-ui/user-center-management');
   await import('./user-ui/interaction-stability');
   await import('./user-ui/account-sync');
+  const privatePdf = await import('./private-pdf-access');
+  privatePdf.installPrivatePdfOriginalRouting();
   await import('./user-ui/feedback-widget');
   await import('./site-analytics');
   await import('./media-enhancements');

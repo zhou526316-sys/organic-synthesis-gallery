@@ -31,6 +31,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       D1_NAME: organic-synthesis-gallery
       R2_BUCKET: organic-synthesis-gallery-media
+      PDF_R2_BUCKET: organic-synthesis-gallery-private-pdf
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       EMAIL_FROM: 'Organic Synthesis Gallery <login@mail.gczhouwld.com>'
       WECHAT_MP_APP_ID: wx28b0fa5a3e28387c
@@ -93,7 +94,28 @@ jobs:
           )
           test -n "$D1_ID" || { echo 'D1 database binding is missing'; exit 1; }
           npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null
+          if ! npx wrangler r2 bucket info "$PDF_R2_BUCKET" --json >/dev/null 2>&1; then
+            npx wrangler r2 bucket create "$PDF_R2_BUCKET" >/dev/null
+          fi
+          npx wrangler r2 bucket info "$PDF_R2_BUCKET" --json >/dev/null
           echo "d1_id=$D1_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Apply isolated private PDF D1 migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-v1.sql >/tmp/private-pdf-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens') ORDER BY name;" --json >/tmp/private-pdf-schema-check.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/private-pdf-schema-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const names=rows.map(x=>x.name).sort();
+          const expected=['private_pdf_access_tokens','private_pdf_documents','user_capabilities'];
+          if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('private PDF schema migration incomplete: '+JSON.stringify(names));
+          console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
+          NODE
 
       - name: Generate frontend deployment configuration
         working-directory: cloudflare/worker
@@ -115,6 +137,9 @@ jobs:
           SUMMARY_REVIEW_ENABLED = "0"
           SUMMARY_MODE = "scheduled_chatgpt_daily_no_api"
           SUMMARY_PUBLICATION_TIME = "12:00 Asia/Shanghai"
+          PRIVATE_PDF_READ_ENABLED = "1"
+          PRIVATE_PDF_CAPTURE_ENABLED = "0"
+          PRIVATE_PDF_PROCESSING_ENABLED = "0"
 
           [ai]
           binding = "AI"
@@ -131,6 +156,10 @@ jobs:
           [[r2_buckets]]
           binding = "MEDIA"
           bucket_name = "$R2_BUCKET"
+
+          [[r2_buckets]]
+          binding = "PDF_PRIVATE"
+          bucket_name = "$PDF_R2_BUCKET"
 
           [[d1_databases]]
           binding = "DB"
