@@ -35,8 +35,9 @@ import { claimMediaJobs, completeMediaJob, failMediaJob, mediaJobStatus, resumeM
 import { resolvePaperTitles } from './title-resolution.js';
 import { ARTICLE_EVIDENCE_SCHEMA_VERSION, getArticleEvidenceInventory, getArticleSummary, importArticleFulltext } from './article-summary.js';
 import { backfillScheduledEvidenceHandoffs, getScheduledEvidenceHandoff, getScheduledEvidenceHandoffPart } from './scheduled-summary-handoff.js';
-import { getSummaryReviewStatus } from './summary-review.js';
+import { compareSummaryReviewCandidateShadow, getSummaryReviewStatus } from './summary-review.js';
 import { backfillEvidenceIndexPage, getEvidenceIndexStatus, listEvidenceIndexRows } from './evidence-index.js';
+import { backfillSummaryJobIndexPage, getSummaryCandidateIndexStatus } from './summary-candidate-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
@@ -295,6 +296,26 @@ async function handleApi(request, env, ctx) {
     if (authError) return authError;
     const limit = Math.max(1, Math.min(1000, Number(url.searchParams.get('limit') || 100)));
     return resultResponse(await listEvidenceIndexRows(env, limit));
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/admin/article-summary/candidate-index/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getSummaryCandidateIndexStatus(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/article-summary/candidate-index/backfill') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(1000, Number(url.searchParams.get('limit') || 500)));
+    return resultResponse(await backfillSummaryJobIndexPage(env, limit));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/article-summary/candidate-index/compare') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const body = await readJson(request);
+    return resultResponse(await compareSummaryReviewCandidateShadow(env, {
+      preferredDoi: String(body?.preferredDoi || ''),
+    }));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
