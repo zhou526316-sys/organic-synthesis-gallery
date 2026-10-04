@@ -34,7 +34,7 @@ async function contextWith(capabilities,openResult={available:true,url:base+'/pr
 }
 try{
  await test('owner click routes to private URL only when capability and PDF are available',async()=>{
-  const context=await contextWith(['private_pdf_read']);const page=await context.newPage();await page.goto(base);await page.locator('.card a.open').first().waitFor();
+  const context=await contextWith(['private_pdf_read']);const page=await context.newPage();const sessionReady=page.waitForResponse(r=>r.url().includes('/api/user-ui/auth/session')&&r.status()===200);await page.goto(base);await sessionReady;await page.waitForTimeout(50);await page.locator('.card a.open').first().waitFor();
   await page.locator('.card a.open').first().evaluate(a=>{a.href='/publisher-fallback.html';});
   await page.waitForTimeout(300);
   const before=context.pages().length;await page.locator('.card a.open').first().click();await page.waitForFunction(n=>window.length>=0,before).catch(()=>{});
@@ -43,12 +43,12 @@ try{
  });
  await test('ordinary account keeps original publisher link with no private lookup',async()=>{
   const context=await contextWith([]);let privateCalls=0;context.on('request',r=>{if(r.url().includes('/private-pdf/open'))privateCalls++;});
-  const page=await context.newPage();await page.goto(base);await page.locator('.card a.open').first().waitFor();await page.locator('.card a.open').first().evaluate(a=>{a.href='/publisher-fallback.html';});
+  const page=await context.newPage();const sessionReady=page.waitForResponse(r=>r.url().includes('/api/user-ui/auth/session')&&r.status()===200);await page.goto(base);await sessionReady;await page.waitForTimeout(50);await page.locator('.card a.open').first().waitFor();await page.locator('.card a.open').first().evaluate(a=>{a.href='/publisher-fallback.html';});
   await page.waitForTimeout(300);const before=context.pages().length;await page.locator('.card a.open').first().click();for(let i=0;i<30&&context.pages().length===before;i++)await page.waitForTimeout(100);
   const target=context.pages().at(-1);await target.waitForURL(/publisher-fallback\\.html/,{timeout:5000,waitUntil:'commit'});assert.match(target.url(),/publisher-fallback\\.html/);assert.equal(privateCalls,0);await context.close();
  });
  await test('owner without stored PDF falls back to publisher',async()=>{
-  const context=await contextWith(['private_pdf_read'],{available:false});const page=await context.newPage();await page.goto(base);await page.locator('.card a.open').first().waitFor();await page.locator('.card a.open').first().evaluate(a=>{a.href='/publisher-fallback.html';});
+  const context=await contextWith(['private_pdf_read'],{available:false});const page=await context.newPage();const sessionReady=page.waitForResponse(r=>r.url().includes('/api/user-ui/auth/session')&&r.status()===200);await page.goto(base);await sessionReady;await page.waitForTimeout(50);await page.locator('.card a.open').first().waitFor();await page.locator('.card a.open').first().evaluate(a=>{a.href='/publisher-fallback.html';});
   await page.waitForTimeout(300);const before=context.pages().length;await page.locator('.card a.open').first().click();for(let i=0;i<30&&context.pages().length===before;i++)await page.waitForTimeout(100);
   const target=context.pages().at(-1);await target.waitForURL(/publisher-fallback\\.html/,{timeout:5000,waitUntil:'commit'});assert.match(target.url(),/publisher-fallback\\.html/);await context.close();
  });
