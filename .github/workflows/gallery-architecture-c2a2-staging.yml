@@ -2,7 +2,7 @@ name: Gallery architecture C2a.2 diagnostics gate
 on:
   push:
     branches:
-      - feat/gallery-architecture-c2a2-observer-diagnostics-20261004
+      - 'feat/gallery-architecture-c2a2-*'
 permissions:
   contents: read
 jobs:
