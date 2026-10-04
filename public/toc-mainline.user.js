@@ -50,7 +50,7 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
-  var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
+  var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v8-ccs-toc';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var INSTALL_REVISION = '6.2.23';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
@@ -1921,6 +1921,96 @@ function embeddedJobDois(value) {
     return rows;
   }
 
+  // CCS Chemistry publishes the official "key image" on its TOC/Ahead-of-Print
+  // listing. The article page can expose Figure 1 without exposing that official
+  // key image, so Figure 1 must never be promoted to official CCS TOC.
+  function ccsTocIndexUrls(job, doc, baseUrl) {
+    if (String(job && job.publisher || publisherForDoi(normalizeDoi(job && job.doi))) !== 'ccs') return [];
+    var origin;
+    try { origin = new URL(baseUrl || location.href).origin; } catch (_) { origin = 'https://www.chinesechemsoc.org'; }
+    var urls = [origin + '/toc/ccschem/0/0', origin + '/toc/ccschem/0/ja'];
+    try {
+      var scope = doc || document;
+      var volume = String((scope.querySelector('meta[name="citation_volume"]') || {}).content || '').trim();
+      var issue = String((scope.querySelector('meta[name="citation_issue"]') || {}).content || '').trim();
+      if (/^\d+$/.test(volume) && /^\d+$/.test(issue)) urls.push(origin + '/toc/ccschem/' + volume + '/' + issue);
+    } catch (_) {}
+    return Array.from(new Set(urls));
+  }
+
+  function ccsDoiFromTextOrHref(value) {
+    var text = String(value || '').toLowerCase();
+    var match = text.match(/10\.31635\/ccschem\.[a-z0-9.]+/i);
+    return match ? normalizeDoi(match[0]) : '';
+  }
+
+  function ccsCardForDoiAnchor(anchor, doi) {
+    var node = anchor && anchor.parentElement;
+    for (var depth = 0; node && depth < 8; depth += 1, node = node.parentElement) {
+      var images = node.querySelectorAll ? node.querySelectorAll('img,picture,source,object[type^="image"]') : [];
+      if (!images.length) continue;
+      var found = new Set();
+      Array.from(node.querySelectorAll('a[href]')).forEach(function (link) {
+        var value = ccsDoiFromTextOrHref((link.getAttribute('href') || '') + ' ' + (link.textContent || ''));
+        if (value) found.add(value);
+      });
+      if (found.size === 1 && found.has(doi)) return node;
+      if (found.size > 1) return null;
+    }
+    return null;
+  }
+
+  function ccsKeyImageSignal(node, card) {
+    var values = [];
+    var current = node;
+    for (var depth = 0; current && depth < 4; depth += 1, current = current.parentElement) {
+      if (current.getAttribute) {
+        ['alt','title','aria-label','class','id'].forEach(function (name) {
+          var value = current.getAttribute(name);
+          if (value) values.push(value);
+        });
+      }
+      if (current !== node) {
+        var text = String(current.textContent || '').replace(/\s+/g, ' ').trim();
+        if (text) values.push(text.slice(0, 320));
+      }
+      if (current === card) break;
+    }
+    return /\bkey\s*image\b|\btable\s+of\s+contents\s*(?:graphic|image)\b|\btoc\s*(?:graphic|image)\b|\bgraphical\s+abstract\b|\bvisual\s+abstract\b/i.test(values.join(' '));
+  }
+
+  function ccsTocIndexCandidatesFromDocument(job, doc, baseUrl) {
+    if (!doc || String(job && job.publisher || '') !== 'ccs') return [];
+    var doi = normalizeDoi(job && job.doi);
+    if (!doi) return [];
+    var anchors = Array.from(doc.querySelectorAll('a[href]')).filter(function (anchor) {
+      var bound = ccsDoiFromTextOrHref((anchor.getAttribute('href') || '') + ' ' + (anchor.textContent || ''));
+      return bound === doi;
+    });
+    var rows = [], seen = new Set();
+    anchors.forEach(function (anchor) {
+      var card = ccsCardForDoiAnchor(anchor, doi);
+      if (!card) return;
+      Array.from(card.querySelectorAll('img')).forEach(function (image) {
+        if (!ccsKeyImageSignal(image, card)) return;
+        articleFigureImageUrls(image, baseUrl || location.href).forEach(function (url, rank) {
+          if (!url || seen.has(url) || reject('CCS Chemistry key image', url)) return;
+          seen.add(url);
+          rows.push({
+            url: url,
+            kind: 'official',
+            assetType: 'toc_graphic',
+            score: 980 - rank,
+            text: 'CCS Chemistry key image',
+            source: 'ccs_toc_index_key_image',
+            element: null
+          });
+        });
+      });
+    });
+    return rows.sort(function (a,b) { return b.score - a.score; });
+  }
+
   function natureDeterministicFigureOneCandidates(job) {
     if (String(job && job.publisher || '') !== 'nature' || job.allowFigureOne === false) return [];
     var doi = normalizeDoi(job && job.doi);
@@ -2017,6 +2107,8 @@ function embeddedJobDois(value) {
       add(location.origin + '/doi/' + doi);
       add(location.origin + '/doi/full/' + doi);
       add(location.origin + '/doi/abs/' + doi);
+    } else if (publisher === 'ccs' && /(?:^|\.)chinesechemsoc\.org$/.test(location.hostname)) {
+      ccsTocIndexUrls(job, document, location.href).forEach(add);
     } else if (publisher === 'science' && location.hostname.endsWith('science.org')) {
       // Deliberately no hidden Science iframe fallbacks. They duplicate document
       // requests and have not recovered TOCs in current diagnostics.
@@ -2080,7 +2172,13 @@ function embeddedJobDois(value) {
                   }
                 });
               }
-              var discovered = collectCandidates(job, trace, doc, current, 'iframe_dom', true);
+              var discovered = job.publisher === 'ccs'
+                ? ccsTocIndexCandidatesFromDocument(job, doc, current)
+                : collectCandidates(job, trace, doc, current, 'iframe_dom', true);
+              if (job.publisher === 'ccs') {
+                pushTrace(trace,{stage:'ccs_toc_index',event:'scan',status:discovered.length?'found':'none',url:current,
+                  message:'doi='+normalizeDoi(job.doi)+';key_images='+String(discovered.length)});
+              }
               if (discovered.length) {
                 var merged = new Map();
                 bestRows.concat(discovered).forEach(function (row) {
@@ -4422,7 +4520,7 @@ function embeddedJobDois(value) {
         await sleep(800);continue;
       }
       if (wantsToc && !toc.length && !iframeAttempted && elapsed>7000 &&
-          (job.publisher==='acs'||job.publisher==='wiley')) {
+          (job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='ccs')) {
         iframeAttempted=true;
         var iframeRows=await iframeCandidates(job,trace);
         toc=iframeRows.filter(function(row){return row&&row.kind==='official';});
@@ -4447,11 +4545,17 @@ function embeddedJobDois(value) {
 
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
-  var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v1';
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v2';
+  var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
   var PRIVATE_PDF_ATTEMPT_PREFIX = P + 'private-pdf-attempt-v1:';
   var PRIVATE_PDF_MAX_BYTES = 60 * 1024 * 1024;
+
+  function privatePdfCaptureEligibleByAddedDate(job) {
+    var addedDate = String(job && job.addedDate || '').trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(addedDate) && addedDate >= PRIVATE_PDF_ADDED_DATE_CUTOFF;
+  }
 
   function privatePdfLease() {
     var lease=GM_getValue(PRIVATE_PDF_LEASE_KEY,null);
@@ -4572,8 +4676,9 @@ function embeddedJobDois(value) {
   }
 
   async function maybeCapturePrivatePdf(job,trace) {
+    if(!job||!currentCaptureJob(job)||!privatePdfCaptureEligibleByAddedDate(job))return null;
     var lease=privatePdfLease();
-    if(!lease||!job||!currentCaptureJob(job))return null;
+    if(!lease)return null;
     var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
     if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000)return {status:'already_stored',documentId:prior.documentId||''};
     if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000)return {status:'not_found_cached'};

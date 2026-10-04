@@ -1,0 +1,80 @@
+name: CCS TOC and PDF cutoff regression
+
+on:
+  push:
+    branches: [fix/pdf-cutoff-ccs-toc-20261004, main]
+    paths:
+      - 'public/toc-mainline.user.js'
+      - 'scripts/tm-ccs-toc-index.inc.js'
+      - 'scripts/tm-private-pdf-capture.inc.js'
+      - 'tests/pdf-cutoff-ccs-toc-browser.mjs'
+      - 'docs/private-pdf-editorial-pipeline.md'
+      - '.github/workflows/ccs-toc-pdf-cutoff.yml'
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v5
+        with: {node-version: 22}
+
+      - name: Confirm literature/publication rules are untouched
+        run: |
+          BASE="$(git merge-base HEAD origin/main)"
+          git diff --exit-code "$BASE" HEAD -- \
+            public/papers.gz.b64 public/rolling-supplement.json shared/literature-journals.js \
+            docs/literature-scope-contract.md docs/literature-update-protocol.md \
+            .github/workflows/literature-audit.yml .github/workflows/new-body-continuous.yml \
+            audit/media-auto-policy.json cloudflare/worker/src/media.js cloudflare/worker/src/local-captures.js
+
+      - name: Check userscript syntax and existing media regressions
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-missing-only.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node tests/tm-controller-recovery.test.mjs
+          node tests/tm-newest-retry.test.mjs
+          node scripts/test-tm223-upload.mjs
+          node scripts/test-tm220-release.mjs
+          node scripts/test-tm222-auto-report.mjs
+
+      - name: Install isolated Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+
+      - name: Verify CCS key-image binding and PDF date scope
+        run: node tests/pdf-cutoff-ccs-toc-browser.mjs
+
+      - name: Build exact compatible online installer
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F "PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v8-ccs-toc'" public/gallery-vpn-bridge.user.js
+          grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
+          grep -F "ccs_toc_index_key_image" public/gallery-vpn-bridge.user.js
+          mkdir -p "$RUNNER_TEMP/ccs-pdf"
+          cp public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/ccs-pdf/"
+          sha256sum public/gallery-vpn-bridge.user.js > "$RUNNER_TEMP/ccs-pdf/sha256.txt"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ccs-toc-pdf-cutoff-tested
+          path: ${{ runner.temp }}/ccs-pdf
+          retention-days: 14

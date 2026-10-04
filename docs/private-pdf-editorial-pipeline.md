@@ -17,10 +17,10 @@ PDF is not a fourth hard missing field in the existing media queue.
 
 1. `editorial_hot`: newest papers that enter the daily selected-article candidate pool. Goal: obtain and verify PDF before deep-reading selection.
 2. `media_rescue`: a paper whose HTML TOC/body/fulltext acquisition is incomplete. PDF can provide a secondary evidence source after verification.
-3. `archive_backfill`: older papers, lowest priority and rate-limited. It must never starve current literature or editorial work.
-4. `manual`: explicit owner request for one DOI.
+3. `archive_backfill`: limited to Gallery `addedDate >= 2026-10-01`; papers added before 2026-10-01 are permanently outside automatic PDF capture scope.
+4. `manual`: explicit owner request for one DOI, still subject to the same 2026-10-01 automatic-capture cutoff unless a later owner-only exception is explicitly designed.
 
-The first implementation opportunistically captures one explicit publisher-provided PDF during an already-open publisher visit. A later independent PDF queue may cover latest papers that did not need a media visit.
+The first implementation opportunistically captures one explicit publisher-provided PDF during an already-open publisher visit. Automatic PDF capture uses the Gallery website `addedDate` as its scope key and requires `addedDate >= 2026-10-01`; publication date is not used as a fallback. A later independent PDF queue may cover eligible recent papers that did not need a media visit.
 
 ## Capture contract
 
