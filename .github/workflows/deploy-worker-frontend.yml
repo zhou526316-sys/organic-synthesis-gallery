@@ -64,7 +64,9 @@ jobs:
           BRIDGE_VERSION="$(sed -n 's#^// @version[[:space:]]*##p' public/gallery-vpn-bridge.user.js | head -1 | tr -d '\r')"
           test -n "$BRIDGE_VERSION"
           grep -F '// @updateURL    https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js' public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '$BRIDGE_VERSION';" public/gallery-vpn-bridge.user.js
+          # Internal capture/controller compatibility is validated above by validate-tm220-artifacts.mjs.
+          # Do not require the public Bridge package version to equal the controller revision:
+          # they are intentionally versioned independently.
 
       - name: Build current frontend assets
         run: npm run build
