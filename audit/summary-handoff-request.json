@@ -1,7 +1,8 @@
 {
-  "version": 1,
-  "requestedAt": "2026-10-03T03:58:30Z",
-  "requestId": "summary-daily-publication-20261003",
-  "cutoffDate": "2026-09-20",
-  "purpose": "Prepare the complete current in-scope encrypted Evidence handoff for the 2026-10-03 daily derived-summary publication. Preserve production literature data and modify no summary data in this transport step."
+  "requestedAt": "2026-10-04T14:14:00+08:00",
+  "purpose": "User explicitly requested immediate publication of all eligible summaries for literature dated 2026-09-20 or later.",
+  "minimumArticleDate": "2026-09-20",
+  "mode": "immediate_current_catchup",
+  "preserveOlderSummaries": true,
+  "doNotModifyLiterature": true
 }
