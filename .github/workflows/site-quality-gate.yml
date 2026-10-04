@@ -95,6 +95,9 @@ jobs:
       - name: Test Evidence Index shadow
         run: npm run test:evidence-index
 
+      - name: Test summary candidate index shadow parity
+        run: npm run test:summary-candidate-index
+
       - name: Test scheduled encrypted handoff
         run: npm run test:scheduled-summary-handoff
 
