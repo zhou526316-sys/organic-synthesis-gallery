@@ -92,6 +92,12 @@ jobs:
       - name: Test fulltext-backed article summaries
         run: npm run test:article-summary
 
+      - name: Test Evidence Index shadow
+        run: npm run test:evidence-index
+
+      - name: Test scheduled encrypted handoff
+        run: npm run test:scheduled-summary-handoff
+
       - name: Test GPT-reviewed summary queue
         run: npm run test:summary-review
 
