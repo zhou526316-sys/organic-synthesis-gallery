@@ -38,14 +38,20 @@ jobs:
             exit 1
           fi
           BASE="${RELAY_URL%/wechat/jsapi-ticket}"
-          RESPONSE="$(curl -fsS --max-time 360 \
+          RAW="$(curl -sS --max-time 360 -w '\n%{http_code}' \
             -X POST "${BASE}/wechat/publisher/run" \
             -H "Authorization: Bearer ${RELAY_KEY}" \
             -H "Content-Type: application/json" \
             --data '{"action":"sync_daily_draft"}')"
+          HTTP_CODE="$(printf '%s\n' "$RAW" | tail -n1)"
+          RESPONSE="$(printf '%s\n' "$RAW" | sed '$d')"
           printf '%s\n' "$RESPONSE" > /tmp/wechat-publisher-response.json
           cat /tmp/wechat-publisher-response.json
-          jq -e '.ok == true and .result.draft_readback == "ok" and (.result.preview_url | length > 0)'             /tmp/wechat-publisher-response.json >/dev/null
+          echo "HTTP_CODE=${HTTP_CODE}"
+          if [[ ! "${HTTP_CODE}" =~ ^2 ]]; then
+            exit 1
+          fi
+          jq -e '.ok == true and .result.draft_readback == "ok" and (.result.preview_url | length > 0)' /tmp/wechat-publisher-response.json >/dev/null
 
       - name: Write latest publisher receipt
         shell: bash
