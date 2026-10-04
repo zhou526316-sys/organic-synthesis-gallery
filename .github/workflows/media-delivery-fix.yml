@@ -49,7 +49,7 @@ jobs:
       - name: Compile Worker without deploying
         working-directory: cloudflare/worker
         run: |
-          npm ci
+          npm install --no-package-lock
           npx wrangler deploy --dry-run --outdir "$RUNNER_TEMP/worker-build"
       - name: Commit tested runtime files to repair branch only
         if: github.ref == 'refs/heads/fix/media-delivery-20261004'
