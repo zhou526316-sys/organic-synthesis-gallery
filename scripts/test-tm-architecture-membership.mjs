@@ -35,7 +35,7 @@ function fixture(){
     work:{path:'work/preview.fixture.json',sha256:'e'.repeat(64),bytes:1}};
   const currentText=stable(current)+'\n';
   const membership={schema:'gallery-published-membership-v1',scope:'all-time',complete:true,publicationSlot:'2026-10-04T08:00:00+08:00',
-    sourceCommit,markerBlobSha:'f'.repeat(40),catalogId,doiSetHash,serial:Date.parse('2026-10-04T00:00:00Z'),count:2,
+    markerBlobSha:'f'.repeat(40),catalogId,doiSetHash,serial:Date.parse('2026-10-04T00:00:00Z'),count:2,
     members:{[a]:'1'.repeat(64),[b]:'2'.repeat(64)},withdrawn:[]};
   const membershipText=stable(membership)+'\n';
   const release={schema:'gallery-architecture-public-v1',productionActivation:false,publicationSlot:membership.publicationSlot,
@@ -49,7 +49,7 @@ function fixture(){
 }
 
 test('actual userscript keeps capture protocol while advancing install metadata',()=>{
-  assert.match(source,/^\/\/ @version\s+6\.2\.21$/m);
+  assert.match(source,/^\/\/ @version\s+6\.2\.22$/m);
   assert.ok(source.includes("var VERSION = '6.2.20';"));
   assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
