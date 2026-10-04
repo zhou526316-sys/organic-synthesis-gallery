@@ -104,7 +104,7 @@ try{
   const explicitCombinedEligible=await page.evaluate(()=>__tm232.evidenceCaptureEligible({mediaNeed:'toc',captureEvidence:true}));
   test('explicit missing-evidence flag makes a TOC-triggered visit capture text',explicitCombinedEligible);
   test('structured full article is classified complete',extracted.packet.fulltextStatus==='complete'&&extracted.packet.schemaVersion==='article-evidence-v2');
-  test('packet binds DOI and Bridge 2.2.35',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.35');
+  test('packet binds DOI and Bridge 2.2.36',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.36');
   const types=extracted.packet.sections.map(r=>r.type);
   test('semantic sections are retained',['abstract','results','mechanism','conclusion'].every(t=>types.includes(t)));
   const all=JSON.stringify({sections:extracted.packet.sections,captions:extracted.packet.captions,tables:extracted.packet.tables});
@@ -182,7 +182,7 @@ try{
     !backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10004'));
   test('missing evidence stays in the lowest-priority backfill queue',
     backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10002'&&r.state==='evidence_gap'));
-  test('evidence-only backlog is lower priority than historical body figures',backfill.tier===3);
+  test('evidence-only backlog shares the historical body/evidence tier',backfill.tier===2);
   const urgentTier=await page.evaluate(()=>__tm232.captureQueueTier({mediaNeed:'evidence',summaryUrgent:true,addedDate:'2026-09-24'},'2026-09-25'));
   test('fresh-TOC summary Evidence gap outranks the normal media backlog',urgentTier===-1);
   test('source retains one-hour post-TOC Evidence urgency and bounded retry',
@@ -257,8 +257,8 @@ try{
   test('Wiley DOM recovery binds only the explicit GA block and refuses adjacent Scheme 1',
     wileyDom.length===1&&/-gra-0001-m\.jpg/i.test(wileyDom[0].url)&&!wileyDom.some(r=>/-sch-0001/i.test(r.url)));
 
-  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.35';"));
-  test('2.2.35 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
+  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.36';"));
+  test('2.2.36 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
 
-  console.log('TM234_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.35',totalTextBudget:null,abstractOnly:true}));
+  console.log('TM234_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.36',totalTextBudget:null,abstractOnly:true}));
 }finally{await browser.close();}
