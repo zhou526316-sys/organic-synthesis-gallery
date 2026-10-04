@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "context": "User authorized final architecture review followed by construction; phase A shadow implementation only.",
+  "reviewDateAsiaShanghai": "2026-10-04",
+  "baselineCommit": "c8464f8acf9bfaf6265cdfabdc0fcbf1509dcf72",
+  "implementationCommit": "9cb76ccc85aab924c496eb0eb4885d42580ddd4a",
+  "branch": "feat/gallery-architecture-v1-20261004",
+  "pullRequest": 267,
+  "implementationStatus": "pull-request-open-at-recording",
+  "changedFiles": 8,
+  "additions": 724,
+  "deletions": 0,
+  "architectureValidation": {
+    "runId": 37173503885,
+    "jobId": 111351198660,
+    "conclusion": "success",
+    "testedMergeCommit": "323453b158beb94fd85a2d7f6355df02a677474d",
+    "tests": 42,
+    "passed": 42,
+    "failed": 0,
+    "skipped": 0,
+    "gregorianDatesChecked": 146097,
+    "liveReportLoggedAt": "2026-10-04T03:14:50.966Z",
+    "report": {
+      "phase": "A-shadow",
+      "ok": true,
+      "records": 785,
+      "shards": 5,
+      "files": 31,
+      "lifecycle": { "archive": 23, "date_invalid": 0, "date_unknown": 0, "future": 0, "hot": 762 },
+      "acquire": 0,
+      "reconcile": 762,
+      "totalBytes": 1219812,
+      "largestShardBytes": 261843,
+      "asOfDate": "2026-10-04",
+      "parityBasis": "byte-verified-live-release-collector",
+      "liveVerification": {
+        "attempted": true,
+        "ok": true,
+        "datasetSha256": "9b1180d9922b42a7c72a50052ce6853ae075d89c45df4b92d416f2fd4e0d713b",
+        "sourceCommit": "55267261c475b1ec5defe081f69bccf7a69ad9d2"
+      },
+      "productionActivated": false,
+      "dispatchEnabled": false,
+      "protectedInputsUnchanged": true,
+      "legacyRenderedUiParity": "not-yet-tested",
+      "stagedFigureInventory": "not-consumed"
+    },
+    "artifact": {
+      "id": 11292217501,
+      "name": "gallery-architecture-shadow-37173503885",
+      "zipBytes": 343653,
+      "zipSha256": "0001780e5209407a162c63da2389edf171eaadf1a9604c2c563ddff608cc320e",
+      "retentionDays": 7
+    }
+  },
+  "existingSiteQualityObserved": {
+    "runId": 37173503917,
+    "frontendBuildAndTypecheck": "success",
+    "workerDryRun": "success",
+    "productionApiSmoke": "success",
+    "playwrightInteractionRegression": "in_progress",
+    "completeGatePassed": false
+  },
+  "interpretation": {
+    "lifecycle": "D minus three calendar months in Asia/Shanghai with month-end clamping; inclusive cutoff. Adding three months to a paper date is not substituted.",
+    "roundtrip": "All fields of the merged public release-collector source are preserved. This does not yet establish parity with browser-side caches, Chinese-title overrides or UI behavior.",
+    "workPreview": "Actual asset inventories are deliberately not imported. Unknown completeness goes to reconciliation; acquire=0 is not evidence of zero media gaps and reconcile=762 is not an instruction to recapture 762 papers.",
+    "sizes": "Catalog artifact sizes, not first-load transfer sizes or production browser performance benchmarks.",
+    "production": "No production reader, queue, dataset, asset, summary, D1/R2 schema, release gate or existing schedule was changed. The new implementation remains opt-in and inactive."
+  },
+  "activationGates": [
+    "legacy browser-visible field parity",
+    "current withdrawal and complete all-time membership fence",
+    "queue-coverage-v6 dual-registry compatibility",
+    "historical DOI/share/favorite/search browser checks",
+    "reversible read-path activation without reverting new data or user state"
+  ]
+}
