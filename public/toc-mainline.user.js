@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.20
+// @version      6.2.21
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -51,6 +51,7 @@
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
   var PUBLISHER_MEDIA_REVISION = '20261004-publisher-sources-v7';
+  var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -64,6 +65,8 @@
   // fail GM_xmlhttpRequest against workers.dev even while the Gallery and the
   // same Worker are reachable through the custom domains.
   var QUEUE_URL = 'https://gallery.gczhouwld.com/toc-demand-live.json';
+  var ARCHITECTURE_DELIVERY_URL = 'https://gallery.gczhouwld.com/release-delivery.json';
+  var ARCHITECTURE_RELEASE_URL = 'https://gallery.gczhouwld.com/architecture-v1/release.json';
   var WORKER = 'https://api.gczhouwld.com';
   var CAPTURE_ENDPOINT = WORKER + '/api/media/local-capture/import';
   var FIGURE_IMPORT_ENDPOINT = WORKER + '/api/article-figures/import';
@@ -76,6 +79,7 @@
   var EVIDENCE_INVENTORY_ENDPOINT = WORKER + '/api/article-summary/evidence-inventory';
   var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';
   var P = 'osg-toc-v6:';
+  var ARCHITECTURE_MEMBERSHIP_STATE_KEY = P + 'architecture-membership-shadow-v1';
   var TOKEN_KEY = P + 'write-token';
   var LEGACY_TOKEN_KEY = 'osg-toc-v5:write-token';
   var ENABLED_KEY = P + 'enabled';
@@ -1078,6 +1082,127 @@ function embeddedJobDois(value) {
   }
   async function getJson(url) {
     return metadataJson({method:'GET',url:url,timeout:45000,headers:{'cache-control':'no-cache',pragma:'no-cache'}},'queue');
+  }
+
+  // BEGIN ARCHITECTURE MEMBERSHIP CORE v1
+  function architectureStable(value) {
+    if(value===null||typeof value!=='object')return JSON.stringify(value);
+    if(Array.isArray(value))return '['+value.map(architectureStable).join(',')+']';
+    return '{'+Object.keys(value).sort().map(function(key){return JSON.stringify(key)+':'+architectureStable(value[key]);}).join(',')+'}';
+  }
+  async function architectureSha256(text) {
+    if(!globalThis.crypto||!globalThis.crypto.subtle)throw new Error('architecture_crypto_unavailable');
+    var bytes=new TextEncoder().encode(String(text));
+    var hash=await globalThis.crypto.subtle.digest('SHA-256',bytes);
+    return Array.from(new Uint8Array(hash)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');
+  }
+  function architectureRefValid(ref) {
+    return Boolean(ref&&typeof ref.path==='string'&&/^[A-Za-z0-9_./-]+$/.test(ref.path)&&ref.path.indexOf('..')<0
+      &&/^[a-f0-9]{64}$/.test(String(ref.sha256||''))&&Number.isSafeInteger(Number(ref.bytes))&&Number(ref.bytes)>=0);
+  }
+  function architectureSetEqual(a,b) {
+    if(!Array.isArray(a)||!Array.isArray(b)||a.length!==b.length)return false;
+    var left=new Set(a),right=new Set(b);
+    return left.size===a.length&&right.size===b.length&&a.every(function(x){return right.has(x);});
+  }
+  async function verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText) {
+    if(!queue||!Array.isArray(queue.articles)||queue.articles.length!==Number(queue.webpageDoiCount))throw new Error('architecture_queue_registry_incomplete');
+    if(!delivery||Number(delivery.schemaVersion)<2||!delivery.files||!delivery.architectureObjects
+      ||typeof delivery.architectureCatalogId!=='string')throw new Error('architecture_delivery_v2_required');
+    var releaseHash=await architectureSha256(releaseText);
+    if(delivery.files['architecture-v1/release.json']!==releaseHash)throw new Error('architecture_release_delivery_hash_mismatch');
+    var release=JSON.parse(releaseText);
+    if(release.schema!=='gallery-architecture-public-v1'||release.productionActivation!==false
+      ||release.sourceCommit!==delivery.sourceCommit||release.publicationSlot!==delivery.publicationSlot
+      ||release.datasetSha256!==delivery.datasetSha256||release.catalogId!==delivery.architectureCatalogId
+      ||release.recordCount!==Number(delivery.productionCards))throw new Error('architecture_release_identity_mismatch');
+    if(!architectureRefValid(release.membership)||!architectureRefValid(release.catalogCurrent))throw new Error('architecture_release_reference_invalid');
+    if(await architectureSha256(membershipText)!==release.membership.sha256
+      ||new TextEncoder().encode(membershipText).byteLength!==Number(release.membership.bytes))throw new Error('architecture_membership_hash_mismatch');
+    if(await architectureSha256(currentText)!==release.catalogCurrent.sha256
+      ||new TextEncoder().encode(currentText).byteLength!==Number(release.catalogCurrent.bytes))throw new Error('architecture_current_hash_mismatch');
+    var membership=JSON.parse(membershipText),current=JSON.parse(currentText);
+    if(membership.schema!=='gallery-published-membership-v1'||membership.scope!=='all-time'||membership.complete!==true
+      ||membership.catalogId!==release.catalogId||membership.doiSetHash!==release.doiSetHash
+      ||membership.publicationSlot!==release.publicationSlot||membership.sourceCommit!==release.sourceCommit
+      ||Number(membership.count)!==release.recordCount||!membership.members||Array.isArray(membership.members))throw new Error('architecture_membership_identity_mismatch');
+    if(current.schema!=='gallery-shadow-catalog-v1'||current.mode!=='shadow'||current.productionActivation!==false
+      ||!architectureRefValid(current.lifecycle))throw new Error('architecture_current_identity_mismatch');
+    if(await architectureSha256(lifecycleText)!==current.lifecycle.sha256
+      ||new TextEncoder().encode(lifecycleText).byteLength!==Number(current.lifecycle.bytes))throw new Error('architecture_lifecycle_hash_mismatch');
+    var lifecycle=JSON.parse(lifecycleText);
+    if(lifecycle.schema!=='gallery-shadow-catalog-v1'||lifecycle.catalog!==current.catalog.path
+      ||typeof lifecycle.asOfDate!=='string'||!lifecycle.partitions)throw new Error('architecture_lifecycle_identity_mismatch');
+    var queueDois=queue.articles.map(function(row){return normalizeDoi(row&&row.doi);});
+    var memberDois=Object.keys(membership.members).map(normalizeDoi);
+    if(queueDois.some(function(x){return !x;})||memberDois.some(function(x){return !x;})
+      ||!architectureSetEqual(queueDois,memberDois))throw new Error('architecture_membership_queue_mismatch');
+    var partitionNames=['hot','archive','date_unknown','date_invalid','future'],partitionDois=[];
+    partitionNames.forEach(function(name){
+      var rows=lifecycle.partitions[name];
+      if(!Array.isArray(rows))throw new Error('architecture_lifecycle_partition_missing:'+name);
+      rows.forEach(function(doi){partitionDois.push(normalizeDoi(doi));});
+    });
+    if(partitionDois.some(function(x){return !x;})||!architectureSetEqual(memberDois,partitionDois))throw new Error('architecture_lifecycle_partition_mismatch');
+    var hot=new Set((lifecycle.partitions.hot||[]).map(normalizeDoi));
+    var archive=new Set((lifecycle.partitions.archive||[]).map(normalizeDoi));
+    return {
+      ok:true,revision:ARCHITECTURE_MEMBERSHIP_REVISION,serial:Number(membership.serial||0),
+      publicationSlot:membership.publicationSlot,catalogId:membership.catalogId,membershipSha256:release.membership.sha256,
+      asOfDate:lifecycle.asOfDate,cutoff:lifecycle.cutoff||'',memberCount:memberDois.length,
+      hotCount:hot.size,archiveCount:archive.size,hotDois:Array.from(hot),archiveDois:Array.from(archive),
+      withdrawn:Array.isArray(membership.withdrawn)?membership.withdrawn.map(normalizeDoi).filter(Boolean):[]
+    };
+  }
+  // END ARCHITECTURE MEMBERSHIP CORE v1
+
+  async function architectureGetText(url,prefix) {
+    var response=await gmRequest({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache'}});
+    if(shouldNativeRetryUpload(response,url))response=await nativeControllerRequest({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache'}});
+    var status=Number(response.status||0);
+    if(status<200||status>=300)throw new Error(prefix+'_http_'+status);
+    var finalUrl=String(response.finalUrl||url),host='';
+    try{host=new URL(finalUrl,location.href).hostname.toLowerCase();}catch(_){}
+    if(host!==GALLERY_HOST&&host!==LEGACY_GALLERY_HOST)throw new Error(prefix+'_unexpected_origin');
+    return String(response.responseText||'');
+  }
+  function architectureObjectUrl(pathname) {
+    if(typeof pathname!=='string'||!/^[A-Za-z0-9_./-]+$/.test(pathname)||pathname.indexOf('..')>=0)throw new Error('architecture_object_path_invalid');
+    return 'https://'+GALLERY_HOST+'/architecture-v1/'+pathname;
+  }
+  function rememberArchitectureMembership(result) {
+    var prior=GM_getValue(ARCHITECTURE_MEMBERSHIP_STATE_KEY,null);
+    if(prior&&Number(prior.serial||0)>Number(result.serial||0))throw new Error('architecture_membership_serial_rollback');
+    if(prior&&Number(prior.serial||0)===Number(result.serial||0)
+      && prior.membershipSha256&&prior.membershipSha256!==result.membershipSha256)throw new Error('architecture_membership_serial_conflict');
+    var sticky=new Set((prior&&Array.isArray(prior.withdrawn)?prior.withdrawn:[]).concat(result.withdrawn||[]).map(normalizeDoi).filter(Boolean));
+    (result.hotDois||[]).concat(result.archiveDois||[]).forEach(function(doi){
+      if(sticky.has(doi))throw new Error('architecture_withdrawn_doi_resurrection');
+    });
+    GM_setValue(ARCHITECTURE_MEMBERSHIP_STATE_KEY,{
+      revision:ARCHITECTURE_MEMBERSHIP_REVISION,serial:Number(result.serial||0),publicationSlot:result.publicationSlot||'',
+      catalogId:result.catalogId||'',membershipSha256:result.membershipSha256||'',asOfDate:result.asOfDate||'',
+      memberCount:Number(result.memberCount||0),hotCount:Number(result.hotCount||0),archiveCount:Number(result.archiveCount||0),
+      withdrawn:Array.from(sticky).sort(),verifiedAt:Date.now()
+    });
+  }
+  async function observeArchitectureMembership(queue) {
+    try {
+      var delivery=await getJson(ARCHITECTURE_DELIVERY_URL+'?architecture-membership='+Date.now());
+      var releaseText=await architectureGetText(ARCHITECTURE_RELEASE_URL+'?architecture-membership='+Date.now(),'architecture_release');
+      var release=JSON.parse(releaseText);
+      if(!architectureRefValid(release.membership)||!architectureRefValid(release.catalogCurrent))throw new Error('architecture_release_reference_invalid');
+      var membershipText=await architectureGetText(architectureObjectUrl(release.membership.path)+'?architecture-membership='+Date.now(),'architecture_membership');
+      var currentText=await architectureGetText(architectureObjectUrl(release.catalogCurrent.path)+'?architecture-membership='+Date.now(),'architecture_current');
+      var current=JSON.parse(currentText);
+      if(!architectureRefValid(current.lifecycle))throw new Error('architecture_lifecycle_reference_invalid');
+      var lifecycleText=await architectureGetText(architectureObjectUrl(current.lifecycle.path)+'?architecture-membership='+Date.now(),'architecture_lifecycle');
+      var result=await verifyArchitectureMembershipPayload(queue,delivery,releaseText,membershipText,currentText,lifecycleText);
+      rememberArchitectureMembership(result);
+      return result;
+    } catch(error) {
+      return {ok:false,revision:ARCHITECTURE_MEMBERSHIP_REVISION,error:String(error&&error.message||error).slice(0,180)};
+    }
   }
   async function getPrivateJson(url,token) {
     return metadataJson({method:'GET',url:url,timeout:30000,headers:{'cache-control':'no-cache',pragma:'no-cache',authorization:'Bearer '+String(token||'')}},'private');
@@ -3584,6 +3709,8 @@ function embeddedJobDois(value) {
       var loaded=await Promise.all([getJson(QUEUE_URL+'?ts='+Date.now()),getJson(WORKER+'/api/media/capture-capabilities')]);
       if(!manualExecutionCurrent(run)||controllerPaused())return;
       var queue=loaded[0],caps=loaded[1];
+      var architectureMembership=await observeArchitectureMembership(queue);
+      s.architectureMembership=architectureMembership;
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.mediaControllerRevision)!==CONTROLLER_REVISION)throw new Error('capture_server_upgrade_pending');
       var checkedAt=0,endRefresh=false,inventoryRecovery=0;
       async function refresh(){
@@ -3728,6 +3855,7 @@ function embeddedJobDois(value) {
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
       if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.39')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
+      var architectureMembership=await observeArchitectureMembership(queue);
       var queueCheckedAt=Date.now();
       var productionInventory=await postReadJson(MEDIA_INVENTORY_ENDPOINT+'?ts='+Date.now(),{dois:queue.articles.map(function(row){return normalizeDoi(row&&row.doi);}).filter(Boolean),readOnly:true});
       var media=productionMediaSnapshot(productionInventory);
@@ -3798,7 +3926,7 @@ function embeddedJobDois(value) {
       if(!renewLease())throw new Error('controller_lease_lost');
       if(manualRunBlocksAutomatic())return;
       var available=availableJobs(),batch=selectBatchJobs(available,batchSize(),latestAddedDate);
-      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
+      summary={controllerRunId:CONTROLLER_ID+':'+Date.now(),lifecycleRevision:CONTROLLER_LIFECYCLE_REVISION,architectureMembershipRevision:ARCHITECTURE_MEMBERSHIP_REVISION,architectureMembership:architectureMembership,version:VERSION,controllerRevision:CONTROLLER_REVISION,queueGeneratedAt:queue.generatedAt,latestAddedDate:latestAddedDate,queueTotal:mediaJobs.length+evidenceJobs.length,evidenceBacklog:evidenceJobs.length,total:batch.length,startedAt:nowIso(),success:0,partial:0,failed:0,aborted:0,skipped:0,lifecycleWarnings:0,tocStored:0,figuresStaged:0,evidenceStored:0,published:0,results:[]};
       persistControllerSummary(summary,true);
       for (var i=0;i<batch.length;i+=1) {
         if(isAbortRequested()||GM_getValue(ENABLED_KEY,true)===false)break;
