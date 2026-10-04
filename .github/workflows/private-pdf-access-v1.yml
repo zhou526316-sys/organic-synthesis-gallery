@@ -1,0 +1,87 @@
+name: Private PDF access v1 regression
+
+on:
+  push:
+    branches: [feature/private-pdf-access-v1, main]
+    paths:
+      - 'cloudflare/schema.sql'
+      - 'cloudflare/worker/src/private-pdf.js'
+      - 'cloudflare/worker/src/integrations.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'cloudflare/worker/scripts/test-private-pdf.mjs'
+      - 'src/private-pdf-access.ts'
+      - 'src/bootstrap.ts'
+      - 'public/private-pdf-owner-setup.html'
+      - 'tests/private-pdf-access-browser.mjs'
+      - '.github/workflows/deploy-worker-frontend.yml'
+      - '.github/workflows/private-pdf-access-v1.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'cloudflare/schema.sql'
+      - 'cloudflare/worker/src/private-pdf.js'
+      - 'cloudflare/worker/src/integrations.js'
+      - 'cloudflare/worker/src/index.js'
+      - 'src/private-pdf-access.ts'
+      - 'src/bootstrap.ts'
+      - 'public/private-pdf-owner-setup.html'
+      - '.github/workflows/deploy-worker-frontend.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Confirm unrelated production rules and media collector are untouched
+        run: |
+          set -euo pipefail
+          git diff --exit-code 8e58a38efa59c6da21ccc71ce6d38205de82707b HEAD -- \
+            PROJECT_RULES.md AGENTS.md shared/literature-journals.js audit/media-auto-policy.json \
+            docs/literature-scope-contract.md docs/literature-update-protocol.md \
+            .github/workflows/literature-audit.yml .github/workflows/github-pages.yml \
+            .github/workflows/new-body-continuous.yml public/toc-mainline.user.js \
+            public/papers.gz.b64 public/rolling-supplement.json cloudflare/worker/src/article-summary.js \
+            cloudflare/worker/src/local-captures.js cloudflare/worker/src/media.js
+          ! git diff 8e58a38efa59c6da21ccc71ce6d38205de82707b HEAD -- . ':!audit/**' | grep -F 'wuliangdao@njfu.edu.cn'
+          grep -F 'PRIVATE_PDF_CAPTURE_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
+          grep -F 'PRIVATE_PDF_PROCESSING_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
+      - name: Check Worker syntax and private PDF security contracts
+        run: |
+          node --check cloudflare/worker/src/private-pdf.js
+          node --check cloudflare/worker/src/integrations.js
+          node --check cloudflare/worker/src/index.js
+          node cloudflare/worker/scripts/test-private-pdf.mjs
+      - name: Validate full schema from scratch
+        run: |
+          sqlite3 /tmp/private-pdf-schema.db < cloudflare/schema.sql
+          sqlite3 /tmp/private-pdf-schema.db "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens') ORDER BY name;"
+          test "$(sqlite3 /tmp/private-pdf-schema.db "SELECT count(*) FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens');")" = "3"
+      - name: Build and typecheck frontend
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+          test -s dist/private-pdf-owner-setup.html
+      - name: Install isolated Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Verify owner-only original-link routing and setup page
+        run: node tests/private-pdf-access-browser.mjs
+      - name: Dry-run Worker bundle without deployment
+        working-directory: cloudflare/worker
+        run: |
+          npm install --no-audit --no-fund
+          npx wrangler deploy --dry-run --outdir "$RUNNER_TEMP/private-pdf-worker"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: private-pdf-access-v1-tested
+          path: ${{ runner.temp }}/private-pdf-worker
+          retention-days: 14
