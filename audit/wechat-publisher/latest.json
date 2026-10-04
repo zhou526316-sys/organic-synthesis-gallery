@@ -11,5 +11,15 @@
   "publish_status": null,
   "article_id": null,
   "article_url": null,
-  "content_source_url": "https://gallery.gczhouwld.com/?edition=2026-10-04"
+  "content_source_url": "https://gallery.gczhouwld.com/?edition=2026-10-04",
+  "publish_attempt": {
+    "status": "blocked",
+    "errcode": 48001,
+    "errmsg": "api unauthorized",
+    "endpoint": "/cgi-bin/freepublish/submit",
+    "attemptedAt": "2026-10-04T09:12:17Z"
+  },
+  "original_notice": true,
+  "author": "化之岛",
+  "edition_url": "https://gallery.gczhouwld.com/?edition=2026-10-04"
 }
