@@ -106,13 +106,14 @@ jobs:
         run: |
           set -euo pipefail
           npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-v1.sql >/tmp/private-pdf-migration.txt
-          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens') ORDER BY name;" --json >/tmp/private-pdf-schema-check.json
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../private-pdf-v2.sql >/tmp/private-pdf-v2-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_capabilities','private_pdf_documents','private_pdf_access_tokens','private_pdf_capture_leases') ORDER BY name;" --json >/tmp/private-pdf-schema-check.json
           node - <<'NODE'
           const fs=require('fs');
           const data=JSON.parse(fs.readFileSync('/tmp/private-pdf-schema-check.json','utf8'));
           const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
           const names=rows.map(x=>x.name).sort();
-          const expected=['private_pdf_access_tokens','private_pdf_documents','user_capabilities'];
+          const expected=['private_pdf_access_tokens','private_pdf_capture_leases','private_pdf_documents','user_capabilities'];
           if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('private PDF schema migration incomplete: '+JSON.stringify(names));
           console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
           NODE

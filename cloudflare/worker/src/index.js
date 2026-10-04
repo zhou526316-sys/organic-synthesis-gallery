@@ -69,7 +69,7 @@ import {
   verifyPasswordRegistration,
   wechatNotify,
 } from './integrations.js';
-import { bootstrapPrivatePdfOwner, openPrivatePdf, privatePdfStatus, servePrivatePdf } from './private-pdf.js';
+import { bootstrapPrivatePdfOwner, importPrivatePdf, issuePrivatePdfCaptureLease, openPrivatePdf, privatePdfStatus, revokePrivatePdfCaptureLeases, servePrivatePdf } from './private-pdf.js';
 
 const json = (value, init = {}) => new Response(JSON.stringify(value), {
   ...init,
@@ -108,6 +108,7 @@ const TAMPERMONKEY_CORS_WRITE_PATHS = new Set([
   '/api/media/local-capture/import',
   '/api/media/local-diagnostics/import',
   '/api/media/tampermonkey-report/import',
+  '/api/private-pdf/import',
 ]);
 
 async function readJson(request) {
@@ -328,6 +329,12 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'POST' && url.pathname === '/api/user-ui/private-pdf/bootstrap-owner') {
     return resultResponse(await bootstrapPrivatePdfOwner(request, env, await readJson(request)), cors);
   }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/private-pdf/capture-lease') {
+    return resultResponse(await issuePrivatePdfCaptureLease(request, env), cors);
+  }
+  if (request.method === 'POST' && url.pathname === '/api/user-ui/private-pdf/capture-lease/revoke') {
+    return resultResponse(await revokePrivatePdfCaptureLeases(request, env), cors);
+  }
   if (request.method === 'POST' && url.pathname === '/api/admin/email/probe') {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
@@ -486,6 +493,10 @@ async function handleApi(request, env, ctx) {
   }
   if (request.method === 'POST' && url.pathname === '/api/media/render-report') {
     return resultResponse(await persistRenderReport(env, await readJson(request)));
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/private-pdf/import') {
+    return resultResponse(await importPrivatePdf(request, env), cors);
   }
 
   const isWriteRoute =
