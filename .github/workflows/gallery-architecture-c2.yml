@@ -1,0 +1,111 @@
+name: Gallery architecture C2 gate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'public/toc-mainline.user.js'
+      - 'architecture/**'
+      - 'shared/literature-lifecycle.mjs'
+      - 'shared/literature-identity.mjs'
+      - 'scripts/build-gallery-architecture-public.mjs'
+      - 'scripts/pages-release-delivery.mjs'
+      - 'scripts/test-gallery-architecture-public.mjs'
+      - 'scripts/test-toc-active-work-membership.mjs'
+      - 'scripts/test-toc-active-work-transport.mjs'
+      - 'scripts/validate-tm220-artifacts.mjs'
+      - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
+      - 'cloudflare/scripts/build-bridge-loader.mjs'
+      - 'tests/tm-controller-recovery.test.mjs'
+      - 'tests/tm-queue-coverage.test.mjs'
+      - 'tests/tm-missing-only.test.mjs'
+      - 'tests/tm-immediate-restart.test.mjs'
+      - 'tests/tm-queue-coverage-browser.mjs'
+      - 'tests/tm-missing-only-browser.mjs'
+      - '.github/workflows/gallery-architecture-c2.yml'
+permissions:
+  contents: read
+concurrency:
+  group: gallery-architecture-c2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  contracts:
+    name: C2 contracts and packaging
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Syntax and architecture contracts
+        run: |
+          set -euo pipefail
+          node --check public/toc-mainline.user.js
+          node --test architecture/tests/*.test.mjs
+          node --test scripts/test-gallery-architecture-public.mjs scripts/test-toc-active-work-membership.mjs
+      - name: Current queue/controller regressions with verified fixture membership
+        run: |
+          set -euo pipefail
+          node tests/tm-controller-recovery.test.mjs
+          node tests/tm-queue-coverage.test.mjs
+          node tests/tm-missing-only.test.mjs
+          node tests/tm-immediate-restart.test.mjs
+          node tests/tm-newest-retry.test.mjs
+      - name: Build exact inactive architecture bundle and test transport
+        run: |
+          set -euo pipefail
+          node scripts/build-gallery-architecture-public.mjs
+          node scripts/test-toc-active-work-transport.mjs public/architecture-v1
+      - name: Package current self-contained Bridge
+        env:
+          TARGET_API_BASE: https://organic-synthesis-gallery-public.pages.dev
+          TARGET_SITE_ORIGIN: https://gallery.gczhouwld.com
+          BRIDGE_UPDATE_ORIGIN: https://gallery.gczhouwld.com
+        run: |
+          set -euo pipefail
+          node cloudflare/scripts/build-cloudflare-bridge.mjs
+          node cloudflare/scripts/build-bridge-loader.mjs
+          node scripts/validate-tm220-artifacts.mjs public
+          grep -F '// @version      2.2.40' public/gallery-vpn-bridge.user.js
+          grep -F "var VERSION = '6.2.20';" public/gallery-vpn-bridge.user.js
+          grep -F '20261004-three-month-active-work-v1' public/gallery-vpn-bridge.user.js
+      - name: Preserve compact C2 package evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-architecture-c2-contracts
+          path: |
+            public/architecture-v1/release.json
+            public/gallery-vpn-bridge.user.js
+          if-no-files-found: error
+          retention-days: 7
+
+  browser:
+    name: C2 queue browser regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Install isolated Chromium
+        run: |
+          npm install --no-save --package-lock=false --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Run queue and missing-only browser fixtures
+        run: |
+          set -euo pipefail
+          node tests/tm-queue-coverage-browser.mjs
+          node tests/tm-missing-only-browser.mjs
+      - name: Preserve browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gallery-architecture-c2-browser
+          path: |
+            ${{ runner.temp }}/tm-queue-coverage-browser.json
+            ${{ runner.temp }}/tm-queue-coverage-trace.zip
+            ${{ runner.temp }}/tm-missing-browser-report.json
+            ${{ runner.temp }}/tm-missing-browser-trace.zip
+          if-no-files-found: warn
+          retention-days: 7
