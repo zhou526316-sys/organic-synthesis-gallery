@@ -399,6 +399,7 @@ async function selectReviewCandidate(env, now = Date.now(), preferredDoi = '') {
     const meta = object?.customMetadata || {};
     return String(meta.state || '') === 'published' && metadataNumber(meta, 'publishedAt') >= now - 24 * 60 * 60 * 1000;
   }).length;
+  const candidateSetHash = await sha256Hex(JSON.stringify(candidates));
   const preferred = String(preferredDoi || '').trim().toLowerCase();
   const selectedCandidate = preferred
     ? candidates.find(candidate => candidate.doi === preferred) || null
@@ -411,6 +412,7 @@ async function selectReviewCandidate(env, now = Date.now(), preferredDoi = '') {
     preferredDoi: preferred,
     preferredEligible: preferred ? Boolean(selectedCandidate) : null,
     recentPublishedCount,
+    candidateSetHash,
     blockedPolicies,
   };
 }
