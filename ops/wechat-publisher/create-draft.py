@@ -31,6 +31,10 @@ DEFAULT_CACHE = Path("/var/lib/osg-wechat-publisher/cover-media.json")
 DEFAULT_STATE = Path("/var/lib/osg-wechat-publisher/draft-state.json")
 DEFAULT_PUBLISH_STATE = Path("/var/lib/osg-wechat-publisher/publish-state.json")
 PUBLISH_TRIGGER = ROOT / "audit" / "automation-triggers" / "wechat-publish-request.json"
+RETROSPECTIVE_TRIGGER = ROOT / "audit" / "automation-triggers" / "wechat-retrospective-request.json"
+RETROSPECTIVE_DIR = ROOT / "public" / "wechat-retrospective"
+DEFAULT_RETROSPECTIVE_STATE = Path("/var/lib/osg-wechat-publisher/retrospective-state.json")
+DEFAULT_RETROSPECTIVE_COVER_CACHE = Path("/var/lib/osg-wechat-publisher/retrospective-cover-media.json")
 DEFAULT_PREVIEW_DIR = Path("/var/www/osg-wechat-preview")
 DEFAULT_PREVIEW_BASE_URL = "https://relay.gczhouwld.com/wechat-preview"
 DEFAULT_BODY_IMAGE_CACHE = Path("/var/lib/osg-wechat-publisher/body-images.json")
@@ -382,6 +386,125 @@ def build_content(slot: str, papers: list[dict], featured: dict | None = None, u
     )
     parts.append("</section>")
     return "".join(parts)
+
+
+
+def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None = None) -> str:
+    uploaded_urls = uploaded_urls or {}
+    figures = {str(x.get("id")): x for x in data.get("figures", []) if isinstance(x, dict)}
+    paper = data.get("paper") or {}
+    parts = [
+        "<section style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#222;line-height:1.72;'>",
+        "<p style='font-size:11px;letter-spacing:.14em;color:#32675f;font-weight:700;margin:0 0 7px;'>RETROSPECTIVE PICK · 往期精选</p>",
+        f"<h2 style='font-size:22px;line-height:1.52;margin:0 0 10px;'>{esc(data.get('headline') or data.get('title') or '')}</h2>",
+        f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
+    ]
+
+    for point in data.get("quick_points", []):
+        parts.append(
+            "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
+            f"<strong style='font-size:14px;line-height:1.55;'>{esc(point.get('label') or '')}</strong>"
+            f"<p style='font-size:14px;line-height:1.78;margin:4px 0 0;color:#444;text-align:justify;'>{esc(point.get('text') or '')}</p>"
+            "</section>"
+        )
+
+    for section in data.get("sections", []):
+        parts.append(
+            f"<p style='font-size:11px;letter-spacing:.08em;color:#32675f;font-weight:700;margin:27px 0 5px;'>{esc(section.get('eyebrow') or '')}</p>"
+            f"<h2 style='font-size:19px;line-height:1.55;margin:0 0 10px;'>{esc(section.get('heading') or '')}</h2>"
+        )
+        for paragraph in section.get("paragraphs", []):
+            parts.append(
+                f"<p style='font-size:15px;line-height:1.88;margin:0 0 12px;text-align:justify;'>{esc(paragraph)}</p>"
+            )
+        for bullet in section.get("bullets", []):
+            parts.append(
+                f"<p style='font-size:14px;line-height:1.82;margin:0 0 8px;padding-left:12px;border-left:2px solid #dfe3e5;'>{esc(bullet)}</p>"
+            )
+        if section.get("callout"):
+            parts.append(
+                "<section style='background:#eef7f5;border-left:3px solid #32675f;padding:11px 13px;margin:14px 0;'>"
+                f"<p style='font-size:14px;line-height:1.8;margin:0;'>{esc(section['callout'])}</p></section>"
+            )
+        if section.get("warning"):
+            parts.append(
+                "<section style='background:#fff7e7;border:1px solid #f0ddb0;border-radius:8px;padding:11px 13px;margin:14px 0;'>"
+                f"<p style='font-size:13px;line-height:1.78;margin:0;'>{esc(section['warning'])}</p></section>"
+            )
+        if section.get("review"):
+            parts.append(
+                "<section style='background:#f4f0ff;border:1px solid #e2daf9;border-radius:8px;padding:11px 13px;margin:14px 0;'>"
+                f"<p style='font-size:13px;line-height:1.78;margin:0;'>{esc(section['review'])}</p></section>"
+            )
+        for fig_id in section.get("figures", []):
+            parts.append(figure_html(str(fig_id), figures, uploaded_urls))
+
+    takehome = data.get("takehome", [])
+    if takehome:
+        parts.append("<section style='background:#202426;color:#fff;border-radius:10px;padding:15px 16px;margin:25px 0;'>")
+        parts.append("<h3 style='font-size:16px;line-height:1.5;margin:0 0 8px;color:#fff;'>这篇论文最值得学什么？</h3>")
+        for item in takehome:
+            parts.append(f"<p style='font-size:13px;line-height:1.75;margin:0 0 7px;color:#f4f5f6;'>• {esc(item)}</p>")
+        parts.append("</section>")
+
+    notice = data.get("ai_notice")
+    if notice:
+        parts.append(
+            "<section style='border-top:1px solid #eee;margin-top:24px;padding-top:14px;'>"
+            "<p style='font-size:11px;color:#888;line-height:1.7;margin:0;'><strong>创作说明：</strong>"
+            f"{esc(notice)}</p></section>"
+        )
+    parts.append(
+        "<section style='margin-top:12px;padding-top:12px;border-top:1px solid #eee;'>"
+        "<p style='font-size:11px;color:#888;line-height:1.7;margin:0;'><strong>原创说明：</strong>"
+        "本文由“化之岛”原创策划与整理，AI 辅助生成与校核；文献事实、化学结构和数据以论文原文为准。"
+        "</p></section>"
+    )
+    parts.append("</section>")
+    return "".join(parts)
+
+
+def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path | None:
+    cover = data.get("cover")
+    if not isinstance(cover, dict):
+        return None
+    fig_id = str(cover.get("source_figure_id") or "").strip()
+    source = local_images.get(fig_id) if fig_id else None
+    if not source:
+        return None
+    try:
+        from PIL import Image
+    except ImportError as exc:
+        raise RuntimeError("cover composition requires Pillow") from exc
+
+    canvas_spec = cover.get("canvas") if isinstance(cover.get("canvas"), dict) else {}
+    width = int(canvas_spec.get("width") or 1880)
+    height = int(canvas_spec.get("height") or 800)
+    background_name = str(canvas_spec.get("background") or "white")
+    crop_frac = cover.get("crop_frac")
+
+    with Image.open(source) as image:
+        image.load()
+        image = image.convert("RGB")
+        if isinstance(crop_frac, list) and len(crop_frac) == 4:
+            x0, y0, x1, y1 = [float(v) for v in crop_frac]
+            x0 = max(0.0, min(1.0, x0)); y0 = max(0.0, min(1.0, y0))
+            x1 = max(x0 + 0.01, min(1.0, x1)); y1 = max(y0 + 0.01, min(1.0, y1))
+            image = image.crop((
+                int(image.width * x0), int(image.height * y0),
+                int(image.width * x1), int(image.height * y1),
+            ))
+        scale = min(width / image.width, height / image.height)
+        resized = image.resize(
+            (max(1, int(image.width * scale)), max(1, int(image.height * scale))),
+            Image.Resampling.LANCZOS,
+        )
+        canvas = Image.new("RGB", (width, height), background_name)
+        canvas.paste(resized, ((width - resized.width)//2, (height - resized.height)//2))
+
+    target = Path(tempfile.gettempdir()) / "osg-wechat-retrospective-cover.jpg"
+    canvas.save(target, format="JPEG", quality=95, optimize=True, progressive=True, dpi=(300, 300))
+    return target
 
 
 def multipart_file(field: str, path: Path):
@@ -1191,6 +1314,36 @@ def save_state(path: Path, payload: dict):
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+
+def pending_retrospective_request():
+    if not RETROSPECTIVE_TRIGGER.exists():
+        return None
+    try:
+        request = json.loads(RETROSPECTIVE_TRIGGER.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(request, dict) or str(request.get("action") or "") != "sync_retrospective_draft":
+        return None
+    request_id = str(request.get("requestId") or "").strip()
+    manifest_rel = str(request.get("manifest") or "").strip()
+    if not request_id or not manifest_rel:
+        return None
+    state = load_state(DEFAULT_RETROSPECTIVE_STATE)
+    if str(state.get("lastRequestId") or "") == request_id:
+        return None
+    manifest_path = (ROOT / manifest_rel).resolve()
+    try:
+        manifest_path.relative_to(ROOT.resolve())
+    except ValueError as exc:
+        raise RuntimeError("retrospective manifest escapes repository") from exc
+    if not manifest_path.exists():
+        raise RuntimeError(f"retrospective manifest missing: {manifest_rel}")
+    data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise RuntimeError("invalid retrospective manifest")
+    return request, data
+
+
 def pending_publish_request(publication_date: str):
     if not PUBLISH_TRIGGER.exists():
         return None
@@ -1228,6 +1381,103 @@ def main() -> int:
     parser.add_argument("--featured-pdf", default="", help="optional local PDF path used instead of downloading the featured paper PDF")
     parser.add_argument("--publish", action="store_true", help="submit the updated draft for publication and wait for final status")
     args = parser.parse_args()
+
+    retrospective = pending_retrospective_request()
+    if retrospective:
+        request, data = retrospective
+        slug = str(data.get("slug") or request.get("slug") or "retrospective").strip()
+        title = str(data.get("title") or "").strip()
+        digest = str(data.get("digest") or "").strip()
+        source_url = str(data.get("source_url") or DEFAULT_SOURCE_URL).strip()
+        if not title or not digest:
+            raise RuntimeError("retrospective title/digest missing")
+
+        if not args.create:
+            print(json.dumps({
+                "stage": "plan",
+                "mode": "retrospective",
+                "slug": slug,
+                "title": title,
+                "source_url": source_url,
+                "note": "No preview URL is created before the WeChat draft is written.",
+            }, ensure_ascii=False))
+            return 0
+
+        load_env(Path(args.env_file))
+        token = get_access_token()
+        uploaded_urls, local_images = upload_featured_images(token, data, args.featured_pdf)
+        content = build_retrospective_content(data, uploaded_urls)
+        cover_path = prepare_cover_from_local(data, local_images)
+        if cover_path is not None:
+            thumb_media_id = upload_permanent_image(token, cover_path, DEFAULT_RETROSPECTIVE_COVER_CACHE)
+        else:
+            fallback = next(iter(local_images.values()), Path(args.cover))
+            thumb_media_id = upload_cover(token, fallback, DEFAULT_RETROSPECTIVE_COVER_CACHE)
+
+        article = {
+            "article_type": "news",
+            "title": title,
+            "author": "化之岛",
+            "digest": digest,
+            "content": content,
+            "content_source_url": source_url,
+            "thumb_media_id": thumb_media_id,
+            "need_open_comment": 0,
+            "only_fans_can_comment": 0,
+        }
+        cover = data.get("cover") if isinstance(data.get("cover"), dict) else {}
+        if cover.get("crop_235_1"):
+            article["pic_crop_235_1"] = str(cover["crop_235_1"])
+        if cover.get("crop_1_1"):
+            article["pic_crop_1_1"] = str(cover["crop_1_1"])
+
+        state = load_state(DEFAULT_RETROSPECTIVE_STATE)
+        drafts = state.get("drafts") if isinstance(state.get("drafts"), dict) else {}
+        prior = drafts.get(slug) if isinstance(drafts.get(slug), dict) else {}
+        media_id = str(prior.get("media_id") or "").strip()
+        if media_id:
+            result = update_draft(token, media_id, article)
+            stage = "draft_update"
+        else:
+            result = create_draft(token, article)
+            media_id = str(result.get("media_id") or "")
+            stage = "draft_add"
+        if not media_id:
+            raise RuntimeError("retrospective draft write succeeded but no media_id is available")
+
+        draft = get_draft(token, media_id)
+        preview_path, preview_url = write_draft_preview(
+            draft,
+            media_id=media_id,
+            preview_dir=Path(args.preview_dir),
+            base_url=args.preview_base_url,
+        )
+        drafts[slug] = {
+            "media_id": media_id,
+            "title": title,
+            "preview_url": preview_url,
+            "updatedAt": int(time.time()),
+        }
+        save_state(DEFAULT_RETROSPECTIVE_STATE, {
+            "lastRequestId": str(request.get("requestId") or ""),
+            "drafts": drafts,
+        })
+        print(json.dumps({
+            "stage": stage,
+            "mode": "retrospective",
+            "slug": slug,
+            "errcode": result.get("errcode", 0),
+            "errmsg": result.get("errmsg", "ok"),
+            "media_id": media_id,
+            "paper_count": 1,
+            "publicationSlot": None,
+            "draft_readback": "ok",
+            "preview_path": str(preview_path),
+            "preview_url": preview_url,
+            "content_source_url": source_url,
+            "title": title,
+        }, ensure_ascii=False))
+        return 0
 
     slot, papers = load_latest_release()
     featured = load_featured(slot[:10])
