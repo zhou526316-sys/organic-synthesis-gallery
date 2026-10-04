@@ -29,7 +29,9 @@ function h(opt={}){
  };
  c=vm.createContext(env);const cut=source.lastIndexOf('  installManualRestartListener();');assert.ok(cut>0);
  vm.runInContext(source.slice(0,cut)+`
- readMissingCaptureInventory=async(q)=>({media:{items:q.articles.map(a=>({doi:a.doi,figureCount:0,tocStored:false,capturedFigures:[]}))},tocs:{items:[],count:0},figures:{complete:true,items:[]},evidence:{items:[],count:0},errors:[]});isGalleryPage=()=>true;badge=__badge;sleep=__sleep;writeToken=__token;getJson=__getJson;enqueueCaptureReport=__enqueue;
+ readMissingCaptureInventory=async(q)=>({media:{items:q.articles.map(a=>({doi:a.doi,figureCount:0,tocStored:false,capturedFigures:[]}))},tocs:{items:[],count:0},figures:{complete:true,items:[]},evidence:{items:[],count:0},errors:[]});
+ observeArchitectureMembership=async(q)=>{var dois=q.articles.map(a=>normalizeDoi(a.doi));return {ok:true,revision:'fixture-active-v2',publicationSlot:'2026-10-01T08:00:00+08:00',catalogId:'a'.repeat(64),asOfDate:'2026-10-01',cutoff:'2026-07-01',memberCount:dois.length,activeCount:dois.length,hotCount:dois.length,archiveCount:0,recentAdditionCount:0,activeDois:dois,archiveDois:[],memberDois:dois,withdrawn:[]};};
+ isGalleryPage=()=>true;badge=__badge;sleep=__sleep;writeToken=__token;getJson=__getJson;enqueueCaptureReport=__enqueue;
  globalThis.T={forceStartFromHead,manualCaptureJobs,manualExecutionCurrent,manualRunBlocksAutomatic,renewLease,currentCaptureJob,finishPairedJob,saveCheckpoint,checkpointKey,attemptKey,completedPublisherResult,controllerRun,requestControllerPause,owner:CONTROLLER_ID};
  installManualRestartListener();installMenu();})();`,c);
  return {T:c.T,c,store,put,badges,opened,requests,timers,reports,clock,listeners};
