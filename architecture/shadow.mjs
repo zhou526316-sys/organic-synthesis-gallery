@@ -13,9 +13,11 @@ const blobSha = bytes => createHash('sha1').update(`blob ${Buffer.byteLength(byt
 const args = process.argv.slice(2), opts = {};
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--verify-live') opts.live = true;
+  else if (args[i] === '--save-fixtures') opts.fixtures = true;
   else if (['--as-of', '--out'].includes(args[i]) && args[i + 1]) opts[args[i].slice(2)] = args[++i];
   else throw new Error(`unknown_argument:${args[i]}`);
 }
+if (opts.fixtures && !opts.live) throw new Error('fixtures_require_byte_verified_live_input');
 const root = process.cwd();
 const output = path.resolve(opts.out || 'artifacts/gallery-architecture-shadow');
 for (const protectedDir of ['public','src','shared','scripts','audit','cloudflare','.github','.git','architecture']) {
@@ -33,6 +35,7 @@ const inputFingerprint = async () => {
   return Object.fromEntries(await Promise.all(files.map(async file => [file, digest(await read(file))])));
 };
 let temporary;
+const fixtures = {}, fixtureHashes = {};
 try {
   const before = await inputFingerprint(), commit = git('rev-parse','HEAD');
   const markerText = await read('audit/publication-release-state.json'), marker = JSON.parse(markerText), markerHash = blobSha(markerText);
@@ -68,7 +71,15 @@ try {
     for (const name of LIVE_FILES) {
       const bytes = await get(name);
       assert(digest(bytes) === delivery.files[name], `live_bytes_changed:${name}`);
+      if (opts.fixtures) { fixtures[name] = bytes; fixtureHashes[name] = { sha256:digest(bytes), receiptBound:true }; }
       if (name !== 'index.html' && name !== 'title-translations-zh.json') live[name] = bytes.toString('utf8');
+    }
+    if (opts.fixtures) {
+      // Existing public title supplement; frozen separately, not falsely claimed as receipt-bound.
+      const name = 'paper-title-resolutions.json', bytes = await get(name);
+      JSON.parse(bytes);
+      assert((await get(name)).equals(bytes), 'resolution_snapshot_changed');
+      fixtures[name] = bytes; fixtureHashes[name] = { sha256:digest(bytes), receiptBound:false, stableDoubleRead:true };
     }
     const published = collectPapers(live, isExcludedDoi);
     assert(sameSet(dois, [...published.keys()]), 'published_repository_doi_mismatch');
@@ -90,6 +101,11 @@ try {
   }
   const reloaded = Object.fromEntries(await Promise.all(Object.keys(bundle.files).map(async name=>[name,await readFile(path.join(temporary,name),'utf8')])));
   verifyCatalog(reloaded, papers);
+  if (opts.fixtures) {
+    const dir = path.join(temporary,'validation/public'); await mkdir(dir,{recursive:true});
+    for (const [name, bytes] of Object.entries(fixtures)) await writeFile(path.join(dir,name),bytes,{flag:'wx'});
+    await writeFile(path.join(temporary,'validation/fixtures.json'),stable(fixtureHashes)+'\n',{flag:'wx'});
+  }
   const report = { schemaVersion:1, phase:'A-shadow', ...result, asOfDate, sourceCommit:commit, parityBasis, liveVerification,
     productionActivated:false, dispatchEnabled:false, protectedInputsUnchanged:true,
     sourceCollection:'existing pages-release-delivery collectPapers; not browser-local overrides',
