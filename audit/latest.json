@@ -1,6 +1,6 @@
 {
   "auditVersion": 5,
-  "generatedAt": "2026-10-03T23:07:35.746Z",
+  "generatedAt": "2026-10-04T00:07:24.353Z",
   "timeZone": "Asia/Shanghai",
   "windowMode": "rolling-3d-with-catchup",
   "lookbackDays": 3,
@@ -168,18 +168,18 @@
     }
   ],
   "summary": {
-    "galleryDois": 780,
+    "galleryDois": 785,
     "sourceRecords": 775,
-    "rawMissingFromGallery": 629,
-    "previouslyReviewedExcluded": 599,
-    "missingFromGallery": 30,
-    "potentialGaps": 11,
+    "rawMissingFromGallery": 624,
+    "previouslyReviewedExcluded": 619,
+    "missingFromGallery": 5,
+    "potentialGaps": 4,
     "criticalSourceFailures": 0,
     "sourceFamilyGaps": 0,
     "sourceCoverageAnomalies": 1,
     "closureCoverageAnomalies": 3,
     "historicalCoverageLosses": 0,
-    "unresolved": 30,
+    "unresolved": 5,
     "scopeCorrectionsPending": 0,
     "excludedByPolicy": 0
   },
@@ -187,10 +187,10 @@
     "date": "2026-10-03",
     "status": "blocked-source-coverage-anomaly",
     "sourceRecords": 34,
-    "rawMissingFromGallery": 33,
-    "previouslyReviewedExcluded": 8,
-    "missingFromGallery": 25,
-    "potentialGaps": 7,
+    "rawMissingFromGallery": 28,
+    "previouslyReviewedExcluded": 28,
+    "missingFromGallery": 0,
+    "potentialGaps": 0,
     "criticalSourceFailures": 0,
     "sourceCoverageAnomalies": [
       {
@@ -408,11 +408,11 @@
       "crossrefOnly": 32,
       "openAlexOnly": 0,
       "multiSource": 2,
-      "coveredByGallery": 1,
-      "rawMissingFromGallery": 33,
-      "previouslyReviewedExcluded": 8,
-      "missingFromGallery": 25,
-      "potentialGaps": 7,
+      "coveredByGallery": 6,
+      "rawMissingFromGallery": 28,
+      "previouslyReviewedExcluded": 28,
+      "missingFromGallery": 0,
+      "potentialGaps": 0,
       "byJournal": {
         "Nature Communications": 19,
         "JACS": 4,
@@ -522,11 +522,11 @@
       "multiSource": 138,
       "lateIndexed": 0,
       "safetyTail": 0,
-      "coveredByGallery": 2,
-      "rawMissingFromGallery": 154,
-      "previouslyReviewedExcluded": 140,
-      "missingFromGallery": 14,
-      "potentialGaps": 1
+      "coveredByGallery": 3,
+      "rawMissingFromGallery": 153,
+      "previouslyReviewedExcluded": 153,
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "JACS": {
       "activeFrom": "2026-07-01",
@@ -552,11 +552,11 @@
       "multiSource": 111,
       "lateIndexed": 0,
       "safetyTail": 0,
-      "coveredByGallery": 26,
-      "rawMissingFromGallery": 94,
-      "previouslyReviewedExcluded": 90,
-      "missingFromGallery": 4,
-      "potentialGaps": 2
+      "coveredByGallery": 27,
+      "rawMissingFromGallery": 93,
+      "previouslyReviewedExcluded": 93,
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "ACS Catalysis": {
       "activeFrom": "2026-07-01",
@@ -569,9 +569,9 @@
       "safetyTail": 0,
       "coveredByGallery": 8,
       "rawMissingFromGallery": 31,
-      "previouslyReviewedExcluded": 27,
-      "missingFromGallery": 4,
-      "potentialGaps": 2
+      "previouslyReviewedExcluded": 30,
+      "missingFromGallery": 1,
+      "potentialGaps": 1
     },
     "Organic Letters": {
       "activeFrom": "2026-07-01",
@@ -582,11 +582,11 @@
       "multiSource": 54,
       "lateIndexed": 0,
       "safetyTail": 0,
-      "coveredByGallery": 47,
-      "rawMissingFromGallery": 8,
+      "coveredByGallery": 48,
+      "rawMissingFromGallery": 7,
       "previouslyReviewedExcluded": 7,
-      "missingFromGallery": 1,
-      "potentialGaps": 1
+      "missingFromGallery": 0,
+      "potentialGaps": 0
     },
     "Chem": {
       "activeFrom": "2026-09-19",
@@ -627,11 +627,11 @@
       "multiSource": 2,
       "lateIndexed": 0,
       "safetyTail": 0,
-      "coveredByGallery": 6,
-      "rawMissingFromGallery": 34,
-      "previouslyReviewedExcluded": 27,
-      "missingFromGallery": 7,
-      "potentialGaps": 5
+      "coveredByGallery": 8,
+      "rawMissingFromGallery": 32,
+      "previouslyReviewedExcluded": 28,
+      "missingFromGallery": 4,
+      "potentialGaps": 3
     },
     "Science Advances": {
       "activeFrom": "2026-09-19",
@@ -1898,737 +1898,6 @@
   ],
   "missingCandidates": [
     {
-      "doi": "10.1021/acscatal.6c06690",
-      "journal": "ACS Catalysis",
-      "title": "Embrace the Mess: Theory for Disordered Surfaces of Working Catalysts",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Karsten Reuter"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1021/acscatal.6c04632",
-      "journal": "ACS Catalysis",
-      "title": "Geometric Response of Silanol-Anchored Co(II) Site Regulates Propane C–H Activation Barrier in Silicalite-1",
-      "abstract": "Abstract Zeolite-confined isolated cobalt catalysts exhibit promising performance in propane dehydrogenation (PDH), while their catalytic performance varies in the orders of magnitude despite most studies claim isolated Co sites are active sites. It is believed that these sites are stabilized by silanols generated by framework defects, which are normally considered as anchoring site. The present study shows that separation between silanol groups has a significant impact on the PDH activity of isolated cobalt sites. Here, a Co–O2 motif, in which Co(II) is anchored by two isolated internal silanols with varying separations, is employed to explore how the relative arrangement of silanol anchoring sites influences PDH performance. By varying the separation between the two silanols, the O–Co–O angle (θ) was tuned from bent to nearly linear configurations. The calculated C–H activation barriers show a positive correlation with the O–Co–O angle of the propane-adsorbed state, θC3H8*. Distortion/interaction (Activation Strain) analysis reveals that this barrier trend mainly arises from the distortion penalty required to reach the transition state. Smaller-θ sites require less angular contraction of the Co–O2 motif and enable stronger Co-centered charge reorganization during C–H cleavage. Experimental comparison provides qualitative support for this geometry-reactivity relationship: Co/S-1 catalysts with silanol-nest environments, which are associated with smaller-θ Co–O2 geometries in model structures, exhibit higher PDH performance and lower apparent activation energy than terminal-silanol samples. These results identify θ as a physically meaningful descriptor that links the geometric response of silanol-anchored Co(II) sites to propane C–H activation.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Yumeng Fo",
-        "Baiting Long",
-        "Xiangyang Ji",
-        "Rui Lin",
-        "Shaojia Song",
-        "Meizan Jing",
-        "Zhen Zhao",
-        "Jian Liu",
-        "Weiyu Song"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1021/acscatal.6c05458",
-      "journal": "ACS Catalysis",
-      "title": "Influence of Ligand Denticity and Nuclearity on the Catalytic Activity and Product Selectivity in Oxygen Reduction Reaction Catalyzed by Copper(II) Complexes",
-      "abstract": "Abstract Two mononuclear Cu(II) complexes, [(L1)Cu](ClO4)2 (1), containing the pentadentate BnTPEN (L1 = N-benzyl-N,N′,N′-tris(2-pyridylmethyl)-1,2-diaminoethane), and [(L2)Cu(ClO4)](ClO4) (2), supported by the tetradentate BnBPEN (L2 = N,N'-dibenzyl-N,N'-bis(2-pyridylmethyl)-1,2-ethanediamine) ligands, were isolated to assess the role of the coordination environment and denticity on the oxygen reduction reaction (ORR). Complex 1 exhibits about 17-fold higher ORR activity than that of 2, highlighting the role of ligand denticity in ORR. The kinetic studies indicate that a proton-coupled electron transfer (PCET) step is involved in the rate-determining step (RDS) for both complexes. Electrochemical and spectroscopic analyses suggest that protonation of the dissociated pyridyl arm in the reduced state of complex 1 establishes an internal proton relay that facilitates ORR. Complex 1 selectively produces H2O2, whereas complex 2 promotes selective 4e–/4H+ reduction of O2 to H2O, supporting distinct protonation pathways of the Cu(II)-hydroperoxo intermediate governed by ligand denticity. Subsequently, the pentadentate ligand framework was extended to generate di- and trinuclear Cu(II) complexes to investigate the influence of multiple metal centers and steric factors on their catalytic ORR activity. The Cu(II) complexes, [(L3)Cu2](ClO4)4 (3) with a bis(pentadentate) and [(L4)Cu3](ClO4)6 (4) of tris(pentadentate) ligands, display comparable overall ORR rates, while both the complexes catalyze 2e–/2H+ reduction of dioxygen. In contrast, the trinuclear complexes, [(L5)Cu3](ClO4)6 (5) and [(L6)Cu3](ClO4)6 (6), on tris(pentadentate) BnTPEN derivatives containing three methyl or ethyl groups on the benzene platform, show substantially diminished ORR activity due to higher reorganiz",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Asit Dutta",
-        "Subhankar Sutradhar",
-        "Sabyasachi Mahapatra",
-        "Srijan Narayan Chowdhury",
-        "Sachidulal Biswas",
-        "Tapan Kanti Paine"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.1214768",
-      "journal": "Angew",
-      "title": "Ag─S Sites Steer Furfural Electroreduction to Furfuryl Alcohol",
-      "abstract": "ABSTRACT The electrochemical upgrading of furfural (FF), a biomass‐derived platform molecule, using renewable electricity offers a promising route toward green and sustainable chemical synthesis. However, achieving high selectivity toward hydrogenated products, such as furfuryl alcohol (FA), remains challenging as hydrogenation competes with C─C coupling reactions that generate undesired dimers. In this study, we show that trace sulfide species introduced into the electrolyte dynamically generate Ag─S sites on Ag surfaces during electrolysis, thereby steering the FF reduction reaction toward FA formation. Using Ag disk electrodes, the introduction of 0.5 mM sulfide ions (S 2− ) into the electrolyte increases the Faradaic efficiency (FE) for FA formation from 59% to 88% and enhances its partial current density ( j FA ) from 5.4 to 12.5 mA cm −2 . X‐ray photoelectron spectroscopy, in situ Raman spectroscopy, and density functional theory simulations collectively reveal that the low‐coverage sulfide species on Ag regulate FF adsorption and facilitate proton transfer to the carbonyl oxygen, steering FA formation, while suppressing hydrofuroin (HF) formation by disrupting the Ag ensembles required for C─C coupling. Overall, our findings establish the deliberate introduction of trace sulfide into the electrolyte as a simple and potentially broadly applicable strategy to steer selectivity in the electrochemical hydrogenation of biomass‐derived furanic aldehydes.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Haibin Ma",
-        "Jordi Morales‐Vidal",
-        "George Teo",
-        "Muhammad S. Naeem",
-        "Terence Jing Cong Tan",
-        "Núria López",
-        "Boon Siang Yeo"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.3010868",
-      "journal": "Angew",
-      "title": "Metal‐Templated Dynamic Reorganization of Macrocyclic Gold Complexes Toward an N ‐Doped Cycloparaphenylene Catenane",
-      "abstract": "ABSTRACT Self‐assembly based on a single dynamic bond smoothly converges on its thermodynamic product, but this does not extend to an interlocked architecture composed of strained, fully π ‐conjugated rings such as [ n ]cycloparaphenylenes ([ n ]CPPs), because assembling such an architecture requires forming the interlocked topology and reorganizing the rigid backbone at the same time. Herein, we report that two dynamic processes designed to operate orthogonally, reversible Au(I)─C σ ‐bond exchange and exchangeable Cu(I)─N coordination, can be coupled to promote metal‐templated dynamic reorganization. This process leads to the formation of an interlocked metal‐complex precursor, which reductive elimination then converts into a [2]catenane composed of two mechanically interlocked, fully π‐conjugated, nitrogen‐doped [12]CPP‐based nanohoops. Computational analyses provide insight into possible Cu(I)‐templated intermediates involved in the formation of the interlocked structure. The embedded sp 2 nitrogen atoms further provide coordination sites for guest‐dependent biasing of the co‐conformational mechanical helical chirality. This work establishes dynamic metal‐templated reorganization as a strategy for constructing strained, topologically complex π‐conjugated architectures beyond the reach of conventional single‐interaction self‐assembly.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Hiromichi Yokoyama",
-        "Miki Kawata",
-        "Masahiro Hayakawa",
-        "Takuji Hatakeyama",
-        "Hidetoshi Kawai",
-        "Yoshitaka Tsuchido",
-        "Tomohito Ide"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1002/anie.7147123",
-      "journal": "Angew",
-      "title": "Mitigating Surface Poisoning by Bidirectional Regulation for Efficient C1‐C2 Molecule Electrooxidation",
-      "abstract": "ABSTRACT The rational design of Pt‐based electrocatalysts to alleviate CO intermediates poisoning during electrooxidation of C1‐C2 fuels (methanol, ethanol, formic acid) presents a grand challenge. Current detoxification strategies predominantly focus on enhancing OH* formation to accelerate CO* oxidation. However, the periodic voltage/current oscillations induced by accumulated OH species are often overlooked. Such accumulation of secondary poisoning intermediates inevitably leads to a high overpotential and poor operational stability. Herein, guided by machine learning screening, we resolve this dilemma by designing ultrathin PtPdGaRuFeMo high‐entropy alloy nanosheets featuring Ga and Ru dual‐promoter sites for the bidirectional regulation of CO* and OH* adsorption. Both theoretical analysis and experimental results demonstrate that the synergistic Ga and Ru sites modulate the electronic structure of active centers, balancing the dynamic adsorption of CO* and OH* to mitigate surface poisoning. Consequently, the as‐prepared catalysts deliver excellent specific activities of 5.4 mA cm −2 for methanol and 3.5 mA cm −2 for formic acid electrooxidation, surpassing commercial Pt/C by factors of 9.7 and 12.8, respectively. This study establishes a dual‐promoter bidirectional regulation, providing a promising route offering a robust solution to the stability‐activity trade‐off in fuel‐cell electrocatalysts.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Shuping Liang",
-        "Yipin Lv",
-        "Guozhu Chen",
-        "Cuncheng Li",
-        "Juan Chen",
-        "Yunrui Li",
-        "Yao Wang",
-        "Daowei Gao"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1002/anie.3686104",
-      "journal": "Angew",
-      "title": "Sidechain Modulation of Responsive Metal‐Organic Framework Pore Chirality for Enhanced Enantioseparation",
-      "abstract": "ABSTRACT The selective separation of enantiomers is important for industrial technologies such as pharmaceuticals, biotechnology, and agrochemicals. Chiral porous materials have been used as the stationary phase for the chromatographic separation of enantiomers; however, they lack synthetic and performance designability. Here we present a new chiral metal‐organic framework with excellent chromatographic enantioseparation performance for a family of aromatic chiral molecules. This material has been developed by diversifying the amino acid sidechains appended to an underlying common structural framework. The structure of the framework places the bulky isopropyl sidechain of L ‐valine in the one‐dimensional pore channels characteristic of the materials family, modulating the accessible space to emphasize the helical shape of the channels. The dimensions of the pores are adapted to those of guests, through conformational flexibility directed by the sidechain, creating appropriate adsorption sites for functionalized aromatic guests. This porous framework affords superior enantioseparation performance compared to the same underlying framework decorated with the shorter methyl sidechain. These results demonstrate that the structure and porosity of dynamic chiral metal‐organic frameworks can be tailored using amino acid‐derived linkers and enhance the enantiomeric separations through stimulation of conformational flexibility.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Luke A. Johnson",
-        "Laurence J. Kershaw Cook",
-        "Bhupendra P. Mali",
-        "Datta Markad",
-        "Nikos Panagiotou",
-        "Dmytro Antypov",
-        "Alexandros P. Katsoulidis",
-        "Matthew J. Rosseinsky"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.31635/ccschem.026.202608392",
-      "journal": "CCS Chemistry",
-      "title": "Enantioselective Synthesis of 1,3-Disubstituted Bicyclo[2.1.1]hexanes via Cascade Allylic Allylation/Intramolecular Crossed [2+2] Photocycloaddition",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Wen-Jie Shen",
-        "Yiliang Gong",
-        "Yifeng Chen",
-        "Yuan-Zheng Cheng",
-        "Shu-Li You"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2096-5745:online",
-        "crossref:2096-5745:published"
-      ],
-      "activeFrom": "2026-09-19",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.31635/ccschem.026.202607991",
-      "journal": "CCS Chemistry",
-      "title": "Universal Dangling OH Bonds at Electrochemically Tunable Aromatic-Water Interfaces",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Chong-hui Jiang",
-        "Sheng-jie Qian",
-        "Yang-gang Wang"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2096-5745:online",
-        "crossref:2096-5745:published"
-      ],
-      "activeFrom": "2026-09-19",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.31635/ccschem.026.202608407",
-      "journal": "CCS Chemistry",
-      "title": "Upcycling of Polystyrene via Synergistically Catenary Photocatalysis",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Haiyang Song",
-        "Jiaolong Meng",
-        "Shuang Li",
-        "Chengliang Li",
-        "Yujie Song",
-        "Xuefeng Jiang"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2096-5745:online",
-        "crossref:2096-5745:published"
-      ],
-      "activeFrom": "2026-09-19",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1038/s41467-026-78039-1",
-      "journal": "Nature Communications",
-      "title": "Bulk mesophases modeling of ferroelectric nematic liquid crystals",
-      "abstract": "Abstract Ferroelectric nematic liquid crystals (FNLCs) are emerging materials that combine orientational order with spontaneous macroscopic polarization. They exhibit distinctive properties, such as polar domain formation, field-tunable textures, and strong electro-elastic couplings. However, due to the complexity of the underlying mechanisms, the bulk structure of the emergent mesophases is not yet fully understood, and a generalized description of all observed phases is still lacking. Here, we demonstrate the bulk mesophases of FNLCs as stabilized by a combination of flexoelectricity, elasticity, bulk ordering, and polarization-nematic couplings. Specifically, we develop Landau de-Gennes-like free energy framework that predicts and explains the structure of major experimentally observed ferroelectric nematic phases, including ferroelectric nematic, antiferroelectric splay nematic, apolar nematic, and isotropic phase, notably together with the correct phase transition sequences. Additionally, we predict the possible existence of new bend-instability-driven mesophase characterized by periodic splay-bend structure. Finally, we calculate a complete phase diagram of bulk ferroelectric nematics as dependent on the key coupling mechanisms, which could possibly enable the predictive design and applications of these novel emergent ferroelectric nematic materials.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Aditya Vats",
-        "Alenka Mertelj",
-        "Miha Ravnik"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-78299-x",
-      "journal": "Nature Communications",
-      "title": "DCAF7 regulates hematopoietic stem cell function and differentiation through polycomb repressive complex 1 modulation",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Johanna Melo-Cardenas",
-        "Lavanya Bezavada",
-        "Te Ling",
-        "Trent Hall",
-        "Amber Broadhurst",
-        "Anitria Cotton",
-        "Jeremy Chase Crawford",
-        "Amanda Nourse",
-        "Vishwajeeth Pagala",
-        "Kiran Kodali",
-        "Mollie S. Hutton",
-        "Shondra M. Pruett-Miller",
-        "Qiong Zhang",
-        "Wojciech Rosikiewicz",
-        "Hongjian Jin",
-        "Dirk Loeffler",
-        "John D. Crispino"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-78054-2",
-      "journal": "Nature Communications",
-      "title": "Design principle for mitigating moisture-induced degradation in 2D halide perovskites",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Isaac Metcalf",
-        "Shanize Forte",
-        "Jianlin Zhou",
-        "Claudine Katan",
-        "Esther H. R. Tsai",
-        "Jacky Even",
-        "Aditya D. Mohite"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-78226-0",
-      "journal": "Nature Communications",
-      "title": "Enantioselective palladium-catalyzed carbonylation of gem-dibromoalkenes to chiral benzo[7]annulenes",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Yu Luo",
-        "Xilong Wang",
-        "Yuanhang Zhang",
-        "Shuang Luo",
-        "Qiang Zhu"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-77834-0",
-      "journal": "Nature Communications",
-      "title": "Global climate impact of land-surface change driven by radiative effects",
-      "abstract": "Abstract A robust proportionality between radiative forcing and global-mean temperature has been established for most climate drivers. However, land-surface changes are considered an exception due to their potential to alter surface hydrology, introducing non-radiative effects that may rival those from surface albedo changes. Here, comparing Earth-system-model simulations with large-scale perturbations of surface albedo and water availability, we find that the spatially integrated biophysical climate impact is similarly dominated by radiative processes and scales approximately linearly with the resulting shifts in planetary albedo, implying a ~ 0.4 K surface temperature response per W m −2 change in top-of-atmosphere net short-wave radiation. Thus, while non-radiative effects strongly influence local temperatures, their net contribution to the global-mean signal is negligible. The planetary-albedo response is primarily governed by regional cloud-cover characteristics, resulting in a substantially stronger temperature response to land-surface change in mid- and high-latitude regions than in the tropics and subtropics.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Philipp de Vrese",
-        "Victor Brovkin",
-        "Moritz Günther",
-        "Sarah M. Kang",
-        "Thomas Raddatz",
-        "Wim Thiery",
-        "Yi Yao"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-78200-w",
-      "journal": "Nature Communications",
-      "title": "Herbicide degradation is driven by communication-mediated division of labor in synthetic communities",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Yuxiao Zhang",
-        "Jack A. Gilbert",
-        "Li Nie",
-        "Yu-Meng Zhang",
-        "Ping Huang",
-        "Weijie Luo",
-        "Xiyuan Xu",
-        "Ru Sun",
-        "Kunkun Fan",
-        "Kaixiang Shi",
-        "Xihui Xu",
-        "Ning-Yi Zhou",
-        "Jia-Bao Zhang",
-        "Haiyan Chu"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1038/s41467-026-78257-7",
-      "journal": "Nature Communications",
-      "title": "Joule-heated regenerable carbon dioxide capture filter for demand-controlled ventilation in indoor applications",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Minjae Kim",
-        "Joo Young Shin",
-        "Jungwoo Huh",
-        "Gil Jung",
-        "Seonggon Kim",
-        "Bora Kim",
-        "Jae Won Lee",
-        "Hoon Wee",
-        "Youngdeog Koh",
-        "Sam S. Yoon",
-        "Yong Tae Kang"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-78050-6",
-      "journal": "Nature Communications",
-      "title": "Near-atomistic simulations reveal the molecular principles that control chromatin structure and phase separation",
-      "abstract": "Abstract Understanding how chromatin’s physicochemical properties shape its emergent organization is central to deciphering genome function. To address this, we present OpenCGChromatin, a high-performance coarse-grained model that achieves near-atomistic simulations of chromatin systems an order of magnitude larger than previously possible, spanning biomolecular condensates and fibers tens of kilobases in length. OpenCGChromatin simulations independently predict, from physicochemical principles, the linker-DNA-dependent chromatin structures observed by cryo-ET and the relative thermodynamic stability of condensates inferred from biochemical assays. Crucially, OpenCGChromatin resolves histone-tail dynamics and interaction networks that remain inaccessible experimentally, explaining how linker-DNA length controls histone tail accessibility and the resulting multiscale structure of chromatin condensates. Extending simulations to 108-nucleosome fibers shows that acetylation disrupts chromatin compaction in a pattern-specific manner by weakening key tail-mediated interactions, with H4K16 and H3K9 emerging as the most energetically disruptive modifications. These results position OpenCGChromatin as a powerful framework for linking molecular detail to emergent chromatin organization.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Kieran Russell",
-        "Yifang Chen",
-        "Jorge R. Espinosa",
-        "David Farré-Gil",
-        "Huabin Zhou",
-        "M. Julia Maristany",
-        "Jose Ignacio Perez-Lopez",
-        "Jan Huertas",
-        "Modesto Orozco",
-        "Michael K. Rosen",
-        "Rosana Collepardo-Guevara"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-77941-y",
-      "journal": "Nature Communications",
-      "title": "Saturation mutagenesis enables RAD51D clinical variant interpretation and identifies distinct biochemical functions",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Kristie E. Darrah",
-        "Shelby L. Hemker",
-        "Yashpal Rawal",
-        "Noah J. Goff",
-        "Phoebe S. Parker",
-        "Gayatri S. Ganesan",
-        "Caleb M. Stratton",
-        "Katherine G. Oppenheimer",
-        "Ella Roberts",
-        "Elena Glick",
-        "Nicole Banks",
-        "Arjun K. Kumar",
-        "Silvia Casadei",
-        "Matthew W. Snyder",
-        "Kara J. Milliron",
-        "Sofia D. Merajver",
-        "Ana M. Dias",
-        "Katherine L. Nathanson",
-        "Susan M. Domchek",
-        "Lea M. Starita",
-        "Shaun K. Olsen",
-        "Patrick Sung",
-        "Jacob O. Kitzman",
-        "Kara A. Bernstein"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-78165-w",
-      "journal": "Nature Communications",
-      "title": "Self-restoration of reactive centers via contaminant-to-catalyst electron replenishment for sustained Fenton-like activity",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Yu-Hang Li",
-        "Anjie Chen",
-        "Xiaoyi Hu",
-        "Mingyi Liu",
-        "Nan Xu",
-        "Alistair G. L. Borthwick",
-        "Haodong Ji"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-78194-5",
-      "journal": "Nature Communications",
-      "title": "Spatiotemporally synchronized pure high-even-order dispersion solitons in multimode fiber lasers",
-      "abstract": "Abstract Soliton solutions of nonlinear wave equations continue to attract broad scientific interest across diverse physical settings. Currently, the study of pure high-even-order dispersion (PHEOD) solitons and multimode spatiotemporal dynamics represents two compelling frontiers in ultrafast photonics. The intersection of these domains is theoretically rich; however, the realization of PHEOD solitons in multimode fibers has been difficult due to the challenge of independently managing dispersion for different transverse modes. Here, we report the first experimental generation of synchronized PHEOD solitons in a multimode fiber laser. By employing a transverse mode division control technique, we physically decouple the modes, which enables control of both modal and chromatic dispersions. We systematically demonstrate the generation of spatiotemporally synchronized PHEOD solitons in four transverse modes, with fourth-, sixth-, or eighth-order dispersion. These multimode pulsed states self-organize through nonlinear coupling among the transverse modes. Numerical simulations account for the main experimental observations and illuminate the nonlinear multimode dynamics that underlie the laser operation. This work bridges the scientific gap between PHEOD engineering and multimode fiber lasers, and opens new possibilities for the development of sources of multidimensionally structured ultrafast light.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Wenqi Ma",
-        "Xiuquan Li",
-        "Canyi Deng",
-        "Caishan Pang",
-        "Rui Nie",
-        "Frank W. Wise",
-        "Guijun Hu"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-78261-x",
-      "journal": "Nature Communications",
-      "title": "Sustainability cost of defect engineering in color centers for quantum communications",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Sahar Shata",
-        "Julie M. Schoenung"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-78235-z",
-      "journal": "Nature Communications",
-      "title": "The structural dynamics and molecular coupling in the slow inactivation of a prokaryotic voltage-gated sodium channel",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Katsumasa Irie",
-        "Shuo Han",
-        "Sarah Applewhite",
-        "Yuki K. Maeda",
-        "Joshua Vance",
-        "Shizhen Wang"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1038/s41467-026-77942-x",
-      "journal": "Nature Communications",
-      "title": "Top-down semantic predictions align phonetic neuronal dynamics in human superior temporal gyrus",
-      "abstract": "Abstract Speech processing involves a hierarchy of cognitive layers from low-level phonetic to high-level semantic representations. However, interactions are not only feed-forward; feedback mechanisms are crucial for real-time, accurate speech recognition. Yet how distant levels interface during speech processing remains unclear. Here, we analyzed intracortical recordings from 624 neurons across three human participants implanted with microelectrode arrays in the anterior superior temporal gyrus during an auditory semantic categorization task and natural speech perception. We identified distinct neural subspaces, or manifolds, for lexico-semantic and phonetic features, with a functional separation of the corresponding low-dimensional dynamics. We contrasted a bottom-up cumulative and a top-down semantic hypothesis on phonetic-semantic temporal alignment, and found phonetic alignment to word-level semantic representations, signaling top-down prediction. These effects were consistent across participants at the spiking level, and remained undetected in adjacent ECoG recordings. These findings demonstrate the reorganization of neuronal population dynamics supporting phonetic representations during semantic prediction.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Pavo Orepić",
-        "Wilson Truccolo",
-        "Eric Halgren",
-        "Sydney S. Cash",
-        "Anne-Lise Giraud",
-        "Timothée Proix"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "normal"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03748",
-      "journal": "Organic Letters",
-      "title": "Sulfolenocorrole as a Chameleon-Like Tecton Enabling the Construction of Multiring Fused Corroles",
-      "abstract": "Abstract In addition to β,β-fusions based on the Diels–Alder reaction of sulfolenocorrole, meso,β-fusion has been realized, enabling the synthesis of multiring fused corroles (CuF3x). The obtained unique conjugation systems afford intense π-stacking and pronounced bathochromic absorption with a broad peak around 1280 nm. Upon theoretical calculations and NMR analysis, the multifusions suppress the noninnocent feature of the corrole ligand; meanwhile, CuF3x and HF3M are proposed to be weakly antiaromatic and nonaromatic, respectively.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Mengyi Hu",
-        "Zhaowen Ye",
-        "Junyang Wang",
-        "Danni Gong",
-        "Qiushuang Li",
-        "Qinlei Liu",
-        "Chengjie Li"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
       "doi": "10.1021/acscatal.6c06578",
       "journal": "ACS Catalysis",
       "title": "Redefining the Value Proposition of Photoelectrochemical Systems: Unique Reaction Knobs for Selective Chemical Synthesis",
@@ -2758,213 +2027,6 @@
     }
   ],
   "potentialGaps": [
-    {
-      "doi": "10.1021/acscatal.6c05458",
-      "journal": "ACS Catalysis",
-      "title": "Influence of Ligand Denticity and Nuclearity on the Catalytic Activity and Product Selectivity in Oxygen Reduction Reaction Catalyzed by Copper(II) Complexes",
-      "abstract": "Abstract Two mononuclear Cu(II) complexes, [(L1)Cu](ClO4)2 (1), containing the pentadentate BnTPEN (L1 = N-benzyl-N,N′,N′-tris(2-pyridylmethyl)-1,2-diaminoethane), and [(L2)Cu(ClO4)](ClO4) (2), supported by the tetradentate BnBPEN (L2 = N,N'-dibenzyl-N,N'-bis(2-pyridylmethyl)-1,2-ethanediamine) ligands, were isolated to assess the role of the coordination environment and denticity on the oxygen reduction reaction (ORR). Complex 1 exhibits about 17-fold higher ORR activity than that of 2, highlighting the role of ligand denticity in ORR. The kinetic studies indicate that a proton-coupled electron transfer (PCET) step is involved in the rate-determining step (RDS) for both complexes. Electrochemical and spectroscopic analyses suggest that protonation of the dissociated pyridyl arm in the reduced state of complex 1 establishes an internal proton relay that facilitates ORR. Complex 1 selectively produces H2O2, whereas complex 2 promotes selective 4e–/4H+ reduction of O2 to H2O, supporting distinct protonation pathways of the Cu(II)-hydroperoxo intermediate governed by ligand denticity. Subsequently, the pentadentate ligand framework was extended to generate di- and trinuclear Cu(II) complexes to investigate the influence of multiple metal centers and steric factors on their catalytic ORR activity. The Cu(II) complexes, [(L3)Cu2](ClO4)4 (3) with a bis(pentadentate) and [(L4)Cu3](ClO4)6 (4) of tris(pentadentate) ligands, display comparable overall ORR rates, while both the complexes catalyze 2e–/2H+ reduction of dioxygen. In contrast, the trinuclear complexes, [(L5)Cu3](ClO4)6 (5) and [(L6)Cu3](ClO4)6 (6), on tris(pentadentate) BnTPEN derivatives containing three methyl or ethyl groups on the benzene platform, show substantially diminished ORR activity due to higher reorganiz",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Asit Dutta",
-        "Subhankar Sutradhar",
-        "Sabyasachi Mahapatra",
-        "Srijan Narayan Chowdhury",
-        "Sachidulal Biswas",
-        "Tapan Kanti Paine"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2155-5435:online",
-        "crossref:2155-5435:published",
-        "crossref:2155-5435:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.1214768",
-      "journal": "Angew",
-      "title": "Ag─S Sites Steer Furfural Electroreduction to Furfuryl Alcohol",
-      "abstract": "ABSTRACT The electrochemical upgrading of furfural (FF), a biomass‐derived platform molecule, using renewable electricity offers a promising route toward green and sustainable chemical synthesis. However, achieving high selectivity toward hydrogenated products, such as furfuryl alcohol (FA), remains challenging as hydrogenation competes with C─C coupling reactions that generate undesired dimers. In this study, we show that trace sulfide species introduced into the electrolyte dynamically generate Ag─S sites on Ag surfaces during electrolysis, thereby steering the FF reduction reaction toward FA formation. Using Ag disk electrodes, the introduction of 0.5 mM sulfide ions (S 2− ) into the electrolyte increases the Faradaic efficiency (FE) for FA formation from 59% to 88% and enhances its partial current density ( j FA ) from 5.4 to 12.5 mA cm −2 . X‐ray photoelectron spectroscopy, in situ Raman spectroscopy, and density functional theory simulations collectively reveal that the low‐coverage sulfide species on Ag regulate FF adsorption and facilitate proton transfer to the carbonyl oxygen, steering FA formation, while suppressing hydrofuroin (HF) formation by disrupting the Ag ensembles required for C─C coupling. Overall, our findings establish the deliberate introduction of trace sulfide into the electrolyte as a simple and potentially broadly applicable strategy to steer selectivity in the electrochemical hydrogenation of biomass‐derived furanic aldehydes.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Haibin Ma",
-        "Jordi Morales‐Vidal",
-        "George Teo",
-        "Muhammad S. Naeem",
-        "Terence Jing Cong Tan",
-        "Núria López",
-        "Boon Siang Yeo"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1002/anie.3686104",
-      "journal": "Angew",
-      "title": "Sidechain Modulation of Responsive Metal‐Organic Framework Pore Chirality for Enhanced Enantioseparation",
-      "abstract": "ABSTRACT The selective separation of enantiomers is important for industrial technologies such as pharmaceuticals, biotechnology, and agrochemicals. Chiral porous materials have been used as the stationary phase for the chromatographic separation of enantiomers; however, they lack synthetic and performance designability. Here we present a new chiral metal‐organic framework with excellent chromatographic enantioseparation performance for a family of aromatic chiral molecules. This material has been developed by diversifying the amino acid sidechains appended to an underlying common structural framework. The structure of the framework places the bulky isopropyl sidechain of L ‐valine in the one‐dimensional pore channels characteristic of the materials family, modulating the accessible space to emphasize the helical shape of the channels. The dimensions of the pores are adapted to those of guests, through conformational flexibility directed by the sidechain, creating appropriate adsorption sites for functionalized aromatic guests. This porous framework affords superior enantioseparation performance compared to the same underlying framework decorated with the shorter methyl sidechain. These results demonstrate that the structure and porosity of dynamic chiral metal‐organic frameworks can be tailored using amino acid‐derived linkers and enhance the enantiomeric separations through stimulation of conformational flexibility.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Luke A. Johnson",
-        "Laurence J. Kershaw Cook",
-        "Bhupendra P. Mali",
-        "Datta Markad",
-        "Nikos Panagiotou",
-        "Dmytro Antypov",
-        "Alexandros P. Katsoulidis",
-        "Matthew J. Rosseinsky"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1433-7851:online",
-        "crossref:1433-7851:published",
-        "crossref:1433-7851:created",
-        "crossref:1521-3773:online",
-        "crossref:1521-3773:published",
-        "crossref:1521-3773:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.31635/ccschem.026.202608392",
-      "journal": "CCS Chemistry",
-      "title": "Enantioselective Synthesis of 1,3-Disubstituted Bicyclo[2.1.1]hexanes via Cascade Allylic Allylation/Intramolecular Crossed [2+2] Photocycloaddition",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Wen-Jie Shen",
-        "Yiliang Gong",
-        "Yifeng Chen",
-        "Yuan-Zheng Cheng",
-        "Shu-Li You"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2096-5745:online",
-        "crossref:2096-5745:published"
-      ],
-      "activeFrom": "2026-09-19",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.31635/ccschem.026.202608407",
-      "journal": "CCS Chemistry",
-      "title": "Upcycling of Polystyrene via Synergistically Catenary Photocatalysis",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Haiyang Song",
-        "Jiaolong Meng",
-        "Shuang Li",
-        "Chengliang Li",
-        "Yujie Song",
-        "Xuefeng Jiang"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2096-5745:online",
-        "crossref:2096-5745:published"
-      ],
-      "activeFrom": "2026-09-19",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1038/s41467-026-78200-w",
-      "journal": "Nature Communications",
-      "title": "Herbicide degradation is driven by communication-mediated division of labor in synthetic communities",
-      "abstract": "",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Yuxiao Zhang",
-        "Jack A. Gilbert",
-        "Li Nie",
-        "Yu-Meng Zhang",
-        "Ping Huang",
-        "Weijie Luo",
-        "Xiyuan Xu",
-        "Ru Sun",
-        "Kunkun Fan",
-        "Kaixiang Shi",
-        "Xihui Xu",
-        "Ning-Yi Zhou",
-        "Jia-Bao Zhang",
-        "Haiyan Chu"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:2041-1723:online",
-        "crossref:2041-1723:published",
-        "crossref:2041-1723:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
-    {
-      "doi": "10.1021/acs.orglett.6c03748",
-      "journal": "Organic Letters",
-      "title": "Sulfolenocorrole as a Chameleon-Like Tecton Enabling the Construction of Multiring Fused Corroles",
-      "abstract": "Abstract In addition to β,β-fusions based on the Diels–Alder reaction of sulfolenocorrole, meso,β-fusion has been realized, enabling the synthesis of multiring fused corroles (CuF3x). The obtained unique conjugation systems afford intense π-stacking and pronounced bathochromic absorption with a broad peak around 1280 nm. Upon theoretical calculations and NMR analysis, the multifusions suppress the noninnocent feature of the corrole ligand; meanwhile, CuF3x and HF3M are proposed to be weakly antiaromatic and nonaromatic, respectively.",
-      "date": "2026-10-03",
-      "type": "journal-article",
-      "authors": [
-        "Mengyi Hu",
-        "Zhaowen Ye",
-        "Junyang Wang",
-        "Danni Gong",
-        "Qiushuang Li",
-        "Qinlei Liu",
-        "Chengjie Li"
-      ],
-      "topics": [],
-      "sources": [
-        "crossref:1523-7052:online",
-        "crossref:1523-7052:published",
-        "crossref:1523-7052:created",
-        "crossref:1523-7060:online",
-        "crossref:1523-7060:published",
-        "crossref:1523-7060:created"
-      ],
-      "activeFrom": "2026-07-01",
-      "dateUnverified": false,
-      "lateIndexed": false,
-      "safetyTail": false,
-      "reviewPriority": "high"
-    },
     {
       "doi": "10.1021/acscatal.6c06578",
       "journal": "ACS Catalysis",
