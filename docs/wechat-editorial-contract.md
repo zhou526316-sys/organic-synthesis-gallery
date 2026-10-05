@@ -36,6 +36,7 @@ Let N be the number of papers released at 08:00.
   - count per journal.
   Example: `Nature Communications 2 篇 · JACS 3 篇 · Angew 2 篇`.
 - The compact update block should occupy minimal vertical space. The daily featured paper receives the dominant visual and text space.
+- When N > 5, the text list still stays compressed to journal counts only, but the Gallery jump card may show **3–4 real miniatures** from that day's new papers. These miniatures are navigation/visual context, not a substitute for re-enumerating the full list.
 - The full list remains accessible through “阅读原文” at the fixed Gallery edition link.
 
 ## Gallery jump card
@@ -72,6 +73,8 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 - Maintain high-resolution rendering and WeChat-compatible image formats.
 - Avoid long uninterrupted text blocks; alternate figures and explanation.
 - Cover must communicate the paper's central reaction or concept at a glance and must not be an arbitrary cropped page.
+- Editorial logic must come from the paper's actual experimental design, evidence chain, scope, comparison, or author/reviewer argument. Do not manufacture a relationship merely to make two facts sound "smart", and avoid generic labels such as "最聪明的地方" unless the paper itself supplies a defensible causal reason.
+- For a retrospective used as the small secondary WeChat card, build a **dedicated square thumbnail** with only the minimum paper identity and original chemistry visual needed at small size; never shrink a dense wide cover into the square slot.
 
 ## Authorship / disclosure
 
