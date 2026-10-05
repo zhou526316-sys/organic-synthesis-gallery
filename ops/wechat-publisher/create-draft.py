@@ -786,54 +786,60 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             )
 
         elif layout == "retrospective_square":
-            # Secondary-card cover: portrait-led, minimal text, designed for
-            # both the square thumbnail and WeChat's centered 2.35:1 crop.
-            canvas = Image.new("RGB", (width, height), "#10243a")
+            # Full square editorial cover for the secondary WeChat card.
+            # Portrait-led, dense blue/gold composition; all essential text
+            # remains inside the central crop used by WeChat.
+            canvas = Image.new("RGB", (width, height), "#0b2a4a")
             draw = ImageDraw.Draw(canvas)
 
-            kicker = str(cover.get("thumb_kicker") or "往期精选")
-            title_text = str(cover.get("thumb_title") or "MacMillan")
-            subtitle = str(cover.get("thumb_subtitle") or "二烷基醚")
-            meta = str(cover.get("thumb_meta") or "Nature")
-
-            # Portrait fills the left half; this is much more legible at small size
-            # than a shrunken paper figure.
+            # Full-bleed portrait on the left ~56%.
             if portrait:
                 with Image.open(portrait) as p:
                     p.load()
                     p = p.convert("RGB")
                     p = ImageOps.fit(
                         p,
-                        (int(width * 0.52), height),
+                        (int(width * 0.58), height),
                         method=Image.Resampling.LANCZOS,
-                        centering=(0.50, 0.43),
+                        centering=(0.48, 0.42),
                     )
                     canvas.paste(p, (0, 0))
 
-            # Dark gradient-like panel on the right using layered rectangles.
-            panel_x = int(width * 0.46)
-            for i in range(12):
-                x0 = panel_x + int(i * width * 0.012)
-                shade = 16 + i * 2
-                draw.rectangle((x0, 0, width, height), fill=(shade, 38 + i, 60 + i * 2))
+            # Deep blue information panel with subtle gold separators.
+            panel_x = int(width * 0.47)
+            draw.rectangle((panel_x, 0, width, height), fill="#0b2a4a")
+            draw.rectangle((panel_x, int(height*0.28), width, int(height*0.285)), fill="#d6b56b")
+            draw.rectangle((panel_x, int(height*0.73), width, int(height*0.735)), fill="#d6b56b")
 
-            left = int(width * 0.52)
-            right = int(width * 0.94)
+            kicker = str(cover.get("thumb_kicker") or "往期精选")
+            title1 = str(cover.get("thumb_title") or "通过杂原子均裂取代")
+            title2 = str(cover.get("thumb_subtitle") or "合成二烷基醚")
+            meta = str(cover.get("thumb_meta") or "MacMillan · Nature")
 
-            kicker_font = choose_font(max(34, int(width * 0.045)), True)
-            title_font = choose_font(max(64, int(width * 0.084)), True)
-            sub_font = choose_font(max(56, int(width * 0.072)), True)
-            meta_font = choose_font(max(32, int(width * 0.042)), True)
+            kicker_font = choose_font(max(38, int(width * 0.050)), True)
+            meta_font = choose_font(max(28, int(width * 0.036)), True)
+            title_font = choose_font(max(60, int(width * 0.078)), True)
+            small_font = choose_font(max(27, int(width * 0.034)), False)
 
-            # All key text sits in the central band so it survives the 2.35:1 crop.
-            y = int(height * 0.31)
-            draw.text((left, y), kicker, font=kicker_font, fill="#e7c57a")
-            y += int(height * 0.085)
-            draw.text((left, y), title_text, font=title_font, fill="#ffffff")
-            y += int(height * 0.105)
-            draw.text((left, y), subtitle, font=sub_font, fill="#f1d58d")
-            y += int(height * 0.095)
-            draw.text((left, y), meta, font=meta_font, fill="#d5e1ef")
+            tx = int(width * 0.515)
+
+            # Top label.
+            draw.text((tx, int(height * 0.085)), kicker, font=kicker_font, fill="#e6c779")
+            draw.text((tx, int(height * 0.155)), meta, font=meta_font, fill="#e9eef5")
+
+            # Main title sits in the central crop-safe band.
+            y = int(height * 0.335)
+            for line in wrap_text(draw, title1, title_font, int(width * 0.43), 2):
+                draw.text((tx, y), line, font=title_font, fill="#ffffff")
+                y += int(height * 0.082)
+            y += int(height * 0.012)
+            for line in wrap_text(draw, title2, title_font, int(width * 0.43), 2):
+                draw.text((tx, y), line, font=title_font, fill="#f0cf82")
+                y += int(height * 0.082)
+
+            # Minimal chemistry cue rather than a dense generated scheme.
+            draw.text((tx, int(height * 0.78)), "Ti–O   +   R•   →   C–O", font=small_font, fill="#dbe7f2")
+            draw.text((tx, int(height * 0.84)), "自由基 C–O 成键", font=small_font, fill="#e6c779")
 
         elif portrait:
             left_w = int(width * 0.34)
