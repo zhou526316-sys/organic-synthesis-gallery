@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.26
+// @version      6.2.27
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -50,10 +50,10 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
-  var PUBLISHER_MEDIA_REVISION = '20261004-rsc-elsevier-ccs-v9';
+  var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v10';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.26';
+  var INSTALL_REVISION = '6.2.27';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -1792,7 +1792,7 @@ function embeddedJobDois(value) {
     if (/-gra-\d+/i.test(url)) score += 180;
     if (/graphical[-_]?abstract|visual[-_]?abstract/i.test(url)) score += 160;
     if (/(?:\/|[_-])toc(?:\/|[_-]|\d|\.)/i.test(url)) score += 140;
-    if (!kind && allowFigureOne && isFigureOne(context)) {
+    if (!kind && allowFigureOne && publisher !== 'ccs' && isFigureOne(context)) {
       kind = 'figure1';
       type = 'figure1_fallback';
       score = 180;
@@ -1835,16 +1835,29 @@ function embeddedJobDois(value) {
       var context = visualScope(node);
       if(job.publisher==='wiley')context=wileyBodyFigureContext(node,context);
       if(job.publisher==='rsc')context=rscBodyFigureContext(node,context);
-      if (!context || !context.label || context.official) return;
+      if (!context || context.official) return;
       visualUrls(node, context.block, baseUrl || location.href).forEach(function (url, rank) {
-        var key = context.label + '|' + url;
+        var label=context.label||'';
+        if(job.publisher==='ccs'){
+          var assetLabel=ccsAssetFigureLabel(url);
+          if(assetLabel&&label&&assetLabel!==label){
+            pushTrace(trace,{stage:'ccs_figure_label',event:'conflict',status:'rejected',url:url,message:'caption='+label+';asset='+assetLabel});
+            return;
+          }
+          if(!label&&assetLabel)label=assetLabel;
+        }
+        if(!label)return;
+        var key = label + '|' + url;
         if (seen.has(key) || reject(context.caption, url) || !candidateBelongsToJob(url, job)) return;
         seen.add(key);
-        rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:context.label,text:context.caption,source:'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
+        rows.push({url:url,kind:'article_figure',assetType:'article_figure',label:label,text:context.caption||label,source:job.publisher==='ccs'?'ccs_caption_asset_bound':'isolated_figure_caption',score:100-rank,element:node.tagName.toLowerCase()==='img'?node:null});
       });
     });
-    rows.sort(function (a,b) { return String(a.label).localeCompare(String(b.label),undefined,{numeric:true}) || b.score-a.score; });
-    pushTrace(trace,{stage:'figure_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'isolated_labels='+new Set(rows.map(function(r){return r.label;})).size+';variants='+rows.length});
+    // CCS mixes Figure N and Scheme N in article order. Alphabetic label sorting
+    // wrongly moves every Figure before every Scheme and changes the representative
+    // first body graphic. Preserve DOM order for CCS; retain legacy ordering elsewhere.
+    if(job.publisher!=='ccs')rows.sort(function (a,b) { return String(a.label).localeCompare(String(b.label),undefined,{numeric:true}) || b.score-a.score; });
+    pushTrace(trace,{stage:'figure_discovery',event:'scan_complete',status:rows.length?'found':'none',message:'isolated_labels='+new Set(rows.map(function(r){return r.label;})).size+';variants='+rows.length+(job.publisher==='ccs'?';order=dom':'')});
     if(job.publisher==='wiley'&&!rows.length)pushTrace(trace,{stage:'figure_discovery',event:'wiley_dom_shape',status:'none',message:'images='+scope.querySelectorAll('img,object[type^="image"]').length+';figureBlocks='+scope.querySelectorAll('figure,[role="figure"],.article-section__figure').length+';numberedHeadings='+Array.from(scope.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]')).filter(function(n){return /^(?:Fig(?:ure)?\.?|Scheme|Chart)\s*\d+[a-z]?\b/i.test(String(n.textContent||'').trim());}).length});
     return rows;
   }
@@ -4667,7 +4680,7 @@ function embeddedJobDois(value) {
 
   async function waitForPairedVisuals(job,trace) {
     var started=Date.now(),step=0,lastSignature='',stable=0,lastFigureSignature='',figureChangedAt=started,iframeAttempted=false,accessGateStarted=0;
-    var toc=[],figures=[];
+    var toc=[],figures=[],recoveredOfficialToc=[];
     while (Date.now()-started<90000 && Date.now()<job.captureDeadline) {
       if (isAbortRequested()) throw new Error('user_aborted');
       assertBoundCaptureJob(job);
@@ -4696,6 +4709,7 @@ function embeddedJobDois(value) {
         ? job.captureFigures
         : String(job.mediaNeed || '').indexOf('figures') >= 0;
       toc=wantsToc?collectCandidates(job,trace,document,location.href,'paired_dom',true):[];
+      if(wantsToc&&!toc.length&&recoveredOfficialToc.length)toc=recoveredOfficialToc.slice();
       figures=wantsFigures?collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom'):[];
       var now=Date.now(),elapsed=now-started;
       if(state.shell&&!toc.length&&!figures.length){
@@ -4707,8 +4721,12 @@ function embeddedJobDois(value) {
           (job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='rsc'||job.publisher==='ccs')) {
         iframeAttempted=true;
         var iframeRows=await iframeCandidates(job,trace);
-        toc=iframeRows.filter(function(row){return row&&row.kind==='official';});
-        if(toc.length) pushTrace(trace,{stage:'paired_toc_fallback',event:'iframe_recovery',status:'found',message:'official='+String(toc.length)});
+        var recovered=iframeRows.filter(function(row){return row&&row.kind==='official';});
+        if(recovered.length){
+          recoveredOfficialToc=recovered.slice();
+          toc=recoveredOfficialToc.slice();
+          pushTrace(trace,{stage:'paired_toc_fallback',event:'iframe_recovery',status:'found',message:'official='+String(toc.length)+';persisted=1'});
+        }
       }
       var figureSignature=figures.map(function(x){return x.label+'|'+x.url;}).join('|');
       if (figureSignature!==lastFigureSignature) {lastFigureSignature=figureSignature;figureChangedAt=Date.now();}
@@ -5000,7 +5018,7 @@ function embeddedJobDois(value) {
         captureToc:!visualSatisfied,
         captureFigures:true,
         captureEvidence:false,
-        allowFigureOne:!official&&(isLatest||natureScienceFamily),
+        allowFigureOne:publisherForDoi(doi)!=='ccs'&&!official&&(isLatest||natureScienceFamily),
         _queueIndex:index
       });
     });
