@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { buildCatalog, stable } from '../catalog.mjs';
-import { PublishedCatalogClient } from '../published-reader.mjs';
+import { PublishedCatalogClient, loadPublishedHotFallback } from '../published-reader.mjs';
 
 const sha256 = value => createHash('sha256').update(value).digest('hex');
 const ref = (path, text) => ({ path, sha256: sha256(text), bytes: Buffer.byteLength(text) });
@@ -14,7 +14,7 @@ const papers = [
   { doi:'10.1234/hot', title:'Hot photoredox chemistry', titleZh:'近期光氧化还原化学', journal:'Angew', authors:['B'], date:'2026-10-03', url:'https://doi.org/10.1234/hot', new:true, addedDate:'2026-10-04' },
 ];
 
-function fixture({ corruptRelease = false, active = true } = {}) {
+function fixture({ corruptRelease = false, active = true, badMembership = false } = {}) {
   const bundle = buildCatalog(papers, {
     asOfDate:'2026-10-04',
     source:{ commit:sourceCommit, datasetSha256, publicationSlot, markerBlobSha:'c'.repeat(40), parityBasis:'fixture' },
@@ -24,7 +24,7 @@ function fixture({ corruptRelease = false, active = true } = {}) {
   const currentRef = ref('current.json', currentText);
   const members = Object.fromEntries(bundle.records.map(row => [row.doi, row.revision]));
   const membershipBody = {
-    schema:'gallery-published-membership-v1', scope:'all-time', complete:true,
+    schema:'gallery-published-membership-v1', scope:badMembership ? 'partial' : 'all-time', complete:true,
     publicationSlot, sourceCommit, markerBlobSha:'c'.repeat(40),
     catalogId:bundle.catalog.recordSetHash, doiSetHash:bundle.catalog.doiSetHash,
     serial:Date.parse(publicationSlot), count:bundle.records.length, members, withdrawn:[],
@@ -32,13 +32,22 @@ function fixture({ corruptRelease = false, active = true } = {}) {
   const membershipText = stable(membershipBody)+'\n';
   const membershipRef = ref(`membership.${sha256(membershipText)}.json`, membershipText);
   generated[membershipRef.path] = membershipText;
+  const hotFallbackBody = {
+    schema:'gallery-hot-fallback-v1', catalogId:bundle.catalog.recordSetHash, doiSetHash:bundle.catalog.doiSetHash,
+    publicationSlot, sourceCommit, generatedAsOfDate:'2026-10-04', scope:'hot-plus-future-candidates',
+    count:bundle.partitions.hot.length,
+    records:bundle.records.filter(row => bundle.partitions.hot.includes(row.doi)),
+  };
+  const hotFallbackText = stable(hotFallbackBody)+'\n';
+  const hotFallbackRef = ref(`hot-fallback.${sha256(hotFallbackText)}.json`, hotFallbackText);
+  generated[hotFallbackRef.path] = hotFallbackText;
   const objects = Object.entries(generated).map(([path,text]) => ref(path,text)).sort((a,b)=>a.path.localeCompare(b.path));
   const release = {
     schema:'gallery-architecture-public-v1', productionActivation:false, frontendReadActivation:active,
     publicationSlot, sourceCommit, markerBlobSha:'c'.repeat(40), datasetSha256,
     asOfDate:'2026-10-04', recordCount:bundle.records.length, catalogId:bundle.catalog.recordSetHash,
     doiSetHash:bundle.catalog.doiSetHash, catalogCurrent:currentRef, membership:membershipRef,
-    titlePresentation:ref('title.fixture.json', stable({schema:'x'})+'\n'), objects,
+    hotFallback:hotFallbackRef, titlePresentation:ref('title.fixture.json', stable({schema:'x'})+'\n'), objects,
   };
   const releaseText = stable(release)+'\n';
   const architectureObjects = Object.fromEntries(objects.map(row=>['architecture-v1/'+row.path,row.sha256]));
@@ -100,5 +109,25 @@ test('frontend reader requires explicit frontend-only activation', async () => {
   await assert.rejects(
     new PublishedCatalogClient('https://example.invalid/', fixture({active:false})).open(),
     /frontend_architecture_not_active/
+  );
+});
+
+
+test('bounded Hot fallback survives an all-time membership validation failure without loading Archive', async () => {
+  const source = fixture({ badMembership:true });
+  await assert.rejects(
+    new PublishedCatalogClient('https://example.invalid/', source).open(),
+    /published_membership_invalid/
+  );
+  const fallback = await loadPublishedHotFallback('https://example.invalid/', source);
+  assert.equal(fallback.mode, 'architecture-hot-fallback');
+  assert.deepEqual(fallback.papers.map(row => row.doi), ['10.1234/hot']);
+  assert.equal(fallback.catalogId.length, 64);
+});
+
+test('Hot fallback still requires a release-delivery hash binding', async () => {
+  await assert.rejects(
+    loadPublishedHotFallback('https://example.invalid/', fixture({ corruptRelease:true })),
+    /architecture_release_hash_mismatch/
   );
 });
