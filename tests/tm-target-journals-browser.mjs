@@ -20,7 +20,7 @@ const harness=[
   "function articleFigureImageUrls(node,base){const out=[];const add=v=>{try{if(v){const u=new URL(v,base).href;if(!out.includes(u))out.push(u)}}catch{}};['data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large','data-original','data-src','data-lazy-src','src'].forEach(k=>add(node.getAttribute&&node.getAttribute(k)));if(node.getAttribute){String(node.getAttribute('srcset')||'').split(',').forEach(x=>add(x.trim().split(/\\s+/)[0]));}return out}",
   "function contextFor(node){let out=[];[node.alt,node.title,node.getAttribute&&node.getAttribute('aria-label')].forEach(v=>{if(v)out.push(v)});let root=node.parentElement;for(let d=0;root&&d<4;d++,root=root.parentElement){out.push(String(root.className||''),String(root.id||''),String(root.textContent||'').slice(0,600));}return out.join(' ')}",
   adapters,
-  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
+  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
   '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -75,6 +75,23 @@ try{
     assert.deepEqual(labels,['Figure 1','Figure 12','Scheme 1','Scheme 3','']);
   });
 
+  await tc('CCS Crossref volume issue maps to deterministic journal TOC route',async()=>{
+    const rows=await page.evaluate(()=>[
+      T.ccsTocIndexUrlFromCrossrefPayload(
+        {doi:'10.31635/ccschem.026.202607659',publisher:'ccs'},
+        {message:{volume:'8',issue:'10','journal-issue':{issue:'10'}}},
+        'https://www.chinesechemsoc.org/doi/10.31635/ccschem.026.202607659'
+      ),
+      T.ccsTocIndexUrlFromCrossrefPayload(
+        {doi:'10.31635/ccschem.026.202607659',publisher:'ccs'},
+        {message:{volume:'8'}},
+        'https://www.chinesechemsoc.org/'
+      )
+    ]);
+    assert.equal(rows[0],'https://www.chinesechemsoc.org/toc/ccschem/8/10');
+    assert.equal(rows[1],'');
+  });
+
   await tc('CCS accepts only target DOI key image as official TOC',async()=>{
     const rows=await page.evaluate(()=>{
       const root=document.querySelector('#fixture');
@@ -99,6 +116,9 @@ try{
     assert.ok(source.includes("rscArticleHtmlUrl(job)"));
     assert.ok(source.includes("job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='rsc'||job.publisher==='ccs'"));
     assert.ok(source.includes("ccsTocIndexCandidatesFromDocument(job,doc,current)"));
+    assert.ok(source.includes("https://api.crossref.org/works/"));
+    assert.ok(source.includes("var crossrefTocUrl=await ccsCrossrefTocIndexUrl(job,trace);"));
+    assert.ok(source.includes("stage:'ccs_toc_route',event:'crossref_volume_issue'"));
   });
 
   await tc('Chem and RSC publisher binding wait is adaptive but DOI-safe',async()=>{
@@ -124,7 +144,7 @@ try{
   await tc('capture protocol and core controller stay unchanged',async()=>{
     assert.ok(source.includes("var VERSION = '6.2.20'"));
     assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39'"));
-    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v10'"));
+    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'"));
     assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'"));
   });
 }finally{await browser.close()}
