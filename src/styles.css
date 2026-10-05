@@ -341,6 +341,42 @@ select {
 .resultline strong {
   color: #172033;
 }
+.result-window-controls {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 2px 2px;
+}
+.result-window-controls[hidden] {
+  display: none;
+}
+.result-window-status {
+  color: #667085;
+  font-size: 12px;
+  text-align: center;
+}
+.result-page-button {
+  min-width: 88px;
+  min-height: 38px;
+  padding: 7px 12px;
+  border: 1px solid #d7deea;
+  border-radius: 10px;
+  background: #fff;
+  color: #48566b;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 750;
+}
+.result-page-button:hover:not(:disabled) {
+  border-color: #b9c8ef;
+  background: #eef3ff;
+  color: #3159bd;
+}
+.result-page-button:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
 
 .audit-panel {
   margin: 0 0 16px;

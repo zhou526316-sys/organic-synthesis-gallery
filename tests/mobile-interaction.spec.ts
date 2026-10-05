@@ -1,4 +1,5 @@
 import { test, expect, devices, type Locator } from '@playwright/test';
+import { RESULT_WINDOW_SIZE } from '../shared/result-window.js';
 
 test.use({
   ...devices['iPhone 13'],
@@ -42,7 +43,9 @@ test('mobile paper actions survive 30 status/note/more cycles without locking pa
   await page.locator('#gallery').evaluate(gallery => {
     (window as Window & { __initialGalleryNodes?: Element[] }).__initialGalleryNodes = Array.from(gallery.querySelectorAll(':scope > .card'));
   });
-  expect(initialCards).toBeGreaterThan(400);
+  expect(initialCards).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(initialCards).toBeGreaterThan(1);
+  expect(Number(await page.locator('#resultCount').textContent())).toBeGreaterThan(400);
 
   const mobileCardLayout = await page.locator('#gallery').evaluate(gallery => {
     const cards = Array.from(gallery.querySelectorAll<HTMLElement>('.card')).slice(0, 2);
@@ -793,8 +796,10 @@ test('search highlights results, picker closes outside, feedback drags and submi
   await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
   await page.locator('.card').first().waitFor({ state: 'visible', timeout: 30000 });
 
-  const initialCards = await page.locator('.card').count();
-  expect(initialCards).toBeGreaterThan(400);
+  const initialCards = await page.locator('#gallery > .card').count();
+  const initialTotal = Number(await page.locator('#resultCount').textContent());
+  expect(initialCards).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(initialTotal).toBeGreaterThan(400);
   await page.evaluate(() => {
     const gallery = document.querySelector('#gallery');
     (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards = 0;
@@ -815,8 +820,11 @@ test('search highlights results, picker closes outside, feedback drags and submi
   await search.fill('photoredox');
   await expect(search).toHaveValue('photoredox');
   await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
-  const visibleAfterSearch = await page.locator('.card:visible').count();
-  expect(visibleAfterSearch).toBeLessThan(initialCards);
+  const visibleAfterSearch = await page.locator('#gallery > .card:visible').count();
+  const searchTotal = Number(await page.locator('#resultCount').textContent());
+  expect(visibleAfterSearch).toBeGreaterThan(0);
+  expect(visibleAfterSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(searchTotal).toBeLessThan(initialTotal);
   expect(await page.locator('.card[hidden]:visible').count()).toBe(0);
   await expect(page.locator('.user-search-summary')).toContainText(/photoredox/i);
   await expect(page.locator('.card.user-search-match:visible').first()).toBeVisible();
@@ -826,7 +834,8 @@ test('search highlights results, picker closes outside, feedback drags and submi
   await search.fill('光催化');
   await expect(search).toHaveValue('光催化');
   await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
-  expect(await page.locator('.card:visible').count()).toBeLessThan(initialCards);
+  expect(await page.locator('#gallery > .card:visible').count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(Number(await page.locator('#resultCount').textContent())).toBeLessThan(initialTotal);
   expect(await page.locator('.card[hidden]:visible').count()).toBe(0);
   expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
 
@@ -1190,7 +1199,9 @@ test('journal and date filters persist across reload and clear cleanly', async (
   const galleryCards = page.locator('#gallery > .card');
   await galleryCards.first().waitFor({ state: 'visible', timeout: 30000 });
   const initialCards = await galleryCards.count();
-  expect(initialCards).toBeGreaterThan(400);
+  const initialTotal = Number(await page.locator('#resultCount').textContent());
+  expect(initialCards).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(initialTotal).toBeGreaterThan(400);
 
   const picker = page.locator('.journal-picker');
   await picker.locator('summary').click();
@@ -1211,7 +1222,9 @@ test('journal and date filters persist across reload and clear cleanly', async (
   await expect(page.locator('#dateTo')).toHaveValue('2026-09-20');
   await expect.poll(async () => galleryCards.count()).toBeGreaterThan(0);
   const filteredCount = await galleryCards.count();
-  expect(filteredCount).toBeLessThan(initialCards);
+  const filteredTotal = Number(await page.locator('#resultCount').textContent());
+  expect(filteredCount).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(filteredTotal).toBeLessThan(initialTotal);
 
   const filtered = await galleryCards.evaluateAll(cards => cards.map(card => ({
     journal: (card as HTMLElement).dataset.journal || '',
@@ -1246,6 +1259,8 @@ test('journal exclusion hides a journal, persists, and can be restored', async (
   const cards = page.locator('#gallery > .card');
   await cards.first().waitFor({ state: 'visible', timeout: 30000 });
   const initialCards = await cards.count();
+  const initialTotal = Number(await page.locator('#resultCount').textContent());
+  expect(initialCards).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
   const jacsCards = page.locator('#gallery > .card[data-journal="JACS"]');
   expect(await jacsCards.count()).toBeGreaterThan(0);
 
@@ -1259,7 +1274,8 @@ test('journal exclusion hides a journal, persists, and can be restored', async (
   await expect(page.locator('#journalSummary')).toContainText(/1 个期刊已隐藏|1 journals hidden/);
   await expect(picker.locator('input[data-journal-option][value="JACS"]')).toBeDisabled();
   await expect(hideJacs).toHaveText(/恢复|Restore/);
-  expect(await cards.count()).toBeLessThan(initialCards);
+  expect(await cards.count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  expect(Number(await page.locator('#resultCount').textContent())).toBeLessThan(initialTotal);
 
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('organic-gallery-filter-preferences-v1') || '{}'));
   expect(saved.excludedJournals).toContain('JACS');
