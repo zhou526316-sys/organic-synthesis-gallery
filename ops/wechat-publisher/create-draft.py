@@ -786,66 +786,69 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             )
 
         elif layout == "retrospective_square":
-            # Secondary WeChat cards are rendered very small. Build a dedicated
-            # square cover with only the paper identity + the original reaction
-            # visual; do not shrink a wide article cover into the thumbnail.
-            canvas = Image.new("RGB", (width, height), "#f7f8fa")
+            # Secondary WeChat cards render at about 88 x 88 px. A wide paper
+            # figure becomes illegible there, so use a dedicated information
+            # thumbnail with a chemically exact typographic equation.
+            canvas = Image.new("RGB", (width, height), "#f5f7fa")
             draw = ImageDraw.Draw(canvas)
             pad = max(32, int(width * 0.045))
             draw.rounded_rectangle(
                 (pad, pad, width - pad, height - pad),
                 radius=max(24, int(width * 0.035)),
                 fill="#ffffff",
-                outline="#dfe3e8",
+                outline="#d9dfe8",
                 width=max(2, int(width * 0.003)),
             )
 
-            kicker = str(cover.get("thumb_kicker") or "往期精选")
+            kicker = str(cover.get("thumb_kicker") or "往期精选 · Nature")
             title_text = str(cover.get("thumb_title") or "MacMillan")
-            subtitle = str(cover.get("thumb_subtitle") or "自由基 C–O")
-            meta = str(cover.get("thumb_meta") or "")
+            equation = str(cover.get("thumb_subtitle") or "R• + Ti–OR → R–OR")
+            meta = str(cover.get("thumb_meta") or "505 nm")
+            footer = str(cover.get("thumb_footer") or "radical C–O")
 
-            kicker_font = choose_font(max(28, int(width * 0.045)), True)
-            title_font = choose_font(max(52, int(width * 0.092)), True)
-            subtitle_font = choose_font(max(38, int(width * 0.062)), True)
-            meta_font = choose_font(max(24, int(width * 0.035)), False)
+            kicker_font = choose_font(max(30, int(width * 0.043)), True)
+            title_font = choose_font(max(76, int(width * 0.105)), True)
+            eq_font = choose_font(max(54, int(width * 0.072)), True)
+            meta_font = choose_font(max(28, int(width * 0.038)), True)
+            footer_font = choose_font(max(30, int(width * 0.043)), False)
 
-            x = pad + int(width * 0.045)
-            y = pad + int(height * 0.035)
-            draw.text((x, y), kicker, font=kicker_font, fill="#32675f")
-            y += int(height * 0.095)
-            draw.text((x, y), title_text, font=title_font, fill="#121820")
-            y += int(height * 0.115)
-            draw.text((x, y), subtitle, font=subtitle_font, fill="#121820")
+            left = pad + int(width * 0.055)
+            right = width - pad - int(width * 0.055)
+            y = pad + int(height * 0.045)
+
+            draw.text((left, y), kicker, font=kicker_font, fill="#32675f")
             if meta:
                 box = draw.textbbox((0, 0), meta, font=meta_font)
-                draw.text(
-                    (width - pad - int(width * 0.045) - (box[2] - box[0]), y + int(height * 0.022)),
-                    meta,
-                    font=meta_font,
-                    fill="#7b8491",
+                draw.rounded_rectangle(
+                    (right - (box[2]-box[0]) - 30, y - 5, right, y + (box[3]-box[1]) + 17),
+                    radius=18,
+                    fill="#eef3ff",
                 )
+                draw.text((right - (box[2]-box[0]) - 15, y + 1), meta, font=meta_font, fill="#3159bd")
 
-            visual_top = int(height * 0.39)
-            visual_bottom = height - pad - int(height * 0.035)
-            visual_left = pad + int(width * 0.045)
-            visual_right = width - pad - int(width * 0.045)
+            y += int(height * 0.13)
+            draw.text((left, y), title_text, font=title_font, fill="#111827")
+
+            eq_top = int(height * 0.44)
             draw.rounded_rectangle(
-                (visual_left, visual_top, visual_right, visual_bottom),
-                radius=max(18, int(width * 0.025)),
-                fill="#ffffff",
-                outline="#e6e9ee",
+                (left, eq_top, right, int(height * 0.76)),
+                radius=max(20, int(width * 0.027)),
+                fill="#f8fafc",
+                outline="#e5e9ef",
                 width=max(2, int(width * 0.002)),
             )
-            fitted = ImageOps.contain(
-                image,
-                (visual_right - visual_left - int(width * 0.06),
-                 visual_bottom - visual_top - int(height * 0.05)),
-                method=Image.Resampling.LANCZOS,
-            )
-            px = visual_left + (visual_right - visual_left - fitted.width) // 2
-            py = visual_top + (visual_bottom - visual_top - fitted.height) // 2
-            canvas.paste(fitted, (px, py))
+            lines = wrap_text(draw, equation, eq_font, right-left-int(width*0.06), 2)
+            line_h = int(height * 0.095)
+            total_h = max(line_h, len(lines)*line_h)
+            ey = eq_top + (int(height * 0.32)-total_h)//2
+            for line in lines:
+                box=draw.textbbox((0,0),line,font=eq_font)
+                draw.text(((width-(box[2]-box[0]))//2, ey), line, font=eq_font, fill="#111827")
+                ey += line_h
+
+            footer_y = int(height * 0.82)
+            fbox=draw.textbbox((0,0),footer,font=footer_font)
+            draw.text(((width-(fbox[2]-fbox[0]))//2, footer_y), footer, font=footer_font, fill="#697386")
 
         elif portrait:
             left_w = int(width * 0.34)
