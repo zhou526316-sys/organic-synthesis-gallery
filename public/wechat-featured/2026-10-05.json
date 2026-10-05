@@ -85,11 +85,18 @@
   "ai_notice": "本文依据 JACS 正文与 Supporting Information 整理。实验结果、计算支持和作者提出的机理模型分开表述；化学结构图均直接使用论文原图，不使用 AI 重绘。",
   "cover": {
     "source_figure_id": "fig1",
-    "description": "使用作者公开工作中的原始反应总览图作为封面底图；化学结构不进行 AI 重绘。",
+    "layout": "gallery_card_qr",
+    "card_title": "由伯胺模块化合成 O-甲磺酰基羟胺",
+    "card_date": "2026-10-04",
+    "qr_repo_path": "assets/wechat-covers/2026-10-05-edition-qr.png",
+    "qr_title": "今日新增",
+    "qr_count": "11 篇",
+    "qr_hint": "扫码进入当日文献页",
+    "description": "微信公众号主封面按 2.35:1 高分辨率生成：左侧复现当日 Gallery 每日精选卡片视觉，右侧为进入 2026-10-05 当日文献页的二维码；化学结构沿用原始公开图，不重绘。",
     "canvas": {
       "width": 1880,
       "height": 800,
-      "background": "white"
+      "background": "#f4f7fb"
     }
   }
 }
