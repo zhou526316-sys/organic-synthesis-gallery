@@ -182,6 +182,7 @@ jobs:
           SUMMARY_PUBLICATION_TIME = "12:00 Asia/Shanghai"
           EVIDENCE_INDEX_SHADOW_ENABLED = "1"
           SUMMARY_CANDIDATE_INDEX_SHADOW_ENABLED = "1"
+          SCHEDULED_HANDOFF_INDEX_READ_ENABLED = "1"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "0"
@@ -313,7 +314,7 @@ jobs:
           console.log('EVIDENCE_INDEX_SHADOW '+JSON.stringify(report));
           NODE
 
-      - name: Backfill and compare scheduled handoff readiness shadow
+      - name: Backfill and verify scheduled handoff D1 read path
         id: scheduled_handoff_shadow
         continue-on-error: true
         env:
@@ -325,8 +326,8 @@ jobs:
           const base=process.env.WORKER_URL;
           const token=process.env.BRIDGE_WRITE_TOKEN;
           fs.writeFileSync('/tmp/scheduled-handoff-shadow-report.json',JSON.stringify({
-            schemaVersion:1,phase:'D2c1-scheduled-handoff-readiness-shadow-live',
-            ok:false,status:'started',readPathActive:false,startedAt:new Date().toISOString(),
+            schemaVersion:1,phase:'D2c2-scheduled-handoff-index-read-live',
+            ok:false,status:'started',readPathActive:true,startedAt:new Date().toISOString(),
           },null,2)+'\n');
           if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for scheduled handoff shadow');
 
@@ -362,7 +363,10 @@ jobs:
             }
           }
           if(status.handoffReadPathReady!==true){
-            throw new Error('scheduled handoff D1 discovery is not shadow-ready: '+JSON.stringify(status));
+            throw new Error('scheduled handoff D1 discovery is not ready: '+JSON.stringify(status));
+          }
+          if(status.handoffReadPathActive!==true){
+            throw new Error('scheduled handoff D1 read path is not active: '+JSON.stringify(status));
           }
 
           const comparisons=[];
@@ -370,6 +374,9 @@ jobs:
             const comparison=await call('/api/admin/article-summary/evidence-index/handoff-compare?limit=40',{method:'POST'});
             console.log(JSON.stringify({scheduledHandoffComparisonAttempt:attempt,...comparison}));
             if(comparison.comparable===true){
+              if(comparison.readPathActive!==true){
+                throw new Error('scheduled handoff comparator does not see active D1 read path: '+JSON.stringify(comparison));
+              }
               if(comparison.same!==true||comparison.pending?.same!==true||comparison.backfill?.same!==true){
                 throw new Error('scheduled handoff D1/R2 divergence: '+JSON.stringify(comparison));
               }
@@ -388,11 +395,16 @@ jobs:
             throw new Error('scheduled handoff parity could not obtain three stable snapshots');
           }
 
+          const liveManifest=await call('/api/article-summary/scheduled-handoff?manifest=1&limit=40');
+          if(liveManifest.discoveryMode!=='d1_index'){
+            throw new Error('scheduled handoff manifest is not using D1 discovery: '+JSON.stringify(liveManifest));
+          }
+
           const report={
             schemaVersion:1,
-            phase:'D2c1-scheduled-handoff-readiness-shadow-live',
+            phase:'D2c2-scheduled-handoff-index-read-live',
             ok:true,
-            readPathActive:false,
+            readPathActive:true,
             evidenceBackfillComplete:status.backfill?.complete===true,
             handoffBackfillComplete:status.handoffBackfill?.complete===true,
             handoffReadPathReady:status.handoffReadPathReady===true,
@@ -409,6 +421,7 @@ jobs:
             backfillCandidateSetHash:comparisons[0].backfill?.legacy?.candidateSetHash||'',
             pendingCount:Number(comparisons[0].pending?.legacy?.count||0),
             creationBacklogCount:Number(comparisons[0].backfill?.legacy?.count||0),
+            manifestDiscoveryMode:liveManifest.discoveryMode,
             verifiedAt:new Date().toISOString(),
           };
           fs.writeFileSync('/tmp/scheduled-handoff-shadow-report.json',JSON.stringify(report,null,2)+'\n');
@@ -695,6 +708,9 @@ jobs:
             if (!response.ok || body?.ok !== true) {
               throw new Error('summary handoff backfill failed: ' + JSON.stringify({ status: response.status, body }));
             }
+            if (body.discoveryMode !== 'd1_index') {
+              throw new Error('summary handoff backfill did not use D1 discovery: ' + JSON.stringify(body));
+            }
             totalCreated += Number(body.created || 0);
             console.log(JSON.stringify({ batch: batch + 1, ...body, totalCreated }));
             if (Number(body.created || 0) === 0) break;
@@ -841,10 +857,12 @@ jobs:
                 body?.privatePdf?.readEnabled === true &&
                 typeof body?.privatePdf?.captureEnabled === 'boolean' &&
                 typeof body?.privatePdf?.processingEnabled === 'boolean' &&
+                body?.scheduledHandoffIndexReadEnabled === true &&
                 body?.wechatTicketRelay === true) {
               console.log(JSON.stringify({
                 canonicalWorkerBindings: true,
                 privatePdf: body.privatePdf,
+                scheduledHandoffIndexReadEnabled: body.scheduledHandoffIndexReadEnabled,
                 wechatTicketRelay: body.wechatTicketRelay,
               }));
               process.exit(0);

@@ -1,4 +1,4 @@
-import { getEvidenceIndexStatus, listEvidenceHandoffIndexRows, shadowIndexHandoff } from './evidence-index.js';
+import { getEvidenceIndexStatus, listEvidenceHandoffIndexRows, scheduledHandoffIndexReadEnabled, shadowIndexHandoff } from './evidence-index.js';
 const HANDOFF_PREFIX = 'private/article-summary-handoff-v1/';
 const EVIDENCE_PREFIX = 'private/article-evidence-v2/';
 const LEGACY_SUMMARY_PREFIX = 'private/article-summary/';
@@ -345,36 +345,50 @@ async function pendingHandoffSelectionLegacy(env, limit) {
   };
 }
 
-async function pendingHandoffSelectionIndexed(env, limit) {
+async function pendingHandoffObjectsIndexed(env, limit) {
   const status=await getEvidenceIndexStatus(env);
   if(status.status!==200||status.body?.handoffReadPathReady!==true){
     return {status:409,body:{error:'scheduled_handoff_index_not_ready',indexStatus:status.body||{}}};
   }
   const asset=await readScheduledSummaryAsset(env);
-  const items=[];let offset=0;let scannedRows=0;
-  for(let pageNo=0;pageNo<100&&items.length<limit;pageNo+=1){
+  const rowsOut=[];let offset=0;let scannedRows=0;
+  for(let pageNo=0;pageNo<100&&rowsOut.length<limit;pageNo+=1){
     const page=await listEvidenceHandoffIndexRows(env,{ready:true,limit:500,offset});
     if(page.status!==200) return page;
     const rows=page.body?.items||[];
     scannedRows+=rows.length;
     for(const row of rows){
-      if(items.length>=limit) break;
+      if(rowsOut.length>=limit) break;
       const doi=normalizeDoi(row?.doi),evidencePacketHash=String(row?.evidence_packet_hash||''),sourceHash=String(row?.source_hash||'');
       if(!doi||!evidencePacketHash||!sourceHash) continue;
+      const handoffKey=String(row?.handoff_r2_key||'');
       if(String(row?.handoff_key_id||'')!==HANDOFF_KEY_ID||String(row?.handoff_algorithm||'')!==HANDOFF_ALGORITHM
-        ||String(row?.handoff_compression||'')!=='gzip'||!String(row?.handoff_r2_key||'').startsWith(HANDOFF_PREFIX)) continue;
+        ||String(row?.handoff_compression||'')!=='gzip'||!handoffKey.startsWith(HANDOFF_PREFIX)) continue;
       const scheduled=asset.items?.[doi];
       if(scheduled&&scheduled.status==='approved'&&scheduled.evidencePacketHash===evidencePacketHash&&scheduled.sourceHash===sourceHash) continue;
       if(await currentLegacySummaryMatches(env,doi,evidencePacketHash,sourceHash)) continue;
-      const envelope=await readJsonObject(env,row.handoff_r2_key);
-      if(!envelopeIsCurrent(envelope,evidencePacketHash,sourceHash)) continue;
-      items.push(handoffSelectionIdentity(envelope));
+      const envelope=await readJsonObject(env,handoffKey);
+      if(!envelopeIsCurrent(envelope,evidencePacketHash,sourceHash)){
+        return {status:409,body:{error:'scheduled_handoff_index_envelope_mismatch',doi}};
+      }
+      rowsOut.push({
+        object:{key:handoffKey},
+        meta:{doi,evidencePacketHash,sourceHash,capturedAt:String(row?.captured_at||'')},
+        envelope,
+      });
     }
     if(rows.length<500) break;
     offset+=rows.length;
   }
+  return {status:200,body:{rows:rowsOut,scannedRows}};
+}
+
+async function pendingHandoffSelectionIndexed(env, limit) {
+  const selected=await pendingHandoffObjectsIndexed(env,limit);
+  if(selected.status!==200) return selected;
+  const items=(selected.body.rows||[]).map(({envelope})=>handoffSelectionIdentity(envelope));
   return {status:200,body:{
-    items,scannedRows,candidateSetHash:await sha256Hex(JSON.stringify(items)),
+    items,scannedRows:selected.body.scannedRows,candidateSetHash:await sha256Hex(JSON.stringify(items)),
   }};
 }
 
@@ -425,40 +439,64 @@ async function handoffBackfillSelectionLegacy(env, limit) {
   };
 }
 
-async function handoffBackfillSelectionIndexed(env, limit) {
+async function handoffBackfillObjectsIndexed(env, limit) {
   const status=await getEvidenceIndexStatus(env);
   if(status.status!==200||status.body?.handoffReadPathReady!==true){
     return {status:409,body:{error:'scheduled_handoff_index_not_ready',indexStatus:status.body||{}}};
   }
   const asset=await readScheduledSummaryAsset(env);
-  const items=[];let offset=0;let scannedRows=0;
-  for(let pageNo=0;pageNo<100&&items.length<limit;pageNo+=1){
+  const rowsOut=[];let offset=0;let scannedRows=0;let skippedCurrent=0;let skippedPolicy=0;
+  for(let pageNo=0;pageNo<100&&rowsOut.length<limit;pageNo+=1){
     const page=await listEvidenceHandoffIndexRows(env,{ready:false,limit:500,offset});
     if(page.status!==200) return page;
     const rows=page.body?.items||[];
     scannedRows+=rows.length;
     for(const row of rows){
-      if(items.length>=limit) break;
+      if(rowsOut.length>=limit) break;
       const doi=normalizeDoi(row?.doi),evidencePacketHash=String(row?.evidence_packet_hash||''),sourceHash=String(row?.source_hash||'');
       if(!doi||!evidencePacketHash||!sourceHash) continue;
       const policy=String(row?.text_processing_policy||'');
-      if(policy==='no_external_ai') continue;
+      if(policy==='no_external_ai'){skippedPolicy+=1;continue;}
       const scheduled=asset.items?.[doi];
-      if(scheduled&&scheduled.status==='approved'&&scheduled.evidencePacketHash===evidencePacketHash&&scheduled.sourceHash===sourceHash) continue;
-      if(await currentLegacySummaryMatches(env,doi,evidencePacketHash,sourceHash)) continue;
-      const evidence=await readJsonObject(env,row.evidence_r2_key);
-      if(!evidence||evidence.evidencePacketHash!==evidencePacketHash||evidence.sourceHash!==sourceHash) continue;
-      items.push(handoffBackfillIdentity({
-        doi,evidenceKey:String(row.evidence_r2_key||''),evidencePacketHash,sourceHash,
-        evidenceLevel:String(row.evidence_level||'unknown'),textProcessingPolicy:policy,
-        capturedAt:String(row.captured_at||''),
-      }));
+      if(scheduled&&scheduled.status==='approved'&&scheduled.evidencePacketHash===evidencePacketHash&&scheduled.sourceHash===sourceHash){
+        skippedCurrent+=1;continue;
+      }
+      if(await currentLegacySummaryMatches(env,doi,evidencePacketHash,sourceHash)){
+        skippedCurrent+=1;continue;
+      }
+      const id=await idForDoi(doi);
+      const existing=await readJsonObject(env,HANDOFF_PREFIX+id+'.json');
+      if(envelopeIsCurrent(existing,evidencePacketHash,sourceHash)){
+        await shadowIndexHandoff(env,existing);
+        skippedCurrent+=1;
+        continue;
+      }
+      const evidenceKey=String(row?.evidence_r2_key||'');
+      const evidence=await readJsonObject(env,evidenceKey);
+      if(!evidence||evidence.evidencePacketHash!==evidencePacketHash||evidence.sourceHash!==sourceHash){
+        return {status:409,body:{error:'scheduled_handoff_index_evidence_mismatch',doi}};
+      }
+      rowsOut.push({row,evidence});
     }
     if(rows.length<500) break;
     offset+=rows.length;
   }
   return {status:200,body:{
-    items,scannedRows,candidateSetHash:await sha256Hex(JSON.stringify(items)),
+    rows:rowsOut,scannedRows,skippedCurrent,skippedPolicy,evidenceCount:Number(status.body?.evidenceCount||0),
+  }};
+}
+
+async function handoffBackfillSelectionIndexed(env, limit) {
+  const selected=await handoffBackfillObjectsIndexed(env,limit);
+  if(selected.status!==200) return selected;
+  const items=(selected.body.rows||[]).map(({row,evidence})=>handoffBackfillIdentity({
+    doi:evidence.doi,evidenceKey:String(row.evidence_r2_key||''),evidencePacketHash:evidence.evidencePacketHash,
+    sourceHash:evidence.sourceHash,evidenceLevel:String(row.evidence_level||evidence.evidenceLevel||'unknown'),
+    textProcessingPolicy:String(row.text_processing_policy||evidence.textProcessingPolicy||''),
+    capturedAt:String(row.captured_at||evidence.capturedAt||''),
+  }));
+  return {status:200,body:{
+    items,scannedRows:selected.body.scannedRows,candidateSetHash:await sha256Hex(JSON.stringify(items)),
   }};
 }
 
@@ -497,7 +535,7 @@ export async function compareScheduledHandoffIndexShadow(env, limitValue = 40) {
 
   const comparable=pendingStable&&backfillStable&&!pendingSaturated&&!backfillSaturated;
   return {status:200,body:{
-    version:1,mode:'scheduled_handoff_index_shadow',readPathActive:false,
+    version:1,mode:'scheduled_handoff_index_shadow',readPathActive:scheduledHandoffIndexReadEnabled(env),
     comparable,sourceStable:pendingStable&&backfillStable,
     legacyPotentiallySaturated:pendingSaturated||backfillSaturated,
     same:comparable&&pendingSame&&backfillSame,limit,
@@ -523,6 +561,38 @@ export async function compareScheduledHandoffIndexShadow(env, limitValue = 40) {
 export async function backfillScheduledEvidenceHandoffs(env, limitValue = 4) {
   if (!env?.MEDIA) return { status: 503, body: { error: 'handoff_storage_unavailable' } };
   const limit = Math.max(1, Math.min(12, Number(limitValue || 4)));
+
+  let discoveryMode = 'legacy_r2';
+  let fallbackReason = '';
+  if (scheduledHandoffIndexReadEnabled(env)) {
+    const indexed = await handoffBackfillObjectsIndexed(env, limit);
+    if (indexed.status === 200) {
+      let created = 0;
+      for (const row of indexed.body.rows || []) {
+        const envelope = await persistScheduledEvidenceHandoff(env, row.evidence);
+        if (envelope) created += 1;
+      }
+      return {
+        status: 200,
+        body: {
+          ok: true,
+          created,
+          scanned: Number(indexed.body.scannedRows || 0),
+          limit,
+          skippedCurrent: Number(indexed.body.skippedCurrent || 0),
+          skippedPolicy: Number(indexed.body.skippedPolicy || 0),
+          evidenceCount: Number(indexed.body.evidenceCount || 0),
+          hasMore: created >= limit,
+          keyId: HANDOFF_KEY_ID,
+          algorithm: HANDOFF_ALGORITHM,
+          discoveryMode: 'd1_index',
+        },
+      };
+    }
+    discoveryMode = 'legacy_r2_fallback';
+    fallbackReason = String(indexed.body?.error || 'scheduled_handoff_index_unavailable');
+  }
+
   const asset = await readScheduledSummaryAsset(env);
   const evidenceObjects = [];
   let cursor;
@@ -541,9 +611,6 @@ export async function backfillScheduledEvidenceHandoffs(env, limitValue = 4) {
     String(b?.customMetadata?.capturedAt || '').localeCompare(String(a?.customMetadata?.capturedAt || ''))
   );
 
-  // Build an in-memory index from R2 object metadata so a normal deployment does
-  // not issue one or more R2 GETs for every already-current evidence packet.
-  // This keeps the historical/rotation backfill below Worker subrequest limits.
   const currentHandoffKeys = new Set();
   let handoffCursor;
   for (let pageNo = 0; pageNo < 10; pageNo += 1) {
@@ -630,6 +697,8 @@ export async function backfillScheduledEvidenceHandoffs(env, limitValue = 4) {
       hasMore: created >= limit,
       keyId: HANDOFF_KEY_ID,
       algorithm: HANDOFF_ALGORITHM,
+      discoveryMode,
+      ...(fallbackReason ? { fallbackReason } : {}),
     },
   };
 }
@@ -638,7 +707,24 @@ export async function getScheduledEvidenceHandoff(env, limitValue = 40, options 
   if (!env?.MEDIA) return { status: 503, body: { error: 'handoff_storage_unavailable' } };
   const limit = Math.max(1, Math.min(60, Number(limitValue || 40)));
   const manifestOnly = options?.manifestOnly === true;
-  const rows = await pendingHandoffObjects(env, limit);
+
+  let rows;
+  let discoveryMode = 'legacy_r2';
+  let fallbackReason = '';
+  if (scheduledHandoffIndexReadEnabled(env)) {
+    const indexed = await pendingHandoffObjectsIndexed(env, limit);
+    if (indexed.status === 200) {
+      rows = indexed.body.rows || [];
+      discoveryMode = 'd1_index';
+    } else {
+      rows = await pendingHandoffObjects(env, limit);
+      discoveryMode = 'legacy_r2_fallback';
+      fallbackReason = String(indexed.body?.error || 'scheduled_handoff_index_unavailable');
+    }
+  } else {
+    rows = await pendingHandoffObjects(env, limit);
+  }
+
   const items = rows.map(({ envelope }) => manifestOnly ? {
     schemaVersion: envelope.schemaVersion,
     keyId: envelope.keyId,
@@ -666,6 +752,8 @@ export async function getScheduledEvidenceHandoff(env, limitValue = 40, options 
       manifestOnly,
       count: items.length,
       limit,
+      discoveryMode,
+      ...(fallbackReason ? { fallbackReason } : {}),
       items,
     },
   };

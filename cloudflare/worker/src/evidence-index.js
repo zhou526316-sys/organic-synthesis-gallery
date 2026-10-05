@@ -36,6 +36,9 @@ async function handoffKeyForDoi(doi) {
 export function evidenceIndexShadowEnabled(env) {
   return String(env?.EVIDENCE_INDEX_SHADOW_ENABLED || '') === '1';
 }
+export function scheduledHandoffIndexReadEnabled(env) {
+  return String(env?.SCHEDULED_HANDOFF_INDEX_READ_ENABLED || '') === '1';
+}
 
 export async function ensureEvidenceIndexSchema(env) {
   if (!env?.DB) throw new Error('evidence_index_db_missing');
@@ -420,7 +423,8 @@ export async function listEvidenceHandoffIndexRows(env, { ready = true, limit = 
     LIMIT ? OFFSET ?
   `).bind(ready?1:0,boundedLimit,boundedOffset).all();
   return {status:200,body:{version:1,schemaVersion:EVIDENCE_INDEX_SCHEMA_VERSION,
-    readPathActive:false,ready:Boolean(ready),offset:boundedOffset,
+    readPathActive:false,handoffReadPathActive:scheduledHandoffIndexReadEnabled(env),
+    ready:Boolean(ready),offset:boundedOffset,
     count:Array.isArray(result?.results)?result.results.length:0,items:result?.results||[]}};
 }
 
@@ -445,9 +449,11 @@ export async function getEvidenceIndexStatus(env) {
   ).first();
   const evidenceBackfillComplete=Number(state?.complete||0)===1;
   const handoffBackfillComplete=Number(handoffState?.complete||0)===1;
+  const handoffReadPathReady=evidenceBackfillComplete&&handoffBackfillComplete;
   return { status:200, body:{
     version:1,schemaVersion:EVIDENCE_INDEX_SCHEMA_VERSION,enabled:true,readPathActive:false,
-    handoffReadPathReady:evidenceBackfillComplete&&handoffBackfillComplete,
+    handoffReadPathReady,
+    handoffReadPathActive:scheduledHandoffIndexReadEnabled(env)&&handoffReadPathReady,
     evidenceCount:Number(counts?.evidence_count||0),
     handoffReadyCount:Number(counts?.handoff_ready_count||0),
     policyBlockedCount:Number(counts?.policy_blocked_count||0),

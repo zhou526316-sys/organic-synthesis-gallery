@@ -29,7 +29,8 @@ test('canonical Worker deploy applies Evidence handoff cursor schema before depl
 test('historical handoff backfill is cursor-persisted and exact-hash fenced',()=>{
   assert.ok(evidence.includes('article_evidence_handoff_backfill'));
   assert.ok(evidence.includes('evidence_packet_hash=? AND source_hash=?'));
-  assert.ok(evidence.includes('handoffReadPathReady:evidenceBackfillComplete&&handoffBackfillComplete'));
+  assert.ok(evidence.includes('const handoffReadPathReady=evidenceBackfillComplete&&handoffBackfillComplete'));
+  assert.ok(evidence.includes('handoffReadPathActive:scheduledHandoffIndexReadEnabled(env)&&handoffReadPathReady'));
   assert.ok(evidence.includes('backfillEvidenceHandoffIndexPage'));
   assert.ok(evidence.includes('listEvidenceHandoffIndexRows'));
 });
@@ -40,10 +41,10 @@ test('admin endpoints expose only shadow backfill and parity operations',()=>{
   assert.ok(index.includes('compareScheduledHandoffIndexShadow'));
 });
 
-test('post-deploy D2c1 gate requires complete backfill and three stable parity snapshots',()=>{
+test('post-deploy D2c2 gate requires ready active D1 reads plus three stable parity snapshots',()=>{
   const block=section(
     deploy,
-    '- name: Backfill and compare scheduled handoff readiness shadow',
+    '- name: Backfill and verify scheduled handoff D1 read path',
     '- name: Backfill and compare summary candidate index shadow',
   );
   assert.ok(block.includes('continue-on-error: true'));
@@ -53,14 +54,18 @@ test('post-deploy D2c1 gate requires complete backfill and three stable parity s
   assert.ok(block.includes('/api/admin/article-summary/evidence-index/handoff-backfill?limit=500'));
   assert.ok(block.includes('/api/admin/article-summary/evidence-index/handoff-compare?limit=40'));
   assert.ok(block.includes('handoffReadPathReady!==true'));
+  assert.ok(block.includes('handoffReadPathActive!==true'));
+  assert.ok(block.includes('comparison.readPathActive!==true'));
   assert.ok(block.includes('comparisons.length<3'));
   assert.ok(block.includes("for(const kind of ['pending','backfill'])"));
+  assert.ok(block.includes('/api/article-summary/scheduled-handoff?manifest=1&limit=40'));
+  assert.ok(block.includes("liveManifest.discoveryMode!=='d1_index'"));
   assert.ok(block.includes('pendingCandidateSetHash'));
   assert.ok(block.includes('backfillCandidateSetHash'));
   assert.ok(block.includes('creationBacklogCount'));
-  assert.ok(block.includes('readPathActive:false'));
+  assert.ok(block.includes('readPathActive:true'));
   assert.ok(block.includes('staleOrMissingRows'));
-  assert.ok(block.includes("phase:'D2c1-scheduled-handoff-readiness-shadow-live'"));
+  assert.ok(block.includes("phase:'D2c2-scheduled-handoff-index-read-live'"));
   const preserve=section(
     deploy,
     '- name: Preserve scheduled handoff readiness shadow report',
@@ -69,33 +74,65 @@ test('post-deploy D2c1 gate requires complete backfill and three stable parity s
   assert.ok(preserve.includes('if-no-files-found: error'));
 });
 
-test('production scheduled handoff read path remains on legacy R2 discovery in D2c1',()=>{
-  const block=section(
+test('production scheduled handoff discovery is D1-primary with explicit R2 fallback in D2c2',()=>{
+  assert.ok(deploy.includes('SCHEDULED_HANDOFF_INDEX_READ_ENABLED = "1"'));
+  const readBlock=section(
     handoff,
     'export async function getScheduledEvidenceHandoff',
     'export async function getScheduledEvidenceHandoffPart',
   );
-  assert.ok(block.includes('pendingHandoffObjects(env, limit)'));
-  assert.ok(!block.includes('pendingHandoffSelectionIndexed'));
-  assert.ok(!block.includes('listEvidenceHandoffIndexRows'));
+  assert.ok(readBlock.includes('scheduledHandoffIndexReadEnabled(env)'));
+  assert.ok(readBlock.includes('pendingHandoffObjectsIndexed(env, limit)'));
+  assert.ok(readBlock.includes("discoveryMode = 'd1_index'"));
+  assert.ok(readBlock.includes("discoveryMode = 'legacy_r2_fallback'"));
+  assert.ok(readBlock.includes('pendingHandoffObjects(env, limit)'));
+
+  const backfillBlock=section(
+    handoff,
+    'export async function backfillScheduledEvidenceHandoffs',
+    'export async function getScheduledEvidenceHandoff',
+  );
+  assert.ok(backfillBlock.includes('handoffBackfillObjectsIndexed(env, limit)'));
+  assert.ok(backfillBlock.includes("discoveryMode: 'd1_index'"));
+  assert.ok(backfillBlock.includes("discoveryMode = 'legacy_r2_fallback'"));
+  assert.ok(backfillBlock.includes("prefix: EVIDENCE_PREFIX"));
+  assert.ok(backfillBlock.includes("prefix: HANDOFF_PREFIX"));
+
   const compare=section(
     handoff,
     'export async function compareScheduledHandoffIndexShadow',
     'export async function backfillScheduledEvidenceHandoffs',
   );
-  assert.ok(compare.includes("readPathActive:false"));
+  assert.ok(compare.includes('scheduledHandoffIndexReadEnabled(env)'));
   assert.ok(compare.includes('legacyPotentiallySaturated'));
-  assert.ok(compare.includes('pendingHandoffSelectionLegacy'));
-  assert.ok(compare.includes('pendingHandoffSelectionIndexed'));
-  assert.ok(compare.includes('handoffBackfillSelectionLegacy'));
-  assert.ok(compare.includes('handoffBackfillSelectionIndexed'));
   assert.ok(compare.includes('candidateSetHash'));
 });
 
-test('D2c1 does not enable model review or change noon summary publication contract',()=>{
+test('production deployment refuses silent fallback after D2c2 activation',()=>{
+  const backfill=section(
+    deploy,
+    '- name: Backfill encrypted daily-summary handoff',
+    '- name: Verify WeChat MP domain file',
+  );
+  assert.ok(backfill.includes("body.discoveryMode !== 'd1_index'"));
+  assert.ok(backfill.includes('summary handoff backfill did not use D1 discovery'));
+
+  const health=section(
+    deploy,
+    '- name: Verify canonical Worker bindings survived deployment and secret sync',
+    '- name: Verify deployed search filtering CSS',
+  );
+  assert.ok(health.includes('body?.scheduledHandoffIndexReadEnabled === true'));
+  assert.ok(health.includes('scheduledHandoffIndexReadEnabled: body.scheduledHandoffIndexReadEnabled'));
+});
+
+test('D2c2 changes only handoff discovery and keeps model review/noon publication contract unchanged',()=>{
   assert.ok(deploy.includes('SUMMARY_REVIEW_ENABLED = "0"'));
   assert.ok(deploy.includes('SUMMARY_MODE = "scheduled_chatgpt_daily_no_api"'));
   assert.ok(deploy.includes('SUMMARY_PUBLICATION_TIME = "12:00 Asia/Shanghai"'));
+  assert.ok(deploy.includes('SCHEDULED_HANDOFF_INDEX_READ_ENABLED = "1"'));
+  assert.ok(index.includes('scheduledHandoffIndexReadEnabled'));
+  assert.ok(evidence.includes('scheduledHandoffIndexReadEnabled'));
 });
 
 console.log('SCHEDULED_HANDOFF_SHADOW_DEPLOYMENT_CONTRACT_PASS');
