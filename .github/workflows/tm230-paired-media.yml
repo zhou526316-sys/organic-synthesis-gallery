@@ -68,8 +68,8 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node --check public/gallery-vpn-bridge.user.js
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.50' public/gallery-vpn-bridge.user.js
-          grep -F "var CONTROLLER_REVISION = '2.2.40';" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.51' public/gallery-vpn-bridge.user.js
+          grep -F "var CONTROLLER_REVISION = '2.2.41';" public/gallery-vpn-bridge.user.js
           grep -F "var GALLERY_HOST = 'gallery.gczhouwld.com';" public/gallery-vpn-bridge.user.js
           grep -F 'requireCompletedCapturePacket' audit/media-auto-policy.json
           grep -F 'latestAddedDate' cloudflare/scripts/build-live-toc-demand-queue.mjs
@@ -84,7 +84,7 @@ jobs:
           grep -F "result.fulltext=await tryCaptureArticleEvidence" public/toc-mainline.user.js
           grep -F "EVIDENCE_INVENTORY_ENDPOINT" public/toc-mainline.user.js
           grep -F "var evidenceJobs=[];" public/toc-mainline.user.js
-          grep -F "PRIVATE_PDF_QUEUE_REVISION = '20261005-private-pdf-queue-v1'" public/toc-mainline.user.js
+          grep -F "PRIVATE_PDF_QUEUE_REVISION = '20261005-private-pdf-queue-v2'" public/toc-mainline.user.js
           grep -F "capturePrivatePdf:true" public/toc-mainline.user.js
           grep -F "totalTextBudget:null" scripts/test-tm232-evidence-capture.mjs
           grep -F "abstractOnly:true" scripts/test-tm232-evidence-capture.mjs
