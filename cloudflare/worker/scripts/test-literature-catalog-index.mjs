@@ -8,6 +8,7 @@ import {
   getLiteratureCatalogIndexStatus,
   importLiteratureCatalogIndexBatch,
   listLiteratureCatalogIndexRows,
+  LITERATURE_INDEX_IMPORT_BATCH_MAX,
   queryLiteratureCatalogIndex,
 } from '../src/literature-catalog-index.js';
 
@@ -268,6 +269,30 @@ test('oversized search metadata fails closed instead of being silently truncated
   assert.match(result.body.detail,/text_over_budget:title/);
   const status=await getLiteratureCatalogIndexStatus(env);
   assert.equal(status.body.generations[0].importedRows,0);
+});
+
+test('import batch is hard-bounded to eight rows per Worker invocation',async t=>{
+  assert.equal(LITERATURE_INDEX_IMPORT_BATCH_MAX,8);
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const g=generation({recordCount:8});
+  const eight=Array.from({length:8},(_,index)=>row(
+    '10.1234/batch-'+String(index+1),
+    'Batch chemistry '+String(index+1),
+    {revision:String((index%8)+1).repeat(64)}
+  ));
+  const accepted=await importLiteratureCatalogIndexBatch(env,{generation:g,rows:eight});
+  assert.equal(accepted.status,200);
+  assert.equal(accepted.body.batchRows,8);
+  assert.equal(accepted.body.importedRows,8);
+
+  const db2=new D1();t.after(()=>db2.close());
+  const env2={LITERATURE_INDEX_DB:db2,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const nine=[...eight,row('10.1234/batch-9','Batch chemistry 9',{revision:'9'.repeat(64)})];
+  const rejected=await importLiteratureCatalogIndexBatch(env2,{generation:generation({recordCount:9}),rows:nine});
+  assert.equal(rejected.status,400);
+  assert.equal(rejected.body.error,'literature_catalog_index_batch_size_invalid');
+  assert.equal(rejected.body.maxRows,8);
 });
 
 test('batch preflight rejects duplicate and overflow rows before changing generation counts',async t=>{
