@@ -81,6 +81,9 @@ function captureIntakeError(payload, doi) {
   if (normalizeDoi(payload?.pageDoi || '') !== doi) return 'capture_page_doi_unverified';
   if (!safeUrl(payload?.articleUrl) || !safeUrl(payload?.sourceUrl)) return 'capture_source_evidence_missing';
   if (!captureBelongsToDoi(payload, doi)) return 'media_source_doi_mismatch';
+  if (String(payload?.kind || '').toLowerCase() === 'official' && invalidRscFirstPagePreviewCapture(payload)) {
+    return 'rsc_first_page_preview_rejected';
+  }
   return '';
 }
 
