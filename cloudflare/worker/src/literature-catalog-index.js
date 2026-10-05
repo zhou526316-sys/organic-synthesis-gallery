@@ -126,10 +126,9 @@ async function generationRow(env,catalogId){
     record_count,imported_rows,ready,created_at,updated_at
     FROM literature_catalog_generations WHERE catalog_id=?`).bind(catalogId).first();
 }
-function generationMatches(row,g){
+function generationContentMatches(row,g){
   return row&&row.catalog_id===g.catalogId&&row.doi_set_hash===g.doiSetHash
-    &&row.publication_slot===g.publicationSlot&&row.source_commit===g.sourceCommit
-    &&row.marker_blob_sha===g.markerBlobSha&&Number(row.record_count)===g.recordCount;
+    &&Number(row.record_count)===g.recordCount;
 }
 
 export async function beginLiteratureCatalogGeneration(env,value){
@@ -139,7 +138,9 @@ export async function beginLiteratureCatalogGeneration(env,value){
   const g=normalizeGeneration(value);
   const now=Date.now();
   const existing=await generationRow(env,g.catalogId);
-  if(existing&&!generationMatches(existing,g)) return {status:409,body:{error:'literature_catalog_generation_identity_conflict',catalogId:g.catalogId}};
+  if(existing&&!generationContentMatches(existing,g)) {
+    return {status:409,body:{error:'literature_catalog_generation_identity_conflict',catalogId:g.catalogId}};
+  }
   if(!existing){
     await env.LITERATURE_INDEX_DB.prepare(`INSERT INTO literature_catalog_generations
       (catalog_id,doi_set_hash,publication_slot,source_commit,marker_blob_sha,record_count,imported_rows,ready,created_at,updated_at)
@@ -149,7 +150,8 @@ export async function beginLiteratureCatalogGeneration(env,value){
   }
   const row=await generationRow(env,g.catalogId);
   return {status:200,body:{ok:true,enabled:true,readPathActive:false,catalogId:g.catalogId,
-    recordCount:g.recordCount,importedRows:Number(row?.imported_rows||0),ready:Number(row?.ready||0)===1}};
+    contentReused:Boolean(existing),recordCount:g.recordCount,importedRows:Number(row?.imported_rows||0),
+    ready:Number(row?.ready||0)===1}};
 }
 
 async function upsertIndexRow(env,catalogId,n,now){
