@@ -21,6 +21,9 @@ function fillDailyTrend(rows,days,now=Date.now()){
 export function siteAnalyticsMaterializedShadowEnabled(env){
   return String(env?.SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED||'')==='1';
 }
+export function siteAnalyticsMaterializedReadEnabled(env){
+  return String(env?.SITE_ANALYTICS_MATERIALIZED_READ_ENABLED||'')==='1';
+}
 
 function visitorStatement(env,{scopeType,scopeKey,eventId,ipHash,viewedAt,date,paperOpen}){
   return env.DB.prepare(`
@@ -146,12 +149,24 @@ export async function markMaterializedVisitorPaperOpen(env,ipHash,date){
   return {enabled:true,updated};
 }
 
+async function reconcileMaterializedPaperOpenFlags(env){
+  const result=await env.DB.prepare(`
+    UPDATE site_analytics_visitors_v2
+    SET paper_open=CASE WHEN EXISTS (
+      SELECT 1 FROM paper_open_readers_v3 r
+      WHERE r.ip_hash=site_analytics_visitors_v2.ip_hash
+    ) THEN 1 ELSE 0 END
+    WHERE scope_type IN ('global','day')
+  `).run();
+  return Number(result?.meta?.changes||0);
+}
+
 export async function backfillSiteAnalyticsMaterializedPage(env,limitValue=50){
   if(!siteAnalyticsMaterializedShadowEnabled(env)) return {status:409,body:{error:'site_analytics_materialized_shadow_disabled'}};
   if(!env?.DB) return {status:503,body:{error:'analytics_materialized_db_missing'}};
   const limit=Math.max(1,Math.min(100,Number(limitValue||50)));
   const now=Date.now();
-  let state=await env.DB.prepare(`
+  const state=await env.DB.prepare(`
     SELECT last_event_id,complete,scanned_events,materialized_events,duplicate_events,failed_events,
       started_at,updated_at,last_error
     FROM site_analytics_v2_backfill WHERE id=1
@@ -184,6 +199,7 @@ export async function backfillSiteAnalyticsMaterializedPage(env,limitValue=50){
     duplicates:Number(state?.duplicate_events||0)+duplicates,
     failed:Number(state?.failed_events||0)+failed,
   };
+  const reconciledPaperOpenRows=complete?await reconcileMaterializedPaperOpenFlags(env):0;
   await env.DB.prepare(`
     INSERT INTO site_analytics_v2_backfill
       (id,last_event_id,complete,scanned_events,materialized_events,duplicate_events,failed_events,started_at,updated_at,last_error)
@@ -193,10 +209,16 @@ export async function backfillSiteAnalyticsMaterializedPage(env,limitValue=50){
       materialized_events=excluded.materialized_events,duplicate_events=excluded.duplicate_events,
       failed_events=excluded.failed_events,started_at=site_analytics_v2_backfill.started_at,
       updated_at=excluded.updated_at,last_error=excluded.last_error
-  `).bind(cursor,complete?1:0,totals.scanned,totals.materialized,totals.duplicates,totals.failed,startedAt,now,lastError).run();
+  `).bind(
+    cursor,complete?1:0,totals.scanned,totals.materialized,totals.duplicates,totals.failed,
+    startedAt,now,complete?'':lastError,
+  ).run();
   if(failed) return {status:502,body:{error:'site_analytics_materialized_backfill_failed',lastEventId:cursor,lastError}};
-  return {status:200,body:{ok:true,enabled:true,complete,lastEventId:cursor,rawMaxEventId:maxId,
-    pageEvents:scanned,pageMaterialized:materialized,pageDuplicates:duplicates,...totals}};
+  return {status:200,body:{
+    ok:true,enabled:true,complete,lastEventId:cursor,rawMaxEventId:maxId,
+    pageEvents:scanned,pageMaterialized:materialized,pageDuplicates:duplicates,
+    reconciledPaperOpenRows,...totals,
+  }};
 }
 
 export async function getSiteAnalyticsMaterializedStatus(env){
@@ -210,10 +232,24 @@ export async function getSiteAnalyticsMaterializedStatus(env){
       FROM site_analytics_v2_backfill WHERE id=1
     `).first(),
   ]);
+  const rawEvents=Number(raw?.count||0);
+  const materializedEvents=Number(events?.count||0);
+  const rawMaxEventId=Number(raw?.max_id||0);
+  const materializedMaxEventId=Number(events?.max_id||0);
+  const ready=siteAnalyticsMaterializedShadowEnabled(env)
+    &&siteAnalyticsMaterializedReadEnabled(env)
+    &&Number(backfill?.complete||0)===1
+    &&safe(backfill?.last_error,180)===''
+    &&rawEvents===materializedEvents
+    &&rawMaxEventId===materializedMaxEventId
+    &&Number(backfill?.last_event_id||0)===rawMaxEventId
+    &&Number(global?.pv||0)===rawEvents;
   return {status:200,body:{
-    version:SHADOW_VERSION,enabled:siteAnalyticsMaterializedShadowEnabled(env),readPathActive:false,
-    rawEvents:Number(raw?.count||0),rawMaxEventId:Number(raw?.max_id||0),
-    materializedEvents:Number(events?.count||0),materializedMaxEventId:Number(events?.max_id||0),
+    version:SHADOW_VERSION,
+    enabled:siteAnalyticsMaterializedShadowEnabled(env),
+    readConfigured:siteAnalyticsMaterializedReadEnabled(env),
+    readPathActive:ready,
+    rawEvents,rawMaxEventId,materializedEvents,materializedMaxEventId,
     globalPv:Number(global?.pv||0),globalUv:Number(global?.uv||0),
     backfill:backfill?{
       complete:Number(backfill.complete||0)===1,lastEventId:Number(backfill.last_event_id||0),
@@ -222,6 +258,87 @@ export async function getSiteAnalyticsMaterializedStatus(env){
       startedAt:Number(backfill.started_at||0),updatedAt:Number(backfill.updated_at||0),lastError:safe(backfill.last_error,180),
     }:{complete:false,lastEventId:0,scannedEvents:0,materializedEvents:0,duplicateEvents:0,failedEvents:0,startedAt:0,updatedAt:0,lastError:''},
   }};
+}
+
+export async function getSiteAnalyticsMaterializedReadiness(env){
+  if(!env?.DB) return {ready:false,reason:'analytics_materialized_db_missing'};
+  if(!siteAnalyticsMaterializedShadowEnabled(env)) return {ready:false,reason:'analytics_materialized_shadow_disabled'};
+  if(!siteAnalyticsMaterializedReadEnabled(env)) return {ready:false,reason:'analytics_materialized_read_disabled'};
+  const [rawLast,materializedLast,global,backfill]=await Promise.all([
+    env.DB.prepare('SELECT id,viewed_at FROM site_pageviews_v1 ORDER BY id DESC LIMIT 1').first(),
+    env.DB.prepare('SELECT event_id FROM site_analytics_materialized_events_v2 ORDER BY event_id DESC LIMIT 1').first(),
+    env.DB.prepare('SELECT pv,last_viewed_at FROM site_global_stats_v2 WHERE id=1').first(),
+    env.DB.prepare('SELECT last_event_id,complete,scanned_events,materialized_events,duplicate_events,failed_events,last_error FROM site_analytics_v2_backfill WHERE id=1').first(),
+  ]);
+  const rawMax=Number(rawLast?.id||0);
+  const materializedMax=Number(materializedLast?.event_id||0);
+  const rawLastViewedAt=Number(rawLast?.viewed_at||0);
+  const globalLastViewedAt=Number(global?.last_viewed_at||0);
+  const lastEventId=Number(backfill?.last_event_id||0);
+  const scannedEvents=Number(backfill?.scanned_events||0);
+  const materializedEvents=Number(backfill?.materialized_events||0);
+  const duplicateEvents=Number(backfill?.duplicate_events||0);
+  const failedEvents=Number(backfill?.failed_events||0);
+  const lastError=safe(backfill?.last_error,180);
+  const ready=Number(backfill?.complete||0)===1
+    &&lastError===''
+    &&rawMax===materializedMax
+    &&lastEventId===rawMax
+    &&materializedEvents+duplicateEvents===scannedEvents
+    &&Number(global?.pv||0)===scannedEvents
+    &&globalLastViewedAt===rawLastViewedAt;
+  return {
+    ready,
+    reason:ready?'ready':'analytics_materialized_not_fresh',
+    rawMaxEventId:rawMax,
+    materializedMaxEventId:materializedMax,
+    backfillLastEventId:lastEventId,
+    globalPv:Number(global?.pv||0),
+    scannedEvents,materializedEvents,duplicateEvents,failedEvents,lastError,
+  };
+}
+
+async function advanceRealtimeWatermark(env,eventId){
+  await env.DB.prepare(`
+    UPDATE site_analytics_v2_backfill
+    SET last_event_id=MAX(last_event_id,?),
+      scanned_events=scanned_events+1,
+      materialized_events=materialized_events+1,
+      updated_at=?,
+      last_error=''
+    WHERE id=1 AND complete=1
+  `).bind(eventId,Date.now()).run();
+}
+
+export async function markSiteAnalyticsMaterializedUnhealthy(env,error,eventId=0){
+  if(!env?.DB) return;
+  const boundedEventId=Math.max(0,Number(eventId||0));
+  const now=Date.now();
+  await env.DB.prepare(`
+    INSERT INTO site_analytics_v2_backfill
+      (id,last_event_id,complete,scanned_events,materialized_events,duplicate_events,failed_events,started_at,updated_at,last_error)
+    VALUES(1,0,0,0,0,0,1,?,?,?)
+    ON CONFLICT(id) DO UPDATE SET
+      complete=0,
+      last_event_id=CASE
+        WHEN ?>0 THEN MIN(site_analytics_v2_backfill.last_event_id,?-1)
+        ELSE site_analytics_v2_backfill.last_event_id END,
+      failed_events=site_analytics_v2_backfill.failed_events+1,
+      updated_at=excluded.updated_at,
+      last_error=excluded.last_error
+  `).bind(now,now,safe(error?.message||String(error),180),boundedEventId,boundedEventId).run();
+}
+
+
+export async function materializeSitePageViewForActiveRead(env,event){
+  try{
+    const result=await materializeSitePageViewEvent(env,event);
+    if(result?.materialized) await advanceRealtimeWatermark(env,Number(event?.id||0));
+    return result;
+  }catch(error){
+    try{await markSiteAnalyticsMaterializedUnhealthy(env,error,Number(event?.id||0));}catch{}
+    throw error;
+  }
 }
 
 export async function materializedSiteAnalyticsStats(env,now=Date.now()){
@@ -277,13 +394,19 @@ export async function materializedSiteAnalyticsStats(env,now=Date.now()){
   const allUv=Math.max(0,Number(global?.uv||0)),todayUv=Math.max(0,Number(todayRow?.uv||0));
   const allOpen=Math.max(0,Number(globalOpen?.count||0)),todayOpenN=Math.max(0,Number(todayOpen?.count||0));
   return {status:200,body:{
-    generation:'site-pageview-v2-shadow',timeZone:'Asia/Shanghai',
+    generation:'site-pageview-v2',timeZone:'Asia/Shanghai',
     trackingStartedAt:Number(global?.first_viewed_at||0)||null,lastPageViewAt:Number(global?.last_viewed_at||0)||null,
     allTime:{pv:Math.max(0,Number(global?.pv||0)),uv:allUv,visitorsWithPaperOpen:allOpen,visitorsWithoutPaperOpen:Math.max(0,allUv-allOpen)},
     today:{date:today,pv:Math.max(0,Number(todayRow?.pv||0)),uv:todayUv,visitorsWithPaperOpen:todayOpenN,visitorsWithoutPaperOpen:Math.max(0,todayUv-todayOpenN)},
     last7Days:trend30.slice(-7),last30Days:trend30,
     topReferrers30Days:combine(refPv,refUv,'source',key=>key||'(direct)'),
     devices30Days:combine(devicePv,deviceUv,'device',key=>key||'other'),
+    definitions:{
+      pv:'One successfully recorded real browser page load.',
+      uv:'Distinct salted CF-Connecting-IP hashes.',
+      visitorsWithoutPaperOpen:'Site UVs whose IP hash has no paper_open_readers_v3 record.',
+      privacy:'Raw IP addresses are never stored; referrers are reduced to hostname only and query strings are not stored.',
+    },
   }};
 }
 

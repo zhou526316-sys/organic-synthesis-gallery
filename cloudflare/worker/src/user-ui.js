@@ -1,7 +1,7 @@
 import { recordReaderOpen } from './reader-count-ledger.js';
 import { normalizeDoi } from './media.js';
 import { shadowWriteUserLibraryState, userLibraryRowShadowEnabled } from './user-library-shadow.js';
-import { markMaterializedVisitorPaperOpen, materializeSitePageViewEvent, siteAnalyticsMaterializedShadowEnabled } from './site-analytics-materialized.js';
+import { markMaterializedVisitorPaperOpen, markSiteAnalyticsMaterializedUnhealthy, materializeSitePageViewEvent, materializeSitePageViewForActiveRead, siteAnalyticsMaterializedReadEnabled, siteAnalyticsMaterializedShadowEnabled } from './site-analytics-materialized.js';
 
 const FEEDBACK_KINDS = new Set(['toc', 'image', 'title', 'date', 'duplicate', 'classification', 'other']);
 const SITE_FEEDBACK_CATEGORIES = new Set(['general', 'search', 'ui', 'account', 'literature', 'other']);
@@ -430,14 +430,28 @@ export async function trackPageView(env, payload, request, ctx) {
   ).bind(ipHash, pagePath, referrerHost, deviceType, date, now).run();
   const eventId = Number(inserted?.meta?.last_row_id || 0);
   if (eventId > 0) {
-    await safeAnalyticsShadowTask(env, ctx, () => materializeSitePageViewEvent(env, {
+    const event = {
       id: eventId,
       ip_hash: ipHash,
       referrer_host: referrerHost,
       device_type: deviceType,
       beijing_date: date,
       viewed_at: now,
-    }), 'SITE_ANALYTICS_MATERIALIZED_WRITE_FAILED');
+    };
+    if (siteAnalyticsMaterializedReadEnabled(env)) {
+      try { await materializeSitePageViewForActiveRead(env, event); }
+      catch (error) {
+        console.warn('SITE_ANALYTICS_MATERIALIZED_ACTIVE_WRITE_FAILED', {
+          message: String(error?.message || error).slice(0, 180),
+          eventId,
+        });
+      }
+    } else {
+      await safeAnalyticsShadowTask(
+        env, ctx, () => materializeSitePageViewEvent(env, event),
+        'SITE_ANALYTICS_MATERIALIZED_WRITE_FAILED',
+      );
+    }
   }
 
   return {
@@ -450,9 +464,8 @@ export async function trackPageView(env, payload, request, ctx) {
   };
 }
 
-export async function siteAnalyticsStats(env) {
+export async function siteAnalyticsStats(env, now = Date.now()) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
-  const now = Date.now();
   const today = beijingDate(now);
   const start30 = dateDaysAgoBeijing(29, now);
 
@@ -564,12 +577,22 @@ export async function markReader(env, payload, request, ctx) {
   const now = Date.now();
 
   const { unique, count } = await recordReaderOpen(env.DB, doi, ipHash, now);
-  await safeAnalyticsShadowTask(
-    env,
-    ctx,
-    () => markMaterializedVisitorPaperOpen(env, ipHash, beijingDate(now)),
-    'SITE_ANALYTICS_MATERIALIZED_READER_MARK_FAILED',
-  );
+  if (siteAnalyticsMaterializedReadEnabled(env)) {
+    try { await markMaterializedVisitorPaperOpen(env, ipHash, beijingDate(now)); }
+    catch (error) {
+      try { await markSiteAnalyticsMaterializedUnhealthy(env, error); } catch {}
+      console.warn('SITE_ANALYTICS_MATERIALIZED_ACTIVE_READER_MARK_FAILED', {
+        message: String(error?.message || error).slice(0, 180),
+      });
+    }
+  } else {
+    await safeAnalyticsShadowTask(
+      env,
+      ctx,
+      () => markMaterializedVisitorPaperOpen(env, ipHash, beijingDate(now)),
+      'SITE_ANALYTICS_MATERIALIZED_READER_MARK_FAILED',
+    );
+  }
 
   return {
     status: 200,

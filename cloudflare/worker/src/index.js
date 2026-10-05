@@ -40,7 +40,7 @@ import { backfillEvidenceHandoffIndexPage, backfillEvidenceIndexPage, getEvidenc
 import { backfillSummaryJobIndexPage, getSummaryCandidateIndexStatus } from './summary-candidate-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus } from './user-library-shadow.js';
-import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getSiteAnalyticsMaterializedStatus, materializedSiteAnalyticsStats } from './site-analytics-materialized.js';
+import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getSiteAnalyticsMaterializedReadiness, getSiteAnalyticsMaterializedStatus, materializedSiteAnalyticsStats, siteAnalyticsMaterializedReadEnabled } from './site-analytics-materialized.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
   alipayNotify,
@@ -232,6 +232,7 @@ async function handleApi(request, env, ctx) {
       scheduledHandoffIndexReadEnabled: String(env.SCHEDULED_HANDOFF_INDEX_READ_ENABLED || '') === '1',
       userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
       siteAnalyticsMaterializedShadowEnabled: String(env.SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED || '') === '1',
+      siteAnalyticsMaterializedReadEnabled: siteAnalyticsMaterializedReadEnabled(env),
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
@@ -369,14 +370,16 @@ async function handleApi(request, env, ctx) {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
     const now = Date.now();
-    const legacy = await siteAnalyticsStats(env);
+    const legacy = await siteAnalyticsStats(env, now);
     const materialized = await materializedSiteAnalyticsStats(env, now);
     if (legacy.status !== 200) return resultResponse(legacy);
     if (materialized.status !== 200) return resultResponse(materialized);
     const comparison = compareSiteAnalyticsBodies(legacy.body, materialized.body);
+    const readiness = await getSiteAnalyticsMaterializedReadiness(env);
     return json({
       version: 2,
-      readPathActive: false,
+      readPathActive: readiness.ready === true,
+      readConfigured: siteAnalyticsMaterializedReadEnabled(env),
       same: comparison.same,
       legacyGeneration: legacy.body.generation,
       materializedGeneration: materialized.body.generation,
@@ -398,6 +401,52 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await trackPageView(env, await readJson(request), request, ctx), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats') {
+    if (siteAnalyticsMaterializedReadEnabled(env)) {
+      try {
+        const readiness = await getSiteAnalyticsMaterializedReadiness(env);
+        if (readiness.ready) {
+          const materialized = await materializedSiteAnalyticsStats(env);
+          if (materialized.status === 200) {
+            return resultResponse({
+              status: 200,
+              body: {
+                ...materialized.body,
+                generation: 'site-pageview-v2',
+                readPath: 'materialized',
+              },
+            }, cors);
+          }
+        }
+        const legacy = await siteAnalyticsStats(env);
+        if (legacy.status === 200) {
+          return resultResponse({
+            status: 200,
+            body: {
+              ...legacy.body,
+              readPath: 'legacy_raw_fallback',
+              materializedFallbackReason: readiness.reason || 'materialized_unavailable',
+            },
+          }, cors);
+        }
+        return resultResponse(legacy, cors);
+      } catch (error) {
+        console.warn('SITE_ANALYTICS_MATERIALIZED_READ_FALLBACK', {
+          message: String(error?.message || error).slice(0, 180),
+        });
+        const legacy = await siteAnalyticsStats(env);
+        if (legacy.status === 200) {
+          return resultResponse({
+            status: 200,
+            body: {
+              ...legacy.body,
+              readPath: 'legacy_raw_fallback',
+              materializedFallbackReason: 'materialized_read_error',
+            },
+          }, cors);
+        }
+        return resultResponse(legacy, cors);
+      }
+    }
     return resultResponse(await siteAnalyticsStats(env), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark') {
