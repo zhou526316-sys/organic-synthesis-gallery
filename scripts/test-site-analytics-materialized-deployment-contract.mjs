@@ -85,6 +85,8 @@ test('D4b deployment activates materialized reads only after backfill and stable
   assert.ok(block.includes("phase:'D4b-site-analytics-materialized-read-live'"));
   assert.ok(block.includes('readPathActive:true'));
   assert.ok(block.includes('/api/admin/site-analytics-materialized/backfill?limit=50'));
+  assert.ok(block.includes("Number(status.backfill?.lastEventId||0)!==Number(status.rawMaxEventId||0)"));
+  assert.ok(block.includes("Number(after.backfill?.lastEventId||0)===Number(after.rawMaxEventId||0)"));
   assert.ok(block.includes('/api/admin/site-analytics-materialized/compare'));
   assert.ok(block.includes('passes.length<2'));
   assert.ok(block.includes('comparison.same===true'));

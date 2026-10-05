@@ -319,7 +319,9 @@ jobs:
           }
 
           let pages=0;
-          while(status.backfill?.complete!==true||status.materializedEvents!==status.rawEvents){
+          while(status.backfill?.complete!==true
+            ||status.materializedEvents!==status.rawEvents
+            ||Number(status.backfill?.lastEventId||0)!==Number(status.rawMaxEventId||0)){
             pages+=1;
             if(pages>400) throw new Error('site analytics materialized backfill exceeded 400 pages');
             const page=await call('/api/admin/site-analytics-materialized/backfill?limit=50',{method:'POST'});
@@ -335,7 +337,8 @@ jobs:
             const stable=before.rawEvents===after.rawEvents
               &&before.materializedEvents===after.materializedEvents
               &&after.rawEvents===after.materializedEvents
-              &&after.backfill?.complete===true;
+              &&after.backfill?.complete===true
+              &&Number(after.backfill?.lastEventId||0)===Number(after.rawMaxEventId||0);
             console.log(JSON.stringify({
               siteAnalyticsComparisonAttempt:attempt,stable,same:comparison.same,
               rawEvents:after.rawEvents,materializedEvents:after.materializedEvents,
