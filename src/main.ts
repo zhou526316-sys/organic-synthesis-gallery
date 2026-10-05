@@ -867,8 +867,49 @@ async function hydrateMediaBatch(): Promise<void> {
   }
 }
 
+function ccsTocFallbackIsInvalid(slot: HTMLElement, result: TocResponse): boolean {
+  const doi = normalizeDoi(slot.dataset.doi);
+  if (!doi?.toLowerCase().startsWith('10.31635/')) return false;
+  const kind = result.primary?.kind || '';
+  const reason = result.reason || '';
+  return kind === 'figure1'
+    || kind === 'article_figure'
+    || reason === 'figure1_fallback'
+    || reason.startsWith('figure_fallback:');
+}
+
+function renderPendingToc(slot: HTMLElement, ccsOfficialOnly = false): void {
+  const graphic = document.createElement('div');
+  graphic.className = 'generated-article-graphic';
+  const journal = document.createElement('div');
+  journal.className = 'generated-graphic-journal';
+  journal.textContent = slot.dataset.journal || '';
+  const title = document.createElement('div');
+  title.className = 'generated-graphic-title';
+  title.textContent = slot.dataset.title || '';
+  const status = document.createElement('div');
+  status.className = 'generated-graphic-status';
+  status.textContent = ccsOfficialOnly
+    ? (language === 'zh' ? '正在获取 CCS 官方 TOC' : 'Fetching official CCS TOC')
+    : t('fetching');
+  graphic.append(journal, title, status);
+  slot.replaceChildren(graphic);
+  slot.classList.remove('loaded');
+  slot.classList.add('generated');
+  slot.dataset.state = 'idle';
+}
+
 function renderToc(slot: HTMLElement, result: TocResponse): void {
-  if (!result.available || !result.imageUrl) return;
+  const doi = normalizeDoi(slot.dataset.doi);
+  const isCcs = Boolean(doi?.toLowerCase().startsWith('10.31635/'));
+  if (ccsTocFallbackIsInvalid(slot, result)) {
+    renderPendingToc(slot, true);
+    return;
+  }
+  if (!result.available || !result.imageUrl) {
+    if (isCcs) renderPendingToc(slot, true);
+    return;
+  }
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'toc-link';
