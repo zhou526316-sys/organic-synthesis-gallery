@@ -4,7 +4,7 @@ import { gunzipSync } from 'node:zlib';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DATA_FILES, collectPapers, assertPartition, sameSet } from './pages-release-delivery.mjs';
+import { DATA_FILES, collectPapers, assertPartition, sameSet, markerPublicationSlot } from './pages-release-delivery.mjs';
 import { buildCatalog, verifyCatalog, stable, digest } from '../architecture/catalog.mjs';
 import { buildLegacyTitlePresentation } from '../architecture/title-presentation.mjs';
 import { loadScopeCorrections } from './lib/scope-corrections.mjs';
@@ -49,8 +49,11 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   assert(!tracked, 'architecture_public_output_must_not_be_tracked');
   const markerText = await readFile(path.resolve(ROOT, MARKER_FILE), 'utf8');
   const marker = JSON.parse(markerText);
-  const publicationSlot = String(marker.publicationSlot || '');
-  assert(marker.mode === 'slot-release' && (/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(publicationSlot)
+  const publicationSlot = markerPublicationSlot(marker);
+  const markerModeValid = marker.mode === 'slot-release'
+    || (marker.mode === 'scope-correction' && marker.releasePolicy === 'deletion-only'
+      && Array.isArray(marker.publishableDois) && marker.publishableDois.length === 0);
+  assert(markerModeValid && (/^\d{4}-\d{2}-\d{2}T08:00:00\+08:00$/.test(publicationSlot)
     || publicationSlot === RETIRED_LAST_EVENING_SLOT), 'invalid_release_marker');
 
   const texts = Object.fromEntries(await Promise.all(SOURCE_FILES.map(async name => {
@@ -84,7 +87,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const datasetSha256 = sha256(pretty(sourceDois));
   const bundle = buildCatalog([...built.values()], {
     asOfDate,
-    source: { commit: sourceCommit, datasetSha256, publicationSlot: marker.publicationSlot, markerBlobSha, parityBasis:'pages-authorized-public-build' },
+    source: { commit: sourceCommit, datasetSha256, publicationSlot, markerBlobSha, parityBasis:'pages-authorized-public-build' },
     withdrawn,
   });
   const verification = verifyCatalog(bundle.files, [...built.values()]);
@@ -100,13 +103,13 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   const presentationRef = ref(`title-presentation.${sha256(presentationText)}.json`, presentationText);
 
   const members = Object.fromEntries(bundle.records.map(row => [row.doi, row.revision]));
-  const serial = Date.parse(marker.publicationSlot);
+  const serial = Date.parse(publicationSlot);
   assert(Number.isSafeInteger(serial), 'membership_serial_invalid');
   const membershipBody = {
     schema: MEMBERSHIP_SCHEMA,
     scope: 'all-time',
     complete: true,
-    publicationSlot: marker.publicationSlot,
+    publicationSlot,
     sourceCommit,
     markerBlobSha,
     catalogId: bundle.catalog.recordSetHash,
@@ -123,7 +126,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     schema: 'gallery-acquisition-basis-v1',
     catalogId: bundle.catalog.recordSetHash,
     doiSetHash: bundle.catalog.doiSetHash,
-    publicationSlot: marker.publicationSlot,
+    publicationSlot,
     count: bundle.records.length,
     records: bundle.records.map(row => ({
       doi: row.doi,
@@ -147,7 +150,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
     schema: SCHEMA,
     productionActivation: false,
     frontendReadActivation: true,
-    publicationSlot: marker.publicationSlot,
+    publicationSlot,
     sourceCommit,
     markerBlobSha,
     datasetSha256,
@@ -188,7 +191,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   await rename(tmp, output);
 
   const report = {
-    ok:true, schema:SCHEMA, publicationSlot:marker.publicationSlot, sourceCommit,
+    ok:true, schema:SCHEMA, publicationSlot, sourceCommit,
     recordCount:bundle.records.length, hot:bundle.partitions.hot.length, archive:bundle.partitions.archive.length,
     objectCount:objects.length, totalObjectBytes:objects.reduce((n,row)=>n+row.bytes,0),
     largestObjectBytes:Math.max(0,...objects.map(row=>row.bytes)),
