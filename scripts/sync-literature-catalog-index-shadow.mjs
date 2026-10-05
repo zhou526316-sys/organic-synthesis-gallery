@@ -294,6 +294,8 @@ async function main() {
         const imported = await api('/api/admin/literature-catalog-index/import', {
           method: 'POST', body: { generation, rows: batch },
         });
+        assert(imported.body.batchRows === batch.length
+          && imported.body.writeStatements === batch.length * 3, 'shadow_import_batch_contract_mismatch');
         assert(imported.body.importedRows <= generation.recordCount, 'shadow_import_overflow');
         importedBatches += 1;
         report.importProgress = {
