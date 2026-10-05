@@ -40,46 +40,27 @@
     "note": "Consolidated the polymer-method scope correction and subsequent late-indexed candidates. Current audit reports galleryDois=503, missingFromGallery=0, unresolved=0."
   },
   "lastWebsiteSync": {
-    "finishedAt": "2026-10-05T01:48:48Z",
+    "finishedAt": "2026-10-05T02:12:35.820Z",
     "dataCommitSha": "e95a6a4d3ece2354a63e05f38b54b21981f792cd",
     "capabilityFingerprint": "2574424f3a6f5eb9dd4ccff39dd6840d2a3f99e3091d6aca041ca6f67c8641af",
     "deployment": "success-live-verified",
+    "syncType": "scope-correction",
     "verification": {
-      "mode": "scope-correction",
-      "lastFixedPublicationSlot": "2026-10-05T08:00:00+08:00",
-      "pagesRun": 37252457388,
-      "deploymentSourceCommit": "21b6f38e05760108ad853abdeb2b7d3c44ec0a54",
-      "markerBlobSha": "486ea67bdddca002293fa3ec910b5a28c7128e87",
+      "productionGitHubPages": "success",
       "totalGalleryCards": 797,
       "galleryDois": 797,
+      "exactDoiSetMatch": true,
       "removedDoisAbsent": [
         "10.1039/d6gc04274k"
       ],
-      "retainedDoiSetVerified": true,
-      "datasetSha256": "9ae042967e38bea2ef418682c3684df600d8ba6e942441c73687328e95551d1e",
-      "sites": [
-        {
-          "site": "https://gallery.gczhouwld.com/",
-          "productionCards": 797,
-          "removedDoisAbsent": [
-            "10.1039/d6gc04274k"
-          ]
-        },
-        {
-          "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-          "productionCards": 797,
-          "removedDoisAbsent": [
-            "10.1039/d6gc04274k"
-          ]
-        }
-      ],
-      "note": "Deletion-only correction is live-verified after the Gallery architecture compatibility fix. No new literature admission or retained-paper mutation was performed; pending backlogs and discovery closure remain unchanged."
+      "retainedDoisVerified": 797,
+      "verificationRun": "37254390068",
+      "verificationFile": "audit/scope-rechecks/scope-correction-20261005012904928-live-verified.json"
     },
     "tocVerification": {
       "webpageDoiCount": 797,
       "verifiedAt": "2026-10-05T01:48:48Z"
-    },
-    "syncType": "scope-correction"
+    }
   },
   "verifiedThrough": "2026-09-18",
   "capabilityRegistry": "audit/literature-capability.json",
@@ -935,7 +916,7 @@
   "lastScopeCorrection": {
     "id": "scope-correction-20261005012904928",
     "mode": "deletion-only",
-    "status": "deployed_verified",
+    "status": "verified",
     "correctedAt": "2026-10-05T01:29:04.928Z",
     "removedDois": [
       "10.1039/d6gc04274k"
@@ -952,7 +933,13 @@
     "retainedCards": 797,
     "removedDoisVerifiedAbsent": [
       "10.1039/d6gc04274k"
-    ]
+    ],
+    "deploymentVerifiedAt": "2026-10-05T02:12:35.820Z",
+    "verificationFile": "audit/scope-rechecks/scope-correction-20261005012904928-live-verified.json",
+    "verificationRun": "37254390068",
+    "repositoryDois": 797,
+    "deployedDois": 797,
+    "exactDoiSetMatch": true
   },
   "lastAdmissionWebsiteSync": {
     "finishedAt": "2026-09-23T08:15:41+08:00",

@@ -2,24 +2,32 @@
   "schemaVersion": 1,
   "ok": true,
   "context": "Post-deployment scope-correction reconciliation",
-  "checkedAt": "2026-10-05T01:48:48Z",
-  "finishedAt": "2026-10-05T01:48:48Z",
-  "sourceCommit": "21b6f38e05760108ad853abdeb2b7d3c44ec0a54",
+  "checkedAt": "2026-10-05T02:12:35.608Z",
+  "finishedAt": "2026-10-05T02:12:35.820Z",
+  "sourceCommit": "5a426bf0ae817f45c7dfb3133009bcfb39752a19",
   "markerCommit": "e95a6a4d3ece2354a63e05f38b54b21981f792cd",
-  "markerBlobSha": "486ea67bdddca002293fa3ec910b5a28c7128e87",
-  "datasetSha256": "9ae042967e38bea2ef418682c3684df600d8ba6e942441c73687328e95551d1e",
   "correctionId": "scope-correction-20261005012904928",
-  "productionCards": 797,
+  "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery",
+  "repositoryDois": 797,
+  "deployedDois": 797,
   "exactDoiSetMatch": true,
   "removedDoisAbsent": [
     "10.1039/d6gc04274k"
   ],
   "retainedDoisVerified": 797,
-  "verificationRun": 37252457388,
-  "canonicalOriginVerified": true,
-  "pagesOriginVerified": true,
+  "requiredDeployedFiles": [
+    "papers.gz.b64",
+    "total-synthesis.json",
+    "manual-supplement.json",
+    "final-audit-supplement.json",
+    "curated-supplement.json",
+    "automation-supplement.json",
+    "rolling-supplement.json",
+    "literature-supplement.json"
+  ],
+  "verificationRun": "37254390068",
+  "upstreamPagesRun": "37254033072",
   "productionDataModified": false,
   "semanticReviewReperformed": false,
-  "mediaFetched": false,
-  "note": "The successful Pages deployment verified the built literature on canonical and Pages origins; an additional cache-busted live release-delivery check confirmed 797 cards and absence of the removed DOI."
+  "mediaFetched": false
 }
