@@ -1,7 +1,7 @@
 {
-  "requestId": "wechat-daily-2026-10-05-evidence-led-mobile-0718",
-  "requestedAt": "2026-10-05T07:18:00Z",
+  "requestId": "wechat-daily-2026-10-05-square-cover-crop-fix-0722",
+  "requestedAt": "2026-10-05T07:22:00Z",
   "publicationDate": "2026-10-05",
   "action": "sync_daily_draft",
-  "reason": "User QA: keep >5 textual list compressed but show several real Gallery mini-cards; shorten daily-feature copy and interleave figures; rebuild the retrospective as a separate second card with a dedicated square thumbnail; remove invented 'smart' relationships and make all editorial logic follow the paper's actual evidence."
+  "reason": "Retry after WeChat errcode 53401: keep the dedicated 1:1 MacMillan secondary-card cover, but provide a valid centered 2.35:1 crop geometry while preserving the full square 1:1 crop."
 }
