@@ -1276,7 +1276,7 @@ def build_gallery_jump_card(
     uploaded_urls: dict[str, str],
     qr_url: str,
 ) -> str:
-    """WeChat-safe jump block: real new-paper miniature on the left, QR on the right."""
+    """WeChat-safe Gallery entry: a faithful miniature of today's real card + QR."""
     if not qr_url or not papers:
         return ""
 
@@ -1286,47 +1286,64 @@ def build_gallery_jump_card(
     card_title_en = str(card.get("title") or "")
     journal = str(card.get("journal") or "")
     doi = normalize_doi(card.get("doi"))
-    visual = uploaded_urls.get("fig1") or uploaded_urls.get("scope") or ""
+    authors = ", ".join(str(x) for x in (card.get("authors") or []) if str(x).strip())
+    visual = uploaded_urls.get("fig1") or ""
 
-    visual_html = (
-        f"<img src='{esc(visual)}' style='display:block;width:100%;height:auto;"
-        "max-height:142px;object-fit:contain;margin:0 0 8px;background:#fff;'/>"
-        if visual else
-        "<div style='height:62px;border-radius:6px;background:#f4f6fa;margin:0 0 8px;"
-        "display:flex;align-items:center;justify-content:center;color:#9aa3b2;font-size:11px;'>"
-        "Organic Synthesis Gallery</div>"
-    )
+    if visual:
+        visual_html = (
+            f"<img src='{esc(visual)}' style='display:block;width:100%;height:116px;"
+            "object-fit:contain;margin:8px 0 8px;background:#fff;border:1px solid #e3e8f1;"
+            "border-radius:7px;'/>"
+        )
+    else:
+        visual_html = (
+            "<div style='height:78px;border:1px solid #e3e8f1;border-radius:7px;"
+            "background:#f8fafc;margin:8px 0;display:flex;align-items:center;"
+            "justify-content:center;color:#98a2b3;font-size:10px;'>今日新增文献卡片</div>"
+        )
 
+    # Keep the block close to the real Gallery card: metadata pills, title,
+    # authors, article visual and DOI. The right column is only the jump QR.
     return (
-        "<section style='margin:16px 0 23px;'>"
+        "<section style='margin:15px 0 24px;'>"
         "<table role='presentation' cellpadding='0' cellspacing='0' style='width:100%;"
-        "border-collapse:separate;border-spacing:0;background:#f7f9fc;border:1px solid #e3e7ef;"
-        "border-radius:10px;overflow:hidden;'>"
+        "border-collapse:separate;border-spacing:0;background:#f7f9fc;border:1px solid #dfe5ef;"
+        "border-radius:12px;overflow:hidden;'>"
         "<tr>"
-        "<td style='width:70%;vertical-align:middle;padding:12px 10px 12px 12px;'>"
-        "<section style='background:#fff;border:1px solid #e3e7ef;border-radius:8px;padding:9px;'>"
-        f"{visual_html}"
-        f"<p style='font-size:10px;color:#3159bd;font-weight:700;letter-spacing:.05em;margin:0 0 4px;'>"
-        f"{esc(journal)} · 今日新增</p>"
-        f"<p style='font-size:13px;line-height:1.5;font-weight:700;color:#222;margin:0 0 4px;'>{esc(card_title)}</p>"
+        "<td style='width:68%;vertical-align:middle;padding:11px 8px 11px 11px;'>"
+        "<section style='background:#fff;border:1px solid #dfe5ef;border-radius:10px;padding:10px;'>"
+        "<p style='margin:0 0 6px;line-height:1.2;'>"
+        "<span style='display:inline-block;font-size:9px;font-weight:700;color:#8b5a08;"
+        "background:#fff0cf;border-radius:999px;padding:3px 6px;margin-right:4px;'>每日精选</span>"
+        f"<span style='display:inline-block;font-size:9px;font-weight:700;color:#3159bd;"
+        f"background:#eef3ff;border-radius:999px;padding:3px 6px;margin-right:4px;'>{esc(journal)}</span>"
+        f"<span style='display:inline-block;font-size:9px;color:#667085;background:#f4f5f7;"
+        f"border-radius:999px;padding:3px 6px;'>{esc(publication_date)}</span>"
+        "</p>"
+        f"<p style='font-size:13px;line-height:1.45;font-weight:700;color:#222;margin:0 0 3px;'>{esc(card_title)}</p>"
         + (
             f"<p style='font-size:9px;line-height:1.35;color:#8a93a3;margin:0 0 4px;'>{esc(card_title_en)}</p>"
             if card_title_en and card_title_en != card_title else ""
         )
-        + f"<p style='font-size:9px;color:#a0a6b0;margin:0;'>DOI {esc(doi)}</p>"
+        + (
+            f"<p style='font-size:9px;line-height:1.35;color:#667085;margin:0 0 2px;'>{esc(authors)}</p>"
+            if authors else ""
+        )
+        + visual_html
+        + f"<p style='font-size:8px;color:#98a2b3;margin:0;word-break:break-all;'>DOI {esc(doi)}</p>"
         "</section>"
         "</td>"
-        "<td style='width:30%;vertical-align:middle;text-align:center;padding:12px 12px 12px 4px;'>"
-        f"<img src='{esc(qr_url)}' style='display:block;width:118px;max-width:100%;height:auto;margin:0 auto 7px;"
-        "background:#fff;border-radius:5px;'/>"
-        "<p style='font-size:11px;line-height:1.45;font-weight:700;color:#3159bd;margin:0;'>扫码进入网页</p>"
+        "<td style='width:32%;vertical-align:middle;text-align:center;padding:12px 11px 12px 5px;'>"
+        f"<img src='{esc(qr_url)}' style='display:block;width:132px;max-width:100%;height:auto;"
+        "margin:0 auto 8px;background:#fff;border:7px solid #fff;border-radius:8px;'/>"
+        "<p style='font-size:12px;line-height:1.4;font-weight:700;color:#3159bd;margin:0 0 3px;'>扫码进入网页</p>"
+        "<p style='font-size:9px;line-height:1.45;color:#8a93a3;margin:0;'>查看今日新增</p>"
         "</td>"
         "</tr></table>"
-        "<p style='font-size:11px;color:#777;line-height:1.65;margin:7px 2px 0;text-align:center;'>"
-        "扫码进入有机合成文献库，查看今日全部新增，并继续搜索、筛选更多文献。</p>"
+        "<p style='font-size:11px;color:#777;line-height:1.6;margin:7px 2px 0;text-align:center;'>"
+        "前往有机合成文献库查看今日全部新增，并按期刊、日期或关键词继续搜索与筛选。</p>"
         "</section>"
     )
-
 
 def prepare_featured_cover(featured: dict | None, override_pdf: str = "") -> Path | None:
     if not featured:
