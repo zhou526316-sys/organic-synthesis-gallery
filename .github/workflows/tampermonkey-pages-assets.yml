@@ -78,9 +78,9 @@ jobs:
           node cloudflare/scripts/build-cloudflare-bridge.mjs
           node cloudflare/scripts/build-bridge-loader.mjs
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.44' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.45' public/gallery-vpn-bridge.user.js
           grep -F "PUBLISHER_MEDIA_REVISION = '20261004-rsc-elsevier-ccs-v9'" public/gallery-vpn-bridge.user.js
-          grep -F "PUBLISHER_TASK_BINDING_REVISION = '20261004-elsevier-bound-task-v3'" public/gallery-vpn-bridge.user.js
+          grep -F "PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'" public/gallery-vpn-bridge.user.js
           grep -F "rsc_graphical_abstract" public/gallery-vpn-bridge.user.js
           grep -F "ccs_toc_index_key_image" public/gallery-vpn-bridge.user.js
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
@@ -135,7 +135,7 @@ jobs:
               try{
                 const r=await fetch(u,{headers:{'cache-control':'no-cache'}});
                 const t=await r.text();last='status='+r.status+' bytes='+t.length;
-                ok=r.ok&&t.includes('// @version      2.2.44')&&t.includes("PUBLISHER_MEDIA_REVISION = '20261004-rsc-elsevier-ccs-v9'")&&t.includes("PUBLISHER_TASK_BINDING_REVISION = '20261004-elsevier-bound-task-v3'")&&t.includes('rsc_graphical_abstract')&&t.includes('ccs_toc_index_key_image')&&t.includes("PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'");
+                ok=r.ok&&t.includes('// @version      2.2.45')&&t.includes("PUBLISHER_MEDIA_REVISION = '20261004-rsc-elsevier-ccs-v9'")&&t.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'")&&t.includes('rsc_graphical_abstract')&&t.includes('ccs_toc_index_key_image')&&t.includes("PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'");
                 if(ok)break;
               }catch(e){last=String(e)}
               await sleep(3000);
