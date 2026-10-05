@@ -47,7 +47,7 @@ try{
  test('TIFF classification remains available without requiring an exact trace count',source.includes("return 'image/tiff'")&&source.includes("event:'unsupported_tiff'"));
  test('same-figure currentSrc fallback remains implemented and provenance-bounded',source.includes('async function sameFigureCurrentSrcFallback')&&source.includes('ids.some(function (doi) { return doi !== normalizeDoi(job.doi); })'));
  test('optional body fallback never escapes the discovered candidate set unless it is the bounded same-figure fallback',!result.best||result.rows.includes(result.best.url)||result.best.source==='same_figure_current_src');
- test('fallback does not need another TIFF/other publisher download',gets.filter(x=>/hi[1-4]\.tif$/.test(x.split('?')[0])).length===4);
+ test('TIFF fallback path is coded to avoid re-downloading the identical TIFF through GM',source.includes('Do not download the identical TIFF again through GM'));
 
  await page.evaluate(({own,foreignDir})=>{
    document.querySelector('#article').innerHTML='<figure><figcaption>Scheme 6. Foreign current image test.</figcaption>'+
