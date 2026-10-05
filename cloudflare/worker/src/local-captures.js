@@ -65,12 +65,25 @@ function captureBelongsToDoi(item, doi) {
   return embedded.every(value => value === target);
 }
 
+function invalidRscFirstPagePreviewCapture(item) {
+  const doi = normalizeDoi(item?.doi || '');
+  if (!doi?.startsWith('10.1039/')) return false;
+  const source = String(item?.sourceUrl || '').toLowerCase();
+  const caption = String(item?.caption || '').toLowerCase();
+  return /\/jam\//.test(source)
+    || /\.pdf\.gif(?:[?#]|$)/.test(source)
+    || /first\s*page\s*(?:preview|of\b)|firstpagepreviewimage|article\s+pdf\s+first\s+page\s+preview|accepted\s+manuscript|author\s+accepted\s+manuscript/.test(caption);
+}
+
 function captureIntakeError(payload, doi) {
   if (payload?.captureVersion !== '6.2.20') return 'capture_client_upgrade_required';
   if (!/^[a-z0-9-]{16,80}$/i.test(String(payload?.jobId || ''))) return 'capture_job_binding_missing';
   if (normalizeDoi(payload?.pageDoi || '') !== doi) return 'capture_page_doi_unverified';
   if (!safeUrl(payload?.articleUrl) || !safeUrl(payload?.sourceUrl)) return 'capture_source_evidence_missing';
   if (!captureBelongsToDoi(payload, doi)) return 'media_source_doi_mismatch';
+  if (String(payload?.kind || '').toLowerCase() === 'official' && invalidRscFirstPagePreviewCapture(payload)) {
+    return 'rsc_first_page_preview_rejected';
+  }
   return '';
 }
 
@@ -1035,6 +1048,7 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
   let promoted = 0;
   let alreadyCurrent = 0;
   let failed = 0;
+  let invalidatedRscPreviews = 0;
   let scanned = 0;
   const failures = [];
   const slice = candidates.slice(offset, offset + scanLimit);
@@ -1044,8 +1058,20 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
     scanned += 1;
     const doi = normalizeDoi(item.doi);
     const current = await env.DB.prepare(
-      'SELECT available, r2_key, updated_at FROM toc_assets WHERE doi = ? LIMIT 1'
+      'SELECT available, r2_key, content_hash, updated_at FROM toc_assets WHERE doi = ? LIMIT 1'
     ).bind(doi).first();
+    if (invalidRscFirstPagePreviewCapture(item)) {
+      if (current && item.contentHash && current.content_hash === item.contentHash) {
+        const now = Date.now();
+        await env.DB.prepare(
+          `UPDATE toc_assets
+           SET available = 0, reason = 'rsc_first_page_preview_rejected', checked_at = ?, updated_at = ?
+           WHERE doi = ? AND content_hash = ?`
+        ).bind(now, now, doi, item.contentHash).run();
+        invalidatedRscPreviews += 1;
+      }
+      continue;
+    }
     if (current && Number(current.available) === 1 && current.r2_key && Number(current.updated_at || 0) >= MEDIA_REBUILD_EPOCH) {
       alreadyCurrent += 1;
       continue;
@@ -1085,6 +1111,7 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
       promoted,
       alreadyCurrent,
       failed,
+      invalidatedRscPreviews,
       scanned,
       candidates: candidates.length,
       limit,
@@ -1104,7 +1131,12 @@ export async function getLocalCaptureIndex(request, env) {
   const rawItems = Object.values(index.items || {});
   const validItems = rawItems.filter(item => {
     const doi = normalizeDoi(item?.doi);
-    return Boolean(doi && Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH && captureBelongsToDoi(item, doi));
+    return Boolean(
+      doi &&
+      Number(item?.updatedAt || 0) >= MEDIA_REBUILD_EPOCH &&
+      captureBelongsToDoi(item, doi) &&
+      !invalidRscFirstPagePreviewCapture(item)
+    );
   });
   const items = validItems.map(item => ({
     ...item,
@@ -1137,7 +1169,7 @@ export async function purgeCrossDoiLocalMedia(env, payload = {}) {
   });
   const badLocal = Object.entries(localIndex.items || {}).filter(([, item]) => {
     const doi = normalizeDoi(item?.doi);
-    return !doi || !captureBelongsToDoi(item, doi);
+    return !doi || !captureBelongsToDoi(item, doi) || invalidRscFirstPagePreviewCapture(item);
   });
   const affectedDois = [...new Set([...badStage, ...badLocal]
     .map(([, item]) => normalizeDoi(item?.doi))

@@ -54,6 +54,16 @@ try{
     assert.equal(result.fig.label,'Figure 1');assert.equal(result.fig.official,false);
   });
 
+  await tc('RSC Accepted Manuscript first-page preview is never accepted as TOC',async()=>{
+    const rows=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<section><h2>Graphical abstract</h2><div class="firstPagePreviewImage widget-FirstPagePreview"><img alt="First page of accepted manuscript" src="https://rscj.silverchair-cdn.com/rscj/content_public/journal/sc/jam/10.1039_d6sc06874j/1/d6sc06874j.pdf.gif"></div></section>';
+      return T.rscGraphicalAbstractCandidates({doi:'10.1039/d6sc06874j',publisher:'rsc'},root,'https://pubs.rsc.org/sc/article/doi/10.1039/D6SC06874J/example')
+        .map(x=>({url:x.url,source:x.source}));
+    });
+    assert.deepEqual(rows,[]);
+  });
+
   await tc('Chem graphical abstract is isolated from numbered figures',async()=>{
     const result=await page.evaluate(()=>{
       const root=document.querySelector('#fixture');
@@ -114,6 +124,7 @@ try{
     assert.ok(source.includes("'https://www.sciencedirect.com/science/article/pii/' + pii[1]"));
     assert.ok(source.includes("publisher === 'rsc'"));
     assert.ok(source.includes("rscArticleHtmlUrl(job)"));
+    assert.ok(source.includes("job.opportunisticFigures===true"));
     assert.ok(source.includes("job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='rsc'||job.publisher==='ccs'"));
     assert.ok(source.includes("ccsTocIndexCandidatesFromDocument(job,doc,current)"));
     assert.ok(source.includes("https://api.crossref.org/works/"));
@@ -143,8 +154,8 @@ try{
 
   await tc('capture protocol and core controller stay unchanged',async()=>{
     assert.ok(source.includes("var VERSION = '6.2.20'"));
-    assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.40'"));
-    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'"));
+    assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.41'"));
+    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v12'"));
     assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'"));
   });
 }finally{await browser.close()}

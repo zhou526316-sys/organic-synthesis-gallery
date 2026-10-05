@@ -925,8 +925,49 @@ async function hydrateMediaBatch(): Promise<void> {
   }
 }
 
+function ccsTocFallbackIsInvalid(slot: HTMLElement, result: TocResponse): boolean {
+  const doi = normalizeDoi(slot.dataset.doi);
+  if (!doi?.toLowerCase().startsWith('10.31635/')) return false;
+  const kind = result.primary?.kind || '';
+  const reason = result.reason || '';
+  return kind === 'figure1'
+    || kind === 'article_figure'
+    || reason === 'figure1_fallback'
+    || reason.startsWith('figure_fallback:');
+}
+
+function renderPendingToc(slot: HTMLElement, ccsOfficialOnly = false): void {
+  const graphic = document.createElement('div');
+  graphic.className = 'generated-article-graphic';
+  const journal = document.createElement('div');
+  journal.className = 'generated-graphic-journal';
+  journal.textContent = slot.dataset.journal || '';
+  const title = document.createElement('div');
+  title.className = 'generated-graphic-title';
+  title.textContent = slot.dataset.title || '';
+  const status = document.createElement('div');
+  status.className = 'generated-graphic-status';
+  status.textContent = ccsOfficialOnly
+    ? (language === 'zh' ? '正在获取 CCS 官方 TOC' : 'Fetching official CCS TOC')
+    : t('fetching');
+  graphic.append(journal, title, status);
+  slot.replaceChildren(graphic);
+  slot.classList.remove('loaded');
+  slot.classList.add('generated');
+  slot.dataset.state = 'idle';
+}
+
 function renderToc(slot: HTMLElement, result: TocResponse): void {
-  if (!result.available || !result.imageUrl) return;
+  const doi = normalizeDoi(slot.dataset.doi);
+  const isCcs = Boolean(doi?.toLowerCase().startsWith('10.31635/'));
+  if (ccsTocFallbackIsInvalid(slot, result)) {
+    renderPendingToc(slot, true);
+    return;
+  }
+  if (!result.available || !result.imageUrl) {
+    if (isCcs) renderPendingToc(slot, true);
+    return;
+  }
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'toc-link';
@@ -964,11 +1005,16 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
 
 function renderFigures(slot: HTMLElement, result: FigureResponse): void {
   if (!result.available || !result.figures.length) {
-    const doi = normalizeDoi(slot.dataset.figureDoi);
-    const remembered = doi ? tocCache.get(doi.toLowerCase())?.result : undefined;
-    if (remembered?.available && remembered.imageUrl) renderFigureFallback(slot, remembered.imageUrl);
+    // Never duplicate the TOC/card graphic into the body-figure strip. A missing
+    // body figure is different from a missing card visual and must stay honest.
+    slot.replaceChildren();
+    slot.hidden = true;
+    slot.classList.remove('loaded');
+    slot.classList.add('generated');
+    slot.dataset.state = 'empty';
     return;
   }
+  slot.hidden = false;
   const heading = document.createElement('div');
   heading.className = 'figure-strip-heading';
   heading.textContent = t('figures');
@@ -1018,28 +1064,6 @@ function renderFigures(slot: HTMLElement, result: FigureResponse): void {
   slot.classList.add('loaded');
   slot.dataset.state = 'done';
   requestAnimationFrame(syncNav);
-}
-
-function renderFigureFallback(slot: HTMLElement, imageUrl: string): void {
-  const heading = document.createElement('div');
-  heading.className = 'figure-strip-heading';
-  heading.textContent = t('figures');
-  const strip = document.createElement('div');
-  strip.className = 'figure-strip';
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'figure-thumb';
-  const image = new Image();
-  image.src = imageUrl;
-  image.alt = t('articleGraphic');
-  const label = document.createElement('span');
-  label.textContent = t('articleGraphic');
-  button.append(image, label);
-  button.addEventListener('click', () => openLightbox(imageUrl, t('articleGraphic')));
-  strip.appendChild(button);
-  slot.replaceChildren(heading, strip);
-  slot.classList.add('loaded');
-  slot.dataset.state = 'fallback';
 }
 
 function openLightbox(imageUrl: string, alt: string, caption?: string): void {
