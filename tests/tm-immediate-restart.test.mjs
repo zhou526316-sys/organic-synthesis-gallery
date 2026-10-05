@@ -9,7 +9,7 @@ const articles=[{doi:'10.1038/s41586-026-old',journal:'Nature',addedDate:'2026-0
  {doi:'10.1021/jacs.6c90002',journal:'JACS',addedDate:'2026-10-01',date:'2026-10-01'},
  {doi:'10.1002/anie.90001',journal:'Angew',addedDate:'2026-10-01',date:'2026-10-01'}];
 const queue={articles,latestAddedDate:'2026-10-01',generatedAt:'2026-10-01T05:00:00Z',webpageDoiCount:3,mediaGeneration:1790082000000};
-const caps={captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',mediaControllerRevision:'2.2.39',evidenceSchemaVersion:'article-evidence-v2'};
+const caps={captureVersion:'6.2.20',mediaGeneration:1790082000000,mode:'verified-staging',mediaControllerRevision:'2.2.40',evidenceSchemaVersion:'article-evidence-v2'};
 function h(opt={}){
  const store=opt.store||new Map(),listeners=opt.listeners||[],badges=[],opened=[],requests=[],timers=new Map(),reports=[],clock=opt.clock||{now:1790827200000};let id=0,c;
  class D extends Date{constructor(...a){super(...(a.length?a:[clock.now]));}static now(){return clock.now;}}

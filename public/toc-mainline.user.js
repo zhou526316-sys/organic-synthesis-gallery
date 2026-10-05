@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.30
+// @version      6.2.31
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -43,7 +43,7 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.39';
+  var CONTROLLER_REVISION = '2.2.40';
   var CAPTURE_HOTFIX_REVISION = '20261001-newest-retry-v1';
   var CONTROLLER_LIFECYCLE_REVISION = '20261001-controller-recovery-v2';
   var controllerResumeTimer = null;
@@ -53,7 +53,7 @@
   var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.30';
+  var INSTALL_REVISION = '6.2.31';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -4248,7 +4248,7 @@ function embeddedJobDois(value) {
       if(!await acquireLease()) {badge(controllerPaused()?'媒体抓取已暂停':'另一个 Gallery 控制页正在运行','#6b7280');return;}
       renew=setInterval(renewLease,15000);
       var caps=await getJson(WORKER+'/api/media/capture-capabilities');
-      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.39')throw new Error('capture_server_upgrade_pending');
+      if(caps.captureVersion!==VERSION||caps.mediaGeneration!==1790082000000||caps.mode!=='verified-staging'||caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION||String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'||String(caps.mediaControllerRevision||'')!=='2.2.40')throw new Error('capture_server_upgrade_pending');
       var queue=await getJson(QUEUE_URL+'?ts='+Date.now());
       var architectureMembership=await observeArchitectureMembership(queue);
       var queueCheckedAt=Date.now();

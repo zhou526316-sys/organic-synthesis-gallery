@@ -72,7 +72,7 @@ await test('CCS backend origin accepted without broadening to impostor hosts',()
  const allowed=vm.runInNewContext(evidence.slice(st,en)+';publisherUrlAllowed',{URL});
  assert.equal(allowed('ccs','https://www.chinesechemsoc.org/doi/full/10.31635/test'),true);assert.equal(allowed('ccs','https://chinesechemsoc.org.evil.example/doi/full/10.31635/test'),false);assert.equal(allowed('acs','https://www.chinesechemsoc.org/doi/full/10.1021/test'),false);
 });
-await test('protocol, version, generation and ownership guards remain',()=>{for(const text of ["var CONTROLLER_REVISION = '2.2.39';","var VERSION = '6.2.20';",'capture_job_stale_or_unbound','capture_tab_job_mismatch','media_source_doi_mismatch','page_doi_mismatch',"caps.mediaGeneration!==1790082000000","String(caps.mediaControllerRevision||'')!=='2.2.39'"])assert.ok(source.includes(text),text);});
+await test('protocol, version, generation and ownership guards remain',()=>{for(const text of ["var CONTROLLER_REVISION = '2.2.40';","var VERSION = '6.2.20';",'capture_job_stale_or_unbound','capture_tab_job_mismatch','media_source_doi_mismatch','page_doi_mismatch',"caps.mediaGeneration!==1790082000000","String(caps.mediaControllerRevision||'')!=='2.2.40'"])assert.ok(source.includes(text),text);});
 await test('provenance errors retain six-hour protection',()=>assert.equal(api.overnightRetryEligible(prior(45,1,'media_source_doi_mismatch'),now),false));
 await test('Retry-After travels through media/evidence completion receipts',()=>{assert.equal((source.match(/result.retryAfterMs=Math.max\(Number\(result.retryAfterMs/g)||[]).length,3);assert.ok(source.includes('retryAfterMs:Number(error&&error.retryAfterMs||0)'));});
 console.log(JSON.stringify({passed,productionWrites:0,hotfix:'20261001-newest-retry-v1'}));

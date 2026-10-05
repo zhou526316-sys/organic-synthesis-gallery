@@ -37,7 +37,7 @@ jobs:
               const r=await fetch(url+suffix,{...init,headers:{origin:'https://gallery.gczhouwld.com','cache-control':'no-cache',...(init.headers||{})},signal:AbortSignal.timeout(30000)});
               row.status=r.status;row.allowOrigin=r.headers.get('access-control-allow-origin');
               const text=await r.text();
-              if(key.endsWith('installer')){row.sha256=createHash('sha256').update(text).digest('hex');row.bytes=Buffer.byteLength(text);row.matchesTested=row.sha256===expected;row.marker=text.includes("var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';");row.panelMarker=text.includes('缺项补抓4');row.button=text.includes('立即开始任务（只补缺项）');row.version=(text.match(/@version\s+(\S+)/)||[])[1];}
+              if(key.endsWith('installer')){row.sha256=createHash('sha256').update(text).digest('hex');row.bytes=Buffer.byteLength(text);row.matchesTested=row.sha256===expected;row.marker=text.includes("var MISSING_CAPTURE_REVISION = '20261005-toc-pdf-only-v5';");row.panelMarker=text.includes('缺项补抓4');row.button=text.includes('立即开始任务（只补缺项）');row.version=(text.match(/@version\s+(\S+)/)||[])[1];}
               else if(r.ok){const x=JSON.parse(text);
                 if(key==='stage_inventory')row.data={schemaVersion:x.schemaVersion,mediaGeneration:x.mediaGeneration,complete:x.complete,count:x.count,actualItems:(x.items||[]).length,figureReceipts:(x.items||[]).reduce((n,v)=>n+Object.keys(v.figures||{}).length,0),sample:(x.items||[]).filter(v=>v.doi==='10.1021/jacs.6c12163').map(v=>({doi:v.doi,expectedFigureCount:v.expectedFigureCount,storedFigureLabels:Object.keys(v.figures||{})}))};
                 else if(key==='production_inventory')row.data={items:(x.items||[]).map(v=>({doi:v.doi,figureCount:v.figureCount,tocStored:v.tocStored,capturedFiguresPresent:Array.isArray(v.capturedFigures),capturedFigureCount:(v.capturedFigures||[]).length}))};
@@ -70,10 +70,10 @@ jobs:
             report.deployments=await deployments();
             const p=Object.fromEntries(report.probes.map(x=>[x.key,x]));
             report.passed=report.deployments.length===2&&report.deployments.every(x=>x.conclusion==='success')
-              &&['canonical_installer','worker_installer'].every(k=>p[k].status===200&&p[k].matchesTested&&p[k].marker&&p[k].panelMarker&&p[k].button&&p[k].version==='2.2.39')
+              &&['canonical_installer','worker_installer'].every(k=>p[k].status===200&&p[k].matchesTested&&p[k].marker&&p[k].panelMarker&&p[k].button&&p[k].version==='2.2.50')
               &&p.stage_inventory.status===200&&p.stage_inventory.data?.schemaVersion==='capture-inventory-v1'&&p.stage_inventory.data?.complete===true&&p.stage_inventory.data?.count===p.stage_inventory.data?.actualItems&&p.stage_inventory.data?.mediaGeneration===1790082000000
               &&p.production_inventory.status===200&&p.production_inventory.data?.items?.length===1&&p.production_inventory.data.items[0].capturedFiguresPresent
-              &&p.capabilities.data?.captureVersion==='6.2.20'&&p.capabilities.data?.mediaControllerRevision==='2.2.39'&&p.capabilities.data?.mediaGeneration===1790082000000
+              &&p.capabilities.data?.captureVersion==='6.2.20'&&p.capabilities.data?.mediaControllerRevision==='2.2.40'&&p.capabilities.data?.mediaGeneration===1790082000000
               &&p.private_evidence_without_auth.status===401;
           }catch(e){report.errors.push(String(e.message).slice(0,180));report.passed=false;}
           report.verifiedAt=new Date().toISOString();

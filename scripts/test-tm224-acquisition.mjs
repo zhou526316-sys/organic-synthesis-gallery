@@ -129,6 +129,6 @@ try{
  test('body discovery waits four quiet seconds after the latest figure-set change',discovery.bodyStillChanging===false&&discovery.bodyStable===true);
  test('TOC-only discovery keeps the legacy early-stable behavior',discovery.tocJobLegacy===true);
  test('opportunistic body failure cannot downgrade TOC queue completion',source.includes('var figuresRequired=job.captureFigures===true;')&&source.includes("if(!figuresRequired){\n        result.status=tocOk?'success':'failed';"));
- test('controller revision is current without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.39';"));
+ test('controller revision is current without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.40';"));
 }finally{await browser.close();}
 console.log('TM224_ACQUISITION_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherFixtureOnly:true,captureProtocol:'6.2.20'}));
