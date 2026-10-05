@@ -254,7 +254,7 @@
     var details = document.createElement('details');
     details.open = GM_getValue(LIVE_PANEL_KEY, true) !== false;
     var heading = document.createElement('summary');
-    heading.textContent = '抓取实时进度 · ' + CONTROLLER_REVISION + ' · 全队列补缺6 · 图源适配7';
+    heading.textContent = '抓取实时进度 · ' + CONTROLLER_REVISION + ' · TOC/PDF补缺8 · PDF可见1';
     details.appendChild(heading);
     var main = document.createElement('main');
     var immediate = document.createElement('button');
@@ -3411,8 +3411,8 @@ function embeddedJobDois(value) {
       if (!token) throw new Error('write_token_missing');
       if(!wantsToc && !wantsFigures && !wantsEvidence && job.capturePrivatePdf===true){
         result.toc={status:'not_requested'};result.figures.status='not_requested';result.fulltext={status:'not_requested'};
-        result.status='success';result.reason='private_pdf_side_channel;published=0';
-        captureLiveUpdate(job,'finished');
+        result.status='pending';result.reason='private_pdf_side_channel;pdf=pending;published=0';
+        captureLiveUpdate(job,'discovering',{pdfStatus:'checking_lease'});
         return finishPairedJob(job,result,trace,token);
       }
       if(!wantsToc && !wantsFigures && wantsEvidence){
