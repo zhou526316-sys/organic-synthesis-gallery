@@ -851,7 +851,6 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
   const cardImageUrl = result.primary?.thumbnailImageUrl || result.primary?.previewImageUrl || result.imageUrl;
   button.dataset.masterSrc = masterImageUrl;
   const image = new Image();
-  image.src = cardImageUrl;
   image.alt = result.primary?.label || t('toc');
   image.className = 'toc-image';
   const rect = slot.getBoundingClientRect();
@@ -859,6 +858,7 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
   image.loading = priority ? 'eager' : 'lazy';
   image.decoding = 'async';
   if (priority) image.setAttribute('fetchpriority', 'high');
+  image.src = cardImageUrl;
   image.decoding = 'async';
   const label = document.createElement('span');
   label.className = 'toc-label';
