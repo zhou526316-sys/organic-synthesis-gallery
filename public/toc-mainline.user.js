@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.25
+// @version      6.2.26
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -51,9 +51,9 @@
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
   var PUBLISHER_MEDIA_REVISION = '20261004-rsc-elsevier-ccs-v9';
-  var PUBLISHER_TASK_BINDING_REVISION = '20261004-elsevier-bound-task-v3';
+  var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.25';
+  var INSTALL_REVISION = '6.2.26';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -507,6 +507,19 @@ function embeddedJobDois(value) {
     return normalizeDoi(job.doi);
   }
 
+  function publisherBindGraceMs(job) {
+    var publisher=String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)));
+    if(publisher==='elsevier')return 45000;
+    if(publisher==='rsc')return 30000;
+    return 4000;
+  }
+
+  function publisherBindingInterstitial() {
+    var title=String(document.title||'');
+    var text=String(document.body&&document.body.innerText||'').slice(0,4000);
+    return /请稍候|请稍等|正在加载|正在检查|正在验证|please\s+(?:wait|stand\s+by)|just\s+a\s+moment|checking\s+(?:your\s+browser|access)|verifying\s+(?:your\s+browser|access)/i.test(title+'\n'+text);
+  }
+
   async function bindPublisherCaptureJob(job) {
     var match = String(location.hash || '').match(/(?:^#|&)osg-job=([a-z0-9-]{16,80})(?:&|$)/i);
     var binding = '';
@@ -515,13 +528,24 @@ function embeddedJobDois(value) {
       binding = sessionStorage.getItem(P + 'tab-job-binding') || '';
     } catch (_) {}
     if (!job.jobId || binding !== job.jobId) throw new Error('capture_tab_job_mismatch');
-    for (var i = 0; i < 8; i += 1) {
+    var started=Date.now(),deadline=started+publisherBindGraceMs(job),lastError=null;
+    while(Date.now()<deadline){
       try { return assertBoundCaptureJob(job); }
       catch (error) {
-        if (String(error.message) !== 'page_doi_unverified' || i === 7) throw error;
-        await sleep(400);
+        lastError=error;
+        if(String(error.message)!=='page_doi_unverified')throw error;
+        var publisher=String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)));
+        var interstitial=publisherBindingInterstitial();
+        var bodyLength=String(document.body&&document.body.innerText||'').length;
+        if(!interstitial&&Date.now()-started>8000&&bodyLength>1200)throw error;
+        if(publisher==='elsevier'||publisher==='rsc'){
+          writePublisherHeartbeat(job,'publisher_binding_wait');
+          GM_setValue(progressKey(job.doi),{jobId:job.jobId,status:'publisher_binding_wait',at:nowIso(),url:location.href,version:VERSION,host:location.hostname});
+        }
+        await sleep(Math.min(1500,Math.max(250,deadline-Date.now())));
       }
     }
+    throw lastError||new Error('page_doi_unverified');
   }
 
   function candidateBelongsToJob(url, job) {
@@ -867,6 +891,7 @@ function embeddedJobDois(value) {
         version: String(progress.version || ''),
         host: String(progress.host || '')
       } : null,
+      privatePdfCapture: typeof privatePdfLeaseDiagnostics==='function' ? privatePdfLeaseDiagnostics() : {state:'unavailable',present:false,expiresAt:0,receivedAt:0,revision:''},
       publisherHeartbeat: (function () {
         var hb = GM_getValue(HEARTBEAT_KEY, null);
         if (!hb) return null;
@@ -2416,7 +2441,7 @@ function embeddedJobDois(value) {
     // Science/AAAS may expose some article text behind an explicit "Check access"
     // overlay. That gate must win over text length; otherwise the page looks loaded
     // and the controller repeatedly scans a document that cannot expose its media.
-    var accessGate = /\b(?:check|checking|verify|verifying)\s+(?:your\s+)?access\b|\baccess\s+(?:check|verification)\b|please\s+(?:wait|stand by).{0,80}(?:access|verification)/i.test(gateText);
+    var accessGate = /\b(?:check|checking|verify|verifying)\s+(?:your\s+)?access\b|\baccess\s+(?:check|verification)\b|please\s+(?:wait|stand by).{0,80}(?:access|verification)|请稍候|请稍等|正在检查|正在验证/i.test(gateText);
     // Publisher article pages often retain generic sign-in strings in navigation or
     // hidden DOM after access is already granted. Only explicit access gates remain
     // authoritative when a DOI-bound article body is otherwise meaningful.
@@ -4704,7 +4729,7 @@ function embeddedJobDois(value) {
 
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
-  var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v2';
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-lease-v3';
   var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
@@ -4725,17 +4750,28 @@ function embeddedJobDois(value) {
     return lease;
   }
 
+  function privatePdfLeaseDiagnostics() {
+    var raw=GM_getValue(PRIVATE_PDF_LEASE_KEY,null),valid=privatePdfLease();
+    return {
+      state:valid?'active':raw?'expired_or_invalid':'missing',
+      present:Boolean(valid),
+      expiresAt:Number(valid&&valid.expiresAt||raw&&raw.expiresAt||0),
+      receivedAt:Number(valid&&valid.receivedAt||raw&&raw.receivedAt||0),
+      revision:String(valid&&valid.revision||raw&&raw.revision||'')
+    };
+  }
+
   function installPrivatePdfLeaseReceiver() {
     if(!isGalleryPage()||typeof window==='undefined'||typeof window.addEventListener!=='function')return;
     window.addEventListener('message',function(event){
       try{
-        if(event.source!==window||event.origin!==location.origin)return;
+        if(event.origin!==location.origin)return;
         var data=event.data||{};
         if(data.type!=='osg-private-pdf-capture-lease-v1'||data.scope!=='private_pdf_capture')return;
-        var token=String(data.token||''),expiresAt=Number(data.expiresAt||0);
-        if(!/^[A-Za-z0-9_-]{32,160}$/.test(token)||expiresAt<=Date.now()+60000)return;
-        GM_setValue(PRIVATE_PDF_LEASE_KEY,{token:token,expiresAt:expiresAt,scope:'private_pdf_capture',receivedAt:Date.now(),revision:PRIVATE_PDF_CAPTURE_REVISION});
-        window.postMessage({type:'osg-private-pdf-capture-lease-ack-v1',expiresAt:expiresAt},location.origin);
+        var token=String(data.token||''),expiresAt=Number(data.expiresAt||0),receivedAt=Date.now();
+        if(!/^[A-Za-z0-9_-]{32,160}$/.test(token)||expiresAt<=receivedAt+60000)return;
+        GM_setValue(PRIVATE_PDF_LEASE_KEY,{token:token,expiresAt:expiresAt,scope:'private_pdf_capture',receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION});
+        window.postMessage({type:'osg-private-pdf-capture-lease-ack-v1',expiresAt:expiresAt,receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION},location.origin);
       }catch(_){}
     });
   }
@@ -4837,7 +4873,11 @@ function embeddedJobDois(value) {
   async function maybeCapturePrivatePdf(job,trace) {
     if(!job||!currentCaptureJob(job)||!privatePdfCaptureEligibleByAddedDate(job))return null;
     var lease=privatePdfLease();
-    if(!lease)return null;
+    if(!lease){
+      pushTrace(trace,{stage:'private_pdf_lease',event:'missing',status:'skipped',message:'eligible_addedDate='+String(job.addedDate||'')+';revision='+PRIVATE_PDF_CAPTURE_REVISION});
+      return {status:'skipped',reason:'capture_lease_missing',revision:PRIVATE_PDF_CAPTURE_REVISION};
+    }
+    pushTrace(trace,{stage:'private_pdf_lease',event:'active',status:'ok',message:'expiresAt='+String(Number(lease.expiresAt||0))+';revision='+String(lease.revision||PRIVATE_PDF_CAPTURE_REVISION)});
     var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
     if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000)return {status:'already_stored',documentId:prior.documentId||''};
     if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000)return {status:'not_found_cached'};
