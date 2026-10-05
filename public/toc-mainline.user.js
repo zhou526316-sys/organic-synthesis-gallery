@@ -210,8 +210,8 @@
       state: s.coverageRevision&&!s.active&&phaseNames[s.phase]?phaseNames[s.phase]:s.missingOnly&&!s.active&&s.phase==='starting'?'正在生成缺项队列':s.missingOnly&&!s.active&&s.phase==='inventory_partial'?'缺项队列已结束，部分库存未确认':phaseNames[s.state] || ('已停止：' + captureLiveError(s.state)),
       needs:s.need||'—',
       working:s.active?(s.row&&/全文|Abstract|文本/.test(s.row.label)?'文本':s.row&&s.row.label?s.row.label:s.need||'加载文章'):'—',
-      evidence:s.activeJob&&s.activeJob.captureEvidence?'本次补抓文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，本次不重抓':'—',
-      gaps:s.coverageRevision&&s.phase!=='starting'?'未补齐 '+s.unresolvedCount+' 篇（待执行 '+s.pendingMissing+'／受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／正文图 '+Number(s.remainingNeeds.figures||0)+'／文本 '+Number(s.remainingNeeds.evidence||0):s.missingOnly?(s.phase==='starting'?'正在读取缺项库存…':'待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／正文图 '+Number(s.remainingNeeds.figures||0)+'／文本 '+Number(s.remainingNeeds.evidence||0)+'（分项可重叠）'):'—',
+      evidence:s.activeJob&&(s.activeJob.captureEvidence||s.activeJob.opportunisticEvidence)?'随当前任务顺带抓取文本':s.activeJob&&s.activeJob.existingEvidenceLevel?captureEvidenceLevelText(s.activeJob.existingEvidenceLevel)+'，不作为队列缺项':'—',
+      gaps:s.coverageRevision&&s.phase!=='starting'?'未补齐 '+s.unresolvedCount+' 篇（待执行 '+s.pendingMissing+'／受阻 '+s.blockedCount+'）；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0):s.missingOnly?(s.phase==='starting'?'正在读取缺项库存…':'待处理 '+s.pendingMissing+' 篇；TOC '+Number(s.remainingNeeds.toc||0)+'／PDF '+Number(s.remainingNeeds.pdf||0)+'（正文图/正文不计入队列）'):'—',
       blocked:(s.blockedPreview||[]).map(function(r){return r.doi+' · '+r.need+' · '+r.reason;}).join('\n'),
       inventory:s.inventoryUnknown?'另有 '+s.inventoryUnknown+' 篇存在未确认项，不冒充已齐全或全部缺失'+(s.inventoryErrors.length?'；'+s.inventoryErrors.join('；'):''):'',
       queue:(s.pendingPreview||[]).map(function(j){return j.addedDate+' · '+j.journal+' · '+j.need+'\n'+j.doi;}).join('\n\n'),
@@ -5142,9 +5142,8 @@ function embeddedJobDois(value) {
         _queueIndex:index
       });
     });
-    // Scheduler tiers: latest Gallery additions first; while no new additions are waiting,
-    // Nature/Science-family visual gaps are cleared before other historical TOCs, then body
-    // figures and evidence. Journal priority applies inside every tier.
+    // Scheduler tiers: missing TOC first (latest additions, then journal priority),
+    // owner PDF second. Body figures and text never form standalone queue tiers.
     var latestAddedDate = String(queue.latestAddedDate || '');
     jobs=jobs.filter(Boolean);
     jobs.sort(function(a,b) {
