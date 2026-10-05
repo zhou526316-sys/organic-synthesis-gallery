@@ -54,6 +54,16 @@ try{
     assert.equal(result.fig.label,'Figure 1');assert.equal(result.fig.official,false);
   });
 
+  await tc('RSC Accepted Manuscript first-page preview is never accepted as TOC',async()=>{
+    const rows=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<section><h2>Graphical abstract</h2><div class="firstPagePreviewImage widget-FirstPagePreview"><img alt="First page of accepted manuscript" src="https://rscj.silverchair-cdn.com/rscj/content_public/journal/sc/jam/10.1039_d6sc06874j/1/d6sc06874j.pdf.gif"></div></section>';
+      return T.rscGraphicalAbstractCandidates({doi:'10.1039/d6sc06874j',publisher:'rsc'},root,'https://pubs.rsc.org/sc/article/doi/10.1039/D6SC06874J/example')
+        .map(x=>({url:x.url,source:x.source}));
+    });
+    assert.deepEqual(rows,[]);
+  });
+
   await tc('Chem graphical abstract is isolated from numbered figures',async()=>{
     const result=await page.evaluate(()=>{
       const root=document.querySelector('#fixture');
