@@ -17,6 +17,8 @@ on:
       - 'cloudflare/user-library-state-v2.sql'
       - 'cloudflare/evidence-index-v1.sql'
       - 'cloudflare/summary-candidate-index-v1.sql'
+      - 'cloudflare/literature-catalog-index-v1.sql'
+      - 'scripts/sync-literature-catalog-index-shadow.mjs'
       - 'scripts/test-summary-candidate-shadow-deployment-contract.mjs'
       - 'scripts/test-scheduled-handoff-shadow-deployment-contract.mjs'
       - 'scripts/test-user-library-shadow-deployment-contract.mjs'
@@ -42,6 +44,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       D1_NAME: organic-synthesis-gallery
+      LITERATURE_INDEX_D1_NAME: organic-synthesis-gallery-literature-index
       R2_BUCKET: organic-synthesis-gallery-media
       PDF_R2_BUCKET: organic-synthesis-gallery-private-pdf
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -111,6 +114,48 @@ jobs:
           fi
           npx wrangler r2 bucket info "$PDF_R2_BUCKET" --json >/dev/null
           echo "d1_id=$D1_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare dedicated literature search shadow D1
+        id: literature_index
+        continue-on-error: true
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 list --json > /tmp/d1-literature-list.json
+          LITERATURE_INDEX_D1_ID=$(node - <<'NODE'
+          const fs=require('fs');
+          const rows=JSON.parse(fs.readFileSync('/tmp/d1-literature-list.json','utf8'));
+          const row=rows.find(item=>item.name===process.env.LITERATURE_INDEX_D1_NAME);
+          if(row?.uuid) process.stdout.write(row.uuid);
+          NODE
+          )
+          if [ -z "$LITERATURE_INDEX_D1_ID" ]; then
+            npx wrangler d1 create "$LITERATURE_INDEX_D1_NAME" >/tmp/d1-literature-create.txt
+            npx wrangler d1 list --json > /tmp/d1-literature-list.json
+            LITERATURE_INDEX_D1_ID=$(node - <<'NODE'
+            const fs=require('fs');
+            const rows=JSON.parse(fs.readFileSync('/tmp/d1-literature-list.json','utf8'));
+            const row=rows.find(item=>item.name===process.env.LITERATURE_INDEX_D1_NAME);
+            if(row?.uuid) process.stdout.write(row.uuid);
+            NODE
+            )
+          fi
+          test -n "$LITERATURE_INDEX_D1_ID" || { echo 'Literature search D1 creation/resolution failed'; exit 1; }
+          test "$LITERATURE_INDEX_D1_ID" != "${{ steps.bindings.outputs.d1_id }}" || { echo 'Literature search D1 must be separate from primary D1'; exit 1; }
+          npx wrangler d1 execute "$LITERATURE_INDEX_D1_NAME" --remote --file=../literature-catalog-index-v1.sql >/tmp/literature-index-migration.txt
+          npx wrangler d1 execute "$LITERATURE_INDEX_D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE name IN ('literature_catalog_generations','literature_catalog_index','literature_catalog_fts') ORDER BY name;" --json >/tmp/literature-index-schema-check.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/literature-index-schema-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const names=rows.map(x=>x.name).sort();
+          const expected=['literature_catalog_fts','literature_catalog_generations','literature_catalog_index'];
+          if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('literature search D1 migration incomplete: '+JSON.stringify(names));
+          console.log(JSON.stringify({literatureIndexSchemaReady:true,tables:names}));
+          NODE
+          echo "d1_id=$LITERATURE_INDEX_D1_ID" >> "$GITHUB_OUTPUT"
+          echo "ready=1" >> "$GITHUB_OUTPUT"
 
       - name: Apply isolated private PDF D1 migration
         working-directory: cloudflare/worker
@@ -203,8 +248,14 @@ jobs:
         shell: bash
         env:
           D1_ID: ${{ steps.bindings.outputs.d1_id }}
+          LITERATURE_INDEX_D1_ID: ${{ steps.literature_index.outputs.d1_id }}
+          LITERATURE_INDEX_READY: ${{ steps.literature_index.outputs.ready }}
         run: |
           set -euo pipefail
+          LITERATURE_INDEX_SHADOW_ENABLED=0
+          if [ "$LITERATURE_INDEX_READY" = "1" ] && [ -n "$LITERATURE_INDEX_D1_ID" ]; then
+            LITERATURE_INDEX_SHADOW_ENABLED=1
+          fi
           cat > wrangler.frontend.toml <<EOF
           name = "organic-synthesis-gallery"
           main = "src/index.js"
@@ -225,6 +276,8 @@ jobs:
           USER_LIBRARY_ROW_READ_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_READ_ENABLED = "1"
+          LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "$LITERATURE_INDEX_SHADOW_ENABLED"
+          LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "0"
@@ -254,6 +307,15 @@ jobs:
           database_name = "$D1_NAME"
           database_id = "$D1_ID"
           EOF
+          if [ "$LITERATURE_INDEX_SHADOW_ENABLED" = "1" ]; then
+            cat >> wrangler.frontend.toml <<EOF
+
+          [[d1_databases]]
+          binding = "LITERATURE_INDEX_DB"
+          database_name = "$LITERATURE_INDEX_D1_NAME"
+          database_id = "$LITERATURE_INDEX_D1_ID"
+          EOF
+          fi
 
       - name: Dry-run frontend Worker bundle
         working-directory: cloudflare/worker
