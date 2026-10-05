@@ -762,14 +762,18 @@ function mount(): void {
 
 function visibleMediaTargets(): Array<{ doi: string; toc: HTMLElement; figures: HTMLElement | null }> {
   const result: Array<{ doi: string; toc: HTMLElement; figures: HTMLElement | null }> = [];
+  const mobile = innerWidth <= 680;
+  const preloadBefore = mobile ? 120 : 260;
+  const preloadAfter = mobile ? 360 : 900;
+  const maxTargets = mobile ? 6 : 14;
   for (const slot of document.querySelectorAll<HTMLElement>('.toc-slot[data-doi]')) {
     const doi = normalizeDoi(slot.dataset.doi);
     const card = slot.closest<HTMLElement>('.card');
     if (!doi || !card) continue;
     const rect = card.getBoundingClientRect();
-    if (rect.bottom < -260 || rect.top > innerHeight + 900) continue;
+    if (rect.bottom < -preloadBefore || rect.top > innerHeight + preloadAfter) continue;
     result.push({ doi, toc: slot, figures: card.querySelector<HTMLElement>('.figure-strip-slot[data-figure-doi]') });
-    if (result.length >= 14) break;
+    if (result.length >= maxTargets) break;
   }
   return result;
 }
@@ -847,10 +851,14 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
   const cardImageUrl = result.primary?.thumbnailImageUrl || result.primary?.previewImageUrl || result.imageUrl;
   button.dataset.masterSrc = masterImageUrl;
   const image = new Image();
-  image.src = cardImageUrl;
   image.alt = result.primary?.label || t('toc');
   image.className = 'toc-image';
-  image.loading = 'lazy';
+  const rect = slot.getBoundingClientRect();
+  const priority = rect.bottom >= -80 && rect.top <= innerHeight + (innerWidth <= 680 ? 220 : 120);
+  image.loading = priority ? 'eager' : 'lazy';
+  image.decoding = 'async';
+  if (priority) image.setAttribute('fetchpriority', 'high');
+  image.src = cardImageUrl;
   image.decoding = 'async';
   const label = document.createElement('span');
   label.className = 'toc-label';

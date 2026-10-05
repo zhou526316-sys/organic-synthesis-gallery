@@ -642,6 +642,129 @@ test('full-text summary opens as a non-fullscreen TOC-backed bilingual panel', a
 });
 
 
+test('mobile title entry stays in Gallery and opens the summary before publisher navigation', async ({ page, context }) => {
+  test.setTimeout(60_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  let summaryCalls = 0;
+  let markCalls = 0;
+
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/article-summary')) {
+      summaryCalls += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          doi: '10.1021/jacs.6c08636',
+          available: true,
+          state: 'published',
+          source: 'scheduled_reviewed_evidence_v2',
+          evidenceLevel: 'partial',
+          cached: true,
+          zh: '移动端摘要入口测试。',
+          en: 'Mobile summary entry fixture.',
+          generatedAt: 1790000000000,
+        }),
+      });
+      return;
+    }
+    if (url.includes('/api/user-ui/reader-counts/mark')) {
+      markCalls += 1;
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ count: 1, unique: true, generation: 'article-open-v3' }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }) });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+  await page.route('**/api/media/batch**', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: [] }) }));
+  await page.route('**/api/media/inventory**', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: [] }) }));
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  const card = page.locator('.card').filter({ has: page.locator('gallery-paper-actions') }).first();
+  await expect(card).toBeVisible({ timeout: 30000 });
+  const titleLink = card.locator('.user-title-link');
+  const externalOpen = card.locator('a.open');
+  await expect(titleLink).toHaveAttribute('href', /https:\/\/doi\.org\//);
+  await expect(externalOpen).toHaveAttribute('href', /https:\/\/doi\.org\//);
+
+  const pagesBefore = context.pages().length;
+  await titleLink.click();
+  const drawer = card.locator('gallery-paper-actions .drawer.summary-drawer');
+  await expect(drawer).toBeVisible();
+  await expect(drawer.locator('.summary-text')).toContainText('移动端摘要入口测试');
+  await expect.poll(() => summaryCalls).toBe(1);
+  await expect.poll(() => markCalls).toBe(1);
+  expect(context.pages().length).toBe(pagesBefore);
+  expect(page.url()).toContain('127.0.0.1:4173');
+  await expect(drawer.locator('a[data-summary-open]')).toHaveAttribute('href', /https:\/\/doi\.org\//);
+});
+
+
+test('mobile TOC hydrates a small near-screen batch and prioritizes the visible image', async ({ page }) => {
+  test.setTimeout(60_000);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const batchSizes: number[] = [];
+
+  await page.route('https://api.gczhouwld.com/**', async route => {
+    const url = route.request().url();
+    if (url.includes('/api/user-ui/reader-counts')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    if (url.includes('/api/user-ui/integrations')) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ auth: { google: false, wechat: false, qq: false, email: false }, payments: { wechat: false, alipay: false } }) });
+      return;
+    }
+    await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+  });
+  await page.route('**/api/media/batch**', async route => {
+    const body = route.request().postDataJSON() as { dois?: string[] };
+    const dois = Array.isArray(body?.dois) ? body.dois : [];
+    batchSizes.push(dois.length);
+    await route.fulfill({
+      status: 200,
+      headers: { 'access-control-allow-origin': '*' },
+      contentType: 'application/json',
+      body: JSON.stringify({
+        items: dois.map(doi => ({
+          doi,
+          toc: {
+            available: true,
+            doi,
+            imageUrl: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22640%22 height=%22360%22%3E%3Crect width=%22640%22 height=%22360%22 fill=%22white%22/%3E%3C/svg%3E',
+            reason: 'cached',
+          },
+          figures: { available: false, doi, figures: [] },
+        })),
+      }),
+    });
+  });
+  await page.route('**/api/media/inventory**', route => route.fulfill({
+    status: 200,
+    headers: { 'access-control-allow-origin': '*' },
+    contentType: 'application/json',
+    body: JSON.stringify({ items: [] }),
+  }));
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => batchSizes.length).toBeGreaterThan(0);
+  expect(batchSizes[0]).toBeLessThanOrEqual(6);
+  expect(batchSizes[0]).toBeGreaterThan(0);
+  const firstImage = page.locator('.card .toc-image').first();
+  await expect(firstImage).toBeVisible({ timeout: 30000 });
+  await expect(firstImage).toHaveAttribute('loading', 'eager');
+  await expect(firstImage).toHaveAttribute('fetchpriority', 'high');
+});
+
+
 test('search highlights results, picker closes outside, feedback drags and submits', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   let submittedFeedback: Record<string, unknown> | null = null;
