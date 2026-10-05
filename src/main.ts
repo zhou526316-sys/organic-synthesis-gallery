@@ -217,6 +217,9 @@ let latestCollectionDate = '';
 let architectureRefreshTimer: number | null = null;
 let architectureRefreshSerial = 0;
 let resultWindowPage = 1;
+let architectureMembershipRevision = 0;
+let corpusRevision = 0;
+let syncedLiteratureDoiRegistryKey = '';
 
 store.addEventListener('counts', () => {
   if (sort === 'readers') renderCards();
@@ -588,6 +591,10 @@ function figureMarkup(paper: Paper): string {
 }
 
 function syncLiteratureDoiRegistry(): void {
+  const registryKey = architectureMemberDois
+    ? `all-time:${architectureMembershipRevision}`
+    : `corpus:${corpusRevision}:${architectureFallbackActive ? 'hot-fallback' : 'current-corpus'}`;
+  if (registryKey === syncedLiteratureDoiRegistryKey) return;
   const dois = architectureMemberDois
     ? [...architectureMemberDois]
     : [...new Set(
@@ -610,6 +617,7 @@ function syncLiteratureDoiRegistry(): void {
     count: dois.length,
     dois,
   });
+  syncedLiteratureDoiRegistryKey = registryKey;
 }
 
 function resetResultWindow(): void {
@@ -1240,6 +1248,7 @@ function normalizeArchitectureRows(value: unknown): Paper[] {
 
 function setArchitectureCorpus(rows: Paper[]): void {
   papers = mergePapers([], rows).filter(paper => !isExcludedDoi(paperDoi(paper)));
+  corpusRevision += 1;
   applyResolvedTitles();
 }
 
@@ -1255,6 +1264,7 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
     architectureFallbackActive = false;
     architectureReadLimited = false;
     architectureMemberDois = [...client.memberDois];
+    architectureMembershipRevision += 1;
     architectureEarliestDate = client.earliestDate || '';
     architectureLandingPapers = mergePapers(landingRows, editionRows);
     const architectureDates = architectureLandingPapers.map(paper => paper.date)
