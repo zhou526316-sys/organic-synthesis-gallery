@@ -56,15 +56,30 @@ async function json(path,init={}){
           // already browser-CORS enabled and is the authoritative capability + kill-switch check.
           const lease=await json('/api/user-ui/private-pdf/capture-lease',{method:'POST'});
           if(!lease.token||!lease.expiresAt)throw new Error('capture_lease_invalid');
-          window.postMessage({type:'osg-private-pdf-capture-lease-v1',token:lease.token,expiresAt:lease.expiresAt,scope:lease.scope},location.origin);
-          captureStatus.textContent='授权已发送给 Tampermonkey。请保持本页打开，直到脚本确认接收。';
+          const message={type:'osg-private-pdf-capture-lease-v1',token:lease.token,expiresAt:lease.expiresAt,scope:lease.scope};
+          let acked=false,attempts=0,timer=null;
+          const cleanup=()=>{if(timer!==null){clearInterval(timer);timer=null;}window.removeEventListener('message',ack);};
           const ack=event=>{
-            if(event.source!==window||event.origin!==location.origin||event.data?.type!=='osg-private-pdf-capture-lease-ack-v1')return;
-            window.removeEventListener('message',ack);
+            if(event.origin!==location.origin||event.data?.type!=='osg-private-pdf-capture-lease-ack-v1')return;
+            if(Number(event.data.expiresAt||0)!==Number(lease.expiresAt||0))return;
+            acked=true;cleanup();
             captureStatus.textContent='PDF 捕获授权成功，本浏览器有效至 '+new Date(lease.expiresAt).toLocaleString()+'。';
             captureStatus.className='ok';
           };
           window.addEventListener('message',ack);
+          const send=()=>{
+            if(acked)return;
+            attempts+=1;
+            window.postMessage(message,location.origin);
+            captureStatus.textContent='正在向 Tampermonkey 交接 PDF 授权（'+attempts+'/12）…';
+            if(attempts>=12){
+              cleanup();
+              captureStatus.textContent='尚未收到 Tampermonkey 确认。请确认脚本已更新并启用，然后重新点击授权。';
+              captureStatus.className='bad';authorize.disabled=false;
+            }
+          };
+          send();
+          timer=setInterval(send,750);
         }catch(error){
           const reason=String(error?.message||error);
           captureStatus.textContent=reason==='private_pdf_capture_disabled'
