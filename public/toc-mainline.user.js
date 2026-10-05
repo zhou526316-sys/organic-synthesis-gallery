@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.31
+// @version      6.2.32
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -43,17 +43,17 @@
   'use strict';
 
   var VERSION = '6.2.20'; // Capture protocol/checkpoints remain compatible.
-  var CONTROLLER_REVISION = '2.2.40';
+  var CONTROLLER_REVISION = '2.2.41';
   var CAPTURE_HOTFIX_REVISION = '20261001-newest-retry-v1';
   var CONTROLLER_LIFECYCLE_REVISION = '20261001-controller-recovery-v2';
   var controllerResumeTimer = null;
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
-  var MISSING_CAPTURE_REVISION = '20261005-toc-pdf-only-v5';
-  var QUEUE_COVERAGE_REVISION = '20261005-queue-coverage-v7';
-  var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11';
+  var MISSING_CAPTURE_REVISION = '20261005-toc-pdf-only-v6';
+  var QUEUE_COVERAGE_REVISION = '20261005-queue-coverage-v8';
+  var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v12';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.31';
+  var INSTALL_REVISION = '6.2.32';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -672,14 +672,17 @@ function embeddedJobDois(value) {
   function jobKind(job) {
     var need=String(job && job.mediaNeed || '');
     if(need==='evidence')return 'evidence';
+    if(need==='pdf')return 'pdf';
     return need === 'figures' || String(job && job.state || '') === 'figure_gap' ? 'figures' : 'toc';
   }
   function attemptKey(doi, generatedAt, kind) {
     var base = P + 'attempt:' + normalizeDoi(doi) + ':' + String(generatedAt || '');
     if(String(kind||'toc')==='evidence')return base+':evidence';
+    if(String(kind||'toc')==='pdf')return base+':pdf';
     return String(kind || 'toc') === 'figures' ? base + ':figures' : base;
   }
   function failureKey(doi, kind) {
+    if(String(kind||'toc')==='pdf')return P + 'failure:pdf:' + normalizeDoi(doi);
     return String(kind || 'toc') === 'figures'
       ? P + 'failure:figures:' + normalizeDoi(doi)
       : P + 'failure:' + normalizeDoi(doi);
