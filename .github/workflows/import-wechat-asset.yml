@@ -1,0 +1,82 @@
+name: Import WeChat Asset
+
+on:
+  push:
+    paths:
+      - 'audit/automation-triggers/wechat-asset-import.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-asset-import
+  cancel-in-progress: false
+
+jobs:
+  import-asset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read import request
+        id: req
+        shell: bash
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          p=Path("audit/automation-triggers/wechat-asset-import.json")
+          d=json.loads(p.read_text())
+          for k in ("source_url","target_path","sha256","file_name"):
+              v=str(d.get(k,"")).strip()
+              if not v:
+                  raise SystemExit(f"missing {k}")
+              print(f"{k}={v}")
+          PY
+
+      - name: Download and verify asset
+        shell: bash
+        env:
+          SOURCE_URL: ${{ steps.req.outputs.source_url }}
+          TARGET_PATH: ${{ steps.req.outputs.target_path }}
+          EXPECTED_SHA256: ${{ steps.req.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$(dirname "$TARGET_PATH")"
+          curl -fL --retry 3 --retry-delay 2 "$SOURCE_URL" -o "$TARGET_PATH"
+          ACTUAL_SHA256="$(sha256sum "$TARGET_PATH" | awk '{print $1}')"
+          test "$ACTUAL_SHA256" = "$EXPECTED_SHA256"
+          test -s "$TARGET_PATH"
+
+      - name: Sanitize request and commit asset
+        shell: bash
+        env:
+          TARGET_PATH: ${{ steps.req.outputs.target_path }}
+          FILE_NAME: ${{ steps.req.outputs.file_name }}
+          EXPECTED_SHA256: ${{ steps.req.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path("audit/automation-triggers/wechat-asset-import.json")
+          d={
+            "status":"completed",
+            "target_path":os.environ["TARGET_PATH"],
+            "file_name":os.environ["FILE_NAME"],
+            "sha256":os.environ["EXPECTED_SHA256"],
+          }
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+"\n")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$TARGET_PATH" audit/automation-triggers/wechat-asset-import.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "assets: import WeChat asset"
+          git pull --rebase origin main
+          git push origin HEAD:main
