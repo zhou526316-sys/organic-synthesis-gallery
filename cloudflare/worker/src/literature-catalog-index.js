@@ -1,4 +1,5 @@
 export const LITERATURE_CATALOG_INDEX_SCHEMA_VERSION = 'literature-catalog-index-v1';
+export const LITERATURE_INDEX_IMPORT_BATCH_MAX = 8;
 const schemaReadyBindings = new WeakSet();
 
 function safe(value,max=1000){
@@ -180,7 +181,9 @@ export async function importLiteratureCatalogIndexBatch(env,payload){
   await ensureLiteratureCatalogIndexSchema(env);
   const g=normalizeGeneration(payload?.generation);
   const rows=Array.isArray(payload?.rows)?payload.rows:[];
-  if(!rows.length||rows.length>250) return {status:400,body:{error:'literature_catalog_index_batch_size_invalid',maxRows:250}};
+  if(!rows.length||rows.length>LITERATURE_INDEX_IMPORT_BATCH_MAX) {
+    return {status:400,body:{error:'literature_catalog_index_batch_size_invalid',maxRows:LITERATURE_INDEX_IMPORT_BATCH_MAX}};
+  }
   const begin=await beginLiteratureCatalogGeneration(env,g);
   if(begin.status!==200) return begin;
   if(begin.body.ready) return {status:409,body:{error:'literature_catalog_generation_already_ready',catalogId:g.catalogId}};
