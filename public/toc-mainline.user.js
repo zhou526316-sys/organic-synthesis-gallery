@@ -4414,11 +4414,8 @@ function embeddedJobDois(value) {
           summary.figuresStaged+=Number(result.figuresStaged||0);
           summary.evidenceStored+=result.fulltext&&result.fulltext.status==='stored'?1:0;
           GM_setValue(attemptKey(job.doi,attemptGeneration,attemptKind),result);
-          if(result.fulltext&&result.fulltext.status==='stored'){
-            clearSummaryEvidenceUrgency(job.doi);
-          }else if(result.toc&&result.toc.status==='stored'){
-            markSummaryEvidenceUrgency(job.doi);
-          }
+          if(result.fulltext&&result.fulltext.status==='stored')clearSummaryEvidenceUrgency(job.doi);
+          else clearSummaryEvidenceUrgency(job.doi); // Text gaps no longer schedule independent retries.
           if(!evidenceOnly&&result.fulltext&&result.fulltext.status==='stored'){
             GM_setValue(attemptKey(job.doi,evidenceGeneration,'evidence'),{doi:job.doi,status:'success',version:VERSION,controllerRevision:CONTROLLER_REVISION,finishedAt:result.finishedAt||nowIso(),reason:'opportunistic_evidence_stored',retryCount:1});
           }
@@ -4443,13 +4440,12 @@ function embeddedJobDois(value) {
         badge('本批：TOC '+summary.tocStored+'；正文图已暂存 '+summary.figuresStaged+'；文字证据 '+summary.evidenceStored+'；完整 '+summary.success+'，部分 '+summary.partial+'，失败 '+summary.failed+'，跳过 '+summary.skipped+'（媒体暂存不等于发布）','#374151');
       }
       var remainingAvailable=!stopReason?availableJobs():[];
-      var urgentEvidencePending=!stopReason&&hasActiveSummaryEvidenceUrgency();
       if(stopReason==='active_task_wait' && !isAbortRequested() && GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},15000);
-      } else if(!stopReason&&(summary.refreshPending||remainingAvailable.length>0||urgentEvidencePending)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
+      } else if(!stopReason&&(summary.refreshPending||remainingAvailable.length>0)&&!isAbortRequested()&&GM_getValue(ENABLED_KEY,true)!==false) {
         if(nextBatchTimer!==null)clearTimeout(nextBatchTimer);
-        var nextDelay=summary.queueRefreshError?60*1000:summary.refreshPending?1500:remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000;
+        var nextDelay=summary.queueRefreshError?60*1000:summary.refreshPending?1500:NEXT_BATCH_DELAY_MS;
         nextBatchTimer=setTimeout(function(){nextBatchTimer=null;controllerRun();},nextDelay);
       }
     } catch(error) {
@@ -4824,7 +4820,7 @@ function embeddedJobDois(value) {
   var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
-  var PRIVATE_PDF_ATTEMPT_PREFIX = P + 'private-pdf-attempt-v1:';
+  var PRIVATE_PDF_ATTEMPT_PREFIX = P + 'private-pdf-attempt-v2:';
   var PRIVATE_PDF_MAX_BYTES = 60 * 1024 * 1024;
   var PRIVATE_PDF_QUEUE_REVISION = '20261005-private-pdf-queue-v1';
 
