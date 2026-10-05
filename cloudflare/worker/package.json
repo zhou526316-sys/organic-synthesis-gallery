@@ -15,6 +15,7 @@
     "test:article-summary": "node scripts/test-article-summary.mjs",
     "test:summary-review": "node scripts/test-summary-review.mjs",
     "test:scheduled-summary-handoff": "node scripts/test-scheduled-summary-handoff.mjs",
+    "test:scheduled-handoff-index": "node scripts/test-scheduled-handoff-index.mjs",
     "test:evidence-index": "node scripts/test-evidence-index.mjs",
     "test:summary-candidate-index": "node scripts/test-summary-candidate-index.mjs"
   },
