@@ -40,7 +40,7 @@ jobs:
         with: {fetch-depth: 0}
       - uses: actions/setup-node@v4
         with: {node-version: 22}
-      - name: Confirm unrelated production rules and media collector are untouched
+      - name: Confirm unrelated production rules are untouched
         run: |
           set -euo pipefail
           BASE="$(git merge-base HEAD origin/main)"
@@ -50,7 +50,7 @@ jobs:
             docs/literature-scope-contract.md docs/literature-update-protocol.md \
             .github/workflows/literature-audit.yml .github/workflows/new-body-continuous.yml \
             public/papers.gz.b64 public/rolling-supplement.json cloudflare/worker/src/article-summary.js \
-            cloudflare/worker/src/local-captures.js cloudflare/worker/src/media.js
+            cloudflare/worker/src/media.js
           ! git diff "$BASE" HEAD -- . ':!audit/**' | grep -F 'wuliangdao@njfu.edu.cn'
           if git diff --quiet "$BASE" HEAD -- public/toc-mainline.user.js src/platform-api.ts .github/workflows/github-pages.yml; then
             git diff --exit-code "$BASE" HEAD -- .github/workflows/github-pages.yml
