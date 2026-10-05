@@ -59,7 +59,16 @@ try{
  });
  await test('existing owner can authorize PDF capture without healthcheck CORS preflight',async()=>{
   const context=await browser.newContext();
-  await context.addInitScript(()=>localStorage.setItem('organic-gallery-session-v1','fixture-session'));
+  await context.addInitScript(()=>{
+    localStorage.setItem('organic-gallery-session-v1','fixture-session');
+    window.addEventListener('message',event=>{
+      if(event.origin!==location.origin||event.data?.type!=='osg-private-pdf-capture-lease-v1')return;
+      window.postMessage({
+        type:'osg-private-pdf-capture-lease-ack-v1',
+        expiresAt:event.data.expiresAt,
+      },location.origin);
+    });
+  });
   let healthCalls=0,leaseCalls=0;
   await context.route('https://api.gczhouwld.com/**',async route=>{
     const u=new URL(route.request().url());
@@ -74,7 +83,7 @@ try{
   assert.equal(healthCalls,0);
   assert.equal(await page.locator('#capture-status').textContent(),'可单独授权本浏览器的 PDF 捕获模块。');
   await page.locator('#authorize').click();
-  await page.getByText('授权已发送给 Tampermonkey').waitFor();
+  await page.getByText(/PDF 捕获授权成功/).waitFor();
   assert.equal(leaseCalls,1);
   assert.equal(healthCalls,0);
   await context.close();
