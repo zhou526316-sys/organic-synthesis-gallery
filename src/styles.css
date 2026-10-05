@@ -316,6 +316,28 @@ select {
   font-size: 13px;
   margin: 10px 2px 14px;
 }
+.result-count {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.result-scope {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 8px;
+  border: 1px solid #d7e0f5;
+  border-radius: 999px;
+  background: #f4f7ff;
+  color: #3159bd;
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+.result-separator {
+  color: #b0b8c5;
+}
 .resultline strong {
   color: #172033;
 }
