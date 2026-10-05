@@ -24,6 +24,13 @@ test('shadow sync is pinned to verified architecture delivery before any import'
   ]) assert.ok(sync.includes(token),token);
 });
 
+test('shadow sync uses a Free-safe eight-row import ceiling',()=>{
+  assert.match(sync,/const IMPORT_BATCH_SIZE = 8;/);
+  assert.match(sync,/offset \+= IMPORT_BATCH_SIZE/);
+  assert.match(sync,/rows\.slice\(offset, offset \+ IMPORT_BATCH_SIZE\)/);
+  assert.match(sync,/importBatchSize: IMPORT_BATCH_SIZE/);
+});
+
 test('shadow sync requires full row and search parity while read path stays inactive',()=>{
   for(const token of [
     '/api/admin/literature-catalog-index/rows',
