@@ -80,7 +80,7 @@ jobs:
           node cloudflare/scripts/build-cloudflare-bridge.mjs
           node cloudflare/scripts/build-bridge-loader.mjs
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.48' public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.49' public/gallery-vpn-bridge.user.js
           grep -F "PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'" public/gallery-vpn-bridge.user.js
           grep -F "https://api.crossref.org/works/" public/gallery-vpn-bridge.user.js
           grep -F "ccs-crossref-route-v1" public/gallery-vpn-bridge.user.js
@@ -140,7 +140,7 @@ jobs:
               try{
                 const r=await fetch(u,{headers:{'cache-control':'no-cache'}});
                 const t=await r.text();last='status='+r.status+' bytes='+t.length;
-                ok=r.ok&&t.includes('// @version      2.2.48')&&t.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'")&&t.includes('https://api.crossref.org/works/')&&t.includes('ccs-crossref-route-v1')&&t.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'")&&t.includes('rsc_graphical_abstract')&&t.includes('ccs_toc_index_key_image')&&t.includes("PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'");
+                ok=r.ok&&t.includes('// @version      2.2.49')&&t.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'")&&t.includes('https://api.crossref.org/works/')&&t.includes('ccs-crossref-route-v1')&&t.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'")&&t.includes('rsc_graphical_abstract')&&t.includes('ccs_toc_index_key_image')&&t.includes("PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'");
                 if(ok)break;
               }catch(e){last=String(e)}
               await sleep(3000);
