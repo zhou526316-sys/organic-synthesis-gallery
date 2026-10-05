@@ -38,6 +38,15 @@ import { backfillScheduledEvidenceHandoffs, compareScheduledHandoffIndexShadow, 
 import { compareSummaryReviewCandidateShadow, getSummaryReviewStatus } from './summary-review.js';
 import { backfillEvidenceHandoffIndexPage, backfillEvidenceIndexPage, getEvidenceIndexStatus, listEvidenceIndexRows } from './evidence-index.js';
 import { backfillSummaryJobIndexPage, getSummaryCandidateIndexStatus } from './summary-candidate-index.js';
+import {
+  beginLiteratureCatalogGeneration,
+  finalizeLiteratureCatalogGeneration,
+  getLiteratureCatalogIndexStatus,
+  importLiteratureCatalogIndexBatch,
+  literatureCatalogIndexReadEnabled,
+  literatureCatalogIndexShadowEnabled,
+  queryLiteratureCatalogIndex,
+} from './literature-catalog-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus } from './user-library-shadow.js';
 import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getSiteAnalyticsMaterializedReadiness, getSiteAnalyticsMaterializedStatus, materializedSiteAnalyticsStats, siteAnalyticsMaterializedReadEnabled } from './site-analytics-materialized.js';
@@ -230,6 +239,10 @@ async function handleApi(request, env, ctx) {
       summaryReviewEnabled: false,
       summaryReviewReady: Boolean(env.DB && env.MEDIA && env.ASSETS),
       scheduledHandoffIndexReadEnabled: String(env.SCHEDULED_HANDOFF_INDEX_READ_ENABLED || '') === '1',
+      literatureCatalogIndexShadowEnabled: literatureCatalogIndexShadowEnabled(env),
+      literatureCatalogIndexReadEnabled: literatureCatalogIndexReadEnabled(env),
+      literatureCatalogIndexReadPathActive: false,
+      literatureCatalogIndexDb: Boolean(env.LITERATURE_INDEX_DB),
       userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
       userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1',
       siteAnalyticsMaterializedShadowEnabled: String(env.SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED || '') === '1',
@@ -334,6 +347,38 @@ async function handleApi(request, env, ctx) {
     const body = await readJson(request);
     return resultResponse(await compareSummaryReviewCandidateShadow(env, {
       preferredDoi: String(body?.preferredDoi || ''),
+    }));
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/admin/literature-catalog-index/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getLiteratureCatalogIndexStatus(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-catalog-index/begin') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await beginLiteratureCatalogGeneration(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-catalog-index/import') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await importLiteratureCatalogIndexBatch(env, await readJson(request)));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-catalog-index/finalize') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const body = await readJson(request);
+    return resultResponse(await finalizeLiteratureCatalogGeneration(env, body?.catalogId));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/literature-catalog-index/query') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await queryLiteratureCatalogIndex(env, {
+      catalogId: url.searchParams.get('catalogId') || '',
+      query: url.searchParams.get('q') || '',
+      limit: Number(url.searchParams.get('limit') || 60),
+      cursor: url.searchParams.get('cursor') || '',
     }));
   }
 

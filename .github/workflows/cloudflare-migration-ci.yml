@@ -81,6 +81,9 @@ jobs:
       - name: Test reader-count materialization
         run: npm run test:reader-counts
 
+      - name: Test dormant literature catalog index
+        run: npm run test:literature-catalog-index
+
       - name: Wrangler dry-run build
         run: npm run check
 
