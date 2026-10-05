@@ -5,6 +5,8 @@ Status: active
 
 ## Daily publication shape
 
+- Daily main-article title should identify the selected feature directly after the literature-daily label, using the pattern **“有机合成文献日报｜日期｜今日精选｜期刊：中文论文标题”** when platform length allows. The Chinese paper title should be a faithful translation of the original title, not a marketing rewrite.
+
 The 10:00 Asia/Shanghai WeChat update is one multi-article push with two editorial entries:
 
 1. **今日更新 + 每日精选**
