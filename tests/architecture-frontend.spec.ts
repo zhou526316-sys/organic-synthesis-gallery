@@ -125,6 +125,37 @@ test('result pagination keeps DOM cardinality bounded across pages', async ({ pa
 });
 
 
+
+test('verified Hot fallback stays bounded when full membership verification fails', async ({ page }) => {
+  const data = fixture();
+  let legacyCorpusRequests = 0;
+
+  await page.route(/\/architecture-v1\/membership\.[a-f0-9]{64}\.json(?:\?.*)?$/, async route => {
+    await route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":"forced membership failure"}' });
+  });
+  await page.route('**/papers.gz.b64', async route => {
+    legacyCorpusRequests += 1;
+    await route.abort();
+  });
+  await stubOptionalApi(page);
+
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-hot-fallback');
+  await expect(page.locator('.architecture-read-limited')).toBeVisible();
+  await expect(page.locator('#resultScopeLabel')).toHaveText(/近三个月|Last 3 months/);
+  await expect(page.locator('#resultCount')).toHaveText(String(data.hotCount));
+  await expect.poll(async () => page.locator('#gallery > .card').count()).toBe(Math.min(data.hotCount, RESULT_WINDOW_SIZE));
+
+  const registry = await page.locator('#gallery-literature-doi-registry').evaluate(node => JSON.parse(node.textContent || '{}'));
+  expect(registry.scope).toBe('hot-fallback');
+  expect(registry.complete).toBe(false);
+  expect(registry.count).toBe(data.hotCount);
+  expect(registry.dois).not.toContain(data.archiveDoi);
+  expect(legacyCorpusRequests).toBe(0);
+});
+
 test('Archive DOI deep-link is resolved on demand and placed first', async ({ page }) => {
   const data = fixture();
   await stubOptionalApi(page);
