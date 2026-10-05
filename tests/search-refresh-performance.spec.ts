@@ -76,11 +76,12 @@ test('search reuses metadata and count reads while matching DOI and clearing hig
   await info.attach('search-cost.json',{body:JSON.stringify({countReads:0,metadataWrites:0}),contentType:'application/json'});
 });
 
-test('new DOM card registers immediately and loads only its uncached DOI', async ({page},info) => {
+test('new DOM card registers immediately and loads only its uncached DOI without changing corpus totals', async ({page},info) => {
   const metrics=await measure(page);
   const actions=await open(page,1280); await actions.locator('[data-action="close"]').click();
   await frames(page);
   const beforeReads=metrics.reads.length, beforeWrites=await writes(page);
+  const corpusTotal=await page.locator('#resultCount').textContent();
   const doi='10.5555/gallery-ui-refresh-fixture';
   await page.locator('#gallery').evaluate((gallery,doi)=>{
     const card=document.createElement('article'); card.className='card'; card.dataset.refreshFixture='true';
@@ -92,10 +93,11 @@ test('new DOM card registers immediately and loads only its uncached DOI', async
   await expect.poll(()=>metrics.reads.slice(beforeReads).flat()).toEqual([doi]);
   expect((await state(page)).metadata[doi].title).toBe('Distinctive refresh regression fixture');
   expect((await writes(page))-beforeWrites).toBe(1);
-  await page.locator('#search').fill('Distinctive refresh regression fixture');
-  await expect(page.locator('#resultCount')).toHaveText('1');
+  // The result total belongs to the canonical corpus/window layer. A transient
+  // decorated DOM card must not manufacture an extra literature result.
+  await expect(page.locator('#resultCount')).toHaveText(corpusTotal || '0');
   await fixture.evaluate(element=>element.remove());
-  await expect(page.locator('#resultCount')).toHaveText('0');
+  await expect(page.locator('#resultCount')).toHaveText(corpusTotal || '0');
   expect(metrics.marks).toEqual([]); expect(metrics.errors).toEqual([]);
   await info.attach('new-card-cost.json',{body:JSON.stringify({readDois:metrics.reads.slice(beforeReads).flat(),metadataWrites:1}),contentType:'application/json'});
 });

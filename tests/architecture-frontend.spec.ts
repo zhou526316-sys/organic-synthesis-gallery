@@ -1,6 +1,7 @@
 import { test, expect, devices } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
+import { RESULT_WINDOW_SIZE } from '../shared/result-window.js';
 
 test.use({
   browserName: 'webkit',
@@ -88,9 +89,12 @@ test('architecture-v1 landing is Hot-only while all-time membership stays comple
 
   await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
     .toBe('architecture-v1');
-  await expect.poll(async () => page.locator('#gallery > .card').count(), { timeout: 30000 }).toBe(data.hotCount);
+  const expectedWindow = Math.min(data.hotCount, RESULT_WINDOW_SIZE);
+  await expect.poll(async () => page.locator('#gallery > .card').count(), { timeout: 30000 }).toBe(expectedWindow);
   await expect(page.locator('#resultScopeLabel')).toHaveText(/近三个月|Last 3 months/);
   await expect(page.locator('#resultCount')).toHaveText(String(data.hotCount));
+  await expect(page.locator('#resultWindowStatus')).toContainText(`/`);
+  await expect(page.locator('#nextResultPage')).toHaveAttribute('data-available', data.hotCount > RESULT_WINDOW_SIZE ? 'true' : 'false');
   await expect(page.locator('#resultScopeLabel')).toHaveAttribute('title', /滚动近三个月|rolling three-calendar-month/);
 
   const registry = await page.locator('#gallery-literature-doi-registry').evaluate(node => JSON.parse(node.textContent || '{}'));
@@ -98,6 +102,28 @@ test('architecture-v1 landing is Hot-only while all-time membership stays comple
   expect(registry.dois).toContain(data.archiveDoi);
   expect(data.hotCount).toBeLessThan(data.memberCount);
 });
+
+test('result pagination keeps DOM cardinality bounded across pages', async ({ page }) => {
+  const data = fixture();
+  await stubOptionalApi(page);
+  await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
+  await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
+    .toBe('architecture-v1');
+
+  const firstCount = await page.locator('#gallery > .card').count();
+  expect(firstCount).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+
+  if (data.hotCount > RESULT_WINDOW_SIZE) {
+    await expect(page.locator('#nextResultPage')).toBeEnabled();
+    await page.locator('#nextResultPage').click();
+    await expect.poll(async () => page.locator('#gallery > .card').count()).toBe(Math.min(RESULT_WINDOW_SIZE, data.hotCount - RESULT_WINDOW_SIZE));
+    await expect(page.locator('#previousResultPage')).toBeEnabled();
+    await expect(page.locator('#resultWindowStatus')).toContainText('2/');
+  } else {
+    await expect(page.locator('#nextResultPage')).toBeDisabled();
+  }
+});
+
 
 test('Archive DOI deep-link is resolved on demand and placed first', async ({ page }) => {
   const data = fixture();
@@ -108,7 +134,8 @@ test('Archive DOI deep-link is resolved on demand and placed first', async ({ pa
     .toBe('architecture-v1');
   const first = page.locator('#gallery > .card').first();
   await expect(first).toHaveAttribute('data-doi', data.archiveDoi, { timeout: 30000 });
-  await expect.poll(async () => page.locator('#gallery > .card').count()).toBe(data.hotCount + 1);
+  await expect.poll(async () => page.locator('#gallery > .card').count()).toBe(Math.min(data.hotCount + 1, RESULT_WINDOW_SIZE));
+  await expect(page.locator('#resultCount')).toHaveText(String(data.hotCount + 1));
   await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
 });
 
