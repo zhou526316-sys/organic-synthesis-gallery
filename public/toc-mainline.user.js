@@ -3460,8 +3460,11 @@ function embeddedJobDois(value) {
       if (result.figures.stored+result.figures.failed<labels.length) result.figures.limitReached=true;
       result.figures.status=!wantsFigures?'not_requested':!labels.length?'not_found':result.figures.failed||result.figures.limitReached?'partial':'staged';
       var tocOk=!wantsToc||result.toc.status==='stored'||result.toc.status==='already_available';
-      var figuresOk=!wantsFigures||result.figures.status==='staged';
-      if(!wantsFigures){
+      var figuresRequired=job.captureFigures===true;
+      var figuresOk=!figuresRequired||result.figures.status==='staged';
+      // Opportunistic body-figure capture never controls queue completion.
+      // Only an explicit figure obligation may downgrade an otherwise-complete TOC job.
+      if(!figuresRequired){
         result.status=tocOk?'success':'failed';
       }else{
         result.status=tocOk&&figuresOk?'success':tocOk||result.figures.stored?'partial':'failed';
@@ -4304,7 +4307,8 @@ function embeddedJobDois(value) {
           var job=Object.assign({},raw);
           // Missing text may be captured while this TOC visit is already open,
           // but it never creates an evidence-only job.
-          job.captureEvidence=evidenceMissing.has(normalizeDoi(job.doi));
+          job.opportunisticEvidence=evidenceMissing.has(normalizeDoi(job.doi));
+          job.captureEvidence=false;
           job.capturePrivatePdf=privatePdfQueueNeeded(job,Date.now());
           merged.set(normalizeDoi(job.doi),job);
         });
@@ -5131,8 +5135,10 @@ function embeddedJobDois(value) {
         mediaNeed:'toc',
         state:'no_visual',
         captureToc:true,
-        captureFigures:true,
+        captureFigures:false,
         captureEvidence:false,
+        opportunisticFigures:true,
+        opportunisticEvidence:false,
         capturePrivatePdf:false,
         allowFigureOne:publisherForDoi(doi)!=='ccs'&&!official&&(isLatest||natureScienceFamily),
         _queueIndex:index
