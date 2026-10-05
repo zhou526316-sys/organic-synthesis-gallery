@@ -333,48 +333,33 @@ def build_content(
         "</p>",
     ]
 
-    if len(papers) > 5:
-        journal_counts = [
-            f"{journal} {len(items)} 篇"
-            for journal, items in grouped.items()
-        ]
+    for journal, items in grouped.items():
         parts.append(
-            "<section style='background:#f7f8fa;border-radius:9px;padding:12px 14px;margin:0 0 18px;'>"
-            "<p style='font-size:13px;color:#555;line-height:1.75;margin:0;'>"
-            + esc(" · ".join(journal_counts))
-            + "</p>"
-            "<p style='font-size:11px;color:#999;line-height:1.6;margin:5px 0 0;'>完整标题与作者请点击文末“阅读原文”查看。</p>"
-            "</section>"
+            "<h2 style='font-size:16px;line-height:1.45;margin:19px 0 7px;"
+            "padding-left:8px;border-left:3px solid #222;'>"
+            f"{esc(journal)} <span style='font-size:10px;font-weight:400;color:#999;'>"
+            f"{len(items)} 篇</span></h2>"
         )
-    else:
-        for journal, items in grouped.items():
+        for paper in items:
+            badge = ""
+            if featured and normalize_doi(featured.get("paper", {}).get("doi")) == paper["doi"]:
+                badge = "<span style='display:inline-block;font-size:9px;color:#8b5a08;background:#fff0cf;border-radius:8px;padding:1px 5px;margin-right:5px;'>每日精选</span>"
             parts.append(
-                "<h2 style='font-size:17px;line-height:1.45;margin:22px 0 8px;"
-                "padding-left:9px;border-left:3px solid #222;'>"
-                f"{esc(journal)} <span style='font-size:11px;font-weight:400;color:#999;'>"
-                f"{len(items)} 篇</span></h2>"
+                "<section style='margin:0 0 10px;padding:0 0 9px;border-bottom:1px solid #f0f1f3;'>"
+                f"<div style='font-size:14px;font-weight:700;line-height:1.5;margin-bottom:2px;'>{badge}{esc(paper['titleZh'])}</div>"
+                f"<div style='font-size:10px;color:#8a93a3;line-height:1.45;'>{esc(paper['title'])}</div>"
+                "</section>"
             )
-            for paper in items:
-                authors = ", ".join(paper["authors"])
-                badge = ""
-                if featured and normalize_doi(featured.get("paper", {}).get("doi")) == paper["doi"]:
-                    badge = "<span style='display:inline-block;font-size:10px;color:#fff;background:#222;border-radius:9px;padding:1px 6px;margin-right:6px;'>今日精选</span>"
-                parts.append(
-                    "<section style='margin:0 0 14px;padding:0 0 13px;border-bottom:1px solid #eee;'>"
-                    f"<div style='font-size:15px;font-weight:700;line-height:1.58;margin-bottom:3px;'>{badge}{esc(paper['titleZh'])}</div>"
-                    f"<div style='font-size:12px;color:#666;line-height:1.55;margin-bottom:5px;'>{esc(paper['title'])}</div>"
-                    f"<div style='font-size:11px;color:#999;line-height:1.5;'>{esc(authors)}</div>"
-                    "</section>"
-                )
 
     if gallery_qr_url:
+        card_visuals = uploaded_urls.get("__gallery_cards__", {}) if isinstance(uploaded_urls.get("__gallery_cards__"), dict) else {}
         parts.append(
             build_gallery_jump_card(
                 slot[:10],
                 papers,
                 featured,
-                uploaded_urls,
                 gallery_qr_url,
+                card_visuals=card_visuals,
             )
         )
 
@@ -1060,6 +1045,17 @@ def prepare_featured_local_images(featured: dict | None, override_pdf: str = "")
         fig_id = str(fig.get("id") or "").strip()
         if not fig_id:
             continue
+        repo_image = str(fig.get("repo_path") or "").strip()
+        if repo_image:
+            local = (ROOT / repo_image).resolve()
+            try:
+                local.relative_to(ROOT.resolve())
+            except ValueError as exc:
+                raise RuntimeError(f"featured repo_path escapes repository: {repo_image}") from exc
+            if not local.exists():
+                raise RuntimeError(f"featured repository image is missing: {repo_image}")
+            prepared[fig_id] = local
+            continue
         if isinstance(fig.get("pdf_render"), dict):
             source_spec = dict(featured)
             figure_pdf_url = str(fig.get("pdf_url") or "").strip()
@@ -1223,6 +1219,52 @@ def upload_featured_images(token: str, featured: dict | None, override_pdf: str 
         )
     return uploaded, local_images
 
+
+def upload_gallery_card_visuals(token: str, papers: list[dict], featured: dict | None, limit: int = 4) -> dict[str, str]:
+    """Upload real Gallery TOC/primary visuals for compact daily-card miniatures."""
+    featured_doi = normalize_doi((featured or {}).get("paper", {}).get("doi"))
+    ordered = list(papers)
+    ordered.sort(key=lambda p: (
+        0 if featured_doi and normalize_doi(p.get("doi")) == featured_doi else 1,
+        JOURNAL_ORDER.get(str(p.get("journal")), 100),
+        str(p.get("titleZh") or p.get("title") or ""),
+    ))
+    selected = [normalize_doi(p.get("doi")) for p in ordered[:max(1, int(limit))]]
+    selected = [x for x in selected if x]
+    if not selected:
+        return {}
+
+    try:
+        payload = json_request(
+            "https://api.gczhouwld.com/api/media/batch",
+            method="POST",
+            payload={"dois": selected},
+        )
+    except Exception:
+        return {}
+
+    by_doi: dict[str, str] = {}
+    for item in payload.get("items", []) if isinstance(payload, dict) else []:
+        if not isinstance(item, dict):
+            continue
+        doi = normalize_doi(item.get("doi"))
+        toc = item.get("toc") if isinstance(item.get("toc"), dict) else {}
+        image_url = str(toc.get("imageUrl") or "").strip()
+        if not doi or not image_url:
+            continue
+        try:
+            local = download_body_image(image_url, "gallery-" + hashlib.sha256(doi.encode()).hexdigest()[:10])
+            by_doi[doi] = upload_local_body_image(
+                token,
+                local,
+                "gallery-card-" + hashlib.sha256(doi.encode()).hexdigest()[:10],
+                DEFAULT_BODY_IMAGE_CACHE,
+            )
+        except Exception:
+            continue
+    return by_doi
+
+
 def prepare_gallery_qr_image(target_url: str) -> Path:
     """Create a high-resolution QR PNG for the daily Gallery entry."""
     target = Path(tempfile.gettempdir()) / "osg-wechat-gallery-qr.png"
@@ -1266,23 +1308,23 @@ def build_gallery_jump_card(
     publication_date: str,
     papers: list[dict],
     featured: dict | None,
-    uploaded_urls: dict[str, str],
     qr_url: str,
+    card_visuals: dict[str, str] | None = None,
 ) -> str:
-    """Compact entry banner: several real cards from today's Gallery + QR."""
+    """Compact entry banner: actual miniatures of today's Gallery cards + QR."""
     if not qr_url or not papers:
         return ""
+    card_visuals = card_visuals or {}
 
     featured_doi = normalize_doi((featured or {}).get("paper", {}).get("doi"))
     ordered = list(papers)
-    if featured_doi:
-        ordered.sort(
-            key=lambda p: (
-                0 if normalize_doi(p.get("doi")) == featured_doi else 1,
-                JOURNAL_ORDER.get(str(p.get("journal")), 100),
-                str(p.get("titleZh") or p.get("title") or ""),
-            )
+    ordered.sort(
+        key=lambda p: (
+            0 if featured_doi and normalize_doi(p.get("doi")) == featured_doi else 1,
+            JOURNAL_ORDER.get(str(p.get("journal")), 100),
+            str(p.get("titleZh") or p.get("title") or ""),
         )
+    )
     shown = ordered[:4]
 
     def card_cell(card: dict) -> str:
@@ -1290,8 +1332,7 @@ def build_gallery_jump_card(
         is_featured = bool(featured_doi and doi == featured_doi)
         title = str(card.get("titleZh") or card.get("title") or doi or "")
         journal = str(card.get("journal") or "")
-        authors = [str(x).strip() for x in (card.get("authors") or []) if str(x).strip()]
-        author_text = "、".join(authors[:2]) + (" 等" if len(authors) > 2 else "")
+        visual = card_visuals.get(doi or "", "")
         border = "#d7a446" if is_featured else "#dfe5ef"
         bg = "#fffdf7" if is_featured else "#ffffff"
         badge = (
@@ -1301,18 +1342,24 @@ def build_gallery_jump_card(
             "<span style='display:inline-block;font-size:7px;font-weight:700;color:#3159bd;"
             "background:#edf3ff;border-radius:999px;padding:2px 5px;margin-right:3px;'>本期文献</span>"
         )
+        visual_html = (
+            f"<img src='{esc(visual)}' style='display:block;width:100%;height:66px;"
+            "object-fit:contain;background:#fff;border:1px solid #e7eaf0;border-radius:6px;"
+            "margin:5px 0 6px;'/>"
+            if visual else ""
+        )
         return (
-            f"<section style='min-height:118px;background:{bg};border:1px solid {border};"
-            "border-radius:8px;padding:8px;margin:0;'>"
-            "<p style='margin:0 0 5px;line-height:1.2;'>"
+            f"<section style='min-height:142px;background:{bg};border:1px solid {border};"
+            "border-radius:8px;padding:7px;margin:0;'>"
+            "<p style='margin:0 0 3px;line-height:1.2;'>"
             + badge
             + f"<span style='font-size:7px;font-weight:700;color:#3159bd;"
               f"background:#eef3ff;border-radius:999px;padding:2px 5px;'>{esc(journal)}</span>"
             + "</p>"
-            + f"<p style='font-size:10px;line-height:1.42;font-weight:700;color:#222;"
-              f"margin:0 0 5px;'>{esc(title)}</p>"
-            + (f"<p style='font-size:7px;line-height:1.3;color:#667085;margin:0 0 4px;'>{esc(author_text)}</p>" if author_text else "")
-            + f"<p style='font-size:7px;line-height:1.25;color:#98a2b3;margin:0;"
+            + visual_html
+            + f"<p style='font-size:9px;line-height:1.35;font-weight:700;color:#222;"
+              f"margin:0 0 3px;'>{esc(title)}</p>"
+            + f"<p style='font-size:6.5px;line-height:1.25;color:#98a2b3;margin:0;"
               f"word-break:break-all;'>DOI {esc(doi)}</p>"
             + "</section>"
         )
@@ -1329,21 +1376,21 @@ def build_gallery_jump_card(
         rows.append(row)
 
     remaining = max(0, len(papers) - len(shown))
-    more = f"另有 {remaining} 篇" if remaining else "已展示全部"
+    more = f"另有 {remaining} 篇，扫码查看完整列表" if remaining else "扫码进入网页继续搜索与筛选"
 
     return (
-        "<section style='margin:15px 0 24px;'>"
+        "<section style='margin:16px 0 25px;'>"
         "<table role='presentation' cellpadding='0' cellspacing='0' style='width:100%;"
         "border-collapse:separate;border-spacing:0;background:#f7f9fc;border:1px solid #dfe5ef;"
         "border-radius:12px;overflow:hidden;'>"
         "<tr>"
         "<td style='width:70%;vertical-align:middle;padding:9px 5px 9px 8px;'>"
         f"<p style='font-size:9px;color:#667085;font-weight:700;letter-spacing:.04em;margin:0 3px 4px;'>"
-        f"今日新增卡片缩略展示 · {len(papers)} 篇</p>"
+        f"网页今日新增卡片 · {len(papers)} 篇</p>"
         "<table role='presentation' cellpadding='0' cellspacing='0' style='width:100%;border-collapse:collapse;'>"
         + "".join(rows)
         + "</table>"
-        f"<p style='font-size:8px;color:#98a2b3;line-height:1.4;margin:4px 4px 0;'>{esc(more)}，扫码查看完整列表。</p>"
+        f"<p style='font-size:8px;color:#98a2b3;line-height:1.4;margin:4px 4px 0;'>{esc(more)}</p>"
         "</td>"
         "<td style='width:30%;vertical-align:middle;text-align:center;padding:12px 10px 12px 4px;"
         "border-left:1px solid #e1e5eb;'>"
@@ -1357,7 +1404,6 @@ def build_gallery_jump_card(
         "前往有机合成文献库查看今日全部新增，并按期刊、日期或关键词继续搜索与筛选。</p>"
         "</section>"
     )
-
 def prepare_featured_cover(featured: dict | None, override_pdf: str = "") -> Path | None:
     if not featured:
         return None
@@ -2098,6 +2144,7 @@ def main() -> int:
     load_env(Path(args.env_file))
     token = get_access_token()
     uploaded_urls, local_images = upload_featured_images(token, featured, args.featured_pdf)
+    uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 4)
     gallery_target_url = f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
     qr_local = prepare_gallery_qr_image(gallery_target_url)
     gallery_qr_url = upload_local_body_image(
