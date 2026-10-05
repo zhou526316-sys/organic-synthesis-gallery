@@ -66,7 +66,7 @@ try{
   let rejectsOld=false;try{__captureTest.pairedJobs({webpageDoiCount:512,visibleGaps:[]},{items:{}});}catch(_){rejectsOld=true;}
   return {out,rejectsOld};
  },{doi,foreign});
- test('historical official-TOC DOI schedules body figures without re-fetching TOC',plan.out.find(j=>j.doi===doi).mediaNeed==='figures'&&plan.out.find(j=>j.doi===doi).captureToc===false&&plan.out.find(j=>j.doi===doi).captureFigures===true);
+ test('historical official-TOC DOI is omitted because body-only gaps no longer create queue work',!plan.out.some(j=>j.doi===doi));
  test('historical missing-TOC DOI captures TOC and body figures in one visit without Figure 1 fallback',plan.out.find(j=>j.doi===foreign).mediaNeed==='toc'&&plan.out.find(j=>j.doi===foreign).captureToc===true&&plan.out.find(j=>j.doi===foreign).captureFigures===true&&plan.out.find(j=>j.doi===foreign).allowFigureOne===false);
  test('old incomplete queue is rejected rather than falsely called complete',plan.rejectsOld);
  // Real Chromium DOM + data-image decoding + HTTP storage receipts, with no external writes.
