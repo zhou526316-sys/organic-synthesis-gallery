@@ -368,7 +368,7 @@ def build_content(
         paper = featured.get("paper") or {}
         parts.extend([
             "<p style='height:1px;background:#e8eaec;margin:28px 0;'></p>",
-            "<p style='font-size:11px;letter-spacing:.12em;color:#32675f;font-weight:700;margin:0 0 6px;'>DAILY PICK · 01</p>",
+            f"<p style='font-size:11px;letter-spacing:.12em;color:#32675f;font-weight:700;margin:0 0 6px;'>{esc(featured.get('kicker') or '每日精选')}</p>",
             f"<h2 style='font-size:21px;line-height:1.5;margin:0 0 10px;'>{esc(featured.get('headline') or '')}</h2>",
             f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
         ])
@@ -416,7 +416,7 @@ def build_content(
         takehome = featured.get("takehome", [])
         if takehome:
             parts.append("<section style='background:#202426;color:#fff;border-radius:10px;padding:15px 16px;margin:24px 0;'>")
-            parts.append("<h3 style='font-size:16px;line-height:1.5;margin:0 0 8px;color:#fff;'>这篇论文最值得学什么？</h3>")
+            parts.append(f"<h3 style='font-size:16px;line-height:1.5;margin:0 0 8px;color:#fff;'>{esc(featured.get('takehome_heading') or '这篇论文最值得学什么？')}</h3>")
             for item in takehome:
                 parts.append(f"<p style='font-size:13px;line-height:1.75;margin:0 0 7px;color:#f4f5f6;'>• {esc(item)}</p>")
             parts.append("</section>")
@@ -446,7 +446,7 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
     paper = data.get("paper") or {}
     parts = [
         "<section style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#222;line-height:1.72;'>",
-        "<p style='font-size:11px;letter-spacing:.14em;color:#32675f;font-weight:700;margin:0 0 7px;'>RETROSPECTIVE PICK · 往期精选</p>",
+        f"<p style='font-size:11px;letter-spacing:.14em;color:#32675f;font-weight:700;margin:0 0 7px;'>{esc(data.get('kicker') or '往期精选')}</p>",
         f"<h2 style='font-size:22px;line-height:1.52;margin:0 0 10px;'>{esc(data.get('headline') or data.get('title') or '')}</h2>",
         f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
     ]
@@ -494,7 +494,7 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
     takehome = data.get("takehome", [])
     if takehome:
         parts.append("<section style='background:#202426;color:#fff;border-radius:10px;padding:15px 16px;margin:25px 0;'>")
-        parts.append("<h3 style='font-size:16px;line-height:1.5;margin:0 0 8px;color:#fff;'>这篇论文最值得学什么？</h3>")
+        parts.append(f"<h3 style='font-size:16px;line-height:1.5;margin:0 0 8px;color:#fff;'>{esc(data.get('takehome_heading') or '这篇论文最值得学什么？')}</h3>")
         for item in takehome:
             parts.append(f"<p style='font-size:13px;line-height:1.75;margin:0 0 7px;color:#f4f5f6;'>• {esc(item)}</p>")
         parts.append("</section>")
