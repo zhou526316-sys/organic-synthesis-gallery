@@ -4,10 +4,10 @@ import {spawnSync} from 'node:child_process';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
-import {getStagedArticleFigures,getTampermonkeyReports,importTampermonkeyReport} from '../cloudflare/worker/src/local-captures.js';
+import {getLocalCaptureIndex,getStagedArticleFigures,getTampermonkeyReports,importTampermonkeyReport} from '../cloudflare/worker/src/local-captures.js';
 import {readPublicationPages} from '../cloudflare/scripts/read-publication-pages.mjs';
 import {completedPacketMap,fetchStored} from '../cloudflare/scripts/merge-new-body-auto.mjs';
-const E=1790082000000,stageKey='local-captures/article-figures/stage-index.json',reportKey='local-captures/tampermonkey/report-index.json';
+const E=1790082000000,stageKey='local-captures/article-figures/stage-index.json',reportKey='local-captures/tampermonkey/report-index.json',localKey='local-captures/index.json';
 let passed=0;async function test(n,f){await f();passed++;console.log('MEDIA_DELIVERY_PASS '+n);}
 function env(items={},reports={}){
  const values=new Map([[stageKey,JSON.stringify({items})],[reportKey,JSON.stringify({items:reports})]]);
@@ -48,6 +48,17 @@ await test('corrupt indexes are503, not fabricated empty ready lists',async()=>{
 await test('unsafe offset, unbounded page limit and missing snapshot are400',async()=>{
  for(const q of ['offset=-1','limit=500000','offset=250','snapshot=not-a-hash'])assert.equal((await getStagedArticleFigures(new Request(stageUrl+'?publication=1&'+q),environment)).status,400);
 });
+await test('RSC Accepted Manuscript first-page preview is excluded from local TOC inventory',async()=>{
+ const doi='10.1039/d6sc06874j';
+ const bad={doi,kind:'official',captureVersion:'6.2.20',jobId:'rsc-preview-fixture-1234',pageDoi:doi,mediaGeneration:E,updatedAt:E+5000,
+  articleUrl:'https://pubs.rsc.org/sc/article/doi/10.1039/D6SC06874J/example',
+  sourceUrl:'https://rscj.silverchair-cdn.com/rscj/content_public/journal/sc/jam/10.1039_d6sc06874j/1/d6sc06874j.pdf.gif',
+  caption:'Article PDF first page preview',r2Key:'local-captures/images/rsc-preview.gif',contentHash:'f6f213c340ab99a7e1af6d5ac03b2376'};
+ const e=env();e.values.set(localKey,JSON.stringify({version:1,updatedAt:E+5000,items:{bad}}));
+ const out=await getLocalCaptureIndex(new Request('https://api.gczhouwld.com/api/media/local-capture-index'),e);
+ assert.equal(out.status,200);assert.equal(out.body.count,0);assert.equal(out.body.invalidFiltered,1);
+});
+
 await test('foreign DOI remains excluded from publication listing',async()=>{
  const r={...row(1),sourceUrl:row(2).sourceUrl};const e=env({r});const p=await readPublicationPages(stageUrl,'stage',u=>transport(u,e));assert.equal(p.count,0);
 });
