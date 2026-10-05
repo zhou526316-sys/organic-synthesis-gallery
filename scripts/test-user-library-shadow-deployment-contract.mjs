@@ -15,7 +15,7 @@ function section(source,start,end){
   return source.slice(a,b);
 }
 
-test('D3a migration is isolated, canonical, and applied before Worker deployment',()=>{
+test('D3b keeps the D3a migration isolated, canonical, and applied before Worker deployment',()=>{
   for(const table of ['user_library_head','user_paper_state','user_library_shadow_backfill']){
     assert.ok(schema.includes(table),table);
     assert.ok(migration.includes(table),table);
@@ -27,14 +27,22 @@ test('D3a migration is isolated, canonical, and applied before Worker deployment
   assert.ok(deploy.includes('wrangler d1 execute "$D1_NAME" --remote --file=../user-library-state-v2.sql'));
 });
 
-test('legacy account document remains the only production read path in D3a',()=>{
+test('D3b account reads are row-primary with a lazy legacy JSON fallback',()=>{
+  const helper=section(userUi,'async function readAccountLibraryState','async function linkProfileToSession');
+  assert.ok(helper.includes("SELECT revision, updated_at FROM user_library_state WHERE user_id = ?"));
+  assert.ok(helper.includes('readUserLibraryStateFromRows'));
+  assert.ok(helper.includes("readPath: 'rows'"));
+  assert.ok(helper.includes("SELECT state_json, revision, updated_at FROM user_library_state WHERE user_id = ?"));
+  assert.ok(helper.includes("readPath: legacy ? 'legacy_fallback' : 'legacy_empty'"));
   const account=section(userUi,'async function accountState','async function cleanOpenReaderCounts');
-  assert.ok(account.includes("SELECT state_json, revision, updated_at FROM user_library_state WHERE user_id = ?"));
-  assert.ok(!account.includes('SELECT global_json'));
-  assert.ok(!account.includes('FROM user_library_head'));
-  assert.ok(!account.includes('FROM user_paper_state'));
+  assert.ok(account.includes('const current = await readAccountLibraryState'));
+  assert.ok(account.includes('state: current.state'));
+  assert.ok(account.includes('readPath: current.readPath'));
   assert.ok(userUi.includes('const MAX_LIBRARY_STATE_BYTES = 1_500_000'));
-  assert.ok(shadow.includes('readPathActive:false'));
+  assert.ok(shadow.includes('userLibraryRowReadEnabled'));
+  assert.ok(shadow.includes("reason:'row_revision_stale'"));
+  assert.ok(shadow.includes("reason:'row_count_mismatch'"));
+  assert.ok(shadow.includes("reason:'row_source_hash_mismatch'"));
 });
 
 test('account merge/save dual-write the row shadow without making shadow failure user-visible',()=>{
@@ -57,16 +65,21 @@ test('row model preserves stable paper keys and metadata-only rows instead of as
   assert.ok(migration.includes('doi TEXT'));
 });
 
-test('D3a production deployment completes historical backfill and two full semantic parity passes',()=>{
+test('D3b production deployment activates row reads only after historical backfill and two full semantic parity passes',()=>{
   assert.ok(deploy.includes('USER_LIBRARY_ROW_SHADOW_ENABLED = "1"'));
+  assert.ok(deploy.includes('USER_LIBRARY_ROW_READ_ENABLED = "1"'));
   const block=section(
     deploy,
-    '- name: Backfill and compare user library row shadow',
+    '- name: Backfill and verify user library row read path',
     '- name: Advance and reconcile Evidence Index shadow',
   );
   assert.ok(block.includes('continue-on-error: true'));
-  assert.ok(block.includes("phase:'D3a-user-library-row-shadow-live'"));
-  assert.ok(block.includes('readPathActive:false'));
+  assert.ok(block.includes("phase:'D3b-user-library-row-read-live'"));
+  assert.ok(block.includes('readPathActive:true'));
+  assert.ok(block.includes('status.readConfigured!==true'));
+  assert.ok(block.includes('page.readPathActive!==true'));
+  assert.ok(block.includes('after.readPathActive===true'));
+  assert.ok(block.includes('finalStatus.readPathActive!==true'));
   assert.ok(block.includes('/api/admin/user-library-shadow/backfill?limit=20'));
   assert.ok(block.includes('/api/admin/user-library-shadow/compare?offset='));
   assert.ok(block.includes('passes.length<2'));
@@ -81,14 +94,17 @@ test('D3a production deployment completes historical backfill and two full seman
   assert.ok(preserve.includes('if-no-files-found: error'));
 });
 
-test('admin routes and health expose shadow status without enabling a row read path',()=>{
+test('admin routes and health expose D3b row-read activation',()=>{
   for(const path of [
     '/api/admin/user-library-shadow/status',
     '/api/admin/user-library-shadow/backfill',
     '/api/admin/user-library-shadow/compare',
   ]) assert.ok(index.includes(path),path);
   assert.ok(index.includes("userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1'"));
+  assert.ok(index.includes("userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1'"));
   assert.ok(deploy.includes('body?.userLibraryRowShadowEnabled === true'));
+  assert.ok(deploy.includes('body?.userLibraryRowReadEnabled === true'));
+  assert.ok(shadow.includes('readConfigured,readPathActive'));
 });
 
 console.log('USER_LIBRARY_ROW_SHADOW_DEPLOYMENT_CONTRACT_PASS');

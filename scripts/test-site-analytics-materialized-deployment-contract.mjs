@@ -79,7 +79,7 @@ test('D4b deployment activates materialized reads only after backfill and stable
   const block=section(
     deploy,
     '- name: Backfill and verify materialized site analytics read path',
-    '- name: Backfill and compare user library row shadow',
+    '- name: Backfill and verify user library row read path',
   );
   assert.ok(block.includes('continue-on-error: true'));
   assert.ok(block.includes("phase:'D4b-site-analytics-materialized-read-live'"));
@@ -97,7 +97,7 @@ test('D4b deployment activates materialized reads only after backfill and stable
   const preserve=section(
     deploy,
     '- name: Preserve materialized site analytics shadow report',
-    '- name: Backfill and compare user library row shadow',
+    '- name: Backfill and verify user library row read path',
   );
   assert.ok(preserve.includes('if-no-files-found: error'));
 });

@@ -35,6 +35,9 @@ function doiForPaperKey(paperKey, metadata) {
 export function userLibraryRowShadowEnabled(env) {
   return String(env?.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1';
 }
+export function userLibraryRowReadEnabled(env) {
+  return String(env?.USER_LIBRARY_ROW_READ_ENABLED || '') === '1';
+}
 
 export async function splitUserLibraryState(state) {
   if (!plainObject(state)) throw new Error('user_library_state_invalid');
@@ -122,15 +125,28 @@ export async function shadowWriteUserLibraryState(env, userId, state, revision, 
   }
 
   const current = await env.DB.prepare(
-    'SELECT revision, source_state_hash FROM user_library_head WHERE user_id = ?'
+    'SELECT revision, updated_at, source_state_hash, paper_count, metadata_count FROM user_library_head WHERE user_id = ?'
   ).bind(normalizedUserId).first();
   if (Number(current?.revision || 0) > rev) {
     return { enabled:true, written:false, skippedStale:true, currentRevision:Number(current.revision) };
   }
 
   const split = await splitUserLibraryState(state);
-  if (Number(current?.revision || 0) === rev && current?.source_state_hash === split.sourceStateHash) {
-    return { enabled:true, written:false, unchanged:true, revision:rev };
+  if (Number(current?.revision || 0) === rev
+      && Number(current?.updated_at || 0) === updated
+      && current?.source_state_hash === split.sourceStateHash) {
+    const integrity = await env.DB.prepare(`
+      SELECT COUNT(*) AS row_count,
+        COALESCE(SUM(CASE WHEN paper_present=1 THEN 1 ELSE 0 END),0) AS paper_count,
+        COALESCE(SUM(CASE WHEN metadata_present=1 THEN 1 ELSE 0 END),0) AS metadata_count
+      FROM user_paper_state
+      WHERE user_id=? AND revision=?
+    `).bind(normalizedUserId,rev).first();
+    if (Number(integrity?.row_count || 0) === split.rows.length
+        && Number(integrity?.paper_count || 0) === split.paperCount
+        && Number(integrity?.metadata_count || 0) === split.metadataCount) {
+      return { enabled:true, written:false, unchanged:true, revision:rev };
+    }
   }
 
   await writeRows(env, normalizedUserId, split, rev, updated);
@@ -155,6 +171,62 @@ export async function shadowWriteUserLibraryState(env, userId, state, revision, 
   };
 }
 
+export async function readUserLibraryStateFromRows(env, userId, legacyMeta = null) {
+  if (!userLibraryRowReadEnabled(env)) return { ready:false, reason:'user_library_row_read_disabled' };
+  if (!env?.DB) return { ready:false, reason:'user_library_shadow_db_missing' };
+  const normalizedUserId = safeText(userId, 300);
+  if (!normalizedUserId) return { ready:false, reason:'user_library_user_id_invalid' };
+
+  const legacy = legacyMeta || await env.DB.prepare(
+    'SELECT revision, updated_at FROM user_library_state WHERE user_id = ?'
+  ).bind(normalizedUserId).first();
+
+  const head = await env.DB.prepare(`
+    SELECT user_id,revision,updated_at,global_json,papers_split,metadata_split,
+      paper_count,metadata_count,source_state_hash,shadow_version
+    FROM user_library_head WHERE user_id=?
+  `).bind(normalizedUserId).first();
+
+  if (!legacy && !head) {
+    return { ready:true, readPath:'rows', revision:0, updatedAt:0, state:{} };
+  }
+  if (!legacy) return { ready:false, reason:'legacy_state_missing' };
+  if (!head) return { ready:false, reason:'row_head_missing' };
+  if (Number(head.revision || 0) !== Number(legacy.revision || 0)
+      || Number(head.updated_at || 0) !== Number(legacy.updated_at || 0)) {
+    return { ready:false, reason:'row_revision_stale' };
+  }
+
+  const rows = await env.DB.prepare(`
+    SELECT paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at
+    FROM user_paper_state
+    WHERE user_id=? AND revision=?
+    ORDER BY paper_key ASC
+  `).bind(normalizedUserId, head.revision).all();
+  const items = rows?.results || [];
+  const paperCount = items.reduce((sum,row)=>sum+(Number(row?.paper_present||0)===1?1:0),0);
+  const metadataCount = items.reduce((sum,row)=>sum+(Number(row?.metadata_present||0)===1?1:0),0);
+  if (paperCount !== Number(head.paper_count || 0) || metadataCount !== Number(head.metadata_count || 0)) {
+    return { ready:false, reason:'row_count_mismatch' };
+  }
+
+  let state;
+  try { state = rebuildUserLibraryState(head, items); }
+  catch { return { ready:false, reason:'row_rebuild_failed' }; }
+  const rebuiltHash = await sha256Hex(stableStateJson(state));
+  if (rebuiltHash !== String(head.source_state_hash || '')) {
+    return { ready:false, reason:'row_source_hash_mismatch' };
+  }
+  return {
+    ready:true,
+    readPath:'rows',
+    revision:Number(head.revision || 0),
+    updatedAt:Number(head.updated_at || 0),
+    state,
+    paperRows:items.length,
+  };
+}
+
 export async function getUserLibraryShadowStatus(env) {
   if (!env?.DB) return {status:503,body:{error:'user_library_shadow_db_missing'}};
   const [legacy,head,papers,mismatch,backfill] = await Promise.all([
@@ -173,10 +245,22 @@ export async function getUserLibraryShadowStatus(env) {
       FROM user_library_shadow_backfill WHERE id=1
     `).first(),
   ]);
+  const legacyUsers=Number(legacy?.count||0);
+  const shadowHeads=Number(head?.count||0);
+  const revisionMismatches=Number(mismatch?.count||0);
+  const backfillComplete=Number(backfill?.complete||0)===1;
+  const backfillHealthy=backfillComplete
+    &&Number(backfill?.invalid_states||0)===0
+    &&Number(backfill?.failed_users||0)===0
+    &&safeText(backfill?.last_error,180)==='';
+  const readConfigured=userLibraryRowReadEnabled(env);
+  const readPathActive=readConfigured&&userLibraryRowShadowEnabled(env)
+    &&backfillHealthy&&legacyUsers===shadowHeads&&revisionMismatches===0;
   return {status:200,body:{
-    version:1,shadowVersion:SHADOW_VERSION,enabled:userLibraryRowShadowEnabled(env),readPathActive:false,
-    legacyUsers:Number(legacy?.count||0),shadowHeads:Number(head?.count||0),paperRows:Number(papers?.count||0),
-    revisionMismatches:Number(mismatch?.count||0),
+    version:1,shadowVersion:SHADOW_VERSION,enabled:userLibraryRowShadowEnabled(env),
+    readConfigured,readPathActive,
+    legacyUsers,shadowHeads,paperRows:Number(papers?.count||0),
+    revisionMismatches,
     backfill:backfill?{
       complete:Number(backfill.complete||0)===1,
       scannedUsers:Number(backfill.scanned_users||0),syncedUsers:Number(backfill.synced_users||0),
@@ -298,7 +382,7 @@ export async function compareUserLibraryShadowPage(env, offsetValue = 0, limitVa
   const nextOffset=offset+rows.length;
   const complete=nextOffset>=Number(totals.body.legacyUsers||0);
   return {status:200,body:{
-    version:1,readPathActive:false,offset,limit,checked:rows.length,matched,
+    version:1,readPathActive:totals.body.readPathActive===true,offset,limit,checked:rows.length,matched,
     mismatched:rows.length-matched,reasons,complete,nextOffset:complete?null:nextOffset,
     legacyUsers:totals.body.legacyUsers,shadowHeads:totals.body.shadowHeads,
     revisionMismatches:totals.body.revisionMismatches,

@@ -1,6 +1,6 @@
 import { recordReaderOpen } from './reader-count-ledger.js';
 import { normalizeDoi } from './media.js';
-import { shadowWriteUserLibraryState, userLibraryRowShadowEnabled } from './user-library-shadow.js';
+import { readUserLibraryStateFromRows, shadowWriteUserLibraryState, userLibraryRowShadowEnabled } from './user-library-shadow.js';
 import { markMaterializedVisitorPaperOpen, markSiteAnalyticsMaterializedUnhealthy, materializeSitePageViewEvent, materializeSitePageViewForActiveRead, siteAnalyticsMaterializedReadEnabled, siteAnalyticsMaterializedShadowEnabled } from './site-analytics-materialized.js';
 
 const FEEDBACK_KINDS = new Set(['toc', 'image', 'title', 'date', 'duplicate', 'classification', 'other']);
@@ -184,6 +184,35 @@ async function safeAnalyticsShadowTask(env, ctx, taskFactory, label) {
   await task;
 }
 
+async function readAccountLibraryState(env, userId) {
+  const legacyMeta = await env.DB.prepare(
+    'SELECT revision, updated_at FROM user_library_state WHERE user_id = ?'
+  ).bind(userId).first();
+
+  const rowRead = await readUserLibraryStateFromRows(env, userId, legacyMeta);
+  if (rowRead?.ready) {
+    return {
+      exists: Number(rowRead.revision || 0) > 0,
+      revision: Number(rowRead.revision || 0),
+      updatedAt: Number(rowRead.updatedAt || 0),
+      state: rowRead.state || {},
+      readPath: 'rows',
+    };
+  }
+
+  const legacy = await env.DB.prepare(
+    'SELECT state_json, revision, updated_at FROM user_library_state WHERE user_id = ?'
+  ).bind(userId).first();
+  return {
+    exists: Boolean(legacy),
+    revision: Number(legacy?.revision || 0),
+    updatedAt: Number(legacy?.updated_at || 0),
+    state: parseState(legacy?.state_json) || {},
+    readPath: legacy ? 'legacy_fallback' : 'legacy_empty',
+    fallbackReason: String(rowRead?.reason || 'row_read_unavailable'),
+  };
+}
+
 async function linkProfileToSession(env, profileId, session) {
   if (!profileId) return;
   await env.DB.prepare(
@@ -210,20 +239,18 @@ async function accountState(env, payload, ctx) {
   if (profileId) await linkProfileToSession(env, profileId, session);
 
   const mode = String(payload?.mode || '');
-  const current = await env.DB.prepare(
-    'SELECT state_json, revision, updated_at FROM user_library_state WHERE user_id = ?'
-  ).bind(session.user_id).first();
+  const current = await readAccountLibraryState(env, session.user_id);
 
   if (mode === 'account-pull') {
-    const parsed = parseState(current?.state_json);
     return {
       status: 200,
       body: {
         account: {
           userId: session.user_id,
-          revision: Number(current?.revision || 0),
-          updatedAt: Number(current?.updated_at || 0),
-          state: parsed || {},
+          revision: current.revision,
+          updatedAt: current.updatedAt,
+          state: current.state,
+          readPath: current.readPath,
         },
       },
     };
@@ -235,11 +262,11 @@ async function accountState(env, payload, ctx) {
   const now = Date.now();
 
   if (mode === 'account-merge') {
-    const existing = parseState(current?.state_json);
+    const existing = current.exists ? current.state : null;
     const merged = existing ? mergeStates(existing, incoming, false) : incoming;
     const mergedJson = stateJson(merged);
     if (!mergedJson) return { status: 400, body: { error: 'merged_library_state_too_large' } };
-    const nextRevision = Number(current?.revision || 0) + 1;
+    const nextRevision = current.revision + 1;
     await env.DB.prepare(
       `INSERT INTO user_library_state (user_id, state_json, revision, updated_at)
        VALUES (?, ?, ?, ?)
@@ -253,8 +280,8 @@ async function accountState(env, payload, ctx) {
   }
 
   const expectedRevision = Number(payload?.revision || 0);
-  const currentRevision = Number(current?.revision || 0);
-  if (current && expectedRevision !== currentRevision) {
+  const currentRevision = current.revision;
+  if (current.exists && expectedRevision !== currentRevision) {
     return {
       status: 409,
       body: {
@@ -262,8 +289,9 @@ async function accountState(env, payload, ctx) {
         account: {
           userId: session.user_id,
           revision: currentRevision,
-          updatedAt: Number(current.updated_at || 0),
-          state: parseState(current.state_json) || {},
+          updatedAt: current.updatedAt,
+          state: current.state,
+          readPath: current.readPath,
         },
       },
     };

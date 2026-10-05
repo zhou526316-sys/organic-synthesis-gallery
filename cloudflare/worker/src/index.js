@@ -231,6 +231,7 @@ async function handleApi(request, env, ctx) {
       summaryReviewReady: Boolean(env.DB && env.MEDIA && env.ASSETS),
       scheduledHandoffIndexReadEnabled: String(env.SCHEDULED_HANDOFF_INDEX_READ_ENABLED || '') === '1',
       userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
+      userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1',
       siteAnalyticsMaterializedShadowEnabled: String(env.SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED || '') === '1',
       siteAnalyticsMaterializedReadEnabled: siteAnalyticsMaterializedReadEnabled(env),
       kv: Boolean(env.STATE),
