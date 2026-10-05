@@ -91,6 +91,10 @@ try{
     const out=await page.evaluate(async()=>{T.setMaybe(async()=>({status:'failed',reason:'fixture_pdf_failure'}));return T.finishPairedJob({doi:'10.1021/jacs.6c12345',jobId:'fixture-job-12345678'},{status:'success',reason:'media_ok',figures:{discovered:0},fulltext:{status:'stored'}},[],null)});
     assert.equal(out.status,'success');assert.equal(out.privatePdf.status,'failed');
   });
+  await tc('pure PDF job cannot report success when PDF capture fails',async()=>{
+    const out=await page.evaluate(async()=>{T.setMaybe(async()=>({status:'failed',reason:'fixture_pdf_failure'}));return T.finishPairedJob({doi:'10.1021/jacs.6c12345',jobId:'fixture-job-12345678',capturePrivatePdf:true,captureToc:false,captureFigures:false,captureEvidence:false,opportunisticFigures:false,opportunisticEvidence:false},{status:'pending',reason:'private_pdf_pending',toc:{status:'not_requested'},figures:{status:'not_requested',discovered:0},fulltext:{status:'not_requested'}},[],null)});
+    assert.equal(out.status,'failed');assert.match(out.reason,/pdf=failed/);
+  });
   await tc('CCS PDF discovery includes canonical direct routes before ePDF viewer',async()=>{
     const rows=await page.evaluate(()=>{document.querySelectorAll('meta[name="citation_pdf_url" i],meta[property="citation_pdf_url" i]').forEach(n=>n.remove());document.body.innerHTML='<main>CCS article</main>';T.setHostAllowed(()=>true);return T.discoverExplicitPdfCandidates({doi:'10.31635/ccschem.026.202608392',publisher:'ccs'}).map(x=>x.source);});
     assert.deepEqual(rows.slice(0,3),['ccs_pdfdirect','ccs_pdf','ccs_epdf']);
