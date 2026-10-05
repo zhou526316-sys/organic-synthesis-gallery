@@ -278,6 +278,56 @@ function phraseQuery(value){
   if(codepoints(q)<3) return '';
   return '"'+q.replaceAll('"','""')+'"';
 }
+function normalizeJournalList(value){
+  if(!Array.isArray(value)) return [];
+  if(value.length>50) throw new Error('literature_catalog_journal_filter_over_budget');
+  const journals=value.map((item,index)=>indexText(item,{label:'journal_filter_'+index,maxBytes:1000}).trim())
+    .filter(Boolean);
+  return [...new Set(journals)].sort();
+}
+function normalizeViewRequest(value){
+  let queryText='';
+  try{queryText=searchQueryText(value?.query);}catch(error){throw error;}
+  const selectedJournals=normalizeJournalList(value?.selectedJournals);
+  const excludedJournals=normalizeJournalList(value?.excludedJournals);
+  const dateFrom=value?.dateFrom==null||value.dateFrom===''?'':(validDate(value.dateFrom)?value.dateFrom:null);
+  const dateTo=value?.dateTo==null||value.dateTo===''?'':(validDate(value.dateTo)?value.dateTo:null);
+  const addedDate=value?.addedDate==null||value.addedDate===''?'':(validDate(value.addedDate)?value.addedDate:null);
+  if(dateFrom===null||dateTo===null||addedDate===null||dateFrom&&dateTo&&dateFrom>dateTo){
+    throw new Error('literature_catalog_view_date_invalid');
+  }
+  const sort=String(value?.sort||'newest');
+  if(sort==='readers') throw new Error('literature_catalog_reader_sort_requires_compatibility');
+  if(sort!=='newest'&&sort!=='oldest') throw new Error('literature_catalog_view_sort_invalid');
+  if(queryText&&codepoints(queryText)<3) throw new Error('literature_catalog_short_query_requires_compatibility');
+  return {queryText,selectedJournals,excludedJournals,dateFrom,dateTo,addedDate,sort};
+}
+function viewScopeKey(catalogId,view){
+  return JSON.stringify({
+    c:catalogId,q:view.queryText,s:view.selectedJournals,x:view.excludedJournals,
+    f:view.dateFrom,t:view.dateTo,a:view.addedDate,o:view.sort,
+  });
+}
+function encodeViewCursor(row,scopeKey){
+  const payload=JSON.stringify({s:scopeKey,d:String(row?.first_online_date||''),i:normalizeDoi(row?.doi)});
+  return btoa(payload).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');
+}
+function decodeViewCursor(value,scopeKey){
+  const raw=safe(value,4000);
+  if(!raw) return null;
+  try{
+    const normalized=raw.replaceAll('-','+').replaceAll('_','/');
+    const padded=normalized+'='.repeat((4-normalized.length%4)%4);
+    const parsed=JSON.parse(atob(padded));
+    const date=parsed?.d===''?'':(validDate(parsed?.d)?parsed.d:null);
+    const doi=normalizeDoi(parsed?.i);
+    if(date===null||!doi||String(parsed?.s||'')!==scopeKey) throw new Error('scope');
+    return {date,doi};
+  }catch(error){
+    if(error instanceof Error&&error.message==='scope') throw new Error('literature_catalog_view_cursor_scope_mismatch');
+    throw new Error('literature_catalog_view_cursor_invalid');
+  }
+}
 function encodeCursor(row,catalogId,queryText){
   const payload=JSON.stringify({
     c:catalogId,q:queryText,d:String(row?.first_online_date||''),i:normalizeDoi(row?.doi),
@@ -357,6 +407,100 @@ export async function queryLiteratureCatalogIndex(env,{catalogId:catalogIdValue,
   return {status:200,body:{version:1,schemaVersion:LITERATURE_CATALOG_INDEX_SCHEMA_VERSION,
     enabled:true,readPathActive:false,catalogId,query:safe(query,300),matched,
     limit:boundedLimit,count:items.length,hasMore,nextCursor,items}};
+}
+
+export async function queryLiteratureCatalogView(env,{
+  catalogId:catalogIdValue,query='',selectedJournals=[],excludedJournals=[],
+  dateFrom='',dateTo='',addedDate='',sort='newest',limit=60,cursor=''
+}={}){
+  if(!literatureCatalogIndexShadowEnabled(env)) return {status:409,body:{error:'literature_catalog_index_shadow_disabled',enabled:false,readPathActive:false}};
+  if(!env?.LITERATURE_INDEX_DB) return {status:503,body:{error:'literature_catalog_index_db_missing'}};
+  await ensureLiteratureCatalogIndexSchema(env);
+  const catalogId=hash64(catalogIdValue);
+  if(!catalogId) return {status:400,body:{error:'literature_catalog_id_invalid'}};
+  const generation=await generationRow(env,catalogId);
+  if(!generation||Number(generation.ready||0)!==1) return {status:409,body:{error:'literature_catalog_generation_not_ready',catalogId}};
+  let view;
+  try{view=normalizeViewRequest({query,selectedJournals,excludedJournals,dateFrom,dateTo,addedDate,sort});}
+  catch(error){
+    const message=safe(error?.message||error,160);
+    const status=message==='literature_catalog_short_query_requires_compatibility'
+      ||message==='literature_catalog_reader_sort_requires_compatibility'?422:400;
+    return {status,body:{error:message,readPathActive:false}};
+  }
+  const boundedLimit=Math.max(1,Math.min(100,Math.floor(Number(limit||60))));
+  const scopeKey=viewScopeKey(catalogId,view);
+  let after=null;
+  try{after=decodeViewCursor(cursor,scopeKey);}catch(error){
+    return {status:400,body:{error:safe(error?.message||error,160),readPathActive:false}};
+  }
+
+  const joins=[],where=[],args=[];
+  if(view.queryText){
+    const match=phraseQuery(view.queryText);
+    joins.push('JOIN literature_catalog_fts f ON f.catalog_id=i.catalog_id AND f.doi=i.doi');
+    where.push('literature_catalog_fts MATCH ?','f.catalog_id=?','i.catalog_id=?');
+    args.push(match,catalogId,catalogId);
+    where.push(`(
+      instr(lower(COALESCE(i.title,'')),?)>0 OR
+      instr(lower(COALESCE(i.title_zh,'')),?)>0 OR
+      instr(lower(COALESCE(i.doi,'')),?)>0 OR
+      instr(lower(COALESCE(i.journal,'')),?)>0 OR
+      instr(lower(COALESCE(i.authors_text,'')),?)>0 OR
+      instr(lower(COALESCE(i.first_online_date,'')),?)>0
+    )`);
+    args.push(...Array(6).fill(view.queryText));
+  }else{
+    where.push('i.catalog_id=?');
+    args.push(catalogId);
+  }
+  if(view.selectedJournals.length){
+    where.push(`i.journal IN (${view.selectedJournals.map(()=>'?').join(',')})`);
+    args.push(...view.selectedJournals);
+  }
+  if(view.excludedJournals.length){
+    where.push(`i.journal NOT IN (${view.excludedJournals.map(()=>'?').join(',')})`);
+    args.push(...view.excludedJournals);
+  }
+  if(view.dateFrom){where.push("COALESCE(i.first_online_date,'')>=?");args.push(view.dateFrom);}
+  if(view.dateTo){where.push("COALESCE(i.first_online_date,'')<=?");args.push(view.dateTo);}
+  if(view.addedDate){where.push('i.added_date=?');args.push(view.addedDate);}
+
+  const base=`FROM literature_catalog_index i ${joins.join(' ')} WHERE ${where.join(' AND ')}`;
+  const total=await env.LITERATURE_INDEX_DB.prepare(`SELECT COUNT(*) AS c ${base}`).bind(...args).first();
+
+  const dateExpr="COALESCE(i.first_online_date,'')";
+  const cursorArgs=[];
+  let cursorClause='';
+  if(after){
+    cursorClause=view.sort==='oldest'
+      ? ` AND (${dateExpr}>? OR (${dateExpr}=? AND i.doi>?))`
+      : ` AND (${dateExpr}<? OR (${dateExpr}=? AND i.doi>?))`;
+    cursorArgs.push(after.date,after.date,after.doi);
+  }
+  const direction=view.sort==='oldest'?'ASC':'DESC';
+  const sql=`SELECT i.doi,i.revision,i.title,i.title_zh,i.authors_json,i.journal,
+      i.first_online_date,i.date_precision,i.added_date,i.synthesis_type
+    ${base}${cursorClause}
+    ORDER BY ${dateExpr} ${direction},i.doi ASC LIMIT ?`;
+  const result=await env.LITERATURE_INDEX_DB.prepare(sql)
+    .bind(...args,...cursorArgs,boundedLimit+1).all();
+  const raw=result?.results||[];
+  const hasMore=raw.length>boundedLimit;
+  const pageRows=raw.slice(0,boundedLimit);
+  const items=pageRows.map(row=>({
+    doi:row.doi,revision:row.revision,title:row.title,titleZh:row.title_zh,
+    authors:JSON.parse(row.authors_json||'[]'),journal:row.journal,
+    firstOnlineDate:row.first_online_date,datePrecision:row.date_precision,
+    addedDate:row.added_date,synthesisType:row.synthesis_type,
+  }));
+  return {status:200,body:{
+    version:1,schemaVersion:LITERATURE_CATALOG_INDEX_SCHEMA_VERSION,
+    enabled:true,readPathActive:false,catalogId,matched:Number(total?.c||0),
+    count:items.length,limit:boundedLimit,hasMore,
+    nextCursor:hasMore&&pageRows.length?encodeViewCursor(pageRows.at(-1),scopeKey):null,
+    sort:view.sort,items,
+  }};
 }
 
 export async function listLiteratureCatalogIndexRows(env,{catalogId:catalogIdValue,afterDoi='',limit=200}={}){
