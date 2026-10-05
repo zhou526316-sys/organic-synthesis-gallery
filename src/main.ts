@@ -1294,7 +1294,11 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
     } catch (fallbackError) {
       const primaryMessage = primaryError instanceof Error ? primaryError.message : String(primaryError);
       const fallbackMessage = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
-      const deliveryNotDeployed = /delivery_http_404/.test(primaryMessage) && /delivery_http_404/.test(fallbackMessage);
+      const localHost = new URL(siteBase).hostname;
+      const localCompatibilityHost = localHost === '127.0.0.1' || localHost === 'localhost';
+      const deliveryUnavailableLocally = localCompatibilityHost
+        && /delivery_(?:http_404|invalid_json)/.test(primaryMessage)
+        && /delivery_(?:http_404|invalid_json)/.test(fallbackMessage);
       architectureClient = null;
       architectureFallbackActive = false;
       architectureReadLimited = false;
@@ -1302,7 +1306,7 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
       architectureEarliestDate = '';
       architectureLandingPapers = [];
       latestCollectionDate = '';
-      if (deliveryNotDeployed) {
+      if (deliveryUnavailableLocally) {
         document.documentElement.dataset.catalogRead = 'legacy';
         return 'legacy-compatible';
       }
