@@ -3,7 +3,7 @@
   "reviewType": "prepublish_primary",
   "publicationSlot": "2026-10-06T08:00:00+08:00",
   "createdAt": "2026-10-06T07:18:00+08:00",
-  "evidenceAsOf": "2026-10-06T07:34:00+08:00",
+  "evidenceAsOf": "2026-10-06T07:23:00+08:00",
   "executionMode": "scheduled_primary_review_github_runner_handoff",
   "phase": "prepublish_ready_with_pending",
   "status": "ready_with_pending",
@@ -15,7 +15,7 @@
   "freshAuditGeneratedAt": "2026-10-05T23:10:38.108Z",
   "snapshotFreshForSlot": true,
   "requiredSnapshotWindow": "fresh 06:55/07:05 Asia/Shanghai audit for sole 08:00 slot",
-  "handoffCommitSha": "a5e96b1ccab4750ee68afe6f79f52ffc4af37885",
+  "handoffCommitSha": "7376df9c5bb5cc74ab183a8918b095dbebb39aa1",
   "handoffFile": "audit/unresolved-latest.json",
   "handoffBlobSha": "baf7dfc7f117a601da63243375c6409238c4606a",
   "compactHandoffSha": "baf7dfc7f117a601da63243375c6409238c4606a",
@@ -32,7 +32,7 @@
     "capabilityGuardConclusion": "success",
     "triggerCommitSha": "d3a3982da5968faef86fc21ac28b7258baada886",
     "triggerBlobSha": "7ecc3b5c6c72d33798aef615a1dfb000409c984d",
-    "snapshotCommitSha": "a5e96b1ccab4750ee68afe6f79f52ffc4af37885",
+    "snapshotCommitSha": "7376df9c5bb5cc74ab183a8918b095dbebb39aa1",
     "generatedAt": "2026-10-05T23:10:38.108Z",
     "galleryDois": 797,
     "sourceRecords": 1835,
@@ -75,10 +75,10 @@
     "activeFromApplied": true,
     "keywordsUsedOnlyForPriority": true,
     "completeCompactRead": true,
-    "primaryWindowCandidates": 94,
-    "catchupOrOlderCandidates": 28,
-    "primaryWindowAccepted": 27,
-    "catchupOrOlderAccepted": 2
+    "primaryWindowCandidates": 103,
+    "catchupOrOlderCandidates": 19,
+    "primaryWindowAccepted": 29,
+    "catchupOrOlderAccepted": 0
   },
   "dateReconciliation": {
     "rows": 9,
@@ -5970,7 +5970,7 @@
       "journal": "Chemical Science",
       "title": "Correction: Robust biomimetic MOF featuring a negative pocket for precise recognition of uranyl, enabling ultrahigh U/V selectivity and rapid uranium extraction from seawater",
       "abstract": "Correction for ‘Robust biomimetic MOF featuring a negative pocket for precise recognition of uranyl, enabling ultrahigh U/V selectivity and rapid uranium extraction from seawater’ by Anni Ye et al. , Chem. Sci ., 2025, 16 , 13749–13759, https://doi.org/10.1039/d5sc02966j.",
-      "date": "",
+      "date": "2026-10-05",
       "type": "journal-article",
       "authors": [
         "Anni Ye",
@@ -6012,7 +6012,7 @@
       "journal": "Chemical Science",
       "title": "Function-Preserving Photooxidation of AS1411 Aptamer by a G-Quadruplex-Guided Photosensitizer",
       "abstract": "AS1411 is a G-quadruplex (G4) aptamer that binds nucleolin (NCL) and is widely used to promote cancer-associated delivery of photoactive cargos. Yet the fate of AS1411 after photosensitizer loading and...",
-      "date": "",
+      "date": "2026-10-05",
       "type": "journal-article",
       "authors": [
         "Maria Vittoria Cottini",
@@ -6063,7 +6063,7 @@
       "journal": "Chemical Science",
       "title": "PNA-ligand conjugates enable site-selective and directional targeting of adjacent G-quadruplexes",
       "abstract": "G-quadruplexes (G4s) are non-canonical DNA structures enriched in gene promoters and involved in transcriptional regulation, making them attractive drug targets, albeit difficult to target individually with high specificity due to...",
-      "date": "",
+      "date": "2026-10-05",
       "type": "journal-article",
       "authors": [
         "Raffaele Graziano",
@@ -6109,7 +6109,7 @@
       "journal": "Chemical Science",
       "title": "Unlocking Catalytic Asymmetric Transformations of Sulfilimidoyl Fluorides toward Chiral Sulfinimidate Esters",
       "abstract": "The rational design of bioactive molecules increasingly utilizes sulfur-containing groups such as sulfoximines and sulfilimines. While sulfonimidoyl fluorides have emerged as versatile chiral S(VI) electrophiles enabling efficient asymmetric synthesis of...",
-      "date": "",
+      "date": "2026-10-05",
       "type": "journal-article",
       "authors": [
         "He-Ping Li",
@@ -6163,7 +6163,7 @@
       "journal": "Green Chemistry",
       "title": "Back cover",
       "abstract": "",
-      "date": "",
+      "date": "2026-10-05",
       "type": "journal-article",
       "authors": [],
       "topics": [],
@@ -6199,7 +6199,7 @@
       "journal": "Green Chemistry",
       "title": "Contents list",
       "abstract": "",
-      "date": "",
+      "date": "2026-10-05",
       "type": "journal-article",
       "authors": [],
       "topics": [],
@@ -6235,7 +6235,7 @@
       "journal": "Green Chemistry",
       "title": "Front cover",
       "abstract": "",
-      "date": "",
+      "date": "2026-10-05",
       "type": "journal-article",
       "authors": [],
       "topics": [],
@@ -6271,7 +6271,7 @@
       "journal": "Green Chemistry",
       "title": "Intensified Flow Hydrochlorination of Biobased Glycerol with Downstream Upgrading to Epoxides",
       "abstract": "Glycerol hydrochlorination is a key transformation for accessing glycidol and epichlorohydrin, two high-value epoxide building blocks central to polymer, surfactant and fine-chemical manufacturing. Conventional batch processes typically rely on aqueous...",
-      "date": "",
+      "date": "2026-10-05",
       "type": "journal-article",
       "authors": [
         "Florian Barbaz",
@@ -6320,7 +6320,7 @@
       "journal": "Green Chemistry",
       "title": "Lignin-mediated charge regulation for highly conductive, temperature-resilient, and recyclable ionogel electrolytes",
       "abstract": "Ionogels have emerged as promising solid-state electrolytes for flexible energy-storage devices because they combine the low volatility and wide electrochemical window of ionic liquids (ILs) with the structural integrity of polymer networks.",
-      "date": "",
+      "date": "2026-10-05",
       "type": "journal-article",
       "authors": [
         "Ling-Hua Xu",
@@ -6453,7 +6453,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6492,7 +6492,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6531,7 +6531,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6570,7 +6570,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6609,7 +6609,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6648,7 +6648,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6687,7 +6687,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6726,7 +6726,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6765,7 +6765,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6804,7 +6804,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-07-01",
       "machineSourceHealth": {
         "activeFrom": "2026-07-01",
@@ -6843,7 +6843,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-09-19",
       "machineSourceHealth": {
         "activeFrom": "2026-09-19",
@@ -6882,7 +6882,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-10-01",
       "machineSourceHealth": {
         "activeFrom": "2026-10-01",
@@ -6921,7 +6921,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-09-19",
       "machineSourceHealth": {
         "activeFrom": "2026-09-19",
@@ -6960,7 +6960,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-09-19",
       "machineSourceHealth": {
         "activeFrom": "2026-09-19",
@@ -6999,7 +6999,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-10-01",
       "machineSourceHealth": {
         "activeFrom": "2026-10-01",
@@ -7038,7 +7038,7 @@
       "candidateCount": null,
       "syntheticTitleCount": null,
       "reason": "机器来源健康与出版社整刊实时实查分开记录；本轮未取得可审计的完整出版社列表计数，blocked/unavailable计数保持unknown。",
-      "checkedAt": "2026-10-06T07:34:00+08:00",
+      "checkedAt": "2026-10-06T07:23:00+08:00",
       "activeFrom": "2026-09-22",
       "machineSourceHealth": {
         "activeFrom": "2026-09-22",
@@ -7091,7 +7091,7 @@
       "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
       "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
       "scopeCorrectionsBlobSha": "cdb36d329454d0e836eef4774c01cfc148e6fdb1",
-      "handoffCommitSha": "a5e96b1ccab4750ee68afe6f79f52ffc4af37885",
+      "handoffCommitSha": "7376df9c5bb5cc74ab183a8918b095dbebb39aa1",
       "handoffBlobSha": "baf7dfc7f117a601da63243375c6409238c4606a",
       "ruleChangeTriggeredHistoricalReview": true,
       "ruleCompatibilityChecked": true,
@@ -7263,14 +7263,14 @@
     "sourceCoverageAnomalies=4",
     "closureCoverageAnomalies=5"
   ],
-  "updatedAt": "2026-10-06T07:34:00+08:00",
+  "updatedAt": "2026-10-06T07:23:00+08:00",
   "scopeContract": {
     "scopeRulesVersion": "scope-2026-10-02-v1",
     "scopeRulesFile": "docs/literature-scope-contract.md",
     "scopeRulesBlobSha": "d3507dde0d44c4482ce9866ff81c73f0f97b0a92",
     "scopeCorrectionsFile": "audit/literature-scope-corrections.json",
     "scopeCorrectionsBlobSha": "cdb36d329454d0e836eef4774c01cfc148e6fdb1",
-    "handoffCommitSha": "a5e96b1ccab4750ee68afe6f79f52ffc4af37885",
+    "handoffCommitSha": "7376df9c5bb5cc74ab183a8918b095dbebb39aa1",
     "handoffBlobSha": "baf7dfc7f117a601da63243375c6409238c4606a",
     "ruleChangeTriggeredHistoricalReview": true,
     "ruleCompatibilityChecked": true,
