@@ -38,3 +38,17 @@ test('public architecture publishes a hash-bound acquisition basis', () => {
   const delivery = readFileSync('scripts/pages-release-delivery.mjs','utf8');
   assert.ok(delivery.includes('release.acquisitionBasis'));
 });
+
+
+test('public architecture publishes a bounded hash-bound Hot fallback object', () => {
+  const builder = readFileSync('scripts/build-gallery-architecture-public.mjs','utf8');
+  assert.ok(builder.includes("schema: 'gallery-hot-fallback-v1'"));
+  assert.ok(builder.includes('hotFallback: hotFallbackRef'));
+  assert.ok(builder.includes('bundle.partitions.hot'));
+  assert.ok(builder.includes('bundle.partitions.future'));
+  const reader = readFileSync('architecture/published-reader.mjs','utf8');
+  assert.ok(reader.includes('loadPublishedHotFallback'));
+  assert.ok(reader.includes('architecture_hot_fallback_hash_mismatch'));
+  const delivery = readFileSync('scripts/pages-release-delivery.mjs','utf8');
+  assert.ok(delivery.includes('release.hotFallback'));
+});

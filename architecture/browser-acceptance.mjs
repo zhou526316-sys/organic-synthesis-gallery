@@ -10,6 +10,7 @@ import { makeMembership } from './membership.mjs';
 import { stable, digest } from './catalog.mjs';
 import { gunzipSync } from 'node:zlib';
 import { buildLegacyTitlePresentation } from './title-presentation.mjs';
+import { RESULT_WINDOW_SIZE } from '../shared/result-window.js';
 
 const root=process.cwd(), shadow=path.resolve(process.argv[2] || ''), out=path.join(shadow,'validation/browser');
 await mkdir(out,{recursive:true});
@@ -49,6 +50,7 @@ const hooks=`
 (globalThis as any).__archBridge = {
   async replace(rows: Paper[]) {
     papers = mergePapers([], rows.map(normalizePaper)).filter(paper => !isExcludedDoi(paperDoi(paper)));
+    resultWindowPage = 1;
     resolvedTitleCache.clear(); zhTitleCache.clear();
     await resolveTitles(); await loadTranslations(); mount();
   },
@@ -58,7 +60,20 @@ const hooks=`
     authors:el.querySelector('.authors')?.textContent,date:el.getAttribute('data-date'),
     journal:el.getAttribute('data-journal'),badge:el.querySelector('.meta .synthesis')?.textContent || [...el.querySelectorAll('.meta .tag')].slice(2).map(e=>e.textContent).join('|'),
     href:el.querySelector('a.open')?.getAttribute('href')
-  })).sort((a,b)=>String(a.doi).localeCompare(String(b.doi))); }
+  })).sort((a,b)=>String(a.doi).localeCompare(String(b.doi))); },
+  async inspectAll() {
+    const rows:any[]=[];
+    resultWindowPage=1; renderCards();
+    while(true){
+      rows.push(...(globalThis as any).__archBridge.inspect());
+      const state=resultWindowState(filteredPapers().length,resultWindowPage,RESULT_WINDOW_SIZE);
+      if(!state.hasNext) break;
+      resultWindowPage+=1; renderCards();
+      await new Promise<void>(resolve=>requestAnimationFrame(()=>resolve()));
+    }
+    resultWindowPage=1; renderCards();
+    return rows.sort((a,b)=>String(a.doi).localeCompare(String(b.doi)));
+  }
 };
 void load().then(() => { (globalThis as any).__archReady = true; });
 `;
@@ -124,8 +139,10 @@ try {
       const baseline={};
       for(const lang of ['en','zh']){
         await page.evaluate(value=>globalThis.__archBridge.language(value),lang);
-        baseline[lang]=await page.evaluate(()=>globalThis.__archBridge.inspect());
-        assert.equal(baseline[lang].length,records.length,'legacy_rendered_doi_count');
+        const visible=await page.evaluate(()=>globalThis.__archBridge.inspect().length);
+        assert.ok(visible<=RESULT_WINDOW_SIZE,'legacy_dom_window_over_budget');
+        baseline[lang]=await page.evaluate(()=>globalThis.__archBridge.inspectAll());
+        assert.equal(baseline[lang].length,records.length,'legacy_paged_doi_count');
       }
       // Initialize the actual new reader/fence in the browser, then render its records
       // through the unchanged production card renderer and the frozen static title supplements.
@@ -147,15 +164,20 @@ try {
       const differences=[];
       for(const lang of ['en','zh']){
         await page.evaluate(value=>globalThis.__archBridge.language(value),lang);
-        const candidate=await page.evaluate(()=>globalThis.__archBridge.inspect());
+        const visible=await page.evaluate(()=>globalThis.__archBridge.inspect().length);
+        assert.ok(visible<=RESULT_WINDOW_SIZE,'candidate_dom_window_over_budget');
+        const candidate=await page.evaluate(()=>globalThis.__archBridge.inspectAll());
         assert.equal(candidate.length,records.length);
         for(let i=0;i<candidate.length;i++)if(stable(candidate[i])!==stable(baseline[lang][i]))differences.push({lang,expected:baseline[lang][i],actual:candidate[i]});
       }
-      await writeFile(path.join(out,`${name}-field-parity.json`),JSON.stringify({compared:records.length,languages:['en','zh'],differences},null,2));
+      await writeFile(path.join(out,`${name}-field-parity.json`),JSON.stringify({compared:records.length,languages:['en','zh'],windowSize:RESULT_WINDOW_SIZE,differences},null,2));
       if(differences.length)console.log('GALLERY_DISPLAY_DIFFERENCES '+JSON.stringify(differences.slice(0,30)));
       assert.equal(differences.length,0,`legacy_display_mismatch:${differences.length}`);
-      const hot=await page.evaluate(async()=>{const r=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate});await __archBridge.replace(r.records.map(__arch.project));return{count:r.records.length,complete:r.complete,dom:__archBridge.inspect().length};});
-      assert.deepEqual(hot,{count:life.counts.hot,complete:true,dom:life.counts.hot});
+      const hot=await page.evaluate(async()=>{const r=await __arch.loadLandingPlan(__arch.reader,{asOfDate:__arch.asOfDate});await __archBridge.replace(r.records.map(__arch.project));const dom=__archBridge.inspect().length;const accessible=(await __archBridge.inspectAll()).length;return{count:r.records.length,complete:r.complete,dom,accessible};});
+      assert.equal(hot.count,life.counts.hot);
+      assert.equal(hot.complete,true);
+      assert.equal(hot.accessible,life.counts.hot);
+      assert.ok(hot.dom<=RESULT_WINDOW_SIZE,'hot_dom_window_over_budget');
 
       // A shared Archive DOI is injected ahead of Hot without loading every history shard.
       const deepLink=await page.evaluate(async doi=>{

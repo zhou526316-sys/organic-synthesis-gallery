@@ -341,6 +341,16 @@ select {
 .resultline strong {
   color: #172033;
 }
+.architecture-read-limited {
+  margin: -4px 2px 14px;
+  padding: 10px 12px;
+  border: 1px solid #ead9a7;
+  border-radius: 12px;
+  background: #fffaf0;
+  color: #72581d;
+  font-size: 12px;
+  line-height: 1.5;
+}
 .result-window-controls {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
