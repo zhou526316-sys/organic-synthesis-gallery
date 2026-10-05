@@ -785,6 +785,68 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
                 fill="#98a2b3",
             )
 
+        elif layout == "retrospective_square":
+            # Secondary WeChat cards are rendered very small. Build a dedicated
+            # square cover with only the paper identity + the original reaction
+            # visual; do not shrink a wide article cover into the thumbnail.
+            canvas = Image.new("RGB", (width, height), "#f7f8fa")
+            draw = ImageDraw.Draw(canvas)
+            pad = max(32, int(width * 0.045))
+            draw.rounded_rectangle(
+                (pad, pad, width - pad, height - pad),
+                radius=max(24, int(width * 0.035)),
+                fill="#ffffff",
+                outline="#dfe3e8",
+                width=max(2, int(width * 0.003)),
+            )
+
+            kicker = str(cover.get("thumb_kicker") or "往期精选")
+            title_text = str(cover.get("thumb_title") or "MacMillan")
+            subtitle = str(cover.get("thumb_subtitle") or "自由基 C–O")
+            meta = str(cover.get("thumb_meta") or "")
+
+            kicker_font = choose_font(max(28, int(width * 0.045)), True)
+            title_font = choose_font(max(52, int(width * 0.092)), True)
+            subtitle_font = choose_font(max(38, int(width * 0.062)), True)
+            meta_font = choose_font(max(24, int(width * 0.035)), False)
+
+            x = pad + int(width * 0.045)
+            y = pad + int(height * 0.035)
+            draw.text((x, y), kicker, font=kicker_font, fill="#32675f")
+            y += int(height * 0.095)
+            draw.text((x, y), title_text, font=title_font, fill="#121820")
+            y += int(height * 0.115)
+            draw.text((x, y), subtitle, font=subtitle_font, fill="#121820")
+            if meta:
+                box = draw.textbbox((0, 0), meta, font=meta_font)
+                draw.text(
+                    (width - pad - int(width * 0.045) - (box[2] - box[0]), y + int(height * 0.022)),
+                    meta,
+                    font=meta_font,
+                    fill="#7b8491",
+                )
+
+            visual_top = int(height * 0.39)
+            visual_bottom = height - pad - int(height * 0.035)
+            visual_left = pad + int(width * 0.045)
+            visual_right = width - pad - int(width * 0.045)
+            draw.rounded_rectangle(
+                (visual_left, visual_top, visual_right, visual_bottom),
+                radius=max(18, int(width * 0.025)),
+                fill="#ffffff",
+                outline="#e6e9ee",
+                width=max(2, int(width * 0.002)),
+            )
+            fitted = ImageOps.contain(
+                image,
+                (visual_right - visual_left - int(width * 0.06),
+                 visual_bottom - visual_top - int(height * 0.05)),
+                method=Image.Resampling.LANCZOS,
+            )
+            px = visual_left + (visual_right - visual_left - fitted.width) // 2
+            py = visual_top + (visual_bottom - visual_top - fitted.height) // 2
+            canvas.paste(fitted, (px, py))
+
         elif portrait:
             left_w = int(width * 0.34)
             with Image.open(portrait) as p:
@@ -1237,7 +1299,7 @@ def upload_featured_images(token: str, featured: dict | None, override_pdf: str 
     return uploaded, local_images
 
 
-def upload_gallery_card_visuals(token: str, papers: list[dict], featured: dict | None, limit: int = 1) -> dict[str, str]:
+def upload_gallery_card_visuals(token: str, papers: list[dict], featured: dict | None, limit: int = 4) -> dict[str, str]:
     """Upload real Gallery TOC/primary visuals for compact daily-card miniatures."""
     featured_doi = normalize_doi((featured or {}).get("paper", {}).get("doi"))
     ordered = list(papers)
@@ -1342,7 +1404,7 @@ def build_gallery_jump_card(
             str(p.get("titleZh") or p.get("title") or ""),
         )
     )
-    shown = ordered[:1]
+    shown = ordered[:4]
 
     def card_cell(card: dict) -> str:
         doi = normalize_doi(card.get("doi"))
@@ -1365,8 +1427,9 @@ def build_gallery_jump_card(
             "margin:5px 0 6px;'/>"
             if visual else ""
         )
+        min_h = "154px" if visual else "96px"
         return (
-            f"<section style='min-height:142px;background:{bg};border:1px solid {border};"
+            f"<section style='min-height:{min_h};background:{bg};border:1px solid {border};"
             "border-radius:8px;padding:7px;margin:0;'>"
             "<p style='margin:0 0 3px;line-height:1.2;'>"
             + badge
@@ -1381,12 +1444,16 @@ def build_gallery_jump_card(
             + "</section>"
         )
 
-    rows = [
-        "<tr><td style='width:100%;vertical-align:top;padding:3px;'>"
-        + card_cell(card)
-        + "</td></tr>"
-        for card in shown
-    ]
+    rows = []
+    for offset in range(0, len(shown), 2):
+        cells = shown[offset:offset + 2]
+        row = "<tr>"
+        for card in cells:
+            row += "<td style='width:50%;vertical-align:top;padding:3px;'>" + card_cell(card) + "</td>"
+        if len(cells) == 1:
+            row += "<td style='width:50%;padding:3px;'></td>"
+        row += "</tr>"
+        rows.append(row)
 
     remaining = max(0, len(papers) - len(shown))
     more = f"另有 {remaining} 篇，扫码查看完整列表" if remaining else "扫码进入网页继续搜索与筛选"
@@ -2157,7 +2224,7 @@ def main() -> int:
     load_env(Path(args.env_file))
     token = get_access_token()
     uploaded_urls, local_images = upload_featured_images(token, featured, args.featured_pdf)
-    uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 1)
+    uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 4)
     gallery_target_url = f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
     qr_local = prepare_gallery_qr_image(gallery_target_url)
     gallery_qr_url = upload_local_body_image(
