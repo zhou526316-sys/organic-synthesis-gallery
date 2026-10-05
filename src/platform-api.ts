@@ -159,18 +159,19 @@ function withoutInvalidCcsToc(item: StaticMediaItem): StaticMediaItem {
 }
 
 function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMediaItem | undefined): StaticMediaItem | undefined {
-  if (!local) return dynamic;
+  if (!local) return dynamic ? withoutInvalidCcsToc(dynamic) : undefined;
   const safeLocal = withoutInvalidCcsToc(local);
   if (!dynamic) return safeLocal;
-  const toc = mediaItemHasToc(safeLocal) ? safeLocal.toc : dynamic.toc;
-  const figures = mediaItemHasFigures(safeLocal) ? safeLocal.figures : dynamic.figures;
+  const safeDynamic = withoutInvalidCcsToc(dynamic);
+  const toc = mediaItemHasToc(safeLocal) ? safeLocal.toc : safeDynamic.toc;
+  const figures = mediaItemHasFigures(safeLocal) ? safeLocal.figures : safeDynamic.figures;
   return {
-    ...dynamic,
+    ...safeDynamic,
     ...safeLocal,
     toc,
     figures,
     inventory: {
-      ...(dynamic.inventory || {}),
+      ...(safeDynamic.inventory || {}),
       ...(safeLocal.inventory || {}),
     },
   };
