@@ -23,6 +23,20 @@ await test('evidence mutation cannot reuse a server marker',async()=>assert.reje
 await test('TOC-role caption is not promoted as a body figure',async()=>{const row={...vector,caption:'Visual Abstract: graphical overview'};row.reviewMarker=await buildBodyReviewMarker(row,row.sha256);await assert.rejects(()=>validateNewBodyMetadata(row,policy,now),/toc_role/);});
 await test('tampered bytes fail before decode',()=>assert.throws(()=>validateNewBodyBytes(png,Buffer.alloc(data.get(exactKey(png)).length)),/digest/));
 await test('publication network helper still refuses publisher downloads',async()=>{await assert.rejects(()=>fetchStored(vector.sourceUrl),/not_stored/);await assert.rejects(()=>fetchStored('https://example.org/image.png'),/not_stored/);});
+await test('CCS publisher UUID body assets are accepted only with exact DOI page and f/sf label binding',async()=>{
+  const doi='10.31635/ccschem.026.202507094';
+  const row={...png,doi,pageDoi:doi,id:'figure-1',label:'Figure 1',caption:'Figure 1 | The EPR experiment.',
+    articleUrl:'https://www.chinesechemsoc.org/doi/full/'+doi,
+    sourceUrl:'https://www.chinesechemsoc.org/cms/asset/dc796273-7ad6-4fcc-8e04-917949bc9033/f1.png'};
+  row.r2Key='local-captures/article-figures/images/'+sha256(Buffer.from(doi)).slice(0,24)+'/figure-1-'+row.sha256.slice(0,16)+'.png';
+  row.reviewMarker=await buildBodyReviewMarker(row,row.sha256);
+  assert.deepEqual(row.reviewMarker.reasons,['opaque_source_needs_provenance']);
+  await validateNewBodyMetadata(row,policy,now);
+  const wrong={...row,sourceUrl:row.sourceUrl.replace('/f1.png','/f2.png')};
+  wrong.reviewMarker=await buildBodyReviewMarker(wrong,wrong.sha256);
+  await assert.rejects(()=>validateNewBodyMetadata(wrong,policy,now),/provenance_incomplete/);
+});
+
 await test('ACS Catalysis year-style Silverchair filenames remain DOI-bound',async()=>{
   const doi='10.1021/acscatal.6c05422';
   const row={...vector,doi,pageDoi:doi,id:'figure-4',label:'Figure 4',caption:'Figure 4. Verified catalytic reaction data and mechanistic comparison.',
