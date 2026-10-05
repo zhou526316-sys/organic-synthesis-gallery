@@ -1,6 +1,7 @@
 import { recordReaderOpen } from './reader-count-ledger.js';
 import { normalizeDoi } from './media.js';
 import { shadowWriteUserLibraryState, userLibraryRowShadowEnabled } from './user-library-shadow.js';
+import { markMaterializedVisitorPaperOpen, materializeSitePageViewEvent, siteAnalyticsMaterializedShadowEnabled } from './site-analytics-materialized.js';
 
 const FEEDBACK_KINDS = new Set(['toc', 'image', 'title', 'date', 'duplicate', 'classification', 'other']);
 const SITE_FEEDBACK_CATEGORIES = new Set(['general', 'search', 'ui', 'account', 'literature', 'other']);
@@ -164,6 +165,18 @@ async function safeShadowLibraryWrite(env, ctx, userId, state, revision, updated
         revision: Number(revision || 0),
       });
     });
+  if (ctx?.waitUntil) {
+    ctx.waitUntil(task);
+    return;
+  }
+  await task;
+}
+
+async function safeAnalyticsShadowTask(env, ctx, taskFactory, label) {
+  if (!siteAnalyticsMaterializedShadowEnabled(env)) return;
+  const task = Promise.resolve().then(taskFactory).catch(error => {
+    console.warn(label, { message: String(error?.message || error).slice(0, 180) });
+  });
   if (ctx?.waitUntil) {
     ctx.waitUntil(task);
     return;
@@ -395,7 +408,7 @@ function fillDailyTrend(rows, days, now = Date.now()) {
   return result;
 }
 
-export async function trackPageView(env, payload, request) {
+export async function trackPageView(env, payload, request, ctx) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
   if (analyticsBotRequest(request)) {
     return { status: 200, body: { accepted: false, reason: 'bot_filtered', generation: 'site-pageview-v1' } };
@@ -410,11 +423,22 @@ export async function trackPageView(env, payload, request) {
   const deviceType = analyticsDeviceType(request);
   const date = beijingDate(now);
 
-  await env.DB.prepare(
+  const inserted = await env.DB.prepare(
     `INSERT INTO site_pageviews_v1
       (ip_hash, page_path, referrer_host, device_type, beijing_date, viewed_at)
      VALUES (?, ?, ?, ?, ?, ?)`
   ).bind(ipHash, pagePath, referrerHost, deviceType, date, now).run();
+  const eventId = Number(inserted?.meta?.last_row_id || 0);
+  if (eventId > 0) {
+    await safeAnalyticsShadowTask(env, ctx, () => materializeSitePageViewEvent(env, {
+      id: eventId,
+      ip_hash: ipHash,
+      referrer_host: referrerHost,
+      device_type: deviceType,
+      beijing_date: date,
+      viewed_at: now,
+    }), 'SITE_ANALYTICS_MATERIALIZED_WRITE_FAILED');
+  }
 
   return {
     status: 200,
@@ -529,7 +553,7 @@ export async function siteAnalyticsStats(env) {
   };
 }
 
-export async function markReader(env, payload, request) {
+export async function markReader(env, payload, request, ctx) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
   const doi = normalizeDoi(payload?.doi);
   if (!doi) return { status: 400, body: { error: 'invalid_reader_mark' } };
@@ -540,6 +564,12 @@ export async function markReader(env, payload, request) {
   const now = Date.now();
 
   const { unique, count } = await recordReaderOpen(env.DB, doi, ipHash, now);
+  await safeAnalyticsShadowTask(
+    env,
+    ctx,
+    () => markMaterializedVisitorPaperOpen(env, ipHash, beijingDate(now)),
+    'SITE_ANALYTICS_MATERIALIZED_READER_MARK_FAILED',
+  );
 
   return {
     status: 200,

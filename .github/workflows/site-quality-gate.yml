@@ -103,10 +103,11 @@ jobs:
       - name: Test site feedback D1-to-R2 fallback
         run: npm run test:feedback-fallback
 
-      - name: Test reader-count and user-library shadow state
+      - name: Test reader-count, user-library and analytics shadow state
         run: |
           npm run test:reader-counts
           npm run test:user-library-shadow
+          npm run test:site-analytics-materialized
 
       - name: Test fulltext-backed article summaries
         run: npm run test:article-summary
@@ -125,6 +126,7 @@ jobs:
           node scripts/test-summary-candidate-shadow-deployment-contract.mjs
           node scripts/test-scheduled-handoff-shadow-deployment-contract.mjs
           node scripts/test-user-library-shadow-deployment-contract.mjs
+          node scripts/test-site-analytics-materialized-deployment-contract.mjs
 
       - name: Test scheduled encrypted handoff
         run: npm run test:scheduled-summary-handoff
