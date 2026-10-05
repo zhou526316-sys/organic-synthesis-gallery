@@ -43,6 +43,7 @@ import {
   finalizeLiteratureCatalogGeneration,
   getLiteratureCatalogIndexStatus,
   importLiteratureCatalogIndexBatch,
+  listLiteratureCatalogIndexRows,
   literatureCatalogIndexReadEnabled,
   literatureCatalogIndexShadowEnabled,
   queryLiteratureCatalogIndex,
@@ -379,6 +380,16 @@ async function handleApi(request, env, ctx) {
       query: url.searchParams.get('q') || '',
       limit: Number(url.searchParams.get('limit') || 60),
       cursor: url.searchParams.get('cursor') || '',
+    }));
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/admin/literature-catalog-index/rows') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await listLiteratureCatalogIndexRows(env, {
+      catalogId: url.searchParams.get('catalogId') || '',
+      afterDoi: url.searchParams.get('afterDoi') || '',
+      limit: Number(url.searchParams.get('limit') || 200),
     }));
   }
 

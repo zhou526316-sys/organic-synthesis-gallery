@@ -17,7 +17,9 @@ on:
       - 'cloudflare/user-library-state-v2.sql'
       - 'cloudflare/evidence-index-v1.sql'
       - 'cloudflare/summary-candidate-index-v1.sql'
+      - 'cloudflare/literature-catalog-index-v1.sql'
       - 'scripts/test-summary-candidate-shadow-deployment-contract.mjs'
+      - 'scripts/test-literature-catalog-index-shadow-deployment-contract.mjs'
       - 'scripts/test-scheduled-handoff-shadow-deployment-contract.mjs'
       - 'scripts/test-user-library-shadow-deployment-contract.mjs'
       - 'scripts/test-site-analytics-materialized-deployment-contract.mjs'
@@ -37,11 +39,12 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       D1_NAME: organic-synthesis-gallery
+      LITERATURE_INDEX_D1_NAME: organic-synthesis-lit-index
       R2_BUCKET: organic-synthesis-gallery-media
       PDF_R2_BUCKET: organic-synthesis-gallery-private-pdf
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -88,6 +91,11 @@ jobs:
         working-directory: cloudflare/worker
         run: npm install --no-audit --no-fund
 
+      - name: Validate literature index shadow deployment contract
+        run: |
+          node --check scripts/sync-literature-catalog-index-shadow.mjs
+          node --test scripts/test-literature-catalog-index-shadow-deployment-contract.mjs scripts/test-literature-catalog-index-shadow-sync-contract.mjs
+
       - name: Resolve existing Cloudflare bindings
         id: bindings
         working-directory: cloudflare/worker
@@ -105,12 +113,36 @@ jobs:
           NODE
           )
           test -n "$D1_ID" || { echo 'D1 database binding is missing'; exit 1; }
+          LITERATURE_INDEX_D1_ID=$(node - <<'NODE'
+          const fs = require('fs');
+          const rows = JSON.parse(fs.readFileSync('/tmp/d1-list.json', 'utf8'));
+          const row = rows.find(item => item.name === process.env.LITERATURE_INDEX_D1_NAME);
+          if (row?.uuid) process.stdout.write(row.uuid);
+          NODE
+          )
+          if [ -z "$LITERATURE_INDEX_D1_ID" ]; then
+            echo "Creating dedicated literature search D1: $LITERATURE_INDEX_D1_NAME"
+            if ! CI=true npx wrangler d1 create "$LITERATURE_INDEX_D1_NAME" >/tmp/literature-index-d1-create.txt 2>&1; then
+              cat /tmp/literature-index-d1-create.txt
+              echo "Create command failed; refreshing D1 list in case another run created it."
+            fi
+            npx wrangler d1 list --json > /tmp/d1-list-after-literature-index.json
+            LITERATURE_INDEX_D1_ID=$(node - <<'NODE'
+            const fs = require('fs');
+            const rows = JSON.parse(fs.readFileSync('/tmp/d1-list-after-literature-index.json', 'utf8'));
+            const row = rows.find(item => item.name === process.env.LITERATURE_INDEX_D1_NAME);
+            if (row?.uuid) process.stdout.write(row.uuid);
+            NODE
+            )
+          fi
+          test -n "$LITERATURE_INDEX_D1_ID" || { echo 'Dedicated literature index D1 is missing'; exit 1; }
           npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null
           if ! npx wrangler r2 bucket info "$PDF_R2_BUCKET" --json >/dev/null 2>&1; then
             npx wrangler r2 bucket create "$PDF_R2_BUCKET" >/dev/null
           fi
           npx wrangler r2 bucket info "$PDF_R2_BUCKET" --json >/dev/null
           echo "d1_id=$D1_ID" >> "$GITHUB_OUTPUT"
+          echo "literature_index_d1_id=$LITERATURE_INDEX_D1_ID" >> "$GITHUB_OUTPUT"
 
       - name: Apply isolated private PDF D1 migration
         working-directory: cloudflare/worker
@@ -198,11 +230,34 @@ jobs:
           console.log(JSON.stringify({summaryCandidateIndexSchemaReady:true,tables:names}));
           NODE
 
+      - name: Apply dedicated literature search index migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$LITERATURE_INDEX_D1_NAME" --remote --file=../literature-catalog-index-v1.sql >/tmp/literature-index-migration.txt
+          npx wrangler d1 execute "$LITERATURE_INDEX_D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('literature_catalog_generations','literature_catalog_index','literature_catalog_fts') ORDER BY name;" --json >/tmp/literature-index-schema-check.json
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT COUNT(*) AS c FROM sqlite_master WHERE name='literature_catalog_fts';" --json >/tmp/primary-d1-no-fts-check.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const unpack=file=>{
+            const data=JSON.parse(fs.readFileSync(file,'utf8'));
+            return Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          };
+          const names=unpack('/tmp/literature-index-schema-check.json').map(x=>x.name).sort();
+          const expected=['literature_catalog_fts','literature_catalog_generations','literature_catalog_index'];
+          if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('literature search index migration incomplete: '+JSON.stringify(names));
+          const primary=unpack('/tmp/primary-d1-no-fts-check.json');
+          if(Number(primary[0]?.c||0)!==0) throw new Error('primary D1 must remain free of literature FTS tables');
+          console.log(JSON.stringify({literatureIndexSchemaReady:true,tables:names,primaryD1FtsFree:true}));
+          NODE
+
       - name: Generate frontend deployment configuration
         working-directory: cloudflare/worker
         shell: bash
         env:
           D1_ID: ${{ steps.bindings.outputs.d1_id }}
+          LITERATURE_INDEX_D1_ID: ${{ steps.bindings.outputs.literature_index_d1_id }}
         run: |
           set -euo pipefail
           cat > wrangler.frontend.toml <<EOF
@@ -225,6 +280,8 @@ jobs:
           USER_LIBRARY_ROW_READ_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_READ_ENABLED = "1"
+          LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "1"
+          LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "0"
@@ -253,6 +310,11 @@ jobs:
           binding = "DB"
           database_name = "$D1_NAME"
           database_id = "$D1_ID"
+
+          [[d1_databases]]
+          binding = "LITERATURE_INDEX_DB"
+          database_name = "$LITERATURE_INDEX_D1_NAME"
+          database_id = "$LITERATURE_INDEX_D1_ID"
           EOF
 
       - name: Dry-run frontend Worker bundle

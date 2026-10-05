@@ -7,6 +7,8 @@ import {
   finalizeLiteratureCatalogGeneration,
   getLiteratureCatalogIndexStatus,
   importLiteratureCatalogIndexBatch,
+  listLiteratureCatalogIndexRows,
+  LITERATURE_INDEX_IMPORT_BATCH_MAX,
   queryLiteratureCatalogIndex,
 } from '../src/literature-catalog-index.js';
 
@@ -169,6 +171,55 @@ test('generation import is resumable, finalize is fenced, and FTS trigram matche
   assert.equal(invalidCursor.body.error,'literature_catalog_cursor_invalid');
 });
 
+test('finalize rejects equal-count FTS corruption when DOI sets differ',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const g=generation({recordCount:2});
+  const pair=rows().slice(0,2);
+  const imported=await importLiteratureCatalogIndexBatch(env,{generation:g,rows:pair});
+  assert.equal(imported.status,200);
+  assert.equal(imported.body.importedRows,2);
+
+  db.sqlite.prepare('DELETE FROM literature_catalog_fts WHERE catalog_id=? AND doi=?')
+    .run(g.catalogId,pair[1].doi);
+  const firstSearch=db.sqlite.prepare('SELECT searchable_text FROM literature_catalog_fts WHERE catalog_id=? AND doi=?')
+    .get(g.catalogId,pair[0].doi);
+  db.sqlite.prepare('INSERT INTO literature_catalog_fts(catalog_id,doi,searchable_text) VALUES(?,?,?)')
+    .run(g.catalogId,pair[0].doi,firstSearch.searchable_text);
+
+  const finalized=await finalizeLiteratureCatalogGeneration(env,g.catalogId);
+  assert.equal(finalized.status,409);
+  assert.equal(finalized.body.error,'literature_catalog_generation_incomplete');
+  assert.equal(finalized.body.indexedRows,2);
+  assert.equal(finalized.body.ftsRows,2);
+  assert.equal(finalized.body.ftsDistinctDois,1);
+  assert.equal(finalized.body.missingFtsRows,1);
+  assert.equal(finalized.body.orphanFtsRows,0);
+});
+
+test('admin row reader covers a ready generation with bounded DOI-keyset pages',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const g=generation();
+  await importLiteratureCatalogIndexBatch(env,{generation:g,rows:rows()});
+  await finalizeLiteratureCatalogGeneration(env,g.catalogId);
+
+  const first=await listLiteratureCatalogIndexRows(env,{catalogId:g.catalogId,limit:2});
+  assert.equal(first.status,200);
+  assert.equal(first.body.count,2);
+  assert.equal(first.body.hasMore,true);
+  assert.ok(first.body.nextAfterDoi);
+  const second=await listLiteratureCatalogIndexRows(env,{
+    catalogId:g.catalogId,limit:2,afterDoi:first.body.nextAfterDoi,
+  });
+  assert.equal(second.status,200);
+  assert.equal(second.body.count,1);
+  assert.equal(second.body.hasMore,false);
+  const all=[...first.body.items,...second.body.items];
+  assert.deepEqual(all.map(item=>item.doi),rows().map(item=>item.doi).sort());
+  assert.equal(new Set(all.map(item=>item.revision)).size,3);
+});
+
 test('two-character chemistry queries explicitly stay on the compatibility path for now',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
@@ -246,6 +297,30 @@ test('oversized search metadata fails closed instead of being silently truncated
   assert.equal(status.body.generations[0].importedRows,0);
 });
 
+test('import batch is hard-bounded to eight rows per Worker invocation',async t=>{
+  assert.equal(LITERATURE_INDEX_IMPORT_BATCH_MAX,8);
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const g=generation({recordCount:8});
+  const eight=Array.from({length:8},(_,index)=>row(
+    '10.1234/batch-'+String(index+1),
+    'Batch chemistry '+String(index+1),
+    {revision:String((index%8)+1).repeat(64)}
+  ));
+  const accepted=await importLiteratureCatalogIndexBatch(env,{generation:g,rows:eight});
+  assert.equal(accepted.status,200);
+  assert.equal(accepted.body.batchRows,8);
+  assert.equal(accepted.body.importedRows,8);
+
+  const db2=new D1();t.after(()=>db2.close());
+  const env2={LITERATURE_INDEX_DB:db2,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const nine=[...eight,row('10.1234/batch-9','Batch chemistry 9',{revision:'9'.repeat(64)})];
+  const rejected=await importLiteratureCatalogIndexBatch(env2,{generation:generation({recordCount:9}),rows:nine});
+  assert.equal(rejected.status,400);
+  assert.equal(rejected.body.error,'literature_catalog_index_batch_size_invalid');
+  assert.equal(rejected.body.maxRows,8);
+});
+
 test('batch preflight rejects duplicate and overflow rows before changing generation counts',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
@@ -278,22 +353,23 @@ test('read flag is independently visible but cannot activate the dormant read pa
   assert.equal(status.body.readPathActive,false);
 });
 
-test('only authenticated admin routes exist in the foundation; public search is not cut over',()=>{
+test('shadow activation remains admin-only, dedicated-DB and read-inactive',()=>{
   const source=readFileSync(new URL('../src/index.js',import.meta.url),'utf8');
   assert.ok(source.includes('/api/admin/literature-catalog-index/query'));
+  assert.ok(source.includes('/api/admin/literature-catalog-index/rows'));
   assert.ok(!source.includes('/api/literature/catalog-search'));
   assert.ok(!source.includes('/api/user-ui/literature-search'));
 
   const wrangler=readFileSync(new URL('../wrangler.toml',import.meta.url),'utf8');
   const deploy=readFileSync(new URL('../../../.github/workflows/deploy-worker-frontend.yml',import.meta.url),'utf8');
-  for(const token of ['LITERATURE_CATALOG_INDEX_SHADOW_ENABLED','LITERATURE_CATALOG_INDEX_READ_ENABLED']){
-    assert.ok(!wrangler.includes(token),token+' must remain unset in wrangler');
-    assert.ok(!deploy.includes(token),token+' must remain unset in production deploy');
-  }
-  assert.ok(!wrangler.includes('LITERATURE_INDEX_DB'),'dedicated search DB binding must remain unconfigured in foundation');
-  assert.ok(!deploy.includes('literature-catalog-index-v1.sql'),'search DB migration must not run in production foundation');
+  assert.ok(!wrangler.includes('LITERATURE_INDEX_DB'),'repository wrangler stays resource-neutral; production binding is generated');
+  assert.ok(deploy.includes('binding = "LITERATURE_INDEX_DB"'));
+  assert.ok(deploy.includes('LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "1"'));
+  assert.ok(deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"'));
+  assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"'));
+  assert.ok(deploy.includes('literature-catalog-index-v1.sql'));
   const primarySchema=readFileSync(new URL('../../schema.sql',import.meta.url),'utf8');
   assert.ok(!primarySchema.includes('literature_catalog_fts'),'primary D1 schema must stay free of FTS virtual tables');
 });
 
-console.log('LITERATURE_CATALOG_INDEX_FOUNDATION_TESTS_READY');
+console.log('LITERATURE_CATALOG_INDEX_SHADOW_TESTS_READY');

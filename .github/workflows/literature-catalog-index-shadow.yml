@@ -1,0 +1,54 @@
+name: Literature catalog index shadow sync
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Deploy Worker frontend assets
+      - Deploy GitHub Pages frontend
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: literature-catalog-index-shadow
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Sync verified Pages generation into dedicated D1 shadow
+        env:
+          SITE_URL: https://gallery.gczhouwld.com/
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+          LITERATURE_INDEX_SHADOW_REPORT: ${{ runner.temp }}/literature-catalog-index-shadow-report.json
+        run: node scripts/sync-literature-catalog-index-shadow.mjs
+
+      - name: Preserve search-index shadow parity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: literature-catalog-index-shadow-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/literature-catalog-index-shadow-report.json
+          if-no-files-found: warn
+          retention-days: 14

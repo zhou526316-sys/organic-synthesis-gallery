@@ -1,4 +1,5 @@
 export const LITERATURE_CATALOG_INDEX_SCHEMA_VERSION = 'literature-catalog-index-v1';
+export const LITERATURE_INDEX_IMPORT_BATCH_MAX = 8;
 const schemaReadyBindings = new WeakSet();
 
 function safe(value,max=1000){
@@ -180,7 +181,9 @@ export async function importLiteratureCatalogIndexBatch(env,payload){
   await ensureLiteratureCatalogIndexSchema(env);
   const g=normalizeGeneration(payload?.generation);
   const rows=Array.isArray(payload?.rows)?payload.rows:[];
-  if(!rows.length||rows.length>250) return {status:400,body:{error:'literature_catalog_index_batch_size_invalid',maxRows:250}};
+  if(!rows.length||rows.length>LITERATURE_INDEX_IMPORT_BATCH_MAX) {
+    return {status:400,body:{error:'literature_catalog_index_batch_size_invalid',maxRows:LITERATURE_INDEX_IMPORT_BATCH_MAX}};
+  }
   const begin=await beginLiteratureCatalogGeneration(env,g);
   if(begin.status!==200) return begin;
   if(begin.body.ready) return {status:409,body:{error:'literature_catalog_generation_already_ready',catalogId:g.catalogId}};
@@ -236,16 +239,33 @@ export async function finalizeLiteratureCatalogGeneration(env,catalogIdValue){
   if(!catalogId) return {status:400,body:{error:'literature_catalog_id_invalid'}};
   const generation=await generationRow(env,catalogId);
   if(!generation) return {status:404,body:{error:'literature_catalog_generation_not_found'}};
-  const indexed=await env.LITERATURE_INDEX_DB.prepare('SELECT COUNT(*) AS c FROM literature_catalog_index WHERE catalog_id=?').bind(catalogId).first();
-  const fts=await env.LITERATURE_INDEX_DB.prepare('SELECT COUNT(*) AS c FROM literature_catalog_fts WHERE catalog_id=?').bind(catalogId).first();
-  const indexedRows=Number(indexed?.c||0),ftsRows=Number(fts?.c||0),recordCount=Number(generation.record_count||0);
-  if(indexedRows!==recordCount||ftsRows!==recordCount){
-    return {status:409,body:{error:'literature_catalog_generation_incomplete',catalogId,recordCount,indexedRows,ftsRows}};
+  const parity=await env.LITERATURE_INDEX_DB.prepare(`SELECT
+      (SELECT COUNT(*) FROM literature_catalog_index WHERE catalog_id=?) AS indexed_rows,
+      (SELECT COUNT(*) FROM literature_catalog_fts WHERE catalog_id=?) AS fts_rows,
+      (SELECT COUNT(DISTINCT doi) FROM literature_catalog_fts WHERE catalog_id=?) AS fts_distinct_dois,
+      (SELECT COUNT(*) FROM literature_catalog_index i
+        LEFT JOIN literature_catalog_fts f ON f.catalog_id=i.catalog_id AND f.doi=i.doi
+        WHERE i.catalog_id=? AND f.doi IS NULL) AS missing_fts_rows,
+      (SELECT COUNT(*) FROM literature_catalog_fts f
+        LEFT JOIN literature_catalog_index i ON i.catalog_id=f.catalog_id AND i.doi=f.doi
+        WHERE f.catalog_id=? AND i.doi IS NULL) AS orphan_fts_rows
+    `).bind(catalogId,catalogId,catalogId,catalogId,catalogId).first();
+  const indexedRows=Number(parity?.indexed_rows||0);
+  const ftsRows=Number(parity?.fts_rows||0);
+  const ftsDistinctDois=Number(parity?.fts_distinct_dois||0);
+  const missingFtsRows=Number(parity?.missing_fts_rows||0);
+  const orphanFtsRows=Number(parity?.orphan_fts_rows||0);
+  const recordCount=Number(generation.record_count||0);
+  if(indexedRows!==recordCount||ftsRows!==recordCount||ftsDistinctDois!==recordCount
+    ||missingFtsRows!==0||orphanFtsRows!==0){
+    return {status:409,body:{error:'literature_catalog_generation_incomplete',catalogId,recordCount,
+      indexedRows,ftsRows,ftsDistinctDois,missingFtsRows,orphanFtsRows}};
   }
   const now=Date.now();
   await env.LITERATURE_INDEX_DB.prepare('UPDATE literature_catalog_generations SET imported_rows=?,ready=1,updated_at=? WHERE catalog_id=?')
     .bind(indexedRows,now,catalogId).run();
-  return {status:200,body:{ok:true,enabled:true,readPathActive:false,catalogId,recordCount,indexedRows,ftsRows,ready:true}};
+  return {status:200,body:{ok:true,enabled:true,readPathActive:false,catalogId,recordCount,
+    indexedRows,ftsRows,ftsDistinctDois,missingFtsRows,orphanFtsRows,ready:true}};
 }
 
 function phraseQuery(value){
@@ -332,6 +352,36 @@ export async function queryLiteratureCatalogIndex(env,{catalogId:catalogIdValue,
   return {status:200,body:{version:1,schemaVersion:LITERATURE_CATALOG_INDEX_SCHEMA_VERSION,
     enabled:true,readPathActive:false,catalogId,query:safe(query,300),matched,
     limit:boundedLimit,count:items.length,hasMore,nextCursor,items}};
+}
+
+export async function listLiteratureCatalogIndexRows(env,{catalogId:catalogIdValue,afterDoi='',limit=200}={}){
+  if(!literatureCatalogIndexShadowEnabled(env)) return {status:409,body:{error:'literature_catalog_index_shadow_disabled',enabled:false,readPathActive:false}};
+  if(!env?.LITERATURE_INDEX_DB) return {status:503,body:{error:'literature_catalog_index_db_missing'}};
+  await ensureLiteratureCatalogIndexSchema(env);
+  const catalogId=hash64(catalogIdValue);
+  if(!catalogId) return {status:400,body:{error:'literature_catalog_id_invalid'}};
+  const generation=await generationRow(env,catalogId);
+  if(!generation||Number(generation.ready||0)!==1) return {status:409,body:{error:'literature_catalog_generation_not_ready',catalogId}};
+  const after=afterDoi?normalizeDoi(afterDoi):'';
+  if(afterDoi&&!after) return {status:400,body:{error:'literature_catalog_after_doi_invalid'}};
+  const boundedLimit=Math.max(1,Math.min(250,Math.floor(Number(limit||200))));
+  const result=await env.LITERATURE_INDEX_DB.prepare(`SELECT doi,revision,title,title_zh,authors_json,journal,
+      first_online_date,date_precision,added_date,synthesis_type
+    FROM literature_catalog_index
+    WHERE catalog_id=? AND doi>?
+    ORDER BY doi ASC LIMIT ?`).bind(catalogId,after,boundedLimit+1).all();
+  const raw=result?.results||[];
+  const hasMore=raw.length>boundedLimit;
+  const page=raw.slice(0,boundedLimit);
+  const items=page.map(row=>({
+    doi:row.doi,revision:row.revision,title:row.title,titleZh:row.title_zh,
+    authors:JSON.parse(row.authors_json||'[]'),journal:row.journal,
+    firstOnlineDate:row.first_online_date,datePrecision:row.date_precision,
+    addedDate:row.added_date,synthesisType:row.synthesis_type,
+  }));
+  return {status:200,body:{version:1,schemaVersion:LITERATURE_CATALOG_INDEX_SCHEMA_VERSION,
+    enabled:true,readPathActive:false,catalogId,count:items.length,hasMore,
+    nextAfterDoi:hasMore&&items.length?items.at(-1).doi:null,items}};
 }
 
 export async function getLiteratureCatalogIndexStatus(env){
