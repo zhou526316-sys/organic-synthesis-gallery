@@ -49,6 +49,26 @@ Immediately below the compact “今日更新” block, include one Gallery entr
 - Do **not** claim the Gallery website itself provides “深度解读”; the deep-reading editorial belongs to the WeChat article.
 - The whole block should fit the normal mobile WeChat article width and read as one compact horizontal card rather than a standalone QR code.
 
+## Core-logic editorial standard
+
+- Every featured article, regardless of journal or topic, must expose the paper's **deepest defensible scientific logic**, not just summarize results.
+- The editorial task is to identify the paper's real constraint structure:
+  1. **What is fundamentally difficult?** Explain the chemical/physical/mechanistic reason the problem is hard, not merely that it has been "challenging".
+  2. **What bottleneck did the authors actually choose to attack?** Distinguish the bottleneck from downstream symptoms.
+  3. **Why should the proposed design solve that bottleneck?** State the causal chemical logic using the paper's own evidence, precedent, energetics, stereoelectronics, speciation, kinetics, thermodynamics, or reactivity model.
+  4. **What evidence establishes each link?** Separate direct observation, control experiment, correlation, spectroscopy, electrochemistry, kinetics, computation, literature precedent, and reviewer-driven clarification.
+  5. **What would an alternative explanation predict?** When the paper discusses competing mechanisms or interpretations, explain what evidence argues for or against each one.
+  6. **What remains unproven?** Never upgrade a plausible model into a demonstrated fact.
+  7. **Where does the method fail, and why?** Treat limitations as mechanistic information that helps define the operative window.
+  8. **What new synthetic capability is actually purchased by this design?** Compare against the relevant prior-state-of-the-art, not against a straw-man baseline.
+- "Deep" does not mean "dense". Use a progressive reading path:
+  **30-second reaction picture → intuitive difficulty → authors' design → experimental consequence → decisive evidence → deeper mechanism/speciation/energetics → alternative models/reviewer challenge → failure boundary → synthetic significance.**
+- At each transition, explicitly answer a causal question such as **“为什么难？”、“为什么这个设计可能有效？”、“这个实验到底排除了什么？”、“这个结果只能证明到哪一步？”**.
+- Do not manufacture narrative cleverness. Phrases such as “最聪明的是…”, “巧妙地…”, “通过拆开两件事…” are prohibited unless the paper provides a defensible causal link and the article explains that link.
+- Do not infer a mechanistic hierarchy from aesthetics or storytelling. Editorial logic must be reconstructed from the supplied main text, SI, peer review/rebuttal when available, and the cited prior-art comparison.
+- For terminology that carries mechanistic meaning (for example RLT, SH2, LMCT, HAT, SET, Curtin-Hammett, radical rebound, ion pair, cage escape), first explain the **operational meaning in this paper**, then explain what observation distinguishes it from adjacent concepts.
+- If a paper's deepest contribution is not mechanistic, the same rule still applies: expose the deepest underlying logic appropriate to the work, e.g. reagent design, catalyst speciation, selectivity origin, synthetic disconnection, physical-organic principle, workflow/HTE strategy, or practical process constraint.
+
 ## Source-depth requirement
 
 - Before drafting a selected paper, read the supplied **final main text and SI as primary sources**. If peer-review files were supplied, read them as a separate evidence layer rather than as decoration.
