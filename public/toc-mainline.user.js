@@ -3930,7 +3930,10 @@ function embeddedJobDois(value) {
       var localText=localResults.find(function(r){return r.fulltext&&r.fulltext.status==='stored'&&r.fulltext.evidencePacketHash;});
       if(localText)textLevel=String(localText.fulltext.evidenceLevel||'unknown');
     }
-    if(!tocKnown)unknown.push('TOC');if(!figureKnown)unknown.push('正文图完整度');if(!inventory.evidenceKnown&&!textLevel)unknown.push('文本');
+    var nonQueueUnknown=[];
+    if(!tocKnown)unknown.push('TOC');
+    if(!figureKnown)nonQueueUnknown.push('正文图完整度');
+    if(!inventory.evidenceKnown&&!textLevel)nonQueueUnknown.push('文本');
     var tocNeeded=tocKnown&&!official;
     var pdfNeeded=privatePdfQueueNeeded(raw,Date.now());
     var job=Object.assign({},raw,{doi:doi,publisher:publisherForDoi(doi),missingOnly:true,recaptureFromHead:false,
@@ -3944,7 +3947,7 @@ function embeddedJobDois(value) {
       capturePrivatePdf:pdfNeeded,
       expectedFigureCount:expected,figureCoverageUnconfirmed:Boolean(tocNeeded&&inspectFigures),missingFigureCount:expected>0?Math.max(0,expected-knownCount):0,
       capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:official?'official':fallback?'figure1':'',
-      unknownNeeds:unknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback&&isNatureScienceFamilyJob(raw))});
+      unknownNeeds:unknown,nonQueueUnknownNeeds:nonQueueUnknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback&&isNatureScienceFamilyJob(raw))});
     job.mediaNeed=[job.captureToc?'toc':'',job.captureFigures?'figures':'',job.captureEvidence?'evidence':'',job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
     job.state=job.captureToc?'no_visual':'private_pdf_gap';
     return job;
