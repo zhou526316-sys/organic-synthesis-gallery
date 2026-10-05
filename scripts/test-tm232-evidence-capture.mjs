@@ -175,22 +175,15 @@ try{
       {doi:'10.1021/jacs.6c10004',available:true,evidenceLevel:'complete'},
     ]};
     const rows=__tm232.evidenceBackfillJobs(q,media,inv);
-    return {rows:rows.map(r=>({doi:r.doi,state:r.state,level:r.existingEvidenceLevel})),tier:__tm232.captureQueueTier(rows[0],'2026-09-25')};
+    return {rows:rows.map(r=>({doi:r.doi,state:r.state,level:r.existingEvidenceLevel}))};
   });
-  test('any stored evidence level leaves the normal backlog without repeated reopening',
-    !backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10001') &&
-    !backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10004'));
-  test('missing evidence stays in the lowest-priority backfill queue',
-    backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10002'&&r.state==='evidence_gap'));
-  test('evidence-only backlog is lower priority than historical body figures',backfill.tier===3);
-  const urgentTier=await page.evaluate(()=>__tm232.captureQueueTier({mediaNeed:'evidence',summaryUrgent:true,addedDate:'2026-09-24'},'2026-09-25'));
-  test('fresh-TOC summary Evidence gap outranks the normal media backlog',urgentTier===-1);
-  test('source retains one-hour post-TOC Evidence urgency and bounded retry',
-    source.includes('SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000')&&
-    source.includes('markSummaryEvidenceUrgency(job.doi)')&&
-    source.includes('urgentEvidenceRetryEligible(prior,Date.now())')&&
-    source.includes('hasActiveSummaryEvidenceUrgency()')&&
-    source.includes("var nextDelay=remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000"));
+  test('stored or missing evidence never creates an independent backfill row',backfill.rows.length===0);
+  const legacyEvidenceTier=await page.evaluate(()=>__tm232.captureQueueTier({mediaNeed:'evidence',captureEvidence:true,summaryUrgent:true,addedDate:'2026-09-25'},'2026-09-25'));
+  test('legacy evidence-only jobs have no executable queue priority',legacyEvidenceTier===5);
+  test('source disables evidence-only jobs and one-hour wakeups',
+    source.includes('var evidenceJobs=[];')&&
+    source.includes('Text gaps no longer schedule independent retries')&&
+    !source.includes('remainingAvailable.length>0||urgentEvidencePending'));
 
   const combinedPlan=await page.evaluate(()=>{
     const q={latestAddedDate:'2026-09-25',webpageDoiCount:2,mediaGeneration:1790082000000,articles:[
@@ -212,10 +205,10 @@ try{
   });
   test('historical missing-TOC media trigger also requests body discovery in the same visit',
     combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===true);
-  test('missing evidence remains eligible even before an official TOC exists',
-    combinedPlan.evidenceDois.includes('10.1002/anie.5617321'));
-  test('scheduler code merges evidence need into an existing media DOI instead of opening twice',
-    source.includes('var merged=new Map();')&&source.includes('merged.get(doi).captureEvidence=true'));
+  test('missing evidence never creates an evidence-only DOI job',combinedPlan.evidenceDois.length===0);
+  test('scheduler only adds missing evidence opportunistically to an existing TOC visit',
+    source.includes('job.captureEvidence=evidenceMissing.has(normalizeDoi(job.doi));')&&
+    source.includes('var evidenceJobs=[];'));
 
   const isolatedFailure=await page.evaluate(async()=>{
     window.__evidenceTransport='fail';
