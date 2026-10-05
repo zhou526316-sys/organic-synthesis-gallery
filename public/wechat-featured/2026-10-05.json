@@ -1,90 +1,189 @@
 {
   "date": "2026-10-05",
-  "headline": "非活化末端烯烃，怎样“反着”做出 Markovnikov 烷基硼？",
+  "headline": "把伯胺“反过来用”：一步变成可转移的亲电氮片段",
   "paper": {
-    "doi": "10.1002/anie.5679433",
-    "journal": "Angew",
-    "title": "Radical Markovnikov Hydroboration of Unactivated Terminal Alkenes With HBaza‐Type Hydroborane via a Triple Catalysis",
-    "authors": "Chang Liu, Yiyun Pan, Yu Zhang, Jie Xu, Kai Yang, Peng Liu, Qiuling Song"
+    "doi": "10.1021/jacs.6c14811",
+    "journal": "JACS",
+    "title": "Complex Fragment Coupling via O-Mesyl Hydroxylamines: Direct Conversion of Primary Amines to Electrophilic Aminating Agents",
+    "authors": "Mats Georg, Young-Do Kwon, Mathias Boeckle, Dongdong Yang, Daniel H. Ess, László Kürti"
   },
   "quick_points": [
     {
       "label": "做了什么",
-      "text": "作者用光氧化还原、钴和 Brønsted 酸三重催化，把非活化末端烯烃转成支链烷基硼化物，实现更具挑战的 Markovnikov 氢硼化；硼源为 HBaza 型 hydroborane。"
+      "text": "作者用 dimesyl peroxide（MPO）把常见伯胺直接氧化成 N-alkyl-O-mesyl hydroxylamine（RNHOMs）。原本作为亲核体的伯胺因此完成“极性反转”，变成可以把复杂 NHR 片段转移出去的亲电氮试剂。"
     },
     {
       "label": "最亮眼的点",
-      "text": "关键不是简单更换硼试剂，而是把区域选择性交给自由基过程：先经金属氢原子转移（MHAT）生成烷基自由基，再由 HBaza 参与自由基硼化，把经典末端烯烃氢硼化的选择性逻辑翻转。"
+      "text": "真正有价值的不是多做了一类羟胺，而是把“现成伯胺 → 亲电氮砌块 → C–N / N–N 片段偶联”连成了一条通路。氨基酸、天然产物和药物来源的复杂手性胺都能进入这套逻辑。"
     },
     {
       "label": "为什么值得读",
-      "text": "出版社摘要明确给出广泛底物范围、良好官能团兼容性、复杂分子烯烃的后期转化以及烷基硼产物的进一步衍生，因此这不仅是一个机理概念，也是一套面向实际合成的反应平台。"
+      "text": "它既解决试剂可得性，也展示了平台性：生成的 RNHOMs 能直接接入芳烃 C–H 胺化、烯烃氮杂环丙烷化、aza-Rubottom 氧化和肼类偶联；机理部分又用自由基捕获对照与 DFT 检验 N–O 键究竟怎样形成。"
     }
   ],
-  "figures": [],
+  "figures": [
+    {
+      "id": "fig1",
+      "caption": "原文 Fig. 1｜核心逻辑：过去复杂 NH-alkyl 亲电胺化试剂往往要多步制备；这项工作从伯胺出发，一步生成 RNHOMs，再进入多类亲电胺化与片段偶联。",
+      "pdf_render": {
+        "page_index": 1,
+        "clip": [
+          105,
+          35,
+          565,
+          665
+        ],
+        "zoom": 4
+      }
+    },
+    {
+      "id": "fig2",
+      "caption": "原文 Fig. 2｜底物范围。简单烷基胺、含烯烃/卤素/腈/醚的胺，以及氨基酸、天然产物和药物来源的复杂胺都能转成 RNHOMs；手性氨基酸底物可保持构型。",
+      "pdf_render": {
+        "page_index": 3,
+        "clip": [
+          12,
+          35,
+          575,
+          465
+        ],
+        "zoom": 4
+      }
+    },
+    {
+      "id": "fig4",
+      "caption": "原文 Fig. 4｜这些 RNHOMs 不是“做出来就结束”：作者直接把它们替换进已有的亲电胺化体系，实现芳烃 C–H 胺化、烯烃氮杂环丙烷化、C–H 胺化和 aza-Rubottom 氧化。",
+      "pdf_render": {
+        "page_index": 5,
+        "clip": [
+          12,
+          35,
+          575,
+          655
+        ],
+        "zoom": 4
+      }
+    },
+    {
+      "id": "fig3",
+      "caption": "原文 Fig. 3｜DFT 支持 amine 对 MPO 发生 SN2-at-oxygen：无碱模型的 ΔH‡ 为 25.5 kcal/mol，引入 Cs2CO3 参与氢键/去质子化后降到 13.1 kcal/mol。",
+      "pdf_render": {
+        "page_index": 4,
+        "clip": [
+          300,
+          35,
+          575,
+          525
+        ],
+        "zoom": 4
+      }
+    },
+    {
+      "id": "fig5",
+      "caption": "原文 Fig. 5｜进一步把一个亲电 RNHOMs 片段与另一个胺片段直接偶联，得到不对称肼；氨基酸来源的两个片段也可以组合。",
+      "pdf_render": {
+        "page_index": 6,
+        "clip": [
+          12,
+          35,
+          575,
+          240
+        ],
+        "zoom": 4
+      }
+    }
+  ],
   "sections": [
     {
-      "eyebrow": "01 · 先看问题",
-      "heading": "难点不是“能不能氢硼化”，而是如何让硼落在更拥挤的那个碳上",
+      "eyebrow": "01 · 为什么这件事值得做",
+      "heading": "亲电胺化不缺反应，真正缺的是“复杂 NHR 亲电试剂”",
       "paragraphs": [
-        "末端烯烃的氢硼化是制备有机硼化物的经典入口，但非活化末端烯烃要实现高 Markovnikov 选择性仍然困难。作者因此没有继续沿传统两电子加成微调，而是把成键过程改写成自由基序列。",
-        "核心思路是先用 MHAT 把简单烯烃转换成烷基自由基，再把 C–B 成键交给另一套自由基捕获过程。"
+        "很多亲电胺化反应已经可以把 NH2 转移到烯烃或芳烃上，但如果想转移一个带复杂侧链的 NH–R，试剂本身往往先要经过多步合成。作者因此把问题往前移了一步：能不能直接拿最常见的伯胺 RNH2，把它变成亲电氮试剂？"
       ]
     },
     {
-      "eyebrow": "02 · 三重催化怎样分工",
-      "heading": "光、Co 和酸不是堆条件，而是在同一条自由基链路上分工",
+      "eyebrow": "02 · 关键一步其实很直接",
+      "heading": "MPO 把伯胺一步氧化成 RNHOMs，几分钟到一小时完成极性反转",
       "paragraphs": [
-        "最终论文摘要把体系明确描述为 photoredox、cobalt 和 Brønsted acid 三重催化。机制研究支持一个顺序过程：先由金属氢原子转移生成碳自由基，再发生 HBaza 参与的自由基硼化。",
-        "因此更稳妥的理解是，不同催化模块分别服务于自由基生成、催化循环调节和 C–B 键形成，而不是三种催化剂同时控制每一个 elementary step。"
-      ],
-      "callout": "最值得迁移的设计思想，是把“自由基在哪里生成”和“自由基最后被什么捕获”拆成两个可分别调控的模块。"
-    },
-    {
-      "eyebrow": "03 · 合成价值",
-      "heading": "复杂分子和后续衍生，决定这条路线是否真正有用",
-      "paragraphs": [
-        "出版社摘要明确写到反应具有广泛底物范围和良好官能团兼容性，并已用于复杂分子来源烯烃的 Markovnikov 氢硼化。",
-        "所得烷基硼产物还能继续转化，并用于生物相关分子或其中间体的合成。区域选择性的价值因此不只是一项数据，而是获得一个可继续做 C–C 与 C–杂原子成键的支链硼化接口。"
+        "优化后使用 MPO、Cs2CO3、CHCl3 和少量水，在 0 °C 下通常 5–60 min 就能完成转化。少量水很关键：它让反应快速推进，同时酸性水洗还能除去剩余胺和碱，因此不少产物不必依赖柱层析。",
+        "代表性底物放大到 10–20 mmol 后仍能给出 91–93% 收率。作者也明确指出这是放热氧化；放大时 MPO 需要分批加入，并把内部温度控制在 10 °C 以下。"
       ]
     },
     {
-      "eyebrow": "04 · 机理证据说到哪一步",
-      "heading": "可以确认的是“MHAT → 自由基硼化”总体路径，不把未核验细节写成事实",
+      "eyebrow": "03 · 范围真正说明了什么",
+      "heading": "最重要的不是 30 个例子，而是复杂手性胺也能被“翻转极性”",
       "paragraphs": [
-        "当前可核验的一手出版社信息明确表述：mechanistic studies support sequential MHAT-mediated radical generation and an HBaza-involved radical borylation process。它支持的是总体反应框架。",
-        "在完整论文图谱和 SI 尚未逐项核对前，本稿不擅自添加具体自由基钟、淬灭、动力学或瞬态中间体结论。"
+        "氨基酸来源的底物尤其有说服力：异亮氨酸衍生物在氧化后仍以单一非对映体得到，说明 α-手性中心没有明显消旋。天然产物和药物来源的伯胺也能转成对应 RNHOMs。",
+        "边界同样清楚：苄胺容易消除成亚胺，苯胺会快速氧化分解；甲硫氨酸和色氨酸等易氧化氨基酸也不兼容。"
       ],
-      "warning": "机制模型得到实验支持，不等于催化循环中的每个瞬态物种都被直接观测。"
+      "figures": [
+        "fig2"
+      ]
     },
     {
-      "eyebrow": "05 · 同行评审与证据边界",
-      "heading": "没有公开评审文件，就不编造“审稿人质疑了什么”",
+      "eyebrow": "04 · 它为什么更像“平台”而不是单一方法",
+      "heading": "换掉亲电胺化试剂，不必把下游反应从头再优化一遍",
       "paragraphs": [
-        "截至本次草稿生成，可核验来源中没有取得这篇 Angew 论文的公开同行评审文件，因此不人为补写 reviewer 质疑，也不把最终论文中的机理讨论反推成审稿意见。",
-        "只有存在可核验 peer-review 文本时，才讨论作者在修订中具体补了哪些实验、哪些结论被加强或收窄。"
+        "作者刻意选择已有的 NHR-transfer 反应来测试，而不是为新试剂重新发明一套条件。结果 RNHOMs 可以直接用于芳烃 C–H 胺化、烯烃氮杂环丙烷化、分子内 C–H 胺化和 aza-Rubottom 氧化，很多体系只需很少调整。",
+        "这意味着复杂胺片段可以先被转成“亲电模块”，再接到另一个复杂骨架上。对药物化学和后期片段偶联而言，这比单纯扩大底物表更有意义。"
       ],
-      "review": "公开同行评审材料：本次未取得；因此不作推测性复原。"
+      "figures": [
+        "fig4"
+      ]
     },
     {
-      "eyebrow": "06 · 最后看边界",
-      "heading": "“底物范围广”不等于“所有末端烯烃都适用”",
+      "eyebrow": "05 · N–O 键是怎么形成的？",
+      "heading": "自由基路径并非完全不可能，但现有证据更支持 SN2-at-oxygen",
       "paragraphs": [
-        "出版社摘要支持 broad substrate scope 和 good functional group compatibility，但当前可核验文本没有给出完整失败底物清单，因此本稿不虚构具体失效类型。",
-        "更准确的结论是：这项工作建立了一条具有一般性的 Markovnikov 自由基氢硼化路线，并已证明复杂分子兼容性与后续合成价值；具体边界仍应以主文和 SI 的完整 scope 为准。"
+        "计算给出的最低能模型是伯胺对 MPO 的氧原子发生协同 SN2 型进攻：N–O 键形成的同时 O–O 键断裂。单独计算时能垒为 25.5 kcal/mol；Cs2CO3 参与后可降至 13.1 kcal/mol。",
+        "作者又加入 CCl3Br 作为自由基捕获剂，反应收率基本不变，这与自由基链式主路径不符。不过作者没有把结论写死：Cs2CO3 参与电子转移的计算路径只高几 kcal/mol，因此更准确的表述是“SN2-at-oxygen 最合理”，而不是“其他路径已被彻底排除”。"
+      ],
+      "figures": [
+        "fig3"
+      ]
+    },
+    {
+      "eyebrow": "06 · 再往前一步",
+      "heading": "把两个独立的胺砌块直接接成 N–N 键",
+      "paragraphs": [
+        "RNHOMs 还能与胺类亲核体进行 N–N 偶联。最初使用一级胺时产率受后续氧化影响，但换成脯氨酸甲酯或 N-甲基丙氨酸甲酯后，肼类产物可达到 76% 和 66%。",
+        "这组结果目前还是初步展示，却把“胺的极性反转”推向了新的逆合成方向：两个各自容易获得的含氮片段，可以通过一亲电、一亲核的方式直接拼接。"
+      ],
+      "figures": [
+        "fig5"
       ]
     }
   ],
   "takehome": [
-    "反应设计：用 MHAT 把区域选择性问题转化为自由基生成与捕获问题。",
-    "合成价值：从简单末端烯烃延伸到复杂分子，并保留烷基硼后续衍生优势。",
-    "证据表达：当前一手信息支持总体“MHAT → radical borylation”模型，但不把未逐项核验的机理实验写成直接证据。"
+    "概念上：把最普通的亲核伯胺直接变成亲电 NHR 片段，是一次真正的 amine umpolung。",
+    "合成上：价值在于复杂氮片段能直接接入多种既有 C–N 反应，而不只是制得一类新试剂。",
+    "机理上：自由基捕获实验与 DFT 共同偏向 SN2-at-oxygen，但作者仍保留了对竞争电子转移路径的证据边界。"
   ],
-  "ai_notice": "本文由 AI 辅助生成，并以当天已通过 Gallery 08:00 审核的出版社摘要与生产审查记录交叉核验。未取得的全文图、SI 细节或公开同行评审内容不作推测；化学结构不使用 AI 重绘。",
-  "evidence": {
-    "source": "audit/prepublish-review-2026-10-05-0800.json publisher abstract and production review",
-    "sourceDoi": "10.1002/anie.5679433",
-    "visualStatus": "publisher figures not yet captured at draft time",
-    "peerReviewStatus": "public peer-review file not obtained"
+  "ai_notice": "本文依据 JACS 正文与 Supporting Information 整理。实验结果、计算支持和作者提出的机理模型分开表述；化学结构图均直接使用论文原图，不使用 AI 重绘。",
+  "pdf_url": "https://pubs.acs.org/jacsat/article-pdf/doi/10.1021/jacs.6c14811/68740323/jacs.6c14811.pdf",
+  "pdf_urls": [
+    "https://chemrxiv.org/doi/pdf/10.26434/chemrxiv.15006185"
+  ],
+  "cover": {
+    "source": "original_jacs_graphical_abstract",
+    "description": "使用 JACS 正文首页原始 graphical abstract，保留原论文结构式，不重绘。",
+    "pdf_render": {
+      "page_index": 0,
+      "clip": [
+        315,
+        205,
+        575,
+        405
+      ],
+      "zoom": 5
+    },
+    "canvas": {
+      "width": 1880,
+      "height": 800,
+      "background": "white",
+      "fit": "contain"
+    },
+    "crop_235_1": "0_0_1_1",
+    "crop_1_1": "0.287234_0_0.712766_1"
   }
 }
