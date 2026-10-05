@@ -489,8 +489,10 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
     source = local_images.get(fig_id) if fig_id else None
     if not source:
         return None
+    portrait_id = str(cover.get("portrait_figure_id") or "").strip()
+    portrait = local_images.get(portrait_id) if portrait_id else None
     try:
-        from PIL import Image
+        from PIL import Image, ImageDraw, ImageOps
     except ImportError as exc:
         raise RuntimeError("cover composition requires Pillow") from exc
 
@@ -511,18 +513,43 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
                 int(image.width * x0), int(image.height * y0),
                 int(image.width * x1), int(image.height * y1),
             ))
-        scale = min(width / image.width, height / image.height)
-        resized = image.resize(
-            (max(1, int(image.width * scale)), max(1, int(image.height * scale))),
-            Image.Resampling.LANCZOS,
-        )
+
         canvas = Image.new("RGB", (width, height), background_name)
-        canvas.paste(resized, ((width - resized.width)//2, (height - resized.height)//2))
+
+        if portrait:
+            # Editorial cover: a clean MacMillan portrait on the left plus the
+            # paper's original reaction artwork on the right. Chemical structures
+            # are never redrawn; they remain pixels from the publisher figure.
+            left_w = int(width * 0.34)
+            with Image.open(portrait) as p:
+                p.load()
+                p = p.convert("RGB")
+                p = ImageOps.fit(p, (left_w, height), method=Image.Resampling.LANCZOS, centering=(0.50, 0.42))
+                canvas.paste(p, (0, 0))
+            draw = ImageDraw.Draw(canvas)
+            fade_w = max(120, int(width * 0.10))
+            for i in range(fade_w):
+                alpha = int(255 * (i / max(1, fade_w - 1)) ** 1.4)
+                x = left_w - fade_w + i
+                draw.line([(x, 0), (x, height)], fill=(255, 255, 255, alpha) if canvas.mode=="RGBA" else (255,255,255), width=1)
+            right_x = int(width * 0.35)
+            right_w = width - right_x - int(width * 0.025)
+            right_h = int(height * 0.78)
+            fitted = ImageOps.contain(image, (right_w, right_h), method=Image.Resampling.LANCZOS)
+            px = right_x + (right_w - fitted.width)//2
+            py = (height - fitted.height)//2
+            canvas.paste(fitted, (px, py))
+        else:
+            scale = min(width / image.width, height / image.height)
+            resized = image.resize(
+                (max(1, int(image.width * scale)), max(1, int(image.height * scale))),
+                Image.Resampling.LANCZOS,
+            )
+            canvas.paste(resized, ((width - resized.width)//2, (height - resized.height)//2))
 
     target = Path(tempfile.gettempdir()) / "osg-wechat-retrospective-cover.jpg"
     canvas.save(target, format="JPEG", quality=95, optimize=True, progressive=True, dpi=(300, 300))
     return target
-
 
 def multipart_file(field: str, path: Path):
     boundary = "----osg" + uuid.uuid4().hex
@@ -758,9 +785,32 @@ def prepare_featured_local_images(featured: dict | None, override_pdf: str = "")
         source_url = str(fig.get("source_url") or "").strip()
         if not source_url:
             continue
-        prepared[fig_id] = download_body_image(source_url, fig_id)
-    return prepared
+        local = download_body_image(source_url, fig_id)
 
+        # Publisher figures are often multi-panel. Allow a fractional crop so the
+        # article can show only the exact evidentiary panel, without page chrome,
+        # neighbouring panels, or unrelated text.
+        crop_frac = fig.get("crop_frac")
+        if isinstance(crop_frac, list) and len(crop_frac) == 4:
+            try:
+                from PIL import Image
+            except ImportError as exc:
+                raise RuntimeError("figure cropping requires Pillow") from exc
+            x0, y0, x1, y1 = [float(v) for v in crop_frac]
+            x0 = max(0.0, min(1.0, x0)); y0 = max(0.0, min(1.0, y0))
+            x1 = max(x0 + 0.01, min(1.0, x1)); y1 = max(y0 + 0.01, min(1.0, y1))
+            with Image.open(local) as image:
+                image.load()
+                image = image.convert("RGB")
+                crop = image.crop((
+                    int(image.width * x0), int(image.height * y0),
+                    int(image.width * x1), int(image.height * y1),
+                ))
+                target = Path(tempfile.gettempdir()) / f"osg-wechat-{fig_id}-crop.png"
+                crop.save(target, format="PNG", optimize=True, dpi=(300, 300))
+                local = target
+        prepared[fig_id] = local
+    return prepared
 
 def upload_local_body_image(token: str, local: Path, fig_id: str, cache_path: Path) -> str:
     payload = local.read_bytes()
