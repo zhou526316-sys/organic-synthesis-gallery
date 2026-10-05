@@ -116,6 +116,7 @@ export async function buildPublicArchitecture({ output = OUTPUT, asOfDate = beij
   };
   const hotFallbackText = stable(hotFallbackBody) + '\n';
   const hotFallbackRef = ref(`hot-fallback.${sha256(hotFallbackText)}.json`, hotFallbackText);
+  assert(hotFallbackRef.bytes <= 4 * 1024 * 1024, 'hot_fallback_over_budget');
 
   const members = Object.fromEntries(bundle.records.map(row => [row.doi, row.revision]));
   const serial = Date.parse(publicationSlot);
