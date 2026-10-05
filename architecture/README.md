@@ -1,5 +1,7 @@
 # Gallery architecture v1 — phase A implementation
 
+> Current active architecture policy: [CURRENT-CONTRACT.md](./CURRENT-CONTRACT.md). Historical `PHASE-*.md` notes are implementation history and may contain retired operational rules; they do not override the current contract.
+
 Approved construction request: final architecture review, then start building, 2026-10-04.
 The architecture remains globally non-authoritative for write-side workflows (`productionActivation:false`, `dispatchEnabled:false`), but the public frontend read path is now independently activatable through `frontendReadActivation:true`.
 
