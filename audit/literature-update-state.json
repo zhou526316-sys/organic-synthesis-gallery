@@ -1084,26 +1084,17 @@
     "verifiedAt": "2026-10-05T07:29:22.476+08:00"
   },
   "lastScopeCorrection": {
-    "id": "scope-correction-20261002045728304",
+    "id": "scope-correction-20261005012904928",
     "mode": "deletion-only",
-    "status": "deployed_verified",
-    "correctedAt": "2026-10-02T04:57:28.304Z",
+    "status": "awaiting_deployment",
+    "correctedAt": "2026-10-05T01:29:04.928Z",
     "removedDois": [
-      "10.1038/s44160-026-01164-8"
+      "10.1039/d6gc04274k"
     ],
-    "beforeCards": 755,
-    "afterCards": 754,
-    "reviewFile": "audit/scope-rechecks/scope-correction-20261002045728304.json",
-    "reviewBlobSha": "d05dda553ff6e5ad8f877092dd9ca155417d6d4d",
-    "deployedAt": "2026-10-02T05:03:14.566Z",
-    "deploymentRun": 36966791981,
-    "deploymentSourceCommit": "42e3044a7e1222abe5ff72a031130d105449e3c1",
-    "markerBlobSha": "72f076bad2efc074270a88f3dee193cfdd81b559",
-    "datasetSha256": "0dd1605cb024b5b63a1f129cdf7250c090e81e71747e9ade8056a4ca20097beb",
-    "retainedCards": 754,
-    "removedDoisVerifiedAbsent": [
-      "10.1038/s44160-026-01164-8"
-    ]
+    "beforeCards": 798,
+    "afterCards": 797,
+    "reviewFile": "audit/scope-rechecks/scope-correction-20261005012904928.json",
+    "reviewBlobSha": "e4ddeea31c2350431cf90d62a6e91fe903395399"
   },
   "lastAdmissionWebsiteSync": {
     "finishedAt": "2026-09-23T08:15:41+08:00",

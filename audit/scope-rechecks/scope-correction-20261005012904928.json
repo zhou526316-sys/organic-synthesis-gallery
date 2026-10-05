@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "mode": "scope-correction",
+  "generatedAt": "2026-10-05T01:29:04.928Z",
+  "requestFile": "audit/automation-triggers/scope-removal-request.json",
+  "source": "explicit_user_confirmed_exclusions",
+  "accepted": [],
+  "rejected": [
+    {
+      "doi": "10.1039/d6gc04274k",
+      "title": "Development of a Continuous Glycolysis Process for the Recycling of Polyethylene Terephthalate (PET) from Post-Consumer Polycotton Blended Textile Waste",
+      "journal": "Green Chemistry",
+      "date": "2026-10-02",
+      "decision": "exclude",
+      "firstPassDecision": "exclude",
+      "challengeDecision": "exclude",
+      "reason": "User-confirmed DOI exclusion: this continuous PET glycolysis/recycling process is outside the Organic Synthesis Gallery scope.",
+      "evidenceBasis": "The 2026-10-05 prepublish review records the RSC article as a continuous twin-screw glycolysis process for PET in post-consumer polycotton textile waste. The chemical depolymerization is real, but the article's principal contribution is recycling/process engineering of a polymer waste stream rather than a general organic preparative method. The user explicitly states that this DOI does not count for the Gallery.",
+      "challengeReason": "The strongest argument for inclusion is that PET ester bonds are chemically cleaved and the process is scalable. That does not override the user's DOI-level boundary, and this exclusion must not be generalized to all polymerization, depolymerization, or recycling chemistry.",
+      "evidencePages": [
+        "https://doi.org/10.1039/d6gc04274k",
+        "https://pubs.rsc.org/gc/article/doi/10.1039/D6GC04274K/1364768/Development-of-a-Continuous-Glycolysis-Process-for"
+      ],
+      "evidenceLevel": "fresh prepublish publisher abstract/article-specific primary-source evidence plus explicit user DOI decision",
+      "source": "explicit_user_scope_correction_and_2026-10-05_prepublish_evidence",
+      "userInstruction": "10.1039/d6gc04274k 这个不算",
+      "scopeRulesVersion": "scope-2026-10-02-v1",
+      "scopeRulesFile": "docs/literature-scope-contract.md",
+      "supersedesReviewFile": "audit/prepublish-review-2026-10-05-0800.json",
+      "scopeAssessment": {
+        "primaryContribution": "Continuous glycolysis/recycling process development for PET in post-consumer polycotton textile waste.",
+        "preparativeTransformation": "PET ester-bond cleavage by glycolysis in a continuous processing setup.",
+        "generalityEvidence": "The prior review cited real waste-stream handling and continuous twin-screw processing, but not a general small-molecule preparative substrate-to-product scope.",
+        "sourceEvidence": "2026-10-05 prepublish review cites the RSC DOI/article page and records the publisher abstract facts about continuous glycolysis, PET/polycotton feed, and twin-screw extrusion.",
+        "boundaryChallenge": "Chemical depolymerization and scale-up are genuine synthetic chemistry operations, but the explicit DOI-level user decision excludes this process-engineering/recycling article without creating a category-wide ban."
+      }
+    }
+  ],
+  "pending": [],
+  "summary": {
+    "reviewed": 1,
+    "accepted": 0,
+    "rejected": 1,
+    "pending": 0
+  },
+  "qualityControl": {
+    "secondPassCompleted": true,
+    "unresolvedDisagreements": 0
+  },
+  "note": "Only previously confirmed out-of-scope entries are removed. This does not claim a complete new discovery audit or global semantic closure."
+}
