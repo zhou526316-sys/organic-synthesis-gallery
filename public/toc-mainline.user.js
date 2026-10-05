@@ -661,7 +661,10 @@ function embeddedJobDois(value) {
       return base;
     }
     if (publisher === 'rsc') {
-      var wantsFull=Boolean(job && (job.captureFigures===true||job.captureEvidence===true))
+      var wantsFull=Boolean(job && (
+          job.captureFigures===true || job.captureEvidence===true
+          || job.opportunisticFigures===true || job.opportunisticEvidence===true
+        ))
         || String(job&&job.mediaNeed||'').indexOf('figures')>=0
         || String(job&&job.mediaNeed||'')==='evidence';
       var htmlUrl=wantsFull?rscArticleHtmlUrl(job):'';
