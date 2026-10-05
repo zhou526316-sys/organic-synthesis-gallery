@@ -866,9 +866,9 @@
       "challengeDecision": "exclude",
       "titleZh": null,
       "decision": "exclude",
-      "reason": "“Ultrathin b ‐Oriented Co‐Gallate MOF Membranes for Lithium Recovery: Precise Ion Sieving via Geometry‐Confined Dehydration”为封面或目录元数据。",
-      "evidenceBasis": "没有独立原创研究内容和制备证据。 此判断以本轮实际取得的文章级题名、摘要或正文证据为限，未对缺失信息作推断。",
-      "challengeReason": "反向挑战已检查该文是否包含标题未充分体现的成键、底物拓展、放大或全路线证据；现有摘要仍不足以推翻上述主要贡献判断。"
+      "reason": "该文的主要贡献是通过气–液界面软模板构筑超薄b取向Co-gallate MOF膜，并以受限脱水实现K+/Li+/Na+/Mg2+离子筛分和盐湖锂回收；属于膜材料制备与分离性能研究，不是一般有机制备方法。",
+      "evidenceBasis": "文章摘要明确给出超薄b取向Co-gallate MOF膜的界面软模板制备、约3.7 Å三维曲折亚纳米通道、K+/Li+选择性13.5及K+/Na+、K+/Mg2+筛分表现。膜的实际制备是真实材料合成操作，但现有证据未建立一般有机底物到可分离产物的制备范围、全合成路线或符合本范围的聚合反应方法。",
+      "challengeReason": "最强反向理由是作者确实发展了可迁移的膜构筑策略，而非只有性能测试；但该策略的目标和验证均围绕MOF膜取向、离子脱水/传输及锂回收选择性，未形成一般有机合成或聚合方法学贡献，因此继续exclude。"
     },
     {
       "doi": "10.31635/ccschem.026.202608564",
@@ -4234,9 +4234,9 @@
       "challengeDecision": "exclude",
       "titleZh": null,
       "decision": "exclude",
-      "reason": "“Superlattice Engineering in Relaxor Ferroelectric-based Capacitors for Ultra-Highly Efficient Recoverable Energy Storage Density”为封面或目录元数据。",
-      "evidenceBasis": "没有独立原创研究内容和制备证据。 此判断以本轮实际取得的文章级题名、摘要或正文证据为限，未对缺失信息作推断。",
-      "challengeReason": "反向挑战已检查该文是否包含标题未充分体现的成键、底物拓展、放大或全路线证据；现有摘要仍不足以推翻上述主要贡献判断。"
+      "reason": "该文以弛豫铁电/顺电层超晶格工程提升电容器可恢复储能密度与效率，主要贡献是无机/铁电材料架构及器件储能性能，不属于一般有机制备方法。",
+      "evidenceBasis": "摘要明确通过0.5Ba(Zr0.2Ti0.8)O3–0.5(Ba0.7Ca0.3)TiO3与SrTiO3层的超晶格工程协同优化低电场下可恢复能量密度与效率，并以电容器性能为核心评价。层状材料构筑是真实实验，但没有一般有机底物–产物转化、全合成路线或符合本范围的聚合反应证据。",
+      "challengeReason": "最强反向理由是论文包含明确的超晶格材料制备与结构调控；然而该制备服务于铁电电容储能性能，文章未建立可推广的有机制备方法，因此继续exclude，而不是把它误记为封面/目录条目。"
     },
     {
       "doi": "10.1038/s41467-026-78013-x",
@@ -5017,9 +5017,9 @@
       "challengeDecision": "exclude",
       "titleZh": null,
       "decision": "exclude",
-      "reason": "“Trichoxanes A and B: Molecular Networking-Guided Discovery of Cage-Like Sorbicillinoids as Mycobacterium tuberculosis GlmU Inhibitors”为封面或目录元数据。",
-      "evidenceBasis": "没有独立原创研究内容和制备证据。 此判断以本轮实际取得的文章级题名、摘要或正文证据为限，未对缺失信息作推断。",
-      "challengeReason": "反向挑战已检查该文是否包含标题未充分体现的成键、底物拓展、放大或全路线证据；现有摘要仍不足以推翻上述主要贡献判断。"
+      "reason": "该文主要通过分子网络从Trichoderma reesei中发现、分离并解析天然产物Trichoxanes A/B，并评价其GlmU抑制活性；属于天然产物分离/结构鉴定与活性研究，不是一般有机合成方法或完成的全合成。",
+      "evidenceBasis": "摘要明确Trichoxanes A/B由Trichoderma reesei分离获得，结构通过光谱、CASE、DP4+ NMR计算和ECD解析；文中提出botryenol与oxosorbicillinol发生Diels–Alder反应并继以级联重排的生物合成假说，同时报告GlmU抑制数据。提出的生物合成路径不是实际执行的制备路线，现有证据没有全合成、形式全合成或一般底物范围。",
+      "challengeReason": "最强反向理由是其笼状sorbicillinoid骨架和所提出的Diels–Alder/级联重排具有明确合成化学意义；但论文实际贡献仍是天然产物发现、分离、结构解析和活性，未展示对应的人工合成路线，因此按范围契约继续exclude。"
     },
     {
       "doi": "10.1021/acs.orglett.6c04136",
@@ -7257,13 +7257,14 @@
   "notes": [
     "完整读取同代fresh compact的122篇候选，双遍结果为29 include、87 exclude、6 pending。",
     "常规预发布阶段未新增生产卡片、媒体或部署。",
-    "10.1039/d6gc04274k按最新用户纠错保持已下线；没有借纠错新增或改动其他保留论文。"
+    "10.1039/d6gc04274k按最新用户纠错保持已下线；没有借纠错新增或改动其他保留论文。",
+    "2026-10-06 recovery review corrected article-specific exclude evidence for 10.1002/anie.7674294, 10.1038/s41467-026-77971-6, and 10.1021/acs.orglett.6c03578. Decisions and 29/87/6 counts are unchanged."
   ],
   "nonBlockingDiscoveryWarnings": [
     "sourceCoverageAnomalies=4",
     "closureCoverageAnomalies=5"
   ],
-  "updatedAt": "2026-10-06T07:23:00+08:00",
+  "updatedAt": "2026-10-06T07:44:30+08:00",
   "scopeContract": {
     "scopeRulesVersion": "scope-2026-10-02-v1",
     "scopeRulesFile": "docs/literature-scope-contract.md",
