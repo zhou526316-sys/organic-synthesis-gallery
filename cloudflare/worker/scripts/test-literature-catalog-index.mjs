@@ -171,6 +171,32 @@ test('generation import is resumable, finalize is fenced, and FTS trigram matche
   assert.equal(invalidCursor.body.error,'literature_catalog_cursor_invalid');
 });
 
+test('finalize rejects equal-count FTS corruption when DOI sets differ',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const g=generation({recordCount:2});
+  const pair=rows().slice(0,2);
+  const imported=await importLiteratureCatalogIndexBatch(env,{generation:g,rows:pair});
+  assert.equal(imported.status,200);
+  assert.equal(imported.body.importedRows,2);
+
+  db.sqlite.prepare('DELETE FROM literature_catalog_fts WHERE catalog_id=? AND doi=?')
+    .run(g.catalogId,pair[1].doi);
+  const firstSearch=db.sqlite.prepare('SELECT searchable_text FROM literature_catalog_fts WHERE catalog_id=? AND doi=?')
+    .get(g.catalogId,pair[0].doi);
+  db.sqlite.prepare('INSERT INTO literature_catalog_fts(catalog_id,doi,searchable_text) VALUES(?,?,?)')
+    .run(g.catalogId,pair[0].doi,firstSearch.searchable_text);
+
+  const finalized=await finalizeLiteratureCatalogGeneration(env,g.catalogId);
+  assert.equal(finalized.status,409);
+  assert.equal(finalized.body.error,'literature_catalog_generation_incomplete');
+  assert.equal(finalized.body.indexedRows,2);
+  assert.equal(finalized.body.ftsRows,2);
+  assert.equal(finalized.body.ftsDistinctDois,1);
+  assert.equal(finalized.body.missingFtsRows,1);
+  assert.equal(finalized.body.orphanFtsRows,0);
+});
+
 test('admin row reader covers a ready generation with bounded DOI-keyset pages',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
