@@ -63,7 +63,7 @@ interface InventoryItem {
   figureCount?: number;
 }
 
-const WORKER_ORIGIN = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+const WORKER_ORIGIN = 'https://api.gczhouwld.com';
 
 let mediaManifestPromise: Promise<StaticMediaManifest> | null = null;
 let translationsPromise: Promise<StaticTranslations> | null = null;
@@ -82,7 +82,11 @@ function workerAssetUrl(path: string): string {
 
 function staticFrontendOnly(): boolean {
   if (typeof location === 'undefined') return false;
-  return location.hostname.endsWith('.github.io') || location.protocol === 'file:';
+  const host = location.hostname.toLowerCase();
+  return location.protocol === 'file:'
+    || host.endsWith('.github.io')
+    || host === 'gallery.gczhouwld.com'
+    || host === 'organic-synthesis-gallery-public.pages.dev';
 }
 
 function normalizeDoi(value: unknown): string | null {
