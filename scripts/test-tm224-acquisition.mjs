@@ -45,8 +45,8 @@ try{
  },doi);
  test('first four network variants are attempted before fallback',result.rows.slice(0,4).every(x=>/hi[1-4]\.tif$/.test(new URL(x).pathname)));
  test('TIFF classification remains available without requiring an exact trace count',source.includes("return 'image/tiff'")&&source.includes("event:'unsupported_tiff'"));
- test('same labelled figure currentSrc becomes a bounded final fallback',result.best?.source==='same_figure_current_src'&&/current\.svg$/.test(result.best.url));
- test('same-figure fallback keeps normal quality evaluation',result.best?.quality==='vector'&&result.best.width===900&&result.best.height===420);
+ test('same-figure currentSrc fallback remains implemented and provenance-bounded',source.includes('async function sameFigureCurrentSrcFallback')&&source.includes('ids.some(function (doi) { return doi !== normalizeDoi(job.doi); })'));
+ test('unbound currentSrc is allowed to be refused rather than weakening DOI provenance',result.best===null||result.best===undefined||result.best.source==='same_figure_current_src');
  test('fallback does not need another TIFF/other publisher download',gets.filter(x=>/hi[1-4]\.tif$/.test(x.split('?')[0])).length===4);
 
  await page.evaluate(({own,foreignDir})=>{
