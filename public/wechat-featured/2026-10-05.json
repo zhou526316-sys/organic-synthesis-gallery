@@ -20,7 +20,7 @@
   "figures": [
     {
       "id": "fig1",
-      "caption": "原文 Fig. 1C｜核心概念：伯胺经 MPO 一步变成 RNHOMs；这些亲电 NH–R 模块随后可以进入芳烃 C–H 胺化、烯烃氮杂环丙烷化、分子内 C–H 胺化、aza-Rubottom 氧化与 N–N 成键。",
+      "caption": "原文 Fig. 1C｜作者给出的“答案图”：从现成 primary amine 出发，用 MPO 一步形成 RNHOMs，再把这个 electrophilic NH–R building block 接回已有的 arene amination、aziridination、C–H amination、aza-Rubottom 与 N–N coupling。",
       "pdf_render": {
         "page_index": 1,
         "clip": [
@@ -101,6 +101,20 @@
         ],
         "zoom": 4.2
       }
+    },
+    {
+      "id": "prior_routes",
+      "caption": "原文 Fig. 1A–B｜上半部分说明 electrophilic amination 的应用其实已经很丰富；下半部分才暴露真正瓶颈——复杂 N-alkyl-O-sulfonyl hydroxylamine 往往要从 hydroxylamine 出发，经保护、O-sulfonylation、Mitsunobu/halo-hydroxylamination、脱保护等多步构建。",
+      "pdf_render": {
+        "page_index": 1,
+        "clip": [
+          43.2,
+          52,
+          556.8,
+          435
+        ],
+        "zoom": 4.2
+      }
     }
   ],
   "sections": [
@@ -118,6 +132,9 @@
       "paragraphs": [
         "Benzoyl peroxide（BPO）可以把一些 amine 氧化成 O-benzoyl hydroxylamine，但对 primary amine 容易出现 N-benzoylation 等竞争过程。原因是 BPO 不只有 peroxide O–O 键，它的 benzoyl carbonyl 本身也是明显的 electrophilic site；primary amine 很容易沿着 acyl substitution 路径走掉。",
         "这也是 O-benzoyl 与 O-sulfonyl reagent 的差别之一。Sulfonyl group 会更强地拉低 N–O σ* 相关能级、增强 N–O bond polarization，同时 sulfonate 是更好的 leaving group。因此 O-sulfonyl hydroxylamine 通常更适合做 electrophilic N-transfer；真正难的是如何直接、选择性地构建 R–NH–O–SO₂R′ 这根 N–O 键。"
+      ],
+      "figures": [
+        "prior_routes"
       ]
     },
     {
