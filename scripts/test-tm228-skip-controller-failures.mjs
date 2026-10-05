@@ -51,17 +51,18 @@ test('failed skipped DOI is persisted into attempt history before continuation',
 
 test('unclosed stale tab is a warning or skip, never a global stop',()=>{
   assert.ok(source.includes("if(!closed)skipReason=skipReason||'previous_task_tab_not_closed';"));
-  const final=source.match(/if\(\/([^/]+)\/\.test\(stopReason\)\)\{CONTROLLER_STOP_REASON/);
-  assert.ok(final,'final hard-stop regex missing');
-  for(const reason of ['task_tab_handle_unavailable','previous_task_tab_not_closed','bound_publisher_heartbeat_missing']){
-    assert.ok(!final[1].includes(reason),reason);
+  const sticky="controller_lease_lost|capture_server_upgrade_pending";
+  assert.ok(source.includes(sticky),'final hard-stop set missing');
+  for(const reason of ['another_task_still_active','task_tab_handle_unavailable','previous_task_tab_not_closed','bound_publisher_heartbeat_missing','controller_timeout','publisher_task_tab_closed']){
+    assert.equal(disposition(reason),'skip',reason);
   }
 });
 
 test('hard stops remain sticky',()=>{
-  const final=source.match(/if\(\/([^/]+)\/\.test\(stopReason\)\)\{CONTROLLER_STOP_REASON/);
+  const sticky="controller_lease_lost|capture_server_upgrade_pending";
+  assert.ok(source.includes(sticky),'sticky hard-stop set missing');
   for(const reason of ['controller_lease_lost','capture_server_upgrade_pending']){
-    assert.ok(final[1].includes(reason),reason);
+    assert.equal(disposition(reason),'stop',reason);
   }
 });
 
