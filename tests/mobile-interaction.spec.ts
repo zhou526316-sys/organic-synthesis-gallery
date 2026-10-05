@@ -715,32 +715,6 @@ test('mobile TOC hydrates a small near-screen batch and prioritizes the visible 
 
   await page.route('https://api.gczhouwld.com/**', async route => {
     const url = route.request().url();
-    if (url.includes('/api/media/batch')) {
-      const body = route.request().postDataJSON() as { dois?: string[] };
-      const dois = Array.isArray(body?.dois) ? body.dois : [];
-      batchSizes.push(dois.length);
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          items: dois.map(doi => ({
-            doi,
-            toc: {
-              available: true,
-              doi,
-              imageUrl: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22640%22 height=%22360%22%3E%3Crect width=%22640%22 height=%22360%22 fill=%22white%22/%3E%3C/svg%3E',
-              reason: 'cached',
-            },
-            figures: { available: false, doi, figures: [] },
-          })),
-        }),
-      });
-      return;
-    }
-    if (url.includes('/api/media/inventory')) {
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: [] }) });
-      return;
-    }
     if (url.includes('/api/user-ui/reader-counts')) {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
       return;
@@ -751,6 +725,34 @@ test('mobile TOC hydrates a small near-screen batch and prioritizes the visible 
     }
     await route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
   });
+  await page.route('**/api/media/batch**', async route => {
+    const body = route.request().postDataJSON() as { dois?: string[] };
+    const dois = Array.isArray(body?.dois) ? body.dois : [];
+    batchSizes.push(dois.length);
+    await route.fulfill({
+      status: 200,
+      headers: { 'access-control-allow-origin': '*' },
+      contentType: 'application/json',
+      body: JSON.stringify({
+        items: dois.map(doi => ({
+          doi,
+          toc: {
+            available: true,
+            doi,
+            imageUrl: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22640%22 height=%22360%22%3E%3Crect width=%22640%22 height=%22360%22 fill=%22white%22/%3E%3C/svg%3E',
+            reason: 'cached',
+          },
+          figures: { available: false, doi, figures: [] },
+        })),
+      }),
+    });
+  });
+  await page.route('**/api/media/inventory**', route => route.fulfill({
+    status: 200,
+    headers: { 'access-control-allow-origin': '*' },
+    contentType: 'application/json',
+    body: JSON.stringify({ items: [] }),
+  }));
 
   await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
   await expect.poll(() => batchSizes.length).toBeGreaterThan(0);
