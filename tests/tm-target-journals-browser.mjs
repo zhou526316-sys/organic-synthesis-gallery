@@ -144,7 +144,7 @@ try{
   await tc('capture protocol and core controller stay unchanged',async()=>{
     assert.ok(source.includes("var VERSION = '6.2.20'"));
     assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.41'"));
-    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'"));
+    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v12'"));
     assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'"));
   });
 }finally{await browser.close()}
