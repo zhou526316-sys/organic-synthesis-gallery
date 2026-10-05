@@ -1047,6 +1047,7 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
   let promoted = 0;
   let alreadyCurrent = 0;
   let failed = 0;
+  let invalidatedRscPreviews = 0;
   let scanned = 0;
   const failures = [];
   const slice = candidates.slice(offset, offset + scanLimit);
@@ -1109,6 +1110,7 @@ export async function promoteOfficialLocalTocs(request, env, options = {}) {
       promoted,
       alreadyCurrent,
       failed,
+      invalidatedRscPreviews,
       scanned,
       candidates: candidates.length,
       limit,
