@@ -786,69 +786,62 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             )
 
         elif layout == "retrospective_square":
-            # Secondary WeChat cards render at about 88 x 88 px. A wide paper
-            # figure becomes illegible there, so use a dedicated information
-            # thumbnail with a chemically exact typographic equation.
-            canvas = Image.new("RGB", (width, height), "#f5f7fa")
+            # Secondary WeChat cards are tiny and WeChat may display the
+            # centered 2.35:1 crop. Keep all identifying information inside
+            # that central band, use full-bleed contrast, and avoid a tiny
+            # shrunken paper figure that becomes visually blank.
+            canvas = Image.new("RGB", (width, height), "#17212b")
             draw = ImageDraw.Draw(canvas)
-            pad = max(32, int(width * 0.045))
-            draw.rounded_rectangle(
-                (pad, pad, width - pad, height - pad),
-                radius=max(24, int(width * 0.035)),
-                fill="#ffffff",
-                outline="#d9dfe8",
-                width=max(2, int(width * 0.003)),
-            )
 
-            kicker = str(cover.get("thumb_kicker") or "往期精选 · Nature")
-            title_text = str(cover.get("thumb_title") or "MacMillan")
-            equation = str(cover.get("thumb_subtitle") or "R• + Ti–OR → R–OR")
-            meta = str(cover.get("thumb_meta") or "505 nm")
-            footer = str(cover.get("thumb_footer") or "radical C–O")
+            kicker = str(cover.get("thumb_kicker") or "MacMillan")
+            title_text = str(cover.get("thumb_title") or "SH2")
+            subtitle = str(cover.get("thumb_subtitle") or "C-O")
+            meta = str(cover.get("thumb_meta") or "Nature")
+            footer = str(cover.get("thumb_footer") or "RADICAL ETHER")
 
-            kicker_font = choose_font(max(30, int(width * 0.043)), True)
-            title_font = choose_font(max(76, int(width * 0.105)), True)
-            eq_font = choose_font(max(54, int(width * 0.072)), True)
-            meta_font = choose_font(max(28, int(width * 0.038)), True)
-            footer_font = choose_font(max(30, int(width * 0.043)), False)
+            kicker_font = choose_font(max(44, int(width * 0.060)), True)
+            title_font = choose_font(max(150, int(width * 0.205)), True)
+            subtitle_font = choose_font(max(88, int(width * 0.120)), True)
+            meta_font = choose_font(max(38, int(width * 0.050)), True)
+            footer_font = choose_font(max(30, int(width * 0.040)), True)
 
-            left = pad + int(width * 0.055)
-            right = width - pad - int(width * 0.055)
-            y = pad + int(height * 0.045)
+            left = int(width * 0.08)
+            right = int(width * 0.92)
 
-            draw.text((left, y), kicker, font=kicker_font, fill="#32675f")
+            # top identity, still visible in full-square mode
+            draw.text((left, int(height * 0.09)), kicker, font=kicker_font, fill="#f4f7fb")
             if meta:
-                box = draw.textbbox((0, 0), meta, font=meta_font)
+                mbox = draw.textbbox((0, 0), meta, font=meta_font)
+                mw = mbox[2] - mbox[0]
                 draw.rounded_rectangle(
-                    (right - (box[2]-box[0]) - 30, y - 5, right, y + (box[3]-box[1]) + 17),
+                    (right - mw - 36, int(height * 0.09) - 6, right, int(height * 0.09) + 58),
                     radius=18,
-                    fill="#eef3ff",
+                    fill="#dce8ff",
                 )
-                draw.text((right - (box[2]-box[0]) - 15, y + 1), meta, font=meta_font, fill="#3159bd")
+                draw.text((right - mw - 18, int(height * 0.09) + 3), meta, font=meta_font, fill="#234a84")
 
-            y += int(height * 0.13)
-            draw.text((left, y), title_text, font=title_font, fill="#111827")
-
-            eq_top = int(height * 0.44)
+            # Everything below is centered inside the 2.35:1 crop
+            # y ~= 0.287 ... 0.713, so even the tiny sub-card is unmistakable.
+            band_top = int(height * 0.30)
+            band_bottom = int(height * 0.70)
             draw.rounded_rectangle(
-                (left, eq_top, right, int(height * 0.76)),
-                radius=max(20, int(width * 0.027)),
-                fill="#f8fafc",
-                outline="#e5e9ef",
-                width=max(2, int(width * 0.002)),
+                (int(width * 0.055), band_top, int(width * 0.945), band_bottom),
+                radius=max(24, int(width * 0.035)),
+                fill="#f3f7fb",
             )
-            lines = wrap_text(draw, equation, eq_font, right-left-int(width*0.06), 2)
-            line_h = int(height * 0.095)
-            total_h = max(line_h, len(lines)*line_h)
-            ey = eq_top + (int(height * 0.32)-total_h)//2
-            for line in lines:
-                box=draw.textbbox((0,0),line,font=eq_font)
-                draw.text(((width-(box[2]-box[0]))//2, ey), line, font=eq_font, fill="#111827")
-                ey += line_h
 
-            footer_y = int(height * 0.82)
-            fbox=draw.textbbox((0,0),footer,font=footer_font)
-            draw.text(((width-(fbox[2]-fbox[0]))//2, footer_y), footer, font=footer_font, fill="#697386")
+            tbox = draw.textbbox((0, 0), title_text, font=title_font)
+            tx = (width - (tbox[2] - tbox[0])) // 2
+            draw.text((tx, int(height * 0.315)), title_text, font=title_font, fill="#102332")
+
+            sbox = draw.textbbox((0, 0), subtitle, font=subtitle_font)
+            sx = (width - (sbox[2] - sbox[0])) // 2
+            draw.text((sx, int(height * 0.525)), subtitle, font=subtitle_font, fill="#32675f")
+
+            # bottom identity, useful in full-square displays
+            fbox = draw.textbbox((0, 0), footer, font=footer_font)
+            fx = (width - (fbox[2] - fbox[0])) // 2
+            draw.text((fx, int(height * 0.82)), footer, font=footer_font, fill="#aebdcc")
 
         elif portrait:
             left_w = int(width * 0.34)
