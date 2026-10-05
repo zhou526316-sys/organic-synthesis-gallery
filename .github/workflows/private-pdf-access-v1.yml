@@ -26,7 +26,9 @@ on:
       - 'src/private-pdf-access.ts'
       - 'src/bootstrap.ts'
       - 'public/private-pdf-owner-setup.html'
+      - 'tests/private-pdf-access-browser.mjs'
       - '.github/workflows/deploy-worker-frontend.yml'
+      - '.github/workflows/private-pdf-access-v1.yml'
 
 permissions:
   contents: read
