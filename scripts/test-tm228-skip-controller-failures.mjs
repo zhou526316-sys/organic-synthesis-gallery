@@ -14,13 +14,13 @@ vm.runInContext(source.slice(start,end),context);
 const disposition=vm.runInContext('controllerFailureDisposition',context);
 
 test('per-DOI controller failures are skippable',()=>{
-  for(const reason of ['task_tab_handle_unavailable','previous_task_tab_not_closed','bound_publisher_heartbeat_missing','controller_timeout']){
+  for(const reason of ['another_task_still_active','task_tab_handle_unavailable','previous_task_tab_not_closed','bound_publisher_heartbeat_missing','controller_timeout','publisher_task_tab_closed']){
     assert.equal(disposition(reason),'skip',reason);
   }
 });
 
 test('controller integrity failures still stop the mainline',()=>{
-  for(const reason of ['controller_lease_lost','another_task_still_active','capture_server_upgrade_pending']){
+  for(const reason of ['controller_lease_lost','capture_server_upgrade_pending']){
     assert.equal(disposition(reason),'stop',reason);
   }
 });
@@ -51,17 +51,18 @@ test('failed skipped DOI is persisted into attempt history before continuation',
 
 test('unclosed stale tab is a warning or skip, never a global stop',()=>{
   assert.ok(source.includes("if(!closed)skipReason=skipReason||'previous_task_tab_not_closed';"));
-  const final=source.match(/if\(\/([^/]+)\/\.test\(stopReason\)\)\{CONTROLLER_STOP_REASON/);
-  assert.ok(final,'final hard-stop regex missing');
-  for(const reason of ['task_tab_handle_unavailable','previous_task_tab_not_closed','bound_publisher_heartbeat_missing']){
-    assert.ok(!final[1].includes(reason),reason);
+  const sticky="controller_lease_lost|capture_server_upgrade_pending";
+  assert.ok(source.includes(sticky),'final hard-stop set missing');
+  for(const reason of ['another_task_still_active','task_tab_handle_unavailable','previous_task_tab_not_closed','bound_publisher_heartbeat_missing','controller_timeout','publisher_task_tab_closed']){
+    assert.equal(disposition(reason),'skip',reason);
   }
 });
 
 test('hard stops remain sticky',()=>{
-  const final=source.match(/if\(\/([^/]+)\/\.test\(stopReason\)\)\{CONTROLLER_STOP_REASON/);
-  for(const reason of ['controller_lease_lost','another_task_still_active','capture_server_upgrade_pending']){
-    assert.ok(final[1].includes(reason),reason);
+  const sticky="controller_lease_lost|capture_server_upgrade_pending";
+  assert.ok(source.includes(sticky),'sticky hard-stop set missing');
+  for(const reason of ['controller_lease_lost','capture_server_upgrade_pending']){
+    assert.equal(disposition(reason),'stop',reason);
   }
 });
 
@@ -78,7 +79,7 @@ test('user abort remains an explicit stop request',()=>{
 
 test('Bridge version advances without capture protocol migration',()=>{
   assert.ok(source.includes("var VERSION = '6.2.20';"));
-  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.35';"));
+  assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 });
 
-console.log('TM228_SKIP_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.35'}));
+console.log('TM228_SKIP_TEST_SUMMARY '+JSON.stringify({passed,captureProtocol:'6.2.20',controllerRevision:'2.2.39'}));

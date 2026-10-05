@@ -19,20 +19,20 @@ function harness(overrides={}){
 const {api}=harness();
 const latest='2026-10-01';
 const today=[
- {doi:'10.1021/jacs.test',journal:'JACS',addedDate:latest,captureToc:true,captureFigures:true},
- {doi:'10.1021/acs.joc.test',journal:'JOC',addedDate:latest,captureToc:false,captureFigures:true,mediaNeed:'figures'},
- {doi:'10.1002/anie.test',journal:'Angew',addedDate:latest,captureToc:false,captureEvidence:true,mediaNeed:'evidence'},
+ {doi:'10.1021/jacs.test',journal:'JACS',addedDate:latest,captureToc:true,captureFigures:true,mediaNeed:'toc'},
+ {doi:'10.1021/acs.joc.test',journal:'JOC',addedDate:latest,captureToc:false,capturePrivatePdf:true,mediaNeed:'pdf'},
 ];
 const old=[{doi:'10.1038/s41586-test',journal:'Nature',addedDate:'2026-09-29',captureToc:true},
  {doi:'10.1126/science.test',journal:'Science',captureToc:true},
  {doi:'10.1021/jacs.old',journal:'JACS',captureToc:true}];
-await test('all latest missing layers precede every historical TOC',()=>{
- const sorted=api.selectBatchJobs([...old,...today],6,latest);
- assert.deepEqual(Array.from(sorted.slice(0,3),x=>x.doi),[today[0].doi,today[2].doi,today[1].doi]);
- for(const a of today)for(const b of old)assert.ok(api.compareCaptureJobs(a,b,latest)<0);
+await test('latest TOC leads, then latest PDF, then historical TOCs',()=>{
+ const sorted=api.selectBatchJobs([...old,...today],5,latest);
+ assert.deepEqual(Array.from(sorted,x=>x.doi),[today[0].doi,today[1].doi,old[0].doi,old[1].doi,old[2].doi]);
+ assert.ok(api.compareCaptureJobs(today[0],today[1],latest)<0);
+ assert.ok(api.compareCaptureJobs(today[1],old[0],latest)<0);
 });
 await test('historical Nature then Science then other TOCs remain ordered',()=>assert.deepEqual(Array.from(api.selectBatchJobs(old,3,latest),x=>x.journal),['Nature','Science','JACS']));
-await test('empty latest date never elevates missing addedDate',()=>assert.notEqual(api.captureQueueTier({mediaNeed:'evidence'},''),-4));
+await test('figure/text-only legacy jobs have no queue priority',()=>{assert.equal(api.captureQueueTier({mediaNeed:'figures',captureFigures:true},latest),5);assert.equal(api.captureQueueTier({mediaNeed:'evidence',captureEvidence:true},latest),5);});
 await test('publisher access cooldown still excludes latest articles',()=>{const h=harness();h.data.set('osg-toc-v6:publisher-access-cooldown:acs',{until:Date.now()+60000});assert.equal(h.api.selectBatchJobs([today[0]],1,latest).length,0);});
 await test('reordered same registry does not restart',()=>assert.equal(api.queueRegistryChanged({latestAddedDate:latest,articles:today},{latestAddedDate:latest,articles:[...today].reverse()}),false));
 await test('added DOI restarts between articles',()=>assert.equal(api.queueRegistryChanged({articles:today},{articles:[...today,old[0]]}),true));

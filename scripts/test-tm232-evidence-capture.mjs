@@ -104,7 +104,7 @@ try{
   const explicitCombinedEligible=await page.evaluate(()=>__tm232.evidenceCaptureEligible({mediaNeed:'toc',captureEvidence:true}));
   test('explicit missing-evidence flag makes a TOC-triggered visit capture text',explicitCombinedEligible);
   test('structured full article is classified complete',extracted.packet.fulltextStatus==='complete'&&extracted.packet.schemaVersion==='article-evidence-v2');
-  test('packet binds DOI and Bridge 2.2.35',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.35');
+  test('packet binds DOI and controller 2.2.39',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.39');
   const types=extracted.packet.sections.map(r=>r.type);
   test('semantic sections are retained',['abstract','results','mechanism','conclusion'].every(t=>types.includes(t)));
   const all=JSON.stringify({sections:extracted.packet.sections,captions:extracted.packet.captions,tables:extracted.packet.tables});
@@ -175,22 +175,15 @@ try{
       {doi:'10.1021/jacs.6c10004',available:true,evidenceLevel:'complete'},
     ]};
     const rows=__tm232.evidenceBackfillJobs(q,media,inv);
-    return {rows:rows.map(r=>({doi:r.doi,state:r.state,level:r.existingEvidenceLevel})),tier:__tm232.captureQueueTier(rows[0],'2026-09-25')};
+    return {rows:rows.map(r=>({doi:r.doi,state:r.state,level:r.existingEvidenceLevel}))};
   });
-  test('any stored evidence level leaves the normal backlog without repeated reopening',
-    !backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10001') &&
-    !backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10004'));
-  test('missing evidence stays in the lowest-priority backfill queue',
-    backfill.rows.some(r=>r.doi==='10.1021/jacs.6c10002'&&r.state==='evidence_gap'));
-  test('evidence-only backlog is lower priority than historical body figures',backfill.tier===3);
-  const urgentTier=await page.evaluate(()=>__tm232.captureQueueTier({mediaNeed:'evidence',summaryUrgent:true,addedDate:'2026-09-24'},'2026-09-25'));
-  test('fresh-TOC summary Evidence gap outranks the normal media backlog',urgentTier===-1);
-  test('source retains one-hour post-TOC Evidence urgency and bounded retry',
-    source.includes('SUMMARY_EVIDENCE_SLA_MS = 60 * 60 * 1000')&&
-    source.includes('markSummaryEvidenceUrgency(job.doi)')&&
-    source.includes('urgentEvidenceRetryEligible(prior,Date.now())')&&
-    source.includes('hasActiveSummaryEvidenceUrgency()')&&
-    source.includes("var nextDelay=remainingAvailable.length>0?NEXT_BATCH_DELAY_MS:60*1000"));
+  test('stored or missing evidence never creates an independent backfill row',backfill.rows.length===0);
+  const legacyEvidenceTier=await page.evaluate(()=>__tm232.captureQueueTier({mediaNeed:'evidence',captureEvidence:true,summaryUrgent:true,addedDate:'2026-09-25'},'2026-09-25'));
+  test('legacy evidence-only jobs have no executable queue priority',legacyEvidenceTier===5);
+  test('source disables evidence-only jobs and one-hour wakeups',
+    source.includes('var evidenceJobs=[];')&&
+    source.includes('Text gaps no longer schedule independent retries')&&
+    !source.includes('remainingAvailable.length>0||urgentEvidencePending'));
 
   const combinedPlan=await page.evaluate(()=>{
     const q={latestAddedDate:'2026-09-25',webpageDoiCount:2,mediaGeneration:1790082000000,articles:[
@@ -206,16 +199,17 @@ try{
     const inv={items:[]};
     const evidence=__tm232.evidenceBackfillJobs(q,media,inv);
     return {
-      wiley:{mediaNeed:wiley.mediaNeed,captureToc:wiley.captureToc,captureFigures:wiley.captureFigures,captureEvidence:wiley.captureEvidence},
+      wiley:{mediaNeed:wiley.mediaNeed,captureToc:wiley.captureToc,captureFigures:wiley.captureFigures,opportunisticFigures:wiley.opportunisticFigures,captureEvidence:wiley.captureEvidence},
       evidenceDois:evidence.map(r=>r.doi)
     };
   });
-  test('historical missing-TOC media trigger also requests body discovery in the same visit',
-    combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===true);
-  test('missing evidence remains eligible even before an official TOC exists',
-    combinedPlan.evidenceDois.includes('10.1002/anie.5617321'));
-  test('scheduler code merges evidence need into an existing media DOI instead of opening twice',
-    source.includes('var merged=new Map();')&&source.includes('merged.get(doi).captureEvidence=true'));
+  test('historical missing-TOC media trigger keeps body discovery opportunistic in the same visit',
+    combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===false&&combinedPlan.wiley.opportunisticFigures===true);
+  test('missing evidence never creates an evidence-only DOI job',combinedPlan.evidenceDois.length===0);
+  test('scheduler only adds missing evidence opportunistically to an existing TOC visit',
+    source.includes('job.opportunisticEvidence=evidenceMissing.has(normalizeDoi(job.doi));')&&
+    source.includes('job.captureEvidence=false;')&&
+    source.includes('var evidenceJobs=[];'));
 
   const isolatedFailure=await page.evaluate(async()=>{
     window.__evidenceTransport='fail';
@@ -257,8 +251,8 @@ try{
   test('Wiley DOM recovery binds only the explicit GA block and refuses adjacent Scheme 1',
     wileyDom.length===1&&/-gra-0001-m\.jpg/i.test(wileyDom[0].url)&&!wileyDom.some(r=>/-sch-0001/i.test(r.url)));
 
-  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.35';"));
-  test('2.2.35 requires Evidence v2 Worker capability',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
+  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.39';"));
+  test('current controller retains Evidence v2 Worker capability gate',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
 
-  console.log('TM234_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.35',totalTextBudget:null,abstractOnly:true}));
+  console.log('TM234_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.39',totalTextBudget:null,abstractOnly:true}));
 }finally{await browser.close();}

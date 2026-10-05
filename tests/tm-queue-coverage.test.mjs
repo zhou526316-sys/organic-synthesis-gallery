@@ -17,7 +17,7 @@ function h(q=queue([]),inventory=inv([]),opts={}){
  GM_getValue:(k,d)=>store.has(k)?structuredClone(store.get(k)):d,GM_setValue:(k,v)=>store.set(k,structuredClone(v)),GM_deleteValue:k=>store.delete(k),GM_listValues:()=>[...store.keys()],GM_registerMenuCommand(){},
  setTimeout:(f,ms)=>{timers.set(++id,{f,ms});return id},clearTimeout:i=>timers.delete(i),setInterval:(f,ms)=>{timers.set(++id,{f,ms,interval:true});return id},clearInterval:i=>timers.delete(i),
  __get:async u=>opts.get?opts.get(u,get):get(u),__post:async(u,p)=>{calls.push(u);if(opts.post)return opts.post(u,p);return {items:inventory.media.items.filter(x=>p.dois.includes(x.doi))}},__private:async()=>{if(opts.evidenceError)throw Error('private_http_401');return inventory.evidence},__sleep:async ms=>{now+=ms},
- GM_openInTab:u=>{const j=store.get(P+'active-job');opened.push(structuredClone(j));if(!opts.noResult)store.set(P+'result:'+j.doi,Object.assign({doi:j.doi,jobId:j.jobId,version:'6.2.20',finishedAt:new D().toISOString(),status:'success',toc:{status:j.captureToc?'stored':'already_available'},fulltext:{status:opts.failText?'failed':j.captureEvidence?'stored':'not_requested'}},opts.result?opts.result(j,opened.length,store):{}));return {closed:false,close(){this.closed=true}};}
+ GM_openInTab:u=>{const j=store.get(P+'active-job');opened.push(structuredClone(j));if(!opts.noResult)store.set(P+'result:'+j.doi,Object.assign({doi:j.doi,jobId:j.jobId,version:'6.2.20',finishedAt:new D().toISOString(),status:'success',toc:{status:j.captureToc?'stored':'already_available'},privatePdf:j.capturePrivatePdf?{status:'stored'}:null,fulltext:{status:opts.failText?'failed':(j.captureEvidence||j.opportunisticEvidence)?'stored':'not_requested'}},opts.result?opts.result(j,opened.length,store):{}));return {closed:false,close(){this.closed=true}};}
  });
  const cut=source.lastIndexOf('  installManualRestartListener();');
  vm.runInContext(source.slice(0,cut)+`
@@ -29,7 +29,7 @@ function h(q=queue([]),inventory=inv([]),opts={}){
 const summary=()=>({results:[],remainingNeeds:{}});
 const fakeJob=(n,flags={})=>({...article(n),captureFigures:true,captureToc:false,captureEvidence:false,capturedFigures:{},...flags});
 await test('single run visits61 missing articles, including all after40',async()=>{
- const ar=Array.from({length:61},(_,n)=>article(n)),i=inv(ar);i.evidence.items=[];i.evidence.count=0;
+ const ar=Array.from({length:61},(_,n)=>article(n)),i=inv(ar);i.media.items.forEach(x=>x.tocStored=false);
  const x=h(queue(ar),i);await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');
  assert.equal(x.opened.length,61);assert.equal(s.total,61);assert.equal(s.visitedCount,61);assert.equal(s.fullyResolved,61);assert.equal(s.unresolvedCount,0);assert.equal(new Set(x.opened.map(j=>j.manualRunId)).size,1);
 });
@@ -70,22 +70,22 @@ await test('unavailable metadata is unknown, not an empty inventory',async()=>{
  failed=true;const second=await x.T.readMissingCaptureInventory(queue(ar));assert.equal(second.figures,null);assert.ok(second.errors.some(e=>e.includes('503')));
 });
 await test('initial transient stage inventory503 recovers in same click',async()=>{
- let fails=0;const ar=[article(1)],i=inv(ar);i.evidence.items=[];i.evidence.count=0;
+ let fails=0;const ar=[article(1)],i=inv(ar);i.media.items[0].tocStored=false;
  const x=h(queue(ar),i,{get:(u,g)=>{if(u.includes('/staged?')&&fails++===0)throw Error('queue_http_503');return g(u)}});
  await x.T.forceStartFromHead();assert.equal(x.opened.length,1);assert.equal(x.store.get(P+'last-run-summary').fullyResolved,1);assert.equal(x.store.get(P+'last-run-summary').inventoryUnknown,0);
 });
 await test('inventory503 mid-run never truncates61 known tasks to40',async()=>{
- const ar=Array.from({length:61},(_,n)=>article(n)),i=inv(ar);i.evidence.items=[];i.evidence.count=0;let stages=0;
+ const ar=Array.from({length:61},(_,n)=>article(n)),i=inv(ar);i.media.items.forEach(x=>x.tocStored=false);let stages=0;
  const x=h(queue(ar),i,{get:(u,g)=>{if(u.includes('/staged?')&&stages++>0)throw Error('queue_http_503');return g(u)}});
  await x.T.forceStartFromHead();assert.equal(x.opened.length,61);assert.equal(x.store.get(P+'last-run-summary').fullyResolved,61);assert.ok(x.store.get(P+'last-run-summary').inventoryErrors.some(e=>e.includes('保留本轮')));
 });
 await test('error at article21 does not prevent article61',async()=>{
- const ar=Array.from({length:61},(_,n)=>article(n)),i=inv(ar);i.evidence.items=[];i.evidence.count=0;
- const x=h(queue(ar),i,{result:j=>j.doi===ar[20].doi?{status:'failed',reason:'publisher_access_gate',fulltext:{status:'failed'}}:{}});
+ const ar=Array.from({length:61},(_,n)=>article(n)),i=inv(ar);i.media.items.forEach(x=>x.tocStored=false);
+ const x=h(queue(ar),i,{result:j=>j.doi===ar[20].doi?{status:'failed',reason:'publisher_access_gate',toc:{status:'failed'},fulltext:{status:'failed'}}:{}});
  await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(x.opened.length,61);assert.equal(s.visitedCount,61);assert.equal(s.fullyResolved,60);assert.equal(s.unresolvedCount,1);assert.equal(s.phase,'blocked_remaining');
 });
-await test('formerly excluded body-completeness unknown becomes labelled discovery task',()=>{
- const ar=[article(1)],i=inv(ar);i.figures.items[0].expectedFigureCount=0;const x=h(queue(ar),i),j=x.plan().jobs[0];assert.equal(j.captureFigures,true);assert.equal(j.captureToc,false);assert.equal(j.captureEvidence,false);assert.match(x.T.captureNeedText(j),/核对图数/);assert.equal(Object.keys(j.capturedFigures).length,2);
+await test('body-completeness unknown never becomes a queue task',()=>{
+ const ar=[article(1)],i=inv(ar);i.figures.items[0].expectedFigureCount=0;const x=h(queue(ar),i);assert.equal(x.plan().jobs.length,0);
 });
 await test('same-endpoint HTML503 metadata fallback retains original authorization',async()=>{
  const x=h();let native=0;const options={method:'GET',url:'https://api.gczhouwld.com/api/article-summary/evidence-inventory',headers:{authorization:'Bearer fixture'}};
@@ -100,11 +100,11 @@ await test('Retry-After on HTML503 is preserved, not bypassed',async()=>{
  const x=h();let n=0;x.T.metadataTransport(async()=>({status:503,responseText:'<html>Wait</html>',responseHeaders:'Retry-After: 30'}),async()=>{n++;});
  await assert.rejects(x.T.metadataJson({url:'https://api.gczhouwld.com/api/media/inventory'},'inventory'),e=>e.retryAfterMs===30000);assert.equal(n,0);
 });
-await test('private missing inventory401 is not reported as all complete',async()=>{
- const ar=[article(1)],x=h(queue(ar),inv(ar),{evidenceError:true});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(s.phase,'blocked_remaining');assert.equal(s.inventoryUnknown,1);assert.equal(x.opened.length,0);
+await test('private evidence inventory401 does not block the queue',async()=>{
+ const ar=[article(1)],x=h(queue(ar),inv(ar),{evidenceError:true});await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(s.inventoryUnknown,0);assert.equal(s.phase,'all_resolved');assert.equal(x.opened.length,0);
 });
-await test('valid image receipt completes final continuation without duplicate visits',async()=>{
+await test('body figure completion alone does not open a publisher tab',async()=>{
  const ar=[article(1)],i=inv(ar);i.figures.items[0].expectedFigureCount=3;let n=0;
- const x=h(queue(ar),i,{result:j=>{n++;return {figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]}}}});await x.T.forceStartFromHead();assert.equal(n,1);assert.equal(x.store.get(P+'last-run-summary').fullyResolved,1);
+ const x=h(queue(ar),i,{result:j=>{n++;return {figures:{discovered:3,stored:3,failed:0,items:[{...fig(j.doi,3),status:'staged'}]}}}});await x.T.forceStartFromHead();assert.equal(n,0);assert.equal(x.store.get(P+'last-run-summary').total,0);
 });
-console.log(JSON.stringify({passed,revision:'20261003-queue-coverage-v6',realPublisherRequests:0,productionWrites:0}));
+console.log(JSON.stringify({passed,revision:'20261005-queue-coverage-v7',realPublisherRequests:0,productionWrites:0}));
