@@ -431,6 +431,18 @@ async function main() {
     assert(shortProbe.status === 422
       && shortProbe.body.error === 'literature_catalog_short_query_requires_compatibility',
       'short_query_compatibility_missing');
+    const shortViewProbe=await api('/api/admin/literature-catalog-index/view',{
+      method:'POST',body:{catalogId:generation.catalogId,query:'Ni',sort:'newest'},allowError:true,
+    });
+    assert(shortViewProbe.status===422
+      && shortViewProbe.body.error==='literature_catalog_short_query_requires_compatibility',
+      'short_view_query_compatibility_missing');
+    const readersProbe=await api('/api/admin/literature-catalog-index/view',{
+      method:'POST',body:{catalogId:generation.catalogId,sort:'readers'},allowError:true,
+    });
+    assert(readersProbe.status===422
+      && readersProbe.body.error==='literature_catalog_reader_sort_requires_compatibility',
+      'reader_sort_compatibility_missing');
 
     const statusAfter = await api('/api/admin/literature-catalog-index/status');
     const ready = (statusAfter.body.generations || []).find(row => row.catalogId === generation.catalogId);
