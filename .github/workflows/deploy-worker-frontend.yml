@@ -105,21 +105,9 @@ jobs:
           test -n "$CLOUDFLARE_API_TOKEN"
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           npx wrangler d1 list --json > /tmp/d1-list.json
-          D1_ID=$(node - <<'NODE'
-          const fs = require('fs');
-          const rows = JSON.parse(fs.readFileSync('/tmp/d1-list.json', 'utf8'));
-          const row = rows.find(item => item.name === process.env.D1_NAME);
-          if (row?.uuid) process.stdout.write(row.uuid);
-          NODE
-          )
+          D1_ID=$(node -e "const fs=require('fs');const rows=JSON.parse(fs.readFileSync('/tmp/d1-list.json','utf8'));const row=rows.find(item=>item.name===process.env.D1_NAME);if(row?.uuid)process.stdout.write(row.uuid)")
           test -n "$D1_ID" || { echo 'D1 database binding is missing'; exit 1; }
-          LITERATURE_INDEX_D1_ID=$(node - <<'NODE'
-          const fs = require('fs');
-          const rows = JSON.parse(fs.readFileSync('/tmp/d1-list.json', 'utf8'));
-          const row = rows.find(item => item.name === process.env.LITERATURE_INDEX_D1_NAME);
-          if (row?.uuid) process.stdout.write(row.uuid);
-          NODE
-          )
+          LITERATURE_INDEX_D1_ID=$(node -e "const fs=require('fs');const rows=JSON.parse(fs.readFileSync('/tmp/d1-list.json','utf8'));const row=rows.find(item=>item.name===process.env.LITERATURE_INDEX_D1_NAME);if(row?.uuid)process.stdout.write(row.uuid)")
           if [ -z "$LITERATURE_INDEX_D1_ID" ]; then
             echo "Creating dedicated literature search D1: $LITERATURE_INDEX_D1_NAME"
             if ! CI=true npx wrangler d1 create "$LITERATURE_INDEX_D1_NAME" >/tmp/literature-index-d1-create.txt 2>&1; then
@@ -127,13 +115,7 @@ jobs:
               echo "Create command failed; refreshing D1 list in case another run created it."
             fi
             npx wrangler d1 list --json > /tmp/d1-list-after-literature-index.json
-            LITERATURE_INDEX_D1_ID=$(node - <<'NODE'
-            const fs = require('fs');
-            const rows = JSON.parse(fs.readFileSync('/tmp/d1-list-after-literature-index.json', 'utf8'));
-            const row = rows.find(item => item.name === process.env.LITERATURE_INDEX_D1_NAME);
-            if (row?.uuid) process.stdout.write(row.uuid);
-            NODE
-            )
+            LITERATURE_INDEX_D1_ID=$(node -e "const fs=require('fs');const rows=JSON.parse(fs.readFileSync('/tmp/d1-list-after-literature-index.json','utf8'));const row=rows.find(item=>item.name===process.env.LITERATURE_INDEX_D1_NAME);if(row?.uuid)process.stdout.write(row.uuid)")
           fi
           test -n "$LITERATURE_INDEX_D1_ID" || { echo 'Dedicated literature index D1 is missing'; exit 1; }
           npx wrangler r2 bucket info "$R2_BUCKET" --json >/dev/null
