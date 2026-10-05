@@ -17,6 +17,14 @@ The 10:00 Asia/Shanghai WeChat update is one multi-article push with two editori
 
 Final publication remains manual for the current personal-subject Official Account; draft creation/update and preview generation remain automated.
 
+## Selection authority
+
+- **每日精选** and **往期精选** are manually selected by the user until the user explicitly changes this policy.
+- The system must not auto-pick, substitute, rank into, or replace either selection based on journal prestige, recency, score, or model preference.
+- A daily featured manifest is used only after that day's user selection is known.
+- A retrospective slug in the daily edition means: attach that user-selected retrospective as a **separate WeChat article/card in the outgoing multi-article queue**. It must never be merged into the daily featured article body.
+- If the user has not selected a retrospective, omit the retrospective card rather than auto-filling one.
+
 ## Daily literature list compression
 
 Let N be the number of papers released at 08:00.
