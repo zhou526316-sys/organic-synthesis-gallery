@@ -78,7 +78,7 @@ export function architectureObjects(directory, marker, sourceCommit, datasetSha2
     assert(bytes.length === row.bytes && sha(bytes) === row.sha256, `architecture_object_mismatch:${row.path}`);
     objectDigests[relative] = row.sha256;
   }
-  for (const required of [release.catalogCurrent, release.membership, release.acquisitionBasis, release.titlePresentation]) {
+  for (const required of [release.catalogCurrent, release.membership, release.acquisitionBasis, release.titlePresentation, release.hotFallback]) {
     assert(required && seen.has(required.path) && objectDigests[`architecture-v1/${required.path}`] === required.sha256,
       'architecture_required_reference_missing');
   }
