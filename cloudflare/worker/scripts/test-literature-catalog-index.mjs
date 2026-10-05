@@ -181,14 +181,29 @@ test('two-character chemistry queries explicitly stay on the compatibility path 
   assert.equal(result.body.minimumIndexedCharacters,3);
 });
 
-test('same catalog id cannot drift generation identity or paper revision',async t=>{
+test('same content catalog can be reused across deployment commits while content drift still fails closed',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
   const g=generation();
-  await beginLiteratureCatalogGeneration(env,g);
-  const conflict=await beginLiteratureCatalogGeneration(env,{...g,recordCount:4});
-  assert.equal(conflict.status,409);
-  assert.equal(conflict.body.error,'literature_catalog_generation_identity_conflict');
+  const firstBegin=await beginLiteratureCatalogGeneration(env,g);
+  assert.equal(firstBegin.status,200);
+  assert.equal(firstBegin.body.contentReused,false);
+
+  const uiOnlyRedeploy=await beginLiteratureCatalogGeneration(env,{
+    ...g,
+    sourceCommit:'e'.repeat(40),
+    markerBlobSha:'f'.repeat(40),
+    publicationSlot:'2026-10-05T18:00:00+08:00',
+  });
+  assert.equal(uiOnlyRedeploy.status,200);
+  assert.equal(uiOnlyRedeploy.body.contentReused,true);
+
+  const countConflict=await beginLiteratureCatalogGeneration(env,{...g,recordCount:4});
+  assert.equal(countConflict.status,409);
+  assert.equal(countConflict.body.error,'literature_catalog_generation_identity_conflict');
+  const doiSetConflict=await beginLiteratureCatalogGeneration(env,{...g,doiSetHash:'9'.repeat(64)});
+  assert.equal(doiSetConflict.status,409);
+  assert.equal(doiSetConflict.body.error,'literature_catalog_generation_identity_conflict');
 
   const first=rows()[0];
   await importLiteratureCatalogIndexBatch(env,{generation:g,rows:[first]});
