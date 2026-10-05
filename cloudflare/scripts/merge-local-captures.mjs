@@ -47,6 +47,16 @@ export function captureBelongsToDoi(capture, doi) {
   return embedded.every(value=>value===target);
 }
 
+export function invalidRscFirstPagePreviewCapture(capture) {
+  const doi=normalizeDoi(capture?.doi||'');
+  if(!doi?.startsWith('10.1039/'))return false;
+  const source=String(capture?.sourceUrl||'').toLowerCase();
+  const caption=String(capture?.caption||'').toLowerCase();
+  return /\/jam\//.test(source)
+    || /\.pdf\.gif(?:[?#]|$)/.test(source)
+    || /first\s*page\s*(?:preview|of\b)|firstpagepreviewimage|article\s+pdf\s+first\s+page\s+preview|accepted\s+manuscript|author\s+accepted\s+manuscript/.test(caption);
+}
+
 function trueToc(toc) {
   return Boolean(
     toc?.available &&
@@ -145,6 +155,8 @@ async function main() {
   let figure1 = 0;
   let merged = 0;
   let failures = 0;
+  let rejectedRscPreviews = 0;
+  let purgedRscPreviews = 0;
   let bytesTotal = 0;
 
   for (const capture of captures) {
@@ -154,6 +166,29 @@ async function main() {
     if (!doi || !['official','figure1'].includes(kind) || !imageUrl) continue;
     if (!captureBelongsToDoi(capture, doi)) {
       console.warn('LOCAL_CAPTURE_CROSS_DOI_REJECTED ' + JSON.stringify({ doi, kind }));
+      continue;
+    }
+    if (kind === 'official' && invalidRscFirstPagePreviewCapture(capture)) {
+      rejectedRscPreviews += 1;
+      const record = manifest.items[doi];
+      if (record?.toc?.contentHash && capture.contentHash && record.toc.contentHash === capture.contentHash) {
+        record.toc = {
+          available: false,
+          doi,
+          articleUrl: capture.articleUrl || record.toc.articleUrl,
+          reason: 'rsc_first_page_preview_rejected',
+          cacheHit: true,
+          cacheState: 'miss',
+        };
+        updateInventory(record);
+        manifest.items[doi] = record;
+        purgedRscPreviews += 1;
+        merged += 1;
+      }
+      console.warn('LOCAL_CAPTURE_RSC_FIRST_PAGE_PREVIEW_REJECTED ' + JSON.stringify({
+        doi,
+        contentHash: capture.contentHash || '',
+      }));
       continue;
     }
 
@@ -244,6 +279,8 @@ async function main() {
     figure1,
     merged,
     failures,
+    rejectedRscPreviews,
+    purgedRscPreviews,
     finalRecords: Object.keys(manifest.items).length,
     bytesTotal,
   }));
