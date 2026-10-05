@@ -67,6 +67,7 @@ Immediately below the compact “今日更新” block, include one Gallery entr
 - Do not manufacture narrative cleverness. Phrases such as “最聪明的是…”, “巧妙地…”, “通过拆开两件事…” are prohibited unless the paper provides a defensible causal link and the article explains that link.
 - Do not infer a mechanistic hierarchy from aesthetics or storytelling. Editorial logic must be reconstructed from the supplied main text, SI, peer review/rebuttal when available, and the cited prior-art comparison.
 - For terminology that carries mechanistic meaning (for example RLT, SH2, LMCT, HAT, SET, Curtin-Hammett, radical rebound, ion pair, cage escape), first explain the **operational meaning in this paper**, then explain what observation distinguishes it from adjacent concepts.
+- Use **Chinese-first terminology** for the article body. Keep an English abbreviation only when it is genuinely useful for readers to recognize the literature term; define it in Chinese at first appearance, then prefer the Chinese expression thereafter. Avoid unnecessary bilingual stacking such as `primary amine / nucleophile / electrophile / intermediate / yield` when standard Chinese terms are clear.
 - If a paper's deepest contribution is not mechanistic, the same rule still applies: expose the deepest underlying logic appropriate to the work, e.g. reagent design, catalyst speciation, selectivity origin, synthetic disconnection, physical-organic principle, workflow/HTE strategy, or practical process constraint.
 - This applies equally to **每日精选** and **往期精选**. A daily pick is not allowed to stay at a lighter explanatory depth merely because it is part of the daily article.
 - External popular-science or WeChat articles may be used only as **presentation references** (pacing, accessibility, image-text rhythm). Never import their section order, causal logic, mechanistic interpretation, or rhetorical storyline into another paper. Each paper's scientific logic must be rebuilt from that paper's own evidence.
@@ -104,6 +105,7 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 - Cover must communicate the paper's central reaction or concept at a glance and must not be an arbitrary cropped page.
 - Editorial logic must come from the paper's actual experimental design, evidence chain, scope, comparison, or author/reviewer argument. Do not manufacture a relationship merely to make two facts sound "smart", and avoid generic labels such as "最聪明的地方" unless the paper itself supplies a defensible causal reason.
 - For a retrospective used as the small secondary WeChat card, build a **dedicated square thumbnail** with only the minimum paper identity and original chemistry visual needed at small size; never shrink a dense wide cover into the square slot.
+- Secondary-card covers must be optimized for the **actual small square/center-cropped WeChat display**. Prefer a large portrait or one simple chemistry motif plus 2–4 short text elements. Do not add unrelated credentials, awards, quotes, slogans, or dates unless the user explicitly requests them.
 
 ## Authorship / disclosure
 
