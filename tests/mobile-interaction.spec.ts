@@ -824,7 +824,7 @@ test('search highlights results, picker closes outside, feedback drags and submi
   const searchTotal = Number(await page.locator('#resultCount').textContent());
   expect(visibleAfterSearch).toBeGreaterThan(0);
   expect(visibleAfterSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
-  expect(searchTotal).toBe(initialTotal);
+  expect(searchTotal).toBeLessThan(initialTotal);
   await expect(page.locator('.user-search-summary')).toContainText(/本页|on this page/i);
   expect(await page.locator('.card[hidden]:visible').count()).toBe(0);
   await expect(page.locator('.user-search-summary')).toContainText(/photoredox/i);
@@ -836,7 +836,7 @@ test('search highlights results, picker closes outside, feedback drags and submi
   await expect(search).toHaveValue('光催化');
   await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
   expect(await page.locator('#gallery > .card:visible').count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
-  expect(Number(await page.locator('#resultCount').textContent())).toBe(initialTotal);
+  expect(Number(await page.locator('#resultCount').textContent())).toBeLessThan(initialTotal);
   expect(await page.locator('.card[hidden]:visible').count()).toBe(0);
   expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
 
