@@ -947,11 +947,16 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
 
 function renderFigures(slot: HTMLElement, result: FigureResponse): void {
   if (!result.available || !result.figures.length) {
-    const doi = normalizeDoi(slot.dataset.figureDoi);
-    const remembered = doi ? tocCache.get(doi.toLowerCase())?.result : undefined;
-    if (remembered?.available && remembered.imageUrl) renderFigureFallback(slot, remembered.imageUrl);
+    // Never duplicate the TOC/card graphic into the body-figure strip. A missing
+    // body figure is different from a missing card visual and must stay honest.
+    slot.replaceChildren();
+    slot.hidden = true;
+    slot.classList.remove('loaded');
+    slot.classList.add('generated');
+    slot.dataset.state = 'empty';
     return;
   }
+  slot.hidden = false;
   const heading = document.createElement('div');
   heading.className = 'figure-strip-heading';
   heading.textContent = t('figures');
