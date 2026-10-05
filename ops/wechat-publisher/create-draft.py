@@ -40,6 +40,7 @@ DEFAULT_PREVIEW_BASE_URL = "https://relay.gczhouwld.com/wechat-preview"
 DEFAULT_BODY_IMAGE_CACHE = Path("/var/lib/osg-wechat-publisher/body-images.json")
 DEFAULT_PDF_CACHE_DIR = Path("/var/lib/osg-wechat-publisher/source-pdfs")
 FEATURED_DIR = ROOT / "public" / "wechat-featured"
+EDITION_DIR = ROOT / "public" / "wechat-editions"
 DEFAULT_SOURCE_URL = "https://gallery.gczhouwld.com/"
 
 SUPPLEMENT_FILES = (
@@ -273,6 +274,29 @@ def load_featured(date: str):
     return data
 
 
+def load_edition(date: str) -> dict:
+    path = EDITION_DIR / f"{date}.json"
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise RuntimeError(f"invalid WeChat edition data: {path}")
+    return data
+
+
+def load_retrospective_slug(slug: str) -> dict | None:
+    slug = str(slug or "").strip()
+    if not slug:
+        return None
+    path = RETROSPECTIVE_DIR / f"{slug}.json"
+    if not path.exists():
+        raise RuntimeError(f"retrospective manifest missing: {path}")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise RuntimeError(f"invalid retrospective manifest: {path}")
+    return data
+
+
 def figure_html(fig_id: str, figures: dict[str, dict], uploaded_urls: dict[str, str]) -> str:
     fig = figures.get(fig_id)
     if not fig:
@@ -346,17 +370,15 @@ def build_content(slot: str, papers: list[dict], featured: dict | None = None, u
             f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
         ])
 
-        # Let readers see the reaction scheme before any summary boxes.
-        # This makes the "做了什么" explanation visually grounded in Fig. 1.
-        parts.append(figure_html("fig1", figures, uploaded_urls))
-
-        for point in featured.get("quick_points", []):
+        for point_index, point in enumerate(featured.get("quick_points", [])):
             parts.append(
                 "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
                 f"<strong style='font-size:14px;line-height:1.55;'>{esc(point.get('label') or '')}</strong>"
                 f"<p style='font-size:14px;line-height:1.78;margin:4px 0 0;color:#444;text-align:justify;'>{esc(point.get('text') or '')}</p>"
                 "</section>"
             )
+            if point_index == 0:
+                parts.append(figure_html("fig1", figures, uploaded_urls))
 
         for section in featured.get("sections", []):
             parts.append(
@@ -427,16 +449,15 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
         f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
     ]
 
-    # Ground the opening explanation in the core reaction image.
-    parts.append(figure_html("fig1", figures, uploaded_urls))
-
-    for point in data.get("quick_points", []):
+    for point_index, point in enumerate(data.get("quick_points", [])):
         parts.append(
             "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
             f"<strong style='font-size:14px;line-height:1.55;'>{esc(point.get('label') or '')}</strong>"
             f"<p style='font-size:14px;line-height:1.78;margin:4px 0 0;color:#444;text-align:justify;'>{esc(point.get('text') or '')}</p>"
             "</section>"
         )
+        if point_index == 0:
+            parts.append(figure_html("fig1", figures, uploaded_urls))
 
     for section in data.get("sections", []):
         parts.append(
@@ -691,43 +712,65 @@ def ensure_pdf_source(featured: dict, override_path: str = "") -> Path:
             raise RuntimeError(f"featured repository source is not a PDF: {repo_path}")
         return path
 
-    pdf_url = str(featured.get("pdf_url") or "").strip()
-    if not pdf_url:
+    pdf_urls = []
+    primary_pdf_url = str(featured.get("pdf_url") or "").strip()
+    if primary_pdf_url:
+        pdf_urls.append(primary_pdf_url)
+    configured_pdf_urls = featured.get("pdf_urls")
+    if isinstance(configured_pdf_urls, list):
+        for value in configured_pdf_urls:
+            value = str(value or "").strip()
+            if value and value not in pdf_urls:
+                pdf_urls.append(value)
+    if not pdf_urls:
         raise RuntimeError(
-            "featured article has pdf_render figures but neither pdf_repo_path nor pdf_url"
+            "featured article has pdf_render figures but neither pdf_repo_path nor pdf_url(s)"
         )
 
     DEFAULT_PDF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    url_hash = hashlib.sha256(pdf_url.encode("utf-8")).hexdigest()[:20]
-    target = DEFAULT_PDF_CACHE_DIR / f"{url_hash}.pdf"
-    if target.exists():
-        try:
-            if target.read_bytes()[:5] == b"%PDF-":
-                return target
-        except OSError:
-            pass
+    errors = []
+    for pdf_url in pdf_urls:
+        url_hash = hashlib.sha256(pdf_url.encode("utf-8")).hexdigest()[:20]
+        target = DEFAULT_PDF_CACHE_DIR / f"{url_hash}.pdf"
+        if target.exists():
+            try:
+                if target.read_bytes()[:5] == b"%PDF-":
+                    return target
+            except OSError:
+                pass
 
-    req = urllib.request.Request(
-        pdf_url,
-        headers={
-            "User-Agent": "Mozilla/5.0 (compatible; OrganicSynthesisGallery/1.0)",
-            "Accept": "application/pdf,*/*;q=0.8",
-        },
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=90) as response:
-            payload = response.read()
-            content_type = str(response.headers.get("Content-Type") or "").lower()
-    except Exception as exc:
-        raise RuntimeError(f"failed to download featured PDF: {exc}") from exc
-
-    if not payload.startswith(b"%PDF-"):
-        raise RuntimeError(
-            "featured PDF URL did not return a PDF "
-            f"(content_type={content_type or 'unknown'}, bytes={len(payload)})"
+        req = urllib.request.Request(
+            pdf_url,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/154.0.0.0 Safari/537.36"
+                ),
+                "Accept": "application/pdf,application/octet-stream;q=0.9,*/*;q=0.5",
+                "Referer": "https://pubs.acs.org/",
+            },
         )
-    target.write_bytes(payload)
-    return target
+        try:
+            with urllib.request.urlopen(req, timeout=90) as response:
+                payload = response.read()
+                content_type = str(response.headers.get("Content-Type") or "").lower()
+        except Exception as exc:
+            errors.append(f"{pdf_url}: {exc}")
+            continue
+
+        if not payload.startswith(b"%PDF-"):
+            errors.append(
+                f"{pdf_url}: non-PDF content_type={content_type or 'unknown'}, bytes={len(payload)}"
+            )
+            continue
+        target.write_bytes(payload)
+        return target
+
+    raise RuntimeError(
+        "failed to download featured PDF from all configured sources: "
+        + " | ".join(errors[-3:])
+    )
 
 
 def render_figure_from_pdf(pdf_path: Path, fig: dict) -> Path:
@@ -1248,12 +1291,15 @@ def wait_for_publish(token: str, publish_id: str, timeout_seconds: int = 120):
     )
 
 
-def create_draft(token: str, article: dict):
+def create_draft(token: str, article: dict | list[dict]):
     url = (
         "https://api.weixin.qq.com/cgi-bin/draft/add?"
         + urllib.parse.urlencode({"access_token": token})
     )
-    result = json_request(url, method="POST", payload={"articles": [article]})
+    articles = article if isinstance(article, list) else [article]
+    if not articles:
+        raise RuntimeError("draft/add requires at least one article")
+    result = json_request(url, method="POST", payload={"articles": articles})
     if result.get("errcode") not in (None, 0):
         raise RuntimeError(
             "draft/add failed: "
@@ -1267,7 +1313,7 @@ def create_draft(token: str, article: dict):
     return result
 
 
-def update_draft(token: str, media_id: str, article: dict):
+def update_draft(token: str, media_id: str, article: dict, index: int = 0):
     url = (
         "https://api.weixin.qq.com/cgi-bin/draft/update?"
         + urllib.parse.urlencode({"access_token": token})
@@ -1275,7 +1321,7 @@ def update_draft(token: str, media_id: str, article: dict):
     result = json_request(
         url,
         method="POST",
-        payload={"media_id": media_id, "index": 0, "articles": article},
+        payload={"media_id": media_id, "index": int(index), "articles": article},
     )
     if result.get("errcode") not in (None, 0):
         raise RuntimeError(
@@ -1320,15 +1366,19 @@ def preview_slug(media_id: str, draft: dict | None = None) -> str:
     version_basis = media_id
     if draft:
         items = draft.get("news_item") if isinstance(draft, dict) else None
-        item = items[0] if isinstance(items, list) and items else {}
-        version_basis += "\n" + json.dumps(
-            {
+        compact_items = []
+        for item in items if isinstance(items, list) else []:
+            if not isinstance(item, dict):
+                continue
+            compact_items.append({
                 "title": item.get("title"),
                 "digest": item.get("digest"),
                 "content": item.get("content"),
                 "thumb_url": item.get("thumb_url"),
                 "content_source_url": item.get("content_source_url"),
-            },
+            })
+        version_basis += "\n" + json.dumps(
+            compact_items,
             ensure_ascii=False,
             sort_keys=True,
         )
@@ -1337,15 +1387,44 @@ def preview_slug(media_id: str, draft: dict | None = None) -> str:
 
 
 def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
-    item = draft["news_item"][0]
-    title = str(item.get("title") or "")
-    author = str(item.get("author") or "")
-    digest = str(item.get("digest") or "")
-    content = str(item.get("content") or "")
-    source_url = str(item.get("content_source_url") or "")
+    items = draft.get("news_item") if isinstance(draft, dict) else None
+    if not isinstance(items, list) or not items:
+        raise RuntimeError("draft preview requires news_item")
 
-    # IMPORTANT: body HTML below is the exact content returned by WeChat draft/get.
-    # The wrapper only approximates the reader shell around that stored content.
+    title = str((items[0] or {}).get("title") or "")
+    card_nav = []
+    rendered = []
+    for idx, item in enumerate(items):
+        if not isinstance(item, dict):
+            continue
+        item_title = str(item.get("title") or "")
+        author = str(item.get("author") or "")
+        digest = str(item.get("digest") or "")
+        content = str(item.get("content") or "")
+        source_url = str(item.get("content_source_url") or "")
+        thumb_url = str(item.get("thumb_url") or "")
+        anchor = f"article-{idx + 1}"
+        card_nav.append(
+            "<a class='push-card' href='#" + anchor + "'>"
+            + (f"<img src='{html.escape(thumb_url, quote=True)}'/>" if thumb_url else "")
+            + "<span><b>" + html.escape(item_title) + "</b>"
+            + (f"<small>{html.escape(digest)}</small>" if digest else "")
+            + "</span></a>"
+        )
+        rendered.append(
+            f"<article id='{anchor}' class='article-block'>"
+            f"<p class='article-index'>{idx + 1:02d} / {len(items):02d}</p>"
+            f"<h1>{html.escape(item_title)}</h1>"
+            f"<div class='meta'>{html.escape(author)}</div>"
+            f"<section class='wx-content'>{content}</section>"
+            + (
+                f"<a class='source-link' href='{html.escape(source_url, quote=True)}' "
+                "target='_blank' rel='noreferrer'>阅读原文</a>"
+                if source_url else ""
+            )
+            + "</article>"
+        )
+
     return f"""<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -1355,24 +1434,35 @@ def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
 <title>{html.escape(title)}</title>
 <style>
 *{{box-sizing:border-box}}
-html,body{{margin:0;padding:0;background:#fff;color:#222}}
+html,body{{margin:0;padding:0;background:#f5f6f7;color:#222;scroll-behavior:smooth}}
 body{{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Microsoft YaHei",Arial,sans-serif}}
-.reader{{max-width:677px;margin:0 auto;padding:24px 20px 48px}}
+.bundle{{max-width:720px;margin:0 auto;padding:16px 12px 48px}}
+.bundle-head{{background:#fff;border-radius:14px;padding:14px;margin:0 0 14px;box-shadow:0 1px 8px rgba(0,0,0,.04)}}
+.bundle-head>p{{font-size:11px;letter-spacing:.12em;color:#777;margin:0 0 10px}}
+.push-card{{display:flex;gap:12px;align-items:center;padding:10px 0;text-decoration:none;color:#222;border-top:1px solid #eee}}
+.push-card:first-of-type{{border-top:0}}
+.push-card img{{width:112px;height:48px;object-fit:cover;border-radius:5px;background:#eee;flex:0 0 auto}}
+.push-card span{{min-width:0;display:block}}
+.push-card b{{display:block;font-size:14px;line-height:1.45}}
+.push-card small{{display:block;color:#888;font-size:11px;line-height:1.45;margin-top:3px}}
+.article-block{{max-width:677px;margin:0 auto 18px;background:#fff;padding:24px 20px 48px;border-radius:14px}}
+.article-index{{font-size:10px;letter-spacing:.12em;color:#aaa;margin:0 0 8px}}
 h1{{font-size:22px;line-height:1.45;font-weight:700;margin:0 0 12px}}
 .meta{{font-size:14px;color:#888;line-height:1.6;margin-bottom:22px}}
 .wx-content{{font-size:16px;line-height:1.75;word-break:break-word;overflow-wrap:anywhere}}
 .wx-content img{{max-width:100%!important;height:auto!important}}
 .wx-content *{{max-width:100%}}
 .source-link{{display:block;margin-top:28px;padding-top:16px;border-top:1px solid #eee;color:#576b95;text-decoration:none;font-size:15px}}
-@media(max-width:520px){{.reader{{padding:20px 17px 42px}}h1{{font-size:22px}}}}
+@media(max-width:520px){{.bundle{{padding:10px 0 36px}}.bundle-head,.article-block{{border-radius:0}}.article-block{{padding:20px 17px 42px}}h1{{font-size:22px}}}}
 </style>
 </head>
 <body>
-<main class="reader">
-<h1>{html.escape(title)}</h1>
-<div class="meta">{html.escape(author)}</div>
-<section class="wx-content">{content}</section>
-{f'<a class="source-link" href="{html.escape(source_url, quote=True)}" target="_blank" rel="noreferrer">阅读原文</a>' if source_url else ''}
+<main class="bundle">
+<section class="bundle-head">
+<p>WECHAT PUSH PREVIEW · 共 {len(items)} 篇</p>
+{''.join(card_nav)}
+</section>
+{''.join(rendered)}
 <!-- Preview source: WeChat draft/get. version hash: {preview_slug(media_id, draft)} -->
 </main>
 </body>
@@ -1569,14 +1659,27 @@ def main() -> int:
         return 0
 
     slot, papers = load_latest_release()
-    featured = load_featured(slot[:10])
-    title = f"{args.title_prefix}有机合成文献日报｜{slot[:10]} · 每日精选"
-    digest = f"今日新增{len(papers)}篇有机合成文献，并精选1篇进行由浅入深的深度解读。" if featured else f"今日新增{len(papers)}篇有机合成文献。"
+    publication_date = slot[:10]
+    featured = load_featured(publication_date)
+    edition = load_edition(publication_date)
+    title = str(
+        edition.get("title")
+        or f"{args.title_prefix}有机合成文献日报｜{publication_date} · 每日精选"
+    )
+    digest = (
+        str(edition.get("digest") or "").strip()
+        or (
+            f"今日新增{len(papers)}篇有机合成文献，并精选1篇进行由浅入深的深度解读。"
+            if featured
+            else f"今日新增{len(papers)}篇有机合成文献。"
+        )
+    )
     source_url = (
-        f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(slot[:10])}"
+        f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
         if featured
         else args.source_url
     )
+    retrospective_slug = str(edition.get("retrospective") or "").strip()
 
     if not args.create:
         print(json.dumps({
@@ -1584,6 +1687,7 @@ def main() -> int:
             "publicationSlot": slot,
             "paper_count": len(papers),
             "featured": bool(featured),
+            "retrospective": retrospective_slug or None,
             "title": title,
             "dois": [x["doi"] for x in papers],
             "note": "No preview URL is created before the WeChat draft is written.",
@@ -1603,7 +1707,8 @@ def main() -> int:
         if local_images.get("fig1"):
             cover_path = local_images["fig1"]
         thumb_media_id = upload_cover(token, cover_path, DEFAULT_CACHE)
-    article = {
+
+    daily_article = {
         "article_type": "news",
         "title": title,
         "author": "化之岛",
@@ -1617,23 +1722,67 @@ def main() -> int:
     if featured and isinstance(featured.get("cover"), dict):
         cover = featured["cover"]
         if cover.get("crop_235_1"):
-            article["pic_crop_235_1"] = str(cover["crop_235_1"])
+            daily_article["pic_crop_235_1"] = str(cover["crop_235_1"])
         if cover.get("crop_1_1"):
-            article["pic_crop_1_1"] = str(cover["crop_1_1"])
+            daily_article["pic_crop_1_1"] = str(cover["crop_1_1"])
+
+    articles = [daily_article]
+    if retrospective_slug:
+        retro = load_retrospective_slug(retrospective_slug)
+        if retro:
+            retro_uploaded, retro_local = upload_featured_images(token, retro, "")
+            retro_content = build_retrospective_content(retro, retro_uploaded)
+            retro_cover_path = prepare_cover_from_local(retro, retro_local)
+            if retro_cover_path is not None:
+                retro_thumb = upload_permanent_image(
+                    token, retro_cover_path, DEFAULT_RETROSPECTIVE_COVER_CACHE
+                )
+            else:
+                retro_fallback = next(iter(retro_local.values()), Path(args.cover))
+                retro_thumb = upload_cover(
+                    token, retro_fallback, DEFAULT_RETROSPECTIVE_COVER_CACHE
+                )
+            retro_article = {
+                "article_type": "news",
+                "title": str(retro.get("title") or "往期精选"),
+                "author": "化之岛",
+                "digest": str(retro.get("digest") or ""),
+                "content": retro_content,
+                "content_source_url": str(retro.get("source_url") or DEFAULT_SOURCE_URL),
+                "thumb_media_id": retro_thumb,
+                "need_open_comment": 0,
+                "only_fans_can_comment": 0,
+            }
+            retro_cover = retro.get("cover") if isinstance(retro.get("cover"), dict) else {}
+            if retro_cover.get("crop_235_1"):
+                retro_article["pic_crop_235_1"] = str(retro_cover["crop_235_1"])
+            if retro_cover.get("crop_1_1"):
+                retro_article["pic_crop_1_1"] = str(retro_cover["crop_1_1"])
+            articles.append(retro_article)
+
     state = load_state(DEFAULT_STATE)
     requested_media_id = str(args.media_id or "").strip()
     same_day_state = (
         isinstance(state, dict)
-        and str(state.get("publicationDate") or "") == slot[:10]
+        and str(state.get("publicationDate") or "") == publication_date
         and str(state.get("media_id") or "").strip()
     )
     media_id = requested_media_id or (str(state.get("media_id")) if same_day_state else "")
 
     if media_id:
-        result = update_draft(token, media_id, article)
-        stage = "draft_update"
+        existing = get_draft(token, media_id)
+        existing_items = existing.get("news_item") if isinstance(existing, dict) else []
+        if isinstance(existing_items, list) and len(existing_items) == len(articles):
+            for index, item in enumerate(articles):
+                update_draft(token, media_id, item, index=index)
+            result = {"errcode": 0, "errmsg": "ok"}
+            stage = "draft_update"
+        else:
+            result = create_draft(token, articles)
+            media_id = str(result.get("media_id") or "")
+            stage = "draft_add_bundle_replacement"
     else:
-        result = create_draft(token, article)
+        result = create_draft(token, articles)
         media_id = str(result.get("media_id") or "")
         stage = "draft_add"
 
@@ -1643,15 +1792,15 @@ def main() -> int:
     save_state(
         DEFAULT_STATE,
         {
-            "publicationDate": slot[:10],
+            "publicationDate": publication_date,
             "publicationSlot": slot,
             "media_id": media_id,
             "title": title,
+            "articleCount": len(articles),
+            "retrospective": retrospective_slug or None,
         },
     )
 
-    # Draft is now the source of truth. Read the stored draft back from WeChat,
-    # then build preview from that response only.
     draft = get_draft(token, media_id)
     preview_path, preview_url = write_draft_preview(
         draft,
@@ -1666,6 +1815,8 @@ def main() -> int:
         "errmsg": result.get("errmsg", "ok"),
         "media_id": media_id,
         "paper_count": len(papers),
+        "article_count": len(articles),
+        "retrospective": retrospective_slug or None,
         "publicationSlot": slot,
         "draft_readback": "ok",
         "preview_path": str(preview_path),
