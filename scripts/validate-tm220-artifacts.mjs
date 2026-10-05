@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const mode=process.argv[2]||'source';
 const root=mode==='source'?'public':mode;
 const src=fs.readFileSync(root+'/toc-mainline.user.js','utf8');
-for(const needle of ["// @version      6.2.31","var VERSION = '6.2.20';","PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'","https://api.crossref.org/works/","ccs-crossref-route-v1","ccsTocIndexUrlFromCrossrefPayload",'function pairedJobs','assertBoundCaptureJob','captureVersion: VERSION','capture_server_upgrade_pending','overnightRetryEligible','checkpointKey','capture_job_stale_or_unbound','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch','svgQuality','visualScope','candidateRequestUrl','figuresStaged','pending_verified_promotion','runtimeVersion: VERSION','GM_listValues','NEXT_BATCH_DELAY_MS = 12000'])assert.ok(src.includes(needle),'Missing release contract: '+needle);
+for(const needle of ["// @version      6.2.32","var VERSION = '6.2.20';","PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v12'","https://api.crossref.org/works/","ccs-crossref-route-v1","ccsTocIndexUrlFromCrossrefPayload",'function pairedJobs','assertBoundCaptureJob','captureVersion: VERSION','capture_server_upgrade_pending','overnightRetryEligible','checkpointKey','capture_job_stale_or_unbound','capture_tab_job_mismatch','page_doi_mismatch','media_source_doi_mismatch','svgQuality','visualScope','candidateRequestUrl','figuresStaged','pending_verified_promotion','runtimeVersion: VERSION','GM_listValues','NEXT_BATCH_DELAY_MS = 12000',"PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-session-v5'",'privatePdfNestedCandidates',"ccs_pdfdirect",'pdfStatus:',"/^(?:stored|already_stored)$/.test(String(result.privatePdf.status||''))"])assert.ok(src.includes(needle),'Missing release contract: '+needle);
 assert.ok(!src.includes("String(queue.mediaGeneration)+':'+String(queue.generatedAt)"),'Queue refresh must not erase capture completion');
 assert.ok(!/BRIDGE_WRITE_TOKEN\s*=|Bearer [A-Za-z0-9_-]{20,}/.test(src),'Embedded write credential');
 const a=src.indexOf('  async function uploadArticleFigure('),b=src.indexOf('  async function uploadCapture(',a);
@@ -13,10 +13,10 @@ const worker=fs.readFileSync('cloudflare/worker/src/local-captures.js','utf8');
 assert.ok(worker.includes("payload?.captureVersion !== '6.2.20'"));
 assert.ok(worker.includes('embedded.every(value => value === target)'));
 const loader=fs.readFileSync('cloudflare/scripts/build-bridge-loader.mjs','utf8');
-assert.ok(loader.includes("const loaderVersion = '2.2.50';")&&loader.includes('// @grant        GM_listValues'));
+assert.ok(loader.includes("const loaderVersion = '2.2.51';")&&loader.includes('// @grant        GM_listValues'));
 if(mode!=='source'){
  const bridge=fs.readFileSync(root+'/gallery-vpn-bridge.user.js','utf8');
- assert.ok(bridge.includes('// @version      2.2.50')&&bridge.includes("var VERSION = '6.2.20';")&&bridge.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'")&&bridge.includes('https://api.crossref.org/works/'));
+ assert.ok(bridge.includes('// @version      2.2.51')&&bridge.includes("var VERSION = '6.2.20';")&&bridge.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v12'")&&bridge.includes('https://api.crossref.org/works/'));
  assert.ok(bridge.includes('organicGalleryCloudflareBridgeWriteToken'));
  assert.ok(!/\beval\s*\(/.test(bridge));
  const q=JSON.parse(fs.readFileSync(root+'/toc-demand-live.json','utf8'));
@@ -24,10 +24,10 @@ if(mode!=='source'){
  assert.ok(Array.isArray(q.articles)&&q.articles.length===q.webpageDoiCount&&q.articles.length>400);
  assert.equal(new Set(q.articles.map(a=>a.doi)).size,q.articles.length);
  assert.ok(Date.parse(q.generatedAt)>=1790082000000);
- console.log('TM220_RELEASE_ARTIFACT '+JSON.stringify({bridgeVersion:'2.2.50',captureVersion:'6.2.20',completeQueue:q.articles.length,queueGeneratedAt:q.generatedAt,mode:'verified-staging'}));
+ console.log('TM220_RELEASE_ARTIFACT '+JSON.stringify({bridgeVersion:'2.2.51',captureVersion:'6.2.20',completeQueue:q.articles.length,queueGeneratedAt:q.generatedAt,mode:'verified-staging'}));
 }else console.log('TM220_SOURCE_CONTRACT_OK');
 
-assert.ok(src.includes("var CONTROLLER_REVISION = '2.2.40';")&&src.includes('previous_task_tab_not_closed')&&src.includes('requestControllerStart'),'Window guard regression');
-assert.ok(src.includes("var INSTALL_REVISION = '6.2.31';")&&src.includes('architecture-membership-observer-v1'),'Observer diagnostic revision missing');
+assert.ok(src.includes("var CONTROLLER_REVISION = '2.2.41';")&&src.includes('previous_task_tab_not_closed')&&src.includes('requestControllerStart'),'Window guard regression');
+assert.ok(src.includes("var INSTALL_REVISION = '6.2.32';")&&src.includes('architecture-membership-observer-v1'),'Observer diagnostic revision missing');
 assert.ok(src.includes("event:observerState.ok===true?'observer_ok':'verification_failed'"),'Observer success/failure diagnostic event missing');
 assert.ok(src.includes("installRevision:typeof INSTALL_REVISION==='string'?INSTALL_REVISION:''"),'Install revision missing from diagnostic context');
