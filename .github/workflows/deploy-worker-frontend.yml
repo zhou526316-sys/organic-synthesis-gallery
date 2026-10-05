@@ -13,12 +13,14 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
+      - 'cloudflare/site-analytics-v2.sql'
       - 'cloudflare/user-library-state-v2.sql'
       - 'cloudflare/evidence-index-v1.sql'
       - 'cloudflare/summary-candidate-index-v1.sql'
       - 'scripts/test-summary-candidate-shadow-deployment-contract.mjs'
       - 'scripts/test-scheduled-handoff-shadow-deployment-contract.mjs'
       - 'scripts/test-user-library-shadow-deployment-contract.mjs'
+      - 'scripts/test-site-analytics-materialized-deployment-contract.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'public/toc-mainline.user.js'
@@ -128,6 +130,23 @@ jobs:
           console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
           NODE
 
+      - name: Apply materialized site analytics D1 migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../site-analytics-v2.sql >/tmp/site-analytics-v2-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('site_global_stats_v2','site_daily_stats_v2','site_dimension_daily_stats_v2','site_analytics_visitors_v2','site_analytics_materialized_events_v2','site_analytics_v2_backfill') ORDER BY name;" --json >/tmp/site-analytics-v2-schema-check.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/site-analytics-v2-schema-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const names=rows.map(x=>x.name).sort();
+          const expected=['site_analytics_materialized_events_v2','site_analytics_v2_backfill','site_analytics_visitors_v2','site_daily_stats_v2','site_dimension_daily_stats_v2','site_global_stats_v2'];
+          if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('site analytics v2 migration incomplete: '+JSON.stringify(names));
+          console.log(JSON.stringify({siteAnalyticsV2SchemaReady:true,tables:names}));
+          NODE
+
       - name: Apply user library row-shadow D1 migration
         working-directory: cloudflare/worker
         shell: bash
@@ -203,6 +222,7 @@ jobs:
           SUMMARY_CANDIDATE_INDEX_SHADOW_ENABLED = "1"
           SCHEDULED_HANDOFF_INDEX_READ_ENABLED = "1"
           USER_LIBRARY_ROW_SHADOW_ENABLED = "1"
+          SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "0"
@@ -261,6 +281,93 @@ jobs:
           NODE
           npx wrangler secret bulk /tmp/runtime-secrets.json --config wrangler.frontend.toml >/dev/null
           rm -f /tmp/runtime-secrets.json
+
+      - name: Backfill and compare materialized site analytics shadow
+        id: site_analytics_shadow
+        continue-on-error: true
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const base=process.env.WORKER_URL;
+          const token=process.env.BRIDGE_WRITE_TOKEN;
+          const reportPath='/tmp/site-analytics-materialized-shadow-report.json';
+          fs.writeFileSync(reportPath,JSON.stringify({
+            schemaVersion:1,phase:'D4a-site-analytics-materialized-shadow-live',
+            ok:false,status:'started',readPathActive:false,startedAt:new Date().toISOString(),
+          },null,2)+'\n');
+          if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for analytics shadow');
+
+          async function call(path,{method='GET'}={}){
+            const response=await fetch(base+path,{
+              method,
+              headers:{authorization:`Bearer ${token}`,'cache-control':'no-cache'},
+              signal:AbortSignal.timeout(30000),
+            });
+            const text=await response.text();
+            let body={};try{body=text?JSON.parse(text):{};}catch{}
+            if(!response.ok) throw new Error(path+' failed: '+response.status+' '+text.slice(0,700));
+            return body;
+          }
+
+          let status=await call('/api/admin/site-analytics-materialized/status');
+          if(status.enabled!==true||status.readPathActive!==false){
+            throw new Error('site analytics materialized shadow status invalid: '+JSON.stringify(status));
+          }
+
+          let pages=0;
+          while(status.backfill?.complete!==true||status.materializedEvents!==status.rawEvents){
+            pages+=1;
+            if(pages>400) throw new Error('site analytics materialized backfill exceeded 400 pages');
+            const page=await call('/api/admin/site-analytics-materialized/backfill?limit=50',{method:'POST'});
+            if(page.ok!==true) throw new Error('site analytics backfill page invalid: '+JSON.stringify(page));
+            status=await call('/api/admin/site-analytics-materialized/status');
+          }
+
+          const passes=[];
+          for(let attempt=1;attempt<=6&&passes.length<2;attempt+=1){
+            const before=await call('/api/admin/site-analytics-materialized/status');
+            const comparison=await call('/api/admin/site-analytics-materialized/compare');
+            const after=await call('/api/admin/site-analytics-materialized/status');
+            const stable=before.rawEvents===after.rawEvents
+              &&before.materializedEvents===after.materializedEvents
+              &&after.rawEvents===after.materializedEvents
+              &&after.backfill?.complete===true;
+            console.log(JSON.stringify({
+              siteAnalyticsComparisonAttempt:attempt,stable,same:comparison.same,
+              rawEvents:after.rawEvents,materializedEvents:after.materializedEvents,
+              globalPv:after.globalPv,globalUv:after.globalUv,
+            }));
+            if(stable&&comparison.same===true) passes.push({
+              rawEvents:after.rawEvents,materializedEvents:after.materializedEvents,
+              globalPv:after.globalPv,globalUv:after.globalUv,
+            });
+            if(passes.length<2) await new Promise(resolve=>setTimeout(resolve,750));
+          }
+          if(passes.length<2) throw new Error('site analytics materialized shadow could not obtain two stable full parity passes');
+
+          status=await call('/api/admin/site-analytics-materialized/status');
+          const report={
+            schemaVersion:1,phase:'D4a-site-analytics-materialized-shadow-live',ok:true,readPathActive:false,
+            rawEvents:Number(status.rawEvents||0),materializedEvents:Number(status.materializedEvents||0),
+            globalPv:Number(status.globalPv||0),globalUv:Number(status.globalUv||0),
+            backfillComplete:status.backfill?.complete===true,backfillPagesThisRun:pages,
+            stableParityPasses:passes.length,verifiedAt:new Date().toISOString(),
+          };
+          fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
+          console.log('SITE_ANALYTICS_MATERIALIZED_SHADOW '+JSON.stringify(report));
+          NODE
+
+      - name: Preserve materialized site analytics shadow report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-analytics-materialized-shadow-${{ github.run_id }}
+          path: /tmp/site-analytics-materialized-shadow-report.json
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Backfill and compare user library row shadow
         id: user_library_shadow
@@ -980,12 +1087,14 @@ jobs:
                 typeof body?.privatePdf?.processingEnabled === 'boolean' &&
                 body?.scheduledHandoffIndexReadEnabled === true &&
                 body?.userLibraryRowShadowEnabled === true &&
+                body?.siteAnalyticsMaterializedShadowEnabled === true &&
                 body?.wechatTicketRelay === true) {
               console.log(JSON.stringify({
                 canonicalWorkerBindings: true,
                 privatePdf: body.privatePdf,
                 scheduledHandoffIndexReadEnabled: body.scheduledHandoffIndexReadEnabled,
                 userLibraryRowShadowEnabled: body.userLibraryRowShadowEnabled,
+                siteAnalyticsMaterializedShadowEnabled: body.siteAnalyticsMaterializedShadowEnabled,
                 wechatTicketRelay: body.wechatTicketRelay,
               }));
               process.exit(0);

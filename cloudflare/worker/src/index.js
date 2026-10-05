@@ -40,6 +40,7 @@ import { backfillEvidenceHandoffIndexPage, backfillEvidenceIndexPage, getEvidenc
 import { backfillSummaryJobIndexPage, getSummaryCandidateIndexStatus } from './summary-candidate-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus } from './user-library-shadow.js';
+import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getSiteAnalyticsMaterializedStatus, materializedSiteAnalyticsStats } from './site-analytics-materialized.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
   alipayNotify,
@@ -230,6 +231,7 @@ async function handleApi(request, env, ctx) {
       summaryReviewReady: Boolean(env.DB && env.MEDIA && env.ASSETS),
       scheduledHandoffIndexReadEnabled: String(env.SCHEDULED_HANDOFF_INDEX_READ_ENABLED || '') === '1',
       userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
+      siteAnalyticsMaterializedShadowEnabled: String(env.SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED || '') === '1',
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
@@ -352,6 +354,37 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await compareUserLibraryShadowPage(env, offset, limit));
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/admin/site-analytics-materialized/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getSiteAnalyticsMaterializedStatus(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/site-analytics-materialized/backfill') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(100, Number(url.searchParams.get('limit') || 50)));
+    return resultResponse(await backfillSiteAnalyticsMaterializedPage(env, limit));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/site-analytics-materialized/compare') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const now = Date.now();
+    const legacy = await siteAnalyticsStats(env);
+    const materialized = await materializedSiteAnalyticsStats(env, now);
+    if (legacy.status !== 200) return resultResponse(legacy);
+    if (materialized.status !== 200) return resultResponse(materialized);
+    const comparison = compareSiteAnalyticsBodies(legacy.body, materialized.body);
+    return json({
+      version: 2,
+      readPathActive: false,
+      same: comparison.same,
+      legacyGeneration: legacy.body.generation,
+      materializedGeneration: materialized.body.generation,
+      legacy: comparison.legacy,
+      materialized: comparison.materialized,
+    });
+  }
+
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
     return resultResponse(await getArticleSummary(env, url.searchParams.get('doi')), cors);
   }
@@ -362,13 +395,13 @@ async function handleApi(request, env, ctx) {
     return resultResponse(await readerStats(env), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/pageview') {
-    return resultResponse(await trackPageView(env, await readJson(request), request), cors);
+    return resultResponse(await trackPageView(env, await readJson(request), request, ctx), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats') {
     return resultResponse(await siteAnalyticsStats(env), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark') {
-    return resultResponse(await markReader(env, await readJson(request), request), cors);
+    return resultResponse(await markReader(env, await readJson(request), request, ctx), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/feedback') {
     return resultResponse(await submitPaperFeedback(env, await readJson(request)), cors);
