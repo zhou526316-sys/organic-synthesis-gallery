@@ -21,6 +21,13 @@ test('production Worker binds a dedicated search D1 in shadow-only mode',()=>{
   assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"'));
 });
 
+test('Cloudflare binding resolution uses indentation-safe node one-liners',()=>{
+  const resolveBlock=deploy.split("- name: Resolve existing Cloudflare bindings")[1]?.split("- name: Apply isolated private PDF D1 migration")[0] || '';
+  assert.ok(resolveBlock.includes('D1_ID=$(node -e "'));
+  assert.ok(resolveBlock.includes('LITERATURE_INDEX_D1_ID=$(node -e "'));
+  assert.ok(!resolveBlock.includes("$(node - <<'NODE'"),'nested heredoc command substitutions are forbidden in binding resolution');
+});
+
 test('primary D1 remains FTS-free and deployment verifies that boundary',()=>{
   assert.ok(!primarySchema.includes('literature_catalog_fts'));
   assert.match(deploy,/primary-d1-no-fts-check\.json/);
