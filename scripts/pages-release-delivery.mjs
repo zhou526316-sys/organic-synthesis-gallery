@@ -19,6 +19,15 @@ const json = file => JSON.parse(readFileSync(file, 'utf8'));
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 export const normalizeDoi = value => String(value || '').trim().toLowerCase()
   .replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '').replace(/[?#].*$/, '');
+export function markerPublicationSlot(marker) {
+  const mode = String(marker?.mode || '');
+  if (mode === 'slot-release') return String(marker?.publicationSlot || '');
+  if (mode === 'scope-correction') {
+    assert(marker?.releasePolicy === 'deletion-only', 'invalid_scope_correction_policy');
+    return String(marker?.lastFixedPublicationSlot || '');
+  }
+  return String(marker?.publicationSlot || '');
+}
 export function sameSet(a, b) {
   return Array.isArray(a) && Array.isArray(b) && a.length === b.length && new Set(a).size === a.length
     && new Set(b).size === b.length && a.every(value => b.includes(value));
@@ -51,7 +60,7 @@ export function architectureObjects(directory, marker, sourceCommit, datasetSha2
   const releasePath = path.join(directory, ARCHITECTURE_RELEASE);
   const release = JSON.parse(readFileSync(releasePath, 'utf8'));
   assert(release?.schema === 'gallery-architecture-public-v1' && release.productionActivation === false, 'invalid_architecture_release');
-  assert(release.publicationSlot === marker.publicationSlot, 'architecture_slot_mismatch');
+  assert(release.publicationSlot === markerPublicationSlot(marker), 'architecture_slot_mismatch');
   assert(release.sourceCommit === sourceCommit, 'architecture_source_commit_mismatch');
   assert(release.markerBlobSha === git('rev-parse', `HEAD:${MARKER}`), 'architecture_marker_mismatch');
   assert(release.recordCount === marker.productionCards && release.datasetSha256 === datasetSha256, 'architecture_dataset_mismatch');
@@ -172,7 +181,7 @@ async function build(directory) {
   const architecture = architectureObjects(directory, marker, sourceCommit, datasetSha256);
   const result = {
     schemaVersion: 2, sourceCommit, markerCommit: git('log', '-1', '--format=%H', '--', MARKER),
-    markerBlobSha: git('rev-parse', `HEAD:${MARKER}`), publicationSlot: marker.publicationSlot || null,
+    markerBlobSha: git('rev-parse', `HEAD:${MARKER}`), publicationSlot: markerPublicationSlot(marker) || null,
     productionCards: dois.length, datasetSha256, dois,
     publishableDois: marker.publishableDois || [], rejectedDois: marker.rejectedDois || [], deferredDois: marker.deferredDois || [],
     protectedBlobs: marker.protectedBlobs, titleZh: titles,
@@ -185,7 +194,7 @@ async function build(directory) {
 export function validateManifest(manifest, marker, markerBlob) {
   assert([1, 2].includes(manifest.schemaVersion) && /^[a-f0-9]{40}$/.test(manifest.sourceCommit), 'invalid_delivery_manifest');
   assert(manifest.markerBlobSha === markerBlob, 'manifest_marker_mismatch');
-  assert(manifest.publicationSlot === (marker.publicationSlot || null), 'manifest_slot_mismatch');
+  assert(manifest.publicationSlot === (markerPublicationSlot(marker) || null), 'manifest_slot_mismatch');
   compareProtected(manifest.protectedBlobs, marker.protectedBlobs);
   assertPartition(marker, manifest.dois);
   assert(manifest.productionCards === marker.productionCards, 'manifest_count_mismatch');
@@ -261,7 +270,7 @@ export function mergeDeliveryState(state, evidence, current) {
   const next = structuredClone(state);
   const architectureRequired = Number(evidence.schemaVersion || 1) >= 2;
   assert(evidence.ok === true && evidence.chineseTitlesVerified === true && (!architectureRequired || evidence.architectureVerified === true), 'delivery_not_verified');
-  assert(evidence.publicationSlot === current.publicationSlot && evidence.productionCards === current.productionCards, 'receipt_is_not_current_release');
+  assert(evidence.publicationSlot === markerPublicationSlot(current) && evidence.productionCards === current.productionCards, 'receipt_is_not_current_release');
   for (const name of ['publishableDois', 'rejectedDois', 'deferredDois']) {
     assert(sameSet(evidence[name], current[name] || []), `receipt_partition_mismatch:${name}`);
   }
@@ -339,7 +348,7 @@ async function recordFailure() {
     && (Date.parse(state.lastWebsiteSync?.finishedAt || '') || 0) < Date.parse(run.updated_at)) {
     state.lastDeploymentAttempt = attempt;
     const target = Math.max(Date.parse(state.prepublishStaging?.publicationSlot || '') || 0, Date.parse(state.prepublish?.publicationSlot || '') || 0);
-    if (!state.activeRun && target <= Date.parse(currentMarker().publicationSlot || '')) state.phase = 'sync_failed';
+    if (!state.activeRun && target <= Date.parse(markerPublicationSlot(currentMarker()) || '')) state.phase = 'sync_failed';
     writeFileSync('audit/literature-update-state.json', pretty(state));
   }
   mkdirSync('audit/deployment-deliveries', { recursive: true });
