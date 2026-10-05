@@ -89,6 +89,9 @@ test('architecture-v1 landing is Hot-only while all-time membership stays comple
   await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
     .toBe('architecture-v1');
   await expect.poll(async () => page.locator('#gallery > .card').count(), { timeout: 30000 }).toBe(data.hotCount);
+  await expect(page.locator('#resultScopeLabel')).toHaveText(/近三个月|Last 3 months/);
+  await expect(page.locator('#resultCount')).toHaveText(String(data.hotCount));
+  await expect(page.locator('#resultScopeLabel')).toHaveAttribute('title', /滚动近三个月|rolling three-calendar-month/);
 
   const registry = await page.locator('#gallery-literature-doi-registry').evaluate(node => JSON.parse(node.textContent || '{}'));
   expect(registry.count).toBe(data.memberCount);
@@ -106,6 +109,7 @@ test('Archive DOI deep-link is resolved on demand and placed first', async ({ pa
   const first = page.locator('#gallery > .card').first();
   await expect(first).toHaveAttribute('data-doi', data.archiveDoi, { timeout: 30000 });
   await expect.poll(async () => page.locator('#gallery > .card').count()).toBe(data.hotCount + 1);
+  await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
 });
 
 test('global search loads an Archive DOI from search shards on demand', async ({ page }) => {
@@ -122,6 +126,7 @@ test('global search loads an Archive DOI from search shards on demand', async ({
     if (!count) return '';
     return (await cards.first().getAttribute('data-doi')) || '';
   }, { timeout: 30000 }).toBe(data.archiveDoi);
+  await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
 });
 
 test('historical date filter loads matching Archive month on demand', async ({ page }) => {
@@ -138,4 +143,5 @@ test('historical date filter loads matching Archive month on demand', async ({ p
 
   await expect.poll(async () => page.locator(`#gallery > .card[data-doi="${data.archiveDoi}"]:not([hidden])`).count(), { timeout: 30000 })
     .toBe(1);
+  await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
 });
