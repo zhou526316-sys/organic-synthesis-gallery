@@ -71,3 +71,15 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 - Keep the AI-assisted creation statement.
 - Keep the fixed original editorial statement.
 - Platform-native “原创” settings are checked manually at final publication when applicable.
+
+## Featured-paper editorial QA
+
+- Use the previous successfully published featured article as the structural baseline: result first, then why the chemistry is difficult, the decisive design/optimization, scope, synthetic application, mechanism, practical limitations, and a concise take-home.
+- The three opening boxes must form one causal reading path rather than three generic selling points: **what was achieved -> what bottleneck was actually solved -> why the paper is worth studying as a method/mechanism story**.
+- The first paper figure belongs immediately above the opening “做了什么” block.
+- Every body figure must be a clean crop from the final paper or SI: no journal header, footer, page number, neighbouring paragraph, half-cut caption, or unrelated panel unless that context is explicitly needed.
+- Prefer final-PDF crops over screenshots. Render at high resolution before cropping; do not enlarge a low-resolution screenshot.
+- Do not include spectra merely because they are present in SI. A spectrum is used only when the article text explicitly teaches the reader what feature in that spectrum is evidence for the claim. Otherwise explain the conclusion in prose or use a more interpretable table/scheme.
+- Never reuse one figure for two different claims. Each image must have one clear evidentiary role and its explanation goes below the image.
+- Keep “chemical space” discussion paper-specific. For the 2026-10-05 bundle, the chemical-space discussion belongs to the MacMillan retrospective, not the JACS daily pick.
+
