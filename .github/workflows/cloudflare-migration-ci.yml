@@ -13,6 +13,7 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/literature-search-index-shadow.yml'
       - 'scripts/sync-literature-catalog-index-shadow.mjs'
+      - 'scripts/test-literature-catalog-index-shadow-sync.mjs'
       - 'WORKER_FRONTEND_REFRESH'
   workflow_dispatch:
 
