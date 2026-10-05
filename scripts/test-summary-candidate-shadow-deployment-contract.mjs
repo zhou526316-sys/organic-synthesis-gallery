@@ -37,6 +37,9 @@ test('production review cycle remains on legacy R2 selector',()=>{
 test('post-deploy candidate step is shadow-only and non-blocking',()=>{
   const block=section(deploy,'- name: Backfill and compare summary candidate index shadow','- name: Promote verified official TOCs into production');
   assert.ok(block.includes('continue-on-error: true'));
+  assert.ok(block.includes("import fs from 'node:fs';"));
+  assert.ok(!block.includes("const fs=require('fs')"));
+  assert.ok(block.includes("status:'started'"));
   assert.ok(block.includes('/api/admin/article-summary/candidate-index/status'));
   assert.ok(block.includes('/api/admin/article-summary/candidate-index/backfill?limit=1000'));
   assert.ok(block.includes('/api/admin/article-summary/candidate-index/compare'));
@@ -46,6 +49,8 @@ test('post-deploy candidate step is shadow-only and non-blocking',()=>{
   assert.ok(block.includes('candidateSetHash'));
   assert.ok(block.includes('comparisons.length<3'));
   assert.ok(block.includes('preferredDoi:firstCandidate'));
+  const preserve=section(deploy,'- name: Preserve summary candidate shadow report','- name: Promote verified official TOCs into production');
+  assert.ok(preserve.includes('if-no-files-found: error'));
 });
 
 test('legacy saturation and unstable snapshots cannot be promoted as parity',()=>{
