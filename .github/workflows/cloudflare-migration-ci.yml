@@ -11,6 +11,8 @@ on:
       - '.github/workflows/cloudflare-migration-ci.yml'
       - '.github/workflows/cloudflare-user-ui-release.yml'
       - '.github/workflows/deploy-worker-frontend.yml'
+      - '.github/workflows/literature-search-index-shadow.yml'
+      - 'scripts/sync-literature-catalog-index-shadow.mjs'
       - 'WORKER_FRONTEND_REFRESH'
   workflow_dispatch:
 
@@ -83,6 +85,9 @@ jobs:
 
       - name: Test dormant literature catalog index
         run: npm run test:literature-catalog-index
+
+      - name: Check literature search shadow sync script
+        run: node --check ../../scripts/sync-literature-catalog-index-shadow.mjs
 
       - name: Wrangler dry-run build
         run: npm run check
