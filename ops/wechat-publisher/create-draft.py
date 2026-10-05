@@ -1709,6 +1709,8 @@ def main() -> int:
     content = build_content(slot, papers, featured, uploaded_urls)
 
     highres_cover = prepare_featured_cover(featured, args.featured_pdf)
+    if highres_cover is None and featured:
+        highres_cover = prepare_cover_from_local(featured, local_images)
     if highres_cover is not None:
         thumb_media_id = upload_permanent_image(token, highres_cover, DEFAULT_CACHE)
     else:
