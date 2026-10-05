@@ -20,7 +20,7 @@ const harness=[
   "function articleFigureImageUrls(node,base){const out=[];const add=v=>{try{if(v){const u=new URL(v,base).href;if(!out.includes(u))out.push(u)}}catch{}};['data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large','data-original','data-src','data-lazy-src','src'].forEach(k=>add(node.getAttribute&&node.getAttribute(k)));if(node.getAttribute){String(node.getAttribute('srcset')||'').split(',').forEach(x=>add(x.trim().split(/\\s+/)[0]));}return out}",
   "function contextFor(node){let out=[];[node.alt,node.title,node.getAttribute&&node.getAttribute('aria-label')].forEach(v=>{if(v)out.push(v)});let root=node.parentElement;for(let d=0;root&&d<4;d++,root=root.parentElement){out.push(String(root.className||''),String(root.id||''),String(root.textContent||'').slice(0,600));}return out.join(' ')}",
   adapters,
-  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
+  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
   '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -64,6 +64,17 @@ try{
     assert.equal(result.length,1);assert.equal(result[0].kind,'official');assert.match(result[0].url,/ga\.jpg/);
   });
 
+  await tc('CCS asset names distinguish Figure from Scheme deterministically',async()=>{
+    const labels=await page.evaluate(()=>[
+      T.ccsAssetFigureLabel('https://www.chinesechemsoc.org/cms/asset/x/f1.gif'),
+      T.ccsAssetFigureLabel('https://www.chinesechemsoc.org/cms/asset/x/f12.jpg'),
+      T.ccsAssetFigureLabel('https://www.chinesechemsoc.org/cms/asset/x/sf1.gif'),
+      T.ccsAssetFigureLabel('https://www.chinesechemsoc.org/cms/asset/x/sf03.png'),
+      T.ccsAssetFigureLabel('https://www.chinesechemsoc.org/specs/ux3/releasedAssets/images/loader.gif')
+    ]);
+    assert.deepEqual(labels,['Figure 1','Figure 12','Scheme 1','Scheme 3','']);
+  });
+
   await tc('CCS accepts only target DOI key image as official TOC',async()=>{
     const rows=await page.evaluate(()=>{
       const root=document.querySelector('#fixture');
@@ -99,10 +110,21 @@ try{
     assert.ok(source.includes("if(!interstitial&&Date.now()-started>8000&&bodyLength>1200)throw error;"));
   });
 
+  await tc('CCS recovered key image persists and CCS body order is DOM order',async()=>{
+    assert.ok(source.includes('var toc=[],figures=[],recoveredOfficialToc=[];'));
+    assert.ok(source.includes('if(wantsToc&&!toc.length&&recoveredOfficialToc.length)toc=recoveredOfficialToc.slice();'));
+    assert.ok(source.includes('recoveredOfficialToc=recovered.slice();'));
+    assert.ok(source.includes("message:'official='+String(toc.length)+';persisted=1'"));
+    assert.ok(source.includes("if(job.publisher!=='ccs')rows.sort"));
+    assert.ok(source.includes("stage:'ccs_figure_label',event:'conflict',status:'rejected'"));
+    assert.ok(source.includes("allowFigureOne:publisherForDoi(doi)!=='ccs'"));
+    assert.ok(source.includes("allowFigureOne && publisher !== 'ccs'"));
+  });
+
   await tc('capture protocol and core controller stay unchanged',async()=>{
     assert.ok(source.includes("var VERSION = '6.2.20'"));
     assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39'"));
-    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261004-rsc-elsevier-ccs-v9'"));
+    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v10'"));
     assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'"));
   });
 }finally{await browser.close()}
