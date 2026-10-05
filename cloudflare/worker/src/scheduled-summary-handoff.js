@@ -1,4 +1,4 @@
-import { shadowIndexHandoff } from './evidence-index.js';
+import { getEvidenceIndexStatus, listEvidenceHandoffIndexRows, shadowIndexHandoff } from './evidence-index.js';
 const HANDOFF_PREFIX = 'private/article-summary-handoff-v1/';
 const EVIDENCE_PREFIX = 'private/article-evidence-v2/';
 const LEGACY_SUMMARY_PREFIX = 'private/article-summary/';
@@ -282,6 +282,242 @@ async function pendingHandoffObjects(env, limit) {
     rows.push({ object, meta, envelope });
   }
   return rows;
+}
+
+function handoffSelectionIdentity(envelope) {
+  return {
+    doi:String(envelope?.doi||''),
+    evidencePacketHash:String(envelope?.evidencePacketHash||''),
+    sourceHash:String(envelope?.sourceHash||''),
+    evidenceLevel:String(envelope?.evidenceLevel||''),
+    capturedAt:String(envelope?.capturedAt||''),
+    keyId:String(envelope?.keyId||''),
+    algorithm:String(envelope?.algorithm||''),
+    compression:String(envelope?.compression||''),
+  };
+}
+function handoffBackfillIdentity(row) {
+  return {
+    doi:String(row?.doi||''),
+    evidenceKey:String(row?.evidenceKey||''),
+    evidencePacketHash:String(row?.evidencePacketHash||''),
+    sourceHash:String(row?.sourceHash||''),
+    evidenceLevel:String(row?.evidenceLevel||''),
+    textProcessingPolicy:String(row?.textProcessingPolicy||''),
+    capturedAt:String(row?.capturedAt||''),
+  };
+}
+async function listPrefixMetadata(env,prefix,maxPages=10) {
+  const listed=[];let cursor;let saturated=false;
+  for(let pageNo=0;pageNo<maxPages;pageNo+=1){
+    const page=await env.MEDIA.list({
+      prefix,limit:1000,...(cursor?{cursor}:{}),include:['customMetadata'],
+    });
+    listed.push(...(page?.objects||[]));
+    if(!page?.truncated||!page?.cursor){cursor='';break;}
+    cursor=page.cursor;
+    if(pageNo===maxPages-1) saturated=true;
+  }
+  return {listed,saturated};
+}
+
+async function pendingHandoffSelectionLegacy(env, limit) {
+  const asset=await readScheduledSummaryAsset(env);
+  const {listed,saturated}=await listPrefixMetadata(env,HANDOFF_PREFIX,10);
+  listed.sort((a,b)=>String(b?.customMetadata?.capturedAt||'').localeCompare(String(a?.customMetadata?.capturedAt||'')));
+  const items=[];
+  for(const object of listed){
+    if(items.length>=limit) break;
+    const meta=object?.customMetadata||{};
+    const doi=normalizeDoi(meta.doi),evidencePacketHash=String(meta.evidencePacketHash||''),sourceHash=String(meta.sourceHash||'');
+    if(!doi||!evidencePacketHash||!sourceHash) continue;
+    if(String(meta.keyId||'')!==HANDOFF_KEY_ID||String(meta.algorithm||'')!==HANDOFF_ALGORITHM||String(meta.compression||'')!=='gzip') continue;
+    const scheduled=asset.items?.[doi];
+    if(scheduled&&scheduled.status==='approved'&&scheduled.evidencePacketHash===evidencePacketHash&&scheduled.sourceHash===sourceHash) continue;
+    if(await currentLegacySummaryMatches(env,doi,evidencePacketHash,sourceHash)) continue;
+    const envelope=await readJsonObject(env,object.key);
+    if(!envelopeIsCurrent(envelope,evidencePacketHash,sourceHash)) continue;
+    items.push(handoffSelectionIdentity(envelope));
+  }
+  return {
+    items,scannedObjects:listed.length,saturated,
+    candidateSetHash:await sha256Hex(JSON.stringify(items)),
+  };
+}
+
+async function pendingHandoffSelectionIndexed(env, limit) {
+  const status=await getEvidenceIndexStatus(env);
+  if(status.status!==200||status.body?.handoffReadPathReady!==true){
+    return {status:409,body:{error:'scheduled_handoff_index_not_ready',indexStatus:status.body||{}}};
+  }
+  const asset=await readScheduledSummaryAsset(env);
+  const items=[];let offset=0;let scannedRows=0;
+  for(let pageNo=0;pageNo<100&&items.length<limit;pageNo+=1){
+    const page=await listEvidenceHandoffIndexRows(env,{ready:true,limit:500,offset});
+    if(page.status!==200) return page;
+    const rows=page.body?.items||[];
+    scannedRows+=rows.length;
+    for(const row of rows){
+      if(items.length>=limit) break;
+      const doi=normalizeDoi(row?.doi),evidencePacketHash=String(row?.evidence_packet_hash||''),sourceHash=String(row?.source_hash||'');
+      if(!doi||!evidencePacketHash||!sourceHash) continue;
+      if(String(row?.handoff_key_id||'')!==HANDOFF_KEY_ID||String(row?.handoff_algorithm||'')!==HANDOFF_ALGORITHM
+        ||String(row?.handoff_compression||'')!=='gzip'||!String(row?.handoff_r2_key||'').startsWith(HANDOFF_PREFIX)) continue;
+      const scheduled=asset.items?.[doi];
+      if(scheduled&&scheduled.status==='approved'&&scheduled.evidencePacketHash===evidencePacketHash&&scheduled.sourceHash===sourceHash) continue;
+      if(await currentLegacySummaryMatches(env,doi,evidencePacketHash,sourceHash)) continue;
+      const envelope=await readJsonObject(env,row.handoff_r2_key);
+      if(!envelopeIsCurrent(envelope,evidencePacketHash,sourceHash)) continue;
+      items.push(handoffSelectionIdentity(envelope));
+    }
+    if(rows.length<500) break;
+    offset+=rows.length;
+  }
+  return {status:200,body:{
+    items,scannedRows,candidateSetHash:await sha256Hex(JSON.stringify(items)),
+  }};
+}
+
+async function handoffBackfillSelectionLegacy(env, limit) {
+  const asset=await readScheduledSummaryAsset(env);
+  const evidenceListing=await listPrefixMetadata(env,EVIDENCE_PREFIX,10);
+  const handoffListing=await listPrefixMetadata(env,HANDOFF_PREFIX,10);
+  const evidenceObjects=evidenceListing.listed.sort((a,b)=>
+    String(b?.customMetadata?.capturedAt||'').localeCompare(String(a?.customMetadata?.capturedAt||''))
+  );
+  const currentHandoffKeys=new Set();
+  for(const object of handoffListing.listed){
+    const meta=object?.customMetadata||{};
+    const doi=normalizeDoi(meta.doi),evidencePacketHash=String(meta.evidencePacketHash||''),sourceHash=String(meta.sourceHash||'');
+    if(!doi||!evidencePacketHash||!sourceHash) continue;
+    if(String(meta.keyId||'')!==HANDOFF_KEY_ID||String(meta.algorithm||'')!==HANDOFF_ALGORITHM||String(meta.compression||'')!=='gzip') continue;
+    currentHandoffKeys.add(doi+'|'+evidencePacketHash+'|'+sourceHash);
+  }
+  const items=[];
+  for(const object of evidenceObjects){
+    if(items.length>=limit) break;
+    const meta=object?.customMetadata||{};
+    const doi=normalizeDoi(meta.doi),evidencePacketHash=String(meta.evidencePacketHash||''),sourceHash=String(meta.sourceHash||'');
+    if(!doi||!evidencePacketHash||!sourceHash) continue;
+    const policy=String(meta.textProcessingPolicy||'');
+    if(policy==='no_external_ai') continue;
+    const scheduled=asset.items?.[doi];
+    if(scheduled&&scheduled.status==='approved'&&scheduled.evidencePacketHash===evidencePacketHash&&scheduled.sourceHash===sourceHash) continue;
+    if(currentHandoffKeys.has(doi+'|'+evidencePacketHash+'|'+sourceHash)) continue;
+    if(await currentLegacySummaryMatches(env,doi,evidencePacketHash,sourceHash)) continue;
+    const id=await idForDoi(doi);
+    const existing=await readJsonObject(env,HANDOFF_PREFIX+id+'.json');
+    if(envelopeIsCurrent(existing,evidencePacketHash,sourceHash)) continue;
+    const evidence=await readJsonObject(env,object.key);
+    if(!evidence||evidence.evidencePacketHash!==evidencePacketHash||evidence.sourceHash!==sourceHash) continue;
+    items.push(handoffBackfillIdentity({
+      doi,evidenceKey:object.key,evidencePacketHash,sourceHash,
+      evidenceLevel:String(meta.evidenceLevel||'unknown'),textProcessingPolicy:policy,
+      capturedAt:String(meta.capturedAt||''),
+    }));
+  }
+  return {
+    items,
+    scannedEvidenceObjects:evidenceObjects.length,
+    scannedHandoffObjects:handoffListing.listed.length,
+    saturated:evidenceListing.saturated||handoffListing.saturated,
+    candidateSetHash:await sha256Hex(JSON.stringify(items)),
+  };
+}
+
+async function handoffBackfillSelectionIndexed(env, limit) {
+  const status=await getEvidenceIndexStatus(env);
+  if(status.status!==200||status.body?.handoffReadPathReady!==true){
+    return {status:409,body:{error:'scheduled_handoff_index_not_ready',indexStatus:status.body||{}}};
+  }
+  const asset=await readScheduledSummaryAsset(env);
+  const items=[];let offset=0;let scannedRows=0;
+  for(let pageNo=0;pageNo<100&&items.length<limit;pageNo+=1){
+    const page=await listEvidenceHandoffIndexRows(env,{ready:false,limit:500,offset});
+    if(page.status!==200) return page;
+    const rows=page.body?.items||[];
+    scannedRows+=rows.length;
+    for(const row of rows){
+      if(items.length>=limit) break;
+      const doi=normalizeDoi(row?.doi),evidencePacketHash=String(row?.evidence_packet_hash||''),sourceHash=String(row?.source_hash||'');
+      if(!doi||!evidencePacketHash||!sourceHash) continue;
+      const policy=String(row?.text_processing_policy||'');
+      if(policy==='no_external_ai') continue;
+      const scheduled=asset.items?.[doi];
+      if(scheduled&&scheduled.status==='approved'&&scheduled.evidencePacketHash===evidencePacketHash&&scheduled.sourceHash===sourceHash) continue;
+      if(await currentLegacySummaryMatches(env,doi,evidencePacketHash,sourceHash)) continue;
+      const evidence=await readJsonObject(env,row.evidence_r2_key);
+      if(!evidence||evidence.evidencePacketHash!==evidencePacketHash||evidence.sourceHash!==sourceHash) continue;
+      items.push(handoffBackfillIdentity({
+        doi,evidenceKey:String(row.evidence_r2_key||''),evidencePacketHash,sourceHash,
+        evidenceLevel:String(row.evidence_level||'unknown'),textProcessingPolicy:policy,
+        capturedAt:String(row.captured_at||''),
+      }));
+    }
+    if(rows.length<500) break;
+    offset+=rows.length;
+  }
+  return {status:200,body:{
+    items,scannedRows,candidateSetHash:await sha256Hex(JSON.stringify(items)),
+  }};
+}
+
+function comparisonSide(selection,scanKey) {
+  return {
+    count:selection.items.length,
+    [scanKey]:Number(selection[scanKey]||0),
+    candidateSetHash:selection.candidateSetHash,
+    items:selection.items,
+  };
+}
+
+export async function compareScheduledHandoffIndexShadow(env, limitValue = 40) {
+  if(!env?.MEDIA||!env?.DB) return {status:503,body:{error:'scheduled_handoff_shadow_storage_unavailable'}};
+  const limit=Math.max(1,Math.min(60,Number(limitValue||40)));
+
+  const pendingLegacyBefore=await pendingHandoffSelectionLegacy(env,limit);
+  const pendingIndexed=await pendingHandoffSelectionIndexed(env,limit);
+  if(pendingIndexed.status!==200) return pendingIndexed;
+  const pendingLegacyAfter=await pendingHandoffSelectionLegacy(env,limit);
+  const pendingStable=pendingLegacyBefore.candidateSetHash===pendingLegacyAfter.candidateSetHash;
+  const pendingSaturated=pendingLegacyBefore.saturated||pendingLegacyAfter.saturated;
+  const pendingSame=pendingStable&&!pendingSaturated
+    &&pendingLegacyBefore.candidateSetHash===pendingIndexed.body.candidateSetHash
+    &&JSON.stringify(pendingLegacyBefore.items)===JSON.stringify(pendingIndexed.body.items);
+
+  const backfillLegacyBefore=await handoffBackfillSelectionLegacy(env,limit);
+  const backfillIndexed=await handoffBackfillSelectionIndexed(env,limit);
+  if(backfillIndexed.status!==200) return backfillIndexed;
+  const backfillLegacyAfter=await handoffBackfillSelectionLegacy(env,limit);
+  const backfillStable=backfillLegacyBefore.candidateSetHash===backfillLegacyAfter.candidateSetHash;
+  const backfillSaturated=backfillLegacyBefore.saturated||backfillLegacyAfter.saturated;
+  const backfillSame=backfillStable&&!backfillSaturated
+    &&backfillLegacyBefore.candidateSetHash===backfillIndexed.body.candidateSetHash
+    &&JSON.stringify(backfillLegacyBefore.items)===JSON.stringify(backfillIndexed.body.items);
+
+  const comparable=pendingStable&&backfillStable&&!pendingSaturated&&!backfillSaturated;
+  return {status:200,body:{
+    version:1,mode:'scheduled_handoff_index_shadow',readPathActive:false,
+    comparable,sourceStable:pendingStable&&backfillStable,
+    legacyPotentiallySaturated:pendingSaturated||backfillSaturated,
+    same:comparable&&pendingSame&&backfillSame,limit,
+    pending:{
+      same:pendingSame,
+      legacy:comparisonSide(pendingLegacyBefore,'scannedObjects'),
+      indexed:comparisonSide(pendingIndexed.body,'scannedRows'),
+    },
+    backfill:{
+      same:backfillSame,
+      legacy:{
+        count:backfillLegacyBefore.items.length,
+        scannedEvidenceObjects:backfillLegacyBefore.scannedEvidenceObjects,
+        scannedHandoffObjects:backfillLegacyBefore.scannedHandoffObjects,
+        candidateSetHash:backfillLegacyBefore.candidateSetHash,
+        items:backfillLegacyBefore.items,
+      },
+      indexed:comparisonSide(backfillIndexed.body,'scannedRows'),
+    },
+  }};
 }
 
 export async function backfillScheduledEvidenceHandoffs(env, limitValue = 4) {

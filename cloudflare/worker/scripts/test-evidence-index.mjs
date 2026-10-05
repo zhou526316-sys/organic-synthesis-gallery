@@ -2,8 +2,10 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
 import {
+  backfillEvidenceHandoffIndexPage,
   backfillEvidenceIndexPage,
   getEvidenceIndexStatus,
+  listEvidenceHandoffIndexRows,
   listEvidenceIndexRows,
   shadowIndexEvidence,
   shadowIndexHandoff,
@@ -203,6 +205,85 @@ test('admin sample is bounded and never contains Evidence plaintext',async t=>{
   assert.ok(!serialized.includes('sections'));
   assert.ok(!serialized.includes('fulltext'));
   assert.ok(!serialized.includes('articleUrl'));
+});
+
+
+test('historical handoff cursor backfill marks only hash-matched current Evidence rows',async t=>{
+  const db=new SqliteD1(); t.after(()=>db.close());
+  const evidenceObjects=[
+    new MemoryObject('private/article-evidence-v2/0001.json',{
+      doi:'10.1234/h1',schemaVersion:'article-evidence-v2',sourceHash:'b'.repeat(64),evidencePacketHash:'a'.repeat(64),
+      publisher:'acs',capturedAt:'2026-10-04T08:01:00Z',textProcessingPolicy:'private_cache_allowed',evidenceLevel:'complete',
+    }),
+    new MemoryObject('private/article-evidence-v2/0002.json',{
+      doi:'10.1234/h2',schemaVersion:'article-evidence-v2',sourceHash:'d'.repeat(64),evidencePacketHash:'c'.repeat(64),
+      publisher:'acs',capturedAt:'2026-10-04T08:02:00Z',textProcessingPolicy:'private_cache_allowed',evidenceLevel:'complete',
+    }),
+  ];
+  const handoffObjects=[
+    new MemoryObject('private/article-summary-handoff-v1/h1.json',{
+      doi:'10.1234/h1',sourceHash:'b'.repeat(64),evidencePacketHash:'a'.repeat(64),
+      keyId:'key-v1',algorithm:'RSA-OAEP-256+A256GCM+GZIP',compression:'gzip',
+    }),
+    new MemoryObject('private/article-summary-handoff-v1/h2-stale.json',{
+      doi:'10.1234/h2',sourceHash:'d'.repeat(64),evidencePacketHash:'e'.repeat(64),
+      keyId:'key-v1',algorithm:'RSA-OAEP-256+A256GCM+GZIP',compression:'gzip',
+    }),
+    new MemoryObject('private/article-summary-handoff-v1/bad.json',{doi:'bad'}),
+  ];
+  const env={DB:db,MEDIA:new MemoryR2([...evidenceObjects,...handoffObjects]),EVIDENCE_INDEX_SHADOW_ENABLED:'1'};
+
+  assert.equal((await backfillEvidenceIndexPage(env,100)).body.complete,true);
+  let status=await getEvidenceIndexStatus(env);
+  assert.equal(status.body.backfill.complete,true);
+  assert.equal(status.body.handoffReadPathReady,false);
+
+  const first=await backfillEvidenceHandoffIndexPage(env,2);
+  assert.equal(first.status,200);
+  assert.equal(first.body.complete,false);
+
+  const second=await backfillEvidenceHandoffIndexPage(env,2);
+  assert.equal(second.body.complete,true);
+  assert.equal(second.body.scannedObjects,3);
+
+  status=await getEvidenceIndexStatus(env);
+  assert.equal(status.body.handoffBackfill.complete,true);
+  assert.equal(status.body.handoffReadPathReady,true);
+  assert.equal(status.body.handoffReadyCount,1);
+  assert.equal(status.body.handoffBackfill.matchedRows,1);
+  assert.equal(status.body.handoffBackfill.staleOrMissingRows,1);
+  assert.equal(status.body.handoffBackfill.skippedInvalid,1);
+
+  const ready=await listEvidenceHandoffIndexRows(env,{ready:true,limit:10});
+  assert.equal(ready.status,200);
+  assert.equal(ready.body.count,1);
+  assert.equal(ready.body.items[0].doi,'10.1234/h1');
+  const missing=await listEvidenceHandoffIndexRows(env,{ready:false,limit:10});
+  assert.equal(missing.body.count,1);
+  assert.equal(missing.body.items[0].doi,'10.1234/h2');
+});
+
+test('handoff backfill state is durable across list failure and completed reruns are idempotent',async t=>{
+  const db=new SqliteD1(); t.after(()=>db.close());
+  const env={DB:db,EVIDENCE_INDEX_SHADOW_ENABLED:'1',MEDIA:new MemoryR2()};
+  await backfillEvidenceIndexPage(env,100);
+  const done=await backfillEvidenceHandoffIndexPage(env,100);
+  assert.equal(done.body.complete,true);
+  const again=await backfillEvidenceHandoffIndexPage(env,100);
+  assert.equal(again.body.complete,true);
+  assert.equal(again.body.scannedObjects,done.body.scannedObjects);
+  assert.equal(again.body.matchedRows,done.body.matchedRows);
+  assert.equal(again.body.staleOrMissingRows,done.body.staleOrMissingRows);
+  assert.equal(again.body.skippedInvalid,done.body.skippedInvalid);
+
+  const db2=new SqliteD1(); t.after(()=>db2.close());
+  const broken={DB:db2,EVIDENCE_INDEX_SHADOW_ENABLED:'1',MEDIA:{async list(){throw new Error('handoff_list_failed')}}};
+  const failed=await backfillEvidenceHandoffIndexPage(broken,100);
+  assert.equal(failed.status,502);
+  assert.equal(failed.body.error,'evidence_handoff_backfill_list_failed');
+  const status=await getEvidenceIndexStatus(broken);
+  assert.equal(status.body.handoffBackfill.complete,false);
+  assert.equal(status.body.handoffBackfill.scannedObjects,0);
 });
 
 console.log('EVIDENCE_INDEX_SHADOW_TESTS_READY');
