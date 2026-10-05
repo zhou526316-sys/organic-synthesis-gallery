@@ -2523,6 +2523,7 @@ function embeddedJobDois(value) {
 
 
   function evidenceCaptureEligible(job) {
+    if (job && job.opportunisticEvidence === true) return true;
     if (job && typeof job.captureEvidence === 'boolean') return job.captureEvidence;
     var need = String(job && job.mediaNeed || '');
     return need.indexOf('figures') >= 0 || need === 'evidence';
@@ -3378,7 +3379,7 @@ function embeddedJobDois(value) {
     job.publisher=job.publisher||publisherForDoi(job.doi);
     job.captureDeadline=Date.now()+6*60*1000;
     var wantsToc=job.captureToc===true;
-    var wantsFigures=job && typeof job.captureFigures==='boolean' ? job.captureFigures : String(job.mediaNeed||'').indexOf('figures')>=0;
+    var wantsFigures=Boolean(job&&job.opportunisticFigures===true)||(job && typeof job.captureFigures==='boolean' ? job.captureFigures : String(job.mediaNeed||'').indexOf('figures')>=0);
     var wantsEvidence=evidenceCaptureEligible(job);
     var result={status:'failed',reason:'',toc:{status:wantsToc?'pending':'already_available'},figures:{status:wantsFigures?'pending':'not_requested',discovered:0,stored:0,failed:0,items:[]},fulltext:{status:wantsEvidence?'pending':'not_requested'},figuresImported:0,figuresStaged:0,published:false};
     job._liveResult=result;
@@ -3936,13 +3937,15 @@ function embeddedJobDois(value) {
       captureToc:tocNeeded,
       // Figures/text are opportunistic only while a TOC visit is already required.
       // They are never queue obligations and never keep a DOI pending by themselves.
-      captureFigures:Boolean(tocNeeded&&needFigures),
-      captureEvidence:Boolean(tocNeeded&&inventory.evidenceKnown&&!textLevel),
+      captureFigures:false,
+      captureEvidence:false,
+      opportunisticFigures:Boolean(tocNeeded&&needFigures),
+      opportunisticEvidence:Boolean(tocNeeded&&inventory.evidenceKnown&&!textLevel),
       capturePrivatePdf:pdfNeeded,
       expectedFigureCount:expected,figureCoverageUnconfirmed:Boolean(tocNeeded&&inspectFigures),missingFigureCount:expected>0?Math.max(0,expected-knownCount):0,
       capturedFigures:figs,existingEvidenceLevel:textLevel,existingTocKind:official?'official':fallback?'figure1':'',
       unknownNeeds:unknown,allowFigureOne:Boolean(tocNeeded&&!official&&!fallback&&isNatureScienceFamilyJob(raw))});
-    job.mediaNeed=[job.captureToc?'toc':'',job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
+    job.mediaNeed=[job.captureToc?'toc':'',job.captureFigures?'figures':'',job.captureEvidence?'evidence':'',job.capturePrivatePdf?'pdf':''].filter(Boolean).join('+');
     job.state=job.captureToc?'no_visual':'private_pdf_gap';
     return job;
   }
@@ -3991,10 +3994,10 @@ function embeddedJobDois(value) {
 
   // Queue coverage is per DOI and per requested layer; an attempt is not completion.
   function coverageHasNeeds(job) {
-    return Boolean(job && (job.captureToc || job.capturePrivatePdf));
+    return Boolean(job && (job.captureToc || job.captureFigures || job.captureEvidence || job.capturePrivatePdf));
   }
   function coverageNeedKey(job) {
-    return [Boolean(job.captureToc),Boolean(job.capturePrivatePdf)].join('|');
+    return [Boolean(job.captureToc),Boolean(job.captureFigures),Boolean(job.captureEvidence),Boolean(job.capturePrivatePdf)].join('|');
   }
   function coverageTransient(reason) {
     return /(?:http_50[234]|timeout|page_not_ready|heartbeat_missing|NetworkError|Failed to fetch|gm_request|gm_then_fetch)/i.test(String(reason||''))
@@ -4016,7 +4019,7 @@ function embeddedJobDois(value) {
       // Retain unresolved obligations on a partial inventory read; never replace
       // a known gap with a missing response. Positive current receipts still win.
       var j=Object.assign({},old.job,raw);
-      ['captureToc','capturePrivatePdf'].forEach(function(k){j[k]=!old.done[k]&&Boolean(old.job[k]||raw[k]);});
+      ['captureToc','captureFigures','captureEvidence','capturePrivatePdf'].forEach(function(k){j[k]=!old.done[k]&&Boolean(old.job[k]||raw[k]);});
       j.capturedFigures=Object.assign({},old.job.capturedFigures||{},raw.capturedFigures||{});
       old.job=coverageJobNeeds(j);
       if(old.state==='resolved'&&coverageHasNeeds(old.job)){old.state='pending';old.retryAt=0;}
@@ -4075,7 +4078,7 @@ function embeddedJobDois(value) {
     s.unresolvedCount=left.length;s.blockedCount=left.filter(function(r){return r.state==='blocked';}).length;
     s.pendingMissing=left.filter(function(r){return r.state==='pending'||r.state==='active';}).length;
     s.remainingNeeds={toc:0,figures:0,evidence:0,pdf:0};
-    left.forEach(function(r){if(r.job.captureToc)s.remainingNeeds.toc++;if(r.job.capturePrivatePdf)s.remainingNeeds.pdf++;});
+    left.forEach(function(r){if(r.job.captureToc)s.remainingNeeds.toc++;if(r.job.captureFigures)s.remainingNeeds.figures++;if(r.job.captureEvidence)s.remainingNeeds.evidence++;if(r.job.capturePrivatePdf)s.remainingNeeds.pdf++;});
     s.pendingPreview=coveragePending(run).slice(0,12).map(function(r){var j=r.job;return {doi:j.doi,journal:j.journal,addedDate:captureBatchDate(j),need:captureNeedText(j)};});
     s.blockedPreview=left.filter(function(r){return r.state==='blocked';}).slice(0,12).map(function(r){return {doi:r.job.doi,need:captureNeedText(r.job),reason:captureLiveError(r.lastReason||'本次没有新进展')};});
     return s;
@@ -4735,9 +4738,9 @@ function embeddedJobDois(value) {
 
   function pairedDiscoveryReady(job, stable, tocCount, figureCount, elapsedMs, figureQuietMs) {
     if (stable < 2) return false;
-    var wantsFigures = job && typeof job.captureFigures === 'boolean'
+    var wantsFigures = Boolean(job&&job.opportunisticFigures===true) || (job && typeof job.captureFigures === 'boolean'
       ? job.captureFigures
-      : String(job && job.mediaNeed || '').indexOf('figures') >= 0;
+      : String(job && job.mediaNeed || '').indexOf('figures') >= 0);
     if (!wantsFigures) return Boolean(tocCount || elapsedMs >= 18000);
     // A TOC can appear several seconds before ACS lazy body figures. Do not let it
     // terminate a body job before the full-page scroll has had time to settle.
@@ -4772,9 +4775,9 @@ function embeddedJobDois(value) {
         captureLiveUpdate(job,'discovering');
       }
       var wantsToc = job.captureToc === true;
-      var wantsFigures = job && typeof job.captureFigures === 'boolean'
+      var wantsFigures = Boolean(job&&job.opportunisticFigures===true) || (job && typeof job.captureFigures === 'boolean'
         ? job.captureFigures
-        : String(job.mediaNeed || '').indexOf('figures') >= 0;
+        : String(job.mediaNeed || '').indexOf('figures') >= 0);
       toc=wantsToc?collectCandidates(job,trace,document,location.href,'paired_dom',true):[];
       if(wantsToc&&!toc.length&&recoveredOfficialToc.length)toc=recoveredOfficialToc.slice();
       figures=wantsFigures?collectArticleFigureCandidates(job,trace,document,location.href,'paired_dom'):[];
