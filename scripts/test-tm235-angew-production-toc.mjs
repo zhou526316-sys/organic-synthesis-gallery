@@ -14,9 +14,9 @@ function test(name, condition) {
   console.log('TM235_ANGEW_PASS ' + name);
 }
 
-test('controller is 2.2.39 with unchanged capture protocol',
+test('controller is 2.2.40 with unchanged capture protocol',
   source.includes("var VERSION = '6.2.20';") &&
-  source.includes("var CONTROLLER_REVISION = '2.2.39';"));
+  source.includes("var CONTROLLER_REVISION = '2.2.40';"));
 
 test('controller no longer reads stale GitHub Pages media-index as TOC authority',
   !source.includes("getJson('https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json") &&
@@ -27,8 +27,8 @@ test('controller no longer reads stale GitHub Pages media-index as TOC authority
 
 test('old controllers are stopped by server capability revision',
   source.includes("String(caps.evidenceCaptureMinControllerRevision||'')!=='2.2.35'") &&
-  source.includes("String(caps.mediaControllerRevision||'')!=='2.2.39'") &&
-  workerIndex.includes("mediaControllerRevision:'2.2.39'") &&
+  source.includes("String(caps.mediaControllerRevision||'')!=='2.2.40'") &&
+  workerIndex.includes("mediaControllerRevision:'2.2.40'") &&
   workerIndex.includes("evidenceCaptureMinControllerRevision:'2.2.35'"));
 
 test('Wiley gets one post-upgrade retry before legacy overnight retry gates',
@@ -157,7 +157,7 @@ try {
 
 console.log('TM235_ANGEW_TEST_SUMMARY ' + JSON.stringify({
   passed,
-  bridge:'2.2.49',
+  bridge:'2.2.50',
   captureProtocol:'6.2.20',
   productionTocAuthority:'d1',
   officialTocAutoPromotion:true,
