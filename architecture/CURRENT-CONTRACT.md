@@ -39,19 +39,19 @@ Hot/Archive separation is the first scale boundary; a bounded result window is t
 - Broad historical date ranges must be chunked/cursor-based rather than resolving and rendering the entire range in one operation.
 - CSS `content-visibility` and lazy media are performance aids, not substitutes for bounding DOM cardinality.
 
-Until this rule is implemented end to end, global search and broad date ranges are considered a known scale-risk surface.
+The fixed browser result window is implemented. The remaining scale-risk surface is upstream retrieval: global search and broad historical date ranges must also become cursor-bounded so the browser never materializes a large hidden result set before rendering the fixed window.
 
 ## 5. Search-index rule
 
 A user-facing all-time search must not permanently depend on scanning every historical monthly segment in the browser.
 
-The current segmented client search is an acceptable migration bridge while the corpus is small, but the long-term path must use a bounded-fanout index (for example a compact server/D1 metadata index or an equivalent content-addressed inverted index). Search correctness must preserve the current rule that partial index failure is not a zero-result proof.
+The current segmented client search is a migration bridge. The active migration target is a generation-fenced, cursor-paged all-time metadata index in a **dedicated rebuildable D1 search database**. The primary D1 that holds user/account, analytics and private-PDF state must remain free of the FTS5 virtual tables used by literature search. Search correctness must preserve the current rule that partial index failure is not a zero-result proof. Queries shorter than the indexed trigram minimum (for example `Ni` or `Pd`) must retain an explicit compatibility path until an equivalent indexed strategy exists.
 
 ## 6. Fallback rule
 
 Fallbacks must preserve correctness **and** the scale boundary.
 
-The current full legacy-corpus fallback is a temporary migration safety net. It must not remain the final fallback once historical volume grows materially. The target fallback is a verified compact Hot snapshot plus exact DOI/date/search Archive retrieval. A degraded architecture path must not reintroduce an all-history browser download that can recreate the failure the architecture was designed to prevent.
+For deployed architecture generations, the fallback is now bounded: verified full reader → hash-bound Hot fallback / retained Hot landing → explicit unavailable state. A production verification or Archive-query failure must not trigger an all-history legacy download. Full legacy-corpus loading remains compatibility-only for environments where architecture delivery is genuinely absent (for example old/local fixtures).
 
 ## 7. Catalog and generation integrity
 
@@ -123,10 +123,10 @@ Architecture changes must test at least:
 
 ## 15. Current priority order
 
-1. **P0 — bounded frontend results:** add real page/cursor/window semantics so search and long date ranges cannot render an unbounded card set.
-2. **P0 — bounded fallback:** replace eventual full-history legacy fallback with Hot-safe fallback plus Archive on-demand retrieval.
-3. **P1 — indexed all-time search:** remove linear client scanning of every historical search segment.
-4. **P1 — user-library D3c:** move writes toward row-authoritative state and remove the monolithic-document size ceiling only after verified dual-path parity.
+1. **P1 — indexed all-time search shadow:** create the dedicated search D1, import only a receipt-verified architecture generation, and require repeat static-reader ↔ D1 parity while the public read path remains off.
+2. **P1 — bounded search/date cutover:** expose generation-bound cursor APIs and remove browser-side linear historical search / broad-range materialization only after shadow parity is proven. Preserve the short-query compatibility path.
+3. **P1 — user-library D3c:** move writes toward row-authoritative state and remove the monolithic-document size ceiling only after verified dual-path parity.
+4. **P2 — registry hot-path cleanup:** prevent all-time registries or equivalent correctness metadata from being repeatedly serialized on ordinary card renders once their size becomes material.
 5. **P2 — continue index/materialization cutovers:** any remaining metadata path that still relies on corpus-wide/prefix-wide scans must migrate behind parity/freshness gates.
 
 These priorities are scale-safety work. They do not alter the Tampermonkey acquisition workflow in this architecture task.
