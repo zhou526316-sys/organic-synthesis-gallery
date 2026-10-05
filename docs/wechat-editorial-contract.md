@@ -127,3 +127,24 @@ Both “每日精选” and “往期精选” use the same deep-reading standar
 - Never reuse one figure for two different claims. Each image must have one clear evidentiary role and its explanation goes below the image.
 - Keep “chemical space” discussion paper-specific. For the 2026-10-05 bundle, the chemical-space discussion belongs to the MacMillan retrospective, not the JACS daily pick.
 
+## Automation release gates
+
+A WeChat draft is not send-ready merely because the API write succeeds.
+
+Before final sending, the automated pipeline must verify all of the following:
+
+- article count and article order are correct;
+- titles follow the daily / retrospective title conventions;
+- selected DOI and journal match the approved editorial choice;
+- body text passes Chinese-first terminology linting with only an explicit abbreviation allowlist;
+- no body figure is reused for multiple arguments;
+- every figure crop is complete, readable and free of unrelated page fragments;
+- the secondary-card cover is validated in the actual small-card / centered-crop display mode;
+- no generated image contains invented chemical structures;
+- mechanism claims are tagged as direct experiment / indirect support / computation / model / unresolved alternative;
+- the draft is read back with `draft/get` and the rendered result is the object being QA'd.
+
+Publisher runs are serialized by editorial revision. A newer requested revision supersedes older queued work; receipt writing must be single-writer or conflict-safe.
+
+The detailed 2026-10-05 lessons and automation graduation criteria live in:
+`audit/wechat-postmortem/2026-10-05.md`.
