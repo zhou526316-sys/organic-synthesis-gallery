@@ -1,6 +1,6 @@
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
-  var PRIVATE_PDF_CAPTURE_REVISION = '20261004-private-pdf-capture-v2';
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-lease-v3';
   var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
@@ -21,17 +21,28 @@
     return lease;
   }
 
+  function privatePdfLeaseDiagnostics() {
+    var raw=GM_getValue(PRIVATE_PDF_LEASE_KEY,null),valid=privatePdfLease();
+    return {
+      state:valid?'active':raw?'expired_or_invalid':'missing',
+      present:Boolean(valid),
+      expiresAt:Number(valid&&valid.expiresAt||raw&&raw.expiresAt||0),
+      receivedAt:Number(valid&&valid.receivedAt||raw&&raw.receivedAt||0),
+      revision:String(valid&&valid.revision||raw&&raw.revision||'')
+    };
+  }
+
   function installPrivatePdfLeaseReceiver() {
     if(!isGalleryPage()||typeof window==='undefined'||typeof window.addEventListener!=='function')return;
     window.addEventListener('message',function(event){
       try{
-        if(event.source!==window||event.origin!==location.origin)return;
+        if(event.origin!==location.origin)return;
         var data=event.data||{};
         if(data.type!=='osg-private-pdf-capture-lease-v1'||data.scope!=='private_pdf_capture')return;
-        var token=String(data.token||''),expiresAt=Number(data.expiresAt||0);
-        if(!/^[A-Za-z0-9_-]{32,160}$/.test(token)||expiresAt<=Date.now()+60000)return;
-        GM_setValue(PRIVATE_PDF_LEASE_KEY,{token:token,expiresAt:expiresAt,scope:'private_pdf_capture',receivedAt:Date.now(),revision:PRIVATE_PDF_CAPTURE_REVISION});
-        window.postMessage({type:'osg-private-pdf-capture-lease-ack-v1',expiresAt:expiresAt},location.origin);
+        var token=String(data.token||''),expiresAt=Number(data.expiresAt||0),receivedAt=Date.now();
+        if(!/^[A-Za-z0-9_-]{32,160}$/.test(token)||expiresAt<=receivedAt+60000)return;
+        GM_setValue(PRIVATE_PDF_LEASE_KEY,{token:token,expiresAt:expiresAt,scope:'private_pdf_capture',receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION});
+        window.postMessage({type:'osg-private-pdf-capture-lease-ack-v1',expiresAt:expiresAt,receivedAt:receivedAt,revision:PRIVATE_PDF_CAPTURE_REVISION},location.origin);
       }catch(_){}
     });
   }
@@ -133,7 +144,11 @@
   async function maybeCapturePrivatePdf(job,trace) {
     if(!job||!currentCaptureJob(job)||!privatePdfCaptureEligibleByAddedDate(job))return null;
     var lease=privatePdfLease();
-    if(!lease)return null;
+    if(!lease){
+      pushTrace(trace,{stage:'private_pdf_lease',event:'missing',status:'skipped',message:'eligible_addedDate='+String(job.addedDate||'')+';revision='+PRIVATE_PDF_CAPTURE_REVISION});
+      return {status:'skipped',reason:'capture_lease_missing',revision:PRIVATE_PDF_CAPTURE_REVISION};
+    }
+    pushTrace(trace,{stage:'private_pdf_lease',event:'active',status:'ok',message:'expiresAt='+String(Number(lease.expiresAt||0))+';revision='+String(lease.revision||PRIVATE_PDF_CAPTURE_REVISION)});
     var doi=normalizeDoi(job.doi),key=PRIVATE_PDF_ATTEMPT_PREFIX+doi,prior=GM_getValue(key,null),now=Date.now();
     if(prior&&prior.status==='stored'&&now-Number(prior.at||0)<30*24*60*60*1000)return {status:'already_stored',documentId:prior.documentId||''};
     if(prior&&prior.status==='not_found'&&now-Number(prior.at||0)<6*60*60*1000)return {status:'not_found_cached'};
