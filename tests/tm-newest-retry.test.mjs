@@ -25,11 +25,11 @@ const today=[
 const old=[{doi:'10.1038/s41586-test',journal:'Nature',addedDate:'2026-09-29',captureToc:true},
  {doi:'10.1126/science.test',journal:'Science',captureToc:true},
  {doi:'10.1021/jacs.old',journal:'JACS',captureToc:true}];
-await test('latest TOC leads, historical TOCs stay ahead of PDF-only work',()=>{
+await test('latest TOC leads, then latest PDF, then historical TOCs',()=>{
  const sorted=api.selectBatchJobs([...old,...today],5,latest);
- assert.deepEqual(Array.from(sorted,x=>x.doi),[today[0].doi,old[0].doi,old[1].doi,old[2].doi,today[1].doi]);
- assert.ok(api.compareCaptureJobs(today[0],old[0],latest)<0);
- assert.ok(api.compareCaptureJobs(today[1],old[2],latest)>0);
+ assert.deepEqual(Array.from(sorted,x=>x.doi),[today[0].doi,today[1].doi,old[0].doi,old[1].doi,old[2].doi]);
+ assert.ok(api.compareCaptureJobs(today[0],today[1],latest)<0);
+ assert.ok(api.compareCaptureJobs(today[1],old[0],latest)<0);
 });
 await test('historical Nature then Science then other TOCs remain ordered',()=>assert.deepEqual(Array.from(api.selectBatchJobs(old,3,latest),x=>x.journal),['Nature','Science','JACS']));
 await test('figure/text-only legacy jobs have no queue priority',()=>{assert.equal(api.captureQueueTier({mediaNeed:'figures',captureFigures:true},latest),5);assert.equal(api.captureQueueTier({mediaNeed:'evidence',captureEvidence:true},latest),5);});
