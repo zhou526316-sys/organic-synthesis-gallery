@@ -313,7 +313,13 @@ def figure_html(fig_id: str, figures: dict[str, dict], uploaded_urls: dict[str, 
     )
 
 
-def build_content(slot: str, papers: list[dict], featured: dict | None = None, uploaded_urls: dict[str, str] | None = None) -> str:
+def build_content(
+    slot: str,
+    papers: list[dict],
+    featured: dict | None = None,
+    uploaded_urls: dict[str, str] | None = None,
+    gallery_qr_url: str = "",
+) -> str:
     uploaded_urls = uploaded_urls or {}
     grouped: dict[str, list[dict]] = {}
     for paper in papers:
@@ -359,6 +365,17 @@ def build_content(slot: str, papers: list[dict], featured: dict | None = None, u
                     f"<div style='font-size:11px;color:#999;line-height:1.5;'>{esc(authors)}</div>"
                     "</section>"
                 )
+
+    if gallery_qr_url:
+        parts.append(
+            build_gallery_jump_card(
+                slot[:10],
+                papers,
+                featured,
+                uploaded_urls,
+                gallery_qr_url,
+            )
+        )
 
     if featured:
         figures = {str(x.get("id")): x for x in featured.get("figures", []) if isinstance(x, dict)}
@@ -987,6 +1004,104 @@ def upload_featured_images(token: str, featured: dict | None, override_pdf: str 
             DEFAULT_BODY_IMAGE_CACHE,
         )
     return uploaded, local_images
+
+
+def prepare_gallery_qr_image(target_url: str) -> Path:
+    """Create a high-resolution QR PNG for the daily Gallery entry."""
+    target = Path(tempfile.gettempdir()) / "osg-wechat-gallery-qr.png"
+    try:
+        import qrcode  # type: ignore
+        image = qrcode.make(target_url)
+        image.save(target)
+        return target
+    except Exception:
+        pass
+
+    qr_url = (
+        "https://api.qrserver.com/v1/create-qr-code/?"
+        + urllib.parse.urlencode({
+            "size": "520x520",
+            "margin": "16",
+            "format": "png",
+            "data": target_url,
+        })
+    )
+    req = urllib.request.Request(
+        qr_url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (compatible; OrganicSynthesisGallery/1.0)",
+            "Accept": "image/png,image/*;q=0.8,*/*;q=0.1",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=45) as response:
+            payload = response.read()
+            content_type = str(response.headers.get("Content-Type") or "").lower()
+    except Exception as exc:
+        raise RuntimeError(f"failed to generate Gallery QR code: {exc}") from exc
+    if not payload or ("image/" not in content_type and not payload.startswith(b"\x89PNG")):
+        raise RuntimeError("Gallery QR endpoint did not return a PNG image")
+    target.write_bytes(payload)
+    return target
+
+
+def build_gallery_jump_card(
+    publication_date: str,
+    papers: list[dict],
+    featured: dict | None,
+    uploaded_urls: dict[str, str],
+    qr_url: str,
+) -> str:
+    """WeChat-safe jump block: real new-paper miniature on the left, QR on the right."""
+    if not qr_url or not papers:
+        return ""
+
+    featured_doi = normalize_doi((featured or {}).get("paper", {}).get("doi"))
+    card = next((p for p in papers if normalize_doi(p.get("doi")) == featured_doi), papers[0])
+    card_title = str(card.get("titleZh") or card.get("title") or card.get("doi") or "")
+    card_title_en = str(card.get("title") or "")
+    journal = str(card.get("journal") or "")
+    doi = normalize_doi(card.get("doi"))
+    visual = uploaded_urls.get("fig1") or uploaded_urls.get("scope") or ""
+
+    visual_html = (
+        f"<img src='{esc(visual)}' style='display:block;width:100%;height:auto;"
+        "max-height:142px;object-fit:contain;margin:0 0 8px;background:#fff;'/>"
+        if visual else
+        "<div style='height:62px;border-radius:6px;background:#f4f6fa;margin:0 0 8px;"
+        "display:flex;align-items:center;justify-content:center;color:#9aa3b2;font-size:11px;'>"
+        "Organic Synthesis Gallery</div>"
+    )
+
+    return (
+        "<section style='margin:16px 0 23px;'>"
+        "<table role='presentation' cellpadding='0' cellspacing='0' style='width:100%;"
+        "border-collapse:separate;border-spacing:0;background:#f7f9fc;border:1px solid #e3e7ef;"
+        "border-radius:10px;overflow:hidden;'>"
+        "<tr>"
+        "<td style='width:70%;vertical-align:middle;padding:12px 10px 12px 12px;'>"
+        "<section style='background:#fff;border:1px solid #e3e7ef;border-radius:8px;padding:9px;'>"
+        f"{visual_html}"
+        f"<p style='font-size:10px;color:#3159bd;font-weight:700;letter-spacing:.05em;margin:0 0 4px;'>"
+        f"{esc(journal)} · 今日新增</p>"
+        f"<p style='font-size:13px;line-height:1.5;font-weight:700;color:#222;margin:0 0 4px;'>{esc(card_title)}</p>"
+        + (
+            f"<p style='font-size:9px;line-height:1.35;color:#8a93a3;margin:0 0 4px;'>{esc(card_title_en)}</p>"
+            if card_title_en and card_title_en != card_title else ""
+        )
+        + f"<p style='font-size:9px;color:#a0a6b0;margin:0;'>DOI {esc(doi)}</p>"
+        "</section>"
+        "</td>"
+        "<td style='width:30%;vertical-align:middle;text-align:center;padding:12px 12px 12px 4px;'>"
+        f"<img src='{esc(qr_url)}' style='display:block;width:118px;max-width:100%;height:auto;margin:0 auto 7px;"
+        "background:#fff;border-radius:5px;'/>"
+        "<p style='font-size:11px;line-height:1.45;font-weight:700;color:#3159bd;margin:0;'>扫码进入网页</p>"
+        "</td>"
+        "</tr></table>"
+        "<p style='font-size:11px;color:#777;line-height:1.65;margin:7px 2px 0;text-align:center;'>"
+        "扫码进入有机合成文献库，查看今日全部新增，并继续搜索、筛选更多文献。</p>"
+        "</section>"
+    )
 
 
 def prepare_featured_cover(featured: dict | None, override_pdf: str = "") -> Path | None:
@@ -1706,7 +1821,21 @@ def main() -> int:
     load_env(Path(args.env_file))
     token = get_access_token()
     uploaded_urls, local_images = upload_featured_images(token, featured, args.featured_pdf)
-    content = build_content(slot, papers, featured, uploaded_urls)
+    gallery_target_url = f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
+    qr_local = prepare_gallery_qr_image(gallery_target_url)
+    gallery_qr_url = upload_local_body_image(
+        token,
+        qr_local,
+        f"gallery-qr-{publication_date}",
+        DEFAULT_BODY_IMAGE_CACHE,
+    )
+    content = build_content(
+        slot,
+        papers,
+        featured,
+        uploaded_urls,
+        gallery_qr_url=gallery_qr_url,
+    )
 
     highres_cover = prepare_featured_cover(featured, args.featured_pdf)
     if highres_cover is None and featured:
