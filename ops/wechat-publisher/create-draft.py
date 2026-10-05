@@ -786,62 +786,54 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             )
 
         elif layout == "retrospective_square":
-            # Secondary WeChat cards are tiny and WeChat may display the
-            # centered 2.35:1 crop. Keep all identifying information inside
-            # that central band, use full-bleed contrast, and avoid a tiny
-            # shrunken paper figure that becomes visually blank.
-            canvas = Image.new("RGB", (width, height), "#17212b")
+            # Secondary-card cover: portrait-led, minimal text, designed for
+            # both the square thumbnail and WeChat's centered 2.35:1 crop.
+            canvas = Image.new("RGB", (width, height), "#10243a")
             draw = ImageDraw.Draw(canvas)
 
-            kicker = str(cover.get("thumb_kicker") or "MacMillan")
-            title_text = str(cover.get("thumb_title") or "SH2")
-            subtitle = str(cover.get("thumb_subtitle") or "C-O")
+            kicker = str(cover.get("thumb_kicker") or "往期精选")
+            title_text = str(cover.get("thumb_title") or "MacMillan")
+            subtitle = str(cover.get("thumb_subtitle") or "二烷基醚")
             meta = str(cover.get("thumb_meta") or "Nature")
-            footer = str(cover.get("thumb_footer") or "RADICAL ETHER")
 
-            kicker_font = choose_font(max(44, int(width * 0.060)), True)
-            title_font = choose_font(max(150, int(width * 0.205)), True)
-            subtitle_font = choose_font(max(88, int(width * 0.120)), True)
-            meta_font = choose_font(max(38, int(width * 0.050)), True)
-            footer_font = choose_font(max(30, int(width * 0.040)), True)
+            # Portrait fills the left half; this is much more legible at small size
+            # than a shrunken paper figure.
+            if portrait:
+                with Image.open(portrait) as p:
+                    p.load()
+                    p = p.convert("RGB")
+                    p = ImageOps.fit(
+                        p,
+                        (int(width * 0.52), height),
+                        method=Image.Resampling.LANCZOS,
+                        centering=(0.50, 0.43),
+                    )
+                    canvas.paste(p, (0, 0))
 
-            left = int(width * 0.08)
-            right = int(width * 0.92)
+            # Dark gradient-like panel on the right using layered rectangles.
+            panel_x = int(width * 0.46)
+            for i in range(12):
+                x0 = panel_x + int(i * width * 0.012)
+                shade = 16 + i * 2
+                draw.rectangle((x0, 0, width, height), fill=(shade, 38 + i, 60 + i * 2))
 
-            # top identity, still visible in full-square mode
-            draw.text((left, int(height * 0.09)), kicker, font=kicker_font, fill="#f4f7fb")
-            if meta:
-                mbox = draw.textbbox((0, 0), meta, font=meta_font)
-                mw = mbox[2] - mbox[0]
-                draw.rounded_rectangle(
-                    (right - mw - 36, int(height * 0.09) - 6, right, int(height * 0.09) + 58),
-                    radius=18,
-                    fill="#dce8ff",
-                )
-                draw.text((right - mw - 18, int(height * 0.09) + 3), meta, font=meta_font, fill="#234a84")
+            left = int(width * 0.52)
+            right = int(width * 0.94)
 
-            # Everything below is centered inside the 2.35:1 crop
-            # y ~= 0.287 ... 0.713, so even the tiny sub-card is unmistakable.
-            band_top = int(height * 0.30)
-            band_bottom = int(height * 0.70)
-            draw.rounded_rectangle(
-                (int(width * 0.055), band_top, int(width * 0.945), band_bottom),
-                radius=max(24, int(width * 0.035)),
-                fill="#f3f7fb",
-            )
+            kicker_font = choose_font(max(34, int(width * 0.045)), True)
+            title_font = choose_font(max(64, int(width * 0.084)), True)
+            sub_font = choose_font(max(56, int(width * 0.072)), True)
+            meta_font = choose_font(max(32, int(width * 0.042)), True)
 
-            tbox = draw.textbbox((0, 0), title_text, font=title_font)
-            tx = (width - (tbox[2] - tbox[0])) // 2
-            draw.text((tx, int(height * 0.315)), title_text, font=title_font, fill="#102332")
-
-            sbox = draw.textbbox((0, 0), subtitle, font=subtitle_font)
-            sx = (width - (sbox[2] - sbox[0])) // 2
-            draw.text((sx, int(height * 0.525)), subtitle, font=subtitle_font, fill="#32675f")
-
-            # bottom identity, useful in full-square displays
-            fbox = draw.textbbox((0, 0), footer, font=footer_font)
-            fx = (width - (fbox[2] - fbox[0])) // 2
-            draw.text((fx, int(height * 0.82)), footer, font=footer_font, fill="#aebdcc")
+            # All key text sits in the central band so it survives the 2.35:1 crop.
+            y = int(height * 0.31)
+            draw.text((left, y), kicker, font=kicker_font, fill="#e7c57a")
+            y += int(height * 0.085)
+            draw.text((left, y), title_text, font=title_font, fill="#ffffff")
+            y += int(height * 0.105)
+            draw.text((left, y), subtitle, font=sub_font, fill="#f1d58d")
+            y += int(height * 0.095)
+            draw.text((left, y), meta, font=meta_font, fill="#d5e1ef")
 
         elif portrait:
             left_w = int(width * 0.34)
