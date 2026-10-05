@@ -1,14 +1,16 @@
 {
   "schemaVersion": 1,
   "mode": "confirmed-scope-removal",
-  "requestId": "user-immediate-scope-removal-20261002-s44160-01164-8",
-  "reason": "The user explicitly excludes 10.1038/s44160-026-01164-8. Its publisher abstract was re-read: membrane/capsule fabrication and function are primary. Apply the existing authorized deletion-only transaction now; do not wait for 18:00 and do not admit any paper.",
+  "requestId": "user-immediate-scope-removal-20261005-d6gc04274k",
+  "reason": "The user explicitly excludes 10.1039/d6gc04274k. The 2026-10-05 prepublish evidence identifies it as a continuous PET glycolysis/recycling process centered on post-consumer polycotton waste and process engineering. Apply the existing authorized deletion-only transaction immediately; do not admit or modify any retained paper.",
   "authorityFile": "audit/scope-removal-authority.json",
-  "removeDois": ["10.1038/s44160-026-01164-8"],
+  "removeDois": [
+    "10.1039/d6gc04274k"
+  ],
   "addDois": [],
   "retainPendingAndUnconfirmedBoundaryPapers": true,
-  "evidenceRegistryCommit": "13c48fe633db75707fdf79ff1a99e2ef487add7c",
-  "evidenceRegistryBlobSha": "4df5fb1fb5c25804846c70eee555e9ae798c5d99",
+  "evidenceRegistryCommit": "7bb41aa2cc258eabfa2d1d19ce0eefee5ec3dc19",
+  "evidenceRegistryBlobSha": "cdb36d329454d0e836eef4774c01cfc148e6fdb1",
   "separateMediaCorrectionDoi": "10.31635/ccschem.026.202507094",
   "separateMediaCorrectionMustNotRemoveArticle": true
 }
