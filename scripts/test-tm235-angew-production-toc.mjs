@@ -157,7 +157,7 @@ try {
 
 console.log('TM235_ANGEW_TEST_SUMMARY ' + JSON.stringify({
   passed,
-  bridge:'2.2.48',
+  bridge:'2.2.49',
   captureProtocol:'6.2.20',
   productionTocAuthority:'d1',
   officialTocAutoPromotion:true,
