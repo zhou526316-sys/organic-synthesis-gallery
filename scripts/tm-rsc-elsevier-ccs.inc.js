@@ -89,6 +89,43 @@
     return (match[1].toLowerCase()==='sf'?'Scheme ':'Figure ')+String(Number(match[2]));
   }
 
+  function ccsTocIndexUrlFromCrossrefPayload(job,payload,baseUrl) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='ccs')return '';
+    var message=payload&&payload.message&&typeof payload.message==='object'?payload.message:payload||{};
+    var volume=String(message.volume||'').trim();
+    var issue=String(message.issue||message['journal-issue']&&message['journal-issue'].issue||'').trim();
+    if(!/^\d+$/.test(volume)||!/^\d+$/.test(issue))return '';
+    var origin;
+    try{origin=new URL(baseUrl||location.href).origin;}catch(_){origin='https://www.chinesechemsoc.org';}
+    return origin+'/toc/ccschem/'+String(Number(volume))+'/'+String(Number(issue));
+  }
+
+  async function ccsCrossrefTocIndexUrl(job,trace) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='ccs')return '';
+    var doi=normalizeDoi(job&&job.doi);if(!doi)return '';
+    var key=P+'ccs-crossref-route-v1:'+doi,now=Date.now(),cached=GM_getValue(key,null);
+    if(cached&&cached.url&&now-Number(cached.at||0)<30*24*60*60*1000){
+      pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_cache',status:'found',url:cached.url,message:'volume='+String(cached.volume||'')+';issue='+String(cached.issue||'')});
+      return String(cached.url);
+    }
+    try{
+      var payload=await metadataJson({method:'GET',url:'https://api.crossref.org/works/'+encodeURIComponent(doi),timeout:20000,headers:{accept:'application/json'}},'ccs_crossref');
+      var url=ccsTocIndexUrlFromCrossrefPayload(job,payload,location.href);
+      var message=payload&&payload.message&&typeof payload.message==='object'?payload.message:payload||{};
+      if(!url){
+        pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_volume_issue',status:'none',message:'volume_or_issue_missing'});
+        return '';
+      }
+      var volume=String(message.volume||'').trim(),issue=String(message.issue||message['journal-issue']&&message['journal-issue'].issue||'').trim();
+      GM_setValue(key,{url:url,volume:volume,issue:issue,at:now,revision:PUBLISHER_MEDIA_REVISION});
+      pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_volume_issue',status:'found',url:url,message:'volume='+volume+';issue='+issue});
+      return url;
+    }catch(error){
+      pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_volume_issue',status:'failed',message:captureLiveError(error&&error.message||error)});
+      return '';
+    }
+  }
+
   // CCS Chemistry exposes its official per-article "key image" on journal TOC
   // listings even when the article page exposes only numbered body figures.
   function ccsTocIndexUrls(job, doc, baseUrl) {
