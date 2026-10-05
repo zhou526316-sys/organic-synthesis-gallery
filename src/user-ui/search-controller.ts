@@ -282,7 +282,10 @@ export class UserSearchController {
     summary.replaceChildren();
     const text = document.createElement('span');
     const prefix = this.language === 'zh' ? '搜索结果' : 'Search results';
-    const suffix = this.language === 'zh' ? `${visible} 篇` : `${visible} papers`;
+    const windowed = Boolean(this.root.querySelector('#resultWindowControls'));
+    const suffix = this.language === 'zh'
+      ? `${windowed ? '本页 ' : ''}${visible} 篇`
+      : `${visible} papers${windowed ? ' on this page' : ''}`;
     text.append(`${prefix}：“`);
     const strong = document.createElement('strong');
     strong.textContent = this.fullQuery.trim();
@@ -331,7 +334,9 @@ export class UserSearchController {
         card.querySelector(PAPER_ACTION_ELEMENT)?.before(hit);
       }
     }
-    const count = this.root.querySelector<HTMLElement>('#resultCount'); if (count) count.textContent = String(visible);
+    const count = this.root.querySelector<HTMLElement>('#resultCount');
+    const windowed = Boolean(this.root.querySelector('#resultWindowControls'));
+    if (count && !windowed) count.textContent = String(visible);
     this.renderSearchSummary(tokens, visible);
     const empty = this.gallery?.querySelector<HTMLElement>('.user-search-empty') || null;
     if (!visible && this.gallery && !empty) { const next = document.createElement('div'); next.className = 'user-search-empty'; next.textContent = this.language === 'zh' ? '没有匹配当前词条组合的文献。可以减少词条、选择智能推荐或检查拼写。' : 'No papers match this term combination. Try fewer terms, a suggestion, or check spelling.'; this.gallery.appendChild(next); }
