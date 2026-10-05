@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.28
+// @version      6.2.29
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -53,7 +53,7 @@
   var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.28';
+  var INSTALL_REVISION = '6.2.29';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -4795,7 +4795,7 @@ function embeddedJobDois(value) {
 
   // Private PDF capture is an optional owner-only side channel. It never
   // determines TOC/body/fulltext task success and can be disabled independently.
-  var PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-lease-v3';
+  var PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-session-v4';
   var PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01';
   var PRIVATE_PDF_CAPTURE_ENDPOINT = WORKER + '/api/private-pdf/import';
   var PRIVATE_PDF_LEASE_KEY = P + 'private-pdf-capture-lease-v1';
@@ -4894,22 +4894,47 @@ function embeddedJobDois(value) {
     try{return new TextDecoder('latin1').decode(bytes.slice(Math.max(0,bytes.length-4096))).indexOf('%%EOF')>=0;}catch(_){return false;}
   }
 
+  async function fetchPrivatePdfWithBrowserSession(job,candidate,trace) {
+    assertBoundCaptureJob(job);
+    var target;
+    try{target=new URL(candidate.url,location.href);}catch(_){return null;}
+    if(target.origin!==location.origin)return null;
+    var started=Date.now(),abort=new AbortController(),timer=setTimeout(function(){abort.abort();},45000);
+    try{
+      var response=await fetch(target.href,{method:'GET',credentials:'include',cache:'no-store',redirect:'follow',
+        headers:{Accept:'application/pdf,application/octet-stream;q=0.9,*/*;q=0.1'},signal:abort.signal});
+      var buffer=await response.arrayBuffer(),status=Number(response.status||0),finalUrl=response.url||target.href;
+      pushTrace(trace,{stage:'private_pdf_fetch',event:'browser_response',status:status>=200&&status<300?'ok':'http_error',
+        httpStatus:status,url:finalUrl,byteLength:buffer&&buffer.byteLength||0,message:'transport=browser_session;durationMs='+(Date.now()-started)});
+      if(status<200||status>=300){var e=new Error('private_pdf_browser_http_'+status);e.httpStatus=status;throw e;}
+      if(!privatePdfHostAllowed(job.publisher||publisherForDoi(job.doi),finalUrl))throw new Error('private_pdf_redirect_host_mismatch');
+      if(!privatePdfBytesValid(buffer))throw new Error('private_pdf_invalid_bytes');
+      return {buffer:buffer,sourceUrl:finalUrl,byteLength:buffer.byteLength,transport:'browser_session'};
+    }catch(error){
+      pushTrace(trace,{stage:'private_pdf_fetch',event:'browser_failed',status:'fallback',httpStatus:Number(error&&error.httpStatus||0),
+        url:target.href,message:'transport=browser_session;'+captureLiveError(error&&error.message||error)});
+      return null;
+    }finally{clearTimeout(timer);}
+  }
+
   async function fetchExplicitPdf(job,candidate,trace) {
     assertBoundCaptureJob(job);
+    var browserPdf=await fetchPrivatePdfWithBrowserSession(job,candidate,trace);
+    if(browserPdf)return browserPdf;
     var started=Date.now();
     try{
       var response=await gmRequest({method:'GET',url:candidate.url,responseType:'arraybuffer',timeout:45000,
         headers:{Accept:'application/pdf,application/octet-stream;q=0.9,*/*;q=0.1',Referer:location.href}});
       var status=Number(response.status||0),buffer=response.response,finalUrl=response.finalUrl||candidate.url;
       pushTrace(trace,{stage:'private_pdf_fetch',event:'response',status:status>=200&&status<300?'ok':'http_error',
-        httpStatus:status,url:finalUrl,byteLength:buffer&&buffer.byteLength||0,message:'durationMs='+(Date.now()-started)});
+        httpStatus:status,url:finalUrl,byteLength:buffer&&buffer.byteLength||0,message:'transport=gm;durationMs='+(Date.now()-started)});
       if(status<200||status>=300){var e=new Error('private_pdf_http_'+status);e.httpStatus=status;throw e;}
       if(!privatePdfHostAllowed(job.publisher||publisherForDoi(job.doi),finalUrl))throw new Error('private_pdf_redirect_host_mismatch');
       if(!privatePdfBytesValid(buffer))throw new Error('private_pdf_invalid_bytes');
-      return {buffer:buffer,sourceUrl:finalUrl,byteLength:buffer.byteLength};
+      return {buffer:buffer,sourceUrl:finalUrl,byteLength:buffer.byteLength,transport:'gm'};
     }catch(error){
       pushTrace(trace,{stage:'private_pdf_fetch',event:'failed',status:'failed',httpStatus:Number(error&&error.httpStatus||0),
-        url:candidate.url,message:captureLiveError(error&&error.message||error)});
+        url:candidate.url,message:'transport=gm;'+captureLiveError(error&&error.message||error)});
       throw error;
     }
   }
