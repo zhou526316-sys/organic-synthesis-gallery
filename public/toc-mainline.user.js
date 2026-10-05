@@ -2374,7 +2374,10 @@ function embeddedJobDois(value) {
     var urls = iframeSourceUrls(job);
     if(job&&job.publisher==='ccs'){
       var crossrefTocUrl=await ccsCrossrefTocIndexUrl(job,trace);
-      if(crossrefTocUrl&&urls.indexOf(crossrefTocUrl)<0)urls.push(crossrefTocUrl);
+      if(crossrefTocUrl){
+        urls=urls.filter(function(url){return url!==crossrefTocUrl;});
+        urls.unshift(crossrefTocUrl);
+      }
     }
     if (!urls.length) return [];
     var best = [];
@@ -4059,10 +4062,7 @@ function embeddedJobDois(value) {
     if(job.captureEvidence && text.status==='stored'){
       next.captureEvidence=false;next.existingEvidenceLevel=text.evidenceLevel||'unknown';row.done.captureEvidence=true;gained++;
     }
-    if(job.capturePrivatePdf && result.privatePdf && result.privatePdf.status){
-      // PDF is a side-channel obligation for this pass only. A failed/not-found
-      // attempt is governed by the PDF cooldown on the next queue build, not by
-      // body/text coverage continuation inside this run.
+    if(job.capturePrivatePdf && result.privatePdf && /^(?:stored|already_stored)$/.test(String(result.privatePdf.status||''))){
       next.capturePrivatePdf=false;row.done.capturePrivatePdf=true;gained++;
     }
     var cp=readCheckpoint(job.doi);next.capturedFigures=Object.assign({},job.capturedFigures||{});
@@ -4185,8 +4185,10 @@ function embeddedJobDois(value) {
         if(result.status==='success'&&coverageHasNeeds(row.job))result.status='partial';
         s.results.push(result);s[result.status]=(s[result.status]||0)+1;
         s.tocStored+=result.toc&&result.toc.status==='stored'?1:0;s.figuresStaged+=Number(result.figuresStaged||0);s.evidenceStored+=result.fulltext&&result.fulltext.status==='stored'?1:0;
-        GM_setValue(attemptKey(job.doi,'manual:'+run.id,'figures'),result);
-        if(row.state==='resolved')GM_setValue(attemptKey(job.doi,VERSION+':paired:1790082000000','figures'),result);
+        if(result.privatePdf&&/^(?:stored|already_stored)$/.test(String(result.privatePdf.status||'')))s.pdfStored=Number(s.pdfStored||0)+1;
+        else if(job.capturePrivatePdf&&result.privatePdf)s.pdfFailed=Number(s.pdfFailed||0)+1;
+        GM_setValue(attemptKey(job.doi,'manual:'+run.id,jobKind(job)),result);
+        if(row.state==='resolved')GM_setValue(attemptKey(job.doi,VERSION+':paired:1790082000000',jobKind(job)),result);
         if(!result.toc)enqueueCaptureReport(job,[{stage:'controller',event:'coverage_capture_result',status:result.status,message:result.reason,at:nowIso()}],result.status,result.reason,true,'');
         coverageStats(run);manualSummary(run);
         if(controllerPaused()||result.status==='aborted')break;
@@ -5179,6 +5181,13 @@ function embeddedJobDois(value) {
         .replace(/[A-Za-z0-9+/_=-]{40,}/g,'[redacted]').slice(0,180);
       result.privatePdf={status:'failed',reason:privatePdfReason};
       if(typeof pushTrace==='function')pushTrace(trace,{stage:'private_pdf_capture',event:'failed',status:'failed',message:privatePdfReason});
+    }
+    var pdfOnly=job.capturePrivatePdf===true&&!job.captureToc&&!job.captureFigures&&!job.captureEvidence&&!job.opportunisticFigures&&!job.opportunisticEvidence;
+    if(pdfOnly){
+      var pdfStatus=String(result.privatePdf&&result.privatePdf.status||'failed');
+      var pdfOk=/^(?:stored|already_stored)$/.test(pdfStatus);
+      result.status=pdfOk?'success':pdfStatus==='not_found'||pdfStatus==='not_found_cached'?'partial':'failed';
+      result.reason='private_pdf_side_channel;pdf='+pdfStatus+(result.privatePdf&&result.privatePdf.reason?';reason='+captureLiveError(result.privatePdf.reason):'')+';published=0';
     }
     if(job.missingOnly&&result.figures&&result.figures.discovered>0){var cp=readCheckpoint(job.doi);cp.figureCoverage={expected:Math.max(Number(cp.figureCoverage&&cp.figureCoverage.expected||0),Number(result.figures.discovered)),observedAt:Date.now()};saveCheckpoint(job.doi,cp,job);}
     result.retryAfterMs=Math.max(Number(result.retryAfterMs||0),Number((result.fulltext||{}).retryAfterMs||0));
