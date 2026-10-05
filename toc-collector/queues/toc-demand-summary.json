@@ -1,34 +1,34 @@
 {
-  "generatedAt": "2026-10-05T01:29:09.599Z",
+  "generatedAt": "2026-10-05T05:50:54.976Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
-  "literatureSupplementUrl": "data:application/json,{\"papers\":[]}",
+  "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 740,
+  "liveLocalCaptures": 762,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
   "mediaInventoryCount": 797,
   "webpageDoiCount": 797,
   "latestAddedDate": "2026-10-05",
   "latestAddedCount": 11,
   "mediaRecordCount": 759,
-  "visibleGapTotal": 42,
-  "demandTotal": 42,
-  "noVisual": 42,
-  "fallbackOnlyNeedsOfficialUpgrade": 118,
-  "missingOfficialTotal": 160,
+  "visibleGapTotal": 27,
+  "demandTotal": 27,
+  "noVisual": 27,
+  "fallbackOnlyNeedsOfficialUpgrade": 114,
+  "missingOfficialTotal": 141,
   "figureGapTotal": 797,
   "zeroFigureGapTotal": 797,
   "lowResolutionFigureGapTotal": 0,
   "unknownQualityFigureGapTotal": 0,
   "sparseFigureGapTotal": 0,
   "byPublisher": {
-    "acs": 24,
-    "wiley": 5,
+    "acs": 23,
+    "wiley": 0,
     "nature": 2,
     "science": 0,
-    "rsc": 4,
-    "elsevier": 2,
-    "ccs": 5,
+    "rsc": 1,
+    "elsevier": 0,
+    "ccs": 1,
     "other": 0
   },
   "upgradeByPublisher": {
@@ -38,20 +38,16 @@
     "science": 9,
     "rsc": 0,
     "elsevier": 0,
-    "ccs": 5,
+    "ccs": 1,
     "other": 0
   },
   "byJournal": {
     "ACS Catalysis": 4,
-    "JACS": 1,
     "JOC": 1,
     "Organic Letters": 18,
-    "CCS Chemistry": 5,
-    "Chem": 2,
+    "CCS Chemistry": 1,
     "Nature": 2,
-    "Chemical Science": 3,
-    "Green Chemistry": 1,
-    "Angew": 5
+    "Chemical Science": 1
   },
   "sample": [
     {
@@ -90,16 +86,6 @@
       "title": "α-C−H Alkylation of α-Silyl Alcohols: Hydrogen Atom Transfer Catalysis Preserving Labile C−Si Bonds",
       "date": "2026-07-02",
       "addedDate": "",
-      "publisher": "acs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
-      "doi": "10.1021/jacs.6c14811",
-      "journal": "JACS",
-      "title": "Complex Fragment Coupling via O -Mesyl Hydroxylamines: Direct Conversion of Primary Amines to Electrophilic Aminating Agents",
-      "date": "2026-10-04",
-      "addedDate": "2026-10-05",
       "publisher": "acs",
       "state": "no_visual",
       "existingReason": ""
@@ -295,12 +281,22 @@
       "existingReason": ""
     },
     {
-      "doi": "10.31635/ccschem.026.202608392",
+      "doi": "10.31635/ccschem.026.202607659",
       "journal": "CCS Chemistry",
-      "title": "Enantioselective Synthesis of 1,3-Disubstituted Bicyclo[2.1.1]hexanes via Cascade Allylic Allylation/Intramolecular Crossed [2+2] Photocycloaddition",
-      "date": "2026-10-03",
+      "title": "Upcycling of Epoxy Resins via An Oxidation–Cope Elimination Pathway Using Organic Solvent",
+      "date": "2026-10-01",
       "addedDate": "2026-10-04",
       "publisher": "ccs",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1038/s41586-026-11169-0",
+      "journal": "Nature",
+      "title": "Chiral oxazolidinones via biocatalytic aziridination of unactivated alkenes",
+      "date": "2026-09-23",
+      "addedDate": "2026-09-24",
+      "publisher": "nature",
       "state": "no_visual",
       "existingReason": ""
     }
