@@ -4,6 +4,7 @@ import {chromium} from 'playwright';
 
 const source=await fs.readFile('public/toc-mainline.user.js','utf8');
 const runtime=await fs.readFile('scripts/tm-private-pdf-capture.inc.js','utf8');
+const ownerSetup=await fs.readFile('public/private-pdf-owner-setup.html','utf8');
 const fi=source.indexOf('  async function finishPairedJob(job,result,trace,token) {');
 const fj=source.indexOf('\n\n  function overnightRetryEligible',fi);
 assert.ok(fi>0&&fj>fi,'finishPairedJob extraction failed');
@@ -34,7 +35,7 @@ const harness=[
 "function enqueueCaptureReport(){return true};function nowIso(){return new Date().toISOString()}",
 runtime,
 finish,
-"globalThis.T={privatePdfLease,privatePdfCaptureEligibleByAddedDate,privatePdfBytesValid,discoverExplicitPdfCandidates,maybeCapturePrivatePdf,finishPairedJob,PRIVATE_PDF_LEASE_KEY,PRIVATE_PDF_CAPTURE_REVISION,setGm:fn=>{gmRequest=fn},setMaybe:fn=>{maybeCapturePrivatePdf=fn}};",
+"globalThis.T={privatePdfLease,privatePdfLeaseDiagnostics,privatePdfCaptureEligibleByAddedDate,privatePdfBytesValid,discoverExplicitPdfCandidates,maybeCapturePrivatePdf,finishPairedJob,PRIVATE_PDF_LEASE_KEY,PRIVATE_PDF_CAPTURE_REVISION,setGm:fn=>{gmRequest=fn},setMaybe:fn=>{maybeCapturePrivatePdf=fn}};",
 '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -52,6 +53,20 @@ try{
   await tc('lease storage expires independently',async()=>{
     const x=await page.evaluate(()=>{GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'A'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()+600000});return T.privatePdfLease()});assert.equal(x.scope,'private_pdf_capture');
     const y=await page.evaluate(()=>{GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'A'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()-1});return T.privatePdfLease()});assert.equal(y,null);
+  });
+  await tc('lease handoff is retryable, cross-world tolerant, and observable',async()=>{
+    assert.ok(runtime.includes("if(event.origin!==location.origin)return;"));
+    assert.ok(!runtime.includes("event.source!==window"));
+    assert.ok(runtime.includes("function privatePdfLeaseDiagnostics()"));
+    assert.ok(ownerSetup.includes("attempts>=12"));
+    assert.ok(ownerSetup.includes("window.addEventListener('message',ack);"));
+    assert.ok(ownerSetup.indexOf("window.addEventListener('message',ack);")<ownerSetup.indexOf("send();"));
+    const x=await page.evaluate(()=>{GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'D'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()+600000,receivedAt:123,revision:T.PRIVATE_PDF_CAPTURE_REVISION});return T.privatePdfLeaseDiagnostics()});
+    assert.equal(x.state,'active');assert.equal(x.present,true);assert.equal(x.receivedAt,123);
+  });
+  await tc('eligible PDF job reports missing lease instead of silently skipping',async()=>{
+    const x=await page.evaluate(async()=>{GM_deleteValue(T.PRIVATE_PDF_LEASE_KEY);GM_deleteValue('osg-toc-v6:private-pdf-attempt-v1:10.1021/jacs.6c12345');const trace=[];const result=await T.maybeCapturePrivatePdf({doi:'10.1021/jacs.6c12345',publisher:'acs',addedDate:'2026-10-05',jobId:'fixture-job-12345678'},trace);return{result,trace}});
+    assert.equal(x.result.status,'skipped');assert.equal(x.result.reason,'capture_lease_missing');assert.equal(x.trace[0].stage,'private_pdf_lease');
   });
   await tc('Oct 1 cutoff is enforced in capture runtime',async()=>{
     assert.equal(await page.evaluate(()=>T.privatePdfCaptureEligibleByAddedDate({addedDate:'2026-10-01'})),true);

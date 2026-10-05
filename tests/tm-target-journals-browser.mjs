@@ -90,11 +90,20 @@ try{
     assert.ok(source.includes("ccsTocIndexCandidatesFromDocument(job,doc,current)"));
   });
 
+  await tc('Chem and RSC publisher binding wait is adaptive but DOI-safe',async()=>{
+    assert.ok(source.includes("if(publisher==='elsevier')return 45000;"));
+    assert.ok(source.includes("if(publisher==='rsc')return 30000;"));
+    assert.ok(source.includes("writePublisherHeartbeat(job,'publisher_binding_wait')"));
+    assert.ok(source.includes("status:'publisher_binding_wait'"));
+    assert.ok(source.includes("if(String(error.message)!=='page_doi_unverified')throw error;"));
+    assert.ok(source.includes("if(!interstitial&&Date.now()-started>8000&&bodyLength>1200)throw error;"));
+  });
+
   await tc('capture protocol and core controller stay unchanged',async()=>{
     assert.ok(source.includes("var VERSION = '6.2.20'"));
     assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.39'"));
     assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261004-rsc-elsevier-ccs-v9'"));
-    assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261004-elsevier-bound-task-v3'"));
+    assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'"));
   });
 }finally{await browser.close()}
 console.log(JSON.stringify({passed,targetJournals:['Chem','Chemical Science','Green Chemistry','CCS Chemistry']}));
