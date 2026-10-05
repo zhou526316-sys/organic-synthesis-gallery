@@ -4,6 +4,7 @@ p=root/'public/toc-mainline.user.js'
 s=p.read_text()
 marker="var PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-session-v4';"
 if marker in s:
+    if "private-pdf-attempt-v2:" not in s: raise RuntimeError('private PDF capture revision is present but attempt generation is stale')
     print('private PDF capture already applied'); raise SystemExit(0)
 runtime=(root/'scripts/tm-private-pdf-capture.inc.js').read_text().rstrip()+"\n\n"
 anchor="  async function finishPairedJob(job,result,trace,token) {\n"
