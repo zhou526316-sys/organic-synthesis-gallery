@@ -199,15 +199,16 @@ try{
     const inv={items:[]};
     const evidence=__tm232.evidenceBackfillJobs(q,media,inv);
     return {
-      wiley:{mediaNeed:wiley.mediaNeed,captureToc:wiley.captureToc,captureFigures:wiley.captureFigures,captureEvidence:wiley.captureEvidence},
+      wiley:{mediaNeed:wiley.mediaNeed,captureToc:wiley.captureToc,captureFigures:wiley.captureFigures,opportunisticFigures:wiley.opportunisticFigures,captureEvidence:wiley.captureEvidence},
       evidenceDois:evidence.map(r=>r.doi)
     };
   });
-  test('historical missing-TOC media trigger also requests body discovery in the same visit',
-    combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===true);
+  test('historical missing-TOC media trigger keeps body discovery opportunistic in the same visit',
+    combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===false&&combinedPlan.wiley.opportunisticFigures===true);
   test('missing evidence never creates an evidence-only DOI job',combinedPlan.evidenceDois.length===0);
   test('scheduler only adds missing evidence opportunistically to an existing TOC visit',
-    source.includes('job.captureEvidence=evidenceMissing.has(normalizeDoi(job.doi));')&&
+    source.includes('job.opportunisticEvidence=evidenceMissing.has(normalizeDoi(job.doi));')&&
+    source.includes('job.captureEvidence=false;')&&
     source.includes('var evidenceJobs=[];'));
 
   const isolatedFailure=await page.evaluate(async()=>{
