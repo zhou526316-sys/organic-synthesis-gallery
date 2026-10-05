@@ -44,7 +44,10 @@ export class UserSearchController {
     this.updateShellQuery();
     if (this.composing || (event instanceof InputEvent && event.isComposing)) return;
     this.root.dispatchEvent(new CustomEvent('gallery-corpus-query', { detail: { query: this.fullQuery } }));
-    this.refreshPreferences(true);
+    // The corpus layer may synchronously replace the rendered result window.
+    // Refresh in a microtask so highlighting/decorations bind to the new cards,
+    // never to detached nodes from the previous window.
+    this.queueRefresh();
     this.renderSuggestions();
   };
   private readonly onCompositionStart = (): void => { this.composing = true; };
@@ -54,7 +57,10 @@ export class UserSearchController {
     this.fullQuery = this.searchInput.value;
     this.updateShellQuery();
     this.root.dispatchEvent(new CustomEvent('gallery-corpus-query', { detail: { query: this.fullQuery } }));
-    this.refreshPreferences(true);
+    // The corpus layer may synchronously replace the rendered result window.
+    // Refresh in a microtask so highlighting/decorations bind to the new cards,
+    // never to detached nodes from the previous window.
+    this.queueRefresh();
     this.renderSuggestions();
   };
 
