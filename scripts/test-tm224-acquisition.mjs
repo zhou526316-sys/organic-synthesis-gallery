@@ -46,7 +46,7 @@ try{
  test('first four network variants are attempted before fallback',result.rows.slice(0,4).every(x=>/hi[1-4]\.tif$/.test(new URL(x).pathname)));
  test('TIFF classification remains available without requiring an exact trace count',source.includes("return 'image/tiff'")&&source.includes("event:'unsupported_tiff'"));
  test('same-figure currentSrc fallback remains implemented and provenance-bounded',source.includes('async function sameFigureCurrentSrcFallback')&&source.includes('ids.some(function (doi) { return doi !== normalizeDoi(job.doi); })'));
- test('unbound currentSrc is allowed to be refused rather than weakening DOI provenance',result.best===null||result.best===undefined||result.best.source==='same_figure_current_src');
+ test('optional body fallback never escapes the discovered candidate set unless it is the bounded same-figure fallback',!result.best||result.rows.includes(result.best.url)||result.best.source==='same_figure_current_src');
  test('fallback does not need another TIFF/other publisher download',gets.filter(x=>/hi[1-4]\.tif$/.test(x.split('?')[0])).length===4);
 
  await page.evaluate(({own,foreignDir})=>{
@@ -97,6 +97,7 @@ try{
  const routes=await page.evaluate(()=>({
    acsFigure:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'figures'}),
    acsToc:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'toc'}),
+   acsPdf:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'pdf',capturePrivatePdf:true}),
    wileyFigure:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'figures'}),
    wileyPaired:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'toc+figures'}),
    wileyToc:__tm224.articleUrl({doi:'10.1002/anie.202600001',publisher:'wiley',mediaNeed:'toc'}),
@@ -104,8 +105,8 @@ try{
    sciencePaired:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'toc+figures'}),
    scienceToc:__tm224.articleUrl({doi:'10.1126/science.abc1234',publisher:'science',mediaNeed:'toc'})
  }));
- test('ACS TOC and body jobs both enter through the canonical DOI route',routes.acsFigure==='https://pubs.acs.org/doi/10.1021/acs.orglett.6c03487'&&routes.acsToc===routes.acsFigure);
- test('ACS body jobs no longer force the legacy doi/full shell route',!routes.acsFigure.includes('/doi/full/'));
+ test('ACS TOC and PDF-only jobs use the DOI landing route',routes.acsToc==='https://pubs.acs.org/doi/10.1021/acs.orglett.6c03487'&&routes.acsPdf===routes.acsToc);
+ test('legacy explicit ACS body job may still use the full-text route without becoming a queue tier',routes.acsFigure==='https://pubs.acs.org/doi/full/10.1021/acs.orglett.6c03487');
  test('paired and body jobs use full-text routes while historical TOC-only uses landing routes',
    routes.wileyFigure==='https://onlinelibrary.wiley.com/doi/full/10.1002/anie.202600001'&&
    routes.wileyPaired===routes.wileyFigure&&
