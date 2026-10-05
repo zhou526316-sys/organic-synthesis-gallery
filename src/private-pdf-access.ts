@@ -3,6 +3,7 @@ const API_BASE = 'https://api.gczhouwld.com';
 const READ_CAPABILITY = 'private_pdf_read';
 
 let ownerReadEnabled = false;
+let capabilityResolved = false;
 let refreshPromise: Promise<void> | null = null;
 
 function sessionToken(): string {
@@ -17,6 +18,7 @@ async function refreshCapability(): Promise<void> {
   const token = sessionToken();
   if (!token) {
     ownerReadEnabled = false;
+    capabilityResolved = true;
     publishCapabilityState();
     return;
   }
@@ -34,6 +36,7 @@ async function refreshCapability(): Promise<void> {
   } catch {
     ownerReadEnabled = false;
   }
+  capabilityResolved = true;
   publishCapabilityState();
 }
 
@@ -69,7 +72,11 @@ async function resolvePrivatePdf(doi: string, token: string): Promise<string | n
 
 function installClickRouting(): void {
   document.addEventListener('click', event => {
-    if (!ownerReadEnabled || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    // Do not lose an owner click merely because the asynchronous capability
+    // refresh has not finished yet. If capability is already known false, keep
+    // ordinary users on the publisher path with no private lookup.
+    if (capabilityResolved && !ownerReadEnabled) return;
     const anchor = anchorFromEvent(event);
     if (!anchor) return;
     const doi = doiForAnchor(anchor);

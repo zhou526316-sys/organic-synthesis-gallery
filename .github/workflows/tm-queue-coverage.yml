@@ -60,7 +60,7 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node scripts/validate-tm220-artifacts.mjs public
           node --check public/gallery-vpn-bridge.user.js
-          grep -F '全队列补缺6' public/gallery-vpn-bridge.user.js
+          grep -F 'TOC/PDF补缺8' public/gallery-vpn-bridge.user.js
           mkdir -p "$RUNNER_TEMP/queue-coverage-output"
           cp public/gallery-vpn-bridge.user.js public/toc-mainline.user.js "$RUNNER_TEMP/queue-coverage-output/"
           sha256sum "$RUNNER_TEMP/queue-coverage-output/"*.js | tee "$RUNNER_TEMP/queue-coverage-output/sha256.txt"

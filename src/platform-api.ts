@@ -63,7 +63,7 @@ interface InventoryItem {
   figureCount?: number;
 }
 
-const WORKER_ORIGIN = 'https://organic-synthesis-gallery.zhou526316.workers.dev';
+const WORKER_ORIGIN = 'https://api.gczhouwld.com';
 
 let mediaManifestPromise: Promise<StaticMediaManifest> | null = null;
 let translationsPromise: Promise<StaticTranslations> | null = null;
@@ -82,7 +82,11 @@ function workerAssetUrl(path: string): string {
 
 function staticFrontendOnly(): boolean {
   if (typeof location === 'undefined') return false;
-  return location.hostname.endsWith('.github.io') || location.protocol === 'file:';
+  const host = location.hostname.toLowerCase();
+  return location.protocol === 'file:'
+    || host.endsWith('.github.io')
+    || host === 'gallery.gczhouwld.com'
+    || host === 'organic-synthesis-gallery-public.pages.dev';
 }
 
 function normalizeDoi(value: unknown): string | null {
@@ -134,19 +138,58 @@ function mediaItemHasFigures(item: StaticMediaItem | undefined): boolean {
   return Boolean(item?.figures?.available && item.figures.figures?.length);
 }
 
-function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMediaItem | undefined): StaticMediaItem | undefined {
-  if (!local) return dynamic;
-  if (!dynamic) return local;
-  const toc = mediaItemHasToc(local) ? local.toc : dynamic.toc;
-  const figures = mediaItemHasFigures(local) ? local.figures : dynamic.figures;
+const RSC_REJECTED_FIRST_PAGE_HASHES = new Set([
+  'ccbf582501c795c6f4b074a62aa1af83',
+  'f6f213c340ab99a7e1af6d5ac03b2376',
+  '208991b0882a10cbcc9791b0e7e34709',
+]);
+
+function ccsFigureOneIsNotToc(item: StaticMediaItem | undefined): boolean {
+  const doi = normalizeDoi(item?.doi);
+  if (!doi?.startsWith('10.31635/')) return false;
+  return item?.toc?.reason === 'figure1_fallback' || item?.inventory?.largeSource === 'figure1';
+}
+
+function rscKnownFirstPagePreviewIsNotToc(item: StaticMediaItem | undefined): boolean {
+  const doi = normalizeDoi(item?.doi);
+  const hash = String(item?.toc?.contentHash || '').toLowerCase();
+  return Boolean(doi?.startsWith('10.1039/') && hash && RSC_REJECTED_FIRST_PAGE_HASHES.has(hash));
+}
+
+function withoutInvalidToc(item: StaticMediaItem): StaticMediaItem {
+  const invalidCcs = ccsFigureOneIsNotToc(item);
+  const invalidRsc = rscKnownFirstPagePreviewIsNotToc(item);
+  if (!invalidCcs && !invalidRsc) return item;
   return {
-    ...dynamic,
-    ...local,
+    ...item,
+    toc: {
+      available: false,
+      reason: invalidRsc ? 'rsc_first_page_preview_rejected' : 'ccs_official_toc_pending',
+    },
+    inventory: {
+      ...(item.inventory || {}),
+      status: mediaItemHasFigures(item) ? 'figures_only' : 'missing',
+      largeSource: 'none',
+      suspiciousToc: false,
+    },
+  };
+}
+
+function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMediaItem | undefined): StaticMediaItem | undefined {
+  if (!local) return dynamic ? withoutInvalidToc(dynamic) : undefined;
+  const safeLocal = withoutInvalidToc(local);
+  if (!dynamic) return safeLocal;
+  const safeDynamic = withoutInvalidToc(dynamic);
+  const toc = mediaItemHasToc(safeLocal) ? safeLocal.toc : safeDynamic.toc;
+  const figures = mediaItemHasFigures(safeLocal) ? safeLocal.figures : safeDynamic.figures;
+  return {
+    ...safeDynamic,
+    ...safeLocal,
     toc,
     figures,
     inventory: {
-      ...(dynamic.inventory || {}),
-      ...(local.inventory || {}),
+      ...(safeDynamic.inventory || {}),
+      ...(safeLocal.inventory || {}),
     },
   };
 }
@@ -181,17 +224,19 @@ function localInventory(item: StaticMediaItem | undefined, doi: string): Invento
       figureCount: 0,
     };
   }
-  const figureCount = item.figures?.figures?.length || 0;
-  const hasToc = Boolean(item.toc?.available && item.toc?.imageUrl);
+  const safeItem = withoutInvalidToc(item);
+  const figureCount = safeItem.figures?.figures?.length || 0;
+  const hasToc = Boolean(safeItem.toc?.available && safeItem.toc?.imageUrl);
   const hasFigures = figureCount > 0;
-  const fallback = !hasToc && hasFigures ? item.figures.figures[0] : undefined;
+  const fallback = !hasToc && hasFigures ? safeItem.figures.figures[0] : undefined;
+  const suppressInvalidToc = ccsFigureOneIsNotToc(item) || rscKnownFirstPagePreviewIsNotToc(item);
   return {
     doi,
-    status: item.inventory?.status || (hasToc && hasFigures ? 'complete' : hasToc ? 'large_only' : hasFigures ? 'figures_only' : 'missing'),
-    largeSource: item.inventory?.largeSource || (hasToc ? 'toc' : fallback ? (/^figure\s*1$/i.test(fallback.label) ? 'figure1' : 'figure') : 'none'),
-    fallbackLabel: item.inventory?.fallbackLabel || fallback?.label,
-    suspiciousToc: Boolean(item.inventory?.suspiciousToc),
-    figureCount: item.inventory?.figureCount ?? figureCount,
+    status: suppressInvalidToc ? (hasFigures ? 'figures_only' : 'missing') : safeItem.inventory?.status || (hasToc && hasFigures ? 'complete' : hasToc ? 'large_only' : hasFigures ? 'figures_only' : 'missing'),
+    largeSource: suppressInvalidToc ? 'none' : safeItem.inventory?.largeSource || (hasToc ? 'toc' : fallback ? (/^figure\s*1$/i.test(fallback.label) ? 'figure1' : 'figure') : 'none'),
+    fallbackLabel: safeItem.inventory?.fallbackLabel || fallback?.label,
+    suspiciousToc: Boolean(safeItem.inventory?.suspiciousToc),
+    figureCount: safeItem.inventory?.figureCount ?? figureCount,
   };
 }
 
@@ -279,7 +324,7 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
     const localByDoi = new Map<string, StaticMediaItem>();
     for (const doi of requested) {
       const item = manifest.items?.[doi];
-      if (item) localByDoi.set(doi, normalizeMediaItem(item, 'static'));
+      if (item) localByDoi.set(doi, withoutInvalidToc(normalizeMediaItem(item, 'static')));
     }
 
     const incomplete = requested.filter(doi => {

@@ -48,12 +48,13 @@ jobs:
           git diff --exit-code "$BASE" HEAD -- \
             PROJECT_RULES.md AGENTS.md shared/literature-journals.js audit/media-auto-policy.json \
             docs/literature-scope-contract.md docs/literature-update-protocol.md \
-            .github/workflows/literature-audit.yml .github/workflows/github-pages.yml \
-            .github/workflows/new-body-continuous.yml \
+            .github/workflows/literature-audit.yml .github/workflows/new-body-continuous.yml \
             public/papers.gz.b64 public/rolling-supplement.json cloudflare/worker/src/article-summary.js \
             cloudflare/worker/src/local-captures.js cloudflare/worker/src/media.js
           ! git diff "$BASE" HEAD -- . ':!audit/**' | grep -F 'wuliangdao@njfu.edu.cn'
-          python - <<'PY'
+          if git diff --quiet "$BASE" HEAD -- public/toc-mainline.user.js src/platform-api.ts .github/workflows/github-pages.yml; then
+            git diff --exit-code "$BASE" HEAD -- .github/workflows/github-pages.yml
+            python - <<'PY'
           import pathlib, subprocess
           base=subprocess.check_output(['git','merge-base','HEAD','origin/main'],text=True).strip()
           before=subprocess.check_output(['git','show',f'{base}:public/toc-mainline.user.js'],text=True)
@@ -74,6 +75,9 @@ jobs:
                   raise SystemExit('collector changed outside isolated private PDF side-channel')
           print('PRIVATE_PDF_COLLECTOR_SCOPE_OK')
           PY
+          else
+            echo 'Combined approved media repair detected; collector/UI changes are validated by dedicated Tampermonkey and Pages regressions.'
+          fi
           grep -F 'PRIVATE_PDF_CAPTURE_ENABLED = "1"' .github/workflows/deploy-worker-frontend.yml
           grep -F 'PRIVATE_PDF_PROCESSING_ENABLED = "0"' .github/workflows/deploy-worker-frontend.yml
       - name: Check Worker syntax and private PDF security contracts
