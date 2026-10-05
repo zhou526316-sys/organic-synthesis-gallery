@@ -104,7 +104,7 @@ try{
   const explicitCombinedEligible=await page.evaluate(()=>__tm232.evidenceCaptureEligible({mediaNeed:'toc',captureEvidence:true}));
   test('explicit missing-evidence flag makes a TOC-triggered visit capture text',explicitCombinedEligible);
   test('structured full article is classified complete',extracted.packet.fulltextStatus==='complete'&&extracted.packet.schemaVersion==='article-evidence-v2');
-  test('packet binds DOI and controller 2.2.39',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.39');
+  test('packet binds DOI and controller 2.2.40',extracted.packet.doi===doi&&extracted.packet.pageDoi===doi&&extracted.packet.controllerRevision==='2.2.40');
   const types=extracted.packet.sections.map(r=>r.type);
   test('semantic sections are retained',['abstract','results','mechanism','conclusion'].every(t=>types.includes(t)));
   const all=JSON.stringify({sections:extracted.packet.sections,captions:extracted.packet.captions,tables:extracted.packet.tables});
@@ -251,8 +251,8 @@ try{
   test('Wiley DOM recovery binds only the explicit GA block and refuses adjacent Scheme 1',
     wileyDom.length===1&&/-gra-0001-m\.jpg/i.test(wileyDom[0].url)&&!wileyDom.some(r=>/-sch-0001/i.test(r.url)));
 
-  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.39';"));
+  test('controller revision changes without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.40';"));
   test('current controller retains Evidence v2 Worker capability gate',source.includes("caps.evidenceSchemaVersion!==EVIDENCE_SCHEMA_VERSION")&&source.includes("evidenceCaptureMinControllerRevision"));
 
-  console.log('TM234_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.39',totalTextBudget:null,abstractOnly:true}));
+  console.log('TM234_EVIDENCE_TEST_SUMMARY '+JSON.stringify({passed,browser:'Chromium',productionWrites:0,publisherNetwork:false,captureProtocol:'6.2.20',controllerRevision:'2.2.40',totalTextBudget:null,abstractOnly:true}));
 }finally{await browser.close();}
