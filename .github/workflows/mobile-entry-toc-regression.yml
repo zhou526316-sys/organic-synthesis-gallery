@@ -13,12 +13,11 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: mobile-entry-toc-${{ github.event.pull_request.number || github.ref }}-${{ matrix.browser }}
-  cancel-in-progress: true
-
 jobs:
   mobile:
+    concurrency:
+      group: mobile-entry-toc-${{ github.event.pull_request.number || github.ref }}-${{ matrix.browser }}
+      cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
