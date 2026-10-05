@@ -321,9 +321,13 @@ jobs:
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
         run: |
           node - <<'NODE'
-          const fs=require('fs');
+          import fs from 'node:fs';
           const base=process.env.WORKER_URL;
           const token=process.env.BRIDGE_WRITE_TOKEN;
+          fs.writeFileSync('/tmp/scheduled-handoff-shadow-report.json',JSON.stringify({
+            schemaVersion:1,phase:'D2c1-scheduled-handoff-readiness-shadow-live',
+            ok:false,status:'started',readPathActive:false,startedAt:new Date().toISOString(),
+          },null,2)+'\n');
           if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for scheduled handoff shadow');
 
           async function call(path,{method='GET'}={}){
@@ -417,7 +421,7 @@ jobs:
         with:
           name: scheduled-handoff-shadow-${{ github.run_id }}
           path: /tmp/scheduled-handoff-shadow-report.json
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 7
 
       - name: Backfill and compare summary candidate index shadow
@@ -428,9 +432,13 @@ jobs:
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
         run: |
           node - <<'NODE'
-          const fs=require('fs');
+          import fs from 'node:fs';
           const base=process.env.WORKER_URL;
           const token=process.env.BRIDGE_WRITE_TOKEN;
+          fs.writeFileSync('/tmp/summary-candidate-shadow-report.json',JSON.stringify({
+            schemaVersion:1,phase:'D2b2-summary-candidate-shadow-live',
+            ok:false,status:'started',readPathActive:false,startedAt:new Date().toISOString(),
+          },null,2)+'\n');
           if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for summary candidate shadow');
 
           async function call(path,{method='GET',body}={}){
@@ -525,7 +533,7 @@ jobs:
         with:
           name: summary-candidate-shadow-${{ github.run_id }}
           path: /tmp/summary-candidate-shadow-report.json
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 7
 
       - name: Promote verified official TOCs into production

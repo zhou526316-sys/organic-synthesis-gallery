@@ -47,6 +47,9 @@ test('post-deploy D2c1 gate requires complete backfill and three stable parity s
     '- name: Backfill and compare summary candidate index shadow',
   );
   assert.ok(block.includes('continue-on-error: true'));
+  assert.ok(block.includes("import fs from 'node:fs';"));
+  assert.ok(!block.includes("const fs=require('fs')"));
+  assert.ok(block.includes("status:'started'"));
   assert.ok(block.includes('/api/admin/article-summary/evidence-index/handoff-backfill?limit=500'));
   assert.ok(block.includes('/api/admin/article-summary/evidence-index/handoff-compare?limit=40'));
   assert.ok(block.includes('handoffReadPathReady!==true'));
@@ -58,6 +61,12 @@ test('post-deploy D2c1 gate requires complete backfill and three stable parity s
   assert.ok(block.includes('readPathActive:false'));
   assert.ok(block.includes('staleOrMissingRows'));
   assert.ok(block.includes("phase:'D2c1-scheduled-handoff-readiness-shadow-live'"));
+  const preserve=section(
+    deploy,
+    '- name: Preserve scheduled handoff readiness shadow report',
+    '- name: Backfill and compare summary candidate index shadow',
+  );
+  assert.ok(preserve.includes('if-no-files-found: error'));
 });
 
 test('production scheduled handoff read path remains on legacy R2 discovery in D2c1',()=>{
