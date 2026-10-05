@@ -1,8 +1,12 @@
 {
-  "generatedAt": "2026-10-04T17:16:00+08:00",
+  "generatedAt": "2026-10-05T10:22:00+08:00",
   "updates": [
     {
-      "id": 37,
+      "id": 38,
+      "status": "reviewed"
+    },
+    {
+      "id": 39,
       "status": "reviewed"
     }
   ],
@@ -21,11 +25,12 @@
     8
   ],
   "reviewBasis": {
-    "userApproval": "User explicitly asked to fix the newly arrived feedback #37.",
-    "originalFeedback": "Desktop literature-summary panel should be taller, with the image above and the text below.",
-    "implementation": "PR #289 merged as c2c3cc9c5f9d68096ad13803a532930a06ef1812. Desktop summary panel uses a taller bounded viewport, single-column vertical layout, TOC/graphical abstract above the summary text, and preserved bilingual tabs. Mobile keeps the prior compact cap.",
-    "tests": "Readable summary layout regression 37190994743 passed. Site quality gate 37190994684 passed, including frontend build/typecheck, production API smoke, Worker dry-run, and Playwright interaction regression. The unrelated Bridge Evidence v2 regression remained red because its old test asserts Bridge 2.2.35 and was not modified.",
-    "deployment": "Sync frontend to Worker 37191248388 succeeded. Deploy GitHub Pages frontend 37191248410 succeeded, including canonical/Pages online verification. Cloudflare Pages fallback 37191248326 failed on the pre-existing Cloudflare API token authentication error code 10000; it is independent of this UI change.",
-    "scope": "Close only #37. Keep the previous 12 unresolved feedback items open/paused."
+    "userApproval": "User explicitly asked to repair newly arrived feedback. This authorization covers #38 and #39 only; the previous 12 unresolved items remain paused.",
+    "verification": "#38 reports slow mobile TOC loading and inability to enter papers. #39 is a screenshot follow-up showing pubs.acs.org returning 403 Forbidden / administrative rules in a mobile in-app browser. This is a publisher access restriction, not a malformed DOI and was not bypassed.",
+    "implementation": "PR #314 merged as f5cbf0c56723ce96c6a24fabc99deeba66504c68. On <=680px viewports, near-screen media hydration is capped at 6 targets with a smaller preload window. Visible/near-visible TOCs use eager loading and high fetch priority while farther images remain lazy. Mobile title/DOI taps now stay in Gallery and open the existing summary panel first; explicit Open original links remain external DOI links. Desktop behavior is unchanged.",
+    "tests": "Dedicated Mobile entry and TOC regression passed. PR #314 Site quality gate, Cloudflare migration, Card sharing, target-journal Tampermonkey capability, private PDF capture, UI refresh cost, status crop/caption/glow, data validation and card glow tests passed. One unrelated Status original image regression was red and did not involve the changed mobile paths.",
+    "deployment": "PR #314 merged and deployed: Worker frontend assets run 37253084251 success, Worker sync run 37253077912 success, GitHub Pages run 37253077895 success. Cloudflare Pages fallback remains independently blocked by its existing API-token authentication issue.",
+    "closeoutExport": "Read-only export run 37254895196 generated 14 open items: exactly #38, #39 plus the known paused baseline 12. No additional newly arrived feedback was present.",
+    "scope": "Close only #38 and #39. Do not change the 12 paused baseline items."
   }
 }
