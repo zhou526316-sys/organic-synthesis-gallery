@@ -101,14 +101,18 @@ export async function loadPublishedHotFallback(siteBase, { fetcher = globalThis.
   const fallback = parseJson(fallbackRead.bytes, 'architecture_hot_fallback');
   assert(fallback?.schema === 'gallery-hot-fallback-v1' && fallback.catalogId === release.catalogId
     && fallback.doiSetHash === release.doiSetHash && fallback.publicationSlot === release.publicationSlot
-    && fallback.sourceCommit === release.sourceCommit && Array.isArray(fallback.records)
-    && fallback.count === fallback.records.length, 'architecture_hot_fallback_generation_mismatch');
+    && fallback.sourceCommit === release.sourceCommit && fallback.scope === 'hot-plus-future-candidates'
+    && typeof fallback.generatedAsOfDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(fallback.generatedAsOfDate)
+    && Array.isArray(fallback.records) && fallback.count === fallback.records.length
+    && fallback.count <= delivery.productionCards, 'architecture_hot_fallback_generation_mismatch');
 
+  const deliveryDois = new Set(delivery.dois.map(value => normalizeDoi(value)).filter(Boolean));
   const seen = new Set();
   const hotRecords = [];
   for (const row of fallback.records) {
     const doi = normalizeDoi(row?.doi || row?.paper?.doi || row?.paper?.url);
-    assert(doi && row?.paper && isHash(row?.revision) && !seen.has(doi), 'architecture_hot_fallback_record_invalid');
+    assert(doi && deliveryDois.has(doi) && row?.paper && isHash(row?.revision) && !seen.has(doi),
+      'architecture_hot_fallback_record_invalid');
     seen.add(doi);
     if (classifyDate(row.firstOnlineDate, asOfDate, row.datePrecision) === 'hot') hotRecords.push(row);
   }
