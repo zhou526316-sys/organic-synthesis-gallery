@@ -78,4 +78,5 @@ jobs:
             exit 0
           fi
           git commit -m "assets: import WeChat featured source PDF"
+          git pull --rebase origin main
           git push origin HEAD:main
