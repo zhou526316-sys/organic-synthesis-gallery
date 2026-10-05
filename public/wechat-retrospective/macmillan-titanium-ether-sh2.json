@@ -38,194 +38,255 @@
       "id": "fig1",
       "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig1_HTML.png",
       "crop_frac": [
-        0.015,
-        0.675,
-        0.985,
-        0.895
+        0.005,
+        0.605,
+        0.995,
+        0.995
       ],
-      "caption": "原文 Fig. 1e｜最浅一层先看反应：carboxylic-acid-derived RAE 提供 alkyl radical，alcohol 进入 Ti–alkoxide，最后形成 dialkyl ether。"
+      "caption": "原文 Fig. 1e｜先看完整反应模块：RAE、alcohol、photocatalyst 与 Ti catalyst 如何汇合成 dialkyl ether；底部 3°–1°、3°–2°、2°–1°、2°–2° 四类连接直接展示作者瞄准的位阻范围。"
+    },
+    {
+      "id": "fig1_classical",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig1_HTML.png",
+      "crop_frac": [
+        0.005,
+        0,
+        0.995,
+        0.315
+      ],
+      "caption": "原文 Fig. 1a–b｜传统路线的两类根本困难：SN2/SN1 的几何和 carbocation 问题；以及 metal-mediated etherification 中 alcohol binding、basic metal alkoxide、sterically demanding coordination 与 sluggish C(sp³)–O reductive elimination。"
+    },
+    {
+      "id": "fig1_ti",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig1_HTML.png",
+      "crop_frac": [
+        0.5,
+        0.315,
+        0.995,
+        0.605
+      ],
+      "caption": "原文 Fig. 1d｜Ti 被考虑的原因：Ti(IV) 高 oxophilicity 有利于形成 Ti–OR，同时 Ti(IV)/Ti(III) 可以参与一电子变化。"
+    },
+    {
+      "id": "mechanism_cycle",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig2_HTML.png",
+      "crop_frac": [
+        0.005,
+        0,
+        0.5,
+        0.3
+      ],
+      "caption": "原文 Fig. 2a｜完整循环：photoredox cycle 负责 Ti(III)/Ti(IV) 与 RAE reduction，Ti cycle 负责 alcohol binding 与 O-ligand transfer；两条 cycle 必须在 speciation 与速率上同时匹配。"
     },
     {
       "id": "lmct",
       "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig2_HTML.png",
       "crop_frac": [
-        0.49,
+        0.5,
         0,
-        1,
-        0.27
+        0.995,
+        0.3
       ],
-      "caption": "原文 Fig. 2b｜这不是普通 wavelength screen：450 nm 会显著激发 Ti–alkoxide 并引发 LMCT/β-scission；505 nm 保留 photoredox excitation，却大幅压低 Ti–alkoxide 直接激发，主反应由 54% 提高到 81%。"
+      "caption": "原文 Fig. 2b｜505 nm 是 species-selective excitation：photocatalyst 仍吸光，而 Ti–alkoxide 的 LMCT/β-scission 被压低；主反应 54%→81%。"
     },
     {
       "id": "ti_dr",
       "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig2_HTML.png",
       "crop_frac": [
-        0,
-        0.27,
-        0.495,
-        0.56
+        0.005,
+        0.3,
+        0.5,
+        0.595
       ],
-      "caption": "原文 Fig. 2c｜有 Ti 时 59%、2.2:1 d.r.；去掉 Ti 或走 carbocation electrochemical route 时 d.r. 都接近 1.1:1。它支持 Ti 进入 bond-forming environment，但不是单独的 het-SH₂ 证明。"
-    },
-    {
-      "id": "radical_test",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig2_HTML.png",
-      "crop_frac": [
-        0,
-        0.555,
-        1,
-        0.78
-      ],
-      "caption": "原文 Fig. 2e｜在强还原环境中，isolated / in situ Ti–alkoxide 仍分别给出 6% / 13% ether；低收率但实验设计刻意压低 carbocation 路径，用来检验 radical 对 Ti–alkoxide 的直接 productive engagement。"
-    },
-    {
-      "id": "dft",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig2_HTML.png",
-      "crop_frac": [
-        0,
-        0.775,
-        1,
-        1
-      ],
-      "caption": "原文 Fig. 2f｜三中心 C···O···Ti TS，ΔG‡ = 16.2 kcal/mol、ΔG = −10.6 kcal/mol；spin density 同时从 carbon 向 Ti 转移。DFT 支持具体 concerted model，但应与更宽泛 RLT 框架分层表述。"
-    },
-    {
-      "id": "chemical_space",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig4_HTML.png",
-      "caption": "原文 Fig. 4｜比“底物多”更重要的是结构类型：2°–2°、3°–2°、diol site selectivity、stereochemical retention 与 BCP ether，构成 radical/Ti route 相对传统极性 etherification 的具体增量。"
-    },
-    {
-      "id": "scope",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig5_HTML.png",
-      "crop_frac": [
-        0,
-        0,
-        1,
-        0.7
-      ],
-      "caption": "原文 Fig. 5a–b｜复杂药物和晚期官能团化仍能工作，说明这套方法不只停留在模型底物。"
+      "caption": "原文 Fig. 2c｜Ti-dependent d.r. 是一个 mechanistic probe：有 Ti 时 2.2:1 d.r.，无 Ti 或 carbocation electrochemical route 时约 1.1:1。支持 Ti 进入 bond-forming environment，但还不能单独证明 concerted het-SH₂。"
     },
     {
       "id": "photonmr",
       "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig2_HTML.png",
       "crop_frac": [
-        0.495,
-        0.27,
-        1,
-        0.555
+        0.5,
+        0.3,
+        0.995,
+        0.595
       ],
-      "caption": "原文 Fig. 2d｜in situ PhotoNMR 直接跟踪到 Ti(IV)–alkoxide 信号在照光反应过程中形成并被消耗；它回答的是“这个关键物种在真实反应条件下是否存在”。"
+      "caption": "原文 Fig. 2d｜PhotoNMR 在照光过程中追踪 Ti(IV)–alkoxide。它证明关键 Ti–OR species 在 working reaction 中存在，却没有直接观察 C–O transition state。"
+    },
+    {
+      "id": "radical_test",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig2_HTML.png",
+      "crop_frac": [
+        0.005,
+        0.595,
+        0.995,
+        0.805
+      ],
+      "caption": "原文 Fig. 2e｜强还原环境下 isolated / in situ Ti–alkoxide 仍能给 ether，作用是压低 radical→carbocation 的解释，证明 carbon radical 与 Ti–alkoxide 可以发生 productive O-ligand transfer。"
+    },
+    {
+      "id": "dft",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig2_HTML.png",
+      "crop_frac": [
+        0.005,
+        0.805,
+        0.995,
+        0.995
+      ],
+      "caption": "原文 Fig. 2f｜generic RLT 如何进一步被描述成 het-SH₂：同一个 TS 中 C–O 在形成、Ti–O 在断裂，IRC 无额外 intermediate，spin density 从 carbon 向 Ti 转移。ΔG‡=16.2 kcal/mol，ΔG=−10.6 kcal/mol。"
+    },
+    {
+      "id": "chemical_space",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig4_HTML.png",
+      "crop_frac": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "caption": "原文 Fig. 4｜这里要看的不是“底物很多”，而是 2°–2°、3°–2°、diol site selectivity、stereochemical retention 与 BCP ethers 这些具体结构能力。"
+    },
+    {
+      "id": "scope",
+      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig5_HTML.png",
+      "crop_frac": [
+        0.005,
+        0,
+        0.995,
+        0.565
+      ],
+      "caption": "原文 Fig. 5a–b｜complex/drug-like examples 与 pharmacologically active scaffolds。这里只回答“能否进入高功能团密度分子”，不和 chemical-space/HTE 混成一个截图。"
     },
     {
       "id": "hte",
       "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-11043-z/MediaObjects/41586_2026_11043_Fig5_HTML.png",
       "crop_frac": [
-        0,
-        0.55,
-        1,
-        1
+        0.005,
+        0.565,
+        0.995,
+        0.995
       ],
-      "caption": "原文 Fig. 5c｜作者不是只凭经验扩 scope：先把已测试 alcohol 映射到 Enamine alcohol chemical space，找出覆盖不足区域，再用 6 RAE × 8 alcohol 的 photo-HTE 矩阵补测；48 个组合中 40 个达到 >30% assay yield。"
+      "caption": "原文 Fig. 5c｜先识别 chemical-space 盲区，再用 6 RAE × 8 alcohol 的 48-well photo-HTE 补测；40/48 个组合 >30% assay yield。"
     }
   ],
   "sections": [
     {
-      "eyebrow": "先从最熟悉的问题开始",
-      "heading": "SN2 被位阻卡住，SN1 又把结构交给 carbocation；传统 inner-sphere metal coupling 还要面对 C(sp³)–O reductive elimination",
+      "eyebrow": "第一层｜为什么位阻醚难",
+      "heading": "难点写在传统 mechanism 本身：SN2 需要背面进攻，SN1 又要付出 carbocation 的代价",
       "paragraphs": [
-        "位阻醚并不是“多加点催化剂”就能解决的问题。Williamson SN2 的过渡态本身就把拥挤碳中心和进攻氧压在一起；SN1 虽然绕开背面进攻，却引入容易重排、消除和丢失立体信息的 carbocation。另一方面，常规 metal alkoxide 路线还会遇到 alcohol binding、强碱性 alkoxide 与缓慢 C(sp³)–O reductive elimination。",
-        "这篇文章提出的第三条路，是把碳端变成 radical，再让它从金属 alkoxide 的 oxygen 端完成配体转移。这样关键 C–O 成键不再要求碳中心经历 SN2 几何，也不需要先生成高能 carbocation。"
+        "对 SN2 来说，oxygen nucleophile 必须从 C–LG 反键方向接近 carbon。Carbon 越拥挤，过渡态就越难容纳进攻者，所以 2°/3° center 会迅速变难。SN1 绕开 backside attack，但先生成 carbocation，于是 rearrangement、elimination 和 stereochemical scrambling 都可能出现。",
+        "Metal-mediated etherification 也有自己的底层瓶颈：alcohol coordination 不一定强，metal alkoxide 往往很 basic，而 C(sp³)–O reductive elimination 本身又可能在拥挤 coordination sphere 中很慢。",
+        "作者因此不是简单换 catalyst，而是试图换掉最关键的 bond-forming geometry：让 carbon radical 靠近 metal-bound oxygen，而不是让 oxygen 从背面进攻拥挤 saturated carbon。"
+      ],
+      "figures": [
+        "fig1_classical"
       ]
     },
     {
-      "eyebrow": "为什么最后选到 titanium",
-      "heading": "Ti 必须同时完成两件彼此相关的化学任务：牢靠地形成 alkoxide，又能在一电子过程中把 alkoxide 作为可转移配体交出去",
+      "eyebrow": "第二层｜为什么是 titanium",
+      "heading": "Ti 需要同时做到“抓住 alcohol”和“在一电子过程中把 OR ligand 交给 radical”",
       "paragraphs": [
-        "Ti(IV) 的高 oxophilicity 使 alcohol 能高效进入 Ti–O 物种；而 Ti(IV)/Ti(III) 又处在可被 photoredox 循环访问的一电子窗口。完整循环里，激发态 4DPAIPN 先把 Ti(III) 氧化到 Ti(IV)，Ti(IV) 随后形成 alkoxide；还原态 photocatalyst 再还原 RAE，脱羧生成 alkyl radical。最后 radical 与 Ti(IV)–alkoxide 成键，产物释放并再生 Ti(III)。",
-        "因此这里不是抽象地“把两件事拆开”，而是两个 catalytic cycles 必须在速率和物种浓度上同时匹配：Ti(IV)–alkoxide 要活得够久，radical 又要在它被其它副反应吃掉之前遇到它。"
+        "Ti(IV) 的 high oxophilicity 有利于形成 Ti–OR；Ti(IV)/Ti(III) 又能被 photoredox cycle 调控。只有这两点同时满足，Ti–alkoxide 才既能形成，又能在 C–O formation 后把 titanium 送回较低 oxidation state。",
+        "完整 reaction 其实是两个 cycle 的耦合：excited 4DPAIPN 氧化 Ti(III)→Ti(IV)；Ti(IV) binding alcohol 形成 Ti–OR；reduced photocatalyst 再还原 RAE 生成 alkyl radical；最后 radical 与 Ti–OR 反应形成 ether 并再生 Ti(III)。",
+        "所以真正的难点不是“有没有 radical”，而是 Ti(IV)–OR lifetime、radical-generation rate、Ti(III) accumulation 与 substrate coordination 必须同时落在一个能工作的窗口里。"
+      ],
+      "figures": [
+        "fig1_ti",
+        "mechanism_cycle"
       ]
     },
     {
-      "eyebrow": "505 nm 为什么是全文最关键的条件之一",
-      "heading": "它不是“换个颜色提高收率”，而是在选择性激发 photocatalyst、同时尽量不激发 Ti–alkoxide",
+      "eyebrow": "第三层｜505 nm 为什么是反应设计，而不是经验优化",
+      "heading": "作者在控制“谁吸光”：让 photocatalyst 继续工作，同时尽量不让 Ti–alkoxide 自毁",
       "paragraphs": [
-        "Ti(IV)–alkoxide 恰好有一个致命弱点：蓝光可触发 LMCT，形成 alkoxy radical 后 β-scission。SI 的 preparative test 里，450 nm 下 defunctionalized product 达到 81% assay yield；换到 505 nm 后该裂解只剩 trace。",
-        "与此同时 4DPAIPN 在 505 nm 仍有足够吸收，因此可以继续驱动 photoredox cycle。主反应也从 450 nm 的 54% 提高到 505 nm 的 81%。这说明波长在这里控制的不是单纯光子能量，而是“哪个物种被允许吸光”。"
+        "Ti(IV)–alkoxide 在 blue-light region 也有吸收；一旦被激发就会发生 LMCT，形成 alkoxy radical，随后 β-scission。也就是说，关键 intermediate 与 photocatalyst 在争夺同一批 photons。",
+        "SI 的 preparative test 显示 450 nm 下 defunctionalized product 可达 81% assay yield，而 505 nm 下只剩 trace；同时 4DPAIPN 在 505 nm 仍可被激发，主 reaction 从 54% 提高到 81%。",
+        "初学者可以把它理解成 wavelength gating：不是“更红的光更温和”这么简单，而是利用 absorption difference 选择性驱动 photocatalyst、避开 Ti–OR LMCT。"
       ],
       "figures": [
         "lmct"
       ]
     },
     {
-      "eyebrow": "SI 里更深的一层：Zn salt 不只是写在条件表里的 base",
-      "heading": "CV 显示 Zn coordination 会重新排布 RAE 与 Ti–alkoxide 的 redox window，因此可能参与调节 radical generation 与 Ti speciation",
+      "eyebrow": "第四层｜先证明 Ti–alkoxide 真的在 working system 里",
+      "heading": "看见一个 intermediate，只能证明“它存在”，还不能证明“它怎样成键”",
       "paragraphs": [
-        "用可溶 ZnCl₂ 作为 preparative zinc salt 的 proxy，free RAE 在约 −1.31 V vs SCE 还原；加入 ZnCl₂ 后并不是把这个峰简单平移，而是出现一个约 −1.54 V 的新 wave，接近 4DPAIPN radical anion 的 −1.52 V。作者因此提出 Zn–RAE equilibrium 可能把一部分 RAE 推到更难还原的状态，对 radical generation 起到 gating 作用。",
-        "对 Ti–alkoxide 则相反：加入 ZnCl₂ 后 reduction wave 轻微向正电位移动且更可逆。这里还不能把 zinc 的角色简化成一个单一 elementary step，但 SI 很清楚地说明它可能同时影响 Lewis-acid coordination 与 redox speciation，而不只是“中和/成盐”。"
-      ]
-    },
-    {
-      "eyebrow": "先证明关键物种确实在反应里",
-      "heading": "UV–vis 给出光谱依据，PhotoNMR 则在照光过程中直接看到 Ti(IV)–alkoxide 的形成与消耗",
-      "paragraphs": [
-        "机制叙事的第一层不是 DFT，而是先确认被画在 catalytic cycle 中央的 Ti–alkoxide 真实存在。Ti precursor、alcohol 与 zinc base 混合后的颜色和 UV–vis 都与 alkoxide formation 相符；更关键的是 in situ PhotoNMR 在实际照光过程中观察到对应 Ti–alkoxide signal 随反应时间变化。",
-        "这类证据只能回答“物种存在并参与周转”，还不能独立证明它以哪一种 transition state 成 C–O 键；后面还需要其它实验把这个问题继续收紧。"
+        "UV–vis 和颜色变化先支持 Ti precursor + alcohol + base 形成新的 Ti–O species；PhotoNMR 更进一步，在真实照光过程中直接看到 Ti(IV)–alkoxide signal 的形成与消耗。",
+        "这一层证据很重要，因为它确认 catalytic cycle 中央的 species 不是纯粹画出来的。但它仍然不能区分 concerted substitution、stepwise electron transfer 或其它 radical ligand-transfer geometry。"
       ],
       "figures": [
         "photonmr"
       ]
     },
     {
-      "eyebrow": "Ti 是否真的进入 C–O 成键环境",
-      "heading": "diastereomeric ratio 的改变说明 Ti 不是旁观者，但它仍然不是 het-SH₂ 的单独证明",
+      "eyebrow": "第五层｜Ti 是否进入关键 C–O 成键环境",
+      "heading": "d.r. 在这里不是性能指标，而是一个 mechanistic reporter",
       "paragraphs": [
-        "用 chiral secondary alcohol 做探针，有 Ti 时产物为 59%、2.2:1 d.r.；去掉 Ti 后只有 8–9%，d.r. 约 1.1:1。把同一底物放到已知 carbocation electrochemical etherification 条件下，产物 44%、d.r. 仍约 1.1:1。",
-        "这个对照的重要性在于：当 titanium 存在时，成键环境明显改变并留下了 stereochemical fingerprint。它支持 Ti 进入关键 C–O bond-forming ensemble，却没有单独告诉我们这一过程究竟是严格 concerted het-SH₂，还是更宽泛的 radical ligand transfer。"
+        "Chiral secondary alcohol 与同一 RAE 在 Ti 条件下给 59% product、2.2:1 d.r.；去掉 Ti 后只剩 8–9%，d.r. 约 1.1:1。把同一 substrate pair 放到已知 carbocation electrochemical etherification 中，44% yield 但 d.r. 仍约 1.1:1。",
+        "如果关键 C–O formation 完全发生在 free carbocation/alcohol 之间，Ti 不应该给 product 留下额外 stereochemical bias。这个对照因此支持 Ti 进入 bond-forming ensemble，但它还只是“Ti-bound ligand transfer”的证据，不足以单独命名 het-SH₂。"
       ],
       "figures": [
         "ti_dr"
       ]
     },
     {
-      "eyebrow": "再追一步：carbon radical 能不能直接从 Ti–alkoxide 拿到 oxygen",
-      "heading": "作者把体系推到强还原环境，故意压住 carbocation 路线，再看 isolated / in situ Ti–alkoxide 是否仍能给 ether",
+      "eyebrow": "第六层｜再排除 carbocation 这个最危险的替代解释",
+      "heading": "强还原条件下仍能形成 ether，说明 carbon radical 可以直接与 Ti–alkoxide productive coupling",
       "paragraphs": [
-        "预先分离的 Ti–alkoxide 或原位形成的 Ti–alkoxide，与 RAE 在 TMSCl-activated Zn 强还原条件下反应，仍能分别给出 6% 和 13% ether。收率并不漂亮，但实验设计本身有意义：强还原环境不利于把 alkyl radical 再氧化成 carbocation，也不支持普通两电子 SN1 路径。",
-        "因此这一实验提供的是“radical 可以直接和 Ti–alkoxide 发生 productive C–O formation”的证据。它与 PhotoNMR 和 d.r. experiment 互补，但作者也没有用这 6–13% 的化学计量结果单独宣布机理已经被证明。"
+        "作者分别使用 isolated Ti–alkoxide 与 in situ Ti–alkoxide，再用 activated Zn 建立强还原环境并从 RAE 产生 radical。这样的 redox environment 不利于 radical 再被氧化成 carbocation。",
+        "仍然观察到 6% 与 13% ether。收率不高，所以它不是 synthetic showcase；它真正回答的是：在不需要 carbocation 的条件下，carbon radical 本身可以从 Ti–alkoxide 获得 oxygen ligand。"
       ],
       "figures": [
         "radical_test"
       ]
     },
     {
-      "eyebrow": "DFT 把 elementary step 说得更具体",
-      "heading": "计算得到三中心 C···O···Ti transition state：C–O 在长、Ti–O 在断，同时 unpaired electron 从 carbon 向 titanium 转移",
+      "eyebrow": "第七层｜RLT 到底是什么",
+      "heading": "RLT 是“metal-bound ligand 被 radical 接走”的总类概念，并不自动规定唯一过渡态",
       "paragraphs": [
-        "参考水平给出的 ΔG‡ 为 16.2 kcal/mol，整体 ΔG 为 −10.6 kcal/mol；TS 中 C–O 距离约 2.33 Å、Ti–O 约 1.95 Å，而且没有直接 Ti–C 接触。spin density 从 reactant 的 carbon +0.97，走到 TS 时分布为 carbon +0.52、Ti +0.63，oxygen 只有小的负 spin density，符合 Ti(IV)→Ti(III) 与 C–O 成键同步发展的图景。",
-        "SI 还用两套独立热力学分析检查这个驱动力：forming C–O bond 比 breaking Ti–O bond 更强，O-transfer 在计算上也比竞争的 Cl-transfer 更有利。也就是说，这个模型不是只靠“找到一个过渡态”，而是 barrier、reaction free energy、spin redistribution 和 bond-strength balance 互相一致。"
+        "Radical ligand transfer（RLT）可以先用一个通式理解：R• + M–X → R–X + M′。净结果是 X ligand 从 metal complex 转移到 carbon-centred radical，同时 metal 的 oxidation/spin state 发生变化。",
+        "这个定义故意很宽。只要实验支持“radical 从 metal-bound X 获得 ligand”，就可以讨论 RLT；但 RLT 本身不要求 C–X forming 与 M–X breaking 必须严格同步，也不要求 transition state 一定是经典 backside substitution geometry。",
+        "所以 PhotoNMR、Ti-dependent d.r. 和强还原 stoichiometric experiment 合起来，已经很好地支持“Ti–alkoxide-mediated O-ligand transfer to a carbon radical”。这足以进入 RLT 框架，但还没把 atom-level pathway 唯一化。"
+      ]
+    },
+    {
+      "eyebrow": "第八层｜het-SH₂ 比 RLT 多说了什么",
+      "heading": "het-SH₂ 不是 RLT 的对立面，而是作者对这个具体 RLT event 提出的更窄 elementary-step model",
+      "paragraphs": [
+        "如果把 RLT 当作“发生了 ligand transfer”，het-SH₂ 进一步声称：radical 直接进攻 Ti–O 的 oxygen，在同一个 elementary step 里形成 C–O，同时 Ti–O 被 homolytically displaced。它强调的是 substitution-at-heteroatom 的 atom-level trajectory。",
+        "这也是 reviewer 1 为什么质疑术语：观察到 O ligand 从 Ti 到 carbon，只能证明 RLT-compatible outcome；要进一步叫 het-SH₂，就需要证据说明不是一个先 electron transfer、再 ligand dissociation/combination 的 stepwise path，也不是其它 metal-assisted radical process。",
+        "因此真正的问题不是“RLT 被推翻没有”，而是“这个 RLT event 有没有足够证据被进一步收窄成 concerted het-SH₂”。最终论文也把 het-SH₂ 放在更宽的 RLT framework 内，而不是与 RLT 对立。"
+      ]
+    },
+    {
+      "eyebrow": "第九层｜什么证据真正把 generic RLT 收窄到 SH₂-type model",
+      "heading": "关键是同一个 reaction coordinate 里的键变化、电子变化和 absence of intermediate",
+      "paragraphs": [
+        "DFT 找到三中心 C···O···Ti TS：C–O 已缩短到约 2.33 Å，Ti–O 从 reactant 的约 1.82 Å 拉长到约 1.95 Å，而且没有 Ti–C bond。IRC 从这个 TS 直接连到 reactant complex 和 product complex，中间没有独立 minimum。",
+        "Spin density 也同步变化：reactant 中 unpaired spin 几乎全在 carbon；到 TS 时 carbon 约 +0.52、Ti 约 +0.63，而 bridging oxygen 只有小负 spin density。这个结果与 Ti(IV)→Ti(III) 和 C–O formation 在同一坐标上发展相符。",
+        "热力学又给出独立交叉检查：forming C–O bond 比 breaking Ti–O bond 更强，整体 substitution exergonic；O-transfer 也比竞争 Cl-transfer 更有利。Barrier、IRC、spin redistribution 与 BDE/BDFE analysis 互相一致，才让“concerted het-SH₂”成为比 generic RLT 更具体、也更有根据的 model。",
+        "但仍不能说实验直接拍到了 TS。最严谨的层级是：实验支持 Ti–alkoxide-mediated radical ligand transfer；计算支持其中一个 concerted het-SH₂ elementary step。"
       ],
-      "review": "同行评审在这里提出了必要的限制：RLT 是“metal ligand 转给 radical”的更宽框架，而 het-SH₂ 是对 atom-level concerted substitution 的更具体描述。最终文章也明确把本反应放在 RLT 框架内，再用 DFT 去支持更具体的 het-SH₂ 模型；两者不能混为同一个证据层级。",
+      "review": "同行评审的价值正在这里：它不是把作者的机制“推翻”，而是迫使作者把宽框架（RLT）和具体模型（het-SH₂）分层，并把每一层分别对应到它真正拥有的证据。",
       "figures": [
         "dft"
       ]
     },
     {
-      "eyebrow": "那这套机制到底买来了哪些新的合成能力",
-      "heading": "真正有分量的不是“80 多个例子”，而是哪些结构在 carbocation / SN2 逻辑下本来就难",
+      "eyebrow": "第十层｜新机制如果不买来新能力，就只是换了一个反应名字",
+      "heading": "真正的合成增量要落到具体 substrate class，而不是“radical chemistry 更温和”这种口号",
       "paragraphs": [
-        "3°–2° 与 2°–2° ether 是最直观的一类；此外，带 α-stereocentre 的 secondary alcohol 可以在 coupling 后保留立体完整性，多羟基底物还能偏向较少取代的 alcohol 位点。primary alkyl chloride 等容易受强碱/亲核条件干扰的功能团也可以保留。",
-        "BCP alcohol 是更有代表性的边界案例：它形式上高度取代，却因为 compact geometry 仍能参与；而 conventional basic/cationic etherification 对这类骨架并不友好。审稿人 3 正是要求作者回答“相对于 Baran carbocation etherification，你到底多得到什么”，所以这里必须用具体 substrate class 来回答，而不能只说 radical chemistry 更温和。"
+        "2°–2° 和 3°–2° ethers 是最直接的例子；α-stereogenic secondary alcohol 可以在 coupling 后保留 stereochemical integrity；diol substrate 对较少取代 OH 表现出 site selectivity；primary alkyl chloride 等容易受强碱/亲核条件影响的 functionality 也可保留。",
+        "BCP alcohol 则是更有说服力的极端案例：形式上是拥挤 alcohol，却因为 compact geometry 仍能参与。Reviewer 3 特别要求作者回答“相对于 Baran electrogenerated carbocation etherification，这套 radical/Ti route 到底多得到什么”，所以文章必须用这些具体结构来回答。"
       ],
       "figures": [
         "chemical_space"
       ]
     },
     {
-      "eyebrow": "chemical space 图其实比普通 scope 更值得读",
-      "heading": "作者先量化“已经覆盖到哪里”，再用 HTE 去补原来没有覆盖的区域",
+      "eyebrow": "第十一层｜chemical space / HTE 为什么值得单独讲",
+      "heading": "这里不是拿漂亮 scope 做结论，而是主动寻找没覆盖到的区域再补实验",
       "paragraphs": [
-        "SI 将 scope 中的 alcohol 与 55,928 个 Enamine alcohol building blocks 用 Morgan fingerprint / UMAP 映射到同一个 chemical space；单纯 scope 的 Vendi diversity score 为 32。随后作者从 underrepresented region 选底物，再做 6 RAE × 8 alcohol 的 48-well photo-HTE matrix。",
-        "48 个组合里有 40 个达到 >30% assay yield，加入这些 HTE substrate 后 Vendi score 提高到 38。这个设计的价值在于，它试图把传统“作者挑一串最好看的 scope”变成一个可量化、可主动寻找盲区的 coverage test；当然，这仍然不能把一个 48-well matrix 等同于无限 generality。"
+        "SI 将 tested alcohols 投影到 55,928-compound Enamine alcohol library 的 Morgan-fingerprint/UMAP space；常规 scope 的 Vendi diversity score 为 32。随后作者从 underrepresented regions 选 substrate，再做 6 RAE × 8 alcohol 的 48-well photo-HTE matrix。",
+        "40/48 combinations 达到 >30% assay yield，加入 HTE substrate 后 Vendi score 提到 38。它的意义在于把“generality”从手工挑例子推进到一个可量化、可主动补盲区的 test；但它仍然不是无限 generality 的证明。"
       ],
       "figures": [
         "hte",
@@ -233,18 +294,18 @@
       ]
     },
     {
-      "eyebrow": "最后一定要看 SI 的失败底物",
-      "heading": "这些 failure 不是附带信息，而是在反向定义 het-SH₂ / Ti platform 的动力学窗口",
+      "eyebrow": "第十二层｜失败底物反而最能告诉你这个机制需要什么",
+      "heading": "het-SH₂ / Ti platform 不是“radical 不怕位阻”，而是有清楚的动力学和 speciation 窗口",
       "paragraphs": [
-        "primary alkyl radicals 在标准条件下不形成 ether，主要走 HAT；epoxide 和 oxetane 会被中间 Ti(III) reductive ring opening；低 nucleophilicity 的 alkyl radical、azetidine-derived radical 也难 productive coupling；过分拥挤的 tertiary alcohol 同样会因 oxygen 周围轨迹受阻而失败。",
-        "另外，alcohol 在 DCM/DCE 中溶解性差会直接拖低收率，tertiary amine 等 electron-rich functionality 还可能抢先 quench excited photocatalyst。换句话说，这不是“radical 不怕位阻，所以什么都能做”，而是要同时满足 radical persistence/nucleophilicity、Ti–alkoxide lifetime、substrate coordination 与 photoredox selectivity。"
+        "Primary alkyl radicals 不给 ether，主要走 HAT；epoxide/oxetane 会被 Ti(III) reductive ring opening；低 nucleophilicity radicals、azetidine-derived radicals 也不能 productive transfer；过分拥挤的 tertiary alcohol 会阻碍接近 oxygen 的 trajectory。",
+        "此外，alcohol 在 DCM/DCE 中溶解性差会直接降低效率，tertiary amine 等 electron-rich functionality 还可能抢先 quench excited photocatalyst。真正的工作窗口同时要求 radical persistence/nucleophilicity、Ti–OR lifetime、substrate coordination 和 photoredox selectivity 合适。"
       ]
     }
   ],
   "takehome": [
-    "505 nm 的核心作用是 species-selective excitation：让 photocatalyst 继续工作，同时压低 Ti–alkoxide LMCT/β-scission；这比“换波长提高收率”更接近这篇文章的真正反应设计。",
-    "实验最直接支持的是 Ti–alkoxide 在真实条件下存在、Ti 进入 C–O 成键环境、alkyl radical 可以直接与 Ti–alkoxide 产生 ether；严格 concerted het-SH₂ 则由这些实验与 DFT 共同支持，并应放在更宽的 RLT 框架下理解。",
-    "合成价值来自具体新增能力——高位阻 2°–2°/3°–2° ether、diol site selectivity、stereochemical retention、BCP/复杂药物片段——同时 primary radicals、epoxide/oxetane、低 nucleophilicity radicals 等失败底物清楚划出了边界。"
+    "RLT 是宽框架：radical 从 metal complex 获得 ligand；het-SH₂ 是更具体的 atom-level model。实验支持前者，DFT/IRC/spin/BDE 等把路径进一步收窄到 concerted het-SH₂。",
+    "505 nm 的作用不是“更温和”，而是 selective excitation：让 photocatalyst 工作，同时避免 Ti–alkoxide LMCT/β-scission，从根本上提高关键 intermediate 的稳态浓度。",
+    "这套 chemistry 的价值最终要用具体新增能力与失败边界衡量：2°–2°/3°–2°、diol site selectivity、stereochemical retention、BCP/complex scaffolds 是增量；primary radicals、epoxide/oxetane、低 nucleophilicity radicals 等则定义了窗口。"
   ],
   "ai_notice": "本文依据论文主文、补充信息和公开同行评审文件整理，并区分实验直接证据、计算支持与作者提出的机理模型；化学结构图片均来自论文或 SI 原图。",
   "cover": {
