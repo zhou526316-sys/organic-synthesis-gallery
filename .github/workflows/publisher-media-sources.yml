@@ -67,7 +67,7 @@ jobs:
           node cloudflare/scripts/build-bridge-loader.mjs
           node scripts/validate-tm220-artifacts.mjs public
           node --check public/gallery-vpn-bridge.user.js
-          grep -F '全队列补缺6 · 图源适配7' public/gallery-vpn-bridge.user.js
+          grep -F 'TOC/PDF补缺8 · PDF可见1' public/gallery-vpn-bridge.user.js
           mkdir -p "$RUNNER_TEMP/publisher-source-output"
           cp public/toc-mainline.user.js public/gallery-vpn-bridge.user.js "$RUNNER_TEMP/publisher-source-output/"
           sha256sum "$RUNNER_TEMP/publisher-source-output/"*.js > "$RUNNER_TEMP/publisher-source-output/sha256.txt"
