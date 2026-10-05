@@ -86,13 +86,13 @@ try{
      '10.1021/acs.joc.6c00002':{toc:{available:true,imageUrl:'toc.svg'}},
      '10.1021/acs.orglett.6c00005':{toc:{available:true,imageUrl:'toc.svg'}}
    }};
-   return __tm224.pairedJobs(q,media).map(x=>({doi:x.doi,journal:x.journal,captureToc:x.captureToc,mediaNeed:x.mediaNeed,allowFigureOne:x.allowFigureOne}));
+   return __tm224.pairedJobs(q,media).map(x=>({doi:x.doi,journal:x.journal,captureToc:x.captureToc,captureFigures:x.captureFigures,opportunisticFigures:x.opportunisticFigures,mediaNeed:x.mediaNeed,allowFigureOne:x.allowFigureOne}));
  });
  test('pairedJobs contains only missing-TOC articles',ordering.length===8&&!ordering.some(x=>x.doi==='10.1021/acs.joc.6c00002'||x.doi==='10.1021/acs.orglett.6c00005'));
  test('latest missing TOC leads the queue',ordering[0].doi==='10.1021/jacs.6c00001');
  test('historical missing-TOC tier follows Nature, Science, Nature children, Science children, JACS, Angew, Chem',JSON.stringify(ordering.slice(1).map(x=>x.journal))===JSON.stringify([
    'Nature','Science','Nature Chemistry','Science Advances','JACS','Angew','Chem']));
- test('every paired media job is a TOC obligation with opportunistic body capture',ordering.every(x=>x.captureToc===true&&x.mediaNeed==='toc'));
+ test('every paired media job is a TOC obligation with non-blocking opportunistic body capture',ordering.every(x=>x.captureToc===true&&x.captureFigures===false&&x.opportunisticFigures===true&&x.mediaNeed==='toc'));
 
  const routes=await page.evaluate(()=>({
    acsFigure:__tm224.articleUrl({doi:'10.1021/acs.orglett.6c03487',publisher:'acs',mediaNeed:'figures'}),
@@ -128,6 +128,7 @@ try{
  test('body discovery retains an 8s minimum observation even after figures appear',discovery.bodyTooEarly===false);
  test('body discovery waits four quiet seconds after the latest figure-set change',discovery.bodyStillChanging===false&&discovery.bodyStable===true);
  test('TOC-only discovery keeps the legacy early-stable behavior',discovery.tocJobLegacy===true);
+ test('opportunistic body failure cannot downgrade TOC queue completion',source.includes('var figuresRequired=job.captureFigures===true;')&&source.includes("if(!figuresRequired){\n        result.status=tocOk?'success':'failed';"));
  test('controller revision is current without capture protocol migration',source.includes("var VERSION = '6.2.20';")&&source.includes("var CONTROLLER_REVISION = '2.2.39';"));
 }finally{await browser.close();}
 console.log('TM224_ACQUISITION_TEST_SUMMARY '+JSON.stringify({passed,productionWrites:0,publisherFixtureOnly:true,captureProtocol:'6.2.20'}));
