@@ -452,6 +452,7 @@ test('shadow activation remains admin-only, dedicated-DB and read-inactive',()=>
   const source=readFileSync(new URL('../src/index.js',import.meta.url),'utf8');
   assert.ok(source.includes('/api/admin/literature-catalog-index/query'));
   assert.ok(source.includes('/api/admin/literature-catalog-index/rows'));
+  assert.ok(source.includes('/api/admin/literature-catalog-index/view'));
   assert.ok(!source.includes('/api/literature/catalog-search'));
   assert.ok(!source.includes('/api/user-ui/literature-search'));
 
