@@ -39,6 +39,7 @@ DEFAULT_PREVIEW_DIR = Path("/var/www/osg-wechat-preview")
 DEFAULT_PREVIEW_BASE_URL = "https://relay.gczhouwld.com/wechat-preview"
 DEFAULT_BODY_IMAGE_CACHE = Path("/var/lib/osg-wechat-publisher/body-images.json")
 DEFAULT_PDF_CACHE_DIR = Path("/var/lib/osg-wechat-publisher/source-pdfs")
+DEFAULT_SOURCE_IMAGE_CACHE_DIR = Path("/var/lib/osg-wechat-publisher/source-images")
 FEATURED_DIR = ROOT / "public" / "wechat-featured"
 EDITION_DIR = ROOT / "public" / "wechat-editions"
 DEFAULT_SOURCE_URL = "https://gallery.gczhouwld.com/"
@@ -854,30 +855,23 @@ def save_json_cache(path: Path, data: dict):
 
 
 def download_body_image(source_url: str, fig_id: str) -> Path:
-    """Download and normalize a publisher figure to a real PNG for WeChat.
+    """Download, normalize and persist a source figure for WeChat reuse."""
+    DEFAULT_SOURCE_IMAGE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    source_key = hashlib.sha256(source_url.encode("utf-8")).hexdigest()
+    persistent_png = DEFAULT_SOURCE_IMAGE_CACHE_DIR / f"{source_key}.png"
+    if persistent_png.exists():
+        try:
+            if persistent_png.stat().st_size > 0:
+                return persistent_png
+        except OSError:
+            pass
 
-    This does not redraw or alter chemical structures. It only decodes the
-    publisher-delivered image and re-encodes the same pixels as a standards-
-    compliant PNG accepted by WeChat's article-body image endpoint.
-    """
     raw_target = Path(tempfile.gettempdir()) / f"osg-wechat-{fig_id}-raw"
-    png_target = Path(tempfile.gettempdir()) / f"osg-wechat-{fig_id}.png"
-
     req = urllib.request.Request(
         source_url,
         headers={
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/154.0.0.0 Safari/537.36"
-            ),
-            # Force raster image delivery and avoid AVIF/WebP content negotiation.
-            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-            "Referer": (
-                "https://pubs.acs.org/"
-                if "pubs.acs.org" in source_url
-                else "https://gallery.gczhouwld.com/"
-            ),
+            "User-Agent": "Mozilla/5.0 (compatible; OrganicSynthesisGallery/1.0)",
+            "Accept": "image/png,image/jpeg,image/gif;q=0.8,*/*;q=0.1",
         },
     )
     try:
@@ -890,9 +884,7 @@ def download_body_image(source_url: str, fig_id: str) -> Path:
     if not payload:
         raise RuntimeError(f"empty featured figure download: {fig_id}")
     if "text/html" in content_type:
-        raise RuntimeError(
-            f"featured figure {fig_id} returned HTML instead of an image"
-        )
+        raise RuntimeError(f"featured figure {fig_id} returned HTML instead of an image")
 
     raw_target.write_bytes(payload)
 
@@ -907,8 +899,6 @@ def download_body_image(source_url: str, fig_id: str) -> Path:
     try:
         with Image.open(raw_target) as image:
             image.load()
-            # Keep original pixel dimensions. Convert palette/alpha safely to RGB
-            # on white because chemistry figures use white backgrounds.
             if image.mode in ("RGBA", "LA"):
                 background = Image.new("RGBA", image.size, "white")
                 background.alpha_composite(image.convert("RGBA"))
@@ -920,9 +910,8 @@ def download_body_image(source_url: str, fig_id: str) -> Path:
                 normalized = background.convert("RGB")
             else:
                 normalized = image.convert("RGB")
-
             normalized.save(
-                png_target,
+                persistent_png,
                 format="PNG",
                 optimize=False,
                 compress_level=4,
@@ -934,8 +923,7 @@ def download_body_image(source_url: str, fig_id: str) -> Path:
             f"content_type={content_type or 'unknown'}, bytes={len(payload)}"
         ) from exc
 
-    return png_target
-
+    return persistent_png
 
 def ensure_pdf_source(featured: dict, override_path: str = "") -> Path:
     if override_path:
@@ -1220,7 +1208,15 @@ def upload_body_image(token: str, source_url: str, fig_id: str, cache_path: Path
 def upload_featured_images(token: str, featured: dict | None, override_pdf: str = ""):
     local_images = prepare_featured_local_images(featured, override_pdf)
     uploaded: dict[str, str] = {}
+    figure_specs = {
+        str(x.get("id")): x
+        for x in (featured or {}).get("figures", [])
+        if isinstance(x, dict) and str(x.get("id") or "").strip()
+    }
     for fig_id, local in local_images.items():
+        spec = figure_specs.get(fig_id) or {}
+        if spec.get("body") is False:
+            continue
         uploaded[fig_id] = upload_local_body_image(
             token,
             local,
@@ -1228,7 +1224,6 @@ def upload_featured_images(token: str, featured: dict | None, override_pdf: str 
             DEFAULT_BODY_IMAGE_CACHE,
         )
     return uploaded, local_images
-
 
 def prepare_gallery_qr_image(target_url: str) -> Path:
     """Create a high-resolution QR PNG for the daily Gallery entry."""
@@ -1276,68 +1271,88 @@ def build_gallery_jump_card(
     uploaded_urls: dict[str, str],
     qr_url: str,
 ) -> str:
-    """WeChat-safe Gallery entry: a faithful miniature of today's real card + QR."""
+    """Compact entry banner: several real cards from today's Gallery + QR."""
     if not qr_url or not papers:
         return ""
 
     featured_doi = normalize_doi((featured or {}).get("paper", {}).get("doi"))
-    card = next((p for p in papers if normalize_doi(p.get("doi")) == featured_doi), papers[0])
-    card_title = str(card.get("titleZh") or card.get("title") or card.get("doi") or "")
-    card_title_en = str(card.get("title") or "")
-    journal = str(card.get("journal") or "")
-    doi = normalize_doi(card.get("doi"))
-    authors = ", ".join(str(x) for x in (card.get("authors") or []) if str(x).strip())
-    visual = uploaded_urls.get("fig1") or ""
-
-    if visual:
-        visual_html = (
-            f"<img src='{esc(visual)}' style='display:block;width:100%;height:116px;"
-            "object-fit:contain;margin:8px 0 8px;background:#fff;border:1px solid #e3e8f1;"
-            "border-radius:7px;'/>"
+    ordered = list(papers)
+    if featured_doi:
+        ordered.sort(
+            key=lambda p: (
+                0 if normalize_doi(p.get("doi")) == featured_doi else 1,
+                JOURNAL_ORDER.get(str(p.get("journal")), 100),
+                str(p.get("titleZh") or p.get("title") or ""),
+            )
         )
-    else:
-        visual_html = (
-            "<div style='height:78px;border:1px solid #e3e8f1;border-radius:7px;"
-            "background:#f8fafc;margin:8px 0;display:flex;align-items:center;"
-            "justify-content:center;color:#98a2b3;font-size:10px;'>今日新增文献卡片</div>"
+    shown = ordered[:4]
+
+    def card_cell(card: dict) -> str:
+        doi = normalize_doi(card.get("doi"))
+        is_featured = bool(featured_doi and doi == featured_doi)
+        title = str(card.get("titleZh") or card.get("title") or doi or "")
+        journal = str(card.get("journal") or "")
+        authors = [str(x).strip() for x in (card.get("authors") or []) if str(x).strip()]
+        author_text = "、".join(authors[:2]) + (" 等" if len(authors) > 2 else "")
+        border = "#d7a446" if is_featured else "#dfe5ef"
+        bg = "#fffdf7" if is_featured else "#ffffff"
+        badge = (
+            "<span style='display:inline-block;font-size:7px;font-weight:700;color:#8b5a08;"
+            "background:#fff0cf;border-radius:999px;padding:2px 5px;margin-right:3px;'>每日精选</span>"
+            if is_featured else
+            "<span style='display:inline-block;font-size:7px;font-weight:700;color:#3159bd;"
+            "background:#edf3ff;border-radius:999px;padding:2px 5px;margin-right:3px;'>本期文献</span>"
+        )
+        return (
+            f"<section style='min-height:118px;background:{bg};border:1px solid {border};"
+            "border-radius:8px;padding:8px;margin:0;'>"
+            "<p style='margin:0 0 5px;line-height:1.2;'>"
+            + badge
+            + f"<span style='font-size:7px;font-weight:700;color:#3159bd;"
+              f"background:#eef3ff;border-radius:999px;padding:2px 5px;'>{esc(journal)}</span>"
+            + "</p>"
+            + f"<p style='font-size:10px;line-height:1.42;font-weight:700;color:#222;"
+              f"margin:0 0 5px;'>{esc(title)}</p>"
+            + (f"<p style='font-size:7px;line-height:1.3;color:#667085;margin:0 0 4px;'>{esc(author_text)}</p>" if author_text else "")
+            + f"<p style='font-size:7px;line-height:1.25;color:#98a2b3;margin:0;"
+              f"word-break:break-all;'>DOI {esc(doi)}</p>"
+            + "</section>"
         )
 
-    # Keep the block close to the real Gallery card: metadata pills, title,
-    # authors, article visual and DOI. The right column is only the jump QR.
+    rows = []
+    for offset in range(0, len(shown), 2):
+        cells = shown[offset:offset + 2]
+        row = "<tr>"
+        for card in cells:
+            row += "<td style='width:50%;vertical-align:top;padding:3px;'>" + card_cell(card) + "</td>"
+        if len(cells) == 1:
+            row += "<td style='width:50%;padding:3px;'></td>"
+        row += "</tr>"
+        rows.append(row)
+
+    remaining = max(0, len(papers) - len(shown))
+    more = f"另有 {remaining} 篇" if remaining else "已展示全部"
+
     return (
         "<section style='margin:15px 0 24px;'>"
         "<table role='presentation' cellpadding='0' cellspacing='0' style='width:100%;"
         "border-collapse:separate;border-spacing:0;background:#f7f9fc;border:1px solid #dfe5ef;"
         "border-radius:12px;overflow:hidden;'>"
         "<tr>"
-        "<td style='width:68%;vertical-align:middle;padding:11px 8px 11px 11px;'>"
-        "<section style='background:#fff;border:1px solid #dfe5ef;border-radius:10px;padding:10px;'>"
-        "<p style='margin:0 0 6px;line-height:1.2;'>"
-        "<span style='display:inline-block;font-size:9px;font-weight:700;color:#8b5a08;"
-        "background:#fff0cf;border-radius:999px;padding:3px 6px;margin-right:4px;'>每日精选</span>"
-        f"<span style='display:inline-block;font-size:9px;font-weight:700;color:#3159bd;"
-        f"background:#eef3ff;border-radius:999px;padding:3px 6px;margin-right:4px;'>{esc(journal)}</span>"
-        f"<span style='display:inline-block;font-size:9px;color:#667085;background:#f4f5f7;"
-        f"border-radius:999px;padding:3px 6px;'>{esc(publication_date)}</span>"
-        "</p>"
-        f"<p style='font-size:13px;line-height:1.45;font-weight:700;color:#222;margin:0 0 3px;'>{esc(card_title)}</p>"
-        + (
-            f"<p style='font-size:9px;line-height:1.35;color:#8a93a3;margin:0 0 4px;'>{esc(card_title_en)}</p>"
-            if card_title_en and card_title_en != card_title else ""
-        )
-        + (
-            f"<p style='font-size:9px;line-height:1.35;color:#667085;margin:0 0 2px;'>{esc(authors)}</p>"
-            if authors else ""
-        )
-        + visual_html
-        + f"<p style='font-size:8px;color:#98a2b3;margin:0;word-break:break-all;'>DOI {esc(doi)}</p>"
-        "</section>"
+        "<td style='width:70%;vertical-align:middle;padding:9px 5px 9px 8px;'>"
+        f"<p style='font-size:9px;color:#667085;font-weight:700;letter-spacing:.04em;margin:0 3px 4px;'>"
+        f"今日新增卡片缩略展示 · {len(papers)} 篇</p>"
+        "<table role='presentation' cellpadding='0' cellspacing='0' style='width:100%;border-collapse:collapse;'>"
+        + "".join(rows)
+        + "</table>"
+        f"<p style='font-size:8px;color:#98a2b3;line-height:1.4;margin:4px 4px 0;'>{esc(more)}，扫码查看完整列表。</p>"
         "</td>"
-        "<td style='width:32%;vertical-align:middle;text-align:center;padding:12px 11px 12px 5px;'>"
+        "<td style='width:30%;vertical-align:middle;text-align:center;padding:12px 10px 12px 4px;"
+        "border-left:1px solid #e1e5eb;'>"
         f"<img src='{esc(qr_url)}' style='display:block;width:132px;max-width:100%;height:auto;"
         "margin:0 auto 8px;background:#fff;border:7px solid #fff;border-radius:8px;'/>"
         "<p style='font-size:12px;line-height:1.4;font-weight:700;color:#3159bd;margin:0 0 3px;'>扫码进入网页</p>"
-        "<p style='font-size:9px;line-height:1.45;color:#8a93a3;margin:0;'>查看今日新增</p>"
+        "<p style='font-size:9px;line-height:1.45;color:#8a93a3;margin:0;'>查看今日全部新增</p>"
         "</td>"
         "</tr></table>"
         "<p style='font-size:11px;color:#777;line-height:1.6;margin:7px 2px 0;text-align:center;'>"
