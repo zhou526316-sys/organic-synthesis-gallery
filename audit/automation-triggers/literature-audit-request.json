@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "requestedAt": "2026-10-04T23:06:34.000Z",
-  "requestedBy": "prepublish-primary-20261005-0800",
-  "publicationSlot": "2026-10-05T08:00:00+08:00",
-  "baselineMainSha": "7ac69a58b0453a9ed50887781fc901144a1ac9b8",
-  "reason": "Fresh prepublish audit required because the prior paired snapshot was generated at 2026-10-04T12:56:22.564Z, outside the 65-minute freshness window for the 2026-10-05 08:00 Asia/Shanghai slot. Recompute the full DOI union with the canonical registry (Chemical Science and Green Chemistry activeFrom=2026-10-01; Chem remains 2026-09-19), preserve the three-day review window, seven-day machine safety tail, created/deposit rescue and verifiedThrough catch-up. Persist paired latest/compact snapshots and do not mutate production literature or media."
+  "requestedAt": "2026-10-05T23:05:00.000Z",
+  "requestedBy": "prepublish-primary-20261006-0800",
+  "publicationSlot": "2026-10-06T08:00:00+08:00",
+  "baselineMainSha": "c94e46de302fb5c92ceed7472617c9f9e9bfc9d2",
+  "reason": "Fresh prepublish audit required because the prior paired snapshot was generated at 2026-10-05T01:22:00.391Z, outside the 65-minute freshness window for the 2026-10-06 08:00 Asia/Shanghai slot, and no current-slot machine run is present. Recompute the full DOI union with the canonical registry (Chemical Science and Green Chemistry activeFrom=2026-10-01; Chem remains 2026-09-19), preserve the three-day review window, seven-day machine safety tail, created/deposit rescue and verifiedThrough catch-up. Persist paired latest/compact snapshots and do not mutate production literature or media."
 }
