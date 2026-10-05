@@ -333,23 +333,40 @@ def build_content(
         "</p>",
     ]
 
-    for journal, items in grouped.items():
-        parts.append(
-            "<h2 style='font-size:16px;line-height:1.45;margin:19px 0 7px;"
-            "padding-left:8px;border-left:3px solid #222;'>"
-            f"{esc(journal)} <span style='font-size:10px;font-weight:400;color:#999;'>"
-            f"{len(items)} 篇</span></h2>"
+    if len(papers) > 5:
+        summary = " · ".join(
+            f"{esc(journal)} {len(items)} 篇"
+            for journal, items in grouped.items()
         )
-        for paper in items:
-            badge = ""
-            if featured and normalize_doi(featured.get("paper", {}).get("doi")) == paper["doi"]:
-                badge = "<span style='display:inline-block;font-size:9px;color:#8b5a08;background:#fff0cf;border-radius:8px;padding:1px 5px;margin-right:5px;'>每日精选</span>"
+        parts.append(
+            "<p style='font-size:13px;line-height:1.8;color:#3f4650;margin:0 0 12px;'>"
+            + summary
+            + "</p>"
+        )
+    else:
+        for journal, items in grouped.items():
             parts.append(
-                "<section style='margin:0 0 10px;padding:0 0 9px;border-bottom:1px solid #f0f1f3;'>"
-                f"<div style='font-size:14px;font-weight:700;line-height:1.5;margin-bottom:2px;'>{badge}{esc(paper['titleZh'])}</div>"
-                f"<div style='font-size:10px;color:#8a93a3;line-height:1.45;'>{esc(paper['title'])}</div>"
-                "</section>"
+                "<h2 style='font-size:16px;line-height:1.45;margin:19px 0 7px;"
+                "padding-left:8px;border-left:3px solid #222;'>"
+                f"{esc(journal)} <span style='font-size:10px;font-weight:400;color:#999;'>"
+                f"{len(items)} 篇</span></h2>"
             )
+            for paper in items:
+                badge = ""
+                if featured and normalize_doi(featured.get("paper", {}).get("doi")) == paper["doi"]:
+                    badge = "<span style='display:inline-block;font-size:9px;color:#8b5a08;background:#fff0cf;border-radius:8px;padding:1px 5px;margin-right:5px;'>每日精选</span>"
+                authors = str(paper.get("authors") or "").strip()
+                author_html = (
+                    f"<div style='font-size:10px;color:#9aa2ad;line-height:1.45;margin-top:2px;'>{esc(authors)}</div>"
+                    if authors else ""
+                )
+                parts.append(
+                    "<section style='margin:0 0 10px;padding:0 0 9px;border-bottom:1px solid #f0f1f3;'>"
+                    f"<div style='font-size:14px;font-weight:700;line-height:1.5;margin-bottom:2px;'>{badge}{esc(paper['titleZh'])}</div>"
+                    f"<div style='font-size:10px;color:#8a93a3;line-height:1.45;'>{esc(paper['title'])}</div>"
+                    + author_html
+                    + "</section>"
+                )
 
     if gallery_qr_url:
         card_visuals = uploaded_urls.get("__gallery_cards__", {}) if isinstance(uploaded_urls.get("__gallery_cards__"), dict) else {}
@@ -1220,7 +1237,7 @@ def upload_featured_images(token: str, featured: dict | None, override_pdf: str 
     return uploaded, local_images
 
 
-def upload_gallery_card_visuals(token: str, papers: list[dict], featured: dict | None, limit: int = 4) -> dict[str, str]:
+def upload_gallery_card_visuals(token: str, papers: list[dict], featured: dict | None, limit: int = 1) -> dict[str, str]:
     """Upload real Gallery TOC/primary visuals for compact daily-card miniatures."""
     featured_doi = normalize_doi((featured or {}).get("paper", {}).get("doi"))
     ordered = list(papers)
@@ -1325,7 +1342,7 @@ def build_gallery_jump_card(
             str(p.get("titleZh") or p.get("title") or ""),
         )
     )
-    shown = ordered[:4]
+    shown = ordered[:1]
 
     def card_cell(card: dict) -> str:
         doi = normalize_doi(card.get("doi"))
@@ -1364,16 +1381,12 @@ def build_gallery_jump_card(
             + "</section>"
         )
 
-    rows = []
-    for offset in range(0, len(shown), 2):
-        cells = shown[offset:offset + 2]
-        row = "<tr>"
-        for card in cells:
-            row += "<td style='width:50%;vertical-align:top;padding:3px;'>" + card_cell(card) + "</td>"
-        if len(cells) == 1:
-            row += "<td style='width:50%;padding:3px;'></td>"
-        row += "</tr>"
-        rows.append(row)
+    rows = [
+        "<tr><td style='width:100%;vertical-align:top;padding:3px;'>"
+        + card_cell(card)
+        + "</td></tr>"
+        for card in shown
+    ]
 
     remaining = max(0, len(papers) - len(shown))
     more = f"另有 {remaining} 篇，扫码查看完整列表" if remaining else "扫码进入网页继续搜索与筛选"
@@ -2144,7 +2157,7 @@ def main() -> int:
     load_env(Path(args.env_file))
     token = get_access_token()
     uploaded_urls, local_images = upload_featured_images(token, featured, args.featured_pdf)
-    uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 4)
+    uploaded_urls["__gallery_cards__"] = upload_gallery_card_visuals(token, papers, featured, 1)
     gallery_target_url = f"https://gallery.gczhouwld.com/?edition={urllib.parse.quote(publication_date)}"
     qr_local = prepare_gallery_qr_image(gallery_target_url)
     gallery_qr_url = upload_local_body_image(
