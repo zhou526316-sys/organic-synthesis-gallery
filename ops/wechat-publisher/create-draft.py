@@ -625,9 +625,18 @@ def download_body_image(source_url: str, fig_id: str) -> Path:
     req = urllib.request.Request(
         source_url,
         headers={
-            "User-Agent": "Mozilla/5.0 (compatible; OrganicSynthesisGallery/1.0)",
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/154.0.0.0 Safari/537.36"
+            ),
             # Force raster image delivery and avoid AVIF/WebP content negotiation.
-            "Accept": "image/png,image/jpeg,image/gif;q=0.8,*/*;q=0.1",
+            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            "Referer": (
+                "https://pubs.acs.org/"
+                if "pubs.acs.org" in source_url
+                else "https://gallery.gczhouwld.com/"
+            ),
         },
     )
     try:
