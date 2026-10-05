@@ -979,11 +979,11 @@ function embeddedJobDois(value) {
     // Body-figure/text incompleteness may be handled opportunistically during an
     // already-required visit, but must never create or prolong a queue entry.
     if (job && job.captureToc === true) {
-      if (isLatest) return -4;
+      if (isLatest) return -5;
       if (isNatureScienceFamilyJob(job)) return -3;
       return -2;
     }
-    if (job && job.capturePrivatePdf === true) return isLatest ? 1 : 4;
+    if (job && job.capturePrivatePdf === true) return isLatest ? -4 : 4;
     return 5;
   }
 
