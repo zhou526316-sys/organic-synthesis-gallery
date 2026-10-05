@@ -86,8 +86,10 @@ jobs:
       - name: Test dormant literature catalog index
         run: npm run test:literature-catalog-index
 
-      - name: Check literature search shadow sync script
-        run: node --check ../../scripts/sync-literature-catalog-index-shadow.mjs
+      - name: Test literature search shadow sync script
+        run: |
+          node --check ../../scripts/sync-literature-catalog-index-shadow.mjs
+          node ../../scripts/test-literature-catalog-index-shadow-sync.mjs
 
       - name: Wrangler dry-run build
         run: npm run check
