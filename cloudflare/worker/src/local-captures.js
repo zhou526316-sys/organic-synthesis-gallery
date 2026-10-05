@@ -914,7 +914,6 @@ export async function promoteStagedNatureSciencePrimaryVisuals(request, env, opt
   let promoted = 0;
   let alreadyCurrent = 0;
   let failed = 0;
-  let invalidatedRscPreviews = 0;
   let scanned = 0;
   const failures = [];
   const slice = candidates.slice(offset, offset + scanLimit);
@@ -1002,7 +1001,6 @@ export async function promoteStagedNatureSciencePrimaryVisuals(request, env, opt
       promoted,
       alreadyCurrent,
       failed,
-      invalidatedRscPreviews,
       scanned,
       candidates: candidates.length,
       limit,
