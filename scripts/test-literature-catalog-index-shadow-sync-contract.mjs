@@ -31,6 +31,15 @@ test('shadow sync uses a Free-safe eight-row import ceiling',()=>{
   assert.match(sync,/importBatchSize: IMPORT_BATCH_SIZE/);
 });
 
+test('shadow sync retries only transient API failures and checkpoints resumable progress',()=>{
+  assert.match(sync,/const TRANSIENT_API_STATUS = new Set\(\[429,500,502,503,504\]\)/);
+  assert.match(sync,/const RETRY_DELAYS_MS = \[300,900,1800\]/);
+  assert.match(sync,/TRANSIENT_API_STATUS\.has\(response\.status\)/);
+  assert.match(sync,/lastBatchAttempts/);
+  assert.match(sync,/importProgress/);
+  assert.match(sync,/shadow_import_batch_contract_mismatch/);
+});
+
 test('shadow sync requires full row and search parity while read path stays inactive',()=>{
   for(const token of [
     '/api/admin/literature-catalog-index/rows',

@@ -155,24 +155,25 @@ export async function beginLiteratureCatalogGeneration(env,value){
     ready:Number(row?.ready||0)===1}};
 }
 
-async function upsertIndexRow(env,catalogId,n,now){
-  await env.LITERATURE_INDEX_DB.prepare(`INSERT INTO literature_catalog_index
-    (catalog_id,doi,revision,title,title_zh,authors_text,authors_json,journal,first_online_date,
-      date_precision,added_date,synthesis_type,searchable_text,updated_at)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-    ON CONFLICT(catalog_id,doi) DO UPDATE SET
-      title=excluded.title,title_zh=excluded.title_zh,authors_text=excluded.authors_text,
-      authors_json=excluded.authors_json,journal=excluded.journal,first_online_date=excluded.first_online_date,
-      date_precision=excluded.date_precision,added_date=excluded.added_date,synthesis_type=excluded.synthesis_type,
-      searchable_text=excluded.searchable_text,updated_at=excluded.updated_at
-    WHERE literature_catalog_index.revision=excluded.revision`).bind(
-      catalogId,n.doi,n.revision,n.title,n.titleZh,n.authors.join(' '),n.authorsJson,
-      n.journal,n.firstOnlineDate,n.datePrecision,n.addedDate,n.synthesisType,n.searchableText,now
-    ).run();
-  await env.LITERATURE_INDEX_DB.prepare('DELETE FROM literature_catalog_fts WHERE catalog_id=? AND doi=?').bind(catalogId,n.doi).run();
-  await env.LITERATURE_INDEX_DB.prepare('INSERT INTO literature_catalog_fts(catalog_id,doi,searchable_text) VALUES(?,?,?)')
-    .bind(catalogId,n.doi,n.searchableText).run();
-  return n.doi;
+function indexRowWriteStatements(db,catalogId,n,now){
+  return [
+    db.prepare(`INSERT INTO literature_catalog_index
+      (catalog_id,doi,revision,title,title_zh,authors_text,authors_json,journal,first_online_date,
+        date_precision,added_date,synthesis_type,searchable_text,updated_at)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      ON CONFLICT(catalog_id,doi) DO UPDATE SET
+        title=excluded.title,title_zh=excluded.title_zh,authors_text=excluded.authors_text,
+        authors_json=excluded.authors_json,journal=excluded.journal,first_online_date=excluded.first_online_date,
+        date_precision=excluded.date_precision,added_date=excluded.added_date,synthesis_type=excluded.synthesis_type,
+        searchable_text=excluded.searchable_text,updated_at=excluded.updated_at
+      WHERE literature_catalog_index.revision=excluded.revision`).bind(
+        catalogId,n.doi,n.revision,n.title,n.titleZh,n.authors.join(' '),n.authorsJson,
+        n.journal,n.firstOnlineDate,n.datePrecision,n.addedDate,n.synthesisType,n.searchableText,now
+      ),
+    db.prepare('DELETE FROM literature_catalog_fts WHERE catalog_id=? AND doi=?').bind(catalogId,n.doi),
+    db.prepare('INSERT INTO literature_catalog_fts(catalog_id,doi,searchable_text) VALUES(?,?,?)')
+      .bind(catalogId,n.doi,n.searchableText),
+  ];
 }
 
 export async function importLiteratureCatalogIndexBatch(env,payload){
@@ -198,16 +199,19 @@ export async function importLiteratureCatalogIndexBatch(env,payload){
   if(new Set(batchDois).size!==batchDois.length){
     return {status:400,body:{error:'literature_catalog_index_batch_duplicate_doi'}};
   }
+  const placeholders=normalized.map(()=>'?').join(',');
+  const existingResult=await env.LITERATURE_INDEX_DB.prepare(
+    `SELECT doi,revision FROM literature_catalog_index WHERE catalog_id=? AND doi IN (${placeholders})`
+  ).bind(g.catalogId,...normalized.map(row=>row.doi)).all();
+  const existingByDoi=new Map((existingResult?.results||[]).map(row=>[row.doi,row.revision]));
   let newRows=0;
   for(const row of normalized){
-    const existing=await env.LITERATURE_INDEX_DB.prepare(
-      'SELECT revision FROM literature_catalog_index WHERE catalog_id=? AND doi=?'
-    ).bind(g.catalogId,row.doi).first();
-    if(existing&&existing.revision!==row.revision){
+    const existingRevision=existingByDoi.get(row.doi);
+    if(existingRevision&&existingRevision!==row.revision){
       return {status:409,body:{error:'literature_catalog_index_batch_rejected',
         detail:'literature_catalog_row_revision_conflict:'+row.doi}};
     }
-    if(!existing) newRows+=1;
+    if(!existingRevision) newRows+=1;
   }
   const before=await env.LITERATURE_INDEX_DB.prepare('SELECT COUNT(*) AS c FROM literature_catalog_index WHERE catalog_id=?')
     .bind(g.catalogId).first();
@@ -216,9 +220,9 @@ export async function importLiteratureCatalogIndexBatch(env,payload){
     return {status:409,body:{error:'literature_catalog_index_row_overflow',catalogId:g.catalogId,
       recordCount:g.recordCount,existingRows:beforeRows,newRows}};
   }
-  const imported=[];
   try{
-    for(const row of normalized) imported.push(await upsertIndexRow(env,g.catalogId,row,now));
+    const statements=normalized.flatMap(row=>indexRowWriteStatements(env.LITERATURE_INDEX_DB,g.catalogId,row,now));
+    await env.LITERATURE_INDEX_DB.batch(statements);
   }catch(error){
     return {status:500,body:{error:'literature_catalog_index_batch_write_failed',detail:safe(error?.message||error,240)}};
   }
@@ -228,7 +232,8 @@ export async function importLiteratureCatalogIndexBatch(env,payload){
   await env.LITERATURE_INDEX_DB.prepare('UPDATE literature_catalog_generations SET imported_rows=?,updated_at=? WHERE catalog_id=?')
     .bind(importedRows,now,g.catalogId).run();
   return {status:200,body:{ok:true,enabled:true,readPathActive:false,catalogId:g.catalogId,
-    batchRows:rows.length,uniqueBatchRows:new Set(imported).size,importedRows,recordCount:g.recordCount,ready:false}};
+    batchRows:rows.length,uniqueBatchRows:normalized.length,writeStatements:normalized.length*3,
+    importedRows,recordCount:g.recordCount,ready:false}};
 }
 
 export async function finalizeLiteratureCatalogGeneration(env,catalogIdValue){
