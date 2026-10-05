@@ -49,6 +49,13 @@ Immediately below the compact “今日更新” block, include one Gallery entr
 - Do **not** claim the Gallery website itself provides “深度解读”; the deep-reading editorial belongs to the WeChat article.
 - The whole block should fit the normal mobile WeChat article width and read as one compact horizontal card rather than a standalone QR code.
 
+## Source-depth requirement
+
+- Before drafting a selected paper, read the supplied **final main text and SI as primary sources**. If peer-review files were supplied, read them as a separate evidence layer rather than as decoration.
+- Build the article only after identifying: the real literature bottleneck, the authors' design logic, decisive experiments, what each experiment actually supports, synthetic scope/chemical-space boundaries, and unresolved alternatives.
+- The reader path must be **shallow to deep**: first make the transformation and value legible to a synthetic chemist in under a minute; only then introduce condition logic, speciation/redox details, mechanistic evidence, calculations, reviewer disputes, and limitations.
+- Do not flatten a paper into uniformly shallow paragraphs. Conversely, do not front-load specialist mechanistic detail before the reader understands the reaction.
+
 ## Featured-paper writing standard
 
 Both “每日精选” and “往期精选” use the same deep-reading standard:
