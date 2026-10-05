@@ -273,7 +273,10 @@ async function main() {
         method: 'POST', body: { catalogId: generation.catalogId },
       });
       assert(finalized.body.ready === true && finalized.body.indexedRows === generation.recordCount
-        && finalized.body.ftsRows === generation.recordCount, 'shadow_finalize_incomplete');
+        && finalized.body.ftsRows === generation.recordCount
+        && finalized.body.ftsDistinctDois === generation.recordCount
+        && finalized.body.missingFtsRows === 0
+        && finalized.body.orphanFtsRows === 0, 'shadow_finalize_incomplete');
     }
 
     const expectedRows = records.map(paperProjection).map(normalizeComparable)
