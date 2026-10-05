@@ -237,6 +237,8 @@ jobs:
           node scripts/validate-tm220-artifacts.mjs dist
           grep -F "gallery-literature-doi-registry" src/main.ts
           grep -F "readOnly: true" cloudflare/scripts/build-live-toc-demand-queue.mjs
+          grep -F "const WORKER_ORIGIN = 'https://api.gczhouwld.com';" src/platform-api.ts
+          grep -F "host === 'gallery.gczhouwld.com'" src/platform-api.ts
           grep -F "payload?.readOnly !== true" cloudflare/worker/src/media.js
           grep -F "TAMPERMONKEY_CORS_WRITE_PATHS" cloudflare/worker/src/index.js
           grep -F "// @updateURL    https://gallery.gczhouwld.com/gallery-vpn-bridge.user.js" dist/gallery-vpn-bridge.user.js
