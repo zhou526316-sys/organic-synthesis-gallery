@@ -2122,6 +2122,13 @@ function embeddedJobDois(value) {
     return rows.sort(function(a,b){return b.score-a.score;});
   }
 
+  function ccsAssetFigureLabel(value) {
+    var raw=String(value||'').split(/[?#]/,1)[0].toLowerCase();
+    var match=raw.match(/(?:^|\/)(sf|f)0*(\d+)\.(?:gif|png|jpe?g|webp)$/i);
+    if(!match)return '';
+    return (match[1].toLowerCase()==='sf'?'Scheme ':'Figure ')+String(Number(match[2]));
+  }
+
   // CCS Chemistry exposes its official per-article "key image" on journal TOC
   // listings even when the article page exposes only numbered body figures.
   function ccsTocIndexUrls(job, doc, baseUrl) {
