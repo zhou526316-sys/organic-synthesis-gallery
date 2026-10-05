@@ -4900,9 +4900,10 @@ function embeddedJobDois(value) {
     var prior=privatePdfAttemptState(doi),ts=Number(now||Date.now());
     if(!prior)return true;
     var age=Math.max(0,ts-Number(prior.at||0));
+    // Only a proven stored receipt clears the PDF obligation. Failed/not-found
+    // attempts remain visible in the queue; maybeCapturePrivatePdf enforces the
+    // network retry cooldown without falsely calling the DOI complete.
     if(prior.status==='stored'&&age<30*24*60*60*1000)return false;
-    if((prior.status==='not_found'||prior.status==='not_found_cached')&&age<6*60*60*1000)return false;
-    if((prior.status==='failed'||prior.status==='failed_cached')&&age<30*60*1000)return false;
     return true;
   }
 
