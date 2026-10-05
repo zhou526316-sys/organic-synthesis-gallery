@@ -15,7 +15,9 @@ const page=await browser.newPage();
 const report={passed:0,cases:[],consoleErrors:[],pageErrors:[]};
 page.on('console',m=>{if(m.type()==='error')report.consoleErrors.push(m.text())});
 page.on('pageerror',e=>report.pageErrors.push(String(e)));
-await page.setContent('<!doctype html><meta name="citation_pdf_url" content="https://pubs.acs.org/doi/pdf/10.1021/jacs.6c12345"><a href="https://pubs.acs.org/doi/suppl/10.1021/jacs.6c12345/suppl_file/test.pdf">Supporting Information PDF</a>');
+await page.route('https://pubs.acs.org/private-pdf-fixture',async route=>route.fulfill({status:200,contentType:'text/html',body:'<!doctype html><meta name="citation_pdf_url" content="https://pubs.acs.org/doi/pdf/10.1021/jacs.6c12345"><a href="https://pubs.acs.org/doi/suppl/10.1021/jacs.6c12345/suppl_file/test.pdf">Supporting Information PDF</a>'}));
+await page.goto('https://pubs.acs.org/private-pdf-fixture');
+await page.evaluate(()=>{window.fetch=async()=>{throw new Error('native_fetch_not_injected')}});
 await page.evaluate(()=>{window.__gm=new Map();window.GM_getValue=(k,d)=>__gm.has(k)?__gm.get(k):d;window.GM_setValue=(k,v)=>__gm.set(k,v);window.GM_deleteValue=k=>__gm.delete(k);window.GM_listValues=()=>[...__gm.keys()];});
 
 const harness=[
@@ -35,7 +37,7 @@ const harness=[
 "function enqueueCaptureReport(){return true};function nowIso(){return new Date().toISOString()}",
 runtime,
 finish,
-"globalThis.T={privatePdfLease,privatePdfLeaseDiagnostics,privatePdfCaptureEligibleByAddedDate,privatePdfBytesValid,discoverExplicitPdfCandidates,maybeCapturePrivatePdf,finishPairedJob,PRIVATE_PDF_LEASE_KEY,PRIVATE_PDF_CAPTURE_REVISION,setGm:fn=>{gmRequest=fn},setMaybe:fn=>{maybeCapturePrivatePdf=fn}};",
+"globalThis.T={privatePdfLease,privatePdfLeaseDiagnostics,privatePdfCaptureEligibleByAddedDate,privatePdfBytesValid,discoverExplicitPdfCandidates,maybeCapturePrivatePdf,finishPairedJob,PRIVATE_PDF_LEASE_KEY,PRIVATE_PDF_CAPTURE_REVISION,setGm:fn=>{gmRequest=fn},setFetch:fn=>{window.fetch=fn},setMaybe:fn=>{maybeCapturePrivatePdf=fn}};",
 '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -77,8 +79,12 @@ try{
     const r=await page.evaluate(async()=>{GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'B'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()+600000});const pdf=new TextEncoder().encode('%PDF-1.7\\n'+('A'.repeat(4096))+'\\n%%EOF').buffer;T.setGm(async o=>o.method==='GET'?{status:200,response:pdf,responseHeaders:'content-type: application/pdf',finalUrl:'https://pubs.acs.org/doi/pdf/10.1021/jacs.6c12345'}:{status:201,responseText:JSON.stringify({stored:true,doi:'10.1021/jacs.6c12345',documentId:'pdf_fixture',contentHash:'a'.repeat(64),byteLength:pdf.byteLength,active:false,requiresVerification:true})});return T.maybeCapturePrivatePdf({doi:'10.1021/jacs.6c12345',publisher:'acs',addedDate:'2026-10-01',jobId:'fixture-job-12345678'},[])});
     assert.equal(r.status,'stored');assert.equal(r.active,false);
   });
+  await tc('same-origin PDF uses authenticated browser session before GM download',async()=>{
+    const x=await page.evaluate(async()=>{GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'E'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()+600000});GM_deleteValue('osg-toc-v6:private-pdf-attempt-v1:10.1021/jacs.6c12345');const pdf=new TextEncoder().encode('%PDF-1.7\\n'+('B'.repeat(4096))+'\\n%%EOF').buffer;let browserOptions=null,gmGet=0,gmPost=0;T.setFetch(async(_url,options)=>{browserOptions={credentials:options.credentials,cache:options.cache,redirect:options.redirect};return new Response(pdf,{status:200,headers:{'content-type':'application/pdf'}})});T.setGm(async o=>{if(o.method==='GET'){gmGet++;throw new Error('unexpected_gm_pdf_get')}gmPost++;return{status:201,responseText:JSON.stringify({stored:true,doi:'10.1021/jacs.6c12345',documentId:'pdf_browser_fixture',contentHash:'b'.repeat(64),byteLength:pdf.byteLength,active:false,requiresVerification:true})}});const trace=[];const r=await T.maybeCapturePrivatePdf({doi:'10.1021/jacs.6c12345',publisher:'acs',addedDate:'2026-10-01',jobId:'fixture-job-12345678'},trace);return{r,browserOptions,gmGet,gmPost,trace}});
+    assert.equal(x.r.status,'stored');assert.equal(x.gmGet,0);assert.equal(x.gmPost,1);assert.equal(x.browserOptions.credentials,'include');assert.equal(x.browserOptions.cache,'no-store');assert.equal(x.browserOptions.redirect,'follow');assert.ok(x.trace.some(row=>row.stage==='private_pdf_fetch'&&row.event==='browser_response'&&/browser_session/.test(row.message)));
+  });
   await tc('publisher 403 stops PDF path without guessed downloads',async()=>{
-    const x=await page.evaluate(async()=>{GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'C'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()+600000});GM_deleteValue('osg-toc-v6:private-pdf-attempt-v1:10.1021/jacs.6c12345');let calls=[];T.setGm(async o=>{calls.push(o.url);return{status:403,response:new ArrayBuffer(0),responseHeaders:'',finalUrl:o.url}});const r=await T.maybeCapturePrivatePdf({doi:'10.1021/jacs.6c12345',publisher:'acs',addedDate:'2026-10-01',jobId:'fixture-job-12345678'},[]);return{r,calls}});
+    const x=await page.evaluate(async()=>{T.setFetch(async()=>{throw new Error('native_fetch_not_injected')});GM_setValue(T.PRIVATE_PDF_LEASE_KEY,{token:'C'.repeat(48),scope:'private_pdf_capture',expiresAt:Date.now()+600000});GM_deleteValue('osg-toc-v6:private-pdf-attempt-v1:10.1021/jacs.6c12345');let calls=[];T.setGm(async o=>{calls.push(o.url);return{status:403,response:new ArrayBuffer(0),responseHeaders:'',finalUrl:o.url}});const r=await T.maybeCapturePrivatePdf({doi:'10.1021/jacs.6c12345',publisher:'acs',addedDate:'2026-10-01',jobId:'fixture-job-12345678'},[]);return{r,calls}});
     assert.equal(x.r.status,'failed');assert.equal(x.calls.length,1);assert.match(x.r.reason,/403/);
   });
   await tc('finishPairedJob keeps media success when PDF fails',async()=>{
