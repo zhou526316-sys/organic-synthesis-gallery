@@ -24,28 +24,8 @@
   "figures": [
     {
       "id": "fig1",
-      "caption": "原文 Fig. 1｜核心逻辑：过去复杂 NH-alkyl 亲电胺化试剂往往要多步制备；这项工作从伯胺出发，一步生成 RNHOMs，再进入多类亲电胺化与片段偶联。",
-      "source_url": "https://pubs.acs.org/cms/10.1021/jacs.6c14811/asset/images/large/ja6c14811_0001.jpeg"
-    },
-    {
-      "id": "fig2",
-      "caption": "原文 Fig. 2｜底物范围。简单烷基胺、含烯烃/卤素/腈/醚的胺，以及氨基酸、天然产物和药物来源的复杂胺都能转成 RNHOMs；手性氨基酸底物可保持构型。",
-      "source_url": "https://pubs.acs.org/cms/10.1021/jacs.6c14811/asset/images/large/ja6c14811_0002.jpeg"
-    },
-    {
-      "id": "fig4",
-      "caption": "原文 Fig. 4｜这些 RNHOMs 不是“做出来就结束”：作者直接把它们替换进已有的亲电胺化体系，实现芳烃 C–H 胺化、烯烃氮杂环丙烷化、C–H 胺化和 aza-Rubottom 氧化。",
-      "source_url": "https://pubs.acs.org/cms/10.1021/jacs.6c14811/asset/images/large/ja6c14811_0004.jpeg"
-    },
-    {
-      "id": "fig3",
-      "caption": "原文 Fig. 3｜DFT 支持 amine 对 MPO 发生 SN2-at-oxygen：无碱模型的 ΔH‡ 为 25.5 kcal/mol，引入 Cs2CO3 参与氢键/去质子化后降到 13.1 kcal/mol。",
-      "source_url": "https://pubs.acs.org/cms/10.1021/jacs.6c14811/asset/images/large/ja6c14811_0003.jpeg"
-    },
-    {
-      "id": "fig5",
-      "caption": "原文 Fig. 5｜进一步把一个亲电 RNHOMs 片段与另一个胺片段直接偶联，得到不对称肼；氨基酸来源的两个片段也可以组合。",
-      "source_url": "https://pubs.acs.org/cms/10.1021/jacs.6c14811/asset/images/large/ja6c14811_0005.jpeg"
+      "source_url": "https://media.beehiiv.com/cdn-cgi/image/fit%3Dscale-down%2Cquality%3D80%2Cformat%3Dauto%2Conerror%3Dredirect/uploads/asset/file/4df372fe-24f7-4f2e-a992-5d44b813e31e/Screenshot_2026-07-17_at_19.44.44.jpg?t=1784313913",
+      "caption": "反应总览｜伯胺经 MPO 一步转成 RNHOMs，实现 amine umpolung；随后这些亲电氮砌块可进入多类 C–N / N–N 片段偶联。图中化学结构沿用作者公开工作的原始图示，不作 AI 重绘。"
     }
   ],
   "sections": [
@@ -70,9 +50,6 @@
       "paragraphs": [
         "氨基酸来源的底物尤其有说服力：异亮氨酸衍生物在氧化后仍以单一非对映体得到，说明 α-手性中心没有明显消旋。天然产物和药物来源的伯胺也能转成对应 RNHOMs。",
         "边界同样清楚：苄胺容易消除成亚胺，苯胺会快速氧化分解；甲硫氨酸和色氨酸等易氧化氨基酸也不兼容。"
-      ],
-      "figures": [
-        "fig2"
       ]
     },
     {
@@ -81,9 +58,6 @@
       "paragraphs": [
         "作者刻意选择已有的 NHR-transfer 反应来测试，而不是为新试剂重新发明一套条件。结果 RNHOMs 可以直接用于芳烃 C–H 胺化、烯烃氮杂环丙烷化、分子内 C–H 胺化和 aza-Rubottom 氧化，很多体系只需很少调整。",
         "这意味着复杂胺片段可以先被转成“亲电模块”，再接到另一个复杂骨架上。对药物化学和后期片段偶联而言，这比单纯扩大底物表更有意义。"
-      ],
-      "figures": [
-        "fig4"
       ]
     },
     {
@@ -92,9 +66,6 @@
       "paragraphs": [
         "计算给出的最低能模型是伯胺对 MPO 的氧原子发生协同 SN2 型进攻：N–O 键形成的同时 O–O 键断裂。单独计算时能垒为 25.5 kcal/mol；Cs2CO3 参与后可降至 13.1 kcal/mol。",
         "作者又加入 CCl3Br 作为自由基捕获剂，反应收率基本不变，这与自由基链式主路径不符。不过作者没有把结论写死：Cs2CO3 参与电子转移的计算路径只高几 kcal/mol，因此更准确的表述是“SN2-at-oxygen 最合理”，而不是“其他路径已被彻底排除”。"
-      ],
-      "figures": [
-        "fig3"
       ]
     },
     {
@@ -103,9 +74,6 @@
       "paragraphs": [
         "RNHOMs 还能与胺类亲核体进行 N–N 偶联。最初使用一级胺时产率受后续氧化影响，但换成脯氨酸甲酯或 N-甲基丙氨酸甲酯后，肼类产物可达到 76% 和 66%。",
         "这组结果目前还是初步展示，却把“胺的极性反转”推向了新的逆合成方向：两个各自容易获得的含氮片段，可以通过一亲电、一亲核的方式直接拼接。"
-      ],
-      "figures": [
-        "fig5"
       ]
     }
   ],
@@ -117,7 +85,7 @@
   "ai_notice": "本文依据 JACS 正文与 Supporting Information 整理。实验结果、计算支持和作者提出的机理模型分开表述；化学结构图均直接使用论文原图，不使用 AI 重绘。",
   "cover": {
     "source_figure_id": "fig1",
-    "description": "微信公众号封面仅使用 JACS 原始 Fig. 1 化学结构；不使用 AI 重绘结构式。",
+    "description": "使用作者公开工作中的原始反应总览图作为封面底图；化学结构不进行 AI 重绘。",
     "canvas": {
       "width": 1880,
       "height": 800,
