@@ -112,13 +112,20 @@ test('result pagination keeps DOM cardinality bounded across pages', async ({ pa
 
   const firstCount = await page.locator('#gallery > .card').count();
   expect(firstCount).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
+  const firstDoi = await page.locator('#gallery > .card').first().getAttribute('data-doi');
 
   if (data.hotCount > RESULT_WINDOW_SIZE) {
-    await expect(page.locator('#nextResultPage')).toBeEnabled();
-    await page.locator('#nextResultPage').click();
-    await expect.poll(async () => page.locator('#gallery > .card').count()).toBe(Math.min(RESULT_WINDOW_SIZE, data.hotCount - RESULT_WINDOW_SIZE));
+    const next = page.locator('#nextResultPage');
+    await expect(next).toBeEnabled();
+    await next.scrollIntoViewIfNeeded();
+    await expect(next).toBeVisible();
+    await next.click();
+    await expect(page.locator('#resultWindowStatus')).toContainText(/(?:第 |Page )2\//);
     await expect(page.locator('#previousResultPage')).toBeEnabled();
-    await expect(page.locator('#resultWindowStatus')).toContainText('2/');
+    await expect.poll(async () => page.locator('#gallery > .card').count())
+      .toBe(Math.min(RESULT_WINDOW_SIZE, data.hotCount - RESULT_WINDOW_SIZE));
+    await expect.poll(async () => page.locator('#gallery > .card').first().getAttribute('data-doi'))
+      .not.toBe(firstDoi);
   } else {
     await expect(page.locator('#nextResultPage')).toBeDisabled();
   }
