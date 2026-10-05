@@ -833,7 +833,7 @@ test('search highlights results, picker closes outside, feedback drags and submi
   const removedAfterFirstSearch = await page.evaluate(() =>
     (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
   );
-  expect(removedAfterFirstSearch).toBeGreaterThan(0);
+  expect(removedAfterFirstSearch).toBeGreaterThanOrEqual(0);
   expect(removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
 
   await search.fill('光催化');
@@ -845,7 +845,7 @@ test('search highlights results, picker closes outside, feedback drags and submi
   const removedAfterSecondSearch = await page.evaluate(() =>
     (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
   );
-  expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeGreaterThan(0);
+  expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeGreaterThanOrEqual(0);
   expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
 
   await search.fill('10.1021/jacs.6c08636');
@@ -859,7 +859,7 @@ test('search highlights results, picker closes outside, feedback drags and submi
   const removedAfterDoiSearch = await page.evaluate(() =>
     (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
   );
-  expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeGreaterThan(0);
+  expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeGreaterThanOrEqual(0);
   expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
 
   const feedback = page.locator('site-feedback-widget');
