@@ -263,7 +263,7 @@ test('read flag is independently visible but cannot activate the dormant read pa
   assert.equal(status.body.readPathActive,false);
 });
 
-test('only authenticated admin routes exist in the foundation; public search is not cut over',()=>{
+test('shadow activation remains admin-only, dedicated, and read-path inactive',()=>{
   const source=readFileSync(new URL('../src/index.js',import.meta.url),'utf8');
   assert.ok(source.includes('/api/admin/literature-catalog-index/query'));
   assert.ok(!source.includes('/api/literature/catalog-search'));
@@ -271,12 +271,19 @@ test('only authenticated admin routes exist in the foundation; public search is 
 
   const wrangler=readFileSync(new URL('../wrangler.toml',import.meta.url),'utf8');
   const deploy=readFileSync(new URL('../../../.github/workflows/deploy-worker-frontend.yml',import.meta.url),'utf8');
-  for(const token of ['LITERATURE_CATALOG_INDEX_SHADOW_ENABLED','LITERATURE_CATALOG_INDEX_READ_ENABLED']){
-    assert.ok(!wrangler.includes(token),token+' must remain unset in wrangler');
-    assert.ok(!deploy.includes(token),token+' must remain unset in production deploy');
+  const shadowWorkflow=readFileSync(new URL('../../../.github/workflows/literature-search-index-shadow.yml',import.meta.url),'utf8');
+  for(const token of ['LITERATURE_CATALOG_INDEX_SHADOW_ENABLED','LITERATURE_CATALOG_INDEX_READ_ENABLED','LITERATURE_INDEX_DB']){
+    assert.ok(!wrangler.includes(token),token+' must remain absent from the checked-in base wrangler config');
   }
-  assert.ok(!wrangler.includes('LITERATURE_INDEX_DB'),'dedicated search DB binding must remain unconfigured in foundation');
-  assert.ok(!deploy.includes('literature-catalog-index-v1.sql'),'search DB migration must not run in production foundation');
+  assert.ok(deploy.includes('LITERATURE_INDEX_D1_NAME: organic-synthesis-gallery-literature-index'));
+  assert.ok(deploy.includes('binding = "LITERATURE_INDEX_DB"'));
+  assert.ok(deploy.includes('literature-catalog-index-v1.sql'));
+  assert.ok(deploy.includes('LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "$LITERATURE_INDEX_SHADOW_ENABLED"'));
+  assert.ok(deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"'));
+  assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"'));
+  assert.ok(shadowWorkflow.includes('workflow_run:'));
+  assert.ok(shadowWorkflow.includes('node architecture/shadow.mjs --verify-live'));
+  assert.ok(shadowWorkflow.includes('sync-literature-catalog-index-shadow.mjs'));
   const primarySchema=readFileSync(new URL('../../schema.sql',import.meta.url),'utf8');
   assert.ok(!primarySchema.includes('literature_catalog_fts'),'primary D1 schema must stay free of FTS virtual tables');
 });
