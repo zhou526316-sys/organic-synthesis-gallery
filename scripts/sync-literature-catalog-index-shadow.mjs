@@ -5,6 +5,7 @@ import { normalizeDoi } from '../shared/literature-identity.mjs';
 
 const SITE = new URL(process.env.SITE_URL || 'https://gallery.gczhouwld.com/');
 const WORKER = new URL(process.env.WORKER_URL || 'https://organic-synthesis-gallery.zhou526316.workers.dev/');
+const IMPORT_BATCH_SIZE = 8;
 const TOKEN = String(process.env.BRIDGE_WRITE_TOKEN || '').trim();
 const REPORT = process.env.LITERATURE_INDEX_SHADOW_REPORT || '/tmp/literature-catalog-index-shadow-report.json';
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
@@ -260,8 +261,8 @@ async function main() {
     let importedBatches = 0;
     if (begin.body.ready !== true) {
       const rows = records.map(paperProjection);
-      for (let offset = 0; offset < rows.length; offset += 100) {
-        const batch = rows.slice(offset, offset + 100);
+      for (let offset = 0; offset < rows.length; offset += IMPORT_BATCH_SIZE) {
+        const batch = rows.slice(offset, offset + IMPORT_BATCH_SIZE);
         const imported = await api('/api/admin/literature-catalog-index/import', {
           method: 'POST', body: { generation, rows: batch },
         });
@@ -318,6 +319,7 @@ async function main() {
       markerBlobSha: generation.markerBlobSha,
       recordCount: generation.recordCount,
       importedBatches,
+      importBatchSize: IMPORT_BATCH_SIZE,
       contentReused: begin.body.contentReused === true,
       alreadyReady: begin.body.ready === true,
       rowParity: { checked: expectedRows.length, mismatched: 0 },
