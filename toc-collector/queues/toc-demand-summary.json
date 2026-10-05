@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-10-05T05:50:54.976Z",
+  "generatedAt": "2026-10-05T19:19:24.079Z",
   "mediaIndexUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/media-index.json",
   "localCaptureIndexUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/local-capture-index",
   "literatureSupplementUrl": "https://zhou526316-sys.github.io/organic-synthesis-gallery/literature-supplement.json",
   "manualDisplayGapOverrides": 16,
-  "liveLocalCaptures": 762,
+  "liveLocalCaptures": 772,
   "mediaInventoryUrl": "https://organic-synthesis-gallery.zhou526316.workers.dev/api/media/inventory",
   "mediaInventoryCount": 797,
   "webpageDoiCount": 797,
   "latestAddedDate": "2026-10-05",
   "latestAddedCount": 11,
-  "mediaRecordCount": 759,
-  "visibleGapTotal": 27,
-  "demandTotal": 27,
-  "noVisual": 27,
-  "fallbackOnlyNeedsOfficialUpgrade": 114,
-  "missingOfficialTotal": 141,
+  "mediaRecordCount": 775,
+  "visibleGapTotal": 26,
+  "demandTotal": 26,
+  "noVisual": 26,
+  "fallbackOnlyNeedsOfficialUpgrade": 113,
+  "missingOfficialTotal": 139,
   "figureGapTotal": 797,
   "zeroFigureGapTotal": 797,
   "lowResolutionFigureGapTotal": 0,
@@ -28,7 +28,7 @@
     "science": 0,
     "rsc": 1,
     "elsevier": 0,
-    "ccs": 1,
+    "ccs": 0,
     "other": 0
   },
   "upgradeByPublisher": {
@@ -38,14 +38,13 @@
     "science": 9,
     "rsc": 0,
     "elsevier": 0,
-    "ccs": 1,
+    "ccs": 0,
     "other": 0
   },
   "byJournal": {
     "ACS Catalysis": 4,
     "JOC": 1,
     "Organic Letters": 18,
-    "CCS Chemistry": 1,
     "Nature": 2,
     "Chemical Science": 1
   },
@@ -281,21 +280,21 @@
       "existingReason": ""
     },
     {
-      "doi": "10.31635/ccschem.026.202607659",
-      "journal": "CCS Chemistry",
-      "title": "Upcycling of Epoxy Resins via An Oxidation–Cope Elimination Pathway Using Organic Solvent",
-      "date": "2026-10-01",
-      "addedDate": "2026-10-04",
-      "publisher": "ccs",
-      "state": "no_visual",
-      "existingReason": ""
-    },
-    {
       "doi": "10.1038/s41586-026-11169-0",
       "journal": "Nature",
       "title": "Chiral oxazolidinones via biocatalytic aziridination of unactivated alkenes",
       "date": "2026-09-23",
       "addedDate": "2026-09-24",
+      "publisher": "nature",
+      "state": "no_visual",
+      "existingReason": ""
+    },
+    {
+      "doi": "10.1038/s41586-026-11091-5",
+      "journal": "Nature",
+      "title": "Ketone homologation via palladium-catalysed decarboxylative rearrangement",
+      "date": "2026-09-03",
+      "addedDate": "",
       "publisher": "nature",
       "state": "no_visual",
       "existingReason": ""
