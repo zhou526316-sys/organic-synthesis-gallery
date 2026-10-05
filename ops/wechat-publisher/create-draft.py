@@ -543,7 +543,7 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
     portrait_id = str(cover.get("portrait_figure_id") or "").strip()
     portrait = local_images.get(portrait_id) if portrait_id else None
     try:
-        from PIL import Image, ImageDraw, ImageOps
+        from PIL import Image, ImageDraw, ImageFont, ImageOps
     except ImportError as exc:
         raise RuntimeError("cover composition requires Pillow") from exc
 
@@ -552,6 +552,63 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
     height = int(canvas_spec.get("height") or 800)
     background_name = str(canvas_spec.get("background") or "white")
     crop_frac = cover.get("crop_frac")
+    layout = str(cover.get("layout") or "").strip()
+
+    def choose_font(size: int, bold: bool = False):
+        names = (
+            [
+                "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+                "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+            ]
+            if bold
+            else [
+                "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+                "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+            ]
+        )
+        for name in names:
+            if Path(name).exists():
+                try:
+                    return ImageFont.truetype(name, size)
+                except OSError:
+                    continue
+        return ImageFont.load_default()
+
+    def wrap_text(draw, value: str, font, max_width: int, max_lines: int):
+        text = str(value or "").strip()
+        if not text:
+            return []
+        tokens = text.split(" ") if " " in text else list(text)
+        joiner = " " if " " in text else ""
+        lines = []
+        current = ""
+        used = 0
+        for index, token in enumerate(tokens):
+            candidate = token if not current else current + joiner + token
+            box = draw.textbbox((0, 0), candidate, font=font)
+            if not current or box[2] - box[0] <= max_width:
+                current = candidate
+                used = index + 1
+                continue
+            lines.append(current)
+            if len(lines) >= max_lines:
+                break
+            current = token
+            used = index
+        if len(lines) < max_lines and current:
+            lines.append(current)
+            used = len(tokens)
+        if used < len(tokens) and lines:
+            last = lines[-1]
+            while last:
+                box = draw.textbbox((0, 0), last + "…", font=font)
+                if box[2] - box[0] <= max_width:
+                    break
+                last = last[:-1]
+            lines[-1] = last.rstrip(" ,.;:，。；：") + "…"
+        return lines[:max_lines]
 
     with Image.open(source) as image:
         image.load()
@@ -567,26 +624,186 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
 
         canvas = Image.new("RGB", (width, height), background_name)
 
-        if portrait:
-            # Editorial cover: a clean MacMillan portrait on the left plus the
-            # paper's original reaction artwork on the right. Chemical structures
-            # are never redrawn; they remain pixels from the publisher figure.
+        if layout == "gallery_card_qr":
+            # Main WeChat cover: reproduce the visual language of the actual
+            # Gallery "每日精选" card and reserve a clean right column for a QR
+            # code that opens the day's Gallery edition. No chemistry is redrawn.
+            canvas = Image.new("RGB", (width, height), "#f4f7fb")
+            draw = ImageDraw.Draw(canvas)
+            card_x, card_y = 44, 44
+            card_w, card_h = int(width * 0.755), height - 88
+            qr_x = card_x + card_w + 34
+            qr_w = width - qr_x - 34
+
+            draw.rounded_rectangle(
+                (card_x, card_y, card_x + card_w, card_y + card_h),
+                radius=34,
+                fill="#ffffff",
+                outline="#d7a446",
+                width=5,
+            )
+
+            paper = data.get("paper") if isinstance(data.get("paper"), dict) else {}
+            journal = str(paper.get("journal") or "")
+            date = str(cover.get("card_date") or data.get("date") or "")
+            card_title = str(
+                cover.get("card_title")
+                or data.get("headline")
+                or paper.get("title")
+                or ""
+            )
+            authors = str(paper.get("authors") or "")
+            doi = str(paper.get("doi") or "")
+
+            tag_font = choose_font(25, True)
+            small_font = choose_font(24, False)
+            title_font = choose_font(44, True)
+            doi_font = choose_font(22, False)
+
+            tx = card_x + 38
+            ty = card_y + 30
+            tags = [
+                ("每日精选", "#fff0cf", "#8b5a08"),
+                (journal, "#eef3ff", "#3159bd"),
+                ("新增", "#edf9f0", "#237044"),
+            ]
+            if date:
+                tags.insert(2, (date, "#f4f5f7", "#667085"))
+            for label, fill, ink in tags:
+                if not label:
+                    continue
+                box = draw.textbbox((0, 0), label, font=tag_font)
+                tw = box[2] - box[0] + 28
+                th = 46
+                draw.rounded_rectangle((tx, ty, tx + tw, ty + th), radius=22, fill=fill)
+                draw.text((tx + 14, ty + 7), label, font=tag_font, fill=ink)
+                tx += tw + 12
+
+            text_x = card_x + 40
+            text_w = card_w - 80
+            title_y = card_y + 105
+            title_lines = wrap_text(draw, card_title, title_font, text_w, 2)
+            for line in title_lines:
+                draw.text((text_x, title_y), line, font=title_font, fill="#172033")
+                title_y += 58
+
+            if authors:
+                author_lines = wrap_text(draw, authors, small_font, text_w, 1)
+                for line in author_lines:
+                    draw.text((text_x, title_y + 4), line, font=small_font, fill="#667085")
+                    title_y += 34
+
+            visual_top = max(card_y + 255, title_y + 24)
+            visual_bottom = card_y + card_h - 58
+            visual_h = max(220, visual_bottom - visual_top)
+            visual_x = card_x + 32
+            visual_w = card_w - 64
+            draw.rounded_rectangle(
+                (visual_x, visual_top, visual_x + visual_w, visual_top + visual_h),
+                radius=22,
+                fill="#ffffff",
+                outline="#e3e8f1",
+                width=2,
+            )
+            fitted = ImageOps.contain(
+                image,
+                (visual_w - 34, visual_h - 34),
+                method=Image.Resampling.LANCZOS,
+            )
+            px = visual_x + (visual_w - fitted.width) // 2
+            py = visual_top + (visual_h - fitted.height) // 2
+            canvas.paste(fitted, (px, py))
+
+            if doi:
+                doi_label = f"DOI {doi}"
+                box = draw.textbbox((0, 0), doi_label, font=doi_font)
+                draw.text(
+                    (card_x + card_w - 34 - (box[2] - box[0]), card_y + card_h - 36),
+                    doi_label,
+                    font=doi_font,
+                    fill="#8a93a3",
+                )
+
+            # QR column.
+            qr_title_font = choose_font(34, True)
+            qr_hint_font = choose_font(24, False)
+            qr_title = str(cover.get("qr_title") or "今日新增")
+            qr_count = str(cover.get("qr_count") or "")
+            qr_line = f"{qr_title}{(' · ' + qr_count) if qr_count else ''}"
+            qr_title_lines = wrap_text(draw, qr_line, qr_title_font, qr_w - 20, 2)
+            qy = 110
+            for line in qr_title_lines:
+                draw.text((qr_x + 10, qy), line, font=qr_title_font, fill="#172033")
+                qy += 47
+
+            qr_rel = str(cover.get("qr_repo_path") or "").strip()
+            qr_path = (ROOT / qr_rel).resolve() if qr_rel else None
+            if qr_path and qr_path.exists():
+                try:
+                    qr_path.relative_to(ROOT.resolve())
+                except ValueError as exc:
+                    raise RuntimeError("cover qr_repo_path escapes repository") from exc
+                with Image.open(qr_path) as qr_image:
+                    qr_image.load()
+                    qr_image = qr_image.convert("RGB")
+                    qr_size = min(qr_w - 36, 292)
+                    qr_image = qr_image.resize(
+                        (qr_size, qr_size),
+                        Image.Resampling.NEAREST,
+                    )
+                    qx = qr_x + (qr_w - qr_size) // 2
+                    qy = max(qy + 24, 210)
+                    draw.rounded_rectangle(
+                        (qx - 14, qy - 14, qx + qr_size + 14, qy + qr_size + 14),
+                        radius=22,
+                        fill="#ffffff",
+                        outline="#d7deea",
+                        width=2,
+                    )
+                    canvas.paste(qr_image, (qx, qy))
+                    qy += qr_size + 38
+            else:
+                qy += 20
+
+            hint = str(cover.get("qr_hint") or "扫码进入当日文献页")
+            for line in wrap_text(draw, hint, qr_hint_font, qr_w - 24, 3):
+                box = draw.textbbox((0, 0), line, font=qr_hint_font)
+                draw.text(
+                    (qr_x + (qr_w - (box[2] - box[0])) // 2, qy),
+                    line,
+                    font=qr_hint_font,
+                    fill="#526071",
+                )
+                qy += 34
+            site = "gallery.gczhouwld.com"
+            site_box = draw.textbbox((0, 0), site, font=doi_font)
+            draw.text(
+                (qr_x + (qr_w - (site_box[2] - site_box[0])) // 2, height - 78),
+                site,
+                font=doi_font,
+                fill="#98a2b3",
+            )
+
+        elif portrait:
             left_w = int(width * 0.34)
             with Image.open(portrait) as p:
                 p.load()
                 p = p.convert("RGB")
-                p = ImageOps.fit(p, (left_w, height), method=Image.Resampling.LANCZOS, centering=(0.50, 0.42))
+                p = ImageOps.fit(
+                    p,
+                    (left_w, height),
+                    method=Image.Resampling.LANCZOS,
+                    centering=(0.50, 0.42),
+                )
                 canvas.paste(p, (0, 0))
-            draw = ImageDraw.Draw(canvas)
-            fade_w = max(120, int(width * 0.10))
-            for i in range(fade_w):
-                alpha = int(255 * (i / max(1, fade_w - 1)) ** 1.4)
-                x = left_w - fade_w + i
-                draw.line([(x, 0), (x, height)], fill=(255, 255, 255, alpha) if canvas.mode=="RGBA" else (255,255,255), width=1)
             right_x = int(width * 0.35)
             right_w = width - right_x - int(width * 0.025)
             right_h = int(height * 0.78)
-            fitted = ImageOps.contain(image, (right_w, right_h), method=Image.Resampling.LANCZOS)
+            fitted = ImageOps.contain(
+                image,
+                (right_w, right_h),
+                method=Image.Resampling.LANCZOS,
+            )
             px = right_x + (right_w - fitted.width)//2
             py = (height - fitted.height)//2
             canvas.paste(fitted, (px, py))
@@ -598,8 +815,15 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             )
             canvas.paste(resized, ((width - resized.width)//2, (height - resized.height)//2))
 
-    target = Path(tempfile.gettempdir()) / "osg-wechat-retrospective-cover.jpg"
-    canvas.save(target, format="JPEG", quality=95, optimize=True, progressive=True, dpi=(300, 300))
+    target = Path(tempfile.gettempdir()) / "osg-wechat-composed-cover.jpg"
+    canvas.save(
+        target,
+        format="JPEG",
+        quality=95,
+        optimize=True,
+        progressive=True,
+        dpi=(300, 300),
+    )
     return target
 
 def multipart_file(field: str, path: Path):
@@ -1528,13 +1752,23 @@ def render_wechat_draft_preview(draft: dict, *, media_id: str) -> str:
         source_url = str(item.get("content_source_url") or "")
         thumb_url = str(item.get("thumb_url") or "")
         anchor = f"article-{idx + 1}"
-        card_nav.append(
-            "<a class='push-card' href='#" + anchor + "'>"
-            + (f"<img src='{html.escape(thumb_url, quote=True)}'/>" if thumb_url else "")
-            + "<span><b>" + html.escape(item_title) + "</b>"
-            + (f"<small>{html.escape(digest)}</small>" if digest else "")
-            + "</span></a>"
-        )
+        if idx == 0:
+            card_nav.append(
+                "<a class='push-card push-card-main' href='#" + anchor + "'>"
+                + (f"<img src='{html.escape(thumb_url, quote=True)}'/>" if thumb_url else "")
+                + "<span><b>" + html.escape(item_title) + "</b>"
+                + (f"<small>{html.escape(digest)}</small>" if digest else "")
+                + "</span></a>"
+            )
+        else:
+            card_nav.append(
+                "<a class='push-card push-card-sub' href='#" + anchor + "'>"
+                + "<span><b>" + html.escape(item_title) + "</b>"
+                + (f"<small>{html.escape(digest)}</small>" if digest else "")
+                + "</span>"
+                + (f"<img src='{html.escape(thumb_url, quote=True)}'/>" if thumb_url else "")
+                + "</a>"
+            )
         rendered.append(
             f"<article id='{anchor}' class='article-block'>"
             f"<p class='article-index'>{idx + 1:02d} / {len(items):02d}</p>"
@@ -1563,12 +1797,17 @@ body{{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC
 .bundle{{max-width:720px;margin:0 auto;padding:16px 12px 48px}}
 .bundle-head{{background:#fff;border-radius:14px;padding:14px;margin:0 0 14px;box-shadow:0 1px 8px rgba(0,0,0,.04)}}
 .bundle-head>p{{font-size:11px;letter-spacing:.12em;color:#777;margin:0 0 10px}}
-.push-card{{display:flex;gap:12px;align-items:center;padding:10px 0;text-decoration:none;color:#222;border-top:1px solid #eee}}
-.push-card:first-of-type{{border-top:0}}
-.push-card img{{width:112px;height:48px;object-fit:cover;border-radius:5px;background:#eee;flex:0 0 auto}}
-.push-card span{{min-width:0;display:block}}
-.push-card b{{display:block;font-size:14px;line-height:1.45}}
-.push-card small{{display:block;color:#888;font-size:11px;line-height:1.45;margin-top:3px}}
+.push-card{{text-decoration:none;color:#222}}
+.push-card-main{{display:block;padding:0 0 12px}}
+.push-card-main img{{display:block;width:100%;aspect-ratio:2.35/1;object-fit:cover;border-radius:8px;background:#eee}}
+.push-card-main span{{display:block;padding:10px 2px 0}}
+.push-card-main b{{display:block;font-size:16px;line-height:1.45}}
+.push-card-main small{{display:block;color:#888;font-size:11px;line-height:1.45;margin-top:4px}}
+.push-card-sub{{display:flex;gap:12px;align-items:center;padding:12px 0 0;border-top:1px solid #eee}}
+.push-card-sub span{{display:block;min-width:0;flex:1}}
+.push-card-sub b{{display:block;font-size:14px;line-height:1.45}}
+.push-card-sub small{{display:block;color:#888;font-size:11px;line-height:1.45;margin-top:4px}}
+.push-card-sub img{{display:block;width:88px;height:88px;object-fit:cover;border-radius:7px;background:#eee;flex:0 0 auto}}
 .article-block{{max-width:677px;margin:0 auto 18px;background:#fff;padding:24px 20px 48px;border-radius:14px}}
 .article-index{{font-size:10px;letter-spacing:.12em;color:#aaa;margin:0 0 8px}}
 h1{{font-size:22px;line-height:1.45;font-weight:700;margin:0 0 12px}}
@@ -1793,7 +2032,7 @@ def main() -> int:
     digest = (
         str(edition.get("digest") or "").strip()
         or (
-            f"今日新增{len(papers)}篇有机合成文献，并精选1篇进行由浅入深的深度解读。"
+            f"今日新增{len(papers)}篇有机合成文献；推文内精选1篇展开解读。"
             if featured
             else f"今日新增{len(papers)}篇有机合成文献。"
         )
