@@ -80,14 +80,17 @@ jobs:
           node cloudflare/scripts/build-cloudflare-bridge.mjs
           node cloudflare/scripts/build-bridge-loader.mjs
           node scripts/validate-tm220-artifacts.mjs public
-          grep -F '// @version      2.2.50' public/gallery-vpn-bridge.user.js
-          grep -F "PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'" public/gallery-vpn-bridge.user.js
+          grep -F '// @version      2.2.51' public/gallery-vpn-bridge.user.js
+          grep -F "PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v12'" public/gallery-vpn-bridge.user.js
           grep -F "https://api.crossref.org/works/" public/gallery-vpn-bridge.user.js
           grep -F "ccs-crossref-route-v1" public/gallery-vpn-bridge.user.js
           grep -F "PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'" public/gallery-vpn-bridge.user.js
           grep -F "rsc_graphical_abstract" public/gallery-vpn-bridge.user.js
           grep -F "ccs_toc_index_key_image" public/gallery-vpn-bridge.user.js
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
+          grep -F "CONTROLLER_REVISION = '2.2.41'" public/gallery-vpn-bridge.user.js
+          grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-session-v5'" public/gallery-vpn-bridge.user.js
+          grep -F "ccs_pdfdirect" public/gallery-vpn-bridge.user.js
       - name: Overlay only Tampermonkey assets and prove everything else is byte-identical
         run: |
           set -euo pipefail
@@ -140,7 +143,7 @@ jobs:
               try{
                 const r=await fetch(u,{headers:{'cache-control':'no-cache'}});
                 const t=await r.text();last='status='+r.status+' bytes='+t.length;
-                ok=r.ok&&t.includes('// @version      2.2.50')&&t.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'")&&t.includes('https://api.crossref.org/works/')&&t.includes('ccs-crossref-route-v1')&&t.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'")&&t.includes('rsc_graphical_abstract')&&t.includes('ccs_toc_index_key_image')&&t.includes("PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'");
+                ok=r.ok&&t.includes('// @version      2.2.51')&&t.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v12'")&&t.includes("CONTROLLER_REVISION = '2.2.41'")&&t.includes("PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-session-v5'")&&t.includes('https://api.crossref.org/works/')&&t.includes('ccs-crossref-route-v1')&&t.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'")&&t.includes('rsc_graphical_abstract')&&t.includes('ccs_toc_index_key_image')&&t.includes("PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'");
                 if(ok)break;
               }catch(e){last=String(e)}
               await sleep(3000);
