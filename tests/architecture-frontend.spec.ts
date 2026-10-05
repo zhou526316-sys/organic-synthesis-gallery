@@ -183,6 +183,7 @@ test('global search loads an Archive DOI from search shards on demand', async ({
   await page.goto(`${process.env.ARCHITECTURE_PREVIEW_BASE || 'http://127.0.0.1:4174'}/`, { waitUntil: 'domcontentloaded' });
   await expect.poll(async () => page.evaluate(() => document.documentElement.dataset.catalogRead || ''), { timeout: 30000 })
     .toBe('architecture-v1');
+  const registryBefore = await page.locator('#gallery-literature-doi-registry').textContent();
 
   await page.locator('#search').fill(data.archiveDoi);
   await expect.poll(async () => {
@@ -192,6 +193,8 @@ test('global search loads an Archive DOI from search shards on demand', async ({
     return (await cards.first().getAttribute('data-doi')) || '';
   }, { timeout: 30000 }).toBe(data.archiveDoi);
   await expect(page.locator('#resultScopeLabel')).toHaveText(/当前筛选|Current filter/);
+  await expect.poll(async () => page.locator('#gallery-literature-doi-registry').textContent())
+    .toBe(registryBefore);
 });
 
 test('historical date filter loads matching Archive month on demand', async ({ page }) => {
