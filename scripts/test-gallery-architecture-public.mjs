@@ -49,4 +49,6 @@ test('public architecture publishes a bounded hash-bound Hot fallback object', (
   const reader = readFileSync('architecture/published-reader.mjs','utf8');
   assert.ok(reader.includes('loadPublishedHotFallback'));
   assert.ok(reader.includes('architecture_hot_fallback_hash_mismatch'));
+  const delivery = readFileSync('scripts/pages-release-delivery.mjs','utf8');
+  assert.ok(delivery.includes('release.hotFallback'));
 });
