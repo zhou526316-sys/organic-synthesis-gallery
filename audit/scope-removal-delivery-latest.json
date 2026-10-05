@@ -1,63 +1,44 @@
 {
   "schemaVersion": 1,
   "ok": true,
-  "runId": 36966791981,
+  "runId": 37252457388,
   "runAttempt": 1,
-  "sourceCommit": "42e3044a7e1222abe5ff72a031130d105449e3c1",
-  "markerCommit": "284af5392fa418e5edde6a9a940b3038eb9bc6d3",
-  "markerBlobSha": "72f076bad2efc074270a88f3dee193cfdd81b559",
-  "publicationSlot": null,
-  "productionCards": 754,
-  "datasetSha256": "0dd1605cb024b5b63a1f129cdf7250c090e81e71747e9ade8056a4ca20097beb",
+  "sourceCommit": "21b6f38e05760108ad853abdeb2b7d3c44ec0a54",
+  "markerCommit": "e95a6a4d3ece2354a63e05f38b54b21981f792cd",
+  "markerBlobSha": "486ea67bdddca002293fa3ec910b5a28c7128e87",
+  "publicationSlot": "2026-10-05T08:00:00+08:00",
+  "productionCards": 797,
+  "datasetSha256": "9ae042967e38bea2ef418682c3684df600d8ba6e942441c73687328e95551d1e",
   "publishableDois": [],
   "rejectedDois": [],
   "deferredDois": [
+    "10.1021/acscatal.6c06578",
     "10.31635/ccschem.026.202608090",
     "10.31635/ccschem.026.202607590",
     "10.31635/ccschem.026.202607612",
-    "10.31635/ccschem.026.202607659",
-    "10.31635/ccschem.026.202608472"
+    "10.31635/ccschem.026.202608472",
+    "10.31635/ccschem.026.202608262"
   ],
   "chineseTitlesVerified": true,
   "sites": [
     {
       "site": "https://gallery.gczhouwld.com/",
-      "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36966791981-1790917373841",
-      "filesVerified": [
-        "papers.gz.b64",
-        "total-synthesis.json",
-        "manual-supplement.json",
-        "final-audit-supplement.json",
-        "curated-supplement.json",
-        "automation-supplement.json",
-        "rolling-supplement.json",
-        "literature-supplement.json",
-        "title-translations-zh.json",
-        "index.html"
-      ],
-      "attempts": 1
+      "productionCards": 797,
+      "removedDoisAbsent": [
+        "10.1039/d6gc04274k"
+      ]
     },
     {
       "site": "https://zhou526316-sys.github.io/organic-synthesis-gallery/",
-      "effectiveUrl": "https://gallery.gczhouwld.com/release-delivery.json?release-check=36966791981-1790917374399",
-      "filesVerified": [
-        "papers.gz.b64",
-        "total-synthesis.json",
-        "manual-supplement.json",
-        "final-audit-supplement.json",
-        "curated-supplement.json",
-        "automation-supplement.json",
-        "rolling-supplement.json",
-        "literature-supplement.json",
-        "title-translations-zh.json",
-        "index.html"
-      ],
-      "attempts": 1
+      "productionCards": 797,
+      "removedDoisAbsent": [
+        "10.1039/d6gc04274k"
+      ]
     }
   ],
-  "verifiedAt": "2026-10-02T05:03:14.566Z",
+  "verifiedAt": "2026-10-05T01:48:48Z",
   "mode": "scope-correction",
   "removedDois": [
-    "10.1038/s44160-026-01164-8"
+    "10.1039/d6gc04274k"
   ]
 }
