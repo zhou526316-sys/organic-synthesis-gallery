@@ -1,7 +1,7 @@
 {
   "slug": "macmillan-titanium-ether-sh2",
   "title": "往期精选｜MacMillan：通过杂原子均裂取代合成二烷基醚",
-  "digest": "MacMillan 团队通过 Ti–alkoxide 参与的自由基配体转移构建二烷基醚，并以实验与计算逐层讨论 RLT 与 het-SH₂ 的证据边界。",
+  "digest": "MacMillan 团队利用钛醇盐与烷基自由基构建二烷基醚，并通过实验与计算逐层讨论自由基配体转移（RLT）与 het-SH₂ 的证据边界。",
   "source_url": "https://gallery.gczhouwld.com/?doi=10.1038/s41586-026-11043-z",
   "pdf_url": "https://www.nature.com/articles/s41586-026-11043-z.pdf",
   "headline": "通过杂原子均裂取代合成二烷基醚",
@@ -14,11 +14,11 @@
   "quick_points": [
     {
       "label": "先用一句话看懂",
-      "text": "氧化还原活性酯（RAE）在光氧化还原条件下产生烷基自由基；另一边，Ti(IV) 与醇形成钛醇盐。随后自由基在氧原子上形成 C–O 键，并把 Ti(IV) 还原为 Ti(III)，最终得到二烷基醚。"
+      "text": "氧化还原活性酯（RAE）在光氧化还原条件下产生烷基自由基；另一边，Ti(IV) 与醇形成钛醇盐。随后自由基在氧原子上形成 C–O 键，同时 Ti(IV) 还原为 Ti(III)，最终得到二烷基醚。"
     },
     {
       "label": "真正的实验难点",
-      "text": "真正困难的不是“能不能产生自由基”，而是要让关键的钛醇盐在光照下保持足够寿命和浓度，同时避免配体到金属电荷转移（LMCT）引发分解、Ti(III) 造成副反应，以及自由基被其它路径消耗。505 nm 光的作用要放在这个物种平衡里理解。"
+      "text": "真正困难的不是“能不能产生自由基”，而是要让关键的钛醇盐在光照下保持足够寿命和浓度，同时避免配体到金属电荷转移（LMCT）引发分解、Ti(III) 造成副反应，以及自由基被其它路径消耗。505 nm 光的意义就在于调控这些物种之间的竞争。"
     }
   ],
   "figures": [
@@ -43,7 +43,7 @@
         0.995,
         0.995
       ],
-      "caption": "原文 Fig. 1e｜先看完整反应模块：RAE、alcohol、photocatalyst 与 Ti catalyst 如何汇合成 dialkyl ether；底部 3°–1°、3°–2°、2°–1°、2°–2° 四类连接直接展示作者瞄准的位阻范围。"
+      "caption": "原文 Fig. 1e｜总体反应：RAE 提供烷基自由基，醇形成钛醇盐，最终构建二烷基醚。底部列出的 3°–1°、3°–2°、2°–1°、2°–2° 四类连接，直接展示了作者瞄准的位阻范围。"
     },
     {
       "id": "fig1_classical",
@@ -54,7 +54,7 @@
         0.995,
         0.305
       ],
-      "caption": "原文 Fig. 1a–b｜传统路线的两类根本困难：SN2/SN1 的几何和 carbocation 问题；以及 metal-mediated etherification 中 alcohol binding、basic metal alkoxide、sterically demanding coordination 与 sluggish C(sp³)–O reductive elimination。"
+      "caption": "原文 Fig. 1a–b｜传统路线为什么难：SN2 受背面进攻几何和位阻限制；SN1 需要碳正离子；常规金属介导醚化还面临醇配位、金属醇盐碱性和 C(sp³)–O 还原消除等问题。"
     },
     {
       "id": "mechanism_cycle",
@@ -65,7 +65,7 @@
         0.5,
         0.282
       ],
-      "caption": "原文 Fig. 2a｜完整循环：photoredox cycle 负责 Ti(III)/Ti(IV) 与 RAE reduction，Ti cycle 负责 alcohol binding 与 O-ligand transfer；两条 cycle 必须在 speciation 与速率上同时匹配。"
+      "caption": "原文 Fig. 2a｜完整循环：光氧化还原循环负责 Ti(III)/Ti(IV) 转换和 RAE 还原，钛循环负责醇结合与氧配体转移。两条循环必须在物种浓度和速率上同时匹配。"
     },
     {
       "id": "lmct",
@@ -76,7 +76,7 @@
         0.995,
         0.282
       ],
-      "caption": "原文 Fig. 2b｜505 nm 是 species-selective excitation：photocatalyst 仍吸光，而 Ti–alkoxide 的 LMCT/β-scission 被压低；主反应 54%→81%。"
+      "caption": "原文 Fig. 2b｜505 nm 的作用不是普通波长筛选：它让光催化剂继续吸光，同时尽量避开钛醇盐的 LMCT/β-裂解，目标醚收率由 54% 提高到 81%。"
     },
     {
       "id": "ti_dr",
@@ -87,7 +87,7 @@
         0.5,
         0.555
       ],
-      "caption": "原文 Fig. 2c｜Ti-dependent d.r. 是一个 mechanistic probe：有 Ti 时 2.2:1 d.r.，无 Ti 或 carbocation electrochemical route 时约 1.1:1。支持 Ti 进入 bond-forming environment，但还不能单独证明 concerted het-SH₂。"
+      "caption": "原文 Fig. 2c｜有 Ti 时产物非对映比为 2.2:1；去掉 Ti 或改走碳正离子电化学路径时均接近 1.1:1。这个结果支持 Ti 进入关键成键环境。"
     },
     {
       "id": "photonmr",
@@ -98,7 +98,7 @@
         0.995,
         0.555
       ],
-      "caption": "原文 Fig. 2d｜PhotoNMR 在照光过程中追踪 Ti(IV)–alkoxide。它证明关键 Ti–OR species 在 working reaction 中存在，却没有直接观察 C–O transition state。"
+      "caption": "原文 Fig. 2d｜原位光照核磁（PhotoNMR）直接跟踪到 Ti(IV) 钛醇盐在照光过程中的形成与消耗，证明关键中间体确实存在于实际反应体系。"
     },
     {
       "id": "radical_test",
@@ -109,7 +109,7 @@
         0.995,
         0.792
       ],
-      "caption": "原文 Fig. 2e｜强还原环境下 isolated / in situ Ti–alkoxide 仍能给 ether，作用是压低 radical→carbocation 的解释，证明 carbon radical 与 Ti–alkoxide 可以发生 productive O-ligand transfer。"
+      "caption": "原文 Fig. 2e｜在强还原条件下，分离得到或原位生成的钛醇盐仍能形成目标醚。实验的意义是尽量压低“自由基先变成碳正离子”的解释。"
     },
     {
       "id": "dft",
@@ -120,7 +120,7 @@
         0.995,
         0.995
       ],
-      "caption": "原文 Fig. 2f｜generic RLT 如何进一步被描述成 het-SH₂：同一个 TS 中 C–O 在形成、Ti–O 在断裂，IRC 无额外 intermediate，spin density 从 carbon 向 Ti 转移。ΔG‡=16.2 kcal/mol，ΔG=−10.6 kcal/mol。"
+      "caption": "原文 Fig. 2f｜DFT 找到三中心 C···O···Ti 过渡态：C–O 成键和 Ti–O 断键在同一反应坐标上发展，并伴随自旋密度从碳向 Ti 转移。计算支持更具体的协同 het-SH₂ 模型。"
     },
     {
       "id": "scope",
@@ -131,7 +131,7 @@
         0.995,
         0.555
       ],
-      "caption": "原文 Fig. 5a–b｜complex/drug-like examples 与 pharmacologically active scaffolds。这里只回答“能否进入高功能团密度分子”，不和 chemical-space/HTE 混成一个截图。"
+      "caption": "原文 Fig. 5a–b｜复杂和药物来源骨架仍能发生偶联。这里验证的是高官能团密度分子中的化学选择性，而不是单纯扩充底物数量。"
     },
     {
       "id": "hte",
@@ -142,7 +142,7 @@
         0.995,
         0.995
       ],
-      "caption": "原文 Fig. 5c｜先识别 chemical-space 盲区，再用 6 RAE × 8 alcohol 的 48-well photo-HTE 补测；40/48 个组合 >30% assay yield。"
+      "caption": "原文 Fig. 5c｜作者先识别化学空间中覆盖不足的区域，再用 6 种 RAE × 8 种醇的 48 孔高通量实验补测；40/48 个组合的测定收率超过 30%。"
     },
     {
       "id": "fig4_core",
@@ -153,7 +153,7 @@
         0.995,
         0.73
       ],
-      "caption": "原文 Fig. 4（上部）｜2°–1°、2°–2° 与 3°–2° ethers。这里的重点是：当 SN2 transition state 因位阻变得不利时，radical/Ti–alkoxide 路线仍能覆盖这些 substitution patterns。"
+      "caption": "原文 Fig. 4（上部）｜2°–1°、2°–2° 和 3°–2° 醚。重点不是数量，而是这些连接方式在传统 SN2 几何下本来就更容易受到位阻限制。"
     },
     {
       "id": "fig4_selectivity",
@@ -164,181 +164,167 @@
         0.995,
         0.995
       ],
-      "caption": "原文 Fig. 4（下部）｜Diol site selectivity 与 3°–BCP ether。前者反映 Ti binding + bond-forming sterics 对位点选择的共同影响；后者展示 compact but formally congested BCP alcohol 仍可进入该反应窗口。"
+      "caption": "原文 Fig. 4（下部）｜二醇位点选择性和 3°–BCP 醚。前者反映钛醇盐形成和后续自由基进攻对空间拥挤的共同敏感性；后者说明紧凑三维几何可以缓解形式上的高取代位阻。"
     }
   ],
   "sections": [
     {
       "eyebrow": "第一层｜为什么位阻醚难",
-      "heading": "难点写在传统 机理 本身：SN2 需要背面进攻，SN1 又要付出 碳正离子 的代价",
+      "heading": "难点来自传统成键机理本身：SN2 需要背面进攻，SN1 又要付出碳正离子的代价",
       "paragraphs": [
-        "对 SN2 来说，氧亲核体 必须从 C–离去基 反键方向接近 碳原子。碳原子 越拥挤，过渡态就越难容纳进攻者，所以 2°/3° 中心 会迅速变难。SN1 绕开 背面进攻，但先生成 碳正离子，于是 重排、消除 和 立体信息丢失 都可能出现。",
-        "金属介导醚化 也有自己的底层瓶颈：醇配位 不一定强，金属醇盐 往往很 碱性强，而 C(sp³)–O reductive 消除 本身又可能在拥挤 配位环境 中很慢。",
-        "作者因此不是简单换 催化剂，而是试图换掉最关键的 成键几何要求：让 碳自由基 靠近 金属配位的氧原子，而不是让 oxygen 从背面进攻拥挤 saturated 碳原子。"
+        "对 SN2 来说，氧亲核体必须从 C–离去基键的反面接近碳原子。碳中心越拥挤，进攻者越难进入，因此二级和三级碳中心会迅速变难。",
+        "SN1 虽然绕开了背面进攻，却需要先生成碳正离子，于是重排、消除和立体信息丢失都可能出现。",
+        "常规金属介导醚化也有自己的瓶颈：醇不一定容易与金属形成稳定配位，金属醇盐往往碱性较强，而拥挤的 C(sp³)–O 还原消除又可能很慢。作者真正改变的，是关键 C–O 成键所要求的几何方式。"
       ],
       "figures": [
         "fig1_classical"
-      ],
-      "bullets": []
+      ]
     },
     {
-      "eyebrow": "第二层｜为什么是 钛",
-      "heading": "Ti 需要同时做到“抓住 alcohol”和“在一电子过程中把 OR ligand 交给 自由基”",
+      "eyebrow": "第二层｜为什么选择钛",
+      "heading": "钛既要能够牢靠地抓住醇形成钛醇盐，又要能参与一电子循环",
       "paragraphs": [
-        "Ti(IV) 的 强亲氧性 有利于形成 Ti–OR；Ti(IV)/Ti(III) 又能被 光氧化还原 循环 调控。只有这两点同时满足，钛醇盐 才既能形成，又能在 C–O formation 后把 钛 送回较低 氧化态。",
-        "完整 reaction 其实是两个 循环 的耦合：激发态 4DPAIPN 氧化 Ti(III)→Ti(IV)；Ti(IV) binding alcohol 形成 Ti–OR；reduced photo催化剂 再还原 RAE 生成 烷基自由基；最后 自由基 与 Ti–OR 反应形成 ether 并再生 Ti(III)。",
-        "所以真正的难点不是“有没有 自由基”，而是 Ti(IV)–OR 寿命、自由基-generation rate、Ti(III) 积累 与 底物配位 必须同时落在一个能工作的窗口里。"
+        "Ti(IV) 具有较强亲氧性，因此容易形成 Ti–OR；与此同时，Ti(IV)/Ti(III) 可以被光氧化还原循环调控。只有这两点同时成立，钛醇盐才既能形成，又能在 C–O 成键之后把钛送回较低氧化态。",
+        "完整反应由两个相互耦合的循环组成：激发态 4DPAIPN 把 Ti(III) 氧化为 Ti(IV)；Ti(IV) 与醇形成钛醇盐；还原态光催化剂再还原 RAE，脱羧产生烷基自由基；最后自由基与钛醇盐成键并再生 Ti(III)。",
+        "因此真正需要匹配的，是钛醇盐寿命、自由基生成速率、Ti(III) 的稳态浓度和底物配位，而不是单纯“把自由基做出来”。"
       ],
       "figures": [
         "mechanism_cycle"
-      ],
-      "bullets": []
+      ]
     },
     {
-      "eyebrow": "第三层｜505 nm 为什么是反应设计，而不是经验优化",
-      "heading": "作者在控制“谁吸光”：让 photo催化剂 继续工作，同时尽量不让 钛醇盐 自毁",
+      "eyebrow": "第三层｜为什么 505 nm 是反应设计，而不是经验优化",
+      "heading": "作者在控制“谁被光激发”：让光催化剂继续工作，同时尽量不激发钛醇盐",
       "paragraphs": [
-        "Ti(IV) 钛醇盐 在 蓝光区域 也有吸收；一旦被激发就会发生 LMCT，形成 烷氧自由基，随后 β-裂解。也就是说，关键 intermediate 与 photo催化剂 在争夺同一批 光子。",
-        "SI 的 制备实验 显示 450 nm 下 脱官能团副产物 可达 81% 测定收率，而 505 nm 下只剩 痕量；同时 4DPAIPN 在 505 nm 仍可被激发，主 reaction 从 54% 提高到 81%。",
-        "初学者可以把它理解成 波长选择性调控：不是“更红的光更温和”这么简单，而是利用 吸收差异 选择性驱动 photo催化剂、避开 Ti–OR LMCT。"
+        "Ti(IV) 钛醇盐在蓝光区域也有吸收；一旦被激发，就会发生配体到金属电荷转移（LMCT），形成烷氧自由基，随后发生 β-裂解。也就是说，关键中间体和光催化剂会竞争同一波段的光。",
+        "SI 的制备实验显示，450 nm 下脱官能团副产物可以达到 81% 测定收率，而在 505 nm 下只剩痕量；同时 4DPAIPN 在 505 nm 仍可被激发，目标醚收率从 54% 提高到 81%。",
+        "所以 505 nm 的作用不是“更红的光更温和”，而是利用吸收差异选择性激发光催化剂，同时避开钛醇盐的有害 LMCT。"
       ],
       "figures": [
         "lmct"
-      ],
-      "bullets": []
+      ]
     },
     {
-      "eyebrow": "第四层｜先证明 钛醇盐 真的在 实际反应体系 里",
-      "heading": "看见一个 intermediate，只能证明“它存在”，还不能证明“它怎样成键”",
+      "eyebrow": "第四层｜先证明钛醇盐确实存在于实际反应体系",
+      "heading": "看见中间体，只能证明“它存在”，还不能证明“它怎样成键”",
       "paragraphs": [
-        "紫外-可见吸收光谱（UV–vis） 和颜色变化先支持 Ti 前体 + alcohol + base 形成新的 Ti–O 物种；PhotoNMR 更进一步，在真实照光过程中直接看到 Ti(IV) 钛醇盐 信号 的形成与消耗。",
-        "这一层证据很重要，因为它确认 catalytic 循环 中央的 物种 不是纯粹画出来的。但它仍然不能区分 协同 substitution、分步 电子转移 或其它 自由基 配体转移几何。"
+        "紫外-可见吸收光谱和颜色变化首先支持 Ti 前体、醇和碱之间形成新的 Ti–O 物种；原位光照核磁（PhotoNMR）则进一步在真实照光过程中观察到 Ti(IV) 钛醇盐信号的形成与消耗。",
+        "这一层证据确认催化循环中央的钛醇盐并非纯粹假设，但它仍不能区分协同取代、分步电子转移或其它自由基配体转移路径。"
       ],
       "figures": [
         "photonmr"
-      ],
-      "bullets": []
+      ]
     },
     {
-      "eyebrow": "第五层｜Ti 是否进入关键 C–O 成键环境",
-      "heading": "d.r. 在这里不是性能指标，而是一个 mechanistic reporter",
+      "eyebrow": "第五层｜Ti 是否真的进入关键 C–O 成键环境",
+      "heading": "非对映比在这里不是性能指标，而是一个机理探针",
       "paragraphs": [
-        "手性仲醇 与同一 RAE 在 Ti 条件下给 59% 产物、2.2:1 d.r.；去掉 Ti 后只剩 8–9%，d.r. 约 1.1:1。把同一 底物组合 放到已知 碳正离子 电化学 etherification 中，44% 收率 但 d.r. 仍约 1.1:1。",
-        "如果关键 C–O formation 完全发生在 free 碳正离子/alcohol 之间，Ti 不应该给 产物 留下额外 立体偏向。这个对照因此支持 Ti 进入 成键体系，但它还只是“与 Ti 结合的 配体转移”的证据，不足以单独命名 het-SH₂。"
+        "手性仲醇与同一 RAE 在含 Ti 条件下得到 59% 产物和 2.2:1 非对映比；去掉 Ti 后只有 8–9%，非对映比约 1.1:1。把同一底物组合放到已知的碳正离子电化学醚化条件下，产物为 44%，非对映比仍约 1.1:1。",
+        "如果关键 C–O 成键完全发生在游离碳正离子和醇之间，Ti 不应该额外留下立体偏向。因此这个对照支持 Ti 进入了成键环境，但它还不足以单独证明具体的 het-SH₂ 路径。"
       ],
       "figures": [
         "ti_dr"
-      ],
-      "bullets": []
+      ]
     },
     {
-      "eyebrow": "第六层｜再排除 碳正离子 这个最危险的替代解释",
-      "heading": "强还原条件下仍能形成 ether，说明 碳自由基 可以直接与 钛醇盐 有效成键",
+      "eyebrow": "第六层｜再排除碳正离子这个重要替代解释",
+      "heading": "在强还原环境下仍能形成醚，说明碳自由基可以直接与钛醇盐发生有效成键",
       "paragraphs": [
-        "作者分别使用 分离得到的 钛醇盐 与 原位生成的 钛醇盐，再用 活化锌 建立强还原环境并从 RAE 产生 自由基。这样的 氧化还原环境 不利于 自由基 再被氧化成 碳正离子。",
-        "仍然观察到 6% 与 13% ether。收率不高，所以它不是 合成展示；它真正回答的是：在不需要 碳正离子 的条件下，碳自由基 本身可以从 钛醇盐 获得 氧配体。"
+        "作者分别使用分离得到的钛醇盐和原位生成的钛醇盐，再用活化锌建立强还原环境并从 RAE 产生自由基。这样的氧化还原环境不利于自由基再被氧化成碳正离子。",
+        "在这种条件下仍能观察到 6% 和 13% 的目标醚。收率并不高，但实验目的不是展示合成效率，而是说明在不需要碳正离子的情况下，碳自由基本身能够从钛醇盐获得氧配体。"
       ],
       "figures": [
         "radical_test"
-      ],
-      "bullets": []
+      ]
     },
     {
       "eyebrow": "第七层｜RLT 到底是什么",
-      "heading": "RLT（自由基配体转移）只是一个总类概念：自由基从金属配合物上“拿走”一个配体",
+      "heading": "自由基配体转移（RLT）是一个总类概念：自由基从金属配合物上“拿走”一个配体",
       "paragraphs": [
-        "可以先用一个最简单的式子理解：R• + M–X → R–X + M′。也就是说，自由基原来不带 X，反应后把金属上的 X 配体带走，同时金属的氧化态或自旋状态发生变化。",
-        "这个定义故意很宽。只要证据支持“自由基从金属配合物获得了一个配体”，就可以归入自由基配体转移（RLT）的讨论范围；但它并没有规定 C–X 键和 M–X 键一定同步变化，也没有规定必须经过某一种特定几何构型。",
-        "因此，PhotoNMR、Ti 对非对映选择性的影响以及强还原条件下的化学计量实验，已经很好地支持“钛醇盐把氧配体转移给碳自由基”。这足以说明存在 RLT，但还不足以单独证明更具体的 het-SH₂。"
-      ],
-      "bullets": []
+        "可以用最简单的式子理解：R• + M–X → R–X + M′。也就是说，自由基原来不带 X，反应后从金属上获得 X 配体，同时金属的氧化态或自旋状态发生变化。",
+        "这个定义本身很宽。只要证据支持“自由基从金属配合物获得了一个配体”，就可以归入 RLT；它并不要求 C–X 成键和 M–X 断键一定严格同步，也不限定唯一的过渡态几何。",
+        "因此，PhotoNMR、Ti 对非对映选择性的影响以及强还原条件下的化学计量实验，已经很好地支持“钛醇盐把氧配体转移给碳自由基”。这足以支持 RLT，但还不足以单独证明更具体的 het-SH₂。"
+      ]
     },
     {
       "eyebrow": "第八层｜het-SH₂ 比 RLT 多说了什么",
       "heading": "het-SH₂ 不是 RLT 的反面，而是对这个具体配体转移过程提出的更细化机理",
       "paragraphs": [
-        "如果说 RLT 只是在描述“配体从金属转移给自由基”，那么 het-SH₂ 进一步提出：自由基直接进攻 Ti–O 键上的氧原子，在同一个基元步骤里形成 C–O 键，同时 Ti–O 键断裂。",
-        "这也是审稿人为什么会质疑作者的术语。只观察到氧配体从 Ti 转移到碳上，只能说明结果与 RLT 一致；如果要进一步把它叫作 het-SH₂，就需要排除“先电子转移，再分步断键/成键”等其它可能路径。",
-        "所以真正的问题不是“RLT 被推翻没有”，而是“这个 RLT 事件是否有足够证据被进一步描述成协同的 het-SH₂”。最终论文也把 het-SH₂ 放在更宽的 RLT 框架内，而不是与 RLT 对立。"
-      ],
-      "bullets": []
+        "如果说 RLT 只描述“配体从金属转移给自由基”，那么 het-SH₂ 进一步提出：自由基直接进攻 Ti–O 键上的氧原子，在同一个基元步骤中形成 C–O 键，同时 Ti–O 键断裂。",
+        "这也是审稿人为什么质疑作者的术语。只观察到氧配体从 Ti 转移到碳上，只能说明结果与 RLT 一致；如果进一步称为 het-SH₂，就需要证据排除“先电子转移，再分步断键/成键”等其它路径。",
+        "所以真正的问题不是“RLT 是否被推翻”，而是“这个 RLT 事件是否有足够证据被进一步描述成协同的 het-SH₂”。最终论文也是把 het-SH₂ 放在更宽的 RLT 框架内。"
+      ]
     },
     {
-      "eyebrow": "第九层｜什么证据真正把 一般的 RLT 收窄到 SH₂-type 模型",
-      "heading": "关键是同一个 reaction coordinate 里的键变化、电子变化和 absence of intermediate",
+      "eyebrow": "第九层｜什么证据把一般 RLT 进一步收窄到 SH₂ 型模型",
+      "heading": "关键在于同一个反应坐标上的成键、断键和电子转移是否同步发展",
       "paragraphs": [
-        "密度泛函理论（DFT） 找到三中心 C···O···Ti 过渡态：C–O 已缩短到约 2.33 Å，Ti–O 从 reactant 的约 1.82 Å 拉长到约 1.95 Å，而且没有 Ti–C bond。IRC 从这个 过渡态 直接连到 反应物复合物 和 产物 complex，中间没有独立 能量极小点。",
-        "Spin density 也同步变化：reactant 中 unpaired spin 几乎全在 碳原子；到 过渡态 时 碳原子 约 +0.52、Ti 约 +0.63，而 bridging oxygen 只有小负 自旋密度。这个结果与 Ti(IV)→Ti(III) 和 C–O formation 在同一坐标上发展相符。",
-        "热力学又给出独立交叉检查：forming C–O bond 比 breaking Ti–O bond 更强，整体 substitution exergonic；O-transfer 也比竞争 Cl-transfer 更有利。Barrier、IRC、spin redistribution 与 键解离能/键解离自由能 analysis 互相一致，才让“协同 het-SH₂”成为比 一般的 RLT 更具体、也更有根据的 模型。",
-        "但仍不能说实验直接拍到了 过渡态。最严谨的层级是：实验支持 钛醇盐-mediated 自由基 配体转移；计算支持其中一个 协同 het-SH₂ 基元步骤。"
+        "密度泛函理论（DFT）找到三中心 C···O···Ti 过渡态：C–O 距离缩短到约 2.33 Å，Ti–O 从反应物中的约 1.82 Å 拉长到约 1.95 Å，而且没有形成 Ti–C 键。",
+        "内禀反应坐标（IRC）从这个过渡态直接连到反应物和产物，中间没有独立能量极小点；同时，自旋密度从碳自由基逐步转移到 Ti，与 Ti(IV)→Ti(III) 和 C–O 成键同步发展相符。",
+        "热力学分析也给出一致结果：新形成的 C–O 键比被打断的 Ti–O 键更强，整体取代过程放能；氧配体转移也比竞争性的氯配体转移更有利。正是这些证据共同支持一个协同的 het-SH₂ 模型。",
+        "但仍不能说实验直接观察到了过渡态。最严谨的层级仍然是：实验支持钛醇盐参与的 RLT，计算进一步支持其中一个协同 het-SH₂ 基元步骤。"
       ],
-      "review": "同行评审的价值正在这里：它不是把作者的机制“推翻”，而是迫使作者把宽框架（RLT）和具体模型（het-SH₂）分层，并把每一层分别对应到它真正拥有的证据。",
+      "review": "同行评审在这里起到的作用，是迫使作者把“宽框架”和“具体机理”分层：RLT 描述发生了什么类型的配体转移，het-SH₂ 则描述作者认为更具体的原子级成键路径。",
       "figures": [
         "dft"
-      ],
-      "bullets": []
+      ]
     },
     {
-      "eyebrow": "第十层｜新机制如果不买来新能力，就只是换了一个反应名字",
-      "heading": "真正的合成增量要落到具体 底物类型，而不是“自由基 chemistry 更温和”这种口号",
+      "eyebrow": "第十层｜如果新机理不能带来新能力，就只是换了一个反应名字",
+      "heading": "真正的合成增量要落实到传统极性醚化难以覆盖的底物类型",
       "paragraphs": [
-        "2°–2° 和 3°–2° ethers 是最直接的新增能力：传统 SN2 要求 nucleophile 从 C–离去基 反键方向靠近一个已经拥挤的 sp³ 碳原子，而这里的关键成键位点转移到 金属配位的氧原子，因此 碳原子 centre 的拥挤不再以同一种几何方式进入 过渡态。",
-        "α-手性 仲醇 还能在 coupling 后保留 立体信息完整性，说明反应不需要先把 alcohol 侧转成自由 碳正离子；一级氯代烷 等容易受强碱/亲核条件影响的 官能团 也能保留。"
+        "2°–2° 和 3°–2° 醚是最直接的新增能力：传统 SN2 要求亲核体从 C–离去基键的反面靠近已经拥挤的 sp³ 碳中心，而这里的关键成键位置转移到金属配位的氧原子，因此位阻不再以同一种方式进入过渡态。",
+        "带 α-手性中心的仲醇在偶联后仍能保留立体信息，说明反应不需要先把醇一侧转成游离碳正离子；一级氯代烷等容易受强碱或亲核条件影响的官能团也能够保留。"
       ],
       "figures": [
         "fig4_core"
-      ],
-      "bullets": []
+      ]
     },
     {
       "eyebrow": "第十一层｜位点选择性和 BCP 为什么比“多做几个底物”更有信息量",
-      "heading": "这两类结果直接暴露 Ti–O formation 与 自由基 attack 对几何的真实要求",
+      "heading": "它们直接暴露了钛醇盐形成和自由基进攻对空间几何的真实要求",
       "paragraphs": [
-        "对 diol substrate，较少取代的 OH 更容易被 functionalize：primary/tertiary diol 只给 primary-derived ether，secondary/tertiary diol 只给 secondary-derived ether。这个趋势与“较少拥挤的 alcohol 更容易进入 钛醇盐，并且后续 自由基 attack 也更少受 oxygen 周围位阻限制”相符。",
-        "双环[1.1.1]戊烷（BCP）醇 则提供另一个角度：它形式上高度取代，却具有紧凑几何，因此仍可发生 coupling。也就是说，这套方法不是简单按“一级/二级/三级”分类，而是对实际三维拥挤和 自由基 approach trajectory 敏感。"
+        "对二醇底物，较少取代的 OH 更容易被官能团化：一级/三级二醇只形成一级醇来源的醚，二级/三级二醇只形成二级醇来源的醚。这个趋势与“较少拥挤的 OH 更容易形成钛醇盐，后续自由基接近氧原子也更容易”相符。",
+        "双环[1.1.1]戊烷（BCP）醇则提供另一个角度：它形式上高度取代，却因为三维几何非常紧凑而仍能发生偶联。说明这套反应并不是简单按一级、二级、三级分类，而是对真实空间拥挤和自由基接近轨迹敏感。"
       ],
       "figures": [
         "fig4_selectivity"
-      ],
-      "bullets": []
+      ]
     },
     {
-      "eyebrow": "第十二层｜化学空间 / 高通量实验（HTE） 为什么值得单独讲",
-      "heading": "这里不是拿漂亮 底物范围 做结论，而是主动寻找没覆盖到的区域再补实验",
+      "eyebrow": "第十二层｜化学空间和高通量实验为什么值得单独讲",
+      "heading": "作者不是只挑漂亮底物，而是主动寻找原有底物范围没有覆盖到的区域",
       "paragraphs": [
-        "SI 将 tested alcohols 投影到 55,928-compound Enamine alcohol library 的 Morgan-fingerprint/UMAP space；常规 底物范围 的 Vendi 多样性评分 为 32。随后作者从 underrepresented regions 选 substrate，再做 6 RAE × 8 alcohol 的 48-well photo-高通量实验（HTE） matrix。",
-        "40/48 combinations 达到 >30% 测定收率，加入 高通量实验（HTE） substrate 后 Vendi score 提到 38。它的意义在于把“generality”从手工挑例子推进到一个可量化、可主动补盲区的 test；但它仍然不是无限 generality 的证明。"
+        "SI 将已经测试的醇与 55,928 个 Enamine 醇类砌块一起映射到同一化学空间中；常规底物范围得到的 Vendi 多样性评分为 32。随后作者从覆盖不足的区域挑选底物，再做 6 种 RAE × 8 种醇的 48 孔高通量实验（HTE）。",
+        "48 个组合中有 40 个测定收率超过 30%，加入这些高通量实验底物后，Vendi 多样性评分提高到 38。它的意义在于把“通用性”从人工挑例子推进到可以主动寻找盲区的覆盖测试，但它仍然不是无限通用性的证明。"
       ],
       "figures": [
         "hte"
-      ],
-      "bullets": []
+      ]
     },
     {
-      "eyebrow": "第十三层｜复杂药物片段是另一个维度的验证",
-      "heading": "这里验证的不是位阻极限，而是高功能团密度分子中能否维持 化学选择性",
+      "eyebrow": "第十三层｜复杂药物片段验证的是另一种能力",
+      "heading": "这里考察的不是位阻极限，而是在高官能团密度分子中能否维持化学选择性",
       "paragraphs": [
-        "Alogliptin、losartan、empagliflozin、febuxostat、lumacaftor 等来源片段都被放进后期偶联测试。它们的意义不在于单个收率有多高，而在于 hetero循环s、halides、multiple heteroatoms 与其它可反应位点共存时，光氧化还原/Ti system 仍能把主要反应通道导向目标 C–O bond formation。"
+        "Alogliptin、losartan、empagliflozin、febuxostat、lumacaftor 等来源片段都被用于后期偶联。它们的意义不在于单个收率有多高，而在于杂环、卤素和多个杂原子共存时，光氧化还原/钛体系仍能把主要反应通道导向目标 C–O 成键。"
       ],
       "figures": [
         "scope"
-      ],
-      "bullets": []
+      ]
     },
     {
-      "eyebrow": "第十四层｜失败底物反而最能告诉你这个机制需要什么",
-      "heading": "het-SH₂ / Ti platform 不是“自由基 不怕位阻”，而是有清楚的动力学和 物种分布 窗口",
+      "eyebrow": "第十四层｜失败底物反而最能告诉你这个机理需要什么",
+      "heading": "这套 Ti/het-SH₂ 平台并不是“自由基不怕位阻”，而是有明确的动力学和物种窗口",
       "paragraphs": [
-        "Primary 烷基自由基s 不给 ether，主要走 氢原子转移（HAT）；epoxide/oxetane 会被 Ti(III) 还原开环；低 nucleophilicity 自由基s、azetidine-derived 自由基s 也不能 有效转移；过分拥挤的 叔醇 会阻碍接近 oxygen 的 trajectory。",
-        "此外，alcohol 在 DCM/DCE 中溶解性差会直接降低效率，叔胺 等 electron-rich 官能团 还可能抢先 quench excited photo催化剂。真正的工作窗口同时要求 自由基 persistence/nucleophilicity、Ti–OR 寿命、底物配位 和 光氧化还原 selectivity 合适。"
-      ],
-      "bullets": []
+        "一级烷基自由基在标准条件下不给目标醚，而主要发生氢原子转移（HAT）；epoxide 和 oxetane 会被 Ti(III) 还原开环；亲核性较弱的烷基自由基和 azetidine 来源自由基也难以发生有效氧配体转移；过分拥挤的叔醇则会阻碍自由基接近氧原子的几何轨迹。",
+        "此外，醇在 DCM/DCE 中溶解性差会直接降低效率，叔胺等富电子官能团还可能抢先淬灭激发态光催化剂。真正的工作窗口要求自由基寿命与亲核性、钛醇盐寿命、底物配位和光氧化还原选择性同时合适。"
+      ]
     }
   ],
   "takehome": [
-    "RLT 是宽框架：自由基 从 metal complex 获得 ligand；het-SH₂ 是更具体的 atom-level 模型。实验支持前者，密度泛函理论（DFT）/IRC/spin/BDE 等把路径进一步收窄到 协同 het-SH₂。",
-    "505 nm 的作用不是“更温和”，而是 selective excitation：让 photo催化剂 工作，同时避免 钛醇盐 LMCT/β-裂解，从根本上提高关键 intermediate 的稳态浓度。",
-    "这套 chemistry 的价值最终要用具体新增能力与失败边界衡量：2°–2°/3°–2°、diol 位点选择性、stereochemical retention、BCP/complex scaffolds 是增量；primary 自由基s、epoxide/oxetane、低 nucleophilicity 自由基s 等则定义了窗口。"
+    "自由基配体转移（RLT）是宽框架：自由基从金属配合物获得一个配体；het-SH₂ 是更具体的原子级成键模型。实验支持前者，DFT/IRC/自旋密度等计算结果进一步支持协同 het-SH₂。",
+    "505 nm 的核心作用不是“更温和”，而是选择性激发：让光催化剂继续工作，同时避免钛醇盐发生 LMCT/β-裂解，从而提高关键中间体的稳态浓度。",
+    "这套方法的价值最终要用具体新增能力和失败边界衡量：2°–2°/3°–2° 醚、二醇位点选择性、立体信息保持和 BCP/复杂药物片段是增量；一级自由基、环氧化物/氧杂环丁烷、低亲核性自由基等则定义了反应窗口。"
   ],
   "ai_notice": "本文依据论文主文、补充信息和公开同行评审文件整理，并区分实验直接证据、计算支持与作者提出的机理模型；化学结构图片均来自论文或 SI 原图。",
   "cover": {
@@ -350,13 +336,13 @@
       "background": "white"
     },
     "thumb_kicker": "往期精选",
-    "thumb_title": "MacMillan",
-    "thumb_subtitle": "二烷基醚",
-    "thumb_meta": "Nature",
+    "thumb_title": "通过杂原子均裂取代",
+    "thumb_subtitle": "合成二烷基醚",
+    "thumb_meta": "MacMillan · Nature",
     "thumb_footer": "",
     "crop_235_1": "0_0.287234_1_0.712766",
     "crop_1_1": "0_0_1_1",
-    "description": "第二图文卡片采用 MacMillan 头像主视觉，配少量中文信息；不展示诺贝尔奖年份，不使用大段英文或复杂反应式。",
+    "description": "完整方形封面：MacMillan 大头像 + 深蓝/金色信息区 + 中文论文标题，适配微信第二图文小卡片；不展示诺贝尔奖年份、宣传语或长英文。",
     "preserve_existing_thumb": false,
     "portrait_figure_id": "portrait"
   },
