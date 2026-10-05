@@ -1267,17 +1267,27 @@ async function loadArchitectureCorpus(): Promise<'architecture-v1' | 'architectu
     try {
       const fallback = await loadPublishedHotFallback(siteBase);
       const fallbackRows = normalizeArchitectureRows(fallback.papers);
+      const editionRows = activeEdition?.dois.flatMap(doi => {
+        const paper = fallbackRows.find(item => paperDoi(item)?.toLowerCase() === doi.toLowerCase());
+        return paper ? [paper] : [];
+      }) || [];
+      let orderedFallback = mergePapers(editionRows, fallbackRows);
+      const sharedDoi = sharedDoiFromLocation()?.toLowerCase();
+      const sharedPaper = sharedDoi
+        ? orderedFallback.find(paper => paperDoi(paper)?.toLowerCase() === sharedDoi)
+        : undefined;
+      if (sharedPaper) orderedFallback = [sharedPaper, ...orderedFallback.filter(paper => paper !== sharedPaper)];
       architectureClient = null;
       architectureFallbackActive = true;
       architectureReadLimited = true;
       architectureMemberDois = null;
-      architectureEarliestDate = fallbackRows.map(paper => paper.date)
+      architectureEarliestDate = orderedFallback.map(paper => paper.date)
         .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort()[0] || '';
-      architectureLandingPapers = fallbackRows;
-      const dates = fallbackRows.map(paper => paper.date)
+      architectureLandingPapers = orderedFallback;
+      const dates = orderedFallback.map(paper => paper.date)
         .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
       latestCollectionDate = dates[dates.length - 1] || '';
-      setArchitectureCorpus(fallbackRows);
+      setArchitectureCorpus(orderedFallback);
       document.documentElement.dataset.catalogRead = 'architecture-hot-fallback';
       return 'architecture-hot-fallback';
     } catch (fallbackError) {
