@@ -124,6 +124,7 @@ try{
     assert.ok(source.includes("'https://www.sciencedirect.com/science/article/pii/' + pii[1]"));
     assert.ok(source.includes("publisher === 'rsc'"));
     assert.ok(source.includes("rscArticleHtmlUrl(job)"));
+    assert.ok(source.includes("job.opportunisticFigures===true"));
     assert.ok(source.includes("job.publisher==='acs'||job.publisher==='wiley'||job.publisher==='rsc'||job.publisher==='ccs'"));
     assert.ok(source.includes("ccsTocIndexCandidatesFromDocument(job,doc,current)"));
     assert.ok(source.includes("https://api.crossref.org/works/"));
