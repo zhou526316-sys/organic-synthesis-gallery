@@ -1,3 +1,17 @@
+export interface PublishedHotFallbackResult {
+  mode: 'architecture-hot-fallback';
+  asOfDate: string;
+  publicationSlot: string;
+  sourceCommit: string;
+  catalogId: string;
+  papers: unknown[];
+}
+
+export function loadPublishedHotFallback(
+  siteBase: string | URL,
+  options?: PublishedCatalogClientOptions & { signal?: AbortSignal },
+): Promise<PublishedHotFallbackResult>;
+
 export interface PublishedCatalogClientOptions {
   fetcher?: typeof fetch;
 }
