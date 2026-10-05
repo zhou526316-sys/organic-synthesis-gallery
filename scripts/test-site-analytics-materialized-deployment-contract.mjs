@@ -36,6 +36,9 @@ test('D4b public site-stats is materialized-primary with explicit raw fallback',
   const route=section(index,"if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats')","if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark')");
   assert.ok(route.includes('siteAnalyticsMaterializedReadEnabled(env)'));
   assert.ok(route.includes('getSiteAnalyticsMaterializedReadiness(env)'));
+  assert.ok(route.includes('repairSiteAnalyticsMaterializedFreshness(env'));
+  assert.ok(route.includes("readiness.reason === 'analytics_materialized_not_fresh'"));
+  assert.ok(route.includes('materializedSelfHealed'));
   assert.ok(route.includes('materializedSiteAnalyticsStats(env)'));
   assert.ok(route.includes("readPath: 'materialized'"));
   assert.ok(route.includes("readPath: 'legacy_raw_fallback'"));
@@ -48,7 +51,10 @@ test('raw pageview write remains primary; active materialization is synchronous 
   const activeWrite=track.indexOf('materializeSitePageViewForActiveRead');
   assert.ok(rawWrite>=0&&activeWrite>rawWrite);
   assert.ok(track.includes('siteAnalyticsMaterializedReadEnabled(env)'));
+  assert.ok(track.includes('SELECT id FROM site_pageviews_v1'));
+  assert.ok(track.includes('ORDER BY id DESC LIMIT 1'));
   assert.ok(track.includes('await materializeSitePageViewForActiveRead(env, event)'));
+  assert.ok(track.includes('repairSiteAnalyticsMaterializedFreshness(env'));
   assert.ok(userUi.includes('SITE_ANALYTICS_MATERIALIZED_ACTIVE_WRITE_FAILED'));
   assert.ok(materialized.includes('markSiteAnalyticsMaterializedUnhealthy'));
   assert.ok(materialized.includes('complete=0'));
@@ -84,7 +90,9 @@ test('D4b deployment activates materialized reads only after backfill and stable
   assert.ok(block.includes('continue-on-error: true'));
   assert.ok(block.includes("phase:'D4b-site-analytics-materialized-read-live'"));
   assert.ok(block.includes('readPathActive:true'));
+  assert.ok(block.includes("while(status.readPathActive!==true)"));
   assert.ok(block.includes('/api/admin/site-analytics-materialized/backfill?limit=50'));
+  assert.ok(block.includes('watermarkReconciled'));
   assert.ok(block.includes('/api/admin/site-analytics-materialized/compare'));
   assert.ok(block.includes('passes.length<2'));
   assert.ok(block.includes('comparison.same===true'));
@@ -111,6 +119,8 @@ test('admin routes and health expose analytics materialized read activation',()=
   assert.ok(deploy.includes('body?.siteAnalyticsMaterializedShadowEnabled === true'));
   assert.ok(deploy.includes('body?.siteAnalyticsMaterializedReadEnabled === true'));
   assert.ok(materialized.includes('getSiteAnalyticsMaterializedReadiness'));
+  assert.ok(materialized.includes('reconcileSiteAnalyticsMaterializedWatermark'));
+  assert.ok(materialized.includes('repairSiteAnalyticsMaterializedFreshness'));
   assert.ok(materialized.includes('analytics_materialized_not_fresh'));
   assert.ok(materialized.includes('reconcileMaterializedPaperOpenFlags'));
   assert.ok(materialized.includes("complete?'':lastError"));

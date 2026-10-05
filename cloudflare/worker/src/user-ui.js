@@ -1,7 +1,7 @@
 import { recordReaderOpen } from './reader-count-ledger.js';
 import { normalizeDoi } from './media.js';
 import { shadowWriteUserLibraryState, userLibraryRowShadowEnabled } from './user-library-shadow.js';
-import { markMaterializedVisitorPaperOpen, markSiteAnalyticsMaterializedUnhealthy, materializeSitePageViewEvent, materializeSitePageViewForActiveRead, siteAnalyticsMaterializedReadEnabled, siteAnalyticsMaterializedShadowEnabled } from './site-analytics-materialized.js';
+import { markMaterializedVisitorPaperOpen, markSiteAnalyticsMaterializedUnhealthy, materializeSitePageViewEvent, materializeSitePageViewForActiveRead, repairSiteAnalyticsMaterializedFreshness, siteAnalyticsMaterializedReadEnabled, siteAnalyticsMaterializedShadowEnabled } from './site-analytics-materialized.js';
 
 const FEEDBACK_KINDS = new Set(['toc', 'image', 'title', 'date', 'duplicate', 'classification', 'other']);
 const SITE_FEEDBACK_CATEGORIES = new Set(['general', 'search', 'ui', 'account', 'literature', 'other']);
@@ -428,7 +428,15 @@ export async function trackPageView(env, payload, request, ctx) {
       (ip_hash, page_path, referrer_host, device_type, beijing_date, viewed_at)
      VALUES (?, ?, ?, ?, ?, ?)`
   ).bind(ipHash, pagePath, referrerHost, deviceType, date, now).run();
-  const eventId = Number(inserted?.meta?.last_row_id || 0);
+  let eventId = Number(inserted?.meta?.last_row_id || 0);
+  if (!(eventId > 0)) {
+    const resolved = await env.DB.prepare(`
+      SELECT id FROM site_pageviews_v1
+      WHERE ip_hash=? AND page_path=? AND referrer_host=? AND device_type=? AND beijing_date=? AND viewed_at=?
+      ORDER BY id DESC LIMIT 1
+    `).bind(ipHash,pagePath,referrerHost,deviceType,date,now).first();
+    eventId = Number(resolved?.id || 0);
+  }
   if (eventId > 0) {
     const event = {
       id: eventId,
@@ -445,6 +453,14 @@ export async function trackPageView(env, payload, request, ctx) {
           message: String(error?.message || error).slice(0, 180),
           eventId,
         });
+        if (ctx?.waitUntil) {
+          ctx.waitUntil(
+            repairSiteAnalyticsMaterializedFreshness(env,{limit:50,maxPages:4})
+              .catch(repairError => console.warn('SITE_ANALYTICS_MATERIALIZED_REPAIR_FAILED', {
+                message: String(repairError?.message || repairError).slice(0, 180),
+              }))
+          );
+        }
       }
     } else {
       await safeAnalyticsShadowTask(

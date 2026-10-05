@@ -161,6 +161,47 @@ async function reconcileMaterializedPaperOpenFlags(env){
   return Number(result?.meta?.changes||0);
 }
 
+export async function reconcileSiteAnalyticsMaterializedWatermark(env){
+  if(!env?.DB) return {reconciled:false,reason:'analytics_materialized_db_missing'};
+  const [raw,materialized,global,backfill]=await Promise.all([
+    env.DB.prepare('SELECT COUNT(*) AS count,COALESCE(MAX(id),0) AS max_id,COALESCE(MAX(viewed_at),0) AS last_viewed_at FROM site_pageviews_v1').first(),
+    env.DB.prepare('SELECT COUNT(*) AS count,COALESCE(MAX(event_id),0) AS max_id FROM site_analytics_materialized_events_v2').first(),
+    env.DB.prepare('SELECT pv,last_viewed_at FROM site_global_stats_v2 WHERE id=1').first(),
+    env.DB.prepare('SELECT started_at,failed_events FROM site_analytics_v2_backfill WHERE id=1').first(),
+  ]);
+  const rawCount=Number(raw?.count||0),rawMax=Number(raw?.max_id||0);
+  const materializedCount=Number(materialized?.count||0),materializedMax=Number(materialized?.max_id||0);
+  const globalPv=Number(global?.pv||0);
+  const rawLastViewedAt=Number(raw?.last_viewed_at||0),globalLastViewedAt=Number(global?.last_viewed_at||0);
+  const factsMatch=rawCount===materializedCount
+    &&rawMax===materializedMax
+    &&globalPv===rawCount
+    &&globalLastViewedAt===rawLastViewedAt;
+  if(!factsMatch){
+    return {reconciled:false,reason:'analytics_materialized_facts_not_equal',
+      rawCount,rawMax,materializedCount,materializedMax,globalPv,rawLastViewedAt,globalLastViewedAt};
+  }
+  const now=Date.now();
+  const startedAt=Number(backfill?.started_at||0)||now;
+  const failedEvents=Number(backfill?.failed_events||0);
+  await env.DB.prepare(`
+    INSERT INTO site_analytics_v2_backfill
+      (id,last_event_id,complete,scanned_events,materialized_events,duplicate_events,failed_events,started_at,updated_at,last_error)
+    VALUES(1,?,1,?,?,0,?,?,?,'')
+    ON CONFLICT(id) DO UPDATE SET
+      last_event_id=excluded.last_event_id,
+      complete=1,
+      scanned_events=excluded.scanned_events,
+      materialized_events=excluded.materialized_events,
+      duplicate_events=0,
+      failed_events=MAX(site_analytics_v2_backfill.failed_events,excluded.failed_events),
+      started_at=site_analytics_v2_backfill.started_at,
+      updated_at=excluded.updated_at,
+      last_error=''
+  `).bind(rawMax,rawCount,materializedCount,failedEvents,startedAt,now).run();
+  return {reconciled:true,rawCount,rawMax,materializedCount,materializedMax,globalPv};
+}
+
 export async function backfillSiteAnalyticsMaterializedPage(env,limitValue=50){
   if(!siteAnalyticsMaterializedShadowEnabled(env)) return {status:409,body:{error:'site_analytics_materialized_shadow_disabled'}};
   if(!env?.DB) return {status:503,body:{error:'analytics_materialized_db_missing'}};
@@ -214,10 +255,11 @@ export async function backfillSiteAnalyticsMaterializedPage(env,limitValue=50){
     startedAt,now,complete?'':lastError,
   ).run();
   if(failed) return {status:502,body:{error:'site_analytics_materialized_backfill_failed',lastEventId:cursor,lastError}};
+  const watermarkReconcile=complete?await reconcileSiteAnalyticsMaterializedWatermark(env):{reconciled:false};
   return {status:200,body:{
     ok:true,enabled:true,complete,lastEventId:cursor,rawMaxEventId:maxId,
     pageEvents:scanned,pageMaterialized:materialized,pageDuplicates:duplicates,
-    reconciledPaperOpenRows,...totals,
+    reconciledPaperOpenRows,watermarkReconciled:watermarkReconcile.reconciled===true,...totals,
   }};
 }
 
@@ -339,6 +381,29 @@ export async function materializeSitePageViewForActiveRead(env,event){
     try{await markSiteAnalyticsMaterializedUnhealthy(env,error,Number(event?.id||0));}catch{}
     throw error;
   }
+}
+
+export async function repairSiteAnalyticsMaterializedFreshness(env,{limit=50,maxPages=4}={}){
+  let readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  if(readiness.ready) return {repaired:false,pages:0,readiness};
+  if(readiness.reason!=='analytics_materialized_not_fresh'){
+    return {repaired:false,pages:0,readiness};
+  }
+  const boundedLimit=Math.max(1,Math.min(100,Number(limit||50)));
+  const boundedPages=Math.max(1,Math.min(10,Number(maxPages||4)));
+  let pages=0;
+  while(!readiness.ready&&pages<boundedPages){
+    pages+=1;
+    const page=await backfillSiteAnalyticsMaterializedPage(env,boundedLimit);
+    if(page.status!==200) return {repaired:false,pages,readiness,error:page.body?.error||'analytics_materialized_repair_failed'};
+    readiness=await getSiteAnalyticsMaterializedReadiness(env);
+    if(page.body?.pageEvents===0&&!readiness.ready) break;
+  }
+  if(!readiness.ready){
+    const reconciled=await reconcileSiteAnalyticsMaterializedWatermark(env);
+    if(reconciled.reconciled) readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  }
+  return {repaired:readiness.ready,pages,readiness};
 }
 
 export async function materializedSiteAnalyticsStats(env,now=Date.now()){

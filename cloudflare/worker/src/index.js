@@ -40,7 +40,7 @@ import { backfillEvidenceHandoffIndexPage, backfillEvidenceIndexPage, getEvidenc
 import { backfillSummaryJobIndexPage, getSummaryCandidateIndexStatus } from './summary-candidate-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus } from './user-library-shadow.js';
-import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getSiteAnalyticsMaterializedReadiness, getSiteAnalyticsMaterializedStatus, materializedSiteAnalyticsStats, siteAnalyticsMaterializedReadEnabled } from './site-analytics-materialized.js';
+import { backfillSiteAnalyticsMaterializedPage, compareSiteAnalyticsBodies, getSiteAnalyticsMaterializedReadiness, getSiteAnalyticsMaterializedStatus, materializedSiteAnalyticsStats, repairSiteAnalyticsMaterializedFreshness, siteAnalyticsMaterializedReadEnabled } from './site-analytics-materialized.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
   alipayNotify,
@@ -403,7 +403,12 @@ async function handleApi(request, env, ctx) {
   if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats') {
     if (siteAnalyticsMaterializedReadEnabled(env)) {
       try {
-        const readiness = await getSiteAnalyticsMaterializedReadiness(env);
+        let readiness = await getSiteAnalyticsMaterializedReadiness(env);
+        let repair = null;
+        if (!readiness.ready && readiness.reason === 'analytics_materialized_not_fresh') {
+          repair = await repairSiteAnalyticsMaterializedFreshness(env, { limit: 50, maxPages: 4 });
+          readiness = repair.readiness;
+        }
         if (readiness.ready) {
           const materialized = await materializedSiteAnalyticsStats(env);
           if (materialized.status === 200) {
@@ -413,6 +418,7 @@ async function handleApi(request, env, ctx) {
                 ...materialized.body,
                 generation: 'site-pageview-v2',
                 readPath: 'materialized',
+                ...(repair?.repaired ? { materializedSelfHealed: true } : {}),
               },
             }, cors);
           }
