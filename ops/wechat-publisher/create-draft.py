@@ -1995,6 +1995,14 @@ def main() -> int:
         prior = drafts.get(slug) if isinstance(drafts.get(slug), dict) else {}
         media_id = str(prior.get("media_id") or "").strip()
         if media_id:
+            existing = get_draft(token, media_id)
+            existing_items = existing.get("news_item") if isinstance(existing, dict) else []
+            cover_cfg = data.get("cover") if isinstance(data.get("cover"), dict) else {}
+            if bool(cover_cfg.get("preserve_existing_thumb")) and isinstance(existing_items, list) and existing_items:
+                prior_item = existing_items[0] if isinstance(existing_items[0], dict) else {}
+                prior_thumb = str(prior_item.get("thumb_media_id") or "").strip()
+                if prior_thumb:
+                    article["thumb_media_id"] = prior_thumb
             result = update_draft(token, media_id, article)
             stage = "draft_update"
         else:
@@ -2169,6 +2177,14 @@ def main() -> int:
         existing = get_draft(token, media_id)
         existing_items = existing.get("news_item") if isinstance(existing, dict) else []
         if isinstance(existing_items, list) and len(existing_items) == len(articles):
+            if retrospective_slug and len(articles) > 1:
+                retro_manifest = load_retrospective_slug(retrospective_slug)
+                retro_cover = retro_manifest.get("cover") if isinstance(retro_manifest, dict) and isinstance(retro_manifest.get("cover"), dict) else {}
+                preserve = bool(retro_cover.get("preserve_existing_thumb"))
+                prior_retro = existing_items[1] if len(existing_items) > 1 and isinstance(existing_items[1], dict) else {}
+                prior_thumb = str(prior_retro.get("thumb_media_id") or "").strip()
+                if preserve and prior_thumb:
+                    articles[1]["thumb_media_id"] = prior_thumb
             for index, item in enumerate(articles):
                 update_draft(token, media_id, item, index=index)
             result = {"errcode": 0, "errmsg": "ok"}
