@@ -138,19 +138,40 @@ function mediaItemHasFigures(item: StaticMediaItem | undefined): boolean {
   return Boolean(item?.figures?.available && item.figures.figures?.length);
 }
 
+function ccsFigureOneIsNotToc(item: StaticMediaItem | undefined): boolean {
+  const doi = normalizeDoi(item?.doi);
+  if (!doi?.startsWith('10.31635/')) return false;
+  return item?.toc?.reason === 'figure1_fallback' || item?.inventory?.largeSource === 'figure1';
+}
+
+function withoutInvalidCcsToc(item: StaticMediaItem): StaticMediaItem {
+  if (!ccsFigureOneIsNotToc(item)) return item;
+  return {
+    ...item,
+    toc: { available: false, reason: 'ccs_official_toc_pending' },
+    inventory: {
+      ...(item.inventory || {}),
+      status: mediaItemHasFigures(item) ? 'figures_only' : 'missing',
+      largeSource: 'none',
+      suspiciousToc: false,
+    },
+  };
+}
+
 function mergeMediaItem(local: StaticMediaItem | undefined, dynamic: StaticMediaItem | undefined): StaticMediaItem | undefined {
   if (!local) return dynamic;
-  if (!dynamic) return local;
-  const toc = mediaItemHasToc(local) ? local.toc : dynamic.toc;
-  const figures = mediaItemHasFigures(local) ? local.figures : dynamic.figures;
+  const safeLocal = withoutInvalidCcsToc(local);
+  if (!dynamic) return safeLocal;
+  const toc = mediaItemHasToc(safeLocal) ? safeLocal.toc : dynamic.toc;
+  const figures = mediaItemHasFigures(safeLocal) ? safeLocal.figures : dynamic.figures;
   return {
     ...dynamic,
-    ...local,
+    ...safeLocal,
     toc,
     figures,
     inventory: {
       ...(dynamic.inventory || {}),
-      ...(local.inventory || {}),
+      ...(safeLocal.inventory || {}),
     },
   };
 }
@@ -185,17 +206,19 @@ function localInventory(item: StaticMediaItem | undefined, doi: string): Invento
       figureCount: 0,
     };
   }
-  const figureCount = item.figures?.figures?.length || 0;
-  const hasToc = Boolean(item.toc?.available && item.toc?.imageUrl);
+  const safeItem = withoutInvalidCcsToc(item);
+  const figureCount = safeItem.figures?.figures?.length || 0;
+  const hasToc = Boolean(safeItem.toc?.available && safeItem.toc?.imageUrl);
   const hasFigures = figureCount > 0;
-  const fallback = !hasToc && hasFigures ? item.figures.figures[0] : undefined;
+  const fallback = !hasToc && hasFigures ? safeItem.figures.figures[0] : undefined;
+  const suppressCcsFigureOne = ccsFigureOneIsNotToc(item);
   return {
     doi,
-    status: item.inventory?.status || (hasToc && hasFigures ? 'complete' : hasToc ? 'large_only' : hasFigures ? 'figures_only' : 'missing'),
-    largeSource: item.inventory?.largeSource || (hasToc ? 'toc' : fallback ? (/^figure\s*1$/i.test(fallback.label) ? 'figure1' : 'figure') : 'none'),
-    fallbackLabel: item.inventory?.fallbackLabel || fallback?.label,
-    suspiciousToc: Boolean(item.inventory?.suspiciousToc),
-    figureCount: item.inventory?.figureCount ?? figureCount,
+    status: suppressCcsFigureOne ? (hasFigures ? 'figures_only' : 'missing') : safeItem.inventory?.status || (hasToc && hasFigures ? 'complete' : hasToc ? 'large_only' : hasFigures ? 'figures_only' : 'missing'),
+    largeSource: suppressCcsFigureOne ? 'none' : safeItem.inventory?.largeSource || (hasToc ? 'toc' : fallback ? (/^figure\s*1$/i.test(fallback.label) ? 'figure1' : 'figure') : 'none'),
+    fallbackLabel: safeItem.inventory?.fallbackLabel || fallback?.label,
+    suspiciousToc: Boolean(safeItem.inventory?.suspiciousToc),
+    figureCount: safeItem.inventory?.figureCount ?? figureCount,
   };
 }
 
