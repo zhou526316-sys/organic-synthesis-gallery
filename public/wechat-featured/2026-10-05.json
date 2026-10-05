@@ -21,92 +21,11 @@
       "text": "这篇文章把制备、应用和机理连成一条线：一步制备、30 个例子、最高 93% 收率并做到 20 mmol；下游覆盖芳烃 C–H 胺化、烯烃氮杂环丙烷化、aza-Rubottom 与 N–N 偶联；机理上也明确区分“最支持的路径”和“尚未完全排除的替代路径”。"
     }
   ],
-  "pdf_url": "https://pubs.acs.org/doi/pdf/10.1021/jacs.6c14811",
   "figures": [
     {
       "id": "fig1",
-      "caption": "原文首页图｜整篇工作的核心逻辑：伯胺经 MPO 一步转成 RNHOMs，随后作为亲电 NH–R 片段进入多类 C–N / N–N 成键反应。这里直接使用论文原图，不重绘结构。",
-      "pdf_render": {
-        "page_index": 0,
-        "clip": [
-          315,
-          225,
-          565,
-          505
-        ],
-        "zoom": 4
-      }
-    },
-    {
-      "id": "scope",
-      "caption": "原文 Fig. 2｜“化学空间”首先来自氮片段本身的扩展：从简单脂肪胺一路做到氨基酸、天然产物和药物来源胺；leucine 衍生物还能做到 20 mmol、91%。",
-      "pdf_render": {
-        "page_index": 3,
-        "clip": [
-          42,
-          48,
-          565,
-          470
-        ],
-        "zoom": 3.5
-      }
-    },
-    {
-      "id": "applications",
-      "caption": "原文 Fig. 4｜第二个维度是受体与成键模式：同一类复杂 RNHOMs 可以进入芳烃 C–H 胺化、烯烃氮杂环丙烷化、分子内 C–H 胺化和 aza-Rubottom 等不同反应。",
-      "pdf_render": {
-        "page_index": 5,
-        "clip": [
-          42,
-          45,
-          566,
-          650
-        ],
-        "zoom": 3.1
-      }
-    },
-    {
-      "id": "mechanism",
-      "caption": "原文 Fig. 3｜DFT 支持 SN2-at-oxygen：不考虑碱时势垒 25.5 kcal/mol，引入 Cs₂CO₃ 的氢键/去质子化作用后降到 13.1 kcal/mol。作者同时保留了对电子转移替代路径的谨慎态度。",
-      "pdf_render": {
-        "page_index": 4,
-        "clip": [
-          300,
-          40,
-          566,
-          545
-        ],
-        "zoom": 4
-      }
-    },
-    {
-      "id": "hydrazine",
-      "caption": "原文 Fig. 5｜第三个维度是新的断键/成键方式：两个独立胺片段通过 N–N 键直接拼接。氨基酸片段组合已做到 76% 和 66%，但目前仍属于平台潜力的初步展示。",
-      "pdf_render": {
-        "page_index": 6,
-        "clip": [
-          42,
-          45,
-          565,
-          225
-        ],
-        "zoom": 4
-      }
-    },
-    {
-      "id": "si_stability",
-      "caption": "SI 稳定性证据｜RNHOMs 并非“做出来就随便放”。低分子量液体衍生物在较高温度下更容易分解，而氨基酸来源的固体衍生物明显更稳定；长期储存仍建议低温。",
-      "pdf_url": "https://pubs.acs.org/doi/suppl/10.1021/jacs.6c14811/suppl_file/ja6c14811_si_001.pdf",
-      "pdf_render": {
-        "page_index": 5,
-        "clip": [
-          40,
-          42,
-          565,
-          650
-        ],
-        "zoom": 3.2
-      }
+      "source_url": "https://media.beehiiv.com/cdn-cgi/image/fit%3Dscale-down%2Cquality%3D80%2Cformat%3Dauto%2Conerror%3Dredirect/uploads/asset/file/4df372fe-24f7-4f2e-a992-5d44b813e31e/Screenshot_2026-07-17_at_19.44.44.jpg?t=1784313913",
+      "caption": "反应总览｜伯胺经 MPO 一步转成 RNHOMs，实现 amine umpolung；随后这些亲电 NH–R 片段可以进入多类 C–N / N–N 片段偶联。结构沿用作者公开工作的原始图示，不作 AI 重绘。"
     }
   ],
   "sections": [
@@ -126,11 +45,7 @@
         "于是化学空间不再只是“30 个 RNHOMs”，而更像三个可以自由组合的维度：第一维是氮片段本身，从普通烷基延伸到氨基酸、天然产物和药物来源片段；第二维是接受这个氮片段的分子骨架；第三维是成键模式，包括芳烃 C–H 胺化、烯烃氮杂环丙烷化、羰基 α-胺化乃至 N–N 偶联。",
         "这就是 complex fragment coupling 的关键：不是先把复杂分子拆回很小的通用胺化试剂，而是尽量保留两个片段各自的复杂度，再在后期把它们直接拼起来。组合数因此呈“乘法式”增长，而不是单纯多几个底物例子。"
       ],
-      "callout": "一个更直观的理解：过去常常是“复杂受体 × 简单 NH₂/小烷基氮”；现在开始变成“复杂受体 × 复杂 NH–R”。这才是这篇文章所说的新化学空间。",
-      "figures": [
-        "scope",
-        "applications"
-      ]
+      "callout": "一个更直观的理解：过去常常是“复杂受体 × 简单 NH₂/小烷基氮”；现在开始变成“复杂受体 × 复杂 NH–R”。这才是这篇文章所说的新化学空间。"
     },
     {
       "eyebrow": "03 · 条件设计里最值得学的细节",
@@ -146,9 +61,6 @@
       "paragraphs": [
         "计算得到近线性的 N···O···O 过渡态，IRC 显示新 N–O 键形成和 O–O 键断裂处在同一个反应坐标。更关键的是把 Cs₂CO₃ 放进模型：它作为氢键碱增强胺的亲核性后，计算势垒从 25.5 降到 13.1 kcal/mol，与 0 °C、分钟级反应相符。",
         "加入 CCl₃Br 后反应收率基本不变，也不支持简单的自由基链主路径。但作者没有把故事讲满：涉及 Cs₂CO₃ 的电子转移路径在计算上只高出几 kcal/mol，因此最准确的说法仍是“SN2-at-oxygen 获得最多支持”，而不是“其他路径已被完全排除”。"
-      ],
-      "figures": [
-        "mechanism"
       ]
     },
     {
@@ -158,10 +70,7 @@
         "RNHOMs 还能和普通胺亲核体形成 hydrazine。两个一级氨基酸片段的首个例子只有 19%，但换成二级胺后明显改善，L-proline methyl ester 和 N-methyl-L-alanine methyl ester 分别给出 76% 和 66%。",
         "这里真正值得关注的是断键思路：一个氨基酸 N 端先被反转为亲电体，再与另一个胺片段构建 N–N 键。它提供了传统 peptide coupling 很少触及的组装方向，也解释了作者为什么把这项工作定位成 fragment coupling，而不只是 hydroxylamine synthesis。"
       ],
-      "warning": "这部分目前仍是初步展示：底物数量有限，一级胺–一级胺的偶联也存在明显收率问题。因此可以说它打开了新的断键逻辑，但不能把它包装成已经成熟的通用 hydrazine 平台。",
-      "figures": [
-        "hydrazine"
-      ]
+      "warning": "这部分目前仍是初步展示：底物数量有限，一级胺–一级胺的偶联也存在明显收率问题。因此可以说它打开了新的断键逻辑，但不能把它包装成已经成熟的通用 hydrazine 平台。"
     },
     {
       "eyebrow": "06 · SI 里一个非常实用的提醒",
@@ -169,9 +78,6 @@
       "paragraphs": [
         "SI 专门做了储存稳定性测试。低分子量、液态的 3a 在室温或 4 °C 下较快分解；氨基酸来源、固态的 3ab 明显稳定得多。作者因此建议长期储存采用低温条件。",
         "这也帮助理解正文中的一个现象：部分 RNHOMs 的 NMR 收率高于柱层析后的分离收率。对于这类高反应性试剂，纯化和储存损失本身就是方法实用性的一部分，而不是可以忽略的实验细节。"
-      ],
-      "figures": [
-        "si_stability"
       ]
     },
     {
@@ -188,26 +94,16 @@
     "所谓化学空间扩展，实质上是把“复杂氮片段 × 复杂受体 × 多种 N-transfer 成键模式”这几个维度接通，使复杂片段之间的组合从加法变成乘法。",
     "机理上 SN2-at-oxygen 最获支持，但作者保留了替代路径的不确定性；应用上 N–N fragment coupling 很有想象力，但目前仍是早期证明。"
   ],
-  "ai_notice": "本文依据论文主文与 Supporting Information 整理。化学结构与反应图均直接来自论文原图或 PDF 裁切，不使用生成模型重绘；机理部分区分直接实验支持、计算支持与尚未完全排除的替代路径。",
+  "ai_notice": "本文依据你提供的 JACS 最终正文与 Supporting Information 整理；实验数据、SI 稳定性/安全信息和机理边界以最终论文为准。正文所显示的化学结构视觉使用作者公开原图，不使用生成模型重绘。",
   "cover": {
-    "pdf_render": {
-      "page_index": 0,
-      "clip": [
-        315,
-        225,
-        565,
-        505
-      ],
-      "zoom": 5
-    },
+    "source_figure_id": "fig1",
     "canvas": {
       "width": 1880,
       "height": 800,
-      "background": "white",
-      "fit": "contain"
+      "background": "white"
     },
     "crop_235_1": "0_0_1_1",
     "crop_1_1": "0.287234_0_0.712766_1",
-    "description": "使用论文首页 graphical abstract 作为每日精选封面，所有结构均来自原论文。"
+    "description": "每日精选封面使用作者公开的反应总览原图；不依赖发布机实时访问 ACS PDF。"
   }
 }
