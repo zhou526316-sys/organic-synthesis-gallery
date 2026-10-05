@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.27
+// @version      6.2.28
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -50,10 +50,10 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261002-missing-only-v4';
   var QUEUE_COVERAGE_REVISION = '20261003-queue-coverage-v6';
-  var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v10';
+  var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
-  var INSTALL_REVISION = '6.2.27';
+  var INSTALL_REVISION = '6.2.28';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
   var ownedTaskHandle = null;
@@ -2129,6 +2129,43 @@ function embeddedJobDois(value) {
     return (match[1].toLowerCase()==='sf'?'Scheme ':'Figure ')+String(Number(match[2]));
   }
 
+  function ccsTocIndexUrlFromCrossrefPayload(job,payload,baseUrl) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='ccs')return '';
+    var message=payload&&payload.message&&typeof payload.message==='object'?payload.message:payload||{};
+    var volume=String(message.volume||'').trim();
+    var issue=String(message.issue||message['journal-issue']&&message['journal-issue'].issue||'').trim();
+    if(!/^\d+$/.test(volume)||!/^\d+$/.test(issue))return '';
+    var origin;
+    try{origin=new URL(baseUrl||location.href).origin;}catch(_){origin='https://www.chinesechemsoc.org';}
+    return origin+'/toc/ccschem/'+String(Number(volume))+'/'+String(Number(issue));
+  }
+
+  async function ccsCrossrefTocIndexUrl(job,trace) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='ccs')return '';
+    var doi=normalizeDoi(job&&job.doi);if(!doi)return '';
+    var key=P+'ccs-crossref-route-v1:'+doi,now=Date.now(),cached=GM_getValue(key,null);
+    if(cached&&cached.url&&now-Number(cached.at||0)<30*24*60*60*1000){
+      pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_cache',status:'found',url:cached.url,message:'volume='+String(cached.volume||'')+';issue='+String(cached.issue||'')});
+      return String(cached.url);
+    }
+    try{
+      var payload=await metadataJson({method:'GET',url:'https://api.crossref.org/works/'+encodeURIComponent(doi),timeout:20000,headers:{accept:'application/json'}},'ccs_crossref');
+      var url=ccsTocIndexUrlFromCrossrefPayload(job,payload,location.href);
+      var message=payload&&payload.message&&typeof payload.message==='object'?payload.message:payload||{};
+      if(!url){
+        pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_volume_issue',status:'none',message:'volume_or_issue_missing'});
+        return '';
+      }
+      var volume=String(message.volume||'').trim(),issue=String(message.issue||message['journal-issue']&&message['journal-issue'].issue||'').trim();
+      GM_setValue(key,{url:url,volume:volume,issue:issue,at:now,revision:PUBLISHER_MEDIA_REVISION});
+      pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_volume_issue',status:'found',url:url,message:'volume='+volume+';issue='+issue});
+      return url;
+    }catch(error){
+      pushTrace(trace,{stage:'ccs_toc_route',event:'crossref_volume_issue',status:'failed',message:captureLiveError(error&&error.message||error)});
+      return '';
+    }
+  }
+
   // CCS Chemistry exposes its official per-article "key image" on journal TOC
   // listings even when the article page exposes only numbered body figures.
   function ccsTocIndexUrls(job, doc, baseUrl) {
@@ -2318,6 +2355,10 @@ function embeddedJobDois(value) {
 
   async function iframeCandidates(job, trace) {
     var urls = iframeSourceUrls(job);
+    if(job&&job.publisher==='ccs'){
+      var crossrefTocUrl=await ccsCrossrefTocIndexUrl(job,trace);
+      if(crossrefTocUrl&&urls.indexOf(crossrefTocUrl)<0)urls.push(crossrefTocUrl);
+    }
     if (!urls.length) return [];
     var best = [];
     for (var u = 0; u < urls.length; u += 1) {
