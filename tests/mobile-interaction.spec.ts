@@ -762,6 +762,9 @@ test('mobile TOC hydrates a small near-screen batch and prioritizes the visible 
   await expect(firstImage).toBeVisible({ timeout: 30000 });
   await expect(firstImage).toHaveAttribute('loading', 'eager');
   await expect(firstImage).toHaveAttribute('fetchpriority', 'high');
+  const firstFigureSlot = page.locator('.card .figure-strip-slot').first();
+  await expect(firstFigureSlot).toBeHidden();
+  await expect(firstFigureSlot.locator('img')).toHaveCount(0);
 });
 
 

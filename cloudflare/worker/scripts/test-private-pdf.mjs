@@ -20,14 +20,15 @@ class FakeStatement {
     }
     if(q.includes('FROM user_capabilities WHERE user_id = ? AND capability = ?')) return db.capabilities.has(a[0]+'|'+a[1])?{ok:1}:null;
     if(q.includes('FROM private_pdf_documents') && q.includes('WHERE doi = ?')) {
-      const rows=[...db.documents.values()].filter(x=>x.doi===a[0]&&x.active===1);
-      rows.sort((x,y)=>y.captured_at-x.captured_at); return rows[0]||null;
+      const includeRaw=Number(a[1]||0)===1;
+      const rows=[...db.documents.values()].filter(x=>x.doi===a[0]&&(x.active===1||includeRaw));
+      rows.sort((x,y)=>(Number(y.active||0)-Number(x.active||0))||(y.captured_at-x.captured_at)); return rows[0]||null;
     }
     if(q.includes('FROM private_pdf_access_tokens t')) {
       const token=db.tokens.get(a[1]); if(!token)return null;
-      const doc=db.documents.get(token.document_id); if(!doc||doc.active!==1)return null;
+      const doc=db.documents.get(token.document_id); if(!doc)return null;
       if(!db.capabilities.has(token.user_id+'|'+a[0]))return null;
-      return {...token,doi:doc.doi,r2_key:doc.r2_key,byte_length:doc.byte_length};
+      return {...token,doi:doc.doi,r2_key:doc.r2_key,byte_length:doc.byte_length,active:doc.active};
     }
     throw new Error('Unhandled first: '+q);
   }
@@ -90,6 +91,25 @@ await test('owner bootstrap cannot be stolen by a second verified account',async
 await test('owner without stored PDF still falls back normally',async()=>{
   const r=await privatePdfStatus(await authRequest('/api/user-ui/private-pdf/status?doi=10.1021/jacs.6c12345'),env);
   assert.equal(r.body.entitled,true);assert.equal(r.body.available,false);
+});
+const rawPdf=Buffer.from('%PDF-1.7\nraw owner fixture\n%%EOF');
+bucket.put('private-pdf/raw-owner.pdf',rawPdf);
+db.documents.set('pdf-raw',{id:'pdf-raw',doi:'10.1021/jacs.6c54321',version_kind:'unknown',content_hash:'b'.repeat(64),r2_key:'private-pdf/raw-owner.pdf',byte_length:rawPdf.length,captured_at:now+1,processing_state:'raw',active:0});
+await test('owner can see and open a privately captured raw PDF before public verification',async()=>{
+  const status=await privatePdfStatus(await authRequest('/api/user-ui/private-pdf/status?doi=10.1021/jacs.6c54321'),env);
+  assert.equal(status.body.available,true);assert.equal(status.body.owner,true);assert.equal(status.body.document.verified,false);
+  const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c54321','owner-token',{method:'POST'}),env);
+  assert.equal(opened.body.available,true);assert.equal(opened.body.verified,false);
+  const served=await servePrivatePdf(new Request(opened.body.url),env,{});
+  assert.equal(served.status,200);assert.equal(Buffer.from(await served.arrayBuffer()).toString(),rawPdf.toString());
+});
+await test('non-owner read capability still cannot see unverified raw captures',async()=>{
+  db.capabilities.set('other|private_pdf_read',{});
+  const status=await privatePdfStatus(await authRequest('/api/user-ui/private-pdf/status?doi=10.1021/jacs.6c54321','other-token'),env);
+  assert.equal(status.body.entitled,true);assert.equal(status.body.owner,false);assert.equal(status.body.available,false);
+  const opened=await openPrivatePdf(await authRequest('/api/user-ui/private-pdf/open?doi=10.1021/jacs.6c54321','other-token',{method:'POST'}),env);
+  assert.equal(opened.body.available,false);
+  db.capabilities.delete('other|private_pdf_read');
 });
 const pdf=Buffer.from('%PDF-1.7\nprivate fixture\n%%EOF');
 bucket.put('private-pdf/fixture.pdf',pdf);

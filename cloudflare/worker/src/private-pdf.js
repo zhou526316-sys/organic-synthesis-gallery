@@ -36,17 +36,18 @@ async function hasCapability(env, userId, capability) {
     return Boolean(row?.ok);
   } catch { return false; }
 }
-async function selectedDocument(env, doi) {
+async function selectedDocument(env, doi, includeOwnerRaw = false) {
   if (!env?.DB || !doi) return null;
   try {
     return await env.DB.prepare(
-      `SELECT id, doi, version_kind, content_hash, r2_key, byte_length, captured_at, processing_state
+      `SELECT id, doi, version_kind, content_hash, r2_key, byte_length, captured_at, processing_state, active
          FROM private_pdf_documents
-        WHERE doi = ? AND active = 1
-        ORDER BY CASE version_kind WHEN 'version_of_record' THEN 4 WHEN 'accepted_manuscript' THEN 3 WHEN 'preprint' THEN 2 ELSE 1 END DESC,
+        WHERE doi = ? AND (active = 1 OR ? = 1)
+        ORDER BY active DESC,
+                 CASE version_kind WHEN 'version_of_record' THEN 4 WHEN 'accepted_manuscript' THEN 3 WHEN 'preprint' THEN 2 ELSE 1 END DESC,
                  captured_at DESC
         LIMIT 1`
-    ).bind(doi).first();
+    ).bind(doi, includeOwnerRaw ? 1 : 0).first();
   } catch { return null; }
 }
 export async function bootstrapPrivatePdfOwner(request, env, payload) {
@@ -81,9 +82,10 @@ export async function privatePdfStatus(request, env) {
   if (!enabled(env, 'PRIVATE_PDF_READ_ENABLED') || !entitled) {
     return { status: 200, body: { enabled: enabled(env, 'PRIVATE_PDF_READ_ENABLED'), authenticated: true, entitled, available: false, doi } };
   }
-  const doc = await selectedDocument(env, doi);
-  return { status: 200, body: { enabled: true, authenticated: true, entitled: true, available: Boolean(doc && env.PDF_PRIVATE), doi,
-    document: doc ? { id: doc.id, versionKind: doc.version_kind, byteLength: Number(doc.byte_length || 0), capturedAt: Number(doc.captured_at || 0), processingState: doc.processing_state || 'raw' } : null } };
+  const owner = await hasCapability(env, userId, OWNER_CAPABILITY);
+  const doc = await selectedDocument(env, doi, owner);
+  return { status: 200, body: { enabled: true, authenticated: true, entitled: true, owner, available: Boolean(doc && env.PDF_PRIVATE), doi,
+    document: doc ? { id: doc.id, versionKind: doc.version_kind, byteLength: Number(doc.byte_length || 0), capturedAt: Number(doc.captured_at || 0), processingState: doc.processing_state || 'raw', verified: Boolean(doc.active) } : null } };
 }
 export async function openPrivatePdf(request, env) {
   const doi = normalizeDoi(new URL(request.url).searchParams.get('doi'));
@@ -92,14 +94,15 @@ export async function openPrivatePdf(request, env) {
   const userId = await authenticatedSessionUserId(request, env);
   if (!userId) return { status: 401, body: { error: 'not_authenticated' } };
   if (!await hasCapability(env, userId, READ_CAPABILITY)) return { status: 403, body: { error: 'private_pdf_not_entitled' } };
-  const doc = await selectedDocument(env, doi);
+  const owner = await hasCapability(env, userId, OWNER_CAPABILITY);
+  const doc = await selectedDocument(env, doi, owner);
   if (!doc) return { status: 200, body: { available: false, doi, reason: 'pdf_not_stored' } };
   const token = randomToken(32), tokenHash = await sha256Hex(token), now = Date.now(), expiresAt = now + ACCESS_TTL_MS;
   await env.DB.prepare(
     'INSERT INTO private_pdf_access_tokens (token_hash, user_id, document_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?)'
   ).bind(tokenHash, userId, doc.id, now, expiresAt).run();
   const url = new URL('/api/user-ui/private-pdf/file', request.url); url.searchParams.set('token', token);
-  return { status: 200, body: { available: true, doi, url: url.toString(), expiresAt, versionKind: doc.version_kind } };
+  return { status: 200, body: { available: true, doi, url: url.toString(), expiresAt, versionKind: doc.version_kind, verified: Boolean(doc.active) } };
 }
 function parseRange(header, size) {
   const match = /^bytes=(\d*)-(\d*)$/.exec(String(header || '').trim());
@@ -117,12 +120,16 @@ export async function servePrivatePdf(request, env, cors = {}) {
   if (token.length < 32) return new Response('Unauthorized', { status: 401 });
   const tokenHash = await sha256Hex(token);
   const row = await env.DB.prepare(
-    `SELECT t.user_id, t.expires_at, d.doi, d.r2_key, d.byte_length
+    `SELECT t.user_id, t.expires_at, d.doi, d.r2_key, d.byte_length, d.active
        FROM private_pdf_access_tokens t
-       JOIN private_pdf_documents d ON d.id = t.document_id AND d.active = 1
+       JOIN private_pdf_documents d ON d.id = t.document_id
        JOIN user_capabilities c ON c.user_id = t.user_id AND c.capability = ?
       WHERE t.token_hash = ? LIMIT 1`
   ).bind(READ_CAPABILITY, tokenHash).first();
+  if (row && !Number(row.active || 0) && !await hasCapability(env, row.user_id, OWNER_CAPABILITY)) {
+    await env.DB.prepare('DELETE FROM private_pdf_access_tokens WHERE token_hash = ?').bind(tokenHash).run().catch(() => {});
+    return new Response('Unauthorized', { status: 401 });
+  }
   if (!row || Number(row.expires_at || 0) < Date.now()) {
     if (row) await env.DB.prepare('DELETE FROM private_pdf_access_tokens WHERE token_hash = ?').bind(tokenHash).run().catch(() => {});
     return new Response('Unauthorized', { status: 401 });

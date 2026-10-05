@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {buildBodyReviewMarker,canonicalBodyEvidence,BODY_MEDIA_GENERATION} from '../../shared/body-media-evidence.js';
+import {buildBodyReviewMarker,canonicalBodyEvidence,sourceDois,BODY_MEDIA_GENERATION} from '../../shared/body-media-evidence.js';
 import {verifyBodyFile} from './merge-reviewed-body.mjs';
 export const POLICY_ID='new-body-auto-20260923-v1';
 export const sha256=b=>createHash('sha256').update(b).digest('hex');
@@ -9,6 +9,18 @@ export function evidenceKey(row){return sha256(canonicalBodyEvidence(row,row.sha
 export function publicationItem(row){return {...row,role:'article_figure',originalUpdatedAt:row.updatedAt,originalR2Key:row.r2Key,order:row.sortOrder};}
 function url(value){const u=new URL(value);requireBody(u.protocol==='https:'&&!u.username&&!u.password&&!u.hash&&!u.search,'auto_url_must_be_plain_https');return u;}
 function hostIs(host,suffix){return host===suffix||host.endsWith('.'+suffix);}
+function ccsHost(host){return hostIs(host,'chinesechemsoc.org')||hostIs(host,'ccspublishing.org.cn');}
+function trustedOpaqueCcsBodyAsset(row,page,source,doi){
+  if(!doi.startsWith('10.31635/')||!ccsHost(page.hostname)||!ccsHost(source.hostname))return false;
+  const pageDois=sourceDois(page.href),sourceIds=sourceDois(source.href);
+  if(pageDois.length!==1||pageDois[0]!==doi||sourceIds.length!==0)return false;
+  const label=String(row?.label||'').trim();
+  const m=label.match(/^(Figure|Scheme)\s+(\d+)$/i);if(!m)return false;
+  const expected=(/^scheme$/i.test(m[1])?'sf':'f')+String(Number(m[2]));
+  const basename=source.pathname.split('/').pop()||'';
+  const assetPattern=new RegExp('^'+expected+'[.](?:png|webp|jpe?g)'+'$','i');
+  return /^\/cms\/asset\/[^/]+\//i.test(source.pathname)&&assetPattern.test(basename);
+}
 function publisherHostsAllowed(doi,pageHost,sourceHost){
   if(doi.startsWith('10.1021/'))return pageHost==='pubs.acs.org'&&['acs.silverchair-cdn.com','pubs.acs.org'].includes(sourceHost);
   if(doi.startsWith('10.1002/'))return hostIs(pageHost,'onlinelibrary.wiley.com')&&(hostIs(sourceHost,'wiley.com')||hostIs(sourceHost,'wiley.com.cn'));
@@ -16,7 +28,7 @@ function publisherHostsAllowed(doi,pageHost,sourceHost){
   if(doi.startsWith('10.1126/'))return hostIs(pageHost,'science.org')&&hostIs(sourceHost,'science.org');
   if(doi.startsWith('10.1039/'))return hostIs(pageHost,'rsc.org')&&hostIs(sourceHost,'rsc.org');
   if(doi.startsWith('10.1016/'))return (hostIs(pageHost,'sciencedirect.com')||hostIs(pageHost,'cell.com'))&&(hostIs(sourceHost,'sciencedirect.com')||hostIs(sourceHost,'cell.com')||hostIs(sourceHost,'els-cdn.com'));
-  if(doi.startsWith('10.31635/'))return hostIs(pageHost,'ccspublishing.org.cn')&&hostIs(sourceHost,'ccspublishing.org.cn');
+  if(doi.startsWith('10.31635/'))return ccsHost(pageHost)&&ccsHost(sourceHost);
   return false;
 }
 export async function validateNewBodyMetadata(row,policy,now=Date.now()){
@@ -25,11 +37,16 @@ export async function validateNewBodyMetadata(row,policy,now=Date.now()){
   requireBody(Number.isSafeInteger(row.updatedAt)&&row.updatedAt>=BODY_MEDIA_GENERATION&&row.updatedAt<=now+300000,'auto_capture_time');
   requireBody(row.reviewMarker?.schemaVersion===1&&row.reviewMarker.revision==='1'&&row.sha256,'auto_server_marker_missing');
   const expected=await buildBodyReviewMarker(row,row.sha256);
-  requireBody(expected.state==='pending_review'&&expected.reasons.length===0,'auto_provenance_incomplete');
-  for(const field of ['assetKey','evidenceSha256','sha256','role','state','byteIntegrity','semanticReview'])requireBody(row.reviewMarker[field]===expected[field],'auto_marker_changed:'+field);
-  requireBody(Array.isArray(row.reviewMarker.reasons)&&row.reviewMarker.reasons.length===0&&row.reviewMarker.published===false,'auto_marker_state');
   const page=url(row.articleUrl),source=url(row.sourceUrl);
   const doi=String(row.doi||'').toLowerCase();
+  const trustedOpaqueCcs=expected.state==='needs_evidence'
+    && Array.isArray(expected.reasons)&&expected.reasons.length===1&&expected.reasons[0]==='opaque_source_needs_provenance'
+    && trustedOpaqueCcsBodyAsset(row,page,source,doi);
+  requireBody((expected.state==='pending_review'&&expected.reasons.length===0)||trustedOpaqueCcs,'auto_provenance_incomplete');
+  for(const field of ['assetKey','evidenceSha256','sha256','role','state','byteIntegrity','semanticReview'])requireBody(row.reviewMarker[field]===expected[field],'auto_marker_changed:'+field);
+  requireBody(Array.isArray(row.reviewMarker.reasons)
+    && JSON.stringify(row.reviewMarker.reasons)===JSON.stringify(expected.reasons)
+    && row.reviewMarker.published===false,'auto_marker_state');
   requireBody(publisherHostsAllowed(doi,page.hostname,source.hostname),'auto_publisher_host_not_enabled');
   if(doi.startsWith('10.1021/')){
     const article=doi.match(/^10\.1021\/(jacs|acscatal|acs\.orglett|acs\.joc)\.([0-9]c[0-9]{5})$/);
