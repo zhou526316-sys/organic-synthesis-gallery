@@ -222,6 +222,7 @@ jobs:
           SUMMARY_CANDIDATE_INDEX_SHADOW_ENABLED = "1"
           SCHEDULED_HANDOFF_INDEX_READ_ENABLED = "1"
           USER_LIBRARY_ROW_SHADOW_ENABLED = "1"
+          USER_LIBRARY_ROW_READ_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_READ_ENABLED = "1"
           PRIVATE_PDF_READ_ENABLED = "1"
@@ -379,7 +380,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Backfill and compare user library row shadow
+      - name: Backfill and verify user library row read path
         id: user_library_shadow
         continue-on-error: true
         env:
@@ -392,8 +393,8 @@ jobs:
           const token=process.env.BRIDGE_WRITE_TOKEN;
           const reportPath='/tmp/user-library-row-shadow-report.json';
           fs.writeFileSync(reportPath,JSON.stringify({
-            schemaVersion:1,phase:'D3a-user-library-row-shadow-live',
-            ok:false,status:'started',readPathActive:false,startedAt:new Date().toISOString(),
+            schemaVersion:1,phase:'D3b-user-library-row-read-live',
+            ok:false,status:'started',readPathActive:true,startedAt:new Date().toISOString(),
           },null,2)+'\n');
           if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for user library row shadow');
 
@@ -410,8 +411,8 @@ jobs:
           }
 
           let status=await call('/api/admin/user-library-shadow/status');
-          if(status.enabled!==true||status.readPathActive!==false){
-            throw new Error('user library row shadow status invalid: '+JSON.stringify(status));
+          if(status.enabled!==true||status.readConfigured!==true){
+            throw new Error('user library row read configuration invalid: '+JSON.stringify(status));
           }
 
           let pages=0;
@@ -436,6 +437,9 @@ jobs:
             const reasons={};
             for(let pageNo=0;pageNo<200;pageNo+=1){
               const page=await call('/api/admin/user-library-shadow/compare?offset='+offset+'&limit=20');
+              if(page.readPathActive!==true){
+                throw new Error('user library row compare does not see active read path: '+JSON.stringify(page));
+              }
               checked+=Number(page.checked||0);
               mismatched+=Number(page.mismatched||0);
               for(const [key,value] of Object.entries(page.reasons||{})) reasons[key]=(reasons[key]||0)+Number(value||0);
@@ -446,7 +450,8 @@ jobs:
             const after=await call('/api/admin/user-library-shadow/status');
             const stable=status.legacyUsers===after.legacyUsers
               &&status.shadowHeads===after.shadowHeads
-              &&after.revisionMismatches===0;
+              &&after.revisionMismatches===0
+              &&after.readPathActive===true;
             const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,shadowHeads:after.shadowHeads,paperRows:after.paperRows};
             console.log(JSON.stringify({userLibraryShadowComparisonAttempt:attempt,...pass}));
             if(stable&&mismatched===0&&checked===after.legacyUsers) passes.push(pass);
@@ -455,8 +460,11 @@ jobs:
           if(passes.length<2) throw new Error('user library row shadow could not obtain two stable full parity passes');
 
           const finalStatus=await call('/api/admin/user-library-shadow/status');
+          if(finalStatus.readPathActive!==true){
+            throw new Error('user library row read path is not active: '+JSON.stringify(finalStatus));
+          }
           const report={
-            schemaVersion:1,phase:'D3a-user-library-row-shadow-live',ok:true,readPathActive:false,
+            schemaVersion:1,phase:'D3b-user-library-row-read-live',ok:true,readPathActive:true,
             legacyUsers:Number(finalStatus.legacyUsers||0),
             shadowHeads:Number(finalStatus.shadowHeads||0),
             paperRows:Number(finalStatus.paperRows||0),
@@ -1097,6 +1105,7 @@ jobs:
                 typeof body?.privatePdf?.processingEnabled === 'boolean' &&
                 body?.scheduledHandoffIndexReadEnabled === true &&
                 body?.userLibraryRowShadowEnabled === true &&
+                body?.userLibraryRowReadEnabled === true &&
                 body?.siteAnalyticsMaterializedShadowEnabled === true &&
                 body?.siteAnalyticsMaterializedReadEnabled === true &&
                 body?.wechatTicketRelay === true) {
@@ -1105,6 +1114,7 @@ jobs:
                 privatePdf: body.privatePdf,
                 scheduledHandoffIndexReadEnabled: body.scheduledHandoffIndexReadEnabled,
                 userLibraryRowShadowEnabled: body.userLibraryRowShadowEnabled,
+                userLibraryRowReadEnabled: body.userLibraryRowReadEnabled,
                 siteAnalyticsMaterializedShadowEnabled: body.siteAnalyticsMaterializedShadowEnabled,
                 siteAnalyticsMaterializedReadEnabled: body.siteAnalyticsMaterializedReadEnabled,
                 wechatTicketRelay: body.wechatTicketRelay,

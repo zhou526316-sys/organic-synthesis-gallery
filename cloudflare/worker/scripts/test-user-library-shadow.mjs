@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
+import { readerCounts } from '../src/user-ui.js';
 import {
   backfillUserLibraryShadowPage,
   compareUserLibraryShadowPage,
   getUserLibraryShadowStatus,
+  readUserLibraryStateFromRows,
   rebuildUserLibraryState,
   shadowWriteUserLibraryState,
   splitUserLibraryState,
@@ -23,6 +25,12 @@ class D1 {
     this.sqlite=new DatabaseSync(':memory:');
     this.sqlite.exec(`
       CREATE TABLE users (id TEXT PRIMARY KEY);
+      CREATE TABLE user_sessions (
+        token_hash TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        created_at INTEGER NOT NULL DEFAULT 0,
+        expires_at INTEGER NOT NULL
+      );
       CREATE TABLE user_library_state (
         user_id TEXT PRIMARY KEY,
         state_json TEXT NOT NULL,
@@ -72,7 +80,7 @@ class D1 {
   async batch(statements){const out=[];for(const s of statements)out.push(await s.run());return out;}
   close(){this.sqlite.close();}
 }
-const envFor=db=>({DB:db,USER_LIBRARY_ROW_SHADOW_ENABLED:'1'});
+const envFor=db=>({DB:db,USER_LIBRARY_ROW_SHADOW_ENABLED:'1',USER_LIBRARY_ROW_READ_ENABLED:'1'});
 
 function stateFixture(){
   return {
@@ -173,6 +181,8 @@ test('historical cursor backfill and paged semantic parity cover all legacy user
   assert.equal(status.body.shadowHeads,2);
   assert.equal(status.body.revisionMismatches,0);
   assert.equal(status.body.backfill.complete,true);
+  assert.equal(status.body.readConfigured,true);
+  assert.equal(status.body.readPathActive,true);
 
   const c1=await compareUserLibraryShadowPage(env,0,1);
   assert.equal(c1.body.checked,1);
@@ -182,6 +192,93 @@ test('historical cursor backfill and paged semantic parity cover all legacy user
   assert.equal(c2.body.checked,1);
   assert.equal(c2.body.mismatched,0);
   assert.equal(c2.body.complete,true);
+});
+
+
+test('fresh row revision reconstructs the complete account state without legacy JSON parsing',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db);
+  db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run('u1');
+  const state=stateFixture();
+  db.sqlite.prepare('INSERT INTO user_library_state(user_id,state_json,revision,updated_at) VALUES(?,?,?,?)')
+    .run('u1',JSON.stringify(state),7,700);
+  await shadowWriteUserLibraryState(env,'u1',state,7,700);
+
+  const read=await readUserLibraryStateFromRows(env,'u1',{revision:7,updated_at:700});
+  assert.equal(read.ready,true);
+  assert.equal(read.readPath,'rows');
+  assert.equal(read.revision,7);
+  assert.equal(read.updatedAt,700);
+  assert.equal(stableStateJson(read.state),stableStateJson(state));
+});
+
+test('row read fails closed on stale revision, missing rows, or source-hash mismatch',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db);
+  db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run('u1');
+  const state=stateFixture();
+  db.sqlite.prepare('INSERT INTO user_library_state(user_id,state_json,revision,updated_at) VALUES(?,?,?,?)')
+    .run('u1',JSON.stringify(state),2,200);
+  await shadowWriteUserLibraryState(env,'u1',state,2,200);
+
+  const stale=await readUserLibraryStateFromRows(env,'u1',{revision:3,updated_at:300});
+  assert.equal(stale.ready,false);
+  assert.equal(stale.reason,'row_revision_stale');
+
+  db.sqlite.prepare("DELETE FROM user_paper_state WHERE user_id='u1' AND paper_key='10.1234/abc'").run();
+  const missing=await readUserLibraryStateFromRows(env,'u1',{revision:2,updated_at:200});
+  assert.equal(missing.ready,false);
+  assert.equal(missing.reason,'row_count_mismatch');
+
+  await shadowWriteUserLibraryState(env,'u1',state,2,200);
+  db.sqlite.prepare("UPDATE user_library_head SET source_state_hash='bad' WHERE user_id='u1'").run();
+  const hash=await readUserLibraryStateFromRows(env,'u1',{revision:2,updated_at:200});
+  assert.equal(hash.ready,false);
+  assert.equal(hash.reason,'row_source_hash_mismatch');
+});
+
+test('row read flag is independently gated and empty accounts remain a valid empty state',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const disabled={DB:db,USER_LIBRARY_ROW_SHADOW_ENABLED:'1',USER_LIBRARY_ROW_READ_ENABLED:'0'};
+  const off=await readUserLibraryStateFromRows(disabled,'u-none');
+  assert.equal(off.ready,false);
+  assert.equal(off.reason,'user_library_row_read_disabled');
+
+  const empty=await readUserLibraryStateFromRows(envFor(db),'u-none');
+  assert.equal(empty.ready,true);
+  assert.equal(empty.readPath,'rows');
+  assert.equal(empty.revision,0);
+  assert.deepEqual(empty.state,{});
+});
+
+
+test('real account-pull API uses rows when fresh and legacy fallback when row revision is stale',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db);
+  const token='session-token-for-row-read';
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));
+  const tokenHash=[...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+  db.sqlite.prepare('INSERT INTO users(id) VALUES (?)').run('u-api');
+  db.sqlite.prepare('INSERT INTO user_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)')
+    .run(tokenHash,'u-api',Date.now()+60_000);
+
+  const state=stateFixture();
+  db.sqlite.prepare('INSERT INTO user_library_state(user_id,state_json,revision,updated_at) VALUES(?,?,?,?)')
+    .run('u-api',JSON.stringify(state),4,400);
+  await shadowWriteUserLibraryState(env,'u-api',state,4,400);
+
+  const fresh=await readerCounts(env,{mode:'account-pull',sessionToken:token});
+  assert.equal(fresh.status,200);
+  assert.equal(fresh.body.account.readPath,'rows');
+  assert.equal(fresh.body.account.revision,4);
+  assert.equal(stableStateJson(fresh.body.account.state),stableStateJson(state));
+
+  db.sqlite.prepare("UPDATE user_library_state SET revision=5,updated_at=500 WHERE user_id='u-api'").run();
+  const fallback=await readerCounts(env,{mode:'account-pull',sessionToken:token});
+  assert.equal(fallback.status,200);
+  assert.equal(fallback.body.account.readPath,'legacy_fallback');
+  assert.equal(fallback.body.account.revision,5);
+  assert.equal(stableStateJson(fallback.body.account.state),stableStateJson(state));
 });
 
 console.log('USER_LIBRARY_ROW_SHADOW_TESTS_READY');
