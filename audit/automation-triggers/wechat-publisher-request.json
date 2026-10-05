@@ -1,7 +1,7 @@
 {
-  "requestId": "wechat-daily-2026-10-05-final-title-crop-pass-0835",
-  "requestedAt": "2026-10-05T08:35:00Z",
+  "requestId": "wechat-daily-2026-10-05-title-translation-cover-fix-0900",
+  "requestedAt": "2026-10-05T09:00:00Z",
   "publicationDate": "2026-10-05",
   "action": "sync_daily_draft",
-  "reason": "Final pre-send pass: use exact original paper titles for both selected papers; remove repeated JACS Fig.1C; remove ambiguous Nature Ti panel; tighten Fig.1/Fig.2 crops; split Fig.4 and Fig.5 material into smaller argument-specific blocks; simplify the secondary thumbnail."
+  "reason": "Correct title semantics: keep 栏目｜作者 and replace only the paper-title phrase with a faithful Chinese translation of the original title for both JACS and Nature. Rebuild the retrospective thumbnail as a full-bleed high-contrast card whose central 2.35:1 crop contains large SH2/C-O identifiers, eliminating the blank-looking cover."
 }
