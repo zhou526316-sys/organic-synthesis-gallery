@@ -10,6 +10,7 @@ import {
   listLiteratureCatalogIndexRows,
   LITERATURE_INDEX_IMPORT_BATCH_MAX,
   queryLiteratureCatalogIndex,
+  queryLiteratureCatalogView,
 } from '../src/literature-catalog-index.js';
 
 class Statement {
@@ -211,6 +212,81 @@ test('finalize rejects equal-count FTS corruption when DOI sets differ',async t=
   assert.equal(finalized.body.ftsDistinctDois,1);
   assert.equal(finalized.body.missingFtsRows,1);
   assert.equal(finalized.body.orphanFtsRows,0);
+});
+
+test('filtered view shadow preserves current frontend filters and bounded keyset paging',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const viewRows=[
+    row('10.1234/view-a','Nickel chemistry A',{journal:'JACS',firstOnlineDate:'2026-10-05',addedDate:'2026-10-05'}),
+    row('10.1234/view-b','Nickel chemistry B',{journal:'Angew',firstOnlineDate:'2026-10-04',addedDate:'2026-10-05'}),
+    row('10.1234/view-c','Photoredox chemistry C',{journal:'JACS',firstOnlineDate:'2026-10-03',addedDate:'2026-10-04'}),
+    row('10.1234/view-d','Organic chemistry D',{journal:'Chem',firstOnlineDate:'2026-10-02',addedDate:'2026-10-03'}),
+    row('10.1234/view-e','Catalysis chemistry E',{journal:'Nature Chemistry',firstOnlineDate:'2026-10-01',addedDate:'2026-10-02'}),
+    row('10.1234/view-f','Archive chemistry F',{journal:'Angew',firstOnlineDate:'2026-09-30',addedDate:'2026-09-30'}),
+    row('10.1234/view-g','Plain reaction G',{journal:'JACS',firstOnlineDate:'2026-09-29',addedDate:'2026-09-29',synthesisType:'formal'}),
+    row('10.1234/view-h','Old chemistry H',{journal:'Chem',firstOnlineDate:'2026-09-28',addedDate:'2026-09-28'}),
+  ];
+  const g=generation({recordCount:viewRows.length});
+  await importLiteratureCatalogIndexBatch(env,{generation:g,rows:viewRows});
+  await finalizeLiteratureCatalogGeneration(env,g.catalogId);
+
+  const jacs=await queryLiteratureCatalogView(env,{
+    catalogId:g.catalogId,selectedJournals:['JACS'],sort:'newest',limit:2,
+  });
+  assert.equal(jacs.status,200);
+  assert.equal(jacs.body.matched,3);
+  assert.deepEqual(jacs.body.items.map(item=>item.doi),['10.1234/view-a','10.1234/view-c']);
+  assert.equal(jacs.body.hasMore,true);
+  assert.ok(jacs.body.nextCursor);
+
+  const jacsSecond=await queryLiteratureCatalogView(env,{
+    catalogId:g.catalogId,selectedJournals:['JACS'],sort:'newest',limit:2,cursor:jacs.body.nextCursor,
+  });
+  assert.deepEqual(jacsSecond.body.items.map(item=>item.doi),['10.1234/view-g']);
+  assert.equal(jacsSecond.body.hasMore,false);
+
+  const wrongScope=await queryLiteratureCatalogView(env,{
+    catalogId:g.catalogId,selectedJournals:['Angew'],sort:'newest',limit:2,cursor:jacs.body.nextCursor,
+  });
+  assert.equal(wrongScope.status,400);
+  assert.equal(wrongScope.body.error,'literature_catalog_view_cursor_scope_mismatch');
+
+  const dateRange=await queryLiteratureCatalogView(env,{
+    catalogId:g.catalogId,dateFrom:'2026-10-01',dateTo:'2026-10-04',sort:'oldest',limit:10,
+  });
+  assert.deepEqual(dateRange.body.items.map(item=>item.doi),[
+    '10.1234/view-e','10.1234/view-d','10.1234/view-c','10.1234/view-b',
+  ]);
+
+  const today=await queryLiteratureCatalogView(env,{
+    catalogId:g.catalogId,addedDate:'2026-10-05',sort:'newest',limit:10,
+  });
+  assert.deepEqual(today.body.items.map(item=>item.doi),['10.1234/view-a','10.1234/view-b']);
+
+  const includeExclude=await queryLiteratureCatalogView(env,{
+    catalogId:g.catalogId,selectedJournals:['JACS','Angew'],excludedJournals:['JACS'],sort:'newest',limit:10,
+  });
+  assert.deepEqual(includeExclude.body.items.map(item=>item.doi),['10.1234/view-b','10.1234/view-f']);
+
+  const nickel=await queryLiteratureCatalogView(env,{
+    catalogId:g.catalogId,query:'nickel',sort:'newest',limit:10,
+  });
+  assert.deepEqual(nickel.body.items.map(item=>item.doi),['10.1234/view-a','10.1234/view-b']);
+
+  const synthesisTypeOnly=await queryLiteratureCatalogView(env,{
+    catalogId:g.catalogId,query:'formal',sort:'newest',limit:10,
+  });
+  assert.equal(synthesisTypeOnly.body.matched,0);
+  assert.deepEqual(synthesisTypeOnly.body.items,[]);
+
+  const shortQuery=await queryLiteratureCatalogView(env,{catalogId:g.catalogId,query:'Ni'});
+  assert.equal(shortQuery.status,422);
+  assert.equal(shortQuery.body.error,'literature_catalog_short_query_requires_compatibility');
+
+  const readersSort=await queryLiteratureCatalogView(env,{catalogId:g.catalogId,sort:'readers'});
+  assert.equal(readersSort.status,422);
+  assert.equal(readersSort.body.error,'literature_catalog_reader_sort_requires_compatibility');
 });
 
 test('admin row reader covers a ready generation with bounded DOI-keyset pages',async t=>{
