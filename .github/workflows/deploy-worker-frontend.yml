@@ -319,12 +319,20 @@ jobs:
           }
 
           let pages=0;
-          while(status.backfill?.complete!==true||status.materializedEvents!==status.rawEvents){
+          while(status.readPathActive!==true){
             pages+=1;
             if(pages>400) throw new Error('site analytics materialized backfill exceeded 400 pages');
             const page=await call('/api/admin/site-analytics-materialized/backfill?limit=50',{method:'POST'});
             if(page.ok!==true) throw new Error('site analytics backfill page invalid: '+JSON.stringify(page));
             status=await call('/api/admin/site-analytics-materialized/status');
+            console.log(JSON.stringify({
+              siteAnalyticsRepairPage:pages,
+              pageEvents:Number(page.pageEvents||0),
+              watermarkReconciled:page.watermarkReconciled===true,
+              rawEvents:status.rawEvents,
+              materializedEvents:status.materializedEvents,
+              readPathActive:status.readPathActive,
+            }));
           }
 
           const passes=[];
