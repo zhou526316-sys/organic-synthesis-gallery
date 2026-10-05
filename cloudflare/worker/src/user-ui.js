@@ -1,5 +1,6 @@
 import { recordReaderOpen } from './reader-count-ledger.js';
 import { normalizeDoi } from './media.js';
+import { shadowWriteUserLibraryState, userLibraryRowShadowEnabled } from './user-library-shadow.js';
 
 const FEEDBACK_KINDS = new Set(['toc', 'image', 'title', 'date', 'duplicate', 'classification', 'other']);
 const SITE_FEEDBACK_CATEGORIES = new Set(['general', 'search', 'ui', 'account', 'literature', 'other']);
@@ -154,6 +155,22 @@ function mergeStates(remote = {}, local = {}, localWins = false) {
   };
 }
 
+async function safeShadowLibraryWrite(env, ctx, userId, state, revision, updatedAt) {
+  if (!userLibraryRowShadowEnabled(env)) return;
+  const task = shadowWriteUserLibraryState(env, userId, state, revision, updatedAt)
+    .catch(error => {
+      console.warn('USER_LIBRARY_ROW_SHADOW_WRITE_FAILED', {
+        message: String(error?.message || error).slice(0, 180),
+        revision: Number(revision || 0),
+      });
+    });
+  if (ctx?.waitUntil) {
+    ctx.waitUntil(task);
+    return;
+  }
+  await task;
+}
+
 async function linkProfileToSession(env, profileId, session) {
   if (!profileId) return;
   await env.DB.prepare(
@@ -173,7 +190,7 @@ async function linkProfileToSession(env, profileId, session) {
   await env.DB.prepare('DELETE FROM paper_readers WHERE profile_id = ?').bind(profileId).run();
 }
 
-async function accountState(env, payload) {
+async function accountState(env, payload, ctx) {
   const session = await authenticatedSession(env, payload?.sessionToken);
   if (!session) return { status: 401, body: { error: 'not_authenticated' } };
   const profileId = normalizeProfileId(payload?.profileId);
@@ -218,6 +235,7 @@ async function accountState(env, payload) {
          revision = excluded.revision,
          updated_at = excluded.updated_at`
     ).bind(session.user_id, mergedJson, nextRevision, now).run();
+    await safeShadowLibraryWrite(env, ctx, session.user_id, merged, nextRevision, now);
     return { status: 200, body: { account: { userId: session.user_id, revision: nextRevision, updatedAt: now, state: merged } } };
   }
 
@@ -247,6 +265,7 @@ async function accountState(env, payload) {
        revision = excluded.revision,
        updated_at = excluded.updated_at`
   ).bind(session.user_id, incomingJson, nextRevision, now).run();
+  await safeShadowLibraryWrite(env, ctx, session.user_id, incoming, nextRevision, now);
   return { status: 200, body: { account: { userId: session.user_id, revision: nextRevision, updatedAt: now, state: incoming } } };
 }
 
@@ -268,10 +287,10 @@ async function cleanOpenReaderCounts(env, dois) {
   return counts;
 }
 
-export async function readerCounts(env, payload) {
+export async function readerCounts(env, payload, ctx) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
   const mode = typeof payload?.mode === 'string' ? payload.mode : '';
-  if (ACCOUNT_MODES.has(mode)) return accountState(env, payload);
+  if (ACCOUNT_MODES.has(mode)) return accountState(env, payload, ctx);
 
   const dois = [...new Set((Array.isArray(payload?.dois) ? payload.dois : [])
     .map(normalizeDoi)
