@@ -31,7 +31,7 @@ try{
  });
  await page.goto(base+'/doi/full/'+doi+'#osg-job='+jobId);
  await page.evaluate(({doi,jobId})=>{
-  const storage={'osg-toc-v6:active-job':{doi,jobId,captureVersion:'6.2.20',publisher:'acs',mediaNeed:'toc+figures',captureToc:true,captureFigures:true,captureEvidence:false,startedAt:new Date().toISOString()},'osg-toc-v6:write-token':'fixture-only-no-production-token'};
+  const storage={'osg-toc-v6:active-job':{doi,jobId,captureVersion:'6.2.20',publisher:'acs',mediaNeed:'toc',captureToc:true,captureFigures:false,opportunisticFigures:true,captureEvidence:false,startedAt:new Date().toISOString()},'osg-toc-v6:write-token':'fixture-only-no-production-token'};
   window.__gm=storage;window.GM_getValue=(k,d)=>k in storage?storage[k]:d;window.GM_setValue=(k,v)=>{storage[k]=v;};window.GM_deleteValue=k=>{delete storage[k];};
   window.GM_listValues=()=>Object.keys(storage);window.GM_registerMenuCommand=()=>{};
   window.GM_xmlhttpRequest=opts=>{
@@ -66,8 +66,8 @@ try{
   let rejectsOld=false;try{__captureTest.pairedJobs({webpageDoiCount:512,visibleGaps:[]},{items:{}});}catch(_){rejectsOld=true;}
   return {out,rejectsOld};
  },{doi,foreign});
- test('historical official-TOC DOI schedules body figures without re-fetching TOC',plan.out.find(j=>j.doi===doi).mediaNeed==='figures'&&plan.out.find(j=>j.doi===doi).captureToc===false&&plan.out.find(j=>j.doi===doi).captureFigures===true);
- test('historical missing-TOC DOI captures TOC and body figures in one visit without Figure 1 fallback',plan.out.find(j=>j.doi===foreign).mediaNeed==='toc'&&plan.out.find(j=>j.doi===foreign).captureToc===true&&plan.out.find(j=>j.doi===foreign).captureFigures===true&&plan.out.find(j=>j.doi===foreign).allowFigureOne===false);
+ test('historical official-TOC DOI is omitted because body-only gaps no longer create queue work',!plan.out.some(j=>j.doi===doi));
+ test('historical missing-TOC DOI keeps body figures opportunistic in the same visit without Figure 1 fallback',plan.out.find(j=>j.doi===foreign).mediaNeed==='toc'&&plan.out.find(j=>j.doi===foreign).captureToc===true&&plan.out.find(j=>j.doi===foreign).captureFigures===false&&plan.out.find(j=>j.doi===foreign).opportunisticFigures===true&&plan.out.find(j=>j.doi===foreign).allowFigureOne===false);
  test('old incomplete queue is rejected rather than falsely called complete',plan.rejectsOld);
  // Real Chromium DOM + data-image decoding + HTTP storage receipts, with no external writes.
  const result=await page.evaluate(async()=>__captureTest.runPublisherJob(__gm['osg-toc-v6:active-job']));
@@ -78,7 +78,7 @@ try{
  const before=posts.length;
  await page.evaluate(()=>{Object.keys(__gm).filter(k=>k.includes('verified-capture:')).forEach(k=>delete __gm[k]);__gm['osg-toc-v6:active-job'].captureToc=true;document.querySelector('#graphicalAbstract').remove();});
  const partial=await page.evaluate(async()=>__captureTest.runPublisherJob(__gm['osg-toc-v6:active-job']));
- test('missing TOC does not stop body capture',partial.figuresStaged===2&&partial.toc.status==='not_found'&&partial.status==='partial');
+ test('missing TOC may still capture body opportunistically but remains a failed TOC obligation',partial.figuresStaged===2&&partial.toc.status==='not_found'&&partial.status==='failed');
  test('body still receives two storage receipts without TOC',posts.slice(before).filter(r=>r.url.endsWith('/stage')).length===2);
  await page.evaluate(()=>{__gm['osg-toc-v6:active-job'].jobId='old-task-must-not-bind';});
  let rejected=false;try{await page.evaluate(({doi,jobId})=>__captureTest.runPublisherJob({doi,jobId,captureVersion:'6.2.20'}),{doi,jobId});}catch(_){rejected=true;}
