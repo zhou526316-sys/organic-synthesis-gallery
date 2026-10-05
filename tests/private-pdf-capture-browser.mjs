@@ -48,10 +48,6 @@ try{
     const rows=await page.evaluate(()=>T.discoverExplicitPdfCandidates({doi:'10.1021/jacs.6c12345',publisher:'acs'}));
     assert.equal(rows.length,1);assert.equal(rows[0].source,'citation_pdf_url');
   });
-  await tc('CCS PDF discovery includes canonical direct routes before ePDF viewer',async()=>{
-    const rows=await page.evaluate(()=>{document.querySelectorAll('meta[name="citation_pdf_url" i],meta[property="citation_pdf_url" i]').forEach(n=>n.remove());document.body.innerHTML='<main>CCS article</main>';T.setHostAllowed(()=>true);return T.discoverExplicitPdfCandidates({doi:'10.31635/ccschem.026.202608392',publisher:'ccs'}).map(x=>x.source);});
-    assert.deepEqual(rows.slice(0,3),['ccs_pdfdirect','ccs_pdf','ccs_epdf']);
-  });
   await tc('PDF magic validator rejects HTML and accepts bounded PDF bytes',async()=>{
     const x=await page.evaluate(()=>{const good=new TextEncoder().encode('%PDF-1.7\\n'+('A'.repeat(2048))+'\\n%%EOF').buffer;const bad=new TextEncoder().encode('<html>'+('x'.repeat(2048))+'</html>').buffer;return[T.privatePdfBytesValid(good),T.privatePdfBytesValid(bad)]});
     assert.deepEqual(x,[true,false]);
@@ -94,6 +90,10 @@ try{
   await tc('finishPairedJob keeps media success when PDF fails',async()=>{
     const out=await page.evaluate(async()=>{T.setMaybe(async()=>({status:'failed',reason:'fixture_pdf_failure'}));return T.finishPairedJob({doi:'10.1021/jacs.6c12345',jobId:'fixture-job-12345678'},{status:'success',reason:'media_ok',figures:{discovered:0},fulltext:{status:'stored'}},[],null)});
     assert.equal(out.status,'success');assert.equal(out.privatePdf.status,'failed');
+  });
+  await tc('CCS PDF discovery includes canonical direct routes before ePDF viewer',async()=>{
+    const rows=await page.evaluate(()=>{document.querySelectorAll('meta[name="citation_pdf_url" i],meta[property="citation_pdf_url" i]').forEach(n=>n.remove());document.body.innerHTML='<main>CCS article</main>';T.setHostAllowed(()=>true);return T.discoverExplicitPdfCandidates({doi:'10.31635/ccschem.026.202608392',publisher:'ccs'}).map(x=>x.source);});
+    assert.deepEqual(rows.slice(0,3),['ccs_pdfdirect','ccs_pdf','ccs_epdf']);
   });
   assert.equal(report.consoleErrors.length,0);assert.equal(report.pageErrors.length,0);
 }finally{
