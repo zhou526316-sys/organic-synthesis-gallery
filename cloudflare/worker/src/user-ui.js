@@ -450,9 +450,9 @@ export async function trackPageView(env, payload, request, ctx) {
   };
 }
 
-export async function siteAnalyticsStats(env) {
+export async function siteAnalyticsStats(env, nowValue = Date.now()) {
   if (!env?.DB) return { status: 503, body: { error: 'D1 binding DB is not configured.' } };
-  const now = Date.now();
+  const now = Number(nowValue);
   const today = beijingDate(now);
   const start30 = dateDaysAgoBeijing(29, now);
 
