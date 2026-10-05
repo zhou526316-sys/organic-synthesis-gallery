@@ -830,7 +830,11 @@ test('search highlights results, picker closes outside, feedback drags and submi
   await expect(page.locator('.user-search-summary')).toContainText(/photoredox/i);
   await expect(page.locator('.card.user-search-match:visible').first()).toBeVisible();
   await expect(page.locator('.card:visible mark.user-search-highlight').first()).toBeVisible();
-  expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
+  const removedAfterFirstSearch = await page.evaluate(() =>
+    (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
+  );
+  expect(removedAfterFirstSearch).toBeGreaterThan(0);
+  expect(removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
 
   await search.fill('光催化');
   await expect(search).toHaveValue('光催化');
@@ -838,7 +842,11 @@ test('search highlights results, picker closes outside, feedback drags and submi
   expect(await page.locator('#gallery > .card:visible').count()).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
   expect(Number(await page.locator('#resultCount').textContent())).toBeLessThan(initialTotal);
   expect(await page.locator('.card[hidden]:visible').count()).toBe(0);
-  expect(await page.evaluate(() => (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0)).toBe(0);
+  const removedAfterSecondSearch = await page.evaluate(() =>
+    (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
+  );
+  expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeGreaterThan(0);
+  expect(removedAfterSecondSearch - removedAfterFirstSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
 
   await search.fill('10.1021/jacs.6c08636');
   await expect.poll(async () => page.locator('.card:visible').count()).toBeGreaterThan(0);
@@ -848,6 +856,11 @@ test('search highlights results, picker closes outside, feedback drags and submi
   await expect(doiCard.locator('a.open')).toHaveAttribute('href', canonicalDoiHref);
   await expect(doiCard.locator('.user-title-link')).toHaveAttribute('href', canonicalDoiHref);
   await expect(doiCard.locator('.user-doi-link')).toHaveAttribute('href', canonicalDoiHref);
+  const removedAfterDoiSearch = await page.evaluate(() =>
+    (window as Window & { __searchRemovedCards?: number }).__searchRemovedCards || 0
+  );
+  expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeGreaterThan(0);
+  expect(removedAfterDoiSearch - removedAfterSecondSearch).toBeLessThanOrEqual(RESULT_WINDOW_SIZE);
 
   const feedback = page.locator('site-feedback-widget');
   const feedbackTab = feedback.locator('.site-feedback-tab');
