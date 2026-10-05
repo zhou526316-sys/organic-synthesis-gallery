@@ -306,7 +306,7 @@ async function staticAwarePost<T>(path: string, body?: unknown): Promise<ApiResp
     const localByDoi = new Map<string, StaticMediaItem>();
     for (const doi of requested) {
       const item = manifest.items?.[doi];
-      if (item) localByDoi.set(doi, normalizeMediaItem(item, 'static'));
+      if (item) localByDoi.set(doi, withoutInvalidCcsToc(normalizeMediaItem(item, 'static')));
     }
 
     const incomplete = requested.filter(doi => {
