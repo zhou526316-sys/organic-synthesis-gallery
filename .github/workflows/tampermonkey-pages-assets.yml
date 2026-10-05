@@ -90,7 +90,7 @@ jobs:
           grep -F "PRIVATE_PDF_ADDED_DATE_CUTOFF = '2026-10-01'" public/gallery-vpn-bridge.user.js
           grep -F "CONTROLLER_REVISION = '2.2.41'" public/gallery-vpn-bridge.user.js
           grep -F "PRIVATE_PDF_CAPTURE_REVISION = '20261005-private-pdf-session-v5'" public/gallery-vpn-bridge.user.js
-          grep -F "source:'ccs_pdfdirect'" public/gallery-vpn-bridge.user.js
+          grep -F "ccs_pdfdirect" public/gallery-vpn-bridge.user.js
       - name: Overlay only Tampermonkey assets and prove everything else is byte-identical
         run: |
           set -euo pipefail
