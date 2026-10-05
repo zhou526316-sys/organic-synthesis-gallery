@@ -22,6 +22,20 @@ test('completed packet index requires a completed body-bearing media phase',()=>
   const tocOnly={...ok,doi:'10.1021/jacs.6c91237',mediaNeed:'toc',figuresDiscovered:0,figuresStored:0,figureLabels:[]};
   const map=completedPacketMap({reports:{items:[ok,bad,unfinished,tocOnly]}});assert.ok(map.has(doi));assert.ok(!map.has(bad.doi));assert.ok(!map.has(unfinished.doi));assert.ok(!map.has(tocOnly.doi));
 });
+test('newer TOC/PDF-only report cannot hide retained completed body packet',()=>{
+  const complete={doi,jobId:'packet-job-retained-1234',captureVersion:'6.2.20',mediaNeed:'toc+figures+evidence',final:true,status:'success',figuresDiscovered:6,figuresStored:6,figureLabels:['Figure 1','Scheme 1','Scheme 2','Scheme 3','Scheme 4','Scheme 5']};
+  const newer={doi,jobId:'packet-job-newer-5678',captureVersion:'6.2.20',mediaNeed:'toc+pdf',final:true,status:'success',figuresDiscovered:0,figuresStored:0,figureLabels:[]};
+  const map=completedPacketMap({reports:{items:[complete,newer]}});
+  assert.equal(map.get(doi)?.jobId,complete.jobId);
+});
+test('CCS Chinese Chemical Society keyimage is strong official TOC evidence',()=>{
+  const ccs='10.31635/ccschem.026.202507094';
+  const row={doi:ccs,kind:'official',captureVersion:'6.2.20',pageDoi:ccs,mediaGeneration:1790082000000,updatedAt:now,
+    articleUrl:'https://www.chinesechemsoc.org/doi/'+ccs,
+    sourceUrl:'https://www.chinesechemsoc.org/cms/asset/d4252995-b8cb-43b4-8848-46b7d9d8fc31/keyimage.png'};
+  assert.equal(strongOfficialCapture(row),true);
+});
+
 
 const goodOfficial={doi,kind:'official',captureVersion:'6.2.20',pageDoi:doi,mediaGeneration:1790082000000,updatedAt:now,
   articleUrl:'https://pubs.acs.org/jacs/article/doi/10.1021/jacs.6c91234/example',
