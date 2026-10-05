@@ -1,6 +1,6 @@
 # WeChat Editorial Contract
 
-Updated: 2026-10-04
+Updated: 2026-10-05
 Status: active
 
 ## Daily publication shape
@@ -29,6 +29,16 @@ Let N be the number of papers released at 08:00.
   Example: `Nature Communications 2 篇 · JACS 3 篇 · Angew 2 篇`.
 - The compact update block should occupy minimal vertical space. The daily featured paper receives the dominant visual and text space.
 - The full list remains accessible through “阅读原文” at the fixed Gallery edition link.
+
+## Gallery jump card
+
+Immediately below the compact “今日更新” block, include one Gallery entry visual optimized for the WeChat article width:
+
+- Left: a miniature styled as a **real card from that day's newly added literature**, using the paper's actual title/journal/DOI and an original paper visual when available.
+- Right: a large, high-contrast QR code pointing to the fixed daily Gallery edition URL: `https://gallery.gczhouwld.com/?edition=YYYY-MM-DD`.
+- Copy must say only that readers can view **all of today's new papers** and continue **searching/filtering/browsing** on the Gallery.
+- Do **not** claim the Gallery website itself provides “深度解读”; the deep-reading editorial belongs to the WeChat article.
+- The whole block should fit the normal mobile WeChat article width and read as one compact horizontal card rather than a standalone QR code.
 
 ## Featured-paper writing standard
 
