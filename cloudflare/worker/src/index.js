@@ -369,7 +369,7 @@ async function handleApi(request, env, ctx) {
     const authError = requireWriteAuthorization(request, env);
     if (authError) return authError;
     const now = Date.now();
-    const legacy = await siteAnalyticsStats(env);
+    const legacy = await siteAnalyticsStats(env, now);
     const materialized = await materializedSiteAnalyticsStats(env, now);
     if (legacy.status !== 200) return resultResponse(legacy);
     if (materialized.status !== 200) return resultResponse(materialized);
