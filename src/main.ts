@@ -1066,28 +1066,6 @@ function renderFigures(slot: HTMLElement, result: FigureResponse): void {
   requestAnimationFrame(syncNav);
 }
 
-function renderFigureFallback(slot: HTMLElement, imageUrl: string): void {
-  const heading = document.createElement('div');
-  heading.className = 'figure-strip-heading';
-  heading.textContent = t('figures');
-  const strip = document.createElement('div');
-  strip.className = 'figure-strip';
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'figure-thumb';
-  const image = new Image();
-  image.src = imageUrl;
-  image.alt = t('articleGraphic');
-  const label = document.createElement('span');
-  label.textContent = t('articleGraphic');
-  button.append(image, label);
-  button.addEventListener('click', () => openLightbox(imageUrl, t('articleGraphic')));
-  strip.appendChild(button);
-  slot.replaceChildren(heading, strip);
-  slot.classList.add('loaded');
-  slot.dataset.state = 'fallback';
-}
-
 function openLightbox(imageUrl: string, alt: string, caption?: string): void {
   document.querySelector('.image-lightbox')?.remove();
   const overlay = document.createElement('div');
