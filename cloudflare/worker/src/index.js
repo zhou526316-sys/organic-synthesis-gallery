@@ -227,6 +227,7 @@ async function handleApi(request, env, ctx) {
       summaryPublicationTime: '12:00 Asia/Shanghai',
       summaryReviewEnabled: false,
       summaryReviewReady: Boolean(env.DB && env.MEDIA && env.ASSETS),
+      scheduledHandoffIndexReadEnabled: String(env.SCHEDULED_HANDOFF_INDEX_READ_ENABLED || '') === '1',
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
