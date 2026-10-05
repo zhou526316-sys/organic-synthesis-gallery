@@ -10,18 +10,28 @@ import {
   materializeSitePageViewEvent,
   materializeSitePageViewForActiveRead,
   materializedSiteAnalyticsStats,
+  reconcileSiteAnalyticsMaterializedWatermark,
+  repairSiteAnalyticsMaterializedFreshness,
 } from '../src/site-analytics-materialized.js';
-import { siteAnalyticsStats } from '../src/user-ui.js';
+import { siteAnalyticsStats, trackPageView } from '../src/user-ui.js';
 
 class Statement {
   constructor(db,sql){this.db=db;this.sql=sql;this.args=[];}
   bind(...args){this.args=args;return this;}
-  async run(){const r=this.db.sqlite.prepare(this.sql).run(...this.args);return {success:true,meta:{changes:Number(r.changes||0),last_row_id:Number(r.lastInsertRowid||0)},results:[]};}
+  async run(){
+    const r=this.db.sqlite.prepare(this.sql).run(...this.args);
+    const meta={changes:Number(r.changes||0)};
+    if(!(this.db.omitPageviewLastRowId&&this.sql.includes('INSERT INTO site_pageviews_v1'))){
+      meta.last_row_id=Number(r.lastInsertRowid||0);
+    }
+    return {success:true,meta,results:[]};
+  }
   async first(){const row=this.db.sqlite.prepare(this.sql).get(...this.args);return row===undefined?null:row;}
   async all(){return {success:true,results:this.db.sqlite.prepare(this.sql).all(...this.args),meta:{}};}
 }
 class D1 {
-  constructor(){
+  constructor({omitPageviewLastRowId=false}={}){
+    this.omitPageviewLastRowId=omitPageviewLastRowId;
     this.sqlite=new DatabaseSync(':memory:');
     this.sqlite.exec(`
       CREATE TABLE site_pageviews_v1 (
@@ -273,6 +283,78 @@ test('active materialization failure disables fast reads until backfill repair',
   assert.equal(recovered.ready,true);
   assert.equal(recovered.lastError,'');
   assert.equal(recovered.failedEvents,1);
+});
+
+
+test('repair heals pre-cutover shadow events whose materialized facts are ahead of the watermark',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db,true);
+  const first=insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T01:00:00Z')});
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal((await getSiteAnalyticsMaterializedReadiness(env)).ready,true);
+
+  const second=insertRaw(db,{ip:'b',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T01:05:00Z')});
+  const shadowWrite=await materializeSitePageViewEvent(env,row(db,second));
+  assert.equal(shadowWrite.materialized,true);
+  let readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,false);
+  assert.equal(readiness.rawMaxEventId,second);
+  assert.equal(readiness.materializedMaxEventId,second);
+  assert.equal(readiness.backfillLastEventId,first);
+
+  const repaired=await repairSiteAnalyticsMaterializedFreshness(env,{limit:50,maxPages:2});
+  assert.equal(repaired.repaired,true);
+  assert.ok(repaired.pages>=1);
+  readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,true);
+  assert.equal(readiness.scannedEvents,2);
+  assert.equal(readiness.materializedEvents,2);
+  assert.equal(readiness.duplicateEvents,0);
+});
+
+test('watermark reconciliation repairs stale diagnostic counters when raw/materialized facts already match',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db,true);
+  for(const [ip,time] of [['a','2026-10-05T01:00:00Z'],['b','2026-10-05T01:05:00Z']]){
+    insertRaw(db,{ip,date:'2026-10-05',viewedAt:Date.parse(time)});
+  }
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  db.sqlite.prepare(`
+    UPDATE site_analytics_v2_backfill
+    SET last_event_id=2,complete=1,scanned_events=1,materialized_events=1,duplicate_events=0,last_error=''
+    WHERE id=1
+  `).run();
+  assert.equal((await getSiteAnalyticsMaterializedReadiness(env)).ready,false);
+
+  const direct=await reconcileSiteAnalyticsMaterializedWatermark(env);
+  assert.equal(direct.reconciled,true);
+  const readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,true);
+  assert.equal(readiness.scannedEvents,2);
+  assert.equal(readiness.materializedEvents,2);
+});
+
+test('trackPageView resolves the inserted raw event id even when D1 run metadata omits last_row_id',async t=>{
+  const db=new D1({omitPageviewLastRowId:true});t.after(()=>db.close());
+  const env={...envFor(db,true),READER_HASH_SECRET:'test-secret'};
+  insertRaw(db,{ip:'seed',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T01:00:00Z')});
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal((await getSiteAnalyticsMaterializedReadiness(env)).ready,true);
+
+  const oldNow=Date.now;
+  Date.now=()=>Date.parse('2026-10-05T01:10:00Z');
+  t.after(()=>{Date.now=oldNow;});
+  const request=new Request('https://api.example/api/user-ui/pageview',{
+    method:'POST',
+    headers:{'CF-Connecting-IP':'203.0.113.8','user-agent':'Mozilla/5.0 TestBrowser'},
+  });
+  const result=await trackPageView(env,{path:'/','referrer':''},request,{waitUntil(){}});
+  assert.equal(result.status,200);
+  assert.equal(result.body.accepted,true);
+  const status=await getSiteAnalyticsMaterializedStatus(env);
+  assert.equal(status.body.rawEvents,2);
+  assert.equal(status.body.materializedEvents,2);
+  assert.equal(status.body.readPathActive,true);
 });
 
 console.log('SITE_ANALYTICS_MATERIALIZED_SHADOW_TESTS_READY');
