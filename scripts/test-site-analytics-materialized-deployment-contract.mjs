@@ -30,22 +30,29 @@ test('D4a analytics migration is isolated, canonical and applied before Worker d
   assert.ok(deploy.includes('wrangler d1 execute "$D1_NAME" --remote --file=../site-analytics-v2.sql'));
 });
 
-test('legacy raw site_pageviews_v1 remains the only public site-stats read path in D4a',()=>{
+test('D4b public site-stats is materialized-primary with explicit raw fallback',()=>{
   const stats=section(userUi,'export async function siteAnalyticsStats','export async function markReader');
   assert.ok(stats.includes('FROM site_pageviews_v1'));
-  assert.ok(!stats.includes('site_global_stats_v2'));
-  assert.ok(!stats.includes('materializedSiteAnalyticsStats'));
   const route=section(index,"if (request.method === 'GET' && url.pathname === '/api/user-ui/site-stats')","if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts/mark')");
+  assert.ok(route.includes('siteAnalyticsMaterializedReadEnabled(env)'));
+  assert.ok(route.includes('getSiteAnalyticsMaterializedReadiness(env)'));
+  assert.ok(route.includes('materializedSiteAnalyticsStats(env)'));
+  assert.ok(route.includes("readPath: 'materialized'"));
+  assert.ok(route.includes("readPath: 'legacy_raw_fallback'"));
   assert.ok(route.includes('siteAnalyticsStats(env)'));
-  assert.ok(!route.includes('materializedSiteAnalyticsStats'));
 });
 
-test('raw pageview write remains primary and analytics materialization is fail-open',()=>{
+test('raw pageview write remains primary; active materialization is synchronous with raw fallback safety',()=>{
   const track=section(userUi,'export async function trackPageView','export async function siteAnalyticsStats');
   const rawWrite=track.indexOf('INSERT INTO site_pageviews_v1');
-  const shadowWrite=track.indexOf('materializeSitePageViewEvent');
-  assert.ok(rawWrite>=0&&shadowWrite>rawWrite);
-  assert.ok(userUi.includes('SITE_ANALYTICS_MATERIALIZED_WRITE_FAILED'));
+  const activeWrite=track.indexOf('materializeSitePageViewForActiveRead');
+  assert.ok(rawWrite>=0&&activeWrite>rawWrite);
+  assert.ok(track.includes('siteAnalyticsMaterializedReadEnabled(env)'));
+  assert.ok(track.includes('await materializeSitePageViewForActiveRead(env, event)'));
+  assert.ok(userUi.includes('SITE_ANALYTICS_MATERIALIZED_ACTIVE_WRITE_FAILED'));
+  assert.ok(materialized.includes('markSiteAnalyticsMaterializedUnhealthy'));
+  assert.ok(materialized.includes('complete=0'));
+  assert.ok(materialized.includes("last_error=excluded.last_error"));
   assert.ok(userUi.includes('safeAnalyticsShadowTask'));
   assert.ok(userUi.includes('ctx?.waitUntil'));
 });
@@ -66,21 +73,25 @@ test('paper-open conversion updates only materialized visitor flags and leaves r
   assert.ok(materialized.includes("scope_type=? AND scope_key=? AND ip_hash=? AND paper_open=0"));
 });
 
-test('D4a deployment backfills raw events and requires two stable full-output parity passes',()=>{
+test('D4b deployment activates materialized reads only after backfill and stable parity',()=>{
   assert.ok(deploy.includes('SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"'));
+  assert.ok(deploy.includes('SITE_ANALYTICS_MATERIALIZED_READ_ENABLED = "1"'));
   const block=section(
     deploy,
-    '- name: Backfill and compare materialized site analytics shadow',
+    '- name: Backfill and verify materialized site analytics read path',
     '- name: Backfill and compare user library row shadow',
   );
   assert.ok(block.includes('continue-on-error: true'));
-  assert.ok(block.includes("phase:'D4a-site-analytics-materialized-shadow-live'"));
-  assert.ok(block.includes('readPathActive:false'));
+  assert.ok(block.includes("phase:'D4b-site-analytics-materialized-read-live'"));
+  assert.ok(block.includes('readPathActive:true'));
   assert.ok(block.includes('/api/admin/site-analytics-materialized/backfill?limit=50'));
   assert.ok(block.includes('/api/admin/site-analytics-materialized/compare'));
   assert.ok(block.includes('passes.length<2'));
   assert.ok(block.includes('comparison.same===true'));
-  assert.ok(block.includes('after.rawEvents===after.materializedEvents'));
+  assert.ok(block.includes('comparison.readPathActive===true'));
+  assert.ok(block.includes('after.readPathActive===true'));
+  assert.ok(block.includes('/api/user-ui/site-stats'));
+  assert.ok(block.includes("live.readPath!=='materialized'"));
   const preserve=section(
     deploy,
     '- name: Preserve materialized site analytics shadow report',
@@ -89,15 +100,20 @@ test('D4a deployment backfills raw events and requires two stable full-output pa
   assert.ok(preserve.includes('if-no-files-found: error'));
 });
 
-test('admin routes and health expose analytics shadow without activating production reads',()=>{
+test('admin routes and health expose analytics materialized read activation',()=>{
   for(const path of [
     '/api/admin/site-analytics-materialized/status',
     '/api/admin/site-analytics-materialized/backfill',
     '/api/admin/site-analytics-materialized/compare',
   ]) assert.ok(index.includes(path),path);
   assert.ok(index.includes("siteAnalyticsMaterializedShadowEnabled: String(env.SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED || '') === '1'"));
+  assert.ok(index.includes('siteAnalyticsMaterializedReadEnabled: siteAnalyticsMaterializedReadEnabled(env)'));
   assert.ok(deploy.includes('body?.siteAnalyticsMaterializedShadowEnabled === true'));
-  assert.ok(materialized.includes('readPathActive:false'));
+  assert.ok(deploy.includes('body?.siteAnalyticsMaterializedReadEnabled === true'));
+  assert.ok(materialized.includes('getSiteAnalyticsMaterializedReadiness'));
+  assert.ok(materialized.includes('analytics_materialized_not_fresh'));
+  assert.ok(materialized.includes('reconcileMaterializedPaperOpenFlags'));
+  assert.ok(materialized.includes("complete?'':lastError"));
 });
 
 console.log('SITE_ANALYTICS_MATERIALIZED_DEPLOYMENT_CONTRACT_PASS');

@@ -4,9 +4,11 @@ import { DatabaseSync } from 'node:sqlite';
 import {
   backfillSiteAnalyticsMaterializedPage,
   compareSiteAnalyticsBodies,
+  getSiteAnalyticsMaterializedReadiness,
   getSiteAnalyticsMaterializedStatus,
   markMaterializedVisitorPaperOpen,
   materializeSitePageViewEvent,
+  materializeSitePageViewForActiveRead,
   materializedSiteAnalyticsStats,
 } from '../src/site-analytics-materialized.js';
 import { siteAnalyticsStats } from '../src/user-ui.js';
@@ -82,7 +84,7 @@ class D1 {
   }
   close(){this.sqlite.close();}
 }
-const envFor=db=>({DB:db,SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED:'1'});
+const envFor=(db,read=false)=>({DB:db,SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED:'1',...(read?{SITE_ANALYTICS_MATERIALIZED_READ_ENABLED:'1'}:{})});
 
 function insertRaw(db,{ip,ref='',device='desktop',date,viewedAt,path='/'}){
   const r=db.sqlite.prepare(`
@@ -192,6 +194,85 @@ test('paper-open marking is idempotent and only affects visitor scopes that alre
   assert.equal(second.updated,0);
   const missing=await markMaterializedVisitorPaperOpen(env,'never-seen','2026-10-05');
   assert.equal(missing.updated,0);
+});
+
+
+test('active materialized read readiness follows the raw watermark and realtime writes close the gap',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db,true);
+  const first=insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T01:00:00Z')});
+  const backfill=await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal(backfill.body.complete,true);
+
+  let readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,true);
+  let status=await getSiteAnalyticsMaterializedStatus(env);
+  assert.equal(status.body.readPathActive,true);
+
+  const second=insertRaw(db,{ip:'b',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T01:05:00Z')});
+  readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,false);
+
+  const materialized=await materializeSitePageViewForActiveRead(env,row(db,second));
+  assert.equal(materialized.materialized,true);
+  readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,true);
+  assert.equal(readiness.rawMaxEventId,second);
+  assert.equal(readiness.materializedMaxEventId,second);
+  assert.equal(readiness.scannedEvents,second);
+  assert.equal(readiness.materializedEvents,second);
+
+  status=await getSiteAnalyticsMaterializedStatus(env);
+  assert.equal(status.body.readPathActive,true);
+  assert.equal(status.body.rawEvents,2);
+  assert.equal(status.body.materializedEvents,2);
+  assert.equal(Number(first),1);
+});
+
+test('readiness does not assume autoincrement ids are dense',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db,true);
+  const first=insertRaw(db,{ip:'discarded',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T00:50:00Z')});
+  db.sqlite.prepare('DELETE FROM site_pageviews_v1 WHERE id=?').run(first);
+  const kept=insertRaw(db,{ip:'kept',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T01:00:00Z')});
+  assert.ok(kept>1);
+  const backfill=await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal(backfill.body.complete,true);
+  const readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,true);
+  assert.equal(readiness.rawMaxEventId,kept);
+  assert.equal(readiness.scannedEvents,1);
+  assert.equal(readiness.globalPv,1);
+});
+
+test('active materialization failure disables fast reads until backfill repair',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env=envFor(db,true);
+  const id=insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T01:00:00Z')});
+  await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal((await getSiteAnalyticsMaterializedReadiness(env)).ready,true);
+
+  await assert.rejects(
+    materializeSitePageViewForActiveRead(env,{
+      id:id+1,ip_hash:'b',referrer_host:'',device_type:'invalid',
+      beijing_date:'2026-10-05',viewed_at:Date.parse('2026-10-05T01:10:00Z'),
+    }),
+    /analytics_materialized_event_invalid/,
+  );
+  const readiness=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(readiness.ready,false);
+  const state=db.sqlite.prepare('SELECT complete,failed_events,last_error FROM site_analytics_v2_backfill WHERE id=1').get();
+  assert.equal(Number(state.complete),0);
+  assert.equal(Number(state.failed_events),1);
+  assert.match(String(state.last_error),/analytics_materialized_event_invalid/);
+
+  const repaired=await backfillSiteAnalyticsMaterializedPage(env,100);
+  assert.equal(repaired.status,200);
+  assert.equal(repaired.body.complete,true);
+  const recovered=await getSiteAnalyticsMaterializedReadiness(env);
+  assert.equal(recovered.ready,true);
+  assert.equal(recovered.lastError,'');
+  assert.equal(recovered.failedEvents,1);
 });
 
 console.log('SITE_ANALYTICS_MATERIALIZED_SHADOW_TESTS_READY');

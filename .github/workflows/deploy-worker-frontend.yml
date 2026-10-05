@@ -223,6 +223,7 @@ jobs:
           SCHEDULED_HANDOFF_INDEX_READ_ENABLED = "1"
           USER_LIBRARY_ROW_SHADOW_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
+          SITE_ANALYTICS_MATERIALIZED_READ_ENABLED = "1"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "0"
@@ -282,7 +283,7 @@ jobs:
           npx wrangler secret bulk /tmp/runtime-secrets.json --config wrangler.frontend.toml >/dev/null
           rm -f /tmp/runtime-secrets.json
 
-      - name: Backfill and compare materialized site analytics shadow
+      - name: Backfill and verify materialized site analytics read path
         id: site_analytics_shadow
         continue-on-error: true
         env:
@@ -295,8 +296,8 @@ jobs:
           const token=process.env.BRIDGE_WRITE_TOKEN;
           const reportPath='/tmp/site-analytics-materialized-shadow-report.json';
           fs.writeFileSync(reportPath,JSON.stringify({
-            schemaVersion:1,phase:'D4a-site-analytics-materialized-shadow-live',
-            ok:false,status:'started',readPathActive:false,startedAt:new Date().toISOString(),
+            schemaVersion:1,phase:'D4b-site-analytics-materialized-read-live',
+            ok:false,status:'started',readPathActive:true,startedAt:new Date().toISOString(),
           },null,2)+'\n');
           if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for analytics shadow');
 
@@ -313,8 +314,8 @@ jobs:
           }
 
           let status=await call('/api/admin/site-analytics-materialized/status');
-          if(status.enabled!==true||status.readPathActive!==false){
-            throw new Error('site analytics materialized shadow status invalid: '+JSON.stringify(status));
+          if(status.enabled!==true||status.readConfigured!==true){
+            throw new Error('site analytics materialized read configuration invalid: '+JSON.stringify(status));
           }
 
           let pages=0;
@@ -340,21 +341,27 @@ jobs:
               rawEvents:after.rawEvents,materializedEvents:after.materializedEvents,
               globalPv:after.globalPv,globalUv:after.globalUv,
             }));
-            if(stable&&comparison.same===true) passes.push({
+            if(stable&&comparison.same===true&&comparison.readPathActive===true&&after.readPathActive===true) passes.push({
               rawEvents:after.rawEvents,materializedEvents:after.materializedEvents,
               globalPv:after.globalPv,globalUv:after.globalUv,
             });
             if(passes.length<2) await new Promise(resolve=>setTimeout(resolve,750));
           }
-          if(passes.length<2) throw new Error('site analytics materialized shadow could not obtain two stable full parity passes');
+          if(passes.length<2) throw new Error('site analytics materialized read path could not obtain two stable full parity passes');
 
           status=await call('/api/admin/site-analytics-materialized/status');
+          if(status.readPathActive!==true) throw new Error('site analytics materialized read path is not active: '+JSON.stringify(status));
+          const live=await call('/api/user-ui/site-stats');
+          if(live.readPath!=='materialized'||live.generation!=='site-pageview-v2'){
+            throw new Error('live site-stats is not using materialized read path: '+JSON.stringify(live));
+          }
           const report={
-            schemaVersion:1,phase:'D4a-site-analytics-materialized-shadow-live',ok:true,readPathActive:false,
+            schemaVersion:1,phase:'D4b-site-analytics-materialized-read-live',ok:true,readPathActive:true,
             rawEvents:Number(status.rawEvents||0),materializedEvents:Number(status.materializedEvents||0),
             globalPv:Number(status.globalPv||0),globalUv:Number(status.globalUv||0),
             backfillComplete:status.backfill?.complete===true,backfillPagesThisRun:pages,
-            stableParityPasses:passes.length,verifiedAt:new Date().toISOString(),
+            stableParityPasses:passes.length,liveReadPath:live.readPath,
+            liveGeneration:live.generation,verifiedAt:new Date().toISOString(),
           };
           fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
           console.log('SITE_ANALYTICS_MATERIALIZED_SHADOW '+JSON.stringify(report));
@@ -1088,6 +1095,7 @@ jobs:
                 body?.scheduledHandoffIndexReadEnabled === true &&
                 body?.userLibraryRowShadowEnabled === true &&
                 body?.siteAnalyticsMaterializedShadowEnabled === true &&
+                body?.siteAnalyticsMaterializedReadEnabled === true &&
                 body?.wechatTicketRelay === true) {
               console.log(JSON.stringify({
                 canonicalWorkerBindings: true,
@@ -1095,6 +1103,7 @@ jobs:
                 scheduledHandoffIndexReadEnabled: body.scheduledHandoffIndexReadEnabled,
                 userLibraryRowShadowEnabled: body.userLibraryRowShadowEnabled,
                 siteAnalyticsMaterializedShadowEnabled: body.siteAnalyticsMaterializedShadowEnabled,
+                siteAnalyticsMaterializedReadEnabled: body.siteAnalyticsMaterializedReadEnabled,
                 wechatTicketRelay: body.wechatTicketRelay,
               }));
               process.exit(0);
