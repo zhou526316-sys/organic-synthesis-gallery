@@ -229,6 +229,44 @@ test('active materialized read readiness follows the raw watermark and realtime 
   assert.equal(Number(first),1);
 });
 
+test('D4b catch-up advances a stale D4a shadow watermark through already-materialized duplicates',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const shadowEnv=envFor(db);
+  const readEnv=envFor(db,true);
+
+  const first=insertRaw(db,{ip:'a',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T01:00:00Z')});
+  const initial=await backfillSiteAnalyticsMaterializedPage(shadowEnv,100);
+  assert.equal(initial.body.complete,true);
+  assert.equal(initial.body.lastEventId,first);
+
+  const second=insertRaw(db,{ip:'b',date:'2026-10-05',viewedAt:Date.parse('2026-10-05T01:05:00Z')});
+  const shadowWrite=await materializeSitePageViewEvent(shadowEnv,row(db,second));
+  assert.equal(shadowWrite.materialized,true);
+
+  const beforeStatus=await getSiteAnalyticsMaterializedStatus(readEnv);
+  assert.equal(beforeStatus.body.rawEvents,2);
+  assert.equal(beforeStatus.body.materializedEvents,2);
+  assert.equal(beforeStatus.body.globalPv,2);
+  assert.equal(beforeStatus.body.backfill.lastEventId,first);
+  assert.equal(beforeStatus.body.readPathActive,false);
+  assert.equal((await getSiteAnalyticsMaterializedReadiness(readEnv)).ready,false);
+
+  const catchup=await backfillSiteAnalyticsMaterializedPage(readEnv,100);
+  assert.equal(catchup.status,200);
+  assert.equal(catchup.body.complete,true);
+  assert.equal(catchup.body.lastEventId,second);
+  assert.equal(catchup.body.pageDuplicates,1);
+
+  const after=await getSiteAnalyticsMaterializedReadiness(readEnv);
+  assert.equal(after.ready,true);
+  assert.equal(after.backfillLastEventId,second);
+  assert.equal(after.rawMaxEventId,second);
+  assert.equal(after.materializedMaxEventId,second);
+  assert.equal(after.scannedEvents,2);
+  assert.equal(after.materializedEvents,1);
+  assert.equal(after.duplicateEvents,1);
+});
+
 test('readiness does not assume autoincrement ids are dense',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env=envFor(db,true);
