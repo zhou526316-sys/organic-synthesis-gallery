@@ -81,7 +81,7 @@ await test('inventory503 mid-run never truncates61 known tasks to40',async()=>{
 });
 await test('error at article21 does not prevent article61',async()=>{
  const ar=Array.from({length:61},(_,n)=>article(n)),i=inv(ar);i.media.items.forEach(x=>x.tocStored=false);
- const x=h(queue(ar),i,{result:j=>j.doi===ar[20].doi?{status:'failed',reason:'publisher_access_gate',fulltext:{status:'failed'}}:{}});
+ const x=h(queue(ar),i,{result:j=>j.doi===ar[20].doi?{status:'failed',reason:'publisher_access_gate',toc:{status:'failed'},fulltext:{status:'failed'}}:{}});
  await x.T.forceStartFromHead();const s=x.store.get(P+'last-run-summary');assert.equal(x.opened.length,61);assert.equal(s.visitedCount,61);assert.equal(s.fullyResolved,60);assert.equal(s.unresolvedCount,1);assert.equal(s.phase,'blocked_remaining');
 });
 await test('body-completeness unknown never becomes a queue task',()=>{
