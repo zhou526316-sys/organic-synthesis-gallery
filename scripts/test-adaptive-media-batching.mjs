@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {adaptiveBatchGate,strongOfficialCapture,tocReadyDois,officialToc,completedPacketMap} from '../cloudflare/scripts/merge-new-body-auto.mjs';
-import {captureBelongsToDoi,embeddedKnownDois} from '../cloudflare/scripts/merge-local-captures.mjs';
+import {captureBelongsToDoi,embeddedKnownDois,invalidRscFirstPagePreviewCapture} from '../cloudflare/scripts/merge-local-captures.mjs';
 import fs from 'node:fs/promises';
 
 const policy=JSON.parse(await fs.readFile('audit/media-auto-policy.json','utf8'));
@@ -50,6 +50,15 @@ test('public official TOC and strong current local TOC both count as ready',()=>
 test('Figure1 fallback does not count as official TOC readiness',()=>assert.equal(officialToc({toc:{available:true,imageUrl:'x.svg',reason:'figure1_fallback'}}),false));
 test('static local-capture guard accepts correct ACS DOI-bound source',()=>assert.equal(captureBelongsToDoi(goodOfficial,doi),true));
 test('static local-capture guard rejects ACS source from another DOI',()=>assert.equal(captureBelongsToDoi({...goodOfficial,sourceUrl:goodOfficial.sourceUrl.replaceAll('6c91234','6c99999')},doi),false));
+test('RSC Accepted Manuscript first-page preview is rejected as official TOC',()=>{
+  assert.equal(invalidRscFirstPagePreviewCapture({
+    doi:'10.1039/d6sc06874j',
+    kind:'official',
+    sourceUrl:'https://rscj.silverchair-cdn.com/rscj/content_public/journal/sc/jam/10.1039_d6sc06874j/1/d6sc06874j.pdf.gif',
+    caption:'Article PDF first page preview'
+  }),true);
+});
+
 test('Nature publisher-owned DOI-bound TOC source is accepted',()=>{
   const nature='10.1038/s41586-026-11043-z',row={doi:nature,kind:'official',captureVersion:'6.2.20',pageDoi:nature,mediaGeneration:1790082000000,updatedAt:now,
     articleUrl:'https://www.nature.com/articles/s41586-026-11043-z',sourceUrl:'https://media.springernature.com/full/s41586-026-11043-z/figures/1'};
