@@ -41,6 +41,7 @@ test('shadow sync follows successful Worker and Pages deployments without public
   assert.match(shadow,/BRIDGE_WRITE_TOKEN/);
   assert.ok(worker.includes('/api/admin/literature-catalog-index/query'));
   assert.ok(worker.includes('/api/admin/literature-catalog-index/rows'));
+  assert.ok(worker.includes('/api/admin/literature-catalog-index/view'));
   assert.ok(!worker.includes('/api/literature/catalog-search'));
   assert.ok(!worker.includes('/api/user-ui/literature-search'));
 });

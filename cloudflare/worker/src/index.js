@@ -47,6 +47,7 @@ import {
   literatureCatalogIndexReadEnabled,
   literatureCatalogIndexShadowEnabled,
   queryLiteratureCatalogIndex,
+  queryLiteratureCatalogView,
 } from './literature-catalog-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
 import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus } from './user-library-shadow.js';
@@ -391,6 +392,12 @@ async function handleApi(request, env, ctx) {
       afterDoi: url.searchParams.get('afterDoi') || '',
       limit: Number(url.searchParams.get('limit') || 200),
     }));
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/admin/literature-catalog-index/view') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await queryLiteratureCatalogView(env, await readJson(request)));
   }
 
   if (request.method === 'GET' && url.pathname === '/api/admin/user-library-shadow/status') {

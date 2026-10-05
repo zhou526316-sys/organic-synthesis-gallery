@@ -118,6 +118,13 @@ function searchable(row) {
   return [row.doi,row.title,row.titleZh,...(row.authors || []),row.journal,row.date,row.synthesisType]
     .join(' ').toLowerCase();
 }
+function frontendNeedleMatch(row,needle){
+  if(!needle) return true;
+  return [
+    row.title||'',row.titleZh||'',row.doi||'',row.journal||'',
+    (row.authors||[]).join(' '),row.firstOnlineDate||row.date||'',
+  ].some(value=>String(value).toLowerCase().includes(needle));
+}
 function normalizeComparable(row) {
   return {
     doi: String(row.doi || ''),
@@ -168,6 +175,77 @@ async function collectD1Query(catalogId, query) {
   }
   throw new Error(`shadow_query_page_limit:${query}`);
 }
+async function collectD1View(catalogId,view) {
+  let cursor='',matched=null;
+  const items=[];
+  for(let page=0;page<100;page+=1){
+    const response=await api('/api/admin/literature-catalog-index/view',{
+      method:'POST',body:{catalogId,...view,limit:100,...(cursor?{cursor}:{})},
+    });
+    assert(response.body.readPathActive===false,'shadow_view_read_path_must_remain_inactive');
+    if(matched===null) matched=Number(response.body.matched||0);
+    else assert(matched===Number(response.body.matched||0),`shadow_view_match_count_changed:${view.name||'unnamed'}`);
+    items.push(...(response.body.items||[]));
+    if(!response.body.hasMore) return {matched,items};
+    assert(typeof response.body.nextCursor==='string'&&response.body.nextCursor,
+      `shadow_view_cursor_missing:${view.name||'unnamed'}`);
+    cursor=response.body.nextCursor;
+  }
+  throw new Error(`shadow_view_page_limit:${view.name||'unnamed'}`);
+}
+function expectedStaticView(records,searchRows,view){
+  const needle=String(view.query||'').trim().toLowerCase();
+  const candidateDois=needle
+    ? new Set(searchRows.filter(row=>searchable(row).includes(needle)).map(row=>row.doi))
+    : null;
+  const selected=new Set(view.selectedJournals||[]);
+  const excluded=new Set(view.excludedJournals||[]);
+  const projected=records.map(paperProjection).filter(row=>{
+    if(candidateDois&&!candidateDois.has(row.doi)) return false;
+    if(excluded.has(row.journal)) return false;
+    if(selected.size&&!selected.has(row.journal)) return false;
+    if(view.dateFrom&&String(row.firstOnlineDate||'')<view.dateFrom) return false;
+    if(view.dateTo&&String(row.firstOnlineDate||'')>view.dateTo) return false;
+    if(view.addedDate&&row.addedDate!==view.addedDate) return false;
+    return frontendNeedleMatch(row,needle);
+  });
+  projected.sort((a,b)=>{
+    const cmp=String(a.firstOnlineDate||'').localeCompare(String(b.firstOnlineDate||''));
+    if(cmp) return view.sort==='oldest'?cmp:-cmp;
+    return a.doi.localeCompare(b.doi);
+  });
+  return projected;
+}
+function viewParityScenarios(records,searchRows){
+  const projected=records.map(paperProjection);
+  const journals=[...new Set(projected.map(row=>row.journal).filter(Boolean))].sort();
+  const dates=projected.map(row=>row.firstOnlineDate).filter(Boolean).sort();
+  const added=projected.map(row=>row.addedDate).filter(Boolean).sort();
+  const q1=dates[Math.floor(dates.length/4)]||'';
+  const q3=dates[Math.floor(dates.length*3/4)]||'';
+  const latestAdded=added.at(-1)||'';
+  const scenarios=[
+    {name:'all-newest',sort:'newest'},
+    {name:'all-oldest',sort:'oldest'},
+    {name:'first-journal',sort:'newest',selectedJournals:journals.slice(0,1)},
+    {name:'exclude-first-journal',sort:'newest',excludedJournals:journals.slice(0,1)},
+    {name:'include-two-exclude-one',sort:'newest',selectedJournals:journals.slice(0,2),excludedJournals:journals.slice(0,1)},
+    {name:'middle-date-range',sort:'oldest',dateFrom:q1,dateTo:q3},
+    {name:'latest-added-date',sort:'newest',addedDate:latestAdded},
+    {name:'nickel-query',sort:'newest',query:'nickel'},
+    {name:'photoredox-query-oldest',sort:'oldest',query:'photoredox'},
+    {name:'wang-query',sort:'newest',query:'Wang'},
+  ];
+  const doiProbe=searchRows.find(row=>row?.doi)?.doi;
+  if(doiProbe) scenarios.push({name:'doi-query',sort:'newest',query:doiProbe});
+  const chinese=searchRows.map(row=>String(row?.titleZh||'').trim()).find(value=>/[\u3400-\u9fff]/u.test(value)&&[...value].length>=3);
+  if(chinese) scenarios.push({name:'chinese-title-query',sort:'newest',query:[...chinese].slice(0,6).join('')});
+  if(journals.length&&q1&&q3) scenarios.push({
+    name:'journal-and-date',sort:'oldest',selectedJournals:[journals.at(-1)],dateFrom:q1,dateTo:q3,
+  });
+  return scenarios.filter(view=>!(view.addedDate===''));
+}
+
 async function collectD1Rows(catalogId) {
   let afterDoi = '';
   const rows = [];
@@ -335,12 +413,36 @@ async function main() {
       assert(JSON.stringify(actual.dois) === JSON.stringify(expected), `shadow_query_set_mismatch:${query}`);
       queryParity.push({ query, matched: expected.length });
     }
+    const viewParity=[];
+    for(const scenario of viewParityScenarios(records,searchRows)){
+      const expected=expectedStaticView(records,searchRows,scenario);
+      const actual=await collectD1View(generation.catalogId,scenario);
+      assert(actual.matched===expected.length,`shadow_view_count_mismatch:${scenario.name}`);
+      const actualDois=actual.items.map(row=>row.doi);
+      const expectedDois=expected.map(row=>row.doi);
+      assert(JSON.stringify(actualDois)===JSON.stringify(expectedDois),
+        `shadow_view_order_mismatch:${scenario.name}`);
+      viewParity.push({name:scenario.name,matched:expected.length});
+    }
+
     const shortProbe = await api(`/api/admin/literature-catalog-index/query?${new URLSearchParams({
       catalogId: generation.catalogId, q: 'Ni', limit: '60',
     })}`, { allowError: true });
     assert(shortProbe.status === 422
       && shortProbe.body.error === 'literature_catalog_short_query_requires_compatibility',
       'short_query_compatibility_missing');
+    const shortViewProbe=await api('/api/admin/literature-catalog-index/view',{
+      method:'POST',body:{catalogId:generation.catalogId,query:'Ni',sort:'newest'},allowError:true,
+    });
+    assert(shortViewProbe.status===422
+      && shortViewProbe.body.error==='literature_catalog_short_query_requires_compatibility',
+      'short_view_query_compatibility_missing');
+    const readersProbe=await api('/api/admin/literature-catalog-index/view',{
+      method:'POST',body:{catalogId:generation.catalogId,sort:'readers'},allowError:true,
+    });
+    assert(readersProbe.status===422
+      && readersProbe.body.error==='literature_catalog_reader_sort_requires_compatibility',
+      'reader_sort_compatibility_missing');
 
     const statusAfter = await api('/api/admin/literature-catalog-index/status');
     const ready = (statusAfter.body.generations || []).find(row => row.catalogId === generation.catalogId);
@@ -364,7 +466,9 @@ async function main() {
       alreadyReady: begin.body.ready === true,
       rowParity: { checked: expectedRows.length, mismatched: 0 },
       searchParity: { probes: queryParity.length, mismatched: 0, queries: queryParity },
+      viewParity: { scenarios:viewParity.length,mismatched:0,views:viewParity },
       shortQueryCompatibility: true,
+      readerSortCompatibility: true,
       readPathActive: false,
     });
     await writeFile(REPORT, jsonText(report));
