@@ -122,17 +122,17 @@
       "eyebrow": "第一层｜为什么“亲电胺化”并不等于“复杂 NH–R 很容易转移”",
       "heading": "反应平台已经很多，真正稀缺的是结构复杂、反应性又合适的 NH–R 亲电试剂",
       "paragraphs": [
-        "初学者可以先把问题分成两部分：一部分是“怎么形成 C–N 键”，另一部分是“氮片段以什么形式进入反应”。过去十多年已经发展出不少 arene amination、olefin aziridination、aza-Rubottom 等 亲电氮转移反应，但这些反应最常用的试剂往往只擅长转移 NH₂、Me、Et 这类简单氮片段。",
-        "一旦希望转移的是 leucine、天然产物来源 amine 或药物来源 NH–R，瓶颈就转移到试剂制备。传统路线往往以 hydroxylamine 为起点，再逐步装上 R；于是“复杂胺片段”必须先被拆回更简单前体，失去了模块化 片段偶联 的优势。"
+        "初学者可以先把问题分成两部分：一部分是“怎么形成 C–N 键”，另一部分是“氮片段以什么形式进入反应”。过去十多年已经发展出不少 芳烃胺化、烯烃氮杂环丙烷化、aza-Rubottom 氧化 等 亲电氮转移反应，但这些反应最常用的试剂往往只擅长转移 NH₂、Me、Et 这类简单氮片段。",
+        "一旦希望转移的是 亮氨酸、天然产物来源 胺 或药物来源 NH–R，瓶颈就转移到试剂制备。传统路线往往以 羟胺 为起点，再逐步装上 R；于是“复杂胺片段”必须先被拆回更简单前体，失去了模块化 片段偶联 的优势。"
       ],
       "bullets": []
     },
     {
       "eyebrow": "第二层｜为什么不能直接拿普通过氧化物把 伯胺 氧化完事",
-      "heading": "伯胺 的问题不只是“会不会被氧化”，而是过氧化物本身还带着其它 亲电 reaction channel",
+      "heading": "伯胺 的问题不只是“会不会被氧化”，而是过氧化物本身还带着其它 亲电 反应通道",
       "paragraphs": [
-        "Benzoyl peroxide（BPO）可以把一些 amine 氧化成 O-benzoyl hydroxylamine，但对 伯胺 容易出现 N-benzoylation 等竞争过程。原因是 BPO 不只有 peroxide O–O 键，它的 benzoyl carbonyl 本身也是明显的 亲电 site；伯胺 很容易沿着 acyl substitution 路径走掉。",
-        "这也是 O-benzoyl 与 O-sulfonyl reagent 的差别之一。Sulfonyl group 会更强地拉低 N–O σ* 相关能级、增强 N–O bond polarization，同时 sulfonate 是更好的 leaving group。因此 O-sulfonyl hydroxylamine 通常更适合做 亲电 N-transfer；真正难的是如何直接、选择性地构建 R–NH–O–SO₂R′ 这根 N–O 键。"
+        "过氧化苯甲酰（BPO）可以把一些 胺 氧化成 O-苯甲酰 羟胺，但对 伯胺 容易出现 N-苯甲酰化 等竞争过程。原因是 BPO 不只有 peroxide O–O 键，它的 苯甲酰基羰基 本身也是明显的 亲电 site；伯胺 很容易沿着 酰基取代 路径走掉。",
+        "这也是 O-苯甲酰 与 O-磺酰化试剂 的差别之一。磺酰基 会更强地拉低 N–O σ* 相关能级、增强 N–O 键极化，同时 sulfonate 是更好的 离去基。因此 O-磺酰 羟胺 通常更适合做 亲电 N-transfer；真正难的是如何直接、选择性地构建 R–NH–O–SO₂R′ 这根 N–O 键。"
       ],
       "figures": [
         "prior_routes"
@@ -141,28 +141,28 @@
     },
     {
       "eyebrow": "第三层｜MPO 为什么值得被选中",
-      "heading": "它不是单纯“更强氧化剂”，而是把 oxygen-transfer 与 OMs activation 写在同一个 reagent 里",
+      "heading": "它不是单纯“更强氧化剂”，而是把 氧转移 与 引入 OMs 活化基 写在同一个 试剂 里",
       "paragraphs": [
-        "MPO 的结构是 MsO–O–OMs。对 伯胺 而言，理想路径不是先生成游离 hydroxylamine 再 sulfonylate，而是 amine 直接在 peroxide oxygen 上发生 substitution：N–O bond 形成的同时 O–O bond 被切开，产物直接就是 RNHOMs。",
-        "如果这个 elementary step 真能走通，MPO 就等于一次完成两件本来需要分开的事：把 nitrogen 氧化到 N–O 层级，同时把 oxygen 端预先装成 OMs leaving group。这里的“高效”来自 反应坐标 的重新设计，不只是 reagent 更活泼。"
+        "MPO 的结构是 MsO–O–OMs。对 伯胺 而言，理想路径不是先生成游离 羟胺 再 sulfonylate，而是 胺 直接在 过氧键上的氧原子 上发生 取代：N–O bond 形成的同时 O–O bond 被切开，产物直接就是 RNHOMs。",
+        "如果这个 基元步骤 真能走通，MPO 就等于一次完成两件本来需要分开的事：把 氮原子 氧化到 N–O 层级，同时把 oxygen 端预先装成 OMs 离去基。这里的“高效”来自 反应坐标 的重新设计，不只是 试剂 更活泼。"
       ],
       "bullets": []
     },
     {
       "eyebrow": "第四层｜为什么反应会很快启动，却自己停下来",
-      "heading": "生成的 MsOH 会不断把真正需要参与进攻的 free amine 变成 ammonium",
+      "heading": "生成的 MsOH 会不断把真正需要参与进攻的 游离胺 变成 铵盐",
       "paragraphs": [
-        "无碱时，MPO 很快被消耗，但 conversion 停在较低水平。作者把它归因为反应同时生成 methanesulfonic acid；随着酸积累，RNH₂ 被质子化成 RNH₃⁺，而后者的 亲核性ity 显著降低。",
-        "所以这里的优化目标不是“找最强的碱”，而是维持足够浓度的 free amine，同时又不能让 碱 自己抢先攻击或分解 MPO。DIPEA 一类有机碱失败，恰恰说明 碱 不是旁观者。"
+        "无碱时，MPO 很快被消耗，但 转化率 停在较低水平。作者把它归因为反应同时生成 甲磺酸；随着酸积累，RNH₂ 被质子化成 RNH₃⁺，而后者的 亲核性 显著降低。",
+        "所以这里的优化目标不是“找最强的碱”，而是维持足够浓度的 游离胺，同时又不能让 碱 自己抢先攻击或分解 MPO。DIPEA 一类有机碱失败，恰恰说明 碱 不是旁观者。"
       ],
       "bullets": []
     },
     {
       "eyebrow": "第五层｜Cs₂CO₃ + 少量水为什么有效",
-      "heading": "体系真正要平衡的是 acid neutralization、phase transfer、MPO stability 和 product elimination",
+      "heading": "体系真正要平衡的是 酸中和、相间传质、MPO 稳定性 和 产物消除副反应",
       "paragraphs": [
-        "Cs₂CO₃ 在 CHCl₃ 中几乎不溶，理论上能中和 MsOH，但实际接触效率有限；换到能很好溶解盐的 polar 溶剂 又会加速 MPO decomposition。加入约 2% water，相当于给异相 acid/碱 process 一个更有效的局部介质，而没有把整个体系搬进强极性溶剂。",
-        "这一步还有第二个限制：RNHOMs 本身可以 elimination 到 imine，过强碱性或过度促进传质反而可能加快副反应。因此最佳条件不是“碱越强越好”，而是在足够快地解酸和尽量慢地伤害 MPO/RNHOMs 之间找窗口。"
+        "Cs₂CO₃ 在 CHCl₃ 中几乎不溶，理论上能中和 MsOH，但实际接触效率有限；换到能很好溶解盐的 极性溶剂 又会加速 MPO decomposition。加入约 2% 水，相当于给异相 acid/碱 过程 一个更有效的局部介质，而没有把整个体系搬进强极性溶剂。",
+        "这一步还有第二个限制：RNHOMs 本身可以 消除 到 亚胺，过强碱性或过度促进传质反而可能加快副反应。因此最佳条件不是“碱越强越好”，而是在足够快地解酸和尽量慢地伤害 MPO/RNHOMs 之间找窗口。"
       ],
       "figures": [
         "table1"
@@ -170,21 +170,21 @@
       "bullets": []
     },
     {
-      "eyebrow": "第六层｜RNHOMs 为什么能被酸洗，却又是高反应性的 N-亲电试剂",
+      "eyebrow": "第六层｜RNHOMs 为什么能被酸洗，却又是高反应性的 亲电氮试剂",
       "heading": "低碱性、低亲核性与较强的 N–O 键活化并不矛盾，它们对应的是不同的反应方向",
       "paragraphs": [
-        "计算显示 N-cyclohexyl-O-mesyl hydroxylammonium 的 pKₐ 约为 −6；而让 RNHOMs 的 nitrogen 作为普通 亲核试剂 去做 SN2，势垒比 cyclohexylamine 高约 10.2 kcal/mol。也就是说，OMs substitution 让 nitrogen 本身变得非常不“像普通胺”。",
-        "但 亲电胺化 利用的不是 nitrogen 去进攻别人，而是其它 亲核试剂 / metal intermediate 去利用被强烈极化、容易断裂的 N–O bond。于是“作为 碱/亲核试剂 很弱”和“作为 亲电氮转移试剂 很活泼”并不矛盾。",
-        "这也解释了一个看似反直觉的操作优势：1 M HCl aqueous workup 可以把残余 amine 和 inorganic 碱 清掉，而目标 RNHOMs 仍留在有机相/可被直接分离。"
+        "计算显示 N-cyclohexyl-O-mesyl hydroxyl铵盐 的 pKₐ 约为 −6；而让 RNHOMs 的 氮原子 作为普通 亲核试剂 去做 SN2，势垒比 cyclohexyl胺 高约 10.2 kcal/mol。也就是说，OMs 取代 让 氮原子 本身变得非常不“像普通胺”。",
+        "但 亲电胺化 利用的不是 氮原子 去进攻别人，而是其它 亲核试剂 / 金属中间体 去利用被强烈极化、容易断裂的 N–O bond。于是“作为 碱/亲核试剂 很弱”和“作为 亲电氮转移试剂 很活泼”并不矛盾。",
+        "这也解释了一个看似反直觉的操作优势：1 M HCl 水相后处理 可以把残余 胺 和 inorganic 碱 清掉，而目标 RNHOMs 仍留在有机相/可被直接分离。"
       ],
       "bullets": []
     },
     {
       "eyebrow": "第七层｜底物范围 真正检验的是“极性反转能不能保留复杂分子的已有信息”",
-      "heading": "如果 chiral pool、natural product、药物来源 amine 都能被直接翻转，reagent availability 才真的被打开",
+      "heading": "如果 手性源、天然产物、药物来源 胺 都能被直接翻转，试剂 availability 才真的被打开",
       "paragraphs": [
-        "Isoleucine-derived RNHOMs 以单一 diastereomer 获得，说明 α-stereocentre 没有在氧化步骤中明显 epimerize；natural-product- 与 药物来源 伯胺s 也能转成对应试剂。这是“complex 片段偶联”成立的前提。",
-        "失败底物同样重要。Benzylamine 容易 elimination 成 imine 并在水解后给 benzaldehyde；aniline 发生快速 oxidative decomposition；methionine、tryptophan 这类 oxidation-sensitive amino acid 也不兼容。换句话说，方法边界首先由 substrate oxidation stability 与 RNHOMs elimination propensity 定义。"
+        "Iso亮氨酸-derived RNHOMs 以单一 diastereomer 获得，说明 α-stereocentre 没有在氧化步骤中明显 发生差向异构；natural-product- 与 药物来源 伯胺s 也能转成对应试剂。这是“complex 片段偶联”成立的前提。",
+        "失败底物同样重要。Benzyl胺 容易 消除 成 亚胺 并在水解后给 benzaldehyde；aniline 发生快速 oxidative decomposition；methionine、tryptophan 这类 易被氧化 amino acid 也不兼容。换句话说，方法边界首先由 substrate oxidation stability 与 RNHOMs 消除 propensity 定义。"
       ],
       "figures": [
         "scope"
@@ -195,9 +195,9 @@
       "eyebrow": "第八层｜为什么 Fig. 4 才真正证明“试剂平台”成立",
       "heading": "作者故意不去发明新的下游反应，而是把复杂 RNHOMs 塞回已经存在的 氮转移反应",
       "paragraphs": [
-        "如果一个新试剂必须为每一种反应重新开发完全新的 catalyst/condition，它更像一个单独反应的专用中间体；如果能在已有 chemistry 中直接替代简单 aminating reagent，它才更接近“平台型 合成模块”。",
-        "这篇文章因此重复使用已知 arene C–H amination、metal-free aza-Hock、olefin aziridination、intramolecular C–H amination 和 aza-Rubottom oxidation 条件。Methylestrone 骨架可以接入 leucine-derived NH–R；geranyl acetate 与 leucine-RNHOMs 得到 70% combined 收率、2.8:1 d.r.；norleucine-derived reagent 做 intramolecular C–H amination 时得到 2.44:1 d.r.。",
-        "这些 d.r. 还不足以叫做成熟 asymmetric methodology，但它们说明一件更基础的事：complex chiral NH–R fragment 不只是“能做成 reagent”，还可能把自身 stereochemical environment 带进后续 bond formation。"
+        "如果一个新试剂必须为每一种反应重新开发完全新的 catalyst/condition，它更像一个单独反应的专用中间体；如果能在已有 chemistry 中直接替代简单 aminating 试剂，它才更接近“平台型 合成模块”。",
+        "这篇文章因此重复使用已知 芳烃 C–H 胺化、metal-free aza-Hock、烯烃氮杂环丙烷化、分子内 C–H 胺化 和 aza-Rubottom 氧化 oxidation 条件。Methylestrone 骨架可以接入 亮氨酸-derived NH–R；geranyl acetate 与 亮氨酸-RNHOMs 得到 70% 总收率、2.8:1 非对映比（d.r.）；nor亮氨酸-derived 试剂 做 分子内 C–H 胺化 时得到 2.44:1 非对映比（d.r.）。",
+        "这些 非对映比（d.r.） 还不足以叫做成熟 asymmetric methodology，但它们说明一件更基础的事：complex chiral NH–R fragment 不只是“能做成 试剂”，还可能把自身 stereochemical environment 带进后续 bond formation。"
       ],
       "figures": [
         "applications"
@@ -208,9 +208,9 @@
       "eyebrow": "第九层｜N–O 键到底怎样形成",
       "heading": "目前最受支持的是“在氧原子上发生取代”的路径，但竞争性的电子转移仍未被完全排除",
       "paragraphs": [
-        "最直观的 自由基 picture 是先把 MPO 的 O–O bond homolyze；但计算给出的 O–O BDE 约 42.1 kcal/mol，并不符合 0 °C 下快速发生的简单热均裂。伯胺 直接单电子还原 MPO 更不利，估算 enthalpy change >50 kcal/mol。",
-        "另一条路径是 amine 直接沿近线性的 N···O···O 轨迹进攻 peroxide oxygen。IRC 显示 N–O forming 与 O–O cleavage 在同一个 反应坐标 上。没有 碱 时 barrier 约 25.5 kcal/mol；把 Cs₂CO₃ 的 氢键作用 / 去质子化作用 纳入后降到 13.1 kcal/mol，与分钟级实验吻合。",
-        "CCl₃Br 自由基捕获剂 基本不改变 收率，也不支持简单 自由基链 是主路径。但作者没有把话说满：Cs₂CO₃ 相关的 电子转移 pathway 只高几 kcal/mol。因此最严谨的结论仍然是“SN2-at-O 最受支持”，而不是“ET 被彻底证伪”。"
+        "最直观的 自由基 picture 是先把 MPO 的 O–O bond homolyze；但计算给出的 O–O 键解离能 约 42.1 kcal/mol，并不符合 0 °C 下快速发生的简单热均裂。伯胺 直接单电子还原 MPO 更不利，估算 焓变 >50 kcal/mol。",
+        "另一条路径是 胺 直接沿近线性的 N···O···O 轨迹进攻 过氧键上的氧原子。内禀反应坐标（IRC） 显示 N–O forming 与 O–O cleavage 在同一个 反应坐标 上。没有 碱 时 能垒 约 25.5 kcal/mol；把 Cs₂CO₃ 的 氢键作用 / 去质子化作用 纳入后降到 13.1 kcal/mol，与分钟级实验吻合。",
+        "CCl₃Br 自由基捕获剂 基本不改变 收率，也不支持简单 自由基链 是主路径。但作者没有把话说满：Cs₂CO₃ 相关的 电子转移 pathway 只高几 kcal/mol。因此最严谨的结论仍然是“氧原子上的 SN2 型取代 最受支持”，而不是“电子转移（ET） 被彻底证伪”。"
       ],
       "figures": [
         "mechanism"
@@ -219,10 +219,10 @@
     },
     {
       "eyebrow": "第十层｜N–N coupling 为什么是一个值得保留的“未完成方向”",
-      "heading": "它展示了新的 retrosynthetic polarity pairing，但一级/一级 amine fragment 之间还远没有成熟",
+      "heading": "它展示了新的 retrosynthetic polarity pairing，但一级/一级 胺 fragment 之间还远没有成熟",
       "paragraphs": [
-        "把一个 amine fragment 先变成 亲电 RNHOMs，另一个 amine 保持 亲核性，就可以直接构建 unsymmetrical hydrazine。这个思路的价值在于极性角色不再固定：两个都来自 amine 的片段，可以被人为分成 亲电试剂 与 亲核试剂。",
-        "但实验也清楚暴露了边界。Leucine-RNHOMs 与 phenylalanine methyl ester 只有 19%；作者怀疑 primary hydrazine 继续氧化成 azo species 是原因之一。换用 secondary amine 亲核试剂 后，proline methyl ester 和 N-methyl-alanine methyl ester 分别升到 76% 和 66%。所以这里更像一个新 disconnection 的 概念验证，而不是已经普适的 hydrazine platform。"
+        "把一个 胺 fragment 先变成 亲电 RNHOMs，另一个 胺 保持 亲核性，就可以直接构建 unsymmetrical 肼。这个思路的价值在于极性角色不再固定：两个都来自 胺 的片段，可以被人为分成 亲电试剂 与 亲核试剂。",
+        "但实验也清楚暴露了边界。Leucine-RNHOMs 与 phenylalanine methyl ester 只有 19%；作者怀疑 primary 肼 继续氧化成 azo species 是原因之一。换用 secondary 胺 亲核试剂 后，proline methyl ester 和 N-methyl-alanine methyl ester 分别升到 76% 和 66%。所以这里更像一个新 disconnection 的 概念验证，而不是已经普适的 肼 platform。"
       ],
       "figures": [
         "hydrazine"
@@ -231,19 +231,19 @@
     },
     {
       "eyebrow": "第十一层｜真正决定实验室能不能用的，是安全和稳定性窗口",
-      "heading": "高反应性 reagent 的代价必须被纳入方法本身，而不是放到 SI 最后一句带过",
+      "heading": "高反应性 试剂 的代价必须被纳入方法本身，而不是放到 SI 最后一句带过",
       "paragraphs": [
-        "3a 与 amino-acid-derived 3ab 分别做到 10 和 20 mmol，收率 93% 和 91%，而且放大后可避免 柱层析。与此同时该 oxidation 明显 exothermic，MPO 需要 portionwise addition，并把 internal temperature 控制在 10 °C 以下。",
-        "SI 还给出明确 溶剂 incompatibility：MPO 与 DMF、DMA、DMSO、NMP 以及 neat isobutylamine 接触会快速、剧烈分解。RNHOMs 的稳定性也高度依赖结构和 physical state：低分子量 liquid/oil 更容易在室温或 4 °C 下分解，而 amino-acid-derived solids 明显稳定。作者因此把 −80 °C 作为通用长期储存建议。",
-        "这些不是“实验注意事项”，而是 reagent platform 的真实 可操作窗口。"
+        "3a 与 氨基酸来源 3ab 分别做到 10 和 20 mmol，收率 93% 和 91%，而且放大后可避免 柱层析。与此同时该 oxidation 明显 exothermic，MPO 需要 分批加入，并把 体系内部温度 控制在 10 °C 以下。",
+        "SI 还给出明确 溶剂 incompatibility：MPO 与 DMF、DMA、DMSO、NMP 以及 neat isobutyl胺 接触会快速、剧烈分解。RNHOMs 的稳定性也高度依赖结构和 物态：低分子量 液体或油状物 更容易在室温或 4 °C 下分解，而 氨基酸来源 固体 明显稳定。作者因此把 −80 °C 作为通用长期储存建议。",
+        "这些不是“实验注意事项”，而是 试剂 platform 的真实 可操作窗口。"
       ],
       "bullets": []
     }
   ],
   "takehome": [
-    "这篇 JACS 的核心不是“又一种 amine oxidation”，而是用 MPO 直接把常见 primary 伯胺库 转成 亲电 NH–R building-block library，解决了复杂 N-transfer reagent 的 supply problem。",
-    "MPO/Cs₂CO₃/H₂O 条件的底层逻辑来自 competing reaction channels：free amine 要保持 亲核性、MsOH 要被中和、MPO 不能被 碱/溶剂 破坏、RNHOMs 又不能被推向 imine elimination。",
-    "SN2-at-oxygen 是当前最受支持的 N–O bond-forming 模型，但 ET 竞争路径仍未被完全排除；真正的平台价值则由复杂 chiral fragments 能否直接进入既有 氮转移反应 来验证。"
+    "这篇 JACS 的核心不是“又一种 胺 oxidation”，而是用 MPO 直接把常见 primary 伯胺库 转成 亲电 NH–R building-block library，解决了复杂 N-transfer 试剂 的 supply problem。",
+    "MPO/Cs₂CO₃/H₂O 条件的底层逻辑来自 competing 反应通道s：游离胺 要保持 亲核性、MsOH 要被中和、MPO 不能被 碱/溶剂 破坏、RNHOMs 又不能被推向 亚胺 消除。",
+    "氧原子上的 SN2 型取代 是当前最受支持的 N–O bond-forming 模型，但 电子转移（ET） 竞争路径仍未被完全排除；真正的平台价值则由复杂 chiral fragments 能否直接进入既有 氮转移反应 来验证。"
   ],
   "ai_notice": "本文由“化之岛”基于 JACS 最终正文与 Supporting Information 整理，AI 辅助资料归纳与文字校核，最终内容经人工审核。正文中的反应图、条件表、底物范围、应用图和机理图均直接取自最终 PDF 原页；不使用生成模型重绘化学结构。",
   "cover": {
