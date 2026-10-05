@@ -13,10 +13,12 @@ on:
       - '.github/workflows/deploy-worker-frontend.yml'
       - 'cloudflare/worker/src/**'
       - 'cloudflare/worker/package.json'
+      - 'cloudflare/user-library-state-v2.sql'
       - 'cloudflare/evidence-index-v1.sql'
       - 'cloudflare/summary-candidate-index-v1.sql'
       - 'scripts/test-summary-candidate-shadow-deployment-contract.mjs'
       - 'scripts/test-scheduled-handoff-shadow-deployment-contract.mjs'
+      - 'scripts/test-user-library-shadow-deployment-contract.mjs'
       - 'cloudflare/scripts/build-cloudflare-bridge.mjs'
       - 'cloudflare/scripts/build-bridge-loader.mjs'
       - 'public/toc-mainline.user.js'
@@ -126,6 +128,23 @@ jobs:
           console.log(JSON.stringify({privatePdfSchemaReady:true,tables:names}));
           NODE
 
+      - name: Apply user library row-shadow D1 migration
+        working-directory: cloudflare/worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler d1 execute "$D1_NAME" --remote --file=../user-library-state-v2.sql >/tmp/user-library-shadow-migration.txt
+          npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('user_library_head','user_paper_state','user_library_shadow_backfill') ORDER BY name;" --json >/tmp/user-library-shadow-schema-check.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/user-library-shadow-schema-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const names=rows.map(x=>x.name).sort();
+          const expected=['user_library_head','user_library_shadow_backfill','user_paper_state'];
+          if(JSON.stringify(names)!==JSON.stringify(expected)) throw new Error('user library shadow migration incomplete: '+JSON.stringify(names));
+          console.log(JSON.stringify({userLibraryShadowSchemaReady:true,tables:names}));
+          NODE
+
       - name: Apply Evidence Index D1 migration
         working-directory: cloudflare/worker
         shell: bash
@@ -183,6 +202,7 @@ jobs:
           EVIDENCE_INDEX_SHADOW_ENABLED = "1"
           SUMMARY_CANDIDATE_INDEX_SHADOW_ENABLED = "1"
           SCHEDULED_HANDOFF_INDEX_READ_ENABLED = "1"
+          USER_LIBRARY_ROW_SHADOW_ENABLED = "1"
           PRIVATE_PDF_READ_ENABLED = "1"
           PRIVATE_PDF_CAPTURE_ENABLED = "1"
           PRIVATE_PDF_PROCESSING_ENABLED = "0"
@@ -241,6 +261,107 @@ jobs:
           NODE
           npx wrangler secret bulk /tmp/runtime-secrets.json --config wrangler.frontend.toml >/dev/null
           rm -f /tmp/runtime-secrets.json
+
+      - name: Backfill and compare user library row shadow
+        id: user_library_shadow
+        continue-on-error: true
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        run: |
+          node - <<'NODE'
+          import fs from 'node:fs';
+          const base=process.env.WORKER_URL;
+          const token=process.env.BRIDGE_WRITE_TOKEN;
+          const reportPath='/tmp/user-library-row-shadow-report.json';
+          fs.writeFileSync(reportPath,JSON.stringify({
+            schemaVersion:1,phase:'D3a-user-library-row-shadow-live',
+            ok:false,status:'started',readPathActive:false,startedAt:new Date().toISOString(),
+          },null,2)+'\n');
+          if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for user library row shadow');
+
+          async function call(path,{method='GET'}={}){
+            const response=await fetch(base+path,{
+              method,
+              headers:{authorization:`Bearer ${token}`,'cache-control':'no-cache'},
+              signal:AbortSignal.timeout(30000),
+            });
+            const text=await response.text();
+            let body={};try{body=text?JSON.parse(text):{};}catch{}
+            if(!response.ok) throw new Error(path+' failed: '+response.status+' '+text.slice(0,700));
+            return body;
+          }
+
+          let status=await call('/api/admin/user-library-shadow/status');
+          if(status.enabled!==true||status.readPathActive!==false){
+            throw new Error('user library row shadow status invalid: '+JSON.stringify(status));
+          }
+
+          let pages=0;
+          while(status.backfill?.complete!==true){
+            pages+=1;
+            if(pages>200) throw new Error('user library row shadow backfill exceeded 200 persisted pages');
+            const page=await call('/api/admin/user-library-shadow/backfill?limit=20',{method:'POST'});
+            if(page.ok!==true||page.enabled!==true){
+              throw new Error('user library row shadow backfill page invalid: '+JSON.stringify(page));
+            }
+            status=await call('/api/admin/user-library-shadow/status');
+          }
+
+          const passes=[];
+          for(let attempt=1;attempt<=4&&passes.length<2;attempt+=1){
+            status=await call('/api/admin/user-library-shadow/status');
+            if(status.legacyUsers!==status.shadowHeads||status.revisionMismatches!==0){
+              await new Promise(resolve=>setTimeout(resolve,750));
+              continue;
+            }
+            let offset=0,checked=0,mismatched=0;
+            const reasons={};
+            for(let pageNo=0;pageNo<200;pageNo+=1){
+              const page=await call('/api/admin/user-library-shadow/compare?offset='+offset+'&limit=20');
+              checked+=Number(page.checked||0);
+              mismatched+=Number(page.mismatched||0);
+              for(const [key,value] of Object.entries(page.reasons||{})) reasons[key]=(reasons[key]||0)+Number(value||0);
+              if(page.complete===true) break;
+              if(page.nextOffset===null||Number(page.nextOffset)<=offset) throw new Error('user library compare cursor stalled');
+              offset=Number(page.nextOffset);
+            }
+            const after=await call('/api/admin/user-library-shadow/status');
+            const stable=status.legacyUsers===after.legacyUsers
+              &&status.shadowHeads===after.shadowHeads
+              &&after.revisionMismatches===0;
+            const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,shadowHeads:after.shadowHeads,paperRows:after.paperRows};
+            console.log(JSON.stringify({userLibraryShadowComparisonAttempt:attempt,...pass}));
+            if(stable&&mismatched===0&&checked===after.legacyUsers) passes.push(pass);
+            if(passes.length<2) await new Promise(resolve=>setTimeout(resolve,750));
+          }
+          if(passes.length<2) throw new Error('user library row shadow could not obtain two stable full parity passes');
+
+          const finalStatus=await call('/api/admin/user-library-shadow/status');
+          const report={
+            schemaVersion:1,phase:'D3a-user-library-row-shadow-live',ok:true,readPathActive:false,
+            legacyUsers:Number(finalStatus.legacyUsers||0),
+            shadowHeads:Number(finalStatus.shadowHeads||0),
+            paperRows:Number(finalStatus.paperRows||0),
+            revisionMismatches:Number(finalStatus.revisionMismatches||0),
+            backfillComplete:finalStatus.backfill?.complete===true,
+            backfillPagesThisRun:pages,
+            stableParityPasses:passes.length,
+            semanticMismatches:passes.reduce((sum,row)=>sum+Number(row.mismatched||0),0),
+            verifiedAt:new Date().toISOString(),
+          };
+          fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
+          console.log('USER_LIBRARY_ROW_SHADOW '+JSON.stringify(report));
+          NODE
+
+      - name: Preserve user library row shadow report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-library-row-shadow-${{ github.run_id }}
+          path: /tmp/user-library-row-shadow-report.json
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Advance and reconcile Evidence Index shadow
         id: evidence_index_shadow
@@ -858,11 +979,13 @@ jobs:
                 typeof body?.privatePdf?.captureEnabled === 'boolean' &&
                 typeof body?.privatePdf?.processingEnabled === 'boolean' &&
                 body?.scheduledHandoffIndexReadEnabled === true &&
+                body?.userLibraryRowShadowEnabled === true &&
                 body?.wechatTicketRelay === true) {
               console.log(JSON.stringify({
                 canonicalWorkerBindings: true,
                 privatePdf: body.privatePdf,
                 scheduledHandoffIndexReadEnabled: body.scheduledHandoffIndexReadEnabled,
+                userLibraryRowShadowEnabled: body.userLibraryRowShadowEnabled,
                 wechatTicketRelay: body.wechatTicketRelay,
               }));
               process.exit(0);

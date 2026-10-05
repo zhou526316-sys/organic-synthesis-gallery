@@ -39,6 +39,7 @@ import { compareSummaryReviewCandidateShadow, getSummaryReviewStatus } from './s
 import { backfillEvidenceHandoffIndexPage, backfillEvidenceIndexPage, getEvidenceIndexStatus, listEvidenceIndexRows } from './evidence-index.js';
 import { backfillSummaryJobIndexPage, getSummaryCandidateIndexStatus } from './summary-candidate-index.js';
 import { exportOpenSiteFeedback, markReader, readerCounts, readerStats, siteAnalyticsStats, submitPaperFeedback, submitSiteFeedback, trackPageView, updateSiteFeedbackStatuses } from './user-ui.js';
+import { backfillUserLibraryShadowPage, compareUserLibraryShadowPage, getUserLibraryShadowStatus } from './user-library-shadow.js';
 import { getWeChatJsSdkSignature } from './wechat-js-sdk.js';
 import {
   alipayNotify,
@@ -228,6 +229,7 @@ async function handleApi(request, env, ctx) {
       summaryReviewEnabled: false,
       summaryReviewReady: Boolean(env.DB && env.MEDIA && env.ASSETS),
       scheduledHandoffIndexReadEnabled: String(env.SCHEDULED_HANDOFF_INDEX_READ_ENABLED || '') === '1',
+      userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1',
       kv: Boolean(env.STATE),
       writeAuth: Boolean(env.BRIDGE_WRITE_TOKEN),
       wechatJsSdk: Boolean(env.WECHAT_MP_APP_ID && env.WECHAT_MP_APP_SECRET),
@@ -331,11 +333,30 @@ async function handleApi(request, env, ctx) {
     }));
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/admin/user-library-shadow/status') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    return resultResponse(await getUserLibraryShadowStatus(env));
+  }
+  if (request.method === 'POST' && url.pathname === '/api/admin/user-library-shadow/backfill') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') || 20)));
+    return resultResponse(await backfillUserLibraryShadowPage(env, limit));
+  }
+  if (request.method === 'GET' && url.pathname === '/api/admin/user-library-shadow/compare') {
+    const authError = requireWriteAuthorization(request, env);
+    if (authError) return authError;
+    const offset = Math.max(0, Number(url.searchParams.get('offset') || 0));
+    const limit = Math.max(1, Math.min(50, Number(url.searchParams.get('limit') || 20)));
+    return resultResponse(await compareUserLibraryShadowPage(env, offset, limit));
+  }
+
   if (request.method === 'GET' && url.pathname === '/api/user-ui/article-summary') {
     return resultResponse(await getArticleSummary(env, url.searchParams.get('doi')), cors);
   }
   if (request.method === 'POST' && url.pathname === '/api/user-ui/reader-counts') {
-    return resultResponse(await readerCounts(env, await readJson(request)), cors);
+    return resultResponse(await readerCounts(env, await readJson(request), ctx), cors);
   }
   if (request.method === 'GET' && url.pathname === '/api/user-ui/reader-stats') {
     return resultResponse(await readerStats(env), cors);
