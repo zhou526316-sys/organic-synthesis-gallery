@@ -28,8 +28,24 @@ class Statement {
   }
 }
 class D1 {
-  constructor(){this.sqlite=new DatabaseSync(':memory:');}
+  constructor(){this.sqlite=new DatabaseSync(':memory:');this.batchCalls=0;this.batchStatementCounts=[];}
   prepare(sql){return new Statement(this,sql);}
+  async batch(statements){
+    this.batchCalls+=1;
+    this.batchStatementCounts.push(statements.length);
+    this.sqlite.exec('BEGIN');
+    try{
+      const results=statements.map(statement=>{
+        const result=this.sqlite.prepare(statement.sql).run(...statement.args);
+        return {success:true,meta:{changes:Number(result.changes||0)},results:[]};
+      });
+      this.sqlite.exec('COMMIT');
+      return results;
+    }catch(error){
+      this.sqlite.exec('ROLLBACK');
+      throw error;
+    }
+  }
   close(){this.sqlite.close();}
 }
 const generation=(overrides={})=>({
@@ -310,7 +326,10 @@ test('import batch is hard-bounded to eight rows per Worker invocation',async t=
   const accepted=await importLiteratureCatalogIndexBatch(env,{generation:g,rows:eight});
   assert.equal(accepted.status,200);
   assert.equal(accepted.body.batchRows,8);
+  assert.equal(accepted.body.writeStatements,24);
   assert.equal(accepted.body.importedRows,8);
+  assert.equal(db.batchCalls,1);
+  assert.deepEqual(db.batchStatementCounts,[24]);
 
   const db2=new D1();t.after(()=>db2.close());
   const env2={LITERATURE_INDEX_DB:db2,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
