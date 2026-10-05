@@ -68,6 +68,8 @@ Immediately below the compact “今日更新” block, include one Gallery entr
 - Do not infer a mechanistic hierarchy from aesthetics or storytelling. Editorial logic must be reconstructed from the supplied main text, SI, peer review/rebuttal when available, and the cited prior-art comparison.
 - For terminology that carries mechanistic meaning (for example RLT, SH2, LMCT, HAT, SET, Curtin-Hammett, radical rebound, ion pair, cage escape), first explain the **operational meaning in this paper**, then explain what observation distinguishes it from adjacent concepts.
 - If a paper's deepest contribution is not mechanistic, the same rule still applies: expose the deepest underlying logic appropriate to the work, e.g. reagent design, catalyst speciation, selectivity origin, synthetic disconnection, physical-organic principle, workflow/HTE strategy, or practical process constraint.
+- This applies equally to **每日精选** and **往期精选**. A daily pick is not allowed to stay at a lighter explanatory depth merely because it is part of the daily article.
+- External popular-science or WeChat articles may be used only as **presentation references** (pacing, accessibility, image-text rhythm). Never import their section order, causal logic, mechanistic interpretation, or rhetorical storyline into another paper. Each paper's scientific logic must be rebuilt from that paper's own evidence.
 
 ## Source-depth requirement
 
@@ -80,7 +82,7 @@ Immediately below the compact “今日更新” block, include one Gallery entr
 
 Both “每日精选” and “往期精选” use the same deep-reading standard:
 
-1. Start shallow: what the authors did, what is genuinely clever, and why the paper is worth reading.
+1. Start shallow: what the authors did, what scientific bottleneck is being addressed, and why the paper matters. Do not label a design as “clever” before establishing the causal chemistry.
 2. Then explain the problem and reaction design.
 3. Use original figures at the exact argumentative point where they help the reader.
 4. Move into conditions and mechanistic evidence only after the reader understands the reaction.
