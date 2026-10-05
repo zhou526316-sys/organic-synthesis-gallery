@@ -1322,6 +1322,7 @@ async function refreshArchitectureCorpus(serial: number): Promise<void> {
       additions = mergePapers(additions, normalizeArchitectureRows(await client.range(dateFrom, dateTo || client.asOfDate)));
     }
     if (serial !== architectureRefreshSerial || architectureClient !== client) return;
+    architectureReadLimited = false;
     setArchitectureCorpus(mergePapers(architectureLandingPapers, additions));
     mount();
   } catch (error) {
