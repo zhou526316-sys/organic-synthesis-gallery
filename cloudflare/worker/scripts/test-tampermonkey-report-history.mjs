@@ -47,9 +47,6 @@ const succeeded = await importTampermonkeyReport(req('/api/media/tampermonkey-re
   evidenceLevel: 'abstract_only',
   evidenceChars: 842,
   evidenceSections: 1,
-  privatePdfStatus: 'stored',
-  privatePdfReason: '',
-  privatePdfBytes: 3456789,
   assetType: 'toc_graphic',
   candidateKind: 'official',
   candidateSource: 'live_dom',
@@ -81,8 +78,6 @@ assert.equal(history.body.latest.fulltextStatus, 'stored');
 assert.equal(history.body.latest.evidenceLevel, 'abstract_only');
 assert.equal(history.body.latest.evidenceChars, 842);
 assert.equal(history.body.latest.evidenceSections, 1);
-assert.equal(history.body.latest.privatePdfStatus, 'stored');
-assert.equal(history.body.latest.privatePdfBytes, 3456789);
 assert.equal(history.body.failureCount, 1);
 assert.equal(history.body.successCount, 1);
 assert.equal(history.body.attempts.length, 2);
