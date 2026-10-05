@@ -7,6 +7,7 @@ import {
   finalizeLiteratureCatalogGeneration,
   getLiteratureCatalogIndexStatus,
   importLiteratureCatalogIndexBatch,
+  listLiteratureCatalogIndexRows,
   queryLiteratureCatalogIndex,
 } from '../src/literature-catalog-index.js';
 
@@ -169,6 +170,29 @@ test('generation import is resumable, finalize is fenced, and FTS trigram matche
   assert.equal(invalidCursor.body.error,'literature_catalog_cursor_invalid');
 });
 
+test('admin row reader covers a ready generation with bounded DOI-keyset pages',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
+  const g=generation();
+  await importLiteratureCatalogIndexBatch(env,{generation:g,rows:rows()});
+  await finalizeLiteratureCatalogGeneration(env,g.catalogId);
+
+  const first=await listLiteratureCatalogIndexRows(env,{catalogId:g.catalogId,limit:2});
+  assert.equal(first.status,200);
+  assert.equal(first.body.count,2);
+  assert.equal(first.body.hasMore,true);
+  assert.ok(first.body.nextAfterDoi);
+  const second=await listLiteratureCatalogIndexRows(env,{
+    catalogId:g.catalogId,limit:2,afterDoi:first.body.nextAfterDoi,
+  });
+  assert.equal(second.status,200);
+  assert.equal(second.body.count,1);
+  assert.equal(second.body.hasMore,false);
+  const all=[...first.body.items,...second.body.items];
+  assert.deepEqual(all.map(item=>item.doi),rows().map(item=>item.doi).sort());
+  assert.equal(new Set(all.map(item=>item.revision)).size,3);
+});
+
 test('two-character chemistry queries explicitly stay on the compatibility path for now',async t=>{
   const db=new D1();t.after(()=>db.close());
   const env={LITERATURE_INDEX_DB:db,LITERATURE_CATALOG_INDEX_SHADOW_ENABLED:'1'};
@@ -278,22 +302,23 @@ test('read flag is independently visible but cannot activate the dormant read pa
   assert.equal(status.body.readPathActive,false);
 });
 
-test('only authenticated admin routes exist in the foundation; public search is not cut over',()=>{
+test('shadow activation remains admin-only, dedicated-DB and read-inactive',()=>{
   const source=readFileSync(new URL('../src/index.js',import.meta.url),'utf8');
   assert.ok(source.includes('/api/admin/literature-catalog-index/query'));
+  assert.ok(source.includes('/api/admin/literature-catalog-index/rows'));
   assert.ok(!source.includes('/api/literature/catalog-search'));
   assert.ok(!source.includes('/api/user-ui/literature-search'));
 
   const wrangler=readFileSync(new URL('../wrangler.toml',import.meta.url),'utf8');
   const deploy=readFileSync(new URL('../../../.github/workflows/deploy-worker-frontend.yml',import.meta.url),'utf8');
-  for(const token of ['LITERATURE_CATALOG_INDEX_SHADOW_ENABLED','LITERATURE_CATALOG_INDEX_READ_ENABLED']){
-    assert.ok(!wrangler.includes(token),token+' must remain unset in wrangler');
-    assert.ok(!deploy.includes(token),token+' must remain unset in production deploy');
-  }
-  assert.ok(!wrangler.includes('LITERATURE_INDEX_DB'),'dedicated search DB binding must remain unconfigured in foundation');
-  assert.ok(!deploy.includes('literature-catalog-index-v1.sql'),'search DB migration must not run in production foundation');
+  assert.ok(!wrangler.includes('LITERATURE_INDEX_DB'),'repository wrangler stays resource-neutral; production binding is generated');
+  assert.ok(deploy.includes('binding = "LITERATURE_INDEX_DB"'));
+  assert.ok(deploy.includes('LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "1"'));
+  assert.ok(deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "0"'));
+  assert.ok(!deploy.includes('LITERATURE_CATALOG_INDEX_READ_ENABLED = "1"'));
+  assert.ok(deploy.includes('literature-catalog-index-v1.sql'));
   const primarySchema=readFileSync(new URL('../../schema.sql',import.meta.url),'utf8');
   assert.ok(!primarySchema.includes('literature_catalog_fts'),'primary D1 schema must stay free of FTS virtual tables');
 });
 
-console.log('LITERATURE_CATALOG_INDEX_FOUNDATION_TESTS_READY');
+console.log('LITERATURE_CATALOG_INDEX_SHADOW_TESTS_READY');

@@ -334,6 +334,36 @@ export async function queryLiteratureCatalogIndex(env,{catalogId:catalogIdValue,
     limit:boundedLimit,count:items.length,hasMore,nextCursor,items}};
 }
 
+export async function listLiteratureCatalogIndexRows(env,{catalogId:catalogIdValue,afterDoi='',limit=200}={}){
+  if(!literatureCatalogIndexShadowEnabled(env)) return {status:409,body:{error:'literature_catalog_index_shadow_disabled',enabled:false,readPathActive:false}};
+  if(!env?.LITERATURE_INDEX_DB) return {status:503,body:{error:'literature_catalog_index_db_missing'}};
+  await ensureLiteratureCatalogIndexSchema(env);
+  const catalogId=hash64(catalogIdValue);
+  if(!catalogId) return {status:400,body:{error:'literature_catalog_id_invalid'}};
+  const generation=await generationRow(env,catalogId);
+  if(!generation||Number(generation.ready||0)!==1) return {status:409,body:{error:'literature_catalog_generation_not_ready',catalogId}};
+  const after=afterDoi?normalizeDoi(afterDoi):'';
+  if(afterDoi&&!after) return {status:400,body:{error:'literature_catalog_after_doi_invalid'}};
+  const boundedLimit=Math.max(1,Math.min(250,Math.floor(Number(limit||200))));
+  const result=await env.LITERATURE_INDEX_DB.prepare(`SELECT doi,revision,title,title_zh,authors_json,journal,
+      first_online_date,date_precision,added_date,synthesis_type
+    FROM literature_catalog_index
+    WHERE catalog_id=? AND doi>?
+    ORDER BY doi ASC LIMIT ?`).bind(catalogId,after,boundedLimit+1).all();
+  const raw=result?.results||[];
+  const hasMore=raw.length>boundedLimit;
+  const page=raw.slice(0,boundedLimit);
+  const items=page.map(row=>({
+    doi:row.doi,revision:row.revision,title:row.title,titleZh:row.title_zh,
+    authors:JSON.parse(row.authors_json||'[]'),journal:row.journal,
+    firstOnlineDate:row.first_online_date,datePrecision:row.date_precision,
+    addedDate:row.added_date,synthesisType:row.synthesis_type,
+  }));
+  return {status:200,body:{version:1,schemaVersion:LITERATURE_CATALOG_INDEX_SCHEMA_VERSION,
+    enabled:true,readPathActive:false,catalogId,count:items.length,hasMore,
+    nextAfterDoi:hasMore&&items.length?items.at(-1).doi:null,items}};
+}
+
 export async function getLiteratureCatalogIndexStatus(env){
   if(!literatureCatalogIndexShadowEnabled(env)){
     return {status:200,body:{version:1,schemaVersion:LITERATURE_CATALOG_INDEX_SCHEMA_VERSION,
