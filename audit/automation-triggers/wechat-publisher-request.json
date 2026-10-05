@@ -1,7 +1,7 @@
 {
-  "requestId": "wechat-daily-2026-10-05-compact-over5-final-0700",
-  "requestedAt": "2026-10-05T07:00:00Z",
+  "requestId": "wechat-daily-2026-10-05-evidence-led-mobile-0718",
+  "requestedAt": "2026-10-05T07:18:00Z",
   "publicationDate": "2026-10-05",
   "action": "sync_daily_draft",
-  "reason": "Final editorial QA fix: when daily release has more than five papers, show only total plus per-journal counts; do not enumerate individual titles/authors. Keep one real Gallery miniature beside the QR. Preserve JACS as user-selected daily feature and MacMillan as the separate second article/card."
+  "reason": "User QA: keep >5 textual list compressed but show several real Gallery mini-cards; shorten daily-feature copy and interleave figures; rebuild the retrospective as a separate second card with a dedicated square thumbnail; remove invented 'smart' relationships and make all editorial logic follow the paper's actual evidence."
 }
