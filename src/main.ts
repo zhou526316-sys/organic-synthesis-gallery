@@ -222,6 +222,7 @@ app.addEventListener('gallery-corpus-query', event => {
   const detail = event instanceof CustomEvent ? event.detail as { query?: unknown } : undefined;
   query = typeof detail?.query === 'string' ? detail.query : '';
   resetResultWindow();
+  renderCards();
   scheduleArchitectureCorpusRefresh();
 });
 
