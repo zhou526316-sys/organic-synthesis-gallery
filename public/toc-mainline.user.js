@@ -147,6 +147,10 @@
         width: Math.max(0, Number(detail.width || (sameImage && prev.width) || 0)), height: Math.max(0, Number(detail.height || (sameImage && prev.height) || 0)),
         lastError: detail.error ? captureLiveError(detail.error) : String(same && prev.lastError || ''),
         resultStatus: String(result.status || ''),
+        pdfStatus: String(detail.pdfStatus || (same && prev.pdfStatus) || '').slice(0,40),
+        pdfBytes: Math.max(0, Number(detail.pdfBytes || (same && prev.pdfBytes) || 0)),
+        pdfError: detail.pdfError ? captureLiveError(detail.pdfError) : String(same && prev.pdfError || ''),
+        pdfCandidate: String(detail.pdfCandidate || (same && prev.pdfCandidate) || '').slice(0,160),
         // This release retains the deployed verified-staging protocol.
         publicationState: 'not_published'
       };
@@ -186,6 +190,8 @@
       batchFailed: Math.max(0, Number(summary.failed || 0)),
       batchSkipped: Math.max(0, Number(summary.skipped || 0)),
       batchPartial: Math.max(0, Number(summary.partial || 0)),
+      batchPdfStored: Math.max(0, Number(summary.pdfStored || 0)),
+      batchPdfFailed: Math.max(0, Number(summary.pdfFailed || 0)),
       lastResult: (summary.results || []).length ? summary.results[summary.results.length - 1] : null,
       // Summary is committed after each paper. The active row is displayed separately, never added twice.
       publication: '已保存至 R2 暂存；符合站点增量发布规则的新 ACS 正文图会后续发布，当前是否上线以网页与发布账本为准'
@@ -205,6 +211,14 @@
     var quality = {vector:'矢量',vector_mixed:'混合矢量／位图',high:'高分辨率',usable:'可用分辨率',low:'低分辨率'};
     var toc = r ? (tocNames[r.tocStatus] || r.tocStatus) : '等待本篇数据';
     if (r && r.tocStatus === 'stored' && r.tocKind === 'figure1') toc += '（Figure 1 替代图，非官方 TOC）';
+    var pdfNames={checking_lease:'检查授权',waiting_page:'等待文章页',discovering:'查找 PDF',candidate_found:'已找到候选',browser_download:'浏览器下载',gm_fallback:'备用下载',validated:'PDF 校验通过',uploading:'上传私有存储',stored:'已存储',already_stored:'已有 PDF',not_found:'未找到 PDF',not_found_cached:'未找到 PDF（冷却中）',failed:'失败',failed_cached:'失败（冷却中）',lease_missing:'未授权',skipped:'已跳过'};
+    var pdfResult=r&&r.pdfStatus?{status:r.pdfStatus,byteLength:r.pdfBytes,reason:r.pdfError}:s.lastResult&&s.lastResult.privatePdf?s.lastResult.privatePdf:null;
+    var pdf=(s.activeJob&&s.activeJob.capturePrivatePdf)||pdfResult
+      ? (pdfNames[String(pdfResult&&pdfResult.status||'')]||String(pdfResult&&pdfResult.status||'等待 PDF 阶段'))
+      : '本篇无需抓取';
+    var pdfBytes=Number(pdfResult&&((pdfResult.byteLength||pdfResult.pdfBytes))||0);
+    if(pdfBytes>0)pdf+=' · '+(pdfBytes>=1048576?(pdfBytes/1048576).toFixed(1)+' MB':Math.round(pdfBytes/1024)+' KB');
+    if(pdfResult&&pdfResult.reason&&!/^(?:not_found_cached|explicit_candidates=0)$/.test(String(pdfResult.reason)))pdf+=' · '+captureLiveError(pdfResult.reason);
     var lastError = r ? r.lastError : s.lastResult && s.lastResult.status !== 'success' ? captureLiveError(s.lastResult.reason) : '';
     return {
       state: s.coverageRevision&&!s.active&&phaseNames[s.phase]?phaseNames[s.phase]:s.missingOnly&&!s.active&&s.phase==='starting'?'正在生成缺项队列':s.missingOnly&&!s.active&&s.phase==='inventory_partial'?'缺项队列已结束，部分库存未确认':phaseNames[s.state] || ('已停止：' + captureLiveError(s.state)),
@@ -218,9 +232,10 @@
       doi: s.doi || '当前没有任务页', journal: s.journal,
       label: r && r.label || '—', toc: toc,
       figures: r ? '已保存 ' + r.stored + '／' + (r.discoveryDone ? r.discovered : '识别中') + ' · 失败 ' + r.failed : '等待本篇数据',
+      pdf: pdf,
       receipts: r ? '本次暂存回执 ' + r.stagedReceipts + ' · 断点复用 ' + r.reused : '—',
       quality: r ? (quality[r.quality] || '尚未测量') + (r.width && r.height ? ' · ' + r.width + '×' + r.height : '') : '—',
-      batch: s.coverageRevision&&s.phase!=='starting'?'已遍历 '+s.completed+'／'+s.total+' 篇 · 确认补齐 '+s.fullyResolved+' 篇 · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · 新正文图 '+s.batchStaged:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
+      batch: s.coverageRevision&&s.phase!=='starting'?'已遍历 '+s.completed+'／'+s.total+' 篇 · 确认补齐 '+s.fullyResolved+' 篇 · 尝试 '+s.attemptCount+' 次 · 新主图 '+s.batchToc+' · PDF 已存 '+s.batchPdfStored+' · PDF 未完成 '+s.batchPdfFailed:s.missingOnly&&s.phase==='starting'?'正在生成缺项队列…':(s.missingOnly?'缺项任务已结束 ':'已结束 ') + s.completed + '／' + s.total + ' 篇 · 主图回执 ' + s.batchToc + ' · 正文暂存回执 ' + s.batchStaged + ' · PDF 已存 ' + s.batchPdfStored + ' · PDF 未完成 ' + s.batchPdfFailed + ' · 部分完成 ' + Number(s.batchPartial||0) + ' · 失败 ' + s.batchFailed + ' · 跳过 ' + s.batchSkipped,
       last: s.lastAt ? new Date(s.lastAt).toLocaleTimeString() + ' · ' + s.ageSeconds + ' 秒前' : '尚无进度记录',
       stale: s.active && s.ageSeconds >= 45 ? '一段时间没有新进展：可能正在等待网络或页面验证，不等于抓取失败。' : '',
       error: lastError || '无', publication: s.publication, delivery: automaticReportDisplay()
@@ -247,7 +262,7 @@
     immediate.addEventListener('click',forceStartFromHead);main.appendChild(immediate);
     var dl = document.createElement('dl');
     var fields = {};
-    [['state','状态'],['doi','当前 DOI'],['journal','期刊'],['needs','本篇缺项'],['working','正在补抓'],['evidence','文本情况'],['label','当前图片'],['toc','主图'],['figures','正文图片'],['receipts','保存记录'],['quality','清晰度'],['gaps','剩余缺项'],['batch','本轮累计'],['last','最后进展'],['error','最近问题']].forEach(function (pair) {
+    [['state','状态'],['doi','当前 DOI'],['journal','期刊'],['needs','本篇缺项'],['working','正在补抓'],['evidence','文本情况'],['label','当前图片'],['toc','主图'],['figures','正文图片'],['pdf','PDF'],['receipts','保存记录'],['quality','清晰度'],['gaps','剩余缺项'],['batch','本轮累计'],['last','最后进展'],['error','最近问题']].forEach(function (pair) {
       var dt = document.createElement('dt'), dd = document.createElement('dd');
       dt.textContent = pair[1]; dd.id = pair[0]; fields[pair[0]] = dd; dl.appendChild(dt); dl.appendChild(dd);
     });
