@@ -72,6 +72,7 @@ function embeddedAcsDois(value){
   return [...found];
 }
 function hostIs(host,suffix){return host===suffix||host.endsWith('.'+suffix);}
+function ccsPublisherHost(host){return hostIs(host,'chinesechemsoc.org')||hostIs(host,'ccspublishing.org.cn');}
 function officialPublisherHosts(doi,pageHost,sourceHost){
   if(doi.startsWith('10.1021/'))return pageHost==='pubs.acs.org'&&['acs.silverchair-cdn.com','pubs.acs.org'].includes(sourceHost);
   if(doi.startsWith('10.1002/'))return hostIs(pageHost,'onlinelibrary.wiley.com')&&(hostIs(sourceHost,'wiley.com')||hostIs(sourceHost,'wiley.com.cn'));
@@ -79,7 +80,7 @@ function officialPublisherHosts(doi,pageHost,sourceHost){
   if(doi.startsWith('10.1126/'))return hostIs(pageHost,'science.org')&&hostIs(sourceHost,'science.org');
   if(doi.startsWith('10.1039/'))return hostIs(pageHost,'rsc.org')&&hostIs(sourceHost,'rsc.org');
   if(doi.startsWith('10.1016/'))return (hostIs(pageHost,'sciencedirect.com')||hostIs(pageHost,'cell.com'))&&(hostIs(sourceHost,'sciencedirect.com')||hostIs(sourceHost,'cell.com')||hostIs(sourceHost,'els-cdn.com'));
-  if(doi.startsWith('10.31635/'))return hostIs(pageHost,'ccspublishing.org.cn')&&hostIs(sourceHost,'ccspublishing.org.cn');
+  if(doi.startsWith('10.31635/'))return ccsPublisherHost(pageHost)&&ccsPublisherHost(sourceHost);
   return false;
 }
 export function strongOfficialCapture(row){
@@ -93,6 +94,8 @@ export function strongOfficialCapture(row){
   const sourceIds=sourceDois(row.sourceUrl);
   if(sourceIds.length===1&&sourceIds[0]===doi)return true;
   if(sourceIds.length)return false;
+  if(doi.startsWith('10.31635/')&&ccsPublisherHost(page.hostname)&&ccsPublisherHost(source.hostname)
+      && /\/cms\/asset\/[^/]+\/keyimage[.](?:png|webp|jpe?g)$/i.test(source.pathname))return true;
   if(doi.startsWith('10.1038/')&&hostIs(source.hostname,'springernature.com')){
     const slug=doi.slice('10.1038/'.length).toLowerCase();
     let pathname='';try{pathname=decodeURIComponent(source.pathname).toLowerCase();}catch{pathname=source.pathname.toLowerCase();}
