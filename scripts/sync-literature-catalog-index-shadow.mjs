@@ -15,6 +15,9 @@ const safePath = value => typeof value === 'string' && /^[A-Za-z0-9_./-]+$/.test
 const validHash = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
 const validSha = value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);
 const jsonText = value => JSON.stringify(value, null, 2) + '\n';
+const TRANSIENT_API_STATUS = new Set([429,500,502,503,504]);
+const RETRY_DELAYS_MS = [300,900,1800];
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function fetchBytes(url, { maxBytes = 8 * 1024 * 1024 } = {}) {
   const target = new URL(url);
@@ -33,23 +36,36 @@ async function fetchJson(url, options) {
   try { return { bytes, body: JSON.parse(bytes.toString('utf8')) }; }
   catch { throw new Error(`invalid_json:${new URL(url).pathname}`); }
 }
-async function api(path, { method = 'GET', body, allowError = false } = {}) {
+async function api(path, { method = 'GET', body, allowError = false, retryTransient = true } = {}) {
   assert(TOKEN, 'BRIDGE_WRITE_TOKEN_required');
-  const response = await fetch(new URL(path, WORKER), {
-    method,
-    headers: {
-      authorization: `Bearer ${TOKEN}`,
-      'cache-control': 'no-cache',
-      ...(body === undefined ? {} : { 'content-type': 'application/json' }),
-    },
-    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-    signal: AbortSignal.timeout(30000),
-  });
-  const text = await response.text();
-  let parsed = {};
-  try { parsed = text ? JSON.parse(text) : {}; } catch { parsed = { raw: text.slice(0, 500) }; }
-  if (!response.ok && !allowError) throw new Error(`${path}:HTTP_${response.status}:${text.slice(0, 500)}`);
-  return { status: response.status, body: parsed };
+  const attempts = retryTransient ? RETRY_DELAYS_MS.length + 1 : 1;
+  let lastError = null;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetch(new URL(path, WORKER), {
+        method,
+        headers: {
+          authorization: `Bearer ${TOKEN}`,
+          'cache-control': 'no-cache',
+          ...(body === undefined ? {} : { 'content-type': 'application/json' }),
+        },
+        ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+        signal: AbortSignal.timeout(30000),
+      });
+      const text = await response.text();
+      let parsed = {};
+      try { parsed = text ? JSON.parse(text) : {}; } catch { parsed = { raw: text.slice(0, 500) }; }
+      if (response.ok || allowError) return { status: response.status, body: parsed, attempt };
+      const error = new Error(`${path}:HTTP_${response.status}:${text.slice(0, 500)}`);
+      if (!retryTransient || !TRANSIENT_API_STATUS.has(response.status) || attempt === attempts) throw error;
+      lastError = error;
+    } catch (error) {
+      if (!retryTransient || attempt === attempts) throw error;
+      lastError = error;
+    }
+    await sleep(RETRY_DELAYS_MS[Math.min(attempt - 1, RETRY_DELAYS_MS.length - 1)]);
+  }
+  throw lastError || new Error(`${path}:retry_exhausted`);
 }
 function exactRef(ref, objectMap, delivery) {
   assert(ref && safePath(ref.path) && validHash(ref.sha256) && Number.isSafeInteger(ref.bytes) && ref.bytes > 0,
@@ -253,6 +269,18 @@ async function main() {
       markerBlobSha: release.markerBlobSha,
       recordCount: release.recordCount,
     };
+    Object.assign(report, {
+      catalogId: generation.catalogId,
+      doiSetHash: generation.doiSetHash,
+      publicationSlot: generation.publicationSlot,
+      sourceCommit: generation.sourceCommit,
+      markerBlobSha: generation.markerBlobSha,
+      recordCount: generation.recordCount,
+      importBatchSize: IMPORT_BATCH_SIZE,
+      importProgress: { importedBatches: 0, importedRows: 0, totalRows: generation.recordCount },
+    });
+    await writeFile(REPORT, jsonText(report));
+
     const statusBefore = await api('/api/admin/literature-catalog-index/status');
     assert(statusBefore.body.enabled === true && statusBefore.body.readConfigured === false
       && statusBefore.body.readPathActive === false, 'shadow_runtime_configuration_invalid');
@@ -268,6 +296,13 @@ async function main() {
         });
         assert(imported.body.importedRows <= generation.recordCount, 'shadow_import_overflow');
         importedBatches += 1;
+        report.importProgress = {
+          importedBatches,
+          importedRows: Number(imported.body.importedRows || 0),
+          totalRows: generation.recordCount,
+          lastBatchAttempts: Number(imported.attempt || 1),
+        };
+        await writeFile(REPORT, jsonText(report));
       }
       const finalized = await api('/api/admin/literature-catalog-index/finalize', {
         method: 'POST', body: { catalogId: generation.catalogId },
