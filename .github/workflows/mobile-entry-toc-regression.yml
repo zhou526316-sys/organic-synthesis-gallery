@@ -29,7 +29,7 @@ jobs:
         run: |
           npm install --no-audit --no-fund
           npm install --no-save --no-package-lock @playwright/test@1.55.0
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps webkit
       - name: Type-check and build
         run: |
           npx tsc --noEmit
