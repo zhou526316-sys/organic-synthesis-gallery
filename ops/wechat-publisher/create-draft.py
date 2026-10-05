@@ -171,7 +171,20 @@ def load_latest_release():
     state_path = ROOT / "audit" / "literature-update-state.json"
     state = json.loads(state_path.read_text(encoding="utf-8"))
     release = state.get("lastPublication") or {}
-    dois = [normalize_doi(x) for x in release.get("publishedDois", []) if normalize_doi(x)]
+    removed_after_release = {
+        normalize_doi(x)
+        for x in (
+            ((state.get("lastWebsiteSync") or {}).get("verification") or {}).get(
+                "removedDoisAbsent", []
+            )
+        )
+        if normalize_doi(x)
+    }
+    dois = [
+        normalize_doi(x)
+        for x in release.get("publishedDois", [])
+        if normalize_doi(x) and normalize_doi(x) not in removed_after_release
+    ]
     slot = str(release.get("publicationSlot") or "")
     if not dois or not slot:
         raise RuntimeError("lastPublication is missing publicationSlot or publishedDois")

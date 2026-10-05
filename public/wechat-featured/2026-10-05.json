@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-05",
+  "headline": "非活化末端烯烃，怎样“反着”做出 Markovnikov 烷基硼？",
+  "paper": {
+    "doi": "10.1002/anie.5679433",
+    "journal": "Angew",
+    "title": "Radical Markovnikov Hydroboration of Unactivated Terminal Alkenes With HBaza‐Type Hydroborane via a Triple Catalysis",
+    "authors": "Chang Liu, Yiyun Pan, Yu Zhang, Jie Xu, Kai Yang, Peng Liu, Qiuling Song"
+  },
+  "quick_points": [
+    {
+      "label": "做了什么",
+      "text": "作者用光氧化还原、钴和 Brønsted 酸三重催化，把非活化末端烯烃转成支链烷基硼化物，实现更具挑战的 Markovnikov 氢硼化；硼源为 HBaza 型 hydroborane。"
+    },
+    {
+      "label": "最亮眼的点",
+      "text": "关键不是简单更换硼试剂，而是把区域选择性交给自由基过程：先经金属氢原子转移（MHAT）生成烷基自由基，再由 HBaza 参与自由基硼化，把经典末端烯烃氢硼化的选择性逻辑翻转。"
+    },
+    {
+      "label": "为什么值得读",
+      "text": "出版社摘要明确给出广泛底物范围、良好官能团兼容性、复杂分子烯烃的后期转化以及烷基硼产物的进一步衍生，因此这不仅是一个机理概念，也是一套面向实际合成的反应平台。"
+    }
+  ],
+  "figures": [],
+  "sections": [
+    {
+      "eyebrow": "01 · 先看问题",
+      "heading": "难点不是“能不能氢硼化”，而是如何让硼落在更拥挤的那个碳上",
+      "paragraphs": [
+        "末端烯烃的氢硼化是制备有机硼化物的经典入口，但非活化末端烯烃要实现高 Markovnikov 选择性仍然困难。作者因此没有继续沿传统两电子加成微调，而是把成键过程改写成自由基序列。",
+        "核心思路是先用 MHAT 把简单烯烃转换成烷基自由基，再把 C–B 成键交给另一套自由基捕获过程。"
+      ]
+    },
+    {
+      "eyebrow": "02 · 三重催化怎样分工",
+      "heading": "光、Co 和酸不是堆条件，而是在同一条自由基链路上分工",
+      "paragraphs": [
+        "最终论文摘要把体系明确描述为 photoredox、cobalt 和 Brønsted acid 三重催化。机制研究支持一个顺序过程：先由金属氢原子转移生成碳自由基，再发生 HBaza 参与的自由基硼化。",
+        "因此更稳妥的理解是，不同催化模块分别服务于自由基生成、催化循环调节和 C–B 键形成，而不是三种催化剂同时控制每一个 elementary step。"
+      ],
+      "callout": "最值得迁移的设计思想，是把“自由基在哪里生成”和“自由基最后被什么捕获”拆成两个可分别调控的模块。"
+    },
+    {
+      "eyebrow": "03 · 合成价值",
+      "heading": "复杂分子和后续衍生，决定这条路线是否真正有用",
+      "paragraphs": [
+        "出版社摘要明确写到反应具有广泛底物范围和良好官能团兼容性，并已用于复杂分子来源烯烃的 Markovnikov 氢硼化。",
+        "所得烷基硼产物还能继续转化，并用于生物相关分子或其中间体的合成。区域选择性的价值因此不只是一项数据，而是获得一个可继续做 C–C 与 C–杂原子成键的支链硼化接口。"
+      ]
+    },
+    {
+      "eyebrow": "04 · 机理证据说到哪一步",
+      "heading": "可以确认的是“MHAT → 自由基硼化”总体路径，不把未核验细节写成事实",
+      "paragraphs": [
+        "当前可核验的一手出版社信息明确表述：mechanistic studies support sequential MHAT-mediated radical generation and an HBaza-involved radical borylation process。它支持的是总体反应框架。",
+        "在完整论文图谱和 SI 尚未逐项核对前，本稿不擅自添加具体自由基钟、淬灭、动力学或瞬态中间体结论。"
+      ],
+      "warning": "机制模型得到实验支持，不等于催化循环中的每个瞬态物种都被直接观测。"
+    },
+    {
+      "eyebrow": "05 · 同行评审与证据边界",
+      "heading": "没有公开评审文件，就不编造“审稿人质疑了什么”",
+      "paragraphs": [
+        "截至本次草稿生成，可核验来源中没有取得这篇 Angew 论文的公开同行评审文件，因此不人为补写 reviewer 质疑，也不把最终论文中的机理讨论反推成审稿意见。",
+        "只有存在可核验 peer-review 文本时，才讨论作者在修订中具体补了哪些实验、哪些结论被加强或收窄。"
+      ],
+      "review": "公开同行评审材料：本次未取得；因此不作推测性复原。"
+    },
+    {
+      "eyebrow": "06 · 最后看边界",
+      "heading": "“底物范围广”不等于“所有末端烯烃都适用”",
+      "paragraphs": [
+        "出版社摘要支持 broad substrate scope 和 good functional group compatibility，但当前可核验文本没有给出完整失败底物清单，因此本稿不虚构具体失效类型。",
+        "更准确的结论是：这项工作建立了一条具有一般性的 Markovnikov 自由基氢硼化路线，并已证明复杂分子兼容性与后续合成价值；具体边界仍应以主文和 SI 的完整 scope 为准。"
+      ]
+    }
+  ],
+  "takehome": [
+    "反应设计：用 MHAT 把区域选择性问题转化为自由基生成与捕获问题。",
+    "合成价值：从简单末端烯烃延伸到复杂分子，并保留烷基硼后续衍生优势。",
+    "证据表达：当前一手信息支持总体“MHAT → radical borylation”模型，但不把未逐项核验的机理实验写成直接证据。"
+  ],
+  "ai_notice": "本文由 AI 辅助生成，并以当天已通过 Gallery 08:00 审核的出版社摘要与生产审查记录交叉核验。未取得的全文图、SI 细节或公开同行评审内容不作推测；化学结构不使用 AI 重绘。",
+  "evidence": {
+    "source": "audit/prepublish-review-2026-10-05-0800.json publisher abstract and production review",
+    "sourceDoi": "10.1002/anie.5679433",
+    "visualStatus": "publisher figures not yet captured at draft time",
+    "peerReviewStatus": "public peer-review file not obtained"
+  }
+}
