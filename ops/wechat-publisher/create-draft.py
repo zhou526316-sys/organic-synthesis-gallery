@@ -390,7 +390,11 @@ def build_content(
             f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
         ])
 
-        parts.append(figure_html("fig1", figures, uploaded_urls))
+        rendered_figures = set()
+        lead_html = figure_html("fig1", figures, uploaded_urls)
+        if lead_html:
+            parts.append(lead_html)
+            rendered_figures.add("fig1")
         for point in featured.get("quick_points", []):
             parts.append(
                 "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
@@ -428,7 +432,13 @@ def build_content(
                     f"<p style='font-size:13px;line-height:1.78;margin:0;'>{esc(section['review'])}</p></section>"
                 )
             for fig_id in section.get("figures", []):
-                parts.append(figure_html(str(fig_id), figures, uploaded_urls))
+                fig_key = str(fig_id)
+                if fig_key in rendered_figures:
+                    continue
+                fig_html = figure_html(fig_key, figures, uploaded_urls)
+                if fig_html:
+                    parts.append(fig_html)
+                    rendered_figures.add(fig_key)
 
         takehome = featured.get("takehome", [])
         if takehome:
@@ -468,7 +478,11 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
         f"<p style='font-size:12px;color:#888;line-height:1.65;margin:0 0 18px;'>{esc(paper.get('authors') or '')} · {esc(paper.get('journal') or '')} · DOI {esc(paper.get('doi') or '')}</p>",
     ]
 
-    parts.append(figure_html("fig1", figures, uploaded_urls))
+    rendered_figures = set()
+    lead_html = figure_html("fig1", figures, uploaded_urls)
+    if lead_html:
+        parts.append(lead_html)
+        rendered_figures.add("fig1")
     for point in data.get("quick_points", []):
         parts.append(
             "<section style='background:#f7f8fa;border-radius:8px;padding:11px 13px;margin:9px 0;'>"
@@ -506,7 +520,13 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
                 f"<p style='font-size:13px;line-height:1.78;margin:0;'>{esc(section['review'])}</p></section>"
             )
         for fig_id in section.get("figures", []):
-            parts.append(figure_html(str(fig_id), figures, uploaded_urls))
+            fig_key = str(fig_id)
+            if fig_key in rendered_figures:
+                continue
+            fig_html = figure_html(fig_key, figures, uploaded_urls)
+            if fig_html:
+                parts.append(fig_html)
+                rendered_figures.add(fig_key)
 
     takehome = data.get("takehome", [])
     if takehome:
@@ -786,61 +806,80 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             )
 
         elif layout == "retrospective_figure_square":
-            # Full editorial square cover for retrospective cards.
-            # Uses the paper's original reaction artwork; no AI-redrawn chemistry.
-            canvas = Image.new("RGB", (width, height), "#0b2949")
+            # Full editorial square for secondary WeChat cards, echoing the
+            # established blue/gold retrospective visual language while keeping
+            # every chemistry structure from the original paper.
+            canvas = Image.new("RGB", (width, height), "#0b2d52")
             draw = ImageDraw.Draw(canvas)
 
             kicker = str(cover.get("thumb_kicker") or "往期精选")
-            title_text = str(cover.get("thumb_title") or "")
+            title1 = str(cover.get("thumb_title") or "")
+            title2 = str(cover.get("thumb_subtitle") or "")
             meta = str(cover.get("thumb_meta") or "")
-            chemistry = str(cover.get("thumb_footer") or "")
+            footer = str(cover.get("thumb_footer") or "")
 
-            kicker_font = choose_font(max(36, int(width * 0.047)), True)
-            title_font = choose_font(max(54, int(width * 0.070)), True)
-            meta_font = choose_font(max(26, int(width * 0.034)), True)
-            footer_font = choose_font(max(27, int(width * 0.035)), True)
+            kicker_font = choose_font(max(38, int(width * 0.050)), True)
+            meta_font = choose_font(max(30, int(width * 0.038)), False)
+            title1_font = choose_font(max(64, int(width * 0.078)), True)
+            title2_font = choose_font(max(55, int(width * 0.068)), True)
+            footer_font = choose_font(max(27, int(width * 0.033)), False)
 
-            gold = "#e8c36f"
-            pale = "#f6f8fb"
-            muted = "#c9d7e7"
+            left = int(width * 0.06)
+            right = int(width * 0.94)
 
-            # Header and title occupy the upper half, like a magazine cover.
+            # Header badge and journal/year.
+            badge_w = int(width * 0.54)
             draw.rounded_rectangle(
-                (int(width*0.055), int(height*0.055), int(width*0.78), int(height*0.14)),
-                radius=max(14,int(width*0.016)), outline=gold, width=3, fill="#0b2949"
+                (left, int(height*0.05), left+badge_w, int(height*0.135)),
+                radius=max(12,int(width*0.012)),
+                outline="#e7c56f",
+                width=max(2,int(width*0.002)),
+                fill="#102f53",
             )
-            draw.text((int(width*0.075), int(height*0.07)), kicker, font=kicker_font, fill=gold)
+            draw.text((left+24, int(height*0.066)), kicker, font=kicker_font, fill="#f1cf7e")
             if meta:
-                box=draw.textbbox((0,0),meta,font=meta_font)
-                draw.text((int(width*0.94)-(box[2]-box[0]), int(height*0.073)), meta, font=meta_font, fill=muted)
+                mbox = draw.textbbox((0,0), meta, font=meta_font)
+                draw.text((right-(mbox[2]-mbox[0]), int(height*0.072)), meta, font=meta_font, fill="#f3f6fa")
+                draw.line(
+                    (right-(mbox[2]-mbox[0]), int(height*0.115), right, int(height*0.115)),
+                    fill="#e7c56f", width=max(2,int(width*0.002)),
+                )
 
-            y=int(height*0.19)
-            for line in wrap_text(draw, title_text, title_font, int(width*0.86), 3):
-                draw.text((int(width*0.065), y), line, font=title_font, fill=pale)
-                y += int(height*0.077)
+            # Big two-level title, designed to survive thumbnail scaling.
+            y = int(height * 0.19)
+            for line in wrap_text(draw, title1, title1_font, int(width*0.86), 2):
+                draw.text((left, y), line, font=title1_font, fill="#ffffff")
+                y += int(height * 0.085)
+            for line in wrap_text(draw, title2, title2_font, int(width*0.86), 2):
+                draw.text((left, y+8), line, font=title2_font, fill="#f0cf82")
+                y += int(height * 0.075)
 
-            draw.line((int(width*0.065), int(height*0.43), int(width*0.94), int(height*0.43)), fill=gold, width=4)
-            if chemistry:
-                draw.text((int(width*0.065), int(height*0.45)), chemistry, font=footer_font, fill=gold)
+            draw.line((left, int(height*0.45), right, int(height*0.45)), fill="#e7c56f", width=max(2,int(width*0.003)))
+            if footer:
+                draw.text((left, int(height*0.465)), footer, font=footer_font, fill="#dce7f2")
 
-            # Original current-reaction crop becomes the large lower visual.
-            visual_top=int(height*0.515)
-            visual_bottom=int(height*0.93)
-            fitted=ImageOps.contain(
+            # Original reaction scheme occupies the lower half in a clean light card.
+            card = (
+                left, int(height*0.55),
+                right, int(height*0.93),
+            )
+            draw.rounded_rectangle(
+                card,
+                radius=max(24,int(width*0.022)),
+                fill="#f8fafc",
+                outline="#d7e0ea",
+                width=max(2,int(width*0.002)),
+            )
+            max_w = card[2]-card[0]-int(width*0.055)
+            max_h = card[3]-card[1]-int(height*0.045)
+            fitted = ImageOps.contain(
                 image,
-                (int(width*0.84), visual_bottom-visual_top),
+                (max_w, max_h),
                 method=Image.Resampling.LANCZOS,
             )
-            card_x=int(width*0.055); card_y=visual_top
-            card_w=int(width*0.89); card_h=visual_bottom-visual_top
-            draw.rounded_rectangle((card_x,card_y,card_x+card_w,card_y+card_h),radius=max(20,int(width*0.024)),fill="#ffffff")
-            px=card_x+(card_w-fitted.width)//2
-            py=card_y+(card_h-fitted.height)//2
-            canvas.paste(fitted,(px,py))
-
-            # Ensure the centered WeChat crop still contains title + reaction.
-            # No decorative blank regions and no tiny full-paper screenshot.
+            px = card[0] + (card[2]-card[0]-fitted.width)//2
+            py = card[1] + (card[3]-card[1]-fitted.height)//2
+            canvas.paste(fitted, (px, py))
 
         elif layout == "retrospective_square":
             # Full square editorial cover for the secondary WeChat card.
