@@ -5,7 +5,7 @@ on:
     types: [completed]
   push:
     branches: [main]
-    paths: ['audit/automation-triggers/tm220-live-check.json']
+    paths: ['audit/automation-triggers/tm220-live-check.json', '.github/workflows/tm220-live-validation.yml']
 permissions:
   contents: read
 concurrency:
@@ -41,19 +41,19 @@ jobs:
             try{
               const suffix='?releaseCheck='+Date.now();
               const raw=await get(site+'gallery-vpn-bridge.user.js'+suffix),script=raw.toString('utf8');
-              assert.match(script,/@version\s+2\.2\.43(?:\s|$)/,'userscript not 2.2.43');
-              for(const marker of ["var VERSION = '6.2.20';","var INSTALL_REVISION = '6.2.25';","var PUBLISHER_TASK_BINDING_REVISION = '20261004-elsevier-bound-task-v2';",'overnightRetryEligible','checkpointKey','pairedJobs','capture_server_upgrade_pending','GM_listValues','assertBoundCaptureJob','pending_verified_promotion','resolvePublisherTaskUrl','boundPublisherJobUrl'])assert.ok(script.includes(marker),'script contract '+marker);
+              assert.match(script,/@version\s+2\.2\.43(?:\s|$)/,'userscript not 2.2.52');
+              for(const marker of ["var VERSION = '6.2.20';","var CONTROLLER_REVISION = '2.2.41';","var INSTALL_REVISION = '6.2.33';","var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';","RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1'","RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01'","PRIVATE_PDF_CAPTURE_REVISION = '20261006-private-pdf-bundle-v6'",'overnightRetryEligible','checkpointKey','pairedJobs','capture_server_upgrade_pending','GM_listValues','assertBoundCaptureJob','pending_verified_promotion','resolvePublisherTaskUrl','boundPublisherJobUrl'])assert.ok(script.includes(marker),'script contract '+marker);
               const q=JSON.parse((await get(site+'toc-demand-live.json'+suffix)).toString('utf8'));
               assert.equal(q.mediaGeneration,1790082000000);assert.equal(q.pairedCaptureRegistry,true);
               assert.equal(q.articles.length,q.webpageDoiCount);assert.ok(q.articles.length>400);assert.equal(new Set(q.articles.map(r=>r.doi)).size,q.articles.length);
               assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(String(q.latestAddedDate||'')),'latestAddedDate missing');
               assert.equal(q.articles.filter(r=>r.addedDate===q.latestAddedDate).length,q.latestAddedCount);
               const caps=JSON.parse((await get(worker+'/api/media/capture-capabilities'+suffix)).toString('utf8'));
-              assert.equal(caps.captureVersion,'6.2.20');assert.equal(caps.evidenceSchemaVersion,'article-evidence-v2');assert.equal(caps.evidenceCaptureMinControllerRevision,'2.2.35');assert.equal(caps.mode,'verified-staging');assert.equal(caps.bodyFigures,true);assert.equal(caps.publishedAutomatically,false);
-              for(const marker of ["var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';",'EVIDENCE_INVENTORY_ENDPOINT',"mediaNeed:'evidence'","fulltextStatus='abstract_only'"])assert.ok(script.includes(marker),'evidence contract '+marker);
+              assert.equal(caps.captureVersion,'6.2.20');assert.equal(caps.mediaControllerRevision,'2.2.41');assert.equal(caps.evidenceSchemaVersion,'article-evidence-v2');assert.equal(caps.evidenceCaptureMinControllerRevision,'2.2.35');assert.equal(caps.mode,'verified-staging');assert.equal(caps.bodyFigures,true);assert.equal(caps.publishedAutomatically,false);
+              for(const marker of ["var EVIDENCE_SCHEMA_VERSION = 'article-evidence-v2';",'EVIDENCE_INVENTORY_ENDPOINT','opportunisticEvidence','evidenceMissingDois'])assert.ok(script.includes(marker),'evidence contract '+marker);
               // Installer/queue verification must not depend on a historical media-recovery
               // marker count. Reviewed TOC retention has its own dedicated live check.
-              const report={verifiedAt:new Date().toISOString(),installationUrl:site+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.43',installRevision:'6.2.25',publisherTaskBindingRevision:'20261004-elsevier-bound-task-v2',captureVersion:'6.2.20',scriptBytes:raw.length,scriptSha256:createHash('sha256').update(raw).digest('hex'),queueArticles:q.articles.length,queueGeneratedAt:q.generatedAt,latestAddedDate:q.latestAddedDate,latestAddedCount:q.latestAddedCount,workerCapabilities:caps,reviewedTocIntegrityDelegatedTo:'reviewed-toc-live-check',publicReadOnly:true,realPublisherSessionVerified:false};
+              const report={verifiedAt:new Date().toISOString(),installationUrl:site+'gallery-vpn-bridge.user.js',bridgeVersion:'2.2.52',installRevision:'6.2.33',publisherTaskBindingRevision:'20261005-interstitial-bind-v4',controllerRevision:'2.2.41',recentFullCaptureRevision:'20261006-oct1-all-media-v1',captureVersion:'6.2.20',scriptBytes:raw.length,scriptSha256:createHash('sha256').update(raw).digest('hex'),queueArticles:q.articles.length,queueGeneratedAt:q.generatedAt,latestAddedDate:q.latestAddedDate,latestAddedCount:q.latestAddedCount,workerCapabilities:caps,reviewedTocIntegrityDelegatedTo:'reviewed-toc-live-check',publicReadOnly:true,realPublisherSessionVerified:false};
               await writeFile(process.env.RUNNER_TEMP+'/tm220-live.json',JSON.stringify(report,null,2));
               console.log('TM220_LIVE_VERIFIED '+JSON.stringify(report));finalError=null;break;
             }catch(error){
