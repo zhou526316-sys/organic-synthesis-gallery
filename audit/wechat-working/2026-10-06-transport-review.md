@@ -1,40 +1,33 @@
-# 2026-10-06 WeChat transport/readback review — complete WYSIWYG edition
+# 2026-10-06 WeChat transport/readback review — paragraph-aligned main-figure edition
 
 Status: **PASS**
 
-Publisher result:
+Final draft:
 - stage: `draft_update`
 - media_id: `KhELYUzvwADwB_l1xH1SWFv31tB1FbKXF89D7ZHLK2znutU4BOGt5XD22WOo65yQ`
 - paper_count: `29`
 - draft_readback: `ok`
-- generatedAt: `2026-10-06T08:20:53.723144Z`
-- preview_url: https://relay.gczhouwld.com/wechat-preview/f73202f8902894037b2ab329.html
+- generatedAt: `2026-10-06T08:41:36.547953Z`
+- preview_url: https://relay.gczhouwld.com/wechat-preview/ff8ada89f9637dbb495c618a.html
 
-## Editorial/visual state written to WeChat
+## Draft/get structure audit
 
-### Nature Chemistry daily feature
-- Opening body image is a materialized two-block Fig. 1e composition, not the old isolated Fig. 1c crop.
-- The opening image was visually re-reviewed after rendering; no neighbouring-panel leak or truncated chemistry remains.
-- Redox/speciation, CV/NMR evidence, electrode behaviour and overall radical network use pinned rasters.
-- A dedicated substrate-scope block is present.
-- Synthetic utility includes both the upstream alkene/hydroboration entry and downstream Suzuki–Miyaura/Buchwald–Hartwig diversification.
-- Method limitations remain explicit.
+- Article count: 2.
+- Daily article body images: 10 total in preview, including the Gallery QR image and 9 scientific/synthetic figures.
+- Hyster body images: 10.
+- All required structural checks passed:
+  - Nature Chemistry Fig. 1e is present and the old isolated Fig. 1c opening is absent.
+  - Alternating-polarity Fig. 3b–c and electrode-material Fig. 3a are both present.
+  - Nature Chemistry substrate scope, hydroboration entry and downstream diversification are present.
+  - Hyster Fig. 1 overview, Fig. 2 evolution + active-site remodeling, Fig. 3 scope, Fig. 4 external/internal FRET, and Fig. 5 lifetime/mechanism/application are present.
 
-### Nature/Hyster retrospective
-- Uses the exact user-confirmed blue FRET/PLP* cover.
-- Opening body figure is the complete horizontal Fig. 1c overview.
-- Narrative follows the paper more closely: concept/challenge → directed evolution → substrate scope → external/internal FRET → radical-pair stereocontrol → excited-state evidence → peer-review boundaries → limitations → Lenacapavir application.
-- Scope is represented by separate pyrimidine and pyridine blocks.
-- Long text-only stretches are broken by evidence images where they materially support the argument, without mechanically forcing one image per paragraph.
-- The lifetime panel is a clean pinned raster; the visually inferior extra redox crop was intentionally not forced into production.
+## Width/layout readback
 
-## Crop policy check
-- All production body figures are pinned raster files.
-- No production figure relies on runtime `crop_frac`.
-- The publisher review gate fingerprints both source manifests and reviewed assets.
-- The final source blob SHAs match the approved gate.
+The paragraph-aligned widths survived WeChat `draft/get`:
+- Daily electrode-material panel: 68%; alternating-polarity panel: 92%.
+- Hyster evolution: 72%; active-site: 82%; lifetime: 70%; Lenacapavir application: 58%.
+- Dense scope/mechanistic figures remain 92–100% where readability requires it.
 
-## Transport decision
-The fixed-IP publisher completed successfully and WeChat `draft/get` returned `draft_readback=ok`.
+## Final decision
 
-Final decision: **PASS — draft is ready for user inspection in the WeChat backend.**
+**PASS.** The latest WeChat draft is the reviewed paragraph-aligned, scope-complete version. The final acceptance path used pinned repository rasters + fixed-IP publisher + WeChat `draft/get` + GitHub-runner preview structure audit; it did not depend on TinyFish.
