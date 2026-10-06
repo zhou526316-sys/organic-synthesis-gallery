@@ -159,15 +159,29 @@
     },
     {
       "id": "daily-problem",
-      "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png",
-      "crop_frac": [
-        0,
-        0.72,
-        1,
-        1
-      ],
       "output": "public/wechat-assets/reviewed/2026-10-06/daily-problem.png",
-      "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-problem.jpg"
+      "proof": "audit/wechat-working/crop-proofs/2026-10-06/daily-problem.jpg",
+      "components": [
+        {
+          "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png",
+          "crop_frac": [
+            0,
+            0.72,
+            0.43,
+            1
+          ]
+        },
+        {
+          "source_url": "https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png",
+          "crop_frac": [
+            0.4,
+            0.72,
+            1,
+            1
+          ]
+        }
+      ],
+      "gap": 24
     },
     {
       "id": "hyster-lifetime-ab",
