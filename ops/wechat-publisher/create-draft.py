@@ -16,6 +16,7 @@ import json
 import mimetypes
 import tempfile
 import time
+import traceback
 import os
 from pathlib import Path
 import sys
@@ -3016,7 +3017,11 @@ if __name__ == "__main__":
     except Exception as exc:
         print(
             json.dumps(
-                {"stage": "error", "error": str(exc)},
+                {
+                    "stage": "error",
+                    "error": str(exc),
+                    "traceback": traceback.format_exc(),
+                },
                 ensure_ascii=False,
             ),
             file=sys.stderr,
