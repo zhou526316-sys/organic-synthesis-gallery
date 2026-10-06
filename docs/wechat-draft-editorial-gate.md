@@ -67,3 +67,7 @@ A successful pre-draft review does not prove the WeChat transport is correct. Af
 - source links.
 
 The final preview is therefore a transport/layout check, not the primary editorial review.
+
+## Tooling independence
+
+The WeChat editorial/publisher acceptance path must not depend on TinyFish. Browser automation may never be a prerequisite for approval. Source fingerprints, local/source-image inspection, fixed-IP publisher results, WeChat `draft/get` readback and the relay preview are the authoritative QA path.
