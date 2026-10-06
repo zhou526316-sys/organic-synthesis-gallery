@@ -20,7 +20,7 @@ const harness=[
   "function articleFigureImageUrls(node,base){const out=[];const add=v=>{try{if(v){const u=new URL(v,base).href;if(!out.includes(u))out.push(u)}}catch{}};['data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large','data-original','data-src','data-lazy-src','src'].forEach(k=>add(node.getAttribute&&node.getAttribute(k)));if(node.getAttribute){String(node.getAttribute('srcset')||'').split(',').forEach(x=>add(x.trim().split(/\\s+/)[0]));}return out}",
   "function contextFor(node){let out=[];[node.alt,node.title,node.getAttribute&&node.getAttribute('aria-label')].forEach(v=>{if(v)out.push(v)});let root=node.parentElement;for(let d=0;root&&d<4;d++,root=root.parentElement){out.push(String(root.className||''),String(root.id||''),String(root.textContent||'').slice(0,600));}return out.join(' ')}",
   adapters,
-  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscPdfPreviewUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
+  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscArticlePdfUrl,rscPdfPreviewUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
   '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -32,12 +32,16 @@ try{
       T.rscRouteParts({doi:'10.1039/D6SC02478E',publisher:'rsc'}),
       T.rscRouteParts({doi:'10.1039/D6GC02452A',publisher:'rsc'}),
       T.rscArticleHtmlUrl({doi:'10.1039/D6SC02478E',publisher:'rsc'}),
-      T.rscArticleHtmlUrl({doi:'10.1039/D6GC02452A',publisher:'rsc'})
+      T.rscArticleHtmlUrl({doi:'10.1039/D6GC02452A',publisher:'rsc'}),
+      T.rscArticlePdfUrl({doi:'10.1039/D6SC02478E',publisher:'rsc'}),
+      T.rscArticlePdfUrl({doi:'10.1039/D6GC02452A',publisher:'rsc'})
     ]);
     assert.equal(rows[0].year,'2026');assert.equal(rows[0].code,'sc');
     assert.equal(rows[1].year,'2026');assert.equal(rows[1].code,'gc');
     assert.equal(rows[2],'https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc02478e');
     assert.equal(rows[3],'https://pubs.rsc.org/en/content/articlehtml/2026/gc/d6gc02452a');
+    assert.equal(rows[4],'https://pubs.rsc.org/en/content/articlepdf/2026/sc/d6sc02478e');
+    assert.equal(rows[5],'https://pubs.rsc.org/en/content/articlepdf/2026/gc/d6gc02452a');
   });
 
   await tc('RSC graphical abstract and Figure 1 remain separate',async()=>{
@@ -74,6 +78,15 @@ try{
     assert.ok(!result.candidates.some(url=>/\.pdf\.gif(?:$|[?#])/i.test(url)));
     assert.ok(source.includes("stage:'rsc_toc_candidate',event:'pdf_preview_rejected'"));
     assert.ok(source.includes("stage:'rsc_figure_candidate',event:'pdf_preview_rejected'"));
+  });
+
+  await tc('RSC remote article HTML recovery and deterministic PDF retry are wired',async()=>{
+    assert.ok(source.includes('async function rscRemoteVisualCandidates(job, trace)'));
+    assert.ok(source.includes("stage:'rsc_remote_html',event:'scan_complete'"));
+    assert.ok(source.includes("rscRemote=await rscRemoteVisualCandidates(job,trace)"));
+    assert.ok(source.includes("if(publisher==='rsc'){var deterministicRscPdf=rscArticlePdfUrl(job)"));
+    assert.ok(source.includes("/\\/content\\/articlepdf\\//.test(u)"));
+    assert.ok(source.includes("prior.status!=='stored'&&String(prior.revision||'')!==PRIVATE_PDF_CAPTURE_REVISION"));
   });
 
   await tc('Chem graphical abstract is isolated from numbered figures',async()=>{
@@ -166,7 +179,7 @@ try{
   await tc('capture protocol and core controller stay unchanged',async()=>{
     assert.ok(source.includes("var VERSION = '6.2.20'"));
     assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.41'"));
-    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261006-rsc-preview-reject-v12'"));
+    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261006-rsc-remote-html-pdf-v13'"));
     assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'"));
   });
 }finally{await browser.close()}
