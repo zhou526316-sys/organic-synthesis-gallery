@@ -67,13 +67,15 @@ jobs:
           GITHUB_PAGES_URL: https://zhou526316-sys.github.io/organic-synthesis-gallery/
           WORKER_SITE_URL: https://organic-synthesis-gallery.zhou526316.workers.dev/
           CUSTOM_SITE_URL: https://api.gczhouwld.com/
+          GALLERY_SITE_URL: https://gallery.gczhouwld.com/
         run: |
           node - <<'NODE'
-          const sites = [process.env.GITHUB_PAGES_URL, process.env.WORKER_SITE_URL, process.env.CUSTOM_SITE_URL];
+          const sites = [process.env.GITHUB_PAGES_URL, process.env.WORKER_SITE_URL, process.env.CUSTOM_SITE_URL, process.env.GALLERY_SITE_URL];
           const required = [
             ['site-feedback-widget', 'feedback widget'],
             ['user-search-summary', 'search results summary'],
             ['site-feedback-widget-position-v1', 'draggable feedback position'],
+            ['account-v3-head', 'bounded V3 account sync'],
           ];
           const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
