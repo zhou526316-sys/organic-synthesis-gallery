@@ -845,6 +845,18 @@ select {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+.figure-strip-empty {
+  min-height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 9px 12px;
+  border: 1px dashed #dfe5ee;
+  border-radius: 9px;
+  background: #fafbfc;
+  color: #8a93a3;
+  font-size: 11px;
+  text-align: center;
+}
 .figure-strip-shell {
   position: relative;
   display: block;
