@@ -22,15 +22,29 @@ async function preloadChineseTitleCache(): Promise<void> {
   }
 }
 
-const titleCachePreload = preloadChineseTitleCache();
+function firstContentReady(): Promise<void> {
+  return new Promise(resolve => {
+    let settled = false;
+    const finish = (): void => {
+      if (settled) return;
+      settled = true;
+      window.removeEventListener('gallery-first-content-rendered', finish);
+      resolve();
+    };
+    window.addEventListener('gallery-first-content-rendered', finish, { once: true });
+    window.setTimeout(finish, 3200);
+  });
+}
+
+const firstContent = firstContentReady();
 const mainReady = import('./main');
 
 void mainReady.finally(() => {
   restoreLegacyMediaListeners();
 }).then(async () => {
-  // Navigation is independent and latency-sensitive: load it before optional
-  // user/account/feedback modules so a slow dynamic chunk cannot postpone the
-  // basic page escape controls.
+  await firstContent;
+  // Everything below is useful after the first cards exist, but none of it
+  // should compete with the architecture/Hot-head requests needed to paint them.
   await import('./card-share');
   await import('./user-ui/page-navigation');
   await import('./user-ui/user-center-management');
@@ -45,8 +59,8 @@ void mainReady.finally(() => {
   await import('./nature-figure-fallbacks');
 });
 
-void Promise.allSettled([titleCachePreload, mainReady]).then(results => {
-  if (results[0]?.status === 'fulfilled') {
-    window.dispatchEvent(new CustomEvent('gallery-title-cache-updated'));
-  }
+void Promise.allSettled([firstContent, mainReady]).then(async results => {
+  if (results[0]?.status !== 'fulfilled' || results[1]?.status !== 'fulfilled') return;
+  await preloadChineseTitleCache();
+  window.dispatchEvent(new CustomEvent('gallery-title-cache-updated'));
 });
