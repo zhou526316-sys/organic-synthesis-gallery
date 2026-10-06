@@ -28,8 +28,9 @@ async function runStatements(env, statements) {
 }
 
 export function userLibraryV3ShadowEnabled(env) {
-  return flag(env?.USER_LIBRARY_V3_SHADOW_ENABLED)
-    && !flag(env?.USER_LIBRARY_V3_WRITE_ENABLED);
+  const publicWriteActive = flag(env?.USER_LIBRARY_V3_WRITE_ENABLED)
+    && !flag(env?.USER_LIBRARY_V3_WRITE_CANARY_ONLY);
+  return flag(env?.USER_LIBRARY_V3_SHADOW_ENABLED) && !publicWriteActive;
 }
 
 async function sourceMeta(env, userId) {
