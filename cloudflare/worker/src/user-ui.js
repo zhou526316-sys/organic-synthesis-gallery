@@ -3,16 +3,18 @@ import { normalizeDoi } from './media.js';
 import { readUserLibraryStateFromRows, shadowWriteUserLibraryState, userLibraryRowShadowEnabled } from './user-library-shadow.js';
 import { shadowWriteUserLibraryV3FromState, userLibraryV3ShadowEnabled } from './user-library-v3-shadow.js';
 import {
+  applyUserLibraryV3Mutation,
   readUserLibraryV3Delta,
   readUserLibraryV3Head,
   readUserLibraryV3Page,
   userLibraryV3ReadEnabled,
+  userLibraryV3WriteEnabled,
 } from './user-library-v3.js';
 import { markMaterializedVisitorPaperOpen, markSiteAnalyticsMaterializedUnhealthy, materializeSitePageViewEvent, materializeSitePageViewForActiveRead, siteAnalyticsMaterializedReadEnabled, siteAnalyticsMaterializedShadowEnabled } from './site-analytics-materialized.js';
 
 const FEEDBACK_KINDS = new Set(['toc', 'image', 'title', 'date', 'duplicate', 'classification', 'other']);
 const SITE_FEEDBACK_CATEGORIES = new Set(['general', 'search', 'ui', 'account', 'literature', 'other']);
-const ACCOUNT_MODES = new Set(['account-merge', 'account-save', 'account-pull', 'account-v3-head', 'account-v3-page', 'account-v3-delta']);
+const ACCOUNT_MODES = new Set(['account-merge', 'account-save', 'account-pull', 'account-v3-head', 'account-v3-page', 'account-v3-delta', 'account-v3-mutate']);
 const MAX_LIBRARY_STATE_BYTES = 1_500_000;
 
 function normalizeProfileId(value) {
@@ -208,18 +210,35 @@ async function safeAnalyticsShadowTask(env, ctx, taskFactory, label) {
 }
 
 async function readAccountLibraryState(env, userId) {
-  const legacyMeta = await env.DB.prepare(
-    'SELECT revision, updated_at FROM user_library_state WHERE user_id = ?'
-  ).bind(userId).first();
+  const v3Authority = userLibraryV3WriteEnabled(env);
+  const authorityMeta = v3Authority
+    ? await env.DB.prepare(
+        'SELECT revision, updated_at FROM user_library_v3_head WHERE user_id = ?'
+      ).bind(userId).first()
+    : await env.DB.prepare(
+        'SELECT revision, updated_at FROM user_library_state WHERE user_id = ?'
+      ).bind(userId).first();
 
-  const rowRead = await readUserLibraryStateFromRows(env, userId, legacyMeta);
+  const rowRead = await readUserLibraryStateFromRows(env, userId, authorityMeta);
   if (rowRead?.ready) {
     return {
       exists: Number(rowRead.revision || 0) > 0,
       revision: Number(rowRead.revision || 0),
       updatedAt: Number(rowRead.updatedAt || 0),
       state: rowRead.state || {},
-      readPath: 'rows',
+      readPath: v3Authority ? 'rows-v3-compat' : 'rows',
+    };
+  }
+
+  if (v3Authority) {
+    return {
+      exists:Boolean(authorityMeta),
+      revision:Number(authorityMeta?.revision || 0),
+      updatedAt:Number(authorityMeta?.updated_at || 0),
+      state:null,
+      readPath:'rows-v3-compat-unavailable',
+      unavailable:true,
+      fallbackReason:String(rowRead?.reason || 'row_read_unavailable'),
     };
   }
 
@@ -256,16 +275,27 @@ async function linkProfileToSession(env, profileId, session) {
 }
 
 async function v3ReadFreshness(env,userId,result) {
+  const head = result?.head || result;
+  const v3Revision = Number(head?.revision || 0);
+  const v3UpdatedAt = Number(head?.updatedAt || 0);
+  if (userLibraryV3WriteEnabled(env)) {
+    return {
+      fresh:true,
+      authority:'v3',
+      legacyRevision:null,
+      legacyUpdatedAt:null,
+      v3Revision,
+      v3UpdatedAt,
+    };
+  }
   const legacy = await env.DB.prepare(
     'SELECT revision, updated_at FROM user_library_state WHERE user_id = ?'
   ).bind(userId).first();
   const legacyRevision = Number(legacy?.revision || 0);
   const legacyUpdatedAt = Number(legacy?.updated_at || 0);
-  const head = result?.head || result;
-  const v3Revision = Number(head?.revision || 0);
-  const v3UpdatedAt = Number(head?.updatedAt || 0);
   return {
     fresh:legacyRevision===v3Revision && legacyUpdatedAt===v3UpdatedAt,
+    authority:'legacy',
     legacyRevision,legacyUpdatedAt,v3Revision,v3UpdatedAt,
   };
 }
@@ -275,6 +305,42 @@ async function accountState(env, payload, ctx) {
   if (!session) return { status: 401, body: { error: 'not_authenticated' } };
 
   const mode = String(payload?.mode || '');
+  if (mode === 'account-v3-mutate') {
+    if (!userLibraryV3WriteEnabled(env)) {
+      return { status:503, body:{ error:'user_library_v3_write_disabled', writeEnabled:false } };
+    }
+    try {
+      const result = await applyUserLibraryV3Mutation(env,session.user_id,{
+        expectedRevision:payload?.expectedRevision,
+        globalState:payload?.globalState,
+        operations:payload?.operations,
+      });
+      if (result?.disabled) return { status:503, body:{ error:result.reason, writeEnabled:false } };
+      if (result?.conflict) {
+        return { status:409, body:{
+          error:'user_library_v3_revision_conflict',
+          currentRevision:Number(result.currentRevision || 0),
+          writeEnabled:true,
+        }};
+      }
+      return { status:200, body:{ account:{
+        userId:session.user_id,
+        readPath:'v3-mutate',
+        writeEnabled:true,
+        revision:Number(result.revision || 0),
+        updatedAt:Number(result.updatedAt || 0),
+        paperCount:Number(result.paperCount || 0),
+        metadataCount:Number(result.metadataCount || 0),
+        operationCount:Number(result.operationCount || 0),
+        changeFloorRevision:Number(result.changeFloorRevision || 0),
+      }}};
+    } catch (error) {
+      const message=String(error?.message || error).slice(0,180);
+      const clientError=/^user_library_v3_(?:mutation|expected|paper|metadata|global|too_many|duplicate|noop|operation)/.test(message);
+      return { status:clientError?400:500, body:{ error:message || 'user_library_v3_mutation_failed' } };
+    }
+  }
+
   if (mode === 'account-v3-head' || mode === 'account-v3-page' || mode === 'account-v3-delta') {
     if (!userLibraryV3ReadEnabled(env)) {
       return { status: 503, body: { error:'user_library_v3_read_disabled', readPath:'v3-disabled' } };
@@ -285,7 +351,7 @@ async function accountState(env, payload, ctx) {
         if (!head?.ready) return { status:503, body:{ error:String(head?.reason || 'user_library_v3_read_unavailable') } };
         const freshness=await v3ReadFreshness(env,session.user_id,head);
         if(!freshness.fresh) return { status:409, body:{ error:'user_library_v3_not_fresh',...freshness } };
-        return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-head', ...head } } };
+        return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-head', writeEnabled:userLibraryV3WriteEnabled(env), ...head } } };
       }
       if (mode === 'account-v3-page') {
         const page = await readUserLibraryV3Page(env,session.user_id,{
@@ -295,7 +361,7 @@ async function accountState(env, payload, ctx) {
         if (!page?.ready) return { status:503, body:{ error:String(page?.reason || 'user_library_v3_read_unavailable') } };
         const freshness=await v3ReadFreshness(env,session.user_id,page);
         if(!freshness.fresh) return { status:409, body:{ error:'user_library_v3_not_fresh',...freshness } };
-        return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-page', ...page } } };
+        return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-page', writeEnabled:userLibraryV3WriteEnabled(env), ...page } } };
       }
       const delta = await readUserLibraryV3Delta(env,session.user_id,{
         sinceRevision: payload?.sinceRevision == null ? 0 : Number(payload.sinceRevision),
@@ -306,7 +372,7 @@ async function accountState(env, payload, ctx) {
       if (!delta?.ready) return { status:503, body:{ error:String(delta?.reason || 'user_library_v3_read_unavailable') } };
       const freshness=await v3ReadFreshness(env,session.user_id,delta);
       if(!freshness.fresh) return { status:409, body:{ error:'user_library_v3_not_fresh',...freshness } };
-      return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-delta', ...delta } } };
+      return { status:200, body:{ account:{ userId:session.user_id, readPath:'v3-delta', writeEnabled:userLibraryV3WriteEnabled(env), ...delta } } };
     } catch (error) {
       return { status:400, body:{ error:String(error?.message || error).slice(0,180) } };
     }
@@ -317,6 +383,14 @@ async function accountState(env, payload, ctx) {
   const current = await readAccountLibraryState(env, session.user_id);
 
   if (mode === 'account-pull') {
+    if (current.unavailable) {
+      return { status:503, body:{
+        error:'user_library_compat_read_unavailable',
+        revision:current.revision,
+        readPath:current.readPath,
+        reason:current.fallbackReason,
+      }};
+    }
     return {
       status: 200,
       body: {
@@ -329,6 +403,14 @@ async function accountState(env, payload, ctx) {
         },
       },
     };
+  }
+
+  if (userLibraryV3WriteEnabled(env) && (mode === 'account-save' || mode === 'account-merge')) {
+    return { status:409, body:{
+      error:'user_library_client_upgrade_required',
+      currentRevision:Number(current.revision || 0),
+      writePath:'v3',
+    }};
   }
 
   const incomingJson = stateJson(payload?.state);
