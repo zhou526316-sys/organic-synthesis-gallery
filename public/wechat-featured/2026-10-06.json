@@ -10,12 +10,12 @@
   },
   "quick_points": [
     {
-      "label": "先看作者真正撞上的问题",
-      "text": "烷基羧酸和烷基硼酸都能被氧化成短寿命烷基自由基，但“都能生成”并不等于“会彼此偶联”。原文 Fig. 1e 把矛盾直接摆出来：普通电解容易走向过氧化、自偶联和电极钝化；交替极性先把这些失败通道压下去，但交叉偶联仍然很低。"
+      "label": "先看反应本身",
+      "text": "烷基羧酸和烷基硼酸分别提供两段烷基骨架，目标是在电化学条件下把它们直接拼成新的 C(sp³)–C(sp³) 键。上面的 Fig. 1e 同时把目标产物和主要失败通道摆在一起：这不是“能不能生成自由基”的问题，而是两类短寿命自由基能不能在同一时间窗口出现。"
     },
     {
-      "label": "全文真正解决的是“生成节奏”",
-      "text": "后面的 TMAF、前体物种、电极材料和波形看似是不同优化，其实都围绕同一件事：把两类自由基的生成与失活拉进同一个时间窗口。读懂这一点，后面的循环伏安、¹⁹F NMR、底物拓展和后续转化就都能串起来。"
+      "label": "再看作者真正要解决的问题",
+      "text": "普通电解会把体系推向过氧化、自偶联和电极钝化；交替极性首先把这些损失通道压下去，但交叉偶联仍然很低。后面的 TMAF、前体物种、电极材料和波形优化，其实都围绕同一件事：把两类自由基的生成与失活重新调到同一个节奏。"
     }
   ],
   "figures": [
@@ -28,42 +28,56 @@
     {
       "id": "fig1",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-problem.png",
-      "caption": "原文 Fig. 1e｜先看作者真正面对的失败模式：普通电解容易出现自由基过氧化、脱羧/脱硼副反应和电极钝化；交替极性虽然明显改善这些问题，但目标交叉偶联仍然很低，说明“让两类自由基同步生成”才是下一步核心。"
+      "caption": "原文 Fig. 1e｜先看作者真正面对的失败模式：普通电解容易出现自由基过氧化、脱羧/脱硼副反应和电极钝化；交替极性虽然明显改善这些问题，但目标交叉偶联仍然很低，说明“让两类自由基同步生成”才是下一步核心。",
+      "display_width_pct": 100
     },
     {
       "id": "fig2_activation",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-redox-species.png",
-      "caption": "原文 Fig. 2b｜TMAF 不是普通添加剂，而是在改前体的物种形态：羧酸变成约 0.8 V 可氧化的羧酸盐，硼酸则在适量氟离子下形成氧化电位接近的单氟/二氟硼酸盐；氟过量形成 BF₃ 物种后又重新失配。"
+      "caption": "原文 Fig. 2b｜TMAF 不是普通添加剂，而是在改前体的物种形态：羧酸变成约 0.8 V 可氧化的羧酸盐，硼酸则在适量氟离子下形成氧化电位接近的单氟/二氟硼酸盐；氟过量形成 BF₃ 物种后又重新失配。",
+      "display_width_pct": 88
     },
     {
       "id": "fig2_redox",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-redox-evidence.png",
-      "caption": "原文 Fig. 2d–f｜循环伏安与 ¹⁹F NMR 把“氧化还原匹配”变成可观测的证据：不同含氟硼物种的出现与氧化波移动相互对应，说明交叉选择性首先取决于前体物种与电位是否被调到同一窗口。"
-    },
-    {
-      "id": "fig3_electrode",
-      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-electrode.png",
-      "caption": "原文 Fig. 3a–c｜电极材料与波形负责两个不同失败通道：碳电极把自由基进一步氧化推到更高电位；交替极性的还原半周期则帮助抑制电极持续钝化。"
+      "caption": "原文 Fig. 2d–f｜循环伏安与 ¹⁹F NMR 把“氧化还原匹配”变成可观测的证据：不同含氟硼物种的出现与氧化波移动相互对应，说明交叉选择性首先取决于前体物种与电位是否被调到同一窗口。",
+      "display_width_pct": 100
     },
     {
       "id": "fig3_mechanism",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-mechanism.png",
-      "caption": "原文 Fig. 3d｜作者提出的整体图景：两类被调到相近氧化窗口的前体分别生成短寿命自由基；当两边生成通量接近时，交叉偶联才有机会压过各自的自偶联与过氧化通道。"
+      "caption": "原文 Fig. 3d｜作者提出的整体图景：两类被调到相近氧化窗口的前体分别生成短寿命自由基；当两边生成通量接近时，交叉偶联才有机会压过各自的自偶联与过氧化通道。",
+      "display_width_pct": 96
     },
     {
       "id": "fig4_scope",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-scope.png",
-      "caption": "原文 Fig. 4a（底物拓展局部）｜方法并不只适用于模型底物：线性脂肪链、酯、烯烃、缩醛/醚、环烷基、芳基氟以及较拥挤的萜类骨架都能进入这类 C(sp³)–C(sp³) 偶联。不同底物收率差异也提醒我们，物种平衡和自由基生成速度仍然是适用边界。"
+      "caption": "原文 Fig. 4a（底物拓展局部）｜方法并不只适用于模型底物：线性脂肪链、酯、烯烃、缩醛/醚、环烷基、芳基氟以及较拥挤的萜类骨架都能进入这类 C(sp³)–C(sp³) 偶联。不同底物收率差异也提醒我们，物种平衡和自由基生成速度仍然是适用边界。",
+      "display_width_pct": 100
     },
     {
       "id": "fig4_hydroboration",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-hydroboration.png",
-      "caption": "原文 Fig. 4（上游衔接）｜烷基硼酸可以由商业烯烃先做 Brown 硼氢化得到，除去溶剂后无需色谱纯化即可进入电解偶联。于是从路线设计上，这套方法把“羧酸 + 硼酸”进一步前移成了形式上的“羧酸 + 烯烃”片段偶联。"
+      "caption": "原文 Fig. 4（上游衔接）｜烷基硼酸可以由商业烯烃先做 Brown 硼氢化得到，除去溶剂后无需色谱纯化即可进入电解偶联。于是从路线设计上，这套方法把“羧酸 + 硼酸”进一步前移成了形式上的“羧酸 + 烯烃”片段偶联。",
+      "display_width_pct": 100
     },
     {
       "id": "fig4_tandem",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-diversification.png",
-      "caption": "原文 Fig. 4b｜合成价值不仅是“做出一个偶联产物”：电解先拼出新的烷基–烷基骨架，保留下来的芳基卤素还可以继续接 Suzuki–Miyaura 或 Buchwald–Hartwig 等后续转化，把这一步变成复杂化的前端模块。"
+      "caption": "原文 Fig. 4b｜合成价值不仅是“做出一个偶联产物”：电解先拼出新的烷基–烷基骨架，保留下来的芳基卤素还可以继续接 Suzuki–Miyaura 或 Buchwald–Hartwig 等后续转化，把这一步变成复杂化的前端模块。",
+      "display_width_pct": 100
+    },
+    {
+      "id": "fig3_alternating",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-alternating-polarity.png",
+      "display_width_pct": 92,
+      "caption": "原文 Fig. 3b–c｜连续只做氧化扫描时，电流随扫描次数明显衰减，说明电极表面不断钝化；加入反向扫描后，氧化响应能够维持。交替极性的意义不是“换一种电流形式”，而是周期性修复一个正在失活的电极界面。"
+    },
+    {
+      "id": "fig3_electrode_material",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-electrode-material.png",
+      "display_width_pct": 68,
+      "caption": "原文 Fig. 3a｜玻碳与铂对有机硼物种的进一步氧化窗口不同。玻碳把第二次氧化推到更高电位，因此刚生成的烷基自由基更不容易继续被氧化成碳正离子。"
     }
   ],
   "sections": [
@@ -83,7 +97,14 @@
         "作者先照着 Kolbe 电解的思路做普通直流恒流电解。结果并不是“反应慢一点”，而是反应走向完全错误：自由基继续被氧化成碳正离子，随后形成醇、醛等副产物；有机硼来源物种还会在电极表面接枝，让电极越来越钝。",
         "把电极极性按固定频率来回切换后，质量平衡明显改善，过氧化和电极钝化都减轻，自由基终于能持续生成。但这时目标交叉产物仍不到 5%，两个自偶联产物反而最多。这一步非常关键，因为它把问题进一步缩小了：波形已经解决“有没有自由基”，剩下的是“两种自由基是不是同时出现”。"
       ],
-      "figures": []
+      "figures": [
+        "fig3_alternating"
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "fig3_alternating"
+        ]
+      }
     },
     {
       "eyebrow": "第三层｜两个反向实验把答案指向氧化电位",
@@ -94,7 +115,12 @@
       ],
       "figures": [
         "fig2_activation"
-      ]
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "fig2_activation"
+        ]
+      }
     },
     {
       "eyebrow": "第四层｜TMAF 把两类前体调到同一个氧化窗口",
@@ -105,7 +131,12 @@
       ],
       "figures": [
         "fig2_redox"
-      ]
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "fig2_redox"
+        ]
+      }
     },
     {
       "eyebrow": "第五层｜水为什么会破坏这个窗口",
@@ -124,8 +155,13 @@
         "另一方面，连续做氧化扫描时，玻碳上的电流也会一轮轮下降，说明表面逐渐被钝化。插入还原扫描后，氧化电流能够维持。于是 RVC/玻碳和交替极性不是重复解决同一件事：前者扩大自由基“存在但还没被继续氧化”的电位窗口，后者维护电极表面的持续工作能力。"
       ],
       "figures": [
-        "fig3_electrode"
-      ]
+        "fig3_electrode_material"
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "fig3_electrode_material"
+        ]
+      }
     },
     {
       "eyebrow": "第七层｜最终的交叉选择性从哪里来",
@@ -136,7 +172,12 @@
       ],
       "figures": [
         "fig3_mechanism"
-      ]
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "fig3_mechanism"
+        ]
+      }
     },
     {
       "eyebrow": "第八层｜哪些实验让自由基图景更可信",
@@ -157,7 +198,12 @@
       ],
       "figures": [
         "fig4_scope"
-      ]
+      ],
+      "figures_after_paragraph": {
+        "2": [
+          "fig4_scope"
+        ]
+      }
     },
     {
       "eyebrow": "第十层｜合成上真正买来了什么",
@@ -170,7 +216,15 @@
       "figures": [
         "fig4_hydroboration",
         "fig4_tandem"
-      ]
+      ],
+      "figures_after_paragraph": {
+        "1": [
+          "fig4_hydroboration"
+        ],
+        "2": [
+          "fig4_tandem"
+        ]
+      }
     },
     {
       "eyebrow": "第十一层｜边界在哪里",
@@ -200,5 +254,5 @@
     "description": "今日精选使用已审核的 2.35:1 成品封面：上部为 Nature Chemistry 原文 Fig. 1e，底部为深蓝标题安全区，避免微信白字压在浅色反应图上。"
   },
   "lead_figure_id": "fig1",
-  "lead_figure_position": "after_quick_points"
+  "lead_figure_position": "before_quick_points"
 }
