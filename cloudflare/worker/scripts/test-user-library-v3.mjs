@@ -668,6 +668,58 @@ test('per-user V3 authority survives global write rollback without reviving lega
   assert.equal(JSON.parse(row.paper_state_json).note,'v3');
 });
 
+test('canary-only V3 write mode exposes write capability only to the isolated user',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  addUser(db,'u-canary');
+  addUser(db,'u-normal');
+
+  const hash=async token=>{
+    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));
+    return [...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+  };
+  const canaryToken='canary-only-token';
+  const normalToken='normal-user-token';
+  db.sqlite.prepare('INSERT INTO user_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)')
+    .run(await hash(canaryToken),'u-canary',Date.now()+60_000);
+  db.sqlite.prepare('INSERT INTO user_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)')
+    .run(await hash(normalToken),'u-normal',Date.now()+60_000);
+
+  const env=envFor(db,{
+    USER_LIBRARY_V3_WRITE_ENABLED:'1',
+    USER_LIBRARY_V3_WRITE_CANARY_ONLY:'1',
+    USER_LIBRARY_V3_WRITE_CANARY_USER_ID:'u-canary',
+  });
+
+  const canaryHead=await readerCounts(env,{mode:'account-v3-head',sessionToken:canaryToken});
+  assert.equal(canaryHead.status,200);
+  assert.equal(canaryHead.body.account.writeEnabled,true);
+  assert.equal(canaryHead.body.account.writeAuthority,'legacy');
+
+  const normalHead=await readerCounts(env,{mode:'account-v3-head',sessionToken:normalToken});
+  assert.equal(normalHead.status,200);
+  assert.equal(normalHead.body.account.writeEnabled,false);
+  assert.equal(normalHead.body.account.writeAuthority,'legacy');
+
+  const blocked=await readerCounts(env,{
+    mode:'account-v3-mutate',sessionToken:normalToken,expectedRevision:0,
+    globalState:{statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},followedSearches:[],searchHistory:[],hideRead:false},
+    operations:[{paperKey:'normal',paperState:{favorite:true}}],
+  });
+  assert.equal(blocked.status,503);
+  assert.equal(blocked.body.error,'user_library_v3_write_disabled');
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_authority WHERE user_id='u-normal'").get().c,0);
+
+  const allowed=await readerCounts(env,{
+    mode:'account-v3-mutate',sessionToken:canaryToken,expectedRevision:0,
+    globalState:{statuses:[],quickTerms:[],collections:[],aliases:[],actionStyles:{},followedSearches:[],searchHistory:[],hideRead:false},
+    operations:[{paperKey:'canary',paperState:{favorite:true}}],
+  });
+  assert.equal(allowed.status,200);
+  assert.equal(allowed.body.account.revision,1);
+  assert.equal(allowed.body.account.writeAuthority,'v3');
+  assert.equal(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_authority WHERE user_id='u-canary'").get().c,1);
+});
+
 test('V3 writes are independently disabled and require an atomic D1 batch',async t=>{
   const db=new D1();t.after(()=>db.close());addUser(db);
   const disabled=envFor(db,{USER_LIBRARY_V3_WRITE_ENABLED:'0'});
