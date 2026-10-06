@@ -61,6 +61,85 @@
     });
     return rows.sort(function(a,b){return b.score-a.score;});
   }
+  function rscDoiFromTextOrHref(value) {
+    var match=String(value||'').toLowerCase().match(/10\.1039\/[a-z0-9._()\/+\-]+/i);
+    return match?normalizeDoi(match[0]):'';
+  }
+
+  function rscIssuePageUrls(job,doc,baseUrl) {
+    if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
+    var scope=doc||document,parts=rscRouteParts(job),urls=[];
+    function add(raw){
+      var url=normalizeUrl(raw,baseUrl||location.href);
+      if(!url||urls.indexOf(url)>=0)return;
+      try{
+        var u=new URL(url,baseUrl||location.href);
+        if(u.hostname.toLowerCase()!=='pubs.rsc.org')return;
+        if(!/(?:\/issue\/|\/journals\/journalissues\/)/i.test(u.pathname))return;
+      }catch(_){return;}
+      urls.push(url);
+    }
+    if(scope&&scope.querySelectorAll){
+      Array.from(scope.querySelectorAll('a[href],link[href]')).forEach(function(node){add(node.getAttribute('href'));});
+      var volume=String((scope.querySelector('meta[name="citation_volume" i]')||{}).content||'').trim();
+      var issue=String((scope.querySelector('meta[name="citation_issue" i]')||{}).content||'').trim();
+      if(parts&&/^\d+$/.test(volume)&&/^\d+$/.test(issue))add('https://pubs.rsc.org/'+parts.code+'/issue/'+volume+'/'+issue);
+    }
+    return urls;
+  }
+
+  function rscIssueCardForDoiAnchor(anchor,doi) {
+    var node=anchor&&anchor.parentElement;
+    for(var depth=0;node&&depth<9;depth+=1,node=node.parentElement){
+      if(!node.querySelectorAll)continue;
+      var images=node.querySelectorAll('img,picture,source,object[type^="image"]');
+      if(!images.length)continue;
+      var found=new Set();
+      Array.from(node.querySelectorAll('a[href],[data-doi]')).forEach(function(link){
+        var value=rscDoiFromTextOrHref((link.getAttribute&&link.getAttribute('href')||'')+' '+(link.getAttribute&&link.getAttribute('data-doi')||'')+' '+(link.textContent||''));
+        if(value)found.add(value);
+      });
+      if(found.size===1&&found.has(doi))return node;
+      if(found.size>1)return null;
+    }
+    return null;
+  }
+
+  function rscIssueTocCandidatesFromDocument(job,doc,baseUrl) {
+    if(!doc||String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
+    var doi=normalizeDoi(job&&job.doi),suffix=doi.split('/')[1]||'',rows=[],seen=new Set();
+    if(!doi||!doc.querySelectorAll)return rows;
+    var anchors=Array.from(doc.querySelectorAll('a[href],[data-doi]')).filter(function(anchor){
+      var raw=(anchor.getAttribute&&anchor.getAttribute('href')||'')+' '+(anchor.getAttribute&&anchor.getAttribute('data-doi')||'')+' '+(anchor.textContent||'');
+      var bound=rscDoiFromTextOrHref(raw);
+      return bound===doi||(!bound&&String(raw).toLowerCase().indexOf(suffix)>=0);
+    });
+    anchors.forEach(function(anchor){
+      var card=rscIssueCardForDoiAnchor(anchor,doi);if(!card)return;
+      var assets=[];
+      Array.from(card.querySelectorAll('img,source,object[type^="image"]')).forEach(function(node){
+        var context=contextFor(node)+' '+String(card.textContent||'').slice(0,1000);
+        articleFigureImageUrls(node,baseUrl||location.href).forEach(function(url,rank){
+          if(!url||rscPdfPreviewUrl(url)||reject(context,url)||seen.has(url))return;
+          if(!candidateBelongsToJob(url,job))return;
+          assets.push({url:url,node:node,rank:rank,context:context});
+        });
+      });
+      var unique=new Map();assets.forEach(function(x){if(!unique.has(x.url))unique.set(x.url,x);});
+      var list=Array.from(unique.values());
+      list.forEach(function(item,index){
+        var strong=/graphical\s+abstract|visual\s+abstract|table\s+of\s+contents|toc\s+(?:graphic|image)|abstract\s+(?:graphic|image)/i.test(item.context);
+        if(!strong&&list.length!==1)return;
+        seen.add(item.url);
+        rows.push({url:item.url,kind:'official',assetType:'graphical_abstract',
+          score:(strong?970:910)-item.rank-index,text:'RSC issue card graphical abstract',
+          source:strong?'rsc_issue_card_graphic':'rsc_issue_card_single_image',
+          element:item.node&&item.node.tagName&&item.node.tagName.toLowerCase()==='img'?item.node:null});
+      });
+    });
+    return rows.sort(function(a,b){return b.score-a.score;});
+  }
+
 
   function elsevierGraphicalAbstractCandidates(job, root, baseUrl) {
     if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='elsevier')return [];
