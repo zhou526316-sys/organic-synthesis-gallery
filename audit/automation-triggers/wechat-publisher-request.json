@@ -1,7 +1,7 @@
 {
-  "requestId": "wechat-daily-2026-10-06-reviewed-gate-v1",
-  "requestedAt": "2026-10-06T05:56:00Z",
+  "requestId": "wechat-daily-2026-10-06-user-visual-reference-final-v2",
+  "requestedAt": "2026-10-06T06:22:00Z",
   "publicationDate": "2026-10-06",
   "action": "sync_daily_draft",
-  "reason": "Terminal sync only after the new pre-draft editorial gate passed. Reviewed sources are pinned by blob SHA in audit/wechat-working/2026-10-06-review-gate.json; text-only and images-only artifacts both passed. Retrospective cover no longer depends on the corrupt local JPEG and is composed from the verified Nature publisher raster. Require draft/get readback and preview before considering transport QA complete."
+  "reason": "Terminal sync after visual self-review. Hyster: restore user-confirmed blue FRET/PLP* cover and use full horizontal Nature Fig. 1c for the opening body image. Nature Chemistry: replace sparse Fig. 1c cover with full Fig. 1e direct-vs-alternating-polarity panel plus a dark title-safe band. Gate fingerprints match current source blobs. No TinyFish dependency; require WeChat draft/get readback."
 }
