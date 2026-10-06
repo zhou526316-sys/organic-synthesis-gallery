@@ -45,11 +45,25 @@ jobs:
           if (!maintenance.includes("! grep -Eq '^(main|\\[assets\\]|\\[vars\\]|\\[ai\\]|\\[triggers\\]|\\[\\[r2_buckets\\]\\])' wrangler.user-ui.toml")) fail('maintenance config deployability guard missing');
 
           const deploys=[...canonical.matchAll(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)];
-          if (deploys.length!==3) fail('canonical workflow must have dry-run, primary deploy, and one conditional rollback deploy');
-          const rollback=canonical.split('- name: Roll back literature indexed read on canary failure')[1]
+          if (deploys.length!==5) fail('canonical workflow must have dry-run, primary deploy, indexed rollback, V3 promotion, and V3 rollback deploys');
+
+          const indexedRollback=canonical.split('- name: Roll back literature indexed read on canary failure')[1]
             ?.split('- name: Preserve literature indexed read activation report')[0] || '';
-          if (!rollback.includes("if: steps.literature_index_read_canary.outcome == 'failure'")) fail('indexed-read rollback must be failure-only');
-          if ((rollback.match(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)||[]).length!==1) fail('rollback must contain exactly one deploy');
+          if (!indexedRollback.includes("if: steps.literature_index_read_canary.outcome == 'failure'")) fail('indexed-read rollback must be failure-only');
+          if ((indexedRollback.match(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)||[]).length!==1) fail('indexed rollback must contain exactly one deploy');
+
+          const v3Promote=canonical.split('- name: Promote V3 write activation to all users')[1]
+            ?.split('- name: Roll back V3 write activation on authority/canary failure')[0] || '';
+          if (!v3Promote.includes("steps.user_library_v3_write_preflight.outputs.activation_mode == 'activate'")) fail('V3 promotion must be first-activation only');
+          if (!v3Promote.includes("steps.user_library_v3_write_canary.outcome == 'success'")) fail('V3 promotion must require successful isolated canary');
+          if ((v3Promote.match(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)||[]).length!==1) fail('V3 promotion must contain exactly one deploy');
+
+          const v3Rollback=canonical.split('- name: Roll back V3 write activation on authority/canary failure')[1]
+            ?.split('- name: Clean up isolated V3 write canary account')[0] || '';
+          if (!v3Rollback.includes("steps.user_library_v3_write_preflight.outputs.activation_mode == 'activate'")) fail('V3 rollback must be first-activation only');
+          if (!v3Rollback.includes("user_library_v3_write_canary.outcome == 'failure'")) fail('V3 rollback must react to canary failure');
+          if (!v3Rollback.includes("user_library_v3_write_promote.outcome == 'failure'")) fail('V3 rollback must react to promotion failure');
+          if ((v3Rollback.match(/npx\s+wrangler\s+deploy\b[^\n]*--config\s+wrangler\.frontend\.toml/g)||[]).length!==1) fail('V3 rollback must contain exactly one deploy');
           for (const required of [
             'Canonical production Worker deployment authority',
             'PDF_R2_BUCKET: organic-synthesis-gallery-private-pdf',
