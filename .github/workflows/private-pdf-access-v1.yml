@@ -13,7 +13,6 @@ on:
       - 'src/private-pdf-access.ts'
       - 'src/bootstrap.ts'
       - 'public/private-pdf-owner-setup.html'
-      - 'public/pdf/**'
       - 'tests/private-pdf-access-browser.mjs'
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/private-pdf-access-v1.yml'
@@ -27,7 +26,6 @@ on:
       - 'src/private-pdf-access.ts'
       - 'src/bootstrap.ts'
       - 'public/private-pdf-owner-setup.html'
-      - 'public/pdf/**'
       - 'tests/private-pdf-access-browser.mjs'
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/private-pdf-access-v1.yml'
@@ -44,7 +42,7 @@ jobs:
         with: {fetch-depth: 0}
       - uses: actions/setup-node@v4
         with: {node-version: 22}
-      - name: Confirm unrelated literature and release rules are untouched
+      - name: Confirm unrelated production rules and media collector are untouched
         run: |
           set -euo pipefail
           BASE="$(git merge-base HEAD origin/main)"
@@ -54,7 +52,8 @@ jobs:
             docs/literature-scope-contract.md docs/literature-update-protocol.md \
             .github/workflows/literature-audit.yml .github/workflows/github-pages.yml \
             .github/workflows/new-body-continuous.yml \
-            public/papers.gz.b64 public/rolling-supplement.json cloudflare/worker/src/article-summary.js
+            public/papers.gz.b64 public/rolling-supplement.json cloudflare/worker/src/article-summary.js \
+            cloudflare/worker/src/local-captures.js cloudflare/worker/src/media.js
           ! git diff "$BASE" HEAD -- . ':!audit/**' | grep -F 'wuliangdao@njfu.edu.cn'
           python - <<'PY'
           import pathlib, subprocess
@@ -99,7 +98,6 @@ jobs:
           npm install --no-audit --no-fund
           npm run build
           test -s dist/private-pdf-owner-setup.html
-          test -s dist/pdf/index.html
       - name: Install isolated Chromium
         run: |
           npm install --no-save --no-package-lock playwright
