@@ -186,6 +186,7 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   const mutation = normalizeMutation(input);
   const now = integer(nowValue, 1, 'user_library_v3_updated_at_invalid');
   const current = await headRow(env, userId);
+  const currentShape = await shapeRow(env,userId);
   const currentRevision = Number(current?.revision || 0);
   if (mutation.expectedRevision !== currentRevision) return conflict(currentRevision);
 
@@ -208,6 +209,8 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   const globalJson = mutation.hasGlobal ? mutation.globalJson : currentGlobalJson;
   const globalRevision = mutation.hasGlobal ? nextRevision : Number(current?.global_revision || 0);
   const floor = Number(current?.change_floor_revision || 0);
+  const papersSplit = currentShape ? Number(currentShape.papers_split || 0)===1 : true;
+  const metadataSplit = currentShape ? Number(currentShape.metadata_split || 0)===1 : true;
   const statements = [
     env.DB.prepare(`
       INSERT INTO user_library_v3_commits (user_id,revision,expected_revision,updated_at)
@@ -243,6 +246,16 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
       op.paperPresent?1:0,op.paperStateJson,op.metadataPresent?1:0,op.metadataJson,now,
     ));
   });
+
+  statements.push(env.DB.prepare(`
+    INSERT INTO user_library_v3_shape (user_id,papers_split,metadata_split,revision)
+    VALUES (?,?,?,?)
+    ON CONFLICT(user_id) DO UPDATE SET
+      papers_split=excluded.papers_split,
+      metadata_split=excluded.metadata_split,
+      revision=excluded.revision
+    WHERE user_library_v3_shape.revision < excluded.revision
+  `).bind(userId,papersSplit?1:0,metadataSplit?1:0,nextRevision));
 
   if (current) {
     statements.push(env.DB.prepare(`
