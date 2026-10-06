@@ -766,7 +766,7 @@ jobs:
           const passes=[];
           for(let attempt=1;attempt<=4&&passes.length<2;attempt+=1){
             status=await call('/api/admin/user-library-shadow/status');
-            if(status.legacyUsers!==status.shadowHeads||status.revisionMismatches!==0){
+            if(status.legacyUsers!==status.legacyShadowHeads||status.revisionMismatches!==0){
               await new Promise(resolve=>setTimeout(resolve,750));
               continue;
             }
@@ -786,10 +786,17 @@ jobs:
             }
             const after=await call('/api/admin/user-library-shadow/status');
             const stable=status.legacyUsers===after.legacyUsers
-              &&status.shadowHeads===after.shadowHeads
+              &&status.legacyShadowHeads===after.legacyShadowHeads
               &&after.revisionMismatches===0
               &&after.readPathActive===true;
-            const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,shadowHeads:after.shadowHeads,paperRows:after.paperRows};
+            const pass={
+              stable,checked,mismatched,reasons,
+              legacyUsers:after.legacyUsers,
+              legacyShadowHeads:after.legacyShadowHeads,
+              v3CompatHeads:after.v3CompatHeads,
+              shadowHeads:after.shadowHeads,
+              paperRows:after.paperRows,
+            };
             console.log(JSON.stringify({userLibraryShadowComparisonAttempt:attempt,...pass}));
             if(stable&&mismatched===0&&checked===after.legacyUsers) passes.push(pass);
             if(passes.length<2) await new Promise(resolve=>setTimeout(resolve,750));
@@ -804,6 +811,8 @@ jobs:
             schemaVersion:1,phase:'D3b-user-library-row-read-live',ok:true,readPathActive:true,
             legacyUsers:Number(finalStatus.legacyUsers||0),
             shadowHeads:Number(finalStatus.shadowHeads||0),
+            legacyShadowHeads:Number(finalStatus.legacyShadowHeads||0),
+            v3CompatHeads:Number(finalStatus.v3CompatHeads||0),
             paperRows:Number(finalStatus.paperRows||0),
             revisionMismatches:Number(finalStatus.revisionMismatches||0),
             backfillComplete:finalStatus.backfill?.complete===true,
