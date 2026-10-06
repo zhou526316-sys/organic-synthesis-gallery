@@ -310,11 +310,14 @@ async function accountState(env, payload, ctx) {
       return { status:503, body:{ error:'user_library_v3_write_disabled', writeEnabled:false } };
     }
     try {
-      const result = await applyUserLibraryV3Mutation(env,session.user_id,{
+      const mutationInput={
         expectedRevision:payload?.expectedRevision,
-        globalState:payload?.globalState,
         operations:payload?.operations,
-      });
+      };
+      if (payload && Object.prototype.hasOwnProperty.call(payload,'globalState')) {
+        mutationInput.globalState=payload.globalState;
+      }
+      const result = await applyUserLibraryV3Mutation(env,session.user_id,mutationInput);
       if (result?.disabled) return { status:503, body:{ error:result.reason, writeEnabled:false } };
       if (result?.conflict) {
         return { status:409, body:{
