@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Organic Synthesis Gallery TOC Mainline
 // @namespace    https://zhou526316-sys.github.io/organic-synthesis-gallery/
-// @version      6.2.36
+// @version      6.2.37
 // @description  Runs the live TOC backlog in the authenticated browser, uploads verified visuals to R2, and records per-DOI diagnostic traces.
 // @author       Organic Synthesis Gallery
 // @match        https://gallery.gczhouwld.com/*
@@ -50,12 +50,12 @@
   var IMMEDIATE_RESTART_REVISION = '20261001-immediate-restart-v3';
   var MISSING_CAPTURE_REVISION = '20261006-oct1-bundle-v7';
   var QUEUE_COVERAGE_REVISION = '20261006-queue-coverage-v9';
-  var PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11';
+  var PUBLISHER_MEDIA_REVISION = '20261006-rsc-elsevier-ccs-v12';
   var PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4';
   var ARCHITECTURE_MEMBERSHIP_REVISION = '20261004-membership-shadow-v1';
   var RECENT_FULL_CAPTURE_REVISION = '20261006-oct1-all-media-v1';
   var RECENT_FULL_CAPTURE_CUTOFF = '2026-10-01';
-  var INSTALL_REVISION = '6.2.36';
+  var INSTALL_REVISION = '6.2.37';
   var STALE_CONTROLLER_TAKEOVER_REVISION = '20261006-stale-controller-takeover-v1';
   var MANUAL_RUN_KEY = 'osg-toc-v6:manual-from-head-v3';
   var manualExecution = null;
@@ -2095,6 +2095,15 @@ function embeddedJobDois(value) {
     return {block:block,label:labels[0],caption:(numbered[0]||texts[0]||own).slice(0,600),official:false};
   }
 
+  function isRscPdfPagePreviewUrl(value) {
+    try {
+      var url=new URL(String(value||''),location.href);
+      return /(?:^|\\.)rscj\\.silverchair-cdn\\.com$/i.test(url.hostname)&&/\\.pdf\\.gif$/i.test(url.pathname);
+    } catch (_) {
+      return /\\.pdf\\.gif(?:[?#]|$)/i.test(String(value||''));
+    }
+  }
+
   function rscGraphicalAbstractCandidates(job, root, baseUrl) {
     if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
     var scope=root||document,base=baseUrl||location.href,rows=[],seen=new Set();
@@ -2103,7 +2112,7 @@ function embeddedJobDois(value) {
     ));}
     function add(node,score,source,text){
       articleFigureImageUrls(node,base).forEach(function(url,rank){
-        if(!url||seen.has(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
+        if(!url||seen.has(url)||isRscPdfPagePreviewUrl(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
         seen.add(url);rows.push({url:url,kind:'official',assetType:'graphical_abstract',score:score-rank,
           text:String(text||'Graphical Abstract').slice(0,1000),source:source,element:node.tagName&&node.tagName.toLowerCase()==='img'?node:null});
       });

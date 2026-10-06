@@ -13,6 +13,7 @@ on:
       - 'src/private-pdf-access.ts'
       - 'src/bootstrap.ts'
       - 'public/private-pdf-owner-setup.html'
+      - 'public/pdf/**'
       - 'tests/private-pdf-access-browser.mjs'
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/private-pdf-access-v1.yml'
@@ -26,6 +27,7 @@ on:
       - 'src/private-pdf-access.ts'
       - 'src/bootstrap.ts'
       - 'public/private-pdf-owner-setup.html'
+      - 'public/pdf/**'
       - 'tests/private-pdf-access-browser.mjs'
       - '.github/workflows/deploy-worker-frontend.yml'
       - '.github/workflows/private-pdf-access-v1.yml'
@@ -98,6 +100,7 @@ jobs:
           npm install --no-audit --no-fund
           npm run build
           test -s dist/private-pdf-owner-setup.html
+          test -s dist/pdf/index.html
       - name: Install isolated Chromium
         run: |
           npm install --no-save --no-package-lock playwright

@@ -868,7 +868,7 @@ function restoreMedia(): void {
     const toc = tocCache.get(key);
     if (toc && now - toc.fetchedAt < MEDIA_TTL && toc.result.available) renderToc(target.toc, toc.result);
     const figures = figureCache.get(key);
-    if (target.figures && figures && now - figures.fetchedAt < MEDIA_TTL && figures.result.available) renderFigures(target.figures, figures.result);
+    if (target.figures && figures && now - figures.fetchedAt < MEDIA_TTL) renderFigures(target.figures, figures.result);
   }
 }
 
@@ -964,11 +964,13 @@ function renderToc(slot: HTMLElement, result: TocResponse): void {
 
 function renderFigures(slot: HTMLElement, result: FigureResponse): void {
   if (!result.available || !result.figures.length) {
-    const doi = normalizeDoi(slot.dataset.figureDoi);
-    const remembered = doi ? tocCache.get(doi.toLowerCase())?.result : undefined;
-    if (remembered?.available && remembered.imageUrl) renderFigureFallback(slot, remembered.imageUrl);
+    slot.replaceChildren();
+    slot.hidden = true;
+    slot.classList.remove('generated', 'loaded');
+    slot.dataset.state = 'empty';
     return;
   }
+  slot.hidden = false;
   const heading = document.createElement('div');
   heading.className = 'figure-strip-heading';
   heading.textContent = t('figures');
@@ -1018,28 +1020,6 @@ function renderFigures(slot: HTMLElement, result: FigureResponse): void {
   slot.classList.add('loaded');
   slot.dataset.state = 'done';
   requestAnimationFrame(syncNav);
-}
-
-function renderFigureFallback(slot: HTMLElement, imageUrl: string): void {
-  const heading = document.createElement('div');
-  heading.className = 'figure-strip-heading';
-  heading.textContent = t('figures');
-  const strip = document.createElement('div');
-  strip.className = 'figure-strip';
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'figure-thumb';
-  const image = new Image();
-  image.src = imageUrl;
-  image.alt = t('articleGraphic');
-  const label = document.createElement('span');
-  label.textContent = t('articleGraphic');
-  button.append(image, label);
-  button.addEventListener('click', () => openLightbox(imageUrl, t('articleGraphic')));
-  strip.appendChild(button);
-  slot.replaceChildren(heading, strip);
-  slot.classList.add('loaded');
-  slot.dataset.state = 'fallback';
 }
 
 function openLightbox(imageUrl: string, alt: string, caption?: string): void {

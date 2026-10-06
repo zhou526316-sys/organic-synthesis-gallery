@@ -6,6 +6,9 @@ const DOI_LIMIT = 1200;
 const QUERY_CHUNK = 80;
 // Media written before the 2.2.17 contamination recovery cutover is quarantined.
 const MEDIA_REBUILD_EPOCH = 1790082000000;
+const LOCAL_CAPTURE_INDEX_KEY = 'local-captures/index.json';
+const RSC_PREVIEW_INDEX_TTL_MS = 5 * 60 * 1000;
+let rscPreviewIndexCache = { loadedAt: 0, keys: new Set() };
 
 export function normalizeDoi(value) {
   if (typeof value !== 'string') return null;
@@ -250,12 +253,43 @@ async function queryByDois(env, sqlPrefix, dois, { optional = false, label = 'qu
   return rows;
 }
 
+function isRscPdfPagePreviewUrl(value) {
+  try {
+    const url = new URL(String(value || ''));
+    return /(?:^|\\.)rscj\\.silverchair-cdn\\.com$/i.test(url.hostname) && /\\.pdf\\.gif$/i.test(url.pathname);
+  } catch {
+    return /\\.pdf\\.gif(?:[?#]|$)/i.test(String(value || ''));
+  }
+}
+
+async function rscPdfPreviewTocKeys(env) {
+  const now = Date.now();
+  if (now - Number(rscPreviewIndexCache.loadedAt || 0) < RSC_PREVIEW_INDEX_TTL_MS) return rscPreviewIndexCache.keys;
+  const keys = new Set();
+  try {
+    const object = await env?.MEDIA?.get(LOCAL_CAPTURE_INDEX_KEY);
+    if (object) {
+      const index = JSON.parse(await object.text());
+      for (const item of Object.values(index?.items || {})) {
+        const doi = normalizeDoi(item?.doi || '');
+        if (!doi || !doi.startsWith('10.1039/') || String(item?.kind || '') !== 'official') continue;
+        if (Number(item?.updatedAt || 0) < MEDIA_REBUILD_EPOCH || !item?.contentHash || !isRscPdfPagePreviewUrl(item?.sourceUrl)) continue;
+        keys.add(doi + '|' + String(item.contentHash));
+      }
+    }
+  } catch {
+    // If the diagnostic capture index is temporarily unavailable, preserve the existing media read path.
+  }
+  rscPreviewIndexCache = { loadedAt: now, keys };
+  return keys;
+}
+
 async function loadMediaRows(env, rawDois) {
   if (!env?.DB) throw new Error('D1 binding DB is not configured');
   const dois = [...new Set(rawDois.map(normalizeDoi).filter(Boolean))].slice(0, DOI_LIMIT);
   if (!dois.length) return { dois, tocByDoi: new Map(), figuresByDoi: new Map(), primaryByDoi: new Map(), primaryVariantsByDoi: new Map(), duplicateHashes: new Set() };
 
-  const [tocRows, figureRows, primaryRows, primaryVariantRows, duplicateRows] = await Promise.all([
+  const [tocRows, figureRows, primaryRows, primaryVariantRows, duplicateRows, rscPreviewTocKeys] = await Promise.all([
     queryByDois(
       env,
       'SELECT doi, article_url, r2_key, content_hash, reason, available, checked_at, updated_at FROM toc_assets WHERE doi IN',
@@ -279,6 +313,7 @@ async function loadMediaRows(env, rawDois) {
       { optional: true, label: 'primary_visual_variants' }
     ),
     allRowsOptional(env.DB.prepare("SELECT content_hash, COUNT(*) AS owners FROM toc_assets WHERE available = 1 AND updated_at >= ? AND content_hash IS NOT NULL AND content_hash <> '' GROUP BY content_hash HAVING COUNT(*) > 1").bind(MEDIA_REBUILD_EPOCH), 'duplicate_toc_hashes'),
+    rscPdfPreviewTocKeys(env),
   ]);
 
   tocRows.splice(0, tocRows.length, ...tocRows.filter(row => Number(row.updated_at || 0) >= MEDIA_REBUILD_EPOCH));
@@ -290,6 +325,7 @@ async function loadMediaRows(env, rawDois) {
   for (const row of tocRows) {
     const doi = String(row.doi).toLowerCase();
     if (!articleUrlMatchesDoi(row.article_url, doi)) continue;
+    if (rscPreviewTocKeys.has(doi + '|' + String(row.content_hash || ''))) continue;
     tocByDoi.set(doi, row);
   }
   const figuresByDoi = new Map();

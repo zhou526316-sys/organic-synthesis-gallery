@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const source=await fs.readFile('public/toc-mainline.user.js','utf8');
+const frontend=await fs.readFile('src/main.ts','utf8');
 const adapters=await fs.readFile('scripts/tm-rsc-elsevier-ccs.inc.js','utf8');
 
 const browser=await chromium.launch({headless:true});
@@ -20,7 +21,7 @@ const harness=[
   "function articleFigureImageUrls(node,base){const out=[];const add=v=>{try{if(v){const u=new URL(v,base).href;if(!out.includes(u))out.push(u)}}catch{}};['data-full-src','data-full','data-lg-src','data-hi-res-src','data-src-large','data-original','data-src','data-lazy-src','src'].forEach(k=>add(node.getAttribute&&node.getAttribute(k)));if(node.getAttribute){String(node.getAttribute('srcset')||'').split(',').forEach(x=>add(x.trim().split(/\\s+/)[0]));}return out}",
   "function contextFor(node){let out=[];[node.alt,node.title,node.getAttribute&&node.getAttribute('aria-label')].forEach(v=>{if(v)out.push(v)});let root=node.parentElement;for(let d=0;root&&d<4;d++,root=root.parentElement){out.push(String(root.className||''),String(root.id||''),String(root.textContent||'').slice(0,600));}return out.join(' ')}",
   adapters,
-  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscBodyFigureContext,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
+  "globalThis.T={rscRouteParts,rscArticleHtmlUrl,rscBodyFigureContext,isRscPdfPagePreviewUrl,rscGraphicalAbstractCandidates,elsevierGraphicalAbstractCandidates,ccsAssetFigureLabel,ccsTocIndexUrlFromCrossrefPayload,ccsTocIndexUrls,ccsTocIndexCandidatesFromDocument};",
   '})();'
 ].join('\n');
 await page.addScriptTag({content:harness});
@@ -52,6 +53,21 @@ try{
     assert.equal(result.ga.length,1);assert.equal(result.ga[0].kind,'official');
     assert.match(result.ga[0].source,/rsc_graphical_abstract/);
     assert.equal(result.fig.label,'Figure 1');assert.equal(result.fig.official,false);
+  });
+
+  await tc('RSC PDF-page preview GIF is never accepted as graphical abstract',async()=>{
+    const result=await page.evaluate(()=>{
+      const root=document.querySelector('#fixture');
+      root.innerHTML='<section class="abstract_graphical"><h2>Graphical abstract</h2><img alt="Graphical abstract" src="https://rscj.silverchair-cdn.com/rscj/content_public/journal/sc/jam/10.1039_d6sc06421c/1/d6sc06421c.pdf.gif?Expires=1"></section>';
+      return {preview:T.isRscPdfPagePreviewUrl(document.querySelector('img').src),ga:T.rscGraphicalAbstractCandidates({doi:'10.1039/d6sc06421c',publisher:'rsc'},root,'https://pubs.rsc.org/en/content/articlehtml/2026/sc/d6sc06421c')};
+    });
+    assert.equal(result.preview,true);assert.equal(result.ga.length,0);
+  });
+
+  await tc('Gallery never aliases TOC into the body-figure strip',async()=>{
+    assert.ok(frontend.includes("slot.hidden = true;"));
+    assert.ok(frontend.includes("slot.dataset.state = 'empty';"));
+    assert.ok(!frontend.includes('renderFigureFallback(slot, remembered.imageUrl)'));
   });
 
   await tc('Chem graphical abstract is isolated from numbered figures',async()=>{
@@ -144,7 +160,7 @@ try{
   await tc('capture protocol and core controller stay unchanged',async()=>{
     assert.ok(source.includes("var VERSION = '6.2.20'"));
     assert.ok(source.includes("var CONTROLLER_REVISION = '2.2.41'"));
-    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261005-rsc-elsevier-ccs-v11'"));
+    assert.ok(source.includes("PUBLISHER_MEDIA_REVISION = '20261006-rsc-elsevier-ccs-v12'"));
     assert.ok(source.includes("PUBLISHER_TASK_BINDING_REVISION = '20261005-interstitial-bind-v4'"));
   });
 }finally{await browser.close()}
