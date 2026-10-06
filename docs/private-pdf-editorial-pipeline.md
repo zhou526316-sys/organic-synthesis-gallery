@@ -20,7 +20,18 @@ PDF is not a fourth hard missing field in the existing media queue.
 3. `archive_backfill`: only papers with Gallery `addedDate >= 2026-10-01`; earlier papers are permanently outside automatic PDF backfill.
 4. `manual`: explicit owner request for one DOI.
 
-The first implementation opportunistically captures one explicit publisher-provided PDF during an already-open publisher visit. Automatic PDF capture is hard-scoped to Gallery website `addedDate >= 2026-10-01`; publication date is not a fallback, and missing `addedDate` is ineligible. A later independent PDF queue may cover eligible recent papers that did not need a media visit.
+Automatic PDF capture is hard-scoped to Gallery website `addedDate >= 2026-10-01`; publication date is not a fallback, and missing `addedDate` is ineligible. The current browser controller has an independent eligible-PDF queue, but it follows the one-visit acquisition bundle: once a qualifying paper page is opened for either a TOC gap or a PDF gap, the same authenticated visit also attempts body figures and full-text HTML evidence. Existing proven figure/text receipts are reused; body/text incompleteness alone does not create a new publisher visit.
+
+## One-visit acquisition bundle
+
+For `addedDate >= 2026-10-01`, a justified publisher-page visit is treated as one acquisition bundle:
+
+- TOC / graphical abstract: capture when the production TOC is missing.
+- Body figures: scan the live article and capture missing Figure/Scheme/Chart assets; reuse same-DOI staged/production receipts first.
+- Full-text HTML evidence: if current evidence is absent, abstract-only or partial, attempt a complete article-text packet.
+- Private PDF: discover and validate an explicit article PDF and store it privately when owner capture authorization is active.
+
+A failure in one companion layer does not erase successful receipts from the other layers and must not stop the controller from moving to later DOI jobs.
 
 ## Capture contract
 
