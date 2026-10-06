@@ -51,11 +51,13 @@ test('D3c V3 schema is isolated, additive and applied before Worker deployment',
   }
 });
 
-test('D3c4b activates V3 writes only after preflight and retains automatic flag rollback',()=>{
+test('D3c4b stages V3 writes in canary-only mode before public promotion',()=>{
   const preflight=deploy.indexOf('- name: Verify user library V3 write activation preflight');
   const configStart=deploy.indexOf('- name: Generate frontend deployment configuration');
   const primaryDeploy=deploy.indexOf('- name: Deploy frontend assets');
-  assert.ok(preflight>0&&configStart>preflight&&primaryDeploy>configStart);
+  const canary=deploy.indexOf('- name: Verify V3 write activation with isolated account');
+  const promote=deploy.indexOf('- name: Promote V3 write activation to all users');
+  assert.ok(preflight>0&&configStart>preflight&&primaryDeploy>configStart&&canary>primaryDeploy&&promote>canary);
   const config=section(
     deploy,
     '- name: Generate frontend deployment configuration',
@@ -64,12 +66,27 @@ test('D3c4b activates V3 writes only after preflight and retains automatic flag 
   assert.ok(config.includes('USER_LIBRARY_V3_SHADOW_ENABLED = "1"'));
   assert.ok(config.includes('USER_LIBRARY_V3_READ_ENABLED = "1"'));
   assert.ok(config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "1"'));
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_CANARY_ONLY = "1"'));
+  assert.ok(config.includes('USER_LIBRARY_V3_WRITE_CANARY_USER_ID = "arch-v3-canary-$GITHUB_RUN_ID"'));
   assert.ok(!config.includes('USER_LIBRARY_V3_WRITE_ENABLED = "0"'));
   assert.ok(deploy.includes('/api/admin/user-library-v3/compare?offset='));
   assert.ok(deploy.includes('D3c4b preflight could not obtain two stable zero-mismatch passes'));
+  const promoteBlock=section(
+    deploy,
+    '- name: Promote V3 write activation to all users',
+    '- name: Roll back V3 write activation on authority/canary failure',
+  );
+  assert.ok(promoteBlock.includes("if: steps.user_library_v3_shadow.outcome == 'success' && steps.user_library_v3_write_canary.outcome == 'success'"));
+  assert.ok(promoteBlock.includes('USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"'));
+  assert.ok(promoteBlock.includes('userLibraryV3WriteConfigured===true'));
+  assert.ok(promoteBlock.includes('userLibraryV3WriteCanaryOnly===false'));
+  assert.ok(promoteBlock.includes('userLibraryV3WriteEnabled===true'));
   assert.ok(deploy.includes('- name: Roll back V3 write activation on authority/canary failure'));
   assert.ok(deploy.includes('s/USER_LIBRARY_V3_WRITE_ENABLED = "1"/USER_LIBRARY_V3_WRITE_ENABLED = "0"/'));
-  assert.ok(v3.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
+  assert.ok(deploy.includes('USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"'));
+  assert.ok(v3.includes('userLibraryV3WriteConfigured'));
+  assert.ok(v3.includes('USER_LIBRARY_V3_WRITE_CANARY_ONLY'));
+  assert.ok(v3.includes('USER_LIBRARY_V3_WRITE_CANARY_USER_ID'));
   assert.ok(v3.includes("reason:'user_library_v3_write_disabled'"));
   assert.ok(v3.includes("reason:'user_library_v3_read_disabled'"));
   assert.ok(shadow.includes('userLibraryV3ShadowEnabled'));
@@ -197,15 +214,12 @@ test('first V3 authority claim is freshness-fenced both before and inside the at
   assert.ok(userUi.includes("String(result.reason || 'user_library_v3_revision_conflict')"));
 });
 
-test('D3c4b production deployment requires isolated write canary, compatibility read, conflict fence, cleanup and rollback',()=>{
+test('D3c4b production deployment requires isolated canary, public promotion, cleanup and rollback',()=>{
   const authorityBlock=section(
     deploy,
     '- name: Verify user library V3 authority mode after deployment',
     '- name: Advance and reconcile Evidence Index shadow',
   );
-  assert.ok(authorityBlock.includes("phase:'D3c4b-user-library-v3-write-authority'"));
-  assert.ok(authorityBlock.includes('shadowEnabled:false'));
-  assert.ok(authorityBlock.includes('writePathActive:true'));
   assert.ok(authorityBlock.includes('revisionMismatches'));
   assert.ok(authorityBlock.includes('expectedHeads'));
   assert.ok(authorityBlock.includes("steps.user_library_v3_shadow.outcome == 'success'"));
@@ -225,6 +239,8 @@ test('D3c4b production deployment requires isolated write canary, compatibility 
     'legacy_docs',
     'authority_rows',
     'monolithicDocumentRemoved=true',
+    '- name: Promote V3 write activation to all users',
+    'USER_LIBRARY_V3_WRITE_CANARY_ONLY = "0"',
     '- name: Roll back V3 write activation on authority/canary failure',
     'USER_LIBRARY_V3_WRITE_ENABLED = "0"',
     '- name: Clean up isolated V3 write canary account',
@@ -234,10 +250,11 @@ test('D3c4b production deployment requires isolated write canary, compatibility 
     "DELETE FROM users WHERE id='$USER_ID'",
     '- name: Fail deployment after safe V3 write rollback',
   ]) assert.ok(canary.includes(token),token);
-  assert.ok(canary.includes("if: steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure'"));
-  assert.ok(canary.includes("if: always() && (steps.user_library_v3_shadow.outcome == 'failure' || steps.user_library_v3_write_canary.outcome == 'failure')"));
-  assert.ok(canary.includes("body?.userLibraryV3WriteEnabled===false"));
-  assert.ok(canary.includes("body?.userLibraryV3ShadowEnabled===true"));
+  assert.ok(canary.includes("steps.user_library_v3_write_promote.outcome == 'failure'"));
+  assert.ok(canary.includes('body?.userLibraryV3WriteConfigured===false'));
+  assert.ok(canary.includes('body?.userLibraryV3WriteCanaryOnly===false'));
+  assert.ok(canary.includes('body?.userLibraryV3WriteEnabled===false'));
+  assert.ok(canary.includes('body?.userLibraryV3ShadowEnabled===true'));
 
   const canonical=section(
     deploy,
@@ -247,6 +264,7 @@ test('D3c4b production deployment requires isolated write canary, compatibility 
   assert.ok(canonical.includes('body?.userLibraryV3ShadowEnabled === false'));
   assert.ok(canonical.includes('body?.userLibraryV3ReadEnabled === true'));
   assert.ok(canonical.includes('body?.userLibraryV3WriteEnabled === true'));
+  assert.ok(canonical.includes('body?.userLibraryV3WriteCanaryOnly === false'));
 });
 
 test('D3c through D3c4b regression suites remain in the site quality gate',()=>{
