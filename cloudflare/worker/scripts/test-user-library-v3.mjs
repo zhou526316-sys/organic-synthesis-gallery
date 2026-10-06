@@ -402,6 +402,10 @@ test('V3 write retention advances the delta floor and prunes only history older 
     VALUES ('u1',1,1,513)
   `).run();
   db.sqlite.prepare(`
+    INSERT INTO user_library_v3_authority(user_id,authority,activated_revision,activated_at)
+    VALUES ('u1','v3',513,513000)
+  `).run();
+  db.sqlite.prepare(`
     INSERT INTO user_library_v3_commits(user_id,revision,expected_revision,updated_at)
     VALUES ('u1',1,0,1000)
   `).run();
@@ -565,6 +569,11 @@ test('per-user V3 authority survives global write rollback without reviving lega
     VALUES ('u-rollback',1,1000,?,1,1,1,1,1)
   `).run(globalJson);
   db.sqlite.prepare("INSERT INTO user_library_v3_shape(user_id,papers_split,metadata_split,revision) VALUES('u-rollback',1,1,1)").run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_shadow_sync
+      (user_id,source_revision,source_updated_at,source_state_hash,inflight_revision,inflight_started_at,synced_at,last_error)
+    VALUES ('u-rollback',1,1000,'rollback-shadow',0,0,1500,'')
+  `).run();
   db.sqlite.prepare(`
     INSERT INTO user_library_v3_rows
       (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,deleted,revision,updated_at)
