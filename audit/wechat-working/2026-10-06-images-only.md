@@ -1,18 +1,16 @@
-# 2026-10-06 公众号纯图片审阅稿（视觉修订版）
+# 2026-10-06 公众号纯图片审阅稿（最终视觉版）
 
-> 本文件对应用户 2026-10-06 对封面和首图的截图反馈。只审图片、裁切、图注与位置；公众号写入前必须以本文件重新通过 image review。
+> 本版只使用已固定的仓库资产或出版社原图。用户确认的 Hyster 蓝色 FRET/PLP* 封面已作为仓库二进制资产锁定；Hyster 正文首图使用用户给出的完整 Fig. 1c 参考图；今日精选封面使用已审核的 Fig. 1e + 深蓝标题安全区成品图。
 
 # 今日精选｜Nature Chemistry
 
 ## 封面
 
 - source_figure_id: `cover_final`
-- layout: `daily_reference_darkband`
 - WeChat 2.35:1 crop: `0_0_1_1`
 - WeChat 1:1 crop: `0.287234_0_0.712766_1`
-- 说明：今日精选封面以 Nature Chemistry 原文 Fig. 1e 为唯一科学图像来源；上部完整展示直流/交替极性与副反应对照，下部保留深色标题安全区供微信卡片白字叠加，不重绘化学结构。
-- source_url: https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41557-026-02237-z/MediaObjects/41557_2026_2237_Fig1_HTML.png
-- source crop_frac: `[0,0.64,1,1]`
+- 说明：今日精选使用已审核的 2.35:1 成品封面：上部为 Nature Chemistry 原文 Fig. 1e，底部为深蓝标题安全区，避免微信白字压在浅色反应图上。
+- repo_path: `public/wechat-assets/natchem-2026-10-06-cover-v2.jpg`
 
 ## fig1
 
@@ -80,13 +78,12 @@
 - source_figure_id: `abstract_cover`
 - WeChat 2.35:1 crop: `0_0.287234_1_0.712766`
 - WeChat 1:1 crop: `0_0_1_1`
-- 说明：使用用户已确认的蓝色 FRET/PLP* 往期精选封面原图；不再由发布脚本重新设计封面。
-- source_url: https://mmbiz.qpic.cn/mmbiz_jpg/uSicOxt5gIGwdFiap4HBJJ9k0KsOWJ8WuOp62PfKaNrUWk6UzDkZSib4pVveuyOnwzicctoicZ9v0CsxcJiaU7XxkQ5YEiaHQZboSFOThU8AVfwO2w/0?wx_fmt=jpeg
+- 说明：使用用户确认的蓝色 FRET/PLP* 往期精选封面原图；发布脚本只做尺寸标准化，不重新设计。
+- repo_path: `public/wechat-assets/hyster-plp-photoenzyme-retrospective-cover.jpg`
 
 ## fig1
 
-- source_url: https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-026-10930-9/MediaObjects/41586_2026_10930_Fig1_HTML.png
-- crop_frac: `[0,0.49,1,0.82]`
+- repo_path: `public/wechat-assets/hyster-fig1c-overview.png`
 - intended placement: 文章开头
 - caption: 原文 Fig. 1c｜左侧是本文的不对称自由基–自由基交叉偶联；中间给出 Rh6G 吸光后向酶内醌式 PLP 发生 FRET 的设计；右侧吸收光谱展示该 PLP 中间体的可见光吸收特征。
 
@@ -138,5 +135,4 @@
 - crop_frac: `[0.68,0.4,1,1]`
 - intended placement: 它证明这种“酶内共生成自由基对”的思路，能够进入真正复杂的合成断键
 - caption: 原文 Fig. 5g｜作者把这一步用于 Lenacapavir 高度官能团化核心片段的构建，单步同时形成新的 C–C 键和手性胺中心。论文报告的是 82% 分析收率、98:2 e.r.，应与真正的工艺放大区分。
-
 
