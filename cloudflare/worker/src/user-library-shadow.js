@@ -171,13 +171,13 @@ export async function shadowWriteUserLibraryState(env, userId, state, revision, 
   };
 }
 
-export async function readUserLibraryStateFromRows(env, userId, legacyMeta = null) {
+export async function readUserLibraryStateFromRows(env, userId, authorityMeta = null) {
   if (!userLibraryRowReadEnabled(env)) return { ready:false, reason:'user_library_row_read_disabled' };
   if (!env?.DB) return { ready:false, reason:'user_library_shadow_db_missing' };
   const normalizedUserId = safeText(userId, 300);
   if (!normalizedUserId) return { ready:false, reason:'user_library_user_id_invalid' };
 
-  const legacy = legacyMeta || await env.DB.prepare(
+  const authority = authorityMeta || await env.DB.prepare(
     'SELECT revision, updated_at FROM user_library_state WHERE user_id = ?'
   ).bind(normalizedUserId).first();
 
@@ -187,22 +187,22 @@ export async function readUserLibraryStateFromRows(env, userId, legacyMeta = nul
     FROM user_library_head WHERE user_id=?
   `).bind(normalizedUserId).first();
 
-  if (!legacy && !head) {
+  if (!authority && !head) {
     return { ready:true, readPath:'rows', revision:0, updatedAt:0, state:{} };
   }
-  if (!legacy) return { ready:false, reason:'legacy_state_missing' };
+  if (!authority) return { ready:false, reason:'row_authority_missing' };
   if (!head) return { ready:false, reason:'row_head_missing' };
-  if (Number(head.revision || 0) !== Number(legacy.revision || 0)
-      || Number(head.updated_at || 0) !== Number(legacy.updated_at || 0)) {
+  if (Number(head.revision || 0) !== Number(authority.revision || 0)
+      || Number(head.updated_at || 0) !== Number(authority.updated_at || 0)) {
     return { ready:false, reason:'row_revision_stale' };
   }
 
   const rows = await env.DB.prepare(`
     SELECT paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at
     FROM user_paper_state
-    WHERE user_id=? AND revision=?
+    WHERE user_id=?
     ORDER BY paper_key ASC
-  `).bind(normalizedUserId, head.revision).all();
+  `).bind(normalizedUserId).all();
   const items = rows?.results || [];
   const paperCount = items.reduce((sum,row)=>sum+(Number(row?.paper_present||0)===1?1:0),0);
   const metadataCount = items.reduce((sum,row)=>sum+(Number(row?.metadata_present||0)===1?1:0),0);
@@ -213,9 +213,11 @@ export async function readUserLibraryStateFromRows(env, userId, legacyMeta = nul
   let state;
   try { state = rebuildUserLibraryState(head, items); }
   catch { return { ready:false, reason:'row_rebuild_failed' }; }
-  const rebuiltHash = await sha256Hex(stableStateJson(state));
-  if (rebuiltHash !== String(head.source_state_hash || '')) {
-    return { ready:false, reason:'row_source_hash_mismatch' };
+  if (Number(head.shadow_version || 0) < 2) {
+    const rebuiltHash = await sha256Hex(stableStateJson(state));
+    if (rebuiltHash !== String(head.source_state_hash || '')) {
+      return { ready:false, reason:'row_source_hash_mismatch' };
+    }
   }
   return {
     ready:true,
@@ -224,14 +226,26 @@ export async function readUserLibraryStateFromRows(env, userId, legacyMeta = nul
     updatedAt:Number(head.updated_at || 0),
     state,
     paperRows:items.length,
+    compatibilityAuthority:Number(head.shadow_version || 0)>=2?'v3':'legacy',
   };
 }
 
 export async function getUserLibraryShadowStatus(env) {
   if (!env?.DB) return {status:503,body:{error:'user_library_shadow_db_missing'}};
-  const [legacy,head,papers,mismatch,backfill] = await Promise.all([
+  const [legacy,head,legacyHead,v3CompatHead,papers,mismatch,backfill] = await Promise.all([
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_state').first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_library_head').first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM user_library_head head
+      INNER JOIN user_library_state legacy ON legacy.user_id=head.user_id
+    `).first(),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM user_library_head head
+      INNER JOIN user_library_v3_authority authority ON authority.user_id=head.user_id
+      WHERE authority.authority='v3'
+    `).first(),
     env.DB.prepare('SELECT COUNT(*) AS count FROM user_paper_state').first(),
     env.DB.prepare(`
       SELECT COUNT(*) AS count
@@ -247,6 +261,8 @@ export async function getUserLibraryShadowStatus(env) {
   ]);
   const legacyUsers=Number(legacy?.count||0);
   const shadowHeads=Number(head?.count||0);
+  const legacyShadowHeads=Number(legacyHead?.count||0);
+  const v3CompatHeads=Number(v3CompatHead?.count||0);
   const revisionMismatches=Number(mismatch?.count||0);
   const backfillComplete=Number(backfill?.complete||0)===1;
   const backfillHealthy=backfillComplete
@@ -255,11 +271,11 @@ export async function getUserLibraryShadowStatus(env) {
     &&safeText(backfill?.last_error,180)==='';
   const readConfigured=userLibraryRowReadEnabled(env);
   const readPathActive=readConfigured&&userLibraryRowShadowEnabled(env)
-    &&backfillHealthy&&legacyUsers===shadowHeads&&revisionMismatches===0;
+    &&backfillHealthy&&legacyUsers===legacyShadowHeads&&revisionMismatches===0;
   return {status:200,body:{
     version:1,shadowVersion:SHADOW_VERSION,enabled:userLibraryRowShadowEnabled(env),
     readConfigured,readPathActive,
-    legacyUsers,shadowHeads,paperRows:Number(papers?.count||0),
+    legacyUsers,shadowHeads,legacyShadowHeads,v3CompatHeads,paperRows:Number(papers?.count||0),
     revisionMismatches,
     backfill:backfill?{
       complete:Number(backfill.complete||0)===1,
