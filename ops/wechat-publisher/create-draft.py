@@ -543,10 +543,22 @@ def build_content(
                 f"<p style='font-size:11px;letter-spacing:.08em;color:#32675f;font-weight:700;margin:26px 0 5px;'>{esc(section.get('eyebrow') or '')}</p>"
                 f"<h2 style='font-size:19px;line-height:1.55;margin:0 0 10px;'>{esc(section.get('heading') or '')}</h2>"
             )
-            for paragraph in section.get("paragraphs", []):
+            figure_positions = section.get("figures_after_paragraph") if isinstance(section.get("figures_after_paragraph"), dict) else {}
+            for paragraph_index, paragraph in enumerate(section.get("paragraphs", []), start=1):
                 parts.append(
                     f"<p style='font-size:15px;line-height:1.88;margin:0 0 12px;text-align:justify;'>{esc(paragraph)}</p>"
                 )
+                inline_ids = figure_positions.get(str(paragraph_index), figure_positions.get(paragraph_index, []))
+                if isinstance(inline_ids, str):
+                    inline_ids = [inline_ids]
+                for fig_id in inline_ids if isinstance(inline_ids, list) else []:
+                    fig_key = str(fig_id)
+                    if fig_key in rendered_figures:
+                        continue
+                    fig_html = figure_html(fig_key, figures, uploaded_urls)
+                    if fig_html:
+                        parts.append(fig_html)
+                        rendered_figures.add(fig_key)
             for bullet in section.get("bullets", []):
                 parts.append(
                     f"<p style='font-size:14px;line-height:1.8;margin:0 0 8px;padding-left:12px;border-left:2px solid #dfe3e5;'>{esc(bullet)}</p>"
@@ -631,10 +643,22 @@ def build_retrospective_content(data: dict, uploaded_urls: dict[str, str] | None
             f"<p style='font-size:11px;letter-spacing:.08em;color:#32675f;font-weight:700;margin:27px 0 5px;'>{esc(section.get('eyebrow') or '')}</p>"
             f"<h2 style='font-size:19px;line-height:1.55;margin:0 0 10px;'>{esc(section.get('heading') or '')}</h2>"
         )
-        for paragraph in section.get("paragraphs", []):
+        figure_positions = section.get("figures_after_paragraph") if isinstance(section.get("figures_after_paragraph"), dict) else {}
+        for paragraph_index, paragraph in enumerate(section.get("paragraphs", []), start=1):
             parts.append(
                 f"<p style='font-size:15px;line-height:1.88;margin:0 0 12px;text-align:justify;'>{esc(paragraph)}</p>"
             )
+            inline_ids = figure_positions.get(str(paragraph_index), figure_positions.get(paragraph_index, []))
+            if isinstance(inline_ids, str):
+                inline_ids = [inline_ids]
+            for fig_id in inline_ids if isinstance(inline_ids, list) else []:
+                fig_key = str(fig_id)
+                if fig_key in rendered_figures:
+                    continue
+                fig_html = figure_html(fig_key, figures, uploaded_urls)
+                if fig_html:
+                    parts.append(fig_html)
+                    rendered_figures.add(fig_key)
         for bullet in section.get("bullets", []):
             parts.append(
                 f"<p style='font-size:14px;line-height:1.82;margin:0 0 8px;padding-left:12px;border-left:2px solid #dfe3e5;'>{esc(bullet)}</p>"
