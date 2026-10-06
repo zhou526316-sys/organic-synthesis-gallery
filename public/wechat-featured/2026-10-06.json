@@ -56,6 +56,11 @@
       "caption": "原文 Fig. 4a（底物/片段拓展）｜这套偶联并不局限于一个模型底物：从简单烷基链到含酯、醚、末端烯烃、氟代芳基和环状/刚性骨架，都能把两个 sp³ 片段接起来。图中代表性实例的收率覆盖约 45–92%。"
     },
     {
+      "id": "fig4_hydroboration",
+      "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-hydroboration.png",
+      "caption": "原文 Table 1（上部）｜把烯烃先做 Brown hydroboration、去除溶剂后直接进入电解偶联，就能把“羧酸 + 硼酸”进一步前移成形式上的“羧酸 + 烯烃”偶联；作者借此强调的是可接入的原料空间，而不是单独多一步前处理。"
+    },
+    {
       "id": "fig4_tandem",
       "repo_path": "public/wechat-assets/reviewed/2026-10-06/daily-diversification.png",
       "caption": "原文 Fig. 4b｜得到新的烷基–烷基 C–C 键后，分子上保留下来的芳基卤素还能继续做 Suzuki–Miyaura 或 Buchwald–Hartwig 偶联，说明这一步更像一个前端“拼骨架”模块，而不是合成终点。"
@@ -156,10 +161,11 @@
       "eyebrow": "第十层｜合成上真正买来了什么",
       "heading": "价值不只在于多做几个底物，而是把烯烃、羧酸和后续偶联接成一条更长的合成路线",
       "paragraphs": [
-        "烷基硼酸本身就可以由烯烃经硼氢化获得，因此这套化学可以继续向上游追溯成形式上的“羧酸 + 烯烃”片段偶联。Nature Chemistry 论文也把原位烯烃硼氢化、同偶联以及后续复杂化列为方法的合成用途，而不是把工作停在一张底物表上。",
-        "更值得注意的是，电解只负责先把两个 sp³ 片段拼起来；分子中保留下来的芳基卤素还能继续进行 Suzuki–Miyaura 或 Buchwald–Hartwig 反应。我的理解是，这让电化学步骤更像一个“前端骨架编辑器”：先解决难做的 sp³–sp³ 连接，再把传统交叉偶联留给后半程。"
+        "烷基硼酸本身就可以由烯烃经 Brown hydroboration 获得。作者把这一步和电解串起来，而且中间只需要去除溶剂、不必先做柱层析，于是这套反应从“羧酸 + 硼酸”继续向上游延伸成形式上的“羧酸 + 烯烃”片段偶联。Nature Chemistry 的摘要也把这一点单独列为方法的合成用途。",
+        "更进一步，电解只负责先把两个 sp³ 片段拼起来；分子中保留下来的芳基卤素还能继续做 Suzuki–Miyaura 或 Buchwald–Hartwig 反应。我的理解是，这让电化学步骤更像一个“前端骨架编辑器”：先解决难做的 sp³–sp³ 连接，再把成熟的传统偶联留给后半程。"
       ],
       "figures": [
+        "fig4_hydroboration",
         "fig4_tandem"
       ]
     },
