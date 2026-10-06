@@ -69,3 +69,15 @@ Effective from the user's 2026-10-06 instruction: **公众号草稿不得从正�
 6. Publisher triggers are terminal actions only. Editorial work must not repeatedly trigger WeChat while text, figures, crops, or covers are still being revised.
 7. Prefer publisher-hosted raster images or locally verified PNG/JPEG assets. A filename extension alone is not proof that an image is valid; decode the raster before publication. Avoid progressive JPEGs in the WeChat pipeline where a normalized PNG/JPEG can be used instead.
 
+
+
+## Long-task timeout preflight
+
+Effective from the user's 2026-10-06 instruction: **before starting any long-running task, first assess whether the planned tool/workflow path is likely to trigger a chat, connector, browser, CI-log, or remote-call timeout.**
+
+1. Perform a timeout-risk preflight before long tasks. Consider call count, payload size, remote latency, full-log/artifact downloads, polling duration, and whether multiple remote operations are chained into one request.
+2. If timeout risk is material, do not start the task in that form. First redesign it into bounded short calls, smaller artifacts, narrow file reads, one-job/one-status queries, staged commits, resumable checkpoints, or another approach that preserves progress if a connection drops.
+3. Avoid full workflow/job log downloads when a step status, small artifact, targeted file read, or narrow regression can locate the failure. Never bundle multiple slow remote reads only for convenience.
+4. Persist meaningful progress to Git after each bounded repair or milestone whenever repository writes are part of the task, so an interrupted chat does not lose completed work.
+5. Only use a direct long-running path when the preflight indicates timeout risk is acceptably low or when no safer equivalent exists. If the safer path changes execution semantics, preserve correctness over speed.
+6. This rule applies project-wide to GitHub, Tampermonkey/media capture, deployments, literature audits, website architecture, WeChat workflows, and other multi-step remote work.
