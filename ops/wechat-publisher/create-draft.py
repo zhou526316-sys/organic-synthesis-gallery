@@ -786,10 +786,9 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             )
 
         elif layout == "retrospective_figure_square":
-            # Secondary WeChat card without a portrait: use a real paper scheme
-            # as the visual anchor, but reserve a large title band that remains
-            # readable in both square and centered-card crops.
-            canvas = Image.new("RGB", (width, height), "#0d2946")
+            # Full editorial square cover for retrospective cards.
+            # Uses the paper's original reaction artwork; no AI-redrawn chemistry.
+            canvas = Image.new("RGB", (width, height), "#0b2949")
             draw = ImageDraw.Draw(canvas)
 
             kicker = str(cover.get("thumb_kicker") or "往期精选")
@@ -797,44 +796,51 @@ def prepare_cover_from_local(data: dict, local_images: dict[str, Path]) -> Path 
             meta = str(cover.get("thumb_meta") or "")
             chemistry = str(cover.get("thumb_footer") or "")
 
-            kicker_font = choose_font(max(34, int(width * 0.045)), True)
-            title_font = choose_font(max(52, int(width * 0.066)), True)
-            meta_font = choose_font(max(28, int(width * 0.036)), True)
-            footer_font = choose_font(max(25, int(width * 0.031)), False)
+            kicker_font = choose_font(max(36, int(width * 0.047)), True)
+            title_font = choose_font(max(54, int(width * 0.070)), True)
+            meta_font = choose_font(max(26, int(width * 0.034)), True)
+            footer_font = choose_font(max(27, int(width * 0.035)), True)
 
-            # Original paper visual fills the lower 58% and is cropped, never redrawn.
-            visual_top = int(height * 0.42)
-            fitted = ImageOps.fit(
-                image,
-                (width, height - visual_top),
-                method=Image.Resampling.LANCZOS,
-                centering=(0.50, 0.52),
+            gold = "#e8c36f"
+            pale = "#f6f8fb"
+            muted = "#c9d7e7"
+
+            # Header and title occupy the upper half, like a magazine cover.
+            draw.rounded_rectangle(
+                (int(width*0.055), int(height*0.055), int(width*0.78), int(height*0.14)),
+                radius=max(14,int(width*0.016)), outline=gold, width=3, fill="#0b2949"
             )
-            canvas.paste(fitted, (0, visual_top))
-
-            # Opaque editorial header keeps the tiny card legible.
-            draw.rectangle((0, 0, width, visual_top), fill="#0d2946")
-            draw.rectangle((0, visual_top - max(4,int(height*0.006)), width, visual_top), fill="#d7b56d")
-
-            left = int(width * 0.065)
-            right = int(width * 0.94)
-            draw.text((left, int(height * 0.06)), kicker, font=kicker_font, fill="#e9c978")
+            draw.text((int(width*0.075), int(height*0.07)), kicker, font=kicker_font, fill=gold)
             if meta:
-                mbox = draw.textbbox((0,0),meta,font=meta_font)
-                draw.text((right-(mbox[2]-mbox[0]), int(height*0.07)), meta, font=meta_font, fill="#dce7f2")
+                box=draw.textbbox((0,0),meta,font=meta_font)
+                draw.text((int(width*0.94)-(box[2]-box[0]), int(height*0.073)), meta, font=meta_font, fill=muted)
 
-            y = int(height * 0.15)
+            y=int(height*0.19)
             for line in wrap_text(draw, title_text, title_font, int(width*0.86), 3):
-                draw.text((left, y), line, font=title_font, fill="#ffffff")
-                y += int(height * 0.075)
+                draw.text((int(width*0.065), y), line, font=title_font, fill=pale)
+                y += int(height*0.077)
 
+            draw.line((int(width*0.065), int(height*0.43), int(width*0.94), int(height*0.43)), fill=gold, width=4)
             if chemistry:
-                draw.rounded_rectangle(
-                    (left, int(height*0.35), right, int(height*0.405)),
-                    radius=max(12,int(width*0.014)),
-                    fill="#173a60",
-                )
-                draw.text((left+18, int(height*0.36)), chemistry, font=footer_font, fill="#dce7f2")
+                draw.text((int(width*0.065), int(height*0.45)), chemistry, font=footer_font, fill=gold)
+
+            # Original current-reaction crop becomes the large lower visual.
+            visual_top=int(height*0.515)
+            visual_bottom=int(height*0.93)
+            fitted=ImageOps.contain(
+                image,
+                (int(width*0.84), visual_bottom-visual_top),
+                method=Image.Resampling.LANCZOS,
+            )
+            card_x=int(width*0.055); card_y=visual_top
+            card_w=int(width*0.89); card_h=visual_bottom-visual_top
+            draw.rounded_rectangle((card_x,card_y,card_x+card_w,card_y+card_h),radius=max(20,int(width*0.024)),fill="#ffffff")
+            px=card_x+(card_w-fitted.width)//2
+            py=card_y+(card_h-fitted.height)//2
+            canvas.paste(fitted,(px,py))
+
+            # Ensure the centered WeChat crop still contains title + reaction.
+            # No decorative blank regions and no tiny full-paper screenshot.
 
         elif layout == "retrospective_square":
             # Full square editorial cover for the secondary WeChat card.
