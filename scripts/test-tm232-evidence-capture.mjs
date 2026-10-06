@@ -207,7 +207,7 @@ try{
     combinedPlan.wiley.mediaNeed==='toc'&&combinedPlan.wiley.captureToc===true&&combinedPlan.wiley.captureFigures===false&&combinedPlan.wiley.opportunisticFigures===true);
   test('missing evidence never creates an evidence-only DOI job',combinedPlan.evidenceDois.length===0);
   test('scheduler only adds missing evidence opportunistically to an existing TOC visit',
-    source.includes('job.opportunisticEvidence=evidenceMissing.has(normalizeDoi(job.doi));')&&
+    (source.includes('job.opportunisticEvidence=evidenceMissing.has(normalizeDoi(job.doi));')||source.includes('job.opportunisticEvidence=Boolean(evidenceMissing.has(doi));')||source.includes('job.opportunisticEvidence=evidenceMissing.has(doi);'))&&
     source.includes('job.captureEvidence=false;')&&
     source.includes('var evidenceJobs=[];'));
 

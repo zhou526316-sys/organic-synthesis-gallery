@@ -65,6 +65,15 @@ function captureBelongsToDoi(item, doi) {
   return embedded.every(value => value === target);
 }
 
+function isRscPdfPagePreviewUrl(value) {
+  try {
+    const url = new URL(String(value || ''));
+    return /(?:^|\.)rscj\.silverchair-cdn\.com$/i.test(url.hostname) && /\.pdf\.gif$/i.test(url.pathname);
+  } catch {
+    return /\.pdf\.gif(?:[?#]|$)/i.test(String(value || ''));
+  }
+}
+
 function captureIntakeError(payload, doi) {
   if (payload?.captureVersion !== '6.2.20') return 'capture_client_upgrade_required';
   if (!/^[a-z0-9-]{16,80}$/i.test(String(payload?.jobId || ''))) return 'capture_job_binding_missing';
@@ -749,6 +758,9 @@ export async function importLocalCapture(request, env, payload) {
   if (intakeError) return { status: 409, body: { code: intakeError, error: intakeError, doi } };
   const kind = String(payload?.kind || '').toLowerCase();
   if (!['official', 'figure1'].includes(kind)) return { status: 400, body: { error: 'kind must be official or figure1.' } };
+  if (kind === 'official' && doi.startsWith('10.1039/') && isRscPdfPagePreviewUrl(payload?.sourceUrl)) {
+    return { status: 409, body: { error: 'RSC PDF page preview is not a graphical abstract.', code: 'rsc_pdf_page_preview_not_toc', doi } };
+  }
   if (!captureBelongsToDoi({ articleUrl: payload?.articleUrl, sourceUrl: payload?.sourceUrl }, doi)) {
     return { status: 409, body: { error: 'Local capture source DOI does not match capture DOI.', code: 'local_media_source_doi_mismatch' } };
   }

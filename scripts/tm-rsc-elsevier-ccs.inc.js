@@ -28,6 +28,15 @@
     return {block:block,label:labels[0],caption:(numbered[0]||texts[0]||own).slice(0,600),official:false};
   }
 
+  function isRscPdfPagePreviewUrl(value) {
+    try {
+      var url=new URL(String(value||''),location.href);
+      return /(?:^|\.)rscj\.silverchair-cdn\.com$/i.test(url.hostname)&&/\.pdf\.gif$/i.test(url.pathname);
+    } catch (_) {
+      return /\.pdf\.gif(?:[?#]|$)/i.test(String(value||''));
+    }
+  }
+
   function rscGraphicalAbstractCandidates(job, root, baseUrl) {
     if(String(job&&job.publisher||publisherForDoi(normalizeDoi(job&&job.doi)))!=='rsc')return [];
     var scope=root||document,base=baseUrl||location.href,rows=[],seen=new Set();
@@ -36,7 +45,7 @@
     ));}
     function add(node,score,source,text){
       articleFigureImageUrls(node,base).forEach(function(url,rank){
-        if(!url||seen.has(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
+        if(!url||seen.has(url)||isRscPdfPagePreviewUrl(url)||reject(text,url)||!candidateBelongsToJob(url,job))return;
         seen.add(url);rows.push({url:url,kind:'official',assetType:'graphical_abstract',score:score-rank,
           text:String(text||'Graphical Abstract').slice(0,1000),source:source,element:node.tagName&&node.tagName.toLowerCase()==='img'?node:null});
       });
