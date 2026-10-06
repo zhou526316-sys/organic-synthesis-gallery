@@ -321,6 +321,101 @@ test('a stale V3 page discards partial V3 state and falls back to the legacy pul
   expect(savedState.metadata['10.1234/partial']).toBeUndefined();
 });
 
+test('malformed V3 identity or counts are discarded before any partial state is applied', async ({ page }) => {
+  test.setTimeout(60_000);
+  await seedSession(page);
+  await stubCommonApi(page);
+
+  const modes: string[] = [];
+  let savedState: any = null;
+  const head = {
+    ready: true,
+    revision: 7,
+    updatedAt: 700,
+    globalState: globalState(false),
+    globalRevision: 7,
+    paperCount: 2,
+    metadataCount: 2,
+    changeFloorRevision: 7,
+    papersSplit: true,
+    metadataSplit: true,
+  };
+
+  await page.route('https://api.gczhouwld.com/api/user-ui/reader-counts', async route => {
+    const body = route.request().postDataJSON() as any;
+    const mode = String(body?.mode || '');
+    if (!mode) {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ counts: {} }) });
+      return;
+    }
+    modes.push(mode);
+
+    if (mode === 'account-v3-head') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ account: { userId: 'u-integrity', readPath: 'v3-head', ...head } }),
+      });
+      return;
+    }
+    if (mode === 'account-v3-page') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          account: {
+            userId: 'different-user',
+            readPath: 'v3-page',
+            ready: true,
+            scanStartRevision: 7,
+            head,
+            count: 1,
+            hasMore: false,
+            nextKey: null,
+            rows: [{
+              paperKey: '10.1234/leak',
+              paperPresent: true,
+              paperState: { favorite: true, collections: [], note: 'MUST NOT APPLY', quickTerms: [], tags: [] },
+              metadataPresent: true,
+              metadata: { id: '10.1234/leak', doi: '10.1234/leak', title: 'Leak', journal: 'JACS' },
+            }],
+          },
+        }),
+      });
+      return;
+    }
+    if (mode === 'account-pull') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          account: { userId: 'u-integrity', revision: 8, updatedAt: 800, state: fullState('integrity fallback') },
+        }),
+      });
+      return;
+    }
+    if (mode === 'account-save') {
+      savedState = body.state;
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          account: { userId: 'u-integrity', revision: 9, updatedAt: 900, state: body.state },
+        }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 400, contentType: 'application/json', body: '{}' });
+  });
+
+  await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+  await expect.poll(() => savedState, { timeout: 30000 }).not.toBeNull();
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncRead || '')).toBe('legacy');
+  expect(modes).toContain('account-pull');
+  expect(savedState.papers['10.1234/leak']).toBeUndefined();
+  expect(savedState.papers['10.1234/legacy'].note).toBe('integrity fallback');
+});
+
 test('session removal clears remembered account revision and disables account sync', async ({ page }) => {
   test.setTimeout(60_000);
   await seedSession(page);
