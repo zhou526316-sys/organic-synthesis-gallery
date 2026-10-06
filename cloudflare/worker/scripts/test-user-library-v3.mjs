@@ -9,6 +9,7 @@ import {
   readUserLibraryV3Head,
   readUserLibraryV3Page,
 } from '../src/user-library-v3.js';
+import { readUserLibraryStateFromRows } from '../src/user-library-shadow.js';
 
 class Statement {
   constructor(db,sql){this.db=db;this.sql=sql;this.args=[];}
@@ -29,8 +30,8 @@ class D1 {
   constructor(){
     this.sqlite=new DatabaseSync(':memory:');
     this.sqlite.exec('PRAGMA foreign_keys=ON; CREATE TABLE users (id TEXT PRIMARY KEY);');
-    const schema=fs.readFileSync(new URL('../../user-library-state-v3.sql',import.meta.url),'utf8');
-    this.sqlite.exec(schema);
+    this.sqlite.exec(fs.readFileSync(new URL('../../user-library-state-v2.sql',import.meta.url),'utf8'));
+    this.sqlite.exec(fs.readFileSync(new URL('../../user-library-state-v3.sql',import.meta.url),'utf8'));
   }
   prepare(sql){return new Statement(this,sql);}
   async batch(statements){
@@ -78,6 +79,23 @@ test('bounded V3 mutation creates revision-fenced head and paged current rows',a
   assert.equal(result.revision,1);
   assert.equal(result.paperCount,1);
   assert.equal(result.metadataCount,2);
+  assert.equal(result.compatibilityReadPath,'rows-v2');
+
+  const compatHead=db.sqlite.prepare(
+    "SELECT revision,shadow_version,paper_count,metadata_count FROM user_library_head WHERE user_id='u1'"
+  ).get();
+  assert.equal(Number(compatHead.revision),1);
+  assert.equal(Number(compatHead.shadow_version),2);
+  assert.equal(Number(compatHead.paper_count),1);
+  assert.equal(Number(compatHead.metadata_count),2);
+  const compatMeta=db.sqlite.prepare(
+    "SELECT revision,updated_at FROM user_library_v3_head WHERE user_id='u1'"
+  ).get();
+  const compat=await readUserLibraryStateFromRows(env,'u1',compatMeta);
+  assert.equal(compat.ready,true);
+  assert.equal(compat.compatibilityAuthority,'v3');
+  assert.equal(compat.state.papers['10.1234/a'].note,'A');
+  assert.equal(compat.state.metadata['title:no-doi'].title,'No DOI');
 
   const head=await readUserLibraryV3Head(env,'u1');
   assert.equal(head.ready,true);
@@ -117,6 +135,10 @@ test('delete is an explicit tombstone and stale expected revision is rejected',a
 
   const page=await readUserLibraryV3Page(env,'u1');
   assert.equal(page.rows.length,0);
+  const compatRow=db.sqlite.prepare(
+    "SELECT COUNT(*) AS c FROM user_paper_state WHERE user_id='u1' AND paper_key='10.1234/a'"
+  ).get();
+  assert.equal(Number(compatRow.c),0);
 
   const delta=await readUserLibraryV3Delta(env,'u1',{sinceRevision:1});
   assert.equal(delta.resetRequired,false);
@@ -243,6 +265,52 @@ test('mutation bounds reject unbounded, duplicate and monolithic-global payloads
     },1000),
     /user_library_v3_mutation_oversized|user_library_v3_paper_state_oversized/,
   );
+});
+
+test('V3 write retention prunes old deltas and tombstones while advancing the reset floor',async t=>{
+  const db=new D1();t.after(()=>db.close());addUser(db);
+  const env=envFor(db);
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_head
+      (user_id,revision,updated_at,global_json,global_revision,paper_count,metadata_count,change_floor_revision,schema_version)
+    VALUES ('u1',512,512,'{}',512,0,0,0,1)
+  `).run();
+  db.sqlite.prepare("INSERT INTO user_library_v3_shape(user_id,papers_split,metadata_split,revision) VALUES('u1',1,1,512)").run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_head
+      (user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version)
+    VALUES ('u1',512,512,'{}',1,1,0,0,'v3-authority:512',2)
+  `).run();
+  db.sqlite.prepare("INSERT INTO user_library_v3_commits(user_id,revision,expected_revision,updated_at) VALUES('u1',1,0,1)").run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_changes
+      (user_id,revision,seq,paper_key,op,doi,paper_present,paper_state_json,metadata_present,metadata_json,updated_at)
+    VALUES ('u1',1,0,'old','delete',NULL,0,NULL,0,NULL,1)
+  `).run();
+  db.sqlite.prepare(`
+    INSERT INTO user_library_v3_rows
+      (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,deleted,revision,updated_at)
+    VALUES ('u1','old',NULL,0,NULL,0,NULL,1,1,1)
+  `).run();
+
+  const first=await applyUserLibraryV3Mutation(env,'u1',{
+    expectedRevision:512,globalState:{hideRead:false},
+  },513);
+  assert.equal(first.revision,513);
+  assert.equal(first.changeFloorRevision,1);
+  assert.equal(Number(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_commits WHERE user_id='u1' AND revision=1").get().c),1);
+
+  const second=await applyUserLibraryV3Mutation(env,'u1',{
+    expectedRevision:513,globalState:{hideRead:true},
+  },514);
+  assert.equal(second.revision,514);
+  assert.equal(second.changeFloorRevision,2);
+  assert.equal(Number(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_commits WHERE user_id='u1' AND revision=1").get().c),0);
+  assert.equal(Number(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_changes WHERE user_id='u1' AND revision=1").get().c),0);
+  assert.equal(Number(db.sqlite.prepare("SELECT COUNT(*) AS c FROM user_library_v3_rows WHERE user_id='u1' AND paper_key='old'").get().c),0);
+  const stale=await readUserLibraryV3Delta(env,'u1',{sinceRevision:1});
+  assert.equal(stale.resetRequired,true);
+  assert.equal(stale.reason,'user_library_v3_change_log_pruned');
 });
 
 test('V3 writes are independently disabled and require an atomic D1 batch',async t=>{
