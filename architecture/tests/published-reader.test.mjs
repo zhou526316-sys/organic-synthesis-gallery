@@ -14,8 +14,8 @@ const papers = [
   { doi:'10.1234/hot', title:'Hot photoredox chemistry', titleZh:'近期光氧化还原化学', journal:'Angew', authors:['B'], date:'2026-10-03', url:'https://doi.org/10.1234/hot', new:true, addedDate:'2026-10-04' },
 ];
 
-function fixture({ corruptRelease = false, active = true, badMembership = false } = {}) {
-  const bundle = buildCatalog(papers, {
+function fixture({ corruptRelease = false, active = true, badMembership = false, sourcePapers = papers } = {}) {
+  const bundle = buildCatalog(sourcePapers, {
     asOfDate:'2026-10-04',
     source:{ commit:sourceCommit, datasetSha256, publicationSlot, markerBlobSha:'c'.repeat(40), parityBasis:'fixture' },
   });
@@ -53,7 +53,7 @@ function fixture({ corruptRelease = false, active = true, badMembership = false 
   const architectureObjects = Object.fromEntries(objects.map(row=>['architecture-v1/'+row.path,row.sha256]));
   const delivery = {
     schemaVersion:2, sourceCommit, markerBlobSha:'c'.repeat(40), publicationSlot,
-    productionCards:papers.length, datasetSha256, dois:bundle.records.map(row=>row.doi),
+    productionCards:sourcePapers.length, datasetSha256, dois:bundle.records.map(row=>row.doi),
     files:{'architecture-v1/release.json':corruptRelease?'0'.repeat(64):sha256(releaseText)},
     architectureObjects, architectureCatalogId:bundle.catalog.recordSetHash,
   };
@@ -130,4 +130,42 @@ test('Hot fallback still requires a release-delivery hash binding', async () => 
     loadPublishedHotFallback('https://example.invalid/', fixture({ corruptRelease:true })),
     /architecture_release_hash_mismatch/
   );
+});
+
+
+test('static Archive fallback refuses silent result truncation', async () => {
+  const sourcePapers = Array.from({ length: 1001 }, (_, index) => ({
+    doi:`10.1234/overflow-${String(index).padStart(4,'0')}`,
+    title:'Overflow nickel chemistry',
+    titleZh:'溢出镍化学',
+    journal:'JACS',
+    authors:['A'],
+    date:'2026-07-01',
+    url:`https://doi.org/10.1234/overflow-${String(index).padStart(4,'0')}`,
+    new:false,
+    addedDate:'2026-07-01',
+  }));
+  const client = await new PublishedCatalogClient('https://example.invalid/', fixture({ sourcePapers })).open();
+  await assert.rejects(client.search('Overflow nickel'), /global_search_result_window_required/);
+  await assert.rejects(client.range('2026-07-01','2026-07-31'), /date_range_result_window_required/);
+});
+
+test('static Archive fallback refuses corpus-wide fanout after 36 monthly segments', async () => {
+  const sourcePapers = Array.from({ length: 37 }, (_, index) => {
+    const date = new Date(Date.UTC(2023, 9 + index, 1)).toISOString().slice(0,10);
+    return {
+      doi:`10.1234/fanout-${String(index).padStart(2,'0')}`,
+      title:'Fanout chemistry',
+      titleZh:'扇出化学',
+      journal:'JACS',
+      authors:['A'],
+      date,
+      url:`https://doi.org/10.1234/fanout-${String(index).padStart(2,'0')}`,
+      new:false,
+      addedDate:date,
+    };
+  });
+  const client = await new PublishedCatalogClient('https://example.invalid/', fixture({ sourcePapers })).open();
+  await assert.rejects(client.search('Fanout chemistry'), /global_search_fanout_window_required/);
+  await assert.rejects(client.range('2023-10-01','2026-10-04'), /date_range_fanout_window_required/);
 });
