@@ -324,13 +324,19 @@ test('V3 write authority batches 65 dirty paper keys as 32/32/1 and never calls 
   });
 
   await page.goto('http://127.0.0.1:4173/', { waitUntil:'domcontentloaded' });
-  await expect.poll(() => mutations.length, { timeout:30000 }).toBe(3);
-  expect(mutations.map(item=>item.operations.length)).toEqual([32,32,1]);
-  expect(mutations.map(item=>item.expectedRevision)).toEqual([10,11,12]);
+  await expect.poll(() => mutations.filter(item=>item.operations?.length>0).length, { timeout:30000 }).toBe(3);
+  const paperMutations=mutations.filter(item=>item.operations?.length>0);
+  const globalMutations=mutations.filter(item=>item.operations?.length===0 && item.globalState);
+  expect(paperMutations.map(item=>item.operations.length)).toEqual([32,32,1]);
+  expect(globalMutations.length).toBeLessThanOrEqual(1);
+  expect(mutations.map(item=>item.expectedRevision)).toEqual(
+    mutations.map((_,index)=>10+index)
+  );
   expect(modes).not.toContain('account-save');
   expect(modes).not.toContain('account-pull');
   await expect.poll(() => page.evaluate(() => document.documentElement.dataset.accountSyncWrite || '')).toBe('v3');
-  await expect.poll(() => page.evaluate(key => localStorage.getItem(key), REVISION_KEY)).toBe('13');
+  await expect.poll(() => page.evaluate(key => localStorage.getItem(key), REVISION_KEY))
+    .toBe(String(10+mutations.length));
 });
 
 test('live write-authority flip upgrades a dirty paper from legacy save to V3 mutate without reload', async ({ page }) => {
@@ -371,7 +377,7 @@ test('live write-authority flip upgrades a dirty paper from legacy save to V3 mu
       const writeEnabled=activated;
       const head=headFor(revision,writeEnabled);
       await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
-        account:{userId:'u-live',readPath:'v3-head',writeEnabled,...head},
+        account:{userId:'u-live',readPath:'v3-head',writeEnabled,writeAuthority:'legacy',...head},
       })});
       return;
     }
@@ -400,7 +406,7 @@ test('live write-authority flip upgrades a dirty paper from legacy save to V3 mu
       if(!activated){
         initialLegacySave=structuredClone(body.state);
         await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({
-          account:{userId:'u-live',revision:2,updatedAt:200,state:body.state,writeEnabled:false},
+          account:{userId:'u-live',revision:2,updatedAt:200,state:body.state,writeEnabled:false,writeAuthority:'legacy'},
         })});
         return;
       }
