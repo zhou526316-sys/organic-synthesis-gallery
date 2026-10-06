@@ -31,9 +31,9 @@
   function isRscPdfPagePreviewUrl(value) {
     try {
       var url=new URL(String(value||''),location.href);
-      return /(?:^|\\.)rscj\\.silverchair-cdn\\.com$/i.test(url.hostname)&&/\\.pdf\\.gif$/i.test(url.pathname);
+      return /(?:^|\.)rscj\.silverchair-cdn\.com$/i.test(url.hostname)&&/\.pdf\.gif$/i.test(url.pathname);
     } catch (_) {
-      return /\\.pdf\\.gif(?:[?#]|$)/i.test(String(value||''));
+      return /\.pdf\.gif(?:[?#]|$)/i.test(String(value||''));
     }
   }
 
