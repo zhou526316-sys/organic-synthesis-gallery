@@ -359,6 +359,30 @@ test('status separates legacy authority from stale monolithic copies',async t=>{
   assert.equal(status.body.revisionMismatches,0);
 });
 
+test('canary-only write staging keeps legacy shadow active for ordinary accounts',async t=>{
+  const db=new D1();t.after(()=>db.close());
+  const state=fixture('legacy-canary-stage');
+  putLegacy(db,'u-legacy',state,1,100);
+  const env={
+    ...envFor(db),
+    USER_LIBRARY_V3_WRITE_ENABLED:'1',
+    USER_LIBRARY_V3_WRITE_CANARY_ONLY:'1',
+    USER_LIBRARY_V3_WRITE_CANARY_USER_ID:'u-canary',
+  };
+  const status=await getUserLibraryV3ShadowStatus(env);
+  assert.equal(status.body.configured,true);
+  assert.equal(status.body.enabled,true);
+  assert.equal(status.body.writeConfigured,true);
+  assert.equal(status.body.writeCanaryOnly,true);
+  assert.equal(status.body.writeEnabled,false);
+
+  const shadow=await shadowWriteUserLibraryV3FromState(env,'u-legacy',state,1,100,200);
+  assert.equal(shadow.written,true);
+  const compare=await compareUserLibraryV3ShadowPage(env,0,20);
+  assert.equal(compare.status,200);
+  assert.equal(compare.body.mismatched,0);
+});
+
 test('V3 write authority automatically disables legacy-to-V3 shadow/backfill/compare',async t=>{
   const db=new D1();t.after(()=>db.close());
   const state=fixture('authoritative');
