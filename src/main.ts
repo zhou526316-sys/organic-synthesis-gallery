@@ -4,7 +4,7 @@ import './styles.css';
 import { mountUserShell } from './user-shell';
 import { beijingDate, earliestAddedDate, isExcludedDoi, isNewToday as isNewTodayDate, msUntilNextBeijingDay, validAddedDate } from '../shared/literature-policy.js';
 import { TARGET_JOURNALS } from '../shared/literature-journals.js';
-import { RESULT_WINDOW_SIZE, resultWindowState } from '../shared/result-window.js';
+import { resultWindowState } from '../shared/result-window.js';
 import { store } from './user-ui/shared';
 import { PublishedCatalogClient, loadPublishedHotFallback } from '../architecture/published-reader.mjs';
 import {
@@ -224,13 +224,24 @@ let architectureEarliestDate = '';
 let latestCollectionDate = '';
 let architectureRefreshTimer: number | null = null;
 let architectureRefreshSerial = 0;
+const DESKTOP_RESULT_WINDOW_SIZE = 24;
+const MOBILE_RESULT_WINDOW_SIZE = 2;
+
+function resultWindowSize(): number {
+  return window.matchMedia('(max-width: 680px)').matches
+    ? MOBILE_RESULT_WINDOW_SIZE
+    : DESKTOP_RESULT_WINDOW_SIZE;
+}
+
 let resultWindowPage = 1;
+let lastResultWindowSize = resultWindowSize();
 let indexedViewCapability: boolean | null = null;
 let indexedViewSerial = 0;
 let indexedViewState: {
   requestKey: string;
   matched: number;
   page: number;
+  limit: number;
   cursors: string[];
   hasMore: boolean;
   nextCursor: string | null;
@@ -673,13 +684,14 @@ function renderCards(): void {
   if (!gallery || !count) return;
   const indexed = indexedViewState;
   const list = indexed ? indexed.papers : filteredPapers();
-  const localWindow = indexed ? null : resultWindowState(list.length, resultWindowPage, RESULT_WINDOW_SIZE);
+  const windowSize = indexed?.limit || resultWindowSize();
+  const localWindow = indexed ? null : resultWindowState(list.length, resultWindowPage, windowSize);
   if (localWindow) resultWindowPage = localWindow.page;
   const renderedList = indexed ? list : list.slice(localWindow!.start, localWindow!.end);
   const totalMatched = indexed ? indexed.matched : list.length;
   const currentPage = indexed ? indexed.page : localWindow!.page;
   const totalPages = indexed
-    ? Math.max(1, Math.ceil(indexed.matched / RESULT_WINDOW_SIZE))
+    ? Math.max(1, Math.ceil(indexed.matched / indexed.limit))
     : localWindow!.pages;
   const firstShown = totalMatched ? (indexed ? (currentPage - 1) * RESULT_WINDOW_SIZE + 1 : localWindow!.start + 1) : 0;
   const endShown = indexed ? firstShown + renderedList.length - (renderedList.length ? 1 : 0) : localWindow!.end;
@@ -1371,7 +1383,7 @@ function indexedViewRequest(cursor = ''): LiteratureCatalogViewRequest | null {
     dateTo,
     addedDate: onlyNew ? beijingDate() : '',
     sort: sort === 'oldest' ? 'oldest' : 'newest',
-    limit: RESULT_WINDOW_SIZE,
+    limit: resultWindowSize(),
     cursor,
   };
 }
@@ -1386,6 +1398,7 @@ function indexedViewRequestKey(request: LiteratureCatalogViewRequest): string {
     dateTo: request.dateTo || '',
     addedDate: request.addedDate || '',
     sort: request.sort || 'newest',
+    limit: request.limit || resultWindowSize(),
   });
 }
 
@@ -1408,6 +1421,7 @@ async function loadIndexedViewPage(
     requestKey,
     matched: response.matched,
     page,
+    limit: response.limit,
     cursors,
     hasMore: response.hasMore,
     nextCursor: response.nextCursor,
@@ -1474,6 +1488,7 @@ async function moveIndexedResultPage(delta: number): Promise<void> {
       requestKey: state.requestKey,
       matched: response.matched,
       page: targetPage,
+      limit: response.limit,
       cursors,
       hasMore: response.hasMore,
       nextCursor: response.nextCursor,
@@ -1555,7 +1570,16 @@ async function load(): Promise<void> {
 }
 
 window.addEventListener('scroll', () => scheduleMediaBatch(40), { passive: true });
-window.addEventListener('resize', () => scheduleMediaBatch(60));
+window.addEventListener('resize', () => {
+  const nextWindowSize = resultWindowSize();
+  if (nextWindowSize !== lastResultWindowSize) {
+    lastResultWindowSize = nextWindowSize;
+    resetResultWindow();
+    renderCards();
+    scheduleArchitectureCorpusRefresh(0);
+  }
+  scheduleMediaBatch(60);
+});
 window.addEventListener('gallery-assets-updated', event => {
   const detail = event instanceof CustomEvent ? event.detail as { doi?: unknown } : undefined;
   const doi = normalizeDoi(typeof detail?.doi === 'string' ? detail.doi : null);
