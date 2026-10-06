@@ -1,8 +1,10 @@
 import { normalizeDoi } from './media.js';
 
 const MAX_MUTATION_OPS = 32;
-const MAX_MUTATION_BYTES = 512 * 1024;
-const MAX_GLOBAL_BYTES = 256 * 1024;
+const MAX_MUTATION_BYTES = 2 * 1024 * 1024;
+const MAX_GLOBAL_BYTES = 1_500_000;
+const CHANGE_RETENTION_REVISIONS = 512;
+const COMPAT_ROW_SHADOW_VERSION = 2;
 const MAX_ROW_BYTES = 256 * 1024;
 const MAX_PAGE_LIMIT = 100;
 const MAX_DELTA_LIMIT = 100;
@@ -38,6 +40,19 @@ function integer(value, min, label) {
 }
 function flag(value) {
   return String(value || '') === '1';
+}
+
+function emptyGlobalState() {
+  return {
+    statuses:[],
+    quickTerms:[],
+    collections:[],
+    aliases:[],
+    actionStyles:{},
+    followedSearches:[],
+    searchHistory:[],
+    hideRead:false,
+  };
 }
 
 export function userLibraryV3ShadowEnabled(env) {
@@ -114,6 +129,57 @@ async function shapeRow(env, userId) {
   `).bind(userId).first();
 }
 
+async function authorityRow(env,userId) {
+  return env.DB.prepare(`
+    SELECT authority,activated_revision,activated_at
+    FROM user_library_v3_authority WHERE user_id=?
+  `).bind(userId).first();
+}
+async function legacyAuthorityMeta(env,userId) {
+  return env.DB.prepare(`
+    SELECT revision,updated_at
+    FROM user_library_state WHERE user_id=?
+  `).bind(userId).first();
+}
+
+async function shadowSyncMeta(env,userId) {
+  return env.DB.prepare(`
+    SELECT source_revision,source_updated_at
+    FROM user_library_v3_shadow_sync WHERE user_id=?
+  `).bind(userId).first();
+}
+
+function legacyShadowFresh(legacy,current,shape,sync) {
+  if (!legacy || !current || !shape || !sync) return false;
+  const revision=Number(legacy.revision || 0);
+  const updatedAt=Number(legacy.updated_at || 0);
+  return revision>=1
+    && Number(current.revision || 0)===revision
+    && Number(current.updated_at || 0)===updatedAt
+    && Number(shape.revision || 0)===revision
+    && Number(sync.source_revision || 0)===revision
+    && Number(sync.source_updated_at || 0)===updatedAt;
+}
+
+function shadowFreshnessConflict(legacy,currentRevision) {
+  return {
+    ok:false,
+    conflict:true,
+    reason:'user_library_v3_shadow_not_fresh',
+    currentRevision:Number(legacy?.revision || currentRevision || 0),
+    v3Revision:Number(currentRevision || 0),
+  };
+}
+
+
+export async function userLibraryV3Authority(env,userIdValue) {
+  if (!env?.DB) return 'legacy';
+  const userId = safeText(userIdValue,300);
+  if (!userId) return 'legacy';
+  const row = await authorityRow(env,userId);
+  return row?.authority === 'v3' ? 'v3' : 'legacy';
+}
+
 async function existingRows(env, userId, operations) {
   if (!operations.length) return new Map();
   const placeholders = operations.map(() => '?').join(',');
@@ -187,8 +253,24 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   const now = integer(nowValue, 1, 'user_library_v3_updated_at_invalid');
   const current = await headRow(env, userId);
   const currentShape = await shapeRow(env,userId);
+  const currentAuthority = await authorityRow(env,userId);
   const currentRevision = Number(current?.revision || 0);
   if (mutation.expectedRevision !== currentRevision) return conflict(currentRevision);
+
+  let legacyMeta = null;
+  let syncMeta = null;
+  const firstMigration = currentAuthority?.authority !== 'v3';
+  if (firstMigration) {
+    legacyMeta = await legacyAuthorityMeta(env,userId);
+    if (legacyMeta) {
+      syncMeta = await shadowSyncMeta(env,userId);
+      if (!legacyShadowFresh(legacyMeta,current,currentShape,syncMeta)) {
+        return shadowFreshnessConflict(legacyMeta,currentRevision);
+      }
+    } else if (currentRevision !== 0 || current || currentShape) {
+      return shadowFreshnessConflict(null,currentRevision);
+    }
+  }
 
   const existing = await existingRows(env, userId, mutation.operations);
   let paperCount = Number(current?.paper_count || 0);
@@ -209,13 +291,47 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   const globalJson = mutation.hasGlobal ? mutation.globalJson : currentGlobalJson;
   const globalRevision = mutation.hasGlobal ? nextRevision : Number(current?.global_revision || 0);
   const floor = Number(current?.change_floor_revision || 0);
+  const nextFloor = Math.max(floor, Math.max(0,nextRevision-CHANGE_RETENTION_REVISIONS));
   const papersSplit = currentShape ? Number(currentShape.papers_split || 0)===1 : true;
   const metadataSplit = currentShape ? Number(currentShape.metadata_split || 0)===1 : true;
+  const authorityStatement = firstMigration && legacyMeta
+    ? env.DB.prepare(`
+        INSERT INTO user_library_v3_authority (user_id,authority,activated_revision,activated_at)
+        VALUES (
+          ?,
+          CASE WHEN EXISTS (
+            SELECT 1
+            FROM user_library_state legacy
+            INNER JOIN user_library_v3_head head ON head.user_id=legacy.user_id
+            INNER JOIN user_library_v3_shape shape ON shape.user_id=legacy.user_id
+            INNER JOIN user_library_v3_shadow_sync sync ON sync.user_id=legacy.user_id
+            WHERE legacy.user_id=?
+              AND legacy.revision=?
+              AND legacy.updated_at=?
+              AND head.revision=legacy.revision
+              AND head.updated_at=legacy.updated_at
+              AND shape.revision=legacy.revision
+              AND sync.source_revision=legacy.revision
+              AND sync.source_updated_at=legacy.updated_at
+          ) THEN 'v3' ELSE 'stale' END,
+          ?,?
+        )
+        ON CONFLICT(user_id) DO NOTHING
+      `).bind(
+        userId,userId,Number(legacyMeta.revision),Number(legacyMeta.updated_at),nextRevision,now,
+      )
+    : env.DB.prepare(`
+        INSERT INTO user_library_v3_authority (user_id,authority,activated_revision,activated_at)
+        VALUES (?,'v3',?,?)
+        ON CONFLICT(user_id) DO NOTHING
+      `).bind(userId,nextRevision,now);
   const statements = [
     env.DB.prepare(`
       INSERT INTO user_library_v3_commits (user_id,revision,expected_revision,updated_at)
       VALUES (?,?,?,?)
     `).bind(userId,nextRevision,currentRevision,now),
+    authorityStatement,
+    env.DB.prepare('DELETE FROM user_library_state WHERE user_id=?').bind(userId),
   ];
 
   mutation.operations.forEach((op, seq) => {
@@ -247,6 +363,59 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
     ));
   });
 
+  mutation.operations.forEach(op => {
+    if (op.deleted) {
+      statements.push(env.DB.prepare(
+        'DELETE FROM user_paper_state WHERE user_id=? AND paper_key=?'
+      ).bind(userId,op.paperKey));
+      return;
+    }
+    statements.push(env.DB.prepare(`
+      INSERT INTO user_paper_state
+        (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,revision,updated_at)
+      VALUES (?,?,?,?,?,?,?,?,?)
+      ON CONFLICT(user_id,paper_key) DO UPDATE SET
+        doi=excluded.doi,
+        paper_present=excluded.paper_present,
+        paper_state_json=excluded.paper_state_json,
+        metadata_present=excluded.metadata_present,
+        metadata_json=excluded.metadata_json,
+        revision=excluded.revision,
+        updated_at=excluded.updated_at
+    `).bind(
+      userId,op.paperKey,op.doi,op.paperPresent?1:0,op.paperStateJson,
+      op.metadataPresent?1:0,op.metadataJson,nextRevision,now,
+    ));
+  });
+
+  statements.push(env.DB.prepare(`
+    INSERT INTO user_library_head
+      (user_id,revision,updated_at,global_json,papers_split,metadata_split,paper_count,metadata_count,source_state_hash,shadow_version)
+    VALUES (?,?,?,?,?,?,?,?,?,?)
+    ON CONFLICT(user_id) DO UPDATE SET
+      revision=excluded.revision,
+      updated_at=excluded.updated_at,
+      global_json=excluded.global_json,
+      papers_split=excluded.papers_split,
+      metadata_split=excluded.metadata_split,
+      paper_count=excluded.paper_count,
+      metadata_count=excluded.metadata_count,
+      source_state_hash=excluded.source_state_hash,
+      shadow_version=excluded.shadow_version
+    WHERE user_library_head.revision < excluded.revision
+  `).bind(
+    userId,nextRevision,now,globalJson,papersSplit?1:0,metadataSplit?1:0,paperCount,metadataCount,
+    `v3-authority:${nextRevision}`,COMPAT_ROW_SHADOW_VERSION,
+  ));
+
+  if (nextFloor > floor) {
+    statements.push(
+      env.DB.prepare('DELETE FROM user_library_v3_changes WHERE user_id=? AND revision<?').bind(userId,nextFloor),
+      env.DB.prepare('DELETE FROM user_library_v3_commits WHERE user_id=? AND revision<?').bind(userId,nextFloor),
+      env.DB.prepare('DELETE FROM user_library_v3_rows WHERE user_id=? AND deleted=1 AND revision<?').bind(userId,nextFloor),
+    );
+  }
+
   statements.push(env.DB.prepare(`
     INSERT INTO user_library_v3_shape (user_id,papers_split,metadata_split,revision)
     VALUES (?,?,?,?)
@@ -264,14 +433,14 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
         change_floor_revision=?,schema_version=1
       WHERE user_id=? AND revision=?
     `).bind(
-      nextRevision,now,globalJson,globalRevision,paperCount,metadataCount,floor,userId,currentRevision,
+      nextRevision,now,globalJson,globalRevision,paperCount,metadataCount,nextFloor,userId,currentRevision,
     ));
   } else {
     statements.push(env.DB.prepare(`
       INSERT INTO user_library_v3_head
         (user_id,revision,updated_at,global_json,global_revision,paper_count,metadata_count,change_floor_revision,schema_version)
       VALUES (?,?,?,?,?,?,?,?,1)
-    `).bind(userId,nextRevision,now,globalJson,globalRevision,paperCount,metadataCount,floor));
+    `).bind(userId,nextRevision,now,globalJson,globalRevision,paperCount,metadataCount,nextFloor));
   }
 
   try {
@@ -283,6 +452,22 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
   } catch (error) {
     const after = await headRow(env, userId);
     if (Number(after?.revision || 0) !== currentRevision) return conflict(after?.revision || 0);
+    if (firstMigration) {
+      const [afterAuthority,afterLegacy,afterShape,afterSync] = await Promise.all([
+        authorityRow(env,userId),
+        legacyAuthorityMeta(env,userId),
+        shapeRow(env,userId),
+        shadowSyncMeta(env,userId),
+      ]);
+      if (afterAuthority?.authority !== 'v3') {
+        if (afterLegacy && !legacyShadowFresh(afterLegacy,after,afterShape,afterSync)) {
+          return shadowFreshnessConflict(afterLegacy,currentRevision);
+        }
+        if (!afterLegacy && currentRevision !== 0) {
+          return shadowFreshnessConflict(null,currentRevision);
+        }
+      }
+    }
     throw error;
   }
 
@@ -298,6 +483,9 @@ export async function applyUserLibraryV3Mutation(env, userIdValue, input, nowVal
     metadataCount,
     globalRevision,
     operationCount:mutation.operations.length,
+    changeFloorRevision:nextFloor,
+    compatibilityReadPath:'rows-v2',
+    writeAuthority:'v3',
   };
 }
 
@@ -310,7 +498,7 @@ export async function readUserLibraryV3Head(env, userIdValue) {
   const head = await headRow(env, userId);
   if (!head) {
     return {
-      ready:true, revision:0, updatedAt:0, globalState:{}, globalRevision:0,
+      ready:true, revision:0, updatedAt:0, globalState:emptyGlobalState(), globalRevision:0,
       paperCount:0, metadataCount:0, changeFloorRevision:0,
       papersSplit:true, metadataSplit:true,
     };
@@ -420,4 +608,5 @@ export const USER_LIBRARY_V3_LIMITS = Object.freeze({
   maxRowBytes:MAX_ROW_BYTES,
   maxPageLimit:MAX_PAGE_LIMIT,
   maxDeltaLimit:MAX_DELTA_LIMIT,
+  changeRetentionRevisions:CHANGE_RETENTION_REVISIONS,
 });
