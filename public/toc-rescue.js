@@ -30,7 +30,7 @@
     if (!manifestPromise) {
       manifestPromise = fetch(assetUrl('media-index.json'), {
         credentials: 'same-origin',
-        cache: 'no-store',
+        cache: 'default',
       })
         .then(response => response.ok ? response.json() : { items: {} })
         .then(payload => payload && typeof payload === 'object' ? payload : { items: {} })
@@ -185,15 +185,30 @@
     }, delay);
   }
 
-  const observer = new MutationObserver(() => scheduleScan(30));
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-  window.addEventListener('pageshow', () => scheduleScan(0));
-  window.addEventListener('scroll', () => scheduleScan(50), { passive: true });
-  window.addEventListener('resize', () => scheduleScan(80), { passive: true });
+  let active = false;
+  let observer = null;
+
+  function activate() {
+    if (active) return;
+    active = true;
+    observer = new MutationObserver(() => scheduleScan(30));
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
+    scheduleScan(0);
+  }
+
+  function onScroll() { scheduleScan(50); }
+  function onResize() { scheduleScan(80); }
+
+  window.addEventListener('gallery-media-static-fallback', activate, { once: true });
+  window.addEventListener('pageshow', event => {
+    if (active && event.persisted) scheduleScan(0);
+  });
   window.addEventListener('gallery-assets-updated', () => {
+    if (!active) return;
     manifestPromise = null;
     liveCapturePromise = null;
     scheduleScan(0);
   });
-  scheduleScan(0);
 })();

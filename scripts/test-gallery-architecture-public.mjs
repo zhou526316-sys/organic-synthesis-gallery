@@ -52,6 +52,14 @@ test('public architecture publishes a bounded hash-bound Hot head object', () =>
   assert.ok(delivery.includes('release.hotHead'));
 });
 
+test('TOC rescue stays dormant until the bounded media path fails', () => {
+  const rescue = readFileSync('public/toc-rescue.js','utf8');
+  assert.ok(rescue.includes("gallery-media-static-fallback"));
+  assert.ok(rescue.includes('function activate()'));
+  assert.ok(!/\nscheduleScan\(0\);\s*\n\}\)\(\);\s*$/.test(rescue));
+  assert.ok(!rescue.includes("cache: 'no-store'"));
+});
+
 test('public architecture publishes a bounded hash-bound Hot fallback object', () => {
   const builder = readFileSync('scripts/build-gallery-architecture-public.mjs','utf8');
   assert.ok(builder.includes("schema: 'gallery-hot-fallback-v1'"));
