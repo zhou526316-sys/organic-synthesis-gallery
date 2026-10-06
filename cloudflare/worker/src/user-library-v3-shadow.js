@@ -94,7 +94,46 @@ function rebuildV3State(head, shape, rows) {
   return state;
 }
 
-function rowStatements(env, userId, split, revision, updatedAt) {
+function comparableRow(row) {
+  return {
+    doi: typeof row?.doi === 'string' && row.doi ? row.doi : null,
+    paperPresent: Boolean(row?.paperPresent ?? Number(row?.paper_present || 0) === 1),
+    paperStateJson: row?.paperStateJson ?? row?.paper_state_json ?? null,
+    metadataPresent: Boolean(row?.metadataPresent ?? Number(row?.metadata_present || 0) === 1),
+    metadataJson: row?.metadataJson ?? row?.metadata_json ?? null,
+  };
+}
+
+function shadowRowDiff(oldRows, newRows) {
+  const oldByKey = new Map((oldRows || []).map(row => [String(row.paper_key), comparableRow(row)]));
+  const newByKey = new Map((newRows || []).map(row => [String(row.paperKey), comparableRow(row)]));
+  const keys = [...new Set([...oldByKey.keys(), ...newByKey.keys()])].sort();
+  const changes = [];
+  const tombstones = [];
+  for (const paperKey of keys) {
+    const oldRow = oldByKey.get(paperKey);
+    const newRow = newByKey.get(paperKey);
+    if (oldRow && !newRow) {
+      changes.push({
+        paperKey,op:'delete',doi:oldRow.doi,
+        paperPresent:false,paperStateJson:null,metadataPresent:false,metadataJson:null,
+      });
+      tombstones.push({ paperKey, doi:oldRow.doi });
+      continue;
+    }
+    if (!newRow) continue;
+    const same = oldRow
+      && oldRow.doi === newRow.doi
+      && oldRow.paperPresent === newRow.paperPresent
+      && oldRow.paperStateJson === newRow.paperStateJson
+      && oldRow.metadataPresent === newRow.metadataPresent
+      && oldRow.metadataJson === newRow.metadataJson;
+    if (!same) changes.push({ paperKey,op:'upsert',...newRow });
+  }
+  return { changes, tombstones };
+}
+
+function rowStatements(env, userId, split, revision, updatedAt, tombstones = []) {
   const claim = `EXISTS (
     SELECT 1 FROM user_library_v3_shadow_sync
     WHERE user_id=? AND inflight_revision=? AND source_revision<?
@@ -102,7 +141,7 @@ function rowStatements(env, userId, split, revision, updatedAt) {
   const statements = [
     env.DB.prepare(`
       DELETE FROM user_library_v3_rows
-      WHERE user_id=? AND ${claim}
+      WHERE user_id=? AND deleted=0 AND ${claim}
     `).bind(userId,userId,revision,revision),
   ];
   for (const row of split.rows || []) {
@@ -137,6 +176,29 @@ function rowStatements(env, userId, split, revision, updatedAt) {
       userId,revision,revision,
     ));
   }
+  for (const row of tombstones) {
+    statements.push(env.DB.prepare(`
+      INSERT INTO user_library_v3_rows
+        (user_id,paper_key,doi,paper_present,paper_state_json,metadata_present,metadata_json,deleted,revision,updated_at)
+      SELECT ?,?,?,0,NULL,0,NULL,1,?,?
+      WHERE ${claim}
+      ON CONFLICT(user_id,paper_key) DO UPDATE SET
+        doi=excluded.doi,
+        paper_present=0,
+        paper_state_json=NULL,
+        metadata_present=0,
+        metadata_json=NULL,
+        deleted=1,
+        revision=excluded.revision,
+        updated_at=excluded.updated_at
+      WHERE user_library_v3_rows.revision<=excluded.revision
+        AND ${claim}
+    `).bind(
+      userId,row.paperKey,row.doi,revision,updatedAt,
+      userId,revision,revision,
+      userId,revision,revision,
+    ));
+  }
   return statements;
 }
 
@@ -154,7 +216,8 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
 
   const split = await splitUserLibraryState(state);
   const current = await v3Sync(env, userId);
-  const currentRevision = Number(current?.source_revision || 0);
+  const currentHead = await v3Head(env, userId);
+  const currentRevision = Math.max(Number(current?.source_revision || 0), Number(currentHead?.revision || 0));
   if (currentRevision > revision) {
     return { enabled:true, written:false, skippedStale:true, currentRevision };
   }
@@ -165,6 +228,13 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
     }
     throw new Error('user_library_v3_shadow_revision_conflict');
   }
+
+  const oldRows = currentRevision > 0 ? await v3Rows(env,userId,currentRevision) : [];
+  const { changes, tombstones } = shadowRowDiff(oldRows,split.rows || []);
+  const previousFloor = Number(currentHead?.change_floor_revision || 0);
+  const changeFloorRevision = previousFloor > 0 ? previousFloor : revision;
+  const globalChanged = String(currentHead?.global_json || '') !== split.globalJson;
+  const globalRevision = globalChanged ? revision : Number(currentHead?.global_revision || revision);
 
   const claimCheck = `EXISTS (
     SELECT 1 FROM user_library_v3_shadow_sync
@@ -182,7 +252,25 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
       WHERE user_library_v3_shadow_sync.source_revision<excluded.inflight_revision
         AND user_library_v3_shadow_sync.inflight_revision<excluded.inflight_revision
     `).bind(userId,revision,now),
-    ...rowStatements(env,userId,split,revision,updatedAt),
+    env.DB.prepare(`
+      INSERT INTO user_library_v3_commits (user_id,revision,expected_revision,updated_at)
+      SELECT ?,?,?,?
+      WHERE ${claimCheck}
+      ON CONFLICT(user_id,revision) DO NOTHING
+    `).bind(userId,revision,currentRevision,updatedAt,userId,revision,revision),
+    ...changes.map((change,seq)=>env.DB.prepare(`
+      INSERT INTO user_library_v3_changes
+        (user_id,revision,seq,paper_key,op,doi,paper_present,paper_state_json,metadata_present,metadata_json,updated_at)
+      SELECT ?,?,?,?,?,?,?,?,?,?,?
+      WHERE ${claimCheck}
+      ON CONFLICT(user_id,revision,seq) DO NOTHING
+    `).bind(
+      userId,revision,seq,change.paperKey,change.op,change.doi,
+      change.paperPresent?1:0,change.paperStateJson,
+      change.metadataPresent?1:0,change.metadataJson,updatedAt,
+      userId,revision,revision,
+    )),
+    ...rowStatements(env,userId,split,revision,updatedAt,tombstones),
     env.DB.prepare(`
       INSERT INTO user_library_v3_head
         (user_id,revision,updated_at,global_json,global_revision,paper_count,metadata_count,change_floor_revision,schema_version)
@@ -200,8 +288,8 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
       WHERE user_library_v3_head.revision<=excluded.revision
         AND ${claimCheck}
     `).bind(
-      userId,revision,updatedAt,split.globalJson,revision,
-      split.paperCount,split.metadataCount,revision,
+      userId,revision,updatedAt,split.globalJson,globalRevision,
+      split.paperCount,split.metadataCount,changeFloorRevision,
       userId,revision,revision,
       userId,revision,revision,
     ),
@@ -261,6 +349,8 @@ export async function shadowWriteUserLibraryV3FromState(env, userIdValue, state,
     paperCount:split.paperCount,
     metadataCount:split.metadataCount,
     sourceStateHash:split.sourceStateHash,
+    changeCount:changes.length,
+    changeFloorRevision,
   };
 }
 
