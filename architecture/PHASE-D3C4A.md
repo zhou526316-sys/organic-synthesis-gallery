@@ -57,6 +57,32 @@ It performs a fresh bounded server read, merges with local state using the exist
 
 A full-library comparison is permitted only in this exceptional conflict/recovery path or during initial account merge. Normal edits remain dirty-key bounded.
 
+## Durable per-user write authority
+
+Global feature flags are not sufficient rollback state once an account has committed a V3 mutation.
+
+D3c4a therefore adds `user_library_v3_authority`.
+
+On the first successful V3 mutation, in the same atomic D1 batch:
+
+- the account is marked `authority=v3`;
+- the V3 revision/current rows/change-log are committed;
+- D3b compatibility rows/head are updated;
+- the old `user_library_state` monolithic document is deleted.
+
+Absence of an authority row means the account is still legacy-authoritative. A V3 authority row is durable and is never cleared by a global feature-flag rollback.
+
+If the global V3 write flag is later disabled:
+
+- legacy-authoritative accounts may continue on the legacy write path;
+- V3-authoritative accounts continue to read from V3/D3b compatibility rows;
+- V3-authoritative accounts enter a write-suspended state;
+- `account-save/account-merge` remain blocked for those accounts;
+- legacy-to-V3 shadow/backfill/reconcile exclude those accounts;
+- the browser keeps local dirty changes and does not attempt a legacy write.
+
+This makes rollback fail-safe: stopping new V3 writes cannot revive a stale monolithic document as authority.
+
 ## Compatibility row mirror
 
 Every successful V3 mutation also updates the D3b compatibility row model in the same atomic batch:
@@ -113,4 +139,4 @@ Before enabling V3 writes it must prove:
 - an isolated production canary can mutate a temporary test user, read it through V3, read it through the D3b compatibility path, observe delta, trigger a deliberate revision conflict, and clean up;
 - failure automatically redeploys with `USER_LIBRARY_V3_WRITE_ENABLED=0`.
 
-Only after that can the legacy monolithic 1.5 MB document cease to be the normal write path.
+Only after that can the legacy monolithic 1.5 MB document cease to be the normal write path. The per-user authority marker ensures that accounts already migrated remain V3-authoritative even if the global activation flag is rolled back.
