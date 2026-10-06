@@ -48,7 +48,7 @@ if(process.env.TM221_BASELINE){
  console.log('TM221_REPRODUCED_PRODUCTION_BUG '+JSON.stringify({opened:h.opened.length,failed:h.summary().failed,reason:'controller_lease_lost'}));
 }
 await test('repeated resume while loading does not delete lease or duplicate dispatch',async()=>{
- const h=harness(source,{onFetch:async(u,c,m)=>{if(u.includes('capture-capabilities')){m.get('继续媒体抓取主线')();m.get('立即运行媒体抓取队列')();}}});
+ const h=harness(source,{onFetch:async(u,c,m)=>{if(u.includes('capture-capabilities')){m.get('继续媒体抓取主线')();m.get('继续媒体抓取主线')();}}});
  await h.run();assert.equal(h.summary().success,20);assert.equal(h.summary().failed,0);assert.equal(h.maxLive,1);assert.ok(h.opened.every(x=>x.closed));
 });
 await test('lease lost while fetching queue opens zero pages and latches stop',async()=>{
