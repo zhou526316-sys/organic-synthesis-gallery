@@ -104,11 +104,14 @@ test('admin routes and health expose D3b row-read activation',()=>{
     '/api/admin/user-library-shadow/backfill',
     '/api/admin/user-library-shadow/compare',
   ]) assert.ok(index.includes(path),path);
-  assert.ok(index.includes("userLibraryRowShadowEnabled: String(env.USER_LIBRARY_ROW_SHADOW_ENABLED || '') === '1'"));
+  assert.ok(index.includes('userLibraryRowShadowEnabled: userLibraryRowShadowEnabled(env)'));
   assert.ok(index.includes("userLibraryRowReadEnabled: String(env.USER_LIBRARY_ROW_READ_ENABLED || '') === '1'"));
   assert.ok(deploy.includes('body?.userLibraryRowShadowEnabled === true'));
   assert.ok(deploy.includes('body?.userLibraryRowReadEnabled === true'));
   assert.ok(shadow.includes('readConfigured,readPathActive'));
+  assert.ok(shadow.includes("USER_LIBRARY_V3_WRITE_ENABLED"));
+  assert.ok(shadow.includes("!== '1'"));
+  assert.ok(shadow.includes("error:'user_library_row_shadow_disabled'"));
 });
 
 console.log('USER_LIBRARY_ROW_SHADOW_DEPLOYMENT_CONTRACT_PASS');
