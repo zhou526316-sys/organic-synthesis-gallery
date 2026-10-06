@@ -68,6 +68,36 @@ CREATE TABLE IF NOT EXISTS user_library_v3_shape (
   revision INTEGER NOT NULL CHECK (revision >= 0)
 );
 
+
+CREATE TABLE IF NOT EXISTS user_library_v3_authority (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  authority TEXT NOT NULL DEFAULT 'v3' CHECK (authority = 'v3'),
+  activated_revision INTEGER NOT NULL CHECK (activated_revision >= 1),
+  activated_at INTEGER NOT NULL
+);
+
+-- Once a user has crossed the irreversible per-user V3 authority boundary,
+-- even an in-flight older Worker is forbidden from reviving the monolithic write path.
+CREATE TRIGGER IF NOT EXISTS trg_user_library_state_block_v3_insert
+BEFORE INSERT ON user_library_state
+WHEN EXISTS (
+  SELECT 1 FROM user_library_v3_authority
+  WHERE user_id=NEW.user_id AND authority='v3'
+)
+BEGIN
+  SELECT RAISE(ABORT,'user_library_v3_authority_active');
+END;
+
+CREATE TRIGGER IF NOT EXISTS trg_user_library_state_block_v3_update
+BEFORE UPDATE ON user_library_state
+WHEN EXISTS (
+  SELECT 1 FROM user_library_v3_authority
+  WHERE user_id=NEW.user_id AND authority='v3'
+)
+BEGIN
+  SELECT RAISE(ABORT,'user_library_v3_authority_active');
+END;
+
 CREATE TABLE IF NOT EXISTS user_library_v3_shadow_sync (
   user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   source_revision INTEGER NOT NULL DEFAULT 0 CHECK (source_revision >= 0),
