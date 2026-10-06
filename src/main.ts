@@ -1679,6 +1679,7 @@ async function load(): Promise<void> {
       latestCollectionDate = legacyDates[legacyDates.length - 1] || '';
     }
     mount();
+    window.dispatchEvent(new CustomEvent('gallery-first-content-rendered'));
     if (architectureMode === 'architecture-v1' && (dateFrom || dateTo || query.trim())) scheduleArchitectureCorpusRefresh(0);
     void resolveTitles().then(() => resolveTitles());
     void loadTranslations();
