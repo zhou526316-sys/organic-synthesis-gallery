@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+test.use({ browserName: 'webkit' });
+
 const SESSION_KEY = 'organic-gallery-session-v1';
 const STATE_KEY = 'organic-gallery-user-ui-v1';
 const REVISION_KEY = 'organic-gallery-account-sync-revision-v1';
