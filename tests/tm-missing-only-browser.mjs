@@ -35,7 +35,8 @@ try{
  await a.locator('#osg-immediate-start').click();await a.waitForFunction(()=>__opened.length===1);
  await a.waitForTimeout(1100);
  const snap=await a.evaluate(()=>{const s=document.querySelector('#osg-capture-live-panel').shadowRoot;return {needs:s.querySelector('#needs').textContent,batch:s.querySelector('#batch').textContent,queue:s.querySelector('#queue').textContent,title:s.querySelector('summary').textContent,total:GM_getValue('osg-toc-v6:last-run-summary').total}});
- assert.equal(snap.total,1);assert.equal(snap.needs,'TOC');assert.match(snap.title,/全队列补缺6/);assert.doesNotMatch(snap.batch,/765/);assert.doesNotMatch(snap.queue,/正文图/);assert.doesNotMatch(snap.queue,/文本/);
+ assert.equal(snap.total,1);assert.equal(snap.needs,'TOC＋正文图＋全文');assert.match(snap.title,/全队列补缺6/);assert.doesNotMatch(snap.batch,/765/);assert.match(snap.queue,/正文图/);assert.match(snap.queue,/全文/);
+ const bundled=await a.evaluate(()=>__opened[0].job);assert.equal(bundled.captureToc,true);assert.equal(bundled.captureFigures,false);assert.equal(bundled.captureEvidence,false);assert.equal(bundled.opportunisticFigures,true);assert.equal(bundled.opportunisticEvidence,true);
  await a.screenshot({path:out+'/tm-missing-toc.png'});
  await a.locator('#osg-immediate-start').click();await a.waitForFunction(()=>__opened.length===2);assert.equal(await a.evaluate(()=>__opened[0].tab.closed),true);
  await b.locator('#osg-immediate-start').click();await b.waitForFunction(()=>__opened.length===1);await a.waitForFunction(()=>__opened[1].tab.closed===true);
@@ -47,6 +48,6 @@ try{
  await b.screenshot({path:out+'/tm-missing-text.png'});
  assert.equal(await b.evaluate(()=>GM_getValue('saved-fixture').retained),true);
  assert.equal(report.consoleErrors.length,0);assert.equal(report.pageErrors.length,0);assert.equal(report.failedRequests.length,0);
- report.passed=true;report.cases=['765 inventory ->1 TOC task','TOC-only work labelled','body/text gaps excluded from queue','no full-corpus denominator','repeat click restarts immediately','second-page takeover','late result fenced','no text-only follow-up','saved data preserved'];
+ report.passed=true;report.cases=['765 inventory ->1 publisher visit','Oct1 TOC visit bundles body figures and full text','body/text gaps do not create standalone visits','no full-corpus denominator','repeat click restarts immediately','second-page takeover','late result fenced','no text-only follow-up','saved data preserved'];
  await b.evaluate(()=>T.requestControllerPause());
 }finally{await context.tracing.stop({path:out+'/tm-missing-browser-trace.zip'});await fs.writeFile(out+'/tm-missing-browser-report.json',JSON.stringify(report,null,2));console.log('MISSING_BROWSER_REPORT',JSON.stringify(report));await browser.close();server.close()}
