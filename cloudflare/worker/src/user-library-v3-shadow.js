@@ -28,7 +28,8 @@ async function runStatements(env, statements) {
 }
 
 export function userLibraryV3ShadowEnabled(env) {
-  return flag(env?.USER_LIBRARY_V3_SHADOW_ENABLED);
+  return flag(env?.USER_LIBRARY_V3_SHADOW_ENABLED)
+    && !flag(env?.USER_LIBRARY_V3_WRITE_ENABLED);
 }
 
 async function sourceMeta(env, userId) {
@@ -372,6 +373,7 @@ export async function getUserLibraryV3ShadowStatus(env) {
   ]);
   return { status:200, body:{
     ok:true,
+    configured:flag(env.USER_LIBRARY_V3_SHADOW_ENABLED),
     enabled:userLibraryV3ShadowEnabled(env),
     readEnabled:flag(env.USER_LIBRARY_V3_READ_ENABLED),
     writeEnabled:flag(env.USER_LIBRARY_V3_WRITE_ENABLED),
@@ -558,6 +560,9 @@ async function compareOne(env, legacy) {
 }
 
 export async function compareUserLibraryV3ShadowPage(env, offsetValue = 0, limitValue = 20) {
+  if (!userLibraryV3ShadowEnabled(env)) {
+    return { status:409, body:{ error:'user_library_v3_shadow_disabled' } };
+  }
   if (!env?.DB) return { status:503, body:{ error:'user_library_v3_shadow_db_missing' } };
   const offset = Math.max(0,Math.floor(Number(offsetValue || 0)));
   const limit = Math.max(1,Math.min(MAX_COMPARE_LIMIT,Number(limitValue || 20)));
