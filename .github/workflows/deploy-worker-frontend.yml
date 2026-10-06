@@ -281,7 +281,7 @@ jobs:
           USER_LIBRARY_ROW_READ_ENABLED = "1"
           USER_LIBRARY_V3_SHADOW_ENABLED = "1"
           USER_LIBRARY_V3_READ_ENABLED = "1"
-          USER_LIBRARY_V3_WRITE_ENABLED = "0"
+          USER_LIBRARY_V3_WRITE_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_SHADOW_ENABLED = "1"
           SITE_ANALYTICS_MATERIALIZED_READ_ENABLED = "1"
           LITERATURE_CATALOG_INDEX_SHADOW_ENABLED = "1"
@@ -325,10 +325,112 @@ jobs:
         working-directory: cloudflare/worker
         run: npx wrangler deploy --dry-run --config wrangler.frontend.toml --outdir .wrangler-frontend-dry-run
 
+      - name: Verify user library V3 write activation preflight
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+          REPORT_PATH: /tmp/user-library-v3-write-preflight.json
+        run: node scripts/user-library-v3-write-activation-canary.mjs preflight
+
       - name: Deploy frontend assets
         id: deploy_worker
         working-directory: cloudflare/worker
         run: npx wrangler deploy --config wrangler.frontend.toml
+
+      - name: Verify isolated user library V3 write canary
+        id: user_library_v3_write_canary
+        continue-on-error: true
+        working-directory: cloudflare/worker
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+        shell: bash
+        run: |
+          set -euo pipefail
+          CANARY_USER_ID="d3c4b-canary-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          CANARY_TOKEN="$(node -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex'))")"
+          CANARY_HASH="$(node -e "const c=require('crypto');process.stdout.write(c.createHash('sha256').update(process.argv[1]).digest('hex'))" "$CANARY_TOKEN")"
+          NOW_MS="$(node -e "process.stdout.write(String(Date.now()))")"
+          EXPIRES_MS="$(node -e "process.stdout.write(String(Date.now()+15*60*1000))")"
+          export CANARY_USER_ID CANARY_TOKEN
+
+          cleanup_canary() {
+            set +e
+            npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" >/tmp/d3c4b-canary-cleanup.txt 2>&1
+            CLEAN_STATUS=$?
+            npx wrangler d1 execute "$D1_NAME" --remote --command "SELECT
+              (SELECT COUNT(*) FROM users WHERE id='$CANARY_USER_ID') AS users_count,
+              (SELECT COUNT(*) FROM user_sessions WHERE user_id='$CANARY_USER_ID') AS sessions_count,
+              (SELECT COUNT(*) FROM user_library_v3_head WHERE user_id='$CANARY_USER_ID') AS v3_head_count,
+              (SELECT COUNT(*) FROM user_library_v3_rows WHERE user_id='$CANARY_USER_ID') AS v3_row_count,
+              (SELECT COUNT(*) FROM user_library_v3_changes WHERE user_id='$CANARY_USER_ID') AS v3_change_count,
+              (SELECT COUNT(*) FROM user_library_head WHERE user_id='$CANARY_USER_ID') AS compat_head_count,
+              (SELECT COUNT(*) FROM user_paper_state WHERE user_id='$CANARY_USER_ID') AS compat_row_count;" --json >/tmp/d3c4b-canary-clean-check.json 2>&1
+            VERIFY_STATUS=$?
+            set -e
+            if [ "$CLEAN_STATUS" -ne 0 ] || [ "$VERIFY_STATUS" -ne 0 ]; then
+              cat /tmp/d3c4b-canary-cleanup.txt || true
+              cat /tmp/d3c4b-canary-clean-check.json || true
+              return 1
+            fi
+            node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('/tmp/d3c4b-canary-clean-check.json','utf8'));
+          const rows=Array.isArray(data)?data.flatMap(x=>x.results||[]):(data.results||[]);
+          const row=rows[0]||{};
+          const leaks=Object.fromEntries(Object.entries(row).filter(([,value])=>Number(value||0)!==0));
+          if(Object.keys(leaks).length) throw new Error('D3c4b canary cleanup leaked rows: '+JSON.stringify(leaks));
+          console.log(JSON.stringify({d3c4bCanaryCleanup:true}));
+          NODE
+          }
+
+          npx wrangler d1 execute "$D1_NAME" --remote --command "INSERT INTO users
+            (id,display_name,email,avatar_url,created_at,updated_at)
+            VALUES ('$CANARY_USER_ID','D3c4b Canary',NULL,NULL,$NOW_MS,$NOW_MS);
+            INSERT INTO user_sessions(token_hash,user_id,created_at,expires_at)
+            VALUES ('$CANARY_HASH','$CANARY_USER_ID',$NOW_MS,$EXPIRES_MS);" >/tmp/d3c4b-canary-create.txt
+
+          set +e
+          REPORT_PATH=/tmp/user-library-v3-write-canary.json \
+            node ../../scripts/user-library-v3-write-activation-canary.mjs canary
+          CANARY_STATUS=$?
+          set -e
+          cleanup_canary
+          exit "$CANARY_STATUS"
+
+      - name: Roll back V3 write authority on canary failure
+        if: steps.user_library_v3_write_canary.outcome == 'failure'
+        working-directory: cloudflare/worker
+        env:
+          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
+          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i 's/USER_LIBRARY_V3_WRITE_ENABLED = "1"/USER_LIBRARY_V3_WRITE_ENABLED = "0"/' wrangler.frontend.toml
+          grep -F 'USER_LIBRARY_V3_WRITE_ENABLED = "0"' wrangler.frontend.toml
+          npx wrangler deploy --config wrangler.frontend.toml
+          CANARY_USER_ID="d3c4b-canary-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          npx wrangler d1 execute "$D1_NAME" --remote --command "DELETE FROM users WHERE id='$CANARY_USER_ID';" >/dev/null || true
+          REPORT_PATH=/tmp/user-library-v3-write-rollback-preflight.json \
+            node ../../scripts/user-library-v3-write-activation-canary.mjs preflight
+
+      - name: Preserve user library V3 write activation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-library-v3-write-activation-${{ github.run_id }}
+          path: |
+            /tmp/user-library-v3-write-preflight.json
+            /tmp/user-library-v3-write-canary.json
+            /tmp/user-library-v3-write-rollback-preflight.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Fail deployment after safe V3 write rollback
+        if: steps.user_library_v3_write_canary.outcome == 'failure'
+        run: |
+          echo "V3 user-library write activation failed; production was rolled back to WRITE_ENABLED=0." >&2
+          exit 1
 
       - name: Sync configured runtime secrets
         working-directory: cloudflare/worker
@@ -630,238 +732,40 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Backfill and verify user library row read path
-        id: user_library_shadow
-        continue-on-error: true
+      - name: Verify user library write authority state
         env:
           WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
           BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
         run: |
           node - <<'NODE'
-          import fs from 'node:fs';
           const base=process.env.WORKER_URL;
           const token=process.env.BRIDGE_WRITE_TOKEN;
-          const reportPath='/tmp/user-library-row-shadow-report.json';
-          fs.writeFileSync(reportPath,JSON.stringify({
-            schemaVersion:1,phase:'D3b-user-library-row-read-live',
-            ok:false,status:'started',readPathActive:true,startedAt:new Date().toISOString(),
-          },null,2)+'\n');
-          if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for user library row shadow');
-
-          async function call(path,{method='GET'}={}){
+          async function admin(path){
             const response=await fetch(base+path,{
-              method,
               headers:{authorization:`Bearer ${token}`,'cache-control':'no-cache'},
               signal:AbortSignal.timeout(30000),
             });
-            const text=await response.text();
-            let body={};try{body=text?JSON.parse(text):{};}catch{}
-            if(!response.ok) throw new Error(path+' failed: '+response.status+' '+text.slice(0,700));
+            const body=await response.json().catch(()=>({}));
+            if(!response.ok) throw new Error(path+' failed: '+response.status+' '+JSON.stringify(body));
             return body;
           }
-
-          let status=await call('/api/admin/user-library-shadow/status');
-          if(status.enabled!==true||status.readConfigured!==true){
-            throw new Error('user library row read configuration invalid: '+JSON.stringify(status));
+          const rows=await admin('/api/admin/user-library-shadow/status');
+          const v3=await admin('/api/admin/user-library-v3/status');
+          if(rows.configured!==true||rows.enabled!==false||rows.readConfigured!==true){
+            throw new Error('D3b authority state invalid: '+JSON.stringify(rows));
           }
-
-          let pages=0;
-          while(status.backfill?.complete!==true){
-            pages+=1;
-            if(pages>200) throw new Error('user library row shadow backfill exceeded 200 persisted pages');
-            const page=await call('/api/admin/user-library-shadow/backfill?limit=20',{method:'POST'});
-            if(page.ok!==true||page.enabled!==true){
-              throw new Error('user library row shadow backfill page invalid: '+JSON.stringify(page));
-            }
-            status=await call('/api/admin/user-library-shadow/status');
+          if(v3.configured!==true||v3.enabled!==false||v3.readEnabled!==true||v3.writeEnabled!==true){
+            throw new Error('V3 authority state invalid: '+JSON.stringify(v3));
           }
-
-          const passes=[];
-          for(let attempt=1;attempt<=4&&passes.length<2;attempt+=1){
-            status=await call('/api/admin/user-library-shadow/status');
-            if(status.legacyUsers!==status.shadowHeads||status.revisionMismatches!==0){
-              await new Promise(resolve=>setTimeout(resolve,750));
-              continue;
-            }
-            let offset=0,checked=0,mismatched=0;
-            const reasons={};
-            for(let pageNo=0;pageNo<200;pageNo+=1){
-              const page=await call('/api/admin/user-library-shadow/compare?offset='+offset+'&limit=20');
-              if(page.readPathActive!==true){
-                throw new Error('user library row compare does not see active read path: '+JSON.stringify(page));
-              }
-              checked+=Number(page.checked||0);
-              mismatched+=Number(page.mismatched||0);
-              for(const [key,value] of Object.entries(page.reasons||{})) reasons[key]=(reasons[key]||0)+Number(value||0);
-              if(page.complete===true) break;
-              if(page.nextOffset===null||Number(page.nextOffset)<=offset) throw new Error('user library compare cursor stalled');
-              offset=Number(page.nextOffset);
-            }
-            const after=await call('/api/admin/user-library-shadow/status');
-            const stable=status.legacyUsers===after.legacyUsers
-              &&status.shadowHeads===after.shadowHeads
-              &&after.revisionMismatches===0
-              &&after.readPathActive===true;
-            const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,shadowHeads:after.shadowHeads,paperRows:after.paperRows};
-            console.log(JSON.stringify({userLibraryShadowComparisonAttempt:attempt,...pass}));
-            if(stable&&mismatched===0&&checked===after.legacyUsers) passes.push(pass);
-            if(passes.length<2) await new Promise(resolve=>setTimeout(resolve,750));
-          }
-          if(passes.length<2) throw new Error('user library row shadow could not obtain two stable full parity passes');
-
-          const finalStatus=await call('/api/admin/user-library-shadow/status');
-          if(finalStatus.readPathActive!==true){
-            throw new Error('user library row read path is not active: '+JSON.stringify(finalStatus));
-          }
-          const report={
-            schemaVersion:1,phase:'D3b-user-library-row-read-live',ok:true,readPathActive:true,
-            legacyUsers:Number(finalStatus.legacyUsers||0),
-            shadowHeads:Number(finalStatus.shadowHeads||0),
-            paperRows:Number(finalStatus.paperRows||0),
-            revisionMismatches:Number(finalStatus.revisionMismatches||0),
-            backfillComplete:finalStatus.backfill?.complete===true,
-            backfillPagesThisRun:pages,
-            stableParityPasses:passes.length,
-            semanticMismatches:passes.reduce((sum,row)=>sum+Number(row.mismatched||0),0),
-            verifiedAt:new Date().toISOString(),
-          };
-          fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
-          console.log('USER_LIBRARY_ROW_SHADOW '+JSON.stringify(report));
+          console.log(JSON.stringify({
+            userLibraryWriteAuthority:'v3',
+            d3bShadowEnabled:rows.enabled,
+            d3bReadConfigured:rows.readConfigured,
+            v3ShadowEnabled:v3.enabled,
+            v3ReadEnabled:v3.readEnabled,
+            v3WriteEnabled:v3.writeEnabled,
+          }));
           NODE
-
-      - name: Preserve user library row shadow report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: user-library-row-shadow-${{ github.run_id }}
-          path: /tmp/user-library-row-shadow-report.json
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Backfill and verify user library V3 shadow parity and bounded reads
-        id: user_library_v3_shadow
-        continue-on-error: true
-        env:
-          WORKER_URL: https://organic-synthesis-gallery.zhou526316.workers.dev
-          BRIDGE_WRITE_TOKEN: ${{ secrets.BRIDGE_WRITE_TOKEN }}
-        run: |
-          node - <<'NODE'
-          import fs from 'node:fs';
-          const base=process.env.WORKER_URL;
-          const token=process.env.BRIDGE_WRITE_TOKEN;
-          const reportPath='/tmp/user-library-v3-shadow-report.json';
-          fs.writeFileSync(reportPath,JSON.stringify({
-            schemaVersion:1,phase:'D3c2-user-library-v3-bounded-read',
-            ok:false,status:'started',boundedReadEnabled:true,accountPullCutover:false,writePathActive:false,startedAt:new Date().toISOString(),
-          },null,2)+'\n');
-          if(!token) throw new Error('BRIDGE_WRITE_TOKEN is required for user library V3 shadow');
-
-          async function call(path,{method='GET'}={}){
-            const response=await fetch(base+path,{
-              method,
-              headers:{authorization:`Bearer ${token}`,'cache-control':'no-cache'},
-              signal:AbortSignal.timeout(30000),
-            });
-            const text=await response.text();
-            let body={};try{body=text?JSON.parse(text):{};}catch{}
-            if(!response.ok) throw new Error(path+' failed: '+response.status+' '+text.slice(0,700));
-            return body;
-          }
-
-          let status=await call('/api/admin/user-library-v3/status');
-          if(status.enabled!==true||status.readEnabled!==true||status.writeEnabled!==false){
-            throw new Error('user library V3 shadow configuration invalid: '+JSON.stringify(status));
-          }
-
-          let backfillPages=0;
-          while(status.backfill?.complete!==true){
-            backfillPages+=1;
-            if(backfillPages>200) throw new Error('user library V3 backfill exceeded 200 persisted pages');
-            const page=await call('/api/admin/user-library-v3/backfill?limit=20',{method:'POST'});
-            if(page.ok!==true||page.enabled!==true){
-              throw new Error('user library V3 backfill page invalid: '+JSON.stringify(page));
-            }
-            status=await call('/api/admin/user-library-v3/status');
-          }
-
-          let reconcilePages=0;
-          while(Number(status.revisionMismatches||0)!==0){
-            reconcilePages+=1;
-            if(reconcilePages>100) throw new Error('user library V3 reconcile exceeded 100 pages');
-            const page=await call('/api/admin/user-library-v3/reconcile?limit=20',{method:'POST'});
-            if(page.ok!==true) throw new Error('user library V3 reconcile page invalid: '+JSON.stringify(page));
-            status=await call('/api/admin/user-library-v3/status');
-          }
-
-          const passes=[];
-          for(let attempt=1;attempt<=6&&passes.length<2;attempt+=1){
-            const before=await call('/api/admin/user-library-v3/status');
-            if(before.enabled!==true||before.readEnabled!==true||before.writeEnabled!==false){
-              throw new Error('user library V3 authority changed unexpectedly: '+JSON.stringify(before));
-            }
-            if(before.revisionMismatches!==0||before.legacyUsers!==before.v3Heads){
-              await call('/api/admin/user-library-v3/reconcile?limit=20',{method:'POST'});
-              await new Promise(resolve=>setTimeout(resolve,500));
-              continue;
-            }
-
-            let offset=0,checked=0,mismatched=0;
-            const reasons={};
-            for(let pageNo=0;pageNo<200;pageNo+=1){
-              const page=await call('/api/admin/user-library-v3/compare?offset='+offset+'&limit=20');
-              checked+=Number(page.checked||0);
-              mismatched+=Number(page.mismatched||0);
-              for(const [key,value] of Object.entries(page.reasons||{})){
-                reasons[key]=Number(reasons[key]||0)+Number(value||0);
-              }
-              if(page.complete===true) break;
-              if(Number(page.nextOffset||0)<=offset) throw new Error('user library V3 compare cursor stalled');
-              offset=Number(page.nextOffset);
-            }
-
-            const after=await call('/api/admin/user-library-v3/status');
-            const stable=before.legacyUsers===after.legacyUsers
-              &&before.v3Heads===after.v3Heads
-              &&after.legacyUsers===after.v3Heads
-              &&after.revisionMismatches===0
-              &&after.readEnabled===true
-              &&after.writeEnabled===false;
-            const pass={stable,checked,mismatched,reasons,legacyUsers:after.legacyUsers,v3Heads:after.v3Heads};
-            console.log(JSON.stringify({userLibraryV3ComparisonAttempt:attempt,...pass}));
-            if(stable&&mismatched===0&&checked===after.legacyUsers) passes.push(pass);
-            if(passes.length<2) await new Promise(resolve=>setTimeout(resolve,750));
-          }
-          if(passes.length<2) throw new Error('user library V3 shadow could not obtain two stable full parity passes');
-
-          const finalStatus=await call('/api/admin/user-library-v3/status');
-          if(finalStatus.readEnabled!==true||finalStatus.writeEnabled!==false||finalStatus.revisionMismatches!==0){
-            throw new Error('user library V3 shadow final state invalid: '+JSON.stringify(finalStatus));
-          }
-          const report={
-            schemaVersion:1,phase:'D3c2-user-library-v3-bounded-read',ok:true,
-            shadowEnabled:true,boundedReadEnabled:true,accountPullCutover:false,writePathActive:false,
-            legacyUsers:Number(finalStatus.legacyUsers||0),
-            v3Heads:Number(finalStatus.v3Heads||0),
-            revisionMismatches:Number(finalStatus.revisionMismatches||0),
-            backfillComplete:finalStatus.backfill?.complete===true,
-            backfillPagesThisRun:backfillPages,
-            reconcilePagesThisRun:reconcilePages,
-            stableParityPasses:passes.length,
-            semanticMismatches:passes.reduce((sum,row)=>sum+Number(row.mismatched||0),0),
-            verifiedAt:new Date().toISOString(),
-          };
-          fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
-          console.log('USER_LIBRARY_V3_SHADOW '+JSON.stringify(report));
-          NODE
-
-      - name: Preserve user library V3 shadow report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: user-library-v3-shadow-${{ github.run_id }}
-          path: /tmp/user-library-v3-shadow-report.json
-          if-no-files-found: error
-          retention-days: 7
 
       - name: Advance and reconcile Evidence Index shadow
         id: evidence_index_shadow
@@ -1479,11 +1383,11 @@ jobs:
                 typeof body?.privatePdf?.captureEnabled === 'boolean' &&
                 typeof body?.privatePdf?.processingEnabled === 'boolean' &&
                 body?.scheduledHandoffIndexReadEnabled === true &&
-                body?.userLibraryRowShadowEnabled === true &&
+                body?.userLibraryRowShadowEnabled === false &&
                 body?.userLibraryRowReadEnabled === true &&
-                body?.userLibraryV3ShadowEnabled === true &&
+                body?.userLibraryV3ShadowEnabled === false &&
                 body?.userLibraryV3ReadEnabled === true &&
-                body?.userLibraryV3WriteEnabled === false &&
+                body?.userLibraryV3WriteEnabled === true &&
                 body?.siteAnalyticsMaterializedShadowEnabled === true &&
                 body?.siteAnalyticsMaterializedReadEnabled === true &&
                 body?.literatureCatalogIndexShadowEnabled === true &&
